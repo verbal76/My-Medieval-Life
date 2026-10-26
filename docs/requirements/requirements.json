@@ -17158,7 +17158,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Owner correction 2026-10-26 (docs/directives/2026-10-26_npc_judgment_refusal_correction.md): an NPC may refuse a transaction because of its opinion of the other party, weighed against need, scarcity, alternatives, price, relationships and personality; two villagers in the same circumstances may decide differently. No hard-coded reputation cutoff, and no rule that every transaction stays possible regardless of NPC preference. Applies to LE-01 and all later Living Economy integration, through the shared JudgmentWeighting (already so in judgment_test test_need_vs_opinion).",
    "history": [
     {
      "date": "2026-10-20",
@@ -17189,6 +17189,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "notes",
+     "why": "owner correction on opinion and refusal recorded as a design constraint"
     }
    ],
    "target_build": "20",
@@ -27946,7 +27951,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Owner correction 2026-10-26 (docs/directives/2026-10-26_npc_judgment_refusal_correction.md): an NPC may refuse a transaction because of its opinion of the other party, weighed against need, scarcity, alternatives, price, relationships and personality; two villagers in the same circumstances may decide differently. No hard-coded reputation cutoff, and no rule that every transaction stays possible regardless of NPC preference. Applies to LE-01 and all later Living Economy integration, through the shared JudgmentWeighting (already so in judgment_test test_need_vs_opinion).",
    "history": [
     {
      "date": "2026-10-20",
@@ -27972,6 +27977,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker F (LE-01); branch: None -> wip/x20-le01",
      "why": "Expansion 20 batch X20-B3 (owner authorization 2026-10-26): the technical model behind the disabled switch; no owner-controlled policy chosen"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "notes",
+     "why": "owner correction on opinion and refusal recorded as a design constraint"
     }
    ],
    "target_build": "20",
