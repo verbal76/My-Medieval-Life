@@ -498,6 +498,9 @@ func _ready() -> void:
 						tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 						grid.add_child(tr)
 				ui.hud.visible = false
+			"gear_sheet_0", "gear_sheet_1", "gear_sheet_2", "gear_sheet_3", "gear_sheet_4", "weapon_carry", "weapon_npcs", \
+					"gear_order_body", "gear_order_katana", "gear_craft", "wiki_gear", "wiki_armoury", "inventory_gear":
+				_gear_shot(shot_panel)              # Build 22: the armour and weapon catalogue (ARMOR-CATALOG-01, WEAPON-*-01)
 			"tailor_pitch", "barber_pitch", "barber", "barber_result":
 				# TAILOR-18 / BARBER-18: the tailor or barber at the manor's pitch; the barber's chair, before and after a visit
 				var job := "tailor" if shot_panel == "tailor_pitch" else "barber"
@@ -1216,6 +1219,12 @@ func _sync_avatars(dt: float) -> void:
 		if (e.get("dir", Vector2.ZERO) as Vector2).length() > 0.1:
 			s.face(e.dir)
 		var anim := str(e.get("anim", "idle"))
+		if who2 != null:                           # WEAPON-VISIBLE-01: their weapon carried, and swung like the axe
+			s.wield(who2.weapon)
+			if anim == "sword" and who2.weapon != "":
+				anim = "swing"
+				if s.tool_item != who2.weapon:
+					s.hold(who2.weapon)
 		s.play(anim if anim in NetSession.ANIMS else "idle")
 		if not bool(e.get("alive", true)) and s.anim != "death":
 			s.play("death", true)
@@ -1753,6 +1762,8 @@ func _process(delta: float) -> void:
 	if world == null:
 		return
 	_refresh_player_worn()
+	if player_sprite != null:                # WEAPON-VISIBLE-01: the weapon in hand is carried, drawn
+		player_sprite.wield(world.player.weapon if world.player.weapon != "" and world.player.inv.has(world.player.weapon) else "")
 	_audio_step(delta)
 	if shot_path != "":
 		_screenshot_step(delta)
@@ -1881,6 +1892,10 @@ func _sync_sprites() -> void:
 		s.position = n.pos * T
 		s.face(n.facing)
 		var look: Array = world.brain.work_look(n) if n.anim == "work" else [n.anim, ""]
+		var arm := ActorSprite.npc_weapon(n)       # WEAPON-VISIBLE-01: guards and bandits carry theirs; anyone fighting swings it
+		s.wield(arm)
+		if look[0] == "sword" and arm != "":
+			look = ["swing", arm]
 		if s.tool_item != look[1]:
 			s.hold(look[1])
 		s.play(look[0] if look[0] != "sleep" else "idle")
@@ -2318,7 +2333,7 @@ func _player_step(delta: float) -> void:
 		# GP-PICKAXE-ANIM: work begun this frame by Gather mode, a tapped seam or tree, or a reach (_gather_step, _reach_step:
 		# the touch path) keeps its swing; only a player standing idle goes back to rest. It used to reset the swing begun a
 		# moment before, so on a phone the miner stood still while the bar filled; E began work after this line and kept it.
-		if action.is_empty() and player_sprite.anim in ["walk", "swing", "gather", "work"]:
+		if action.is_empty() and player_sprite.anim in ["walk", "swing", "gather", "work"] and not player_sprite.striking:     # (a weapon's blow plays through)
 			_rest_anim()
 		_through_portal(Vector2.ZERO)        # MIN-A: a tapped adit, reached
 	_find_target()
@@ -3932,6 +3947,12 @@ func plant_cutting(item: String) -> void:
 	)
 
 
+## WEAPON-VISIBLE-01: the player's animation as the other players see it: a blow with the weapon is sent as "sword" (their
+## screens swing the weapon they see in hand), so it is not taken for work.
+func net_anim() -> String:
+	return "sword" if player_sprite.striking else player_sprite.anim
+
+
 ## Begin a timed piece of work: `anim` is "swing" (with `tool`, the item held in the hand: the pickaxe
 ## for mining, the axe for felling) or "gather" (picking, harvesting, planting); it plays until the work ends
 ## or is cancelled (cancel_action), then the player is back to idle.
@@ -4089,7 +4110,10 @@ func _swing_begins() -> void:
 	sprinting = false                  # no sprint while attacking
 	if swing.only != null and swing.only.alive:
 		player_sprite.face(swing.only.pos - world.player.pos)
-	player_sprite.play("sword", true)  # the press shows at once; the blow lands on the slash frame
+	if player_sprite.weapon_item != "":
+		player_sprite.strike()             # WEAPON-VISIBLE-01: the weapon swung like the axe (the swing poses)
+	else:
+		player_sprite.play("sword", true)  # the press shows at once; the blow lands on the slash frame
 
 
 func _swing_step(delta: float) -> void:
@@ -5362,6 +5386,112 @@ func _swing_panel(mining: bool, frame: int) -> void:
 	_use()
 	player_sprite.speed_scale = 0.0
 	player_sprite.t = float(frame) * 0.16 + 0.01
+
+
+## Build 22 screenshots of the armour and weapon catalogue: gear_sheet_N, 22 catalogue armour pieces a page on one character
+## (columns: the eight directions standing, a walk and a work frame); weapon_carry, ActorSprites carrying weapons in every
+## direction, walking and mid-swing; weapon_npcs, a guard and a bandit with theirs, one fighting; the order and craft
+## windows, the encyclopedia pages and the Pack with a rare piece worn.
+func _gear_shot(panel: String) -> void:
+	var p := world.player
+	if panel.begins_with("gear_sheet_"):
+		var back := ColorRect.new()
+		back.color = Color8(96, 128, 72)
+		back.size = Vector2(1280, 720)
+		ui.hud_root.add_child(back)
+		var grid := GridContainer.new()
+		grid.columns = 20
+		grid.add_theme_constant_override("h_separation", 0)
+		grid.add_theme_constant_override("v_separation", 0)
+		ui.hud_root.add_child(grid)
+		var rr := RandomNumberGenerator.new()
+		rr.seed = 11
+		var rec := CharacterLook.random_recipe(rr, "male")
+		var ids := (CharacterLook.style().worn_layers as Dictionary).keys().filter(func(i): return GameData.item(str(i)).has("class") and str(GameData.item(str(i)).get("class")) != "" and GameData.orderable(str(i)) and (CharacterLook.style().worn_layers[i] as Dictionary).has("layer"))
+		var page := int(panel.right(1))
+		for id in ids.slice(page * 22, page * 22 + 22):
+			for cell in [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [0, 3], [0, 14]]:
+				var at := AtlasTexture.new()
+				at.atlas = CharacterLook.texture(rec, [id])
+				at.region = Rect2(cell[1] * 32, cell[0] * 32, 32, 32)
+				var tr := TextureRect.new()
+				tr.texture = at
+				tr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+				tr.custom_minimum_size = Vector2(64, 64)
+				tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				tr.tooltip_text = str(id)
+				grid.add_child(tr)
+		print("gear_sheet page %d: %s" % [page, ", ".join(ids.slice(page * 22, page * 22 + 22))])
+		ui.hud.visible = false
+		return
+	if panel in ["weapon_carry", "weapon_npcs"]:
+		player_sprite.visible = false
+		var at := p.pos * T
+		var weapons := ["iron_sword_01", "steel_katana_25", "gold_battle_axe_23", "bronze_spear_04", "iron_staff_28", "steel_battle_hammer_02", "gold_rapier_14", "bronze_knife_30"]
+		if panel == "weapon_carry":
+			for row in 3:
+				for d in 8:
+					var s := ActorSprite.new()
+					s.setup_texture(CharacterLook.player_sheet(p))
+					actors.add_child(s)
+					s.position = at + Vector2((d - 3.5) * 22.0, (row - 1) * 30.0)
+					s.dir = d
+					s.wield(weapons[d])
+					s.speed_scale = 0.0
+					if row == 0:
+						s.play("idle")
+					elif row == 1:
+						s.play("walk")
+						s.t = 0.14
+					else:
+						s.strike()
+						s.t = float(d % 3) * 0.16 + 0.01
+		else:
+			var g: NPC = world.npcs.filter(func(o): return o.alive and o.job == "guard")[0]
+			var bnd: Array = world.npcs.filter(func(o): return o.alive and o.role == "bandit")
+			g.pos = p.pos + Vector2(-1.5, 0)
+			g.anim = "idle"
+			g.plan.clear()
+			if not bnd.is_empty():
+				bnd[0].pos = p.pos + Vector2(1.5, 0)
+				bnd[0].anim = "sword"
+				bnd[0].plan.clear()
+				bnd[0].facing = Vector2(-1, 0)
+			p.inv.add("steel_greatsword_25")
+			p.weapon = "steel_greatsword_25"
+			player_sprite.visible = true
+		camera.zoom = Vector2(5, 5) * view_scale
+		follow_at = at
+		return
+	p.coins = 2000
+	for id in {"iron_bar": 10, "leather": 4, "boar_tusk": 4, "antler": 4, "gold_bar": 2, "fine_cloth": 3, "hide": 4, "wool_cloth": 2}:
+		p.inv.add(id, {"iron_bar": 10, "leather": 4, "boar_tusk": 4, "antler": 4, "gold_bar": 2, "fine_cloth": 3, "hide": 4, "wool_cloth": 2}[id])
+	p.skills["smithing"] = Skills.xp_for_level(5)
+	var smith: NPC = world.npcs.filter(func(o): return o.alive and o.job == "smith")[0]
+	world.minutes = floorf(world.minutes / 1440.0) * 1440.0 + 10.0 * 60.0
+	smith.pos = Vector2(brain_cell(smith)) + Vector2(0.5, 0.5)
+	p.pos = smith.pos + Vector2(0, 1.6)
+	follow_at = _in_view(p.pos * T)
+	match panel:
+		"gear_order_body":
+			GearWindow.show(ui, "order", smith, "body")
+		"gear_order_katana":
+			GearWindow.show(ui, "order", smith, "katana", "steel", "steel_katana_25")
+		"gear_craft":
+			for id in world.stations:
+				if str(world.stations[id].type) == "anvil" and world.station_refusal(id) == "":
+					GearWindow.show(ui, "craft", id)
+					break
+		"wiki_gear", "wiki_armoury":
+			ui.show_wiki(ui.hide_all)
+			ui.wiki_win.goto("gear:katana" if panel == "wiki_gear" else "sys:armoury")
+		"inventory_gear":
+			p.inv.add("dragon_knight_helm")
+			p.head = "dragon_knight_helm"
+			p.inv.add("gold_staff_25")
+			p.weapon = "gold_staff_25"
+			ui.toggle_inventory()
+			(func(): ui.inventory_window().choose("dragon_knight_helm")).call_deferred()
 
 
 ## HOUSE-10 screenshots: the household of b_v1_house adds the small room beside its house (placed and supplied

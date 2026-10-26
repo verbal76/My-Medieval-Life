@@ -49,6 +49,15 @@ var pose := ""                 # "" standing, "lie" in a bed, "sit" on a chair (
 var pose_row := 2              # the sheet row of the lying frame (2 east: head left; 6 west: head right)
 var tool_icon: Sprite2D        # the tool held in the hand while swinging
 var tool_item := ""            # the item id of the tool shown ("" = none)
+var weapon_icon: Sprite2D      # WEAPON-VISIBLE-01: the weapon carried in the hand while standing or walking
+var weapon_item := ""          # the item id of the weapon carried ("" = none)
+var striking := false          # a swing of the carried weapon is playing through (strike)
+# WEAPON-VISIBLE-01 (owner, 2026-10-26: "walk around with it drawn so we get a chance to see it"): how a carried weapon is
+# held, by the way the carrier faces ("side" is east, mirrored for west, as SWING_POSES): [hand x, hand y (from the feet),
+# the direction its head points (degrees: 0 ahead, -90 up), mirror the icon, drawn behind the body]. Held low at the side,
+# point raised; behind the body when facing away.
+const CARRY_POSES := {"south": [5, -3, -70.0, false, false], "side": [2, -3, -60.0, true, false], "away": [-4, -4, -110.0, false, true]}
+const CARRY_SCALE := 0.75
 
 
 ## Lie in a bed (or on a pallet) whose cell centre is `at` (pixels), head toward `head` ("up", "left",
@@ -154,6 +163,75 @@ func hold(item: String) -> void:
 	tool_icon.texture = load("res://assets/icons/%s.png" % item)
 
 
+## WEAPON-VISIBLE-01: carry this weapon (an item id; "" for none). It is drawn while standing and walking; a swing with
+## it is a "swing" with the weapon held (hold), as the axe's.
+func wield(item: String) -> void:
+	if item == weapon_item:
+		return
+	weapon_item = item
+	if item == "":
+		if weapon_icon:
+			weapon_icon.visible = false
+		return
+	if weapon_icon == null:
+		weapon_icon = Sprite2D.new()
+		weapon_icon.name = "Weapon"
+		weapon_icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		weapon_icon.offset = Vector2(-5, -5)          # the grip, as the swung tool's
+		add_child(weapon_icon)
+	var path := "res://assets/icons/%s.png" % item
+	weapon_icon.texture = load(path) if ResourceLoader.exists(path) else null
+
+
+## WEAPON-VISIBLE-01: one blow with the carried weapon: the axe's swing (the throw frames, the swing poses) with the weapon in
+## hand, played once through.
+func strike() -> void:
+	hold(weapon_item)
+	play("swing", true)
+	striking = true
+
+
+## The carried weapon for this frame: shown standing or walking (not lying, sitting, at work, swinging or dead).
+func _place_weapon(i: int) -> void:
+	if weapon_icon == null:
+		return
+	weapon_icon.visible = weapon_item != "" and weapon_icon.texture != null and pose == "" and anim in ["idle", "walk"]
+	if not weapon_icon.visible:
+		return
+	var key := "south" if dir == 0 else ("away" if dir in [3, 4, 5] else "side")
+	var c: Array = CARRY_POSES[key]
+	var hand := Vector2(float(c[0]), float(c[1]) - (1.0 if anim == "walk" and i % 2 == 1 else 0.0))     # a step's bob
+	var head := float(c[2])
+	var mirror: bool = c[3]
+	if dir in [5, 6, 7]:                                    # faced west: mirrored
+		hand.x = -hand.x
+		head = 180.0 - head
+		mirror = not mirror
+	weapon_icon.scale = Vector2(-CARRY_SCALE if mirror else CARRY_SCALE, CARRY_SCALE)
+	weapon_icon.rotation = deg_to_rad(head - ((-180.0 - ICON_HEAD) if mirror else ICON_HEAD))
+	weapon_icon.position = hand
+	weapon_icon.show_behind_parent = c[4]
+	weapon_icon.z_index = 0 if c[4] else 1
+
+
+## WEAPON-VISIBLE-01: the weapon a villager is drawn with: a guard's or a bandit's best (most damage, then id) at all
+## times; anyone else's only while fighting ("sword"); "" for none. View only: nothing in the world reads it.
+static func npc_weapon(n: NPC) -> String:
+	if n == null or not n.alive:
+		return ""
+	if not (n.role == "bandit" or n.job == "guard" or n.anim == "sword"):
+		return ""
+	var best := ""
+	for id in n.inv.ids():
+		var it := GameData.item(str(id))
+		if str(it.get("type", "")) != "weapon":
+			continue
+		if best == "" or int(it.get("damage", 0)) > int(GameData.item(best).get("damage", 0)) or \
+				(int(it.get("damage", 0)) == int(GameData.item(best).get("damage", 0)) and str(id) < best):
+			best = str(id)
+	return best
+
+
 ## Where the held tool is for this frame of the swing (the node's own offset is (0, -7), so the hand is
 ## given from the sprite's centre).
 func _place_tool(i: int) -> void:
@@ -192,6 +270,7 @@ func play(name: String, play_once := false) -> void:
 	anim = name
 	once = play_once
 	t = 0.0
+	striking = false
 
 
 func _process(delta: float) -> void:
@@ -204,8 +283,12 @@ func _process(delta: float) -> void:
 		if anim != "death":
 			anim = "idle"
 			once = false
+			striking = false
 	if pose == "lie":
 		frame = pose_row * 29 + 24
+		if weapon_icon:
+			weapon_icon.visible = false
 		return
 	frame = dir * 29 + int(cols[i % cols.size()])
 	_place_tool(i % cols.size())
+	_place_weapon(i % cols.size())

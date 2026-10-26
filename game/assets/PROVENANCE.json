@@ -18163,8 +18163,8 @@
    "file": "assets/characters/layers/headwear/ranger_hat_cyan.png",
    "source": "PUNY_CHARACTERS_v2.1.zip",
    "member": "PUNY_CHARACTERS_v2.1/PUNY CHARACTERS/Individual Spritesheets/Layer 6 - Headgears/Basic Range/RangerHatCyan.png",
-   "transform": "copied unchanged (the colourway the item draws while worn; no recolouring)",
-   "sha256": "6cf2c8f6bcf37e401b0259641adc70aa71b46788aa2e2cef7a843509e7c49435"
+   "transform": "frame 19 (the first hurt frame) repeated to make the pack's 29 frames (the shipped sheet has 28); no recolouring",
+   "sha256": "71b978887659b9d57b7f6c37513245a7784772832aa491ad48a009c7e5e788e3"
   },
   {
    "file": "assets/characters/layers/headwear/ranger_hat_green.png",

@@ -272,8 +272,20 @@ def import_into(prov, record):
         member = V21_DIR + rel
         dest = OUT / "characters" / "layers" / layer / f"{item}.png"
         dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_bytes(pz.read(member))
-        record(dest, PUNY_V21, member, "copied unchanged (the colourway the item draws while worn; no recolouring)")
+        img = Image.open(io.BytesIO(pz.read(member)))
+        if img.size == (28 * 32, 256):
+            # the pack ships RangerHatCyan one hurt frame short (28 frames; its frames from 19 on are the others' 20 on):
+            # its frame 19 is repeated, so every frame lands in its column (found by comparing it with RangerHatGreen)
+            img = img.convert("RGBA")
+            out = Image.new("RGBA", (29 * 32, 256))
+            out.paste(img.crop((0, 0, 20 * 32, 256)), (0, 0))
+            out.paste(img.crop((19 * 32, 0, 28 * 32, 256)), (20 * 32, 0))
+            out.save(dest)
+            record(dest, PUNY_V21, member, "frame 19 (the first hurt frame) repeated to make the pack's 29 frames (the shipped sheet "
+                   "has 28); no recolouring")
+        else:
+            dest.write_bytes(pz.read(member))
+            record(dest, PUNY_V21, member, "copied unchanged (the colourway the item draws while worn; no recolouring)")
         style["layers"].setdefault(layer, {})[item] = {"sheet": "res://" + str(dest.relative_to(REPO / "game")), "ramps": []}
         style["worn_layers"][item] = {"layer": layer, "option": item}
     style_path.write_text(json.dumps(style, indent=1) + "\n")
