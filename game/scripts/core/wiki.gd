@@ -18,7 +18,7 @@ extends RefCounted
 const ICON := "res://assets/icons/%s.png"
 const SCHEMES := {"kbm": "Keyboard and mouse", "gamepad": "Gamepad", "touch": "Touch"}
 const STATION_NAMES := {"anvil": "Anvil", "armory_counter": "Armory counter", "forge": "Forge", "mine_cart": "Mine cart",
-	"oven": "Oven", "sawhorse": "Sawhorse", "stove": "Stove", "tavern_counter": "Tavern counter", "well": "Well",
+	"oven": "Oven", "sawhorse": "Sawhorse", "sawmill_counter": "Sawmill desk", "stove": "Stove", "tavern_counter": "Tavern counter", "well": "Well",
 	"workbench": "Workbench"}
 ## Pages a profession's page points on to.
 const JOB_LINKS := {"miner": ["sys:mining", "sys:prospecting", "sys:minecarts"], "laborer": ["sys:mining"], "reeve": ["sys:manor_jobs", "sys:manor_treasury"], "smith": ["sys:prospecting"]}

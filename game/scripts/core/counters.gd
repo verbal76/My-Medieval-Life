@@ -12,8 +12,8 @@ extends RefCounted
 ##
 ## One mechanism for every skilled business: a new counter needs only its station type and its keepers' jobs here.
 
-const KEEPERS := {"armory_counter": ["smith"]}            # counter station type -> the jobs that keep it
-const NAMES := {"armory_counter": "the armoury"}
+const KEEPERS := {"armory_counter": ["smith"], "sawmill_counter": ["carpenter"]}     # counter station type -> the jobs that keep it (GP-BUSINESS-DESK: the sawmill's desk, generator v15)
+const NAMES := {"armory_counter": "the armoury", "sawmill_counter": "the sawmill"}
 
 var w: World
 var serving := {}            # counter station id -> the id of the villager coming to it or serving at it

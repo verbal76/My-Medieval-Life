@@ -2486,12 +2486,22 @@ func _find_target() -> void:
 		if d < 1.5 and world.reaches(p.pos, at):
 			near.append([d, near.size(), _container_target(c)])
 	for post in _shop_posts():
+		if not post.stall:
+			continue                       # GP-BUSINESS-DESK: a counter is a desk, offered only beside it and facing it (below)
 		for at: Vector2 in post.cells:
 			if at.distance_to(p.pos) > 2.2:
 				continue
 			var d := at.distance_to(probe)
 			if d < 1.5 and world.reaches(p.pos, at):
-				near.append([d, near.size(), _shop_target(post)])
+				var sd := BusinessDesks.by_id(world, str(post.id))
+				near.append([d, near.size(), _desk_target(sd, _shop_target(post)) if not sd.is_empty() else _shop_target(post)])
+				break
+	for dk in BusinessDesks.faced_all(world, p.pos, facing_vec()):
+		if str(dk.kind) == "counter":
+			var cp := {"id": str(dk.post), "stall": false}
+			near.append([(Vector2(dk.at) + Vector2(0.5, 0.5)).distance_to(probe), near.size(), _desk_target(dk, _shop_target(cp))])
+		elif str(dk.kind) == "front" and not world.holds(world.acting_ref(), world.buildings[dk.building]):
+			near.append([(Vector2(dk.at) + Vector2(0.5, 0.5)).distance_to(probe), near.size(), _desk_target(dk, _front_target(dk))])
 	for i in world.loot.size():
 		if World.level_of(world.loot[i]) != 0:
 			continue                       # left below the surface (MIN-A)
@@ -2609,13 +2619,9 @@ func _find_target() -> void:
 				"label": ("Sharpen your %s (%d coin to the smith)" % [GameData.item_name(wid).to_lower(), World.SHARPEN_COINS]) if nos == "" else "Grinding wheel: %s" % nos})
 	if world.couriers != null:                                # REG-COURIER-01: the village's courier booth (a stall kept by a villager)
 		var cb: Dictionary = world.couriers.booth_near(p.pos, 1.8)
-		if not cb.is_empty():
+		if not cb.is_empty() and not BusinessDesks.booth_on_desk(world, cb):     # GP-BUSINESS-DESK: a booth at a desk is in the desk's menu
 			here.append({"kind": "courier_booth", "booth": str(cb.id), "label": "Courier booth: send goods by the regular route or a special delivery"})
-		elif world.couriers.booth_of_keeper(world.acting_ref()).is_empty():                  # Q18-15: a business with a shop may open its own booth
-			for sst in world.business.stalls.built(world.acting_ref()):
-				if Vector2(float(sst.x) + 1.0, float(sst.y) + 0.5).distance_to(p.pos) < 2.5:
-					here.append({"kind": "courier_shop_booth", "label": "Open a courier booth at your stall"})
-					break
+		# Q18-15: a business with a shop opens its own booth from its desk's menu (_desk_target)
 	if world.farm.caravan_here() and world.farm.caravan_stop().distance_to(p.pos) < float(Farming.cfg().caravan_horse.reach):      # B14-11: the visiting caravan sells a plough horse
 		var no_horse := world.farm.buy_horse_refusal(p)
 		here.append({"kind": "caravan_horse", "label": ("Buy a plough horse from the caravan (%d coins)" if no_horse == "" else "The caravan's plough horse (%d coins): " + no_horse) % int(Farming.cfg().caravan_horse.price)})
@@ -2650,8 +2656,9 @@ func _find_target() -> void:
 				if at.distance_to(p.pos) < 1.3:
 					near_front = true
 			if near_front:
-				fronts.append({"kind": "stall", "id": str(id), "label": "Manage your storefront"} if b.has("shop")
-						else {"kind": "front_open", "id": str(id), "label": "Open your storefront"})
+				var own_front: Dictionary = {"kind": "stall", "id": str(id), "label": "Manage your storefront"} if b.has("shop") else {"kind": "front_open", "id": str(id), "label": "Open your storefront"}
+				var fd := BusinessDesks.by_id(world, "front:" + str(id))
+				fronts.append(_desk_target(fd, own_front) if not fd.is_empty() else own_front)        # GP-BUSINESS-DESK
 		elif (Vector2(world.building_door(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 1.3:
 			var why := world.business.storefront_refusal(b)
 			var cost := Business.storefront_cost()
@@ -2805,6 +2812,63 @@ func _manor_label(j: Dictionary) -> String:
 	return ""
 
 
+## GP-BUSINESS-DESK: a business's desk (BusinessDesks). Use opens its short menu (GameUI.show_desk): `inner`, what the counter
+## or stall offers now (trade with the keeper; when the keeper is away, ringing for service or the goods left on a stall; your
+## own to manage), and the courier where the business keeps a booth at the desk (at your own desk, opening one). The prompt is
+## `inner`'s, naming the courier when there is one.
+func _desk_target(d: Dictionary, inner: Dictionary) -> Dictionary:
+	var opts: Array = [inner]
+	var bo := BusinessDesks.booth_at(world, d)
+	if not bo.is_empty():
+		opts.append({"kind": "courier_booth", "booth": str(bo.id), "label": "Speak to the courier (send goods)"})
+	elif _desk_is_mine(d) and world.couriers != null and world.couriers.booth_of_keeper(world.acting_ref()).is_empty():
+		opts.append({"kind": "courier_shop_booth", "label": "Open a courier booth at this desk"})
+	var label := str(inner.get("label", ""))
+	if not bo.is_empty():
+		label += "; or the courier"
+	return {"kind": "desk", "desk": d, "options": opts, "label": label, "status": _desk_status(d, inner)}
+
+
+func _desk_is_mine(d: Dictionary) -> bool:
+	match str(d.get("kind", "")):
+		"stall":
+			return world.holds(world.acting_ref(), world.stalls.get(str(d.post), {}))
+		"front", "shop":
+			return world.holds(world.acting_ref(), world.buildings.get(str(d.building), {}))
+	return false
+
+
+## The menu's first line: who is at the desk, or why nobody is.
+func _desk_status(d: Dictionary, inner: Dictionary) -> String:
+	if _desk_is_mine(d):
+		return "Your own business."
+	match str(inner.get("kind", "")):
+		"shop":
+			var k: NPC = inner.npc
+			return "%s %s is at the desk: buy and sell." % [k.name, k.family]
+		"summon":
+			return "Nobody is at the desk. Ring for service and a keeper who can come will."
+		"info":
+			return str(inner.get("text", ""))
+		"container":
+			return "Nobody is at the stall. Its goods lie there; taking them is theft."
+	return ""
+
+
+## A household's storefront (B14) that is not the acting player's: its keeper there trades; otherwise nobody keeps it now.
+func _front_target(d: Dictionary) -> Dictionary:
+	var k: NPC = world.npc(int(world.front_keepers.get(str(d.building), -1)))
+	if k != null and world.at_post(k):
+		return {"kind": "shop", "npc": k, "label": "Trade with %s (%s)" % [k.name, world.shop_name(k)]}
+	return {"kind": "info", "label": "%s: nobody keeps it now" % World.cap(str(d.name)), "text": "Nobody keeps %s now." % str(d.name)}
+
+
+## Do one of a desk menu's choices (GameUI.show_desk), as Use on it would.
+func use_option(opt: Dictionary) -> void:
+	target = opt
+	_use()
+
+
 ## The counters and stalls the player can buy at: {id, stall, cells (tile centres to use)}.
 func _shop_posts() -> Array:
 	var out := []
@@ -2879,7 +2943,9 @@ func _fit_targets(place: String) -> Array:
 	out.append({"kind": "fitout", "id": place, "label": "Fit out this room (counter, shelves, equipment)"})
 	var e := world.fitting.entry(b, "counter")
 	if not e.is_empty() and Vector2(int(e.use[0]) + 0.5, int(e.use[1]) + 0.5).distance_to(world.player.pos) < 1.4:
-		out.append({"kind": "stall", "id": place, "label": "Manage your shop" if b.has("shop") else "Open a shop here (%d coins a day)" % int(GameData.b("shop_licence_day"))})
+		var own_shop := {"kind": "stall", "id": place, "label": "Manage your shop" if b.has("shop") else "Open a shop here (%d coins a day)" % int(GameData.b("shop_licence_day"))}
+		var sd := BusinessDesks.by_id(world, "shop:" + place)
+		out.append(_desk_target(sd, own_shop) if not sd.is_empty() else own_shop)          # GP-BUSINESS-DESK
 	return out
 
 
@@ -3059,6 +3125,8 @@ func _use() -> void:
 			ui.show_fitout(str(target.id))
 		"summon":
 			ui.message(world.counters.summon(str(target.id)).text)
+		"desk":
+			ui.show_desk(target)                               # GP-BUSINESS-DESK: the business desk's short menu
 		"info":
 			ui.message(target.text)
 		"container":
