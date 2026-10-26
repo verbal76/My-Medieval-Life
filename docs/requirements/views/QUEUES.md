@@ -2,19 +2,32 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (17)
+## Workers and task branches (30)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
+| ARMOR-01 | 18 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
 | E20-P1 | 20 | IMPLEMENTED ON TASK BRANCH | X20 foundation worker (Sonnet subagent) | wip/expansion20-preparation |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | FIX-D1D2 | 20 | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) | wip/expansion19-preparation, wip/expansion20-preparation |
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
+| GP-BUSINESS-COURIER | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
+| GP-BUSINESS-DESK | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
+| GP-FARMER-TENDING | 20 | IN DEVELOPMENT | worker C (family and farming) | wip/b22-family |
+| GP-LOCKPICK | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
+| GP-MARKET-SPACING | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
+| GP-MINE-WOOD-FRAME | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
+| GP-QTY-PICKER-CONTROLLER | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
+| GP-STALL-RENT-WRONG-PITCH | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
+| GP-TABLE-ITEMS | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
+| GP-WANTED-INDICATOR | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
+| GP-WIKI-RECIPE-TOOLS | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
+| MP-PLAYER-FAMILY | 20 | IN DEVELOPMENT | worker C (family and farming) | wip/b22-family |
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
@@ -24,7 +37,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (49)
+## Implemented but not tested (47)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -44,8 +57,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | EQ-05 | 16 | PARTIALLY IMPLEMENTED |  |
 | FARM-08 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | FSE-00 | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
-| GP-BUSINESS-COURIER | 20 | PARTIALLY IMPLEMENTED |  |
-| GP-BUSINESS-DESK | 20 | PARTIALLY IMPLEMENTED | finish the desk; the courier hand-off is tracked separately as GP-BUSINESS-COURIER; write the desk test; regenerate the village and check G0; shopkeepers' existing buying and selling must keep working (it does in Build 21) |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH |  |
 | MIN-G | 17 | INTEGRATED |  |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH |  |

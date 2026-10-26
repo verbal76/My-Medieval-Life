@@ -635,7 +635,7 @@
    "playtest": [
     "owner playtest on a device"
    ],
-   "branch": "wip/b18-armour",
+   "branch": "wip/b22-ui",
    "commits": [
     "9f3a237"
    ],
@@ -645,7 +645,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Build 22: implement on wip/b22-ui, lead integrates on wip/build22",
    "priority": "",
    "workstream": "b18-armour",
    "superseded_by": null,
@@ -695,6 +695,11 @@
      "date": "2026-10-26",
      "change": "note",
      "why": "known_defects wording corrected (no change of substance)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (interface); branch: wip/b18-armour -> wip/b22-ui",
+     "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
     }
    ],
    "target_build": "18",
@@ -703,7 +708,7 @@
    ],
    "migrated_from_status": "IMPLEMENTED — TESTING REQUIRED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "VERIFICATION FAILED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -716,7 +721,8 @@
    ],
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "assigned_worker": "worker B (interface)"
   },
   {
    "id": "ARMOR-Q",
@@ -22397,7 +22403,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22406,9 +22412,14 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (market); branch: wip/build22-business-desk -> wip/b22-market",
+     "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
     }
    ],
-   "branch": "wip/build22-business-desk",
+   "branch": "wip/b22-market",
    "commits": [
     "e25eec9"
    ],
@@ -22418,7 +22429,8 @@
     "X20-OPEN-ITEMS"
    ],
    "design": "PARTIAL",
-   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)"
+   "next_action": "Build 22: implement on wip/b22-market, lead integrates on wip/build22",
+   "assigned_worker": "worker A (market)"
   },
   {
    "id": "GP-BUSINESS-DESK",
@@ -22436,7 +22448,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22485,10 +22497,15 @@
      "date": "2026-10-24",
      "change": "remaining_work: None -> finish the desk; the courier hand-off is tracked separately as GP-BUSINESS-COURIER; write the desk test; regenerate the village and check G0; shopkeepers' existing buying and selling must keep working (it does in Build 21); implementation: None -> unfinished, untested snapshot on wip/build22-business-desk e25eec9 (on top of c33d7c2): new game/scripts/core/business_desks.gd; changes to counters.gd, settlement/couriers.gd, wiki.gd, world.gd, main.gd, ui/game_ui.gd, game/data/village.json, tools/build_village.py",
      "why": "owner clarification 2026-10-24: the desk work is preserved unfinished and untested on wip/build22-business-desk e25eec9; never discard, overwrite, restart or mark it complete"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (market); branch: wip/build22-business-desk -> wip/b22-market",
+     "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
     }
    ],
-   "assigned_worker": null,
-   "branch": "wip/build22-business-desk",
+   "assigned_worker": "worker A (market)",
+   "branch": "wip/b22-market",
    "commits": [
     "e25eec9"
    ],
@@ -22497,7 +22514,8 @@
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "finish the desk; the courier hand-off is tracked separately as GP-BUSINESS-COURIER; write the desk test; regenerate the village and check G0; shopkeepers' existing buying and selling must keep working (it does in Build 21)",
-   "implementation": "unfinished, untested snapshot on wip/build22-business-desk e25eec9 (on top of c33d7c2): a new business-desks script (core/business_desks.gd on that branch); changes to counters.gd, settlement/couriers.gd, wiki.gd, world.gd, main.gd, ui/game_ui.gd, game/data/village.json, tools/build_village.py"
+   "implementation": "unfinished, untested snapshot on wip/build22-business-desk e25eec9 (on top of c33d7c2): a new business-desks script (core/business_desks.gd on that branch); changes to counters.gd, settlement/couriers.gd, wiki.gd, world.gd, main.gd, ui/game_ui.gd, game/data/village.json, tools/build_village.py",
+   "next_action": "Build 22: implement on wip/b22-market, lead integrates on wip/build22"
   },
   {
    "id": "GP-CHECKPOINT-1",
@@ -22795,7 +22813,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22834,14 +22852,20 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker C (family and farming); branch: wip/multiplayer-b19 -> wip/b22-family",
+     "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
     }
    ],
-   "assigned_worker": null,
-   "branch": "wip/multiplayer-b19",
+   "assigned_worker": "worker C (family and farming)",
+   "branch": "wip/b22-family",
    "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "next_action": "Build 22: implement on wip/b22-family, lead integrates on wip/build22"
   },
   {
    "id": "GP-GIFT-QUANTITY",
@@ -23394,7 +23418,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23433,11 +23457,16 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (interface); branch: wip/multiplayer-b19 -> wip/b22-ui",
+     "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
     }
    ],
-   "next_action": "P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19",
-   "assigned_worker": null,
-   "branch": "wip/multiplayer-b19",
+   "next_action": "Build 22: implement on wip/b22-ui, lead integrates on wip/build22",
+   "assigned_worker": "worker B (interface)",
+   "branch": "wip/b22-ui",
    "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
    "related": [
     "X20-OPEN-ITEMS"
@@ -23522,7 +23551,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23536,14 +23565,21 @@
      "date": "2026-10-26",
      "change": "parent: None -> X20-OPEN-ITEMS",
      "why": "owner playtest report 2026-10-26, carried into the Expansion 20 scope (record only)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (market); branch: None -> wip/b22-market",
+     "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
     }
    ],
    "related": [
     "X20-OPEN-ITEMS",
     "GP-MARKET-SHELVES"
    ],
-   "next_action": "awaiting the owner's authorization to implement (recorded only)",
-   "notes": "The owner wrote 'not too close'; read as 'now too close' (spacing worse with the new sprite). Asked the owner to confirm."
+   "next_action": "Build 22: implement on wip/b22-market, lead integrates on wip/build22",
+   "notes": "The owner wrote 'not too close'; read as 'now too close' (spacing worse with the new sprite). Asked the owner to confirm.",
+   "assigned_worker": "worker A (market)",
+   "branch": "wip/b22-market"
   },
   {
    "id": "GP-MINE-WOOD-FRAME",
@@ -23562,7 +23598,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23576,6 +23612,11 @@
      "date": "2026-10-26",
      "change": "parent: None -> X20-OPEN-ITEMS",
      "why": "owner playtest report 2026-10-26, carried into the Expansion 20 scope (record only)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (interface); branch: None -> wip/b22-ui",
+     "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
     }
    ],
    "related": [
@@ -23583,8 +23624,10 @@
     "MIN-H",
     "MIN-F"
    ],
-   "next_action": "awaiting the owner's authorization to implement (recorded only)",
-   "notes": "Lead reading, unconfirmed: the frame is most likely the level's way out (a portal door) or a timber support (MIN-F); asked the owner whether one was placed."
+   "next_action": "Build 22: implement on wip/b22-ui, lead integrates on wip/build22",
+   "notes": "Lead reading, unconfirmed: the frame is most likely the level's way out (a portal door) or a timber support (MIN-F); asked the owner whether one was placed.",
+   "assigned_worker": "worker B (interface)",
+   "branch": "wip/b22-ui"
   },
   {
    "id": "GP-PACK-DETAIL-FIT",
@@ -23998,7 +24041,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -24012,6 +24055,11 @@
      "date": "2026-10-26",
      "change": "parent: None -> X20-OPEN-ITEMS",
      "why": "owner playtest report 2026-10-26, carried into the Expansion 20 scope (record only)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (interface); branch: None -> wip/b22-ui",
+     "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
     }
    ],
    "related": [
@@ -24020,7 +24068,9 @@
     "GP-GIFT-QUANTITY",
     "GP-INPUT-CONSIST"
    ],
-   "next_action": "awaiting the owner's authorization to implement (recorded only)"
+   "next_action": "Build 22: implement on wip/b22-ui, lead integrates on wip/build22",
+   "assigned_worker": "worker B (interface)",
+   "branch": "wip/b22-ui"
   },
   {
    "id": "GP-REPAIR-SOCIAL",
@@ -24332,7 +24382,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -24346,14 +24396,21 @@
      "date": "2026-10-26",
      "change": "parent: None -> X20-OPEN-ITEMS",
      "why": "owner playtest report 2026-10-26, carried into the Expansion 20 scope (record only)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (market); branch: None -> wip/b22-market",
+     "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
     }
    ],
    "related": [
     "X20-OPEN-ITEMS",
     "GP-MARKET-SHELVES"
    ],
-   "next_action": "awaiting the owner's authorization to implement (recorded only)",
-   "notes": "Cause found by the lead (read only): Business.rent() rents free_pitch(), the first free pitch, and ignores the one whose window was used; the window then reopens the chosen pitch, which is not the player's, so its rent view shows 'You already rent a stall.' (game/scripts/core/business.gd rent, ui/stall_window.gd _rent_view, on wip/multiplayer-b19). A defect: a mechanic failing its function."
+   "next_action": "Build 22: implement on wip/b22-market, lead integrates on wip/build22",
+   "notes": "Cause found by the lead (read only): Business.rent() rents free_pitch(), the first free pitch, and ignores the one whose window was used; the window then reopens the chosen pitch, which is not the player's, so its rent view shows 'You already rent a stall.' (game/scripts/core/business.gd rent, ui/stall_window.gd _rent_view, on wip/multiplayer-b19). A defect: a mechanic failing its function.",
+   "assigned_worker": "worker A (market)",
+   "branch": "wip/b22-market"
   },
   {
    "id": "GP-STALL-TABLE-10",
@@ -24492,7 +24549,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -24546,14 +24603,20 @@
      "date": "2026-10-24",
      "change": "title: Anything drawn on a table is a real item that can be taken -> Merchandise previews on tables: a visual preview of what the business offers (no pickup)",
      "why": "owner clarification 2026-10-24 (docs/directives/2026-10-24_build21_scope_freeze.md): preview only, not item pickup"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (market); branch: wip/multiplayer-b19 -> wip/b22-market",
+     "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
     }
    ],
-   "assigned_worker": null,
-   "branch": "wip/multiplayer-b19",
+   "assigned_worker": "worker A (market)",
+   "branch": "wip/b22-market",
    "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "next_action": "Build 22: implement on wip/b22-market, lead integrates on wip/build22"
   },
   {
    "id": "GP-TARGET-ART-MATCH",
@@ -24794,7 +24857,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -24808,6 +24871,11 @@
      "date": "2026-10-26",
      "change": "parent: None -> X20-OPEN-ITEMS",
      "why": "owner playtest report 2026-10-26, carried into the Expansion 20 scope (record only)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (interface); branch: None -> wip/b22-ui",
+     "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
     }
    ],
    "related": [
@@ -24815,7 +24883,9 @@
     "GP-CRIME-PURSUIT",
     "GP-REPAIR-SOCIAL"
    ],
-   "next_action": "awaiting the owner's authorization to implement (recorded only)"
+   "next_action": "Build 22: implement on wip/b22-ui, lead integrates on wip/build22",
+   "assigned_worker": "worker B (interface)",
+   "branch": "wip/b22-ui"
   },
   {
    "id": "GP-WHEAT-PICKED",
@@ -24974,7 +25044,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -24988,6 +25058,11 @@
      "date": "2026-10-26",
      "change": "parent: None -> X20-OPEN-ITEMS",
      "why": "owner playtest report 2026-10-26, carried into the Expansion 20 scope (record only)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (interface); branch: None -> wip/b22-ui",
+     "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
     }
    ],
    "related": [
@@ -24995,8 +25070,10 @@
     "WIKI-01",
     "UI-WIKI-01"
    ],
-   "next_action": "awaiting the owner's authorization to implement (recorded only)",
-   "notes": "Lead finding: game/scripts/core/wiki.gd builds recipe lines from station and inputs only; recipes.json carries tools in a 'tool' field (dress_stone: mallet and chisel), which the page never shows."
+   "next_action": "Build 22: implement on wip/b22-ui, lead integrates on wip/build22",
+   "notes": "Lead finding: game/scripts/core/wiki.gd builds recipe lines from station and inputs only; recipes.json carries tools in a 'tool' field (dress_stone: mallet and chisel), which the page never shows.",
+   "assigned_worker": "worker B (interface)",
+   "branch": "wip/b22-ui"
   },
   {
    "id": "HEALTH-01",
@@ -30998,7 +31075,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -31037,15 +31114,21 @@
      "date": "2026-10-24",
      "change": "acceptance: Life.births lets a female player whose partner is a male player (in play or away) have children under the existing rules (ages, chances, interval), both recorded as parents; same-sex player couples never get births; player adoption (Guardianship.player_adopt) records both spouses as parents and joins the child to the couple's household, for any player couple; children persist and keep both parent links through save, load, host restart and reconnect; host-authoritative and deterministic; G0 unchanged; tests for each case, Male and female player couples may also adopt; adoption is an active action, never automatic, Biological birth creates a new person; adoption moves an existing child into the family without increasing the population, Both spouses are recognized as parents of every child, biological or adopted, Player marriage and couple-household records, adoptive-parent links and a save migration from save version 22 (the data-model change that deferred it); related: MP-ADOPTION-AGENCY, X20-OPEN-ITEMS",
      "why": "owner rules restated in the Expansion 20 reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md); no new family system; the adoption agency is separate (MP-ADOPTION-AGENCY)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker C (family and farming); branch: wip/multiplayer-b19 -> wip/b22-family",
+     "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
     }
    ],
-   "assigned_worker": null,
-   "branch": "wip/multiplayer-b19",
+   "assigned_worker": "worker C (family and farming)",
+   "branch": "wip/b22-family",
    "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
    "related": [
     "MP-ADOPTION-AGENCY",
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "next_action": "Build 22: implement on wip/b22-family, lead integrates on wip/build22"
   },
   {
    "id": "MP-Q-PLAYER-CHILDREN",
@@ -57441,10 +57524,15 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "owner authorized execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 first, then substantive Expansion 20 implementation; the 2026-10-24 hold is superseded"
     }
    ],
    "umbrella": true,
-   "next_action": "awaiting the owner's explicit authorization to begin Expansion 20 implementation (record only, 2026-10-24)"
+   "next_action": "Build 22 in development (wip/build22); Expansion 20 implementation begins after Build 22's private packages (owner 2026-10-26)"
   },
   {
    "id": "XAUDIT-01",
