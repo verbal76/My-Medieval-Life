@@ -309,6 +309,35 @@ func _ready() -> void:
 										found = true
 										break
 				print("steps shot: found=", found)
+			"lockpick", "lockpick_phone":
+				# GP-LOCKPICK: the minigame on a level 2 lock, two pins set, one wobbling, one rising, frozen for the picture
+				if shot_panel == "lockpick_phone":
+					settings.phone = true
+					ui.fit_safe_area()
+				ui.set_scheme("touch" if shot_panel == "lockpick_phone" else "gamepad")
+				world.player.inv.add("lockpick", 2)
+				for bid in world.buildings:
+					var lu: Array = world.chests.units_in(str(bid)).filter(func(cu): return world.chests.info(cu).access == "foreign")
+					if str(world.buildings[bid].type) == "house" and not lu.is_empty():
+						world.chests.locks[lu[0].id] = {"level": 2, "locked": true}
+						world.player.pos = lu[0].at + Vector2(0, 1)
+						follow_at = _in_view(world.player.pos * T)
+						pick_lock(str(lu[0].id))
+						var lw: LockpickWindow = ui.panel_body.find_child("LockpickWindow", true, false)
+						var lg := lw.play
+						var caught := 0
+						while lg.result == "" and lg.t < 60.0:
+							lg.step(1.0 / 60.0)
+							for i in lg.n:
+								if lg.state[i] == LockpickPlay.WOBBLE and lg.t_in[i] >= 0.3 and caught < 2:
+									lg.press(i)
+									caught += 1
+							if caught >= 2 and lg.state.has(LockpickPlay.WOBBLE) and lg.state.has(LockpickPlay.RISING):
+								break
+						lw.set_process(false)
+						lw.art.queue_redraw()
+						lw._status()
+						break
 			"mine_frame", "mine_exit":
 				# GP-MINE-WOOD-FRAME: below in the gallery, a timber support on the floor cell under a seam in the wall (the
 				# owner's screenshot), and another in the open floor; mine_exit: the player at the way out
@@ -2994,18 +3023,31 @@ func _chest_target(u: Dictionary) -> Dictionary:
 	return {"kind": "chest", "id": u.id, "label": "Open %s (theft)" % what, "theft": world.chest_is_theft(u)}
 
 
-## Pick a locked chest's lock (PL2-002): takes game time, may snap the pick, and may be seen.
+## Pick a locked chest's lock (PL2-002): GP-LOCKPICK, the pin-tumbler minigame (LockpickWindow) in place of the passive
+## meter. The world is not paused (it never was: the meter took game time). Stopping, or the window closing for any other
+## reason, makes no attempt and leaves the lock as it was; the game's end makes the one attempt, with the existing rules
+## (World.player_pick_lock: open until dawn, the pick may snap on a failure, the witnesses, the crime, Stealth xp).
 func pick_lock(uid: String) -> void:
 	var u := world.chests.unit(uid)
 	var why := world.chests.cannot_pick(u)
 	if why != "":
 		ui.message(why)
 		return
-	var secs := world.chests.pick_minutes(u) / float(GameData.b("game_minutes_per_second"))
-	ui.hide_all()
-	start_action("Picking the lock", secs, func():
-		var r: Dictionary = world.player_pick_lock(u)          # the try and its xp are core's (DVW-A12 R6)
-		ui.message(r.text, 6.0)
+	cancel_action("")
+	var lk: Dictionary = world.chests.lock_of(u)
+	var game := LockpickPlay.from(int(lk.level), world.chests.pick_chance(u), absi(hash(uid)))
+	ui._open("lockpick", "Picking the lock: %d pins" % game.n, false)
+	var win := LockpickWindow.new().setup(game, ui.scheme)
+	win.sounds = func(id: String): audio.play_sfx(id)
+	ui.panel_body.add_child(win)
+	ui.panel_back = win.stop_now                # X, Esc and the pad's Menu stop it
+	win.stopped.connect(func():
+		ui.hide_all()
+		ui.message("You stop. The lock is as it was."))
+	win.finished.connect(func(res: String):
+		var r: Dictionary = world.player_pick_lock(u, res)     # the try and its xp are core's (DVW-A12 R6); the host's in a shared world
+		ui.hide_all()
+		ui.message(str(r.text), 6.0)
 		if r.result == "open":
 			ui.show_chest(uid))
 

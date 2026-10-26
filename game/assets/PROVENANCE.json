@@ -2081,6 +2081,48 @@
    "sha256": "435ae26fdf1ed3e02630c9a53edc1e5f96d1cd1fa51965f67da4b1699bf2483f"
   },
   {
+   "file": "assets/prompts/keyboard_1.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_1.png",
+   "transform": "copied unchanged",
+   "sha256": "78450dc5650646422a582f7e146377f651301ad5853172d4c03cad76a3a03894"
+  },
+  {
+   "file": "assets/prompts/keyboard_2.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_2.png",
+   "transform": "copied unchanged",
+   "sha256": "ba5483497652bac89efc99b2cfe3e8c7adcf8be6a0cb8283a01d92d8b66ecf7c"
+  },
+  {
+   "file": "assets/prompts/keyboard_3.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_3.png",
+   "transform": "copied unchanged",
+   "sha256": "927dd6e2ef540b5adaf30c0db41a78f3188bf765b1439d0e4ebad9143d3392d6"
+  },
+  {
+   "file": "assets/prompts/keyboard_4.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_4.png",
+   "transform": "copied unchanged",
+   "sha256": "a87afcc608eacc42de09421edc1b1cc5403e4c50454dd71e4b92b8646a5297c6"
+  },
+  {
+   "file": "assets/prompts/keyboard_5.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_5.png",
+   "transform": "copied unchanged",
+   "sha256": "fbb9a5562a04a1aef13d55b63351912f25e3036e3b9496cfb03fcc00ef860465"
+  },
+  {
+   "file": "assets/prompts/keyboard_6.png",
+   "source": "kenney_input-prompts_1.5.zip",
+   "member": "Keyboard & Mouse/Double/keyboard_6.png",
+   "transform": "copied unchanged",
+   "sha256": "9ae73b6265b4ff54a4dd6da671f75b47ffd6e774c91906c4b252b114a4ddf403"
+  },
+  {
    "file": "assets/prompts/keyboard_a.png",
    "source": "kenney_input-prompts_1.5.zip",
    "member": "Keyboard & Mouse/Double/keyboard_a.png",
