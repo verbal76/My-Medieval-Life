@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (35)
+## Workers and task branches (41)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -13,11 +13,17 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | FIX-D1D2 | 20 | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) | wip/expansion19-preparation, wip/expansion20-preparation |
+| GP-ANDROID-ACTION-BUTTONS | 20 | IN DEVELOPMENT | worker E (Android usability) | wip/x20-android |
+| GP-ANDROID-HUD-SCALE | 20 | IN DEVELOPMENT | worker E (Android usability) | wip/x20-android |
+| GP-ANDROID-RECENTER | 20 | IN DEVELOPMENT | worker E (Android usability) | wip/x20-android |
+| GP-ANDROID-USE-TALK-TARGETING | 20 | IN DEVELOPMENT | worker E (Android usability) | wip/x20-android |
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-BUSINESS-COURIER | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
 | GP-BUSINESS-DESK | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-FARMER-TENDING | 20 | IMPLEMENTED ON TASK BRANCH | worker C (family and farming) | wip/b22-family |
+| GP-INTERACTABLE-OUTLINES | 20 | IN DEVELOPMENT | worker E (Android usability) | wip/x20-android |
+| GP-INTERACTION-PROMPT-LIFECYCLE | 20 | IN DEVELOPMENT | worker E (Android usability) | wip/x20-android |
 | GP-LOCKPICK | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | GP-MARKET-SPACING | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
 | GP-MINE-WOOD-FRAME | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |

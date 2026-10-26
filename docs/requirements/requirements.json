@@ -14308,6 +14308,11 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> economy_foundation_test 66, world_test 339, migration_test 92, save_transfer_test 21, conservation_test 8, unittest 115; sim_gate identical; test_commit: None -> 4d9bc05; commits + 1efb59f; commits + 4d9bc05; next_action",
      "why": "foundation built (1efb59f, 4d9bc05): reservation record, economic event record, actor resolver; economy.json enabled false; economy_foundation_test 66, world 339, migration 92, save_transfer 21, conservation 8, unittest 115; gate identical"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "Expansion 20 batch X20-B1: the foundation merged onto the Build 22 line on wip/expansion20 (0b5287c), disabled; validation running"
     }
    ],
    "assigned_worker": "X20 foundation worker (Sonnet subagent)",
@@ -19115,6 +19120,11 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "Expansion 20 batch X20-B1: the foundation merged onto the Build 22 line on wip/expansion20 (0b5287c), disabled; validation running"
     }
    ],
    "assigned_worker": "repair workers (Sonnet subagents)",
@@ -22144,7 +22154,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22153,6 +22163,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E (Android usability); branch: None -> wip/x20-android",
+     "why": "Expansion 20 batch X20-B2 (owner authorization 2026-10-26)"
     }
    ],
    "related": [
@@ -22162,7 +22177,9 @@
    "design": "SPECIFIED",
    "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
    "playtest": "Android phone",
-   "notes": "Refines GP-ACTIONBAR (two right-side columns, implemented in Builds 20/21); it does not replace or reopen it."
+   "notes": "Refines GP-ACTIONBAR (two right-side columns, implemented in Builds 20/21); it does not replace or reopen it.",
+   "assigned_worker": "worker E (Android usability)",
+   "branch": "wip/x20-android"
   },
   {
    "id": "GP-ANDROID-HUD-SCALE",
@@ -22183,7 +22200,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22192,6 +22209,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E (Android usability); branch: None -> wip/x20-android",
+     "why": "Expansion 20 batch X20-B2 (owner authorization 2026-10-26)"
     }
    ],
    "related": [
@@ -22202,7 +22224,9 @@
    "effort": "XS",
    "design": "SPECIFIED",
    "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone"
+   "playtest": "Android phone",
+   "assigned_worker": "worker E (Android usability)",
+   "branch": "wip/x20-android"
   },
   {
    "id": "GP-ANDROID-RECENTER",
@@ -22223,7 +22247,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22232,6 +22256,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E (Android usability); branch: None -> wip/x20-android",
+     "why": "Expansion 20 batch X20-B2 (owner authorization 2026-10-26)"
     }
    ],
    "related": [
@@ -22241,7 +22270,9 @@
    "effort": "S",
    "design": "SPECIFIED",
    "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone (two display sizes)"
+   "playtest": "Android phone (two display sizes)",
+   "assigned_worker": "worker E (Android usability)",
+   "branch": "wip/x20-android"
   },
   {
    "id": "GP-ANDROID-USE-TALK-TARGETING",
@@ -22264,7 +22295,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22273,6 +22304,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E (Android usability); branch: None -> wip/x20-android",
+     "why": "Expansion 20 batch X20-B2 (owner authorization 2026-10-26)"
     }
    ],
    "related": [
@@ -22283,7 +22319,9 @@
    "effort": "M",
    "design": "SPECIFIED",
    "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone, gamepad, keyboard and mouse"
+   "playtest": "Android phone, gamepad, keyboard and mouse",
+   "assigned_worker": "worker E (Android usability)",
+   "branch": "wip/x20-android"
   },
   {
    "id": "GP-ANVIL",
@@ -23417,7 +23455,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23426,6 +23464,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E (Android usability); branch: None -> wip/x20-android",
+     "why": "Expansion 20 batch X20-B2 (owner authorization 2026-10-26)"
     }
    ],
    "related": [
@@ -23434,7 +23477,9 @@
    "effort": "M",
    "design": "SPECIFIED",
    "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone and PC"
+   "playtest": "Android phone and PC",
+   "assigned_worker": "worker E (Android usability)",
+   "branch": "wip/x20-android"
   },
   {
    "id": "GP-INTERACTION-PROMPT-LIFECYCLE",
@@ -23456,7 +23501,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23465,6 +23510,11 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E (Android usability); branch: None -> wip/x20-android",
+     "why": "Expansion 20 batch X20-B2 (owner authorization 2026-10-26)"
     }
    ],
    "related": [
@@ -23474,7 +23524,9 @@
    "effort": "S",
    "design": "SPECIFIED",
    "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone and PC"
+   "playtest": "Android phone and PC",
+   "assigned_worker": "worker E (Android usability)",
+   "branch": "wip/x20-android"
   },
   {
    "id": "GP-INTERIOR-WALLS",
@@ -43678,6 +43730,11 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> judgment_test 217, judgment_personality_test 73, judgment_bonds_test 97, judgment_live_test 142, judgment_guard_save_test 18, relations_test 80 (4a0459f); economy_foundation_test 89, contracts_test 154, credit_test 98, conservation_test 8, world_test 339 (1befd0e); sim_gate identical on both; test_commit: None -> 1befd0e; commits + 4a0459f; commits + 1befd0e; next_action",
      "why": "done: tolerance has one owner (4a0459f, Expansion 19: personality layer, same numbers, old sections migrated, equivalence proven); reservations recognise contract holds (1befd0e, Expansion 20: available = held - holds - reservations); gate identical on both"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "Expansion 20 batch X20-B1: the foundation merged onto the Build 22 line on wip/expansion20 (0b5287c), disabled; validation running"
     }
    ],
    "next_action": "owner confirms: when the personality formula later drives tolerance for a provocation, it replaces the Q13 step rather than adding to it",

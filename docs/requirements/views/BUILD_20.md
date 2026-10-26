@@ -18,10 +18,16 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 78 |
 | Open owner decisions (blocking) | 15 (11) |
 
-## In development (worker assigned) (2)
+## In development (worker assigned) (8)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| GP-ANDROID-ACTION-BUTTONS | Android right-side action controls: compact circular backgrounds, closer to the right edge, glyphs and labels kept | OWNER APPROVED | IN DEVELOPMENT | worker E (Android usability) / wip/x20-android | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | S |
+| GP-ANDROID-HUD-SCALE | Android health and status panel about 15% smaller, with every value kept legible | OWNER APPROVED | IN DEVELOPMENT | worker E (Android usability) / wip/x20-android | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | XS |
+| GP-ANDROID-RECENTER | Android Recenter places the character at the visual centre of the usable gameplay area, not under the health panel | OWNER APPROVED | IN DEVELOPMENT | worker E (Android usability) / wip/x20-android | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | S |
+| GP-ANDROID-USE-TALK-TARGETING | Use prioritises the usable station or object and Talk the nearby character; the current target is clear and selectable | OWNER APPROVED | IN DEVELOPMENT | worker E (Android usability) / wip/x20-android | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | M |
+| GP-INTERACTABLE-OUTLINES | Usable objects nearby show a subtle sprite-silhouette glow; the selected target a brighter one | OWNER APPROVED | IN DEVELOPMENT | worker E (Android usability) / wip/x20-android | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | M |
+| GP-INTERACTION-PROMPT-LIFECYCLE | Contextual prompts ('Use the workbench') clear while the interaction is active and when it closes or the target changes | OWNER APPROVED | IN DEVELOPMENT | worker E (Android usability) / wip/x20-android | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | S |
 | REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | recorder worker (Sonnet subagent) / wip/recorder | TARGETED TESTS PASSED | combined gate on 2d5d49c; then into the Build 19 integration branch with Expansion 19 | design: UNKNOWN | UNKNOWN |
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | run 2 only: 30 days, seeds 1 and 2, on the recorder head with FIX-RECF1 and D3; stop at day 30, a FATAL line or the storage cap | design: UNKNOWN | UNKNOWN |
 
@@ -58,18 +64,12 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | GP-WHEAT-PICKED | Harvested wheat shows as picked, cell by cell | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
 | GP-WIKI-LAYOUT | Encyclopedia laid out like a classic wiki page, on parchment | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
 
-## Ready to proceed now (approved, specified, nothing open blocks it) (9)
+## Ready to proceed now (approved, specified, nothing open blocks it) (3)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | harms lower regard; gossip spreads deeds |  | M |
-| GP-ANDROID-ACTION-BUTTONS | Android right-side action controls: compact circular backgrounds, closer to the right edge, glyphs and labels kept | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | S |
-| GP-ANDROID-HUD-SCALE | Android health and status panel about 15% smaller, with every value kept legible | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | XS |
-| GP-ANDROID-RECENTER | Android Recenter places the character at the visual centre of the usable gameplay area, not under the health panel | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | S |
-| GP-ANDROID-USE-TALK-TARGETING | Use prioritises the usable station or object and Talk the nearby character; the current target is clear and selectable | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | M |
 | GP-BUSINESS-COURIER | Business courier integration: the courier hand-off at a business desk (individually traceable part of GP-BUSINESS-DESK) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker A (market) / wip/b22-market | TARGETED TESTS PASSED | Build 22: implement on wip/b22-market, lead integrates on wip/build22 |  | UNKNOWN |
-| GP-INTERACTABLE-OUTLINES | Usable objects nearby show a subtle sprite-silhouette glow; the selected target a brighter one | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | M |
-| GP-INTERACTION-PROMPT-LIFECYCLE | Contextual prompts ('Use the workbench') clear while the interaction is active and when it closes or the target changes | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | S |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | OWNER APPROVED | PARTIALLY IMPLEMENTED | wip/expansion19-preparation | TARGETED TESTS PASSED | rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c) |  | L |
 
 ## Blocked (open owner decision, unfinished dependency or unsettled design) (39)

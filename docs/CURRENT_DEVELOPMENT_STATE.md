@@ -30,6 +30,10 @@ kept); only worker C bumps the save version (22 -> 23, with migration); worker C
 shared files (main.gd, game_ui.gd) get small localized edits that the lead merges. The SIM-GATE suite runs once, in the release
 workflow on the release commit. Owner amendment 2026-10-26 (`docs/directives/2026-10-26_build22_final_owner_answers_amendment.md`): 14 items, GP-SKILLS-RT added (worker B); all questions answered; player children stay in Build 22 (integrated only after its tests pass).
 
+### In flight (2026-10-26)
+- Build 22 release run 40398771937 on `wip/build22` `b7e1c91` (all Build 22 workers merged; baseline replaced with evidence).
+- Expansion 20: `wip/expansion20` (`.claude/worktrees/x20main`) = Build 22 + Living Economy foundation (X20-B1, `0b5287c`, disabled; validation running); worker E on `wip/x20-android` (`.claude/worktrees/x20-android`): the six Android usability items (X20-B2): GP-ANDROID-RECENTER, GP-ANDROID-HUD-SCALE, GP-ANDROID-ACTION-BUTTONS, GP-ANDROID-USE-TALK-TARGETING, GP-INTERACTABLE-OUTLINES, GP-INTERACTION-PROMPT-LIFECYCLE.
+
 ## Expansion 20 open-items reconciliation (owner, 2026-10-24, record only)
 
 `docs/directives/2026-10-24_expansion20_open_items_reconciliation.md`. Expansion 20 is the umbrella for the outstanding gameplay
