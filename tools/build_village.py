@@ -34,6 +34,21 @@ drawn by the game as a sprite at spawns.campfire, so the camp's tile 5958 (trans
 entry go; the fire's cell stays solid (camp_fire). Its crates and barrels are Shade's whole crate (797) and barrel (358)
 instead of pieces of other objects (3500, 3502, still used by the stalls and the mine yard). Nothing walkable changes.
 
+Generator v15 (GP-BUSINESS-DESK): the sawmill's table with stools (68, 25) is its business desk, a station
+(sawmill_counter, s11, used from (67, 25)) like the armory's counter; nothing drawn or walkable changes.
+
+Generator v16 (Build 22; GP-MARKET-SPACING, owner 2026-10-26: "The booths are too close together. Space them farther apart";
+GP-TABLE-ITEMS): the market is laid out anew for the Craftpix shelf (53 x 43 px over a stall's two cells, standing 6 px below
+them: it overhangs its footprint by 0.65 tile each side and rises 1.3 tiles above it). Two rows of five, 5 tiles apart along a
+row (three walkable cells and 1.7 tiles of open ground between neighbouring shelves) and 5 rows apart (a clear lane of 1.7
+tiles between the front row's customers and the back row's shelves): the north row (y 59) the manor's four pitches, now
+village.json "pitches" (the game drew them from Business.PITCHES before), and the sixth merchant's stall; the south row
+(y 64) the other five merchants' stalls. Ids, kinds and the merchants' order are as before. Trees, boulders, plants and the
+flower beds are laid out with the v15 stalls first, so none of them moves; the market is then moved (relayout_market), every
+new cell checked free. The counters' stations carry "show": the cells of their drawn tables where the goods they offer are
+shown (GP-TABLE-ITEMS): the tavern's counter either side of its ledger (44 and 46, 40), the smithy's (70 and 72, 43), the
+sawmill's table (68, 25), whose drawn plate of food is taken off so the goods show.
+
 Generator v14 (GP-SMITHY-WORKBENCH): the smithy's workbench table is cleared and drawn with a hammer and tongs; the grinding
 wheel is named in spawns (grindstone, its use cell) for sharpening (GP-SHARPEN). Collision unchanged.
 
@@ -606,9 +621,11 @@ class Village:
         self.walkable_override.add((ox + 4, oy + 8))
         return b
 
-    def station(self, kind, use, building=None, at=None):
-        self.ents["stations"].append({"id": f"s{len(self.ents['stations'])}", "type": kind,
-                                      "use": list(use), "at": list(at or use), "building": building})
+    def station(self, kind, use, building=None, at=None, show=None):
+        st = {"id": f"s{len(self.ents['stations'])}", "type": kind, "use": list(use), "at": list(at or use), "building": building}
+        if show:
+            st["show"] = [list(c) for c in show]      # generator v16 (GP-TABLE-ITEMS): where a desk's goods are shown
+        self.ents["stations"].append(st)
 
     # ---- the layout --------------------------------------------------------------------------
     def build(self):
@@ -687,6 +704,7 @@ class Village:
         self.place_boulders()
         self.place_plants()
         self.relay_plots()
+        self.relayout_market()       # generator v16: after everything that avoided the v15 stalls is laid out
         # the plants keep the ids they had before the chapel took ground (a save matches its plants by id)
         self.plant_ids = {(x, y): f"pl{i}" for i, (x, y, t) in enumerate(self.plant_cells())}
         self.add_chapel()
@@ -871,7 +889,7 @@ class Village:
         egg bread."""
         tav = "b2"
         smithy = "b4"
-        self.station("tavern_counter", (42, 41), tav, at=(42, 40))
+        self.station("tavern_counter", (42, 41), tav, at=(42, 40), show=((44, 40), (46, 40)))
         self.station("oven", (53, 48), tav, at=(54, 47))
         self.station("stove", (52, 48), tav, at=(52, 47))
         self.restyle_stove()
@@ -890,9 +908,18 @@ class Village:
         self.ents["spawns"]["grindstone_use"] = [80, 46]
         ox, oy = sawmill["x"], sawmill["y"]
         self.station("sawhorse", (ox + 3, oy + 6), sawmill["id"], at=(ox + 2, oy + 6))
-        self.station("armory_counter", (71, 44), smithy, at=(71, 43))
+        self.station("armory_counter", (71, 44), smithy, at=(71, 43), show=((70, 43), (72, 43)))
         self.station("mine_cart", (self.cart[0] + 1, self.cart[1]), None, at=self.cart)
         self.station("prep", (55, 44), tav, at=(55, 45))     # v7: the kitchen table east of the oven
+        # generator v15 (GP-BUSINESS-DESK, owner: "Just make that the business desk, like in all businesses"): the sawmill's
+        # business desk is its small table with stools (68, 25), already drawn; the carpenters keep it as the smiths keep the
+        # armory's counter (Counters.KEEPERS). A new station id (s11) after the others; nothing drawn or walkable changes.
+        self.station("sawmill_counter", (ox + 3, oy + 5), sawmill["id"], at=(ox + 4, oy + 5), show=((ox + 4, oy + 5),))
+        # generator v16 (GP-TABLE-ITEMS): the plate of food drawn on the sawmill's desk is taken off, so the goods the sawmill
+        # offers show on it (only the drawing changes)
+        for i in range(6):
+            if self.get("below", i, ox + 4, oy + 5) % 100000 == 798:
+                self.put("below", i, ox + 4, oy + 5, -1)
 
     # ---- market, pens, fields, camp, plots --------------------------------------------------------
     def market(self, x0, y0):
@@ -904,6 +931,42 @@ class Village:
             for (dx, dy, t) in ((0, 0, table), (1, 0, CRATE if i % 2 else BARREL)):
                 self.put("below", 0, x + dx, y0 + dy, tile_val(0, t))
             self.ents["stalls"].append({"id": f"stall{i}", "x": x, "y": y0, "use": [x, y0 + 1]})
+
+    # generator v16 (GP-MARKET-SPACING): the market's rows, chosen from the shelf's footprint and the room to walk round it
+    # (module docstring): (id, x, y) for the north row (the manor's pitches and stall5) and the south row (stall0-4).
+    MARKET_STEP = 5
+    MARKET_ROWS = (59, 64)
+    MARKET_X0 = 37
+    PITCHES = (("pitch0", ""), ("pitch2", "tailor"), ("pitch1", ""), ("pitch3", "barber"))
+
+    def relayout_market(self):
+        """Generator v16: move the six merchants' stalls to the new layout and lay out the manor's four pitches
+        (village.json "pitches", drawn and made solid by the game, Business.add_pitches). Each stall's table and
+        crate or barrel go with it; every new cell, use cell and the lane round it must be free ground."""
+        north, south = self.MARKET_ROWS
+        xs = [self.MARKET_X0 + i * self.MARKET_STEP for i in range(5)]
+        stalls = {s["id"]: s for s in self.ents["stalls"]}
+        art = {}
+        for s in self.ents["stalls"]:                    # take the v15 art up
+            art[s["id"]] = [self.get("below", 0, s["x"] + dx, s["y"]) for dx in (0, 1)]
+            for dx in (0, 1):
+                self.put("below", 0, s["x"] + dx, s["y"], -1)
+        place = {f"stall{i}": (xs[i], south) for i in range(5)}
+        place["stall5"] = (xs[4], north)
+        pitches = [{"id": pid, "x": xs[i], "y": north, "use": [xs[i], north + 1], "service": svc}
+                   for i, (pid, svc) in enumerate(self.PITCHES)]
+        trees = {(tr["x"], tr["y"]) for tr in self.ents["trees"]}
+        plants = {(x, y) for (x, y, _) in self.plant_cells()}
+        for sid, (x, y) in sorted(place.items()) + [(p["id"], (p["x"], p["y"])) for p in pitches]:
+            for c in [(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)]:
+                assert not self.has_object(*c) and c not in self.road and c not in trees and c not in plants, \
+                    "market v16: %s at %s is not free" % (sid, c)
+        for sid, (x, y) in place.items():
+            s = stalls[sid]
+            s["x"], s["y"], s["use"] = x, y, [x, y + 1]
+            for dx in (0, 1):
+                self.put("below", 0, x + dx, y, art[sid][dx])
+        self.ents["pitches"] = sorted(pitches, key=lambda p: p["id"])     # in id order, as Business.PITCHES listed them
 
     def field(self, x, y, w, h):
         self.ents["fields"].append({"id": f"f{len(self.ents['fields'])}", "x": x, "y": y, "w": w, "h": h})

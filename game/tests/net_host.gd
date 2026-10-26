@@ -18,6 +18,7 @@ var max_players := 2
 var census := {}          # MP Batch B: {coins, goods} taken on demand, at load and after the last save
 var storm := 0.0          # MP Batch B: seconds left of saving every frame (a guest joining mid-save)
 var saves := 0
+var orphan_id := -1       # MP-PLAYER-FAMILY: the child family_orphan made
 
 
 func _init() -> void:
@@ -205,6 +206,52 @@ func _commands() -> void:
 		"kill_guest":
 			for id in main.net.by_peer:
 				w.damage_player(99999.0, "a test", w.player_by_pid(int(main.net.by_peer[id])))
+		"family_setup":                              # MP-PLAYER-FAMILY: the host a man of 25 with a house of his own, the guest beside him
+			var hp := w.host_player()
+			hp.sex = "male"
+			hp.born = Life.born_for_age(25.0, w.minutes)
+			var bids: Array = w.buildings.keys()
+			bids.sort()
+			for pass_ in 2:                          # a house nobody lives in first, else any house with beds
+				for bid in bids:
+					var b: Dictionary = w.buildings[bid]
+					if hp.home == "" and str(b.type) == "house" and w.construction.beds_in(str(bid)) >= 2 and (pass_ == 1 or w.household_in(str(bid)) < 0):
+						w.set_owner(b, World.PLAYER)
+						w.set_tenant(b, "")
+						hp.home = str(bid)
+			for id in main.net.by_peer:
+				var gp: PlayerState = w.player_by_pid(int(main.net.by_peer[id]))
+				gp.sex = str(c.get("sex", "female"))
+				gp.born = hp.born
+				gp.pos = hp.pos + Vector2(1, 0)
+				main.net.rpc_id(id, "s_correct", gp.pos)
+				main.net.rpc_id(id, "s_self", gp.to_dict())
+		"family_accept":                             # the host accepts the guest's offer (MP-D8)
+			for o in w.offers_to(w.host_player()):
+				w.player_answer(int(o.id), true)
+			Life.sync_couple_homes(w)
+		"family_birth":                              # a birth to the couple by Life.birth (the chance of Life.births is a test's patience)
+			var gq: PlayerState = w.player_of_id(w.host_player().partner)
+			var hh := Life.couple_household(w, w.host_player(), gq)
+			var mom: PlayerState = gq if gq.sex == "female" else w.host_player()
+			var dad: PlayerState = w.host_player() if mom == gq else gq
+			if hh >= 0:
+				Life.birth(w, mom, dad, hh)
+		"family_orphan":                             # a child whose parents die, taken in by strangers: one the couple may adopt
+			for hh2 in w.households:
+				var ms: Array = w.brain._members(int(hh2.id))
+				if int(hh2.id) < 3 or Life.is_couple(hh2) or not ms.any(func(o: NPC) -> bool: return o.role == "child"):
+					continue
+				var kid: NPC = ms.filter(func(o: NPC) -> bool: return o.role == "child")[0]
+				if not Life.parent_ids(kid).all(func(pid): return int(pid) < 0 or w.npc(int(pid)) == null or ms.has(w.npc(int(pid))) or not w.npc(int(pid)).alive):
+					continue                             # a parent living elsewhere would keep the child
+				for o: NPC in ms:
+					if o.alive and o.role != "child":
+						w.kill(o, "fever")
+				var tier := Guardianship.place(w, kid)
+				if tier in ["villager", "clan"]:            # no kin of theirs cares for the child: the couple may take them in
+					orphan_id = kid.id
+					break
 
 
 func _status() -> void:
@@ -216,7 +263,7 @@ func _status() -> void:
 			"away": p.away, "host": w.is_host(p), "ref": ref, "key": p.net_key,
 			"alive": p.alive, "line": p.line, "skills": p.skills.duplicate(), "crimes": p.crimes.size(), "case": (w.justice.case_of(ref).get("crimes", []) as Array).size(),
 			"killings": w.relations.killings_of(ref), "jtag": _tagged(w, ref), "resting": p.rest_until >= 0.0, "quests": p.quests.size(),
-			"carts": w.carts.of(ref).size(), "id": w.person_id(p), "partner": p.partner}
+			"carts": w.carts.of(ref).size(), "id": w.person_id(p), "partner": p.partner, "children": p.children.duplicate()}
 	var connected := []
 	for id in main.net.by_peer:
 		connected.append(int(main.net.by_peer[id]))
@@ -236,12 +283,25 @@ func _status() -> void:
 		"running": main.running, "troughs": troughs, "seq": last_seq, "players": players, "connected": connected, "rejected": main.net.rejected,
 		"applied": main.net.applied, "host_pid": w.host_player().pid, "host_pos": [w.host_player().pos.x, w.host_player().pos.y],
 		"minutes": w.minutes, "seed": w.seed, "plants": plants, "coin_leak": w.total_coins() - coins0 - c_in,
-		"census": census, "saves": saves, "storm": storm > 0.0, "newcomers": int(w.stats.get("player_newcomers", 0)), "coin_sources": w.coin_sources}
+		"census": census, "saves": saves, "family": _family(w), "orphan": orphan_id, "storm": storm > 0.0, "newcomers": int(w.stats.get("player_newcomers", 0)), "coin_sources": w.coin_sources}
 	var tmp := dir + "status.tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	f.store_string(JSON.stringify(d))
 	f.close()
 	DirAccess.rename_absolute(ProjectSettings.globalize_path(tmp), ProjectSettings.globalize_path(dir + "status.json"))
+
+
+## MP-PLAYER-FAMILY: the couples' households and every child of a player (its parents, adoptive parents, household), and the population.
+func _family(w: World) -> Dictionary:
+	var hs := []
+	for hh in w.households:
+		if hh.has("couple"):
+			hs.append({"id": int(hh.id), "couple": hh.couple, "members": hh.members, "home": str(hh.home), "family": str(hh.family)})
+	var kids := {}
+	for n: NPC in w.npcs:
+		if Life.is_player_id(n.mother) or Life.is_player_id(n.father) or not n.adoptive.is_empty():
+			kids[str(n.id)] = {"mother": n.mother, "father": n.father, "adoptive": n.adoptive, "household": n.household, "alive": n.alive}
+	return {"households": hs, "kids": kids, "npcs": w.npcs.size(), "living": w.npcs.filter(func(o: NPC) -> bool: return o.alive).size()}
 
 
 ## Every good in the world, over every holder (the census of the economy simulation's ledger; every player's pack and chest).

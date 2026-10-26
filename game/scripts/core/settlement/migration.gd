@@ -330,8 +330,8 @@ static func _house(w: World, ms: Array, prefer_h := -1, prefer_home := "", host_
 		return int(nh.id)
 	var host := -1                                   # no house to lease: a room with the smallest household
 	for hh in w.households:
-		if hh.get("ended", false) or int(hh.id) == int(nh.id) or not w.buildings.has(str(hh.home)) or w.brain._members(int(hh.id)).is_empty():
-			continue
+		if hh.get("ended", false) or int(hh.id) == int(nh.id) or not w.buildings.has(str(hh.home)) or w.brain._members(int(hh.id)).is_empty() or Life.is_couple(hh):
+			continue                                 # (never in a player couple's home: MP-PLAYER-FAMILY)
 		if host < 0 or w.brain._members(int(hh.id)).size() < w.brain._members(host).size():
 			host = int(hh.id)
 	w.households.erase(nh)
@@ -357,7 +357,7 @@ static func _can_house(w: World, purse: int, need_home: bool) -> bool:
 	if need_home:
 		return false
 	for hh in w.households:
-		if not hh.get("ended", false) and w.buildings.has(str(hh.home)) and not w.brain._members(int(hh.id)).is_empty():
+		if not hh.get("ended", false) and w.buildings.has(str(hh.home)) and not w.brain._members(int(hh.id)).is_empty() and not Life.is_couple(hh):
 			return true
 	return false
 
@@ -447,8 +447,8 @@ static func _hunger_out(w: World, s: OffMapSettlement) -> bool:
 	var best := -1
 	var best_days := INF
 	for h in range(3, w.households.size()):
-		if w.households[h].get("ended", false):
-			continue
+		if w.households[h].get("ended", false) or Life.is_couple(w.households[h]):
+			continue                                     # a player couple's children do not leave without them (MP-PLAYER-FAMILY)
 		var ms: Array = w.brain._members(h)
 		if ms.is_empty() or _any_barred(w, ms):
 			continue

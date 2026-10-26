@@ -3299,6 +3299,25 @@ func show_sleeper(n: NPC) -> void:
 	_button("Let them sleep", hide_all)
 
 
+## GP-BUSINESS-DESK: a business's desk (Main._desk_target): who is at it, then one button for each thing it offers now (trade
+## with the keeper or ring for service, the courier), each done as Use on it would (Main.use_option).
+func show_desk(t: Dictionary) -> void:
+	var d: Dictionary = t.desk
+	_open("desk", "The desk: %s" % str(d.name), main.paused)
+	if str(t.get("status", "")) != "":
+		_label(str(t.status))
+	for o in t.options:
+		var opt: Dictionary = o
+		if str(opt.get("kind", "")) == "info" and str(t.get("status", "")) != "":
+			continue                                   # nothing to do there: the first line already says why
+		var b := _button(str(opt.get("label", "")), func():
+			hide_all()
+			main.use_option(opt))
+		b.name = "Desk_" + str(opt.kind)
+	_button("Leave", hide_all)
+	compact(620)
+
+
 ## The merchant's window. `pick` ({id, mode: "buy"|"sell", price}) opens the quantity control at the top
 ## for that item (PL1-03); Cancel just redraws the window, so it changes nothing.
 func show_trade(n: NPC, pick := {}) -> void:

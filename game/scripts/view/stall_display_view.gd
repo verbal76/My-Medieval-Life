@@ -20,6 +20,7 @@ var icons := {}
 var actors: Node2D                # GP-MARKET-SHELVES: where the shelves go (y-sorted with the characters)
 var map_view: MapView
 var shelves := {}                 # stall id -> StallShelf
+var tables_shown: Array = []      # GP-TABLE-ITEMS: the tavern's offer the tables were last drawn for
 
 
 func setup(w: World, actor_node: Node2D = null, view: MapView = null) -> void:
@@ -38,14 +39,18 @@ func _process(dt: float) -> void:
 
 
 func refresh() -> void:
-	if world == null or world.business == null or world.brain == null:     # (a world being replaced is disposed: no brain)
-		return
-	var now: Array = world.business.displays()
+	if world == null or world.business == null or world.disposed:
+		return                        # a world thrown away (a new game, a load, leaving a shared world, quitting) is not read
+	var now: Array = world.business.displays() + world.business.desk_previews()     # GP-TABLE-ITEMS: and the desks' tables
 	if now != shown:
 		shown = now
 		queue_redraw()
 	if actors != null:
 		_refresh_shelves()
+	var offer: Array = world.table_offer()               # GP-TABLE-ITEMS: the tavern's tables follow what it serves
+	if offer != tables_shown:
+		tables_shown = offer
+		world.show_tables()
 
 
 func _refresh_shelves() -> void:

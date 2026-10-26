@@ -49,6 +49,7 @@ var next_band_id := BAND_START
 var people := {}
 var identity_report := {}
 var tie_history := {}
+var disposed := false               # set by dispose(): the world is being thrown away; views stop reading it
 var load_error := ""                # set by load_dict when the save cannot be brought up to date (the caller refuses it and leaves the file)
 var households: Array = []         # {id, family, home, members, pantry}
 var buildings := {}                # id -> dict
@@ -838,7 +839,8 @@ func mirror(path: String, c: Callable, args: Array) -> Variant:
 ## Owner decision MP-D8 (2026-10-24): marriage between two players, and every other action that needs both of them, needs both
 ## players' consent. One player offers (player_offer), the other answers (player_answer); nothing happens until they accept, and the
 ## offer is checked again then. Kinds: "partner" (the two become partners, Life's rules for a pair: both living adults of partnering
-## age, neither partnered, not kin; no feast and no children are made for a pair of players: births need a villager parent, Life.births)
+## age, neither partnered, not kin; no feast; the couple founds its household, where a man and a woman have children by Life.births' rules
+## and any couple raises a child it takes in, Guardianship.player_adopt: MP-PLAYER-FAMILY)
 ## and "gift" (goods handed from one pack to the other, their stolen marks with them). An offer lapses at the end of its day, or when
 ## either player leaves play. Saved under the optional key "player_offers".
 var offers: Array = []              # {id, kind, from (ref), to (ref), item, qty, day}
@@ -936,6 +938,7 @@ func player_answer(id: int, accept: bool, actor: PlayerState = null) -> String:
 			Life.kin_version += 1
 			stat("partnerships")
 			stat("player_partnerships")
+			Life.found_couple_household(self, a, b)          # MP-PLAYER-FAMILY (save 23): the couple's household, for the children they raise
 			note("%s %s and %s %s become partners." % [a.name, a.family, b.name, b.family])
 		"gift":
 			var item := str(o.item)
@@ -4410,11 +4413,29 @@ func serve_tables() -> void:
 
 
 ## Draw each table's dish while it has food on it, and the bare table when it has none (the tile
-## Shade drew there, recorded in village.json, in its layer: tile_changed kind = that layer).
+## Shade drew there, recorded in village.json, in its layer: tile_changed kind = that layer). GP-TABLE-ITEMS (owner clarification
+## 2026-10-24: tables show a visual preview of what the business offers, not pickup): a bare table still shows its dish while the
+## tavern offers that dish (table_offer), a look only: there is nothing on it to take, and it is bought at the counter.
 func show_tables() -> void:
+	var offer := table_offer()
 	for c in containers:
 		if c.kind == "table" and c.has("tile"):
-			tile_changed.emit(Vector2i(c.x, c.y), str(c.layer), int(c.tile) if c.inv.total() > 0 else -1)
+			tile_changed.emit(Vector2i(c.x, c.y), str(c.layer), int(c.tile) if c.inv.total() > 0 or offer.has(str(c.dish)) else -1)
+
+
+## GP-TABLE-ITEMS: what the tavern offers now (its keeper's goods for sale, NPCBrain.for_sale), sorted; [] with no keeper.
+func table_offer() -> Array:
+	var k := tavern_keeper()
+	if k == null or brain == null:
+		return []
+	var out: Array = brain.for_sale(k)
+	out.sort()
+	return out
+
+
+## GP-TABLE-ITEMS: whether table container `c`, with nothing on it, shows the dish the tavern offers (a preview only).
+func table_previews(c: Dictionary) -> bool:
+	return c.kind == "table" and c.inv.total() == 0 and table_offer().has(str(c.get("dish", "")))
 
 
 ## Food on the tavern's tables (for the village's food reckoning).
@@ -5070,7 +5091,7 @@ func buy_plot(p: Dictionary, actor: PlayerState = null) -> bool:
 const MANOR := "manor"
 const PLAYER := "player"
 const ANIMAL_LOOT_DAYS := 3.0     # a carcass left lying spoils after this many days
-const SAVE_VERSION := 22          # 22: MP Batch C (per-player identities): a guest is its own person wherever a villager's id would stand (ties, family links, judgment facts, NPC targets and reports, feasts): the negative of its line's pid (World.person_id; the host's line stays -2, ID-D1), so an older build (which reads -2 only) must not open it; a 21 save is read with everything it holds as it was (World.migrate_21_to_22: what save 21 kept under -2 stays the host's line's, including ties and judgment a guest made then, its facts still told apart by their "by:player:<pid>" tag; a villager's report on a guest names the guest's own id); nothing is dropped; 21: MP Batch A1 (multiplayer foundation): the optional World key "players" {host: the host's pid, by_pid: {pid: PlayerState dict}} lists every player character (the host's is also written, as always, in "player", which stays the host's authoritative record, so an older build reads the save and ignores the new key), and a PlayerState carries "map_level" when it is not on the surface (the host's level stays in "underground"); a 20 or older save has no "players" key and loads with its "player" as the only player (no migration of data, nothing dropped); 20: ID-01 (identity foundation): World "next_person_id" (the village counter, below 1,000,000, never lowered), "next_band_id" (the settlement and player band from 1,000,000, never lowered; ID-D2 option B) and "people" (the register: id -> name, family, sex, born, mother, father, where, since), optional "identity_report" and "tie_history"; PlayerState "pid"; a settlement member's sixth entry [5] is its person id ([4] is {} for a member born there); NPC "became_player" (a child who became the player keeps the record, alive false). A 19 or older save is given all of it once on load (Identity.upgrade: deterministic, nothing merged, deleted or reassigned, ambiguity written to identity_report); a save that cannot be is refused and left as it is; 19+: Build 18 TRADE-CREDIT adds the optional key "credit" (recorded debts; absent: none, no version change); Build 18 MIGRATE-18 adds optional keys: inside "regions" the log of moves between the village and the settlements ("moves", "move_counts", "suits"), each settlement's "tax" and "journal", optional household and business fields (low, rate, landless) and a fifth member entry for a person who came from the village, and the villager key "away" (absent: nobody has moved, no tax state, no journal: no version change); Build 18 REG-COURIER-01 adds the optional key "couriers" (booths, routes, deliveries on the road, trade contacts; absent: none in flight, no version change); Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 23          # 23: MP-PLAYER-FAMILY (owner 2026-10-24): a player couple's household (a household with the key "couple", the two players' person ids, the host's line first; its members are the couple's children) and NPC "adoptive" (the person ids of the couple who took the child in; mother and father stay as born). A 22 save is read with everything it holds as it was and each pair of married players is given its household on load (World.migrate_22_to_23, Life.ensure_couple_households); an older build must not open a 23, which it would read as a household with no adult; 22: MP Batch C (per-player identities): a guest is its own person wherever a villager's id would stand (ties, family links, judgment facts, NPC targets and reports, feasts): the negative of its line's pid (World.person_id; the host's line stays -2, ID-D1), so an older build (which reads -2 only) must not open it; a 21 save is read with everything it holds as it was (World.migrate_21_to_22: what save 21 kept under -2 stays the host's line's, including ties and judgment a guest made then, its facts still told apart by their "by:player:<pid>" tag; a villager's report on a guest names the guest's own id); nothing is dropped; 21: MP Batch A1 (multiplayer foundation): the optional World key "players" {host: the host's pid, by_pid: {pid: PlayerState dict}} lists every player character (the host's is also written, as always, in "player", which stays the host's authoritative record, so an older build reads the save and ignores the new key), and a PlayerState carries "map_level" when it is not on the surface (the host's level stays in "underground"); a 20 or older save has no "players" key and loads with its "player" as the only player (no migration of data, nothing dropped); 20: ID-01 (identity foundation): World "next_person_id" (the village counter, below 1,000,000, never lowered), "next_band_id" (the settlement and player band from 1,000,000, never lowered; ID-D2 option B) and "people" (the register: id -> name, family, sex, born, mother, father, where, since), optional "identity_report" and "tie_history"; PlayerState "pid"; a settlement member's sixth entry [5] is its person id ([4] is {} for a member born there); NPC "became_player" (a child who became the player keeps the record, alive false). A 19 or older save is given all of it once on load (Identity.upgrade: deterministic, nothing merged, deleted or reassigned, ambiguity written to identity_report); a save that cannot be is refused and left as it is; 19+: Build 18 TRADE-CREDIT adds the optional key "credit" (recorded debts; absent: none, no version change); Build 18 MIGRATE-18 adds optional keys: inside "regions" the log of moves between the village and the settlements ("moves", "move_counts", "suits"), each settlement's "tax" and "journal", optional household and business fields (low, rate, landless) and a fifth member entry for a person who came from the village, and the villager key "away" (absent: nobody has moved, no tax state, no journal: no version change); Build 18 REG-COURIER-01 adds the optional key "couriers" (booths, routes, deliveries on the road, trade contacts; absent: none in flight, no version change); Build 18 SET-C-FIVE adds the optional key "regions" (the five neighbouring settlements; absent: founded from the seed and stepped to the saved day, an older caravan_purse becoming the traders' coins) and drops caravan_purse: no version change; 19: Build 18 INV-18: PlayerState "pack_level" (0-2; absent: 0); the player's pack takes a capacity per item category (Inventory.category_cap, from the registry, never stored) instead of 24 kinds, and worn gear takes no place; an 18 or older save loads every item, count, wear and gear slot exactly as saved (PlayerState.from_dict), a category over its capacity keeps everything and takes no new kind; 18: Build 18 CC-01: PlayerState "appearance" and "heir_appearance", the looks as recipes (CharacterLook); a 17 or older save migrates on load (PlayerState.from_dict: a look of game/data/appearances.json becomes its recipe, any other sheet stays as it is); 17: Build 17: CON-01 "contracts" (absent: none); MIN-C "prospecting" (absent: nothing sampled, carried or known); MIN-D "discovery" {gen, dug, levels, history} and deposits carrying "found" (absent: nothing dug, levels computed); MIN-E "pits" {gen, next_id, pits: [{id, x, y, owner, for, day, dug, heaps}]} and deposits carrying "pit" (absent: no pits); MIN-F "mine_works" {gen, opened, cut, supports, track} (absent: nothing cut, set up or laid) and carts carrying "kind" and "level" (absent: a handcart on the surface); underground (MIN-A): "underground" {gen, player_level}, deposits and loot may carry "level" (absent = the surface); a 16 to 14 save loads with the player on the surface and the gallery's seams full (absent keys are defaults; no migration); 16: Build 16 farmland and stalls (FARM-01..09: World "farm_plots" cells and parcels marked "farm"; STALL-01..06: built stalls and every stall's open, session, frac and settlements in World.stalls); a 15 or 14 save loads with no farmland and every stall closed with nothing unsettled (absent keys are defaults; no migration); 15: PAR-01 villagers' skills (NPC.skills; a 14 save's villagers are given, once, a plausible history in their trade on load, Skills.seed_villagers; a 15 save is never re-seeded); 14: B8-029 aging (NPC, PlayerState and Animal carry born, sex, mother, father, partner, children; owner: older saves are disposable); 13: the village laid out anew (tools/build_village.py generator v6: buildings, roads, trees, deposits and stations stand elsewhere; owner 2026-10-19: older saves are disposable, none is migrated: SaveStore.MIN_VERSION refuses them and keeps the file); 12: the tree lifecycle (trees carry species and a growth stage; planted trees; the overworld's changed trees carry species, stage and planted; owner: older saves are disposable, none is migrated); 11: the caravan's purse (caravan_purse; economy work, no migration); 10: the overworld (its seed, and the trees felled in it; owner: older saves are disposable, none is migrated);  9: wild plants, picked or ripe (older saves load with every plant ripe);  8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -5439,6 +5460,7 @@ func _station_owners() -> void:
 
 ## Break the world <-> brain reference cycle so a finished world is freed.
 func dispose() -> void:
+	disposed = true                    # the views that read this world stop (StallDisplayView): it is being thrown away
 	if recorder != null:
 		recorder.finish()              # REC-19: write what is buffered and close the session
 		recorder = null
@@ -5614,9 +5636,62 @@ static func migrate_21_to_22(src: Dictionary) -> Dictionary:
 	return d
 
 
+## MP-PLAYER-FAMILY (save 23): the raw step from a version 22 save. Save 23 adds the player couple's household (a household record with
+## "couple": the two players' person ids; Life, "player couples") and a villager's "adoptive" parents. Save 22 had neither: a couple of
+## players had no household, so no child was born or adopted into one, and no adopted child recorded an adoptive parent (nothing to
+## move or guess). The step founds the household of each pair of living players married to each other (their partner links name each
+## other), appended after every saved household, as Life.found_couple_household does: the family of the first of the key (the host's
+## line first), the first of them with a house as its home, no members, an empty pantry. Every other record (the players' packs,
+## purses, chests, ties and partner links, every household and villager) is left as saved. An older build must not open a save 23: it
+## would read the couple's household as one without an adult and give its children away. Deterministic; returns a deep copy; nothing
+## is dropped; World.load_dict runs it on a 22 (and Life.ensure_couple_households finds the households made).
+static func migrate_22_to_23(src: Dictionary) -> Dictionary:
+	var d: Dictionary = src.duplicate(true)
+	if int(d.get("save_version", 0)) != 22:
+		return d                                       # idempotent: only a 22 is changed
+	var by_id := {}                                    # person id -> the player's saved record
+	var host: Dictionary = d.get("player", {})
+	by_id[Life.PLAYER_ID] = host
+	var pl = d.get("players", {})
+	if pl is Dictionary:
+		var keys: Array = (pl.get("by_pid", {}) as Dictionary).keys()
+		keys.sort_custom(func(a, b): return int(a) < int(b))
+		for k in keys:
+			if int(k) == int(pl.get("host", -1)):
+				continue
+			var pd: Dictionary = pl.by_pid[k]
+			by_id[-(int(pd.get("line", 0)) if int(pd.get("line", 0)) > 0 else int(k))] = pd
+	var ids: Array = by_id.keys()
+	ids.sort()
+	ids.reverse()                                      # the host's -2 first, then the guests' lines
+	var made := 0
+	for ia in ids:
+		var a: Dictionary = by_id[ia]
+		var ib := int(a.get("partner", -1))
+		if not bool(a.get("alive", true)) or ib >= ia or not by_id.has(ib):
+			continue                                   # each pair once, from its first (higher) id
+		var b: Dictionary = by_id[ib]
+		if int(b.get("partner", -1)) != int(ia) or not bool(b.get("alive", true)):
+			continue
+		var home := ""
+		for p: Dictionary in [a, b]:
+			if home == "" and str(p.get("home", "")) != "" and (d.get("buildings", {}) as Dictionary).has(str(p.home)):
+				home = str(p.home)
+		var hs: Array = d.households
+		hs.append({"id": float(hs.size()), "family": str(a.get("family", "")), "home": home, "members": [], "pantry": Inventory.new().to_dict(),
+			"couple": [float(ia), float(ib)], "founded_day": float(int(float(d.get("minutes", 0.0)) / DAY))})
+		made += 1
+	d.save_version = 23
+	d.format = "mml-save/23"
+	d["_migrated_22"] = {"couples": made}              # read once by load_dict (a stat), never written back
+	return d
+
+
 func load_dict(m: VillageMap, d: Dictionary) -> void:
 	if int(d.get("save_version", 0)) == 21:
 		d = migrate_21_to_22(d)                    # MP Batch C: save 21 to 22 (above)
+	if int(d.get("save_version", 0)) == 22:
+		d = migrate_22_to_23(d)                    # MP-PLAYER-FAMILY: save 22 to 23 (above)
 	map = m
 	seed = int(d.seed)
 	rng.seed = seed + int(d.minutes)
@@ -5831,6 +5906,14 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 			plants.append({"id": "kept_" + str(sp.id).trim_prefix("kept_"), "x": sc.x, "y": sc.y, "kind": str(sp.kind), "tile": int(sp.tile),
 					"state": str(sp.state), "regrow": float(sp.regrow)})
 	_kept_plants = []
+	if d.has("_migrated_22"):
+		stat("save_22_loaded")                                                    # MP-PLAYER-FAMILY: read from a version 22 save
+		stat("save_22_couple_households", int(d._migrated_22.get("couples", 0)))
+	Life.ensure_couple_households(self)     # MP-PLAYER-FAMILY (save 23): every married pair of players has its household (none in single player)
+	for hh in households:
+		if hh.has("couple"):
+			hh.couple = (hh.couple as Array).map(func(x): return int(x))     # person ids as whole numbers (JSON reads floats)
+	Life.sync_couple_homes(self)
 	property.settle_ended_households()      # saves before property: a house whose family died out goes to the manor
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	law_lessons = (d.get("law_lessons", {}) as Dictionary).duplicate(true)      # LAW-SKILL: absent in an older save
@@ -5893,6 +5976,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	var caps_now: Dictionary = settlement_caps if (settlement_caps.get("levels", {}) as Dictionary).is_empty() else settlement_caps.duplicate(true)
 	settlement_profile = SettlementProfile.update(self, caps_now, day())
 	_unstick()
+	if couriers != null:
+		couriers.seat_at_desks()       # GP-BUSINESS-DESK: a business's courier booth stands at its desk (an older save's at its station)
 	if recorder == null and FlightRecorder.enabled():
 		WorldRecorder.attach(self)     # REC-19: a loaded game records too (off unless recorder.json enables it)
 	if recorder != null:

@@ -66,6 +66,7 @@ var my_pid := 0
 var version_sent := ""              # tests: send another version to see the refusal
 var avatars := {}                   # every other player: pid -> {pid, name, sprite, pos, dir, anim, alive}
 var npc_target := {}                # npc id -> the last position the host sent (the view eases toward it)
+var field_pose := {}                # GP-FARMER-TENDING: npc id -> {pos, anim, tool, facing}: how the host draws a villager at work on a field (FieldWorkView)
 var animal_target := {}             # Build 21: animal id -> the last position the host sent (the view eases toward it)
 var refusal := ""                   # the last refusal's code
 var replies := {}                   # request id -> the host's answer
@@ -279,6 +280,10 @@ static func public_player(p: PlayerState) -> Dictionary:
 	o.alive = p.alive
 	o.map_level = p.map_level
 	o.away = p.away
+	o.partner = p.partner                       # MP-PLAYER-FAMILY: whom they married and their children are known to all (family records)
+	o.children = p.children.duplicate()
+	o.mother = p.mother
+	o.father = p.father
 	return o.to_dict()
 
 
@@ -457,6 +462,8 @@ func s_players(list: Array) -> void:
 			if e.has("wield"):
 				o.weapon = str(e.wield)                # WEAPON-VISIBLE-01: and the weapon they hold
 			o.alive = bool(e.alive)
+			o.partner = int(e.get("partner", o.partner))                 # MP-PLAYER-FAMILY: their family as the host has it
+			o.children = (e.get("children", o.children) as Array).map(func(c): return int(c))
 	for pid in avatars.keys():
 		if not seen.has(pid):
 			avatars.erase(pid)
@@ -482,6 +489,11 @@ func s_npcs(minutes: float, list: Array) -> void:
 		n.facing = Vector2(e[3], e[4])
 		n.anim = str(e[5])
 		n.alive = bool(e[6])
+		if e.size() >= 10:
+			var swing := float(e[9]) > 0.5
+			field_pose[n.id] = {"pos": Vector2(e[7], e[8]), "anim": "swing" if swing else "walk", "tool": FieldWorkView.TOOL if swing else "", "facing": n.facing}
+		else:
+			field_pose.erase(n.id)
 
 
 var _welcome_digest := {}
@@ -680,7 +692,11 @@ func _host_step(dt: float) -> void:
 			var list := []
 			for n: NPC in main.world.npcs:
 				if n.pos.distance_to(g.pos) <= NetProtocol.NPC_RANGE:
-					list.append([n.id, n.pos.x, n.pos.y, n.facing.x, n.facing.y, n.anim, n.alive])
+					var fw := FieldWorkView.pose(main.world, n)     # GP-FARMER-TENDING: a field worker's drawn place and tool come along
+					if fw.is_empty():
+						list.append([n.id, n.pos.x, n.pos.y, n.facing.x, n.facing.y, n.anim, n.alive])
+					else:
+						list.append([n.id, n.pos.x, n.pos.y, fw.facing.x, fw.facing.y, n.anim, n.alive, fw.pos.x, fw.pos.y, 1 if fw.anim == "swing" else 0])
 			for i in range(0, maxi(1, list.size()), NPCS_PER_PACKET):      # unreliable packets stay under the MTU
 				rpc_id(id, "s_npcs", main.world.minutes, list.slice(i, i + NPCS_PER_PACKET))
 		_n_animals += 1
@@ -735,12 +751,13 @@ func players_list() -> Array:
 	var w: World = main.world
 	var h: PlayerState = w.host_player()
 	var out := [{"pid": h.pid, "name": h.name, "sprite": h.sprite, "pos": h.pos, "dir": main.facing_vec(), "anim": main.net_anim(), "alive": h.alive,
-		"worn": [h.armor, h.head], "wield": h.weapon}]       # ARMOR-01: what each player wears; WEAPON-VISIBLE-01: what they hold
+		"worn": [h.armor, h.head], "wield": h.weapon,       # ARMOR-01: what each player wears; WEAPON-VISIBLE-01: what they hold
+		"partner": h.partner, "children": h.children}]          # MP-PLAYER-FAMILY: a player's spouse and children are public family records
 	for id in by_peer:
 		var g: PlayerState = w.player_by_pid(int(by_peer[id]))
 		if g != null:
 			out.append({"pid": g.pid, "name": g.name, "sprite": g.sprite, "pos": g.pos, "dir": moves[id].dir, "anim": moves[id].anim, "alive": g.alive,
-				"worn": [g.armor, g.head], "wield": g.weapon})
+				"worn": [g.armor, g.head], "wield": g.weapon, "partner": g.partner, "children": g.children})
 	return out
 
 

@@ -42,8 +42,10 @@ extends RefCounted
 ## sales on closing, 5% to the manor. A pitch is open from its renting until it is closed (collect() closes it and
 ## settles), and its open session's proceeds cannot be taken or spent (Q13). Shops and storefronts keep their terms.
 
-const PITCHES := [{"id": "pitch0", "x": 42, "y": 61}, {"id": "pitch1", "x": 50, "y": 61},
-	{"id": "pitch2", "x": 46, "y": 61, "service": "tailor"}, {"id": "pitch3", "x": 54, "y": 61, "service": "barber"}]   # TAILOR-18, BARBER-18: the last two are let to the village's tailor and barber, never to the player
+## The manor's open pitches are village.json "pitches" since generator v16 (GP-MARKET-SPACING): {id, x, y, use, service}; the
+## tailor's and the barber's (TAILOR-18, BARBER-18) are let to them, never to the player.
+static func pitch_specs(m: VillageMap) -> Array:
+	return m.data.get("pitches", [])
 const AWNING := [1890, 3502]          # the merchants' stall art (ground layer "below0"), two tiles wide
 const PRICE_CAP := 4                  # a listing may be priced up to this many times the item's value
 const HIRABLE := Construction.HIRABLE   # villagers free to be hired for a day: out of work, a manor hand with no job taken, a labourer
@@ -69,17 +71,20 @@ static func add_pitches(world: World, m: VillageMap) -> void:
 	for l in m.data.layers:
 		if str(l.name) == "below0":
 			lay = l
-	for p in PITCHES:
+	for p in pitch_specs(m):
 		var id: String = p.id
 		if not world.stalls.has(id):
 			# made as a loaded one is (JSON numbers), so a save of an upgraded old save is the same as of the next load
 			world.stalls[id] = JSON.parse_string(JSON.stringify({"id": id, "x": int(p.x), "y": int(p.y), "use": [int(p.x), int(p.y) + 1],
 				"kind": "pitch", "pitch": true, "owner": World.MANOR, "tenant": "", "service": str(p.get("service", ""))}))
+	seat_market(world, m, lay)
+	for p in pitch_specs(m):
+		var s: Dictionary = world.stalls[str(p.id)]
 		if not lay.is_empty():
 			for k in 2:
-				lay.data[int(p.y) * m.w + int(p.x) + k] = AWNING[k]
+				lay.data[int(s.y) * m.w + int(s.x) + k] = AWNING[k]
 		for k in 2:
-			m.set_solid(Vector2i(int(p.x) + k, int(p.y)), true)
+			m.set_solid(Vector2i(int(s.x) + k, int(s.y)), true)
 	var ids: Array = world.buildings.keys()
 	ids.sort()
 	for id in ids:
@@ -90,6 +95,52 @@ static func add_pitches(world: World, m: VillageMap) -> void:
 	for id in sids:
 		if Stalls.is_built(world.stalls[id]):          # stalls built by the player and villagers (STALL-01)
 			Stalls.draw(world, m, world.stalls[id])
+
+
+## GP-MARKET-SPACING (generator v16): a save made before the market was laid out anew keeps its market stalls and pitches
+## where the map had them then. Each one (the merchants' stalls and the manor's pitches, never a stall someone built) is moved to
+## its place on the map, with its use cell; everything it holds (tenant, stock, prices, till, sales, sessions) stays as saved,
+## and its id is kept. If a built stall stands on the new place, the stall stays where it was: its old cells are made solid
+## and the new place's drawn table taken up and made walkable, so the drawing and the collision agree. Couriers' booths at a
+## stall follow it (CourierService.seat_at_desks).
+static func seat_market(world: World, m: VillageMap, lay: Dictionary) -> void:
+	var places := {}
+	for s in m.data.stalls:
+		places[str(s.id)] = Vector2i(int(s.x), int(s.y))
+	for p in pitch_specs(m):
+		places[str(p.id)] = Vector2i(int(p.x), int(p.y))
+	var built_cells := {}
+	for id in world.stalls:
+		var b: Dictionary = world.stalls[id]
+		if Stalls.is_built(b):
+			for c in [Vector2i(int(b.x), int(b.y)), Vector2i(int(b.x) + 1, int(b.y)), Vector2i(int(b.x), int(b.y) + 1), Vector2i(int(b.x) + 1, int(b.y) + 1)]:
+				built_cells[c] = true
+	var ids: Array = places.keys()
+	ids.sort()
+	for id in ids:
+		if not world.stalls.has(id) or Stalls.is_built(world.stalls[id]):
+			continue
+		var s: Dictionary = world.stalls[id]
+		var to: Vector2i = places[id]
+		var was := Vector2i(int(s.x), int(s.y))
+		if was == to:
+			continue
+		var cells := [to, to + Vector2i(1, 0), to + Vector2i(0, 1), to + Vector2i(1, 1)]
+		if cells.any(func(c): return built_cells.has(c)):
+			for k in 2:
+				m.set_solid(was + Vector2i(k, 0), true)
+				if not id.begins_with("pitch"):
+					m.set_solid(to + Vector2i(k, 0), false)
+					if not lay.is_empty():
+						lay.data[to.y * m.w + to.x + k] = -1
+			world.stat("market_stall_kept_in_place")
+			continue
+		s.x = float(to.x)                     # as a loaded one is (JSON numbers), so a save of it is the same as of the next load
+		s.y = float(to.y)
+		s.use = [float(to.x), float(to.y + 1)]
+		if id.begins_with("pitch"):
+			continue                          # its old cells were never map data: add_pitches makes only the new ones solid
+		world.stat("market_stall_moved")
 
 
 # ---------------------------------------------------------------- storefronts (B14) ---------
@@ -361,7 +412,7 @@ func sorted_ids() -> Array:
 func free_pitch() -> Dictionary:
 	for id in sorted_ids():
 		var s: Dictionary = w.stalls[id]
-		if is_pitch(s) and not Stalls.is_built(s) and w.tenant_of(s) == "" and str(s.get("service", "")) == "":
+		if is_free_pitch(s):
 			return s
 	return {}
 
@@ -466,6 +517,38 @@ func displays() -> Array:
 	return out
 
 
+## GP-TABLE-ITEMS (owner clarification 2026-10-24: tables are not item-pickup containers; they show a visual preview of what
+## the business offers): the goods a business's counter desk shows on its table, [{x, y, wide: 1, goods}], two kinds a table
+## cell (BusinessDesks.table_cells), in a fixed order: the tavern's from its keeper's offer, a skilled trade's counter from the
+## keeper serving it or else its first keeper (NPCBrain.for_sale, most held first: merchant_goods). Nothing for sale, nothing
+## shown. Read only: no goods or coins move, nothing is taken from a table, and buying is at the desk (GP-BUSINESS-DESK).
+func desk_previews() -> Array:
+	var out := []
+	for d in BusinessDesks.all(w):
+		if str(d.kind) != "counter":
+			continue
+		var cells := BusinessDesks.table_cells(w, d)
+		var goods := merchant_goods(desk_keeper(str(d.id)), cells.size() * 2)
+		for i in cells.size():
+			var part := goods.slice(i * 2, i * 2 + 2)
+			if not part.is_empty():
+				out.append({"x": int(cells[i].x), "y": int(cells[i].y), "wide": 1, "goods": part})
+	return out
+
+
+## Whose goods counter `id` offers: the tavern's keeper, or the keeper serving a skilled trade's counter, else its first keeper.
+func desk_keeper(id: String) -> NPC:
+	if str(w.stations.get(id, {}).get("type", "")) == "tavern_counter":
+		return w.tavern_keeper()
+	if not w.counters.is_counter(id):
+		return null
+	var s := w.counters.server(id)
+	if s != null:
+		return s
+	var ks := w.counters.keepers(id)
+	return ks[0] if not ks.is_empty() else null
+
+
 func stock_of(s: Dictionary) -> Dictionary:
 	return s.get("stock", {})
 
@@ -474,10 +557,18 @@ func price_of(s: Dictionary, id: String) -> int:
 	return int(s.get("prices", {}).get(id, GameData.value(id)))
 
 
-## Why the player cannot rent now, or "".
-func rent_refusal() -> String:
+## Whether `s` is a pitch the player may rent now: an open pitch, not built on, let to nobody, not kept for a service trade.
+func is_free_pitch(s: Dictionary) -> bool:
+	return not s.is_empty() and is_pitch(s) and not Stalls.is_built(s) and w.tenant_of(s) == "" and str(s.get("service", "")) == ""
+
+
+## Why the player cannot rent now, or "". With `pitch` (the pitch whose window is open, GP-STALL-RENT-WRONG-PITCH), why not
+## that one.
+func rent_refusal(pitch: Dictionary = {}) -> String:
 	if not mine().is_empty():
 		return "You already rent a stall."
+	if not pitch.is_empty() and not is_free_pitch(pitch):
+		return "That pitch is not free to rent."
 	if free_pitch().is_empty():
 		return "Every open pitch is let."
 	if w.player.coins < rent_day():
@@ -485,17 +576,19 @@ func rent_refusal() -> String:
 	return ""
 
 
-## Rent the first free pitch: the first day is paid now. "" when done, else why not.
-func rent(actor: PlayerState = null) -> String:
-	# MP C (World.mirror): a guest's verb goes to the host
+## Rent `pitch` (the pitch whose window the player used), or with none the first free pitch: the first day is paid now. "" when
+## done, else why not. GP-STALL-RENT-WRONG-PITCH (owner, 2026-10-26: "it never gives me the one I clicked on and rented"): the
+## chosen pitch is the one rented, never another.
+func rent(pitch: Dictionary = {}, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host, naming the pitch
 	if w.mirrors():
-		return w.mirror("business.rent", rent.bind(), [])
+		return w.mirror("business.rent", rent.bind(pitch), [pitch] if not pitch.is_empty() else [])
 	if actor != null and actor != w.player:
-		return w.as_actor(actor, rent)
-	var why := rent_refusal()
+		return w.as_actor(actor, rent.bind(pitch))
+	var why := rent_refusal(pitch)
 	if why != "":
 		return why
-	var s := free_pitch()
+	var s := pitch if not pitch.is_empty() else free_pitch()
 	if not w.property._pay_manor(w.acting_ref(), rent_day()):
 		return "You cannot pay the rent."
 	w.set_tenant(s, w.acting_ref())

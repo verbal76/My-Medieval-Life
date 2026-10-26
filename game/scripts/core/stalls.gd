@@ -37,6 +37,13 @@ extends RefCounted
 ## and `settlements`. Older saves have none of them and load as closed, unsettled-free stalls (a pitch rented in an
 ## older save counts as open).
 
+## GP-MARKET-SPACING (owner, 2026-10-26: "The booths are too close together. Space them farther apart"): a stall stands at
+## least this far (tiles, between footprint origins, along x or along y) from any other, the market's own spacing (generator
+## v16, tools/build_village.py): the 53 px Craftpix shelf overhangs its two cells by 0.65 tile each side and rises 1.3 tiles
+## above them, so 5 leaves three walkable cells and 1.7 tiles of open ground between two shelves side by side, and a clear
+## lane between a row's customers and the shelves behind them. (Before Build 22: 3 tiles apart.)
+const SPACING := Vector2i(5, 5)
+
 var w: World
 var biz: Business
 var _looked := {}                     # household index -> the day it last looked for stall ground (not saved)
@@ -321,7 +328,8 @@ func site_refusal(c: Vector2i, ref: String) -> String:
 			return "an open pit"
 	for sid in w.stalls:
 		var o: Dictionary = w.stalls[sid]
-		if Vector2i(int(o.x), int(o.y)).distance_to(c) < 3.0 or Vector2i(int(o.use[0]), int(o.use[1])).distance_to(Vector2(c)) < 2.0:
+		var gap := (c - Vector2i(int(o.x), int(o.y))).abs()
+		if (gap.x < SPACING.x and gap.y < SPACING.y) or Vector2i(int(o.use[0]), int(o.use[1])).distance_to(Vector2(c)) < 2.0:
 			return "too close to another stall"
 	return ""
 

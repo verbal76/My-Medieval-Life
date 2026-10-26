@@ -215,7 +215,7 @@ func _counters() -> void:
 	for o: NPC in w.npcs:
 		if o.alive and o.job == "smith":
 			smith = o
-	var ac: String = w.counters.all()[0]
+	var ac: String = w.stations_of("armory_counter")[0]          # GP-BUSINESS-DESK: the sawmill's desk is a counter too
 	var smithy: Dictionary = w.buildings[str(w.stations[ac].building)]
 	smith.plan.clear()
 	smith.target = -1

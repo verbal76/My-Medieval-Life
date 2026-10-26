@@ -1104,7 +1104,8 @@ func test_save22() -> void:
 	n.partner = w.person_id(g)
 	g.partner = n.id
 	var d := w.to_dict()
-	check(int(d.save_version) == 22 and str(d.format) == "mml-save/22", "the save is version 22")
+	check(int(d.save_version) == World.SAVE_VERSION and str(d.format) == "mml-save/%d" % World.SAVE_VERSION and World.SAVE_VERSION >= 22,
+		"the save is the current version (22 since Batch C; 23 since MP-PLAYER-FAMILY)")
 	var w2 := _reload(d)
 	var g2 := w2.player_by_pid(g.pid)
 	check(g2 != null and w2.person_id(g2) == w.person_id(g) and Contracts.ref_of(g2) == w.player_ref(g), "the guest comes back with its id and reference")

@@ -10,7 +10,7 @@ static func add_pages(w: Wiki) -> void:
 	var evict := int(GameData.b("stall_evict_days"))
 	var pct := Stalls.pct()
 	w.add_page("guide:stall", "How do I sell from my own stall?", "guides", [
-		Wiki.p("Find an open pitch in the market (beside the merchants' stalls) and press Use: \"Rent this market pitch\" costs %d coins a day, the first day at once." % rent),
+		Wiki.p("Find an open pitch in the market (beside the merchants' stalls) and press Use: \"Rent this market pitch\" costs %d coins a day, the first day at once. You rent the pitch you chose, never another; one at a time." % rent),
 		Wiki.bullets([
 			"Open the stall again later with Use: \"Manage your market stall\".",
 			"Put up: choose an item from your pack, how many, and the price they go up at (it starts at the market value, or the price you already ask). They move into the stall's stock at that price; you can change a price later too.",
@@ -32,7 +32,7 @@ static func add_pages(w: Wiki) -> void:
 		Wiki.p("Anyone can build a market stall of their own: you, and the village's households too. It costs %s from your pack and no rent; instead the manor takes %d%% of what it sells." % [cost_text, pct]),
 		Wiki.p("The village's own merchants face the same prices you do: a stall that sells more cheaply among many rivals earns less. A merchant whose household cannot live on the stall may move to an empty stall of the same kind where its goods should fetch clearly more, and one that still cannot get by gives up the trade and leaves the stall empty for the manor to let again."),
 		Wiki.bullets([
-			"Build: carry %s, stand outdoors on clear ground facing up and press Use: \"Build a market stall here\". The ground must be open (no road, tree, plant, field, pen or someone else's land) and at least 3 tiles from another stall; the cell you stand on is where buyers come." % cost_text,
+			"Build: carry %s, stand outdoors on clear ground facing up and press Use: \"Build a market stall here\". The ground must be open (no road, tree, plant, field, pen or someone else's land) and at least %d tiles along or %d rows across from another stall, as the market's own stalls stand, so each shelf has room around it; the cell you stand on is where buyers come." % [cost_text, Stalls.SPACING.x, Stalls.SPACING.y],
 			"Stock: press Use at the stall (\"Manage your market stall\") and Put up goods from your pack. They are in the stall now, not in your pack; Take back returns them.",
 			"OPEN STALL: it sells while you are anywhere else. Villagers who really need its goods and can pay come and buy, at your prices.",
 			"While it is open the sales wait in its till: they are not yours to take or spend until you close it.",

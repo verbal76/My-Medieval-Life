@@ -776,8 +776,8 @@ func _ctr01_counters() -> void:
 	var p := w.player
 	var m0 := w.minutes
 	var p0 := p.pos
-	var ids: Array = w.counters.all()
-	check(ids.size() >= 1 and str(w.stations[ids[0]].type) == "armory_counter", "CTR-01: the armoury counter is a skilled trade's counter (%s)" % str(ids))
+	var ids: Array = w.counters.all().filter(func(c): return str(w.stations[c].type) == "armory_counter")      # GP-BUSINESS-DESK: the sawmill's desk is a counter too
+	check(ids.size() >= 1 and w.counters.all().has(ids[0]), "CTR-01: the armoury counter is a skilled trade's counter (%s)" % str(w.counters.all()))
 	var id: String = ids[0]
 	var smiths: Array = w.counters.keepers(id)
 	check(smiths.size() > 0 and smiths.all(func(o): return o.job == "smith"), "ARM-01: the smiths keep the armoury counter (%d)" % smiths.size())

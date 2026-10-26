@@ -261,6 +261,8 @@ func _ready() -> void:
 				world.player.pos = Vector2(int(pb.x), int(pb.y)) + Vector2(1.0, 1.7)
 				follow_at = _in_view(Vector2(int(pb.x) + 1, int(pb.y)) * T)
 				camera.zoom = Vector2(5, 5) * view_scale
+			"desk_armory_counter", "desk_tavern_counter", "desk_sawmill_counter", "desk_stall", "desk_courier":
+				_desk_shot(shot_panel)          # GP-BUSINESS-DESK: a business desk's menu (screenshots only)
 			"campfire":
 				# GP-BANDIT-CAMP-ART: the camp's fire with a bandit behind it and the player in front
 				var fc: Array = map.data.spawns.campfire
@@ -382,6 +384,8 @@ func _ready() -> void:
 				_farm_shot(shot_panel)                  # PL2-015: a cleared and tilled field, growing crops, a pen with animals
 			"farm_plot_mixed":
 				_plot_shot()                            # VIS-CROP-01: a household's plot part sown, part only tilled
+			"tend_0", "tend_2", "tend_4", "tend_5", "tend_7", "tend_9":
+				_tend_shot(int(shot_panel.right(1)))    # GP-FARMER-TENDING: the farmers at k/10 of an hour's tending, drawn through their fields
 			"door", "door_deep":
 				_door_shot(shot_panel == "door_deep")   # VIS-DOOR-01: a villager stepping into a house's doorway
 			"open_pit", "open_pit_dug":
@@ -1889,6 +1893,15 @@ func _sync_sprites() -> void:
 		if _show_sleeper(n, s) or _show_sitter(n, s):
 			continue
 		s.stand()
+		# GP-FARMER-TENDING: field work drawn through the field (presentation only); a guest draws it as the host's snapshots say
+		var fw: Dictionary = (net.field_pose.get(n.id, {}) if guest_world else FieldWorkView.pose(world, n)) if n.alive else {}
+		if not fw.is_empty():
+			s.position = fw.pos * T
+			s.face(fw.facing)
+			if s.tool_item != fw.tool:
+				s.hold(fw.tool)
+			s.play(fw.anim)
+			continue
 		s.position = n.pos * T
 		s.face(n.facing)
 		var look: Array = world.brain.work_look(n) if n.anim == "work" else [n.anim, ""]
@@ -2614,12 +2627,22 @@ func _find_target() -> void:
 		if d < 1.5 and world.reaches(p.pos, at):
 			near.append([d, near.size(), _container_target(c)])
 	for post in _shop_posts():
+		if not post.stall:
+			continue                       # GP-BUSINESS-DESK: a counter is a desk, offered only beside it and facing it (below)
 		for at: Vector2 in post.cells:
 			if at.distance_to(p.pos) > 2.2:
 				continue
 			var d := at.distance_to(probe)
 			if d < 1.5 and world.reaches(p.pos, at):
-				near.append([d, near.size(), _shop_target(post)])
+				var sd := BusinessDesks.by_id(world, str(post.id))
+				near.append([d, near.size(), _desk_target(sd, _shop_target(post)) if not sd.is_empty() else _shop_target(post)])
+				break
+	for dk in BusinessDesks.faced_all(world, p.pos, facing_vec()):
+		if str(dk.kind) == "counter":
+			var cp := {"id": str(dk.post), "stall": false}
+			near.append([(Vector2(dk.at) + Vector2(0.5, 0.5)).distance_to(probe), near.size(), _desk_target(dk, _shop_target(cp))])
+		elif str(dk.kind) == "front" and not world.holds(world.acting_ref(), world.buildings[dk.building]):
+			near.append([(Vector2(dk.at) + Vector2(0.5, 0.5)).distance_to(probe), near.size(), _desk_target(dk, _front_target(dk))])
 	for i in world.loot.size():
 		if World.level_of(world.loot[i]) != 0:
 			continue                       # left below the surface (MIN-A)
@@ -2737,13 +2760,9 @@ func _find_target() -> void:
 				"label": ("Sharpen your %s (%d coin to the smith)" % [GameData.item_name(wid).to_lower(), World.SHARPEN_COINS]) if nos == "" else "Grinding wheel: %s" % nos})
 	if world.couriers != null:                                # REG-COURIER-01: the village's courier booth (a stall kept by a villager)
 		var cb: Dictionary = world.couriers.booth_near(p.pos, 1.8)
-		if not cb.is_empty():
+		if not cb.is_empty() and not BusinessDesks.booth_on_desk(world, cb):     # GP-BUSINESS-DESK: a booth at a desk is in the desk's menu
 			here.append({"kind": "courier_booth", "booth": str(cb.id), "label": "Courier booth: send goods by the regular route or a special delivery"})
-		elif world.couriers.booth_of_keeper(world.acting_ref()).is_empty():                  # Q18-15: a business with a shop may open its own booth
-			for sst in world.business.stalls.built(world.acting_ref()):
-				if Vector2(float(sst.x) + 1.0, float(sst.y) + 0.5).distance_to(p.pos) < 2.5:
-					here.append({"kind": "courier_shop_booth", "label": "Open a courier booth at your stall"})
-					break
+		# Q18-15: a business with a shop opens its own booth from its desk's menu (_desk_target)
 	if world.farm.caravan_here() and world.farm.caravan_stop().distance_to(p.pos) < float(Farming.cfg().caravan_horse.reach):      # B14-11: the visiting caravan sells a plough horse
 		var no_horse := world.farm.buy_horse_refusal(p)
 		here.append({"kind": "caravan_horse", "label": ("Buy a plough horse from the caravan (%d coins)" if no_horse == "" else "The caravan's plough horse (%d coins): " + no_horse) % int(Farming.cfg().caravan_horse.price)})
@@ -2778,8 +2797,9 @@ func _find_target() -> void:
 				if at.distance_to(p.pos) < 1.3:
 					near_front = true
 			if near_front:
-				fronts.append({"kind": "stall", "id": str(id), "label": "Manage your storefront"} if b.has("shop")
-						else {"kind": "front_open", "id": str(id), "label": "Open your storefront"})
+				var own_front: Dictionary = {"kind": "stall", "id": str(id), "label": "Manage your storefront"} if b.has("shop") else {"kind": "front_open", "id": str(id), "label": "Open your storefront"}
+				var fd := BusinessDesks.by_id(world, "front:" + str(id))
+				fronts.append(_desk_target(fd, own_front) if not fd.is_empty() else own_front)        # GP-BUSINESS-DESK
 		elif (Vector2(world.building_door(id)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 1.3:
 			var why := world.business.storefront_refusal(b)
 			var cost := Business.storefront_cost()
@@ -2933,6 +2953,94 @@ func _manor_label(j: Dictionary) -> String:
 	return ""
 
 
+## GP-BUSINESS-DESK: a business's desk (BusinessDesks). Use opens its short menu (GameUI.show_desk): `inner`, what the counter
+## or stall offers now (trade with the keeper; when the keeper is away, ringing for service or the goods left on a stall; your
+## own to manage), and the courier where the business keeps a booth at the desk (at your own desk, opening one). The prompt is
+## `inner`'s, naming the courier when there is one.
+func _desk_target(d: Dictionary, inner: Dictionary) -> Dictionary:
+	var opts: Array = [inner]
+	var bo := BusinessDesks.booth_at(world, d)
+	if not bo.is_empty():
+		opts.append({"kind": "courier_booth", "booth": str(bo.id), "label": "Speak to the courier (send goods)"})
+	elif _desk_is_mine(d) and world.couriers != null and world.couriers.booth_of_keeper(world.acting_ref()).is_empty():
+		opts.append({"kind": "courier_shop_booth", "label": "Open a courier booth at this desk"})
+	var label := str(inner.get("label", ""))
+	if not bo.is_empty():
+		label += "; or the courier"
+	var out := {"kind": "desk", "desk": d, "options": opts, "label": label, "status": _desk_status(d, inner)}
+	if bool(inner.get("theft", false)):
+		out.theft = true                                 # DVW-A12 R16: a stall left alone is still offered as theft, flagged as such
+	return out
+
+
+func _desk_is_mine(d: Dictionary) -> bool:
+	match str(d.get("kind", "")):
+		"stall":
+			return world.holds(world.acting_ref(), world.stalls.get(str(d.post), {}))
+		"front", "shop":
+			return world.holds(world.acting_ref(), world.buildings.get(str(d.building), {}))
+	return false
+
+
+## The menu's first line: who is at the desk, or why nobody is.
+func _desk_status(d: Dictionary, inner: Dictionary) -> String:
+	if _desk_is_mine(d):
+		return "Your own business."
+	match str(inner.get("kind", "")):
+		"shop":
+			var k: NPC = inner.npc
+			return "%s %s is at the desk: buy and sell." % [k.name, k.family]
+		"summon":
+			return "Nobody is at the desk. Ring for service and a keeper who can come will."
+		"info":
+			return str(inner.get("text", ""))
+		"container":
+			return "Nobody is at the stall. Its goods lie there; taking them is theft."
+	return ""
+
+
+## A household's storefront (B14) that is not the acting player's: its keeper there trades; otherwise nobody keeps it now.
+func _front_target(d: Dictionary) -> Dictionary:
+	var k: NPC = world.npc(int(world.front_keepers.get(str(d.building), -1)))
+	if k != null and world.at_post(k):
+		return {"kind": "shop", "npc": k, "label": "Trade with %s (%s)" % [k.name, world.shop_name(k)]}
+	return {"kind": "info", "label": "%s: nobody keeps it now" % World.cap(str(d.name)), "text": "Nobody keeps %s now." % str(d.name)}
+
+
+## GP-BUSINESS-DESK screenshots: the player at a desk (a counter by its station type, a merchant's stall with its merchant at
+## it, or the smithy's desk with a courier booth), facing it, and the desk's menu open.
+func _desk_shot(panel: String) -> void:
+	var d := {}
+	if panel == "desk_stall":
+		var m: NPC = world.npcs.filter(func(n): return n.alive and n.job == "merchant")[0]
+		m.pos = world.shop_post(m)
+		m.plan = [world.brain.work(600, "", {}, "idle")]
+		d = BusinessDesks.by_id(world, str(m.workplace))
+	else:
+		var type := "armory_counter" if panel == "desk_courier" else panel.trim_prefix("desk_")
+		d = BusinessDesks.by_id(world, str(world.stations_of(type)[0]))
+		if panel == "desk_courier":
+			world.couriers.daily()
+			var smith: NPC = world.npcs.filter(func(n): return n.alive and n.job == "smith")[0]
+			world.couriers.open_shop_booth(World.npc_ref(smith.id))
+	if d.is_empty():
+		return
+	world.player.pos = Vector2(d.use) + Vector2(0.5, 0.5)
+	var step: Vector2i = (d.at as Vector2i) - (d.use as Vector2i)
+	player_sprite.dir = {Vector2i(0, 1): 0, Vector2i(1, 0): 2, Vector2i(0, -1): 4, Vector2i(-1, 0): 6}.get(step, 4)
+	follow_at = _in_view(Vector2(d.at) * T)
+	camera.zoom = Vector2(4, 4) * view_scale
+	_find_target()
+	if str(target.get("kind", "")) == "desk":
+		ui.show_desk(target)
+
+
+## Do one of a desk menu's choices (GameUI.show_desk), as Use on it would.
+func use_option(opt: Dictionary) -> void:
+	target = opt
+	_use()
+
+
 ## The counters and stalls the player can buy at: {id, stall, cells (tile centres to use)}.
 func _shop_posts() -> Array:
 	var out := []
@@ -3007,7 +3115,9 @@ func _fit_targets(place: String) -> Array:
 	out.append({"kind": "fitout", "id": place, "label": "Fit out this room (counter, shelves, equipment)"})
 	var e := world.fitting.entry(b, "counter")
 	if not e.is_empty() and Vector2(int(e.use[0]) + 0.5, int(e.use[1]) + 0.5).distance_to(world.player.pos) < 1.4:
-		out.append({"kind": "stall", "id": place, "label": "Manage your shop" if b.has("shop") else "Open a shop here (%d coins a day)" % int(GameData.b("shop_licence_day"))})
+		var own_shop := {"kind": "stall", "id": place, "label": "Manage your shop" if b.has("shop") else "Open a shop here (%d coins a day)" % int(GameData.b("shop_licence_day"))}
+		var sd := BusinessDesks.by_id(world, "shop:" + place)
+		out.append(_desk_target(sd, own_shop) if not sd.is_empty() else own_shop)          # GP-BUSINESS-DESK
 	return out
 
 
@@ -3019,6 +3129,9 @@ func _container_target(c: Dictionary) -> Dictionary:
 			return _chest_target(cu)
 	var id := world.container_pick(c)
 	var whose := world.container_whose(c)
+	if id == "" and world.table_previews(c):          # GP-TABLE-ITEMS: a preview of what the tavern serves, nothing to take
+		var dish := GameData.item_name(str(c.dish))
+		return {"kind": "info", "label": "%s is served here: buy it at the counter" % dish, "text": "The table shows what the tavern serves: %s. Buy it from the keeper at the counter." % dish.to_lower()}
 	if id == "":
 		var look := str(c.get("look", c.kind))         # GP-TARGET-ART-MATCH: named as drawn
 		return {"kind": "info", "label": "Empty %s (%s)" % [look, whose], "text": "There is nothing in the %s." % look}
@@ -3200,6 +3313,8 @@ func _use() -> void:
 			ui.show_fitout(str(target.id))
 		"summon":
 			ui.message(world.counters.summon(str(target.id)).text)
+		"desk":
+			ui.show_desk(target)                               # GP-BUSINESS-DESK: the business desk's short menu
 		"info":
 			ui.message(target.text)
 		"container":
@@ -3393,7 +3508,7 @@ func _use() -> void:
 				ui.message("You pay the caravan's trader and take the %s." % GameData.item_name(str(target.item)).to_lower())
 		"courier_shop_booth":
 			var why_booth: String = world.couriers.open_shop_booth(world.acting_ref())
-			ui.message(why_booth if why_booth != "" else "You set a courier booth at your stall: your deliveries can leave from it.")
+			ui.message(why_booth if why_booth != "" else "You set a courier booth at your desk: your deliveries can leave from it.")
 		"sharpen":                                       # GP-SHARPEN: at the grinding wheel, 1 coin to the smith
 			var whyw: String = world.player_sharpen(str(target.id))
 			ui.message(whyw if whyw != "" else "The smith puts your %s to the wheel: it is sharp again (%d coin)." % [GameData.item_name(str(target.id)).to_lower(), World.SHARPEN_COINS])
@@ -5950,6 +6065,32 @@ func _farm_shot(kind: String) -> void:
 	p.pos = Vector2(float(pl.x) + 4.5, float(pl.y) + float(pl.h) + 0.5)
 	var mid := (Vector2(float(pl.x), float(pl.y)) + Vector2(float(last.x), float(last.y))) / 2.0 + Vector2(4.5, 5.0)
 	follow_at = _in_view(mid * T)
+	camera.position = follow_at
+
+
+## GP-FARMER-TENDING (screenshots only): every manor farmer at `k` tenths of an hour's tending of their growing field (the watch step
+## NPCBrain._farmer gives them), standing where the simulation puts them; FieldWorkView draws them walking and working the field.
+func _tend_shot(k: int) -> void:
+	var first := {}
+	for n: NPC in world.npcs:
+		if not n.alive or n.job != "farmer":
+			continue
+		var f: Dictionary = world.brain._field(n.workplace)
+		if f.is_empty():
+			continue
+		world.set_field(f, "growing")
+		var watch: Dictionary = world.brain.work(60, "", {}, "idle")
+		watch["field"] = f.id
+		n.plan = [watch]
+		n.work_left = 60.0 * (1.0 - k / 10.0)
+		n.anim = "idle"
+		n.pos = Vector2(int(f.x) + 0.5, int(f.y) + int(f.h) + 0.5)
+		if first.is_empty():
+			first = f
+	if first.is_empty():
+		return
+	world.player.pos = Vector2(int(first.x) + int(first.w) / 2.0, int(first.y) + int(first.h) + 3.0)
+	follow_at = _in_view(Vector2(int(first.x) + int(first.w) / 2.0 + 4.0, int(first.y) + int(first.h) / 2.0) * T)
 	camera.position = follow_at
 
 
