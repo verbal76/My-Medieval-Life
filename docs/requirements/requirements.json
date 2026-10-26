@@ -761,8 +761,8 @@
     "ARMOR-CATALOG-D1"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -795,6 +795,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker D (gear); branch: None -> wip/b22-gear",
      "why": "owner: in the amended Build 22 mini-build"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
+     "why": "worker D report (wip/b22-gear b1e2247), merged into wip/build22 at 9247b19: 91 armour pieces, 1,920 weapons from the owner's weapons pack, orders and commissions, worn buffs, tusks and antlers, drawn and swung weapons"
     }
    ],
    "related": [
@@ -804,9 +809,20 @@
    "design": "OWNER DECISION REQUIRED",
    "effort": "L",
    "next_action": "owner approves the catalogue proposal (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md); then a Build 22 worker implements it on top of ARMOR-01",
-   "notes": "Owner asked for it in Build 22. Existing: items.json 'bonus' (max_hp, max_stamina) summed over worn gear (PlayerState.bonus); no fireball-damage bonus yet; no steel, tin, bronze, silk or fur material yet. Owner 2026-10-26: squeeze it into the amended Build 22 mini-build.",
+   "notes": "Owner asked for it in Build 22. Existing: items.json 'bonus' (max_hp, max_stamina) summed over worn gear (PlayerState.bonus); no fireball-damage bonus yet; no steel, tin, bronze, silk or fur material yet. Owner 2026-10-26: squeeze it into the amended Build 22 mini-build. Not yet: Puny Skills buff icons (buffs shown as text), timed orders, tailor stock of cloth, villagers making catalogue pieces for stock, player businesses making them.",
    "assigned_worker": "worker D (gear)",
-   "branch": "wip/b22-gear"
+   "branch": "wip/b22-gear",
+   "commits": [
+    "21ba260",
+    "5896b26",
+    "7ff9b36",
+    "aca4dc3",
+    "b1e2247",
+    "c897548"
+   ],
+   "tests": "gear_catalogue_test 61, armour_worn_test 294, equip_test 51, combat_test 41, wiki_test, run_tests 3600/0, start_test 523/0, net tests pass; G0 differs only by the tusk and antler drops (control run with drops off identical); evidence in the Build 22 gear baseline note on wip/build22",
+   "test_commit": "b1e2247",
+   "playtest": "real device check outstanding; values provisional for the owner's review (the armour and weapon catalogue table on wip/build22)"
   },
   {
    "id": "ARMOR-CATALOG-D1",
@@ -855,8 +871,8 @@
     "ARMOR-CATALOG-D1"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -874,6 +890,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker D (gear); branch: None -> wip/b22-gear",
      "why": "owner: in the amended Build 22 mini-build"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
+     "why": "worker D report (wip/b22-gear b1e2247), merged into wip/build22 at 9247b19: 91 armour pieces, 1,920 weapons from the owner's weapons pack, orders and commissions, worn buffs, tusks and antlers, drawn and swung weapons"
     }
    ],
    "related": [
@@ -884,7 +905,18 @@
    "design": "OWNER DECISION REQUIRED",
    "notes": "Delivery: the Build 22 mini-build (owner 2026-10-26). Boars exist (balance.json wildlife; skins boar, boar_grey, mini_boar). No reindeer species or reindeer art in any pack; deer exist with stag skins (mini_stag).",
    "assigned_worker": "worker D (gear)",
-   "branch": "wip/b22-gear"
+   "branch": "wip/b22-gear",
+   "commits": [
+    "21ba260",
+    "5896b26",
+    "7ff9b36",
+    "aca4dc3",
+    "b1e2247",
+    "c897548"
+   ],
+   "tests": "gear_catalogue_test 61, armour_worn_test 294, equip_test 51, combat_test 41, wiki_test, run_tests 3600/0, start_test 523/0, net tests pass; G0 differs only by the tusk and antler drops (control run with drops off identical); evidence in the Build 22 gear baseline note on wip/build22",
+   "test_commit": "b1e2247",
+   "playtest": "real device check outstanding; values provisional for the owner's review (the armour and weapon catalogue table on wip/build22)"
   },
   {
    "id": "ARMOR-Q",
@@ -54962,8 +54994,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -54986,6 +55018,11 @@
      "date": "2026-10-26",
      "change": "acceptance[0]: corrected the source sheet",
      "why": "owner supplied the real master sheet (16x16 Weapons RPG Icons.zip, staging 1e6a295); the earlier text named the 72-icon Assorted sheet: Every weapon of the master weapons sheet (16x16 Assorted RPG Icons, weapons.png) is a real item with an icon, damage, du"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
+     "why": "worker D report (wip/b22-gear b1e2247), merged into wip/build22 at 9247b19: 91 armour pieces, 1,920 weapons from the owner's weapons pack, orders and commissions, worn buffs, tusks and antlers, drawn and swung weapons"
     }
    ],
    "related": [
@@ -54995,7 +55032,18 @@
    ],
    "notes": "Delivery: the Build 22 mini-build (owner 2026-10-26).",
    "assigned_worker": "worker D (gear)",
-   "branch": "wip/b22-gear"
+   "branch": "wip/b22-gear",
+   "commits": [
+    "21ba260",
+    "5896b26",
+    "7ff9b36",
+    "aca4dc3",
+    "b1e2247",
+    "c897548"
+   ],
+   "tests": "gear_catalogue_test 61, armour_worn_test 294, equip_test 51, combat_test 41, wiki_test, run_tests 3600/0, start_test 523/0, net tests pass; G0 differs only by the tusk and antler drops (control run with drops off identical); evidence in the Build 22 gear baseline note on wip/build22",
+   "test_commit": "b1e2247",
+   "playtest": "real device check outstanding; values provisional for the owner's review (the armour and weapon catalogue table on wip/build22)"
   },
   {
    "id": "WEAPON-VISIBLE-01",
@@ -55015,8 +55063,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -55034,6 +55082,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker D (gear); branch: None -> wip/b22-gear",
      "why": "owner: in the amended Build 22 mini-build"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
+     "why": "worker D report (wip/b22-gear b1e2247), merged into wip/build22 at 9247b19: 91 armour pieces, 1,920 weapons from the owner's weapons pack, orders and commissions, worn buffs, tusks and antlers, drawn and swung weapons"
     }
    ],
    "related": [
@@ -55043,7 +55096,18 @@
    ],
    "notes": "Delivery: the Build 22 mini-build (owner 2026-10-26).",
    "assigned_worker": "worker D (gear)",
-   "branch": "wip/b22-gear"
+   "branch": "wip/b22-gear",
+   "commits": [
+    "21ba260",
+    "5896b26",
+    "7ff9b36",
+    "aca4dc3",
+    "b1e2247",
+    "c897548"
+   ],
+   "tests": "gear_catalogue_test 61, armour_worn_test 294, equip_test 51, combat_test 41, wiki_test, run_tests 3600/0, start_test 523/0, net tests pass; G0 differs only by the tusk and antler drops (control run with drops off identical); evidence in the Build 22 gear baseline note on wip/build22",
+   "test_commit": "b1e2247",
+   "playtest": "real device check outstanding; values provisional for the owner's review (the armour and weapon catalogue table on wip/build22)"
   },
   {
    "id": "WEATHER-01",

@@ -10,7 +10,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 |---|---|
 | Approved requirements in scope | 78 |
 | Integrated | 28 of 78 (36%) |
-| Automated tests passed | 46 of 78 (59%) |
+| Automated tests passed | 50 of 78 (64%) |
 | Integration verified | 28 of 78 (36%) |
 | Gameplay verified | 0 of 78 (0%) |
 | Owner playtested | 0 of 78 (0%) |
@@ -18,16 +18,12 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 78 |
 | Open owner decisions (blocking) | 15 (11) |
 
-## In development (worker assigned) (6)
+## In development (worker assigned) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| ARMOR-CATALOG-01 | Every armour, helmet and cultural outfit in the Puny Characters pack can be made and bought at the armourer; cultural pieces cost more and need special materials; rarer pieces carry buffs | OWNER APPROVED | IN DEVELOPMENT | worker D (gear) / wip/b22-gear | NOT TESTED | owner approves the catalogue proposal (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md); then a Build 22 worker implements it on top of ARMOR-01 | ARMOR-CATALOG-D1, ARMOR-01, design: OWNER DECISION REQUIRED | L |
-| ARMOR-MATERIALS-01 | Boar tusks and antlers as hunted materials, used in special armour and weapons | OWNER APPROVED | IN DEVELOPMENT | worker D (gear) / wip/b22-gear | NOT TESTED |  | ARMOR-CATALOG-D1, design: OWNER DECISION REQUIRED | UNKNOWN |
 | REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | recorder worker (Sonnet subagent) / wip/recorder | TARGETED TESTS PASSED | combined gate on 2d5d49c; then into the Build 19 integration branch with Expansion 19 | design: UNKNOWN | UNKNOWN |
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | run 2 only: 30 days, seeds 1 and 2, on the recorder head with FIX-RECF1 and D3; stop at day 30, a FATAL line or the storage cap | design: UNKNOWN | UNKNOWN |
-| WEAPON-CATALOG-01 | Every weapon on the master weapons sheet can be made at the smithy at an appropriate Smithing level and bought there | OWNER APPROVED | IN DEVELOPMENT | worker D (gear) / wip/b22-gear | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| WEAPON-VISIBLE-01 | An equipped weapon is drawn on the character while walking, and attacks swing it like the axe; villagers the same | OWNER APPROVED | IN DEVELOPMENT | worker D (gear) / wip/b22-gear | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (28)
 
@@ -76,10 +72,12 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | GP-INTERACTION-PROMPT-LIFECYCLE | Contextual prompts ('Use the workbench') clear while the interaction is active and when it closes or the target changes | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | S |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | OWNER APPROVED | PARTIALLY IMPLEMENTED | wip/expansion19-preparation | TARGETED TESTS PASSED | rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c) |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (35)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (39)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| ARMOR-CATALOG-01 | Every armour, helmet and cultural outfit in the Puny Characters pack can be made and bought at the armourer; cultural pieces cost more and need special materials; rarer pieces carry buffs | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker D (gear) / wip/b22-gear | TARGETED TESTS PASSED | owner approves the catalogue proposal (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md); then a Build 22 worker implements it on top of ARMOR-01 | ARMOR-CATALOG-D1, ARMOR-01, design: OWNER DECISION REQUIRED | L |
+| ARMOR-MATERIALS-01 | Boar tusks and antlers as hunted materials, used in special armour and weapons | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker D (gear) / wip/b22-gear | TARGETED TESTS PASSED |  | ARMOR-CATALOG-D1, design: OWNER DECISION REQUIRED | UNKNOWN |
 | B19-EMERGE | Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | L |
 | E20-P1 | Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | X20 foundation worker (Sonnet subagent) / wip/expansion20-preparation | TARGETED TESTS PASSED | owner reviews the architecture (LE00_BUILD18_REFRESH.md, LE01_DATA_CONTRACTS.md) and answers OD-LE-02, 04, 07, 10, 13, 15 | design: UNKNOWN | UNKNOWN |
@@ -112,6 +110,8 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | SJD-G | XS |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | GM-01 | design: UNKNOWN | UNKNOWN |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 19, designed with the personality, judgment and decision systems (B18-DP-07); no Build 18 model | design: DESIGN WORK REQUIRED | L |
+| WEAPON-CATALOG-01 | Every weapon on the master weapons sheet can be made at the smithy at an appropriate Smithing level and bought there | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker D (gear) / wip/b22-gear | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| WEAPON-VISIBLE-01 | An equipped weapon is drawn on the character while walking, and attacks swing it like the axe; villagers the same | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker D (gear) / wip/b22-gear | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | X19-FOUND | Expansion 19 foundations round: personality, relationship history and family reputation (judgment off) | OWNER APPROVED | PARTIALLY IMPLEMENTED | lead (merges Workers A and B) / wip/expansion19-preparation | TARGETED TESTS PASSED | owner: X19-PERS-FORMULA, X19-TRAIT-DIST, X19-SPILL-REACH, X19-REP-TRANSMIT, X19-BOND-LIMITS; what counts as a costly mistake and a reminder; the decision effect of stubbornness | design: UNKNOWN | UNKNOWN |
 | X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

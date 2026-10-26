@@ -7,8 +7,8 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | ARMOR-01 | 18 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
-| ARMOR-CATALOG-01 | 20 | IN DEVELOPMENT | worker D (gear) | wip/b22-gear |
-| ARMOR-MATERIALS-01 | 20 | IN DEVELOPMENT | worker D (gear) | wip/b22-gear |
+| ARMOR-CATALOG-01 | 20 | IMPLEMENTED ON TASK BRANCH | worker D (gear) | wip/b22-gear |
+| ARMOR-MATERIALS-01 | 20 | IMPLEMENTED ON TASK BRANCH | worker D (gear) | wip/b22-gear |
 | E20-P1 | 20 | IMPLEMENTED ON TASK BRANCH | X20 foundation worker (Sonnet subagent) | wip/expansion20-preparation |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
@@ -38,8 +38,8 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | REC-DIAG | 20 | IN DEVELOPMENT | lead | wip/recorder (read-only runs) |
 | RECON-01 | unassigned | IMPLEMENTED ON TASK BRANCH | reconciliation worker (Sonnet subagent) | wip/expansion19-preparation, wip/expansion20-preparation |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
-| WEAPON-CATALOG-01 | 20 | IN DEVELOPMENT | worker D (gear) | wip/b22-gear |
-| WEAPON-VISIBLE-01 | 20 | IN DEVELOPMENT | worker D (gear) | wip/b22-gear |
+| WEAPON-CATALOG-01 | 20 | IMPLEMENTED ON TASK BRANCH | worker D (gear) | wip/b22-gear |
+| WEAPON-VISIBLE-01 | 20 | IMPLEMENTED ON TASK BRANCH | worker D (gear) | wip/b22-gear |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
 ## Implemented but not tested (47)
