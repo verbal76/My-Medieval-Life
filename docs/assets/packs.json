@@ -538,6 +538,29 @@
     "Bandit camp campfire (GP-BANDIT-CAMP-ART)",
     "Player campfires (the Fire action) and countryside camps"
    ]
+  },
+  {
+   "id": "shade_weapon_icons",
+   "name": "16x16 Weapon RPG Icons",
+   "creator": "Shade",
+   "sources": [
+    "16x16 Weapons RPG Icons.zip"
+   ],
+   "storage": "public",
+   "licence": "CC0",
+   "permissions": "CC0 1.0 (itch.io page, screenshot docs/assets/reference/weapon_rpg_icons_page_licence_2026-10-26.png): any use, commercial, modification; no credit needed (credited anyway).",
+   "categories": [
+    "icons",
+    "weapons"
+   ],
+   "status": "planned",
+   "used_for": "",
+   "scale": "1:1 (16 x 16 icons)",
+   "decision": "Owner 2026-10-26: the master weapons sheet; every weapon made at the smithy at a skill level and sold there (WEAPON-CATALOG-01). The four recolours map to metal tiers.",
+   "opportunities": [
+    "Every weapon type and design as smithy items (WEAPON-CATALOG-01)",
+    "Inventory and shop icons for weapons"
+   ]
   }
  ]
 }

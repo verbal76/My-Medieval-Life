@@ -10,6 +10,7 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `16x16 Armour RPG Icons.zip` | paid | 5 | 931.6 KB | Armour icon sheets: boots, breastplates, headgear, trousers. "16x16 Armor RPG Icons" by Shade, in the owner's itch.io library (screenshot 2026-10-18). |
 | `16x16 Jewelry RPG Icons.zip` | paid | 7807 | 4.4 MB | Jewelry icons (rings, necklaces, bracelets, brooches...) as sheets plus thousands of individual 16x16 PNGs. Includes LICENSE.txt. |
 | `16x16 Survival RPG Icons.zip` | paid | 1887 | 1.4 MB | Survival/crafting icons by category (food, gems, plants & alchemy, textile, armour, dirt & clay...). Includes LICENSE.txt. |
+| `16x16 Weapons RPG Icons.zip` | CC0 | 5 | 312.1 KB | Free 16x16 Weapon RPG Icons by Shade (merchant-shade.itch.io), supplied by the owner on 2026-10-26, stored byte for byte: bronze-, gold-, iron- and steel-weapons.png (384 x 320 each, 16 x 16 icons; the same designs in four metals) and all-assets-preview.png. The page lists rapier, katana, sword, greatsword, scimitar, knife, butcher knife, battle axe, battle hammer, spear, staff, trident, mace, scythe, sickle and nunchucks, 30 designs x 4 recolours each. Itch.io page: Creative Commons Zero v1.0 Universal; no credit needed (credited anyway, owner policy). Page screenshots in docs/assets/reference/. |
 | `16x16 miniworld - octoshrimpy  -  indoor update.zip` | CC BY 4.0 | 9 | 505.7 KB | 16x16 miniworld + by octoshrimpy (remix/extension of Shade's Miniworld), the 'legacy - indoor update' download (older version): characters, buildings, nature, walls, indoor things, terrain + terrain decor sheets. |
 | `Character-Customizer.zip` | verify | 3 | 1.6 MB | Manual character customiser: GIMP .xcf and Photoshop layer files plus ReadMe. Not scriptable as-is. |
 | `ClimbUp_restore_backup.zip` | n/a | 3 | 2.9 MB | NOT an art pack: backup of a separate 'Climb up' game-designer project (project.json + splash image). |
@@ -47,7 +48,7 @@ but forbids redistributing the original files. **free** = Shade's own terms say 
 
 | Extension | Count |
 |---|---:|
-| `.png` | 17112 |
+| `.png` | 17117 |
 | `.svg` | 1542 |
 | `.gif` | 354 |
 | `.txt` | 44 |
@@ -108,6 +109,12 @@ Each folder lists its file count and the most common image sizes.
 | `16x16 Survival RPG Icons/Textile` | 232 | 16x16 | `Boar-Pelt-01.png`, `Boar-Pelt-02.png`, `Boar-Pelt-03.png`, `Boar-Pelt-04.png`, ... |
 | `16x16 Survival RPG Icons/Tools` | 338 | 16x16 | `Arrow-01.png`, `Arrow-02.png`, `Arrow-03.png`, `Arrow-04.png`, ... |
 | `16x16 Survival RPG Icons/Wood` | 101 | 16x16 | `Paper-01.png`, `Paper-02.png`, `Paper-03.png`, `Paper-04.png`, ... |
+
+### 16x16 Weapons RPG Icons.zip
+
+| Folder | Files | Image sizes | Examples |
+|---|---:|---|---|
+| `16x16 Weapons RPG Icons` | 5 | 384x320 (4), 768x640 (1) | `all-assets-preview.png`, `bronze-weapons.png`, `gold-weapons.png`, `iron-weapons.png`, ... |
 
 ### 16x16 miniworld - octoshrimpy  -  indoor update.zip
 

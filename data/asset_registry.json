@@ -12903,6 +12903,154 @@
     }
    ],
    "imported": []
+  },
+  {
+   "id": "shade_weapon_icons",
+   "name": "16x16 Weapon RPG Icons",
+   "creator": "Shade",
+   "sources": [
+    "16x16 Weapons RPG Icons.zip"
+   ],
+   "storage": "public",
+   "licence": "CC0",
+   "permissions": "CC0 1.0 (itch.io page, screenshot docs/assets/reference/weapon_rpg_icons_page_licence_2026-10-26.png): any use, commercial, modification; no credit needed (credited anyway).",
+   "categories": [
+    "icons",
+    "weapons"
+   ],
+   "status": "planned",
+   "used_for": "",
+   "scale": "1:1 (16 x 16 icons)",
+   "decision": "Owner 2026-10-26: the master weapons sheet; every weapon made at the smithy at a skill level and sold there (WEAPON-CATALOG-01). The four recolours map to metal tiers.",
+   "opportunities": [
+    "Every weapon type and design as smithy items (WEAPON-CATALOG-01)",
+    "Inventory and shop icons for weapons"
+   ],
+   "scan": [
+    {
+     "source": "16x16 Weapons RPG Icons.zip",
+     "present": true,
+     "files": 5,
+     "by_ext": {
+      ".png": 5
+     },
+     "licence_files": [],
+     "image_count": 5,
+     "sizes": {
+      "384x320": 4,
+      "768x640": 1
+     },
+     "frame_grids": {},
+     "images": [
+      {
+       "member": "16x16 Weapons RPG Icons/all-assets-preview.png",
+       "sha": "cc63521fc657193a",
+       "size": [
+        768,
+        640
+       ],
+       "content": [
+        0,
+        0,
+        768,
+        640
+       ],
+       "frame": [
+        768,
+        640
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "16x16 Weapons RPG Icons/bronze-weapons.png",
+       "sha": "b2eb15ab6ab9e85f",
+       "size": [
+        384,
+        320
+       ],
+       "content": [
+        0,
+        0,
+        384,
+        320
+       ],
+       "frame": [
+        384,
+        320
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "16x16 Weapons RPG Icons/gold-weapons.png",
+       "sha": "020cf63a509a31a5",
+       "size": [
+        384,
+        320
+       ],
+       "content": [
+        0,
+        0,
+        384,
+        320
+       ],
+       "frame": [
+        384,
+        320
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "16x16 Weapons RPG Icons/iron-weapons.png",
+       "sha": "9f520f628e59e578",
+       "size": [
+        384,
+        320
+       ],
+       "content": [
+        0,
+        0,
+        384,
+        320
+       ],
+       "frame": [
+        384,
+        320
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "16x16 Weapons RPG Icons/steel-weapons.png",
+       "sha": "257ef941fec1bfd8",
+       "size": [
+        384,
+        320
+       ],
+       "content": [
+        0,
+        0,
+        384,
+        320
+       ],
+       "frame": [
+        384,
+        320
+       ],
+       "frames_per_row": [
+        1
+       ]
+      }
+     ]
+    }
+   ],
+   "imported": []
   }
  ]
 }

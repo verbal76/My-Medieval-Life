@@ -22,6 +22,7 @@ from assetzip import REPO
 # "paid" = in the 50% Sale October bundle receipt; its licence forbids
 # redistributing the original files.
 NOTES = {
+    "16x16 Weapons RPG Icons.zip": ("CC0", "Free 16x16 Weapon RPG Icons by Shade (merchant-shade.itch.io), supplied by the owner on 2026-10-26, stored byte for byte: bronze-, gold-, iron- and steel-weapons.png (384 x 320 each, 16 x 16 icons; the same designs in four metals) and all-assets-preview.png. The page lists rapier, katana, sword, greatsword, scimitar, knife, butcher knife, battle axe, battle hammer, spear, staff, trident, mace, scythe, sickle and nunchucks, 30 designs x 4 recolours each. Itch.io page: Creative Commons Zero v1.0 Universal; no credit needed (credited anyway, owner policy). Page screenshots in docs/assets/reference/."),
     "16x16 Armour RPG Icons.zip": ("paid", "Armour icon sheets: boots, breastplates, headgear, trousers. \"16x16 Armor RPG Icons\" by Shade, in the owner's itch.io library (screenshot 2026-10-18)."),
     "16x16 Jewelry RPG Icons.zip": ("paid", "Jewelry icons (rings, necklaces, bracelets, brooches...) as sheets plus thousands of individual 16x16 PNGs. Includes LICENSE.txt."),
     "16x16 Survival RPG Icons.zip": ("paid", "Survival/crafting icons by category (food, gems, plants & alchemy, textile, armour, dirt & clay...). Includes LICENSE.txt."),
