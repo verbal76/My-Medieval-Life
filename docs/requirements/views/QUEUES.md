@@ -17,7 +17,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-BUSINESS-COURIER | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
 | GP-BUSINESS-DESK | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-FARMER-TENDING | 20 | IN DEVELOPMENT | worker C (family and farming) | wip/b22-family |
+| GP-FARMER-TENDING | 20 | IMPLEMENTED ON TASK BRANCH | worker C (family and farming) | wip/b22-family |
 | GP-LOCKPICK | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | GP-MARKET-SPACING | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
 | GP-MINE-WOOD-FRAME | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
@@ -30,7 +30,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
-| MP-PLAYER-FAMILY | 20 | IN DEVELOPMENT | worker C (family and farming) | wip/b22-family |
+| MP-PLAYER-FAMILY | 20 | IMPLEMENTED ON TASK BRANCH | worker C (family and farming) | wip/b22-family |
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |

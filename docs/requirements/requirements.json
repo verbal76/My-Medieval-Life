@@ -22976,8 +22976,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23025,6 +23025,11 @@
      "date": "2026-10-26",
      "change": "acceptance + owner amendment criteria",
      "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + c756d8e",
+     "why": "worker C report; merged into wip/build22 at a89484a (one conflict in net_session.gd resolved keeping both fields); combined tests pass: armour_worn 29, player_family 88, net_family 22, net_ui 61, multiplayer_c 340, field_work 24"
     }
    ],
    "assigned_worker": "worker C (family and farming)",
@@ -23033,7 +23038,13 @@
    "related": [
     "X20-OPEN-ITEMS"
    ],
-   "next_action": "Build 22: implement on wip/b22-family, lead integrates on wip/build22"
+   "next_action": "Build 22: implement on wip/b22-family, lead integrates on wip/build22",
+   "commits": [
+    "c756d8e"
+   ],
+   "tests": "field_work_test 24; presentation only, G0 identical; run_tests 3600/0",
+   "test_commit": "39f8871",
+   "playtest": "real device check outstanding (phone view)"
   },
   {
    "id": "GP-GIFT-QUANTITY",
@@ -31397,8 +31408,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -31446,16 +31457,28 @@
      "date": "2026-10-26",
      "change": "acceptance + owner amendment criteria",
      "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + bc243a9, 39f8871",
+     "why": "worker C report; merged into wip/build22 at a89484a (one conflict in net_session.gd resolved keeping both fields); combined tests pass: armour_worn 29, player_family 88, net_family 22, net_ui 61, multiplayer_c 340, field_work 24"
     }
    ],
    "assigned_worker": "worker C (family and farming)",
    "branch": "wip/b22-family",
-   "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
+   "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started. Save version 23 (couple household, NPC.adoptive). Agent decision: a couple with no house has no births (adoption already needed a home). Limitation: the couple's children eat from the household pantry, gifts and relief, not from the parents' chests.",
    "related": [
     "MP-ADOPTION-AGENCY",
     "X20-OPEN-ITEMS"
    ],
-   "next_action": "Build 22: implement on wip/b22-family, lead integrates on wip/build22"
+   "next_action": "Build 22: implement on wip/b22-family, lead integrates on wip/build22",
+   "commits": [
+    "39f8871",
+    "bc243a9"
+   ],
+   "tests": "player_family_test 88, net_family_test 22 (two processes, host restart, guest rejoin), multiplayer_c_test 340, family_test 51; save 22->23 migration with a Build 21 fixture; run_tests 3600/0, start_test 523/0, G0 identical",
+   "test_commit": "39f8871",
+   "playtest": "real device check outstanding (two-device marriage, birth and adoption over Wi-Fi)"
   },
   {
    "id": "MP-Q-PLAYER-CHILDREN",
