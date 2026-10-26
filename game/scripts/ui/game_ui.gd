@@ -35,7 +35,10 @@ var prompt_next: Button          # GP-ANDROID-USE-TALK-TARGETING: on a touch scr
 var log_box: VBoxContainer
 var toast: Label
 var toast_t := 0.0
-var toast_bottom := -160.0     # where the toast's bottom edge sits (above the prompt and the placing bar)
+var toast_shown := 0.0         # GP-MESSAGE-FOOTPRINT: how long the message was set to stay (it fades over its last FADE_SECONDS)
+var log_push := 0.0            # how far the corner log steps down while the message beside it would overlap it
+var messages: Array = []       # GP-MESSAGE-FOOTPRINT: every message this game, "[date  time] words", for the journal's Messages
+var messages_world := 0        # the world those belong to (its instance id) (a new or loaded game starts a new list)
 var action_bar: ProgressBar
 var action_label: Label        # the work's name inside the action bar ("Mining")
 var panel: PanelContainer
@@ -94,8 +97,15 @@ const PROGRESS_FILL := Color(0.47, 0.72, 0.29)            # the green of a filli
 const PROGRESS_EDGE := Color8(16, 10, 6)                   # a thin near-black outline, so it reads on dark ground too
 const ACTION_BAR_W := 96.0
 const ACTION_BAR_RISE := 22.0  # world pixels above the player's feet: just over the head
-const PROMPT_MAX_W := 360.0    # the contextual prompt and the message toast wrap at this width
-const TOAST_MAX_W := 460.0
+# GP-MESSAGE-FOOTPRINT (owner, 2026-10-26, "This takes up too much real estate in the screen"): the prompt is one slim line
+# along the bottom edge and the message a small box at the top edge, both in smaller words, out of the middle of the play area
+const PROMPT_MAX_W := 520.0    # the contextual prompt: one line up to this width (was 360, two lines at 16 points)
+const TOAST_MAX_W := 560.0     # the message: wraps at this width or the room beside the status box (was 460 at 17 points)
+const PROMPT_FONT := 14        # was 16
+const TOAST_FONT := 14         # was 17
+const PROMPT_EDGE := 6.0       # the prompt's gap above the bottom edge of the usable screen (was 64)
+const FADE_SECONDS := 0.6      # a message fades out over its last this many seconds
+const MESSAGES_KEPT := 200     # the Messages page keeps this many, oldest dropped first
 const METERS := {
 	"hp": ["Health", "health", "Health: how much you can take. Rest at home, eat food that heals, or drink a tonic. At 0 you die."],
 	"hunger": ["Food", "hud_hunger", "Food: falls slowly as time passes. At 0 you starve and lose health. Eat from the Pack to refill it."],
@@ -238,7 +248,7 @@ func _fit_hud() -> void:
 	var m: float = HUD_MARGIN["phone" if main.settings.phone else "desktop"]
 	status_box.position = Vector2(m, m)
 	log_box.offset_right = -m
-	log_box.offset_top = m
+	log_box.offset_top = m + log_push              # still below the message while it shows (GP-MESSAGE-FOOTPRINT)
 	touch_bar.offset_right = -TOUCH_EDGE             # GP-ANDROID-ACTION-BUTTONS: closer to the edge, inside the safe area
 	touch_bar.offset_bottom = -TOUCH_EDGE
 	_fit_touch_bar(view.y - inset[1] - inset[3] - 2.0 * TOUCH_EDGE, m)
@@ -578,51 +588,61 @@ func _build_hud() -> void:
 	prompt_box.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	prompt_box.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	prompt_box.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	prompt_box.offset_bottom = -64
+	prompt_box.offset_bottom = -PROMPT_EDGE
 	prompt_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	prompt_box.visible = false
 	var ph := HBoxContainer.new()
 	prompt_icon = TextureRect.new()
-	prompt_icon.custom_minimum_size = Vector2(30, 30)
+	prompt_icon.custom_minimum_size = Vector2(22, 22)
 	prompt_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	prompt_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	prompt_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	ph.add_child(prompt_icon)
 	prompt_label = Label.new()
-	prompt_label.add_theme_font_size_override("font_size", 16)
+	prompt_label.add_theme_font_size_override("font_size", PROMPT_FONT)
 	prompt_label.add_theme_color_override("font_outline_color", Color.BLACK)
 	prompt_label.add_theme_constant_override("outline_size", 3)
 	prompt_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	ph.add_child(prompt_label)
 	# GP-ANDROID-USE-TALK-TARGETING: with more than one thing to use here, Next chooses the next (as Q / Tab and the D-pad do);
 	# on a touch screen only, where there are no keys for it
+	# GP-MESSAGE-FOOTPRINT: a small button that shows which of them is chosen ("1/3 >"); still a thumb's height
 	prompt_next = Button.new()
 	prompt_next.text = "Next"
+	prompt_next.tooltip_text = "Next: choose the next thing to use here"
 	prompt_next.focus_mode = Control.FOCUS_NONE
-	prompt_next.custom_minimum_size = Vector2(64, 44)
+	prompt_next.custom_minimum_size = Vector2(52, 40)
 	prompt_next.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	prompt_next.add_theme_font_size_override("font_size", 16)
+	prompt_next.add_theme_font_size_override("font_size", 14)
 	prompt_next.visible = false
 	prompt_next.pressed.connect(func(): main.cycle_target(1))
 	ph.add_child(prompt_next)
 	ph.add_theme_constant_override("separation", 6)
 	var pm := _style(Color(WINDOW, 0.88))
-	pm.set_content_margin_all(6)
+	pm.set_content_margin_all(2)
+	pm.content_margin_left = 6
+	pm.content_margin_right = 4
 	prompt_box.add_theme_stylebox_override("panel", pm)
 	prompt_box.add_child(ph)
 	hud.add_child(prompt_box)
 
+	# GP-MESSAGE-FOOTPRINT: the message, a small box at the top edge beside the status box (placed in _place_toast); it fades
+	# after its time, a tap or click on it puts it away at once, and every message is kept on the journal's Messages page
 	toast = Label.new()
-	toast.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	toast.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	toast.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	toast.offset_bottom = -160
-	toast.add_theme_font_size_override("font_size", 17)
+	toast.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	toast.add_theme_font_size_override("font_size", TOAST_FONT)
 	toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	toast.visible = false
+	toast.mouse_filter = Control.MOUSE_FILTER_STOP
+	toast.tooltip_text = ""
 	_backed(toast)
+	(toast.get_theme_stylebox("normal") as StyleBoxFlat).set_content_margin_all(5)
 	toast.add_theme_color_override("font_outline_color", Color.BLACK)
-	toast.add_theme_constant_override("outline_size", 6)
+	toast.add_theme_constant_override("outline_size", 4)
+	toast.gui_input.connect(func(e: InputEvent):
+		if (e is InputEventMouseButton and e.pressed) or (e is InputEventScreenTouch and e.pressed):
+			dismiss_message()
+			toast.accept_event())
 	hud.add_child(toast)
 
 	# the player's own timed work (mining, felling, harvesting, crafting...): a small dark bar over the
@@ -1057,7 +1077,8 @@ func update_hud() -> void:
 	if prompt_box.visible:
 		_place_bottom(prompt_box, _prompt_bottom())
 	if toast.visible:
-		_place_bottom(toast, toast_bottom)
+		_place_toast()
+	_push_log()
 	var a: Dictionary = main.action
 	action_bar.visible = not a.is_empty()
 	if not a.is_empty():
@@ -1073,9 +1094,9 @@ func update_hud() -> void:
 		action_bar.global_position = head - Vector2(action_bar.size.x / 2.0, action_bar.size.y)
 	if toast_t > 0.0:
 		toast_t -= get_process_delta_time()
+		toast.modulate.a = clampf(toast_t / minf(FADE_SECONDS, toast_shown * 0.5), 0.0, 1.0) if toast_shown > 0.0 else 1.0
 		if toast_t <= 0.0:
-			toast.text = ""
-			toast.visible = false
+			dismiss_message()
 
 
 ## The text inside a bar (PL1-05): plain "current/max", e.g. "85/100". Health rounds up so a living
@@ -1095,22 +1116,72 @@ func _meter_text(key: String, words: String, fraction: float) -> void:
 	bars[key].modulate = Color(1.0, 0.7, 0.65) if blink else Color.WHITE
 
 
-## Where the prompt's bottom edge sits: just above the screen edge, or above the action buttons
-## when the touch bar is showing (they fill the bottom of a phone).
+## Where the prompt's bottom edge sits: GP-MESSAGE-FOOTPRINT, a slim bar just above the bottom edge of the usable screen
+## (GP-ACTIONBAR: the touch columns are at the right edge, not along the bottom).
 func _prompt_bottom() -> float:
-	return -64.0                            # GP-ACTIONBAR: the touch columns are at the right edge, not along the bottom
+	return -PROMPT_EDGE
 
 
-## Centre a bottom-anchored control on its own (re-measured) size, its bottom edge at `bottom`. A
-## control that grows from its bottom edge keeps its old top when the words get shorter, and a
+## The room along the bottom edge that the prompt may use, [left, right] in HUD units: left of the touch columns and
+## Recenter, right of the thumbstick when it shows.
+func _bottom_room() -> Vector2:
+	var w := hud.size.x if hud.size.x > 0.0 else get_viewport().get_visible_rect().size.x
+	var left := 0.0
+	var right := w - touch_bar_width()
+	if stick != null and stick.visible:
+		left = stick.offset_right + 8.0
+	if recenter_btn != null and recenter_btn.visible:
+		right = minf(right, w + recenter_btn.offset_right - recenter_btn.get_combined_minimum_size().x - 8.0)
+	return Vector2(left, maxf(right, left))
+
+
+## Centre a bottom-anchored control on its own (re-measured) size, its bottom edge at `bottom`, in the room the bottom edge
+## leaves (_bottom_room). A control that grows from its bottom edge keeps its old top when the words get shorter, and a
 ## wrapping label measured while it had no width is thousands of pixels tall.
 func _place_bottom(c: Control, bottom: float) -> void:
 	var m := c.get_combined_minimum_size()
-	var shift := -touch_bar_width() / 2.0     # centred in the room left of the touch columns
+	var room := _bottom_room()
+	var w := hud.size.x if hud.size.x > 0.0 else get_viewport().get_visible_rect().size.x
+	var shift := (room.x + room.y) / 2.0 - w / 2.0     # centred in the room left of the touch columns
 	c.offset_left = -m.x / 2.0 + shift
 	c.offset_right = m.x / 2.0 + shift
 	c.offset_top = bottom - m.y
 	c.offset_bottom = bottom
+
+
+## GP-MESSAGE-FOOTPRINT: the room along the top edge for the message, [left, right] in HUD units: right of the status box
+## (and of the wanted note under it), left of the touch columns.
+func _top_room() -> Vector2:
+	var w := hud.size.x if hud.size.x > 0.0 else get_viewport().get_visible_rect().size.x
+	var m := status_box.position.y if status_box != null else 10.0
+	var left := m
+	if status_box != null and status_box.visible:
+		left = status_box.position.x + status_box.size.x + 8.0
+	return Vector2(left, maxf(w - touch_bar_width() - m, left + 120.0))
+
+
+## The message at the top edge, over the play area's centre where the room allows, never under the status box or the
+## touch columns.
+func _place_toast() -> void:
+	var room := _top_room()
+	var m := toast.get_combined_minimum_size()
+	var cx := play_centre().x - hud.get_global_rect().position.x if status_box != null else (room.x + room.y) / 2.0
+	cx = clampf(cx, room.x + m.x / 2.0, maxf(room.y - m.x / 2.0, room.x + m.x / 2.0))
+	toast.size = m
+	toast.position = Vector2(roundf(cx - m.x / 2.0), status_box.position.y if status_box != null else 10.0)
+
+
+## The corner log (gains, village news, top right) steps down below the message while the two would overlap, and back up.
+func _push_log() -> void:
+	var want := 0.0
+	if toast.visible:
+		var t := toast.get_global_rect()
+		var l := log_box.get_global_rect()
+		if t.position.x < l.end.x and l.position.x < t.end.x:
+			want = t.size.y + 6.0
+	if want != log_push:
+		log_box.offset_top += want - log_push
+		log_push = want
 
 
 ## Fit a label to its words: one line up to max_w, wrapped (at max_w) beyond that.
@@ -1123,10 +1194,19 @@ func _fit_label(l: Label, max_w: float) -> void:
 
 
 ## The contextual prompt; `more`: there is a next thing to choose here (the touch Next button shows).
+## GP-MESSAGE-FOOTPRINT: `text` keeps its lines (prompt_text: the target, then the talk line or the next choice); the bar
+## shows them on one line, "first · second". On a touch screen the Next button names which of the choices is chosen
+## ("1/3 >") instead of a line naming the next one.
 func prompt(text: String, more := false) -> void:
 	prompt_text = text
-	prompt_label.text = text
 	prompt_next.visible = more and text != "" and scheme == "touch"
+	var lines: Array = Array(text.split("\n", false))
+	if prompt_next.visible:
+		lines = lines.filter(func(l: String): return not l.begins_with("Next: "))
+		var opts: Array = main.target_options if main != null else []
+		var at := opts.find(main.target) if main != null else -1
+		prompt_next.text = ("%d/%d  >" % [at + 1, opts.size()]) if at >= 0 and opts.size() > 1 else "Next  >"
+	prompt_label.text = "  ·  ".join(lines)
 	_fit_label(prompt_label, PROMPT_MAX_W)
 	_place_bottom(prompt_box, _prompt_bottom())
 	prompt_icon.texture = load(PROMPT % USE_ICON.get(scheme, "touch_tap"))
@@ -1171,13 +1251,54 @@ func _controls_tab() -> void:
 		_controls_list(s)
 
 
+## A message for the player: GP-MESSAGE-FOOTPRINT, a small box at the top edge for `seconds`, fading at the end, put away by
+## a tap or click on it, and kept on the journal's Messages page.
 func message(text: String, seconds := 4.0) -> void:
 	toast.text = text
-	_fit_label(toast, TOAST_MAX_W)
-	toast.visible = true
+	var room := _top_room()
+	_fit_label(toast, minf(TOAST_MAX_W, room.y - room.x - 10.0))
+	toast.visible = text != ""
+	toast.modulate.a = 1.0
 	toast_t = seconds
-	toast_bottom = minf(-160.0, _prompt_bottom() - 56.0) if not place_bar.visible else -(place_bar.size.y + 24.0)    # above the placing bar
-	_place_bottom(toast, toast_bottom)
+	toast_shown = seconds
+	_place_toast()
+	_push_log()
+	_keep_message(text)
+
+
+func _world_id() -> int:
+	return main.world.get_instance_id() if main != null and main.world != null else 0
+
+
+## The messages of the game in play (none yet when the list is another game's).
+func game_messages() -> Array:
+	return messages if messages_world == _world_id() else []
+
+
+## Put the message away now (its time is up, or it was tapped).
+func dismiss_message() -> void:
+	toast_t = 0.0
+	toast.text = ""
+	toast.visible = false
+	toast.modulate.a = 1.0
+	_push_log()
+
+
+## Keep a message for the journal's Messages page, stamped like the village record ("[Spring, Year 1  Day 3  07:24] ...").
+## A game of its own: a new or loaded world starts a new list. Kept by the interface only (not saved).
+func _keep_message(text: String) -> void:
+	if text.strip_edges() == "":
+		return
+	var w = main.world if main != null else null
+	if _world_id() != messages_world:
+		messages = []
+		messages_world = _world_id()
+	var line: String = ("[%s] %s" % [w.clock_text(), text]) if w != null else text
+	if not messages.is_empty() and messages[-1] == line:
+		return                                   # the same words again the same minute (a refusal repeated)
+	messages.append(line)
+	if messages.size() > MESSAGES_KEPT:
+		messages.pop_front()
 
 
 ## Something gained or a quick hint ("+2 red berries"): a short line in the top-right corner that
@@ -1258,7 +1379,7 @@ func modal() -> bool:
 func blocks(pos: Vector2) -> bool:
 	if panel.visible:
 		return true
-	for c in (touch_buttons() if touch_bar.visible else []) + [status_box, recenter_btn, place_bar, stick, prompt_next]:
+	for c in (touch_buttons() if touch_bar.visible else []) + [status_box, recenter_btn, place_bar, stick, prompt_next, toast]:
 		if c.visible and c.get_global_rect().has_point(pos):
 			return true
 	return false
@@ -2046,12 +2167,14 @@ func show_players() -> void:
 	_button("Close", hide_all)
 
 
-func show_journal(spread: int, quests_page := false) -> void:
-	var items := _quest_items() if quests_page else _journal_items()
+## `messages_page` (GP-MESSAGE-FOOTPRINT): the messages shown at the top of the screen this game, by day, as the village
+## record is.
+func show_journal(spread: int, quests_page := false, messages_page := false) -> void:
+	var items := _quest_items() if quests_page else (_journal_items(game_messages()) if messages_page else _journal_items())
 	var pages := maxi(1, ceili(float(items.size()) / JOURNAL_PER_PAGE))
 	var spreads := ceili(pages / 2.0)
 	spread = spreads - 1 if spread < 0 else clampi(spread, 0, spreads - 1)
-	_open("journal", "Journal: quests" if quests_page else "Journal", true)
+	_open("journal", "Journal: quests" if quests_page else ("Journal: messages" if messages_page else "Journal"), true)
 	var book := HBoxContainer.new()
 	book.add_theme_constant_override("separation", 0)
 	book.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -2110,19 +2233,22 @@ func show_journal(spread: int, quests_page := false) -> void:
 			book.add_child(spine)
 	var nav := HBoxContainer.new()
 	panel_body.add_child(nav)
-	var earlier := _button("Earlier", func(): show_journal(spread - 1, quests_page), spread > 0, nav)
-	earlier.custom_minimum_size = Vector2(160, 48)
+	var earlier := _button("Earlier", func(): show_journal(spread - 1, quests_page, messages_page), spread > 0, nav)
+	earlier.custom_minimum_size = Vector2(130, 48)
 	var where := Label.new()
 	where.text = "Pages %d–%d of %d" % [spread * 2 + 1, mini(spread * 2 + 2, pages), pages] if items.size() > 0 else "Nothing written yet"
 	where.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	where.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nav.add_child(where)
-	var later := _button("Later", func(): show_journal(spread + 1, quests_page), spread < spreads - 1, nav)
-	var other := _button("Village record" if quests_page else "Quests", func(): show_journal(-1, not quests_page), true, nav)
-	other.custom_minimum_size = Vector2(200, 48)
-	later.custom_minimum_size = Vector2(160, 48)
+	var later := _button("Later", func(): show_journal(spread + 1, quests_page, messages_page), spread < spreads - 1, nav)
+	later.custom_minimum_size = Vector2(130, 48)
+	for v in [["Village record", false, false], ["Quests", true, false], ["Messages", false, true]]:
+		if bool(v[1]) == quests_page and bool(v[2]) == messages_page:
+			continue
+		var other := _button(str(v[0]), func(): show_journal(-1, bool(v[1]), bool(v[2])), true, nav)
+		other.custom_minimum_size = Vector2(150, 48)
 	var res := _button("Resources", func(): show_resources(), true, nav)
-	res.custom_minimum_size = Vector2(200, 48)
+	res.custom_minimum_size = Vector2(150, 48)
 
 
 ## The village record as journal lines: a heading when the day changes, then each entry with its
@@ -2198,10 +2324,10 @@ func _manor_next(j: Dictionary) -> String:
 	return ""
 
 
-func _journal_items() -> Array:
+func _journal_items(source = null) -> Array:
 	var out := []
 	var day := ""
-	for entry in main.world.log_lines:
+	for entry in (main.world.log_lines if source == null else source):
 		var line: String = entry
 		var close := line.find("] ")
 		var stamp: String = line.substr(1, close - 1) if line.begins_with("[") and close > 0 else ""
@@ -2232,9 +2358,9 @@ func show_resources(node := "", item := "") -> void:
 	var gap := Control.new()
 	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nav.add_child(gap)
-	for v in [["Village record", false], ["Quests", true]]:
-		var b := _button(str(v[0]), func(): show_journal(-1, bool(v[1])), true, nav)
-		b.custom_minimum_size = Vector2(200, 48)
+	for v in [["Village record", false, false], ["Quests", true, false], ["Messages", false, true]]:
+		var b := _button(str(v[0]), func(): show_journal(-1, bool(v[1]), bool(v[2])), true, nav)
+		b.custom_minimum_size = Vector2(150, 48)
 	var sheet := PanelContainer.new()
 	var paper := StyleBoxFlat.new()
 	paper.bg_color = PARCHMENT
