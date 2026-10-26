@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (39)
+## Workers and task branches (33)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -11,17 +11,11 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | ARMOR-MATERIALS-01 | 20 | IMPLEMENTED ON TASK BRANCH | worker D (gear) | wip/b22-gear |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
-| GP-ANDROID-ACTION-BUTTONS | 20 | IN DEVELOPMENT | worker E (Android usability) | wip/x20-android |
-| GP-ANDROID-HUD-SCALE | 20 | IN DEVELOPMENT | worker E (Android usability) | wip/x20-android |
-| GP-ANDROID-RECENTER | 20 | IN DEVELOPMENT | worker E (Android usability) | wip/x20-android |
-| GP-ANDROID-USE-TALK-TARGETING | 20 | IN DEVELOPMENT | worker E (Android usability) | wip/x20-android |
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-BUSINESS-COURIER | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
 | GP-BUSINESS-DESK | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-FARMER-TENDING | 20 | IMPLEMENTED ON TASK BRANCH | worker C (family and farming) | wip/b22-family |
-| GP-INTERACTABLE-OUTLINES | 20 | IN DEVELOPMENT | worker E (Android usability) | wip/x20-android |
-| GP-INTERACTION-PROMPT-LIFECYCLE | 20 | IN DEVELOPMENT | worker E (Android usability) | wip/x20-android |
 | GP-LOCKPICK | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | GP-MARKET-SPACING | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
 | GP-MINE-WOOD-FRAME | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
@@ -98,7 +92,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | WIKI-B17 | 17 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 
-## Awaiting owner playtest or device check (79)
+## Awaiting owner playtest or device check (85)
 
 | ID | Build | Verification | Needs |
 |---|---|---|---|
@@ -127,6 +121,10 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | FARM-CROP-SEED | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | FR-04 | 15 | TARGETED TESTS PASSED | a controller: D-pad up opens the Journal, left stick press opens Build |
 | GP-ACTIONBAR | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-ANDROID-ACTION-BUTTONS | 20 | INTEGRATION VERIFIED | r, e, a, l,  , p, h, o, n, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, t, h, u, m, b,  , c, o, m, f, o, r, t, ,,  , e, d, g, e,  , g, a, p,  , b, y,  , t, h, e,  , c, a, m, e, r, a,  , c, u, t, o, u, t, ,,  , l, e, g, i, b, i, l, i, t, y, ,,  , o, u, t, l, i, n, e,  , v, i, s, i, b, i, l, i, t, y,  , i, n,  , d, a, y, l, i, g, h, t, ,,  , N, e, x, t,  , b, u, t, t, o, n, ) |
+| GP-ANDROID-HUD-SCALE | 20 | INTEGRATION VERIFIED | r, e, a, l,  , p, h, o, n, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, t, h, u, m, b,  , c, o, m, f, o, r, t, ,,  , e, d, g, e,  , g, a, p,  , b, y,  , t, h, e,  , c, a, m, e, r, a,  , c, u, t, o, u, t, ,,  , l, e, g, i, b, i, l, i, t, y, ,,  , o, u, t, l, i, n, e,  , v, i, s, i, b, i, l, i, t, y,  , i, n,  , d, a, y, l, i, g, h, t, ,,  , N, e, x, t,  , b, u, t, t, o, n, ) |
+| GP-ANDROID-RECENTER | 20 | INTEGRATION VERIFIED | r, e, a, l,  , p, h, o, n, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, t, h, u, m, b,  , c, o, m, f, o, r, t, ,,  , e, d, g, e,  , g, a, p,  , b, y,  , t, h, e,  , c, a, m, e, r, a,  , c, u, t, o, u, t, ,,  , l, e, g, i, b, i, l, i, t, y, ,,  , o, u, t, l, i, n, e,  , v, i, s, i, b, i, l, i, t, y,  , i, n,  , d, a, y, l, i, g, h, t, ,,  , N, e, x, t,  , b, u, t, t, o, n, ) |
+| GP-ANDROID-USE-TALK-TARGETING | 20 | INTEGRATION VERIFIED | r, e, a, l,  , p, h, o, n, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, t, h, u, m, b,  , c, o, m, f, o, r, t, ,,  , e, d, g, e,  , g, a, p,  , b, y,  , t, h, e,  , c, a, m, e, r, a,  , c, u, t, o, u, t, ,,  , l, e, g, i, b, i, l, i, t, y, ,,  , o, u, t, l, i, n, e,  , v, i, s, i, b, i, l, i, t, y,  , i, n,  , d, a, y, l, i, g, h, t, ,,  , N, e, x, t,  , b, u, t, t, o, n, ) |
 | GP-ANVIL | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-BACK-DOORS | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-BANDIT-CAMP-ART | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
@@ -137,6 +135,8 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-GOSSIP-NATURAL | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-HARVEST-CONT | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-INPUT-CONSIST | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-INTERACTABLE-OUTLINES | 20 | INTEGRATION VERIFIED | r, e, a, l,  , p, h, o, n, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, t, h, u, m, b,  , c, o, m, f, o, r, t, ,,  , e, d, g, e,  , g, a, p,  , b, y,  , t, h, e,  , c, a, m, e, r, a,  , c, u, t, o, u, t, ,,  , l, e, g, i, b, i, l, i, t, y, ,,  , o, u, t, l, i, n, e,  , v, i, s, i, b, i, l, i, t, y,  , i, n,  , d, a, y, l, i, g, h, t, ,,  , N, e, x, t,  , b, u, t, t, o, n, ) |
+| GP-INTERACTION-PROMPT-LIFECYCLE | 20 | INTEGRATION VERIFIED | r, e, a, l,  , p, h, o, n, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, t, h, u, m, b,  , c, o, m, f, o, r, t, ,,  , e, d, g, e,  , g, a, p,  , b, y,  , t, h, e,  , c, a, m, e, r, a,  , c, u, t, o, u, t, ,,  , l, e, g, i, b, i, l, i, t, y, ,,  , o, u, t, l, i, n, e,  , v, i, s, i, b, i, l, i, t, y,  , i, n,  , d, a, y, l, i, g, h, t, ,,  , N, e, x, t,  , b, u, t, t, o, n, ) |
 | GP-INTERIOR-WALLS | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-JOYSTICK | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-MARKET-SHELVES | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |

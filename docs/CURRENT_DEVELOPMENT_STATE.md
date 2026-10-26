@@ -32,7 +32,7 @@ workflow on the release commit. Owner amendment 2026-10-26 (`docs/directives/202
 
 ### In flight (2026-10-26)
 - Build 22 release run 40398771937 on `wip/build22` `b7e1c91` (all Build 22 workers merged; baseline replaced with evidence).
-- Expansion 20: `wip/expansion20` (`.claude/worktrees/x20main`) = Build 22 + Living Economy foundation (X20-B1, `0b5287c`, disabled; validation running); worker E on `wip/x20-android` (`.claude/worktrees/x20-android`): the six Android usability items (X20-B2): GP-ANDROID-RECENTER, GP-ANDROID-HUD-SCALE, GP-ANDROID-ACTION-BUTTONS, GP-ANDROID-USE-TALK-TARGETING, GP-INTERACTABLE-OUTLINES, GP-INTERACTION-PROMPT-LIFECYCLE.
+- Expansion 20: `wip/expansion20` (`.claude/worktrees/x20main`) = Build 22 + Living Economy foundation (X20-B1, `0b5287c`, disabled; validation running); DONE, merged at a16dbbe: worker E on `wip/x20-android` (`.claude/worktrees/x20-android`): the six Android usability items (X20-B2): GP-ANDROID-RECENTER, GP-ANDROID-HUD-SCALE, GP-ANDROID-ACTION-BUTTONS, GP-ANDROID-USE-TALK-TARGETING, GP-INTERACTABLE-OUTLINES, GP-INTERACTION-PROMPT-LIFECYCLE.
 - Worker F on `wip/x20-le01` (`.claude/worktrees/x20-le01`, base `0b5287c`): LE-01, the shared actor, need, offer, knowledge and contract model behind the disabled switch (X20-B3).
 
 - **Build 19 recovery (owner 2026-10-26, `docs/directives/2026-10-26_build19_carryover_audit_x20_integration.md`, record B19-RECOVERY):**

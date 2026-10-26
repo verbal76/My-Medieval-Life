@@ -22237,8 +22237,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22251,6 +22251,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E (Android usability); branch: None -> wip/x20-android",
      "why": "Expansion 20 batch X20-B2 (owner authorization 2026-10-26)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED",
+     "why": "worker E (wip/x20-android 35ef2a1) merged into wip/expansion20 at a16dbbe; lead looked at the outline and button screenshots"
     }
    ],
    "related": [
@@ -22259,10 +22264,19 @@
    "effort": "S",
    "design": "SPECIFIED",
    "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone",
+   "playtest": "real phone check outstanding (thumb comfort, edge gap by the camera cutout, legibility, outline visibility in daylight, Next button)",
    "notes": "Refines GP-ACTIONBAR (two right-side columns, implemented in Builds 20/21); it does not replace or reopen it.",
-   "assigned_worker": "worker E (Android usability)",
-   "branch": "wip/x20-android"
+   "assigned_worker": null,
+   "branch": "wip/x20-android",
+   "commits": [
+    "35ef2a1",
+    "e0ea781"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 a16dbbe"
+   ],
+   "test_commit": "a16dbbe",
+   "tests": "x20_android_ui_test 68/0, run_tests 3600/0, start_test 523/0 (two assertions updated for the intended change), net_ui 61/0, wiki_test, G0 identical; combined on wip/expansion20 a16dbbe: android 68/0, economy_foundation 89/0, start_test 523/0, net_ui 61/0"
   },
   {
    "id": "GP-ANDROID-HUD-SCALE",
@@ -22283,8 +22297,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22297,6 +22311,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E (Android usability); branch: None -> wip/x20-android",
      "why": "Expansion 20 batch X20-B2 (owner authorization 2026-10-26)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED",
+     "why": "worker E (wip/x20-android 35ef2a1) merged into wip/expansion20 at a16dbbe; lead looked at the outline and button screenshots"
     }
    ],
    "related": [
@@ -22307,9 +22326,18 @@
    "effort": "XS",
    "design": "SPECIFIED",
    "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone",
-   "assigned_worker": "worker E (Android usability)",
-   "branch": "wip/x20-android"
+   "playtest": "real phone check outstanding (thumb comfort, edge gap by the camera cutout, legibility, outline visibility in daylight, Next button)",
+   "assigned_worker": null,
+   "branch": "wip/x20-android",
+   "commits": [
+    "35ef2a1",
+    "d5d8f16"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 a16dbbe"
+   ],
+   "test_commit": "a16dbbe",
+   "tests": "x20_android_ui_test 68/0, run_tests 3600/0, start_test 523/0 (two assertions updated for the intended change), net_ui 61/0, wiki_test, G0 identical; combined on wip/expansion20 a16dbbe: android 68/0, economy_foundation 89/0, start_test 523/0, net_ui 61/0"
   },
   {
    "id": "GP-ANDROID-RECENTER",
@@ -22330,8 +22358,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22344,6 +22372,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E (Android usability); branch: None -> wip/x20-android",
      "why": "Expansion 20 batch X20-B2 (owner authorization 2026-10-26)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED",
+     "why": "worker E (wip/x20-android 35ef2a1) merged into wip/expansion20 at a16dbbe; lead looked at the outline and button screenshots"
     }
    ],
    "related": [
@@ -22353,9 +22386,18 @@
    "effort": "S",
    "design": "SPECIFIED",
    "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone (two display sizes)",
-   "assigned_worker": "worker E (Android usability)",
-   "branch": "wip/x20-android"
+   "playtest": "real phone check outstanding (thumb comfort, edge gap by the camera cutout, legibility, outline visibility in daylight, Next button)",
+   "assigned_worker": null,
+   "branch": "wip/x20-android",
+   "commits": [
+    "35ef2a1",
+    "6204afa"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 a16dbbe"
+   ],
+   "test_commit": "a16dbbe",
+   "tests": "x20_android_ui_test 68/0, run_tests 3600/0, start_test 523/0 (two assertions updated for the intended change), net_ui 61/0, wiki_test, G0 identical; combined on wip/expansion20 a16dbbe: android 68/0, economy_foundation 89/0, start_test 523/0, net_ui 61/0"
   },
   {
    "id": "GP-ANDROID-USE-TALK-TARGETING",
@@ -22378,8 +22420,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22392,6 +22434,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E (Android usability); branch: None -> wip/x20-android",
      "why": "Expansion 20 batch X20-B2 (owner authorization 2026-10-26)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED",
+     "why": "worker E (wip/x20-android 35ef2a1) merged into wip/expansion20 at a16dbbe; lead looked at the outline and button screenshots"
     }
    ],
    "related": [
@@ -22402,9 +22449,18 @@
    "effort": "M",
    "design": "SPECIFIED",
    "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone, gamepad, keyboard and mouse",
-   "assigned_worker": "worker E (Android usability)",
-   "branch": "wip/x20-android"
+   "playtest": "real phone check outstanding (thumb comfort, edge gap by the camera cutout, legibility, outline visibility in daylight, Next button)",
+   "assigned_worker": null,
+   "branch": "wip/x20-android",
+   "commits": [
+    "35ef2a1",
+    "49aa457"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 a16dbbe"
+   ],
+   "test_commit": "a16dbbe",
+   "tests": "x20_android_ui_test 68/0, run_tests 3600/0, start_test 523/0 (two assertions updated for the intended change), net_ui 61/0, wiki_test, G0 identical; combined on wip/expansion20 a16dbbe: android 68/0, economy_foundation 89/0, start_test 523/0, net_ui 61/0"
   },
   {
    "id": "GP-ANVIL",
@@ -23538,8 +23594,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23552,6 +23608,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E (Android usability); branch: None -> wip/x20-android",
      "why": "Expansion 20 batch X20-B2 (owner authorization 2026-10-26)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED",
+     "why": "worker E (wip/x20-android 35ef2a1) merged into wip/expansion20 at a16dbbe; lead looked at the outline and button screenshots"
     }
    ],
    "related": [
@@ -23560,9 +23621,21 @@
    "effort": "M",
    "design": "SPECIFIED",
    "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone and PC",
-   "assigned_worker": "worker E (Android usability)",
-   "branch": "wip/x20-android"
+   "playtest": "real phone check outstanding (thumb comfort, edge gap by the camera cutout, legibility, outline visibility in daylight, Next button)",
+   "assigned_worker": null,
+   "branch": "wip/x20-android",
+   "commits": [
+    "35ef2a1",
+    "7c9401e"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 a16dbbe"
+   ],
+   "test_commit": "a16dbbe",
+   "tests": "x20_android_ui_test 68/0, run_tests 3600/0, start_test 523/0 (two assertions updated for the intended change), net_ui 61/0, wiki_test, G0 identical; combined on wip/expansion20 a16dbbe: android 68/0, economy_foundation 89/0, start_test 523/0, net_ui 61/0",
+   "known_defects": [
+    "The workbench's glow rings only its small tool tile and the stove's may take in the pot beside it (how those objects are split across map tiles)"
+   ]
   },
   {
    "id": "GP-INTERACTION-PROMPT-LIFECYCLE",
@@ -23584,8 +23657,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23598,6 +23671,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E (Android usability); branch: None -> wip/x20-android",
      "why": "Expansion 20 batch X20-B2 (owner authorization 2026-10-26)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED",
+     "why": "worker E (wip/x20-android 35ef2a1) merged into wip/expansion20 at a16dbbe; lead looked at the outline and button screenshots"
     }
    ],
    "related": [
@@ -23607,9 +23685,18 @@
    "effort": "S",
    "design": "SPECIFIED",
    "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone and PC",
-   "assigned_worker": "worker E (Android usability)",
-   "branch": "wip/x20-android"
+   "playtest": "real phone check outstanding (thumb comfort, edge gap by the camera cutout, legibility, outline visibility in daylight, Next button)",
+   "assigned_worker": null,
+   "branch": "wip/x20-android",
+   "commits": [
+    "35ef2a1",
+    "824e8e2"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 a16dbbe"
+   ],
+   "test_commit": "a16dbbe",
+   "tests": "x20_android_ui_test 68/0, run_tests 3600/0, start_test 523/0 (two assertions updated for the intended change), net_ui 61/0, wiki_test, G0 identical; combined on wip/expansion20 a16dbbe: android 68/0, economy_foundation 89/0, start_test 523/0, net_ui 61/0"
   },
   {
    "id": "GP-INTERIOR-WALLS",
