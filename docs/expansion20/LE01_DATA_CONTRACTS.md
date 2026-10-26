@@ -58,6 +58,25 @@ by (day, minute, seq); an event earlier than the last is refused. Bounded ring (
 and type. Diagnostics only: nothing reads it to decide. Reservation changes are noted as events.
 Future consumers: `economy_sim.gd` diagnostics, Expansion 19 facts.
 
-## Not here (blocked or out of scope)
-Offer book (OD-LE-02), knowledge (OD-LE-10), need model, credit terms (OD-LE-05/07), contract breach (OD-LE-13), business
-identity (OD-LE-04/07), adaptive prices, loans, wages. Tests: `game/tests/economy_foundation_test.gd`.
+## LE-01 model (needs, offers, knowledge, contract links)
+
+Added 2026-10-26 (X20-B3, owner authorization of the same day); the implementation note with every placeholder is
+`LE01_IMPLEMENTATION.md`. Same switch, same attach point, same save key, no `SAVE_VERSION` change.
+
+| Record | Script | Contract |
+|---|---|---|
+| Actor (extended) | `econ_actor.gd` | `profile`, `controller` (a till's holder, ECON-P3), `household_of`, `location`, `judged_person` (the shared Expansion 19 model's person); "player" is the host, "player:<pid>" a guest; still no business ref (OD-LE-04/07) |
+| Need | `econ_needs.gd` (`EconNeeds`) | derived, never written back: food (hh.econ days < reserve_days), tool (JOB_TOOL, the builder's axe), input (`NPCBrain.wants`), contract (owed beyond stock, earliest deadline), housing (own site's `need`); dirty set + `refresh_budget`; saved |
+| Offer | `econ_offers.gd` (`EconOffers`) | ask reserves goods, bid reserves coins; post/withdraw/expire/record_fill move nothing; price given by the caller; `visibility` = OD-LE-02B placeholder; indexes by item and actor; bounded |
+| Knowledge | `econ_knowledge.gd` (`EconKnowledge`) | one entry per (knower, subject, item, side); sources own, dealing, contract only; in_person/notice (OD-LE-02B) and word_of_mouth/rumour (OD-LE-10) refused; no trust or opinion stored; nothing forgotten (OD-LE-10) |
+| Contract link | `econ_contracts.gd` (`EconContractLinks`) | `view` (owed = the RECON-01 hold, escrow), `earmark` an input as a reservation "contract:<id>" to the deadline, `sweep` releases when CON-01 has ended the contract |
+| Observers | `economy_foundation.gd` | `on_trade` (World.trade, after the sale) and `dawn` (World._new_day): INT-500, INT-501 |
+
+Save key `"economy"` gains `needs`, `offers`, `knowledge`, `contracts`, `contract_cursor`, each only when non-empty; a
+foundation-only or older save loads them empty. Tests: `game/tests/economy_model_test.gd`.
+
+## Still not here
+
+Adaptive prices, bids that move, negotiation and settlement (LE-02, under OD-LE-02's answer), credit terms (OD-LE-05B),
+breach and renegotiation rules (OD-LE-13's answer, LE-02/04), business identity (OD-LE-04/07), loans, wages (OD-LE-03),
+any decision that reads the model or an opinion (owner rule 2026-10-26: after the Build 19 judgment recovery).
