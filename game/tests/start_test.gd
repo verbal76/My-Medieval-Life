@@ -118,7 +118,8 @@ func _run() -> void:
 	var hud_view: Vector2 = main.get_viewport().get_visible_rect().size
 	check(absf(hud_sb.position.x - hm) < 1.0 and absf(hud_sb.position.y - hm) < 1.0, "the status box is anchored %d units from the top-left corner (%s)" % [hm, hud_sb.position])
 	var hud_tb: Rect2 = ui.touch_bar.get_global_rect()
-	check(absf(hud_view.x - hud_tb.end.x - hm) < 1.0 and absf(hud_view.y - hud_tb.end.y - hm) < 1.0, "the action bar is anchored %d units from the bottom-right corner" % hm)
+	var te: float = GameUI.TOUCH_EDGE                  # GP-ANDROID-ACTION-BUTTONS: closer to the edge than the HUD margin (was hm)
+	check(absf(hud_view.x - hud_tb.end.x - te) < 1.0 and absf(hud_view.y - hud_tb.end.y - te) < 1.0, "the action bar is anchored %d units from the bottom-right corner" % te)
 	var winp := Vector2(DisplayServer.window_get_size())
 	if winp.x <= 0 or winp.y <= 0 or DisplayServer.get_name() == "headless":
 		winp = hud_view
@@ -2435,7 +2436,7 @@ func _actions_tests() -> void:     # a coroutine: a few steps wait for the next 
 		for c in [ui.status_box, ui.log_box]:
 			if c.visible and c.get_global_rect().intersects(bar):
 				clash.append(c.name)
-		check(view.encloses(bar) and clash.is_empty() and run_btn.get_global_rect().size.x >= 64.0, "at %s the touch bar with Run is on screen and clear of the HUD (%s, clash %s)" % [sz, bar, clash])
+		check(view.encloses(bar) and clash.is_empty() and run_btn.get_global_rect().size.x >= GameUI.TOUCH_BUTTON_W, "at %s the touch bar with Run is on screen and clear of the HUD (%s, clash %s)" % [sz, bar, clash])
 		await _touch_columns_check(str(sz), view)
 	get_root().content_scale_size = size0
 	ui.fit_safe_area()
@@ -2456,12 +2457,13 @@ func _touch_columns_check(where: String, view: Rect2) -> void:
 	var overlap := 0
 	var small := 0
 	for i in rects.size():
-		if not view.encloses(rects[i]) or rects[i].size.y < GameUI.TOUCH_BUTTON_MIN_H or rects[i].size.x < 80.0 or all[i].get_theme_font_size("font_size") < 17:
+		# GP-ANDROID-ACTION-BUTTONS: a compact disc and its caption (was: a tile at least 80 wide with a 17-point caption)
+		if not view.encloses(rects[i]) or rects[i].size.y < GameUI.TOUCH_BUTTON_MIN_H or rects[i].size.x < GameUI.TOUCH_BUTTON_W or all[i].get_theme_font_size("font_size") < GameUI.TOUCH_FONT:
 			small += 1
 		for j in range(i + 1, rects.size()):
 			if (rects[i] as Rect2).grow(-0.5).intersects(rects[j]):
 				overlap += 1
-	check(all.size() == 9 and overlap == 0 and small == 0, "%s: all 9 actions on screen, none overlapping, each at least 80 x %d with a %d-point caption" % [where, int(GameUI.TOUCH_BUTTON_MIN_H), GameUI.TOUCH_FONT])
+	check(all.size() == 9 and overlap == 0 and small == 0, "%s: all 9 actions on screen, none overlapping, each at least %d x %d with a %d-point caption" % [where, int(GameUI.TOUCH_BUTTON_W), int(GameUI.TOUCH_BUTTON_MIN_H), GameUI.TOUCH_FONT])
 	var left: Rect2 = cols[0].get_global_rect()
 	var right: Rect2 = cols[1].get_global_rect()
 	check(left.end.x <= right.position.x and right.end.x > view.end.x - 40.0 and left.position.x > view.size.x * 0.6, "%s: the columns stand side by side at the right edge, the middle of the screen free (%s, %s)" % [where, left, right])

@@ -106,7 +106,7 @@ const USE_ICON := {"kbm": "keyboard_e", "gamepad": "xbox_button_a", "touch": "to
 # the controls list, per scheme: [prompt icons, what they do] (Kenney Input Prompts)
 const CONTROLS := {
 	"touch": [[["touch_tap"], "Tap the ground to walk there; tap someone or something to walk to it and use it. Or choose a thumbstick (Settings, Interface, Moving by touch): drag it in the lower left to walk"],
-		[["touch_finger_one"], "The action buttons stand in two columns at the right edge: Run, Gather, Fire, Skills and Menu, and beside them Use, Attack, Pack and Map"],
+		[["touch_finger_one"], "The action buttons stand in two columns close to the right edge, each a round button with its name under it: Run, Gather, Fire, Skills and Menu, and beside them Use, Attack, Pack and Map. Tap the round button or its name"],
 		[["touch_finger_one"], "Gather turns gather mode on (the button reads Gather ON, lit gold; Gather OFF when off); then tap a seam, tree, ripe field, flower, berry bush or game to gather it until it runs out"],
 		[["touch_finger_one"], "Attack swings at a foe within sword reach; with none near, it turns attack mode on: tap who to attack, and tap them again to strike"],
 		[["touch_zoom_in"], "Pinch to zoom"],
@@ -237,9 +237,9 @@ func _fit_hud() -> void:
 	status_box.position = Vector2(m, m)
 	log_box.offset_right = -m
 	log_box.offset_top = m
-	touch_bar.offset_right = -m
-	touch_bar.offset_bottom = -m
-	_fit_touch_bar(view.y - inset[1] - inset[3] - 2.0 * m, m)
+	touch_bar.offset_right = -TOUCH_EDGE             # GP-ANDROID-ACTION-BUTTONS: closer to the edge, inside the safe area
+	touch_bar.offset_bottom = -TOUCH_EDGE
+	_fit_touch_bar(view.y - inset[1] - inset[3] - 2.0 * TOUCH_EDGE, m)
 	# then step off any cutout an element would overlap (once laid out)
 	_avoid_cutouts.call_deferred(cutouts, m)
 
@@ -342,11 +342,19 @@ const TOUCH_COLUMNS := [
 	[["Use", "interact", "use"], ["Attack", "attack", "attack"], ["Pack", "inventory", "pack"], ["Map", "map", "map"]],
 ]
 const TOUCH_GAP := 6                   # between buttons (interface units): they never touch or overlap
-const TOUCH_BUTTON_W := 96.0
-const TOUCH_BUTTON_H := (72.0)         # the most a button is tall; shorter screens fit five rows (touch_button_height)
-const TOUCH_BUTTON_MIN_H := 52.0
-const TOUCH_FONT := 17
-const TOUCH_ON := Color8(240, 196, 84)  # a mode that is on (Gather, Run, Attack): gold border and caption
+# GP-ANDROID-ACTION-BUTTONS (owner, 2026-10-24): a compact disc behind each glyph, its caption just under the disc, in
+# place of Build 21's 96 x 72 tiles. The glyph art and its size are kept (TOUCH_ICON: the box Build 21's 72-high tile gave
+# the 128 px icon); every caption is kept; the whole button (disc and caption) is the touch target.
+const TOUCH_ICON := 40.0               # the glyph's box (the icon art fills about two thirds of it)
+const TOUCH_DISC := 48.0               # the disc's diameter: the glyph with a rim round it
+const TOUCH_BUTTON_W := 58.0           # the least width of a button (wider when its caption is: "Gather OFF")
+const TOUCH_CAPTION_H := 22.0          # the caption's line (TOUCH_FONT)
+const TOUCH_BUTTON_H := TOUCH_TOP + (TOUCH_DISC - TOUCH_ICON) / 2.0 + TOUCH_ICON + TOUCH_CAPTION_H   # 70: the disc, the caption under it
+const TOUCH_BUTTON_MIN_H := 60.0       # a very short screen squeezes the rows (and the glyph) to this; still a comfortable thumb
+const TOUCH_TOP := 4.0                 # above the disc
+const TOUCH_EDGE := 4.0                # the columns' margin from the right (and bottom) edge of the safe area (was HUD_MARGIN)
+const TOUCH_FONT := 15
+const TOUCH_ON := Color8(240, 196, 84)  # a mode that is on (Gather, Run, Attack): gold rim and caption
 
 
 ## Every touch action button, in column order.
@@ -357,41 +365,67 @@ func touch_buttons() -> Array:
 	return out
 
 
-## A touch action: its icon over a readable caption, on its own dark tile (it reads on bright grass and sand).
+## GP-ANDROID-ACTION-BUTTONS: the disc drawn behind a touch button's glyph (show_behind_parent), dark with a slate rim; gold
+## while its mode is on, darker while pressed.
+class TouchDisc extends Control:
+	var on := false
+
+	func _draw() -> void:
+		var b := get_parent() as Button
+		var pad := (GameUI.TOUCH_DISC - GameUI.TOUCH_ICON) / 2.0
+		var icon := minf(size.y - GameUI.TOUCH_TOP - pad - GameUI.TOUCH_CAPTION_H, size.x - 4.0)    # the glyph's box, as the button draws it
+		var r := icon / 2.0 + pad
+		var at := Vector2(size.x / 2.0, GameUI.TOUCH_TOP + r)
+		var pressed := b != null and b.get_draw_mode() in [BaseButton.DRAW_PRESSED, BaseButton.DRAW_HOVER_PRESSED]
+		var fill := Color(GameUI.WINDOW, 0.97 if pressed else 0.84)
+		if on:
+			fill = Color(0.36, 0.26, 0.08, 0.92)
+		draw_circle(at, r, fill, true, -1.0, true)
+		draw_circle(at, r - 1.5, GameUI.TOUCH_ON if on else Color(GameUI.SLATE, 0.95), false, 3.0 if on else 2.0, true)
+
+
+## A touch action: its glyph on a small dark disc, the caption under it (they read on bright grass and sand).
 func _touch_button(icon: String, caption: String) -> Button:
 	var b := Button.new()
 	b.icon = load(UI % icon)
-	b.expand_icon = true
+	b.expand_icon = true                # the glyph fills the room above the caption: TOUCH_ICON at TOUCH_BUTTON_H
 	b.text = caption
 	b.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
 	b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	b.focus_mode = Control.FOCUS_NONE
 	b.add_theme_font_size_override("font_size", TOUCH_FONT)
 	b.add_theme_color_override("font_outline_color", Color.BLACK)
-	b.add_theme_constant_override("outline_size", 4)
+	b.add_theme_constant_override("outline_size", 5)
+	b.add_theme_constant_override("h_separation", 0)
 	b.clip_text = false
+	var disc := TouchDisc.new()
+	disc.name = "Disc"
+	disc.show_behind_parent = true
+	disc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	disc.set_anchors_preset(Control.PRESET_FULL_RECT)
+	b.add_child(disc)
+	for sig in [b.button_down, b.button_up, b.mouse_exited]:
+		sig.connect(disc.queue_redraw)
 	_touch_style(b, false)
 	b.custom_minimum_size = Vector2(TOUCH_BUTTON_W, TOUCH_BUTTON_H)
 	return b
 
 
-## The tile behind a touch button; `on` marks a mode that is on (gold border, brighter tile).
+## A touch button's look; `on` marks a mode that is on (gold rim and caption, a brighter disc).
 func _touch_style(b: Button, on: bool) -> void:
-	for state in ["normal", "hover", "pressed", "focus", "disabled"]:
-		var st := StyleBoxFlat.new()
-		st.bg_color = Color(WINDOW, 0.86 if state != "pressed" else 0.97)
-		if on:
-			st.bg_color = Color(0.36, 0.26, 0.08, 0.92)
-		st.border_color = TOUCH_ON if on else Color(SLATE, 0.95)
-		st.set_border_width_all(3 if on else 2)
-		st.set_corner_radius_all(8)
-		st.content_margin_left = 4
-		st.content_margin_right = 4
-		st.content_margin_top = 5
-		st.content_margin_bottom = 3
-		b.add_theme_stylebox_override(state, st)
-	for c in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+	var empty := StyleBoxEmpty.new()
+	empty.content_margin_top = TOUCH_TOP + (TOUCH_DISC - TOUCH_ICON) / 2.0
+	empty.content_margin_left = 2
+	empty.content_margin_right = 2
+	empty.content_margin_bottom = 0
+	for state in ["normal", "hover", "pressed", "hover_pressed", "focus", "disabled"]:
+		b.add_theme_stylebox_override(state, empty)
+	for c in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
 		b.add_theme_color_override(c, TOUCH_ON if on else PALE)
+	var disc := b.get_node_or_null("Disc") as TouchDisc
+	if disc != null:
+		disc.on = on
+		disc.queue_redraw()
 
 
 ## The height of a touch button that lets five rows fit in `avail` interface units of height (never above
@@ -407,7 +441,7 @@ static func touch_button_height(avail: float) -> float:
 func touch_bar_width() -> float:
 	if touch_bar == null or not touch_bar.visible:
 		return 0.0
-	return touch_bar.get_combined_minimum_size().x + float(HUD_MARGIN["phone" if main.settings.phone else "desktop"])
+	return touch_bar.get_combined_minimum_size().x + TOUCH_EDGE
 
 
 ## A button showing one of the UI pack's icon tiles (the tile is the button), with a caption under it.
@@ -793,6 +827,7 @@ func _fit_touch_bar(avail: float, m: float) -> void:
 	var bh := touch_button_height(avail)
 	for b: Button in touch_buttons():
 		b.custom_minimum_size = Vector2(TOUCH_BUTTON_W, bh)
+		(b.get_node("Disc") as Control).queue_redraw()
 	touch_bar.reset_size()
 	var w := touch_bar_width() if touch_bar.visible else 0.0
 	log_box.offset_right = -m - w
