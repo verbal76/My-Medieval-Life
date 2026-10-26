@@ -442,7 +442,7 @@ func _ready() -> void:
 				ui.show_origin()
 			"settings", "settings_display", "settings_interface", "settings_controls":
 				ui.show_settings(ui.hide_all, shot_panel.trim_prefix("settings_") if shot_panel.begins_with("settings_") else "audio")
-			"settings_wiki", "wiki", "wiki_category", "wiki_search", "wiki_item", "wiki_guide", "wiki_recipe":
+			"settings_wiki", "wiki", "wiki_category", "wiki_search", "wiki_item", "wiki_guide", "wiki_recipe", "wiki_tools", "wiki_block", "wiki_mallet":
 				ui.show_wiki(ui.hide_all)        # the Village Encyclopedia (UI-WIKI-01); add --phone for a phone's layout
 				match shot_panel:
 					"wiki_category":
@@ -455,6 +455,8 @@ func _ready() -> void:
 						ui.wiki_win.goto("guide:heal")
 					"wiki_recipe":
 						ui.wiki_win.goto("recipe:forge_pickaxe")
+					"wiki_tools", "wiki_block", "wiki_mallet":     # GP-WIKI-RECIPE-TOOLS: a recipe's tools, a product's, a tool's uses
+						ui.wiki_win.goto({"wiki_tools": "recipe:dress_stone", "wiki_block": "item:building_block", "wiki_mallet": "item:mallet"}[shot_panel])
 			"controls", "controls_pad":
 				if shot_panel == "controls_pad":
 					ui.set_scheme("gamepad")
