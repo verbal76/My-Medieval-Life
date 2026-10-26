@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 571 (302 of them still open) |
-| **Open entries now** (rules excluded) | | **479** |
+| Entries added since | | 573 (304 of them still open) |
+| **Open entries now** (rules excluded) | | **481** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (54)
@@ -97,7 +97,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (571)
+## Added since the baseline (573)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -279,6 +279,7 @@ None.
 | GP-JOYSTICK | Android movement option: tap-to-move (default, existing) or a lower-left virtual joystick for continuous movement under the same movement, collision and navigation rules; hidden when menus, dialogue, inventory or minigames need the screen; scales and respects safe areas; preference stored per device/player | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-LOCKPICK | Interactive pin-tumbler lockpicking minigame replacing the passive meter: cutaway chambers with springs, pins, setting line, wobble and fall animations, a lockpick; whack-a-mole timing on readable visual cues (no hidden randomness); easy locks about 4 tumblers and 6-8 successful taps, harder locks 5-6 tumblers, faster wobble, shorter windows, several unstable pins, never smaller targets; non-overlapping touch regions; gamepad A/B/X/Y (+LB/RB) with prompts, keyboard equivalents; local to the player, never pauses a multiplayer world, host authoritative over lock state and rewards | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | GP-MARKET-SHELVES | Market stalls as Craftpix wooden shelves showing each merchant's actual listings (up to ten) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
+| GP-MINE-WOOD-FRAME | Underground: a wooden frame drawn over the wall beside a deposit reads as blocking it; supports and openings need a clear representation | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | GP-PACK-DETAIL-FIT | Pack item detail panel: action buttons cut off the bottom of the screen | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-PAUSE-PANEL | Pause menu: a framed panel over the dimmed game, not a full-screen brown background | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-PICKAXE-ANIM | Android mining shows the pickaxe swing synchronized with the work and stops when mining stops (PC already does); other long work animations checked; mining speed, output and rules unchanged | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
@@ -297,6 +298,7 @@ None.
 | GP-UI-COMPACT | Menus: smaller text and tighter boxes so more fits on screen | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-WHEAT-PICKED | Harvested wheat shows as picked, cell by cell | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-WIKI-LAYOUT | Encyclopedia laid out like a classic wiki page, on parchment | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
+| GP-WIKI-RECIPE-TOOLS | Encyclopedia recipes name every tool the work needs (for example a mallet and a chisel, and which chisels count) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | HEALTH-01 | Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | HORSE-Q | Plough horse: price and what it does | decision | APPROVED | owner decision |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |

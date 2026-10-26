@@ -21907,6 +21907,168 @@
    ]
   },
   {
+   "id": "GP-ANDROID-ACTION-BUTTONS",
+   "kind": "approved",
+   "title": "Android right-side action controls: compact circular backgrounds, closer to the right edge, glyphs and labels kept",
+   "description": "Android right-side action controls: compact circular backgrounds, closer to the right edge, glyphs and labels kept",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "Replace oversized rectangular button backgrounds with compact circular backgrounds. Do not remove labels as a space-saving shortcut.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Existing glyph artwork and glyph size kept",
+    "Every visible label kept",
+    "Button functions and ordering unchanged",
+    "Compact circular backgrounds sized to the glyph and label",
+    "Controls closer to the right edge, respecting device safe areas",
+    "Comfortable touch hit targets; gameplay space reclaimed"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "related": [
+    "GP-ACTIONBAR"
+   ],
+   "effort": "S",
+   "design": "SPECIFIED",
+   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
+   "playtest": "Android phone",
+   "notes": "Refines GP-ACTIONBAR (two right-side columns, implemented in Builds 20/21); it does not replace or reopen it."
+  },
+  {
+   "id": "GP-ANDROID-HUD-SCALE",
+   "kind": "approved",
+   "title": "Android health and status panel about 15% smaller, with every value kept legible",
+   "description": "Android health and status panel about 15% smaller, with every value kept legible",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "Reduce the health and status panel by approximately 15%.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Panel about 15% smaller",
+    "Health and other status information and their numbers kept and legible",
+    "Wasted space reduced rather than useful information removed",
+    "Gameplay functionality unchanged"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "related": [
+    "UI-HUD-01",
+    "B7-010",
+    "GP-ANDROID-RECENTER"
+   ],
+   "effort": "XS",
+   "design": "SPECIFIED",
+   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
+   "playtest": "Android phone"
+  },
+  {
+   "id": "GP-ANDROID-RECENTER",
+   "kind": "approved",
+   "title": "Android Recenter places the character at the visual centre of the usable gameplay area, not under the health panel",
+   "description": "Android Recenter places the character at the visual centre of the usable gameplay area, not under the health panel",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "The Recenter control currently positions the player incorrectly relative to the visible gameplay area.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Recenter places the character at the visual centre of the usable gameplay area, accounting for the screen area of persistent HUD elements",
+    "The character is never placed underneath the health panel",
+    "Consistent at every zoom level and Android display size",
+    "Existing camera controls and movement behaviour unchanged"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "related": [
+    "UI-HUD-01",
+    "B7-010"
+   ],
+   "effort": "S",
+   "design": "SPECIFIED",
+   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
+   "playtest": "Android phone (two display sizes)"
+  },
+  {
+   "id": "GP-ANDROID-USE-TALK-TARGETING",
+   "kind": "approved",
+   "title": "Use prioritises the usable station or object and Talk the nearby character; the current target is clear and selectable",
+   "description": "Use prioritises the usable station or object and Talk the nearby character; the current target is clear and selectable",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "The existing Use button sometimes selects a nearby villager when the player intends to interact with a station or other usable object. The game already has a Use button. Do not add a redundant Use Nearby button.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Use prioritises the appropriate usable station or object; Talk prioritises nearby characters",
+    "The current target is understandable to the player",
+    "With several eligible targets there is a practical way to choose the intended one",
+    "Interaction distance, permissions, ownership and access rules unchanged",
+    "No maximum zoom or pixel-perfect tapping needed",
+    "No new Use Nearby button: corrections to the existing targeting and interaction system"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "related": [
+    "GP-ANVIL",
+    "GP-TARGET-ART-MATCH",
+    "GP-INTERACTABLE-OUTLINES"
+   ],
+   "effort": "M",
+   "design": "SPECIFIED",
+   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
+   "playtest": "Android phone, gamepad, keyboard and mouse"
+  },
+  {
    "id": "GP-ANVIL",
    "kind": "approved",
    "title": "Workshop anvil: the touch and click target is the visible anvil (not the woodpile); the character walks to a valid spot beside it; tapping the woodpile never opens the anvil; artwork, layout and crafting unchanged; every workstation's graphic and interaction target checked for the same mismatch",
@@ -22199,6 +22361,47 @@
    ],
    "tests": "sim_gate.py PASS against the new baseline at 9feaf77 (lead rerun); baseline diff checked by the lead",
    "test_commit": "9feaf77"
+  },
+  {
+   "id": "GP-BUSINESS-COURIER",
+   "kind": "approved",
+   "title": "Business courier integration: the courier hand-off at a business desk (individually traceable part of GP-BUSINESS-DESK)",
+   "description": "Business courier integration: the courier hand-off at a business desk (individually traceable part of GP-BUSINESS-DESK)",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "Business desk and courier work: Existing unfinished and untested implementation is preserved on \"wip/build22-business-desk\" at commit \"e25eec9\".",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Couriers collect from and deliver to a business through its desk",
+    "Existing courier deliveries and shopkeeper trade unchanged where not extended",
+    "Tests, wiki and INT entry updated"
+   ],
+   "target_build": "20",
+   "parent": "GP-BUSINESS-DESK",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "branch": "wip/build22-business-desk",
+   "commits": [
+    "e25eec9"
+   ],
+   "implementation": "unfinished, untested changes to game/scripts/core/settlement/couriers.gd in the e25eec9 snapshot",
+   "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
+   "related": [
+    "X20-OPEN-ITEMS"
+   ],
+   "design": "PARTIAL",
+   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)"
   },
   {
    "id": "GP-BUSINESS-DESK",
@@ -22923,6 +23126,87 @@
    ]
   },
   {
+   "id": "GP-INTERACTABLE-OUTLINES",
+   "kind": "approved",
+   "title": "Usable objects nearby show a subtle sprite-silhouette glow; the selected target a brighter one",
+   "description": "Usable objects nearby show a subtle sprite-silhouette glow; the selected target a brighter one",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "Players need to recognize which objects can be used without tapping everything. This is a usability feature, not authorization for a new interaction framework.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Nearby usable objects show a subtle glowing outline; the selected target a brighter outline",
+    "The outline follows the object's sprite silhouette, not its tile",
+    "Covers ovens, workbenches, market stalls, anvils, storage and other eligible objects",
+    "Respects interaction range and access restrictions",
+    "No clutter or excessive rendering cost",
+    "Consistent across supported platforms where appropriate",
+    "No new interaction framework"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "related": [
+    "GP-ANDROID-USE-TALK-TARGETING"
+   ],
+   "effort": "M",
+   "design": "SPECIFIED",
+   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
+   "playtest": "Android phone and PC"
+  },
+  {
+   "id": "GP-INTERACTION-PROMPT-LIFECYCLE",
+   "kind": "approved",
+   "title": "Contextual prompts ('Use the workbench') clear while the interaction is active and when it closes or the target changes",
+   "description": "Contextual prompts ('Use the workbench') clear while the interaction is active and when it closes or the target changes",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "Contextual prompts such as \"Use the workbench\" currently remain visible during or after interactions until the player moves away. Do not confuse persistent proximity with an active interaction target.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Prompt shown when a valid target is selected",
+    "Prompt cleared or suppressed while its interaction is active",
+    "Stale prompts cleared when the interaction closes, the target changes or becomes invalid",
+    "The prompt returns when the object is selected again",
+    "Activity feedback such as 'Crafting' kept"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "related": [
+    "GP-ANDROID-USE-TALK-TARGETING",
+    "CTR-02"
+   ],
+   "effort": "S",
+   "design": "SPECIFIED",
+   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
+   "playtest": "Android phone and PC"
+  },
+  {
    "id": "GP-INTERIOR-WALLS",
    "kind": "approved",
    "title": "Building interiors: side walls missing when inside",
@@ -23203,6 +23487,47 @@
    "related": [
     "X20-OPEN-ITEMS"
    ]
+  },
+  {
+   "id": "GP-MINE-WOOD-FRAME",
+   "kind": "approved",
+   "title": "Underground: a wooden frame drawn over the wall beside a deposit reads as blocking it; supports and openings need a clear representation",
+   "description": "Underground: a wooden frame drawn over the wall beside a deposit reads as blocking it; supports and openings need a clear representation",
+   "source": "docs/gameplay_polish/reference/mine_wood_frame_over_deposit_2026-10-26.jpg",
+   "owner_wording": "What is that wood? It's blocking a deposit, if it's supports that's a bad representation. We need it better represented in lines open spaces",
+   "approval": "owner, 2026-10-26 (playtest report)",
+   "acceptance": [
+    "The wooden object in the owner's screenshot is identified (the way out of the level, or a timber support) and drawn so it never covers or seems to block a deposit",
+    "Openings, supports and the way out read clearly as what they are in the open floor, without hiding a deposit or its prompt"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/mine_wood_frame_over_deposit_2026-10-26.jpg"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "parent: None -> X20-OPEN-ITEMS",
+     "why": "owner playtest report 2026-10-26, carried into the Expansion 20 scope (record only)"
+    }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS",
+    "MIN-H",
+    "MIN-F"
+   ],
+   "next_action": "awaiting the owner's authorization to implement (recorded only)",
+   "notes": "Lead reading, unconfirmed: the frame is most likely the level's way out (a portal door) or a timber support (MIN-F); asked the owner whether one was placed."
   },
   {
    "id": "GP-PACK-DETAIL-FIT",
@@ -23653,6 +23978,11 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "owner playtest observation 2026-10-26 (PC): a villager who knew of the player's killing refused the player ('Murderer! Get away from me!'); owner: 'Nice, it remembers'. One observation, not a full device verification"
     }
    ],
    "next_action": "Owner: approve earshot distances; decide on trade refusal for known killers; device playtest in the next build",
@@ -24444,6 +24774,48 @@
    "related": [
     "X20-OPEN-ITEMS"
    ]
+  },
+  {
+   "id": "GP-WIKI-RECIPE-TOOLS",
+   "kind": "approved",
+   "title": "Encyclopedia recipes name every tool the work needs (for example a mallet and a chisel, and which chisels count)",
+   "description": "Encyclopedia recipes name every tool the work needs (for example a mallet and a chisel, and which chisels count)",
+   "source": "docs/gameplay_polish/reference/wiki_recipe_without_tools_2026-10-26.jpg",
+   "owner_wording": "I need to know in the Wikipedia what tools are also needed when making something, I didn't know I needed a steel chisel and a mallet",
+   "approval": "owner, 2026-10-26 (playtest report)",
+   "acceptance": [
+    "Every recipe's 'How to make it' and 'From raw materials' lines show the tools it needs (recipes.json tool) with links, and which items satisfy each tool kind",
+    "Other work that needs a tool (timber supports and ladders with a mallet, stone cutting, mining) says so on its page",
+    "wiki_test checks that every recipe with a tool shows it"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/wiki_recipe_without_tools_2026-10-26.jpg"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "parent: None -> X20-OPEN-ITEMS",
+     "why": "owner playtest report 2026-10-26, carried into the Expansion 20 scope (record only)"
+    }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS",
+    "WIKI-01",
+    "UI-WIKI-01"
+   ],
+   "next_action": "awaiting the owner's authorization to implement (recorded only)",
+   "notes": "Lead finding: game/scripts/core/wiki.gd builds recipe lines from station and inputs only; recipes.json carries tools in a 'tool' field (dress_stone: mallet and chisel), which the page never shows."
   },
   {
    "id": "HEALTH-01",
@@ -30002,6 +30374,37 @@
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN"
+  },
+  {
+   "id": "MP-ADOPTION-AGENCY",
+   "kind": "approved",
+   "title": "Adoption agency concept (future, separate design item)",
+   "description": "Adoption agency concept (future, separate design item)",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "The future adoption-agency concept is a separate, deferred design item. Do not implement it or create a new family system.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "DEFERRED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "design": "DESIGN WORK REQUIRED",
+   "related": [
+    "MP-PLAYER-FAMILY"
+   ],
+   "next_action": "none until the owner takes it up"
   },
   {
    "id": "MP-ARCH",
@@ -56833,6 +57236,36 @@
    ]
   },
   {
+   "id": "X20-OPEN-ITEMS",
+   "kind": "approved",
+   "title": "Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy",
+   "description": "Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy",
+   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
+   "owner_wording": "Expansion 20 is the next major development milestone. I want every outstanding gameplay, Android usability, interaction, visual, and previously deferred Build 19 item reconciled into the Expansion 20 planning scope.",
+   "approval": "owner, 2026-10-24",
+   "acceptance": [
+    "Every carried item is listed with its existing id, status, remaining acceptance and target in docs/expansion20/X20_OPEN_ITEMS.md (a snapshot of this register); implementation waits for the owner's explicit authorization"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT APPLICABLE",
+   "verification_status": "NOT APPLICABLE",
+   "release_status": "NOT APPLICABLE",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-24",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
+    }
+   ],
+   "umbrella": true,
+   "next_action": "awaiting the owner's explicit authorization to begin Expansion 20 implementation (record only, 2026-10-24)"
+  },
+  {
    "id": "XAUDIT-01",
    "kind": "approved",
    "title": "Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence",
@@ -56944,351 +57377,6 @@
      "why": "owner answered 2026-10-23 (docs/directives/2026-10-23_owner_answers_x19_release_decisions.md)"
     }
    ]
-  },
-  {
-   "id": "X20-OPEN-ITEMS",
-   "kind": "approved",
-   "title": "Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy",
-   "description": "Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy",
-   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
-   "owner_wording": "Expansion 20 is the next major development milestone. I want every outstanding gameplay, Android usability, interaction, visual, and previously deferred Build 19 item reconciled into the Expansion 20 planning scope.",
-   "approval": "owner, 2026-10-24",
-   "acceptance": [
-    "Every carried item is listed with its existing id, status, remaining acceptance and target in docs/expansion20/X20_OPEN_ITEMS.md (a snapshot of this register); implementation waits for the owner's explicit authorization"
-   ],
-   "target_build": "20",
-   "parent": null,
-   "depends_on": [],
-   "decisions": [],
-   "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT APPLICABLE",
-   "verification_status": "NOT APPLICABLE",
-   "release_status": "NOT APPLICABLE",
-   "completion": "OPEN",
-   "history": [
-    {
-     "date": "2026-10-24",
-     "change": "entered in the register",
-     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
-    }
-   ],
-   "umbrella": true,
-   "next_action": "awaiting the owner's explicit authorization to begin Expansion 20 implementation (record only, 2026-10-24)"
-  },
-  {
-   "id": "GP-ANDROID-RECENTER",
-   "kind": "approved",
-   "title": "Android Recenter places the character at the visual centre of the usable gameplay area, not under the health panel",
-   "description": "Android Recenter places the character at the visual centre of the usable gameplay area, not under the health panel",
-   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
-   "owner_wording": "The Recenter control currently positions the player incorrectly relative to the visible gameplay area.",
-   "approval": "owner, 2026-10-24",
-   "acceptance": [
-    "Recenter places the character at the visual centre of the usable gameplay area, accounting for the screen area of persistent HUD elements",
-    "The character is never placed underneath the health panel",
-    "Consistent at every zoom level and Android display size",
-    "Existing camera controls and movement behaviour unchanged"
-   ],
-   "target_build": "20",
-   "parent": "X20-OPEN-ITEMS",
-   "depends_on": [],
-   "decisions": [],
-   "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
-   "release_status": "NOT READY",
-   "completion": "OPEN",
-   "history": [
-    {
-     "date": "2026-10-24",
-     "change": "entered in the register",
-     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
-    }
-   ],
-   "related": [
-    "UI-HUD-01",
-    "B7-010"
-   ],
-   "effort": "S",
-   "design": "SPECIFIED",
-   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone (two display sizes)"
-  },
-  {
-   "id": "GP-ANDROID-HUD-SCALE",
-   "kind": "approved",
-   "title": "Android health and status panel about 15% smaller, with every value kept legible",
-   "description": "Android health and status panel about 15% smaller, with every value kept legible",
-   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
-   "owner_wording": "Reduce the health and status panel by approximately 15%.",
-   "approval": "owner, 2026-10-24",
-   "acceptance": [
-    "Panel about 15% smaller",
-    "Health and other status information and their numbers kept and legible",
-    "Wasted space reduced rather than useful information removed",
-    "Gameplay functionality unchanged"
-   ],
-   "target_build": "20",
-   "parent": "X20-OPEN-ITEMS",
-   "depends_on": [],
-   "decisions": [],
-   "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
-   "release_status": "NOT READY",
-   "completion": "OPEN",
-   "history": [
-    {
-     "date": "2026-10-24",
-     "change": "entered in the register",
-     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
-    }
-   ],
-   "related": [
-    "UI-HUD-01",
-    "B7-010",
-    "GP-ANDROID-RECENTER"
-   ],
-   "effort": "XS",
-   "design": "SPECIFIED",
-   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone"
-  },
-  {
-   "id": "GP-ANDROID-ACTION-BUTTONS",
-   "kind": "approved",
-   "title": "Android right-side action controls: compact circular backgrounds, closer to the right edge, glyphs and labels kept",
-   "description": "Android right-side action controls: compact circular backgrounds, closer to the right edge, glyphs and labels kept",
-   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
-   "owner_wording": "Replace oversized rectangular button backgrounds with compact circular backgrounds. Do not remove labels as a space-saving shortcut.",
-   "approval": "owner, 2026-10-24",
-   "acceptance": [
-    "Existing glyph artwork and glyph size kept",
-    "Every visible label kept",
-    "Button functions and ordering unchanged",
-    "Compact circular backgrounds sized to the glyph and label",
-    "Controls closer to the right edge, respecting device safe areas",
-    "Comfortable touch hit targets; gameplay space reclaimed"
-   ],
-   "target_build": "20",
-   "parent": "X20-OPEN-ITEMS",
-   "depends_on": [],
-   "decisions": [],
-   "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
-   "release_status": "NOT READY",
-   "completion": "OPEN",
-   "history": [
-    {
-     "date": "2026-10-24",
-     "change": "entered in the register",
-     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
-    }
-   ],
-   "related": [
-    "GP-ACTIONBAR"
-   ],
-   "effort": "S",
-   "design": "SPECIFIED",
-   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone",
-   "notes": "Refines GP-ACTIONBAR (two right-side columns, implemented in Builds 20/21); it does not replace or reopen it."
-  },
-  {
-   "id": "GP-ANDROID-USE-TALK-TARGETING",
-   "kind": "approved",
-   "title": "Use prioritises the usable station or object and Talk the nearby character; the current target is clear and selectable",
-   "description": "Use prioritises the usable station or object and Talk the nearby character; the current target is clear and selectable",
-   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
-   "owner_wording": "The existing Use button sometimes selects a nearby villager when the player intends to interact with a station or other usable object. The game already has a Use button. Do not add a redundant Use Nearby button.",
-   "approval": "owner, 2026-10-24",
-   "acceptance": [
-    "Use prioritises the appropriate usable station or object; Talk prioritises nearby characters",
-    "The current target is understandable to the player",
-    "With several eligible targets there is a practical way to choose the intended one",
-    "Interaction distance, permissions, ownership and access rules unchanged",
-    "No maximum zoom or pixel-perfect tapping needed",
-    "No new Use Nearby button: corrections to the existing targeting and interaction system"
-   ],
-   "target_build": "20",
-   "parent": "X20-OPEN-ITEMS",
-   "depends_on": [],
-   "decisions": [],
-   "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
-   "release_status": "NOT READY",
-   "completion": "OPEN",
-   "history": [
-    {
-     "date": "2026-10-24",
-     "change": "entered in the register",
-     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
-    }
-   ],
-   "related": [
-    "GP-ANVIL",
-    "GP-TARGET-ART-MATCH",
-    "GP-INTERACTABLE-OUTLINES"
-   ],
-   "effort": "M",
-   "design": "SPECIFIED",
-   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone, gamepad, keyboard and mouse"
-  },
-  {
-   "id": "GP-INTERACTABLE-OUTLINES",
-   "kind": "approved",
-   "title": "Usable objects nearby show a subtle sprite-silhouette glow; the selected target a brighter one",
-   "description": "Usable objects nearby show a subtle sprite-silhouette glow; the selected target a brighter one",
-   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
-   "owner_wording": "Players need to recognize which objects can be used without tapping everything. This is a usability feature, not authorization for a new interaction framework.",
-   "approval": "owner, 2026-10-24",
-   "acceptance": [
-    "Nearby usable objects show a subtle glowing outline; the selected target a brighter outline",
-    "The outline follows the object's sprite silhouette, not its tile",
-    "Covers ovens, workbenches, market stalls, anvils, storage and other eligible objects",
-    "Respects interaction range and access restrictions",
-    "No clutter or excessive rendering cost",
-    "Consistent across supported platforms where appropriate",
-    "No new interaction framework"
-   ],
-   "target_build": "20",
-   "parent": "X20-OPEN-ITEMS",
-   "depends_on": [],
-   "decisions": [],
-   "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
-   "release_status": "NOT READY",
-   "completion": "OPEN",
-   "history": [
-    {
-     "date": "2026-10-24",
-     "change": "entered in the register",
-     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
-    }
-   ],
-   "related": [
-    "GP-ANDROID-USE-TALK-TARGETING"
-   ],
-   "effort": "M",
-   "design": "SPECIFIED",
-   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone and PC"
-  },
-  {
-   "id": "GP-INTERACTION-PROMPT-LIFECYCLE",
-   "kind": "approved",
-   "title": "Contextual prompts ('Use the workbench') clear while the interaction is active and when it closes or the target changes",
-   "description": "Contextual prompts ('Use the workbench') clear while the interaction is active and when it closes or the target changes",
-   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
-   "owner_wording": "Contextual prompts such as \"Use the workbench\" currently remain visible during or after interactions until the player moves away. Do not confuse persistent proximity with an active interaction target.",
-   "approval": "owner, 2026-10-24",
-   "acceptance": [
-    "Prompt shown when a valid target is selected",
-    "Prompt cleared or suppressed while its interaction is active",
-    "Stale prompts cleared when the interaction closes, the target changes or becomes invalid",
-    "The prompt returns when the object is selected again",
-    "Activity feedback such as 'Crafting' kept"
-   ],
-   "target_build": "20",
-   "parent": "X20-OPEN-ITEMS",
-   "depends_on": [],
-   "decisions": [],
-   "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
-   "release_status": "NOT READY",
-   "completion": "OPEN",
-   "history": [
-    {
-     "date": "2026-10-24",
-     "change": "entered in the register",
-     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
-    }
-   ],
-   "related": [
-    "GP-ANDROID-USE-TALK-TARGETING",
-    "CTR-02"
-   ],
-   "effort": "S",
-   "design": "SPECIFIED",
-   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)",
-   "playtest": "Android phone and PC"
-  },
-  {
-   "id": "GP-BUSINESS-COURIER",
-   "kind": "approved",
-   "title": "Business courier integration: the courier hand-off at a business desk (individually traceable part of GP-BUSINESS-DESK)",
-   "description": "Business courier integration: the courier hand-off at a business desk (individually traceable part of GP-BUSINESS-DESK)",
-   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
-   "owner_wording": "Business desk and courier work: Existing unfinished and untested implementation is preserved on \"wip/build22-business-desk\" at commit \"e25eec9\".",
-   "approval": "owner, 2026-10-24",
-   "acceptance": [
-    "Couriers collect from and deliver to a business through its desk",
-    "Existing courier deliveries and shopkeeper trade unchanged where not extended",
-    "Tests, wiki and INT entry updated"
-   ],
-   "target_build": "20",
-   "parent": "GP-BUSINESS-DESK",
-   "depends_on": [],
-   "decisions": [],
-   "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
-   "verification_status": "NOT TESTED",
-   "release_status": "NOT READY",
-   "completion": "OPEN",
-   "history": [
-    {
-     "date": "2026-10-24",
-     "change": "entered in the register",
-     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
-    }
-   ],
-   "branch": "wip/build22-business-desk",
-   "commits": [
-    "e25eec9"
-   ],
-   "implementation": "unfinished, untested changes to game/scripts/core/settlement/couriers.gd in the e25eec9 snapshot",
-   "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
-   "related": [
-    "X20-OPEN-ITEMS"
-   ],
-   "design": "PARTIAL",
-   "next_action": "awaiting the owner's authorization to implement (recorded only, 2026-10-24)"
-  },
-  {
-   "id": "MP-ADOPTION-AGENCY",
-   "kind": "approved",
-   "title": "Adoption agency concept (future, separate design item)",
-   "description": "Adoption agency concept (future, separate design item)",
-   "source": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md",
-   "owner_wording": "The future adoption-agency concept is a separate, deferred design item. Do not implement it or create a new family system.",
-   "approval": "owner, 2026-10-24",
-   "acceptance": [],
-   "target_build": "unassigned",
-   "parent": null,
-   "depends_on": [],
-   "decisions": [],
-   "approval_status": "DEFERRED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
-   "release_status": "NOT READY",
-   "completion": "OPEN",
-   "history": [
-    {
-     "date": "2026-10-24",
-     "change": "entered in the register",
-     "why": "docs/directives/2026-10-24_expansion20_open_items_reconciliation.md"
-    }
-   ],
-   "design": "DESIGN WORK REQUIRED",
-   "related": [
-    "MP-PLAYER-FAMILY"
-   ],
-   "next_action": "none until the owner takes it up"
   }
  ]
 }
