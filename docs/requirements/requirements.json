@@ -54807,7 +54807,7 @@
    "owner_wording": "You also have a master weapons sprite sheet, let's do the same with it we should be able to buy them from a smithy and make them at an appropriate skill level as well. So all new armors and weapons being introduced will need a production skill level assigned and a recipe",
    "approval": "owner, 2026-10-26",
    "acceptance": [
-    "Every weapon of the master weapons sheet (16x16 Assorted RPG Icons, weapons.png) is a real item with an icon, damage, durability, price, a recipe at the smithy with a production skill level, and is sold by the smithy",
+    "Every weapon of the master weapons sheet (16x16 Weapons RPG Icons by Shade, CC0: 16 types x 30 designs in bronze, iron, steel and gold) is a real item with an icon, damage, durability, price, a smithy recipe with a production skill level, and is sold by the smithy; shop and wiki grouped by type, metal and design so they stay usable",
     "Special weapons may use boar tusks and antlers (ARMOR-MATERIALS-01) and may carry worn buffs",
     "Wiki pages list each weapon, its recipe, tools and skill level"
    ],
@@ -54835,6 +54835,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker D (gear); branch: None -> wip/b22-gear",
      "why": "owner: in the amended Build 22 mini-build"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "acceptance[0]: corrected the source sheet",
+     "why": "owner supplied the real master sheet (16x16 Weapons RPG Icons.zip, staging 1e6a295); the earlier text named the 72-icon Assorted sheet: Every weapon of the master weapons sheet (16x16 Assorted RPG Icons, weapons.png) is a real item with an icon, damage, du"
     }
    ],
    "related": [
