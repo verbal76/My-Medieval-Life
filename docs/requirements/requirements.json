@@ -22565,8 +22565,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22579,10 +22579,16 @@
      "date": "2026-10-26",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (market); branch: wip/build22-business-desk -> wip/b22-market",
      "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 700305d",
+     "why": "worker A report; merged into wip/build22 at 66fd330 (doc conflicts resolved, interaction index regenerated); combined suites pass"
     }
    ],
    "branch": "wip/b22-market",
    "commits": [
+    "700305d",
     "e25eec9"
    ],
    "implementation": "unfinished, untested changes to game/scripts/core/settlement/couriers.gd in the e25eec9 snapshot",
@@ -22592,7 +22598,10 @@
    ],
    "design": "PARTIAL",
    "next_action": "Build 22: implement on wip/b22-market, lead integrates on wip/build22",
-   "assigned_worker": "worker A (market)"
+   "assigned_worker": "worker A (market)",
+   "tests": "courier_desk_test 26; on wip/build22 66fd330 with B and C merged: run_tests 3600/0, start_test 523/0, multiplayer_c 340/0, G0 PASS",
+   "test_commit": "97cba8b",
+   "playtest": "real device check outstanding"
   },
   {
    "id": "GP-BUSINESS-DESK",
@@ -22610,8 +22619,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -22664,11 +22673,17 @@
      "date": "2026-10-26",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (market); branch: wip/build22-business-desk -> wip/b22-market",
      "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 764eff0",
+     "why": "worker A report; merged into wip/build22 at 66fd330 (doc conflicts resolved, interaction index regenerated); combined suites pass"
     }
    ],
    "assigned_worker": "worker A (market)",
    "branch": "wip/b22-market",
    "commits": [
+    "764eff0",
     "e25eec9"
    ],
    "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
@@ -22677,7 +22692,10 @@
    ],
    "remaining_work": "finish the desk; the courier hand-off is tracked separately as GP-BUSINESS-COURIER; write the desk test; regenerate the village and check G0; shopkeepers' existing buying and selling must keep working (it does in Build 21)",
    "implementation": "unfinished, untested snapshot on wip/build22-business-desk e25eec9 (on top of c33d7c2): a new business-desks script (core/business_desks.gd on that branch); changes to counters.gd, settlement/couriers.gd, wiki.gd, world.gd, main.gd, ui/game_ui.gd, game/data/village.json, tools/build_village.py",
-   "next_action": "Build 22: implement on wip/b22-market, lead integrates on wip/build22"
+   "next_action": "Build 22: implement on wip/b22-market, lead integrates on wip/build22",
+   "tests": "desk_test 33; on wip/build22 66fd330 with B and C merged: run_tests 3600/0, start_test 523/0, multiplayer_c 340/0, G0 PASS",
+   "test_commit": "97cba8b",
+   "playtest": "real device check outstanding"
   },
   {
    "id": "GP-CHECKPOINT-1",
@@ -23749,8 +23767,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23773,6 +23791,11 @@
      "date": "2026-10-26",
      "change": "acceptance + owner amendment criteria",
      "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 87ae381, 89ee91c, 8803950",
+     "why": "worker A report; merged into wip/build22 at 66fd330 (doc conflicts resolved, interaction index regenerated); combined suites pass"
     }
    ],
    "related": [
@@ -23782,7 +23805,15 @@
    "next_action": "Build 22: implement on wip/b22-market, lead integrates on wip/build22",
    "notes": "The owner wrote 'not too close'; read as 'now too close' (spacing worse with the new sprite). Asked the owner to confirm.",
    "assigned_worker": "worker A (market)",
-   "branch": "wip/b22-market"
+   "branch": "wip/b22-market",
+   "commits": [
+    "87ae381",
+    "8803950",
+    "89ee91c"
+   ],
+   "tests": "market_spacing_test 23; village generator v16; baseline replaced with evidence (the Build 22 baseline-change note on wip/build22, old baseline kept); on wip/build22 66fd330 with B and C merged: run_tests 3600/0, start_test 523/0, multiplayer_c 340/0, G0 PASS",
+   "test_commit": "97cba8b",
+   "playtest": "real device check outstanding"
   },
   {
    "id": "GP-MINE-WOOD-FRAME",
@@ -24675,8 +24706,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -24699,6 +24730,11 @@
      "date": "2026-10-26",
      "change": "acceptance + owner amendment criteria",
      "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 9871733",
+     "why": "worker A report; merged into wip/build22 at 66fd330 (doc conflicts resolved, interaction index regenerated); combined suites pass"
     }
    ],
    "related": [
@@ -24708,7 +24744,13 @@
    "next_action": "Build 22: implement on wip/b22-market, lead integrates on wip/build22",
    "notes": "Cause found by the lead (read only): Business.rent() rents free_pitch(), the first free pitch, and ignores the one whose window was used; the window then reopens the chosen pitch, which is not the player's, so its rent view shows 'You already rent a stall.' (game/scripts/core/business.gd rent, ui/stall_window.gd _rent_view, on wip/multiplayer-b19). A defect: a mechanic failing its function.",
    "assigned_worker": "worker A (market)",
-   "branch": "wip/b22-market"
+   "branch": "wip/b22-market",
+   "commits": [
+    "9871733"
+   ],
+   "tests": "stall_rent_pitch_test 22; on wip/build22 66fd330 with B and C merged: run_tests 3600/0, start_test 523/0, multiplayer_c 340/0, G0 PASS",
+   "test_commit": "97cba8b",
+   "playtest": "real device check outstanding"
   },
   {
    "id": "GP-STALL-TABLE-10",
@@ -24847,8 +24889,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -24906,15 +24948,26 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (market); branch: wip/multiplayer-b19 -> wip/b22-market",
      "why": "owner authorized Build 22 and Expansion 20 execution (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md): Build 22 = the five deferred areas and the seven 2026-10-26 playtest items"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 87ae381",
+     "why": "worker A report; merged into wip/build22 at 66fd330 (doc conflicts resolved, interaction index regenerated); combined suites pass"
     }
    ],
    "assigned_worker": "worker A (market)",
    "branch": "wip/b22-market",
-   "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
+   "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started. Open point: food the tavern keepers actually set out on tables can still be taken as theft (unchanged from before Build 22; recorded in DECISIONS by worker A).",
    "related": [
     "X20-OPEN-ITEMS"
    ],
-   "next_action": "Build 22: implement on wip/b22-market, lead integrates on wip/build22"
+   "next_action": "Build 22: implement on wip/b22-market, lead integrates on wip/build22",
+   "commits": [
+    "87ae381"
+   ],
+   "tests": "table_preview_test 17; on wip/build22 66fd330 with B and C merged: run_tests 3600/0, start_test 523/0, multiplayer_c 340/0, G0 PASS",
+   "test_commit": "97cba8b",
+   "playtest": "real device check outstanding"
   },
   {
    "id": "GP-TARGET-ART-MATCH",

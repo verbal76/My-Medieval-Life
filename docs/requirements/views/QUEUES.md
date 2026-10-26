@@ -14,17 +14,17 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | FIX-D1D2 | 20 | IMPLEMENTED ON TASK BRANCH | repair workers (Sonnet subagents) | wip/expansion19-preparation, wip/expansion20-preparation |
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-BUSINESS-COURIER | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
-| GP-BUSINESS-DESK | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
+| GP-BUSINESS-COURIER | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
+| GP-BUSINESS-DESK | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-FARMER-TENDING | 20 | IMPLEMENTED ON TASK BRANCH | worker C (family and farming) | wip/b22-family |
 | GP-LOCKPICK | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
-| GP-MARKET-SPACING | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
+| GP-MARKET-SPACING | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
 | GP-MINE-WOOD-FRAME | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | GP-QTY-PICKER-CONTROLLER | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | GP-SKILLS-RT | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
-| GP-STALL-RENT-WRONG-PITCH | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
-| GP-TABLE-ITEMS | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
+| GP-STALL-RENT-WRONG-PITCH | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
+| GP-TABLE-ITEMS | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
 | GP-WANTED-INDICATOR | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | GP-WIKI-RECIPE-TOOLS | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |

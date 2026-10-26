@@ -265,8 +265,8 @@ None.
 | GP-BACK-DOORS | Back doors not drawn on roofs; a trail leads to every door | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-BANDIT-CAMP-ART | Bandit camp: crates, barrels and campfire drawn with the wrong tiles | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | multiplayer |
-| GP-BUSINESS-COURIER | Business courier integration: the courier hand-off at a business desk (individually traceable part of GP-BUSINESS-DESK) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
-| GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| GP-BUSINESS-COURIER | Business courier integration: the courier hand-off at a business desk (individually traceable part of GP-BUSINESS-DESK) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
+| GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-CHECKPOINT-1 | Checkpoint 1: private three-platform playtest release (Android, Windows, Linux) of the quick-win polish fixes | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | multiplayer |
 | GP-CRIME-PURSUIT | Proportionate crime response, guard pursuit that survives loss of sight, coordinated manhunts and persistent wanted status | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-DIALOGUE-PERSPECTIVE | NPCs speak from their own perspective: I, we, my mother, you; witnessed versus heard; personal significance | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
@@ -282,7 +282,7 @@ None.
 | GP-JOYSTICK | Android movement option: tap-to-move (default, existing) or a lower-left virtual joystick for continuous movement under the same movement, collision and navigation rules; hidden when menus, dialogue, inventory or minigames need the screen; scales and respects safe areas; preference stored per device/player | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-LOCKPICK | Interactive pin-tumbler lockpicking minigame replacing the passive meter: cutaway chambers with springs, pins, setting line, wobble and fall animations, a lockpick; whack-a-mole timing on readable visual cues (no hidden randomness); easy locks about 4 tumblers and 6-8 successful taps, harder locks 5-6 tumblers, faster wobble, shorter windows, several unstable pins, never smaller targets; non-overlapping touch regions; gamepad A/B/X/Y (+LB/RB) with prompts, keyboard equivalents; local to the player, never pauses a multiplayer world, host authoritative over lock state and rewards | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-MARKET-SHELVES | Market stalls as Craftpix wooden shelves showing each merchant's actual listings (up to ten) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
-| GP-MARKET-SPACING | Market stalls with the Craftpix shelf sprite stand too close together | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| GP-MARKET-SPACING | Market stalls with the Craftpix shelf sprite stand too close together | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-MINE-WOOD-FRAME | Underground: a wooden frame drawn over the wall beside a deposit reads as blocking it; supports and openings need a clear representation | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-PACK-DETAIL-FIT | Pack item detail panel: action buttons cut off the bottom of the screen | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-PAUSE-PANEL | Pause menu: a framed panel over the dimmed game, not a full-screen brown background | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
@@ -296,10 +296,10 @@ None.
 | GP-SKILLS-RT | Controller right trigger opens Skills during normal play (an additional shortcut; RB and L kept) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-SMITHY-WORKBENCH | Smithy: the grinding wheel is not the workbench; a table dressed with hammers is | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-STALL-PRICE-ON-PUTUP | Market stall: set the price when putting goods up | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
-| GP-STALL-RENT-WRONG-PITCH | Renting a market pitch rents the first free one, not the one the player chose, then says 'You already rent a stall' | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| GP-STALL-RENT-WRONG-PITCH | Renting a market pitch rents the first free one, not the one the player chose, then says 'You already rent a stall' | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-STALL-TABLE-10 | Market stall table shows ten goods comfortably | approved | NOT APPLICABLE / NOT APPLICABLE / CLOSED | multiplayer |
 | GP-START-RUSTY-AXE | The player starts with a rusty axe | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
-| GP-TABLE-ITEMS | Merchandise previews on tables: a visual preview of what the business offers (no pickup) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| GP-TABLE-ITEMS | Merchandise previews on tables: a visual preview of what the business offers (no pickup) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-TARGET-ART-MATCH | Interaction prompts name what the art shows (tavern 'crate' is a roast) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-TRAIL-EDGES | Trails crossing bare dirt show stray grass edges | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-UI-COMPACT | Menus: smaller text and tighter boxes so more fits on screen | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
