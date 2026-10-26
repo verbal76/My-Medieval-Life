@@ -111,7 +111,7 @@ const CONTROLS := {
 		[["touch_finger_one"], "Attack swings at a foe within sword reach; with none near, it turns attack mode on: tap who to attack, and tap them again to strike"],
 		[["touch_zoom_in"], "Pinch to zoom"],
 		[["xbox_button_a"], "Connect a Bluetooth or wired controller and the game switches to its controls and hides these buttons"],
-		[["touch_swipe_two_move"], "Drag with two fingers to look around; Recenter brings the view back to you"],
+		[["touch_swipe_two_move"], "Drag with two fingers to look around; Recenter brings the view back to you, in the middle of the part of the screen the buttons and the status box leave clear"],
 		[["touch_finger_one"], "Map opens the village map; tap a spot on it to look there"],
 		[["touch_finger_one"], "Run turns sprint on (it lights up): walk anywhere to run, using stamina; tap Run again to walk"]],
 	"kbm": [[["keyboard_w", "keyboard_a", "keyboard_s", "keyboard_d"], "Move"],
@@ -442,6 +442,33 @@ func touch_bar_width() -> float:
 	if touch_bar == null or not touch_bar.visible:
 		return 0.0
 	return touch_bar.get_combined_minimum_size().x + TOUCH_EDGE
+
+
+## GP-ANDROID-RECENTER (owner, 2026-10-24): the visual centre of the usable play area, in viewport units: the centre of the
+## screen's area that the persistent HUD leaves clear (the centroid of the screen less the status box and, when shown, the
+## touch columns). Messages, the prompt, the wanted note and Recenter come and go and do not move the view. It moves
+## smoothly with the HUD's size and the screen's shape: left of the touch columns on a phone, a little away from the status
+## box everywhere.
+func play_centre() -> Vector2:
+	var view := Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size)
+	var blockers: Array = []
+	if status_box != null and status_box.visible:
+		blockers.append(status_box.get_global_rect())
+	if touch_bar != null and touch_bar.visible:
+		blockers.append(touch_bar.get_global_rect())
+	return clear_centre(view, blockers)
+
+
+## The centroid of `view` less the rectangles of `blockers` (each clipped to the view; they do not overlap each other).
+static func clear_centre(view: Rect2, blockers: Array) -> Vector2:
+	var area := view.get_area()
+	var moment := view.get_center() * area
+	for b: Rect2 in blockers:
+		var c := view.intersection(b)
+		if c.has_area():
+			area -= c.get_area()
+			moment -= c.get_center() * c.get_area()
+	return moment / area if area > 1.0 else view.get_center()
 
 
 ## A button showing one of the UI pack's icon tiles (the tile is the button), with a caption under it.

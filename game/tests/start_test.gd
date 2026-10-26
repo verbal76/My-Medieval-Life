@@ -694,7 +694,8 @@ func _run() -> void:
 	check(main.cam_free and main.camera.position == main.cam_at, "the view stays where it was dragged while the world runs")
 	ui.recenter_btn.pressed.emit()
 	main._sync_sprites()
-	check(not main.cam_free and main.camera.position == p.pos * main.T and not ui.recenter_btn.visible, "Recenter follows the player again and hides")
+	# GP-ANDROID-RECENTER: the camera stands off the player by view_shift, so the player is drawn at the centre of the play area
+	check(not main.cam_free and main.camera.position.is_equal_approx(p.pos * main.T - main.view_shift()) and not ui.recenter_btn.visible, "Recenter follows the player again and hides")
 	# one finger: a tap on open ground still walks there
 	var spot := Vector2.INF
 	for off in [Vector2(3, 0), Vector2(-3, 0), Vector2(0, 3), Vector2(0, -3)]:

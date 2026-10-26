@@ -405,6 +405,17 @@ func _ready() -> void:
 						break
 			"stove_window":
 				ui.show_craft(world.stations_of("stove")[0])
+			"recenter":
+				# GP-ANDROID-RECENTER: look away, then Recenter: the player at the centre of the play area (screenshots only)
+				ui.toast.visible = false
+				ui.toast_t = 0.0
+				pan_camera(Vector2(400, 120))
+				recenter()
+				(func():
+					await get_tree().process_frame
+					await get_tree().process_frame
+					print("recenter: player on screen at ", player_sprite.get_global_transform_with_canvas().origin, ", play centre ", ui.play_centre(),
+						", status ", ui.status_box.get_global_rect(), ", touch bar ", ui.touch_bar.get_global_rect() if ui.touch_bar.visible else Rect2())).call()
 			"hud_low", "prompt":
 				# B8-013/019: a low-food, low-health HUD, with the contextual prompt and a hint toast
 				world.player.hunger = 12.0
@@ -1936,7 +1947,7 @@ func _sync_sprites() -> void:
 	if not p.alive:
 		if player_sprite.anim != "death":
 			player_sprite.play("death", true)
-	camera.position = cam_at if cam_free else _follow(p.pos * T)
+	camera.position = cam_at if cam_free else _follow(p.pos * T) - view_shift()
 	target_marker.visible = chase != null and chase.alive
 	if target_marker.visible:
 		var bob := sin(Time.get_ticks_msec() / 150.0) * 1.5
@@ -5019,6 +5030,16 @@ func _follow(at: Vector2) -> Vector2:
 ## direction (the overworld), so there is nothing to keep it over.
 func _in_view(at: Vector2) -> Vector2:
 	return at
+
+
+## GP-ANDROID-RECENTER: how far (world pixels) the camera stands from the point it follows, so that point is drawn at the
+## centre of the usable play area (GameUI.play_centre: the screen less the status box and the touch columns) rather than at
+## the centre of the whole screen, nearer them. Divided by the zoom, so it holds at every zoom and display size.
+func view_shift() -> Vector2:
+	if ui == null or camera == null or ui.hud_root == null:
+		return Vector2.ZERO
+	var view := get_viewport().get_visible_rect().size
+	return (ui.play_centre() - view / 2.0) / camera.zoom
 
 
 ## Look at a spot on the map (a tile position), without moving the player.
