@@ -463,11 +463,11 @@ static func _rent_view(ui: GameUI, w: World, s: Dictionary) -> void:
 	var biz: Business = w.business
 	ui._open("stall", "Market pitch  ·  you have %d coins" % w.player.coins)
 	ui._label("An open pitch in the market, kept by the manor. Rent it for %d coins a day (the first day now, then each morning from your purse or the till), put your goods up at your own prices, and stand by the stall while you sell: villagers buy only what they really need, with their own coins." % Business.rent_day(), 17)
-	var why := biz.rent_refusal()
+	var why := biz.rent_refusal(s)
 	if why != "":
 		ui._label(why, 17, COLD)
 	ui._button("Rent it for %d coins a day" % Business.rent_day(), func():
-		var r := biz.rent()
+		var r := biz.rent(s)                         # GP-STALL-RENT-WRONG-PITCH: this pitch, not the first free one
 		ui.message(r if r != "" else "You rent the stall.")
 		show(ui, str(s.id)), why == "")
 	ui._button("Not now", ui.hide_all)

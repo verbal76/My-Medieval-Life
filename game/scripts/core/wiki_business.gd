@@ -10,7 +10,7 @@ static func add_pages(w: Wiki) -> void:
 	var evict := int(GameData.b("stall_evict_days"))
 	var pct := Stalls.pct()
 	w.add_page("guide:stall", "How do I sell from my own stall?", "guides", [
-		Wiki.p("Find an open pitch in the market (beside the merchants' stalls) and press Use: \"Rent this market pitch\" costs %d coins a day, the first day at once." % rent),
+		Wiki.p("Find an open pitch in the market (beside the merchants' stalls) and press Use: \"Rent this market pitch\" costs %d coins a day, the first day at once. You rent the pitch you chose, never another; one at a time." % rent),
 		Wiki.bullets([
 			"Open the stall again later with Use: \"Manage your market stall\".",
 			"Put up: choose an item from your pack, how many, and the price they go up at (it starts at the market value, or the price you already ask). They move into the stall's stock at that price; you can change a price later too.",

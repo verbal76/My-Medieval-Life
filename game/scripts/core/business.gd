@@ -361,7 +361,7 @@ func sorted_ids() -> Array:
 func free_pitch() -> Dictionary:
 	for id in sorted_ids():
 		var s: Dictionary = w.stalls[id]
-		if is_pitch(s) and not Stalls.is_built(s) and w.tenant_of(s) == "" and str(s.get("service", "")) == "":
+		if is_free_pitch(s):
 			return s
 	return {}
 
@@ -474,10 +474,18 @@ func price_of(s: Dictionary, id: String) -> int:
 	return int(s.get("prices", {}).get(id, GameData.value(id)))
 
 
-## Why the player cannot rent now, or "".
-func rent_refusal() -> String:
+## Whether `s` is a pitch the player may rent now: an open pitch, not built on, let to nobody, not kept for a service trade.
+func is_free_pitch(s: Dictionary) -> bool:
+	return not s.is_empty() and is_pitch(s) and not Stalls.is_built(s) and w.tenant_of(s) == "" and str(s.get("service", "")) == ""
+
+
+## Why the player cannot rent now, or "". With `pitch` (the pitch whose window is open, GP-STALL-RENT-WRONG-PITCH), why not
+## that one.
+func rent_refusal(pitch: Dictionary = {}) -> String:
 	if not mine().is_empty():
 		return "You already rent a stall."
+	if not pitch.is_empty() and not is_free_pitch(pitch):
+		return "That pitch is not free to rent."
 	if free_pitch().is_empty():
 		return "Every open pitch is let."
 	if w.player.coins < rent_day():
@@ -485,17 +493,19 @@ func rent_refusal() -> String:
 	return ""
 
 
-## Rent the first free pitch: the first day is paid now. "" when done, else why not.
-func rent(actor: PlayerState = null) -> String:
-	# MP C (World.mirror): a guest's verb goes to the host
+## Rent `pitch` (the pitch whose window the player used), or with none the first free pitch: the first day is paid now. "" when
+## done, else why not. GP-STALL-RENT-WRONG-PITCH (owner, 2026-10-26: "it never gives me the one I clicked on and rented"): the
+## chosen pitch is the one rented, never another.
+func rent(pitch: Dictionary = {}, actor: PlayerState = null) -> String:
+	# MP C (World.mirror): a guest's verb goes to the host, naming the pitch
 	if w.mirrors():
-		return w.mirror("business.rent", rent.bind(), [])
+		return w.mirror("business.rent", rent.bind(pitch), [pitch] if not pitch.is_empty() else [])
 	if actor != null and actor != w.player:
-		return w.as_actor(actor, rent)
-	var why := rent_refusal()
+		return w.as_actor(actor, rent.bind(pitch))
+	var why := rent_refusal(pitch)
 	if why != "":
 		return why
-	var s := free_pitch()
+	var s := pitch if not pitch.is_empty() else free_pitch()
 	if not w.property._pay_manor(w.acting_ref(), rent_day()):
 		return "You cannot pay the rent."
 	w.set_tenant(s, w.acting_ref())
