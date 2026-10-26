@@ -16,6 +16,7 @@ extends SceneTree
 ##       witnesses, reports and guards respond; GP-CRIME-PURSUIT A3: a beaten player yields to a guard of the case
 ##       an hour after the second killing (day 2 15:00), if still alive and the case still open; tools/sim_suite.py)
 ##       [--judgment]   (attach a fresh judgment store; Build 19 ships judgment on already; prints its counts at the end)
+##       [--economy]   (Expansion 20 LE-01: the economy model on, observing only; prints its record counts at the end)
 ##       [--no-judgment]   (the Build 18 path: judgment off, as tools/sim_gate.py --sim-args=--no-judgment compares with the baseline)
 ##       [--capability L --cap-profile P] [--cap-scenario S] [--cap-industries a,b] [--cap-report] [--cap-at 30,60]   (Expansion 18 X18-SIM,
 ##       analysis only: tests/capability_metrics.gd)
@@ -80,6 +81,9 @@ func _init() -> void:
 	var cap_info := CapMetrics.pre_setup(args) if cap_on else {}
 	var t0 := Time.get_ticks_msec()
 	JudgmentLive.test_disabled = "--no-judgment" in args
+	if "--economy" in args:               # EXPANSION 20 LE-01: the economy model attached, observing only (never shipped on)
+		EconomyFoundation.set_override({"enabled": true})
+		print("economy: LE-01 model enabled (observing)")
 	w = World.new()
 	w.setup(VillageMap.load_default(), seed)
 	var parts := [w.brain, w.property, w.business, w.construction, w.fauna, w.farm, w.quests, w.manor_work, w.carts, w.relations]
@@ -182,6 +186,12 @@ func _init() -> void:
 			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows, "herd": herd_log, "herd_care": herd_care}, " ", false))
 		f.close()
 	var ok: bool = int(final.currency.leak) == 0 and (final.ledger.items as Dictionary).is_empty()
+	if w.economy != null:                 # EXPANSION 20 LE-01: what the model recorded (diagnostics; it decides nothing)
+		var ec: EconomyFoundation = w.economy
+		print("economy: events %d (ordered %s), knowledge %d, needs recorded %d (dirty %d), offers %d, reservations %d, unbacked %d, links %d" % [ec.events.size(),
+			str(ec.events.ordered()), ec.knowledge.size(), ec.needs.recorded().size(), ec.needs.dirty.size(), ec.offers.records.size(), ec.reservations.records.size(),
+			ec.reservations.unbacked().size(), ec.contract_links.links.size()])
+		print("economy save bytes: %d" % JSON.stringify(ec.to_dict()).length())
 	var rec = w.recorder
 	w.dispose()
 	if rec != null:
