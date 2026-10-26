@@ -3296,6 +3296,8 @@ func show_desk(t: Dictionary) -> void:
 		_label(str(t.status))
 	for o in t.options:
 		var opt: Dictionary = o
+		if str(opt.get("kind", "")) == "info" and str(t.get("status", "")) != "":
+			continue                                   # nothing to do there: the first line already says why
 		var b := _button(str(opt.get("label", "")), func():
 			hide_all()
 			main.use_option(opt))

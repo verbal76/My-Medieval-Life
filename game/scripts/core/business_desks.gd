@@ -109,7 +109,9 @@ static func faced_all(w: World, pos: Vector2, facing: Vector2) -> Array:
 		var near := Vector2i(floori(probe.x), floori(probe.y)) == at
 		if not near and (Vector2(at) + Vector2(0.5, 0.5)).distance_to(pos) <= World.STATION_BESIDE:
 			near = World.station_in_reach({"use": [d.use.x, d.use.y], "at": [at.x, at.y]}, pos, facing) and Vector2i(floori(pos.x), floori(pos.y)) != d.use
-		if near and (Vector2(at) + Vector2(0.5, 0.5)).distance_to(pos) <= World.STATION_BESIDE and w.reaches(pos, Vector2(at) + Vector2(0.5, 0.5)):
+		# reached across the desk, or from the keeper's side (the tavern's counter stands in the room's partition, outside its floor)
+		var reach: bool = w.reaches(pos, Vector2(at) + Vector2(0.5, 0.5)) or w.reaches(pos, Vector2(d.use) + Vector2(0.5, 0.5))
+		if near and (Vector2(at) + Vector2(0.5, 0.5)).distance_to(pos) <= World.STATION_BESIDE and reach:
 			out.append(d)
 	return out
 
