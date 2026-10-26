@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (667)
+## Approved requirement (668)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -18,6 +18,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | 16 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | ARMOR-01 | Armour is acquired in play, physical, and visible when worn | 18 | OWNER APPROVED | IN DEVELOPMENT | VERIFICATION FAILED | NOT READY | OPEN |
 | ARMOR-CATALOG-01 | Every armour, helmet and cultural outfit in the Puny Characters pack can be made and bought at the armourer; cultural pieces cost more and need special materials; rarer pieces carry buffs | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| ARMOR-MATERIALS-01 | Boar tusks and antlers as hunted materials, used in special armour and weapons | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B12A-01 | 1-11 fixed (B13-01..10); 12 → B13-14 |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B12A-02 | Fixed (WHAT_WAS_DONE:135) |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B12A-03 | Fixed / one withdrawn (addendum :1631) |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |

@@ -8,14 +8,14 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 75 |
-| Integrated | 28 of 75 (37%) |
-| Automated tests passed | 33 of 75 (44%) |
-| Integration verified | 28 of 75 (37%) |
-| Gameplay verified | 0 of 75 (0%) |
-| Owner playtested | 0 of 75 (0%) |
-| Complete | 0 of 75 (0%) |
-| Open (release blockers) | 75 |
+| Approved requirements in scope | 76 |
+| Integrated | 28 of 76 (37%) |
+| Automated tests passed | 33 of 76 (43%) |
+| Integration verified | 28 of 76 (37%) |
+| Gameplay verified | 0 of 76 (0%) |
+| Owner playtested | 0 of 76 (0%) |
+| Complete | 0 of 76 (0%) |
+| Open (release blockers) | 76 |
 | Open owner decisions (blocking) | 15 (11) |
 
 ## In development (worker assigned) (15)
@@ -84,11 +84,12 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | GP-INTERACTION-PROMPT-LIFECYCLE | Contextual prompts ('Use the workbench') clear while the interaction is active and when it closes or the target changes | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | S |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | OWNER APPROVED | PARTIALLY IMPLEMENTED | wip/expansion19-preparation | TARGETED TESTS PASSED | rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c) |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (24)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (25)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | ARMOR-CATALOG-01 | Every armour, helmet and cultural outfit in the Puny Characters pack can be made and bought at the armourer; cultural pieces cost more and need special materials; rarer pieces carry buffs | OWNER APPROVED | NOT STARTED | none | NOT TESTED | owner approves the catalogue proposal (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md); then a Build 22 worker implements it on top of ARMOR-01 | ARMOR-CATALOG-D1, ARMOR-01, design: OWNER DECISION REQUIRED | L |
+| ARMOR-MATERIALS-01 | Boar tusks and antlers as hunted materials, used in special armour and weapons | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | ARMOR-CATALOG-D1, design: OWNER DECISION REQUIRED | UNKNOWN |
 | B19-EMERGE | Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | L |
 | E20-P1 | Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | X20 foundation worker (Sonnet subagent) / wip/expansion20-preparation | TARGETED TESTS PASSED | owner reviews the architecture (LE00_BUILD18_REFRESH.md, LE01_DATA_CONTRACTS.md) and answers OD-LE-02, 04, 07, 10, 13, 15 | design: UNKNOWN | UNKNOWN |
@@ -117,7 +118,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
-| ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | OPEN | no | ARMOR-CATALOG-01 |
+| ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | OPEN | no | ARMOR-CATALOG-01, ARMOR-MATERIALS-01 |
 | OD-LE-02B | Offer visibility: who can see an offer (in person at stalls and meetings, by word of mouth, a notice board), the remaining part of OD-LE-02 | OPEN | no |  |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | OPEN | yes | ECON-P3.4 |
 | OD-LE-04 | Owner decision (Living Economy): Business founding, partnerships, ownership and inheritance | OPEN | yes |  |

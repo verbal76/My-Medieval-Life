@@ -774,6 +774,11 @@
      "date": "2026-10-26",
      "change": "decisions + ARMOR-CATALOG-D1",
      "why": "the values await the owner's approval"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "owner: deliver in the amended Build 22 mini-build"
     }
    ],
    "related": [
@@ -783,7 +788,7 @@
    "design": "OWNER DECISION REQUIRED",
    "effort": "L",
    "next_action": "owner approves the catalogue proposal (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md); then a Build 22 worker implements it on top of ARMOR-01",
-   "notes": "Owner asked for it in Build 22. Existing: items.json 'bonus' (max_hp, max_stamina) summed over worn gear (PlayerState.bonus); no fireball-damage bonus yet; no steel, tin, bronze, silk or fur material yet."
+   "notes": "Owner asked for it in Build 22. Existing: items.json 'bonus' (max_hp, max_stamina) summed over worn gear (PlayerState.bonus); no fireball-damage bonus yet; no steel, tin, bronze, silk or fur material yet. Owner 2026-10-26: squeeze it into the amended Build 22 mini-build."
   },
   {
    "id": "ARMOR-CATALOG-D1",
@@ -806,6 +811,50 @@
      "why": "docs/design/ARMOUR_CATALOGUE_PROPOSAL.md"
     }
    ]
+  },
+  {
+   "id": "ARMOR-MATERIALS-01",
+   "kind": "approved",
+   "title": "Boar tusks and antlers as hunted materials, used in special armour and weapons",
+   "description": "Boar tusks and antlers as hunted materials, used in special armour and weapons",
+   "source": "owner message 2026-10-26",
+   "owner_wording": "And I mean squeeze it into the amended build 22 mini build. Let's make boar tusks and reindeer antlers materials as well. Those could be used in special armor and weapons",
+   "approval": "owner, 2026-10-26",
+   "acceptance": [
+    "Boar tusks come from boars that are killed (existing wild boar; hunter and player), antlers from the antlered animal decided by the owner; both are real items with icons, prices and wiki pages, and the wildlife ledger counts them",
+    "They are ingredients of special armour and weapons in the approved armour catalogue (ARMOR-CATALOG-01)",
+    "No item created from nothing: every tusk or antler comes from a real animal"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [
+    "ARMOR-CATALOG-D1"
+   ],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-26"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "parent: None -> X20-OPEN-ITEMS; decisions + ARMOR-CATALOG-D1",
+     "why": "owner request for the Build 22 mini-build"
+    }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS",
+    "ARMOR-CATALOG-01",
+    "OWN-26"
+   ],
+   "design": "OWNER DECISION REQUIRED",
+   "notes": "Delivery: the Build 22 mini-build (owner 2026-10-26). Boars exist (balance.json wildlife; skins boar, boar_grey, mini_boar). No reindeer species or reindeer art in any pack; deer exist with stag skins (mini_stag)."
   },
   {
    "id": "ARMOR-Q",
