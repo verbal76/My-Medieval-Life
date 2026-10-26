@@ -24233,7 +24233,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -24257,6 +24257,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> x20_android_ui_test 95/0, start_test 523/0, net_ui_test 61/0, wanted_indicator_test 16/0, wiki_test passed, run_tests 3600/0, G0 identical; test_commit: None -> 7c59b50; commits + 7c59b50",
      "why": "worker H finished the layout at 7c59b50 (x20_android_ui_test 95/0, start_test 523/0, net_ui_test 61/0, wanted_indicator 16/0, wiki_test, run_tests 3600/0, G0 identical); merge waits for GP-MESSAGE-JOURNAL on the same branch"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + Expansion 20 wip/expansion20 b6fdb25",
+     "why": "merged into wip/expansion20 b6fdb25"
     }
    ],
    "related": [
@@ -24271,6 +24276,9 @@
    "test_commit": "7c59b50",
    "commits": [
     "7c59b50"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 b6fdb25"
    ]
   },
   {
@@ -24294,8 +24302,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -24308,10 +24316,32 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker H (screen messages); branch: None -> wip/x20-msg",
      "why": "assigned to worker H on its existing branch"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> message_journal_test 38/0 (the owner's 10 cases), x20_android_ui_test 95/0, player_family_test 88/0, save_transfer_test 21/0, multiplayer_c_test 340/0, start_test 523/0, net_ui_test 61/0, wiki_test passed, run_tests 3600/0, unittest OK; G0 identical to the baseline; merged tree identical to the tested 2e9ad2f; test_commit: None -> 2e9ad2f; commits + 2e9ad2f; integrated_in + Expansion 20 wip/expansion20 b6fdb25; known_defects + On the phone the journal's left page overflows the window (an entry cut off at the bottom while the right page continues); fix sent to worker H: paginate by visible height; notes",
+     "why": "built by worker H (2e9ad2f) and merged into wip/expansion20 b6fdb25; one layout defect open (journal page overflows on the phone), being fixed"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "notes",
+     "why": "note reworded: the data file is on wip/expansion20 only"
     }
    ],
    "assigned_worker": "worker H (screen messages)",
-   "branch": "wip/x20-msg"
+   "branch": "wip/x20-msg",
+   "tests": "message_journal_test 38/0 (the owner's 10 cases), x20_android_ui_test 95/0, player_family_test 88/0, save_transfer_test 21/0, multiplayer_c_test 340/0, start_test 523/0, net_ui_test 61/0, wiki_test passed, run_tests 3600/0, unittest OK; G0 identical to the baseline; merged tree identical to the tested 2e9ad2f",
+   "test_commit": "2e9ad2f",
+   "commits": [
+    "2e9ad2f"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 b6fdb25"
+   ],
+   "known_defects": [
+    "On the phone the journal's left page overflows the window (an entry cut off at the bottom while the right page continues); fix sent to worker H: paginate by visible height"
+   ],
+   "notes": "Optional save key 'messages' (save stays version 23, following the existing optional-key pattern: credit, couriers, player_offers); Build 21/22 saves load with an empty journal (fixture tests). Per player; a guest's messages are saved in the host's world. Two tiers in the message_journal data file (on wip/expansion20): significant (crime, law, family, contract, work, quest, property, village, skill) 2000 per player, ordinary (trade, money, npc, find, game) 300, each trimmed only from its own tier; about 110 bytes an entry, about 245 KB at full. Recording point: messages are built in the interface, which asks World.player_tell to record them (no world-side message channel exists). Village events stay on the saved Village record page (300 lines), not duplicated into Messages. Provisional limits: docs/DECISIONS.md on wip/expansion20."
   },
   {
    "id": "GP-MINE-WOOD-FRAME",
