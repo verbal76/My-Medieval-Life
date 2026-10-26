@@ -73,7 +73,7 @@ func _stall_at() -> void:
 func _rent() -> void:
 	var b: Business = w.business
 	var pitches: Array = w.stalls.values().filter(func(s): return Business.is_pitch(s))
-	check(pitches.size() == Business.PITCHES.size() and w.tenant_of(pitches[0]) == "", "the manor keeps open pitches in the market")
+	check(pitches.size() == Business.pitch_specs(w.map).size() and w.tenant_of(pitches[0]) == "", "the manor keeps open pitches in the market")
 	check(w.stalls.values().filter(func(s): return not Business.is_pitch(s) and w.tenant_of(s) != "").size() == 6, "the six merchants keep their own stalls; no merchant took a pitch")
 	var total := w.total_coins()
 	var treasury := w.treasury
@@ -716,7 +716,7 @@ func _save_load() -> void:
 	check(s2.sales.size() == 1 and int(s2.sales[0].qty) == 1 and int(s2.paid_day) == int(s.paid_day), "and the sales record and rent day")
 	# a save made before pitches existed gets them
 	var old: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict(), "", true, true))
-	for id in Business.PITCHES.map(func(p): return p.id):
+	for id in Business.pitch_specs(w.map).map(func(p): return p.id):
 		old.stalls.erase(id)
 	main._load_save(old)
 	w = main.world

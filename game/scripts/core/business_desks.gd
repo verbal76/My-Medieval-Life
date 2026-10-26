@@ -132,3 +132,14 @@ static func booth_on_desk(w: World, b: Dictionary) -> bool:
 		if Vector2i(int(b.x), int(b.y)) == d.at:
 			return true
 	return false
+
+
+## GP-TABLE-ITEMS: the cells of a counter desk's drawn table where the goods it offers are shown: its station's "show" cells
+## (generator v16: either side of the tavern's and the smithy's ledgers, so the ledger stays in view; the sawmill's one-cell
+## table), else the desk's own cell.
+static func table_cells(w: World, d: Dictionary) -> Array:
+	var st: Dictionary = w.stations.get(str(d.id), {})
+	var out := []
+	for c in st.get("show", []):
+		out.append(Vector2i(int(c[0]), int(c[1])))
+	return out if not out.is_empty() else [d.at]

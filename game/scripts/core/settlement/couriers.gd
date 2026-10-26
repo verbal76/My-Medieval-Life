@@ -288,6 +288,10 @@ func open_shop_booth(owner: String) -> String:
 ## work station (a smith's at the forge): on load it moves to the desk (its cell only; nothing it holds changes).
 func seat_at_desks() -> void:
 	for b in booths:
+		if str(b.settlement) == SettlementFacts.VILLAGE and str(b.get("stall", "")) != "" and w.stalls.has(str(b.stall)):
+			var s: Dictionary = w.stalls[str(b.stall)]           # GP-MARKET-SPACING: a booth at a stall stands where the stall is
+			b.x = int(s.x)
+			b.y = int(s.y)
 		if not bool(b.get("shop", false)):
 			continue
 		var desk := BusinessDesks.of_business(w, str(b.keeper))

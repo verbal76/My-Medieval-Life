@@ -2990,6 +2990,9 @@ func _container_target(c: Dictionary) -> Dictionary:
 			return _chest_target(cu)
 	var id := world.container_pick(c)
 	var whose := world.container_whose(c)
+	if id == "" and world.table_previews(c):          # GP-TABLE-ITEMS: a preview of what the tavern serves, nothing to take
+		var dish := GameData.item_name(str(c.dish))
+		return {"kind": "info", "label": "%s is served here: buy it at the counter" % dish, "text": "The table shows what the tavern serves: %s. Buy it from the keeper at the counter." % dish.to_lower()}
 	if id == "":
 		var look := str(c.get("look", c.kind))         # GP-TARGET-ART-MATCH: named as drawn
 		return {"kind": "info", "label": "Empty %s (%s)" % [look, whose], "text": "There is nothing in the %s." % look}
