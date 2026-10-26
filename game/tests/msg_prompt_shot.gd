@@ -72,6 +72,12 @@ func _wait() -> void:
 				break
 			main.cycle_target(1)
 	if frames == 20 and choose == "journal":
+		var w: World = main.world
+		for t in [["Contract made with Hugh Reed: 4 logs at 3 coins each, within 3 days (12 coins, set aside when you agree).", "contract"],
+				["You sell 2 apples for 6 coins.", "trade"], ["Hugh Reed: There's nothing the manor needs carried, quarried or mended just now.", "npc"],
+				["The guard Ada saw you take it. You are fined 10 coins, paid to the manor.", "crime"], ["Mining is now level 2!", "skill"]]:
+			w.minutes += 37.0
+			w.player_tell(t[0], t[1])
 		main.ui.show_journal(-1, false, true)        # the journal's Messages page, where every message is kept
 	if frames < 30:
 		return

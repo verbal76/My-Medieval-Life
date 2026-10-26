@@ -383,7 +383,7 @@ func _message_footprint() -> void:
 		get_root().content_scale_size = sz
 		ui.fit_safe_area()
 		await frames()
-		ui.message(opening, 8.0)
+		ui.message(opening, 8.0, "game")
 		main.target_options = three
 		main.target = three[1]
 		ui.prompt("Talk to Mabel Reed\nNext: Talk to Hugh Reed (3 of 3)", true)
@@ -420,7 +420,7 @@ func _message_footprint() -> void:
 	tap.position = at
 	ui.toast.gui_input.emit(tap)
 	check(not ui.toast.visible, "a tap on the message puts it away")
-	ui.message("A short one.", 4.0)
+	ui.message("A short one.", 4.0, "game")
 	ui.toast_t = 0.0001
 	await frames(2)
 	check(not ui.toast.visible and ui.toast.modulate.a == 1.0, "its time up, the message goes")
@@ -428,7 +428,7 @@ func _message_footprint() -> void:
 	# every message is kept on the journal's Messages page
 	var kept: Array = ui.game_messages()
 	check(kept.any(func(l: String): return l.ends_with(opening)) and kept.any(func(l: String): return l.ends_with("A short one.")),
-		"the messages are kept, stamped with the day and time (%d kept)" % kept.size())
+		"the messages are kept in the world's journal, stamped with the day and time (%d kept)" % kept.size())
 	ui.show_journal(-1, false, true)
 	var words := ""
 	for l in ui.panel_body.find_children("*", "Label", true, false):

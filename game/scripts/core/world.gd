@@ -849,8 +849,33 @@ func mirror(path: String, c: Callable, args: Array) -> Variant:
 ## and "gift" (goods handed from one pack to the other, their stolen marks with them). An offer lapses at the end of its day, or when
 ## either player leaves play. Saved under the optional key "player_offers".
 var offers: Array = []              # {id, kind, from (ref), to (ref), item, qty, day}
+## GP-MESSAGE-JOURNAL (owner, 2026-10-26): the messages each player was shown that are worth keeping (MessageJournal), saved with the
+## world under the optional key "messages" (absent: none). Read only by the journal's Messages page, never by the simulation.
+var messages := MessageJournal.new()
 var next_offer := 1
 const OFFER_REACH := 3.0            # tiles: the two stand together
+
+
+## GP-MESSAGE-JOURNAL: keep a message shown to the acting player (a guest under as_actor) in its journal, when `category` is one
+## the journal keeps (MessageJournal.tier_of; "" is routine feedback, shown and not kept). On a guest's machine the verb goes to the
+## host, which keeps it in its own world under the guest's reference, so it is saved there. True when kept.
+func player_tell(text: String, category: String) -> bool:
+	if MessageJournal.tier_of(category) == "":
+		return false
+	if mirrors():
+		return mirror("player_tell", player_tell.bind(text, category), [text, category])
+	return messages.record(acting_ref(), minutes, category, text)
+
+
+## The kept messages of the acting player, oldest first: [minutes, category, text].
+func player_messages() -> Array:
+	return messages.entries(acting_ref())
+
+
+## The words of the acting player's newest kept message ("" for none).
+func player_last_message() -> String:
+	var list: Array = messages.by_ref.get(acting_ref(), [])
+	return str(list[-1][2]) if not list.is_empty() else ""
 
 
 func offers_to(p: PlayerState) -> Array:
@@ -5511,7 +5536,7 @@ func to_dict() -> Dictionary:
 		"mine_works": mine_works.to_dict(),
 		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged(_economy_section()).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged(_economy_section()).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
 	if judgment != null:
 		out.judgment = judgment.to_dict()                          # PROSPECTIVE (PROS-19): provisional section
 	elif not judgment_foreign.is_empty():
@@ -5925,6 +5950,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	law_lessons = (d.get("law_lessons", {}) as Dictionary).duplicate(true)      # LAW-SKILL: absent in an older save
 	offers = []                                                               # MP-D8: absent: none
+	messages = MessageJournal.from_dict(d.get(MessageJournal.KEY, {}))        # GP-MESSAGE-JOURNAL: absent in a save before it: none
 	var po = d.get("player_offers", {})
 	if po is Dictionary and not po.is_empty():
 		next_offer = int(po.get("next", 1))

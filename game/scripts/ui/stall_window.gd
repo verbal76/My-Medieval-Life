@@ -143,7 +143,7 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 		ui._label("%s owing: sales are stopped. Pay %d coins to open again; the manor takes it back if it stays unpaid." % ["Licence" if shop else "Rent", rent * maxi(1, w.day() - int(s.paid_day))], 17, COLD)
 		ui._button("Pay the %s" % ("licence" if shop else "rent"), func():
 			var why := biz.pay_arrears(s)
-			ui.message(why if why != "" else "Paid.")
+			ui.message(why if why != "" else "Paid.", 4.0, "" if why != "" else "money")
 			show(ui, id), p.coins >= rent)
 	else:
 		var att := biz.attendant_of(s)
@@ -173,21 +173,21 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 	ui.panel_body.add_child(acts)
 	if till > 0 and not biz.stalls.is_market(s):
 		ui._button("Collect %d coins" % till, func():
-			ui.message("You collect %d coins from the till." % biz.collect(s))
+			ui.message("You collect %d coins from the till." % biz.collect(s), 4.0, "money")
 			show(ui, id), true, acts)
 	for amt in [10, 50]:                        # ECON-P3: the till is the business's; the owner moves money by choice
 		var put: int = amt
 		ui._button("Put in %d" % put, func():
 			var why := biz.deposit(s, put)
-			ui.message(why if why != "" else "You put %d coins in the till." % put)
+			ui.message(why if why != "" else "You put %d coins in the till." % put, 4.0, "" if why != "" else "money")
 			show(ui, id), p.coins >= put, acts)
 		ui._button("Take out %d" % put, func():
 			var why := biz.withdraw(s, put)
-			ui.message(why if why != "" else "You take %d coins from the till." % put)
+			ui.message(why if why != "" else "You take %d coins from the till." % put, 4.0, "" if why != "" else "money")
 			show(ui, id), biz.stalls.withdrawable(s) >= put if biz.stalls.is_market(s) else till >= put, acts)
 	if not built:
 		ui._button("Give up the pitch" if not shop else "Close the shop", func():
-			ui.message(biz.close(s))
+			ui.message(biz.close(s), 4.0, "trade")
 			ui.hide_all(), true, acts)
 	if shop:
 		ui._button("Fit out the room", func(): FitWindow.show(ui, id), true, acts)
@@ -196,7 +196,7 @@ static func show(ui: GameUI, id: String, pick := {}) -> void:
 		var why := biz.upgrade_refusal(s)
 		ui._button("Larger stall: %d coins, then %d a day" % [int(GameData.b("stall_large_cost")), int(GameData.b("stall_large_rent_day"))], func():
 			var r := biz.upgrade(s)
-			ui.message(r if r != "" else "Your stall is larger now: more goods, a display, a wider reach.")
+			ui.message(r if r != "" else "Your stall is larger now: more goods, a display, a wider reach.", 4.0, "" if r != "" else "property")
 			show(ui, id), why == "", acts)
 		ui._label("A larger stall holds %d kinds of goods (now %d) and has a display that draws buyers from %.1f times as far." % [int(GameData.b("stall_large_listings")), biz.listing_cap(s), float(GameData.b("stall_large_reach"))], 14)
 	if built:
@@ -284,7 +284,7 @@ static func _attendant_section(ui: GameUI, w: World, s: Dictionary, id: String) 
 		ui._label("%s %s, %d coins a day from the till or your purse. They stand at the counter in the working day (7 to 18), sleep at night, and sell only what villagers really need." % [att.name, att.family, biz.wage()], 15)
 		ui._button("Let %s go" % att.name, func():
 			biz.dismiss(s)
-			ui.message("%s no longer works for you." % att.name)
+			ui.message("%s no longer works for you." % att.name, 4.0, "work")
 			show(ui, id))
 		return
 	var cands := biz.candidates()
@@ -309,7 +309,7 @@ static func _attendant_section(ui: GameUI, w: World, s: Dictionary, id: String) 
 		hb.custom_minimum_size = Vector2(110, 48)
 		hb.pressed.connect(func():
 			var r := biz.hire(s, who)
-			ui.message(r if r != "" else "%s will mind the counter." % who.name)
+			ui.message(r if r != "" else "%s will mind the counter." % who.name, 4.0, "" if r != "" else "work")
 			show(ui, id))
 		h.add_child(hb)
 		ui.panel_body.add_child(h)
@@ -372,7 +372,7 @@ static func _production_section(ui: GameUI, w: World, s: Dictionary, id: String)
 			bt.disabled = wk.order_refusal(s, rid, batches, keep) != ""
 			bt.pressed.connect(func():
 				var why := wk.add_order(s, rid, batches, keep)
-				ui.message(why if why != "" else "Ordered.")
+				ui.message(why if why != "" else "Ordered.", 4.0, "" if why != "" else "trade")
 				show(ui, id))
 			h.add_child(bt)
 		ui.panel_body.add_child(h)
@@ -422,7 +422,7 @@ static func _session_section(ui: GameUI, w: World, s: Dictionary, id: String) ->
 	ui.panel_body.add_child(row)
 	if open:
 		ui._button("Close the stall and settle", func():
-			ui.message("You close the stall. " + st.settle_text(s, st.close(s)))
+			ui.message("You close the stall. " + st.settle_text(s, st.close(s)), 4.0, "trade")
 			show(ui, id), true, row)
 	else:
 		var why := st.open_refusal(s, w.acting_ref())
@@ -432,7 +432,7 @@ static func _session_section(ui: GameUI, w: World, s: Dictionary, id: String) ->
 			show(ui, id), why == "", row)
 		if held > 0 or int(s.get("till", 0)) > 0:
 			ui._button("Settle the till", func():
-				ui.message(st.settle_text(s, st.close(s)))
+				ui.message(st.settle_text(s, st.close(s)), 4.0, "trade")
 				show(ui, id), true, row)
 	var log: Array = s.get("settlements", [])
 	if not log.is_empty():
@@ -468,7 +468,7 @@ static func _rent_view(ui: GameUI, w: World, s: Dictionary) -> void:
 		ui._label(why, 17, COLD)
 	ui._button("Rent it for %d coins a day" % Business.rent_day(), func():
 		var r := biz.rent(s)                         # GP-STALL-RENT-WRONG-PITCH: this pitch, not the first free one
-		ui.message(r if r != "" else "You rent the stall.")
+		ui.message(r if r != "" else "You rent the stall.", 4.0, "" if r != "" else "property")
 		show(ui, str(s.id)), why == "")
 	ui._button("Not now", ui.hide_all)
 

@@ -1,0 +1,14 @@
+{
+  "format": "mml-message-journal/1",
+  "_doc": "GP-MESSAGE-JOURNAL (owner, 2026-10-26): what the journal's Messages page keeps of the messages shown to a player, read by MessageJournal (game/scripts/core/message_journal.gd). A message is recorded only when its source gives it one of these categories; an untagged message (routine interface feedback: a target chosen, a refusal, a menu answer) is shown and not kept. Each player keeps at most 'cap' entries of each tier; past it the oldest entry of that tier goes, so ordinary entries never push out significant ones. Agent decision, provisional for the owner (docs/DECISIONS.md, 2026-10-26).",
+  "tiers": {
+    "significant": {
+      "cap": 2000,
+      "categories": ["crime", "law", "family", "contract", "work", "quest", "property", "village", "skill"]
+    },
+    "ordinary": {
+      "cap": 300,
+      "categories": ["trade", "money", "npc", "find", "game"]
+    }
+  }
+}

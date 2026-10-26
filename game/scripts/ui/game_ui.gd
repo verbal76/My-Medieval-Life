@@ -37,8 +37,6 @@ var toast: Label
 var toast_t := 0.0
 var toast_shown := 0.0         # GP-MESSAGE-FOOTPRINT: how long the message was set to stay (it fades over its last FADE_SECONDS)
 var log_push := 0.0            # how far the corner log steps down while the message beside it would overlap it
-var messages: Array = []       # GP-MESSAGE-FOOTPRINT: every message this game, "[date  time] words", for the journal's Messages
-var messages_world := 0        # the world those belong to (its instance id) (a new or loaded game starts a new list)
 var action_bar: ProgressBar
 var action_label: Label        # the work's name inside the action bar ("Mining")
 var panel: PanelContainer
@@ -105,7 +103,6 @@ const PROMPT_FONT := 14        # was 16
 const TOAST_FONT := 14         # was 17
 const PROMPT_EDGE := 6.0       # the prompt's gap above the bottom edge of the usable screen (was 64)
 const FADE_SECONDS := 0.6      # a message fades out over its last this many seconds
-const MESSAGES_KEPT := 200     # the Messages page keeps this many, oldest dropped first
 const METERS := {
 	"hp": ["Health", "health", "Health: how much you can take. Rest at home, eat food that heals, or drink a tonic. At 0 you die."],
 	"hunger": ["Food", "hud_hunger", "Food: falls slowly as time passes. At 0 you starve and lose health. Eat from the Pack to refill it."],
@@ -832,7 +829,7 @@ func show_farm_deal(rect: Rect2i) -> void:
 			message("You cannot have it: %s." % fp.why)
 			return
 		main.end_placement()
-		message("The farmland is yours%s." % (" on lease" if lease else ""))
+		message("The farmland is yours%s." % (" on lease" if lease else ""), 4.0, "property")
 		show_build(p)
 	_button("Lease for %d coins a week" % int(t.rent), func(): deal.call(true), w.player.coins >= int(t.rent))
 	_button("Buy for %d coins" % int(t.price), func(): deal.call(false), w.player.coins >= int(t.price))
@@ -871,7 +868,7 @@ func _show_farm_plot(pl: Dictionary) -> void:
 	_label("The fence and gate take %d planks and %d stone from your pack%s." % [int(cost.plank), int(cost.stone), (": " + no.trim_suffix(".")) if no != "" else ""], 16)
 	_button("Put up the fence and gate", func():
 		var why: String = fp.build_fence(pl, w.acting_ref(), [w.player.inv])
-		message(why if why != "" else "The fence and gate stand.")
+		message(why if why != "" else "The fence and gate stand.", 4.0, "" if why != "" else "property")
 		show_build(pl), no == "")
 
 
@@ -1252,8 +1249,10 @@ func _controls_tab() -> void:
 
 
 ## A message for the player: GP-MESSAGE-FOOTPRINT, a small box at the top edge for `seconds`, fading at the end, put away by
-## a tap or click on it, and kept on the journal's Messages page.
-func message(text: String, seconds := 4.0) -> void:
+## a tap or click on it. GP-MESSAGE-JOURNAL: `category` (game/data/message_journal.json: "crime", "trade", "npc"...) is set by
+## the caller for a message worth keeping; the World keeps it in the acting player's saved journal (World.player_tell), shown on
+## the journal's Messages page. "" (routine feedback: a refusal, a target, a menu answer) is shown and not kept.
+func message(text: String, seconds := 4.0, category := "") -> void:
 	toast.text = text
 	var room := _top_room()
 	_fit_label(toast, minf(TOAST_MAX_W, room.y - room.x - 10.0))
@@ -1263,16 +1262,21 @@ func message(text: String, seconds := 4.0) -> void:
 	toast_shown = seconds
 	_place_toast()
 	_push_log()
-	_keep_message(text)
+	if category != "" and text != "" and main != null and main.world != null:
+		main.world.player_tell(text, category)
 
 
-func _world_id() -> int:
-	return main.world.get_instance_id() if main != null and main.world != null else 0
+## A kept message (GP-MESSAGE-JOURNAL): shown as message() shows it and kept in the journal under `category`.
+func tell(text: String, category: String, seconds := 4.0) -> void:
+	message(text, seconds, category)
 
 
-## The messages of the game in play (none yet when the list is another game's).
+## The acting player's kept messages as journal lines, oldest first, stamped like the village record
+## ("[Spring, Year 1  Day 3  07:24] words"): read from the World's saved journal each time the page opens.
 func game_messages() -> Array:
-	return messages if messages_world == _world_id() else []
+	if main == null or main.world == null:
+		return []
+	return main.world.player_messages().map(func(e: Array): return "[%s] %s" % [Life.clock_text(float(e[0])), str(e[2])])
 
 
 ## Put the message away now (its time is up, or it was tapped).
@@ -1282,23 +1286,6 @@ func dismiss_message() -> void:
 	toast.visible = false
 	toast.modulate.a = 1.0
 	_push_log()
-
-
-## Keep a message for the journal's Messages page, stamped like the village record ("[Spring, Year 1  Day 3  07:24] ...").
-## A game of its own: a new or loaded world starts a new list. Kept by the interface only (not saved).
-func _keep_message(text: String) -> void:
-	if text.strip_edges() == "":
-		return
-	var w = main.world if main != null else null
-	if _world_id() != messages_world:
-		messages = []
-		messages_world = _world_id()
-	var line: String = ("[%s] %s" % [w.clock_text(), text]) if w != null else text
-	if not messages.is_empty() and messages[-1] == line:
-		return                                   # the same words again the same minute (a refusal repeated)
-	messages.append(line)
-	if messages.size() > MESSAGES_KEPT:
-		messages.pop_front()
 
 
 ## Something gained or a quick hint ("+2 red berries"): a short line in the top-right corner that
@@ -1801,7 +1788,7 @@ func show_barber(n: NPC, draft: Dictionary) -> void:
 		var r: Dictionary = w.player_barber_visit(n, recipe)
 		if r.ok:
 			main.player_worn = "reset"           # redraw the player's sprite from the new recipe
-			message("%s trims and dresses your hair (%d coins paid)." % [n.name, int(r.paid)])
+			message("%s trims and dresses your hair (%d coins paid)." % [n.name, int(r.paid)], 4.0, "trade")
 			_talk_view(n, "There. A new man, or woman. Mind the wind.")
 		else:
 			message(str(r.why)), why == "" or why.begins_with("A visit costs"), left)
@@ -2152,7 +2139,7 @@ func show_players() -> void:
 		if w.players_partner_refusal(me, q) == "":
 			_button("Ask %s to be your partner" % q.name, func():
 				var why := w.player_offer("partner", pid)
-				message(why if why != "" else "You ask %s. They must agree." % q.name)
+				message(why if why != "" else "You ask %s. They must agree." % q.name, 4.0, "" if why != "" else "family")
 				show_players())
 		var ids: Array = me.inv.ids()
 		ids.sort()
@@ -2162,7 +2149,7 @@ func show_players() -> void:
 			var iid: String = id
 			_button("Offer 1 %s" % GameData.item_name(iid).to_lower(), func():
 				var why := w.player_offer("gift", pid, iid, 1)
-				message(why if why != "" else "You offer it to %s." % q.name)
+				message(why if why != "" else "You offer it to %s." % q.name, 4.0, "" if why != "" else "trade")
 				show_players())
 	_button("Close", hide_all)
 
@@ -2171,6 +2158,7 @@ func show_players() -> void:
 ## record is.
 func show_journal(spread: int, quests_page := false, messages_page := false) -> void:
 	var items := _quest_items() if quests_page else (_journal_items(game_messages()) if messages_page else _journal_items())
+	var phone_journal: bool = main.settings.layout_height() < 600.0
 	var pages := maxi(1, ceili(float(items.size()) / JOURNAL_PER_PAGE))
 	var spreads := ceili(pages / 2.0)
 	spread = spreads - 1 if spread < 0 else clampi(spread, 0, spreads - 1)
@@ -2193,7 +2181,9 @@ func show_journal(spread: int, quests_page := false, messages_page := false) -> 
 		paper.content_margin_bottom = 12
 		sheet.add_theme_stylebox_override("panel", paper)
 		sheet.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		sheet.custom_minimum_size = Vector2(0, 300)
+		# GP-MESSAGE-JOURNAL: on a phone (450 high) a 300-high page pushed the page buttons out of the window; the page is lower there,
+		# 300 on a desktop as before; longer pages still grow and the window scrolls
+		sheet.custom_minimum_size = Vector2(0, clampf(main.settings.layout_height() - 250.0, 160.0, 300.0))
 		var lines := VBoxContainer.new()
 		lines.add_theme_constant_override("separation", 6)
 		sheet.add_child(lines)
@@ -2213,7 +2203,7 @@ func show_journal(spread: int, quests_page := false, messages_page := false) -> 
 				l.add_theme_color_override("font_color", Color8(122, 38, 22))
 			else:
 				l.text = it.text
-				l.add_theme_font_size_override("font_size", 16)
+				l.add_theme_font_size_override("font_size", 14 if phone_journal else 16)
 				l.add_theme_color_override("font_color", INK)
 			lines.add_child(l)
 		var gap := Control.new()
@@ -2233,6 +2223,8 @@ func show_journal(spread: int, quests_page := false, messages_page := false) -> 
 			book.add_child(spine)
 	var nav := HBoxContainer.new()
 	panel_body.add_child(nav)
+	if phone_journal:
+		panel_body.move_child(nav, 0)      # GP-MESSAGE-JOURNAL: on a phone the page buttons stand above the pages, never scrolled away
 	var earlier := _button("Earlier", func(): show_journal(spread - 1, quests_page, messages_page), spread > 0, nav)
 	earlier.custom_minimum_size = Vector2(130, 48)
 	var where := Label.new()
@@ -2740,9 +2732,9 @@ func _quest_choices(n: NPC, choices: GridContainer) -> void:
 				sfx("jingle_quest_complete")
 				var learned: String = w.quests.last_learned
 				if t.get("hire", false):
-					message("Work done: %s (+%d coins wage)" % [t.title, paid])
+					message("Work done: %s (+%d coins wage)" % [t.title, paid], 4.0, "work")
 				else:
-					message("Quest done: %s%s%s" % [t.title, (" (+%d coins)" % paid) if paid > 0 else "", (". " + learned) if learned != "" else ""])
+					message("Quest done: %s%s%s" % [t.title, (" (+%d coins)" % paid) if paid > 0 else "", (". " + learned) if learned != "" else ""], 4.0, "quest")
 				_talk_view(n, thanks, false, "", ("You learned: " + learned) if learned != "" else ""))
 		else:
 			_talk_choice(choices, "About your request", func(): _talk_view(n, w.quests.line(q, "waiting")))
@@ -2758,7 +2750,7 @@ func _quest_choices(n: NPC, choices: GridContainer) -> void:
 		_talk_choice(choices, "Teach me about the law", func():       # LAW-SKILL: the reeve's lesson (the clergy's, later)
 			var r := Law.teach(w, w.acting_ref(), n)
 			if r.ok:
-				message(r.text)
+				message(r.text, 4.0, "law")
 			_talk_view(n, r.text))
 	# paid work (owner: the player can work and earn money): asked for, never marked
 	if w.quests.hires(n):
@@ -2780,7 +2772,7 @@ func _chapel_choices(n: NPC, choices: GridContainer) -> void:
 			_talk_choice(choices, "Give %d coins to the chapel" % amt, func():
 				var r := w.chapel.player_offer_coins(amt)
 				if r.ok:
-					message(r.text)
+					message(r.text, 4.0, "village")
 				_talk_view(n, r.text))
 	var shown := 0
 	for id in NPCBrain.EDIBLE:
@@ -2790,12 +2782,12 @@ func _chapel_choices(n: NPC, choices: GridContainer) -> void:
 			_talk_choice(choices, "Give 1 %s to the chapel" % GameData.item_name(item).to_lower(), func():
 				var r := w.chapel.player_offer_item(item, 1)
 				if r.ok:
-					message(r.text)
+					message(r.text, 4.0, "village")
 				_talk_view(n, r.text))
 	_talk_choice(choices, "Ask the church for food", func():
 		var r := w.chapel.player_ask()
 		if r.ok:
-			message(r.text)
+			message(r.text, 4.0, "village")
 		_talk_view(n, r.text))
 	_talk_choice(choices, "How can I help the church?", func():
 		_talk_view(n, "Whatever you can spare goes first to feeding those in need, coins or food. The church keeps its own small plot beside the chapel; villagers who have the time work it, and when none do, we work it ourselves."))
@@ -2811,7 +2803,7 @@ func _feast_choices(n: NPC, choices: GridContainer) -> void:
 		_talk_choice(choices, str(opt.label), func():
 			var r := w.feast.player_feast(kind, size)
 			if r.ok:
-				message(r.text)
+				message(r.text, 4.0, "village")
 			_talk_view(n, r.text))
 
 
@@ -2855,7 +2847,7 @@ func show_manor_jobs(reeve: NPC) -> void:
 		var job: Dictionary = j
 		_button("Take it", func():
 			if mw.take(job, "player"):
-				message("Work for the manor: %s. It is written in your journal." % mw.describe(job))
+				message("Work for the manor: %s. It is written in your journal." % mw.describe(job), 4.0, "work")
 				hide_all()
 			else:
 				message(mw.last_refusal)
@@ -2878,10 +2870,10 @@ func _offer_choices(n: NPC, choices: GridContainer, hire := "") -> void:
 			return
 		sfx("jingle_quest_accepted")
 		if hire != "":
-			message("Hired: %s. It is written in your journal." % Quests.template(q.id).title)
+			message("Hired: %s. It is written in your journal." % Quests.template(q.id).title, 4.0, "work")
 			_talk_view(n, "Good. Come and find me when it's done, and you'll have your wage.")
 			return
-		message("New quest: %s. It is written in your journal." % Quests.template(q.id).title)
+		message("New quest: %s. It is written in your journal." % Quests.template(q.id).title, 4.0, "quest")
 		_talk_view(n, "Good. Come back when it's done."))
 	_talk_choice(choices, "Not now", func(): _talk_view(n, Dialogue.opening(w, n)))
 
@@ -2889,6 +2881,10 @@ func _offer_choices(n: NPC, choices: GridContainer, hire := "") -> void:
 ## `note` is a line under the speech, not spoken (what a teacher taught the player).
 func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "", helping := false) -> void:
 	var w: World = main.world
+	# GP-MESSAGE-JOURNAL: what a villager says to the player is kept (ordinary, "npc"), except the greeting that opens every
+	# conversation and words the player's own action already put in the journal (a chapel gift, a feast, a lesson)
+	if said != "" and said != Dialogue.opening(w, n) and said != w.player_last_message():
+		w.player_tell("%s: %s" % [n.name, said], "npc")
 	_open("talk", Dialogue.full_name(n))
 	var tall: float = main.settings.layout_height()
 	panel_body.size_flags_vertical = Control.SIZE_EXPAND_FILL       # the talk fills the window; choices at the foot
@@ -2979,7 +2975,7 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 		_talk_choice(choices, "Learn Fireball (%d coins)" % price if not known else "You know Fireball", func():
 			var learned := w.player_learn_fireball(n)          # the price, the payment and the spell are core's (DVW-A12 R12)
 			if learned.ok:
-				message("You learned Fireball. Press F (or the Fire button) to cast it; it uses stamina.")
+				message("You learned Fireball. Press F (or the Fire button) to cast it; it uses stamina.", 4.0, "skill")
 				if str(learned.thanks) != "":
 					_talk_view(n, str(learned.thanks))
 				else:
@@ -2993,7 +2989,7 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 		_talk_choice(choices, row_text, func():
 			var r: Dictionary = w.player_buy_pack_row(n)
 			if r.ok:
-				message("%s lets out your pack: every tab now holds %d kinds (%d coins paid)." % [n.name, w.player.pack_cap(), int(r.paid)])
+				message("%s lets out your pack: every tab now holds %d kinds (%d coins paid)." % [n.name, w.player.pack_cap(), int(r.paid)], 4.0, "trade")
 				hide_all()
 			else:
 				message(str(r.why)), row_price >= 0)
@@ -3028,7 +3024,7 @@ func _relation_choices(n: NPC, choices: GridContainer) -> void:
 			_talk_choice(choices, "Offer a home", func():
 				var why := Guardianship.player_adopt(w, n)
 				if why == "":
-					message("%s comes to live with your family." % n.name)
+					message("%s comes to live with your family." % n.name, 4.0, "family")
 				_talk_view(n, "With you? ...Yes. Thank you." if why == "" else why))
 		return
 	# CON-01: goods-procurement contracts: propose one, or see those open and offered with this villager
@@ -3039,7 +3035,7 @@ func _relation_choices(n: NPC, choices: GridContainer) -> void:
 	if r.can_befriend(n):
 		_talk_choice(choices, "Befriend", func():
 			r.befriend(w.acting_id(), n.id)
-			message("You and %s are friends." % n.name)
+			message("You and %s are friends." % n.name, 4.0, "family")
 			_talk_view(n, "Friends, then. Come to me if you need anything."))
 	var me := w.acting_id()
 	if r.can_court(me, n.id) and Life.partner_refusal(w, n) == "":
@@ -3049,13 +3045,13 @@ func _relation_choices(n: NPC, choices: GridContainer) -> void:
 				_talk_choice(choices, "Ask to court", func():
 					var why := r.ask_court(me, n)
 					if why == "":
-						message("You are courting %s." % n.name)
+						message("You are courting %s." % n.name, 4.0, "family")
 					_talk_view(n, "I'd like that. Come and see me." if why == "" else why))
 		elif st == "courting":
 			_talk_choice(choices, "Propose", func():
 				var why := r.propose(me, n)
 				if why == "":
-					message("%s said yes: you are partners." % n.name)
+					message("%s said yes: you are partners." % n.name, 4.0, "family")
 				_talk_view(n, "Yes. Yes, I will." if why == "" else why))
 
 
@@ -3082,7 +3078,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 		panel_body.add_child(h)
 		var done := func(said: String) -> void:
 			if said != "":
-				message(said)
+				message(said, 4.0, "contract")
 			show_contract(n, t)
 		if Contracts.is_service(cc):
 			_service_row(n, cc, l, h, done)
@@ -3128,7 +3124,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			_button("Agree: %d at %d each in %d days (%d coins)" % [int(ct.qty), int(ct.price), int(ct.days), int(ct.qty) * int(ct.price)], func():
 				var r2 := k.propose(w.acting_ref(), n, str(ct.get("item", "")), int(ct.qty), int(ct.price), int(ct.days), reply.get("history", []), ct.get("svc", {}))
 				if r2.has("contract"):
-					message("Contract made with %s: %s." % [n.name, k.describe(r2.contract)])
+					message("Contract made with %s: %s." % [n.name, k.describe(r2.contract)], 4.0, "contract")
 					show_contract(n, {}, r2)
 				else:
 					show_contract(n, ct, r2))
@@ -3276,7 +3272,7 @@ func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 				var r := k.counter_offer(k.get_contract(int(t.counter)), qty, price, days)
 				r.from_buyer = true
 				if r.has("contract"):
-					message("Contract made with %s: %s." % [n.name, k.describe(r.contract)])
+					message("Contract made with %s: %s." % [n.name, k.describe(r.contract)], 4.0, "contract")
 				show_contract(n, {}, r))
 		else:
 			next_btn = _button("Propose to %s" % n.name, func():
@@ -3287,7 +3283,7 @@ func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 					r = k.propose(w.acting_ref(), n, str(t.item), qty, price, days)
 				if r.has("contract"):
 					message(("Contract made with %s: %s." % [n.name, k.describe(r.contract)]) if t.has("svc") else
-							"Contract made: %d %s from %s." % [qty, what, n.name])
+							"Contract made: %d %s from %s." % [qty, what, n.name], 4.0, "contract")
 					show_contract(n, {}, r)
 				else:
 					var nt: Dictionary = t.duplicate()
@@ -3471,7 +3467,7 @@ func _helper_choices(n: NPC, choices: GridContainer) -> void:
 				message(why)
 				_talk_view(n, Dialogue.opening(w, n))
 				return
-			message("%s will carry%s for the rest of the working day." % [n.name, where])
+			message("%s will carry%s for the rest of the working day." % [n.name, where], 4.0, "work")
 			_talk_view(n, "Right. I'll get to it.")
 		var spend := w.player_helper_budget(pp)                # what the helper may spend: core's (DVW-A12 R21)
 		_talk_choice(choices, "From my chest%s (%d coins)" % [where, wage], func(): hire.call(0), w.player.coins >= wage)
@@ -3667,7 +3663,7 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 			var b: Dictionary = w.player_buy_many(n, id, q)
 			if b.result == "bought":                    # (its Trading xp is core's, DVW-A12 R13)
 				sfx("coin")
-				message("You buy %d %s for %d coins." % [q, nm.to_lower(), int(b.paid)])
+				message("You buy %d %s for %d coins." % [q, nm.to_lower(), int(b.paid)], 4.0, "trade")
 			else:
 				message(b.text)
 			show_trade(n)
@@ -3675,7 +3671,7 @@ func _trade_picker(n: NPC, pick: Dictionary) -> void:
 		var r: Dictionary = w.player_sell_many(n, id, q)
 		if r.sold > 0:                                  # (its Trading xp is core's, DVW-A12 R13)
 			sfx("coin")
-			message("You sell %d %s for %d coins." % [r.sold, nm.to_lower(), int(r.paid)])
+			message("You sell %d %s for %d coins." % [r.sold, nm.to_lower(), int(r.paid)], 4.0, "trade")
 		if r.result == "sold":
 			show_trade(n)
 		elif r.result == "failed":
@@ -3912,7 +3908,7 @@ func show_place_deal(kind: String, rect: Rect2i, anchor := "") -> void:
 			message("You cannot build there: %s." % c.why)
 			return
 		main.end_placement()
-		message("The ground is yours%s and the frame is up. Bring the materials." % (" on lease" if lease else ""))
+		message("The ground is yours%s and the frame is up. Bring the materials." % (" on lease" if lease else ""), 4.0, "property")
 		show_build(p)
 	_button("Buy the ground and mark out (%d coins)" % int(t.price), func(): mark.call(false), w.player.coins >= int(t.price))
 	_button("Lease and mark out (%d a week)" % int(t.rent), func(): mark.call(true), w.player.coins >= int(t.rent))
@@ -3998,14 +3994,14 @@ func show_build(pl: Dictionary) -> void:
 		_label("A helper can carry for you: talk to a villager out of work or labouring and hire them for the day (%d coins)." % int(GameData.b("helper_wage")), 15)
 	_button("Deliver what I carry", func():
 		if w.deliver(pl, p.inv, w.acting_ref()):
-			message("%s is finished!" % World.cap(w.property.describe(pl)))
+			message("%s is finished!" % World.cap(w.property.describe(pl)), 4.0, "property")
 			hide_all()
 		else:
 			show_build(pl))
 	_button("Give up the site (all materials come back)", func():
 		var back := w.cancel_site(pl, p.inv)
 		var words: Array = back.keys().map(func(k): return "%d %s" % [int(back[k]), GameData.item_name(k).to_lower()])
-		message("The frame comes down. You take back %s." % (", ".join(words) if not words.is_empty() else "nothing; none was delivered"))
+		message("The frame comes down. You take back %s." % (", ".join(words) if not words.is_empty() else "nothing; none was delivered"), 4.0, "property")
 		show_build(pl))
 
 
@@ -4126,7 +4122,7 @@ func _deal_row(t: Dictionary, again: Callable) -> void:
 	text = text[0].to_upper() + text.substr(1)
 	h.add_child(l)
 	var act := func(result: String, done: String) -> void:
-		message(result if result != "" else done)
+		message(result if result != "" else done, 4.0, "" if result != "" else "property")
 		again.call()
 	if w.holds(w.acting_ref(), t):
 		var head: Dictionary = pr.head(t)

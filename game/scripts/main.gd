@@ -160,7 +160,7 @@ func _ready() -> void:
 	net.name = "NetSession"
 	net.main = self
 	add_child(net)
-	net.changed.connect(func(t): ui.message(t, 8.0))
+	net.changed.connect(func(t): ui.message(t, 8.0, "game"))
 	ui.build(self)
 	ui.set_scheme(scheme)
 	# a controller connected to a phone (or already there at start) hides the touch buttons and uses the
@@ -1358,7 +1358,7 @@ func _start(fresh := false) -> void:
 	autosave_hour = int(world.minutes / 60.0)
 	ui.hide_all()
 	if fresh:
-		ui.message("%s %s, %s. %s" % [world.player.name, world.player.family, world.clock_text(), GameUI.OPENING_HINT], 8.0)
+		ui.message("%s %s, %s. %s" % [world.player.name, world.player.family, world.clock_text(), GameUI.OPENING_HINT], 8.0, "game")
 	else:
 		ui.message("%s %s, %s. Explore the village: talk to people, work, trade, build." % [world.player.name, world.player.family, world.clock_text()])
 
@@ -1853,7 +1853,7 @@ func _process(delta: float) -> void:
 		if mine.size() > _offers_seen:
 			var o: Dictionary = mine[mine.size() - 1]
 			var from: PlayerState = world.player_of_ref(str(o["from"]))
-			ui.message("%s asks you something: press Use beside them to answer." % (from.name if from != null else "Someone"), 6.0)   # MP-D8
+			ui.message("%s asks you something: press Use beside them to answer." % (from.name if from != null else "Someone"), 6.0, "game")   # MP-D8
 		_offers_seen = mine.size()
 	_sync_sprites()
 	_sync_levels(delta)
@@ -3269,7 +3269,7 @@ func pick_lock(uid: String) -> void:
 	win.finished.connect(func(res: String):
 		var r: Dictionary = world.player_pick_lock(u, res)     # the try and its xp are core's (DVW-A12 R6); the host's in a shared world
 		ui.hide_all()
-		ui.message(str(r.text), 6.0)
+		ui.message(str(r.text), 6.0, "crime")
 		if r.result == "open":
 			ui.show_chest(uid))
 
@@ -3308,7 +3308,7 @@ func pickpocket(n: NPC) -> void:
 		return
 	if not r.ok:
 		say(n, "Thief! Get your hand out of my purse!")
-	ui.message(r.text)
+	ui.message(r.text, 4.0, "crime")
 
 
 func _who(n: NPC) -> String:
@@ -3394,10 +3394,10 @@ func _use() -> void:
 			ui.show_stall(str(target.id))
 		"front_build":
 			var why := world.business.build_storefront(world.buildings[str(target.id)])
-			ui.message(why if why != "" else "Your storefront stands by the door. List goods at its counter.")
+			ui.message(why if why != "" else "Your storefront stands by the door. List goods at its counter.", 4.0, "" if why != "" else "property")
 		"stall_build":
 			var why := world.construction.build_stall(world.acting_ref(), target.c, p.inv)
-			ui.message(why if why != "" else "Your market stall stands. Put goods in it and open it; it sells while you are away.")
+			ui.message(why if why != "" else "Your market stall stands. Put goods in it and open it; it sells while you are away.", 4.0, "" if why != "" else "property")
 		"front_open":
 			var why := world.business.open_front(world.buildings[str(target.id)])
 			ui.message(why if why != "" else "Your storefront is open.")
@@ -3429,7 +3429,7 @@ func _use() -> void:
 				var seen := int(p.crimes[-1].witnesses) if not p.crimes.is_empty() else 0      # (the xp for it is core's, R6)
 				var said := "You take 1 %s from %s. %s" % [GameData.item_name(got).to_lower(), place,
 						"Nobody saw." if seen == 0 else ("%d %s saw you!" % [seen, "person" if seen == 1 else "people"])]
-				ui.message(said + ((" " + world.last_guard) if world.last_guard != "" else ""))
+				ui.message(said + ((" " + world.last_guard) if world.last_guard != "" else ""), 4.0, "crime")
 		"loot":
 			var got := world.player_loot(int(target.i))             # the taking is core's (DVW-A12 R5)
 			if str(got.far) != "":
@@ -3465,12 +3465,12 @@ func _use() -> void:
 			_fill_own(target.cell)
 		"fill_order":
 			var why: String = world.manor_work.order_backfill(world.player_level, target.cell, int(target.units))
-			ui.message(why if why != "" else "The order is made and its wage set aside. Leave the spoil at the mine's mouth, where the order's workers take it.")
+			ui.message(why if why != "" else "The order is made and its wage set aside. Leave the spoil at the mine's mouth, where the order's workers take it.", 4.0, "" if why != "" else "work")
 		"fill_cancel":
 			var fj: Dictionary = world.manor_work.job(int(target.job))
 			if not fj.is_empty():
 				world.manor_work.cancel_backfill(fj)
-				ui.message("The order is cancelled: its wage comes back to you; the fill placed stays where it is.")
+				ui.message("The order is cancelled: its wage comes back to you; the fill placed stays where it is.", 4.0, "work")
 		"fill_stock":
 			var sj: Dictionary = world.manor_work.job(int(target.job))
 			if not sj.is_empty():
@@ -3589,30 +3589,30 @@ func _use() -> void:
 			courier_window.show()
 		"caravan_horse":
 			var why_not: String = world.farm.buy_horse(p)
-			ui.message(why_not if why_not != "" else "You pay the caravan and walk the horse into your pen. With it, the hand plough does a cell in %.0f second." % float(Farming.cfg().till.horse.seconds))
+			ui.message(why_not if why_not != "" else "You pay the caravan and walk the horse into your pen. With it, the hand plough does a cell in %.0f second." % float(Farming.cfg().till.horse.seconds), 4.0, "" if why_not != "" else "trade")
 		"caravan_luxury":
 			var why_lux: String = Luxury.buy(world, p, str(target.item))
 			if why_lux != "":
 				ui.message(why_lux)
 			else:
 				_gain("+1 %s" % GameData.item_name(str(target.item)), str(target.item))
-				ui.message("You pay the caravan's trader and take the %s." % GameData.item_name(str(target.item)).to_lower())
+				ui.message("You pay the caravan's trader and take the %s." % GameData.item_name(str(target.item)).to_lower(), 4.0, "trade")
 		"caravan_food":
 			var why_food: String = CaravanFood.buy(world, p, str(target.item))
 			if why_food != "":
 				ui.message(why_food)
 			else:
 				_gain("+1 %s" % GameData.item_name(str(target.item)), str(target.item))
-				ui.message("You pay the caravan's trader and take the %s." % GameData.item_name(str(target.item)).to_lower())
+				ui.message("You pay the caravan's trader and take the %s." % GameData.item_name(str(target.item)).to_lower(), 4.0, "trade")
 		"courier_shop_booth":
 			var why_booth: String = world.couriers.open_shop_booth(world.acting_ref())
-			ui.message(why_booth if why_booth != "" else "You set a courier booth at your desk: your deliveries can leave from it.")
+			ui.message(why_booth if why_booth != "" else "You set a courier booth at your desk: your deliveries can leave from it.", 4.0, "" if why_booth != "" else "property")
 		"sharpen":                                       # GP-SHARPEN: at the grinding wheel, 1 coin to the smith
 			var whyw: String = world.player_sharpen(str(target.id))
-			ui.message(whyw if whyw != "" else "The smith puts your %s to the wheel: it is sharp again (%d coin)." % [GameData.item_name(str(target.id)).to_lower(), World.SHARPEN_COINS])
+			ui.message(whyw if whyw != "" else "The smith puts your %s to the wheel: it is sharp again (%d coin)." % [GameData.item_name(str(target.id)).to_lower(), World.SHARPEN_COINS], 4.0, "" if whyw != "" else "trade")
 		"pen_buy":
 			var no: String = world.farm.buy_animal(target.pen, str(target.sex), p)
-			ui.message(no if no != "" else "You buy it and walk it into your pen.")
+			ui.message(no if no != "" else "You buy it and walk it into your pen.", 4.0, "" if no != "" else "trade")
 		"plot":
 			ui.show_build(target.plot)
 		"workshop":
@@ -3626,7 +3626,7 @@ func _use() -> void:
 		"rest":
 			rest()
 		"yield":
-			ui.message(str(world.player_yield().text))       # A3: taken in and fined (core's: World.player_yield)
+			ui.message(str(world.player_yield().text), 4.0, "law")       # A3: taken in and fined (core's: World.player_yield)
 		"sit":
 			sit_down(target.spot)
 		"manor_job":
@@ -3645,7 +3645,7 @@ func _use() -> void:
 						found = " The pit strikes ore: a new seam is opened." if mj.get("found", false) else " The pit finds no ore."
 					elif mj.kind == "excavate" and mj.get("found", false):
 						found = " The pit has struck ore: a new seam is opened."
-					ui.message("Work for the manor done.%s The manor pays you %d coins." % [found, pay])
+					ui.message("Work for the manor done.%s The manor pays you %d coins." % [found, pay], 4.0, "work")
 				elif mj.kind == "survey":
 					ui.message(ui._manor_next(mj))
 				else:
@@ -3803,7 +3803,7 @@ func _pit_dig(pit: Dictionary, cell: Vector2i, tool: String) -> void:
 			return
 		_gain("+1 %s" % GameData.item_name(str(r.item)), str(r.item))
 		if not (r.exposed as Dictionary).is_empty():
-			ui.message("The pit strikes %s: a new seam is opened." % GameData.item_name(str(r.exposed.ore)).to_lower())
+			ui.message("The pit strikes %s: a new seam is opened." % GameData.item_name(str(r.exposed.ore)).to_lower(), 4.0, "find")
 		if r.broke:
 			ui.message("Your %s broke." % GameData.item_name(tool).to_lower())
 		_level_up("mining", int(r.up)), "swing", tool)
@@ -3991,7 +3991,7 @@ func _shaft_dig(cell: Vector2i, tool: String) -> void:
 			return
 		_gain("+1 %s" % GameData.item_name(str(r.item)), str(r.item))
 		if r.done:
-			ui.message("The shaft breaks through to the level below. Set a ladder in it to climb down.")
+			ui.message("The shaft breaks through to the level below. Set a ladder in it to climb down.", 4.0, "find")
 		_level_up("mining", int(r.up)), "swing", "pickaxe")
 
 
@@ -4046,10 +4046,10 @@ func _trial_dig(c: Dictionary, cell: Vector2i, tool: String) -> void:
 			ui.message(str(r.why))
 			return
 		if (r.found as Dictionary).is_empty():
-			ui.message("The trial pit finds no ore.")
+			ui.message("The trial pit finds no ore.", 4.0, "find")
 		else:
 			audio.play_sfx("secret_found")
-			ui.message("The trial pit strikes %s: a new seam is opened." % GameData.item_name(str(r.found.ore)).to_lower())
+			ui.message("The trial pit strikes %s: a new seam is opened." % GameData.item_name(str(r.found.ore)).to_lower(), 4.0, "find")
 		ui.message("The earth you dug lies in a spoil pile beside the pit.")
 		if r.broke:
 			ui.message("Your %s broke." % GameData.item_name(tool).to_lower())
@@ -4197,7 +4197,7 @@ func _level_up(skill: String, up: int) -> void:
 		audio.play_sfx("jingle_level_up")
 		var s: Dictionary = GameData.skills[skill]
 		var unlock := Skills.tier_text(skill, up)
-		ui.message("%s is now level %d!%s" % [s.name, up, (" Unlocked: " + unlock) if unlock != "" else ""])
+		ui.message("%s is now level %d!%s" % [s.name, up, (" Unlocked: " + unlock) if unlock != "" else ""], 4.0, "skill")
 
 
 ## Craft a recipe at a station (called from the craft panel). Same recipe data as the NPCs.
@@ -4459,7 +4459,7 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 	var h := world.player_hit_animal(a, dmg)
 	_hit_fx(animal_sprites.get(a.id), before, before - dmg, dmg)
 	if str(h.guard) != "":
-		ui.message(str(h.guard))
+		ui.message(str(h.guard), 4.0, "crime")
 
 
 ## A blow of the player's (a spell's) of `dmg` lands on villager `n`: the rules are core's (World.player_hit_npc,
@@ -4553,7 +4553,7 @@ func _projectiles_step(delta: float) -> void:
 		elif h.who is Animal:
 			_hit_fx(animal_sprites.get(h.who.id), float(h.before), float(h.before) - float(h.dealt), float(h.dealt))
 			if str(h.guard) != "":
-				ui.message(str(h.guard))
+				ui.message(str(h.guard), 4.0, "crime")
 		if hit:
 			_level_up("magic", int(h.up))
 		if hit or pr.left <= 0.0 or map.is_solid_world(Vector2i(floori(pr.pos.x), floori(pr.pos.y))):

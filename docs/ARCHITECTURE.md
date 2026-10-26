@@ -158,6 +158,13 @@ are tested without a window. This is what keeps determinism and testing cheap.
 - Persistent person identity (save version 20, ID-01): every person has one permanent id, never reused (village people below 1,000,000, settlement residents and player characters from 1,000,000, ID-D2), with a
   register of who and where they are; the 19 to 20 step is `Identity.upgrade`, run on load, deterministic, reporting ambiguity and
   refusing (leaving the file untouched) what it cannot do. See `docs/design/IDENTITY.md`.
+- Optional keys without a version change: a section added to the world save that an older save simply lacks (absent means
+  empty) and an older build may ignore is written only when it holds something and read with a default, with no version
+  bump (the pattern of "credit", "couriers", "player_offers"). The message journal (GP-MESSAGE-JOURNAL, Expansion 20) is one:
+  "messages" maps each player's reference to its kept messages, `[world minutes, category, words]` oldest first, bounded per
+  player by `game/data/message_journal.json` (`MessageJournal`, `game/scripts/core/message_journal.gd`); saves 22 and 23 load
+  with an empty journal (fixtures `game/tests/fixtures/mp_save_v22_couple.json`, `b22_save_v23_single.json`;
+  `game/tests/message_journal_test.gd`).
 
 ### 3.8 Performance
 

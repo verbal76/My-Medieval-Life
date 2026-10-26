@@ -167,7 +167,7 @@ static func _row(ui, mode: String, ctx, id: String, again: Callable) -> void:
 			var res: Dictionary = w.player_order_gear(ctx, id)
 			if res.ok:
 				ui.sfx("coin")
-				ui.message("%s makes you a %s (%d coins paid)." % [(ctx as NPC).name, str(it.name).to_lower(), int(res.paid)])
+				ui.message("%s makes you a %s (%d coins paid)." % [(ctx as NPC).name, str(it.name).to_lower(), int(res.paid)], 4.0, "trade")
 			else:
 				ui.message(str(res.why))
 			again.call()
