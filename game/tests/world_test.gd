@@ -1340,9 +1340,22 @@ func _station_conflict() -> void:
 	# interruption: the player stops; the place is free at once and the smith works
 	main.cancel_action("You stop.")
 	check(not w.player_at_station(forge), "cancelling frees the forge at once")
+	var bars0 := smith.inv.count("iron_bar")
+	var coal0 := smith.inv.count("coal")
+	var used0 := float(w.stats.get("used_iron_ore", 0.0))
+	var made0 := float(w.stats.get("made_iron_bar", 0.0))
 	for i in 40:
 		w._run_plan(smith, 0.5, 2.0)
-	check(smith.inv.count("iron_ore") == ore0 - 2 and smith.inv.count("iron_bar") >= 1 and not w.stations[forge].users.has(smith.id), "then the smith smelts, and its reservation is released")
+	# the smelting is done: a bar (two with a skilled hand's bonus_chance) made and counted; the ore and coal used and
+	# counted, or, for a practised smith, all kept by save_chance ("a practised hand wastes nothing", World.work_craft),
+	# which draws on the world's shared random stream, so either outcome is the game's own rule
+	var made := smith.inv.count("iron_bar") - bars0
+	var used := ore0 - smith.inv.count("iron_ore")
+	var spent := used == 2 and coal0 - smith.inv.count("coal") == 1 and is_equal_approx(float(w.stats.get("used_iron_ore", 0.0)) - used0, 2.0)
+	var saved := used == 0 and smith.inv.count("coal") == coal0 and is_equal_approx(float(w.stats.get("used_iron_ore", 0.0)), used0)
+	check(smith.plan.is_empty() and made >= 1 and is_equal_approx(float(w.stats.get("made_iron_bar", 0.0)) - made0, float(made)) \
+			and (spent or saved) and not w.stations[forge].users.has(smith.id),
+			"then the smith smelts (%d bar, ore %s), and its reservation is released" % [made, "used" if spent else ("kept by a practised hand" if saved else "WRONG: %d used" % used)])
 	# finished work frees the place too
 	p.inv.add("iron_ore", 2)
 	p.inv.add("coal", 1)
