@@ -135,9 +135,9 @@ static func seat_market(world: World, m: VillageMap, lay: Dictionary) -> void:
 						lay.data[to.y * m.w + to.x + k] = -1
 			world.stat("market_stall_kept_in_place")
 			continue
-		s.x = to.x
-		s.y = to.y
-		s.use = [to.x, to.y + 1]
+		s.x = float(to.x)                     # as a loaded one is (JSON numbers), so a save of it is the same as of the next load
+		s.y = float(to.y)
+		s.use = [float(to.x), float(to.y + 1)]
 		if id.begins_with("pitch"):
 			continue                          # its old cells were never map data: add_pitches makes only the new ones solid
 		world.stat("market_stall_moved")
