@@ -11,6 +11,9 @@ extends SceneTree
 ##     a theft or a refused station, never with a window open, at most six;
 ##   - GP-INTERACTION-PROMPT-LIFECYCLE: the prompt shows for the chosen target, goes while its window is open and the work
 ##     runs, stays down after, and comes back when the thing is chosen again; the work's bar still says "Crafting".
+##   - GP-MESSAGE-FOOTPRINT (owner, 2026-10-26): the message a small box at the top edge, the prompt a slim line at the
+##     bottom edge with a small "2/3" Next, both out of the middle of the play area at 20:9, 16:9 and 16:10; the message
+##     tapped away or gone after its time, and kept on the journal's Messages page.
 ##   godot --headless --path game --script res://tests/x20_android_ui_test.gd
 
 var main
@@ -55,6 +58,7 @@ func _run() -> void:
 	await _outlines()
 	await _prompt_lifecycle()
 	_refused_station()
+	await _message_footprint()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -364,3 +368,78 @@ func _refused_station() -> void:
 			if not main.outline_cells(main._station_target(sid)).is_empty():
 				wrong += 1
 	check(refused > 0 and wrong == 0, "a station someone else is using (or not the player's to use) does not glow (%d such, after %d steps)" % [refused, steps])
+
+
+# ---------------------------------------------------------------- GP-MESSAGE-FOOTPRINT ----------
+func _message_footprint() -> void:
+	var ui = main.ui
+	ui.hide_all()
+	main.paused = true                    # the prompts here are set by hand; the world does not choose its own meanwhile
+	main.scheme = "touch"
+	ui.set_scheme("touch")
+	var opening := "%s %s, %s. %s" % [main.world.player.name, main.world.player.family, main.world.clock_text(), GameUI.OPENING_HINT]
+	var three := [{"kind": "station", "label": "Use the oven"}, {"kind": "npc", "label": "Talk to Mabel Reed"}, {"kind": "npc", "label": "Talk to Hugh Reed"}]
+	for sz in [Vector2i(1001, 450), Vector2i(800, 450), Vector2i(720, 450)]:
+		get_root().content_scale_size = sz
+		ui.fit_safe_area()
+		await frames()
+		ui.message(opening, 8.0, "game")
+		main.target_options = three
+		main.target = three[1]
+		ui.prompt("Talk to Mabel Reed\nNext: Talk to Hugh Reed (3 of 3)", true)
+		await frames(3)
+		var view := Rect2(Vector2.ZERO, Vector2(sz))
+		var t: Rect2 = ui.toast.get_global_rect()
+		var pb: Rect2 = ui.prompt_box.get_global_rect()
+		var sb: Rect2 = ui.status_box.get_global_rect()
+		var tb: Rect2 = ui.touch_bar.get_global_rect()
+		var mid := Rect2(view.size * Vector2(0.25, 0.3), view.size * Vector2(0.5, 0.4))     # the middle of the play area
+		check(t.position.y < 30.0 and not t.intersects(sb) and not t.intersects(tb) and not t.intersects(mid) and t.end.y <= view.size.y * 0.25,
+			"%s: the opening message is a small box at the top edge, in its top quarter (%s), clear of the status box, the buttons and the middle (was 460 x 94 mid-screen)" % [sz, t])
+		check(ui.toast.get_theme_font_size("font_size") == GameUI.TOAST_FONT and GameUI.TOAST_FONT < 17, "%s: the message's words are smaller (%d points, were 17)" % [sz, GameUI.TOAST_FONT])
+		check(view.size.y - pb.end.y < 30.0 and pb.size.y <= 48.0 and not pb.intersects(tb) and not pb.intersects(sb) and not pb.intersects(t) and not pb.intersects(mid),
+			"%s: the prompt is one slim line at the bottom edge (%s), clear of the buttons, the status box, the message and the middle (was 2 lines, 61 high)" % [sz, pb])
+		check(ui.prompt_label.text == "Talk to Mabel Reed" and ui.prompt_next.visible and ui.prompt_next.text.begins_with("2/3"),
+			"%s: the prompt keeps its target, and Next says which of the three is chosen (\"%s\", \"%s\")" % [sz, ui.prompt_label.text, ui.prompt_next.text])
+		check(ui.prompt_next.get_global_rect().size.y >= 40.0, "%s: Next is still a thumb's height (%s)" % [sz, ui.prompt_next.get_global_rect().size])
+		var lb: Rect2 = ui.log_box.get_global_rect()
+		check(lb.position.y >= t.end.y or lb.position.x >= t.end.x or lb.end.x <= t.position.x, "%s: the corner log steps below the message, not under it" % sz)
+	# the talk line stays, on the same line
+	main.target = three[0]
+	ui.prompt("Use the oven\nTap them: Talk to Mabel Reed", true)
+	check(ui.prompt_label.text.contains("Use the oven") and ui.prompt_label.text.contains("Talk to Mabel Reed") and not ui.prompt_label.text.contains("\n")
+		and ui.prompt_next.text.begins_with("1/3") and ui.prompt_text.contains("\n"), "the talk line is kept on the prompt's one line: \"%s\" [%s]" % [ui.prompt_label.text, ui.prompt_next.text])
+	main.target_options = []
+	main.target = {}
+	ui.prompt("")
+	# a tap on the message puts it away, and is not a walk; its time up, it goes too
+	var at: Vector2 = ui.toast.get_global_rect().get_center()
+	check(ui.blocks(at), "a tap on the message is the interface's, not a walk")
+	var tap := InputEventScreenTouch.new()
+	tap.pressed = true
+	tap.position = at
+	ui.toast.gui_input.emit(tap)
+	check(not ui.toast.visible, "a tap on the message puts it away")
+	ui.message("A short one.", 4.0, "game")
+	ui.toast_t = 0.0001
+	await frames(2)
+	check(not ui.toast.visible and ui.toast.modulate.a == 1.0, "its time up, the message goes")
+	check(ui.log_push == 0.0, "the corner log is back at the top when no message shows")
+	# every message is kept on the journal's Messages page
+	var kept: Array = ui.game_messages()
+	check(kept.any(func(l: String): return l.ends_with(opening)) and kept.any(func(l: String): return l.ends_with("A short one.")),
+		"the messages are kept in the world's journal, stamped with the day and time (%d kept)" % kept.size())
+	ui.show_journal(-1, false, true)
+	var words := ""
+	for l in ui.panel_body.find_children("*", "Label", true, false):
+		words += (l as Label).text + "\n"
+	check(ui.is_open("journal") and ui.title_label.text.to_lower() == "journal: messages" and words.contains("A short one.") and words.contains("Any work for me?"),
+		"the journal's Messages page shows them (%s: %s)" % [ui.title_label.text, words.replace("\n", " | ")])
+	var btns: Array = ui.panel_body.find_children("*", "Button", true, false).map(func(b): return (b as Button).text)
+	check(btns.has("Village record") and btns.has("Quests") and btns.has("Resources"), "and leads to the other pages: %s" % [btns])
+	ui.show_journal(-1)
+	btns = ui.panel_body.find_children("*", "Button", true, false).map(func(b): return (b as Button).text)
+	check(btns.has("Messages"), "the village record leads to the Messages page")
+	ui.hide_all()
+	get_root().content_scale_size = Vector2i(1001, 450)
+	ui.fit_safe_area()

@@ -29,10 +29,10 @@ static func show(ui, n: NPC, want := "", offer := "") -> void:
 		ui._label(("%s asks you for %d %s and offers %d %s in barter." % [n.name, int(r.qty), item, int(r.give_qty), GameData.item_name(str(r.give)).to_lower()]) if str(r.mode) == "barter" \
 				else "%s asks you for %d %s on credit: %d coins, repaid by day %d." % [n.name, int(r.qty), item, int(r.value), w.day() + int(Credit.cfg().days)], 16, GOLD)
 		ui._button("Accept", func():
-			ui.message(str(cr.answer_request(rid, true).text))
+			ui.message(str(cr.answer_request(rid, true).text), 4.0, "money")
 			show(ui, n))
 		ui._button("Refuse", func():
-			ui.message(str(cr.answer_request(rid, false).text))
+			ui.message(str(cr.answer_request(rid, false).text), 4.0, "money")
 			show(ui, n))
 	var any := false
 	for d in cr.debts_of(them, me):
@@ -43,7 +43,7 @@ static func show(ui, n: NPC, want := "", offer := "") -> void:
 				("overdue since day %d: until it is paid they will sell you nothing on credit" % int(d.due)) if late else "due by day %d" % int(d.due)], 16, Color(1, 0.7, 0.55) if late else GOLD)
 		ui._button("Repay %d coins" % int(d.value), func():
 			if cr.repay(id, true):
-				ui.message("You repay %d coins." % int(d.value))
+				ui.message("You repay %d coins." % int(d.value), 4.0, "money")
 			show(ui, n), p.coins >= int(d.value))
 	for d in cr.debts_of(me, them):
 		any = true
@@ -79,7 +79,7 @@ static func show(ui, n: NPC, want := "", offer := "") -> void:
 		var lend := cr.credit_refusal(p, n, oprice)
 		ui._item_row(id, p.inv.count(id), "%d coins, due by day %d%s" % [oprice, w.day() + int(Credit.cfg().days), "" if lend == "" else "  ·  " + lend], "Lend 1",
 			func():
-				ui.message(str(cr.sell_on_credit(p, n, oid, 1, oprice).text))
+				ui.message(str(cr.sell_on_credit(p, n, oid, 1, oprice).text), 4.0, "money")
 				show(ui, n), lend == "")
 		ui._item_row(id, p.inv.count(id), "swap for their goods", "Barter", func(): show(ui, n, "", oid))
 	ui._button("Back to trading", func(): ui.show_trade(n))
@@ -124,7 +124,7 @@ static func _offer_pick(ui, n: NPC, offer: String) -> void:
 		var gid: String = give
 		ui._item_row(give, n.inv.count(give), ("%d of it (you ask %d coins' worth)" % [int(q.give_qty), int(q.ask)]) if bool(q.ok) else str(q.why), "Swap",
 			func():
-				ui.message(str(cr.barter(p, n, offer, 1, gid).text))
+				ui.message(str(cr.barter(p, n, offer, 1, gid).text), 4.0, "trade")
 				show(ui, n), bool(q.ok))
 	if not shown:
 		ui._label("%s has nothing to spare." % n.name, 15, DIM)

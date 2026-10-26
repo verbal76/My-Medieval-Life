@@ -28,7 +28,7 @@ static func show(ui: GameUI, bid: String) -> void:
 			ui._label("The counter is ready. A shop pays a licence of %d coins a day to the manor." % int(GameData.b("shop_licence_day")), 16)
 			ui._button("Open the shop (licence %d coins a day)" % int(GameData.b("shop_licence_day")), func():
 				var r := w.business.open_shop(b)
-				ui.message(r if r != "" else "Your shop is open.")
+				ui.message(r if r != "" else "Your shop is open.", 4.0, "" if r != "" else "property")
 				if r == "":
 					StallWindow.show(ui, bid)
 				else:
