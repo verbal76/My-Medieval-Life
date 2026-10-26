@@ -13,9 +13,9 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 | Count | Value |
 |---|---|
 | Implemented harvestable node types | 29 (22 player-harvestable) |
-| Materials the nodes produce | 31: apple, apple_sapling, blueberries, carrot, carrot_seed, coal, copper_ore, dirt, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, ore_sample, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, spoil, stone, topsoil, wheat, wheat_seed, wool |
-| Production chains documented (node product to finished item) | 92 (92 workable, 0 blocked by gold ore) |
-| Materials with no current use | 6: feather, fine_cloth, handcart, jewellery, minecart, spice |
+| Materials the nodes produce | 33: antler, apple, apple_sapling, blueberries, boar_tusk, carrot, carrot_seed, coal, copper_ore, dirt, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, ore_sample, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, spoil, stone, topsoil, wheat, wheat_seed, wool |
+| Production chains documented (node product to finished item) | 410 (410 workable, 0 blocked by gold ore) |
+| Materials with no current use | 4: handcart, jewellery, minecart, spice |
 | Recipes with a missing raw-material source | 0 |
 | Finite node types with no replacement | 5: gold_seam, horse_pen, open_pit, prospect_clue, tunnel_rock |
 | Nodes not Gather-compatible | 7: chicken_pen, cow_pen, horse_pen, pig_pen, player_field, player_pen, sheep_pen |
@@ -41,22 +41,83 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 ### `chicken_pen` · Chickens (implemented)
 
 - **feather** (2 a cycle)
-  - used as it is: bought by the merchant goods; bought by the passing caravan
+  - 2 feather + 1 iron_bar, 1 leather, 1 wool_cloth → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+  - 2 feather + 1 gold_bar, 2 hide, 2 iron_bar, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+  - 4 feather + 1 gold_bar, 2 iron_bar → **1 valkyrie_helm** (forge_valkyrie_helm, anvil)
+  - 1 feather + 1 wool_cloth → **1 archer_hat_cyan** (sew_archer_hat_cyan, workbench)
+  - 1 feather + 1 wool_cloth → **1 archer_hat_green** (sew_archer_hat_green, workbench)
+  - 1 feather + 1 wool_cloth → **1 archer_hat_yellow** (sew_archer_hat_yellow, workbench)
+  - 2 feather + 3 fine_cloth, 2 leather → **1 french_hunter_coat** (sew_french_hunter_coat, workbench)
+  - 2 feather + 1 fine_cloth, 1 leather → **1 hunter_hat_blue** (sew_hunter_hat_blue, workbench)
+  - 2 feather + 1 fine_cloth, 1 leather → **1 hunter_hat_indigo** (sew_hunter_hat_indigo, workbench)
+  - 2 feather + 1 fine_cloth, 1 leather → **1 hunter_hat_red** (sew_hunter_hat_red, workbench)
+  - 2 feather + 3 fine_cloth, 2 leather → **1 musketeer_coat_purple** (sew_musketeer_coat_purple, workbench)
+  - 2 feather + 3 fine_cloth, 2 leather → **1 musketeer_coat_red** (sew_musketeer_coat_red, workbench)
+  - 2 feather + 1 fine_cloth, 1 leather → **1 musketeer_hat_purple** (sew_musketeer_hat_purple, workbench)
+  - 2 feather + 1 fine_cloth, 1 leather → **1 musketeer_hat_red** (sew_musketeer_hat_red, workbench)
+  - 1 feather + 1 wool_cloth → **1 ranger_hat_cyan** (sew_ranger_hat_cyan, workbench)
+  - 1 feather + 1 wool_cloth → **1 ranger_hat_green** (sew_ranger_hat_green, workbench)
+  - 1 feather + 1 wool_cloth → **1 ranger_hat_yellow** (sew_ranger_hat_yellow, workbench)
+  - 4 feather + 2 fine_cloth, 2 leather → **1 yabusame_robe_blue** (sew_yabusame_robe_blue, workbench)
+  - 4 feather + 2 fine_cloth, 2 leather → **1 yabusame_robe_red** (sew_yabusame_robe_red, workbench)
+  - 1 feather + 3 wheat, 1 wool_cloth → **1 yabusame_straw_hat_blue** (sew_yabusame_straw_hat_blue, workbench)
+  - 1 feather + 3 wheat, 1 wool_cloth → **1 yabusame_straw_hat_red** (sew_yabusame_straw_hat_red, workbench)
 - **meat** (1 a cycle)
   - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
 
 ### `coal_seam` · Coal seam (implemented)
 
 - **coal** (1 a cycle)
+  - 1 coal + 5 copper_bar, 2 leather → **1 bronze_armor** (forge_bronze_armor, anvil)
   - 1 coal + 1 iron_bar → **1 cart_ironwork** (forge_cart_ironwork, anvil)
     - 1 cart_ironwork + 1 cart_axle, 2 cart_wheel, 4 plank → **1 handcart** (build_handcart, workbench)
     - 2 cart_ironwork + 2 cart_axle, 4 cart_wheel, 6 plank → **1 minecart** (build_minecart, workbench)
+  - 1 coal + 3 iron_bar, 1 leather → **1 knight_helm** (forge_knight_helm, anvil)
+  - 1 coal + 2 copper_bar, 1 leather → **1 soldier_bronze_helm_blue** (forge_soldier_bronze_helm_blue, anvil)
+  - 1 coal + 2 copper_bar, 1 leather → **1 soldier_bronze_helm_red** (forge_soldier_bronze_helm_red, anvil)
+  - 2 coal + 3 iron_bar, 1 leather → **1 soldier_steel_helm_blue** (forge_soldier_steel_helm_blue, anvil)
+  - 2 coal + 3 iron_bar, 1 leather → **1 soldier_steel_helm_red** (forge_soldier_steel_helm_red, anvil)
+  - 3 coal + 6 iron_bar, 2 leather → **1 steel_armor** (forge_steel_armor, anvil)
   - 1 coal + 2 copper_ore → **1 copper_bar** (smelt_copper, forge)
     - 1 copper_bar + 1 leather → **1 amulet** (forge_amulet, anvil)
+    - 5 copper_bar + 1 coal, 2 leather → **1 bronze_armor** (forge_bronze_armor, anvil)
     - 1 copper_bar → **1 copper_ring** (forge_copper_ring, anvil)
     - 2 copper_bar + 1 plank → **1 copper_sword** (forge_copper_sword, anvil)
+    - 2 copper_bar + 4 leather, 2 wool_cloth → **1 mongol_cherbi_armor** (forge_mongol_cherbi_armor, anvil)
+    - 2 copper_bar + 2 boar_tusk, 2 gold_bar, 1 iron_bar, 4 leather, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 2 copper_bar + 2 hide, 4 leather, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+    - 2 copper_bar + 1 fine_cloth, 1 iron_bar, 4 leather, 2 wool_cloth → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 copper_bar + 1 hide, 1 iron_bar, 1 wool_cloth → **1 mongol_noyon_helm** (forge_mongol_noyon_helm, anvil)
+    - 2 copper_bar + 1 coal, 1 leather → **1 soldier_bronze_helm_blue** (forge_soldier_bronze_helm_blue, anvil)
+    - 2 copper_bar + 1 coal, 1 leather → **1 soldier_bronze_helm_red** (forge_soldier_bronze_helm_red, anvil)
   - 1 coal + 2 gold_ore → **1 gold_bar** (smelt_gold, forge)
+    - 1 gold_bar + 2 fine_cloth, 2 iron_bar → **1 daimyo_helm** (forge_daimyo_helm, anvil)
+    - 1 gold_bar + 2 antler, 3 iron_bar, 1 leather → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+    - 1 gold_bar + 2 boar_tusk, 3 iron_bar, 1 leather → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+    - 4 gold_bar + 2 iron_bar, 2 leather → **1 gold_armor** (forge_gold_armor, anvil)
     - 1 gold_bar → **1 gold_ring** (forge_gold_ring, anvil)
+    - 2 gold_bar + 2 boar_tusk, 2 copper_bar, 1 iron_bar, 4 leather, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 1 gold_bar + 2 feather, 2 hide, 2 iron_bar, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+    - 1 gold_bar + 1 fine_cloth, 3 iron_bar, 1 leather → **1 paladin_helm** (forge_paladin_helm, anvil)
+    - 1 gold_bar + 2 fine_cloth, 2 iron_bar → **1 shogun_helm_green** (forge_shogun_helm_green, anvil)
+    - 1 gold_bar + 2 fine_cloth, 2 iron_bar → **1 shogun_helm_purple** (forge_shogun_helm_purple, anvil)
+    - 1 gold_bar + 1 iron_bar, 1 leather → **1 soldier_gold_helm_blue** (forge_soldier_gold_helm_blue, anvil)
+    - 1 gold_bar + 1 iron_bar, 1 leather → **1 soldier_gold_helm_red** (forge_soldier_gold_helm_red, anvil)
+    - 1 gold_bar + 4 feather, 2 iron_bar → **1 valkyrie_helm** (forge_valkyrie_helm, anvil)
+    - 2 gold_bar + 2 antler, 4 hide, 3 iron_bar, 1 leather → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+    - 1 gold_bar + 2 antler, 2 iron_bar, 1 leather → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 esper_hat_blue** (sew_esper_hat_blue, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 esper_hat_red** (sew_esper_hat_red, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 esper_hood_cyan** (sew_esper_hood_cyan, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 esper_hood_red** (sew_esper_hood_red, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 high_mage_hat_cyan** (sew_high_mage_hat_cyan, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 high_mage_hat_red** (sew_high_mage_hat_red, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 high_mage_hat_yellow** (sew_high_mage_hat_yellow, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 mage_hat_cyan** (sew_mage_hat_cyan, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 mage_hat_red** (sew_mage_hat_red, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 mage_hat_yellow** (sew_mage_hat_yellow, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 sorcerer_hood_cyan** (sew_sorcerer_hood_cyan, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 sorcerer_hood_red** (sew_sorcerer_hood_red, workbench)
   - 1 coal + 2 iron_ore → **1 iron_bar** (smelt_iron, forge)
     - 2 iron_bar + 4 plank → **1 plough** (craft_plough, workbench)
     - 2 iron_bar + 1 plank → **1 axe** (forge_axe, anvil)
@@ -67,39 +128,131 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
       - 1 cart_ironwork + 1 cart_axle, 2 cart_wheel, 4 plank → **1 handcart** (build_handcart, workbench)
       - 2 cart_ironwork + 2 cart_axle, 4 cart_wheel, 6 plank → **1 minecart** (build_minecart, workbench)
     - 1 iron_bar → **1 chisel** (forge_chisel, anvil)
+    - 2 iron_bar + 2 fine_cloth, 1 gold_bar → **1 daimyo_helm** (forge_daimyo_helm, anvil)
+    - 3 iron_bar + 2 antler, 1 gold_bar, 1 leather → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+    - 3 iron_bar + 2 boar_tusk, 1 gold_bar, 1 leather → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+    - 2 iron_bar + 4 gold_bar, 2 leather → **1 gold_armor** (forge_gold_armor, anvil)
+    - 1 iron_bar + 1 leather → **1 grunt_helm** (forge_grunt_helm, anvil)
     - 1 iron_bar + 1 plank → **1 hammer** (forge_hammer, anvil)
     - 5 iron_bar + 2 leather → **1 iron_armor** (forge_iron_armor, anvil)
     - 2 iron_bar + 1 leather → **1 iron_helmet** (forge_iron_helmet, anvil)
     - 3 iron_bar + 1 leather → **1 iron_sword** (forge_iron_sword, anvil)
+    - 3 iron_bar + 1 coal, 1 leather → **1 knight_helm** (forge_knight_helm, anvil)
     - 1 iron_bar → **3 lockpick** (forge_lockpicks, anvil)
+    - 1 iron_bar + 2 feather, 1 leather, 1 wool_cloth → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+    - 1 iron_bar + 2 boar_tusk, 2 copper_bar, 2 gold_bar, 4 leather, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 2 iron_bar + 2 feather, 1 gold_bar, 2 hide, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+    - 2 iron_bar + 1 hide → **1 mongol_kheshig_helm** (forge_mongol_kheshig_helm, anvil)
+    - 1 iron_bar + 2 copper_bar, 1 fine_cloth, 4 leather, 2 wool_cloth → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 iron_bar + 1 copper_bar, 1 hide, 1 wool_cloth → **1 mongol_noyon_helm** (forge_mongol_noyon_helm, anvil)
     - 1 iron_bar → **12 nails** (forge_nails, anvil)
       - 6 nails + 3 plank → **1 ladder** (make_ladder, workbench)
       - 4 nails + 2 plank → **1 track_section** (make_track_section, workbench)
     - 2 iron_bar → **1 padlock** (forge_padlock, anvil)
+    - 3 iron_bar + 1 fine_cloth, 1 gold_bar, 1 leather → **1 paladin_helm** (forge_paladin_helm, anvil)
     - 2 iron_bar + 1 plank → **1 pickaxe** (forge_pickaxe, anvil)
     - 1 iron_bar + 1 leather, 1 plank → **1 prospecting_kit** (forge_prospecting_kit, anvil)
+    - 3 iron_bar + 3 fine_cloth, 1 leather → **1 samurai_armor_lime** (forge_samurai_armor_lime, anvil)
+    - 3 iron_bar + 3 fine_cloth, 1 leather → **1 samurai_armor_purple** (forge_samurai_armor_purple, anvil)
+    - 2 iron_bar + 1 fine_cloth → **1 samurai_helm** (forge_samurai_helm, anvil)
+    - 2 iron_bar + 1 leather → **1 scout_helm** (forge_scout_helm, anvil)
+    - 2 iron_bar + 2 fine_cloth, 1 gold_bar → **1 shogun_helm_green** (forge_shogun_helm_green, anvil)
+    - 2 iron_bar + 2 fine_cloth, 1 gold_bar → **1 shogun_helm_purple** (forge_shogun_helm_purple, anvil)
     - 1 iron_bar → **1 shovel_blade** (forge_shovel_blade, anvil)
       - 1 shovel_blade + 1 shovel_haft → **1 shovel** (assemble_shovel, workbench)
+    - 1 iron_bar + 1 gold_bar, 1 leather → **1 soldier_gold_helm_blue** (forge_soldier_gold_helm_blue, anvil)
+    - 1 iron_bar + 1 gold_bar, 1 leather → **1 soldier_gold_helm_red** (forge_soldier_gold_helm_red, anvil)
+    - 2 iron_bar + 1 leather → **1 soldier_iron_helm_blue** (forge_soldier_iron_helm_blue, anvil)
+    - 2 iron_bar + 1 leather → **1 soldier_iron_helm_red** (forge_soldier_iron_helm_red, anvil)
+    - 3 iron_bar + 2 coal, 1 leather → **1 soldier_steel_helm_blue** (forge_soldier_steel_helm_blue, anvil)
+    - 3 iron_bar + 2 coal, 1 leather → **1 soldier_steel_helm_red** (forge_soldier_steel_helm_red, anvil)
+    - 6 iron_bar + 3 coal, 2 leather → **1 steel_armor** (forge_steel_armor, anvil)
+    - 2 iron_bar + 4 feather, 1 gold_bar → **1 valkyrie_helm** (forge_valkyrie_helm, anvil)
+    - 3 iron_bar + 2 antler, 2 gold_bar, 4 hide, 1 leather → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+    - 2 iron_bar + 2 antler, 1 gold_bar, 1 leather → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+    - 3 iron_bar + 4 hide, 2 wool_cloth → **1 viking_karl_armor** (forge_viking_karl_armor, anvil)
+    - 2 iron_bar + 2 antler → **1 viking_karl_helm** (forge_viking_karl_helm, anvil)
+    - 3 iron_bar + 2 boar_tusk, 3 hide, 1 leather → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
+    - 2 iron_bar + 2 antler, 1 leather → **1 viking_warrior_helm_red** (forge_viking_warrior_helm_red, anvil)
+    - 2 iron_bar + 2 antler, 1 leather → **1 viking_warrior_helm_yellow** (forge_viking_warrior_helm_yellow, anvil)
 
 ### `copper_seam` · Copper seam (implemented)
 
 - **copper_ore** (1 a cycle)
   - 2 copper_ore + 1 coal → **1 copper_bar** (smelt_copper, forge)
     - 1 copper_bar + 1 leather → **1 amulet** (forge_amulet, anvil)
+    - 5 copper_bar + 1 coal, 2 leather → **1 bronze_armor** (forge_bronze_armor, anvil)
     - 1 copper_bar → **1 copper_ring** (forge_copper_ring, anvil)
     - 2 copper_bar + 1 plank → **1 copper_sword** (forge_copper_sword, anvil)
+    - 2 copper_bar + 4 leather, 2 wool_cloth → **1 mongol_cherbi_armor** (forge_mongol_cherbi_armor, anvil)
+    - 2 copper_bar + 2 boar_tusk, 2 gold_bar, 1 iron_bar, 4 leather, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 2 copper_bar + 2 hide, 4 leather, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+    - 2 copper_bar + 1 fine_cloth, 1 iron_bar, 4 leather, 2 wool_cloth → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 copper_bar + 1 hide, 1 iron_bar, 1 wool_cloth → **1 mongol_noyon_helm** (forge_mongol_noyon_helm, anvil)
+    - 2 copper_bar + 1 coal, 1 leather → **1 soldier_bronze_helm_blue** (forge_soldier_bronze_helm_blue, anvil)
+    - 2 copper_bar + 1 coal, 1 leather → **1 soldier_bronze_helm_red** (forge_soldier_bronze_helm_red, anvil)
 
 ### `cow_pen` · Cows (implemented)
 
 - **hide** (1 a cycle)
+  - 2 hide + 2 feather, 1 gold_bar, 2 iron_bar, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+  - 2 hide + 2 copper_bar, 4 leather, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+  - 1 hide + 2 iron_bar → **1 mongol_kheshig_helm** (forge_mongol_kheshig_helm, anvil)
+  - 1 hide + 1 copper_bar, 1 iron_bar, 1 wool_cloth → **1 mongol_noyon_helm** (forge_mongol_noyon_helm, anvil)
+  - 4 hide + 2 antler, 2 gold_bar, 3 iron_bar, 1 leather → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+  - 4 hide + 3 iron_bar, 2 wool_cloth → **1 viking_karl_armor** (forge_viking_karl_armor, anvil)
+  - 3 hide + 2 boar_tusk, 3 iron_bar, 1 leather → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
   - 1 hide → **1 leather** (tan_leather, workbench)
     - 1 leather + 1 copper_bar → **1 amulet** (forge_amulet, anvil)
+    - 2 leather + 1 coal, 5 copper_bar → **1 bronze_armor** (forge_bronze_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 3 iron_bar → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+    - 1 leather + 2 boar_tusk, 1 gold_bar, 3 iron_bar → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+    - 2 leather + 4 gold_bar, 2 iron_bar → **1 gold_armor** (forge_gold_armor, anvil)
+    - 1 leather + 1 iron_bar → **1 grunt_helm** (forge_grunt_helm, anvil)
     - 2 leather + 5 iron_bar → **1 iron_armor** (forge_iron_armor, anvil)
     - 1 leather + 2 iron_bar → **1 iron_helmet** (forge_iron_helmet, anvil)
     - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
+    - 1 leather + 1 coal, 3 iron_bar → **1 knight_helm** (forge_knight_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 wool_cloth → **1 mongol_cherbi_armor** (forge_mongol_cherbi_armor, anvil)
+    - 1 leather + 2 feather, 1 iron_bar, 1 wool_cloth → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+    - 4 leather + 2 boar_tusk, 2 copper_bar, 2 gold_bar, 1 iron_bar, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 1 leather + 2 feather, 1 gold_bar, 2 hide, 2 iron_bar → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 hide, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+    - 4 leather + 2 copper_bar, 1 fine_cloth, 1 iron_bar, 2 wool_cloth → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 leather + 1 fine_cloth, 1 gold_bar, 3 iron_bar → **1 paladin_helm** (forge_paladin_helm, anvil)
     - 1 leather + 1 iron_bar, 1 plank → **1 prospecting_kit** (forge_prospecting_kit, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_lime** (forge_samurai_armor_lime, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_purple** (forge_samurai_armor_purple, anvil)
+    - 1 leather + 2 iron_bar → **1 scout_helm** (forge_scout_helm, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_blue** (forge_soldier_bronze_helm_blue, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_red** (forge_soldier_bronze_helm_red, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_blue** (forge_soldier_gold_helm_blue, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_red** (forge_soldier_gold_helm_red, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_blue** (forge_soldier_iron_helm_blue, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_red** (forge_soldier_iron_helm_red, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_blue** (forge_soldier_steel_helm_blue, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_red** (forge_soldier_steel_helm_red, anvil)
+    - 2 leather + 3 coal, 6 iron_bar → **1 steel_armor** (forge_steel_armor, anvil)
+    - 1 leather + 2 antler, 2 gold_bar, 4 hide, 3 iron_bar → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 2 iron_bar → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+    - 1 leather + 2 boar_tusk, 3 hide, 3 iron_bar → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_red** (forge_viking_warrior_helm_red, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_yellow** (forge_viking_warrior_helm_yellow, anvil)
     - 4 leather → **1 leather_armor** (leather_armor, workbench)
     - 2 leather → **1 leather_cap** (leather_cap, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 french_hunter_coat** (sew_french_hunter_coat, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_blue** (sew_hunter_hat_blue, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_indigo** (sew_hunter_hat_indigo, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_red** (sew_hunter_hat_red, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_purple** (sew_musketeer_coat_purple, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_red** (sew_musketeer_coat_red, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_purple** (sew_musketeer_hat_purple, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_red** (sew_musketeer_hat_red, workbench)
+    - 1 leather + 2 fine_cloth, 2 wool_cloth → **1 ninja_garb** (sew_ninja_garb, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_blue** (sew_ronin_robe_blue, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_red** (sew_ronin_robe_red, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_blue** (sew_yabusame_robe_blue, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_red** (sew_yabusame_robe_red, workbench)
 - **meat** (6 a cycle)
   - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
 
@@ -115,19 +268,95 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 
 - **gold_ore** (1 a cycle)
   - 2 gold_ore + 1 coal → **1 gold_bar** (smelt_gold, forge)
+    - 1 gold_bar + 2 fine_cloth, 2 iron_bar → **1 daimyo_helm** (forge_daimyo_helm, anvil)
+    - 1 gold_bar + 2 antler, 3 iron_bar, 1 leather → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+    - 1 gold_bar + 2 boar_tusk, 3 iron_bar, 1 leather → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+    - 4 gold_bar + 2 iron_bar, 2 leather → **1 gold_armor** (forge_gold_armor, anvil)
     - 1 gold_bar → **1 gold_ring** (forge_gold_ring, anvil)
+    - 2 gold_bar + 2 boar_tusk, 2 copper_bar, 1 iron_bar, 4 leather, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 1 gold_bar + 2 feather, 2 hide, 2 iron_bar, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+    - 1 gold_bar + 1 fine_cloth, 3 iron_bar, 1 leather → **1 paladin_helm** (forge_paladin_helm, anvil)
+    - 1 gold_bar + 2 fine_cloth, 2 iron_bar → **1 shogun_helm_green** (forge_shogun_helm_green, anvil)
+    - 1 gold_bar + 2 fine_cloth, 2 iron_bar → **1 shogun_helm_purple** (forge_shogun_helm_purple, anvil)
+    - 1 gold_bar + 1 iron_bar, 1 leather → **1 soldier_gold_helm_blue** (forge_soldier_gold_helm_blue, anvil)
+    - 1 gold_bar + 1 iron_bar, 1 leather → **1 soldier_gold_helm_red** (forge_soldier_gold_helm_red, anvil)
+    - 1 gold_bar + 4 feather, 2 iron_bar → **1 valkyrie_helm** (forge_valkyrie_helm, anvil)
+    - 2 gold_bar + 2 antler, 4 hide, 3 iron_bar, 1 leather → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+    - 1 gold_bar + 2 antler, 2 iron_bar, 1 leather → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 esper_hat_blue** (sew_esper_hat_blue, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 esper_hat_red** (sew_esper_hat_red, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 esper_hood_cyan** (sew_esper_hood_cyan, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 esper_hood_red** (sew_esper_hood_red, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 high_mage_hat_cyan** (sew_high_mage_hat_cyan, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 high_mage_hat_red** (sew_high_mage_hat_red, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 high_mage_hat_yellow** (sew_high_mage_hat_yellow, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 mage_hat_cyan** (sew_mage_hat_cyan, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 mage_hat_red** (sew_mage_hat_red, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 mage_hat_yellow** (sew_mage_hat_yellow, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 sorcerer_hood_cyan** (sew_sorcerer_hood_cyan, workbench)
+    - 1 gold_bar + 2 fine_cloth, 1 wool_cloth → **1 sorcerer_hood_red** (sew_sorcerer_hood_red, workbench)
 
 ### `horse_pen` · Horses (implemented)
 
 - **hide** (1 a cycle)
+  - 2 hide + 2 feather, 1 gold_bar, 2 iron_bar, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+  - 2 hide + 2 copper_bar, 4 leather, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+  - 1 hide + 2 iron_bar → **1 mongol_kheshig_helm** (forge_mongol_kheshig_helm, anvil)
+  - 1 hide + 1 copper_bar, 1 iron_bar, 1 wool_cloth → **1 mongol_noyon_helm** (forge_mongol_noyon_helm, anvil)
+  - 4 hide + 2 antler, 2 gold_bar, 3 iron_bar, 1 leather → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+  - 4 hide + 3 iron_bar, 2 wool_cloth → **1 viking_karl_armor** (forge_viking_karl_armor, anvil)
+  - 3 hide + 2 boar_tusk, 3 iron_bar, 1 leather → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
   - 1 hide → **1 leather** (tan_leather, workbench)
     - 1 leather + 1 copper_bar → **1 amulet** (forge_amulet, anvil)
+    - 2 leather + 1 coal, 5 copper_bar → **1 bronze_armor** (forge_bronze_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 3 iron_bar → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+    - 1 leather + 2 boar_tusk, 1 gold_bar, 3 iron_bar → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+    - 2 leather + 4 gold_bar, 2 iron_bar → **1 gold_armor** (forge_gold_armor, anvil)
+    - 1 leather + 1 iron_bar → **1 grunt_helm** (forge_grunt_helm, anvil)
     - 2 leather + 5 iron_bar → **1 iron_armor** (forge_iron_armor, anvil)
     - 1 leather + 2 iron_bar → **1 iron_helmet** (forge_iron_helmet, anvil)
     - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
+    - 1 leather + 1 coal, 3 iron_bar → **1 knight_helm** (forge_knight_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 wool_cloth → **1 mongol_cherbi_armor** (forge_mongol_cherbi_armor, anvil)
+    - 1 leather + 2 feather, 1 iron_bar, 1 wool_cloth → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+    - 4 leather + 2 boar_tusk, 2 copper_bar, 2 gold_bar, 1 iron_bar, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 1 leather + 2 feather, 1 gold_bar, 2 hide, 2 iron_bar → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 hide, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+    - 4 leather + 2 copper_bar, 1 fine_cloth, 1 iron_bar, 2 wool_cloth → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 leather + 1 fine_cloth, 1 gold_bar, 3 iron_bar → **1 paladin_helm** (forge_paladin_helm, anvil)
     - 1 leather + 1 iron_bar, 1 plank → **1 prospecting_kit** (forge_prospecting_kit, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_lime** (forge_samurai_armor_lime, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_purple** (forge_samurai_armor_purple, anvil)
+    - 1 leather + 2 iron_bar → **1 scout_helm** (forge_scout_helm, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_blue** (forge_soldier_bronze_helm_blue, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_red** (forge_soldier_bronze_helm_red, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_blue** (forge_soldier_gold_helm_blue, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_red** (forge_soldier_gold_helm_red, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_blue** (forge_soldier_iron_helm_blue, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_red** (forge_soldier_iron_helm_red, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_blue** (forge_soldier_steel_helm_blue, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_red** (forge_soldier_steel_helm_red, anvil)
+    - 2 leather + 3 coal, 6 iron_bar → **1 steel_armor** (forge_steel_armor, anvil)
+    - 1 leather + 2 antler, 2 gold_bar, 4 hide, 3 iron_bar → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 2 iron_bar → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+    - 1 leather + 2 boar_tusk, 3 hide, 3 iron_bar → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_red** (forge_viking_warrior_helm_red, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_yellow** (forge_viking_warrior_helm_yellow, anvil)
     - 4 leather → **1 leather_armor** (leather_armor, workbench)
     - 2 leather → **1 leather_cap** (leather_cap, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 french_hunter_coat** (sew_french_hunter_coat, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_blue** (sew_hunter_hat_blue, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_indigo** (sew_hunter_hat_indigo, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_red** (sew_hunter_hat_red, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_purple** (sew_musketeer_coat_purple, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_red** (sew_musketeer_coat_red, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_purple** (sew_musketeer_hat_purple, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_red** (sew_musketeer_hat_red, workbench)
+    - 1 leather + 2 fine_cloth, 2 wool_cloth → **1 ninja_garb** (sew_ninja_garb, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_blue** (sew_ronin_robe_blue, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_red** (sew_ronin_robe_red, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_blue** (sew_yabusame_robe_blue, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_red** (sew_yabusame_robe_red, workbench)
 - **meat** (6 a cycle)
   - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
 
@@ -144,19 +373,53 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
       - 1 cart_ironwork + 1 cart_axle, 2 cart_wheel, 4 plank → **1 handcart** (build_handcart, workbench)
       - 2 cart_ironwork + 2 cart_axle, 4 cart_wheel, 6 plank → **1 minecart** (build_minecart, workbench)
     - 1 iron_bar → **1 chisel** (forge_chisel, anvil)
+    - 2 iron_bar + 2 fine_cloth, 1 gold_bar → **1 daimyo_helm** (forge_daimyo_helm, anvil)
+    - 3 iron_bar + 2 antler, 1 gold_bar, 1 leather → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+    - 3 iron_bar + 2 boar_tusk, 1 gold_bar, 1 leather → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+    - 2 iron_bar + 4 gold_bar, 2 leather → **1 gold_armor** (forge_gold_armor, anvil)
+    - 1 iron_bar + 1 leather → **1 grunt_helm** (forge_grunt_helm, anvil)
     - 1 iron_bar + 1 plank → **1 hammer** (forge_hammer, anvil)
     - 5 iron_bar + 2 leather → **1 iron_armor** (forge_iron_armor, anvil)
     - 2 iron_bar + 1 leather → **1 iron_helmet** (forge_iron_helmet, anvil)
     - 3 iron_bar + 1 leather → **1 iron_sword** (forge_iron_sword, anvil)
+    - 3 iron_bar + 1 coal, 1 leather → **1 knight_helm** (forge_knight_helm, anvil)
     - 1 iron_bar → **3 lockpick** (forge_lockpicks, anvil)
+    - 1 iron_bar + 2 feather, 1 leather, 1 wool_cloth → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+    - 1 iron_bar + 2 boar_tusk, 2 copper_bar, 2 gold_bar, 4 leather, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 2 iron_bar + 2 feather, 1 gold_bar, 2 hide, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+    - 2 iron_bar + 1 hide → **1 mongol_kheshig_helm** (forge_mongol_kheshig_helm, anvil)
+    - 1 iron_bar + 2 copper_bar, 1 fine_cloth, 4 leather, 2 wool_cloth → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 iron_bar + 1 copper_bar, 1 hide, 1 wool_cloth → **1 mongol_noyon_helm** (forge_mongol_noyon_helm, anvil)
     - 1 iron_bar → **12 nails** (forge_nails, anvil)
       - 6 nails + 3 plank → **1 ladder** (make_ladder, workbench)
       - 4 nails + 2 plank → **1 track_section** (make_track_section, workbench)
     - 2 iron_bar → **1 padlock** (forge_padlock, anvil)
+    - 3 iron_bar + 1 fine_cloth, 1 gold_bar, 1 leather → **1 paladin_helm** (forge_paladin_helm, anvil)
     - 2 iron_bar + 1 plank → **1 pickaxe** (forge_pickaxe, anvil)
     - 1 iron_bar + 1 leather, 1 plank → **1 prospecting_kit** (forge_prospecting_kit, anvil)
+    - 3 iron_bar + 3 fine_cloth, 1 leather → **1 samurai_armor_lime** (forge_samurai_armor_lime, anvil)
+    - 3 iron_bar + 3 fine_cloth, 1 leather → **1 samurai_armor_purple** (forge_samurai_armor_purple, anvil)
+    - 2 iron_bar + 1 fine_cloth → **1 samurai_helm** (forge_samurai_helm, anvil)
+    - 2 iron_bar + 1 leather → **1 scout_helm** (forge_scout_helm, anvil)
+    - 2 iron_bar + 2 fine_cloth, 1 gold_bar → **1 shogun_helm_green** (forge_shogun_helm_green, anvil)
+    - 2 iron_bar + 2 fine_cloth, 1 gold_bar → **1 shogun_helm_purple** (forge_shogun_helm_purple, anvil)
     - 1 iron_bar → **1 shovel_blade** (forge_shovel_blade, anvil)
       - 1 shovel_blade + 1 shovel_haft → **1 shovel** (assemble_shovel, workbench)
+    - 1 iron_bar + 1 gold_bar, 1 leather → **1 soldier_gold_helm_blue** (forge_soldier_gold_helm_blue, anvil)
+    - 1 iron_bar + 1 gold_bar, 1 leather → **1 soldier_gold_helm_red** (forge_soldier_gold_helm_red, anvil)
+    - 2 iron_bar + 1 leather → **1 soldier_iron_helm_blue** (forge_soldier_iron_helm_blue, anvil)
+    - 2 iron_bar + 1 leather → **1 soldier_iron_helm_red** (forge_soldier_iron_helm_red, anvil)
+    - 3 iron_bar + 2 coal, 1 leather → **1 soldier_steel_helm_blue** (forge_soldier_steel_helm_blue, anvil)
+    - 3 iron_bar + 2 coal, 1 leather → **1 soldier_steel_helm_red** (forge_soldier_steel_helm_red, anvil)
+    - 6 iron_bar + 3 coal, 2 leather → **1 steel_armor** (forge_steel_armor, anvil)
+    - 2 iron_bar + 4 feather, 1 gold_bar → **1 valkyrie_helm** (forge_valkyrie_helm, anvil)
+    - 3 iron_bar + 2 antler, 2 gold_bar, 4 hide, 1 leather → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+    - 2 iron_bar + 2 antler, 1 gold_bar, 1 leather → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+    - 3 iron_bar + 4 hide, 2 wool_cloth → **1 viking_karl_armor** (forge_viking_karl_armor, anvil)
+    - 2 iron_bar + 2 antler → **1 viking_karl_helm** (forge_viking_karl_helm, anvil)
+    - 3 iron_bar + 2 boar_tusk, 3 hide, 1 leather → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
+    - 2 iron_bar + 2 antler, 1 leather → **1 viking_warrior_helm_red** (forge_viking_warrior_helm_red, anvil)
+    - 2 iron_bar + 2 antler, 1 leather → **1 viking_warrior_helm_yellow** (forge_viking_warrior_helm_yellow, anvil)
 
 ### `open_pit` · Open pit (implemented)
 
@@ -172,14 +435,64 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 ### `pig_pen` · Pigs (implemented)
 
 - **hide** (1 a cycle)
+  - 2 hide + 2 feather, 1 gold_bar, 2 iron_bar, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+  - 2 hide + 2 copper_bar, 4 leather, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+  - 1 hide + 2 iron_bar → **1 mongol_kheshig_helm** (forge_mongol_kheshig_helm, anvil)
+  - 1 hide + 1 copper_bar, 1 iron_bar, 1 wool_cloth → **1 mongol_noyon_helm** (forge_mongol_noyon_helm, anvil)
+  - 4 hide + 2 antler, 2 gold_bar, 3 iron_bar, 1 leather → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+  - 4 hide + 3 iron_bar, 2 wool_cloth → **1 viking_karl_armor** (forge_viking_karl_armor, anvil)
+  - 3 hide + 2 boar_tusk, 3 iron_bar, 1 leather → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
   - 1 hide → **1 leather** (tan_leather, workbench)
     - 1 leather + 1 copper_bar → **1 amulet** (forge_amulet, anvil)
+    - 2 leather + 1 coal, 5 copper_bar → **1 bronze_armor** (forge_bronze_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 3 iron_bar → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+    - 1 leather + 2 boar_tusk, 1 gold_bar, 3 iron_bar → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+    - 2 leather + 4 gold_bar, 2 iron_bar → **1 gold_armor** (forge_gold_armor, anvil)
+    - 1 leather + 1 iron_bar → **1 grunt_helm** (forge_grunt_helm, anvil)
     - 2 leather + 5 iron_bar → **1 iron_armor** (forge_iron_armor, anvil)
     - 1 leather + 2 iron_bar → **1 iron_helmet** (forge_iron_helmet, anvil)
     - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
+    - 1 leather + 1 coal, 3 iron_bar → **1 knight_helm** (forge_knight_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 wool_cloth → **1 mongol_cherbi_armor** (forge_mongol_cherbi_armor, anvil)
+    - 1 leather + 2 feather, 1 iron_bar, 1 wool_cloth → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+    - 4 leather + 2 boar_tusk, 2 copper_bar, 2 gold_bar, 1 iron_bar, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 1 leather + 2 feather, 1 gold_bar, 2 hide, 2 iron_bar → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 hide, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+    - 4 leather + 2 copper_bar, 1 fine_cloth, 1 iron_bar, 2 wool_cloth → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 leather + 1 fine_cloth, 1 gold_bar, 3 iron_bar → **1 paladin_helm** (forge_paladin_helm, anvil)
     - 1 leather + 1 iron_bar, 1 plank → **1 prospecting_kit** (forge_prospecting_kit, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_lime** (forge_samurai_armor_lime, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_purple** (forge_samurai_armor_purple, anvil)
+    - 1 leather + 2 iron_bar → **1 scout_helm** (forge_scout_helm, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_blue** (forge_soldier_bronze_helm_blue, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_red** (forge_soldier_bronze_helm_red, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_blue** (forge_soldier_gold_helm_blue, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_red** (forge_soldier_gold_helm_red, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_blue** (forge_soldier_iron_helm_blue, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_red** (forge_soldier_iron_helm_red, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_blue** (forge_soldier_steel_helm_blue, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_red** (forge_soldier_steel_helm_red, anvil)
+    - 2 leather + 3 coal, 6 iron_bar → **1 steel_armor** (forge_steel_armor, anvil)
+    - 1 leather + 2 antler, 2 gold_bar, 4 hide, 3 iron_bar → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 2 iron_bar → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+    - 1 leather + 2 boar_tusk, 3 hide, 3 iron_bar → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_red** (forge_viking_warrior_helm_red, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_yellow** (forge_viking_warrior_helm_yellow, anvil)
     - 4 leather → **1 leather_armor** (leather_armor, workbench)
     - 2 leather → **1 leather_cap** (leather_cap, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 french_hunter_coat** (sew_french_hunter_coat, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_blue** (sew_hunter_hat_blue, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_indigo** (sew_hunter_hat_indigo, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_red** (sew_hunter_hat_red, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_purple** (sew_musketeer_coat_purple, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_red** (sew_musketeer_coat_red, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_purple** (sew_musketeer_hat_purple, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_red** (sew_musketeer_hat_red, workbench)
+    - 1 leather + 2 fine_cloth, 2 wool_cloth → **1 ninja_garb** (sew_ninja_garb, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_blue** (sew_ronin_robe_blue, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_red** (sew_ronin_robe_red, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_blue** (sew_yabusame_robe_blue, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_red** (sew_yabusame_robe_red, workbench)
 - **meat** (4 a cycle)
   - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
 
@@ -206,6 +519,13 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
     - 1 ale + 2 healing_tonic → **1 strong_healing_tonic** (brew_strong_tonic, stove)
   - 2 wheat → **6 pottage** (cook_pottage, stove)
   - 3 wheat → **1 bread** (knead_flatbread, prep)
+  - 3 wheat + 1 wool_cloth → **1 ronin_straw_hat_blue** (sew_ronin_straw_hat_blue, workbench)
+  - 3 wheat + 1 wool_cloth → **1 ronin_straw_hat_red** (sew_ronin_straw_hat_red, workbench)
+  - 3 wheat → **1 traveller_straw_hat** (sew_traveller_straw_hat, workbench)
+  - 3 wheat + 1 wool_cloth → **1 traveller_straw_hat_cyan** (sew_traveller_straw_hat_cyan, workbench)
+  - 3 wheat → **1 villager_straw_hat** (sew_villager_straw_hat, workbench)
+  - 3 wheat + 1 feather, 1 wool_cloth → **1 yabusame_straw_hat_blue** (sew_yabusame_straw_hat_blue, workbench)
+  - 3 wheat + 1 feather, 1 wool_cloth → **1 yabusame_straw_hat_red** (sew_yabusame_straw_hat_red, workbench)
 - **wheat_seed** (1 a cycle)
   - used as it is: Sown on a tilled cell of a villager household's farmland: one seed a cell (used up), the player's rule (FARM-03).; Sown on a tilled cell of the player's field: one seed a cell (used up).
 
@@ -217,7 +537,52 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
   - 3 milk → **1 cheese** (press_cheese, prep)
 - **wool** (1 a cycle)
   - 2 wool → **1 wool_cloth** (weave_cloth, workbench)
+    - 2 wool_cloth + 2 copper_bar, 4 leather → **1 mongol_cherbi_armor** (forge_mongol_cherbi_armor, anvil)
+    - 1 wool_cloth + 2 feather, 1 iron_bar, 1 leather → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+    - 2 wool_cloth + 2 boar_tusk, 2 copper_bar, 2 gold_bar, 1 iron_bar, 4 leather → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 2 wool_cloth + 2 copper_bar, 2 hide, 4 leather → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+    - 2 wool_cloth + 2 copper_bar, 1 fine_cloth, 1 iron_bar, 4 leather → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 wool_cloth + 1 copper_bar, 1 hide, 1 iron_bar → **1 mongol_noyon_helm** (forge_mongol_noyon_helm, anvil)
+    - 2 wool_cloth + 4 hide, 3 iron_bar → **1 viking_karl_armor** (forge_viking_karl_armor, anvil)
+    - 1 wool_cloth + 1 feather → **1 archer_hat_cyan** (sew_archer_hat_cyan, workbench)
+    - 1 wool_cloth + 1 feather → **1 archer_hat_green** (sew_archer_hat_green, workbench)
+    - 1 wool_cloth + 1 feather → **1 archer_hat_yellow** (sew_archer_hat_yellow, workbench)
+    - 1 wool_cloth → **1 assassin_bandana_black** (sew_assassin_bandana_black, workbench)
+    - 1 wool_cloth → **1 assassin_bandana_green** (sew_assassin_bandana_green, workbench)
+    - 1 wool_cloth → **1 assassin_bandana_red** (sew_assassin_bandana_red, workbench)
     - 1 wool_cloth → **3 linen_bandage** (sew_bandages, workbench)
+    - 1 wool_cloth + 2 fine_cloth, 1 gold_bar → **1 esper_hat_blue** (sew_esper_hat_blue, workbench)
+    - 1 wool_cloth + 2 fine_cloth, 1 gold_bar → **1 esper_hat_red** (sew_esper_hat_red, workbench)
+    - 1 wool_cloth + 2 fine_cloth, 1 gold_bar → **1 esper_hood_cyan** (sew_esper_hood_cyan, workbench)
+    - 1 wool_cloth + 2 fine_cloth, 1 gold_bar → **1 esper_hood_red** (sew_esper_hood_red, workbench)
+    - 1 wool_cloth + 2 fine_cloth, 1 gold_bar → **1 high_mage_hat_cyan** (sew_high_mage_hat_cyan, workbench)
+    - 1 wool_cloth + 2 fine_cloth, 1 gold_bar → **1 high_mage_hat_red** (sew_high_mage_hat_red, workbench)
+    - 1 wool_cloth + 2 fine_cloth, 1 gold_bar → **1 high_mage_hat_yellow** (sew_high_mage_hat_yellow, workbench)
+    - 1 wool_cloth + 2 fine_cloth, 1 gold_bar → **1 mage_hat_cyan** (sew_mage_hat_cyan, workbench)
+    - 1 wool_cloth + 2 fine_cloth, 1 gold_bar → **1 mage_hat_red** (sew_mage_hat_red, workbench)
+    - 1 wool_cloth + 2 fine_cloth, 1 gold_bar → **1 mage_hat_yellow** (sew_mage_hat_yellow, workbench)
+    - 1 wool_cloth → **1 ninja_bandana_black** (sew_ninja_bandana_black, workbench)
+    - 1 wool_cloth → **1 ninja_bandana_blue** (sew_ninja_bandana_blue, workbench)
+    - 1 wool_cloth → **1 ninja_bandana_red** (sew_ninja_bandana_red, workbench)
+    - 2 wool_cloth + 2 fine_cloth, 1 leather → **1 ninja_garb** (sew_ninja_garb, workbench)
+    - 1 wool_cloth + 1 feather → **1 ranger_hat_cyan** (sew_ranger_hat_cyan, workbench)
+    - 1 wool_cloth + 1 feather → **1 ranger_hat_green** (sew_ranger_hat_green, workbench)
+    - 1 wool_cloth + 1 feather → **1 ranger_hat_yellow** (sew_ranger_hat_yellow, workbench)
+    - 1 wool_cloth → **1 rogue_hat** (sew_rogue_hat, workbench)
+    - 1 wool_cloth + 3 wheat → **1 ronin_straw_hat_blue** (sew_ronin_straw_hat_blue, workbench)
+    - 1 wool_cloth + 3 wheat → **1 ronin_straw_hat_red** (sew_ronin_straw_hat_red, workbench)
+    - 1 wool_cloth + 2 fine_cloth, 1 gold_bar → **1 sorcerer_hood_cyan** (sew_sorcerer_hood_cyan, workbench)
+    - 1 wool_cloth + 2 fine_cloth, 1 gold_bar → **1 sorcerer_hood_red** (sew_sorcerer_hood_red, workbench)
+    - 1 wool_cloth → **1 stalker_hood_black** (sew_stalker_hood_black, workbench)
+    - 1 wool_cloth → **1 stalker_hood_purple** (sew_stalker_hood_purple, workbench)
+    - 1 wool_cloth → **1 stalker_hood_red** (sew_stalker_hood_red, workbench)
+    - 1 wool_cloth → **1 thief_bandana_green** (sew_thief_bandana_green, workbench)
+    - 1 wool_cloth → **1 thief_bandana_lime** (sew_thief_bandana_lime, workbench)
+    - 1 wool_cloth → **1 thief_bandana_red** (sew_thief_bandana_red, workbench)
+    - 2 wool_cloth + 1 fine_cloth → **1 traveller_robe** (sew_traveller_robe, workbench)
+    - 1 wool_cloth + 3 wheat → **1 traveller_straw_hat_cyan** (sew_traveller_straw_hat_cyan, workbench)
+    - 1 wool_cloth + 1 feather, 3 wheat → **1 yabusame_straw_hat_blue** (sew_yabusame_straw_hat_blue, workbench)
+    - 1 wool_cloth + 1 feather, 3 wheat → **1 yabusame_straw_hat_red** (sew_yabusame_straw_hat_red, workbench)
 
 ### `prospect_clue` · Prospecting clue (implemented)
 
@@ -232,14 +597,64 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 ### `sheep_pen` · Sheep (implemented)
 
 - **hide** (1 a cycle)
+  - 2 hide + 2 feather, 1 gold_bar, 2 iron_bar, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+  - 2 hide + 2 copper_bar, 4 leather, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+  - 1 hide + 2 iron_bar → **1 mongol_kheshig_helm** (forge_mongol_kheshig_helm, anvil)
+  - 1 hide + 1 copper_bar, 1 iron_bar, 1 wool_cloth → **1 mongol_noyon_helm** (forge_mongol_noyon_helm, anvil)
+  - 4 hide + 2 antler, 2 gold_bar, 3 iron_bar, 1 leather → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+  - 4 hide + 3 iron_bar, 2 wool_cloth → **1 viking_karl_armor** (forge_viking_karl_armor, anvil)
+  - 3 hide + 2 boar_tusk, 3 iron_bar, 1 leather → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
   - 1 hide → **1 leather** (tan_leather, workbench)
     - 1 leather + 1 copper_bar → **1 amulet** (forge_amulet, anvil)
+    - 2 leather + 1 coal, 5 copper_bar → **1 bronze_armor** (forge_bronze_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 3 iron_bar → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+    - 1 leather + 2 boar_tusk, 1 gold_bar, 3 iron_bar → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+    - 2 leather + 4 gold_bar, 2 iron_bar → **1 gold_armor** (forge_gold_armor, anvil)
+    - 1 leather + 1 iron_bar → **1 grunt_helm** (forge_grunt_helm, anvil)
     - 2 leather + 5 iron_bar → **1 iron_armor** (forge_iron_armor, anvil)
     - 1 leather + 2 iron_bar → **1 iron_helmet** (forge_iron_helmet, anvil)
     - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
+    - 1 leather + 1 coal, 3 iron_bar → **1 knight_helm** (forge_knight_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 wool_cloth → **1 mongol_cherbi_armor** (forge_mongol_cherbi_armor, anvil)
+    - 1 leather + 2 feather, 1 iron_bar, 1 wool_cloth → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+    - 4 leather + 2 boar_tusk, 2 copper_bar, 2 gold_bar, 1 iron_bar, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 1 leather + 2 feather, 1 gold_bar, 2 hide, 2 iron_bar → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 hide, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+    - 4 leather + 2 copper_bar, 1 fine_cloth, 1 iron_bar, 2 wool_cloth → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 leather + 1 fine_cloth, 1 gold_bar, 3 iron_bar → **1 paladin_helm** (forge_paladin_helm, anvil)
     - 1 leather + 1 iron_bar, 1 plank → **1 prospecting_kit** (forge_prospecting_kit, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_lime** (forge_samurai_armor_lime, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_purple** (forge_samurai_armor_purple, anvil)
+    - 1 leather + 2 iron_bar → **1 scout_helm** (forge_scout_helm, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_blue** (forge_soldier_bronze_helm_blue, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_red** (forge_soldier_bronze_helm_red, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_blue** (forge_soldier_gold_helm_blue, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_red** (forge_soldier_gold_helm_red, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_blue** (forge_soldier_iron_helm_blue, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_red** (forge_soldier_iron_helm_red, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_blue** (forge_soldier_steel_helm_blue, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_red** (forge_soldier_steel_helm_red, anvil)
+    - 2 leather + 3 coal, 6 iron_bar → **1 steel_armor** (forge_steel_armor, anvil)
+    - 1 leather + 2 antler, 2 gold_bar, 4 hide, 3 iron_bar → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 2 iron_bar → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+    - 1 leather + 2 boar_tusk, 3 hide, 3 iron_bar → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_red** (forge_viking_warrior_helm_red, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_yellow** (forge_viking_warrior_helm_yellow, anvil)
     - 4 leather → **1 leather_armor** (leather_armor, workbench)
     - 2 leather → **1 leather_cap** (leather_cap, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 french_hunter_coat** (sew_french_hunter_coat, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_blue** (sew_hunter_hat_blue, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_indigo** (sew_hunter_hat_indigo, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_red** (sew_hunter_hat_red, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_purple** (sew_musketeer_coat_purple, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_red** (sew_musketeer_coat_red, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_purple** (sew_musketeer_hat_purple, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_red** (sew_musketeer_hat_red, workbench)
+    - 1 leather + 2 fine_cloth, 2 wool_cloth → **1 ninja_garb** (sew_ninja_garb, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_blue** (sew_ronin_robe_blue, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_red** (sew_ronin_robe_red, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_blue** (sew_yabusame_robe_blue, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_red** (sew_yabusame_robe_red, workbench)
 - **meat** (3 a cycle)
   - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
 
@@ -297,65 +712,303 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
     - 1 ale + 2 healing_tonic → **1 strong_healing_tonic** (brew_strong_tonic, stove)
   - 2 wheat → **6 pottage** (cook_pottage, stove)
   - 3 wheat → **1 bread** (knead_flatbread, prep)
+  - 3 wheat + 1 wool_cloth → **1 ronin_straw_hat_blue** (sew_ronin_straw_hat_blue, workbench)
+  - 3 wheat + 1 wool_cloth → **1 ronin_straw_hat_red** (sew_ronin_straw_hat_red, workbench)
+  - 3 wheat → **1 traveller_straw_hat** (sew_traveller_straw_hat, workbench)
+  - 3 wheat + 1 wool_cloth → **1 traveller_straw_hat_cyan** (sew_traveller_straw_hat_cyan, workbench)
+  - 3 wheat → **1 villager_straw_hat** (sew_villager_straw_hat, workbench)
+  - 3 wheat + 1 feather, 1 wool_cloth → **1 yabusame_straw_hat_blue** (sew_yabusame_straw_hat_blue, workbench)
+  - 3 wheat + 1 feather, 1 wool_cloth → **1 yabusame_straw_hat_red** (sew_yabusame_straw_hat_red, workbench)
 
 ### `wild_bear` · Bear (implemented)
 
 - **hide** (2 a cycle)
+  - 2 hide + 2 feather, 1 gold_bar, 2 iron_bar, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+  - 2 hide + 2 copper_bar, 4 leather, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+  - 1 hide + 2 iron_bar → **1 mongol_kheshig_helm** (forge_mongol_kheshig_helm, anvil)
+  - 1 hide + 1 copper_bar, 1 iron_bar, 1 wool_cloth → **1 mongol_noyon_helm** (forge_mongol_noyon_helm, anvil)
+  - 4 hide + 2 antler, 2 gold_bar, 3 iron_bar, 1 leather → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+  - 4 hide + 3 iron_bar, 2 wool_cloth → **1 viking_karl_armor** (forge_viking_karl_armor, anvil)
+  - 3 hide + 2 boar_tusk, 3 iron_bar, 1 leather → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
   - 1 hide → **1 leather** (tan_leather, workbench)
     - 1 leather + 1 copper_bar → **1 amulet** (forge_amulet, anvil)
+    - 2 leather + 1 coal, 5 copper_bar → **1 bronze_armor** (forge_bronze_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 3 iron_bar → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+    - 1 leather + 2 boar_tusk, 1 gold_bar, 3 iron_bar → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+    - 2 leather + 4 gold_bar, 2 iron_bar → **1 gold_armor** (forge_gold_armor, anvil)
+    - 1 leather + 1 iron_bar → **1 grunt_helm** (forge_grunt_helm, anvil)
     - 2 leather + 5 iron_bar → **1 iron_armor** (forge_iron_armor, anvil)
     - 1 leather + 2 iron_bar → **1 iron_helmet** (forge_iron_helmet, anvil)
     - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
+    - 1 leather + 1 coal, 3 iron_bar → **1 knight_helm** (forge_knight_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 wool_cloth → **1 mongol_cherbi_armor** (forge_mongol_cherbi_armor, anvil)
+    - 1 leather + 2 feather, 1 iron_bar, 1 wool_cloth → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+    - 4 leather + 2 boar_tusk, 2 copper_bar, 2 gold_bar, 1 iron_bar, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 1 leather + 2 feather, 1 gold_bar, 2 hide, 2 iron_bar → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 hide, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+    - 4 leather + 2 copper_bar, 1 fine_cloth, 1 iron_bar, 2 wool_cloth → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 leather + 1 fine_cloth, 1 gold_bar, 3 iron_bar → **1 paladin_helm** (forge_paladin_helm, anvil)
     - 1 leather + 1 iron_bar, 1 plank → **1 prospecting_kit** (forge_prospecting_kit, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_lime** (forge_samurai_armor_lime, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_purple** (forge_samurai_armor_purple, anvil)
+    - 1 leather + 2 iron_bar → **1 scout_helm** (forge_scout_helm, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_blue** (forge_soldier_bronze_helm_blue, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_red** (forge_soldier_bronze_helm_red, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_blue** (forge_soldier_gold_helm_blue, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_red** (forge_soldier_gold_helm_red, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_blue** (forge_soldier_iron_helm_blue, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_red** (forge_soldier_iron_helm_red, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_blue** (forge_soldier_steel_helm_blue, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_red** (forge_soldier_steel_helm_red, anvil)
+    - 2 leather + 3 coal, 6 iron_bar → **1 steel_armor** (forge_steel_armor, anvil)
+    - 1 leather + 2 antler, 2 gold_bar, 4 hide, 3 iron_bar → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 2 iron_bar → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+    - 1 leather + 2 boar_tusk, 3 hide, 3 iron_bar → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_red** (forge_viking_warrior_helm_red, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_yellow** (forge_viking_warrior_helm_yellow, anvil)
     - 4 leather → **1 leather_armor** (leather_armor, workbench)
     - 2 leather → **1 leather_cap** (leather_cap, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 french_hunter_coat** (sew_french_hunter_coat, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_blue** (sew_hunter_hat_blue, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_indigo** (sew_hunter_hat_indigo, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_red** (sew_hunter_hat_red, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_purple** (sew_musketeer_coat_purple, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_red** (sew_musketeer_coat_red, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_purple** (sew_musketeer_hat_purple, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_red** (sew_musketeer_hat_red, workbench)
+    - 1 leather + 2 fine_cloth, 2 wool_cloth → **1 ninja_garb** (sew_ninja_garb, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_blue** (sew_ronin_robe_blue, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_red** (sew_ronin_robe_red, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_blue** (sew_yabusame_robe_blue, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_red** (sew_yabusame_robe_red, workbench)
 - **meat** (6 a cycle)
   - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
 
 ### `wild_bird` · Bird (implemented)
 
 - **feather** (1 a cycle)
-  - used as it is: bought by the merchant goods; bought by the passing caravan
+  - 2 feather + 1 iron_bar, 1 leather, 1 wool_cloth → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+  - 2 feather + 1 gold_bar, 2 hide, 2 iron_bar, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+  - 4 feather + 1 gold_bar, 2 iron_bar → **1 valkyrie_helm** (forge_valkyrie_helm, anvil)
+  - 1 feather + 1 wool_cloth → **1 archer_hat_cyan** (sew_archer_hat_cyan, workbench)
+  - 1 feather + 1 wool_cloth → **1 archer_hat_green** (sew_archer_hat_green, workbench)
+  - 1 feather + 1 wool_cloth → **1 archer_hat_yellow** (sew_archer_hat_yellow, workbench)
+  - 2 feather + 3 fine_cloth, 2 leather → **1 french_hunter_coat** (sew_french_hunter_coat, workbench)
+  - 2 feather + 1 fine_cloth, 1 leather → **1 hunter_hat_blue** (sew_hunter_hat_blue, workbench)
+  - 2 feather + 1 fine_cloth, 1 leather → **1 hunter_hat_indigo** (sew_hunter_hat_indigo, workbench)
+  - 2 feather + 1 fine_cloth, 1 leather → **1 hunter_hat_red** (sew_hunter_hat_red, workbench)
+  - 2 feather + 3 fine_cloth, 2 leather → **1 musketeer_coat_purple** (sew_musketeer_coat_purple, workbench)
+  - 2 feather + 3 fine_cloth, 2 leather → **1 musketeer_coat_red** (sew_musketeer_coat_red, workbench)
+  - 2 feather + 1 fine_cloth, 1 leather → **1 musketeer_hat_purple** (sew_musketeer_hat_purple, workbench)
+  - 2 feather + 1 fine_cloth, 1 leather → **1 musketeer_hat_red** (sew_musketeer_hat_red, workbench)
+  - 1 feather + 1 wool_cloth → **1 ranger_hat_cyan** (sew_ranger_hat_cyan, workbench)
+  - 1 feather + 1 wool_cloth → **1 ranger_hat_green** (sew_ranger_hat_green, workbench)
+  - 1 feather + 1 wool_cloth → **1 ranger_hat_yellow** (sew_ranger_hat_yellow, workbench)
+  - 4 feather + 2 fine_cloth, 2 leather → **1 yabusame_robe_blue** (sew_yabusame_robe_blue, workbench)
+  - 4 feather + 2 fine_cloth, 2 leather → **1 yabusame_robe_red** (sew_yabusame_robe_red, workbench)
+  - 1 feather + 3 wheat, 1 wool_cloth → **1 yabusame_straw_hat_blue** (sew_yabusame_straw_hat_blue, workbench)
+  - 1 feather + 3 wheat, 1 wool_cloth → **1 yabusame_straw_hat_red** (sew_yabusame_straw_hat_red, workbench)
 
 ### `wild_boar` · Wild boar (implemented)
 
+- **boar_tusk** (2 a cycle)
+  - 2 boar_tusk + 1 gold_bar, 3 iron_bar, 1 leather → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+  - 2 boar_tusk + 2 copper_bar, 2 gold_bar, 1 iron_bar, 4 leather, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+  - 2 boar_tusk + 3 hide, 3 iron_bar, 1 leather → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
 - **hide** (1 a cycle)
+  - 2 hide + 2 feather, 1 gold_bar, 2 iron_bar, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+  - 2 hide + 2 copper_bar, 4 leather, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+  - 1 hide + 2 iron_bar → **1 mongol_kheshig_helm** (forge_mongol_kheshig_helm, anvil)
+  - 1 hide + 1 copper_bar, 1 iron_bar, 1 wool_cloth → **1 mongol_noyon_helm** (forge_mongol_noyon_helm, anvil)
+  - 4 hide + 2 antler, 2 gold_bar, 3 iron_bar, 1 leather → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+  - 4 hide + 3 iron_bar, 2 wool_cloth → **1 viking_karl_armor** (forge_viking_karl_armor, anvil)
+  - 3 hide + 2 boar_tusk, 3 iron_bar, 1 leather → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
   - 1 hide → **1 leather** (tan_leather, workbench)
     - 1 leather + 1 copper_bar → **1 amulet** (forge_amulet, anvil)
+    - 2 leather + 1 coal, 5 copper_bar → **1 bronze_armor** (forge_bronze_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 3 iron_bar → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+    - 1 leather + 2 boar_tusk, 1 gold_bar, 3 iron_bar → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+    - 2 leather + 4 gold_bar, 2 iron_bar → **1 gold_armor** (forge_gold_armor, anvil)
+    - 1 leather + 1 iron_bar → **1 grunt_helm** (forge_grunt_helm, anvil)
     - 2 leather + 5 iron_bar → **1 iron_armor** (forge_iron_armor, anvil)
     - 1 leather + 2 iron_bar → **1 iron_helmet** (forge_iron_helmet, anvil)
     - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
+    - 1 leather + 1 coal, 3 iron_bar → **1 knight_helm** (forge_knight_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 wool_cloth → **1 mongol_cherbi_armor** (forge_mongol_cherbi_armor, anvil)
+    - 1 leather + 2 feather, 1 iron_bar, 1 wool_cloth → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+    - 4 leather + 2 boar_tusk, 2 copper_bar, 2 gold_bar, 1 iron_bar, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 1 leather + 2 feather, 1 gold_bar, 2 hide, 2 iron_bar → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 hide, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+    - 4 leather + 2 copper_bar, 1 fine_cloth, 1 iron_bar, 2 wool_cloth → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 leather + 1 fine_cloth, 1 gold_bar, 3 iron_bar → **1 paladin_helm** (forge_paladin_helm, anvil)
     - 1 leather + 1 iron_bar, 1 plank → **1 prospecting_kit** (forge_prospecting_kit, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_lime** (forge_samurai_armor_lime, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_purple** (forge_samurai_armor_purple, anvil)
+    - 1 leather + 2 iron_bar → **1 scout_helm** (forge_scout_helm, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_blue** (forge_soldier_bronze_helm_blue, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_red** (forge_soldier_bronze_helm_red, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_blue** (forge_soldier_gold_helm_blue, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_red** (forge_soldier_gold_helm_red, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_blue** (forge_soldier_iron_helm_blue, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_red** (forge_soldier_iron_helm_red, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_blue** (forge_soldier_steel_helm_blue, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_red** (forge_soldier_steel_helm_red, anvil)
+    - 2 leather + 3 coal, 6 iron_bar → **1 steel_armor** (forge_steel_armor, anvil)
+    - 1 leather + 2 antler, 2 gold_bar, 4 hide, 3 iron_bar → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 2 iron_bar → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+    - 1 leather + 2 boar_tusk, 3 hide, 3 iron_bar → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_red** (forge_viking_warrior_helm_red, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_yellow** (forge_viking_warrior_helm_yellow, anvil)
     - 4 leather → **1 leather_armor** (leather_armor, workbench)
     - 2 leather → **1 leather_cap** (leather_cap, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 french_hunter_coat** (sew_french_hunter_coat, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_blue** (sew_hunter_hat_blue, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_indigo** (sew_hunter_hat_indigo, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_red** (sew_hunter_hat_red, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_purple** (sew_musketeer_coat_purple, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_red** (sew_musketeer_coat_red, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_purple** (sew_musketeer_hat_purple, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_red** (sew_musketeer_hat_red, workbench)
+    - 1 leather + 2 fine_cloth, 2 wool_cloth → **1 ninja_garb** (sew_ninja_garb, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_blue** (sew_ronin_robe_blue, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_red** (sew_ronin_robe_red, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_blue** (sew_yabusame_robe_blue, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_red** (sew_yabusame_robe_red, workbench)
 - **meat** (4 a cycle)
   - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
 
 ### `wild_deer` · Deer (implemented)
 
+- **antler** (2 a cycle)
+  - 2 antler + 1 gold_bar, 3 iron_bar, 1 leather → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+  - 2 antler + 2 gold_bar, 4 hide, 3 iron_bar, 1 leather → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+  - 2 antler + 1 gold_bar, 2 iron_bar, 1 leather → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+  - 2 antler + 2 iron_bar → **1 viking_karl_helm** (forge_viking_karl_helm, anvil)
+  - 2 antler + 2 iron_bar, 1 leather → **1 viking_warrior_helm_red** (forge_viking_warrior_helm_red, anvil)
+  - 2 antler + 2 iron_bar, 1 leather → **1 viking_warrior_helm_yellow** (forge_viking_warrior_helm_yellow, anvil)
 - **hide** (1 a cycle)
+  - 2 hide + 2 feather, 1 gold_bar, 2 iron_bar, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+  - 2 hide + 2 copper_bar, 4 leather, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+  - 1 hide + 2 iron_bar → **1 mongol_kheshig_helm** (forge_mongol_kheshig_helm, anvil)
+  - 1 hide + 1 copper_bar, 1 iron_bar, 1 wool_cloth → **1 mongol_noyon_helm** (forge_mongol_noyon_helm, anvil)
+  - 4 hide + 2 antler, 2 gold_bar, 3 iron_bar, 1 leather → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+  - 4 hide + 3 iron_bar, 2 wool_cloth → **1 viking_karl_armor** (forge_viking_karl_armor, anvil)
+  - 3 hide + 2 boar_tusk, 3 iron_bar, 1 leather → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
   - 1 hide → **1 leather** (tan_leather, workbench)
     - 1 leather + 1 copper_bar → **1 amulet** (forge_amulet, anvil)
+    - 2 leather + 1 coal, 5 copper_bar → **1 bronze_armor** (forge_bronze_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 3 iron_bar → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+    - 1 leather + 2 boar_tusk, 1 gold_bar, 3 iron_bar → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+    - 2 leather + 4 gold_bar, 2 iron_bar → **1 gold_armor** (forge_gold_armor, anvil)
+    - 1 leather + 1 iron_bar → **1 grunt_helm** (forge_grunt_helm, anvil)
     - 2 leather + 5 iron_bar → **1 iron_armor** (forge_iron_armor, anvil)
     - 1 leather + 2 iron_bar → **1 iron_helmet** (forge_iron_helmet, anvil)
     - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
+    - 1 leather + 1 coal, 3 iron_bar → **1 knight_helm** (forge_knight_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 wool_cloth → **1 mongol_cherbi_armor** (forge_mongol_cherbi_armor, anvil)
+    - 1 leather + 2 feather, 1 iron_bar, 1 wool_cloth → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+    - 4 leather + 2 boar_tusk, 2 copper_bar, 2 gold_bar, 1 iron_bar, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 1 leather + 2 feather, 1 gold_bar, 2 hide, 2 iron_bar → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 hide, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+    - 4 leather + 2 copper_bar, 1 fine_cloth, 1 iron_bar, 2 wool_cloth → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 leather + 1 fine_cloth, 1 gold_bar, 3 iron_bar → **1 paladin_helm** (forge_paladin_helm, anvil)
     - 1 leather + 1 iron_bar, 1 plank → **1 prospecting_kit** (forge_prospecting_kit, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_lime** (forge_samurai_armor_lime, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_purple** (forge_samurai_armor_purple, anvil)
+    - 1 leather + 2 iron_bar → **1 scout_helm** (forge_scout_helm, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_blue** (forge_soldier_bronze_helm_blue, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_red** (forge_soldier_bronze_helm_red, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_blue** (forge_soldier_gold_helm_blue, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_red** (forge_soldier_gold_helm_red, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_blue** (forge_soldier_iron_helm_blue, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_red** (forge_soldier_iron_helm_red, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_blue** (forge_soldier_steel_helm_blue, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_red** (forge_soldier_steel_helm_red, anvil)
+    - 2 leather + 3 coal, 6 iron_bar → **1 steel_armor** (forge_steel_armor, anvil)
+    - 1 leather + 2 antler, 2 gold_bar, 4 hide, 3 iron_bar → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 2 iron_bar → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+    - 1 leather + 2 boar_tusk, 3 hide, 3 iron_bar → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_red** (forge_viking_warrior_helm_red, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_yellow** (forge_viking_warrior_helm_yellow, anvil)
     - 4 leather → **1 leather_armor** (leather_armor, workbench)
     - 2 leather → **1 leather_cap** (leather_cap, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 french_hunter_coat** (sew_french_hunter_coat, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_blue** (sew_hunter_hat_blue, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_indigo** (sew_hunter_hat_indigo, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_red** (sew_hunter_hat_red, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_purple** (sew_musketeer_coat_purple, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_red** (sew_musketeer_coat_red, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_purple** (sew_musketeer_hat_purple, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_red** (sew_musketeer_hat_red, workbench)
+    - 1 leather + 2 fine_cloth, 2 wool_cloth → **1 ninja_garb** (sew_ninja_garb, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_blue** (sew_ronin_robe_blue, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_red** (sew_ronin_robe_red, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_blue** (sew_yabusame_robe_blue, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_red** (sew_yabusame_robe_red, workbench)
 - **meat** (4 a cycle)
   - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
 
 ### `wild_fox` · Fox (implemented)
 
 - **hide** (1 a cycle)
+  - 2 hide + 2 feather, 1 gold_bar, 2 iron_bar, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+  - 2 hide + 2 copper_bar, 4 leather, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+  - 1 hide + 2 iron_bar → **1 mongol_kheshig_helm** (forge_mongol_kheshig_helm, anvil)
+  - 1 hide + 1 copper_bar, 1 iron_bar, 1 wool_cloth → **1 mongol_noyon_helm** (forge_mongol_noyon_helm, anvil)
+  - 4 hide + 2 antler, 2 gold_bar, 3 iron_bar, 1 leather → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+  - 4 hide + 3 iron_bar, 2 wool_cloth → **1 viking_karl_armor** (forge_viking_karl_armor, anvil)
+  - 3 hide + 2 boar_tusk, 3 iron_bar, 1 leather → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
   - 1 hide → **1 leather** (tan_leather, workbench)
     - 1 leather + 1 copper_bar → **1 amulet** (forge_amulet, anvil)
+    - 2 leather + 1 coal, 5 copper_bar → **1 bronze_armor** (forge_bronze_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 3 iron_bar → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+    - 1 leather + 2 boar_tusk, 1 gold_bar, 3 iron_bar → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+    - 2 leather + 4 gold_bar, 2 iron_bar → **1 gold_armor** (forge_gold_armor, anvil)
+    - 1 leather + 1 iron_bar → **1 grunt_helm** (forge_grunt_helm, anvil)
     - 2 leather + 5 iron_bar → **1 iron_armor** (forge_iron_armor, anvil)
     - 1 leather + 2 iron_bar → **1 iron_helmet** (forge_iron_helmet, anvil)
     - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
+    - 1 leather + 1 coal, 3 iron_bar → **1 knight_helm** (forge_knight_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 wool_cloth → **1 mongol_cherbi_armor** (forge_mongol_cherbi_armor, anvil)
+    - 1 leather + 2 feather, 1 iron_bar, 1 wool_cloth → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+    - 4 leather + 2 boar_tusk, 2 copper_bar, 2 gold_bar, 1 iron_bar, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 1 leather + 2 feather, 1 gold_bar, 2 hide, 2 iron_bar → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 hide, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+    - 4 leather + 2 copper_bar, 1 fine_cloth, 1 iron_bar, 2 wool_cloth → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 leather + 1 fine_cloth, 1 gold_bar, 3 iron_bar → **1 paladin_helm** (forge_paladin_helm, anvil)
     - 1 leather + 1 iron_bar, 1 plank → **1 prospecting_kit** (forge_prospecting_kit, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_lime** (forge_samurai_armor_lime, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_purple** (forge_samurai_armor_purple, anvil)
+    - 1 leather + 2 iron_bar → **1 scout_helm** (forge_scout_helm, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_blue** (forge_soldier_bronze_helm_blue, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_red** (forge_soldier_bronze_helm_red, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_blue** (forge_soldier_gold_helm_blue, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_red** (forge_soldier_gold_helm_red, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_blue** (forge_soldier_iron_helm_blue, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_red** (forge_soldier_iron_helm_red, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_blue** (forge_soldier_steel_helm_blue, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_red** (forge_soldier_steel_helm_red, anvil)
+    - 2 leather + 3 coal, 6 iron_bar → **1 steel_armor** (forge_steel_armor, anvil)
+    - 1 leather + 2 antler, 2 gold_bar, 4 hide, 3 iron_bar → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 2 iron_bar → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+    - 1 leather + 2 boar_tusk, 3 hide, 3 iron_bar → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_red** (forge_viking_warrior_helm_red, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_yellow** (forge_viking_warrior_helm_yellow, anvil)
     - 4 leather → **1 leather_armor** (leather_armor, workbench)
     - 2 leather → **1 leather_cap** (leather_cap, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 french_hunter_coat** (sew_french_hunter_coat, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_blue** (sew_hunter_hat_blue, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_indigo** (sew_hunter_hat_indigo, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_red** (sew_hunter_hat_red, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_purple** (sew_musketeer_coat_purple, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_red** (sew_musketeer_coat_red, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_purple** (sew_musketeer_hat_purple, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_red** (sew_musketeer_hat_red, workbench)
+    - 1 leather + 2 fine_cloth, 2 wool_cloth → **1 ninja_garb** (sew_ninja_garb, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_blue** (sew_ronin_robe_blue, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_red** (sew_ronin_robe_red, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_blue** (sew_yabusame_robe_blue, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_red** (sew_yabusame_robe_red, workbench)
 - **meat** (1 a cycle)
   - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
 
@@ -366,24 +1019,117 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 - **rabbit_pelt** (1 a cycle)
   - 2 rabbit_pelt → **1 leather** (tan_pelts, workbench)
     - 1 leather + 1 copper_bar → **1 amulet** (forge_amulet, anvil)
+    - 2 leather + 1 coal, 5 copper_bar → **1 bronze_armor** (forge_bronze_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 3 iron_bar → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+    - 1 leather + 2 boar_tusk, 1 gold_bar, 3 iron_bar → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+    - 2 leather + 4 gold_bar, 2 iron_bar → **1 gold_armor** (forge_gold_armor, anvil)
+    - 1 leather + 1 iron_bar → **1 grunt_helm** (forge_grunt_helm, anvil)
     - 2 leather + 5 iron_bar → **1 iron_armor** (forge_iron_armor, anvil)
     - 1 leather + 2 iron_bar → **1 iron_helmet** (forge_iron_helmet, anvil)
     - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
+    - 1 leather + 1 coal, 3 iron_bar → **1 knight_helm** (forge_knight_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 wool_cloth → **1 mongol_cherbi_armor** (forge_mongol_cherbi_armor, anvil)
+    - 1 leather + 2 feather, 1 iron_bar, 1 wool_cloth → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+    - 4 leather + 2 boar_tusk, 2 copper_bar, 2 gold_bar, 1 iron_bar, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 1 leather + 2 feather, 1 gold_bar, 2 hide, 2 iron_bar → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 hide, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+    - 4 leather + 2 copper_bar, 1 fine_cloth, 1 iron_bar, 2 wool_cloth → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 leather + 1 fine_cloth, 1 gold_bar, 3 iron_bar → **1 paladin_helm** (forge_paladin_helm, anvil)
     - 1 leather + 1 iron_bar, 1 plank → **1 prospecting_kit** (forge_prospecting_kit, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_lime** (forge_samurai_armor_lime, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_purple** (forge_samurai_armor_purple, anvil)
+    - 1 leather + 2 iron_bar → **1 scout_helm** (forge_scout_helm, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_blue** (forge_soldier_bronze_helm_blue, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_red** (forge_soldier_bronze_helm_red, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_blue** (forge_soldier_gold_helm_blue, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_red** (forge_soldier_gold_helm_red, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_blue** (forge_soldier_iron_helm_blue, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_red** (forge_soldier_iron_helm_red, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_blue** (forge_soldier_steel_helm_blue, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_red** (forge_soldier_steel_helm_red, anvil)
+    - 2 leather + 3 coal, 6 iron_bar → **1 steel_armor** (forge_steel_armor, anvil)
+    - 1 leather + 2 antler, 2 gold_bar, 4 hide, 3 iron_bar → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 2 iron_bar → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+    - 1 leather + 2 boar_tusk, 3 hide, 3 iron_bar → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_red** (forge_viking_warrior_helm_red, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_yellow** (forge_viking_warrior_helm_yellow, anvil)
     - 4 leather → **1 leather_armor** (leather_armor, workbench)
     - 2 leather → **1 leather_cap** (leather_cap, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 french_hunter_coat** (sew_french_hunter_coat, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_blue** (sew_hunter_hat_blue, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_indigo** (sew_hunter_hat_indigo, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_red** (sew_hunter_hat_red, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_purple** (sew_musketeer_coat_purple, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_red** (sew_musketeer_coat_red, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_purple** (sew_musketeer_hat_purple, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_red** (sew_musketeer_hat_red, workbench)
+    - 1 leather + 2 fine_cloth, 2 wool_cloth → **1 ninja_garb** (sew_ninja_garb, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_blue** (sew_ronin_robe_blue, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_red** (sew_ronin_robe_red, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_blue** (sew_yabusame_robe_blue, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_red** (sew_yabusame_robe_red, workbench)
 
 ### `wild_wolf` · Wolf (implemented)
 
 - **hide** (1 a cycle)
+  - 2 hide + 2 feather, 1 gold_bar, 2 iron_bar, 1 leather → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+  - 2 hide + 2 copper_bar, 4 leather, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+  - 1 hide + 2 iron_bar → **1 mongol_kheshig_helm** (forge_mongol_kheshig_helm, anvil)
+  - 1 hide + 1 copper_bar, 1 iron_bar, 1 wool_cloth → **1 mongol_noyon_helm** (forge_mongol_noyon_helm, anvil)
+  - 4 hide + 2 antler, 2 gold_bar, 3 iron_bar, 1 leather → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+  - 4 hide + 3 iron_bar, 2 wool_cloth → **1 viking_karl_armor** (forge_viking_karl_armor, anvil)
+  - 3 hide + 2 boar_tusk, 3 iron_bar, 1 leather → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
   - 1 hide → **1 leather** (tan_leather, workbench)
     - 1 leather + 1 copper_bar → **1 amulet** (forge_amulet, anvil)
+    - 2 leather + 1 coal, 5 copper_bar → **1 bronze_armor** (forge_bronze_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 3 iron_bar → **1 dark_knight_helm** (forge_dark_knight_helm, anvil)
+    - 1 leather + 2 boar_tusk, 1 gold_bar, 3 iron_bar → **1 dragon_knight_helm** (forge_dragon_knight_helm, anvil)
+    - 2 leather + 4 gold_bar, 2 iron_bar → **1 gold_armor** (forge_gold_armor, anvil)
+    - 1 leather + 1 iron_bar → **1 grunt_helm** (forge_grunt_helm, anvil)
     - 2 leather + 5 iron_bar → **1 iron_armor** (forge_iron_armor, anvil)
     - 1 leather + 2 iron_bar → **1 iron_helmet** (forge_iron_helmet, anvil)
     - 1 leather + 3 iron_bar → **1 iron_sword** (forge_iron_sword, anvil)
+    - 1 leather + 1 coal, 3 iron_bar → **1 knight_helm** (forge_knight_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 wool_cloth → **1 mongol_cherbi_armor** (forge_mongol_cherbi_armor, anvil)
+    - 1 leather + 2 feather, 1 iron_bar, 1 wool_cloth → **1 mongol_cherbi_helm** (forge_mongol_cherbi_helm, anvil)
+    - 4 leather + 2 boar_tusk, 2 copper_bar, 2 gold_bar, 1 iron_bar, 2 wool_cloth → **1 mongol_khaan_armor** (forge_mongol_khaan_armor, anvil)
+    - 1 leather + 2 feather, 1 gold_bar, 2 hide, 2 iron_bar → **1 mongol_khaan_helm** (forge_mongol_khaan_helm, anvil)
+    - 4 leather + 2 copper_bar, 2 hide, 2 wool_cloth → **1 mongol_kheshig_armor** (forge_mongol_kheshig_armor, anvil)
+    - 4 leather + 2 copper_bar, 1 fine_cloth, 1 iron_bar, 2 wool_cloth → **1 mongol_noyon_armor** (forge_mongol_noyon_armor, anvil)
+    - 1 leather + 1 fine_cloth, 1 gold_bar, 3 iron_bar → **1 paladin_helm** (forge_paladin_helm, anvil)
     - 1 leather + 1 iron_bar, 1 plank → **1 prospecting_kit** (forge_prospecting_kit, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_lime** (forge_samurai_armor_lime, anvil)
+    - 1 leather + 3 fine_cloth, 3 iron_bar → **1 samurai_armor_purple** (forge_samurai_armor_purple, anvil)
+    - 1 leather + 2 iron_bar → **1 scout_helm** (forge_scout_helm, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_blue** (forge_soldier_bronze_helm_blue, anvil)
+    - 1 leather + 1 coal, 2 copper_bar → **1 soldier_bronze_helm_red** (forge_soldier_bronze_helm_red, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_blue** (forge_soldier_gold_helm_blue, anvil)
+    - 1 leather + 1 gold_bar, 1 iron_bar → **1 soldier_gold_helm_red** (forge_soldier_gold_helm_red, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_blue** (forge_soldier_iron_helm_blue, anvil)
+    - 1 leather + 2 iron_bar → **1 soldier_iron_helm_red** (forge_soldier_iron_helm_red, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_blue** (forge_soldier_steel_helm_blue, anvil)
+    - 1 leather + 2 coal, 3 iron_bar → **1 soldier_steel_helm_red** (forge_soldier_steel_helm_red, anvil)
+    - 2 leather + 3 coal, 6 iron_bar → **1 steel_armor** (forge_steel_armor, anvil)
+    - 1 leather + 2 antler, 2 gold_bar, 4 hide, 3 iron_bar → **1 viking_jarl_armor** (forge_viking_jarl_armor, anvil)
+    - 1 leather + 2 antler, 1 gold_bar, 2 iron_bar → **1 viking_jarl_helm** (forge_viking_jarl_helm, anvil)
+    - 1 leather + 2 boar_tusk, 3 hide, 3 iron_bar → **1 viking_warrior_armor** (forge_viking_warrior_armor, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_red** (forge_viking_warrior_helm_red, anvil)
+    - 1 leather + 2 antler, 2 iron_bar → **1 viking_warrior_helm_yellow** (forge_viking_warrior_helm_yellow, anvil)
     - 4 leather → **1 leather_armor** (leather_armor, workbench)
     - 2 leather → **1 leather_cap** (leather_cap, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 french_hunter_coat** (sew_french_hunter_coat, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_blue** (sew_hunter_hat_blue, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_indigo** (sew_hunter_hat_indigo, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 hunter_hat_red** (sew_hunter_hat_red, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_purple** (sew_musketeer_coat_purple, workbench)
+    - 2 leather + 2 feather, 3 fine_cloth → **1 musketeer_coat_red** (sew_musketeer_coat_red, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_purple** (sew_musketeer_hat_purple, workbench)
+    - 1 leather + 2 feather, 1 fine_cloth → **1 musketeer_hat_red** (sew_musketeer_hat_red, workbench)
+    - 1 leather + 2 fine_cloth, 2 wool_cloth → **1 ninja_garb** (sew_ninja_garb, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_blue** (sew_ronin_robe_blue, workbench)
+    - 2 leather + 2 fine_cloth → **1 ronin_robe_red** (sew_ronin_robe_red, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_blue** (sew_yabusame_robe_blue, workbench)
+    - 2 leather + 4 feather, 2 fine_cloth → **1 yabusame_robe_red** (sew_yabusame_robe_red, workbench)
 - **meat** (2 a cycle)
   - 1 meat + 1 log → **2 roast_meat** (roast_meat, oven)
 
@@ -391,63 +1137,286 @@ answers the same questions at run time (`uses_of`, `sources_of`, `chain`). Writt
 
 Every recipe path from a node's product to an item no recipe consumes:
 
+- antler → dark_knight_helm
+- antler → viking_jarl_armor
+- antler → viking_jarl_helm
+- antler → viking_karl_helm
+- antler → viking_warrior_helm_red
+- antler → viking_warrior_helm_yellow
+- boar_tusk → dragon_knight_helm
+- boar_tusk → mongol_khaan_armor
+- boar_tusk → viking_warrior_armor
+- coal → bronze_armor
 - coal → cart_ironwork → handcart
 - coal → cart_ironwork → minecart
 - coal → copper_bar → amulet
+- coal → copper_bar → bronze_armor
 - coal → copper_bar → copper_ring
 - coal → copper_bar → copper_sword
+- coal → copper_bar → mongol_cherbi_armor
+- coal → copper_bar → mongol_khaan_armor
+- coal → copper_bar → mongol_kheshig_armor
+- coal → copper_bar → mongol_noyon_armor
+- coal → copper_bar → mongol_noyon_helm
+- coal → copper_bar → soldier_bronze_helm_blue
+- coal → copper_bar → soldier_bronze_helm_red
+- coal → gold_bar → daimyo_helm
+- coal → gold_bar → dark_knight_helm
+- coal → gold_bar → dragon_knight_helm
+- coal → gold_bar → esper_hat_blue
+- coal → gold_bar → esper_hat_red
+- coal → gold_bar → esper_hood_cyan
+- coal → gold_bar → esper_hood_red
+- coal → gold_bar → gold_armor
 - coal → gold_bar → gold_ring
+- coal → gold_bar → high_mage_hat_cyan
+- coal → gold_bar → high_mage_hat_red
+- coal → gold_bar → high_mage_hat_yellow
+- coal → gold_bar → mage_hat_cyan
+- coal → gold_bar → mage_hat_red
+- coal → gold_bar → mage_hat_yellow
+- coal → gold_bar → mongol_khaan_armor
+- coal → gold_bar → mongol_khaan_helm
+- coal → gold_bar → paladin_helm
+- coal → gold_bar → shogun_helm_green
+- coal → gold_bar → shogun_helm_purple
+- coal → gold_bar → soldier_gold_helm_blue
+- coal → gold_bar → soldier_gold_helm_red
+- coal → gold_bar → sorcerer_hood_cyan
+- coal → gold_bar → sorcerer_hood_red
+- coal → gold_bar → valkyrie_helm
+- coal → gold_bar → viking_jarl_armor
+- coal → gold_bar → viking_jarl_helm
 - coal → iron_bar → axe
 - coal → iron_bar → cart_axle → handcart
 - coal → iron_bar → cart_axle → minecart
 - coal → iron_bar → cart_ironwork → handcart
 - coal → iron_bar → cart_ironwork → minecart
 - coal → iron_bar → chisel
+- coal → iron_bar → daimyo_helm
+- coal → iron_bar → dark_knight_helm
+- coal → iron_bar → dragon_knight_helm
+- coal → iron_bar → gold_armor
+- coal → iron_bar → grunt_helm
 - coal → iron_bar → hammer
 - coal → iron_bar → iron_armor
 - coal → iron_bar → iron_helmet
 - coal → iron_bar → iron_sword
+- coal → iron_bar → knight_helm
 - coal → iron_bar → lockpick
+- coal → iron_bar → mongol_cherbi_helm
+- coal → iron_bar → mongol_khaan_armor
+- coal → iron_bar → mongol_khaan_helm
+- coal → iron_bar → mongol_kheshig_helm
+- coal → iron_bar → mongol_noyon_armor
+- coal → iron_bar → mongol_noyon_helm
 - coal → iron_bar → nails → ladder
 - coal → iron_bar → nails → track_section
 - coal → iron_bar → padlock
+- coal → iron_bar → paladin_helm
 - coal → iron_bar → pickaxe
 - coal → iron_bar → plough
 - coal → iron_bar → prospecting_kit
+- coal → iron_bar → samurai_armor_lime
+- coal → iron_bar → samurai_armor_purple
+- coal → iron_bar → samurai_helm
+- coal → iron_bar → scout_helm
+- coal → iron_bar → shogun_helm_green
+- coal → iron_bar → shogun_helm_purple
 - coal → iron_bar → shovel_blade → shovel
+- coal → iron_bar → soldier_gold_helm_blue
+- coal → iron_bar → soldier_gold_helm_red
+- coal → iron_bar → soldier_iron_helm_blue
+- coal → iron_bar → soldier_iron_helm_red
+- coal → iron_bar → soldier_steel_helm_blue
+- coal → iron_bar → soldier_steel_helm_red
+- coal → iron_bar → steel_armor
+- coal → iron_bar → valkyrie_helm
+- coal → iron_bar → viking_jarl_armor
+- coal → iron_bar → viking_jarl_helm
+- coal → iron_bar → viking_karl_armor
+- coal → iron_bar → viking_karl_helm
+- coal → iron_bar → viking_warrior_armor
+- coal → iron_bar → viking_warrior_helm_red
+- coal → iron_bar → viking_warrior_helm_yellow
+- coal → knight_helm
+- coal → soldier_bronze_helm_blue
+- coal → soldier_bronze_helm_red
+- coal → soldier_steel_helm_blue
+- coal → soldier_steel_helm_red
+- coal → steel_armor
 - copper_ore → copper_bar → amulet
+- copper_ore → copper_bar → bronze_armor
 - copper_ore → copper_bar → copper_ring
 - copper_ore → copper_bar → copper_sword
+- copper_ore → copper_bar → mongol_cherbi_armor
+- copper_ore → copper_bar → mongol_khaan_armor
+- copper_ore → copper_bar → mongol_kheshig_armor
+- copper_ore → copper_bar → mongol_noyon_armor
+- copper_ore → copper_bar → mongol_noyon_helm
+- copper_ore → copper_bar → soldier_bronze_helm_blue
+- copper_ore → copper_bar → soldier_bronze_helm_red
 - egg → bread
+- feather → archer_hat_cyan
+- feather → archer_hat_green
+- feather → archer_hat_yellow
+- feather → french_hunter_coat
+- feather → hunter_hat_blue
+- feather → hunter_hat_indigo
+- feather → hunter_hat_red
+- feather → mongol_cherbi_helm
+- feather → mongol_khaan_helm
+- feather → musketeer_coat_purple
+- feather → musketeer_coat_red
+- feather → musketeer_hat_purple
+- feather → musketeer_hat_red
+- feather → ranger_hat_cyan
+- feather → ranger_hat_green
+- feather → ranger_hat_yellow
+- feather → valkyrie_helm
+- feather → yabusame_robe_blue
+- feather → yabusame_robe_red
+- feather → yabusame_straw_hat_blue
+- feather → yabusame_straw_hat_red
 - flower → healing_tonic → strong_healing_tonic
 - flower → herbal_poultice
 - flower → herbal_tonic
+- gold_ore → gold_bar → daimyo_helm
+- gold_ore → gold_bar → dark_knight_helm
+- gold_ore → gold_bar → dragon_knight_helm
+- gold_ore → gold_bar → esper_hat_blue
+- gold_ore → gold_bar → esper_hat_red
+- gold_ore → gold_bar → esper_hood_cyan
+- gold_ore → gold_bar → esper_hood_red
+- gold_ore → gold_bar → gold_armor
 - gold_ore → gold_bar → gold_ring
+- gold_ore → gold_bar → high_mage_hat_cyan
+- gold_ore → gold_bar → high_mage_hat_red
+- gold_ore → gold_bar → high_mage_hat_yellow
+- gold_ore → gold_bar → mage_hat_cyan
+- gold_ore → gold_bar → mage_hat_red
+- gold_ore → gold_bar → mage_hat_yellow
+- gold_ore → gold_bar → mongol_khaan_armor
+- gold_ore → gold_bar → mongol_khaan_helm
+- gold_ore → gold_bar → paladin_helm
+- gold_ore → gold_bar → shogun_helm_green
+- gold_ore → gold_bar → shogun_helm_purple
+- gold_ore → gold_bar → soldier_gold_helm_blue
+- gold_ore → gold_bar → soldier_gold_helm_red
+- gold_ore → gold_bar → sorcerer_hood_cyan
+- gold_ore → gold_bar → sorcerer_hood_red
+- gold_ore → gold_bar → valkyrie_helm
+- gold_ore → gold_bar → viking_jarl_armor
+- gold_ore → gold_bar → viking_jarl_helm
 - hide → leather → amulet
+- hide → leather → bronze_armor
+- hide → leather → dark_knight_helm
+- hide → leather → dragon_knight_helm
+- hide → leather → french_hunter_coat
+- hide → leather → gold_armor
+- hide → leather → grunt_helm
+- hide → leather → hunter_hat_blue
+- hide → leather → hunter_hat_indigo
+- hide → leather → hunter_hat_red
 - hide → leather → iron_armor
 - hide → leather → iron_helmet
 - hide → leather → iron_sword
+- hide → leather → knight_helm
 - hide → leather → leather_armor
 - hide → leather → leather_cap
+- hide → leather → mongol_cherbi_armor
+- hide → leather → mongol_cherbi_helm
+- hide → leather → mongol_khaan_armor
+- hide → leather → mongol_khaan_helm
+- hide → leather → mongol_kheshig_armor
+- hide → leather → mongol_noyon_armor
+- hide → leather → musketeer_coat_purple
+- hide → leather → musketeer_coat_red
+- hide → leather → musketeer_hat_purple
+- hide → leather → musketeer_hat_red
+- hide → leather → ninja_garb
+- hide → leather → paladin_helm
 - hide → leather → prospecting_kit
+- hide → leather → ronin_robe_blue
+- hide → leather → ronin_robe_red
+- hide → leather → samurai_armor_lime
+- hide → leather → samurai_armor_purple
+- hide → leather → scout_helm
+- hide → leather → soldier_bronze_helm_blue
+- hide → leather → soldier_bronze_helm_red
+- hide → leather → soldier_gold_helm_blue
+- hide → leather → soldier_gold_helm_red
+- hide → leather → soldier_iron_helm_blue
+- hide → leather → soldier_iron_helm_red
+- hide → leather → soldier_steel_helm_blue
+- hide → leather → soldier_steel_helm_red
+- hide → leather → steel_armor
+- hide → leather → viking_jarl_armor
+- hide → leather → viking_jarl_helm
+- hide → leather → viking_warrior_armor
+- hide → leather → viking_warrior_helm_red
+- hide → leather → viking_warrior_helm_yellow
+- hide → leather → yabusame_robe_blue
+- hide → leather → yabusame_robe_red
+- hide → mongol_khaan_helm
+- hide → mongol_kheshig_armor
+- hide → mongol_kheshig_helm
+- hide → mongol_noyon_helm
+- hide → viking_jarl_armor
+- hide → viking_karl_armor
+- hide → viking_warrior_armor
 - iron_ore → iron_bar → axe
 - iron_ore → iron_bar → cart_axle → handcart
 - iron_ore → iron_bar → cart_axle → minecart
 - iron_ore → iron_bar → cart_ironwork → handcart
 - iron_ore → iron_bar → cart_ironwork → minecart
 - iron_ore → iron_bar → chisel
+- iron_ore → iron_bar → daimyo_helm
+- iron_ore → iron_bar → dark_knight_helm
+- iron_ore → iron_bar → dragon_knight_helm
+- iron_ore → iron_bar → gold_armor
+- iron_ore → iron_bar → grunt_helm
 - iron_ore → iron_bar → hammer
 - iron_ore → iron_bar → iron_armor
 - iron_ore → iron_bar → iron_helmet
 - iron_ore → iron_bar → iron_sword
+- iron_ore → iron_bar → knight_helm
 - iron_ore → iron_bar → lockpick
+- iron_ore → iron_bar → mongol_cherbi_helm
+- iron_ore → iron_bar → mongol_khaan_armor
+- iron_ore → iron_bar → mongol_khaan_helm
+- iron_ore → iron_bar → mongol_kheshig_helm
+- iron_ore → iron_bar → mongol_noyon_armor
+- iron_ore → iron_bar → mongol_noyon_helm
 - iron_ore → iron_bar → nails → ladder
 - iron_ore → iron_bar → nails → track_section
 - iron_ore → iron_bar → padlock
+- iron_ore → iron_bar → paladin_helm
 - iron_ore → iron_bar → pickaxe
 - iron_ore → iron_bar → plough
 - iron_ore → iron_bar → prospecting_kit
+- iron_ore → iron_bar → samurai_armor_lime
+- iron_ore → iron_bar → samurai_armor_purple
+- iron_ore → iron_bar → samurai_helm
+- iron_ore → iron_bar → scout_helm
+- iron_ore → iron_bar → shogun_helm_green
+- iron_ore → iron_bar → shogun_helm_purple
 - iron_ore → iron_bar → shovel_blade → shovel
+- iron_ore → iron_bar → soldier_gold_helm_blue
+- iron_ore → iron_bar → soldier_gold_helm_red
+- iron_ore → iron_bar → soldier_iron_helm_blue
+- iron_ore → iron_bar → soldier_iron_helm_red
+- iron_ore → iron_bar → soldier_steel_helm_blue
+- iron_ore → iron_bar → soldier_steel_helm_red
+- iron_ore → iron_bar → steel_armor
+- iron_ore → iron_bar → valkyrie_helm
+- iron_ore → iron_bar → viking_jarl_armor
+- iron_ore → iron_bar → viking_jarl_helm
+- iron_ore → iron_bar → viking_karl_armor
+- iron_ore → iron_bar → viking_karl_helm
+- iron_ore → iron_bar → viking_warrior_armor
+- iron_ore → iron_bar → viking_warrior_helm_red
+- iron_ore → iron_bar → viking_warrior_helm_yellow
 - log → mallet
 - log → plank → axe
 - log → plank → cart_axle → handcart
@@ -471,18 +1440,113 @@ Every recipe path from a node's product to an item no recipe consumes:
 - meat → roast_meat
 - milk → cheese
 - rabbit_pelt → leather → amulet
+- rabbit_pelt → leather → bronze_armor
+- rabbit_pelt → leather → dark_knight_helm
+- rabbit_pelt → leather → dragon_knight_helm
+- rabbit_pelt → leather → french_hunter_coat
+- rabbit_pelt → leather → gold_armor
+- rabbit_pelt → leather → grunt_helm
+- rabbit_pelt → leather → hunter_hat_blue
+- rabbit_pelt → leather → hunter_hat_indigo
+- rabbit_pelt → leather → hunter_hat_red
 - rabbit_pelt → leather → iron_armor
 - rabbit_pelt → leather → iron_helmet
 - rabbit_pelt → leather → iron_sword
+- rabbit_pelt → leather → knight_helm
 - rabbit_pelt → leather → leather_armor
 - rabbit_pelt → leather → leather_cap
+- rabbit_pelt → leather → mongol_cherbi_armor
+- rabbit_pelt → leather → mongol_cherbi_helm
+- rabbit_pelt → leather → mongol_khaan_armor
+- rabbit_pelt → leather → mongol_khaan_helm
+- rabbit_pelt → leather → mongol_kheshig_armor
+- rabbit_pelt → leather → mongol_noyon_armor
+- rabbit_pelt → leather → musketeer_coat_purple
+- rabbit_pelt → leather → musketeer_coat_red
+- rabbit_pelt → leather → musketeer_hat_purple
+- rabbit_pelt → leather → musketeer_hat_red
+- rabbit_pelt → leather → ninja_garb
+- rabbit_pelt → leather → paladin_helm
 - rabbit_pelt → leather → prospecting_kit
+- rabbit_pelt → leather → ronin_robe_blue
+- rabbit_pelt → leather → ronin_robe_red
+- rabbit_pelt → leather → samurai_armor_lime
+- rabbit_pelt → leather → samurai_armor_purple
+- rabbit_pelt → leather → scout_helm
+- rabbit_pelt → leather → soldier_bronze_helm_blue
+- rabbit_pelt → leather → soldier_bronze_helm_red
+- rabbit_pelt → leather → soldier_gold_helm_blue
+- rabbit_pelt → leather → soldier_gold_helm_red
+- rabbit_pelt → leather → soldier_iron_helm_blue
+- rabbit_pelt → leather → soldier_iron_helm_red
+- rabbit_pelt → leather → soldier_steel_helm_blue
+- rabbit_pelt → leather → soldier_steel_helm_red
+- rabbit_pelt → leather → steel_armor
+- rabbit_pelt → leather → viking_jarl_armor
+- rabbit_pelt → leather → viking_jarl_helm
+- rabbit_pelt → leather → viking_warrior_armor
+- rabbit_pelt → leather → viking_warrior_helm_red
+- rabbit_pelt → leather → viking_warrior_helm_yellow
+- rabbit_pelt → leather → yabusame_robe_blue
+- rabbit_pelt → leather → yabusame_robe_red
 - stone → building_block
 - stone → rubble
 - wheat → ale → strong_healing_tonic
 - wheat → bread
 - wheat → pottage
+- wheat → ronin_straw_hat_blue
+- wheat → ronin_straw_hat_red
+- wheat → traveller_straw_hat
+- wheat → traveller_straw_hat_cyan
+- wheat → villager_straw_hat
+- wheat → yabusame_straw_hat_blue
+- wheat → yabusame_straw_hat_red
+- wool → wool_cloth → archer_hat_cyan
+- wool → wool_cloth → archer_hat_green
+- wool → wool_cloth → archer_hat_yellow
+- wool → wool_cloth → assassin_bandana_black
+- wool → wool_cloth → assassin_bandana_green
+- wool → wool_cloth → assassin_bandana_red
+- wool → wool_cloth → esper_hat_blue
+- wool → wool_cloth → esper_hat_red
+- wool → wool_cloth → esper_hood_cyan
+- wool → wool_cloth → esper_hood_red
+- wool → wool_cloth → high_mage_hat_cyan
+- wool → wool_cloth → high_mage_hat_red
+- wool → wool_cloth → high_mage_hat_yellow
 - wool → wool_cloth → linen_bandage
+- wool → wool_cloth → mage_hat_cyan
+- wool → wool_cloth → mage_hat_red
+- wool → wool_cloth → mage_hat_yellow
+- wool → wool_cloth → mongol_cherbi_armor
+- wool → wool_cloth → mongol_cherbi_helm
+- wool → wool_cloth → mongol_khaan_armor
+- wool → wool_cloth → mongol_kheshig_armor
+- wool → wool_cloth → mongol_noyon_armor
+- wool → wool_cloth → mongol_noyon_helm
+- wool → wool_cloth → ninja_bandana_black
+- wool → wool_cloth → ninja_bandana_blue
+- wool → wool_cloth → ninja_bandana_red
+- wool → wool_cloth → ninja_garb
+- wool → wool_cloth → ranger_hat_cyan
+- wool → wool_cloth → ranger_hat_green
+- wool → wool_cloth → ranger_hat_yellow
+- wool → wool_cloth → rogue_hat
+- wool → wool_cloth → ronin_straw_hat_blue
+- wool → wool_cloth → ronin_straw_hat_red
+- wool → wool_cloth → sorcerer_hood_cyan
+- wool → wool_cloth → sorcerer_hood_red
+- wool → wool_cloth → stalker_hood_black
+- wool → wool_cloth → stalker_hood_purple
+- wool → wool_cloth → stalker_hood_red
+- wool → wool_cloth → thief_bandana_green
+- wool → wool_cloth → thief_bandana_lime
+- wool → wool_cloth → thief_bandana_red
+- wool → wool_cloth → traveller_robe
+- wool → wool_cloth → traveller_straw_hat_cyan
+- wool → wool_cloth → viking_karl_armor
+- wool → wool_cloth → yabusame_straw_hat_blue
+- wool → wool_cloth → yabusame_straw_hat_red
 
 ## From an item or building: raw materials and nodes
 
@@ -492,8 +1556,15 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 |---|---|---|---|
 | ale | 0.75 wheat | `player_field`, `wheat_field` | - |
 | amulet | 1 coal, 2 copper_ore, 1 hide | `coal_seam`, `copper_seam`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; copper_ore: import |
+| archer_hat_cyan | 1 feather, 2 wool | `chicken_pen`, `player_pen`, `wild_bird` | - |
+| archer_hat_green | 1 feather, 2 wool | `chicken_pen`, `player_pen`, `wild_bird` | - |
+| archer_hat_yellow | 1 feather, 2 wool | `chicken_pen`, `player_pen`, `wild_bird` | - |
+| assassin_bandana_black | 2 wool | `player_pen` | - |
+| assassin_bandana_green | 2 wool | `player_pen` | - |
+| assassin_bandana_red | 2 wool | `player_pen` | - |
 | axe | 2 coal, 4 iron_ore, 0.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
 | bread | 0.5 egg, 1 wheat | `player_field`, `player_pen`, `wheat_field` | - |
+| bronze_armor | 6 coal, 10 copper_ore, 2 hide | `coal_seam`, `copper_seam`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; copper_ore: import |
 | building_block | 1.5 stone | `boulder`, `open_pit`, `stone_seam`, `tunnel_rock` | stone: import |
 | cart_axle | 1 coal, 2 iron_ore, 0.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
 | cart_ironwork | 2 coal, 2 iron_ore | `coal_seam`, `iron_seam` | coal: import; iron_ore: import |
@@ -503,41 +1574,125 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | copper_bar | 1 coal, 2 copper_ore | `coal_seam`, `copper_seam` | coal: import; copper_ore: import |
 | copper_ring | 1 coal, 2 copper_ore | `coal_seam`, `copper_seam` | coal: import; copper_ore: import |
 | copper_sword | 2 coal, 4 copper_ore, 0.5 log | `coal_seam`, `copper_seam`, `tree` | coal: import; copper_ore: import |
+| daimyo_helm | 3 coal, 2 fine_cloth, 2 gold_ore, 4 iron_ore | `coal_seam`, `gold_seam`, `iron_seam` | coal: import; fine_cloth: import; iron_ore: import |
+| dark_knight_helm | 2 antler, 4 coal, 2 gold_ore, 1 hide, 6 iron_ore | `coal_seam`, `cow_pen`, `gold_seam`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| dragon_knight_helm | 2 boar_tusk, 4 coal, 2 gold_ore, 1 hide, 6 iron_ore | `coal_seam`, `cow_pen`, `gold_seam`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| esper_hat_blue | 1 coal, 2 fine_cloth, 2 gold_ore, 2 wool | `coal_seam`, `gold_seam`, `player_pen` | coal: import; fine_cloth: import |
+| esper_hat_red | 1 coal, 2 fine_cloth, 2 gold_ore, 2 wool | `coal_seam`, `gold_seam`, `player_pen` | coal: import; fine_cloth: import |
+| esper_hood_cyan | 1 coal, 2 fine_cloth, 2 gold_ore, 2 wool | `coal_seam`, `gold_seam`, `player_pen` | coal: import; fine_cloth: import |
+| esper_hood_red | 1 coal, 2 fine_cloth, 2 gold_ore, 2 wool | `coal_seam`, `gold_seam`, `player_pen` | coal: import; fine_cloth: import |
+| french_hunter_coat | 2 feather, 3 fine_cloth, 2 hide | `chicken_pen`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_bird`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | fine_cloth: import |
+| gold_armor | 6 coal, 8 gold_ore, 2 hide, 4 iron_ore | `coal_seam`, `cow_pen`, `gold_seam`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
 | gold_bar | 1 coal, 2 gold_ore | `coal_seam`, `gold_seam` | coal: import |
 | gold_ring | 1 coal, 2 gold_ore | `coal_seam`, `gold_seam` | coal: import |
+| grunt_helm | 1 coal, 1 hide, 2 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
 | hammer | 1 coal, 2 iron_ore, 0.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
 | handcart | 3 coal, 4 iron_ore, 5.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
 | healing_tonic | 5 flower | `flower_patch`, `player_field` | - |
 | herbal_poultice | 2 flower | `flower_patch`, `player_field` | - |
 | herbal_tonic | 3 flower | `flower_patch`, `player_field` | - |
+| high_mage_hat_cyan | 1 coal, 2 fine_cloth, 2 gold_ore, 2 wool | `coal_seam`, `gold_seam`, `player_pen` | coal: import; fine_cloth: import |
+| high_mage_hat_red | 1 coal, 2 fine_cloth, 2 gold_ore, 2 wool | `coal_seam`, `gold_seam`, `player_pen` | coal: import; fine_cloth: import |
+| high_mage_hat_yellow | 1 coal, 2 fine_cloth, 2 gold_ore, 2 wool | `coal_seam`, `gold_seam`, `player_pen` | coal: import; fine_cloth: import |
+| hunter_hat_blue | 2 feather, 1 fine_cloth, 1 hide | `chicken_pen`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_bird`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | fine_cloth: import |
+| hunter_hat_indigo | 2 feather, 1 fine_cloth, 1 hide | `chicken_pen`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_bird`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | fine_cloth: import |
+| hunter_hat_red | 2 feather, 1 fine_cloth, 1 hide | `chicken_pen`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_bird`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | fine_cloth: import |
 | iron_armor | 5 coal, 2 hide, 10 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
 | iron_bar | 1 coal, 2 iron_ore | `coal_seam`, `iron_seam` | coal: import; iron_ore: import |
 | iron_helmet | 2 coal, 1 hide, 4 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
 | iron_sword | 3 coal, 1 hide, 6 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| knight_helm | 4 coal, 1 hide, 6 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
 | ladder | 0.5 coal, 1 iron_ore, 1.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
 | leather | 1 hide | `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | - |
 | leather_armor | 4 hide | `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | - |
 | leather_cap | 2 hide | `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | - |
 | linen_bandage | 0.67 wool | `player_pen` | - |
 | lockpick | 0.33 coal, 0.67 iron_ore | `coal_seam`, `iron_seam` | coal: import; iron_ore: import |
+| mage_hat_cyan | 1 coal, 2 fine_cloth, 2 gold_ore, 2 wool | `coal_seam`, `gold_seam`, `player_pen` | coal: import; fine_cloth: import |
+| mage_hat_red | 1 coal, 2 fine_cloth, 2 gold_ore, 2 wool | `coal_seam`, `gold_seam`, `player_pen` | coal: import; fine_cloth: import |
+| mage_hat_yellow | 1 coal, 2 fine_cloth, 2 gold_ore, 2 wool | `coal_seam`, `gold_seam`, `player_pen` | coal: import; fine_cloth: import |
 | mallet | 1.5 log | `tree` | - |
 | minecart | 6 coal, 8 iron_ore, 10 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
+| mongol_cherbi_armor | 2 coal, 4 copper_ore, 4 hide, 4 wool | `coal_seam`, `copper_seam`, `cow_pen`, `horse_pen`, `pig_pen`, `player_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; copper_ore: import |
+| mongol_cherbi_helm | 1 coal, 2 feather, 1 hide, 2 iron_ore, 2 wool | `chicken_pen`, `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `player_pen`, `sheep_pen`, `wild_bear`, `wild_bird`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| mongol_khaan_armor | 2 boar_tusk, 5 coal, 4 copper_ore, 4 gold_ore, 4 hide, 2 iron_ore, 4 wool | `coal_seam`, `copper_seam`, `cow_pen`, `gold_seam`, `horse_pen`, `iron_seam`, `pig_pen`, `player_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; copper_ore: import; iron_ore: import |
+| mongol_khaan_helm | 3 coal, 2 feather, 2 gold_ore, 3 hide, 4 iron_ore | `chicken_pen`, `coal_seam`, `cow_pen`, `gold_seam`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_bird`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| mongol_kheshig_armor | 2 coal, 4 copper_ore, 6 hide, 4 wool | `coal_seam`, `copper_seam`, `cow_pen`, `horse_pen`, `pig_pen`, `player_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; copper_ore: import |
+| mongol_kheshig_helm | 2 coal, 1 hide, 4 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| mongol_noyon_armor | 3 coal, 4 copper_ore, 1 fine_cloth, 4 hide, 2 iron_ore, 4 wool | `coal_seam`, `copper_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `player_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; copper_ore: import; fine_cloth: import; iron_ore: import |
+| mongol_noyon_helm | 2 coal, 2 copper_ore, 1 hide, 2 iron_ore, 2 wool | `coal_seam`, `copper_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `player_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; copper_ore: import; iron_ore: import |
+| musketeer_coat_purple | 2 feather, 3 fine_cloth, 2 hide | `chicken_pen`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_bird`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | fine_cloth: import |
+| musketeer_coat_red | 2 feather, 3 fine_cloth, 2 hide | `chicken_pen`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_bird`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | fine_cloth: import |
+| musketeer_hat_purple | 2 feather, 1 fine_cloth, 1 hide | `chicken_pen`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_bird`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | fine_cloth: import |
+| musketeer_hat_red | 2 feather, 1 fine_cloth, 1 hide | `chicken_pen`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_bird`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | fine_cloth: import |
 | nails | 0.08 coal, 0.17 iron_ore | `coal_seam`, `iron_seam` | coal: import; iron_ore: import |
+| ninja_bandana_black | 2 wool | `player_pen` | - |
+| ninja_bandana_blue | 2 wool | `player_pen` | - |
+| ninja_bandana_red | 2 wool | `player_pen` | - |
+| ninja_garb | 2 fine_cloth, 1 hide, 4 wool | `cow_pen`, `horse_pen`, `pig_pen`, `player_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | fine_cloth: import |
 | padlock | 2 coal, 4 iron_ore | `coal_seam`, `iron_seam` | coal: import; iron_ore: import |
+| paladin_helm | 4 coal, 1 fine_cloth, 2 gold_ore, 1 hide, 6 iron_ore | `coal_seam`, `cow_pen`, `gold_seam`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; fine_cloth: import; iron_ore: import |
 | pickaxe | 2 coal, 4 iron_ore, 0.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
 | plank | 0.5 log | `tree` | - |
 | plough | 2 coal, 4 iron_ore, 2 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
 | pottage | 0.33 wheat | `player_field`, `wheat_field` | - |
 | prospecting_kit | 1 coal, 1 hide, 2 iron_ore, 0.5 log | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `tree`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| ranger_hat_cyan | 1 feather, 2 wool | `chicken_pen`, `player_pen`, `wild_bird` | - |
+| ranger_hat_green | 1 feather, 2 wool | `chicken_pen`, `player_pen`, `wild_bird` | - |
+| ranger_hat_yellow | 1 feather, 2 wool | `chicken_pen`, `player_pen`, `wild_bird` | - |
 | roast_meat | 0.5 log, 0.5 meat | `chicken_pen`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `tree`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_rabbit`, `wild_wolf` | - |
+| rogue_hat | 2 wool | `player_pen` | - |
+| ronin_robe_blue | 2 fine_cloth, 2 hide | `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | fine_cloth: import |
+| ronin_robe_red | 2 fine_cloth, 2 hide | `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | fine_cloth: import |
+| ronin_straw_hat_blue | 3 wheat, 2 wool | `player_field`, `player_pen`, `wheat_field` | - |
+| ronin_straw_hat_red | 3 wheat, 2 wool | `player_field`, `player_pen`, `wheat_field` | - |
 | rubble | 3 stone | `boulder`, `open_pit`, `stone_seam`, `tunnel_rock` | stone: import |
+| samurai_armor_lime | 3 coal, 3 fine_cloth, 1 hide, 6 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; fine_cloth: import; iron_ore: import |
+| samurai_armor_purple | 3 coal, 3 fine_cloth, 1 hide, 6 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; fine_cloth: import; iron_ore: import |
+| samurai_helm | 2 coal, 1 fine_cloth, 4 iron_ore | `coal_seam`, `iron_seam` | coal: import; fine_cloth: import; iron_ore: import |
+| scout_helm | 2 coal, 1 hide, 4 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| shogun_helm_green | 3 coal, 2 fine_cloth, 2 gold_ore, 4 iron_ore | `coal_seam`, `gold_seam`, `iron_seam` | coal: import; fine_cloth: import; iron_ore: import |
+| shogun_helm_purple | 3 coal, 2 fine_cloth, 2 gold_ore, 4 iron_ore | `coal_seam`, `gold_seam`, `iron_seam` | coal: import; fine_cloth: import; iron_ore: import |
 | shovel | 1 coal, 2 iron_ore, 0.5 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
 | shovel_blade | 1 coal, 2 iron_ore | `coal_seam`, `iron_seam` | coal: import; iron_ore: import |
 | shovel_haft | 0.5 log | `tree` | - |
+| soldier_bronze_helm_blue | 3 coal, 4 copper_ore, 1 hide | `coal_seam`, `copper_seam`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; copper_ore: import |
+| soldier_bronze_helm_red | 3 coal, 4 copper_ore, 1 hide | `coal_seam`, `copper_seam`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; copper_ore: import |
+| soldier_gold_helm_blue | 2 coal, 2 gold_ore, 1 hide, 2 iron_ore | `coal_seam`, `cow_pen`, `gold_seam`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| soldier_gold_helm_red | 2 coal, 2 gold_ore, 1 hide, 2 iron_ore | `coal_seam`, `cow_pen`, `gold_seam`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| soldier_iron_helm_blue | 2 coal, 1 hide, 4 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| soldier_iron_helm_red | 2 coal, 1 hide, 4 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| soldier_steel_helm_blue | 5 coal, 1 hide, 6 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| soldier_steel_helm_red | 5 coal, 1 hide, 6 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| sorcerer_hood_cyan | 1 coal, 2 fine_cloth, 2 gold_ore, 2 wool | `coal_seam`, `gold_seam`, `player_pen` | coal: import; fine_cloth: import |
+| sorcerer_hood_red | 1 coal, 2 fine_cloth, 2 gold_ore, 2 wool | `coal_seam`, `gold_seam`, `player_pen` | coal: import; fine_cloth: import |
+| stalker_hood_black | 2 wool | `player_pen` | - |
+| stalker_hood_purple | 2 wool | `player_pen` | - |
+| stalker_hood_red | 2 wool | `player_pen` | - |
+| steel_armor | 9 coal, 2 hide, 12 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
 | strong_healing_tonic | 10 flower, 0.75 wheat | `flower_patch`, `player_field`, `wheat_field` | - |
+| thief_bandana_green | 2 wool | `player_pen` | - |
+| thief_bandana_lime | 2 wool | `player_pen` | - |
+| thief_bandana_red | 2 wool | `player_pen` | - |
 | timber_support | 2 log | `tree` | - |
 | track_section | 0.33 coal, 0.67 iron_ore, 1 log | `coal_seam`, `iron_seam`, `tree` | coal: import; iron_ore: import |
+| traveller_robe | 1 fine_cloth, 4 wool | `player_pen` | fine_cloth: import |
+| traveller_straw_hat | 3 wheat | `player_field`, `wheat_field` | - |
+| traveller_straw_hat_cyan | 3 wheat, 2 wool | `player_field`, `player_pen`, `wheat_field` | - |
+| valkyrie_helm | 3 coal, 4 feather, 2 gold_ore, 4 iron_ore | `chicken_pen`, `coal_seam`, `gold_seam`, `iron_seam`, `wild_bird` | coal: import; iron_ore: import |
+| viking_jarl_armor | 2 antler, 5 coal, 4 gold_ore, 5 hide, 6 iron_ore | `coal_seam`, `cow_pen`, `gold_seam`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| viking_jarl_helm | 2 antler, 3 coal, 2 gold_ore, 1 hide, 4 iron_ore | `coal_seam`, `cow_pen`, `gold_seam`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| viking_karl_armor | 3 coal, 4 hide, 6 iron_ore, 4 wool | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `player_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| viking_karl_helm | 2 antler, 2 coal, 4 iron_ore | `coal_seam`, `iron_seam`, `wild_deer` | coal: import; iron_ore: import |
+| viking_warrior_armor | 2 boar_tusk, 3 coal, 4 hide, 6 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| viking_warrior_helm_red | 2 antler, 2 coal, 1 hide, 4 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| viking_warrior_helm_yellow | 2 antler, 2 coal, 1 hide, 4 iron_ore | `coal_seam`, `cow_pen`, `horse_pen`, `iron_seam`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | coal: import; iron_ore: import |
+| villager_straw_hat | 3 wheat | `player_field`, `wheat_field` | - |
 | wool_cloth | 2 wool | `player_pen` | - |
+| yabusame_robe_blue | 4 feather, 2 fine_cloth, 2 hide | `chicken_pen`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_bird`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | fine_cloth: import |
+| yabusame_robe_red | 4 feather, 2 fine_cloth, 2 hide | `chicken_pen`, `cow_pen`, `horse_pen`, `pig_pen`, `sheep_pen`, `wild_bear`, `wild_bird`, `wild_boar`, `wild_deer`, `wild_fox`, `wild_wolf` | fine_cloth: import |
+| yabusame_straw_hat_blue | 1 feather, 3 wheat, 2 wool | `chicken_pen`, `player_field`, `player_pen`, `wheat_field`, `wild_bird` | - |
+| yabusame_straw_hat_red | 1 feather, 3 wheat, 2 wool | `chicken_pen`, `player_field`, `player_pen`, `wheat_field`, `wild_bird` | - |
 | building: apothecary | 18 log, 22.5 stone | `boulder`, `open_pit`, `stone_seam`, `tree`, `tunnel_rock` | stone: import |
 | building: bakehouse | 20 log, 45 stone | `boulder`, `open_pit`, `stone_seam`, `tree`, `tunnel_rock` | stone: import |
 | building: carpentry | 30 log, 22.5 stone | `boulder`, `open_pit`, `stone_seam`, `tree`, `tunnel_rock` | stone: import |
@@ -554,12 +1709,21 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 |---|---|---|---|
 | `ale` Ale | food | recipe `brew_ale` ×4; start_stock `start_0` | buyer `merchant_food` ×15; buyer `sage` ×2; buyer `tavernkeeper` ×20; export `caravan`; food `ale`; recipe `brew_strong_tonic` ×1 |
 | `amulet` Copper amulet | amulet | recipe `forge_amulet` ×1 | buyer `merchant_goods` ×2; equip `amulet`; export `caravan` |
+| `antler` Antler | resource | node `wild_deer` ×2 | buyer `merchant_goods` ×10; export `caravan`; recipe `forge_dark_knight_helm` ×2; recipe `forge_viking_jarl_armor` ×2; recipe `forge_viking_jarl_helm` ×2; recipe `forge_viking_karl_helm` ×2; recipe `forge_viking_warrior_helm_red` ×2; recipe `forge_viking_warrior_helm_yellow` ×2 |
 | `apple` Apple | food | node `apple_tree` ×4 | buyer `merchant_food` ×15; export `caravan`; food `apple`; food `apple` |
 | `apple_sapling` Apple sapling | resource | node `tree` ×1 | plant `apple_sapling` |
+| `archer_hat_cyan` Archer's hat (cyan) | head | recipe `sew_archer_hat_cyan` ×1 | equip `head` |
+| `archer_hat_green` Archer's hat (green) | head | recipe `sew_archer_hat_green` ×1 | equip `head` |
+| `archer_hat_yellow` Archer's hat (yellow) | head | recipe `sew_archer_hat_yellow` ×1 | equip `head` |
+| `assassin_bandana_black` Assassin's bandana (black) | head | recipe `sew_assassin_bandana_black` ×1 | equip `head` |
+| `assassin_bandana_green` Assassin's bandana (green) | head | recipe `sew_assassin_bandana_green` ×1 | equip `head` |
+| `assassin_bandana_red` Assassin's bandana (red) | head | recipe `sew_assassin_bandana_red` ×1 | equip `head` |
 | `axe` Axe | tool | recipe `forge_axe` ×1; start_stock `start_0` | buyer `merchant_goods` ×4; equip `tool`; export `caravan`; quest `a_new_axe` ×1; tool `tree` |
 | `blue_berry_cutting` Blue berry cutting | resource | import `caravan` | buyer `merchant_food` ×4; export `caravan`; plant `blue_berry_cutting` |
 | `blueberries` Blueberries | food | node `blue_berry_bush` ×2 | buyer `merchant_food` ×15; export `caravan`; food `blueberries` |
+| `boar_tusk` Boar tusk | resource | node `wild_boar` ×2 | buyer `merchant_goods` ×10; export `caravan`; recipe `forge_dragon_knight_helm` ×2; recipe `forge_mongol_khaan_armor` ×2; recipe `forge_viking_warrior_armor` ×2 |
 | `bread` Loaf of bread | food | recipe `bake_egg_bread` ×2; recipe `knead_flatbread` ×1; start_kit `player_start_items` ×1 | buyer `merchant_food` ×15; buyer `tavernkeeper` ×12; export `caravan`; food `bread` |
+| `bronze_armor` Bronze armour | armor | recipe `forge_bronze_armor` ×1 | equip `armor` |
 | `building_block` Building block | resource | recipe `dress_stone` ×2 | building `apothecary` ×15; building `bakehouse` ×30; building `carpentry` ×15; building `house` ×20; building `kitchen` ×20; building `quarters` ×15; building `room` ×6; building `smithy` ×30; building `storage` ×10; buyer `merchant_raw` ×20 |
 | `carrot` Carrot | food | node `player_field` ×3 | buyer `cook` ×20; buyer `merchant_food` ×20; export `caravan`; food `carrot` |
 | `carrot_seed` Carrot seed | resource | import `caravan`; node `player_field` ×1 | plant `carrot_seed`; plant `carrot_seed` |
@@ -568,48 +1732,85 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `cart_wheel` Cart wheel | resource | recipe `make_cart_wheel` ×1 | recipe `build_handcart` ×2; recipe `build_minecart` ×4 |
 | `cheese` Cheese | food | recipe `press_cheese` ×1 | buyer `cook` ×10; buyer `merchant_food` ×10; buyer `tavernkeeper` ×8; export `caravan`; food `cheese` |
 | `chisel` Iron chisel | tool | recipe `forge_chisel` ×1 | buyer `merchant_goods` ×2; equip `tool`; export `caravan` |
-| `coal` Coal | resource | import `caravan`; node `coal_seam` ×1; start_stock `start_0` | buyer `merchant_raw` ×20; buyer `smith` ×30; fuel `coal`; recipe `forge_cart_ironwork` ×1; recipe `smelt_copper` ×1; recipe `smelt_gold` ×1; recipe `smelt_iron` ×1 |
-| `copper_bar` Copper bar | resource | recipe `smelt_copper` ×1 | buyer `merchant_goods` ×6; export `caravan`; recipe `forge_amulet` ×1; recipe `forge_copper_ring` ×1; recipe `forge_copper_sword` ×2 |
+| `coal` Coal | resource | import `caravan`; node `coal_seam` ×1; start_stock `start_0` | buyer `merchant_raw` ×20; buyer `smith` ×30; fuel `coal`; recipe `forge_bronze_armor` ×1; recipe `forge_cart_ironwork` ×1; recipe `forge_knight_helm` ×1; recipe `forge_soldier_bronze_helm_blue` ×1; recipe `forge_soldier_bronze_helm_red` ×1; recipe `forge_soldier_steel_helm_blue` ×2; recipe `forge_soldier_steel_helm_red` ×2; recipe `forge_steel_armor` ×3; recipe `smelt_copper` ×1; recipe `smelt_gold` ×1; recipe `smelt_iron` ×1 |
+| `copper_bar` Copper bar | resource | recipe `smelt_copper` ×1 | buyer `merchant_goods` ×6; export `caravan`; recipe `forge_amulet` ×1; recipe `forge_bronze_armor` ×5; recipe `forge_copper_ring` ×1; recipe `forge_copper_sword` ×2; recipe `forge_mongol_cherbi_armor` ×2; recipe `forge_mongol_khaan_armor` ×2; recipe `forge_mongol_kheshig_armor` ×2; recipe `forge_mongol_noyon_armor` ×2; recipe `forge_mongol_noyon_helm` ×1; recipe `forge_soldier_bronze_helm_blue` ×2; recipe `forge_soldier_bronze_helm_red` ×2 |
 | `copper_ore` Copper ore | resource | import `caravan`; node `copper_seam` ×1 | buyer `merchant_raw` ×15; buyer `smith` ×20; recipe `smelt_copper` ×2 |
 | `copper_ring` Copper ring | ring | recipe `forge_copper_ring` ×1 | buyer `merchant_goods` ×3; equip `ring`; export `caravan` |
 | `copper_sword` Copper sword | weapon | recipe `forge_copper_sword` ×1; start_stock `start_0`; start_stock `start_3` | buyer `merchant_goods` ×3; equip `weapon`; export `caravan` |
+| `daimyo_helm` Daimyo helm | head | recipe `forge_daimyo_helm` ×1 | equip `head` |
+| `dark_knight_helm` Dark knight helm | head | recipe `forge_dark_knight_helm` ×1 | equip `head` |
 | `dirt` Dirt | resource | node `open_pit` ×1 | backfill `dirt`; storage `dirt` |
+| `dragon_knight_helm` Dragon knight helm | head | recipe `forge_dragon_knight_helm` ×1 | equip `head` |
 | `egg` Egg | food | node `player_pen` ×1 | buyer `cook` ×20; buyer `merchant_food` ×20; export `caravan`; food `egg`; recipe `bake_egg_bread` ×1 |
-| `feather` Feathers | resource | node `chicken_pen` ×2; node `wild_bird` ×1 | buyer `merchant_goods` ×20; export `caravan` |
-| `fine_cloth` Fine cloth | resource | import `caravan` | **none** |
+| `esper_hat_blue` Esper hat (blue) | head | recipe `sew_esper_hat_blue` ×1 | equip `head` |
+| `esper_hat_red` Esper hat (red) | head | recipe `sew_esper_hat_red` ×1 | equip `head` |
+| `esper_hood_cyan` Esper hood (cyan) | head | recipe `sew_esper_hood_cyan` ×1 | equip `head` |
+| `esper_hood_red` Esper hood (red) | head | recipe `sew_esper_hood_red` ×1 | equip `head` |
+| `feather` Feathers | resource | node `chicken_pen` ×2; node `wild_bird` ×1 | buyer `merchant_goods` ×20; export `caravan`; recipe `forge_mongol_cherbi_helm` ×2; recipe `forge_mongol_khaan_helm` ×2; recipe `forge_valkyrie_helm` ×4; recipe `sew_archer_hat_cyan` ×1; recipe `sew_archer_hat_green` ×1; recipe `sew_archer_hat_yellow` ×1; recipe `sew_french_hunter_coat` ×2; recipe `sew_hunter_hat_blue` ×2; recipe `sew_hunter_hat_indigo` ×2; recipe `sew_hunter_hat_red` ×2; recipe `sew_musketeer_coat_purple` ×2; recipe `sew_musketeer_coat_red` ×2; recipe `sew_musketeer_hat_purple` ×2; recipe `sew_musketeer_hat_red` ×2; recipe `sew_ranger_hat_cyan` ×1; recipe `sew_ranger_hat_green` ×1; recipe `sew_ranger_hat_yellow` ×1; recipe `sew_yabusame_robe_blue` ×4; recipe `sew_yabusame_robe_red` ×4; recipe `sew_yabusame_straw_hat_blue` ×1; recipe `sew_yabusame_straw_hat_red` ×1 |
+| `fine_cloth` Fine cloth | resource | import `caravan` | recipe `forge_daimyo_helm` ×2; recipe `forge_mongol_noyon_armor` ×1; recipe `forge_paladin_helm` ×1; recipe `forge_samurai_armor_lime` ×3; recipe `forge_samurai_armor_purple` ×3; recipe `forge_samurai_helm` ×1; recipe `forge_shogun_helm_green` ×2; recipe `forge_shogun_helm_purple` ×2; recipe `sew_esper_hat_blue` ×2; recipe `sew_esper_hat_red` ×2; recipe `sew_esper_hood_cyan` ×2; recipe `sew_esper_hood_red` ×2; recipe `sew_french_hunter_coat` ×3; recipe `sew_high_mage_hat_cyan` ×2; recipe `sew_high_mage_hat_red` ×2; recipe `sew_high_mage_hat_yellow` ×2; recipe `sew_hunter_hat_blue` ×1; recipe `sew_hunter_hat_indigo` ×1; recipe `sew_hunter_hat_red` ×1; recipe `sew_mage_hat_cyan` ×2; recipe `sew_mage_hat_red` ×2; recipe `sew_mage_hat_yellow` ×2; recipe `sew_musketeer_coat_purple` ×3; recipe `sew_musketeer_coat_red` ×3; recipe `sew_musketeer_hat_purple` ×1; recipe `sew_musketeer_hat_red` ×1; recipe `sew_ninja_garb` ×2; recipe `sew_ronin_robe_blue` ×2; recipe `sew_ronin_robe_red` ×2; recipe `sew_sorcerer_hood_cyan` ×2; recipe `sew_sorcerer_hood_red` ×2; recipe `sew_traveller_robe` ×1; recipe `sew_yabusame_robe_blue` ×2; recipe `sew_yabusame_robe_red` ×2 |
 | `flower` Wild flower | resource | node `flower_patch` ×1; node `player_field` ×2 | buyer `sage` ×20; recipe `brew_healing_tonic` ×5; recipe `brew_poultice` ×2; recipe `brew_tonic` ×3 |
 | `flower_seed` Wild flower seed | resource | import `caravan` | buyer `merchant_food` ×4; export `caravan`; plant `flower_seed` |
-| `gold_bar` Gold bar | resource | recipe `smelt_gold` ×1 | buyer `merchant_goods` ×4; export `caravan`; recipe `forge_gold_ring` ×1 |
+| `french_hunter_coat` Hunter's coat | armor | recipe `sew_french_hunter_coat` ×1 | equip `armor` |
+| `gold_armor` Gold armour | armor | recipe `forge_gold_armor` ×1 | equip `armor` |
+| `gold_bar` Gold bar | resource | recipe `smelt_gold` ×1 | buyer `merchant_goods` ×4; export `caravan`; recipe `forge_daimyo_helm` ×1; recipe `forge_dark_knight_helm` ×1; recipe `forge_dragon_knight_helm` ×1; recipe `forge_gold_armor` ×4; recipe `forge_gold_ring` ×1; recipe `forge_mongol_khaan_armor` ×2; recipe `forge_mongol_khaan_helm` ×1; recipe `forge_paladin_helm` ×1; recipe `forge_shogun_helm_green` ×1; recipe `forge_shogun_helm_purple` ×1; recipe `forge_soldier_gold_helm_blue` ×1; recipe `forge_soldier_gold_helm_red` ×1; recipe `forge_valkyrie_helm` ×1; recipe `forge_viking_jarl_armor` ×2; recipe `forge_viking_jarl_helm` ×1; recipe `sew_esper_hat_blue` ×1; recipe `sew_esper_hat_red` ×1; recipe `sew_esper_hood_cyan` ×1; recipe `sew_esper_hood_red` ×1; recipe `sew_high_mage_hat_cyan` ×1; recipe `sew_high_mage_hat_red` ×1; recipe `sew_high_mage_hat_yellow` ×1; recipe `sew_mage_hat_cyan` ×1; recipe `sew_mage_hat_red` ×1; recipe `sew_mage_hat_yellow` ×1; recipe `sew_sorcerer_hood_cyan` ×1; recipe `sew_sorcerer_hood_red` ×1 |
 | `gold_ore` Gold ore | resource | node `gold_seam` ×1 | buyer `smith` ×10; recipe `smelt_gold` ×2 |
 | `gold_ring` Gold ring | ring | recipe `forge_gold_ring` ×1 | buyer `merchant_goods` ×2; equip `ring`; export `caravan` |
+| `grunt_helm` Grunt helm | head | recipe `forge_grunt_helm` ×1 | equip `head` |
 | `hammer` Smith's hammer | tool | recipe `forge_hammer` ×1; start_stock `start_0` | buyer `merchant_goods` ×2; equip `tool`; export `caravan`; tool `hammer` |
 | `handcart` Handcart | resource | recipe `build_handcart` ×1 | **none** |
 | `healing_tonic` Healing tonic | medicine | recipe `brew_healing_tonic` ×1 | recipe `brew_strong_tonic` ×2 |
 | `herb_seed` Herb seed | resource | import `caravan`; node `player_field` ×1 | plant `herb_seed`; plant `herb_seed` |
 | `herbal_poultice` Herbal poultice | medicine | recipe `brew_poultice` ×1 | buyer `merchant_goods` ×8; export `caravan` |
 | `herbal_tonic` Herbal tonic | food | recipe `brew_tonic` ×1 | food `herbal_tonic` |
-| `hide` Hide | resource | node `cow_pen` ×1; node `horse_pen` ×1; node `pig_pen` ×1; node `sheep_pen` ×1; node `wild_bear` ×2; node `wild_boar` ×1; node `wild_deer` ×1; node `wild_fox` ×1; node `wild_wolf` ×1; start_stock `start_0` | buyer `merchant_goods` ×6; buyer `tanner` ×15; export `caravan`; quest `the_tanners_craft` ×2; recipe `tan_leather` ×1 |
+| `hide` Hide | resource | node `cow_pen` ×1; node `horse_pen` ×1; node `pig_pen` ×1; node `sheep_pen` ×1; node `wild_bear` ×2; node `wild_boar` ×1; node `wild_deer` ×1; node `wild_fox` ×1; node `wild_wolf` ×1; start_stock `start_0` | buyer `merchant_goods` ×6; buyer `tanner` ×15; export `caravan`; quest `the_tanners_craft` ×2; recipe `forge_mongol_khaan_helm` ×2; recipe `forge_mongol_kheshig_armor` ×2; recipe `forge_mongol_kheshig_helm` ×1; recipe `forge_mongol_noyon_helm` ×1; recipe `forge_viking_jarl_armor` ×4; recipe `forge_viking_karl_armor` ×4; recipe `forge_viking_warrior_armor` ×3; recipe `tan_leather` ×1 |
+| `high_mage_hat_cyan` High mage hat (cyan) | head | recipe `sew_high_mage_hat_cyan` ×1 | equip `head` |
+| `high_mage_hat_red` High mage hat (red) | head | recipe `sew_high_mage_hat_red` ×1 | equip `head` |
+| `high_mage_hat_yellow` High mage hat (yellow) | head | recipe `sew_high_mage_hat_yellow` ×1 | equip `head` |
+| `hunter_hat_blue` Hunter's hat (blue) | head | recipe `sew_hunter_hat_blue` ×1 | equip `head` |
+| `hunter_hat_indigo` Hunter's hat (indigo) | head | recipe `sew_hunter_hat_indigo` ×1 | equip `head` |
+| `hunter_hat_red` Hunter's hat (red) | head | recipe `sew_hunter_hat_red` ×1 | equip `head` |
 | `iron_armor` Iron armour | armor | recipe `forge_iron_armor` ×1 | buyer `merchant_goods` ×2; equip `armor`; export `caravan` |
-| `iron_bar` Iron bar | resource | recipe `smelt_iron` ×1; start_stock `start_0` | building `smithy` ×4; buyer `merchant_goods` ×6; export `caravan`; manor_job `iron_bar`; recipe `craft_plough` ×2; recipe `forge_axe` ×2; recipe `forge_cart_axle` ×1; recipe `forge_cart_ironwork` ×1; recipe `forge_chisel` ×1; recipe `forge_hammer` ×1; recipe `forge_iron_armor` ×5; recipe `forge_iron_helmet` ×2; recipe `forge_iron_sword` ×3; recipe `forge_lockpicks` ×1; recipe `forge_nails` ×1; recipe `forge_padlock` ×2; recipe `forge_pickaxe` ×2; recipe `forge_prospecting_kit` ×1; recipe `forge_shovel_blade` ×1 |
+| `iron_bar` Iron bar | resource | recipe `smelt_iron` ×1; start_stock `start_0` | building `smithy` ×4; buyer `merchant_goods` ×6; export `caravan`; manor_job `iron_bar`; recipe `craft_plough` ×2; recipe `forge_axe` ×2; recipe `forge_cart_axle` ×1; recipe `forge_cart_ironwork` ×1; recipe `forge_chisel` ×1; recipe `forge_daimyo_helm` ×2; recipe `forge_dark_knight_helm` ×3; recipe `forge_dragon_knight_helm` ×3; recipe `forge_gold_armor` ×2; recipe `forge_grunt_helm` ×1; recipe `forge_hammer` ×1; recipe `forge_iron_armor` ×5; recipe `forge_iron_helmet` ×2; recipe `forge_iron_sword` ×3; recipe `forge_knight_helm` ×3; recipe `forge_lockpicks` ×1; recipe `forge_mongol_cherbi_helm` ×1; recipe `forge_mongol_khaan_armor` ×1; recipe `forge_mongol_khaan_helm` ×2; recipe `forge_mongol_kheshig_helm` ×2; recipe `forge_mongol_noyon_armor` ×1; recipe `forge_mongol_noyon_helm` ×1; recipe `forge_nails` ×1; recipe `forge_padlock` ×2; recipe `forge_paladin_helm` ×3; recipe `forge_pickaxe` ×2; recipe `forge_prospecting_kit` ×1; recipe `forge_samurai_armor_lime` ×3; recipe `forge_samurai_armor_purple` ×3; recipe `forge_samurai_helm` ×2; recipe `forge_scout_helm` ×2; recipe `forge_shogun_helm_green` ×2; recipe `forge_shogun_helm_purple` ×2; recipe `forge_shovel_blade` ×1; recipe `forge_soldier_gold_helm_blue` ×1; recipe `forge_soldier_gold_helm_red` ×1; recipe `forge_soldier_iron_helm_blue` ×2; recipe `forge_soldier_iron_helm_red` ×2; recipe `forge_soldier_steel_helm_blue` ×3; recipe `forge_soldier_steel_helm_red` ×3; recipe `forge_steel_armor` ×6; recipe `forge_valkyrie_helm` ×2; recipe `forge_viking_jarl_armor` ×3; recipe `forge_viking_jarl_helm` ×2; recipe `forge_viking_karl_armor` ×3; recipe `forge_viking_karl_helm` ×2; recipe `forge_viking_warrior_armor` ×3; recipe `forge_viking_warrior_helm_red` ×2; recipe `forge_viking_warrior_helm_yellow` ×2 |
 | `iron_helmet` Iron helmet | head | recipe `forge_iron_helmet` ×1 | buyer `merchant_goods` ×2; equip `head`; export `caravan` |
 | `iron_ore` Iron ore | resource | import `caravan`; node `iron_seam` ×1; start_stock `start_0` | buyer `merchant_raw` ×20; buyer `smith` ×30; quest `ore_for_the_forge` ×6; quest `work_the_mine` ×6; recipe `smelt_iron` ×2 |
 | `iron_sword` Iron sword | weapon | recipe `forge_iron_sword` ×1; start_stock `start_0` | buyer `merchant_goods` ×3; equip `weapon`; export `caravan` |
 | `jewellery` Jewellery | resource | import `caravan` | **none** |
+| `knight_helm` Knight helm | head | recipe `forge_knight_helm` ×1 | equip `head` |
 | `ladder` Ladder | resource | recipe `make_ladder` ×1 | building `ladder` |
-| `leather` Leather | resource | recipe `tan_leather` ×1; recipe `tan_pelts` ×1; start_stock `start_0` | buyer `merchant_goods` ×6; buyer `smith` ×6; export `caravan`; recipe `forge_amulet` ×1; recipe `forge_iron_armor` ×2; recipe `forge_iron_helmet` ×1; recipe `forge_iron_sword` ×1; recipe `forge_prospecting_kit` ×1; recipe `leather_armor` ×4; recipe `leather_cap` ×2 |
+| `leather` Leather | resource | recipe `tan_leather` ×1; recipe `tan_pelts` ×1; start_stock `start_0` | buyer `merchant_goods` ×6; buyer `smith` ×6; export `caravan`; recipe `forge_amulet` ×1; recipe `forge_bronze_armor` ×2; recipe `forge_dark_knight_helm` ×1; recipe `forge_dragon_knight_helm` ×1; recipe `forge_gold_armor` ×2; recipe `forge_grunt_helm` ×1; recipe `forge_iron_armor` ×2; recipe `forge_iron_helmet` ×1; recipe `forge_iron_sword` ×1; recipe `forge_knight_helm` ×1; recipe `forge_mongol_cherbi_armor` ×4; recipe `forge_mongol_cherbi_helm` ×1; recipe `forge_mongol_khaan_armor` ×4; recipe `forge_mongol_khaan_helm` ×1; recipe `forge_mongol_kheshig_armor` ×4; recipe `forge_mongol_noyon_armor` ×4; recipe `forge_paladin_helm` ×1; recipe `forge_prospecting_kit` ×1; recipe `forge_samurai_armor_lime` ×1; recipe `forge_samurai_armor_purple` ×1; recipe `forge_scout_helm` ×1; recipe `forge_soldier_bronze_helm_blue` ×1; recipe `forge_soldier_bronze_helm_red` ×1; recipe `forge_soldier_gold_helm_blue` ×1; recipe `forge_soldier_gold_helm_red` ×1; recipe `forge_soldier_iron_helm_blue` ×1; recipe `forge_soldier_iron_helm_red` ×1; recipe `forge_soldier_steel_helm_blue` ×1; recipe `forge_soldier_steel_helm_red` ×1; recipe `forge_steel_armor` ×2; recipe `forge_viking_jarl_armor` ×1; recipe `forge_viking_jarl_helm` ×1; recipe `forge_viking_warrior_armor` ×1; recipe `forge_viking_warrior_helm_red` ×1; recipe `forge_viking_warrior_helm_yellow` ×1; recipe `leather_armor` ×4; recipe `leather_cap` ×2; recipe `sew_french_hunter_coat` ×2; recipe `sew_hunter_hat_blue` ×1; recipe `sew_hunter_hat_indigo` ×1; recipe `sew_hunter_hat_red` ×1; recipe `sew_musketeer_coat_purple` ×2; recipe `sew_musketeer_coat_red` ×2; recipe `sew_musketeer_hat_purple` ×1; recipe `sew_musketeer_hat_red` ×1; recipe `sew_ninja_garb` ×1; recipe `sew_ronin_robe_blue` ×2; recipe `sew_ronin_robe_red` ×2; recipe `sew_yabusame_robe_blue` ×2; recipe `sew_yabusame_robe_red` ×2 |
 | `leather_armor` Leather armour | armor | recipe `leather_armor` ×1; start_stock `start_0` | buyer `merchant_goods` ×2; equip `armor`; export `caravan` |
 | `leather_cap` Leather cap | head | recipe `leather_cap` ×1 | buyer `merchant_goods` ×3; equip `head`; export `caravan` |
 | `linen_bandage` Linen bandage | medicine | recipe `sew_bandages` ×3; start_kit `player_start_items` ×2 | buyer `sage` ×8 |
 | `lockpick` Lockpick | resource | recipe `forge_lockpicks` ×3 | tool `lockpick` |
 | `log` Log | resource | node `tree` ×4; start_stock `start_0` | building `apothecary` ×8; building `bakehouse` ×10; building `carpentry` ×15; building `house` ×10; building `kitchen` ×8; building `quarters` ×10; building `room` ×6; building `smithy` ×10; building `storage` ×10; buyer `carpenter` ×30; buyer `cook` ×10; buyer `merchant_raw` ×20; export `caravan`; fuel `log`; fuel `log`; manor_job `log`; quest `wood_for_the_hearth` ×5; quest `work_the_woods` ×6; recipe `make_mallet` ×1; recipe `make_timber_support` ×1; recipe `roast_meat` ×1; recipe `saw_planks` ×1 |
+| `mage_hat_cyan` Mage hat (cyan) | head | recipe `sew_mage_hat_cyan` ×1 | equip `head` |
+| `mage_hat_red` Mage hat (red) | head | recipe `sew_mage_hat_red` ×1 | equip `head` |
+| `mage_hat_yellow` Mage hat (yellow) | head | recipe `sew_mage_hat_yellow` ×1 | equip `head` |
 | `mallet` Mallet | tool | recipe `make_mallet` ×1 | buyer `merchant_goods` ×2; equip `tool`; export `caravan` |
 | `meat` Raw meat | resource | node `chicken_pen` ×1; node `cow_pen` ×6; node `horse_pen` ×6; node `pig_pen` ×4; node `sheep_pen` ×3; node `wild_bear` ×6; node `wild_boar` ×4; node `wild_deer` ×4; node `wild_fox` ×1; node `wild_rabbit` ×1; node `wild_wolf` ×2; start_stock `start_0` | buyer `cook` ×15; buyer `merchant_food` ×10; export `caravan`; recipe `roast_meat` ×1 |
 | `milk` Milk | food | node `player_pen` ×2 | buyer `cook` ×12; buyer `merchant_food` ×10; export `caravan`; food `milk`; recipe `press_cheese` ×3 |
 | `minecart` Minecart | resource | recipe `build_minecart` ×1 | **none** |
+| `mongol_cherbi_armor` Mongol cherbi armour | armor | recipe `forge_mongol_cherbi_armor` ×1 | equip `armor` |
+| `mongol_cherbi_helm` Mongol cherbi helm | head | recipe `forge_mongol_cherbi_helm` ×1 | equip `head` |
+| `mongol_khaan_armor` Mongol khaan armour | armor | recipe `forge_mongol_khaan_armor` ×1 | equip `armor` |
+| `mongol_khaan_helm` Mongol khaan helm | head | recipe `forge_mongol_khaan_helm` ×1 | equip `head` |
+| `mongol_kheshig_armor` Mongol kheshig armour | armor | recipe `forge_mongol_kheshig_armor` ×1 | equip `armor` |
+| `mongol_kheshig_helm` Mongol kheshig helm | head | recipe `forge_mongol_kheshig_helm` ×1 | equip `head` |
+| `mongol_noyon_armor` Mongol noyon armour | armor | recipe `forge_mongol_noyon_armor` ×1 | equip `armor` |
+| `mongol_noyon_helm` Mongol noyon helm | head | recipe `forge_mongol_noyon_helm` ×1 | equip `head` |
+| `musketeer_coat_purple` Musketeer's coat (purple) | armor | recipe `sew_musketeer_coat_purple` ×1 | equip `armor` |
+| `musketeer_coat_red` Musketeer's coat (red) | armor | recipe `sew_musketeer_coat_red` ×1 | equip `armor` |
+| `musketeer_hat_purple` Musketeer's hat (purple) | head | recipe `sew_musketeer_hat_purple` ×1 | equip `head` |
+| `musketeer_hat_red` Musketeer's hat (red) | head | recipe `sew_musketeer_hat_red` ×1 | equip `head` |
 | `nails` Nails | resource | recipe `forge_nails` ×12 | building `nails`; buyer `merchant_goods` ×24; export `caravan`; recipe `make_ladder` ×6; recipe `make_track_section` ×4 |
+| `ninja_bandana_black` Ninja bandana (black) | head | recipe `sew_ninja_bandana_black` ×1 | equip `head` |
+| `ninja_bandana_blue` Ninja bandana (blue) | head | recipe `sew_ninja_bandana_blue` ×1 | equip `head` |
+| `ninja_bandana_red` Ninja bandana (red) | head | recipe `sew_ninja_bandana_red` ×1 | equip `head` |
+| `ninja_garb` Ninja garb | armor | recipe `sew_ninja_garb` ×1 | equip `armor` |
 | `oak_sapling` Oak sapling | resource | node `tree` ×1 | plant `oak_sapling` |
 | `ore_sample` Rock sample | resource | node `prospect_clue` ×1 | assay `ore_sample` |
 | `padlock` Padlock | resource | recipe `forge_padlock` ×1 | tool `padlock` |
+| `paladin_helm` Paladin helm | head | recipe `forge_paladin_helm` ×1 | equip `head` |
 | `pickaxe` Pickaxe | tool | recipe `forge_pickaxe` ×1; start_stock `start_0` | buyer `merchant_goods` ×4; equip `tool`; export `caravan`; tool `boulder`; tool `coal_seam`; tool `copper_seam`; tool `gold_seam`; tool `iron_seam`; tool `open_pit`; tool `stone_seam`; tool `tunnel_rock` |
 | `pine_sapling` Pine sapling | resource | node `tree` ×1 | plant `pine_sapling` |
 | `plain_clothes` Plain clothes | armor | start_kit `player_start_items` ×1 | equip `armor` |
@@ -620,28 +1821,75 @@ Raw materials for one unit, through the recipes (a recipe making several is shar
 | `pottage` Pottage | food | recipe `cook_pottage` ×6; start_stock `start_0`; start_stock `start_1` | buyer `merchant_food` ×20; buyer `tavernkeeper` ×60; export `caravan`; food `pottage`; quest `food_for_the_family` ×3 |
 | `prospecting_kit` Prospector's kit | tool | recipe `forge_prospecting_kit` ×1 | equip `tool`; tool `prospect_clue` |
 | `rabbit_pelt` Rabbit pelt | resource | node `wild_rabbit` ×1 | buyer `merchant_goods` ×6; buyer `tanner` ×15; export `caravan`; recipe `tan_pelts` ×2 |
+| `ranger_hat_cyan` Ranger's hat (cyan) | head | recipe `sew_ranger_hat_cyan` ×1 | equip `head` |
+| `ranger_hat_green` Ranger's hat (green) | head | recipe `sew_ranger_hat_green` ×1 | equip `head` |
+| `ranger_hat_yellow` Ranger's hat (yellow) | head | recipe `sew_ranger_hat_yellow` ×1 | equip `head` |
 | `red_berries` Red berries | food | node `red_berry_bush` ×2 | buyer `merchant_food` ×15; export `caravan`; food `red_berries` |
 | `red_berry_cutting` Red berry cutting | resource | import `caravan` | buyer `merchant_food` ×4; export `caravan`; plant `red_berry_cutting` |
 | `roast_meat` Roast meat | food | recipe `roast_meat` ×2; start_stock `start_0` | buyer `merchant_food` ×10; buyer `tavernkeeper` ×20; export `caravan`; food `roast_meat` |
+| `rogue_hat` Rogue's hat | head | recipe `sew_rogue_hat` ×1 | equip `head` |
+| `ronin_robe_blue` Ronin's robe (blue) | armor | recipe `sew_ronin_robe_blue` ×1 | equip `armor` |
+| `ronin_robe_red` Ronin's robe (red) | armor | recipe `sew_ronin_robe_red` ×1 | equip `armor` |
+| `ronin_straw_hat_blue` Ronin's straw hat (blue) | head | recipe `sew_ronin_straw_hat_blue` ×1 | equip `head` |
+| `ronin_straw_hat_red` Ronin's straw hat (red) | head | recipe `sew_ronin_straw_hat_red` ×1 | equip `head` |
 | `rotten_apple` Rotten apple | food | start_kit `player_start_items` ×1 | food `rotten_apple` |
 | `rubble` Rubble | resource | recipe `dress_stone` ×1 | buyer `merchant_raw` ×20; manor_job `rubble` |
 | `rusty_axe` Rusty axe | tool | start_kit `player_start_items` ×1 | equip `tool`; tool `tree` |
 | `rusty_pickaxe` Rusty pickaxe | tool | start_kit `player_start_items` ×1 | equip `tool`; tool `boulder`; tool `coal_seam`; tool `copper_seam`; tool `gold_seam`; tool `iron_seam`; tool `open_pit`; tool `stone_seam`; tool `tunnel_rock` |
 | `rusty_sword` Rusty sword | weapon | start_kit `player_start_items` ×1 | equip `weapon` |
+| `samurai_armor_lime` Samurai armour (green) | armor | recipe `forge_samurai_armor_lime` ×1 | equip `armor` |
+| `samurai_armor_purple` Samurai armour (purple) | armor | recipe `forge_samurai_armor_purple` ×1 | equip `armor` |
+| `samurai_helm` Samurai helm | head | recipe `forge_samurai_helm` ×1 | equip `head` |
+| `scout_helm` Scout helm | head | recipe `forge_scout_helm` ×1 | equip `head` |
+| `shogun_helm_green` Shogun helm (green) | head | recipe `forge_shogun_helm_green` ×1 | equip `head` |
+| `shogun_helm_purple` Shogun helm (purple) | head | recipe `forge_shogun_helm_purple` ×1 | equip `head` |
 | `shovel` Shovel | tool | recipe `assemble_shovel` ×1 | buyer `merchant_goods` ×2; equip `tool`; export `caravan` |
 | `shovel_blade` Shovel blade | resource | recipe `forge_shovel_blade` ×1 | buyer `carpenter` ×1; recipe `assemble_shovel` ×1 |
 | `shovel_haft` Shovel haft | resource | recipe `make_shovel_haft` ×1 | recipe `assemble_shovel` ×1 |
+| `soldier_bronze_helm_blue` Soldier's bronze helm (blue plume) | head | recipe `forge_soldier_bronze_helm_blue` ×1 | equip `head` |
+| `soldier_bronze_helm_red` Soldier's bronze helm (red plume) | head | recipe `forge_soldier_bronze_helm_red` ×1 | equip `head` |
+| `soldier_gold_helm_blue` Soldier's gold helm (blue plume) | head | recipe `forge_soldier_gold_helm_blue` ×1 | equip `head` |
+| `soldier_gold_helm_red` Soldier's gold helm (red plume) | head | recipe `forge_soldier_gold_helm_red` ×1 | equip `head` |
+| `soldier_iron_helm_blue` Soldier's iron helm (blue plume) | head | recipe `forge_soldier_iron_helm_blue` ×1 | equip `head` |
+| `soldier_iron_helm_red` Soldier's iron helm (red plume) | head | recipe `forge_soldier_iron_helm_red` ×1 | equip `head` |
+| `soldier_steel_helm_blue` Soldier's steel helm (blue plume) | head | recipe `forge_soldier_steel_helm_blue` ×1 | equip `head` |
+| `soldier_steel_helm_red` Soldier's steel helm (red plume) | head | recipe `forge_soldier_steel_helm_red` ×1 | equip `head` |
+| `sorcerer_hood_cyan` Sorcerer hood (cyan) | head | recipe `sew_sorcerer_hood_cyan` ×1 | equip `head` |
+| `sorcerer_hood_red` Sorcerer hood (red) | head | recipe `sew_sorcerer_hood_red` ×1 | equip `head` |
 | `spice` Spices | resource | import `caravan` | **none** |
 | `spoil` Spoil | resource | node `open_pit` ×1; node `tunnel_rock` ×1 | backfill `spoil`; backfill `spoil`; storage `spoil` |
+| `stalker_hood_black` Stalker's hood (black) | head | recipe `sew_stalker_hood_black` ×1 | equip `head` |
+| `stalker_hood_purple` Stalker's hood (purple) | head | recipe `sew_stalker_hood_purple` ×1 | equip `head` |
+| `stalker_hood_red` Stalker's hood (red) | head | recipe `sew_stalker_hood_red` ×1 | equip `head` |
+| `steel_armor` Steel armour | armor | recipe `forge_steel_armor` ×1 | equip `armor` |
 | `stone` Stone | resource | import `caravan`; node `boulder` ×1; node `open_pit` ×1; node `stone_seam` ×1; node `tunnel_rock` ×1; start_stock `start_0` | building `stone`; buyer `merchant_raw` ×40; buyer `stonecutter` ×12; manor_job `stone`; recipe `dress_stone` ×3 |
 | `strong_healing_tonic` Strong healing tonic | medicine | recipe `brew_strong_tonic` ×1 | **none** |
+| `thief_bandana_green` Thief's bandana (green) | head | recipe `sew_thief_bandana_green` ×1 | equip `head` |
+| `thief_bandana_lime` Thief's bandana (lime) | head | recipe `sew_thief_bandana_lime` ×1 | equip `head` |
+| `thief_bandana_red` Thief's bandana (red) | head | recipe `sew_thief_bandana_red` ×1 | equip `head` |
 | `timber_support` Timber support | resource | recipe `make_timber_support` ×1 | building `timber_support` |
 | `topsoil` Topsoil | resource | node `open_pit` ×1 | backfill `topsoil`; storage `topsoil` |
 | `track_section` Track section | resource | recipe `make_track_section` ×1 | building `track_section` |
-| `wheat` Wheat | resource | node `player_field` ×3; node `wheat_field` ×6; start_stock `start_0`; start_stock `start_1`; start_stock `start_4` | buyer `cook` ×60; buyer `merchant_food` ×20; export `caravan`; feed `wheat`; food `wheat`; granary `wheat`; home_cooking `wheat`; quest `work_the_harvest` ×24; recipe `bake_egg_bread` ×2; recipe `brew_ale` ×3; recipe `cook_pottage` ×2; recipe `knead_flatbread` ×3 |
+| `traveller_robe` Traveller's robe | armor | recipe `sew_traveller_robe` ×1 | equip `armor` |
+| `traveller_straw_hat` Traveller's straw hat | head | recipe `sew_traveller_straw_hat` ×1 | equip `head` |
+| `traveller_straw_hat_cyan` Traveller's straw hat (cyan) | head | recipe `sew_traveller_straw_hat_cyan` ×1 | equip `head` |
+| `valkyrie_helm` Valkyrie helm | head | recipe `forge_valkyrie_helm` ×1 | equip `head` |
+| `viking_jarl_armor` Viking jarl armour | armor | recipe `forge_viking_jarl_armor` ×1 | equip `armor` |
+| `viking_jarl_helm` Viking jarl helm | head | recipe `forge_viking_jarl_helm` ×1 | equip `head` |
+| `viking_karl_armor` Viking karl armour | armor | recipe `forge_viking_karl_armor` ×1 | equip `armor` |
+| `viking_karl_helm` Viking karl helm | head | recipe `forge_viking_karl_helm` ×1 | equip `head` |
+| `viking_warrior_armor` Viking warrior armour | armor | recipe `forge_viking_warrior_armor` ×1 | equip `armor` |
+| `viking_warrior_helm_red` Viking warrior helm (red) | head | recipe `forge_viking_warrior_helm_red` ×1 | equip `head` |
+| `viking_warrior_helm_yellow` Viking warrior helm (yellow) | head | recipe `forge_viking_warrior_helm_yellow` ×1 | equip `head` |
+| `villager_straw_hat` Villager's straw hat | head | recipe `sew_villager_straw_hat` ×1 | equip `head` |
+| `wheat` Wheat | resource | node `player_field` ×3; node `wheat_field` ×6; start_stock `start_0`; start_stock `start_1`; start_stock `start_4` | buyer `cook` ×60; buyer `merchant_food` ×20; export `caravan`; feed `wheat`; food `wheat`; granary `wheat`; home_cooking `wheat`; quest `work_the_harvest` ×24; recipe `bake_egg_bread` ×2; recipe `brew_ale` ×3; recipe `cook_pottage` ×2; recipe `knead_flatbread` ×3; recipe `sew_ronin_straw_hat_blue` ×3; recipe `sew_ronin_straw_hat_red` ×3; recipe `sew_traveller_straw_hat` ×3; recipe `sew_traveller_straw_hat_cyan` ×3; recipe `sew_villager_straw_hat` ×3; recipe `sew_yabusame_straw_hat_blue` ×3; recipe `sew_yabusame_straw_hat_red` ×3 |
 | `wheat_seed` Wheat seed | resource | import `caravan`; node `player_field` ×1; start_stock `start_2` | plant `wheat_seed`; plant `wheat_seed` |
 | `wool` Wool | resource | node `player_pen` ×1 | buyer `merchant_goods` ×20; buyer `tanner` ×12; export `caravan`; recipe `weave_cloth` ×2 |
-| `wool_cloth` Woollen cloth | resource | recipe `weave_cloth` ×1 | buyer `merchant_goods` ×10; export `caravan`; recipe `sew_bandages` ×1 |
+| `wool_cloth` Woollen cloth | resource | recipe `weave_cloth` ×1 | buyer `merchant_goods` ×10; export `caravan`; recipe `forge_mongol_cherbi_armor` ×2; recipe `forge_mongol_cherbi_helm` ×1; recipe `forge_mongol_khaan_armor` ×2; recipe `forge_mongol_kheshig_armor` ×2; recipe `forge_mongol_noyon_armor` ×2; recipe `forge_mongol_noyon_helm` ×1; recipe `forge_viking_karl_armor` ×2; recipe `sew_archer_hat_cyan` ×1; recipe `sew_archer_hat_green` ×1; recipe `sew_archer_hat_yellow` ×1; recipe `sew_assassin_bandana_black` ×1; recipe `sew_assassin_bandana_green` ×1; recipe `sew_assassin_bandana_red` ×1; recipe `sew_bandages` ×1; recipe `sew_esper_hat_blue` ×1; recipe `sew_esper_hat_red` ×1; recipe `sew_esper_hood_cyan` ×1; recipe `sew_esper_hood_red` ×1; recipe `sew_high_mage_hat_cyan` ×1; recipe `sew_high_mage_hat_red` ×1; recipe `sew_high_mage_hat_yellow` ×1; recipe `sew_mage_hat_cyan` ×1; recipe `sew_mage_hat_red` ×1; recipe `sew_mage_hat_yellow` ×1; recipe `sew_ninja_bandana_black` ×1; recipe `sew_ninja_bandana_blue` ×1; recipe `sew_ninja_bandana_red` ×1; recipe `sew_ninja_garb` ×2; recipe `sew_ranger_hat_cyan` ×1; recipe `sew_ranger_hat_green` ×1; recipe `sew_ranger_hat_yellow` ×1; recipe `sew_rogue_hat` ×1; recipe `sew_ronin_straw_hat_blue` ×1; recipe `sew_ronin_straw_hat_red` ×1; recipe `sew_sorcerer_hood_cyan` ×1; recipe `sew_sorcerer_hood_red` ×1; recipe `sew_stalker_hood_black` ×1; recipe `sew_stalker_hood_purple` ×1; recipe `sew_stalker_hood_red` ×1; recipe `sew_thief_bandana_green` ×1; recipe `sew_thief_bandana_lime` ×1; recipe `sew_thief_bandana_red` ×1; recipe `sew_traveller_robe` ×2; recipe `sew_traveller_straw_hat_cyan` ×1; recipe `sew_yabusame_straw_hat_blue` ×1; recipe `sew_yabusame_straw_hat_red` ×1 |
+| `yabusame_robe_blue` Yabusame robe (blue) | armor | recipe `sew_yabusame_robe_blue` ×1 | equip `armor` |
+| `yabusame_robe_red` Yabusame robe (red) | armor | recipe `sew_yabusame_robe_red` ×1 | equip `armor` |
+| `yabusame_straw_hat_blue` Yabusame straw hat (blue) | head | recipe `sew_yabusame_straw_hat_blue` ×1 | equip `head` |
+| `yabusame_straw_hat_red` Yabusame straw hat (red) | head | recipe `sew_yabusame_straw_hat_red` ×1 | equip `head` |
 
 ## Code-defined uses and sources
 
@@ -702,7 +1950,7 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 | `stone` | import (source) | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. | `game/scripts/core/npc_brain.gd::_caravan_stone` |
 | `blue_berry_cutting`, `carrot_seed`, `flower_seed`, `herb_seed`, `potato_seed`, `red_berry_cutting`, `wheat_seed` | import (source) | Each caravan visit sells the seed sellers (the food stall) up to caravan_seed_per_visit seed, cuttings and flower seed, the scarcest first, towards this stock, from the merchant's own coins (Build 13 rule 3, MERCH-01). | `game/scripts/core/npc_brain.gd::_caravan_seeds` |
 | `fine_cloth`, `jewellery`, `spice` | import (source) | DVW-B3-LUX: costly goods the traders of Wulstead and Higham-on-the-Way hold in their stock (settlements.json start; GAME EXPANSION, from beyond the map). On a visit day villagers with a taste for them and spare coin beyond their reserve buy some, and the player buys at the wagon, at value x luxury.markup, the coins going into the trader's till and leaving the village. Kept, never used up. | `game/scripts/core/luxury.gd::visit` |
-| `ale`, `amulet`, `apple`, `axe`, `blue_berry_cutting`, `blueberries`, `bread`, `carrot`, `cheese`, `chisel`, `copper_bar`, `copper_ring`, `copper_sword`, `egg`, `feather`, `flower_seed`, `gold_bar`, `gold_ring`, `hammer`, `herbal_poultice`, `hide`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `leather`, `leather_armor`, `leather_cap`, `log`, `mallet`, `meat`, `milk`, `nails`, `pickaxe`, `plank`, `plough`, `potato`, `pottage`, `rabbit_pelt`, `red_berries`, `red_berry_cutting`, `roast_meat`, `shovel`, `wheat`, `wool`, `wool_cloth` | export | Every second day (the nearer settlements' traders more often) the caravan buys what a merchant (up to its BUYS caps) or a smith (the caps below) holds above half the cap, at 0.8 x value, unless the village is short of food. It never buys the mine's raw output (iron ore, copper ore, gold ore, coal, stone: NPCBrain.NOT_EXPORTED); those it only sells to the village. The caravan is the traders of the five neighbouring settlements: each buys only what its settlement still wants and pays only from the coins in its own trader's till, so a surplus nobody wants or can be paid for stays on the shelf. Smith caps: axe 4, copper_bar 8, copper_sword 4, gold_bar 2, iron_bar 8, iron_sword 4, pickaxe 4. | `game/scripts/core/npc_brain.gd::caravan` |
+| `ale`, `amulet`, `antler`, `apple`, `axe`, `blue_berry_cutting`, `blueberries`, `boar_tusk`, `bread`, `carrot`, `cheese`, `chisel`, `copper_bar`, `copper_ring`, `copper_sword`, `egg`, `feather`, `flower_seed`, `gold_bar`, `gold_ring`, `hammer`, `herbal_poultice`, `hide`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_sword`, `leather`, `leather_armor`, `leather_cap`, `log`, `mallet`, `meat`, `milk`, `nails`, `pickaxe`, `plank`, `plough`, `potato`, `pottage`, `rabbit_pelt`, `red_berries`, `red_berry_cutting`, `roast_meat`, `shovel`, `wheat`, `wool`, `wool_cloth` | export | Every second day (the nearer settlements' traders more often) the caravan buys what a merchant (up to its BUYS caps) or a smith (the caps below) holds above half the cap, at 0.8 x value, unless the village is short of food. It never buys the mine's raw output (iron ore, copper ore, gold ore, coal, stone: NPCBrain.NOT_EXPORTED); those it only sells to the village. The caravan is the traders of the five neighbouring settlements: each buys only what its settlement still wants and pays only from the coins in its own trader's till, so a surplus nobody wants or can be paid for stays on the shelf. Smith caps: axe 4, copper_bar 8, copper_sword 4, gold_bar 2, iron_bar 8, iron_sword 4, pickaxe 4. | `game/scripts/core/npc_brain.gd::caravan` |
 
 ## Findings
 
@@ -710,7 +1958,7 @@ Uses and sources the data files do not show, recorded in `resources.json` with t
 
 Items no recipe consumes: the end of every chain. They are eaten, worn or used, sold, or built with.
 
-`amulet`, `apple`, `apple_sapling`, `axe`, `blue_berry_cutting`, `blueberries`, `bread`, `building_block`, `carrot`, `carrot_seed`, `cheese`, `chisel`, `copper_ring`, `copper_sword`, `dirt`, `feather`, `fine_cloth`, `flower_seed`, `gold_ring`, `hammer`, `handcart`, `herb_seed`, `herbal_poultice`, `herbal_tonic`, `iron_armor`, `iron_helmet`, `iron_sword`, `jewellery`, `ladder`, `leather_armor`, `leather_cap`, `linen_bandage`, `lockpick`, `mallet`, `minecart`, `oak_sapling`, `ore_sample`, `padlock`, `pickaxe`, `pine_sapling`, `plain_clothes`, `plough`, `potato`, `potato_seed`, `pottage`, `prospecting_kit`, `red_berries`, `red_berry_cutting`, `roast_meat`, `rotten_apple`, `rubble`, `rusty_axe`, `rusty_pickaxe`, `rusty_sword`, `shovel`, `spice`, `spoil`, `strong_healing_tonic`, `timber_support`, `topsoil`, `track_section`, `wheat_seed`
+`amulet`, `apple`, `apple_sapling`, `archer_hat_cyan`, `archer_hat_green`, `archer_hat_yellow`, `assassin_bandana_black`, `assassin_bandana_green`, `assassin_bandana_red`, `axe`, `blue_berry_cutting`, `blueberries`, `bread`, `bronze_armor`, `building_block`, `carrot`, `carrot_seed`, `cheese`, `chisel`, `copper_ring`, `copper_sword`, `daimyo_helm`, `dark_knight_helm`, `dirt`, `dragon_knight_helm`, `esper_hat_blue`, `esper_hat_red`, `esper_hood_cyan`, `esper_hood_red`, `flower_seed`, `french_hunter_coat`, `gold_armor`, `gold_ring`, `grunt_helm`, `hammer`, `handcart`, `herb_seed`, `herbal_poultice`, `herbal_tonic`, `high_mage_hat_cyan`, `high_mage_hat_red`, `high_mage_hat_yellow`, `hunter_hat_blue`, `hunter_hat_indigo`, `hunter_hat_red`, `iron_armor`, `iron_helmet`, `iron_sword`, `jewellery`, `knight_helm`, `ladder`, `leather_armor`, `leather_cap`, `linen_bandage`, `lockpick`, `mage_hat_cyan`, `mage_hat_red`, `mage_hat_yellow`, `mallet`, `minecart`, `mongol_cherbi_armor`, `mongol_cherbi_helm`, `mongol_khaan_armor`, `mongol_khaan_helm`, `mongol_kheshig_armor`, `mongol_kheshig_helm`, `mongol_noyon_armor`, `mongol_noyon_helm`, `musketeer_coat_purple`, `musketeer_coat_red`, `musketeer_hat_purple`, `musketeer_hat_red`, `ninja_bandana_black`, `ninja_bandana_blue`, `ninja_bandana_red`, `ninja_garb`, `oak_sapling`, `ore_sample`, `padlock`, `paladin_helm`, `pickaxe`, `pine_sapling`, `plain_clothes`, `plough`, `potato`, `potato_seed`, `pottage`, `prospecting_kit`, `ranger_hat_cyan`, `ranger_hat_green`, `ranger_hat_yellow`, `red_berries`, `red_berry_cutting`, `roast_meat`, `rogue_hat`, `ronin_robe_blue`, `ronin_robe_red`, `ronin_straw_hat_blue`, `ronin_straw_hat_red`, `rotten_apple`, `rubble`, `rusty_axe`, `rusty_pickaxe`, `rusty_sword`, `samurai_armor_lime`, `samurai_armor_purple`, `samurai_helm`, `scout_helm`, `shogun_helm_green`, `shogun_helm_purple`, `shovel`, `soldier_bronze_helm_blue`, `soldier_bronze_helm_red`, `soldier_gold_helm_blue`, `soldier_gold_helm_red`, `soldier_iron_helm_blue`, `soldier_iron_helm_red`, `soldier_steel_helm_blue`, `soldier_steel_helm_red`, `sorcerer_hood_cyan`, `sorcerer_hood_red`, `spice`, `spoil`, `stalker_hood_black`, `stalker_hood_purple`, `stalker_hood_red`, `steel_armor`, `strong_healing_tonic`, `thief_bandana_green`, `thief_bandana_lime`, `thief_bandana_red`, `timber_support`, `topsoil`, `track_section`, `traveller_robe`, `traveller_straw_hat`, `traveller_straw_hat_cyan`, `valkyrie_helm`, `viking_jarl_armor`, `viking_jarl_helm`, `viking_karl_armor`, `viking_karl_helm`, `viking_warrior_armor`, `viking_warrior_helm_red`, `viking_warrior_helm_yellow`, `villager_straw_hat`, `wheat_seed`, `yabusame_robe_blue`, `yabusame_robe_red`, `yabusame_straw_hat_blue`, `yabusame_straw_hat_red`
 
 ### Orphaned items
 
@@ -728,7 +1976,7 @@ None.
 
 Items whose only lasting source, once the finite seams are worked out, is the caravan:
 
-`amulet`, `axe`, `blue_berry_cutting`, `building_block`, `cart_axle`, `cart_ironwork`, `chisel`, `coal`, `copper_bar`, `copper_ore`, `copper_ring`, `copper_sword`, `dirt`, `fine_cloth`, `flower_seed`, `gold_bar`, `gold_ore`, `gold_ring`, `hammer`, `handcart`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_ore`, `iron_sword`, `jewellery`, `ladder`, `lockpick`, `minecart`, `nails`, `ore_sample`, `padlock`, `pickaxe`, `plough`, `prospecting_kit`, `red_berry_cutting`, `rubble`, `shovel`, `shovel_blade`, `spice`, `spoil`, `stone`, `topsoil`, `track_section`
+`amulet`, `axe`, `blue_berry_cutting`, `bronze_armor`, `building_block`, `cart_axle`, `cart_ironwork`, `chisel`, `coal`, `copper_bar`, `copper_ore`, `copper_ring`, `copper_sword`, `daimyo_helm`, `dark_knight_helm`, `dirt`, `dragon_knight_helm`, `esper_hat_blue`, `esper_hat_red`, `esper_hood_cyan`, `esper_hood_red`, `fine_cloth`, `flower_seed`, `french_hunter_coat`, `gold_armor`, `gold_bar`, `gold_ore`, `gold_ring`, `grunt_helm`, `hammer`, `handcart`, `high_mage_hat_cyan`, `high_mage_hat_red`, `high_mage_hat_yellow`, `hunter_hat_blue`, `hunter_hat_indigo`, `hunter_hat_red`, `iron_armor`, `iron_bar`, `iron_helmet`, `iron_ore`, `iron_sword`, `jewellery`, `knight_helm`, `ladder`, `lockpick`, `mage_hat_cyan`, `mage_hat_red`, `mage_hat_yellow`, `minecart`, `mongol_cherbi_armor`, `mongol_cherbi_helm`, `mongol_khaan_armor`, `mongol_khaan_helm`, `mongol_kheshig_armor`, `mongol_kheshig_helm`, `mongol_noyon_armor`, `mongol_noyon_helm`, `musketeer_coat_purple`, `musketeer_coat_red`, `musketeer_hat_purple`, `musketeer_hat_red`, `nails`, `ninja_garb`, `ore_sample`, `padlock`, `paladin_helm`, `pickaxe`, `plough`, `prospecting_kit`, `red_berry_cutting`, `ronin_robe_blue`, `ronin_robe_red`, `rubble`, `samurai_armor_lime`, `samurai_armor_purple`, `samurai_helm`, `scout_helm`, `shogun_helm_green`, `shogun_helm_purple`, `shovel`, `shovel_blade`, `soldier_bronze_helm_blue`, `soldier_bronze_helm_red`, `soldier_gold_helm_blue`, `soldier_gold_helm_red`, `soldier_iron_helm_blue`, `soldier_iron_helm_red`, `soldier_steel_helm_blue`, `soldier_steel_helm_red`, `sorcerer_hood_cyan`, `sorcerer_hood_red`, `spice`, `spoil`, `steel_armor`, `stone`, `topsoil`, `track_section`, `traveller_robe`, `valkyrie_helm`, `viking_jarl_armor`, `viking_jarl_helm`, `viking_karl_armor`, `viking_karl_helm`, `viking_warrior_armor`, `viking_warrior_helm_red`, `viking_warrior_helm_yellow`, `yabusame_robe_blue`, `yabusame_robe_red`
 
 Every building needs stone (house, workshops), and the smithy needs iron bars, so all building depends
 on caravan stone after the stone seams are gone.
@@ -752,7 +2000,6 @@ finding not recorded here.
 | `spoil` | import | implemented | MIN-E: spoil comes only from the finite ground of the open pits staked in the village (OpenPits) and, MIN-F, from the rock cut to extend the tunnels below ground (MineWorks, bounded by the hill); nothing brings more, and none is meant to. |
 | `minecart` | no_consumer | implemented | MIN-F: built from cart parts at the workbench (build_minecart); it is not consumed but used: set down on track it becomes a cart of kind minecart (Carts, MineWorks.set_down_minecart) that hauls goods along the rails below ground and out to the mine's yard. |
 | `ore_sample` | import | implemented | MIN-C: rock samples come only from the clues' finite search areas (samples_per_clue a clue, one a cell); nothing brings more, and none is meant to: once the village's clues are sampled out, new ground to read is MIN-D's (deeper strata, the larger map). The finite source is the design, not a gap. |
-| `feather` | no_consumer | implemented | A trade good (PL2-004): chickens drop feathers and the goods merchant buys them (NPCBrain.BUYS / OUTLETS), but the game has no arrows or bedding to use them in, so no recipe consumes them. |
 | `handcart` | no_consumer | implemented | B14: built from cart parts (build_handcart) by the player, the carpenter and storefront households, and bought and sold; it is not consumed but used: pulled storage, parked at home or a cart hub, and households' market runs (carts in play, B14-06, game/scripts/core/carts.gd). |
 | `rotten_apple` | start_kit_only | implemented | Only in the player's start kit: spoiled food that harms when eaten. |
 | `rusty_sword` | start_kit_only | implemented | Only in the player's start kit; nobody buys it. |
@@ -765,5 +2012,6 @@ finding not recorded here.
 | `copper_ore` | import | implemented | After the copper seams are worked out, the smiths' copper comes only by caravan. |
 | `stone` | import | implemented | After the stone seams are worked out, stone comes only by caravan, to the raw-goods merchants. |
 | `spice` | no_consumer | implemented | DVW-B3-LUX: bought for show and kept, not eaten: no recipe takes it (a villager's food is the village's own); the traders' stock of it is finite and nothing makes more (WDR-022). |
-| `fine_cloth` | no_consumer | implemented | DVW-B3-LUX: a luxury bought for show and kept; nothing makes or uses it up. |
 | `jewellery` | no_consumer | implemented | DVW-B3-LUX: a luxury bought for show and kept; it is not worn (no slot takes it) and nothing makes or uses it up. |
+
+> The 1920 weapons of the master weapons sheet (generated into `game/data/weapon_catalogue.json` by `tools/build_weapons.py`, one anvil recipe each from iron, copper or gold bars, coal, leather or planks, and for the masterwork patterns boar tusks and antlers) are checked with everything else but not listed here; see the in-game encyclopedia's weapon pages.

@@ -57,8 +57,8 @@ class ResourceRegistryTest(unittest.TestCase):
             self.assertTrue(any(want in p for p in found), want)
 
     def test_findings_must_be_recorded_and_exceptions_must_not_be_stale(self):
-        found = self.mutated(lambda r: r.__setitem__("exceptions", [e for e in r["exceptions"] if e["item"] != "feather"]))
-        self.assertTrue(any("finding not recorded: feather" in p for p in found))
+        found = self.mutated(lambda r: r.__setitem__("exceptions", [e for e in r["exceptions"] if e["item"] != "spice"]))
+        self.assertTrue(any("finding not recorded: spice" in p for p in found))
         found = self.mutated(lambda r: r["exceptions"].append({"item": "log", "finding": "no_source", "status": "implemented", "reason": "x"}))
         self.assertTrue(any("stale exception: log" in p for p in found))
 

@@ -199,7 +199,12 @@
       "value": 30,
       "damage": 7,
       "durability": 150,
-      "category": "weapons"
+      "category": "weapons",
+      "class": "common",
+      "order": {
+        "maker": "smith",
+        "fee": 6
+      }
     },
     "iron_sword": {
       "name": "Iron sword",
@@ -207,7 +212,12 @@
       "value": 48,
       "damage": 11,
       "durability": 220,
-      "category": "weapons"
+      "category": "weapons",
+      "class": "common",
+      "order": {
+        "maker": "smith",
+        "fee": 5
+      }
     },
     "leather_armor": {
       "name": "Leather armour",
@@ -215,7 +225,12 @@
       "value": 30,
       "armor": 3,
       "durability": 300,
-      "category": "armour"
+      "category": "armour",
+      "class": "common",
+      "order": {
+        "maker": "tanner",
+        "fee": 6
+      }
     },
     "iron_armor": {
       "name": "Iron armour",
@@ -223,7 +238,12 @@
       "value": 80,
       "armor": 6,
       "durability": 600,
-      "category": "armour"
+      "category": "armour",
+      "class": "common",
+      "order": {
+        "maker": "smith",
+        "fee": 8
+      }
     },
     "rusty_sword": {
       "name": "Rusty sword",
@@ -343,7 +363,12 @@
       "value": 14,
       "armor": 1,
       "durability": 240,
-      "category": "armour"
+      "category": "armour",
+      "class": "common",
+      "order": {
+        "maker": "tanner",
+        "fee": 2
+      }
     },
     "iron_helmet": {
       "name": "Iron helmet",
@@ -351,7 +376,12 @@
       "value": 36,
       "armor": 2,
       "durability": 480,
-      "category": "armour"
+      "category": "armour",
+      "class": "common",
+      "order": {
+        "maker": "smith",
+        "fee": 4
+      }
     },
     "copper_ring": {
       "name": "Copper ring",
@@ -638,6 +668,1573 @@
       "type": "resource",
       "value": 3,
       "category": "crafted"
+    },
+    "boar_tusk": {
+      "name": "Boar tusk",
+      "type": "resource",
+      "value": 6,
+      "category": "raw"
+    },
+    "antler": {
+      "name": "Antler",
+      "type": "resource",
+      "value": 8,
+      "category": "raw"
+    },
+    "bronze_armor": {
+      "name": "Bronze armour",
+      "type": "armor",
+      "value": 70,
+      "armor": 5,
+      "durability": 500,
+      "category": "armour",
+      "class": "common",
+      "order": {
+        "maker": "smith",
+        "fee": 6
+      }
+    },
+    "steel_armor": {
+      "name": "Steel armour",
+      "type": "armor",
+      "value": 135,
+      "armor": 8,
+      "durability": 800,
+      "category": "armour",
+      "class": "fine",
+      "order": {
+        "maker": "smith",
+        "fee": 32
+      }
+    },
+    "gold_armor": {
+      "name": "Gold armour",
+      "type": "armor",
+      "value": 320,
+      "armor": 6,
+      "durability": 600,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "smith",
+        "fee": 80,
+        "bring": {
+          "gold_bar": 4
+        }
+      },
+      "bonus": {
+        "max_hp": 10,
+        "stamina_regen": 1
+      },
+      "about": "Gilded plate: a bearer who seems never to tire."
+    },
+    "viking_karl_armor": {
+      "name": "Viking karl armour",
+      "type": "armor",
+      "value": 110,
+      "armor": 5,
+      "durability": 500,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 40,
+        "bring": {
+          "hide": 4,
+          "wool_cloth": 2
+        }
+      },
+      "about": "A free northman's mail over fur and wool."
+    },
+    "viking_warrior_armor": {
+      "name": "Viking warrior armour",
+      "type": "armor",
+      "value": 110,
+      "armor": 5,
+      "durability": 500,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 40,
+        "bring": {
+          "hide": 3,
+          "boar_tusk": 2
+        }
+      },
+      "bonus": {
+        "damage": 1
+      },
+      "about": "Mail hung with boar tusks: every blow lands a little harder."
+    },
+    "viking_jarl_armor": {
+      "name": "Viking jarl armour",
+      "type": "armor",
+      "value": 265,
+      "armor": 6,
+      "durability": 600,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "smith",
+        "fee": 90,
+        "bring": {
+          "hide": 4,
+          "gold_bar": 2,
+          "antler": 2
+        }
+      },
+      "bonus": {
+        "max_hp": 10
+      },
+      "about": "A chieftain's gilded mail and antler clasps."
+    },
+    "mongol_cherbi_armor": {
+      "name": "Mongol cherbi armour",
+      "type": "armor",
+      "value": 100,
+      "armor": 4,
+      "durability": 400,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 40,
+        "bring": {
+          "wool_cloth": 2
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      },
+      "about": "Light lamellar for a long ride."
+    },
+    "mongol_kheshig_armor": {
+      "name": "Mongol kheshig armour",
+      "type": "armor",
+      "value": 110,
+      "armor": 4,
+      "durability": 400,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 40,
+        "bring": {
+          "wool_cloth": 2,
+          "hide": 2
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      },
+      "about": "A guardsman's lamellar over a fur-lined coat."
+    },
+    "mongol_noyon_armor": {
+      "name": "Mongol noyon armour",
+      "type": "armor",
+      "value": 155,
+      "armor": 5,
+      "durability": 500,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 50,
+        "bring": {
+          "wool_cloth": 2,
+          "fine_cloth": 1
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      },
+      "about": "A commander's lamellar, faced with silk."
+    },
+    "mongol_khaan_armor": {
+      "name": "Mongol khaan armour",
+      "type": "armor",
+      "value": 290,
+      "armor": 5,
+      "durability": 500,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "smith",
+        "fee": 100,
+        "bring": {
+          "wool_cloth": 2,
+          "gold_bar": 2,
+          "boar_tusk": 2
+        }
+      },
+      "bonus": {
+        "max_stamina": 10,
+        "stamina_regen": 1
+      },
+      "about": "A khan's gilded lamellar: breath for the whole day."
+    },
+    "samurai_armor_lime": {
+      "name": "Samurai armour (green)",
+      "type": "armor",
+      "value": 190,
+      "armor": 5,
+      "durability": 500,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 3
+        }
+      },
+      "about": "Laced iron plates on silk cords."
+    },
+    "samurai_armor_purple": {
+      "name": "Samurai armour (purple)",
+      "type": "armor",
+      "value": 190,
+      "armor": 5,
+      "durability": 500,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 3
+        }
+      },
+      "about": "Laced iron plates on silk cords."
+    },
+    "ronin_robe_blue": {
+      "name": "Ronin's robe (blue)",
+      "type": "armor",
+      "value": 110,
+      "armor": 3,
+      "durability": 300,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "tanner",
+        "fee": 40,
+        "bring": {
+          "fine_cloth": 2
+        }
+      },
+      "bonus": {
+        "stamina_regen": 1
+      },
+      "about": "A wanderer's robe over a leather vest."
+    },
+    "yabusame_robe_blue": {
+      "name": "Yabusame robe (blue)",
+      "type": "armor",
+      "value": 115,
+      "armor": 3,
+      "durability": 300,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "tanner",
+        "fee": 40,
+        "bring": {
+          "fine_cloth": 2,
+          "feather": 4
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      },
+      "about": "A mounted archer's robe."
+    },
+    "ronin_robe_red": {
+      "name": "Ronin's robe (red)",
+      "type": "armor",
+      "value": 110,
+      "armor": 3,
+      "durability": 300,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "tanner",
+        "fee": 40,
+        "bring": {
+          "fine_cloth": 2
+        }
+      },
+      "bonus": {
+        "stamina_regen": 1
+      },
+      "about": "A wanderer's robe over a leather vest."
+    },
+    "yabusame_robe_red": {
+      "name": "Yabusame robe (red)",
+      "type": "armor",
+      "value": 115,
+      "armor": 3,
+      "durability": 300,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "tanner",
+        "fee": 40,
+        "bring": {
+          "fine_cloth": 2,
+          "feather": 4
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      },
+      "about": "A mounted archer's robe."
+    },
+    "ninja_garb": {
+      "name": "Ninja garb",
+      "type": "armor",
+      "value": 135,
+      "armor": 2,
+      "durability": 200,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "tanner",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 2
+        }
+      },
+      "bonus": {
+        "stamina_regen": 2
+      },
+      "about": "Close black silk: quick breath, little protection."
+    },
+    "traveller_robe": {
+      "name": "Traveller's robe",
+      "type": "armor",
+      "value": 80,
+      "armor": 1,
+      "durability": 200,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "tanner",
+        "fee": 30,
+        "bring": {
+          "fine_cloth": 1
+        }
+      },
+      "bonus": {
+        "max_stamina": 5,
+        "stamina_regen": 1
+      },
+      "about": "A road robe for long journeys."
+    },
+    "french_hunter_coat": {
+      "name": "Hunter's coat",
+      "type": "armor",
+      "value": 145,
+      "armor": 3,
+      "durability": 300,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "tanner",
+        "fee": 40,
+        "bring": {
+          "fine_cloth": 3,
+          "feather": 2
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      },
+      "about": "A French huntsman's coat."
+    },
+    "musketeer_coat_purple": {
+      "name": "Musketeer's coat (purple)",
+      "type": "armor",
+      "value": 145,
+      "armor": 3,
+      "durability": 300,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "tanner",
+        "fee": 40,
+        "bring": {
+          "fine_cloth": 3,
+          "feather": 2
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      },
+      "about": "A musketeer's tabard coat."
+    },
+    "musketeer_coat_red": {
+      "name": "Musketeer's coat (red)",
+      "type": "armor",
+      "value": 145,
+      "armor": 3,
+      "durability": 300,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "tanner",
+        "fee": 40,
+        "bring": {
+          "fine_cloth": 3,
+          "feather": 2
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      },
+      "about": "A musketeer's tabard coat."
+    },
+    "grunt_helm": {
+      "name": "Grunt helm",
+      "type": "head",
+      "value": 25,
+      "armor": 1,
+      "durability": 240,
+      "category": "armour",
+      "class": "common",
+      "order": {
+        "maker": "smith",
+        "fee": 4
+      }
+    },
+    "scout_helm": {
+      "name": "Scout helm",
+      "type": "head",
+      "value": 40,
+      "armor": 2,
+      "durability": 480,
+      "category": "armour",
+      "class": "common",
+      "order": {
+        "maker": "smith",
+        "fee": 4
+      }
+    },
+    "knight_helm": {
+      "name": "Knight helm",
+      "type": "head",
+      "value": 65,
+      "armor": 3,
+      "durability": 720,
+      "category": "armour",
+      "class": "fine",
+      "order": {
+        "maker": "smith",
+        "fee": 15
+      }
+    },
+    "soldier_bronze_helm_red": {
+      "name": "Soldier's bronze helm (red plume)",
+      "type": "head",
+      "value": 35,
+      "armor": 2,
+      "durability": 480,
+      "category": "armour",
+      "class": "common",
+      "order": {
+        "maker": "smith",
+        "fee": 4
+      }
+    },
+    "soldier_bronze_helm_blue": {
+      "name": "Soldier's bronze helm (blue plume)",
+      "type": "head",
+      "value": 35,
+      "armor": 2,
+      "durability": 480,
+      "category": "armour",
+      "class": "common",
+      "order": {
+        "maker": "smith",
+        "fee": 4
+      }
+    },
+    "soldier_iron_helm_red": {
+      "name": "Soldier's iron helm (red plume)",
+      "type": "head",
+      "value": 40,
+      "armor": 2,
+      "durability": 480,
+      "category": "armour",
+      "class": "common",
+      "order": {
+        "maker": "smith",
+        "fee": 4
+      }
+    },
+    "soldier_iron_helm_blue": {
+      "name": "Soldier's iron helm (blue plume)",
+      "type": "head",
+      "value": 40,
+      "armor": 2,
+      "durability": 480,
+      "category": "armour",
+      "class": "common",
+      "order": {
+        "maker": "smith",
+        "fee": 4
+      }
+    },
+    "soldier_steel_helm_red": {
+      "name": "Soldier's steel helm (red plume)",
+      "type": "head",
+      "value": 70,
+      "armor": 3,
+      "durability": 720,
+      "category": "armour",
+      "class": "fine",
+      "order": {
+        "maker": "smith",
+        "fee": 16
+      }
+    },
+    "soldier_steel_helm_blue": {
+      "name": "Soldier's steel helm (blue plume)",
+      "type": "head",
+      "value": 70,
+      "armor": 3,
+      "durability": 720,
+      "category": "armour",
+      "class": "fine",
+      "order": {
+        "maker": "smith",
+        "fee": 16
+      }
+    },
+    "soldier_gold_helm_red": {
+      "name": "Soldier's gold helm (red plume)",
+      "type": "head",
+      "value": 130,
+      "armor": 3,
+      "durability": 720,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "smith",
+        "fee": 60,
+        "bring": {
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "max_hp": 5
+      }
+    },
+    "soldier_gold_helm_blue": {
+      "name": "Soldier's gold helm (blue plume)",
+      "type": "head",
+      "value": 130,
+      "armor": 3,
+      "durability": 720,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "smith",
+        "fee": 60,
+        "bring": {
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "max_hp": 5
+      }
+    },
+    "dark_knight_helm": {
+      "name": "Dark knight helm",
+      "type": "head",
+      "value": 195,
+      "armor": 3,
+      "durability": 720,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "smith",
+        "fee": 80,
+        "bring": {
+          "gold_bar": 1,
+          "antler": 2
+        }
+      },
+      "bonus": {
+        "damage": 2
+      },
+      "about": "Black steel crowned with antler: a heavier hand in a fight."
+    },
+    "dragon_knight_helm": {
+      "name": "Dragon knight helm",
+      "type": "head",
+      "value": 190,
+      "armor": 3,
+      "durability": 720,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "smith",
+        "fee": 80,
+        "bring": {
+          "gold_bar": 1,
+          "boar_tusk": 2
+        }
+      },
+      "bonus": {
+        "fire_damage": 3
+      },
+      "about": "Tusked like a dragon's jaw: your fireballs burn hotter."
+    },
+    "paladin_helm": {
+      "name": "Paladin helm",
+      "type": "head",
+      "value": 200,
+      "armor": 3,
+      "durability": 720,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "smith",
+        "fee": 70,
+        "bring": {
+          "gold_bar": 1,
+          "fine_cloth": 1
+        }
+      },
+      "bonus": {
+        "max_hp": 5,
+        "stamina_regen": 1
+      },
+      "about": "A winged holy helm."
+    },
+    "viking_karl_helm": {
+      "name": "Viking karl helm",
+      "type": "head",
+      "value": 75,
+      "armor": 2,
+      "durability": 480,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 30,
+        "bring": {
+          "antler": 2
+        }
+      }
+    },
+    "viking_warrior_helm_red": {
+      "name": "Viking warrior helm (red)",
+      "type": "head",
+      "value": 80,
+      "armor": 2,
+      "durability": 480,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 30,
+        "bring": {
+          "antler": 2
+        }
+      }
+    },
+    "viking_warrior_helm_yellow": {
+      "name": "Viking warrior helm (yellow)",
+      "type": "head",
+      "value": 80,
+      "armor": 2,
+      "durability": 480,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 30,
+        "bring": {
+          "antler": 2
+        }
+      }
+    },
+    "valkyrie_helm": {
+      "name": "Valkyrie helm",
+      "type": "head",
+      "value": 120,
+      "armor": 2,
+      "durability": 480,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 40,
+        "bring": {
+          "feather": 4,
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      },
+      "about": "Winged: light on the head and the feet."
+    },
+    "viking_jarl_helm": {
+      "name": "Viking jarl helm",
+      "type": "head",
+      "value": 170,
+      "armor": 3,
+      "durability": 720,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "smith",
+        "fee": 70,
+        "bring": {
+          "gold_bar": 1,
+          "antler": 2
+        }
+      },
+      "bonus": {
+        "max_hp": 5
+      }
+    },
+    "mongol_cherbi_helm": {
+      "name": "Mongol cherbi helm",
+      "type": "head",
+      "value": 60,
+      "armor": 2,
+      "durability": 480,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 30,
+        "bring": {
+          "wool_cloth": 1,
+          "feather": 2
+        }
+      }
+    },
+    "mongol_kheshig_helm": {
+      "name": "Mongol kheshig helm",
+      "type": "head",
+      "value": 60,
+      "armor": 2,
+      "durability": 480,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 30,
+        "bring": {
+          "hide": 1
+        }
+      }
+    },
+    "mongol_noyon_helm": {
+      "name": "Mongol noyon helm",
+      "type": "head",
+      "value": 75,
+      "armor": 2,
+      "durability": 480,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 40,
+        "bring": {
+          "hide": 1,
+          "wool_cloth": 1
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      }
+    },
+    "mongol_khaan_helm": {
+      "name": "Mongol khaan helm",
+      "type": "head",
+      "value": 170,
+      "armor": 3,
+      "durability": 720,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "smith",
+        "fee": 80,
+        "bring": {
+          "gold_bar": 1,
+          "hide": 2,
+          "feather": 2
+        }
+      },
+      "bonus": {
+        "max_stamina": 5,
+        "stamina_regen": 1
+      }
+    },
+    "samurai_helm": {
+      "name": "Samurai helm",
+      "type": "head",
+      "value": 100,
+      "armor": 2,
+      "durability": 480,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "smith",
+        "fee": 40,
+        "bring": {
+          "fine_cloth": 1
+        }
+      }
+    },
+    "daimyo_helm": {
+      "name": "Daimyo helm",
+      "type": "head",
+      "value": 200,
+      "armor": 3,
+      "durability": 720,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "smith",
+        "fee": 60,
+        "bring": {
+          "gold_bar": 1,
+          "fine_cloth": 2
+        }
+      },
+      "bonus": {
+        "fire_damage": 2,
+        "max_hp": 5
+      }
+    },
+    "shogun_helm_green": {
+      "name": "Shogun helm (green)",
+      "type": "head",
+      "value": 200,
+      "armor": 3,
+      "durability": 720,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "smith",
+        "fee": 60,
+        "bring": {
+          "gold_bar": 1,
+          "fine_cloth": 2
+        }
+      },
+      "bonus": {
+        "fire_damage": 4
+      }
+    },
+    "shogun_helm_purple": {
+      "name": "Shogun helm (purple)",
+      "type": "head",
+      "value": 200,
+      "armor": 3,
+      "durability": 720,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "smith",
+        "fee": 60,
+        "bring": {
+          "gold_bar": 1,
+          "fine_cloth": 2
+        }
+      },
+      "bonus": {
+        "fire_damage": 4
+      }
+    },
+    "musketeer_hat_purple": {
+      "name": "Musketeer's hat (purple)",
+      "type": "head",
+      "value": 65,
+      "armor": 1,
+      "durability": 240,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "tanner",
+        "fee": 25,
+        "bring": {
+          "fine_cloth": 1,
+          "feather": 2
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      }
+    },
+    "musketeer_hat_red": {
+      "name": "Musketeer's hat (red)",
+      "type": "head",
+      "value": 65,
+      "armor": 1,
+      "durability": 240,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "tanner",
+        "fee": 25,
+        "bring": {
+          "fine_cloth": 1,
+          "feather": 2
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      }
+    },
+    "hunter_hat_blue": {
+      "name": "Hunter's hat (blue)",
+      "type": "head",
+      "value": 65,
+      "armor": 1,
+      "durability": 240,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "tanner",
+        "fee": 25,
+        "bring": {
+          "fine_cloth": 1,
+          "feather": 2
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      }
+    },
+    "hunter_hat_indigo": {
+      "name": "Hunter's hat (indigo)",
+      "type": "head",
+      "value": 65,
+      "armor": 1,
+      "durability": 240,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "tanner",
+        "fee": 25,
+        "bring": {
+          "fine_cloth": 1,
+          "feather": 2
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      }
+    },
+    "hunter_hat_red": {
+      "name": "Hunter's hat (red)",
+      "type": "head",
+      "value": 65,
+      "armor": 1,
+      "durability": 240,
+      "category": "armour",
+      "class": "cultural",
+      "order": {
+        "maker": "tanner",
+        "fee": 25,
+        "bring": {
+          "fine_cloth": 1,
+          "feather": 2
+        }
+      },
+      "bonus": {
+        "max_stamina": 5
+      }
+    },
+    "mage_hat_cyan": {
+      "name": "Mage hat (cyan)",
+      "type": "head",
+      "value": 170,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "tanner",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 2,
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "fire_damage": 2
+      }
+    },
+    "mage_hat_red": {
+      "name": "Mage hat (red)",
+      "type": "head",
+      "value": 170,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "tanner",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 2,
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "fire_damage": 2
+      }
+    },
+    "mage_hat_yellow": {
+      "name": "Mage hat (yellow)",
+      "type": "head",
+      "value": 170,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "tanner",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 2,
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "fire_damage": 2
+      }
+    },
+    "high_mage_hat_cyan": {
+      "name": "High mage hat (cyan)",
+      "type": "head",
+      "value": 170,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "tanner",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 2,
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "fire_damage": 4
+      }
+    },
+    "high_mage_hat_red": {
+      "name": "High mage hat (red)",
+      "type": "head",
+      "value": 170,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "tanner",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 2,
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "fire_damage": 4
+      }
+    },
+    "high_mage_hat_yellow": {
+      "name": "High mage hat (yellow)",
+      "type": "head",
+      "value": 170,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "tanner",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 2,
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "fire_damage": 4
+      }
+    },
+    "esper_hat_blue": {
+      "name": "Esper hat (blue)",
+      "type": "head",
+      "value": 170,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "tanner",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 2,
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "fire_damage": 2,
+        "max_stamina": 5
+      }
+    },
+    "esper_hat_red": {
+      "name": "Esper hat (red)",
+      "type": "head",
+      "value": 170,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "tanner",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 2,
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "fire_damage": 2,
+        "max_stamina": 5
+      }
+    },
+    "esper_hood_cyan": {
+      "name": "Esper hood (cyan)",
+      "type": "head",
+      "value": 170,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "tanner",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 2,
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "fire_damage": 2,
+        "stamina_regen": 1
+      }
+    },
+    "esper_hood_red": {
+      "name": "Esper hood (red)",
+      "type": "head",
+      "value": 170,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "tanner",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 2,
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "fire_damage": 2,
+        "stamina_regen": 1
+      }
+    },
+    "sorcerer_hood_cyan": {
+      "name": "Sorcerer hood (cyan)",
+      "type": "head",
+      "value": 170,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "tanner",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 2,
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "fire_damage": 3
+      }
+    },
+    "sorcerer_hood_red": {
+      "name": "Sorcerer hood (red)",
+      "type": "head",
+      "value": 170,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "rare",
+      "order": {
+        "maker": "tanner",
+        "fee": 50,
+        "bring": {
+          "fine_cloth": 2,
+          "gold_bar": 1
+        }
+      },
+      "bonus": {
+        "fire_damage": 3
+      }
+    },
+    "villager_straw_hat": {
+      "name": "Villager's straw hat",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "traveller_straw_hat": {
+      "name": "Traveller's straw hat",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "traveller_straw_hat_cyan": {
+      "name": "Traveller's straw hat (cyan)",
+      "type": "head",
+      "value": 20,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "ronin_straw_hat_blue": {
+      "name": "Ronin's straw hat (blue)",
+      "type": "head",
+      "value": 20,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "ronin_straw_hat_red": {
+      "name": "Ronin's straw hat (red)",
+      "type": "head",
+      "value": 20,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "yabusame_straw_hat_blue": {
+      "name": "Yabusame straw hat (blue)",
+      "type": "head",
+      "value": 20,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "yabusame_straw_hat_red": {
+      "name": "Yabusame straw hat (red)",
+      "type": "head",
+      "value": 20,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "ninja_bandana_black": {
+      "name": "Ninja bandana (black)",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "ninja_bandana_blue": {
+      "name": "Ninja bandana (blue)",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "ninja_bandana_red": {
+      "name": "Ninja bandana (red)",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "archer_hat_cyan": {
+      "name": "Archer's hat (cyan)",
+      "type": "head",
+      "value": 13,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "archer_hat_green": {
+      "name": "Archer's hat (green)",
+      "type": "head",
+      "value": 13,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "archer_hat_yellow": {
+      "name": "Archer's hat (yellow)",
+      "type": "head",
+      "value": 13,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "ranger_hat_cyan": {
+      "name": "Ranger's hat (cyan)",
+      "type": "head",
+      "value": 13,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "ranger_hat_green": {
+      "name": "Ranger's hat (green)",
+      "type": "head",
+      "value": 13,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "ranger_hat_yellow": {
+      "name": "Ranger's hat (yellow)",
+      "type": "head",
+      "value": 13,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "rogue_hat": {
+      "name": "Rogue's hat",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "assassin_bandana_black": {
+      "name": "Assassin's bandana (black)",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "assassin_bandana_green": {
+      "name": "Assassin's bandana (green)",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "assassin_bandana_red": {
+      "name": "Assassin's bandana (red)",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "thief_bandana_green": {
+      "name": "Thief's bandana (green)",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "thief_bandana_lime": {
+      "name": "Thief's bandana (lime)",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "thief_bandana_red": {
+      "name": "Thief's bandana (red)",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "stalker_hood_black": {
+      "name": "Stalker's hood (black)",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "stalker_hood_purple": {
+      "name": "Stalker's hood (purple)",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
+    },
+    "stalker_hood_red": {
+      "name": "Stalker's hood (red)",
+      "type": "head",
+      "value": 12,
+      "armor": 0,
+      "durability": 240,
+      "category": "armour",
+      "class": "plain",
+      "order": {
+        "maker": "tailor",
+        "fee": 3
+      }
     }
   }
 }

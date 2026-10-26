@@ -1,0 +1,34 @@
+{
+  "format": "mml-weapon-types/1",
+  "note": "WEAPON-CATALOG-01 (owner 2026-10-26; Build 22): every weapon of Shade's master weapons sheet (16x16 Weapons RPG Icons.zip: four metal recolours of one 24 x 20 sheet, 16 weapon types of 30 designs each) is an item, a smithy recipe and a commission at the smith. tools/build_weapons.py expands this table into game/data/weapon_catalogue.json (generated; never hand-edit). Per item: damage = round(type damage x metal damage) + tier damage; durability = round(type durability x metal durability x (1 + 0.1 x tier index)); level (Smithing) = metal level + type level + tier level, at most 10; materials: the type's bars of the metal's bar (steel: one iron bar more and coal for each bar; bronze: copper bars and a coal; gold: iron bars, and the player brings gold bars, one for every two bars, at least one) and its haft; the top tier (designs tier 3) is Rare: commissioned, the player brings the type's special materials (boar tusks, antlers) and it carries the type's worn bonus; gold adds +5 health. value = materials at their base value + the work fee (Common 10%, Fine 30% of the materials; a commission's fee as given). attack_speed divides the time of a swing (1 = as before). The sheet: design d (0-29) of a type at block (col, row) is the cell (col + d mod 3, row + d div 3). Agent proposal under the owner's delegation (ARMOR-CATALOG-D1, provisional).",
+  "sheet": {"zip": "16x16 Weapons RPG Icons.zip", "dir": "16x16 Weapons RPG Icons/", "cell": 16, "block": [3, 10]},
+  "metals": {
+    "bronze": {"name": "Bronze", "sheet": "bronze-weapons.png", "class": "common", "damage": 0.85, "durability": 0.8, "level": 1},
+    "iron": {"name": "Iron", "sheet": "iron-weapons.png", "class": "common", "damage": 1.0, "durability": 1.0, "level": 2},
+    "steel": {"name": "Steel", "sheet": "steel-weapons.png", "class": "fine", "damage": 1.25, "durability": 1.4, "level": 3},
+    "gold": {"name": "Gold", "sheet": "gold-weapons.png", "class": "rare", "damage": 1.1, "durability": 1.0, "level": 4, "bonus": {"max_hp": 5}, "fee": 40}
+  },
+  "tiers": [
+    {"name": "plain", "from": 0, "to": 11, "damage": 0, "level": 0, "minutes": 0},
+    {"name": "fine", "from": 12, "to": 20, "damage": 1, "level": 1, "minutes": 10},
+    {"name": "masterwork", "from": 21, "to": 29, "damage": 2, "level": 2, "minutes": 20, "rare": true, "fee": 30}
+  ],
+  "types": {
+    "rapier": {"name": "rapier", "at": [0, 0], "damage": 8, "speed": 1.3, "durability": 160, "bars": 2, "haft": {"leather": 1}, "level": 1, "special": {"antler": 1}, "bonus": {"stamina_regen": 1}},
+    "sword": {"name": "sword", "at": [3, 0], "damage": 10, "speed": 1.0, "durability": 220, "bars": 3, "haft": {"leather": 1}, "level": 0, "special": {"antler": 1}, "bonus": {"max_hp": 5}},
+    "greatsword": {"name": "greatsword", "at": [6, 0], "damage": 15, "speed": 0.75, "durability": 260, "bars": 5, "haft": {"leather": 1}, "level": 1, "special": {"boar_tusk": 2}, "bonus": {"max_hp": 5, "damage": 1}},
+    "katana": {"name": "katana", "at": [9, 0], "damage": 11, "speed": 1.1, "durability": 220, "bars": 3, "haft": {"leather": 1}, "level": 1, "special": {"boar_tusk": 1, "antler": 1}, "bonus": {"damage": 1, "stamina_regen": 1}},
+    "scimitar": {"name": "scimitar", "at": [12, 0], "damage": 10, "speed": 1.1, "durability": 200, "bars": 3, "haft": {"leather": 1}, "level": 0, "special": {"boar_tusk": 1}, "bonus": {"max_stamina": 10}},
+    "spear": {"name": "spear", "at": [15, 0], "damage": 9, "speed": 1.0, "durability": 200, "bars": 1, "haft": {"plank": 2}, "level": 0, "special": {"boar_tusk": 1}, "bonus": {"max_stamina": 5, "damage": 1}},
+    "staff": {"name": "staff", "plural": "staves", "at": [18, 0], "damage": 6, "speed": 1.1, "durability": 180, "bars": 1, "haft": {"plank": 2}, "level": 0, "special": {"antler": 2}, "bonus": {"fire_damage": 4}},
+    "trident": {"name": "trident", "at": [21, 0], "damage": 10, "speed": 0.95, "durability": 200, "bars": 2, "haft": {"plank": 2}, "level": 1, "special": {"boar_tusk": 2}, "bonus": {"fire_damage": 2, "max_stamina": 5}},
+    "battle_axe": {"name": "battle axe", "at": [0, 10], "damage": 13, "speed": 0.85, "durability": 240, "bars": 3, "haft": {"plank": 2}, "level": 1, "special": {"boar_tusk": 2}, "bonus": {"damage": 2}},
+    "mace": {"name": "mace", "at": [3, 10], "damage": 11, "speed": 0.9, "durability": 260, "bars": 3, "haft": {"plank": 1}, "level": 0, "special": {"antler": 1}, "bonus": {"max_hp": 5, "damage": 1}},
+    "knife": {"name": "knife", "plural": "knives", "at": [6, 10], "damage": 5, "speed": 1.5, "durability": 120, "bars": 1, "haft": {"plank": 1}, "level": 0, "special": {"antler": 1}, "bonus": {"stamina_regen": 2}},
+    "butcher_knife": {"name": "butcher knife", "plural": "butcher knives", "at": [9, 10], "damage": 7, "speed": 1.2, "durability": 140, "bars": 1, "haft": {"plank": 1}, "level": 0, "special": {"boar_tusk": 1}, "bonus": {"damage": 2}},
+    "scythe": {"name": "scythe", "at": [12, 10], "damage": 9, "speed": 0.9, "durability": 180, "bars": 2, "haft": {"plank": 2}, "level": 0, "special": {"antler": 1}, "bonus": {"fire_damage": 2, "damage": 1}},
+    "sickle": {"name": "sickle", "at": [15, 10], "damage": 6, "speed": 1.3, "durability": 140, "bars": 1, "haft": {"plank": 1}, "level": 0, "special": {"antler": 1}, "bonus": {"stamina_regen": 1, "max_stamina": 5}},
+    "nunchucks": {"name": "nunchucks", "plural": "nunchucks", "at": [18, 10], "damage": 6, "speed": 1.4, "durability": 160, "bars": 1, "haft": {"leather": 1}, "level": 0, "special": {"antler": 1}, "bonus": {"stamina_regen": 2, "max_stamina": 5}},
+    "battle_hammer": {"name": "battle hammer", "at": [21, 10], "damage": 14, "speed": 0.75, "durability": 300, "bars": 4, "haft": {"plank": 2}, "level": 1, "special": {"boar_tusk": 2}, "bonus": {"max_hp": 10}}
+  }
+}

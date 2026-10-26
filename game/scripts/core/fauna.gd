@@ -516,7 +516,8 @@ func hungry(pen: Dictionary) -> int:
 
 
 # ---------------------------------------------------------------- death ----------------------
-## Kill an animal; returns what it yields (meat; hide, rabbit pelt or feathers for the kinds that have them).
+## Kill an animal; returns what it yields (meat; hide, rabbit pelt or feathers for the kinds that have them; a boar's tusks,
+## a stag's antlers).
 func kill(a: Animal) -> Inventory:
 	var bag := Inventory.new()
 	var s := a.spec()
@@ -529,6 +530,14 @@ func kill(a: Animal) -> Inventory:
 	if adult and int(s.hide) > 0:
 		bag.add("hide", int(s.hide))
 		w.stat("made_hide", float(s.hide))
+	# ARMOR-MATERIALS-01 (owner 2026-10-26): a grown wild boar's tusks, a grown stag's antlers (balance "tusks", "antlers_m"),
+	# only from an animal really killed here, by the player, a hunter, a poacher or a keeper alike; counted as made_
+	if adult and int(s.get("tusks", 0)) > 0:
+		bag.add("boar_tusk", int(s.tusks))
+		w.stat("made_boar_tusk", float(s.tusks))
+	if adult and a.sex == "m" and int(s.get("antlers_m", 0)) > 0:
+		bag.add("antler", int(s.antlers_m))
+		w.stat("made_antler", float(s.antlers_m))
 	if adult:                                   # PL2-004: a rabbit's pelt, a chicken's feathers
 		for key in ["pelt", "feathers"]:
 			var item: String = "rabbit_pelt" if key == "pelt" else "feather"

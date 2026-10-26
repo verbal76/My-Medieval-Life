@@ -3400,7 +3400,7 @@ func test_resource_registry() -> void:
 	var cows: Array = w.fauna.animals.filter(func(a: Animal): return a.species == "cow")
 	check(not cows.is_empty() and ResourceNodes.can_harvest(w, ResourceNodes.def("cow_pen"), cows[0]).contains("keeper"), "the keeper's livestock is not the player's to take")
 	var boar: Dictionary = GameData.b("animals").boar
-	check(ResourceNodes.products(ResourceNodes.def("wild_boar")) == {"meat": int(boar.meat), "hide": int(boar.hide)}, "products resolve balance keys")
+	check(ResourceNodes.products(ResourceNodes.def("wild_boar")) == {"meat": int(boar.meat), "hide": int(boar.hide), "boar_tusk": int(boar.tusks)}, "products resolve balance keys")     # Build 22: and its tusks
 	# uses_of, sources_of and chain agree with recipes.json
 	ok = true
 	for r in GameData.recipes:

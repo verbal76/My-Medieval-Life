@@ -147,7 +147,7 @@ func damage() -> float:
 	var d := 2.0
 	if weapon != "" and inv.has(weapon):
 		d = float(GameData.item(weapon).get("damage", 2))
-	return d * Skills.value(self, "combat", "damage_mult", 1.0)
+	return (d + bonus("damage")) * Skills.value(self, "combat", "damage_mult", 1.0)     # ARMOR-CATALOG-01: worn gear's melee bonus
 
 
 ## The tool of a kind the player uses: the one in hand if it is of that kind, else the best carried.
@@ -170,7 +170,11 @@ func defense() -> float:
 	return d
 
 
-## The sum of one bonus ("max_hp", "max_stamina") over the gear worn (items.json "bonus").
+## The sum of one bonus over the gear worn (items.json "bonus"): "max_hp", "max_stamina" (Build 7), and from Build 22
+## (ARMOR-CATALOG-01) "fire_damage" (added to a fireball's damage, World.player_fireball_hit), "stamina_regen" (stamina a
+## second, World.update) and "damage" (added to a blow's weapon damage, damage()). Each slot holds one item, so an item
+## counts once however it is worn; an item in the pack but not worn gives nothing. BONUS_NAMES words them for the Pack
+## and the encyclopedia.
 func bonus(stat: String) -> float:
 	var total := 0.0
 	for slot in GEAR:
@@ -178,6 +182,20 @@ func bonus(stat: String) -> float:
 		if id != "" and inv.has(id):
 			total += float(GameData.item(id).get("bonus", {}).get(stat, 0))
 	return total
+
+
+const BONUS_NAMES := {"max_hp": "health", "max_stamina": "stamina", "fire_damage": "fireball damage",
+	"stamina_regen": "stamina a second", "damage": "melee damage"}
+
+
+## "+5 health, +2 fireball damage" for an item's worn bonus ("" for none).
+static func bonus_text(id: String) -> String:
+	var b: Dictionary = GameData.item(id).get("bonus", {})
+	var parts := []
+	for k in b:
+		var v := float(b[k])
+		parts.append("+%s %s" % [str(int(v)) if v == floorf(v) else str(v), BONUS_NAMES.get(k, str(k).replace("_", " "))])
+	return ", ".join(parts)
 
 
 ## Most health and stamina the player can have, with what the gear worn adds.

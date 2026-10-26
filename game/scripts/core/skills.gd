@@ -265,11 +265,25 @@ static func tier_text(skill: String, lv: int) -> String:
 static func recipes_at(skill: String, lv: int) -> Array:
 	GameData.ensure()
 	var out := []
+	var weapons := {}                       # WEAPON-CATALOG-01: catalogue weapons by type ("katanas"), not 1,920 names
 	for r in GameData.recipes:
 		var rec: Dictionary = GameData.recipes[r]
 		if str(rec.skill) == skill and int(rec.level) == lv:
-			out.append(GameData.item_name(str(rec.out.keys()[0])).to_lower())
+			if GameData.is_catalogue_recipe(r):
+				var g: Dictionary = GameData.item(str(rec.out.keys()[0])).gear
+				var kind := WikiGear.plural(str(g.wtype))
+				if not weapons.has(kind):
+					weapons[kind] = []
+				var metal := str(GameData.weapon_types.metals[g.metal].name).to_lower()
+				if not (weapons[kind] as Array).has(metal):
+					weapons[kind].append(metal)
+			else:
+				out.append(GameData.item_name(str(rec.out.keys()[0])).to_lower())
 	out.sort()
+	var ws := weapons.keys()
+	ws.sort()
+	if not ws.is_empty():
+		out.append("weapon patterns: " + ", ".join(ws.map(func(k): return "%s (%s)" % [k, ", ".join(weapons[k])])))
 	return out
 
 

@@ -473,6 +473,90 @@
       "metal_armour"
      ]
     ]
+   },
+   "bronze_armor": {
+    "sheet": "res://assets/characters/layers/clothes/bronze_armor.png",
+    "ramps": []
+   },
+   "french_hunter_coat": {
+    "sheet": "res://assets/characters/layers/clothes/french_hunter_coat.png",
+    "ramps": []
+   },
+   "gold_armor": {
+    "sheet": "res://assets/characters/layers/clothes/gold_armor.png",
+    "ramps": []
+   },
+   "mongol_cherbi_armor": {
+    "sheet": "res://assets/characters/layers/clothes/mongol_cherbi_armor.png",
+    "ramps": []
+   },
+   "mongol_khaan_armor": {
+    "sheet": "res://assets/characters/layers/clothes/mongol_khaan_armor.png",
+    "ramps": []
+   },
+   "mongol_kheshig_armor": {
+    "sheet": "res://assets/characters/layers/clothes/mongol_kheshig_armor.png",
+    "ramps": []
+   },
+   "mongol_noyon_armor": {
+    "sheet": "res://assets/characters/layers/clothes/mongol_noyon_armor.png",
+    "ramps": []
+   },
+   "musketeer_coat_purple": {
+    "sheet": "res://assets/characters/layers/clothes/musketeer_coat_purple.png",
+    "ramps": []
+   },
+   "musketeer_coat_red": {
+    "sheet": "res://assets/characters/layers/clothes/musketeer_coat_red.png",
+    "ramps": []
+   },
+   "ninja_garb": {
+    "sheet": "res://assets/characters/layers/clothes/ninja_garb.png",
+    "ramps": []
+   },
+   "ronin_robe_blue": {
+    "sheet": "res://assets/characters/layers/clothes/ronin_robe_blue.png",
+    "ramps": []
+   },
+   "ronin_robe_red": {
+    "sheet": "res://assets/characters/layers/clothes/ronin_robe_red.png",
+    "ramps": []
+   },
+   "samurai_armor_lime": {
+    "sheet": "res://assets/characters/layers/clothes/samurai_armor_lime.png",
+    "ramps": []
+   },
+   "samurai_armor_purple": {
+    "sheet": "res://assets/characters/layers/clothes/samurai_armor_purple.png",
+    "ramps": []
+   },
+   "steel_armor": {
+    "sheet": "res://assets/characters/layers/clothes/steel_armor.png",
+    "ramps": []
+   },
+   "traveller_robe": {
+    "sheet": "res://assets/characters/layers/clothes/traveller_robe.png",
+    "ramps": []
+   },
+   "viking_jarl_armor": {
+    "sheet": "res://assets/characters/layers/clothes/viking_jarl_armor.png",
+    "ramps": []
+   },
+   "viking_karl_armor": {
+    "sheet": "res://assets/characters/layers/clothes/viking_karl_armor.png",
+    "ramps": []
+   },
+   "viking_warrior_armor": {
+    "sheet": "res://assets/characters/layers/clothes/viking_warrior_armor.png",
+    "ramps": []
+   },
+   "yabusame_robe_blue": {
+    "sheet": "res://assets/characters/layers/clothes/yabusame_robe_blue.png",
+    "ramps": []
+   },
+   "yabusame_robe_red": {
+    "sheet": "res://assets/characters/layers/clothes/yabusame_robe_red.png",
+    "ramps": []
    }
   },
   "gloves": {
@@ -697,6 +781,286 @@
       "metal_headwear"
      ]
     ]
+   },
+   "archer_hat_cyan": {
+    "sheet": "res://assets/characters/layers/headwear/archer_hat_cyan.png",
+    "ramps": []
+   },
+   "archer_hat_green": {
+    "sheet": "res://assets/characters/layers/headwear/archer_hat_green.png",
+    "ramps": []
+   },
+   "archer_hat_yellow": {
+    "sheet": "res://assets/characters/layers/headwear/archer_hat_yellow.png",
+    "ramps": []
+   },
+   "assassin_bandana_black": {
+    "sheet": "res://assets/characters/layers/headwear/assassin_bandana_black.png",
+    "ramps": []
+   },
+   "assassin_bandana_green": {
+    "sheet": "res://assets/characters/layers/headwear/assassin_bandana_green.png",
+    "ramps": []
+   },
+   "assassin_bandana_red": {
+    "sheet": "res://assets/characters/layers/headwear/assassin_bandana_red.png",
+    "ramps": []
+   },
+   "daimyo_helm": {
+    "sheet": "res://assets/characters/layers/headwear/daimyo_helm.png",
+    "ramps": []
+   },
+   "dark_knight_helm": {
+    "sheet": "res://assets/characters/layers/headwear/dark_knight_helm.png",
+    "ramps": []
+   },
+   "dragon_knight_helm": {
+    "sheet": "res://assets/characters/layers/headwear/dragon_knight_helm.png",
+    "ramps": []
+   },
+   "esper_hat_blue": {
+    "sheet": "res://assets/characters/layers/headwear/esper_hat_blue.png",
+    "ramps": []
+   },
+   "esper_hat_red": {
+    "sheet": "res://assets/characters/layers/headwear/esper_hat_red.png",
+    "ramps": []
+   },
+   "esper_hood_cyan": {
+    "sheet": "res://assets/characters/layers/headwear/esper_hood_cyan.png",
+    "ramps": []
+   },
+   "esper_hood_red": {
+    "sheet": "res://assets/characters/layers/headwear/esper_hood_red.png",
+    "ramps": []
+   },
+   "grunt_helm": {
+    "sheet": "res://assets/characters/layers/headwear/grunt_helm.png",
+    "ramps": []
+   },
+   "high_mage_hat_cyan": {
+    "sheet": "res://assets/characters/layers/headwear/high_mage_hat_cyan.png",
+    "ramps": []
+   },
+   "high_mage_hat_red": {
+    "sheet": "res://assets/characters/layers/headwear/high_mage_hat_red.png",
+    "ramps": []
+   },
+   "high_mage_hat_yellow": {
+    "sheet": "res://assets/characters/layers/headwear/high_mage_hat_yellow.png",
+    "ramps": []
+   },
+   "hunter_hat_blue": {
+    "sheet": "res://assets/characters/layers/headwear/hunter_hat_blue.png",
+    "ramps": []
+   },
+   "hunter_hat_indigo": {
+    "sheet": "res://assets/characters/layers/headwear/hunter_hat_indigo.png",
+    "ramps": []
+   },
+   "hunter_hat_red": {
+    "sheet": "res://assets/characters/layers/headwear/hunter_hat_red.png",
+    "ramps": []
+   },
+   "knight_helm": {
+    "sheet": "res://assets/characters/layers/headwear/knight_helm.png",
+    "ramps": []
+   },
+   "mage_hat_cyan": {
+    "sheet": "res://assets/characters/layers/headwear/mage_hat_cyan.png",
+    "ramps": []
+   },
+   "mage_hat_red": {
+    "sheet": "res://assets/characters/layers/headwear/mage_hat_red.png",
+    "ramps": []
+   },
+   "mage_hat_yellow": {
+    "sheet": "res://assets/characters/layers/headwear/mage_hat_yellow.png",
+    "ramps": []
+   },
+   "mongol_cherbi_helm": {
+    "sheet": "res://assets/characters/layers/headwear/mongol_cherbi_helm.png",
+    "ramps": []
+   },
+   "mongol_khaan_helm": {
+    "sheet": "res://assets/characters/layers/headwear/mongol_khaan_helm.png",
+    "ramps": []
+   },
+   "mongol_kheshig_helm": {
+    "sheet": "res://assets/characters/layers/headwear/mongol_kheshig_helm.png",
+    "ramps": []
+   },
+   "mongol_noyon_helm": {
+    "sheet": "res://assets/characters/layers/headwear/mongol_noyon_helm.png",
+    "ramps": []
+   },
+   "musketeer_hat_purple": {
+    "sheet": "res://assets/characters/layers/headwear/musketeer_hat_purple.png",
+    "ramps": []
+   },
+   "musketeer_hat_red": {
+    "sheet": "res://assets/characters/layers/headwear/musketeer_hat_red.png",
+    "ramps": []
+   },
+   "ninja_bandana_black": {
+    "sheet": "res://assets/characters/layers/headwear/ninja_bandana_black.png",
+    "ramps": []
+   },
+   "ninja_bandana_blue": {
+    "sheet": "res://assets/characters/layers/headwear/ninja_bandana_blue.png",
+    "ramps": []
+   },
+   "ninja_bandana_red": {
+    "sheet": "res://assets/characters/layers/headwear/ninja_bandana_red.png",
+    "ramps": []
+   },
+   "paladin_helm": {
+    "sheet": "res://assets/characters/layers/headwear/paladin_helm.png",
+    "ramps": []
+   },
+   "ranger_hat_cyan": {
+    "sheet": "res://assets/characters/layers/headwear/ranger_hat_cyan.png",
+    "ramps": []
+   },
+   "ranger_hat_green": {
+    "sheet": "res://assets/characters/layers/headwear/ranger_hat_green.png",
+    "ramps": []
+   },
+   "ranger_hat_yellow": {
+    "sheet": "res://assets/characters/layers/headwear/ranger_hat_yellow.png",
+    "ramps": []
+   },
+   "rogue_hat": {
+    "sheet": "res://assets/characters/layers/headwear/rogue_hat.png",
+    "ramps": []
+   },
+   "ronin_straw_hat_blue": {
+    "sheet": "res://assets/characters/layers/headwear/ronin_straw_hat_blue.png",
+    "ramps": []
+   },
+   "ronin_straw_hat_red": {
+    "sheet": "res://assets/characters/layers/headwear/ronin_straw_hat_red.png",
+    "ramps": []
+   },
+   "samurai_helm": {
+    "sheet": "res://assets/characters/layers/headwear/samurai_helm.png",
+    "ramps": []
+   },
+   "scout_helm": {
+    "sheet": "res://assets/characters/layers/headwear/scout_helm.png",
+    "ramps": []
+   },
+   "shogun_helm_green": {
+    "sheet": "res://assets/characters/layers/headwear/shogun_helm_green.png",
+    "ramps": []
+   },
+   "shogun_helm_purple": {
+    "sheet": "res://assets/characters/layers/headwear/shogun_helm_purple.png",
+    "ramps": []
+   },
+   "soldier_bronze_helm_blue": {
+    "sheet": "res://assets/characters/layers/headwear/soldier_bronze_helm_blue.png",
+    "ramps": []
+   },
+   "soldier_bronze_helm_red": {
+    "sheet": "res://assets/characters/layers/headwear/soldier_bronze_helm_red.png",
+    "ramps": []
+   },
+   "soldier_gold_helm_blue": {
+    "sheet": "res://assets/characters/layers/headwear/soldier_gold_helm_blue.png",
+    "ramps": []
+   },
+   "soldier_gold_helm_red": {
+    "sheet": "res://assets/characters/layers/headwear/soldier_gold_helm_red.png",
+    "ramps": []
+   },
+   "soldier_iron_helm_blue": {
+    "sheet": "res://assets/characters/layers/headwear/soldier_iron_helm_blue.png",
+    "ramps": []
+   },
+   "soldier_iron_helm_red": {
+    "sheet": "res://assets/characters/layers/headwear/soldier_iron_helm_red.png",
+    "ramps": []
+   },
+   "soldier_steel_helm_blue": {
+    "sheet": "res://assets/characters/layers/headwear/soldier_steel_helm_blue.png",
+    "ramps": []
+   },
+   "soldier_steel_helm_red": {
+    "sheet": "res://assets/characters/layers/headwear/soldier_steel_helm_red.png",
+    "ramps": []
+   },
+   "sorcerer_hood_cyan": {
+    "sheet": "res://assets/characters/layers/headwear/sorcerer_hood_cyan.png",
+    "ramps": []
+   },
+   "sorcerer_hood_red": {
+    "sheet": "res://assets/characters/layers/headwear/sorcerer_hood_red.png",
+    "ramps": []
+   },
+   "stalker_hood_black": {
+    "sheet": "res://assets/characters/layers/headwear/stalker_hood_black.png",
+    "ramps": []
+   },
+   "stalker_hood_purple": {
+    "sheet": "res://assets/characters/layers/headwear/stalker_hood_purple.png",
+    "ramps": []
+   },
+   "stalker_hood_red": {
+    "sheet": "res://assets/characters/layers/headwear/stalker_hood_red.png",
+    "ramps": []
+   },
+   "thief_bandana_green": {
+    "sheet": "res://assets/characters/layers/headwear/thief_bandana_green.png",
+    "ramps": []
+   },
+   "thief_bandana_lime": {
+    "sheet": "res://assets/characters/layers/headwear/thief_bandana_lime.png",
+    "ramps": []
+   },
+   "thief_bandana_red": {
+    "sheet": "res://assets/characters/layers/headwear/thief_bandana_red.png",
+    "ramps": []
+   },
+   "traveller_straw_hat": {
+    "sheet": "res://assets/characters/layers/headwear/traveller_straw_hat.png",
+    "ramps": []
+   },
+   "traveller_straw_hat_cyan": {
+    "sheet": "res://assets/characters/layers/headwear/traveller_straw_hat_cyan.png",
+    "ramps": []
+   },
+   "valkyrie_helm": {
+    "sheet": "res://assets/characters/layers/headwear/valkyrie_helm.png",
+    "ramps": []
+   },
+   "viking_jarl_helm": {
+    "sheet": "res://assets/characters/layers/headwear/viking_jarl_helm.png",
+    "ramps": []
+   },
+   "viking_karl_helm": {
+    "sheet": "res://assets/characters/layers/headwear/viking_karl_helm.png",
+    "ramps": []
+   },
+   "viking_warrior_helm_red": {
+    "sheet": "res://assets/characters/layers/headwear/viking_warrior_helm_red.png",
+    "ramps": []
+   },
+   "viking_warrior_helm_yellow": {
+    "sheet": "res://assets/characters/layers/headwear/viking_warrior_helm_yellow.png",
+    "ramps": []
+   },
+   "villager_straw_hat": {
+    "sheet": "res://assets/characters/layers/headwear/villager_straw_hat.png",
+    "ramps": []
+   },
+   "yabusame_straw_hat_blue": {
+    "sheet": "res://assets/characters/layers/headwear/yabusame_straw_hat_blue.png",
+    "ramps": []
+   },
+   "yabusame_straw_hat_red": {
+    "sheet": "res://assets/characters/layers/headwear/yabusame_straw_hat_red.png",
+    "ramps": []
    }
   },
   "weapon-overlay": {
@@ -852,6 +1216,370 @@
   },
   "plain_clothes": {
    "note": "the character's own clothes: nothing drawn over them"
+  },
+  "archer_hat_cyan": {
+   "layer": "headwear",
+   "option": "archer_hat_cyan"
+  },
+  "archer_hat_green": {
+   "layer": "headwear",
+   "option": "archer_hat_green"
+  },
+  "archer_hat_yellow": {
+   "layer": "headwear",
+   "option": "archer_hat_yellow"
+  },
+  "assassin_bandana_black": {
+   "layer": "headwear",
+   "option": "assassin_bandana_black"
+  },
+  "assassin_bandana_green": {
+   "layer": "headwear",
+   "option": "assassin_bandana_green"
+  },
+  "assassin_bandana_red": {
+   "layer": "headwear",
+   "option": "assassin_bandana_red"
+  },
+  "bronze_armor": {
+   "layer": "clothes",
+   "option": "bronze_armor"
+  },
+  "daimyo_helm": {
+   "layer": "headwear",
+   "option": "daimyo_helm"
+  },
+  "dark_knight_helm": {
+   "layer": "headwear",
+   "option": "dark_knight_helm"
+  },
+  "dragon_knight_helm": {
+   "layer": "headwear",
+   "option": "dragon_knight_helm"
+  },
+  "esper_hat_blue": {
+   "layer": "headwear",
+   "option": "esper_hat_blue"
+  },
+  "esper_hat_red": {
+   "layer": "headwear",
+   "option": "esper_hat_red"
+  },
+  "esper_hood_cyan": {
+   "layer": "headwear",
+   "option": "esper_hood_cyan"
+  },
+  "esper_hood_red": {
+   "layer": "headwear",
+   "option": "esper_hood_red"
+  },
+  "french_hunter_coat": {
+   "layer": "clothes",
+   "option": "french_hunter_coat"
+  },
+  "gold_armor": {
+   "layer": "clothes",
+   "option": "gold_armor"
+  },
+  "grunt_helm": {
+   "layer": "headwear",
+   "option": "grunt_helm"
+  },
+  "high_mage_hat_cyan": {
+   "layer": "headwear",
+   "option": "high_mage_hat_cyan"
+  },
+  "high_mage_hat_red": {
+   "layer": "headwear",
+   "option": "high_mage_hat_red"
+  },
+  "high_mage_hat_yellow": {
+   "layer": "headwear",
+   "option": "high_mage_hat_yellow"
+  },
+  "hunter_hat_blue": {
+   "layer": "headwear",
+   "option": "hunter_hat_blue"
+  },
+  "hunter_hat_indigo": {
+   "layer": "headwear",
+   "option": "hunter_hat_indigo"
+  },
+  "hunter_hat_red": {
+   "layer": "headwear",
+   "option": "hunter_hat_red"
+  },
+  "knight_helm": {
+   "layer": "headwear",
+   "option": "knight_helm"
+  },
+  "mage_hat_cyan": {
+   "layer": "headwear",
+   "option": "mage_hat_cyan"
+  },
+  "mage_hat_red": {
+   "layer": "headwear",
+   "option": "mage_hat_red"
+  },
+  "mage_hat_yellow": {
+   "layer": "headwear",
+   "option": "mage_hat_yellow"
+  },
+  "mongol_cherbi_armor": {
+   "layer": "clothes",
+   "option": "mongol_cherbi_armor"
+  },
+  "mongol_cherbi_helm": {
+   "layer": "headwear",
+   "option": "mongol_cherbi_helm"
+  },
+  "mongol_khaan_armor": {
+   "layer": "clothes",
+   "option": "mongol_khaan_armor"
+  },
+  "mongol_khaan_helm": {
+   "layer": "headwear",
+   "option": "mongol_khaan_helm"
+  },
+  "mongol_kheshig_armor": {
+   "layer": "clothes",
+   "option": "mongol_kheshig_armor"
+  },
+  "mongol_kheshig_helm": {
+   "layer": "headwear",
+   "option": "mongol_kheshig_helm"
+  },
+  "mongol_noyon_armor": {
+   "layer": "clothes",
+   "option": "mongol_noyon_armor"
+  },
+  "mongol_noyon_helm": {
+   "layer": "headwear",
+   "option": "mongol_noyon_helm"
+  },
+  "musketeer_coat_purple": {
+   "layer": "clothes",
+   "option": "musketeer_coat_purple"
+  },
+  "musketeer_coat_red": {
+   "layer": "clothes",
+   "option": "musketeer_coat_red"
+  },
+  "musketeer_hat_purple": {
+   "layer": "headwear",
+   "option": "musketeer_hat_purple"
+  },
+  "musketeer_hat_red": {
+   "layer": "headwear",
+   "option": "musketeer_hat_red"
+  },
+  "ninja_bandana_black": {
+   "layer": "headwear",
+   "option": "ninja_bandana_black"
+  },
+  "ninja_bandana_blue": {
+   "layer": "headwear",
+   "option": "ninja_bandana_blue"
+  },
+  "ninja_bandana_red": {
+   "layer": "headwear",
+   "option": "ninja_bandana_red"
+  },
+  "ninja_garb": {
+   "layer": "clothes",
+   "option": "ninja_garb"
+  },
+  "paladin_helm": {
+   "layer": "headwear",
+   "option": "paladin_helm"
+  },
+  "ranger_hat_cyan": {
+   "layer": "headwear",
+   "option": "ranger_hat_cyan"
+  },
+  "ranger_hat_green": {
+   "layer": "headwear",
+   "option": "ranger_hat_green"
+  },
+  "ranger_hat_yellow": {
+   "layer": "headwear",
+   "option": "ranger_hat_yellow"
+  },
+  "rogue_hat": {
+   "layer": "headwear",
+   "option": "rogue_hat"
+  },
+  "ronin_robe_blue": {
+   "layer": "clothes",
+   "option": "ronin_robe_blue"
+  },
+  "ronin_robe_red": {
+   "layer": "clothes",
+   "option": "ronin_robe_red"
+  },
+  "ronin_straw_hat_blue": {
+   "layer": "headwear",
+   "option": "ronin_straw_hat_blue"
+  },
+  "ronin_straw_hat_red": {
+   "layer": "headwear",
+   "option": "ronin_straw_hat_red"
+  },
+  "samurai_armor_lime": {
+   "layer": "clothes",
+   "option": "samurai_armor_lime"
+  },
+  "samurai_armor_purple": {
+   "layer": "clothes",
+   "option": "samurai_armor_purple"
+  },
+  "samurai_helm": {
+   "layer": "headwear",
+   "option": "samurai_helm"
+  },
+  "scout_helm": {
+   "layer": "headwear",
+   "option": "scout_helm"
+  },
+  "shogun_helm_green": {
+   "layer": "headwear",
+   "option": "shogun_helm_green"
+  },
+  "shogun_helm_purple": {
+   "layer": "headwear",
+   "option": "shogun_helm_purple"
+  },
+  "soldier_bronze_helm_blue": {
+   "layer": "headwear",
+   "option": "soldier_bronze_helm_blue"
+  },
+  "soldier_bronze_helm_red": {
+   "layer": "headwear",
+   "option": "soldier_bronze_helm_red"
+  },
+  "soldier_gold_helm_blue": {
+   "layer": "headwear",
+   "option": "soldier_gold_helm_blue"
+  },
+  "soldier_gold_helm_red": {
+   "layer": "headwear",
+   "option": "soldier_gold_helm_red"
+  },
+  "soldier_iron_helm_blue": {
+   "layer": "headwear",
+   "option": "soldier_iron_helm_blue"
+  },
+  "soldier_iron_helm_red": {
+   "layer": "headwear",
+   "option": "soldier_iron_helm_red"
+  },
+  "soldier_steel_helm_blue": {
+   "layer": "headwear",
+   "option": "soldier_steel_helm_blue"
+  },
+  "soldier_steel_helm_red": {
+   "layer": "headwear",
+   "option": "soldier_steel_helm_red"
+  },
+  "sorcerer_hood_cyan": {
+   "layer": "headwear",
+   "option": "sorcerer_hood_cyan"
+  },
+  "sorcerer_hood_red": {
+   "layer": "headwear",
+   "option": "sorcerer_hood_red"
+  },
+  "stalker_hood_black": {
+   "layer": "headwear",
+   "option": "stalker_hood_black"
+  },
+  "stalker_hood_purple": {
+   "layer": "headwear",
+   "option": "stalker_hood_purple"
+  },
+  "stalker_hood_red": {
+   "layer": "headwear",
+   "option": "stalker_hood_red"
+  },
+  "steel_armor": {
+   "layer": "clothes",
+   "option": "steel_armor"
+  },
+  "thief_bandana_green": {
+   "layer": "headwear",
+   "option": "thief_bandana_green"
+  },
+  "thief_bandana_lime": {
+   "layer": "headwear",
+   "option": "thief_bandana_lime"
+  },
+  "thief_bandana_red": {
+   "layer": "headwear",
+   "option": "thief_bandana_red"
+  },
+  "traveller_robe": {
+   "layer": "clothes",
+   "option": "traveller_robe"
+  },
+  "traveller_straw_hat": {
+   "layer": "headwear",
+   "option": "traveller_straw_hat"
+  },
+  "traveller_straw_hat_cyan": {
+   "layer": "headwear",
+   "option": "traveller_straw_hat_cyan"
+  },
+  "valkyrie_helm": {
+   "layer": "headwear",
+   "option": "valkyrie_helm"
+  },
+  "viking_jarl_armor": {
+   "layer": "clothes",
+   "option": "viking_jarl_armor"
+  },
+  "viking_jarl_helm": {
+   "layer": "headwear",
+   "option": "viking_jarl_helm"
+  },
+  "viking_karl_armor": {
+   "layer": "clothes",
+   "option": "viking_karl_armor"
+  },
+  "viking_karl_helm": {
+   "layer": "headwear",
+   "option": "viking_karl_helm"
+  },
+  "viking_warrior_armor": {
+   "layer": "clothes",
+   "option": "viking_warrior_armor"
+  },
+  "viking_warrior_helm_red": {
+   "layer": "headwear",
+   "option": "viking_warrior_helm_red"
+  },
+  "viking_warrior_helm_yellow": {
+   "layer": "headwear",
+   "option": "viking_warrior_helm_yellow"
+  },
+  "villager_straw_hat": {
+   "layer": "headwear",
+   "option": "villager_straw_hat"
+  },
+  "yabusame_robe_blue": {
+   "layer": "clothes",
+   "option": "yabusame_robe_blue"
+  },
+  "yabusame_robe_red": {
+   "layer": "clothes",
+   "option": "yabusame_robe_red"
+  },
+  "yabusame_straw_hat_blue": {
+   "layer": "headwear",
+   "option": "yabusame_straw_hat_blue"
+  },
+  "yabusame_straw_hat_red": {
+   "layer": "headwear",
+   "option": "yabusame_straw_hat_red"
   }
  }
 }

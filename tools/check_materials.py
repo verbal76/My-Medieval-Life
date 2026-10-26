@@ -126,6 +126,10 @@ def recipes_in(text, recipes):
 def load(root=ROOT):
     """The game's data as the plain dict build_report reads."""
     ctx = cr.load(root)
+    # WEAPON-CATALOG-01: the 1,920 generated catalogue weapons are one use family of the bars, coal, leather, planks, tusks
+    # and antlers they take (as Rule 003 counts near-duplicates once); they are left out of this report
+    ctx["items"] = {k: v for k, v in ctx["items"].items() if "gear" not in v}
+    ctx["recipes"] = {k: v for k, v in ctx["recipes"].items() if not v.get("catalogue")}
     items, recipes, bal = ctx["items"], ctx["recipes"], ctx["balance"]
     brain = (root / BRAIN).read_text(encoding="utf-8")
     jobs = sorted(set(cr.gd_const((root / "game/scripts/core/population.gd").read_text(encoding="utf-8"), "JOBS")) | ADOPTED)

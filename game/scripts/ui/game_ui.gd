@@ -2783,6 +2783,10 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 				hide_all()
 			else:
 				message(str(r.why)), row_price >= 0)
+	if GearOrders.takes_orders(n):
+		# ARMOR-CATALOG-01, WEAPON-CATALOG-01 (Build 22): the village's armourers take orders (GearWindow, GearOrders)
+		var what: String = {"smith": "Armoury: order armour and weapons", "tanner": "Order leather and cloth armour", "tailor": "Order hats, hoods and bandanas"}[n.job]
+		_talk_choice(choices, what, func(): GearWindow.show(self, "order", n))
 	if w.is_barber(n):
 		_talk_choice(choices, "Hair, beard and colour (%d coins a visit)" % int(GameData.b("barber").price), func(): show_barber(n, w.player.appearance))
 	if n.id == w.reeve_id:
@@ -3481,8 +3485,12 @@ func show_craft(station_id: String) -> void:
 	var no := w.station_refusal(station_id)
 	if no != "":
 		_label(no, 18, Color(1, 0.7, 0.55))
+	var gear := 0
 	for r in (Furniture.home_recipes(str(st.kind)) if st.has("home") else GameData.recipes_at(st.type)):
 		var rec: Dictionary = GameData.recipes[r]
+		if GameData.orderable(str(rec.out.keys()[0])):
+			gear += 1                                  # ARMOR-CATALOG-01: the catalogue's pieces, grouped in their own window
+			continue
 		var ins := ", ".join(rec.in.keys().map(func(k): return "%d %s (%d)" % [int(rec.in[k]), GameData.item_name(k), p.inv.count(k)]))
 		var outs := ", ".join(rec.out.keys().map(func(k): return "%d %s" % [int(rec.out[k]), GameData.item_name(k)]))
 		var h := HBoxContainer.new()
@@ -3495,6 +3503,8 @@ func show_craft(station_id: String) -> void:
 		var rr: String = r
 		_button("Make", func(): main.craft(rr, station_id), w.player_craft_refusal(rr) == "" and no == "", h)     # core decides (DVW-A12 R3)
 		panel_body.add_child(h)
+	if gear > 0 and not st.has("home"):
+		_button("Armour and weapons (%d pieces)" % gear, func(): GearWindow.show(self, "craft", station_id)).name = "Gear catalogue"
 
 
 # ---------------------------------------------------------------- inventory ------------------

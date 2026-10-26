@@ -444,6 +444,7 @@
       "litter": 2,
       "meat": 4,
       "hide": 1,
+      "tusks": 2,
       "start": [
         2,
         3
@@ -487,7 +488,7 @@
     },
     "deer": {"name": "Deer", "kind": "wild", "skins": ["mini_doe"], "skins_m": ["mini_stag"], "frame": 32, "layout": "minifolks", "diet": "graze",
       "hp": 18, "speed": 1.5, "grow_years": 0.5, "juvenile_years": 0.125, "elder_years": 7.5, "death_years": [9, 12], "breed_years": 0.75, "litter": 1,
-      "meat": 4, "hide": 1, "start": [2, 4], "woods_cap": 10, "keep": 2, "flee": 5.0, "one": "deer"},
+      "meat": 4, "hide": 1, "antlers_m": 2, "start": [2, 4], "woods_cap": 10, "keep": 2, "flee": 5.0, "one": "deer"},
     "wolf": {"name": "Wolves", "kind": "wild", "skins": ["mini_wolf"], "frame": 32, "layout": "minifolks", "diet": "hunt", "prey": ["deer", "boar", "rabbit"],
       "hunger_per_hour": 1.0, "hp": 22, "speed": 1.7, "grow_years": 0.625, "juvenile_years": 0.125, "elder_years": 8, "death_years": [9, 12], "breed_years": 1.25, "litter": 2,
       "meat": 2, "hide": 1, "start": [1, 1], "woods_cap": 4, "keep": 2, "flee": 0.0, "bite": 6, "bite_seconds": 1.2, "people": true, "game": false, "one": "wolf"},

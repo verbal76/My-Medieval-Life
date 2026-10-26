@@ -16,12 +16,12 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 
 | Measure | Count |
 |---|---|
-| Standard crafting materials | 25 |
+| Standard crafting materials | 29 |
 | Production professions | 11 |
-| Recipes | 49 |
-| Threshold findings | 38 |
-| ... with a recorded exception | 20 |
-| ... open (no exception) | 18 |
+| Recipes | 140 |
+| Threshold findings | 39 |
+| ... with a recorded exception | 19 |
+| ... open (no exception) | 20 |
 | Orphaned recipes | 0 |
 | Broken references | 0 |
 | Stale or invalid exceptions | 0 |
@@ -30,20 +30,24 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 
 | Material | Meaningful uses | Consuming recipes | Construction | Professions | Made by | Gathered by | Result |
 |---|---|---|---|---|---|---|---|
+| `antler` | 6 | `forge_dark_knight_helm` (player only); `forge_viking_jarl_armor` (player only); `forge_viking_jarl_helm` (player only); `forge_viking_karl_helm` (player only); `forge_viking_warrior_helm_red` (player only); `forge_viking_warrior_helm_yellow` (player only) | none | none | none | hunter | few professions: **open** |
+| `boar_tusk` | 3 | `forge_dragon_knight_helm` (player only); `forge_mongol_khaan_armor` (player only); `forge_viking_warrior_armor` (player only) | none | none | none | hunter | few professions: **open** |
 | `building_block` | 2 | none | house, workshop | none | `dress_stone` | none | few uses: **open**; few professions: **open** |
 | `cart_axle` | 2 | `build_handcart` (carpenter); `build_minecart` (player only) | none | carpenter | `forge_cart_axle` | none | few uses: exception; few professions: exception |
 | `cart_ironwork` | 2 | `build_handcart` (carpenter); `build_minecart` (player only) | none | carpenter | `forge_cart_ironwork` | none | few uses: exception; few professions: exception |
 | `cart_wheel` | 2 | `build_handcart` (carpenter); `build_minecart` (player only) | none | carpenter | `make_cart_wheel` | none | few uses: exception; few professions: exception |
-| `coal` | 4 | `forge_cart_ironwork` (smith); `smelt_copper` (smith); `smelt_gold` (smith); `smelt_iron` (smith) | none | smith | none | laborer, miner | few professions: **open** |
-| `copper_bar` | 3 | `forge_amulet` (smith); `forge_copper_ring` (smith); `forge_copper_sword` (smith) | none | smith | `smelt_copper` | none | few professions: **open** |
+| `coal` | 11 | `forge_bronze_armor` (player only); `forge_cart_ironwork` (smith); `forge_knight_helm` (player only); `forge_soldier_bronze_helm_blue` (player only); `forge_soldier_bronze_helm_red` (player only); `forge_soldier_steel_helm_blue` (player only); `forge_soldier_steel_helm_red` (player only); `forge_steel_armor` (player only); `smelt_copper` (smith); `smelt_gold` (smith); `smelt_iron` (smith) | none | smith | none | laborer, miner | few professions: **open** |
+| `copper_bar` | 11 | `forge_amulet` (smith); `forge_bronze_armor` (player only); `forge_copper_ring` (smith); `forge_copper_sword` (smith); `forge_mongol_cherbi_armor` (player only); `forge_mongol_khaan_armor` (player only); `forge_mongol_kheshig_armor` (player only); `forge_mongol_noyon_armor` (player only); `forge_mongol_noyon_helm` (player only); `forge_soldier_bronze_helm_blue` (player only); `forge_soldier_bronze_helm_red` (player only) | none | smith | `smelt_copper` | none | few professions: **open** |
 | `copper_ore` | 1 | `smelt_copper` (smith) | none | smith | none | laborer, miner | few uses: exception; few professions: exception |
+| `feather` | 21 | `forge_mongol_cherbi_helm` (player only); `forge_mongol_khaan_helm` (player only); `forge_valkyrie_helm` (player only); `sew_archer_hat_cyan` (player only); `sew_archer_hat_green` (player only); `sew_archer_hat_yellow` (player only); `sew_french_hunter_coat` (player only); `sew_hunter_hat_blue` (player only); `sew_hunter_hat_indigo` (player only); `sew_hunter_hat_red` (player only); `sew_musketeer_coat_purple` (player only); `sew_musketeer_coat_red` (player only); `sew_musketeer_hat_purple` (player only); `sew_musketeer_hat_red` (player only); `sew_ranger_hat_cyan` (player only); `sew_ranger_hat_green` (player only); `sew_ranger_hat_yellow` (player only); `sew_yabusame_robe_blue` (player only); `sew_yabusame_robe_red` (player only); `sew_yabusame_straw_hat_blue` (player only); `sew_yabusame_straw_hat_red` (player only) | none | none | none | farmer, hunter | few professions: **open** |
+| `fine_cloth` | 34 | `forge_daimyo_helm` (player only); `forge_mongol_noyon_armor` (player only); `forge_paladin_helm` (player only); `forge_samurai_armor_lime` (player only); `forge_samurai_armor_purple` (player only); `forge_samurai_helm` (player only); `forge_shogun_helm_green` (player only); `forge_shogun_helm_purple` (player only); `sew_esper_hat_blue` (player only); `sew_esper_hat_red` (player only); `sew_esper_hood_cyan` (player only); `sew_esper_hood_red` (player only); `sew_french_hunter_coat` (player only); `sew_high_mage_hat_cyan` (player only); `sew_high_mage_hat_red` (player only); `sew_high_mage_hat_yellow` (player only); `sew_hunter_hat_blue` (player only); `sew_hunter_hat_indigo` (player only); `sew_hunter_hat_red` (player only); `sew_mage_hat_cyan` (player only); `sew_mage_hat_red` (player only); `sew_mage_hat_yellow` (player only); `sew_musketeer_coat_purple` (player only); `sew_musketeer_coat_red` (player only); `sew_musketeer_hat_purple` (player only); `sew_musketeer_hat_red` (player only); `sew_ninja_garb` (player only); `sew_ronin_robe_blue` (player only); `sew_ronin_robe_red` (player only); `sew_sorcerer_hood_cyan` (player only); `sew_sorcerer_hood_red` (player only); `sew_traveller_robe` (player only); `sew_yabusame_robe_blue` (player only); `sew_yabusame_robe_red` (player only) | none | none | none | none | few professions: **open** |
 | `flower` | 3 | `brew_healing_tonic` (sage); `brew_poultice` (sage); `brew_tonic` (sage) | none | sage | none | none | few professions: **open** |
-| `gold_bar` | 1 | `forge_gold_ring` (smith) | none | smith | `smelt_gold` | none | few uses: **open**; few professions: **open** |
+| `gold_bar` | 27 | `forge_daimyo_helm` (player only); `forge_dark_knight_helm` (player only); `forge_dragon_knight_helm` (player only); `forge_gold_armor` (player only); `forge_gold_ring` (smith); `forge_mongol_khaan_armor` (player only); `forge_mongol_khaan_helm` (player only); `forge_paladin_helm` (player only); `forge_shogun_helm_green` (player only); `forge_shogun_helm_purple` (player only); `forge_soldier_gold_helm_blue` (player only); `forge_soldier_gold_helm_red` (player only); `forge_valkyrie_helm` (player only); `forge_viking_jarl_armor` (player only); `forge_viking_jarl_helm` (player only); `sew_esper_hat_blue` (player only); `sew_esper_hat_red` (player only); `sew_esper_hood_cyan` (player only); `sew_esper_hood_red` (player only); `sew_high_mage_hat_cyan` (player only); `sew_high_mage_hat_red` (player only); `sew_high_mage_hat_yellow` (player only); `sew_mage_hat_cyan` (player only); `sew_mage_hat_red` (player only); `sew_mage_hat_yellow` (player only); `sew_sorcerer_hood_cyan` (player only); `sew_sorcerer_hood_red` (player only) | none | smith | `smelt_gold` | none | few professions: **open** |
 | `gold_ore` | 1 | `smelt_gold` (smith) | none | smith | none | laborer, miner | few uses: **open**; few professions: **open** |
-| `hide` | 1 | `tan_leather` (tanner) | none | tanner | none | farmer, hunter | few uses: exception; few professions: exception |
-| `iron_bar` | 18 | `craft_plough` (carpenter); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_cart_ironwork` (smith); `forge_chisel` (smith); `forge_hammer` (smith); `forge_iron_armor` (smith); `forge_iron_helmet` (smith); `forge_iron_sword` (smith); `forge_lockpicks` (smith); `forge_nails` (smith); `forge_padlock` (smith); `forge_pickaxe` (smith); `forge_prospecting_kit` (player only); `forge_shovel_blade` (smith) | shop fittings, storefront, workshop | carpenter, smith | `smelt_iron` | none | pass |
+| `hide` | 8 | `forge_mongol_khaan_helm` (player only); `forge_mongol_kheshig_armor` (player only); `forge_mongol_kheshig_helm` (player only); `forge_mongol_noyon_helm` (player only); `forge_viking_jarl_armor` (player only); `forge_viking_karl_armor` (player only); `forge_viking_warrior_armor` (player only); `tan_leather` (tanner) | none | tanner | none | farmer, hunter | few professions: exception |
+| `iron_bar` | 52 | `craft_plough` (carpenter); `forge_axe` (smith); `forge_cart_axle` (smith); `forge_cart_ironwork` (smith); `forge_chisel` (smith); `forge_daimyo_helm` (player only); `forge_dark_knight_helm` (player only); `forge_dragon_knight_helm` (player only); `forge_gold_armor` (player only); `forge_grunt_helm` (player only); `forge_hammer` (smith); `forge_iron_armor` (smith); `forge_iron_helmet` (smith); `forge_iron_sword` (smith); `forge_knight_helm` (player only); `forge_lockpicks` (smith); `forge_mongol_cherbi_helm` (player only); `forge_mongol_khaan_armor` (player only); `forge_mongol_khaan_helm` (player only); `forge_mongol_kheshig_helm` (player only); `forge_mongol_noyon_armor` (player only); `forge_mongol_noyon_helm` (player only); `forge_nails` (smith); `forge_padlock` (smith); `forge_paladin_helm` (player only); `forge_pickaxe` (smith); `forge_prospecting_kit` (player only); `forge_samurai_armor_lime` (player only); `forge_samurai_armor_purple` (player only); `forge_samurai_helm` (player only); `forge_scout_helm` (player only); `forge_shogun_helm_green` (player only); `forge_shogun_helm_purple` (player only); `forge_shovel_blade` (smith); `forge_soldier_gold_helm_blue` (player only); `forge_soldier_gold_helm_red` (player only); `forge_soldier_iron_helm_blue` (player only); `forge_soldier_iron_helm_red` (player only); `forge_soldier_steel_helm_blue` (player only); `forge_soldier_steel_helm_red` (player only); `forge_steel_armor` (player only); `forge_valkyrie_helm` (player only); `forge_viking_jarl_armor` (player only); `forge_viking_jarl_helm` (player only); `forge_viking_karl_armor` (player only); `forge_viking_karl_helm` (player only); `forge_viking_warrior_armor` (player only); `forge_viking_warrior_helm_red` (player only); `forge_viking_warrior_helm_yellow` (player only) | shop fittings, storefront, workshop | carpenter, smith | `smelt_iron` | none | pass |
 | `iron_ore` | 1 | `smelt_iron` (smith) | none | smith | none | laborer, miner | few uses: exception; few professions: exception |
-| `leather` | 7 | `forge_amulet` (smith); `forge_iron_armor` (smith); `forge_iron_helmet` (smith); `forge_iron_sword` (smith); `forge_prospecting_kit` (player only); `leather_armor` (tanner); `leather_cap` (tanner) | none | smith, tanner | `tan_leather`, `tan_pelts` | none | pass |
+| `leather` | 50 | `forge_amulet` (smith); `forge_bronze_armor` (player only); `forge_dark_knight_helm` (player only); `forge_dragon_knight_helm` (player only); `forge_gold_armor` (player only); `forge_grunt_helm` (player only); `forge_iron_armor` (smith); `forge_iron_helmet` (smith); `forge_iron_sword` (smith); `forge_knight_helm` (player only); `forge_mongol_cherbi_armor` (player only); `forge_mongol_cherbi_helm` (player only); `forge_mongol_khaan_armor` (player only); `forge_mongol_khaan_helm` (player only); `forge_mongol_kheshig_armor` (player only); `forge_mongol_noyon_armor` (player only); `forge_paladin_helm` (player only); `forge_prospecting_kit` (player only); `forge_samurai_armor_lime` (player only); `forge_samurai_armor_purple` (player only); `forge_scout_helm` (player only); `forge_soldier_bronze_helm_blue` (player only); `forge_soldier_bronze_helm_red` (player only); `forge_soldier_gold_helm_blue` (player only); `forge_soldier_gold_helm_red` (player only); `forge_soldier_iron_helm_blue` (player only); `forge_soldier_iron_helm_red` (player only); `forge_soldier_steel_helm_blue` (player only); `forge_soldier_steel_helm_red` (player only); `forge_steel_armor` (player only); `forge_viking_jarl_armor` (player only); `forge_viking_jarl_helm` (player only); `forge_viking_warrior_armor` (player only); `forge_viking_warrior_helm_red` (player only); `forge_viking_warrior_helm_yellow` (player only); `leather_armor` (tanner); `leather_cap` (tanner); `sew_french_hunter_coat` (player only); `sew_hunter_hat_blue` (player only); `sew_hunter_hat_indigo` (player only); `sew_hunter_hat_red` (player only); `sew_musketeer_coat_purple` (player only); `sew_musketeer_coat_red` (player only); `sew_musketeer_hat_purple` (player only); `sew_musketeer_hat_red` (player only); `sew_ninja_garb` (player only); `sew_ronin_robe_blue` (player only); `sew_ronin_robe_red` (player only); `sew_yabusame_robe_blue` (player only); `sew_yabusame_robe_red` (player only) | none | smith, tanner | `tan_leather`, `tan_pelts` | none | pass |
 | `log` | 7 | `make_mallet` (carpenter); `make_timber_support` (player only); `roast_meat` (cook); `saw_planks` (carpenter) | house, loft, workshop | carpenter, cook | none | woodcutter | pass |
 | `meat` | 1 | `roast_meat` (cook) | none | cook | none | farmer, hunter | few uses: **open**; few professions: **open** |
 | `nails` | 2 | `make_ladder` (player only); `make_track_section` (player only) | none | none | `forge_nails` | none | few uses: **open**; few professions: **open** |
@@ -52,9 +56,9 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `shovel_blade` | 1 | `assemble_shovel` (player only) | none | none | `forge_shovel_blade` | none | few uses: exception; few professions: exception |
 | `shovel_haft` | 1 | `assemble_shovel` (player only) | none | none | `make_shovel_haft` | none | few uses: exception; few professions: exception |
 | `stone` | 3 | `dress_stone` (laborer, stonecutter) | shop fittings | laborer, stonecutter | none | laborer, miner | pass |
-| `wheat` | 3 | `bake_egg_bread` (cook); `brew_ale` (cook); `cook_pottage` (cook); `knead_flatbread` (cook) | none | cook | none | farmer | few professions: **open** |
+| `wheat` | 10 | `bake_egg_bread` (cook); `brew_ale` (cook); `cook_pottage` (cook); `knead_flatbread` (cook); `sew_ronin_straw_hat_blue` (player only); `sew_ronin_straw_hat_red` (player only); `sew_traveller_straw_hat` (player only); `sew_traveller_straw_hat_cyan` (player only); `sew_villager_straw_hat` (player only); `sew_yabusame_straw_hat_blue` (player only); `sew_yabusame_straw_hat_red` (player only) | none | cook | none | farmer | few professions: **open** |
 | `wool` | 1 | `weave_cloth` (tanner) | none | tanner | none | none | few uses: **open**; few professions: **open** |
-| `wool_cloth` | 1 | `sew_bandages` (tanner) | none | tanner | `weave_cloth` | none | few uses: **open**; few professions: **open** |
+| `wool_cloth` | 46 | `forge_mongol_cherbi_armor` (player only); `forge_mongol_cherbi_helm` (player only); `forge_mongol_khaan_armor` (player only); `forge_mongol_kheshig_armor` (player only); `forge_mongol_noyon_armor` (player only); `forge_mongol_noyon_helm` (player only); `forge_viking_karl_armor` (player only); `sew_archer_hat_cyan` (player only); `sew_archer_hat_green` (player only); `sew_archer_hat_yellow` (player only); `sew_assassin_bandana_black` (player only); `sew_assassin_bandana_green` (player only); `sew_assassin_bandana_red` (player only); `sew_bandages` (tanner); `sew_esper_hat_blue` (player only); `sew_esper_hat_red` (player only); `sew_esper_hood_cyan` (player only); `sew_esper_hood_red` (player only); `sew_high_mage_hat_cyan` (player only); `sew_high_mage_hat_red` (player only); `sew_high_mage_hat_yellow` (player only); `sew_mage_hat_cyan` (player only); `sew_mage_hat_red` (player only); `sew_mage_hat_yellow` (player only); `sew_ninja_bandana_black` (player only); `sew_ninja_bandana_blue` (player only); `sew_ninja_bandana_red` (player only); `sew_ninja_garb` (player only); `sew_ranger_hat_cyan` (player only); `sew_ranger_hat_green` (player only); `sew_ranger_hat_yellow` (player only); `sew_rogue_hat` (player only); `sew_ronin_straw_hat_blue` (player only); `sew_ronin_straw_hat_red` (player only); `sew_sorcerer_hood_cyan` (player only); `sew_sorcerer_hood_red` (player only); `sew_stalker_hood_black` (player only); `sew_stalker_hood_purple` (player only); `sew_stalker_hood_red` (player only); `sew_thief_bandana_green` (player only); `sew_thief_bandana_lime` (player only); `sew_thief_bandana_red` (player only); `sew_traveller_robe` (player only); `sew_traveller_straw_hat_cyan` (player only); `sew_yabusame_straw_hat_blue` (player only); `sew_yabusame_straw_hat_red` (player only) | none | tanner | `weave_cloth` | none | few professions: **open** |
 
 ### End goods also used as ingredients (not held to Rule 001)
 
@@ -72,7 +76,7 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | carpenter | `cart_wheel`, `handcart`, `mallet`, `plank`, `plough` | laborer: mallet (keeps it for its work); smith: plank (recipe forge_pickaxe); stonecutter: mallet (keeps it for its work) | `mallet`, `plank`, `plough` | pass |
 | cook | `ale`, `bread`, `cheese`, `pottage`, `roast_meat` | sage: ale (recipe brew_strong_tonic); tavernkeeper: ale (buys it), bread (buys it), cheese (buys it), pottage (buys it), roast_meat (buys it) | `ale`, `bread`, `cheese`, `pottage`, `roast_meat` | pass |
 | farmer | `feather`, `hide`, `meat`, `wheat` | cook: meat (recipe roast_meat), wheat (recipe cook_pottage); tanner: hide (recipe tan_leather) | `feather`, `hide`, `meat`, `wheat` | pass |
-| hunter | `feather`, `hide`, `meat`, `rabbit_pelt` | cook: meat (recipe roast_meat); tanner: hide (recipe tan_leather), rabbit_pelt (recipe tan_pelts) | `feather`, `hide`, `meat`, `rabbit_pelt` | pass |
+| hunter | `antler`, `boar_tusk`, `feather`, `hide`, `meat`, `rabbit_pelt` | cook: meat (recipe roast_meat); tanner: hide (recipe tan_leather), rabbit_pelt (recipe tan_pelts) | `antler`, `boar_tusk`, `feather`, `hide`, `meat`, `rabbit_pelt` | pass |
 | laborer | `building_block`, `coal`, `copper_ore`, `dirt`, `gold_ore`, `iron_ore`, `ore_sample`, `rubble`, `spoil`, `stone`, `topsoil` | smith: coal (recipe smelt_iron), copper_ore (recipe smelt_copper), gold_ore (recipe smelt_gold), iron_ore (recipe smelt_iron); stonecutter: stone (recipe dress_stone) | `building_block`, `coal`, `copper_ore`, `iron_ore`, `rubble`, `stone` | pass |
 | miner | `coal`, `copper_ore`, `dirt`, `gold_ore`, `iron_ore`, `ore_sample`, `spoil`, `stone`, `topsoil` | laborer: stone (recipe dress_stone); smith: coal (recipe smelt_iron), copper_ore (recipe smelt_copper), gold_ore (recipe smelt_gold), iron_ore (recipe smelt_iron); stonecutter: stone (recipe dress_stone) | `coal`, `copper_ore`, `iron_ore`, `stone` | pass |
 | sage | `healing_tonic`, `herbal_poultice`, `herbal_tonic`, `strong_healing_tonic` | nobody | `herbal_poultice` | supplies nobody: exception |
@@ -99,22 +103,61 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `dress_stone` | workbench | 3 stone | 2 building_block, 1 rubble | laborer, stonecutter, households |
 | `forge_amulet` | anvil | 1 copper_bar, 1 leather | 1 amulet | smith |
 | `forge_axe` | anvil | 2 iron_bar, 1 plank | 1 axe | smith |
+| `forge_bronze_armor` | anvil | 1 coal, 5 copper_bar, 2 leather | 1 bronze_armor | player only |
 | `forge_cart_axle` | anvil | 1 iron_bar, 1 plank | 1 cart_axle | smith |
 | `forge_cart_ironwork` | anvil | 1 coal, 1 iron_bar | 1 cart_ironwork | smith |
 | `forge_chisel` | anvil | 1 iron_bar | 1 chisel | smith |
 | `forge_copper_ring` | anvil | 1 copper_bar | 1 copper_ring | smith |
 | `forge_copper_sword` | anvil | 2 copper_bar, 1 plank | 1 copper_sword | smith |
+| `forge_daimyo_helm` | anvil | 2 fine_cloth, 1 gold_bar, 2 iron_bar | 1 daimyo_helm | player only |
+| `forge_dark_knight_helm` | anvil | 2 antler, 1 gold_bar, 3 iron_bar, 1 leather | 1 dark_knight_helm | player only |
+| `forge_dragon_knight_helm` | anvil | 2 boar_tusk, 1 gold_bar, 3 iron_bar, 1 leather | 1 dragon_knight_helm | player only |
+| `forge_gold_armor` | anvil | 4 gold_bar, 2 iron_bar, 2 leather | 1 gold_armor | player only |
 | `forge_gold_ring` | anvil | 1 gold_bar | 1 gold_ring | smith |
+| `forge_grunt_helm` | anvil | 1 iron_bar, 1 leather | 1 grunt_helm | player only |
 | `forge_hammer` | anvil | 1 iron_bar, 1 plank | 1 hammer | smith |
 | `forge_iron_armor` | anvil | 5 iron_bar, 2 leather | 1 iron_armor | smith |
 | `forge_iron_helmet` | anvil | 2 iron_bar, 1 leather | 1 iron_helmet | smith |
 | `forge_iron_sword` | anvil | 3 iron_bar, 1 leather | 1 iron_sword | smith |
+| `forge_knight_helm` | anvil | 1 coal, 3 iron_bar, 1 leather | 1 knight_helm | player only |
 | `forge_lockpicks` | anvil | 1 iron_bar | 3 lockpick | smith |
+| `forge_mongol_cherbi_armor` | anvil | 2 copper_bar, 4 leather, 2 wool_cloth | 1 mongol_cherbi_armor | player only |
+| `forge_mongol_cherbi_helm` | anvil | 2 feather, 1 iron_bar, 1 leather, 1 wool_cloth | 1 mongol_cherbi_helm | player only |
+| `forge_mongol_khaan_armor` | anvil | 2 boar_tusk, 2 copper_bar, 2 gold_bar, 1 iron_bar, 4 leather, 2 wool_cloth | 1 mongol_khaan_armor | player only |
+| `forge_mongol_khaan_helm` | anvil | 2 feather, 1 gold_bar, 2 hide, 2 iron_bar, 1 leather | 1 mongol_khaan_helm | player only |
+| `forge_mongol_kheshig_armor` | anvil | 2 copper_bar, 2 hide, 4 leather, 2 wool_cloth | 1 mongol_kheshig_armor | player only |
+| `forge_mongol_kheshig_helm` | anvil | 1 hide, 2 iron_bar | 1 mongol_kheshig_helm | player only |
+| `forge_mongol_noyon_armor` | anvil | 2 copper_bar, 1 fine_cloth, 1 iron_bar, 4 leather, 2 wool_cloth | 1 mongol_noyon_armor | player only |
+| `forge_mongol_noyon_helm` | anvil | 1 copper_bar, 1 hide, 1 iron_bar, 1 wool_cloth | 1 mongol_noyon_helm | player only |
 | `forge_nails` | anvil | 1 iron_bar | 12 nails | smith |
 | `forge_padlock` | anvil | 2 iron_bar | 1 padlock | smith |
+| `forge_paladin_helm` | anvil | 1 fine_cloth, 1 gold_bar, 3 iron_bar, 1 leather | 1 paladin_helm | player only |
 | `forge_pickaxe` | anvil | 2 iron_bar, 1 plank | 1 pickaxe | smith |
 | `forge_prospecting_kit` | anvil | 1 iron_bar, 1 leather, 1 plank | 1 prospecting_kit | player only |
+| `forge_samurai_armor_lime` | anvil | 3 fine_cloth, 3 iron_bar, 1 leather | 1 samurai_armor_lime | player only |
+| `forge_samurai_armor_purple` | anvil | 3 fine_cloth, 3 iron_bar, 1 leather | 1 samurai_armor_purple | player only |
+| `forge_samurai_helm` | anvil | 1 fine_cloth, 2 iron_bar | 1 samurai_helm | player only |
+| `forge_scout_helm` | anvil | 2 iron_bar, 1 leather | 1 scout_helm | player only |
+| `forge_shogun_helm_green` | anvil | 2 fine_cloth, 1 gold_bar, 2 iron_bar | 1 shogun_helm_green | player only |
+| `forge_shogun_helm_purple` | anvil | 2 fine_cloth, 1 gold_bar, 2 iron_bar | 1 shogun_helm_purple | player only |
 | `forge_shovel_blade` | anvil | 1 iron_bar | 1 shovel_blade | smith |
+| `forge_soldier_bronze_helm_blue` | anvil | 1 coal, 2 copper_bar, 1 leather | 1 soldier_bronze_helm_blue | player only |
+| `forge_soldier_bronze_helm_red` | anvil | 1 coal, 2 copper_bar, 1 leather | 1 soldier_bronze_helm_red | player only |
+| `forge_soldier_gold_helm_blue` | anvil | 1 gold_bar, 1 iron_bar, 1 leather | 1 soldier_gold_helm_blue | player only |
+| `forge_soldier_gold_helm_red` | anvil | 1 gold_bar, 1 iron_bar, 1 leather | 1 soldier_gold_helm_red | player only |
+| `forge_soldier_iron_helm_blue` | anvil | 2 iron_bar, 1 leather | 1 soldier_iron_helm_blue | player only |
+| `forge_soldier_iron_helm_red` | anvil | 2 iron_bar, 1 leather | 1 soldier_iron_helm_red | player only |
+| `forge_soldier_steel_helm_blue` | anvil | 2 coal, 3 iron_bar, 1 leather | 1 soldier_steel_helm_blue | player only |
+| `forge_soldier_steel_helm_red` | anvil | 2 coal, 3 iron_bar, 1 leather | 1 soldier_steel_helm_red | player only |
+| `forge_steel_armor` | anvil | 3 coal, 6 iron_bar, 2 leather | 1 steel_armor | player only |
+| `forge_valkyrie_helm` | anvil | 4 feather, 1 gold_bar, 2 iron_bar | 1 valkyrie_helm | player only |
+| `forge_viking_jarl_armor` | anvil | 2 antler, 2 gold_bar, 4 hide, 3 iron_bar, 1 leather | 1 viking_jarl_armor | player only |
+| `forge_viking_jarl_helm` | anvil | 2 antler, 1 gold_bar, 2 iron_bar, 1 leather | 1 viking_jarl_helm | player only |
+| `forge_viking_karl_armor` | anvil | 4 hide, 3 iron_bar, 2 wool_cloth | 1 viking_karl_armor | player only |
+| `forge_viking_karl_helm` | anvil | 2 antler, 2 iron_bar | 1 viking_karl_helm | player only |
+| `forge_viking_warrior_armor` | anvil | 2 boar_tusk, 3 hide, 3 iron_bar, 1 leather | 1 viking_warrior_armor | player only |
+| `forge_viking_warrior_helm_red` | anvil | 2 antler, 2 iron_bar, 1 leather | 1 viking_warrior_helm_red | player only |
+| `forge_viking_warrior_helm_yellow` | anvil | 2 antler, 2 iron_bar, 1 leather | 1 viking_warrior_helm_yellow | player only |
 | `knead_flatbread` | prep | 3 wheat | 1 bread | cook |
 | `leather_armor` | workbench | 4 leather | 1 leather_armor | tanner |
 | `leather_cap` | workbench | 2 leather | 1 leather_cap | tanner |
@@ -127,7 +170,59 @@ World Design Rule 007 (Automated Compliance, register entry WDR-007-C): material
 | `press_cheese` | prep | 3 milk | 1 cheese | cook |
 | `roast_meat` | oven | 1 log, 1 meat | 2 roast_meat | cook, households |
 | `saw_planks` | sawhorse | 1 log | 2 plank | carpenter, households |
+| `sew_archer_hat_cyan` | workbench | 1 feather, 1 wool_cloth | 1 archer_hat_cyan | player only |
+| `sew_archer_hat_green` | workbench | 1 feather, 1 wool_cloth | 1 archer_hat_green | player only |
+| `sew_archer_hat_yellow` | workbench | 1 feather, 1 wool_cloth | 1 archer_hat_yellow | player only |
+| `sew_assassin_bandana_black` | workbench | 1 wool_cloth | 1 assassin_bandana_black | player only |
+| `sew_assassin_bandana_green` | workbench | 1 wool_cloth | 1 assassin_bandana_green | player only |
+| `sew_assassin_bandana_red` | workbench | 1 wool_cloth | 1 assassin_bandana_red | player only |
 | `sew_bandages` | workbench | 1 wool_cloth | 3 linen_bandage | tanner |
+| `sew_esper_hat_blue` | workbench | 2 fine_cloth, 1 gold_bar, 1 wool_cloth | 1 esper_hat_blue | player only |
+| `sew_esper_hat_red` | workbench | 2 fine_cloth, 1 gold_bar, 1 wool_cloth | 1 esper_hat_red | player only |
+| `sew_esper_hood_cyan` | workbench | 2 fine_cloth, 1 gold_bar, 1 wool_cloth | 1 esper_hood_cyan | player only |
+| `sew_esper_hood_red` | workbench | 2 fine_cloth, 1 gold_bar, 1 wool_cloth | 1 esper_hood_red | player only |
+| `sew_french_hunter_coat` | workbench | 2 feather, 3 fine_cloth, 2 leather | 1 french_hunter_coat | player only |
+| `sew_high_mage_hat_cyan` | workbench | 2 fine_cloth, 1 gold_bar, 1 wool_cloth | 1 high_mage_hat_cyan | player only |
+| `sew_high_mage_hat_red` | workbench | 2 fine_cloth, 1 gold_bar, 1 wool_cloth | 1 high_mage_hat_red | player only |
+| `sew_high_mage_hat_yellow` | workbench | 2 fine_cloth, 1 gold_bar, 1 wool_cloth | 1 high_mage_hat_yellow | player only |
+| `sew_hunter_hat_blue` | workbench | 2 feather, 1 fine_cloth, 1 leather | 1 hunter_hat_blue | player only |
+| `sew_hunter_hat_indigo` | workbench | 2 feather, 1 fine_cloth, 1 leather | 1 hunter_hat_indigo | player only |
+| `sew_hunter_hat_red` | workbench | 2 feather, 1 fine_cloth, 1 leather | 1 hunter_hat_red | player only |
+| `sew_mage_hat_cyan` | workbench | 2 fine_cloth, 1 gold_bar, 1 wool_cloth | 1 mage_hat_cyan | player only |
+| `sew_mage_hat_red` | workbench | 2 fine_cloth, 1 gold_bar, 1 wool_cloth | 1 mage_hat_red | player only |
+| `sew_mage_hat_yellow` | workbench | 2 fine_cloth, 1 gold_bar, 1 wool_cloth | 1 mage_hat_yellow | player only |
+| `sew_musketeer_coat_purple` | workbench | 2 feather, 3 fine_cloth, 2 leather | 1 musketeer_coat_purple | player only |
+| `sew_musketeer_coat_red` | workbench | 2 feather, 3 fine_cloth, 2 leather | 1 musketeer_coat_red | player only |
+| `sew_musketeer_hat_purple` | workbench | 2 feather, 1 fine_cloth, 1 leather | 1 musketeer_hat_purple | player only |
+| `sew_musketeer_hat_red` | workbench | 2 feather, 1 fine_cloth, 1 leather | 1 musketeer_hat_red | player only |
+| `sew_ninja_bandana_black` | workbench | 1 wool_cloth | 1 ninja_bandana_black | player only |
+| `sew_ninja_bandana_blue` | workbench | 1 wool_cloth | 1 ninja_bandana_blue | player only |
+| `sew_ninja_bandana_red` | workbench | 1 wool_cloth | 1 ninja_bandana_red | player only |
+| `sew_ninja_garb` | workbench | 2 fine_cloth, 1 leather, 2 wool_cloth | 1 ninja_garb | player only |
+| `sew_ranger_hat_cyan` | workbench | 1 feather, 1 wool_cloth | 1 ranger_hat_cyan | player only |
+| `sew_ranger_hat_green` | workbench | 1 feather, 1 wool_cloth | 1 ranger_hat_green | player only |
+| `sew_ranger_hat_yellow` | workbench | 1 feather, 1 wool_cloth | 1 ranger_hat_yellow | player only |
+| `sew_rogue_hat` | workbench | 1 wool_cloth | 1 rogue_hat | player only |
+| `sew_ronin_robe_blue` | workbench | 2 fine_cloth, 2 leather | 1 ronin_robe_blue | player only |
+| `sew_ronin_robe_red` | workbench | 2 fine_cloth, 2 leather | 1 ronin_robe_red | player only |
+| `sew_ronin_straw_hat_blue` | workbench | 3 wheat, 1 wool_cloth | 1 ronin_straw_hat_blue | player only |
+| `sew_ronin_straw_hat_red` | workbench | 3 wheat, 1 wool_cloth | 1 ronin_straw_hat_red | player only |
+| `sew_sorcerer_hood_cyan` | workbench | 2 fine_cloth, 1 gold_bar, 1 wool_cloth | 1 sorcerer_hood_cyan | player only |
+| `sew_sorcerer_hood_red` | workbench | 2 fine_cloth, 1 gold_bar, 1 wool_cloth | 1 sorcerer_hood_red | player only |
+| `sew_stalker_hood_black` | workbench | 1 wool_cloth | 1 stalker_hood_black | player only |
+| `sew_stalker_hood_purple` | workbench | 1 wool_cloth | 1 stalker_hood_purple | player only |
+| `sew_stalker_hood_red` | workbench | 1 wool_cloth | 1 stalker_hood_red | player only |
+| `sew_thief_bandana_green` | workbench | 1 wool_cloth | 1 thief_bandana_green | player only |
+| `sew_thief_bandana_lime` | workbench | 1 wool_cloth | 1 thief_bandana_lime | player only |
+| `sew_thief_bandana_red` | workbench | 1 wool_cloth | 1 thief_bandana_red | player only |
+| `sew_traveller_robe` | workbench | 1 fine_cloth, 2 wool_cloth | 1 traveller_robe | player only |
+| `sew_traveller_straw_hat` | workbench | 3 wheat | 1 traveller_straw_hat | player only |
+| `sew_traveller_straw_hat_cyan` | workbench | 3 wheat, 1 wool_cloth | 1 traveller_straw_hat_cyan | player only |
+| `sew_villager_straw_hat` | workbench | 3 wheat | 1 villager_straw_hat | player only |
+| `sew_yabusame_robe_blue` | workbench | 4 feather, 2 fine_cloth, 2 leather | 1 yabusame_robe_blue | player only |
+| `sew_yabusame_robe_red` | workbench | 4 feather, 2 fine_cloth, 2 leather | 1 yabusame_robe_red | player only |
+| `sew_yabusame_straw_hat_blue` | workbench | 1 feather, 3 wheat, 1 wool_cloth | 1 yabusame_straw_hat_blue | player only |
+| `sew_yabusame_straw_hat_red` | workbench | 1 feather, 3 wheat, 1 wool_cloth | 1 yabusame_straw_hat_red | player only |
 | `smelt_copper` | forge | 1 coal, 2 copper_ore | 1 copper_bar | smith |
 | `smelt_gold` | forge | 1 coal, 2 gold_ore | 1 gold_bar | smith |
 | `smelt_iron` | forge | 1 coal, 2 iron_ore | 1 iron_bar | smith |
@@ -143,6 +238,8 @@ None.
 
 | Subject | Finding | Detail | Exception (rule: reason) |
 |---|---|---|---|
+| material `antler` | few_professions | consumed by 0 professions (none), fewer than 2 | **none: open** |
+| material `boar_tusk` | few_professions | consumed by 0 professions (none), fewer than 2 | **none: open** |
 | material `building_block` | few_professions | consumed by 0 professions (none), fewer than 2 | **none: open** |
 | material `building_block` | few_uses | 2 meaningful uses (0 recipes, 2 construction), fewer than 3 | **none: open** |
 | material `cart_axle` | few_professions | consumed by 1 professions (carpenter), fewer than 2 | WDR-001: Cart component (B14): forged by the smith only to be assembled into a handcart (build_handcart) by the carpenter or a household; by design a one-use part, and the smith-to-carpenter link it makes is a Rule 002 chain. |
@@ -155,13 +252,13 @@ None.
 | material `copper_bar` | few_professions | consumed by 1 professions (smith), fewer than 2 | **none: open** |
 | material `copper_ore` | few_professions | consumed by 1 professions (smith), fewer than 2 | WDR-001: Feedstock: raw ore whose one processing step is smelting (smelt_copper, the smith's forge); its product, copper_bar, is consumed by three distinct recipes (copper sword, copper ring, amulet). |
 | material `copper_ore` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | WDR-001: Feedstock: raw ore whose one processing step is smelting (smelt_copper, the smith's forge); its product, copper_bar, is consumed by three distinct recipes (copper sword, copper ring, amulet). |
+| material `feather` | few_professions | consumed by 0 professions (none), fewer than 2 | **none: open** |
+| material `fine_cloth` | few_professions | consumed by 0 professions (none), fewer than 2 | **none: open** |
 | material `flower` | few_professions | consumed by 1 professions (sage), fewer than 2 | **none: open** |
 | material `gold_bar` | few_professions | consumed by 1 professions (smith), fewer than 2 | **none: open** |
-| material `gold_bar` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
 | material `gold_ore` | few_professions | consumed by 1 professions (smith), fewer than 2 | **none: open** |
 | material `gold_ore` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
 | material `hide` | few_professions | consumed by 1 professions (tanner), fewer than 2 | WDR-001: Feedstock: a raw animal hide whose one processing step is tanning (tan_leather, the tanner); its product, leather, is consumed by six distinct recipes. |
-| material `hide` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | WDR-001: Feedstock: a raw animal hide whose one processing step is tanning (tan_leather, the tanner); its product, leather, is consumed by six distinct recipes. |
 | material `iron_ore` | few_professions | consumed by 1 professions (smith), fewer than 2 | WDR-001: Feedstock: raw ore whose one processing step is smelting (smelt_iron, the smith's forge); the interdependency is carried by its product, iron_bar, which many recipes and constructions consume. |
 | material `iron_ore` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | WDR-001: Feedstock: raw ore whose one processing step is smelting (smelt_iron, the smith's forge); the interdependency is carried by its product, iron_bar, which many recipes and constructions consume. |
 | material `meat` | few_professions | consumed by 1 professions (cook), fewer than 2 | **none: open** |
@@ -178,7 +275,6 @@ None.
 | material `wool` | few_professions | consumed by 1 professions (tanner), fewer than 2 | **none: open** |
 | material `wool` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
 | material `wool_cloth` | few_professions | consumed by 1 professions (tanner), fewer than 2 | **none: open** |
-| material `wool_cloth` | few_uses | 1 meaningful uses (1 recipes, 0 construction), fewer than 3 | **none: open** |
 | profession `sage` | supplies_nobody | none of healing_tonic, herbal_poultice, herbal_tonic, strong_healing_tonic is needed by another profession | WDR-002: The sage's medicines are not a production input of another trade: they are bought by people of every profession when hurt (a guard hurt on duty, a miner, a hunter), from the sage with their own coins, to recover and keep working (NPCBrain._plan_heal). A functioning cross-profession relationship, not an isolated menu; no stockpile or artificial dependency is added. |
 | profession `stonecutter` | supplies_nobody | none of building_block, rubble is needed by another profession | WDR-002: The stonecutter's dressed blocks are construction material, not a production input of another trade: the raw-goods merchant buys them and households and the manor build them into the houses, workshops and repairs that people of every profession live and work in, and the rubble goes to the manor's mending (NPCBrain._blocks_wanted opens the trade only while building sites or the merchant need blocks). The game has no builder trade; none is created and no artificial purchase is added. |
 

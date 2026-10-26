@@ -21,7 +21,8 @@ const STATION_NAMES := {"anvil": "Anvil", "armory_counter": "Armory counter", "f
 	"oven": "Oven", "sawhorse": "Sawhorse", "sawmill_counter": "Sawmill desk", "stove": "Stove", "tavern_counter": "Tavern counter", "well": "Well",
 	"workbench": "Workbench"}
 ## Pages a profession's page points on to.
-const JOB_LINKS := {"miner": ["sys:mining", "sys:prospecting", "sys:minecarts"], "laborer": ["sys:mining"], "reeve": ["sys:manor_jobs", "sys:manor_treasury"], "smith": ["sys:prospecting"]}
+const JOB_LINKS := {"miner": ["sys:mining", "sys:prospecting", "sys:minecarts"], "laborer": ["sys:mining"], "reeve": ["sys:manor_jobs", "sys:manor_treasury"], "smith": ["sys:prospecting", "sys:armoury"],
+	"tanner": ["sys:armoury"], "tailor": ["sys:armoury"], "hunter": ["item:boar_tusk", "item:antler"]}
 const ITEM_GROUPS := {"tool": "items_tools", "weapon": "items_gear", "armor": "items_gear", "head": "items_gear",
 	"ring": "items_gear", "amulet": "items_gear", "food": "items_food", "resource": "items_materials", "medicine": "items_medicine"}
 ## What each profession does, in a line (checked against NPCBrain's plans when written).
@@ -50,16 +51,16 @@ const JOB_TEXT := {
 	"woodcutter": "Fells trees with an axe and sells the logs.",
 	"carpenter": "Buys logs and saws them into planks; builds handcarts, and makes timber supports, ladders, mallets and minecarts for those who need them.",
 	"stonecutter": "A trade of its own, taken up when blocks are wanted and stone is on sale: buys raw stone with its own coins, dresses it into building blocks at a workbench with a mallet and an iron chisel, and sells the blocks and its rubble to the raw-goods merchant, and the blocks to builders or on contract. It earns only what the blocks fetch above the stone and the tools cost; when nobody wants blocks it earns nothing and, like anyone, looks for other work.",
-	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour (iron chisels for the stoneworkers among them) at the anvil, and keeps the armoury counter: ring there and a smith comes to serve.",
-	"tanner": "Buys hides, pelts and wool: makes leather, weaves wool into cloth and sews bandages for the Apothecary.",
+	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour (iron chisels for the stoneworkers among them) at the anvil, and keeps the armoury counter: ring there and a smith comes to serve. The village's armourer: makes every metal armour, helmet and weapon of the catalogue to order (see Armour and weapons).",
+	"tanner": "Buys hides, pelts and wool: makes leather, weaves wool into cloth and sews bandages for the Apothecary. Makes the leather and cloth armour of the catalogue to order: the Japanese robes, the French coats and hats, the mage's hats and hoods (see Armour and weapons).",
 	"farmer": "Sows, tends and harvests the wheat fields (keeping seed back), and keeps the animal pens: feeds them, collects the eggs, milk and wool, and sells them. The farmers of a field cut it together and share its grain, and the seed kept back for the next sowing, by the work each put into the cutting, after the field's animals are fed. You see them at it: while they sow, tend the growing crop or cut it, they walk through the field from one patch to the next and work the ground with a shovel; how long the work takes and what it yields do not depend on where you see them.",
 	"cook": "Cooks wheat and meat into pottage and roast meat, and at the kitchen's preparation table presses milk into cheese and bakes egg bread for the tavern and the food stall.",
 	"tavernkeeper": "Keeps The Well House and sells food and ale.",
-	"hunter": "Hunts wild boar and rabbits for meat and hides.",
+	"hunter": "Hunts wild game (boar, deer, rabbits and birds) for meat and hides, a grown boar's tusks and a stag's antlers, and sells them on.",
 	"merchant": "Runs a market stall or shop and trades goods.",
 	"guard": "Watches the village: stops thieves, returns stolen goods and fines the thief; hunts those who attack or kill, and takes them in.",
 	"reeve": "Runs the manor's accounts and posts its jobs on the job board (talk to the reeve and ask for work).",
-	"tailor": "Opens the locked rows of your pack: the second row for %d coins, then the third for %d, each in all eight tabs at once. Works from the manor's pitch beside the market in the day, rent-free like the merchants' stalls, and earns only from these two sales. Talk to the tailor there (not asleep, not away) and choose Backpack. A world has one; if the tailor dies or an older game had none, the village's labour market opens the place for an adult who becomes free.",
+	"tailor": "Opens the locked rows of your pack: the second row for %d coins, then the third for %d, each in all eight tabs at once, and sews plain hats, hoods and bandanas to order from your cloth or straw (see Armour and weapons). Works from the manor's pitch beside the market in the day, rent-free like the merchants' stalls, and earns only from these sales. Talk to the tailor there (not asleep, not away) and choose Backpack. A world has one; if the tailor dies or an older game had none, the village's labour market opens the place for an adult who becomes free.",
 	"barber": "Changes your hair, beard and hair colour (the same choices as the character creator, with a preview) for %d coins a visit, paid to the barber. Works from the manor's pitch beside the market in the day. Talk to the barber there and choose Hair, beard and colour. Your clothes and armour are not touched. A world has one; if the barber dies or an older game had none, the labour market opens the place for an adult who becomes free.",
 	"sage": "The village lorekeeper; tells the story and keeps the Apothecary (medicine brewed from flowers, bandages from the tanner).",
 }
@@ -142,6 +143,7 @@ static func build() -> Wiki:
 	WikiContracts.add_pages(w)     # CON-01 contracts, DVW-B4 spoiling and wear
 	WikiMining.add_pages(w)        # Build 17: mining, prospecting, open pits, underground, and the ideas not built yet
 	WikiStone.add_pages(w)         # STONE-01 raw stone and building blocks
+	WikiGear.add_pages(w)          # Build 22: the armour and weapon catalogue, orders, worn bonuses, tusks and antlers
 	add_provider(WikiExcavation.add_pages)     # Build 17: shovels and pickaxes, trial-pit earth, where to dig, capability
 	add_provider(WikiMineEquipment.add_pages)     # MIN-EQUIP, MIN-COLLAPSE (wiki_mine_equipment.gd)
 	for c in providers:
@@ -256,23 +258,36 @@ func _amounts(d: Dictionary) -> String:
 	return ", ".join(parts)
 
 
-## Recipes that make / use an item (ids, sorted).
+## Recipes that make / use an item (ids, sorted). Indexed once per build: with the weapon catalogue there are over two
+## thousand recipes, too many to scan for every page.
+var _making := {}
+var _using := {}
+
+
+func _index_recipes() -> void:
+	if not _making.is_empty():
+		return
+	var ids := GameData.recipes.keys()
+	ids.sort()
+	for r in ids:
+		for i in GameData.recipes[r].out:
+			if not _making.has(i):
+				_making[i] = []
+			_making[i].append(r)
+		for i in GameData.recipes[r]["in"]:
+			if not _using.has(i):
+				_using[i] = []
+			_using[i].append(r)
+
+
 func recipes_making(item: String) -> Array:
-	var out := []
-	for r in GameData.recipes:
-		if GameData.recipes[r].out.has(item):
-			out.append(r)
-	out.sort()
-	return out
+	_index_recipes()
+	return (_making.get(item, []) as Array).duplicate()
 
 
 func recipes_using(item: String) -> Array:
-	var out := []
-	for r in GameData.recipes:
-		if GameData.recipes[r]["in"].has(item):
-			out.append(r)
-	out.sort()
-	return out
+	_index_recipes()
+	return (_using.get(item, []) as Array).duplicate()
 
 
 func nodes_yielding(item: String) -> Array:
@@ -389,6 +404,8 @@ func _core_categories() -> void:
 
 func _items() -> void:
 	for id in GameData.items:
+		if GameData.is_catalogue_weapon(id):
+			continue                               # WEAPON-CATALOG-01: one page per weapon type (WikiGear), not 1,920
 		var it: Dictionary = GameData.items[id]
 		var rows := [["Type", str(it.type).capitalize()], ["Base price", "%d coins" % int(it.value)]]
 		if it.has("food"):
@@ -399,6 +416,11 @@ func _items() -> void:
 			rows.append(["Costs", "%d health (spoiled)" % int(it.harm)])
 		if it.has("damage"):
 			rows.append(["Damage", str(int(it.damage))])
+		if str(it.get("class", "")) != "":                 # ARMOR-CATALOG-01
+			rows.append(["Class", str(it["class"]).capitalize()])
+			rows.append(["Made to order by", "the " + GearOrders.maker_job(id)])
+			if not (it.order.get("bring", {}) as Dictionary).is_empty():
+				rows.append(["You bring", GearOrders.amounts(it.order.bring)])
 		if it.has("armor"):
 			rows.append(["Armour", str(int(it.armor))])
 		if it.has("durability"):
@@ -410,8 +432,8 @@ func _items() -> void:
 		if it.has("tool"):
 			var kin: Array = tool_kind_items(str(it.tool)).filter(func(t): return t != id).map(func(t): return _iname(t))
 			rows.append(["Works as", "a %s%s" % [tool_kind_name(str(it.tool)), "" if kin.is_empty() else " (so does the " + " or the ".join(kin) + ")"]])     # GP-WIKI-RECIPE-TOOLS
-		for k in it.get("bonus", {}):
-			rows.append(["Bonus", "+%d %s" % [int(it.bonus[k]), str(k).replace("_", " ")]])
+		if PlayerState.bonus_text(id) != "":
+			rows.append(["Bonus", PlayerState.bonus_text(id) + " while worn"])
 		if it.has("plant"):
 			rows.append(["Grows into", "a %s tree" % it.plant])
 		var blocks := [stats(rows)]
@@ -425,11 +447,15 @@ func _items() -> void:
 			for r in making:
 				blocks.append({"t": "recipe", "id": r})
 			blocks.append({"t": "chain", "id": id})
-		var using := recipes_using(id)
+		var using := recipes_using(id).filter(func(r): return not GameData.orderable(str(GameData.recipes[r].out.keys()[0])))
 		if not using.is_empty():
 			blocks.append(h("Used to make"))
 			for r in using:
 				blocks.append({"t": "recipe", "id": r})
+		var gear_uses := recipes_using(id).size() - using.size()
+		if gear_uses > 0:                          # ARMOR-CATALOG-01: the catalogue's pieces, counted, on their own pages
+			blocks.append(p("It goes into %d pieces of armour and weapons made to order (see Armour and weapons)." % gear_uses))
+			blocks.append(links(["sys:armoury"]))
 		if it.has("tool"):                          # GP-WIKI-RECIPE-TOOLS: what work this tool is needed for
 			var tu := tool_uses(str(it.tool))
 			if not tu.is_empty():
@@ -460,6 +486,8 @@ func _items() -> void:
 
 func _recipes() -> void:
 	for id in GameData.recipes:
+		if GameData.is_catalogue_recipe(id):
+			continue                               # WEAPON-CATALOG-01: on the weapon type's page
 		var r: Dictionary = GameData.recipes[id]
 		var out_id: String = r.out.keys()[0]
 		var st: String = STATION_NAMES.get(r.station, str(r.station).capitalize())
@@ -520,7 +548,7 @@ func _stations() -> void:
 		if not where[t].has(place):
 			where[t].append(place)
 	for t in where:
-		var rs := GameData.recipes_at(t)
+		var rs := GameData.recipes_at(t).filter(func(r): return not GameData.is_catalogue_recipe(r))
 		var blocks := [p("Found: %s." % ", ".join(where[t]))]
 		if Counters.KEEPERS.has(t):           # a skilled trade's counter (CTR-01..03)
 			blocks.append(p("Nobody stands at this counter all day. Ring for service here and one of the %s who keep it walks over and serves you, if one can come: not asleep, in working hours (%d:00 to %d:00), not eating or fighting. Otherwise you are told why. They put down the work in hand and go back to it when you leave." % [", ".join((Counters.KEEPERS[t] as Array).map(func(j): return j + "s")), int(NPCBrain.WORK_START), int(NPCBrain.WORK_END)]))
@@ -532,6 +560,9 @@ func _stations() -> void:
 			blocks.append(h("Recipes"))
 			for r in rs:
 				blocks.append({"t": "recipe", "id": r})
+		if GameData.recipes_at(t).size() > rs.size():
+			blocks.append(p("And every weapon of the catalogue: see Armour and weapons."))
+			blocks.append(links(["sys:armoury"]))
 		add_page("station:" + t, STATION_NAMES.get(t, t.capitalize()), "stations", blocks, "", t)
 	for t in GameData.recipes.values().map(func(r): return str(r.station)):
 		if not pages.has("station:" + t):
@@ -549,7 +580,7 @@ func _skills() -> void:
 			blocks.insert(0, p(str(s.about)))
 		var rl := []
 		for r in GameData.recipes:
-			if GameData.recipes[r].skill == id:
+			if GameData.recipes[r].skill == id and not GameData.is_catalogue_recipe(r):
 				rl.append("recipe:" + r)
 		rl.sort()
 		if not rl.is_empty():
@@ -572,6 +603,10 @@ func _animals() -> void:
 		var wild: bool = a.kind == "wild"
 		var rows := [["Kind", "wild game" if wild else "livestock (kept in a pen)"], ["Health", str(int(a.hp))],
 			["Meat", str(int(a.get("meat", 0)))], ["Hides", str(int(a.get("hide", 0)))]]
+		if int(a.get("tusks", 0)) > 0:                 # ARMOR-MATERIALS-01
+			rows.append(["Tusks", "%d from a grown one" % int(a.tusks)])
+		if int(a.get("antlers_m", 0)) > 0:
+			rows.append(["Antlers", "%d from a grown male (a stag)" % int(a.antlers_m)])
 		if a.has("feed"):
 			rows.append(["Feed", "%d wheat a meal" % int(a.feed)])
 		rows.append(["Newborn until", "%s days old (juvenile)" % (str(Animal.stage_days(a, "juvenile")) if a.has("juvenile_years") else "?")])
@@ -587,6 +622,10 @@ func _animals() -> void:
 		var ls := [node, "item:meat"]
 		if int(a.get("hide", 0)) > 0:
 			ls.append("item:hide")
+		if int(a.get("tusks", 0)) > 0:
+			ls.append("item:boar_tusk")
+		if int(a.get("antlers_m", 0)) > 0:
+			ls.append("item:antler")
 		blocks.append(links(ls))
 		var diet: String = {"graze": "It grazes in its wood.", "seeds": "It picks seeds in its wood.",
 			"hunt": "It hunts %s in its wood." % ", ".join((a.get("prey", []) as Array).map(func(k): return str(an[k].name).to_lower())),

@@ -273,6 +273,7 @@ static func public_player(p: PlayerState) -> Dictionary:
 	o.appearance = p.appearance.duplicate(true)
 	o.armor = p.armor                         # ARMOR-01: worn armour and headgear are seen by everyone (the look, not the pack)
 	o.head = p.head
+	o.weapon = p.weapon                       # WEAPON-VISIBLE-01: the weapon in hand is drawn on them too
 	o.sex = p.sex
 	o.born = p.born
 	o.pos = p.pos
@@ -458,6 +459,8 @@ func s_players(list: Array) -> void:
 			if e.has("worn") and (e.worn as Array).size() == 2:
 				o.armor = str(e.worn[0])              # ARMOR-01: and what they wear (drawn by main._sync_avatars)
 				o.head = str(e.worn[1])
+			if e.has("wield"):
+				o.weapon = str(e.wield)                # WEAPON-VISIBLE-01: and the weapon they hold
 			o.alive = bool(e.alive)
 			o.partner = int(e.get("partner", o.partner))                 # MP-PLAYER-FAMILY: their family as the host has it
 			o.children = (e.get("children", o.children) as Array).map(func(c): return int(c))
@@ -747,14 +750,14 @@ func send_animals(id: int, g: PlayerState, all: bool) -> void:
 func players_list() -> Array:
 	var w: World = main.world
 	var h: PlayerState = w.host_player()
-	var out := [{"pid": h.pid, "name": h.name, "sprite": h.sprite, "pos": h.pos, "dir": main.facing_vec(), "anim": main.player_sprite.anim, "alive": h.alive,
-		"worn": [h.armor, h.head],                  # ARMOR-01: what each player wears, so the others draw it
+	var out := [{"pid": h.pid, "name": h.name, "sprite": h.sprite, "pos": h.pos, "dir": main.facing_vec(), "anim": main.net_anim(), "alive": h.alive,
+		"worn": [h.armor, h.head], "wield": h.weapon,       # ARMOR-01: what each player wears; WEAPON-VISIBLE-01: what they hold
 		"partner": h.partner, "children": h.children}]          # MP-PLAYER-FAMILY: a player's spouse and children are public family records
 	for id in by_peer:
 		var g: PlayerState = w.player_by_pid(int(by_peer[id]))
 		if g != null:
 			out.append({"pid": g.pid, "name": g.name, "sprite": g.sprite, "pos": g.pos, "dir": moves[id].dir, "anim": moves[id].anim, "alive": g.alive,
-				"worn": [g.armor, g.head], "partner": g.partner, "children": g.children})
+				"worn": [g.armor, g.head], "wield": g.weapon, "partner": g.partner, "children": g.children})
 	return out
 
 
@@ -762,7 +765,7 @@ func _guest_step(dt: float) -> void:
 	_t_move += dt
 	if _t_move >= 1.0 / NetProtocol.MOVE_HZ:
 		_t_move = 0.0
-		rpc_id(1, "c_move", main.world.player.pos, main.facing_vec(), main.player_sprite.anim)
+		rpc_id(1, "c_move", main.world.player.pos, main.facing_vec(), main.net_anim())
 	var k := minf(1.0, dt * 8.0)
 	for id in npc_target:
 		var n: NPC = main.world.npc(id)

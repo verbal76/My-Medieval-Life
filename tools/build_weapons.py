@@ -1,0 +1,212 @@
+"""Expand the weapon table (game/data/weapon_types.json) into the weapon catalogue (game/data/weapon_catalogue.json).
+
+WEAPON-CATALOG-01 (owner, 2026-10-26): every weapon of the master weapons sheet (16x16 Weapons RPG Icons.zip, Shade, CC0:
+four metal recolours, 16 types x 30 designs) is a real item with an icon, damage, attack speed, durability, a price, an
+anvil recipe with a Smithing level, and is ordered from the smith. The rules are in the table's note; this tool only
+applies them, so the 1,920 items are never written by hand. GameData merges the catalogue into the items and recipes
+(GameData.ensure), and tools/check_resources.py reads it the same way.
+
+    python3 tools/build_weapons.py            # check the committed catalogue is current (exit 1 if not)
+    python3 tools/build_weapons.py --write    # regenerate game/data/weapon_catalogue.json
+    python3 tools/build_weapons.py --doc      # write docs/design/ARMOUR_WEAPON_CATALOGUE.md (the owner's review table)
+"""
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+TABLE = ROOT / "game" / "data" / "weapon_types.json"
+OUT = ROOT / "game" / "data" / "weapon_catalogue.json"
+FORMAT = "mml-weapon-catalogue/1"
+
+
+def _r5(x):
+    """A price: whole coins, to the nearest 5 from 20 up."""
+    return int(round(x / 5.0) * 5) if x >= 20 else int(round(x))
+
+
+def _add(d, k, q):
+    if q:
+        d[k] = d.get(k, 0) + q
+
+
+def build(table, values):
+    """{"items": {id: item}, "recipes": {id: recipe}} for every type, metal and design, in table order."""
+    items, recipes = {}, {}
+    sheet = table["sheet"]
+    per_col, _ = sheet["block"]
+    for tid, t in table["types"].items():
+        for mid, m in table["metals"].items():
+            for d in range(per_col * sheet["block"][1]):
+                tier_i, tier = next((i, x) for i, x in enumerate(table["tiers"]) if x["from"] <= d <= x["to"])
+                bars = int(t["bars"])
+                made, bring = {}, {}
+                if mid == "bronze":
+                    _add(made, "copper_bar", bars)
+                    _add(made, "coal", 1)
+                elif mid == "steel":
+                    _add(made, "iron_bar", bars + 1)
+                    _add(made, "coal", bars)
+                else:
+                    _add(made, "iron_bar", bars)
+                if mid == "gold":
+                    _add(bring, "gold_bar", max(1, bars // 2))
+                for k, q in t["haft"].items():
+                    _add(made, k, int(q))
+                bonus = {}
+                rare = bool(tier.get("rare", False))
+                if rare:
+                    for k, q in t["special"].items():
+                        _add(bring, k, int(q))
+                    for k, q in t["bonus"].items():
+                        _add(bonus, k, q)
+                for k, q in m.get("bonus", {}).items():
+                    _add(bonus, k, q)
+                allin = dict(made)
+                for k, q in bring.items():
+                    _add(allin, k, q)
+                mat = sum(values[k] * q for k, q in allin.items())
+                cls = "rare" if rare else m["class"]
+                if bring:
+                    fee = int(m.get("fee", 0)) + int(tier.get("fee", 0)) + 10 * bars
+                else:
+                    fee = max(4, round(mat * (0.1 if cls == "common" else 0.3)))
+                iid = "%s_%s_%02d" % (mid, tid, d + 1)
+                col = t["at"][0] + d % per_col
+                row = t["at"][1] + d // per_col
+                it = {"name": "%s %s (pattern %d)" % (m["name"], t["name"], d + 1), "type": "weapon", "value": _r5(mat + fee),
+                      "damage": max(1, round(t["damage"] * m["damage"]) + int(tier["damage"])), "attack_speed": t["speed"],
+                      "durability": round(t["durability"] * m["durability"] * (1 + 0.1 * tier_i)), "category": "weapons",
+                      "class": cls, "order": {"maker": "smith", "fee": fee}}
+                if bring:
+                    it["order"]["bring"] = bring
+                if bonus:
+                    it["bonus"] = bonus
+                it["gear"] = {"wtype": tid, "metal": mid, "design": d + 1, "tier": tier_i + 1}
+                it["icon"] = [m["sheet"], col, row]
+                items[iid] = it
+                minutes = 20 * bars + 30 + int(tier["minutes"])
+                recipes["forge_" + iid] = {"station": "anvil", "in": allin, "out": {iid: 1}, "minutes": minutes,
+                                           "skill": "smithing", "xp": round(minutes / 3),
+                                           "level": min(10, int(m["level"]) + int(t["level"]) + int(tier["level"])),
+                                           "catalogue": True}
+    return {"items": items, "recipes": recipes}
+
+
+def render(root=ROOT):
+    table = json.loads((root / "game" / "data" / "weapon_types.json").read_text())
+    base = json.loads((root / "game" / "data" / "items.json").read_text())["items"]
+    values = {k: int(v["value"]) for k, v in base.items()}
+    cat = build(table, values)
+    doc = {"format": FORMAT, "note": "Generated by tools/build_weapons.py from weapon_types.json; never hand-edit.",
+           "items": cat["items"], "recipes": cat["recipes"]}
+    # one item or recipe per line: readable diffs, a small file
+    lines = ["{", '  "format": %s,' % json.dumps(FORMAT), '  "note": %s,' % json.dumps(doc["note"]), '  "items": {']
+    lines.append(",\n".join("    %s: %s" % (json.dumps(k), json.dumps(v)) for k, v in cat["items"].items()))
+    lines.append("  },")
+    lines.append('  "recipes": {')
+    lines.append(",\n".join("    %s: %s" % (json.dumps(k), json.dumps(v)) for k, v in cat["recipes"].items()))
+    lines.append("  }")
+    lines.append("}")
+    return "\n".join(lines) + "\n"
+
+
+BONUS = {"max_hp": "health", "max_stamina": "stamina", "fire_damage": "fireball damage", "stamina_regen": "stamina/s",
+         "damage": "melee damage"}
+
+
+def _amounts(d, names):
+    return ", ".join("%d %s" % (q, names.get(k, k).lower()) for k, q in d.items()) or "-"
+
+
+def _bonus(b):
+    return ", ".join("+%g %s" % (v, BONUS.get(k, k)) for k, v in b.items()) or "-"
+
+
+def catalogue_doc(root=ROOT):
+    """docs/design/ARMOUR_WEAPON_CATALOGUE.md: every armour piece one row; the weapons one row per type, metal and tier
+    (the patterns of a tier share their numbers and differ in their art)."""
+    data = root / "game" / "data"
+    items = json.loads((data / "items.json").read_text())["items"]
+    recipes = json.loads((data / "recipes.json").read_text())["recipes"]
+    cat = json.loads((data / "weapon_catalogue.json").read_text())
+    table = json.loads((data / "weapon_types.json").read_text())
+    names = {k: v["name"] for k, v in items.items()}
+    skills = {"smithing": "Smithing", "tanning": "Tanning", "crafting": "Crafting"}
+
+    def recipe_of(i, recs):
+        for pre in ("forge_", "sew_"):
+            if pre + i in recs:
+                return recs[pre + i]
+        return next(r for _, r in sorted(recs.items()) if i in r["out"])
+
+    L = ["# Armour and weapon catalogue (Build 22)", "",
+         "Generated by `python3 tools/build_weapons.py --doc` from `game/data/items.json`, `recipes.json`, `weapon_types.json` and",
+         "the generated `weapon_catalogue.json`; never hand-edit. Owner records: ARMOR-CATALOG-01, ARMOR-MATERIALS-01,",
+         "WEAPON-CATALOG-01, WEAPON-VISIBLE-01; values are the agent's provisional proposal under ARMOR-CATALOG-D1 (the owner",
+         "may change any of them at review). Materials option B: copper bars stand in for bronze, iron bars and coal for steel,",
+         "hides for fur, fine cloth for silk.", "",
+         "**How to read it.** *Maker supplies* comes from the maker's own stock (charged at base value on top of the fee; what the",
+         "maker lacks the buyer may bring instead, uncharged). *You bring* is a commission's special materials. *Price* is the",
+         "item's base value (materials at base value plus the fee). *Skill* is the recipe the maker, or the player, needs.",
+         "Buffs work while worn or held, once per piece: health and stamina raise the caps, fireball damage is added to each",
+         "fireball, stamina/s to regeneration, melee damage to each blow.", "",
+         "## Armour, helmets and hats", "",
+         "| Item | Class | Slot | Armour | Maker | Maker supplies | You bring | Fee | Skill | Price | Buff |",
+         "|---|---|---|---|---|---|---|---|---|---|---|"]
+    for i, it in items.items():
+        if "order" not in it or it["type"] not in ("armor", "head"):
+            continue
+        r = recipe_of(i, recipes)
+        bring = it["order"].get("bring", {})
+        made = {k: q - bring.get(k, 0) for k, q in r["in"].items() if q - bring.get(k, 0) > 0}
+        L.append("| %s (`%s`) | %s | %s | %d | %s | %s | %s | %d | %s %d | %d | %s |" % (
+            it["name"], i, it["class"], "body" if it["type"] == "armor" else "head", it["armor"], it["order"]["maker"],
+            _amounts(made, names), _amounts(bring, names), it["order"]["fee"], skills[r["skill"]], r["level"], it["value"],
+            _bonus(it.get("bonus", {}))))
+    L += ["", "## Weapons", "",
+          "The two plain swords of earlier builds (copper and iron) and the rusty sword keep their numbers; the copper and iron",
+          "swords can now be ordered from the smith too. The master sheet's 1,920 weapons: each type in four metals and 30",
+          "patterns; patterns 1-12 plain, 13-21 fine work, 22-30 masterwork (rare, commissioned, with the type's buff; tusks or",
+          "antlers brought). Gold adds +5 health and needs gold bars brought. Speed divides the swing time.", "",
+          "| Type | Metal | Patterns | Class | Damage | Speed | Durability | Maker supplies | You bring | Fee | Smithing | Price | Buff |",
+          "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+    for tid, t in table["types"].items():
+        for mid, m in table["metals"].items():
+            for tier in table["tiers"]:
+                i = "%s_%s_%02d" % (mid, tid, tier["from"] + 1)
+                it = cat["items"][i]
+                r = cat["recipes"]["forge_" + i]
+                bring = it["order"].get("bring", {})
+                made = {k: q - bring.get(k, 0) for k, q in r["in"].items() if q - bring.get(k, 0) > 0}
+                L.append("| %s | %s | %d-%d | %s | %d | x%g | %d | %s | %s | %d | %d | %d | %s |" % (
+                    t["name"], m["name"].lower(), tier["from"] + 1, tier["to"] + 1, it["class"], it["damage"], it["attack_speed"],
+                    it["durability"], _amounts(made, names), _amounts(bring, names), it["order"]["fee"], r["level"], it["value"],
+                    _bonus(it.get("bonus", {}))))
+    L += ["", "## New materials", "",
+          "| Item | Price | Source |", "|---|---|---|",
+          "| Boar tusk (`boar_tusk`) | %d | 2 from every grown wild boar killed (player, hunter, poacher); hunters sell them to the goods merchant |" % items["boar_tusk"]["value"],
+          "| Antler (`antler`) | %d | 2 from every grown stag (male deer) killed; no reindeer art exists, so the item is plainly \"Antler\" |" % items["antler"]["value"], ""]
+    return "\n".join(L)
+
+
+def main():
+    if "--doc" in sys.argv:
+        out = ROOT / "docs" / "design" / "ARMOUR_WEAPON_CATALOGUE.md"
+        out.write_text(catalogue_doc())
+        print("wrote %s" % out.relative_to(ROOT))
+        return 0
+    text = render()
+    if "--write" in sys.argv:
+        OUT.write_text(text)
+        print("wrote %s (%d bytes)" % (OUT.relative_to(ROOT), len(text)))
+        return 0
+    if not OUT.exists() or OUT.read_text() != text:
+        print("game/data/weapon_catalogue.json is stale: run python3 tools/build_weapons.py --write")
+        return 1
+    print("weapon catalogue current")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

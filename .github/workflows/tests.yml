@@ -59,6 +59,7 @@ jobs:
           python3 tools/check_interactions.py
           python3 tools/check_requirements.py --against HEAD~1   # no approved requirement lost or closed without a record
           python3 tools/check_resources.py
+          python3 tools/build_weapons.py          # WEAPON-CATALOG-01: the generated catalogue matches its table
           python3 tools/check_materials.py   # material and profession coverage (WDR-007-C); fails on broken references or stale exceptions
 
       - name: Game tests (headless)
@@ -129,6 +130,8 @@ jobs:
           $godot --headless --path game --script res://tests/pad_shortcuts_test.gd
           $godot --headless --path game --script res://tests/wanted_indicator_test.gd
           $godot --headless --path game --script res://tests/armour_worn_test.gd
+          # ARMOR-CATALOG-01, WEAPON-CATALOG-01, WEAPON-VISIBLE-01 (Build 22): the armour and weapon catalogue
+          $godot --headless --path game --script res://tests/gear_catalogue_test.gd
           $godot --headless --path game --script res://tests/mine_frame_test.gd
           $godot --headless --path game --script res://tests/lockpick_test.gd
           # GP-STALL-PRICE-ON-PUTUP (Build 21): the price chosen with the number when putting goods up; the workroom's verbs

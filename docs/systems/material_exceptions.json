@@ -32,13 +32,6 @@
   },
   {
    "material": "hide",
-   "finding": "few_uses",
-   "reason": "Feedstock: a raw animal hide whose one processing step is tanning (tan_leather, the tanner); its product, leather, is consumed by six distinct recipes.",
-   "rule": "WDR-001",
-   "approval": "agent proposal 2026-10-20 (WDR-007-C), owner review pending"
-  },
-  {
-   "material": "hide",
    "finding": "few_professions",
    "reason": "Feedstock: a raw animal hide whose one processing step is tanning (tan_leather, the tanner); its product, leather, is consumed by six distinct recipes.",
    "rule": "WDR-001",

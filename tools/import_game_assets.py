@@ -70,6 +70,7 @@ import craftpix_shelves  # noqa: E402
 import living_forest
 import terrain_art  # noqa: E402
 import game_audio  # noqa: E402
+import gear_assets  # noqa: E402
 
 OUT = REPO / "game" / "assets"
 CAMPFIRE_SHEET = "Animated Pixel Campfire (SMStudios)/Sprite-sheet-campfire.png"
@@ -863,6 +864,7 @@ def main():
     craftpix_shelves.import_into(prov, record)        # GP-MARKET-SHELVES: the market shelves, from the private Craftpix zip, else kept
     animal_farm.import_into(prov, record)             # the horse (B14-11): from the private Animal Farm pack, else kept as it is
     terrain_art.import_into(prov, record)             # B14-07: steps, stairs and walkways; the nails and mallet icons
+    gear_assets.import_into(prov, record)             # Build 22: the armour and weapon catalogue's icons and worn layers
     game_audio.import_into(prov, record)              # MUSIC-18, SFX-18: Ogg Vorbis music (Android) and the Cozy RPG SFX, from private-assets/ and the release WAVs
     (OUT / "PROVENANCE.json").write_text(json.dumps({"format": "mml-provenance/1", "files": prov}, indent=1) + "\n")
     print(f"imported {len(prov)} files into game/assets")

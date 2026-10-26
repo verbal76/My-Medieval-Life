@@ -1153,7 +1153,7 @@ func _update_one_player(real_dt: float, gm: float) -> void:
 	p.hunger = maxf(0.0, p.hunger - gm / 60.0 * float(GameData.b("player_hunger_per_hour")))
 	if p.hunger <= 0.0:
 		damage_player(gm / 60.0 * float(GameData.b("starve_damage_per_hour")), "hunger")     # TIME-04: the villagers' rule
-	p.stamina = minf(p.stamina_cap(), p.stamina + real_dt * float(GameData.b("player_stamina_regen_per_second")))
+	p.stamina = minf(p.stamina_cap(), p.stamina + real_dt * (float(GameData.b("player_stamina_regen_per_second")) + p.bonus("stamina_regen")))    # ARMOR-CATALOG-01: worn gear
 	if p.rest_until >= 0.0 and minutes >= p.rest_until:
 		_end_rest(p, true)             # MP-D2: a rest in real time ran its course
 	relations.player_tick(gm)          # time spent near villagers builds ties (CRT-10)
@@ -2466,7 +2466,7 @@ func player_fireball_hit(pos: Vector2, actor: PlayerState = null) -> Dictionary:
 		return mirror("player_fireball_hit", player_fireball_hit.bind(pos), [pos])
 	if actor != null and actor != player:
 		return as_actor(actor, player_fireball_hit.bind(pos))
-	var dmg := FIREBALL_DAMAGE * Skills.value(player, "magic", "fireball_damage", 1.0)
+	var dmg := FIREBALL_DAMAGE * Skills.value(player, "magic", "fireball_damage", 1.0) + player.bonus("fire_damage")    # ARMOR-CATALOG-01: worn gear's fire bonus
 	for n: NPC in present(pos, FIREBALL_HIT_RADIUS):
 		var before := n.hp
 		var h := player_hit_npc(n, dmg)
@@ -4982,6 +4982,17 @@ func player_buy_pack_row(t: NPC, actor: PlayerState = null) -> Dictionary:
 	stat("tailor_pack_rows")
 	stat("tailor_fees", float(price))
 	return {"ok": true, "why": "", "level": player.pack_level, "paid": price}
+
+
+## ARMOR-CATALOG-01, WEAPON-CATALOG-01 (Build 22): the player orders catalogue piece `id` from maker `n` (GearOrders: the
+## maker's recipe and skill, the buyer's brought materials and the fee; all or nothing). Returns {ok, why, paid, item, brought}.
+func player_order_gear(n: NPC, id: String, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_order_gear", player_order_gear.bind(n, id), [n, id])
+	if actor != null and actor != player:
+		return as_actor(actor, player_order_gear.bind(n, id))
+	return GearOrders.order(self, n, id, player)
 
 
 ## BARBER-18: whether `n` is a barber (balance.json barber.job), who changes the player's hair, beard and hair colour.

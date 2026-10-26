@@ -318,19 +318,26 @@ func _build_details() -> void:
 		lines.append("Damage %d." % int(it.damage))
 	if int(it.get("armor", 0)) > 0:
 		lines.append("Armour %d." % int(it.armor))
-	var bonus: Dictionary = it.get("bonus", {})
-	if bonus.has("max_hp"):
-		lines.append("+%d max health while worn." % int(bonus.max_hp))
-	if bonus.has("max_stamina"):
-		lines.append("+%d max stamina while worn." % int(bonus.max_stamina))
+	if it.has("attack_speed") and float(it.attack_speed) != 1.0:
+		lines.append("Swings %s." % ("faster" if float(it.attack_speed) > 1.0 else "slower"))     # WEAPON-CATALOG-01
+	if PlayerState.bonus_text(id) != "":
+		lines.append("While worn: %s." % PlayerState.bonus_text(id))     # ARMOR-CATALOG-01: every worn bonus, by name
+	if str(it.get("class", "")) != "":
+		lines.append("%s piece; made to order by the %s." % [str(it["class"]).capitalize(), GearOrders.maker_job(id)])
 	if it.has("durability"):
 		var left := int(p.inv.durability.get(id, it.durability))
 		lines.append("Wear left: %d of %d (%s)." % [left, int(it.durability), Decay.condition(left, int(it.durability))])     # DVW-B4
 	if Decay.keeping_text(id) != "":
 		lines.append(Decay.keeping_text(id))
-	var crafts := ResourceNodes.uses_of(id).filter(func(u): return u.kind == "recipe")
-	if not crafts.is_empty():
-		lines.append("Used for: " + "; ".join(crafts.map(func(u): return _use_line(w, id, u))) + ".")
+	var all_crafts := ResourceNodes.uses_of(id).filter(func(u): return u.kind == "recipe")
+	# the armour and weapon catalogue's pieces (made to order), counted, not listed one by one
+	var crafts := all_crafts.filter(func(u): return not GameData.orderable(str((u.makes as Dictionary).keys()[0])))
+	var pieces := all_crafts.size() - crafts.size()
+	if not crafts.is_empty() or pieces > 0:
+		var parts: Array = crafts.map(func(u): return _use_line(w, id, u))
+		if pieces > 0:
+			parts.append("%d pieces of armour and weapons made to order (see Armour and weapons in the encyclopedia)" % pieces)
+		lines.append("Used for: " + "; ".join(parts) + ".")
 	if it.has("propagates"):
 		lines.append("Plant it on open village grass in front of you (not on a road, a door, a field or beside a tree). It grows into a %s that bears in its season." % ("flower" if str(it.propagates) == "flower" else "berry bush"))
 	if it.has("plant"):

@@ -60,16 +60,22 @@ func _data_tests() -> void:
 	var missing := []
 	var no_icon := []
 	for id in GameData.items:
-		if not w.pages.has("item:" + id):
+		if GameData.is_catalogue_weapon(id):         # WEAPON-CATALOG-01: the 1,920 weapons are on their type's page
+			if not w.pages.has("gear:" + str(GameData.items[id].gear.wtype)):
+				missing.append(id)
+		elif not w.pages.has("item:" + id):
 			missing.append(id)
 		elif ResourceLoader.exists("res://assets/icons/%s.png" % id) and w.pages["item:" + id].icon == "":
 			no_icon.append(id)
 	check(missing.is_empty() and no_icon.is_empty(), "every item has a page, with its icon where one exists %s %s" % [missing, no_icon])
 	missing.clear()
 	for id in GameData.recipes:
-		if not w.pages.has("recipe:" + id):
+		if GameData.is_catalogue_recipe(id):
+			if not w.pages.has("gear:" + str(GameData.item(str(GameData.recipes[id].out.keys()[0])).gear.wtype)):
+				missing.append(id)
+		elif not w.pages.has("recipe:" + id):
 			missing.append(id)
-	check(missing.is_empty(), "every recipe has a page %s" % [missing])
+	check(missing.is_empty(), "every recipe has a page (a catalogue weapon's its type's) %s" % [missing])
 	for id in GameData.resources.nodes:
 		if not w.pages.has("node:" + id):
 			missing.append(id)
