@@ -39,7 +39,7 @@ workflow on the release commit. Owner amendment 2026-10-26 (`docs/directives/202
   the 18 carryovers (SJD-E, SJD-F, SJD-G, SJD-H, PROS-19, X19-FOUND, DVW-B1, DVW-B2, GM-01, X19-MISINFO, X19-STORY-LIFE, REC-19,
   REC-DIAG, REC-STORE, B19-EMERGE, WDR-009-C, WDR-011-C, FIX-D1D2) and the 9 awaiting verification (FAM-SAC-01, FIX-D3, FIX-RECF1,
   SJD-B, SJD-C, SJD-D, X19-FOUND-BONDS, X19-FOUND-FAMREP, X19-FOUND-PERS). Step 1, running: the code audit and recovery matrix
-  (an audit worker, read-only, against `wip/expansion20`); the matrix will be committed as `docs/expansion20/B19_RECOVERY_MATRIX.md`
+  (an audit worker, read-only, against `wip/expansion20`); the matrix will be committed in docs/expansion20/ as B19_RECOVERY_MATRIX.md
   and kept current. Then integration in the owner's order (foundations, judgment, misinformation and memory, diagnostics, economy
   interaction), incremental, on `wip/expansion20`. LE-01 continues only where independent of judgment (owner section 7).
 - Owner decisions prepared: `docs/expansion20/LE_OWNER_DECISIONS.md` (14 Living Economy decisions, awaiting the owner).
