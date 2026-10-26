@@ -85,6 +85,7 @@ func _run() -> void:
 		check(w.player_unequip(slot), "%s: taken off" % id)
 		await frames()
 		check(px(main.player_sprite.texture) == bare, "%s: taken off, the character's own clothes again" % id)
+		p.inv.remove(id, 1)                     # Build 22: the catalogue has more pieces than the armour tab has places
 	# save and load keep the armour on, and it is drawn
 	p.inv.add("iron_armor", 1)
 	p.inv.add("iron_helmet", 1)

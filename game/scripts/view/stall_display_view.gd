@@ -38,7 +38,7 @@ func _process(dt: float) -> void:
 
 
 func refresh() -> void:
-	if world == null or world.business == null:
+	if world == null or world.business == null or world.brain == null:     # (a world being replaced is disposed: no brain)
 		return
 	var now: Array = world.business.displays()
 	if now != shown:
