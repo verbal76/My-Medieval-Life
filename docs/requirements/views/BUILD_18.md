@@ -9,7 +9,7 @@ Readiness: **RELEASED (private playtest draft (code 61ec528, run 39935635926, 20
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 83 |
-| Integrated | 79 of 83 (95%) |
+| Integrated | 80 of 83 (96%) |
 | Automated tests passed | 78 of 83 (94%) |
 | Integration verified | 57 of 83 (69%) |
 | Gameplay verified | 0 of 83 (0%) |
@@ -18,10 +18,11 @@ Readiness: **RELEASED (private playtest draft (code 61ec528, run 39935635926, 20
 | Open (release blockers) | 81 |
 | Open owner decisions (blocking) | 1 (0) |
 
-## Integrated, awaiting gameplay or owner verification (77)
+## Integrated, awaiting gameplay or owner verification (78)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED | every wearable armour item (leather included) has a worn layer and draws on the player and villagers in every direction; confirm the owner's case; owner playtest; known: Leather cap drawn with the grunt helm in the bronze row reads orange; the pack has no leather headgear (owner may prefer another choice) |  | verification only |
 | B14-11 | Animal Farm pack: the horse and farm animals | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate; known: the caravan's wagon is a stand-in sprite (mine cart tile) |  | verification only |
 | BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate (REL18-*) |  | verification only |
@@ -100,11 +101,10 @@ Readiness: **RELEASED (private playtest draft (code 61ec528, run 39935635926, 20
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; Build 18 wip/build18 b196303 | TARGETED TESTS PASSED | run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11); known: covers 9 of about 46 planned runs; no capability constants adopted |  | verification only |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 9932b1d | TARGETED TESTS PASSED |  |  | verification only |
 
-## Ready to proceed now (approved, specified, nothing open blocks it) (4)
+## Ready to proceed now (approved, specified, nothing open blocks it) (3)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | Build 18 wip/build18 | TARGETED TESTS PASSED | every wearable armour item (leather included) has a worn layer and draws on the player and villagers in every direction; confirm the owner's case; owner playtest; known: Leather cap drawn with the grunt helm in the bronze row reads orange; the pack has no leather headgear (owner may prefer another choice) |  | UNKNOWN |
 | REL18-DEVICE | Build 18 release gate: Device and owner playtest of every player-facing Build 18 requirement (the playtest queue) | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Owner-approved sequence (docs/directives/2026-10-23_rel18_device_and_decision_package.md): all implementation items closed or accepted as permanently blocked, pre-package verification done, then final candidate packages (Android, Windows, Linux) for the owner's device playtest; pass closes REL18-DEVICE, fail means fixes and corrected candidates |  | M |
 | REL18-OWNER | Build 18 release gate: The owner's approval to publish a Build 18 distributable (B17-DIR exception carried to Build 18) | OWNER APPROVED | NOT STARTED | none | NOT TESTED | public publication only with the owner's approval |  | S |
 | SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |  | UNKNOWN |

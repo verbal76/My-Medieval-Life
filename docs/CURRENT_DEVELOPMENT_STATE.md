@@ -8,7 +8,7 @@ Update it at every checkpoint: after a merge, when a worker starts or stops, bef
 context, where measurable) and before a session ends. The previous long-form state file is archived in
 `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-23.md` (history only).
 
-**Updated:** 2026-10-26 (Build 22 and Expansion 20 execution authorized; Build 22 in development).
+**Updated:** 2026-10-26 (Build 22 private draft released; Expansion 20 and the Build 19 recovery in progress).
 
 ## CURRENT: Build 22, then Expansion 20 (owner, 2026-10-26, `docs/directives/2026-10-26_build22_expansion20_execution_authorization.md`)
 
@@ -31,7 +31,8 @@ shared files (main.gd, game_ui.gd) get small localized edits that the lead merge
 workflow on the release commit. Owner amendment 2026-10-26 (`docs/directives/2026-10-26_build22_final_owner_answers_amendment.md`): 14 items, GP-SKILLS-RT added (worker B); all questions answered; player children stay in Build 22 (integrated only after its tests pass).
 
 ### In flight (2026-10-26)
-- Build 22 release run 40398771937 on `wip/build22` `b7e1c91` (all Build 22 workers merged; baseline replaced with evidence).
+- **Build 22 released as a private draft** (2026-10-26, run 40398771937, draft 424822036, `wip/build22` `b7e1c91`): APK, Windows and Linux; SHA256SUMS checked; APK versionCode 22, package unchanged, certificate 31:70:4B:...:80:E6 (same as Build 21, so it installs over it). Its 18 records are INTEGRATED; device checks outstanding.
+- Owner correction 2026-10-26 (`docs/directives/2026-10-26_npc_judgment_refusal_correction.md`): opinion may make an NPC refuse a trade, weighed against need and circumstances, never by a fixed cutoff, with no rule that every trade stays possible; constraint on LE-01 and all later Living Economy work; sent to worker F.
 - Expansion 20: `wip/expansion20` (`.claude/worktrees/x20main`) = Build 22 + Living Economy foundation (X20-B1, `0b5287c`, disabled; validation running); DONE, merged at a16dbbe: worker E on `wip/x20-android` (`.claude/worktrees/x20-android`): the six Android usability items (X20-B2): GP-ANDROID-RECENTER, GP-ANDROID-HUD-SCALE, GP-ANDROID-ACTION-BUTTONS, GP-ANDROID-USE-TALK-TARGETING, GP-INTERACTABLE-OUTLINES, GP-INTERACTION-PROMPT-LIFECYCLE.
 - Worker F on `wip/x20-le01` (`.claude/worktrees/x20-le01`, base `0b5287c`): LE-01, the shared actor, need, offer, knowledge and contract model behind the disabled switch (X20-B3).
 

@@ -2,35 +2,19 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (35)
+## Workers and task branches (17)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
-| ARMOR-01 | 18 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
-| ARMOR-CATALOG-01 | 20 | IMPLEMENTED ON TASK BRANCH | worker D (gear) | wip/b22-gear |
-| ARMOR-MATERIALS-01 | 20 | IMPLEMENTED ON TASK BRANCH | worker D (gear) | wip/b22-gear |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-BUSINESS-COURIER | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
-| GP-BUSINESS-DESK | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-FARMER-TENDING | 20 | IMPLEMENTED ON TASK BRANCH | worker C (family and farming) | wip/b22-family |
-| GP-LOCKPICK | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
-| GP-MARKET-SPACING | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
 | GP-MESSAGE-FOOTPRINT | 20 | IN DEVELOPMENT | worker H (screen messages) | wip/x20-msg |
-| GP-MINE-WOOD-FRAME | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
-| GP-QTY-PICKER-CONTROLLER | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
-| GP-SKILLS-RT | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
-| GP-STALL-RENT-WRONG-PITCH | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
-| GP-TABLE-ITEMS | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
-| GP-WANTED-INDICATOR | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
-| GP-WIKI-RECIPE-TOOLS | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
 | LE-01 | 20 | IN DEVELOPMENT | worker F (LE-01) | wip/x20-le01 |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
-| MP-PLAYER-FAMILY | 20 | IMPLEMENTED ON TASK BRANCH | worker C (family and farming) | wip/b22-family |
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
@@ -38,8 +22,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | REC-DIAG | 20 | IN DEVELOPMENT | lead | wip/recorder (read-only runs) |
 | REC-STORE | 20 | IN DEVELOPMENT | worker G (recovery R1, R3) | wip/x20-r1r3 |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
-| WEAPON-CATALOG-01 | 20 | IMPLEMENTED ON TASK BRANCH | worker D (gear) | wip/b22-gear |
-| WEAPON-VISIBLE-01 | 20 | IMPLEMENTED ON TASK BRANCH | worker D (gear) | wip/b22-gear |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
 ## Implemented but not tested (46)
@@ -93,10 +75,13 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | WIKI-B17 | 17 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 
-## Awaiting owner playtest or device check (85)
+## Awaiting owner playtest or device check (103)
 
 | ID | Build | Verification | Needs |
 |---|---|---|---|
+| ARMOR-01 | 18 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, A, n, d, r, o, i, d,  , t, o, u, c, h, ,,  , c, o, n, t, r, o, l, l, e, r, ,,  , t, w, o, -, d, e, v, i, c, e,  , p, l, a, y,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ) |
+| ARMOR-CATALOG-01 | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g, ;,  , v, a, l, u, e, s,  , p, r, o, v, i, s, i, o, n, a, l,  , f, o, r,  , t, h, e,  , o, w, n, e, r, ', s,  , r, e, v, i, e, w,  , (, t, h, e,  , a, r, m, o, u, r,  , a, n, d,  , w, e, a, p, o, n,  , c, a, t, a, l, o, g, u, e,  , t, a, b, l, e,  , o, n,  , w, i, p, /, b, u, i, l, d, 2, 2, ) |
+| ARMOR-MATERIALS-01 | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g, ;,  , v, a, l, u, e, s,  , p, r, o, v, i, s, i, o, n, a, l,  , f, o, r,  , t, h, e,  , o, w, n, e, r, ', s,  , r, e, v, i, e, w,  , (, t, h, e,  , a, r, m, o, u, r,  , a, n, d,  , w, e, a, p, o, n,  , c, a, t, a, l, o, g, u, e,  , t, a, b, l, e,  , o, n,  , w, i, p, /, b, u, i, l, d, 2, 2, ) |
 | B13-12 | 15 | TARGETED TESTS PASSED | controller |
 | B13-13 | 15 | TARGETED TESTS PASSED | phone |
 | B14-01 | 15 | TARGETED TESTS PASSED | controller |
@@ -129,9 +114,12 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-ANVIL | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-BACK-DOORS | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-BANDIT-CAMP-ART | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-BUSINESS-COURIER | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g |
+| GP-BUSINESS-DESK | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g |
 | GP-CRIME-PURSUIT | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-DIALOGUE-PERSPECTIVE | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-DRAW-UNDER-HOUSE | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-FARMER-TENDING | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, p, h, o, n, e,  , v, i, e, w, ) |
 | GP-GIFT-QUANTITY | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-GOSSIP-NATURAL | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-HARVEST-CONT | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
@@ -140,23 +128,33 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-INTERACTION-PROMPT-LIFECYCLE | 20 | INTEGRATION VERIFIED | r, e, a, l,  , p, h, o, n, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, t, h, u, m, b,  , c, o, m, f, o, r, t, ,,  , e, d, g, e,  , g, a, p,  , b, y,  , t, h, e,  , c, a, m, e, r, a,  , c, u, t, o, u, t, ,,  , l, e, g, i, b, i, l, i, t, y, ,,  , o, u, t, l, i, n, e,  , v, i, s, i, b, i, l, i, t, y,  , i, n,  , d, a, y, l, i, g, h, t, ,,  , N, e, x, t,  , b, u, t, t, o, n, ) |
 | GP-INTERIOR-WALLS | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-JOYSTICK | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-LOCKPICK | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, A, n, d, r, o, i, d,  , t, o, u, c, h, ,,  , c, o, n, t, r, o, l, l, e, r, ,,  , t, w, o, -, d, e, v, i, c, e,  , p, l, a, y,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ) |
 | GP-MARKET-SHELVES | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-MARKET-SPACING | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g |
+| GP-MINE-WOOD-FRAME | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, A, n, d, r, o, i, d,  , t, o, u, c, h, ,,  , c, o, n, t, r, o, l, l, e, r, ,,  , t, w, o, -, d, e, v, i, c, e,  , p, l, a, y,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ) |
 | GP-PACK-DETAIL-FIT | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-PAUSE-PANEL | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-PICKAXE-ANIM | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-PROPERTY-NAME-DOUBLE | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-QTY-PICKER-CONTROLLER | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, A, n, d, r, o, i, d,  , t, o, u, c, h, ,,  , c, o, n, t, r, o, l, l, e, r, ,,  , t, w, o, -, d, e, v, i, c, e,  , p, l, a, y,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ) |
 | GP-REPAIR-SOCIAL | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-SHARPEN | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-SKILLS-RT | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, A, n, d, r, o, i, d,  , t, o, u, c, h, ,,  , c, o, n, t, r, o, l, l, e, r, ,,  , t, w, o, -, d, e, v, i, c, e,  , p, l, a, y,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ) |
 | GP-SMITHY-WORKBENCH | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-STALL-PRICE-ON-PUTUP | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-STALL-RENT-WRONG-PITCH | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g |
 | GP-START-RUSTY-AXE | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-TABLE-ITEMS | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g |
 | GP-TARGET-ART-MATCH | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-TRAIL-EDGES | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-UI-COMPACT | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-WANTED-INDICATOR | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, A, n, d, r, o, i, d,  , t, o, u, c, h, ,,  , c, o, n, t, r, o, l, l, e, r, ,,  , t, w, o, -, d, e, v, i, c, e,  , p, l, a, y,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ) |
 | GP-WHEAT-PICKED | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-WIKI-LAYOUT | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-WIKI-RECIPE-TOOLS | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, A, n, d, r, o, i, d,  , t, o, u, c, h, ,,  , c, o, n, t, r, o, l, l, e, r, ,,  , t, w, o, -, d, e, v, i, c, e,  , p, l, a, y,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ) |
 | INV-18 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | MAP-01 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
+| MP-PLAYER-FAMILY | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, t, w, o, -, d, e, v, i, c, e,  , m, a, r, r, i, a, g, e, ,,  , b, i, r, t, h,  , a, n, d,  , a, d, o, p, t, i, o, n,  , o, v, e, r,  , W, i, -, F, i, ) |
 | ORE-PLACE-01 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | PL1-03 | 15 | TARGETED TESTS PASSED | phone |
 | PL1-05 | 15 | TARGETED TESTS PASSED | phone |
@@ -179,6 +177,8 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | VIS-STEPS-01 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | VIS-TREE-02 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | WDR-008-C | 15 | TARGETED TESTS PASSED | phone, controller |
+| WEAPON-CATALOG-01 | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g, ;,  , v, a, l, u, e, s,  , p, r, o, v, i, s, i, o, n, a, l,  , f, o, r,  , t, h, e,  , o, w, n, e, r, ', s,  , r, e, v, i, e, w,  , (, t, h, e,  , a, r, m, o, u, r,  , a, n, d,  , w, e, a, p, o, n,  , c, a, t, a, l, o, g, u, e,  , t, a, b, l, e,  , o, n,  , w, i, p, /, b, u, i, l, d, 2, 2, ) |
+| WEAPON-VISIBLE-01 | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g, ;,  , v, a, l, u, e, s,  , p, r, o, v, i, s, i, o, n, a, l,  , f, o, r,  , t, h, e,  , o, w, n, e, r, ', s,  , r, e, v, i, e, w,  , (, t, h, e,  , a, r, m, o, u, r,  , a, n, d,  , w, e, a, p, o, n,  , c, a, t, a, l, o, g, u, e,  , t, a, b, l, e,  , o, n,  , w, i, p, /, b, u, i, l, d, 2, 2, ) |
 | WORLD-LIFE-01 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | X18-CAPCOMP | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | X18-CAPNUM | 18 | INTEGRATION VERIFIED | owner playtest on a device |

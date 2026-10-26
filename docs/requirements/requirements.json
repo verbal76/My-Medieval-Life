@@ -640,7 +640,8 @@
    "commits": [
     "8da7dec",
     "9f3a237",
-    "f6559b3"
+    "f6559b3",
+    "b7e1c91"
    ],
    "parent": "B18-DIR",
    "depends_on": [],
@@ -713,15 +714,21 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: VERIFICATION FAILED -> TARGETED TESTS PASSED; commits + f6559b3, 8da7dec",
      "why": "worker B report: done on wip/b22-ui (8da7dec), merged into wip/build22 at a287cd0; lead looked at the armour, mine and wanted screenshots"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "target_build": "18",
    "integrated_in": [
-    "Build 18 wip/build18"
+    "Build 18 wip/build18",
+    "Build 22 wip/build22 b7e1c91"
    ],
    "migrated_from_status": "IMPLEMENTED — TESTING REQUIRED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -761,7 +768,7 @@
     "ARMOR-CATALOG-D1"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -800,6 +807,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
      "why": "worker D report (wip/b22-gear b1e2247), merged into wip/build22 at 9247b19: 91 armour pieces, 1,920 weapons from the owner's weapons pack, orders and commissions, worn buffs, tusks and antlers, drawn and swung weapons"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "related": [
@@ -818,11 +830,15 @@
     "7ff9b36",
     "aca4dc3",
     "b1e2247",
-    "c897548"
+    "c897548",
+    "b7e1c91"
    ],
    "tests": "gear_catalogue_test 61, armour_worn_test 294, equip_test 51, combat_test 41, wiki_test, run_tests 3600/0, start_test 523/0, net tests pass; G0 differs only by the tusk and antler drops (control run with drops off identical); evidence in the Build 22 gear baseline note on wip/build22",
    "test_commit": "b1e2247",
-   "playtest": "real device check outstanding; values provisional for the owner's review (the armour and weapon catalogue table on wip/build22)"
+   "playtest": "real device check outstanding; values provisional for the owner's review (the armour and weapon catalogue table on wip/build22)",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "ARMOR-CATALOG-D1",
@@ -871,7 +887,7 @@
     "ARMOR-CATALOG-D1"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -895,6 +911,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
      "why": "worker D report (wip/b22-gear b1e2247), merged into wip/build22 at 9247b19: 91 armour pieces, 1,920 weapons from the owner's weapons pack, orders and commissions, worn buffs, tusks and antlers, drawn and swung weapons"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "related": [
@@ -912,11 +933,15 @@
     "7ff9b36",
     "aca4dc3",
     "b1e2247",
-    "c897548"
+    "c897548",
+    "b7e1c91"
    ],
    "tests": "gear_catalogue_test 61, armour_worn_test 294, equip_test 51, combat_test 41, wiki_test, run_tests 3600/0, start_test 523/0, net tests pass; G0 differs only by the tusk and antler drops (control run with drops off identical); evidence in the Build 22 gear baseline note on wip/build22",
    "test_commit": "b1e2247",
-   "playtest": "real device check outstanding; values provisional for the owner's review (the armour and weapon catalogue table on wip/build22)"
+   "playtest": "real device check outstanding; values provisional for the owner's review (the armour and weapon catalogue table on wip/build22)",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "ARMOR-Q",
@@ -22850,7 +22875,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22869,12 +22894,18 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 700305d",
      "why": "worker A report; merged into wip/build22 at 66fd330 (doc conflicts resolved, interaction index regenerated); combined suites pass"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "branch": "wip/b22-market",
    "commits": [
     "700305d",
-    "e25eec9"
+    "e25eec9",
+    "b7e1c91"
    ],
    "implementation": "unfinished, untested changes to game/scripts/core/settlement/couriers.gd in the e25eec9 snapshot",
    "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
@@ -22886,7 +22917,10 @@
    "assigned_worker": "worker A (market)",
    "tests": "courier_desk_test 26; on wip/build22 66fd330 with B and C merged: run_tests 3600/0, start_test 523/0, multiplayer_c 340/0, G0 PASS",
    "test_commit": "97cba8b",
-   "playtest": "real device check outstanding"
+   "playtest": "real device check outstanding",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "GP-BUSINESS-DESK",
@@ -22904,7 +22938,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22963,13 +22997,19 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 764eff0",
      "why": "worker A report; merged into wip/build22 at 66fd330 (doc conflicts resolved, interaction index regenerated); combined suites pass"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "assigned_worker": "worker A (market)",
    "branch": "wip/b22-market",
    "commits": [
     "764eff0",
-    "e25eec9"
+    "e25eec9",
+    "b7e1c91"
    ],
    "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
    "related": [
@@ -22980,7 +23020,10 @@
    "next_action": "Build 22: implement on wip/b22-market, lead integrates on wip/build22",
    "tests": "desk_test 33; on wip/build22 66fd330 with B and C merged: run_tests 3600/0, start_test 523/0, multiplayer_c 340/0, G0 PASS",
    "test_commit": "97cba8b",
-   "playtest": "real device check outstanding"
+   "playtest": "real device check outstanding",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "GP-CHECKPOINT-1",
@@ -23279,7 +23322,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23333,6 +23376,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + c756d8e",
      "why": "worker C report; merged into wip/build22 at a89484a (one conflict in net_session.gd resolved keeping both fields); combined tests pass: armour_worn 29, player_family 88, net_family 22, net_ui 61, multiplayer_c 340, field_work 24"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "assigned_worker": "worker C (family and farming)",
@@ -23343,11 +23391,15 @@
    ],
    "next_action": "Build 22: implement on wip/b22-family, lead integrates on wip/build22",
    "commits": [
-    "c756d8e"
+    "c756d8e",
+    "b7e1c91"
    ],
    "tests": "field_work_test 24; presentation only, G0 identical; run_tests 3600/0",
    "test_commit": "39f8871",
-   "playtest": "real device check outstanding (phone view)"
+   "playtest": "real device check outstanding (phone view)",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "GP-GIFT-QUANTITY",
@@ -23946,7 +23998,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -24000,6 +24052,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 73661ec",
      "why": "worker B report: done on wip/b22-ui (8da7dec), merged into wip/build22 at a287cd0; lead looked at the armour, mine and wanted screenshots"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "next_action": "Build 22: implement on wip/b22-ui, lead integrates on wip/build22",
@@ -24010,11 +24067,15 @@
     "X20-OPEN-ITEMS"
    ],
    "commits": [
-    "73661ec"
+    "73661ec",
+    "b7e1c91"
    ],
    "tests": "lockpick_test 19; run_tests 3600/0, start_test 523/0, net tests pass, G0 identical (wip/b22-ui 8da7dec)",
    "test_commit": "8da7dec",
-   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)"
+   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "GP-MARKET-SHELVES",
@@ -24097,7 +24158,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -24126,6 +24187,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 87ae381, 89ee91c, 8803950",
      "why": "worker A report; merged into wip/build22 at 66fd330 (doc conflicts resolved, interaction index regenerated); combined suites pass"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "related": [
@@ -24139,11 +24205,15 @@
    "commits": [
     "87ae381",
     "8803950",
-    "89ee91c"
+    "89ee91c",
+    "b7e1c91"
    ],
    "tests": "market_spacing_test 23; village generator v16; baseline replaced with evidence (the Build 22 baseline-change note on wip/build22, old baseline kept); on wip/build22 66fd330 with B and C merged: run_tests 3600/0, start_test 523/0, multiplayer_c 340/0, G0 PASS",
    "test_commit": "97cba8b",
-   "playtest": "real device check outstanding"
+   "playtest": "real device check outstanding",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "GP-MESSAGE-FOOTPRINT",
@@ -24212,7 +24282,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -24241,6 +24311,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 5f3f2ad",
      "why": "worker B report: done on wip/b22-ui (8da7dec), merged into wip/build22 at a287cd0; lead looked at the armour, mine and wanted screenshots"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "related": [
@@ -24253,11 +24328,15 @@
    "assigned_worker": "worker B (interface)",
    "branch": "wip/b22-ui",
    "commits": [
-    "5f3f2ad"
+    "5f3f2ad",
+    "b7e1c91"
    ],
    "tests": "mine_frame_test 4; run_tests 3600/0, start_test 523/0, net tests pass, G0 identical (wip/b22-ui 8da7dec)",
    "test_commit": "8da7dec",
-   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)"
+   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "GP-PACK-DETAIL-FIT",
@@ -24672,7 +24751,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -24701,6 +24780,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 7741787",
      "why": "worker B report: done on wip/b22-ui (8da7dec), merged into wip/build22 at a287cd0; lead looked at the armour, mine and wanted screenshots"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "related": [
@@ -24713,11 +24797,15 @@
    "assigned_worker": "worker B (interface)",
    "branch": "wip/b22-ui",
    "commits": [
-    "7741787"
+    "7741787",
+    "b7e1c91"
    ],
    "tests": "pad_shortcuts_test 33; run_tests 3600/0, start_test 523/0, net tests pass, G0 identical (wip/b22-ui 8da7dec)",
    "test_commit": "8da7dec",
-   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)"
+   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "GP-REPAIR-SOCIAL",
@@ -24886,7 +24974,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -24905,6 +24993,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 7741787",
      "why": "worker B report: done on wip/b22-ui (8da7dec), merged into wip/build22 at a287cd0; lead looked at the armour, mine and wanted screenshots"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "related": [
@@ -24915,11 +25008,15 @@
    "branch": "wip/b22-ui",
    "next_action": "Build 22: implement on wip/b22-ui",
    "commits": [
-    "7741787"
+    "7741787",
+    "b7e1c91"
    ],
    "tests": "pad_shortcuts_test 33; run_tests 3600/0, start_test 523/0, net tests pass, G0 identical (wip/b22-ui 8da7dec)",
    "test_commit": "8da7dec",
-   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)"
+   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "GP-SMITHY-WORKBENCH",
@@ -25084,7 +25181,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -25113,6 +25210,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 9871733",
      "why": "worker A report; merged into wip/build22 at 66fd330 (doc conflicts resolved, interaction index regenerated); combined suites pass"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "related": [
@@ -25124,11 +25226,15 @@
    "assigned_worker": "worker A (market)",
    "branch": "wip/b22-market",
    "commits": [
-    "9871733"
+    "9871733",
+    "b7e1c91"
    ],
    "tests": "stall_rent_pitch_test 22; on wip/build22 66fd330 with B and C merged: run_tests 3600/0, start_test 523/0, multiplayer_c 340/0, G0 PASS",
    "test_commit": "97cba8b",
-   "playtest": "real device check outstanding"
+   "playtest": "real device check outstanding",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "GP-STALL-TABLE-10",
@@ -25267,7 +25373,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -25331,6 +25437,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 87ae381",
      "why": "worker A report; merged into wip/build22 at 66fd330 (doc conflicts resolved, interaction index regenerated); combined suites pass"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "assigned_worker": "worker A (market)",
@@ -25341,11 +25452,15 @@
    ],
    "next_action": "Build 22: implement on wip/b22-market, lead integrates on wip/build22",
    "commits": [
-    "87ae381"
+    "87ae381",
+    "b7e1c91"
    ],
    "tests": "table_preview_test 17; on wip/build22 66fd330 with B and C merged: run_tests 3600/0, start_test 523/0, multiplayer_c 340/0, G0 PASS",
    "test_commit": "97cba8b",
-   "playtest": "real device check outstanding"
+   "playtest": "real device check outstanding",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "GP-TARGET-ART-MATCH",
@@ -25587,7 +25702,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -25616,6 +25731,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + f2cc09c",
      "why": "worker B report: done on wip/b22-ui (8da7dec), merged into wip/build22 at a287cd0; lead looked at the armour, mine and wanted screenshots"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "related": [
@@ -25627,11 +25747,15 @@
    "assigned_worker": "worker B (interface)",
    "branch": "wip/b22-ui",
    "commits": [
-    "f2cc09c"
+    "f2cc09c",
+    "b7e1c91"
    ],
    "tests": "wanted_indicator_test 16; run_tests 3600/0, start_test 523/0, net tests pass, G0 identical (wip/b22-ui 8da7dec)",
    "test_commit": "8da7dec",
-   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)"
+   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "GP-WHEAT-PICKED",
@@ -25791,7 +25915,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -25820,6 +25944,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 76c437f",
      "why": "worker B report: done on wip/b22-ui (8da7dec), merged into wip/build22 at a287cd0; lead looked at the armour, mine and wanted screenshots"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "related": [
@@ -25832,11 +25961,15 @@
    "assigned_worker": "worker B (interface)",
    "branch": "wip/b22-ui",
    "commits": [
-    "76c437f"
+    "76c437f",
+    "b7e1c91"
    ],
    "tests": "wiki_test 140 checks; run_tests 3600/0, start_test 523/0, net tests pass, G0 identical (wip/b22-ui 8da7dec)",
    "test_commit": "8da7dec",
-   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)"
+   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "HEALTH-01",
@@ -31850,7 +31983,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -31904,6 +32037,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + bc243a9, 39f8871",
      "why": "worker C report; merged into wip/build22 at a89484a (one conflict in net_session.gd resolved keeping both fields); combined tests pass: armour_worn 29, player_family 88, net_family 22, net_ui 61, multiplayer_c 340, field_work 24"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "assigned_worker": "worker C (family and farming)",
@@ -31916,11 +32054,15 @@
    "next_action": "Build 22: implement on wip/b22-family, lead integrates on wip/build22",
    "commits": [
     "39f8871",
-    "bc243a9"
+    "bc243a9",
+    "b7e1c91"
    ],
    "tests": "player_family_test 88, net_family_test 22 (two processes, host restart, guest rejoin), multiplayer_c_test 340, family_test 51; save 22->23 migration with a Build 21 fixture; run_tests 3600/0, start_test 523/0, G0 identical",
    "test_commit": "39f8871",
-   "playtest": "real device check outstanding (two-device marriage, birth and adoption over Wi-Fi)"
+   "playtest": "real device check outstanding (two-device marriage, birth and adoption over Wi-Fi)",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "MP-Q-PLAYER-CHILDREN",
@@ -55472,7 +55614,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -55501,6 +55643,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
      "why": "worker D report (wip/b22-gear b1e2247), merged into wip/build22 at 9247b19: 91 armour pieces, 1,920 weapons from the owner's weapons pack, orders and commissions, worn buffs, tusks and antlers, drawn and swung weapons"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "related": [
@@ -55517,11 +55664,15 @@
     "7ff9b36",
     "aca4dc3",
     "b1e2247",
-    "c897548"
+    "c897548",
+    "b7e1c91"
    ],
    "tests": "gear_catalogue_test 61, armour_worn_test 294, equip_test 51, combat_test 41, wiki_test, run_tests 3600/0, start_test 523/0, net tests pass; G0 differs only by the tusk and antler drops (control run with drops off identical); evidence in the Build 22 gear baseline note on wip/build22",
    "test_commit": "b1e2247",
-   "playtest": "real device check outstanding; values provisional for the owner's review (the armour and weapon catalogue table on wip/build22)"
+   "playtest": "real device check outstanding; values provisional for the owner's review (the armour and weapon catalogue table on wip/build22)",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "WEAPON-VISIBLE-01",
@@ -55541,7 +55692,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -55565,6 +55716,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
      "why": "worker D report (wip/b22-gear b1e2247), merged into wip/build22 at 9247b19: 91 armour pieces, 1,920 weapons from the owner's weapons pack, orders and commissions, worn buffs, tusks and antlers, drawn and swung weapons"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; commits + b7e1c91; integrated_in + Build 22 wip/build22 b7e1c91",
+     "why": "in Build 22 private playtest draft (release run 40398771937, draft 424822036; G0 sim gate passed; three platforms from b7e1c91; APK versionCode 22 signed with the permanent key 31:70:4B...80:E6)"
     }
    ],
    "related": [
@@ -55581,11 +55737,15 @@
     "7ff9b36",
     "aca4dc3",
     "b1e2247",
-    "c897548"
+    "c897548",
+    "b7e1c91"
    ],
    "tests": "gear_catalogue_test 61, armour_worn_test 294, equip_test 51, combat_test 41, wiki_test, run_tests 3600/0, start_test 523/0, net tests pass; G0 differs only by the tusk and antler drops (control run with drops off identical); evidence in the Build 22 gear baseline note on wip/build22",
    "test_commit": "b1e2247",
-   "playtest": "real device check outstanding; values provisional for the owner's review (the armour and weapon catalogue table on wip/build22)"
+   "playtest": "real device check outstanding; values provisional for the owner's review (the armour and weapon catalogue table on wip/build22)",
+   "integrated_in": [
+    "Build 22 wip/build22 b7e1c91"
+   ]
   },
   {
    "id": "WEATHER-01",
