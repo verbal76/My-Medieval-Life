@@ -685,6 +685,11 @@
      "date": "2026-10-22",
      "change": "remaining_work",
      "why": "2026-10-23 audit (REQ-CTRL-02): stale next_action replaced by the actual remaining work; known limitations recorded from the merge reports"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "verification_status: INTEGRATION VERIFIED -> VERIFICATION FAILED; implementation_status: INTEGRATED -> PARTIALLY IMPLEMENTED; known_defects set; related + X20-OPEN-ITEMS",
+     "why": "owner playtest report 2026-10-26: armour bought and worn is not visible; lead reading: leather armour has no worn layer, only iron armour and helmet do; carried into the Expansion 20 scope (record only)"
     }
    ],
    "target_build": "18",
@@ -693,13 +698,20 @@
    ],
    "migrated_from_status": "IMPLEMENTED — TESTING REQUIRED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "INTEGRATED",
-   "verification_status": "INTEGRATION VERIFIED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "verification_status": "VERIFICATION FAILED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "test_commit": "83d3afc",
    "design": "SPECIFIED",
-   "remaining_work": "owner playtest on a device; Build 18 release gate (REL18-*)"
+   "remaining_work": "every wearable armour item (leather included) has a worn layer and draws on the player and villagers in every direction; confirm the owner's case; owner playtest",
+   "known_defects": [
+    "Owner playtest 2026-10-26: worn armour he bought and put on does not show on his character ('I want to see my character wear the armor I purchase and put on').",
+    "Only iron armour and the iron helmet have worn layers (game/data/character_style.json worn_layers); leather armour draws nothing. Which armour the owner wore is not yet known."
+   ],
+   "related": [
+    "X20-OPEN-ITEMS"
+   ]
   },
   {
    "id": "ARMOR-Q",

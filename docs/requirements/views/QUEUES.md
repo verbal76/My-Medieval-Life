@@ -78,11 +78,10 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | WIKI-B17 | 17 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 
-## Awaiting owner playtest or device check (80)
+## Awaiting owner playtest or device check (79)
 
 | ID | Build | Verification | Needs |
 |---|---|---|---|
-| ARMOR-01 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | B13-12 | 15 | TARGETED TESTS PASSED | controller |
 | B13-13 | 15 | TARGETED TESTS PASSED | phone |
 | B14-01 | 15 | TARGETED TESTS PASSED | controller |

@@ -16,7 +16,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | AR-P1-1 | Prepared; owner must create key |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | AR-P1-2 | Fixed on staging; PR #1 branch still has push-triggered workflow | owner action | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | 16 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| ARMOR-01 | Armour is acquired in play, physical, and visible when worn | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | VERIFICATION FAILED | NOT READY | OPEN |
 | B12A-01 | 1-11 fixed (B13-01..10); 12 → B13-14 |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B12A-02 | Fixed (WHAT_WAS_DONE:135) |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B12A-03 | Fixed / one withdrawn (addendum :1631) |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
