@@ -6,7 +6,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
-| ARMOR-01 | 18 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
+| ARMOR-01 | 18 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | ARMOR-CATALOG-01 | 20 | IN DEVELOPMENT | worker D (gear) | wip/b22-gear |
 | ARMOR-MATERIALS-01 | 20 | IN DEVELOPMENT | worker D (gear) | wip/b22-gear |
 | E20-P1 | 20 | IMPLEMENTED ON TASK BRANCH | X20 foundation worker (Sonnet subagent) | wip/expansion20-preparation |
@@ -18,15 +18,15 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-BUSINESS-DESK | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-FARMER-TENDING | 20 | IN DEVELOPMENT | worker C (family and farming) | wip/b22-family |
-| GP-LOCKPICK | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
+| GP-LOCKPICK | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | GP-MARKET-SPACING | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
-| GP-MINE-WOOD-FRAME | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
-| GP-QTY-PICKER-CONTROLLER | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
-| GP-SKILLS-RT | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
+| GP-MINE-WOOD-FRAME | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
+| GP-QTY-PICKER-CONTROLLER | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
+| GP-SKILLS-RT | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | GP-STALL-RENT-WRONG-PITCH | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
 | GP-TABLE-ITEMS | 20 | IN DEVELOPMENT | worker A (market) | wip/b22-market |
-| GP-WANTED-INDICATOR | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
-| GP-WIKI-RECIPE-TOOLS | 20 | IN DEVELOPMENT | worker B (interface) | wip/b22-ui |
+| GP-WANTED-INDICATOR | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
+| GP-WIKI-RECIPE-TOOLS | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |

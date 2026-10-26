@@ -634,13 +634,13 @@
     "The equipment-to-visual link is fixed at its root so no existing armour item can lack a picture again (a test over every equippable armour)"
    ],
    "implementation": "",
-   "tests": "character_look_test, equip_test, start_test, wiki_test; all 66 Godot suites (exit 0, 0 SCRIPT ERROR, 0 FAIL) and the Python suite at wip/build18 83d3afc, run by the lead 2026-10-23",
-   "playtest": [
-    "owner playtest on a device"
-   ],
+   "tests": "armour_worn_test 29, character_look_test 34; run_tests 3600/0, start_test 523/0, net tests pass, G0 identical (wip/b22-ui 8da7dec)",
+   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)",
    "branch": "wip/b22-ui",
    "commits": [
-    "9f3a237"
+    "8da7dec",
+    "9f3a237",
+    "f6559b3"
    ],
    "parent": "B18-DIR",
    "depends_on": [],
@@ -708,6 +708,11 @@
      "date": "2026-10-26",
      "change": "acceptance + owner amendment criteria",
      "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: VERIFICATION FAILED -> TARGETED TESTS PASSED; commits + f6559b3, 8da7dec",
+     "why": "worker B report: done on wip/b22-ui (8da7dec), merged into wip/build22 at a287cd0; lead looked at the armour, mine and wanted screenshots"
     }
    ],
    "target_build": "18",
@@ -716,16 +721,15 @@
    ],
    "migrated_from_status": "IMPLEMENTED — TESTING REQUIRED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "VERIFICATION FAILED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "test_commit": "83d3afc",
+   "test_commit": "8da7dec",
    "design": "SPECIFIED",
    "remaining_work": "every wearable armour item (leather included) has a worn layer and draws on the player and villagers in every direction; confirm the owner's case; owner playtest",
    "known_defects": [
-    "Owner playtest 2026-10-26: armour the owner bought and put on does not show on the owner's character ('I want to see my character wear the armor I purchase and put on').",
-    "Only iron armour and the iron helmet have worn layers (game/data/character_style.json worn_layers); leather armour draws nothing. Which armour the owner wore is not yet known."
+    "Leather cap drawn with the grunt helm in the bronze row reads orange; the pack has no leather headgear (owner may prefer another choice)"
    ],
    "related": [
     "X20-OPEN-ITEMS"
@@ -23583,8 +23587,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23632,15 +23636,26 @@
      "date": "2026-10-26",
      "change": "acceptance + owner amendment criteria",
      "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 73661ec",
+     "why": "worker B report: done on wip/b22-ui (8da7dec), merged into wip/build22 at a287cd0; lead looked at the armour, mine and wanted screenshots"
     }
    ],
    "next_action": "Build 22: implement on wip/b22-ui, lead integrates on wip/build22",
    "assigned_worker": "worker B (interface)",
    "branch": "wip/b22-ui",
-   "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started.",
+   "notes": "Delivery: the Build 22 mini-build release (a release number, not Expansion 22), under the Expansion 20 umbrella; not started. Worker B: finishing on a lock already opened now gives no experience (was 1); the old per-level pick_minutes is no longer used for the player's pick.",
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "commits": [
+    "73661ec"
+   ],
+   "tests": "lockpick_test 19; run_tests 3600/0, start_test 523/0, net tests pass, G0 identical (wip/b22-ui 8da7dec)",
+   "test_commit": "8da7dec",
+   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)"
   },
   {
    "id": "GP-MARKET-SHELVES",
@@ -23777,8 +23792,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -23801,6 +23816,11 @@
      "date": "2026-10-26",
      "change": "acceptance + owner amendment criteria",
      "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 5f3f2ad",
+     "why": "worker B report: done on wip/b22-ui (8da7dec), merged into wip/build22 at a287cd0; lead looked at the armour, mine and wanted screenshots"
     }
    ],
    "related": [
@@ -23811,7 +23831,13 @@
    "next_action": "Build 22: implement on wip/b22-ui, lead integrates on wip/build22",
    "notes": "Lead reading, unconfirmed: the frame is most likely the level's way out (a portal door) or a timber support (MIN-F); asked the owner whether one was placed.",
    "assigned_worker": "worker B (interface)",
-   "branch": "wip/b22-ui"
+   "branch": "wip/b22-ui",
+   "commits": [
+    "5f3f2ad"
+   ],
+   "tests": "mine_frame_test 4; run_tests 3600/0, start_test 523/0, net tests pass, G0 identical (wip/b22-ui 8da7dec)",
+   "test_commit": "8da7dec",
+   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)"
   },
   {
    "id": "GP-PACK-DETAIL-FIT",
@@ -24226,8 +24252,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -24250,6 +24276,11 @@
      "date": "2026-10-26",
      "change": "acceptance + owner amendment criteria",
      "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 7741787",
+     "why": "worker B report: done on wip/b22-ui (8da7dec), merged into wip/build22 at a287cd0; lead looked at the armour, mine and wanted screenshots"
     }
    ],
    "related": [
@@ -24260,7 +24291,13 @@
    ],
    "next_action": "Build 22: implement on wip/b22-ui, lead integrates on wip/build22",
    "assigned_worker": "worker B (interface)",
-   "branch": "wip/b22-ui"
+   "branch": "wip/b22-ui",
+   "commits": [
+    "7741787"
+   ],
+   "tests": "pad_shortcuts_test 33; run_tests 3600/0, start_test 523/0, net tests pass, G0 identical (wip/b22-ui 8da7dec)",
+   "test_commit": "8da7dec",
+   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)"
   },
   {
    "id": "GP-REPAIR-SOCIAL",
@@ -24429,8 +24466,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -24443,6 +24480,11 @@
      "date": "2026-10-26",
      "change": "parent: None -> X20-OPEN-ITEMS; implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (interface); branch: None -> wip/b22-ui",
      "why": "owner amendment 2026-10-26: item 14 of Build 22"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 7741787",
+     "why": "worker B report: done on wip/b22-ui (8da7dec), merged into wip/build22 at a287cd0; lead looked at the armour, mine and wanted screenshots"
     }
    ],
    "related": [
@@ -24451,7 +24493,13 @@
    ],
    "assigned_worker": "worker B (interface)",
    "branch": "wip/b22-ui",
-   "next_action": "Build 22: implement on wip/b22-ui"
+   "next_action": "Build 22: implement on wip/b22-ui",
+   "commits": [
+    "7741787"
+   ],
+   "tests": "pad_shortcuts_test 33; run_tests 3600/0, start_test 523/0, net tests pass, G0 identical (wip/b22-ui 8da7dec)",
+   "test_commit": "8da7dec",
+   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)"
   },
   {
    "id": "GP-SMITHY-WORKBENCH",
@@ -25097,8 +25145,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -25121,6 +25169,11 @@
      "date": "2026-10-26",
      "change": "acceptance + owner amendment criteria",
      "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + f2cc09c",
+     "why": "worker B report: done on wip/b22-ui (8da7dec), merged into wip/build22 at a287cd0; lead looked at the armour, mine and wanted screenshots"
     }
    ],
    "related": [
@@ -25130,7 +25183,13 @@
    ],
    "next_action": "Build 22: implement on wip/b22-ui, lead integrates on wip/build22",
    "assigned_worker": "worker B (interface)",
-   "branch": "wip/b22-ui"
+   "branch": "wip/b22-ui",
+   "commits": [
+    "f2cc09c"
+   ],
+   "tests": "wanted_indicator_test 16; run_tests 3600/0, start_test 523/0, net tests pass, G0 identical (wip/b22-ui 8da7dec)",
+   "test_commit": "8da7dec",
+   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)"
   },
   {
    "id": "GP-WHEAT-PICKED",
@@ -25290,8 +25349,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -25314,6 +25373,11 @@
      "date": "2026-10-26",
      "change": "acceptance + owner amendment criteria",
      "why": "owner amendment 2026-10-26 (docs/directives/2026-10-26_build22_final_owner_answers_amendment.md): answers and criteria added; nothing removed"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; commits + 76c437f",
+     "why": "worker B report: done on wip/b22-ui (8da7dec), merged into wip/build22 at a287cd0; lead looked at the armour, mine and wanted screenshots"
     }
    ],
    "related": [
@@ -25324,7 +25388,13 @@
    "next_action": "Build 22: implement on wip/b22-ui, lead integrates on wip/build22",
    "notes": "Lead finding: game/scripts/core/wiki.gd builds recipe lines from station and inputs only; recipes.json carries tools in a 'tool' field (dress_stone: mallet and chisel), which the page never shows.",
    "assigned_worker": "worker B (interface)",
-   "branch": "wip/b22-ui"
+   "branch": "wip/b22-ui",
+   "commits": [
+    "76c437f"
+   ],
+   "tests": "wiki_test 140 checks; run_tests 3600/0, start_test 523/0, net tests pass, G0 identical (wip/b22-ui 8da7dec)",
+   "test_commit": "8da7dec",
+   "playtest": "real device check outstanding (Android touch, controller, two-device play where it applies)"
   },
   {
    "id": "HEALTH-01",
