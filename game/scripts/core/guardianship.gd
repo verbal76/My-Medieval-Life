@@ -43,9 +43,12 @@ static func dawn(w: World) -> void:
 			place(w, k)
 
 
-## The living children of household `h` when no adult or elder of it is alive; else [].
+## The living children of household `h` when no adult or elder of it is alive; else []. A player couple's household is cared for
+## while either player lives (MP-PLAYER-FAMILY, in play or away).
 static func orphans(w: World, h: int) -> Array:
 	var kids := []
+	if Life.is_couple_h(w, h) and not Life.couple_parents(w, h).is_empty():
+		return kids
 	for o: NPC in w.brain._members(h):
 		if not o.alive:
 			continue
@@ -75,7 +78,7 @@ static func place(w: World, k: NPC) -> String:
 static func candidates(w: World, k: NPC) -> Dictionary:
 	var out := {}
 	var parents := []
-	for pid in [k.mother, k.father]:
+	for pid in Life.parent_ids(k):
 		var p := w.npc(int(pid)) if int(pid) >= 0 else null
 		if p != null and p.alive and p.role != "bandit" and _eligible(w, p.household, k):
 			parents.append(p.household)
@@ -121,7 +124,7 @@ static func candidates(w: World, k: NPC) -> Dictionary:
 	out.relative = _ranked(w, k, near)
 	var others := []
 	for h in w.households.size():
-		if _eligible(w, h, k) and Life.has_room(w, h, k):
+		if _eligible(w, h, k) and Life.has_room(w, h, k) and not Life.is_couple_h(w, h):      # a player couple takes in only by choice (player_adopt) or as kin
 			others.append(h)
 	out.villager = _ranked(w, k, others)
 	return out
@@ -140,7 +143,7 @@ static func kin_distances(w: World, k: NPC) -> Dictionary:
 		var o = (pl if pl != null and pl.alive else null) if Life.is_player_id(id) else w.npc(id)
 		if o == null:
 			continue
-		var next: Array = [o.mother, o.father] + o.children
+		var next: Array = Life.parent_ids(o) + o.children        # MP-PLAYER-FAMILY: adoptive parents are parents
 		for nid in next:
 			var n := int(nid)
 			if (n < 0 and not Life.is_player_id(n)) or dist.has(n):
@@ -159,6 +162,8 @@ static func _eligible(w: World, h: int, k: NPC) -> bool:
 	var hh: Dictionary = w.households[h]
 	if hh.get("ended", false) or not w.buildings.has(str(hh.home)):
 		return false
+	if Life.is_couple_h(w, h):
+		return not Life.couple_parents(w, h).is_empty()       # MP-PLAYER-FAMILY: the players are its responsible adults
 	var ra := w.construction.responsible_adult(h)
 	return ra != null and ra.role != "child"
 
@@ -282,10 +287,18 @@ static func _take_share(w: World, k: NPC, old: int, into: Inventory) -> void:
 
 
 ## The household the player's family lives in with the player's partner (where the player's own children are raised,
-## Life.births), or -1: without a partner the player has no household of villagers to raise a child in.
+## Life.births), or -1: without a partner the player has no household of villagers to raise a child in. A player married to a
+## player: the couple's household (MP-PLAYER-FAMILY).
 static func player_household(w: World, who: PlayerState = null) -> int:
 	var p: PlayerState = who if who != null else w.player          # MP C5: any player (default the acting one)
-	if not p.alive or p.partner < 0:
+	if not p.alive:
+		return -1
+	if Life.is_player_id(p.partner):
+		var q := w.player_of_id(p.partner)
+		if q == null or q == p or not q.alive or q.partner != w.person_id(p):
+			return -1
+		return Life.couple_household(w, p, q)
+	if p.partner < 0:
 		return -1
 	var o := w.npc(p.partner)
 	if o == null or not o.alive or o.partner != w.person_id(p):
@@ -305,9 +318,12 @@ static func player_adopt_refusal(w: World, k: NPC) -> String:
 		return "Only a child can be taken in."
 	if not w.player.alive or Life.age_years(w.player.born, w.minutes) < float(Life.cfg().partner_min_age):
 		return "You are too young to take in a child."
-	for pid in [k.mother, k.father]:
+	for pid in Life.parent_ids(k):
 		var p := w.npc(int(pid)) if int(pid) >= 0 else null
 		if p != null and p.alive:
+			return "%s has a parent living." % k.name
+		var pp: PlayerState = w.player_of_id(int(pid)) if Life.is_player_id(int(pid)) and int(pid) != w.acting_id() else null
+		if pp != null and pp.alive and pp.partner != w.acting_id():
 			return "%s has a parent living." % k.name
 	var h := player_household(w)
 	if h < 0:
@@ -340,6 +356,20 @@ static func player_adopt(w: World, k: NPC, actor: PlayerState = null) -> String:
 	if why != "":
 		return why
 	k.clan = ""
-	move(w, k, player_household(w), "player")
+	var h := player_household(w)
+	move(w, k, h, "player")
+	if Life.is_couple_h(w, h):
+		# MP-PLAYER-FAMILY (owner, 2026-10-24): both spouses are the child's parents, as adoptive parents (mother and father stay as
+		# born); the child is one of each spouse's children (heirs, kin, the family's talk); no new person is made
+		for id in w.households[h].couple:
+			if not k.adoptive.has(int(id)):
+				k.adoptive.append(int(id))
+			var pp: PlayerState = w.player_of_id(int(id)) if Life.is_player_id(int(id)) else null
+			if pp != null and not pp.children.has(k.id):
+				pp.children.append(k.id)
+		Life.kin_version += 1
+		w.stat("couple_adoptions")
+		var sp := w.player_of_id(w.player.partner)
+		w.note("%s %s and %s %s take %s in as their own child." % [w.player.name, w.player.family, sp.name, sp.family, k.name])
 	w.stat("player_adoptions")
 	return ""

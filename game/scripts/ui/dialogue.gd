@@ -158,6 +158,8 @@ static func bond_words(w: World, n: NPC) -> String:
 	var st := w.relations.stage(w.acting_id(), n.id)
 	if st == "partners":
 		return "your partner"
+	if w.player.children.has(n.id):          # MP-PLAYER-FAMILY: a child born to the player or taken in by them (both spouses: Life.parent_ids)
+		return "your child" if not n.adoptive.has(w.acting_id()) else "your child (taken in)"
 	if st == "courting":
 		return "courting you"
 	return "your friend" if w.relations.player_friend(n) else ""

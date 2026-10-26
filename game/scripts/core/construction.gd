@@ -726,8 +726,8 @@ func daily() -> void:
 	var needs := {}                    # household -> goal keys still true today
 	for h in w.households.size():
 		var hh: Dictionary = w.households[h]
-		if hh.get("ended", false) or w.brain._members(h).is_empty():
-			continue
+		if hh.get("ended", false) or w.brain._members(h).is_empty() or Life.is_couple(hh):
+			continue                       # MP-PLAYER-FAMILY: a player couple's home is the players' own (Life.sync_couple_homes)
 		_rehouse(h)
 		if str(hh.get("build", "")) != "":
 			_family_help(h)

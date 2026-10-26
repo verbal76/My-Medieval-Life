@@ -393,6 +393,7 @@ static func dawn(w: World) -> void:
 	sync_roles(w)
 	_natural_deaths(w)
 	w.relations.dawn()                 # friendship and courting; villagers court and marry (CRT-04)
+	sync_couple_homes(w)               # MP-PLAYER-FAMILY: a player couple's household lives in their home (nothing in single player)
 	births(w)
 	Guardianship.dawn(w)               # FAM-02..05: orphaned children are taken in by kin or a villager household
 	Outlaws.dawn(w)                    # BANDIT-RETURN: a season after the band is gone, 2 or 3 outlaws arrive
@@ -531,7 +532,7 @@ static func partner_refusal(w: World, n: NPC) -> String:
 		return "%s does not want that." % n.name
 	if has_partner(w, n):
 		return "%s is already spoken for." % n.name
-	if kin(w.acting_id(), p.mother, p.father, n.id, n.mother, n.father):
+	if kin(w.acting_id(), p.mother, p.father, n.id, n.mother, n.father) or p.children.has(n.id) or n.adoptive.has(w.acting_id()):
 		return "%s is your kin." % n.name
 	return ""
 
@@ -571,6 +572,14 @@ static func births(w: World) -> void:
 			var o := w.npc(p.partner)
 			if o != null and o.alive and o.partner == w.person_id(p) and o.sex != p.sex:
 				_try_birth(w, p, o.household, o, chance)
+		elif p.alive and p.sex == "female" and is_player_id(p.partner):
+			# MP-PLAYER-FAMILY (owner, 2026-10-24): a woman married to a man who is a player (in play or away) has children by the same
+			# rules (ages, food, interval, chance), raised in the couple's household; a couple of one sex never has (CRT-07)
+			var q := w.player_of_id(p.partner)
+			if q != null and q.alive and q.partner == w.person_id(p) and q.sex != p.sex:
+				var h := couple_household(w, p, q)
+				if h >= 0 and w.buildings.has(str(w.households[h].home)):
+					_try_birth(w, p, h, q, chance)
 
 
 static func _try_birth(w: World, mother, h: int, father, chance: float) -> bool:
@@ -583,7 +592,7 @@ static func _try_birth(w: World, mother, h: int, father, chance: float) -> bool:
 		return false
 	for cid in mother.children:
 		var k := w.npc(int(cid))
-		if k != null and age_years(k.born, w.minutes) < float(c.birth_min_gap_years):
+		if k != null and age_years(k.born, w.minutes) < float(c.birth_min_gap_years) and not k.adoptive.has(w.id_of_party(mother)):     # a child taken in is no birth
 			return false
 	if w.rng.randf() >= chance:
 		return false
@@ -625,6 +634,129 @@ static func birth(w: World, mother, father, h: int) -> NPC:
 	var m_name: String = mother.name if mother != null else father.name
 	w.note("A %s, %s, is born to %s." % ["girl" if k.sex == "female" else "boy", k.name, m_name])
 	return k
+
+
+# ---------------------------------------------------------------- player couples -------------
+## MP-PLAYER-FAMILY (owner decisions 2026-10-24, docs/directives/2026-10-24_owner_decision_player_marriage_children.md; save 23):
+## two married players have a household of their own, a household record like any other (World.households: family, home, members,
+## pantry) with the key "couple": the two players' person ids (World.person_id), the host's line first (sorted high to low). Its
+## members are villagers only, as in every household: the couple's children, born to them (births) or taken in (Guardianship.player_adopt).
+## The players are not members (they are no villagers); while either of them lives (in play or away) the household is cared for: it is
+## not orphaned (Guardianship.orphans), it does not end (Property._anyone_alive), and the village leaves its housing and lodging to the
+## players (Construction.daily, newcomers and migrants never lodge there, no orphan is placed there but by kin). Its home is the
+## couple's: the first of them with a home (sync_couple_homes, every dawn and on load). It is founded when the two marry
+## (World.player_answer) and, for a couple married in a save of version 22, on load (ensure_couple_households). A couple without a
+## home has no children (a newborn lives in its household's house; the household of a villager always has one or lodges).
+
+
+## The two players' person ids as a couple key: [higher, lower] (the host's -2 first).
+static func couple_key(w: World, a: PlayerState, b: PlayerState) -> Array:
+	var ia := w.person_id(a)
+	var ib := w.person_id(b)
+	return [maxi(ia, ib), mini(ia, ib)]
+
+
+## Whether household record `hh` is a player couple's.
+static func is_couple(hh: Dictionary) -> bool:
+	return hh.has("couple") and not hh.get("ended", false)
+
+
+## Whether household `h` is a player couple's household (not ended).
+static func is_couple_h(w: World, h: int) -> bool:
+	return h >= 0 and h < w.households.size() and is_couple(w.households[h])
+
+
+## The living players of a couple household (each a parent of its children), in the key's order.
+static func couple_parents(w: World, h: int) -> Array:
+	var out := []
+	if not is_couple_h(w, h):
+		return out
+	for id in w.households[h].couple:
+		var p: PlayerState = w.player_of_id(int(id)) if is_player_id(int(id)) else null
+		if p != null and p.alive and not out.has(p):
+			out.append(p)
+	return out
+
+
+## The household of the married players `a` and `b`, or -1.
+static func couple_household(w: World, a: PlayerState, b: PlayerState) -> int:
+	if a == null or b == null:
+		return -1
+	var key := couple_key(w, a, b)
+	for h in w.households.size():
+		var hh: Dictionary = w.households[h]
+		if is_couple(hh) and int(hh.couple[0]) == int(key[0]) and int(hh.couple[1]) == int(key[1]):
+			return h
+	return -1
+
+
+## The couple's household, founded if they have none yet: the family name of the first of the key (the host's line first), the
+## home of the first of them with one ("" while they have none), no members, an empty pantry. Returns its index.
+static func found_couple_household(w: World, a: PlayerState, b: PlayerState) -> int:
+	var h := couple_household(w, a, b)
+	if h >= 0:
+		return h
+	var key := couple_key(w, a, b)
+	var first: PlayerState = w.player_of_id(int(key[0]))
+	var nh := {"id": w.households.size(), "family": first.family, "home": "", "members": [], "pantry": Inventory.new(), "couple": key,
+		"founded_day": w.day()}
+	w.households.append(nh)
+	_sync_couple_home(w, int(nh.id))
+	w.stat("couple_households")
+	return int(nh.id)
+
+
+## Every pair of living players married to each other has its household (save 22 had none; idempotent: a couple that has one keeps
+## it). On load, and nothing at all in single player.
+static func ensure_couple_households(w: World) -> int:
+	var made := 0
+	var list := w.player_list()
+	for i in list.size():
+		var a: PlayerState = list[i]
+		if not a.alive or not is_player_id(a.partner):
+			continue
+		var b := w.player_of_id(a.partner)
+		if b == null or b == a or not b.alive or b.partner != w.person_id(a) or list.find(b) < i:
+			continue
+		if couple_household(w, a, b) < 0:
+			found_couple_household(w, a, b)
+			made += 1
+	return made
+
+
+## Each couple household's home follows the couple: the first of them (the key's order) with a house of their own. While neither has
+## one the children stay where they lived. Members who lived in the old home move with it.
+static func sync_couple_homes(w: World) -> void:
+	for h in w.households.size():
+		if is_couple(w.households[h]):
+			_sync_couple_home(w, h)
+
+
+static func _sync_couple_home(w: World, h: int) -> void:
+	var hh: Dictionary = w.households[h]
+	for id in hh.couple:
+		var p: PlayerState = w.player_of_id(int(id)) if is_player_id(int(id)) else null
+		if p == null or not p.alive or str(p.home) == "" or not w.buildings.has(str(p.home)):
+			continue
+		if str(hh.home) != str(p.home):
+			var was := str(hh.home)
+			hh.home = str(p.home)
+			for m in hh.members:
+				var o := w.npc(int(m))
+				if o != null and o.alive and (o.home == was or o.home == ""):
+					o.home = str(p.home)
+		return
+
+
+## The parents of a person as person ids: mother and father (as born, -1 unknown), then the adoptive parents who took them in
+## (MP-PLAYER-FAMILY: both spouses of a player couple).
+static func parent_ids(n) -> Array:
+	var out := [int(n.mother), int(n.father)]
+	if n is NPC:
+		for id in (n as NPC).adoptive:
+			if not out.has(int(id)):
+				out.append(int(id))
+	return out
 
 
 # ---------------------------------------------------------------- inheritance ----------------
@@ -724,3 +856,12 @@ static func retire_player_id(w: World, dead: PlayerState = null) -> void:
 	for q: PlayerState in w.player_list():         # MP-D8: a player partnered with the dead (two players' marriage)
 		if q != dead and q.partner == line:
 			q.partner = former
+	for n: NPC in w.npcs:                          # MP-PLAYER-FAMILY: an adopted child's adoptive parent is the dead, as an ancestor
+		for i in n.adoptive.size():
+			if int(n.adoptive[i]) == line:
+				n.adoptive[i] = former
+	for hh in w.households:                        # and the couple's household names the dead as such (the heir is not the spouse)
+		if hh.has("couple"):
+			for i in (hh.couple as Array).size():
+				if int(hh.couple[i]) == line:
+					hh.couple[i] = former
