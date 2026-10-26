@@ -47,6 +47,7 @@ var gain_log: Array = []       # [item id, text] of the recent gain lines (_gain
 var sprinting := false         # B8-027: running (LT toggles on a pad; Shift held, or toggled, on a keyboard)
 var save_meta := {}            # PL1-11: the save's identity for portable and cloud saves (_save_meta)
 var save_extra := {}           # sections of a loaded save this build does not know, written back unchanged (SAVE-08)
+var prompt_done := ""          # GP-INTERACTION-PROMPT-LIFECYCLE: the target (its _target_key) whose window was opened: its prompt stays down until it is chosen again
 var talk_alt := {}             # a villager beside the resource the player faces: Y (pad), T (keys) or a tap talks to them while A works the resource
 var target_options: Array = [] # B8-014: everything the player could use here, nearest first; target is one of them
 var tab_cycled := -1           # the frame Tab chose another target (it is the Pack's key too, then it does not open it)
@@ -2332,6 +2333,8 @@ func _player_step(delta: float) -> void:
 	var p := world.player
 	_swing_step(delta)
 	if not action.is_empty():
+		if ui.prompt_text != "":
+			ui.prompt("")                 # GP-INTERACTION-PROMPT-LIFECYCLE: the work's bar ("Crafting") says what is going on
 		_menu_keys()                      # the Pack and the other windows open mid-action: that stops it (B8-010)
 		if ui.modal():
 			cancel_action("")
@@ -2355,6 +2358,8 @@ func _player_step(delta: float) -> void:
 		return
 	if ui.modal():
 		player_sprite.play("idle")
+		if ui.prompt_text != "":
+			ui.prompt("")                 # GP-INTERACTION-PROMPT-LIFECYCLE: no prompt behind or beside an open window
 		return
 	if furn.get("kind", "") == "sit":
 		_seated_step()                    # PL2-013: any input stands the player up
@@ -2946,7 +2951,7 @@ func _find_target() -> void:
 			text += "\n%s: %s" % [{"kbm": "T", "gamepad": "Y", "touch": "Tap them"}.get(scheme, "T"), talk_alt.get("label", "")]
 		elif text != "" and cands.size() > 1:
 			text += "\n" + _next_hint(cands[(pick + 1) % cands.size()], pick)
-		ui.prompt(text, text != "" and cands.size() > 1)
+		_prompt(text, text != "" and cands.size() > 1)
 
 
 ## GP-ANDROID-USE-TALK-TARGETING: the order Use offers things in: every thing (a station, a chest, a counter, a seam...)
@@ -2957,6 +2962,20 @@ static func use_order(cands: Array) -> Array:
 	if things.is_empty() or things.size() == cands.size():
 		return cands
 	return things + cands.filter(func(c): return str(c.get("kind", "")) in ["npc", "animal"])
+
+
+## GP-INTERACTION-PROMPT-LIFECYCLE (owner, 2026-10-24): the contextual prompt for the chosen target, kept for what it is
+## for: choosing. It is down while a window is open or the player's own work runs (its bar over the head says "Crafting",
+## "Mining"...), and once the target's window has been opened (prompt_done) it stays down after the window closes, until
+## that target is chosen again: another target taken (or none: walking away), Next / Q / Tab / the D-pad, or Use again.
+## Standing beside a thing is not using it.
+func _prompt(text: String, more := false) -> void:
+	var k := _target_key(target) if not target.is_empty() else ""
+	if prompt_done != "" and k != prompt_done:
+		prompt_done = ""                  # the target changed or went: its prompt may come back when it is chosen again
+	if ui.modal() or not action.is_empty() or (prompt_done != "" and k == prompt_done):
+		text = ""
+	ui.prompt(text, more and text != "")
 
 
 ## Which thing a target is, stable from frame to frame (what the labels' counts change is not part of it).
@@ -2993,6 +3012,7 @@ func cycle_target(dir: int) -> void:
 		if _target_key(target_options[i]) == _target_key(target):
 			at = i
 	at = posmod(at + dir, target_options.size())
+	prompt_done = ""                      # GP-INTERACTION-PROMPT-LIFECYCLE: chosen again: its prompt comes back
 	target_pref = _target_key(target_options[at])
 	target = target_options[at]
 	_find_target()
@@ -3320,7 +3340,11 @@ func interact() -> void:
 		if not hit.is_empty():
 			select_resource(hit, true)
 			return
+	prompt_done = ""
 	_use()
+	if ui.modal() and not target.is_empty():
+		prompt_done = _target_key(target)       # GP-INTERACTION-PROMPT-LIFECYCLE: its window is open: no prompt for it until chosen again
+		ui.prompt("")
 
 
 func _target_cell(t: Dictionary) -> Vector2i:
@@ -6625,7 +6649,7 @@ func _find_target_below() -> void:
 	var text := "" if passing or not gather.is_empty() else str(target.get("label", ""))
 	if text != "" and not talk_alt.is_empty():
 		text += "\n%s: %s" % [{"kbm": "T", "gamepad": "Y", "touch": "Tap them"}.get(scheme, "T"), talk_alt.get("label", "")]
-	ui.prompt(text)
+	_prompt(text)
 
 
 ## Fade between the surface and the level below over RoofFade.FADE_TIME, as a roof lifts: the level's view in, and
