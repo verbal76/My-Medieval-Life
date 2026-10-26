@@ -220,6 +220,19 @@ func _ready() -> void:
 			camera.zoom = Vector2(shot_zoom, shot_zoom) * view_scale
 		camera.position_smoothing_enabled = false
 		match shot_panel:
+			"wanted", "wanted_phone":
+				# GP-WANTED-INDICATOR: a guard in a chase after an assault: the red ring and the note under the status box
+				var jv: NPC = world.npcs.filter(func(n): return n.alive and n.role == "adult" and n.job != "guard")[0]
+				var jg: NPC = world.npcs.filter(func(n): return n.alive and n.job == "guard")[0]
+				var jc := world.justice.record(world.acting_ref(), "assault", jv, world.player.pos, 1)
+				world.justice.learn(jg, world.acting_ref(), [jc], world.player.pos)
+				world.justice.engage(jg, world.acting_ref(), "pursuing")
+				jg.pos = world.player.pos + Vector2(3, 1)
+				if shot_panel == "wanted_phone":
+					settings.phone = true
+					ui.set_scheme("touch")
+					ui.fit_safe_area()
+				ui.update_hud()
 			"joystick":
 				settings.touch_move = "joystick"         # GP-JOYSTICK (screenshots only; not saved)
 				ui.stick.push = Vector2(0.6, -0.4)
@@ -1363,6 +1376,7 @@ func _build_scene() -> void:
 	player_sprite.setup_texture(CharacterLook.player_sheet(world.player))
 	player_worn = _worn_key()
 	actors.add_child(player_sprite)
+	player_sprite.add_child(WantedRing.new())          # GP-WANTED-INDICATOR: shown while guards hunt this player
 	camera = Camera2D.new()
 	camera.zoom = Vector2(3, 3) * view_scale
 	camera.position_smoothing_enabled = true
@@ -1780,6 +1794,9 @@ func _sync_sprites() -> void:
 		s.play(look[0] if look[0] != "sleep" else "idle")
 	var p := world.player
 	player_sprite.position = p.pos * T
+	var ring := player_sprite.get_node_or_null("WantedRing") as WantedRing
+	if ring != null:
+		ring.set_on(bool(WantedHud.alert_of(world).get("hunted", false)), get_process_delta_time())     # GP-WANTED-INDICATOR
 	# who could be in a doorway, with their sprite when drawn (VIS-DOOR-01); the player opens doors but never fades:
 	# the roof lifts as they step in, so their way in stays in view
 	var people := [[p.pos, null]]

@@ -18,6 +18,7 @@ var compact_top := false         # ... and placed at the top (a phone's keyboard
 var hud: Control
 var hud_root: Control            # the HUD's own full-screen root: system bars kept clear, cutouts avoided per element
 var status_box: PanelContainer   # health, hunger, stamina, coins and the clock, in the top-left corner
+var wanted_hud: WantedHud         # GP-WANTED-INDICATOR: the guards are after you, and why (under the status box)
 var test_safe := Rect2()         # tests only: a pretend display safe area (window pixels)
 var test_cutouts: Array = []     # tests only: pretend display cutouts (camera holes), Rect2 in window pixels
 var bars := {}
@@ -485,6 +486,9 @@ func _build_hud() -> void:
 	date_label = Label.new()
 	date_label.add_theme_font_size_override("font_size", 14)
 	v.add_child(date_label)
+	wanted_hud = WantedHud.new()
+	wanted_hud.set_anchors_preset(Control.PRESET_TOP_LEFT)
+	hud.add_child(wanted_hud)
 
 	log_box = VBoxContainer.new()
 	log_box.set_anchors_preset(Control.PRESET_TOP_RIGHT)
@@ -956,6 +960,9 @@ func update_hud() -> void:
 	_meter_text("hunger", bar_words(p.hunger, HUNGER_MAX), p.hunger / HUNGER_MAX)
 	_meter_text("stamina", bar_words(p.stamina, p.stamina_cap()), p.stamina / maxf(1.0, p.stamina_cap()))
 	coins_label.text = " %d" % p.coins
+	wanted_hud.refresh(w)                           # GP-WANTED-INDICATOR: just under the status box, wherever that sits
+	if wanted_hud.visible:
+		wanted_hud.position = status_box.position + Vector2(0, status_box.size.y + 6.0)
 	var when: String = w.clock_text()                 # "Spring, Year 1  Day 3  07:00": the date, then the time
 	var cut := when.rfind(" ")
 	date_label.text = when.left(cut).strip_edges()

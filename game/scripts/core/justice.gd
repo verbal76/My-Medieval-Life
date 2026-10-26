@@ -274,6 +274,39 @@ func status(ref: String) -> String:
 	return "wanted" if not _known_all(c).filter(func(i): return str(c.crimes[i].settled) == "").is_empty() else "clear"
 
 
+## GP-WANTED-INDICATOR (owner 2026-10-26): what the player `ref` is shown about the guards after them, read from the case and
+## its pursuers only (no new rule, nothing kept): {} when nothing is outstanding that a guard knows and nobody is on the case;
+## else {state: "pursued" (a guard has them in sight), "coming" (a guard is on the way to where they were reported),
+## "searched" (guards search where they were last seen), "wanted" (known, nobody on it now); hunted: a guard is on the
+## case; crime: the gravest outstanding crime the guards know (its kind); victim: its victim's id (-1 none); at: [x, y] where
+## it was done}. It names no guard and no guard's place: only what the player can know (what they did and that they are
+## hunted). Cleared, settled, lapsed or closed (the offender died) cases show nothing.
+func alert(ref: String) -> Dictionary:
+	var c: Dictionary = cases.get(ref, {})
+	if c.is_empty():
+		return {}
+	var hunted := not (c.pursuers as Dictionary).is_empty()
+	var open: Array = _known_all(c).filter(func(i): return str(c.crimes[i].settled) == "")
+	if open.is_empty() and not hunted:
+		return {}
+	var state := "wanted"
+	if hunted:
+		var states := []
+		for gid in c.pursuers:
+			var g: NPC = w.npc(int(gid))
+			if g != null and g.alive and str(g.pursuit.get("ref", "")) == ref:
+				states.append(str(g.pursuit.get("state", "")))
+		state = "pursued" if states.has("pursuing") else "coming" if states.has("responding") else "searched" if states.has("searching") else "pursued"
+	var pick := -1
+	for i in (open if not open.is_empty() else _known_all(c)):
+		if pick < 0 or severity(str(c.crimes[i].kind)) > severity(str(c.crimes[pick].kind)) \
+				or (severity(str(c.crimes[i].kind)) == severity(str(c.crimes[pick].kind)) and float(c.crimes[i].t) > float(c.crimes[pick].t)):
+			pick = i
+	var cr: Dictionary = c.crimes[pick] if pick >= 0 else {}
+	return {"state": state, "hunted": hunted, "crime": str(cr.get("kind", "")), "victim": int(cr.get("victim", -1)),
+		"at": cr.get("at", []), "count": open.size()}
+
+
 ## Crimes `cis` (or, with [], every outstanding one) are settled `how` ("fined", "yielded", "taken", "lapsed"): they no
 ## longer count in any guard's tier. Returns how many were settled.
 func settle(ref: String, cis: Array, how: String) -> int:
