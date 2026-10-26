@@ -24233,8 +24233,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -24252,6 +24252,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: worker H (screen messages); branch: wip/x20-msg",
      "why": "Build 19 recovery batches R1 and R3 / owner screen report"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> x20_android_ui_test 95/0, start_test 523/0, net_ui_test 61/0, wanted_indicator_test 16/0, wiki_test passed, run_tests 3600/0, G0 identical; test_commit: None -> 7c59b50; commits + 7c59b50",
+     "why": "worker H finished the layout at 7c59b50 (x20_android_ui_test 95/0, start_test 523/0, net_ui_test 61/0, wanted_indicator 16/0, wiki_test, run_tests 3600/0, G0 identical); merge waits for GP-MESSAGE-JOURNAL on the same branch"
     }
    ],
    "related": [
@@ -24261,7 +24266,12 @@
     "GP-UI-COMPACT"
    ],
    "assigned_worker": "worker H (screen messages)",
-   "branch": "wip/x20-msg"
+   "branch": "wip/x20-msg",
+   "tests": "x20_android_ui_test 95/0, start_test 523/0, net_ui_test 61/0, wanted_indicator_test 16/0, wiki_test passed, run_tests 3600/0, G0 identical",
+   "test_commit": "7c59b50",
+   "commits": [
+    "7c59b50"
+   ]
   },
   {
    "id": "GP-MESSAGE-JOURNAL",
@@ -28110,17 +28120,19 @@
     "Unit tests and persistence"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0",
    "playtest": [],
    "branch": "wip/x20-le01",
-   "commits": [],
+   "commits": [
+    "84ce213"
+   ],
    "parent": "EXP-D",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "LE-02 (owner policies held: OD-LE-02B, -04, -05B, -07, -08, -10, -11, -13B, -14, -15). Gaps found at LE-01: no economy actor for villagers' storefront tills (front.till) or trade-counter tills (counter.till); judgment system lacks a read of one person's weighted opinion of another, and judged persons for manor, chapel, manor tills and neighbouring settlements; the model's save section reached about 400-440 KB by day 30 (trade knowledge), a phone budget question under OD-LE-15.",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -28155,19 +28167,27 @@
      "date": "2026-10-26",
      "change": "notes",
      "why": "owner correction on opinion and refusal recorded as a design constraint"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0; test_commit: None -> b7e3c3b; commits + 84ce213; integrated_in + Expansion 20 wip/expansion20 b7e3c3b; next_action",
+     "why": "merged into wip/expansion20 and validated with the switch off"
     }
    ],
    "target_build": "20",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
-   "integrated_in": [],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 b7e3c3b"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "assigned_worker": "worker F (LE-01)"
+   "assigned_worker": "worker F (LE-01)",
+   "test_commit": "b7e3c3b"
   },
   {
    "id": "LE-02",

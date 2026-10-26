@@ -9,8 +9,8 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 80 |
-| Integrated | 61 of 80 (76%) |
-| Automated tests passed | 62 of 80 (78%) |
+| Integrated | 62 of 80 (78%) |
+| Automated tests passed | 64 of 80 (80%) |
 | Integration verified | 36 of 80 (45%) |
 | Gameplay verified | 0 of 80 (0%) |
 | Owner playtested | 0 of 80 (0%) |
@@ -18,18 +18,16 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 78 |
 | Open owner decisions (blocking) | 15 (11) |
 
-## In development (worker assigned) (6)
+## In development (worker assigned) (4)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| GP-MESSAGE-FOOTPRINT | The message box and the interaction prompt take too much of the screen; make them compact and keep them out of the play area | OWNER APPROVED | IN DEVELOPMENT | worker H (screen messages) / wip/x20-msg | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | GP-MESSAGE-JOURNAL | Messages journal is saved with the world: persistent, per-world, filtered to meaningful events, bounded retention | OWNER APPROVED | IN DEVELOPMENT | worker H (screen messages) / wip/x20-msg | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | IN DEVELOPMENT | worker F (LE-01) / wip/x20-le01 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | worker G (recovery R1, R3) / wip/x20-r1r3 | TARGETED TESTS PASSED | recorder stage D5 (judgment publish, learn, tell, trust, every choice with alternatives and factors) and D4 relations (batch R3) | design: UNKNOWN | UNKNOWN |
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | analysis of judgment once D5 records it (batch R6); closure also waits on SIM-F2 and SIM-F3 | design: UNKNOWN | UNKNOWN |
 | REC-STORE | Recorder keeps every decision's alternatives and factors in full; no reduction, sampling or discarding; storage limit stops recording, keeps data, marks the session incomplete | OWNER APPROVED | IN DEVELOPMENT | worker G (recovery R1, R3) / wip/x20-r1r3 | NOT TESTED | judgment-weighted decisions recorded in full (batch R3) | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (59)
+## Integrated, awaiting gameplay or owner verification (60)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -85,6 +83,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | GP-WHEAT-PICKED | Harvested wheat shows as picked, cell by cell | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
 | GP-WIKI-LAYOUT | Encyclopedia laid out like a classic wiki page, on parchment | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
 | GP-WIKI-RECIPE-TOOLS | Encyclopedia recipes name every tool the work needs (for example a mallet and a chisel, and which chisels count) | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED | Build 22: implement on wip/b22-ui, lead integrates on wip/build22 |  | verification only |
+| LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 b7e3c3b | TARGETED TESTS PASSED | LE-02 (owner policies held: OD-LE-02B, -04, -05B, -07, -08, -10, -11, -13B, -14, -15). Gaps found at LE-01: no economy actor for villagers' storefront tills (front.till) or trade-counter tills (counter.till); judgment system lacks a read of one person's weighted opinion of another, and judged persons for manor, chapel, manor tills and neighbouring settlements; the model's save section reached about 400-440 KB by day 30 (trade knowledge), a phone budget question under OD-LE-15. |  | verification only |
 | MP-PLAYER-FAMILY | Children of player-to-player marriages: biological (male and female) and adoption with both spouses as parents | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED | Build 22: implement on wip/b22-family, lead integrates on wip/build22 |  | verification only |
 | SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | 13 decision domains live through JudgmentWeighting.choose; close against acceptance with the population evidence of the measurement batch (R6); politics stays with Expansion 21 (Q-POL-1, Q-POL-7) |  | verification only |
 | WEAPON-CATALOG-01 | Every weapon on the master weapons sheet can be made at the smithy at an appropriate Smithing level and bought there | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED |  |  | verification only |
@@ -99,12 +98,13 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 |---|---|---|---|---|---|---|---|---|
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (12)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (13)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it | design: UNKNOWN | UNKNOWN |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | OWNER APPROVED | NOT STARTED | none | NOT TESTED | historical memory: fact links and entity refs (building, item, household), the 30-planks chain, significance rule, dialogue from records, save migration (batch R4) | design: UNKNOWN | L |
+| GP-MESSAGE-FOOTPRINT | The message box and the interaction prompt take too much of the screen; make them compact and keep them out of the play area | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker H (screen messages) / wip/x20-msg | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | OWNER APPROVED | NOT STARTED | none | NOT TESTED | P1 after Batch A1 (docs/gameplay_polish/SCHEDULE.md) | design: UNKNOWN | UNKNOWN |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

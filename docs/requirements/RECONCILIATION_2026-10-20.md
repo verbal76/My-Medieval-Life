@@ -288,7 +288,7 @@ None.
 | GP-LOCKPICK | Interactive pin-tumbler lockpicking minigame replacing the passive meter: cutaway chambers with springs, pins, setting line, wobble and fall animations, a lockpick; whack-a-mole timing on readable visual cues (no hidden randomness); easy locks about 4 tumblers and 6-8 successful taps, harder locks 5-6 tumblers, faster wobble, shorter windows, several unstable pins, never smaller targets; non-overlapping touch regions; gamepad A/B/X/Y (+LB/RB) with prompts, keyboard equivalents; local to the player, never pauses a multiplayer world, host authoritative over lock state and rewards | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-MARKET-SHELVES | Market stalls as Craftpix wooden shelves showing each merchant's actual listings (up to ten) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-MARKET-SPACING | Market stalls with the Craftpix shelf sprite stand too close together | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
-| GP-MESSAGE-FOOTPRINT | The message box and the interaction prompt take too much of the screen; make them compact and keep them out of the play area | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| GP-MESSAGE-FOOTPRINT | The message box and the interaction prompt take too much of the screen; make them compact and keep them out of the play area | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-MESSAGE-JOURNAL | Messages journal is saved with the world: persistent, per-world, filtered to meaningful events, bounded retention | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | GP-MINE-WOOD-FRAME | Underground: a wooden frame drawn over the wall beside a deposit reads as blocking it; supports and openings need a clear representation | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-PACK-DETAIL-FIT | Pack item detail panel: action buttons cut off the bottom of the screen | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
@@ -343,7 +343,7 @@ None.
 | JUICE-00 | Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 20+ |
 | LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20+ |
-| LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
