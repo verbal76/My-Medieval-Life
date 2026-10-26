@@ -7,14 +7,14 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
+| Open entries (rules excluded) | 231 | 173 still open, 58 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 584 (315 of them still open) |
-| **Open entries now** (rules excluded) | | **492** |
+| Entries added since | | 585 (308 of them still open) |
+| **Open entries now** (rules excluded) | | **481** |
 | Open entries moved to another build | | 15 |
 
-## Closed since the baseline (54)
+## Closed since the baseline (58)
 
 | ID | Item | Kind | Baseline status | Baseline build | State now | Build now |
 |---|---|---|---|---|---|---|
@@ -56,6 +56,10 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | REC-017 | Bring stale project documents up to date (handoff, plan, game design, build decisions, CLAUDE.md release list, resources.json exception) | approved | APPROVED — NOT STARTED | 15 | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | approved | ACTIVE DEVELOPMENT | 15 | NOT APPLICABLE / NOT APPLICABLE / CLOSED | 15 |
 | ROAD-01 | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settlement & Regional Economy, 19 NPC Judgment | decision | ACTIVE DEVELOPMENT | 15 | APPROVED | 15 |
+| SJD-B | Judgment expansion Gate B: architecture audit (Godot services, relationships, economic decisions, event hooks, save format, risks) and integration map with open questions | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 19 |
+| SJD-C | Judgment expansion Gate C: isolated prototype (event catalog, beliefs, signed interpretation, GOOD/BAD ledger, tests), no effect on live behaviour | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 19 |
+| SJD-D | Judgment expansion Gate D: decision prototype (factor registry, utility profiles, the 50-iron scenario, explanation traces, determinism) | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 19 |
+| SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 20 |
 | SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | decision | BLOCKED | 19 | APPROVED | 19 |
 | SJD-Q02 | Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs? | decision | BLOCKED | 19 | APPROVED | 19 |
 | SJD-Q03 | Judgment open decision: Different disposition thresholds per NPC, or one calibrated scale? | decision | BLOCKED | 19 | APPROVED | 19 |
@@ -79,14 +83,14 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 |---|---|---|---|---|---|---|
 | B14-09 | Skeletons in caves and uncleared woods (guard by day, roam at night, 3-day respawn; bones and rusty gear) | approved | APPROVED — NOT STARTED | 20+ | NOT STARTED / NOT TESTED / OPEN | 26 |
 | DVW-A12 | Keep rules in `core/`, not UI; audit list (:37) | approved | APPROVED — NOT STARTED | 16 | INTEGRATED / TARGETED TESTS PASSED / OPEN | 17 |
-| DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | approved | PARTIALLY IMPLEMENTED | 19 | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 20 |
-| DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | approved | APPROVED — NOT STARTED | 19 | NOT STARTED / NOT TESTED / OPEN | 20 |
+| DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | approved | PARTIALLY IMPLEMENTED | 19 | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | DVW-B6 | Wildlife wandering in from the overworld | approved | APPROVED — NOT STARTED | 16 | NOT STARTED / NOT TESTED / OPEN | 18 |
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | approved | BLOCKED | owner decision | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | FR-01 | Lizards and spiders as enemies | approved | BLOCKED | 20+ | NOT STARTED / NOT TESTED / OPEN | 26 |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | approved | APPROVED — NOT STARTED | 19 | NOT STARTED / NOT TESTED / OPEN | 20 |
-| SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | approved | APPROVED — NOT STARTED | 19 | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | 20 |
-| SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | approved | APPROVED — NOT STARTED | 19 | NOT STARTED / NOT TESTED / OPEN | 20 |
+| SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 20 |
+| SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | approved | APPROVED — NOT STARTED | 19 | NOT STARTED / NOT TESTED / OPEN | 20 |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | approved | APPROVED — NOT STARTED | 19 | NOT STARTED / NOT TESTED / OPEN | 20 |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | approved | APPROVED — NOT STARTED | 20+ | NOT STARTED / NOT TESTED / OPEN | 21 |
@@ -97,7 +101,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (584)
+## Added since the baseline (585)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -137,7 +141,7 @@ None.
 | B18-DP-16 | ECON-P3's title also lists 'quotes follow money, stock days, market hire wages' (agent proposals P3.2-P3.4 in docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md lines 183-187). The owner's answer approved the separation of business and household money only. Are P3.2-P3.4 part of the approved Build 18 requirement, or should they be split off as unapproved proposals? | decision | APPROVED | 18 |
 | B18-SCOPE | Build 18 stays combined: tracks A, B and C; multiplayer excluded | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE | 18 |
 | B19-BASELINE | Approve the Build 19 determinism baseline on wip/build19 a7c84e9 (docs/design/BUILD19_BASELINE_PROPOSAL.md)? | decision | APPROVED | 19 |
-| B19-EMERGE | Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B19-EMERGE | Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | B19-RECOVERY | Build 19 carryover recovery within Expansion 20: audit the 18 unfinished Build 19 requirements and the 9 awaiting verification against the code, then integrate, finish or implement them on the Expansion 20 line | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | multiplayer |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | decision | APPROVED | owner decision |
@@ -227,9 +231,9 @@ None.
 | FARM-09 | Farmland placement by drag: two green corners, live price at screen centre, lease or buy, confirm | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
-| FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
-| FIX-D3 | Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 19 |
-| FIX-RECF1 | Fix the unsold-goods re-decision loop (REC-F1): find the actual cause and correct the condition that makes villagers reconsider an unavailable action hundreds of times; no arbitrary cooldown; autonomy, economy and prompt reaction preserved; isolated from other systems | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 19 |
+| FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 20 |
+| FIX-D3 | Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 19 |
+| FIX-RECF1 | Fix the unsold-goods re-decision loop (REC-F1): find the actual cause and correct the condition that makes villagers reconsider an unavailable action hundreds of times; no arbitrary cooldown; autonomy, economy and prompt reaction preserved; isolated from other systems | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 19 |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | INTEGRATED / NOT TESTED / OPEN | 16 |
 | FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
@@ -284,6 +288,7 @@ None.
 | GP-LOCKPICK | Interactive pin-tumbler lockpicking minigame replacing the passive meter: cutaway chambers with springs, pins, setting line, wobble and fall animations, a lockpick; whack-a-mole timing on readable visual cues (no hidden randomness); easy locks about 4 tumblers and 6-8 successful taps, harder locks 5-6 tumblers, faster wobble, shorter windows, several unstable pins, never smaller targets; non-overlapping touch regions; gamepad A/B/X/Y (+LB/RB) with prompts, keyboard equivalents; local to the player, never pauses a multiplayer world, host authoritative over lock state and rewards | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-MARKET-SHELVES | Market stalls as Craftpix wooden shelves showing each merchant's actual listings (up to ten) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-MARKET-SPACING | Market stalls with the Craftpix shelf sprite stand too close together | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
+| GP-MESSAGE-FOOTPRINT | The message box and the interaction prompt take too much of the screen; make them compact and keep them out of the play area | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | GP-MINE-WOOD-FRAME | Underground: a wooden frame drawn over the wall beside a deposit reads as blocking it; supports and openings need a clear representation | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-PACK-DETAIL-FIT | Pack item detail panel: action buttons cut off the bottom of the screen | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-PAUSE-PANEL | Pause menu: a framed panel over the dimmed game, not a full-screen brown background | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
@@ -474,7 +479,7 @@ None.
 | PL2-015-WATER | Farming: weather and expanded watering, crop and animal loss (deferred from PL2-015) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
 | PROS-01 | Parallel prospective development of Expansions 18 and 19 on isolated branches while Build 17 stays the priority; no merge, release or presentation as integrated gameplay before the reconciliation gates | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE | 18 |
 | PROS-18 | Expansion 18 prospective implementation (settlement capability and specialization, regional supply and demand, routes and transport, settlement inventories and reports, competition and cooperation, caravan subsidy replacement plan, conservation tests) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
-| PROS-19 | Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests) | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | 20 |
+| PROS-19 | Expansion 19 prospective implementation (personal memory, subjective judgment, signed opinions, decision weighting that influences not dictates, provenance and sharing, persistence and migration prototypes, determinism and large-population performance tests) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 20 |
 | PVG-01 | Procedural villages: expansion-aware house placement (footprint, parcel, road access, adjoining construction space, terrain and elevation, neighbours and boundaries, future rooms, household activity space) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
 | PVG-02 | Procedural villages: realistic medieval density and variation (compact homes by central roads and markets, larger plots outward, trades by infrastructure, farms on suitable land, irregular terrain-following roads and parcels) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
 | PVG-03 | Procedural villages: viable long-term housing options per home where practical (attached additions, smaller rooms, upper floors if supported, acquiring adjoining land, a new home elsewhere), decided by the real building and property systems | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
@@ -573,7 +578,7 @@ None.
 | SIM-B17 | SIM-01 in Build 17: one monitored longest run per seed, checkpoints for shorter milestones, stop at the first broken ledger | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 17 |
 | SIM-F2 | Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix? | decision | OPEN | 19 |
 | SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | decision | OPEN | 19 |
-| SIM-F4 | Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases? | decision | OPEN | 19 |
+| SIM-F4 | Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases? | decision | APPROVED | 19 |
 | SIM-F9 | The REC-F1 root cause also affects plans that start with a work step in eating, taking medicine and a homeless villager's bed: their waits end at once. Fixing them changes eating and rest timing. Approve the same correction for those plans? | decision | APPROVED | 19 |
 | SIM-GATE-01 | Permanent pre-build simulation, flight recorder and Excel quality gate | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | multiplayer |
 | SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
@@ -662,14 +667,14 @@ None.
 | X19-CRT12 | Courtship proposals use fixed notoriety and regard cut-offs (CRT-12); keep 'no marrying a killer' absolute and weigh the rest with judgment, or keep the cut-offs? | decision | APPROVED | 19 |
 | X19-DECAY | Judgment decay rate for ordinary contributions (proposed 3 permille a day, half-life 231 days; demonstrated 1-10 permille over 365 days; murder never decays) | decision | APPROVED | 19 |
 | X19-EVENT-Q | Expansion 19 event feeds raised four questions: (1) should a guard killing an assailant count as a killing (today it does: the game cannot tell them apart)? (2) should first acquaintance be recorded as a meeting fact? (3) should a late repayment score as a fair deal? (4) self-defence cannot yet be told from an attack: add that distinction later? | decision | APPROVED | 19 |
-| X19-FOUND | Expansion 19 foundations round: personality, relationship history and family reputation (judgment off) | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | 20 |
-| X19-FOUND-BONDS | Relationship history and reconciliation: resentment softens with growth, neutrality restores neither friendship nor trust, familiarity gives about 10% more friendship progression to former friends (non-stacking, suspended by negative standing), trust recovers only by reliability; serious grievances last at least about one game year | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 19 |
-| X19-FOUND-FAMREP | Family reputation: known family history colours descendants' impressions, positive reputation about 5% more friendship progression (about 12% combined with familiarity, not 15%), familiarity not inherited, personal experience overrides inherited impressions, small spillover of wrongdoing onto relatives without inheriting the wrongdoing, trust stays individual | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 19 |
-| X19-FOUND-PERS | Personality framework: evolving traits, soft limits, learning from costly mistakes, practical wisdom, temporary emotions and anger, recovery and growth; about 30% of villagers with potential for self-defeating stubbornness (population level) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 19 |
+| X19-FOUND | Expansion 19 foundations round: personality, relationship history and family reputation (judgment off) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| X19-FOUND-BONDS | Relationship history and reconciliation: resentment softens with growth, neutrality restores neither friendship nor trust, familiarity gives about 10% more friendship progression to former friends (non-stacking, suspended by negative standing), trust recovers only by reliability; serious grievances last at least about one game year | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 19 |
+| X19-FOUND-FAMREP | Family reputation: known family history colours descendants' impressions, positive reputation about 5% more friendship progression (about 12% combined with familiarity, not 15%), familiarity not inherited, personal experience overrides inherited impressions, small spillover of wrongdoing onto relatives without inheriting the wrongdoing, trust stays individual | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 19 |
+| X19-FOUND-PERS | Personality framework: evolving traits, soft limits, learning from costly mistakes, practical wisdom, temporary emotions and anger, recovery and growth; about 30% of villagers with potential for self-defeating stubbornness (population level) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 19 |
 | X19-GOSSIP-FLOOR | Gossip closeness (X19-Q-TIMING): a story passes between strangers with the agent-proposed chance gossip.closeness_floor_permille = 500 (half the time), rising to certain between the closest friends. Keep 500, or another value? | decision | APPROVED | 19 |
 | X19-GUARD | A guard who is the player's friend waives the fine (CRT-06) while SJD-Q08 says a guard can like someone and still enforce: keep, always enforce, or let friendship reduce but never waive the fine? | decision | APPROVED | 19 |
 | X19-HARMED | Relations.harmed lowers the player's standing with a victim's kin and friends instantly; when judgment is live, should word of mouth carry it instead (SJD-Q07 no instant broadcasts)? | decision | APPROVED | 19 |
-| X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | X19-PERS-FORMULA | The numerical formulas for personality evolution (rates by frequency, severity and duration; soft limits; learning acceleration; emotion length; recovery) | decision | APPROVED | 19 |
 | X19-PERSONALITY | Agent-proposed numbers for per-person temperament (SJD-Q03, Q13): tolerance and weights vary by up to 30% between people; being wronged lowers tolerance 4% per severity point, being helped raises regard for opinion 3% per point, at most 25% either way; a shift applies to all dealings, not only the kind of deed. Keep, or change? | decision | APPROVED | 19 |
 | X19-Q-TIMING | Gossip timing: keep 'spread' (identical results to telling an hour's meetings at once; rare long catch-up frames ~8.6 ms on a phone) or allow 'scheduled' (each meeting at its own seeded minute: smallest frames, but word passes at different times, so outcomes differ slightly)? | decision | APPROVED | 19 |
@@ -678,7 +683,7 @@ None.
 | X19-RUNNERUP | Near-best choices (SJD-Q09): the agent-proposed chance that a villager takes a close second instead of the best option is 150 permille (15%), only among options within 2 points of the best. Keep 15%, or another value? | decision | APPROVED | 19 |
 | X19-SCOPE | Expansion 19 ships complete: judgment, personality, relationships, family reputation, gossip, memory, deliberate lies, inherited family stories, stubbornness and the family-sacrifice hierarchy all enabled and influencing NPC decisions; nothing core deferred to 19.x | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 19 |
 | X19-SPILL-REACH | How far does reputation spillover reach through extended family (parents, children, siblings, cousins, in-laws)? | decision | APPROVED | 19 |
-| X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | decision | APPROVED | 19 |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | decision | APPROVED | 19 |
 | X20-OPEN-ITEMS | Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 20 |

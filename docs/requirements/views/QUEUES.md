@@ -40,7 +40,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | WEAPON-VISIBLE-01 | 20 | IMPLEMENTED ON TASK BRANCH | worker D (gear) | wip/b22-gear |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (47)
+## Implemented but not tested (46)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -54,7 +54,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | DVW-A13 | 20+ | PARTIALLY IMPLEMENTED |  |
 | DVW-A14 | 15 | INTEGRATED |  |
 | DVW-A3 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
-| DVW-B1 | 20 | PARTIALLY IMPLEMENTED |  |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH |  |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH |  |
 | EQ-05 | 16 | PARTIALLY IMPLEMENTED |  |
@@ -81,7 +80,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH |  |
 | SET-C | 18 | PARTIALLY IMPLEMENTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |
 | WDR-001-C | 17 | PARTIALLY IMPLEMENTED |  |
-| WDR-009-C | 20 | PARTIALLY IMPLEMENTED |  |
+| WDR-009-C | 20 | PARTIALLY IMPLEMENTED | the 30-planks verification scenario on top of GM-01 (batch R4) |
 | WDR-010-C | 15 | PARTIALLY IMPLEMENTED |  |
 | WDR-013-C | 17 | PARTIALLY IMPLEMENTED |  |
 | WDR-015-C | 20+ | PARTIALLY IMPLEMENTED |  |

@@ -5137,8 +5137,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -5156,11 +5156,22 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition verify: code present and enabled, tests pass; was recorded NOT STARTED or partial (register not updated)"
     }
    ],
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "applied for Build 19 (runs 2-4 classified); continues in the measurement batch (R6)",
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 0b5287c"
+   ],
+   "test_commit": "0b5287c",
+   "tests": "on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0"
   },
   {
    "id": "B19-RECOVERY",
@@ -5195,6 +5206,11 @@
      "date": "2026-10-26",
      "change": "parent: None -> X20-OPEN-ITEMS; umbrella",
      "why": "the 27 records carry the work; this record holds the recovery workstream"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "audit committed: 11 complete, 7 verify, 1 integrate, 7 implement (four pieces of code), 1 blocked; contradiction explained (done under other ids, superseded by X19-SCOPE, register not updated, validation and diagnostics left unfinished)"
     }
    ],
    "umbrella": true,
@@ -5227,7 +5243,8 @@
     "X19-FOUND-FAMREP",
     "X19-FOUND-PERS",
     "LE-01"
-   ]
+   ],
+   "next_action": "batches R1 (small cleanups) and R3 (recorder D5/D4) in parallel, then R2, R4, R5, R6, R7, R8 per docs/expansion20/B19_RECOVERY_MATRIX.md"
   },
   {
    "id": "B21-LAN-PLAYTEST",
@@ -13193,7 +13210,7 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "**Yes** (DECISIONS:39) | No queue/ledger row | `npc.gd`/`life.gd` \"relationships\" are family links only (B8-029); no gossip/favour code | NOT-STARTED | GM-01 and VP-01 depend on it (QUEUE:36,38)",
-   "tests": "",
+   "tests": "on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -13243,24 +13260,33 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition verify: code present and enabled, tests pass; was recorded NOT STARTED or partial (register not updated)"
     }
    ],
    "acceptance_derived": true,
    "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "memory of favours and harms, crimes and their stain are judgment inputs (EXP-C)",
-   "integrated_in": [],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 0b5287c"
+   ],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "PARTIAL",
    "effort": "M",
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "satisfied by the judgment store (memories, ledgers, gossip, trust) read by greetings and help; 'prices read relationships' waits on OD-LE-10/14 (Living Economy)",
+   "test_commit": "0b5287c"
   },
   {
    "id": "DVW-B10",
@@ -13498,7 +13524,7 @@
     "As recorded in the source document; evidence named in implementation and tests"
    ],
    "implementation": "**Yes** | No row | `main.gd::_crime`: attack turns guards hostile (DVW:48); no assault fine found | NOT-STARTED | ",
-   "tests": "",
+   "tests": "on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -13538,24 +13564,33 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition verify: code present and enabled, tests pass; was recorded NOT STARTED or partial (register not updated)"
     }
    ],
    "acceptance_derived": true,
    "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "memory of favours and harms, crimes and their stain are judgment inputs (EXP-C)",
-   "integrated_in": [],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 0b5287c"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "UNKNOWN",
    "effort": "L",
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "satisfied by GP-CRIME-PURSUIT (assault, killing, fines) and the owner's heir answer 'Case ends; stain stays'; close against acceptance",
+   "test_commit": "0b5287c"
   },
   {
    "id": "DVW-B3",
@@ -17942,23 +17977,30 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition integrate: working, but its factors are not visible in the recorder (family_trace read only by a test); fixed by recorder stage D5 (batch R3)"
     }
    ],
    "next_action": "X19 completion worker adds the danger behaviour, then Build 19 integration",
    "assigned_worker": "family worker (Sonnet subagent)",
    "branch": "wip/expansion19-preparation",
    "tests": "family_first_test 79/0; judgment_test 217/0; judgment_live_test 142/0; personality 73/0; bonds 97/0; family 51/0; relations 80/0; world 339/0; sim_gate identical",
-   "test_commit": "b7f832e",
+   "test_commit": "0b5287c",
    "commits": [
     "3022fbf",
     "fff48a4"
    ],
    "integrated_in": [
-    "Build 19 wip/build19 2f72ec3"
+    "Build 19 wip/build19 2f72ec3",
+    "Expansion 20 wip/expansion20 0b5287c"
    ],
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "recorder D5: family_trace and judgment factors recorded (batch R3)"
   },
   {
    "id": "FARM-01",
@@ -19167,9 +19209,9 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "COMPLETE",
    "history": [
     {
      "date": "2026-10-23",
@@ -19205,6 +19247,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + Expansion 20 wip/expansion20 0b5287c",
      "why": "X20-B1: the Living Economy foundation merged onto the Build 22 line (two world.gd conflicts, both sides kept); all suites pass, G0 identical"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; completion: OPEN -> COMPLETE",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition complete: present, enabled where intended, tests pass; remaining_work cleared"
     }
    ],
    "assigned_worker": "repair workers (Sonnet subagents)",
@@ -19220,7 +19267,9 @@
    ],
    "integrated_in": [
     "Expansion 20 wip/expansion20 0b5287c"
-   ]
+   ],
+   "remaining_work": "",
+   "next_action": ""
   },
   {
    "id": "FIX-D3",
@@ -19239,9 +19288,9 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "COMPLETE",
    "history": [
     {
      "date": "2026-10-23",
@@ -19267,21 +19316,29 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; completion: OPEN -> COMPLETE",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition complete: present, enabled where intended, tests pass; remaining_work cleared"
     }
    ],
    "assigned_worker": "repair worker X19 (Sonnet subagent)",
    "branch": "wip/expansion19-preparation",
    "tests": "judgment_guard_save_test 18, relations_test 80, judgment_live_test 142, judgment_test 217, judgment_personality_test 65, judgment_bonds_test 97, migration_test 92, save_transfer_test 21, wiki_test; sim_gate identical",
-   "test_commit": "3ec38d2",
+   "test_commit": "0b5287c",
    "commits": [
     "3ec38d2"
    ],
    "integrated_in": [
-    "Build 19 wip/build19 2f72ec3"
+    "Build 19 wip/build19 2f72ec3",
+    "Expansion 20 wip/expansion20 0b5287c"
    ],
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "",
+   "next_action": ""
   },
   {
    "id": "FIX-RECF1",
@@ -19302,9 +19359,9 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "COMPLETE",
    "history": [
     {
      "date": "2026-10-23",
@@ -19355,24 +19412,31 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; completion: OPEN -> COMPLETE",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition complete: present, enabled where intended, tests pass; remaining_work cleared"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/fix-recf1",
    "tests": "recf1_test 9 (fails 2 without the fix), world_test, parity_test, interdependency_test, stalls_test, od16_test, conservation_test, succession_test all 0 failures; ledgers leak 0 (seed 1); recf1_test 23/0; recf1_test 23/0; recorder_test 160/0; world_test 339/0; sim_gate 2d5d49c: no leaks, differs from day 10 (expected class, unattributed)",
-   "test_commit": "b113f73",
+   "test_commit": "0b5287c",
    "commits": [
     "c27aaa2",
     "b113f73"
    ],
-   "next_action": "merge into wip/recorder with identity; combined first-divergence check on both seeds; propose one baseline",
+   "next_action": "",
    "integrated_in": [
     "Build 19 wip/build19 2f72ec3",
+    "Expansion 20 wip/expansion20 0b5287c",
     "wip/recorder 2d5d49c"
    ],
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": ""
   },
   {
    "id": "FR-01",
@@ -22119,6 +22183,11 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition implement (audit): historical memory: fact links and entity refs (building, item, household), the 30-planks chain, significance rule, dialogue from records, save migration (batch R4)"
     }
    ],
    "acceptance_derived": true,
@@ -22136,7 +22205,9 @@
    "effort": "L",
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "historical memory: fact links and entity refs (building, item, household), the 30-planks chain, significance rule, dialogue from records, save migration (batch R4)",
+   "test_commit": "0b5287c"
   },
   {
    "id": "GP-ACTIONBAR",
@@ -24068,6 +24139,47 @@
    "tests": "market_spacing_test 23; village generator v16; baseline replaced with evidence (the Build 22 baseline-change note on wip/build22, old baseline kept); on wip/build22 66fd330 with B and C merged: run_tests 3600/0, start_test 523/0, multiplayer_c 340/0, G0 PASS",
    "test_commit": "97cba8b",
    "playtest": "real device check outstanding"
+  },
+  {
+   "id": "GP-MESSAGE-FOOTPRINT",
+   "kind": "approved",
+   "title": "The message box and the interaction prompt take too much of the screen; make them compact and keep them out of the play area",
+   "description": "The message box and the interaction prompt take too much of the screen; make them compact and keep them out of the play area",
+   "source": "docs/gameplay_polish/reference/message_prompt_footprint_2026-10-26.jpg",
+   "owner_wording": "This takes up too much real estate in the screen",
+   "approval": "owner, 2026-10-26 (playtest report)",
+   "acceptance": [
+    "The message box (e.g. the morning welcome) and the interaction prompt together no longer cover the middle of the play area on a phone: smaller text and boxes, placed toward an edge, the message fading after a short time or tapped away",
+    "Nothing is lost: every message stays readable in the journal or log; the prompt keeps its target, the Next choice and the talk line",
+    "Checked at phone, 16:9 and 16:10 sizes with screenshots; works with touch, pad and keyboard"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "docs/gameplay_polish/reference/message_prompt_footprint_2026-10-26.jpg"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "parent: None -> X20-OPEN-ITEMS",
+     "why": "owner playtest report on the X20-B2 screenshots"
+    }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS",
+    "GP-INTERACTION-PROMPT-LIFECYCLE",
+    "GP-ANDROID-HUD-SCALE",
+    "GP-UI-COMPACT"
+   ]
   },
   {
    "id": "GP-MINE-WOOD-FRAME",
@@ -39931,7 +40043,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "owner: X19-DECAY (16 game days?), X19-GOSSIP-FLOOR, X19-RUNNERUP, X19-TRUST-RATES, X19-PERSONALITY, X19-EVENT-Q and the hook numbers; then matched-seed 365-day calibration (judgment off vs on, one run per seed, 100-day read from checkpoints), device perf, wiki, INT entries at reconciliation",
+   "next_action": "",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -40031,23 +40143,30 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; completion: OPEN -> COMPLETE",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition complete: present, enabled where intended, tests pass; remaining_work cleared"
     }
    ],
    "target_build": "20",
-   "integrated_in": [],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 0b5287c"
+   ],
    "task_branches": [
     "Expansion 19 prototype wip/expansion19-preparation"
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "COMPLETE",
    "umbrella": true,
    "assigned_worker": "X19 sync worker (Sonnet subagent)",
-   "remaining_work": "rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c)",
-   "test_commit": "c4b10e4",
+   "remaining_work": "",
+   "test_commit": "0b5287c",
    "related": [
     "X20-OPEN-ITEMS"
    ]
@@ -43592,20 +43711,26 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition implement (audit): recorder stage D5 (judgment publish, learn, tell, trust, every choice with alternatives and factors) and D4 relations (batch R3)"
     }
    ],
    "assigned_worker": "recorder worker (Sonnet subagent)",
    "branch": "wip/recorder",
    "next_action": "combined gate on 2d5d49c; then into the Build 19 integration branch with Expansion 19",
    "tests": "recorder_test 62, world_test 339, start_test 506 steps, conservation_test 8, judgment_live_test 142; economy_sim 10 days seed 1 fingerprint identical with and without --record; sim_gate identical; recorder_test 160/0; recf1_test 23/0; world_test 339/0; identity 98/0; migration 93/0",
-   "test_commit": "2d5d49c",
+   "test_commit": "0b5287c",
    "commits": [
     "94b1304",
     "2d5d49c"
    ],
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "recorder stage D5 (judgment publish, learn, tell, trust, every choice with alternatives and factors) and D4 relations (batch R3)"
   },
   {
    "id": "REC-D1",
@@ -43766,6 +43891,11 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition implement (audit): analysis of judgment once D5 records it (batch R6); closure also waits on SIM-F2 and SIM-F3"
     }
    ],
    "assigned_worker": "lead",
@@ -43773,7 +43903,9 @@
    "next_action": "run 2 only: 30 days, seeds 1 and 2, on the recorder head with FIX-RECF1 and D3; stop at day 30, a FATAL line or the storage cap",
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "analysis of judgment once D5 records it (batch R6); closure also waits on SIM-F2 and SIM-F3",
+   "test_commit": "0b5287c"
   },
   {
    "id": "REC-F1",
@@ -43855,11 +43987,18 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition implement (audit): judgment-weighted decisions recorded in full (batch R3)"
     }
    ],
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "judgment-weighted decisions recorded in full (batch R3)",
+   "test_commit": "0b5287c"
   },
   {
    "id": "RECON-01",
@@ -47611,8 +47750,8 @@
    "description": "Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases?",
    "source": "docs/directives/2026-10-23_simulation_first_diagnostics.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Owner answered 2026-10-23 (docs/directives/2026-10-23_owner_clarifications_famrep_simf4.md): health no longer blocks a bandit's food purchase; a bandit may buy as soon as it can afford one item of food; bandits heal by resting at the camp. Built in 417c07f.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "19",
    "related": [],
@@ -47653,6 +47792,11 @@
      "date": "2026-10-24",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IMPLEMENTED ON TASK BRANCH; verification_status: None -> TARGETED TESTS PASSED; tests: None -> od16_test 38/0; recf1_test 28/0; world_test 339/0; outlaw_return 24/0; wiki pass; 30-day seeds 1-2 measured; test_commit: None -> 417c07f; commits + 417c07f; next_action",
      "why": "built 417c07f (owner answers): od16_test covers both rules; 30-day measurement: no starvation on either seed, bandit deaths only in fights with villagers"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "disposition: OPEN -> APPROVED",
+     "why": "the owner's answer was recorded in history but the disposition was never updated (Build 19 recovery audit, batch R0)"
     }
    ],
    "next_action": "ships with Build 19",
@@ -47905,29 +48049,36 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; completion: OPEN -> COMPLETE",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition complete: present, enabled where intended, tests pass; remaining_work cleared"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "",
    "roadmap_reason": "the NPC Judgment System expansion",
    "integrated_in": [
-    "Build 19 wip/build19 2f72ec3"
+    "Build 19 wip/build19 2f72ec3",
+    "Expansion 20 wip/expansion20 0b5287c"
    ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "COMPLETE",
    "task_branches": [
     "Expansion 19 prototype wip/expansion19-preparation"
    ],
-   "test_commit": "c4b10e4",
+   "test_commit": "0b5287c",
    "design": "SPECIFIED",
    "effort": "XS",
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": ""
   },
   {
    "id": "SJD-C",
@@ -47999,29 +48150,36 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; completion: OPEN -> COMPLETE",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition complete: present, enabled where intended, tests pass; remaining_work cleared"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "",
    "roadmap_reason": "the NPC Judgment System expansion",
    "integrated_in": [
-    "Build 19 wip/build19 2f72ec3"
+    "Build 19 wip/build19 2f72ec3",
+    "Expansion 20 wip/expansion20 0b5287c"
    ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "COMPLETE",
    "task_branches": [
     "Expansion 19 prototype wip/expansion19-preparation"
    ],
-   "test_commit": "c4b10e4",
+   "test_commit": "0b5287c",
    "design": "SPECIFIED",
    "effort": "M",
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": ""
   },
   {
    "id": "SJD-D",
@@ -48093,29 +48251,36 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; completion: OPEN -> COMPLETE",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition complete: present, enabled where intended, tests pass; remaining_work cleared"
     }
    ],
    "target_build": "19",
    "roadmap_gate": "",
    "roadmap_reason": "the NPC Judgment System expansion",
    "integrated_in": [
-    "Build 19 wip/build19 2f72ec3"
+    "Build 19 wip/build19 2f72ec3",
+    "Expansion 20 wip/expansion20 0b5287c"
    ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "COMPLETE",
    "task_branches": [
     "Expansion 19 prototype wip/expansion19-preparation"
    ],
-   "test_commit": "c4b10e4",
+   "test_commit": "0b5287c",
    "design": "SPECIFIED",
    "effort": "M",
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": ""
   },
   {
    "id": "SJD-E",
@@ -48187,23 +48352,30 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; completion: OPEN -> COMPLETE",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition complete: present, enabled where intended, tests pass; remaining_work cleared"
     }
    ],
    "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "the NPC Judgment System expansion",
-   "integrated_in": [],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 0b5287c"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "COMPLETE",
    "task_branches": [
     "Expansion 19 prototype wip/expansion19-preparation"
    ],
-   "test_commit": "c4b10e4",
-   "remaining_work": "rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c)",
+   "test_commit": "0b5287c",
+   "remaining_work": "",
    "design": "SPECIFIED",
    "effort": "L",
    "related": [
@@ -48222,7 +48394,7 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -48273,23 +48445,32 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition verify: code present and enabled, tests pass; was recorded NOT STARTED or partial (register not updated)"
     }
    ],
    "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "the NPC Judgment System expansion",
-   "integrated_in": [],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 0b5287c"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "SPECIFIED",
    "effort": "XL",
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "13 decision domains live through JudgmentWeighting.choose; close against acceptance with the population evidence of the measurement batch (R6); politics stays with Expansion 21 (Q-POL-1, Q-POL-7)",
+   "test_commit": "0b5287c"
   },
   {
    "id": "SJD-G",
@@ -48354,6 +48535,11 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition implement (audit): 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5"
     }
    ],
    "target_build": "20",
@@ -48373,7 +48559,9 @@
    ],
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5",
+   "test_commit": "0b5287c"
   },
   {
    "id": "SJD-H",
@@ -48438,6 +48626,11 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition blocked: the owner's Gate H review, after SJD-G; enablement itself was ordered by the owner (X19-SCOPE)"
     }
    ],
    "target_build": "20",
@@ -48454,7 +48647,9 @@
    "effort": "XS",
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "present the SJD-G report to the owner (batch R8)",
+   "test_commit": "0b5287c"
   },
   {
    "id": "SJD-Q01",
@@ -53876,6 +54071,11 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition implement (audit): the 30-planks verification scenario on top of GM-01 (batch R4)"
     }
    ],
    "target_build": "20",
@@ -53890,7 +54090,9 @@
    "completion": "OPEN",
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "the 30-planks verification scenario on top of GM-01 (batch R4)",
+   "test_commit": "0b5287c"
   },
   {
    "id": "WDR-010",
@@ -54124,6 +54326,11 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "note",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition implement (audit): aspirations in five domains from real state as a decision factor; design note first, then code behind a flag (batch R5)"
     }
    ],
    "target_build": "20",
@@ -54138,10 +54345,11 @@
    "completion": "OPEN",
    "design": "DESIGN WORK REQUIRED",
    "effort": "L",
-   "remaining_work": "Build 19, designed with the personality, judgment and decision systems (B18-DP-07); no Build 18 model",
+   "remaining_work": "aspirations in five domains from real state as a decision factor; design note first, then code behind a flag (batch R5)",
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "test_commit": "0b5287c"
   },
   {
    "id": "WDR-012",
@@ -57338,7 +57546,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -57367,18 +57575,27 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> INTEGRATED",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition verify: code present and enabled, tests pass; was recorded NOT STARTED or partial (register not updated)"
     }
    ],
    "assigned_worker": "lead (merges Workers A and B)",
    "branch": "wip/expansion19-preparation",
    "tests": "merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB",
-   "test_commit": "c756211",
+   "test_commit": "0b5287c",
    "commits": [
     "c756211"
    ],
    "next_action": "owner: X19-PERS-FORMULA, X19-TRAIT-DIST, X19-SPILL-REACH, X19-REP-TRANSMIT, X19-BOND-LIMITS; what counts as a costly mistake and a reminder; the decision effect of stubbornness",
    "related": [
     "X20-OPEN-ITEMS"
+   ],
+   "remaining_work": "children complete; umbrella closes with them",
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 0b5287c"
    ]
   },
   {
@@ -57399,9 +57616,9 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "COMPLETE",
    "history": [
     {
      "date": "2026-10-23",
@@ -57427,21 +57644,29 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; completion: OPEN -> COMPLETE",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition complete: present, enabled where intended, tests pass; remaining_work cleared"
     }
    ],
    "assigned_worker": "X19 Worker B bonds (Sonnet subagent)",
    "branch": "wip/expansion19-preparation",
    "tests": "merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB",
-   "test_commit": "c756211",
+   "test_commit": "0b5287c",
    "commits": [
     "c756211"
    ],
    "integrated_in": [
-    "Build 19 wip/build19 2f72ec3"
+    "Build 19 wip/build19 2f72ec3",
+    "Expansion 20 wip/expansion20 0b5287c"
    ],
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "",
+   "next_action": ""
   },
   {
    "id": "X19-FOUND-FAMREP",
@@ -57461,9 +57686,9 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "COMPLETE",
    "history": [
     {
      "date": "2026-10-23",
@@ -57489,21 +57714,29 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; completion: OPEN -> COMPLETE",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition complete: present, enabled where intended, tests pass; remaining_work cleared"
     }
    ],
    "assigned_worker": "X19 Worker B bonds (Sonnet subagent)",
    "branch": "wip/expansion19-preparation",
    "tests": "merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB",
-   "test_commit": "c756211",
+   "test_commit": "0b5287c",
    "commits": [
     "c756211"
    ],
    "integrated_in": [
-    "Build 19 wip/build19 2f72ec3"
+    "Build 19 wip/build19 2f72ec3",
+    "Expansion 20 wip/expansion20 0b5287c"
    ],
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "",
+   "next_action": ""
   },
   {
    "id": "X19-FOUND-PERS",
@@ -57524,9 +57757,9 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "COMPLETE",
    "history": [
     {
      "date": "2026-10-23",
@@ -57557,22 +57790,30 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope for verification only (Build 19 work is not reopened)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; completion: OPEN -> COMPLETE",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition complete: present, enabled where intended, tests pass; remaining_work cleared"
     }
    ],
    "assigned_worker": "X19 Worker A personality (Sonnet subagent)",
    "branch": "wip/expansion19-preparation",
    "tests": "judgment_personality_test 65, judgment_live_test 136, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21; sim_gate identical; merged c756211: judgment_personality_test 65, judgment_bonds_test 97, judgment_live_test 142, judgment_test 217, judgment_decay_demo 24, relations_test 79, migration_test 92, save_transfer_test 21, family_test 51, world_test 339; sim_gate identical; perf 500 live p99 0.8 ms, memory 2.2 MB",
-   "test_commit": "c756211",
+   "test_commit": "0b5287c",
    "commits": [
     "a3aa237",
     "c756211"
    ],
    "integrated_in": [
-    "Build 19 wip/build19 2f72ec3"
+    "Build 19 wip/build19 2f72ec3",
+    "Expansion 20 wip/expansion20 0b5287c"
    ],
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "",
+   "next_action": ""
   },
   {
    "id": "X19-GOSSIP-FLOOR",
@@ -57764,8 +58005,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -57783,11 +58024,22 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition verify: code present and enabled, tests pass; was recorded NOT STARTED or partial (register not updated)"
     }
    ],
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "live as the owner approved (packet D); the false_accusation catalog event is never published (batch R1)",
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 0b5287c"
+   ],
+   "test_commit": "0b5287c",
+   "tests": "on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0"
   },
   {
    "id": "X19-PERS-FORMULA",
@@ -58224,8 +58476,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -58248,11 +58500,22 @@
      "date": "2026-10-24",
      "change": "related + X20-OPEN-ITEMS",
      "why": "owner 2026-10-24 Expansion 20 open-items reconciliation (docs/directives/2026-10-24_expansion20_open_items_reconciliation.md): carried into the Expansion 20 consolidated scope"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
+     "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition verify: code present and enabled, tests pass; was recorded NOT STARTED or partial (register not updated)"
     }
    ],
    "related": [
     "X20-OPEN-ITEMS"
-   ]
+   ],
+   "remaining_work": "live: stories passed at coming of age and at home, observers judge by their own knowledge",
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 0b5287c"
+   ],
+   "test_commit": "0b5287c",
+   "tests": "on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0"
   },
   {
    "id": "X19-TRAIT-DIST",
