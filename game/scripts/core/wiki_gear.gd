@@ -29,7 +29,8 @@ static func _armoury(w: Wiki) -> void:
 		var it: Dictionary = GameData.items[id]
 		if not it.has("order"):
 			continue
-		counts[str(it.type)] = int(counts.get(str(it.type), 0)) + 1
+		if str(it.type) != "weapon" or it.has("gear"):         # the weapons of the pattern sheets (the two plain swords apart)
+			counts[str(it.type)] = int(counts.get(str(it.type), 0)) + 1
 		for k in it.get("bonus", {}):
 			if not bonus_ex.has(k):
 				bonus_ex[k] = str(id)
@@ -58,6 +59,8 @@ static func _armoury(w: Wiki) -> void:
 		Wiki.bullets(bonus_rows),
 		Wiki.h("Tusks and antlers"),
 		Wiki.p("Boar tusks and antlers go into special armour and weapons. They come only from animals really killed: a grown wild boar gives %d tusks, a grown stag (a male deer) %d antlers, whoever kills it, you or the hunter. Hunters sell theirs to the goods merchant, where you can buy them." % [int(boar.get("tusks", 0)), int(deer.get("antlers_m", 0))]),
+		Wiki.h("On your figure"),
+		Wiki.p("Every armour, helmet, hat and outfit of the catalogue is drawn on you while you wear it, in every direction, and other players see it too; taking it off shows your own clothes again. The weapon in your hand is carried drawn at your side while you stand or walk, and an attack swings it, as the axe is swung. Guards and bandits carry theirs the same way, and anyone who fights swings the weapon they have."),
 		Wiki.h("Weapons"),
 		Wiki.p("Each kind has its own damage, speed and wear: a knife or rapier swings quickly for little damage, a greatsword or battle hammer slowly and heavily. Steel does more and lasts longer than iron, bronze less. Patterns 13 to 21 are finer work (one more damage, a level more), 22 to 30 masterwork (two more damage, two levels more, a commission with tusks or antlers, and a worn bonus)."),
 		Wiki.links(["item:boar_tusk", "item:antler", "job:smith", "job:tanner", "station:anvil", "station:workbench", "skill:smithing", "skill:tanning", "todo:gear_orders"] +
@@ -71,7 +74,7 @@ static func _weapon_type(w: Wiki, tid: String) -> void:
 	for id in GameData.items:
 		if GameData.is_catalogue_weapon(id) and str(GameData.items[id].gear.wtype) == tid:
 			ids.append(str(id))
-	var blocks := [Wiki.p("The %s: %d patterns in each of four metals, made at the anvil (Smithing) or ordered from the smith. It swings at x%s the usual speed." % [str(t.name), ids.size() / 4, str(t.speed)])]
+	var blocks := [Wiki.p("The %s: %d patterns in each of four metals, made at the anvil (Smithing) or ordered from the smith. It swings at x%s the usual speed." % [str(t.name), ids.size() / 4, str(snappedf(float(t.speed), 0.01))])]
 	for mid in GameData.weapon_types.metals:
 		var m: Dictionary = GameData.weapon_types.metals[mid]
 		var mine := ids.filter(func(i): return str(GameData.items[i].gear.metal) == mid)

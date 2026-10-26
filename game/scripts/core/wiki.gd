@@ -21,7 +21,8 @@ const STATION_NAMES := {"anvil": "Anvil", "armory_counter": "Armory counter", "f
 	"oven": "Oven", "sawhorse": "Sawhorse", "stove": "Stove", "tavern_counter": "Tavern counter", "well": "Well",
 	"workbench": "Workbench"}
 ## Pages a profession's page points on to.
-const JOB_LINKS := {"miner": ["sys:mining", "sys:prospecting", "sys:minecarts"], "laborer": ["sys:mining"], "reeve": ["sys:manor_jobs", "sys:manor_treasury"], "smith": ["sys:prospecting"]}
+const JOB_LINKS := {"miner": ["sys:mining", "sys:prospecting", "sys:minecarts"], "laborer": ["sys:mining"], "reeve": ["sys:manor_jobs", "sys:manor_treasury"], "smith": ["sys:prospecting", "sys:armoury"],
+	"tanner": ["sys:armoury"], "tailor": ["sys:armoury"], "hunter": ["item:boar_tusk", "item:antler"]}
 const ITEM_GROUPS := {"tool": "items_tools", "weapon": "items_gear", "armor": "items_gear", "head": "items_gear",
 	"ring": "items_gear", "amulet": "items_gear", "food": "items_food", "resource": "items_materials", "medicine": "items_medicine"}
 ## What each profession does, in a line (checked against NPCBrain's plans when written).
@@ -50,16 +51,16 @@ const JOB_TEXT := {
 	"woodcutter": "Fells trees with an axe and sells the logs.",
 	"carpenter": "Buys logs and saws them into planks; builds handcarts, and makes timber supports, ladders, mallets and minecarts for those who need them.",
 	"stonecutter": "A trade of its own, taken up when blocks are wanted and stone is on sale: buys raw stone with its own coins, dresses it into building blocks at a workbench with a mallet and an iron chisel, and sells the blocks and its rubble to the raw-goods merchant, and the blocks to builders or on contract. It earns only what the blocks fetch above the stone and the tools cost; when nobody wants blocks it earns nothing and, like anyone, looks for other work.",
-	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour (iron chisels for the stoneworkers among them) at the anvil, and keeps the armoury counter: ring there and a smith comes to serve.",
-	"tanner": "Buys hides, pelts and wool: makes leather, weaves wool into cloth and sews bandages for the Apothecary.",
+	"smith": "Smelts ore into bars at the forge and forges tools, weapons and armour (iron chisels for the stoneworkers among them) at the anvil, and keeps the armoury counter: ring there and a smith comes to serve. The village's armourer: makes every metal armour, helmet and weapon of the catalogue to order (see Armour and weapons).",
+	"tanner": "Buys hides, pelts and wool: makes leather, weaves wool into cloth and sews bandages for the Apothecary. Makes the leather and cloth armour of the catalogue to order: the Japanese robes, the French coats and hats, the mage's hats and hoods (see Armour and weapons).",
 	"farmer": "Sows, tends and harvests the wheat fields (keeping seed back), and keeps the animal pens: feeds them, collects the eggs, milk and wool, and sells them. The farmers of a field cut it together and share its grain, and the seed kept back for the next sowing, by the work each put into the cutting, after the field's animals are fed.",
 	"cook": "Cooks wheat and meat into pottage and roast meat, and at the kitchen's preparation table presses milk into cheese and bakes egg bread for the tavern and the food stall.",
 	"tavernkeeper": "Keeps The Well House and sells food and ale.",
-	"hunter": "Hunts wild boar and rabbits for meat and hides.",
+	"hunter": "Hunts wild game (boar, deer, rabbits and birds) for meat and hides, a grown boar's tusks and a stag's antlers, and sells them on.",
 	"merchant": "Runs a market stall or shop and trades goods.",
 	"guard": "Watches the village: stops thieves, returns stolen goods and fines the thief; hunts those who attack or kill, and takes them in.",
 	"reeve": "Runs the manor's accounts and posts its jobs on the job board (talk to the reeve and ask for work).",
-	"tailor": "Opens the locked rows of your pack: the second row for %d coins, then the third for %d, each in all eight tabs at once. Works from the manor's pitch beside the market in the day, rent-free like the merchants' stalls, and earns only from these two sales. Talk to the tailor there (not asleep, not away) and choose Backpack. A world has one; if the tailor dies or an older game had none, the village's labour market opens the place for an adult who becomes free.",
+	"tailor": "Opens the locked rows of your pack: the second row for %d coins, then the third for %d, each in all eight tabs at once, and sews plain hats, hoods and bandanas to order from your cloth or straw (see Armour and weapons). Works from the manor's pitch beside the market in the day, rent-free like the merchants' stalls, and earns only from these sales. Talk to the tailor there (not asleep, not away) and choose Backpack. A world has one; if the tailor dies or an older game had none, the village's labour market opens the place for an adult who becomes free.",
 	"barber": "Changes your hair, beard and hair colour (the same choices as the character creator, with a preview) for %d coins a visit, paid to the barber. Works from the manor's pitch beside the market in the day. Talk to the barber there and choose Hair, beard and colour. Your clothes and armour are not touched. A world has one; if the barber dies or an older game had none, the labour market opens the place for an adult who becomes free.",
 	"sage": "The village lorekeeper; tells the story and keeps the Apothecary (medicine brewed from flowers, bandages from the tanner).",
 }

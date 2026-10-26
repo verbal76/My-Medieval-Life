@@ -193,7 +193,8 @@ static func bonus_text(id: String) -> String:
 	var b: Dictionary = GameData.item(id).get("bonus", {})
 	var parts := []
 	for k in b:
-		parts.append("+%s %s" % [str(b[k]), BONUS_NAMES.get(k, str(k).replace("_", " "))])
+		var v := float(b[k])
+		parts.append("+%s %s" % [str(int(v)) if v == floorf(v) else str(v), BONUS_NAMES.get(k, str(k).replace("_", " "))])
 	return ", ".join(parts)
 
 

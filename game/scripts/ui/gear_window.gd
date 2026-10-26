@@ -8,7 +8,7 @@ extends RefCounted
 ## of icons; picking one shows what it is, what it needs and the button to order or make it. What the player sees comes
 ## from core (GearOrders.terms, World.player_craft_refusal); the window decides nothing.
 
-const ARMOUR_GROUPS := [["body", "Body armour and outfits", "armor"], ["head", "Helmets and hats", "head"], ["other", "Swords", "weapon"]]
+const ARMOUR_GROUPS := [["body", "Body armour and outfits", "armor"], ["head", "Helmets and hats", "head"], ["other", "Plain swords", "weapon"]]
 const COLS := 6
 
 
@@ -38,6 +38,10 @@ static func group_of(id: String) -> String:
 	return "other"
 
 
+static func _rank(g: String) -> int:
+	return {"body": 0, "head": 1, "other": 3}.get(g, 2)
+
+
 static func group_name(g: String) -> String:
 	for a in ARMOUR_GROUPS:
 		if a[0] == g:
@@ -61,6 +65,8 @@ static func show(ui, mode: String, ctx, group := "", metal := "", pick := "") ->
 			var g := group_of(id)
 			if not groups.has(g):
 				groups.append(g)
+		# armour first, then the weapon types by name, the plain swords last
+		groups.sort_custom(func(a, b): return _rank(a) < _rank(b) or (_rank(a) == _rank(b) and group_name(a) < group_name(b)))
 		var grid := GridContainer.new()
 		grid.columns = 2
 		ui.panel_body.add_child(grid)
@@ -106,10 +112,11 @@ static func show(ui, mode: String, ctx, group := "", metal := "", pick := "") ->
 		var b := Button.new()
 		b.name = "Design " + id
 		b.icon = _tex(id)
-		b.text = str(it.gear.design)
+		b.text = str(int(it.gear.design))
 		b.tooltip_text = str(it.name)
-		b.custom_minimum_size = Vector2(72, 48)
-		b.expand_icon = false
+		b.custom_minimum_size = Vector2(84, 56)
+		b.expand_icon = true
+		b.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		b.disabled = id == pick
 		var pid: String = id
 		b.pressed.connect(func(): show(ui, mode, ctx, group, metal, pid))
@@ -127,7 +134,7 @@ static func _row(ui, mode: String, ctx, id: String, again: Callable) -> void:
 	if it.has("damage"):
 		parts.append("damage %d" % int(it.damage))
 		if float(it.get("attack_speed", 1.0)) != 1.0:
-			parts.append("speed x%s" % str(it.attack_speed))
+			parts.append("speed x%s" % str(snappedf(float(it.attack_speed), 0.01)))
 	if it.has("armor"):
 		parts.append("armour %d" % int(it.armor))
 	if PlayerState.bonus_text(id) != "":
