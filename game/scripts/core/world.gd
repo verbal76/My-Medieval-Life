@@ -49,6 +49,7 @@ var next_band_id := BAND_START
 var people := {}
 var identity_report := {}
 var tie_history := {}
+var disposed := false               # set by dispose(): the world is being thrown away; views stop reading it
 var load_error := ""                # set by load_dict when the save cannot be brought up to date (the caller refuses it and leaves the file)
 var households: Array = []         # {id, family, home, members, pantry}
 var buildings := {}                # id -> dict
@@ -4412,11 +4413,29 @@ func serve_tables() -> void:
 
 
 ## Draw each table's dish while it has food on it, and the bare table when it has none (the tile
-## Shade drew there, recorded in village.json, in its layer: tile_changed kind = that layer).
+## Shade drew there, recorded in village.json, in its layer: tile_changed kind = that layer). GP-TABLE-ITEMS (owner clarification
+## 2026-10-24: tables show a visual preview of what the business offers, not pickup): a bare table still shows its dish while the
+## tavern offers that dish (table_offer), a look only: there is nothing on it to take, and it is bought at the counter.
 func show_tables() -> void:
+	var offer := table_offer()
 	for c in containers:
 		if c.kind == "table" and c.has("tile"):
-			tile_changed.emit(Vector2i(c.x, c.y), str(c.layer), int(c.tile) if c.inv.total() > 0 else -1)
+			tile_changed.emit(Vector2i(c.x, c.y), str(c.layer), int(c.tile) if c.inv.total() > 0 or offer.has(str(c.dish)) else -1)
+
+
+## GP-TABLE-ITEMS: what the tavern offers now (its keeper's goods for sale, NPCBrain.for_sale), sorted; [] with no keeper.
+func table_offer() -> Array:
+	var k := tavern_keeper()
+	if k == null or brain == null:
+		return []
+	var out: Array = brain.for_sale(k)
+	out.sort()
+	return out
+
+
+## GP-TABLE-ITEMS: whether table container `c`, with nothing on it, shows the dish the tavern offers (a preview only).
+func table_previews(c: Dictionary) -> bool:
+	return c.kind == "table" and c.inv.total() == 0 and table_offer().has(str(c.get("dish", "")))
 
 
 ## Food on the tavern's tables (for the village's food reckoning).
@@ -5430,6 +5449,7 @@ func _station_owners() -> void:
 
 ## Break the world <-> brain reference cycle so a finished world is freed.
 func dispose() -> void:
+	disposed = true                    # the views that read this world stop (StallDisplayView): it is being thrown away
 	if recorder != null:
 		recorder.finish()              # REC-19: write what is buffered and close the session
 		recorder = null

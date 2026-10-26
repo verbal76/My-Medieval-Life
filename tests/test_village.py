@@ -163,6 +163,30 @@ class VillageTest(unittest.TestCase):
             self.assertIn(tuple(c), town)
             self.assertFalse(solid[c[1]][c[0]])
 
+    def test_market_v16_spacing(self):
+        """Generator v16 (GP-MARKET-SPACING): ten market places (six merchants' stalls, four pitches) in two rows, 5 apart along
+        a row and 5 rows apart; every customer cell reached on foot; nothing on a road, a tree, a plant or another object; the
+        counters say where their goods are shown (GP-TABLE-ITEMS)."""
+        solid = solid_grid()
+        town = reach(solid, tuple(D["spawns"]["player"]))
+        places = [(s["id"], s["x"], s["y"], tuple(s["use"])) for s in D["stalls"] + D["pitches"]]
+        self.assertEqual(sorted(p[0] for p in places), ["pitch0", "pitch1", "pitch2", "pitch3"] + [f"stall{i}" for i in range(6)])
+        self.assertEqual({p["id"]: p["service"] for p in D["pitches"]}, {"pitch0": "", "pitch1": "", "pitch2": "tailor", "pitch3": "barber"})
+        roads = {tuple(c) for c in D["road"]}
+        trees = {(t["x"], t["y"]) for t in D["trees"]}
+        plants = {(p["x"], p["y"]) for p in D["plants"]}
+        for i, (a, ax, ay, ause) in enumerate(places):
+            self.assertIn(ause, town, a)
+            for c in ((ax, ay), (ax + 1, ay), ause):
+                self.assertNotIn(c, roads, a)
+                self.assertNotIn(c, trees, a)
+                self.assertNotIn(c, plants, a)
+            for (b, bx, by, _) in places[i + 1:]:
+                self.assertFalse(abs(ax - bx) < 5 and abs(ay - by) < 5, (a, b))
+        for kind, cells in (("tavern_counter", [[44, 40], [46, 40]]), ("armory_counter", [[70, 43], [72, 43]]), ("sawmill_counter", [[68, 25]])):
+            st = next(s for s in D["stations"] if s["type"] == kind)
+            self.assertEqual(st["show"], cells, kind)
+
     def test_plots_lie_on_open_ground_with_the_old_ones_remembered(self):
         """Generator v8 (ROOMS-18): the two plots stand on open ground, off every road, building, field and
         pen, with a lane to the road and the ring round them free of trees; the old sites stay in

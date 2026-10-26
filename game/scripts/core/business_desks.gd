@@ -109,7 +109,9 @@ static func faced_all(w: World, pos: Vector2, facing: Vector2) -> Array:
 		var near := Vector2i(floori(probe.x), floori(probe.y)) == at
 		if not near and (Vector2(at) + Vector2(0.5, 0.5)).distance_to(pos) <= World.STATION_BESIDE:
 			near = World.station_in_reach({"use": [d.use.x, d.use.y], "at": [at.x, at.y]}, pos, facing) and Vector2i(floori(pos.x), floori(pos.y)) != d.use
-		if near and (Vector2(at) + Vector2(0.5, 0.5)).distance_to(pos) <= World.STATION_BESIDE and w.reaches(pos, Vector2(at) + Vector2(0.5, 0.5)):
+		# reached across the desk, or from the keeper's side (the tavern's counter stands in the room's partition, outside its floor)
+		var reach: bool = w.reaches(pos, Vector2(at) + Vector2(0.5, 0.5)) or w.reaches(pos, Vector2(d.use) + Vector2(0.5, 0.5))
+		if near and (Vector2(at) + Vector2(0.5, 0.5)).distance_to(pos) <= World.STATION_BESIDE and reach:
 			out.append(d)
 	return out
 
@@ -130,3 +132,14 @@ static func booth_on_desk(w: World, b: Dictionary) -> bool:
 		if Vector2i(int(b.x), int(b.y)) == d.at:
 			return true
 	return false
+
+
+## GP-TABLE-ITEMS: the cells of a counter desk's drawn table where the goods it offers are shown: its station's "show" cells
+## (generator v16: either side of the tavern's and the smithy's ledgers, so the ledger stays in view; the sawmill's one-cell
+## table), else the desk's own cell.
+static func table_cells(w: World, d: Dictionary) -> Array:
+	var st: Dictionary = w.stations.get(str(d.id), {})
+	var out := []
+	for c in st.get("show", []):
+		out.append(Vector2i(int(c[0]), int(c[1])))
+	return out if not out.is_empty() else [d.at]

@@ -261,6 +261,8 @@ func _ready() -> void:
 				world.player.pos = Vector2(int(pb.x), int(pb.y)) + Vector2(1.0, 1.7)
 				follow_at = _in_view(Vector2(int(pb.x) + 1, int(pb.y)) * T)
 				camera.zoom = Vector2(5, 5) * view_scale
+			"desk_armory_counter", "desk_tavern_counter", "desk_sawmill_counter", "desk_stall", "desk_courier":
+				_desk_shot(shot_panel)          # GP-BUSINESS-DESK: a business desk's menu (screenshots only)
 			"campfire":
 				# GP-BANDIT-CAMP-ART: the camp's fire with a bandit behind it and the player in front
 				var fc: Array = map.data.spawns.campfire
@@ -2950,7 +2952,10 @@ func _desk_target(d: Dictionary, inner: Dictionary) -> Dictionary:
 	var label := str(inner.get("label", ""))
 	if not bo.is_empty():
 		label += "; or the courier"
-	return {"kind": "desk", "desk": d, "options": opts, "label": label, "status": _desk_status(d, inner)}
+	var out := {"kind": "desk", "desk": d, "options": opts, "label": label, "status": _desk_status(d, inner)}
+	if bool(inner.get("theft", false)):
+		out.theft = true                                 # DVW-A12 R16: a stall left alone is still offered as theft, flagged as such
+	return out
 
 
 func _desk_is_mine(d: Dictionary) -> bool:
@@ -2985,6 +2990,34 @@ func _front_target(d: Dictionary) -> Dictionary:
 	if k != null and world.at_post(k):
 		return {"kind": "shop", "npc": k, "label": "Trade with %s (%s)" % [k.name, world.shop_name(k)]}
 	return {"kind": "info", "label": "%s: nobody keeps it now" % World.cap(str(d.name)), "text": "Nobody keeps %s now." % str(d.name)}
+
+
+## GP-BUSINESS-DESK screenshots: the player at a desk (a counter by its station type, a merchant's stall with its merchant at
+## it, or the smithy's desk with a courier booth), facing it, and the desk's menu open.
+func _desk_shot(panel: String) -> void:
+	var d := {}
+	if panel == "desk_stall":
+		var m: NPC = world.npcs.filter(func(n): return n.alive and n.job == "merchant")[0]
+		m.pos = world.shop_post(m)
+		m.plan = [world.brain.work(600, "", {}, "idle")]
+		d = BusinessDesks.by_id(world, str(m.workplace))
+	else:
+		var type := "armory_counter" if panel == "desk_courier" else panel.trim_prefix("desk_")
+		d = BusinessDesks.by_id(world, str(world.stations_of(type)[0]))
+		if panel == "desk_courier":
+			world.couriers.daily()
+			var smith: NPC = world.npcs.filter(func(n): return n.alive and n.job == "smith")[0]
+			world.couriers.open_shop_booth(World.npc_ref(smith.id))
+	if d.is_empty():
+		return
+	world.player.pos = Vector2(d.use) + Vector2(0.5, 0.5)
+	var step: Vector2i = (d.at as Vector2i) - (d.use as Vector2i)
+	player_sprite.dir = {Vector2i(0, 1): 0, Vector2i(1, 0): 2, Vector2i(0, -1): 4, Vector2i(-1, 0): 6}.get(step, 4)
+	follow_at = _in_view(Vector2(d.at) * T)
+	camera.zoom = Vector2(4, 4) * view_scale
+	_find_target()
+	if str(target.get("kind", "")) == "desk":
+		ui.show_desk(target)
 
 
 ## Do one of a desk menu's choices (GameUI.show_desk), as Use on it would.
@@ -3081,6 +3114,9 @@ func _container_target(c: Dictionary) -> Dictionary:
 			return _chest_target(cu)
 	var id := world.container_pick(c)
 	var whose := world.container_whose(c)
+	if id == "" and world.table_previews(c):          # GP-TABLE-ITEMS: a preview of what the tavern serves, nothing to take
+		var dish := GameData.item_name(str(c.dish))
+		return {"kind": "info", "label": "%s is served here: buy it at the counter" % dish, "text": "The table shows what the tavern serves: %s. Buy it from the keeper at the counter." % dish.to_lower()}
 	if id == "":
 		var look := str(c.get("look", c.kind))         # GP-TARGET-ART-MATCH: named as drawn
 		return {"kind": "info", "label": "Empty %s (%s)" % [look, whose], "text": "There is nothing in the %s." % look}
@@ -3457,7 +3493,7 @@ func _use() -> void:
 				ui.message("You pay the caravan's trader and take the %s." % GameData.item_name(str(target.item)).to_lower())
 		"courier_shop_booth":
 			var why_booth: String = world.couriers.open_shop_booth(world.acting_ref())
-			ui.message(why_booth if why_booth != "" else "You set a courier booth at your stall: your deliveries can leave from it.")
+			ui.message(why_booth if why_booth != "" else "You set a courier booth at your desk: your deliveries can leave from it.")
 		"sharpen":                                       # GP-SHARPEN: at the grinding wheel, 1 coin to the smith
 			var whyw: String = world.player_sharpen(str(target.id))
 			ui.message(whyw if whyw != "" else "The smith puts your %s to the wheel: it is sharp again (%d coin)." % [GameData.item_name(str(target.id)).to_lower(), World.SHARPEN_COINS])
