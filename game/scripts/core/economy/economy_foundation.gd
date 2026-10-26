@@ -4,7 +4,14 @@ extends RefCounted
 ## EconReservations, EconEvents). World calls attach() twice only: at the end of setup() and in load_dict(). With
 ## game/data/economy.json "enabled": false (the shipped state) attach() returns null: nothing is constructed, no
 ## save key is written, and no live code path references these classes. A test can switch it on with set_override().
-## Format "mml-economy/1": see docs/expansion20/LE01_DATA_CONTRACTS.md.
+## Format "mml-economy/1": see docs/expansion20/LE01_DATA_CONTRACTS.md and LE01_IMPLEMENTATION.md.
+##
+## LE-01 model (needs, offers, knowledge, contract links) is built here too. Two live calls reach it, each guarded by
+## `World.economy != null` so they cost nothing and do nothing while disabled: World.trade -> on_trade (after the sale:
+## an event, what the two parties learned by dealing, their needs marked for re-derivation) and World._new_day -> dawn
+## (offers, reservations and contract links expire or follow their contracts; contract terms learned; dirty needs
+## re-derived within a budget). The model OBSERVES: it moves no coin or good, draws no random number, writes no game
+## state outside its own records, and nothing in live play reads it to decide.
 
 const KEY := "economy"
 const PATH := "res://data/economy.json"
@@ -15,6 +22,11 @@ static var _cfg := {}
 var actors: EconActor
 var reservations: EconReservations
 var events: EconEvents
+var needs: EconNeeds
+var offers: EconOffers
+var knowledge: EconKnowledge
+var contract_links: EconContractLinks
+var contract_cursor := 0          # the highest CON-01 contract id whose terms the two parties have been told (knowledge "contract")
 
 
 static func config() -> Dictionary:
@@ -48,13 +60,64 @@ static func attach(world: World, saved := {}) -> EconomyFoundation:
 	f.reservations = EconReservations.new(f.actors, cfg.get("reservations", {}))
 	f.reservations.events = f.events
 	f.actors.reservations = f.reservations
+	f.needs = EconNeeds.new(f.actors, cfg.get("needs", {}))
+	f.offers = EconOffers.new(f.reservations, cfg.get("offers", {}))
+	f.offers.events = f.events
+	f.knowledge = EconKnowledge.new(f.actors)
+	f.offers.knowledge = f.knowledge
+	f.contract_links = EconContractLinks.new(f.reservations)
 	f.reservations.load_dict(saved.get("reservations", {}))
 	f.events.load_dict(saved.get("events", {}))
+	f.needs.load_dict(saved.get("needs", {}))
+	f.offers.load_dict(saved.get("offers", {}))
+	f.knowledge.load_dict(saved.get("knowledge", {}))
+	f.contract_links.load_dict(saved.get("contracts", {}))
+	f.contract_cursor = int(saved.get("contract_cursor", 0))
 	return f
 
 
 func is_empty() -> bool:
-	return reservations.is_empty() and events.is_empty()
+	return reservations.is_empty() and events.is_empty() and needs.is_empty() and offers.is_empty() and knowledge.is_empty() \
+			and contract_links.is_empty() and contract_cursor == 0
+
+
+## World.trade, after a completed sale (observed only). Both parties learn of each other by the dealing; an event is noted;
+## the parties and their households are marked for their needs to be derived again.
+func on_trade(buyer: Object, seller: Object, item: String, qty: int, total: int) -> void:
+	var b := Contracts.ref_of(buyer)
+	var s := Contracts.ref_of(seller)
+	var w := actors.w
+	var each := int(total / qty) if qty > 0 else 0
+	events.record_at(w.day(), int(fmod(w.minutes, World.DAY)), "trade", b, s, item, qty, total, "")
+	knowledge.learn(b, s, item, EconKnowledge.SELLS, each, "dealing")
+	knowledge.learn(s, b, item, EconKnowledge.BUYS, each, "dealing")
+	for r in [b, s]:
+		needs.mark(r)
+		needs.mark(actors.household_of(r))
+
+
+## World._new_day (observed only): offers, then reservations, expire; links follow their contracts; new contracts' terms are
+## learned by their two parties; dirty needs are re-derived within the budget.
+func dawn(day: int) -> void:
+	offers.expire_due(day)
+	reservations.expire_due(day)
+	contract_links.sweep()
+	var cs: Contracts = actors.w.contracts
+	if cs != null:
+		var top := contract_cursor
+		for c in cs.list:
+			var id := int(c.id)
+			if id <= contract_cursor:
+				continue
+			top = maxi(top, id)
+			if str(c.get("kind", "goods")) == "service":
+				continue
+			knowledge.learn(str(c.buyer), str(c.seller), str(c.item), EconKnowledge.SELLS, int(c.price_each), "contract")
+			knowledge.learn(str(c.seller), str(c.buyer), str(c.item), EconKnowledge.BUYS, int(c.price_each), "contract")
+			for r in [str(c.buyer), str(c.seller)]:
+				needs.mark(r)
+		contract_cursor = top
+	needs.refresh()
 
 
 ## {} when there is nothing to save (World then writes no key).
@@ -65,4 +128,14 @@ func to_dict() -> Dictionary:
 	var e := events.to_dict()
 	if not events.is_empty() and not e.is_empty():
 		d["events"] = e
+	if not needs.is_empty():
+		d["needs"] = needs.to_dict()
+	if not offers.is_empty():
+		d["offers"] = offers.to_dict()
+	if not knowledge.is_empty():
+		d["knowledge"] = knowledge.to_dict()
+	if not contract_links.is_empty():
+		d["contracts"] = contract_links.to_dict()
+	if contract_cursor != 0:
+		d["contract_cursor"] = contract_cursor
 	return d

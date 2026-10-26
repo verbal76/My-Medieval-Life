@@ -1,6 +1,6 @@
 {
   "format": "mml-economy/1",
-  "note": "Expansion 20 (Living Economy) LE-01 foundation. enabled is false: with it off the World builds none of these records and writes no save key. Nothing in live play calls them.",
+  "note": "Expansion 20 (Living Economy) LE-01: the foundation records and the LE-01 model (needs, offers, knowledge, contract links). enabled is false: with it off the World builds none of these records and writes no save key. With it on the model only observes: nothing in live play reads it to decide.",
   "enabled": false,
   "reservations": {
     "keep_finished": 200
@@ -8,5 +8,21 @@
   "events": {
     "capacity": 500,
     "save": true
+  },
+  "needs": {
+    "refresh_budget": 64
+  },
+  "offers": {
+    "keep_finished": 200
+  },
+  "owner_decisions": {
+    "note": "Placeholders that do nothing while the economy is off and decide nothing while it is on (docs/expansion20/LE01_IMPLEMENTATION.md section 3).",
+    "offer_visibility": "OWNER DECISION OD-LE-02B",
+    "knowledge_reliability_and_memory": "OWNER DECISION OD-LE-10",
+    "business_identity": "OWNER DECISION OD-LE-04 / OD-LE-07",
+    "material_substitution": "OWNER DECISION OD-LE-08",
+    "contract_death_of_party": "OWNER DECISION OD-LE-13B",
+    "player_visibility": "OWNER DECISION OD-LE-14",
+    "performance_budget": "OWNER DECISION OD-LE-15 (needs.refresh_budget is an engineering default, not an acceptance target)"
   }
 }
