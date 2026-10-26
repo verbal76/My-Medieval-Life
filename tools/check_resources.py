@@ -74,6 +74,9 @@ def load(root=ROOT):
         ctx["res"] = json.loads((data / "resources.json").read_text())
     ctx["items"] = json.loads((data / "items.json").read_text())["items"]
     ctx["recipes"] = json.loads((data / "recipes.json").read_text())["recipes"]
+    cat = json.loads((data / "weapon_catalogue.json").read_text())     # WEAPON-CATALOG-01: merged as GameData.ensure merges it
+    ctx["items"].update(cat["items"])
+    ctx["recipes"].update(cat["recipes"])
     ctx["balance"] = json.loads((data / "balance.json").read_text())
     ctx["quests"] = json.loads((data / "quests.json").read_text())["quests"]
     ctx["village"] = json.loads((data / "village.json").read_text())
@@ -880,7 +883,18 @@ def registry(ctx):
 
 
 def documents(ctx):
-    return {MANIFEST: manifest(ctx), REGISTRY: registry(ctx)}
+    """The two documents. The 1,920 generated catalogue weapons (game/data/weapon_catalogue.json) are checked like every
+    item but left out of the documents, which would otherwise list each of them under every bar, plank and hide: one
+    line says so instead."""
+    doc = dict(ctx)
+    doc["items"] = {k: v for k, v in ctx["items"].items() if "gear" not in v}
+    doc["recipes"] = {k: v for k, v in ctx["recipes"].items() if not v.get("catalogue")}
+    n = len(ctx["items"]) - len(doc["items"])
+    note = ("\n> The %d weapons of the master weapons sheet (generated into `game/data/weapon_catalogue.json` by "
+            "`tools/build_weapons.py`, one anvil recipe each from iron, copper or gold bars, coal, leather or planks, and "
+            "for the masterwork patterns boar tusks and antlers) are checked with everything else but not listed here; "
+            "see the in-game encyclopedia's weapon pages.\n" % n) if n else ""
+    return {MANIFEST: manifest(doc) + note, REGISTRY: registry(doc) + note}
 
 
 def main(argv):

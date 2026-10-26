@@ -270,8 +270,9 @@
    "categories": [
     "icons"
    ],
-   "status": "partial",
-   "opportunities": "Icons for armour pieces the game adds later."
+   "status": "integrated",
+   "used_for": "Build 22 (ARMOR-CATALOG-01): the inventory icons of the 91 catalogue armour pieces, cut 1:1 from breastplates.png and headgear.png (tools/gear_assets.py).",
+   "opportunities": "Boots and trousers sheets unused: the game has no boots or legs slot."
   },
   {
    "id": "assorted_icons",
@@ -553,8 +554,8 @@
     "icons",
     "weapons"
    ],
-   "status": "planned",
-   "used_for": "",
+   "status": "integrated",
+   "used_for": "Build 22 (WEAPON-CATALOG-01, WEAPON-VISIBLE-01): every one of the 1,920 cells is the icon of a generated catalogue weapon (game/data/weapon_catalogue.json; tools/gear_assets.py), carried and swung in hand.",
    "scale": "1:1 (16 x 16 icons)",
    "decision": "Owner 2026-10-26: the master weapons sheet; every weapon made at the smithy at a skill level and sold there (WEAPON-CATALOG-01). The four recolours map to metal tiers.",
    "opportunities": [

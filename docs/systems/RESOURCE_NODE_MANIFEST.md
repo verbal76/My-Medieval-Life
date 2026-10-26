@@ -14,7 +14,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 ## Summary
 
 - Implemented node types: 29 (22 the player may harvest, 7 the keeper's livestock).
-- Materials they produce: 31 (apple, apple_sapling, blueberries, carrot, carrot_seed, coal, copper_ore, dirt, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, ore_sample, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, spoil, stone, topsoil, wheat, wheat_seed, wool).
+- Materials they produce: 33 (antler, apple, apple_sapling, blueberries, boar_tusk, carrot, carrot_seed, coal, copper_ore, dirt, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, ore_sample, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, spoil, stone, topsoil, wheat, wheat_seed, wool).
 - Finite node types: 10 (boulder, coal_seam, copper_seam, gold_seam, horse_pen, iron_seam, open_pit, prospect_clue, stone_seam, tunnel_rock); with no replacement once worked out: 5 (gold_seam, horse_pen, open_pit, prospect_clue, tunnel_rock).
 - At risk of overharvesting: 4 (coal_seam, copper_seam, iron_seam, stone_seam).
 - Not Gather-compatible: 7 (chicken_pen, cow_pen, horse_pen, pig_pen, player_field, player_pen, sheep_pen).
@@ -45,8 +45,8 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 | `wheat_field` Wheat field | crop | cultivated | none | none | 6 wheat | ripens | yes | yes | yes | implemented |
 | `wild_bear` Bear | game | natural | weapon | combat | 2 hide, 6 meat | breeds | yes | no | yes | implemented |
 | `wild_bird` Bird | game | natural | weapon | combat | 1 feather | breeds | yes | yes | yes | implemented |
-| `wild_boar` Wild boar | game | natural | weapon | combat | 1 hide, 4 meat | breeds | yes | yes | yes | implemented |
-| `wild_deer` Deer | game | natural | weapon | combat | 1 hide, 4 meat | breeds | yes | yes | yes | implemented |
+| `wild_boar` Wild boar | game | natural | weapon | combat | 2 boar_tusk, 1 hide, 4 meat | breeds | yes | yes | yes | implemented |
+| `wild_deer` Deer | game | natural | weapon | combat | 2 antler, 1 hide, 4 meat | breeds | yes | yes | yes | implemented |
 | `wild_fox` Fox | game | natural | weapon | combat | 1 hide, 1 meat | breeds | yes | no | yes | implemented |
 | `wild_rabbit` Rabbit | game | natural | weapon | combat | 1 meat, 1 rabbit_pelt | breeds | yes | yes | yes | implemented |
 | `wild_wolf` Wolf | game | natural | weapon | combat | 1 hide, 2 meat | breeds | yes | no | yes | implemented |
@@ -494,7 +494,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Skill:** combat, level 0.
 - **Time:** `hunt_minutes` (40 game minutes). A hunter works hunt_minutes game minutes a kill. The player strikes every 0.6 seconds until the animal's health (animals.boar.hp) is gone.
 - **Cost:** stamina 0, tool wear 0. No stamina; attacks do not wear the weapon.
-- **Yields a cycle:** 1 hide, 4 meat. A young animal gives half the meat (at least 1) and no hide (Fauna.kill). The player's kill is left as a bag where it fell.
+- **Yields a cycle:** 2 boar_tusk, 1 hide, 4 meat. A young animal gives half the meat (at least 1) and no hide or tusks (Fauna.kill). A grown boar gives its tusks (ARMOR-MATERIALS-01). The player's kill is left as a bag where it fell.
 - **Total:** animals.boar.start (males, females) in each wood, at most animals.boar.woods_cap a wood.
 - **Depletion:** breeds. A well-fed adult female with a well-fed adult male in her wood gives a litter every breed_years while the wood is under its cap (Fauna.new_day). Nothing migrates in: a group of one sex never breeds again.
 - **Owner:** Nobody: wild game belongs to no one. **Theft:** Never theft.
@@ -512,7 +512,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Skill:** combat, level 0.
 - **Time:** `hunt_minutes` (40 game minutes). Deer flee the player and wolves within animals.deer.flee tiles.
 - **Cost:** stamina 0, tool wear 0. No stamina; attacks do not wear the weapon.
-- **Yields a cycle:** 1 hide, 4 meat. A young deer gives half the meat and no hide. Stags (males) carry antlers; does do not.
+- **Yields a cycle:** 2 antler, 1 hide, 4 meat. A young deer gives half the meat and no hide. Stags (males) carry antlers; does do not: a grown stag gives animals.deer.antlers_m antlers (ARMOR-MATERIALS-01).
 - **Total:** animals.deer.start (males, females) in each wood, at most animals.deer.woods_cap a wood.
 - **Depletion:** breeds. Litters while a well-fed pair shares the wood and it is under its cap; nobody takes the last grown male or female of a wood (Fauna.spare).
 - **Owner:** Nobody: wild game belongs to no one. **Theft:** Never theft.
@@ -645,3 +645,5 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 | `wild_fox` | Takes pen chickens at night (wildlife.fox_raid_chance_per_hour); numbers provisional (B14). |
 | `wild_rabbit` | Was frozen at 4 adults from about day 10 (LONG_RUN_SIMULATION.md finding 8); since B14 a breeding pair always remains, but foxes and wolves now hunt rabbits too. |
 | `wild_wolf` | Starves when its prey is at its breeding stock; numbers provisional (B14). |
+
+> The 1920 weapons of the master weapons sheet (generated into `game/data/weapon_catalogue.json` by `tools/build_weapons.py`, one anvil recipe each from iron, copper or gold bars, coal, leather or planks, and for the masterwork patterns boar tusks and antlers) are checked with everything else but not listed here; see the in-game encyclopedia's weapon pages.

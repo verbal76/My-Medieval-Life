@@ -353,8 +353,8 @@
       "minutes_key": "hunt_minutes",
       "time_note": "A hunter works hunt_minutes game minutes a kill. The player strikes every 0.6 seconds until the animal's health (animals.boar.hp) is gone.",
       "action_cost": {"stamina": 0, "tool_wear": 0, "note": "No stamina; attacks do not wear the weapon."},
-      "yields": {"meat": "animals.boar.meat", "hide": "animals.boar.hide"},
-      "yield_notes": "A young animal gives half the meat (at least 1) and no hide (Fauna.kill). The player's kill is left as a bag where it fell.",
+      "yields": {"meat": "animals.boar.meat", "hide": "animals.boar.hide", "boar_tusk": "animals.boar.tusks"},
+      "yield_notes": "A young animal gives half the meat (at least 1) and no hide or tusks (Fauna.kill). A grown boar gives its tusks (ARMOR-MATERIALS-01). The player's kill is left as a bag where it fell.",
       "total": "animals.boar.start (males, females) in each wood, at most animals.boar.woods_cap a wood.",
       "depletion": "breeds",
       "regeneration": "A well-fed adult female with a well-fed adult male in her wood gives a litter every breed_years while the wood is under its cap (Fauna.new_day). Nothing migrates in: a group of one sex never breeds again.",
@@ -423,8 +423,8 @@
       "minutes_key": "hunt_minutes",
       "time_note": "Deer flee the player and wolves within animals.deer.flee tiles.",
       "action_cost": {"stamina": 0, "tool_wear": 0, "note": "No stamina; attacks do not wear the weapon."},
-      "yields": {"meat": "animals.deer.meat", "hide": "animals.deer.hide"},
-      "yield_notes": "A young deer gives half the meat and no hide. Stags (males) carry antlers; does do not.",
+      "yields": {"meat": "animals.deer.meat", "hide": "animals.deer.hide", "antler": "animals.deer.antlers_m"},
+      "yield_notes": "A young deer gives half the meat and no hide. Stags (males) carry antlers; does do not: a grown stag gives animals.deer.antlers_m antlers (ARMOR-MATERIALS-01).",
       "total": "animals.deer.start (males, females) in each wood, at most animals.deer.woods_cap a wood.",
       "depletion": "breeds",
       "regeneration": "Litters while a well-fed pair shares the wood and it is under its cap; nobody takes the last grown male or female of a wood (Fauna.spare).",
@@ -1092,7 +1092,6 @@
     {"item": "spoil", "finding": "import", "reason": "MIN-E: spoil comes only from the finite ground of the open pits staked in the village (OpenPits) and, MIN-F, from the rock cut to extend the tunnels below ground (MineWorks, bounded by the hill); nothing brings more, and none is meant to.", "status": "implemented"},
     {"item": "minecart", "finding": "no_consumer", "reason": "MIN-F: built from cart parts at the workbench (build_minecart); it is not consumed but used: set down on track it becomes a cart of kind minecart (Carts, MineWorks.set_down_minecart) that hauls goods along the rails below ground and out to the mine's yard.", "status": "implemented"},
     {"item": "ore_sample", "finding": "import", "reason": "MIN-C: rock samples come only from the clues' finite search areas (samples_per_clue a clue, one a cell); nothing brings more, and none is meant to: once the village's clues are sampled out, new ground to read is MIN-D's (deeper strata, the larger map). The finite source is the design, not a gap.", "status": "implemented"},
-    {"item": "feather", "finding": "no_consumer", "reason": "A trade good (PL2-004): chickens drop feathers and the goods merchant buys them (NPCBrain.BUYS / OUTLETS), but the game has no arrows or bedding to use them in, so no recipe consumes them.", "status": "implemented"},
     {"item": "handcart", "finding": "no_consumer", "reason": "B14: built from cart parts (build_handcart) by the player, the carpenter and storefront households, and bought and sold; it is not consumed but used: pulled storage, parked at home or a cart hub, and households' market runs (carts in play, B14-06, game/scripts/core/carts.gd).", "status": "implemented"},
     {"item": "rotten_apple", "finding": "start_kit_only", "reason": "Only in the player's start kit: spoiled food that harms when eaten.", "status": "implemented"},
     {"item": "rusty_sword", "finding": "start_kit_only", "reason": "Only in the player's start kit; nobody buys it.", "status": "implemented"},
@@ -1105,7 +1104,6 @@
     {"item": "copper_ore", "finding": "import", "reason": "After the copper seams are worked out, the smiths' copper comes only by caravan.", "status": "implemented"},
     {"item": "stone", "finding": "import", "reason": "After the stone seams are worked out, stone comes only by caravan, to the raw-goods merchants.", "status": "implemented"},
     {"item": "spice", "finding": "no_consumer", "reason": "DVW-B3-LUX: bought for show and kept, not eaten: no recipe takes it (a villager's food is the village's own); the traders' stock of it is finite and nothing makes more (WDR-022).", "status": "implemented"},
-    {"item": "fine_cloth", "finding": "no_consumer", "reason": "DVW-B3-LUX: a luxury bought for show and kept; nothing makes or uses it up.", "status": "implemented"},
     {"item": "jewellery", "finding": "no_consumer", "reason": "DVW-B3-LUX: a luxury bought for show and kept; it is not worn (no slot takes it) and nothing makes or uses it up.", "status": "implemented"}
   ]
 }
