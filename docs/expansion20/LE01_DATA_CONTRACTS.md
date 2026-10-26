@@ -75,6 +75,14 @@ Added 2026-10-26 (X20-B3, owner authorization of the same day); the implementati
 Save key `"economy"` gains `needs`, `offers`, `knowledge`, `contracts`, `contract_cursor`, each only when non-empty; a
 foundation-only or older save loads them empty. Tests: `game/tests/economy_model_test.gd`.
 
+## Opinion and trade (owner rule 2026-10-26)
+
+The model stores no opinion, trust or reputation and decides no trade. When a decision reads opinion (LE-02 onward) it does
+so through the shared Expansion 19 weighing (`JudgmentWeighting.choose`), as one factor beside need, scarcity, alternatives,
+price, relationships and personality: an NPC may refuse a deal because of their opinion, another in the same
+circumstances may deal out of necessity; there is no numerical cutoff that refuses automatically and no rule that every
+trade must stay possible regardless of preference (the owner's words: `LE01_IMPLEMENTATION.md` section 2).
+
 ## Still not here
 
 Adaptive prices, bids that move, negotiation and settlement (LE-02, under OD-LE-02's answer), credit terms (OD-LE-05B),

@@ -45,14 +45,29 @@ Missing or incomplete for the economy (reported, not substituted):
 1. **No neutral opinion read for a trade.** `JudgmentLive.willing` and the `pick_*` functions return a choice or a yes/no;
    there is no call returning the chooser's weighted opinion of a counterparty as a factor beside need, price, scarcity and
    alternatives without itself choosing. LE-02 should pass those as candidate factors to `JudgmentWeighting.choose` with a
-   trade profile; whether the existing profiles (`trade_sell`, ...) weigh price, scarcity and alternatives, and that a
-   strong dislike can never on its own refuse a feasible trade, needs the Build 19 recovery workstream to confirm.
+   trade profile (`trade_buy` weighs necessity, sole source, affordability, urgency and disposition against doing
+   without); whether the profiles weigh price, scarcity and alternatives as LE-02 needs is for the Build 19 recovery
+   workstream to confirm.
 2. **No judged person for institutions or settlements.** `person_of_ref` gives -1 for the manor (its reeve is not
    substituted), the chapel, tills held by the manor and `region:` parties.
 3. **No reliability of commercial information.** `JudgmentStore.belief` covers judged events; gossip carries judgment
    events, not prices or offers. How heard prices travel and how far they are trusted is OD-LE-10 and must ride on that
    channel, not a second one.
 Nothing in LE-01 activates a decision that depends on opinion or trust.
+
+**Owner rule on opinion and trade (2026-10-26, verbatim):** "An NPC absolutely may refuse a transaction because of their
+opinion of another character. However, reputation must not act as a rigid, automatic prohibition based on a numerical
+threshold. NPCs weigh their opinions against needs, scarcity, available alternatives, prices, relationships, personality
+and other circumstances. A villager who dislikes someone may still trade with them out of necessity. Another villager in
+the same circumstances may refuse because their dislike outweighs the benefit. Both outcomes are valid. The Judgment
+System influences decisions rather than dictating universal outcomes. [...] Do not implement a hard-coded reputation
+cutoff or a rule requiring every transaction to remain possible regardless of NPC preference."
+So at the decision seam (LE-02 onward: whether to deal, with whom, at what terms) opinion is one factor in the shared
+`JudgmentWeighting.choose`, weighed with need, scarcity, alternatives, price and relationships under each person's
+personality (`trait_weight`), with doing without (`forgo`) a valid result. LE-01 has no regard or reputation threshold, no
+rule that every trade stays possible, and no clamp on the opinion's weight. `economy_model_test.gd::test_opinion_is_weighed`
+shows on the shared engine that the same strong dislike leads to a deal or a refusal depending on need, alternatives and
+the person. The weights and formulas are owner-held (LE-02+); LE-01 adds none.
 
 ## 3. OWNER DECISION placeholders
 

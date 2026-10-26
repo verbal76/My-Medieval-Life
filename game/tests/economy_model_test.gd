@@ -41,6 +41,7 @@ func _init() -> void:
 	test_save()
 	test_observes_only()
 	test_cost()
+	test_opinion_is_weighed()
 	EconomyFoundation.set_override({})
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
@@ -495,3 +496,38 @@ func test_cost() -> void:
 	for n: NPC in w.npcs.slice(w.npcs.size() - 500):
 		w.economy.needs.mark(World.npc_ref(n.id))
 	check(w.economy.needs.refresh().size() == w.economy.needs.refresh_budget, "a refresh is bounded by its budget")
+
+
+# ------------------------------------------------------------------------------------------------ opinion is weighed
+## Owner rule 2026-10-26: an NPC may refuse a deal because of their opinion, but no numerical cutoff refuses automatically and
+## no rule keeps every deal possible. The economy keeps no opinion; the decision seam LE-02 will use is the shared
+## JudgmentWeighting.choose (trade_buy). With the SAME strong dislike for the seller, the outcome must depend on need, on
+## alternatives and on the person (shipped personality spread). Nothing here asserts that a trade succeeds.
+func test_opinion_is_weighed() -> void:
+	var c: Dictionary = JudgmentStore.default_cfg().duplicate(true)
+	var j := JudgmentStore.new(c, JudgmentSocial.new(), 7)
+	const SELLER := 9000
+	const OTHER := 9001
+	var choosers := range(100, 160)
+	for p in choosers:
+		j.set_ledger(p, SELLER, 0, 40000)                   # the same strong dislike in every chooser
+	var buy := func(p: int, need: int, alternative := false) -> String:
+		var cands := [{"id": "disliked", "counterparty": SELLER, "factors": {"necessity": need, "affordability": 70000, "urgency": need}}]
+		if alternative:
+			cands.append({"id": "other", "counterparty": OTHER, "factors": {"necessity": need, "affordability": 70000, "urgency": need}})
+		return str(JudgmentWeighting.choose(j, c, p, "trade_buy", cands).chosen)
+	var p0: int = choosers[0]
+	check(buy.call(p0, 100000) == "disliked" and buy.call(p0, 0) == "forgo", "the same dislike: bought from in great need, refused with no need (no fixed cutoff)")
+	check(buy.call(p0, 100000, true) == "other", "with an alternative on the same terms the disliked seller is passed over")
+	var split := false
+	var levels := 0
+	for need in range(0, 100001, 2500):
+		var outs := {}
+		for p in choosers:
+			outs[buy.call(p, need)] = true
+		if outs.size() > 1:
+			split = true
+			levels += 1
+	check(split, "same dislike and circumstances: one person deals, another refuses (personality; %d need levels split)" % levels)
+	check(j.net(p0, SELLER) == -40000, "weighing a deal leaves the opinion unchanged")
+	check(not FileAccess.get_file_as_string("res://scripts/core/economy/econ_knowledge.gd").contains("regard >=") and not FileAccess.get_file_as_string("res://scripts/core/economy/econ_offers.gd").contains("regard"), "no regard threshold in the economy model")
