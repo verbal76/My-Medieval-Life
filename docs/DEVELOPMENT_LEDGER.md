@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (672)
+## Approved requirement (673)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -326,6 +326,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | GP-MARKET-SHELVES | Market stalls as Craftpix wooden shelves showing each merchant's actual listings (up to ten) | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | GP-MARKET-SPACING | Market stalls with the Craftpix shelf sprite stand too close together | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | GP-MESSAGE-FOOTPRINT | The message box and the interaction prompt take too much of the screen; make them compact and keep them out of the play area | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| GP-MESSAGE-JOURNAL | Messages journal is saved with the world: persistent, per-world, filtered to meaningful events, bounded retention | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-MINE-WOOD-FRAME | Underground: a wooden frame drawn over the wall beside a deposit reads as blocking it; supports and openings need a clear representation | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | GP-PACK-DETAIL-FIT | Pack item detail panel: action buttons cut off the bottom of the screen | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | GP-PAUSE-PANEL | Pause menu: a framed panel over the dimmed game, not a full-screen brown background | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |

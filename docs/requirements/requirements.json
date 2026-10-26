@@ -24264,6 +24264,46 @@
    "branch": "wip/x20-msg"
   },
   {
+   "id": "GP-MESSAGE-JOURNAL",
+   "kind": "approved",
+   "title": "Messages journal is saved with the world: persistent, per-world, filtered to meaningful events, bounded retention",
+   "description": "Messages journal is saved with the world: persistent, per-world, filtered to meaningful events, bounded retention",
+   "source": "docs/directives/2026-10-26_messages_journal_persistence.md",
+   "owner_wording": "The Messages journal must be a permanent part of the saved world's history, not a temporary session log. Players should be able to return to their game days or weeks later and review important messages they previously received. Preserve save compatibility, preserve performance, and retain the smaller notification boxes.",
+   "approval": "owner, 2026-10-26",
+   "acceptance": [
+    "messages survive save, load and restart; each world keeps its own history; a new game starts empty; chronological with original day and time; dismissing or fading never deletes an entry; recorded without opening the journal",
+    "Build 21 and Build 22 saves load unchanged with an empty history; no other save data altered; no separate save system",
+    "meaningful events recorded (NPC communication, work and contracts, player trade and money, crime and fines, relationships and household, village events, quests); routine interface feedback not recorded; no second recorder or ledger",
+    "bounded retention that keeps significant events over routine ones; no unbounded save growth",
+    "compact Messages page: ordered, wrapped, scrollable, readable on Android and desktop, clear of navigation; the notification box unchanged",
+    "tests: receive, dismiss, fade, save, reload, restore; old save without the field; two worlds kept separate; G0 unchanged (logging does not alter simulation or determinism)"
+   ],
+   "target_build": "20",
+   "parent": "GP-MESSAGE-FOOTPRINT",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-26_messages_journal_persistence.md"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker H (screen messages); branch: None -> wip/x20-msg",
+     "why": "assigned to worker H on its existing branch"
+    }
+   ],
+   "assigned_worker": "worker H (screen messages)",
+   "branch": "wip/x20-msg"
+  },
+  {
    "id": "GP-MINE-WOOD-FRAME",
    "kind": "approved",
    "title": "Underground: a wooden frame drawn over the wall beside a deposit reads as blocking it; supports and openings need a clear representation",

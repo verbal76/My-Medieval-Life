@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 173 still open, 58 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 585 (308 of them still open) |
-| **Open entries now** (rules excluded) | | **481** |
+| Entries added since | | 586 (309 of them still open) |
+| **Open entries now** (rules excluded) | | **482** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (58)
@@ -101,7 +101,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (585)
+## Added since the baseline (586)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -289,6 +289,7 @@ None.
 | GP-MARKET-SHELVES | Market stalls as Craftpix wooden shelves showing each merchant's actual listings (up to ten) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-MARKET-SPACING | Market stalls with the Craftpix shelf sprite stand too close together | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-MESSAGE-FOOTPRINT | The message box and the interaction prompt take too much of the screen; make them compact and keep them out of the play area | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| GP-MESSAGE-JOURNAL | Messages journal is saved with the world: persistent, per-world, filtered to meaningful events, bounded retention | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | GP-MINE-WOOD-FRAME | Underground: a wooden frame drawn over the wall beside a deposit reads as blocking it; supports and openings need a clear representation | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-PACK-DETAIL-FIT | Pack item detail panel: action buttons cut off the bottom of the screen | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-PAUSE-PANEL | Pause menu: a framed panel over the dimmed game, not a full-screen brown background | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |

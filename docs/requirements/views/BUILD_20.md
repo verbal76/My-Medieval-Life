@@ -8,21 +8,22 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 79 |
-| Integrated | 61 of 79 (77%) |
-| Automated tests passed | 62 of 79 (78%) |
-| Integration verified | 36 of 79 (46%) |
-| Gameplay verified | 0 of 79 (0%) |
-| Owner playtested | 0 of 79 (0%) |
-| Complete | 2 of 79 (3%) |
-| Open (release blockers) | 77 |
+| Approved requirements in scope | 80 |
+| Integrated | 61 of 80 (76%) |
+| Automated tests passed | 62 of 80 (78%) |
+| Integration verified | 36 of 80 (45%) |
+| Gameplay verified | 0 of 80 (0%) |
+| Owner playtested | 0 of 80 (0%) |
+| Complete | 2 of 80 (2%) |
+| Open (release blockers) | 78 |
 | Open owner decisions (blocking) | 15 (11) |
 
-## In development (worker assigned) (5)
+## In development (worker assigned) (6)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | GP-MESSAGE-FOOTPRINT | The message box and the interaction prompt take too much of the screen; make them compact and keep them out of the play area | OWNER APPROVED | IN DEVELOPMENT | worker H (screen messages) / wip/x20-msg | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| GP-MESSAGE-JOURNAL | Messages journal is saved with the world: persistent, per-world, filtered to meaningful events, bounded retention | OWNER APPROVED | IN DEVELOPMENT | worker H (screen messages) / wip/x20-msg | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | IN DEVELOPMENT | worker F (LE-01) / wip/x20-le01 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | worker G (recovery R1, R3) / wip/x20-r1r3 | TARGETED TESTS PASSED | recorder stage D5 (judgment publish, learn, tell, trust, every choice with alternatives and factors) and D4 relations (batch R3) | design: UNKNOWN | UNKNOWN |
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | analysis of judgment once D5 records it (batch R6); closure also waits on SIM-F2 and SIM-F3 | design: UNKNOWN | UNKNOWN |
