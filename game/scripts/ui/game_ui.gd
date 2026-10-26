@@ -142,6 +142,10 @@ const CORNER_MARGIN := Vector2(28, 14)
 const HUD_MARGIN := {"desktop": 10.0, "phone": 12.0}
 const BUTTON_H := 42.0                  # GP-UI-COMPACT: a window button's height (was 48); still a comfortable touch target
 const BUTTON_MIN_WIDTH := 220.0       # window buttons are at least this wide, else as wide as their text (GP-UI-COMPACT: was 260)
+# GP-ANDROID-HUD-SCALE: the status box's parts (Build 22: margin 10, 24 px icons, 156 x 18 bars)
+const STATUS_PAD := 6.0
+const STATUS_ICON := 20.0
+const STATUS_BAR := Vector2(136, 16)
 const SCHEME_NAMES :={"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
 
 
@@ -428,22 +432,28 @@ func _build_hud() -> void:
 	hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud_root.add_child(hud)
 	# anchored to the top-left corner of the usable screen, a small margin in (fit_safe_area)
+	# GP-ANDROID-HUD-SCALE (owner, 2026-10-24): about 15% smaller than Build 22's (204 x 152): the wasted space goes (tighter
+	# margins and rows, narrower bars, smaller icons), every value and its words stay, at the same or nearly the same size
 	var box := PanelContainer.new()
-	box.add_theme_stylebox_override("panel", _style(Color(WINDOW, 0.88)))
+	var bs := _style(Color(WINDOW, 0.88))
+	bs.set_content_margin_all(STATUS_PAD)
+	box.add_theme_stylebox_override("panel", bs)
 	box.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	status_box = box
 	hud.add_child(box)
 	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 3)
 	box.add_child(v)
 	for key in ["hp", "hunger", "stamina"]:
 		var m: Array = METERS[key]
 		var h := HBoxContainer.new()
-		var ic := _ui_icon(m[1], 24)                 # the food bar's is a 16 px roast drumstick (UI-HUNGER-01)
+		h.add_theme_constant_override("separation", 4)
+		var ic := _ui_icon(m[1], STATUS_ICON)        # the food bar's is a 16 px roast drumstick (UI-HUNGER-01)
 		ic.tooltip_text = m[2]
 		ic.mouse_filter = Control.MOUSE_FILTER_PASS
 		h.add_child(ic)
 		var pb := ProgressBar.new()
-		pb.custom_minimum_size = Vector2(156, 18)
+		pb.custom_minimum_size = STATUS_BAR
 		pb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		pb.show_percentage = false
 		pb.tooltip_text = m[2]
@@ -471,20 +481,21 @@ func _build_hud() -> void:
 	# bottom row (the time at its right end); the date sits under them in smaller words, so it no longer
 	# widens the box.
 	var row := HBoxContainer.new()
-	row.add_child(_ui_icon("coins", 24))
+	row.add_theme_constant_override("separation", 4)
+	row.add_child(_ui_icon("coins", STATUS_ICON))
 	coins_label = Label.new()
 	coins_label.tooltip_text = "Coins in your purse"
 	coins_label.mouse_filter = Control.MOUSE_FILTER_PASS
 	coins_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	coins_label.add_theme_font_size_override("font_size", 16)
+	coins_label.add_theme_font_size_override("font_size", 15)
 	row.add_child(coins_label)
 	clock_label = Label.new()
-	clock_label.add_theme_font_size_override("font_size", 16)
+	clock_label.add_theme_font_size_override("font_size", 15)
 	clock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	row.add_child(clock_label)
 	v.add_child(row)
 	date_label = Label.new()
-	date_label.add_theme_font_size_override("font_size", 14)
+	date_label.add_theme_font_size_override("font_size", 13)
 	v.add_child(date_label)
 	wanted_hud = WantedHud.new()
 	wanted_hud.set_anchors_preset(Control.PRESET_TOP_LEFT)
