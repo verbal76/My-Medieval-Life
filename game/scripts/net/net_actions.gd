@@ -29,7 +29,7 @@ const VERBS := {
 	"release_player_station": "C2", "chests.store": "C2", "chests.take": "C2", "chests.set_own_lock": "C2",
 	"player_pick_lock": "C2", "note_player_work": "C2", "player_xp": "C2", "player_set_down_cart": "C2",
 	# C3: economy
-	"player_buy_many": "C3", "player_sell_many": "C3", "player_buy_pack_row": "C3", "player_barber_visit": "C3",
+	"player_buy_many": "C3", "player_sell_many": "C3", "player_buy_pack_row": "C3", "player_barber_visit": "C3", "player_order_gear": "C3",
 	"player_learn_fireball": "C3", "contracts.propose": "C3", "contracts.deliver": "C3", "contracts.cancel": "C3",
 	"contracts.accept_offer": "C3", "contracts.counter_offer": "C3", "contracts.decline_offer": "C3", "credit.repay": "C3",
 	"credit.answer_request": "C3", "ContractServices:player_report": "C3", "ContractServices:player_collect": "C3",

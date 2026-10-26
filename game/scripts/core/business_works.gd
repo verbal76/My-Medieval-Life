@@ -62,7 +62,7 @@ func recipes() -> Array:
 	var ids: Array = GameData.recipes.keys()
 	ids.sort()
 	for r in ids:
-		if kinds.has(str(GameData.recipes[r].station)):
+		if kinds.has(str(GameData.recipes[r].station)) and not GameData.is_catalogue_recipe(r):    # the 1,920 catalogue weapons are made by hand or ordered (WEAPON-CATALOG-01)
 			out.append(r)
 	return out
 

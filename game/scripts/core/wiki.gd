@@ -142,6 +142,7 @@ static func build() -> Wiki:
 	WikiContracts.add_pages(w)     # CON-01 contracts, DVW-B4 spoiling and wear
 	WikiMining.add_pages(w)        # Build 17: mining, prospecting, open pits, underground, and the ideas not built yet
 	WikiStone.add_pages(w)         # STONE-01 raw stone and building blocks
+	WikiGear.add_pages(w)          # Build 22: the armour and weapon catalogue, orders, worn bonuses, tusks and antlers
 	add_provider(WikiExcavation.add_pages)     # Build 17: shovels and pickaxes, trial-pit earth, where to dig, capability
 	add_provider(WikiMineEquipment.add_pages)     # MIN-EQUIP, MIN-COLLAPSE (wiki_mine_equipment.gd)
 	for c in providers:
@@ -254,23 +255,36 @@ func _amounts(d: Dictionary) -> String:
 	return ", ".join(parts)
 
 
-## Recipes that make / use an item (ids, sorted).
+## Recipes that make / use an item (ids, sorted). Indexed once per build: with the weapon catalogue there are over two
+## thousand recipes, too many to scan for every page.
+var _making := {}
+var _using := {}
+
+
+func _index_recipes() -> void:
+	if not _making.is_empty():
+		return
+	var ids := GameData.recipes.keys()
+	ids.sort()
+	for r in ids:
+		for i in GameData.recipes[r].out:
+			if not _making.has(i):
+				_making[i] = []
+			_making[i].append(r)
+		for i in GameData.recipes[r]["in"]:
+			if not _using.has(i):
+				_using[i] = []
+			_using[i].append(r)
+
+
 func recipes_making(item: String) -> Array:
-	var out := []
-	for r in GameData.recipes:
-		if GameData.recipes[r].out.has(item):
-			out.append(r)
-	out.sort()
-	return out
+	_index_recipes()
+	return (_making.get(item, []) as Array).duplicate()
 
 
 func recipes_using(item: String) -> Array:
-	var out := []
-	for r in GameData.recipes:
-		if GameData.recipes[r]["in"].has(item):
-			out.append(r)
-	out.sort()
-	return out
+	_index_recipes()
+	return (_using.get(item, []) as Array).duplicate()
 
 
 func nodes_yielding(item: String) -> Array:
@@ -315,6 +329,8 @@ func _core_categories() -> void:
 
 func _items() -> void:
 	for id in GameData.items:
+		if GameData.is_catalogue_weapon(id):
+			continue                               # WEAPON-CATALOG-01: one page per weapon type (WikiGear), not 1,920
 		var it: Dictionary = GameData.items[id]
 		var rows := [["Type", str(it.type).capitalize()], ["Base price", "%d coins" % int(it.value)]]
 		if it.has("food"):
@@ -325,6 +341,11 @@ func _items() -> void:
 			rows.append(["Costs", "%d health (spoiled)" % int(it.harm)])
 		if it.has("damage"):
 			rows.append(["Damage", str(int(it.damage))])
+		if str(it.get("class", "")) != "":                 # ARMOR-CATALOG-01
+			rows.append(["Class", str(it["class"]).capitalize()])
+			rows.append(["Made to order by", "the " + GearOrders.maker_job(id)])
+			if not (it.order.get("bring", {}) as Dictionary).is_empty():
+				rows.append(["You bring", GearOrders.amounts(it.order.bring)])
 		if it.has("armor"):
 			rows.append(["Armour", str(int(it.armor))])
 		if it.has("durability"):
@@ -335,8 +356,8 @@ func _items() -> void:
 			rows.append(["Work speed", "x%s" % str(it.speed)])
 		if it.has("tool"):
 			rows.append(["Works as", str(it.tool)])
-		for k in it.get("bonus", {}):
-			rows.append(["Bonus", "+%d %s" % [int(it.bonus[k]), str(k).replace("_", " ")]])
+		if PlayerState.bonus_text(id) != "":
+			rows.append(["Bonus", PlayerState.bonus_text(id) + " while worn"])
 		if it.has("plant"):
 			rows.append(["Grows into", "a %s tree" % it.plant])
 		var blocks := [stats(rows)]
@@ -350,11 +371,15 @@ func _items() -> void:
 			for r in making:
 				blocks.append({"t": "recipe", "id": r})
 			blocks.append({"t": "chain", "id": id})
-		var using := recipes_using(id)
+		var using := recipes_using(id).filter(func(r): return not GameData.orderable(str(GameData.recipes[r].out.keys()[0])))
 		if not using.is_empty():
 			blocks.append(h("Used to make"))
 			for r in using:
 				blocks.append({"t": "recipe", "id": r})
+		var gear_uses := recipes_using(id).size() - using.size()
+		if gear_uses > 0:                          # ARMOR-CATALOG-01: the catalogue's pieces, counted, on their own pages
+			blocks.append(p("It goes into %d pieces of armour and weapons made to order (see Armour and weapons)." % gear_uses))
+			blocks.append(links(["sys:armoury"]))
 		var uses := []
 		if WikiMining.USE_TEXT.has(id):
 			uses.append_array(WikiMining.USE_TEXT[id])     # player-facing wording for the Build 17 mining goods
@@ -374,6 +399,8 @@ func _items() -> void:
 
 func _recipes() -> void:
 	for id in GameData.recipes:
+		if GameData.is_catalogue_recipe(id):
+			continue                               # WEAPON-CATALOG-01: on the weapon type's page
 		var r: Dictionary = GameData.recipes[id]
 		var out_id: String = r.out.keys()[0]
 		var st: String = STATION_NAMES.get(r.station, str(r.station).capitalize())
@@ -427,7 +454,7 @@ func _stations() -> void:
 		if not where[t].has(place):
 			where[t].append(place)
 	for t in where:
-		var rs := GameData.recipes_at(t)
+		var rs := GameData.recipes_at(t).filter(func(r): return not GameData.is_catalogue_recipe(r))
 		var blocks := [p("Found: %s." % ", ".join(where[t]))]
 		if Counters.KEEPERS.has(t):           # a skilled trade's counter (CTR-01..03)
 			blocks.append(p("Nobody stands at this counter all day. Ring for service here and one of the %s who keep it walks over and serves you, if one can come: not asleep, in working hours (%d:00 to %d:00), not eating or fighting. Otherwise you are told why. They put down the work in hand and go back to it when you leave." % [", ".join((Counters.KEEPERS[t] as Array).map(func(j): return j + "s")), int(NPCBrain.WORK_START), int(NPCBrain.WORK_END)]))
@@ -439,6 +466,9 @@ func _stations() -> void:
 			blocks.append(h("Recipes"))
 			for r in rs:
 				blocks.append({"t": "recipe", "id": r})
+		if GameData.recipes_at(t).size() > rs.size():
+			blocks.append(p("And every weapon of the catalogue: see Armour and weapons."))
+			blocks.append(links(["sys:armoury"]))
 		add_page("station:" + t, STATION_NAMES.get(t, t.capitalize()), "stations", blocks, "", t)
 	for t in GameData.recipes.values().map(func(r): return str(r.station)):
 		if not pages.has("station:" + t):
@@ -456,7 +486,7 @@ func _skills() -> void:
 			blocks.insert(0, p(str(s.about)))
 		var rl := []
 		for r in GameData.recipes:
-			if GameData.recipes[r].skill == id:
+			if GameData.recipes[r].skill == id and not GameData.is_catalogue_recipe(r):
 				rl.append("recipe:" + r)
 		rl.sort()
 		if not rl.is_empty():
@@ -479,6 +509,10 @@ func _animals() -> void:
 		var wild: bool = a.kind == "wild"
 		var rows := [["Kind", "wild game" if wild else "livestock (kept in a pen)"], ["Health", str(int(a.hp))],
 			["Meat", str(int(a.get("meat", 0)))], ["Hides", str(int(a.get("hide", 0)))]]
+		if int(a.get("tusks", 0)) > 0:                 # ARMOR-MATERIALS-01
+			rows.append(["Tusks", "%d from a grown one" % int(a.tusks)])
+		if int(a.get("antlers_m", 0)) > 0:
+			rows.append(["Antlers", "%d from a grown male (a stag)" % int(a.antlers_m)])
 		if a.has("feed"):
 			rows.append(["Feed", "%d wheat a meal" % int(a.feed)])
 		rows.append(["Newborn until", "%s days old (juvenile)" % (str(Animal.stage_days(a, "juvenile")) if a.has("juvenile_years") else "?")])
@@ -494,6 +528,10 @@ func _animals() -> void:
 		var ls := [node, "item:meat"]
 		if int(a.get("hide", 0)) > 0:
 			ls.append("item:hide")
+		if int(a.get("tusks", 0)) > 0:
+			ls.append("item:boar_tusk")
+		if int(a.get("antlers_m", 0)) > 0:
+			ls.append("item:antler")
 		blocks.append(links(ls))
 		var diet: String = {"graze": "It grazes in its wood.", "seeds": "It picks seeds in its wood.",
 			"hunt": "It hunts %s in its wood." % ", ".join((a.get("prey", []) as Array).map(func(k): return str(an[k].name).to_lower())),

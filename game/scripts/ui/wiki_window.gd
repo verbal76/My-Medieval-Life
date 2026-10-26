@@ -644,6 +644,31 @@ func _block(b: Dictionary) -> void:
 					_label(ln.replace("    ", "      "), 16)
 		"controls":
 			_controls_block(str(b.scheme))
+		"designs":
+			_designs_block(b.ids)
+
+
+## WEAPON-CATALOG-01: a weapon type's designs as a grid of icons (the variant picker); tapping one shows its name and numbers.
+func _designs_block(ids: Array) -> void:
+	var shown := _label("Tap a design to see it.", 15, DIM)
+	var g := HFlowContainer.new()
+	g.add_theme_constant_override("h_separation", 4)
+	g.add_theme_constant_override("v_separation", 4)
+	host.add_child(g)
+	for id in ids:
+		var it := GameData.item(str(id))
+		var b := Button.new()
+		b.name = "Design_" + str(id)
+		var ip := Wiki.icon_path(str(id))
+		b.icon = load(ip) if ip != "" else null
+		b.expand_icon = true
+		b.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		b.tooltip_text = str(it.get("name", id))
+		b.custom_minimum_size = Vector2(44, 44)
+		var words := "%s: damage %d, durability %d, %d coins%s" % [str(it.get("name", id)), int(it.get("damage", 0)), int(it.get("durability", 0)), int(it.get("value", 0)),
+			("; worn: " + PlayerState.bonus_text(str(id))) if PlayerState.bonus_text(str(id)) != "" else ""]
+		b.pressed.connect(func(): shown.text = words)
+		g.add_child(b)
 
 
 func _recipe_row(rid: String) -> void:
