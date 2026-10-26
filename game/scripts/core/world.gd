@@ -5990,8 +5990,6 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		recorder.world_loaded(d)       # REC-19: a session note: loaded, its save version, the ids unchanged
 
 
-## Anyone saved standing where the map now has furniture or a wall (a bed added to a home by a later
-## map) steps to the nearest open cell in the same place, so nobody loads stuck.
 ## D2: the optional save key "economy": the live records when on, else a section carried through unchanged.
 func _economy_section() -> Dictionary:
 	if economy != null:
@@ -5999,6 +5997,8 @@ func _economy_section() -> Dictionary:
 	return {EconomyFoundation.KEY: economy_foreign.duplicate(true)} if not economy_foreign.is_empty() else {}
 
 
+## Anyone saved standing where the map now has furniture or a wall (a bed added to a home by a later
+## map) steps to the nearest open cell in the same place, so nobody loads stuck.
 func _unstick() -> void:
 	for n: NPC in npcs:
 		if not n.alive or n.depth != 0 or not map.is_solid(n.cell()):       # below the surface the level's map holds them

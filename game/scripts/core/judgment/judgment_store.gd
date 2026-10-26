@@ -202,6 +202,7 @@ var _lie_chance := 0                    # lies.chance_permille: of the meetings 
 var _lie_gap := 0                       # lies.gap_days: days between one liar's inventions (0: one game year, Life.year_days())
 var _lie_res := 2000                    # lies.min_resentment: serious resentment toward the subject (milli-points) that gives a motive
 var _lie_types := []                    # lies.types: what an invented story accuses the subject of
+var _refuting := false                  # R1: a refutation is being taken in at its meeting (trust.rumour_false applies, not the catalog's)
 var _story_good := 2000                 # family_story.good_severity: a good deed this serious is passed on to children (X19-STORY-LIFE)
 var _story_days := 4                    # family_story.expire_days: how long a new adult waits to be told, at home with a parent
 var _fight_min := 10                    # self_defence.fight_minutes: a fight ends when no blow has fallen for this long
@@ -548,7 +549,11 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 		if pers.active:
 			_trait_experience(observer, ev)
 		bonds.on_belief(observer, ev)               # X19-FOUND-BONDS: resentment and betrayal history
-	if fresh and _t_ev[t] != 0:
+	if fresh:
+		var rtg: Array = fact_tags.get(ev, [])
+		if rtg.size() >= 2 and str(rtg[0]) == "refutes":   # R1 (X19-MISINFO): learning a lie was shown false corrects what it caused
+			_drop_lie(observer, int(rtg[1]), int((actors[0] as Array)[0]) if not actors.is_empty() else -1)
+	if fresh and _t_ev[t] != 0 and not _refuting:      # at a refutation the approved trust.rumour_false applies instead (_refute)
 		var late: bool = (fact_tags.get(ev, []) as Array).has("late")      # X19-EVENT-Q (3): a late repayment is a fair deal with half the trust gain
 		for a in actors:                            # reliability shown by the deed itself: a fair deal, a cheat, a false charge
 			if int(a[0]) != observer:
@@ -1539,19 +1544,71 @@ func _contradicts(listener: int, actors: Array) -> bool:
 ## `listener` shows `teller`'s story false: the listener never takes it up, a teller who held it takes back what they had
 ## judged from it (only those who learn it correct their judgment), and the liar loses rumour_false (15 points) of trust
 ## with each of them.
+## R1 (Expansion 20, X19-MISINFO "proven false corrects the judgment it caused; consequences by intent, harm, repetition"):
+## the liar's deed is itself a fact, the catalog's `false_accusation` (actor the liar, victims the accused, tagged
+## ["refutes", the lie]), published once per lie (_refutation) and taken in firsthand by both at the meeting. Each judges
+## it by the catalog's own rules (BAD, its severity, read through their tie to the accused, as any deed), so each lie shown
+## false is judged once more against the liar. It travels by word of mouth like any deed, and whoever later learns of it
+## drops what the lie made them think (learn, _drop_lie). Trust: the two at the meeting lose the approved rumour_false
+## (15 points), not the catalog's 20 on top of it (_refuting); a told account of it moves trust by the catalog, as any deed.
 func _refute(teller: int, listener: int, ev: int, liar: int) -> void:
 	_stat("lies_refuted")
 	_gver += 1
 	_hold(listener, ev)
+	var held := teller != liar and (memories.get(teller, {}) as Dictionary).has(ev)
+	var rf := _refutation(ev, liar)
+	if rf > 0:
+		var accused := _fact_people(facts[rf], 0)
+		_refuting = true
+		for o in ([listener, teller] if held else [listener]):
+			if int(o) != liar:
+				observe(rf, int(o), "participant" if accused.has(o) else "witnessed")
+		_refuting = false
 	if listener != liar:
 		trust_add(listener, liar, -_t_false)
-	var mem: Dictionary = memories.get(teller, {})
-	if teller != liar and mem.has(ev):
-		_post(teller, ev, {}, false)
-		mem.erase(ev)
-		(contrib.get(teller, {}) as Dictionary).erase(ev)
+	if held:
+		_drop_lie(teller, ev, liar)                  # already done by learn when it took in the refutation
 		trust_add(teller, liar, -_t_false)
-		_stat("lies_corrected")
+
+
+## R1: the `false_accusation` fact that shows lie `ev` false: the one already published for it while it lasts, else a new
+## one (actor the liar, victims those the lie accused), noted on the lie's tags (["lie", liar, refutation]). -1 when the
+## catalog refuses it.
+func _refutation(ev: int, liar: int) -> int:
+	var tg: Array = fact_tags.get(ev, [])
+	if tg.size() >= 3 and facts.has(int(tg[2])):
+		return int(tg[2])
+	var accused := []
+	for a in _fact_actors(facts[ev]):
+		accused.append(int(a[0]))
+	var rf := publish("false_accusation", [liar], accused, [], 0, ["refutes", ev])
+	if rf > 0 and tg.size() >= 2:
+		var t2 := tg.duplicate()
+		if t2.size() >= 3:
+			t2[2] = rf
+		else:
+			t2.append(rf)
+		fact_tags[ev] = t2
+	return rf
+
+
+## R1: `observer` has learned that lie `ev` was shown false: they take back what they judged from it and drop the story
+## (never the liar, who judged nobody by it). True when there was anything to take back.
+func _drop_lie(observer: int, ev: int, liar: int) -> bool:
+	if observer == liar:
+		return false
+	var mem: Dictionary = memories.get(observer, {})
+	var mine: Dictionary = contrib.get(observer, {})
+	if not mem.has(ev) and not mine.has(ev):
+		return false
+	if mine.has(ev):
+		_post(observer, ev, {}, false)
+		mine.erase(ev)
+	mem.erase(ev)
+	_hold(observer, ev)
+	_gver += 1
+	_stat("lies_corrected")
+	return true
 
 
 ## `observer`'s memory of `ev` becomes permanent (never fades, never pushed out, its fact never retires): a betrayal by a

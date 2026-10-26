@@ -55,6 +55,7 @@ func _init() -> void:
 	test_event_rules()
 	test_lies()
 	test_lie_frequency()
+	test_refutation_fact()
 	test_family_stories()
 	test_reach()
 	test_colour_and_limits()
@@ -249,6 +250,91 @@ func test_lie_frequency() -> void:
 		j.meet(1000 + i * 3, 5000 + i)
 	var lies := int(j.stats.get("lies", 0))
 	check(lies >= 15 and lies <= 50, "about 5%% of %d motivated gossip meetings invent a story (%d)" % [n, lies])
+
+
+## R1 (Expansion 20; X19-MISINFO "proven false corrects the judgment it caused; consequences by intent, harm, repetition"): a lie
+## shown false is published as the catalog's `false_accusation`, the liar's own deed, judged by the catalog's rules.
+func _refutations(j: JudgmentStore) -> Array:
+	var out := []
+	for fid in j.facts:
+		if j.fact(int(fid)).type == "false_accusation":
+			out.append(int(fid))
+	out.sort()
+	return out
+
+
+func _the_lie(j: JudgmentStore) -> int:
+	for fid in j.facts:
+		if j.is_lie(int(fid)):
+			return int(fid)
+	return -1
+
+
+func test_refutation_fact() -> void:
+	var jg := lie_world()
+	jg.meet(LIAR, LISTENER)
+	var gl := _the_lie(jg)
+	check(_refutations(jg).is_empty(), "R1: no false accusation is a fact before anyone shows the story false")
+	var tr0 := jg.trust_of(LISTENER, LIAR)
+	var g0 := jg.trust_of(GUARD, LIAR)
+	jg.meet(LISTENER, GUARD)
+	var rfs := _refutations(jg)
+	check(rfs.size() == 1, "R1: the guard showing it false publishes one false_accusation fact (%d)" % rfs.size())
+	var rf: int = rfs[0] if not rfs.is_empty() else -1
+	var f := jg.fact(rf) if rf > 0 else {}
+	check(not f.is_empty() and f.actors.size() == 1 and int(f.actors[0][0]) == LIAR and f.victims == [SUBJ] and f.tags == ["refutes", gl],
+		"R1: its actor is the liar, its victim the one the lie accused, tagged as refuting the lie (%s)" % str(f))
+	check(jg.fact(gl).tags.size() == 3 and int(jg.fact(gl).tags[2]) == rf and jg.is_lie(gl) and jg.liar_of(gl) == LIAR, "R1: the lie keeps its tags and notes its refutation")
+	check(jg.belief(LISTENER, rf).src == "witnessed" and jg.belief(GUARD, rf).src == "witnessed", "R1: both at the meeting take it in firsthand")
+	check(jg.contribution(GUARD, rf, LIAR)[1] > 0 and jg.contribution(LISTENER, rf, LIAR)[1] > 0 and jg.bad(GUARD, LIAR) > 0,
+		"R1: each judges the liar BAD for it, by the catalog's interpretation (guard %s, listener %s)" % [str(jg.contribution(GUARD, rf, LIAR)), str(jg.contribution(LISTENER, rf, LIAR))])
+	var sev := int(JudgmentStore.default_cfg().events.false_accusation.severity)
+	check(jg.contribution(GUARD, rf, LIAR)[1] == JudgmentMath.scale(sev, int(cfg().interpret.bystander)) and jg.contribution(GUARD, rf, LIAR)[0] == 0,
+		"R1: the guard, no tie to the accused, reads it as a bystander: severity x bystander (%d)" % jg.contribution(GUARD, rf, LIAR)[1])
+	check(jg.trust_of(LISTENER, LIAR) == tr0 - 15000 and jg.trust_of(GUARD, LIAR) == g0 - 15000, "R1: trust still falls by the approved 15 at the meeting, not the catalog's 20 on top")
+	# word of the false charge travels: a third person who believed the lie drops it when told it was shown false
+	var j3 := lie_world()
+	j3.meet(LIAR, LISTENER)
+	j3.meet(LIAR, 21)
+	var l3 := _the_lie(j3)
+	check(not j3.belief(21, l3).is_empty() and j3.contribution(21, l3, SUBJ)[1] > 0, "R1: a third villager heard the lie from the liar and thinks the worse of the accused")
+	j3.meet(LISTENER, GUARD)
+	var bad21 := j3.bad(21, SUBJ)
+	j3.trust_add(21, LIAR, 50000)                            # some trust to lose (a stranger's starts at 0)
+	var t21 := j3.trust_of(21, LIAR)
+	j3.meet(LISTENER, 21)
+	var r3 := _refutations(j3)
+	check(r3.size() == 1 and not j3.belief(21, r3[0]).is_empty() and j3.belief(21, r3[0]).src == "told", "R1: the listener tells them the lie was shown false")
+	check(j3.belief(21, l3).is_empty() and j3.contribution(21, l3, SUBJ) == [0, 0] and j3.bad(21, SUBJ) < bad21,
+		"R1: ...and they drop the lie and what it made them think of the accused (bad %d to %d)" % [bad21, j3.bad(21, SUBJ)])
+	var conf21 := int(j3.belief(21, r3[0]).conf) if r3.size() == 1 else 0
+	check(j3.bad(21, LIAR) > 0 and j3.trust_of(21, LIAR) == t21 + JudgmentMath.mul_div(-20000, conf21, 1000), "R1: they judge the liar by it, and trust them less by the catalog's rule for a told deed: 20 x their confidence (%d to %d)" % [t21, j3.trust_of(21, LIAR)])
+	# one lie, one refutation: kin of the accused showing the same lie false again judges the same fact, no second one
+	var j4 := lie_world()
+	j4.meet(LIAR, LISTENER)
+	j4.meet(LIAR, 21)
+	j4.meet(LISTENER, GUARD)
+	j4.meet(21, KIN)
+	var r4 := _refutations(j4)
+	check(r4.size() == 1 and not j4.belief(KIN, r4[0]).is_empty() and j4.belief(21, _the_lie(j4)).is_empty(), "R1: a second refutation of the same lie reuses its fact (%d facts)" % r4.size())
+	# repetition: a second lie shown false a year later is a second deed against the liar
+	var bad1 := j4.bad(GUARD, LIAR)
+	for d in 8:
+		j4.advance_day(j4.day + 1)
+	j4.set_ledger(LIAR, SUBJ, 0, 30000)
+	var tl := j4.publish("theft", [SUBJ], [X], [], 5)
+	j4.observe_all(tl, [LIAR])
+	j4.meet(LIAR, 31)
+	j4.meet(31, GUARD)
+	check(_refutations(j4).size() == 2 and j4.bad(GUARD, LIAR) > bad1, "R1: a second lie shown false is a second false accusation the guard holds against the liar (bad %d to %d)" % [bad1, j4.bad(GUARD, LIAR)])
+	# deterministic and saved
+	var jb := lie_world()
+	jb.meet(LIAR, LISTENER)
+	jb.meet(LISTENER, GUARD)
+	check(jb.state_hash() == jg.state_hash(), "R1: deterministic: the same meetings give the same refutation")
+	var copy := store({}, JudgmentSocial.new().set_guard(GUARD).set_kin(SUBJ, KIN).set_regard(LISTENER, LIAR, 80).set_regard(GUARD, LIAR, 80))
+	copy.load_dict(JSON.parse_string(JSON.stringify(jg.to_dict())))
+	check(copy.state_hash() == jg.state_hash() and copy.fact(rf).tags == ["refutes", gl] and int(copy.fact(gl).tags[2]) == rf, "R1: the refutation and its link to the lie survive a save")
 
 
 # ---------------------------------------------------------------- X19-STORY-LIFE -------------------
