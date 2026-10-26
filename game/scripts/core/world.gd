@@ -538,6 +538,8 @@ func _new_day() -> void:
 			stat("burned_log")
 	if cold > 0:
 		note("%d households had no firewood last night." % cold)
+	if economy != null:
+		economy.dawn(d)                # EXPANSION 20 LE-01: the model's expiries and refreshes (records only; null while disabled)
 
 
 func _update_npc(n: NPC, dt: float) -> void:
@@ -1317,6 +1319,8 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 		recorder.trade_end(rec_trade, buyer, seller, id)
 	if trade_hook.is_valid():
 		trade_hook.call(buyer, seller, id, qty, total)
+	if economy != null:
+		economy.on_trade(buyer, seller, id, qty, total)     # EXPANSION 20 LE-01: observed only (an event, knowledge, needs marked); null while disabled
 	if relations:                      # X18 HOOK (X18-Q12-POST): the pair become commercial contacts (a record only)
 		relations.note_trade(id_of_party(buyer), id_of_party(seller), day())     # MP C3: a guest trades as itself
 	if business:

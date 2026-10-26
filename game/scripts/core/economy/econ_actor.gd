@@ -22,8 +22,18 @@ extends RefCounted
 ##   chapel     coins Chapel.coins, goods Chapel.store
 ##   stall/shop coins the till, no goods
 ##   region     coins SettlementParty.purse(), goods held_items(); a dissolved household or unknown holder does not exist
-## Consumers: EconReservations (what an owner holds, whether it is alive), EconEvents (actor refs), and economy_sim.gd
-## diagnostics later.
+## Consumers: EconReservations (what an owner holds, whether it is alive), EconEvents (actor refs), EconNeeds, EconOffers,
+## EconKnowledge and EconContractLinks (LE-01 model), and economy_sim.gd diagnostics.
+##
+## LE-01 model additions (read-only, uncached): "player:<pid>" (a guest player, MP C3) resolves through World.player_of_ref,
+## and "player" is the host (World.player_of_ref), not whoever is acting; profile(ref) {ref, kind, name, alive, household,
+## controller, location}; controller(ref) for a till (the stall's or the building's holder, World.holder_of, the ECON-P3
+## till owner); household_of(ref). A business is still a till plus its holder: OWNER DECISION OD-LE-04 / OD-LE-07
+## (BUSINESS_IDENTITY below) decides whether it becomes an actor of its own.
+
+## OWNER DECISION OD-LE-04 / OD-LE-07: business founding, ownership, inheritance, and business/household account separation
+## beyond ECON-P3's tills. Placeholder: no "business:" ref exists; nothing reads this but the tests and the LE-01 note.
+const BUSINESS_IDENTITY := "OWNER DECISION OD-LE-04/OD-LE-07: undecided; a business is its till plus its holder"
 
 var w: World
 var reservations: EconReservations = null       # set by EconomyFoundation; the source of reserved()/available()
@@ -36,6 +46,8 @@ func _init(world: World) -> void:
 func kind(ref: String) -> String:
 	if ref == World.PLAYER or ref == World.MANOR or ref == "chapel":
 		return ref
+	if ref.begins_with("player:"):
+		return World.PLAYER
 	for k in ["npc", "hh", "stall", "shop", "region"]:
 		if ref.begins_with(k + ":"):
 			return k
@@ -44,7 +56,9 @@ func kind(ref: String) -> String:
 
 func exists(ref: String) -> bool:
 	match kind(ref):
-		"player", "manor":
+		"player":
+			return _player(ref) != null
+		"manor":
 			return true
 		"chapel":
 			return w.chapel != null
@@ -81,7 +95,7 @@ func coins(ref: String) -> int:
 		"npc":
 			return w.npc(_num(ref)).coins
 		"player":
-			return w.player.coins
+			return _player(ref).coins
 		"manor":
 			return w.treasury
 		"chapel":
@@ -105,7 +119,7 @@ func count(ref: String, item: String) -> int:
 		"hh":
 			return 0 if not alive(ref) else (w.households[_num(ref)].pantry as Inventory).count(item)
 		"player":
-			return w.player.inv.count(item) + w.player.chest.count(item)
+			return _player(ref).inv.count(item) + _player(ref).chest.count(item)
 		"manor":
 			return w.granary.count(item)
 		"chapel":
@@ -127,7 +141,7 @@ func goods(ref: String) -> Dictionary:
 		"hh":
 			srcs = [w.households[_num(ref)].pantry.items] if alive(ref) else []
 		"player":
-			srcs = [w.player.inv.items, w.player.chest.items]
+			srcs = [_player(ref).inv.items, _player(ref).chest.items]
 		"manor":
 			srcs = [w.granary.items]
 		"chapel":
@@ -155,6 +169,74 @@ func name_of(ref: String) -> String:
 	if kind(ref) == "chapel":
 		return "the chapel"
 	return w.ref_name(ref) if kind(ref) in ["npc", "hh", "player", "manor"] else ref
+
+
+## LE-01: the household ref ("hh:<n>") a villager belongs to, the household itself, or "" (players, the manor, tills).
+func household_of(ref: String) -> String:
+	match kind(ref):
+		"hh":
+			return ref
+		"npc":
+			var n: NPC = w.npc(_num(ref))
+			return World.hh_ref(n.household) if n != null and n.household >= 0 and n.household < w.households.size() else ""
+	return ""
+
+
+## LE-01: who controls a till (a stall's or a shop building's holder: the tenant, else the owner; ECON-P3), or the actor
+## itself for every other kind. "" when the ref does not exist.
+func controller(ref: String) -> String:
+	if not exists(ref):
+		return ""
+	match kind(ref):
+		"stall":
+			return w.holder_of(_stall(ref))
+		"shop":
+			return w.holder_of(w.buildings.get(ref.trim_prefix("shop:"), {}))
+	return ref
+
+
+## LE-01: where the actor is found, as an id the world already uses (a home or workplace building, a stall id, a shop's
+## building, a settlement id); "" when it has none. A place, not a position: travel is LE-02's question.
+func location(ref: String) -> String:
+	if not exists(ref):
+		return ""
+	match kind(ref):
+		"npc":
+			var n: NPC = w.npc(_num(ref))
+			return n.workplace if n.workplace != "" else n.home
+		"hh":
+			return str(w.households[_num(ref)].get("home", ""))
+		"player":
+			return _player(ref).home
+		"stall":
+			return "stall:" + ref.trim_prefix("stall:")
+		"shop":
+			return ref.trim_prefix("shop:")
+		"region":
+			return ref.trim_prefix("region:").get_slice("/", 0)
+	return ""
+
+
+## LE-01: one actor's identity as the model sees it, read now (never cached): {ref, kind, name, alive, household,
+## controller, location}. {} for an unknown ref.
+func profile(ref: String) -> Dictionary:
+	if not exists(ref):
+		return {}
+	return {"ref": ref, "kind": kind(ref), "name": name_of(ref), "alive": alive(ref), "household": household_of(ref),
+		"controller": controller(ref), "location": location(ref)}
+
+
+## The person the shared Expansion 19 judgment model judges for this actor (JudgmentLive.person_of_ref: a villager, a player,
+## a household's responsible adult), a till answering to its controller; -1 when nobody is judged (the manor, the chapel,
+## a settlement, an unknown ref). A ref mapping only: the economy keeps no opinion, trust or reputation of its own (owner
+## rule 2026-10-26, carryover directive s.7) and nothing in LE-01 calls this to decide.
+func judged_person(ref: String) -> int:
+	var c := controller(ref)
+	return JudgmentLive.person_of_ref(w, c) if c != "" and kind(c) in ["npc", "player", "hh"] else -1
+
+
+func _player(ref: String) -> PlayerState:
+	return w.player_of_ref(ref)
 
 
 func _num(ref: String) -> int:
