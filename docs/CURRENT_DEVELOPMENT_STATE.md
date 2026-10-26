@@ -42,6 +42,7 @@ workflow on the release commit. Owner amendment 2026-10-26 (`docs/directives/202
   (an audit worker, read-only, against `wip/expansion20`); the matrix will be committed in docs/expansion20/ as B19_RECOVERY_MATRIX.md
   and kept current. Then integration in the owner's order (foundations, judgment, misinformation and memory, diagnostics, economy
   interaction), incremental, on `wip/expansion20`. LE-01 continues only where independent of judgment (owner section 7).
+- Recovery in progress: worker G on `wip/x20-r1r3` (batch R1 cleanups, then R3 recorder D5/D4: REC-19, REC-STORE, FAM-SAC-01's gap); worker H on `wip/x20-msg` (GP-MESSAGE-FOOTPRINT). Matrix committed: docs/expansion20/B19_RECOVERY_MATRIX.md.
 - Owner decisions prepared: `docs/expansion20/LE_OWNER_DECISIONS.md` (14 Living Economy decisions, awaiting the owner).
 
 ## Expansion 20 open-items reconciliation (owner, 2026-10-24, record only)

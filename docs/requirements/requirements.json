@@ -24158,7 +24158,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -24172,6 +24172,11 @@
      "date": "2026-10-26",
      "change": "parent: None -> X20-OPEN-ITEMS",
      "why": "owner playtest report on the X20-B2 screenshots"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: worker H (screen messages); branch: wip/x20-msg",
+     "why": "Build 19 recovery batches R1 and R3 / owner screen report"
     }
    ],
    "related": [
@@ -24179,7 +24184,9 @@
     "GP-INTERACTION-PROMPT-LIFECYCLE",
     "GP-ANDROID-HUD-SCALE",
     "GP-UI-COMPACT"
-   ]
+   ],
+   "assigned_worker": "worker H (screen messages)",
+   "branch": "wip/x20-msg"
   },
   {
    "id": "GP-MINE-WOOD-FRAME",
@@ -43716,10 +43723,15 @@
      "date": "2026-10-26",
      "change": "note",
      "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition implement (audit): recorder stage D5 (judgment publish, learn, tell, trust, every choice with alternatives and factors) and D4 relations (batch R3)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: IN DEVELOPMENT -> IN DEVELOPMENT; assigned_worker: worker G (recovery R1, R3); branch: wip/x20-r1r3",
+     "why": "Build 19 recovery batches R1 and R3 / owner screen report"
     }
    ],
-   "assigned_worker": "recorder worker (Sonnet subagent)",
-   "branch": "wip/recorder",
+   "assigned_worker": "worker G (recovery R1, R3)",
+   "branch": "wip/x20-r1r3",
    "next_action": "combined gate on 2d5d49c; then into the Build 19 integration branch with Expansion 19",
    "tests": "recorder_test 62, world_test 339, start_test 506 steps, conservation_test 8, judgment_live_test 142; economy_sim 10 days seed 1 fingerprint identical with and without --record; sim_gate identical; recorder_test 160/0; recf1_test 23/0; world_test 339/0; identity 98/0; migration 93/0",
    "test_commit": "0b5287c",
@@ -43968,7 +43980,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -43992,13 +44004,20 @@
      "date": "2026-10-26",
      "change": "note",
      "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition implement (audit): judgment-weighted decisions recorded in full (batch R3)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: worker G (recovery R1, R3); branch: wip/x20-r1r3",
+     "why": "Build 19 recovery batches R1 and R3 / owner screen report"
     }
    ],
    "related": [
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "judgment-weighted decisions recorded in full (batch R3)",
-   "test_commit": "0b5287c"
+   "test_commit": "0b5287c",
+   "assigned_worker": "worker G (recovery R1, R3)",
+   "branch": "wip/x20-r1r3"
   },
   {
    "id": "RECON-01",

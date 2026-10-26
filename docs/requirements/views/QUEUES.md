@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (33)
+## Workers and task branches (35)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -18,6 +18,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-FARMER-TENDING | 20 | IMPLEMENTED ON TASK BRANCH | worker C (family and farming) | wip/b22-family |
 | GP-LOCKPICK | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | GP-MARKET-SPACING | 20 | IMPLEMENTED ON TASK BRANCH | worker A (market) | wip/b22-market |
+| GP-MESSAGE-FOOTPRINT | 20 | IN DEVELOPMENT | worker H (screen messages) | wip/x20-msg |
 | GP-MINE-WOOD-FRAME | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | GP-QTY-PICKER-CONTROLLER | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | GP-SKILLS-RT | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
@@ -33,8 +34,9 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
-| REC-19 | 20 | IN DEVELOPMENT | recorder worker (Sonnet subagent) | wip/recorder |
+| REC-19 | 20 | IN DEVELOPMENT | worker G (recovery R1, R3) | wip/x20-r1r3 |
 | REC-DIAG | 20 | IN DEVELOPMENT | lead | wip/recorder (read-only runs) |
+| REC-STORE | 20 | IN DEVELOPMENT | worker G (recovery R1, R3) | wip/x20-r1r3 |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | WEAPON-CATALOG-01 | 20 | IMPLEMENTED ON TASK BRANCH | worker D (gear) | wip/b22-gear |
 | WEAPON-VISIBLE-01 | 20 | IMPLEMENTED ON TASK BRANCH | worker D (gear) | wip/b22-gear |
