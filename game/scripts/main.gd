@@ -106,6 +106,7 @@ var gather_mode := false
 var gather := {}               # what is being gathered: {def, ref, continuous, hp, tries, cycles}; {} for nothing
 var gather_warned = null       # the field whose owner the player was warned of: a second tap takes it anyway
 var gather_mark: Line2D        # the outline round the chosen resource
+var target_outline: TargetOutline   # GP-INTERACTABLE-OUTLINES: the glow round the usable things in reach
 var attack_mode := false       # toggled by the Attack button: a tap on a person or animal targets it
 var chase: Object = null       # the NPC or Animal marked with the sword: the player walks to it to strike
 var strike_pending := false    # strike the target once in reach (a tap on it, or arriving at it)
@@ -416,6 +417,46 @@ func _ready() -> void:
 					await get_tree().process_frame
 					print("recenter: player on screen at ", player_sprite.get_global_transform_with_canvas().origin, ", play centre ", ui.play_centre(),
 						", status ", ui.status_box.get_global_rect(), ", touch bar ", ui.touch_bar.get_global_rect() if ui.touch_bar.visible else Rect2())).call()
+			"outline", "outline_cycle", "outline_used", "outline_stall":
+				# GP-INTERACTABLE-OUTLINES / GP-ANDROID-USE-TALK-TARGETING / GP-INTERACTION-PROMPT-LIFECYCLE (screenshots only): the
+				# player at the smithy's anvil with a villager beside it: the things in reach glow, the anvil (Use's) brightly;
+				# outline_cycle: Next chose the following thing; outline_used: the anvil's window was opened and closed again
+				ui.toast.visible = false
+				ui.toast_t = 0.0
+				var an: String = world.stations_of("anvil")[0]
+				var ast: Dictionary = world.stations[an]
+				world.player.pos = Vector2(int(ast.use[0]) + 0.5, int(ast.use[1]) + 0.5)
+				player_sprite.face(Vector2(int(ast.at[0]) + 0.5, int(ast.at[1]) + 0.5) - world.player.pos)
+				var by: NPC = world.npcs.filter(func(n): return n.alive and n.role == "adult" and n.job != "smith")[0]
+				by.plan = [world.brain.work(600, "", {}, "idle")]
+				by.pos = world.player.pos + facing_vec() * 0.8
+				by.anim = "idle"
+				if shot_panel == "outline_stall":           # a market pitch's shelf, faced from its serving side, the merchant away
+					var pt: Dictionary = world.stalls["pitch2"]
+					pt["stock"] = {"wheat": 70, "egg": 6, "milk": 3, "bread": 4}
+					for n: NPC in world.npcs:
+						if n.job == "merchant":
+							n.pos = Vector2(10.5, 70.5)
+							n.plan = [world.brain.work(600, "", {}, "idle")]
+					world.player.pos = Vector2(int(pt.x), int(pt.y)) + Vector2(1.0, 1.7)
+					player_sprite.face(Vector2(0, -1))
+					by.pos = world.player.pos + Vector2(1.5, 0.3)
+				follow_at = _in_view(world.player.pos * T)
+				var rf := RoofFade.probe(world, world.player.pos, inside_hold)
+				inside_hold = rf.inside
+				roofs.follow(rf.inside, rf.inside_roof, rf.under, rf.under_roof, 5.0)
+				paused = true
+				_find_target()
+				if shot_panel == "outline_cycle":
+					cycle_target(1)
+				elif shot_panel == "outline_used":
+					interact()
+					ui.hide_all()
+				(func():
+					await get_tree().process_frame
+					await get_tree().process_frame
+					print("outline: target ", target.get("label", ""), "; options ", target_options.map(func(t): return str(t.kind)),
+						"; drawn ", target_outline.shown if target_outline != null else [], "; prompt: ", ui.prompt_text.replace("\n", " | "))).call()
 			"hud_low", "prompt":
 				# B8-013/019: a low-food, low-health HUD, with the contextual prompt and a hint toast
 				world.player.hunger = 12.0
@@ -1353,6 +1394,7 @@ func _clear_world() -> void:
 	gather = {}
 	gather_warned = null
 	gather_mark = null              # its node goes with the scene
+	target_outline = null           # ... and so does the outlines' node
 	if gather_mode:
 		gather_mode = false
 		ui.set_gather_mode(false)
@@ -1815,6 +1857,7 @@ func _process(delta: float) -> void:
 	_sync_sprites()
 	_sync_levels(delta)
 	_sync_gather_mark()
+	_sync_outlines()
 	ui.update_hud()
 
 
@@ -2831,9 +2874,9 @@ func _find_target() -> void:
 			for sp in world.interiors[world.place_of(p.pos)].spots:
 				var at := Vector2(int(sp.at[0]), int(sp.at[1])) + Vector2(0.5, 0.5)
 				if at.distance_to(probe) < 0.9 and sp.kind == "bed":
-					here.append({"kind": "rest", "label": "Your bed: rest until morning"})
+					here.append({"kind": "rest", "label": "Your bed: rest until morning", "cell": Vector2i(int(sp.at[0]), int(sp.at[1]))})
 				elif at.distance_to(probe) < 0.9 and sp.kind == "chest":
-					here.append({"kind": "home", "label": "Your chest: store things, rest"})
+					here.append({"kind": "home", "label": "Your chest: store things, rest", "cell": Vector2i(int(sp.at[0]), int(sp.at[1]))})
 	# PL2-002: other chests in the building the player stands in (the family chest is handled above)
 	var inside := world.place_of(p.pos)
 	if inside != "" and inside != p.home:
@@ -2935,7 +2978,7 @@ func _target_key(t: Dictionary) -> String:
 func _next_hint(next: Dictionary, at: int) -> String:
 	var l: String = next.get("label", "")
 	if scheme == "touch":                  # GP-ANDROID-USE-TALK-TARGETING: the prompt's Next button chooses it
-		return "Next: %s (%d of %d)" % [l.get_slice(":", 0).get_slice(" (", 0), at + 1, target_options.size()]
+		return "Next: %s (%d of %d)" % [l.get_slice(":", 0).get_slice(" (", 0), (at + 1) % target_options.size() + 1, target_options.size()]
 	var keys := {"kbm": "Q / Tab", "gamepad": "D-pad left / right"}
 	return "%s: next - %s (%d of %d)" % [keys.get(scheme, "Q / Tab"), l.get_slice(":", 0).get_slice(" (", 0), at + 1, target_options.size()]
 
@@ -6293,6 +6336,88 @@ func _gather_target(d: Dictionary, ref) -> Dictionary:
 		"plant":
 			return {"kind": "plant", "plant": ref, "label": ""}
 	return {}
+
+
+## GP-INTERACTABLE-OUTLINES (owner, 2026-10-24): a faint glow round each usable thing on offer here (target_options: in
+## reach, by the existing rules) and a bright one round the one Use would take (target). Only things the player may use now:
+## not a theft, not a refusal (a station someone is using), not a person or an animal (the prompt names them). None while a
+## window is open, while placing a building or gathering, or below the surface.
+func _sync_outlines() -> void:
+	if view == null or world == null:
+		return
+	if target_outline == null:
+		target_outline = TargetOutline.new()
+		add_child(target_outline)
+		move_child(target_outline, actors.get_index())      # over the floor, under the people (and the roofs)
+		target_outline.setup(view)
+	var items: Array = []
+	if not ui.modal() and placing.is_empty() and gather.is_empty() and world.player_level == 0 and world.player.alive:
+		var tk := _target_key(target)
+		for t: Dictionary in target_options:
+			var shape = outline_shape(t)
+			if not shape.is_empty():
+				var item := [shape, _target_key(t) == tk]
+				if item[1]:
+					items.push_front(item)               # the chosen one is always among those drawn
+				else:
+					items.append(item)
+	target_outline.show_items(items)
+
+
+## What a usable thing's outline follows (TargetOutline.show_items): the sprite of a market shelf drawn over its stall, else
+## the map cells it is drawn on ([] when it has none to draw, or may not be used now).
+func outline_shape(t: Dictionary):
+	if t.is_empty() or t.get("theft", false):
+		return []
+	var post := ""
+	if str(t.get("kind", "")) == "stall":
+		post = str(t.get("id", ""))
+	elif str(t.get("kind", "")) == "desk":
+		post = str(t.desk.get("post", ""))
+	if post != "" and stall_display_view != null and stall_display_view.shelves.has(post):
+		var sh: StallShelf = stall_display_view.shelves[post]
+		return {"tex": StallShelf.texture_of(sh.look), "at": sh.position + Vector2(-StallShelf.HALF_W, -StallShelf.H + StallShelf.DROP)}
+	return outline_cells(t)
+
+
+## The map cells a usable thing is drawn on ([] when it has none to draw, or may not be used now).
+func outline_cells(t: Dictionary) -> Array:
+	if t.is_empty() or t.get("theft", false):
+		return []
+	var cell := func(v) -> Vector2i:
+		if v is Vector2i:
+			return v
+		if v is Vector2:
+			return Vector2i(floori(v.x), floori(v.y))
+		return Vector2i(int(v[0]), int(v[1]))
+	match str(t.get("kind", "")):
+		"station":
+			var id := str(t.get("id", ""))
+			if world.stations.has(id):
+				var st: Dictionary = world.stations[id]
+				return [cell.call(st.at)] if st.has("at") and world.station_refusal(id) == "" else []
+			return [cell.call(t.spot.at)] if t.has("spot") else []
+		"sit":
+			return [cell.call(t.spot.at)] if t.has("spot") else []
+		"container":
+			return [Vector2i(int(t.c.x), int(t.c.y))]
+		"chest":
+			var u: Dictionary = world.chests.unit(str(t.id))
+			if u.has("c"):
+				return [Vector2i(int(u.c.x), int(u.c.y))]
+			return [cell.call(u.at)] if u.has("at") and not u.has("cart") else []
+		"desk":
+			return [cell.call(t.desk.at)] if t.desk.has("at") else []
+		"stall":
+			var s: Dictionary = world.stalls.get(str(t.id), {})
+			return [Vector2i(int(s.x), int(s.y)), Vector2i(int(s.x) + 1, int(s.y))] if s.has("x") else []
+		"deposit":
+			return [Vector2i(int(t.dep.x), int(t.dep.y))]
+		"plant":
+			return [Vector2i(int(t.plant.x), int(t.plant.y))]
+		"home", "rest":
+			return [t.cell] if t.has("cell") else []
+	return []
 
 
 ## The outline round the chosen resource (a field: its edge).
