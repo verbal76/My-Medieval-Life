@@ -2276,8 +2276,10 @@ func _actions_tests() -> void:     # a coroutine: a few steps wait for the next 
 	check(main.target.kind == first, "the D-pad goes back")
 	main._unhandled_input(_key(KEY_TAB))
 	check(main.target.kind != first and main.tab_cycled == Engine.get_process_frames(), "Tab chooses the next one and does not open the Pack with it")
-	if main.target.kind != "station":
+	var steps := 0                         # GP-ANDROID-USE-TALK-TARGETING: the station leads now, so cycle round to it (was: one step)
+	while main.target.kind != "station" and steps < main.target_options.size():
 		main.cycle_target(1)
+		steps += 1
 	check(main.target.kind == "station", "the station can be chosen")
 	main.interact()
 	check(ui.is_open("craft"), "and used (A / E): its window opens with the person standing beside it")
