@@ -309,6 +309,31 @@ func _ready() -> void:
 										found = true
 										break
 				print("steps shot: found=", found)
+			"mine_frame", "mine_exit":
+				# GP-MINE-WOOD-FRAME: below in the gallery, a timber support on the floor cell under a seam in the wall (the
+				# owner's screenshot), and another in the open floor; mine_exit: the player at the way out
+				var u := world.underground
+				var e0: Dictionary = u.portals[0].ends[0]
+				var e1: Dictionary = u.portals[0].ends[1]
+				var lm := u.map_at(int(e1.level), e1.stand)
+				world.player.pos = Vector2(e0.stand) + Vector2(0.5, 0.5)
+				world.player_through(Vector2(e1.stand - e0.stand))
+				if shot_panel == "mine_frame":
+					var under := Vector2i(-1, -1)
+					var open := Vector2i(-1, -1)
+					for f in lm.floor_cells():
+						if under.x < 0 and not world.deposit_at(f + Vector2i(0, -1), lm.level).is_empty():
+							under = f
+						elif open.x < 0 and VillageMap.SIDES.all(func(d): return not lm.is_solid(f + d)):
+							open = f
+					for c in [under, open]:
+						if c.x >= 0:
+							world.mine_works.supports.append([lm.level, c.x, c.y, 1000])
+					world.player.pos = Vector2(under) + Vector2(1.5, 1.5)
+					print("mine_frame: support under a seam at ", under, ", in the open at ", open)
+					world.mine_works.changed.emit(lm.level, under)
+				camera.zoom = Vector2(5, 5) * view_scale
+				follow_at = _in_view(world.player.pos * T)
 			"mine_works", "cave":
 				_works_shot(shot_panel == "cave")       # MIN-F: the gallery extended with supports, track and a minecart; MIN-H: the cave
 			"collapse", "shaft", "backfill":

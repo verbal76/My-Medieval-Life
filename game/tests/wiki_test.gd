@@ -119,6 +119,8 @@ func _data_tests() -> void:
 				no_tools.append("%s/%s" % [rid, k])
 	check(no_tools.is_empty() and not Wiki.recipe_tool_kinds("dress_stone").is_empty(), "every recipe with a tool shows it on its page, its product's page and its chain line, linked to every item that counts %s" % [no_tools])
 	check(w.pages["sys:appearance"].text.contains("leather armour as a leather jerkin") and not w.pages.has("todo:looks_more"), "ARMOR-01: every armour shows on your figure, leather included (no longer a Not yet page)")
+	var mu: String = w.pages["sys:mining_underground"].text
+	check(mu.contains("daylight falling in") and mu.contains("a beam laid across the passage") and mu.contains("never covers a seam"), "GP-MINE-WOOD-FRAME: the underground page says how the way out and a support look")
 	var th: String = w.pages["sys:theft"].text
 	check(th.contains("red ring") and th.contains("pursued by the guards") and th.contains("never shows where a guard is") and "sys:theft" in w.search("hunted") and "sys:theft" in w.search("chased"),
 		"GP-WANTED-INDICATOR: the theft and guards page explains the red ring and the note")

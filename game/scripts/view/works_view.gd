@@ -8,7 +8,7 @@ extends Node2D
 ## tiles by Main; Puny Dungeon's log beam and poles are "planned", not imported): the rails are drawn here as a few
 ## procedural pixels at the 16 px tile, as PitView's stakes and mounds are. A track cell shows wooden sleepers across
 ## its way and two iron rails, joined to the track beside it (four ways); a lone section lies east to west. A support is
-## a timber set: two posts and a cap beam across the top of its cell.
+## a timber set seen from above: a cap beam across the passage, its post heads at the ends, inside its own cell.
 
 const WOOD := Color(0.42, 0.28, 0.15)
 const WOOD_DARK := Color(0.25, 0.16, 0.08)
@@ -105,9 +105,9 @@ func _draw_ladder_foot(sh: Dictionary) -> void:
 	var c := Vector2i(int(sh.x), int(sh.y))
 	var o := Vector2(c) * tile
 	draw_rect(Rect2(o + Vector2(2, 2), Vector2(12, 12)), Color(0, 0, 0, 0.25))
-	for x in [4, 10]:
-		draw_rect(Rect2(o + Vector2(x, -6), Vector2(2, 20)), WOOD)
-	for y in [-3, 1, 5, 9]:
+	for x in [4, 10]:                                  # GP-MINE-WOOD-FRAME: inside its cell (it rose 6 px over the wall above)
+		draw_rect(Rect2(o + Vector2(x, 0), Vector2(2, 15)), WOOD)
+	for y in [2, 6, 10]:
 		draw_rect(Rect2(o + Vector2(4, y), Vector2(8, 1)), WOOD_LIGHT)
 
 
@@ -135,24 +135,55 @@ func _draw_track(c: Vector2i) -> void:
 			draw_rect(Rect2(o + Vector2(x + 1, 0), Vector2(1, 16)), IRON_DARK)
 
 
+## GP-MINE-WOOD-FRAME (owner playtest 2026-10-26: "What is that wood? It's blocking a deposit, if it's supports that's a bad
+## representation. We need it better represented in lines open spaces"): a timber set seen from above, as the floor is, lying
+## wholly inside its own floor cell: a cap beam laid across the passage as a line, with the two post heads at its ends against
+## the walls. It used to stand up 6 px into the cell above, posts and cap drawn as a doorway frame, so under a seam in the
+## wall its beam cut through the deposit and the gap between its posts read as a way through. Nothing of it is drawn
+## outside its cell, so it never covers a seam beside it or reads as an opening. Greyer and sagging as it weakens.
 func _draw_support(c: Vector2i) -> void:
 	var cond := clampf(float(works.support_condition(level, c)) / float(MineWorks.cfg().stability.full), 0.0, 1.0)
 	var grey := Color(0.36, 0.34, 0.32)
-	var wood := WOOD.lerp(grey, 1.0 - cond)            # MIN-F2: greyer as it weakens
-	var light := WOOD_LIGHT.lerp(grey, 1.0 - cond)
-	var o := Vector2(c) * tile + Vector2(0, -6)        # it stands up: drawn a little above its cell
-	draw_rect(Rect2(o + Vector2(3, 4), Vector2(10, 18)), Color(0, 0, 0, 0.28))     # the shadow under the set
-	for x in [0, 12]:                                  # the two posts, full height
-		draw_rect(Rect2(o + Vector2(x, 2), Vector2(4, 20)), WOOD_DARK)
-		draw_rect(Rect2(o + Vector2(x, 2), Vector2(3, 19)), wood)
-		draw_rect(Rect2(o + Vector2(x, 2), Vector2(1, 19)), light)
-		draw_rect(Rect2(o + Vector2(x + 1, 8), Vector2(1, 3)), WOOD_DARK)          # grain
-	var sag := 1.0 if cond < 0.5 else 0.0               # a weak cap sags in the middle and cracks
-	draw_rect(Rect2(o + Vector2(-1, 0), Vector2(18, 5)), WOOD_DARK)    # the cap beam across the posts
-	draw_rect(Rect2(o + Vector2(-1, 0), Vector2(18, 4)), wood)
-	draw_rect(Rect2(o + Vector2(-1, 0), Vector2(18, 1)), light)
-	if sag > 0.0:
-		draw_rect(Rect2(o + Vector2(5, 4), Vector2(6, 1 + sag)), WOOD_DARK)
-		draw_rect(Rect2(o + Vector2(7, 0), Vector2(1, 4)), Color(0.08, 0.05, 0.03))
-	draw_rect(Rect2(o + Vector2(3, 5), Vector2(2, 2)), WOOD_DARK)       # the wedges
-	draw_rect(Rect2(o + Vector2(11, 5), Vector2(2, 2)), WOOD_DARK)
+	var cols := {"wood": WOOD.lerp(grey, 1.0 - cond), "light": WOOD_LIGHT.lerp(grey, 1.0 - cond), "dark": WOOD_DARK,   # MIN-F2: greyer as it weakens
+		"shadow": Color(0, 0, 0, 0.25), "crack": Color(0.08, 0.05, 0.03)}
+	for part in support_parts(Vector2(c) * tile, _support_runs_ns(c), 1.0 if cond < 0.5 else 0.0):
+		draw_rect(part[0], cols[part[1]])
+
+
+## The rectangles of a support drawn at `o` (its cell's corner, pixels): [Rect2, colour key], all inside the 16 px cell
+## (mine_frame_test checks it). `ns`: the beam lies north-south; `sag` 1 for a weak support (the beam bowed, cracked).
+static func support_parts(o: Vector2, ns: bool, sag: float) -> Array:
+	var out := []
+	if ns:
+		out.append([Rect2(o + Vector2(7, 1), Vector2(3, 14)), "shadow"])                  # its shadow on the floor
+		out.append([Rect2(o + Vector2(6 + sag, 1), Vector2(4, 14)), "dark"])              # the cap beam, a line across
+		out.append([Rect2(o + Vector2(6 + sag, 1), Vector2(3, 14)), "wood"])
+		out.append([Rect2(o + Vector2(6 + sag, 1), Vector2(1, 14)), "light"])
+		for y in [0, 12]:                                                                  # the post heads at its ends
+			out.append([Rect2(o + Vector2(5, y), Vector2(6, 4)), "dark"])
+			out.append([Rect2(o + Vector2(6, y + 1), Vector2(4, 2)), "wood"])
+		if sag > 0.0:
+			out.append([Rect2(o + Vector2(7, 6), Vector2(1, 4)), "crack"])
+	else:
+		out.append([Rect2(o + Vector2(1, 7), Vector2(14, 3)), "shadow"])
+		out.append([Rect2(o + Vector2(1, 6 + sag), Vector2(14, 4)), "dark"])
+		out.append([Rect2(o + Vector2(1, 6 + sag), Vector2(14, 3)), "wood"])
+		out.append([Rect2(o + Vector2(1, 6 + sag), Vector2(14, 1)), "light"])
+		for x in [0, 12]:
+			out.append([Rect2(o + Vector2(x, 5), Vector2(4, 6)), "dark"])
+			out.append([Rect2(o + Vector2(x + 1, 6), Vector2(2, 4)), "wood"])
+		if sag > 0.0:
+			out.append([Rect2(o + Vector2(6, 7), Vector2(4, 1)), "crack"])
+	return out
+
+
+## Whether the support's beam lies north-south: across a passage that runs east-west (rock or a seam north and south of
+## the cell, or more open floor east and west than north and south). Read from the level's map; presentation only.
+func _support_runs_ns(c: Vector2i) -> bool:
+	var lm: LevelMap = works.w.underground.map_at(level, c) if works.w != null and works.w.underground != null else null
+	if lm == null:
+		return false
+	var ns := int(lm.is_solid(c + Vector2i(0, -1))) + int(lm.is_solid(c + Vector2i(0, 1)))
+	var ew := int(lm.is_solid(c + Vector2i(-1, 0))) + int(lm.is_solid(c + Vector2i(1, 0)))
+	return ns > ew
+

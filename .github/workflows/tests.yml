@@ -129,6 +129,7 @@ jobs:
           $godot --headless --path game --script res://tests/pad_shortcuts_test.gd
           $godot --headless --path game --script res://tests/wanted_indicator_test.gd
           $godot --headless --path game --script res://tests/armour_worn_test.gd
+          $godot --headless --path game --script res://tests/mine_frame_test.gd
           # GP-STALL-PRICE-ON-PUTUP (Build 21): the price chosen with the number when putting goods up; the workroom's verbs
           $godot --headless --path game --script res://tests/stall_putup_test.gd
           # GP-JOYSTICK, GP-INPUT-CONSIST (Build 21): the optional thumbstick walks by the same move actions as keys and pads
