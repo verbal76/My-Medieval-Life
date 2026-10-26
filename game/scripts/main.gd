@@ -315,6 +315,8 @@ func _ready() -> void:
 				_farm_shot(shot_panel)                  # PL2-015: a cleared and tilled field, growing crops, a pen with animals
 			"farm_plot_mixed":
 				_plot_shot()                            # VIS-CROP-01: a household's plot part sown, part only tilled
+			"tend_0", "tend_2", "tend_4", "tend_5", "tend_7", "tend_9":
+				_tend_shot(int(shot_panel.right(1)))    # GP-FARMER-TENDING: the farmers at k/10 of an hour's tending, drawn through their fields
 			"door", "door_deep":
 				_door_shot(shot_panel == "door_deep")   # VIS-DOOR-01: a villager stepping into a house's doorway
 			"open_pit", "open_pit_dug":
@@ -1768,6 +1770,15 @@ func _sync_sprites() -> void:
 		if _show_sleeper(n, s) or _show_sitter(n, s):
 			continue
 		s.stand()
+		# GP-FARMER-TENDING: field work drawn through the field (presentation only); a guest draws it as the host's snapshots say
+		var fw: Dictionary = (net.field_pose.get(n.id, {}) if guest_world else FieldWorkView.pose(world, n)) if n.alive else {}
+		if not fw.is_empty():
+			s.position = fw.pos * T
+			s.face(fw.facing)
+			if s.tool_item != fw.tool:
+				s.hold(fw.tool)
+			s.play(fw.anim)
+			continue
 		s.position = n.pos * T
 		s.face(n.facing)
 		var look: Array = world.brain.work_look(n) if n.anim == "work" else [n.anim, ""]
@@ -5690,6 +5701,32 @@ func _farm_shot(kind: String) -> void:
 	p.pos = Vector2(float(pl.x) + 4.5, float(pl.y) + float(pl.h) + 0.5)
 	var mid := (Vector2(float(pl.x), float(pl.y)) + Vector2(float(last.x), float(last.y))) / 2.0 + Vector2(4.5, 5.0)
 	follow_at = _in_view(mid * T)
+	camera.position = follow_at
+
+
+## GP-FARMER-TENDING (screenshots only): every manor farmer at `k` tenths of an hour's tending of their growing field (the watch step
+## NPCBrain._farmer gives them), standing where the simulation puts them; FieldWorkView draws them walking and working the field.
+func _tend_shot(k: int) -> void:
+	var first := {}
+	for n: NPC in world.npcs:
+		if not n.alive or n.job != "farmer":
+			continue
+		var f: Dictionary = world.brain._field(n.workplace)
+		if f.is_empty():
+			continue
+		world.set_field(f, "growing")
+		var watch: Dictionary = world.brain.work(60, "", {}, "idle")
+		watch["field"] = f.id
+		n.plan = [watch]
+		n.work_left = 60.0 * (1.0 - k / 10.0)
+		n.anim = "idle"
+		n.pos = Vector2(int(f.x) + 0.5, int(f.y) + int(f.h) + 0.5)
+		if first.is_empty():
+			first = f
+	if first.is_empty():
+		return
+	world.player.pos = Vector2(int(first.x) + int(first.w) / 2.0, int(first.y) + int(first.h) + 3.0)
+	follow_at = _in_view(Vector2(int(first.x) + int(first.w) / 2.0 + 4.0, int(first.y) + int(first.h) / 2.0) * T)
 	camera.position = follow_at
 
 

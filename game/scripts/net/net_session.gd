@@ -66,6 +66,7 @@ var my_pid := 0
 var version_sent := ""              # tests: send another version to see the refusal
 var avatars := {}                   # every other player: pid -> {pid, name, sprite, pos, dir, anim, alive}
 var npc_target := {}                # npc id -> the last position the host sent (the view eases toward it)
+var field_pose := {}                # GP-FARMER-TENDING: npc id -> {pos, anim, tool, facing}: how the host draws a villager at work on a field (FieldWorkView)
 var animal_target := {}             # Build 21: animal id -> the last position the host sent (the view eases toward it)
 var refusal := ""                   # the last refusal's code
 var replies := {}                   # request id -> the host's answer
@@ -480,6 +481,11 @@ func s_npcs(minutes: float, list: Array) -> void:
 		n.facing = Vector2(e[3], e[4])
 		n.anim = str(e[5])
 		n.alive = bool(e[6])
+		if e.size() >= 10:
+			var swing := float(e[9]) > 0.5
+			field_pose[n.id] = {"pos": Vector2(e[7], e[8]), "anim": "swing" if swing else "walk", "tool": FieldWorkView.TOOL if swing else "", "facing": n.facing}
+		else:
+			field_pose.erase(n.id)
 
 
 var _welcome_digest := {}
@@ -678,7 +684,11 @@ func _host_step(dt: float) -> void:
 			var list := []
 			for n: NPC in main.world.npcs:
 				if n.pos.distance_to(g.pos) <= NetProtocol.NPC_RANGE:
-					list.append([n.id, n.pos.x, n.pos.y, n.facing.x, n.facing.y, n.anim, n.alive])
+					var fw := FieldWorkView.pose(main.world, n)     # GP-FARMER-TENDING: a field worker's drawn place and tool come along
+					if fw.is_empty():
+						list.append([n.id, n.pos.x, n.pos.y, n.facing.x, n.facing.y, n.anim, n.alive])
+					else:
+						list.append([n.id, n.pos.x, n.pos.y, fw.facing.x, fw.facing.y, n.anim, n.alive, fw.pos.x, fw.pos.y, 1 if fw.anim == "swing" else 0])
 			for i in range(0, maxi(1, list.size()), NPCS_PER_PACKET):      # unreliable packets stay under the MTU
 				rpc_id(id, "s_npcs", main.world.minutes, list.slice(i, i + NPCS_PER_PACKET))
 		_n_animals += 1

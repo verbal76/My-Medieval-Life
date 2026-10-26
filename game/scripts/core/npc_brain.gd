@@ -1591,7 +1591,9 @@ func _farmer(n: NPC) -> bool:
 			# the crop grows by itself: the farmer keeps watch, without swinging a tool at nothing
 			# (Build 8 report: villagers swinging tools with no visible work)
 			n.doing = "watching the crop grow"
-			n.plan = [go(spot), work(60, "", {}, "idle")]
+			var watch := work(60, "", {}, "idle")
+			watch["field"] = f.id                  # GP-FARMER-TENDING: drawn walking the field, tending it (FieldWorkView); no act, nothing changes
+			n.plan = [go(spot), watch]
 	return true
 
 
