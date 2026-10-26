@@ -135,6 +135,9 @@ jobs:
           $godot --headless --path game --script res://tests/gear_catalogue_test.gd
           $godot --headless --path game --script res://tests/mine_frame_test.gd
           $godot --headless --path game --script res://tests/lockpick_test.gd
+          # X20-B2 (Expansion 20): Recenter, the smaller status box, the round action buttons, Use / Talk targeting, the
+          # usable things' outlines and the contextual prompt's lifecycle
+          $godot --headless --path game --script res://tests/x20_android_ui_test.gd
           # GP-STALL-PRICE-ON-PUTUP (Build 21): the price chosen with the number when putting goods up; the workroom's verbs
           $godot --headless --path game --script res://tests/stall_putup_test.gd
           # GP-JOYSTICK, GP-INPUT-CONSIST (Build 21): the optional thumbstick walks by the same move actions as keys and pads

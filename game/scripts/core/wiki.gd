@@ -741,7 +741,17 @@ func _systems() -> void:
 	sys.call("needs", "Health, food and stamina", [
 		p("Three bars top left. Health: how much you can take; at 0 you die. Food: falls %s a game hour; at 0 you starve and lose health, so eat. Stamina: spent by Fireball (%d) and sprinting; it refills by itself. A bar turns red and blinks when low." % [str(GameData.b("player_hunger_per_hour")), int(GameData.b("fireball_stamina"))]),
 		p("Time: one real second is %s game minutes, so a day lasts about %d real minutes." % [str(gmps), roundi(1440.0 / gmps / 60.0)]),
-		links(["guide:heal", "sys:resting", "sys:sprint", "sys:magic"])])
+		links(["guide:heal", "sys:resting", "sys:sprint", "sys:magic", "sys:screen"])])
+	# X20-B2 (owner, 2026-10-24): GP-ANDROID-HUD-SCALE, GP-ANDROID-ACTION-BUTTONS, GP-ANDROID-RECENTER,
+	# GP-ANDROID-USE-TALK-TARGETING, GP-INTERACTABLE-OUTLINES, GP-INTERACTION-PROMPT-LIFECYCLE
+	sys.call("screen", "What is on the screen", [
+		p("Top left, the status box: your health, food and stamina bars with their numbers, your coins, the time and the date. When the guards are after you, a note under it says why."),
+		p("On a phone or tablet the action buttons stand in two columns close to the right edge, each a round button with its name under it: Run, Gather, Fire, Skills and Menu, and beside them Use, Attack, Pack and Map. Run, Gather and Attack light up gold while they are on."),
+		p("Things you can use nearby glow faintly round their shape: a station such as the oven, the anvil, the workbench or the sawhorse, a chest or crate, a business's desk, a market stall, a seam or a ripe plant, your bed. The one Use would work glows brightest. Nothing glows that you may not use now: what would be theft, or a station someone else is working at. People never glow: the prompt names them."),
+		p("The prompt at the bottom says what Use would do. Use always works the thing before a villager standing beside it; to talk to the villager, tap them (T on a keyboard, Y on a pad), as the prompt's second line says. When more than one thing can be used, the prompt's Next button (Q or Tab on a keyboard, the D-pad on a pad) chooses the next, and its glow becomes the brightest."),
+		p("Once you have opened a thing, its prompt goes and stays away while you use it and after you close it, so it never hangs about: the bar over your head says what you are doing, such as Crafting. Choose the thing again (Next, or step away and back) and the prompt returns; Use still works it meanwhile."),
+		p("Look around by dragging two fingers (the right stick, or the mouse wheel held down); Recenter (C, pressing the right stick) brings the view back with you in the middle of the part of the screen the status box and the buttons leave clear."),
+		links(["sys:needs", "controls:touch", "controls:kbm", "controls:gamepad", "sys:journal_map"])])
 	sys.call("sharpening", "Sharpening a weapon", [
 		p("In the smithy, stand at the grinding wheel (beside the workbench, the table with the hammer and tongs) and choose Sharpen: the smith, when at work there, puts a worn weapon to the wheel for %d coin, paid to the smith, and it is as good as new (its wear mended; it does not hit harder). A weapon that is not worn, an empty purse or the smith away and it cannot be done. Villagers and guards pay the smith the same." % World.SHARPEN_COINS),
 		links(["job:smith", "sys:needs"])])

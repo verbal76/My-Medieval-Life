@@ -31,6 +31,7 @@ var date_label: Label          # the season, year and day ("Spring, Year 1  Day 
 var prompt_label: Label
 var prompt_box: PanelContainer
 var prompt_icon: TextureRect
+var prompt_next: Button          # GP-ANDROID-USE-TALK-TARGETING: on a touch screen, the prompt's Next (the next thing to use here)
 var log_box: VBoxContainer
 var toast: Label
 var toast_t := 0.0
@@ -106,12 +107,13 @@ const USE_ICON := {"kbm": "keyboard_e", "gamepad": "xbox_button_a", "touch": "to
 # the controls list, per scheme: [prompt icons, what they do] (Kenney Input Prompts)
 const CONTROLS := {
 	"touch": [[["touch_tap"], "Tap the ground to walk there; tap someone or something to walk to it and use it. Or choose a thumbstick (Settings, Interface, Moving by touch): drag it in the lower left to walk"],
-		[["touch_finger_one"], "The action buttons stand in two columns at the right edge: Run, Gather, Fire, Skills and Menu, and beside them Use, Attack, Pack and Map"],
+		[["touch_finger_one"], "The action buttons stand in two columns close to the right edge, each a round button with its name under it: Run, Gather, Fire, Skills and Menu, and beside them Use, Attack, Pack and Map. Tap the round button or its name"],
 		[["touch_finger_one"], "Gather turns gather mode on (the button reads Gather ON, lit gold; Gather OFF when off); then tap a seam, tree, ripe field, flower, berry bush or game to gather it until it runs out"],
 		[["touch_finger_one"], "Attack swings at a foe within sword reach; with none near, it turns attack mode on: tap who to attack, and tap them again to strike"],
 		[["touch_zoom_in"], "Pinch to zoom"],
 		[["xbox_button_a"], "Connect a Bluetooth or wired controller and the game switches to its controls and hides these buttons"],
-		[["touch_swipe_two_move"], "Drag with two fingers to look around; Recenter brings the view back to you"],
+		[["touch_swipe_two_move"], "Drag with two fingers to look around; Recenter brings the view back to you, in the middle of the part of the screen the buttons and the status box leave clear"],
+		[["touch_finger_one"], "Use works the station, chest, counter or rock beside you before any villager standing there; tap a villager to talk to them. When more than one thing can be used, the prompt's Next button chooses the next"],
 		[["touch_finger_one"], "Map opens the village map; tap a spot on it to look there"],
 		[["touch_finger_one"], "Run turns sprint on (it lights up): walk anywhere to run, using stamina; tap Run again to walk"]],
 	"kbm": [[["keyboard_w", "keyboard_a", "keyboard_s", "keyboard_d"], "Move"],
@@ -123,10 +125,10 @@ const CONTROLS := {
 		[["mouse_scroll"], "Zoom"], [["mouse_scroll", "mouse_move"], "Hold the wheel and drag to look around"],
 		[["keyboard_c"], "Recenter the view on you"], [["keyboard_m"], "Village map"],
 		[["keyboard_shift"], "Hold to sprint (it uses stamina)"], [["keyboard_q", "keyboard_tab"], "Next choice, when more than one thing can be used here"],
-		[["keyboard_t"], "Talk to the villager beside the rock, tree or plant you face (E still works it)"],
+		[["keyboard_t"], "Talk to the villager nearby (E still uses the station, chest or rock you face)"],
 		[["keyboard_escape", "mouse_right"], "While working: stop at once"]],
 	"gamepad": [[["xbox_stick_l"], "Move"], [["xbox_button_a"], "Use, or choose in a window"],
-		[["xbox_button_x"], "Swing at what is in front of you"], [["xbox_dpad_down"], "Gather mode: A in front of a resource gathers it until it runs out"], [["xbox_button_y"], "Fireball (once learned); beside a villager at a rock, tree or plant: talk to them (A works it)"],
+		[["xbox_button_x"], "Swing at what is in front of you"], [["xbox_dpad_down"], "Gather mode: A in front of a resource gathers it until it runs out"], [["xbox_button_y"], "Fireball (once learned); with a villager beside what A uses: talk to them"],
 		[["xbox_button_view"], "Pack"], [["xbox_rb", "xbox_rt"], "Skills (RB, or RT in play)"], [["xbox_dpad_up"], "Journal"], [["xbox_stick_l_press"], "Build"], [["xbox_button_menu"], "Menu"],
 		[["xbox_button_b"], "Close a window (with a quantity choice open, only that choice)"],
 		[["xbox_button_x", "xbox_button_y"], "In a quantity choice: X the fewest (1), Y the most you can (Max)"],
@@ -142,6 +144,10 @@ const CORNER_MARGIN := Vector2(28, 14)
 const HUD_MARGIN := {"desktop": 10.0, "phone": 12.0}
 const BUTTON_H := 42.0                  # GP-UI-COMPACT: a window button's height (was 48); still a comfortable touch target
 const BUTTON_MIN_WIDTH := 220.0       # window buttons are at least this wide, else as wide as their text (GP-UI-COMPACT: was 260)
+# GP-ANDROID-HUD-SCALE: the status box's parts (Build 22: margin 10, 24 px icons, 156 x 18 bars)
+const STATUS_PAD := 6.0
+const STATUS_ICON := 20.0
+const STATUS_BAR := Vector2(136, 16)
 const SCHEME_NAMES :={"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
 
 
@@ -233,9 +239,9 @@ func _fit_hud() -> void:
 	status_box.position = Vector2(m, m)
 	log_box.offset_right = -m
 	log_box.offset_top = m
-	touch_bar.offset_right = -m
-	touch_bar.offset_bottom = -m
-	_fit_touch_bar(view.y - inset[1] - inset[3] - 2.0 * m, m)
+	touch_bar.offset_right = -TOUCH_EDGE             # GP-ANDROID-ACTION-BUTTONS: closer to the edge, inside the safe area
+	touch_bar.offset_bottom = -TOUCH_EDGE
+	_fit_touch_bar(view.y - inset[1] - inset[3] - 2.0 * TOUCH_EDGE, m)
 	# then step off any cutout an element would overlap (once laid out)
 	_avoid_cutouts.call_deferred(cutouts, m)
 
@@ -338,11 +344,19 @@ const TOUCH_COLUMNS := [
 	[["Use", "interact", "use"], ["Attack", "attack", "attack"], ["Pack", "inventory", "pack"], ["Map", "map", "map"]],
 ]
 const TOUCH_GAP := 6                   # between buttons (interface units): they never touch or overlap
-const TOUCH_BUTTON_W := 96.0
-const TOUCH_BUTTON_H := (72.0)         # the most a button is tall; shorter screens fit five rows (touch_button_height)
-const TOUCH_BUTTON_MIN_H := 52.0
-const TOUCH_FONT := 17
-const TOUCH_ON := Color8(240, 196, 84)  # a mode that is on (Gather, Run, Attack): gold border and caption
+# GP-ANDROID-ACTION-BUTTONS (owner, 2026-10-24): a compact disc behind each glyph, its caption just under the disc, in
+# place of Build 21's 96 x 72 tiles. The glyph art and its size are kept (TOUCH_ICON: the box Build 21's 72-high tile gave
+# the 128 px icon); every caption is kept; the whole button (disc and caption) is the touch target.
+const TOUCH_ICON := 40.0               # the glyph's box (the icon art fills about two thirds of it)
+const TOUCH_DISC := 48.0               # the disc's diameter: the glyph with a rim round it
+const TOUCH_BUTTON_W := 58.0           # the least width of a button (wider when its caption is: "Gather OFF")
+const TOUCH_CAPTION_H := 22.0          # the caption's line (TOUCH_FONT)
+const TOUCH_BUTTON_H := TOUCH_TOP + (TOUCH_DISC - TOUCH_ICON) / 2.0 + TOUCH_ICON + TOUCH_CAPTION_H   # 70: the disc, the caption under it
+const TOUCH_BUTTON_MIN_H := 60.0       # a very short screen squeezes the rows (and the glyph) to this; still a comfortable thumb
+const TOUCH_TOP := 4.0                 # above the disc
+const TOUCH_EDGE := 4.0                # the columns' margin from the right (and bottom) edge of the safe area (was HUD_MARGIN)
+const TOUCH_FONT := 15
+const TOUCH_ON := Color8(240, 196, 84)  # a mode that is on (Gather, Run, Attack): gold rim and caption
 
 
 ## Every touch action button, in column order.
@@ -353,41 +367,67 @@ func touch_buttons() -> Array:
 	return out
 
 
-## A touch action: its icon over a readable caption, on its own dark tile (it reads on bright grass and sand).
+## GP-ANDROID-ACTION-BUTTONS: the disc drawn behind a touch button's glyph (show_behind_parent), dark with a slate rim; gold
+## while its mode is on, darker while pressed.
+class TouchDisc extends Control:
+	var on := false
+
+	func _draw() -> void:
+		var b := get_parent() as Button
+		var pad := (GameUI.TOUCH_DISC - GameUI.TOUCH_ICON) / 2.0
+		var icon := minf(size.y - GameUI.TOUCH_TOP - pad - GameUI.TOUCH_CAPTION_H, size.x - 4.0)    # the glyph's box, as the button draws it
+		var r := icon / 2.0 + pad
+		var at := Vector2(size.x / 2.0, GameUI.TOUCH_TOP + r)
+		var pressed := b != null and b.get_draw_mode() in [BaseButton.DRAW_PRESSED, BaseButton.DRAW_HOVER_PRESSED]
+		var fill := Color(GameUI.WINDOW, 0.97 if pressed else 0.84)
+		if on:
+			fill = Color(0.36, 0.26, 0.08, 0.92)
+		draw_circle(at, r, fill, true, -1.0, true)
+		draw_circle(at, r - 1.5, GameUI.TOUCH_ON if on else Color(GameUI.SLATE, 0.95), false, 3.0 if on else 2.0, true)
+
+
+## A touch action: its glyph on a small dark disc, the caption under it (they read on bright grass and sand).
 func _touch_button(icon: String, caption: String) -> Button:
 	var b := Button.new()
 	b.icon = load(UI % icon)
-	b.expand_icon = true
+	b.expand_icon = true                # the glyph fills the room above the caption: TOUCH_ICON at TOUCH_BUTTON_H
 	b.text = caption
 	b.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
 	b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	b.focus_mode = Control.FOCUS_NONE
 	b.add_theme_font_size_override("font_size", TOUCH_FONT)
 	b.add_theme_color_override("font_outline_color", Color.BLACK)
-	b.add_theme_constant_override("outline_size", 4)
+	b.add_theme_constant_override("outline_size", 5)
+	b.add_theme_constant_override("h_separation", 0)
 	b.clip_text = false
+	var disc := TouchDisc.new()
+	disc.name = "Disc"
+	disc.show_behind_parent = true
+	disc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	disc.set_anchors_preset(Control.PRESET_FULL_RECT)
+	b.add_child(disc)
+	for sig in [b.button_down, b.button_up, b.mouse_exited]:
+		sig.connect(disc.queue_redraw)
 	_touch_style(b, false)
 	b.custom_minimum_size = Vector2(TOUCH_BUTTON_W, TOUCH_BUTTON_H)
 	return b
 
 
-## The tile behind a touch button; `on` marks a mode that is on (gold border, brighter tile).
+## A touch button's look; `on` marks a mode that is on (gold rim and caption, a brighter disc).
 func _touch_style(b: Button, on: bool) -> void:
-	for state in ["normal", "hover", "pressed", "focus", "disabled"]:
-		var st := StyleBoxFlat.new()
-		st.bg_color = Color(WINDOW, 0.86 if state != "pressed" else 0.97)
-		if on:
-			st.bg_color = Color(0.36, 0.26, 0.08, 0.92)
-		st.border_color = TOUCH_ON if on else Color(SLATE, 0.95)
-		st.set_border_width_all(3 if on else 2)
-		st.set_corner_radius_all(8)
-		st.content_margin_left = 4
-		st.content_margin_right = 4
-		st.content_margin_top = 5
-		st.content_margin_bottom = 3
-		b.add_theme_stylebox_override(state, st)
-	for c in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+	var empty := StyleBoxEmpty.new()
+	empty.content_margin_top = TOUCH_TOP + (TOUCH_DISC - TOUCH_ICON) / 2.0
+	empty.content_margin_left = 2
+	empty.content_margin_right = 2
+	empty.content_margin_bottom = 0
+	for state in ["normal", "hover", "pressed", "hover_pressed", "focus", "disabled"]:
+		b.add_theme_stylebox_override(state, empty)
+	for c in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_hover_pressed_color"]:
 		b.add_theme_color_override(c, TOUCH_ON if on else PALE)
+	var disc := b.get_node_or_null("Disc") as TouchDisc
+	if disc != null:
+		disc.on = on
+		disc.queue_redraw()
 
 
 ## The height of a touch button that lets five rows fit in `avail` interface units of height (never above
@@ -403,7 +443,34 @@ static func touch_button_height(avail: float) -> float:
 func touch_bar_width() -> float:
 	if touch_bar == null or not touch_bar.visible:
 		return 0.0
-	return touch_bar.get_combined_minimum_size().x + float(HUD_MARGIN["phone" if main.settings.phone else "desktop"])
+	return touch_bar.get_combined_minimum_size().x + TOUCH_EDGE
+
+
+## GP-ANDROID-RECENTER (owner, 2026-10-24): the visual centre of the usable play area, in viewport units: the centre of the
+## screen's area that the persistent HUD leaves clear (the centroid of the screen less the status box and, when shown, the
+## touch columns). Messages, the prompt, the wanted note and Recenter come and go and do not move the view. It moves
+## smoothly with the HUD's size and the screen's shape: left of the touch columns on a phone, a little away from the status
+## box everywhere.
+func play_centre() -> Vector2:
+	var view := Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size)
+	var blockers: Array = []
+	if status_box != null and status_box.visible:
+		blockers.append(status_box.get_global_rect())
+	if touch_bar != null and touch_bar.visible:
+		blockers.append(touch_bar.get_global_rect())
+	return clear_centre(view, blockers)
+
+
+## The centroid of `view` less the rectangles of `blockers` (each clipped to the view; they do not overlap each other).
+static func clear_centre(view: Rect2, blockers: Array) -> Vector2:
+	var area := view.get_area()
+	var moment := view.get_center() * area
+	for b: Rect2 in blockers:
+		var c := view.intersection(b)
+		if c.has_area():
+			area -= c.get_area()
+			moment -= c.get_center() * c.get_area()
+	return moment / area if area > 1.0 else view.get_center()
 
 
 ## A button showing one of the UI pack's icon tiles (the tile is the button), with a caption under it.
@@ -428,22 +495,28 @@ func _build_hud() -> void:
 	hud.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hud_root.add_child(hud)
 	# anchored to the top-left corner of the usable screen, a small margin in (fit_safe_area)
+	# GP-ANDROID-HUD-SCALE (owner, 2026-10-24): about 15% smaller than Build 22's (204 x 152): the wasted space goes (tighter
+	# margins and rows, narrower bars, smaller icons), every value and its words stay, at the same or nearly the same size
 	var box := PanelContainer.new()
-	box.add_theme_stylebox_override("panel", _style(Color(WINDOW, 0.88)))
+	var bs := _style(Color(WINDOW, 0.88))
+	bs.set_content_margin_all(STATUS_PAD)
+	box.add_theme_stylebox_override("panel", bs)
 	box.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	status_box = box
 	hud.add_child(box)
 	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 3)
 	box.add_child(v)
 	for key in ["hp", "hunger", "stamina"]:
 		var m: Array = METERS[key]
 		var h := HBoxContainer.new()
-		var ic := _ui_icon(m[1], 24)                 # the food bar's is a 16 px roast drumstick (UI-HUNGER-01)
+		h.add_theme_constant_override("separation", 4)
+		var ic := _ui_icon(m[1], STATUS_ICON)        # the food bar's is a 16 px roast drumstick (UI-HUNGER-01)
 		ic.tooltip_text = m[2]
 		ic.mouse_filter = Control.MOUSE_FILTER_PASS
 		h.add_child(ic)
 		var pb := ProgressBar.new()
-		pb.custom_minimum_size = Vector2(156, 18)
+		pb.custom_minimum_size = STATUS_BAR
 		pb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		pb.show_percentage = false
 		pb.tooltip_text = m[2]
@@ -471,20 +544,21 @@ func _build_hud() -> void:
 	# bottom row (the time at its right end); the date sits under them in smaller words, so it no longer
 	# widens the box.
 	var row := HBoxContainer.new()
-	row.add_child(_ui_icon("coins", 24))
+	row.add_theme_constant_override("separation", 4)
+	row.add_child(_ui_icon("coins", STATUS_ICON))
 	coins_label = Label.new()
 	coins_label.tooltip_text = "Coins in your purse"
 	coins_label.mouse_filter = Control.MOUSE_FILTER_PASS
 	coins_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	coins_label.add_theme_font_size_override("font_size", 16)
+	coins_label.add_theme_font_size_override("font_size", 15)
 	row.add_child(coins_label)
 	clock_label = Label.new()
-	clock_label.add_theme_font_size_override("font_size", 16)
+	clock_label.add_theme_font_size_override("font_size", 15)
 	clock_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	row.add_child(clock_label)
 	v.add_child(row)
 	date_label = Label.new()
-	date_label.add_theme_font_size_override("font_size", 14)
+	date_label.add_theme_font_size_override("font_size", 13)
 	v.add_child(date_label)
 	wanted_hud = WantedHud.new()
 	wanted_hud.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -520,6 +594,17 @@ func _build_hud() -> void:
 	prompt_label.add_theme_constant_override("outline_size", 3)
 	prompt_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	ph.add_child(prompt_label)
+	# GP-ANDROID-USE-TALK-TARGETING: with more than one thing to use here, Next chooses the next (as Q / Tab and the D-pad do);
+	# on a touch screen only, where there are no keys for it
+	prompt_next = Button.new()
+	prompt_next.text = "Next"
+	prompt_next.focus_mode = Control.FOCUS_NONE
+	prompt_next.custom_minimum_size = Vector2(64, 44)
+	prompt_next.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	prompt_next.add_theme_font_size_override("font_size", 16)
+	prompt_next.visible = false
+	prompt_next.pressed.connect(func(): main.cycle_target(1))
+	ph.add_child(prompt_next)
 	ph.add_theme_constant_override("separation", 6)
 	var pm := _style(Color(WINDOW, 0.88))
 	pm.set_content_margin_all(6)
@@ -782,6 +867,7 @@ func _fit_touch_bar(avail: float, m: float) -> void:
 	var bh := touch_button_height(avail)
 	for b: Button in touch_buttons():
 		b.custom_minimum_size = Vector2(TOUCH_BUTTON_W, bh)
+		(b.get_node("Disc") as Control).queue_redraw()
 	touch_bar.reset_size()
 	var w := touch_bar_width() if touch_bar.visible else 0.0
 	log_box.offset_right = -m - w
@@ -800,7 +886,7 @@ func set_scheme(s: String) -> void:
 	if place_bar.visible:
 		show_placing(true)                  # its hint follows the scheme
 	_fit_hud()                              # the messages and Recenter step beside the touch columns, or back
-	prompt(prompt_text)
+	prompt(prompt_text, main.target_options.size() > 1)
 	if is_open("title"):
 		show_title(main.can_continue())       # its controls list follows the scheme
 	if panel.visible and s != "touch":
@@ -1036,9 +1122,11 @@ func _fit_label(l: Label, max_w: float) -> void:
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if w > max_w else TextServer.AUTOWRAP_OFF
 
 
-func prompt(text: String) -> void:
+## The contextual prompt; `more`: there is a next thing to choose here (the touch Next button shows).
+func prompt(text: String, more := false) -> void:
 	prompt_text = text
 	prompt_label.text = text
+	prompt_next.visible = more and text != "" and scheme == "touch"
 	_fit_label(prompt_label, PROMPT_MAX_W)
 	_place_bottom(prompt_box, _prompt_bottom())
 	prompt_icon.texture = load(PROMPT % USE_ICON.get(scheme, "touch_tap"))
@@ -1170,7 +1258,7 @@ func modal() -> bool:
 func blocks(pos: Vector2) -> bool:
 	if panel.visible:
 		return true
-	for c in (touch_buttons() if touch_bar.visible else []) + [status_box, recenter_btn, place_bar, stick]:
+	for c in (touch_buttons() if touch_bar.visible else []) + [status_box, recenter_btn, place_bar, stick, prompt_next]:
 		if c.visible and c.get_global_rect().has_point(pos):
 			return true
 	return false

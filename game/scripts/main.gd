@@ -47,6 +47,7 @@ var gain_log: Array = []       # [item id, text] of the recent gain lines (_gain
 var sprinting := false         # B8-027: running (LT toggles on a pad; Shift held, or toggled, on a keyboard)
 var save_meta := {}            # PL1-11: the save's identity for portable and cloud saves (_save_meta)
 var save_extra := {}           # sections of a loaded save this build does not know, written back unchanged (SAVE-08)
+var prompt_done := ""          # GP-INTERACTION-PROMPT-LIFECYCLE: the target (its _target_key) whose window was opened: its prompt stays down until it is chosen again
 var talk_alt := {}             # a villager beside the resource the player faces: Y (pad), T (keys) or a tap talks to them while A works the resource
 var target_options: Array = [] # B8-014: everything the player could use here, nearest first; target is one of them
 var tab_cycled := -1           # the frame Tab chose another target (it is the Pack's key too, then it does not open it)
@@ -106,6 +107,7 @@ var gather_mode := false
 var gather := {}               # what is being gathered: {def, ref, continuous, hp, tries, cycles}; {} for nothing
 var gather_warned = null       # the field whose owner the player was warned of: a second tap takes it anyway
 var gather_mark: Line2D        # the outline round the chosen resource
+var target_outline: TargetOutline   # GP-INTERACTABLE-OUTLINES: the glow round the usable things in reach
 var attack_mode := false       # toggled by the Attack button: a tap on a person or animal targets it
 var chase: Object = null       # the NPC or Animal marked with the sword: the player walks to it to strike
 var strike_pending := false    # strike the target once in reach (a tap on it, or arriving at it)
@@ -405,6 +407,57 @@ func _ready() -> void:
 						break
 			"stove_window":
 				ui.show_craft(world.stations_of("stove")[0])
+			"recenter":
+				# GP-ANDROID-RECENTER: look away, then Recenter: the player at the centre of the play area (screenshots only)
+				ui.toast.visible = false
+				ui.toast_t = 0.0
+				pan_camera(Vector2(400, 120))
+				recenter()
+				(func():
+					await get_tree().process_frame
+					await get_tree().process_frame
+					print("recenter: player on screen at ", player_sprite.get_global_transform_with_canvas().origin, ", play centre ", ui.play_centre(),
+						", status ", ui.status_box.get_global_rect(), ", touch bar ", ui.touch_bar.get_global_rect() if ui.touch_bar.visible else Rect2())).call()
+			"outline", "outline_cycle", "outline_used", "outline_stall":
+				# GP-INTERACTABLE-OUTLINES / GP-ANDROID-USE-TALK-TARGETING / GP-INTERACTION-PROMPT-LIFECYCLE (screenshots only): the
+				# player at the smithy's anvil with a villager beside it: the things in reach glow, the anvil (Use's) brightly;
+				# outline_cycle: Next chose the following thing; outline_used: the anvil's window was opened and closed again
+				ui.toast.visible = false
+				ui.toast_t = 0.0
+				var an: String = world.stations_of("anvil")[0]
+				var ast: Dictionary = world.stations[an]
+				world.player.pos = Vector2(int(ast.use[0]) + 0.5, int(ast.use[1]) + 0.5)
+				player_sprite.face(Vector2(int(ast.at[0]) + 0.5, int(ast.at[1]) + 0.5) - world.player.pos)
+				var by: NPC = world.npcs.filter(func(n): return n.alive and n.role == "adult" and n.job != "smith")[0]
+				by.plan = [world.brain.work(600, "", {}, "idle")]
+				by.pos = world.player.pos + facing_vec() * 0.8
+				by.anim = "idle"
+				if shot_panel == "outline_stall":           # a market pitch's shelf, faced from its serving side, the merchant away
+					var pt: Dictionary = world.stalls["pitch2"]
+					pt["stock"] = {"wheat": 70, "egg": 6, "milk": 3, "bread": 4}
+					for n: NPC in world.npcs:
+						if n.job == "merchant":
+							n.pos = Vector2(10.5, 70.5)
+							n.plan = [world.brain.work(600, "", {}, "idle")]
+					world.player.pos = Vector2(int(pt.x), int(pt.y)) + Vector2(1.0, 1.7)
+					player_sprite.face(Vector2(0, -1))
+					by.pos = world.player.pos + Vector2(1.5, 0.3)
+				follow_at = _in_view(world.player.pos * T)
+				var rf := RoofFade.probe(world, world.player.pos, inside_hold)
+				inside_hold = rf.inside
+				roofs.follow(rf.inside, rf.inside_roof, rf.under, rf.under_roof, 5.0)
+				paused = true
+				_find_target()
+				if shot_panel == "outline_cycle":
+					cycle_target(1)
+				elif shot_panel == "outline_used":
+					interact()
+					ui.hide_all()
+				(func():
+					await get_tree().process_frame
+					await get_tree().process_frame
+					print("outline: target ", target.get("label", ""), "; options ", target_options.map(func(t): return str(t.kind)),
+						"; drawn ", target_outline.shown if target_outline != null else [], "; prompt: ", ui.prompt_text.replace("\n", " | "))).call()
 			"hud_low", "prompt":
 				# B8-013/019: a low-food, low-health HUD, with the contextual prompt and a hint toast
 				world.player.hunger = 12.0
@@ -1342,6 +1395,7 @@ func _clear_world() -> void:
 	gather = {}
 	gather_warned = null
 	gather_mark = null              # its node goes with the scene
+	target_outline = null           # ... and so does the outlines' node
 	if gather_mode:
 		gather_mode = false
 		ui.set_gather_mode(false)
@@ -1804,6 +1858,7 @@ func _process(delta: float) -> void:
 	_sync_sprites()
 	_sync_levels(delta)
 	_sync_gather_mark()
+	_sync_outlines()
 	ui.update_hud()
 
 
@@ -1936,7 +1991,7 @@ func _sync_sprites() -> void:
 	if not p.alive:
 		if player_sprite.anim != "death":
 			player_sprite.play("death", true)
-	camera.position = cam_at if cam_free else _follow(p.pos * T)
+	camera.position = cam_at if cam_free else _follow(p.pos * T) - view_shift()
 	target_marker.visible = chase != null and chase.alive
 	if target_marker.visible:
 		var bob := sin(Time.get_ticks_msec() / 150.0) * 1.5
@@ -2278,6 +2333,8 @@ func _player_step(delta: float) -> void:
 	var p := world.player
 	_swing_step(delta)
 	if not action.is_empty():
+		if ui.prompt_text != "":
+			ui.prompt("")                 # GP-INTERACTION-PROMPT-LIFECYCLE: the work's bar ("Crafting") says what is going on
 		_menu_keys()                      # the Pack and the other windows open mid-action: that stops it (B8-010)
 		if ui.modal():
 			cancel_action("")
@@ -2301,6 +2358,8 @@ func _player_step(delta: float) -> void:
 		return
 	if ui.modal():
 		player_sprite.play("idle")
+		if ui.prompt_text != "":
+			ui.prompt("")                 # GP-INTERACTION-PROMPT-LIFECYCLE: no prompt behind or beside an open window
 		return
 	if furn.get("kind", "") == "sit":
 		_seated_step()                    # PL2-013: any input stands the player up
@@ -2356,6 +2415,8 @@ func _player_step(delta: float) -> void:
 		attack()
 	if not talk_alt.is_empty() and (Input.is_action_just_pressed("talk") or (Input.is_action_just_pressed("fireball") and scheme == "gamepad")):
 		talk_to_alt()                     # Y on a pad talks instead of casting while a villager is offered
+	elif Input.is_action_just_pressed("talk") and str(target.get("kind", "")) in ["npc", "shop"]:
+		interact()                        # GP-ANDROID-USE-TALK-TARGETING: T talks to the villager chosen (the first of only people)
 	elif Input.is_action_just_pressed("fireball"):
 		fireball()
 	_menu_keys()
@@ -2818,9 +2879,9 @@ func _find_target() -> void:
 			for sp in world.interiors[world.place_of(p.pos)].spots:
 				var at := Vector2(int(sp.at[0]), int(sp.at[1])) + Vector2(0.5, 0.5)
 				if at.distance_to(probe) < 0.9 and sp.kind == "bed":
-					here.append({"kind": "rest", "label": "Your bed: rest until morning"})
+					here.append({"kind": "rest", "label": "Your bed: rest until morning", "cell": Vector2i(int(sp.at[0]), int(sp.at[1]))})
 				elif at.distance_to(probe) < 0.9 and sp.kind == "chest":
-					here.append({"kind": "home", "label": "Your chest: store things, rest"})
+					here.append({"kind": "home", "label": "Your chest: store things, rest", "cell": Vector2i(int(sp.at[0]), int(sp.at[1]))})
 	# PL2-002: other chests in the building the player stands in (the family chest is handled above)
 	var inside := world.place_of(p.pos)
 	if inside != "" and inside != p.home:
@@ -2851,13 +2912,19 @@ func _find_target() -> void:
 				cands.push_front(job)
 			else:
 				cands.append(job)
-	# a villager by the seam, tree or plant in front (often working it too) no longer takes the default:
-	# A works the resource and Y / T talks to them (owner, Build 13 playtest)
+	# a villager by the seam, tree or plant in front (often working it too) no longer takes the default: A works the resource
+	# and Y / T talks to them (owner, Build 13 playtest). GP-ANDROID-USE-TALK-TARGETING (owner, 2026-10-24) makes that the rule
+	# for every usable thing: Use is for the station, chest, counter, loot, seam, door... in reach, and a villager or animal
+	# beside it comes after it (Q / Tab, the D-pad or the prompt's Next reach them); Talk (T, Y, or tapping them) is for the
+	# nearest villager. With only people or animals in reach, Use talks to the nearest as before. Reach, ownership and the
+	# refusals are unchanged: this only orders what was already on offer.
 	talk_alt = {}
-	if not front.is_empty() and not cands.is_empty() and str(cands[0].kind) in ["npc", "shop"]:
-		talk_alt = cands[0]
-		cands.erase(front)
-		cands.push_front(front)
+	cands = use_order(cands)
+	if not cands.is_empty() and not str(cands[0].kind) in ["npc", "shop"]:
+		for tc in cands:
+			if str(tc.kind) in ["npc", "shop"]:
+				talk_alt = tc
+				break
 	# taking what is not yours is never the default choice: it is offered last (Q / Tab reaches it)
 	# (whether a choice is theft is core's: World.chest_is_theft, container_is_theft, field_is_theft, DVW-A12 R16)
 	var lawful := cands.filter(func(c): return not c.get("theft", false))
@@ -2884,7 +2951,31 @@ func _find_target() -> void:
 			text += "\n%s: %s" % [{"kbm": "T", "gamepad": "Y", "touch": "Tap them"}.get(scheme, "T"), talk_alt.get("label", "")]
 		elif text != "" and cands.size() > 1:
 			text += "\n" + _next_hint(cands[(pick + 1) % cands.size()], pick)
-		ui.prompt(text)
+		_prompt(text, text != "" and cands.size() > 1)
+
+
+## GP-ANDROID-USE-TALK-TARGETING: the order Use offers things in: every thing (a station, a chest, a counter, a seam...)
+## before any character (a villager to talk to, an animal), each group in the order it came. A trader at their post (kind
+## "shop") is the counter's use and keeps its place.
+static func use_order(cands: Array) -> Array:
+	var things := cands.filter(func(c): return not str(c.get("kind", "")) in ["npc", "animal"])
+	if things.is_empty() or things.size() == cands.size():
+		return cands
+	return things + cands.filter(func(c): return str(c.get("kind", "")) in ["npc", "animal"])
+
+
+## GP-INTERACTION-PROMPT-LIFECYCLE (owner, 2026-10-24): the contextual prompt for the chosen target, kept for what it is
+## for: choosing. It is down while a window is open or the player's own work runs (its bar over the head says "Crafting",
+## "Mining"...), and once the target's window has been opened (prompt_done) it stays down after the window closes, until
+## that target is chosen again: another target taken (or none: walking away), Next / Q / Tab / the D-pad, or Use again.
+## Standing beside a thing is not using it.
+func _prompt(text: String, more := false) -> void:
+	var k := _target_key(target) if not target.is_empty() else ""
+	if prompt_done != "" and k != prompt_done:
+		prompt_done = ""                  # the target changed or went: its prompt may come back when it is chosen again
+	if ui.modal() or not action.is_empty() or (prompt_done != "" and k == prompt_done):
+		text = ""
+	ui.prompt(text, more and text != "")
 
 
 ## Which thing a target is, stable from frame to frame (what the labels' counts change is not part of it).
@@ -2904,8 +2995,10 @@ func _target_key(t: Dictionary) -> String:
 
 ## The prompt's second line: what the next choice is and how to reach it.
 func _next_hint(next: Dictionary, at: int) -> String:
-	var keys := {"kbm": "Q / Tab", "gamepad": "D-pad left / right", "touch": "tap it"}
 	var l: String = next.get("label", "")
+	if scheme == "touch":                  # GP-ANDROID-USE-TALK-TARGETING: the prompt's Next button chooses it
+		return "Next: %s (%d of %d)" % [l.get_slice(":", 0).get_slice(" (", 0), (at + 1) % target_options.size() + 1, target_options.size()]
+	var keys := {"kbm": "Q / Tab", "gamepad": "D-pad left / right"}
 	return "%s: next - %s (%d of %d)" % [keys.get(scheme, "Q / Tab"), l.get_slice(":", 0).get_slice(" (", 0), at + 1, target_options.size()]
 
 
@@ -2919,6 +3012,7 @@ func cycle_target(dir: int) -> void:
 		if _target_key(target_options[i]) == _target_key(target):
 			at = i
 	at = posmod(at + dir, target_options.size())
+	prompt_done = ""                      # GP-INTERACTION-PROMPT-LIFECYCLE: chosen again: its prompt comes back
 	target_pref = _target_key(target_options[at])
 	target = target_options[at]
 	_find_target()
@@ -3246,7 +3340,11 @@ func interact() -> void:
 		if not hit.is_empty():
 			select_resource(hit, true)
 			return
+	prompt_done = ""
 	_use()
+	if ui.modal() and not target.is_empty():
+		prompt_done = _target_key(target)       # GP-INTERACTION-PROMPT-LIFECYCLE: its window is open: no prompt for it until chosen again
+		ui.prompt("")
 
 
 func _target_cell(t: Dictionary) -> Vector2i:
@@ -5021,6 +5119,16 @@ func _in_view(at: Vector2) -> Vector2:
 	return at
 
 
+## GP-ANDROID-RECENTER: how far (world pixels) the camera stands from the point it follows, so that point is drawn at the
+## centre of the usable play area (GameUI.play_centre: the screen less the status box and the touch columns) rather than at
+## the centre of the whole screen, nearer them. Divided by the zoom, so it holds at every zoom and display size.
+func view_shift() -> Vector2:
+	if ui == null or camera == null or ui.hud_root == null:
+		return Vector2.ZERO
+	var view := get_viewport().get_visible_rect().size
+	return (ui.play_centre() - view / 2.0) / camera.zoom
+
+
 ## Look at a spot on the map (a tile position), without moving the player.
 func look_at_tile(tile: Vector2) -> void:
 	cam_at = _in_view(tile * T)
@@ -6254,6 +6362,88 @@ func _gather_target(d: Dictionary, ref) -> Dictionary:
 	return {}
 
 
+## GP-INTERACTABLE-OUTLINES (owner, 2026-10-24): a faint glow round each usable thing on offer here (target_options: in
+## reach, by the existing rules) and a bright one round the one Use would take (target). Only things the player may use now:
+## not a theft, not a refusal (a station someone is using), not a person or an animal (the prompt names them). None while a
+## window is open, while placing a building or gathering, or below the surface.
+func _sync_outlines() -> void:
+	if view == null or world == null:
+		return
+	if target_outline == null:
+		target_outline = TargetOutline.new()
+		add_child(target_outline)
+		move_child(target_outline, actors.get_index())      # over the floor, under the people (and the roofs)
+		target_outline.setup(view)
+	var items: Array = []
+	if not ui.modal() and placing.is_empty() and gather.is_empty() and world.player_level == 0 and world.player.alive:
+		var tk := _target_key(target)
+		for t: Dictionary in target_options:
+			var shape = outline_shape(t)
+			if not shape.is_empty():
+				var item := [shape, _target_key(t) == tk]
+				if item[1]:
+					items.push_front(item)               # the chosen one is always among those drawn
+				else:
+					items.append(item)
+	target_outline.show_items(items)
+
+
+## What a usable thing's outline follows (TargetOutline.show_items): the sprite of a market shelf drawn over its stall, else
+## the map cells it is drawn on ([] when it has none to draw, or may not be used now).
+func outline_shape(t: Dictionary):
+	if t.is_empty() or t.get("theft", false):
+		return []
+	var post := ""
+	if str(t.get("kind", "")) == "stall":
+		post = str(t.get("id", ""))
+	elif str(t.get("kind", "")) == "desk":
+		post = str(t.desk.get("post", ""))
+	if post != "" and stall_display_view != null and stall_display_view.shelves.has(post):
+		var sh: StallShelf = stall_display_view.shelves[post]
+		return {"tex": StallShelf.texture_of(sh.look), "at": sh.position + Vector2(-StallShelf.HALF_W, -StallShelf.H + StallShelf.DROP)}
+	return outline_cells(t)
+
+
+## The map cells a usable thing is drawn on ([] when it has none to draw, or may not be used now).
+func outline_cells(t: Dictionary) -> Array:
+	if t.is_empty() or t.get("theft", false):
+		return []
+	var cell := func(v) -> Vector2i:
+		if v is Vector2i:
+			return v
+		if v is Vector2:
+			return Vector2i(floori(v.x), floori(v.y))
+		return Vector2i(int(v[0]), int(v[1]))
+	match str(t.get("kind", "")):
+		"station":
+			var id := str(t.get("id", ""))
+			if world.stations.has(id):
+				var st: Dictionary = world.stations[id]
+				return [cell.call(st.at)] if st.has("at") and world.station_refusal(id) == "" else []
+			return [cell.call(t.spot.at)] if t.has("spot") else []
+		"sit":
+			return [cell.call(t.spot.at)] if t.has("spot") else []
+		"container":
+			return [Vector2i(int(t.c.x), int(t.c.y))]
+		"chest":
+			var u: Dictionary = world.chests.unit(str(t.id))
+			if u.has("c"):
+				return [Vector2i(int(u.c.x), int(u.c.y))]
+			return [cell.call(u.at)] if u.has("at") and not u.has("cart") else []
+		"desk":
+			return [cell.call(t.desk.at)] if t.desk.has("at") else []
+		"stall":
+			var s: Dictionary = world.stalls.get(str(t.id), {})
+			return [Vector2i(int(s.x), int(s.y)), Vector2i(int(s.x) + 1, int(s.y))] if s.has("x") else []
+		"deposit":
+			return [Vector2i(int(t.dep.x), int(t.dep.y))]
+		"plant":
+			return [Vector2i(int(t.plant.x), int(t.plant.y))]
+		"home", "rest":
+			return [t.cell] if t.has("cell") else []
+	return []
+
+
 ## The outline round the chosen resource (a field: its edge).
 func _sync_gather_mark() -> void:
 	if gather_mark == null:
@@ -6447,10 +6637,19 @@ func _find_target_below() -> void:
 	cands.append_array(_cart_targets(world.player_level))     # MIN-F: a minecart on this level
 	cands.append_array(_works_targets())                       # MIN-F: the rock face, supports, track
 	talk_alt = {}
+	cands = use_order(cands)                                    # GP-ANDROID-USE-TALK-TARGETING: things first, as on the surface
+	if not cands.is_empty() and str(cands[0].kind) != "npc":
+		for tc in cands:
+			if str(tc.kind) == "npc":
+				talk_alt = tc
+				break
 	target_options = cands
 	target = cands[0] if not cands.is_empty() else {}
 	var passing: bool = walking and target.get("kind", "") == "deposit"
-	ui.prompt("" if passing or not gather.is_empty() else str(target.get("label", "")))
+	var text := "" if passing or not gather.is_empty() else str(target.get("label", ""))
+	if text != "" and not talk_alt.is_empty():
+		text += "\n%s: %s" % [{"kbm": "T", "gamepad": "Y", "touch": "Tap them"}.get(scheme, "T"), talk_alt.get("label", "")]
+	_prompt(text)
 
 
 ## Fade between the surface and the level below over RoofFade.FADE_TIME, as a roof lifts: the level's view in, and
