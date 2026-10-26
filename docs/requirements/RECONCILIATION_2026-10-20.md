@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 575 (306 of them still open) |
-| **Open entries now** (rules excluded) | | **483** |
+| Entries added since | | 577 (308 of them still open) |
+| **Open entries now** (rules excluded) | | **485** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (54)
@@ -97,7 +97,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (575)
+## Added since the baseline (577)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -279,6 +279,7 @@ None.
 | GP-JOYSTICK | Android movement option: tap-to-move (default, existing) or a lower-left virtual joystick for continuous movement under the same movement, collision and navigation rules; hidden when menus, dialogue, inventory or minigames need the screen; scales and respects safe areas; preference stored per device/player | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-LOCKPICK | Interactive pin-tumbler lockpicking minigame replacing the passive meter: cutaway chambers with springs, pins, setting line, wobble and fall animations, a lockpick; whack-a-mole timing on readable visual cues (no hidden randomness); easy locks about 4 tumblers and 6-8 successful taps, harder locks 5-6 tumblers, faster wobble, shorter windows, several unstable pins, never smaller targets; non-overlapping touch regions; gamepad A/B/X/Y (+LB/RB) with prompts, keyboard equivalents; local to the player, never pauses a multiplayer world, host authoritative over lock state and rewards | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | GP-MARKET-SHELVES | Market stalls as Craftpix wooden shelves showing each merchant's actual listings (up to ten) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
+| GP-MARKET-SPACING | Market stalls with the Craftpix shelf sprite stand too close together | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | GP-MINE-WOOD-FRAME | Underground: a wooden frame drawn over the wall beside a deposit reads as blocking it; supports and openings need a clear representation | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | GP-PACK-DETAIL-FIT | Pack item detail panel: action buttons cut off the bottom of the screen | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-PAUSE-PANEL | Pause menu: a framed panel over the dimmed game, not a full-screen brown background | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
@@ -291,6 +292,7 @@ None.
 | GP-SHARPEN | Sharpen a weapon at the smith's grinding wheel for 1 coin | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-SMITHY-WORKBENCH | Smithy: the grinding wheel is not the workbench; a table dressed with hammers is | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-STALL-PRICE-ON-PUTUP | Market stall: set the price when putting goods up | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
+| GP-STALL-RENT-WRONG-PITCH | Renting a market pitch rents the first free one, not the one the player chose, then says 'You already rent a stall' | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | GP-STALL-TABLE-10 | Market stall table shows ten goods comfortably | approved | NOT APPLICABLE / NOT APPLICABLE / CLOSED | multiplayer |
 | GP-START-RUSTY-AXE | The player starts with a rusty axe | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-TABLE-ITEMS | Merchandise previews on tables: a visual preview of what the business offers (no pickup) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |

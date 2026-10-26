@@ -23489,6 +23489,46 @@
    ]
   },
   {
+   "id": "GP-MARKET-SPACING",
+   "kind": "approved",
+   "title": "Market stalls with the Craftpix shelf sprite stand too close together",
+   "description": "Market stalls with the Craftpix shelf sprite stand too close together",
+   "source": "owner message 2026-10-26 (playtest)",
+   "owner_wording": "The market booths are not too close to each other with the new sprite",
+   "approval": "owner, 2026-10-26 (playtest report)",
+   "acceptance": [
+    "Stalls drawn with the shelf sprite have clear space between them, so each reads as its own stall and can be reached and walked between",
+    "Layout change through the village generator (version bump, G0 evidence per the baseline policy)"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-26 (playtest)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "parent: None -> X20-OPEN-ITEMS",
+     "why": "owner playtest report 2026-10-26, carried into the Expansion 20 scope (record only)"
+    }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS",
+    "GP-MARKET-SHELVES"
+   ],
+   "next_action": "awaiting the owner's authorization to implement (recorded only)",
+   "notes": "The owner wrote 'not too close'; read as 'now too close' (spacing worse with the new sprite). Asked the owner to confirm."
+  },
+  {
    "id": "GP-MINE-WOOD-FRAME",
    "kind": "approved",
    "title": "Underground: a wooden frame drawn over the wall beside a deposit reads as blocking it; supports and openings need a clear representation",
@@ -24256,6 +24296,47 @@
    "related": [
     "X20-OPEN-ITEMS"
    ]
+  },
+  {
+   "id": "GP-STALL-RENT-WRONG-PITCH",
+   "kind": "approved",
+   "title": "Renting a market pitch rents the first free one, not the one the player chose, then says 'You already rent a stall'",
+   "description": "Renting a market pitch rents the first free one, not the one the player chose, then says 'You already rent a stall'",
+   "source": "owner message 2026-10-26 (playtest)",
+   "owner_wording": "When ever I rent a booth, it never gives me the one I clicked on and rented. It says I already have one and gives me a different booth. Even though I didn't have one to begin with",
+   "approval": "owner, 2026-10-26 (playtest report)",
+   "acceptance": [
+    "Renting from a pitch's window rents that pitch (when it is free), for the player and for a multiplayer guest",
+    "After renting, the window shows the rented pitch as the player's own, with no 'You already rent a stall' message",
+    "A test rents a pitch other than the first free one and checks the tenant"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-26 (playtest)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "parent: None -> X20-OPEN-ITEMS",
+     "why": "owner playtest report 2026-10-26, carried into the Expansion 20 scope (record only)"
+    }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS",
+    "GP-MARKET-SHELVES"
+   ],
+   "next_action": "awaiting the owner's authorization to implement (recorded only)",
+   "notes": "Cause found by the lead (read only): Business.rent() rents free_pitch(), the first free pitch, and ignores the one whose window was used; the window then reopens the chosen pitch, which is not the player's, so its rent view shows 'You already rent a stall.' (game/scripts/core/business.gd rent, ui/stall_window.gd _rent_view, on wip/multiplayer-b19). A defect: a mechanic failing its function."
   },
   {
    "id": "GP-STALL-TABLE-10",
