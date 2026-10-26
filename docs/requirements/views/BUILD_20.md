@@ -8,14 +8,14 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 69 |
-| Integrated | 28 of 69 (41%) |
-| Automated tests passed | 33 of 69 (48%) |
-| Integration verified | 28 of 69 (41%) |
-| Gameplay verified | 0 of 69 (0%) |
-| Owner playtested | 0 of 69 (0%) |
-| Complete | 0 of 69 (0%) |
-| Open (release blockers) | 69 |
+| Approved requirements in scope | 71 |
+| Integrated | 28 of 71 (39%) |
+| Automated tests passed | 33 of 71 (46%) |
+| Integration verified | 28 of 71 (39%) |
+| Gameplay verified | 0 of 71 (0%) |
+| Owner playtested | 0 of 71 (0%) |
+| Complete | 0 of 71 (0%) |
+| Open (release blockers) | 71 |
 | Open owner decisions (blocking) | 14 (11) |
 
 ## In development (worker assigned) (2)
@@ -72,7 +72,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | GP-INTERACTION-PROMPT-LIFECYCLE | Contextual prompts ('Use the workbench') clear while the interaction is active and when it closes or the target changes | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | S |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | OWNER APPROVED | PARTIALLY IMPLEMENTED | wip/expansion19-preparation | TARGETED TESTS PASSED | rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c) |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (30)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (32)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -87,7 +87,9 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | GP-LOCKPICK | Interactive pin-tumbler lockpicking minigame replacing the passive meter: cutaway chambers with springs, pins, setting line, wobble and fall animations, a lockpick; whack-a-mole timing on readable visual cues (no hidden randomness); easy locks about 4 tumblers and 6-8 successful taps, harder locks 5-6 tumblers, faster wobble, shorter windows, several unstable pins, never smaller targets; non-overlapping touch regions; gamepad A/B/X/Y (+LB/RB) with prompts, keyboard equivalents; local to the player, never pauses a multiplayer world, host authoritative over lock state and rewards | OWNER APPROVED | NOT STARTED | wip/multiplayer-b19 | NOT TESTED | P2: after multiplayer Batch A (A1 and A2), on wip/multiplayer-b19 | design: UNKNOWN | UNKNOWN |
 | GP-MINE-WOOD-FRAME | Underground: a wooden frame drawn over the wall beside a deposit reads as blocking it; supports and openings need a clear representation | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only) | design: UNKNOWN | UNKNOWN |
 | GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | OWNER APPROVED | NOT STARTED | none | NOT TESTED | P1 after Batch A1 (docs/gameplay_polish/SCHEDULE.md) | design: UNKNOWN | UNKNOWN |
+| GP-QTY-PICKER-CONTROLLER | Quantity pickers (putting goods up at a stall, gifts): Max and Min reachable in one press on a controller | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only) | design: UNKNOWN | UNKNOWN |
 | GP-TABLE-ITEMS | Merchandise previews on tables: a visual preview of what the business offers (no pickup) | OWNER APPROVED | NOT STARTED | wip/multiplayer-b19 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| GP-WANTED-INDICATOR | Show the player when guards are hunting them: a red ring around the character and an out-of-the-way note saying why | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only) | design: UNKNOWN | UNKNOWN |
 | GP-WIKI-RECIPE-TOOLS | Encyclopedia recipes name every tool the work needs (for example a mallet and a chisel, and which chisels count) | OWNER APPROVED | NOT STARTED | none | NOT TESTED | awaiting the owner's authorization to implement (recorded only) | design: UNKNOWN | UNKNOWN |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

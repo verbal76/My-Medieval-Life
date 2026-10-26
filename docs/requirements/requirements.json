@@ -23924,6 +23924,48 @@
    ]
   },
   {
+   "id": "GP-QTY-PICKER-CONTROLLER",
+   "kind": "approved",
+   "title": "Quantity pickers (putting goods up at a stall, gifts): Max and Min reachable in one press on a controller",
+   "description": "Quantity pickers (putting goods up at a stall, gifts): Max and Min reachable in one press on a controller",
+   "source": "owner message 2026-10-26 (playtest)",
+   "owner_wording": "When even I am adding things to the market the max button need moved or a button assigned, if I use a controller I have to left d-pad the whole way to the highest number then get to max which defeats the purpose, only mouse and touch can use it effectively",
+   "approval": "owner, 2026-10-26 (playtest report)",
+   "acceptance": [
+    "On a controller, Max (and Min) are reached with one press: an assigned button or focus placed so the d-pad does not have to step through the numbers first",
+    "The same in every quantity picker (stall put-up, gifts, selling, dropping); the on-screen prompt shows the button",
+    "Mouse, touch and keyboard behaviour unchanged"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-26 (playtest)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "parent: None -> X20-OPEN-ITEMS",
+     "why": "owner playtest report 2026-10-26, carried into the Expansion 20 scope (record only)"
+    }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS",
+    "GP-STALL-PRICE-ON-PUTUP",
+    "GP-GIFT-QUANTITY",
+    "GP-INPUT-CONSIST"
+   ],
+   "next_action": "awaiting the owner's authorization to implement (recorded only)"
+  },
+  {
    "id": "GP-REPAIR-SOCIAL",
    "kind": "approved",
    "title": "Master gameplay repair: dialogue, social awareness, crime response and guard AI",
@@ -24635,6 +24677,47 @@
    "related": [
     "X20-OPEN-ITEMS"
    ]
+  },
+  {
+   "id": "GP-WANTED-INDICATOR",
+   "kind": "approved",
+   "title": "Show the player when guards are hunting them: a red ring around the character and an out-of-the-way note saying why",
+   "description": "Show the player when guards are hunting them: a red ring around the character and an out-of-the-way note saying why",
+   "source": "owner message 2026-10-26 (playtest)",
+   "owner_wording": "We need a red circle around our body so I know when I am being hunted by guards I died 2 times without know why I was being chased. We will also need somewhere out of the way on the screen where it tells me why I am being chased",
+   "approval": "owner, 2026-10-26 (playtest report)",
+   "acceptance": [
+    "While any guard is pursuing, searching for or coming to confront the player, a red ring is drawn around the player's character, and it goes when the pursuit ends",
+    "A small panel out of the way of play and the HUD names the reason (the crime and where it was seen) and the current state (wanted, pursued, searched for)",
+    "Driven by the existing crime and guard state (GP-CRIME-PURSUIT), not new rules; per player in multiplayer; works on Android, PC and controller; wiki explains it"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-26 (playtest)"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "parent: None -> X20-OPEN-ITEMS",
+     "why": "owner playtest report 2026-10-26, carried into the Expansion 20 scope (record only)"
+    }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS",
+    "GP-CRIME-PURSUIT",
+    "GP-REPAIR-SOCIAL"
+   ],
+   "next_action": "awaiting the owner's authorization to implement (recorded only)"
   },
   {
    "id": "GP-WHEAT-PICKED",

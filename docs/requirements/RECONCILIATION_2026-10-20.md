@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 573 (304 of them still open) |
-| **Open entries now** (rules excluded) | | **481** |
+| Entries added since | | 575 (306 of them still open) |
+| **Open entries now** (rules excluded) | | **483** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (54)
@@ -97,7 +97,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (573)
+## Added since the baseline (575)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -286,6 +286,7 @@ None.
 | GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | GP-PROGRESS-BAR | One overhead activity progress bar on every platform (the Android 'Mining' bar): above the working character and following them, labelled with the activity, filling per work cycle and resetting each cycle in continuous work, hidden when work ends, readable at all resolutions, no duplicate indicators; mining, woodcutting, farming, crafting, construction and other timed work; per player in multiplayer from authoritative progress, without clutter from distant players | approved | INTEGRATED / OWNER PLAYTESTED / COMPLETE | multiplayer |
 | GP-PROPERTY-NAME-DOUBLE | Village log doubles a property's location ('beside the smithy beside the smithy') | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
+| GP-QTY-PICKER-CONTROLLER | Quantity pickers (putting goods up at a stall, gifts): Max and Min reachable in one press on a controller | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | GP-REPAIR-SOCIAL | Master gameplay repair: dialogue, social awareness, crime response and guard AI | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-SHARPEN | Sharpen a weapon at the smith's grinding wheel for 1 coin | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-SMITHY-WORKBENCH | Smithy: the grinding wheel is not the workbench; a table dressed with hammers is | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
@@ -296,6 +297,7 @@ None.
 | GP-TARGET-ART-MATCH | Interaction prompts name what the art shows (tavern 'crate' is a roast) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-TRAIL-EDGES | Trails crossing bare dirt show stray grass edges | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-UI-COMPACT | Menus: smaller text and tighter boxes so more fits on screen | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
+| GP-WANTED-INDICATOR | Show the player when guards are hunting them: a red ring around the character and an out-of-the-way note saying why | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | GP-WHEAT-PICKED | Harvested wheat shows as picked, cell by cell | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-WIKI-LAYOUT | Encyclopedia laid out like a classic wiki page, on parchment | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-WIKI-RECIPE-TOOLS | Encyclopedia recipes name every tool the work needs (for example a mallet and a chisel, and which chisels count) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
