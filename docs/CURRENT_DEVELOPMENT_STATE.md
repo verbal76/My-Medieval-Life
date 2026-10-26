@@ -23,6 +23,7 @@ foundations integrated and tested, not rebuilt; owner-controlled economic values
 | `wip/b22-market` | `.claude/worktrees/b22-market` | `4313886` | worker A | GP-BUSINESS-DESK, GP-BUSINESS-COURIER, GP-TABLE-ITEMS, GP-STALL-RENT-WRONG-PITCH, GP-MARKET-SPACING |
 | `wip/b22-ui` | `.claude/worktrees/b22-ui` | `6567c04` | worker B | GP-LOCKPICK, GP-QTY-PICKER-CONTROLLER, GP-WANTED-INDICATOR, GP-WIKI-RECIPE-TOOLS, ARMOR-01, GP-MINE-WOOD-FRAME, GP-SKILLS-RT |
 | `wip/b22-family` | `.claude/worktrees/b22-family` | `6567c04` | worker C | MP-PLAYER-FAMILY, GP-FARMER-TENDING |
+| `wip/b22-gear` | `.claude/worktrees/b22-gear` | `6567c04` | worker D | ARMOR-CATALOG-01, ARMOR-MATERIALS-01, WEAPON-CATALOG-01, WEAPON-VISIBLE-01 (decision ARMOR-CATALOG-D1 held PROVISIONAL) |
 
 Rules for the round: only worker A may change the village layout or the single-player baseline (evidence first, old baseline
 kept); only worker C bumps the save version (22 -> 23, with migration); worker C's farmer animation must leave G0 identical;

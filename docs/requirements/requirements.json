@@ -744,7 +744,9 @@
     "Every body armour, helmet and cultural outfit of the Puny Characters pack (Shade) is a real item that can be made (recipe) and bought at the armourer, drawn on the character when worn (ARMOR-01 linkage)",
     "Cultural pieces cost more and need special materials as well as payment for the work",
     "Rarer-looking pieces carry worn buffs (for example +5 health, more fireball damage) through the gear bonus mechanic",
-    "Classes, prices, materials and buff values presented to and approved by the owner before they are assigned (ARMOR-01 rule); new materials follow the material rules (WDR-001..003, 007)"
+    "Classes, prices, materials and buff values presented to and approved by the owner before they are assigned (ARMOR-01 rule); new materials follow the material rules (WDR-001..003, 007)",
+    "Every new armour and weapon has a production skill level and a recipe (owner 2026-10-26)",
+    "Buffs are the agent's creative design (owner 2026-10-26: 'Be creative in the buffs from the armor'), varied and fitting each piece, listed in the wiki"
    ],
    "target_build": "20",
    "parent": "X20-OPEN-ITEMS",
@@ -755,7 +757,7 @@
     "ARMOR-CATALOG-D1"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -779,6 +781,16 @@
      "date": "2026-10-26",
      "change": "note",
      "why": "owner: deliver in the amended Build 22 mini-build"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "acceptance + 2",
+     "why": "owner 2026-10-26: production skill level and recipe for every new piece; buffs delegated ('be creative')"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker D (gear); branch: None -> wip/b22-gear",
+     "why": "owner: in the amended Build 22 mini-build"
     }
    ],
    "related": [
@@ -788,7 +800,9 @@
    "design": "OWNER DECISION REQUIRED",
    "effort": "L",
    "next_action": "owner approves the catalogue proposal (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md); then a Build 22 worker implements it on top of ARMOR-01",
-   "notes": "Owner asked for it in Build 22. Existing: items.json 'bonus' (max_hp, max_stamina) summed over worn gear (PlayerState.bonus); no fireball-damage bonus yet; no steel, tin, bronze, silk or fur material yet. Owner 2026-10-26: squeeze it into the amended Build 22 mini-build."
+   "notes": "Owner asked for it in Build 22. Existing: items.json 'bonus' (max_hp, max_stamina) summed over worn gear (PlayerState.bonus); no fireball-damage bonus yet; no steel, tin, bronze, silk or fur material yet. Owner 2026-10-26: squeeze it into the amended Build 22 mini-build.",
+   "assigned_worker": "worker D (gear)",
+   "branch": "wip/b22-gear"
   },
   {
    "id": "ARMOR-CATALOG-D1",
@@ -797,8 +811,8 @@
    "description": "Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md)",
    "source": "docs/design/ARMOUR_CATALOGUE_PROPOSAL.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Owner 2026-10-26: 'Be creative in the buffs from the armor'; the amendment of 2026-10-26 delegates remaining routine decisions. Held provisionally by the agent: antlers from the existing stags (no reindeer art exists), materials option B for Build 22 (existing materials stand in for steel, bronze, fur and silk; option A recorded for later), values by the proposal's rules, cloth headgear sold by the tailor. The owner may change any of it at review.",
+   "disposition": "PROVISIONAL",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [],
@@ -809,6 +823,11 @@
      "date": "2026-10-26",
      "change": "entered in the register",
      "why": "docs/design/ARMOUR_CATALOGUE_PROPOSAL.md"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "disposition: OPEN -> PROVISIONAL",
+     "why": "owner delegated the buffs and routine decisions; the agent's recommendations held provisionally, never final until the owner confirms"
     }
    ]
   },
@@ -832,7 +851,7 @@
     "ARMOR-CATALOG-D1"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -846,6 +865,11 @@
      "date": "2026-10-26",
      "change": "parent: None -> X20-OPEN-ITEMS; decisions + ARMOR-CATALOG-D1",
      "why": "owner request for the Build 22 mini-build"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker D (gear); branch: None -> wip/b22-gear",
+     "why": "owner: in the amended Build 22 mini-build"
     }
    ],
    "related": [
@@ -854,7 +878,9 @@
     "OWN-26"
    ],
    "design": "OWNER DECISION REQUIRED",
-   "notes": "Delivery: the Build 22 mini-build (owner 2026-10-26). Boars exist (balance.json wildlife; skins boar, boar_grey, mini_boar). No reindeer species or reindeer art in any pack; deer exist with stag skins (mini_stag)."
+   "notes": "Delivery: the Build 22 mini-build (owner 2026-10-26). Boars exist (balance.json wildlife; skins boar, boar_grey, mini_boar). No reindeer species or reindeer art in any pack; deer exist with stag skins (mini_stag).",
+   "assigned_worker": "worker D (gear)",
+   "branch": "wip/b22-gear"
   },
   {
    "id": "ARMOR-Q",
@@ -54771,6 +54797,102 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "remaining_work": "unknown: needs a human review of what remains"
+  },
+  {
+   "id": "WEAPON-CATALOG-01",
+   "kind": "approved",
+   "title": "Every weapon on the master weapons sheet can be made at the smithy at an appropriate Smithing level and bought there",
+   "description": "Every weapon on the master weapons sheet can be made at the smithy at an appropriate Smithing level and bought there",
+   "source": "owner message 2026-10-26",
+   "owner_wording": "You also have a master weapons sprite sheet, let's do the same with it we should be able to buy them from a smithy and make them at an appropriate skill level as well. So all new armors and weapons being introduced will need a production skill level assigned and a recipe",
+   "approval": "owner, 2026-10-26",
+   "acceptance": [
+    "Every weapon of the master weapons sheet (16x16 Assorted RPG Icons, weapons.png) is a real item with an icon, damage, durability, price, a recipe at the smithy with a production skill level, and is sold by the smithy",
+    "Special weapons may use boar tusks and antlers (ARMOR-MATERIALS-01) and may carry worn buffs",
+    "Wiki pages list each weapon, its recipe, tools and skill level"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-26"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "parent: None -> X20-OPEN-ITEMS",
+     "why": "owner request for the Build 22 mini-build"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker D (gear); branch: None -> wip/b22-gear",
+     "why": "owner: in the amended Build 22 mini-build"
+    }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS",
+    "ARMOR-CATALOG-01",
+    "ARMOR-01"
+   ],
+   "notes": "Delivery: the Build 22 mini-build (owner 2026-10-26).",
+   "assigned_worker": "worker D (gear)",
+   "branch": "wip/b22-gear"
+  },
+  {
+   "id": "WEAPON-VISIBLE-01",
+   "kind": "approved",
+   "title": "An equipped weapon is drawn on the character while walking, and attacks swing it like the axe; villagers the same",
+   "description": "An equipped weapon is drawn on the character while walking, and attacks swing it like the axe; villagers the same",
+   "source": "owner message 2026-10-26",
+   "owner_wording": "If you have a weapon on your body slot you should walk around with it drawn so we get a chance to see it, and you should swing like the axe does when you are attacking so should NPCs put that in the mini 22 build as well.",
+   "approval": "owner, 2026-10-26",
+   "acceptance": [
+    "The player's equipped weapon is drawn on the character while idle and walking, in every direction",
+    "Attacking plays a swing with that weapon, like the axe's chopping swing",
+    "Villagers, guards and bandits with a weapon show it and swing it the same way; multiplayer shows other players' weapons"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-26"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "parent: None -> X20-OPEN-ITEMS",
+     "why": "owner request for the Build 22 mini-build"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker D (gear); branch: None -> wip/b22-gear",
+     "why": "owner: in the amended Build 22 mini-build"
+    }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS",
+    "ARMOR-CATALOG-01",
+    "ARMOR-01"
+   ],
+   "notes": "Delivery: the Build 22 mini-build (owner 2026-10-26).",
+   "assigned_worker": "worker D (gear)",
+   "branch": "wip/b22-gear"
   },
   {
    "id": "WEATHER-01",

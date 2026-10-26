@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (668)
+## Approved requirement (670)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -17,8 +17,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | AR-P1-2 | Fixed on staging; PR #1 branch still has push-triggered workflow | owner action | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | 16 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | ARMOR-01 | Armour is acquired in play, physical, and visible when worn | 18 | OWNER APPROVED | IN DEVELOPMENT | VERIFICATION FAILED | NOT READY | OPEN |
-| ARMOR-CATALOG-01 | Every armour, helmet and cultural outfit in the Puny Characters pack can be made and bought at the armourer; cultural pieces cost more and need special materials; rarer pieces carry buffs | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| ARMOR-MATERIALS-01 | Boar tusks and antlers as hunted materials, used in special armour and weapons | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| ARMOR-CATALOG-01 | Every armour, helmet and cultural outfit in the Puny Characters pack can be made and bought at the armourer; cultural pieces cost more and need special materials; rarer pieces carry buffs | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| ARMOR-MATERIALS-01 | Boar tusks and antlers as hunted materials, used in special armour and weapons | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B12A-01 | 1-11 fixed (B13-01..10); 12 → B13-14 |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B12A-02 | Fixed (WHAT_WAS_DONE:135) |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B12A-03 | Fixed / one withdrawn (addendum :1631) |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
@@ -653,6 +653,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-020-C | Comply with World Design Rule 20: Autonomous Housing | unassigned | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | WDR-021-C | Comply with World Design Rule 21: Household Succession and Family Care | unassigned | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | WDR-022-C | Comply with World Design Rule 22: classify every finding as defect, legitimate outcome or future improvement; no hidden rescue; tests check mechanics and integrity, never prosperity | 15 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
+| WEAPON-CATALOG-01 | Every weapon on the master weapons sheet can be made at the smithy at an appropriate Smithing level and bought there | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| WEAPON-VISIBLE-01 | An equipped weapon is drawn on the character while walking, and attacks swing it like the axe; villagers the same | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | WEATHER-01 | Dynamic weather and natural disasters expansion: thunderstorms, rainstorms, snow, heavy winds, droughts, forest fire, tornado damaging buildings and people, flash flood tearing through the town (destroying, killing, washing people away who later find their way back) | 25 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | WIKI-B17 | Build 17 documentation reconciliation: in-game wiki pages and developer references for every merged and verified Build 17 feature (mining and geology, production and equipment, economy and labour, mortality), planned features only in 'Not in the game yet', health placeholders, wiki validation | 17 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | WORLD-LIFE-01 | The countryside is empty of people and animals; its trails lead nowhere yet | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
@@ -774,7 +776,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
-| ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | 20 | OPEN |  |
+| ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | 20 | PROVISIONAL |  |
 | ARMOR-Q | Armour scope: Option A (exact text to be presented) | owner decision | APPROVED |  |
 | B18-DP-01 | PL1-10: finish production chains (attendants work the player's stations), stall goods display, shops in leased village houses with existing systems? | 18 | APPROVED |  |
 | B18-DP-02 | PL2-008: treat ROOMS-18 as the answer to its open question and close on playtest (villager modules and module signs not in its text)? | 18 | APPROVED |  |
