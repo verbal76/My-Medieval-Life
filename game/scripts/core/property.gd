@@ -499,6 +499,8 @@ func settle_ended_households() -> void:
 
 
 func _anyone_alive(h: int) -> bool:
+	if Life.is_couple_h(w, h) and not Life.couple_parents(w, h).is_empty():
+		return true                        # MP-PLAYER-FAMILY: a player couple's household lives while either of them does
 	for m in w.households[h].members:
 		var o: NPC = w.npc(int(m))
 		if o and o.alive:

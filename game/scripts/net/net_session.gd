@@ -276,6 +276,10 @@ static func public_player(p: PlayerState) -> Dictionary:
 	o.alive = p.alive
 	o.map_level = p.map_level
 	o.away = p.away
+	o.partner = p.partner                       # MP-PLAYER-FAMILY: whom they married and their children are known to all (family records)
+	o.children = p.children.duplicate()
+	o.mother = p.mother
+	o.father = p.father
 	return o.to_dict()
 
 
@@ -449,6 +453,8 @@ func s_players(list: Array) -> void:
 		if o != null:
 			o.pos = e.pos                         # the guest's copy of the other players follows the host
 			o.alive = bool(e.alive)
+			o.partner = int(e.get("partner", o.partner))                 # MP-PLAYER-FAMILY: their family as the host has it
+			o.children = (e.get("children", o.children) as Array).map(func(c): return int(c))
 	for pid in avatars.keys():
 		if not seen.has(pid):
 			avatars.erase(pid)
@@ -726,11 +732,13 @@ func send_animals(id: int, g: PlayerState, all: bool) -> void:
 func players_list() -> Array:
 	var w: World = main.world
 	var h: PlayerState = w.host_player()
-	var out := [{"pid": h.pid, "name": h.name, "sprite": h.sprite, "pos": h.pos, "dir": main.facing_vec(), "anim": main.player_sprite.anim, "alive": h.alive}]
+	var out := [{"pid": h.pid, "name": h.name, "sprite": h.sprite, "pos": h.pos, "dir": main.facing_vec(), "anim": main.player_sprite.anim, "alive": h.alive,
+		"partner": h.partner, "children": h.children}]          # MP-PLAYER-FAMILY: a player's spouse and children are public family records
 	for id in by_peer:
 		var g: PlayerState = w.player_by_pid(int(by_peer[id]))
 		if g != null:
-			out.append({"pid": g.pid, "name": g.name, "sprite": g.sprite, "pos": g.pos, "dir": moves[id].dir, "anim": moves[id].anim, "alive": g.alive})
+			out.append({"pid": g.pid, "name": g.name, "sprite": g.sprite, "pos": g.pos, "dir": moves[id].dir, "anim": moves[id].anim, "alive": g.alive,
+				"partner": g.partner, "children": g.children})
 	return out
 
 

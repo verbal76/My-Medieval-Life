@@ -3643,6 +3643,10 @@ func household_stores(h: int) -> Array:
 	var stores: Array = [w.households[h].pantry]
 	for o: NPC in _members(h):
 		stores.append(o.inv)
+	for p: PlayerState in Life.couple_parents(w, h):       # MP-PLAYER-FAMILY: a player couple's food is what the two hold, packs and chests
+		stores.append(p.inv)
+		if not stores.has(p.chest):
+			stores.append(p.chest)
 	return stores
 
 
@@ -4389,8 +4393,8 @@ func _newcomer_for(v: Dictionary) -> NPC:
 		if str(nh.home) == "":
 			var host := -1                           # no house to lease: a room with the smallest household
 			for hh in w.households:
-				if hh.get("ended", false) or int(hh.id) == int(nh.id) or not w.buildings.has(str(hh.home)) or _members(int(hh.id)).is_empty():
-					continue
+				if hh.get("ended", false) or int(hh.id) == int(nh.id) or not w.buildings.has(str(hh.home)) or _members(int(hh.id)).is_empty() or Life.is_couple(hh):
+					continue                         # (never in a player couple's home: MP-PLAYER-FAMILY)
 				if host < 0 or _members(int(hh.id)).size() < _members(host).size():
 					host = int(hh.id)
 			w.households.erase(nh)
