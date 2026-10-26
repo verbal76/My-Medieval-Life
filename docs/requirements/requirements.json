@@ -5163,6 +5163,73 @@
    ]
   },
   {
+   "id": "B19-RECOVERY",
+   "kind": "approved",
+   "title": "Build 19 carryover recovery within Expansion 20: audit the 18 unfinished Build 19 requirements and the 9 awaiting verification against the code, then integrate, finish or implement them on the Expansion 20 line",
+   "description": "Build 19 carryover recovery within Expansion 20: audit the 18 unfinished Build 19 requirements and the 9 awaiting verification against the code, then integrate, finish or implement them on the Expansion 20 line",
+   "source": "docs/directives/2026-10-26_build19_carryover_audit_x20_integration.md",
+   "owner_wording": "I want the unfinished Build 19 scope audited, recovered, integrated and completed within the current Expansion 20 effort.",
+   "approval": "owner, 2026-10-26",
+   "acceptance": [
+    "A recovery matrix in the repository covers every one of the 27 requirements with evidence (code, branch, commit, integration, enablement, tests, remaining work, dependencies, disposition) and is kept current",
+    "The Build 19 completion contradiction (register says complete while SJD-E..H are open) is explained with evidence",
+    "Every item ends implemented and verified, satisfied by an equivalent implementation, awaiting a named owner-device check, blocked by a documented owner decision, or deferred by the owner; none disappears",
+    "Integration follows the order: foundations, judgment, misinformation and memory, diagnostics, economy interaction; each step tested incrementally with determinism, conservation and save compatibility"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-26_build19_carryover_audit_x20_integration.md"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "parent: None -> X20-OPEN-ITEMS; umbrella",
+     "why": "the 27 records carry the work; this record holds the recovery workstream"
+    }
+   ],
+   "umbrella": true,
+   "related": [
+    "SJD-E",
+    "SJD-F",
+    "SJD-G",
+    "SJD-H",
+    "PROS-19",
+    "X19-FOUND",
+    "DVW-B1",
+    "DVW-B2",
+    "GM-01",
+    "X19-MISINFO",
+    "X19-STORY-LIFE",
+    "REC-19",
+    "REC-DIAG",
+    "REC-STORE",
+    "B19-EMERGE",
+    "WDR-009-C",
+    "WDR-011-C",
+    "FIX-D1D2",
+    "FAM-SAC-01",
+    "FIX-D3",
+    "FIX-RECF1",
+    "SJD-B",
+    "SJD-C",
+    "SJD-D",
+    "X19-FOUND-BONDS",
+    "X19-FOUND-FAMREP",
+    "X19-FOUND-PERS",
+    "LE-01"
+   ]
+  },
+  {
    "id": "B21-LAN-PLAYTEST",
    "kind": "approved",
    "title": "Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build",

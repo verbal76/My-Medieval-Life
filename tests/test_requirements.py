@@ -180,6 +180,15 @@ class ValidationTest(unittest.TestCase):
         new["requirements"].append(fake)
         self.assertTrue(any("ZZ-999" in e for e in cr.memory_errors(new)))
 
+    def test_handoff_worktrees_are_local_and_branches_are_checked(self):
+        # a session worktree named in the handoff is never required to exist (a CI runner has none) ...
+        text = "work in `.claude/worktrees/zz-nowhere` on `wip/zz-real`; also `wip/zz-gone`."
+        self.assertEqual([m for m in cr.LINK_RE.findall(text) if not m.startswith(cr.LOCAL_ONLY)], [])
+        # ... but a branch it names must exist on the remote, and an unreadable remote reports nothing
+        errs = cr.branch_errors(text, "STATE", heads={"wip/zz-real"})
+        self.assertEqual(errs, ["STATE names branch wip/zz-gone, which the remote does not have"])
+        self.assertEqual(cr.branch_errors(text, "STATE", heads=None) if cr.remote_branches() is None else [], [])
+
     def test_baseline_entries_cannot_vanish_or_change_silently(self):
         bp = REPO / "docs" / "requirements" / "baseline_2026-10-20.json"
         b = json.loads(bp.read_text())

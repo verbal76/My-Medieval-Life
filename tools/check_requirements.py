@@ -374,14 +374,43 @@ def _requirement_errors(r, builds):
     return e
 
 
-def memory_errors(d):
+# Session worktrees (`.claude/worktrees/<name>`) are local working copies, never committed and absent on CI runners; a
+# handoff names them so a session can find its own checkouts. They are not checked as paths; the branches the handoff
+# names (`wip/...`, `staging/...`) are checked on the remote instead (branch_errors).
+LOCAL_ONLY = (".claude/worktrees/",)
+BRANCH_RE = re.compile(r"`((?:wip|staging)/[\w./-]+)`")
+_REMOTE_HEADS = {}
+
+
+def remote_branches():
+    """The remote's branch names, or None when the remote cannot be read (no network): then nothing is reported."""
+    if "heads" not in _REMOTE_HEADS:
+        out = subprocess.run(["git", "-C", str(REPO), "ls-remote", "--heads", "origin"], capture_output=True, text=True)
+        _REMOTE_HEADS["heads"] = ({ln.split("refs/heads/", 1)[1] for ln in out.stdout.splitlines() if "refs/heads/" in ln}
+                                  if out.returncode == 0 else None)
+    return _REMOTE_HEADS["heads"]
+
+
+def branch_errors(text, source, heads=None):
+    """Branches a memory file names that the remote does not have (a typo, or a branch deleted while still referenced)."""
+    heads = remote_branches() if heads is None else heads
+    if heads is None:
+        return []
+    return ["%s names branch %s, which the remote does not have" % (source, b)
+            for b in sorted(set(BRANCH_RE.findall(text))) if b.rstrip("/.,;:)") not in heads]
+
+
+def memory_errors(d, heads=None):
     errors = []
     for f in (MEMORY, STATE):
         if not f.exists():
             errors.append("%s is missing (the project memory, MEM-01)" % f.relative_to(REPO))
             continue
+        errors += branch_errors(f.read_text(), str(f.relative_to(REPO)), heads)
         for m in sorted(set(LINK_RE.findall(f.read_text()))):
             path = m.rstrip("/.,;:)")
+            if path.startswith(LOCAL_ONLY):
+                continue
             generated = {str(reconciliation_path(bp).relative_to(REPO)) for bp in BASELINES} | {"docs/requirements/views"} | {
                 "docs/requirements/views/%s.md" % n for n in ("STATUS", "DECISIONS", "BACKLOG", "QUEUES", "BUILD_18", "BUILD_19", "BUILD_20", "BUILD_21", "BUILD_22", "BUILD_23", "BUILD_24", "BUILD_25", "BUILD_26", "BUILD_27")}
             if not (REPO / path).exists() and not list(REPO.glob(path)) and path not in generated:

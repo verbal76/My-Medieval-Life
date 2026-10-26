@@ -136,10 +136,11 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | OPEN | yes |  |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | OPEN | yes |  |
 
-## Not counted: umbrellas, proposals, ideas, deferred (5)
+## Not counted: umbrellas, proposals, ideas, deferred (6)
 
 | ID | Item | Kind | Approval |
 |---|---|---|---|
+| B19-RECOVERY | Build 19 carryover recovery within Expansion 20: audit the 18 unfinished Build 19 requirements and the 9 awaiting verification against the code, then integrate, finish or implement them on the Expansion 20 line | umbrella | OWNER APPROVED |
 | ECON-P3.3 | Stock targets in days of sales (agent proposal P3.3, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 185) | proposal | PROPOSED |
 | ECON-P3.4 | Hire wages from the market quote (agent proposal P3.4, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 186) | proposal | PROPOSED |
 | EXP-D | Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build | umbrella | OWNER APPROVED |
