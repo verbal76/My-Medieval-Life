@@ -220,7 +220,7 @@ func _run() -> void:
 	check(mine_for_guest and not mine_for_host, "it is the guest's own desk for the guest, not for the host")
 	# --- saves: nothing new is saved; a Build 21 save (22) and the Build 20 save (21) load with their desks
 	var d22: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict(), "", true, true))
-	check(int(d22.save_version) == 22, "the save version is unchanged (22)")
+	check(int(d22.save_version) == World.SAVE_VERSION, "the desks add no save version of their own (the current version, %d)" % World.SAVE_VERSION)   # Build 22: 23 since MP-PLAYER-FAMILY
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), d22)
 	check(w2.load_error == "" and BusinessDesks.all(w2).size() == BusinessDesks.all(w).size(), "a save 22 loads with the same desks (%d)" % BusinessDesks.all(w2).size())
