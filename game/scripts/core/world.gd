@@ -49,6 +49,7 @@ var next_band_id := BAND_START
 var people := {}
 var identity_report := {}
 var tie_history := {}
+var disposed := false               # set by dispose(): the world is being thrown away; views stop reading it
 var load_error := ""                # set by load_dict when the save cannot be brought up to date (the caller refuses it and leaves the file)
 var households: Array = []         # {id, family, home, members, pantry}
 var buildings := {}                # id -> dict
@@ -5422,6 +5423,7 @@ func _station_owners() -> void:
 
 ## Break the world <-> brain reference cycle so a finished world is freed.
 func dispose() -> void:
+	disposed = true                    # the views that read this world stop (StallDisplayView): it is being thrown away
 	if recorder != null:
 		recorder.finish()              # REC-19: write what is buffered and close the session
 		recorder = null

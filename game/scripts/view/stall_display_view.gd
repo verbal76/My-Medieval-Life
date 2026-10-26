@@ -38,8 +38,8 @@ func _process(dt: float) -> void:
 
 
 func refresh() -> void:
-	if world == null or world.business == null:
-		return
+	if world == null or world.business == null or world.disposed:
+		return                        # a world thrown away (a new game, a load, leaving a shared world, quitting) is not read
 	var now: Array = world.business.displays()
 	if now != shown:
 		shown = now
