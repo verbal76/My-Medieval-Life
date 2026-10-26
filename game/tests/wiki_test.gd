@@ -118,6 +118,7 @@ func _data_tests() -> void:
 					or not str(w.chain_lines(out_id)[0]).contains(Wiki.tool_kind_name(k)) or not w.pages["item:" + out_id].text.contains(GameData.item_name(its[0]).to_lower())):
 				no_tools.append("%s/%s" % [rid, k])
 	check(no_tools.is_empty() and not Wiki.recipe_tool_kinds("dress_stone").is_empty(), "every recipe with a tool shows it on its page, its product's page and its chain line, linked to every item that counts %s" % [no_tools])
+	check(w.pages["sys:appearance"].text.contains("leather armour as a leather jerkin") and not w.pages.has("todo:looks_more"), "ARMOR-01: every armour shows on your figure, leather included (no longer a Not yet page)")
 	var th: String = w.pages["sys:theft"].text
 	check(th.contains("red ring") and th.contains("pursued by the guards") and th.contains("never shows where a guard is") and "sys:theft" in w.search("hunted") and "sys:theft" in w.search("chased"),
 		"GP-WANTED-INDICATOR: the theft and guards page explains the red ring and the note")

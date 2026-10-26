@@ -51,6 +51,13 @@
    "sha256": "c119efb120231bc99fcef8f10445dfd8d29edb03abdf01663379fc47507f6cec"
   },
   {
+   "file": "assets/characters/layers/gloves/leather-gloves.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/gloves/leather-gloves.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "4b94bdfa4c9d66c261af3027b563f4d0e377c44ff0aebdafc4d1713de337936c"
+  },
+  {
    "file": "assets/characters/layers/hair/f1.png",
    "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
    "member": "assets/hair/f1.png",
@@ -231,6 +238,13 @@
    "member": "assets/headwear/novice-helm.png",
    "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
    "sha256": "215256052e6edcf20d190ebb70b4bc75b792c588194a766bbc2824528befdc32"
+  },
+  {
+   "file": "assets/characters/layers/headwear/grunt-helm.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/headwear/grunt-helm.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "3d28268797fa0dd6f303ec50535832ea22ef8d2ac3b5c6ba086af4418c5a6a3e"
   },
   {
    "file": "assets/characters/layers/weapon-overlay/weapon-overlay.png",

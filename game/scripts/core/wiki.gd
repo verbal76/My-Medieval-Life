@@ -823,7 +823,7 @@ func _systems() -> void:
 		links(["sys:death_causes", "sys:inheritance", "sys:saving", "guide:heal", "sys:ageing"])])
 	sys.call("appearance", "Your appearance", [
 		p("When you start a new game you choose how you look: your skin, hair style and hair colour, a beard or none, eye colour, eyelashes, plain clothes or a tunic and their colour, and leather boots or bare feet. Randomize picks a whole new look; the arrows beside each feature step through its choices, and the figure beside them shows you from the front and three sides."),
-		p("It is only how you look. Everyone begins as an ordinary villager with the same clothes, tools and coins, whatever they choose; there are no hats, armour or gloves to pick. Iron armour and the iron helmet show on your figure while you wear them (the armour over your clothes, the helmet over your hair) and your own look returns when you take them off; leather armour and the leather cap have no picture and change nothing you see. Your look itself is kept in your save."),
+		p("It is only how you look. Everyone begins as an ordinary villager with the same clothes, tools and coins, whatever they choose; there are no hats, armour or gloves to pick. All the armour you can wear shows on your figure, from every side and while you walk, work and fight: iron armour as a grey breastplate and the iron helmet as an open iron helm over your hair; leather armour as a leather jerkin with leather gloves and boots, and the leather cap as a round brown cap. Your own clothes come back when you take them off. Other players in your game see what you wear, and you see theirs. Your look itself is kept in your save, and what you wear stays on after loading."),
 		links(["sys:inheritance", "sys:saving"])])
 	sys.call("chains", "Production chains", [
 		p("Raw materials become goods through stations:"),
@@ -855,7 +855,6 @@ func _not_yet() -> void:
 		"luxury_status": ["Standing from owning luxuries", "Villagers buy spices, fine cloth and jewellery from the caravan to show they can, and keep them, but the village has no measure of a person's standing yet, so owning them changes nothing about how anyone is treated, you included. They are kept in a pack and go to an heir; they are not worn."],
 		"cloud_saves": ["Cloud saves", "Saves stay on your device. There is no cloud sync or online play."],
 		"multiplayer_more": ["Internet play and hosting from a phone", "Playing with friends works on the same Wi-Fi or home network, with a PC hosting (see Playing with friends). Playing over the internet, a phone or tablet hosting a world, dedicated servers and more than one friend tested at a time are not in the game yet."],
-		"looks_more": ["Leather armour on your figure", "Leather armour and the leather cap protect you but are not drawn on your figure (only iron armour and the iron helmet show: see Your appearance)."],
 		"farm_more": ["Oxen, coops, watering, trapping and hired farmhands", "You can farm and keep animals yourself, and a plough horse from the caravan speeds the plough (see the farming guides), but there are no oxen, no riding or carts drawn by horses, no roofed coops or shelters, no watering or weather, no traps for rabbits, no other animals from the caravan and no hired farmhands yet."],
 	}
 	for id in items:

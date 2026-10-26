@@ -17,7 +17,15 @@ func check(cond: bool, what: String) -> void:
 func _init() -> void:
 	var looks: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/appearances.json")).looks
 	var st := CharacterLook.style()
-	check(st.format == "mml-character-style/1" and st.worn_layers.has("iron_armor") and st.worn_layers.has("iron_helmet") and not st.worn_layers.has("leather_armor"), "the style is read; iron armour and the iron helmet have worn layers, leather gear none")
+	# ARMOR-01 (Build 22, owner 2026-10-26): every armour and head item has a worn entry, and every one that protects draws a layer
+	GameData.ensure()
+	var gear := []
+	for id in GameData.items:
+		if str(GameData.items[id].type) in ["armor", "head"]:
+			gear.append(str(id))
+	var no_entry := gear.filter(func(i): return not st.worn_layers.has(i))
+	var no_art := gear.filter(func(i): return float(GameData.items[i].get("armor", 0)) > 0.0 and not st.worn_layers.get(i, {}).has("layer"))
+	check(st.format == "mml-character-style/1" and gear.size() >= 5 and no_entry.is_empty() and no_art.is_empty(), "the style is read; every armour and head item has a worn entry, every protective one a layer %s %s" % [no_entry, no_art])
 
 	# 1. the same sheet as the importer's generator: every Build 7-17 look, drawn from its recipe
 	var same := 0
@@ -140,20 +148,49 @@ func _init() -> void:
 	var worn := CharacterLook.apply_worn(r1, ["test_hood", "plain_clothes"])
 	check(worn.picks.hair == "" and worn.picks.shoes == "leather-boots" and worn.swatches.leather_shoes == 1 and r1.picks.hair == "m5", "a worn item's entry hides and adds layers without touching the recipe")
 	st.worn_layers.erase("test_hood")
-	check(CharacterLook.apply_worn(r1, ["plain_clothes", "leather_armor", "leather_cap", ""]) == {"picks": r1.picks, "swatches": r1.swatches}, "items with no entry (plain clothes, leather gear, nothing) change nothing")
+	check(CharacterLook.apply_worn(r1, ["plain_clothes", ""]) == {"picks": r1.picks, "swatches": r1.swatches}, "plain clothes (the character's own) and nothing change nothing")
 
 	# 8. ARMOR-01: iron armour and the iron helmet draw their layers, taking them off restores the look
 	var rec_before := JSON.stringify(r1)
 	var bare := CharacterLook.render(r1)
 	var arm := CharacterLook.apply_worn(r1, ["iron_armor", ""])
-	check(arm.picks.clothes == "metal-armour" and arm.swatches.metal_armour == 1 and arm.picks.get("headwear", "") == r1.picks.get("headwear", ""), "iron armour sets the clothes layer to metal-armour on a steel swatch")
+	check(arm.picks.clothes == "metal-armour" and arm.swatches.metal_armour == 0 and arm.picks.get("headwear", "") == r1.picks.get("headwear", ""), "iron armour sets the clothes layer to metal-armour on the iron swatch (the pack's IronArmour)")
 	var helm := CharacterLook.apply_worn(r1, ["", "iron_helmet"])
 	check(helm.picks.headwear == "novice-helm" and helm.picks.clothes == r1.picks.clothes, "the iron helmet sets the headwear layer to the novice helm")
 	var img_arm := CharacterLook.render(arm)
 	var img_helm := CharacterLook.render(helm)
 	var img_both := CharacterLook.render(CharacterLook.apply_worn(r1, ["iron_armor", "iron_helmet"]))
 	check(_seen(img_arm) != _seen(bare) and _seen(img_helm) != _seen(bare) and _seen(img_both) != _seen(img_arm) and _seen(img_both) != _seen(img_helm), "armour, helmet and both each draw differently from the bare look")
-	check(_seen(CharacterLook.render(CharacterLook.apply_worn(r1, ["", ""]))) == _seen(bare) and _seen(CharacterLook.render(CharacterLook.apply_worn(r1, ["leather_armor", "leather_cap"]))) == _seen(bare), "taking items off, or wearing leather gear (no art), draws the bare look")
+	check(_seen(CharacterLook.render(CharacterLook.apply_worn(r1, ["", ""]))) == _seen(bare) and _seen(CharacterLook.render(CharacterLook.apply_worn(r1, ["leather_armor", "leather_cap"]))) != _seen(bare), "taking items off draws the bare look; leather gear draws (Build 22)")
+	var lth := CharacterLook.apply_worn(r1, ["leather_armor", "leather_cap"])
+	check(lth.picks.clothes == "tunic" and lth.swatches.tunic == 1 and lth.picks.gloves == "leather-gloves" and lth.picks.shoes == "leather-boots" and lth.picks.headwear == "grunt-helm",
+		"leather armour is the leather tunic (tunic row 1, the pack's LeatherTunic) with leather gloves and boots; the leather cap a plain round cap")
+	# every wearable item, on a man and on a woman, in all eight directions and the idle, walk, work, sword, throw (tool
+	# swing) and carry frames, draws differently from the bare look; taking it off restores the bare sheet exactly
+	var order: Array = st.draw_order
+	check(order.find("clothes") < order.find("hair") and order.find("hair") < order.find("headwear") and order.find("headwear") < order.find("weapon-overlay") and order.find("shoes") < order.find("clothes") and order.find("gloves") > order.find("clothes"),
+		"drawing order: boots, then the body armour, gloves over it, hair, the helmet over the hair, the weapon over everything")
+	var cols := [0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 14, 15, 16, 17, 18, 25, 26, 27]
+	var unseen := []
+	for sex in ["male", "female"]:
+		var rr := RandomNumberGenerator.new()
+		rr.seed = 77 if sex == "male" else 78
+		var rec := CharacterLook.random_recipe(rr, sex)
+		rec.picks.clothes = "tunic"
+		rec.swatches.tunic = 1                       # the hardest case: already in a leather-coloured tunic
+		rec.picks.shoes = "leather-boots"
+		var base_img := CharacterLook.render(rec)
+		for item in gear:
+			if not st.worn_layers[item].has("layer"):
+				continue
+			var worn_img := CharacterLook.render(CharacterLook.apply_worn(rec, [item, ""] if str(GameData.items[item].type) == "armor" else ["", item]))
+			for row in 8:
+				for c in cols:
+					var r2 := Rect2i(c * 32, row * 32, 32, 32)
+					if _seen(worn_img.get_region(r2)) == _seen(base_img.get_region(r2)):
+						unseen.append("%s %s row %d col %d" % [sex, item, row, c])
+		check(_seen(CharacterLook.render(CharacterLook.apply_worn(rec, ["", ""]))) == _seen(base_img), "%s: taken off, the bare sheet again" % sex)
+	check(unseen.is_empty(), "every armour and head item shows on a man and a woman in every direction and animation frame %s" % [unseen.slice(0, 6)])
 	check(JSON.stringify(r1) == rec_before, "wearing never changes the recipe")
 	var ps := PlayerState.new()
 	ps.appearance = CharacterLook.normalize(r1)

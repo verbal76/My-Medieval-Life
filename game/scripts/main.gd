@@ -402,7 +402,7 @@ func _ready() -> void:
 					ui.inventory_window().tab_buttons[2].grab_focus()
 			"worn_none", "worn_iron_armor", "worn_iron_helmet", "worn_iron_both", "worn_leather":
 				# ARMOR-01: the player (made at the creator's defaults) wearing nothing, iron armour, an iron helmet, both,
-				# or leather armour and a cap (no art: unchanged); the other worn panels show the same character
+				# or leather armour and a cap (Build 22: the leather tunic, gloves and boots, a round cap); the same character
 				var gear := {"worn_iron_armor": ["iron_armor"], "worn_iron_helmet": ["iron_helmet"],
 						"worn_iron_both": ["iron_armor", "iron_helmet"], "worn_leather": ["leather_armor", "leather_cap"]}
 				for id in gear.get(shot_panel, []):
@@ -414,6 +414,36 @@ func _ready() -> void:
 					player_worn = "reset"
 				camera.zoom = Vector2(12, 12) * view_scale
 				follow_at = _in_view(world.player.pos * T)
+			"worn_sheet", "worn_sheet_f":
+				# ARMOR-01 (Build 22): composed sheets (a man, or _f a woman): rows bare, iron armour, iron helmet, leather
+				# armour, leather cap, iron both, leather both; columns the eight directions (idle), then a walk, work and
+				# sword frame facing south, on a plain backdrop
+				var back := ColorRect.new()
+				back.color = Color8(96, 128, 72)
+				back.size = Vector2(1280, 720)
+				ui.hud_root.add_child(back)
+				var grid := GridContainer.new()
+				grid.columns = 11
+				grid.position = Vector2(8, 8)
+				grid.add_theme_constant_override("h_separation", 0)
+				grid.add_theme_constant_override("v_separation", 0)
+				ui.hud_root.add_child(grid)
+				var rr := RandomNumberGenerator.new()
+				rr.seed = 12 if shot_panel == "worn_sheet_f" else 11
+				var rec := CharacterLook.random_recipe(rr, "female" if shot_panel == "worn_sheet_f" else "male")
+				for worn in [["", ""], ["iron_armor", ""], ["", "iron_helmet"], ["leather_armor", ""], ["", "leather_cap"], ["iron_armor", "iron_helmet"], ["leather_armor", "leather_cap"]]:
+					var tex := CharacterLook.texture(rec, worn)
+					for cell in [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [0, 3], [0, 14], [0, 6]]:
+						var at := AtlasTexture.new()
+						at.atlas = tex
+						at.region = Rect2(cell[1] * 32, cell[0] * 32, 32, 32)
+						var tr := TextureRect.new()
+						tr.texture = at
+						tr.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+						tr.custom_minimum_size = Vector2(96, 96)
+						tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+						grid.add_child(tr)
+				ui.hud.visible = false
 			"tailor_pitch", "barber_pitch", "barber", "barber_result":
 				# TAILOR-18 / BARBER-18: the tailor or barber at the manor's pitch; the barber's chair, before and after a visit
 				var job := "tailor" if shot_panel == "tailor_pitch" else "barber"
@@ -1119,6 +1149,14 @@ func _sync_avatars(dt: float) -> void:
 			actors.add_child(s)
 			s.position = (e.pos as Vector2) * T
 			avatar_sprites[id] = s
+		var who2: PlayerState = world.player_by_pid(int(id))
+		if who2 != null:                           # ARMOR-01: redraw when what they wear changes (put on, taken off)
+			var wk := "%s|%s" % [who2.armor, who2.head]
+			if str(s.get_meta("worn", "")) != wk:
+				s.set_meta("worn", wk)
+				var sheet := CharacterLook.player_sheet(who2)
+				if sheet != null:
+					s.texture = sheet
 		var to: Vector2 = (e.pos as Vector2) * T
 		s.position = s.position.lerp(to, minf(1.0, dt * 12.0)) if s.position.distance_to(to) < 48.0 else to
 		if (e.get("dir", Vector2.ZERO) as Vector2).length() > 0.1:

@@ -291,13 +291,26 @@ CREATION_SWATCHES = {
 CREATION_LINKED = {"facial_hair": "hair"}    # a beard takes the hair's colour, as the importer's looks always had
 ALWAYS_LAYERS = {"eyes": "eyes", "weapon-overlay": "weapon-overlay"}   # drawn without a pick (puny_chargen.render)
 HUMAN_ONLY = ["eyes", "eyelashes"]
-# ARMOR-01 (owner Option A, 2026-10-22; docs/DECISIONS.md): worn item id -> the layer it draws while worn. iron_armor is
-# the pack's metal-armour clothes layer, iron_helmet its novice-helm (a plain open iron helm; the face stays
-# readable), both on metal ramp row 1 (the cool steel grey; row 0 is the warm reference grey, rows 2-3 gold).
-# leather_armor and leather_cap have no art: drawn as nothing extra. Not offered by creation.
+# ARMOR-01 (owner Option A, 2026-10-22; docs/DECISIONS.md): worn item id -> the layer it draws while worn, from the
+# Puny Characters art and its palette ramps. Build 22 (owner playtest 2026-10-26: bought armour did not show; owner
+# amendment: every equippable armour has a picture, from the existing art, mapped to the closest real layer and ramp,
+# matched against the colourways the full pack ships, PUNY_CHARACTERS_v2.1.zip Individual Spritesheets):
+#   iron_armor   clothes metal-armour, metal row 0 (the pack's IronArmour; row 1 is its SteelArmour, used before)
+#   iron_helmet  headwear novice-helm, metal row 0 (the pack's NoviceHelm as shipped: an open plain iron helm)
+#   leather_armor clothes tunic, tunic row 1 (the pack's LeatherTunic), with the leather gloves and leather boots
+#                (leather row 0) drawn as well (`also`), so it reads as a leather jerkin over any clothes
+#   leather_cap  headwear grunt-helm (a plain round cap with no crest; the pack has no leather headgear), metal row 3
+#                (the pack's bronze row, the brown nearest leather)
+#   plain_clothes the character's own clothes: an entry with no layer, nothing drawn over them on purpose
+# character_look_test checks every armour and head item has an entry, so none can be left without a picture again.
+# Not offered by creation.
 WORN_LAYERS = {
-    "iron_armor": {"layer": "clothes", "option": "metal-armour", "swatches": {"metal_armour": 1}},
-    "iron_helmet": {"layer": "headwear", "option": "novice-helm", "swatches": {"metal_headwear": 1}},
+    "iron_armor": {"layer": "clothes", "option": "metal-armour", "swatches": {"metal_armour": 0}},
+    "iron_helmet": {"layer": "headwear", "option": "novice-helm", "swatches": {"metal_headwear": 0}},
+    "leather_armor": {"layer": "clothes", "option": "tunic", "swatches": {"tunic": 1, "leather_gloves": 0, "leather_shoes": 0},
+                      "also": [{"layer": "gloves", "option": "leather-gloves"}, {"layer": "shoes", "option": "leather-boots"}]},
+    "leather_cap": {"layer": "headwear", "option": "grunt-helm", "swatches": {"metal_headwear": 3}},
+    "plain_clothes": {"note": "the character's own clothes: nothing drawn over them"},
 }
 
 
@@ -324,9 +337,10 @@ def _import_character_layers(record, style, zip_name):
     wanted = {layer: [c for c in codes if c is not None] for layer, codes in CREATION_PICKS.items()}
     wanted.update({layer: [code] for layer, code in ALWAYS_LAYERS.items()})
     for w in WORN_LAYERS.values():
-        wanted.setdefault(w["layer"], [])
-        if w["option"] not in wanted[w["layer"]]:
-            wanted[w["layer"]].append(w["option"])
+        for part in ([w] if "layer" in w else []) + w.get("also", []):
+            wanted.setdefault(part["layer"], [])
+            if part["option"] not in wanted[part["layer"]]:
+                wanted[part["layer"]].append(part["option"])
     for layer in puny_chargen.DRAW_ORDER:
         if layer not in wanted:
             continue
@@ -354,7 +368,7 @@ def _import_character_layers(record, style, zip_name):
         "draw_order": puny_chargen.DRAW_ORDER, "always": ALWAYS_LAYERS, "human_only": HUMAN_ONLY,
         "selections": selections, "ramps": ramps, "layers": layers,
         "creation": {"picks": CREATION_PICKS, "swatches": CREATION_SWATCHES, "linked": CREATION_LINKED},
-        # ARMOR-01: worn item id -> {"layer", "option", "swatches", "hides": [layers]} (WORN_LAYERS above)
+        # ARMOR-01: worn item id -> {"layer", "option", "swatches", "hides": [layers], "also": [{"layer", "option"}]} (WORN_LAYERS)
         "worn_layers": WORN_LAYERS,
     }
     (REPO / "game" / "data" / "character_style.json").write_text(json.dumps(data, indent=1) + "\n")
