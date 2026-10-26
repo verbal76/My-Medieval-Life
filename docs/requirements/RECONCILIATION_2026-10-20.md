@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 177 still open, 54 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 578 (309 of them still open) |
-| **Open entries now** (rules excluded) | | **486** |
+| Entries added since | | 580 (311 of them still open) |
+| **Open entries now** (rules excluded) | | **488** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (54)
@@ -97,7 +97,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (578)
+## Added since the baseline (580)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -105,6 +105,8 @@ None.
 | ANDROID-RELEASE-SIGNING | Android builds signed with the permanent release identity from the four ANDROID_RELEASE_* secrets, no fallback | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 21 |
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | IN DEVELOPMENT / VERIFICATION FAILED / OPEN | 18 |
+| ARMOR-CATALOG-01 | Every armour, helmet and cultural outfit in the Puny Characters pack can be made and bought at the armourer; cultural pieces cost more and need special materials; rarer pieces carry buffs | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | decision | OPEN | 20 |
 | ARMOR-Q | Armour scope: Option A (exact text to be presented) | decision | APPROVED | owner decision |
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | approved | INTEGRATED / NOT TESTED / OPEN | 16 |
 | B16-READY | Build 16 development audit and release-readiness report | approved | INTEGRATED / NOT TESTED / OPEN | 16 |

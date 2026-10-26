@@ -733,6 +733,81 @@
    "assigned_worker": "worker B (interface)"
   },
   {
+   "id": "ARMOR-CATALOG-01",
+   "kind": "approved",
+   "title": "Every armour, helmet and cultural outfit in the Puny Characters pack can be made and bought at the armourer; cultural pieces cost more and need special materials; rarer pieces carry buffs",
+   "description": "Every armour, helmet and cultural outfit in the Puny Characters pack can be made and bought at the armourer; cultural pieces cost more and need special materials; rarer pieces carry buffs",
+   "source": "owner message 2026-10-26",
+   "owner_wording": "We need to make all of these available to make in purchase at the armorer the ones that are culturally specific are going to have a higher cost and ask for special materials in addition to paying for the build. And some of the more rarer looking items are going to have buffs attached. So when you wear it, you might get like a bracelet or one of the rings plus five health. You might get damage ranges to your fireball things like that, so let's start thinking around that route. Let's try and squeeze that into this build.",
+   "approval": "owner, 2026-10-26",
+   "acceptance": [
+    "Every body armour, helmet and cultural outfit of the Puny Characters pack (Shade) is a real item that can be made (recipe) and bought at the armourer, drawn on the character when worn (ARMOR-01 linkage)",
+    "Cultural pieces cost more and need special materials as well as payment for the work",
+    "Rarer-looking pieces carry worn buffs (for example +5 health, more fireball damage) through the gear bonus mechanic",
+    "Classes, prices, materials and buff values presented to and approved by the owner before they are assigned (ARMOR-01 rule); new materials follow the material rules (WDR-001..003, 007)"
+   ],
+   "target_build": "20",
+   "parent": "X20-OPEN-ITEMS",
+   "depends_on": [
+    "ARMOR-01"
+   ],
+   "decisions": [
+    "ARMOR-CATALOG-D1"
+   ],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-26"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "parent: None -> X20-OPEN-ITEMS; depends_on + ARMOR-01",
+     "why": "owner request for Build 22; values await approval"
+    },
+    {
+     "date": "2026-10-26",
+     "change": "decisions + ARMOR-CATALOG-D1",
+     "why": "the values await the owner's approval"
+    }
+   ],
+   "related": [
+    "X20-OPEN-ITEMS",
+    "ARMOR-01"
+   ],
+   "design": "OWNER DECISION REQUIRED",
+   "effort": "L",
+   "next_action": "owner approves the catalogue proposal (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md); then a Build 22 worker implements it on top of ARMOR-01",
+   "notes": "Owner asked for it in Build 22. Existing: items.json 'bonus' (max_hp, max_stamina) summed over worn gear (PlayerState.bonus); no fireball-damage bonus yet; no steel, tin, bronze, silk or fur material yet."
+  },
+  {
+   "id": "ARMOR-CATALOG-D1",
+   "kind": "decision",
+   "title": "Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md)",
+   "description": "Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md)",
+   "source": "docs/design/ARMOUR_CATALOGUE_PROPOSAL.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-26",
+     "change": "entered in the register",
+     "why": "docs/design/ARMOUR_CATALOGUE_PROPOSAL.md"
+    }
+   ]
+  },
+  {
    "id": "ARMOR-Q",
    "title": "Armour scope: Option A (exact text to be presented)",
    "kind": "decision",

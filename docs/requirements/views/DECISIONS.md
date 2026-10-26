@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 37 |
+| OPEN | 38 |
 | APPROVED | 186 |
 | PROVISIONAL | 1 |
 | SUPERSEDED | 2 |
@@ -33,10 +33,11 @@ The decision register is the `decision` records of the register. A recommendatio
 | SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | OPEN | no |  | docs/directives/2026-10-23_simulation_first_diagnostics.md |
 | SIM-F4 | Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases? | OPEN | no |  | docs/directives/2026-10-23_simulation_first_diagnostics.md |
 
-## Build 20: Living Economy: open, reopened or provisional (14)
+## Build 20: Living Economy: open, reopened or provisional (15)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
+| ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | OPEN | no | ARMOR-CATALOG-01 | docs/design/ARMOUR_CATALOGUE_PROPOSAL.md |
 | OD-LE-02B | Offer visibility: who can see an offer (in person at stalls and meetings, by word of mouth, a notice board), the remaining part of OD-LE-02 | OPEN | no |  | docs/directives/2026-10-23_expansions_19_21_consolidated_design.md |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | OPEN | yes | ECON-P3.4 | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-04 | Owner decision (Living Economy): Business founding, partnerships, ownership and inheritance | OPEN | yes |  | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |

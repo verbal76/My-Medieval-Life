@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (666)
+## Approved requirement (667)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -17,6 +17,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | AR-P1-2 | Fixed on staging; PR #1 branch still has push-triggered workflow | owner action | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | 16 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | ARMOR-01 | Armour is acquired in play, physical, and visible when worn | 18 | OWNER APPROVED | IN DEVELOPMENT | VERIFICATION FAILED | NOT READY | OPEN |
+| ARMOR-CATALOG-01 | Every armour, helmet and cultural outfit in the Puny Characters pack can be made and bought at the armourer; cultural pieces cost more and need special materials; rarer pieces carry buffs | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B12A-01 | 1-11 fixed (B13-01..10); 12 → B13-14 |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B12A-02 | Fixed (WHAT_WAS_DONE:135) |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B12A-03 | Fixed / one withdrawn (addendum :1631) |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
@@ -768,10 +769,11 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (227)
+## Owner decisions (228)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
+| ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | 20 | OPEN |  |
 | ARMOR-Q | Armour scope: Option A (exact text to be presented) | owner decision | APPROVED |  |
 | B18-DP-01 | PL1-10: finish production chains (attendants work the player's stations), stall goods display, shops in leased village houses with existing systems? | 18 | APPROVED |  |
 | B18-DP-02 | PL2-008: treat ROOMS-18 as the answer to its open question and close on playtest (villager modules and module signs not in its text)? | 18 | APPROVED |  |
