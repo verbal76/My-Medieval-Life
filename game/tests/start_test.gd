@@ -2264,7 +2264,9 @@ func _actions_tests() -> void:     # a coroutine: a few steps wait for the next 
 	main._find_target()
 	var kinds: Array = main.target_options.map(func(t): return str(t.kind))
 	check(kinds.has("station") and (kinds.has("npc") or kinds.has("shop")), "(station + person) both are offered: %s" % [kinds])
-	check(ui.prompt_text.contains("\n") and ui.prompt_text.contains("next"), "the prompt names the next choice on a second line: \"%s\"" % ui.prompt_text.replace("\n", " | "))
+	# GP-ANDROID-USE-TALK-TARGETING: Use takes the station and the person is offered to talk (was: the person first, the station
+	# named as the next choice), because Use now puts things before people by the owner's direction
+	check(main.target.kind == "station" and ui.prompt_text.contains("\nT: Talk to"), "Use takes the station; the person is offered to talk on a second line: \"%s\"" % ui.prompt_text.replace("\n", " | "))
 	var first: String = main.target.kind
 	main._unhandled_input(_key(KEY_Q))
 	check(main.target.kind != first, "Q chooses the other one (%s -> %s)" % [first, main.target.kind])

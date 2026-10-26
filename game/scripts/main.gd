@@ -2367,6 +2367,8 @@ func _player_step(delta: float) -> void:
 		attack()
 	if not talk_alt.is_empty() and (Input.is_action_just_pressed("talk") or (Input.is_action_just_pressed("fireball") and scheme == "gamepad")):
 		talk_to_alt()                     # Y on a pad talks instead of casting while a villager is offered
+	elif Input.is_action_just_pressed("talk") and str(target.get("kind", "")) in ["npc", "shop"]:
+		interact()                        # GP-ANDROID-USE-TALK-TARGETING: T talks to the villager chosen (the first of only people)
 	elif Input.is_action_just_pressed("fireball"):
 		fireball()
 	_menu_keys()
@@ -2862,13 +2864,19 @@ func _find_target() -> void:
 				cands.push_front(job)
 			else:
 				cands.append(job)
-	# a villager by the seam, tree or plant in front (often working it too) no longer takes the default:
-	# A works the resource and Y / T talks to them (owner, Build 13 playtest)
+	# a villager by the seam, tree or plant in front (often working it too) no longer takes the default: A works the resource
+	# and Y / T talks to them (owner, Build 13 playtest). GP-ANDROID-USE-TALK-TARGETING (owner, 2026-10-24) makes that the rule
+	# for every usable thing: Use is for the station, chest, counter, loot, seam, door... in reach, and a villager or animal
+	# beside it comes after it (Q / Tab, the D-pad or the prompt's Next reach them); Talk (T, Y, or tapping them) is for the
+	# nearest villager. With only people or animals in reach, Use talks to the nearest as before. Reach, ownership and the
+	# refusals are unchanged: this only orders what was already on offer.
 	talk_alt = {}
-	if not front.is_empty() and not cands.is_empty() and str(cands[0].kind) in ["npc", "shop"]:
-		talk_alt = cands[0]
-		cands.erase(front)
-		cands.push_front(front)
+	cands = use_order(cands)
+	if not cands.is_empty() and not str(cands[0].kind) in ["npc", "shop"]:
+		for tc in cands:
+			if str(tc.kind) in ["npc", "shop"]:
+				talk_alt = tc
+				break
 	# taking what is not yours is never the default choice: it is offered last (Q / Tab reaches it)
 	# (whether a choice is theft is core's: World.chest_is_theft, container_is_theft, field_is_theft, DVW-A12 R16)
 	var lawful := cands.filter(func(c): return not c.get("theft", false))
@@ -2895,7 +2903,17 @@ func _find_target() -> void:
 			text += "\n%s: %s" % [{"kbm": "T", "gamepad": "Y", "touch": "Tap them"}.get(scheme, "T"), talk_alt.get("label", "")]
 		elif text != "" and cands.size() > 1:
 			text += "\n" + _next_hint(cands[(pick + 1) % cands.size()], pick)
-		ui.prompt(text)
+		ui.prompt(text, text != "" and cands.size() > 1)
+
+
+## GP-ANDROID-USE-TALK-TARGETING: the order Use offers things in: every thing (a station, a chest, a counter, a seam...)
+## before any character (a villager to talk to, an animal), each group in the order it came. A trader at their post (kind
+## "shop") is the counter's use and keeps its place.
+static func use_order(cands: Array) -> Array:
+	var things := cands.filter(func(c): return not str(c.get("kind", "")) in ["npc", "animal"])
+	if things.is_empty() or things.size() == cands.size():
+		return cands
+	return things + cands.filter(func(c): return str(c.get("kind", "")) in ["npc", "animal"])
 
 
 ## Which thing a target is, stable from frame to frame (what the labels' counts change is not part of it).
@@ -2915,8 +2933,10 @@ func _target_key(t: Dictionary) -> String:
 
 ## The prompt's second line: what the next choice is and how to reach it.
 func _next_hint(next: Dictionary, at: int) -> String:
-	var keys := {"kbm": "Q / Tab", "gamepad": "D-pad left / right", "touch": "tap it"}
 	var l: String = next.get("label", "")
+	if scheme == "touch":                  # GP-ANDROID-USE-TALK-TARGETING: the prompt's Next button chooses it
+		return "Next: %s (%d of %d)" % [l.get_slice(":", 0).get_slice(" (", 0), at + 1, target_options.size()]
+	var keys := {"kbm": "Q / Tab", "gamepad": "D-pad left / right"}
 	return "%s: next - %s (%d of %d)" % [keys.get(scheme, "Q / Tab"), l.get_slice(":", 0).get_slice(" (", 0), at + 1, target_options.size()]
 
 
@@ -6468,10 +6488,19 @@ func _find_target_below() -> void:
 	cands.append_array(_cart_targets(world.player_level))     # MIN-F: a minecart on this level
 	cands.append_array(_works_targets())                       # MIN-F: the rock face, supports, track
 	talk_alt = {}
+	cands = use_order(cands)                                    # GP-ANDROID-USE-TALK-TARGETING: things first, as on the surface
+	if not cands.is_empty() and str(cands[0].kind) != "npc":
+		for tc in cands:
+			if str(tc.kind) == "npc":
+				talk_alt = tc
+				break
 	target_options = cands
 	target = cands[0] if not cands.is_empty() else {}
 	var passing: bool = walking and target.get("kind", "") == "deposit"
-	ui.prompt("" if passing or not gather.is_empty() else str(target.get("label", "")))
+	var text := "" if passing or not gather.is_empty() else str(target.get("label", ""))
+	if text != "" and not talk_alt.is_empty():
+		text += "\n%s: %s" % [{"kbm": "T", "gamepad": "Y", "touch": "Tap them"}.get(scheme, "T"), talk_alt.get("label", "")]
+	ui.prompt(text)
 
 
 ## Fade between the surface and the level below over RoofFade.FADE_TIME, as a roof lifts: the level's view in, and

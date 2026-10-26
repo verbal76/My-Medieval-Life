@@ -31,6 +31,7 @@ var date_label: Label          # the season, year and day ("Spring, Year 1  Day 
 var prompt_label: Label
 var prompt_box: PanelContainer
 var prompt_icon: TextureRect
+var prompt_next: Button          # GP-ANDROID-USE-TALK-TARGETING: on a touch screen, the prompt's Next (the next thing to use here)
 var log_box: VBoxContainer
 var toast: Label
 var toast_t := 0.0
@@ -112,6 +113,7 @@ const CONTROLS := {
 		[["touch_zoom_in"], "Pinch to zoom"],
 		[["xbox_button_a"], "Connect a Bluetooth or wired controller and the game switches to its controls and hides these buttons"],
 		[["touch_swipe_two_move"], "Drag with two fingers to look around; Recenter brings the view back to you, in the middle of the part of the screen the buttons and the status box leave clear"],
+		[["touch_finger_one"], "Use works the station, chest, counter or rock beside you before any villager standing there; tap a villager to talk to them. When more than one thing can be used, the prompt's Next button chooses the next"],
 		[["touch_finger_one"], "Map opens the village map; tap a spot on it to look there"],
 		[["touch_finger_one"], "Run turns sprint on (it lights up): walk anywhere to run, using stamina; tap Run again to walk"]],
 	"kbm": [[["keyboard_w", "keyboard_a", "keyboard_s", "keyboard_d"], "Move"],
@@ -123,10 +125,10 @@ const CONTROLS := {
 		[["mouse_scroll"], "Zoom"], [["mouse_scroll", "mouse_move"], "Hold the wheel and drag to look around"],
 		[["keyboard_c"], "Recenter the view on you"], [["keyboard_m"], "Village map"],
 		[["keyboard_shift"], "Hold to sprint (it uses stamina)"], [["keyboard_q", "keyboard_tab"], "Next choice, when more than one thing can be used here"],
-		[["keyboard_t"], "Talk to the villager beside the rock, tree or plant you face (E still works it)"],
+		[["keyboard_t"], "Talk to the villager nearby (E still uses the station, chest or rock you face)"],
 		[["keyboard_escape", "mouse_right"], "While working: stop at once"]],
 	"gamepad": [[["xbox_stick_l"], "Move"], [["xbox_button_a"], "Use, or choose in a window"],
-		[["xbox_button_x"], "Swing at what is in front of you"], [["xbox_dpad_down"], "Gather mode: A in front of a resource gathers it until it runs out"], [["xbox_button_y"], "Fireball (once learned); beside a villager at a rock, tree or plant: talk to them (A works it)"],
+		[["xbox_button_x"], "Swing at what is in front of you"], [["xbox_dpad_down"], "Gather mode: A in front of a resource gathers it until it runs out"], [["xbox_button_y"], "Fireball (once learned); with a villager beside what A uses: talk to them"],
 		[["xbox_button_view"], "Pack"], [["xbox_rb", "xbox_rt"], "Skills (RB, or RT in play)"], [["xbox_dpad_up"], "Journal"], [["xbox_stick_l_press"], "Build"], [["xbox_button_menu"], "Menu"],
 		[["xbox_button_b"], "Close a window (with a quantity choice open, only that choice)"],
 		[["xbox_button_x", "xbox_button_y"], "In a quantity choice: X the fewest (1), Y the most you can (Max)"],
@@ -592,6 +594,17 @@ func _build_hud() -> void:
 	prompt_label.add_theme_constant_override("outline_size", 3)
 	prompt_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	ph.add_child(prompt_label)
+	# GP-ANDROID-USE-TALK-TARGETING: with more than one thing to use here, Next chooses the next (as Q / Tab and the D-pad do);
+	# on a touch screen only, where there are no keys for it
+	prompt_next = Button.new()
+	prompt_next.text = "Next"
+	prompt_next.focus_mode = Control.FOCUS_NONE
+	prompt_next.custom_minimum_size = Vector2(64, 44)
+	prompt_next.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	prompt_next.add_theme_font_size_override("font_size", 16)
+	prompt_next.visible = false
+	prompt_next.pressed.connect(func(): main.cycle_target(1))
+	ph.add_child(prompt_next)
 	ph.add_theme_constant_override("separation", 6)
 	var pm := _style(Color(WINDOW, 0.88))
 	pm.set_content_margin_all(6)
@@ -873,7 +886,7 @@ func set_scheme(s: String) -> void:
 	if place_bar.visible:
 		show_placing(true)                  # its hint follows the scheme
 	_fit_hud()                              # the messages and Recenter step beside the touch columns, or back
-	prompt(prompt_text)
+	prompt(prompt_text, main.target_options.size() > 1)
 	if is_open("title"):
 		show_title(main.can_continue())       # its controls list follows the scheme
 	if panel.visible and s != "touch":
@@ -1109,9 +1122,11 @@ func _fit_label(l: Label, max_w: float) -> void:
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if w > max_w else TextServer.AUTOWRAP_OFF
 
 
-func prompt(text: String) -> void:
+## The contextual prompt; `more`: there is a next thing to choose here (the touch Next button shows).
+func prompt(text: String, more := false) -> void:
 	prompt_text = text
 	prompt_label.text = text
+	prompt_next.visible = more and text != "" and scheme == "touch"
 	_fit_label(prompt_label, PROMPT_MAX_W)
 	_place_bottom(prompt_box, _prompt_bottom())
 	prompt_icon.texture = load(PROMPT % USE_ICON.get(scheme, "touch_tap"))
@@ -1243,7 +1258,7 @@ func modal() -> bool:
 func blocks(pos: Vector2) -> bool:
 	if panel.visible:
 		return true
-	for c in (touch_buttons() if touch_bar.visible else []) + [status_box, recenter_btn, place_bar, stick]:
+	for c in (touch_buttons() if touch_bar.visible else []) + [status_box, recenter_btn, place_bar, stick, prompt_next]:
 		if c.visible and c.get_global_rect().has_point(pos):
 			return true
 	return false
