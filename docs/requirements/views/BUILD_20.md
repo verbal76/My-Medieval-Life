@@ -18,7 +18,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 78 |
 | Open owner decisions (blocking) | 15 (11) |
 
-## In development (worker assigned) (8)
+## In development (worker assigned) (9)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -28,6 +28,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | GP-ANDROID-USE-TALK-TARGETING | Use prioritises the usable station or object and Talk the nearby character; the current target is clear and selectable | OWNER APPROVED | IN DEVELOPMENT | worker E (Android usability) / wip/x20-android | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | M |
 | GP-INTERACTABLE-OUTLINES | Usable objects nearby show a subtle sprite-silhouette glow; the selected target a brighter one | OWNER APPROVED | IN DEVELOPMENT | worker E (Android usability) / wip/x20-android | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | M |
 | GP-INTERACTION-PROMPT-LIFECYCLE | Contextual prompts ('Use the workbench') clear while the interaction is active and when it closes or the target changes | OWNER APPROVED | IN DEVELOPMENT | worker E (Android usability) / wip/x20-android | NOT TESTED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | S |
+| LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | IN DEVELOPMENT | worker F (LE-01) / wip/x20-le01 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | recorder worker (Sonnet subagent) / wip/recorder | TARGETED TESTS PASSED | combined gate on 2d5d49c; then into the Build 19 integration branch with Expansion 19 | design: UNKNOWN | UNKNOWN |
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | run 2 only: 30 days, seeds 1 and 2, on the recorder head with FIX-RECF1 and D3; stop at day 30, a FATAL line or the storage cap | design: UNKNOWN | UNKNOWN |
 
@@ -74,7 +75,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | GP-BUSINESS-COURIER | Business courier integration: the courier hand-off at a business desk (individually traceable part of GP-BUSINESS-DESK) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker A (market) / wip/b22-market | TARGETED TESTS PASSED | Build 22: implement on wip/b22-market, lead integrates on wip/build22 |  | UNKNOWN |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | OWNER APPROVED | PARTIALLY IMPLEMENTED | wip/expansion19-preparation | TARGETED TESTS PASSED | rework for the owner's answers of 2026-10-23: SJD-Q05 no prior-opinion bias in interpretation; X19-REGARD trust separate from liking (new structure); X19-Q-TIMING gossip passed at each meeting by contact and closeness (the prototype batches by the hour); X19-ASSAULT assault permanent; X19-HARMED keep the instant harm to kin; X19-CRT12 keep the courtship cut-offs; X19-GUARD a friendly guard reduces, never waives, a fine; synchronize with the finished Build 18 (the branch is on Build 17 cd7439c) |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (37)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (36)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -96,7 +97,6 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | GP-TABLE-ITEMS | Merchandise previews on tables: a visual preview of what the business offers (no pickup) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker A (market) / wip/b22-market | TARGETED TESTS PASSED | Build 22: implement on wip/b22-market, lead integrates on wip/build22 | design: UNKNOWN | UNKNOWN |
 | GP-WANTED-INDICATOR | Show the player when guards are hunting them: a red ring around the character and an out-of-the-way note saying why | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker B (interface) / wip/b22-ui | TARGETED TESTS PASSED | Build 22: implement on wip/b22-ui, lead integrates on wip/build22 | design: UNKNOWN | UNKNOWN |
 | GP-WIKI-RECIPE-TOOLS | Encyclopedia recipes name every tool the work needs (for example a mallet and a chisel, and which chisels count) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker B (interface) / wip/b22-ui | TARGETED TESTS PASSED | Build 22: implement on wip/b22-ui, lead integrates on wip/build22 | design: UNKNOWN | UNKNOWN |
-| LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

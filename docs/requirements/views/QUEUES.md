@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (38)
+## Workers and task branches (39)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -33,6 +33,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-WIKI-RECIPE-TOOLS | 20 | IMPLEMENTED ON TASK BRANCH | worker B (interface) | wip/b22-ui |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
+| LE-01 | 20 | IN DEVELOPMENT | worker F (LE-01) | wip/x20-le01 |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
 | MP-PLAYER-FAMILY | 20 | IMPLEMENTED ON TASK BRANCH | worker C (family and farming) | wip/b22-family |
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |

@@ -336,7 +336,7 @@ None.
 | JUICE-00 | Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 20+ |
 | LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20+ |
-| LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
