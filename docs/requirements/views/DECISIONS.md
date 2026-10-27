@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 36 |
+| OPEN | 37 |
 | APPROVED | 194 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
@@ -32,7 +32,7 @@ The decision register is the `decision` records of the register. A recommendatio
 | SIM-F2 | Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix? | OPEN | no |  | docs/directives/2026-10-23_simulation_first_diagnostics.md |
 | SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | OPEN | no |  | docs/directives/2026-10-23_simulation_first_diagnostics.md |
 
-## Build 20: Living Economy: open, reopened or provisional (15)
+## Build 20: Living Economy: open, reopened or provisional (16)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
@@ -51,6 +51,7 @@ The decision register is the `decision` records of the register. A recommendatio
 | OD-LE-13B | Death of a party to a contract: does the contract end, pass to the heir or the household, or go to the estate (the remaining part of OD-LE-13) | OPEN | no |  | docs/directives/2026-10-23_expansions_19_21_consolidated_design.md |
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | OPEN | yes |  | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | OPEN | yes |  | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| WDR-011-Q8 | Aspirations, scope of Q3: individual romantic preferences now apply to whom an NPC chooses to court. Should the same individual weighting also apply to whether an NPC ACCEPTS a proposal (the existing acceptance rules, kinship restrictions and the X19-CRT12 cut-offs kept as hard limits), or should acceptance stay as it is today? | OPEN | no |  | R5 design revision (wip/x20-r5 8bde18b); docs/directives/2026-10-27_final_aspirations_decisions.md Q3 |
 
 ## Build 21: Village Politics: open, reopened or provisional (9)
 

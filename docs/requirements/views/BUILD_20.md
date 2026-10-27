@@ -16,7 +16,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Owner playtested | 0 of 81 (0%) |
 | Complete | 2 of 81 (2%) |
 | Open (release blockers) | 79 |
-| Open owner decisions (blocking) | 15 (11) |
+| Open owner decisions (blocking) | 16 (11) |
 
 ## In development (worker assigned) (7)
 
@@ -119,7 +119,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | INTEGRATION VERIFIED | NOT READY |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (15)
+## Open owner decisions (16)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
@@ -138,6 +138,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | OD-LE-13B | Death of a party to a contract: does the contract end, pass to the heir or the household, or go to the estate (the remaining part of OD-LE-13) | OPEN | no |  |
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | OPEN | yes |  |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | OPEN | yes |  |
+| WDR-011-Q8 | Aspirations, scope of Q3: individual romantic preferences now apply to whom an NPC chooses to court. Should the same individual weighting also apply to whether an NPC ACCEPTS a proposal (the existing acceptance rules, kinship restrictions and the X19-CRT12 cut-offs kept as hard limits), or should acceptance stay as it is today? | OPEN | no |  |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (6)
 

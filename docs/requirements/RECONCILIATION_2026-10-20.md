@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 173 still open, 58 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 594 (310 of them still open) |
-| **Open entries now** (rules excluded) | | **483** |
+| Entries added since | | 595 (311 of them still open) |
+| **Open entries now** (rules excluded) | | **484** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (58)
@@ -101,7 +101,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (594)
+## Added since the baseline (595)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -638,6 +638,7 @@ None.
 | WDR-011-Q5 | Aspirations: approve the provisional values (priorities, thresholds, adaptation rates) as a starting point tuned from four-seed measurements, or set them now? (Owner-given values used: hunger floor 25, stubborn share 30%.) | decision | APPROVED | 20 |
 | WDR-011-Q6 | Aspirations: should social standing be a sixth domain (read from the village's overall opinion), beyond Rule 011's five? | decision | APPROVED | 20 |
 | WDR-011-Q7 | Aspirations: should players see villagers' aspirations: none in v1, or a dialogue line from the leading aspiration once the feature is on and reviewed? | decision | APPROVED | 20 |
+| WDR-011-Q8 | Aspirations, scope of Q3: individual romantic preferences now apply to whom an NPC chooses to court. Should the same individual weighting also apply to whether an NPC ACCEPTS a proposal (the existing acceptance rules, kinship restrictions and the X19-CRT12 cut-offs kept as hard limits), or should acceptance stay as it is today? | decision | OPEN | 20 |
 | WDR-017-C | Comply with World Design Rule 17: Generational Memory and Living History | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | WDR-018-C | Comply with World Design Rule 18: Protected Ecological Continuity | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | unassigned |
 | WDR-019-C | Comply with World Design Rule 19: Living Political Agency and Democratic Consequences | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |

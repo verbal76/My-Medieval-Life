@@ -54615,7 +54615,8 @@
    "playtest": [],
    "branch": "wip/x20-r5",
    "commits": [
-    "e25b0ed"
+    "e25b0ed",
+    "8bde18b"
    ],
    "parent": null,
    "depends_on": [],
@@ -54629,7 +54630,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Agent reading recorded: with job_choice on, the weighted profile replaces the ordinary job-switch step of hiring competition (WDR-012-C, B18-DP-08); wage and the manor's raised wage still count (owner Q2). Open: WDR-011-Q8 (proposal acceptance).",
    "history": [
     {
      "date": "2026-10-19",
@@ -54685,6 +54686,11 @@
      "date": "2026-10-27",
      "change": "next_action",
      "why": "owner's final aspirations decisions 2026-10-27 (docs/directives/2026-10-27_final_aspirations_decisions.md): six domains, survival pressure with the family safeguard, job_choice, individual romantic preferences, stubbornness and wisdom, provisional numbers, dialogue later"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "commits + 8bde18b; notes",
+     "why": "R5 design revised for the owner's final answers (wip/x20-r5 8bde18b): six domains, survival pressure outside the family-first rules, job_choice at the morning job search (replaces the job-switch step when its flag is on; wage stays a factor), individual courtship weighting in pick_court; effort 3-4 worker-days"
     }
    ],
    "target_build": "20",
@@ -54957,6 +54963,36 @@
    ],
    "notes": "Recommendation: a dialogue line from the leading aspiration later, once the feature is on and reviewed.",
    "completion": "CLOSED"
+  },
+  {
+   "id": "WDR-011-Q8",
+   "kind": "decision",
+   "title": "Aspirations, scope of Q3: individual romantic preferences now apply to whom an NPC chooses to court. Should the same individual weighting also apply to whether an NPC ACCEPTS a proposal (the existing acceptance rules, kinship restrictions and the X19-CRT12 cut-offs kept as hard limits), or should acceptance stay as it is today?",
+   "description": "Aspirations, scope of Q3: individual romantic preferences now apply to whom an NPC chooses to court. Should the same individual weighting also apply to whether an NPC ACCEPTS a proposal (the existing acceptance rules, kinship restrictions and the X19-CRT12 cut-offs kept as hard limits), or should acceptance stay as it is today?",
+   "source": "R5 design revision (wip/x20-r5 8bde18b); docs/directives/2026-10-27_final_aspirations_decisions.md Q3",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "WDR-011-C"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "R5 design revision (wip/x20-r5 8bde18b); docs/directives/2026-10-27_final_aspirations_decisions.md Q3"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "agent recommendation recorded (not an approval)"
+    }
+   ],
+   "notes": "Recommendation: apply it to acceptance too (Q3 speaks of selecting a partner and of one villager overlooking financial differences that another would not), inside the existing acceptance rules and cut-offs as hard limits; human players' consent untouched. Until answered the code keeps acceptance unchanged."
   },
   {
    "id": "WDR-012",
