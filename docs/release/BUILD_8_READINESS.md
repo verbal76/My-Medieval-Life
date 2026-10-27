@@ -1,3 +1,5 @@
+> **HISTORICAL BUILD / TEST EVIDENCE — NOT CURRENT RELEASE AUTHORITY (owner, 2026-10-27).** Preserve this packet for regression investigation, old test results and provenance, not as the active build, release gate, task list or packaging command. Current build status and policy live in `docs/CURRENT_DEVELOPMENT_STATE.md`, `CLAUDE.md` and the requirements register. Build 22 is the latest private three-platform draft; Expansion 20 remains blocked from packaging until MP-INTERACT-01 merges last and passes validation.
+
 # Build 8 readiness report
 
 Prepared 2026-10-18 for the owner's decision. **Decision (owner, 2026-10-18): Build 8 is authorized as a private testing build only**: a draft GitHub Release that only the repository's collaborators can see, not a public release, and no merge into `main`.
