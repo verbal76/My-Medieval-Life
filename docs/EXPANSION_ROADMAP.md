@@ -2,14 +2,14 @@
 
 **Read only this active section for current scheduling.** The rest of this document is preserved as historical planning. Source of truth: current register, latest owner directive and active branch state. An approved future design is not permission to start it.
 
-**Build 22** already exists as a private APK/Windows/Linux draft (`b7e1c91`, 2026-10-26) and must not be reopened. **Expansion 20** is explicitly authorized and under development (`wip/expansion20`): LE-01 model integrated with flag off; Android/Messages and Build 19 recovery R1–R4 integrated; aspirations R5 isolated, later LE stages unfinished. Verify new branch evidence before changing these statuses.
+**Build 23** (Expansion 20 playtest checkpoint, `c79b12c`, 2026-10-27) is the latest private APK/Windows/Linux draft; **Build 22** (`b7e1c91`) is frozen. **Expansion 20** remains under development on `wip/expansion20`: LE-01 model (switch off), Android/Messages, Build 19 recovery R1–R5 and aspirations (switches off) are integrated; LE-02..LE-07 are not started. Verify new branch evidence before changing these statuses.
 
-**Multiplayer MP-INTERACT-01 is active, not a future unauthorized proposal:** implemented on `wip/x20-mp-interact`, unmerged and awaiting final integration. **No Expansion 20 builds of any kind, private included, until this correction merges LAST and cross-platform host/guest interactions are validated.**
+**Multiplayer MP-INTERACT-01** was merged last and validated before Build 23; it awaits the owner's device checks and decisions MP-INTERACT-Q1/Q2.
 
 | Priority | Scope | Authorization |
 |---|---|---|
 | Current | Expansion 20: Living Economy plus approved carryovers | Active authorized implementation; unfinished. |
-| Final X20 integration | MP-INTERACT-01 | Isolated work, merge LAST, required release validation. |
+| Shipped in Build 23 | MP-INTERACT-01 | Integrated last and validated; owner device checks pending. |
 | Future | 21 Politics | Scoped future design, not automatic implementation. |
 | Future | 23 Bandit factions | Future. |
 | Future | 22 Settlement advancement phase 2 | Future. |
