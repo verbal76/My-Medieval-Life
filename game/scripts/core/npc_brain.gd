@@ -336,18 +336,21 @@ func _plan_provision(n: NPC) -> bool:
 	var hh: Dictionary = w.households[n.household]
 	var dependants := _dependants(hh)
 	var stocked := _stocked(hh)
+	# SIM-F2 (closing the defect class): firewood and grain are planned only in the quantity buy_from would sell at the
+	# bargained price from the household's purse (buy_qty, `pantry`), and not again unchanged after a failed purchase
 	if n.coins >= 3 and (hh.pantry as Inventory).count("log") < 1:
 		var seller := _seller_of("log", n)
-		if seller:
+		if seller and buy_qty(n, seller, "log", 1, true) > 0:
 			n.doing = "buying firewood"
 			n.plan = [go(_workplace_cell(seller)), doit("buy_from", {"vendor": seller.id, "item": "log", "qty": 1, "pantry": true})]
 			return true
 	if n.coins >= 4 and stocked < dependants + 1:
 		# grain to cook at home feeds a family for far less than meals bought at the tavern
 		var grain := _grain_seller(n)
-		if grain:
+		var gq := buy_qty(n, grain, "wheat", 2, true) if grain else 0
+		if gq > 0:
 			n.doing = "buying grain for the household"
-			n.plan = [go(_workplace_cell(grain) if grain.job != "farmer" else grain.cell()), doit("buy_from", {"vendor": grain.id, "item": "wheat", "qty": 2, "pantry": true})]
+			n.plan = [go(_workplace_cell(grain) if grain.job != "farmer" else grain.cell()), doit("buy_from", {"vendor": grain.id, "item": "wheat", "qty": gq, "pantry": true})]
 			return true
 		var v := _vendor_with_food(n)
 		if v:
@@ -730,12 +733,23 @@ func _mason(n: NPC) -> bool:
 ## refused, and the empty plan chose it again at once (recorder run 1: 328 failed iron-chisel purchases in a day). A
 ## purchase that failed anyway is not chosen again while nothing that decided it has changed (buy_held).
 func buy_open(n: NPC, v: NPC, item: String, qty := 1) -> bool:
-	if v.inv.count(item) < qty or buy_held(n, v, item):
-		return false
-	var cost := w.deal_price(w.sell_price(v, item), n, v) * qty
-	if World.is_necessity(item) or JOB_TOOL.get(n.job, "") == item:
-		return n.coins >= cost
-	return w.can_afford(n, cost)
+	return v.inv.count(item) >= qty and buy_qty(n, v, item, qty) == qty
+
+
+## SIM-F2, for an order the act may fill in part: how many of the `want` units of `item` buy_from would sell `n` from `v`
+## now, by its own rule: the seller's stock, the bargained price (World.deal_price), from the whole purse for a necessity, a
+## household's pantry (`need`) or the trade's own tool, else above the reserve; `spent` coins already planned for earlier
+## steps of the same trip are counted as gone. 0 while the same purchase is held after a failure (buy_held).
+func buy_qty(n: NPC, v: NPC, item: String, want: int, need := false, spent := 0) -> int:
+	if buy_held(n, v, item):
+		return 0
+	var up := w.deal_price(w.sell_price(v, item), n, v)
+	var whole: bool = need or World.is_necessity(item) or JOB_TOOL.get(n.job, "") == item
+	var floor := 0 if whole else w.reserve_of(n)
+	var q := mini(want, v.inv.count(item))
+	while q > 0 and n.coins - spent - up * q < floor:
+		q -= 1
+	return q
 
 
 ## SIM-F2: whether `n`'s last failed purchase (buy_failed) was this one, from `v`, and nothing has changed since: the same
@@ -812,6 +826,9 @@ func _part_seller(id: String, n: NPC) -> NPC:
 
 ## The walk to buy the parts `need` ({id: qty}) that `n` lacks, with their own coins, keeping `floor`
 ## coins in hand; [] if a part has no seller or they cannot pay. Planks also come from the timber stall.
+## SIM-F2 (closing the defect class, lead 2026-10-27): each part is planned at the bargained price buy_from pays, in the
+## quantity it would sell by its own rule (buy_qty, the trip's earlier parts counted as spent), never below `floor`; a part
+## none of which can be paid for, or held after a failed purchase (buy_held), gives [] as a part with no seller does.
 func _parts_trip(n: NPC, need: Dictionary, floor := 0) -> Array:
 	var plan := []
 	var cost := 0
@@ -822,10 +839,14 @@ func _parts_trip(n: NPC, need: Dictionary, floor := 0) -> Array:
 		var o := _seller_of(id, n) if id == "plank" else _part_seller(id, n)
 		if o == null or o.inv.count(id) < short:
 			return []
-		cost += w.sell_price(o, id) * short
-		plan.append_array([go(_workplace_cell(o) if o.job != "smith" else o.cell()), doit("buy_from", {"vendor": o.id, "item": id, "qty": short})])
-	if n.coins - cost < floor:
-		return []
+		var up := w.deal_price(w.sell_price(o, id), n, o)
+		var q := buy_qty(n, o, id, short, false, cost)
+		while q > 0 and n.coins - cost - up * q < floor:
+			q -= 1
+		if q <= 0:
+			return []
+		cost += up * q
+		plan.append_array([go(_workplace_cell(o) if o.job != "smith" else o.cell()), doit("buy_from", {"vendor": o.id, "item": id, "qty": q})])
 	return plan
 
 
@@ -865,7 +886,7 @@ func _plan_cart(n: NPC, house: Dictionary) -> bool:
 		n.doing = "gathering parts for a handcart"
 		n.plan = parts_plan + [go(w.station_use(bench)), work(CapabilityHook.work_time(float(rec.minutes), "carpentry", Skills.value(n, "carpentry", "craft_time", 1.0), n), "craft", {"recipe": "build_handcart", "station": bench}, "work", _station_at(bench))] + home
 		return true
-	if maker != null and n.coins >= whole:
+	if maker != null and buy_open(n, maker, "handcart"):     # SIM-F2: the bargained price, by the act's rule
 		n.doing = "buying a handcart"
 		n.plan = [go(_workplace_cell(maker) if maker.job != "smith" else maker.cell()), doit("buy_from", {"vendor": maker.id, "item": "handcart", "qty": 1})] + home
 		return true

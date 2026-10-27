@@ -94,5 +94,77 @@ func _init() -> void:
 			chosen += 1
 	check(chosen == 0, "120 decisions, the unaffordable chisel chosen %d times (was every time)" % chosen)
 
+	# 5. the defect class closed (lead, 2026-10-27): the parts trip (cart and plough parts), firewood and grain plan only
+	# what buy_from would sell at the bargained price, partial orders in the affordable quantity, and hold a failed one
+	var smith: NPC = null
+	for n: NPC in w.npcs:
+		if smith == null and n.alive and n.role == "adult" and n.job == "smith":
+			smith = n
+	smith.inv.add("iron_bar", 4)
+	if w.asleep(smith):
+		smith.anim = "idle"
+	var bar_seller: NPC = b._part_seller("iron_bar", buyer)
+	check(bar_seller != null, "someone sells iron bars")
+	bar_seller.skills["trading"] = Skills.xp_for_level(10)
+	buyer.inv.remove("iron_bar", buyer.inv.count("iron_bar"))
+	var bl := w.sell_price(bar_seller, "iron_bar")
+	var bd := w.deal_price(bl, buyer, bar_seller)
+	check(bd > bl, "iron bars: bargained %d above list %d" % [bd, bl])
+	buyer.coins = w.reserve_of(buyer) + bl * 2
+	var trip := b._parts_trip(buyer, {"iron_bar": 2})
+	var planned := int(trip[-1].args.qty) if not trip.is_empty() else 0
+	var afford := (buyer.coins - w.reserve_of(buyer)) / bd
+	check(planned == mini(2, afford) and planned < 2, "parts trip: a purse for two at the list price plans the %d the bargained price pays for (was 2)" % planned)
+	buyer.coins = w.reserve_of(buyer) + bl
+	check(b._parts_trip(buyer, {"iron_bar": 2}).is_empty(), "parts trip: none affordable at the bargained price: no trip (was planned on the list price)")
+	buyer.coins = w.reserve_of(buyer) + bd * 2
+	check(b._parts_trip(buyer, {"iron_bar": 2}).size() == 2, "parts trip: both bars affordable: the trip is planned")
+	b.buy_failed[buyer.id] = {"vendor": bar_seller.id, "item": "iron_bar", "price": bd, "stock": bar_seller.inv.count("iron_bar"), "purse": buyer.coins, "at": w.minutes}
+	check(b._parts_trip(buyer, {"iron_bar": 2}).is_empty(), "parts trip: a failed purchase of the same part, nothing changed: held")
+	b.buy_failed.erase(buyer.id)
+	# firewood and grain for the household (the pantry: the whole purse)
+	var hh: Dictionary = w.households[buyer.household]
+	var pantry: Inventory = hh.pantry
+	for id in pantry.ids():
+		pantry.remove(id, pantry.count(id))
+	var wood: NPC = b._seller_of("log", buyer)
+	check(wood != null, "someone sells logs")
+	wood.skills["trading"] = Skills.xp_for_level(10)
+	var ll := w.sell_price(wood, "log")
+	var ld := w.deal_price(ll, buyer, wood)
+	buyer.coins = maxi(3, ll)
+	buyer.plan.clear()
+	var planned_fw := b._plan_provision(buyer) and buyer.doing == "buying firewood"
+	if ld > buyer.coins:
+		check(not planned_fw, "firewood: %d coins, list %d, bargained %d: not chosen (was chosen on the list price)" % [buyer.coins, ll, ld])
+	else:
+		check(planned_fw, "firewood: affordable at the bargained price (%d): chosen" % ld)
+	buyer.coins = maxi(3, ld)
+	buyer.plan.clear()
+	check(b._plan_provision(buyer) and buyer.doing == "buying firewood", "firewood: with the bargained price in the purse it is chosen")
+	b.buy_failed[buyer.id] = {"vendor": wood.id, "item": "log", "price": ld, "stock": wood.inv.count("log"), "purse": buyer.coins, "at": w.minutes}
+	buyer.plan.clear()
+	buyer.doing = "idle"
+	var again := b._plan_provision(buyer) and buyer.doing == "buying firewood" and int(buyer.plan[-1].args.vendor) == wood.id
+	check(not again, "firewood: a failed purchase from p:%d, nothing changed: not chosen again (%s)" % [wood.id, buyer.doing])
+	b.buy_failed.erase(buyer.id)
+	pantry.add("log", 1)
+	var grain: NPC = b._grain_seller(buyer)
+	if grain != null:
+		grain.skills["trading"] = Skills.xp_for_level(10)
+		var gd := w.deal_price(w.sell_price(grain, "wheat"), buyer, grain)
+		buyer.coins = maxi(4, gd)                          # one unit at the bargained price, not two
+		buyer.plan.clear()
+		var chose := b._plan_provision(buyer) and buyer.doing == "buying grain for the household"
+		check(chose and int(buyer.plan[-1].args.qty) == buyer.coins / gd, "grain: the order is the %d unit(s) the purse pays for at %d, not 2" % [buyer.coins / gd, gd])
+		b.buy_failed[buyer.id] = {"vendor": grain.id, "item": "wheat", "price": gd, "stock": grain.inv.count("wheat"), "purse": buyer.coins, "at": w.minutes}
+		buyer.plan.clear()
+		buyer.doing = "idle"
+		var again_g := b._plan_provision(buyer) and buyer.doing == "buying grain for the household" and int(buyer.plan[-1].args.vendor) == grain.id
+		check(not again_g, "grain: a failed purchase, nothing changed: not chosen again (%s)" % buyer.doing)
+		b.buy_failed.erase(buyer.id)
+	else:
+		check(false, "a grain seller to test with")
+
 	print("\nsim_f2_test: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
