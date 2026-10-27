@@ -22,6 +22,7 @@ extends Node
 signal changed(text: String)        # something the player should be told (joins, refusals, losses)
 signal answered(text: String)       # the host's answer to one of this guest's requests (shown, not kept: routine feedback)
 signal players_changed
+signal verb_answered(rid: int, result: Variant)    # X20: the host's result of one of this guest's verbs (Main._on_verb_answered)
 
 const REFUSALS := {
 	"version": "That game runs a different version of My Medieval Life. Both players need the same version.",
@@ -293,6 +294,28 @@ static func public_player(p: PlayerState) -> Dictionary:
 	return o.to_dict()
 
 
+## X20: what of the players' private records a guest's copy receives (World.to_dict `d`, changed in place for guest `ref`): the offers
+## and messages between players (World.offers) that it sent or that are addressed to it, and its own kept messages (the Messages
+## journal). The interface shows a player only those; another pair's offers and words are theirs. The offer counter stays (the
+## copy's own offers are numbered from it).
+static func _private_for(d: Dictionary, ref: String) -> void:
+	if d.has("player_offers"):
+		var po: Dictionary = d.player_offers
+		var mine: Array = (po.get("list", []) as Array).filter(func(o): return str(o["from"]) == ref or str(o.to) == ref)
+		d["player_offers"] = {"next": po.get("next", 1), "list": mine}
+	if d.has(MessageJournal.KEY):
+		var mj: Dictionary = d[MessageJournal.KEY]
+		if mj.has(ref):
+			d[MessageJournal.KEY] = {ref: mj[ref]}
+		else:
+			d.erase(MessageJournal.KEY)
+
+
+## Host (X20, tests): the offers and messages between players that guest `ref`'s copy holds (_private_for).
+static func offers_for(w: World, ref: String) -> Array:
+	return w.offers.filter(func(o): return str(o["from"]) == ref or str(o.to) == ref)
+
+
 ## The world as this guest may see it: the save, with the guest's own character in full and every other player's public
 ## record only (no one else's pack, purse, crimes or identity hash).
 func world_for(pid: int) -> PackedByteArray:
@@ -304,6 +327,7 @@ func world_for(pid: int) -> PackedByteArray:
 		by[str(p.pid)] = p.to_dict() if p.pid == pid else public_player(p)
 	d["players"] = {"host": w.host_player().pid, "by_pid": by}
 	d["net_pid"] = pid
+	_private_for(d, w.player_ref(w.player_by_pid(pid)))
 	_welcome_digest = NetSync.digest(d)            # what this guest's copy holds from now (NetSync.changed sends the rest)
 	var raw := JSON.stringify(d).to_utf8_buffer()
 	return raw.compress(FileAccess.COMPRESSION_GZIP)
@@ -598,6 +622,11 @@ func note_prediction(rid, r) -> void:
 		predicted[rid] = NetActions.enc(main.world, r)
 
 
+## Guest: the id of the request sent last (a verb just sent through World.mirror).
+func last_request() -> int:
+	return _next_request - 1
+
+
 ## Guest: ask the host to do something; the answer lands in `replies[id]` (and the guest's character is updated from it).
 func request(kind: String, args: Dictionary) -> int:
 	var rid := _next_request
@@ -615,6 +644,13 @@ func c_request(rid: int, kind: String, args: Dictionary) -> void:
 		return
 	arrivals += 1
 	queue.append({"seq": arrivals, "pid": int(by_peer[id]), "peer": id, "rid": rid, "kind": kind, "args": args})
+
+
+## X20 (net_mp4_test): a guest's copy changes its own offers before the host answers (World.player_answer takes the answered one
+## away at once; World.player_offer, mirrored, adds one). When the host refuses (the buyer is short, not beside them, "You have asked
+## already") its offers are unchanged, so NetSync.changed would not send them and the copy would keep its guess: an offer still
+## waiting gone from the recipient's screen, or one that does not exist shown. After these verbs the offers always go again.
+const OFFER_VERBS := ["player_offer", "player_answer"]
 
 
 ## Host: apply every queued request, in arrival order (then pid), each once, as its player, and answer it. Called at one
@@ -639,6 +675,8 @@ func apply_requests() -> void:
 		if peer != null and by_peer.has(int(q.peer)):
 			rpc_id(int(q.peer), "s_reply", int(q.rid), r)
 			sync_due[int(q.peer)] = true                # MP C: its copy takes the sections this changed, at once (send_syncs)
+			if str(r.get("path", "")) in OFFER_VERBS and synced.has(int(q.peer)):
+				synced[int(q.peer)]["player_offers"] = -1     # X20: the offers go again even when the host's did not change (OFFER_VERBS)
 	send_syncs(false)
 
 
@@ -659,6 +697,7 @@ func s_reply(rid: int, r: Dictionary) -> void:
 		# the host's world had moved on), and the sections that follow (s_sync) put the copy right
 		var mine_r = predicted.get(rid)
 		predicted.erase(rid)
+		verb_answered.emit(rid, r.get("result"))
 		if (not bool(r.get("ok", false)) or JSON.stringify(mine_r) != JSON.stringify(r.get("result"))) and str(r.get("text", "")) != "":
 			answered.emit(str(r.text))
 		if main.world != null and main.world.recorder != null and JSON.stringify(mine_r) != JSON.stringify(r.get("result")):
@@ -704,11 +743,16 @@ func send_syncs(all: bool, skip: Array = []) -> void:
 			due.append(id)
 	if due.is_empty():
 		return
-	var d: Dictionary = main.world.to_dict()
+	var all_d: Dictionary = main.world.to_dict()
 	for id in due:
 		sync_due.erase(id)
 		if not synced.has(id):
 			synced[id] = {}
+		var d := all_d
+		if all_d.has("player_offers"):                 # X20: only the offers and messages this guest is party to
+			var g: PlayerState = main.world.player_by_pid(int(by_peer[id]))
+			d = all_d.duplicate(false)
+			_private_for(d, main.world.player_ref(g) if g != null else "")
 		var ch := NetSync.changed(d, synced[id], skip if not sync_due_was.has(id) else [])
 		if ch.is_empty():
 			continue

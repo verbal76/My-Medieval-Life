@@ -106,6 +106,9 @@ static func adopt(w: World, sections: Dictionary) -> void:
 					for f in st:
 						if not f in ["x", "y", "trunk", "top", "bottom"]:
 							t[f] = st[f]
+					for f in t.keys():
+						if not st.has(f) and not f in ["x", "y", "trunk", "top", "bottom"]:
+							t.erase(f)                    # a field the host's record no longer has (a felled tree's "born", World.fell)
 					if moved:
 						w.tree_changed.emit(t)
 			"plants":
