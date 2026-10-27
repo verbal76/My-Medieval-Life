@@ -73,6 +73,7 @@ static func attach(w, config: Dictionary = {}) -> JudgmentStore:
 	w.judgment = j
 	if "recorder" in w and w.recorder != null:
 		j.rec = w.recorder                 # REC-19 D5: a store made after the recorder (a loaded game) records too
+		j.pers.rec = w.recorder            # X20-FINAL: and its personality layer
 	return j
 
 

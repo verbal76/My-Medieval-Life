@@ -222,8 +222,11 @@ func helped(helper: int, n: NPC, amount := -1.0) -> void:
 	if n == null or not n.alive:
 		return
 	var t := tie(helper, n.id)
+	var rb := WorldRecorder.tie_before(t) if w.recorder != null else []
 	t.last = w.day()
 	_raise(t, float(cfg().help_regard) if amount < 0.0 else amount, 0.0, true, Vector2i(helper, n.id))
+	if w.recorder != null:
+		w.recorder.tie_event("help", helper, n.id, t, rb)     # X20-FINAL
 
 
 ## Add to a tie, within the day's limits (regard_daily_cap, attraction_daily_cap; losses are never capped).
@@ -509,8 +512,17 @@ func stage(a: int, b: int) -> String:
 
 
 ## The player (or a villager) asks to court: accepted once attraction reaches court_at and they have known each
-## other on court_min_days separate days.
+## other on court_min_days separate days. (X20-FINAL: with the flight recorder on, the asking and its answer are one event.)
 func ask_court(a: int, n: NPC) -> String:
+	if w.recorder == null or w.mirrors():
+		return _ask_court(a, n)
+	var rc: Array = w.recorder.court_begin("court_ask", a, n)
+	var why := _ask_court(a, n)
+	w.recorder.court_end(rc, "court_ask", a, n, why)
+	return why
+
+
+func _ask_court(a: int, n: NPC) -> String:
 	# MP C (World.mirror): a guest's verb goes to the host
 	if w.mirrors():
 		return w.mirror("relations.ask_court", ask_court.bind(a, n), [a, n])
@@ -530,8 +542,18 @@ func ask_court(a: int, n: NPC) -> String:
 
 
 ## A proposal (CRT-01): accepted when courting long enough (propose_min_days), known on marry_min_days separate
-## days, with attraction at propose_at; asked too early it is declined and cools things a little.
+## days, with attraction at propose_at; asked too early it is declined and cools things a little. (X20-FINAL: with the flight
+## recorder on, the proposal and its answer are one event, the partnership its child.)
 func propose(a: int, n: NPC) -> String:
+	if w.recorder == null or w.mirrors():
+		return _propose(a, n)
+	var rc: Array = w.recorder.court_begin("proposal", a, n)
+	var why := _propose(a, n)
+	w.recorder.court_end(rc, "proposal", a, n, why)
+	return why
+
+
+func _propose(a: int, n: NPC) -> String:
 	# MP C (World.mirror): a guest's verb goes to the host
 	if w.mirrors():
 		return w.mirror("relations.propose", propose.bind(a, n), [a, n])
@@ -671,7 +693,10 @@ func talked(n: NPC) -> void:
 	var k := int(t.get("talks_today", 0))
 	var reg := float(sh.talk_first) if k == 0 else float(sh.talk_more) * pow(float(sh.talk_decay), k - 1)
 	t.talks_today = k + 1
+	var rb := WorldRecorder.tie_before(t) if w.recorder != null else []
 	_raise(t, reg, reg * float(sh.talk_attraction_share) if can_court(w.acting_id(), n.id) else 0.0, true, Vector2i(w.acting_id(), n.id))
+	if w.recorder != null:
+		w.recorder.tie_event("talk", w.acting_id(), n.id, t, rb, "talks_today=%d" % (k + 1))     # X20-FINAL
 
 
 # ---------------------------------------------------------------- every dawn -----------------
@@ -679,11 +704,15 @@ func talked(n: NPC) -> void:
 func dawn() -> void:
 	var c := cfg()
 	var d: int = w.day()
+	if w.recorder != null:
+		w.recorder.cooling_begin(ties)     # X20-FINAL: one row a dawn for the ties that cooled
 	for k in ties.keys():
 		var t: Dictionary = ties[k]
 		if int(t.last) < d - 1:
 			var ids: PackedStringArray = str(k).split(":") if w.judgment != null else PackedStringArray()
 			_raise(t, -float(c.decay_per_day) * 0.5, -float(c.decay_per_day), true, Vector2i(int(ids[0]), int(ids[1])) if w.judgment != null else NO_PAIR)
+	if w.recorder != null:
+		w.recorder.cooling_end(ties)
 	_villagers_court()
 
 
@@ -734,6 +763,8 @@ func _villagers_court() -> void:
 			if best == null:
 				continue
 			interests[n.id] = best.id
+			if w.recorder != null:
+				w.recorder.court_interest(n, best, pool.size() if judged else -1, judged, float(peek(n.id, best.id).attraction))     # X20-FINAL
 			target = best
 		var t := tie(n.id, target.id)
 		var gift := _gift_from(n, target)

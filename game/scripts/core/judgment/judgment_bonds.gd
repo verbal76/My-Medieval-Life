@@ -233,6 +233,8 @@ func on_belief(observer: int, ev: int) -> void:
 			(betrayal_log[k] as Array).append([observer, actor, f[JudgmentStore.F_DAY], str(s._types[t])])
 			stats.betrayals = int(stats.get("betrayals", 0)) + 1
 			s.keep_forever(observer, ev)           # a betrayal is never erased (X19-STORY-LIFE: handed down as a family story)
+		if s.rec != null:
+			s.rec.grievance(observer, actor, ev, add, int(r[0]), was_friend)     # X20-FINAL
 
 
 ## The daily step (Store.begin_day): resentment softens only through personality growth, and a serious grievance not

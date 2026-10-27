@@ -45,19 +45,36 @@ static func attach(world, config := {}) -> WorldRecorder:
 	r.w = world
 	r.samples_on = bool(r.cfg.get("hourly_samples", true))
 	r.meta = {"seed": int(world.seed), "save_version": World.SAVE_VERSION, "commit": OS.get_environment("MML_COMMIT") if OS.get_environment("MML_COMMIT") != "" else "unknown",
-		"flags": {"recorder": true, "judgment": world.judgment != null, "economy": "no such flag in this build", "civic": "no such flag in this build"}}
+		"flags": flags_of(world), "scenario": OS.get_environment("MML_SCENARIO")}
 	for b in r.codes.decision_chain:
 		r._chain.append(str(b.id))
 		r._chain_factors[str(b.id)] = b.factors
 	world.recorder = r
 	if world.judgment != null:
 		world.judgment.rec = r             # REC-19 D5: the judgment store reports to the recorder (JudgmentLive.attach does it for a later store)
+		world.judgment.pers.rec = r        # X20-FINAL: the personality layer too
 	r._write_session()
 	return r
 
 
 func _now() -> Array:
 	return [w.day(), fmod(w.minutes, World.DAY)]
+
+
+## X20-FINAL: the feature switches as this world runs them (the archive's own record of what was on; tools/recorder_archive.py
+## compares them with what a scenario requires, so a run that left a system off cannot count as exercising it).
+static func flags_of(world) -> Dictionary:
+	var j = world.judgment
+	var integ := {}
+	if j != null:
+		var dec: Dictionary = (j.cfg.get("decision", {}) as Dictionary).get("integration", {})
+		var ks := dec.keys()
+		ks.sort()
+		for k in ks:
+			if not str(k).begins_with("_"):
+				integ[str(k)] = bool(dec[k]) and (str(k) != "job_choice" or j.asp.enabled)     # as JudgmentLive.on reads them (no call)
+	return {"recorder": true, "judgment": j != null, "aspiration": j != null and j.asp.enabled,
+		"job_choice": bool(integ.get("job_choice", false)), "economy": world.economy != null, "judgment_integration": integ}
 
 
 ## A person's reference is their permanent person id (ID-01): `p:<id>`. The player character is `p:<PlayerState.pid>`, the same
@@ -349,6 +366,8 @@ func hour() -> void:
 		return
 	_audit_coins()
 	_close_stale_chases()
+	_day_summaries()                            # X20-FINAL: the day's memory, resources and LE-01 summaries (once a day)
+	net_state_maybe()                           # X20-FINAL: the host's digest in a network session (once a game hour)
 	if samples_on:
 		for n: NPC in w.npcs:
 			if n.alive:
@@ -1223,3 +1242,495 @@ func harm_begin(actor: int, n: NPC, amount: float, spread: bool) -> int:
 func harm_tie(ev: int, a: int, b: int, t: Dictionary, before: Array) -> void:
 	if ev > 0:
 		_tie_rows(ev, a, b, t, before)
+
+
+# ================================================================ X20-FINAL phase 3 (owner directive 2026-10-27)
+## The gaps the Expansions 18-20 coverage matrix found (docs/expansion20/X18_X20_COVERAGE_MATRIX.md), filled with the same
+## architecture: one guarded call at each site, values the site has already computed, no random draw, no state changed. The
+## recorder's own reads (the daily summaries, the network digest) read plain fields and pure functions only.
+##   flows        World.stat            production, consumption and unmet-need counters moved inside an open event (an action, a
+##                                      decision, a verb): a state row on "world" (the counter before and after) under that event,
+##                                      so the actor and the plan that produced, used or went without are known. Outside an event
+##                                      the hourly snapshot's stats_delta already holds them.
+##   contracts    Contracts._open, deliver, _pay_units, _end      object thread "contract:<id>", coins set aside, paid, returned
+##   credit       Credit.sell_on_credit, repay, _default, barter  debts and swaps with their goods and coins
+##   relations    Relations.helped, talked, dawn (cooling: one row a dawn), _villagers_court (an interest taken), ask_court and
+##                propose (outcome and reason, suitor a villager or a player)
+##   judgment     JudgmentStore._forget, make_history, tell_family_history; JudgmentPersonality._log; JudgmentBonds.on_belief
+##   days         at the first hour of each day: judgment_day (the store's stats moved), world_day (deposits, trees, regions,
+##                capability levels and changes, households), economy_model (LE-01 records and their integrity, when on)
+##   network      NetSession (host and guest): joins, refusals, leaves, requests applied, host lost, a prediction the host
+##                answered differently; syncs counted; one net_state digest an hour per participant (section hashes)
+const _PRODUCE := ["made_", "mined_", "felled_", "dug_", "cut_", "farm_harvest_", "farm_made_"]
+const _CONSUME := ["eaten_", "used_", "feed_eaten_", "burned_", "broke_", "spoiled_", "poached_lost_", "wild_eaten_"]
+const _UNMET := ["missed_meal_", "station_busy_", "starved_", "skill_short_", "keeper_no_feed_", "keeper_no_coins_", "field_unsown_no_seed",
+	"farm_plot_no_ground", "farm_plot_cannot_afford", "supports_failed", "work_refused", "assay_refused", "proposals_refused",
+	"proposals_declined", "contracts_lapsed", "contracts_unsigned", "credit_defaulted", "wage_unpaid"]
+var _day_seen := -1                     # the last day whose summaries were written
+var _jstats_seen := {}                  # judgment stats at the last judgment_day
+var _bstats_seen := {}                  # bonds stats at the last judgment_day
+var _disc_hist := 0                     # discovery.history rows already reported
+var _net_hour := -1                     # the last game hour a net_state digest was written
+var _net_counts := {}                   # syncs sent / adopted and their bytes since the last digest
+var net = null                          # the NetSession, when this world is in a network session (set by its hooks)
+var _cool := []                         # Relations.dawn: [ties, regard sum, attraction sum] before the cooling
+
+
+## World.stat (before it adds): a flow counter moved. Production, consumption and unmet needs are written under the open event.
+func stat_moved(key: String, n: float, before: float) -> void:
+	if stopped or finished:
+		return
+	var kind := ""
+	for p in _UNMET:
+		if key.begins_with(p):
+			kind = "unmet"
+			break
+	if kind == "":
+		for p in _PRODUCE:
+			if key.begins_with(p):
+				kind = "produced"
+				break
+	if kind == "":
+		for p in _CONSUME:
+			if key.begins_with(p):
+				kind = "consumed"
+				break
+	if kind == "" or key == "eaten_food" or key == "spoiled_total" or "_by_" in key:
+		return
+	var cur := current()
+	if cur <= 0:
+		return
+	var after := before + n
+	state_change(cur, "world", "%s:%s" % [kind, key], int(before) if is_equal_approx(before, roundf(before)) else snappedf(before, 0.01),
+		int(after) if is_equal_approx(after, roundf(after)) else snappedf(after, 0.01), "world.stat")
+
+
+## A party reference of the game ("npc:<id>", "player", "player:<line>", "manor", "hh:<n>") as the recorder's ref.
+func wref(r: String) -> String:
+	if r.begins_with("npc:"):
+		return "p:%d" % World.ref_id(r)
+	if World.is_player_ref(r):
+		return ref_of(w.player_for(r))
+	return r
+
+
+func _wpart(ev: int, r: String, role: String) -> void:
+	participant(ev, wref(r), role + (":player" if World.is_player_ref(r) else ""))
+
+
+# ---------------------------------------------------------------- contracts -----------------
+## Contracts._open succeeded: the buyer's coins are set aside on the contract (object thread contract:<id>).
+func contract_opened(c: Dictionary, buyer_after: int) -> void:
+	var total := int(c.reserved)
+	var ev := begin("contracts", "contract", "contract", "opened", wref(str(c.seller)), {"object": "contract:%d" % int(c.id),
+		"detail": "contract=%d item=%s qty=%d price_each=%d days=%d deadline_day=%d kind=%s route=%s" % [int(c.id), str(c.get("item", "")),
+		int(c.qty), int(c.price_each), int(c.days), int(c.deadline_day), str(c.get("kind", "goods")), str(c.get("route", ""))]})
+	_wpart(ev, str(c.buyer), "buyer")
+	_wpart(ev, str(c.seller), "seller")
+	state_change(ev, wref(str(c.buyer)), "coins", buyer_after + total, buyer_after, "contracts")
+	state_change(ev, "contract:%d" % int(c.id), "coins", 0, total, "contracts")
+	state_change(ev, "contract:%d" % int(c.id), "state", "offered", "accepted", "contracts")
+	end(ev)
+
+
+## Contracts.deliver moved the goods (before _pay_units pays for them): the item rows of both sides.
+func contract_goods(c: Dictionary, units: int, from: Inventory, to: Inventory) -> void:
+	var id := str(c.item)
+	var ev := begin("contracts", "contract", "contract", "delivered", wref(str(c.seller)), {"object": "contract:%d" % int(c.id),
+		"detail": "contract=%d item=%s units=%d" % [int(c.id), id, units]})
+	_wpart(ev, str(c.seller), "seller")
+	_wpart(ev, str(c.buyer), "buyer")
+	state_change(ev, wref(str(c.seller)), "item:" + id, from.count(id) + units, from.count(id), "contracts")
+	state_change(ev, inv_ref(to) if inv_ref(to) != "inv:?" else wref(str(c.buyer)), "item:" + id, to.count(id) - units, to.count(id), "contracts")
+	end(ev)
+
+
+## Contracts._pay_units paid `pay` for `units` from the coins set aside.
+func contract_paid(c: Dictionary, units: int, pay: int, seller_after: int) -> void:
+	var ev := begin("contracts", "contract", "contract", "paid", wref(str(c.seller)), {"object": "contract:%d" % int(c.id),
+		"detail": "contract=%d units=%d pay=%d delivered=%d of %d" % [int(c.id), units, pay, int(c.delivered), int(c.qty)]})
+	_wpart(ev, str(c.seller), "seller")
+	_wpart(ev, str(c.buyer), "buyer")
+	state_change(ev, "contract:%d" % int(c.id), "coins", int(c.reserved) + pay, int(c.reserved), "contracts")
+	state_change(ev, wref(str(c.seller)), "coins", seller_after - pay, seller_after, "contracts")
+	end(ev)
+
+
+## Contracts._end: the contract ends in `state` (fulfilled, cancelled, lapsed); what was still set aside went back to the buyer.
+func contract_ended(c: Dictionary, was: String, held: int, buyer_after: int) -> void:
+	var ev := begin("contracts", "contract", "contract", str(c.state), wref(str(c.seller)), {"object": "contract:%d" % int(c.id),
+		"detail": "contract=%d why=%s delivered=%d of %d paid=%d" % [int(c.id), str(c.get("why", "")), int(c.delivered), int(c.qty), int(c.paid)]})
+	_wpart(ev, str(c.seller), "seller")
+	_wpart(ev, str(c.buyer), "buyer")
+	if held > 0:
+		state_change(ev, "contract:%d" % int(c.id), "coins", held, 0, "contracts")
+		state_change(ev, wref(str(c.buyer)), "coins", buyer_after - held, buyer_after, "contracts")
+	state_change(ev, "contract:%d" % int(c.id), "state", was, str(c.state), "contracts")
+	end(ev, "ok" if str(c.state) == "fulfilled" else "failed", "", "")
+
+
+# ---------------------------------------------------------------- credit --------------------
+func _party_ref(o) -> String:
+	return ref_of(o) if (o is NPC or o is PlayerState) else "obj:?"
+
+
+## Credit.sell_on_credit: the goods went over and a debt was recorded.
+func credit_extended(seller: Object, buyer: Object, id: String, qty: int, d: Dictionary) -> void:
+	var s := _party_ref(seller)
+	var b := _party_ref(buyer)
+	var ev := begin("credit", "debt", "credit", "extended", s, _xy(buyer).merged({"object": "debt:%d" % int(d.id),
+		"detail": "debt=%d item=%s qty=%d value=%d due_day=%d" % [int(d.id), id, qty, int(d.value), int(d.due)]}))
+	part(ev, seller, "creditor")
+	part(ev, buyer, "debtor")
+	state_change(ev, s, "item:" + id, seller.inv.count(id) + qty, seller.inv.count(id), "credit")
+	state_change(ev, b, "item:" + id, buyer.inv.count(id) - qty, buyer.inv.count(id), "credit")
+	state_change(ev, "debt:%d" % int(d.id), "state", "none", "open", "credit")
+	end(ev)
+
+
+## Credit.repay: the debtor paid the creditor.
+func credit_repaid(d: Dictionary, deb, cre, late: bool) -> void:
+	var v := int(d.value)
+	var ev := begin("credit", "debt", "credit", "repaid_late" if late else "repaid", _party_ref(deb), {"object": "debt:%d" % int(d.id),
+		"detail": "debt=%d value=%d" % [int(d.id), v]})
+	part(ev, deb, "debtor")
+	part(ev, cre, "creditor")
+	state_change(ev, _party_ref(deb), "coins", int(deb.coins) + v, int(deb.coins), "credit")
+	state_change(ev, _party_ref(cre), "coins", int(cre.coins) - v, int(cre.coins), "credit")
+	state_change(ev, "debt:%d" % int(d.id), "state", "defaulted" if late else "open", str(d.state), "credit")
+	end(ev)
+
+
+func credit_defaulted(d: Dictionary) -> void:
+	var ev := begin("credit", "debt", "credit", "defaulted", wref(str(d.debtor)), {"object": "debt:%d" % int(d.id),
+		"detail": "debt=%d value=%d due_day=%d" % [int(d.id), int(d.value), int(d.due)]})
+	_wpart(ev, str(d.debtor), "debtor")
+	_wpart(ev, str(d.creditor), "creditor")
+	state_change(ev, "debt:%d" % int(d.id), "state", "open", "defaulted", "credit")
+	end(ev, "failed", "", "")
+
+
+## Credit.barter: goods for goods.
+func barter(seller: Object, buyer: Object, want: String, qty: int, give: String, k: int) -> void:
+	var s := _party_ref(seller)
+	var b := _party_ref(buyer)
+	var ev := begin("credit", "barter", "credit", "barter", b, _xy(buyer).merged({"detail": "want=%s qty=%d give=%s qty=%d" % [want, qty, give, k]}))
+	part(ev, buyer, "buyer")
+	part(ev, seller, "seller")
+	state_change(ev, s, "item:" + want, seller.inv.count(want) + qty, seller.inv.count(want), "credit")
+	state_change(ev, b, "item:" + want, buyer.inv.count(want) - qty, buyer.inv.count(want), "credit")
+	state_change(ev, b, "item:" + give, buyer.inv.count(give) + k, buyer.inv.count(give), "credit")
+	state_change(ev, s, "item:" + give, seller.inv.count(give) - k, seller.inv.count(give), "credit")
+	end(ev)
+
+
+# ---------------------------------------------------------------- relations: the other channels
+## Relations.helped / talked: one event on the tie with what moved.
+func tie_event(kind: String, a: int, b: int, t: Dictionary, before: Array, detail := "") -> void:
+	var ev := begin("relations", kind, "relation", kind, jref(a), {"object": "tie:" + Relations.key(a, b), "detail": detail})
+	participant(ev, jref(a), "person")
+	participant(ev, jref(b), "person")
+	_tie_rows(ev, a, b, t, before)
+	end(ev)
+
+
+## Relations.dawn: the ties that cooled without contact, as one row a dawn (sums before and after; per-tie rows would be thousands).
+func cooling_begin(ties: Dictionary) -> void:
+	_cool = _tie_sums(ties)
+
+
+func cooling_end(ties: Dictionary) -> void:
+	if _cool.is_empty():
+		return
+	var after := _tie_sums(ties)
+	var ev := begin("relations", "cooling", "relation", "cooling", "world", {"detail": "ties=%d cooled=%d" % [int(after[0]), int(after[3])]})
+	state_change(ev, "world", "regard_sum", snappedf(float(_cool[1]), 0.01), snappedf(float(after[1]), 0.01), "relations")
+	state_change(ev, "world", "attraction_sum", snappedf(float(_cool[2]), 0.01), snappedf(float(after[2]), 0.01), "relations")
+	end(ev)
+	_cool = []
+
+
+func _tie_sums(ties: Dictionary) -> Array:
+	var r := 0.0
+	var a := 0.0
+	var cooled := 0
+	var d: int = w.day()
+	for k in ties:
+		var t: Dictionary = ties[k]
+		r += float(t.regard)
+		a += float(t.attraction)
+		if int(t.last) < d - 1:
+			cooled += 1
+	return [ties.size(), r, a, cooled]
+
+
+## Relations._villagers_court: an unpartnered adult took an interest in someone (the start of a courtship).
+func court_interest(n: NPC, target: NPC, pool: int, judged: bool, attraction: float) -> void:
+	var ev := begin("relations", "court", "relation", "interest", ref_of(n), _xy(n).merged({"object": "tie:" + Relations.key(n.id, target.id),
+		"detail": "candidates=%d judged=%s attraction=%s" % [pool, str(judged), str(snappedf(attraction, 0.01))]}))
+	part(ev, n, "suitor")
+	part(ev, target, "chosen")
+	end(ev)
+
+
+## Before Relations.ask_court / propose: the tie as it stands.
+func court_begin(kind: String, a: int, n: NPC) -> Array:
+	var t: Dictionary = w.relations.peek(a, n.id)
+	var ev := begin("relations", "court", "relation", kind, jref(a), _xy(n).merged({"object": "tie:" + Relations.key(a, n.id)}))
+	return [ev, str(t.get("stage", "")), tie_before(t) if t.has("regard") else [0.0, 0.0, 0]]
+
+
+## After it: accepted ("" answer) or refused with the answer's words, the stage before and after, and what moved.
+func court_end(r: Array, kind: String, a: int, n: NPC, answer: String) -> void:
+	var ev: int = r[0]
+	if ev <= 0:
+		return
+	participant(ev, jref(a), "suitor:player" if Life.is_player_id(a) else "suitor")
+	part(ev, n, "asked")
+	var t: Dictionary = w.relations.peek(a, n.id)
+	var stage := str(t.get("stage", ""))
+	if kind == "proposal" and answer == "" and int(n.partner) == a:
+		stage = "partners"
+	if stage != str(r[1]):
+		state_change(ev, "tie:" + Relations.key(a, n.id), "stage", str(r[1]) if str(r[1]) != "" else "none", stage if stage != "" else "none", "relations")
+	if t.has("regard"):
+		_tie_rows(ev, a, n.id, t, r[2])
+	var why := ""
+	if answer != "":
+		why = "refused_by_rules"
+	end(ev, "ok" if answer == "" else "refused", why, "answer=" + (answer.left(120) if answer != "" else "yes"))
+
+
+# ---------------------------------------------------------------- judgment over time --------
+## JudgmentStore._forget: a memory faded below the threshold (at dawn) or was crowded out (while something new was learnt: the
+## open belief is its parent).
+func memory_forgot(observer: int, fact: int, type: String) -> void:
+	var o := jref(observer)
+	var ev := begin("judgment", "memory", "judgment", "forgot", o, {"object": "fact:%d" % fact, "detail": "fact=%d type=%s; %s" % [fact, type,
+		"crowded out while learning" if current() > 0 else "faded"]})
+	participant(ev, o, "observer")
+	state_change(ev, o, "memory:fact:%d" % fact, "held", "forgotten", "judgment")
+	end(ev)
+
+
+## JudgmentPersonality._log: one change of a person's traits, wisdom or anger (channel 1 provocation, 2 positive, 3 mistake, 4 reminder).
+func personality_change(person: int, ch: int, subject: int, sev: int, d0: int, d1: int, extra: int) -> void:
+	var names := {1: "provocation", 2: "positive", 3: "mistake", 4: "reminder"}
+	var o := jref(person)
+	var ev := begin("judgment", "personality", "judgment", str(names.get(ch, "channel_%d" % ch)), o, {"detail": "subject=%d severity=%d" % [subject, sev]})
+	participant(ev, o, "person")
+	if d0 != 0:
+		factor(ev, "trait", "tolerance_delta", d0, "permille", "personality")
+	if d1 != 0:
+		factor(ev, "trait", "stubbornness_delta", d1, "permille", "personality")
+	if extra != 0:
+		factor(ev, "trait", "wisdom_or_anger", extra, "permille", "personality")
+	end(ev)
+
+
+## JudgmentBonds.on_belief: a victim's grievance against an actor (and a betrayal when the actor had been their friend).
+func grievance(victim: int, actor: int, fact: int, added: int, total: int, betrayal: bool) -> void:
+	var v := jref(victim)
+	var ev := begin("judgment", "bonds", "judgment", "betrayal" if betrayal else "grievance", v, {"object": "fact:%d" % fact,
+		"detail": "fact=%d added=%d" % [fact, added]})
+	participant(ev, v, "victim")
+	participant(ev, jref(actor), "actor")
+	state_change(ev, v, "resentment:%s" % jref(actor), total - added, total, "judgment")
+	end(ev)
+
+
+## JudgmentStore.make_history: a significant deed became a historical record; tell_family_history: a parent passed records on.
+func history_made(ev_id: int, h: Dictionary) -> void:
+	var a := jref(int(h.actors[0])) if not (h.actors as Array).is_empty() else "world"
+	var ev := begin("judgment", "history", "judgment", "history_made", a, {"object": "fact:%d" % ev_id,
+		"detail": "fact=%d type=%s value=%d known=%d" % [ev_id, str(h.type), int(h.value), (h.known as Dictionary).size()]})
+	for x in h.actors:
+		participant(ev, jref(int(x)), "actor")
+	end(ev)
+
+
+func history_told(parent: int, child: int, n: int) -> void:
+	if n <= 0:
+		return
+	var ev := begin("judgment", "history", "judgment", "history_told", jref(parent), {"detail": "records=%d" % n})
+	participant(ev, jref(parent), "parent")
+	participant(ev, jref(child), "child")
+	end(ev)
+
+
+# ---------------------------------------------------------------- the day's summaries --------
+## At the first hour boundary of each game day (WorldRecorder.hour): what changed over the day in memory, the world's resources
+## and the LE-01 model. Reads plain fields and pure functions only (judgment.stats, not counts(), which flushes gossip).
+func _day_summaries() -> void:
+	var d: int = w.day()
+	if d == _day_seen:
+		return
+	var first := _day_seen < 0
+	_day_seen = d
+	if w.judgment != null:
+		var j = w.judgment
+		var ev := begin("judgment", "day", "summary", "judgment_day", "world", {"detail": "day=%d facts=%d history=%d" % [d, j.facts.size(), j.history.size()]})
+		var moved := _moved(j.stats, _jstats_seen)
+		if not first:
+			for k in moved:
+				factor(ev, "day", "stat:" + str(k), moved[k], "count", "judgment")
+		var bm := _moved(j.bonds.stats, _bstats_seen)
+		if not first:
+			for k in bm:
+				factor(ev, "day", "bonds:" + str(k), bm[k], "count", "judgment")
+		var mem := 0
+		for o in j.memories:
+			mem += (j.memories[o] as Dictionary).size()
+		factor(ev, "day", "memories_held", mem, "count", "judgment")
+		factor(ev, "day", "people_remembering", j.memories.size(), "count", "judgment")
+		factor(ev, "day", "aspiration_on", str(j.asp.enabled), "flag", "judgment")
+		end(ev)
+	var wd := begin("world", "day", "summary", "world_day", "world", {"detail": "day=%d" % d})
+	var by_ore := {}
+	var out := 0
+	for dep in w.deposits:
+		var ore := str(dep.get("ore", "?"))
+		by_ore[ore] = int(by_ore.get(ore, 0)) + int(dep.get("amount", 0))
+		if int(dep.get("amount", 0)) <= 0:
+			out += 1
+	var ores := by_ore.keys()
+	ores.sort()
+	for ore in ores:
+		factor(wd, "deposits", "left:" + str(ore), int(by_ore[ore]), "units", "world_state")
+	factor(wd, "deposits", "worked_out", out, "seams", "world_state")
+	factor(wd, "deposits", "seams", w.deposits.size(), "seams", "world_state")
+	var mature := 0
+	for t in w.trees:
+		if str(t.get("state", "")) == "mature":
+			mature += 1
+	factor(wd, "trees", "standing", w.trees.size(), "trees", "world_state")
+	factor(wd, "trees", "mature", mature, "trees", "world_state")
+	var hh := 0
+	for h in w.households.size():
+		if not w.households[h].get("ended", false) and not w.brain._members(h).is_empty():
+			hh += 1
+	factor(wd, "people", "households_with_members", hh, "households", "world_state")
+	if w.regions != null:
+		factor(wd, "regions", "coins", int(w.regions.coins()), "coins", "world_state")
+		var goods: Dictionary = w.regions.goods()
+		var gt := 0
+		for g in goods:
+			gt += int(goods[g])
+		factor(wd, "regions", "goods", gt, "units", "world_state")
+	if w.discovery != null:
+		var inds: Array = w.discovery.levels.keys()
+		inds.sort()
+		for ind in inds:
+			factor(wd, "capability", "level:" + str(ind), int(w.discovery.levels[ind]), "level", "world_state")
+		var hist: Array = w.discovery.history
+		for i in range(mini(_disc_hist, hist.size()), hist.size()):
+			var r: Dictionary = hist[i]
+			factor(wd, "capability", "change:%s" % str(r.get("industry", "")), "%s->%s %s" % [str(r.get("from", "")), str(r.get("to", "")), str(r.get("why", "")).left(80)], "text", "world_state")
+		_disc_hist = hist.size()
+	if w.contracts != null:
+		var open := 0
+		for c in w.contracts.list:
+			if Contracts.is_open(c):
+				open += 1
+		factor(wd, "contracts", "open", open, "contracts", "world_state")
+		factor(wd, "contracts", "reserved_coins", int(w.contracts.reserved_total()), "coins", "world_state")
+	if w.credit != null:
+		factor(wd, "credit", "debts_open", w.credit.debts_of("", "", false).size(), "debts", "world_state")
+	end(wd)
+	if w.economy != null:
+		var ec = w.economy
+		var em := begin("economy", "model", "summary", "economy_model", "world", {"detail": "LE-01 (observing only)"})
+		factor(em, "model", "events", ec.events.size(), "count", "economy_model")
+		factor(em, "model", "events_ordered", str(ec.events.ordered()), "flag", "economy_model")
+		factor(em, "model", "knowledge", ec.knowledge.size(), "count", "economy_model")
+		factor(em, "model", "needs_recorded", ec.needs.recorded().size(), "count", "economy_model")
+		factor(em, "model", "needs_dirty", ec.needs.dirty.size(), "count", "economy_model")
+		factor(em, "model", "offers", ec.offers.records.size(), "count", "economy_model")
+		factor(em, "model", "reservations", ec.reservations.records.size(), "count", "economy_model")
+		factor(em, "model", "unbacked", ec.reservations.unbacked().size(), "count", "economy_model")
+		factor(em, "model", "contract_links", ec.contract_links.links.size(), "count", "economy_model")
+		end(em, "ok" if ec.reservations.unbacked().is_empty() and ec.events.ordered() else "failed", "", "")
+		if not ec.reservations.unbacked().is_empty():
+			alert("violation", "economy.unbacked_reservation", "world", "unbacked=%d" % ec.reservations.unbacked().size(), em)
+
+
+## {key: change} of the numeric entries of `now` against `seen` (then updated), sorted keys.
+func _moved(now: Dictionary, seen: Dictionary) -> Dictionary:
+	var out := {}
+	var ks := now.keys()
+	ks.sort()
+	for k in ks:
+		var v = now[k]
+		if typeof(v) in [TYPE_INT, TYPE_FLOAT] and v != seen.get(k, 0):
+			out[k] = int(v) - int(seen.get(k, 0)) if typeof(v) == TYPE_INT else snappedf(float(v) - float(seen.get(k, 0.0)), 0.01)
+			seen[k] = v
+	return out
+
+
+# ---------------------------------------------------------------- network (multiplayer) ------
+## NetSession hooks, on the host (the authoritative world) and on a guest (its copy, which never simulates: no hourly audit runs
+## there, so a guest's archive holds its network events and its digests only). `who` is a PlayerState or null.
+func net_event(session, kind: String, who, detail := "", outcome := "ok") -> void:
+	net = session
+	var role := str(session.role) if session != null else ""
+	var ev := begin("net", role if role != "" else "session", "network", kind, ref_of(who) if who != null else "world", {"detail": detail})
+	if who != null:
+		participant(ev, ref_of(who), "player")
+	end(ev, outcome, "", "")
+	flush_soon()
+
+
+## Host: a guest's request applied (a verb or an action), with its result.
+func net_request(session, who: PlayerState, kind: String, r: Dictionary) -> void:
+	net = session
+	var ok := bool(r.get("ok", true)) and str(r.get("result", "")) != "failed"
+	var ev := begin("net", "host", "network", "request", ref_of(who) if who != null else "world", {"detail": "kind=%s path=%s text=%s" % [kind,
+		str(r.get("path", "")), str(r.get("text", "")).left(100)]})
+	if who != null:
+		participant(ev, ref_of(who), "player")
+	end(ev, "ok" if ok else "failed", "", "")
+
+
+## Syncs sent (host) or adopted (guest): counted for the next digest, never one row each (several a second).
+func net_sync(session, sent: bool, sections: int, nbytes: int) -> void:
+	net = session
+	var k := "sent" if sent else "adopted"
+	_net_counts[k] = int(_net_counts.get(k, 0)) + 1
+	_net_counts[k + "_sections"] = int(_net_counts.get(k + "_sections", 0)) + sections
+	_net_counts[k + "_bytes"] = int(_net_counts.get(k + "_bytes", 0)) + nbytes
+	if not sent:
+		net_state_maybe()
+
+
+## One digest a game hour per participant: role, the players this machine knows, each shared section's hash (NetSync.digest of
+## World.to_dict, the hashes the host's syncs compare), and the syncs since the last one. tools/recorder_archive.py
+## --participants compares the host's and guests' digests hour by hour.
+func net_state_maybe() -> void:
+	if net == null or not is_instance_valid(net) or str(net.role) == "" or stopped or finished:
+		return
+	var hk := int(w.minutes / 60.0)
+	if hk == _net_hour:
+		return
+	_net_hour = hk
+	var ev := begin("net", str(net.role), "network", "net_state", ref_of(w.player), {"detail": "role=%s minute=%d" % [str(net.role), int(w.minutes)]})
+	var players := []
+	for p: PlayerState in w.player_list():
+		players.append("%s coins=%d alive=%s away=%s" % [ref_of(p), int(p.coins), str(p.alive), str(p.away)])
+	factor(ev, "net", "players", "; ".join(players), "text", "network")
+	factor(ev, "net", "peers", (net.by_peer as Dictionary).size() if str(net.role) == "host" else 1, "count", "network")
+	var dig: Dictionary = NetSync.digest(w.to_dict())
+	var ks := dig.keys()
+	ks.sort()
+	for k in ks:
+		factor(ev, "section", str(k), str(dig[k]), "hash", "network")
+	for k in _net_counts:
+		factor(ev, "sync", str(k), int(_net_counts[k]), "count", "network")
+	_net_counts.clear()
+	end(ev)
+	flush_soon()
+
+
+## A guest's world never reaches an hour boundary (it does not simulate): write what is buffered now.
+func flush_soon() -> void:
+	if net != null and is_instance_valid(net) and str(net.role) == "guest":
+		flush()

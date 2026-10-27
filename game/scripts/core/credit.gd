@@ -229,6 +229,8 @@ func barter(seller: Object, buyer: Object, want: String, qty: int, give: String)
 	buyer.inv.add(want, qty)
 	buyer.inv.remove(give, k)
 	seller.inv.add(give, k)
+	if w.recorder != null:
+		w.recorder.barter(seller, buyer, want, qty, give, k)     # X20-FINAL
 	_note_deal(seller, buyer)
 	w.stat("barter_deals")
 	w.stat("barter_units", float(qty + k))
@@ -288,6 +290,8 @@ func sell_on_credit(seller: Object, buyer: Object, id: String, qty: int, value: 
 			"made": w.day(), "due": w.day() + int(cfg().days), "state": OPEN, "ended": -1}
 	next_id += 1
 	debts.append(d)
+	if w.recorder != null:
+		w.recorder.credit_extended(seller, buyer, id, qty, d)     # X20-FINAL
 	_note_deal(seller, buyer)
 	w.stat("credit_extended")
 	w.stat("credit_coins", float(value))
@@ -329,6 +333,8 @@ func repay(id: int, force := false, actor: PlayerState = null) -> bool:
 	if cre is NPC:
 		cre.earned += int(d.value)
 	_end(d, LATE if late else REPAID)
+	if w.recorder != null:
+		w.recorder.credit_repaid(d, deb, cre, late)     # X20-FINAL
 	if w.judgment != null:
 		JudgmentLive.on_deal(w, "trade_fair", _rid(str(d.debtor)), _rid(str(d.creditor)), int(d.value), late)    # a debt repaid; late is a fair deal with half the trust gain (X19-EVENT-Q)
 	var reg: float = float(cfg().repay_regard) * (0.5 if late else 1.0)
@@ -343,6 +349,8 @@ func repay(id: int, force := false, actor: PlayerState = null) -> bool:
 
 func _default(d: Dictionary) -> void:
 	d.state = DEFAULTED
+	if w.recorder != null:
+		w.recorder.credit_defaulted(d)     # X20-FINAL
 	var amount := float(cfg().default_regard)
 	var cre := str(d.creditor)
 	var deb := str(d.debtor)

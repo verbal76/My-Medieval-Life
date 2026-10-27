@@ -662,6 +662,8 @@ func _open(c: Dictionary) -> bool:
 	c.deadline_day = w.day() + int(c.days) - 1        # the last day it may be delivered on (days counts today)
 	if not list.has(c):
 		list.append(c)
+	if w.recorder != null:
+		w.recorder.contract_opened(c, _coins(c.buyer))     # X20-FINAL: the coins set aside, on the thread contract:<id>
 	var s := _npc_of(c.seller)
 	if is_service(c):
 		w.stat("service_contracts_made")
@@ -863,6 +865,8 @@ func deliver(c: Dictionary, units: int, into: Inventory = null, actor: PlayerSta
 	if World.is_player_ref(c.seller):
 		w.player_for(c.seller).trim_stolen()
 	to.add(c.item, units)
+	if w.recorder != null:
+		w.recorder.contract_goods(c, units, from, to)      # X20-FINAL: the goods handed over
 	_pay_units(c, units)
 	return units
 
@@ -879,6 +883,8 @@ func _pay_units(c: Dictionary, units: int) -> void:
 	c.paid = int(c.paid) + pay
 	c.delivered = int(c.delivered) + units
 	_add_coins(c.seller, pay)
+	if w.recorder != null:
+		w.recorder.contract_paid(c, units, pay, _coins(c.seller))     # X20-FINAL: paid from the coins set aside
 	var s := _npc_of(c.seller)
 	if s:
 		s.earned += pay
@@ -986,6 +992,7 @@ func _end(c: Dictionary, state: String, why: String) -> void:
 	if is_service(c):
 		ContractServices.release(self, c)          # CON-02: anything of the buyer's still carried goes back
 	var held := int(c.get("reserved", 0))
+	var was := str(c.state)
 	c.reserved = 0
 	if held > 0:
 		_add_coins(c.buyer, held)
@@ -993,6 +1000,8 @@ func _end(c: Dictionary, state: String, why: String) -> void:
 	c.ended_day = w.day()
 	if why != "":
 		c.why = why
+	if w.recorder != null:
+		w.recorder.contract_ended(c, was, held, _coins(c.buyer))     # X20-FINAL: how it ended, the coins returned
 
 
 ## Either party ends an open contract: what was delivered has been paid; the rest of the set-aside coins go back to

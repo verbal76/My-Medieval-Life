@@ -134,6 +134,8 @@ func host(opts: Dictionary) -> String:
 		return "Could not open the game to others (port %d is in use or blocked)." % port
 	multiplayer.multiplayer_peer = peer
 	role = "host"
+	if main.world.recorder != null:
+		main.world.recorder.net_event(self, "host_started", main.world.host_player(), "max_players=%d" % max_players)     # X20-FINAL
 	discovery.host(_answer(), discovery_port)
 	DisplayServer.screen_set_keep_on(true)        # a sleeping host stops the world for everyone
 	changed.emit("Hosting %s. Friends on the same network can join it." % world_name)
@@ -182,6 +184,8 @@ func _on_peer_disconnected(id: int) -> void:
 	if not is_host() or not by_peer.has(id):
 		return
 	var g: PlayerState = main.world.player_by_pid(int(by_peer[id]))
+	if main.world.recorder != null:
+		main.world.recorder.net_event(self, "guest_left", g, "peer=%d" % id)     # X20-FINAL
 	by_peer.erase(id)
 	moves.erase(id)
 	synced.erase(id)
@@ -338,6 +342,8 @@ func _on_server_gone() -> void:
 
 func _lost(text: String) -> void:
 	var was_in: bool = is_guest() and main.guest_world
+	if was_in and main.world != null and main.world.recorder != null:
+		main.world.recorder.net_event(self, "host_lost", main.world.player, text.left(100), "interrupted")     # X20-FINAL
 	stop()
 	changed.emit(text)
 	if was_in:
@@ -364,11 +370,15 @@ func c_hello(version: String, key: String, who: String, pw_hash: String) -> void
 	var kh := NetProtocol.key_hash(key) if key.length() == 32 else ""
 	var why := admit(kh, version, pw_hash, who) if kh != "" else "version"
 	if why != "":
+		if main.world != null and main.world.recorder != null:
+			main.world.recorder.net_event(self, "guest_refused", null, "code=%s" % why, "refused")     # X20-FINAL
 		rpc_id(id, "s_refuse", why)
 		get_tree().create_timer(0.5).timeout.connect(func(): if peer != null and multiplayer.get_peers().has(id): peer.disconnect_peer(id))
 		return
 	var p := guest_state(kh, who)
 	by_peer[id] = p.pid
+	if main.world.recorder != null:
+		main.world.recorder.net_event(self, "guest_joined", p, "peer=%d guests=%d" % [id, by_peer.size()])     # X20-FINAL
 	moves[id] = {"t": Time.get_ticks_msec(), "dir": Vector2.DOWN, "anim": "idle"}
 	discovery.info = _answer()
 	rpc_id(id, "s_welcome", world_for(p.pid), id)
@@ -403,6 +413,8 @@ func s_welcome(blob: PackedByteArray, id: int) -> void:
 	if not main.start_guest_world(d, my_pid):
 		_lost("The world could not be shown. Try joining again.")
 		return
+	if main.world != null and main.world.recorder != null:
+		main.world.recorder.net_event(self, "joined_host", main.world.player, "pid=%d" % my_pid)     # X20-FINAL: the guest's own session
 	changed.emit("Joined %s." % str(d.get("world_name", "the world")))
 	players_changed.emit()
 
@@ -617,6 +629,8 @@ func apply_requests() -> void:
 		var p: PlayerState = main.world.player_by_pid(int(q.pid))
 		var r := NetActions.apply(main.world, p, str(q.kind), q.args if q.args is Dictionary else {})
 		applied += 1
+		if main.world.recorder != null:
+			main.world.recorder.net_request(self, p, str(q.kind), r)     # X20-FINAL: each player action the host applied
 		if r.has("heir_pid") and by_peer.has(int(q.peer)):
 			by_peer[int(q.peer)] = int(r.heir_pid)     # MP-D4: the connection now plays the heir
 			announce(main.world.player_by_pid(int(r.heir_pid)), int(q.peer))     # MP-INTERACT-01: the others learn of the heir
@@ -647,6 +661,8 @@ func s_reply(rid: int, r: Dictionary) -> void:
 		predicted.erase(rid)
 		if (not bool(r.get("ok", false)) or JSON.stringify(mine_r) != JSON.stringify(r.get("result"))) and str(r.get("text", "")) != "":
 			answered.emit(str(r.text))
+		if main.world != null and main.world.recorder != null and JSON.stringify(mine_r) != JSON.stringify(r.get("result")):
+			main.world.recorder.net_event(self, "prediction_differs", main.world.player, "rid=%d path=%s" % [rid, str(r.get("path", ""))], "failed")     # X20-FINAL
 		return
 	if str(r.get("text", "")) != "":
 		answered.emit(str(r.text))
@@ -698,6 +714,8 @@ func send_syncs(all: bool, skip: Array = []) -> void:
 			continue
 		var blob := JSON.stringify(ch).to_utf8_buffer().compress(FileAccess.COMPRESSION_GZIP)
 		sync_bytes += blob.size()
+		if main.world.recorder != null:
+			main.world.recorder.net_sync(self, true, ch.size(), blob.size())     # X20-FINAL: counted, not one row each
 		rpc_id(id, "s_sync", blob)
 
 
@@ -709,6 +727,8 @@ func s_sync(blob: PackedByteArray) -> void:
 	if d is Dictionary:
 		NetSync.adopt(main.world, d)
 		syncs += 1
+		if main.world.recorder != null:
+			main.world.recorder.net_sync(self, false, (d as Dictionary).size(), blob.size())     # X20-FINAL (and the guest's hourly digest)
 
 
 # ---------------------------------------------------------------- every frame ----------------
