@@ -88,14 +88,14 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | DVW-B6 | Wildlife wandering in from the overworld | approved | APPROVED — NOT STARTED | 16 | NOT STARTED / NOT TESTED / OPEN | 18 |
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | approved | BLOCKED | owner decision | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | FR-01 | Lizards and spiders as enemies | approved | BLOCKED | 20+ | NOT STARTED / NOT TESTED / OPEN | 26 |
-| GM-01 | Generational memory and historical consequences (the 30-planks chain) | approved | APPROVED — NOT STARTED | 19 | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| GM-01 | Generational memory and historical consequences (the 30-planks chain) | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 20 |
-| SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | approved | APPROVED — NOT STARTED | 19 | IN DEVELOPMENT / TARGETED TESTS PASSED / OPEN | 20 |
+| SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | approved | APPROVED — NOT STARTED | 19 | NOT STARTED / NOT TESTED / OPEN | 20 |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | approved | APPROVED — NOT STARTED | 19 | NOT STARTED / NOT TESTED / OPEN | 20 |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | approved | APPROVED — NOT STARTED | 20+ | NOT STARTED / NOT TESTED / OPEN | 21 |
-| WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | approved | PARTIALLY IMPLEMENTED | 19 | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
-| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | approved | APPROVED — NOT STARTED | 18 | NOT STARTED / NOT TESTED / OPEN | 20 |
+| WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | approved | PARTIALLY IMPLEMENTED | 19 | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | approved | APPROVED — NOT STARTED | 18 | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 
 ## Reopened since the baseline (0)
 

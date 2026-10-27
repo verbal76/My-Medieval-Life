@@ -22175,10 +22175,12 @@
     "As recorded in the source; evidence named in implementation and tests"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4",
    "playtest": [],
    "branch": "wip/x20-r2r4",
-   "commits": [],
+   "commits": [
+    "de61317"
+   ],
    "parent": null,
    "depends_on": [
     "DVW-B1"
@@ -22189,7 +22191,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Remaining: gifts of materials (only coins toward another's house exist), no demolition mechanic (destroyed wording tested by erasing the building), gratitude feeds no decision yet (measure in R6), no recorder rows for history records.",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -22229,17 +22231,24 @@
      "date": "2026-10-27",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker I (recovery R2, R4); branch:  -> wip/x20-r2r4",
      "why": "recovery R2/R4 assigned (base wip/expansion20 e49384e)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4; test_commit: 0b5287c -> de61317; commits + de61317; integrated_in + Expansion 20 wip/expansion20 5770d00; next_action",
+     "why": "R4 historical memory merged: refs, links and history records in the judgment section (v3, optional keys; save_version unchanged), handed down to adult children, told in talk with the house's current state"
     }
    ],
    "acceptance_derived": true,
    "target_build": "20",
    "roadmap_gate": "fit to confirm",
    "roadmap_reason": "generational memory is the judgment system's event and belief record; not named in any build, closest fit",
-   "integrated_in": [],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 5770d00"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "UNKNOWN",
@@ -22248,7 +22257,7 @@
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "historical memory: fact links and entity refs (building, item, household), the 30-planks chain, significance rule, dialogue from records, save migration (batch R4)",
-   "test_commit": "0b5287c",
+   "test_commit": "de61317",
    "assigned_worker": "worker I (recovery R2, R4)"
   },
   {
@@ -48756,10 +48765,12 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0",
+   "tests": "on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0; worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4",
    "playtest": [],
    "branch": "wip/x20-r2r4",
-   "commits": [],
+   "commits": [
+    "c51d49b"
+   ],
    "parent": "EXP-C",
    "depends_on": [
     "SJD-E"
@@ -48817,17 +48828,23 @@
      "date": "2026-10-27",
      "change": "implementation_status: INTEGRATED -> IN DEVELOPMENT; assigned_worker: None -> worker I (recovery R2, R4); branch:  -> wip/x20-r2r4",
      "why": "recovery R2/R4 assigned (base wip/expansion20 e49384e)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; tests: on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0 -> on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0; worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4; test_commit: 0b5287c -> de61317; commits + c51d49b; integrated_in + Expansion 20 wip/expansion20 5770d00",
+     "why": "R2 crime-report hook merged (flag decision.integration.report off; measured in R6 before any switch-on)"
     }
    ],
    "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "the NPC Judgment System expansion",
    "integrated_in": [
-    "Expansion 20 wip/expansion20 0b5287c"
+    "Expansion 20 wip/expansion20 0b5287c",
+    "Expansion 20 wip/expansion20 5770d00"
    ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -48837,7 +48854,7 @@
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "13 decision domains live through JudgmentWeighting.choose; close against acceptance with the population evidence of the measurement batch (R6); politics stays with Expansion 21 (Q-POL-1, Q-POL-7)",
-   "test_commit": "0b5287c",
+   "test_commit": "de61317",
    "assigned_worker": "worker I (recovery R2, R4)"
   },
   {
@@ -54397,10 +54414,12 @@
     "Rule 009's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
    ],
    "implementation": "Shared systems with consequences; the 30-planks provenance chain not built (GM-01)",
-   "tests": "",
+   "tests": "worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4",
    "playtest": [],
    "branch": "wip/x20-r2r4",
-   "commits": [],
+   "commits": [
+    "de61317"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -54409,7 +54428,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "GM-01",
+   "next_action": "Remaining: gifts of materials (only coins toward another's house exist), no demolition mechanic (destroyed wording tested by erasing the building), gratitude feeds no decision yet (measure in R6), no recorder rows for history records.",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -54449,23 +54468,30 @@
      "date": "2026-10-27",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> worker I (recovery R2, R4); branch:  -> wip/x20-r2r4",
      "why": "recovery R2/R4 assigned (base wip/expansion20 e49384e)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4; test_commit: 0b5287c -> de61317; commits + de61317; integrated_in + Expansion 20 wip/expansion20 5770d00; next_action",
+     "why": "R4 historical memory merged: refs, links and history records in the judgment section (v3, optional keys; save_version unchanged), handed down to adult children, told in talk with the house's current state"
     }
    ],
    "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "emergent gameplay is the judgment system's purpose",
-   "integrated_in": [],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 5770d00"
+   ],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "related": [
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "the 30-planks verification scenario on top of GM-01 (batch R4)",
-   "test_commit": "0b5287c",
+   "test_commit": "de61317",
    "assigned_worker": "worker I (recovery R2, R4)"
   },
   {
@@ -54733,6 +54759,11 @@
      "date": "2026-10-27",
      "change": "commits + 8bde18b; notes",
      "why": "R5 design revised for the owner's final answers (wip/x20-r5 8bde18b): six domains, survival pressure outside the family-first rules, job_choice at the morning job search (replaces the job-switch step when its flag is on; wage stays a factor), individual courtship weighting in pick_court; effort 3-4 worker-days"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker:  -> worker L (aspirations code)",
+     "why": "R2/R4 merged, so the aspiration code can start (shared files free)"
     }
    ],
    "target_build": "20",
@@ -54741,7 +54772,7 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -54752,7 +54783,7 @@
     "X20-OPEN-ITEMS"
    ],
    "test_commit": "0b5287c",
-   "assigned_worker": ""
+   "assigned_worker": "worker L (aspirations code)"
   },
   {
    "id": "WDR-011-Q1",

@@ -2,13 +2,12 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (17)
+## Workers and task branches (15)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
-| GM-01 | 20 | IN DEVELOPMENT | worker I (recovery R2, R4) | wip/x20-r2r4 |
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
@@ -20,8 +19,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | REC-DIAG | 20 | IN DEVELOPMENT | lead | wip/recorder (read-only runs) |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
-| SJD-F | 20 | IN DEVELOPMENT | worker I (recovery R2, R4) | wip/x20-r2r4 |
-| WDR-009-C | 20 | IN DEVELOPMENT | worker I (recovery R2, R4) | wip/x20-r2r4 |
+| WDR-011-C | 20 | IN DEVELOPMENT | worker L (aspirations code) | wip/x20-r5 |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
 ## Implemented but not tested (45)
