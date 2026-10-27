@@ -43,7 +43,16 @@ const LIVE_ORDER_STEP := 10000      # live_order: 100 points for the live rule's
 static func on(w, domain: String) -> bool:
 	if w == null or w.judgment == null:
 		return false
-	return bool((w.judgment.cfg.decision.get("integration", {}) as Dictionary).get(domain, false))
+	if not bool((w.judgment.cfg.decision.get("integration", {}) as Dictionary).get(domain, false)):
+		return false
+	if domain == "job_choice":
+		return w.judgment.asp.job_choice_allowed()     # R5: needs aspiration.enabled (refused with a logged reason otherwise)
+	return true
+
+
+## R5 (WDR-011-C): whether the aspiration layer is on for `w` (a store attached and judgment.json aspiration.enabled).
+static func aspiring(w) -> bool:
+	return w != null and w.judgment != null and w.judgment.asp.enabled
 
 
 static var test_enabled := false     # tests only: switch judgment on without editing judgment.json
@@ -60,6 +69,7 @@ static func enabled() -> bool:
 static func attach(w, config: Dictionary = {}) -> JudgmentStore:
 	var j := JudgmentStore.new(config, Social.new(w), int(w.seed))
 	j.day = w.day()
+	j.world = w                            # R5: the aspiration layer reads the live world (held weakly)
 	w.judgment = j
 	if "recorder" in w and w.recorder != null:
 		j.rec = w.recorder                 # REC-19 D5: a store made after the recorder (a loaded game) records too
@@ -406,6 +416,9 @@ static func at_of(w, ref: String):
 static func on_death(w, n: NPC, kind: String) -> int:
 	if w == null or w.judgment == null or n.role == "bandit":
 		return -1
+	if w.judgment.asp.enabled:
+		for pid in [n.mother, n.father, n.partner] + n.children:
+			w.judgment.asp.on_loss(w, int(pid))        # R5: the loss of a partner, child or parent is a family setback, met by personality
 	var t := ["cause:" + kind]
 	if n.household >= 0:
 		t.append("hh:%d" % n.household)
@@ -433,6 +446,9 @@ static func on_death(w, n: NPC, kind: String) -> int:
 
 ## A partnership made (Relations.propose accepted, the player's included): a neutral fact for the two of them.
 static func on_marriage(w, a: int, b: int) -> void:
+	if w.judgment.asp.enabled:
+		w.judgment.asp.on_marriage(w, a)                 # R5: property gains priority (villagers only; a player has no aspirations)
+		w.judgment.asp.on_marriage(w, b)
 	var ev: int = w.judgment.publish("marriage", [a, b])
 	if ev > 0:
 		w.judgment.observe_all(ev, [a, b])
@@ -589,8 +605,10 @@ static func work_refusal(w, worker: NPC, employer: int, wage: int, favour := fal
 	if not on(w, "work_accept") or worker == null or employer == worker.id:
 		return ""
 	var need := JudgmentMath.clampi_((50 - worker.coins) * 2000, 0, 100000)
-	var r := JudgmentWeighting.choose(w.judgment, w.judgment.cfg, worker.id, "work_accept",
-			[{"id": "accept", "counterparty": employer, "factors": {"necessity": need, "wage": 100000 if wage > 0 or favour else 0}}], [w.day(), employer])
+	var cand := {"id": "accept", "counterparty": employer, "factors": {"necessity": need, "wage": 100000 if wage > 0 or favour else 0}}
+	if wage <= 0:
+		cand.serves = {"food": 0, "wealth": 0}            # R5: unpaid work feeds no one and earns nothing (read only with aspirations on)
+	var r := JudgmentWeighting.choose(w.judgment, w.judgment.cfg, worker.id, "work_accept", [cand], [w.day(), employer])
 	w.judgment._stat("work_offers")
 	if str(r.chosen) == "accept":
 		return ""
@@ -626,7 +644,10 @@ static func pick_court(w, n: NPC, people: Array, attraction: Dictionary) -> NPC:
 		return null
 	var cands := []
 	for o: NPC in people:
-		cands.append({"id": o.id, "counterparty": o.id, "factors": {"attraction": roundi(clampf(float(attraction[o.id]), 0.0, 100.0) * 1000.0)}})
+		var f := {"attraction": roundi(clampf(float(attraction[o.id]), 0.0, 100.0) * 1000.0)}
+		if aspiring(w):
+			f.merge(court_factors(w, n, o))                # R5 (FAD Q3): what else this villager values in a partner, weighed by their own priorities
+		cands.append({"id": o.id, "counterparty": o.id, "factors": f})
 	var r := JudgmentWeighting.choose(w.judgment, w.judgment.cfg, n.id, "court_choice", cands, [w.day(), n.id])
 	w.judgment._stat("court_choices")
 	for o: NPC in people:
@@ -762,3 +783,120 @@ static func will_report(w, n: NPC, offender: int, how: String, crime: String) ->
 		j._stat("report_kept_quiet")
 		return false
 	return true
+
+
+# ---------------------------------------------------------------- R5 aspirations (WDR-011-C) -----------------------
+## court_choice (FAD Q3): the courting factors of candidate `x` for chooser `n`, each from real state, 0..100000. Their
+## weights (judgment.json aspiration.court) are scaled by n's own effective priority of a domain in JudgmentWeighting, so
+## one villager weighs security, another wealth, another the bond they already have. Nothing gates: a poor candidate is
+## weighed, never removed. Kinship, age, existing partners and consent stay the live rules' (Relations.can_court and the
+## pool, villagers only: no NPC ever chooses a player). No ledger entry counts twice: disposition is n's own opinion of x,
+## family_compat n's opinions of x's parents and siblings, standing everyone else's personal opinion of x.
+static func court_factors(w, n: NPC, x: NPC) -> Dictionary:
+	var j: JudgmentStore = w.judgment
+	var a: JudgmentAspiration = j.asp
+	var cc: Dictionary = a.c.get("court", {})
+	var mid := int(j.cfg.decision.disposition_mid)
+	var tt: Dictionary = w.relations.peek(n.id, x.id)
+	var bond := roundi(clampf(float(tt.regard), 0.0, 100.0) * float(int(cc.get("bond_regard_permille", 700)))) \
+			+ mini(int(tt.days_known), int(cc.get("bond_days_full", 16))) * (100000 - 100 * int(cc.get("bond_regard_permille", 700))) / maxi(1, int(cc.get("bond_days_full", 16)))
+	var econ: Dictionary = w.households[x.household].get("econ", {}) if x.household >= 0 else {}
+	var savings := maxf(1.0, float(GameData.b("household_savings_days")))
+	var security := 0
+	if not econ.is_empty():
+		security = (50000 if bool(econ.sustainable) else 0) + roundi(minf(float(econ.days) / savings, 1.0) * 50000.0)
+	var wx: int = w.property.purse(World.hh_ref(x.household)) if x.household >= 0 else x.coins
+	var wn: int = w.property.purse(World.hh_ref(n.household)) if n.household >= 0 else n.coins
+	var wealth := 50000 if wx + wn <= 0 else JudgmentMath.mul_div(maxi(0, wx), 100000, maxi(1, wx + wn))
+	var prop := int(a.rows[x.id].sat[JudgmentAspiration.PROPERTY]) if a.rows.has(x.id) else 0
+	var streak := int(econ.get("streak", 0)) if not econ.is_empty() else 0
+	var stability := maxi(0, 50000 - streak * int(cc.get("stability_streak_step", 20000)))
+	if x.job != "":
+		stability += clampi((w.day() - x.job_since) * 50000 / maxi(1, a.n_("profession_tenure_full", 16)), 0, 50000)
+	# family compatibility: n's own personal opinions of x's parents and siblings (x excluded: that is disposition)
+	var rel := []
+	for pid in [x.mother, x.father]:
+		if int(pid) >= 0:
+			rel.append(int(pid))
+			var p: NPC = w.npc(int(pid))
+			if p != null:
+				for cid in p.children:
+					if int(cid) != x.id and not rel.has(int(cid)):
+						rel.append(int(cid))
+	rel.sort()
+	var fsum := 0
+	var fcnt := 0
+	for r in rel:
+		if r != n.id and j.ledgers.has(n.id) and JudgmentStore._lfind(j.ledgers[n.id], int(r)) >= 0:
+			fsum += j.personal_disposition(n.id, int(r))
+			fcnt += 1
+	var compat := fsum / fcnt if fcnt > 0 else mid
+	var ln := int(a.rows[n.id].lead) if a.rows.has(n.id) else -1
+	var lx := int(a.rows[x.id].lead) if a.rows.has(x.id) else -1
+	var shared := 100000 if ln >= 0 and ln == lx else (50000 if ln < 0 or lx < 0 else 0)
+	return {"bond": clampi(bond, 0, 100000), "security": clampi(security, 0, 100000), "wealth": wealth, "property": prop,
+		"stability": clampi(stability, 0, 100000), "family_compat": clampi(compat, 0, 100000), "shared_ambition": shared,
+		"standing": a.standing_excluding(x.id, n.id)}
+
+
+## job_choice (FAD Q2; NPCBrain.seek_work with decision.integration.job_choice and aspiration.enabled on): which of the open
+## jobs the live search found feasible (`opts` [[job, live score], ...] in the live list's order) villager `n` takes, or ""
+## to stay in the job they have. Who looks for work, what is open and affordable, and that skilled trades need training
+## stay the live rule's; this only weighs among those options: the live rule's own preference (live_order), the pay
+## (wage), the pay gain as hardship magnifies it (need_wage: coin need and the household's unsustainable days), skill and
+## room to improve (both scaled by the person's own profession priority, which survival pressure lowers), tenure and career
+## satisfaction for staying. With equal career factors the live answer stands. `live_best` is the live rule's best option,
+## `live_switch` whether the live rule would take it. No occupation is preferred by a fixed rule.
+static func pick_job(w, n: NPC, opts: Array, unemployed: bool, current: float, live_best: String, live_switch: bool, econ: Dictionary) -> String:
+	var j: JudgmentStore = w.judgment
+	var a: JudgmentAspiration = j.asp
+	var jc: Dictionary = a.c.get("job", {})
+	var order := []
+	var rest := opts.duplicate()
+	rest.sort_custom(func(x, y) -> bool: return float(x[1]) > float(y[1]))
+	var best_entry = null
+	for o in rest:
+		if str(o[0]) == live_best:
+			best_entry = o
+	if best_entry != null:
+		rest.erase(best_entry)
+	if live_switch or unemployed:
+		if best_entry != null:
+			order.append(best_entry)
+		if not unemployed:
+			order.append(["", current])
+	else:
+		order.append(["", current])
+		if best_entry != null:
+			order.append(best_entry)
+	order.append_array(rest)
+	var top := maxf(0.001, current)
+	for o in order:
+		top = maxf(top, float(o[1]))
+	var hardship := maxi(coin_need(n), mini(100000, int(econ.get("streak", 0)) * int(jc.get("hardship_per_streak_day", 20000))))
+	var full := maxi(1, int(jc.get("need_gain_full_permille", 100)))
+	var cands := []
+	for i in order.size():
+		var job := str(order[i][0])
+		var score := float(order[i][1])
+		var f := {"live_order": maxi(0, 100000 - LIVE_ORDER_STEP * i), "wage": clampi(roundi(maxf(0.0, score) / top * 100000.0), 0, 100000)}
+		if job == "":
+			var sk := a.skill_fit(n, n.job)
+			f.skill = maxi(0, sk)
+			f.growth = a.growth_fit(n, n.job)
+			f.tenure = clampi((w.day() - n.job_since) * 100000 / maxi(1, a.n_("profession_tenure_full", 16)), 0, 100000)
+			f.career_sat = a.profession_sat(n, w)
+			f.need_wage = 0
+		else:
+			f.skill = maxi(0, a.skill_fit(n, job))
+			f.growth = a.growth_fit(n, job)
+			var gain := clampi(roundi((score - current) * 1000.0 / maxf(1.0, current)), 0, 100000)
+			f.need_wage = JudgmentMath.mul_div(mini(1000, gain * 1000 / full), hardship, 1000)
+		cands.append({"id": job if job != "" else "stay", "factors": f})
+	var r := JudgmentWeighting.choose(j, j.cfg, n.id, "job_choice", cands, [w.day(), n.id])
+	j._stat("job_choices")
+	var chosen := "" if r.chosen == null or str(r.chosen) == "stay" else str(r.chosen)
+	var live := live_best if (live_switch or unemployed) else ""
+	if chosen != live:
+		j._stat("job_choices_changed")                 # the weighing moved the choice from the live rule's
+	return chosen

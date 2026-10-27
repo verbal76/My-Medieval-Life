@@ -1066,7 +1066,11 @@ func trust_move(a: int, b: int, before: int, after: int) -> void:
 
 
 const _JBASIS := {"forgo": "forgo", "none feasible": "none_feasible", "the family name alone cannot refuse": "family_name_cannot_refuse"}
-const _JSOURCE := {"disposition": "judgment", "ambivalence": "judgment", "sole_source": "judgment"}
+const _JSOURCE := {"disposition": "judgment", "ambivalence": "judgment", "sole_source": "judgment",
+	"aspiration": "aspiration", "standing": "judgment",     # R5 (WDR-011-C): the aspiration factor; actual standing is others' judgment
+	"bond": "world_state", "security": "world_state", "wealth": "world_state", "property": "world_state", "stability": "world_state",
+	"family_compat": "judgment", "shared_ambition": "aspiration", "need_wage": "world_state", "skill": "world_state", "growth": "world_state",
+	"tenure": "world_state", "career_sat": "aspiration"}
 
 
 ## One JudgmentWeighting.choose, in full: the decision, every candidate as an alternative (infeasible ones with why) and, for each
@@ -1084,6 +1088,8 @@ func judgment_choice(chooser: int, profile: String, key: Array, r: Dictionary) -
 		if opt == "forgo" and not row.has("counterparty"):
 			alternative(ev, "forgo", "yes", true, "", int(row.get("utility", 0)))
 			factor(ev, "forgo", "forgo", int(row.get("utility", 0)), "milli-points", "profile")
+			if row.has("forgo_aspiration_offset"):
+				factor(ev, "forgo", "forgo_aspiration_offset", int(row.forgo_aspiration_offset), "milli-points", "aspiration")
 			continue
 		var cp := int(row.get("counterparty", -1))
 		if cp != -1 and not seen_cp.has(cp):
@@ -1111,12 +1117,37 @@ func judgment_choice(chooser: int, profile: String, key: Array, r: Dictionary) -
 		if row.has("stubborn"):
 			for k in ["resent", "switch", "override", "total"]:
 				factor(ev, opt, "stubborn_" + k, int(row.stubborn.get(k, 0)), "milli-points", "personality")
+		if row.has("aspiration"):                   # R5: which aspiration the factor came from
+			var a: Dictionary = row.aspiration
+			factor(ev, opt, "aspiration_domain", str(a.get("domain", "")) if str(a.get("domain", "")) != "" else "content", "text", "aspiration")
+			factor(ev, opt, "aspiration_pressure", int(a.get("pressure", 0)), "milli-points", "aspiration")
+			factor(ev, opt, "aspiration_fit", int(a.get("fit", 0)), "-1/0/+1", "aspiration")
+			factor(ev, opt, "surv", int(a.get("surv", 0)), "permille", "aspiration")
+		if row.has("scale"):                        # R5: the priority multiplier applied to each scaled weight
+			var sk: Array = (row.scale as Dictionary).keys()
+			sk.sort()
+			for k in sk:
+				factor(ev, opt, "scale:" + str(k), int(row.scale[k]), "permille", "aspiration")
 	end(ev, "ok" if r.get("chosen") != null else "empty")
 	_jlast_choice = ev
 	_jlast_trace = r.get("trace")
 
 
 ## One family-priority decision (JudgmentFamily._record: the row it keeps in JudgmentStore.family_trace), linked to its weighing.
+## R5 (WDR-011-C): one change of a villager's aspirations: a priority shift (success, setback, loss, marriage, with how the
+## person met it), a change of the leading aspiration, or the survival level crossing a step of surv_record_step. Event code
+## judgment/aspiration; the facts as factor rows. Never read by the simulation.
+func aspiration_event(person: int, kind: String, facts: Dictionary) -> void:
+	var actor := jref(person)
+	var ev := begin("judgment", "aspiration", "judgment", kind, actor)
+	participant(ev, actor, "person")
+	var keys := facts.keys()
+	keys.sort()
+	for k in keys:
+		factor(ev, kind, str(k), facts[k], "value", "aspiration")
+	end(ev)
+
+
 func judgment_family(row: Dictionary) -> void:
 	var actor := jref(int(row.who))
 	var ev := begin("judgment", "family", "judgment", str(row.kind), actor, {"detail": "household=%d chosen=%s utility=%d" % [int(row.household), str(row.chosen), int(row.utility)]})
