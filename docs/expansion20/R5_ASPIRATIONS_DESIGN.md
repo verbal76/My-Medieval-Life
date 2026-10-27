@@ -534,3 +534,11 @@ here). Flags on (`--aspiration --job-choice`):
   (assaults by bandits are frequent) count like those witnessed. For R6 to measure; not changed here.
 - Events: about 740 successes, 555-576 setbacks, 610-640 lead changes and 870-945 survival steps per seed in 30 days: the band
   edges make priorities move often.
+
+**Correction after the measurement (2026-10-27, coordinator review).** The survival level was on for nearly every adult. The
+dawn diagnostics (`aspire_dawn_by_*` counters, `economy_sim` survival breakdown) showed the cause: the hunger part began at
+`eat_below` 55, the ordinary appetite that most villagers pass before breakfast, when the level is taken; danger from remembered
+violence, mostly hearsay, added the rest. Now (PROVISIONAL, `docs/DECISIONS.md`): hunger counts from `hunger_from` 35 down to
+the owner's floor 25; danger is the household's real situation only, read from the facts' victims (an assault or killing of the
+villager or a household member within `danger_days`: `danger_step`; a theft from them: `theft_step` 125); stories about
+other people never count, and a lie is no harm. Section 4's table is superseded on these two rows.

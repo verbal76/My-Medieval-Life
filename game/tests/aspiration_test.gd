@@ -26,6 +26,7 @@ func _init() -> void:
 	GameData.ensure()
 	test_config()
 	test_v1_survival()
+	test_v1_danger_is_real_harm()
 	test_v2_hungry_parent_protects()
 	test_v3_no_needless_sacrifice()
 	test_v4_job_choice()
@@ -169,9 +170,11 @@ func test_v1_survival() -> void:
 	check(a.raw_survival(n, w) == 0, "V1: fed and well: survival level 0")
 	n.hunger = 25.0
 	check(a.raw_survival(n, w) == 1000, "V1: hunger at the owner's survival floor 25: survival level 1000")
-	n.hunger = 40.0
+	n.hunger = 50.0
+	check(a.raw_survival(n, w) == 0, "V1: hunger 50, an ordinary appetite before breakfast (below eat_below 55): no survival pressure")
+	n.hunger = 30.0
 	var mid := a.raw_survival(n, w)
-	check(mid > 0 and mid < 1000, "V1: hunger 40 (between eat_below 55 and the floor): partial (%d)" % mid)
+	check(mid > 0 and mid < 1000, "V1: hunger 30 (between hunger_from 35 and the floor): partial (%d)" % mid)
 	n.hunger = 100.0
 	n.hp = n.max_hp * 0.2
 	check(a.raw_survival(n, w) == 1000, "V1: health at the danger floor (20%%): survival level 1000")
@@ -231,6 +234,67 @@ func test_v1_survival() -> void:
 			"V1: hunger and its recovery change no other domain's priority permanently (survival pressure is not a shift: %s)" % str(sh))
 	w.dispose()
 	w2.dispose()
+
+
+## V1, danger (coordinator check after the 30-day measurement, 2026-10-27): "dangerous living conditions" are the villager's
+## real situation (harm to them or their household), never village gossip about other people.
+func test_v1_danger_is_real_harm() -> void:
+	var w := world()
+	var a := asp_on(w)
+	var j: JudgmentStore = w.judgment
+	var parent: NPC = null
+	var child: NPC = null
+	for c: NPC in w.npcs:
+		if c.alive and c.role == "child" and c.household >= 0:
+			for m in w.households[c.household].members:
+				var o: NPC = w.npc(int(m))
+				if o != null and o.alive and o.role == "adult" and o.job != "guard":
+					parent = o
+					child = c
+					break
+		if parent != null:
+			break
+	check(parent != null, "danger: a household with an adult and a child")
+	var stranger: NPC = null
+	var thug: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household != parent.household and o.household >= 0:
+			if stranger == null:
+				stranger = o
+			elif thug == null and o.household != stranger.household:
+				thug = o
+	parent.hunger = 100.0
+	parent.hp = parent.max_hp
+	var p0 := a.survival_parts(parent, w)
+	check(int(p0.hunger) == 0 and int(p0.injury) == 0 and int(p0.danger) == 0 and a.raw_survival(parent, w) == 0,
+			"danger: a well-fed, unhurt villager in a peaceful household is under no pressure (%s)" % str(p0))
+	# an assault on a stranger, which the parent saw and is told about again: hearsay about others raises nothing
+	var ev := j.publish("assault", [thug.id], [stranger.id], [], 0)
+	j.observe_all(ev, [parent.id])
+	check(j.memories.get(parent.id, {}).has(ev), "danger: (the parent knows of the assault on a stranger)")
+	check(int(a.survival_parts(parent, w).danger) == 0 and a.raw_survival(parent, w) == 0, "danger: knowing of an assault on a stranger raises no pressure")
+	check(int(a.survival_parts(stranger, w).danger) > 0, "danger: ...it does for the one assaulted")
+	# an assault on the parent's own child: pressure at once, without anyone telling the parent
+	var ev2 := j.publish("assault", [thug.id], [child.id], [], 0)
+	check(ev2 > 0 and int(a.survival_parts(parent, w).danger) == a.n_("danger_step") and a.raw_survival(parent, w) > 0,
+			"danger: an assault on one's own child puts the parent under pressure (%d)" % int(a.survival_parts(parent, w).danger))
+	# a theft from the household counts less; the level is capped
+	j.publish("theft", [thug.id], [parent.id], [], 5)
+	check(int(a.survival_parts(parent, w).danger) == a.n_("danger_step") + a.n_("theft_step"), "danger: a theft from the household adds theft_step")
+	for i in 6:
+		j.publish("assault", [thug.id], [child.id], [], 0)
+	check(int(a.survival_parts(parent, w).danger) == 1000, "danger: capped at 1000")
+	# past danger_days the harm no longer counts as present danger
+	var w2 := world()
+	var a2 := asp_on(w2)
+	var p2: NPC = w2.npc(parent.id)
+	w2.judgment.publish("assault", [thug.id], [child.id], [], 0)
+	check(int(a2.survival_parts(p2, w2).danger) > 0, "danger: (fresh harm counts)")
+	w2.minutes += float(a2.n_("danger_days") + 1) * 1440.0
+	w2.judgment.day = w2.day()
+	check(int(a2.survival_parts(p2, w2).danger) == 0, "danger: harm older than danger_days no longer counts")
+	w2.dispose()
+	w.dispose()
 
 
 # ---------------------------------------------------------------- V2 ------------------------------

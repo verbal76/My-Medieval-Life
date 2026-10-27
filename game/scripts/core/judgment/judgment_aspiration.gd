@@ -50,6 +50,8 @@ var unread := {}                    # a saved "aspire" section kept while the la
 var _hh := {}                       # dawn cache: household -> {homes, owned, plots}
 var _holders := {}                  # dawn cache: holder ref -> [owned homes, leased homes, plots]
 var _warned := false
+var _dkey := []                     # the danger cache's key: [day, next event id] (never saved: derived from the facts)
+var _dcache := {}                   # household ("h<i>") or lone person ("p<id>") -> danger permille from recent harm to them
 
 
 func _init(owner_store, section: Dictionary, seed: int) -> void:
@@ -127,48 +129,77 @@ func yield_of(person: int, d: int) -> int:
 # ---------------------------------------------------------------- survival (§4) ------------------
 ## The survival level now, permille: the highest of severe hunger, injury and recent danger the person knows of.
 func raw_survival(n: NPC, w) -> int:
+	var p := survival_parts(n, w)
+	return clampi(maxi(maxi(int(p.hunger), int(p.injury)), int(p.danger)), 0, 1000)
+
+
+## The three parts of the survival level, permille each (the level is the highest): severe hunger, injury, danger. For
+## diagnostics (economy_sim prints which part puts each adult under pressure) and the test.
+func survival_parts(n: NPC, w) -> Dictionary:
 	var fam: Dictionary = store.cfg.decision.get("family", {})
 	var floor_ := float(fam.get("survival_floor_hunger", 25))          # owner value
-	var eat := float(GameData.b("eat_below"))
-	var s := 0
+	var from := float(n_("hunger_from", 35))                          # severe hunger: well below the ordinary appetite (eat_below 55)
+	var h := 0
 	if n.hunger <= floor_:
-		s = 1000
-	elif n.hunger < eat:
-		s = roundi((eat - n.hunger) / maxf(0.001, eat - floor_) * 1000.0)
+		h = 1000
+	elif n.hunger < from:
+		h = roundi((from - n.hunger) / maxf(0.001, from - floor_) * 1000.0)
 	var hpf := float(int((fam.get("danger", {}) as Dictionary).get("hp_floor_permille", 200)))
 	var inj := float(n_("injury_from", 700))
 	var r := (n.hp / maxf(0.001, n.max_hp)) * 1000.0
+	var i := 0
 	if r <= hpf:
-		s = maxi(s, 1000)
+		i = 1000
 	elif r < inj:
-		s = maxi(s, roundi((inj - r) / maxf(0.001, inj - hpf) * 1000.0))
-	return clampi(maxi(s, _danger(n, w)), 0, 1000)
+		i = roundi((inj - r) / maxf(0.001, inj - hpf) * 1000.0)
+	return {"hunger": h, "injury": i, "danger": _danger(n, w)}
 
 
-## Recent violence the person knows of (their own memories, BAD facts of family "violence" within danger_days), counted
-## twice when a victim is of their household. Violence memories are permanent (assault, killing), so the raw read is exact.
+## Dangerous living conditions (FAD Q1: the villager's real situation, not village gossip): recent harm done to the villager
+## or a member of their own household, read from the facts themselves (who the victims were), never from what the villager
+## has been told about other people. Each BAD violence fact (assault, killing) within danger_days with such a victim adds
+## danger_step; each theft or pocket picked from them adds theft_step. An invented story (a lie) is not harm. Cached per
+## (day, next event id), so it rises at once when a new harm is published.
 func _danger(n: NPC, w) -> int:
-	var mem: Dictionary = store.memories.get(n.id, {})
-	if mem.is_empty():
-		return 0
-	var vh := "violence".hash()
-	var since: int = w.day() - n_("danger_days", 8)
-	var step := n_("danger_step", 250)
-	var s := 0
-	for ev in mem:
-		var m: PackedInt64Array = mem[ev]
-		var t := int(m[JudgmentStore.M_TYPE])
-		if store._pol[t] != -1 or store._famh[t] != vh or int(m[JudgmentStore.M_DAY]) < since:
-			continue
-		var k := 1
-		if store.facts.has(ev) and n.household >= 0:
-			for v in JudgmentStore._fact_people(store.facts[ev], 0):
-				var o: NPC = w.npc(int(v)) if int(v) >= 0 else null
-				if o != null and o.household == n.household:
-					k = 2
-					break
-		s += step * k
-	return mini(1000, s)
+	var key := [int(w.day()), int(store.next_event)]
+	if key != _dkey:
+		_dkey = key
+		_dcache = {}
+		var vh := "violence".hash()
+		var th := "theft".hash()
+		var today := int(w.day())
+		for d in range(today - n_("danger_days", 8), today + 1):
+			for ev in store.by_day.get(d, []):
+				if not store.facts.has(ev):
+					continue
+				var f: PackedInt64Array = store.facts[ev]
+				var t := int(f[JudgmentStore.F_TYPE])
+				if store._pol[t] != -1:
+					continue
+				var step := 0
+				if store._famh[t] == vh:
+					step = n_("danger_step", 250)
+				elif store._famh[t] == th:
+					step = n_("theft_step", 125)
+				if step == 0 or _is_lie(ev):
+					continue
+				var hit := {}
+				for v in JudgmentStore._fact_people(f, 0):
+					var o: NPC = w.npc(int(v)) if int(v) >= 0 else null
+					if o != null:
+						hit[_dkey_of(o)] = true
+				for k in hit:
+					_dcache[k] = int(_dcache.get(k, 0)) + step
+	return mini(1000, int(_dcache.get(_dkey_of(n), 0)))
+
+
+static func _dkey_of(o: NPC) -> String:
+	return "h%d" % o.household if o.household >= 0 else "p%d" % o.id
+
+
+func _is_lie(ev) -> bool:
+	var tags: Array = store.fact_tags.get(ev, [])
+	return not tags.is_empty() and str(tags[0]) == "lie"
 
 
 ## The survival level a decision reads: it rises at once with hunger or injury, and falls only as the dawn lets it.
@@ -479,7 +510,13 @@ func _dawn_one(w, n: NPC, today: int) -> void:
 		r.band[d] = b
 	# survival: rises at once, falls at most recover_per_day a day
 	var before := int(r.surv)
-	r.surv = maxi(raw_survival(n, w), before - n_("recover_per_day", 200))
+	var sp := survival_parts(n, w)
+	var raw := maxi(maxi(int(sp.hunger), int(sp.injury)), int(sp.danger))
+	r.surv = maxi(raw, before - n_("recover_per_day", 200))
+	if raw > 0:                                  # diagnostics: which part set the level this dawn (the highest; hunger first on a tie)
+		store._stat("aspire_dawn_by_" + ("hunger" if int(sp.hunger) == raw else ("injury" if int(sp.injury) == raw else "danger")))
+	elif int(r.surv) > 0:
+		store._stat("aspire_dawn_by_carried")    # nothing now: what remains of an earlier level, falling recover_per_day a day
 	var step := maxi(1, n_("surv_record_step", 250))
 	if int(r.surv) / step != before / step:
 		_record(w, n, "survival", {"surv_before": before, "surv_after": int(r.surv)})

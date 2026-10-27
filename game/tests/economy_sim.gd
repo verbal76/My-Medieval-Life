@@ -193,6 +193,29 @@ func _init() -> void:
 				leads[l if l != "" else "content"] = int(leads.get(l if l != "" else "content", 0)) + 1
 				surv += 1 if int(w.judgment.asp.rows[p].surv) > 0 else 0
 			print("aspiration: %d adults; leads %s; under survival pressure %d" % [w.judgment.asp.rows.size(), JSON.stringify(leads), surv])
+			# which part puts each adult under pressure now (the highest of hunger, injury, danger), and how each danger memory was learnt
+			var by := {"none": 0, "hunger": 0, "injury": 0, "danger": 0}
+			var src := {}
+			var vh := "violence".hash()
+			for p in w.judgment.asp.rows:
+				var n: NPC = w.npc(int(p))
+				if n == null:
+					continue
+				var sparts: Dictionary = w.judgment.asp.survival_parts(n, w)
+				var top := "none"
+				var best := 0
+				for k in ["hunger", "injury", "danger"]:
+					if int(sparts[k]) > best:
+						best = int(sparts[k])
+						top = k
+				by[top] += 1
+				for ev in w.judgment.memories.get(n.id, {}):
+					var m: PackedInt64Array = w.judgment.memories[n.id][ev]
+					var t := int(m[JudgmentStore.M_TYPE])
+					if w.judgment._pol[t] == -1 and w.judgment._famh[t] == vh and int(m[JudgmentStore.M_DAY]) >= w.day() - int(w.judgment.asp.c.get("danger_days", 8)):
+						var sk: String = JudgmentStore.SOURCES[int(m[JudgmentStore.M_SRC])]
+						src[sk] = int(src.get(sk, 0)) + 1
+			print("aspiration survival now, by highest part: %s; recent violence memories by source: %s; saved level above 0: %d" % [JSON.stringify(by), JSON.stringify(src), surv])
 	if cap_on:
 		print("CAPABILITY " + JSON.stringify(CapMetrics.report(cap_info, w, cap0, reached)))
 	if out != "":
