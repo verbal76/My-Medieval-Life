@@ -37,14 +37,14 @@
    "implementation_authorized": true,
    "integration_branch": "wip/expansion20",
    "released": "Build 23 private draft (code c79b12c, run 40526826846, release 425699977, 2026-10-27); MP-INTERACT-01 integrated last and validated before the build (X20-FINAL)",
-   "authority": "owner directive 2026-10-26 (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md, superseding the 2026-10-23 phase 1 limit): substantive Expansion 20 implementation on wip/expansion20; policies for open OD-LE decisions still need the owner. RELEASE BLOCKER (owner 2026-10-27, docs/directives/2026-10-27_multiplayer_interaction_release_blocker.md): no Expansion 20 build of any kind, private drafts included, until MP-INTERACT-01 is integrated and validated"
+   "authority": "owner directive 2026-10-26 (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md, superseding the 2026-10-23 phase 1 limit): substantive Expansion 20 implementation on wip/expansion20; policies for open OD-LE decisions still need the owner. RELEASE BLOCKER (owner 2026-10-27, docs/directives/2026-10-27_multiplayer_interaction_release_blocker.md): no Expansion 20 build of any kind, private drafts included, until MP-INTERACT-01 is integrated and validated; COMPLETION PRIORITY (owner 2026-10-27, docs/directives/2026-10-27_complete_expansion20_first.md, X20-COMPLETE): finish Expansion 20 before any Expansion 21 implementation; Build 23 stays a private checkpoint"
   },
   "21": {
    "name": "Village Politics",
    "implementation_authorized": true,
    "integration_branch": "",
    "released": "",
-   "authority": "owner directive 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md): phase 1 only: P21-00 audit, P21-01 isolated civic foundations (records only, all political behaviour disabled), P21-02 decision mapping on wip/expansion21-preparation; no politics active, no merge to staging or main, no builds"
+   "authority": "owner directive 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md): phase 1 only: P21-00 audit, P21-01 isolated civic foundations (records only, all political behaviour disabled), P21-02 decision mapping on wip/expansion21-preparation; no politics active, no merge to staging or main, no builds; ON HOLD (owner 2026-10-27, X20-COMPLETE): no Expansion 21 implementation or agent until Expansion 20 reaches its completion point; scope preserved"
   },
   "22": {
    "name": "Settlement Advancement Phase 2",
@@ -59960,6 +59960,46 @@
      "why": "owner answered 2026-10-23 (docs/directives/2026-10-23_owner_answers_x19_release_decisions.md)"
     }
    ]
+  },
+  {
+   "id": "X20-COMPLETE",
+   "kind": "approved",
+   "title": "Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness",
+   "description": "Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness",
+   "source": "docs/directives/2026-10-27_complete_expansion20_first.md",
+   "owner_wording": "FINISH EXPANSION 20 FIRST. Complete the flight-recorder diagnostics. Correct the unowned shop tills. Continue the approved Living Economy implementation. Complete the authorized carryovers. Keep unresolved features disabled. Run the required simulations and performance validation. Preserve Build 23 as a private playtest checkpoint. Do not start Expansion 21 in parallel.",
+   "approval": "owner, 2026-10-27",
+   "acceptance": [
+    "REC-DIAG complete: reproducible evidence on NPC decisions, household resources, food, production, employment, trade, ownership, currency transfers, settlement conditions, migration, unusual deaths, economic instability; bounded overhead",
+    "every business holding money has a traceable owner under the approved model (existing, new, transfer, inheritance, save/load, closure, transactions); focused regression tests",
+    "LE-02..LE-05 implemented in order under approved decisions only; career choice and other unapproved features stay behind their gates; no lending, interest or debt collection",
+    "EMP-PERM-01, GP-POLISH (anvil, lockpicking, Android joystick), SJD-G calibration done; SJD-H waits for the owner's review",
+    "LE-06 multi-seed long runs on GitHub Actions without redundant campaigns; LE-07 readiness; no public release without the owner",
+    "one consolidated owner report covering the 12 points of section 11; Expansion 21 not started"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-27_complete_expansion20_first.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/expansion20",
+     "why": "owner directive 2026-10-27 captured; lead starts with the foundation (till ownership, REC-DIAG)"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/expansion20"
   },
   {
    "id": "X20-FINAL",

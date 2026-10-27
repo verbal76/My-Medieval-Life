@@ -30,9 +30,16 @@ Workers from 87b69ab (2026-10-27): M on `wip/x20-fixes` (SIM-F2, SIM-F3, player/
 
 ## Next actions (current work only)
 
-1. Fetch latest staging and every active `wip/` worker branch. Check in-progress CI/simulations and local worktrees before running or assigning anything; never duplicate a live test.
-2. Owner: device checks of Build 23 (phone install over Build 22 keeping the save, Windows, controller, two-device multiplayer) and the open decisions MP-INTERACT-Q1/Q2 and REG-X20-D1..D4 (off-map settlement rules). Record device results in the register's `playtest` fields.
-3. Continue authorized Expansion 20 work from `wip/expansion20` (`c79b12c`) in dependency order: R6 measurement (REC-DIAG), LE-01 storefront/counter till actor gaps before any finance code, then LE-02..LE-07; extend proposal weighing to player suitors (D39, Rule 012). Switches stay off until the owner reviews them.
+**Owner directive 2026-10-27 (`docs/directives/2026-10-27_complete_expansion20_first.md`, X20-COMPLETE): finish Expansion 20
+before Expansion 21 (on hold, no agent). Build 23 stays a private checkpoint; never public without the owner.** Order:
+1. Foundation: till ownership in the economy model (storefront `front.till` and trade-counter `counter.till` have no economy
+   actor; live coins are counted and paid under ECON-P3 and B18-DP-01, so the gap is the model's, not lost money), then
+   REC-DIAG completion against the directive's event list.
+2. LE-02, LE-03, LE-04, LE-05 in order (approved decisions only; scope of the FUTURE-classed OD-LE answers asked of the owner
+   2026-10-27); carryovers EMP-PERM-01, GP-POLISH, SJD-G (SJD-H waits for the owner).
+3. LE-06 long runs on GitHub Actions, LE-07 readiness, one consolidated report.
+Owner device checks of Build 23 and the open decisions (MP-INTERACT-Q1/Q2, REG-X20-D1..D4, ARMOR-CATALOG-D1, ID-D3) never
+block this work. Fetch staging and active `wip/` branches first; never duplicate a live test.
 
 ## Sources
 

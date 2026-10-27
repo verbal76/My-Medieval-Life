@@ -2,27 +2,28 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-Authority: owner directive 2026-10-26 (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md, superseding the 2026-10-23 phase 1 limit): substantive Expansion 20 implementation on wip/expansion20; policies for open OD-LE decisions still need the owner. RELEASE BLOCKER (owner 2026-10-27, docs/directives/2026-10-27_multiplayer_interaction_release_blocker.md): no Expansion 20 build of any kind, private drafts included, until MP-INTERACT-01 is integrated and validated
+Authority: owner directive 2026-10-26 (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md, superseding the 2026-10-23 phase 1 limit): substantive Expansion 20 implementation on wip/expansion20; policies for open OD-LE decisions still need the owner. RELEASE BLOCKER (owner 2026-10-27, docs/directives/2026-10-27_multiplayer_interaction_release_blocker.md): no Expansion 20 build of any kind, private drafts included, until MP-INTERACT-01 is integrated and validated; COMPLETION PRIORITY (owner 2026-10-27, docs/directives/2026-10-27_complete_expansion20_first.md, X20-COMPLETE): finish Expansion 20 before any Expansion 21 implementation; Build 23 stays a private checkpoint
 
 Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, release 425699977, 2026-10-27); MP-INTERACT-01 integrated last and validated before the build (X20-FINAL))**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 82 |
-| Integrated | 71 of 82 (87%) |
-| Automated tests passed | 71 of 82 (87%) |
-| Integration verified | 38 of 82 (46%) |
-| Gameplay verified | 0 of 82 (0%) |
-| Owner playtested | 0 of 82 (0%) |
-| Complete | 2 of 82 (2%) |
-| Open (release blockers) | 80 |
+| Approved requirements in scope | 83 |
+| Integrated | 71 of 83 (86%) |
+| Automated tests passed | 71 of 83 (86%) |
+| Integration verified | 38 of 83 (46%) |
+| Gameplay verified | 0 of 83 (0%) |
+| Owner playtested | 0 of 83 (0%) |
+| Complete | 2 of 83 (2%) |
+| Open (release blockers) | 81 |
 | Open owner decisions (blocking) | 7 (0) |
 
-## In development (worker assigned) (1)
+## In development (worker assigned) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | analysis of judgment once D5 records it (batch R6); closure also waits on SIM-F2 and SIM-F3 | design: UNKNOWN | UNKNOWN |
+| X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (69)
 
