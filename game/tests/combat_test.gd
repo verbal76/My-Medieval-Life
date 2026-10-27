@@ -106,7 +106,7 @@ func test_buffer() -> void:
 	var cfg := Combat.cfg()
 	var st: float = main.swing_time()
 	check(main.attack() == "start", "a press with no swing running starts one at once")
-	check(main.player_sprite.anim == "sword", "the sword animation starts on the press itself (immediate feedback)")
+	check(main.player_sprite.anim == "swing" and main.player_sprite.striking, "the strike starts on the press itself (immediate feedback)")
 	main._swing_step(0.05)
 	check(main.attack() == "ignored", "a press early in the swing (%.2f s left, buffer %.2f s) is not kept" % [main.swing.remaining(st), float(cfg.buffer)])
 	var guard := 0

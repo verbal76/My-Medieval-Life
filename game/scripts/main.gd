@@ -113,6 +113,7 @@ var target_outline: TargetOutline   # GP-INTERACTABLE-OUTLINES: the glow round t
 var attack_mode := false       # toggled by the Attack button: a tap on a person or animal targets it
 var chase: Object = null       # the NPC or Animal marked with the sword: the player walks to it to strike
 var strike_pending := false    # strike the target once in reach (a tap on it, or arriving at it)
+var bare_hint_said := false   # GP-SWORD-VIS: the hint to wield a carried weapon, once a session
 var swing := Combat.new()      # the sword swing: windup, blow, recovery and one buffered press (CQ-01)
 var target_marker: Sprite2D    # the sword shown over the target
 var settings := GameSettings.new()
@@ -482,6 +483,9 @@ func _ready() -> void:
 						world.npcs[2].anim = "idle"
 						break
 				_find_target()
+			"sword_grid", "sword_grid_bare", "sword_attack_0", "sword_attack_1", "sword_attack_2", "sword_attack_bare_0", \
+					"sword_attack_bare_1", "sword_attack_bare_2", "sword_npc_0", "sword_npc_1", "sword_npc_2":
+				_sword_shot(shot_panel)             # GP-SWORD-VIS: the sword held, carried and swung
 			"mine_swing_0","mine_swing_1", "mine_swing_2", "chop_swing_0", "chop_swing_1", "chop_swing_2":
 				# mid-swing, frozen at one frame of the swing, with the pickaxe or the axe in hand
 				_swing_panel(shot_panel.begins_with("mine"), int(shot_panel.right(1)))
@@ -1367,13 +1371,10 @@ func _sync_avatars(dt: float) -> void:
 		if (e.get("dir", Vector2.ZERO) as Vector2).length() > 0.1:
 			s.face(e.dir)
 		var anim := str(e.get("anim", "idle"))
-		if who2 != null:                           # WEAPON-VISIBLE-01: their weapon carried, and swung like the axe
+		if who2 != null:                           # WEAPON-VISIBLE-01: their weapon carried
 			s.wield(who2.weapon)
-			if anim == "sword" and who2.weapon != "":
-				anim = "swing"
-				if s.tool_item != who2.weapon:
-					s.hold(who2.weapon)
-		s.play(anim if anim in NetSession.ANIMS else "idle")
+		if not (s.striking and anim in ["idle", "walk"]):      # GP-SWORD-VIS: a blow ("sword") is a strike with it; one under way plays through
+			s.play(anim if anim in NetSession.ANIMS else "idle")
 		if not bool(e.get("alive", true)) and s.anim != "death":
 			s.play("death", true)
 		s.visible = who2 == null or who2.map_level == world.player.map_level      # MP-INTERACT-01: another level is out of sight (MIN-A)
@@ -1915,7 +1916,7 @@ func _process(delta: float) -> void:
 		return
 	_refresh_player_worn()
 	if player_sprite != null:                # WEAPON-VISIBLE-01: the weapon in hand is carried, drawn
-		player_sprite.wield(world.player.weapon if world.player.weapon != "" and world.player.inv.has(world.player.weapon) else "")
+		player_sprite.wield(_in_hand())
 	_audio_step(delta)
 	if shot_path != "":
 		_screenshot_step(delta)
@@ -2051,8 +2052,8 @@ func _sync_sprites() -> void:
 		var look: Array = world.brain.work_look(n) if n.anim == "work" else [n.anim, ""]
 		var arm := ActorSprite.npc_weapon(n)       # WEAPON-VISIBLE-01: guards and bandits carry theirs; anyone fighting swings it
 		s.wield(arm)
-		if look[0] == "sword" and arm != "":
-			look = ["swing", arm]
+		if _npc_strike_view(n, s, str(look[0])):
+			continue
 		if s.tool_item != look[1]:
 			s.hold(look[1])
 		s.play(look[0] if look[0] != "sleep" else "idle")
@@ -2489,8 +2490,9 @@ func _player_step(delta: float) -> void:
 		walk_stuck = walk_stuck + delta if p.pos.distance_to(before) < step.length() * 0.3 else 0.0
 		_through_portal(v)
 		player_sprite.face(v)
-		player_sprite.play("walk")
-		player_sprite.speed_scale = _sprint_scale()
+		if not player_sprite.striking:     # GP-SWORD-VIS: a blow begun plays through while walking (the walk used to cut it off)
+			player_sprite.play("walk")
+			player_sprite.speed_scale = _sprint_scale()
 	else:
 		sprinting = false
 		# GP-PICKAXE-ANIM: work begun this frame by Gather mode, a tapped seam or tree, or a reach (_gather_step, _reach_step:
@@ -4293,6 +4295,38 @@ func plant_cutting(item: String) -> void:
 	)
 
 
+## GP-SWORD-VIS: a fighting villager's blows drawn as strikes with the weapon they carry (or bare-handed), each landing
+## on the frame its blow does. The blow is the world's (NPCBrain: when attack_cd runs out it strikes and starts again),
+## so the strike begins strike_lead seconds before attack_cd runs out, and a blow seen without one (a fight's first, a
+## guest's world without the countdown) is drawn from its striking frame. A strike under way plays through; between
+## blows the weapon is carried. True when the sprite was handled here. View only.
+func _npc_strike_view(n: NPC, s: ActorSprite, look: String) -> bool:
+	var cd := n.attack_cd
+	var last := float(s.get_meta("cd", 0.0))
+	s.set_meta("cd", cd)
+	if look != "sword":
+		if s.striking and look in ["idle", "walk"]:
+			return true
+		return false
+	var lead := ActorSprite.strike_lead()
+	if not s.striking:
+		if cd > last + 0.01:                    # a blow has just landed: shown at once
+			s.strike()
+			s.t = lead
+		elif cd <= lead:                         # the next blow is a frame away: wind up for it
+			s.strike()
+			s.t = lead - cd
+		elif s.anim != "idle":
+			s.play("idle")
+	return true
+
+
+## The weapon in the player's hand: the one wielded ("In hand"), while they carry it; "" for none.
+func _in_hand() -> String:
+	var w := world.player.weapon
+	return w if w != "" and world.player.inv.has(w) else ""
+
+
 ## WEAPON-VISIBLE-01: the player's animation as the other players see it: a blow with the weapon is sent as "sword" (their
 ## screens swing the weapon they see in hand), so it is not taken for work.
 func net_anim() -> String:
@@ -4456,10 +4490,17 @@ func _swing_begins() -> void:
 	sprinting = false                  # no sprint while attacking
 	if swing.only != null and swing.only.alive:
 		player_sprite.face(swing.only.pos - world.player.pos)
-	if player_sprite.weapon_item != "":
-		player_sprite.strike()             # WEAPON-VISIBLE-01: the weapon swung like the axe (the swing poses)
-	else:
-		player_sprite.play("sword", true)  # the press shows at once; the blow lands on the slash frame
+	# WEAPON-VISIBLE-01, GP-SWORD-VIS: the weapon in hand swung (a slash, STRIKE_POSES), bare-handed with none; the press
+	# shows at once and the blow lands on the strike's striking frame (Combat windup = ActorSprite.strike_lead)
+	player_sprite.wield(_in_hand())
+	player_sprite.speed_scale = 1.0        # at its own pace, so the striking frame is the blow's
+	player_sprite.strike()
+	if _in_hand() == "" and not bare_hint_said:
+		for id in world.player.inv.ids():
+			if str(GameData.item(str(id)).get("type", "")) == "weapon":
+				bare_hint_said = true
+				ui.message("You strike bare-handed: your %s is in your pack. Wield it (Pack, In hand) to fight with it." % GameData.item_name(str(id)).to_lower(), 5.0)
+				break
 
 
 func _swing_step(delta: float) -> void:
@@ -5737,6 +5778,89 @@ func _press(root: Node, caption: String) -> bool:
 			(c as Button).pressed.emit()
 			return true
 	return false
+
+
+## GP-SWORD-VIS screenshots. sword_grid: ActorSprites with the iron sword in every direction (columns S, SE, E, NE, N, NW,
+## W, SW), rows standing, walking, the swing's three frames and back at rest (sword_grid_bare: the same with nothing in
+## hand). sword_attack_N: the player with the start kit's sword wielded through the Pack's path (World.player_equip),
+## Attack pressed (the game's own attack), held at frame N of the swing, facing --side; sword_attack_bare_N: the start
+## kit as it comes (the sword in the pack, not wielded).
+func _sword_shot(panel: String) -> void:
+	var p := world.player
+	if panel.begins_with("sword_grid"):
+		player_sprite.visible = false
+		var at := p.pos * T
+		var back := ColorRect.new()                 # a plain ground behind the grid
+		back.color = Color8(150, 170, 100)
+		back.position = at + Vector2(-150, -120)
+		back.size = Vector2(300, 240)
+		back.z_index = 50                            # over the roofs and fences of wherever the player stands
+		actors.add_child(back)
+		for row in 6:
+			for d in 8:
+				var s := ActorSprite.new()
+				s.setup_texture(CharacterLook.player_sheet(p))
+				actors.add_child(s)
+				s.position = at + Vector2((d - 3.5) * 36.0, (row - 2.5) * 38.0 + 14.0)
+				s.dir = d
+				s.z_index = 51
+				s.wield("" if panel == "sword_grid_bare" else "iron_sword")
+				s.speed_scale = 0.0
+				if row == 0 or row == 5:
+					if row == 5:
+						s.strike()
+						s.t = 9.0           # played through: back at rest, the sword carried again
+					else:
+						s.play("idle")
+				elif row == 1:
+					s.play("walk")
+					s.t = 0.14
+				else:
+					s.strike()
+					s.t = float(row - 2) * 0.16 + 0.01
+		camera.zoom = Vector2(3, 3) * view_scale
+		follow_at = at
+		ui.hud.visible = false
+		return
+	if panel.begins_with("sword_npc"):
+		# a guard and a bandit at blows (east and west), and two armed villagers (north and south), the world held
+		# still, each sprite held at frame N of its strike
+		paused = true
+		var g: NPC = world.npcs.filter(func(o): return o.alive and o.job == "guard")[0]
+		var bnd: NPC = world.npcs.filter(func(o): return o.alive and o.role == "bandit")[0]
+		var folk: Array = world.npcs.filter(func(o): return o.alive and o.job != "guard" and o.role != "bandit" and Life.age_years(o.born, world.minutes) >= 16.0).slice(0, 2)
+		var fighters := [[g, Vector2(-2.3, 0), Vector2(1, 0)], [bnd, Vector2(-0.7, 0), Vector2(-1, 0)],
+				[folk[0], Vector2(1.5, -0.7), Vector2(0, 1)], [folk[1], Vector2(1.5, 0.7), Vector2(0, -1)]]
+		for f in fighters:
+			var n: NPC = f[0]
+			n.pos = p.pos + f[1]
+			n.facing = f[2]
+			n.plan.clear()
+			n.anim = "sword"
+			n.attack_cd = 0.0
+			if ActorSprite.npc_weapon(n) == "":
+				n.inv.add("iron_sword")
+		player_sprite.visible = false
+		get_tree().create_timer(0.3).timeout.connect(func():
+			for f in fighters:
+				var s: ActorSprite = sprites.get((f[0] as NPC).id)
+				if s != null:
+					s.strike()
+					s.speed_scale = 0.0
+					s.t = float(panel.right(1)) * 0.16 + 0.01)
+		camera.zoom = Vector2(7, 7) * view_scale
+		follow_at = _in_view(p.pos * T)
+		ui.hud.visible = false
+		return
+	if not panel.contains("bare"):
+		world.player_equip("rusty_sword")
+	var v := Vector2(shot_side)
+	player_sprite.face(v)
+	attack()
+	player_sprite.speed_scale = 0.0
+	player_sprite.t = float(panel.right(1)) * 0.16 + 0.01
+	camera.zoom = Vector2(10, 10) * view_scale
+	follow_at = _in_view(p.pos * T)
 
 
 ## Screenshot helper: the player beside a seam (or a mature tree), the tool in hand, the work begun,
