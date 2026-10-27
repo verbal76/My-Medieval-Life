@@ -32109,9 +32109,14 @@
      "date": "2026-10-27",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> mp_interact_ui_test 112/0 (one process, real key, pad, touch and mouse events: player beside villager, anvil and stall, several players, moving, cycling, levels); net_interact_test 67/0 x3 runs (three processes over loopback: host, touch guest, second guest; host-guest both ways and guest-guest; accept, decline, counter; conservation; double accept; disconnect, reconnect, host restart with a pending offer); multiplayer_c 340/0, run_tests 3600/0, start_test 523/0, world_test 339/0, x20_android_ui 95/0, message_journal 50/0, wiki_test 140/0, other net suites and contract tests 0 failures; G0 identical on 93f5a76; Linux and Windows exports build (unsigned), Linux binary starts; screenshots looked at by worker and lead; test_commit: None -> 0ce4c9e; commits + 0ce4c9e; playtest; next_action",
      "why": "worker K finished on wip/x20-mp-interact (start 4f50ffb, head 0ce4c9e); not merged: integrated last"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "next_action",
+     "why": "integration baseline fixed: wip/expansion20 3601211 passed the combined validation (owner instruction 2026-10-27: record the exact verified commit)"
     }
    ],
-   "next_action": "Integrate LAST onto the frozen validated Expansion 20 baseline (expected conflicts: main.gd targeting and tap, game_ui.gd show_players/show_pause, world.gd MP-D8 section, net_* files); then multiplayer and combined suites, G0, three exports, release-readiness report. Owner questions MP-INTERACT-Q1, -Q2.",
+   "next_action": "Merge wip/x20-mp-interact 0ce4c9e onto the verified baseline wip/expansion20 3601211 (LAST); resolve conflicts keeping both sides; multiplayer suites (mp_interact_ui, net_interact, net_*), combined regression, one G0, three exports, release-readiness report with the device matrix. MP-INTERACT-Q1/Q2 stay open for the owner.",
    "notes": "BLOCKS the next Expansion 20 release (private drafts included). Playtest evidence: the Windows player saw Bob (Android) but could not select or interact with him; the reverse was not tried. Treated as a cross-platform deficiency until tests show otherwise. Build 22 is not reopened. Likely cause (read-only look, 2026-10-27, wip/expansion20 b6fdb25): other players are never offered as a target. main._find_target lists villagers, shops, desks, loot, animals and things but no player, so there is no prompt, outline or tap target for one; the MP-D8 players window (GameUI.show_players: gift, partner, answer offers) opens only from main.interact when NO other target is in reach (main.gd interact, the target.is_empty() branch, _beside_player). In a village something else is nearly always in reach, so the other player cannot be chosen. Also to audit: guest_blocked() in interact, touch tap selection, the pad's next-target cycle, and the guest's path through the host.",
    "assigned_worker": "worker K (multiplayer interaction)",
    "branch": "wip/x20-mp-interact",
@@ -55117,7 +55122,7 @@
     "Rule 011's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
    ],
    "implementation": "No aspiration domains; job mobility, apprenticeships and storefronts exist (REC-016)",
-   "tests": "worker L on wip/x20-r5: aspiration_test 145/0 (owner's ten checks, survival danger from real household harm, Q8 proposals), relations_test 80/0, judgment_live 161/0, family_first 104/0, start_test 523/0 and the judgment, history, recorder, migration, conservation, run_tests suites 0 failures; G0 identical with flags off before and after each change; flags-on 30 days seeds 1-2: no currency or item leaks, adults under survival pressure 17/64 and 11/65 (was 63/64)",
+   "tests": "worker L on wip/x20-r5: aspiration_test 145/0 (owner's ten checks, survival danger from real household harm, Q8 proposals), relations_test 80/0, judgment_live 161/0, family_first 104/0, start_test 523/0 and the judgment, history, recorder, migration, conservation, run_tests suites 0 failures; G0 identical with flags off before and after each change; flags-on 30 days seeds 1-2: no currency or item leaks, adults under survival pressure 17/64 and 11/65 (was 63/64); combined on wip/expansion20 3601211 (29 suites, 0 failures, no script errors): aspiration 145, relations 80, history 28, judgment 217, judgment_live 161, judgment_x19 117, family_first 104, recorder 189, migration 93, conservation 8, message_journal 51, economy_model 113, economy_foundation 89, x20_android_ui 95, dialogue_perspective 84, judgment_guard_save 20, save_transfer 21, player_family 88, multiplayer_c 340, net_g1 45, net_batch_b 44, net_c 35, net_family 22, net_fauna 13, net_ui 61, world 339, wiki_test passed, start_test 523, run_tests 3600; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks)",
    "playtest": [],
    "branch": "wip/x20-r5",
    "commits": [
@@ -55213,6 +55218,11 @@
      "date": "2026-10-27",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> worker L on wip/x20-r5: aspiration_test 145/0 (owner's ten checks, survival danger from real household harm, Q8 proposals), relations_test 80/0, judgment_live 161/0, family_first 104/0, start_test 523/0 and the judgment, history, recorder, migration, conservation, run_tests suites 0 failures; G0 identical with flags off before and after each change; flags-on 30 days seeds 1-2: no currency or item leaks, adults under survival pressure 17/64 and 11/65 (was 63/64); test_commit: 0b5287c -> 2cc0007; commits + 2cc0007; integrated_in + Expansion 20 wip/expansion20 3601211; next_action",
      "why": "aspirations merged into wip/expansion20 (3601211), all flags off; combined validation running"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "tests: worker L on wip/x20-r5: aspiration_test 145/0 (owner's ten checks, survival danger from real household harm, Q8 proposals), relations_test 80/0, judgment_live 161/0, family_first 104/0, start_test 523/0 and the judgment, history, recorder, migration, conservation, run_tests suites 0 failures; G0 identical with flags off before and after each change; flags-on 30 days seeds 1-2: no currency or item leaks, adults under survival pressure 17/64 and 11/65 (was 63/64) -> worker L on wip/x20-r5: aspiration_test 145/0 (owner's ten checks, survival danger from real household harm, Q8 proposals), relations_test 80/0, judgment_live 161/0, family_first 104/0, start_test 523/0 and the judgment, history, recorder, migration, conservation, run_tests suites 0 failures; G0 identical with flags off before and after each change; flags-on 30 days seeds 1-2: no currency or item leaks, adults under survival pressure 17/64 and 11/65 (was 63/64); combined on wip/expansion20 3601211 (29 suites, 0 failures, no script errors): aspiration 145, relations 80, history 28, judgment 217, judgment_live 161, judgment_x19 117, family_first 104, recorder 189, migration 93, conservation 8, message_journal 51, economy_model 113, economy_foundation 89, x20_android_ui 95, dialogue_perspective 84, judgment_guard_save 20, save_transfer 21, player_family 88, multiplayer_c 340, net_g1 45, net_batch_b 44, net_c 35, net_family 22, net_fauna 13, net_ui 61, world 339, wiki_test passed, start_test 523, run_tests 3600; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); test_commit: 2cc0007 -> 3601211",
+     "why": "combined validation passed on wip/expansion20 3601211"
     }
    ],
    "target_build": "20",
@@ -55233,7 +55243,7 @@
    "related": [
     "X20-OPEN-ITEMS"
    ],
-   "test_commit": "2cc0007",
+   "test_commit": "3601211",
    "assigned_worker": "worker L (aspirations code)"
   },
   {
