@@ -1,7 +1,5 @@
 # Expansions 18-20 simulation and flight-recorder coverage matrix (X20-FINAL phase 2.1)
 
-**Draft (planning commit): the column "Closed on `wip/x20-recorder`" is the plan until the implementation commits land.**
-
 Owner directive `docs/directives/2026-10-27_x20_final_validation_recorder_release.md`, phase 2.1 (register X20-FINAL). Audit of the
 code on **`87b69ab`** (`wip/x20-final`: the verified Expansion 20 baseline `3601211` with MP-INTERACT-01 merged last), worktree
 `wip/x20-recorder`. Sources: the code (`game/scripts/**`), the feature switches (`game/data/judgment.json`, `economy.json`,
@@ -60,7 +58,7 @@ Main gaps found (detail in sections 2 to 4):
 | 18.9 | Trade routes, transportation, cartage and courier services | 18 | ACTIVE | REG-COURIER-01, X18-Q12, X18-Q12-BOOTH, X18-Q12-POST, GP-BUSINESS-COURIER | courier_test, courier_live_test, courier_desk_test, desk_test | normal village (villager postings) | none (courier coins show as unattributed holder alerts) | courier jobs not recorded | courier deliveries in a long run | stats rows (`courier_*`) in the hourly snapshot (existing); deliveries still not events (open) |
 | 18.10 | Merchant competition and economic rivalry | 18 | ACTIVE | WDR-012-C | competition_test (4) | normal village | trades and refused trades | — | — | — |
 | 18.11 | Contract formation and fulfilment (CON-01, signing, services, 50-ore) | 18 | ACTIVE | X18-Q13, VER-CON-50ORE, CON-UX-01, TRADE-UI-02 | contracts_test (22), contract_sign_test, contract_50ore_test, services_test | NPC-to-NPC orders in the normal village; no failed-contract scenario | **none** (`recorder_coverage.json`: Not instrumented) | formation, delivery, payment, cancellation and lapse unrecorded; their coins became unattributed alerts | a scenario with contracts that lapse; contract state transitions verified | `contract` events (open, deliver/pay, end with state and why) on the object thread `contract:<id>`, coin state rows; `contracts_fail` scenario; verifier checks contract transitions |
-| 18.12 | Barter and credit with trust (debts, repayment, default) | 18 | ACTIVE | TRADE-CREDIT | credit_test (13) | normal village (villagers' food deals) | **none** | debts and defaults unrecorded | — | `credit` events (extended, repaid, late, defaulted, barter) with coins and goods |
+| 18.12 | Barter and credit with trust (debts, repayment, default) | 18 | ACTIVE | TRADE-CREDIT | credit_test (13) | normal village (villagers' food deals) | **none** | debts and defaults unrecorded | — | `credit` events (extended, repaid, late, defaulted, barter) with coins and goods (tested in recorder_test; **no 10-day smoke run had a credit deal**: exercised only in longer runs) |
 | 18.13 | Payments and ownership transfers; business tills | 18 | ACTIVE | ECON-P3, PL1-10, X18-Q13 | business_money_test, property_test | normal village | trade, transfer, manor flows; tills not (alerts) | till movements | — | — (the hourly audit keeps naming them; open) |
 | 18.14 | Currency and inventory conservation | 18 | ACTIVE | WDR-022, SIM-01 | conservation_test, economy_sim ledgers | every run (blocking) | coin audit (REC-D4), item rows for trade/transfer | item changes outside trade/transfer not seen | — | production/consumption rows attribute item flows to actors |
 | 18.15 | Migration both ways with the settlements | 18 | ACTIVE | MIGRATE-18, REG-DEMO-01 | migration_test (9) | every run | identity moves (left, returned) | — | — | — |
@@ -110,7 +108,7 @@ All of the judgment layer is **ON** as shipped (`judgment.json enabled: true`, 1
 | 20.9 | Generational memory and history (the 30-planks chain) | 20 | ACTIVE | GM-01 | history_test (3) | every run (rare) | none | history records unrecorded | — | `history` events |
 | 20.10 | Multiplayer: host-owned world, synchronization, network messages | 20 | ACTIVE (LAN) | MP Batch A-C, MP-D1..D8 | multiplayer_a1/b/c_test, net_g1/batch_b/c/fauna/family_test (separate processes) | **none** (no black-box run) | **none** | joins, leaves, requests, syncs, participant state unrecorded | 1 host + 2 guests and 1 host + 3 guests on the net harness, recorded, with participant digests compared | net hooks (host and guest) and an hourly `net_state` digest per participant; `tools/recorder_archive.py --participants` compares them; recording in the harness by the `MML_RECORD` environment variable (no change to the harness) |
 | 20.11 | Multiplayer player interaction (MP-INTERACT-01) | 20 | ACTIVE on `87b69ab` (merged last) | MP-INTERACT-01 | net_interact_test, mp_interact_ui_test | none | none | as 20.10 | as 20.10 + device checks | `net_request` events name each player action and its result |
-| 20.12 | Multiplayer save/load, disconnect and reconnect, time stopping without the host | 20 | ACTIVE | MP-D1, MP Batch B | net_batch_b_test, multiplayer_b_test | none | none | — | net harness | `net_join` / `net_leave` / `net_host_lost` events |
+| 20.12 | Multiplayer save/load, disconnect and reconnect, time stopping without the host | 20 | ACTIVE | MP-D1, MP Batch B | net_batch_b_test, multiplayer_b_test | none | none | — | net harness | `guest_joined` / `guest_left` / `host_lost` events |
 | 20.13 | Players' families (MP-PLAYER-FAMILY) | 20 | ACTIVE | MP-PLAYER-FAMILY | player_family_test, net_family_test | none | births and partnerships (life) | — | — | — |
 | 20.14 | Bandit stalk (SIM-F3) and chisel re-decision (SIM-F2) fixes | 20 | APPROVED, in progress on another worker's branch (not on `87b69ab`) | SIM-F2, SIM-F3 | — | — | decisions show the loops (empty decisions, repeated choices) | — | after integration: the recorder counts of re-decisions | verifier `redecisions` measure (empty decisions per actor-day, repeated identical choices) |
 | 20.15 | Gameplay polish batch (input, HUD, Android, wiki, lockpick, stalls...) | 20 | ACTIVE (player-facing), GP-POLISH umbrella PARTIAL | GP-* records | ui and shot tests | — | player verbs | — | device playtests (register `playtest`) | — |
@@ -138,3 +136,26 @@ an invalid transition, a flags mismatch or a required system not exercised block
 - Ledger decay is applied lazily when an entry is read, so it is visible in the values each choice reads, not as its own rows.
 - Multiplayer black-box runs need the net harness (owned by the network worker) started with `MML_RECORD`; nothing here runs them.
 - Physical-device checks (touch, controller, two devices on a LAN) stay in the register's `playtest` field.
+
+## 7. Evidence on `wip/x20-recorder` (2026-10-27, brief validation; not the release gate)
+
+Commit `6bc405a` (code identical to the later docs and test commits). Seed 1, 10 days each, `tools/sim_suite.py --short 10 --seed 1`
+(subset, never a release gate): **PASS, 0 blocking findings**; every archive valid under the new content checks.
+
+| Run | Switches | Archive (10 days) | Rows | Matrix rows exercised | Contract threads (states) | Judgment chain |
+|---|---|---|---|---|---|---|
+| eq_s1 | shipped | 8.07 MB | 875,158 | 13 of 19 | 16 (offers withdrawn) | 24 crime facts, no later choice about an offender (bandits do not trade) |
+| x20_on_s1 | on | 8.12 MB | 880,719 | 16 of 19 | 16 | 42 facts, none |
+| strip_mine | on | 8.17 MB | 884,406 | 16 of 19 | 17 (1 fulfilled) | 67 facts, none |
+| contracts_fail | on | 8.12 MB | 876,871 | 16 of 19 | 20 (4 opened, 1 fulfilled, **2 lapsed**, 17 cancelled) | 35 facts, none |
+| poverty | on | 7.89 MB | 861,649 | 16 of 19 | 13 | 24 facts, none |
+| social_chain | on | 8.30 MB | 901,108 | 16 of 19 | 65 | **complete**: 48 later choices about the player by believers, 39 by villagers who only heard (contract_accept) |
+| social_chain_off | shipped | 8.25 MB | 894,988 | 13 of 19 | 63 | **complete**: 101 later choices, 86 by hearsay (contract_accept 83, food_seller 18) |
+| probe_saveload_on | on | two sessions | — | save and load both recorded | — | the loaded world adds 74 keys the save lacked (no value lost or changed; second round trip identical; reported, not blocking) |
+
+Not exercised by any 10-day run: 18.12 credit (rare deals; covered by recorder_test), 18.19 in the simulations (covered by the save/load
+probe), 20.10 multiplayer (needs the network harness with `MML_RECORD`). Determinism and recorder neutrality (10 days, seed 1, run in
+pairs): shipped switches identical at days 0, 5 and 10 (fingerprints `8f06b0d2...`, `e3bc5b94...`, `ca5b7869...`); Expansion 20 switches on
+identical (`8f06b0d2...`, `8704d350...`, `c0913803...`). Measures for review (not failures): about 1,420-1,460 empty decisions in 10 days,
+the worst actor-days 36-71 (the SIM-F3 bandit stalk loop, fixed on another branch); the commonest unmet need is a busy station
+(`station_busy_workbench` about 200 in 10 days).

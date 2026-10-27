@@ -321,6 +321,11 @@ pay_guards 10, robbery 30, raise_alarm 32, report_crime 40, deaths 8, births 7, 
 `alternative` is 46% of the bytes, `factor` 26%, `event` 12%. The decision detail is the dominant cost; limiting `alternative` and `factor` rows to
 the winner is the first reduction if volume matters.
 
+X20-FINAL phase 3 (commit `6bc405a`, seed 1, 10 days, `sim_suite.py --short 10 --seed 1`): 7.9 to 8.3 MB and 860,000 to 900,000 rows per 10
+days in every scenario, shipped switches or Expansion 20 switches on (the judgment choices are most of it); recorded and unrecorded runs
+identical at days 0, 5 and 10 with either set of switches; `recorder_test.gd` 203 checks, 0 failures. Details:
+`docs/expansion20/X18_X20_COVERAGE_MATRIX.md` section 7.
+
 ## 7. Known limits (also in `recorder_coverage.json`)
 
 Since X20-FINAL phase 3 (section 3) contracts, credit, relations' other channels, memory over time, flows by actor, the day's summaries and
