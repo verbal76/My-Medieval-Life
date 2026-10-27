@@ -206,7 +206,17 @@ func _per_player() -> void:
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
 	check(JSON.stringify(w2.messages.to_dict()) == JSON.stringify(w.messages.to_dict()), "both are saved in the host's world")
-	check(NetActions.VERBS.has("player_tell"), "a guest's message goes to the host as a player verb (World.player_tell)")
+	check(not NetActions.VERBS.has("player_tell"), "keeping a message is not a player verb a guest sends the host as an action")
+	var sent := []
+	var gw := World.new()
+	gw.setup(VillageMap.load_default(), 4)
+	gw.remote = func(path, args): sent.append(["verb", path]); return 1          # as on a guest's machine (World.mirror)
+	gw.remote_journal = func(t, c): sent.append(["journal", t, c])
+	gw.player_tell("You sell 1 apple for 3 coins.", "trade")
+	gw.player_tell("You select the workbench.", "")
+	check(sent == [["journal", "You sell 1 apple for 3 coins.", "trade"]] and gw.player_messages().size() == 1,
+		"on a guest's machine a kept message goes to the host's journal only, never as a verb, and a routine one not at all (%s)" % [sent])
+	gw.dispose()
 	w.dispose()
 	w2.dispose()
 

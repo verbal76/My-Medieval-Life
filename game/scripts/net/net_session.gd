@@ -20,6 +20,7 @@ extends Node
 ## Peer ids are only for the current connection.
 
 signal changed(text: String)        # something the player should be told (joins, refusals, losses)
+signal answered(text: String)       # the host's answer to one of this guest's requests (shown, not kept: routine feedback)
 signal players_changed
 
 const REFUSALS := {
@@ -54,6 +55,7 @@ var moves := {}                     # peer id -> {t (ms), dir, anim}: the last a
 var queue: Array = []               # requests waiting for the host's next tick: {seq, pid, peer, rid, kind, args}
 var arrivals := 0                   # the arrival counter that orders `queue`
 var applied := 0                    # requests applied (tests and the log)
+var journal_kept := 0               # GP-MESSAGE-JOURNAL: guests' journal entries received (not requests; tests)
 var rejected := 0                   # moves sent back (tests and the log)
 var discovery_port := NetProtocol.DISCOVERY_PORT
 
@@ -609,10 +611,34 @@ func s_reply(rid: int, r: Dictionary) -> void:
 		var mine_r = predicted.get(rid)
 		predicted.erase(rid)
 		if (not bool(r.get("ok", false)) or JSON.stringify(mine_r) != JSON.stringify(r.get("result"))) and str(r.get("text", "")) != "":
-			changed.emit(str(r.text))
+			answered.emit(str(r.text))
 		return
 	if str(r.get("text", "")) != "":
-		changed.emit(str(r.text))
+		answered.emit(str(r.text))
+
+
+# ---------------------------------------------------------------- GP-MESSAGE-JOURNAL ----------
+const JOURNAL_MAX_CHARS := 600       # a journal entry a guest sends is cut to this (no message of the game is longer)
+
+## Guest (World.remote_journal): a message this player was shown and keeps, for the host to keep in its world under this
+## player. Not a request: no answer, no sync, never applied as an action.
+func send_journal(text: String, category: String) -> void:
+	if peer != null and not is_host():
+		rpc_id(1, "c_journal", text.left(JOURNAL_MAX_CHARS), category)
+
+
+@rpc("any_peer", "call_remote", "reliable")
+func c_journal(text: String, category: String) -> void:
+	if not is_host() or main.world == null:
+		return
+	var id := multiplayer.get_remote_sender_id()
+	if not by_peer.has(id):
+		return
+	var p: PlayerState = main.world.player_by_pid(int(by_peer[id]))
+	if p == null:
+		return
+	main.world.messages.record(main.world.player_ref(p), main.world.minutes, category, text.left(JOURNAL_MAX_CHARS))
+	journal_kept += 1
 
 
 ## Host (MP C): each guest due one (or all, `all`) gets the sections of the shared world that changed since it was last sent them.

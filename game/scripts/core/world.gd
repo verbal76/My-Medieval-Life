@@ -857,14 +857,21 @@ const OFFER_REACH := 3.0            # tiles: the two stand together
 
 
 ## GP-MESSAGE-JOURNAL: keep a message shown to the acting player (a guest under as_actor) in its journal, when `category` is one
-## the journal keeps (MessageJournal.tier_of; "" is routine feedback, shown and not kept). On a guest's machine the verb goes to the
-## host, which keeps it in its own world under the guest's reference, so it is saved there. True when kept.
+## the journal keeps (MessageJournal.tier_of; "" is routine feedback, shown and not kept). True when kept here.
+## On a guest's machine the entry is kept in its copy (for its journal page now) and handed to `remote_journal` (NetSession.
+## send_journal), which the host keeps in its own world under the guest's reference, so it is saved there. That is a record of
+## what was shown, never a player verb: it does not go through World.mirror or the host's queue of requests, so it can never
+## repeat or add to the action whose answer the guest was shown (net_g1_test, "the host applied it once").
+var remote_journal := Callable()
+
+
 func player_tell(text: String, category: String) -> bool:
 	if MessageJournal.tier_of(category) == "":
 		return false
-	if mirrors():
-		return mirror("player_tell", player_tell.bind(text, category), [text, category])
-	return messages.record(acting_ref(), minutes, category, text)
+	var kept := messages.record(acting_ref(), minutes, category, text)
+	if kept and remote_journal.is_valid():
+		remote_journal.call(text, category)
+	return kept
 
 
 ## The kept messages of the acting player, oldest first: [minutes, category, text].

@@ -230,6 +230,15 @@ func actions() -> void:
 	await wait(0.3)
 	check(main.net.replies.get(r1, {}).get("ok", false) and w.player.inv.count(food) == n0 - 1 and int(status().applied) == applied0 + 1,
 		"the guest eats a %s: the host applied it once (%s)" % [food, main.net.replies.get(r1, {}).get("text", "")])
+	# GP-MESSAGE-JOURNAL: a message the guest keeps goes to the host's journal under the guest, never as another action
+	var applied1 := int(status().applied)
+	var kept0 := int(status().get("journal_kept", 0))
+	main.ui.message("You sell 1 apple for 3 coins (journal test).", 4.0, "trade")
+	await until(func(): return int(status().get("journal_kept", 0)) > kept0, 5.0)
+	var j: Dictionary = status().get("journal", {})
+	var mine: Dictionary = j.get(main.world.player_ref(main.world.player), {})
+	check(str(mine.get("last", "")) == "You sell 1 apple for 3 coins (journal test)." and not str(j.get("player", {}).get("last", "")).contains("journal test")
+		and int(status().applied) == applied1, "a kept message reaches the host's journal under the guest, and the host applies no action for it (%s)" % [j])
 	check(packs_agree() and absf(w.player.hunger - float(me().hunger)) < 1.0, "the host's and the guest's records of the guest agree (pack, hunger %.1f / %.1f)" % [w.player.hunger, float(me().hunger)])
 	# pick a wild plant, through the guest's own tap path (Main.select_resource), beside it
 	var pl := {}

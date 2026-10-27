@@ -160,7 +160,8 @@ func _ready() -> void:
 	net.name = "NetSession"
 	net.main = self
 	add_child(net)
-	net.changed.connect(func(t): ui.message(t, 8.0, "game"))
+	net.changed.connect(func(t): ui.message(t, 8.0, "game"))     # joins and leaves: kept in the journal
+	net.answered.connect(func(t): ui.message(t, 8.0))            # the host's answer to a request: shown, not kept (routine)
 	ui.build(self)
 	ui.set_scheme(scheme)
 	# a controller connected to a phone (or already there at start) hides the touch buttons and uses the
@@ -1180,6 +1181,7 @@ func start_guest_world(d: Dictionary, pid: int) -> bool:
 	world.set_local_player(me)
 	world.remote = net.send_verb               # MP Batch C: this machine's verbs are the host's to apply (World.mirror)
 	world.remote_done = net.note_prediction
+	world.remote_journal = net.send_journal     # GP-MESSAGE-JOURNAL: kept messages go to the host's journal, not as requests
 	guest_world = true
 	_build_scene()
 	_apply_world_changes()
