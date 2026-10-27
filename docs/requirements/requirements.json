@@ -36,7 +36,7 @@
    "name": "Living Economy",
    "implementation_authorized": true,
    "integration_branch": "wip/expansion20",
-   "released": "",
+   "released": "Build 23 private draft (code c79b12c, run 40526826846, release 425699977, 2026-10-27); MP-INTERACT-01 integrated last and validated before the build (X20-FINAL)",
    "authority": "owner directive 2026-10-26 (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md, superseding the 2026-10-23 phase 1 limit): substantive Expansion 20 implementation on wip/expansion20; policies for open OD-LE decisions still need the owner. RELEASE BLOCKER (owner 2026-10-27, docs/directives/2026-10-27_multiplayer_interaction_release_blocker.md): no Expansion 20 build of any kind, private drafts included, until MP-INTERACT-01 is integrated and validated"
   },
   "21": {
@@ -32081,8 +32081,8 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
-   "release_status": "NOT READY",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "RELEASE CANDIDATE",
    "completion": "OPEN",
    "history": [
     {
@@ -32119,20 +32119,26 @@
      "date": "2026-10-27",
      "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; tests: mp_interact_ui_test 112/0 (one process, real key, pad, touch and mouse events: player beside villager, anvil and stall, several players, moving, cycling, levels); net_interact_test 67/0 x3 runs (three processes over loopback: host, touch guest, second guest; host-guest both ways and guest-guest; accept, decline, counter; conservation; double accept; disconnect, reconnect, host restart with a pending offer); multiplayer_c 340/0, run_tests 3600/0, start_test 523/0, world_test 339/0, x20_android_ui 95/0, message_journal 50/0, wiki_test 140/0, other net suites and contract tests 0 failures; G0 identical on 93f5a76; Linux and Windows exports build (unsigned), Linux binary starts; screenshots looked at by worker and lead -> mp_interact_ui_test 112/0 (one process, real key, pad, touch and mouse events: player beside villager, anvil and stall, several players, moving, cycling, levels); net_interact_test 67/0 x3 runs (three processes over loopback: host, touch guest, second guest; host-guest both ways and guest-guest; accept, decline, counter; conservation; double accept; disconnect, reconnect, host restart with a pending offer); multiplayer_c 340/0, run_tests 3600/0, start_test 523/0, world_test 339/0, x20_android_ui 95/0, message_journal 50/0, wiki_test 140/0, other net suites and contract tests 0 failures; G0 identical on 93f5a76; Linux and Windows exports build (unsigned), Linux binary starts; screenshots looked at by worker and lead; combined on wip/x20-final 87b69ab (26 suites 0 failures): mp_interact_ui 112, net_interact 67, net_g1 45, net_c 35, net_batch_b 44, net_fauna 13, net_family 22, net_ui 61, x20_android_ui 95, multiplayer_c 340, contract_sign 21, message_journal 51, contracts 154, player_family 88, migration 93, contract_50ore 19, save_transfer 21, relations 80, conservation 8, economy_model 113, judgment_live 161, wiki passed, start_test 523, aspiration 145, world 339, run_tests 3600; G0 identical to the baseline; test_commit: 0ce4c9e -> 87b69ab; integrated_in + Expansion 20 wip/expansion20 87b69ab; next_action",
      "why": "merged LAST onto the verified baseline 3601211 at 87b69ab; combined validation passed; wip/expansion20 advanced to 87b69ab"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; release_status: NOT READY -> RELEASE CANDIDATE; test_commit: 87b69ab -> c79b12c; integrated_in + Build 23 c79b12c; next_action",
+     "why": "shipped in Build 23 (private draft, c79b12c) after combined validation and recorded multiplayer soaks"
     }
    ],
-   "next_action": "Final X20 release validation (X20-FINAL): multiplayer 1+2 and 1+3 scenarios (worker O), final gate on the release commit, three-platform exports; owner-device matrix remains (all nine host/guest pairs). MP-INTERACT-Q1/Q2 open for the owner.",
+   "next_action": "Owner device checks: all nine host/guest platform pairs (Android phone, Windows PC, real controller, two machines); MP-INTERACT-Q1/Q2 open for the owner.",
    "notes": "BLOCKS the next Expansion 20 release (private drafts included). Playtest evidence: the Windows player saw Bob (Android) but could not select or interact with him; the reverse was not tried. Treated as a cross-platform deficiency until tests show otherwise. Build 22 is not reopened. Likely cause (read-only look, 2026-10-27, wip/expansion20 b6fdb25): other players are never offered as a target. main._find_target lists villagers, shops, desks, loot, animals and things but no player, so there is no prompt, outline or tap target for one; the MP-D8 players window (GameUI.show_players: gift, partner, answer offers) opens only from main.interact when NO other target is in reach (main.gd interact, the target.is_empty() branch, _beside_player). In a village something else is nearly always in reach, so the other player cannot be chosen. Also to audit: guest_blocked() in interact, touch tap selection, the pad's next-target cycle, and the guest's path through the host.",
    "assigned_worker": "worker K (multiplayer interaction)",
    "branch": "wip/x20-mp-interact",
    "tests": "mp_interact_ui_test 112/0 (one process, real key, pad, touch and mouse events: player beside villager, anvil and stall, several players, moving, cycling, levels); net_interact_test 67/0 x3 runs (three processes over loopback: host, touch guest, second guest; host-guest both ways and guest-guest; accept, decline, counter; conservation; double accept; disconnect, reconnect, host restart with a pending offer); multiplayer_c 340/0, run_tests 3600/0, start_test 523/0, world_test 339/0, x20_android_ui 95/0, message_journal 50/0, wiki_test 140/0, other net suites and contract tests 0 failures; G0 identical on 93f5a76; Linux and Windows exports build (unsigned), Linux binary starts; screenshots looked at by worker and lead; combined on wip/x20-final 87b69ab (26 suites 0 failures): mp_interact_ui 112, net_interact 67, net_g1 45, net_c 35, net_batch_b 44, net_fauna 13, net_family 22, net_ui 61, x20_android_ui 95, multiplayer_c 340, contract_sign 21, message_journal 51, contracts 154, player_family 88, migration 93, contract_50ore 19, save_transfer 21, relations 80, conservation 8, economy_model 113, judgment_live 161, wiki passed, start_test 523, aspiration 145, world 339, run_tests 3600; G0 identical to the baseline",
-   "test_commit": "87b69ab",
+   "test_commit": "c79b12c",
    "commits": [
     "0ce4c9e"
    ],
    "playtest": "All nine host/guest platform pairs need owner devices (Android phone, Windows PC, real controller, two-machine LAN); only Linux-host-Linux ran end to end on the build machine, the rest are automated input paths plus loopback",
    "integrated_in": [
-    "Expansion 20 wip/expansion20 87b69ab"
+    "Expansion 20 wip/expansion20 87b69ab",
+    "Build 23 c79b12c"
    ]
   },
   {
@@ -59979,9 +59985,9 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
-   "release_status": "NOT READY",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "RELEASE CANDIDATE",
    "completion": "OPEN",
    "history": [
     {
@@ -60003,13 +60009,30 @@
      "date": "2026-10-27",
      "change": "tests: eaf6652: Python tests OK; 35 game suites 0 failures 0 script errors (incl. net_mp4 148, net_interact 67, mp_interact_ui 112, sim_f2 33, sim_f3 17, recorder 203, aspiration 155, world 339, start 523, run_tests 3600); full simulation gate (sim_suite, 19 runs + probes, 425 simulated days, seeds 1-6, 3374, 4693): PASS, 0 blocking, accepted baseline identical (36 values), determinism recorded vs unrecorded identical with shipped and X20 switches, save/load probes pass, judgment chain end to end (social_chain 99 later choices by hearsay); GitHub Actions long-sims 40478714284 (seeds 1-2, 80 days, aspirations/job choice/economy on, recorded) and 40478725139 (seed 1, 80 days, shipped, recorded): passed, leak 0 and no item leaks at every checkpoint, archives complete and independently checked -> eaf6652: Python tests OK; 35 game suites 0 failures 0 script errors (incl. net_mp4 148, net_interact 67, mp_interact_ui 112, sim_f2 33, sim_f3 17, recorder 203, aspiration 155, world 339, start 523, run_tests 3600); full simulation gate (sim_suite, 19 runs + probes, 425 simulated days, seeds 1-6, 3374, 4693): PASS, 0 blocking, accepted baseline identical (36 values), determinism recorded vs unrecorded identical with shipped and X20 switches, save/load probes pass, judgment chain end to end (social_chain 99 later choices by hearsay); GitHub Actions long-sims 40478714284 (seeds 1-2, 80 days, aspirations/job choice/economy on, recorded) and 40478725139 (seed 1, 80 days, shipped, recorded): passed, leak 0 and no item leaks at every checkpoint, archives complete and independently checked; c79b12c: suites on 8fc7ac6 (Python OK; 37 game suites incl. net_soak, net_recorder_quit, net_mp4 148, net_interact 67, run_tests 3600, all 0 failures except judgment_live 1, fixed in 7e1d309: judgment_live 161/0, net_recorder_quit 20/0, recorder 203/0, start 523/0); eaf6652 full simulation gate PASS and Actions long runs 40478714284, 40478725139 passed; recorded multiplayer soaks 1+3 and 1+2: every archive valid, participants identical (wip/x20-mprec); off-map hunger deaths classified legitimate (REG-X20-D1..D4); test_commit: eaf6652 -> c79b12c; next_action",
      "why": "release candidate c79b12c validated; Build 23 release workflow dispatched (run 40526826846, private draft)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; release_status: NOT READY -> RELEASED; commits + c79b12c; integrated_in + Expansion 20 wip/expansion20 c79b12c; next_action; notes",
+     "why": "Build 23 released as a private draft from c79b12c; packages verified"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "release_status: RELEASED -> RELEASE CANDIDATE",
+     "why": "correction: a private draft is recorded as a release candidate until the owner's device checks, as for Builds 18 and 19"
     }
    ],
    "assigned_worker": "lead (integration); workers per phase",
    "branch": "wip/x20-final",
    "tests": "eaf6652: Python tests OK; 35 game suites 0 failures 0 script errors (incl. net_mp4 148, net_interact 67, mp_interact_ui 112, sim_f2 33, sim_f3 17, recorder 203, aspiration 155, world 339, start 523, run_tests 3600); full simulation gate (sim_suite, 19 runs + probes, 425 simulated days, seeds 1-6, 3374, 4693): PASS, 0 blocking, accepted baseline identical (36 values), determinism recorded vs unrecorded identical with shipped and X20 switches, save/load probes pass, judgment chain end to end (social_chain 99 later choices by hearsay); GitHub Actions long-sims 40478714284 (seeds 1-2, 80 days, aspirations/job choice/economy on, recorded) and 40478725139 (seed 1, 80 days, shipped, recorded): passed, leak 0 and no item leaks at every checkpoint, archives complete and independently checked; c79b12c: suites on 8fc7ac6 (Python OK; 37 game suites incl. net_soak, net_recorder_quit, net_mp4 148, net_interact 67, run_tests 3600, all 0 failures except judgment_live 1, fixed in 7e1d309: judgment_live 161/0, net_recorder_quit 20/0, recorder 203/0, start 523/0); eaf6652 full simulation gate PASS and Actions long runs 40478714284, 40478725139 passed; recorded multiplayer soaks 1+3 and 1+2: every archive valid, participants identical (wip/x20-mprec); off-map hunger deaths classified legitimate (REG-X20-D1..D4)",
    "test_commit": "c79b12c",
-   "next_action": "Release run 40526826846 (sim-gate on c79b12c, then three exports): verify packages, checksums, APK certificate 31:70:4B..80:E6 and versionCode 23; advance wip/expansion20; final report."
+   "next_action": "Owner device checks of Build 23 (phone install over Build 22, Windows, controller, two-device multiplayer, all nine host/guest pairs); owner decisions MP-INTERACT-Q1/Q2 and REG-X20-D1..D4.",
+   "commits": [
+    "c79b12c"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 c79b12c"
+   ],
+   "notes": "Build 23 (release 425699977, tag build-23, private draft, run 40526826846: sim-gate then three exports). Verified: SHA256SUMS all OK; APK signed with the permanent certificate 31704b80...76cb80e6 (same as Builds 21, 22), v2+v3, package com.hotatticgames.mymedievallife.dev, versionCode 23, versionName 0.1.23-test, permissions INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE, CHANGE_WIFI_MULTICAST_STATE (unchanged since Build 21); Windows zip holds MyMedievalLife.exe; Linux binary starts headless (Godot 4.7.2) and exits 0. Tester notes: BUILD_23_TESTER_NOTES.md in docs/release on wip/expansion20."
   },
   {
    "id": "X20-OPEN-ITEMS",

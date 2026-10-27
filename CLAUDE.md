@@ -24,11 +24,11 @@ are. No file is read automatically because it exists: do these steps, in order, 
    `python3 tools/check_requirements.py` (it must report 0 problems).
 7. **Determine what was completed, what remains unverified and what is authorized next,** from the register's
    statuses and evidence and the state file's next tasks; never from memory of a conversation.
-8. **Resume only currently authorized work.** Use the live requirements register, latest owner directives and active worker branches. Build 22 is the latest private three-platform draft and must not be reopened. Expansion 20 is authorized and in development. MP-INTERACT-01 was developed in isolation and must be integrated LAST. **Do not build or package any Expansion 20 APK, Windows or Linux artifact, including private drafts, until that multiplayer fix is integrated and validated.** Never answer owner decisions, compromise save/security rules, or merge to main without authorization. The earlier Build 17–19 sequencing and prototype-only restrictions are historical, not a gate against now-authorized Expansion 20.
+8. **Resume only currently authorized work.** Use the live requirements register, latest owner directives and active worker branches. Build 23 (Expansion 20, `c79b12c`, 2026-10-27) is the latest private three-platform draft; Build 22 must not be reopened. MP-INTERACT-01 was integrated LAST and validated before Build 23; Expansion 20 development continues on `wip/expansion20`. Never answer owner decisions, compromise save/security rules, or merge to main without authorization. The earlier Build 17–19 sequencing and prototype-only restrictions are historical, not a gate against now-authorized Expansion 20.
 
 **After a context compaction or in a fresh session** (owner directive 2026-10-20, `docs/directives/2026-10-20_compaction_readiness.md`):
 - Do steps 1-8 before any further decision.
-- Build authority is the live requirements register, generated STATUS/QUEUES views and most recent explicit owner directives. Build 22 is the latest private test build; Expansion 20 is authorized and in progress, but cannot be packaged until MP-INTERACT-01 is merged LAST and validated. WDR-022 remains in force. Recovery: `docs/handoffs/CURRENT_SESSION_RECOVERY.md`; checkpoint around 70–75% context.
+- Build authority is the live requirements register, generated STATUS/QUEUES views and most recent explicit owner directives. Build 23 is the latest private test build (MP-INTERACT-01 merged last and validated first); Expansion 20 development continues. WDR-022 remains in force. Recovery: `docs/handoffs/CURRENT_SESSION_RECOVERY.md`; checkpoint around 70–75% context.
 - What a conversation summary lacks was not thereby unapproved: the register, the decision log and `docs/directives/` are the record.
 - Do not repeat completed work, and never restart a simulation or test before checking whether it is still running (the state file's workers and processes: GitHub Actions runs, local processes).
 - Compaction is not a reason to stop: continue the next approved task.
@@ -58,7 +58,7 @@ Status (keep current):
 | Engine | Established Godot 4.7 implementation; prototype engine proposals are historical. |
 | Platforms | Android APK first, then PC (Windows, Linux), as the owner directed; touch, gamepad, and keyboard and mouse |
 | Gameplay code | Established living-world simulation, economy, family, Judgment and multiplayer; active requirements and branch evidence control status. |
-| Builds | Build 22 (`b7e1c91`, 2026-10-26) is the latest private three-platform draft. Expansion 20 (`wip/expansion20`) is active with LE-01 off-flag foundation and integrated recovery R1–R4; R5 and later LE stages remain in development. MP-INTERACT-01 is isolated and must merge LAST. **No Expansion 20 build, even private, until multiplayer integration and validation.** Prior packets are historical. |
+| Builds | Build 23 (Expansion 20, `c79b12c`, run 40526826846, 2026-10-27) is the latest private three-platform draft: MP-INTERACT-01 merged last and validated, recovery R1–R5, LE-01 foundation, aspirations and job choice behind switches (off). Not yet device-checked. Build 22 (`b7e1c91`) is frozen. LE-02 and later stages remain in development on `wip/expansion20`. Prior packets are historical. |
 
 ## 2. Repository layout
 
@@ -280,7 +280,7 @@ corresponding documentation.** Every agent and worker, on every task:
   show no log until they finish, so the simulated day of a running job is not visible; say so rather than claim live
   monitoring.
 - Visual output must actually be looked at before it is reported as verified.
-- **Current Expansion 20 overriding restriction (owner, 2026-10-27):** no packaging, private draft, publishing, APK, Windows or Linux export for Expansion 20 before MP-INTERACT-01 is merged last and validated on the relevant platforms. After this gate, provide a release-readiness report and follow the owner's applicable publication authorization. Do not reopen Build 22. This takes precedence over older automatic-release directions for Expansion 20.
+- **Current Expansion 20 overriding restriction (owner, 2026-10-27; satisfied for Build 23, MP-INTERACT-01 merged last at `87b69ab` and validated):** no packaging, private draft, publishing, APK, Windows or Linux export for Expansion 20 before MP-INTERACT-01 is merged last and validated on the relevant platforms. After this gate, provide a release-readiness report and follow the owner's applicable publication authorization. Do not reopen Build 22. This takes precedence over older automatic-release directions for Expansion 20.
 - **Release policy (owner standing directive 2026-10-21, `docs/directives/2026-10-21_standing_continuous_release_directive.md`;
   supersedes the 2026-10-18 rule that each release needs the owner's approval for that occasion).** Development runs on a
   continuous develop, test, release and advance model:

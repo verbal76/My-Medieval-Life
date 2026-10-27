@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (14)
+## Workers and task branches (13)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -18,7 +18,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | REC-DIAG | 20 | IN DEVELOPMENT | lead | wip/recorder (read-only runs) |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
-| X20-FINAL | 20 | IN DEVELOPMENT | lead (integration); workers per phase | wip/x20-final |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
 ## Implemented but not tested (45)
@@ -150,7 +149,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-WIKI-RECIPE-TOOLS | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, A, n, d, r, o, i, d,  , t, o, u, c, h, ,,  , c, o, n, t, r, o, l, l, e, r, ,,  , t, w, o, -, d, e, v, i, c, e,  , p, l, a, y,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ) |
 | INV-18 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | MAP-01 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
-| MP-INTERACT-01 | 20 | TARGETED TESTS PASSED | A, l, l,  , n, i, n, e,  , h, o, s, t, /, g, u, e, s, t,  , p, l, a, t, f, o, r, m,  , p, a, i, r, s,  , n, e, e, d,  , o, w, n, e, r,  , d, e, v, i, c, e, s,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ,,  , W, i, n, d, o, w, s,  , P, C, ,,  , r, e, a, l,  , c, o, n, t, r, o, l, l, e, r, ,,  , t, w, o, -, m, a, c, h, i, n, e,  , L, A, N, ), ;,  , o, n, l, y,  , L, i, n, u, x, -, h, o, s, t, -, L, i, n, u, x,  , r, a, n,  , e, n, d,  , t, o,  , e, n, d,  , o, n,  , t, h, e,  , b, u, i, l, d,  , m, a, c, h, i, n, e, ,,  , t, h, e,  , r, e, s, t,  , a, r, e,  , a, u, t, o, m, a, t, e, d,  , i, n, p, u, t,  , p, a, t, h, s,  , p, l, u, s,  , l, o, o, p, b, a, c, k |
+| MP-INTERACT-01 | 20 | INTEGRATION VERIFIED | A, l, l,  , n, i, n, e,  , h, o, s, t, /, g, u, e, s, t,  , p, l, a, t, f, o, r, m,  , p, a, i, r, s,  , n, e, e, d,  , o, w, n, e, r,  , d, e, v, i, c, e, s,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ,,  , W, i, n, d, o, w, s,  , P, C, ,,  , r, e, a, l,  , c, o, n, t, r, o, l, l, e, r, ,,  , t, w, o, -, m, a, c, h, i, n, e,  , L, A, N, ), ;,  , o, n, l, y,  , L, i, n, u, x, -, h, o, s, t, -, L, i, n, u, x,  , r, a, n,  , e, n, d,  , t, o,  , e, n, d,  , o, n,  , t, h, e,  , b, u, i, l, d,  , m, a, c, h, i, n, e, ,,  , t, h, e,  , r, e, s, t,  , a, r, e,  , a, u, t, o, m, a, t, e, d,  , i, n, p, u, t,  , p, a, t, h, s,  , p, l, u, s,  , l, o, o, p, b, a, c, k |
 | MP-PLAYER-FAMILY | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, t, w, o, -, d, e, v, i, c, e,  , m, a, r, r, i, a, g, e, ,,  , b, i, r, t, h,  , a, n, d,  , a, d, o, p, t, i, o, n,  , o, v, e, r,  , W, i, -, F, i, ) |
 | ORE-PLACE-01 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | PL1-03 | 15 | TARGETED TESTS PASSED | phone |
