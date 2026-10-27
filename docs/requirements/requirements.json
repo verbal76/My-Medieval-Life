@@ -22175,7 +22175,7 @@
     "As recorded in the source; evidence named in implementation and tests"
    ],
    "implementation": "",
-   "tests": "worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4",
+   "tests": "worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4; combined on wip/expansion20 5770d00: history 28/0, judgment 217/0, judgment_live 161/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, x20_android_ui 95/0, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks)",
    "playtest": [],
    "branch": "wip/x20-r2r4",
    "commits": [
@@ -22236,6 +22236,11 @@
      "date": "2026-10-27",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4; test_commit: 0b5287c -> de61317; commits + de61317; integrated_in + Expansion 20 wip/expansion20 5770d00; next_action",
      "why": "R4 historical memory merged: refs, links and history records in the judgment section (v3, optional keys; save_version unchanged), handed down to adult children, told in talk with the house's current state"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "tests: worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4 -> worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4; combined on wip/expansion20 5770d00: history 28/0, judgment 217/0, judgment_live 161/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, x20_android_ui 95/0, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); test_commit: de61317 -> 5770d00",
+     "why": "combined validation on the merged branch at 5770d00"
     }
    ],
    "acceptance_derived": true,
@@ -22257,7 +22262,7 @@
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "historical memory: fact links and entity refs (building, item, household), the 30-planks chain, significance rule, dialogue from records, save migration (batch R4)",
-   "test_commit": "de61317",
+   "test_commit": "5770d00",
    "assigned_worker": "worker I (recovery R2, R4)"
   },
   {
@@ -24367,22 +24372,27 @@
      "date": "2026-10-27",
      "change": "known_defects + net_g1_test fails one check: a guest's journal recording of a host reply sends a second request to the host (fix in progress, worker H on wip/x20-msg)",
      "why": "regression found by worker K: net_g1_test 'the guest eats a bread: the host applied it once' fails on wip/expansion20 (from 4f50ffb): a guest's journalled reply notice sends a second request to the host; fix assigned to worker H"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "tests: message_journal_test 38/0 (the owner's 10 cases), x20_android_ui_test 95/0, player_family_test 88/0, save_transfer_test 21/0, multiplayer_c_test 340/0, start_test 523/0, net_ui_test 61/0, wiki_test passed, run_tests 3600/0, unittest OK; G0 identical to the baseline; merged tree identical to the tested 2e9ad2f; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks) -> message_journal_test 38/0 (the owner's 10 cases), x20_android_ui_test 95/0, player_family_test 88/0, save_transfer_test 21/0, multiplayer_c_test 340/0, start_test 523/0, net_ui_test 61/0, wiki_test passed, run_tests 3600/0, unittest OK; G0 identical to the baseline; merged tree identical to the tested 2e9ad2f; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); on c6d4280: net_g1 45/0, net_batch_b 44/0, net_c 35/0, net_family 22/0, net_fauna 13/0, net_ui 61/0, multiplayer_c 340/0, message_journal 51/0, x20_android_ui 95/0, start_test 523/0; test_commit: 4f50ffb -> c6d4280; commits + c6d4280; integrated_in + Expansion 20 wip/expansion20 0dc0014",
+     "why": "regression fixed: a guest's kept messages go to the host on their own channel (NetSession.send_journal), never as an action; host answers not journalled (wip/x20-msg c6d4280, merged at wip/expansion20 0dc0014, tree identical to the tested one)"
     }
    ],
    "assigned_worker": "worker H (screen messages)",
    "branch": "wip/x20-msg",
-   "tests": "message_journal_test 38/0 (the owner's 10 cases), x20_android_ui_test 95/0, player_family_test 88/0, save_transfer_test 21/0, multiplayer_c_test 340/0, start_test 523/0, net_ui_test 61/0, wiki_test passed, run_tests 3600/0, unittest OK; G0 identical to the baseline; merged tree identical to the tested 2e9ad2f; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks)",
-   "test_commit": "4f50ffb",
+   "tests": "message_journal_test 38/0 (the owner's 10 cases), x20_android_ui_test 95/0, player_family_test 88/0, save_transfer_test 21/0, multiplayer_c_test 340/0, start_test 523/0, net_ui_test 61/0, wiki_test passed, run_tests 3600/0, unittest OK; G0 identical to the baseline; merged tree identical to the tested 2e9ad2f; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); on c6d4280: net_g1 45/0, net_batch_b 44/0, net_c 35/0, net_family 22/0, net_fauna 13/0, net_ui 61/0, multiplayer_c 340/0, message_journal 51/0, x20_android_ui 95/0, start_test 523/0",
+   "test_commit": "c6d4280",
    "commits": [
     "2e9ad2f",
-    "126e358"
+    "126e358",
+    "c6d4280"
    ],
    "integrated_in": [
-    "Expansion 20 wip/expansion20 b6fdb25"
+    "Expansion 20 wip/expansion20 b6fdb25",
+    "Expansion 20 wip/expansion20 0dc0014"
    ],
-   "known_defects": [
-    "net_g1_test fails one check: a guest's journal recording of a host reply sends a second request to the host (fix in progress, worker H on wip/x20-msg)"
-   ],
+   "known_defects": [],
    "notes": "Optional save key 'messages' (save stays version 23, following the existing optional-key pattern: credit, couriers, player_offers); Build 21/22 saves load with an empty journal (fixture tests). Per player; a guest's messages are saved in the host's world. Two tiers in the message_journal data file (on wip/expansion20): significant (crime, law, family, contract, work, quest, property, village, skill) 2000 per player, ordinary (trade, money, npc, find, game) 300, each trimmed only from its own tier; about 110 bytes an entry, about 245 KB at full. Recording point: messages are built in the interface, which asks World.player_tell to record them (no world-side message channel exists). Village events stay on the saved Village record page (300 lines), not duplicated into Messages. Provisional limits: docs/DECISIONS.md on wip/expansion20."
   },
   {
@@ -48848,7 +48858,7 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0; worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4",
+   "tests": "on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0; worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4; combined on wip/expansion20 5770d00: history 28/0, judgment 217/0, judgment_live 161/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, x20_android_ui 95/0, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks)",
    "playtest": [],
    "branch": "wip/x20-r2r4",
    "commits": [
@@ -48916,6 +48926,11 @@
      "date": "2026-10-27",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; tests: on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0 -> on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0; worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4; test_commit: 0b5287c -> de61317; commits + c51d49b; integrated_in + Expansion 20 wip/expansion20 5770d00",
      "why": "R2 crime-report hook merged (flag decision.integration.report off; measured in R6 before any switch-on)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "tests: on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0; worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4 -> on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0; worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4; combined on wip/expansion20 5770d00: history 28/0, judgment 217/0, judgment_live 161/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, x20_android_ui 95/0, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); test_commit: de61317 -> 5770d00",
+     "why": "combined validation on the merged branch at 5770d00"
     }
    ],
    "target_build": "20",
@@ -48937,7 +48952,7 @@
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "13 decision domains live through JudgmentWeighting.choose; close against acceptance with the population evidence of the measurement batch (R6); politics stays with Expansion 21 (Q-POL-1, Q-POL-7)",
-   "test_commit": "de61317",
+   "test_commit": "5770d00",
    "assigned_worker": "worker I (recovery R2, R4)"
   },
   {
@@ -54497,7 +54512,7 @@
     "Rule 009's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
    ],
    "implementation": "Shared systems with consequences; the 30-planks provenance chain not built (GM-01)",
-   "tests": "worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4",
+   "tests": "worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4; combined on wip/expansion20 5770d00: history 28/0, judgment 217/0, judgment_live 161/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, x20_android_ui 95/0, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks)",
    "playtest": [],
    "branch": "wip/x20-r2r4",
    "commits": [
@@ -54556,6 +54571,11 @@
      "date": "2026-10-27",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4; test_commit: 0b5287c -> de61317; commits + de61317; integrated_in + Expansion 20 wip/expansion20 5770d00; next_action",
      "why": "R4 historical memory merged: refs, links and history records in the judgment section (v3, optional keys; save_version unchanged), handed down to adult children, told in talk with the house's current state"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "tests: worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4 -> worker I on wip/x20-r2r4: history_test 28/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, start_test 523/0, run_tests 3600/0, wiki_test passed, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0; G0 identical after R2 and after R4; combined on wip/expansion20 5770d00: history 28/0, judgment 217/0, judgment_live 161/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, x20_android_ui 95/0, dialogue_perspective 84/0, judgment_guard_save 20/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); test_commit: de61317 -> 5770d00",
+     "why": "combined validation on the merged branch at 5770d00"
     }
    ],
    "target_build": "20",
@@ -54574,7 +54594,7 @@
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "the 30-planks verification scenario on top of GM-01 (batch R4)",
-   "test_commit": "de61317",
+   "test_commit": "5770d00",
    "assigned_worker": "worker I (recovery R2, R4)"
   },
   {
