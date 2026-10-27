@@ -1,3 +1,5 @@
+> **HISTORICAL / SUPERSEDED DESIGN SOURCE — NOT ACTIVE DEVELOPMENT AUTHORITY (owner, 2026-10-27).** This file records early Game Designer interview material, a prototype decision or an obsolete design proposal. Retain it for provenance, not as a current specification, task list, owner approval or permission to implement features. Current guidance comes from `CLAUDE.md`, `docs/PROJECT_MEMORY.md`, `docs/requirements/requirements.json`, later applicable owner directives and validated game code. See `docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md`. An old design idea needs new owner confirmation before becoming active.
+
 # My Medieval Life: game design
 
 Status: **draft, waiting on owner answers.** Nothing here is approved unless it is listed under

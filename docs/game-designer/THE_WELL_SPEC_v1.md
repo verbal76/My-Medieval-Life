@@ -1,3 +1,5 @@
+> **HISTORICAL / SUPERSEDED DESIGN SOURCE — NOT ACTIVE DEVELOPMENT AUTHORITY (owner, 2026-10-27).** This file records early Game Designer interview material, a prototype decision or an obsolete design proposal. Retain it for provenance, not as a current specification, task list, owner approval or permission to implement features. Current guidance comes from `CLAUDE.md`, `docs/PROJECT_MEMORY.md`, `docs/requirements/requirements.json`, later applicable owner directives and validated game code. See `docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md`. An old design idea needs new owner confirmation before becoming active.
+
 # The Well - AUTHORITATIVE BUILD SPECIFICATION
 
 Spec version 1 (Initial Build) - generated 2026-10-17 by Game Designer. This file supersedes earlier versions; earlier versions are preserved in the Game Designer project history and must not be re-derived from memory.
