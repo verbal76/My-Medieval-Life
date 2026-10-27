@@ -10,7 +10,8 @@ extends RefCounted
 ##
 ## Refs (today's, unchanged): "npc:<id>", "hh:<n>", "player", "manor", "region:<settlement>/<holder>", plus read-only
 ## refs this resolver defines for owners that have no ref yet: "chapel" (World.chapel's fund and store),
-## "stall:<id>" (a stall's till) and "shop:<building id>" (a shop's till), coins only.
+## "stall:<id>" (a stall's till) and "shop:<building id>" (a shop's till), "front:<building id>" (a household's storefront
+## till, ECON-P3) and "counter:<building id>" (a trade counter's till, B18-DP-01), coins only.
 ## NO BUSINESS IDENTITY: a business is still its owner's ref, a building or a stall id (OD-LE-04 and OD-LE-07 are
 ## open); no "business:" ref is invented here.
 ##
@@ -20,7 +21,7 @@ extends RefCounted
 ##   player     coins PlayerState.coins, goods pack + chest
 ##   manor      coins World.treasury, goods the granary
 ##   chapel     coins Chapel.coins, goods Chapel.store
-##   stall/shop coins the till, no goods
+##   stall/shop/front/counter  coins the till, no goods
 ##   region     coins SettlementParty.purse(), goods held_items(); a dissolved household or unknown holder does not exist
 ## Consumers: EconReservations (what an owner holds, whether it is alive), EconEvents (actor refs), EconNeeds, EconOffers,
 ## EconKnowledge and EconContractLinks (LE-01 model), and economy_sim.gd diagnostics.
@@ -48,7 +49,7 @@ func kind(ref: String) -> String:
 		return ref
 	if ref.begins_with("player:"):
 		return World.PLAYER
-	for k in ["npc", "hh", "stall", "shop", "region"]:
+	for k in ["npc", "hh", "stall", "shop", "front", "counter", "region"]:
 		if ref.begins_with(k + ":"):
 			return k
 	return ""
@@ -71,6 +72,8 @@ func exists(ref: String) -> bool:
 			return w.stalls.has(ref.trim_prefix("stall:")) or w.stalls.has(_num(ref))
 		"shop":
 			return _shop(ref) != null
+		"front", "counter":
+			return _building(ref).has(kind(ref))
 		"region":
 			return w.regions != null and w.regions.party(ref) != null
 	return false
@@ -104,6 +107,8 @@ func coins(ref: String) -> int:
 			return int(_stall(ref).get("till", 0))
 		"shop":
 			return int(_shop(ref).get("till", 0))
+		"front", "counter":
+			return int(_building(ref)[kind(ref)].get("till", 0))
 		"region":
 			return w.regions.party(ref).purse()
 	return 0
@@ -192,6 +197,10 @@ func controller(ref: String) -> String:
 			return w.holder_of(_stall(ref))
 		"shop":
 			return w.holder_of(w.buildings.get(ref.trim_prefix("shop:"), {}))
+		"front":
+			return w.business.money.front_owner(_building(ref)) if w.business != null else w.holder_of(_building(ref))
+		"counter":
+			return w.business.money.counter_owner(_building(ref)) if w.business != null else w.holder_of(_building(ref))
 	return ref
 
 
@@ -210,8 +219,8 @@ func location(ref: String) -> String:
 			return _player(ref).home
 		"stall":
 			return "stall:" + ref.trim_prefix("stall:")
-		"shop":
-			return ref.trim_prefix("shop:")
+		"shop", "front", "counter":
+			return ref.get_slice(":", 1)
 		"region":
 			return ref.trim_prefix("region:").get_slice("/", 0)
 	return ""
@@ -247,6 +256,27 @@ func _num(ref: String) -> int:
 func _stall(ref: String) -> Dictionary:
 	var k := ref.trim_prefix("stall:")
 	return w.stalls[k] if w.stalls.has(k) else w.stalls.get(_num(ref), {})
+
+
+## Every till the village holds coins in, as refs, in a fixed order (stalls, shops, storefronts, counters; each by id): the
+## same tills Business.tills counts, so their coins add up to it (economy_sim diagnostics, economy_model_test).
+func till_refs() -> Array:
+	var out := []
+	var ids: Array = w.stalls.keys()
+	ids.sort()
+	for id in ids:
+		out.append("stall:" + str(id))
+	ids = w.buildings.keys()
+	ids.sort()
+	for k in ["shop", "front", "counter"]:
+		for id in ids:
+			if w.buildings[id].has(k):
+				out.append(k + ":" + str(id))
+	return out
+
+
+func _building(ref: String) -> Dictionary:
+	return w.buildings.get(ref.get_slice(":", 1), {})
 
 
 func _shop(ref: String):

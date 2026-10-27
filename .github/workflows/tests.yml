@@ -89,6 +89,7 @@ jobs:
           $godot --headless --path game --script res://tests/property_test.gd
           $godot --headless --path game --script res://tests/business_test.gd
           $godot --headless --path game --script res://tests/business_money_test.gd
+          $godot --headless --path game --script res://tests/till_ownership_test.gd
           $godot --headless --path game --script res://tests/business_works_test.gd
           # Build 18 suites (REL18-SUITES: every suite runs in CI)
           $godot --headless --path game --script res://tests/chapel_test.gd
