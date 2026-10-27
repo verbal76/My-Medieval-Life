@@ -4124,7 +4124,13 @@ func raise_alarm(aware: Dictionary, attacker: int, ref := "", cis := []) -> int:
 ## the villager (older saves: an attack).
 ## A1: a report on a player carries the player's reference (`ref`, default the acting player's) and the crimes of their case
 ## it tells of (`cis`); a report the villager already holds on the same player gains the new crimes.
-func report_crime(n: NPC, offender: int, how: String, crime := "attack", ref := "", cis := []) -> void:
+## R2 (SJD-F): with decision.integration.report on, the villager first weighs telling against keeping quiet
+## (JudgmentLive.will_report); `weigh` false for a rule that is never weighed (a family member fetching help,
+## JudgmentFamily). Off (the default), every call reports as before. True when the report is taken up.
+func report_crime(n: NPC, offender: int, how: String, crime := "attack", ref := "", cis := [], weigh := true) -> bool:
+	if weigh and JudgmentLive.on(self, "report") and not JudgmentLive.will_report(self, n, offender, how, crime):
+		stat("crime_reports_withheld")
+		return false
 	var had: Dictionary = n.report
 	n.report = {"offender": offender, "t": minutes, "how": how}
 	if crime != "attack":
@@ -4143,6 +4149,7 @@ func report_crime(n: NPC, offender: int, how: String, crime := "attack", ref := 
 	stat("crime_reports_made")
 	if recorder != null:
 		recorder.report(n, offender, how, crime)      # REC-19
+	return true
 
 
 ## Whether the offender of a report can still be pursued: alive (the player alive, or the villager).

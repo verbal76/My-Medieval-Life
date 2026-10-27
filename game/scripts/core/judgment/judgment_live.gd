@@ -29,6 +29,8 @@ extends RefCounted
 ##                   barter_accept   Credit.barter_quote     whether a villager takes the swap
 ##                   food_seller     Credit._cheapest_food   whom a short household asks for food
 ##                   family_help     Construction._family_help  whether a relative household gives toward a home
+##                   report          World.report_crime      whether a villager who knows of a crime tells a guard (R2,
+##                                                           SJD-F; integration.report OFF until measured)
 ##                 each on only with a store attached and its decision.integration flag set; feasibility (stock,
 ##                 coins, purchase_qty, can_hire, can_court, regard thresholds) and conservation are never overridden.
 
@@ -701,3 +703,32 @@ static func pick_food_seller(w, buyer: NPC, cands: Array) -> Dictionary:
 ## `builder`'s home. The amount and the means are the live rule's.
 static func family_gives(w, giver: NPC, builder: NPC) -> bool:
 	return willing(w, "family_help", giver, builder.id, [w.day(), builder.id])
+
+
+# ---------------------------------------------------------------- SJD-F crime: whether to report (R2) ---------------
+## report (World.report_crime): whether villager `n`, who knows of `offender`'s crime (`how`: "saw", "victim" or
+## "sighting"; `crime`: "attack" or "theft"), tells a guard or keeps quiet. Both options are feasible (who may report
+## and how a report travels stay the live rule's); the choice between them is weighed by the one shared interface,
+## never decided by a cutoff (owner, 2026-10-26: judgment influences, never dictates). Telling: the live rule's yes
+## (live_order) and the harm done. Keeping quiet: what `n` thinks of the offender (disposition, the family name's colour
+## included), kinship with them, and fear of them (the violence `n` holds against them). Each person weighs these by
+## their own personality (trait_spread, life shift, stubbornness), so two witnesses of the same crime may decide
+## differently. Every choice is recorded by the flight recorder when one is attached (JudgmentWeighting.choose).
+static func will_report(w, n: NPC, offender: int, how: String, crime: String) -> bool:
+	var j: JudgmentStore = w.judgment
+	if offender == n.id:
+		return true
+	var rc: Dictionary = j.cfg.decision.get("report", {})
+	var harm := int(rc.get("harm_victim", 0)) if how == "victim" else int(rc.get("harm_attack" if crime == "attack" else "harm_theft", 0))
+	var kin := 100000 if j.social != null and j.social.kin(n.id, offender) else 0
+	var fear := JudgmentMath.clampi_(JudgmentMath.mul_div(int(j.ledger(n.id, offender)[6]), int(rc.get("fear_permille_per_point", 0)), 1000), 0, 100000)
+	var cands := [
+		{"id": "report", "counterparty": -1, "factors": {"live_order": 100000, "harm": harm, "disposition": 0, "kinship": 0, "fear": 0}},
+		{"id": "silent", "counterparty": offender, "factors": {"live_order": 0, "harm": 0, "kinship": kin, "fear": fear}},
+	]
+	var r := JudgmentWeighting.choose(j, j.cfg, n.id, "report", cands, [w.day(), offender, how.hash(), crime.hash()])
+	j._stat("report_choices")
+	if str(r.chosen) == "silent":
+		j._stat("report_kept_quiet")
+		return false
+	return true
