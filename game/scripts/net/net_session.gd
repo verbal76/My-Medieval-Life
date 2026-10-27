@@ -605,6 +605,13 @@ func c_request(rid: int, kind: String, args: Dictionary) -> void:
 	queue.append({"seq": arrivals, "pid": int(by_peer[id]), "peer": id, "rid": rid, "kind": kind, "args": args})
 
 
+## X20 (net_mp4_test): a guest's copy changes its own offers before the host answers (World.player_answer takes the answered one
+## away at once; World.player_offer, mirrored, adds one). When the host refuses (the buyer is short, not beside them, "You have asked
+## already") its offers are unchanged, so NetSync.changed would not send them and the copy would keep its guess: an offer still
+## waiting gone from the recipient's screen, or one that does not exist shown. After these verbs the offers always go again.
+const OFFER_VERBS := ["player_offer", "player_answer"]
+
+
 ## Host: apply every queued request, in arrival order (then pid), each once, as its player, and answer it. Called at one
 ## fixed point of the host's frame (Main._process, before World.update), so a recorded session replays the same way.
 func apply_requests() -> void:
@@ -625,6 +632,8 @@ func apply_requests() -> void:
 		if peer != null and by_peer.has(int(q.peer)):
 			rpc_id(int(q.peer), "s_reply", int(q.rid), r)
 			sync_due[int(q.peer)] = true                # MP C: its copy takes the sections this changed, at once (send_syncs)
+			if str(r.get("path", "")) in OFFER_VERBS and synced.has(int(q.peer)):
+				synced[int(q.peer)]["player_offers"] = -1     # X20: the offers go again even when the host's did not change (OFFER_VERBS)
 	send_syncs(false)
 
 

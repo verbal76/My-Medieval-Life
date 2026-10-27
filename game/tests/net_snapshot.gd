@@ -20,8 +20,10 @@ static func compare(w: World, my_pid: int, dump: Dictionary, keys: Array) -> Arr
 		return ["no dump from the host"]
 	var mine: Dictionary = w.to_dict()
 	for k in keys:
-		if norm(dump.get("sections", {}).get(k)) != norm(mine.get(k)):
-			bad.append("section %s%s" % [k, _first_difference(JSON.parse_string(norm(dump.get("sections", {}).get(k))), JSON.parse_string(norm(mine.get(k))))])
+		var hs = _canon(k, dump.get("sections", {}).get(k))
+		var ms = _canon(k, mine.get(k))
+		if norm(hs) != norm(ms):
+			bad.append("section %s%s" % [k, _first_difference(JSON.parse_string(norm(hs)), JSON.parse_string(norm(ms)))])
 	if norm(dump.get("offers", [])) != norm(w.offers):
 		bad.append("offers (host %d, here %d)" % [(dump.get("offers", []) as Array).size(), w.offers.size()])
 	var hm := float(dump.get("minutes", -1))
@@ -59,6 +61,20 @@ static func compare(w: World, my_pid: int, dump: Dictionary, keys: Array) -> Arr
 		if q.away:
 			bad.append("player %s in play on the host, away here" % pid_s)
 	return bad
+
+
+## A section as the game reads it. Trees: a stump or a young tree's growth date is Trees.born_of (its own "born", else its regrowth
+## day): a felled tree loses "born" in the host's live world (World.fell) and a world loaded from a save writes it back as that same
+## value (World.load_dict), so a guest welcomed after a felling holds it written out. Both read the same; a stale date does not.
+static func _canon(k: String, v):
+	if k != "trees" or not v is Array:
+		return v
+	var out := []
+	for t in JSON.parse_string(JSON.stringify(v)):
+		if t is Dictionary and str(t.get("state", "")) != "grown":
+			t["born"] = Trees.born_of(t)
+		out.append(t)
+	return out
 
 
 ## Where two values first differ, briefly (for a failing check's message).
