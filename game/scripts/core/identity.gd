@@ -60,10 +60,10 @@ static func sync_name(w: World, n: NPC) -> void:
 
 
 ## The person is now `where` (from today).
-static func move(w: World, id: int, where: String) -> void:
+static func move(w: World, id: int, where: String, why := "") -> void:
 	if w.people.has(id):
 		if w.recorder != null:
-			w.recorder.identity_move(id, str(w.people[id].where), where)     # REC-19: leave, return, death, ancestor, player (same id throughout)
+			w.recorder.identity_move(id, str(w.people[id].where), where, why)     # REC-19: leave, return, death, ancestor, player (same id throughout)
 		w.people[id].where = where
 		w.people[id].since = w.day()
 

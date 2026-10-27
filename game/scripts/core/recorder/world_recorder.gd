@@ -639,7 +639,7 @@ func identity_registered(id: int, how: String, where: String, name: String, moth
 
 
 ## The register moves a person (Identity.move): leave and return (same id), death, ancestor, player.
-func identity_move(id: int, before: String, after: String) -> void:
+func identity_move(id: int, before: String, after: String, why := "") -> void:
 	var sub := "moved"
 	if after == Identity.DEAD:
 		sub = "died"
@@ -652,7 +652,7 @@ func identity_move(id: int, before: String, after: String) -> void:
 	elif before == Identity.VILLAGE:
 		sub = "left_village"
 	var ref := "p:%d" % id
-	occurrence("identity", "register", "identity", sub, ref, [[ref, "person"]], [[ref, "where", before, after, "identity"]], "ok", "", "from=%s to=%s" % [before, after])
+	occurrence("identity", "register", "identity", sub, ref, [[ref, "person"]], [[ref, "where", before, after, "identity"]], "ok", "", "from=%s to=%s%s" % [before, after, ("; cause=" + why) if why != "" else ""])
 
 
 ## Before Identity.succeed: the player role changes hands. Returns the open event and what the end compares with.
@@ -689,6 +689,7 @@ func birth(k: NPC, mother, father, h: int) -> void:
 ## Before World.kill mutates.
 func death_begin(n: NPC, cause: String) -> Array:
 	var ev := begin("life", "death", "life", "death", ref_of(n), _xy(n).merged({"detail": "cause=" + cause}))
+	_death_context(ev, n)                       # REC-DIAG: what they had and what was on offer
 	return [ev, n.coins]
 
 
@@ -1654,6 +1655,8 @@ func _day_summaries() -> void:
 		end(em, "ok" if ec.reservations.unbacked().is_empty() and ec.events.ordered() else "failed", "", "")
 		if not ec.reservations.unbacked().is_empty():
 			alert("violation", "economy.unbacked_reservation", "world", "unbacked=%d" % ec.reservations.unbacked().size(), em)
+	_economy_day(d)                              # REC-DIAG: food, households' resources, tills with their owners
+	_settlement_day(d)                           # REC-DIAG: the off-map settlements' conditions
 
 
 ## {key: change} of the numeric entries of `now` against `seen` (then updated), sorted keys.
@@ -1767,3 +1770,161 @@ static func net_digest(d: Dictionary) -> Dictionary:
 func flush_soon() -> void:
 	if net != null and is_instance_valid(net) and str(net.role) == "guest":
 		flush()
+
+
+# ================================================================ REC-DIAG (owner directive 2026-10-27, X20-COMPLETE s.2A)
+## The diagnostics the directive lists that the recorder did not yet capture: business tills' coin moves (currency transfers,
+## ownership of business money), property ownership and tenancy changes, the village's food and each household's resources once
+## a day, the off-map settlements' conditions once a day, migration with its reason, the cause of a settlement member's death,
+## and what a dying villager had and could have bought. Read only, as everything here; bounded: a till move or an ownership
+## change is one event when it happens; the summaries are one event a day each (rows: the tills, the households, the five
+## settlements). tools/recorder_archive.py turns them into findings (unusual deaths, economic instability) with seed, day, actor
+## and the cause chain; nothing here judges an outcome (WDR-022).
+var _actors = null                      # an EconActor resolver (read only, built on first use; the LE-01 model may be off)
+
+
+func _econ() -> EconActor:
+	if _actors == null:
+		_actors = EconActor.new(w)
+	return _actors
+
+
+## Units of the foods villagers eat (NPCBrain.EDIBLE) in an Inventory or an {item: n} dictionary.
+static func food_units(src) -> int:
+	var n := 0
+	for f in NPCBrain.EDIBLE:
+		n += int(src.count(f)) if src is Inventory else int((src as Dictionary).get(f, 0))
+	return n
+
+
+## Food on offer in the village now: in the stalls' stock, and carried by the villagers whose trade sells it.
+func food_for_sale() -> Dictionary:
+	var stalls := 0
+	for id in w.stalls:
+		stalls += food_units(w.stalls[id].get("stock", {}))
+	var traders := 0
+	for n: NPC in w.npcs:
+		if n.alive and n.job in ["merchant", "cook", "tavernkeeper", "farmer"]:
+			traders += food_units(n.inv)
+	return {"stalls": stalls, "traders": traders}
+
+
+## A business till's coins moved (BusinessMoney, Stalls), recorded right after both sides changed so the hourly coin audit
+## attributes it (it was an unattributed holder change before). `till` its ref ("front:<id>", "counter:<id>", "stall:<id>"),
+## `who` the purse at the other end (an NPC or a player; null: the manor's treasury), `amount` > 0 into the till, < 0 out of it,
+## `till_after` the till now, `why` the rule (sale, necessity, owner_pay, topup, escheat, commission, settle).
+func till_flow(till: String, who, amount: int, till_after: int, why: String) -> void:
+	if amount == 0:
+		return
+	var r := ref_of(who) if who != null else "manor"
+	var after := int(who.coins) if who != null else int(w.treasury)
+	var ev := begin("economy", "till", "transaction", "till_" + why, r, {"object": till})
+	participant(ev, r, "holder")
+	participant(ev, till, "till")
+	state_change(ev, r, "coins", after + amount, after, "business.till")
+	state_change(ev, till, "coins", till_after - amount, till_after, "business.till")
+	end(ev, "ok", "", "controller=%s" % _econ().controller(till))
+
+
+## World.set_owner / set_tenant changed who owns or leases a thing (a building, a stall, a pen, a plot, a field). Not before the
+## first hour (World.setup gives every building its first owner).
+func ownership(thing: Dictionary, prop: String, before: String, after: String) -> void:
+	if not _audited or before == after:
+		return
+	var obj := "place:" + str(thing.get("id", "?"))
+	var ev := begin("world", "property", "property", prop + "_changed", wref(after) if after != "" else wref(before), {"object": obj})
+	if before != "":
+		participant(ev, wref(before), "from")
+	if after != "":
+		participant(ev, wref(after), "to")
+	state_change(ev, obj, prop, before, after, "property")
+	var till := ""
+	for k in ["front", "counter"]:
+		if thing.has(k):
+			till += "%s_till=%d " % [k, int(thing[k].get("till", 0))]
+	end(ev, "ok", "", "type=%s %s" % [str(thing.get("type", thing.get("kind", ""))), till.strip_edges()])
+
+
+## Stalls.daily: a built stall whose holder is gone (left the village, or its household ended) passes to the manor; its session
+## was settled (till events) and `goods` units of its stock go to the granary.
+func business_abandoned(till: String, holder: String, goods: int) -> void:
+	occurrence("economy", "property", "property", "business_abandoned", wref(holder) if holder != "" else "manor", [[wref(holder), "from"], ["manor", "to"]],
+			[[till, "owner", holder, World.MANOR, "property"]], "ok", "", "holder gone; stock to the granary=%d" % goods, {"object": till})
+
+
+## Migration._book: people moved between the village and a settlement, with the reason.
+func migration(settlement: String, dir: String, reason: String, people: int, coins: int, goods: int) -> void:
+	occurrence("world", "migration", "migration", "migration_" + dir, "settlement:" + settlement, [["settlement:" + settlement, "settlement"]], [],
+			"ok", "", "reason=%s; people=%d; coins=%d; goods=%d" % [reason, people, coins, goods])
+
+
+## The day's economy (one event): food on offer and in store, each household's resources, each till with its controller.
+func _economy_day(d: int) -> void:
+	var ev := begin("economy", "day", "summary", "economy_day", "world", {"detail": "day=%d" % d})
+	var fs := food_for_sale()
+	factor(ev, "food", "for_sale_stalls", int(fs.stalls), "units", "economy_day")
+	factor(ev, "food", "carried_by_traders", int(fs.traders), "units", "economy_day")
+	factor(ev, "food", "granary", food_units(w.granary), "units", "economy_day")
+	var pantries := 0
+	for h in w.households.size():
+		var hh: Dictionary = w.households[h]
+		if hh.get("ended", false) or w.brain._members(h).is_empty():
+			continue
+		var r := World.hh_ref(h)
+		var fu := food_units(hh.pantry)
+		pantries += fu
+		factor(ev, r, "purse", w.property.purse(r), "coins", "economy_day")
+		factor(ev, r, "food_units", fu, "units", "economy_day")
+		factor(ev, r, "food_days", snappedf(float(hh.get("econ", {}).get("days", 0.0)), 0.01), "days", "economy_day")
+		factor(ev, r, "members", w.brain._members(h).size(), "people", "economy_day")
+	factor(ev, "food", "pantries", pantries, "units", "economy_day")
+	var e := _econ()
+	for t in e.till_refs():
+		factor(ev, "till", t, e.coins(t), "coins", "economy_day")
+		factor(ev, "till_owner", t, e.controller(t), "ref", "economy_day")
+	end(ev)
+
+
+## The day's off-map settlements (one event): people, households, the hungry, coins, the treasury, food, deaths and migrants so far.
+func _settlement_day(d: int) -> void:
+	if w.regions == null:
+		return
+	var ev := begin("world", "settlement", "summary", "settlement_day", "world", {"detail": "day=%d" % d})
+	for s in w.regions.list:
+		var hungry := 0
+		var food := 0
+		for h in s.hh:
+			if h.alive:
+				food += food_units(h.pantry)
+				if int(h.hungry) > 0:
+					hungry += 1
+		var o := "settlement:" + str(s.id)
+		factor(ev, o, "population", s.population(), "people", "settlement_day")
+		factor(ev, o, "households", s.households(), "households", "settlement_day")
+		factor(ev, o, "hungry_households", hungry, "households", "settlement_day")
+		factor(ev, o, "coins", s.coins(), "coins", "settlement_day")
+		factor(ev, o, "treasury", s.treasury(), "coins", "settlement_day")
+		factor(ev, o, "food_units", food + food_units(s.gov.granary), "units", "settlement_day")
+		factor(ev, o, "deaths", int(s.flows.get("deaths", 0)), "people", "settlement_day")
+		factor(ev, o, "age_deaths", int(s.flows.get("age_deaths", 0)), "people", "settlement_day")
+	end(ev)
+
+
+## A villager's death (World.kill, before it mutates): what they and their household held and what the village had on offer, so
+## an unusual death (hunger while coins or food were at hand) can be told from the archive.
+func _death_context(ev: int, n: NPC) -> void:
+	if ev <= 0:
+		return
+	factor(ev, "deceased", "coins", int(n.coins), "coins", "death")
+	factor(ev, "deceased", "food_carried", food_units(n.inv), "units", "death")
+	factor(ev, "deceased", "hunger", snappedf(n.hunger, 0.1), "hunger", "death")
+	if n.household >= 0 and n.household < w.households.size():
+		var r := World.hh_ref(n.household)
+		var hh: Dictionary = w.households[n.household]
+		factor(ev, "household", "purse", w.property.purse(r), "coins", "death")
+		factor(ev, "household", "food_units", food_units(hh.pantry), "units", "death")
+		factor(ev, "household", "food_days", snappedf(float(hh.get("econ", {}).get("days", 0.0)), 0.01), "days", "death")
+	var fs := food_for_sale()
+	factor(ev, "village", "food_for_sale_stalls", int(fs.stalls), "units", "death")
+	factor(ev, "village", "food_carried_by_traders", int(fs.traders), "units", "death")
+	factor(ev, "village", "granary_food", food_units(w.granary), "units", "death")

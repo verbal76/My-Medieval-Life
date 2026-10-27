@@ -91,6 +91,7 @@ class Deep:
         self.snap_prev = None
         self.snap_bad = []
         self.decisions = {}                     # choice event id -> chosen
+        self.diag = Diag()                      # REC-DIAG: abnormal-run evidence (findings, never problems)
 
     # --- feeding
     def event_rows(self, cols, rows):
@@ -114,12 +115,13 @@ class Deep:
             if (cat in ("life", "contract", "credit", "network", "summary") or (cat == "judgment" and subsys in ("fact", "belief", "choice", "gossip"))
                     or cat in ("action", "decision", "transaction", "verb")) and isinstance(i, int):
                 if cat in ("action", "decision", "transaction", "verb"):
-                    self.ev[i] = (row[0], row[1], "", "", cat, "", actor, row[7], "")       # light: for after-death checks
+                    self.ev[i] = (row[0], row[1], "", "", cat, sub, actor, row[7], "")      # light: after-death checks, a death's cause chain
                 else:
                     self.ev[i] = row
                     self.keep.add(i)
             if cat == "decision" and row[7] == "empty":
                 self.empty_dec[(actor, row[0])] += 1
+            self.diag.event(i, row, g(r, "detail", ""))
 
     def other_rows(self, table, cols, rows):
         ix = {c: i for i, c in enumerate(cols)}
@@ -131,6 +133,8 @@ class Deep:
                 for c in ("from", "to"):
                     if c in ix:
                         self.refs.append(("link." + c, r[ix[c]]))
+            if table in ("factor", "participant"):
+                self.diag.other(table, ix, r)
             if table == "participant" and "event" in ix:
                 self.part_rows[r[ix["event"]]].append((r[ix["ref"]], r[ix["role"]]))
             elif table == "decision" and "event" in ix:
@@ -166,6 +170,7 @@ class Deep:
                 if isinstance(s.get("starving"), int) and isinstance(s.get("alive"), int) and s["starving"] > s["alive"]:
                     self.snap_bad.append("snapshot starving %s above alive %s at day %s" % (s["starving"], s["alive"], s.get("day")))
                 self.snap_prev = s
+                self.diag.snapshot(s)
 
     # --- results
     def finish(self, rep, require_flags=None, require_rows=None):
@@ -252,6 +257,7 @@ class Deep:
                 p[0] += 1
                 p[1].add(e[6])
                 p[2][str(self.decisions.get(i))] += 1
+        rep["abnormal"] = self.diag.report(self.sess, self.ev)
         rep["choice_profiles"] = {k: {"choices": v[0], "choosers": len(v[1]), "distinct_chosen": len(v[2]),
                                       "forgo_or_none": v[2].get("forgo", 0) + v[2].get("none", 0)} for k, v in sorted(prof.items())}
 
@@ -293,6 +299,191 @@ class Deep:
         out["by_profile"] = dict(out["by_profile"])
         out["complete"] = out["later_choices_hearsay"] > 0
         return out
+
+
+class Diag:
+    """REC-DIAG (owner directive 2026-10-27, X20-COMPLETE s.2A): evidence of abnormal runs, read from the rows the recorder writes
+    (life and identity deaths with their context factors, the daily economy and settlement summaries, till moves, property changes,
+    abandoned businesses, migrations, the hourly snapshots). Every finding names the seed, the day, the actor and the cause chain.
+    These are measures for review, never problems: a village may fail (WDR-022); the simulation's integrity is checked elsewhere."""
+
+    RUN = 3                                     # consecutive days that make a run worth reporting (a review measure, not a limit)
+    SOURCES = ("economy_day", "settlement_day", "death")
+    KEEP = ("economy_day", "settlement_day", "death", "died", "migration_in", "migration_out", "business_abandoned",
+            "owner_changed", "tenant_changed", "till_escheat")
+    CAP = 40
+
+    def __init__(self):
+        self.ev = {}                            # id -> (day, minute, subtype, actor, detail)
+        self.fac = defaultdict(list)            # event id -> [(option, factor, value)]
+        self.parts = defaultdict(list)          # kept event id -> [(ref, role)]
+        self.days = {}                          # day -> the day's last snapshot
+
+    def event(self, i, row, detail):
+        sub = row[5]
+        if sub in self.KEEP and isinstance(i, int):
+            self.ev[i] = (row[0], row[1], sub, row[6], str(detail or ""))
+
+    def other(self, table, ix, r):
+        if table == "factor":
+            if r[ix["source"]] in self.SOURCES:
+                self.fac[r[ix["event"]]].append((r[ix["option"]], r[ix["factor"]], r[ix["value"]]))
+        elif table == "participant" and r[ix["role"]] in ("from", "to"):      # the property and abandonment events' parties only
+            self.parts[r[ix["event"]]].append((r[ix["ref"]], r[ix["role"]]))
+
+    def snapshot(self, s):
+        if isinstance(s.get("day"), int):
+            self.days[s["day"]] = s
+
+    @staticmethod
+    def _detail(d, key):
+        for part in d.replace(";", " ").split():
+            if part.startswith(key + "="):
+                return part[len(key) + 1:]
+        return ""
+
+    @classmethod
+    def runs(cls, series, test):
+        """[(first day, last day)] of the runs of at least RUN consecutive days where test(value) holds."""
+        out, run = [], None
+        for d, v in series:
+            if test(v):
+                if run is not None and d == run[1] + 1:
+                    run[1] = d
+                else:
+                    run = [d, d]
+            else:
+                run = None
+            if run is not None and run[1] - run[0] + 1 == cls.RUN:
+                out.append(run)                 # the same list grows with the run: its last day is filled in below
+        return [(r[0], r[1]) for r in out]
+
+    @staticmethod
+    def _cause(detail):
+        """The cause of a death event's detail ("cause=old age; role=..."), whole."""
+        for part in detail.split(";"):
+            part = part.strip()
+            if part.startswith("cause="):
+                return part[len("cause="):]
+        return ""
+
+    def report(self, sess, light):
+        seed = sess.get("seed")
+        found = []
+
+        def add(kind, day, actor, evidence, chain=None):
+            found.append({"kind": kind, "seed": seed, "day": day, "actor": actor, "evidence": evidence, "chain": chain or []})
+
+        # deaths: villagers (life|death with their context), off-map members (identity|died with the settlement's cause)
+        by_actor = defaultdict(list)
+        for i, e in light.items():
+            if e[4] in ("action", "decision", "transaction", "verb"):
+                by_actor[e[6]].append((e[0], e[1], i, e[4], e[5], e[7]))
+        offmap = Counter()
+        for i, (day, minute, sub, actor, detail) in sorted(self.ev.items()):
+            if sub == "death":
+                cause = self._cause(detail)
+                if "role=bandit" in detail:
+                    continue
+                f = {"%s.%s" % (o, k): v for o, k, v in self.fac.get(i, [])}
+                means = {k: v for k, v in f.items() if k in ("deceased.coins", "deceased.food_carried", "household.purse", "household.food_units",
+                                                             "village.food_for_sale_stalls", "village.food_carried_by_traders", "village.granary_food")
+                         and isinstance(v, (int, float)) and v > 0}
+                chain = [{"event": j, "day": d, "minute": m, "category": c, "subtype": s, "outcome": o}
+                         for d, m, j, c, s, o in sorted(x for x in by_actor.get(actor, []) if (x[0], x[1]) <= (day, minute))[-8:]]
+                if cause == "starvation" and means:
+                    add("starved_with_means", day, actor, {"cause": cause, "event": i, "means": means, "context": f, "detail": detail}, chain)
+                elif cause not in ("old age", "starvation"):
+                    add("violent_or_accidental_death", day, actor, {"cause": cause, "event": i, "context": f, "detail": detail}, chain)
+                elif cause == "starvation":
+                    add("starved_without_means", day, actor, {"cause": cause, "event": i, "context": f, "detail": detail}, chain)
+            elif sub == "died":
+                frm = self._detail(detail, "from")
+                cause = self._cause(detail) or "unrecorded"
+                if frm not in ("", "village", "player"):
+                    offmap[(frm, cause)] += 1
+                    if cause in ("hunger", "no_household_left"):
+                        add("settlement_" + cause + "_death", day, actor, {"settlement": frm, "event": i,
+                                                                           "settlement_day": self._settlement_on(frm, day)})
+        # economic instability: the village's daily series (the day's last snapshot)
+        days = sorted(self.days)
+        def series(k):
+            return [(d, self.days[d].get(k)) for d in days if isinstance(self.days[d].get(k), (int, float))]
+        tre = series("treasury")
+        for a, b in self.runs(list(zip([d for d, _ in tre[1:]], [y - x for (_, x), (_, y) in zip(tre, tre[1:])])), lambda v: v < 0):
+            v0 = dict(tre).get(a - 1, dict(tre)[a])
+            add("treasury_drain", a, "manor", {"from_day": a, "to_day": b, "treasury_before": v0, "treasury_after": dict(tre)[b]})
+        for a, b in self.runs(tre, lambda v: v <= 0):
+            add("treasury_empty", a, "manor", {"from_day": a, "to_day": b})
+        for a, b in self.runs(series("hh_purse_min"), lambda v: v <= 0):
+            add("household_purse_at_zero", a, "households", {"from_day": a, "to_day": b, "note": "the poorest household's purse stayed at 0"})
+        for a, b in self.runs(series("food_days"), lambda v: v < 1):
+            add("village_food_short", a, "village", {"from_day": a, "to_day": b, "food_days": dict(series("food_days"))[a]})
+        # the daily economy summary: households in hardship, tills stuck at zero, tills without an owner
+        hh = defaultdict(list)
+        tills = defaultdict(list)
+        for i, (day, minute, sub, actor, detail) in sorted(self.ev.items()):
+            if sub != "economy_day":
+                continue
+            f = defaultdict(dict)
+            for o, k, v in self.fac.get(i, []):
+                f[o][k] = v
+            for o, vals in f.items():
+                if o.startswith("hh:"):
+                    hh[o].append((day, vals))
+            for t, c in f.get("till", {}).items():
+                tills[t].append((day, c, f.get("till_owner", {}).get(t, "")))
+        for h, rows in sorted(hh.items()):
+            for a, b in self.runs([(d, v) for d, v in rows], lambda v: v.get("purse", 1) <= 0 and isinstance(v.get("food_days"), (int, float)) and v["food_days"] < 1):
+                add("household_hardship", a, h, {"from_day": a, "to_day": b, "first": dict(rows)[a], "last": dict(rows)[b]})
+        for t, rows in sorted(tills.items()):
+            if any(not o for _, c, o in rows):
+                add("till_without_owner", next(d for d, c, o in rows if not o), t, {"rows": rows[:5]})
+            had = False
+            ser = []
+            for d, c, o in rows:
+                had = had or (isinstance(c, int) and c > 0)
+                if had:
+                    ser.append((d, c))
+            for a, b in self.runs(ser, lambda v: v == 0):
+                add("till_stuck_at_zero", a, t, {"from_day": a, "to_day": b, "owner": dict((d, o) for d, c, o in rows).get(a, "")})
+        # the settlements: coins drained, households hungry day after day
+        st = defaultdict(list)
+        for i, (day, minute, sub, actor, detail) in sorted(self.ev.items()):
+            if sub == "settlement_day":
+                f = defaultdict(dict)
+                for o, k, v in self.fac.get(i, []):
+                    f[o][k] = v
+                for o, vals in f.items():
+                    st[o].append((day, vals))
+        for o, rows in sorted(st.items()):
+            co = [(d, v.get("coins")) for d, v in rows if isinstance(v.get("coins"), (int, float))]
+            for a, b in self.runs(list(zip([d for d, _ in co[1:]], [y - x for (_, x), (_, y) in zip(co, co[1:])])), lambda v: v < 0):
+                add("settlement_coins_drain", a, o, {"from_day": a, "to_day": b, "coins_before": dict(co).get(a - 1), "coins_after": dict(co)[b]})
+            for a, b in self.runs([(d, v.get("hungry_households", 0)) for d, v in rows], lambda v: isinstance(v, (int, float)) and v > 0):
+                add("settlement_hunger", a, o, {"from_day": a, "to_day": b, "first": dict(rows)[a], "last": dict(rows)[b]})
+        # businesses abandoned (a holder who left or ended), tills escheated, property passing to the manor; migrations
+        mig = Counter()
+        for i, (day, minute, sub, actor, detail) in sorted(self.ev.items()):
+            if sub == "business_abandoned":
+                add("business_abandoned", day, actor, {"event": i, "detail": detail, "parties": self.parts.get(i, [])})
+            elif sub == "till_escheat":
+                add("till_escheated", day, actor, {"event": i, "detail": detail, "parties": self.parts.get(i, [])})
+            elif sub in ("owner_changed", "tenant_changed") and ("front_till" in detail or "counter_till" in detail):
+                add("business_premises_changed_hands", day, actor, {"event": i, "change": sub, "detail": detail, "parties": self.parts.get(i, [])})
+            elif sub.startswith("migration_"):
+                mig[(sub[len("migration_"):], self._detail(detail, "reason"))] += int(self._detail(detail, "people") or 0)
+        counts = Counter(f["kind"] for f in found)
+        return {"seed": seed, "counts": dict(sorted(counts.items())), "findings": found[:self.CAP], "findings_total": len(found),
+                "settlement_deaths": {"%s|%s" % k: n for k, n in sorted(offmap.items())},
+                "migrations": {"%s|%s" % k: n for k, n in sorted(mig.items())}, "run_days": self.RUN,
+                "note": "evidence for review; never pass/fail (WDR-022)"}
+
+    def _settlement_on(self, sid, day):
+        for i, (d, minute, sub, actor, detail) in self.ev.items():
+            if sub == "settlement_day" and d == day:
+                return {k: v for o, k, v in self.fac.get(i, []) if o == "settlement:" + sid}
+        return {}
 
 
 def exercised(events, props):

@@ -3309,7 +3309,7 @@ func release_person_id(id: int) -> void:
 ## What a settlement tells the register (OffMapSettlement.person_hook).
 func offmap_person(event: String, info: Dictionary) -> int:
 	if event == "death":
-		Identity.move(self, int(info.id), Identity.DEAD)
+		Identity.move(self, int(info.id), Identity.DEAD, str(info.get("cause", "")))
 		return int(info.id)
 	var id := new_offmap_person_id()
 	Identity.register_member(self, id, str(info.settlement), int(info.sex), int(info.born), {}, int(info.mother), int(info.father), "settlement_birth")
@@ -5389,6 +5389,8 @@ func holds(ref: String, thing: Dictionary) -> bool:
 
 
 func set_owner(thing: Dictionary, ref: String) -> void:
+	if recorder != null and thing.has("owner"):
+		recorder.ownership(thing, "owner", str(thing.owner), ref)     # REC-DIAG
 	thing.owner = ref
 	if str(thing.get("type", "")) in ["workshop", "player_house"]:          # a workshop's stations change hands with it
 		for id in stations:
@@ -5399,6 +5401,8 @@ func set_owner(thing: Dictionary, ref: String) -> void:
 ## Let it to `ref` for `rent` coins a week (the first week counts from today), or end the letting
 ## with ref "".
 func set_tenant(thing: Dictionary, ref: String, rent := 0) -> void:
+	if recorder != null:
+		recorder.ownership(thing, "tenant", str(thing.get("tenant", "")), ref)     # REC-DIAG
 	thing.tenant = ref
 	if ref == "" or rent <= 0:
 		for k in ["rent", "due_day", "arrears", "missed"]:
