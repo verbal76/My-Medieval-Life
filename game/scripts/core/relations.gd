@@ -550,7 +550,8 @@ func propose(a: int, n: NPC) -> String:
 		_raise(t, 0.0, -float(cfg().too_soon_penalty), false)
 		w.stat("proposals_declined")
 		return "It's too soon. Ask me again when we know each other better."
-	if JudgmentLive.aspiring(w) and not Life.is_player_id(a) and w.npc(a) != null and not JudgmentLive.accepts_proposal(w, n, w.npc(a)):
+	var suitor = (w.player_of_id(a) if Life.is_player_id(a) else w.npc(a)) if JudgmentLive.aspiring(w) else null
+	if suitor != null and not JudgmentLive.accepts_proposal(w, n, suitor):     # PROP-EQ: a player's proposal is weighed as a villager's
 		t.stage = ""                                  # WDR-011-Q8 A (aspirations on only): an eligible proposal refused by the villager's own
 		t.refused = true                              # preferences ends the courtship, as a rival does; the suitor looks elsewhere
 		w.stat("proposals_refused")
