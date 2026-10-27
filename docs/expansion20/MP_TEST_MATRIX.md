@@ -1,0 +1,131 @@
+# Multiplayer test matrix (Expansion 20 final validation, phase 4.5)
+
+Owner directive 2026-10-27, `docs/directives/2026-10-27_x20_final_validation_recorder_release.md`, phase 4.5 ("Multiplayer
+simulation") and phase 5 item 11; the approved design is unchanged: `docs/directives/2026-10-24_master_multiplayer_directive.md`
+(a host-owned world, about three or four players, time stops when the host leaves) and
+`docs/directives/2026-10-27_mp_interact_begin_now.md` (MP-INTERACT-01). Branch `wip/x20-mptest`, based on `87b69ab`
+(MP-INTERACT-01 merged onto Expansion 20).
+
+## What "automated-verified" means here
+
+**automated-verified (loopback, this machine)**: separate Godot 4.7.2 processes on one Linux machine, each running the real game scene
+headless, talking ENet over 127.0.0.1. Each platform's *input path* was driven by the events that platform produces (a screen touch
+at the scene's own coordinates, a left mouse click, key presses, joypad button events), through the game's own input handlers. No
+Android, Windows or Steam Deck hardware, no physical touchscreen, controller or mouse, no Wi-Fi, cellular or internet route, no
+firewall and no exported build were used. A simulated screen size is not a device. Every row below therefore still needs the owner's
+devices before it can be called device-validated (the register's `playtest` field).
+
+**OWNER DEVICE NEEDED**: only a real device or a real network can settle it.
+
+## Tests
+
+| Test | Players | What it exercises |
+|---|---|---|
+| `game/tests/net_mp4_test.gd` (new) | 1 host + 2 guests, then 1 host + 3 guests; a 5th refused | every player choosing every other by tap, click, keys and pad; requests from several players applied in the same host frame; message delivery and order; every participant's copy compared with the host's; guest leave and return with offers pending both ways; a save with all guests playing; host quit and return (time stopped), host killed and return; coins and goods over all four players |
+| `game/tests/net_interact_test.gd` (MP-INTERACT-01) | 1 host + 2 guests | the request flow end to end on each side's own screen: touch gift, mouse sale, pad decline, guest-to-guest message and gift, contract and delivery, disconnect mid-offer, host restart with an offer pending |
+| `game/tests/mp_interact_ui_test.gd` | one process, host with two guest characters | targeting beside villagers, workstations, stalls; several players; moving players; cycling; other level; disconnected and reconnected; touch at 20:9, mouse, keys, pad |
+| `net_g1_test`, `net_batch_b_test`, `net_c_test`, `net_family_test`, `net_fauna_test`, `net_ui_test`, `multiplayer_c_test` | 1 host + 1 or 2 guests | joining, refusals, persistence, verbs as the guest, family, animals, the interface at phone and desktop sizes |
+
+The harness pieces: `net_host.gd` (the host process: commands and a status file; new: `hold`/`release` to apply several players'
+requests in one frame, `freeze`/`thaw` and `dump` with `full` for a consistent snapshot, `put`, `offer`, `save`, `fell`),
+`net_interact_guest.gd` (a guest process; new: an optional file tag so several can run, keys, pad, mouse, leave and join, `compare`),
+`net_snapshot.gd` (new: one copy of the world against the host's frozen dump).
+
+## Configurations
+
+| Configuration | Status |
+|---|---|
+| 1 host + 2 guests (three players) | automated-verified (loopback, this machine): `net_mp4_test` (targets, a tap, a message, a full copy comparison for each guest) and `net_interact_test` (the whole interaction flow) |
+| 1 host + 3 guests (four players, the design's maximum, `NetProtocol.MAX_PLAYERS`) | automated-verified (loopback, this machine): `net_mp4_test`; a fifth player is refused "full" |
+| Three or four players on real devices over a LAN | OWNER DEVICE NEEDED |
+| Over the internet (NAT, relay, cellular host) | OWNER DEVICE NEEDED (and the internet path itself is outside this validation: LAN and manual IP only, MP-D5) |
+
+## Host and guest platform pairs
+
+The code paths are the same on every platform (no platform branch in the network or interaction code); a pair differs only in which
+input path each side uses and in the device and network. Both directions (host initiates, guest initiates) were driven for each
+input path in the four-player test, and guest to guest as well.
+
+| Host | Guest | Host's input | Guest's input | Status |
+|---|---|---|---|---|
+| Android | Android | touch | touch | automated-verified (loopback, this machine) for the input paths; OWNER DEVICE NEEDED (two phones, a phone hosting on Wi-Fi, backgrounding, sleep) |
+| Android | Windows | touch | mouse, keys | automated-verified (loopback, this machine); OWNER DEVICE NEEDED |
+| Android | Linux | touch | mouse, keys, pad | automated-verified (loopback, this machine); OWNER DEVICE NEEDED (Steam Deck as guest) |
+| Windows | Android | mouse, keys | touch | automated-verified (loopback, this machine); OWNER DEVICE NEEDED (the owner's failed playtest pair: recheck first) |
+| Windows | Windows | mouse, keys | mouse, keys | automated-verified (loopback, this machine); OWNER DEVICE NEEDED (Windows firewall prompt, two PCs) |
+| Windows | Linux | mouse, keys | mouse, keys, pad | automated-verified (loopback, this machine); OWNER DEVICE NEEDED |
+| Linux | Android | mouse, keys | touch | automated-verified (loopback, this machine); OWNER DEVICE NEEDED for the phone |
+| Linux | Windows | mouse, keys | mouse, keys | automated-verified (loopback, this machine); OWNER DEVICE NEEDED for the Windows PC |
+| Linux | Linux | mouse, keys, pad | mouse, keys, pad | automated-verified (loopback, this machine): all processes here are Linux; a real two-machine LAN and the Steam Deck are OWNER DEVICE NEEDED |
+
+The platform a process "is" in these tests is the input path it uses; every process ran the Linux editor binary, not an exported
+Android, Windows or Linux build.
+
+## Input methods
+
+| Input | Choosing another player | Opening their window, answering | Status |
+|---|---|---|---|
+| Touch (Android) | a tap on the character (Ann and Cara on three others each) | the window's buttons; the tap walks up and opens | automated-verified (loopback, this machine) as screen-touch events; OWNER DEVICE NEEDED (finger accuracy on a real screen, Pixel 10 Pro XL) |
+| Mouse (Windows, Linux) | a left click on the character (the host and Dan on three others each) | the window's buttons | automated-verified (loopback, this machine); OWNER DEVICE NEEDED (a real mouse on Windows) |
+| Keys (Windows, Linux) | turning to someone, Q round those in front, E (the host and Dan on three others each) | E, the window's buttons | automated-verified (loopback, this machine); OWNER DEVICE NEEDED |
+| Controller (pad) | turning, D-pad round those in front, A (Ann on three others); B back to play | A, B | automated-verified (loopback, this machine) as joypad events; OWNER DEVICE NEEDED (a physical controller on Windows and Linux, the Steam Deck's built-in controls) |
+
+Keys and pad choose among the people in front of the player, within the same short reach as villagers (`World.TARGET_PROBE`, as
+designed in MP-INTERACT-01); a player two and a half tiles away is chosen by tap or click, or by stepping closer. That is the approved
+targeting rule, not a defect.
+
+## Results on this machine
+
+`net_mp4_test`: **138 checks, 0 failures, three consecutive runs** (192 s, 200 s, 186 s, on a machine shared with other
+workers' simulations), no script errors. Run once with the two fixes below reverted: 10 failures (the regression checks).
+
+| Scenario | Exercised (asserted that it happened) |
+|---|---|
+| 1 host + 2 guests | each copy has the other two in play; Ann's target is the host she faces; Ann taps Cara and Cara taps the host: their windows; Cara's message reaches the host's journal; both guests' copies equal the host's world |
+| 1 host + 3 guests | four distinct permanent pids; a fifth refused "full"; twelve directed choices: the host by mouse and by keys, Ann by touch and by pad, Cara by touch, Dan by mouse and by keys, each window naming the right player |
+| Same tick (`hold`/`release`: held requests applied in one host frame, checked by count) | one ore offered to two players, both accept: it moves once, the late one told "no longer has it"; one buyer accepts two sales he can pay one of: paid once, the other left waiting (and still on his screen after a second refused try); two gifts offered in one frame and accepted in one frame: each gives one, gets one; two players pick one plant: one gets it, the host gives the other nothing |
+| Delivery and order | six messages from two senders, turn about: each once, each sender's in order, the recipient's copy in the host's order, the last kept in his journal; five sent in one frame: once each, in order |
+| Consistency (host frozen, `dump`; each copy compared: 23 synchronized sections, the offers, the clock, 110 villagers alive or not, every player's place, no other player's pack, its own pack and purse) | Ann, Cara and Dan at 1+3 after a tree was felled, after the concurrent actions, after two guests left and came back, after the host's restart, after the host was killed; Ann and Cara at 1+2 |
+| Guest away and back | Dan leaves with an offer pending to him: away on the host, nobody can choose him, his machine holds no world; back as the same pid, the offer still his; accepted, the ore moves once. Cara offers and leaves: Ann's acceptance moves nothing ("They are gone."); Cara back with her ore and no offer |
+| Save with guests playing, host away and back | the save holds all four players and the pending offer; the host quits: every guest out, no machine holds the world; 8.8 s later the loaded clock equals the saved one to the hundredth of a minute (no minute passed), coins and goods identical, every guest out of play until rejoining; all three rejoin as the same characters with the same packs, purses and places; time runs again; the pending offer accepted after the restart moves once |
+| Host killed after a save | every guest told "Host disconnected. The world has stopped until the host plays again."; back from the save, the clock unchanged, all three return |
+| Conservation | coins conserved on the host after every step and over the run; ore counted over all four players before and after every exchange; no guest ever wrote a save |
+
+### Defects found and fixed (game code, `game/scripts/net/`)
+
+1. **A refused acceptance made a waiting offer vanish from the recipient's screen** (`net_session.gd`). Root cause: a guest's copy takes
+   an answered offer away at once (`World.player_answer` on a guest) and a mirrored `player_offer` adds one, before the host
+   replies; when the host refuses (the buyer is short of coins, not beside them, "You have asked already") its offers do not change,
+   so `NetSync.changed` never resends them and the copy keeps its guess. Reproduction: Dan, short of coins, accepts a player's sale;
+   the host refuses and keeps the offer; Dan's copy has no offer and no Decline button, for the rest of the day. Fix: after applying a
+   guest's `player_offer` or `player_answer`, the host marks that guest's copy of the offers stale so they are sent again.
+   Regression: `net_mp4_test` "the refused acceptance leaves the offer waiting on the host and on Dan's screen", "Dan declines the
+   other: nothing waits".
+2. **A tree felled while guests watched kept its old growth date on their copies** (`net_sync.gd`). Root cause: `NetSync.adopt` copied
+   each field of the host's tree record but never removed one the host had dropped (`World.fell` erases `born`). Reproduction: a
+   woodcutter or the test fells a tree; each guest's stump keeps `born` -10000000 (a grown tree's) where the host reads its regrowth
+   day. No visible effect was found (the host sets a new date when the stump sprouts and sends it), but the copies differed from the
+   host. Fix: fields absent from the host's record are removed. Regression: the consistency checks after a felling.
+
+### Findings not fixed (for the lead)
+
+- The second of two players picking one plant at the same moment sees "+1" on its own screen for a moment: its machine shows its own
+  run of the verb, and the host's empty answer has no words, so `NetSession.s_reply` says nothing while its pack is put right. Nothing
+  is duplicated (host and copies agree); a message for "someone was quicker" would be new player-facing wording, so it is left to the
+  lead.
+- Every guest's copy holds every offer and message between all players (the "player_offers" section), including messages between two
+  other players; the interface shows each player only their own. A design question (what a guest's machine may hold), not changed.
+- Keys and pad choose only among people in front of the player within the villagers' reach; a player 2.4 tiles away needs a tap, a
+  click or a step closer. That is the MP-INTERACT-01 rule, recorded here so a device tester expects it.
+
+## What still needs the owner's devices
+
+1. Every platform pair above on real hardware, both directions, at least once: choose, open, offer, accept and decline.
+2. Three and four players at once on real devices (one host, two and three guests), including two guests answering one host offer
+   at the same moment.
+3. A phone hosting: the screen kept on (`DisplayServer.screen_set_keep_on`), backgrounding and screen lock while guests play (the
+   world must stop for everyone if the host's app is suspended), a Wi-Fi change.
+4. The host closing the game and opening it again while guests wait: guests see "Host disconnected. The world has stopped until the
+   host plays again." and rejoin as the same characters.
+5. Touch accuracy on a real phone screen; a real mouse; a physical controller on Windows and Linux; the Steam Deck.
+6. The Windows firewall prompt on first hosting; a real LAN between two machines (loopback has no packet loss or latency).
