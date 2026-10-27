@@ -2,20 +2,20 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-Authority: owner directive 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md): phase 1 only: LE-00 audit, registration, data contracts and isolated foundation components behind disabled hooks on wip/expansion20-preparation; no live economy, no merge to staging or main, no policy for open OD-LE decisions
+Authority: owner directive 2026-10-26 (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md, superseding the 2026-10-23 phase 1 limit): substantive Expansion 20 implementation on wip/expansion20; policies for open OD-LE decisions still need the owner. RELEASE BLOCKER (owner 2026-10-27, docs/directives/2026-10-27_multiplayer_interaction_release_blocker.md): no Expansion 20 build of any kind, private drafts included, until MP-INTERACT-01 is integrated and validated
 
 Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 80 |
-| Integrated | 64 of 80 (80%) |
-| Automated tests passed | 65 of 80 (81%) |
-| Integration verified | 36 of 80 (45%) |
-| Gameplay verified | 0 of 80 (0%) |
-| Owner playtested | 0 of 80 (0%) |
-| Complete | 2 of 80 (2%) |
-| Open (release blockers) | 78 |
+| Approved requirements in scope | 81 |
+| Integrated | 64 of 81 (79%) |
+| Automated tests passed | 65 of 81 (80%) |
+| Integration verified | 36 of 81 (44%) |
+| Gameplay verified | 0 of 81 (0%) |
+| Owner playtested | 0 of 81 (0%) |
+| Complete | 2 of 81 (2%) |
+| Open (release blockers) | 79 |
 | Open owner decisions (blocking) | 15 (11) |
 
 ## In development (worker assigned) (3)
@@ -99,7 +99,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 |---|---|---|---|---|---|---|---|---|
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (12)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (13)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -112,6 +112,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| MP-INTERACT-01 | Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller) | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Implement as the final Expansion 20 batch on the frozen integrated baseline (after the Build 19 recovery, LE work, Android usability and the Messages journal). No Expansion 20 build of any kind (public or private) until this is integrated and validated. | MP-01, design: UNKNOWN | UNKNOWN |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) | SJD-G | XS |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | the 30-planks verification scenario on top of GM-01 (batch R4) | design: UNKNOWN | UNKNOWN |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | OWNER APPROVED | NOT STARTED | none | NOT TESTED | aspirations in five domains from real state as a decision factor; design note first, then code behind a flag (batch R5) | design: DESIGN WORK REQUIRED | L |

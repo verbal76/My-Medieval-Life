@@ -10,6 +10,14 @@ context, where measurable) and before a session ends. The previous long-form sta
 
 **Updated:** 2026-10-26 (Build 22 private draft released; Expansion 20 and the Build 19 recovery in progress).
 
+## RELEASE BLOCKER: MP-INTERACT-01 (owner, 2026-10-27, `docs/directives/2026-10-27_multiplayer_interaction_release_blocker.md`)
+
+No Expansion 20 build of any kind (public or private draft, APK, Windows or Linux) until player-to-player selection and
+interaction is fixed, integrated and validated for host and guest on Windows, Linux and Android with keyboard and mouse,
+touch and controller (register `MP-INTERACT-01`). Playtest: the Windows player saw Bob (Android) but could not select or
+interact with him. Order: finish the other Expansion 20 work, freeze the integrated baseline, then integrate this as the last
+batch, run the multiplayer and combined gates, verify the three exports, write the release-readiness report. Build 22 is not reopened.
+
 ## CURRENT: Build 22, then Expansion 20 (owner, 2026-10-26, `docs/directives/2026-10-26_build22_expansion20_execution_authorization.md`)
 
 Order: (1) Build 22 = the five deferred mini-build areas + the seven 2026-10-26 playtest items; (2) integrate and validate on

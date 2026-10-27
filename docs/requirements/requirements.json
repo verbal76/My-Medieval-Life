@@ -37,7 +37,7 @@
    "implementation_authorized": true,
    "integration_branch": "wip/expansion20",
    "released": "",
-   "authority": "owner directive 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md): phase 1 only: LE-00 audit, registration, data contracts and isolated foundation components behind disabled hooks on wip/expansion20-preparation; no live economy, no merge to staging or main, no policy for open OD-LE decisions"
+   "authority": "owner directive 2026-10-26 (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md, superseding the 2026-10-23 phase 1 limit): substantive Expansion 20 implementation on wip/expansion20; policies for open OD-LE decisions still need the owner. RELEASE BLOCKER (owner 2026-10-27, docs/directives/2026-10-27_multiplayer_interaction_release_blocker.md): no Expansion 20 build of any kind, private drafts included, until MP-INTERACT-01 is integrated and validated"
   },
   "21": {
    "name": "Village Politics",
@@ -31938,6 +31938,47 @@
      "why": "docs/directives/2026-10-24_owner_multiplayer_decisions.md"
     }
    ]
+  },
+  {
+   "id": "MP-INTERACT-01",
+   "kind": "approved",
+   "title": "Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller)",
+   "description": "Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller)",
+   "source": "docs/directives/2026-10-27_multiplayer_interaction_release_blocker.md",
+   "owner_wording": "No next Expansion 20 playtest release without the multiplayer interaction fix. This restriction includes private releases. ... Finish the other development work first if that is most efficient. Integrate multiplayer last. But do not ship without it.",
+   "approval": "owner, 2026-10-27",
+   "acceptance": [
+    "each player can select the other with keyboard and mouse, touch and controller, including when NPCs or objects are nearby, and open the interaction menu",
+    "host and guest can each initiate: conversation, gifts, trading, contracts and relationship interactions as the approved multiplayer specifications define; mutual-agreement interactions let the receiver accept, decline or negotiate where the system supports it",
+    "reuses the existing network architecture, authoritative world, player identities, transactions and consent; no separate multiplayer economy; no new economic or relationship policy",
+    "tests drive the real gameplay interaction interface: Windows, Linux and Android each initiating to the other two; host to guest and guest to host; currency and inventory conserved; save, load and reconnect; no single-player regression; combinations needing an owner device listed, not claimed",
+    "integrated last on the frozen Expansion 20 baseline; targeted multiplayer and combined regression and simulation gates; three platform exports verified; release-readiness report"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "MP-01"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-27_multiplayer_interaction_release_blocker.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "next_action; notes",
+     "why": "owner: release blocker for the next Expansion 20 build, including private drafts; implemented last as a dedicated batch"
+    }
+   ],
+   "next_action": "Implement as the final Expansion 20 batch on the frozen integrated baseline (after the Build 19 recovery, LE work, Android usability and the Messages journal). No Expansion 20 build of any kind (public or private) until this is integrated and validated.",
+   "notes": "BLOCKS the next Expansion 20 release (private drafts included). Playtest evidence: the Windows player saw Bob (Android) but could not select or interact with him; the reverse was not tried. Treated as a cross-platform deficiency until tests show otherwise. Build 22 is not reopened."
   },
   {
    "id": "MP-MASTER",
