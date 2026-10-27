@@ -519,3 +519,18 @@ neutral, the recorder and determinism. `judgment_x19_test` now tests "a newer ga
 **Not done here.** Dialogue (FAD Q7): the seam is `JudgmentAspiration.lead_of(person)` and `domain_name(d)`; nothing
 speaks. No wiki page while the layer is off. Proposal acceptance is unchanged (open question WDR-011-Q8). The four-seed
 measurement is R6's.
+
+**Short measurement (2026-10-27, one 30-day run per seed, seeds 1 and 2, `economy_sim --every 10`; not R6's four-seed campaign).**
+Flags off: G0 identical to `docs/release/sim_baseline.json` (both seeds, days 10 and 30; the same runs served as the off side
+here). Flags on (`--aspiration --job-choice`):
+- Conservation: currency leak 0 and no item leak at every checkpoint, both seeds; no FATAL line, no script error.
+- Seed 2 ended byte-identical to flags off (same day-30 fingerprint): no weighed decision changed. Seed 1 diverged (alive 112
+  vs 113, currency 4757 vs 4720, all balanced); no yes-or-forgo decision was refused in either run (no `*_declined`,
+  `work_refused`), and `job_choice` was asked 12 and 8 times and always agreed with the live rule, so the divergence most
+  likely comes from courting (the new courting weights: court choices 21 vs 19, six marriages shifted priorities).
+- Day 30 leads: seed 1 food 38, family 15, standing 5, profession 4, property 2 (64 adults); seed 2 food 23, standing 17,
+  family 13, profession 5, wealth 4, property 3 (65). Under survival pressure at day 30: 63 of 64 and 55 of 65 adults, with mean
+  hunger 67-69 (above `eat_below`), so the pressure is very likely the **danger** term: violence facts known by word of mouth
+  (assaults by bandits are frequent) count like those witnessed. For R6 to measure; not changed here.
+- Events: about 740 successes, 555-576 setbacks, 610-640 lead changes and 870-945 survival steps per seed in 30 days: the band
+  edges make priorities move often.
