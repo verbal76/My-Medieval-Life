@@ -228,6 +228,12 @@ static func opening(w: World, n: NPC) -> String:
 	if caught(w, n):
 		return _pick(w, n, ["I caught you stealing. Keep your hands to yourself.", "Thief. I know what you are; I caught you at it."])
 	var lines: Array = [_greeting(w, n)]
+	# GM-01 (R4): a villager who knows a deed in their family's history that touches the listener's line or their own tells it,
+	# once to each listener (EventTalk.told keeps what was said to whom)
+	var hist := EventTalk.history(w, n)
+	if not hist.is_empty() and not EventTalk.told(w, n).has("history:%d" % int(hist.ev)):
+		EventTalk.mark_said(w, n, ["history:%d" % int(hist.ev)])
+		lines.append(DialogueVoice.history_line(w, n, hist))
 	if n.id == w.sage_id:
 		lines.append("Fire answers those who learn its rules. I can teach you to call it.")
 	elif n.id == w.reeve_id:

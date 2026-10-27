@@ -75,13 +75,19 @@ func _wait() -> void:
 		var w: World = main.world
 		for t in [["Contract made with Hugh Reed: 4 logs at 3 coins each, within 3 days (12 coins, set aside when you agree).", "contract"],
 				["You sell 2 apples for 6 coins.", "trade"], ["Hugh Reed: There's nothing the manor needs carried, quarried or mended just now.", "npc"],
-				["The guard Ada saw you take it. You are fined 10 coins, paid to the manor.", "crime"], ["Mining is now level 2!", "skill"]]:
+				["The guard Ada saw you take it. You are fined 10 coins, paid to the manor.", "crime"], ["Mining is now level 2!", "skill"]] + [["You sell 3 pottage for 9 coins.", "trade"], ["Ada Thorne: The smith wants charcoal; ask him.", "npc"],
+				["Quest done: Bread for the widow (+5 coins).", "quest"], ["You and Mabel Reed are friends.", "family"],
+				["Work for the manor done. The manor pays you 6 coins.", "work"], ["The trial pit strikes iron ore: a new seam is opened.", "find"],
+				["You buy 2 bread for 4 coins.", "trade"], ["Hired: Fell trees for the carpenter. It is written in your journal.", "work"]]:
 			w.minutes += 37.0
-			w.player_tell(t[0], t[1])
+			w.player_tell("%s (%d)" % [t[0], int(w.minutes) % 1000], t[1])
 		main.ui.show_journal(-1, false, true)        # the journal's Messages page, where every message is kept
 	if frames < 30:
 		return
 	process_frame.disconnect(_wait)
+	if choose == "journal":
+		var u = main.ui
+		print("journal: window body %s, its content %s (more than the body would scroll)" % [u.body_scroll.size, u.panel_body.get_combined_minimum_size()])
 	var img := root.get_texture().get_image()
 	img.save_png(out)
 	print("saved ", out, " ", img.get_size(), " options ", main.target_options.map(func(t): return str(t.kind)),

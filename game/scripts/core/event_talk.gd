@@ -99,6 +99,82 @@ static func dead_named(w: World, n: NPC, first: String) -> NPC:
 	return best
 
 
+# ---------------------------------------------------------------- GM-01: the family's history
+## How many generations `ancestor` is above `person` (0: the same person, 1: a parent, 2: a grandparent ...), through Life's
+## family graph (mothers and fathers, villagers and players alike), up to `most`; -1 when not their ancestor.
+static func generations(w: World, person: int, ancestor: int, most := 4) -> int:
+	var level := [person]
+	for g in most + 1:
+		if level.has(ancestor):
+			return g
+		var up := []
+		for id in level:
+			var p = Life.parent_of(w, int(id))
+			if p == null:
+				continue
+			for a in [int(p.mother), int(p.father)]:
+				if a != -1 and not up.has(a):
+					up.append(a)
+		if up.is_empty():
+			return -1
+		level = up
+	return -1
+
+
+## The historical deed (JudgmentStore.history, GM-01) the speaker knows that touches the listener or the speaker's own family:
+## {ev, giver, receiver, value, item, qty, listener_gen (the giver above the listener, -1 not of their line), speaker_gen (the
+## receiver above the speaker), giver_gen (the giver above the speaker), state ("ours", "yours", "sold", "destroyed",
+## "unfinished"), owner (who holds the house now, when sold)}; {} when they know none that does. One of the listener's line
+## comes first, then the latest. Read only: what the speaker knows (they took part, or were told by a parent), the family
+## graph, and the building as it stands now.
+static func history(w: World, n: NPC) -> Dictionary:
+	if w.judgment == null:
+		return {}
+	var j: JudgmentStore = w.judgment
+	var best := {}
+	var me := w.acting_id()
+	for ev in j.history_known(n.id):
+		var h: Dictionary = j.history[ev]
+		if (h.actors as Array).is_empty() or (h.beneficiaries as Array).is_empty():
+			continue
+		var giver := int(h.actors[0])
+		var recv := int(h.beneficiaries[0])
+		var lg := generations(w, me, giver)
+		var sr := generations(w, n.id, recv)
+		if lg < 0 and sr < 0:
+			continue                              # nobody's family here: not theirs to tell this listener
+		var it := {"ev": int(ev), "giver": giver, "receiver": recv, "value": int(h.value), "item": str(h.refs.get("item", "")),
+			"qty": int(h.refs.get("qty", 0)), "listener_gen": lg, "speaker_gen": sr, "giver_gen": generations(w, n.id, giver)}
+		it.merge(house_state(w, n, h.refs))
+		if best.is_empty() or (lg >= 0 and int(best.listener_gen) < 0) or ((lg >= 0) == (int(best.listener_gen) >= 0) and int(ev) > int(best.ev)):
+			best = it
+	return best
+
+
+## What became of the house a record went toward: {state, owner}: "unfinished" (never built), "destroyed" (no longer
+## stands), "ours" (the household it was built for, or the speaker's, still holds it), "yours" (the listener owns it),
+## "sold" (someone else: owner is how the speaker names them).
+static func house_state(w: World, n: NPC, refs: Dictionary) -> Dictionary:
+	var bid := str(refs.get("building", ""))
+	if bid == "":
+		return {"state": "unfinished", "owner": ""}
+	if not w.buildings.has(bid):
+		return {"state": "destroyed", "owner": ""}
+	var b: Dictionary = w.buildings[bid]
+	var own := w.owner_of(b)
+	if own == World.hh_ref(int(refs.get("household", -1))) or (n.household >= 0 and w.holds(World.hh_ref(n.household), b)):
+		return {"state": "ours", "owner": ""}
+	if own == w.acting_ref():
+		return {"state": "yours", "owner": ""}
+	var name := "the manor"
+	if own.begins_with("hh:") and World.ref_id(own) < w.households.size():
+		name = "the %s family" % str(w.households[World.ref_id(own)].family)
+	elif World.is_player_ref(own):
+		var p: PlayerState = w.player_of_ref(own)
+		name = full(p) if p != null else "another"
+	return {"state": "sold", "owner": name}
+
+
 ## The gravest harm the speaker knows the listener did to someone else:
 ## {crime: "killing" | "assault", how: "saw" | "heard", victim: NPC, rel: relation(n, victim)}, or {} when none.
 ## A harm done to the speaker themselves is Dialogue.attacked's.

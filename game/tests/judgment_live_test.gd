@@ -58,6 +58,8 @@ func _init() -> void:
 	test_q14_family_help()
 	test_event_feeds()
 	test_bonds_live()
+	test_r2_report_off()
+	test_r2_report_on()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -846,3 +848,143 @@ func test_bonds_live() -> void:
 	w.dispose()
 	w2.dispose()
 	w3.dispose()
+
+
+# ---------------------------------------------------------------- R2 (SJD-F): whether a witness reports a crime ------
+## One assault by villager `a` on `v`, seen by `wit` (all moved beside the victim, awake). Returns the world.
+func _r2_world(on: bool) -> World:
+	var w := new_world()
+	var c := plain_cfg()
+	c.decision.integration.report = on
+	JudgmentLive.attach(w, c)
+	var people := _r2_cast(w)
+	for i in 5:
+		var n: NPC = people[i]
+		n.pos = people[0].pos + Vector2(0.5 * i, 0)
+		n.anim = "idle"
+		n.report = {}
+	return w
+
+
+## Five adults: [victim, attacker, three witnesses], none of the others kin of the attacker (kinship has its own check),
+## then everyone else.
+func _r2_cast(w: World) -> Array:
+	var all := adults(w)
+	var soc := JudgmentLive.Social.new(w)
+	var att: NPC = all[1]
+	var cast := [null, att]
+	var rest := []
+	for n: NPC in all:
+		if n == att:
+			continue
+		if cast.size() < 5 and not soc.kin(n.id, att.id):
+			if cast[0] == null:
+				cast[0] = n
+			else:
+				cast.append(n)
+		else:
+			rest.append(n)
+	return cast + rest
+
+
+func _r2_alarm(w: World) -> Array:
+	var people := _r2_cast(w)
+	var victim: NPC = people[0]
+	var attacker: NPC = people[1]
+	w.raise_alarm(w.aware_of_attack(victim.pos, victim), attacker.id)
+	return people.slice(0, 5)
+
+
+## Off (the shipped default, decision.integration.report false): every villager who knows of the crime takes up a report,
+## exactly as Build 18 to 19; no report choice is weighed.
+func test_r2_report_off() -> void:
+	check(not bool(JudgmentStore.default_cfg().decision.integration.get("report", true)), "R2: judgment.json ships the report hook OFF")
+	check(JudgmentStore.default_cfg().decision.profiles.has("report"), "R2: the report profile is configured")
+	var w := _r2_world(false)
+	var ppl := _r2_alarm(w)
+	var made := 0
+	for i in [0, 2, 3, 4]:
+		if not (ppl[i] as NPC).report.is_empty():
+			made += 1
+	check(made == 4, "R2 off: the victim and every witness take up a report (%d of 4)" % made)
+	check(int(w.judgment.stats.get("report_choices", 0)) == 0, "R2 off: no report choice is weighed")
+	check(float(w.stats.get("crime_reports_withheld", 0.0)) == 0.0, "R2 off: none withheld")
+	w.dispose()
+	# Off, even a witness who thinks the world of the attacker reports (the live rule is untouched)
+	w = _r2_world(false)
+	ppl = _r2_cast(w)
+	w.judgment.set_ledger(ppl[2].id, ppl[1].id, 90000, 0)
+	_r2_alarm(w)
+	check(not (ppl[2] as NPC).report.is_empty(), "R2 off: a witness fond of the attacker still reports")
+	w.dispose()
+
+
+## On: the same crime, the same rules; a witness with no opinion of the attacker reports, one fond of them may keep quiet;
+## a witness's report, when made, is exactly the off one (feasibility and delivery unchanged); the silent one still
+## remembers the deed. Personality: villagers holding the same opinion of the same attacker decide differently.
+func test_r2_report_on() -> void:
+	var off := _r2_world(false)
+	var po := _r2_alarm(off)
+	var neutral_off: Dictionary = (po[3] as NPC).report.duplicate()
+	var victim_off: Dictionary = (po[0] as NPC).report.duplicate()
+	off.dispose()
+	var w := _r2_world(true)
+	var ppl := _r2_cast(w)
+	var fond: NPC = ppl[2]
+	var j: JudgmentStore = w.judgment
+	j.set_ledger(fond.id, ppl[1].id, 90000, 0)
+	_r2_alarm(w)
+	var neutral: NPC = ppl[3]
+	check(neutral.report == neutral_off, "R2 on: a witness with no opinion of the attacker reports, the same report as off (%s)" % str(neutral.report))
+	check((ppl[0] as NPC).report == victim_off, "R2 on: the victim reports, the same report as off (%s, %s)" % [str((ppl[0] as NPC).report), str(victim_off)])
+	check(int(j.stats.get("report_choices", 0)) >= 4, "R2 on: each report is a weighed choice (%d)" % int(j.stats.get("report_choices", 0)))
+	var r_fond := JudgmentLive.will_report(w, fond, ppl[1].id, "saw", "attack")
+	check(fond.report.is_empty() == (not r_fond), "R2 on: the fond witness's choice is reproducible (same inputs, same answer)")
+	check(not j.belief(fond.id, int(last_fact(j, "assault").id)).is_empty(), "R2 on: a witness who keeps quiet still knows what they saw")
+	# the same situation for many villagers: everyone fond of the attacker to the same degree, the same assault
+	var att: NPC = ppl[1]
+	var said := 0
+	var quiet := 0
+	var pool := ppl.slice(5)
+	for n: NPC in pool:
+		j.set_ledger(n.id, att.id, 60000, 0)
+	for n: NPC in pool:
+		if JudgmentLive.will_report(w, n, att.id, "saw", "attack"):
+			said += 1
+		else:
+			quiet += 1
+	check(said > 0 and quiet > 0, "R2 on: villagers with the same opinion of the same attacker decide differently by personality (%d tell, %d keep quiet)" % [said, quiet])
+	# opinion is weighed, not a cutoff: someone who dislikes the attacker tells; the victim tells more readily than a bystander
+	var hater: NPC = pool[0]
+	j.set_ledger(hater.id, att.id, 0, 60000)
+	check(JudgmentLive.will_report(w, hater, att.id, "saw", "attack"), "R2 on: a witness who dislikes the attacker reports")
+	var told_as_victim := 0
+	var told_as_witness := 0
+	for n: NPC in pool:
+		if JudgmentLive.will_report(w, n, att.id, "victim", "attack"):
+			told_as_victim += 1
+		if JudgmentLive.will_report(w, n, att.id, "saw", "theft"):
+			told_as_witness += 1
+	check(told_as_victim >= told_as_witness, "R2 on: harm is weighed: as victims of an attack at least as many tell as witnesses of a theft (%d, %d)" % [told_as_victim, told_as_witness])
+	# kinship: a relative of the offender weighs it toward silence (the same choices with the kinship weight at 0)
+	var kin_pairs := []
+	for n: NPC in adults(w):
+		for o: NPC in adults(w):
+			if n != o and j.social.kin(n.id, o.id):
+				kin_pairs.append([n, o])
+	var wts: Dictionary = j.cfg.decision.profiles.report.weights
+	var quiet_kin := 0
+	var quiet_nokin := 0
+	for pr in kin_pairs:
+		if not JudgmentLive.will_report(w, pr[0], pr[1].id, "saw", "attack"):
+			quiet_kin += 1
+	var kw := int(wts.kinship)
+	wts.kinship = 0
+	for pr in kin_pairs:
+		if not JudgmentLive.will_report(w, pr[0], pr[1].id, "saw", "attack"):
+			quiet_nokin += 1
+	wts.kinship = kw
+	check(not kin_pairs.is_empty() and quiet_kin > quiet_nokin, "R2 on: kinship with the offender is weighed toward silence (%d of %d kin keep quiet; %d with kinship unweighed)" % [quiet_kin, kin_pairs.size(), quiet_nokin])
+	check(quiet_kin < kin_pairs.size(), "R2 on: ...but kinship decides nothing alone: some kin still tell")
+	check(fond.report.is_empty() and not neutral.report.is_empty(), "R2 on: the same assault: the witness fond of the attacker keeps quiet, the one with no opinion reports")
+	w.dispose()
