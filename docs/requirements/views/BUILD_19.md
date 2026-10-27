@@ -16,7 +16,7 @@ Readiness: **RELEASED (private playtest draft (code 2f72ec3, run 40044931601, 20
 | Owner playtested | 0 of 11 (0%) |
 | Complete | 9 of 11 (82%) |
 | Open (release blockers) | 2 |
-| Open owner decisions (blocking) | 2 (0) |
+| Open owner decisions (blocking) | 0 (0) |
 
 ## Integrated, awaiting gameplay or owner verification (1)
 
@@ -43,13 +43,6 @@ Readiness: **RELEASED (private playtest draft (code 2f72ec3, run 40044931601, 20
 | X19-FOUND-FAMREP | Family reputation: known family history colours descendants' impressions, positive reputation about 5% more friendship progression (about 12% combined with familiarity, not 15%), familiarity not inherited, personal experience overrides inherited impressions, small spillover of wrongdoing onto relatives without inheriting the wrongdoing, trust stays individual | INTEGRATION VERIFIED | NOT READY |
 | X19-FOUND-PERS | Personality framework: evolving traits, soft limits, learning from costly mistakes, practical wisdom, temporary emotions and anger, recovery and growth; about 30% of villagers with potential for self-defeating stubbornness (population level) | INTEGRATION VERIFIED | NOT READY |
 | X19-SCOPE | Expansion 19 ships complete: judgment, personality, relationships, family reputation, gossip, memory, deliberate lies, inherited family stories, stubbornness and the family-sacrifice hierarchy all enabled and influencing NPC decisions; nothing core deferred to 19.x | INTEGRATION VERIFIED | RELEASE CANDIDATE |
-
-## Open owner decisions (2)
-
-| ID | Question | Disposition | Blocks | Affects |
-|---|---|---|---|---|
-| SIM-F2 | Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix? | OPEN | no |  |
-| SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | OPEN | no |  |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (5)
 

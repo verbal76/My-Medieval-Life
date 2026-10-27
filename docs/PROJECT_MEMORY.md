@@ -17,6 +17,7 @@ The governing principles are the owner's numbered World Design Rules in `docs/WO
 - automated compliance.
 
 The design intent is in `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md`. What is confirmed, proposed or undecided in the game design is in `docs/GAME_DESIGN.md`.
+**Authority (owner, 2026-10-27, `docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md`):** the original game design document, the Game Designer import (`docs/game-designer/`) and `docs/DESIGN_GAP_ASSESSMENT.md` are historical reference only, never primary authority; the latest owner instructions, the register and the implemented, validated game come first. Old-design content marked GDD-REVIEW there (Morris era and atlas, a magic system beyond Fireball, monsters and bosses, a chosen hero, an automatic updater, fixed content quotas) is parked and needs explicit current-game reconfirmation.
 
 ## Where everything is
 

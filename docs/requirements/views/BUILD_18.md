@@ -16,7 +16,7 @@ Readiness: **RELEASED (private playtest draft (code 61ec528, run 39935635926, 20
 | Owner playtested | 0 of 83 (0%) |
 | Complete | 2 of 83 (2%) |
 | Open (release blockers) | 81 |
-| Open owner decisions (blocking) | 1 (0) |
+| Open owner decisions (blocking) | 0 (0) |
 
 ## Integrated, awaiting gameplay or owner verification (78)
 
@@ -115,12 +115,6 @@ Readiness: **RELEASED (private playtest draft (code 61ec528, run 39935635926, 20
 |---|---|---|---|
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | INTEGRATION VERIFIED | NOT READY |
 | VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | INTEGRATION VERIFIED | NOT READY |
-
-## Open owner decisions (1)
-
-| ID | Question | Disposition | Blocks | Affects |
-|---|---|---|---|---|
-| Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | PROVISIONAL | no | Q18-11A, Q18-11B |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (9)
 

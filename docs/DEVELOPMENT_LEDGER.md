@@ -815,15 +815,15 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | CON02-S-4 | Should harvest be offered as a service contract (the harvest-hire rules now belong to paid quests kept by Q-C2)? | owner decision | APPROVED |  |
 | CON02-S-5 | Which real need should make a villager hire a service on its own (none yet, so the live economy is unchanged)? | owner decision | APPROVED |  |
 | CON02-S-6 | Confirm the 50-coin formal signing line for services as for goods | owner decision | APPROVED |  |
-| E22-OD-03 | Knowledge persistence: how industrial knowledge passes on (teaching, apprenticeship, written records) or is lost when skilled people die or leave; Build 18 keeps it only in living people | 22 | OPEN |  |
-| E22-OD-04 | Regional trade and transport: do traders' trips take real travel time, carry limited loads and risk loss on routes (replacing the instant six-day road trade), and do settlements trade with each other beyond the village | 22 | OPEN |  |
-| E22-OD-05 | Population across the region: should off-map settlements get housing and land that limit growth (REG-DEMO-D1 left this to future systems), and may whole settlements be abandoned | 22 | OPEN |  |
-| E23-OD-01 | Bandit factions: territory and jurisdiction, how many factions may exist and how they form, how leadership changes, and whether crimes act only on real inventories reached by real travel | 23 | OPEN |  |
+| E22-OD-03 | Knowledge persistence: how industrial knowledge passes on (teaching, apprenticeship, written records) or is lost when skilled people die or leave; Build 18 keeps it only in living people | 22 | APPROVED |  |
+| E22-OD-04 | Regional trade and transport: do traders' trips take real travel time, carry limited loads and risk loss on routes (replacing the instant six-day road trade), and do settlements trade with each other beyond the village | 22 | APPROVED |  |
+| E22-OD-05 | Population across the region: should off-map settlements get housing and land that limit growth (REG-DEMO-D1 left this to future systems), and may whole settlements be abandoned | 22 | APPROVED |  |
+| E23-OD-01 | Bandit factions: territory and jurisdiction, how many factions may exist and how they form, how leadership changes, and whether crimes act only on real inventories reached by real travel | 23 | APPROVED |  |
 | FARM-08-Q-CROP | How is a field's crop divided among the farmers who work it? |  | APPROVED |  |
 | HORSE-Q | Plough horse: price and what it does | owner decision | APPROVED |  |
 | ID-D1 | Identity: when an heir takes over, does the village's view of the player carry on to the heir (Build 18 behaviour), or do the parent's ties stay with the parent's own identity while the heir starts from the ties they had as a villager? | unassigned | APPROVED |  |
 | ID-D2 | Identity changes the determinism gate: off-map people and player characters now draw ids from the one counter, so later villagers' ids shift and id-seeded pair chemistry diverges from Build 18 (seeds 1 and 2 differ from day 10; no leaks). Options: (a) one counter as built, accept a new gate baseline; (b) off-map people and player characters in a separate id band (1,000,000+): village ids match Build 18 and day 10 is identical, day 30 still differs once a settlement-born person arrives keeping their id (inherent to the approved rule); accept a new baseline from that point. Either way a re-baseline is needed. Also: a kept heir-child record lets kin (a grandmother) take in that child's orphaned children, which Build 18 did not. | unassigned | APPROVED |  |
-| ID-D3 | Identity gate baseline: approve the candidate new baseline (docs/design/IDENTITY_GATE_CANDIDATE.json)? Its only divergences (day 13 on both seeds) come from arrivals keeping their permanent band id, which changes traits Build 18 hashes from the id (chapel piety, caravan taste, skill seed, willingness, sprite). Alternatively those traits could be seeded from a stored per-person seed so they no longer depend on the id value (a design change). | unassigned | OPEN |  |
+| ID-D3 | Identity gate baseline: approve the candidate new baseline (docs/design/IDENTITY_GATE_CANDIDATE.json)? Its only divergences (day 13 on both seeds) come from arrivals keeping their permanent band id, which changes traits Build 18 hashes from the id (chapel piety, caravan taste, skill seed, willingness, sprite). Alternatively those traits could be seeded from a stored per-person seed so they no longer depend on the id value (a design change). | unassigned | PROVISIONAL |  |
 | INV-Q1 | INV-18 borderline item classifications | owner decision | APPROVED |  |
 | INV-Q2 | INV-18 upgrade acquisition and cost | owner decision | APPROVED |  |
 | MIN-C-Q2 | Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics | owner decision | APPROVED |  |
@@ -855,14 +855,14 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | MP-INTERACT-Q2 | Talk targeting: Talk takes the nearest person, so a closer villager comes before another player (a tap, a click or Next always reaches the player). Should players come first for Talk instead? | 20 | OPEN |  |
 | MP-Q-PLAYER-CHILDREN | Should a marriage between two players have children? (births currently need a villager parent) | multiplayer | APPROVED |  |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | 17 | APPROVED |  |
-| OD-02 | Owner decision: balance review of every provisional number | owner decision | OPEN |  |
-| OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | owner decision | OPEN |  |
-| OD-04 | Owner decisions: chest and lock questions | owner decision | OPEN |  |
+| OD-02 | Owner decision: balance review of every provisional number | owner decision | APPROVED |  |
+| OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | owner decision | APPROVED |  |
+| OD-04 | Owner decisions: chest and lock questions | owner decision | APPROVED |  |
 | OD-05 | Owner decisions: inner doorways, relaying survey plots | 18 | APPROVED |  |
 | OD-06 | Owner decisions: farming (Farming skill, wheat versus wages) | 18 | APPROVED |  |
-| OD-07 | Owner decision: hunting in Gather mode | owner decision | OPEN |  |
+| OD-07 | Owner decision: hunting in Gather mode | owner decision | APPROVED |  |
 | OD-08 | Owner decision: is honest arbitrage intended? | 18 | APPROVED |  |
-| OD-09 | Owner decisions: GAME_DESIGN items still open (U3-U5, U13, U16-U21) | owner decision | OPEN |  |
+| OD-09 | Owner decisions: GAME_DESIGN items still open (U3-U5, U13, U16-U21) | owner decision | APPROVED |  |
 | OD-10 | Owner decision: a lasting stone source before Build 17 (stone runs out by day 160-190 and stalls house building) | 16 | SUPERSEDED |  |
 | OD-11 | Owner decision: an orphaned child for whom no household is eligible: what temporary care applies (stay in the family house watched by neighbours, lodge at the manor, other) | 16 | APPROVED |  |
 | OD-12 | Owner decision: choosing between equally close eligible relatives (for example two grandparent households, or an aunt and an uncle) | 16 | APPROVED |  |
@@ -870,7 +870,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | OD-14 | Owner decision: no original village house has room for the living-quarters module. The module is house-sized (9x10), must touch the house and cannot cover a road; on the current layout every original house is hemmed in. Options: (a) detached quarters on nearby free ground, counted as the household's rooms; (b) a smaller added room (a new building type); (c) accept that original houses do not expand, and rely on bed sharing, households splitting and new houses. | 15 | APPROVED |  |
 | OD-15 | Should the player's sales stop at a trader's 15-coin floor, as villagers' sales do (B7-008)? | 15 | APPROVED |  |
 | OD-16 | The village's trade economy stops around day 120-140 on seed 1 (smith out of coins, no iron, no axes, no timber): how should money flow back to the essential trades? | 15 | APPROVED |  |
-| OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | 16 | OPEN |  |
+| OD-17 | Owner decision: the Game Designer spec's open calls not covered by another entry: C1 the hero (spec: 'Your main character is the hero' against the confirmed 'not the chosen one'), C10 the view (top-down at an angle, three-quarter, or isometric; with DGA-D1), and Steam Deck labelling (the spec's '(web)' build; the owner said to correct the label without changing the platforms). Class progression is REC-010, ranged combat REC-009, Mote REC-002, the API 36 policy REC-003 | 16 | APPROVED |  |
 | OD-18 | Player-only perks and rules found by the DVW-A8 and DVW-A12 audits | owner decision | APPROVED |  |
 | OD-19 | PAR-02: the universal coin-reserve threshold | owner decision | APPROVED |  |
 | OD-20 | PAR-05: should a caught pickpocket's cry (theft rules 2026-10-18; the Stealth guard_radius perk) become a report like assault's? | 16 | APPROVED |  |
@@ -886,25 +886,25 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | OD-30 | Official expansion numbering: 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy; Exploration unnumbered; Multiplayer a separate track | owner decision | APPROVED |  |
 | OD-LE-01 | Owner decision (Living Economy): Standalone build number and placement without displacing existing Build 19 Judgment | owner decision | APPROVED |  |
 | OD-LE-02 | Owner decision (Living Economy): Market board, direct negotiation or hybrid and visibility rules | 20 | APPROVED | yes |
-| OD-LE-02B | Offer visibility: who can see an offer (in person at stalls and meetings, by word of mouth, a notice board), the remaining part of OD-LE-02 | 20 | OPEN |  |
-| OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | 20 | OPEN | yes |
-| OD-LE-04 | Owner decision (Living Economy): Business founding, partnerships, ownership and inheritance | 20 | OPEN | yes |
+| OD-LE-02B | Offer visibility: who can see an offer (in person at stalls and meetings, by word of mouth, a notice board), the remaining part of OD-LE-02 | 20 | APPROVED |  |
+| OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | 20 | APPROVED | yes |
+| OD-LE-04 | Owner decision (Living Economy): Business founding, partnerships, ownership and inheritance | 20 | APPROVED | yes |
 | OD-LE-05 | Owner decision (Living Economy): Loan interest, collateral, default and collection rules | 20 | APPROVED | yes |
-| OD-LE-05B | Interest and lending: whether loans carry interest or fees, who may lend money, and collection procedures (the remaining part of OD-LE-05) | 20 | OPEN |  |
-| OD-LE-06 | Owner decision (Living Economy): Permissible manor interventions and political authority | 20 | OPEN | yes |
-| OD-LE-07 | Owner decision (Living Economy): Restricted-use advances and business/household account separation | 20 | OPEN | yes |
-| OD-LE-08 | Owner decision (Living Economy): Barter, rental, repair and resource substitution | 20 | OPEN | yes |
-| OD-LE-09 | Owner decision (Living Economy): Bandit market participation and regional trading limits | 20 | OPEN | yes |
-| OD-LE-10 | Owner decision (Living Economy): Economic rumor, memory persistence and reliability | 20 | OPEN | yes |
-| OD-LE-11 | Owner decision (Living Economy): Speculation, hoarding and deliberate market manipulation | 20 | OPEN | yes |
-| OD-LE-12 | Owner decision (Living Economy): Charity, kinship support and communal relief | 20 | OPEN | yes |
+| OD-LE-05B | Interest and lending: whether loans carry interest or fees, who may lend money, and collection procedures (the remaining part of OD-LE-05) | 20 | APPROVED |  |
+| OD-LE-06 | Owner decision (Living Economy): Permissible manor interventions and political authority | 20 | APPROVED | yes |
+| OD-LE-07 | Owner decision (Living Economy): Restricted-use advances and business/household account separation | 20 | APPROVED | yes |
+| OD-LE-08 | Owner decision (Living Economy): Barter, rental, repair and resource substitution | 20 | APPROVED | yes |
+| OD-LE-09 | Owner decision (Living Economy): Bandit market participation and regional trading limits | 20 | APPROVED | yes |
+| OD-LE-10 | Owner decision (Living Economy): Economic rumor, memory persistence and reliability | 20 | APPROVED | yes |
+| OD-LE-11 | Owner decision (Living Economy): Speculation, hoarding and deliberate market manipulation | 20 | APPROVED | yes |
+| OD-LE-12 | Owner decision (Living Economy): Charity, kinship support and communal relief | 20 | APPROVED | yes |
 | OD-LE-13 | Owner decision (Living Economy): Contract cancellation, penalties and death of a party | 20 | APPROVED | yes |
-| OD-LE-13B | Death of a party to a contract: does the contract end, pass to the heir or the household, or go to the estate (the remaining part of OD-LE-13) | 20 | OPEN |  |
-| OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | 20 | OPEN | yes |
-| OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | 20 | OPEN | yes |
+| OD-LE-13B | Death of a party to a contract: does the contract end, pass to the heir or the household, or go to the estate (the remaining part of OD-LE-13) | 20 | APPROVED |  |
+| OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | 20 | APPROVED | yes |
+| OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | 20 | APPROVED | yes |
 | OWN-09 | Build 8 private only; registry public-only; no sustainability changes until decided |  | APPROVED |  |
-| P21-RESIDENCY | How long must an adult live in a settlement to count as an established resident (to vote and stand for mayor)? | 21 | OPEN |  |
-| P21-STRUCTURE | Beyond the elected mayor: councils and their powers, the manor or a lord's authority over the village, regional government, and whether smaller settlements have simpler government | 21 | OPEN |  |
+| P21-RESIDENCY | How long must an adult live in a settlement to count as an established resident (to vote and stand for mayor)? | 21 | APPROVED |  |
+| P21-STRUCTURE | Beyond the elected mayor: councils and their powers, the manor or a lord's authority over the village, regional government, and whether smaller settlements have simpler government | 21 | APPROVED |  |
 | PACK-Q | Pack capacity: how many kinds the player can carry | owner decision | APPROVED |  |
 | Q-C1 | CON-01 Q-C1: Manor tool orders stay separate from CON-01 (advance payment preserved; counted as obligations) | 17 | APPROVED |  |
 | Q-C2 | CON-01 Q-C2: Paid work quests stay separate (full payment on completion or none) | 17 | APPROVED |  |
@@ -915,18 +915,18 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | Q-C7 | CON-01 Q-C7: sign_reach = 3 tiles, same place and level; the reeve represents the manor | 17 | APPROVED |  |
 | Q-C8 | CON-01 Q-C8: offer_days = 2: an unsigned formal agreement expires after two days, nothing reserved or moved before signing | 17 | APPROVED |  |
 | Q-C9 | CON-01 Q-C9: npc_counter_tolerance = 0.25 above the buyer's own price, within its real purchasing power; quantity limits and 10-day wait kept | 17 | APPROVED |  |
-| Q-POL-1 | Political structure of the starting village (manor with a reeve, elected mayor, council, or a mix; what the lord retains) | 21 | OPEN | yes |
+| Q-POL-1 | Political structure of the starting village (manor with a reeve, elected mayor, council, or a mix; what the lord retains) | 21 | APPROVED | yes |
 | Q-POL-2 | Franchise: who votes and who may stand | 21 | APPROVED | yes |
 | Q-POL-3 | Office terms, election season and by-elections (with the 8-day game year) | 21 | APPROVED | yes |
-| Q-POL-4 | Vote privacy and which totals are public | 21 | OPEN | yes |
-| Q-POL-5 | Ties in elections | 21 | OPEN | yes |
-| Q-POL-6 | Removal from office | 21 | OPEN | yes |
-| Q-POL-7 | Placement and gate: politics waits for Expansion 19's live judgment, or an interim voter model behind a switch | 21 | OPEN | yes |
-| Q-POL-8 | The constable and the law: a constable and crime records before Expansion 22; the friendly guard (X19 conflict 3) | 21 | OPEN | yes |
-| Q-POL-9 | Taxes under an elected authority and DVW-B5's predictability | 21 | OPEN | yes |
+| Q-POL-4 | Vote privacy and which totals are public | 21 | APPROVED | yes |
+| Q-POL-5 | Ties in elections | 21 | APPROVED | yes |
+| Q-POL-6 | Removal from office | 21 | APPROVED | yes |
+| Q-POL-7 | Placement and gate: politics waits for Expansion 19's live judgment, or an interim voter model behind a switch | 21 | APPROVED | yes |
+| Q-POL-8 | The constable and the law: a constable and crime records before Expansion 22; the friendly guard (X19 conflict 3) | 21 | APPROVED | yes |
+| Q-POL-9 | Taxes under an elected authority and DVW-B5's predictability | 21 | APPROVED | yes |
 | Q18-1 | Q18-1: Carpentry, Masonry (stoneworking) and Tanning become skills of their own, seeded from existing Crafting experience |  | APPROVED |  |
 | Q18-10 | Anyone may buy from another settlement; the buyer fetches the goods or pays a willing carter; no free delivery, no merchant-only buying, nothing created | 18 | APPROVED |  |
-| Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | 18 | PROVISIONAL |  |
+| Q18-11 | What pay factor and output factor should each settlement capability level give, and for which industries? (Until answered every factor is 1.0, no effect) | 18 | APPROVED |  |
 | Q18-11A | Which compensation and productivity percentages per industry and level 0-10? (Candidate +20% output / +8% pay at level 10, diminishing; research-informed proposal, NOT approved) |  | APPROVED |  |
 | Q18-11B | How do worker experience, tools, facilities and infrastructure compose a settlement's capability rating? (Options to be presented; no weighting or permanent advancement system without approval) |  | APPROVED |  |
 | Q18-12 | May a buyer hire a villager or carter to haul goods between settlements, and on what terms (day wage, fee per load, or a negotiated service contract)? Overlaps OD-LE-03 and MIN-D-Q1 | 18 | APPROVED |  |
@@ -956,8 +956,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | ROAD-Q3 | Skeletons, lizards and spiders (B14-09, FR-01): keep in Expansion 26 or return them to the unnumbered exploration track? | owner decision | APPROVED |  |
 | ROAD-Q4 | Building condition: design it with 22-D (abandonment) or with 25 (disasters)? | owner decision | APPROVED |  |
 | ROAD-Q5 | Batch 0 (bring wip/expansion20 and wip/expansion21 preparation onto Build 19 together) as the first step after Build 19's acceptance? | owner decision | APPROVED |  |
-| SIM-F2 | Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix? | 19 | OPEN |  |
-| SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | 19 | OPEN |  |
+| SIM-F2 | Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix? | 19 | APPROVED |  |
+| SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | 19 | APPROVED |  |
 | SIM-F4 | Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases? | 19 | APPROVED |  |
 | SIM-F9 | The REC-F1 root cause also affects plans that start with a work step in eating, taking medicine and a homeless villager's bed: their waits end at once. Fixing them changes eating and rest timing. Approve the same correction for those plans? | 19 | APPROVED |  |
 | SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | 19 | APPROVED |  |
@@ -989,7 +989,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-011-Q5 | Aspirations: approve the provisional values (priorities, thresholds, adaptation rates) as a starting point tuned from four-seed measurements, or set them now? (Owner-given values used: hunger floor 25, stubborn share 30%.) | 20 | APPROVED |  |
 | WDR-011-Q6 | Aspirations: should social standing be a sixth domain (read from the village's overall opinion), beyond Rule 011's five? | 20 | APPROVED |  |
 | WDR-011-Q7 | Aspirations: should players see villagers' aspirations: none in v1, or a dialogue line from the leading aspiration once the feature is on and reviewed? | 20 | APPROVED |  |
-| WDR-011-Q8 | Aspirations, scope of Q3: individual romantic preferences now apply to whom an NPC chooses to court. Should the same individual weighting also apply to whether an NPC ACCEPTS a proposal (the existing acceptance rules, kinship restrictions and the X19-CRT12 cut-offs kept as hard limits), or should acceptance stay as it is today? | 20 | OPEN |  |
+| WDR-011-Q8 | Aspirations, scope of Q3: individual romantic preferences now apply to whom an NPC chooses to court. Should the same individual weighting also apply to whether an NPC ACCEPTS a proposal (the existing acceptance rules, kinship restrictions and the X19-CRT12 cut-offs kept as hard limits), or should acceptance stay as it is today? | 20 | APPROVED |  |
 | X18-D1 | Expansion 18 D1: starting experience seeded once from recorded skills (farming from PAR-01A history) |  | APPROVED |  |
 | X18-D2 | Expansion 18 D2: what limits effective capability | 18 | APPROVED |  |
 | X18-D3 | Expansion 18 D3: no thresholds on the 0-10 levels; novice/journeyman/master names in player reports |  | APPROVED |  |

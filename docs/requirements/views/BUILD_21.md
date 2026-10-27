@@ -16,7 +16,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Owner playtested | 0 of 6 (0%) |
 | Complete | 0 of 6 (0%) |
 | Open (release blockers) | 6 |
-| Open owner decisions (blocking) | 9 (7) |
+| Open owner decisions (blocking) | 0 (0) |
 
 ## Integrated, awaiting gameplay or owner verification (1)
 
@@ -33,20 +33,6 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | P21-02 | Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/expansion21-preparation | NOT TESTED | owner answers the packet (structure and noble authority first) | design: UNKNOWN | UNKNOWN |
 | P21-MAYOR | Elected mayor: elected by established adult residents who are also eligible to stand; four-game-year terms; incumbents may stand again; an early vacancy calls a replacement election as soon as possible, the longest-serving eligible civic official holding authority meanwhile; voters judge candidates individually by policies, competence, interests, trust, relationships, family and their own priorities | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | OWNER APPROVED | NOT STARTED | wip/expansion21-preparation | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-
-## Open owner decisions (9)
-
-| ID | Question | Disposition | Blocks | Affects |
-|---|---|---|---|---|
-| P21-RESIDENCY | How long must an adult live in a settlement to count as an established resident (to vote and stand for mayor)? | OPEN | no |  |
-| P21-STRUCTURE | Beyond the elected mayor: councils and their powers, the manor or a lord's authority over the village, regional government, and whether smaller settlements have simpler government | OPEN | no |  |
-| Q-POL-1 | Political structure of the starting village (manor with a reeve, elected mayor, council, or a mix; what the lord retains) | OPEN | yes |  |
-| Q-POL-4 | Vote privacy and which totals are public | OPEN | yes |  |
-| Q-POL-5 | Ties in elections | OPEN | yes |  |
-| Q-POL-6 | Removal from office | OPEN | yes |  |
-| Q-POL-7 | Placement and gate: politics waits for Expansion 19's live judgment, or an interim voter model behind a switch | OPEN | yes |  |
-| Q-POL-8 | The constable and the law: a constable and crime records before Expansion 22; the friendly guard (X19 conflict 3) | OPEN | yes |  |
-| Q-POL-9 | Taxes under an elected authority and DVW-B5's predictability | OPEN | yes |  |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (5)
 

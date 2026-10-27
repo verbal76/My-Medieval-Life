@@ -10,6 +10,10 @@ context, where measurable) and before a session ends. The previous long-form sta
 
 **Updated:** 2026-10-26 (Build 22 private draft released; Expansion 20 and the Build 19 recovery in progress).
 
+## Owner decisions reconciled (2026-10-27, `docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md`)
+
+All 39 open decisions answered: 37 closed APPROVED (CURRENT policy, FUTURE design-only direction, ENGINEERING fixes SIM-F2/SIM-F3, GDD-REVIEW splits OD-03/OD-17 with parked parts not approved); ARMOR-CATALOG-D1 and ID-D3 stay PROVISIONAL (conditional). Open: MP-INTERACT-Q1, MP-INTERACT-Q2, plus those two. Old design documents are historical reference only (`docs/PROJECT_MEMORY.md`). Follow-ups: SIM-F2/F3 fixes after the R5 merge; Q8 = A to worker L; LE-01 till actor gaps before any finance logic (D06).
+
 ## RELEASE BLOCKER: MP-INTERACT-01 (owner, 2026-10-27, `docs/directives/2026-10-27_multiplayer_interaction_release_blocker.md`)
 
 No Expansion 20 build of any kind (public or private draft, APK, Windows or Linux) until player-to-player selection and

@@ -16,7 +16,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Owner playtested | 0 of 81 (0%) |
 | Complete | 2 of 81 (2%) |
 | Open (release blockers) | 79 |
-| Open owner decisions (blocking) | 18 (11) |
+| Open owner decisions (blocking) | 3 (0) |
 
 ## In development (worker assigned) (2)
 
@@ -124,28 +124,13 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | INTEGRATION VERIFIED | NOT READY |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (18)
+## Open owner decisions (3)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
 | ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | PROVISIONAL | no | ARMOR-CATALOG-01, ARMOR-MATERIALS-01 |
 | MP-INTERACT-Q1 | Player-to-player contracts: the contract system only has a way for villagers to do units of work, so contracts between two players are limited to goods. Should a player be able to hire another player for work (a service contract)? | OPEN | no |  |
 | MP-INTERACT-Q2 | Talk targeting: Talk takes the nearest person, so a closer villager comes before another player (a tap, a click or Next always reaches the player). Should players come first for Talk instead? | OPEN | no |  |
-| OD-LE-02B | Offer visibility: who can see an offer (in person at stalls and meetings, by word of mouth, a notice board), the remaining part of OD-LE-02 | OPEN | no |  |
-| OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | OPEN | yes | ECON-P3.4 |
-| OD-LE-04 | Owner decision (Living Economy): Business founding, partnerships, ownership and inheritance | OPEN | yes |  |
-| OD-LE-05B | Interest and lending: whether loans carry interest or fees, who may lend money, and collection procedures (the remaining part of OD-LE-05) | OPEN | no |  |
-| OD-LE-06 | Owner decision (Living Economy): Permissible manor interventions and political authority | OPEN | yes |  |
-| OD-LE-07 | Owner decision (Living Economy): Restricted-use advances and business/household account separation | OPEN | yes |  |
-| OD-LE-08 | Owner decision (Living Economy): Barter, rental, repair and resource substitution | OPEN | yes |  |
-| OD-LE-09 | Owner decision (Living Economy): Bandit market participation and regional trading limits | OPEN | yes |  |
-| OD-LE-10 | Owner decision (Living Economy): Economic rumor, memory persistence and reliability | OPEN | yes |  |
-| OD-LE-11 | Owner decision (Living Economy): Speculation, hoarding and deliberate market manipulation | OPEN | yes |  |
-| OD-LE-12 | Owner decision (Living Economy): Charity, kinship support and communal relief | OPEN | yes |  |
-| OD-LE-13B | Death of a party to a contract: does the contract end, pass to the heir or the household, or go to the estate (the remaining part of OD-LE-13) | OPEN | no |  |
-| OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | OPEN | yes |  |
-| OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | OPEN | yes |  |
-| WDR-011-Q8 | Aspirations, scope of Q3: individual romantic preferences now apply to whom an NPC chooses to court. Should the same individual weighting also apply to whether an NPC ACCEPTS a proposal (the existing acceptance rules, kinship restrictions and the X19-CRT12 cut-offs kept as hard limits), or should acceptance stay as it is today? | OPEN | no |  |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (6)
 

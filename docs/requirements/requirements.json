@@ -847,7 +847,7 @@
    "description": "Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md)",
    "source": "docs/design/ARMOUR_CATALOGUE_PROPOSAL.md",
    "owner_wording": null,
-   "owner_answer": "Owner 2026-10-26: 'Be creative in the buffs from the armor'; the amendment of 2026-10-26 delegates remaining routine decisions. Held provisionally by the agent: antlers from the existing stags (no reindeer art exists), materials option B for Build 22 (existing materials stand in for steel, bronze, fur and silk; option A recorded for later), values by the proposal's rules, cloth headgear sold by the tailor. The owner may change any of it at review.",
+   "owner_answer": "D16 answer B [CONDITIONAL]: Build 22's four armour categories, items and visuals stand. Numerical armour, buff and crafting rules stay PROVISIONAL pending the owner's balance and art review; not an approval of the exact fireball stats, cloth hats or material substitution. No Build 22 rebuild.",
    "disposition": "PROVISIONAL",
    "blocks_implementation": false,
    "target_build": "20",
@@ -864,6 +864,11 @@
      "date": "2026-10-26",
      "change": "disposition: OPEN -> PROVISIONAL",
      "why": "owner delegated the buffs and routine decisions; the agent's recommendations held provisionally, never final until the owner confirms"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "owner_answer",
+     "why": "owner answered (D16, answer B, CONDITIONAL) in docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md; conditional, stays open until its evidence exists"
     }
    ]
   },
@@ -14586,8 +14591,8 @@
    "description": "Knowledge persistence: how industrial knowledge passes on (teaching, apprenticeship, written records) or is lost when skilled people die or leave; Build 18 keeps it only in living people",
    "source": "docs/directives/2026-10-23_expansions_22_23_kickoff.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D27 answer C [FUTURE]: Skills and craft knowledge gained by experience, teaching, apprenticeship and records can transfer or die out across generations; individual 0-10 capability kept; no automatic inheritance of skills; no telepathic diffusion. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "22",
    "related": [],
@@ -14598,8 +14603,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_expansions_22_23_kickoff.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D27, answer C, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "E22-OD-04",
@@ -14608,8 +14619,8 @@
    "description": "Regional trade and transport: do traders' trips take real travel time, carry limited loads and risk loss on routes (replacing the instant six-day road trade), and do settlements trade with each other beyond the village",
    "source": "docs/directives/2026-10-23_expansions_22_23_kickoff.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D28 answer C [FUTURE]: Future physical caravans carry finite goods over time with capacity and danger; the six-day inter-settlement abstraction stays until an approved regional stage, same ledgers and saves. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "22",
    "related": [],
@@ -14620,8 +14631,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_expansions_22_23_kickoff.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D28, answer C, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "E22-OD-05",
@@ -14630,8 +14647,8 @@
    "description": "Population across the region: should off-map settlements get housing and land that limit growth (REG-DEMO-D1 left this to future systems), and may whole settlements be abandoned",
    "source": "docs/directives/2026-10-23_expansions_22_23_kickoff.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D29 answer C [FUTURE]: Distant settlements may grow, decline or be abandoned, constrained by land, housing and food; existing abstract-world state, person ids and conservation preserved; no promise of fully simulated regions in X20. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "22",
    "related": [],
@@ -14642,8 +14659,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_expansions_22_23_kickoff.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D29, answer C, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "E22-P1",
@@ -14736,8 +14759,8 @@
    "description": "Bandit factions: territory and jurisdiction, how many factions may exist and how they form, how leadership changes, and whether crimes act only on real inventories reached by real travel",
    "source": "docs/directives/2026-10-23_expansions_22_23_kickoff.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D30 answer C [FUTURE]: Future bandit factions may have members, territory and leaders, with real inventory, crimes and social reintegration; no magical spawn engine; existing bandit behaviour and the SIM-F3 fix stay. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "23",
    "related": [],
@@ -14748,8 +14771,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_expansions_22_23_kickoff.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D30, answer C, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "E23-SCOPE",
@@ -27262,8 +27291,8 @@
    "description": "Identity gate baseline: approve the candidate new baseline (docs/design/IDENTITY_GATE_CANDIDATE.json)? Its only divergences (day 13 on both seeds) come from arrivals keeping their permanent band id, which changes traits Build 18 hashes from the id (chapel piety, caravan taste, skill seed, willingness, sprite). Alternatively those traits could be seeded from a stored per-person seed so they no longer depend on the id value (a design change).",
    "source": "docs/directives/2026-10-23_id_d2_succession_decisions.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D38 answer A (conditional) [CONDITIONAL]: An identity-gate baseline may be promoted only after a same-commit, current-branch conservation, determinism and first-divergence audit; an old candidate from another commit is not blessed.",
+   "disposition": "PROVISIONAL",
    "blocks_implementation": false,
    "target_build": "unassigned",
    "related": [],
@@ -27274,6 +27303,11 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_id_d2_succession_decisions.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "disposition: OPEN -> PROVISIONAL; owner_answer",
+     "why": "owner answered (D38, answer A (conditional), CONDITIONAL) in docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md; conditional, stays open until its evidence exists"
     }
    ]
   },
@@ -32589,6 +32623,11 @@
      "date": "2026-10-23",
      "change": "schema v2: BLOCKED -> disposition OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D31, answer C, CURRENT) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "acceptance_derived": true,
@@ -32597,8 +32636,10 @@
    "roadmap_reason": "waiting on an owner decision, not development work",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": false
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "completion": "CLOSED",
+   "owner_answer": "D31 answer C [CURRENT]: Continue the flight recorder, deterministic gates, conservation measures, population and performance profiling and source-tagged decision evidence; never automatically rebalance every provisional number or rerun whole suites after no change."
   },
   {
    "id": "OD-03",
@@ -32644,6 +32685,11 @@
      "date": "2026-10-23",
      "change": "schema v2: BLOCKED -> disposition OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D32, answer nested, GDD-REVIEW) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "acceptance_derived": true,
@@ -32652,8 +32698,10 @@
    "roadmap_reason": "waiting on an owner decision, not development work",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": false
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "completion": "CLOSED",
+   "owner_answer": "D32 answer nested [GDD-REVIEW]: Split: CURRENT constraints: the existing 2.5D eight-direction view (fix roofs, depth, targeting in the existing engine; no 2:1 renderer conversion), keep the licensed asset set, host-authoritative multiplayer (internet joining desired, 3-4 friends, world stops when the host is offline, characters bound to the host world), one active character per player with family and heirs and permanent identities, consent for human-to-human actions, existing combat kept stable, equipment visual layers, Godot on Android/Windows/Linux with Deck controller and display support, content boundary crime/death/injury with consequences and no slavery transactions, incremental branch architecture. PARKED (GDD-REVIEW, not approved): Morris/Ralph/Ursula era, five-region starts, counties and atlas; the magic/Well system beyond the existing Fireball; PvP (future extension only); combat re-architecture. Any of these needs explicit current-game owner reconfirmation. Parked parts are NOT approved."
   },
   {
    "id": "OD-04",
@@ -32699,6 +32747,11 @@
      "date": "2026-10-23",
      "change": "schema v2: BLOCKED -> disposition OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D33, answer B, CURRENT) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "acceptance_derived": true,
@@ -32707,8 +32760,10 @@
    "roadmap_reason": "waiting on an owner decision, not development work",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": false
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "completion": "CLOSED",
+   "owner_answer": "D33 answer B [CURRENT]: Locks, keys and chests use ownership, existing lockpick and crime behaviour and realistic finite items; improve only as the existing system supports; no locksmith simulation; Build 22 lockpick fixes kept."
   },
   {
    "id": "OD-05",
@@ -32881,6 +32936,11 @@
      "date": "2026-10-23",
      "change": "schema v2: BLOCKED -> disposition OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D34, answer A, CURRENT) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "acceptance_derived": true,
@@ -32889,8 +32949,10 @@
    "roadmap_reason": "waiting on an owner decision, not development work",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": false
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "completion": "CLOSED",
+   "owner_answer": "D34 answer A [CURRENT]: Hunting is manual and intentional through combat, separate from Gather mode; Gather never auto-targets or kills wildlife (owner confirmed)."
   },
   {
    "id": "OD-08",
@@ -32997,6 +33059,11 @@
      "date": "2026-10-23",
      "change": "schema v2: BLOCKED -> disposition OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D35, answer C, CURRENT) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "acceptance_derived": true,
@@ -33005,8 +33072,10 @@
    "roadmap_reason": "waiting on an owner decision, not development work",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": false
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "completion": "CLOSED",
+   "owner_answer": "D35 answer C [CURRENT]: Reconcile old design-document question ids against newer requirements, leaving imported sources immutable; mark superseded premises; the latest owner correction takes precedence."
   },
   {
    "id": "OD-10",
@@ -33493,6 +33562,11 @@
      "date": "2026-10-23",
      "change": "schema v2: BLOCKED -> disposition OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D36, answer nested, GDD-REVIEW) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "target_build": "16",
@@ -33502,8 +33576,10 @@
    "complexity": "",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": false
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "completion": "CLOSED",
+   "owner_answer": "D36 answer nested [GDD-REVIEW]: Split: CURRENT/binding: an ordinary player person, no chosen hero, title or scripted destiny (36a); the present skill and career system, no class lock (36b); Steam Deck-friendly Linux output with keyboard, mouse, controller and 1280x800 legibility, no Verified claim (36d); no automatic or silent updater and no Mote infrastructure, owner-controlled versioned APK/Windows/Linux delivery (36e); Android toolchain maintenance only (36f); the UI accessibility roadmap (36h); one-time purchase as direction only, no publication or price decision (36i); no fixed content quotas or linear finale (36j). PARKED (GDD-REVIEW, not approved): a combat overhaul (36c) and the monster and boss roster (36g). Parked parts are NOT approved."
   },
   {
    "id": "OD-18",
@@ -34370,8 +34446,8 @@
    "description": "Offer visibility: who can see an offer (in person at stalls and meetings, by word of mouth, a notice board), the remaining part of OD-LE-02",
    "source": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D01 answer C [CURRENT]: Trade offers are local to real encounters, stalls and direct dialogue; gossip carries what a villager genuinely learned, not a universal offer board. Preserve NPC-limited information and player visibility.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [],
@@ -34382,8 +34458,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D01, answer C, CURRENT) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "OD-LE-03",
@@ -34432,6 +34514,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D02, answer C, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "target_build": "20",
@@ -34439,8 +34526,10 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": true
+   "disposition": "APPROVED",
+   "blocks_implementation": true,
+   "completion": "CLOSED",
+   "owner_answer": "D02 answer C [FUTURE]: Existing wage and hiring rules remain intact while current contracts may negotiate explicit item, quantity and unit price. Broader negotiated wages and services are layered into LE-03 behind flags; do not replace functioning pay or invent universal wages. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization."
   },
   {
    "id": "OD-LE-04",
@@ -34489,6 +34578,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D03, answer A, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "target_build": "20",
@@ -34496,8 +34590,10 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": true
+   "disposition": "APPROVED",
+   "blocks_implementation": true,
+   "completion": "CLOSED",
+   "owner_answer": "D03 answer A [FUTURE]: One owner per business initially, ownership recorded separately from household money and estate inheritance. Multiple businesses possible if existing ownership permits; no partnership model in this first stage. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization."
   },
   {
    "id": "OD-LE-05",
@@ -34577,8 +34673,8 @@
    "description": "Interest and lending: whether loans carry interest or fees, who may lend money, and collection procedures (the remaining part of OD-LE-05)",
    "source": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D04 answer C [FUTURE]: Loans, interest, collateral, repayment and default are selected future economic behaviour, NOT present in LE-01. No agent-selected rates or lender powers. Real funds and estate limits, explicit terms, consent and auditable default. Build only in an authorized finance stage. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [],
@@ -34589,8 +34685,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D04, answer C, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "OD-LE-06",
@@ -34639,6 +34741,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D05, answer C, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "target_build": "20",
@@ -34646,8 +34753,10 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": true
+   "disposition": "APPROVED",
+   "blocks_implementation": true,
+   "completion": "CLOSED",
+   "owner_answer": "D05 answer C [FUTURE]: Existing manor relief, tax bands, guard funding and supplies continue. Controlled emergency loans and interventions need actual treasury, authority and the future politics dependency; no arbitrary price control or minted relief. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization."
   },
   {
    "id": "OD-LE-07",
@@ -34701,6 +34810,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: related",
      "why": "overlaps a Build 18 owner answer of 2026-10-23; to be reconciled with the owner, not assumed answered"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D06, answer A, CURRENT) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "target_build": "20",
@@ -34708,11 +34822,13 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "related": [
     "ECON-P3"
-   ]
+   ],
+   "completion": "CLOSED",
+   "owner_answer": "D06 answer A [CURRENT]: Business tills, stock and obligations are separate from household holdings (ECON-P3). Owners can make explicit recorded contributions, legitimate profit distributions or estate transfers; no silent pooling. Fix LE-01's storefront and counter till actor gaps before new finance logic."
   },
   {
    "id": "OD-LE-08",
@@ -34766,6 +34882,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: related",
      "why": "overlaps a Build 18 owner answer of 2026-10-23; to be reconciled with the owner, not assumed answered"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D07, answer B, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "target_build": "20",
@@ -34773,11 +34894,13 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "related": [
     "TRADE-CREDIT"
-   ]
+   ],
+   "completion": "CLOSED",
+   "owner_answer": "D07 answer B [FUTURE]: Keep existing barter. Renting, repair and substitutes selected as economic extensions: model real assets, time, repairs and contracts in phased LE work, not an immediate overhaul or infinite transformation recipes. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization."
   },
   {
    "id": "OD-LE-09",
@@ -34826,6 +34949,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D08, answer A, CURRENT) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "target_build": "20",
@@ -34833,8 +34961,10 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": true
+   "disposition": "APPROVED",
+   "blocks_implementation": true,
+   "completion": "CLOSED",
+   "owner_answer": "D08 answer A [CURRENT]: Retain current bandit buying and off-village trading. No ban on bandits at stalls, no stolen-goods merchant system. Bandit factions and physical regional transport are separate, deferred work."
   },
   {
    "id": "OD-LE-10",
@@ -34883,6 +35013,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D09, answer C, CURRENT) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "target_build": "20",
@@ -34890,8 +35025,10 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": true
+   "disposition": "APPROVED",
+   "blocks_implementation": true,
+   "completion": "CLOSED",
+   "owner_answer": "D09 answer C [CURRENT]: Price knowledge comes from observation, direct offers and existing gossip with source, age and trust, and may be wrong or stale. Use the integrated gossip and judgment plumbing; no separate price-rumour engine or omniscient player market."
   },
   {
    "id": "OD-LE-11",
@@ -34940,6 +35077,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D10, answer B, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "target_build": "20",
@@ -34947,8 +35089,10 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": true
+   "disposition": "APPROVED",
+   "blocks_implementation": true,
+   "completion": "CLOSED",
+   "owner_answer": "D10 answer B [FUTURE]: Villager speculation and hoarding is an approved direction once adaptive prices, resource accounting and storage exist. Nothing manipulates supply by fiat; scarcity, inventory, consequences and finite purses govern. Not on within off-flag LE-01. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization."
   },
   {
    "id": "OD-LE-12",
@@ -35002,6 +35146,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: related",
      "why": "overlaps a Build 18 owner answer of 2026-10-23; to be reconciled with the owner, not assumed answered"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D11, answer C, CURRENT) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "target_build": "20",
@@ -35009,11 +35158,13 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "related": [
     "DVW-B3-CHAPEL"
-   ]
+   ],
+   "completion": "CLOSED",
+   "owner_answer": "D11 answer C [CURRENT]: Extend existing family help, chapel aid and manor relief by voluntary real-resource donations where meaningful; all transfers obey the family sacrifice hierarchy, judgment-weighted willingness and conservation. No separate charity economy."
   },
   {
    "id": "OD-LE-13",
@@ -35085,8 +35236,8 @@
    "description": "Death of a party to a contract: does the contract end, pass to the heir or the household, or go to the estate (the remaining part of OD-LE-13)",
    "source": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D12 answer B [FUTURE]: Death of a contract party can create estate claims up to real estate assets; heirs bear no automatic liability from separate personal funds. Current contract-death and lapse handling stays until the authorized contract and estate stage with migrations. No invented penalties; nothing forced into Build 22. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [],
@@ -35097,8 +35248,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D12, answer B, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "OD-LE-14",
@@ -35147,6 +35304,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D13, answer C, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "target_build": "20",
@@ -35154,8 +35316,10 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": true
+   "disposition": "APPROVED",
+   "blocks_implementation": true,
+   "completion": "CLOSED",
+   "owner_answer": "D13 answer C [FUTURE]: A personal market journal may track only offers the player actually learned, with date, place and staleness, aligned with the persistent per-world Messages journal; no omniscient marketplace feed; must not break the guest journal network path. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization."
   },
   {
    "id": "OD-LE-15",
@@ -35204,6 +35368,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D14, answer C, CURRENT) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "target_build": "20",
@@ -35211,8 +35380,10 @@
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
    "integrated_in": [],
    "migrated_from_status": "BLOCKED",
-   "disposition": "OPEN",
-   "blocks_implementation": true
+   "disposition": "APPROVED",
+   "blocks_implementation": true,
+   "completion": "CLOSED",
+   "owner_answer": "D14 answer C [CURRENT]: Economy target about 500 NPCs on a mid-range Android phone, work staggered to at most about 4 ms per game frame: a target to PROFILE, not a success claim. Deterministic outcomes and earlier memory evidence preserved."
   },
   {
    "id": "OD01-QUEST",
@@ -37230,8 +37401,8 @@
    "description": "How long must an adult live in a settlement to count as an established resident (to vote and stand for mayor)?",
    "source": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D20 answer C (modified) [FUTURE]: Voting after 8 game days (one game year) of residence, council candidacy after 16 days (two game years); persistent real residency and adult status required; only with the approved politics rollout. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "21",
    "related": [],
@@ -37242,8 +37413,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D20, answer C (modified), FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "P21-STRUCTURE",
@@ -37252,8 +37429,8 @@
    "description": "Beyond the elected mayor: councils and their powers, the manor or a lord's authority over the village, regional government, and whether smaller settlements have simpler government",
    "source": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D19 answer C [FUTURE]: As Q-POL-1 (D19): elected mayor and council long term; manor and reeve kept until an Expansion 21 transition is drafted and authorized. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "21",
    "related": [],
@@ -37264,8 +37441,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D19, answer C, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "PACK-Q",
@@ -41883,8 +42066,8 @@
    "description": "Political structure of the starting village (manor with a reeve, elected mayor, council, or a mix; what the lord retains)",
    "source": "docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D19 answer C [FUTURE]: Elected mayor and council are the approved long-term direction; the working manor and reeve system is not ripped out. Transition and legal authority drafted for Expansion 21 once judgment is live, not in X20 economy work. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization.",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "21",
    "related": [
@@ -41898,8 +42081,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "Build 21 preliminary plan question, never registered"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D19, answer C, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "Q-POL-2",
@@ -41968,8 +42157,8 @@
    "description": "Vote privacy and which totals are public",
    "source": "docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D21 answer A [FUTURE]: Secret individual votes, published aggregate totals, deterministic internal audit; NPCs do not learn private ballots; vote decisions use real judgment and knowledge. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization.",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "21",
    "related": [
@@ -41983,8 +42172,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "Build 21 preliminary plan question, never registered"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D21, answer A, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "Q-POL-5",
@@ -41993,8 +42188,8 @@
    "description": "Ties in elections",
    "source": "docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D22 answer A [FUTURE]: Ties: runoff first, then qualifying service tenure, then age; an explicit deterministic equality fallback before final implementation; Expansion 21. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization.",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "21",
    "related": [
@@ -42008,8 +42203,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "Build 21 preliminary plan question, never registered"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D22, answer A, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "Q-POL-6",
@@ -42018,8 +42219,8 @@
    "description": "Removal from office",
    "source": "docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D23 answer A [FUTURE]: No automatic impeachment or recall: an elected term ends early only by death or permanent absence, with consequences on reputation and later ballots. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization.",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "21",
    "related": [
@@ -42033,8 +42234,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "Build 21 preliminary plan question, never registered"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D23, answer A, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "Q-POL-7",
@@ -42043,8 +42250,8 @@
    "description": "Placement and gate: politics waits for Expansion 19's live judgment, or an interim voter model behind a switch",
    "source": "docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D24 answer A [CURRENT]: Real voter choices wait for the operational, tested individual Judgment System; no interim omniscient scripted vote engine. Design-only scaffolding may exist without activation.",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "21",
    "related": [
@@ -42058,8 +42265,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "Build 21 preliminary plan question, never registered"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D24, answer A, CURRENT) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "Q-POL-8",
@@ -42068,8 +42281,8 @@
    "description": "The constable and the law: a constable and crime records before Expansion 22; the friendly guard (X19 conflict 3)",
    "source": "docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D25 answer B [FUTURE]: Mayor and council select a constable through real governance; the constable commands guards under existing law. No competing guard or crime system; no unlimited coercive power. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization.",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "21",
    "related": [
@@ -42083,8 +42296,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "Build 21 preliminary plan question, never registered"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D25, answer B, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "Q-POL-9",
@@ -42093,8 +42312,8 @@
    "description": "Taxes under an elected authority and DVW-B5's predictability",
    "source": "docs/directives/2026-10-21_master_expansion_roadmap.md; Build 21 preliminary plan (wip/expansion21-preparation 0eeb3df, expansion21/PRELIMINARY_PLAN.md section 5.2)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D26 answer B [FUTURE]: The mayor proposes taxes within existing bands and spending, council approval for major items, finite treasury; integrated with the current tax, guard and manor ledger once authorized. FUTURE: design direction only; not implemented; do not start the stage or build subsystems without its authorization.",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "21",
    "related": [
@@ -42109,8 +42328,14 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "Build 21 preliminary plan question, never registered"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D26, answer B, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "Q18-1",
@@ -42275,18 +42500,24 @@
      "date": "2026-10-23",
      "change": "owner_answer",
      "why": "owner: retain neutral 1.0 capability factors for Build 18 (docs/directives/2026-10-23_chapel_alms_build18_decisions.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: PROVISIONAL -> APPROVED; owner_answer",
+     "why": "owner answered (D37, answer A, CURRENT) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
    "target_build": "18",
-   "owner_answer": "DP-19: retain neutral 1.0 capability factors",
+   "owner_answer": "D37 answer A [CURRENT]: No extra settlement-wide pay or output multipliers (1.0, neutral). Individual 0-10 skills with industry-specific output and pay, the facility effective cap, and farming improving time not yield are kept.",
    "integrated_in": [],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
-   "disposition": "PROVISIONAL",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "related": [
     "X18-SIM",
     "Q18-11A"
-   ]
+   ],
+   "completion": "CLOSED"
   },
   {
    "id": "Q18-11A",
@@ -48170,8 +48401,8 @@
    "description": "Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix?",
    "source": "docs/directives/2026-10-23_simulation_first_diagnostics.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D17 answer C [ENGINEERING]: A stonecutter re-buying a chisel 328 times a day is a repeated-redecision defect: bounded re-evaluation keyed to a meaningful change (price, stock, purse, elapsed time); track lost work in the recorder; no shopping AI, no change to conservation, no loan system.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "19",
    "related": [],
@@ -48182,8 +48413,20 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_simulation_first_diagnostics.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D17, answer C, ENGINEERING) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "next_action",
+     "why": "engineering fix approved (D17); scheduled after R5 merges (shared npc_brain.gd)"
     }
-   ]
+   ],
+   "completion": "CLOSED",
+   "next_action": "Focused fix: bounded re-evaluation keyed to a meaningful change (price, stock, purse, elapsed time); recorder tracks lost work; tests plus G0; after the R5 aspirations merge (npc_brain.gd is shared)."
   },
   {
    "id": "SIM-F3",
@@ -48192,8 +48435,8 @@
    "description": "Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)?",
    "source": "docs/directives/2026-10-23_simulation_first_diagnostics.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D18 answer C [ENGINEERING]: Bandits' empty stalk plan re-deciding every tick is a recorder-proven performance defect: keep a persistent deterministic plan while conditions are unchanged and re-evaluate on real state changes; no new bandit combat or faction mechanics.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "19",
    "related": [],
@@ -48204,8 +48447,20 @@
      "date": "2026-10-23",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-23_simulation_first_diagnostics.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D18, answer C, ENGINEERING) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "next_action",
+     "why": "engineering fix approved (D18); scheduled after R5 merges"
     }
-   ]
+   ],
+   "completion": "CLOSED",
+   "next_action": "Focused fix: a persistent deterministic stalk plan while conditions are unchanged, re-evaluated on real state changes; tests plus G0; after the R5 aspirations merge."
   },
   {
    "id": "SIM-F4",
@@ -54797,7 +55052,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "Update the R5 design for the owner's answers (worker J, wip/x20-r5), then code after R2/R4 merge (same files): flag off, six domains, job_choice behind its own flag, tests for all seven decisions, G0 identical with it off, no resource creation; aspiration dialogue only after review.",
+   "next_action": "Worker L: survival-pressure danger-term fix, then extend individual romance weighting to proposal acceptance (Q8 = A) inside the existing acceptance rules and hard limits; flags off; then merge into wip/expansion20 and validate.",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -54867,6 +55122,11 @@
      "date": "2026-10-27",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker:  -> worker L (aspirations code)",
      "why": "R2/R4 merged, so the aspiration code can start (shared files free)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "next_action",
+     "why": "owner D15 (answer C) and D39 (WDR-011-Q8 = A): personal romance preferences also govern accepting an eligible proposal, hard limits and human consent kept"
     }
    ],
    "target_build": "20",
@@ -55147,8 +55407,8 @@
    "description": "Aspirations, scope of Q3: individual romantic preferences now apply to whom an NPC chooses to court. Should the same individual weighting also apply to whether an NPC ACCEPTS a proposal (the existing acceptance rules, kinship restrictions and the X19-CRT12 cut-offs kept as hard limits), or should acceptance stay as it is today?",
    "source": "R5 design revision (wip/x20-r5 8bde18b); docs/directives/2026-10-27_final_aspirations_decisions.md Q3",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "D39 answer A [CURRENT]: An NPC's personal romance preferences affect both choosing a courtship target and accepting or refusing an eligible proposal. Kinship, age, existing-partner and hard-limit checks and human-player consent stay mandatory. Within the eligible pool weigh bond, opinion, circumstances, personality and ambitions; standing not double counted. (D15, answer C, on WDR-011-C: courtship stays voluntary, on separate days, without A-button spam; suitability by personality within eligibility, no financial cutoffs.)",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -55166,9 +55426,15 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "agent recommendation recorded (not an approval)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (D39, answer A, CURRENT) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
     }
    ],
-   "notes": "Recommendation: apply it to acceptance too (Q3 speaks of selecting a partner and of one villager overlooking financial differences that another would not), inside the existing acceptance rules and cut-offs as hard limits; human players' consent untouched. Until answered the code keeps acceptance unchanged."
+   "notes": "Recommendation: apply it to acceptance too (Q3 speaks of selecting a partner and of one villager overlooking financial differences that another would not), inside the existing acceptance rules and cut-offs as hard limits; human players' consent untouched. Until answered the code keeps acceptance unchanged.",
+   "completion": "CLOSED"
   },
   {
    "id": "WDR-012",

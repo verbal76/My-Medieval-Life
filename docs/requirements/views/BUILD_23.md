@@ -16,7 +16,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Owner playtested | 0 of 2 (0%) |
 | Complete | 0 of 2 (0%) |
 | Open (release blockers) | 2 |
-| Open owner decisions (blocking) | 1 (0) |
+| Open owner decisions (blocking) | 0 (0) |
 
 ## Blocked (open owner decision, unfinished dependency or unsettled design) (2)
 
@@ -24,10 +24,4 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 |---|---|---|---|---|---|---|---|---|
 | E23-BANA | Expansion 23 BAN-A: existing-system audit and requirements reconciliation for bandit factions and criminal careers (Rule 016, the bandit roadmap); no criminal actions or faction behaviour | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / staging/my-medieval-life | NOT TESTED | owner reviews the audit and approves the architecture | design: UNKNOWN | UNKNOWN |
 | E23-SCOPE | Expansion 23 works within the village, existing roads and currently represented settlements; travel-time route banditry on Expansion 22's completed routes belongs in Expansion 22 phase E; no temporary systems to be discarded later | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-
-## Open owner decisions (1)
-
-| ID | Question | Disposition | Blocks | Affects |
-|---|---|---|---|---|
-| E23-OD-01 | Bandit factions: territory and jurisdiction, how many factions may exist and how they form, how leadership changes, and whether crimes act only on real inventories reached by real travel | OPEN | no |  |
 
