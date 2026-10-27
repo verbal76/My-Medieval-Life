@@ -208,6 +208,10 @@ func _home_meal(n: NPC) -> Array:
 ## performed actions by kind.
 var decide_calls := {}
 var act_calls := {}
+## SIM-F2: each villager's last failed buy_from ({vendor, item, price, stock, purse, at}; erased by a purchase), read by
+## buy_held. Not saved, as a plan is not: a loaded villager decides afresh.
+var buy_failed := {}
+const BUY_RETRY_MINUTES := 60.0      # SIM-F2: PROVISIONAL (agent, docs/DECISIONS.md): a failed purchase is tried again after an hour at most
 
 
 func decide(n: NPC) -> void:
@@ -396,7 +400,7 @@ func _plan_heal(n: NPC) -> bool:
 		if o == null or not o.alive or w.asleep(o) or o == n:
 			continue
 		for m in MEDICINES:
-			if o.inv.has(m) and n.coins >= w.sell_price(o, m) and (best == null or n.pos.distance_to(o.pos) < n.pos.distance_to(best.pos)):
+			if o.inv.has(m) and buy_open(n, o, m) and (best == null or n.pos.distance_to(o.pos) < n.pos.distance_to(best.pos)):     # SIM-F2: the act's price and rule
 				best = o
 				item = m
 				break
@@ -715,13 +719,39 @@ func _mason(n: NPC) -> bool:
 	return _fetch_dress_stone(n)
 
 
+## SIM-F2 (owner D17, answer C, ENGINEERING, 2026-10-27): a purchase is chosen only when buy_from would make it: the
+## seller holds `qty` of `item` and `n` can pay the bargained price (World.deal_price: the list price moved by both sides'
+## Trading, which the act pays) by the act's own rule (World.can_afford above the reserve; a necessity or the trade's own
+## tool from the whole purse). Choosing on the list price let a purse between the two prices plan a purchase the act then
+## refused, and the empty plan chose it again at once (recorder run 1: 328 failed iron-chisel purchases in a day). A
+## purchase that failed anyway is not chosen again while nothing that decided it has changed (buy_held).
+func buy_open(n: NPC, v: NPC, item: String, qty := 1) -> bool:
+	if v.inv.count(item) < qty or buy_held(n, v, item):
+		return false
+	var cost := w.deal_price(w.sell_price(v, item), n, v) * qty
+	if World.is_necessity(item) or JOB_TOOL.get(n.job, "") == item:
+		return n.coins >= cost
+	return w.can_afford(n, cost)
+
+
+## SIM-F2: whether `n`'s last failed purchase (buy_failed) was this one, from `v`, and nothing has changed since: the same
+## bargained price, the seller's stock, the buyer's purse, and less than buy_retry_minutes gone by. Then choosing it again
+## would fail the same way. Bounded: after that time it is tried again whatever happened.
+func buy_held(n: NPC, v: NPC, item: String) -> bool:
+	var f = buy_failed.get(n.id)
+	if f == null or int(f.vendor) != v.id or str(f.item) != item:
+		return false
+	return int(f.price) == w.deal_price(w.sell_price(v, item), n, v) and int(f.stock) == v.inv.count(item) and int(f.purse) == n.coins \
+			and w.minutes - float(f.at) < BUY_RETRY_MINUTES
+
+
 ## STONE-01, STONE-06: a trip to buy the dressing tool `kind` (the mallet: the carpenter's, the iron chisel: the smith's,
 ## either from the goods merchant) with the villager's own coins above their reserve; false when none is for sale.
 func _fetch_dress_tool(n: NPC, kind: String) -> bool:
 	var maker := "smith" if kind == "chisel" else "carpenter"
 	for o: NPC in w.npcs:
 		if o.alive and o != n and not w.asleep(o) and (o.job == maker or buy_role(o) == "merchant_goods") \
-				and o.inv.has(kind) and not keeps(o, kind) and n.coins - w.reserve_of(n) >= w.sell_price(o, kind):
+				and o.inv.has(kind) and not keeps(o, kind) and buy_open(n, o, kind):     # SIM-F2: buy_from's own price and rule
 			n.doing = "buying %s to dress stone" % ("an iron chisel" if kind == "chisel" else "a " + kind)
 			n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": kind, "qty": 1})]
 			return true
@@ -733,7 +763,7 @@ func _fetch_dress_tool(n: NPC, kind: String) -> bool:
 func _fetch_dress_stone(n: NPC) -> bool:
 	var short := int(GameData.recipes["dress_stone"]["in"]["stone"]) - n.inv.count("stone")
 	for v: NPC in _with_buy_role("merchant_raw"):
-		if v != n and not w.asleep(v) and v.inv.count("stone") >= short and n.coins - w.reserve_of(n) >= w.sell_price(v, "stone") * short:
+		if v != n and not w.asleep(v) and buy_open(n, v, "stone", short):     # SIM-F2: buy_from's own price and rule
 			n.doing = "buying stone to dress"
 			n.plan = [go(_workplace_cell(v)), doit("buy_from", {"vendor": v.id, "item": "stone", "qty": short})]
 			return true
@@ -1795,7 +1825,7 @@ func _bandit_market(n: NPC) -> bool:
 		if _guard_near(Vector2(at), 10.0):
 			continue
 		for f in FOOD:
-			if v.inv.has(f) and w.sell_price(v, f) <= n.coins:
+			if v.inv.has(f) and buy_open(n, v, f):     # SIM-F2: the bargained price the act pays, not the list price
 				var qty := mini(int(GameData.b("bandit_spend_units")), n.coins / maxi(1, w.sell_price(v, f)))
 				n.doing = "slipping into the market"
 				n.plan = [go(at), doit("buy_from", {"vendor": v.id, "item": f, "qty": qty})]
@@ -2218,7 +2248,7 @@ func _buy_tool(n: NPC, tool: String) -> bool:
 			continue
 		for o: NPC in w.npcs:
 			if o.alive and ((o.job == role) if role in ["smith", "carpenter"] else (buy_role(o) == role)) and o.inv.has(tool) and not keeps(o, tool):
-				if n.coins >= w.sell_price(o, tool):
+				if buy_open(n, o, tool):          # SIM-F2: the bargained price the act pays (the list price looped a woodcutter all day)
 					n.doing = "buying a new %s" % tool
 					n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": tool, "qty": 1})]
 					return true
@@ -2357,6 +2387,18 @@ func _bandit_near(p: Vector2, r: float) -> NPC:
 
 
 # ---------------------------------------------------------------- actions --------------------
+## SIM-F2 (D17: "track lost work in the recorder"): a buy_from the act's own rules refused before World.trade was asked
+## (the seller had none left, or the bargained price would take the buyer into their reserve) is written as a refused
+## trade with its reason and the figures that decided it, through the recorder's existing event calls and codes.
+func _record_refused_buy(buyer: NPC, v: NPC, item: String, qty: int, up: int) -> void:
+	var rec = w.recorder
+	var detail := "item=%s qty=%d price=%d purse=%d reserve=%d stock=%d" % [item, qty, up, buyer.coins, w.reserve_of(buyer), v.inv.count(item)]
+	var ev: int = rec.begin("economy", "trade", "transaction", "trade", WorldRecorder.ref_of(buyer), {"detail": detail})
+	rec.participant(ev, WorldRecorder.ref_of(buyer), "buyer")
+	rec.participant(ev, WorldRecorder.ref_of(v), "seller")
+	rec.end(ev, "refused", "seller_lacks_item" if not v.inv.has(item) else "refused_by_rules", "below_reserve" if v.inv.has(item) else "")
+
+
 func act(n: NPC, what: String, a: Dictionary) -> bool:
 	act_calls[what] = int(act_calls.get(what, 0)) + 1
 	match what:
@@ -2555,6 +2597,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var for_need: bool = a.get("pantry", false) or World.is_necessity(a.item) or JOB_TOOL.get(buyer.job, "") == a.item
 			while qty > 0 and not for_need and not w.can_afford(buyer, up * qty):
 				qty -= 1                          # stock and materials: only what leaves the household's reserve (OD-19)
+			var traded := qty > 0                 # SIM-F2: World.trade was asked (it records its own refusal)
 			while qty > 0 and not w.trade(buyer, v, a.item, qty, up):
 				qty -= 1
 			if qty > 0:
@@ -2563,6 +2606,12 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				w.transfer(buyer.inv, n.inv, a.item, qty)
 			if qty > 0 and a.get("pantry", false):
 				w.transfer(n.inv, w.households[n.household].pantry, a.item, qty)
+			if qty > 0:
+				buy_failed.erase(n.id)
+			else:                                 # SIM-F2: remembered, so the same purchase is not chosen again unchanged
+				buy_failed[n.id] = {"vendor": v.id, "item": str(a.item), "price": up, "stock": v.inv.count(a.item), "purse": buyer.coins, "at": w.minutes}
+				if w.recorder != null and not traded:
+					_record_refused_buy(buyer, v, str(a.item), int(a.qty), up)
 			return qty > 0
 		"buy_seed":                                       # MERCH-01: a villager buys seed by the player's rule
 			var v := w.npc(int(a.vendor))
