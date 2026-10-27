@@ -63,7 +63,10 @@ var place_label: Label
 ## journal's quests page.
 const EARNING_HINT := "For paid work, ask farmers, miners and woodcutters \"Any work for me?\", or the reeve at the manor. Sell ore to the smith, logs to the carpenter, hides to the tanner, and goods at the market stalls."
 const OPENING_HINT := "For paid work, ask farmers, miners, woodcutters or the reeve \"Any work for me?\". Who buys what is in the journal."
-const JOURNAL_PER_PAGE := 6    # lines on a journal page (a day heading counts as one)
+const JOURNAL_NAV_H := 48.0     # the journal's page buttons' height
+const JOURNAL_SPINE := 10.0     # the book's spine between its two pages
+const JOURNAL_LINE_SEP := 6.0   # the gap between a page's lines
+const JOURNAL_DAY_SIZE := 20    # a day's heading on a journal page (points)
 const PARCHMENT := Color8(236, 222, 186)
 const INK := Color8(58, 38, 22)
 # the journal's Resources & Gathering page (show_resources): its words come from resources.json
@@ -2154,56 +2157,63 @@ func show_players() -> void:
 	_button("Close", hide_all)
 
 
-## `messages_page` (GP-MESSAGE-FOOTPRINT): the messages shown at the top of the screen this game, by day, as the village
-## record is.
+## `messages_page` (GP-MESSAGE-FOOTPRINT): the messages shown at the top of the screen, kept by the world (GP-MESSAGE-JOURNAL), by
+## day, as the village record is. GP-MESSAGE-JOURNAL pages: each page holds what fits its height at the window's size (measured,
+## not counted), an entry is never split across two pages, and the two pages and their buttons fit the window, so Earlier and
+## Later are the way through the history and nothing needs scrolling (one entry taller than a whole page stands alone).
 func show_journal(spread: int, quests_page := false, messages_page := false) -> void:
 	var items := _quest_items() if quests_page else (_journal_items(game_messages()) if messages_page else _journal_items())
 	var phone_journal: bool = main.settings.layout_height() < 600.0
-	var pages := maxi(1, ceili(float(items.size()) / JOURNAL_PER_PAGE))
+	_open("journal", "Journal: quests" if quests_page else ("Journal: messages" if messages_page else "Journal"), true)
+	var line_size := 14 if phone_journal else 16
+	var paper := StyleBoxFlat.new()
+	paper.bg_color = PARCHMENT
+	paper.border_color = Color8(120, 84, 48)
+	paper.set_border_width_all(3)
+	paper.set_corner_radius_all(3)
+	paper.content_margin_left = 22
+	paper.content_margin_right = 22
+	paper.content_margin_top = 16
+	paper.content_margin_bottom = 12
+	# the room the window gives the two pages: the window less its frame and title row, less the page buttons
+	var win: Vector2 = root.size - Vector2(16, 16)
+	var frame: Vector2 = panel.get_theme_stylebox("panel").get_minimum_size()
+	var outer_sep := float((panel.get_child(0) as VBoxContainer).get_theme_constant("separation"))
+	var body := Vector2(win.x - frame.x, win.y - frame.y - top_row.get_combined_minimum_size().y - outer_sep)
+	var book_h := floorf(body.y - JOURNAL_NAV_H - float(panel_body.get_theme_constant("separation")) - 2.0)
+	# measured a little narrower than the page, so a line the Label would just wrap is counted wrapped (a vertical scroll bar, or
+	# rounding of the two pages' widths, takes a few units)
+	var text_w := floorf((body.x - JOURNAL_SPINE) / 2.0 - paper.get_minimum_size().x) - 10.0
+	var num_h := _journal_text_h("1", 14, text_w)
+	var room := book_h - paper.get_minimum_size().y - num_h - 2.0 * JOURNAL_LINE_SEP
+	var page_list := journal_pages(items, text_w, room, line_size)
+	var pages := maxi(1, page_list.size())
 	var spreads := ceili(pages / 2.0)
 	spread = spreads - 1 if spread < 0 else clampi(spread, 0, spreads - 1)
-	_open("journal", "Journal: quests" if quests_page else ("Journal: messages" if messages_page else "Journal"), true)
 	var book := HBoxContainer.new()
+	book.name = "Book"
 	book.add_theme_constant_override("separation", 0)
 	book.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	panel_body.add_child(book)
 	for side in 2:
 		var page := spread * 2 + side
 		var sheet := PanelContainer.new()
-		var paper := StyleBoxFlat.new()
-		paper.bg_color = PARCHMENT
-		paper.border_color = Color8(120, 84, 48)
-		paper.set_border_width_all(3)
-		paper.set_corner_radius_all(3)
-		paper.content_margin_left = 22
-		paper.content_margin_right = 22
-		paper.content_margin_top = 16
-		paper.content_margin_bottom = 12
 		sheet.add_theme_stylebox_override("panel", paper)
 		sheet.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		# GP-MESSAGE-JOURNAL: on a phone (450 high) a 300-high page pushed the page buttons out of the window; the page is lower there,
-		# 300 on a desktop as before; longer pages still grow and the window scrolls
-		sheet.custom_minimum_size = Vector2(0, clampf(main.settings.layout_height() - 250.0, 160.0, 300.0))
+		sheet.custom_minimum_size = Vector2(0, maxf(book_h, 120.0))
 		var lines := VBoxContainer.new()
-		lines.add_theme_constant_override("separation", 6)
+		lines.add_theme_constant_override("separation", int(JOURNAL_LINE_SEP))
 		sheet.add_child(lines)
-		var on_page := items.slice(page * JOURNAL_PER_PAGE, (page + 1) * JOURNAL_PER_PAGE)
-		if not on_page.is_empty() and not on_page[0].day:
-			# a page that starts mid-day repeats the day's heading, as a diary would
-			for k in range(page * JOURNAL_PER_PAGE - 1, -1, -1):
-				if items[k].day:
-					on_page.push_front({"day": true, "text": "%s, continued" % items[k].text})
-					break
+		var on_page: Array = page_list[page] if page < page_list.size() else []
 		for it in on_page:
 			var l := Label.new()
 			l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			l.text = it.text
 			if it.day:
-				l.text = it.text
-				l.add_theme_font_size_override("font_size", 20)
+				l.add_theme_font_size_override("font_size", JOURNAL_DAY_SIZE)
 				l.add_theme_color_override("font_color", Color8(122, 38, 22))
 			else:
-				l.text = it.text
-				l.add_theme_font_size_override("font_size", 14 if phone_journal else 16)
+				l.add_theme_font_size_override("font_size", line_size)
 				l.add_theme_color_override("font_color", INK)
 			lines.add_child(l)
 		var gap := Control.new()
@@ -2219,28 +2229,85 @@ func show_journal(spread: int, quests_page := false, messages_page := false) -> 
 		if side == 0:
 			var spine := ColorRect.new()
 			spine.color = Color8(92, 58, 34)
-			spine.custom_minimum_size = Vector2(10, 0)
+			spine.custom_minimum_size = Vector2(JOURNAL_SPINE, 0)
 			book.add_child(spine)
 	var nav := HBoxContainer.new()
 	panel_body.add_child(nav)
 	if phone_journal:
-		panel_body.move_child(nav, 0)      # GP-MESSAGE-JOURNAL: on a phone the page buttons stand above the pages, never scrolled away
+		panel_body.move_child(nav, 0)      # GP-MESSAGE-JOURNAL: on a phone the page buttons stand above the pages
+	# on a phone the buttons take only their words' width, in smaller words, so the row fits the narrowest screen (720 x 450)
+	var bw := func(b: Button, w: float) -> void:
+		b.custom_minimum_size = Vector2(0.0 if phone_journal else w, JOURNAL_NAV_H)
+		if phone_journal:
+			b.add_theme_font_size_override("font_size", 16)
 	var earlier := _button("Earlier", func(): show_journal(spread - 1, quests_page, messages_page), spread > 0, nav)
-	earlier.custom_minimum_size = Vector2(130, 48)
+	bw.call(earlier, 130.0)
 	var where := Label.new()
-	where.text = "Pages %d–%d of %d" % [spread * 2 + 1, mini(spread * 2 + 2, pages), pages] if items.size() > 0 else "Nothing written yet"
+	where.name = "Where"
+	where.text = ("%d–%d of %d" if phone_journal else "Pages %d–%d of %d") % [spread * 2 + 1, mini(spread * 2 + 2, pages), pages] if items.size() > 0 else ("Nothing yet" if phone_journal else "Nothing written yet")
+	if phone_journal:
+		where.add_theme_font_size_override("font_size", 16)
 	where.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	where.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	nav.add_child(where)
 	var later := _button("Later", func(): show_journal(spread + 1, quests_page, messages_page), spread < spreads - 1, nav)
-	later.custom_minimum_size = Vector2(130, 48)
+	bw.call(later, 130.0)
 	for v in [["Village record", false, false], ["Quests", true, false], ["Messages", false, true]]:
 		if bool(v[1]) == quests_page and bool(v[2]) == messages_page:
 			continue
 		var other := _button(str(v[0]), func(): show_journal(-1, bool(v[1]), bool(v[2])), true, nav)
-		other.custom_minimum_size = Vector2(150, 48)
+		bw.call(other, 150.0)
 	var res := _button("Resources", func(): show_resources(), true, nav)
-	res.custom_minimum_size = Vector2(150, 48)
+	bw.call(res, 150.0)
+
+
+## The height a journal line takes: its words at `size` points wrapped at `width`, as a Label draws them.
+func _journal_text_h(text: String, size: int, width: float) -> float:
+	var f: Font = panel.get_theme_font("font", "Label")
+	var spacing := float(panel.get_theme_constant("line_spacing", "Label"))
+	var s := f.get_multiline_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, maxf(width, 1.0), size, -1,
+			TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE)
+	var lh := f.get_height(size)
+	var n := maxi(1, roundi(s.y / lh))
+	return ceilf(n * lh + (n - 1) * spacing)
+
+
+## The journal's items ({day, text}) laid out in pages of at most `room` height at text width `width`: an entry is never split, a
+## day's heading never ends a page without one of its entries, and a page that begins mid-day repeats the day's heading
+## ("..., continued"), as a diary would. An entry taller than a page gets a page of its own.
+func journal_pages(items: Array, width: float, room: float, line_size: int) -> Array:
+	var pages := []
+	var cur := []
+	var used := 0.0
+	var day := ""
+	var height := func(it: Dictionary) -> float:
+		return _journal_text_h(str(it.text), JOURNAL_DAY_SIZE if it.day else line_size, width) + JOURNAL_LINE_SEP
+	for i in items.size():
+		var it: Dictionary = items[i]
+		var h: float = height.call(it)
+		if it.day:
+			day = str(it.text)
+			var with_next: float = h + (height.call(items[i + 1]) if i + 1 < items.size() and not items[i + 1].day else 0.0)
+			if not cur.is_empty() and used + with_next > room:
+				pages.append(cur)
+				cur = []
+				used = 0.0
+			cur.append(it)
+			used += h
+			continue
+		if not cur.is_empty() and used + h > room:
+			pages.append(cur)
+			cur = []
+			used = 0.0
+		if cur.is_empty() and day != "":
+			var c := {"day": true, "text": "%s, continued" % day}
+			cur.append(c)
+			used += height.call(c)
+		cur.append(it)
+		used += h
+	if not cur.is_empty():
+		pages.append(cur)
+	return pages
 
 
 ## The village record as journal lines: a heading when the day changes, then each entry with its

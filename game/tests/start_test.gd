@@ -640,13 +640,15 @@ func _run() -> void:
 	check(p.crimes.size() == crimes_now + 1 and p.crimes[-1].kind == "pickpocket", "the pickpocket is on the record (%s)" % ("unseen" if p.crimes[-1].witnesses == 0 else "caught"))
 
 	# the journal: the village record on book pages, opening at the latest, with page turning
-	for i in 30:
+	# GP-MESSAGE-JOURNAL: a page holds what fits its height (was six lines), so a desktop spread takes some forty short entries:
+	# 120 of them (was 30) still make several spreads to turn
+	for i in 120:
 		w.note("journal test entry %d" % i)
 	ui.show_journal(-1)
 	check(ui.is_open("journal"), "the journal opens")
 	var page_text: String = " ".join(ui.panel_body.find_children("*", "Label", true, false).map(func(l): return l.text))
-	check(page_text.contains("journal test entry 29") and page_text.contains("Day 1"), "it opens at the latest pages, under the day's heading")
-	check(_press("Earlier") and not " ".join(ui.panel_body.find_children("*", "Label", true, false).map(func(l): return l.text)).contains("journal test entry 29"), "Earlier turns back a page")
+	check(page_text.contains("journal test entry 119") and page_text.contains("Day 1"), "it opens at the latest pages, under the day's heading")
+	check(_press("Earlier") and not " ".join(ui.panel_body.find_children("*", "Label", true, false).map(func(l): return l.text)).contains("journal test entry 119"), "Earlier turns back a page")
 	check(_press("Later"), "Later turns forward again")
 	ui.hide_all()
 

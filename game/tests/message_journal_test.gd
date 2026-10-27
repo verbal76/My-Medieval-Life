@@ -8,6 +8,8 @@ extends SceneTree
 ##        else as before;
 ##   9.   two saved worlds keep their own histories; a new game starts with none;
 ##   10.  keeping messages changes nothing in the simulation (same seed, same steps, with and without messages: the same world);
+##   the pages: each holds what fits its height (measured), no entry split, nothing to scroll, every message once, in order, at
+##   20:9, 16:9 and 16:10 phones, the narrowest 720 x 450 and the desktop; the village record the same;
 ##   and the retention rules: per player, two tiers with their caps from game/data/message_journal.json, ordinary entries never
 ##   pushing out significant ones; a guest's messages are its own.
 ##   godot --headless --path game --script res://tests/message_journal_test.gd
@@ -52,6 +54,7 @@ func frames(n := 3) -> void:
 func _run() -> void:
 	await _save_and_reload()
 	await _two_worlds()
+	await _pages()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -260,3 +263,58 @@ func _determinism() -> void:
 	check(JSON.stringify(da) == JSON.stringify(db), "and the same world in every saved section but the journal")
 	a.dispose()
 	b.dispose()
+
+
+# ---------------------------------------------------------------- the pages fit the window -----------------------------------
+func _pages() -> void:
+	var ui = main.ui
+	var w: World = main.world
+	var words := ["The guard Ada saw you take it. You are fined 10 coins, paid to the manor.", "You sell 2 apples for 6 coins.",
+		"Contract made with Hugh Reed: 4 logs at 3 coins each, within 3 days (12 coins, set aside when you agree).",
+		"Hugh Reed: There's nothing the manor needs carried, quarried or mended just now.", "Mining is now level 2!"]
+	for i in 40:
+		w.minutes += 53.0
+		w.player_tell("%s (%d)" % [words[i % words.size()], i], ["crime", "trade", "contract", "npc", "skill"][i % 5])
+	for i in 30:
+		w.note("A long village event to fill the record's pages, number %d, with words enough to wrap on a phone's narrow page." % i)
+	var want: Array = ui.game_messages().map(func(l: String): return l.substr(l.find("] ") + 2))
+	for c in [[Vector2i(1001, 450), true, "20:9 phone"], [Vector2i(800, 450), true, "16:9 phone"], [Vector2i(720, 450), true, "16:10 phone, the narrowest"],
+			[Vector2i(1280, 720), false, "16:9 desktop"], [Vector2i(1152, 720), false, "16:10 desktop"],
+			[Vector2i(800, 450), true, "16:9 phone with a wide safe-area inset (28 units), as the window gave in the screenshot"]]:
+		main.settings.phone = c[1]
+		get_root().content_scale_size = c[0]
+		ui.test_safe = Rect2(28, 14, c[0].x - 56, c[0].y - 28) if str(c[2]).contains("inset") else Rect2()
+		ui.fit_safe_area()
+		await frames(2)
+		for messages_page in [true, false]:
+			var seen := []
+			var bad := []
+			var spread := 0
+			var spreads := 1
+			while spread < spreads:
+				ui.show_journal(spread, false, messages_page)
+				await frames(3)
+				var body: Control = ui.panel_body
+				if body.get_combined_minimum_size().x > ui.body_scroll.size.x + 1.0 or ui.panel.get_global_rect().end.x > Vector2(c[0]).x + 0.5:
+					bad.append("spread %d is wider than the window (%d > %d)" % [spread, body.get_combined_minimum_size().x, ui.body_scroll.size.x])
+				if body.get_combined_minimum_size().y > ui.body_scroll.size.y + 1.0:
+					bad.append("spread %d scrolls (%d > %d)" % [spread, body.get_combined_minimum_size().y, ui.body_scroll.size.y])
+				for sheet in body.get_node("Book").get_children():
+					if not (sheet is PanelContainer):
+						continue
+					var lines: VBoxContainer = sheet.get_child(0)
+					if lines.get_combined_minimum_size().y > lines.size.y + 1.0:
+						bad.append("spread %d: a page overflows (%d > %d)" % [spread, lines.get_combined_minimum_size().y, lines.size.y])
+					for l in lines.get_children():
+						if l is Label and (l as Label).get_theme_color("font_color") == GameUI.INK:
+							seen.append((l as Label).text.substr((l as Label).text.find("  ") + 2))
+				var where: String = (body.find_child("Where", true, false) as Label).text
+				spreads = ceili(int(where.get_slice(" of ", 1)) / 2.0)
+				spread += 1
+			if messages_page:
+				check(bad.is_empty() and seen == want, "%s, Messages: %d spreads, every page fits, nothing to scroll, all %d messages once, in order%s" % [c[2], spreads, want.size(), "" if bad.is_empty() else ": " + str(bad) + (" seen %d" % seen.size())])
+			else:
+				check(bad.is_empty(), "%s, Village record: %d spreads, every page fits, nothing to scroll%s" % [c[2], spreads, "" if bad.is_empty() else ": " + str(bad)])
+	ui.hide_all()
+	ui.test_safe = Rect2()
+	main.settings.phone = false
