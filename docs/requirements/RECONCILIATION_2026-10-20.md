@@ -10,7 +10,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 168 still open, 63 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 605 (288 of them still open) |
+| Entries added since | | 607 (288 of them still open) |
 | **Open entries now** (rules excluded) | | **455** |
 | Open entries moved to another build | | 15 |
 
@@ -106,7 +106,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (605)
+## Added since the baseline (607)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -554,7 +554,7 @@ None.
 | REG-INV-01 | Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | REG-PARTY-01 | One trading-party interface over the five settlements (trader, businesses, treasury, households) replacing the prospective SettlementLedger parties in RegionalMarket and Couriers | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | REG-WAGE-D1 | Merge the necessity-wage correction (wip/b18-wagefix): a settlement business pays its hungry worker household that cannot buy a day's food even below its working reserve (PAR-02A)? It removes 9 of Higham's 10 deaths in 200 days; nothing else changes. | decision | APPROVED | 18 |
-| REG-X20-D1 | Off-map settlements: may a hungry household that is the only worker household of its business migrate for hunger (MIGRATE-18), and may it change trade? Today two undocumented agent rules forbid both (offmap.gd _move_jobs: 'a trade is never left with no household'; migration.gd _hunger_in: business with fewer than 2 workers excluded), so sole herders, miners, foresters and weavers whose goods find no buyer die with 0-2 coins while wheat is on sale. | decision | OPEN | 20 |
+| REG-X20-D1 | Off-map settlements: may a hungry household that is the only worker household of its business migrate for hunger (MIGRATE-18), and may it change trade? Today two undocumented agent rules forbid both (offmap.gd _move_jobs: 'a trade is never left with no household'; migration.gd _hunger_in: business with fewer than 2 workers excluded), so sole herders, miners, foresters and weavers whose goods find no buyer die with 0-2 coins while wheat is on sale. | decision | APPROVED | 20 |
 | REG-X20-D2 | Off-map settlements: should 'cannot buy a day's food' (hunger migration) also count when there is no food for sale at all, not only when the household lacks coins? In the switches-on run Garton starved holding 68-110 coins with empty stalls after its farmers moved to better-paid trades. | decision | OPEN | 20 |
 | REG-X20-D3 | Off-map settlements: should settlement-to-settlement food trade get a live path? The owner's REG-BUY-D1 answer allows it, but road trade carries no food and RegionalMarket is not wired into the live game, so one settlement's surplus never reaches a starving neighbour. | decision | OPEN | 20 |
 | REG-X20-D4 | Off-map settlements: revisit the deferred circulation question (REG-CIRC-D1) now its prerequisites exist? Settlement traders keep buying from the village and buy little back (netherton paid out 460 coins in 30 days and took in 41), draining treasuries until relief and day labour stop. | decision | OPEN | 20 |
@@ -711,7 +711,9 @@ None.
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | decision | APPROVED | 19 |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
+| X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | X20-OPEN-ITEMS | Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 20 |
+| X20-SCOPE | Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forward into Expansion 20 (LE-02..LE-05)? | decision | APPROVED | 20 |
 | XAUDIT-01 | Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
 | XEXPL-01 | Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | XEXPL-D1 | Decision explainability: is an optional player-inspection panel wanted in this generation of builds, or only in-world explanation (dialogue, rumours, notices) for now? | decision | APPROVED | unassigned |

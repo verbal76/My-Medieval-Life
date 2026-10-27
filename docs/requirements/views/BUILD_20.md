@@ -8,15 +8,15 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 83 |
-| Integrated | 71 of 83 (86%) |
-| Automated tests passed | 71 of 83 (86%) |
-| Integration verified | 38 of 83 (46%) |
-| Gameplay verified | 0 of 83 (0%) |
-| Owner playtested | 0 of 83 (0%) |
-| Complete | 2 of 83 (2%) |
-| Open (release blockers) | 81 |
-| Open owner decisions (blocking) | 7 (0) |
+| Approved requirements in scope | 84 |
+| Integrated | 71 of 84 (85%) |
+| Automated tests passed | 71 of 84 (85%) |
+| Integration verified | 38 of 84 (45%) |
+| Gameplay verified | 0 of 84 (0%) |
+| Owner playtested | 0 of 84 (0%) |
+| Complete | 2 of 84 (2%) |
+| Open (release blockers) | 82 |
+| Open owner decisions (blocking) | 6 (0) |
 
 ## In development (worker assigned) (2)
 
@@ -105,7 +105,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (9)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (10)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -118,6 +118,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) | SJD-G | XS |
+| X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Complete (2)
 
@@ -126,14 +127,13 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | INTEGRATION VERIFIED | NOT READY |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (7)
+## Open owner decisions (6)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
 | ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | PROVISIONAL | no | ARMOR-CATALOG-01, ARMOR-MATERIALS-01 |
 | MP-INTERACT-Q1 | Player-to-player contracts: the contract system only has a way for villagers to do units of work, so contracts between two players are limited to goods. Should a player be able to hire another player for work (a service contract)? | OPEN | no |  |
 | MP-INTERACT-Q2 | Talk targeting: Talk takes the nearest person, so a closer villager comes before another player (a tap, a click or Next always reaches the player). Should players come first for Talk instead? | OPEN | no |  |
-| REG-X20-D1 | Off-map settlements: may a hungry household that is the only worker household of its business migrate for hunger (MIGRATE-18), and may it change trade? Today two undocumented agent rules forbid both (offmap.gd _move_jobs: 'a trade is never left with no household'; migration.gd _hunger_in: business with fewer than 2 workers excluded), so sole herders, miners, foresters and weavers whose goods find no buyer die with 0-2 coins while wheat is on sale. | OPEN | no |  |
 | REG-X20-D2 | Off-map settlements: should 'cannot buy a day's food' (hunger migration) also count when there is no food for sale at all, not only when the household lacks coins? In the switches-on run Garton starved holding 68-110 coins with empty stalls after its farmers moved to better-paid trades. | OPEN | no |  |
 | REG-X20-D3 | Off-map settlements: should settlement-to-settlement food trade get a live path? The owner's REG-BUY-D1 answer allows it, but road trade carries no food and RegionalMarket is not wired into the live game, so one settlement's surplus never reaches a starving neighbour. | OPEN | no |  |
 | REG-X20-D4 | Off-map settlements: revisit the deferred circulation question (REG-CIRC-D1) now its prerequisites exist? Settlement traders keep buying from the village and buy little back (netherton paid out 460 coins in 30 days and took in 41), draining treasuries until relief and day labour stop. | OPEN | no |  |

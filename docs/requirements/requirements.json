@@ -34540,7 +34540,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Brought forward into Expansion 20 by X20-SCOPE (owner 2026-10-27, docs/directives/2026-10-27_x20_scope_and_free_migration.md); implementation authorized in LE-02..LE-05, activation still behind its switch and owner review.",
    "history": [
     {
      "date": "2026-10-20",
@@ -34566,6 +34566,11 @@
      "date": "2026-10-27",
      "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered (D02, answer C, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "X20-SCOPE (owner 2026-10-27): FUTURE answer brought forward into Expansion 20; activation gates unchanged"
     }
    ],
    "target_build": "20",
@@ -34604,7 +34609,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Brought forward into Expansion 20 by X20-SCOPE (owner 2026-10-27, docs/directives/2026-10-27_x20_scope_and_free_migration.md); implementation authorized in LE-02..LE-05, activation still behind its switch and owner review.",
    "history": [
     {
      "date": "2026-10-20",
@@ -34630,6 +34635,11 @@
      "date": "2026-10-27",
      "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered (D03, answer A, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "X20-SCOPE (owner 2026-10-27): FUTURE answer brought forward into Expansion 20; activation gates unchanged"
     }
    ],
    "target_build": "20",
@@ -34903,7 +34913,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Brought forward into Expansion 20 by X20-SCOPE (owner 2026-10-27, docs/directives/2026-10-27_x20_scope_and_free_migration.md); implementation authorized in LE-02..LE-05, activation still behind its switch and owner review.",
    "history": [
     {
      "date": "2026-10-20",
@@ -34934,6 +34944,11 @@
      "date": "2026-10-27",
      "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered (D07, answer B, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "X20-SCOPE (owner 2026-10-27): FUTURE answer brought forward into Expansion 20; activation gates unchanged"
     }
    ],
    "target_build": "20",
@@ -35103,7 +35118,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Brought forward into Expansion 20 by X20-SCOPE (owner 2026-10-27, docs/directives/2026-10-27_x20_scope_and_free_migration.md); implementation authorized in LE-02..LE-05, activation still behind its switch and owner review.",
    "history": [
     {
      "date": "2026-10-20",
@@ -35129,6 +35144,11 @@
      "date": "2026-10-27",
      "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered (D10, answer B, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "X20-SCOPE (owner 2026-10-27): FUTURE answer brought forward into Expansion 20; activation gates unchanged"
     }
    ],
    "target_build": "20",
@@ -35305,10 +35325,15 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "continuity review (DCR-01): intentional revision of the provisional OD-29 contract default (death ends the contract), no owner action needed"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "X20-SCOPE (owner 2026-10-27): FUTURE answer brought forward into Expansion 20; activation gates unchanged"
     }
    ],
    "completion": "CLOSED",
-   "notes": "DCR-01 review: intentional revision of the provisional Build 17 contract default (OD-29); current handling stays until the authorized contract and estate stage, with migrations."
+   "notes": "Brought forward into Expansion 20 by X20-SCOPE (owner 2026-10-27, docs/directives/2026-10-27_x20_scope_and_free_migration.md); implementation authorized in LE-02..LE-05, activation still behind its switch and owner review."
   },
   {
    "id": "OD-LE-14",
@@ -35336,7 +35361,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Brought forward into Expansion 20 by X20-SCOPE (owner 2026-10-27, docs/directives/2026-10-27_x20_scope_and_free_migration.md); implementation authorized in LE-02..LE-05, activation still behind its switch and owner review.",
    "history": [
     {
      "date": "2026-10-20",
@@ -35362,6 +35387,11 @@
      "date": "2026-10-27",
      "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered (D13, answer C, FUTURE) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "X20-SCOPE (owner 2026-10-27): FUTURE answer brought forward into Expansion 20; activation gates unchanged"
     }
    ],
    "target_build": "20",
@@ -45420,8 +45450,8 @@
    "description": "Off-map settlements: may a hungry household that is the only worker household of its business migrate for hunger (MIGRATE-18), and may it change trade? Today two undocumented agent rules forbid both (offmap.gd _move_jobs: 'a trade is never left with no household'; migration.gd _hunger_in: business with fewer than 2 workers excluded), so sole herders, miners, foresters and weavers whose goods find no buyer die with 0-2 coins while wheat is on sale.",
    "source": "X20-FINAL settlement investigation 2026-10-27 (wip/x20-final eaf6652; probes in session scratch, no code change)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "APPROVED: FREE MIGRATION (owner 2026-10-27). A villager may leave a settlement even when the only worker of a business, every profession, traders included, no special restriction. Migration remains an individual decision under the approved decision-making framework (needs, circumstances, economic interest, relationships, preferences); two traders may decide differently; no hard-coded migration requirement and no retention to protect the economy. Ownership, property, employment and contract consequences follow the established rules; resulting shortages are legitimate. Migration, abandoned businesses and their consequences go into the flight-recorder diagnostics and LE-06 reporting.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -45439,9 +45469,14 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "agent finding recorded; not a release blocker (WDR-022)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "disposition: OPEN -> APPROVED; owner_answer; notes",
+     "why": "owner answered 2026-10-27"
     }
    ],
-   "notes": "Evidence: 8 of 8 shipped-switch hunger deaths by day 60 (seed 1) are such households (netherton herder: no sale for 38 days). Removing only the migration exclusion cuts deaths 8 -> 1 but sends 40 people to the village and shrinks netherton 13 -> 5 (a gameplay change, owner's call under DCR-01). Unchanged since Build 22. Options: (a) keep, and document the rule; (b) let sole households migrate (trader excepted or not); (c) let them change trade. Recommendation: (b) with the trader excepted, documented; measured before enabling."
+   "notes": "DCR-01: compatible with WDR-022; it removes the two undocumented agent rules (migration.gd _hunger_in sole-worker exclusion; offmap.gd _move_jobs 'a trade is never left with no household', the same retention applied to changing trade). The lead's earlier recommendation (trader excepted) is not adopted. REG-X20-D2 stays open: the ruling lists unavailable food as a reason someone may choose to leave, but whether the existing hunger rule counts empty stalls is still its own question."
   },
   {
    "id": "REG-X20-D2",
@@ -59996,10 +60031,16 @@
      "date": "2026-10-27",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/expansion20",
      "why": "owner directive 2026-10-27 captured; lead starts with the foundation (till ownership, REC-DIAG)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "X20-SCOPE and REG-X20-D1 answered; scope now includes OD-LE-03, -04, -08, -11, -13B, -14 and X20-MIGRATE"
     }
    ],
    "assigned_worker": "lead",
-   "branch": "wip/expansion20"
+   "branch": "wip/expansion20",
+   "notes": "Scope (owner 2026-10-27): LE-02..LE-05 include the FUTURE Living Economy answers brought forward by X20-SCOPE and free migration X20-MIGRATE (REG-X20-D1). Excluded: lending, interest, manor emergency loans. Activation stays gated."
   },
   {
    "id": "X20-FINAL",
@@ -60075,6 +60116,36 @@
    "notes": "Build 23 (release 425699977, tag build-23, private draft, run 40526826846: sim-gate then three exports). Verified: SHA256SUMS all OK; APK signed with the permanent certificate 31704b80...76cb80e6 (same as Builds 21, 22), v2+v3, package com.hotatticgames.mymedievallife.dev, versionCode 23, versionName 0.1.23-test, permissions INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE, CHANGE_WIFI_MULTICAST_STATE (unchanged since Build 21); Windows zip holds MyMedievalLife.exe; Linux binary starts headless (Godot 4.7.2) and exits 0. Tester notes: BUILD_23_TESTER_NOTES.md in docs/release on wip/expansion20."
   },
   {
+   "id": "X20-MIGRATE",
+   "kind": "approved",
+   "title": "Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules",
+   "description": "Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules",
+   "source": "docs/directives/2026-10-27_x20_scope_and_free_migration.md",
+   "owner_wording": "TRADERS ARE FREE TO MIGRATE JUST LIKE EVERYONE ELSE. NO NPC IS FORCED TO REMAIN IN A SETTLEMENT SIMPLY BECAUSE THE ECONOMY DEPENDS ON THEIR BUSINESS.",
+   "approval": "owner, 2026-10-27",
+   "acceptance": [
+    "no rule keeps an NPC or household in a settlement because its business depends on them (migration.gd sole-worker exclusion and offmap.gd last-household rule removed)",
+    "departure is an individual weighed decision; same circumstances can give different choices; never mandatory",
+    "ownership, property, employment and contracts of the leaver follow established rules; conservation holds; recorder and LE-06 report migration, abandoned businesses and their consequences"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-27_x20_scope_and_free_migration.md"
+    }
+   ]
+  },
+  {
    "id": "X20-OPEN-ITEMS",
    "kind": "approved",
    "title": "Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy",
@@ -60108,6 +60179,36 @@
    ],
    "umbrella": true,
    "next_action": "Build 22 in development (wip/build22); Expansion 20 implementation begins after Build 22's private packages (owner 2026-10-26)"
+  },
+  {
+   "id": "X20-SCOPE",
+   "kind": "decision",
+   "title": "Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forward into Expansion 20 (LE-02..LE-05)?",
+   "description": "Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forward into Expansion 20 (LE-02..LE-05)?",
+   "source": "docs/directives/2026-10-27_x20_scope_and_free_migration.md",
+   "owner_wording": null,
+   "owner_answer": "APPROVED (owner 2026-10-27): bring the previously approved FUTURE Living Economy mechanics forward into Expansion 20: negotiated wages and service contracts behind their switches (OD-LE-03/D02); explicit business ownership, separate business accounting and inheritance (OD-LE-04/D03); tool rental, repair and previously approved material substitution (OD-LE-08/D07); merchant stockpiling and speculation (OD-LE-11/D10); contractual obligations through the deceased party's estate (OD-LE-13B/D12); the player's market journal of discovered offers (OD-LE-14/D13); other FUTURE Living Economy mechanics belonging to LE-02..LE-05. No new policies; lending, interest and manor emergency loans stay excluded (OD-LE-05B, OD-LE-06 loans); activation and owner-review gates stay binding.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "X20-COMPLETE"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-27_x20_scope_and_free_migration.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "disposition: OPEN -> APPROVED; owner_answer; notes",
+     "why": "owner answered 2026-10-27"
+    }
+   ],
+   "notes": "DCR-01: compatible extension (scheduling change only; each answer's content preserved). Lead's scope reading: the Expansion 22/23-tagged FUTURE answers (E22-OD-03 knowledge, E22-OD-04 physical caravans, E22-OD-05 regional population, E23-OD-01 bandit factions) are not Living Economy decisions and stay in their expansions; LE-05 keeps the six-day inter-settlement abstraction (E22-OD-04)."
   },
   {
    "id": "XAUDIT-01",

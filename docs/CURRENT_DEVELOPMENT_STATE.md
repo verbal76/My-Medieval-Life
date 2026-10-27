@@ -35,8 +35,8 @@ before Expansion 21 (on hold, no agent). Build 23 stays a private checkpoint; ne
 1. Foundation: till ownership in the economy model (storefront `front.till` and trade-counter `counter.till` have no economy
    actor; live coins are counted and paid under ECON-P3 and B18-DP-01, so the gap is the model's, not lost money), then
    REC-DIAG completion against the directive's event list.
-2. LE-02, LE-03, LE-04, LE-05 in order (approved decisions only; scope of the FUTURE-classed OD-LE answers asked of the owner
-   2026-10-27); carryovers EMP-PERM-01, GP-POLISH, SJD-G (SJD-H waits for the owner).
+2. LE-02, LE-03, LE-04, LE-05 in order (approved decisions only; X20-SCOPE approved 2026-10-27 brings OD-LE-03, -04, -08, -11, -13B,
+   -14 forward; lending excluded; X20-MIGRATE free migration per REG-X20-D1); carryovers EMP-PERM-01, GP-POLISH, SJD-G (SJD-H waits for the owner).
 3. LE-06 long runs on GitHub Actions, LE-07 readiness, one consolidated report.
 Owner device checks of Build 23 and the open decisions (MP-INTERACT-Q1/Q2, REG-X20-D1..D4, ARMOR-CATALOG-D1, ID-D3) never
 block this work. Fetch staging and active `wip/` branches first; never duplicate a live test.

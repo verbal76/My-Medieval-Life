@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (676)
+## Approved requirement (677)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -681,6 +681,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASE CANDIDATE | OPEN |
+| X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | X20-OPEN-ITEMS | Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy | 20 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | OPEN |
 | XAUDIT-01 | Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | XEXPL-01 | Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
@@ -779,7 +780,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (243)
+## Owner decisions (244)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -954,7 +955,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | REG-CIRC-D1 | Coins paid to Garton for ore pile up in Garton's households with nothing to buy (no maker there and the traders carry no finished goods), so they never return. Should the traders also carry finished goods a settlement's households want and cannot make (a design change), or is this one-way flow a legitimate outcome? | 20+ | DEFERRED |  |
 | REG-DEMO-D1 | Off-map settlements now follow the village's birth rule with no housing limit (the village has houses; the settlements have none, by lighter detail). In a settlements-only year they grow from 261 to 735 people, and Higham and Wulstead outgrow their harvests (74 and 30 hunger deaths). Should settlement births be limited by a housing or land capacity, as the village's are by houses, or is growth to the food limit the intended outcome? | 18 | APPROVED |  |
 | REG-WAGE-D1 | Merge the necessity-wage correction (wip/b18-wagefix): a settlement business pays its hungry worker household that cannot buy a day's food even below its working reserve (PAR-02A)? It removes 9 of Higham's 10 deaths in 200 days; nothing else changes. | 18 | APPROVED |  |
-| REG-X20-D1 | Off-map settlements: may a hungry household that is the only worker household of its business migrate for hunger (MIGRATE-18), and may it change trade? Today two undocumented agent rules forbid both (offmap.gd _move_jobs: 'a trade is never left with no household'; migration.gd _hunger_in: business with fewer than 2 workers excluded), so sole herders, miners, foresters and weavers whose goods find no buyer die with 0-2 coins while wheat is on sale. | 20 | OPEN |  |
+| REG-X20-D1 | Off-map settlements: may a hungry household that is the only worker household of its business migrate for hunger (MIGRATE-18), and may it change trade? Today two undocumented agent rules forbid both (offmap.gd _move_jobs: 'a trade is never left with no household'; migration.gd _hunger_in: business with fewer than 2 workers excluded), so sole herders, miners, foresters and weavers whose goods find no buyer die with 0-2 coins while wheat is on sale. | 20 | APPROVED |  |
 | REG-X20-D2 | Off-map settlements: should 'cannot buy a day's food' (hunger migration) also count when there is no food for sale at all, not only when the household lacks coins? In the switches-on run Garton starved holding 68-110 coins with empty stalls after its farmers moved to better-paid trades. | 20 | OPEN |  |
 | REG-X20-D3 | Off-map settlements: should settlement-to-settlement food trade get a live path? The owner's REG-BUY-D1 answer allows it, but road trade carries no food and RegionalMarket is not wired into the live game, so one settlement's surplus never reaches a starving neighbour. | 20 | OPEN |  |
 | REG-X20-D4 | Off-map settlements: revisit the deferred circulation question (REG-CIRC-D1) now its prerequisites exist? Settlement traders keep buying from the village and buy little back (netherton paid out 460 coins in 30 days and took in 41), draining treasuries until relief and day labour stop. | 20 | OPEN |  |
@@ -1025,5 +1026,6 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X19-SPILL-REACH | How far does reputation spillover reach through extended family (parents, children, siblings, cousins, in-laws)? | 19 | APPROVED |  |
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | 19 | APPROVED |  |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | 19 | APPROVED |  |
+| X20-SCOPE | Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forward into Expansion 20 (LE-02..LE-05)? | 20 | APPROVED |  |
 | XEXPL-D1 | Decision explainability: is an optional player-inspection panel wanted in this generation of builds, or only in-world explanation (dialogue, rumours, notices) for now? | unassigned | APPROVED |  |
 
