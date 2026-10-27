@@ -48508,10 +48508,18 @@
      "date": "2026-10-27",
      "change": "next_action",
      "why": "engineering fix approved (D17); scheduled after R5 merges (shared npc_brain.gd)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: None -> IN DEVELOPMENT; assigned_worker: None -> worker M (X20 release fixes); branch: None -> wip/x20-fixes",
+     "why": "assigned for the X20 release (owner directive 2026-10-27)"
     }
    ],
    "completion": "CLOSED",
-   "next_action": "Focused fix: bounded re-evaluation keyed to a meaningful change (price, stock, purse, elapsed time); recorder tracks lost work; tests plus G0; after the R5 aspirations merge (npc_brain.gd is shared)."
+   "next_action": "Focused fix: bounded re-evaluation keyed to a meaningful change (price, stock, purse, elapsed time); recorder tracks lost work; tests plus G0; after the R5 aspirations merge (npc_brain.gd is shared).",
+   "implementation_status": "IN DEVELOPMENT",
+   "assigned_worker": "worker M (X20 release fixes)",
+   "branch": "wip/x20-fixes"
   },
   {
    "id": "SIM-F3",
@@ -48542,10 +48550,18 @@
      "date": "2026-10-27",
      "change": "next_action",
      "why": "engineering fix approved (D18); scheduled after R5 merges"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: None -> IN DEVELOPMENT; assigned_worker: None -> worker M (X20 release fixes); branch: None -> wip/x20-fixes",
+     "why": "assigned for the X20 release (owner directive 2026-10-27)"
     }
    ],
    "completion": "CLOSED",
-   "next_action": "Focused fix: a persistent deterministic stalk plan while conditions are unchanged, re-evaluated on real state changes; tests plus G0; after the R5 aspirations merge."
+   "next_action": "Focused fix: a persistent deterministic stalk plan while conditions are unchanged, re-evaluated on real state changes; tests plus G0; after the R5 aspirations merge.",
+   "implementation_status": "IN DEVELOPMENT",
+   "assigned_worker": "worker M (X20 release fixes)",
+   "branch": "wip/x20-fixes"
   },
   {
    "id": "SIM-F4",

@@ -23,6 +23,7 @@ MP-INTERACT-01 merged at `87b69ab` onto the verified baseline `3601211` (26 suit
 (2) coverage audit of Expansions 18-20; (3) recorder and scenario updates; (4) black-box campaigns (normal, stress, social,
 a few long runs on GitHub Actions, multiplayer 1+2 and 1+3); (5) independent archive analysis; (6) fix genuine defects;
 (7) final clean gate on the release commit; (8) release; (9) consolidated report. No overlapping workers on the same expensive run.
+Workers from 87b69ab (2026-10-27): M on `wip/x20-fixes` (SIM-F2, SIM-F3, player/NPC proposal equality; owns npc_brain.gd and proposal code); N on `wip/x20-recorder` (coverage matrix, recorder instrumentation, scenarios, analysis tooling; owns the recorder and sim tools); O on `wip/x20-mptest` (1+2 and 1+3 multiplayer scenarios, host/guest consistency, device matrix; owns the net test harness). Campaigns run once, later, on the merged result.
 
 ## Next actions (current work only)
 
