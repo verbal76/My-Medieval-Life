@@ -25545,6 +25545,37 @@
    ]
   },
   {
+   "id": "GP-SWORD-VIS",
+   "kind": "approved",
+   "title": "Visible equipped sword: held when drawn, swung with the attack in every facing, layered and attached to the hand; hit timing matches the swing; player and armed NPCs",
+   "description": "Visible equipped sword: held when drawn, swung with the attack in every facing, layered and attached to the hand; hit timing matches the swing; player and armed NPCs",
+   "source": "docs/directives/2026-10-27_visible_sword_attacks.md",
+   "owner_wording": "IF MY CHARACTER IS USING A WEAPON, I WANT TO SEE THE ACTUAL WEAPON BEING USED.",
+   "approval": "owner, 2026-10-27",
+   "acceptance": [
+    "a character with a sword drawn visibly holds it, moves with it, swings it when attacking with correct orientation in every facing (foreground/background layering), and returns to the holding pose",
+    "the sword stays attached to the hand; its look follows the equipped weapon where the assets distinguish weapon types; no generic slash effect as a substitute",
+    "hit detection and damage timing match the visible swing; damage, reach, stamina and balance unchanged unless a verified defect",
+    "works for the player and armed NPCs; reuses the existing tool-rendering and directional animation; targeted tests and real in-game screenshots looked at"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-27_visible_sword_attacks.md"
+    }
+   ]
+  },
+  {
    "id": "GP-TABLE-ITEMS",
    "kind": "approved",
    "title": "Merchandise previews on tables: a visual preview of what the business offers (no pickup)",

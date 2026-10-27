@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 168 still open, 63 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 607 (288 of them still open) |
-| **Open entries now** (rules excluded) | | **455** |
+| Entries added since | | 608 (289 of them still open) |
+| **Open entries now** (rules excluded) | | **456** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (63)
@@ -106,7 +106,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (607)
+## Added since the baseline (608)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -312,6 +312,7 @@ None.
 | GP-STALL-RENT-WRONG-PITCH | Renting a market pitch rents the first free one, not the one the player chose, then says 'You already rent a stall' | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-STALL-TABLE-10 | Market stall table shows ten goods comfortably | approved | NOT APPLICABLE / NOT APPLICABLE / CLOSED | multiplayer |
 | GP-START-RUSTY-AXE | The player starts with a rusty axe | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
+| GP-SWORD-VIS | Visible equipped sword: held when drawn, swung with the attack in every facing, layered and attached to the hand; hit timing matches the swing; player and armed NPCs | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | GP-TABLE-ITEMS | Merchandise previews on tables: a visual preview of what the business offers (no pickup) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-TARGET-ART-MATCH | Interaction prompts name what the art shows (tavern 'crate' is a roast) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-TRAIL-EDGES | Trails crossing bare dirt show stray grass edges | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |

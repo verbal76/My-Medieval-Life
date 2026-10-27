@@ -8,14 +8,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 84 |
-| Integrated | 71 of 84 (85%) |
-| Automated tests passed | 71 of 84 (85%) |
-| Integration verified | 38 of 84 (45%) |
-| Gameplay verified | 0 of 84 (0%) |
-| Owner playtested | 0 of 84 (0%) |
-| Complete | 2 of 84 (2%) |
-| Open (release blockers) | 82 |
+| Approved requirements in scope | 85 |
+| Integrated | 71 of 85 (84%) |
+| Automated tests passed | 71 of 85 (84%) |
+| Integration verified | 38 of 85 (45%) |
+| Gameplay verified | 0 of 85 (0%) |
+| Owner playtested | 0 of 85 (0%) |
+| Complete | 2 of 85 (2%) |
+| Open (release blockers) | 83 |
 | Open owner decisions (blocking) | 6 (0) |
 
 ## In development (worker assigned) (2)
@@ -105,12 +105,13 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (10)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (11)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it | design: UNKNOWN | UNKNOWN |
 | GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | OWNER APPROVED | NOT STARTED | none | NOT TESTED | P1 after Batch A1 (docs/gameplay_polish/SCHEDULE.md) | design: UNKNOWN | UNKNOWN |
+| GP-SWORD-VIS | Visible equipped sword: held when drawn, swung with the attack in every facing, layered and attached to the hand; hit timing matches the swing; player and armed NPCs | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

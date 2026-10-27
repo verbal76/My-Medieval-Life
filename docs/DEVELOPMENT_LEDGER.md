@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (677)
+## Approved requirement (678)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -343,6 +343,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | GP-STALL-RENT-WRONG-PITCH | Renting a market pitch rents the first free one, not the one the player chose, then says 'You already rent a stall' | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | GP-STALL-TABLE-10 | Market stall table shows ten goods comfortably | multiplayer | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT READY | CLOSED |
 | GP-START-RUSTY-AXE | The player starts with a rusty axe | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| GP-SWORD-VIS | Visible equipped sword: held when drawn, swung with the attack in every facing, layered and attached to the hand; hit timing matches the swing; player and armed NPCs | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | GP-TABLE-ITEMS | Merchandise previews on tables: a visual preview of what the business offers (no pickup) | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | GP-TARGET-ART-MATCH | Interaction prompts name what the art shows (tavern 'crate' is a roast) | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | GP-TRAIL-EDGES | Trails crossing bare dirt show stray grass edges | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
