@@ -37,6 +37,20 @@ const SWING_POSES := {
 	"north": [[-3, -5, -150.0, false, true], [-2, -6, -85.0, false, true], [2, -5, -40.0, false, true]],
 }
 const ICON_HEAD := -135.0                      # where an icon's head points, unmirrored (degrees, from the grip)
+# GP-SWORD-VIS (owner, 2026-10-27: "IF MY CHARACTER IS USING A WEAPON, I WANT TO SEE THE ACTUAL WEAPON BEING USED"): a blow
+# with a weapon (strike) is a slash, not the axe's chop: the same three frames and the same fields as SWING_POSES, posed
+# for each of the five facings drawn ("east" is mirrored for west, "southeast" for south-west, "northeast" for north-west):
+# the blade raised back over the shoulder, then pointing the way the striker faces as the blow lands (frame STRIKE_FRAME),
+# then swept past it. Facing away (north, north-east, north-west) the blade raised back is toward the viewer, drawn over
+# the body, and the blade ahead is beyond it, drawn behind; facing the viewer or to the side, the reverse.
+const STRIKE_POSES := {
+	"south": [[4, -6, -60.0, false, false], [2, -3, 95.0, false, false], [-2, -3, 150.0, false, false]],
+	"southeast": [[-1, -6, -140.0, true, true], [4, -3, 40.0, true, false], [2, -2, 95.0, true, false]],
+	"east": [[-1, -5, -155.0, true, true], [4, -4, 5.0, true, false], [4, -3, 50.0, true, false]],
+	"northeast": [[-2, -5, -175.0, true, false], [3, -6, -45.0, true, true], [4, -4, 0.0, true, true]],
+	"north": [[-4, -5, 160.0, false, false], [3, -6, -80.0, false, true], [3, -5, -30.0, false, true]],
+}
+const STRIKE_FRAME := 1          # the frame of the swing on which a blow lands (Combat's windup is one frame: 0.16 s)
 
 var anim := "idle"
 var dir := 0
@@ -183,12 +197,18 @@ func wield(item: String) -> void:
 	weapon_icon.texture = load(path) if ResourceLoader.exists(path) else null
 
 
-## WEAPON-VISIBLE-01: one blow with the carried weapon: the axe's swing (the throw frames, the swing poses) with the weapon in
-## hand, played once through.
+## WEAPON-VISIBLE-01: one blow with the carried weapon: the swing (the throw frames) with the weapon in hand, played once
+## through, then back to carrying it. GP-SWORD-VIS: posed as a slash (STRIKE_POSES); with nothing in hand a bare-handed
+## blow (the sheet's own sword frames draw a small sword and a slash, which is not what is held, so they are not used).
 func strike() -> void:
 	hold(weapon_item)
 	play("swing", true)
 	striking = true
+
+
+## Seconds from the start of a strike to the frame its blow lands on.
+static func strike_lead() -> float:
+	return float(ANIMS.swing[1]) * STRIKE_FRAME
 
 
 ## The carried weapon for this frame: shown standing or walking (not lying, sitting, at work, swinging or dead).
@@ -240,8 +260,11 @@ func _place_tool(i: int) -> void:
 	tool_icon.visible = anim == "swing" and tool_item != "" and tool_icon.texture != null
 	if not tool_icon.visible:
 		return
-	var key := "south" if dir == 0 else ("north" if dir == 4 else "side")
-	var poses: Array = SWING_POSES[key]
+	var poses: Array
+	if striking:                                            # GP-SWORD-VIS: a weapon's slash
+		poses = STRIKE_POSES[["south", "southeast", "east", "northeast", "north", "northeast", "east", "southeast"][dir]]
+	else:
+		poses = SWING_POSES["south" if dir == 0 else ("north" if dir == 4 else "side")]
 	var pose: Array = poses[i % poses.size()]
 	var hand := Vector2(float(pose[0]), float(pose[1]))
 	var head := float(pose[2])
@@ -265,6 +288,12 @@ func face(v: Vector2) -> void:
 
 
 func play(name: String, play_once := false) -> void:
+	if name == "sword":
+		# GP-SWORD-VIS: a fighter's blow ("sword" in the world and over the network) is a strike with what they carry,
+		# one after another while it lasts; a strike under way plays through
+		if not striking:
+			strike()
+		return
 	if name == anim and not play_once:
 		return
 	anim = name
