@@ -615,6 +615,12 @@ func _run_plan(n: NPC, dt: float, gm: float) -> void:
 					if not n.plan.is_empty() and n.plan[0].k == "work":
 						n.work_left = float(n.plan[0].min)
 				return
+			"watch":                                  # SIM-F3: a bandit's stalking watch lasts until what it waits for changes
+				if brain.watch_over(n, s):
+					n.plan.pop_front()
+					continue
+				n.anim = "idle"
+				return
 			"do":
 				n.plan.pop_front()
 				if not _act_step(n, s):

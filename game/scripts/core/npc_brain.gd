@@ -211,6 +211,10 @@ var act_calls := {}
 ## SIM-F2: each villager's last failed buy_from ({vendor, item, price, stock, purse, at}; erased by a purchase), read by
 ## buy_held. Not saved, as a plan is not: a loaded villager decides afresh.
 var buy_failed := {}
+## SIM-F3: each bandit's last chase given up blocked ({prey, cell}: the prey's cell then); read by _bandit. Not saved, as
+## the chase target is not.
+var stalk_lost := {}
+const STALK_WATCH_MINUTES := 30.0    # SIM-F3: PROVISIONAL (agent, docs/DECISIONS.md): a stalking watch re-picks its prey at least this often
 const BUY_RETRY_MINUTES := 60.0      # SIM-F2: PROVISIONAL (agent, docs/DECISIONS.md): a failed purchase is tried again after an hour at most
 
 
@@ -1803,14 +1807,50 @@ func _bandit(n: NPC, h: float) -> void:
 	if night:
 		var prey = _prey_for(n)
 		if prey != null:
-			n.target = prey.id if prey is NPC else w.person_id(prey)     # MP C6: the player it stalks, by their own id
-			n.target_ref = ""                          # (foe_player reads the player from the id)
+			var pid: int = prey.id if prey is NPC else w.person_id(prey)     # MP C6: the player it stalks, by their own id
 			n.doing = "stalking"
+			# SIM-F3 (owner D18, answer C, ENGINEERING): a chase starts only where fight() can run it, the prey within
+			# CHASE_RANGE and not where the last chase of it was blocked with the prey standing in the same cell. Otherwise
+			# the stalk is a lasting plan step (watch) instead of an empty plan decided again every tick.
+			var lost = stalk_lost.get(n.id)
+			var held: bool = lost != null and int(lost.prey) == pid and Vector2i(lost.cell) == _cell_of(prey)
+			if not held and prey.pos.distance_to(n.pos) <= CHASE_RANGE:
+				n.target = pid
+				n.target_ref = ""                          # (foe_player reads the player from the id)
+				return
+			n.plan = [{"k": "watch", "prey": pid, "cell": _cell_of(prey) if held else null, "until": w.minutes + STALK_WATCH_MINUTES}]
 			return
 	if not night and h >= WORK_START and h < WORK_END and _bandit_market(n):
 		return
 	n.doing = "lurking at the camp"
 	n.plan = [go(wander_cell(w.bandit_camp, 3)), work(w.rng.randf_range(30, 90), "poach", {}, "idle")]
+
+
+## SIM-F3 (owner D18, answer C, ENGINEERING, 2026-10-27): whether a bandit's stalking watch (the plan step `s` made by
+## _bandit) is over, read every tick by World._run_plan: the night ended, the watch's STALK_WATCH_MINUTES ran out, the
+## bandit is hurt enough to rest, the prey is gone (dead, indoors, on another level, away, or with too few coins to rob), or
+## what the watch waits for happened: the prey came within CHASE_RANGE, or (a watch held after a blocked chase) the prey
+## left the cell it stood in. Then the bandit decides afresh; until then it decides nothing. Deterministic: real state only.
+func watch_over(n: NPC, s: Dictionary) -> bool:
+	var h := w.hour()
+	if not (h >= 21.0 or h < 4.5) or w.minutes >= float(s.until) or n.hp < n.max_hp * float(GameData.b("rest").seek_below):
+		return true
+	var pid := int(s.prey)
+	var prey = w.player_of_id(pid) if Life.is_player_id(pid) else w.npc(pid)
+	if prey == null or not prey.alive:
+		return true
+	if prey is NPC:
+		if w.place_of(prey.pos) != "" or prey.depth != n.depth or prey.coins < 3:
+			return true
+	elif prey.away or prey.map_level != n.depth:
+		return true
+	if s.get("cell") != null:
+		return _cell_of(prey) != Vector2i(s.cell)
+	return prey.pos.distance_to(n.pos) <= CHASE_RANGE
+
+
+static func _cell_of(who) -> Vector2i:
+	return Vector2i(floori(who.pos.x), floori(who.pos.y))
 
 
 ## OD-16 (a), EQ-20 (owner 2026-10-20: "bandits spend their hoards at the market"): by day a bandit who can afford one
@@ -2880,6 +2920,8 @@ func fight(n: NPC, dt: float) -> void:
 			# one whose target is gone.
 			if w.recorder != null:
 				w.recorder.chase_end(n, "blocked")      # SIM-GATE-01: the corner case (GP-CRIME-PURSUIT)
+			if n.role == "bandit":                      # SIM-F3: not chased the same blocked way while the prey stands there
+				stalk_lost[n.id] = {"prey": n.target, "cell": Vector2i(floori(tpos.x), floori(tpos.y))}
 			n.target = -1
 			n.plan.clear()
 			if n.role == "bandit":
@@ -2892,6 +2934,7 @@ func fight(n: NPC, dt: float) -> void:
 		w.recorder.chase_strike(n)      # SIM-GATE-01
 	n.anim = "sword"
 	n.plan = []
+	stalk_lost.erase(n.id)                              # SIM-F3: a chase that reached its target ends any blocked memory
 	if w.judgment != null:
 		w.judgment.note_blow(n.id, n.target)        # X19-EVENT-Q: who struck first in this fight, so an answer is not judged as an attack
 	# a bandit robs ordinary villagers rather than killing them
