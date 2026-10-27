@@ -47,7 +47,8 @@ const LOG_MAX := 200                 # moves kept in the log (Regions.moves); th
 const TRADE_JOB := {"farmer": "farmer", "herder": "farmer", "forester": "woodcutter", "miner": "miner", "sawyer": "carpenter",
 	"mason": "miner", "smith": "smith", "tanner": "tanner", "cook": "cook", "weaver": "", "healer": "", "merchant": "merchant", "official": ""}
 const JOB_BIZ := {"farmer": "farm", "woodcutter": "forest", "miner": "quarry", "hunter": "herd", "smith": "smith", "carpenter": "sawyer",
-	"tanner": "tanner", "cook": "cook", "tavernkeeper": "cook", "laborer": "farm", "manor_hand": "farm"}
+	"tanner": "tanner", "cook": "cook", "tavernkeeper": "cook", "laborer": "farm", "manor_hand": "farm",
+	"merchant": "merchant"}                       # REG-X20-D1: a village trader may now leave; where they join is receive_household's rule
 const OFFICES := ["guard", "reeve", "sage", "preacher", "church_assistant", "tailor", "barber"]
 const WORK_PLACES := ["manor_hand", "farmer", "hunter"]          # market places that need no tool (a migrant arrives with none)
 const WHY := {"hunger": "for want of food", "work": "for work", "land": "for land", "marriage": "to marry"}
@@ -82,16 +83,15 @@ static func _try(w: World, s: OffMapSettlement, reason: String, dir: String) -> 
 
 
 # ------------------------------------------------------------------ the village's side ----------------
-## Somebody who cannot leave: an office-holder, a market trader (their stock is the market's), someone tied to the player, a
-## child of the founding households' care, or a bandit.
+## Somebody who cannot leave: an office-holder, someone tied to the player, a child of the founding households' care, or a
+## bandit. A market trader may leave like anyone (REG-X20-D1, owner 2026-10-27: no special restriction for traders): the stock
+## in their own pack goes with them and their stall is let again exactly as after a death (_gone, NPCBrain.on_death).
 static func _barred(w: World, n: NPC) -> bool:
 	if n.role == "bandit" or n.clan != "" or n.household < 3:
 		return true
 	if n.id == w.reeve_id or n.id == w.sage_id or OFFICES.has(n.job):
 		return true
-	if Life.is_player_id(n.partner) or Life.is_player_id(n.mother) or Life.is_player_id(n.father):
-		return true
-	return SettlementHoldings.MARKET_ROLES.has(w.brain.buy_role(n))
+	return Life.is_player_id(n.partner) or Life.is_player_id(n.mother) or Life.is_player_id(n.father)
 
 
 static func _any_barred(w: World, ms: Array) -> bool:
@@ -626,9 +626,9 @@ static func _hunger_in(w: World, s: OffMapSettlement) -> bool:
 	var pick_hungry := 0
 	for i in s.hh.size():
 		var h: Dictionary = s.hh[i]
-		if not h.alive or str(h.trade) == "official" or int(h.hungry) <= 0 or int(h.coins) >= s._day_food_cost(h) \
-				or s._pantry_pts(h) >= s._need_pts(h) or s._workers(s.biz[OffMapSettlement.TRADE_BIZ[h.trade]]) < 2:
-			continue
+		if not h.alive or str(h.trade) == "official" or int(h.hungry) < s.move_patience(h) or int(h.coins) >= s._day_food_cost(h) \
+				or s._pantry_pts(h) >= s._need_pts(h):
+			continue                                   # REG-X20-D1: a business's only household may leave too; each waits its own patience
 		if int(h.hungry) > pick_hungry:
 			pick_hungry = int(h.hungry)
 			pick = i
@@ -676,9 +676,8 @@ static func _household_in(w: World, s: OffMapSettlement, hi: int, reason: String
 static func _land_in(w: World, s: OffMapSettlement) -> bool:
 	for i in s.hh.size():
 		var h: Dictionary = s.hh[i]
-		if not h.alive or int(h.get("landless", 0)) != 1 or str(h.trade) == "official" or int(h.adults) != 2 or h.mem.size() < 2 \
-				or s._workers(s.biz[OffMapSettlement.TRADE_BIZ[h.trade]]) < 2:
-			continue
+		if not h.alive or int(h.get("landless", 0)) != 1 or str(h.trade) == "official" or int(h.adults) != 2 or h.mem.size() < 2:
+			continue                                   # REG-X20-D1: no household is kept back for its business
 		if not _can_house(w, int(h.coins), true):
 			continue
 		if _household_in(w, s, i, "land"):                       # the manor's market, by the village's own rule (buy, else two weeks' rent)

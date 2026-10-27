@@ -30,6 +30,7 @@ func _init() -> void:
 	test_conservation_and_save()
 	test_old_save()
 	test_determinism()
+	test_free_migration()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -550,3 +551,80 @@ func test_determinism() -> void:
 	var ids_a := a.npcs.map(func(n): return "%d%s%s%s" % [n.id, n.name, n.alive, n.away])
 	var ids_b := b.npcs.map(func(n): return "%d%s%s%s" % [n.id, n.name, n.alive, n.away])
 	check(ids_a == ids_b, "and the same villagers, names and whereabouts")
+
+
+# ------------------------------------------------------------------ REG-X20-D1: free migration ----------------
+## Owner 2026-10-27: a business's only worker household may leave like anyone, traders included; leaving stays each household's
+## own decision (two in the same plight may differ); nothing is made or lost and the business state follows the existing rules.
+func test_free_migration() -> void:
+	var w := _world()
+	var s: OffMapSettlement = w.regions.by_id["netherton"]
+	var hi := -1
+	for i in s.hh.size():
+		if s.hh[i].alive and str(s.hh[i].trade) != "official" and str(s.hh[i].trade) != "trader":
+			hi = i
+			break
+	check(hi >= 0, "free: a working settlement household to test")
+	var bt: String = OffMapSettlement.TRADE_BIZ[s.hh[hi].trade]
+	for j in s.biz[bt].workers.duplicate():                    # make it the business's only household
+		if int(j) != hi:
+			s.biz[bt].workers.erase(j)
+			s.biz["farm" if bt != "farm" else "herd"].workers.append(j)
+	check(s._workers(s.biz[bt]) == 1, "free: the %s has one household left" % bt)
+	var sh: Dictionary = s.hh[hi]
+	var pat := s.move_patience(sh)
+	check(pat >= 1 and pat <= int(OffMapSettlement.rules().move_patience_days_max), "free: its patience is within the rule (%d)" % pat)
+	check(pat == s.move_patience(sh), "free: and the same every time it is read (derived, reproducible)")
+	sh.coins = 0
+	sh.pantry = {}
+	sh.credit = 0.0
+	s.reopen_books()
+	w.food_days = 30.0
+	sh.hungry = pat - 1
+	if pat > 1:
+		check(not Migration._hunger_in(w, s), "free: a household still within its patience stays")
+	sh.hungry = pat
+	var before := _books(w)
+	check(Migration._hunger_in(w, s), "free: the business's only household leaves when its own patience is spent")
+	check(not sh.alive and s._workers(s.biz[bt]) == 0, "free: the business is left with no household")
+	check(_same(before, _books(w)) and _sound(w), "free: and nothing was made or lost")
+	for k in 3:                                                  # an idle business closes by the existing rule, its till and stock kept
+		s.dev["seen"] = (s.flows.unmet as Dictionary).duplicate()
+		s._close_idle()
+	check(not s.biz.has(bt) and s.closed.has(bt), "free: an idle business closes by the existing rule (_close_idle)")
+	check(_same(before, _books(w)) and _sound(w), "free: closing it moves its till and stock, never loses them")
+	var seen := {}
+	for t in w.regions.by_id:
+		var st: OffMapSettlement = w.regions.by_id[t]
+		for h2 in st.hh:
+			seen[st.move_patience(h2)] = true
+	check(seen.size() >= 2, "free: households differ in patience, so the same plight can lead to different choices (%s)" % str(seen.keys()))
+	# the village side: a market trader is not barred from leaving
+	var trader: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and SettlementHoldings.MARKET_ROLES.has(w.brain.buy_role(n)) and n.household >= 3 and n.id != w.reeve_id and n.clan == "" \
+				and not Life.is_player_id(n.partner) and not Life.is_player_id(n.mother) and not Life.is_player_id(n.father):
+			trader = n
+			break
+	if trader != null:
+		check(not Migration._barred(w, trader), "free: a market trader may leave the village (%s, %s)" % [trader.name, w.brain.buy_role(trader)])
+		var w3 := _world()
+		var t3: NPC = w3.by_id[trader.id]
+		var s3: OffMapSettlement = w3.regions.by_id["wulstead"]
+		_feed_settlement(s3)
+		var hh3 := t3.household
+		for h in range(3, w3.households.size()):                  # everyone else is fed, so the trader's household is the one in want
+			if h != hh3 and not w3.households[h].get("ended", false):
+				w3.households[h].pantry.add("bread", 200)
+		_starve(w3, hh3)
+		t3.inv.add("wheat", 5)                                    # stock in the trader's own pack goes with them
+		t3.coins = 11
+		w3.food_days = 0.5
+		var b3 := _books(w3)
+		var place := t3.workplace
+		check(Migration._hunger_out(w3, s3), "free: in famine the trader's household leaves for a settlement with food")
+		check(not t3.alive and t3.away == "wulstead", "free: the trader is away at Wulstead, not dead")
+		check(_same(b3, _books(w3)) and _sound(w3), "free: their stock and purse crossed with them, nothing made or lost")
+		check(not w3.stalls.has(place) or w3.holder_of(w3.stalls[place]) != World.npc_ref(t3.id), "free: their stall is no longer theirs (let again as after a death)")
+	else:
+		check(true, "free: no market trader eligible in this world (nothing to test on the village side)")

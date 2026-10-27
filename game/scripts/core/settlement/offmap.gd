@@ -793,6 +793,14 @@ func _tool_stock(T: Dictionary, tool: String, workers: int) -> int:
 	return maxi(1, ceili(float(T.tools[tool]) * float(workers) * 20.0)) if workers > 0 else 0
 
 
+## REG-X20-D1 (owner 2026-10-27): leaving is each household's own decision, so two households in the same plight may choose
+## differently. A household's patience is how many hungry days it bears before it will go: 1 to `move_patience_days_max`, its
+## own, drawn once from the settlement and the household (reproducible, saved by being derived; no RNG state).
+func move_patience(h: Dictionary) -> int:
+	var top := maxi(1, int(_rules.get("move_patience_days_max", 1)))
+	return 1 + int(_roll(id.hash() & 0xFFFFFF, int(h.id), 21) * float(top))
+
+
 func _workers(b: Dictionary) -> int:
 	var n := 0
 	for i in b.workers:
@@ -1249,8 +1257,8 @@ func _move_jobs() -> void:
 	if best != "":
 		for t in types:
 			var b: Dictionary = biz[t]
-			if t == best or _workers(b) <= 1:
-				continue                       # a trade is never left with no household: the settlement keeps its character
+			if t == best:
+				continue                       # REG-X20-D1: a trade may be left with no household (it closes when idle, _close_idle)
 			for i in b.workers.duplicate():
 				var h: Dictionary = hh[i]
 				if h.alive and int(h.stay) >= int(_rules.switch_stay_days) and float(h.inc) / 7.0 < float(_rules.switch_below) \
@@ -1404,7 +1412,7 @@ func _open_trade(delta: Dictionary) -> void:
 		if not h.alive or not TRADE_BIZ.has(str(h.trade)) or int(h.stay) < int(_rules.switch_stay_days):
 			continue
 		var ob: String = TRADE_BIZ[h.trade]
-		if not biz.has(ob) or _workers(biz[ob]) <= 1 or best_pay < 2.0 * float(h.rate):
+		if not biz.has(ob) or best_pay < 2.0 * float(h.rate):        # REG-X20-D1: a business's only household may go too
 			continue
 		var cash := int(h.coins) - int(_rules.keep_cash_base) - int(_rules.keep_cash_per_member) * (int(h.adults) + int(h.children))
 		if cash >= reserve and cash > pick_cash:
