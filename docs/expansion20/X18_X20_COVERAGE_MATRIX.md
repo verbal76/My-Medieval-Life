@@ -156,6 +156,6 @@ Commit `6bc405a` (code identical to the later docs and test commits). Seed 1, 10
 Not exercised by any 10-day run: 18.12 credit (rare deals; covered by recorder_test), 18.19 in the simulations (covered by the save/load
 probe), 20.10 multiplayer (needs the network harness with `MML_RECORD`). Determinism and recorder neutrality (10 days, seed 1, run in
 pairs): shipped switches identical at days 0, 5 and 10 (fingerprints `8f06b0d2...`, `e3bc5b94...`, `ca5b7869...`); Expansion 20 switches on
-identical (`8f06b0d2...`, `8704d350...`, `c0913803...`). Measures for review (not failures): about 1,420-1,460 empty decisions in 10 days,
+identical (`8f06b0d2...`, `8704d350...`, `c0913803...`). G0 (`tools/sim_gate.py`, seeds 1 and 2, 30 days, unrecorded, shipped switches) on `6eed7aa`: **PASS, identical to the accepted baseline** (`docs/release/sim_baseline.json`; seed 1 day 30 `f9fa18b1...`, seed 2 day 30 `fd2108ea...`, leaks 0). Suites on this branch: `recorder_test` 203/0, `run_tests` 3600/0, `start_test` 523 steps/0, Python `tests/` 162 OK (`test_sim_gate` 34, 11 new). Measures for review (not failures): about 1,420-1,460 empty decisions in 10 days,
 the worst actor-days 36-71 (the SIM-F3 bandit stalk loop, fixed on another branch); the commonest unmet need is a busy station
 (`station_busy_workbench` about 200 in 10 days).
