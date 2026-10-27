@@ -24362,6 +24362,11 @@
      "date": "2026-10-27",
      "change": "commits + 126e358",
      "why": "defect fixed: journal pages paginate by measured height (wip/x20-msg 126e358, merged 4f50ffb; message_journal_test 50/0 checks every spread fits at 7 sizes; screenshots looked at)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "known_defects + net_g1_test fails one check: a guest's journal recording of a host reply sends a second request to the host (fix in progress, worker H on wip/x20-msg)",
+     "why": "regression found by worker K: net_g1_test 'the guest eats a bread: the host applied it once' fails on wip/expansion20 (from 4f50ffb): a guest's journalled reply notice sends a second request to the host; fix assigned to worker H"
     }
    ],
    "assigned_worker": "worker H (screen messages)",
@@ -24375,7 +24380,9 @@
    "integrated_in": [
     "Expansion 20 wip/expansion20 b6fdb25"
    ],
-   "known_defects": [],
+   "known_defects": [
+    "net_g1_test fails one check: a guest's journal recording of a host reply sends a second request to the host (fix in progress, worker H on wip/x20-msg)"
+   ],
    "notes": "Optional save key 'messages' (save stays version 23, following the existing optional-key pattern: credit, couriers, player_offers); Build 21/22 saves load with an empty journal (fixture tests). Per player; a guest's messages are saved in the host's world. Two tiers in the message_journal data file (on wip/expansion20): significant (crime, law, family, contract, work, quest, property, village, skill) 2000 per player, ordinary (trade, money, npc, find, game) 300, each trimmed only from its own tier; about 110 bytes an entry, about 245 KB at full. Recording point: messages are built in the interface, which asks World.player_tell to record them (no world-side message channel exists). Village events stay on the saved Village record page (300 lines), not duplicated into Messages. Provisional limits: docs/DECISIONS.md on wip/expansion20."
   },
   {
@@ -32001,8 +32008,8 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -32025,12 +32032,88 @@
      "date": "2026-10-27",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker K (multiplayer interaction); branch: None -> wip/x20-mp-interact; next_action",
      "why": "owner 2026-10-27 (docs/directives/2026-10-27_mp_interact_begin_now.md): start development now on an isolated branch, still integrated last; release restriction unchanged"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> mp_interact_ui_test 112/0 (one process, real key, pad, touch and mouse events: player beside villager, anvil and stall, several players, moving, cycling, levels); net_interact_test 67/0 x3 runs (three processes over loopback: host, touch guest, second guest; host-guest both ways and guest-guest; accept, decline, counter; conservation; double accept; disconnect, reconnect, host restart with a pending offer); multiplayer_c 340/0, run_tests 3600/0, start_test 523/0, world_test 339/0, x20_android_ui 95/0, message_journal 50/0, wiki_test 140/0, other net suites and contract tests 0 failures; G0 identical on 93f5a76; Linux and Windows exports build (unsigned), Linux binary starts; screenshots looked at by worker and lead; test_commit: None -> 0ce4c9e; commits + 0ce4c9e; playtest; next_action",
+     "why": "worker K finished on wip/x20-mp-interact (start 4f50ffb, head 0ce4c9e); not merged: integrated last"
     }
    ],
-   "next_action": "Worker K develops on wip/x20-mp-interact from wip/expansion20 4f50ffb (audit, targeting, menu, consent, conservation, interface-driven tests, cross-platform matrix). Integrated LAST onto the frozen validated Expansion 20 baseline; no Expansion 20 build of any kind until then.",
+   "next_action": "Integrate LAST onto the frozen validated Expansion 20 baseline (expected conflicts: main.gd targeting and tap, game_ui.gd show_players/show_pause, world.gd MP-D8 section, net_* files); then multiplayer and combined suites, G0, three exports, release-readiness report. Owner questions MP-INTERACT-Q1, -Q2.",
    "notes": "BLOCKS the next Expansion 20 release (private drafts included). Playtest evidence: the Windows player saw Bob (Android) but could not select or interact with him; the reverse was not tried. Treated as a cross-platform deficiency until tests show otherwise. Build 22 is not reopened. Likely cause (read-only look, 2026-10-27, wip/expansion20 b6fdb25): other players are never offered as a target. main._find_target lists villagers, shops, desks, loot, animals and things but no player, so there is no prompt, outline or tap target for one; the MP-D8 players window (GameUI.show_players: gift, partner, answer offers) opens only from main.interact when NO other target is in reach (main.gd interact, the target.is_empty() branch, _beside_player). In a village something else is nearly always in reach, so the other player cannot be chosen. Also to audit: guest_blocked() in interact, touch tap selection, the pad's next-target cycle, and the guest's path through the host.",
    "assigned_worker": "worker K (multiplayer interaction)",
-   "branch": "wip/x20-mp-interact"
+   "branch": "wip/x20-mp-interact",
+   "tests": "mp_interact_ui_test 112/0 (one process, real key, pad, touch and mouse events: player beside villager, anvil and stall, several players, moving, cycling, levels); net_interact_test 67/0 x3 runs (three processes over loopback: host, touch guest, second guest; host-guest both ways and guest-guest; accept, decline, counter; conservation; double accept; disconnect, reconnect, host restart with a pending offer); multiplayer_c 340/0, run_tests 3600/0, start_test 523/0, world_test 339/0, x20_android_ui 95/0, message_journal 50/0, wiki_test 140/0, other net suites and contract tests 0 failures; G0 identical on 93f5a76; Linux and Windows exports build (unsigned), Linux binary starts; screenshots looked at by worker and lead",
+   "test_commit": "0ce4c9e",
+   "commits": [
+    "0ce4c9e"
+   ],
+   "playtest": "All nine host/guest platform pairs need owner devices (Android phone, Windows PC, real controller, two-machine LAN); only Linux-host-Linux ran end to end on the build machine, the rest are automated input paths plus loopback"
+  },
+  {
+   "id": "MP-INTERACT-Q1",
+   "kind": "decision",
+   "title": "Player-to-player contracts: the contract system only has a way for villagers to do units of work, so contracts between two players are limited to goods. Should a player be able to hire another player for work (a service contract)?",
+   "description": "Player-to-player contracts: the contract system only has a way for villagers to do units of work, so contracts between two players are limited to goods. Should a player be able to hire another player for work (a service contract)?",
+   "source": "MP-INTERACT-01 worker report and audit (wip/x20-mp-interact 0ce4c9e)",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "MP-INTERACT-01"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "MP-INTERACT-01 worker report (wip/x20-mp-interact 0ce4c9e, audit docs/expansion20/MP_INTERACT_AUDIT.md on that branch)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "agent recommendation recorded (not an approval)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "source",
+     "why": "source reworded: the audit lives on the multiplayer branch only"
+    }
+   ],
+   "notes": "Recommendation: goods only for this build (what the existing contract system supports); service contracts between players as a later item, since it needs a way to record and verify a player's work."
+  },
+  {
+   "id": "MP-INTERACT-Q2",
+   "kind": "decision",
+   "title": "Talk targeting: Talk takes the nearest person, so a closer villager comes before another player (a tap, a click or Next always reaches the player). Should players come first for Talk instead?",
+   "description": "Talk targeting: Talk takes the nearest person, so a closer villager comes before another player (a tap, a click or Next always reaches the player). Should players come first for Talk instead?",
+   "source": "MP-INTERACT-01 worker report (wip/x20-mp-interact 0ce4c9e)",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "MP-INTERACT-01"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "MP-INTERACT-01 worker report (wip/x20-mp-interact 0ce4c9e)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "agent recommendation recorded (not an approval)"
+    }
+   ],
+   "notes": "Recommendation: players first for Talk when one is in reach (in a shared game a player beside you is nearly always who you mean); villagers stay reachable with Next, tap or click."
   },
   {
    "id": "MP-MASTER",

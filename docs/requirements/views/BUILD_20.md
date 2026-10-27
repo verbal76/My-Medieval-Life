@@ -10,19 +10,18 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 |---|---|
 | Approved requirements in scope | 81 |
 | Integrated | 68 of 81 (84%) |
-| Automated tests passed | 68 of 81 (84%) |
+| Automated tests passed | 69 of 81 (85%) |
 | Integration verified | 36 of 81 (44%) |
 | Gameplay verified | 0 of 81 (0%) |
 | Owner playtested | 0 of 81 (0%) |
 | Complete | 2 of 81 (2%) |
 | Open (release blockers) | 79 |
-| Open owner decisions (blocking) | 16 (11) |
+| Open owner decisions (blocking) | 18 (11) |
 
-## In development (worker assigned) (3)
+## In development (worker assigned) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| MP-INTERACT-01 | Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller) | OWNER APPROVED | IN DEVELOPMENT | worker K (multiplayer interaction) / wip/x20-mp-interact | NOT TESTED | Worker K develops on wip/x20-mp-interact from wip/expansion20 4f50ffb (audit, targeting, menu, consent, conservation, interface-driven tests, cross-platform matrix). Integrated LAST onto the frozen validated Expansion 20 baseline; no Expansion 20 build of any kind until then. | MP-01, design: UNKNOWN | UNKNOWN |
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | analysis of judgment once D5 records it (batch R6); closure also waits on SIM-F2 and SIM-F3 | design: UNKNOWN | UNKNOWN |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | OWNER APPROVED | IN DEVELOPMENT | worker L (aspirations code) / wip/x20-r5 | NOT TESTED | aspirations in five domains from real state as a decision factor; design note first, then code behind a flag (batch R5) | design: DESIGN WORK REQUIRED | L |
 
@@ -63,7 +62,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | GP-MARKET-SHELVES | Market stalls as Craftpix wooden shelves showing each merchant's actual listings (up to ten) | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
 | GP-MARKET-SPACING | Market stalls with the Craftpix shelf sprite stand too close together | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED | Build 22: implement on wip/b22-market, lead integrates on wip/build22 |  | verification only |
 | GP-MESSAGE-FOOTPRINT | The message box and the interaction prompt take too much of the screen; make them compact and keep them out of the play area | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 b6fdb25 | TARGETED TESTS PASSED |  |  | verification only |
-| GP-MESSAGE-JOURNAL | Messages journal is saved with the world: persistent, per-world, filtered to meaningful events, bounded retention | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 b6fdb25 | TARGETED TESTS PASSED |  |  | verification only |
+| GP-MESSAGE-JOURNAL | Messages journal is saved with the world: persistent, per-world, filtered to meaningful events, bounded retention | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 b6fdb25 | TARGETED TESTS PASSED | known: net_g1_test fails one check: a guest's journal recording of a host reply sends a second request to the host (fix in progress, worker H on wip/x20-msg) |  | verification only |
 | GP-MINE-WOOD-FRAME | Underground: a wooden frame drawn over the wall beside a deposit reads as blocking it; supports and openings need a clear representation | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED | Build 22: implement on wip/b22-ui, lead integrates on wip/build22 |  | verification only |
 | GP-PACK-DETAIL-FIT | Pack item detail panel: action buttons cut off the bottom of the screen | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
 | GP-PAUSE-PANEL | Pause menu: a framed panel over the dimmed game, not a full-screen brown background | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
@@ -103,7 +102,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 |---|---|---|---|---|---|---|---|---|
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (9)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (10)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -115,6 +114,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| MP-INTERACT-01 | Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker K (multiplayer interaction) / wip/x20-mp-interact | TARGETED TESTS PASSED | Integrate LAST onto the frozen validated Expansion 20 baseline (expected conflicts: main.gd targeting and tap, game_ui.gd show_players/show_pause, world.gd MP-D8 section, net_* files); then multiplayer and combined suites, G0, three exports, release-readiness report. Owner questions MP-INTERACT-Q1, -Q2. | MP-01, design: UNKNOWN | UNKNOWN |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) | SJD-G | XS |
 
 ## Complete (2)
@@ -124,11 +124,13 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | INTEGRATION VERIFIED | NOT READY |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (16)
+## Open owner decisions (18)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
 | ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | PROVISIONAL | no | ARMOR-CATALOG-01, ARMOR-MATERIALS-01 |
+| MP-INTERACT-Q1 | Player-to-player contracts: the contract system only has a way for villagers to do units of work, so contracts between two players are limited to goods. Should a player be able to hire another player for work (a service contract)? | OPEN | no |  |
+| MP-INTERACT-Q2 | Talk targeting: Talk takes the nearest person, so a closer villager comes before another player (a tap, a click or Next always reaches the player). Should players come first for Talk instead? | OPEN | no |  |
 | OD-LE-02B | Offer visibility: who can see an offer (in person at stalls and meetings, by word of mouth, a notice board), the remaining part of OD-LE-02 | OPEN | no |  |
 | OD-LE-03 | Owner decision (Living Economy): Wages, rents and service contracts in first release | OPEN | yes | ECON-P3.4 |
 | OD-LE-04 | Owner decision (Living Economy): Business founding, partnerships, ownership and inheritance | OPEN | yes |  |

@@ -414,7 +414,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | MP-ADOPTION-AGENCY | Adoption agency concept (future, separate design item) | unassigned | DEFERRED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | MP-ARCH | Multiplayer architecture approved in principle: one authoritative simulation, several full player characters, shared gameplay systems, single-player compatibility; with eight requirements: Build 19 simulation and single-player behaviour preserved; no separate simplified guest simulation; permanent identities and per-player ownership throughout; every platform a potential host and guest; the prototype kept as reference; multiplayer ahead of Expansion 20; explicit verification gates for Android, Windows, Linux, Steam Deck and mixed-platform sessions; the milestone in every status report until owner acceptance | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | MP-INET | Internet multiplayer is mandatory: free connection methods first; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal (costs, dependencies, privacy, alternatives) comes to the owner before internet support is declared complete | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| MP-INTERACT-01 | Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller) | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| MP-INTERACT-01 | Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller) | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MP-MASTER | Full player-hosted multiplayer as the next milestone after Build 19 (before Expansion 20): 3-4 players including the host in one persistent host-authoritative world; full guest parity with the host in every existing system; Android, Windows and Linux (incl. Steam Deck) each host and join, every cross-platform combination validated on real devices; LAN and a documented internet method with no dedicated server and no paid service without owner approval; single player intact offline | multiplayer | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MP-PLAYER-FAMILY | Children of player-to-player marriages: biological (male and female) and adoption with both spouses as parents | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MUSIC-18 | Game music from the owner's three songs (Prosperous Village, Sunrise over the Village, Misted Ancient), played on the Music bus; Music and Sound-effect volume sliders in Settings working | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -776,7 +776,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (236)
+## Owner decisions (238)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -851,6 +851,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | MP-D6 | Multiplayer: an Android host leaving the app (world pauses for everyone, or a foreground service keeps hosting)? | multiplayer | APPROVED | yes |
 | MP-D7 | Multiplayer: a new guest character (a newcomer to the village, or a member of an existing household)? | multiplayer | APPROVED | yes |
 | MP-D8 | Multiplayer: player-to-player marriage, children and inheritance follow the same rules as with villagers (CRT-03)? | multiplayer | APPROVED | yes |
+| MP-INTERACT-Q1 | Player-to-player contracts: the contract system only has a way for villagers to do units of work, so contracts between two players are limited to goods. Should a player be able to hire another player for work (a service contract)? | 20 | OPEN |  |
+| MP-INTERACT-Q2 | Talk targeting: Talk takes the nearest person, so a closer villager comes before another player (a tap, a click or Next always reaches the player). Should players come first for Talk instead? | 20 | OPEN |  |
 | MP-Q-PLAYER-CHILDREN | Should a marriage between two players have children? (births currently need a villager parent) | multiplayer | APPROVED |  |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | 17 | APPROVED |  |
 | OD-02 | Owner decision: balance review of every provisional number | owner decision | OPEN |  |
