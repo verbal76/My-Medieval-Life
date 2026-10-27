@@ -401,10 +401,12 @@ func _everyone_chooses_everyone() -> void:
 	for pid in [ann, cara, dan]:
 		var at: Array = rec(pid).get("pos", [0, 0])
 		await command({"cmd": "face", "x": float(at[0]), "y": float(at[1])})
+		await until(func(): return (hui().get("pids", []) as Array).map(func(x): return int(x)).has(pid), 3.0)
 		var n := 0
-		while int(hui().get("target_pid", 0)) != pid and n < 4:
+		while int(hui().get("target_pid", 0)) != pid and n < 6:
+			var was := int(hui().get("target_pid", 0))
 			await command({"cmd": "key", "code": KEY_Q})
-			await wait(0.15)
+			await until(func(): return int(hui().get("target_pid", 0)) != was, 2.0)     # one press, one step (a slow frame is waited for)
 			n += 1
 		await command({"cmd": "key", "code": KEY_E})
 		check(await until(func(): return str(hui().get("title", "")) == "%s (PLAYER)" % names[pid], 3.0),
@@ -445,10 +447,12 @@ func _everyone_chooses_everyone() -> void:
 		var at2: Array = rec(pid).get("pos", [0, 0])
 		await gcmd("g3", {"cmd": "face", "x": float(at2[0]), "y": float(at2[1])})
 		await wait(0.2)
+		await until(func(): return (gs("g3").get("ui", {}).get("pids", []) as Array).map(func(x): return int(x)).has(pid), 3.0)
 		var n := 0
-		while int(gs("g3").get("ui", {}).get("target_pid", 0)) != pid and n < 4:
+		while int(gs("g3").get("ui", {}).get("target_pid", 0)) != pid and n < 6:
+			var was := int(gs("g3").get("ui", {}).get("target_pid", 0))
 			await gcmd("g3", {"cmd": "key", "code": KEY_Q})
-			await wait(0.2)
+			await until(func(): return int(gs("g3").get("ui", {}).get("target_pid", 0)) != was, 2.0)
 			n += 1
 		await gcmd("g3", {"cmd": "key", "code": KEY_E})
 		check(await until(func(): return str(gs("g3").get("ui", {}).get("title", "")) == "%s (PLAYER)" % names[pid], 3.0),
