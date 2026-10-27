@@ -1,3 +1,5 @@
+> **HISTORICAL LITERARY RESEARCH — NOT BINDING GAME CANON OR DESIGN (owner, 2026-10-27).** William Morris source research is retained as literary evidence and possible inspiration, not the specification for the already developed My Medieval Life. Names, geography, maps, history, political systems, magic and novel events do not become required game content without new, explicit owner approval. Consult the current register and directives. Research text below is preserved for provenance.
+
 # H. Procedural world generator: design specification
 
 **Status: proposal.** No engine, scale, tile size, coordinate system or algorithm is chosen here.
