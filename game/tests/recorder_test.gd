@@ -45,6 +45,7 @@ func _init() -> void:
 	test_person_refs()
 	test_judgment_and_relations()
 	test_x20_phase3()
+	test_rec_diag()
 	test_coverage_file()
 	print("%d checks, %d failures" % [checks, failures])
 	_remove(tmp_root)
@@ -1241,6 +1242,76 @@ func test_x20_phase3() -> void:
 	check(not em.is_empty() and em[-1].outcome == "ok" and bool(re.meta.flags.economy), "X20: the LE-01 model's daily summary (ok: nothing unbacked) and economy=true in the flags")
 	we.dispose()
 	EconomyFoundation.set_override({})
+
+
+# ---------------------------------------------------------------------------- REC-DIAG (owner directive 2026-10-27 s.2A)
+## A storefront sale, a household ending with coins in its till (deaths with their context, the till escheated, the house passing
+## to the manor), a migration line and a day's summaries; the same steps with and without the recorder end in the same world.
+func diag_steps(w: World) -> Dictionary:
+	run_minutes(w, 70)                        # past the first hour: the coin audit and the ownership events are live
+	var n: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household >= 3 and o.home != "" and w.buildings.has(o.home) and str(w.buildings[o.home].get("type", "")) == "house" \
+				and w.holds(World.hh_ref(o.household), w.buildings[o.home]) and w.business.front_place(w.buildings[o.home]).size() > 0:
+			n = o
+			break
+	var house: Dictionary = w.buildings[n.home]
+	var c := w.business.storefront_cost()
+	for id in c:
+		n.inv.add(id, int(c[id]))
+	w.business.build_npc_front(house, n)
+	w.front_keepers[n.home] = n.id
+	n.plan.clear()
+	n.target = -1
+	n.pos = Vector2(int(house.front.use[0]) + 0.5, int(house.front.use[1]) + 0.5)
+	n.inv.add("herbal_poultice", 2)
+	w.player.coins += 50
+	var sold := w.trade(w.player, n, "herbal_poultice", 2, 6)
+	run_minutes(w, 61)                        # an hourly audit after the sale
+	house.front.till = int(house.front.till) + 20
+	var t0 := w.treasury
+	for m in (w.households[n.household].members as Array).duplicate():
+		var o := w.npc(int(m))
+		if o != null and o.alive:
+			w.kill(o, "starvation")
+	var out := {"sold": sold, "till": BusinessMoney.till_of(house), "escheat": w.treasury - t0, "house": str(house.id), "keeper": n.id}
+	if w.recorder != null:
+		w.recorder.migration("testville", "out", "test", 1, 0, 0)
+	run_minutes(w, 25 * 60)                   # a dawn: the day's summaries
+	return out
+
+
+func test_rec_diag() -> void:
+	var plain := identity_world()
+	var oa := diag_steps(plain)
+	var ha := world_hash(plain)
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("rec_diag")})
+	var ob := diag_steps(w)
+	check(oa == ob and world_hash(w) == ha, "REC-DIAG: recording till moves, ownership, deaths' context, migration and the day's summaries changes nothing (%s)" % JSON.stringify(ob))
+	check(rec.unknown_codes.is_empty(), "REC-DIAG: no unknown code (%s)" % str(rec.unknown_codes))
+	check(bool(ob.sold) and int(ob.till) == 0 and int(ob.escheat) > 0, "REC-DIAG: the sale went to the till and the ended household's till to the manor (%s)" % JSON.stringify(ob))
+	var d := read_all(rec)
+	var subs := func(st: String) -> Array:
+		return d.event.filter(func(e): return e.subtype == st)
+	var till := "front:" + str(ob.house)
+	check(subs.call("till_sale").filter(func(e): return e.object == till).size() == 1, "REC-DIAG: the storefront sale is a till event on the till's thread")
+	check(subs.call("till_escheat").filter(func(e): return e.object == till).size() == 1, "REC-DIAG: the escheat of the ended household's till is a till event")
+	var keeper := "p:%d" % int(ob.keeper)
+	check(d.alert.filter(func(a): return str(a.rule) == "coin.unattributed_holder" and str(a.entities) == keeper).is_empty(), "REC-DIAG: the keeper's coins moving to the till are attributed (no unattributed alert)")
+	check(subs.call("owner_changed").any(func(e): return e.object == "place:" + str(ob.house) and str(e.detail).contains("front_till=0")), "REC-DIAG: the house passing to the manor is an ownership event naming its (emptied) till")
+	var deaths: Array = subs.call("death").filter(func(e): return str(e.detail).begins_with("cause=starvation"))
+	var ctx: Array = d.factor.filter(func(f): return str(f.source) == "death" and deaths.any(func(e): return int(e.id) == int(f.event)))
+	check(not deaths.is_empty() and ctx.any(func(f): return f.option == "deceased" and f.factor == "coins") and ctx.any(func(f): return f.option == "village" and f.factor == "food_for_sale_stalls"),
+		"REC-DIAG: a death carries what the dead and their household held and the food on offer (%d deaths, %d factors)" % [deaths.size(), ctx.size()])
+	check(subs.call("migration_out").size() == 1, "REC-DIAG: a migration is an event with its reason")
+	var ed: Array = subs.call("economy_day")
+	var sd: Array = subs.call("settlement_day")
+	check(not ed.is_empty() and d.factor.any(func(f): return f.option == "till" and str(f.factor) == till) and d.factor.any(func(f): return f.option == "till_owner"),
+		"REC-DIAG: the day's economy lists each till with its coins and owner")
+	check(not sd.is_empty() and d.factor.any(func(f): return str(f.option).begins_with("settlement:") and f.factor == "hungry_households"), "REC-DIAG: the day's settlements")
+	w.dispose()
+	plain.dispose()
 
 
 func test_coverage_file() -> void:

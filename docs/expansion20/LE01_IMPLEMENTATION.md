@@ -118,3 +118,44 @@ What the model recorded in 30 days: seed 1: 500 events (the ring full, ordered),
 saved economy section was 442 KB and 401 KB, almost all knowledge from dealings; it grows with who has dealt with whom
 (bounded by pairs and items, not by time). Whether that size is acceptable on a phone is a performance question for
 OD-LE-15; a compact encoding is an engineering option for LE-02 that changes no rule.
+
+## 6. Till ownership (owner directive 2026-10-27, X20-COMPLETE s.2B; branch `wip/x20-foundation`)
+
+**Finding.** The live money was never ownerless: storefront tills (`buildings[id].front.till`, ECON-P3) and trade-counter tills
+(`buildings[id].counter.till`, B18-DP-01) are counted (`Business.tills`, so `World.total_coins` and the holdings census) and settled each
+morning by `BusinessMoney.daily`. The gap was the model's: `EconActor` had refs only for `stall:` and `shop:` tills, so money in a
+storefront or counter till had no actor, controller, location or judged person, and no event or reservation could name it.
+
+**Model refs (read only, uncached).** `front:<building id>` and `counter:<building id>`: `kind`, `exists` (the building carries the
+record; an older save without it has none), `coins` (the till), `controller`, `location` (the building), `profile`, `judged_person` (the
+controller's person). `EconActor.till_refs()` lists every till `Business.tills` counts (stalls, shops, storefronts, counters, each by id),
+so their coins add up to it; `economy_sim.gd --economy` prints that audit. `EconomyFoundation.on_trade` names the till a sale's proceeds go
+into in the trade event's note (`till:front:<id>`, `till:counter:<id>`, from `BusinessMoney.till_ref_for`) and marks its controller's needs.
+
+**One rule, not two.** The controller is read from the same functions the morning settlement pays by:
+`BusinessMoney.front_owner(b)` (the household or villager holding the house; the holder's own ref when it is a player or the manor, whose
+storefront tills `daily()` leaves alone; the manor when the holding household has ended: escheat) and `BusinessMoney.counter_owner(b)`
+(the household holding the building, else the keeper who last served at it while they live, else the manor). `daily()` and `_payee` now
+call them, so behaviour is unchanged (G0 identical). No `business:` identity was added.
+
+**Defect found and fixed (coins paid to the wrong holder).** "A household that has ended leaves its till to the manor" (ECON-P3, the
+comment and INT-340) was dead code for storefronts: `Property.household_ended` made the house the manor's first, `daily()` then skipped the
+manor-held storefront, the till sat there, and the next household to buy or lease the house was paid the dead household's takings at its
+first morning. `Property.household_ended` now calls `BusinessMoney.household_ended(ref)`, which moves the tills of the houses the
+household held to the treasury (the existing `_settle` escheat, stat `front_till_escheat`) before the houses pass. Conserved; tested with
+the economy switch off and on. Counter tills needed no change (the keeper is paid when the holder is gone; escheat when nobody is left).
+
+**Cases audited** (`game/tests/till_ownership_test.gd`, 50 checks): world start (every till resolves, sum = `Business.tills`); a new
+storefront built the villagers' way and its first sale; a counter's first sale; transfers by `set_owner` and `set_tenant` (household,
+another household, the player, the manor); the holder household ending (escheat, and the regression: the next holder draws nothing); save
+and load (round trip; an older save without `front.till` and without a `counter` record); closure (the player's shop: its till returns
+to the player, the `shop:` ref goes, the storefront stays with an empty till); the switch off (the live escheat does not need the model).
+Front and counter records are never removed by any code path, so "closure" of a villager storefront does not exist today.
+
+**Left for the owner (not built).** A living household that loses a house with coins in its storefront till (a lease taken back for
+arrears, `Property._release`; the lease given up) leaves the till in the house: the manor holds it (controller `manor`), `daily()` does not
+settle a manor-held storefront, and the next holder is paid it. No approved text says whose those coins are: the player's analogue
+(B18-DP-01, INT-392: a shop closes with the lease and its till returns to the player) and OD-LE-04/D03 ("ownership recorded separately from
+household money and estate inheritance") point to the leaving household, but that is a live behaviour change, so it is reported, not
+decided here. An explicit per-till owner record (D03, authorized 2026-10-27) was not added: the holder rule above already gives every till
+one traceable owner, and recording one separately would only change outcomes in exactly this unsettled case.
