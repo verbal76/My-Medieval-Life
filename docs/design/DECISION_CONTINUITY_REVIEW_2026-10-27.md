@@ -46,3 +46,13 @@ Nothing was rewritten; earlier rules stand where they are recorded. **One genuin
 | Existing code affected | None in the live game (no politics). The Expansion 21 groundwork on `wip/expansion21-preparation` holds records only; its plan (A9, readiness table row 5) lists removal as open (Q-POL-3, Q-POL-6). |
 | Proposed reconciliation | Read D23's "No **automatic** impeachment/recall" literally: no removal is ever triggered automatically by a score or rule, but the earlier "removal through the established political system" stays available as a deliberate act of that system (for example a council or vote procedure, to be designed with P21-STRUCTURE) for grave misconduct, alongside death and permanent absence. Both texts survive; the 2026-10-19 rule is not discarded. |
 | Owner approval required | **Yes.** Choose: (a) the reconciliation above; (b) D23 strictly: no removal mechanics at all (the 2026-10-19 permission is then superseded by name); or (c) another rule. Nothing is built either way until Expansion 21 is authorized. |
+
+## 4. Resolution of the conflict (owner, 2026-10-27)
+
+The owner chose **option B** (`docs/directives/2026-10-27_q_pol_6_conflict_resolution.md`; `Q-POL-6-CONFLICT` closed): D23 holds
+strictly. There are no impeachment, recall or political removal mechanics for the mayor, automatic or manual. The mayor serves the
+four-game-year term (consolidated design 2026-10-23, section 4.2) unless death or permanent absence ends it early; misconduct,
+corruption and unpopular decisions affect reputation, political relationships, public support and future elections only. The
+2026-10-19 directive *permitted* removal where appropriate and did not mandate it; D23 is the newer, explicit decision and supersedes
+that permission **specifically for mayoral removal**. The 2026-10-19 text is preserved unchanged in `docs/directives/`; other political
+mechanics are untouched, and no Expansion 21 work starts.

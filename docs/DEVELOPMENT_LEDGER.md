@@ -922,7 +922,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | Q-POL-4 | Vote privacy and which totals are public | 21 | APPROVED | yes |
 | Q-POL-5 | Ties in elections | 21 | APPROVED | yes |
 | Q-POL-6 | Removal from office | 21 | APPROVED | yes |
-| Q-POL-6-CONFLICT | Removal from office: the owner's 2026-10-19 directive allows removal through the established political system where appropriate; the 2026-10-27 answer D23 (Q-POL-6 = A) allows no automatic impeachment or recall and no removal mechanics. Which rule holds? (a) no automatic removal, but deliberate removal through the political system stays possible for grave misconduct (both texts kept); (b) D23 strictly, no removal at all (2026-10-19 permission superseded by name); (c) another rule. | 21 | OPEN |  |
+| Q-POL-6-CONFLICT | Removal from office: the owner's 2026-10-19 directive allows removal through the established political system where appropriate; the 2026-10-27 answer D23 (Q-POL-6 = A) allows no automatic impeachment or recall and no removal mechanics. Which rule holds? (a) no automatic removal, but deliberate removal through the political system stays possible for grave misconduct (both texts kept); (b) D23 strictly, no removal at all (2026-10-19 permission superseded by name); (c) another rule. | 21 | APPROVED |  |
 | Q-POL-7 | Placement and gate: politics waits for Expansion 19's live judgment, or an interim voter model behind a switch | 21 | APPROVED | yes |
 | Q-POL-8 | The constable and the law: a constable and crime records before Expansion 22; the friendly guard (X19 conflict 3) | 21 | APPROVED | yes |
 | Q-POL-9 | Taxes under an elected authority and DVW-B5's predictability | 21 | APPROVED | yes |

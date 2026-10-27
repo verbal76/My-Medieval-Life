@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 168 still open, 63 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 599 (283 of them still open) |
-| **Open entries now** (rules excluded) | | **450** |
+| Entries added since | | 599 (282 of them still open) |
+| **Open entries now** (rules excluded) | | **449** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (63)
@@ -512,7 +512,7 @@ None.
 | Q-POL-4 | Vote privacy and which totals are public | decision | APPROVED | 21 |
 | Q-POL-5 | Ties in elections | decision | APPROVED | 21 |
 | Q-POL-6 | Removal from office | decision | APPROVED | 21 |
-| Q-POL-6-CONFLICT | Removal from office: the owner's 2026-10-19 directive allows removal through the established political system where appropriate; the 2026-10-27 answer D23 (Q-POL-6 = A) allows no automatic impeachment or recall and no removal mechanics. Which rule holds? (a) no automatic removal, but deliberate removal through the political system stays possible for grave misconduct (both texts kept); (b) D23 strictly, no removal at all (2026-10-19 permission superseded by name); (c) another rule. | decision | OPEN | 21 |
+| Q-POL-6-CONFLICT | Removal from office: the owner's 2026-10-19 directive allows removal through the established political system where appropriate; the 2026-10-27 answer D23 (Q-POL-6 = A) allows no automatic impeachment or recall and no removal mechanics. Which rule holds? (a) no automatic removal, but deliberate removal through the political system stays possible for grave misconduct (both texts kept); (b) D23 strictly, no removal at all (2026-10-19 permission superseded by name); (c) another rule. | decision | APPROVED | 21 |
 | Q-POL-7 | Placement and gate: politics waits for Expansion 19's live judgment, or an interim voter model behind a switch | decision | APPROVED | 21 |
 | Q-POL-8 | The constable and the law: a constable and crime records before Expansion 22; the friendly guard (X19 conflict 3) | decision | APPROVED | 21 |
 | Q-POL-9 | Taxes under an elected authority and DVW-B5's predictability | decision | APPROVED | 21 |
