@@ -152,7 +152,7 @@ static func _talk(ui: GameUI, q: PlayerState) -> void:
 	var send := func(text: String) -> void:
 		var why := w.player_offer("say", pid, "", 0, null, 0, 0, text)
 		if why == "":
-			ui.message("You say to %s: \"%s\"" % [q.name, World.clean_say(text)], 4.0, "player")
+			ui.message("You say to %s: \"%s\"" % [q.name, World.clean_say(text)], 4.0, "players")
 			show(ui, pid)
 		else:
 			ui.message(why)
@@ -266,15 +266,16 @@ static func _terms(ui: GameUI, q: PlayerState, form: Dictionary) -> void:
 	var price := int(form.price)
 	var by_day := w.day() + int(form.get("days", 0))
 	var sentence := ""
+	var goods := Contracts.counted(qty, name)
 	match kind:
 		"sell":
-			sentence = "You sell %d %s to %s for %d coins." % [qty, name, q.name, price]
+			sentence = "You sell %s to %s for %d coins." % [goods, q.name, price]
 		"buy":
-			sentence = "You buy %d %s from %s for %d coins." % [qty, name, q.name, price]
+			sentence = "You buy %s from %s for %d coins." % [goods, q.name, price]
 		"contract":
-			sentence = "%s supplies you %d %s at %d each (%d coins, set aside when they agree) by the end of day %d." % [q.name, qty, name, price, qty * price, by_day]
+			sentence = "%s supplies you %s at %d each (%d coins, set aside when they agree) by the end of day %d." % [q.name, goods, price, qty * price, by_day]
 		"supply":
-			sentence = "You supply %s with %d %s at %d each (%d coins) by the end of day %d." % [q.name, qty, name, price, qty * price, by_day]
+			sentence = "You supply %s with %s at %d each (%d coins) by the end of day %d." % [q.name, goods, price, qty * price, by_day]
 	var sl := ui._label(sentence, 18, GOLD)
 	sl.name = "TermsSummary"
 	var row := _row(ui)

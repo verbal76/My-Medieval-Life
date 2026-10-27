@@ -19,6 +19,8 @@ var census := {}          # MP Batch B: {coins, goods} taken on demand, at load 
 var storm := 0.0          # MP Batch B: seconds left of saving every frame (a guest joining mid-save)
 var saves := 0
 var orphan_id := -1       # MP-PLAYER-FAMILY: the child family_orphan made
+var releases: Array = []  # MP-INTERACT-01: input events to release on the next frame (a key or button pressed by a command)
+var spot := Vector2.INF   # MP-INTERACT-01: where "stage" stood the players
 
 
 func _init() -> void:
@@ -91,6 +93,9 @@ func _process(delta: float) -> bool:
 	if not started:
 		return false
 	main.world.host_player().hunger = 100.0          # the idle host does not starve while the test runs
+	for e in releases:
+		Input.parse_input_event(e)
+	releases.clear()
 	if walk > 0.0:
 		var step := minf(walk, 3.0 * delta)
 		main.world.host_player().pos.x += step
@@ -201,6 +206,65 @@ func _commands() -> void:
 			a4.wait = 30.0
 		"pen_trough":
 			w.fauna.pens[str(c.id)].trough = int(c.n)
+		"stage":                                     # MP-INTERACT-01: the host and every guest together on open ground, villagers kept off
+			spot = _open_spot()
+			var hp2 := w.host_player()
+			hp2.pos = spot
+			hp2.born = Life.born_for_age(25.0, w.minutes)
+			main.player_sprite.face(Vector2.RIGHT)
+			main.move_to = Vector2.INF
+			var k := 0
+			var ids: Array = main.net.by_peer.keys()
+			ids.sort_custom(func(x, y): return int(main.net.by_peer[x]) < int(main.net.by_peer[y]))     # by pid: the first to join first
+			for id in ids:
+				var gp: PlayerState = w.player_by_pid(int(main.net.by_peer[id]))
+				gp.pos = spot + ([Vector2(1.0, 0), Vector2(1.0, 1.4), Vector2(-1.0, 1.4)][k % 3])
+				gp.born = hp2.born
+				k += 1
+				main.net.rpc_id(id, "s_correct", gp.pos)
+			_clear_villagers()
+		"clear_villagers":
+			_clear_villagers()
+		"face":                                      # the host faces a point (tiles)
+			main.player_sprite.face(Vector2(float(c.x), float(c.y)) - w.host_player().pos)
+		"key":                                       # a key pressed (released next frame), as the keyboard does
+			var e := InputEventKey.new()
+			e.physical_keycode = int(c.code)
+			e.keycode = int(c.code)
+			e.pressed = true
+			Input.parse_input_event(e)
+			var up := e.duplicate()
+			up.pressed = false
+			releases.append(up)
+		"pad":                                       # a pad button pressed (released next frame)
+			var j := InputEventJoypadButton.new()
+			j.button_index = int(c.button)
+			j.pressed = true
+			Input.parse_input_event(j)
+			var ju := j.duplicate()
+			ju.pressed = false
+			releases.append(ju)
+		"click_pid":                                 # a left click on that player's drawn character (Windows, Linux)
+			var sp: ActorSprite = main.avatar_sprites.get(int(c.pid))
+			if sp != null:
+				var at: Vector2 = main.get_canvas_transform() * (sp.position + Vector2(0, -0.4 * main.T))
+				var mb := InputEventMouseButton.new()
+				mb.button_index = MOUSE_BUTTON_LEFT
+				mb.position = at
+				mb.pressed = true
+				root.push_input(mb, true)
+				var mu := mb.duplicate()
+				mu.pressed = false
+				root.push_input(mu, true)
+		"press":                                     # a button of the open window, by its node name or its words
+			_press_named(main.ui.panel_body, str(c.name))
+		"picker":                                    # the open quantity picker set and confirmed
+			var qp: QuantityPicker = main.ui.panel_body.find_child("QuantityPicker", true, false)
+			if qp != null:
+				qp.set_qty(int(c.n))
+				qp.confirm()
+		"close":
+			main.ui.hide_all()
 		"ui_stop":                                   # Build 21: Stop hosting, pressed in the host's Open to friends window
 			_press(main.ui.panel_body, "Stop hosting")
 		"kill_guest":
@@ -254,6 +318,40 @@ func _commands() -> void:
 					break
 
 
+## MP-INTERACT-01: open ground near the host's spawn with room for three players round it, not in a building.
+func _open_spot() -> Vector2:
+	var w: World = main.world
+	var sp = main.map.data.spawns.player
+	var base := Vector2(int(sp[0]) + 0.5, int(sp[1]) + 0.5)
+	for r in range(0, 14):
+		for off in [Vector2(r, 0), Vector2(-r, 0), Vector2(0, r), Vector2(0, -r), Vector2(r, r), Vector2(-r, -r)]:
+			var at: Vector2 = base + off
+			var ok := w.place_of(at) == ""
+			for d in [Vector2.ZERO, Vector2(1, 0), Vector2(-1, 0), Vector2(1, 1.4), Vector2(-1, 1.4), Vector2(0, 1.4)]:
+				if not w.step_ok(w.host_player(), at + d):
+					ok = false
+			if ok:
+				return at
+	return base
+
+
+func _clear_villagers() -> void:
+	if spot == Vector2.INF:
+		return
+	for n: NPC in main.world.npcs:
+		if n.alive and n.pos.distance_to(spot) < 6.0:
+			n.pos = spot + Vector2(30, 30)
+			n.plan = [main.world.brain.work(600, "", {}, "idle")]
+
+
+func _press_named(node: Node, n: String) -> bool:
+	for b in node.find_children("*", "BaseButton", true, false):
+		if b is Button and ((b as Button).name == n or (b as Button).text == n) and not (b as Button).disabled and (b as Button).is_visible_in_tree():
+			(b as Button).pressed.emit()
+			return true
+	return false
+
+
 func _status() -> void:
 	var w: World = main.world
 	var players := {}
@@ -283,12 +381,34 @@ func _status() -> void:
 		"running": main.running, "troughs": troughs, "seq": last_seq, "players": players, "connected": connected, "rejected": main.net.rejected,
 		"applied": main.net.applied, "host_pid": w.host_player().pid, "host_pos": [w.host_player().pos.x, w.host_player().pos.y],
 		"minutes": w.minutes, "seed": w.seed, "plants": plants, "coin_leak": w.total_coins() - coins0 - c_in,
-		"census": census, "saves": saves, "family": _family(w), "orphan": orphan_id, "storm": storm > 0.0, "newcomers": int(w.stats.get("player_newcomers", 0)), "coin_sources": w.coin_sources}
+		"census": census, "saves": saves, "family": _family(w), "orphan": orphan_id, "storm": storm > 0.0, "newcomers": int(w.stats.get("player_newcomers", 0)), "coin_sources": w.coin_sources,
+		"ui": _ui_state(), "offers": w.offers.duplicate(true), "spot": [spot.x, spot.y] if spot != Vector2.INF else []}
 	var tmp := dir + "status.tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	f.store_string(JSON.stringify(d))
 	f.close()
 	DirAccess.rename_absolute(ProjectSettings.globalize_path(tmp), ProjectSettings.globalize_path(dir + "status.json"))
+
+
+## MP-INTERACT-01: what the host's screen shows: the window, its title, words and buttons, the message, the chosen target.
+func _ui_state() -> Dictionary:
+	var ui: GameUI = main.ui
+	var words := []
+	var buttons := []
+	if ui.modal():
+		for l in ui.panel_body.find_children("*", "Label", true, false):
+			words.append((l as Label).text)
+		for b in ui.panel_body.find_children("*", "Button", true, false):
+			if (b as Button).is_visible_in_tree():
+				buttons.append(str((b as Button).name) + "=" + (b as Button).text + ("" if not (b as Button).disabled else " (off)"))
+	return {"kind": ui.panel_kind if ui.modal() else "", "title": ui.title_label.text if ui.modal() else "", "words": words, "buttons": buttons,
+		"toast": ui.toast.text if ui.toast.visible else "", "target": str(main.target.get("kind", "")), "target_pid": int(main.target.get("pid", 0)),
+		"options": main.target_options.map(func(t): return str(t.get("kind", ""))), "messages": w_messages(),
+		"facing": [main.facing_vec().x, main.facing_vec().y], "pids": main.target_options.map(func(t): return int(t.get("pid", 0)))}
+
+
+func w_messages() -> Array:
+	return main.world.player_messages().map(func(e): return str(e[2]))
 
 
 ## MP-PLAYER-FAMILY: the couples' households and every child of a player (its parents, adoptive parents, household), and the population.

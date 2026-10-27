@@ -14,6 +14,12 @@ extends RefCounted
 ## (NetSync). Unknown verbs and malformed or foreign arguments are refused. Kinds of A2 and B (eat, pick_plant, heir) stay.
 
 const KINDS := ["eat", "pick_plant", "heir", "verb", "rest", "consent"]
+## Verbs whose Vector2 argument is a direction, not a place (MP-INTERACT-01: the reach check read player_through's step as a position
+## near the map's corner and refused every guest's passage through the adit). The verb itself works from the guest's own place.
+const DIRECTION_VERBS := ["player_through"]
+## The arguments (by index) that are words a player wrote or was shown, passed as plain text and never decoded (MP-INTERACT-01: a
+## message reading "player" would otherwise be taken for the host's reference and refused).
+const TEXT_ARGS := {"player_offer": [7], "player_tell": [0]}
 const VERB_REACH := 24.0              # tiles: what a guest acts on is on its screen (the interface's own reach rules apply in the verb)
 
 ## Every player verb a guest's interface can call, by the path World.mirror sends: "" the World itself, "<field>." a module the World
@@ -112,8 +118,11 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 		return _answer(w, p, false, "That cannot be done in a shared world.")
 	var args := []
 	var bad := {"why": ""}
-	for v in raw:
-		args.append(dec(w, p, v, bad))
+	for i in raw.size():
+		if TEXT_ARGS.get(path, []).has(i):
+			args.append(str(raw[i]) if raw[i] is String else "")     # words a player wrote: never read as a reference
+		else:
+			args.append(dec(w, p, raw[i], bad))
 	if path.begins_with("relations."):
 		for a in args:                               # person ids (a giver, a suitor): only the guest's own, or a villager's
 			if a is int and Life.is_player_id(a) and a != w.person_id(p):
@@ -125,7 +134,7 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 		if i < 0:
 			return _answer(w, p, false, "That is not there any more.")
 		args = [i]
-	var far := _out_of_reach(w, p, args)
+	var far := _out_of_reach(w, p, args) if not path in DIRECTION_VERBS else false
 	if far:
 		return _answer(w, p, false, "That is too far away.")
 	var r = w.as_actor(p, func():

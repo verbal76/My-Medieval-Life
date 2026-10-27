@@ -6491,6 +6491,9 @@ func path_for_player(from: Vector2i, to: Vector2i, actor: PlayerState = null) ->
 func player_through(dir: Vector2, actor: PlayerState = null) -> Dictionary:
 	# MP C (World.mirror): a guest's verb goes to the host
 	if mirrors():
+		# MP-INTERACT-01: sent only when a passage is there (this copy has the map's portals): a guest walking sent it every frame
+		if underground == null or underground.portal_from(player_level, Vector2i(floori(player.pos.x), floori(player.pos.y)), dir).is_empty():
+			return {}
 		return mirror("player_through", player_through.bind(dir), [dir])
 	if actor != null and actor != player:
 		return as_actor(actor, player_through.bind(dir))

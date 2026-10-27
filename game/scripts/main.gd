@@ -6527,9 +6527,9 @@ func _tell_offers() -> void:
 		var who := from.name if from != null else "Someone"
 		match str(o.kind):
 			"say":
-				ui.message("%s says: \"%s\"" % [who, str(o.get("text", ""))], 8.0, "player")
+				ui.message("%s says: \"%s\"" % [who, str(o.get("text", ""))], 8.0, "players")
 			"note":
-				ui.message(str(o.get("text", "")), 6.0, "player")
+				ui.message(str(o.get("text", "")), 6.0, "players")
 			"partner":
 				ui.message("%s asks you to be partners. Choose %s, or Players in the menu, to answer." % [who, who], 8.0, "family")
 			_:

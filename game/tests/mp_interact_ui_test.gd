@@ -522,7 +522,7 @@ func _host_to_guest(spot: Vector2) -> void:
 		press("Step_price_m1")
 		await process_frame
 	var sum := (ui.panel_body.find_child("TermsSummary", true, false) as Label).text
-	check(sum == "You sell 2 apple to Bob for 7 coins.", "the terms say it: \"%s\"" % sum)
+	check(sum == "You sell 2 apples to Bob for 7 coins.", "the terms say it: \"%s\"" % sum)
 	check(press("TermsSend"), "Send")
 	o = w.offers_to(bob)
 	check(o.size() == 1 and str(o[0].kind) == "sell" and int(o[0].price) == 7 and int(o[0].qty) == 2, "a sale offer waits")
@@ -547,7 +547,7 @@ func _host_to_guest(spot: Vector2) -> void:
 	press("Step_days_m1")
 	await frames()
 	sum = (ui.panel_body.find_child("TermsSummary", true, false) as Label).text
-	check(sum.begins_with("Bob supplies you 3 apple at 2 each (6 coins"), "the contract's terms: \"%s\"" % sum)
+	check(sum.begins_with("Bob supplies you 3 apples at 2 each (6 coins"), "the contract's terms: \"%s\"" % sum)
 	press("TermsSend")
 	o = w.offers_to(bob)
 	check(o.size() == 1 and str(o[0].kind) == "contract" and int(o[0].days) == 2, "a contract offer waits")
@@ -582,6 +582,9 @@ func _host_to_guest(spot: Vector2) -> void:
 			if str(mem).contains("Meet me at the well"):
 				heard = true
 	check(not heard and not "\n".join(w.log_lines).contains("Meet me at the well"), "no villager hears or remembers it; it is not in the village record")
+	var rr := NetActions.apply_verb(w, bob, "player_offer", ["say", host.pid, "", 0, null, 0, 0, "player"])
+	check(rr.ok and w.messages_to(host).any(func(x): return str(x.text) == "player"), "a message that reads \"player\" is words, not the host's reference")
+	await frames(2)                                  # told (and so not mistaken for the next notice)
 	ui.hide_all()
 
 
