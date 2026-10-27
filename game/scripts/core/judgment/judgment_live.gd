@@ -793,27 +793,35 @@ static func will_report(w, n: NPC, offender: int, how: String, crime: String) ->
 ## weighed, never removed. Kinship, age, existing partners and consent stay the live rules' (Relations.can_court and the
 ## pool, villagers only: no NPC ever chooses a player). No ledger entry counts twice: disposition is n's own opinion of x,
 ## family_compat n's opinions of x's parents and siblings, standing everyone else's personal opinion of x.
-static func court_factors(w, n: NPC, x: NPC) -> Dictionary:
+## `x` is a villager, or a player (PROP-EQ, WDR-012, D39 follow-up: a player's proposal is weighed by the same factors, read
+## in the player's own form: the player's household is Guardianship.player_household (a couple household; none for a
+## single player, read as a villager without a household is), the wealth the player's purse, no trade (the game records
+## none for a player), the parents and siblings by the player's own mother and father, standing by their person id).
+static func court_factors(w, n: NPC, x) -> Dictionary:
 	var j: JudgmentStore = w.judgment
 	var a: JudgmentAspiration = j.asp
 	var cc: Dictionary = a.c.get("court", {})
 	var mid := int(j.cfg.decision.disposition_mid)
-	var tt: Dictionary = w.relations.peek(n.id, x.id)
+	var pl: bool = x is PlayerState
+	var xid: int = w.person_id(x) if pl else x.id
+	var xh: int = Guardianship.player_household(w, x) if pl else x.household
+	var xjob: String = "" if pl else x.job
+	var tt: Dictionary = w.relations.peek(n.id, xid)
 	var bond := roundi(clampf(float(tt.regard), 0.0, 100.0) * float(int(cc.get("bond_regard_permille", 700)))) \
 			+ mini(int(tt.days_known), int(cc.get("bond_days_full", 16))) * (100000 - 100 * int(cc.get("bond_regard_permille", 700))) / maxi(1, int(cc.get("bond_days_full", 16)))
-	var econ: Dictionary = w.households[x.household].get("econ", {}) if x.household >= 0 else {}
+	var econ: Dictionary = w.households[xh].get("econ", {}) if xh >= 0 else {}
 	var savings := maxf(1.0, float(GameData.b("household_savings_days")))
 	var security := 0
 	if not econ.is_empty():
 		security = (50000 if bool(econ.sustainable) else 0) + roundi(minf(float(econ.days) / savings, 1.0) * 50000.0)
-	var wx: int = w.property.purse(World.hh_ref(x.household)) if x.household >= 0 else x.coins
+	var wx: int = w.property.purse(World.hh_ref(xh)) if xh >= 0 else int(x.coins)
 	var wn: int = w.property.purse(World.hh_ref(n.household)) if n.household >= 0 else n.coins
 	var wealth := 50000 if wx + wn <= 0 else JudgmentMath.mul_div(maxi(0, wx), 100000, maxi(1, wx + wn))
-	var prop := int(a.rows[x.id].sat[JudgmentAspiration.PROPERTY]) if a.rows.has(x.id) else 0
+	var prop := int(a.rows[xid].sat[JudgmentAspiration.PROPERTY]) if a.rows.has(xid) else 0
 	var streak := int(econ.get("streak", 0)) if not econ.is_empty() else 0
 	var stability := maxi(0, 50000 - streak * int(cc.get("stability_streak_step", 20000)))
-	if x.job != "":
-		stability += clampi((w.day() - x.job_since) * 50000 / maxi(1, a.n_("profession_tenure_full", 16)), 0, 50000)
+	if xjob != "":
+		stability += clampi((w.day() - int(x.job_since)) * 50000 / maxi(1, a.n_("profession_tenure_full", 16)), 0, 50000)
 	# family compatibility: n's own personal opinions of x's parents and siblings (x excluded: that is disposition)
 	var rel := []
 	for pid in [x.mother, x.father]:
@@ -822,7 +830,7 @@ static func court_factors(w, n: NPC, x: NPC) -> Dictionary:
 			var p: NPC = w.npc(int(pid))
 			if p != null:
 				for cid in p.children:
-					if int(cid) != x.id and not rel.has(int(cid)):
+					if int(cid) != xid and not rel.has(int(cid)):
 						rel.append(int(cid))
 	rel.sort()
 	var fsum := 0
@@ -833,11 +841,11 @@ static func court_factors(w, n: NPC, x: NPC) -> Dictionary:
 			fcnt += 1
 	var compat := fsum / fcnt if fcnt > 0 else mid
 	var ln := int(a.rows[n.id].lead) if a.rows.has(n.id) else -1
-	var lx := int(a.rows[x.id].lead) if a.rows.has(x.id) else -1
+	var lx := int(a.rows[xid].lead) if a.rows.has(xid) else -1
 	var shared := 100000 if ln >= 0 and ln == lx else (50000 if ln < 0 or lx < 0 else 0)
 	return {"bond": clampi(bond, 0, 100000), "security": clampi(security, 0, 100000), "wealth": wealth, "property": prop,
 		"stability": clampi(stability, 0, 100000), "family_compat": clampi(compat, 0, 100000), "shared_ambition": shared,
-		"standing": a.standing_excluding(x.id, n.id)}
+		"standing": a.standing_excluding(xid, n.id)}
 
 
 ## job_choice (FAD Q2; NPCBrain.seek_work with decision.integration.job_choice and aspiration.enabled on): which of the open
@@ -909,14 +917,17 @@ static func pick_job(w, n: NPC, opts: Array, unemployed: bool, current: float, l
 ## and too-soon gate), so weighting can only refuse an eligible proposal, never allow an ineligible one. Weighed by the one
 ## shared interface with the courting factors (court_factors: bond, own opinion, circumstances, shared ambitions, standing
 ## without the chooser's own entry), each scaled by n's own priorities and spread, against doing without (the profile's
-## forgo). No financial cutoff: wealth is one weighed factor. A player suitor is not weighed here (the live rule decides, as
-## before), and no NPC ever answers for a player.
-static func accepts_proposal(w, n: NPC, suitor: NPC) -> bool:
+## forgo). No financial cutoff: wealth is one weighed factor. `suitor` is a villager or a player (PROP-EQ, WDR-012, D39
+## follow-up): a player's proposal to a villager is weighed the same way, the player read in their own form
+## (court_factors). Only the villager's own answer is weighed: no NPC ever answers for a player, and a proposal between two
+## players is theirs alone (World.player_offer), never here.
+static func accepts_proposal(w, n: NPC, suitor) -> bool:
 	var j: JudgmentStore = w.judgment
-	var t: Dictionary = w.relations.peek(n.id, suitor.id)
+	var sid: int = w.person_id(suitor) if suitor is PlayerState else suitor.id
+	var t: Dictionary = w.relations.peek(n.id, sid)
 	var f := court_factors(w, n, suitor)
 	f.attraction = roundi(clampf(float(t.attraction), 0.0, 100.0) * 1000.0)
-	var r := JudgmentWeighting.choose(j, j.cfg, n.id, "proposal_accept", [{"id": "accept", "counterparty": suitor.id, "factors": f}], [w.day(), suitor.id])
+	var r := JudgmentWeighting.choose(j, j.cfg, n.id, "proposal_accept", [{"id": "accept", "counterparty": sid, "factors": f}], [w.day(), sid])
 	j._stat("proposal_weighed")
 	if str(r.chosen) == "accept":
 		return true

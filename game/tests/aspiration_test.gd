@@ -32,6 +32,7 @@ func _init() -> void:
 	test_v4_job_choice()
 	test_v5_romance()
 	test_q8_proposals()
+	test_q8_player_proposals()
 	test_v6_perseverance()
 	test_v7_standing()
 	test_v8_save_load()
@@ -666,20 +667,98 @@ func test_q8_proposals() -> void:
 	check(w.relations.propose(sx.id, n1).begins_with("It's too soon"), "Q8: courtship still needs its separate days: too soon is too soon")
 	check(int(j.stats.get("proposal_weighed", 0)) == 0, "Q8: none of these reached the weighing")
 	w.dispose()
-	# a player's proposal: decided by the live rule exactly as with the flags off; no NPC ever answers for a player
+
+
+
+## PROP-EQ (D39 follow-up, WDR-012): a player's proposal to a villager, set up as test_q8_proposals' suitor: courting, eligible.
+func q8_player(aspire: bool) -> Dictionary:
+	var st := q8_world(aspire)
+	var w: World = st.w
+	var pl: PlayerState = w.player
+	var pid := w.person_id(pl)
+	pl.coins = 0
+	pl.partner = -1
+	for n: NPC in [st.n1, st.n2]:
+		var t: Dictionary = w.relations.tie(pid, n.id)
+		t.stage = "courting"
+		t.since = w.day() - 10
+		t.attraction = 70.0
+		t.regard = 30.0
+		t.days_known = 13
+	w.judgment.set_ledger(st.n2.id, pid, 30000, 0)                  # n2 is fond of the player; n1 has no opinion of them
+	st.pl = pl
+	st.pid = pid
+	return st
+
+
+func test_q8_player_proposals() -> void:
+	# flags off: the live rule answers a player's proposal, nothing weighed (unchanged)
 	var res := []
 	for aspire in [false, true]:
-		var pw := q8_world(aspire)
-		var tp: Dictionary = pw.w.relations.tie(Life.PLAYER_ID, pw.n2.id)
-		tp.stage = "courting"
-		tp.since = pw.w.day() - 10
-		tp.attraction = 70.0
-		tp.regard = 30.0
-		tp.days_known = 13
-		res.append([pw.w.relations.propose(Life.PLAYER_ID, pw.n2), int(pw.w.judgment.stats.get("proposal_weighed", 0))])
+		var pw := q8_player(aspire)
+		res.append([pw.w.relations.propose(pw.pid, pw.n2), int(pw.w.judgment.stats.get("proposal_weighed", 0))])
 		pw.w.dispose()
-	check(res[0][0] == res[1][0] and int(res[1][1]) == 0, "Q8: a player's proposal is answered exactly as with the flags off (%s), never weighed" % str(res))
-
+	check(int(res[0][1]) == 0, "PROP-EQ: flags off: a player's proposal is answered by the live rule, never weighed (%s)" % str(res[0]))
+	check(int(res[1][1]) == 1, "PROP-EQ: aspirations on: a player's eligible proposal goes through the same weighing as a villager's")
+	# the player read in their own form: the same factors as a villager in the same position
+	var q := q8_player(true)
+	var w: World = q.w
+	var n1: NPC = q.n1
+	var twin: NPC = q.s                                               # a villager made the player's equal: no household, the
+	twin.household = -1                                               # same purse, no trade, no parents, no aspiration row,
+	twin.coins = q.pl.coins                                           # the same tie and the same opinion held of them
+	twin.job = ""
+	twin.mother = -1
+	twin.father = -1
+	q.pl.mother = -1
+	q.pl.father = -1
+	w.judgment.asp.rows.erase(twin.id)
+	var tt: Dictionary = w.relations.tie(twin.id, n1.id)
+	var tp: Dictionary = w.relations.tie(q.pid, n1.id)
+	for k in ["attraction", "regard", "days_known"]:
+		tt[k] = tp[k]
+	var fp := JudgmentLive.court_factors(w, n1, q.pl)
+	var fv := JudgmentLive.court_factors(w, n1, twin)
+	var same := true
+	for k in fv:
+		if k != "standing" and fv[k] != fp[k]:
+			same = false
+			print("  differs: %s player %s villager %s" % [k, fp[k], fv[k]])
+	check(same, "PROP-EQ: a player and a villager in the same position have the same courting factors (%s)" % JSON.stringify(fp))
+	check(int(fp.standing) == w.judgment.asp.standing_excluding(q.pid, n1.id), "PROP-EQ: the player's standing is everyone else's opinion of the player, by their person id")
+	# the player's own parents and purse are read
+	var mom: NPC = q.n2
+	q.pl.mother = mom.id
+	w.judgment.set_ledger(n1.id, mom.id, 10000, 0)
+	var fm := JudgmentLive.court_factors(w, n1, q.pl)
+	check(int(fm.family_compat) == w.judgment.personal_disposition(n1.id, mom.id), "PROP-EQ: the player's mother counts in family compatibility as a villager's would")
+	q.pl.mother = -1
+	q.pl.coins = 5000
+	check(int(JudgmentLive.court_factors(w, n1, q.pl).wealth) > int(fp.wealth), "PROP-EQ: the player's purse is the player's wealth")
+	w.dispose()
+	# preferences decide a player's eligible proposal as a villager's: refused by the security-minded villager who has no
+	# opinion of a poor suitor; the player's own consent is never touched
+	var r := q8_player(true)
+	var a1: String = r.w.relations.propose(r.pid, r.n1)
+	check(a1 != "" and r.w.relations.peek(r.pid, r.n1.id).refused and r.pl.partner == -1 and (r.n1 as NPC).partner == -1,
+			"PROP-EQ: the security-minded villager refuses the poor player as they refuse a poor villager (%s)" % a1)
+	r.w.dispose()
+	var r2 := q8_player(true)
+	r2.w.judgment.set_ledger(r2.n1.id, r2.pid, 40000, 0)
+	r2.pl.coins = 600
+	var a2: String = r2.w.relations.propose(r2.pid, r2.n1)
+	check(a2 == "" and (r2.n1 as NPC).partner == r2.pid, "PROP-EQ: the same villager accepts a player they think well of and who can keep a home (%s)" % a2)
+	r2.w.dispose()
+	# hard limits first, for a player too: too soon, kinship
+	var h := q8_player(true)
+	(h.w.relations.tie(h.pid, h.n1.id) as Dictionary).since = h.w.day() - 1
+	check(h.w.relations.propose(h.pid, h.n1).begins_with("It's too soon"), "PROP-EQ: a player's courtship still needs its separate days")
+	h.pl.mother = (h.n2 as NPC).id
+	(h.n2 as NPC).children.append(h.pid)
+	Life.kin_version += 1
+	check(h.w.relations.propose(h.pid, h.n2) == "We aren't courting.", "PROP-EQ: kin can never marry a player, however the preferences weigh")
+	check(int(h.w.judgment.stats.get("proposal_weighed", 0)) == 0, "PROP-EQ: none of these reached the weighing")
+	h.w.dispose()
 
 # ---------------------------------------------------------------- V6 ------------------------------
 ## Stubbornness influences perseverance; wisdom speeds adaptation; repeated setbacks change even a stubborn villager.
