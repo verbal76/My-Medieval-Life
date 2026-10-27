@@ -340,11 +340,11 @@ static func _shield(w, n: NPC, near: Array, t: Dictionary) -> void:
 	n.doing = "shielding the family"
 	n.plan = [w.brain.go(Vector2i(floori(at.x), floori(at.y)), 1.3), w.brain.work(0.5, "", {}, "idle")]
 	if str(t.kind) == "bandit" and n.report.is_empty():
-		w.report_crime(n, int(t.id), "saw")                  # PAR-05: the next decision goes to the nearest guard (NPCBrain._report)
+		w.report_crime(n, int(t.id), "saw", "attack", "", [], false)     # PAR-05: the next decision goes to the nearest guard (NPCBrain._report)
 		w.judgment._stat("family_danger_reports")
 	elif str(t.kind) == "killer" and n.report.is_empty():
 		var c: Dictionary = w.justice.case_of(str(t.ref))
-		w.report_crime(n, int(t.id), "sighting", "attack", str(t.ref), [int(c.aware.get(str(n.id), c.crimes.size() - 1))])     # A7: and tells a guard where
+		w.report_crime(n, int(t.id), "sighting", "attack", str(t.ref), [int(c.aware.get(str(n.id), c.crimes.size() - 1))], false)     # A7: and tells a guard where
 		w.judgment._stat("family_danger_reports")
 
 

@@ -577,7 +577,7 @@ func test_save_and_upgrade() -> void:
 				printerr("DIFF ", key, "\n  ", JSON.stringify(a[key]).substr(0, 400), "\n  ", JSON.stringify(b.get(key)).substr(0, 400))
 	check(loaded == "" and again == text, "a Build 19 section (lies, stories, stubborn choices, fights, clock) saves and loads byte-identically (%s)" % loaded)
 	var d: Dictionary = JSON.parse_string(text)
-	check(int(d.version) == 2 and d.has("lied") and d.has("stories") and d.has("choices") and d.has("fights") and d.has("clock") and d.has("traits") and int(d.traits.v) == 2, "...with the new optional keys, version 2, traits layout 2")
+	check(int(d.version) == JudgmentStore.VERSION and d.has("lied") and d.has("stories") and d.has("choices") and d.has("fights") and d.has("clock") and d.has("traits") and int(d.traits.v) == 2, "...with the new optional keys, the current version (3 since GM-01), traits layout 2")
 	# a Build 18 / prototype section (version 1, traits layout 1: anger in days) loads without loss and upgrades
 	var old: Dictionary = JSON.parse_string(text)
 	for key in ["lied", "stories", "choices", "fights", "clock"]:
@@ -590,10 +590,10 @@ func test_save_and_upgrade() -> void:
 	check(err == "" and u.day == int(old.day), "a version 1 section loads (%s)" % err)
 	check(u.pers.anger_at(h, 3, 0) == 400 and u.pers.anger_at(h, 4, 0) == 200 and u.pers.anger_at(h, 5, 0) == 0, "...its anger is converted from days to minutes (400, 200, 0 on days 3, 4, 5)")
 	check(u.pers.overriding(h, 4, 0) and not u.pers.overriding(h, 5, 0), "...and the override still ends on day 5")
-	check(int(u.to_dict().version) == 2 and u.facts.size() == j.facts.size() and u.memories.size() == j.memories.size() and u.ledgers.size() == j.ledgers.size(), "...nothing dropped; it saves as version 2")
+	check(int(u.to_dict().version) == JudgmentStore.VERSION and u.facts.size() == j.facts.size() and u.memories.size() == j.memories.size() and u.ledgers.size() == j.ledgers.size(), "...nothing dropped; it saves as the current version")
 	# newer or foreign layouts are kept, never dropped
 	var newer: Dictionary = JSON.parse_string(text)
-	newer.version = 3
+	newer.version = JudgmentStore.VERSION + 1
 	var nk := store(j.cfg, JudgmentSocial.new())
 	check(nk.load_dict(newer) != "" and JSON.stringify(nk.to_dict()) == JSON.stringify(newer), "a section from a newer game is kept unread and written back unchanged")
 	var newer_t: Dictionary = JSON.parse_string(text)

@@ -383,6 +383,49 @@
       }
     ]
   },
+  "history": {
+    "_doc": "GM-01 (R4): a family's history as a villager tells it, from a historical record they know (EventTalk.history): who gave (giver: 'you', 'your grandfather', 'my great-grandfather' or a full name), to whom (receiver: 'me', 'my grandmother', or a full name), what ('40 coins'), and what became of the house. {recognise} opens it when the listener is of the giver's line. One line per state; the speaker picks among the options.",
+    "recognise": [
+      "You're one of the {family} family, aren't you? ",
+      "You'd be of the {family} line. "
+    ],
+    "ours": [
+      "{Giver} gave {receiver} {what} toward our house when the money ran short. We've lived in it ever since.",
+      "{Giver} helped {receiver} build our house: {what} toward it, when there was not enough. It's still ours."
+    ],
+    "yours": [
+      "{Giver} gave {receiver} {what} toward that house. It's yours now."
+    ],
+    "sold": [
+      "{Giver} gave {receiver} {what} toward a house. It isn't ours any more: {owner} {has} it now.",
+      "{Giver} helped {receiver} build a house with {what}. It passed out of the family; {owner} {has} it now."
+    ],
+    "destroyed": [
+      "{Giver} gave {receiver} {what} toward a house. It stands no more, but we remember.",
+      "{Giver} helped {receiver} build a house with {what}. The house is gone now."
+    ],
+    "unfinished": [
+      "{Giver} gave {receiver} {what} toward a house that was never finished."
+    ],
+    "ancestor": {
+      "1": {
+        "male": "father",
+        "female": "mother"
+      },
+      "2": {
+        "male": "grandfather",
+        "female": "grandmother"
+      },
+      "3": {
+        "male": "great-grandfather",
+        "female": "great-grandmother"
+      },
+      "4": {
+        "male": "great-great-grandfather",
+        "female": "great-great-grandmother"
+      }
+    }
+  },
   "said": {
     "_doc": "A6 (D5): what a villager says once they have already told this listener something (NPC.talked, by the listener's player reference). again_witness: the opening of a witness who has already said it today, by stance. again_news: an event of their own family's grief or the listener's harm already told, said again at most once a day. nothing_new: no news they have not told this listener.",
     "again_witness": {

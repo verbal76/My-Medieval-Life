@@ -29,6 +29,8 @@ extends RefCounted
 ##                   barter_accept   Credit.barter_quote     whether a villager takes the swap
 ##                   food_seller     Credit._cheapest_food   whom a short household asks for food
 ##                   family_help     Construction._family_help  whether a relative household gives toward a home
+##                   report          World.report_crime      whether a villager who knows of a crime tells a guard (R2,
+##                                                           SJD-F; integration.report OFF until measured)
 ##                 each on only with a store attached and its decision.integration flag set; feasibility (stock,
 ##                 coins, purchase_qty, can_hire, can_court, regard thresholds) and conservation are never overridden.
 
@@ -193,6 +195,35 @@ static func on_help(w, helper: int, n: NPC, type: String, value: int) -> void:
 	_event(w, type, [helper], [], [n.id], value, n.pos if type == "help_minor" else null)
 
 
+## GM-01: a relative household's coins toward a home (Construction._family_help): the help_build deed as on_help publishes
+## it, naming the household it helped (`hh`), the giving household (`giver_hh`), the plot the house stands on and its
+## cost then; a significant gift (JudgmentStore.significant) becomes a historical record both households know of.
+## Returns the event id.
+static func on_build_help(w, giver: int, builder: NPC, value: int, giver_hh: int, hh: int, plot: String, cost: int) -> int:
+	var ev := _event(w, "help_build", [giver], [], [builder.id], value, null)
+	if ev <= 0:
+		return ev
+	var j: JudgmentStore = w.judgment
+	j.set_refs(ev, {"household": hh, "giver_household": giver_hh, "plot": plot, "building": "", "item": "", "qty": value, "cost": cost,
+			"links": [["contributed", "plot:" + plot]]})
+	var present := [giver, builder.id]
+	for h in [giver_hh, hh]:
+		if h >= 0 and h < w.households.size():
+			for m in w.households[h].members:
+				var o: NPC = w.npc(int(m))
+				if o != null and o.alive and not present.has(o.id):
+					present.append(o.id)
+	present.sort()
+	j.make_history(ev, present)
+	return ev
+
+
+## GM-01: a building finished (World._finish_site): the help that went toward its plot now names it.
+static func on_built(w, b: Dictionary) -> void:
+	if str(b.get("parcel", "")) != "":
+		w.judgment.building_done(str(b.parcel), str(b.id), w.day())
+
+
 ## A deal kept or broken between two people (ids; -1 for a party that is not a person: nothing is published). A contract
 ## fulfilled or a debt repaid on time is trade_fair, a contract lapsed or a debt defaulted is trade_cheat; `seller` is
 ## the one who owed the goods, work or coin. Private: only the two know.
@@ -299,6 +330,7 @@ static func tell_family_tick(w) -> void:
 				mask |= 1 << i                        # no parent here to tell them
 			elif c.home != "" and w.place_of(c.pos) == c.home and w.place_of(p.pos) == c.home:
 				j.tell_family_stories(p.id, c.id)
+				j.tell_family_history(p.id, c.id)       # GM-01: and the family's history (knowledge only: nothing is judged)
 				mask |= 1 << i
 		if mask == 3:
 			j.story_pending.erase(id)
@@ -701,3 +733,32 @@ static func pick_food_seller(w, buyer: NPC, cands: Array) -> Dictionary:
 ## `builder`'s home. The amount and the means are the live rule's.
 static func family_gives(w, giver: NPC, builder: NPC) -> bool:
 	return willing(w, "family_help", giver, builder.id, [w.day(), builder.id])
+
+
+# ---------------------------------------------------------------- SJD-F crime: whether to report (R2) ---------------
+## report (World.report_crime): whether villager `n`, who knows of `offender`'s crime (`how`: "saw", "victim" or
+## "sighting"; `crime`: "attack" or "theft"), tells a guard or keeps quiet. Both options are feasible (who may report
+## and how a report travels stay the live rule's); the choice between them is weighed by the one shared interface,
+## never decided by a cutoff (owner, 2026-10-26: judgment influences, never dictates). Telling: the live rule's yes
+## (live_order) and the harm done. Keeping quiet: what `n` thinks of the offender (disposition, the family name's colour
+## included), kinship with them, and fear of them (the violence `n` holds against them). Each person weighs these by
+## their own personality (trait_spread, life shift, stubbornness), so two witnesses of the same crime may decide
+## differently. Every choice is recorded by the flight recorder when one is attached (JudgmentWeighting.choose).
+static func will_report(w, n: NPC, offender: int, how: String, crime: String) -> bool:
+	var j: JudgmentStore = w.judgment
+	if offender == n.id:
+		return true
+	var rc: Dictionary = j.cfg.decision.get("report", {})
+	var harm := int(rc.get("harm_victim", 0)) if how == "victim" else int(rc.get("harm_attack" if crime == "attack" else "harm_theft", 0))
+	var kin := 100000 if j.social != null and j.social.kin(n.id, offender) else 0
+	var fear := JudgmentMath.clampi_(JudgmentMath.mul_div(int(j.ledger(n.id, offender)[6]), int(rc.get("fear_permille_per_point", 0)), 1000), 0, 100000)
+	var cands := [
+		{"id": "report", "counterparty": -1, "factors": {"live_order": 100000, "harm": harm, "disposition": 0, "kinship": 0, "fear": 0}},
+		{"id": "silent", "counterparty": offender, "factors": {"live_order": 0, "harm": 0, "kinship": kin, "fear": fear}},
+	]
+	var r := JudgmentWeighting.choose(j, j.cfg, n.id, "report", cands, [w.day(), offender, how.hash(), crime.hash()])
+	j._stat("report_choices")
+	if str(r.chosen) == "silent":
+		j._stat("report_kept_quiet")
+		return false
+	return true

@@ -301,3 +301,40 @@ static func said_line(w: World, n: NPC, kind: String, stance := "") -> String:
 	var s: Dictionary = data().said
 	var lines: Array = s[kind] if kind != "again_witness" else s.again_witness[stance]
 	return Dialogue._pick(w, n, lines, 13)
+
+
+# ---------------------------------------------------------------- GM-01: the family's history
+## A historical deed the speaker knows (EventTalk.history) in their own words: who gave what to whom, from the listener's and
+## the speaker's places in the two families, and what became of the house. Everything in it comes from the record, the
+## family graph and the building as it stands.
+static func history_line(w: World, n: NPC, h: Dictionary) -> String:
+	var t: Dictionary = data().history
+	var g = w.npc(int(h.giver)) if int(h.giver) >= 0 else w.player_of_id(int(h.giver))
+	var r = w.npc(int(h.receiver)) if int(h.receiver) >= 0 else w.player_of_id(int(h.receiver))
+	var lg := int(h.listener_gen)
+	var giver := ""
+	if lg == 0:
+		giver = "you"
+	elif lg > 0:
+		giver = "your " + _ancestor(t, lg, g)
+	elif int(h.giver_gen) > 0:
+		giver = "my " + _ancestor(t, int(h.giver_gen), g)
+	else:
+		giver = EventTalk.full(g) if g != null else "someone"
+	var sr := int(h.speaker_gen)
+	var receiver := "me" if sr == 0 else ("my " + _ancestor(t, sr, r) if sr > 0 else (EventTalk.full(r) if r != null else "a neighbour"))
+	var what := ("%d %s" % [int(h.qty), str(h.item)]) if str(h.item) != "" else ("%d coins" % int(h.value))
+	var line := Dialogue._pick(w, n, t[str(h.state)], 3)
+	var owner := str(h.get("owner", ""))
+	line = line.format({"Giver": _cap(giver), "giver": giver, "receiver": receiver, "what": what, "owner": owner, "has": "has"})
+	if lg > 0 and g != null:
+		line = Dialogue._pick(w, n, t.recognise, 4).format({"family": str(g.family)}) + line
+	return line
+
+
+## "grandfather", "great-grandmother": `g` generations above, by the person's sex.
+static func _ancestor(t: Dictionary, g: int, who) -> String:
+	var row: Dictionary = t.ancestor.get(str(mini(g, 4)), t.ancestor["4"])
+	var sex := str(who.sex) if who != null else "male"
+	return str(row.get(sex, row.male))
+
