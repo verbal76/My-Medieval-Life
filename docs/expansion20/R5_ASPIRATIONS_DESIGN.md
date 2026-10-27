@@ -542,3 +542,18 @@ violence, mostly hearsay, added the rest. Now (PROVISIONAL, `docs/DECISIONS.md`)
 the owner's floor 25; danger is the household's real situation only, read from the facts' victims (an assault or killing of the
 villager or a household member within `danger_days`: `danger_step`; a theft from them: `theft_step` 125); stories about
 other people never count, and a lie is no harm. Section 4's table is superseded on these two rows.
+
+*Before and after (seed 1 and 2, 30 days, `--aspiration --job-choice`; one run each; G0 identical with the flags off).*
+
+| | Seed 1 before | Seed 1 after | Seed 2 after |
+|---|---|---|---|
+| Adults with a survival level above 0 at day 30 | 63 of 64 | 17 of 64 | 11 of 65 |
+| Dawn levels set by danger / hunger / injury (30 days) | 1213 / 457 / 0 | 194 / 100 / 0 | 270 / 81 / 0 |
+| Dawn levels only carried from an earlier day | 100 | 72 | 147 |
+| Leading aspiration at day 30 | food 38, family 15, standing 5, profession 4, property 2 | family 25, standing 16, food 12, profession 6, property 5 | standing 20, family 14, food 13, wealth 6, profession 7, property 5 |
+| Currency leak / item leaks | 0 / none | 0 / none | 0 / none |
+
+Before the fix, 74 of the 99 recent violence memories the adults held at day 30 (seed 1) were hearsay (rumour 55, told 19).
+Danger now comes only from harm to the household, mostly bandit robberies (an assault and a theft on the same victim). Seed 2
+with the flags on still ends identical to the flags off; seed 1 diverges (currency 4209 against 4720, balanced), and
+job_choice changed the live answer twice in seed 1.
