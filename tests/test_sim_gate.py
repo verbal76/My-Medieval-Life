@@ -87,6 +87,138 @@ class ArchiveCheck(unittest.TestCase):
         self.assertTrue(any("footer does not match" in p for p in r["problems"]), r["problems"])
 
 
+FULL_EVENT = ["seq", "id", "parent", "interaction", "object", "day", "minute", "settlement", "x", "y", "system", "subsystem", "category", "subtype",
+              "actor", "outcome", "reason", "rule", "detail"]
+
+
+def ev(seq, i, day, minute, system, subsystem, category, subtype, actor, obj="", parent=-1, outcome="ok"):
+    return [seq, i, parent, i, obj, day, minute, "", -1, -1, system, subsystem, category, subtype, actor, outcome, "", "", ""]
+
+
+def make_full(root, events, parts=(), changes=(), flags=None, name="s1", net_factors=()):
+    """An archive with full event columns (the X20-FINAL content checks): events are rows without seq (it is given here)."""
+    s = Path(root) / name
+    seq = 0
+    rows = []
+    for e in events:
+        seq += 1
+        rows.append([seq] + list(e))
+    write_chunk(s / "d0000" / "event.h07.p0.jsonl.gz", "event", FULL_EVENT, rows)
+    counts = {"event": len(rows)}
+    tables = [("participant", ["seq", "event", "ref", "role"], parts), ("state_change", ["seq", "event", "ref", "prop", "before", "after", "delta", "authority"], changes),
+              ("factor", ["seq", "event", "option", "factor", "value", "unit", "source", "evaluated"], net_factors)]
+    for t, cols, data in tables:
+        if data:
+            trows = []
+            for d in data:
+                seq += 1
+                trows.append([seq] + list(d))
+            write_chunk(s / "d0000" / ("%s.h07.p0.jsonl.gz" % t), t, cols, trows)
+            counts[t] = len(trows)
+    seq += 1
+    write_chunk(s / "d0000" / "snapshot.h07.p1.jsonl.gz", "snapshot", SNAP_COLS, [[seq, 0, 7, 100, 3000]])
+    counts["snapshot"] = 1
+    sess = {"schema": recorder_archive.SCHEMA, "session": name, "ended": True, "completeness": "complete", "last_seq": seq, "events": len(rows),
+            "counts": counts, "unknown_codes": {}, "recovered": [], "final_snapshot": {"day": 0, "hour": 8, "alive": 100}, "flags": flags or {}}
+    (s / "session.json").write_text(json.dumps(sess))
+    return str(s)
+
+
+class ContentChecks(unittest.TestCase):
+    """X20-FINAL phase 5: the archive's content, read independently of the game."""
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.tmp)
+
+    def evs(self, rows):
+        return [r[1:] for r in rows]
+
+    def test_clean_content_passes(self):
+        e = [ev(0, 1, 0, 600, "life", "death", "life", "death", "p:5")[1:], ev(0, 2, 0, 500, "brain", "act", "action", "eat", "p:5")[1:]]
+        r = recorder_archive.verify(make_full(self.tmp, e))
+        self.assertTrue(r["ok"], r["problems"])
+
+    def test_missing_event_id_fails(self):
+        e = [ev(0, 1, 0, 1, "brain", "act", "action", "eat", "p:1")[1:], ev(0, 3, 0, 2, "brain", "act", "action", "eat", "p:1")[1:]]
+        r = recorder_archive.verify(make_full(self.tmp, e))
+        self.assertTrue(any("event ids" in p for p in r["problems"]), r["problems"])
+
+    def test_dangling_reference_fails(self):
+        e = [ev(0, 1, 0, 1, "brain", "act", "action", "eat", "p:1")[1:]]
+        r = recorder_archive.verify(make_full(self.tmp, e, parts=[(7, "p:1", "actor")]))
+        self.assertTrue(any("naming an event" in p for p in r["problems"]), r["problems"])
+
+    def test_action_after_death_fails(self):
+        e = [ev(0, 1, 0, 600, "life", "death", "life", "death", "p:5")[1:], ev(0, 2, 0, 700, "brain", "act", "action", "eat", "p:5")[1:]]
+        r = recorder_archive.verify(make_full(self.tmp, e))
+        self.assertTrue(any("after a death" in p for p in r["problems"]), r["problems"])
+
+    def test_bad_role_change_fails(self):
+        e = [ev(0, 1, 0, 1, "life", "role", "life", "role_changed", "p:5")[1:]]
+        r = recorder_archive.verify(make_full(self.tmp, e, changes=[(1, "p:5", "role", "elder", "child", "not evaluated", "life")]))
+        self.assertTrue(any("role changes" in p for p in r["problems"]), r["problems"])
+
+    def test_contract_lifecycle(self):
+        good = [ev(0, 1, 0, 1, "contracts", "contract", "contract", "opened", "p:2", "contract:1")[1:],
+                ev(0, 2, 0, 2, "contracts", "contract", "contract", "paid", "p:2", "contract:1")[1:],
+                ev(0, 3, 0, 3, "contracts", "contract", "contract", "fulfilled", "p:2", "contract:1")[1:]]
+        coins = [(1, "contract:1", "coins", 0, 10, 10, "contracts"), (2, "contract:1", "coins", 10, 0, -10, "contracts")]
+        r = recorder_archive.verify(make_full(self.tmp, good, changes=coins))
+        self.assertTrue(r["ok"], r["problems"])
+        self.assertEqual(r["contracts"]["threads"], 1)
+        bad = good + [ev(0, 4, 0, 4, "contracts", "contract", "contract", "paid", "p:2", "contract:1")[1:]]
+        r = recorder_archive.verify(make_full(self.tmp, bad, changes=coins, name="s2"))
+        self.assertTrue(any("contract or debt" in p for p in r["problems"]), r["problems"])
+
+    def test_contract_coins_must_return(self):
+        e = [ev(0, 1, 0, 1, "contracts", "contract", "contract", "opened", "p:2", "contract:1")[1:],
+             ev(0, 2, 0, 3, "contracts", "contract", "contract", "lapsed", "p:2", "contract:1", outcome="failed")[1:]]
+        r = recorder_archive.verify(make_full(self.tmp, e, changes=[(1, "contract:1", "coins", 0, 10, 10, "contracts")]))
+        self.assertTrue(any("still set aside" in p for p in r["problems"]), r["problems"])
+
+    def test_required_flags(self):
+        e = [ev(0, 1, 0, 1, "brain", "act", "action", "eat", "p:1")[1:]]
+        d = make_full(self.tmp, e, flags={"aspiration": False})
+        r = recorder_archive.verify(d, require_flags={"aspiration": True})
+        self.assertTrue(any("flag aspiration" in p for p in r["problems"]), r["problems"])
+        self.assertTrue(recorder_archive.verify(d, require_flags={"aspiration": False})["ok"])
+
+    def test_required_rows(self):
+        e = [ev(0, 1, 0, 1, "brain", "act", "action", "eat", "p:1")[1:]]
+        r = recorder_archive.verify(make_full(self.tmp, e), require_rows=["18.11"])
+        self.assertTrue(any("not exercised" in p for p in r["problems"]), r["problems"])
+
+    def test_judgment_chain_traced(self):
+        e = [ev(0, 1, 0, 600, "judgment", "fact", "judgment", "fact:pickpocket", "p:-2", "fact:9")[1:],
+             ev(0, 2, 0, 600, "judgment", "belief", "judgment", "witnessed", "p:3", "fact:9")[1:],
+             ev(0, 3, 1, 100, "judgment", "belief", "judgment", "told", "p:4", "fact:9")[1:],
+             ev(0, 4, 3, 600, "judgment", "choice", "judgment", "contract_accept", "p:4")[1:],
+             ev(0, 5, 3, 610, "judgment", "choice", "judgment", "contract_accept", "p:7")[1:]]
+        parts = [(1, "p:-2", "actor:1000"), (4, "p:-2", "counterparty"), (5, "p:-2", "counterparty")]
+        r = recorder_archive.verify(make_full(self.tmp, e, parts=parts))
+        ch = r["chains"]
+        self.assertTrue(ch["complete"], ch)
+        self.assertEqual((ch["crime_facts"], ch["beliefs"], ch["heard_not_seen"], ch["later_choices"], ch["later_choices_hearsay"]), (1, 2, 1, 1, 1))
+
+    def test_participants_compared(self):
+        def net(name, role, hashes):
+            evs, facs = [], []
+            for h, val in enumerate(hashes):
+                evs.append(ev(0, h + 1, 0, h * 60 + 5, "net", role, "network", "net_state", "p:1")[1:])
+                facs.append((h + 1, "section", "npcs", val, "hash", "network", "yes"))
+            return make_full(self.tmp, evs, net_factors=facs, name=name)
+        host = net("s_host", "host", ["a", "b", "c", "d"])
+        ok = net("s_g1", "guest", ["a", "x", "c", "d"])
+        bad = net("s_g2", "guest", ["a", "x", "y", "z"])
+        r = recorder_archive.compare_participants([host, ok])
+        self.assertTrue(r["ok"], r)
+        r = recorder_archive.compare_participants([host, bad])
+        self.assertFalse(r["ok"])
+
+
 def fake_sim(path, leak=0, items=None, alive=100, coins=3000, days=10):
     sample = lambda d: {"day": d, "fingerprint": "f%d" % d, "people": {"alive": alive, "households": 25, "births": 0},
                         "currency": {"total": coins, "leak": leak if d == days else 0}, "money": {"treasury": 300},
