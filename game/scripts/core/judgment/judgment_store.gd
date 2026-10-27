@@ -75,7 +75,8 @@ extends RefCounted
 ## A story that does not pass this time may pass in a later meeting. A floor of 1000 turns the weighting off.
 
 const FORMAT := "mml-judgment/1"
-const VERSION := 2                       # 2 (Build 19): optional keys clock, lied, stories, choices, fights; traits v2 (anger in minutes). Version 1 sections load unchanged.
+const VERSION := 3                       # 2 (Build 19): optional keys clock, lied, stories, choices, fights; traits v2 (anger in minutes). Version 1 sections load unchanged.
+                                         # 3 (Expansion 20 R4, GM-01): optional keys refs (a fact's entity references and links) and history; version 1-2 sections load with none.
 const SOURCES := ["participant", "witnessed", "told", "rumour"]
 const TOLD := 2
 # a memory: [type, day, src, by, hops, conf, sal, actor count, actor, share, actor, share...]
@@ -125,6 +126,8 @@ var lied := {}           # liar -> day of their last invented story (X19-MISINFO
 var story_pending := {}  # child -> [day they came of age, parents who have told them (bit 0 mother, bit 1 father)] (X19-STORY-LIFE; saved)
 var last_choice := {}    # chooser -> {decision key -> [token, day]}: a stubborn person's last choice in a decision (saved)
 var fights := {}         # pair key -> [aggressor, first blow minute, last blow minute]: a fight under way (X19-EVENT-Q self-defence; saved)
+var fact_refs := {}      # GM-01: event id -> what a fact touched and led to: {household, giver_household, plot, building, item, qty, cost, built_day, links: [[kind, target], ...]}; only facts that have any; retires with the fact (saved "refs")
+var history := {}        # GM-01: event id -> the historical record of a significant deed, kept after its fact retires: {type, day, actors, beneficiaries, value, refs, known: {person: [source, teller, generation]}} (saved "history")
 var trace := false       # developer diagnostics: keep each interpretation's parts in last_trace (off: the same numbers, no record)
 var rec = null           # REC-19 D5: the flight recorder (WorldRecorder) when one is attached (WorldRecorder.attach, JudgmentLive.attach); never saved, never read by the simulation: it is handed values already computed
 var timing := {}         # microseconds spent, by part (measurement only: never saved, never read by the simulation)
@@ -1654,6 +1657,115 @@ func _hold(person: int, ev: int) -> void:
 		knowers[ev] = k
 
 
+# ---------------------------------------------------------------- GM-01: historical memory --------------------
+## Rule 009 and the owner's directive of 2026-10-19 Part I ("the 30 planks"): a fact can name what it touched and what it
+## led to (entity references: a household, a plot, a building, an item and its quantity; links: [kind, target], kinds
+## "contributed" and "built"), and a significant deed is kept as a historical record after its fact retires, with who
+## knows of it and how: "participant" (took part, or of the households concerned at the time) or "family" (told by a
+## parent, generation counted from the record). The record is knowledge, not judgment: it posts nothing to a ledger,
+## moves no trust and is never told in gossip, so it changes no decision (judgment-weighted gratitude is for R6 to measure
+## first). Numbers in judgment.json "history" (PROVISIONAL agent values).
+
+## Give fact `ev` its entity references and links (`refs`; `links` defaults to none).
+func set_refs(ev: int, refs: Dictionary) -> void:
+	if not facts.has(ev):
+		return
+	var r := refs.duplicate(true)
+	if not r.has("links"):
+		r.links = []
+	fact_refs[ev] = r
+
+
+## The references and links of `ev`: its history record's (which outlives the fact), else the fact's, else {}.
+func refs_of(ev: int) -> Dictionary:
+	if history.has(ev):
+		return history[ev].refs
+	return fact_refs.get(ev, {})
+
+
+## Add a causal link [kind, target] to `ev` (on the fact and on its history record), once.
+func add_link(ev: int, kind: String, target: String) -> void:
+	for r in [fact_refs.get(ev, null), history[ev].refs if history.has(ev) else null]:
+		if r == null:
+			continue
+		var l := [kind, target]
+		if not (r.links as Array).has(l):
+			r.links.append(l)
+
+
+## Whether `ev` is significant enough to become history (the significance rule, judgment.json "history"): a deed of a
+## kind in history.types worth at least history.min_value, and at least history.significant_share_permille of what it
+## went toward (refs.cost: a house's cost when it was given), when that is known.
+func significant(ev: int) -> bool:
+	var hc: Dictionary = cfg.get("history", {})
+	var f := fact(ev)
+	if f.is_empty() or not (hc.get("types", []) as Array).has(str(f.type)):
+		return false
+	var v := int(f.value)
+	if v < int(hc.get("min_value", 1)):
+		return false
+	var cost := int((fact_refs.get(ev, {}) as Dictionary).get("cost", 0))
+	return cost <= 0 or v * 1000 >= int(hc.get("significant_share_permille", 0)) * cost
+
+
+## Make `ev` history when it is significant: those in `present` know of it firsthand. Returns whether it is history.
+func make_history(ev: int, present: Array) -> bool:
+	if history.has(ev):
+		return true
+	if not significant(ev):
+		return false
+	var f := fact(ev)
+	var actors := (f.actors as Array).map(func(a): return int(a[0]) if a is Array else int(a))
+	var kn := {}
+	for p in present:
+		kn[int(p)] = ["participant", -1, 0]
+	history[ev] = {"type": str(f.type), "day": int(f.day), "actors": actors, "beneficiaries": (f.beneficiaries as Array).duplicate(),
+		"value": int(f.value), "refs": (fact_refs.get(ev, {"links": []}) as Dictionary).duplicate(true), "known": kn}
+	_stat("history_records")
+	return true
+
+
+## The historical records `person` knows of, by event id.
+func history_known(person: int) -> Array:
+	var out := []
+	for ev in _sorted(history):
+		if (history[ev].known as Dictionary).has(person):
+			out.append(int(ev))
+	return out
+
+
+## A house was finished on `plot` as `building` on day `d`: every fact and record that went toward it now names it.
+func building_done(plot: String, building: String, d: int) -> void:
+	for which in 2:
+		var src: Dictionary = fact_refs if which == 0 else history
+		for ev in _sorted(src):
+			var r: Dictionary = src[ev] if which == 0 else src[ev].refs
+			if str(r.get("plot", "")) == plot and str(r.get("building", "")) == "":
+				r.building = building
+				r.built_day = d
+				add_link(int(ev), "built", "building:" + building)
+
+
+## `parent` tells `child` the family's history they know, at home as with the family stories (X19-STORY-LIFE): every
+## record the parent knows, the child does not, and that is within history.max_generations of the deed. Returns how many.
+func tell_family_history(parent: int, child: int) -> int:
+	if parent == child:
+		return 0
+	var gens := int((cfg.get("history", {}) as Dictionary).get("max_generations", 4))
+	var n := 0
+	for ev in _sorted(history):
+		var kn: Dictionary = history[ev].known
+		if not kn.has(parent) or kn.has(child):
+			continue
+		var g := int(kn[parent][2]) + 1
+		if g > gens:
+			continue
+		kn[child] = ["family", parent, g]
+		n += 1
+		_stat("history_told")
+	return n
+
+
 # ---------------------------------------------------------------- X19-STORY-LIFE: family stories --
 ## Whether a parent's memory is worth handing down: a permanent one (a killing, an assault, a betrayal) or a good deed at
 ## least family_story.good_severity serious. Ordinary deeds fade with the rest and are not passed on.
@@ -1830,6 +1942,7 @@ func begin_day(d: int) -> void:
 				facts.erase(ev)
 				fact_tags.erase(ev)
 				fact_orig.erase(ev)
+				fact_refs.erase(ev)                   # GM-01: a significant deed's references live on in its history record
 				knowers.erase(ev)
 				_retiring[ev] = true
 				_stat("expired")
@@ -2144,6 +2257,21 @@ func to_dict() -> Dictionary:
 			var f: Array = fights[k]
 			fl.append([int((k >> 32) - JudgmentBonds.FAR), JudgmentBonds._lo(k), int(f[0]), int(f[1]), int(f[2])])
 		out.fights = fl                          # fights under way (self-defence)
+	if not fact_refs.is_empty():
+		var rf := []
+		for ev in _sorted(fact_refs):
+			rf.append([int(ev), (fact_refs[ev] as Dictionary).duplicate(true)])
+		out.refs = rf                            # GM-01 (version 3): facts' entity references and links
+	if not history.is_empty():
+		var hs := []
+		for ev in _sorted(history):
+			var h: Dictionary = history[ev]
+			var kn := []
+			for p in _sorted(h.known):
+				kn.append([int(p), str(h.known[p][0]), int(h.known[p][1]), int(h.known[p][2])])
+			hs.append([int(ev), str(h.type), int(h.day), (h.actors as Array).duplicate(), (h.beneficiaries as Array).duplicate(), int(h.value),
+					(h.refs as Dictionary).duplicate(true), kn])
+		out.history = hs                         # GM-01 (version 3): the historical records and who knows each
 	return out
 
 
@@ -2157,7 +2285,7 @@ static func _sorted(d: Dictionary) -> Array:
 ## unknown format, a newer version, or naming an event type this catalog lacks is refused with a message and kept
 ## unread, written back unchanged, never dropped (CLAUDE.md section 7). Returns "" or the reason it was not read.
 func load_dict(d: Dictionary) -> String:
-	for x in [facts, fact_tags, fact_orig, knowers, by_day, memories, contrib, ledgers, trust, told_today, news_told_today, life, _early, _retiring, lied, story_pending, last_choice, fights]:
+	for x in [facts, fact_tags, fact_orig, knowers, by_day, memories, contrib, ledgers, trust, told_today, news_told_today, life, _early, _retiring, lied, story_pending, last_choice, fights, fact_refs, history]:
 		(x as Dictionary).clear()
 	pers.clear()
 	_people = PackedInt64Array()
@@ -2270,6 +2398,15 @@ func load_dict(d: Dictionary) -> String:
 		last_choice[int(r[0])][str(r[1])] = [str(r[2]), int(r[3])]
 	for r in m.get("fights", []):
 		fights[JudgmentBonds._pk(int(r[0]), int(r[1]))] = [int(r[2]), int(r[3]), int(r[4])]
+	for r in m.get("refs", []):                  # GM-01: absent in version 1-2 sections (no references, no links)
+		if facts.has(int(r[0])):
+			fact_refs[int(r[0])] = _whole(r[1])
+	for r in m.get("history", []):
+		var kn := {}
+		for k in r[7]:
+			kn[int(k[0])] = [str(k[1]), int(k[2]), int(k[3])]
+		history[int(r[0])] = {"type": str(r[1]), "day": int(r[2]), "actors": _whole(r[3]), "beneficiaries": _whole(r[4]), "value": int(r[5]),
+				"refs": _whole(r[6]), "known": kn}
 	for r in m.get("scheduled", []):
 		if _g_sched:
 			meet_at(int(r[1]), int(r[2]), int(r[0]))
@@ -2279,6 +2416,20 @@ func load_dict(d: Dictionary) -> String:
 		for o in d2:
 			_add_person(int(o))
 	return ""
+
+
+## JSON reads whole numbers as floats: give them back as integers, through dictionaries and arrays.
+static func _whole(v):
+	if v is float and v == floorf(v):
+		return int(v)
+	if v is Array:
+		return (v as Array).map(func(x): return _whole(x))
+	if v is Dictionary:
+		var o := {}
+		for k in v:
+			o[k] = _whole(v[k])
+		return o
+	return v
 
 
 static func _ints2(a) -> Array:
@@ -2308,13 +2459,15 @@ static func migrate(d: Dictionary) -> Dictionary:
 		return {"error": "judgment section version %d is newer than this game's %d: kept unread" % [int(d.version), VERSION]}
 	# version 1 (Builds 16-18 prototype sections) -> 2: nothing is rewritten here; the Build 19 keys (clock, lied, stories,
 	# choices, fights) are optional and absent in version 1, and "traits" v1 (anger in days) is converted by its own loader
+	# version 2 -> 3 (GM-01): nothing is rewritten; the keys refs and history are optional and absent before (no links, no
+	# historical records: a Build 19-22 save loads with none and gains them from the deeds done after it is loaded)
 	for k in ["facts", "memories", "contrib", "ledgers"]:
 		if not (d.get(k, null) is Array):
 			return {"error": "judgment section damaged (no %s): kept unread" % k}
 	var out := d.duplicate(true)
 	if not out.has("told_today"):
 		out.told_today = []
-	out.version = VERSION                              # read as the current layout; written back as version 2
+	out.version = VERSION                              # read as the current layout; written back as the current version
 	return out
 
 

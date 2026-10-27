@@ -195,6 +195,35 @@ static func on_help(w, helper: int, n: NPC, type: String, value: int) -> void:
 	_event(w, type, [helper], [], [n.id], value, n.pos if type == "help_minor" else null)
 
 
+## GM-01: a relative household's coins toward a home (Construction._family_help): the help_build deed as on_help publishes
+## it, naming the household it helped (`hh`), the giving household (`giver_hh`), the plot the house stands on and its
+## cost then; a significant gift (JudgmentStore.significant) becomes a historical record both households know of.
+## Returns the event id.
+static func on_build_help(w, giver: int, builder: NPC, value: int, giver_hh: int, hh: int, plot: String, cost: int) -> int:
+	var ev := _event(w, "help_build", [giver], [], [builder.id], value, null)
+	if ev <= 0:
+		return ev
+	var j: JudgmentStore = w.judgment
+	j.set_refs(ev, {"household": hh, "giver_household": giver_hh, "plot": plot, "building": "", "item": "", "qty": value, "cost": cost,
+			"links": [["contributed", "plot:" + plot]]})
+	var present := [giver, builder.id]
+	for h in [giver_hh, hh]:
+		if h >= 0 and h < w.households.size():
+			for m in w.households[h].members:
+				var o: NPC = w.npc(int(m))
+				if o != null and o.alive and not present.has(o.id):
+					present.append(o.id)
+	present.sort()
+	j.make_history(ev, present)
+	return ev
+
+
+## GM-01: a building finished (World._finish_site): the help that went toward its plot now names it.
+static func on_built(w, b: Dictionary) -> void:
+	if str(b.get("parcel", "")) != "":
+		w.judgment.building_done(str(b.parcel), str(b.id), w.day())
+
+
 ## A deal kept or broken between two people (ids; -1 for a party that is not a person: nothing is published). A contract
 ## fulfilled or a debt repaid on time is trade_fair, a contract lapsed or a debt defaulted is trade_cheat; `seller` is
 ## the one who owed the goods, work or coin. Private: only the two know.
@@ -301,6 +330,7 @@ static func tell_family_tick(w) -> void:
 				mask |= 1 << i                        # no parent here to tell them
 			elif c.home != "" and w.place_of(c.pos) == c.home and w.place_of(p.pos) == c.home:
 				j.tell_family_stories(p.id, c.id)
+				j.tell_family_history(p.id, c.id)       # GM-01: and the family's history (knowledge only: nothing is judged)
 				mask |= 1 << i
 		if mask == 3:
 			j.story_pending.erase(id)

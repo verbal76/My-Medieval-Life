@@ -3764,6 +3764,8 @@ func _finish_site(p: Dictionary) -> void:
 	note("%s is finished." % cap(property.describe(b)))
 	property._settle(by)               # a family's first house becomes its home
 	construction.on_finished(b)        # a founding household moves in
+	if judgment != null:
+		JudgmentLive.on_built(self, b)     # GM-01: the help that went toward this plot now names the house
 
 
 ## A sleeping loft is finished (HOUSE-12): no new building; the house gains its loft (World._with_loft) and
