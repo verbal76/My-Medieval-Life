@@ -14,17 +14,297 @@ It also returns the facts the gate reconciles with the simulation's own output: 
 "final_snapshot", the world as the session left it), alert counts by rule, villager deaths, births and arrivals (newcomers,
 outlaws, arrivals and people returning from a settlement), and accepted trades.
 
+X20-FINAL phase 5 (owner directive 2026-10-27): the black-box checks of the archive's content (class Deep), all from the rows:
+  - event ids 1..N each once (N the session's own count), and every row of the other tables naming a recorded event;
+  - valid transitions: nobody decides, acts, trades or is born again after their death; roles only child -> adult -> elder;
+    a contract opens once, is delivered and paid only while open, ends once, nothing after its end, and its set-aside coins
+    come back to zero; a debt is extended once and repaid or defaulted after; each job change starts from the last recorded job
+    (reported, not a problem: employment is partly instrumented);
+  - the hourly snapshots: counters that only grow never fall, values in range;
+  - the session's recorded flags against the flags a scenario requires (verify(..., require_flags=));
+  - what was exercised: event counts for each row of recorder_coverage.json "exercise" (the coverage matrix's rows), so a
+    scenario that claims a system and recorded none of it is a problem (verify(..., require_rows=));
+  - the owner's judgment chain (chains()): a crime fact, the beliefs it formed (witnessed, then told or rumoured), and a later
+    weighted choice by a believer with the fact's actor as counterparty; with those who only heard of it counted apart;
+  - measures for review (never problems): re-decisions (empty decisions and repeated identical choices per actor-day),
+    choice diversity per profile, flows produced, consumed and unmet.
+  compare_participants(dirs): the multiplayer participants' hourly net_state digests, section by section.
+
     python3 tools/recorder_archive.py ARCHIVE_SESSION_DIR      # prints the report; exit 1 if the archive is not valid
+    python3 tools/recorder_archive.py --participants HOST_DIR GUEST_DIR...   # compares a network session's participants
 """
 import glob
 import gzip
 import hashlib
 import json
+import fnmatch
 import os
 import sys
+from collections import Counter, defaultdict
 
 SCHEMA = "mml-recorder/2"
 TABLES = ["event", "participant", "decision", "alternative", "factor", "state_change", "link", "alert", "sample", "snapshot"]
+COVERAGE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "game", "data", "recorder_coverage.json")
+CRIME_FACTS = ("fact:theft", "fact:pickpocket", "fact:assault", "fact:killing", "fact:robbery", "fact:trade_cheat")
+ROLE_STEPS = {("child", "adult"), ("adult", "elder")}
+GROWING = ("births", "deaths")
+
+
+def exercise_rows():
+    """The coverage matrix's rows with the event patterns that show each was exercised (recorder_coverage.json "exercise")."""
+    try:
+        return json.load(open(COVERAGE_FILE)).get("exercise", [])
+    except (OSError, ValueError):
+        return []
+
+
+class Deep:
+    """The content checks of one session (X20-FINAL phase 5), fed table by table in the order verify reads the chunks."""
+
+    def __init__(self, sess):
+        self.sess = sess
+        self.events_n = int(sess.get("events", 0) or 0)
+        self.ids = bytearray(self.events_n + 2) if self.events_n else None
+        self.id_dup = self.id_out = 0
+        self.refs = []                          # (table, event id) rows naming events, checked at the end
+        self.bad_refs = Counter()
+        self.ev = {}                            # id -> (day, minute, system, subsystem, category, subtype, actor, outcome, object)
+        self.keep = set()                       # ids of the events the transition and chain checks need
+        self.died = {}                          # actor ref -> (day, minute, id)
+        self.after_death = []
+        self.born = Counter()
+        self.role_bad = []
+        self.job_last = {}
+        self.job_breaks = []
+        self.props = Counter()
+        self.flows = Counter()
+        self.contract_coins = defaultdict(int)
+        self.choice_cp = defaultdict(set)       # choice event id -> counterparties
+        self.belief_teller = {}
+        self.part_rows = defaultdict(list)      # kept event id -> [(ref, role)]
+        self.empty_dec = Counter()              # (actor, day) -> empty decisions
+        self.choices = Counter()                # (actor, day, profile, chosen) -> count
+        self.profile = defaultdict(lambda: {"n": 0, "choosers": set(), "chosen": Counter()})
+        self.snap_prev = None
+        self.snap_bad = []
+        self.decisions = {}                     # choice event id -> chosen
+
+    # --- feeding
+    def event_rows(self, cols, rows):
+        ix = {c: i for i, c in enumerate(cols)}
+        g = lambda r, c, d=None: r[ix[c]] if c in ix else d
+        for r in rows:
+            i = g(r, "id")
+            if self.ids is not None and isinstance(i, int):
+                if i < 1 or i > self.events_n:
+                    self.id_out += 1
+                elif self.ids[i]:
+                    self.id_dup += 1
+                else:
+                    self.ids[i] = 1
+            par = g(r, "parent", -1)
+            if isinstance(par, int) and par > 0:
+                self.refs.append(("event.parent", par))
+            row = (g(r, "day", 0), g(r, "minute", 0.0), g(r, "system", ""), g(r, "subsystem", ""), g(r, "category", ""), g(r, "subtype", ""),
+                   g(r, "actor", ""), g(r, "outcome", ""), g(r, "object", ""))
+            cat, sub, sysn, subsys, actor = row[4], row[5], row[2], row[3], row[6]
+            if (cat in ("life", "contract", "credit", "network", "summary") or (cat == "judgment" and subsys in ("fact", "belief", "choice", "gossip"))
+                    or cat in ("action", "decision", "transaction", "verb")) and isinstance(i, int):
+                if cat in ("action", "decision", "transaction", "verb"):
+                    self.ev[i] = (row[0], row[1], "", "", cat, "", actor, row[7], "")       # light: for after-death checks
+                else:
+                    self.ev[i] = row
+                    self.keep.add(i)
+            if cat == "decision" and row[7] == "empty":
+                self.empty_dec[(actor, row[0])] += 1
+
+    def other_rows(self, table, cols, rows):
+        ix = {c: i for i, c in enumerate(cols)}
+        key = {"participant": "event", "decision": "event", "alternative": "event", "factor": "event", "state_change": "event"}.get(table)
+        for r in rows:
+            if key and key in ix:
+                self.refs.append((table, r[ix[key]]))
+            if table == "link":
+                for c in ("from", "to"):
+                    if c in ix:
+                        self.refs.append(("link." + c, r[ix[c]]))
+            if table == "participant" and "event" in ix:
+                self.part_rows[r[ix["event"]]].append((r[ix["ref"]], r[ix["role"]]))
+            elif table == "decision" and "event" in ix:
+                self.decisions[r[ix["event"]]] = r[ix["chosen"]]
+            elif table == "state_change" and "prop" in ix:
+                prop, ref, ev = str(r[ix["prop"]]), str(r[ix["ref"]]), r[ix["event"]]
+                head = prop.split(":")[0]
+                self.props[head] += 1
+                if head in ("produced", "consumed", "unmet"):
+                    d = r[ix["delta"]] if isinstance(r[ix["delta"]], (int, float)) else 0
+                    self.flows[prop] += d if isinstance(d, (int, float)) else 0
+                elif prop == "role":
+                    if (r[ix["before"]], r[ix["after"]]) not in ROLE_STEPS:
+                        self.role_bad.append("%s role %s -> %s (event %s)" % (ref, r[ix["before"]], r[ix["after"]], ev))
+                elif prop == "job":
+                    last = self.job_last.get(ref)
+                    if last is not None and last != r[ix["before"]] and len(self.job_breaks) < 20:
+                        self.job_breaks.append("%s job %r -> %r, last recorded %r (event %s)" % (ref, r[ix["before"]], r[ix["after"]], last, ev))
+                    self.job_last[ref] = r[ix["after"]]
+                elif prop == "coins" and ref.startswith("contract:") and isinstance(r[ix["delta"]], int):
+                    self.contract_coins[ref] += r[ix["delta"]]
+            elif table == "snapshot":
+                s = dict(zip(cols, r))
+                if self.snap_prev:
+                    for k in GROWING:
+                        if k in s and k in self.snap_prev and s[k] < self.snap_prev[k]:
+                            self.snap_bad.append("snapshot %s fell: %s -> %s at day %s hour %s" % (k, self.snap_prev[k], s[k], s.get("day"), s.get("hour")))
+                for k in ("alive", "starving", "households", "adults"):
+                    if isinstance(s.get(k), (int, float)) and s[k] < 0:
+                        self.snap_bad.append("snapshot %s negative at day %s hour %s" % (k, s.get("day"), s.get("hour")))
+                if isinstance(s.get("mean_hunger"), (int, float)) and not (0 <= s["mean_hunger"] <= 100):
+                    self.snap_bad.append("snapshot mean_hunger %s out of range at day %s" % (s["mean_hunger"], s.get("day")))
+                if isinstance(s.get("starving"), int) and isinstance(s.get("alive"), int) and s["starving"] > s["alive"]:
+                    self.snap_bad.append("snapshot starving %s above alive %s at day %s" % (s["starving"], s["alive"], s.get("day")))
+                self.snap_prev = s
+
+    # --- results
+    def finish(self, rep, require_flags=None, require_rows=None):
+        probs, notes = rep["problems"], rep.setdefault("notes", [])
+        if self.ids is not None:
+            missing = self.events_n - sum(self.ids[1:self.events_n + 1])
+            if missing or self.id_dup or self.id_out:
+                probs.append("event ids: %d missing, %d doubled, %d out of range (of %d)" % (missing, self.id_dup, self.id_out, self.events_n))
+            bad = Counter(t for t, e in self.refs if not (isinstance(e, int) and 1 <= e <= self.events_n and self.ids[e]))
+            if bad:
+                probs.append("rows naming an event that was not recorded: %s" % dict(bad))
+        # life: births once; after a death no decision, action, trade or verb by that person
+        order = sorted(self.ev.items(), key=lambda kv: (kv[1][0], kv[1][1], kv[0]))
+        for i, e in order:
+            cat, sub, actor = e[4], e[5], e[6]
+            if cat == "life" and sub == "birth":
+                self.born[actor] += 1
+            if cat == "life" and sub == "death" and actor not in self.died:
+                self.died[actor] = (e[0], e[1], i)
+            elif cat in ("action", "decision", "transaction", "verb") and actor in self.died:
+                d = self.died[actor]
+                if (e[0], e[1]) > (d[0], d[1]) and len(self.after_death) < 20:
+                    self.after_death.append("%s %s event %d on day %s minute %s after their death (event %d, day %s)" % (actor, cat, i, e[0], e[1], d[2], d[0]))
+        twice = [a for a, n in self.born.items() if n > 1]
+        if twice:
+            probs.append("born more than once: %s" % twice[:10])
+        if self.after_death:
+            probs.append("events after a death: %d (first: %s)" % (len(self.after_death), self.after_death[0]))
+        if self.role_bad:
+            probs.append("invalid role changes: %s" % self.role_bad[:5])
+        # contracts and debts: their object threads in event order
+        threads = defaultdict(list)
+        for i, e in order:
+            if e[8] and (e[8].startswith("contract:") or e[8].startswith("debt:")) and e[4] in ("contract", "credit"):
+                threads[e[8]].append((i, e[5]))
+        bad_c = []
+        for obj, evs in sorted(threads.items()):
+            seq = [s for _, s in evs]
+            if obj.startswith("contract:"):
+                ends = [k for k, s in enumerate(seq) if s in ("fulfilled", "cancelled", "lapsed")]
+                opened = [k for k, s in enumerate(seq) if s == "opened"]
+                if len(ends) > 1 or len(opened) > 1 or (ends and ends[0] != len(seq) - 1):
+                    bad_c.append("%s %s" % (obj, seq))
+                elif any(s in ("delivered", "paid") for s in seq) and not opened:
+                    pass                                     # opened before this session began (a loaded game): not judged
+                elif opened and any(s in ("delivered", "paid") for k, s in enumerate(seq) if k < opened[0]):
+                    bad_c.append("%s %s" % (obj, seq))
+                if ends and opened and self.contract_coins.get(obj, 0) != 0:
+                    bad_c.append("%s ended with %d coins still set aside on the record" % (obj, self.contract_coins[obj]))
+            else:
+                ext = [k for k, s in enumerate(seq) if s == "extended"]
+                done = [k for k, s in enumerate(seq) if s in ("repaid", "repaid_late")]
+                if len(ext) > 1 or len(done) > 1 or (ext and done and done[0] < ext[0]) or (done and done[0] != len(seq) - 1):
+                    bad_c.append("%s %s" % (obj, seq))
+        if bad_c:
+            probs.append("invalid contract or debt transitions: %d (first: %s)" % (len(bad_c), bad_c[0]))
+        rep["contracts"] = {"threads": sum(1 for o in threads if o.startswith("contract:")), "debts": sum(1 for o in threads if o.startswith("debt:")),
+                            "states": dict(Counter(s for o, evs in threads.items() for _, s in evs))}
+        if self.job_breaks:
+            notes.append("job changes not starting from the last recorded job (employment is partly instrumented): %d, e.g. %s" % (
+                len(self.job_breaks), self.job_breaks[0]))
+        probs.extend(self.snap_bad[:5])
+        # flags and required rows
+        flags = self.sess.get("flags") or {}
+        rep["flags"] = flags
+        for k, want in (require_flags or {}).items():
+            if flags.get(k) != want:
+                probs.append("flag %s is %r in the recording; the scenario requires %r (the system was not exercised as claimed)" % (k, flags.get(k), want))
+        rep["exercised"] = exercised(rep.get("events", {}), self.props)
+        for row in (require_rows or []):
+            if rep["exercised"].get(row, {}).get("events", 0) == 0:
+                probs.append("required system not exercised: %s (%s)" % (row, rep["exercised"].get(row, {}).get("system", "no such row")))
+        # measures for review
+        red = [(n, a, d) for (a, d), n in self.empty_dec.items()]
+        red.sort(reverse=True)
+        rep["redecisions"] = {"empty_decisions": sum(self.empty_dec.values()), "worst_actor_days": [{"actor": a, "day": d, "empty": n} for n, a, d in red[:5]]}
+        rep["flows"] = {k: round(v, 2) for k, v in sorted(self.flows.items()) if v}
+        rep["state_props"] = dict(self.props)
+        rep["chains"] = self.chains()
+        prof = defaultdict(lambda: [0, set(), Counter()])
+        for i, e in self.ev.items():
+            if e[4] == "judgment" and e[3] == "choice":
+                p = prof[e[5]]
+                p[0] += 1
+                p[1].add(e[6])
+                p[2][str(self.decisions.get(i))] += 1
+        rep["choice_profiles"] = {k: {"choices": v[0], "choosers": len(v[1]), "distinct_chosen": len(v[2]),
+                                      "forgo_or_none": v[2].get("forgo", 0) + v[2].get("none", 0)} for k, v in sorted(prof.items())}
+
+    def chains(self):
+        """The owner's chain: crime fact -> beliefs (witnessed, then told) -> a later choice by a believer about the actor."""
+        facts = {}
+        for i, e in self.ev.items():
+            if e[4] == "judgment" and e[3] == "fact" and e[5] in CRIME_FACTS and e[8]:
+                actors = [r for r, role in self.part_rows.get(i, []) if str(role).startswith("actor")]
+                facts[e[8]] = {"id": i, "type": e[5], "day": e[0], "minute": e[1], "actors": set(actors)}
+        believers = defaultdict(dict)           # fact object -> observer -> (day, minute, source)
+        for i, e in self.ev.items():
+            if e[4] == "judgment" and e[3] == "belief" and e[8] in facts:
+                obs = e[6]
+                if obs not in believers[e[8]] or (e[0], e[1]) < believers[e[8]][obs][:2]:
+                    believers[e[8]][obs] = (e[0], e[1], e[5])
+        choices = defaultdict(list)             # counterparty -> [(day, minute, chooser, profile, chosen)]
+        for i, e in self.ev.items():
+            if e[4] == "judgment" and e[3] == "choice":
+                for ref, role in self.part_rows.get(i, []):
+                    if role == "counterparty":
+                        choices[ref].append((e[0], e[1], e[6], e[5], self.decisions.get(i)))
+        out = {"crime_facts": len(facts), "beliefs": 0, "heard_not_seen": 0, "later_choices": 0, "later_choices_hearsay": 0, "by_profile": Counter(), "examples": []}
+        for obj, f in sorted(facts.items(), key=lambda kv: kv[1]["id"]):
+            bel = believers.get(obj, {})
+            out["beliefs"] += len(bel)
+            out["heard_not_seen"] += sum(1 for b in bel.values() if b[2] in ("told", "rumour"))
+            for actor in f["actors"]:
+                for c in choices.get(actor, []):
+                    b = bel.get(c[2])
+                    if b and (c[0], c[1]) > (b[0], b[1]):
+                        out["later_choices"] += 1
+                        out["by_profile"][c[3]] += 1
+                        if b[2] in ("told", "rumour"):
+                            out["later_choices_hearsay"] += 1
+                            if len(out["examples"]) < 5:
+                                out["examples"].append({"fact": obj, "type": f["type"], "actor": actor, "chooser": c[2], "heard_by": b[2], "heard_day": b[0],
+                                                        "choice_day": c[0], "profile": c[3], "chosen": c[4]})
+        out["by_profile"] = dict(out["by_profile"])
+        out["complete"] = out["later_choices_hearsay"] > 0
+        return out
+
+
+def exercised(events, props):
+    """Event counts (and state rows) for each row of the coverage matrix (recorder_coverage.json "exercise")."""
+    out = {}
+    for row in exercise_rows():
+        n = 0
+        for key, k in events.items():
+            cat, sub = key.split("|")[0], key.split("|")[1]
+            if any(fnmatch.fnmatch("%s|%s" % (cat, sub), p) for p in row.get("events", [])):
+                n += k
+        for p in row.get("props", []):
+            n += props.get(p, 0)
+        out[row["row"]] = {"system": row.get("system", ""), "events": n}
+    return out
 
 
 def read_chunk(path):
@@ -69,8 +349,8 @@ def read_chunk(path):
     return head, rows, ""
 
 
-def verify(session_dir):
-    """Check a session directory. Returns a report dict with "ok" and "problems"."""
+def verify(session_dir, require_flags=None, require_rows=None):
+    """Check a session directory. Returns a report dict with "ok" and "problems" (and the X20-FINAL content checks: Deep)."""
     rep = {"dir": session_dir, "ok": False, "problems": [], "chunks": 0, "bytes": 0, "counts": {}, "snapshot_hours": 0,
            "alerts": {}, "villager_deaths": 0, "births": 0, "newcomers": 0, "trades": 0, "last_snapshot": None,
            "first_snapshot": None, "events": {}}
@@ -91,6 +371,7 @@ def verify(session_dir):
         rep["problems"].append("unknown codes: %s" % sess.get("unknown_codes"))
     if sess.get("recovered"):
         rep["problems"].append("recovered chunks of an earlier session: %d" % len(sess.get("recovered")))
+    deep = Deep(sess)
     last_seq = int(sess.get("last_seq", 0))
     seen = bytearray(last_seq + 1)
     dup = out_of_range = 0
@@ -110,6 +391,10 @@ def verify(session_dir):
             continue
         rep["counts"][table] = rep["counts"].get(table, 0) + len(rows)
         cols = head["columns"]
+        if table == "event":
+            deep.event_rows(cols, rows)
+        else:
+            deep.other_rows(table, cols, rows)
         for r in rows:
             s = r[0]
             if not isinstance(s, int) or s < 1 or s > last_seq:
@@ -157,6 +442,65 @@ def verify(session_dir):
     if snaps:
         rep["first_snapshot"] = {k: v for k, v in snaps[0].items() if k != "stats_delta"}
         rep["last_snapshot"] = {k: v for k, v in snaps[-1].items() if k != "stats_delta"}
+    deep.finish(rep, require_flags, require_rows)
+    rep["ok"] = not rep["problems"]
+    return rep
+
+
+def net_states(session_dir):
+    """A participant's hourly net_state digests: {(day, hour): {"role", "sections": {key: hash}, "players"}}."""
+    evs, facs = {}, defaultdict(dict)
+    for path in sorted(glob.glob(os.path.join(session_dir, "d*", "*.jsonl.gz"))):
+        head, rows, problem = read_chunk(path)
+        if problem or head is None:
+            continue
+        cols = head["columns"]
+        if head.get("table") == "event":
+            ix = {c: i for i, c in enumerate(cols)}
+            for r in rows:
+                if r[ix["subtype"]] == "net_state":
+                    evs[r[ix["id"]]] = (r[ix["day"]], int(float(r[ix["minute"]]) // 60), r[ix["subsystem"]])
+        elif head.get("table") == "factor":
+            ix = {c: i for i, c in enumerate(cols)}
+            for r in rows:
+                facs[r[ix["event"]]][(r[ix["option"]], r[ix["factor"]])] = r[ix["value"]]
+    out = {}
+    for i, (d, h, role) in evs.items():
+        f = facs.get(i, {})
+        out[(d, h)] = {"role": role, "sections": {k[1]: v for k, v in f.items() if k[0] == "section"}, "players": f.get(("net", "players"), "")}
+    return out
+
+
+def compare_participants(dirs):
+    """Compare network participants' archives hour by hour (the host's first). A section that differs at three or more consecutive
+    compared hours is a problem (a guest copy behind the host for an hour is expected: villagers and animals sync less often)."""
+    parts = [(d, net_states(d)) for d in dirs]
+    host = next(((d, s) for d, s in parts if any(v["role"] == "host" for v in s.values())), None)
+    rep = {"participants": [{"dir": d, "role": sorted({v["role"] for v in s.values()}), "hours": len(s)} for d, s in parts], "problems": [], "differences": {}}
+    if host is None:
+        rep["problems"].append("no host digest in these archives")
+        return rep
+    for d, s in parts:
+        if d == host[0]:
+            continue
+        hours = sorted(set(s) & set(host[1]))
+        run, worst = Counter(), Counter()
+        diff = Counter()
+        for hk in hours:
+            a, b = host[1][hk]["sections"], s[hk]["sections"]
+            for k in sorted(set(a) | set(b)):
+                if a.get(k) != b.get(k):
+                    diff[k] += 1
+                    run[k] += 1
+                    worst[k] = max(worst[k], run[k])
+                else:
+                    run[k] = 0
+        rep["differences"][d] = {"hours_compared": len(hours), "sections_differing": dict(diff), "longest_run": dict(worst)}
+        if not hours:
+            rep["problems"].append("%s: no hour in common with the host" % d)
+        for k, n in worst.items():
+            if n >= 3:
+                rep["problems"].append("%s: section %s differs from the host for %d consecutive hours" % (d, k, n))
     rep["ok"] = not rep["problems"]
     return rep
 
@@ -167,8 +511,12 @@ def session_dirs(root):
 
 
 if __name__ == "__main__":
+    if len(sys.argv) > 2 and sys.argv[1] == "--participants":
+        r = compare_participants(sys.argv[2:])
+        print(json.dumps(r, indent=1, sort_keys=True, default=str))
+        sys.exit(0 if r["ok"] else 1)
     if len(sys.argv) != 2:
         sys.exit(__doc__)
     r = verify(sys.argv[1])
-    print(json.dumps({k: v for k, v in r.items() if k != "events"}, indent=1, sort_keys=True))
+    print(json.dumps({k: v for k, v in r.items() if k != "events"}, indent=1, sort_keys=True, default=str))
     sys.exit(0 if r["ok"] else 1)

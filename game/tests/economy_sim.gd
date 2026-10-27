@@ -17,6 +17,8 @@ extends SceneTree
 ##       an hour after the second killing (day 2 15:00), if still alive and the case still open; tools/sim_suite.py)
 ##       [--judgment]   (attach a fresh judgment store; Build 19 ships judgment on already; prints its counts at the end)
 ##       [--economy]   (Expansion 20 LE-01: the economy model on, observing only; prints its record counts at the end)
+##       [--scenario strip_mine|contracts_fail|social_chain --at DAY]   (X20-FINAL phase 4, tools/sim_suite.py: economic stress
+##       and the judgment chain through the game's own verbs; see _intervene and _scripted_step)
 ##       [--aspiration] [--job-choice]   (Expansion 20 R5, WDR-011-C: the NPC aspiration layer on, and its own job_choice flag;
 ##       both shipped off; a measurement run, never the gate's; prints the aspiration rows' leads at the end)
 ##       [--no-judgment]   (the Build 18 path: judgment off, as tools/sim_gate.py --sim-args=--no-judgment compares with the baseline)
@@ -134,6 +136,8 @@ func _init() -> void:
 		for i in per_day:
 			if scenario == "crime_spree" and i % 60 == 0 and w.day() >= scenario_day:
 				_crime_step(w.day() - scenario_day, int(fmod(w.minutes, World.DAY) / 60.0))
+			elif (scenario == "social_chain" or scenario == "contracts_fail") and i % 60 == 0 and w.day() >= scenario_day:
+				_scripted_step(w.day() - scenario_day, int(fmod(w.minutes, World.DAY) / 60.0))
 			var tu := Time.get_ticks_usec()
 			w.update(STEP)
 			update_us += Time.get_ticks_usec() - tu
@@ -377,6 +381,11 @@ func _on_died(n: NPC) -> void:
 ##   corner_wheat a rich player (3000 coins from outside) buys every sack of wheat on sale (World.player_buy_many)
 ##   gift_coins   a rich player (2000 coins from outside) gives 100 coins each to the poorest households' providers
 ##   hunt_out     the player kills every wild deer and boar (Fauna.kill, as a hunt does); the game is left as loot
+## X20-FINAL phase 4 (economic stress, legitimate world changes only; nothing is created):
+##   strip_mine   the player works every surface seam of iron ore, copper ore and coal out (World.work_mine: the ledger's
+##                mined_ count, no tool worn) and carries the ore out of the valley (the ledger's exported_ count); the
+##                village's smiths, miners and manor then meet depleted seams
+##   contracts_fail  see _scripted_step (the player's orders, accepted on the villagers' own terms, then partly cancelled)
 func _intervene(name: String) -> void:
 	var p := w.player
 	match name:
@@ -416,6 +425,21 @@ func _intervene(name: String) -> void:
 				p.coins -= 100
 				ra.coins += 100
 				scenario_log.given = int(scenario_log.get("given", 0)) + 100
+		"strip_mine":
+			var bag := Inventory.new()
+			for dep in w.deposits:
+				if int(dep.get("level", 0)) != 0 or not (str(dep.get("ore", "")) in ["iron_ore", "copper_ore", "coal"]):
+					continue
+				for k in 4000:
+					if str(w.work_mine(p, dep, bag, "").result) != "ok":
+						break
+				scenario_log.seams = int(scenario_log.get("seams", 0)) + 1
+			for id in bag.items.keys():
+				var q := bag.count(id)
+				if q > 0:
+					bag.remove(id, q)
+					w.stat("exported_" + str(id), float(q))      # carried out of the valley: counted as exported in the ledger
+					scenario_log["exported_" + str(id)] = q
 		"hunt_out":
 			for a: Animal in w.fauna.animals.duplicate():
 				if a.alive and a.wild() and a.species in ["deer", "boar"]:
@@ -504,6 +528,100 @@ func _crime_step(day_n: int, hour: int) -> void:
 	if step != "":
 		scenario_log.steps = int(scenario_log.get("steps", 0)) + 1
 		print("CRIME day %d %02d:00 %s: %s" % [w.day(), hour, step, JSON.stringify(scenario_log)])
+
+
+## X20-FINAL phase 4 scripted steps, by day after --at and hour of the game clock, through the game's own verbs:
+##   social_chain (the owner's chain: a crime seen -> opinions -> gossip -> another's judgment -> a later decision): day 0 11:00 and
+##     day 1 11:00 the player picks the pocket of the adult with the most villagers in sight (two crimes, under the notoriety at
+##     which everyone refuses, so each villager's own judgment answers); day 3 10:00 the player, with 600 coins from outside, offers
+##     every adult villager a small contract (one unit of something they hold, twice its price, two days): each answer is the
+##     villager's contract_accept judgment of the player (witnesses, those told, those who heard nothing); the flight recorder
+##     traces it (tools/recorder_archive.py chains).
+##   contracts_fail: day 0 09:00 the player, with 3000 coins from outside, orders goods from every adult tradesperson (their own
+##     goods, a quantity of 8, three days), accepting a counteroffer on its terms; day 2 09:00 the player cancels every third open
+##     contract. The harness player has no home, so goods for the player wait for a chest that is not there and those contracts
+##     lapse at their deadline: the lapse path (coins back, the broken promise judged).
+func _scripted_step(day_n: int, hour: int) -> void:
+	var p := w.player
+	if not p.alive:
+		return
+	var key := "%d_%d" % [day_n, hour]
+	if scenario_log.has("done_" + key):
+		return
+	var did := ""
+	match [scenario, day_n, hour]:
+		["social_chain", 0, 11], ["social_chain", 1, 11]:
+			var v := _crime_victim(true)
+			if v != null:
+				p.pos = v.pos + Vector2(0.4, 0)
+				scenario_log["pickpocket_" + str(day_n)] = w.pickpocket(v).get("ok", false)
+				scenario_log["victim_" + str(day_n)] = v.id
+				did = "pickpocket"
+		["social_chain", 3, 10]:
+			p.coins += 600
+			w.coin_sources += 600
+			w.stat("scenario_coins_in", 600)
+			var ans := {}
+			for n: NPC in w.npcs:
+				if not n.alive or n.role != "adult" or n.job == "guard":
+					continue
+				var item := ""
+				var ids: Array = n.inv.items.keys()
+				ids.sort()
+				for id in ids:
+					if n.inv.count(str(id)) > 0 and not GameData.item(str(id)).is_empty() and not Skills.is_gear(str(id)):
+						item = str(id)
+						break
+				if item == "":
+					continue
+				p.pos = n.pos + Vector2(0.4, 0)           # face to face, as a player asking would stand
+				var r: Dictionary = w.contracts.propose(w.player_ref(p), n, item, 1, maxi(1, w.sell_price(n, item)) * 2, 2)
+				var a := str(r.get("answer", ""))
+				if (r.get("terms", {}) as Dictionary).get("judgment", false):
+					a = "refused_by_judgment"
+				ans[a] = int(ans.get(a, 0)) + 1
+				if r.has("contract"):
+					w.contracts.cancel(r.contract, w.player_ref(p))     # the answer was the point: the slot is freed for the next (max_open_player)
+			scenario_log.offers = ans
+			did = "offers"
+		["contracts_fail", 0, 9]:
+			p.coins += 3000
+			w.coin_sources += 3000
+			w.stat("scenario_coins_in", 3000)
+			var ans := {}
+			for n: NPC in w.npcs:
+				if not n.alive or n.role != "adult" or n.job in ["", "guard", "farmer", "laborer"]:
+					continue
+				var item := ""
+				var ids: Array = n.inv.items.keys()
+				ids.sort()
+				for id in ids:
+					if not GameData.item(str(id)).is_empty() and not Skills.is_gear(str(id)) and not (str(id) in NPCBrain.FOOD):
+						item = str(id)
+						break
+				if item == "":
+					continue
+				var price := maxi(1, w.sell_price(n, item))
+				p.pos = n.pos + Vector2(0.4, 0)           # face to face: a formal contract is signed in person (Q18-13)
+				var r: Dictionary = w.contracts.propose(w.player_ref(p), n, item, 8, price, 3)
+				if str(r.get("answer", "")) == "counter":
+					r = w.contracts.propose(w.player_ref(p), n, item, int(r.qty), int(r.price_each), int(r.days), r.get("history", []))
+				var a := str(r.get("answer", ""))
+				ans[a] = int(ans.get(a, 0)) + 1
+			scenario_log.orders = ans
+			did = "orders"
+		["contracts_fail", 2, 9]:
+			var k := 0
+			var cancelled := 0
+			for c in w.contracts.open_of(w.player_ref(p), "buyer"):
+				if k % 3 == 0 and w.contracts.cancel(c, w.player_ref(p)) == "":
+					cancelled += 1
+				k += 1
+			scenario_log.cancelled = cancelled
+			did = "cancel"
+	if did != "":
+		scenario_log["done_" + key] = true
+		print("SCENARIO %s day %d %02d:00 %s: %s" % [scenario, w.day(), hour, did, JSON.stringify(scenario_log)])
 
 
 func _crime_victim(violent: bool) -> NPC:
