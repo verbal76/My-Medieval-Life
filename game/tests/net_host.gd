@@ -283,7 +283,8 @@ func _status() -> void:
 		"running": main.running, "troughs": troughs, "seq": last_seq, "players": players, "connected": connected, "rejected": main.net.rejected,
 		"applied": main.net.applied, "host_pid": w.host_player().pid, "host_pos": [w.host_player().pos.x, w.host_player().pos.y],
 		"minutes": w.minutes, "seed": w.seed, "plants": plants, "coin_leak": w.total_coins() - coins0 - c_in,
-		"census": census, "saves": saves, "family": _family(w), "orphan": orphan_id, "storm": storm > 0.0, "newcomers": int(w.stats.get("player_newcomers", 0)), "coin_sources": w.coin_sources}
+		"census": census, "saves": saves, "family": _family(w), "orphan": orphan_id, "storm": storm > 0.0, "newcomers": int(w.stats.get("player_newcomers", 0)), "coin_sources": w.coin_sources,
+		"journal": _journal_counts(w), "journal_kept": main.net.journal_kept}
 	var tmp := dir + "status.tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	f.store_string(JSON.stringify(d))
@@ -330,3 +331,12 @@ static func _tagged(w: World, ref: String) -> bool:
 		if (w.judgment.fact(int(ev)).tags as Array).has("by:" + ref):
 			return true
 	return false
+
+
+## GP-MESSAGE-JOURNAL: how many messages each player keeps in the host's world, and the newest's words, by player reference.
+func _journal_counts(w: World) -> Dictionary:
+	var out := {}
+	for r in w.messages.by_ref:
+		var list: Array = w.messages.by_ref[r]
+		out[str(r)] = {"n": list.size(), "last": str(list[-1][2]) if not list.is_empty() else ""}
+	return out

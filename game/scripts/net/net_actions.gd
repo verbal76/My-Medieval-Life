@@ -22,7 +22,6 @@ const VERBS := {
 	# C1: needs, health, death, equipment
 	"player_eat": "C1", "player_sharpen": "C3", "player_use_medicine": "C1", "player_equip": "C1", "player_unequip": "C1", "player_drop": "C1",
 	"player_yield": "C1", "player_wake": "C1", "player_rest": "C1",
-	"player_tell": "C1",          # GP-MESSAGE-JOURNAL: a message the guest was shown, kept in the host's world under the guest
 	# C2: gathering, inventory, crafting, stations
 	"player_pick_plant": "C2", "player_pick_fruit": "C2", "player_harvest": "C2", "player_mine": "C2", "player_chop": "C2",
 	"player_craft_begin": "C2", "player_craft": "C2", "player_take": "C2", "container_store": "C2", "container_pick": "C2",
