@@ -211,6 +211,15 @@
    "note": "Their effects show where they matter: in the facts, beliefs and ledger posts they lead to and in the factors of later choices (disposition, family colour, stubborn penalties)."
   },
   {
+   "system": "Judgment: NPC aspirations (Expansion 20 R5, WDR-011-C; off by default)",
+   "interaction": "every change of a villager's aspirations as event judgment/aspiration: a priority shift (success, setback, the loss of a partner, child or parent, marriage; with how the person met a setback: persevered, adapted, gave_up), a change of the leading aspiration, and the survival level crossing a step of aspiration.surv_record_step; in every JudgmentWeighting.choose with the layer on, the aspiration factor's domain, pressure, fit and survival level, the priority multiplier of each scaled weight (job_choice skill and growth, the courting factors) and the forgo row's aspiration offset",
+   "where": "JudgmentAspiration._record (WorldRecorder.aspiration_event); JudgmentWeighting._choose trace (WorldRecorder.judgment_choice)",
+   "status": "Partially instrumented",
+   "stage": "R5 (Expansion 20)",
+   "test": "test_judgment_and_relations",
+   "note": "Only while aspiration.enabled is on (shipped off). Not recorded: the daily satisfaction of each domain when no band, lead or survival step changes (it is saved in the judgment section's aspire rows). game/tests/aspiration_test.gd checks the event and the trace extras."
+  },
+  {
    "system": "Player",
    "interaction": "the player verbs that change the world: trade (buy, sell), take, strike, craft, loot, each a verb event on the player's permanent reference with the pack, the purse and the target's health before and after; what a verb triggers (a trade, a witness, an alarm, a death) is its child",
    "where": "World.player_buy_many, player_sell, player_take, player_craft, player_hit_npc, player_loot (wrappers); World.trade",

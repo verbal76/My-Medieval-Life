@@ -50,6 +50,22 @@ static func _choose(store: JudgmentStore, cfg: Dictionary, chooser: int, profile
 	var dc: Dictionary = cfg.decision
 	var prof: Dictionary = dc.profiles[profile]
 	var weights: Dictionary = prof.weights
+	# R5 aspirations (WDR-011-C; off by default): with the layer on, the yes-or-forgo profiles gain the one "aspiration" factor
+	# and court_choice its courting factors (judgment.json aspiration); profiles with scaled_by (job_choice skill and growth,
+	# the courting factors) scale those weights by the chooser's effective priority of a domain. Off: nothing here runs, the
+	# weights and the trace are exactly as before. Never a family_* profile (FAMILY-01 stays the rule it is).
+	var asp: JudgmentAspiration = store.asp if store != null and store.asp != null and store.asp.enabled else null
+	var scaled: Dictionary = {}
+	if asp != null:
+		var fw: Dictionary = asp.c.get("factor_weights", {})
+		if fw.has(profile):
+			weights = weights.duplicate()
+			weights["aspiration"] = int(fw[profile])
+		elif profile == "court_choice" or profile == "proposal_accept":      # whom to court, and (WDR-011-Q8 A) whether to accept
+			weights = (((asp.c.get("court", {}) as Dictionary).get("weights", {})) as Dictionary).duplicate()
+			scaled = ((asp.c.get("court", {}) as Dictionary).get("scaled_by", {}) as Dictionary)
+		if prof.has("scaled_by"):
+			scaled = prof.scaled_by
 	var feasible := 0
 	var only_cp := 0
 	var real := 0
@@ -103,12 +119,22 @@ static func _choose(store: JudgmentStore, cfg: Dictionary, chooser: int, profile
 			f.ambivalence = store.ambivalence(chooser, cp) if store != null and cp != -1 else 0
 		if weights.has("sole_source") and not f.has("sole_source"):
 			f.sole_source = 100000 / maxi(1, feasible) if cp != -1 else 0
+		if asp != null and weights.has("aspiration") and not f.has("aspiration"):
+			var af := asp.factor(chooser, profile, cand.get("serves", null), store.world)
+			f.aspiration = int(af.value)
+			row.aspiration = af                 # the leading domain, its pressure, the fit and the survival level (recorder)
 		var parts := {}
 		var u := 0
 		var names := weights.keys()
 		names.sort()
 		for name in names:
 			var wgt := trait_weight(cfg, store.world_seed if store != null else 0, chooser, str(name), int(weights[name]), store)
+			if asp != null and scaled.has(name):
+				var mult := asp.scale_for(chooser, JudgmentAspiration.DOMAINS.find(str(scaled[name])), store.world)
+				wgt = JudgmentMath.mul_div(wgt, mult, 1000)
+				if not row.has("scale"):
+					row.scale = {}
+				row.scale[name] = mult               # the priority multiplier applied to this weight (recorder)
 			var part := JudgmentMath.mul_div(wgt, JudgmentMath.clampi_(int(f.get(name, 0)), 0, 100000), 1000)
 			parts[name] = part
 			u += part
@@ -131,10 +157,19 @@ static func _choose(store: JudgmentStore, cfg: Dictionary, chooser: int, profile
 	var result := {}
 	if forgo > 0:
 		var fu := forgo
+		var asp_off := 0
+		if asp != null and weights.has("aspiration"):
+			# neutral = off: doing without is credited the factor's midpoint at this person's weight, so a neutral aspiration
+			# (content, or a domain this choice does not bear on) changes no answer
+			asp_off = JudgmentMath.mul_div(trait_weight(cfg, store.world_seed, chooser, "aspiration", int(weights.aspiration), store), int(dc.disposition_mid), 1000)
+			fu += asp_off
 		if sw > 0 or overriding:
 			var sf := _stubborn_penalty(store, chooser, -1, "forgo", last, sw, overriding, pen)
 			fu -= int(sf.total)
-		trace.append({"id": "forgo", "feasible": true, "utility": fu})
+		var frow := {"id": "forgo", "feasible": true, "utility": fu}
+		if asp_off != 0:
+			frow.forgo_aspiration_offset = asp_off
+		trace.append(frow)
 		if best == null or fu > best_u:
 			result = {"chosen": "forgo", "utility": fu, "trace": trace, "policy": "forgo"}
 	if result.is_empty() and best == null:

@@ -593,7 +593,7 @@ func test_save_and_upgrade() -> void:
 	check(int(u.to_dict().version) == JudgmentStore.VERSION and u.facts.size() == j.facts.size() and u.memories.size() == j.memories.size() and u.ledgers.size() == j.ledgers.size(), "...nothing dropped; it saves as the current version")
 	# newer or foreign layouts are kept, never dropped
 	var newer: Dictionary = JSON.parse_string(text)
-	newer.version = JudgmentStore.VERSION + 1
+	newer.version = JudgmentStore.MAX_VERSION + 1                 # R5: the newest readable is 4 (aspire), so a newer game writes 5
 	var nk := store(j.cfg, JudgmentSocial.new())
 	check(nk.load_dict(newer) != "" and JSON.stringify(nk.to_dict()) == JSON.stringify(newer), "a section from a newer game is kept unread and written back unchanged")
 	var newer_t: Dictionary = JSON.parse_string(text)

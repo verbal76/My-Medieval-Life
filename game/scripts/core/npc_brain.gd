@@ -4049,6 +4049,7 @@ func seek_work() -> void:
 	# by real counts) has no work to do, and looks for other work as an adult out of work does
 	var no_game: bool = w.fauna.takeable_game() == 0
 	var seekers := 0               # WDR-012-C: villagers looking for work this morning
+	var judged_job := JudgmentLive.on(w, "job_choice")     # R5 (FAD Q2): off unless aspiration.enabled and integration.job_choice
 	for h in w.households.size():
 		var econ: Dictionary = w.households[h].get("econ", {})
 		if econ.is_empty():
@@ -4072,6 +4073,7 @@ func seek_work() -> void:
 			var current := 0.0 if unemployed else n.avg_income(5)
 			var best := ""
 			var best_score := -1e9
+			var opts := []                 # R5 job_choice: every feasible option with its live score
 			var home := w.building_door(n.home)
 			for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector", "stonecutter", "tailor", "barber", "preacher", "church_assistant"]:
 				var opt: Dictionary = market[job]
@@ -4086,6 +4088,8 @@ func seek_work() -> void:
 						continue
 					setup = price / 10.0
 				var score: float = float(opt.pay) - setup - Vector2(home).distance_to(Vector2(opt.at)) / 60.0
+				if judged_job:
+					opts.append([job, score])
 				if score > best_score:
 					best_score = score
 					best = job
@@ -4093,7 +4097,12 @@ func seek_work() -> void:
 				if unemployed:
 					once("no_work_%d_%d" % [n.id, w.day()], "%s %s looks for work and finds none." % [n.name, n.family])
 				continue
-			if not unemployed and best_score < maxf(current * float(GameData.b("job_switch_margin")), current + float(GameData.b("job_switch_min_gain"))):
+			var live_switch := unemployed or best_score >= maxf(current * float(GameData.b("job_switch_margin")), current + float(GameData.b("job_switch_min_gain")))
+			if judged_job:
+				best = JudgmentLive.pick_job(w, n, opts, unemployed, current, best, live_switch, econ)
+				if best == "":
+					continue                   # stays in the job they have
+			elif not live_switch:
 				continue
 			market[best].open = int(market[best].open) - 1
 			var why := "out of work" if unemployed else "%s did not keep the household fed" % (n.job.replace("_", " ") + " work")
@@ -4439,6 +4448,8 @@ func dawn(record := true) -> void:
 	if record:
 		for h in w.households.size():
 			evaluate_household(h, true)
+		if w.judgment != null and w.judgment.asp.enabled:
+			w.judgment.asp.dawn(w)                   # R5 (WDR-011-C): aspirations from this morning's state, before the search for work
 		succession_dawn()
 		seek_work()
 		for pl: PlayerState in w.player_list():      # MP C3: each player's own quests (single player: the one)

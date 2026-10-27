@@ -17,6 +17,8 @@ extends SceneTree
 ##       an hour after the second killing (day 2 15:00), if still alive and the case still open; tools/sim_suite.py)
 ##       [--judgment]   (attach a fresh judgment store; Build 19 ships judgment on already; prints its counts at the end)
 ##       [--economy]   (Expansion 20 LE-01: the economy model on, observing only; prints its record counts at the end)
+##       [--aspiration] [--job-choice]   (Expansion 20 R5, WDR-011-C: the NPC aspiration layer on, and its own job_choice flag;
+##       both shipped off; a measurement run, never the gate's; prints the aspiration rows' leads at the end)
 ##       [--no-judgment]   (the Build 18 path: judgment off, as tools/sim_gate.py --sim-args=--no-judgment compares with the baseline)
 ##       [--capability L --cap-profile P] [--cap-scenario S] [--cap-industries a,b] [--cap-report] [--cap-at 30,60]   (Expansion 18 X18-SIM,
 ##       analysis only: tests/capability_metrics.gd)
@@ -81,6 +83,12 @@ func _init() -> void:
 	var cap_info := CapMetrics.pre_setup(args) if cap_on else {}
 	var t0 := Time.get_ticks_msec()
 	JudgmentLive.test_disabled = "--no-judgment" in args
+	if "--aspiration" in args or "--job-choice" in args:   # R5: set before the world (and its judgment store) is made
+		var ov := {"enabled": "--aspiration" in args}
+		if "--job-choice" in args:
+			ov.job_choice = true
+		JudgmentAspiration.override = ov
+		print("aspiration: %s" % JSON.stringify(ov))
 	if "--economy" in args:               # EXPANSION 20 LE-01: the economy model attached, observing only (never shipped on)
 		EconomyFoundation.set_override({"enabled": true})
 		print("economy: LE-01 model enabled (observing)")
@@ -177,6 +185,37 @@ func _init() -> void:
 		print("judgment: %s; stats %s" % [JSON.stringify(w.judgment.counts()), JSON.stringify(w.judgment.stats)])
 		print("judgment time (us): %s" % JSON.stringify(w.judgment.timing))
 		print("judgment state hash: %d" % w.judgment.state_hash())       # byte-level comparison of every ledger, memory and fact
+		if w.judgment.asp.enabled:
+			var leads := {}
+			var surv := 0
+			for p in w.judgment.asp.rows:
+				var l: String = w.judgment.asp.lead_of(int(p))
+				leads[l if l != "" else "content"] = int(leads.get(l if l != "" else "content", 0)) + 1
+				surv += 1 if int(w.judgment.asp.rows[p].surv) > 0 else 0
+			print("aspiration: %d adults; leads %s; under survival pressure %d" % [w.judgment.asp.rows.size(), JSON.stringify(leads), surv])
+			# which part puts each adult under pressure now (the highest of hunger, injury, danger), and how each danger memory was learnt
+			var by := {"none": 0, "hunger": 0, "injury": 0, "danger": 0}
+			var src := {}
+			var vh := "violence".hash()
+			for p in w.judgment.asp.rows:
+				var n: NPC = w.npc(int(p))
+				if n == null:
+					continue
+				var sparts: Dictionary = w.judgment.asp.survival_parts(n, w)
+				var top := "none"
+				var best := 0
+				for k in ["hunger", "injury", "danger"]:
+					if int(sparts[k]) > best:
+						best = int(sparts[k])
+						top = k
+				by[top] += 1
+				for ev in w.judgment.memories.get(n.id, {}):
+					var m: PackedInt64Array = w.judgment.memories[n.id][ev]
+					var t := int(m[JudgmentStore.M_TYPE])
+					if w.judgment._pol[t] == -1 and w.judgment._famh[t] == vh and int(m[JudgmentStore.M_DAY]) >= w.day() - int(w.judgment.asp.c.get("danger_days", 8)):
+						var sk: String = JudgmentStore.SOURCES[int(m[JudgmentStore.M_SRC])]
+						src[sk] = int(src.get(sk, 0)) + 1
+			print("aspiration survival now, by highest part: %s; recent violence memories by source: %s; saved level above 0: %d" % [JSON.stringify(by), JSON.stringify(src), surv])
 	if cap_on:
 		print("CAPABILITY " + JSON.stringify(CapMetrics.report(cap_info, w, cap0, reached)))
 	if out != "":

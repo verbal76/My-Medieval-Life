@@ -77,6 +77,9 @@ extends RefCounted
 const FORMAT := "mml-judgment/1"
 const VERSION := 3                       # 2 (Build 19): optional keys clock, lied, stories, choices, fights; traits v2 (anger in minutes). Version 1 sections load unchanged.
                                          # 3 (Expansion 20 R4, GM-01): optional keys refs (a fact's entity references and links) and history; version 1-2 sections load with none.
+const ASPIRE_VERSION := 4                # 4 (Expansion 20 R5, WDR-011-C): the optional key aspire (NPC aspirations), written ONLY when it has rows, so a
+                                         # section with aspirations off is version 3 byte for byte; Builds 19-22 meeting a 4 keep it unread (never dropped)
+const MAX_VERSION := 4                   # the newest section this game reads
 const SOURCES := ["participant", "witnessed", "told", "rumour"]
 const TOLD := 2
 # a memory: [type, day, src, by, hops, conf, sal, actor count, actor, share, actor, share...]
@@ -131,6 +134,13 @@ var history := {}        # GM-01: event id -> the historical record of a signifi
 var trace := false       # developer diagnostics: keep each interpretation's parts in last_trace (off: the same numbers, no record)
 var rec = null           # REC-19 D5: the flight recorder (WorldRecorder) when one is attached (WorldRecorder.attach, JudgmentLive.attach); never saved, never read by the simulation: it is handed values already computed
 var timing := {}         # microseconds spent, by part (measurement only: never saved, never read by the simulation)
+var asp: JudgmentAspiration   # R5 (WDR-011-C): NPC aspirations, judgment.json "aspiration" (off by default: inert); saved "aspire" when it has rows
+var _wref: WeakRef = null     # the live World this store belongs to (JudgmentLive.attach), held weakly; null in bare-store tests
+var world:
+	get:
+		return _wref.get_ref() if _wref != null else null
+	set(v):
+		_wref = weakref(v) if v != null else null
 
 # the sliced daily update
 var _people := PackedInt64Array()   # everyone with any record, sorted
@@ -295,6 +305,9 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 	_b_policy = {"multiplier": 0, "threshold": 1, "both": 2}.get(str(bc.confidence_policy), 0)
 	_b_thr = int(bc.confidence_threshold)
 	bonds = JudgmentBonds.new(self, cfg.get("bonds", {}))
+	asp = JudgmentAspiration.new(self, cfg.get("aspiration", {}), seed)
+	if JudgmentAspiration.override.has("job_choice"):
+		(cfg.decision.integration as Dictionary).job_choice = bool(JudgmentAspiration.override.job_choice)    # economy_sim --job-choice
 
 
 func _stat(k: String, v := 1) -> void:
@@ -2272,6 +2285,10 @@ func to_dict() -> Dictionary:
 			hs.append([int(ev), str(h.type), int(h.day), (h.actors as Array).duplicate(), (h.beneficiaries as Array).duplicate(), int(h.value),
 					(h.refs as Dictionary).duplicate(true), kn])
 		out.history = hs                         # GM-01 (version 3): the historical records and who knows each
+	var ad := asp.to_dict()
+	if not ad.is_empty():
+		out.aspire = ad                          # R5 (version 4): aspirations; absent (and version 3) while off or empty
+		out.version = ASPIRE_VERSION
 	return out
 
 
@@ -2303,6 +2320,7 @@ func load_dict(d: Dictionary) -> String:
 	_snext = -1
 	clock_abs = 0
 	bonds.load_dict({})
+	asp.load_dict({})
 	unread = {}
 	if d.is_empty():
 		return ""
@@ -2407,6 +2425,9 @@ func load_dict(d: Dictionary) -> String:
 			kn[int(k[0])] = [str(k[1]), int(k[2]), int(k[3])]
 		history[int(r[0])] = {"type": str(r[1]), "day": int(r[2]), "actors": _whole(r[3]), "beneficiaries": _whole(r[4]), "value": int(r[5]),
 				"refs": _whole(r[6]), "known": kn}
+	var ae := asp.load_dict(m.get("aspire", {}))     # R5: absent before version 4 (no shifts, survival 0; the first dawn sets the bands)
+	if ae != "":
+		_stat("aspire_unread")
 	for r in m.get("scheduled", []):
 		if _g_sched:
 			meet_at(int(r[1]), int(r[2]), int(r[0]))
@@ -2455,19 +2476,21 @@ static func migrate(d: Dictionary) -> Dictionary:
 		return out
 	if fmt != FORMAT:
 		return {"error": "judgment section of unknown format '%s': kept unread" % fmt}
-	if int(d.get("version", 0)) > VERSION:
-		return {"error": "judgment section version %d is newer than this game's %d: kept unread" % [int(d.version), VERSION]}
+	if int(d.get("version", 0)) > MAX_VERSION:
+		return {"error": "judgment section version %d is newer than this game's %d: kept unread" % [int(d.version), MAX_VERSION]}
 	# version 1 (Builds 16-18 prototype sections) -> 2: nothing is rewritten here; the Build 19 keys (clock, lied, stories,
 	# choices, fights) are optional and absent in version 1, and "traits" v1 (anger in days) is converted by its own loader
 	# version 2 -> 3 (GM-01): nothing is rewritten; the keys refs and history are optional and absent before (no links, no
 	# historical records: a Build 19-22 save loads with none and gains them from the deeds done after it is loaded)
+	# version 3 -> 4 (R5, WDR-011-C): nothing is rewritten; the key aspire is optional (no shifts, survival 0, no false
+	# crossing: the first dawn only sets the bands); it is written back as version 4 only while it has rows
 	for k in ["facts", "memories", "contrib", "ledgers"]:
 		if not (d.get(k, null) is Array):
 			return {"error": "judgment section damaged (no %s): kept unread" % k}
 	var out := d.duplicate(true)
 	if not out.has("told_today"):
 		out.told_today = []
-	out.version = VERSION                              # read as the current layout; written back as the current version
+	out.version = VERSION                              # read as the current layout; written back as the current version (4 only with aspire rows)
 	return out
 
 
