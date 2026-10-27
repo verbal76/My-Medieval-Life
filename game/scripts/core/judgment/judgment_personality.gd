@@ -36,6 +36,7 @@ var drift := {}                       # person -> [tolerance drift, stubbornness
 var anger := {}                       # person -> [intensity at set, set minute, duration minutes, peak, override until minute] (saved)
 var wisdom := {}                      # person -> {kind hash (0 = carried to every situation) -> permille} (saved)
 var record := {}                       # person -> PackedInt64Array of LOGW-wide rows, oldest first, never erased (saved)
+var rec = null                       # X20-FINAL: the flight recorder (set with JudgmentStore.rec; never saved, never read)
 var life_tol := {}                    # person -> tolerance shift permille from firsthand bad deeds (SJD-Q13 effect, RECON-01; saved under "tol")
 
 var _q13_step := 0                    # personality.tolerance_per_point: permille of tolerance lost per point of a bad deed's severity (SJD-Q13)
@@ -434,6 +435,8 @@ func _log(person: int, today: int, ch: int, subject: int, sev: int, d0: int, d1:
 	var rows: PackedInt64Array = record.get(person, PackedInt64Array())
 	rows.append_array(PackedInt64Array([today, ch, subject, sev, d0, d1, extra]))
 	record[person] = rows
+	if rec != null:
+		rec.personality_change(person, ch, subject, sev, d0, d1, extra)     # X20-FINAL
 
 
 # ---------------------------------------------------------------- saving -------------------------

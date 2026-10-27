@@ -114,7 +114,13 @@ static func default_codes() -> Dictionary:
 
 
 static func enabled() -> bool:
-	return test_enabled or live_enabled or bool(default_cfg().get("enabled", false))
+	return test_enabled or live_enabled or env_root() != "" or bool(default_cfg().get("enabled", false))
+
+
+## X20-FINAL: the environment variable MML_RECORD=DIR switches recording on for a whole process (the multiplayer harness's host and
+## guests run the real game: each records its own session under DIR). Never set by the game; an empty value is off.
+static func env_root() -> String:
+	return OS.get_environment("MML_RECORD")
 
 
 ## Start a session. `config` overrides recorder.json keys (root, buffer_rows, storage_cap_bytes, ...).
@@ -124,6 +130,8 @@ func _init(config := {}, session_meta := {}) -> void:
 		cfg[k] = config[k]
 	codes = default_codes()
 	meta = session_meta.duplicate(true)
+	if not config.has("root") and env_root() != "":
+		cfg["root"] = env_root()
 	root = str(cfg.get("root", "user://recorder"))
 	_cap = int(cfg.get("storage_cap_bytes", 0))
 	_buffer_rows = maxi(16, int(cfg.get("buffer_rows", 50000)))
@@ -131,7 +139,7 @@ func _init(config := {}, session_meta := {}) -> void:
 		buffer[t] = []
 		counts[t] = 0
 	started_unix = Time.get_unix_time_from_system()
-	session = "s%d" % int(started_unix)
+	session = "s%d" % int(started_unix) if env_root() == "" else "s%d_p%d" % [int(started_unix), OS.get_process_id()]     # several processes, one root
 	var base := session
 	var n := 1
 	while DirAccess.dir_exists_absolute(_abs("%s/%s" % [root, session])):

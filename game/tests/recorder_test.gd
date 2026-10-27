@@ -44,6 +44,7 @@ func _init() -> void:
 	test_scripted_equivalence()
 	test_person_refs()
 	test_judgment_and_relations()
+	test_x20_phase3()
 	test_coverage_file()
 	print("%d checks, %d failures" % [checks, failures])
 	_remove(tmp_root)
@@ -1132,6 +1133,114 @@ func test_judgment_and_relations() -> void:
 	check(bad.is_empty(), "D5/D4: every person in a judgment or relations row is a registered permanent id (bad: %s)" % str(bad.slice(0, 5)))
 	plain.dispose()
 	w.dispose()
+
+
+## X20-FINAL phase 3 (owner directive 2026-10-27): contracts, credit, relations' other channels, memory and personality over time,
+## grievances, production flows, the day's summaries, the flags and the network digest. The same steps with and without the
+## recorder leave the world, the judgment store and the RNG identical.
+class FakeNet:
+	var role := "host"
+	var by_peer := {}
+
+
+func x20_item(n: NPC) -> String:
+	var ids: Array = n.inv.items.keys()
+	ids.sort()
+	for id in ids:
+		if n.inv.count(str(id)) > 0 and not GameData.item(str(id)).is_empty() and not Skills.is_gear(str(id)):
+			return str(id)
+	return ""
+
+
+func x20_steps(w: World) -> Dictionary:
+	run_minutes(w, 26 * 60)
+	var out := {}
+	var adults: Array = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.household >= 3 and n.job != "guard" and x20_item(n) != "")
+	var a: NPC = adults[0]
+	var b: NPC = adults[1]
+	var item := x20_item(a)
+	b.coins += 50
+	b.pos = a.pos + Vector2(0.4, 0)
+	var r: Dictionary = w.contracts.propose(World.npc_ref(b.id), a, item, 1, maxi(1, w.sell_price(a, item)), 2)
+	out.contract = str(r.get("answer", ""))
+	if r.has("contract"):
+		out.delivered = w.contracts.deliver(r.contract, 1)
+	var cr := {"result": "no pair", "debt": {}}
+	for s_ in adults:                         # a pair that trusts each other (trust is regard: set high here, the same in both runs)
+		for b_ in adults:
+			if s_ == b_ or str(cr.result) == "credited" or x20_item(s_) == "":
+				continue
+			w.relations.tie(s_.id, b_.id).regard = 100.0
+			cr = w.credit.sell_on_credit(s_, b_, x20_item(s_), 1, 3)
+			if str(cr.result) == "credited":
+				a = b_
+	out.credit = str(cr.result)
+	if not (cr.debt as Dictionary).is_empty():
+		a.coins += 3
+		out.repaid = w.credit.repay(int(cr.debt.id), true)
+	w.relations.helped(b.id, a)
+	w.relations.talked(a)
+	out.court = w.relations.ask_court(Life.PLAYER_ID, a)
+	var j: JudgmentStore = w.judgment
+	var ev := j.publish("theft", [b.id], [a.id], [], 5)
+	j.observe_all(ev, [a.id, adults[2].id])
+	j.pers.mistake(a.id, "trade", 30000, w.day())
+	run_minutes(w, 24 * 60)
+	return out
+
+
+func test_x20_phase3() -> void:
+	var plain := identity_world()
+	var oa := x20_steps(plain)
+	var ha := world_hash(plain) + str(plain.judgment.state_hash())
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("x20")})
+	var ob := x20_steps(w)
+	rec.net = FakeNet.new()
+	rec.net_state_maybe()                     # the digest reads World.to_dict: it must change nothing either
+	check(oa == ob and world_hash(w) + str(w.judgment.state_hash()) == ha, "X20: recording contracts, credit, relations, memory, flows, the days and a network digest changes nothing (%s)" % JSON.stringify(ob))
+	check(rec.unknown_codes.is_empty(), "X20: no unknown code (%s)" % str(rec.unknown_codes))
+	rec.flush()
+	var d := read_all(rec)
+	var sub_n := func(cat: String, st: String) -> int:
+		return d.event.filter(func(e): return e.category == cat and (st == "" or e.subtype == st)).size()
+	if str(ob.contract) == "accept":
+		check(sub_n.call("contract", "opened") == 1 and sub_n.call("contract", "delivered") == 1 and sub_n.call("contract", "paid") == 1 and sub_n.call("contract", "fulfilled") == 1,
+			"X20: a contract is opened, delivered, paid and fulfilled on one object thread")
+		var cc := 0
+		for c in d.state_change:
+			if str(c.ref).begins_with("contract:") and str(c.prop) == "coins":
+				cc += int(c.delta)
+		check(cc == 0, "X20: the contract's set-aside coins come back to zero (%d)" % cc)
+	else:
+		check(false, "X20: the test contract was accepted (answer %s)" % str(ob.contract))
+	check(sub_n.call("credit", "extended") >= 1 and sub_n.call("credit", "repaid") + sub_n.call("credit", "repaid_late") >= 1, "X20: a debt extended and repaid (%s)" % str(ob.credit))
+	check(sub_n.call("relation", "help") >= 1 and sub_n.call("relation", "talk") >= 1 and sub_n.call("relation", "court_ask") >= 1,
+		"X20: help, talk and the player's court asking (answer: %s) are events" % str(ob.court))
+	check(sub_n.call("relation", "cooling") >= 1, "X20: the dawn's cooling is one row")
+	check(sub_n.call("judgment", "grievance") + sub_n.call("judgment", "betrayal") >= 1, "X20: the victim's grievance is an event")
+	check(sub_n.call("judgment", "mistake") >= 1, "X20: a personality change (a costly mistake) is an event")
+	check(sub_n.call("summary", "judgment_day") >= 2 and sub_n.call("summary", "world_day") >= 2, "X20: a judgment and a world summary each day")
+	var flows: Array = d.state_change.filter(func(c): return str(c.authority) == "world.stat")
+	var kinds := {}
+	for c in flows:
+		kinds[str(c.prop).get_slice(":", 0)] = true
+	var bad_parent: Array = flows.filter(func(c): return d.event.filter(func(e): return int(e.id) == int(c.event)).is_empty())
+	check(kinds.has("produced") and kinds.has("consumed") and bad_parent.is_empty(), "X20: production and consumption flows are rows under recorded events (%s; %d flows)" % [str(kinds.keys()), flows.size()])
+	check(sub_n.call("network", "net_state") == 1 and d.factor.filter(func(f): return str(f.option) == "section").size() > 5, "X20: the network digest holds a hash per shared section")
+	var fl: Dictionary = rec.meta.flags
+	check(fl.has("aspiration") and fl.has("economy") and fl.has("judgment_integration") and not fl.has("civic"), "X20: the session's flags name the real switches (%s)" % JSON.stringify(fl))
+	w.dispose()
+	plain.dispose()
+	# the LE-01 model on: its daily integrity summary, and the flag in the archive
+	EconomyFoundation.set_override({"enabled": true})
+	var we := identity_world()
+	var re := WorldRecorder.attach(we, {"root": sub("x20_economy")})
+	run_minutes(we, 26 * 60)
+	var em: Array = rows(re, "event").filter(func(e): return e.subtype == "economy_model")
+	check(not em.is_empty() and em[-1].outcome == "ok" and bool(re.meta.flags.economy), "X20: the LE-01 model's daily summary (ok: nothing unbacked) and economy=true in the flags")
+	we.dispose()
+	EconomyFoundation.set_override({})
 
 
 func test_coverage_file() -> void:

@@ -1,6 +1,6 @@
 # Flight recorder: implemented data contract (REC-19, schema `mml-recorder/2`)
 
-Status: stage D1 (core), the D2 choke points and the D3 systems (identity, life, employment, government, crime, player verbs, save and load), on `wip/recorder`, merged with the identity foundation (ID-01, save version 20). Schema 2 (SIM-GATE-01, 2026-10-24, `wip/sim-gate`): the hourly village snapshot, combat chase events and the closing snapshot; the pre-build simulation gate and the analysis workbook that read it are in `docs/design/SIM_GATE_AUDIT.md`. A schema 1 archive reads the same (it has no snapshot table). Expansion 20 batch R3 (`wip/x20-r1r3`): stage D5 judgment and the D4 relations' shared hours, gifts and harm (same schema 2: new event kinds and codes, no new table). Design and decisions: `docs/design/FLIGHT_RECORDER_DESIGN.md`,
+Status: stage D1 (core), the D2 choke points and the D3 systems (identity, life, employment, government, crime, player verbs, save and load), on `wip/recorder`, merged with the identity foundation (ID-01, save version 20). Schema 2 (SIM-GATE-01, 2026-10-24, `wip/sim-gate`): the hourly village snapshot, combat chase events and the closing snapshot; the pre-build simulation gate and the analysis workbook that read it are in `docs/design/SIM_GATE_AUDIT.md`. A schema 1 archive reads the same (it has no snapshot table). Expansion 20 batch R3 (`wip/x20-r1r3`): stage D5 judgment and the D4 relations' shared hours, gifts and harm (same schema 2: new event kinds and codes, no new table). X20-FINAL phase 3 (`wip/x20-recorder`, 2026-10-27): flows, contracts, credit, relations' other channels, memory over time, daily summaries and multiplayer (same schema 2). Design and decisions: `docs/design/FLIGHT_RECORDER_DESIGN.md`,
 `docs/directives/2026-10-23_recorder_decisions.md` (REC-D1 to REC-D4). Developer reference only; the recorder is not a player feature and
 has no wiki page (it is off by default). Since SIM-GATE-01's amendment the Windows and Linux game offer it as a testing option
 (Settings, Saves, "Record gameplay", off by default) with an export of the recording (section 8); Android does not.
@@ -63,6 +63,23 @@ flush, no draw), so recording changes no belief, ledger, trust or choice.
 | Weighted choices | `JudgmentWeighting.choose` (the final result, after the family-name re-run) | `judgment_choice` |
 | Family priority | `JudgmentFamily._record` (the `family_trace` row) | `judgment_family` |
 | Relations | `Relations.share`, `give`, `harmed` | `shared_hour`, `gift_begin/end`, `harm_begin`, `harm_tie`, `end` |
+
+X20-FINAL phase 3 hooks (owner directive 2026-10-27; `docs/expansion20/X18_X20_COVERAGE_MATRIX.md` names the gaps they close; INT-570).
+Each is one guarded call; `Relations.ask_court` and `propose` became wrappers (as the player verbs and `JudgmentStore.tell` are) around
+the unchanged bodies `_ask_court` and `_propose`, called alone with no recorder or on a guest.
+
+| System | Where | Call |
+|---|---|---|
+| Production, consumption, unmet needs | `World.stat` (before it adds) | `stat_moved` |
+| Contracts | `Contracts._open`, `deliver`, `_pay_units`, `_end` | `contract_opened`, `contract_goods`, `contract_paid`, `contract_ended` |
+| Credit | `Credit.sell_on_credit`, `repay`, `_default`, `barter` | `credit_extended`, `credit_repaid`, `credit_defaulted`, `barter` |
+| Relations | `Relations.helped`, `talked`, `dawn`, `_villagers_court`, `ask_court`, `propose` | `tie_event`, `cooling_begin/end`, `court_interest`, `court_begin/end` |
+| Memory and temperament | `JudgmentStore._forget`, `make_history`, `tell_family_history`; `JudgmentPersonality._log` (`pers.rec`, set with `JudgmentStore.rec`); `JudgmentBonds.on_belief` | `memory_forgot`, `history_made`, `history_told`, `personality_change`, `grievance` |
+| The day | `WorldRecorder.hour` (the first hour of each day) | `_day_summaries` |
+| Multiplayer | `NetSession.host`, `c_hello` (joined, refused), `_on_peer_disconnected`, `_lost`, `s_welcome`, `apply_requests`, `send_syncs`, `s_sync`, `s_reply`; `WorldRecorder.hour` | `net_event`, `net_request`, `net_sync`, `net_state_maybe` |
+
+Switch for a whole process: `MML_RECORD=DIR` (environment) makes `FlightRecorder.enabled()` true and roots every session there, named
+`s<unix>_p<process id>` so several processes (the network harness's host and guests) share one directory. The game never sets it.
 
 ## 3. Tables
 
@@ -210,6 +227,40 @@ All are `event` rows with participants and `state_change` rows; a pass or verb i
   `tie:<a>:<b>` with `regard`, `attraction` (floats, no delta) and `days_known` before and after (only those that changed); a gift also
   records `item:<id>` leaving the giver and reaching the receiver (authority `relations.gift`); a harm records every tie it lowered.
 
+### X20-FINAL events (phase 3)
+
+- **Flows** (no event of their own): a state row on `world` under the event open at the time (an action, a decision, a verb), prop
+  `produced:<counter>`, `consumed:<counter>` or `unmet:<counter>` (the `w.stats` key, e.g. `produced:mined_iron_ore`,
+  `unmet:missed_meal_no_money`), before and after the world counter, authority `world.stat`. The actor is the event's actor, so a
+  chain reads: decision (the branch), action (`work_mine`), `produced:mined_iron_ore`; or decision (`eat`) with
+  `unmet:missed_meal_no_food_for_sale` and no plan. Counters moved outside any event stay in the snapshot's `stats_delta` only.
+- **Contracts** (`system contracts`, `category contract`, object `contract:<id>`): `opened` (buyer and `contract:<id>` coins, state
+  offered -> accepted), `delivered` (items of seller and receiver), `paid` (from `contract:<id>` to the seller), and one end:
+  `fulfilled` (ok), `cancelled` or `lapsed` (failed; why in the detail; the coins still set aside back to the buyer; state before ->
+  after). An offer or a signing that never opened appears only as its end. The thread's coin rows sum to zero once it ends.
+- **Credit** (`system credit`, `category credit`): `extended` (object `debt:<id>`, the goods both sides), `repaid` / `repaid_late`
+  (coins both sides), `defaulted` (failed), `barter` (goods both ways).
+- **Relations**: `help` and `talk` (tie rows), `cooling` (one a dawn: `regard_sum` and `attraction_sum` of all ties on `world`, the
+  ties and those cooled in the detail), `interest` (a suitor's choice: candidates, whether judgment chose), `court_ask` and `proposal`
+  (outcome ok or refused, reason `refused_by_rules`, the answer's words, `stage` before and after, participant `suitor` or
+  `suitor:player`, the partnership a child event).
+- **Judgment over time**: `forgot` (object `fact:<id>`, `memory:fact:<id>` held -> forgotten; a child of the belief that crowded it out,
+  else faded at dawn), `provocation` / `positive` / `mistake` / `reminder` (personality: trait deltas, wisdom or anger as factors),
+  `grievance` / `betrayal` (resentment before and after), `history_made` and `history_told`.
+- **Summaries** (`category summary`, one a day each): `judgment_day` (factors: every judgment stat and bonds stat moved over the day,
+  memories held, people remembering, aspiration on), `world_day` (deposits left by ore, seams worked out, trees standing and mature,
+  households with members, regional coins and goods, capability levels and their changes, open contracts and reserved coins, open
+  debts), `economy_model` (LE-01 when on: events, ordered, knowledge, needs recorded and dirty, offers, reservations, unbacked,
+  contract links; outcome failed and a violation alert `economy.unbacked_reservation` if a reservation is unbacked).
+- **Network** (`system net`, subsystem the role, `category network`): `host_started`, `guest_joined`, `guest_refused`, `guest_left`,
+  `joined_host` and `host_lost` (guest), `request` (each request the host applied: kind, path, text; failed when the result says so),
+  `prediction_differs` (a guest's own run of a verb gave another result than the host's), `net_state` (once a game hour per
+  participant: players with coins and alive, peers, `section` factors with the hash of each shared `World.to_dict` section, `sync`
+  factors counting the syncs sent or adopted and their bytes since the last digest). A guest's world never simulates, so its archive
+  has these and its load only (no hourly audit there).
+- **Session flags** (`session.json flags`): `recorder`, `judgment`, `aspiration`, `job_choice`, `economy`, and each judgment decision
+  domain as `JudgmentLive.on` reads it; plus `scenario` (`MML_SCENARIO`, the gate's run name).
+
 ## 4. Archive on disk
 
 ```
@@ -270,18 +321,31 @@ pay_guards 10, robbery 30, raise_alarm 32, report_crime 40, deaths 8, births 7, 
 `alternative` is 46% of the bytes, `factor` 26%, `event` 12%. The decision detail is the dominant cost; limiting `alternative` and `factor` rows to
 the winner is the first reduction if volume matters.
 
+X20-FINAL phase 3 (commit `6bc405a`, seed 1, 10 days, `sim_suite.py --short 10 --seed 1`): 7.9 to 8.3 MB and 860,000 to 900,000 rows per 10
+days in every scenario, shipped switches or Expansion 20 switches on (the judgment choices are most of it); recorded and unrecorded runs
+identical at days 0, 5 and 10 with either set of switches; `recorder_test.gd` 203 checks, 0 failures. Details:
+`docs/expansion20/X18_X20_COVERAGE_MATRIX.md` section 7.
+
 ## 7. Known limits (also in `recorder_coverage.json`)
 
-Schema 2 adds the snapshot and chases; the limits below stand. A chase does not name the code that set the target.
+Since X20-FINAL phase 3 (section 3) contracts, credit, relations' other channels, memory over time, flows by actor, the day's summaries and
+multiplayer are recorded. Still not recorded: business tills, stalls, property, construction and the manor's works as events (their coins are
+detected by the hourly audit, named by holder and amount; the world total balances); courier deliveries (counted in `stats_delta` only);
+capability multipliers per unit; the settlements' daily phases beyond the daily totals; ledger decay (applied lazily on read: visible in the
+values every choice records); memory fading per memory (only the forgetting); the player's closeness ticks; moves and the per-tick villager
+and animal network snapshots. Coin changes outside the instrumented sites are detected hourly, not attributed. Item changes outside
+`World.trade`/`transfer`, the verbs' summaries, contracts, credit and gifts are not item rows. Chests, carts, stalls and loot appear as `inv:?`
+in transfers. Decision records stop at the top-level branch. Jobs that run `_plan_job` internally show only `job` as the chosen branch.
 
-Not recorded: production and consumption effects, relations' other channels (help, talk, cooling, courting at dawn, proposals), contracts,
-credit, business, stalls, property, construction, farming, mining, manor work, chapel, feasts, quests, the settlements' daily phases (stages D4
-and D6), and judgment's changes over time (memory fading, forgetting, retirement, ledger decay, personality, bonds). Judgment's facts,
-beliefs, gossip, ledger posts, trust and every weighted choice, and the relations' shared hours, gifts and harm, are recorded (R3). Partly recorded
-(see the coverage file for what is and is not): life, employment, government, crime, the player's verbs, save and load, the settlements'
-register transitions. Coin changes outside the instrumented sites are detected hourly, not attributed. Item changes outside
-`World.trade`/`transfer` and the verbs' summaries are not seen. Chests, carts, stalls and loot appear as `inv:?` in transfers. Decision records
-stop at the top-level branch. Jobs that run `_plan_job` internally (most villagers by day) show only `job` as the chosen branch.
+## 7a. Independent verification (X20-FINAL phase 5)
+
+`tools/recorder_archive.py` checks, besides the archive's integrity (section 4): event ids 1..N each once and every row naming a recorded event;
+nobody decides, acts, trades or is born again after their death; roles only child -> adult -> elder; contract and debt threads open once,
+move only while open, end once and leave no coins set aside; the snapshots' growing counters never fall and values stay in range; the
+recorded flags against the scenario's (`require_flags`); the coverage matrix's rows exercised (`recorder_coverage.json exercise`,
+`require_rows`); the owner's judgment chain (`chains`: crime facts, believers, those who only heard, later choices about the offender by
+believers); measures for review (re-decisions, choice profiles, flows). `--participants HOST GUEST...` compares network participants'
+digests hour by hour (a section differing three or more consecutive hours is a problem). `tools/sim_suite.py` blocks on every problem.
 
 ## 8. Desktop recording and export (SIM-GATE-01 amendment, 2026-10-24)
 

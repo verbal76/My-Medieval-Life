@@ -1,7 +1,7 @@
 {
  "format": "mml-recorder-coverage/1",
  "note": "What the flight recorder instruments, system by system (docs/design/FLIGHT_RECORDER_DESIGN.md section 2). Never read a row as broader than its scope text. A row is 'Fully instrumented' only when it names a test in game/tests/recorder_test.gd that exercises it (checked by that test); everything not listed as instrumented is not recorded. Updated by the stage that instruments a system.",
- "as_of": "stage D1 + D2 choke points + D3 systems (identity, life, employment, government, crime, player verbs, save and load), 2026-10-23; schema 2 (SIM-GATE-01: hourly village snapshots, combat chases, the closing snapshot), 2026-10-24; D5 judgment and D4 relations shared hours, gifts and harm (Expansion 20 batch R3), 2026-10-26",
+ "as_of": "stage D1 + D2 choke points + D3 systems (identity, life, employment, government, crime, player verbs, save and load), 2026-10-23; schema 2 (SIM-GATE-01: hourly village snapshots, combat chases, the closing snapshot), 2026-10-24; D5 judgment and D4 relations shared hours, gifts and harm (Expansion 20 batch R3), 2026-10-26; X20-FINAL phase 3 (production, consumption and unmet-need flows; contracts and credit; relations' help, talk, cooling, courting and proposals; memory forgotten, personality, grievances, history; daily summaries; multiplayer), 2026-10-27",
  "rows": [
   {
    "system": "Decisions",
@@ -69,10 +69,11 @@
   {
    "system": "Production and consumption",
    "interaction": "work outputs, crafting, eating",
-   "where": "work_goods, work_mine, work_felled, work_craft, eat acts",
+   "where": "World.stat (WorldRecorder.stat_moved)",
    "status": "Partially instrumented",
-   "stage": "D2",
-   "note": "Only as the action event (kind, ok or failed) of the plan step that did it; the goods produced and consumed are not recorded as state changes."
+   "stage": "X20-FINAL phase 3",
+   "note": "X20-FINAL: every production (made_, mined_, felled_, dug_, cut_, farm_harvest_, farm_made_), consumption (eaten_, used_, feed_eaten_, burned_, broke_, spoiled_, poached_lost_, wild_eaten_) and unmet-need counter (missed_meal_, station_busy_, starved_, skill_short_, keeper_no_*, field_unsown_no_seed, farm_plot_*, supports_failed, work_refused, assay_refused, proposals refused or declined, contracts lapsed or unsigned, credit defaulted) moved inside an open event is a state row on 'world' (prop kind:counter, the world counter before and after) under that event, so the actor, the action and the decision are known. Moves outside any event (hourly world processes) are only in the snapshot's stats_delta. Quantities moved between stores outside World.trade/transfer are still not item rows.",
+   "test": "test_x20_phase3"
   },
   {
    "system": "Life",
@@ -140,18 +141,20 @@
   {
    "system": "Relationships: other channels",
    "interaction": "help (Relations.helped), the player's talk and closeness (talked, player_tick), defending, daily cooling and courting at dawn, befriending, proposals and their answers",
-   "where": "relations.gd",
-   "status": "Not instrumented",
-   "stage": "D4",
-   "note": "A partnership is recorded by Life (D3, partnership). A friendship or courtship stage changed inside a shared hour is visible only as that hour's regard and attraction rows."
+   "where": "Relations.helped, talked, dawn, _villagers_court, ask_court, propose",
+   "status": "Partially instrumented",
+   "stage": "X20-FINAL phase 3",
+   "note": "X20-FINAL: help and talk (events on the tie with what moved), cooling (one row a dawn: ties, regard and attraction sums before and after; not per tie), a villager taking an interest (candidates, whether judgment chose), court asking and proposals (wrappers around the unchanged bodies: outcome, the answer's words, stage before and after; suitor marked :player for a player). The player's closeness ticks (player_tick) are not recorded.",
+   "test": "test_x20_phase3"
   },
   {
    "system": "Contracts and credit",
    "interaction": "offer, counter, accept, decline, deliver, lapse, debt, repay, default",
-   "where": "contracts.gd, credit.gd",
-   "status": "Not instrumented",
-   "stage": "D4",
-   "note": "The object-thread mechanism (link rows, same_object) exists in the core and is tested; no contract or debt event uses it yet."
+   "where": "Contracts._open, deliver, _pay_units, _end; Credit.sell_on_credit, repay, _default, barter",
+   "status": "Partially instrumented",
+   "stage": "X20-FINAL phase 3",
+   "note": "X20-FINAL: object threads contract:<id> and debt:<id>: opened (coins set aside: buyer and contract coin rows), delivered (items of both sides), paid (from the reservation to the seller), ended (fulfilled, cancelled, lapsed, with why and the coins returned); debts extended (goods), repaid (coins), defaulted; barter (goods both ways). Offers not taken up and signings appear only at their end. Services' work steps are paid rows without goods.",
+   "test": "test_x20_phase3"
   },
   {
    "system": "Business, stalls, property, construction",
@@ -205,10 +208,11 @@
   {
    "system": "Judgment: memory and temperament over time",
    "interaction": "salience fading and forgetting, facts retiring at the horizon, ledger decay, personality and wisdom drift, anger, bonds, resentment and family stories' pending state",
-   "where": "JudgmentStore.begin_day and dawn slices, JudgmentPersonality, JudgmentBonds",
-   "status": "Not instrumented",
-   "stage": "D5",
-   "note": "Their effects show where they matter: in the facts, beliefs and ledger posts they lead to and in the factors of later choices (disposition, family colour, stubborn penalties)."
+   "where": "JudgmentStore._forget, make_history, tell_family_history; JudgmentPersonality._log; JudgmentBonds.on_belief; WorldRecorder daily judgment_day",
+   "status": "Partially instrumented",
+   "stage": "X20-FINAL phase 3",
+   "note": "X20-FINAL: each memory forgotten (faded at dawn, or crowded out while learning: then a child of that belief), each personality change (channel, subject, severity, trait deltas), each grievance and betrayal, each history record made or told to a child; daily judgment_day (the store's stats moved, memories held). Fading per memory and ledger decay (lazy, applied on read) are not rows: their effect is in the forgotten events and in the values every choice records.",
+   "test": "test_x20_phase3"
   },
   {
    "system": "Judgment: NPC aspirations (Expansion 20 R5, WDR-011-C; off by default)",
@@ -247,11 +251,192 @@
    "note": "The load note is exercised by a test (mid-journey save, load, return under the same reference). The save event is called from main.gd save_game, which no headless test runs: the recorder method is tested directly. A game loaded with the recorder enabled attaches a new session; a loaded game never continues an earlier session's archive."
   },
   {
+   "system": "Daily summaries (world, judgment, LE-01)",
+   "interaction": "once a game day: deposits left and worked out by ore, trees, households, regional coins and goods, capability levels and their changes, open contracts and reserved coins, open debts; the judgment store's stats moved; the LE-01 model's record counts and integrity (unbacked reservations raise a violation alert)",
+   "where": "WorldRecorder._day_summaries (from hour())",
+   "status": "Partially instrumented",
+   "stage": "X20-FINAL phase 3",
+   "test": "test_x20_phase3",
+   "note": "Read only: plain fields and pure functions (judgment.stats, never counts(), which flushes gossip)."
+  },
+  {
+   "system": "Multiplayer (host and guests)",
+   "interaction": "host started, guest joined, refused, left; host lost (guest); each request the host applied with its result; a prediction the host answered differently; syncs counted; one net_state digest a game hour per participant (players, peers, a hash per shared section)",
+   "where": "NetSession hooks (game/scripts/net/net_session.gd); WorldRecorder.net_*",
+   "status": "Partially instrumented",
+   "stage": "X20-FINAL phase 3",
+   "test": "test_x20_phase3",
+   "note": "A guest's world never simulates, so its archive holds only its network events and digests (no audit there). MML_RECORD=DIR records every process of the network harness. Moves and the per-tick villager and animal snapshots are not rows. tools/recorder_archive.py --participants compares the digests."
+  },
+  {
    "system": "Expansions 20, 21, 22 (hybrid), 23",
    "interaction": "their future systems",
    "where": "",
    "status": "Not instrumented",
    "stage": "hooks in D1; instrumented with each feature"
+  }
+ ],
+ "exercise": [
+  {
+   "row": "18.5",
+   "system": "resource extraction and depletion",
+   "events": [],
+   "props": [
+    "produced"
+   ]
+  },
+  {
+   "row": "18.7",
+   "system": "farming and food (consumption and unmet needs)",
+   "events": [],
+   "props": [
+    "consumed",
+    "unmet"
+   ]
+  },
+  {
+   "row": "18.11",
+   "system": "contracts",
+   "events": [
+    "contract|*"
+   ]
+  },
+  {
+   "row": "18.12",
+   "system": "barter and credit",
+   "events": [
+    "credit|*"
+   ]
+  },
+  {
+   "row": "18.19",
+   "system": "save and load",
+   "events": [
+    "system|world_loaded",
+    "system|world_saved"
+   ]
+  },
+  {
+   "row": "19.1",
+   "system": "opinions: facts and beliefs",
+   "events": [
+    "judgment|fact:*",
+    "judgment|witnessed",
+    "judgment|told",
+    "judgment|rumour",
+    "judgment|participant"
+   ]
+  },
+  {
+   "row": "19.2",
+   "system": "personality change",
+   "events": [
+    "judgment|provocation",
+    "judgment|positive",
+    "judgment|mistake",
+    "judgment|reminder"
+   ]
+  },
+  {
+   "row": "19.4",
+   "system": "friendship, courting, proposals",
+   "events": [
+    "relation|*"
+   ]
+  },
+  {
+   "row": "19.7",
+   "system": "gossip",
+   "events": [
+    "judgment|tell"
+   ]
+  },
+  {
+   "row": "19.8",
+   "system": "memory forgetting",
+   "events": [
+    "judgment|forgot",
+    "summary|judgment_day"
+   ]
+  },
+  {
+   "row": "19.9",
+   "system": "grievances and betrayals",
+   "events": [
+    "judgment|grievance",
+    "judgment|betrayal"
+   ]
+  },
+  {
+   "row": "19.10",
+   "system": "weighted decisions (13 domains)",
+   "events": [
+    "judgment|trade_sell",
+    "judgment|trade_buy_from",
+    "judgment|contract_*",
+    "judgment|court_choice",
+    "judgment|befriend",
+    "judgment|hire_choice",
+    "judgment|work_accept",
+    "judgment|credit_lend",
+    "judgment|barter_accept",
+    "judgment|food_seller",
+    "judgment|family_help"
+   ]
+  },
+  {
+   "row": "19.6",
+   "system": "family-first priority",
+   "events": [
+    "judgment|meal_*",
+    "judgment|pay",
+    "judgment|work",
+    "judgment|danger"
+   ]
+  },
+  {
+   "row": "19.11",
+   "system": "crime and the village's response",
+   "events": [
+    "crime|*"
+   ]
+  },
+  {
+   "row": "20.1",
+   "system": "aspirations (switch)",
+   "events": [
+    "judgment|lead",
+    "judgment|priority",
+    "judgment|survival"
+   ]
+  },
+  {
+   "row": "20.2",
+   "system": "aspiration job choice (switch)",
+   "events": [
+    "judgment|job_choice"
+   ]
+  },
+  {
+   "row": "20.5",
+   "system": "LE-01 model (switch)",
+   "events": [
+    "summary|economy_model"
+   ]
+  },
+  {
+   "row": "20.10",
+   "system": "multiplayer",
+   "events": [
+    "network|*"
+   ]
+  },
+  {
+   "row": "18.1",
+   "system": "daily world summary (capability, deposits, regions)",
+   "events": [
+    "summary|world_day"
+   ]
   }
  ]
 }

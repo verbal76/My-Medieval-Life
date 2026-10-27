@@ -3429,6 +3429,8 @@ func _inherit(n: NPC, heir: NPC) -> void:
 
 
 func stat(key: String, n := 1.0) -> void:
+	if recorder != null:
+		recorder.stat_moved(key, n, float(stats.get(key, 0.0)))     # X20-FINAL: production, consumption and unmet needs, under the open event
 	stats[key] = float(stats.get(key, 0.0)) + n
 
 
@@ -5720,6 +5722,7 @@ func dispose() -> void:
 		recorder = null
 		if judgment != null:
 			judgment.rec = null        # REC-19 D5: the store no longer reports
+			judgment.pers.rec = null
 	brain = null
 	fauna = null
 	construction = null

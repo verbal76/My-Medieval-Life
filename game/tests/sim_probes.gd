@@ -40,7 +40,11 @@ func _init() -> void:
 	var r := {}
 	match probe:
 		"saveload":
-			r = saveload(seed, int(arg.call("--days", "2")))
+			if "--aspiration" in args:                 # X20-FINAL: the save and load of a flags-on world (aspirations, job choice, LE-01)
+				JudgmentAspiration.override = {"enabled": true, "job_choice": true}
+			if "--economy" in args:
+				EconomyFoundation.set_override({"enabled": true})
+			r = saveload(seed, int(arg.call("--days", "2")), str(arg.call("--record", "")))
 		"pursuit":
 			r = pursuit(seed, str(arg.call("--record", "")))
 		"manhunt":
@@ -81,13 +85,21 @@ func totals(w: World) -> Dictionary:
 		"coins": w.total_coins(), "treasury": w.treasury, "households": w.households.size(), "items": items}
 
 
-func saveload(seed: int, days: int) -> Dictionary:
+func saveload(seed: int, days: int, record := "") -> Dictionary:
 	var w := new_world(seed)
+	if record != "":                                       # X20-FINAL: the save and the load are in the archive (two sessions)
+		WorldRecorder.attach(w, {"root": record})
 	run_minutes(w, days * World.DAY + 11 * 60)             # into a working morning, people mid-errand
 	var t0 := Time.get_ticks_msec()
-	var text1 := JSON.stringify(w.to_dict(), "", true)
+	var saved_d := w.to_dict()
+	if w.recorder != null:
+		w.recorder.saved(saved_d)
+	var text1 := JSON.stringify(saved_d, "", true)
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(text1))
+	if record != "":
+		WorldRecorder.attach(w2, {"root": record})
+		w2.recorder.world_loaded(JSON.parse_string(text1))
 	var text2 := JSON.stringify(w2.to_dict(), "", true)
 	var ms := Time.get_ticks_msec() - t0
 	var a := totals(w)
@@ -108,7 +120,9 @@ func saveload(seed: int, days: int) -> Dictionary:
 	w3.dispose()
 	var r := {"ok": a == b and int(kinds.dropped) == 0 and int(kinds.changed) == 0 and stable, "identical_text": text1 == text2,
 		"differences": kinds, "examples": diffs.slice(0, 20), "second_round_trip_identical": stable, "before": a, "after": b,
-		"save_bytes": text1.length(), "save_load_ms": ms, "day": w.day()}
+		"save_bytes": text1.length(), "save_load_ms": ms, "day": w.day(), "flags": WorldRecorder.flags_of(w2)}
+	if record != "":
+		run_minutes(w2, 3 * 60)                            # the loaded world goes on (after every comparison above): its own hourly records
 	w.dispose()
 	w2.dispose()
 	return r

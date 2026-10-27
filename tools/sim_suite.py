@@ -52,7 +52,16 @@ ACCEPTED = RELEASE / "sim_baseline.json"
 SCHEMA = recorder_archive.SCHEMA
 COVERAGE = {"A": "normal village equilibrium", "B": "resource shortages and economic stress", "C": "population and households",
             "D": "production and economy", "E": "relationships and judgment", "F": "crime and law enforcement",
-            "G": "navigation and daily behaviour", "H": "simulation performance"}
+            "G": "navigation and daily behaviour", "H": "simulation performance",
+            "I": "Expansion 20 switches on (aspirations, aspiration job choice, the LE-01 model)",
+            "J": "the judgment chain (a crime seen, gossip, another's judgment, a later decision about the offender)"}
+# X20-FINAL phase 4 (owner directive 2026-10-27, 2.4: "A simulation that leaves a new system disabled does not count as exercising
+# that system"): the Expansion 20 switches, on. The recorded flags must say so (recorder_archive.verify require_flags), and each
+# run names the coverage-matrix rows (docs/expansion20/X18_X20_COVERAGE_MATRIX.md) it must exercise (require_rows).
+X20_ON = ["--aspiration", "--job-choice", "--economy"]
+X20_FLAGS = {"aspiration": True, "job_choice": True, "economy": True}
+SHIPPED_FLAGS = {"judgment": True, "aspiration": False, "economy": False}
+DET_PAIRS = [("eq_s1", "det_s1", "shipped switches"), ("x20_on_s1", "x20_on_det_s1", "Expansion 20 switches on")]
 
 # The fixed scenarios. Seeds 1 and 2 at 30 days are the accepted baseline's (sim_baseline.json, checks at days 10 and 30).
 # Shortages start on day 5, after the village has settled; 20 days shows the interruption and the response.
@@ -73,6 +82,24 @@ SCENARIOS = [
      "args": ["--set", "caravan_every_days=100000"]},
     {"run": "crime", "scenario": "F crime: theft, pickpocket, killings, flight, assault from day 3", "cover": "EFG", "seed": 1, "days": 15, "record": True,
      "args": ["--scenario", "crime_spree", "--at", "3"]},
+    # X20-FINAL phase 4: the Expansion 20 switches on, with the normal village, legitimate stress and the judgment chain
+    {"run": "x20_on_s1", "scenario": "A and I: normal village, Expansion 20 switches on", "cover": "ACDEGI", "seed": 1, "days": 30, "record": True,
+     "args": X20_ON, "flags": X20_FLAGS, "rows": ["18.7", "19.1", "19.4", "19.6", "19.7", "19.8", "19.10", "20.1", "20.5", "18.1"]},
+    {"run": "x20_on_det_s1", "scenario": "determinism and recorder neutrality with the Expansion 20 switches on (x20_on_s1 unrecorded)", "cover": "",
+     "seed": 1, "days": 30, "record": False, "args": X20_ON},
+    {"run": "strip_mine", "scenario": "B and I stress: every surface seam of iron, copper and coal worked out on day 5", "cover": "BDI", "seed": 4, "days": 20,
+     "record": True, "args": X20_ON + ["--scenario", "strip_mine", "--at", "5"], "flags": X20_FLAGS, "rows": ["18.5", "18.7", "20.1"]},
+    {"run": "contracts_fail", "scenario": "B and I stress: the player's orders, partly cancelled, the rest lapsing", "cover": "BDI", "seed": 5, "days": 20,
+     "record": True, "args": X20_ON + ["--scenario", "contracts_fail", "--at", "3"], "flags": X20_FLAGS, "rows": ["18.11"]},
+    {"run": "poverty", "scenario": "B and I stress: a harsh lord (tax 30%, 40% when the treasury is low, no exemption)", "cover": "BCI", "seed": 6, "days": 20,
+     "record": True, "args": X20_ON + ["--set", "tax_rate_normal=0.3", "--set", "tax_rate_low_treasury=0.4", "--set", "tax_exemption_base=0",
+                                       "--set", "tax_exemption_per_member=0"], "flags": X20_FLAGS, "rows": ["18.7", "20.1"]},
+    {"run": "social_chain", "scenario": "E, F, I and J: two pockets picked in sight of the village, then the player's offers to every adult (switches on)",
+     "cover": "EFIJ", "seed": 1, "days": 15, "record": True, "args": X20_ON + ["--scenario", "social_chain", "--at", "3"], "flags": X20_FLAGS,
+     "rows": ["19.1", "19.7", "19.10", "19.11"], "chain": True},
+    {"run": "social_chain_off", "scenario": "E, F and J: the same with the shipped switches (judgment on, aspirations and LE-01 off)", "cover": "EFJ",
+     "seed": 1, "days": 15, "record": True, "args": ["--scenario", "social_chain", "--at", "3"], "flags": SHIPPED_FLAGS,
+     "rows": ["19.1", "19.7", "19.10", "19.11"], "chain": True},
 ]
 ROTATING_DAYS = 20
 ROTATING_COUNT = 2
@@ -107,7 +134,9 @@ def rotating(commit):
 def job_env(base, commit):
     (base / "userdata").mkdir(parents=True, exist_ok=True)
     (base / "tmp").mkdir(exist_ok=True)
-    return dict(os.environ, XDG_DATA_HOME=str(base / "userdata"), TMPDIR=str(base / "tmp"), MML_COMMIT=commit)
+    env = dict(os.environ, XDG_DATA_HOME=str(base / "userdata"), TMPDIR=str(base / "tmp"), MML_COMMIT=commit, MML_SCENARIO=base.name)
+    env.pop("MML_RECORD", None)                 # the gate's runs record only where it says (--record), never by inheritance
+    return env
 
 
 def run_job(godot, job, out, commit):
@@ -199,6 +228,20 @@ def evaluate(jobs, results, out, commit, inject_note="", partial=False, release_
         if kind == "probe":
             p = base / "probe.json"
             r = json.loads(p.read_text()) if p.exists() else {}
+            if j.get("record") and j["probe"] == "saveload":
+                sessions = recorder_archive.session_dirs(str(base / "rec"))
+                if len(sessions) != 2:
+                    findings.append(finding(j, "recorder: the recorded save and load should leave two sessions, found %d" % len(sessions), "critical", True))
+                for sd in sessions:
+                    rep = recorder_archive.verify(sd, require_flags=j.get("flags"))
+                    for pr in rep["problems"]:
+                        findings.append(finding(j, "recorder output invalid (save and load): " + pr, "critical", True, "a complete, consistent archive", pr))
+                ev_all = {}
+                for sd in sessions:
+                    for k, v in recorder_archive.verify(sd)["events"].items():
+                        ev_all[k] = ev_all.get(k, 0) + v
+                if not any(k.startswith("system|world_saved") for k in ev_all) or not any(k.startswith("system|world_loaded") for k in ev_all):
+                    findings.append(finding(j, "recorder: the save and the load are not both in the archive", "critical", True))
             if j["probe"] == "saveload":
                 saveload.append(r)
                 diff = r.get("differences", {})
@@ -282,8 +325,17 @@ def evaluate(jobs, results, out, commit, inject_note="", partial=False, release_
             if len(sessions) != 1:
                 findings.append(finding(j, "recorder: expected one session, found %d" % len(sessions), "critical", True))
             else:
-                rep = recorder_archive.verify(sessions[0])
+                rep = recorder_archive.verify(sessions[0], require_flags=j.get("flags"), require_rows=j.get("rows"))
                 row["session_dir"] = sessions[0]
+                row["exercised"] = rep.get("exercised", {})
+                row["chains"] = rep.get("chains", {})
+                row["contracts"] = rep.get("contracts", {})
+                row["redecisions"] = rep.get("redecisions", {})
+                row["flags"] = rep.get("flags", {})
+                row["archive_notes"] = rep.get("notes", [])
+                if j.get("chain") and not rep.get("chains", {}).get("complete"):
+                    findings.append(finding(j, "the judgment chain was not exercised end to end (a crime fact, a believer who heard of it, a later choice about the offender)",
+                                            "critical", True, "at least one complete chain", json.dumps({k: v for k, v in rep.get("chains", {}).items() if k != "examples"})[:400]))
                 row["analysis_out"] = str(base / "analysis.json")
                 row["archive_bytes"] = rep["bytes"]
                 row["rows"] = sum(rep["counts"].values())
@@ -306,25 +358,11 @@ def evaluate(jobs, results, out, commit, inject_note="", partial=False, release_
                                             entity="world"))
                 row["unattributed_holder_alerts"] = rep["alerts"].get("coin.unattributed_holder", 0)
         runs.append(row)
-    # --- determinism and recorder neutrality: eq_s1 (recorded) against det_s1 (not)
-    if "eq_s1" in sims and "det_s1" in sims:
-        a = {s["day"]: s for s in json.load(open(sims["eq_s1"]))["samples"]}
-        b = {s["day"]: s for s in json.load(open(sims["det_s1"]))["samples"]}
-        diffs = []
-        for d in sorted(set(a) | set(b)):
-            if d not in a or d not in b:
-                diffs.append("day %s missing" % d)
-            elif summarise(a[d]) != summarise(b[d]):
-                diffs.append("day %s: %s" % (d, ", ".join(k for k in summarise(a[d]) if summarise(a[d])[k] != summarise(b[d]).get(k))))
-        checked = len(set(a) & set(b))
-        history.append({"comparison": "determinism: recorded against unrecorded, seed 1", "baseline": "det_s1 (same commit)", "seed": 1, "day": "every 5 days",
-                        "value": "fingerprint and summary at %d checkpoints" % checked, "base": "", "now": "", "verdict": "MATCH" if not diffs else "DIFFERS",
-                        "note": "; ".join(diffs)[:500] or "identical at every checkpoint: the recorder changes nothing and the run is reproducible"})
-        if diffs:
-            findings.append(finding(by_run["det_s1"], "determinism: the same seed with and without the recorder differs", "critical", True, "identical at every checkpoint",
-                                    "; ".join(diffs)[:500]))
-    else:
-        findings.append(finding({"run": "det_s1", "seed": 1}, "determinism pair did not run (eq_s1 and det_s1)", "critical", not partial))
+    # --- determinism and recorder neutrality: each recorded run against its unrecorded twin (DET_PAIRS)
+    for rec_run, det_run, label in DET_PAIRS:
+        if partial and rec_run not in by_run and det_run not in by_run:
+            continue
+        _det_pair(rec_run, det_run, label, sims, by_run, history, findings, partial)
     # --- baselines: the accepted one blocks; earlier builds are compared and reported
     build_points = []
     for fname, runs_for, label, blocking in [("sim_baseline.json", ["eq_s1", "eq_s2"], "accepted baseline", True),
@@ -390,6 +428,28 @@ def evaluate(jobs, results, out, commit, inject_note="", partial=False, release_
             "perf_rows": perf_rows, "profile": profile, "build_points": build_points, "sims": sims, "covered": sorted(covered)}
 
 
+
+def _det_pair(rec_run, det_run, label, sims, by_run, history, findings, partial):
+    seed = by_run.get(rec_run, by_run.get(det_run, {})).get("seed")
+    if rec_run in sims and det_run in sims:
+        a = {s["day"]: s for s in json.load(open(sims[rec_run]))["samples"]}
+        b = {s["day"]: s for s in json.load(open(sims[det_run]))["samples"]}
+        diffs = []
+        for d in sorted(set(a) | set(b)):
+            if d not in a or d not in b:
+                diffs.append("day %s missing" % d)
+            elif summarise(a[d]) != summarise(b[d]):
+                diffs.append("day %s: %s" % (d, ", ".join(k for k in summarise(a[d]) if summarise(a[d])[k] != summarise(b[d]).get(k))))
+        checked = len(set(a) & set(b))
+        history.append({"comparison": "determinism: recorded against unrecorded, seed %s (%s)" % (seed, label), "baseline": "%s (same commit)" % det_run, "seed": seed, "day": "every 5 days",
+                        "value": "fingerprint and summary at %d checkpoints" % checked, "base": "", "now": "", "verdict": "MATCH" if not diffs else "DIFFERS",
+                        "note": "; ".join(diffs)[:500] or "identical at every checkpoint: the recorder changes nothing and the run is reproducible"})
+        if diffs:
+            findings.append(finding(by_run[det_run], "determinism: the same seed with and without the recorder differs (%s)" % label, "critical", True,
+                                    "identical at every checkpoint", "; ".join(diffs)[:500]))
+    else:
+        findings.append(finding({"run": det_run, "seed": seed}, "determinism pair did not run (%s and %s)" % (rec_run, det_run), "critical", not partial))
+
 def add_proposals(gate, out):
     """Measured values with no approved limit: reported as PROPOSED for the owner, never blocking. Read from the analyses."""
     props = []
@@ -449,8 +509,18 @@ def write_summary(gate, out):
     lines.append("- Accepted baseline: %s (%d values compared at days 10 and 30, seeds 1 and 2)." % (
         "identical" if match and all(h["verdict"] == "MATCH" for h in match) else ("differs" if match else "not compared"), len(match)))
     det = [h for h in gate["history"] if h["comparison"].startswith("determinism")]
-    if det:
-        lines.append("- Determinism and recorder neutrality: %s." % det[0]["note"])
+    for h in det:
+        lines.append("- %s: %s." % (h["comparison"][0].upper() + h["comparison"][1:], h["note"]))
+    for r in gate["runs"]:
+        ch = r.get("chains") or {}
+        if ch.get("crime_facts"):
+            lines.append("- Judgment chain in %s: %d crime facts, %d beliefs (%d heard, not seen), %d later choices about the offender by believers, %d by those who only heard (%s)." % (
+                r["run"], ch["crime_facts"], ch["beliefs"], ch["heard_not_seen"], ch["later_choices"], ch["later_choices_hearsay"],
+                ", ".join("%s %d" % kv for kv in sorted((ch.get("by_profile") or {}).items()))))
+        missing = [k for k, v in (r.get("exercised") or {}).items() if not v.get("events")]
+        if r.get("exercised"):
+            lines.append("- Systems exercised in %s: %d of %d matrix rows with events%s." % (r["run"], len(r["exercised"]) - len(missing), len(r["exercised"]),
+                                                                                     ("; none: " + ", ".join(missing)) if missing else ""))
     for n in gate["notes"]:
         lines.append("- %s" % n)
     known = [f for f in gate["findings"] if not f["blocking"] and f["severity"] in ("major",)]
@@ -469,6 +539,8 @@ def main():
     ap.add_argument("--jobs", type=int, default=os.cpu_count() or 2)
     ap.add_argument("--only", default="", help="comma-separated run names (a targeted subset: never a release gate)")
     ap.add_argument("--import", dest="do_import", action="store_true")
+    ap.add_argument("--short", type=int, default=0, help="X20-FINAL smoke: every selected run at this many days (with --seed): never a release gate")
+    ap.add_argument("--seed", type=int, default=0, help="with --short: every selected run on this seed")
     ap.add_argument("--reuse", default="", help="an earlier --out directory: check its outputs again without simulating")
     ap.add_argument("--inject", default="", choices=["", "leak", "corrupt", "crash"], help="plant a defect in the reused copy (tests and proof only)")
     a = ap.parse_args()
@@ -479,6 +551,8 @@ def main():
     jobs = [dict(j) for j in SCENARIOS] + rotating(commit)
     jobs += [{"run": "probe_saveload_s1", "kind": "probe", "probe": "saveload", "seed": 1, "scenario": "save and load integrity", "args": ["--days", "2"]},
              {"run": "probe_saveload_s2", "kind": "probe", "probe": "saveload", "seed": 2, "scenario": "save and load integrity", "args": ["--days", "2"]},
+             {"run": "probe_saveload_on", "kind": "probe", "probe": "saveload", "seed": 1, "record": True, "flags": X20_FLAGS,
+              "scenario": "save and load integrity with the Expansion 20 switches on, recorded across the save and the load", "args": ["--days", "2", "--aspiration", "--economy"]},
              {"run": "probe_pursuit", "kind": "probe", "probe": "pursuit", "seed": 1, "scenario": "F guard pursuit: the owner's corner case", "record": True},
              {"run": "probe_manhunt", "kind": "probe", "probe": "manhunt", "seed": 1, "scenario": "F the manhunt: hue and cry, search, wanted across save and load, yielding"},
              {"run": "probe_playtest", "kind": "probe", "probe": "playtest", "seed": 1, "scenario": "the owner's playtest corrections: bandits, walls, stations, repeated news",
@@ -488,6 +562,12 @@ def main():
     if a.only:                           # a targeted subset while developing: suite-level checks (determinism pair, coverage)
         keep = set(a.only.split(","))    # are reported but cannot block, and the result says it is no release gate
         jobs = [j for j in jobs if j["run"] in keep]
+    if a.short:                          # a smoke run of the scenarios (shorter, one seed): no baseline applies to it
+        for j in jobs:
+            if j.get("kind", "sim") == "sim":
+                j["days"] = a.short
+                if a.seed:
+                    j["seed"] = a.seed
     if a.reuse:
         src = Path(a.reuse).resolve()
         if src != out:
@@ -509,7 +589,7 @@ def main():
                            env=job_env(out / "_import", commit), timeout=1800)
         print("simulation gate: %d jobs on %d workers, commit %s" % (len(jobs), a.jobs, commit[:12]), flush=True)
         results, sim_seconds = run_all(godot, jobs, out, commit, a.jobs)
-    ev = evaluate(jobs, results, out, commit, a.inject, partial=bool(a.only))
+    ev = evaluate(jobs, results, out, commit, a.inject, partial=bool(a.only or a.short), release_dir=(out / "_no_baselines") if a.short else RELEASE)
     gate = {"format": "mml-sim-gate/1", "commit": commit, "build": os.environ.get("BUILD_N", ""), "run_id": os.environ.get("GITHUB_RUN_ID", "local-%d" % int(t_start)),
             "schema": SCHEMA, "subset": bool(a.only), "injected": a.inject, "job_results": list(results.values()),
             "timing": {"simulations": sim_seconds, "jobs": a.jobs}}
@@ -520,7 +600,7 @@ def main():
                                      "note": "same seed and days, run side by side with the rest of the suite"}
     gate["parallel"] = {"jobs": a.jobs, "wall_seconds": sim_seconds, "sum_of_job_seconds": round(sum(r["seconds"] for r in results.values()), 1)}
     gate["result"] = "FAIL" if any(f["blocking"] for f in gate["findings"]) else "PASS"
-    if a.only:
+    if a.only or a.short:
         gate["result"] += " (subset: not a release gate)"
     # the analyses and the workbook, by the game's own code (tests/sim_workbook.gd); the measured, proposed thresholds come
     # from the analyses, so they are read between the two passes; then the workbook is validated here
@@ -530,7 +610,7 @@ def main():
     gate_path.write_text(json.dumps(gate, indent=1, default=str))
     gate["analysis_run"] = godot_workbook(godot, gate_path, None, out, commit)
     add_proposals(gate, out)
-    gate["result"] = ("FAIL" if any(f["blocking"] for f in gate["findings"]) else "PASS") + (" (subset: not a release gate)" if a.only else "") + \
+    gate["result"] = ("FAIL" if any(f["blocking"] for f in gate["findings"]) else "PASS") + (" (subset: not a release gate)" if (a.only or a.short) else "") + \
         (" (defect injected: %s)" % a.inject if a.inject else "")
     gate_path.write_text(json.dumps(gate, indent=1, default=str))
     if wb.exists():
@@ -548,7 +628,7 @@ def main():
                                  "description": "workbook invalid: %s" % p, "severity": "critical", "blocking": True, "expected": "every sheet and chart valid",
                                  "actual": p, "reproduce": "python3 tools/check_workbook.py %s" % wb})
     gate["result"] = "FAIL" if any(f["blocking"] for f in gate["findings"]) else "PASS"
-    if a.only:
+    if a.only or a.short:
         gate["result"] += " (subset: not a release gate)"
     if a.inject:
         gate["result"] += " (defect injected: %s)" % a.inject

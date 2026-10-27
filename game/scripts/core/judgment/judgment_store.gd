@@ -662,6 +662,8 @@ func _forget(observer: int, ev: int) -> void:
 	var t: int = (memories[observer] as Dictionary)[ev][M_TYPE]
 	(memories[observer] as Dictionary).erase(ev)
 	_stat("forgotten")
+	if rec != null:
+		rec.memory_forgot(observer, ev, _types[t])      # X20-FINAL: forgetting is recorded (fading itself: the daily summary)
 	if _retract:
 		_post(observer, ev, {}, _jperm[t] == 1)
 	else:
@@ -1735,6 +1737,8 @@ func make_history(ev: int, present: Array) -> bool:
 	history[ev] = {"type": str(f.type), "day": int(f.day), "actors": actors, "beneficiaries": (f.beneficiaries as Array).duplicate(),
 		"value": int(f.value), "refs": (fact_refs.get(ev, {"links": []}) as Dictionary).duplicate(true), "known": kn}
 	_stat("history_records")
+	if rec != null:
+		rec.history_made(ev, history[ev])      # X20-FINAL (GM-01)
 	return true
 
 
@@ -1776,6 +1780,8 @@ func tell_family_history(parent: int, child: int) -> int:
 		kn[child] = ["family", parent, g]
 		n += 1
 		_stat("history_told")
+	if rec != null:
+		rec.history_told(parent, child, n)      # X20-FINAL (GM-01)
 	return n
 
 
