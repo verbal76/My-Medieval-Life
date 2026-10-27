@@ -15,7 +15,8 @@ context, where measurable) and before a session ends. The previous long-form sta
 No Expansion 20 build of any kind (public or private draft, APK, Windows or Linux) until player-to-player selection and
 interaction is fixed, integrated and validated for host and guest on Windows, Linux and Android with keyboard and mouse,
 touch and controller (register `MP-INTERACT-01`). Playtest: the Windows player saw Bob (Android) but could not select or
-interact with him. Order: finish the other Expansion 20 work, freeze the integrated baseline, then integrate this as the last
+interact with him. **Development started 2026-10-27** (owner, `docs/directives/2026-10-27_mp_interact_begin_now.md`): worker K on
+`wip/x20-mp-interact` (worktree `.claude/worktrees/x20-mp`), starting commit 4f50ffb (`wip/expansion20`). Order: finish the other Expansion 20 work, freeze the integrated baseline, then integrate this as the last
 batch, run the multiplayer and combined gates, verify the three exports, write the release-readiness report. Build 22 is not reopened.
 
 ## CURRENT: Build 22, then Expansion 20 (owner, 2026-10-26, `docs/directives/2026-10-26_build22_expansion20_execution_authorization.md`)

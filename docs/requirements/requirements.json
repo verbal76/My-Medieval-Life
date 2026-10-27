@@ -31967,7 +31967,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -31986,10 +31986,17 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "lead's read-only first look at the cause (wip/expansion20 b6fdb25)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker K (multiplayer interaction); branch: None -> wip/x20-mp-interact; next_action",
+     "why": "owner 2026-10-27 (docs/directives/2026-10-27_mp_interact_begin_now.md): start development now on an isolated branch, still integrated last; release restriction unchanged"
     }
    ],
-   "next_action": "Implement as the final Expansion 20 batch on the frozen integrated baseline (after the Build 19 recovery, LE work, Android usability and the Messages journal). No Expansion 20 build of any kind (public or private) until this is integrated and validated.",
-   "notes": "BLOCKS the next Expansion 20 release (private drafts included). Playtest evidence: the Windows player saw Bob (Android) but could not select or interact with him; the reverse was not tried. Treated as a cross-platform deficiency until tests show otherwise. Build 22 is not reopened. Likely cause (read-only look, 2026-10-27, wip/expansion20 b6fdb25): other players are never offered as a target. main._find_target lists villagers, shops, desks, loot, animals and things but no player, so there is no prompt, outline or tap target for one; the MP-D8 players window (GameUI.show_players: gift, partner, answer offers) opens only from main.interact when NO other target is in reach (main.gd interact, the target.is_empty() branch, _beside_player). In a village something else is nearly always in reach, so the other player cannot be chosen. Also to audit: guest_blocked() in interact, touch tap selection, the pad's next-target cycle, and the guest's path through the host."
+   "next_action": "Worker K develops on wip/x20-mp-interact from wip/expansion20 4f50ffb (audit, targeting, menu, consent, conservation, interface-driven tests, cross-platform matrix). Integrated LAST onto the frozen validated Expansion 20 baseline; no Expansion 20 build of any kind until then.",
+   "notes": "BLOCKS the next Expansion 20 release (private drafts included). Playtest evidence: the Windows player saw Bob (Android) but could not select or interact with him; the reverse was not tried. Treated as a cross-platform deficiency until tests show otherwise. Build 22 is not reopened. Likely cause (read-only look, 2026-10-27, wip/expansion20 b6fdb25): other players are never offered as a target. main._find_target lists villagers, shops, desks, loot, animals and things but no player, so there is no prompt, outline or tap target for one; the MP-D8 players window (GameUI.show_players: gift, partner, answer offers) opens only from main.interact when NO other target is in reach (main.gd interact, the target.is_empty() branch, _beside_player). In a village something else is nearly always in reach, so the other player cannot be chosen. Also to audit: guest_blocked() in interact, touch tap selection, the pad's next-target cycle, and the guest's path through the host.",
+   "assigned_worker": "worker K (multiplayer interaction)",
+   "branch": "wip/x20-mp-interact"
   },
   {
    "id": "MP-MASTER",
