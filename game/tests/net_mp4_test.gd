@@ -255,6 +255,11 @@ func stage() -> void:
 
 ## Every participant's copy of the shared world against the host's at one frozen moment (tests/net_snapshot.gd).
 func consistent(label: String, guests: Array) -> void:
+	# every copy live first: the clock and the players in play have reached it (a guest that has just rejoined, a slow frame)
+	var n_in: int = status().get("connected", []).size()
+	await until(func(): return main.world.minutes >= float(status().get("minutes", 0)) - 2.0 and main.other_players().size() == n_in, 8.0)
+	for t in guests:
+		await until(func(): return float(gs(t).get("minutes", 0)) >= float(status().get("minutes", 0)) - 2.0 and (gs(t).get("others", []) as Array).size() == n_in, 8.0)
 	await command({"cmd": "freeze"})
 	await wait(0.4)                                     # what was already on its way arrives
 	var s0: int = main.net.syncs
@@ -596,11 +601,18 @@ func _one_plant() -> void:
 	await until(func(): return w.player.pos.distance_to(spots[0]) < 0.1 and Vector2(rec(dan).pos[0], rec(dan).pos[1]).distance_to(spots[1]) < 0.1, 4.0)
 	var inv_a: Dictionary = rec(ann).get("inv", {}).duplicate()
 	var inv_d: Dictionary = rec(dan).get("inv", {}).duplicate()
+	var ga0: int = main.gain_log.size()
+	var gd0: int = (gs("g3").get("gains", []) as Array).size()
+	var ann_told := []
 	await hold()
 	main.select_resource(ResourceNodes.node_at(w, cell, true), false)
 	await gcmd("g3", {"cmd": "pick", "x": cell.x, "y": cell.y})
 	await release(2, "two players picking one plant", true)
-	await wait(1.0)
+	var end := Time.get_ticks_msec() + 2500
+	while Time.get_ticks_msec() < end:                  # what Ann's screen says, as it comes
+		if main.ui.toast.visible and (ann_told.is_empty() or ann_told[-1] != main.ui.toast.text):
+			ann_told.append(main.ui.toast.text)
+		await process_frame
 	var gain_a := _gain(inv_a, rec(ann).get("inv", {}))
 	var gain_d := _gain(inv_d, rec(dan).get("inv", {}))
 	var yld := ResourceNodes.products(ResourceNodes.def_for("plant", str(pl.kind)))
@@ -612,6 +624,15 @@ func _one_plant() -> void:
 	check(str(status().plants.get("%d,%d" % [cell.x, cell.y], "")) == "picked", "the host's plant is picked once")
 	var loser_results: Array = (gs("g3").get("results", []) as Array) if gain_a > 0 else main.net.replies.values().filter(func(r): return str(r.get("path", "")) == "player_pick_plant").map(func(r): return JSON.stringify(r.get("result")))
 	check(loser_results.has("{}"), "the host gives the second picker nothing (its answer: %s)" % [loser_results.slice(-3)])
+	var gains_a: Array = main.gain_log.slice(ga0).map(func(g): return str(g[1]))
+	var gains_d: Array = (gs("g3").get("gains", []) as Array).slice(gd0)
+	var told_d: Array = gs("g3").get("toasts", [])
+	var winner_gains: Array = gains_a if gain_a > 0 else gains_d
+	var loser_gains: Array = gains_d if gain_a > 0 else gains_a
+	var loser_told: Array = told_d if gain_a > 0 else ann_told
+	check(winner_gains.size() >= 1 and str(winner_gains[0]).begins_with("+"), "the one who picked it is shown what came (%s)" % [winner_gains])
+	check(loser_gains.is_empty() and loser_told.has("Nothing left to pick."),
+		"the other is shown the truth, \"Nothing left to pick.\", and no gain (shown %s; gains %s)" % [loser_told.slice(-4), loser_gains])
 	await packs_agree("one plant, two pickers")
 
 
@@ -648,6 +669,35 @@ func _messages() -> void:
 	var want := ["burst 1", "burst 2", "burst 3", "burst 4", "burst 5"]
 	check(await until(func(): return (gs("g2").get("offers", []) as Array).filter(func(o): return str(o.kind) == "say" and str(o.text).begins_with("burst")).map(func(o): return str(o.text)) == want, 8.0),
 		"five messages sent in one frame reach Cara once each, in order")
+	await _private("after the messages")
+	# a private offer from the host to Cara: Dan and Ann never hold it
+	await command({"cmd": "give_host", "id": ORE, "n": 1})
+	await command({"cmd": "offer", "kind": "gift", "to": cara, "item": ORE, "qty": 1})
+	check(await until(func(): return (gs("g2").get("offers", []) as Array).any(func(o): return str(o.kind) == "gift" and str(o["from"]) == "player"), 5.0), "the host offers Cara an ore: she has it")
+	await wait(NetSync.SYNC_SECONDS + 1.0)
+	await _private("after the host's offer to Cara")
+	var oc := host_offers("gift", host_pid, cara)
+	if not oc.is_empty():
+		await gcmd("g2", {"cmd": "show_player", "pid": host_pid})
+		await gcmd("g2", {"cmd": "press", "name": "OfferDecline%d" % int(oc[0].id)})
+		await gcmd("g2", {"cmd": "close"})
+	await command({"cmd": "take_host", "id": ORE})
+
+
+## Each copy holds only the offers and messages its player sent or received: none between two other players, none of their words.
+func _private(label: String) -> void:
+	var me := "player:%d" % ann
+	var foreign_a: Array = main.world.offers.filter(func(o): return str(o["from"]) != me and str(o.to) != me)
+	check(foreign_a.is_empty() and not main.world.offers.any(func(o): return str(o.get("text", "")) in ["Cara 1", "Cara 2", "Cara 3"]),
+		"%s: Ann's copy holds no offer or message between others (%d)" % [label, foreign_a.size()])
+	for t in ["g2", "g3"]:
+		var g := gs(t)
+		var texts: Array = (g.get("offers", []) as Array).map(func(o): return str(o.get("text", "")))
+		# Dan must not hold Ann's burst to Cara; Cara must not hold Ann's messages to Dan (her own to Dan are hers)
+		var theirs: Array = ["burst 1", "burst 2", "burst 3", "burst 4", "burst 5"] if t == "g3" else ["Ann 1", "Ann 2", "Ann 3"]
+		var others_words := texts.filter(func(x): return theirs.has(str(x)))
+		check(int(g.get("foreign_offers", -1)) == 0 and others_words.is_empty(),
+			"%s: %s's copy holds no offer or message between others (%d; %s)" % [label, {"g2": "Cara", "g3": "Dan"}[t], int(g.get("foreign_offers", -1)), others_words])
 
 
 # ---------------------------------------------------------------- a guest away and back -------------
@@ -667,6 +717,8 @@ func _guest_away_and_back() -> void:
 	var c_ore := ore(cara)
 	check(await rejoin("g3"), "Dan comes back")
 	check(int(gs("g3").pid) == dan, "as the same character (pid %d)" % int(gs("g3").pid))
+	check(int(gs("g3").get("foreign_offers", -1)) == 0 and (gs("g3").get("journal_refs", []) as Array).all(func(r): return str(r) == "player:%d" % dan),
+		"the world he is sent holds only his own offers and his own journal (%d others' offers; journals %s)" % [int(gs("g3").get("foreign_offers", -1)), gs("g3").get("journal_refs", [])])
 	check(await until(func(): return (gs("g3").get("offers", []) as Array).any(func(x): return not o.is_empty() and int(x.id) == int(o[0].id)), 5.0), "Cara's offer is still his to answer")
 	await stage()
 	await gcmd("g3", {"cmd": "show_player", "pid": cara})

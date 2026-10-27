@@ -164,6 +164,7 @@ func _ready() -> void:
 	add_child(net)
 	net.changed.connect(func(t): ui.message(t, 8.0, "game"))     # joins and leaves: kept in the journal
 	net.answered.connect(func(t): ui.message(t, 8.0))            # the host's answer to a request: shown, not kept (routine)
+	net.verb_answered.connect(_on_verb_answered)                  # X20: a guest's picking, as the host settled it
 	ui.build(self)
 	ui.set_scheme(scheme)
 	# a controller connected to a phone (or already there at start) hides the touch buttons and uses the
@@ -3468,6 +3469,33 @@ func _gain(text: String, item := "") -> void:
 	ui.gain(text, item)
 
 
+## X20 (net_mp4_test): on a guest, what a picking gave is the host's to say. This machine's own run of the verb (World.mirror) cannot
+## know that another player picked the same plant in the same moment, so it would show "+1" for goods that never came. The picking
+## just sent waits for the host's answer (NetSession.verb_answered), which shows what came or "Nothing left to pick.". True on a guest.
+var pick_waits := {}                   # request id -> true: pickings whose outcome the host's answer shows
+
+
+func _pick_answered_later() -> bool:
+	if not guest_world:
+		return false
+	pick_waits[net.last_request()] = true
+	return true
+
+
+func _on_verb_answered(rid: int, result) -> void:
+	if not pick_waits.has(rid):
+		return
+	pick_waits.erase(rid)
+	if result == null:
+		return                         # refused before it was done (out of reach...): the host's answer says why (NetSession.answered)
+	var got: Dictionary = result if result is Dictionary else {}
+	if got.is_empty():
+		ui.message("Nothing left to pick.")
+		return
+	for id in got:
+		_gain("+%d %s" % [int(got[id]), GameData.item_name(str(id))], str(id))
+
+
 ## Do what the current target offers, once (Use; and each cycle of gathering).
 func _use() -> void:
 	var p := world.player
@@ -3640,6 +3668,8 @@ func _use() -> void:
 			next_sound = "fruit_drop"
 			start_action("Picking", 1.5, func():
 				var got := world.player_pick_fruit(ftree)          # MP C2: one verb, applied by the host for a guest
+				if _pick_answered_later():
+					return
 				for id in got:
 					_gain("+%d %s" % [int(got[id]), GameData.item_name(id)], id)
 				if got.is_empty():
@@ -3653,6 +3683,8 @@ func _use() -> void:
 			next_sound = "bush_rustling"
 			start_action("Picking", 1.2, func():
 				var got := world.player_pick_plant(pl)          # MP C2: the goods and the cutting (SEED-02) in one verb
+				if _pick_answered_later():
+					return
 				if got.is_empty():
 					ui.message("Nothing left to pick.")
 				for k in got:

@@ -24,8 +24,9 @@ static func compare(w: World, my_pid: int, dump: Dictionary, keys: Array) -> Arr
 		var ms = _canon(k, mine.get(k))
 		if norm(hs) != norm(ms):
 			bad.append("section %s%s" % [k, _first_difference(JSON.parse_string(norm(hs)), JSON.parse_string(norm(ms)))])
-	if norm(dump.get("offers", [])) != norm(w.offers):
-		bad.append("offers (host %d, here %d)" % [(dump.get("offers", []) as Array).size(), w.offers.size()])
+	var ho: Array = dump.get("offers_for", {}).get(str(my_pid), dump.get("offers", []))     # the host's offers as sent to this player
+	if norm(ho) != norm(w.offers):
+		bad.append("offers (host's for this player %d, here %d)" % [ho.size(), w.offers.size()])
 	var hm := float(dump.get("minutes", -1))
 	if w.minutes > hm + 0.01 or w.minutes < hm - CLOCK_SLACK:
 		bad.append("clock (host %.1f, here %.1f)" % [hm, w.minutes])

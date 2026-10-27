@@ -16,6 +16,7 @@ var last_seq := -1
 var t := 0.0
 var releases: Array = []       # input events to release on the next frame (a key or a pad button pressed by a command)
 var cmp := {}                  # the last "compare": {seq, bad}
+var toasts: Array = []         # every message this screen showed (sampled), for checks of what a player was told
 
 
 func _init() -> void:
@@ -148,7 +149,9 @@ func _commands() -> void:
 
 
 func _status() -> void:
-	var d := {"seq": last_seq, "welcomed": main.guest_world, "pid": main.net.my_pid, "refusal": main.net.refusal, "cmp": cmp,
+	if main.guest_world and main.ui.toast.visible and (toasts.is_empty() or toasts[-1] != main.ui.toast.text):
+		toasts.append(main.ui.toast.text)
+	var d := {"seq": last_seq, "toasts": toasts.slice(-20), "welcomed": main.guest_world, "pid": main.net.my_pid, "refusal": main.net.refusal, "cmp": cmp,
 		"world": main.world != null, "running": main.running}
 	if main.guest_world:
 		var w: World = main.world
@@ -173,6 +176,10 @@ func _status() -> void:
 		d["replies"] = main.net.replies.values().map(func(r): return str(r.get("text", "")))
 		d["results"] = main.net.replies.values().map(func(r): return JSON.stringify(r.get("result")))
 		d["messages"] = w.player_messages().map(func(e): return str(e[2]))
+		d["gains"] = main.gain_log.map(func(g): return str(g[1]))
+		var me := w.player_ref(w.player)
+		d["foreign_offers"] = w.offers.filter(func(o): return str(o["from"]) != me and str(o.to) != me).size()
+		d["journal_refs"] = w.messages.by_ref.keys().filter(func(r): return not (w.messages.by_ref[r] as Array).is_empty())
 	var f := FileAccess.open(dir + tag + "_status.tmp", FileAccess.WRITE)
 	f.store_string(JSON.stringify(d))
 	f.close()

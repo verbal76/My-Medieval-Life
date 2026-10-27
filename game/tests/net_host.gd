@@ -215,6 +215,10 @@ func _commands() -> void:
 				out.sections[k] = dd.get(k)
 			if c.get("full", false):                 # X20 phase 4.5 (net_snapshot.gd): offers, villagers, players, the clock
 				out["offers"] = w.offers.duplicate(true)
+				var of := {}                         # X20: what each player's copy is sent of them (NetSession.offers_for)
+				for p: PlayerState in w.player_list():
+					of[str(p.pid)] = NetSession.offers_for(w, w.player_ref(p))
+				out["offers_for"] = of
 				out["minutes"] = w.minutes
 				var nn := {}
 				for n: NPC in w.npcs:
