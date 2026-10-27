@@ -55106,12 +55106,13 @@
     "Rule 011's mandatory bullets met, shown by its verification scenario (docs/WORLD_DESIGN_RULES.md)"
    ],
    "implementation": "No aspiration domains; job mobility, apprenticeships and storefronts exist (REC-016)",
-   "tests": "",
+   "tests": "worker L on wip/x20-r5: aspiration_test 145/0 (owner's ten checks, survival danger from real household harm, Q8 proposals), relations_test 80/0, judgment_live 161/0, family_first 104/0, start_test 523/0 and the judgment, history, recorder, migration, conservation, run_tests suites 0 failures; G0 identical with flags off before and after each change; flags-on 30 days seeds 1-2: no currency or item leaks, adults under survival pressure 17/64 and 11/65 (was 63/64)",
    "playtest": [],
    "branch": "wip/x20-r5",
    "commits": [
     "e25b0ed",
-    "8bde18b"
+    "8bde18b",
+    "2cc0007"
    ],
    "parent": null,
    "depends_on": [],
@@ -55121,7 +55122,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "Worker L: survival-pressure danger-term fix, then extend individual romance weighting to proposal acceptance (Q8 = A) inside the existing acceptance rules and hard limits; flags off; then merge into wip/expansion20 and validate.",
+   "next_action": "Combined validation on wip/expansion20; R6 four-seed measurement (aspirations, report hook, history gratitude) before any flag is switched on; owner review; then aspiration dialogue (Q7). Follow-up (engineering, D39 and Rule 012 equal rules): extend proposal-acceptance weighing to player suitors, whose courting factors (household, job, parents) need reading in the player's form; until then a player's proposal is answered by the live rule.",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -55196,16 +55197,23 @@
      "date": "2026-10-27",
      "change": "next_action",
      "why": "owner D15 (answer C) and D39 (WDR-011-Q8 = A): personal romance preferences also govern accepting an eligible proposal, hard limits and human consent kept"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> worker L on wip/x20-r5: aspiration_test 145/0 (owner's ten checks, survival danger from real household harm, Q8 proposals), relations_test 80/0, judgment_live 161/0, family_first 104/0, start_test 523/0 and the judgment, history, recorder, migration, conservation, run_tests suites 0 failures; G0 identical with flags off before and after each change; flags-on 30 days seeds 1-2: no currency or item leaks, adults under survival pressure 17/64 and 11/65 (was 63/64); test_commit: 0b5287c -> 2cc0007; commits + 2cc0007; integrated_in + Expansion 20 wip/expansion20 3601211; next_action",
+     "why": "aspirations merged into wip/expansion20 (3601211), all flags off; combined validation running"
     }
    ],
    "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "professional interdependency, economic consequences, NPC prosperity and rivalry are the settlement expansion's rules",
-   "integrated_in": [],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 3601211"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "DESIGN WORK REQUIRED",
@@ -55214,7 +55222,7 @@
    "related": [
     "X20-OPEN-ITEMS"
    ],
-   "test_commit": "0b5287c",
+   "test_commit": "2cc0007",
    "assigned_worker": "worker L (aspirations code)"
   },
   {
@@ -55500,6 +55508,11 @@
      "date": "2026-10-27",
      "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered (D39, answer A, CURRENT) in the current-first reconciliation of 2026-10-27 (docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "note",
+     "why": "implemented on wip/x20-r5 2cc0007 behind the aspiration flag (hard limits first, then one JudgmentWeighting choice; refusal ends that courtship; acceptance threshold 80,000 PROVISIONAL); merged 3601211"
     }
    ],
    "notes": "Recommendation: apply it to acceptance too (Q3 speaks of selecting a partner and of one villager overlooking financial differences that another would not), inside the existing acceptance rules and cut-offs as hard limits; human players' consent untouched. Until answered the code keeps acceptance unchanged.",

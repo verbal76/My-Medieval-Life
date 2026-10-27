@@ -6,10 +6,12 @@
 
 - **Build 22**: existing private three-platform draft (`wip/build22` `b7e1c91`, run `40398771937`, 2026-10-26). Frozen, not reopened.
 - **Expansion 20**: authorized in development on `wip/expansion20` (last observed `0dc0014`). LE-01 foundation with off switch, Android UI and Messages journal, and R1–R4 of Build 19 recovery have been integrated. Remaining recovery verification and LE-02–LE-07 are not finished, regardless of prior draft documents.
-- **Aspirations R5**: isolated `wip/x20-r5` (last observed `bbfc6e2`), six domains including social standing, survival and family protections, measurement; switches off until valid integration. Q8=A (individual proposal acceptance with existing hard limits) is approved policy, not an assertion that it is already merged.
+- **Aspirations R5**: merged into `wip/expansion20` at `3601211` (merge of `wip/x20-r5` `2cc0007`) (six domains including social standing; survival pressure from real household harm only; family protections; Q8=A proposal acceptance behind the flag, hard limits first; all switches off). Combined validation of that merge is running in `.claude/worktrees/x20main`; when it passes, that commit is the frozen baseline for the MP-INTERACT-01 integration. Follow-up: extend proposal weighing to player suitors (engineering, D39 and Rule 012).
 - **Multiplayer MP-INTERACT-01**: isolated `wip/x20-mp-interact` (`0ce4c9e` at last observation), implemented and targeted UI/network tests, **NOT YET INTEGRATED**. Two open owner questions MP-INTERACT-Q1/Q2 remain. Merge **LAST** onto the frozen combined X20 baseline and validate on Android/Windows/Linux with actual host/guest, input methods and real device gaps correctly identified.
 - **RELEASE BLOCKER:** **NO Expansion 20 APK, Windows or Linux build of ANY KIND, private draft included, before MP-INTERACT-01 is merged last and validated.** Publishing remains separately controlled; Build 22 stays frozen.
 - **Requirements**: owner reconciled 39 decisions on staging `5484ce1`; DCR-01 continuity added at `866af5c`. At this recorded point: 2 open multiplayer questions and 2 provisional (armour/identity); read latest register for counts. Future decisions are design only, not blanket work permission.
+
+- **Other records in development** (the register validator requires them named here): ID-01 (identity, `wip/foundation-identity`; waits on ID-D3's same-commit audit) and REC-DIAG (simulation diagnostics; continues as part of R6 measurement).
 
 ## Next actions (current work only)
 
