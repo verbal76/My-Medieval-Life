@@ -373,6 +373,7 @@ func c_hello(version: String, key: String, who: String, pw_hash: String) -> void
 	discovery.info = _answer()
 	rpc_id(id, "s_welcome", world_for(p.pid), id)
 	synced[id] = _welcome_digest
+	announce(p, id)                               # MP-INTERACT-01: the guests already here learn who came (their public record)
 	var known := {}
 	for a: Animal in main.world.fauna.animals:        # the welcome's save holds every animal there is now
 		known[a.id] = true
@@ -464,12 +465,45 @@ func s_players(list: Array) -> void:
 			if e.has("wield"):
 				o.weapon = str(e.wield)                # WEAPON-VISIBLE-01: and the weapon they hold
 			o.alive = bool(e.alive)
+			o.map_level = int(e.get("level", o.map_level))     # MP-INTERACT-01: the level they are on (the adit), and that they are in play
+			o.away = false
 			o.partner = int(e.get("partner", o.partner))                 # MP-PLAYER-FAMILY: their family as the host has it
 			o.children = (e.get("children", o.children) as Array).map(func(c): return int(c))
 	for pid in avatars.keys():
 		if not seen.has(pid):
 			avatars.erase(pid)
+	if main.world != null and main.guest_world:
+		for q: PlayerState in main.world.player_list():
+			if q.pid != my_pid and not seen.has(q.pid):
+				q.away = true                         # MP-INTERACT-01: the host no longer reports them in play (left, MP-D1)
 	players_changed.emit()
+
+
+## Host (MP-INTERACT-01): tell every other connected guest the public record of player `p` (one who joined, an heir), so their copy
+## has them to choose and to name: the same record a welcome holds for each other player (public_player).
+func announce(p: PlayerState, but_peer: int) -> void:
+	if p == null or peer == null:
+		return
+	var d := public_player(p)
+	for id in by_peer:
+		if int(id) != but_peer:
+			rpc_id(int(id), "s_public", d)
+
+
+## Guest (MP-INTERACT-01): another player's public record (a guest who joined after this one, an heir): added to this copy, or its
+## public fields brought up to date.
+@rpc("authority", "call_remote", "reliable")
+func s_public(d: Dictionary) -> void:
+	if main.world == null or not main.guest_world or int(d.get("pid", 0)) == my_pid:
+		return
+	var fresh := PlayerState.from_dict(d)
+	var q: PlayerState = main.world.player_by_pid(fresh.pid)
+	if q == null:
+		main.world.add_guest(fresh)
+		return
+	for k in ["name", "family", "sprite", "heir_sprite", "appearance", "armor", "head", "weapon", "sex", "born", "alive", "map_level",
+			"partner", "children", "mother", "father"]:
+		q.set(k, fresh.get(k))
 
 
 @rpc("authority", "call_remote", "reliable")
@@ -585,6 +619,7 @@ func apply_requests() -> void:
 		applied += 1
 		if r.has("heir_pid") and by_peer.has(int(q.peer)):
 			by_peer[int(q.peer)] = int(r.heir_pid)     # MP-D4: the connection now plays the heir
+			announce(main.world.player_by_pid(int(r.heir_pid)), int(q.peer))     # MP-INTERACT-01: the others learn of the heir
 			players_changed.emit()
 			main.save_game(false)
 		if peer != null and by_peer.has(int(q.peer)):
@@ -776,13 +811,13 @@ func send_animals(id: int, g: PlayerState, all: bool) -> void:
 func players_list() -> Array:
 	var w: World = main.world
 	var h: PlayerState = w.host_player()
-	var out := [{"pid": h.pid, "name": h.name, "sprite": h.sprite, "pos": h.pos, "dir": main.facing_vec(), "anim": main.net_anim(), "alive": h.alive,
+	var out := [{"pid": h.pid, "name": h.name, "sprite": h.sprite, "pos": h.pos, "dir": main.facing_vec(), "anim": main.net_anim(), "alive": h.alive, "level": h.map_level,
 		"worn": [h.armor, h.head], "wield": h.weapon,       # ARMOR-01: what each player wears; WEAPON-VISIBLE-01: what they hold
 		"partner": h.partner, "children": h.children}]          # MP-PLAYER-FAMILY: a player's spouse and children are public family records
 	for id in by_peer:
 		var g: PlayerState = w.player_by_pid(int(by_peer[id]))
 		if g != null:
-			out.append({"pid": g.pid, "name": g.name, "sprite": g.sprite, "pos": g.pos, "dir": moves[id].dir, "anim": moves[id].anim, "alive": g.alive,
+			out.append({"pid": g.pid, "name": g.name, "sprite": g.sprite, "pos": g.pos, "dir": moves[id].dir, "anim": moves[id].anim, "alive": g.alive, "level": g.map_level,
 				"worn": [g.armor, g.head], "wield": g.weapon, "partner": g.partner, "children": g.children})
 	return out
 

@@ -1874,6 +1874,9 @@ func show_pause() -> void:
 		add.call("Leave the game", func(): main.leave_guest_world("You left %s's world. Your character waits there for your return." % main.world.host_player().name))
 	else:
 		add.call("Playing with friends (%d)" % main.net.by_peer.size() if main.net.is_host() else "Open to friends", func(): NetWindow.show_host(self))
+	if main.guest_world or main.net.has_guests():          # MP-INTERACT-01: the players here, and what they asked
+		var asks: int = main.world.offers_to(main.world.player).size()
+		add.call("Players" + (" (%d waiting)" % asks if asks > 0 else ""), show_players)
 	add.call("Settings", func(): show_settings(show_pause, "audio"))
 	add.call("Controls", func(): show_controls(show_pause))
 	add.call("Encyclopedia", func(): show_wiki(show_pause))
@@ -2113,48 +2116,15 @@ func _choice(text: String, values: Array, current: String, set_value: Callable) 
 
 ## The journal: the village record written into a book, two parchment pages at a time, under a
 ## heading for each day. `spread` is the pair of pages shown; -1 opens at the latest.
-## MP-D8 (owner, 2026-10-24): what one player may ask of another beside them, and their answer: both must agree. The other players
-## standing with the local player, an offer of a gift from the pack or to be partners (World.player_offer), and the offers made to
-## the local player today, to accept or decline (World.player_answer). In a guest's world each goes to the host like every verb.
+## MP-D8 (owner, 2026-10-24), MP-INTERACT-01 (owner, 2026-10-27): the players in the session and what they asked of this one, to
+## answer; each player's own window (show_player) from there. Opened by Use with nothing else in reach and by the pause menu's Players.
 func show_players() -> void:
-	var w: World = main.world
-	var me := w.player
-	_open("players", "Other players", false)
-	var near := w.active_players().filter(func(q): return q != me and q.alive and q.map_level == me.map_level and q.pos.distance_to(me.pos) <= World.OFFER_REACH)
-	for o in w.offers_to(me):
-		var from: PlayerState = w.player_of_ref(str(o["from"]))
-		var who := from.name if from != null else "Someone"
-		var what := "to be partners" if str(o.kind) == "partner" else "%d %s" % [int(o.qty), GameData.item_name(str(o.item)).to_lower()]
-		_label("%s offers you %s." % [who, what], 18, Color(1, 0.85, 0.5))
-		var oid := int(o.id)
-		_button("Accept", func():
-			var why := w.player_answer(oid, true)
-			message(why if why != "" else "Done.")
-			show_players())
-		_button("Decline", func():
-			w.player_answer(oid, false)
-			show_players())
-	if near.is_empty():
-		_label("Stand beside another player to offer them something.", 16)
-	for q: PlayerState in near:
-		var pid := q.pid
-		_label("%s %s" % [q.name, q.family], 20)
-		if w.players_partner_refusal(me, q) == "":
-			_button("Ask %s to be your partner" % q.name, func():
-				var why := w.player_offer("partner", pid)
-				message(why if why != "" else "You ask %s. They must agree." % q.name, 4.0, "" if why != "" else "family")
-				show_players())
-		var ids: Array = me.inv.ids()
-		ids.sort()
-		for id in ids.slice(0, 8):
-			if PlayerState.GEAR.any(func(sl): return me.get(sl) == id):
-				continue
-			var iid: String = id
-			_button("Offer 1 %s" % GameData.item_name(iid).to_lower(), func():
-				var why := w.player_offer("gift", pid, iid, 1)
-				message(why if why != "" else "You offer it to %s." % q.name, 4.0, "" if why != "" else "trade")
-				show_players())
-	_button("Close", hide_all)
+	PlayerWindow.show_list(self)
+
+
+## MP-INTERACT-01: the window for the other player `pid` (chosen in the world: Use, Talk, a tap or a click on them).
+func show_player(pid: int, view := "", form := {}) -> void:
+	PlayerWindow.show(self, pid, view, form)
 
 
 ## `messages_page` (GP-MESSAGE-FOOTPRINT): the messages shown at the top of the screen, kept by the world (GP-MESSAGE-JOURNAL), by
