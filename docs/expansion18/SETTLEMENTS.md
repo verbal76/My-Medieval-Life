@@ -187,8 +187,10 @@ both directions, at most one move (a person, a couple or a household) per reason
 
 A traveller keeps name, age, sex and skills; a settlement-born member gets a name drawn reproducibly from the settlement, day and sex, and
 the skills of the village's own starting rule (`Skills.start_xp`, PAR-01A) for their household's trade. The purse and the pack travel with
-them (and a whole household's pantry). Villagers who cannot go: the reeve, the sage, guards, clergy, tailor and barber, market traders (their stock is
-the market's), anyone tied to the player, the founding households. The villager who leaves is kept in the village's people as no longer
+them (and a whole household's pantry). Villagers who cannot go: the reeve, the sage, guards, clergy, tailor and barber,
+anyone tied to the player, the founding households. Market traders may go like anyone (REG-X20-D1, owner 2026-10-27, free migration;
+the stock in their own pack goes with them), and no settlement household is kept back because its business has no other (the old
+sole-worker and last-household rules are removed); an idle business closes by `_close_idle`. The villager who leaves is kept in the village's people as no longer
 alive with `away` set; their post and stall are handed on as after a death. Coins and goods cross exactly like the couriers' (INT-280): the
 village's `coin_sources`, `caravan_coins_in/out`, `exported_/imported_`, the settlement's `outside_*` flow lines, and people are counted on
 both sides (`Regions.move_counts` against the settlements' `migrants_in/out`). The settlement writes each move into its own journal,
