@@ -118,6 +118,8 @@ func _commands() -> void:
 			main.move_to = Vector2.INF
 		"still":                                     # stop walking (a tap or click walks the player toward what it chose)
 			main.move_to = Vector2.INF
+		"walk":                                      # walk to a point (tiles), as a tap on the ground does (Main's route)
+			main.move_to = Vector2(float(c.x), float(c.y))
 		"pick":                                      # a tap on a plant: the gathering path (Main.select_resource), as net_g1_test does it
 			var hit := ResourceNodes.node_at(main.world, Vector2i(int(c.x), int(c.y)), true)
 			if not hit.is_empty():

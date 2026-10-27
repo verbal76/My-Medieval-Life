@@ -6204,7 +6204,10 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	brain.dawn(false)
 	quests = Quests.new(self)
 	quests.load_dict(d.get("quest_offers", {}))      # older saves: no offers yet; the next dawn makes them
-	quests.start_story()                             # saves from before the storyline get its quests
+	if not d.has("net_pid"):
+		quests.start_story()                         # saves from before the storyline get its quests (X20: never a guest's copy of a
+		                                             # host's world, NetSession.world_for: the host migrated it; here it would give the host's
+		                                             # public record a quest and the log a line the host never wrote)
 	if int(d.get("save_version", 1)) < 7:
 		quests.migrate_reserves()
 	manor_work = ManorWork.new(self)
