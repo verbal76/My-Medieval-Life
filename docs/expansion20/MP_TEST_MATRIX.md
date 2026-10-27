@@ -76,19 +76,21 @@ targeting rule, not a defect.
 
 ## Results on this machine
 
-`net_mp4_test`: **138 checks, 0 failures, three consecutive runs** (192 s, 200 s, 186 s, on a machine shared with other
-workers' simulations), no script errors. Run once with the two fixes below reverted: 10 failures (the regression checks).
+`net_mp4_test` on `7ff8d8b`: **148 checks, 0 failures, three consecutive runs** (191 s, 194 s, 193 s, on a machine shared with
+other workers' simulations), no script errors. On `f3e5b4c` (before defects 3 and 4) it was 138 checks, 0 failures, three runs; run
+once there with defects 1 and 2's fixes reverted: 10 failures (the regression checks).
 
 | Scenario | Exercised (asserted that it happened) |
 |---|---|
 | 1 host + 2 guests | each copy has the other two in play; Ann's target is the host she faces; Ann taps Cara and Cara taps the host: their windows; Cara's message reaches the host's journal; both guests' copies equal the host's world |
 | 1 host + 3 guests | four distinct permanent pids; a fifth refused "full"; twelve directed choices: the host by mouse and by keys, Ann by touch and by pad, Cara by touch, Dan by mouse and by keys, each window naming the right player |
-| Same tick (`hold`/`release`: held requests applied in one host frame, checked by count) | one ore offered to two players, both accept: it moves once, the late one told "no longer has it"; one buyer accepts two sales he can pay one of: paid once, the other left waiting (and still on his screen after a second refused try); two gifts offered in one frame and accepted in one frame: each gives one, gets one; two players pick one plant: one gets it, the host gives the other nothing |
+| Same tick (`hold`/`release`: held requests applied in one host frame, checked by count) | one ore offered to two players, both accept: it moves once, the late one told "no longer has it"; one buyer accepts two sales he can pay one of: paid once, the other left waiting (and still on his screen after a second refused try); two gifts offered in one frame and accepted in one frame: each gives one, gets one; two players pick one plant: one gets it and is shown its gain, the other is given nothing and shown "Nothing left to pick." with no gain |
 | Delivery and order | six messages from two senders, turn about: each once, each sender's in order, the recipient's copy in the host's order, the last kept in his journal; five sent in one frame: once each, in order |
 | Consistency (host frozen, `dump`; each copy compared: 23 synchronized sections, the offers, the clock, 110 villagers alive or not, every player's place, no other player's pack, its own pack and purse) | Ann, Cara and Dan at 1+3 after a tree was felled, after the concurrent actions, after two guests left and came back, after the host's restart, after the host was killed; Ann and Cara at 1+2 |
 | Guest away and back | Dan leaves with an offer pending to him: away on the host, nobody can choose him, his machine holds no world; back as the same pid, the offer still his; accepted, the ore moves once. Cara offers and leaves: Ann's acceptance moves nothing ("They are gone."); Cara back with her ore and no offer |
 | Save with guests playing, host away and back | the save holds all four players and the pending offer; the host quits: every guest out, no machine holds the world; 8.8 s later the loaded clock equals the saved one to the hundredth of a minute (no minute passed), coins and goods identical, every guest out of play until rejoining; all three rejoin as the same characters with the same packs, purses and places; time runs again; the pending offer accepted after the restart moves once |
 | Host killed after a save | every guest told "Host disconnected. The world has stopped until the host plays again."; back from the save, the clock unchanged, all three return |
+| Privacy between players | no copy holds an offer or message between two other players (after the messages, after a host offer to Cara), and a rejoining guest's welcome holds only its own offers and its own Messages journal |
 | Conservation | coins conserved on the host after every step and over the run; ore counted over all four players before and after every exchange; no guest ever wrote a save |
 
 Regression on `f3e5b4c` (the code of this branch): `net_batch_b_test` 44, `net_c_test` 35, `net_family_test` 22, `net_fauna_test` 13,
@@ -113,14 +115,25 @@ leaks 0 (2,104 s).
    day. No visible effect was found (the host sets a new date when the stump sprouts and sends it), but the copies differed from the
    host. Fix: fields absent from the host's record are removed. Regression: the consistency checks after a felling.
 
-### Findings not fixed (for the lead)
+3. **The loser of a same-plant race was shown "+1" and given nothing** (`main.gd`, `net_session.gd`). Root cause: a guest shows its
+   own run of the picking verb at once (`World.mirror`); its copy cannot know another player picked the plant in the same host frame,
+   and the host's empty answer carried no words. Reproduction: Ann and Dan pick one plant in one host frame; one is shown "+1 Flower"
+   and has nothing. Fix: on a guest, a plant or fruit picking waits for the host's answer (`NetSession.verb_answered`) and shows what
+   came, or the single-player wording "Nothing left to pick."; single player and the host are unchanged. Regression: `net_mp4_test`
+   "the other is shown the truth".
+4. **Every guest received every offer and message between all players** (`net_session.gd`). Root cause: the "player_offers" section
+   and the welcome's whole save went to every guest alike, the welcome with every player's Messages journal. Fix: the host sends each
+   guest only the offers and messages it sent or receives, and only its own journal (`NetSession._private_for`, in the welcome and
+   in every sync); nothing else the game needs is held there. The snapshot comparison compares each copy with the host's offers as
+   sent to that player (`NetSession.offers_for`). Regression: `net_mp4_test` "holds no offer or message between others", and the
+   rejoin check of the welcome.
 
-- The second of two players picking one plant at the same moment sees "+1" on its own screen for a moment: its machine shows its own
-  run of the verb, and the host's empty answer has no words, so `NetSession.s_reply` says nothing while its pack is put right. Nothing
-  is duplicated (host and copies agree); a message for "someone was quicker" would be new player-facing wording, so it is left to the
-  lead.
-- Every guest's copy holds every offer and message between all players (the "player_offers" section), including messages between two
-  other players; the interface shows each player only their own. A design question (what a guest's machine may hold), not changed.
+Regression on `7ff8d8b`: `net_interact_test` 67, `net_g1_test` 45, `net_ui_test` 61, `multiplayer_c_test` 340, `mp_interact_ui_test`
+112, `message_journal_test` 51 checks: 0 failures, no script errors. G0 was not rerun for defects 3 and 4: they change only the network
+layer and a guest-only branch of `main.gd` (no simulation code); the G0 above is on `f3e5b4c`.
+
+### Note
+
 - Keys and pad choose only among people in front of the player within the villagers' reach; a player 2.4 tiles away needs a tap, a
   click or a step closer. That is the MP-INTERACT-01 rule, recorded here so a device tester expects it.
 
