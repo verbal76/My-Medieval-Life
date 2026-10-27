@@ -1,3 +1,5 @@
+> **HISTORICAL BUILD EVIDENCE — NOT CURRENT RELEASE STATUS OR AUTHORIZATION (owner, 2026-10-27).** Retained for defect archaeology; not a current development queue, test gate or build instruction. Read `docs/CURRENT_DEVELOPMENT_STATE.md` and the live register. Original findings remain below.
+
 # Build 14 open-items audit and build-readiness review
 
 Owner directive: `docs/directives/2026-10-19_open_items_audit.md`.

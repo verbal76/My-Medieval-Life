@@ -1,3 +1,5 @@
+> **HISTORICAL DEVELOPMENT HANDOFF / PLAN — SUPERSEDED, NOT AN ACTIVE TASK LIST (owner, 2026-10-27).** Do not resume its worker assignments, milestone gates or release directions. Use `docs/CURRENT_DEVELOPMENT_STATE.md`, the live requirements register and later owner directives. The original contents remain below for audit and regression research.
+
 # Development queue
 
 > **Historical (superseded 2026-10-20, MEM-01).** The current handoff and next tasks are in `docs/CURRENT_DEVELOPMENT_STATE.md`; start every session from `docs/PROJECT_MEMORY.md`. The queue below is kept as it was for the record and is not current.

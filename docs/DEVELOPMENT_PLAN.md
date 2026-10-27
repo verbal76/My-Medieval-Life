@@ -1,3 +1,5 @@
+> **HISTORICAL DEVELOPMENT HANDOFF / PLAN — SUPERSEDED, NOT AN ACTIVE TASK LIST (owner, 2026-10-27).** Do not resume its worker assignments, milestone gates or release directions. Use `docs/CURRENT_DEVELOPMENT_STATE.md`, the live requirements register and later owner directives. The original contents remain below for audit and regression research.
+
 # My Medieval Life: development plan
 
 > **Historical (superseded 2026-10-20, MEM-01).** This milestone plan is kept for the record and is no longer the task board. The current work and next tasks are in `docs/CURRENT_DEVELOPMENT_STATE.md`, the roadmap in `docs/requirements/requirements.json` (ledger: `docs/DEVELOPMENT_LEDGER.md`); start from `docs/PROJECT_MEMORY.md`.
