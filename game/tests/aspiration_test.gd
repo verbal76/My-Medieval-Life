@@ -31,6 +31,7 @@ func _init() -> void:
 	test_v3_no_needless_sacrifice()
 	test_v4_job_choice()
 	test_v5_romance()
+	test_q8_proposals()
 	test_v6_perseverance()
 	test_v7_standing()
 	test_v8_save_load()
@@ -555,6 +556,129 @@ func test_v5_romance() -> void:
 		pool_has_player = pool_has_player or Life.is_player_id(o.id)
 	check(not pool_has_player and picks.all(func(p): return not Life.is_player_id(int(p))), "V5: no player is ever chosen by an NPC")
 	w.dispose()
+
+
+# ---------------------------------------------------------------- WDR-011-Q8 (answer A) ---------------
+## Owner 2026-10-27 (D39): a villager's own romance preferences also decide whether they accept an eligible proposal. Hard
+## limits come first and cannot be weighed away; a player's consent is never decided by an NPC; no financial cutoff.
+func q8_world(aspire: bool) -> Dictionary:
+	var w := world(6)
+	var rel: Relations = w.relations
+	var singles := []
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and n.partner == -1 and rel.willing(n) and n.job != "guard" and n.household >= 0:
+			singles.append(n)
+	var pick := []
+	for cand: NPC in singles:
+		var ok := []
+		for o: NPC in singles:
+			if o != cand and rel.can_court(cand.id, o.id):
+				ok.append(o)
+		for i in ok.size():
+			for k in range(i + 1, ok.size()):
+				if pick.is_empty():
+					pick = [cand, ok[i], ok[k]]
+	var st := {"w": w, "s": pick[0], "n1": pick[1], "n2": pick[2]}
+	if aspire:
+		asp_on(w)
+	var sx: NPC = st.s
+	var n1: NPC = st.n1
+	var n2: NPC = st.n2
+	for n: NPC in [sx, n1, n2]:
+		w.brain._lodge(n, w.households.size() - 1 - [sx, n1, n2].find(n))
+	for n: NPC in [sx, n1, n2]:
+		for m in w.households[n.household].members:
+			w.npc(int(m)).coins = 0
+		n.hunger = 100.0
+		n.hp = n.max_hp
+	sx.job = ""
+	n1.coins = 500                                                   # a well-off household
+	w.households[sx.household].econ = {"sustainable": false, "days": 0.0, "streak": 5, "cost": 10.0, "adults": 1}
+	w.households[n1.household].econ = {"sustainable": true, "days": 20.0, "streak": 0, "cost": 10.0, "adults": 1}
+	w.households[n2.household].econ = {"sustainable": false, "days": 2.0, "streak": 2, "cost": 10.0, "adults": 1}
+	for n: NPC in [sx, n1, n2]:
+		var t: Dictionary = w.relations.tie(sx.id, n.id) if n != sx else {}
+		if n != sx:
+			t.stage = "courting"
+			t.since = w.day() - 10
+			t.attraction = 70.0
+			t.regard = 30.0
+			t.days_known = 13
+	if aspire:
+		var a: JudgmentAspiration = w.judgment.asp
+		set_row(a, sx, [50000, 50000, 0, 50000, 0, 50000])
+		a.rows[sx.id].lead = A.FAMILY
+		set_row(a, n1, [50000, 0, 50000, 50000, 50000, 50000], [300, 300, 300, 0, 0, 0])     # security and wealth first
+		a.rows[n1.id].lead = A.WEALTH
+		set_row(a, n2, [50000, 50000, 50000, 50000, 0, 50000], [0, -300, 0, 0, 0, 0])        # cares little for wealth
+		a.rows[n2.id].lead = A.FAMILY
+	w.judgment.set_ledger(n2.id, sx.id, 30000, 0)                    # n2 is fond of the suitor; n1 has no opinion of them
+	return st
+
+
+func test_q8_proposals() -> void:
+	# flags off: the live rule accepts both (the eligible proposal is accepted whatever the villager values)
+	var off := q8_world(false)
+	check(off.w.relations.propose(off.s.id, off.n1) == "", "Q8: flags off: the live rule accepts the eligible proposal (no preference weighed)")
+	check(int(off.w.judgment.stats.get("proposal_weighed", 0)) == 0, "Q8: flags off: nothing weighed")
+	off.w.dispose()
+	var on := q8_world(true)
+	var w: World = on.w
+	var r1: String = w.relations.propose(on.s.id, on.n1)
+	var r2: String = w.relations.propose(on.s.id, on.n2)
+	check(r1 != "" and w.relations.peek(on.s.id, on.n1.id).refused, "Q8: a well-off villager who puts security first and has no opinion of the poor suitor refuses (%s)" % r1)
+	check(r2 == "" and (on.n2 as NPC).partner == (on.s as NPC).id, "Q8: the same suitor's proposal is accepted by a poor villager who is fond of them and shares their ambition")
+	check(int(w.judgment.stats.get("proposal_weighed", 0)) == 2, "Q8: both eligible proposals went through the one weighing (JudgmentWeighting.choose)")
+	w.dispose()
+	# no financial cutoff: the same poor suitor, but the security-minded villager now thinks well of them and shares the ambition
+	var on2 := q8_world(true)
+	on2.w.judgment.set_ledger(on2.n1.id, on2.s.id, 40000, 0)
+	on2.w.judgment.asp.rows[on2.n1.id].lead = A.FAMILY
+	check(on2.w.relations.propose(on2.s.id, on2.n1) == "", "Q8: no wealth cutoff: fondness and a shared plan outweigh the suitor's poverty for the same villager")
+	on2.w.dispose()
+	# hard limits first: kinship, an existing partner, too soon; weighting cannot overrule them
+	var hl := q8_world(true)
+	w = hl.w
+	var j: JudgmentStore = w.judgment
+	var parent: NPC = hl.s
+	var child: NPC = hl.n2
+	child.mother = parent.id                                         # the suitor is made the second villager's mother: kin
+	parent.children.append(child.id)
+	Life.kin_version += 1
+	check(not w.relations.can_court(parent.id, child.id), "Q8: (mother and grown child are kin: Relations.can_court refuses)")
+	if true:
+		var tk: Dictionary = w.relations.tie(parent.id, child.id)
+		tk.stage = "courting"
+		tk.since = w.day() - 30
+		tk.attraction = 100.0
+		tk.regard = 100.0
+		tk.days_known = 40
+		j.set_ledger(child.id, parent.id, 100000, 0)
+		check(w.relations.propose(parent.id, child) == "We aren't courting." and child.partner != parent.id, "Q8: kin can never marry, however the preferences weigh")
+	var n1: NPC = hl.n1
+	var sx: NPC = hl.s
+	n1.partner = (hl.n2 as NPC).id
+	j.set_ledger(n1.id, sx.id, 100000, 0)
+	check(w.relations.propose(sx.id, n1) == "We aren't courting.", "Q8: someone already partnered cannot be married, however fond")
+	n1.partner = -1
+	var t1: Dictionary = w.relations.tie(sx.id, n1.id)
+	t1.since = w.day() - 1
+	check(w.relations.propose(sx.id, n1).begins_with("It's too soon"), "Q8: courtship still needs its separate days: too soon is too soon")
+	check(int(j.stats.get("proposal_weighed", 0)) == 0, "Q8: none of these reached the weighing")
+	w.dispose()
+	# a player's proposal: decided by the live rule exactly as with the flags off; no NPC ever answers for a player
+	var res := []
+	for aspire in [false, true]:
+		var pw := q8_world(aspire)
+		var tp: Dictionary = pw.w.relations.tie(Life.PLAYER_ID, pw.n2.id)
+		tp.stage = "courting"
+		tp.since = pw.w.day() - 10
+		tp.attraction = 70.0
+		tp.regard = 30.0
+		tp.days_known = 13
+		res.append([pw.w.relations.propose(Life.PLAYER_ID, pw.n2), int(pw.w.judgment.stats.get("proposal_weighed", 0))])
+		pw.w.dispose()
+	check(res[0][0] == res[1][0] and int(res[1][1]) == 0, "Q8: a player's proposal is answered exactly as with the flags off (%s), never weighed" % str(res))
 
 
 # ---------------------------------------------------------------- V6 ------------------------------

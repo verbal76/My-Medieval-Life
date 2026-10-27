@@ -557,3 +557,9 @@ Before the fix, 74 of the 99 recent violence memories the adults held at day 30 
 Danger now comes only from harm to the household, mostly bandit robberies (an assault and a theft on the same victim). Seed 2
 with the flags on still ends identical to the flags off; seed 1 diverges (currency 4209 against 4720, balanced), and
 job_choice changed the live answer twice in seed 1.
+
+**WDR-011-Q8, owner answer A (2026-10-27, D39).** Section 6.3's "proposal acceptance unchanged" is superseded. With the layer on,
+`Relations.propose` keeps every hard limit first and unweighed, then (villager suitors only) `JudgmentLive.accepts_proposal`
+weighs accepting against doing without through `JudgmentWeighting.choose`, profile `proposal_accept` (forgo 80000, PROVISIONAL),
+with the courting factors and weights. A refusal by preference ends the courtship as a rival does. A player suitor is answered
+by the live rule; no NPC decides for a player. Test: `aspiration_test::test_q8_proposals`.

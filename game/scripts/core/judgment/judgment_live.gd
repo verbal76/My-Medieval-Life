@@ -900,3 +900,24 @@ static func pick_job(w, n: NPC, opts: Array, unemployed: bool, current: float, l
 	if chosen != live:
 		j._stat("job_choices_changed")                 # the weighing moved the choice from the live rule's
 	return chosen
+
+
+## proposal_accept (WDR-011-Q8, owner answer A, 2026-10-27, D39; with aspirations on only): whether villager `n` accepts the
+## eligible proposal of villager `suitor`. Called by Relations.propose only AFTER every hard limit has passed (courting,
+## Relations.can_court: kinship, age, existing partners; Relations.refusal: willingness, regard, a rival; the separate-days
+## and too-soon gate), so weighting can only refuse an eligible proposal, never allow an ineligible one. Weighed by the one
+## shared interface with the courting factors (court_factors: bond, own opinion, circumstances, shared ambitions, standing
+## without the chooser's own entry), each scaled by n's own priorities and spread, against doing without (the profile's
+## forgo). No financial cutoff: wealth is one weighed factor. A player suitor is not weighed here (the live rule decides, as
+## before), and no NPC ever answers for a player.
+static func accepts_proposal(w, n: NPC, suitor: NPC) -> bool:
+	var j: JudgmentStore = w.judgment
+	var t: Dictionary = w.relations.peek(n.id, suitor.id)
+	var f := court_factors(w, n, suitor)
+	f.attraction = roundi(clampf(float(t.attraction), 0.0, 100.0) * 1000.0)
+	var r := JudgmentWeighting.choose(j, j.cfg, n.id, "proposal_accept", [{"id": "accept", "counterparty": suitor.id, "factors": f}], [w.day(), suitor.id])
+	j._stat("proposal_weighed")
+	if str(r.chosen) == "accept":
+		return true
+	j._stat("proposal_refused_by_preference")
+	return false

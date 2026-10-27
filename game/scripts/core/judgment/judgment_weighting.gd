@@ -61,7 +61,7 @@ static func _choose(store: JudgmentStore, cfg: Dictionary, chooser: int, profile
 		if fw.has(profile):
 			weights = weights.duplicate()
 			weights["aspiration"] = int(fw[profile])
-		elif profile == "court_choice":
+		elif profile == "court_choice" or profile == "proposal_accept":      # whom to court, and (WDR-011-Q8 A) whether to accept
 			weights = (((asp.c.get("court", {}) as Dictionary).get("weights", {})) as Dictionary).duplicate()
 			scaled = ((asp.c.get("court", {}) as Dictionary).get("scaled_by", {}) as Dictionary)
 		if prof.has("scaled_by"):
