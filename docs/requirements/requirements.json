@@ -48521,13 +48521,27 @@
      "date": "2026-10-27",
      "change": "implementation_status: None -> IN DEVELOPMENT; assigned_worker: None -> worker M (X20 release fixes); branch: None -> wip/x20-fixes",
      "why": "assigned for the X20 release (owner directive 2026-10-27)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: None -> TARGETED TESTS PASSED; tests: None -> worker M: sim_f2_test 33/0, sim_f3_test 17/0, world 339, start 523, run_tests 3600, and 20 related suites 0 failures; G0 candidate identical at c932e4b and d4686cd, conservation intact; test_commit: None -> f736044; commits + f736044; integrated_in + Expansion 20 wip/x20-final eaf6652",
+     "why": "fix merged into wip/x20-final eaf6652 (worker M, wip/x20-fixes f736044); single-player baseline replaced with evidence (SIM_BASELINE_CHANGES_X20_FIXES.md, candidate reproduced twice); combined validation in progress"
     }
    ],
    "completion": "CLOSED",
    "next_action": "Focused fix: bounded re-evaluation keyed to a meaningful change (price, stock, purse, elapsed time); recorder tracks lost work; tests plus G0; after the R5 aspirations merge (npc_brain.gd is shared).",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "INTEGRATED",
    "assigned_worker": "worker M (X20 release fixes)",
-   "branch": "wip/x20-fixes"
+   "branch": "wip/x20-fixes",
+   "verification_status": "TARGETED TESTS PASSED",
+   "tests": "worker M: sim_f2_test 33/0, sim_f3_test 17/0, world 339, start 523, run_tests 3600, and 20 related suites 0 failures; G0 candidate identical at c932e4b and d4686cd, conservation intact",
+   "test_commit": "f736044",
+   "commits": [
+    "f736044"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/x20-final eaf6652"
+   ]
   },
   {
    "id": "SIM-F3",
@@ -48563,13 +48577,27 @@
      "date": "2026-10-27",
      "change": "implementation_status: None -> IN DEVELOPMENT; assigned_worker: None -> worker M (X20 release fixes); branch: None -> wip/x20-fixes",
      "why": "assigned for the X20 release (owner directive 2026-10-27)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: None -> TARGETED TESTS PASSED; tests: None -> worker M: sim_f2_test 33/0, sim_f3_test 17/0, world 339, start 523, run_tests 3600, and 20 related suites 0 failures; G0 candidate identical at c932e4b and d4686cd, conservation intact; test_commit: None -> f736044; commits + f736044; integrated_in + Expansion 20 wip/x20-final eaf6652",
+     "why": "fix merged into wip/x20-final eaf6652 (worker M, wip/x20-fixes f736044); single-player baseline replaced with evidence (SIM_BASELINE_CHANGES_X20_FIXES.md, candidate reproduced twice); combined validation in progress"
     }
    ],
    "completion": "CLOSED",
    "next_action": "Focused fix: a persistent deterministic stalk plan while conditions are unchanged, re-evaluated on real state changes; tests plus G0; after the R5 aspirations merge.",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "INTEGRATED",
    "assigned_worker": "worker M (X20 release fixes)",
-   "branch": "wip/x20-fixes"
+   "branch": "wip/x20-fixes",
+   "verification_status": "TARGETED TESTS PASSED",
+   "tests": "worker M: sim_f2_test 33/0, sim_f3_test 17/0, world 339, start 523, run_tests 3600, and 20 related suites 0 failures; G0 candidate identical at c932e4b and d4686cd, conservation intact",
+   "test_commit": "f736044",
+   "commits": [
+    "f736044"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/x20-final eaf6652"
+   ]
   },
   {
    "id": "SIM-F4",
