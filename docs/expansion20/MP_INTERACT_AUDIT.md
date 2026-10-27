@@ -77,3 +77,49 @@ See the branch's commits. Players become targets of kind `player` beside village
 menu (`GameUI.show_player`) offers Talk (a short message), Gift, Sell (goods for coins), Contract (goods), Partner, and the
 requests from that player; every request is a `World.player_offer` record answered by `World.player_answer`, with the
 answer returned to the offerer as a note; the guest's copy of other players follows their level and presence.
+
+## 5. Changed test inputs (no assertion weakened)
+
+| Test | Old | New | Why |
+|---|---|---|---|
+| `multiplayer_c_test.gd::test_verbs_catalog` | every verb but `player_rest` must contain `mirror("<path>"` | `player_rest` and `player_answer` must contain `remote.call("<path>"` | a guest's answer is sent without a local run (its copy cannot know the other's pack); the assertion "every verb is sent by its own verb" is unchanged |
+| `net_host.gd` | (commands) | new commands `stage`, `clear_villagers`, `face`, `key`, `pad`, `click_pid`, `press`, `picker`, `close`; status `ui`, `offers`, `spot` | additive, for `net_interact_test.gd`; earlier tests do not use them |
+
+## 6. Evidence (branch `wip/x20-mp-interact`, Linux, headless Godot 4.7.2)
+
+| Suite | Checks | Result |
+|---|---|---|
+| `mp_interact_ui_test` (new, one process, real input) | 112 | 0 failures |
+| `net_interact_test` (new, three processes over loopback) | 67 | 0 failures, three consecutive runs |
+| `multiplayer_c_test` | 340 | 0 failures |
+| `net_c_test`, `net_batch_b_test`, `net_family_test`, `net_ui_test`, `net_fauna_test` | 35, 44, 22, 61, 13 | 0 failures |
+| `multiplayer_a1_test`, `multiplayer_b_test` | 67, 31 | 0 failures |
+| `net_g1_test` | 44 | 1 failure, **the same at the starting commit `4f50ffb`** (not caused here): "the guest eats a bread: the host applied it once" counts two requests, because the guest's notice of the reply is now journalled (`net.changed` to `ui.message(..., "game")`, GP-MESSAGE-JOURNAL), a second request |
+| `run_tests`, `start_test`, `world_test`, `x20_android_ui_test`, `message_journal_test` | 3,600, 523, 339, 95, 50 | 0 failures |
+| `contracts_test`, `contract_sign_test`, `contract_50ore_test`, `gift_quantity_test`, `pad_shortcuts_test`, `trade_skills_test`, `wiki_test` | 154, 21, 16, 7, 33, 96, 140 | 0 failures |
+| `python3 -m unittest discover -s tests` | 151 | OK |
+| `check_interactions`, `check_requirements` | 334 interactions; 789 records | 0 problems |
+| Headless export, Linux and Windows presets (unsigned) | | both build; the Linux binary starts and quits without a script error |
+| Screenshots (xvfb, opengl3): 2404x1080 touch (prompt, window, sale terms), 1920x1080 keys (prompt, window), 1920x1200 pad (prompt, players list) | | looked at: the prompt names "Bob (player)" on one line with the Talk key; the ring is at Bob's feet; the window is compact, titled, with thumb-sized buttons, clear of the status box and the touch columns |
+
+## 7. Host and guest platform matrix
+
+"Automated" means the input path of that platform was driven in a test on Linux (touch emulation at a phone's size, mouse, keys, a
+pad's events) and the network path over loopback between separate Godot processes. It is not a device test: no Android or Windows
+hardware, no real network, no real controller was used.
+
+| Host | Guest | Host initiates | Guest initiates | Status |
+|---|---|---|---|---|
+| Android | Android | touch (emulated) | touch (emulated) | automated (input + loopback); OWNER DEVICE NEEDED (phone hosting is not supported for internet play; LAN phone host untested on hardware) |
+| Android | Windows | touch (emulated) | mouse, keys | automated; OWNER DEVICE NEEDED |
+| Android | Linux | touch (emulated) | mouse, keys | automated; OWNER DEVICE NEEDED |
+| Windows | Android | mouse, keys | touch (emulated) | automated; OWNER DEVICE NEEDED (the playtest pair) |
+| Windows | Windows | mouse, keys | mouse, keys | automated; OWNER DEVICE NEEDED |
+| Windows | Linux | mouse, keys | mouse, keys | automated; OWNER DEVICE NEEDED |
+| Linux | Android | mouse, keys | touch (emulated) | automated (this is the loopback test's own setup); OWNER DEVICE NEEDED for the phone |
+| Linux | Windows | mouse, keys | mouse, keys | automated; OWNER DEVICE NEEDED for the Windows PC |
+| Linux | Linux | mouse, keys | mouse, keys | automated end to end on this machine (three processes); a real two-machine LAN is still OWNER DEVICE NEEDED |
+
+Controller: pad events (D-pad, A, B, Y) were driven on both sides; a physical controller on each platform is OWNER DEVICE NEEDED.
+The game code is the same on every platform (no platform branch in the paths changed), so the remaining risk is the device itself:
+touch accuracy on a real screen, a real controller's mapping, the Windows firewall and the network.
