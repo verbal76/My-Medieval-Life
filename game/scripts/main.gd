@@ -5590,13 +5590,8 @@ func _keep_previous_game() -> void:
 ## only a world thrown away for another (World.dispose) ended its session, so every orderly quit left the archive "recording". A
 ## process that is killed still leaves its archive incomplete, as it should.
 func end_recording() -> void:
-	if world == null or world.recorder == null:
-		return
-	world.recorder.finish()
-	world.recorder = null
-	if world.judgment != null:
-		world.judgment.rec = null
-		world.judgment.pers.rec = null
+	if world != null:
+		world.end_recording()          # the world closes the session and detaches its stores
 
 
 func _exit_tree() -> void:

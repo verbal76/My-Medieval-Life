@@ -5720,15 +5720,22 @@ func _station_owners() -> void:
 		st.tenant = ""
 
 
+## Close the flight recorder's session, if one is open: write what is buffered and stop the stores reporting to it. Called when
+## the world is thrown away (dispose) and when it is closed in an orderly way (Main.end_recording, X20 net_recorder_quit_test).
+func end_recording() -> void:
+	if recorder == null:
+		return
+	recorder.finish()                  # REC-19: write what is buffered and close the session
+	recorder = null
+	if judgment != null:
+		judgment.rec = null            # REC-19 D5: the store no longer reports
+		judgment.pers.rec = null
+
+
 ## Break the world <-> brain reference cycle so a finished world is freed.
 func dispose() -> void:
 	disposed = true                    # the views that read this world stop (StallDisplayView): it is being thrown away
-	if recorder != null:
-		recorder.finish()              # REC-19: write what is buffered and close the session
-		recorder = null
-		if judgment != null:
-			judgment.rec = null        # REC-19 D5: the store no longer reports
-			judgment.pers.rec = null
+	end_recording()
 	brain = null
 	fauna = null
 	construction = null
