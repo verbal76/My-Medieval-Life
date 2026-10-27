@@ -114,6 +114,8 @@ static func _record(w, who: NPC, kind: String, r: Dictionary, extra := {}) -> vo
 	while j.family_trace.size() > int(cfg(w).get("trace_cap", 64)):
 		j.family_trace.pop_front()
 	j._stat("family_%s_%s" % [kind, str(r.chosen)])
+	if j.rec != null:
+		j.rec.judgment_family(row)                     # REC-19 D5 / FAM-SAC-01: the family-priority factors in the recorder
 
 
 ## Whether `n` leaves the food to those they answer to: "pantry" (the household's store; `price` ignored) or "buy" (a meal

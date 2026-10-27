@@ -41,6 +41,8 @@ static func choose(store: JudgmentStore, cfg: Dictionary, chooser: int, profile:
 			r = r2
 	if store != null and bool(r.get("stubborn", false)):
 		store.remember_choice(chooser, str(r.dkey), str(r.token))
+	if store != null and store.rec != null:
+		store.rec.judgment_choice(chooser, profile, key, r)     # REC-19 D5 / REC-STORE: every alternative and factor, in full
 	return r
 
 

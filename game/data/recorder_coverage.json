@@ -1,7 +1,7 @@
 {
  "format": "mml-recorder-coverage/1",
  "note": "What the flight recorder instruments, system by system (docs/design/FLIGHT_RECORDER_DESIGN.md section 2). Never read a row as broader than its scope text. A row is 'Fully instrumented' only when it names a test in game/tests/recorder_test.gd that exercises it (checked by that test); everything not listed as instrumented is not recorded. Updated by the stage that instruments a system.",
- "as_of": "stage D1 + D2 choke points + D3 systems (identity, life, employment, government, crime, player verbs, save and load), 2026-10-23; schema 2 (SIM-GATE-01: hourly village snapshots, combat chases, the closing snapshot), 2026-10-24",
+ "as_of": "stage D1 + D2 choke points + D3 systems (identity, life, employment, government, crime, player verbs, save and load), 2026-10-23; schema 2 (SIM-GATE-01: hourly village snapshots, combat chases, the closing snapshot), 2026-10-24; D5 judgment and D4 relations shared hours, gifts and harm (Expansion 20 batch R3), 2026-10-26",
  "rows": [
   {
    "system": "Decisions",
@@ -10,7 +10,7 @@
    "status": "Partially instrumented",
    "stage": "D2",
    "test": "test_live_world",
-   "note": "Branch level only. Job routines inside a branch (_plan_job, _crafter, _guard, _bandit ...), recipe order, seller and buyer searches, the labour market and succession are not instrumented (D4). A branch before the winner is recorded as passed over: the chain does not say whether its guard was false or its planner returned no plan. Factors are the values read before the call; scores do not exist in a priority chain."
+   "note": "Branch level only. Job routines inside a branch (_plan_job, _crafter, _guard, _bandit ...), recipe order, seller and buyer searches, the labour market and succession are not instrumented (D4). Choices weighed by judgment (JudgmentWeighting.choose) are recorded with their own scores in full: see 'Judgment-weighted decisions'. A branch before the winner is recorded as passed over: the chain does not say whether its guard was false or its planner returned no plan. Factors are the values read before the call; scores do not exist in a priority chain."
   },
   {
    "system": "Actions",
@@ -129,11 +129,21 @@
    "note": "Which code set NPC.target (raise_alarm, deliver_report, a blow answered, a bandit's choice) is not named: the chase begins at the first fight() tick. A target cleared outside fight() (the player's death, a kill by another) is closed at the next hour, so its end time is that hour. Villager-against-villager fights are recorded as chases too (fighter 'villager')."
   },
   {
-   "system": "Relationships",
-   "interaction": "shared hours, gifts, help, harm, courtship, marriage",
+   "system": "Relationships: shared hours, gifts, harm",
+   "interaction": "each shared hour of a pair (Relations.share: kind work, social or met), each gift (Relations.give: the item leaving the giver and reaching the receiver), each harm (Relations.harmed: the victim's tie and every kin or friend tie it lowered); every one an event on the pair's tie (tie:<a>:<b>) with regard, attraction and days known before and after",
+   "where": "Relations.share, give, harmed (WorldRecorder.shared_hour, gift_begin/end, harm_begin/harm_tie)",
+   "status": "Fully instrumented",
+   "stage": "D4 (Expansion 20, R3)",
+   "test": "test_judgment_and_relations",
+   "note": "Scope: these three channels only. Regard and attraction are floats, so their state rows carry no delta."
+  },
+  {
+   "system": "Relationships: other channels",
+   "interaction": "help (Relations.helped), the player's talk and closeness (talked, player_tick), defending, daily cooling and courting at dawn, befriending, proposals and their answers",
    "where": "relations.gd",
    "status": "Not instrumented",
-   "stage": "D4"
+   "stage": "D4",
+   "note": "A partnership is recorded by Life (D3, partnership). A friendship or courtship stage changed inside a shared hour is visible only as that hour's regard and attraction rows."
   },
   {
    "system": "Contracts and credit",
@@ -167,11 +177,38 @@
    "note": "Not recorded: the settlements' daily steps, their trade, tax and journals, migration decisions (why a household moves), couriers (D6)."
   },
   {
-   "system": "Judgment (Expansion 19)",
-   "interaction": "facts, beliefs, gossip, ledgers, decision weighting",
-   "where": "JudgmentStore, JudgmentLive",
+   "system": "Judgment (Expansion 19): facts, beliefs, gossip, ledgers, trust",
+   "interaction": "every fact published (type, actors with shares, victims, beneficiaries, value, tags: a lie, its refutation), every belief taken in (source, teller, hops, confidence; object thread fact:<id>), every telling that passed something on with the beliefs it gave as children, every ledger post (judgment_good / judgment_bad of an actor for a fact, before and after) and every trust move (before and after)",
+   "where": "JudgmentStore.publish, learn, tell, _post, trust_add (through JudgmentStore.rec)",
+   "status": "Fully instrumented",
+   "stage": "D5 (Expansion 20, R3)",
+   "test": "test_judgment_and_relations",
+   "note": "A meeting with nothing to tell writes no gossip row (the shared hour is the Relationships row). Not recorded: memory salience fading, forgetting, fact retirement at the horizon, ledger decay, personality drift, anger, bonds and resentment (below)."
+  },
+  {
+   "system": "Judgment-weighted decisions",
+   "interaction": "every JudgmentWeighting.choose (all 13 integrated decision domains and the family profiles): the chooser, the profile, the key, the chosen option and the selection policy as a decision row; every candidate as an alternative (feasible with its utility, or infeasible with the live code's why); for each feasible candidate every factor value, every weighted contribution, the family-name colour and the stubborn penalties; forgo with its utility",
+   "where": "JudgmentWeighting.choose (WorldRecorder.judgment_choice)",
+   "status": "Fully instrumented",
+   "stage": "D5 (Expansion 20, R3; REC-STORE)",
+   "test": "test_judgment_and_relations",
+   "note": "In full: no alternative or factor is sampled or dropped; at the storage cap the session stops, keeps everything and is marked incomplete (REC-D2). When the family name alone would have refused, only the repeated choice without it is recorded (tiebreak colour_blocked)."
+  },
+  {
+   "system": "Family priority (FAMILY-01)",
+   "interaction": "every family-priority decision (meal, pay, work, danger): the person, household, kind, chosen option and utility, the rule's own values (tier, temperament, threat, dependants, price, the dependant paid for) as factor rows, linked part_of from its weighted choice (whose factors carry family_child_need, family_spouse_need, family_parent_need, self_floor ...)",
+   "where": "JudgmentFamily._record (WorldRecorder.judgment_family)",
+   "status": "Fully instrumented",
+   "stage": "D5 (Expansion 20, R3; FAM-SAC-01)",
+   "test": "test_judgment_and_relations"
+  },
+  {
+   "system": "Judgment: memory and temperament over time",
+   "interaction": "salience fading and forgetting, facts retiring at the horizon, ledger decay, personality and wisdom drift, anger, bonds, resentment and family stories' pending state",
+   "where": "JudgmentStore.begin_day and dawn slices, JudgmentPersonality, JudgmentBonds",
    "status": "Not instrumented",
-   "stage": "D5"
+   "stage": "D5",
+   "note": "Their effects show where they matter: in the facts, beliefs and ledger posts they lead to and in the factors of later choices (disposition, family colour, stubborn penalties)."
   },
   {
    "system": "Player",

@@ -105,6 +105,7 @@ static func analyse(session_dir: String, defs: Dictionary) -> Dictionary:
 	var records := []
 	var deaths := []
 	var crime_ids := {}
+	var judgment := {}                  # REC-19 D5 / D4 (Expansion 20, R3): judgment and relations events, "subsystem|subtype|outcome" -> n
 	r = each_row(session_dir, "event", func(row, idx):
 		var cat := str(row[idx.category])
 		var sub := str(row[idx.subtype])
@@ -118,6 +119,9 @@ static func analyse(session_dir: String, defs: Dictionary) -> Dictionary:
 				return
 			"decision":
 				_inc(decisions, out)
+				return
+			"judgment", "relation":
+				_inc(judgment, "%s|%s|%s" % [str(row[idx.subsystem]), sub, out])     # counted, not listed (their volume would crowd the Events sheet)
 				return
 			"interruption":
 				_inc(interruptions, "%s|%s" % [sub, str(row[idx.reason])])
@@ -151,6 +155,7 @@ static func analyse(session_dir: String, defs: Dictionary) -> Dictionary:
 	a.events = ev
 	a.actions = actions
 	a.decisions = decisions
+	a.judgment = judgment
 	a.interruptions = interruptions
 	a.life = life
 	a.deaths = deaths

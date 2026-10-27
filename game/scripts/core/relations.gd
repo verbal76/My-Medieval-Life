@@ -190,6 +190,7 @@ func give(giver: int, n: NPC, id: String, qty := 1) -> String:
 	if not n.inv.can_add(id):
 		return "I've no room to carry that, but thank you."
 	var e := gift_effect(giver, n, id)
+	var rg: Array = w.recorder.gift_begin(giver, from, n, id, peek(giver, n.id)) if w.recorder != null else []   # REC-19 D4
 	from.remove(id, qty)
 	n.inv.add(id, qty)
 	if gp != null:
@@ -202,6 +203,8 @@ func give(giver: int, n: NPC, id: String, qty := 1) -> String:
 	while (t.recent as Array).size() > 3:
 		(t.recent as Array).pop_front()
 	_raise(t, float(e.regard), float(e.attraction), true, Vector2i(giver, n.id))
+	if w.recorder != null:
+		w.recorder.gift_end(rg, giver, from, n, id, t)
 	w.stat("gifts_given")
 	if w.judgment != null and first_today and float(e.regard) > 0.0:
 		JudgmentLive.on_gift(w, giver, n, id)                      # PROSPECTIVE (PROS-19)
@@ -285,9 +288,16 @@ func _touch(t: Dictionary) -> void:
 func harmed(n: NPC, amount: float, spread := true) -> void:
 	if n == null or n.role == "bandit":
 		return
+	var hev: int = w.recorder.harm_begin(w.acting_id(), n, amount, spread) if w.recorder != null else 0    # REC-19 D4
 	if n.alive:
-		_raise(tie(w.acting_id(), n.id), -amount, -amount * 0.5, false, Vector2i(w.acting_id(), n.id))
+		var tn := tie(w.acting_id(), n.id)
+		var bn := WorldRecorder.tie_before(tn) if hev > 0 else []
+		_raise(tn, -amount, -amount * 0.5, false, Vector2i(w.acting_id(), n.id))
+		if hev > 0:
+			w.recorder.harm_tie(hev, w.acting_id(), n.id, tn, bn)
 	if not spread:
+		if hev > 0:
+			w.recorder.end(hev)
 		return
 	var c := cfg()
 	for o: NPC in w.npcs:
@@ -299,7 +309,13 @@ func harmed(n: NPC, amount: float, spread := true) -> void:
 		elif friends(o.id, n.id):
 			share = float(c.friend_harm_share)
 		if share > 0.0:
-			_raise(tie(w.acting_id(), o.id), -amount * share, -amount * share * 0.5, false, Vector2i(w.acting_id(), o.id))
+			var to := tie(w.acting_id(), o.id)
+			var bo := WorldRecorder.tie_before(to) if hev > 0 else []
+			_raise(to, -amount * share, -amount * share * 0.5, false, Vector2i(w.acting_id(), o.id))
+			if hev > 0:
+				w.recorder.harm_tie(hev, w.acting_id(), o.id, to, bo)
+	if hev > 0:
+		w.recorder.end(hev)
 
 
 ## The player slew a villager (World.kill): their family and friends turn hard against the player
@@ -604,6 +620,7 @@ func share(a: int, b: int, kind: String) -> void:
 	if int(t.get("hour_key", -1)) == hk:
 		return
 	t.hour_key = hk
+	var sb := WorldRecorder.tie_before(t) if w.recorder != null else []      # REC-19 D4: the shared hour
 	if w.judgment != null:
 		w.judgment.meet_hourly(a, b, hk * 60)      # PROSPECTIVE (PROS-19): time together, word passes on (told over the next ticks)
 	var d: int = w.day()
@@ -618,10 +635,11 @@ func share(a: int, b: int, kind: String) -> void:
 	var att := float(sh.get(kind + "_attraction", 0.0)) * chemistry(a, b) if can_court(a, b) else 0.0
 	if str(t.stage) == "courting":
 		att *= float(sh.courting_factor)              # time together while courting counts for more
-	if reg <= 0.0 and att <= 0.0:
-		return
-	_raise_noted(t, reg, att, a, b)
-	_befriend_if_close(a, b, t)
+	if reg > 0.0 or att > 0.0:
+		_raise_noted(t, reg, att, a, b)
+		_befriend_if_close(a, b, t)
+	if w.recorder != null:
+		w.recorder.shared_hour(a, b, kind, t, sb)
 
 
 func _befriend_if_close(a: int, b: int, t: Dictionary) -> void:

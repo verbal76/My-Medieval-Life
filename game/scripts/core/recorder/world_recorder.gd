@@ -14,6 +14,8 @@ extends FlightRecorder
 ##   coin audit    hourly              recorded coin changes against each holder's purse and World.total_coins: any
 ##                                     difference is an "unattributed" event and an alert (REC-D4; no coin site is rewritten)
 ##   samples       hourly              hunger, health, cell, doing and coins of each living villager and the player (REC-D3)
+##   judgment (D5) and relations (D4): see the sections at the end (facts, beliefs, gossip, ledger posts, trust, every weighted
+##                 choice in full, family-priority decisions; shared hours, gifts, harm)
 
 var w                                   # the World
 var _plan_ev := {}                      # npc id -> [decision event, the plan Array it made, interaction]
@@ -48,6 +50,8 @@ static func attach(world, config := {}) -> WorldRecorder:
 		r._chain.append(str(b.id))
 		r._chain_factors[str(b.id)] = b.factors
 	world.recorder = r
+	if world.judgment != null:
+		world.judgment.rec = r             # REC-19 D5: the judgment store reports to the recorder (JudgmentLive.attach does it for a later store)
 	r._write_session()
 	return r
 
@@ -957,3 +961,234 @@ func world_loaded(d: Dictionary) -> void:
 func saved(d: Dictionary) -> void:
 	occurrence("world", "save", "system", "world_saved", "world", [], [], "ok", "", "save_version=%d; people=%d; next_person_id=%d next_band_id=%d; day=%d" % [
 			int(d.get("save_version", 0)), w.people.size(), w.next_person_id, w.next_band_id, w.day()])
+
+
+# ---------------------------------------------------------------- judgment (D5) -------------
+## REC-19 stage D5 (Expansion 20, batch R3; REC-STORE, FAM-SAC-01): the judgment store's records as they change, called through
+## JudgmentStore.rec (null unless a recorder is attached; set by attach and JudgmentLive.attach). Every call passes values the
+## store has just computed: nothing here calls a store function (no catch-up, no gossip flush, no draw), so recording changes no
+## belief, ledger, trust or choice.
+##   fact       JudgmentStore.publish        one event per fact: type, actors (with shares), victims, beneficiaries, value, tags
+##   belief     JudgmentStore.learn          one event per belief taken in (source, teller, hops, confidence); its ledger posts and
+##                                           trust moves are its state rows; the object thread "fact:<id>" joins a fact's beliefs
+##   gossip     JudgmentStore.tell           one event per telling that passed anything on (stories, news, a lie shown false); the beliefs it
+##                                           gave are its children. A meeting with nothing to tell writes no row (D4 records the hour)
+##   ledger     JudgmentStore._post          state rows judgment_good / judgment_bad:<actor>:fact:<id>, the contribution before and after
+##   trust      JudgmentStore.trust_add      state row trust:<subject>, before and after
+##   choice     JudgmentWeighting.choose     one decision with every candidate (feasible or not, with why) as an alternative and every
+##                                           factor value, weighted contribution, family colour and stubborn penalty as factor rows, in
+##                                           full (REC-STORE: no sampling; the storage cap stops the session, REC-D2)
+##   family     JudgmentFamily._record       one event per family-priority decision (the rows of family_trace), linked to its choice
+var _jlast_choice := 0                  # the last choice event (a family decision links to it)
+var _jlast_trace = null                 # ...and the trace Array that choice returned
+var _jgossip := {}                      # open gossip event id -> the row sequence when it began
+
+
+## A person in the judgment store or the relations: a villager is p:<id>; a player id (Life.is_player_id) is the player's permanent ref.
+func jref(id: int) -> String:
+	if Life.is_player_id(id):
+		var p = w.player_of_id(id)
+		return ref_of(p) if p != null else _pref(id)
+	return "p:%d" % id
+
+
+## The event the store's state rows belong to: the one open now (a belief, a telling, an action), else a one-off of its own.
+func _jctx(subsystem: String, subtype: String, actor: String, detail: String) -> int:
+	var cur := current()
+	if cur > 0:
+		return cur
+	return occurrence("judgment", subsystem, "judgment", subtype, actor, [[actor, "actor"]], [], "ok", "", detail)
+
+
+func judgment_fact(id: int, type: String, actors: Array, victims: Array, beneficiaries: Array, value: int, tags: Array) -> void:
+	var a0 := jref(int(actors[0][0])) if not actors.is_empty() else "world"
+	var ev := begin("judgment", "fact", "judgment", "fact:" + type, a0, {"object": "fact:%d" % id, "detail": "fact=%d value=%d tags=%s" % [id, value, JSON.stringify(tags)]})
+	for a in actors:
+		participant(ev, jref(int(a[0])), "actor:%d" % int(a[1]))
+	for v in victims:
+		participant(ev, jref(int(v)), "victim")
+	for b in beneficiaries:
+		participant(ev, jref(int(b)), "beneficiary")
+	end(ev)
+
+
+## A belief taken in (JudgmentStore.learn, past its duplicate checks): open until learn returns, so its posts and trust moves join it.
+func belief_begin(observer: int, fact: int, type: String, src: String, by: int, hops: int, conf: int, upgrade: bool) -> int:
+	var o := jref(observer)
+	var ev := begin("judgment", "belief", "judgment", src, o, {"object": "fact:%d" % fact,
+		"detail": "fact=%d type=%s hops=%d conf=%d%s" % [fact, type, hops, conf, " upgrade" if upgrade else ""]})
+	participant(ev, o, "observer")
+	if by >= 0 or Life.is_player_id(by):
+		participant(ev, jref(by), "teller")
+	return ev
+
+
+func gossip_begin(_teller: int, _listener: int) -> int:
+	var ev := begin("judgment", "gossip", "judgment", "tell", jref(_teller))
+	if ev > 0:
+		_jgossip[ev] = seq
+	return ev
+
+
+## The telling ends: `told` moral stories passed; news told and a lie shown false are recorded under it as their own rows. With nothing at all recorded under it the event is
+## dropped unwritten (no row, its id given back), so a meeting with nothing to tell costs no row.
+func gossip_end(ev: int, teller: int, listener: int, told: int) -> void:
+	if ev <= 0:
+		return
+	var at := int(_jgossip.get(ev, -1))
+	_jgossip.erase(ev)
+	if told == 0 and at == seq and _open.has(ev):
+		_open.erase(ev)
+		var i := _stack.rfind(ev)
+		if i >= 0:
+			_stack.remove_at(i)
+		if next_event == ev + 1:
+			next_event = ev
+		return
+	participant(ev, jref(teller), "teller")
+	participant(ev, jref(listener), "listener")
+	end(ev, "ok", "", "stories=%d" % told)        # its children say what else passed (news, a lie shown false)
+
+
+func judgment_post(observer: int, fact: int, actor: int, og: int, ob: int, ng: int, nb: int) -> void:
+	var o := jref(observer)
+	var ev := _jctx("ledger", "post", o, "fact=%d" % fact)
+	var a := jref(actor)
+	if og != ng:
+		state_change(ev, o, "judgment_good:%s:fact:%d" % [a, fact], og, ng, "judgment")
+	if ob != nb:
+		state_change(ev, o, "judgment_bad:%s:fact:%d" % [a, fact], ob, nb, "judgment")
+
+
+func trust_move(a: int, b: int, before: int, after: int) -> void:
+	var o := jref(a)
+	state_change(_jctx("trust", "trust_move", o, ""), o, "trust:%s" % jref(b), before, after, "judgment")
+
+
+const _JBASIS := {"forgo": "forgo", "none feasible": "none_feasible", "the family name alone cannot refuse": "family_name_cannot_refuse"}
+const _JSOURCE := {"disposition": "judgment", "ambivalence": "judgment", "sole_source": "judgment"}
+
+
+## One JudgmentWeighting.choose, in full: the decision, every candidate as an alternative (infeasible ones with why) and, for each
+## feasible one, every factor value, its weighted contribution, the family colour and the stubborn penalties, then forgo.
+func judgment_choice(chooser: int, profile: String, key: Array, r: Dictionary) -> void:
+	var actor := jref(chooser)
+	var chosen := "none" if r.get("chosen") == null else str(r.chosen)
+	var policy := str(r.get("policy", ""))
+	var ev := begin("judgment", "choice", "judgment", profile, actor, {"detail": "key=%s utility=%d policy=%s" % [JSON.stringify(key), int(r.get("utility", 0)), policy]})
+	participant(ev, actor, "chooser")
+	decision(ev, actor, "judgment_weighted", chosen, str(_JBASIS.get(policy, policy)), "colour_blocked" if bool(r.get("colour_blocked", false)) else "")
+	var seen_cp := {}
+	for row in r.get("trace", []):
+		var opt := str(row.id)
+		if opt == "forgo" and not row.has("counterparty"):
+			alternative(ev, "forgo", "yes", true, "", int(row.get("utility", 0)))
+			factor(ev, "forgo", "forgo", int(row.get("utility", 0)), "milli-points", "profile")
+			continue
+		var cp := int(row.get("counterparty", -1))
+		if cp != -1 and not seen_cp.has(cp):
+			seen_cp[cp] = true
+			participant(ev, jref(cp), "counterparty")
+		if not bool(row.get("feasible", true)):
+			alternative(ev, opt, "yes", false, "not_feasible")
+			factor(ev, opt, "why", str(row.get("why", "")), "text", "live_code")
+			continue
+		alternative(ev, opt, "yes", true, "", int(row.get("utility", 0)))
+		if cp != -1:
+			factor(ev, opt, "counterparty", jref(cp), "ref", "live_code")
+		var f: Dictionary = row.get("factors", {})
+		var names := f.keys()
+		names.sort()
+		for n in names:
+			factor(ev, opt, str(n), int(f[n]), "milli-points (0-100000)", str(_JSOURCE.get(str(n), "live_code")))
+		var c: Dictionary = row.get("contributions", {})
+		var cn := c.keys()
+		cn.sort()
+		for n in cn:
+			factor(ev, opt, "weighted:" + str(n), int(c[n]), "milli-points", "weight")
+		if row.has("colour"):
+			factor(ev, opt, "family_colour", int(row.colour), "milli-points", "judgment")
+		if row.has("stubborn"):
+			for k in ["resent", "switch", "override", "total"]:
+				factor(ev, opt, "stubborn_" + k, int(row.stubborn.get(k, 0)), "milli-points", "personality")
+	end(ev, "ok" if r.get("chosen") != null else "empty")
+	_jlast_choice = ev
+	_jlast_trace = r.get("trace")
+
+
+## One family-priority decision (JudgmentFamily._record: the row it keeps in JudgmentStore.family_trace), linked to its weighing.
+func judgment_family(row: Dictionary) -> void:
+	var actor := jref(int(row.who))
+	var ev := begin("judgment", "family", "judgment", str(row.kind), actor, {"detail": "household=%d chosen=%s utility=%d" % [int(row.household), str(row.chosen), int(row.utility)]})
+	participant(ev, actor, "head" if str(row.kind) == "pay" else "person")
+	var keys := row.keys()
+	keys.sort()
+	for k in keys:
+		if k in ["day", "hour", "who", "household", "kind", "chosen", "utility", "trace"]:
+			continue
+		var v = row[k]
+		if k == "for":
+			participant(ev, jref(int(v)), "dependant")
+			v = jref(int(v))
+		factor(ev, str(row.chosen), str(k), v, "value", "judgment_family")
+	if _jlast_choice > 0 and is_same(_jlast_trace, row.get("trace")):
+		link(_jlast_choice, ev, "part_of", "family_trace")
+	end(ev)
+
+
+# ---------------------------------------------------------------- relations (D4) ------------
+## REC-19 stage D4, Relations (Expansion 20, batch R3): shared hours, gifts and harm, each an event on the pair's tie
+## (`tie:<a>:<b>`, Relations.key) with the regard and attraction before and after (floats, so no delta) and the people as
+## participants. Reads the tie Dictionary the caller already holds; nothing is changed.
+func _tie_rows(ev: int, a: int, b: int, t: Dictionary, before: Array) -> void:
+	var ref := "tie:" + Relations.key(a, b)
+	if float(before[0]) != float(t.regard):
+		state_change(ev, ref, "regard", snappedf(float(before[0]), 0.0001), snappedf(float(t.regard), 0.0001), "relations")
+	if float(before[1]) != float(t.attraction):
+		state_change(ev, ref, "attraction", snappedf(float(before[1]), 0.0001), snappedf(float(t.attraction), 0.0001), "relations")
+	if int(before[2]) != int(t.days_known):
+		state_change(ev, ref, "days_known", int(before[2]), int(t.days_known), "relations")
+
+
+static func tie_before(t: Dictionary) -> Array:
+	return [float(t.regard), float(t.attraction), int(t.days_known)]
+
+
+## Relations.share: one shared hour of a pair (kind work, social or met), whatever it added.
+func shared_hour(a: int, b: int, kind: String, t: Dictionary, before: Array) -> void:
+	var ev := begin("relations", "shared", "relation", kind, jref(a), {"object": "tie:" + Relations.key(a, b)})
+	participant(ev, jref(a), "person")
+	participant(ev, jref(b), "person")
+	_tie_rows(ev, a, b, t, before)
+	end(ev)
+
+
+## Before Relations.give moves the goods: the event and the counts and tie before.
+func gift_begin(giver: int, from: Inventory, n: NPC, id: String, t: Dictionary) -> Array:
+	var ev := begin("relations", "gift", "relation", "gift", jref(giver), {"object": "tie:" + Relations.key(giver, n.id), "detail": "item=%s" % id})
+	return [ev, from.count(id), n.inv.count(id), tie_before(t)]
+
+
+func gift_end(g: Array, giver: int, from: Inventory, n: NPC, id: String, t: Dictionary) -> void:
+	var ev: int = g[0]
+	if ev <= 0:
+		return
+	var gr := jref(giver)
+	participant(ev, gr, "giver")
+	participant(ev, jref(n.id), "receiver")
+	state_change(ev, gr, "item:" + id, int(g[1]), from.count(id), "relations.gift")
+	state_change(ev, jref(n.id), "item:" + id, int(g[2]), n.inv.count(id), "relations.gift")
+	_tie_rows(ev, giver, n.id, t, g[3])
+	end(ev)
+
+
+## Relations.harmed: harm the acting player did (or that the villager saw); each tie it lowered is a child row set.
+func harm_begin(actor: int, n: NPC, amount: float, spread: bool) -> int:
+	var ev := begin("relations", "harm", "relation", "harm", jref(actor), {"detail": "amount=%s spread=%s" % [str(snappedf(amount, 0.0001)), str(spread)]})
+	participant(ev, jref(n.id), "victim")
+	return ev
+
+
+func harm_tie(ev: int, a: int, b: int, t: Dictionary, before: Array) -> void:
+	if ev > 0:
+		_tie_rows(ev, a, b, t, before)
