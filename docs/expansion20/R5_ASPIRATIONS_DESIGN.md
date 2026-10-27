@@ -461,3 +461,61 @@ domain, survival pressure, `job_choice` and the romance factors).
   desktop. This is an estimate, not a measurement.
 - The code batch measures it with `judgment_perf.gd` and the `world.profiling` "daily: brain dawn" slot. Target: at most 5%
   added to that slot. The phone budget is not yet set (CLAUDE.md §8). No per-frame work is added.
+
+---
+
+## 12. Developer notes: the code batch (2026-10-27, base `origin/wip/expansion20` 5770d00)
+
+Implemented on `wip/x20-r5` as designed, with these differences and details. Everything is off by default
+(`aspiration.enabled` false, `decision.integration.job_choice` false); with them off nothing below runs and G0 matches.
+
+**Files.**
+- `judgment/judgment_aspiration.gd` (new): domains, satisfaction, standing, survival, temperament, shifts, the factor,
+  the dawn update, `on_loss`, `on_marriage`, the `aspire` save rows. `JudgmentAspiration.override` lets economy_sim switch it on
+  (`--aspiration`, `--job-choice`).
+- `judgment/judgment_weighting.gd::_choose`: with the layer on, the five yes-or-forgo profiles gain the `aspiration` weight
+  from `aspiration.factor_weights` (not written into the profiles, so the profiles are byte-identical while off);
+  `court_choice` takes its weights from `aspiration.court.weights`; weights named in a profile's or the court's `scaled_by`
+  are multiplied by the chooser's effective priority. Trace extras: `row.aspiration` {domain, pressure, fit, surv},
+  `row.scale` {factor: multiplier}, forgo `forgo_aspiration_offset`.
+- `judgment/judgment_store.gd`: member `asp`; a weak reference `world` (set by `JudgmentLive.attach`); optional key
+  `aspire`. **Versions:** R4 had already made the section version 3, so the R5 section is **version 4**
+  (`ASPIRE_VERSION`), written only when `aspire` has rows; `VERSION` stays 3 (the version written otherwise) and
+  `MAX_VERSION` 4 is the newest read. A store with the layer off keeps a loaded `aspire` unread and writes it back.
+- `judgment/judgment_live.gd`: `on("job_choice")` refuses unless the layer is on (`push_warning` once); `aspiring`;
+  `pick_job`; `court_factors` (used by `pick_court` only with the layer on); `serves` for unpaid work in `work_refusal`;
+  `on_death` (loss of a partner, child or parent) and `on_marriage` hooks.
+- `npc_brain.gd`: `seek_work` collects the feasible options and, with `job_choice` on, asks `pick_job`; the live
+  condition is unchanged otherwise. `dawn` calls `asp.dawn(w)` between the households' evaluation and `succession_dawn`
+  / `seek_work`.
+- Recorder: `WorldRecorder.aspiration_event` (code `judgment/aspiration`, subsystem added to `recorder_codes.json`;
+  coverage row added), `_JSOURCE` entries and the trace extras in `judgment_choice`.
+
+**Differences from sections 2 to 8.**
+- **Saved satisfaction.** Each row also saves the morning's satisfaction (`sat`, six values). Decisions all day read it
+  (the yes-or-forgo factor, a candidate's property in courting, shared ambition); recomputing it at load would read a
+  later world, so a mid-day save would not give the same next choices (V8).
+- **Standing computed live.** `standing_value(x, exclude)` walks the observers' ledgers (sorted) at the time it is read
+  (each dawn for the villager's own standing; per candidate in courting) instead of a dawn cache of per-observer
+  contributions. Same separation, no saved derived state.
+- **Row layout.** `[person, shifts[], bands[], sats[], lead, lead_since, setbacks[][], surv]`, each array in the order of
+  `domains`; `lead` indexes `domains` (-1 content); `setbacks` per domain are the days of the recent setbacks (at most
+  `giveup_after`).
+- **job_choice weights.** need_wage 500, tenure 50, career_sat 50 (section 6.2 proposed 300, 100, 100): with the design's
+  numbers the stay option of a skilled smith outweighs any hardship, which FAD Q2 rules out. `need_wage` = hardship x the pay
+  gain, a gain of `need_gain_full_permille` (10%) counting in full; hardship = max(coin need, `hardship_per_streak_day` x the
+  household's unsustainable days). Candidates: the live best, then staying (or staying first when the live rule would not
+  switch), then the rest by live score.
+- **Court weights.** Applied only with the layer on: attraction 500 and disposition 300 replace the profile's 600 and 400.
+- **Satisfaction shapes** (PROVISIONAL, `docs/DECISIONS.md`): property owned 60, leased 40, none 15 points, land +20,
+  short goal -20, missing tool -20; family single 15, courting 35 (`Relations.interests`), partnered 60, children 70 or 90
+  when sustainable.
+- **Survival danger** reads only permanent violence memories (assault, killing), so reading them without a catch-up is exact.
+
+**Tests.** `game/tests/aspiration_test.gd`, one function per owner verification bullet (V1 to V10) plus domains and
+neutral, the recorder and determinism. `judgment_x19_test` now tests "a newer game's section" with
+`JudgmentStore.MAX_VERSION + 1` (version 4 is readable since R5).
+
+**Not done here.** Dialogue (FAD Q7): the seam is `JudgmentAspiration.lead_of(person)` and `domain_name(d)`; nothing
+speaks. No wiki page while the layer is off. Proposal acceptance is unchanged (open question WDR-011-Q8). The four-seed
+measurement is R6's.
