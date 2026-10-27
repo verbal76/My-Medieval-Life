@@ -289,7 +289,21 @@ func relations(rec_runs: Array, chart_runs: Array) -> void:
 		x.row([_label(r), _fmt(a.stats.get("gifts_given", 0.0)), _fmt(a.stats.get("friendships", 0.0)), int(a.life.get("partnership", 0)),
 			_fmt(a.stats.get("crime_reports_made", 0.0)), _fmt(a.stats.get("crime_reports_delivered", 0.0)), wit, last.get("facts")])
 	_blank(2)
-	x.row(["not recorded yet", "Good/Bad opinion ledgers, gossip propagation and each relation's change are not instrumented (recorder_coverage.json: Relationships, Judgment, stages D4 and D5); the counts above are the game's own counters and the hourly totals of ties, friendships, courting pairs and judgment facts."])
+	# REC-19 D5 and D4 (Expansion 20, R3): what the recorder saw of judgment and relations, counted from its event rows
+	x.row(["run", "judgment facts published", "beliefs taken in", "tellings that passed word", "weighted choices", "family-priority decisions",
+		"shared hours", "gifts", "harms"])
+	for r in rec_runs:
+		var j: Dictionary = r.analysis.get("judgment", {})
+		var n := func(prefix: String) -> int:
+			var t := 0
+			for k in j:
+				if str(k).begins_with(prefix):
+					t += int(j[k])
+			return t
+		x.row([_label(r), n.call("fact|"), n.call("belief|"), n.call("gossip|tell|ok"), n.call("choice|"), n.call("family|"), n.call("shared|"),
+			n.call("gift|"), n.call("harm|")])
+	_blank(2)
+	x.row(["not recorded", "Memory fading, forgetting, ledger decay, personality drift, bonds and resentment, and the relations' other channels (help, talk, cooling, courting at dawn) are not instrumented (recorder_coverage.json). Each belief's ledger posts and trust moves, and every weighted choice's alternatives and factors, are in the archive's state_change, alternative and factor tables (not read into this workbook: their volume)."])
 
 
 func crime(rec_runs: Array, chart_runs: Array, gate: Dictionary) -> void:

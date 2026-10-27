@@ -126,6 +126,7 @@ var story_pending := {}  # child -> [day they came of age, parents who have told
 var last_choice := {}    # chooser -> {decision key -> [token, day]}: a stubborn person's last choice in a decision (saved)
 var fights := {}         # pair key -> [aggressor, first blow minute, last blow minute]: a fight under way (X19-EVENT-Q self-defence; saved)
 var trace := false       # developer diagnostics: keep each interpretation's parts in last_trace (off: the same numbers, no record)
+var rec = null           # REC-19 D5: the flight recorder (WorldRecorder) when one is attached (WorldRecorder.attach, JudgmentLive.attach); never saved, never read by the simulation: it is handed values already computed
 var timing := {}         # microseconds spent, by part (measurement only: never saved, never read by the simulation)
 
 # the sliced daily update
@@ -327,6 +328,8 @@ func publish(type: String, actors: Array, victims: Array = [], beneficiaries: Ar
 	by_day[day].append(id)
 	_stat("events")
 	_stat("event_" + type)                  # a diagnostics counter per kind (reports)
+	if rec != null:
+		rec.judgment_fact(id, type, _shares(actors), victims, beneficiaries, value, tags)     # REC-19 D5
 	return id
 
 
@@ -524,6 +527,7 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 		return false
 	var f: PackedInt64Array = facts[ev]
 	var t := f[F_TYPE]
+	var rev: int = rec.belief_begin(observer, ev, _types[t], src, by, hops, conf, had) if rec != null else 0    # REC-19 D5
 	var fresh := not had and not has_contribution(observer, ev)
 	if had and SOURCES.find(src) < TOLD:
 		var prev: PackedInt64Array = mem[ev]
@@ -536,6 +540,8 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 		mem[ev] = _pack_mem(t, f[F_DAY], SOURCES.find(src), by, hops, conf, maxi(sal, old_sal), actors, 0)
 		_stat("news_beliefs")
 		_bound_news(observer)
+		if rev > 0:
+			rec.end(rev)
 		return true
 	var perm := _mem_permanent(observer, f)
 	mem[ev] = _pack_mem(t, f[F_DAY], SOURCES.find(src), by, hops, conf, maxi(sal, old_sal), actors, 1 if perm else 0)
@@ -560,6 +566,8 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 				var dt := JudgmentMath.mul_div(JudgmentMath.mul_div(_t_ev[t], conf, 1000), int(a[1]), 1000)
 				trust_add(observer, int(a[0]), dt / 2 if late and dt > 0 else dt)
 	_bound(observer)
+	if rev > 0:
+		rec.end(rev)
 	return true
 
 
@@ -935,6 +943,8 @@ func _post(observer: int, ev: int, want: Dictionary, perm := false) -> void:
 			out.append(nb)
 		if og == ng and ob == nb:
 			continue
+		if rec != null:
+			rec.judgment_post(observer, ev, int(a), og, ob, ng, nb)      # REC-19 D5: the ledger post
 		var was := og != 0 or ob != 0
 		var now := ng != 0 or nb != 0
 		_ledger_add(observer, a, ng - og, nb - ob, 1 if now and not was else (-1 if was and not now else 0), perm)
@@ -1349,6 +1359,15 @@ func _gtrim() -> void:
 ## the teller (credibility(): the existing relationship number, then their judgment of the teller). A seeded hash may
 ## make a rumour name the wrong actor (misattribute_permille; the teller's most disliked). Returns how many were told.
 func tell(teller: int, listener: int) -> int:
+	if rec == null:
+		return _tell(teller, listener)
+	var gev: int = rec.gossip_begin(teller, listener)                  # REC-19 D5: the telling and the beliefs it gave
+	var k := _tell(teller, listener)
+	rec.gossip_end(gev, teller, listener, k)
+	return k
+
+
+func _tell(teller: int, listener: int) -> int:
 	if teller == listener or not memories.has(teller):
 		return 0
 	_cu(teller)
@@ -1752,6 +1771,8 @@ func trust_add(a: int, b: int, d: int) -> void:
 	if not trust.has(a):
 		trust[a] = {}
 	trust[a][b] = clampi(cur + d, 0, 100000)
+	if rec != null:
+		rec.trust_move(a, b, cur, int(trust[a][b]))                   # REC-19 D5
 	_stat("trust_moves")
 
 

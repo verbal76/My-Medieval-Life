@@ -5467,6 +5467,8 @@ func dispose() -> void:
 	if recorder != null:
 		recorder.finish()              # REC-19: write what is buffered and close the session
 		recorder = null
+		if judgment != null:
+			judgment.rec = null        # REC-19 D5: the store no longer reports
 	brain = null
 	fauna = null
 	construction = null

@@ -3,12 +3,12 @@
   "note": "The one code table of the flight recorder (schema mml-recorder/1). XEXPL-01's explanation layers will read the same table. A code the recorder is given that is not listed here is counted in unknown_codes (the recorder test requires zero) and still written as given. 'not evaluated' is the value stored for anything the engine did not compute; nothing is invented.",
   "not_evaluated": "not evaluated",
   "outcomes": ["ok", "failed", "refused", "interrupted", "abandoned", "unfinished", "unattributed", "empty"],
-  "systems": ["combat", "brain", "world", "economy", "audit", "player", "identity", "life", "employment", "government", "crime"],
-  "subsystems": ["chase", "decide", "act", "trade", "transfer", "walk", "station", "coins", "snapshot", "register", "succession", "save", "birth", "death", "role", "partner", "guardianship", "job", "vacancy", "wage", "reeve_day", "pay_guards", "manor", "witness", "guard", "alarm", "report", "robbery", "verb", "hue_and_cry", "bell"],
-  "categories": ["combat", "decision", "action", "transaction", "interruption", "audit", "identity", "life", "employment", "civic", "crime", "verb", "system"],
-  "entity_kinds": {"p": "person: p:<permanent person id> (ID-01); the current player character is p:<PlayerState.pid>, marked by the participant role suffix :player, never a separate identity; p:player only if a player has no pid (a bare test world)", "role": "an office that passes from person to person: role:player is held by one person at a time (changes at succession)", "hh": "household (index)", "manor": "the manor and its treasury", "granary": "the manor's granary", "inv": "an inventory whose owner the recorder could not name", "world": "the village as a whole"},
-  "state_properties": ["people", "vacancies", "coins", "item", "where", "alive", "role", "job", "hp", "partner", "household", "crimes", "holder", "wage_raise", "target", "report", "treasury"],
-  "authorities": ["world.trade", "world.transfer", "audit", "summary", "identity", "life", "employment", "gov.tax", "gov.wage", "gov.repairs", "gov.granary", "gov.tools", "gov.works", "gov.mine_supply", "gov.relief", "gov.fine", "crime.robbery", "player.verb", "life.inherit"],
+  "systems": ["combat", "brain", "world", "economy", "audit", "player", "identity", "life", "employment", "government", "crime", "judgment", "relations"],
+  "subsystems": ["chase", "decide", "act", "trade", "transfer", "walk", "station", "coins", "snapshot", "register", "succession", "save", "birth", "death", "role", "partner", "guardianship", "job", "vacancy", "wage", "reeve_day", "pay_guards", "manor", "witness", "guard", "alarm", "report", "robbery", "verb", "hue_and_cry", "bell", "fact", "belief", "gossip", "ledger", "trust", "choice", "family", "shared", "gift", "harm"],
+  "categories": ["combat", "decision", "action", "transaction", "interruption", "audit", "identity", "life", "employment", "civic", "crime", "verb", "system", "judgment", "relation"],
+  "entity_kinds": {"p": "person: p:<permanent person id> (ID-01); the current player character is p:<PlayerState.pid>, marked by the participant role suffix :player, never a separate identity; p:player only if a player has no pid (a bare test world)", "role": "an office that passes from person to person: role:player is held by one person at a time (changes at succession)", "hh": "household (index)", "manor": "the manor and its treasury", "granary": "the manor's granary", "inv": "an inventory whose owner the recorder could not name", "world": "the village as a whole", "tie": "a pair's relationship, tie:<lower id>:<higher id> (Relations.key; a player tie uses their person id, -2 the host)"},
+  "state_properties": ["people", "vacancies", "coins", "item", "where", "alive", "role", "job", "hp", "partner", "household", "crimes", "holder", "wage_raise", "target", "report", "treasury", "judgment_good", "judgment_bad", "trust", "regard", "attraction", "days_known"],
+  "authorities": ["world.trade", "world.transfer", "audit", "summary", "identity", "life", "employment", "gov.tax", "gov.wage", "gov.repairs", "gov.granary", "gov.tools", "gov.works", "gov.mine_supply", "gov.relief", "gov.fine", "crime.robbery", "player.verb", "life.inherit", "judgment", "relations", "relations.gift"],
   "link_kinds": ["caused", "fulfils", "obligation", "part_of", "same_object"],
   "alert_severities": ["violation", "warning"],
   "alert_rules": {
@@ -17,6 +17,7 @@
     "coin.unattributed_total": "World.total_coins changed by an amount neither the recorded coin changes nor World.coin_sources explain"
   },
   "reasons": {
+    "not_feasible": "the live decision code marked the candidate infeasible (its own words are the factor row why)",
     "invalid_trade": "quantity or price not valid, or buyer and seller the same",
     "buyer_short_of_coins": "the buyer's purse was below the bill",
     "seller_lacks_item": "the seller did not hold the units",
@@ -54,8 +55,8 @@
     "taken": "a guard who may not kill beat the offender down and took them in (A3): fined, the stolen goods returned",
     "not_reached": "an earlier branch took the decision, so this branch (alternative option \"after:<winner>\" stands for every later branch of the chain) was not evaluated"
   },
-  "decision_kinds": ["plan_next"],
-  "decision_basis": ["first_passing_branch"],
+  "decision_kinds": ["plan_next", "judgment_weighted"],
+  "decision_basis": ["first_passing_branch", "margin", "argmax", "forgo", "none_feasible", "family_name_cannot_refuse"],
   "decision_chain": [
     {"id": "bandit", "factors": ["role"]},
     {"id": "clan_child", "factors": ["clan"]},

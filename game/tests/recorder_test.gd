@@ -43,6 +43,7 @@ func _init() -> void:
 	test_player_verbs()
 	test_scripted_equivalence()
 	test_person_refs()
+	test_judgment_and_relations()
 	test_coverage_file()
 	print("%d checks, %d failures" % [checks, failures])
 	_remove(tmp_root)
@@ -252,7 +253,7 @@ func test_live_world() -> void:
 	for e in d.event:
 		ev[int(e.id)] = e
 	# decisions: one per decide call; the chosen branch is the one the chain returned; later branches are not evaluated
-	var decisions: Array = d.decision
+	var decisions: Array = d.decision.filter(func(x): return x.kind == "plan_next")     # the brain's chain (judgment-weighted choices are D5's, tested below)
 	var chosen_ok := not decisions.is_empty()
 	var by_ev := {}
 	for a in d.alternative:
@@ -993,6 +994,143 @@ func test_person_refs() -> void:
 		if str(r).begins_with("p:") and not w.people.has(int(str(r).substr(2))):
 			bad.append(r)
 	check(bad.is_empty() and not seen_refs.has("p:player"), "every person reference in the archive is a permanent id the register knows; none is p:player (%d refs, bad: %s)" % [seen_refs.size(), str(bad)])
+	w.dispose()
+
+
+## REC-19 D5 and D4 relations (Expansion 20, batch R3; REC-STORE, FAM-SAC-01): judgment facts, beliefs, gossip, ledger posts, trust
+## moves, every weighted choice with every alternative and factor, family-priority decisions, and the relations' shared hours,
+## gifts and harm. The same steps with and without the recorder leave the world, the judgment store and the RNG identical.
+func judgment_steps(w: World) -> void:
+	run_minutes(w, 26 * 60)
+	var j: JudgmentStore = w.judgment
+	var adults: Array = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.household >= 3)
+	var a: NPC = adults[0]
+	var b: NPC = adults[1]
+	# a weighted choice with an infeasible candidate and a forgo (contract_accept), as the live code hands it
+	JudgmentWeighting.choose(j, j.cfg, a.id, "contract_accept", [
+		{"id": "deal_b", "counterparty": b.id, "factors": {"live_order": 100000, "necessity": 40000}},
+		{"id": "deal_x", "counterparty": adults[2].id, "feasible": false, "why": "no stock"}], [w.day(), 77])
+	# a family-priority decision through the real record path
+	var r := JudgmentWeighting.choose(j, j.cfg, a.id, "family_meal", [
+		{"id": "eat", "counterparty": -1, "factors": {"self_need": 60000}},
+		{"id": "give", "counterparty": -1, "factors": {"family_child_need": 50000}}], [w.day(), a.id, 5])
+	JudgmentFamily._record(w, a, "meal_pantry", r, {"tier": 3, "temperament": "ordinary"})
+	# a deed, seen: a fact, beliefs, ledger posts
+	var ev := j.publish("theft", [a.id], [b.id], [], 5)
+	j.observe_all(ev, [adults[3].id])
+	j.observe_all(j.publish("trade_fair", [a.id], [], [b.id], 5), [])     # a fair deal: the beneficiary's trust in the dealer moves
+	# the player's gift and harm
+	w.player.inv.add("bread", 1)
+	w.relations.give(Life.PLAYER_ID, b, "bread")
+	w.relations.harmed(b, 3.0)
+	run_minutes(w, 60)
+
+
+func test_judgment_and_relations() -> void:
+	var plain := identity_world()
+	judgment_steps(plain)
+	var ha := world_hash(plain) + str(plain.judgment.state_hash())
+	var w := identity_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("judgment")})
+	check(w.judgment != null and w.judgment.rec == rec, "D5: the judgment store reports to the attached recorder (JudgmentStore.rec)")
+	judgment_steps(w)
+	check(world_hash(w) + str(w.judgment.state_hash()) == ha, "D5/D4: recording judgment and relations changes nothing: to_dict, the judgment store's hash and the RNG state equal the unrecorded run")
+	rec.flush()
+	var d := read_all(rec)
+	check(rec.unknown_codes.is_empty(), "D5/D4: no unknown code (%s)" % str(rec.unknown_codes))
+	var ev := {}
+	var kids := {}
+	for e in d.event:
+		ev[int(e.id)] = e
+		if int(e.parent) > 0:
+			if not kids.has(int(e.parent)):
+				kids[int(e.parent)] = []
+			kids[int(e.parent)].append(e)
+	var by := func(table: String) -> Dictionary:
+		var m := {}
+		for x in d[table]:
+			if not m.has(int(x.event)):
+				m[int(x.event)] = []
+			m[int(x.event)].append(x)
+		return m
+	var parts: Dictionary = by.call("participant")
+	var sc: Dictionary = by.call("state_change")
+	var alts: Dictionary = by.call("alternative")
+	var facs: Dictionary = by.call("factor")
+	var jev: Array = d.event.filter(func(e): return e.system == "judgment")
+	var facts: Array = jev.filter(func(e): return e.subsystem == "fact")
+	var beliefs: Array = jev.filter(func(e): return e.subsystem == "belief")
+	var gossip: Array = jev.filter(func(e): return e.subsystem == "gossip")
+	var choices: Array = jev.filter(func(e): return e.subsystem == "choice")
+	check(facts.size() > 0 and facts.all(func(e): return e.actor == "world" or (parts.get(int(e.id), []) as Array).any(func(p): return str(p.role).begins_with("actor") and p.ref == e.actor)) and facts.any(func(e): return e.subtype == "fact:theft" and str(e.object).begins_with("fact:")),
+		"D5: every published fact is an event with its actors (%d facts)" % facts.size())
+	var thread_ok: bool = beliefs.size() > 0
+	for e in beliefs:
+		thread_ok = thread_ok and str(e.object).begins_with("fact:") and e.subtype in JudgmentStore.SOURCES
+	check(thread_ok, "D5: every belief taken in is an event on the fact's thread, with its source (%d beliefs)" % beliefs.size())
+	var posted: Array = beliefs.filter(func(e): return (sc.get(int(e.id), []) as Array).any(func(c): return str(c.prop).begins_with("judgment_bad:") or str(c.prop).begins_with("judgment_good:")))
+	check(posted.size() > 0 and posted.any(func(e): return e.subtype == "witnessed"), "D5: ledger posts are the beliefs' state rows, contribution before and after (%d beliefs posted)" % posted.size())
+	check(d.state_change.any(func(c): return str(c.prop).begins_with("trust:") and c.authority == "judgment"), "D5: trust moves are state rows with before and after")
+	var told_ok: bool = gossip.size() > 0
+	for g in gossip:
+		told_ok = told_ok and g.outcome == "ok" and not (kids.get(int(g.id), []) as Array).is_empty()
+	var with_told := gossip.filter(func(g): return (kids.get(int(g.id), []) as Array).any(func(k): return k.subsystem == "belief" and k.subtype in ["told", "rumour"]))
+	check(told_ok and not with_told.is_empty(), "D5: each recorded telling passed something on: its children are what it gave (%d tellings, %d with told beliefs; one with nothing writes no row)" % [gossip.size(), with_told.size()])
+	# every weighted choice, in full
+	var dec: Array = d.decision.filter(func(x): return x.kind == "judgment_weighted")
+	check(dec.size() == choices.size() and dec.size() >= 2, "D5: every JudgmentWeighting.choose is a decision (%d)" % dec.size())
+	var mine: Array = choices.filter(func(e): return e.subtype == "contract_accept" and str(e.detail).contains("77"))
+	check(mine.size() == 1, "D5: the scripted contract choice is recorded once")
+	if mine.size() == 1:
+		var id := int(mine[0].id)
+		var al: Array = alts.get(id, [])
+		var fa: Array = facs.get(id, [])
+		var opts := al.map(func(x): return x.option)
+		check(opts.has("deal_b") and opts.has("deal_x") and opts.has("forgo") and al.size() == 3, "REC-STORE: every candidate and forgo is an alternative (%s)" % str(opts))
+		var x: Array = al.filter(func(x): return x.option == "deal_x")
+		check(not x.is_empty() and x[0].feasible == false and x[0].reason == "not_feasible" and fa.any(func(f): return f.option == "deal_x" and f.factor == "why" and f.value == "no stock"), "REC-STORE: an infeasible candidate keeps its why")
+		var wts: Dictionary = JudgmentStore.default_cfg().decision.profiles.contract_accept.weights
+		var full := true
+		for k in wts:
+			full = full and fa.any(func(f): return f.option == "deal_b" and f.factor == k) and fa.any(func(f): return f.option == "deal_b" and f.factor == "weighted:" + k)
+		check(full and fa.any(func(f): return f.option == "deal_b" and f.factor == "disposition" and f.source == "judgment"), "REC-STORE: every factor the profile weighs and its weighted contribution are kept for each feasible option")
+		var dd: Array = d.decision.filter(func(q): return int(q.event) == id)
+		var bu: Array = al.filter(func(x): return x.option == "deal_b")
+		var fo: Array = al.filter(func(x): return x.option == "forgo")
+		check(dd.size() == 1 and dd[0].chosen in ["deal_b", "forgo"] and typeof(bu[0].score) != TYPE_STRING and typeof(fo[0].score) != TYPE_STRING, "D5: the chosen option and each utility are stored (chose %s)" % (dd[0].chosen if dd.size() == 1 else "?"))
+	var all_full: bool = true
+	for e in choices:
+		var al2: Array = alts.get(int(e.id), [])
+		all_full = all_full and not al2.is_empty()
+		for a2 in al2:
+			if a2.feasible == true and a2.option != "forgo":
+				all_full = all_full and (facs.get(int(e.id), []) as Array).any(func(f): return f.option == a2.option and str(f.factor).begins_with("weighted:"))
+	check(all_full, "REC-STORE: each of the %d recorded choices has its alternatives, and every feasible one its weighted factors" % choices.size())
+	# family priority
+	var fam: Array = jev.filter(func(e): return e.subsystem == "family")
+	var fam_ok: bool = fam.any(func(e): return e.subtype == "meal_pantry" and (facs.get(int(e.id), []) as Array).any(func(f): return f.factor == "tier" and int(f.value) == 3))
+	var linked: bool = d.link.any(func(l): return l.kind == "part_of" and ev.has(int(l.to)) and ev[int(l.to)].subsystem == "family" and ev.has(int(l.from)) and ev[int(l.from)].subtype == "family_meal")
+	var fam_factors: bool = d.factor.any(func(f): return f.factor == "family_child_need")
+	check(fam_ok and linked and fam_factors, "FAM-SAC-01: a family-priority decision is an event with its rule values, linked to the weighing that carries the family factors")
+	# relations D4
+	var rel: Array = d.event.filter(func(e): return e.system == "relations")
+	var shared: Array = rel.filter(func(e): return e.subsystem == "shared")
+	check(shared.size() > 0 and shared.all(func(e): return (parts.get(int(e.id), []) as Array).size() == 2 and str(e.object).begins_with("tie:")) and shared.any(func(e): return (sc.get(int(e.id), []) as Array).any(func(c): return c.prop == "regard")),
+		"D4: each shared hour is an event on the pair's tie, with regard rows when it moved (%d hours)" % shared.size())
+	var gifts: Array = rel.filter(func(e): return e.subsystem == "gift")
+	var gift_ok: bool = gifts.size() == 1
+	if gift_ok:
+		var gr: Array = (sc.get(int(gifts[0].id), []) as Array).filter(func(c): return c.prop == "item:bread")
+		gift_ok = gr.size() == 2 and int(gr[0].delta) + int(gr[1].delta) == 0 and int(gr[0].delta) == -1 and (sc.get(int(gifts[0].id), []) as Array).any(func(c): return c.prop == "regard") and gifts[0].actor == "p:%d" % w.player.pid
+	check(gift_ok, "D4: the gift is one event: the bread leaves the player and reaches the receiver, and the tie's regard moves")
+	var harms: Array = rel.filter(func(e): return e.subsystem == "harm")
+	check(harms.size() == 1 and (sc.get(int(harms[0].id), []) as Array).any(func(c): return c.prop == "regard" and float(c.after) < float(c.before)), "D4: the harm is one event with the ties it lowered")
+	var bad := []
+	for x in d.participant:
+		if str(x.ref).begins_with("p:") and not w.people.has(int(str(x.ref).substr(2))):
+			bad.append(x.ref)
+	check(bad.is_empty(), "D5/D4: every person in a judgment or relations row is a registered permanent id (bad: %s)" % str(bad.slice(0, 5)))
+	plain.dispose()
 	w.dispose()
 
 

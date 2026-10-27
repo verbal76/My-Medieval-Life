@@ -1,6 +1,6 @@
 # Flight recorder: implemented data contract (REC-19, schema `mml-recorder/2`)
 
-Status: stage D1 (core), the D2 choke points and the D3 systems (identity, life, employment, government, crime, player verbs, save and load), on `wip/recorder`, merged with the identity foundation (ID-01, save version 20). Schema 2 (SIM-GATE-01, 2026-10-24, `wip/sim-gate`): the hourly village snapshot, combat chase events and the closing snapshot; the pre-build simulation gate and the analysis workbook that read it are in `docs/design/SIM_GATE_AUDIT.md`. A schema 1 archive reads the same (it has no snapshot table). Design and decisions: `docs/design/FLIGHT_RECORDER_DESIGN.md`,
+Status: stage D1 (core), the D2 choke points and the D3 systems (identity, life, employment, government, crime, player verbs, save and load), on `wip/recorder`, merged with the identity foundation (ID-01, save version 20). Schema 2 (SIM-GATE-01, 2026-10-24, `wip/sim-gate`): the hourly village snapshot, combat chase events and the closing snapshot; the pre-build simulation gate and the analysis workbook that read it are in `docs/design/SIM_GATE_AUDIT.md`. A schema 1 archive reads the same (it has no snapshot table). Expansion 20 batch R3 (`wip/x20-r1r3`): stage D5 judgment and the D4 relations' shared hours, gifts and harm (same schema 2: new event kinds and codes, no new table). Design and decisions: `docs/design/FLIGHT_RECORDER_DESIGN.md`,
 `docs/directives/2026-10-23_recorder_decisions.md` (REC-D1 to REC-D4). Developer reference only; the recorder is not a player feature and
 has no wiki page (it is off by default). Since SIM-GATE-01's amendment the Windows and Linux game offer it as a testing option
 (Settings, Saves, "Record gameplay", off by default) with an export of the recording (section 8); Android does not.
@@ -47,6 +47,22 @@ D3 hooks (each a guarded `if recorder != null:` call; none changes what the game
 | Crime | `World.witness`, `guard_confront`, `raise_alarm`, `report_crime`, `NPCBrain.fight` (robbery) | `witness_begin`, `guard_begin/end`, `alarm_begin/end`, `report`, `robbery` |
 | Player verbs | `World.player_buy_many`, `player_sell`, `player_take`, `player_craft`, `player_hit_npc`, `player_loot`: each is a wrapper that calls the unchanged `_player_*` body between `verb_begin` and `verb_end` (without a recorder the wrapper is one `if` and a call) | `verb_begin/end` |
 | Save and load | end of `World.load_dict` (attaches a recorder when enabled), `main.gd save_game` | `world_loaded`, `saved` |
+
+D5 and D4 hooks (Expansion 20, batch R3; REC-19, REC-STORE, FAM-SAC-01). The judgment store holds the recorder in `JudgmentStore.rec`
+(null unless a recorder is attached: `WorldRecorder.attach` sets it, `JudgmentLive.attach` sets it for a store made later, as on load;
+never saved). Each call passes values the store has already computed; the recorder calls no store function (no catch-up, no gossip
+flush, no draw), so recording changes no belief, ledger, trust or choice.
+
+| System | Where | Call |
+|---|---|---|
+| Judgment facts | `JudgmentStore.publish` | `judgment_fact` |
+| Beliefs | `JudgmentStore.learn` (after its duplicate checks: open until it returns) | `belief_begin`, `end` |
+| Gossip | `JudgmentStore.tell` (now a wrapper around the unchanged `_tell`) | `gossip_begin`, `gossip_end` |
+| Ledger posts | `JudgmentStore._post` (each contribution that changes) | `judgment_post` |
+| Trust | `JudgmentStore.trust_add` | `trust_move` |
+| Weighted choices | `JudgmentWeighting.choose` (the final result, after the family-name re-run) | `judgment_choice` |
+| Family priority | `JudgmentFamily._record` (the `family_trace` row) | `judgment_family` |
+| Relations | `Relations.share`, `give`, `harmed` | `shared_hour`, `gift_begin/end`, `harm_begin`, `harm_tie`, `end` |
 
 ## 3. Tables
 
@@ -168,6 +184,32 @@ All are `event` rows with participants and `state_change` rows; a pass or verb i
   `identity.ids_changed_on_load` if a version 20 save loads with a different set of ids) and `world_saved`. A loaded game with the recorder
   enabled starts a new session; the audit takes its balances afresh.
 
+### D5 and D4 events (Expansion 20, R3)
+
+- **Judgment** (`system judgment`, `category judgment`): `fact` events (subtype `fact:<event type>`; actor the first actor; participants
+  `actor:<share permille>`, `victim`, `beneficiary`; detail `fact=<id> value= tags=`; object thread `fact:<id>`); `belief` events (subtype
+  the source: participant, witnessed, told, rumour; participants `observer` and `teller`; detail fact, type, hops, confidence, `upgrade`;
+  object thread `fact:<id>`, so a fact's beliefs follow it); its state rows are the ledger posts (`judgment_good:<actor>:fact:<id>` and
+  `judgment_bad:...` on the observer, the contribution before and after, authority `judgment`) and trust moves (`trust:<subject>` on the one
+  who trusts, 0..100000 milli-points before and after). `gossip` events (subtype `tell`, teller and listener, `stories=<n>` moral stories; news told and a lie shown false
+  are their own child rows) are the parents of the beliefs they gave; a telling with nothing recorded under it is dropped
+  unwritten. State rows outside a belief or telling (a correction, a trust move from a live hook) go on the event open at the time (an action,
+  a verb), else on a one-off `ledger` / `trust` event.
+- **Weighted choices** (`subsystem choice`, subtype the profile): a `decision` row (kind `judgment_weighted`, chosen option or `none`,
+  basis the selection policy: `margin`, `argmax`, `forgo`, `none_feasible`, `family_name_cannot_refuse`; tiebreak `colour_blocked` when the
+  family name alone would have refused); one `alternative` per candidate (feasible with its utility as score; infeasible with reason
+  `not_feasible` and a `why` factor in the live code's words) and one for `forgo` with its utility; for each feasible candidate one `factor` row
+  per factor value (unit milli-points 0-100000; source `judgment` for disposition, ambivalence and sole_source, else `live_code`), one
+  `weighted:<factor>` row per weighted contribution, `family_colour` and `stubborn_resent/switch/override/total` when present, and its
+  `counterparty`. Nothing is sampled or reduced (REC-STORE); the storage cap stops the session (REC-D2).
+- **Family priority** (`subsystem family`, subtype the kind: `meal_pantry`, `meal_buy`, `pay`, `work`, `danger`): household, chosen and utility
+  in the detail, the rule's values (tier, temperament, price, threat, dependants, cornered, the dependant paid for) as factor rows, and a
+  `part_of` link from its weighted choice, whose factors carry `family_child_need`, `family_spouse_need`, `family_parent_need`, `self_need`,
+  `self_floor` and the rest of the family profile.
+- **Relations** (`system relations`, `category relation`): `shared` (subtype work, social or met), `gift`, `harm`, each on the tie
+  `tie:<a>:<b>` with `regard`, `attraction` (floats, no delta) and `days_known` before and after (only those that changed); a gift also
+  records `item:<id>` leaving the giver and reaching the receiver (authority `relations.gift`); a harm records every tie it lowered.
+
 ## 4. Archive on disk
 
 ```
@@ -232,8 +274,10 @@ the winner is the first reduction if volume matters.
 
 Schema 2 adds the snapshot and chases; the limits below stand. A chase does not name the code that set the target.
 
-Not recorded: production and consumption effects, relations (courting stages, gifts, regard), contracts, credit, business, stalls, property,
-construction, farming, mining, manor work, chapel, feasts, quests, the settlements' daily phases, judgment (stages D4 to D6). Partly recorded
+Not recorded: production and consumption effects, relations' other channels (help, talk, cooling, courting at dawn, proposals), contracts,
+credit, business, stalls, property, construction, farming, mining, manor work, chapel, feasts, quests, the settlements' daily phases (stages D4
+and D6), and judgment's changes over time (memory fading, forgetting, retirement, ledger decay, personality, bonds). Judgment's facts,
+beliefs, gossip, ledger posts, trust and every weighted choice, and the relations' shared hours, gifts and harm, are recorded (R3). Partly recorded
 (see the coverage file for what is and is not): life, employment, government, crime, the player's verbs, save and load, the settlements'
 register transitions. Coin changes outside the instrumented sites are detected hourly, not attributed. Item changes outside
 `World.trade`/`transfer` and the verbs' summaries are not seen. Chests, carts, stalls and loot appear as `inv:?` in transfers. Decision records

@@ -59,6 +59,8 @@ static func attach(w, config: Dictionary = {}) -> JudgmentStore:
 	var j := JudgmentStore.new(config, Social.new(w), int(w.seed))
 	j.day = w.day()
 	w.judgment = j
+	if "recorder" in w and w.recorder != null:
+		j.rec = w.recorder                 # REC-19 D5: a store made after the recorder (a loaded game) records too
 	return j
 
 
