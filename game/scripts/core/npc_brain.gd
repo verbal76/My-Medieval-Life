@@ -826,9 +826,10 @@ func _part_seller(id: String, n: NPC) -> NPC:
 
 ## The walk to buy the parts `need` ({id: qty}) that `n` lacks, with their own coins, keeping `floor`
 ## coins in hand; [] if a part has no seller or they cannot pay. Planks also come from the timber stall.
-## SIM-F2 (closing the defect class, lead 2026-10-27): each part is planned at the bargained price buy_from pays, in the
-## quantity it would sell by its own rule (buy_qty, the trip's earlier parts counted as spent), never below `floor`; a part
-## none of which can be paid for, or held after a failed purchase (buy_held), gives [] as a part with no seller does.
+## SIM-F2 (closing the defect class, lead 2026-10-27): each part is counted at the bargained price buy_from pays, and the
+## trip is planned only when the act would sell every part it needs by its own rule (buy_qty, the trip's earlier parts
+## counted as spent) with `floor` coins left: the parts make one thing, so a trip that could buy only some of them is not
+## planned (as before, on the list price). A part held after a failed purchase (buy_held) gives [] too.
 func _parts_trip(n: NPC, need: Dictionary, floor := 0) -> Array:
 	var plan := []
 	var cost := 0
@@ -840,13 +841,10 @@ func _parts_trip(n: NPC, need: Dictionary, floor := 0) -> Array:
 		if o == null or o.inv.count(id) < short:
 			return []
 		var up := w.deal_price(w.sell_price(o, id), n, o)
-		var q := buy_qty(n, o, id, short, false, cost)
-		while q > 0 and n.coins - cost - up * q < floor:
-			q -= 1
-		if q <= 0:
+		if buy_qty(n, o, id, short, false, cost) < short or n.coins - cost - up * short < floor:
 			return []
-		cost += up * q
-		plan.append_array([go(_workplace_cell(o) if o.job != "smith" else o.cell()), doit("buy_from", {"vendor": o.id, "item": id, "qty": q})])
+		cost += up * short
+		plan.append_array([go(_workplace_cell(o) if o.job != "smith" else o.cell()), doit("buy_from", {"vendor": o.id, "item": id, "qty": short})])
 	return plan
 
 

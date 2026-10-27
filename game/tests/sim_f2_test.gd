@@ -111,14 +111,12 @@ func _init() -> void:
 	var bd := w.deal_price(bl, buyer, bar_seller)
 	check(bd > bl, "iron bars: bargained %d above list %d" % [bd, bl])
 	buyer.coins = w.reserve_of(buyer) + bl * 2
-	var trip := b._parts_trip(buyer, {"iron_bar": 2})
-	var planned := int(trip[-1].args.qty) if not trip.is_empty() else 0
-	var afford := (buyer.coins - w.reserve_of(buyer)) / bd
-	check(planned == mini(2, afford) and planned < 2, "parts trip: a purse for two at the list price plans the %d the bargained price pays for (was 2)" % planned)
-	buyer.coins = w.reserve_of(buyer) + bl
-	check(b._parts_trip(buyer, {"iron_bar": 2}).is_empty(), "parts trip: none affordable at the bargained price: no trip (was planned on the list price)")
+	check(b._parts_trip(buyer, {"iron_bar": 2}).is_empty(), "parts trip: a purse for two at the list price but not at the bargained price: no trip (was planned, then refused)")
+	buyer.coins = w.reserve_of(buyer) + bd * 2 - 1
+	check(b._parts_trip(buyer, {"iron_bar": 2}).is_empty(), "parts trip: one coin short of both parts: no partial trip (the parts make one thing)")
 	buyer.coins = w.reserve_of(buyer) + bd * 2
-	check(b._parts_trip(buyer, {"iron_bar": 2}).size() == 2, "parts trip: both bars affordable: the trip is planned")
+	var trip := b._parts_trip(buyer, {"iron_bar": 2})
+	check(trip.size() == 2 and int(trip[-1].args.qty) == 2, "parts trip: both bars affordable at the bargained price: the trip is planned")
 	b.buy_failed[buyer.id] = {"vendor": bar_seller.id, "item": "iron_bar", "price": bd, "stock": bar_seller.inv.count("iron_bar"), "purse": buyer.coins, "at": w.minutes}
 	check(b._parts_trip(buyer, {"iron_bar": 2}).is_empty(), "parts trip: a failed purchase of the same part, nothing changed: held")
 	b.buy_failed.erase(buyer.id)
