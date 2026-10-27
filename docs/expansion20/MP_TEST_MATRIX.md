@@ -91,6 +91,12 @@ workers' simulations), no script errors. Run once with the two fixes below rever
 | Host killed after a save | every guest told "Host disconnected. The world has stopped until the host plays again."; back from the save, the clock unchanged, all three return |
 | Conservation | coins conserved on the host after every step and over the run; ore counted over all four players before and after every exchange; no guest ever wrote a save |
 
+Regression on `f3e5b4c` (the code of this branch): `net_batch_b_test` 44, `net_c_test` 35, `net_family_test` 22, `net_fauna_test` 13,
+`net_g1_test` 45, `net_interact_test` 67, `net_ui_test` 61, `multiplayer_a1_test` 67, `multiplayer_b_test` 31, `multiplayer_c_test` 340,
+`mp_interact_ui_test` 112, `message_journal_test` 51 checks, `start_test` 523 steps, `run_tests` 3,600 checks: 0 failures, no script
+errors. G0 (`python3 tools/sim_gate.py`, once): **PASS, identical to the baseline**, seeds 1 and 2, days 10 and 30, currency and item
+leaks 0 (2,104 s).
+
 ### Defects found and fixed (game code, `game/scripts/net/`)
 
 1. **A refused acceptance made a waiting offer vanish from the recipient's screen** (`net_session.gd`). Root cause: a guest's copy takes
