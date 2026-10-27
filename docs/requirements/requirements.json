@@ -59873,10 +59873,18 @@
      "date": "2026-10-27",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead (integration); workers per phase; branch: None -> wip/x20-final",
      "why": "owner directive 2026-10-27; work starting"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "tests: None -> eaf6652: Python tests OK; 35 game suites 0 failures 0 script errors (incl. net_mp4 148, net_interact 67, mp_interact_ui 112, sim_f2 33, sim_f3 17, recorder 203, aspiration 155, world 339, start 523, run_tests 3600); full simulation gate (tools/sim_suite.py, 19 runs + probes, 425 simulated days, seeds 1-6, 3374, 4693): PASS, 0 blocking, accepted baseline identical (36 values), determinism recorded vs unrecorded identical with shipped and X20 switches, save/load probes pass, judgment chain end to end (social_chain 99 later choices by hearsay); GitHub Actions long-sims 40478714284 (seeds 1-2, 80 days, aspirations/job choice/economy on, recorded) and 40478725139 (seed 1, 80 days, shipped, recorded): passed, leak 0 and no item leaks at every checkpoint, archives complete and independently checked; test_commit: None -> eaf6652; next_action",
+     "why": "eaf6652 validated: suites and simulation gate PASS; long runs passed; one finding under investigation"
     }
    ],
    "assigned_worker": "lead (integration); workers per phase",
-   "branch": "wip/x20-final"
+   "branch": "wip/x20-final",
+   "tests": "eaf6652: Python tests OK; 35 game suites 0 failures 0 script errors (incl. net_mp4 148, net_interact 67, mp_interact_ui 112, sim_f2 33, sim_f3 17, recorder 203, aspiration 155, world 339, start 523, run_tests 3600); full simulation gate (sim_suite, 19 runs + probes, 425 simulated days, seeds 1-6, 3374, 4693): PASS, 0 blocking, accepted baseline identical (36 values), determinism recorded vs unrecorded identical with shipped and X20 switches, save/load probes pass, judgment chain end to end (social_chain 99 later choices by hearsay); GitHub Actions long-sims 40478714284 (seeds 1-2, 80 days, aspirations/job choice/economy on, recorded) and 40478725139 (seed 1, 80 days, shipped, recorded): passed, leak 0 and no item leaks at every checkpoint, archives complete and independently checked",
+   "test_commit": "eaf6652",
+   "next_action": "Classify the off-map settlement hunger deaths (investigation running); recorded multiplayer 1+3 run with participant comparison; tester notes; release workflow on the final commit; final report."
   },
   {
    "id": "X20-OPEN-ITEMS",

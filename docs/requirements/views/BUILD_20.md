@@ -23,7 +23,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | analysis of judgment once D5 records it (batch R6); closure also waits on SIM-F2 and SIM-F3 | design: UNKNOWN | UNKNOWN |
-| X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | OWNER APPROVED | IN DEVELOPMENT | lead (integration); workers per phase / wip/x20-final | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | OWNER APPROVED | IN DEVELOPMENT | lead (integration); workers per phase / wip/x20-final | NOT TESTED | Classify the off-map settlement hunger deaths (investigation running); recorded multiplayer 1+3 run with participant comparison; tester notes; release workflow on the final commit; final report. | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (68)
 
