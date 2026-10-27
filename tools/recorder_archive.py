@@ -8,7 +8,9 @@ says whether it is whole and consistent, so the simulation gate never trusts the
     and sha256 (of the row lines, each followed by "\\n") match;
   - the row sequence numbers of all tables together are exactly 1..last_seq, each once (nothing lost, nothing doubled);
   - each table's row count equals the session's own count;
-  - the hourly snapshots (table "snapshot") follow one another an hour apart.
+  - the hourly snapshots (table "snapshot") follow one another an hour apart. A multiplayer guest's session (its net_state
+    events all "guest") has none: the guest's copy of the host's world never simulates (the approved host-authoritative design),
+    so its hourly record is the net_state digest, at least one, in distinct and rising game hours (X20 phase 4.5).
 
 It also returns the facts the gate reconciles with the simulation's own output: the closing snapshot (session.json
 "final_snapshot", the world as the session left it), alert counts by rule, villager deaths, births and arrivals (newcomers,
@@ -353,7 +355,7 @@ def verify(session_dir, require_flags=None, require_rows=None):
     """Check a session directory. Returns a report dict with "ok" and "problems" (and the X20-FINAL content checks: Deep)."""
     rep = {"dir": session_dir, "ok": False, "problems": [], "chunks": 0, "bytes": 0, "counts": {}, "snapshot_hours": 0,
            "alerts": {}, "villager_deaths": 0, "births": 0, "newcomers": 0, "trades": 0, "last_snapshot": None,
-           "first_snapshot": None, "events": {}}
+           "first_snapshot": None, "events": {}, "net_role": ""}
     sp = os.path.join(session_dir, "session.json")
     try:
         sess = json.load(open(sp))
@@ -376,6 +378,7 @@ def verify(session_dir, require_flags=None, require_rows=None):
     seen = bytearray(last_seq + 1)
     dup = out_of_range = 0
     snaps = []
+    net_hours = []                        # (seq, game hour, role) of each net_state digest
     files = sorted(glob.glob(os.path.join(session_dir, "d*", "*.jsonl.gz")))
     for path in files:
         rep["chunks"] += 1
@@ -422,6 +425,8 @@ def verify(session_dir, require_flags=None, require_rows=None):
                     rep["newcomers"] += 1
                 elif r[ci] == "transaction" and r[si] == "trade" and r[oi] == "ok":
                     rep["trades"] += 1
+                elif r[ci] == "network" and r[si] == "net_state":
+                    net_hours.append((r[0], int(r[cols.index("day")]) * 24 + int(float(r[cols.index("minute")]) // 60), r[cols.index("subsystem")]))
     missing = last_seq - sum(seen[1:]) if last_seq else 0
     if missing or dup or out_of_range:
         rep["problems"].append("row sequence: %d missing, %d doubled, %d out of range (of %d)" % (missing, dup, out_of_range, last_seq))
@@ -430,7 +435,15 @@ def verify(session_dir, require_flags=None, require_rows=None):
             rep["problems"].append("table %s: %d rows on disk, the session counted %d" % (t, rep["counts"].get(t, 0), n))
     snaps.sort(key=lambda s: s["seq"])
     rep["snapshot_hours"] = len(snaps)
-    if not snaps:
+    roles = {h[2] for h in net_hours}
+    rep["net_role"] = "/".join(sorted(roles))
+    if not snaps and roles == {"guest"}:
+        net_hours.sort()
+        hrs = [h[1] for h in net_hours]
+        if any(b <= a for a, b in zip(hrs, hrs[1:])):
+            rep["problems"].append("a guest's net_state digests are not in distinct rising game hours: %s" % hrs[:12])
+        rep["net_state_hours"] = len(hrs)
+    elif not snaps:
         rep["problems"].append("no hourly snapshot (schema 2 requires one an hour)")
     for a, b in zip(snaps, snaps[1:]):
         if (b["day"] * 24 + b["hour"]) - (a["day"] * 24 + a["hour"]) != 1:

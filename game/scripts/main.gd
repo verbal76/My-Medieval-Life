@@ -5585,6 +5585,24 @@ func _keep_previous_game() -> void:
 	DirAccess.rename_absolute(ProjectSettings.globalize_path(src), ProjectSettings.globalize_path(prev))
 
 
+## X20 (net_recorder_quit_test): a recording ends when its world is closed in an orderly way: "Save and quit to title", or the game
+## quitting (the title's Quit, a desktop window closed, Android's Back, a test's quit), which takes this node out of the tree. Before,
+## only a world thrown away for another (World.dispose) ended its session, so every orderly quit left the archive "recording". A
+## process that is killed still leaves its archive incomplete, as it should.
+func end_recording() -> void:
+	if world == null or world.recorder == null:
+		return
+	world.recorder.finish()
+	world.recorder = null
+	if world.judgment != null:
+		world.judgment.rec = null
+		world.judgment.pers.rec = null
+
+
+func _exit_tree() -> void:
+	end_recording()
+
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
 		# Android's Back: closes an open window (the map, the pack...); otherwise saves and quits as before
