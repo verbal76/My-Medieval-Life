@@ -119,6 +119,10 @@ permanent: a rule is never renumbered or reused, and new rules continue from 017
 
 *Example:* An NPC may prioritize food, then wealth, property and family; another may prefer stability. Heirs do not automatically inherit ancestor skills.
 *Verification:* Test five aspiration domains and adaptation after illness, loss, marriage or prosperity.
+*Amendment (owner, 2026-10-27, `docs/directives/2026-10-27_final_aspirations_decisions.md`, WDR-011-Q6):* a sixth domain,
+social standing and recognition (how much an NPC wants respect, kept separate from how others actually judge them), so the
+domains are six. "Illness" is read from existing measurable conditions (severe hunger, injury, danger) until an illness
+system exists (WDR-011-Q1).
 
 ## Rule 012 — NPC Competition and Economic Rivalry
 

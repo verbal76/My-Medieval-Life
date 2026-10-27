@@ -980,13 +980,13 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | STONE-Q3 | STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18 |  | APPROVED |  |
 | STONECUT-R1 | WDR-002: the stonecutter (X18-STONECUT) supplies no other profession; its building blocks are bought by the raw-goods merchant and built into houses and workshops by households and the manor, and the game has no builder trade. Approve a documented exception with checked evidence, as for the sage (B18-DP-15), or direct another remedy? | 18 | APPROVED | yes |
 | TAILOR-Q | Where the tailor comes from | owner decision | APPROVED |  |
-| WDR-011-Q1 | Aspirations: the game has no illness system; should low health and near-starvation hunger count as illness for Rule 011's adaptation, or wait for an illness system? | 20 | OPEN |  |
-| WDR-011-Q2 | Aspirations: should careers be steered only through accepting work and contracts, or add a job-choice decision (behind its own switch, after R2)? | 20 | OPEN |  |
-| WDR-011-Q3 | Aspirations: may villagers who care about wealth or property favour suitors with means, or does courting stay attraction plus opinion in v1? | 20 | OPEN |  |
-| WDR-011-Q4 | Aspirations: who perseveres after a setback: the existing stubborn villagers (about 30%), with experience speeding adaptation, or a new seeded ambition temperament? | 20 | OPEN |  |
-| WDR-011-Q5 | Aspirations: approve the provisional values (priorities, thresholds, adaptation rates) as a starting point tuned from four-seed measurements, or set them now? (Owner-given values used: hunger floor 25, stubborn share 30%.) | 20 | OPEN |  |
-| WDR-011-Q6 | Aspirations: should social standing be a sixth domain (read from the village's overall opinion), beyond Rule 011's five? | 20 | OPEN |  |
-| WDR-011-Q7 | Aspirations: should players see villagers' aspirations: none in v1, or a dialogue line from the leading aspiration once the feature is on and reviewed? | 20 | OPEN |  |
+| WDR-011-Q1 | Aspirations: the game has no illness system; should low health and near-starvation hunger count as illness for Rule 011's adaptation, or wait for an illness system? | 20 | APPROVED |  |
+| WDR-011-Q2 | Aspirations: should careers be steered only through accepting work and contracts, or add a job-choice decision (behind its own switch, after R2)? | 20 | APPROVED |  |
+| WDR-011-Q3 | Aspirations: may villagers who care about wealth or property favour suitors with means, or does courting stay attraction plus opinion in v1? | 20 | APPROVED |  |
+| WDR-011-Q4 | Aspirations: who perseveres after a setback: the existing stubborn villagers (about 30%), with experience speeding adaptation, or a new seeded ambition temperament? | 20 | APPROVED |  |
+| WDR-011-Q5 | Aspirations: approve the provisional values (priorities, thresholds, adaptation rates) as a starting point tuned from four-seed measurements, or set them now? (Owner-given values used: hunger floor 25, stubborn share 30%.) | 20 | APPROVED |  |
+| WDR-011-Q6 | Aspirations: should social standing be a sixth domain (read from the village's overall opinion), beyond Rule 011's five? | 20 | APPROVED |  |
+| WDR-011-Q7 | Aspirations: should players see villagers' aspirations: none in v1, or a dialogue line from the leading aspiration once the feature is on and reviewed? | 20 | APPROVED |  |
 | X18-D1 | Expansion 18 D1: starting experience seeded once from recorded skills (farming from PAR-01A history) |  | APPROVED |  |
 | X18-D2 | Expansion 18 D2: what limits effective capability | 18 | APPROVED |  |
 | X18-D3 | Expansion 18 D3: no thresholds on the 0-10 levels; novice/journeyman/master names in player reports |  | APPROVED |  |

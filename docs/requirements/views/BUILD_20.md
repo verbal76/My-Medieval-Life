@@ -16,7 +16,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Owner playtested | 0 of 81 (0%) |
 | Complete | 2 of 81 (2%) |
 | Open (release blockers) | 79 |
-| Open owner decisions (blocking) | 22 (11) |
+| Open owner decisions (blocking) | 15 (11) |
 
 ## In development (worker assigned) (7)
 
@@ -119,7 +119,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | INTEGRATION VERIFIED | NOT READY |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (22)
+## Open owner decisions (15)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
@@ -138,13 +138,6 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | OD-LE-13B | Death of a party to a contract: does the contract end, pass to the heir or the household, or go to the estate (the remaining part of OD-LE-13) | OPEN | no |  |
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | OPEN | yes |  |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | OPEN | yes |  |
-| WDR-011-Q1 | Aspirations: the game has no illness system; should low health and near-starvation hunger count as illness for Rule 011's adaptation, or wait for an illness system? | OPEN | no |  |
-| WDR-011-Q2 | Aspirations: should careers be steered only through accepting work and contracts, or add a job-choice decision (behind its own switch, after R2)? | OPEN | no |  |
-| WDR-011-Q3 | Aspirations: may villagers who care about wealth or property favour suitors with means, or does courting stay attraction plus opinion in v1? | OPEN | no |  |
-| WDR-011-Q4 | Aspirations: who perseveres after a setback: the existing stubborn villagers (about 30%), with experience speeding adaptation, or a new seeded ambition temperament? | OPEN | no |  |
-| WDR-011-Q5 | Aspirations: approve the provisional values (priorities, thresholds, adaptation rates) as a starting point tuned from four-seed measurements, or set them now? (Owner-given values used: hunger floor 25, stubborn share 30%.) | OPEN | no |  |
-| WDR-011-Q6 | Aspirations: should social standing be a sixth domain (read from the village's overall opinion), beyond Rule 011's five? | OPEN | no |  |
-| WDR-011-Q7 | Aspirations: should players see villagers' aspirations: none in v1, or a dialogue line from the leading aspiration once the feature is on and reviewed? | OPEN | no |  |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (6)
 

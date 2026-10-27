@@ -54625,7 +54625,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "Owner answers WDR-011-Q1..Q7; then the code batch on wip/expansion20 after R2/R4 (same files), flag off, aspiration_test with the Rule 011 scenario, G0 identical off.",
+   "next_action": "Update the R5 design for the owner's answers (worker J, wip/x20-r5), then code after R2/R4 merge (same files): flag off, six domains, job_choice behind its own flag, tests for all seven decisions, G0 identical with it off, no resource creation; aspiration dialogue only after review.",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -54680,6 +54680,11 @@
      "date": "2026-10-27",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> NOT STARTED; assigned_worker: worker J (R5 design) -> ",
      "why": "correction: only the design note exists; no code yet (code waits for WDR-011-Q1..Q7 and R2/R4)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "next_action",
+     "why": "owner's final aspirations decisions 2026-10-27 (docs/directives/2026-10-27_final_aspirations_decisions.md): six domains, survival pressure with the family safeguard, job_choice, individual romantic preferences, stubbornness and wisdom, provisional numbers, dialogue later"
     }
    ],
    "target_build": "20",
@@ -54708,8 +54713,8 @@
    "description": "Aspirations: the game has no illness system; should low health and near-starvation hunger count as illness for Rule 011's adaptation, or wait for an illness system?",
    "source": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Option C: severe hunger, injuries and dangerous living conditions (existing measurable conditions; no new illness system) influence all of an NPC's aspirations, dynamically and by personality, recovering afterwards; never a permanent personality change or automatic cancellation of other goals. Mandatory safeguard: the family responsibility order (children, spouse, parents, self) and the family-sacrifice rules are preserved; survival pressure feeds the existing decision architecture, no second family engine; no needless self-sacrifice where staying alive better protects the family.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -54727,9 +54732,15 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "agent recommendation recorded (not an approval)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-10-27 (docs/directives/2026-10-27_final_aspirations_decisions.md); final for the current implementation"
     }
    ],
-   "notes": "Recommendation: count low health and near-starvation hunger as illness for now."
+   "notes": "Recommendation: count low health and near-starvation hunger as illness for now.",
+   "completion": "CLOSED"
   },
   {
    "id": "WDR-011-Q2",
@@ -54738,8 +54749,8 @@
    "description": "Aspirations: should careers be steered only through accepting work and contracts, or add a job-choice decision (behind its own switch, after R2)?",
    "source": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Option B: career ambitions; a job_choice decision profile behind its own integration flag weighing wages, skills, skill growth, experience, career satisfaction, financial necessity, available work and ambitions; no separate career simulation and no hardcoded occupation preference that overrides other considerations.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -54757,9 +54768,15 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "agent recommendation recorded (not an approval)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-10-27 (docs/directives/2026-10-27_final_aspirations_decisions.md); final for the current implementation"
     }
    ],
-   "notes": "Recommendation: add a job-choice decision behind its own switch, after R2."
+   "notes": "Recommendation: add a job-choice decision behind its own switch, after R2.",
+   "completion": "CLOSED"
   },
   {
    "id": "WDR-011-Q3",
@@ -54768,8 +54785,8 @@
    "description": "Aspirations: may villagers who care about wealth or property favour suitors with means, or does courting stay attraction plus opinion in v1?",
    "source": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Option C: romantic preferences vary by individual personality, values, circumstances and ambitions (attraction, relationships, opinions, financial security, wealth and property, household stability, family compatibility, shared ambitions, social standing), through the existing Judgment System and world state; no fixed wealth requirement; not everyone cares equally about wealth; human-player mutual consent and existing kinship and marriage restrictions preserved.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -54787,9 +54804,15 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "agent recommendation recorded (not an approval)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-10-27 (docs/directives/2026-10-27_final_aspirations_decisions.md); final for the current implementation"
     }
    ],
-   "notes": "Recommendation: no; courting stays attraction plus opinion in v1."
+   "notes": "Recommendation: no; courting stays attraction plus opinion in v1.",
+   "completion": "CLOSED"
   },
   {
    "id": "WDR-011-Q4",
@@ -54798,8 +54821,8 @@
    "description": "Aspirations: who perseveres after a setback: the existing stubborn villagers (about 30%), with experience speeding adaptation, or a new seeded ambition temperament?",
    "source": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Option A: the existing stubbornness and wisdom traits (about 30% stubborn, unchanged); stubborn villagers persevere longer, others adapt sooner, wisdom and experience affect adaptation, repeated setbacks can change even a stubborn villager's goals; no new ambition trait; responses not identical.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -54817,9 +54840,15 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "agent recommendation recorded (not an approval)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-10-27 (docs/directives/2026-10-27_final_aspirations_decisions.md); final for the current implementation"
     }
    ],
-   "notes": "Recommendation: the existing stubborn villagers, with experience speeding adaptation."
+   "notes": "Recommendation: the existing stubborn villagers, with experience speeding adaptation.",
+   "completion": "CLOSED"
   },
   {
    "id": "WDR-011-Q5",
@@ -54828,8 +54857,8 @@
    "description": "Aspirations: approve the provisional values (priorities, thresholds, adaptation rates) as a starting point tuned from four-seed measurements, or set them now? (Owner-given values used: hunger floor 25, stubborn share 30%.)",
    "source": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Option A: the proposed numbers are approved as PROVISIONAL starting values, identifiable and adjustable, evaluated by the four-seed measurement; the owner's hunger and stubbornness values stay authoritative; report observations before recommending changes; never alter the baseline silently; no redundant long campaigns.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -54847,9 +54876,15 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "agent recommendation recorded (not an approval)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-10-27 (docs/directives/2026-10-27_final_aspirations_decisions.md); final for the current implementation"
     }
    ],
-   "notes": "Recommendation: approve the provisional values as a starting point and tune from four-seed measurements."
+   "notes": "Recommendation: approve the provisional values as a starting point and tune from four-seed measurements.",
+   "completion": "CLOSED"
   },
   {
    "id": "WDR-011-Q6",
@@ -54858,8 +54893,8 @@
    "description": "Aspirations: should social standing be a sixth domain (read from the village's overall opinion), beyond Rule 011's five?",
    "source": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Option B: add social standing and recognition as a sixth domain (Rule 011 expanded from five to six). It is how much an NPC wants recognition, separate from how others actually judge them; no double counting of judgment or reputation in one decision; no invented political offices, elections or institutions; six domains in design, data, saves, reporting and tests, backward compatible and deterministic.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -54877,9 +54912,15 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "agent recommendation recorded (not an approval)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-10-27 (docs/directives/2026-10-27_final_aspirations_decisions.md); final for the current implementation"
     }
    ],
-   "notes": "Recommendation: no; opinion already counts in every choice."
+   "notes": "Recommendation: no; opinion already counts in every choice.",
+   "completion": "CLOSED"
   },
   {
    "id": "WDR-011-Q7",
@@ -54888,8 +54929,8 @@
    "description": "Aspirations: should players see villagers' aspirations: none in v1, or a dialogue line from the leading aspiration once the feature is on and reviewed?",
    "source": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Option B: villagers voice real, current aspirations in natural dialogue through the existing dialogue, perspective, memory and conversation systems, respecting what they know and will share, not repeatedly; implemented only once the aspiration system works and is reviewed, never enabled early.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -54907,9 +54948,15 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "agent recommendation recorded (not an approval)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "completion: None -> CLOSED; disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-10-27 (docs/directives/2026-10-27_final_aspirations_decisions.md); final for the current implementation"
     }
    ],
-   "notes": "Recommendation: a dialogue line from the leading aspiration later, once the feature is on and reviewed."
+   "notes": "Recommendation: a dialogue line from the leading aspiration later, once the feature is on and reviewed.",
+   "completion": "CLOSED"
   },
   {
    "id": "WDR-012",
