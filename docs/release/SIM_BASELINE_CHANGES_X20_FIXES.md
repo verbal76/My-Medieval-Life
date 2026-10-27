@@ -5,9 +5,10 @@ Evidence for the baseline policy. **`docs/release/sim_baseline.json` is not repl
 
 ## The run
 
-- G0, once: `python3 tools/sim_gate.py --godot /opt/godot/godot` (seeds 1 and 2, 30 days, checkpoints 10 and 30, judgment on,
-  aspirations off, the shipped defaults), at `c932e4b` (base `87b69ab` + SIM-F2 + SIM-F3 + PROP-EQ). Wall time 25 min 12 s
-  (both seeds in parallel). The run wrote its results with `--write`; they were moved to the candidate file and the committed
+- G0, once on the current head: `python3 tools/sim_gate.py --godot /opt/godot/godot` (seeds 1 and 2, 30 days, checkpoints 10
+  and 30, judgment on, aspirations off, the shipped defaults), at `d4686cd` (base `87b69ab` + SIM-F2, its class closed on the
+  parts trips, handcart, firewood and grain + SIM-F3 + PROP-EQ). Wall time 26 min 31 s (both seeds in parallel). This replaces
+  the first candidate (G0 at `c932e4b`, before the class was closed). The run wrote its results with `--write`; they were moved to the candidate file and the committed
   baseline (`13e779e`) restored unchanged; the comparison below is `sim_gate.compare` on the two files.
 - Result: **FAIL, 28 differences**: every compared value at both checkpoints of both seeds (fingerprint, alive, currency,
   treasury, item ledger table, deposits, animals). **Conservation intact**: currency leak 0 and item leaks none at every
@@ -23,11 +24,15 @@ Evidence for the baseline policy. **`docs/release/sim_baseline.json` is not repl
 
 These are outcomes of a different history, measured, not judged (WDR-022; no threshold applies).
 
+- **Closing the class on the parts trips, handcart, firewood and grain changed nothing in 30 days**: every checkpoint value
+  of this run (fingerprints, alive, currency, treasury, ledger, deposits, animals) is identical to the `c932e4b` run's; the
+  candidate file differs from the first one only in its recording commit. Seed 1's day 0 is also identical tick by tick.
+
 ## The divergence is the fixes'
 
 - The base reproduces the baseline: `87b69ab`, seed 1, 10 days (economy_sim, the gate's arguments) gives fingerprint
   `ca5b786910ef14d14c6070aac835068b`, alive 103, currency 3274, exactly the committed baseline's seed 1 day 10.
-- First divergence (seed 1, `87b69ab` against `c932e4b`, every villager's doing, coins and target tick by tick): **day 0,
+- First divergence (seed 1, `87b69ab` against `c932e4b` and again against `d4686cd`, the same, every villager's doing, coins and target tick by tick): **day 0,
   11:39**, labourer p:99. At 10:04 he chose to buy a mallet to dress stone from the goods merchant p:46 with 12 coins: list
   price 12, bargained price 13 (the seller's Trading). On `87b69ab` the act refused it and the trip was chosen again at the
   counter until 11:43; with SIM-F2 the purchase is no longer chosen at the bargained price he cannot pay, and he goes back to
