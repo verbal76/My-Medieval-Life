@@ -539,6 +539,8 @@ def main():
     ap.add_argument("--jobs", type=int, default=os.cpu_count() or 2)
     ap.add_argument("--only", default="", help="comma-separated run names (a targeted subset: never a release gate)")
     ap.add_argument("--import", dest="do_import", action="store_true")
+    ap.add_argument("--short", type=int, default=0, help="X20-FINAL smoke: every selected run at this many days (with --seed): never a release gate")
+    ap.add_argument("--seed", type=int, default=0, help="with --short: every selected run on this seed")
     ap.add_argument("--reuse", default="", help="an earlier --out directory: check its outputs again without simulating")
     ap.add_argument("--inject", default="", choices=["", "leak", "corrupt", "crash"], help="plant a defect in the reused copy (tests and proof only)")
     a = ap.parse_args()
@@ -560,6 +562,12 @@ def main():
     if a.only:                           # a targeted subset while developing: suite-level checks (determinism pair, coverage)
         keep = set(a.only.split(","))    # are reported but cannot block, and the result says it is no release gate
         jobs = [j for j in jobs if j["run"] in keep]
+    if a.short:                          # a smoke run of the scenarios (shorter, one seed): no baseline applies to it
+        for j in jobs:
+            if j.get("kind", "sim") == "sim":
+                j["days"] = a.short
+                if a.seed:
+                    j["seed"] = a.seed
     if a.reuse:
         src = Path(a.reuse).resolve()
         if src != out:
@@ -581,7 +589,7 @@ def main():
                            env=job_env(out / "_import", commit), timeout=1800)
         print("simulation gate: %d jobs on %d workers, commit %s" % (len(jobs), a.jobs, commit[:12]), flush=True)
         results, sim_seconds = run_all(godot, jobs, out, commit, a.jobs)
-    ev = evaluate(jobs, results, out, commit, a.inject, partial=bool(a.only))
+    ev = evaluate(jobs, results, out, commit, a.inject, partial=bool(a.only or a.short), release_dir=(out / "_no_baselines") if a.short else RELEASE)
     gate = {"format": "mml-sim-gate/1", "commit": commit, "build": os.environ.get("BUILD_N", ""), "run_id": os.environ.get("GITHUB_RUN_ID", "local-%d" % int(t_start)),
             "schema": SCHEMA, "subset": bool(a.only), "injected": a.inject, "job_results": list(results.values()),
             "timing": {"simulations": sim_seconds, "jobs": a.jobs}}
@@ -592,7 +600,7 @@ def main():
                                      "note": "same seed and days, run side by side with the rest of the suite"}
     gate["parallel"] = {"jobs": a.jobs, "wall_seconds": sim_seconds, "sum_of_job_seconds": round(sum(r["seconds"] for r in results.values()), 1)}
     gate["result"] = "FAIL" if any(f["blocking"] for f in gate["findings"]) else "PASS"
-    if a.only:
+    if a.only or a.short:
         gate["result"] += " (subset: not a release gate)"
     # the analyses and the workbook, by the game's own code (tests/sim_workbook.gd); the measured, proposed thresholds come
     # from the analyses, so they are read between the two passes; then the workbook is validated here
@@ -602,7 +610,7 @@ def main():
     gate_path.write_text(json.dumps(gate, indent=1, default=str))
     gate["analysis_run"] = godot_workbook(godot, gate_path, None, out, commit)
     add_proposals(gate, out)
-    gate["result"] = ("FAIL" if any(f["blocking"] for f in gate["findings"]) else "PASS") + (" (subset: not a release gate)" if a.only else "") + \
+    gate["result"] = ("FAIL" if any(f["blocking"] for f in gate["findings"]) else "PASS") + (" (subset: not a release gate)" if (a.only or a.short) else "") + \
         (" (defect injected: %s)" % a.inject if a.inject else "")
     gate_path.write_text(json.dumps(gate, indent=1, default=str))
     if wb.exists():
@@ -620,7 +628,7 @@ def main():
                                  "description": "workbook invalid: %s" % p, "severity": "critical", "blocking": True, "expected": "every sheet and chart valid",
                                  "actual": p, "reproduce": "python3 tools/check_workbook.py %s" % wb})
     gate["result"] = "FAIL" if any(f["blocking"] for f in gate["findings"]) else "PASS"
-    if a.only:
+    if a.only or a.short:
         gate["result"] += " (subset: not a release gate)"
     if a.inject:
         gate["result"] += " (defect injected: %s)" % a.inject
