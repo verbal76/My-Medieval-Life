@@ -22171,7 +22171,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/x20-r2r4",
    "commits": [],
    "parent": null,
    "depends_on": [
@@ -22218,6 +22218,11 @@
      "date": "2026-10-26",
      "change": "note",
      "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition implement (audit): historical memory: fact links and entity refs (building, item, household), the 30-planks chain, significance rule, dialogue from records, save migration (batch R4)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker I (recovery R2, R4); branch:  -> wip/x20-r2r4",
+     "why": "recovery R2/R4 assigned (base wip/expansion20 e49384e)"
     }
    ],
    "acceptance_derived": true,
@@ -22227,7 +22232,7 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22237,7 +22242,8 @@
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "historical memory: fact links and entity refs (building, item, household), the 30-planks chain, significance rule, dialogue from records, save migration (batch R4)",
-   "test_commit": "0b5287c"
+   "test_commit": "0b5287c",
+   "assigned_worker": "worker I (recovery R2, R4)"
   },
   {
    "id": "GP-ACTIONBAR",
@@ -48703,7 +48709,7 @@
    "implementation": "",
    "tests": "on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/x20-r2r4",
    "commits": [],
    "parent": "EXP-C",
    "depends_on": [
@@ -48757,6 +48763,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
      "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition verify: code present and enabled, tests pass; was recorded NOT STARTED or partial (register not updated)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: INTEGRATED -> IN DEVELOPMENT; assigned_worker: None -> worker I (recovery R2, R4); branch:  -> wip/x20-r2r4",
+     "why": "recovery R2/R4 assigned (base wip/expansion20 e49384e)"
     }
    ],
    "target_build": "20",
@@ -48767,7 +48778,7 @@
    ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "INTEGRATED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -48777,7 +48788,8 @@
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "13 decision domains live through JudgmentWeighting.choose; close against acceptance with the population evidence of the measurement batch (R6); politics stays with Expansion 21 (Q-POL-1, Q-POL-7)",
-   "test_commit": "0b5287c"
+   "test_commit": "0b5287c",
+   "assigned_worker": "worker I (recovery R2, R4)"
   },
   {
    "id": "SJD-G",
@@ -54338,7 +54350,7 @@
    "implementation": "Shared systems with consequences; the 30-planks provenance chain not built (GM-01)",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/x20-r2r4",
    "commits": [],
    "parent": null,
    "depends_on": [],
@@ -54383,6 +54395,11 @@
      "date": "2026-10-26",
      "change": "note",
      "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition implement (audit): the 30-planks verification scenario on top of GM-01 (batch R4)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: None -> worker I (recovery R2, R4); branch:  -> wip/x20-r2r4",
+     "why": "recovery R2/R4 assigned (base wip/expansion20 e49384e)"
     }
    ],
    "target_build": "20",
@@ -54391,7 +54408,7 @@
    "integrated_in": [],
    "migrated_from_status": "PARTIALLY IMPLEMENTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -54399,7 +54416,8 @@
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "the 30-planks verification scenario on top of GM-01 (batch R4)",
-   "test_commit": "0b5287c"
+   "test_commit": "0b5287c",
+   "assigned_worker": "worker I (recovery R2, R4)"
   },
   {
    "id": "WDR-010",
@@ -54588,7 +54606,7 @@
    "implementation": "No aspiration domains; job mobility, apprenticeships and storefronts exist (REC-016)",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/x20-r5",
    "commits": [],
    "parent": null,
    "depends_on": [],
@@ -54638,6 +54656,11 @@
      "date": "2026-10-26",
      "change": "note",
      "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition implement (audit): aspirations in five domains from real state as a decision factor; design note first, then code behind a flag (batch R5)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker J (R5 design); branch:  -> wip/x20-r5",
+     "why": "recovery R5 design note assigned (no code until after R2 and review)"
     }
    ],
    "target_build": "20",
@@ -54646,7 +54669,7 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -54656,7 +54679,8 @@
    "related": [
     "X20-OPEN-ITEMS"
    ],
-   "test_commit": "0b5287c"
+   "test_commit": "0b5287c",
+   "assigned_worker": "worker J (R5 design)"
   },
   {
    "id": "WDR-012",

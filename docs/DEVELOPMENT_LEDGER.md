@@ -297,7 +297,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | FSE-B10 | The player's kills enter the wildlife ledger | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | FSE-B11 | The home hearth gives the player and villagers the same recipes | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | FSE-B12 | Hunting experience by one rule for the player and villagers | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
-| GM-01 | Generational memory and historical consequences (the 30-planks chain) | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| GM-01 | Generational memory and historical consequences (the 30-planks chain) | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | GP-ACTIONBAR | Android action controls redesigned into two readable right-side columns (proposed: Run, Gather, Fire, Skills, Menu / Use, Attack, Pack, Map), every action kept, comfortable non-overlapping targets, centre and upper-left HUD clear, insets respected, stable positions, Gather on/off state unmistakable; baseline the owner's screenshot docs/gameplay_polish/reference/android_mining_hud_2026-10-24.png | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | GP-ANDROID-ACTION-BUTTONS | Android right-side action controls: compact circular backgrounds, closer to the right edge, glyphs and labels kept | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | GP-ANDROID-HUD-SCALE | Android health and status panel about 15% smaller, with every value kept legible | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
@@ -597,7 +597,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | SJD-C | Judgment expansion Gate C: isolated prototype (event catalog, beliefs, signed interpretation, GOOD/BAD ledger, tests), no effect on live behaviour | 19 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
 | SJD-D | Judgment expansion Gate D: decision prototype (factor registry, utility profiles, the 50-iron scenario, explanation traces, determinism) | 19 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
-| SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | 20 | OWNER APPROVED | IN DEVELOPMENT | TARGETED TESTS PASSED | NOT READY | OPEN |
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
@@ -643,9 +643,9 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-006-C | Comply with World Design Rule 6: Maintain the Existing Interlocking Systems Manifest |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | WDR-007-C | Comply with World Design Rule 7: Automated Compliance | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | 20 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
+| WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | 15 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
-| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | 17 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |

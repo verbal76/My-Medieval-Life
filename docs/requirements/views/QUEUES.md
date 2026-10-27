@@ -2,12 +2,13 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (15)
+## Workers and task branches (19)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
+| GM-01 | 20 | IN DEVELOPMENT | worker I (recovery R2, R4) | wip/x20-r2r4 |
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
@@ -20,9 +21,12 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | REC-DIAG | 20 | IN DEVELOPMENT | lead | wip/recorder (read-only runs) |
 | REC-STORE | 20 | IN DEVELOPMENT | worker G (recovery R1, R3) | wip/x20-r1r3 |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
+| SJD-F | 20 | IN DEVELOPMENT | worker I (recovery R2, R4) | wip/x20-r2r4 |
+| WDR-009-C | 20 | IN DEVELOPMENT | worker I (recovery R2, R4) | wip/x20-r2r4 |
+| WDR-011-C | 20 | IN DEVELOPMENT | worker J (R5 design) | wip/x20-r5 |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (46)
+## Implemented but not tested (45)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -62,7 +66,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH |  |
 | SET-C | 18 | PARTIALLY IMPLEMENTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |
 | WDR-001-C | 17 | PARTIALLY IMPLEMENTED |  |
-| WDR-009-C | 20 | PARTIALLY IMPLEMENTED | the 30-planks verification scenario on top of GM-01 (batch R4) |
 | WDR-010-C | 15 | PARTIALLY IMPLEMENTED |  |
 | WDR-013-C | 17 | PARTIALLY IMPLEMENTED |  |
 | WDR-015-C | 20+ | PARTIALLY IMPLEMENTED |  |

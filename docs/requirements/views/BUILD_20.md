@@ -9,7 +9,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 81 |
-| Integrated | 64 of 81 (79%) |
+| Integrated | 63 of 81 (78%) |
 | Automated tests passed | 65 of 81 (80%) |
 | Integration verified | 36 of 81 (44%) |
 | Gameplay verified | 0 of 81 (0%) |
@@ -18,15 +18,19 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 79 |
 | Open owner decisions (blocking) | 15 (11) |
 
-## In development (worker assigned) (3)
+## In development (worker assigned) (7)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| GM-01 | Generational memory and historical consequences (the 30-planks chain) | OWNER APPROVED | IN DEVELOPMENT | worker I (recovery R2, R4) / wip/x20-r2r4 | NOT TESTED | historical memory: fact links and entity refs (building, item, household), the 30-planks chain, significance rule, dialogue from records, save migration (batch R4) | design: UNKNOWN | L |
 | REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | IN DEVELOPMENT | worker G (recovery R1, R3) / wip/x20-r1r3 | TARGETED TESTS PASSED | recorder stage D5 (judgment publish, learn, tell, trust, every choice with alternatives and factors) and D4 relations (batch R3) | design: UNKNOWN | UNKNOWN |
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | analysis of judgment once D5 records it (batch R6); closure also waits on SIM-F2 and SIM-F3 | design: UNKNOWN | UNKNOWN |
 | REC-STORE | Recorder keeps every decision's alternatives and factors in full; no reduction, sampling or discarding; storage limit stops recording, keeps data, marks the session incomplete | OWNER APPROVED | IN DEVELOPMENT | worker G (recovery R1, R3) / wip/x20-r1r3 | NOT TESTED | judgment-weighted decisions recorded in full (batch R3) | design: UNKNOWN | UNKNOWN |
+| SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | OWNER APPROVED | IN DEVELOPMENT | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | 13 decision domains live through JudgmentWeighting.choose; close against acceptance with the population evidence of the measurement batch (R6); politics stays with Expansion 21 (Q-POL-1, Q-POL-7) |  | XL |
+| WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | OWNER APPROVED | IN DEVELOPMENT | worker I (recovery R2, R4) / wip/x20-r2r4 | NOT TESTED | the 30-planks verification scenario on top of GM-01 (batch R4) | design: UNKNOWN | UNKNOWN |
+| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | OWNER APPROVED | IN DEVELOPMENT | worker J (R5 design) / wip/x20-r5 | NOT TESTED | aspirations in five domains from real state as a decision factor; design note first, then code behind a flag (batch R5) | design: DESIGN WORK REQUIRED | L |
 
-## Integrated, awaiting gameplay or owner verification (62)
+## Integrated, awaiting gameplay or owner verification (61)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -86,25 +90,17 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | GP-WIKI-RECIPE-TOOLS | Encyclopedia recipes name every tool the work needs (for example a mallet and a chisel, and which chisels count) | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED | Build 22: implement on wip/b22-ui, lead integrates on wip/build22 |  | verification only |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 b7e3c3b | TARGETED TESTS PASSED | LE-02 (owner policies held: OD-LE-02B, -04, -05B, -07, -08, -10, -11, -13B, -14, -15). Gaps found at LE-01: no economy actor for villagers' storefront tills (front.till) or trade-counter tills (counter.till); judgment system lacks a read of one person's weighted opinion of another, and judged persons for manor, chapel, manor tills and neighbouring settlements; the model's save section reached about 400-440 KB by day 30 (trade knowledge), a phone budget question under OD-LE-15. |  | verification only |
 | MP-PLAYER-FAMILY | Children of player-to-player marriages: biological (male and female) and adoption with both spouses as parents | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED | Build 22: implement on wip/b22-family, lead integrates on wip/build22 |  | verification only |
-| SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | 13 decision domains live through JudgmentWeighting.choose; close against acceptance with the population evidence of the measurement batch (R6); politics stays with Expansion 21 (Q-POL-1, Q-POL-7) |  | verification only |
 | WEAPON-CATALOG-01 | Every weapon on the master weapons sheet can be made at the smithy at an appropriate Smithing level and bought there | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED |  |  | verification only |
 | WEAPON-VISIBLE-01 | An equipped weapon is drawn on the character while walking, and attacks swing it like the axe; villagers the same | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED |  |  | verification only |
 | X19-FOUND | Expansion 19 foundations round: personality, relationship history and family reputation (judgment off) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | children complete; umbrella closes with them |  | verification only |
 | X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | live as the owner approved (packet D); the false_accusation catalog event is never published (batch R1) |  | verification only |
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | live: stories passed at coming of age and at home, observers judge by their own knowledge |  | verification only |
 
-## Ready to proceed now (approved, specified, nothing open blocks it) (1)
-
-| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
-|---|---|---|---|---|---|---|---|---|
-| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 |  | L |
-
-## Blocked (open owner decision, unfinished dependency or unsettled design) (13)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (11)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it | design: UNKNOWN | UNKNOWN |
-| GM-01 | Generational memory and historical consequences (the 30-planks chain) | OWNER APPROVED | NOT STARTED | none | NOT TESTED | historical memory: fact links and entity refs (building, item, household), the 30-planks chain, significance rule, dialogue from records, save migration (batch R4) | design: UNKNOWN | L |
 | GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | OWNER APPROVED | NOT STARTED | none | NOT TESTED | P1 after Batch A1 (docs/gameplay_polish/SCHEDULE.md) | design: UNKNOWN | UNKNOWN |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
@@ -113,9 +109,8 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | MP-INTERACT-01 | Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller) | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Implement as the final Expansion 20 batch on the frozen integrated baseline (after the Build 19 recovery, LE work, Android usability and the Messages journal). No Expansion 20 build of any kind (public or private) until this is integrated and validated. | MP-01, design: UNKNOWN | UNKNOWN |
+| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 | SJD-F | L |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) | SJD-G | XS |
-| WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED | the 30-planks verification scenario on top of GM-01 (batch R4) | design: UNKNOWN | UNKNOWN |
-| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | OWNER APPROVED | NOT STARTED | none | NOT TESTED | aspirations in five domains from real state as a decision factor; design note first, then code behind a flag (batch R5) | design: DESIGN WORK REQUIRED | L |
 
 ## Complete (2)
 
