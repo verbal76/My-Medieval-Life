@@ -739,13 +739,14 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B17F-SIMREPORT | economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log | 18 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | 18 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 
-## World design rule (32)
+## World design rule (33)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
 | AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | 16 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | B17-DIR | Build 17 combined integration direction: continue MIN-D, DVW-A12, FARM-08 and MIN-C visual verification; reuse passing evidence; no new distributable without explicit owner approval | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | B18-SCOPE | Build 18 stays combined: tracks A, B and C; multiplayer excluded | 18 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
+| DCR-01 | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control | unassigned | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | MILE-01 | Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) without the owner | 16 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | MSW-01 | Minimum Sufficient Work: correctness mandatory, redundancy justified |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | PROS-01 | Parallel prospective development of Expansions 18 and 19 on isolated branches while Build 17 stays the priority; no merge, release or presentation as integrated gameplay before the reconciliation gates | 18 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
@@ -776,7 +777,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (238)
+## Owner decisions (239)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -921,6 +922,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | Q-POL-4 | Vote privacy and which totals are public | 21 | APPROVED | yes |
 | Q-POL-5 | Ties in elections | 21 | APPROVED | yes |
 | Q-POL-6 | Removal from office | 21 | APPROVED | yes |
+| Q-POL-6-CONFLICT | Removal from office: the owner's 2026-10-19 directive allows removal through the established political system where appropriate; the 2026-10-27 answer D23 (Q-POL-6 = A) allows no automatic impeachment or recall and no removal mechanics. Which rule holds? (a) no automatic removal, but deliberate removal through the political system stays possible for grave misconduct (both texts kept); (b) D23 strictly, no removal at all (2026-10-19 permission superseded by name); (c) another rule. | 21 | OPEN |  |
 | Q-POL-7 | Placement and gate: politics waits for Expansion 19's live judgment, or an interim voter model behind a switch | 21 | APPROVED | yes |
 | Q-POL-8 | The constable and the law: a constable and crime records before Expansion 22; the friendly guard (X19 conflict 3) | 21 | APPROVED | yes |
 | Q-POL-9 | Taxes under an elected authority and DVW-B5's predictability | 21 | APPROVED | yes |

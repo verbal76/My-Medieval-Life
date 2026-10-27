@@ -16,7 +16,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Owner playtested | 0 of 6 (0%) |
 | Complete | 0 of 6 (0%) |
 | Open (release blockers) | 6 |
-| Open owner decisions (blocking) | 0 (0) |
+| Open owner decisions (blocking) | 1 (0) |
 
 ## Integrated, awaiting gameplay or owner verification (1)
 
@@ -33,6 +33,12 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | P21-02 | Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/expansion21-preparation | NOT TESTED | owner answers the packet (structure and noble authority first) | design: UNKNOWN | UNKNOWN |
 | P21-MAYOR | Elected mayor: elected by established adult residents who are also eligible to stand; four-game-year terms; incumbents may stand again; an early vacancy calls a replacement election as soon as possible, the longest-serving eligible civic official holding authority meanwhile; voters judge candidates individually by policies, competence, interests, trust, relationships, family and their own priorities | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | OWNER APPROVED | NOT STARTED | wip/expansion21-preparation | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+
+## Open owner decisions (1)
+
+| ID | Question | Disposition | Blocks | Affects |
+|---|---|---|---|---|
+| Q-POL-6-CONFLICT | Removal from office: the owner's 2026-10-19 directive allows removal through the established political system where appropriate; the 2026-10-27 answer D23 (Q-POL-6 = A) allows no automatic impeachment or recall and no removal mechanics. Which rule holds? (a) no automatic removal, but deliberate removal through the political system stays possible for grave misconduct (both texts kept); (b) D23 strictly, no removal at all (2026-10-19 permission superseded by name); (c) another rule. | OPEN | no |  |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (5)
 

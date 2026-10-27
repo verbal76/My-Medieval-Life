@@ -61,11 +61,12 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-015-C | Comply with World Design Rule 15: Political Authority, Social Hierarchy, and Civic Employment | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 
-## Approved, no build assigned (13)
+## Approved, no build assigned (14)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
 | CON-02-KINDS | CON-02 unfinished service kinds: further labour and service contracts beyond dig and survey (e.g. work on the buyer's materials with existing recipes), tracked as open dependencies of the Build 17 approval | approved | OWNER APPROVED | NOT STARTED |
+| DCR-01 | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control | rule | PROPOSED | NOT STARTED |
 | ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | approved | OWNER APPROVED | IN DEVELOPMENT |
 | MP-ADOPTION-AGENCY | Adoption agency concept (future, separate design item) | approved | DEFERRED | NOT STARTED |
 | RECON-01 | Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off | approved | OWNER APPROVED | INTEGRATED |

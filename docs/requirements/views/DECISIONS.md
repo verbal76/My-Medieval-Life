@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 2 |
+| OPEN | 3 |
 | APPROVED | 231 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
@@ -20,6 +20,12 @@ The decision register is the `decision` records of the register. A recommendatio
 | ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | PROVISIONAL | no | ARMOR-CATALOG-01, ARMOR-MATERIALS-01 | docs/design/ARMOUR_CATALOGUE_PROPOSAL.md |
 | MP-INTERACT-Q1 | Player-to-player contracts: the contract system only has a way for villagers to do units of work, so contracts between two players are limited to goods. Should a player be able to hire another player for work (a service contract)? | OPEN | no |  | MP-INTERACT-01 worker report and audit (wip/x20-mp-interact 0ce4c9e) |
 | MP-INTERACT-Q2 | Talk targeting: Talk takes the nearest person, so a closer villager comes before another player (a tap, a click or Next always reaches the player). Should players come first for Talk instead? | OPEN | no |  | MP-INTERACT-01 worker report (wip/x20-mp-interact 0ce4c9e) |
+
+## Build 21: Village Politics: open, reopened or provisional (1)
+
+| ID | Question | Disposition | Blocks implementation | Affects | Source |
+|---|---|---|---|---|---|
+| Q-POL-6-CONFLICT | Removal from office: the owner's 2026-10-19 directive allows removal through the established political system where appropriate; the 2026-10-27 answer D23 (Q-POL-6 = A) allows no automatic impeachment or recall and no removal mechanics. Which rule holds? (a) no automatic removal, but deliberate removal through the political system stays possible for grave misconduct (both texts kept); (b) D23 strictly, no removal at all (2026-10-19 permission superseded by name); (c) another rule. | OPEN | no |  | docs/design/DECISION_CONTINUITY_REVIEW_2026-10-27.md section 3 (DCR-01) |
 
 ## Approved, no build assigned: open, reopened or provisional (1)
 

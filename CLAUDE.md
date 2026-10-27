@@ -381,6 +381,15 @@ corresponding documentation.** Every agent and worker, on every task:
   why. Owner decisions are marked as such; agent proposals stay "Proposed" until the owner approves.
 - `docs/GAME_DESIGN.md` moves an item from Undecided or Proposed to Confirmed only when the owner
   approves it, with a link to the decision entry.
+- **Decision continuity (owner, 2026-10-27, DCR-01, `docs/directives/2026-10-27_design_continuity_directive.md`; standing).**
+  Before implementing any newly approved decision, compare it with the earlier owner directives, settled decisions, the
+  register, the code, verified behaviour, saves and migrations, and the release restrictions, and classify it as a
+  **compatible extension**, an **intentional revision** (say exactly what changes and why) or a **conflict**. A later answer
+  never silently supersedes an earlier one; context matters, above all for questions drawn from the historical design
+  documents. Return only genuine conflicts to the owner, each with: requirement id, previous rule, its source, the new rule,
+  the exact difference, systems and code affected, a proposed reconciliation and whether owner approval is needed. Never
+  rewrite the earlier rule; preserve it and document any intentional change. Future-stage answers authorize no
+  implementation. First review: `docs/design/DECISION_CONTINUITY_REVIEW_2026-10-27.md`.
 
 ## 9a. Requirements register (owner, 2026-10-19; standing, do not remove or weaken without the owner's approval)
 

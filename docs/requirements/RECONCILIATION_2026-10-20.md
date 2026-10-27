@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 168 still open, 63 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 597 (281 of them still open) |
-| **Open entries now** (rules excluded) | | **449** |
+| Entries added since | | 599 (283 of them still open) |
+| **Open entries now** (rules excluded) | | **450** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (63)
@@ -106,7 +106,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (597)
+## Added since the baseline (599)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -184,6 +184,7 @@ None.
 | CTR-02 | At a counter: a prompt, press A, and the business's available shopkeeper walks to the counter to serve | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | CTR-04 | Permanent counters are not market stalls: no stall commission on counters without an approved rule | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
+| DCR-01 | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control | rule | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
@@ -511,6 +512,7 @@ None.
 | Q-POL-4 | Vote privacy and which totals are public | decision | APPROVED | 21 |
 | Q-POL-5 | Ties in elections | decision | APPROVED | 21 |
 | Q-POL-6 | Removal from office | decision | APPROVED | 21 |
+| Q-POL-6-CONFLICT | Removal from office: the owner's 2026-10-19 directive allows removal through the established political system where appropriate; the 2026-10-27 answer D23 (Q-POL-6 = A) allows no automatic impeachment or recall and no removal mechanics. Which rule holds? (a) no automatic removal, but deliberate removal through the political system stays possible for grave misconduct (both texts kept); (b) D23 strictly, no removal at all (2026-10-19 permission superseded by name); (c) another rule. | decision | OPEN | 21 |
 | Q-POL-7 | Placement and gate: politics waits for Expansion 19's live judgment, or an interim voter model behind a switch | decision | APPROVED | 21 |
 | Q-POL-8 | The constable and the law: a constable and crime records before Expansion 22; the friendly guard (X19 conflict 3) | decision | APPROVED | 21 |
 | Q-POL-9 | Taxes under an elected authority and DVW-B5's predictability | decision | APPROVED | 21 |
