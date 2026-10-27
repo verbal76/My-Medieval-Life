@@ -59784,6 +59784,49 @@
    ]
   },
   {
+   "id": "X20-FINAL",
+   "kind": "approved",
+   "title": "Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release",
+   "description": "Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release",
+   "source": "docs/directives/2026-10-27_x20_final_validation_recorder_release.md",
+   "owner_wording": "Expansion 20 is now authorized to proceed through final validation and release without another routine owner approval. ... The final deliverable is a tested, stable, three-platform Expansion 20 release.",
+   "approval": "owner, 2026-10-27",
+   "acceptance": [
+    "Phase 1: wip/x20-final 87b69ab validated; remaining approved X20 release fixes done (SIM-F2 chisel, SIM-F3 bandit stalk, player/NPC proposal equality under D39 and Rule 012); no future-expansion features",
+    "Phase 2: coverage matrix for every system introduced or changed in Expansions 18-20 (implemented and active, behind switches, partial, approved not implemented, future), with tests, simulation and recorder coverage, gaps and required verification",
+    "Phase 3: recorder extended (NPC decisions with alternatives and factors, economy production, transfers, failures and depletion, social, world, multiplayer host/guest state), bounded, no behaviour change, hourly snapshots and independent archive verification kept",
+    "Phase 4: black-box campaigns: normal, economic stress, social and judgment, a few long runs (GitHub Actions), multiplayer with 1 host + 2 guests and 1 host + 3 guests; switches exercised on and off",
+    "Phase 5: independent analysis of the archives against the owner's 15 checks; WDR-022 respected (village failure is an outcome, accounting or state errors are defects)",
+    "Phase 6: genuine defects fixed at root with reproductions and regression tests; no weakened tests; baselines changed only with documented evidence",
+    "Phase 7: final clean validation on the exact release commit; Phase 8: Android (permanent key), Windows and Linux from one commit and build number in one release, existing visibility (private draft), smoke-tested; Phase 9: consolidated report with the coverage matrix, defects and remaining device checks"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "MP-INTERACT-01"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-27_x20_final_validation_recorder_release.md"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead (integration); workers per phase; branch: None -> wip/x20-final",
+     "why": "owner directive 2026-10-27; work starting"
+    }
+   ],
+   "assigned_worker": "lead (integration); workers per phase",
+   "branch": "wip/x20-final"
+  },
+  {
    "id": "X20-OPEN-ITEMS",
    "kind": "approved",
    "title": "Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy",

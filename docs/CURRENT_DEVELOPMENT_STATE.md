@@ -13,6 +13,17 @@
 
 - **Other records in development** (the register validator requires them named here): ID-01 (identity, `wip/foundation-identity`; waits on ID-D3's same-commit audit) and REC-DIAG (simulation diagnostics; continues as part of R6 measurement).
 
+## X20-FINAL: final validation, recorder modernization and automatic release (owner, 2026-10-27)
+
+`docs/directives/2026-10-27_x20_final_validation_recorder_release.md` supersedes the need for another release approval: when every
+technical check is clean, build and release Android, Windows and Linux together from one verified commit, with the existing visibility
+(private draft) and the permanent signing key. Integration branch `wip/x20-final` (worktree `.claude/worktrees/x20-final`):
+MP-INTERACT-01 merged at `87b69ab` onto the verified baseline `3601211` (26 suites 0 failures; G0 running). Plan, in the owner's order:
+(1) validate 87b69ab, then the remaining X20 release fixes (SIM-F2 chisel, SIM-F3 bandit stalk, player/NPC proposal equality);
+(2) coverage audit of Expansions 18-20; (3) recorder and scenario updates; (4) black-box campaigns (normal, stress, social,
+a few long runs on GitHub Actions, multiplayer 1+2 and 1+3); (5) independent archive analysis; (6) fix genuine defects;
+(7) final clean gate on the release commit; (8) release; (9) consolidated report. No overlapping workers on the same expensive run.
+
 ## Next actions (current work only)
 
 1. Fetch latest staging and every active `wip/` worker branch. Check in-progress CI/simulations and local worktrees before running or assigning anything; never duplicate a live test.

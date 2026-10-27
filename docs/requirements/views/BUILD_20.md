@@ -8,21 +8,22 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 81 |
-| Integrated | 69 of 81 (85%) |
-| Automated tests passed | 70 of 81 (86%) |
-| Integration verified | 36 of 81 (44%) |
-| Gameplay verified | 0 of 81 (0%) |
-| Owner playtested | 0 of 81 (0%) |
-| Complete | 2 of 81 (2%) |
-| Open (release blockers) | 79 |
+| Approved requirements in scope | 82 |
+| Integrated | 69 of 82 (84%) |
+| Automated tests passed | 70 of 82 (85%) |
+| Integration verified | 36 of 82 (44%) |
+| Gameplay verified | 0 of 82 (0%) |
+| Owner playtested | 0 of 82 (0%) |
+| Complete | 2 of 82 (2%) |
+| Open (release blockers) | 80 |
 | Open owner decisions (blocking) | 3 (0) |
 
-## In development (worker assigned) (1)
+## In development (worker assigned) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | analysis of judgment once D5 records it (batch R6); closure also waits on SIM-F2 and SIM-F3 | design: UNKNOWN | UNKNOWN |
+| X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | OWNER APPROVED | IN DEVELOPMENT | lead (integration); workers per phase / wip/x20-final | NOT TESTED |  | MP-INTERACT-01, design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (67)
 
