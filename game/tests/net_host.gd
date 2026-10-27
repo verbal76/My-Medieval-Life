@@ -21,6 +21,13 @@ var saves := 0
 var orphan_id := -1       # MP-PLAYER-FAMILY: the child family_orphan made
 var releases: Array = []  # MP-INTERACT-01: input events to release on the next frame (a key or button pressed by a command)
 var spot := Vector2.INF   # MP-INTERACT-01: where "stage" stood the players
+var why_last := ""        # the host's last "offer": "" or why not
+var felled := ""          # the tree "fell" felled
+var holding := false      # X20 phase 4.5 (net_mp4_test): guests' requests are held back as they arrive, then applied in one frame
+var held: Array = []
+var releasing := false
+var batch := {}           # the last release: {held, applied (in that one frame), frame}
+var _batch_from := -1
 
 
 func _init() -> void:
@@ -36,6 +43,28 @@ func _init() -> void:
 	root.add_child(main)
 	main.save_path = dir + "host_save.json"
 	process_frame.connect(_start, CONNECT_ONE_SHOT)
+	process_frame.connect(_hold_step)
+
+
+## X20 phase 4.5: "process_frame" comes after the network poll (requests that arrived this frame are in NetSession.queue) and before
+## Main._process, which applies the queue (NetSession.apply_requests). Held, the arrivals wait here; released, every held request goes
+## back into the queue at once, so the host applies them all in this one frame, in their arrival order (the same tick).
+func _hold_step() -> void:
+	if not started:
+		return
+	if _batch_from >= 0:
+		batch["applied"] = main.net.applied - _batch_from
+		_batch_from = -1
+	if holding:
+		held.append_array(main.net.queue)
+		main.net.queue = []
+	elif releasing:
+		releasing = false
+		var keep := held.filter(func(q): return main.net.by_peer.has(int(q.peer)))     # as NetSession drops a gone guest's requests
+		main.net.queue = keep + main.net.queue
+		batch = {"held": keep.size(), "frame": Engine.get_process_frames()}
+		_batch_from = main.net.applied
+		held = []
 
 
 func _start() -> void:
@@ -44,7 +73,8 @@ func _start() -> void:
 	else:
 		main.new_game()
 	main.ui.hide_all()
-	census = {"at": "load", "coins": main.world.total_coins(), "goods": _goods(), "away": _aways()}
+	census = {"at": "load", "coins": main.world.total_coins(), "goods": _goods(), "away": _aways(), "minutes": main.world.minutes,
+		"msec": Time.get_unix_time_from_system()}
 	if mode == "ui":                                  # Build 21: opened by the player's own menus (the pause menu, Open to friends)
 		started = await _open_by_menu()
 		coins0 = main.world.total_coins()
@@ -142,12 +172,14 @@ func _commands() -> void:
 			main.save_game(false)
 			main.net.stop()
 			main.save_game(false)
-			census = {"at": "saved", "coins": w.total_coins(), "goods": _goods(), "away": _aways()}
+			census = {"at": "saved", "coins": w.total_coins(), "goods": _goods(), "away": _aways(), "minutes": w.minutes,
+				"msec": Time.get_unix_time_from_system()}
 			_status()
 			quit(0)
 		"crash":                                     # MP Batch B: the host is killed after an hourly save made while the guest played
 			main.save_game(false)
-			census = {"at": "saved", "coins": w.total_coins(), "goods": _goods(), "away": _aways()}
+			census = {"at": "saved", "coins": w.total_coins(), "goods": _goods(), "away": _aways(), "minutes": w.minutes,
+				"msec": Time.get_unix_time_from_system()}
 			_status()
 			main.net.peer.close()
 			quit(0)
@@ -181,11 +213,59 @@ func _commands() -> void:
 			var out := {"digest": NetSync.digest(dd), "sections": {}}
 			for k in c.get("keys", []):
 				out.sections[k] = dd.get(k)
+			if c.get("full", false):                 # X20 phase 4.5 (net_snapshot.gd): offers, villagers, players, the clock
+				out["offers"] = w.offers.duplicate(true)
+				out["minutes"] = w.minutes
+				var nn := {}
+				for n: NPC in w.npcs:
+					nn[str(n.id)] = n.alive
+				out["npcs"] = nn
+				var pp := {}
+				for p: PlayerState in w.player_list():
+					pp[str(p.pid)] = {"pos": [p.pos.x, p.pos.y], "inv": p.inv.items.duplicate(), "coins": p.coins, "away": p.away}
+				out["players"] = pp
 			var df := FileAccess.open(dir + "dump.json", FileAccess.WRITE)
 			df.store_string(JSON.stringify(out))
 			df.close()
 		"save_storm":
 			storm = float(c.secs)
+		"hold":                                      # X20 phase 4.5: the guests' requests wait (_hold_step)
+			holding = true
+		"release":                                   # and are applied together, in one frame
+			holding = false
+			releasing = true
+		"freeze":                                    # the host's frame stops (Main and its children: no simulation, no snapshots) so
+			main.process_mode = Node.PROCESS_MODE_DISABLED     # every copy can be compared with one moment of the host's world
+		"thaw":
+			main.process_mode = Node.PROCESS_MODE_INHERIT
+		"put":                                       # one player (by pid) stands at x, y
+			var pp: PlayerState = w.player_by_pid(int(c.pid))
+			if pp != null:
+				pp.pos = Vector2(float(c.x), float(c.y))
+				for id in main.net.by_peer:
+					if int(main.net.by_peer[id]) == pp.pid:
+						main.net.rpc_id(id, "s_correct", pp.pos)
+		"give_host":                                 # goods for the host's own pack, entered in the books as imported
+			w.host_player().inv.add(str(c.id), int(c.n))
+			w.stat("imported_" + str(c.id), float(c.n))
+		"take_host":                                 # the host's pack emptied of one good (counted out as exported), for a test's exact count
+			var hn := w.host_player().inv.count(str(c.id))
+			w.host_player().inv.remove(str(c.id), hn)
+			w.stat("imported_" + str(c.id), -float(hn))
+		"offer":                                     # the host offers, as its interface's buttons do (World.player_offer)
+			why_last = w.player_offer(str(c.kind), int(c.to), str(c.get("item", "")), int(c.get("qty", 1)), null, int(c.get("price", 0)), int(c.get("days", 0)), str(c.get("text", "")))
+		"fell":                                      # the grown village tree nearest the players felled, as a woodcutter fells one
+			var best := {}
+			for t in w.trees:
+				if str(t.state) == "grown" and not t.get("ow", false) and t.has("born") and (best.is_empty() or Vector2(int(t.x), int(t.y)).distance_to(spot) < Vector2(int(best.x), int(best.y)).distance_to(spot)):
+					best = t
+			if not best.is_empty() and w.fell(best, 0) > 0:
+				felled = "%d,%d%s" % [int(best.x), int(best.y), "" if best.has("born") else " (no born)"]
+		"save":                                      # a save while the guests play (the hourly save, by hand)
+			main.save_game(false)
+			saves += 1
+			census = {"at": "saved_live", "coins": w.total_coins(), "goods": _goods(), "away": _aways(), "minutes": w.minutes,
+				"msec": Time.get_unix_time_from_system()}
 		"animal_to":                                 # Build 21: a host animal put somewhere on its own ground, standing there a while
 			var a: Animal = w.fauna.by_id(int(c.id))
 			if a != null:
@@ -218,7 +298,7 @@ func _commands() -> void:
 			ids.sort_custom(func(x, y): return int(main.net.by_peer[x]) < int(main.net.by_peer[y]))     # by pid: the first to join first
 			for id in ids:
 				var gp: PlayerState = w.player_by_pid(int(main.net.by_peer[id]))
-				gp.pos = spot + ([Vector2(1.0, 0), Vector2(1.0, 1.4), Vector2(-1.0, 1.4)][k % 3])
+				gp.pos = spot + ([Vector2(1.0, 0), Vector2(1.0, 1.4), Vector2(0, 1.4)][k % 3])     # all within reach of each other
 				gp.born = hp2.born
 				k += 1
 				main.net.rpc_id(id, "s_correct", gp.pos)
@@ -383,7 +463,9 @@ func _status() -> void:
 		"minutes": w.minutes, "seed": w.seed, "plants": plants, "coin_leak": w.total_coins() - coins0 - c_in,
 		"census": census, "saves": saves, "family": _family(w), "orphan": orphan_id, "storm": storm > 0.0, "newcomers": int(w.stats.get("player_newcomers", 0)), "coin_sources": w.coin_sources,
 		"journal": _journal_counts(w), "journal_kept": main.net.journal_kept,
-		"ui": _ui_state(), "offers": w.offers.duplicate(true), "spot": [spot.x, spot.y] if spot != Vector2.INF else []}
+		"ui": _ui_state(), "offers": w.offers.duplicate(true), "spot": [spot.x, spot.y] if spot != Vector2.INF else [],
+		"held": held.size(), "holding": holding, "batch": batch, "why_last": why_last, "felled": felled, "frozen": main.process_mode == Node.PROCESS_MODE_DISABLED,
+		"day": w.day()}
 	var tmp := dir + "status.tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	f.store_string(JSON.stringify(d))
