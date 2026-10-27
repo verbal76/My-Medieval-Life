@@ -22,7 +22,7 @@ Readiness: **RELEASED (private playtest draft (code 2f72ec3, run 40044931601, 20
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| FAM-SAC-01 | Family sacrifice and responsibility: the father figure puts children, then spouse, then parents before himself, giving up food, comfort, wealth, time and reasonable safety in hardship, without suicidal choices that would leave the family worse off; through the existing household, needs, personality and decision code; factors recorded through XEXPL-01 and the flight recorder | OWNER APPROVED | INTEGRATED | Build 19 wip/build19 2f72ec3; Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | recorder D5: family_trace and judgment factors recorded (batch R3) |  | verification only |
+| FAM-SAC-01 | Family sacrifice and responsibility: the father figure puts children, then spouse, then parents before himself, giving up food, comfort, wealth, time and reasonable safety in hardship, without suicidal choices that would leave the family worse off; through the existing household, needs, personality and decision code; factors recorded through XEXPL-01 and the flight recorder | OWNER APPROVED | INTEGRATED | Build 19 wip/build19 2f72ec3; Expansion 20 wip/expansion20 0b5287c; Expansion 20 wip/expansion20 4f50ffb | TARGETED TESTS PASSED | recorder D5: family_trace and judgment factors recorded (batch R3) |  | verification only |
 
 ## Blocked (open owner decision, unfinished dependency or unsettled design) (1)
 

@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (19)
+## Workers and task branches (17)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -18,9 +18,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
-| REC-19 | 20 | IN DEVELOPMENT | worker G (recovery R1, R3) | wip/x20-r1r3 |
 | REC-DIAG | 20 | IN DEVELOPMENT | lead | wip/recorder (read-only runs) |
-| REC-STORE | 20 | IN DEVELOPMENT | worker G (recovery R1, R3) | wip/x20-r1r3 |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | SJD-F | 20 | IN DEVELOPMENT | worker I (recovery R2, R4) | wip/x20-r2r4 |
 | WDR-009-C | 20 | IN DEVELOPMENT | worker I (recovery R2, R4) | wip/x20-r2r4 |

@@ -18012,20 +18012,26 @@
      "date": "2026-10-26",
      "change": "note",
      "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition integrate: working, but its factors are not visible in the recorder (family_trace read only by a test); fixed by recorder stage D5 (batch R3)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "tests: family_first_test 79/0; judgment_test 217/0; judgment_live_test 142/0; personality 73/0; bonds 97/0; family 51/0; relations 80/0; world 339/0; sim_gate identical -> family_first_test 79/0; judgment_test 217/0; judgment_live_test 142/0; personality 73/0; bonds 97/0; family 51/0; relations 80/0; world 339/0; sim_gate identical; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); test_commit: 0b5287c -> 4f50ffb; integrated_in + Expansion 20 wip/expansion20 4f50ffb",
+     "why": "R1/R3 merged into wip/expansion20 (e49384e) and validated with the combined suites at 4f50ffb"
     }
    ],
    "next_action": "X19 completion worker adds the danger behaviour, then Build 19 integration",
    "assigned_worker": "family worker (Sonnet subagent)",
    "branch": "wip/expansion19-preparation",
-   "tests": "family_first_test 79/0; judgment_test 217/0; judgment_live_test 142/0; personality 73/0; bonds 97/0; family 51/0; relations 80/0; world 339/0; sim_gate identical",
-   "test_commit": "0b5287c",
+   "tests": "family_first_test 79/0; judgment_test 217/0; judgment_live_test 142/0; personality 73/0; bonds 97/0; family 51/0; relations 80/0; world 339/0; sim_gate identical; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks)",
+   "test_commit": "4f50ffb",
    "commits": [
     "3022fbf",
     "fff48a4"
    ],
    "integrated_in": [
     "Build 19 wip/build19 2f72ec3",
-    "Expansion 20 wip/expansion20 0b5287c"
+    "Expansion 20 wip/expansion20 0b5287c",
+    "Expansion 20 wip/expansion20 4f50ffb"
    ],
    "related": [
     "X20-OPEN-ITEMS"
@@ -24268,6 +24274,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + Expansion 20 wip/expansion20 b6fdb25",
      "why": "merged into wip/expansion20 b6fdb25"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "tests: x20_android_ui_test 95/0, start_test 523/0, net_ui_test 61/0, wanted_indicator_test 16/0, wiki_test passed, run_tests 3600/0, G0 identical -> x20_android_ui_test 95/0, start_test 523/0, net_ui_test 61/0, wanted_indicator_test 16/0, wiki_test passed, run_tests 3600/0, G0 identical; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); test_commit: 7c59b50 -> 4f50ffb",
+     "why": "combined validation at wip/expansion20 4f50ffb (journal pager fix 126e358 merged)"
     }
    ],
    "related": [
@@ -24278,8 +24289,8 @@
    ],
    "assigned_worker": "worker H (screen messages)",
    "branch": "wip/x20-msg",
-   "tests": "x20_android_ui_test 95/0, start_test 523/0, net_ui_test 61/0, wanted_indicator_test 16/0, wiki_test passed, run_tests 3600/0, G0 identical",
-   "test_commit": "7c59b50",
+   "tests": "x20_android_ui_test 95/0, start_test 523/0, net_ui_test 61/0, wanted_indicator_test 16/0, wiki_test passed, run_tests 3600/0, G0 identical; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks)",
+   "test_commit": "4f50ffb",
    "commits": [
     "7c59b50"
    ],
@@ -24332,21 +24343,30 @@
      "date": "2026-10-26",
      "change": "notes",
      "why": "note reworded: the data file is on wip/expansion20 only"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "tests: message_journal_test 38/0 (the owner's 10 cases), x20_android_ui_test 95/0, player_family_test 88/0, save_transfer_test 21/0, multiplayer_c_test 340/0, start_test 523/0, net_ui_test 61/0, wiki_test passed, run_tests 3600/0, unittest OK; G0 identical to the baseline; merged tree identical to the tested 2e9ad2f -> message_journal_test 38/0 (the owner's 10 cases), x20_android_ui_test 95/0, player_family_test 88/0, save_transfer_test 21/0, multiplayer_c_test 340/0, start_test 523/0, net_ui_test 61/0, wiki_test passed, run_tests 3600/0, unittest OK; G0 identical to the baseline; merged tree identical to the tested 2e9ad2f; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); test_commit: 2e9ad2f -> 4f50ffb",
+     "why": "combined validation at wip/expansion20 4f50ffb (journal pager fix 126e358 merged)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "commits + 126e358",
+     "why": "defect fixed: journal pages paginate by measured height (wip/x20-msg 126e358, merged 4f50ffb; message_journal_test 50/0 checks every spread fits at 7 sizes; screenshots looked at)"
     }
    ],
    "assigned_worker": "worker H (screen messages)",
    "branch": "wip/x20-msg",
-   "tests": "message_journal_test 38/0 (the owner's 10 cases), x20_android_ui_test 95/0, player_family_test 88/0, save_transfer_test 21/0, multiplayer_c_test 340/0, start_test 523/0, net_ui_test 61/0, wiki_test passed, run_tests 3600/0, unittest OK; G0 identical to the baseline; merged tree identical to the tested 2e9ad2f",
-   "test_commit": "2e9ad2f",
+   "tests": "message_journal_test 38/0 (the owner's 10 cases), x20_android_ui_test 95/0, player_family_test 88/0, save_transfer_test 21/0, multiplayer_c_test 340/0, start_test 523/0, net_ui_test 61/0, wiki_test passed, run_tests 3600/0, unittest OK; G0 identical to the baseline; merged tree identical to the tested 2e9ad2f; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks)",
+   "test_commit": "4f50ffb",
    "commits": [
-    "2e9ad2f"
+    "2e9ad2f",
+    "126e358"
    ],
    "integrated_in": [
     "Expansion 20 wip/expansion20 b6fdb25"
    ],
-   "known_defects": [
-    "On the phone the journal's left page overflows the window (an entry cut off at the bottom while the right page continues); fix sent to worker H: paginate by visible height"
-   ],
+   "known_defects": [],
    "notes": "Optional save key 'messages' (save stays version 23, following the existing optional-key pattern: credit, couriers, player_offers); Build 21/22 saves load with an empty journal (fixture tests). Per player; a guest's messages are saved in the host's world. Two tiers in the message_journal data file (on wip/expansion20): significant (crime, law, family, contract, work, quest, property, village, skill) 2000 per player, ordinary (trade, money, npc, find, game) 300, each trimmed only from its own tier; about 110 bytes an entry, about 245 KB at full. Recording point: messages are built in the interface, which asks World.player_tell to record them (no world-side message channel exists). Village events stay on the saved Village record page (300 lines), not duplicated into Messages. Provisional limits: docs/DECISIONS.md on wip/expansion20."
   },
   {
@@ -28156,7 +28176,7 @@
     "Unit tests and persistence"
    ],
    "implementation": "",
-   "tests": "on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0",
+   "tests": "on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks)",
    "playtest": [],
    "branch": "wip/x20-le01",
    "commits": [
@@ -28208,6 +28228,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0; test_commit: None -> b7e3c3b; commits + 84ce213; integrated_in + Expansion 20 wip/expansion20 b7e3c3b; next_action",
      "why": "merged into wip/expansion20 and validated with the switch off"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "tests: on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0 -> on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); test_commit: b7e3c3b -> 4f50ffb",
+     "why": "combined validation at wip/expansion20 4f50ffb (journal pager fix 126e358 merged)"
     }
    ],
    "target_build": "20",
@@ -28223,7 +28248,7 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "assigned_worker": "worker F (LE-01)",
-   "test_commit": "b7e3c3b"
+   "test_commit": "4f50ffb"
   },
   {
    "id": "LE-02",
@@ -43965,7 +43990,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -44029,13 +44054,18 @@
      "date": "2026-10-26",
      "change": "implementation_status: IN DEVELOPMENT -> IN DEVELOPMENT; assigned_worker: worker G (recovery R1, R3); branch: wip/x20-r1r3",
      "why": "Build 19 recovery batches R1 and R3 / owner screen report"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; tests: recorder_test 62, world_test 339, start_test 506 steps, conservation_test 8, judgment_live_test 142; economy_sim 10 days seed 1 fingerprint identical with and without --record; sim_gate identical; recorder_test 160/0; recf1_test 23/0; world_test 339/0; identity 98/0; migration 93/0 -> recorder_test 62, world_test 339, start_test 506 steps, conservation_test 8, judgment_live_test 142; economy_sim 10 days seed 1 fingerprint identical with and without --record; sim_gate identical; recorder_test 160/0; recf1_test 23/0; world_test 339/0; identity 98/0; migration 93/0; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); test_commit: 0b5287c -> 4f50ffb; integrated_in + Expansion 20 wip/expansion20 4f50ffb",
+     "why": "R1/R3 merged into wip/expansion20 (e49384e) and validated with the combined suites at 4f50ffb"
     }
    ],
    "assigned_worker": "worker G (recovery R1, R3)",
    "branch": "wip/x20-r1r3",
    "next_action": "combined gate on 2d5d49c; then into the Build 19 integration branch with Expansion 19",
-   "tests": "recorder_test 62, world_test 339, start_test 506 steps, conservation_test 8, judgment_live_test 142; economy_sim 10 days seed 1 fingerprint identical with and without --record; sim_gate identical; recorder_test 160/0; recf1_test 23/0; world_test 339/0; identity 98/0; migration 93/0",
-   "test_commit": "0b5287c",
+   "tests": "recorder_test 62, world_test 339, start_test 506 steps, conservation_test 8, judgment_live_test 142; economy_sim 10 days seed 1 fingerprint identical with and without --record; sim_gate identical; recorder_test 160/0; recf1_test 23/0; world_test 339/0; identity 98/0; migration 93/0; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks)",
+   "test_commit": "4f50ffb",
    "commits": [
     "94b1304",
     "2d5d49c"
@@ -44043,7 +44073,10 @@
    "related": [
     "X20-OPEN-ITEMS"
    ],
-   "remaining_work": "recorder stage D5 (judgment publish, learn, tell, trust, every choice with alternatives and factors) and D4 relations (batch R3)"
+   "remaining_work": "recorder stage D5 (judgment publish, learn, tell, trust, every choice with alternatives and factors) and D4 relations (batch R3)",
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 4f50ffb"
+   ]
   },
   {
    "id": "REC-D1",
@@ -44281,8 +44314,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -44310,15 +44343,24 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: worker G (recovery R1, R3); branch: wip/x20-r1r3",
      "why": "Build 19 recovery batches R1 and R3 / owner screen report"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); test_commit: 0b5287c -> 4f50ffb; integrated_in + Expansion 20 wip/expansion20 4f50ffb",
+     "why": "R1/R3 merged into wip/expansion20 (e49384e) and validated with the combined suites at 4f50ffb"
     }
    ],
    "related": [
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "judgment-weighted decisions recorded in full (batch R3)",
-   "test_commit": "0b5287c",
+   "test_commit": "4f50ffb",
    "assigned_worker": "worker G (recovery R1, R3)",
-   "branch": "wip/x20-r1r3"
+   "branch": "wip/x20-r1r3",
+   "tests": "combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks)",
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 4f50ffb"
+   ]
   },
   {
    "id": "RECON-01",
@@ -58690,6 +58732,11 @@
      "date": "2026-10-26",
      "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED",
      "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition verify: code present and enabled, tests pass; was recorded NOT STARTED or partial (register not updated)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "tests: on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0 -> on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); test_commit: 0b5287c -> 4f50ffb; integrated_in + Expansion 20 wip/expansion20 4f50ffb",
+     "why": "R1/R3 merged into wip/expansion20 (e49384e) and validated with the combined suites at 4f50ffb"
     }
    ],
    "related": [
@@ -58697,10 +58744,11 @@
    ],
    "remaining_work": "live as the owner approved (packet D); the false_accusation catalog event is never published (batch R1)",
    "integrated_in": [
-    "Expansion 20 wip/expansion20 0b5287c"
+    "Expansion 20 wip/expansion20 0b5287c",
+    "Expansion 20 wip/expansion20 4f50ffb"
    ],
-   "test_commit": "0b5287c",
-   "tests": "on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0"
+   "test_commit": "4f50ffb",
+   "tests": "on wip/expansion20 0b5287c (Build 19 recovery audit): judgment_test 217/0, judgment_live_test 144/0, judgment_personality_test 91/0, judgment_bonds_test 98/0, judgment_x19_test 101/0, family_first_test 104/0, judgment_guard_save_test 20/0, relations_test 80/0, family_test 51/0, recf1_test 28/0, justice_test 33/0, manhunt_test 60/0, pursuit_test 35/0, migration_test 93/0, conservation_test 8/0; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks)"
   },
   {
    "id": "X19-PERS-FORMULA",
