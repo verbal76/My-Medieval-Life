@@ -99,6 +99,7 @@ answer returned to the offerer as a note; the guest's copy of other players foll
 | `contracts_test`, `contract_sign_test`, `contract_50ore_test`, `gift_quantity_test`, `pad_shortcuts_test`, `trade_skills_test`, `wiki_test` | 154, 21, 16, 7, 33, 96, 140 | 0 failures |
 | `python3 -m unittest discover -s tests` | 151 | OK |
 | `check_interactions`, `check_requirements` | 334 interactions; 789 records | 0 problems |
+| G0 (`python3 tools/sim_gate.py`, once, on `93f5a76`) | seeds 1 and 2, days 10 and 30 | **PASS, identical to the baseline**; currency and item leaks 0 (1,283 s) |
 | Headless export, Linux and Windows presets (unsigned) | | both build; the Linux binary starts and quits without a script error |
 | Screenshots (xvfb, opengl3): 2404x1080 touch (prompt, window, sale terms), 1920x1080 keys (prompt, window), 1920x1200 pad (prompt, players list) | | looked at: the prompt names "Bob (player)" on one line with the Talk key; the ring is at Bob's feet; the window is compact, titled, with thumb-sized buttons, clear of the status box and the touch columns |
 
