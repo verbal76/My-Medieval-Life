@@ -1,3 +1,5 @@
+> **HISTORICAL BUILD / TEST EVIDENCE — NOT CURRENT RELEASE AUTHORITY (owner, 2026-10-27).** Preserve this packet for regression investigation, old test results and provenance, not as the active build, release gate, task list or packaging command. Current build status and policy live in `docs/CURRENT_DEVELOPMENT_STATE.md`, `CLAUDE.md` and the requirements register. Build 22 is the latest private three-platform draft; Expansion 20 remains blocked from packaging until MP-INTERACT-01 merges last and passes validation.
+
 # Build 14: tester notes
 
 Build 14 is a private draft release made from `7dbae4f` (packet: `docs/release/BUILD_14_PACKET.md`; readiness:
