@@ -9,7 +9,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 82 |
-| Integrated | 69 of 82 (84%) |
+| Integrated | 70 of 82 (85%) |
 | Automated tests passed | 70 of 82 (85%) |
 | Integration verified | 36 of 82 (44%) |
 | Gameplay verified | 0 of 82 (0%) |
@@ -23,9 +23,9 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | IN DEVELOPMENT | lead / wip/recorder (read-only runs) | NOT TESTED | analysis of judgment once D5 records it (batch R6); closure also waits on SIM-F2 and SIM-F3 | design: UNKNOWN | UNKNOWN |
-| X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | OWNER APPROVED | IN DEVELOPMENT | lead (integration); workers per phase / wip/x20-final | NOT TESTED |  | MP-INTERACT-01, design: UNKNOWN | UNKNOWN |
+| X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | OWNER APPROVED | IN DEVELOPMENT | lead (integration); workers per phase / wip/x20-final | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (67)
+## Integrated, awaiting gameplay or owner verification (68)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -85,6 +85,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | GP-WIKI-LAYOUT | Encyclopedia laid out like a classic wiki page, on parchment | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
 | GP-WIKI-RECIPE-TOOLS | Encyclopedia recipes name every tool the work needs (for example a mallet and a chisel, and which chisels count) | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED | Build 22: implement on wip/b22-ui, lead integrates on wip/build22 |  | verification only |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 b7e3c3b | TARGETED TESTS PASSED | LE-02 (owner policies held: OD-LE-02B, -04, -05B, -07, -08, -10, -11, -13B, -14, -15). Gaps found at LE-01: no economy actor for villagers' storefront tills (front.till) or trade-counter tills (counter.till); judgment system lacks a read of one person's weighted opinion of another, and judged persons for manor, chapel, manor tills and neighbouring settlements; the model's save section reached about 400-440 KB by day 30 (trade knowledge), a phone budget question under OD-LE-15. |  | verification only |
+| MP-INTERACT-01 | Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 87b69ab | TARGETED TESTS PASSED | Final X20 release validation (X20-FINAL): multiplayer 1+2 and 1+3 scenarios (worker O), final gate on the release commit, three-platform exports; owner-device matrix remains (all nine host/guest pairs). MP-INTERACT-Q1/Q2 open for the owner. |  | verification only |
 | MP-PLAYER-FAMILY | Children of player-to-player marriages: biological (male and female) and adoption with both spouses as parents | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED | Build 22: implement on wip/b22-family, lead integrates on wip/build22 |  | verification only |
 | REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 4f50ffb | TARGETED TESTS PASSED | recorder stage D5 (judgment publish, learn, tell, trust, every choice with alternatives and factors) and D4 relations (batch R3) |  | verification only |
 | REC-STORE | Recorder keeps every decision's alternatives and factors in full; no reduction, sampling or discarding; storage limit stops recording, keeps data, marks the session incomplete | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 4f50ffb | TARGETED TESTS PASSED | judgment-weighted decisions recorded in full (batch R3) |  | verification only |
@@ -103,7 +104,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 |---|---|---|---|---|---|---|---|---|
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (10)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (9)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -115,7 +116,6 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| MP-INTERACT-01 | Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker K (multiplayer interaction) / wip/x20-mp-interact | TARGETED TESTS PASSED | Merge wip/x20-mp-interact 0ce4c9e onto the verified baseline wip/expansion20 3601211 (LAST); resolve conflicts keeping both sides; multiplayer suites (mp_interact_ui, net_interact, net_*), combined regression, one G0, three exports, release-readiness report with the device matrix. MP-INTERACT-Q1/Q2 stay open for the owner. | MP-01, design: UNKNOWN | UNKNOWN |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) | SJD-G | XS |
 
 ## Complete (2)

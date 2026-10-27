@@ -32080,7 +32080,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -32114,18 +32114,26 @@
      "date": "2026-10-27",
      "change": "next_action",
      "why": "integration baseline fixed: wip/expansion20 3601211 passed the combined validation (owner instruction 2026-10-27: record the exact verified commit)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; tests: mp_interact_ui_test 112/0 (one process, real key, pad, touch and mouse events: player beside villager, anvil and stall, several players, moving, cycling, levels); net_interact_test 67/0 x3 runs (three processes over loopback: host, touch guest, second guest; host-guest both ways and guest-guest; accept, decline, counter; conservation; double accept; disconnect, reconnect, host restart with a pending offer); multiplayer_c 340/0, run_tests 3600/0, start_test 523/0, world_test 339/0, x20_android_ui 95/0, message_journal 50/0, wiki_test 140/0, other net suites and contract tests 0 failures; G0 identical on 93f5a76; Linux and Windows exports build (unsigned), Linux binary starts; screenshots looked at by worker and lead -> mp_interact_ui_test 112/0 (one process, real key, pad, touch and mouse events: player beside villager, anvil and stall, several players, moving, cycling, levels); net_interact_test 67/0 x3 runs (three processes over loopback: host, touch guest, second guest; host-guest both ways and guest-guest; accept, decline, counter; conservation; double accept; disconnect, reconnect, host restart with a pending offer); multiplayer_c 340/0, run_tests 3600/0, start_test 523/0, world_test 339/0, x20_android_ui 95/0, message_journal 50/0, wiki_test 140/0, other net suites and contract tests 0 failures; G0 identical on 93f5a76; Linux and Windows exports build (unsigned), Linux binary starts; screenshots looked at by worker and lead; combined on wip/x20-final 87b69ab (26 suites 0 failures): mp_interact_ui 112, net_interact 67, net_g1 45, net_c 35, net_batch_b 44, net_fauna 13, net_family 22, net_ui 61, x20_android_ui 95, multiplayer_c 340, contract_sign 21, message_journal 51, contracts 154, player_family 88, migration 93, contract_50ore 19, save_transfer 21, relations 80, conservation 8, economy_model 113, judgment_live 161, wiki passed, start_test 523, aspiration 145, world 339, run_tests 3600; G0 identical to the baseline; test_commit: 0ce4c9e -> 87b69ab; integrated_in + Expansion 20 wip/expansion20 87b69ab; next_action",
+     "why": "merged LAST onto the verified baseline 3601211 at 87b69ab; combined validation passed; wip/expansion20 advanced to 87b69ab"
     }
    ],
-   "next_action": "Merge wip/x20-mp-interact 0ce4c9e onto the verified baseline wip/expansion20 3601211 (LAST); resolve conflicts keeping both sides; multiplayer suites (mp_interact_ui, net_interact, net_*), combined regression, one G0, three exports, release-readiness report with the device matrix. MP-INTERACT-Q1/Q2 stay open for the owner.",
+   "next_action": "Final X20 release validation (X20-FINAL): multiplayer 1+2 and 1+3 scenarios (worker O), final gate on the release commit, three-platform exports; owner-device matrix remains (all nine host/guest pairs). MP-INTERACT-Q1/Q2 open for the owner.",
    "notes": "BLOCKS the next Expansion 20 release (private drafts included). Playtest evidence: the Windows player saw Bob (Android) but could not select or interact with him; the reverse was not tried. Treated as a cross-platform deficiency until tests show otherwise. Build 22 is not reopened. Likely cause (read-only look, 2026-10-27, wip/expansion20 b6fdb25): other players are never offered as a target. main._find_target lists villagers, shops, desks, loot, animals and things but no player, so there is no prompt, outline or tap target for one; the MP-D8 players window (GameUI.show_players: gift, partner, answer offers) opens only from main.interact when NO other target is in reach (main.gd interact, the target.is_empty() branch, _beside_player). In a village something else is nearly always in reach, so the other player cannot be chosen. Also to audit: guest_blocked() in interact, touch tap selection, the pad's next-target cycle, and the guest's path through the host.",
    "assigned_worker": "worker K (multiplayer interaction)",
    "branch": "wip/x20-mp-interact",
-   "tests": "mp_interact_ui_test 112/0 (one process, real key, pad, touch and mouse events: player beside villager, anvil and stall, several players, moving, cycling, levels); net_interact_test 67/0 x3 runs (three processes over loopback: host, touch guest, second guest; host-guest both ways and guest-guest; accept, decline, counter; conservation; double accept; disconnect, reconnect, host restart with a pending offer); multiplayer_c 340/0, run_tests 3600/0, start_test 523/0, world_test 339/0, x20_android_ui 95/0, message_journal 50/0, wiki_test 140/0, other net suites and contract tests 0 failures; G0 identical on 93f5a76; Linux and Windows exports build (unsigned), Linux binary starts; screenshots looked at by worker and lead",
-   "test_commit": "0ce4c9e",
+   "tests": "mp_interact_ui_test 112/0 (one process, real key, pad, touch and mouse events: player beside villager, anvil and stall, several players, moving, cycling, levels); net_interact_test 67/0 x3 runs (three processes over loopback: host, touch guest, second guest; host-guest both ways and guest-guest; accept, decline, counter; conservation; double accept; disconnect, reconnect, host restart with a pending offer); multiplayer_c 340/0, run_tests 3600/0, start_test 523/0, world_test 339/0, x20_android_ui 95/0, message_journal 50/0, wiki_test 140/0, other net suites and contract tests 0 failures; G0 identical on 93f5a76; Linux and Windows exports build (unsigned), Linux binary starts; screenshots looked at by worker and lead; combined on wip/x20-final 87b69ab (26 suites 0 failures): mp_interact_ui 112, net_interact 67, net_g1 45, net_c 35, net_batch_b 44, net_fauna 13, net_family 22, net_ui 61, x20_android_ui 95, multiplayer_c 340, contract_sign 21, message_journal 51, contracts 154, player_family 88, migration 93, contract_50ore 19, save_transfer 21, relations 80, conservation 8, economy_model 113, judgment_live 161, wiki passed, start_test 523, aspiration 145, world 339, run_tests 3600; G0 identical to the baseline",
+   "test_commit": "87b69ab",
    "commits": [
     "0ce4c9e"
    ],
-   "playtest": "All nine host/guest platform pairs need owner devices (Android phone, Windows PC, real controller, two-machine LAN); only Linux-host-Linux ran end to end on the build machine, the rest are automated input paths plus loopback"
+   "playtest": "All nine host/guest platform pairs need owner devices (Android phone, Windows PC, real controller, two-machine LAN); only Linux-host-Linux ran end to end on the build machine, the rest are automated input paths plus loopback",
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 87b69ab"
+   ]
   },
   {
    "id": "MP-INTERACT-Q1",
