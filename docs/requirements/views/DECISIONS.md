@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 36 |
+| OPEN | 43 |
 | APPROVED | 187 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
@@ -32,7 +32,7 @@ The decision register is the `decision` records of the register. A recommendatio
 | SIM-F2 | Recorder finding F2: a stonecutter re-chose a failing iron-chisel purchase 328 times in one day (day 2, seed 1), losing a working day; same re-decision family as REC-F1. Approve a narrow fix? | OPEN | no |  | docs/directives/2026-10-23_simulation_first_diagnostics.md |
 | SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | OPEN | no |  | docs/directives/2026-10-23_simulation_first_diagnostics.md |
 
-## Build 20: Living Economy: open, reopened or provisional (15)
+## Build 20: Living Economy: open, reopened or provisional (22)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
@@ -51,6 +51,13 @@ The decision register is the `decision` records of the register. A recommendatio
 | OD-LE-13B | Death of a party to a contract: does the contract end, pass to the heir or the household, or go to the estate (the remaining part of OD-LE-13) | OPEN | no |  | docs/directives/2026-10-23_expansions_19_21_consolidated_design.md |
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | OPEN | yes |  | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | OPEN | yes |  | docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 18 |
+| WDR-011-Q1 | Aspirations: the game has no illness system; should low health and near-starvation hunger count as illness for Rule 011's adaptation, or wait for an illness system? | OPEN | no |  | R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011 |
+| WDR-011-Q2 | Aspirations: should careers be steered only through accepting work and contracts, or add a job-choice decision (behind its own switch, after R2)? | OPEN | no |  | R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011 |
+| WDR-011-Q3 | Aspirations: may villagers who care about wealth or property favour suitors with means, or does courting stay attraction plus opinion in v1? | OPEN | no |  | R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011 |
+| WDR-011-Q4 | Aspirations: who perseveres after a setback: the existing stubborn villagers (about 30%), with experience speeding adaptation, or a new seeded ambition temperament? | OPEN | no |  | R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011 |
+| WDR-011-Q5 | Aspirations: approve the provisional values (priorities, thresholds, adaptation rates) as a starting point tuned from four-seed measurements, or set them now? (Owner-given values used: hunger floor 25, stubborn share 30%.) | OPEN | no |  | R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011 |
+| WDR-011-Q6 | Aspirations: should social standing be a sixth domain (read from the village's overall opinion), beyond Rule 011's five? | OPEN | no |  | R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011 |
+| WDR-011-Q7 | Aspirations: should players see villagers' aspirations: none in v1, or a dialogue line from the leading aspiration once the feature is on and reviewed? | OPEN | no |  | R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011 |
 
 ## Build 21: Village Politics: open, reopened or provisional (9)
 

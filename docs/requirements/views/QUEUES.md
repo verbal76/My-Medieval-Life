@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (19)
+## Workers and task branches (18)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -23,7 +23,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | SJD-F | 20 | IN DEVELOPMENT | worker I (recovery R2, R4) | wip/x20-r2r4 |
 | WDR-009-C | 20 | IN DEVELOPMENT | worker I (recovery R2, R4) | wip/x20-r2r4 |
-| WDR-011-C | 20 | IN DEVELOPMENT | worker J (R5 design) | wip/x20-r5 |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
 ## Implemented but not tested (45)

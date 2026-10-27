@@ -16,9 +16,9 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Owner playtested | 0 of 81 (0%) |
 | Complete | 2 of 81 (2%) |
 | Open (release blockers) | 79 |
-| Open owner decisions (blocking) | 15 (11) |
+| Open owner decisions (blocking) | 22 (11) |
 
-## In development (worker assigned) (7)
+## In development (worker assigned) (6)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -28,7 +28,6 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | REC-STORE | Recorder keeps every decision's alternatives and factors in full; no reduction, sampling or discarding; storage limit stops recording, keeps data, marks the session incomplete | OWNER APPROVED | IN DEVELOPMENT | worker G (recovery R1, R3) / wip/x20-r1r3 | NOT TESTED | judgment-weighted decisions recorded in full (batch R3) | design: UNKNOWN | UNKNOWN |
 | SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | OWNER APPROVED | IN DEVELOPMENT | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | 13 decision domains live through JudgmentWeighting.choose; close against acceptance with the population evidence of the measurement batch (R6); politics stays with Expansion 21 (Q-POL-1, Q-POL-7) |  | XL |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | OWNER APPROVED | IN DEVELOPMENT | worker I (recovery R2, R4) / wip/x20-r2r4 | NOT TESTED | the 30-planks verification scenario on top of GM-01 (batch R4) | design: UNKNOWN | UNKNOWN |
-| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | OWNER APPROVED | IN DEVELOPMENT | worker J (R5 design) / wip/x20-r5 | NOT TESTED | aspirations in five domains from real state as a decision factor; design note first, then code behind a flag (batch R5) | design: DESIGN WORK REQUIRED | L |
 
 ## Integrated, awaiting gameplay or owner verification (61)
 
@@ -96,7 +95,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | live as the owner approved (packet D); the false_accusation catalog event is never published (batch R1) |  | verification only |
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | live: stories passed at coming of age and at home, observers judge by their own knowledge |  | verification only |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (11)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (12)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -111,6 +110,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | MP-INTERACT-01 | Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller) | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Implement as the final Expansion 20 batch on the frozen integrated baseline (after the Build 19 recovery, LE work, Android usability and the Messages journal). No Expansion 20 build of any kind (public or private) until this is integrated and validated. | MP-01, design: UNKNOWN | UNKNOWN |
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 | SJD-F | L |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) | SJD-G | XS |
+| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | OWNER APPROVED | NOT STARTED | wip/x20-r5 | NOT TESTED | aspirations in five domains from real state as a decision factor; design note first, then code behind a flag (batch R5) | design: DESIGN WORK REQUIRED | L |
 
 ## Complete (2)
 
@@ -119,7 +119,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | INTEGRATION VERIFIED | NOT READY |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (15)
+## Open owner decisions (22)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
@@ -138,6 +138,13 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | OD-LE-13B | Death of a party to a contract: does the contract end, pass to the heir or the household, or go to the estate (the remaining part of OD-LE-13) | OPEN | no |  |
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | OPEN | yes |  |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | OPEN | yes |  |
+| WDR-011-Q1 | Aspirations: the game has no illness system; should low health and near-starvation hunger count as illness for Rule 011's adaptation, or wait for an illness system? | OPEN | no |  |
+| WDR-011-Q2 | Aspirations: should careers be steered only through accepting work and contracts, or add a job-choice decision (behind its own switch, after R2)? | OPEN | no |  |
+| WDR-011-Q3 | Aspirations: may villagers who care about wealth or property favour suitors with means, or does courting stay attraction plus opinion in v1? | OPEN | no |  |
+| WDR-011-Q4 | Aspirations: who perseveres after a setback: the existing stubborn villagers (about 30%), with experience speeding adaptation, or a new seeded ambition temperament? | OPEN | no |  |
+| WDR-011-Q5 | Aspirations: approve the provisional values (priorities, thresholds, adaptation rates) as a starting point tuned from four-seed measurements, or set them now? (Owner-given values used: hunger floor 25, stubborn share 30%.) | OPEN | no |  |
+| WDR-011-Q6 | Aspirations: should social standing be a sixth domain (read from the village's overall opinion), beyond Rule 011's five? | OPEN | no |  |
+| WDR-011-Q7 | Aspirations: should players see villagers' aspirations: none in v1, or a dialogue line from the leading aspiration once the feature is on and reviewed? | OPEN | no |  |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (6)
 

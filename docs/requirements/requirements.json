@@ -54607,7 +54607,9 @@
    "tests": "",
    "playtest": [],
    "branch": "wip/x20-r5",
-   "commits": [],
+   "commits": [
+    "e25b0ed"
+   ],
    "parent": null,
    "depends_on": [],
    "blockers": [],
@@ -54616,7 +54618,7 @@
    ],
    "interactions": [],
    "wiki": [],
-   "next_action": "Design the five aspiration domains",
+   "next_action": "Owner answers WDR-011-Q1..Q7; then the code batch on wip/expansion20 after R2/R4 (same files), flag off, aspiration_test with the Rule 011 scenario, G0 identical off.",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -54661,6 +54663,16 @@
      "date": "2026-10-27",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker J (R5 design); branch:  -> wip/x20-r5",
      "why": "recovery R5 design note assigned (no code until after R2 and review)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; commits + e25b0ed; next_action",
+     "why": "R5 design note done (wip/x20-r5 e25b0ed): five domains from existing state, one factor in five existing JudgmentWeighting profiles, off by default, no rescue; owner questions WDR-011-Q1..Q7; code batch (about 1.5-2 worker-days) after R2 and not alongside R4"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> NOT STARTED; assigned_worker: worker J (R5 design) -> ",
+     "why": "correction: only the design note exists; no code yet (code waits for WDR-011-Q1..Q7 and R2/R4)"
     }
    ],
    "target_build": "20",
@@ -54669,7 +54681,7 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "NOT STARTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -54680,7 +54692,217 @@
     "X20-OPEN-ITEMS"
    ],
    "test_commit": "0b5287c",
-   "assigned_worker": "worker J (R5 design)"
+   "assigned_worker": ""
+  },
+  {
+   "id": "WDR-011-Q1",
+   "kind": "decision",
+   "title": "Aspirations: the game has no illness system; should low health and near-starvation hunger count as illness for Rule 011's adaptation, or wait for an illness system?",
+   "description": "Aspirations: the game has no illness system; should low health and near-starvation hunger count as illness for Rule 011's adaptation, or wait for an illness system?",
+   "source": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "WDR-011-C"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "agent recommendation recorded (not an approval)"
+    }
+   ],
+   "notes": "Recommendation: count low health and near-starvation hunger as illness for now."
+  },
+  {
+   "id": "WDR-011-Q2",
+   "kind": "decision",
+   "title": "Aspirations: should careers be steered only through accepting work and contracts, or add a job-choice decision (behind its own switch, after R2)?",
+   "description": "Aspirations: should careers be steered only through accepting work and contracts, or add a job-choice decision (behind its own switch, after R2)?",
+   "source": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "WDR-011-C"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "agent recommendation recorded (not an approval)"
+    }
+   ],
+   "notes": "Recommendation: add a job-choice decision behind its own switch, after R2."
+  },
+  {
+   "id": "WDR-011-Q3",
+   "kind": "decision",
+   "title": "Aspirations: may villagers who care about wealth or property favour suitors with means, or does courting stay attraction plus opinion in v1?",
+   "description": "Aspirations: may villagers who care about wealth or property favour suitors with means, or does courting stay attraction plus opinion in v1?",
+   "source": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "WDR-011-C"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "agent recommendation recorded (not an approval)"
+    }
+   ],
+   "notes": "Recommendation: no; courting stays attraction plus opinion in v1."
+  },
+  {
+   "id": "WDR-011-Q4",
+   "kind": "decision",
+   "title": "Aspirations: who perseveres after a setback: the existing stubborn villagers (about 30%), with experience speeding adaptation, or a new seeded ambition temperament?",
+   "description": "Aspirations: who perseveres after a setback: the existing stubborn villagers (about 30%), with experience speeding adaptation, or a new seeded ambition temperament?",
+   "source": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "WDR-011-C"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "agent recommendation recorded (not an approval)"
+    }
+   ],
+   "notes": "Recommendation: the existing stubborn villagers, with experience speeding adaptation."
+  },
+  {
+   "id": "WDR-011-Q5",
+   "kind": "decision",
+   "title": "Aspirations: approve the provisional values (priorities, thresholds, adaptation rates) as a starting point tuned from four-seed measurements, or set them now? (Owner-given values used: hunger floor 25, stubborn share 30%.)",
+   "description": "Aspirations: approve the provisional values (priorities, thresholds, adaptation rates) as a starting point tuned from four-seed measurements, or set them now? (Owner-given values used: hunger floor 25, stubborn share 30%.)",
+   "source": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "WDR-011-C"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "agent recommendation recorded (not an approval)"
+    }
+   ],
+   "notes": "Recommendation: approve the provisional values as a starting point and tune from four-seed measurements."
+  },
+  {
+   "id": "WDR-011-Q6",
+   "kind": "decision",
+   "title": "Aspirations: should social standing be a sixth domain (read from the village's overall opinion), beyond Rule 011's five?",
+   "description": "Aspirations: should social standing be a sixth domain (read from the village's overall opinion), beyond Rule 011's five?",
+   "source": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "WDR-011-C"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "agent recommendation recorded (not an approval)"
+    }
+   ],
+   "notes": "Recommendation: no; opinion already counts in every choice."
+  },
+  {
+   "id": "WDR-011-Q7",
+   "kind": "decision",
+   "title": "Aspirations: should players see villagers' aspirations: none in v1, or a dialogue line from the leading aspiration once the feature is on and reviewed?",
+   "description": "Aspirations: should players see villagers' aspirations: none in v1, or a dialogue line from the leading aspiration once the feature is on and reviewed?",
+   "source": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "WDR-011-C"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "R5 aspirations design note (wip/x20-r5 e25b0ed), World Design Rule 011"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "agent recommendation recorded (not an approval)"
+    }
+   ],
+   "notes": "Recommendation: a dialogue line from the leading aspiration later, once the feature is on and reviewed."
   },
   {
    "id": "WDR-012",

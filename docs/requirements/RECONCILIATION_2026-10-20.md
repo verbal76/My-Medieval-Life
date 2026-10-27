@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 173 still open, 58 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 587 (310 of them still open) |
-| **Open entries now** (rules excluded) | | **483** |
+| Entries added since | | 594 (317 of them still open) |
+| **Open entries now** (rules excluded) | | **490** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (58)
@@ -95,13 +95,13 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | approved | APPROVED — NOT STARTED | 19 | NOT STARTED / NOT TESTED / OPEN | 20 |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | approved | APPROVED — NOT STARTED | 20+ | NOT STARTED / NOT TESTED / OPEN | 21 |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | approved | PARTIALLY IMPLEMENTED | 19 | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
-| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | approved | APPROVED — NOT STARTED | 18 | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | approved | APPROVED — NOT STARTED | 18 | NOT STARTED / NOT TESTED / OPEN | 20 |
 
 ## Reopened since the baseline (0)
 
 None.
 
-## Added since the baseline (587)
+## Added since the baseline (594)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -631,6 +631,13 @@ None.
 | VP-01C | Village politics stage: Voting and the election lifecycle | proposal | NOT STARTED / NOT APPLICABLE / OPEN | 21 |
 | VP-01D | Village politics stage: Political consequences in village life | proposal | NOT STARTED / NOT APPLICABLE / OPEN | 21 |
 | VP-01E | Village politics stage: Soak, calibration and owner review | proposal | NOT STARTED / NOT APPLICABLE / OPEN | 21 |
+| WDR-011-Q1 | Aspirations: the game has no illness system; should low health and near-starvation hunger count as illness for Rule 011's adaptation, or wait for an illness system? | decision | OPEN | 20 |
+| WDR-011-Q2 | Aspirations: should careers be steered only through accepting work and contracts, or add a job-choice decision (behind its own switch, after R2)? | decision | OPEN | 20 |
+| WDR-011-Q3 | Aspirations: may villagers who care about wealth or property favour suitors with means, or does courting stay attraction plus opinion in v1? | decision | OPEN | 20 |
+| WDR-011-Q4 | Aspirations: who perseveres after a setback: the existing stubborn villagers (about 30%), with experience speeding adaptation, or a new seeded ambition temperament? | decision | OPEN | 20 |
+| WDR-011-Q5 | Aspirations: approve the provisional values (priorities, thresholds, adaptation rates) as a starting point tuned from four-seed measurements, or set them now? (Owner-given values used: hunger floor 25, stubborn share 30%.) | decision | OPEN | 20 |
+| WDR-011-Q6 | Aspirations: should social standing be a sixth domain (read from the village's overall opinion), beyond Rule 011's five? | decision | OPEN | 20 |
+| WDR-011-Q7 | Aspirations: should players see villagers' aspirations: none in v1, or a dialogue line from the leading aspiration once the feature is on and reviewed? | decision | OPEN | 20 |
 | WDR-017-C | Comply with World Design Rule 17: Generational Memory and Living History | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | WDR-018-C | Comply with World Design Rule 18: Protected Ecological Continuity | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | unassigned |
 | WDR-019-C | Comply with World Design Rule 19: Living Political Agency and Democratic Consequences | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |

@@ -645,7 +645,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-008-C | Comply with World Design Rule 8: Player Knowledge and Wiki | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | WDR-010-C | Comply with World Design Rule 10: Depth Without Obscurity | 15 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
-| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | WDR-012-C | Comply with World Design Rule 12: NPC Competition and Economic Rivalry | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | WDR-013-C | Comply with World Design Rule 13: Finite Resources and Actual Consumption | 17 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | WDR-014-C | Comply with World Design Rule 14: Graveyards, Ancestry, and NPC Legacy | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
@@ -776,7 +776,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (228)
+## Owner decisions (235)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -980,6 +980,13 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | STONE-Q3 | STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18 |  | APPROVED |  |
 | STONECUT-R1 | WDR-002: the stonecutter (X18-STONECUT) supplies no other profession; its building blocks are bought by the raw-goods merchant and built into houses and workshops by households and the manor, and the game has no builder trade. Approve a documented exception with checked evidence, as for the sage (B18-DP-15), or direct another remedy? | 18 | APPROVED | yes |
 | TAILOR-Q | Where the tailor comes from | owner decision | APPROVED |  |
+| WDR-011-Q1 | Aspirations: the game has no illness system; should low health and near-starvation hunger count as illness for Rule 011's adaptation, or wait for an illness system? | 20 | OPEN |  |
+| WDR-011-Q2 | Aspirations: should careers be steered only through accepting work and contracts, or add a job-choice decision (behind its own switch, after R2)? | 20 | OPEN |  |
+| WDR-011-Q3 | Aspirations: may villagers who care about wealth or property favour suitors with means, or does courting stay attraction plus opinion in v1? | 20 | OPEN |  |
+| WDR-011-Q4 | Aspirations: who perseveres after a setback: the existing stubborn villagers (about 30%), with experience speeding adaptation, or a new seeded ambition temperament? | 20 | OPEN |  |
+| WDR-011-Q5 | Aspirations: approve the provisional values (priorities, thresholds, adaptation rates) as a starting point tuned from four-seed measurements, or set them now? (Owner-given values used: hunger floor 25, stubborn share 30%.) | 20 | OPEN |  |
+| WDR-011-Q6 | Aspirations: should social standing be a sixth domain (read from the village's overall opinion), beyond Rule 011's five? | 20 | OPEN |  |
+| WDR-011-Q7 | Aspirations: should players see villagers' aspirations: none in v1, or a dialogue line from the leading aspiration once the feature is on and reviewed? | 20 | OPEN |  |
 | X18-D1 | Expansion 18 D1: starting experience seeded once from recorded skills (farming from PAR-01A history) |  | APPROVED |  |
 | X18-D2 | Expansion 18 D2: what limits effective capability | 18 | APPROVED |  |
 | X18-D3 | Expansion 18 D3: no thresholds on the 0-10 levels; novice/journeyman/master names in player reports |  | APPROVED |  |
