@@ -92,53 +92,51 @@ static func _menu(ui: GameUI, q: PlayerState) -> void:
 static func _requests(ui: GameUI, list: Array, back: Callable) -> void:
 	var w: World = ui.main.world
 	for o in list:
+		if str(o.kind) == "note":
+			continue                              # an answer to an offer: told in the message and kept in the journal, not listed here
 		var oid := int(o.id)
 		var from: PlayerState = w.player_of_ref(str(o["from"]))
 		var who := from.name if from != null else "Someone"
+		if str(o.kind) == "say":
+			ui._label("%s: \"%s\"" % [who, str(o.get("text", ""))], 16, GOLD)
+			ui._button("Put away", func():
+				w.player_answer(oid, false)
+				back.call(), true, _row(ui)).name = "OfferOk%d" % oid
+			continue
+		ui._label("%s offers you %s." % [who, w.offer_text(o)], 16, GOLD)
 		var row := _row(ui)
-		match str(o.kind):
-			"say":
-				ui._label("%s: \"%s\"" % [who, str(o.get("text", ""))], 16, GOLD)
-				ui._button("OK", func():
-					w.player_answer(oid, false)
-					back.call(), true, row).name = "OfferOk%d" % oid
-			"note":
-				ui._label(str(o.get("text", "")), 15, GOLD)
-				ui._button("OK", func():
-					w.player_answer(oid, false)
-					back.call(), true, row).name = "OfferOk%d" % oid
-			_:
-				ui._label("%s offers you %s." % [who, w.offer_text(o)], 16, GOLD)
-				ui._button("Accept", func():
-					var why := w.player_answer(oid, true)
-					ui.message(why if why != "" else ("You accept." if ui.main.guest_world else "Done."), 4.0)
-					back.call(), true, row).name = "OfferAccept%d" % oid
-				ui._button("Decline", func():
-					w.player_answer(oid, false)
-					back.call(), true, row).name = "OfferDecline%d" % oid
-				if COUNTER.has(str(o.kind)) and from != null:
-					var fpid := from.pid
-					var counter := {"item": str(o.item), "qty": int(o.qty), "price": int(o.get("price", 1)), "days": int(o.get("days", 3)),
-						"kind": COUNTER[str(o.kind)], "counter": oid}
-					ui._button("Counter", func(): show(ui, fpid, "terms", counter), true, row).name = "OfferCounter%d" % oid
+		ui._button("Accept", func():
+			var why := w.player_answer(oid, true)
+			ui.message(why if why != "" else ("You accept." if ui.main.guest_world else "Done."), 4.0)
+			back.call(), true, row).name = "OfferAccept%d" % oid
+		ui._button("Decline", func():
+			w.player_answer(oid, false)
+			back.call(), true, row).name = "OfferDecline%d" % oid
+		if COUNTER.has(str(o.kind)) and from != null:
+			var fpid := from.pid
+			var counter := {"item": str(o.item), "qty": int(o.qty), "price": int(o.get("price", 1)), "days": int(o.get("days", 3)),
+				"kind": COUNTER[str(o.kind)], "counter": oid}
+			ui._button("Counter", func(): show(ui, fpid, "terms", counter), true, row).name = "OfferCounter%d" % oid
 
 
 ## An open contract between the two: what it is, and Deliver (the seller, beside the buyer) or End (either).
 static func _contract_row(ui: GameUI, q: PlayerState, c: Dictionary) -> void:
 	var w: World = ui.main.world
 	var item := GameData.item_name(str(c.item)).to_lower()
-	var row := _row(ui)
 	var cid := int(c.id)
 	var pid := q.pid
+	var row: HFlowContainer
 	if w.is_acting_ref(c.seller):
 		var have := mini(w.player.inv.count(str(c.item)), Contracts.left(c))
 		ui._label("You supply %s: %d of %d %s at %d each, by the end of day %d." % [q.name, int(c.delivered), int(c.qty), item, int(c.price_each), int(c.deadline_day) + 1], 15)
+		row = _row(ui)
 		ui._button("Deliver %d" % have, func():
 			var gave := w.player_contract_deliver(cid, have)
 			ui.message(("You hand over %d %s and are paid %d coins." % [gave, item, gave * int(c.price_each)]) if gave > 0 else "Nothing handed over: stand beside %s, with the goods." % q.name, 4.0, "contract" if gave > 0 else "")
 			show(ui, pid), have > 0 and beside(ui, q), row).name = "ContractDeliver%d" % cid
 	else:
 		ui._label("%s supplies you: %d of %d %s at %d each, by the end of day %d; %d coins set aside." % [q.name, int(c.delivered), int(c.qty), item, int(c.price_each), int(c.deadline_day) + 1, int(c.reserved)], 15)
+		row = _row(ui)
 	ui._button("End it", func():
 		var why: String = w.contracts.cancel(c, w.acting_ref())
 		ui.message(why if why != "" else "The contract is ended: what was delivered is paid, the rest of the coins go back.", 4.0, "" if why != "" else "contract")

@@ -1022,20 +1022,20 @@ func _tell_player(to_ref: String, text: String) -> void:
 
 ## An offer in words, as its recipient reads it ("1 bread", "to be partners", "4 iron ore for 12 coins"...).
 func offer_text(o: Dictionary) -> String:
-	var item := GameData.item_name(str(o.get("item", ""))).to_lower()
+	var goods := Contracts.counted(int(o.get("qty", 0)), GameData.item_name(str(o.get("item", ""))).to_lower())
 	match str(o.kind):
 		"partner":
 			return "to be partners"
 		"gift":
-			return "%d %s" % [int(o.qty), item]
+			return goods
 		"sell":
-			return "%d %s for %d coins" % [int(o.qty), item, int(o.get("price", 0))]
+			return "%s for %d coins" % [goods, int(o.get("price", 0))]
 		"buy":
-			return "%d coins for %d %s of yours" % [int(o.get("price", 0)), int(o.qty), item]
+			return "%d coins for %s of yours" % [int(o.get("price", 0)), goods]
 		"contract":
-			return "a contract: you supply %d %s at %d coins each, within %d days" % [int(o.qty), item, int(o.get("price", 0)), int(o.get("days", 1))]
+			return "a contract: you supply %s at %d coins each, within %d days" % [goods, int(o.get("price", 0)), int(o.get("days", 1))]
 		"supply":
-			return "a contract: they supply you %d %s at %d coins each, within %d days" % [int(o.qty), item, int(o.get("price", 0)), int(o.get("days", 1))]
+			return "a contract: they supply you %s at %d coins each, within %d days" % [goods, int(o.get("price", 0)), int(o.get("days", 1))]
 		"say", "note":
 			return str(o.get("text", ""))
 	return str(o.kind)
