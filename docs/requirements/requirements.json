@@ -45408,6 +45408,126 @@
    ]
   },
   {
+   "id": "REG-X20-D1",
+   "kind": "decision",
+   "title": "Off-map settlements: may a hungry household that is the only worker household of its business migrate for hunger (MIGRATE-18), and may it change trade? Today two undocumented agent rules forbid both (offmap.gd _move_jobs: 'a trade is never left with no household'; migration.gd _hunger_in: business with fewer than 2 workers excluded), so sole herders, miners, foresters and weavers whose goods find no buyer die with 0-2 coins while wheat is on sale.",
+   "description": "Off-map settlements: may a hungry household that is the only worker household of its business migrate for hunger (MIGRATE-18), and may it change trade? Today two undocumented agent rules forbid both (offmap.gd _move_jobs: 'a trade is never left with no household'; migration.gd _hunger_in: business with fewer than 2 workers excluded), so sole herders, miners, foresters and weavers whose goods find no buyer die with 0-2 coins while wheat is on sale.",
+   "source": "X20-FINAL settlement investigation 2026-10-27 (wip/x20-final eaf6652; probes in session scratch, no code change)",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "MIGRATE-18"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "X20-FINAL settlement investigation 2026-10-27 (wip/x20-final eaf6652; probes in session scratch, no code change)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "agent finding recorded; not a release blocker (WDR-022)"
+    }
+   ],
+   "notes": "Evidence: 8 of 8 shipped-switch hunger deaths by day 60 (seed 1) are such households (netherton herder: no sale for 38 days). Removing only the migration exclusion cuts deaths 8 -> 1 but sends 40 people to the village and shrinks netherton 13 -> 5 (a gameplay change, owner's call under DCR-01). Unchanged since Build 22. Options: (a) keep, and document the rule; (b) let sole households migrate (trader excepted or not); (c) let them change trade. Recommendation: (b) with the trader excepted, documented; measured before enabling."
+  },
+  {
+   "id": "REG-X20-D2",
+   "kind": "decision",
+   "title": "Off-map settlements: should 'cannot buy a day's food' (hunger migration) also count when there is no food for sale at all, not only when the household lacks coins? In the switches-on run Garton starved holding 68-110 coins with empty stalls after its farmers moved to better-paid trades.",
+   "description": "Off-map settlements: should 'cannot buy a day's food' (hunger migration) also count when there is no food for sale at all, not only when the household lacks coins? In the switches-on run Garton starved holding 68-110 coins with empty stalls after its farmers moved to better-paid trades.",
+   "source": "X20-FINAL settlement investigation 2026-10-27 (wip/x20-final eaf6652; probes in session scratch, no code change)",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "MIGRATE-18"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "X20-FINAL settlement investigation 2026-10-27 (wip/x20-final eaf6652; probes in session scratch, no code change)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "agent finding recorded; not a release blocker (WDR-022)"
+    }
+   ],
+   "notes": "Recommendation: yes (it is the rule's evident intent); measure before release of the change."
+  },
+  {
+   "id": "REG-X20-D3",
+   "kind": "decision",
+   "title": "Off-map settlements: should settlement-to-settlement food trade get a live path? The owner's REG-BUY-D1 answer allows it, but road trade carries no food and RegionalMarket is not wired into the live game, so one settlement's surplus never reaches a starving neighbour.",
+   "description": "Off-map settlements: should settlement-to-settlement food trade get a live path? The owner's REG-BUY-D1 answer allows it, but road trade carries no food and RegionalMarket is not wired into the live game, so one settlement's surplus never reaches a starving neighbour.",
+   "source": "X20-FINAL settlement investigation 2026-10-27 (wip/x20-final eaf6652; probes in session scratch, no code change)",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "MIGRATE-18"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "X20-FINAL settlement investigation 2026-10-27 (wip/x20-final eaf6652; probes in session scratch, no code change)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "agent finding recorded; not a release blocker (WDR-022)"
+    }
+   ],
+   "notes": "Missing capability, not a defect. Recommendation: schedule as engineering under the existing approval, measured."
+  },
+  {
+   "id": "REG-X20-D4",
+   "kind": "decision",
+   "title": "Off-map settlements: revisit the deferred circulation question (REG-CIRC-D1) now its prerequisites exist? Settlement traders keep buying from the village and buy little back (netherton paid out 460 coins in 30 days and took in 41), draining treasuries until relief and day labour stop.",
+   "description": "Off-map settlements: revisit the deferred circulation question (REG-CIRC-D1) now its prerequisites exist? Settlement traders keep buying from the village and buy little back (netherton paid out 460 coins in 30 days and took in 41), draining treasuries until relief and day labour stop.",
+   "source": "X20-FINAL settlement investigation 2026-10-27 (wip/x20-final eaf6652; probes in session scratch, no code change)",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "MIGRATE-18"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-27",
+     "change": "entered in the register",
+     "why": "X20-FINAL settlement investigation 2026-10-27 (wip/x20-final eaf6652; probes in session scratch, no code change)"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "agent finding recorded; not a release blocker (WDR-022)"
+    }
+   ],
+   "notes": "The owner's standing rule forbids artificial circulation merely to prevent decline; this asks only whether the evaluation REG-CIRC-D1 deferred should now happen."
+  },
+  {
    "id": "REL-14-16",
    "title": "Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold",
    "kind": "approved",
