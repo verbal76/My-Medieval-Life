@@ -265,6 +265,9 @@ func _commands() -> void:
 					best = t
 			if not best.is_empty() and w.fell(best, 0) > 0:
 				felled = "%d,%d%s" % [int(best.x), int(best.y), "" if best.has("born") else " (no born)"]
+		"quit_to_title":                             # X20: the pause menu's "Save and quit to title", pressed as the player does
+			main.ui.show_pause()
+			_press(main.ui.panel_body, "Save and quit to title")
 		"save":                                      # a save while the guests play (the hourly save, by hand)
 			main.save_game(false)
 			saves += 1
@@ -468,7 +471,7 @@ func _status() -> void:
 		"census": census, "saves": saves, "family": _family(w), "orphan": orphan_id, "storm": storm > 0.0, "newcomers": int(w.stats.get("player_newcomers", 0)), "coin_sources": w.coin_sources,
 		"journal": _journal_counts(w), "journal_kept": main.net.journal_kept,
 		"ui": _ui_state(), "offers": w.offers.duplicate(true), "spot": [spot.x, spot.y] if spot != Vector2.INF else [],
-		"held": held.size(), "holding": holding, "batch": batch, "why_last": why_last, "felled": felled, "frozen": main.process_mode == Node.PROCESS_MODE_DISABLED,
+		"held": held.size(), "holding": holding, "batch": batch, "why_last": why_last, "felled": felled, "rec": {"dir": str(w.recorder.dir) if w.recorder != null else "", "state": w.recorder.completeness() if w.recorder != null else ""}, "frozen": main.process_mode == Node.PROCESS_MODE_DISABLED,
 		"day": w.day()}
 	var tmp := dir + "status.tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)

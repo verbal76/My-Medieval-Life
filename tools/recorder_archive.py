@@ -8,7 +8,10 @@ says whether it is whole and consistent, so the simulation gate never trusts the
     and sha256 (of the row lines, each followed by "\\n") match;
   - the row sequence numbers of all tables together are exactly 1..last_seq, each once (nothing lost, nothing doubled);
   - each table's row count equals the session's own count;
-  - the hourly snapshots (table "snapshot") follow one another an hour apart.
+  - the hourly snapshots (table "snapshot") follow one another an hour apart. A multiplayer guest's session (its network events
+    all "guest") has none: the guest's copy of the host's world never simulates (the approved host-authoritative design), so its
+    hourly record is the net_state digest, taken on the sync the host marks at each of its hours, in distinct rising game hours
+    (none when the guest left before the host's next hour; X20 phase 4.5).
 
 It also returns the facts the gate reconciles with the simulation's own output: the closing snapshot (session.json
 "final_snapshot", the world as the session left it), alert counts by rule, villager deaths, births and arrivals (newcomers,
@@ -353,7 +356,7 @@ def verify(session_dir, require_flags=None, require_rows=None):
     """Check a session directory. Returns a report dict with "ok" and "problems" (and the X20-FINAL content checks: Deep)."""
     rep = {"dir": session_dir, "ok": False, "problems": [], "chunks": 0, "bytes": 0, "counts": {}, "snapshot_hours": 0,
            "alerts": {}, "villager_deaths": 0, "births": 0, "newcomers": 0, "trades": 0, "last_snapshot": None,
-           "first_snapshot": None, "events": {}}
+           "first_snapshot": None, "events": {}, "net_role": ""}
     sp = os.path.join(session_dir, "session.json")
     try:
         sess = json.load(open(sp))
@@ -376,6 +379,8 @@ def verify(session_dir, require_flags=None, require_rows=None):
     seen = bytearray(last_seq + 1)
     dup = out_of_range = 0
     snaps = []
+    net_hours = []                        # (seq, game hour, role) of each net_state digest
+    net_roles = set()                     # the roles of the session's network events (host, guest)
     files = sorted(glob.glob(os.path.join(session_dir, "d*", "*.jsonl.gz")))
     for path in files:
         rep["chunks"] += 1
@@ -422,6 +427,10 @@ def verify(session_dir, require_flags=None, require_rows=None):
                     rep["newcomers"] += 1
                 elif r[ci] == "transaction" and r[si] == "trade" and r[oi] == "ok":
                     rep["trades"] += 1
+                elif r[ci] == "network":
+                    if r[si] == "net_state":
+                        net_hours.append((r[0], int(r[cols.index("day")]) * 24 + int(float(r[cols.index("minute")]) // 60), r[cols.index("subsystem")]))
+                    net_roles.add(r[cols.index("subsystem")])
     missing = last_seq - sum(seen[1:]) if last_seq else 0
     if missing or dup or out_of_range:
         rep["problems"].append("row sequence: %d missing, %d doubled, %d out of range (of %d)" % (missing, dup, out_of_range, last_seq))
@@ -430,7 +439,15 @@ def verify(session_dir, require_flags=None, require_rows=None):
             rep["problems"].append("table %s: %d rows on disk, the session counted %d" % (t, rep["counts"].get(t, 0), n))
     snaps.sort(key=lambda s: s["seq"])
     rep["snapshot_hours"] = len(snaps)
-    if not snaps:
+    roles = {x for x in net_roles if x in ("host", "guest")}
+    rep["net_role"] = "/".join(sorted(roles))
+    if not snaps and roles == {"guest"}:
+        net_hours.sort()
+        hrs = [h[1] for h in net_hours]
+        if any(b <= a for a, b in zip(hrs, hrs[1:])):
+            rep["problems"].append("a guest's net_state digests are not in distinct rising game hours: %s" % hrs[:12])
+        rep["net_state_hours"] = len(hrs)
+    elif not snaps:
         rep["problems"].append("no hourly snapshot (schema 2 requires one an hour)")
     for a, b in zip(snaps, snaps[1:]):
         if (b["day"] * 24 + b["hour"]) - (a["day"] * 24 + a["hour"]) != 1:
@@ -449,7 +466,7 @@ def verify(session_dir, require_flags=None, require_rows=None):
 
 def net_states(session_dir):
     """A participant's hourly net_state digests: {(day, hour): {"role", "sections": {key: hash}, "players"}}."""
-    evs, facs = {}, defaultdict(dict)
+    evs, facs, actors = {}, defaultdict(dict), {}
     for path in sorted(glob.glob(os.path.join(session_dir, "d*", "*.jsonl.gz"))):
         head, rows, problem = read_chunk(path)
         if problem or head is None:
@@ -460,6 +477,7 @@ def net_states(session_dir):
             for r in rows:
                 if r[ix["subtype"]] == "net_state":
                     evs[r[ix["id"]]] = (r[ix["day"]], int(float(r[ix["minute"]]) // 60), r[ix["subsystem"]])
+                    actors[r[ix["id"]]] = r[ix["actor"]]
         elif head.get("table") == "factor":
             ix = {c: i for i, c in enumerate(cols)}
             for r in rows:
@@ -467,13 +485,21 @@ def net_states(session_dir):
     out = {}
     for i, (d, h, role) in evs.items():
         f = facs.get(i, {})
-        out[(d, h)] = {"role": role, "sections": {k[1]: v for k, v in f.items() if k[0] == "section"}, "players": f.get(("net", "players"), "")}
+        expected = defaultdict(dict)            # the host's: guest ref -> {section: hash of what that guest is sent}
+        for k, v in f.items():
+            if k[0] == "for" and "|" in k[1]:
+                gref, sec = k[1].split("|", 1)
+                expected[gref][sec] = v
+        out[(d, h)] = {"role": role, "actor": actors.get(i, ""), "sections": {k[1]: v for k, v in f.items() if k[0] == "section"},
+                       "players": f.get(("net", "players"), ""), "for": dict(expected)}
     return out
 
 
 def compare_participants(dirs):
     """Compare network participants' archives hour by hour (the host's first). A section that differs at three or more consecutive
-    compared hours is a problem (a guest copy behind the host for an hour is expected: villagers and animals sync less often)."""
+    compared hours is a problem (a guest copy behind the host for an hour is expected: villagers and animals sync less often).
+    X20: a guest is compared with what the host sends it: for a section the host records per guest ("for": the offers and messages
+    between players, of which each guest is sent only its own), that hash, not the host's whole section ("absent": none)."""
     parts = [(d, net_states(d)) for d in dirs]
     host = next(((d, s) for d, s in parts if any(v["role"] == "host" for v in s.values())), None)
     rep = {"participants": [{"dir": d, "role": sorted({v["role"] for v in s.values()}), "hours": len(s)} for d, s in parts], "problems": [], "differences": {}}
@@ -487,7 +513,13 @@ def compare_participants(dirs):
         run, worst = Counter(), Counter()
         diff = Counter()
         for hk in hours:
-            a, b = host[1][hk]["sections"], s[hk]["sections"]
+            a = dict(host[1][hk]["sections"])
+            for sec, v in host[1][hk].get("for", {}).get(s[hk].get("actor", ""), {}).items():
+                if v == "absent":
+                    a.pop(sec, None)
+                else:
+                    a[sec] = v
+            b = s[hk]["sections"]
             for k in sorted(set(a) | set(b)):
                 if a.get(k) != b.get(k):
                     diff[k] += 1

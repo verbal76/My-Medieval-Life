@@ -367,7 +367,9 @@ func hour() -> void:
 	_audit_coins()
 	_close_stale_chases()
 	_day_summaries()                            # X20-FINAL: the day's memory, resources and LE-01 summaries (once a day)
-	net_state_maybe()                           # X20-FINAL: the host's digest in a network session (once a game hour)
+	if net == null or not is_instance_valid(net) or not net.has_guests():
+		net_state_maybe()                       # X20-FINAL: the digest in a network session (once a game hour); a host with guests takes
+		                                        # it at the end of its frame, as it marks the guests' sync (NetSession._host_step)
 	if samples_on:
 		for n: NPC in w.npcs:
 			if n.alive:
@@ -1692,14 +1694,14 @@ func net_request(session, who: PlayerState, kind: String, r: Dictionary) -> void
 
 
 ## Syncs sent (host) or adopted (guest): counted for the next digest, never one row each (several a second).
-func net_sync(session, sent: bool, sections: int, nbytes: int) -> void:
+func net_sync(session, sent: bool, sections: int, nbytes: int, hour_mark := false) -> void:
 	net = session
 	var k := "sent" if sent else "adopted"
 	_net_counts[k] = int(_net_counts.get(k, 0)) + 1
 	_net_counts[k + "_sections"] = int(_net_counts.get(k + "_sections", 0)) + sections
 	_net_counts[k + "_bytes"] = int(_net_counts.get(k + "_bytes", 0)) + nbytes
-	if not sent:
-		net_state_maybe()
+	if not sent and hour_mark:
+		net_state_maybe()                    # X20: the sync the host marked at its hour: this copy now holds what the host's digest saw
 
 
 ## One digest a game hour per participant: role, the players this machine knows, each shared section's hash (NetSync.digest of
@@ -1718,16 +1720,47 @@ func net_state_maybe() -> void:
 		players.append("%s coins=%d alive=%s away=%s" % [ref_of(p), int(p.coins), str(p.alive), str(p.away)])
 	factor(ev, "net", "players", "; ".join(players), "text", "network")
 	factor(ev, "net", "peers", (net.by_peer as Dictionary).size() if str(net.role) == "host" else 1, "count", "network")
-	var dig: Dictionary = NetSync.digest(w.to_dict())
+	var d: Dictionary = w.to_dict()
+	var dig: Dictionary = net_digest(d)
 	var ks := dig.keys()
 	ks.sort()
 	for k in ks:
 		factor(ev, "section", str(k), str(dig[k]), "hash", "network")
+	if str(net.role) == "host":                # X20: each guest is sent only its own offers (NetSession._private_for): what its copy should hold
+		for id in net.by_peer:
+			var g: PlayerState = w.player_by_pid(int(net.by_peer[id]))
+			if g != null:
+				var dd := d.duplicate(false)
+				NetSession._private_for(dd, w.player_ref(g))
+				factor(ev, "for", "%s|player_offers" % ref_of(g), str(net_digest(dd).get("player_offers", "absent")), "hash", "network")     # keyed as that guest's own digests name it (its actor)
 	for k in _net_counts:
 		factor(ev, "sync", str(k), int(_net_counts[k]), "count", "network")
 	_net_counts.clear()
 	end(ev)
 	flush_soon()
+
+
+## X20: the hash of each shared section as both machines can compare it: by content (a JSON round trip, keys sorted: numbers read
+## from a save or a sync are floats where a new world's are ints), without the live fields the faster snapshots carry instead of the
+## sections (a villager's or an animal's place, facing and animation: NetSync.NPC_LIVE, NetSession.s_animals). Reads only.
+static func net_digest(d: Dictionary) -> Dictionary:
+	var out := {}
+	for k in NetSync.KEYS:
+		if not d.has(k):
+			continue
+		var v = JSON.parse_string(JSON.stringify(d[k]))
+		if k == "npcs" and v is Array:
+			for n in v:
+				if n is Dictionary:
+					for f in NetSync.NPC_LIVE:
+						n.erase(f)
+		elif k == "fauna" and v is Dictionary:
+			for a in v.get("animals", []):
+				if a is Dictionary:
+					a.erase("pos")
+					a.erase("hp")              # the snapshots' (s_animals) too
+		out[k] = hash(JSON.stringify(v, "", true))
+	return out
 
 
 ## A guest's world never reaches an hour boundary (it does not simulate): write what is buffered now.

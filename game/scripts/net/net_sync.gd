@@ -176,6 +176,7 @@ static func adopt(w: World, sections: Dictionary) -> void:
 				if not (d.fauna as Dictionary).is_empty():
 					adopt_fauna(w, d.fauna)
 			"player_offers":
+				w.next_offer = int((d.player_offers as Dictionary).get("next", w.next_offer))     # X20: the host's counter, as its record has it
 				w.offers = []
 				for o in (d.player_offers as Dictionary).get("list", []):
 					w.offers.append(World.offer_from_dict(o))

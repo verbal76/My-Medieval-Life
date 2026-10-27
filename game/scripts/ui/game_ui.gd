@@ -1884,6 +1884,7 @@ func show_pause() -> void:
 		add.call("Save and quit to title", func():
 			main.stop_hosting()
 			main.save_game(false)
+			main.end_recording()                     # X20: the world is closed: its recording ends here
 			main.running = false
 			show_title(true))
 	compact(580.0)
