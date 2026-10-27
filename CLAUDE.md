@@ -16,7 +16,7 @@ are. No file is read automatically because it exists: do these steps, in order, 
 3. **Read `docs/CURRENT_DEVELOPMENT_STATE.md`**, the handoff: branches, workers in flight, next actions,
    interrupted processes (session state only; it never restates a requirement's status).
 4. **Review the register and unresolved decisions:** the generated views in `docs/requirements/views/` (STATUS,
-   BUILD_18..21, DECISIONS, QUEUES, BACKLOG; all generated from `docs/requirements/requirements.json`, the one register
+   BUILD_18..23, DECISIONS, QUEUES, BACKLOG; all generated from `docs/requirements/requirements.json`, the one register
    and decision register), `docs/EXPANSION_ROADMAP.md` and `docs/WORLD_DESIGN_RULES.md`.
 5. **Review the design specifications for the current work:** the documents the active entries cite in their
    `source` (owner directives in `docs/directives/`, the specs the index names).
@@ -24,18 +24,11 @@ are. No file is read automatically because it exists: do these steps, in order, 
    `python3 tools/check_requirements.py` (it must report 0 problems).
 7. **Determine what was completed, what remains unverified and what is authorized next,** from the register's
    statuses and evidence and the state file's next tasks; never from memory of a conversation.
-8. **Resume approved development** from the next approved task, without asking the owner to repeat anything
-   already recorded in the register, the decision log or the directives. Never start Build 19, or Build 17 or 18
-   before the build before it meets every condition of OVN-01 section 4; never answer an
-   open owner decision, merge into `main` or `wip/multiplayer` into staging, or publish outside the release
-   authorization in force.
-   Exception (owner, 2026-10-21, PROS-01, `docs/directives/2026-10-21_parallel_prospective_development_18_19.md`):
-   prospective Expansion 18 and 19 code is developed on `wip/expansion18-preparation` and `wip/expansion19-preparation`,
-   isolated, never merged or released before its reconciliation gate (18 after Build 17 is complete, 19 after Build 18).
+8. **Resume only currently authorized work.** Use the live requirements register, latest owner directives and active worker branches. Build 22 is the latest private three-platform draft and must not be reopened. Expansion 20 is authorized and in development. MP-INTERACT-01 was developed in isolation and must be integrated LAST. **Do not build or package any Expansion 20 APK, Windows or Linux artifact, including private drafts, until that multiplayer fix is integrated and validated.** Never answer owner decisions, compromise save/security rules, or merge to main without authorization. The earlier Build 17–19 sequencing and prototype-only restrictions are historical, not a gate against now-authorized Expansion 20.
 
 **After a context compaction or in a fresh session** (owner directive 2026-10-20, `docs/directives/2026-10-20_compaction_readiness.md`):
 - Do steps 1-8 before any further decision.
-- Build authority is the register's `builds` map and `docs/requirements/views/STATUS.md` (Build 18 combined, authorized; Build 19 prospective and isolated; Builds 20 and 21 not authorized); the standing mandate is OVN-02 with OVN-01 (autonomous engineering of approved work; design principle WDR-022, "a village is allowed to fail, the simulation is not"). Recovery steps: `docs/handoffs/CURRENT_SESSION_RECOVERY.md`; checkpoint at about 70–75% context.
+- Build authority is the live requirements register, generated STATUS/QUEUES views and most recent explicit owner directives. Build 22 is the latest private test build; Expansion 20 is authorized and in progress, but cannot be packaged until MP-INTERACT-01 is merged LAST and validated. WDR-022 remains in force. Recovery: `docs/handoffs/CURRENT_SESSION_RECOVERY.md`; checkpoint around 70–75% context.
 - What a conversation summary lacks was not thereby unapproved: the register, the decision log and `docs/directives/` are the record.
 - Do not repeat completed work, and never restart a simulation or test before checking whether it is still running (the state file's workers and processes: GitHub Actions runs, local processes).
 - Compaction is not a reason to stop: continue the next approved task.
@@ -52,8 +45,7 @@ World Design Rules (`docs/WORLD_DESIGN_RULES.md`): a living medieval village tha
 summarised in `docs/PROJECT_MEMORY.md`. **Its founding principle (owner, 2026-10-20, World Design Rule 022): "A village is allowed to fail. The simulation
 is not."** The game simulates a functioning world; it never guarantees a successful one. Fix what is broken (a mechanic
 failing its approved function, script errors, coins or items without a valid transaction, lost state); preserve
-legitimate outcomes (bankruptcy, shortage, decline) even when the statistics are unfavourable; add no hidden rescue. Item by item, the design is still being decided: `docs/GAME_DESIGN.md`
-separates Confirmed, Proposed and Undecided items, and only the owner confirms one.
+legitimate outcomes (bankruptcy, shortage, decline) even when the statistics are unfavourable; add no hidden rescue. The current game design and open owner questions come from the live requirements register and applicable later directives. `docs/GAME_DESIGN.md`, `docs/DESIGN_GAP_ASSESSMENT.md`, `docs/game-designer/` and Morris world research are historical reference only.
 
 Status (keep current):
 
@@ -62,11 +54,11 @@ Status (keep current):
 | Asset inventory, dedupe, licences | Done: `ASSET_MANIFEST.md`, `asset_manifest.csv` |
 | Asset tooling (Python) | Done: terrain, rivers/roads, animation and building data, renderers |
 | Morris world research | Done: all 119 chapters extracted and quote-verified; registries, deliverables A–J in `docs/world/` |
-| Design document | Draft, awaiting owner answers; the owner's world directive and living-world economy intent (`docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md`) are recorded in `docs/DECISIONS.md` |
-| Engine | Godot 4.7 prototype in `game/`, built at the owner's request; the formal engine entry in `docs/DECISIONS.md` is still *Proposed* |
+| Design authority | World Design Rules, live register and applicable owner directives; original design drafts are historical. |
+| Engine | Established Godot 4.7 implementation; prototype engine proposals are historical. |
 | Platforms | Android APK first, then PC (Windows, Linux), as the owner directed; touch, gamepad, and keyboard and mouse |
-| Gameplay code | Playable prototype in `game/` (village simulation, player, economy); rules and open questions in `docs/BUILD_DECISIONS.md` |
-| Builds | Linux, Windows and Android from one revision with one build number, by `.github/workflows/release.yml`, run by hand only after the owner approves a coordinated release (section 5). Build 7 (`6799071`) is the last public test release; its issues are in `docs/release/BUILD_7_ISSUES.md`. Builds 8 (`cd35b54`), 9, 10, 11 (`c6661fa`), 12 (`f8b4a98`) and 13 (`4e76f72`) were private testing builds (draft releases); Build 14 (`7dbae4f`) was a private testing build; Build 15 (`a8760be`) was a private testing build (a draft release). **Build 16 (`b3bbb1c`, packet `docs/release/BUILD_16_PACKET.md`) is the current release, published 2026-10-21 to the GitHub Releases tab** under the owner's standing release model; Build 17 (`cd7439c`) was a private playtest draft; **Build 18 (`61ec528`, packet `docs/release/BUILD_18_PACKET.md` on `wip/build18`) is a private playtest draft release** (2026-10-23, run 39935635926), not published. **Build 19 (`2f72ec3` on `wip/build19`, packet `docs/release/BUILD_19_PACKET.md` there) is a private playtest draft release** (2026-10-24, run 40044931601): Expansion 19 complete and on, permanent identity, the flight recorder (off in every build); not published. **Build 20 (`56c24cb` on `wip/multiplayer-b19`, Checkpoint 1 of the gameplay polish, tester notes `docs/release/BUILD_20_TESTER_NOTES.md` there) is a private playtest draft release** (2026-10-24, run 40065271734, draft 422532601): Android (disposable key, the owner's one-time exception), Windows and Linux; it predates SIM-GATE-01; not published. **Build 21 (`6567c04` on `wip/multiplayer-b19`) is a private playtest draft release** (2026-10-24, run 40117759608, draft 422895130): LAN play, the Build 21 polish, the APK signed with the permanent release key; not published. Its deferrals are the Build 22 mini-build (`docs/backlog/BUILD22_MINI_BUILD.md`), a release number, not Expansion 22. **Build 22 (`b7e1c91` on `wip/build22`, tester notes `docs/release/BUILD_22_TESTER_NOTES.md` there) is a private playtest draft release** (2026-10-26, run 40398771937, draft 424822036): the mini-build, the 2026-10-26 playtest fixes, players' families (save 23), the armour and weapon catalogue; APK versionCode 22 signed with the permanent key (same certificate as Build 21); not published. **Expansion 20 open items (owner, 2026-10-24, record only):** record `X20-OPEN-ITEMS`, `docs/expansion20/X20_OPEN_ITEMS.md`; nothing starts without the owner's authorization. Builds 15 to 18 are authorized as private drafts, in order, when each meets the owner's completion conditions (OVN-01 section 9, REL-15-18; REL-14-16 before it). Builds 15 (simulation stabilization) and 16 (long-term equilibrium and adaptation) are complete; the workflow makes drafts unless `visibility: public` is chosen with the owner's approval (and confirmed, behind the `public-release` environment). Android builds from Build 21 are signed with the owner's permanent release key from the four `ANDROID_RELEASE_*` secrets (`docs/release/ANDROID_SIGNING.md`); Builds up to 20 used throwaway keys. `.github/workflows/tests.yml` runs the tests on staging pushes and publishes nothing |
+| Gameplay code | Established living-world simulation, economy, family, Judgment and multiplayer; active requirements and branch evidence control status. |
+| Builds | Build 22 (`b7e1c91`, 2026-10-26) is the latest private three-platform draft. Expansion 20 (`wip/expansion20`) is active with LE-01 off-flag foundation and integrated recovery R1–R4; R5 and later LE stages remain in development. MP-INTERACT-01 is isolated and must merge LAST. **No Expansion 20 build, even private, until multiplayer integration and validation.** Prior packets are historical. |
 
 ## 2. Repository layout
 
@@ -288,6 +280,7 @@ corresponding documentation.** Every agent and worker, on every task:
   show no log until they finish, so the simulated day of a running job is not visible; say so rather than claim live
   monitoring.
 - Visual output must actually be looked at before it is reported as verified.
+- **Current Expansion 20 overriding restriction (owner, 2026-10-27):** no packaging, private draft, publishing, APK, Windows or Linux export for Expansion 20 before MP-INTERACT-01 is merged last and validated on the relevant platforms. After this gate, provide a release-readiness report and follow the owner's applicable publication authorization. Do not reopen Build 22. This takes precedence over older automatic-release directions for Expansion 20.
 - **Release policy (owner standing directive 2026-10-21, `docs/directives/2026-10-21_standing_continuous_release_directive.md`;
   supersedes the 2026-10-18 rule that each release needs the owner's approval for that occasion).** Development runs on a
   continuous develop, test, release and advance model:
@@ -462,8 +455,7 @@ or historical (`docs/DECISIONS.md` narrative log, `docs/DEVELOPMENT_QUEUE.md`, a
 - Any gameplay mechanic, or changing a Confirmed design item
 - Adding, deleting or replacing source asset archives, or changing a licence label without a source
 - Breaking save compatibility
-- New third-party dependencies with licence or cost implications; paid services; network or online
-  features
+- New third-party dependencies with licence or cost implications; paid services; new network or online capabilities outside the already approved multiplayer and MP-INTERACT-01 scope
 - Publishing builds, releases or store listings
 
 ## 12. Reporting

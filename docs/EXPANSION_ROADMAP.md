@@ -1,26 +1,30 @@
-# Current priority for Expansions 20-27 (owner, 2026-10-24, register ROAD-03)
+# Active expansion roadmap — 2026-10-27
 
-**This section is current; everything below it is the historical record for Builds 15-19, kept as it was.** Directive
-`docs/directives/2026-10-24_expansion_roadmap_reprioritization.md`; full review in `docs/design/ROADMAP_20_27_PRIORITY.md`
-(scope from each source, dependencies, shared infrastructure, batches, checkpoints, open questions). Numbers unchanged; only the
-development order. Planning only: no expansion is authorized for implementation by it.
+**Read only this active section for current scheduling.** The rest of this document is preserved as historical planning. Source of truth: current register, latest owner directive and active branch state. An approved future design is not permission to start it.
 
-| Priority | Expansion | Status |
+**Build 22** already exists as a private APK/Windows/Linux draft (`b7e1c91`, 2026-10-26) and must not be reopened. **Expansion 20** is explicitly authorized and under development (`wip/expansion20`): LE-01 model integrated with flag off; Android/Messages and Build 19 recovery R1–R4 integrated; aspirations R5 isolated, later LE stages unfinished. Verify new branch evidence before changing these statuses.
+
+**Multiplayer MP-INTERACT-01 is active, not a future unauthorized proposal:** implemented on `wip/x20-mp-interact`, unmerged and awaiting final integration. **No Expansion 20 builds of any kind, private included, until this correction merges LAST and cross-platform host/guest interactions are validated.**
+
+| Priority | Scope | Authorization |
 |---|---|---|
-| 0 | **Multiplayer (separate track, next milestone)** | after Build 19's owner acceptance, before Expansion 20 (MP-MASTER, `docs/directives/2026-10-24_master_multiplayer_directive.md`); preparation done (`docs/multiplayer/MULTIPLAYER_PREPARATION.md`); implementation not authorized |
-| 1 | 20 Living Economy | phase 1 foundation done (off); LE-01 onward awaits authorization. Since 2026-10-24 also the umbrella for the outstanding gameplay polish, Android usability and interaction items and the unfinished Build 19 items (`X20-OPEN-ITEMS`, `docs/expansion20/X20_OPEN_ITEMS.md`); recorded only, nothing started |
-| 2 | 21 Politics | phase 1 done (off); elections await P21-STRUCTURE, P21-RESIDENCY and authorization |
-| 3 | 23 Bandit Factions and Criminal Careers | BAN-A audit done; BAN-B awaits E23-OD-01 and authorization |
-| 4 | 22 Settlement Advancement Phase 2 | audit done; architecture awaits authorization |
-| 5 | 24 Generational Legacy | not authorized |
-| 6 | 25 Weather, Seasons and Disasters | design only |
-| 7 | 26 Creatures and Heroes | design only |
-| 8 | 27 World Exploration, Dungeons & Encounters | numbering and assignment of its existing specification (ROAD-Q1, EXP-27); not authorized |
+| Current | Expansion 20: Living Economy plus approved carryovers | Active authorized implementation; unfinished. |
+| Final X20 integration | MP-INTERACT-01 | Isolated work, merge LAST, required release validation. |
+| Future | 21 Politics | Scoped future design, not automatic implementation. |
+| Future | 23 Bandit factions | Future. |
+| Future | 22 Settlement advancement phase 2 | Future. |
+| Future | 24 Generational legacy | Future. |
+| Future | 25 Weather and disasters | Future. |
+| Future | 26 Creatures and heroes | Future. |
+| Future | 27 Exploration and encounters | Future; Morris lore not automatically binding. |
 
-Owner answers ROAD-Q1..Q5 (2026-10-24, `docs/directives/2026-10-24_owner_roadmap_question_decisions.md`): order 20 → 21 → 23 → 22
-→ 24 → 25 → 26 → 27; multiplayer a separate parallel track; 23 within the village, existing roads and represented settlements,
-route banditry in 22-E; creatures' behaviour in 26, placement in 27; 22 owns the one building-condition system, reused by 25;
-Batch 0 after Build 19's playtest acceptance, reported first. Build 19 is frozen pending the owner's playtest.
+Preserve 39-question current-first decisions and DCR-01 continuity; do not silently supersede previously approved, implemented designs.
+
+---
+
+# Historical roadmap — Builds 15–19 and former execution sequence (NOT CURRENT INSTRUCTIONS)
+
+Earlier "not started" and "multiplayer unauthorized" statements below refer to their former dates and are not valid as today's work gates.
 
 # Roadmap: Builds 15-19 and the three expansions
 

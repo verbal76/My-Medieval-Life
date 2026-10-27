@@ -16,7 +16,7 @@ The governing principles are the owner's numbered World Design Rules in `docs/WO
 - depth without obscurity;
 - automated compliance.
 
-The design intent is in `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md`. What is confirmed, proposed or undecided in the game design is in `docs/GAME_DESIGN.md`.
+The living-world philosophy is preserved in the nonbinding conceptual `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md`. Actual game requirements and decisions come from the live register and recent owner directives; `docs/GAME_DESIGN.md` is historical.
 **Authority (owner, 2026-10-27, `docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md`):** the original game design document, the Game Designer import (`docs/game-designer/`) and `docs/DESIGN_GAP_ASSESSMENT.md` are historical reference only, never primary authority; the latest owner instructions, the register and the implemented, validated game come first. Old-design content marked GDD-REVIEW there (Morris era and atlas, a magic system beyond Fireball, monsters and bosses, a chosen hero, an automatic updater, fixed content quotas) is parked and needs explicit current-game reconfirmation.
 
 ## Where everything is
@@ -44,47 +44,26 @@ The design intent is in `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md`. What is c
 | Architecture | `docs/ARCHITECTURE.md`; rules and open questions of the prototype in `docs/BUILD_DECISIONS.md` |
 | Saves: format, safety, migration, carrying a save between builds, recovery | `docs/release/SAVE_CONTINUITY.md`; code in `game/scripts/core/save_store.gd` and `game/scripts/core/save_transfer.gd` |
 | Long-run simulations and their results | `docs/release/LONG_RUN_SIMULATION.md`; harness `game/tests/economy_sim.gd` |
-| Releases: the last packet, readiness, Android signing | `docs/release/BUILD_14_PACKET.md`, `docs/release/BUILD_14_READINESS.md`, `docs/release/ANDROID_SIGNING.md`, `.github/workflows/release.yml` |
+| Current releases and signing | Latest Build 22 private draft and active X20 restriction: live register/state file; signing: `docs/release/ANDROID_SIGNING.md`. Build 14 packets historical. |
 | Harvestable resources and their uses | `game/data/resources.json` (`tools/check_resources.py`) |
 | Assets: registry, licences, scaling, the mandatory pipeline skill | `docs/assets/ASSET_REGISTRY.md`, `docs/assets/packs.json`, `docs/assets/ASSET_SCALING_STANDARD.md`, `.claude/skills/asset-integration-pipeline/SKILL.md` |
 | The world research (Morris) | `docs/world/` |
 | The open-items audit and the 231-entry reconciliation against the five builds (2026-10-20) | `docs/requirements/RECONCILIATION_2026-10-20.md` (generated: what has closed, moved or been added since), frozen baseline `docs/requirements/baseline_2026-10-20.json` (the 231 open and 142 closed approved entries at `a203c0b`); the audit before it: `docs/release/BUILD_14_OPEN_ITEMS_AUDIT.md` |
 | Builds 18–21, the Build 20+ backlog, multiplayer, owner decisions, owner or external actions | `docs/requirements/views/` (STATUS, BUILD_18..21, BACKLOG, DECISIONS, QUEUES) |
-| Known limitations | Defects: each requirement's `known_defects` in the register; save limits: `docs/release/SAVE_CONTINUITY.md` section 3; last build's known issues: `docs/release/BUILD_14_READINESS.md`; prototype rules and open questions: `docs/BUILD_DECISIONS.md`; Android signing: `docs/release/ANDROID_SIGNING.md` |
+| Known limitations | Live register, save continuity guide, current Build 22 tester notes and signing guide; early Build 14 and prototype reports historical. |
 | Older recovery records (history; the register supersedes their counts) | `docs/requirements/RECOVERY_2026-10-19.md`, `docs/HANDOFF.md`, `docs/DEVELOPMENT_QUEUE.md`, `docs/DEVELOPMENT_PLAN.md` (all marked historical) |
 
-## How the register says where an item stands
+## Requirement authority
 
-Every entry has a stable id, a `kind` and a lifecycle `status` (the validator rejects anything else):
+The only current decision/status source is `docs/requirements/requirements.json`, with `docs/requirements/SCHEMA.md` and generated views. Approval, implementation, testing, device verification and release are distinct. Do not promote proposals, old build claims or unmerged worker code to completed gameplay.
 
-| The owner's category | In the register |
-|---|---|
-| Approved but not started | kind `approved`, status APPROVED — NOT STARTED |
-| In progress | ACTIVE DEVELOPMENT, or PARTIALLY IMPLEMENTED |
-| Implemented but not verified | IMPLEMENTED — TESTING REQUIRED, or AUTOMATED TESTS PASSED — PLAYTEST REQUIRED (waiting on a real device) |
-| Verified complete | COMPLETE AND VERIFIED, with implementation, test or commit evidence (enforced) |
-| Blocked | BLOCKED, with its blockers |
-| Deferred | DEFERRED |
-| Proposed | kind `proposal` (or `idea`): never counted as approved work |
-| Awaiting owner decision | kind `decision`, status BLOCKED, until the owner's words are recorded in `owner_answer` (enforced) |
-| Superseded | SUPERSEDED, with `superseded_by` naming the replacing entry (enforced) |
-| Unknown | UNKNOWN — INVESTIGATION REQUIRED |
+## Current milestones (2026-10-27)
 
-Every open entry also carries `target_build` (15–19, `20+`, `multiplayer`, `owner decision`, `owner action`), `roadmap_gate` and `roadmap_reason`, `acceptance` (completion criteria), `depends_on`, and a `history` line for every change.
-
-## Roadmap (owner, 2026-10-20: ROAD-01)
-
-| Build | Content | Status |
-|---|---|---|
-| 14 | Released as a private draft from `7dbae4f` | The current test build |
-| 15 | Simulation stabilization: population, housing, wildlife, resources, economy, relationships | **Complete**: released 2026-10-20 as a private draft from `a8760be` (`docs/release/BUILD_15_PACKET.md`) |
-| 16 | Long-term equilibrium and validation: the baseline before the expansions | **In development** (from 2026-10-20). Equilibrium means mechanical consistency and meaningful adaptation, not guaranteed success (OVN-02 section 8, WDR-022) |
-| 17 | Mining & Industrial Development (EXP-A) | Approved objective; **not started**. Authorized by OVN-01 to begin only after Builds 15 and 16 meet section 4 |
-| 18 | Settlement Advancement & Regional Economy (EXP-B) | Approved objective; **not started**. Authorized by OVN-01 after Build 17 |
-| 19 | NPC Judgment System (EXP-C) | Approved objective; **not started**; 14 open design questions (SJD-Q01..Q14) unanswered |
-| Standalone (number TBD, OD-LE-01; proposed 20) | **Living Economy Expansion** (EXP-D): needs-driven economy across every system; its own build, never folded into 16-18 | Approved design; not started; 15 owner decisions open (OD-LE-01..15) |
-
-Every open register entry has a `target_build`. The dependencies that touch the order are in `docs/EXPANSION_ROADMAP.md`. If work must span more builds, keep the approved objective, flag the scheduling issue to the owner, and never silently change the roadmap.
+- **Build 22**: latest private three-platform draft, `wip/build22` `b7e1c91`; not to be reopened.
+- **Expansion 20**: currently authorized and in active development. LE-01 foundation integrated but switched off; Android usability/Message journal, Build 19 recovery R1–R4 integrated. Six-domain aspirations R5 in isolation, later LE stages unfinished. Fetch latest heads before interpreting status.
+- **MP-INTERACT-01**: implemented on separate `wip/x20-mp-interact` branch, merges **LAST**. **No Expansion 20 build even a private draft until it is integrated and verified on Android/Windows/Linux as relevant host/guest.**
+- **Decisions**: current-first 39-answer reconciliation on staging `5484ce1`, DCR-01 later added. Two multiplayer questions open, armor/identity provisional at last observation; verify the register.
+- **Future priority**: 20 → 21 → 23 → 22 → 24 → 25 → 26 → 27. Design direction is not implementation authority. Historical Builds 15–19 sequencing does not constrain already completed builds.
 
 ## Open owner decisions and blockers
 
@@ -101,27 +80,16 @@ Never answer an open decision on the owner's behalf, and never treat a proposal 
 
 A few early register entries cite chat messages or uploads that were never committed (for example REC-002, REC-007 and REC-013). Their wording is copied into the entry itself, under `owner_wording`. Treat that copy as the record, and ask the owner only if it is not enough to act on.
 
-## Expansion 20 consolidated scope (owner, 2026-10-24)
+## Expansion 20 consolidated scope
 
-Expansion 20 holds the Living Economy foundations and, as an umbrella, every outstanding gameplay polish, Android usability,
-interaction and visual item and the unfinished Build 19 items: record `X20-OPEN-ITEMS`, snapshot `docs/expansion20/X20_OPEN_ITEMS.md`,
-live view `docs/requirements/views/BUILD_20.md`. The Build 22 mini-build (`docs/backlog/BUILD22_MINI_BUILD.md`) is a release under
-that umbrella, not Expansion 22. Implementation waits for the owner's explicit authorization.
+The live register and `docs/requirements/views/BUILD_20.md` control current authorized scope; `docs/expansion20/X20_OPEN_ITEMS.md` is a planning snapshot. Owner authorization on 2026-10-26 supersedes the 2026-10-24 planning-only restriction. The economy foundation is not the completed economy. Multiplayer remains a final-integration release blocker.
 
-## How to find the next approved task
+## Next approved work
 
-1. `docs/CURRENT_DEVELOPMENT_STATE.md`, "Next actions", and `docs/requirements/views/BUILD_18.md`: the priority order.
-2. Then the register: entries with `target_build` of the current build (15 now), kind `approved`, status not closed and no gate that is still waiting. The ledger's Roadmap section lists them by build.
-3. Work the current build's items. Do not start a later build's items except where the roadmap names a dependency (SET-A's design during Build 17).
+1. Fetch current remote branches/worktrees, current registry and running CI/simulations; do not restart ongoing work.
+2. Coordinate worker branches and test evidence from the register's queue; do not follow archived prototype task boards.
+3. Follow the current Expansion 20 multiplayer gate and avoid any build before the correction is integrated last and validated.
 
-## What must not begin without further authorization
+## Current restrictions
 
-- Builds 17 and 18: authorized by OVN-01, but only in order, after the build before meets every condition of its section 4. Build 19: approved objective only.
-- Any release, upload or publication: only under the release authorization in force (OVN-01 section 9 and REL-15-18: Builds 15–18 as private drafts when every section 4 condition holds; REL-14-16 before it). Public visibility needs its own approval.
-- Merging into `main`; force-pushing or deleting `staging/my-medieval-life`.
-- Merging multiplayer (`wip/multiplayer`) into staging.
-- Answering the judgment system's 14 questions, or any open owner decision.
-- New gameplay mechanics beyond approved requirements; breaking save compatibility; new paid dependencies or online features.
-- The permanent Android signing key (deferred by the owner).
-
-The full list is CLAUDE.md, section 11.
+Do not merge to main, force-push shared branches, break save/identity continuity, disrupt other workers or auto-implement future expansions. Original GDD/Bob/Morris research is historical only. No X20 packaging until MP-INTERACT-01 is integrated last and validated; no automatic publication authorization. Preserve real money/item conservation, family-sacrifice decisions, six aspiration domains, Judgment weighting and host authority.

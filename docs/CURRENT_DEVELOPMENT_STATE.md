@@ -1,199 +1,23 @@
-# Current development state
+# Current development state — active handoff
 
-The session handoff (MEM-01, owner 2026-10-20; reshaped by REQ-CTRL-01, owner 2026-10-23). It holds **only
-session-specific state**: branches, workers, what is in flight, next actions. It never restates a requirement's status.
-That is in the register, `docs/requirements/requirements.json`, and its generated views in `docs/requirements/views/`.
+**Updated 2026-10-27 (documentation-only authority cleanup).** Fetch current heads before acting. The previous handoff is preserved at `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_pre_2026-10-27_authority_cleanup.md` as an archived audit snapshot, **not active tasks**.
 
-Update it at every checkpoint: after a merge, when a worker starts or stops, before a context handoff (at about 70–75%
-context, where measurable) and before a session ends. The previous long-form state file is archived in
-`docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-23.md` (history only).
+## Current baseline and mandatory release gate
 
-**Updated:** 2026-10-26 (Build 22 private draft released; Expansion 20 and the Build 19 recovery in progress).
+- **Build 22**: existing private three-platform draft (`wip/build22` `b7e1c91`, run `40398771937`, 2026-10-26). Frozen, not reopened.
+- **Expansion 20**: authorized in development on `wip/expansion20` (last observed `0dc0014`). LE-01 foundation with off switch, Android UI and Messages journal, and R1–R4 of Build 19 recovery have been integrated. Remaining recovery verification and LE-02–LE-07 are not finished, regardless of prior draft documents.
+- **Aspirations R5**: isolated `wip/x20-r5` (last observed `bbfc6e2`), six domains including social standing, survival and family protections, measurement; switches off until valid integration. Q8=A (individual proposal acceptance with existing hard limits) is approved policy, not an assertion that it is already merged.
+- **Multiplayer MP-INTERACT-01**: isolated `wip/x20-mp-interact` (`0ce4c9e` at last observation), implemented and targeted UI/network tests, **NOT YET INTEGRATED**. Two open owner questions MP-INTERACT-Q1/Q2 remain. Merge **LAST** onto the frozen combined X20 baseline and validate on Android/Windows/Linux with actual host/guest, input methods and real device gaps correctly identified.
+- **RELEASE BLOCKER:** **NO Expansion 20 APK, Windows or Linux build of ANY KIND, private draft included, before MP-INTERACT-01 is merged last and validated.** Publishing remains separately controlled; Build 22 stays frozen.
+- **Requirements**: owner reconciled 39 decisions on staging `5484ce1`; DCR-01 continuity added at `866af5c`. At this recorded point: 2 open multiplayer questions and 2 provisional (armour/identity); read latest register for counts. Future decisions are design only, not blanket work permission.
 
-## Owner decisions reconciled (2026-10-27, `docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md`)
+## Next actions (current work only)
 
-All 39 open decisions answered: 37 closed APPROVED (CURRENT policy, FUTURE design-only direction, ENGINEERING fixes SIM-F2/SIM-F3, GDD-REVIEW splits OD-03/OD-17 with parked parts not approved); ARMOR-CATALOG-D1 and ID-D3 stay PROVISIONAL (conditional). Open: MP-INTERACT-Q1, MP-INTERACT-Q2, Q-POL-6-CONFLICT, plus those two. Old design documents are historical reference only (`docs/PROJECT_MEMORY.md`). Continuity rule DCR-01 (owner, 2026-10-27): review each newly approved decision against the established design before implementing it; first review `docs/design/DECISION_CONTINUITY_REVIEW_2026-10-27.md` found one conflict (Q-POL-6-CONFLICT, removal from office, owner) and one intentional revision (OD-LE-13B of the provisional OD-29 contract default). Follow-ups: SIM-F2/F3 fixes after the R5 merge; Q8 = A to worker L; LE-01 till actor gaps before any finance logic (D06).
+1. Fetch latest staging and every active `wip/` worker branch. Check in-progress CI/simulations and local worktrees before running or assigning anything; never duplicate a live test.
+2. Proceed with currently authorized recovery/aspirations and Living Economy work only in their dependency order and isolated worktrees. Coordinate SIM-F2/SIM-F3 fixes touching `npc_brain.gd` after R5 integration. Resolve LE-01 storefront/counter till actor gaps before future finance code; maintain conservation, Judgment and family rules.
+3. After all other approved Expansion 20 batches are integrated and tested, integrate MP-INTERACT-01 **LAST**. Run applicable combined/targeted validation and cross-platform input-to-transaction paths; disclose untested actual device combinations.
+4. Only when the blocker is satisfied, report release readiness and ask for/observe the applicable owner release authorization. Documentation changes do not authorize builds.
 
-## RELEASE BLOCKER: MP-INTERACT-01 (owner, 2026-10-27, `docs/directives/2026-10-27_multiplayer_interaction_release_blocker.md`)
+## Sources
 
-No Expansion 20 build of any kind (public or private draft, APK, Windows or Linux) until player-to-player selection and
-interaction is fixed, integrated and validated for host and guest on Windows, Linux and Android with keyboard and mouse,
-touch and controller (register `MP-INTERACT-01`). Playtest: the Windows player saw Bob (Android) but could not select or
-interact with him. **Development started 2026-10-27** (owner, `docs/directives/2026-10-27_mp_interact_begin_now.md`): worker K on
-`wip/x20-mp-interact` (worktree `.claude/worktrees/x20-mp`), starting commit 4f50ffb (`wip/expansion20`). **Finished 2026-10-27 at 0ce4c9e** (not merged; waits to be integrated last). Owner questions MP-INTERACT-Q1/Q2. Order: finish the other Expansion 20 work, freeze the integrated baseline, then integrate this as the last
-batch, run the multiplayer and combined gates, verify the three exports, write the release-readiness report. Build 22 is not reopened.
-
-## CURRENT: Build 22, then Expansion 20 (owner, 2026-10-26, `docs/directives/2026-10-26_build22_expansion20_execution_authorization.md`)
-
-Order: (1) Build 22 = the five deferred mini-build areas + the seven 2026-10-26 playtest items; (2) integrate and validate on
-`wip/build22`; (3) private three-platform draft (permanent key; Build 21 -> 22 update keeps the save); (4) begin Expansion 20
-implementation at once (`X20-OPEN-ITEMS`, `docs/expansion20/X20_OPEN_ITEMS.md`; reconcile Build 22 items first; Living Economy
-foundations integrated and tested, not rebuilt; owner-controlled economic values presented, never guessed).
-
-| Branch | Worktree | Base | Owner | Items |
-|---|---|---|---|---|
-| `wip/build22` | `.claude/worktrees/b22` | `6567c04` + desk work `e25eec9` (merge `4313886`) | lead (integration) | all |
-| `wip/b22-market` | `.claude/worktrees/b22-market` | `4313886` | worker A | GP-BUSINESS-DESK, GP-BUSINESS-COURIER, GP-TABLE-ITEMS, GP-STALL-RENT-WRONG-PITCH, GP-MARKET-SPACING |
-| `wip/b22-ui` | `.claude/worktrees/b22-ui` | `6567c04` | worker B | GP-LOCKPICK, GP-QTY-PICKER-CONTROLLER, GP-WANTED-INDICATOR, GP-WIKI-RECIPE-TOOLS, ARMOR-01, GP-MINE-WOOD-FRAME, GP-SKILLS-RT |
-| `wip/b22-family` | `.claude/worktrees/b22-family` | `6567c04` | worker C | MP-PLAYER-FAMILY, GP-FARMER-TENDING |
-| `wip/b22-gear` | `.claude/worktrees/b22-gear` | `6567c04` | worker D | ARMOR-CATALOG-01, ARMOR-MATERIALS-01, WEAPON-CATALOG-01, WEAPON-VISIBLE-01 (decision ARMOR-CATALOG-D1 held PROVISIONAL) |
-
-Rules for the round: only worker A may change the village layout or the single-player baseline (evidence first, old baseline
-kept); only worker C bumps the save version (22 -> 23, with migration); worker C's farmer animation must leave G0 identical;
-shared files (main.gd, game_ui.gd) get small localized edits that the lead merges. The SIM-GATE suite runs once, in the release
-workflow on the release commit. Owner amendment 2026-10-26 (`docs/directives/2026-10-26_build22_final_owner_answers_amendment.md`): 14 items, GP-SKILLS-RT added (worker B); all questions answered; player children stay in Build 22 (integrated only after its tests pass).
-
-### In flight (2026-10-26)
-- **Build 22 released as a private draft** (2026-10-26, run 40398771937, draft 424822036, `wip/build22` `b7e1c91`): APK, Windows and Linux; SHA256SUMS checked; APK versionCode 22, package unchanged, certificate 31:70:4B:...:80:E6 (same as Build 21, so it installs over it). Its 18 records are INTEGRATED; device checks outstanding.
-- Build 19 recovery: R1 and R3 merged into `wip/expansion20` at e49384e (journal pager fix merged at 4f50ffb; combined validation PASSED at 4f50ffb: 17 suites 0 failures, G0 identical; this is the current validated Expansion 20 baseline and MP-INTERACT-01's starting commit). R2 (SJD-F crime-report hook, flag off) and R4 (GM-01 / WDR-009-C historical memory) merged into `wip/expansion20` at 5770d00 (validated: 17 suites 0 failures, G0 identical). Journal channel fix merged at 0dc0014 (net_g1_test passes again). In flight: worker L on `wip/x20-r5` (R5 WDR-011-C aspirations code per the revised design 8bde18b and the owner's final answers; flags off; open WDR-011-Q8 keeps proposal acceptance unchanged). Next after them: R6 measurement, R7 economy interaction, then MP-INTERACT-01 last.
-- GP-MESSAGE-JOURNAL (owner, 2026-10-26, `docs/directives/2026-10-26_messages_journal_persistence.md`): the Messages journal saved with the world; worker H extends `wip/x20-msg` (GP-MESSAGE-FOOTPRINT, done at 7c59b50, awaiting merge after the LE-01 merge's tests).
-- Owner correction 2026-10-26 (`docs/directives/2026-10-26_npc_judgment_refusal_correction.md`): opinion may make an NPC refuse a trade, weighed against need and circumstances, never by a fixed cutoff, with no rule that every trade stays possible; constraint on LE-01 and all later Living Economy work; sent to worker F.
-- Expansion 20: `wip/expansion20` (`.claude/worktrees/x20main`) = Build 22 + Living Economy foundation (X20-B1, `0b5287c`, disabled; validation running); DONE, merged at a16dbbe: worker E on `wip/x20-android` (`.claude/worktrees/x20-android`): the six Android usability items (X20-B2): GP-ANDROID-RECENTER, GP-ANDROID-HUD-SCALE, GP-ANDROID-ACTION-BUTTONS, GP-ANDROID-USE-TALK-TARGETING, GP-INTERACTABLE-OUTLINES, GP-INTERACTION-PROMPT-LIFECYCLE.
-- Worker F on `wip/x20-le01` (`.claude/worktrees/x20-le01`, base `0b5287c`): LE-01, the shared actor, need, offer, knowledge and contract model behind the disabled switch (X20-B3).
-
-- **Build 19 recovery (owner 2026-10-26, `docs/directives/2026-10-26_build19_carryover_audit_x20_integration.md`, record B19-RECOVERY):**
-  the 18 carryovers (SJD-E, SJD-F, SJD-G, SJD-H, PROS-19, X19-FOUND, DVW-B1, DVW-B2, GM-01, X19-MISINFO, X19-STORY-LIFE, REC-19,
-  REC-DIAG, REC-STORE, B19-EMERGE, WDR-009-C, WDR-011-C, FIX-D1D2) and the 9 awaiting verification (FAM-SAC-01, FIX-D3, FIX-RECF1,
-  SJD-B, SJD-C, SJD-D, X19-FOUND-BONDS, X19-FOUND-FAMREP, X19-FOUND-PERS). Step 1, running: the code audit and recovery matrix
-  (an audit worker, read-only, against `wip/expansion20`); the matrix will be committed in docs/expansion20/ as B19_RECOVERY_MATRIX.md
-  and kept current. Then integration in the owner's order (foundations, judgment, misinformation and memory, diagnostics, economy
-  interaction), incremental, on `wip/expansion20`. LE-01 continues only where independent of judgment (owner section 7).
-- Recovery in progress: worker G on `wip/x20-r1r3` (batch R1 cleanups, then R3 recorder D5/D4: REC-19, REC-STORE, FAM-SAC-01's gap); worker H on `wip/x20-msg` (GP-MESSAGE-FOOTPRINT). Matrix committed: docs/expansion20/B19_RECOVERY_MATRIX.md.
-- Owner decisions prepared: `docs/expansion20/LE_OWNER_DECISIONS.md` (14 Living Economy decisions, awaiting the owner).
-
-## Expansion 20 open-items reconciliation (owner, 2026-10-24, record only)
-
-`docs/directives/2026-10-24_expansion20_open_items_reconciliation.md`. Expansion 20 is the umbrella for the outstanding gameplay
-polish, Android usability, interaction and visual work and the unfinished Build 19 items, beside the Living Economy foundations
-(kept disabled on `wip/expansion20-preparation`). Umbrella record `X20-OPEN-ITEMS`; planning snapshot `docs/expansion20/X20_OPEN_ITEMS.md`;
-live status in `docs/requirements/views/BUILD_20.md`. The five Build 22 mini-build areas keep that delivery (business desk and courier
-work on `wip/build22-business-desk` `e25eec9`). **Nothing is authorized to start:** no Expansion 20 implementation, Living Economy
-activation, Android interface work, agents, simulations, builds or publication until the owner says so. Next action: wait for the
-owner's authorization.
-
-## Build 21 scope freeze (owner, 2026-10-24, `docs/directives/2026-10-24_build21_scope_freeze.md`)
-
-Build 21 frozen at `wip/multiplayer-b19` `089366e` (agent work to `c33d7c2`, signing merge `5cef194`); private release: first run 40116740018 failed only at reading the fingerprint (fixed in `6567c04`); run 40117759608
-on `6567c04` passed (sim-gate and build), draft release 422895130 "My Medieval Life — Build 21" (APK, Windows, Linux, signature file,
-SHA256SUMS; certificate SHA-256 31:70:4B:...:80:E6). Project on hold awaiting the owner's playtest. Deferred to the Build 22 mini-build (`docs/backlog/BUILD22_MINI_BUILD.md`, not started):
-GP-BUSINESS-DESK (unfinished work on `wip/build22-business-desk` `e25eec9`), GP-TABLE-ITEMS, GP-FARMER-TENDING, GP-LOCKPICK,
-MP-PLAYER-FAMILY. The Build 21 agent is stopped. After the release: report to the owner and stop.
-
-## Read first (after a compaction or in a new session)
-
-1. `CLAUDE.md` section 0. Then this file.
-2. `docs/requirements/views/STATUS.md` (where each build stands), `BUILD_18.md` (the active build), `DECISIONS.md` (open
-   owner decisions), `QUEUES.md` (workers, untested work, playtest queue).
-3. The record of any task you resume, in `docs/requirements/requirements.json`; the procedure in
-   `docs/requirements/SCHEMA.md`.
-
-Never reconstruct state from a conversation summary: these files are the record.
-
-## Branches
-
-| Branch | Head | Role |
-|---|---|---|
-| `staging/my-medieval-life` | see `git log origin/staging/my-medieval-life -1` | records: the only branch where the register is edited |
-| `wip/build18` | `239bdff` (2026-10-23; Build 18 draft release from `61ec528`) | Build 18 integration; + credit parity, ECON-P3 business money, the capability profile, DP-15 sage evidence, X18-SIM report, SET-D, farming audit and church-field volunteering + stone corrections, NPC competition, player businesses |
-| `wip/build17` | `dfec7ec` | Build 17, frozen (private playtest draft from code `cd7439c`) |
-| `wip/expansion19-preparation` | `c2ece16` | Build 19 judgment prototype, switched off, isolated (PROS-01); synced with Build 18 (SYNC-18, merge c2ece16: gate identical, judgment and shared suites pass) |
-| `wip/expansion20-preparation`, `wip/expansion21-preparation` | `d82f173`, `0eeb3df` | documents only; Builds 20 and 21 not authorized |
-| `wip/multiplayer` | `d18d7d1` | MP-01, excluded from Build 18; never merge without the owner |
-| `main` | | changes only when the owner merges |
-
-## Workers in flight
-
-Each is a record in IN DEVELOPMENT; the validator requires it to be named here.
-
-| Record | Worker | Branch | Started from | Notes |
-|---|---|---|---|---|
-| PROS-19, X19-FOUND | none (round complete) | `wip/expansion19-preparation` | c756211 | foundations round merged and verified (ten suites, gate identical, perf); waits on the owner's numbers and formulas |
-| E20-P1 | X20 foundation worker (done) | `wip/expansion20-preparation` | 4d9bc05 | reservation record, event record, actor resolver built, off, tested, gate identical; waits on the owner's architecture review and OD-LE answers |
-| P21-01 | X21 foundation worker (done) | `wip/expansion21-preparation` | 8ac88f5 | civic records built, off, tested, gate identical; P21-00 and P21-02 done (64317eb) |
-| E22-P1, E23-BANA | lead (done) | staging (documents) | - | audit written: docs/design/EXPANSIONS_22_23_AUDIT.md; waits on the owner's review; no implementation |
-| XAUDIT-01 | lead (done) | staging (documents) | - | report docs/design/CROSS_EXPANSION_PRESERVATION_AUDIT.md; awaits the owner's review; findings D1 (judgment save bypass) and D2 (economy save drop) are defects on the prospective branches, unfixed by instruction |
-| FIX-D1D2, FIX-D3 | repair workers (done) | `wip/expansion19-preparation` (fd99591 D1, 3ec38d2 D3), `wip/expansion20-preparation` (af62948 D2) | - | done and reported 2026-10-23; branches stay separate until the owner approves the integration plan |
-| ID-01 | identity worker 2 (done) | `wip/foundation-identity` | 84d1880 | option B done; gate divergences explained (docs/design/IDENTITY_GATE_ANALYSIS.md); waits on ID-D3 (candidate baseline); then merge into wip/recorder |
-| RECON-01 | reconciliation worker (done) | `wip/expansion19-preparation` 4a0459f, `wip/expansion20-preparation` 1befd0e | - | one tolerance calculation; reservations recognise contract holds; gate identical |
-| REC-19 | recorder worker (done); lead | `wip/recorder` | 2d5d49c | identity merged, D3 instrumentation done (824e32c); FIX-RECF1/SIM-F9 merged by the lead (2d5d49c); combined gate running; next: into the Build 19 integration branch |
-| FIX-RECF1 | lead (done) | `wip/fix-recf1` merged into `wip/recorder` 2d5d49c | b113f73 | integrated; bandit starvation differences unattributed until the recorder shows causes (SIM-F4 open) |
-| FAM-SAC-01 | family worker (done) | `wip/expansion19-preparation` | fff48a4 | built behind the switch, tests pass, gate identical; danger behaviour answered by the owner (shield and fetch help), added by the X19 completion worker |
-| X19-SCOPE | lead (done) | `wip/build19` | 2f72ec3 (packet 42c33e0) | Build 19 private draft released (run 40044931601), packages checked; complete as the development milestone (owner 2026-10-24); public publication only with the owner's approval |
-| MP-MASTER / B21-LAN-PLAYTEST | Build 21 agent (subagent, sequential); lead verifies and builds | `wip/multiplayer-b19` (worktree `.claude/worktrees/mp`) | 7fb8b12 (LAN UI, Android permissions, animal sync, recorder audit, campfire done) | Owner's final execution directive `docs/directives/2026-10-24_build21_final_execution.md`: GP-MARKET-SHELVES, the small fixes (repeated news, campfire size, bandit spawn), then every approved GP item in development (GP-GIFT-QUANTITY, GP-STALL-PRICE-ON-PUTUP, GP-INTERIOR-WALLS, GP-UI-COMPACT, GP-WIKI-LAYOUT, GP-JOYSTICK, GP-INPUT-CONSIST, GP-HARVEST-CONT, GP-TARGET-ART-MATCH, GP-BUSINESS-DESK, GP-SMITHY-WORKBENCH, GP-SHARPEN, GP-TABLE-ITEMS, GP-FARMER-TENDING, GP-LOCKPICK, MP-PLAYER-FAMILY); GP-PROGRESS-BAR closed (owner: done in an earlier build). Then Build 21 private, after merging `wip/android-signing` (8f38920, ANDROID-RELEASE-SIGNING: the four `ANDROID_RELEASE_*` secrets, apksigner with separate passwords, certificate SHA-256 recorded, no fallback key; owner directive `docs/directives/2026-10-24_permanent_android_signing_integration.md`) into `wip/multiplayer-b19`. MP-PLAYER-FAMILY: minimal fix only, else defer (`docs/directives/2026-10-24_mp_player_family_minimal_fix.md`). Agent progress note: B21_PROGRESS.md in the session scratchpad. |
-| SIM-GATE-01 | done; merged | `wip/multiplayer-b19` 95249b7 | gate PASS locally on the merge | Active for the next release from this branch; thresholds await the owner |
-| REC-DIAG | lead | recorder archives (scratchpad), read-only runs of `wip/recorder` | 94b1304 | simulation-first analysis (docs/directives/2026-10-23_simulation_first_diagnostics.md); findings in docs/design/SIM_FINDINGS.md |
-
-Expansion 20: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion20_phase1_authorization.md); Expansion 21: phase 1 authorized 2026-10-23 (docs/directives/2026-10-23_expansion21_phase1_authorization.md).
-Alignment report and capability matrices: `docs/design/EXPANSIONS_19_21_ALIGNMENT.md` (2026-10-23). No worker is running; every next step waits on the owner's answers.
-
-### Running processes (never restart or cancel; SIM-02)
-
-None (the 365-day runs, run 39874405723, finished 02:04 UTC).
-
-On their reports:
-1. Review the work.
-2. Merge it into `wip/build18`.
-3. Run targeted integration and conservation checks on the merge commit (the suites the change touches, conservation runs); not broad suites without a specific reason (owner 2026-10-23, MSW-01). For the regions merge: the chapel and settlements share the settlement holdings script and the economy ledger.
-4. Update the records: INTEGRATED, `test_commit`.
-5. Regenerate the views.
-
-## Historical: Build 18 and 19 next actions (2026-10-23, superseded; kept for history only, do not act on them)
-
-Overnight plan (owner authorization 2026-10-23; decisions made on the owner's behalf go in
-`OWNER_REVIEW_DECISIONS.md` (wip/build18, folder docs, build18), D1 onward):
-1. DONE: CHAPEL-R2 alms implemented on `wip/build18` (local commit 5bdecb7: `chapel.gd::alms`, `household_shortfall`,
-   `chapel_test::test_alms`, wiki, INT-404, DECISIONS, owner-review log), tester notes BUILD_18_TESTER_NOTES.md (wip/build18, release docs).
-2. DONE on `wip/build18` 61ec528 (pushed): all 85 suites pass; determinism gate PASS, identical to the baseline (no alms are
-   paid in the first 30 days: households still hold enough); tester notes committed.
-3. DONE: long-sims run 39904513181 on 61ec528, seeds 1-4: no leak, FATAL or script error; before/after comparison and a
-   probe showing the alms reach every short household (LONG_RUNS_365_ALMS.md on wip/build18, ecd91d4); decisions D10-D11.
-4. DONE: Build 18 released as a private draft (run 39935635926 on 61ec528; packet BUILD_18_PACKET.md on wip/build18,
-   239bdff): three packages downloaded back, checksums match, audio per platform checked, Linux binary launched.
-5. NEXT: the owner's device playtest (REL18-DEVICE); public publication only with the owner's approval. The morning
-   report was given in the session.
-6. X19 foundations round: DONE (c756211; report given 2026-10-23).
-7. Expansions directive (2026-10-23): Build 18 merged into `wip/expansion19-preparation` (c2ece16, reviewed); the worker is on
-   nothing more until the owner answers the numbers (then 365-day calibration off vs on). Done: hooks (577821d), event feeds (e8d4122), X19-Q-TIMING (3f89816), the rule answers (2456294), X19-GUARD (949b5b9),
-   X19-REGARD (46b46e5), SJD-Q03/Q13 (ca2e9ba). Open number questions for the owner: X19-GOSSIP-FLOOR, X19-RUNNERUP,
-   X19-TRUST-RATES, X19-PERSONALITY, X19-EVENT-Q; X19-DECAY awaits the calendar explanation (given 2026-10-23 in the session).
-   Expansions 20 and 21: decision packet given to the owner; no work until answered.
-8. **Build 19 complete scope (owner 2026-10-23, X19-SCOPE, `docs/directives/2026-10-23_x19_complete_release_scope.md`): the
-   priority.** All Expansion 19 numbers are now answered (`docs/directives/2026-10-23_owner_answers_x19_release_decisions.md`,
-   packet `docs/design/X19_RELEASE_DECISIONS.md`; spillover reach: extended kin through second cousins at falling, provisional weights, per the owner's clarification `docs/directives/2026-10-23_owner_clarifications_famrep_simf4.md`). Plan:
-   (a) FAM-SAC-01 worker lands; (b) a completion worker on `wip/expansion19-preparation` sets the approved numbers, switches
-   personality, family reputation, lies (X19-MISINFO), family stories (X19-STORY-LIFE), stubbornness and self-defence live,
-   judgment on by default; (c) integrate with identity (84d1880), FIX-RECF1/SIM-F9 (b113f73) and the recorder (off in public
-   builds) on one Build 19 integration branch; (d) targeted integration tests, conservation, combined first-divergence check
-   on both seeds and ONE proposed baseline; (e) present Build 19 for release authorization (never publish automatically).
-   The mayoral term (four game years) is settled and not reopened.
-9. **Expansions 25 and 26 (owner 2026-10-23, design only, no code):** packets
-   `docs/design/EXPANSION25_WEATHER_SEASONS_DISASTERS.md` (WEATHER-01) and `docs/design/EXPANSION26_CREATURES_AND_HEROES.md`
-   (PET-01, MON-01, B14-09, FR-01); split per `docs/directives/2026-10-23_split_expansions_25_26.md`; open questions in each
-   packet's section 6 / 5. They never delay Build 19.
-10. **Roadmap reprioritization (owner 2026-10-24, ROAD-03, planning only):** order 20, 21, 23, 22, 24, 25, 26, 27 (to verify);
-   review `docs/design/ROADMAP_20_27_PRIORITY.md`; questions ROAD-Q1..Q5. No expansion implementation until separately
-   authorized. Build 19 frozen pending the owner's playtest.
-11. **Multiplayer next (owner 2026-10-24, MP-MASTER, `docs/directives/2026-10-24_master_multiplayer_directive.md`):** sequence
-   Build 19 acceptance → full multiplayer → Expansion 20. Preparation only now (assessment, plan, decisions; MP-D1 open);
-   implementation after Build 19's owner acceptance and explicit authorization. Prototype `wip/multiplayer` d18d7d1 preserved;
-   its notes and the 2026-10-21 audit in `docs/multiplayer/`.
-   Architecture approved in principle; MP-D1..D8 decided 2026-10-24 (MP-ARCH, MP-INET); plan with gates G0-G10 in
-   `docs/multiplayer/MULTIPLAYER_PREPARATION.md`. Report multiplayer's stage in every status report until owner acceptance.
-12. **Gameplay and Controls Polish (owner 2026-10-24, GP-POLISH and eight children):** P1 (anvil, Android pickaxe animation,
-   Android action layout) right after multiplayer Batch A1; P2 (overhead progress bar, joystick, continuous harvesting,
-   lockpicking minigame, input consistency) after Batch A; before Expansion 20 (`docs/gameplay_polish/SCHEDULE.md`).
-Do not publish publicly; do not reopen settled decisions; no open-ended repair campaign.
-
-## Waiting on the owner
-
-Every open decision is in `docs/requirements/views/DECISIONS.md`. The decision package B18-DP-01..14 was answered 2026-10-23 (`docs/directives/2026-10-23_build18_decision_package_answers.md`); B18-DP-15 and DP-16 were answered (`docs/directives/2026-10-23_dp15_dp16_con02_empperm.md`). In this session:
-- the calendar question: X19-DECAY held as PROVISIONAL pending the owner's view of the 8-day year;
-- the stone values (STONE-D1, STONE-D2);
-- Build 18 target (owner 2026-10-23, `docs/directives/2026-10-23_reg_demo_d1_and_build18_target.md`): playable within five hours; punch list fixed; blockers to the owner promptly; REG-CIRC-D1 deferred until REG-EVAL-01;
-- Build 18 packaging gate (REL18-PACKAGE): no test package until every Build 18 punch-list item is closed or accepted as permanently blocked;
-- chapel review, non-blocking: CHAPEL-R1..R5 (player volunteering, offerings funding wages, old-save plants, ore layout, chapel art); the chapel's economic values are provisional working values;
-- Builds 20 and 21 authorization.
-
-## Waiting (sequenced)
-
-- REL18 release runs (365 days per seed, 100-day read), REG-EVAL-01, WDR-004-C and SET-C verification: on the final Build 18 code.
+Live statuses: `docs/requirements/requirements.json`, `docs/requirements/views/`; binding rules: `CLAUDE.md`, `docs/WORLD_DESIGN_RULES.md`, applicable owner directives (2026-10-27 multiplayer, aspirations, 39 decisions, DCR-01); current roadmap: `docs/EXPANSION_ROADMAP.md` active header. All earlier content in `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_pre_2026-10-27_authority_cleanup.md` is historical only.
