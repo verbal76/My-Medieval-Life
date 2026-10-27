@@ -31975,10 +31975,15 @@
      "date": "2026-10-27",
      "change": "next_action; notes",
      "why": "owner: release blocker for the next Expansion 20 build, including private drafts; implemented last as a dedicated batch"
+    },
+    {
+     "date": "2026-10-27",
+     "change": "notes",
+     "why": "lead's read-only first look at the cause (wip/expansion20 b6fdb25)"
     }
    ],
    "next_action": "Implement as the final Expansion 20 batch on the frozen integrated baseline (after the Build 19 recovery, LE work, Android usability and the Messages journal). No Expansion 20 build of any kind (public or private) until this is integrated and validated.",
-   "notes": "BLOCKS the next Expansion 20 release (private drafts included). Playtest evidence: the Windows player saw Bob (Android) but could not select or interact with him; the reverse was not tried. Treated as a cross-platform deficiency until tests show otherwise. Build 22 is not reopened."
+   "notes": "BLOCKS the next Expansion 20 release (private drafts included). Playtest evidence: the Windows player saw Bob (Android) but could not select or interact with him; the reverse was not tried. Treated as a cross-platform deficiency until tests show otherwise. Build 22 is not reopened. Likely cause (read-only look, 2026-10-27, wip/expansion20 b6fdb25): other players are never offered as a target. main._find_target lists villagers, shops, desks, loot, animals and things but no player, so there is no prompt, outline or tap target for one; the MP-D8 players window (GameUI.show_players: gift, partner, answer offers) opens only from main.interact when NO other target is in reach (main.gd interact, the target.is_empty() branch, _beside_player). In a village something else is nearly always in reach, so the other player cannot be chosen. Also to audit: guest_blocked() in interact, touch tap selection, the pad's next-target cycle, and the guest's path through the host."
   },
   {
    "id": "MP-MASTER",
