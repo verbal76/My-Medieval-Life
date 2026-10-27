@@ -8,7 +8,7 @@
     },
     "ordinary": {
       "cap": 300,
-      "categories": ["trade", "money", "npc", "find", "game"]
+      "categories": ["trade", "money", "npc", "find", "game", "player"]
     }
   }
 }

@@ -62,6 +62,7 @@ var walk_i := 0
 var walk_goal := Vector2i(-1, -1)      # the cell walk_path leads to
 var walk_stuck := 0.0                  # seconds without progress along the route
 var talk_to: NPC = null                # a tapped villager the player walks up to, to talk
+var talk_player := 0                   # MP-INTERACT-01: the pid of a tapped or clicked player the player walks up to (0: none)
 var reach_to := Vector2.INF            # a tapped shop counter, stall or container the player walks up to, to use
 var reach_station := ""                # GP-ANVIL: a tapped crafting station; reach_to is then its use cell
 var touch_points := {}
@@ -99,7 +100,8 @@ var walking := false           # the player moved this frame (resource prompts w
 var net: NetSession            # MP Batch A2: hosting and joining (scripts/net, docs/multiplayer/BATCH_A.md)
 var guest_world := false       # this machine shows a host's world from its own character: it never simulates or saves it
 var avatar_sprites := {}       # the other players in the session, by pid
-var _offers_seen := 0           # MP-D8: offers made to this player today that it was told of
+var _offers_seen := {}          # MP-D8, MP-INTERACT-01: ids of the offers and messages to this player it was told of
+var player_mark: PlayerMark     # MP-INTERACT-01: the ring at the feet of the players in reach, brightest round the chosen one
 var _guest_note_t := -100.0
 ## Gather mode (B7-012, owner 2026-10-18): the Gather button; a tap (or Use) on a resource walks to it
 ## and gathers it, cycle after cycle by the usual actions, until it runs out or something stops it.
@@ -1237,10 +1239,96 @@ func _beside_player() -> bool:
 		return false
 	if not world.offers_to(world.player).is_empty():
 		return true
-	for q: PlayerState in world.active_players():
-		if q != world.player and q.alive and q.map_level == world.player.map_level and q.pos.distance_to(world.player.pos) <= World.OFFER_REACH:
+	for q: PlayerState in other_players():
+		if q.map_level == world.player.map_level and q.pos.distance_to(world.player.pos) <= World.OFFER_REACH:
 			return true
 	return false
+
+
+## MP-INTERACT-01: the other players in play in this session, by pid: never this machine's own character, never one away
+## (disconnected, MP-D1) or dead. On the host the connected guests; on a guest everyone the host reports in play (its copy of
+## them follows NetSession.s_players). Empty when playing alone.
+func other_players() -> Array:
+	var out := []
+	if world == null or net.role == "":
+		return out
+	var ids: Array = net.others().keys()
+	ids.sort()
+	for id in ids:
+		var q: PlayerState = world.player_by_pid(int(id))
+		if q != null and q != world.player and q.alive and not q.away:
+			out.append(q)
+	return out
+
+
+## MP-INTERACT-01: the other players within reach of the probe in front of the player, as targets ([distance, target], nearest
+## first, then by pid): kind "player", the pid their stable identity, their name, on the player's level, with a clear line.
+func _player_targets(probe: Vector2) -> Array:
+	var out := []
+	var p := world.player
+	for q: PlayerState in other_players():
+		if q.map_level != p.map_level:
+			continue
+		var d := q.pos.distance_to(probe)
+		if d < 1.5 and q.pos.distance_to(p.pos) <= World.OFFER_REACH and world.reaches(p.pos, q.pos):
+			out.append([d, {"kind": "player", "pid": q.pid, "label": "%s (player): talk, trade, give" % q.name}])
+	out.sort_custom(func(x, y): return x[0] < y[0] or (x[0] == y[0] and int(x[1].pid) < int(y[1].pid)))
+	return out
+
+
+## MP-INTERACT-01: the other player drawn at a map position (their sprite stands above their feet), or null: what a tap or a
+## click on them chooses. Their drawn place, as the eye sees it, on the player's level.
+func _player_at(wpos: Vector2) -> PlayerState:
+	var at := wpos + Vector2(0, 0.4)
+	var best: PlayerState = null
+	var bd := 0.9
+	for q: PlayerState in other_players():
+		if q.map_level != world.player.map_level:
+			continue
+		var s: ActorSprite = avatar_sprites.get(q.pid)
+		var drawn: Vector2 = s.position / T if s != null else q.pos
+		if drawn.distance_to(at) < bd:
+			bd = drawn.distance_to(at)
+			best = q
+	return best
+
+
+## Whether the tapped player is drawn nearer the tap than the villager or animal there (the one the eye picks).
+func _player_nearer(q: PlayerState, wpos: Vector2) -> bool:
+	var at := wpos + Vector2(0, 0.4)
+	var c: Object = _creature_at(wpos)
+	var s: ActorSprite = avatar_sprites.get(q.pid)
+	var drawn: Vector2 = s.position / T if s != null else q.pos
+	return c == null or drawn.distance_to(at) <= (c.pos as Vector2).distance_to(at)
+
+
+## MP-INTERACT-01: open the menu for player `pid` (Use, Talk, a tap or a click on them): the same window on every platform.
+func open_player(pid: int) -> void:
+	var q := world.player_by_pid(pid)
+	if q == null or q == world.player:
+		return
+	player_sprite.face(q.pos - world.player.pos)
+	ui.show_player(pid)
+
+
+## Walk up to a tapped or clicked player (following them as they move) and open their menu beside them.
+func _talk_player_step() -> void:
+	if talk_player == 0:
+		return
+	var q := world.player_by_pid(talk_player)
+	if q == null or q == world.player or not q.alive or q.away or q.map_level != world.player.map_level or q.pos.distance_to(world.player.pos) > 25.0 \
+			or not other_players().has(q):
+		talk_player = 0
+		move_to = Vector2.INF
+		return
+	var d := q.pos - world.player.pos
+	if d.length() > 1.3:
+		move_to = q.pos
+		return
+	move_to = Vector2.INF
+	talk_player = 0
+	target_pref = "player:%d" % q.pid
+	open_player(q.pid)
 
 
 ## The other players: one sprite each, eased toward where the host says they are.
@@ -1285,6 +1373,7 @@ func _sync_avatars(dt: float) -> void:
 		s.play(anim if anim in NetSession.ANIMS else "idle")
 		if not bool(e.get("alive", true)) and s.anim != "death":
 			s.play("death", true)
+		s.visible = who2 == null or who2.map_level == world.player.map_level      # MP-INTERACT-01: another level is out of sight (MIN-A)
 
 
 func resume_after_origin() -> void:
@@ -1379,6 +1468,8 @@ func _clear_world() -> void:
 	cart_sprites.clear()             # their nodes go with the scene (a world loaded after one with carts: MP C, a guest rejoining)
 	chase = null
 	talk_to = null
+	talk_player = 0                 # MP-INTERACT-01
+	_offers_seen = {}
 	reach_to = Vector2.INF
 	placing = {}
 	diamonds.clear()                # their nodes go with the scene
@@ -1849,12 +1940,7 @@ func _process(delta: float) -> void:
 	if running and not world.player.alive and not ui.is_open("death"):
 		ui.show_death()
 	if running and not world.offers.is_empty():
-		var mine: Array = world.offers_to(world.player)
-		if mine.size() > _offers_seen:
-			var o: Dictionary = mine[mine.size() - 1]
-			var from: PlayerState = world.player_of_ref(str(o["from"]))
-			ui.message("%s asks you something: press Use beside them to answer." % (from.name if from != null else "Someone"), 6.0, "game")   # MP-D8
-		_offers_seen = mine.size()
+		_tell_offers()                       # MP-D8, MP-INTERACT-01: what another player asked or said, told once
 	_sync_sprites()
 	_sync_levels(delta)
 	_sync_gather_mark()
@@ -2372,12 +2458,14 @@ func _player_step(delta: float) -> void:
 	if v.length() > 0.1:
 		chase = null
 		talk_to = null
+		talk_player = 0
 		reach_to = Vector2.INF
 		if cam_free:
 			recenter()                    # walking with keys or the stick brings the view back
 	_gather_step()
 	_chase_step()
 	_talk_step()
+	_talk_player_step()
 	_reach_step()
 	if v.length() > 0.1:
 		move_to = Vector2.INF
@@ -2417,6 +2505,8 @@ func _player_step(delta: float) -> void:
 		talk_to_alt()                     # Y on a pad talks instead of casting while a villager is offered
 	elif Input.is_action_just_pressed("talk") and str(target.get("kind", "")) in ["npc", "shop"]:
 		interact()                        # GP-ANDROID-USE-TALK-TARGETING: T talks to the villager chosen (the first of only people)
+	elif str(target.get("kind", "")) == "player" and (Input.is_action_just_pressed("talk") or (Input.is_action_just_pressed("fireball") and scheme == "gamepad")):
+		interact()                        # MP-INTERACT-01: T (and Y on a pad) with a player chosen opens their menu
 	elif Input.is_action_just_pressed("fireball"):
 		fireball()
 	_menu_keys()
@@ -2680,6 +2770,8 @@ func _find_target() -> void:
 				near.append([d, near.size(), {"kind": "shop", "npc": n, "label": "Trade with %s (%s)" % [n.name, world.shop_name(n)]}])
 			else:
 				near.append([d, near.size(), {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}])
+	for pt in _player_targets(probe):                # MP-INTERACT-01: another player in reach, among the people
+		near.append([pt[0], near.size(), pt[1]])
 	for c in world.containers:
 		var at := Vector2(int(c.x) + 0.5, int(c.y) + 0.5)
 		if at.distance_to(p.pos) > World.CONTAINER_REACH:
@@ -2920,9 +3012,9 @@ func _find_target() -> void:
 	# refusals are unchanged: this only orders what was already on offer.
 	talk_alt = {}
 	cands = use_order(cands)
-	if not cands.is_empty() and not str(cands[0].kind) in ["npc", "shop"]:
+	if not cands.is_empty() and not str(cands[0].kind) in ["npc", "shop", "player"]:
 		for tc in cands:
-			if str(tc.kind) in ["npc", "shop"]:
+			if str(tc.kind) in ["npc", "shop", "player"]:        # MP-INTERACT-01: Talk reaches a player as a villager
 				talk_alt = tc
 				break
 	# taking what is not yours is never the default choice: it is offered last (Q / Tab reaches it)
@@ -2958,10 +3050,15 @@ func _find_target() -> void:
 ## before any character (a villager to talk to, an animal), each group in the order it came. A trader at their post (kind
 ## "shop") is the counter's use and keeps its place.
 static func use_order(cands: Array) -> Array:
-	var things := cands.filter(func(c): return not str(c.get("kind", "")) in ["npc", "animal"])
+	var things := cands.filter(func(c): return not str(c.get("kind", "")) in CHARACTER_KINDS)
 	if things.is_empty() or things.size() == cands.size():
 		return cands
-	return things + cands.filter(func(c): return str(c.get("kind", "")) in ["npc", "animal"])
+	return things + cands.filter(func(c): return str(c.get("kind", "")) in CHARACTER_KINDS)
+
+
+## The kinds of target that are someone, not something: after the things for Use, first for Talk (MP-INTERACT-01: a player is
+## one, beside the villagers and animals, nearest first).
+const CHARACTER_KINDS := ["npc", "animal", "player"]
 
 
 ## GP-INTERACTION-PROMPT-LIFECYCLE (owner, 2026-10-24): the contextual prompt for the chosen target, kept for what it is
@@ -2981,7 +3078,7 @@ func _prompt(text: String, more := false) -> void:
 ## Which thing a target is, stable from frame to frame (what the labels' counts change is not part of it).
 func _target_key(t: Dictionary) -> String:
 	var k := str(t.get("kind", ""))
-	for f in ["npc", "animal", "id", "i", "c", "dep", "tree", "plant", "field", "plot", "pen", "thing"]:
+	for f in ["npc", "animal", "pid", "id", "i", "c", "dep", "tree", "plant", "field", "plot", "pen", "thing"]:
 		if t.has(f):
 			var v = t[f]
 			if v is Object:
@@ -3386,6 +3483,8 @@ func _use() -> void:
 		ui.message(far)
 		return
 	match target.kind:
+		"player":
+			open_player(int(target.pid))                   # MP-INTERACT-01: the chosen player's menu
 		"npc":
 			approach(target.npc)
 		"shop":
@@ -5239,7 +5338,7 @@ func _tap(screen_pos: Vector2) -> void:
 	if _tap_portal(wpos) or _tap_below(wpos):
 		return                            # MIN-A: the adit tapped, or a tap below the surface
 	var pile := _loot_at(wpos)
-	if pile != Vector2.INF and _creature_at(wpos) == null:
+	if pile != Vector2.INF and _creature_at(wpos) == null and _player_at(wpos) == null:
 		# a tapped pile (a carcass, a dropped bag): walk up to it and take it, in any mode (PL2-004)
 		chase = null
 		talk_to = null
@@ -5268,8 +5367,14 @@ func _tap(screen_pos: Vector2) -> void:
 		return
 	chase = null
 	talk_to = null
+	talk_player = 0
 	reach_to = Vector2.INF
 	reach_station = ""
+	var tapped_player := _player_at(wpos)
+	if tapped_player != null and _player_nearer(tapped_player, wpos):
+		talk_player = tapped_player.pid   # MP-INTERACT-01: walk up to them (following if they move) and open their menu
+		_talk_player_step()
+		return
 	var tapped := _creature_at(wpos)
 	if tapped is NPC and tapped.role != "bandit":
 		talk_to = tapped                  # walk up to them (following if they move) and talk
@@ -6386,6 +6491,56 @@ func _sync_outlines() -> void:
 				else:
 					items.append(item)
 	target_outline.show_items(items)
+	_sync_player_marks()
+
+
+## MP-INTERACT-01: a ring at the feet of each other player on offer (target_options), brightest round the chosen one; none with a
+## window open, while placing or gathering. Their drawn place (the avatar sprite), so the ring stays on them as they move.
+func _sync_player_marks() -> void:
+	if player_mark == null:
+		player_mark = PlayerMark.new()
+		add_child(player_mark)
+		move_child(player_mark, actors.get_index())         # over the floor, under the people
+	var marks: Array = []
+	if not ui.modal() and placing.is_empty() and gather.is_empty() and world.player.alive:
+		var tk := _target_key(target)
+		for t: Dictionary in target_options:
+			if str(t.get("kind", "")) != "player":
+				continue
+			var s: ActorSprite = avatar_sprites.get(int(t.pid))
+			var q := world.player_by_pid(int(t.pid))
+			if s == null and q == null:
+				continue
+			marks.append([s.position if s != null else q.pos * T, _target_key(t) == tk])
+	player_mark.show_marks(marks)
+
+
+## MP-D8, MP-INTERACT-01: each offer, message or answer another player sent this one, told once in the compact message (and kept in
+## the journal's Messages page): who, what, and how to answer (choose them, or Players in the menu). The world never waits for it.
+func _tell_offers() -> void:
+	for o in world.offers_to(world.player) + world.messages_to(world.player):
+		var id := int(o.id)
+		if _offers_seen.has(id):
+			continue
+		_offers_seen[id] = true
+		var from: PlayerState = world.player_of_ref(str(o["from"]))
+		var who := from.name if from != null else "Someone"
+		match str(o.kind):
+			"say":
+				ui.message("%s says: \"%s\"" % [who, str(o.get("text", ""))], 8.0, "player")
+			"note":
+				ui.message(str(o.get("text", "")), 6.0, "player")
+			"partner":
+				ui.message("%s asks you to be partners. Choose %s, or Players in the menu, to answer." % [who, who], 8.0, "family")
+			_:
+				ui.message("%s offers you %s. Choose %s, or Players in the menu, to answer." % [who, world.offer_text(o), who], 8.0,
+						"contract" if str(o.kind) == "contract" else "trade")
+	if _offers_seen.size() > 64:
+		var live := {}
+		for o in world.offers:
+			if _offers_seen.has(int(o.id)):
+				live[int(o.id)] = true
+		_offers_seen = live
 
 
 ## What a usable thing's outline follows (TargetOutline.show_items): the sprite of a market shelf drawn over its stall, else
@@ -6596,6 +6751,11 @@ func _tap_below(wpos: Vector2) -> bool:
 		if move_to == Vector2.INF:
 			_reach_step()
 		return true
+	var tq := _player_at(wpos)
+	if tq != null:
+		talk_player = tq.pid                     # MP-INTERACT-01: another player on this level
+		_talk_player_step()
+		return true
 	var who := world.present(wpos, 0.8)          # a villager working below (World.present sees the tapped point's level)
 	if not who.is_empty() and (who[0] as NPC).depth == world.player_level:
 		talk_to = who[0]                         # walk up to them and talk
@@ -6636,15 +6796,23 @@ func _find_target_below() -> void:
 			break
 	cands.append_array(_cart_targets(world.player_level))     # MIN-F: a minecart on this level
 	cands.append_array(_works_targets())                       # MIN-F: the rock face, supports, track
+	for pt in _player_targets(probe):                          # MP-INTERACT-01: another player on this level
+		cands.append(pt[1])
 	talk_alt = {}
 	cands = use_order(cands)                                    # GP-ANDROID-USE-TALK-TARGETING: things first, as on the surface
-	if not cands.is_empty() and str(cands[0].kind) != "npc":
+	if not cands.is_empty() and not str(cands[0].kind) in ["npc", "player"]:
 		for tc in cands:
-			if str(tc.kind) == "npc":
+			if str(tc.kind) in ["npc", "player"]:
 				talk_alt = tc
 				break
 	target_options = cands
-	target = cands[0] if not cands.is_empty() else {}
+	var pick := 0                                               # MP-INTERACT-01: the choice cycled to (Next) is kept, as on the surface
+	if target_pref != "":
+		for i in cands.size():
+			if _target_key(cands[i]) == target_pref:
+				pick = i
+				break
+	target = cands[pick] if not cands.is_empty() else {}
 	var passing: bool = walking and target.get("kind", "") == "deposit"
 	var text := "" if passing or not gather.is_empty() else str(target.get("label", ""))
 	if text != "" and not talk_alt.is_empty():

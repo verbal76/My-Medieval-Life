@@ -878,9 +878,16 @@ func player_last_message() -> String:
 	return str(list[-1][2]) if not list.is_empty() else ""
 
 
+## Today's offers to player `p` waiting for its answer (MP-INTERACT-01: messages and notes are messages_to's).
 func offers_to(p: PlayerState) -> Array:
 	var ref := player_ref(p)
-	return offers.filter(func(o): return str(o.to) == ref and int(o.day) == day())
+	return offers.filter(func(o): return str(o.to) == ref and int(o.day) == day() and not str(o.kind) in ["say", "note"])
+
+
+## MP-INTERACT-01: today's messages and notes to player `p` (to read and put away), oldest first.
+func messages_to(p: PlayerState) -> Array:
+	var ref := player_ref(p)
+	return offers.filter(func(o): return str(o.to) == ref and int(o.day) == day() and str(o.kind) in ["say", "note"])
 
 
 func offers_from(p: PlayerState) -> Array:
@@ -906,8 +913,31 @@ func players_partner_refusal(a: PlayerState, b: PlayerState) -> String:
 	return ""
 
 
-func _offer_refusal(a: PlayerState, b: PlayerState, kind: String, item: String, qty: int) -> String:
-	if b == null or b.away or not b.alive or a.map_level != b.map_level or a.pos.distance_to(b.pos) > OFFER_REACH:
+## MP-INTERACT-01 (owner, 2026-10-27): the other interactions between two players use the same consent record. "sell" (the offerer
+## sells `qty` of `item` from its pack for `price` coins in all) and "buy" (the offerer offers `price` coins in all for `qty` of `item`
+## from the other's pack): settled by World.trade on acceptance, the one atomic sale. "contract" (the offerer, the buyer, asks the other
+## to supply `qty` of `item` at `price` coins each within `days`) and "supply" (the offerer, the seller, offers to supply on those
+## terms): accepted, the CON-01 contract opens by Contracts.open_between with the buyer's coins set aside, every rule of a contract
+## with a villager after that. Each pair is the other's counter-offer. "say" (a short message, `text`; it needs no answer) and "note"
+## (the host tells the offerer how its offer was answered; never offered by a player). Nothing a player writes is read by a villager:
+## messages live only here and in the players' journals.
+const SAY_MAX := 120                 # characters of a message between players (agent decision, docs/DECISIONS.md 2026-10-27)
+const MESSAGES_KEPT := 8             # messages and notes waiting for one player at a time; the oldest goes first
+const PRICE_MAX := 100000            # coins: the most one offer may name (a bound on input, not an economic rule)
+const OFFER_KINDS := ["partner", "gift", "sell", "buy", "contract", "supply", "say"]
+
+
+## A message between players as it is kept: one line, no control characters, at most SAY_MAX characters.
+static func clean_say(text: String) -> String:
+	var out := ""
+	for ch in text.replace("\n", " ").replace("\t", " ").replace("\r", " "):
+		if ch.unicode_at(0) >= 32 and ch.unicode_at(0) != 127:
+			out += ch
+	return out.strip_edges().left(SAY_MAX)
+
+
+func _offer_refusal(a: PlayerState, b: PlayerState, kind: String, item: String, qty: int, price := 0, days := 0, text := "") -> String:
+	if b == null or b == a or b.away or not b.alive or a.map_level != b.map_level or a.pos.distance_to(b.pos) > OFFER_REACH:
 		return "Stand beside them to ask."
 	match kind:
 		"partner":
@@ -916,32 +946,111 @@ func _offer_refusal(a: PlayerState, b: PlayerState, kind: String, item: String, 
 			if qty < 1 or not a.inv.has(item, qty):
 				return "You do not have that."
 			return ""
+		"sell":
+			if qty < 1 or not a.inv.has(item, qty):
+				return "You do not have that."
+			if price < 1 or price > PRICE_MAX:
+				return "Name a price of at least 1 coin."
+			return ""
+		"buy":
+			if not GameData.items.has(item) or qty < 1 or qty > 999:
+				return "That cannot be bought."
+			if price < 1 or price > PRICE_MAX:
+				return "Name a price of at least 1 coin."
+			return "You haven't %d coins." % price if a == player and a.coins < price else ""     # the buyer's purse: its own offer
+		"contract", "supply":
+			if not GameData.items.has(item) or qty < 1 or qty > 999:
+				return "That cannot be ordered."
+			if price < 1 or price > PRICE_MAX or qty * price > PRICE_MAX:
+				return "Name a price of at least 1 coin each."
+			if days < 1 or days > int(Contracts.cfg().max_days):
+				return "Give between 1 and %d days." % int(Contracts.cfg().max_days)
+			return contracts.fund_refusal(player_ref(a), qty * price) if a == player and kind == "contract" else ""     # the buyer's purse: its own offer; at the answer, open_between
+		"say":
+			return "" if clean_say(text) != "" else "Say something first."
 	return "That cannot be offered."
 
 
 ## The acting player offers `kind` to the player with pid `to_pid`. "" when offered (the other must accept), else why not.
-func player_offer(kind: String, to_pid: int, item := "", qty := 1, actor: PlayerState = null) -> String:
+## MP-INTERACT-01: `price` (coins in all for "sell", each for "contract"), `days` ("contract") and `text` ("say") after `actor`, so
+## every earlier call keeps its meaning. The offer names its recipient only: nothing of theirs is touched until they answer.
+func player_offer(kind: String, to_pid: int, item := "", qty := 1, actor: PlayerState = null, price := 0, days := 0, text := "") -> String:
 	if mirrors():
-		return mirror("player_offer", player_offer.bind(kind, to_pid, item, qty), [kind, to_pid, item, qty])
+		return mirror("player_offer", player_offer.bind(kind, to_pid, item, qty, null, price, days, text), [kind, to_pid, item, qty, null, price, days, text])
 	if actor != null and actor != player:
-		return as_actor(actor, player_offer.bind(kind, to_pid, item, qty))
+		return as_actor(actor, player_offer.bind(kind, to_pid, item, qty, null, price, days, text))
+	if not kind in OFFER_KINDS:
+		return "That cannot be offered."
 	var b := player_by_pid(to_pid)
-	var why := _offer_refusal(player, b, kind, item, qty)
+	var why := _offer_refusal(player, b, kind, item, qty, price, days, text)
 	if why != "":
 		return why
+	if kind == "say":
+		_keep_message({"kind": "say", "from": acting_ref(), "to": player_ref(b), "item": "", "qty": 0, "text": clean_say(text)})
+		stat("player_messages")
+		return ""
 	for o in offers_from(player):
 		if str(o.to) == player_ref(b) and str(o.kind) == kind:
 			return "You have asked already."
-	offers.append({"id": next_offer, "kind": kind, "from": acting_ref(), "to": player_ref(b), "item": item, "qty": qty, "day": day()})
+	var rec := {"id": next_offer, "kind": kind, "from": acting_ref(), "to": player_ref(b), "item": item, "qty": qty, "day": day()}
+	if kind in ["sell", "buy", "contract", "supply"]:
+		rec["price"] = price
+	if kind in ["contract", "supply"]:
+		rec["days"] = days
+	offers.append(rec)
 	next_offer += 1
 	stat("player_offers")
 	return ""
 
 
+## A message or note for one player: kept with the offers (saved, sent to the guests, lapsing with its day), at most MESSAGES_KEPT
+## waiting for that player, the oldest going first.
+func _keep_message(rec: Dictionary) -> void:
+	rec["id"] = next_offer
+	rec["day"] = day()
+	next_offer += 1
+	offers.append(rec)
+	var mine := offers.filter(func(o): return str(o.to) == str(rec.to) and str(o.kind) in ["say", "note"])
+	for i in maxi(0, mine.size() - MESSAGES_KEPT):
+		offers.erase(mine[i])
+
+
+## Tell the player `to_ref` how `who` answered: a note it reads (Main shows it and keeps it in its journal).
+func _tell_player(to_ref: String, text: String) -> void:
+	_keep_message({"kind": "note", "from": acting_ref(), "to": to_ref, "item": "", "qty": 0, "text": text})
+
+
+## An offer in words, as its recipient reads it ("1 bread", "to be partners", "4 iron ore for 12 coins"...).
+func offer_text(o: Dictionary) -> String:
+	var item := GameData.item_name(str(o.get("item", ""))).to_lower()
+	match str(o.kind):
+		"partner":
+			return "to be partners"
+		"gift":
+			return "%d %s" % [int(o.qty), item]
+		"sell":
+			return "%d %s for %d coins" % [int(o.qty), item, int(o.get("price", 0))]
+		"buy":
+			return "%d coins for %d %s of yours" % [int(o.get("price", 0)), int(o.qty), item]
+		"contract":
+			return "a contract: you supply %d %s at %d coins each, within %d days" % [int(o.qty), item, int(o.get("price", 0)), int(o.get("days", 1))]
+		"supply":
+			return "a contract: they supply you %d %s at %d coins each, within %d days" % [int(o.qty), item, int(o.get("price", 0)), int(o.get("days", 1))]
+		"say", "note":
+			return str(o.get("text", ""))
+	return str(o.kind)
+
+
 ## The acting player answers offer `id` made to them: accepted, it is done now (checked again); declined, it is gone. "" or why not.
+## MP-INTERACT-01: an acceptance that cannot be done now (not beside them, no room, the coins short) leaves the offer waiting until it
+## is answered or lapses with its day; the offerer is told the answer (a note). A message or note is put away by either answer.
+## On a guest the answer goes to the host only: its copy holds the other player's public record, not their pack or purse, so it
+## cannot foretell the result; the host's answer and its sections follow.
 func player_answer(id: int, accept: bool, actor: PlayerState = null) -> String:
 	if mirrors():
-		return mirror("player_answer", player_answer.bind(id, accept), [id, accept])
+		remote.call("player_answer", [id, accept])
+		offers = offers.filter(func(x): return int(x.id) != id or str(x.to) != acting_ref())
+		return ""
 	if actor != null and actor != player:
 		return as_actor(actor, player_answer.bind(id, accept))
 	var o := {}
@@ -950,19 +1059,35 @@ func player_answer(id: int, accept: bool, actor: PlayerState = null) -> String:
 			o = x
 	if o.is_empty():
 		return "There is no such offer."
-	offers.erase(o)
-	if not accept:
-		stat("player_offers_declined")
+	var kind := str(o.kind)
+	if kind in ["say", "note"]:
+		offers.erase(o)
 		return ""
 	var a := player_of_ref(str(o["from"]))
 	var b := player
+	if not accept:
+		offers.erase(o)
+		stat("player_offers_declined")
+		_tell_player(str(o["from"]), "%s declines your offer: %s." % [b.name, offer_text(o)])
+		return ""
 	if int(o.day) != day():
+		offers.erase(o)
 		return "That offer has lapsed."
-	var why := _offer_refusal(a, b, str(o.kind), str(o.item), int(o.qty)) if a != null else "They are gone."
+	if a == null or a.away or not a.alive:
+		offers.erase(o)
+		return "They are gone."
+	var why := _offer_refusal(a, b, kind, str(o.item), int(o.qty), int(o.get("price", 0)), int(o.get("days", 0)))
+	if why == "Stand beside them to ask.":
+		return "Stand beside %s to accept." % a.name
 	if why != "":
-		return why if str(o.kind) == "gift" else "You cannot: %s" % why.to_lower()
-	match str(o.kind):
+		offers.erase(o)
+		if why == "You do not have that.":
+			why = "%s no longer has it." % a.name
+		_tell_player(str(o["from"]), "%s could not accept your offer: %s" % [b.name, why])
+		return why if kind in ["gift", "sell", "buy"] else "You cannot: %s" % why.to_lower()
+	match kind:
 		"partner":
+			offers.erase(o)
 			a.partner = person_id(b)
 			b.partner = person_id(a)
 			Life.kin_version += 1
@@ -975,20 +1100,101 @@ func player_answer(id: int, accept: bool, actor: PlayerState = null) -> String:
 			var qty := int(o.qty)
 			if not b.inv.can_add(item):
 				return b.inv.full_text(item)
+			offers.erase(o)
 			var marks: Dictionary = (a.stolen.get(item, {}) as Dictionary).duplicate()
 			a.inv.remove(item, qty)
 			b.inv.add(item, qty)
-			var left := qty
-			var owners := marks.keys()
-			owners.sort()
-			for ow in owners:
-				var k := mini(left, int(marks[ow]))
-				if k > 0:
-					a.unmark(item, int(ow), k)
-					b.mark_stolen(item, int(ow), k)
-					left -= k
+			_carry_marks(a, b, item, qty, marks)
 			stat("player_gifts")
+		"sell":
+			var item := str(o.item)
+			var qty := int(o.qty)
+			var price := int(o.price)
+			if b.coins < price:
+				return "You haven't %d coins." % price
+			if not b.inv.can_add(item):
+				return b.inv.full_text(item)
+			var marks: Dictionary = (a.stolen.get(item, {}) as Dictionary).duplicate()
+			if not trade(b, a, item, qty, int(price / qty), price):      # the one atomic sale: goods and coins together, or nothing
+				return "That cannot be done now."
+			offers.erase(o)
+			_carry_marks(a, b, item, qty, marks)
+			stat("player_sales")
+		"buy":
+			var item := str(o.item)
+			var qty := int(o.qty)
+			var price := int(o.price)
+			if not b.inv.has(item, qty):
+				return "You do not have %d %s." % [qty, GameData.item_name(item).to_lower()]
+			if a.coins < price:
+				offers.erase(o)
+				_tell_player(str(o["from"]), "%s accepted, but you no longer have %d coins." % [b.name, price])
+				return "%s no longer has %d coins." % [a.name, price]
+			if not a.inv.can_add(item):
+				return "%s has no room for it." % a.name
+			var marks: Dictionary = (b.stolen.get(item, {}) as Dictionary).duplicate()
+			if not trade(a, b, item, qty, int(price / qty), price):
+				return "That cannot be done now."
+			offers.erase(o)
+			_carry_marks(b, a, item, qty, marks)
+			stat("player_sales")
+		"contract", "supply":
+			var buyer := str(o["from"]) if kind == "contract" else acting_ref()
+			var seller := acting_ref() if kind == "contract" else str(o["from"])
+			var c = contracts.open_between(buyer, seller, str(o.item), int(o.qty), int(o.price), int(o.days))
+			if c is String:
+				return c
+			offers.erase(o)
+			stat("player_contracts")
+	_tell_player(str(o["from"]), "%s accepts your offer: %s." % [b.name, offer_text(o)])
 	return ""
+
+
+## A gift or sale between players: what was stolen stays stolen, and the marks go with the goods (as many as moved).
+func _carry_marks(a: PlayerState, b: PlayerState, item: String, qty: int, marks: Dictionary) -> void:
+	var left := qty
+	var owners := marks.keys()
+	owners.sort()
+	for ow in owners:
+		var k := mini(left, int(marks[ow]))
+		if k > 0:
+			a.unmark(item, int(ow), k)
+			b.mark_stolen(item, int(ow), k)
+			left -= k
+
+
+## MP-INTERACT-01: the acting player, the seller of an open contract with another player, hands over up to `units` to that player
+## standing beside them (Contracts.deliver: goods and payment in one step). The number handed over, 0 when none.
+func player_contract_deliver(cid: int, units: int, actor: PlayerState = null) -> int:
+	if mirrors():
+		return mirror("player_contract_deliver", player_contract_deliver.bind(cid, units), [cid, units])
+	if actor != null and actor != player:
+		return as_actor(actor, player_contract_deliver.bind(cid, units))
+	var c := contracts.get_contract(cid)
+	if c.is_empty() or not Contracts.is_open(c) or str(c.seller) != acting_ref():
+		return 0
+	var buyer := player_of_ref(str(c.buyer))
+	if buyer == null or buyer == player or buyer.away or not buyer.alive or buyer.map_level != player.map_level or buyer.pos.distance_to(player.pos) > OFFER_REACH:
+		return 0
+	return contracts.deliver(c, units)
+
+
+## The open contracts between the acting player and player `q` (either side), in id order.
+func contracts_with_player(q: PlayerState) -> Array:
+	var me := acting_ref()
+	var them := player_ref(q)
+	return contracts.list.filter(func(c): return Contracts.is_open(c) and ((str(c.buyer) == me and str(c.seller) == them) or (str(c.buyer) == them and str(c.seller) == me)))
+
+
+## An offer record as a save or a host's section has it (MP-INTERACT-01: price, days and text only when the offer has them).
+static func offer_from_dict(o: Dictionary) -> Dictionary:
+	var r := {"id": int(o.id), "kind": str(o.kind), "from": str(o["from"]), "to": str(o.to), "item": str(o.get("item", "")), "qty": int(o.get("qty", 0)), "day": int(o.day)}
+	for k in ["price", "days"]:
+		if o.has(k):
+			r[k] = int(o[k])
+	if o.has("text"):
+		r["text"] = clean_say(str(o.text))
+	return r
 
 
 ## Offers of a day gone, or with a player out of play, lapse (World._new_day).
@@ -5957,7 +6163,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	if po is Dictionary and not po.is_empty():
 		next_offer = int(po.get("next", 1))
 		for o in po.get("list", []):
-			offers.append({"id": int(o.id), "kind": str(o.kind), "from": str(o["from"]), "to": str(o.to), "item": str(o.item), "qty": int(o.qty), "day": int(o.day)})
+			offers.append(offer_from_dict(o))
 	if d.has("_migrated_21"):
 		stat("save_21_loaded")                                                    # MP Batch C: read from a version 21 save
 		stat("save_21_reports_moved", int(d._migrated_21.get("reports", 0)))

@@ -175,7 +175,7 @@ static func adopt(w: World, sections: Dictionary) -> void:
 			"player_offers":
 				w.offers = []
 				for o in (d.player_offers as Dictionary).get("list", []):
-					w.offers.append({"id": int(o.id), "kind": str(o.kind), "from": str(o["from"]), "to": str(o.to), "item": str(o.item), "qty": int(o.qty), "day": int(o.day)})
+					w.offers.append(World.offer_from_dict(o))
 
 
 static var _npc_props: Array = []

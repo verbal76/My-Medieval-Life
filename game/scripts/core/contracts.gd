@@ -141,6 +141,10 @@ func face_to_face(a_ref: String, b_ref: String) -> bool:
 	var reach := float(cfg().sign_reach)
 	if a is NPC and b is NPC:
 		return w.present((a as NPC).pos, reach).has(b)
+	if a is PlayerState and b is PlayerState:          # MP-INTERACT-01: two players, each where they stand
+		var pa: PlayerState = a
+		var pb: PlayerState = b
+		return pa.map_level == pb.map_level and w.place_of(pa.pos) == w.place_of(pb.pos) and pa.pos.distance_to(pb.pos) <= reach
 	var n: NPC = b if a is PlayerState else a
 	return w.present(w.player.pos, reach).has(n)
 
@@ -678,6 +682,31 @@ func _open(c: Dictionary) -> bool:
 	w.note("%s agreed to supply %s with %d %s at %d each by day %d." % [w.ref_name(c.seller, true), w.ref_name(c.buyer), int(c.qty),
 			GameData.item_name(c.item).to_lower(), int(c.price_each), int(c.deadline_day) + 1])
 	return true
+
+
+## MP-INTERACT-01 (owner, 2026-10-27): a contract between two players, agreed by both (the buyer's offer and the seller's
+## acceptance are World.player_offer and player_answer, MP-D8's consent). The same record and rules as with a villager: the
+## buyer's coins are set aside now, the seller is paid unit by unit on delivery (deliver), partial delivery, either may cancel
+## (cancel), past its deadline it lapses at dawn with the coins back to the buyer; a formal one only face to face; each side's
+## limit of open contracts. Goods only (a service between players has no way for a player to do the units: CON-02's work is a
+## villager's). Returns the open record, or the reason it could not open (nothing set aside or recorded).
+func open_between(buyer_ref: String, seller_ref: String, id: String, qty: int, price_each: int, days: int) -> Variant:
+	if not World.is_player_ref(buyer_ref) or not World.is_player_ref(seller_ref) or buyer_ref == seller_ref:
+		return "That cannot be agreed."
+	for r in [buyer_ref, seller_ref]:
+		if open_of(r).size() >= int(cfg().max_open_player):
+			return "%s as many contracts open as can be kept track of (%d)." % ["You have" if r == w.acting_ref() else w.ref_name(r, true) + " has", int(cfg().max_open_player)]
+	if formal(qty * price_each) and not face_to_face(buyer_ref, seller_ref):
+		return "A contract worth %d coins is signed face to face." % (qty * price_each)
+	var why := fund_refusal(buyer_ref, qty * price_each)
+	if why != "":
+		return "%s cannot set aside %d coins for it." % [w.ref_name(buyer_ref, true), qty * price_each]
+	var c := _new_record(buyer_ref, seller_ref, id, qty, price_each, days,
+			[{"day": w.day(), "by": buyer_ref, "what": "offer", "qty": qty, "price_each": price_each, "days": days},
+			 {"day": w.day(), "by": seller_ref, "what": "accept", "qty": qty, "price_each": price_each, "days": days}])
+	if not _open(c):
+		return "%s cannot set aside %d coins for it." % [w.ref_name(buyer_ref, true), qty * price_each]
+	return c
 
 
 ## A villager's offer to the player (the player is the seller): kept as an "offered" record until the player accepts

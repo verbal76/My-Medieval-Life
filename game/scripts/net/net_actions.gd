@@ -51,6 +51,7 @@ const VERBS := {
 	"relations.talked": "C5", "relations.give": "C5", "relations.befriend": "C5", "relations.ask_court": "C5",
 	"relations.propose": "C5", "feast.player_feast": "C5", "chapel.player_ask": "C5", "chapel.player_offer_coins": "C5",
 	"chapel.player_offer_item": "C5", "Guardianship:player_adopt": "C5", "player_offer": "C5", "player_answer": "C5",
+	"player_contract_deliver": "C5",   # MP-INTERACT-01: the seller hands a contract's goods to the player beside it (World.player_contract_deliver)
 	# C6: crime and combat
 	"player_strike": "C6", "player_melee_npc": "C6", "player_hit_npc": "C6", "player_hit_animal": "C6",
 	"player_cast_fireball": "C6", "player_fireball_hit": "C6", "pickpocket": "C6",

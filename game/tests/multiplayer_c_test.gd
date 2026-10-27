@@ -240,8 +240,8 @@ func test_verbs_catalog() -> void:
 		if f.ends_with(".gd"):
 			src += FileAccess.get_file_as_string("res://scripts/core/settlement/" + f)
 	for path in NetActions.VERBS:
-		if path == "player_rest":
-			if not src.contains('remote.call("player_rest"'):
+		if path in ["player_rest", "player_answer"]:        # sent without a local run (MP-INTERACT-01: an answer depends on the other's pack)
+			if not src.contains('remote.call("%s"' % path):
 				unsent.append(path)
 		elif not src.contains('mirror("%s"' % path):
 			unsent.append(path)
