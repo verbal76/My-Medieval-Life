@@ -170,6 +170,30 @@ func household_ended(ref: String) -> void:
 			_settle(b.front, null, "front_till", "front:" + str(b.id))
 
 
+## TILL-D1 (owner, 2026-10-28): the household that held house `b` keeps its storefront till: the whole balance goes to its own
+## funds (World.party: its head, or the villager), so the next holder starts with an empty till. A player's storefront keeps its
+## shop's till (Business) and the manor's is not a household's: unchanged. Nobody of the household left: the escheat
+## (household_ended) applies instead. Coins move only from the till to the purse (conserved).
+func keep_till(b: Dictionary, ref: String) -> void:
+	var till := till_of(b)
+	if till <= 0 or ref == "" or World.is_player_ref(ref) or ref == World.MANOR:
+		return
+	var who: NPC = w.party(ref)
+	if who == null:
+		return
+	if _move(b.front, who, till, true):
+		w.stat("front_till_kept", till)
+		_rec("front:" + str(b.get("id", "")), b.front, who, -till, "kept")
+
+
+## TILL-D1: every storefront till of the houses `ref` holds goes to its own funds now (a whole household leaving the village:
+## Migration takes the coins with it).
+func keep_tills_of(ref: String) -> void:
+	for b in fronts():
+		if w.holder_of(b) == ref:
+			keep_till(b, ref)
+
+
 ## Necessity first, the owner's pay, then the float, for one till record (`rec` holds `till`, `earned`, `paid`), paid to and
 ## topped up from `who`. Nobody left: the till goes to the manor.
 func _settle(rec: Dictionary, who: Object, key: String, ref := "") -> void:

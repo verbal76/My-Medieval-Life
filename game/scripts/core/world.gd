@@ -5391,7 +5391,9 @@ func holds(ref: String, thing: Dictionary) -> bool:
 func set_owner(thing: Dictionary, ref: String) -> void:
 	if recorder != null and thing.has("owner"):
 		recorder.ownership(thing, "owner", str(thing.owner), ref)     # REC-DIAG
+	var was := holder_of(thing)
 	thing.owner = ref
+	_handed_over(thing, was)
 	if str(thing.get("type", "")) in ["workshop", "player_house"]:          # a workshop's stations change hands with it
 		for id in stations:
 			if str(stations[id].get("building", "")) == str(thing.get("id", "")):
@@ -5403,7 +5405,9 @@ func set_owner(thing: Dictionary, ref: String) -> void:
 func set_tenant(thing: Dictionary, ref: String, rent := 0) -> void:
 	if recorder != null:
 		recorder.ownership(thing, "tenant", str(thing.get("tenant", "")), ref)     # REC-DIAG
+	var was := holder_of(thing)
 	thing.tenant = ref
+	_handed_over(thing, was)
 	if ref == "" or rent <= 0:
 		for k in ["rent", "due_day", "arrears", "missed"]:
 			thing.erase(k)
@@ -5412,6 +5416,14 @@ func set_tenant(thing: Dictionary, ref: String, rent := 0) -> void:
 	thing.due_day = day() + Property.WEEK
 	thing.arrears = 0
 	thing.missed = 0
+
+
+## TILL-D1 (owner, 2026-10-28): "The household keeps its money. When it moves or gives up the property, its till balance is
+## transferred to its own funds. The next occupant receives an empty till." A house whose holder changed: the storefront till
+## goes to the household (or villager) that held it, while one of them lives (BusinessMoney.keep_till).
+func _handed_over(thing: Dictionary, was: String) -> void:
+	if business != null and thing.has("front") and was != holder_of(thing):
+		business.money.keep_till(thing, was)
 
 
 ## The villager a reference names, alive: the one for "npc:<id>", the head of a household (its first

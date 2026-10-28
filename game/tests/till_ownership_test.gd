@@ -31,6 +31,7 @@ func _init() -> void:
 	test_save_load()
 	test_closure()
 	test_switch_off()
+	test_till_d1_migration()
 	EconomyFoundation.set_override({})
 	print("till_ownership_test: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
@@ -175,11 +176,23 @@ func test_transfer() -> void:
 	var oref := World.hh_ref(other.household)
 	house.front.till = 30
 	var all := w.total_coins()
+	var head: NPC = w.party(World.hh_ref(n.household))
+	var c0 := head.coins
 	w.set_tenant(house, oref)
-	check(e.controller(ref) == oref and e.coins(ref) == 30 and w.total_coins() == all, "let to another household: the tenant holds the till")
+	check(e.controller(ref) == oref and e.coins(ref) == 0 and head.coins == c0 + 30 and w.total_coins() == all,
+			"TILL-D1: let to another household: the owner household keeps its 30 coins, the tenant starts with an empty till")
+	house.front.till = 12
+	all = w.total_coins()
+	var thead: NPC = w.party(oref)
+	var t0 := thead.coins
 	w.set_tenant(house, "")
+	check(e.coins(ref) == 0 and thead.coins == t0 + 12 and w.total_coins() == all, "TILL-D1: the lease given up or taken back: the tenant household keeps its till")
+	house.front.till = 9
+	all = w.total_coins()
+	var c1 := head.coins
 	w.set_owner(house, oref)
-	check(e.controller(ref) == oref and w.total_coins() == all, "sold to another household: the new owner")
+	check(e.controller(ref) == oref and e.coins(ref) == 0 and head.coins == c1 + 9 and w.total_coins() == all,
+			"TILL-D1: sold to another household: the seller keeps its till, the new owner starts empty")
 	w.set_owner(house, "player")
 	check(e.controller(ref) == "player" and e.judged_person(ref) == JudgmentLive.person_of_ref(w, "player"), "the player's: the player (their shop keeps its own till)")
 	w.set_owner(house, World.MANOR)
@@ -294,3 +307,24 @@ func test_switch_off() -> void:
 			o.alive = false
 	w.property.household_ended(n.household)
 	check(w.treasury == t0 + 11 and BusinessMoney.till_of(house) == 0 and w.total_coins() == all, "off: the live rule is the same (the economy model is not needed for the escheat)")
+
+
+# ------------------------------------------------------------------------------------------------ TILL-D1: moving away
+## Owner 2026-10-28: a household that moves keeps its money: its storefront till goes to its own funds and leaves the village with it.
+func test_till_d1_migration() -> void:
+	var w := new_world()
+	var n := householder(w)
+	var h := n.household
+	var house := open_front(w, n)
+	house.front.till = 41
+	var s: OffMapSettlement = w.regions.by_id["wulstead"]
+	var ms: Array = w.brain._members(h)
+	var carried := 41
+	for o: NPC in ms:
+		carried += o.coins
+	var src0 := w.coin_sources
+	var t0 := w.treasury
+	var ok := Migration._household_out(w, s, ms, true, "hunger", Migration.hiring(s) if Migration.hiring(s) != "" else "farm")
+	check(ok, "TILL-D1: the household leaves for Wulstead")
+	check(int(house.front.get("till", 0)) == 0 and w.treasury == t0, "TILL-D1: its till went with it, not to the manor")
+	check(src0 - w.coin_sources == carried, "TILL-D1: the coins that crossed are its purses and its till (%d)" % carried)

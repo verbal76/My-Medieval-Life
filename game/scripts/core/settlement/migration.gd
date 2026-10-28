@@ -433,6 +433,8 @@ static func _household_out(w: World, s: OffMapSettlement, ms: Array, whole: bool
 		return false
 	var pantry: Inventory = w.households[ms[0].household].pantry if whole else null
 	_pre_leave(w, ms)
+	if whole and w.business != null:
+		w.business.money.keep_tills_of(World.hh_ref(ms[0].household))     # TILL-D1: its storefront till goes with it
 	var load_ := _pack(w, ms, pantry)
 	var names := _names(ms)
 	var h := s.receive_household(load_.people, int(load_.coins), load_.goods, bt)
