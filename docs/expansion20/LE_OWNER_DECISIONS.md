@@ -1,9 +1,10 @@
 # Living Economy: the owner's decisions (OD-LE-02 to OD-LE-15)
 
-Prepared 2026-10-26 for the owner, from the register's open decisions and the Build 18 audit's analysis
+HISTORICAL DECISION PACKET (prepared 2026-10-26): the 39-answer reconciliation was committed on 2026-10-27. All the previously presented OD-LE questions in this table have owner answers in the authoritative `docs/requirements/requirements.json` (the source of the generated `docs/requirements/views/DECISIONS.md`). **Do not ask the owner to answer them again.** The choices and recommendations below are retained as the original packet, not current decision status. Approved policy is not evidence that all gameplay implementations are complete.
+
+Prepared 2026-10-26 for the owner, from the register's then-open decisions and the Build 18 audit's analysis
 (`docs/expansion20/LE00_BUILD18_REFRESH.md` section 6, on `wip/expansion20`). Each item: what is undecided, what the game
-does today, the options, and the agent's recommendation. **Nothing here is decided until the owner answers.** A short
-reply such as "accept all recommendations" or "accept all except 5: option B" is enough.
+does today, the options, and the agent's recommendation. **Superseded instruction:** this packet originally asked for answers; the owner has since answered and the register controls.
 
 Items marked **blocks LE-01** are needed to finish the core model; the others block later stages (LE-02 to LE-05).
 
