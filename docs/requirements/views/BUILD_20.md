@@ -4,28 +4,21 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 
 Authority: owner directive 2026-10-26 (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md, superseding the 2026-10-23 phase 1 limit): substantive Expansion 20 implementation on wip/expansion20; policies for open OD-LE decisions still need the owner. RELEASE BLOCKER (owner 2026-10-27, docs/directives/2026-10-27_multiplayer_interaction_release_blocker.md): no Expansion 20 build of any kind, private drafts included, until MP-INTERACT-01 is integrated and validated; COMPLETION PRIORITY (owner 2026-10-27, docs/directives/2026-10-27_complete_expansion20_first.md, X20-COMPLETE): finish Expansion 20 before any Expansion 21 implementation; Build 23 stays a private checkpoint
 
-Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, release 425699977, 2026-10-27); MP-INTERACT-01 integrated last and validated before the build (X20-FINAL))**
+Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, release 425699977, 2026-10-27); MP-INTERACT-01 integrated last and validated before the build (X20-FINAL); Build 24 private draft (code 4611d86, run 40636966840, release 426357144, 2026-10-28): Expansion 20 checkpoint, then development paused (X20-CHECKPOINT))**
 
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 88 |
-| Integrated | 76 of 88 (86%) |
-| Automated tests passed | 76 of 88 (86%) |
-| Integration verified | 43 of 88 (49%) |
+| Integrated | 77 of 88 (88%) |
+| Automated tests passed | 77 of 88 (88%) |
+| Integration verified | 44 of 88 (50%) |
 | Gameplay verified | 0 of 88 (0%) |
 | Owner playtested | 0 of 88 (0%) |
 | Complete | 2 of 88 (2%) |
 | Open (release blockers) | 86 |
 | Open owner decisions (blocking) | 1 (0) |
 
-## In development (worker assigned) (2)
-
-| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
-|---|---|---|---|---|---|---|---|---|
-| X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Release run 40636966840 (sim-gate then three exports; never restart it, SIM-02): verify checksums, signing certificate, versionCode 24, desktop packages; record the draft; then PAUSE Medieval development. | design: UNKNOWN | UNKNOWN |
-| X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-
-## Integrated, awaiting gameplay or owner verification (74)
+## Integrated, awaiting gameplay or owner verification (75)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -100,6 +93,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X19-FOUND | Expansion 19 foundations round: personality, relationship history and family reputation (judgment off) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | children complete; umbrella closes with them |  | verification only |
 | X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c; Expansion 20 wip/expansion20 4f50ffb | TARGETED TESTS PASSED | live as the owner approved (packet D); the false_accusation catalog event is never published (batch R1) |  | verification only |
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | live: stories passed at coming of age and at home, observers judge by their own knowledge |  | verification only |
+| X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | OWNER APPROVED | INTEGRATED | Build 24 private draft 426357144 (wip/expansion20 4611d86) | INTEGRATION VERIFIED | PAUSED (owner 2026-10-28). Owner device checks of Build 24 when convenient; resume Expansion 20 only on the owner's instruction (handoff docs/handoffs/X20_RECOVERY_HANDOFF.md). |  | verification only |
 | X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 c79b12c | INTEGRATION VERIFIED | Owner device checks of Build 23 (phone install over Build 22, Windows, controller, two-device multiplayer, all nine host/guest pairs); owner decisions MP-INTERACT-Q1/Q2 and REG-X20-D1..D4. |  | verification only |
 | X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 5c303be | INTEGRATION VERIFIED |  |  | verification only |
 | X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 e8cc44b | INTEGRATION VERIFIED |  |  | verification only |
@@ -110,7 +104,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (9)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (10)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -122,6 +116,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) | SJD-G | XS |
+| X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | NOT STARTED | lead / wip/expansion20 | NOT TESTED | PAUSED after Build 24 (owner 2026-10-28). Resume only on the owner's instruction: LE-03 first (docs/handoffs/X20_RECOVERY_HANDOFF.md section 3). | design: UNKNOWN | UNKNOWN |
 | X20-SETTLE-FOOD | Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game | OWNER APPROVED | NOT STARTED | none | NOT TESTED | LE-05 (paused 2026-10-28). | design: UNKNOWN | UNKNOWN |
 
 ## Complete (2)

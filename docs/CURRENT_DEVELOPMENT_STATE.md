@@ -1,6 +1,6 @@
 # Current development state — active handoff
 
-**Updated 2026-10-27 (Build 23 released as a private draft).** Fetch current heads before acting. The previous handoff is preserved at `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_pre_2026-10-27_authority_cleanup.md` as an archived audit snapshot, **not active tasks**.
+**Updated 2026-10-28 (Build 24 checkpoint released; Medieval development paused).** Fetch current heads before acting. The previous handoff is preserved at `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_pre_2026-10-27_authority_cleanup.md` as an archived audit snapshot, **not active tasks**.
 
 ## Current baseline and mandatory release gate
 
@@ -30,10 +30,11 @@ Workers from 87b69ab (2026-10-27): M on `wip/x20-fixes` (SIM-F2, SIM-F3, player/
 
 ## Next actions (current work only)
 
-**Owner 2026-10-28 (`docs/directives/2026-10-28_x20_checkpoint_build_and_pause.md`, X20-CHECKPOINT): produce the Build 24 private
-checkpoint from `wip/expansion20`, write the recovery handoff, then PAUSE all Medieval development (Upwardly is the priority).** No
-Expansion 21, no LE-03, no new workers, never public. Build 24 release run 40636966840 on `wip/expansion20` `4611d86` IN FLIGHT (private draft; never restart it, SIM-02); validation passed (multiplayer gate, targeted suites, Actions long-sims 40634549680 identical to the baseline), then the
-recovery handoff `docs/handoffs/X20_RECOVERY_HANDOFF.md` (written 2026-10-28: all remaining Expansion 20 work, branches, gates). X20-COMPLETE is suspended after the checkpoint. TILL-D1 done (X20-TILL-KEEP); LE-02 merged (`e8cc44b`).
+**MEDIEVAL DEVELOPMENT IS PAUSED (owner 2026-10-28, `docs/directives/2026-10-28_x20_checkpoint_build_and_pause.md`).** Build 24, the
+Expansion 20 checkpoint, is a private draft (release 426357144, tag `build-24`, `wip/expansion20` `4611d86`, run 40636966840), verified
+(checksums, permanent signing certificate, versionCode 24, Windows and Linux packages). No work is in flight: no workers, no runs.
+Do nothing on Medieval until the owner resumes it. To resume: `docs/handoffs/X20_RECOVERY_HANDOFF.md` (remaining Expansion 20 work,
+LE-03 first; branches, gates, decisions). Owner device checks of Builds 23 and 24 are outstanding and never block a resume.
 
 ## Sources
 

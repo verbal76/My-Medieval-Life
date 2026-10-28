@@ -9,7 +9,7 @@ not abandoned and not complete. Resume only on the owner's explicit instruction.
 
 | What | Branch | Commit |
 |---|---|---|
-| Expansion 20 integration (all groundwork below) | `wip/expansion20` | Build 24's commit (see the register's X20-CHECKPOINT and the Build 24 release) |
+| Expansion 20 integration (all groundwork below) = Build 24 | `wip/expansion20` | `4611d86` (Build 24: private draft 426357144, tag `build-24`, run 40636966840) |
 | Register, directives, handoff | `staging/my-medieval-life` | latest |
 | Build 23 (previous checkpoint, MP-INTERACT-01) | `wip/x20-final` | `c79b12c` |
 | Build 22 (frozen) | `wip/build22` | `b7e1c91` |

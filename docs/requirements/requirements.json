@@ -36,7 +36,7 @@
    "name": "Living Economy",
    "implementation_authorized": true,
    "integration_branch": "wip/expansion20",
-   "released": "Build 23 private draft (code c79b12c, run 40526826846, release 425699977, 2026-10-27); MP-INTERACT-01 integrated last and validated before the build (X20-FINAL)",
+   "released": "Build 23 private draft (code c79b12c, run 40526826846, release 425699977, 2026-10-27); MP-INTERACT-01 integrated last and validated before the build (X20-FINAL); Build 24 private draft (code 4611d86, run 40636966840, release 426357144, 2026-10-28): Expansion 20 checkpoint, then development paused (X20-CHECKPOINT)",
    "authority": "owner directive 2026-10-26 (docs/directives/2026-10-26_build22_expansion20_execution_authorization.md, superseding the 2026-10-23 phase 1 limit): substantive Expansion 20 implementation on wip/expansion20; policies for open OD-LE decisions still need the owner. RELEASE BLOCKER (owner 2026-10-27, docs/directives/2026-10-27_multiplayer_interaction_release_blocker.md): no Expansion 20 build of any kind, private drafts included, until MP-INTERACT-01 is integrated and validated; COMPLETION PRIORITY (owner 2026-10-27, docs/directives/2026-10-27_complete_expansion20_first.md, X20-COMPLETE): finish Expansion 20 before any Expansion 21 implementation; Build 23 stays a private checkpoint"
   },
   "21": {
@@ -60213,9 +60213,9 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
-   "release_status": "NOT READY",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "RELEASE CANDIDATE",
    "completion": "OPEN",
    "history": [
     {
@@ -60232,13 +60232,25 @@
      "date": "2026-10-28",
      "change": "tests: None -> on e8cc44b: le02_market 101, till_ownership 54, economy_model 112, contracts 154, mp_interact_ui 112, net_interact 67, net_mp4 148, start 523 steps, wiki passed, sword_visual 37, migration 109 (0 failures); GitHub Actions long-sims 40634549680 seeds 1,2 30 days: day-30 fingerprints identical to the accepted baseline (c24e8660..., 45fd9acb...), leak 0, no item leaks, no script errors; economy switch off; test_commit: None -> e8cc44b; next_action",
      "why": "validated and dispatched: release run 40636966840 on wip/expansion20 4611d86 (private draft, build 24)"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; release_status: NOT READY -> RELEASE CANDIDATE; commits + 4611d86; integrated_in + Build 24 private draft 426357144 (wip/expansion20 4611d86); notes; next_action",
+     "why": "Build 24 released as a private draft and verified; Medieval development paused"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/expansion20",
    "tests": "on e8cc44b: le02_market 101, till_ownership 54, economy_model 112, contracts 154, mp_interact_ui 112, net_interact 67, net_mp4 148, start 523 steps, wiki passed, sword_visual 37, migration 109 (0 failures); GitHub Actions long-sims 40634549680 seeds 1,2 30 days: day-30 fingerprints identical to the accepted baseline (c24e8660..., 45fd9acb...), leak 0, no item leaks, no script errors; economy switch off",
    "test_commit": "e8cc44b",
-   "next_action": "Release run 40636966840 (sim-gate then three exports; never restart it, SIM-02): verify checksums, signing certificate, versionCode 24, desktop packages; record the draft; then PAUSE Medieval development."
+   "next_action": "PAUSED (owner 2026-10-28). Owner device checks of Build 24 when convenient; resume Expansion 20 only on the owner's instruction (handoff docs/handoffs/X20_RECOVERY_HANDOFF.md).",
+   "commits": [
+    "4611d86"
+   ],
+   "integrated_in": [
+    "Build 24 private draft 426357144 (wip/expansion20 4611d86)"
+   ],
+   "notes": "Build 24 (tag build-24, private draft 426357144, run 40636966840: sim-gate passed, then three exports). Verified: SHA256SUMS all OK; APK v2+v3 signed with the permanent certificate 31704b80...76cb80e6 (as Builds 21-23), package com.hotatticgames.mymedievallife.dev, versionCode 24, versionName 0.1.24-test; Windows zip holds MyMedievalLife.exe; Linux binary starts headless (Godot 4.7.2). Tester notes: BUILD_24_TESTER_NOTES.md in docs/release on wip/expansion20. Not device-checked."
   },
   {
    "id": "X20-COMPLETE",
@@ -60261,7 +60273,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "NOT STARTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -60285,11 +60297,17 @@
      "date": "2026-10-28",
      "change": "notes",
      "why": "owner 2026-10-28: suspended after the Build 24 checkpoint (Upwardly priority); the completion requirement still governs a completed Expansion 20 release"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; next_action",
+     "why": "paused after Build 24 (owner 2026-10-28)"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/expansion20",
-   "notes": "SUSPENDED (owner 2026-10-28, docs/directives/2026-10-28_x20_checkpoint_build_and_pause.md): remaining work (LE-03..LE-07, EMP-PERM-01, GP-POLISH, SJD-G/H) paused after the Build 24 private checkpoint; resume only on the owner's instruction."
+   "notes": "SUSPENDED (owner 2026-10-28, docs/directives/2026-10-28_x20_checkpoint_build_and_pause.md): remaining work (LE-03..LE-07, EMP-PERM-01, GP-POLISH, SJD-G/H) paused after the Build 24 private checkpoint; resume only on the owner's instruction.",
+   "next_action": "PAUSED after Build 24 (owner 2026-10-28). Resume only on the owner's instruction: LE-03 first (docs/handoffs/X20_RECOVERY_HANDOFF.md section 3)."
   },
   {
    "id": "X20-FINAL",

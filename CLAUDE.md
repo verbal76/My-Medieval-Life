@@ -24,11 +24,11 @@ are. No file is read automatically because it exists: do these steps, in order, 
    `python3 tools/check_requirements.py` (it must report 0 problems).
 7. **Determine what was completed, what remains unverified and what is authorized next,** from the register's
    statuses and evidence and the state file's next tasks; never from memory of a conversation.
-8. **Resume only currently authorized work.** Use the live requirements register, latest owner directives and active worker branches. Build 23 (Expansion 20, `c79b12c`, 2026-10-27) is the latest private three-platform draft; Build 22 must not be reopened. MP-INTERACT-01 was integrated LAST and validated before Build 23; Expansion 20 development continues on `wip/expansion20`. Never answer owner decisions, compromise save/security rules, or merge to main without authorization. The earlier Build 17–19 sequencing and prototype-only restrictions are historical, not a gate against now-authorized Expansion 20.
+8. **Resume only currently authorized work.** Use the live requirements register, latest owner directives and active worker branches. Build 24 (Expansion 20 checkpoint, `4611d86`, 2026-10-28) is the latest private three-platform draft. **Medieval development is PAUSED** (owner 2026-10-28): do no Medieval work unless the owner resumes it; the resume point is `docs/handoffs/X20_RECOVERY_HANDOFF.md`. Never answer owner decisions, compromise save/security rules, or merge to main without authorization. The earlier Build 17–19 sequencing and prototype-only restrictions are historical, not a gate against now-authorized Expansion 20.
 
 **After a context compaction or in a fresh session** (owner directive 2026-10-20, `docs/directives/2026-10-20_compaction_readiness.md`):
 - Do steps 1-8 before any further decision.
-- Build authority is the live requirements register, generated STATUS/QUEUES views and most recent explicit owner directives. Build 23 is the latest private test build (MP-INTERACT-01 merged last and validated first); Expansion 20 development continues. WDR-022 remains in force. Recovery: `docs/handoffs/CURRENT_SESSION_RECOVERY.md`; checkpoint around 70–75% context.
+- Build authority is the live requirements register, generated STATUS/QUEUES views and most recent explicit owner directives. Build 24 is the latest private test build; Medieval development is PAUSED until the owner resumes it. WDR-022 remains in force. Recovery: `docs/handoffs/CURRENT_SESSION_RECOVERY.md`; checkpoint around 70–75% context.
 - What a conversation summary lacks was not thereby unapproved: the register, the decision log and `docs/directives/` are the record.
 - Do not repeat completed work, and never restart a simulation or test before checking whether it is still running (the state file's workers and processes: GitHub Actions runs, local processes).
 - Compaction is not a reason to stop: continue the next approved task.
@@ -58,7 +58,7 @@ Status (keep current):
 | Engine | Established Godot 4.7 implementation; prototype engine proposals are historical. |
 | Platforms | Android APK first, then PC (Windows, Linux), as the owner directed; touch, gamepad, and keyboard and mouse |
 | Gameplay code | Established living-world simulation, economy, family, Judgment and multiplayer; active requirements and branch evidence control status. |
-| Builds | Build 23 (Expansion 20, `c79b12c`, run 40526826846, 2026-10-27) is the latest private three-platform draft: MP-INTERACT-01 merged last and validated, recovery R1–R5, LE-01 foundation, aspirations and job choice behind switches (off). Not yet device-checked. Build 22 (`b7e1c91`) is frozen. LE-02 and later stages remain in development on `wip/expansion20`. Prior packets are historical. |
+| Builds | Build 24 (Expansion 20 checkpoint, `4611d86`, run 40636966840, 2026-10-28) is the latest private three-platform draft: Build 23's content plus till ownership (TILL-D1), free migration, visible swords, flight-recorder diagnostics and the LE-02 market behind the off switch. Not device-checked. **Medieval development is PAUSED** (owner 2026-10-28; Upwardly is the priority); resume only on the owner's instruction from `docs/handoffs/X20_RECOVERY_HANDOFF.md`. Builds 22 and 23 are frozen. |
 
 ## 2. Repository layout
 
