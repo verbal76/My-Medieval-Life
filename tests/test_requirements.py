@@ -157,12 +157,18 @@ class ValidationTest(unittest.TestCase):
         self.assertTrue(any("not authorized" in e for e in _errs(new)))
 
     def test_open_decision_is_not_silently_answered(self):
-        new = copy.deepcopy(REGISTER)
-        q = next(x for x in new["requirements"] if x["kind"] == "decision" and x["disposition"] == "OPEN")
+        # The live register may hold no OPEN decision (all answered, deferred or provisional): make one in a copy.
+        base = copy.deepcopy(REGISTER)
+        q0 = next((x for x in base["requirements"] if x["kind"] == "decision" and x["disposition"] == "OPEN"), None) or \
+            next(x for x in base["requirements"] if x["kind"] == "decision" and x["disposition"] in ("DEFERRED", "PROVISIONAL"))
+        q0["disposition"] = "OPEN"
+        q0["owner_answer"] = None
+        new = copy.deepcopy(base)
+        q = next(x for x in new["requirements"] if x["id"] == q0["id"])
         q["disposition"] = "APPROVED"
         q["owner_answer"] = q["owner_wording"] = None
         self.assertTrue(any(q["id"] in e and "owner's words" in e for e in _errs(new)))
-        self.assertTrue(any(q["id"] in e for e in cr.compare(REGISTER, new)))
+        self.assertTrue(any(q["id"] in e for e in cr.compare(base, new)))
 
     def test_x19_decay_approved_only_by_the_owner(self):
         # PROVISIONAL until the owner's answer of 2026-10-23 (section A of docs/design/X19_RELEASE_DECISIONS.md)
