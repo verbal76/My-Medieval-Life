@@ -28321,7 +28321,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "LE-02 in development (wip/x20-le02). Open: TILL-D1 (a living household leaving a house with storefront coins).",
+   "next_action": "LE-02 in development (wip/x20-le02). TILL-D1 Option A approved 2026-10-28; implementation of transfer to living household's funds on loss of storefront property still pending, separate from the passed till ownership tests.",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -28371,6 +28371,11 @@
      "date": "2026-10-28",
      "change": "tests: on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks) -> on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); till_ownership_test 50, business_money_test 37, economy_model_test 113, economy_foundation_test 89; test_commit: 4f50ffb -> 5c303be; next_action",
      "why": "till-ownership gap closed: storefront and counter tills are economy actors with one shared owner rule; ended-household till escheat defect fixed (3a6eee8)"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "next_action: LE-02 in development (wip/x20-le02). Open: TILL-D1 (a living household leaving a house with storefront coins). -> LE-02 in development (wip/x20-le02). TILL-D1 Option A approved 2026-10-28; implementation of transfer to living household's funds on loss of storefront property still pending, separate from the passed till ownership tests.",
+     "why": "docs/directives/2026-10-28_till_d1_and_pending_decision_triage.md"
     }
    ],
    "target_build": "20",
@@ -32180,9 +32185,14 @@
      "date": "2026-10-27",
      "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; release_status: NOT READY -> RELEASE CANDIDATE; test_commit: 87b69ab -> c79b12c; integrated_in + Build 23 c79b12c; next_action",
      "why": "shipped in Build 23 (private draft, c79b12c) after combined validation and recorded multiplayer soaks"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "next_action: Owner device checks: all nine host/guest platform pairs (Android phone, Windows PC, real controller, two machines); MP-INTERACT-Q1/Q2 open for the owner. -> Owner device checks still needed (cross-platform host/guest and physical input devices). MP-INTERACT-Q1/Q2 are DEFERRED for the current playtest; preserve existing goods-contract and nearest-person Talk behavior.",
+     "why": "docs/directives/2026-10-28_till_d1_and_pending_decision_triage.md"
     }
    ],
-   "next_action": "Owner device checks: all nine host/guest platform pairs (Android phone, Windows PC, real controller, two machines); MP-INTERACT-Q1/Q2 open for the owner.",
+   "next_action": "Owner device checks still needed (cross-platform host/guest and physical input devices). MP-INTERACT-Q1/Q2 are DEFERRED for the current playtest; preserve existing goods-contract and nearest-person Talk behavior.",
    "notes": "BLOCKS the next Expansion 20 release (private drafts included). Playtest evidence: the Windows player saw Bob (Android) but could not select or interact with him; the reverse was not tried. Treated as a cross-platform deficiency until tests show otherwise. Build 22 is not reopened. Likely cause (read-only look, 2026-10-27, wip/expansion20 b6fdb25): other players are never offered as a target. main._find_target lists villagers, shops, desks, loot, animals and things but no player, so there is no prompt, outline or tap target for one; the MP-D8 players window (GameUI.show_players: gift, partner, answer offers) opens only from main.interact when NO other target is in reach (main.gd interact, the target.is_empty() branch, _beside_player). In a village something else is nearly always in reach, so the other player cannot be chosen. Also to audit: guest_blocked() in interact, touch tap selection, the pad's next-target cycle, and the guest's path through the host.",
    "assigned_worker": "worker K (multiplayer interaction)",
    "branch": "wip/x20-mp-interact",
