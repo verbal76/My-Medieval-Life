@@ -28405,17 +28405,19 @@
     "Ledger-safe multi-actor trades"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "le02_market_test 101/0, economy_model 112, economy_foundation 89, till_ownership 50 (54 after TILL-D1), contracts 154, contract_sign 21, judgment 217, judgment_live 161, relations 80, recorder 214, run_tests 3600, start 523, world 339, multiplayer_c 340; G0 switch off identical to 6ee13c7",
    "playtest": [],
    "branch": "wip/x20-le02",
-   "commits": [],
+   "commits": [
+    "01e6823"
+   ],
    "parent": "EXP-D",
    "depends_on": [],
    "blockers": [],
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "",
+   "next_action": "Paused (owner 2026-10-28). For LE-03: unify the villagers' existing buying routines with the market (reservations not read by npc_orders), food bids and household budgets, negotiated wages/services; all LE-02 parameters provisional until LE-06 economy-on runs.",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -28445,19 +28447,27 @@
      "date": "2026-10-28",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> LE-02 worker; branch:  -> wip/x20-le02",
      "why": "LE-02 worker started on wip/x20-le02 from 5c303be"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests:  -> le02_market_test 101/0, economy_model 112, economy_foundation 89, till_ownership 50 (54 after TILL-D1), contracts 154, contract_sign 21, judgment 217, judgment_live 161, relations 80, recorder 214, run_tests 3600, start 523, world 339, multiplayer_c 340; G0 switch off identical to 6ee13c7; test_commit: None -> e8cc44b; commits + 01e6823; integrated_in + Expansion 20 wip/expansion20 e8cc44b; next_action",
+     "why": "LE-02 worker finished (01e6823); merged into wip/expansion20 e8cc44b; switch off"
     }
    ],
    "target_build": "20",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
-   "integrated_in": [],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 e8cc44b"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "assigned_worker": "LE-02 worker"
+   "assigned_worker": "LE-02 worker",
+   "test_commit": "e8cc44b"
   },
   {
    "id": "LE-03",
@@ -60137,6 +60147,44 @@
    ]
   },
   {
+   "id": "X20-CHECKPOINT",
+   "kind": "approved",
+   "title": "Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development",
+   "description": "Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development",
+   "source": "docs/directives/2026-10-28_x20_checkpoint_build_and_pause.md",
+   "owner_wording": "Produce a NEW PRIVATE PLAYTEST BUILD from the validated integration branch for Android, Windows, and Linux ... This is a development checkpoint, NOT the completed Expansion 20 release. ... Once the private testing builds are available and the handoff is secured, PAUSE ALL FURTHER MEDIEVAL DEVELOPMENT.",
+   "approval": "owner, 2026-10-28",
+   "acceptance": [
+    "TILL-D1 finished; LE-02 01e6823 integrated into wip/expansion20; Living Economy switch off; targeted integration and packaging checks, existing evidence reused",
+    "multiplayer interaction release gate verified before packaging; private draft (never public) Android, Windows, Linux from one commit via release.yml",
+    "active / disabled / unimplemented / awaiting device verification recorded; comprehensive recovery handoff for LE-03..LE-07, polish, deferred decisions, branches, commits, tests, gates; everything pushed",
+    "then pause: no Expansion 21, no LE-03, no new feature work or workers"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-28",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-28_x20_checkpoint_build_and_pause.md"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/expansion20",
+     "why": "lead executing the checkpoint"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/expansion20"
+  },
+  {
    "id": "X20-COMPLETE",
    "kind": "approved",
    "title": "Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness",
@@ -60176,11 +60224,16 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "X20-SCOPE and REG-X20-D1 answered; scope now includes OD-LE-03, -04, -08, -11, -13B, -14 and X20-MIGRATE"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "notes",
+     "why": "owner 2026-10-28: suspended after the Build 24 checkpoint (Upwardly priority); the completion requirement still governs a completed Expansion 20 release"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/expansion20",
-   "notes": "Scope (owner 2026-10-27): LE-02..LE-05 include the FUTURE Living Economy answers brought forward by X20-SCOPE and free migration X20-MIGRATE (REG-X20-D1). Excluded: lending, interest, manor emergency loans. Activation stays gated."
+   "notes": "SUSPENDED (owner 2026-10-28, docs/directives/2026-10-28_x20_checkpoint_build_and_pause.md): remaining work (LE-03..LE-07, EMP-PERM-01, GP-POLISH, SJD-G/H) paused after the Build 24 private checkpoint; resume only on the owner's instruction."
   },
   {
    "id": "X20-FINAL",
@@ -60381,8 +60434,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -60395,10 +60448,23 @@
      "date": "2026-10-28",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/expansion20",
      "why": "lead implementing"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> till_ownership_test 54/0, business_money 37, migration 109, property 123, recorder 214; test_commit: None -> e8cc44b; commits + 00cfa87; integrated_in + Expansion 20 wip/expansion20 e8cc44b",
+     "why": "implemented 00cfa87, merged e8cc44b"
     }
    ],
    "assigned_worker": "lead",
-   "branch": "wip/expansion20"
+   "branch": "wip/expansion20",
+   "tests": "till_ownership_test 54/0, business_money 37, migration 109, property 123, recorder 214",
+   "test_commit": "e8cc44b",
+   "commits": [
+    "00cfa87"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 e8cc44b"
+   ]
   },
   {
    "id": "XAUDIT-01",

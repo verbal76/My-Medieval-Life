@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 168 still open, 63 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 610 (285 of them still open) |
-| **Open entries now** (rules excluded) | | **452** |
+| Entries added since | | 611 (286 of them still open) |
+| **Open entries now** (rules excluded) | | **453** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (63)
@@ -106,7 +106,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (610)
+## Added since the baseline (611)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -351,7 +351,7 @@ None.
 | LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20+ |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
-| LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
@@ -711,12 +711,13 @@ None.
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | decision | APPROVED | 19 |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | decision | APPROVED | 19 |
+| X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-OPEN-ITEMS | Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 20 |
 | X20-SCOPE | Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forward into Expansion 20 (LE-02..LE-05)? | decision | APPROVED | 20 |
-| X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | XAUDIT-01 | Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
 | XEXPL-01 | Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | XEXPL-D1 | Decision explainability: is an optional player-inspection panel wanted in this generation of builds, or only in-world explanation (dialogue, rumours, notices) for now? | decision | APPROVED | unassigned |

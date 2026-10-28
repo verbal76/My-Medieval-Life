@@ -8,25 +8,24 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 86 |
-| Integrated | 74 of 86 (86%) |
-| Automated tests passed | 74 of 86 (86%) |
-| Integration verified | 41 of 86 (48%) |
-| Gameplay verified | 0 of 86 (0%) |
-| Owner playtested | 0 of 86 (0%) |
-| Complete | 2 of 86 (2%) |
-| Open (release blockers) | 84 |
+| Approved requirements in scope | 87 |
+| Integrated | 76 of 87 (87%) |
+| Automated tests passed | 76 of 87 (87%) |
+| Integration verified | 43 of 87 (49%) |
+| Gameplay verified | 0 of 87 (0%) |
+| Owner playtested | 0 of 87 (0%) |
+| Complete | 2 of 87 (2%) |
+| Open (release blockers) | 85 |
 | Open owner decisions (blocking) | 1 (0) |
 
-## In development (worker assigned) (3)
+## In development (worker assigned) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | IN DEVELOPMENT | LE-02 worker / wip/x20-le02 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (72)
+## Integrated, awaiting gameplay or owner verification (74)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -87,6 +86,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | GP-WIKI-LAYOUT | Encyclopedia laid out like a classic wiki page, on parchment | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
 | GP-WIKI-RECIPE-TOOLS | Encyclopedia recipes name every tool the work needs (for example a mallet and a chisel, and which chisels count) | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED | Build 22: implement on wip/b22-ui, lead integrates on wip/build22 |  | verification only |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 b7e3c3b | TARGETED TESTS PASSED | LE-02 in development (wip/x20-le02). TILL-D1 Option A approved 2026-10-28; implementation of transfer to living household's funds on loss of storefront property still pending, separate from the passed till ownership tests. |  | verification only |
+| LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 e8cc44b | INTEGRATION VERIFIED | Paused (owner 2026-10-28). For LE-03: unify the villagers' existing buying routines with the market (reservations not read by npc_orders), food bids and household budgets, negotiated wages/services; all LE-02 parameters provisional until LE-06 economy-on runs. |  | verification only |
 | MP-INTERACT-01 | Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 87b69ab; Build 23 c79b12c | INTEGRATION VERIFIED | Owner device checks still needed (cross-platform host/guest and physical input devices). MP-INTERACT-Q1/Q2 are DEFERRED for the current playtest; preserve existing goods-contract and nearest-person Talk behavior. |  | verification only |
 | MP-PLAYER-FAMILY | Children of player-to-player marriages: biological (male and female) and adoption with both spouses as parents | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED | Build 22: implement on wip/b22-family, lead integrates on wip/build22 |  | verification only |
 | REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 4f50ffb | TARGETED TESTS PASSED | recorder stage D5 (judgment publish, learn, tell, trust, every choice with alternatives and factors) and D4 relations (batch R3) |  | verification only |
@@ -102,6 +102,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | live: stories passed at coming of age and at home, observers judge by their own knowledge |  | verification only |
 | X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 c79b12c | INTEGRATION VERIFIED | Owner device checks of Build 23 (phone install over Build 22, Windows, controller, two-device multiplayer, all nine host/guest pairs); owner decisions MP-INTERACT-Q1/Q2 and REG-X20-D1..D4. |  | verification only |
 | X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 5c303be | INTEGRATION VERIFIED |  |  | verification only |
+| X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 e8cc44b | INTEGRATION VERIFIED |  |  | verification only |
 
 ## Ready to proceed now (approved, specified, nothing open blocks it) (1)
 
