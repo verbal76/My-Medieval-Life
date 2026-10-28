@@ -474,6 +474,8 @@ func household_ended(h: int) -> void:
 	for p in w.plots:
 		if not p.site.is_empty() and not p.site.get("done", false) and str(p.site.get("owner", "")) == ref:
 			w.cancel_site(p, w.granary)
+	if w.business != null:
+		w.business.money.household_ended(ref)     # its storefront tills go to the manor first (ECON-P3; LE-01 till ownership)
 	for r in _all_things():
 		if w.tenant_of(r) == ref:
 			w.set_tenant(r, "")

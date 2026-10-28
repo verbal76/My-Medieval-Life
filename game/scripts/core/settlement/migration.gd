@@ -182,6 +182,8 @@ static func _book(w: World, s: OffMapSettlement, dir: String, reason: String, pe
 	w.stat("migrants_" + dir, float(people))
 	w.stat("migrant_%s_%s" % [dir, reason], float(people))
 	w.regions.log_move({"day": w.day(), "settlement": s.id, "dir": dir, "reason": reason, "people": people, "coins": coins, "goods": _count(goods)})
+	if w.recorder != null:
+		w.recorder.migration(str(s.id), dir, reason, people, coins, _count(goods))     # REC-DIAG
 
 
 static func _count(goods: Dictionary) -> int:

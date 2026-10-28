@@ -75,6 +75,8 @@ func after_trade(seller: Object, total: int) -> void:
 		b.front.till = till_of(b) + total
 		b.front["earned"] = int(b.front.get("earned", 0)) + total
 		w.stat("front_till_in", total)
+		if w.recorder != null:
+			w.recorder.till_flow("front:" + str(b.id), seller, total, till_of(b), "sale")     # REC-DIAG
 		return
 	b = counter_building(seller)                   # a trade counter's sale (B18-DP-01)
 	if b.is_empty() or w.holds(w.acting_ref(), b):
@@ -86,6 +88,8 @@ func after_trade(seller: Object, total: int) -> void:
 	rec["keeper"] = seller.id
 	b["counter"] = rec
 	w.stat("counter_till_in", total)
+	if w.recorder != null:
+		w.recorder.till_flow("counter:" + str(b.id), seller, total, int(rec.till), "sale")     # REC-DIAG
 
 
 ## A move between a household's purse and its storefront till, by the rules above or by the player's choice. Nothing
@@ -114,35 +118,93 @@ func daily() -> void:
 		var ref := w.holder_of(b)
 		if World.is_player_ref(ref) or ref == World.MANOR:
 			continue                               # the player's storefront keeps its shop's till (Business); the manor's is not a household's
-		_settle(b.front, w.party(ref), "front_till")
+		_settle(b.front, w.party(front_owner(b)), "front_till", "front:" + str(b.id))
 	for b in counter_buildings():
-		_settle(b.counter, _payee(b), "counter_till")
+		_settle(b.counter, _payee(b), "counter_till", "counter:" + str(b.id))
+
+
+# ---------------------------------------------------------------- whose till (one rule) -----
+## The one statement of whose money a storefront's till is (ECON-P3), read by daily() to pay it and by the economy
+## model (EconActor.controller, "front:<building id>"): the household (or villager) that holds the house; the holder's
+## own ref when it is a player or the manor (daily() leaves those tills alone); the manor when the holder is gone (its
+## household has ended: escheat). Never "" for a house with a storefront.
+func front_owner(b: Dictionary) -> String:
+	var ref := w.holder_of(b)
+	if World.is_player_ref(ref) or ref == World.MANOR:
+		return ref
+	return ref if w.party(ref) != null else World.MANOR
+
+
+## A trade counter's till (B18-DP-01): the household that holds the building, else the keeper who last served at it while
+## they live, else the manor (escheat). The same rule _payee pays by.
+func counter_owner(b: Dictionary) -> String:
+	var ref := w.holder_of(b)
+	if ref != World.MANOR and not World.is_player_ref(ref) and w.party(ref) != null:
+		return ref
+	var k := int(b.get("counter", {}).get("keeper", -1))
+	var n: NPC = w.npc(k) if k >= 0 else null
+	return World.npc_ref(k) if n != null and n.alive else World.MANOR
+
+
+## The till a sale by `seller` goes into by after_trade ("front:<building id>" or "counter:<building id>"), else ""
+## (a stall's or the seller's own purse). A read: decides nothing, moves nothing.
+func till_ref_for(seller: Object) -> String:
+	if not (seller is NPC):
+		return ""
+	var b := keeping(seller)
+	if not b.is_empty():
+		return "front:" + str(b.id)
+	b = counter_building(seller)
+	if b.is_empty() or w.holds(w.acting_ref(), b):
+		return ""
+	return "counter:" + str(b.id)
+
+
+## Property.household_ended: the storefront tills of the houses an ended household held go to the manor (the rule above:
+## "a household that has ended leaves its till to the manor"), before the houses pass to the manor. Without this the
+## house became the manor's first, daily() then left the till alone (the manor's is not a household's), and whoever was
+## next let or sold the house was paid the dead household's takings.
+func household_ended(ref: String) -> void:
+	for b in fronts():
+		if w.holder_of(b) == ref and till_of(b) > 0:
+			_settle(b.front, null, "front_till", "front:" + str(b.id))
 
 
 ## Necessity first, the owner's pay, then the float, for one till record (`rec` holds `till`, `earned`, `paid`), paid to and
 ## topped up from `who`. Nobody left: the till goes to the manor.
-func _settle(rec: Dictionary, who: Object, key: String) -> void:
+func _settle(rec: Dictionary, who: Object, key: String, ref := "") -> void:
 	var till := int(rec.get("till", 0))
 	if who == null:
 		if till > 0:
 			w.treasury += till                     # nobody of the household is left: to the manor
 			w.stat(key + "_escheat", till)
 			rec.till = 0
+			if w.recorder != null:
+				w.recorder.till_flow(ref, null, -till, 0, "escheat")     # REC-DIAG
 		return
 	var short := maxi(0, w.reserve_of(who) - int(who.coins))
 	var draw := mini(short, till)
 	if draw > 0 and _move(rec, who, draw, true):
 		w.stat(key + "_necessity", draw)
+		_rec(ref, rec, who, -draw, "necessity")
 	till = int(rec.get("till", 0))
 	var surplus := till - reserve_coins()
 	var pay := int(float(surplus) * payout_share()) if surplus > 0 else 0
 	if pay > 0 and _move(rec, who, pay, true):
 		rec["paid"] = int(rec.get("paid", 0)) + pay
 		w.stat(key + "_owner_pay", pay)
+		_rec(ref, rec, who, -pay, "owner_pay")
 	elif till < reserve_coins():
 		var top := mini(reserve_coins() - till, w.spendable(who))
 		if top > 0 and _move(rec, who, top, false):
 			w.stat(key + "_topup", top)
+			_rec(ref, rec, who, top, "topup")
+
+
+## REC-DIAG: a settlement move as the flight recorder's till event (nothing when it is off).
+func _rec(ref: String, rec: Dictionary, who: Object, amount: int, why: String) -> void:
+	if w.recorder != null and ref != "":
+		w.recorder.till_flow(ref, who, amount, int(rec.get("till", 0)), why)
 
 
 ## Coins between a till record and a purse: out of the till (`out`) or into it. Nothing moves unless all of `amount` can.
@@ -205,11 +267,4 @@ func counter_tills() -> int:
 
 ## Who is paid from a counter's till: the household that holds the building, else the keeper who last served at it.
 func _payee(b: Dictionary) -> Object:
-	var ref := w.holder_of(b)
-	if ref != World.MANOR and not World.is_player_ref(ref):
-		var o: Object = w.party(ref)
-		if o != null:
-			return o
-	var k := int(b.counter.get("keeper", -1))
-	var n: NPC = w.npc(k) if k >= 0 else null
-	return n if n != null and n.alive else null
+	return w.party(counter_owner(b))

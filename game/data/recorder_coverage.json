@@ -158,10 +158,11 @@
   },
   {
    "system": "Business, stalls, property, construction",
-   "interaction": "tills, wages, stall sales, leases, rents, sites, deliveries",
-   "where": "business*.gd, stalls.gd, property.gd, construction.gd",
-   "status": "Not instrumented",
-   "stage": "D4"
+   "interaction": "REC-DIAG: every coin move of a storefront, trade-counter, stall or shop session till (sale into it, necessity, owner's pay, top-up, commission, settlement, escheat) as a till event with both sides; ownership and tenancy changes of buildings, stalls, pens, plots and fields (World.set_owner, set_tenant); a built stall abandoned by a holder who is gone; each till's coins and owner once a day (economy_day)",
+   "where": "BusinessMoney.after_trade, _settle; Stalls.after_trade, settle, daily; World.set_owner, set_tenant; WorldRecorder._economy_day",
+   "status": "Partially instrumented",
+   "stage": "REC-DIAG",
+   "note": "Not yet: wages and rents of the player's premises, construction sites and deliveries, the player's own shop till moves (Business.deposit, withdraw, collect); an ownership change in the first game hour of a session (World.setup gives every building its owner then)."
   },
   {
    "system": "Farming, mining, manor work, chapel, feasts, quests",
@@ -177,7 +178,7 @@
    "status": "Partially instrumented",
    "stage": "D3",
    "test": "test_identity_events",
-   "note": "Not recorded: the settlements' daily steps, their trade, tax and journals, migration decisions (why a household moves), couriers (D6)."
+   "note": "REC-DIAG: each move between the village and a settlement as a migration event with its reason, people, coins and goods (Migration._book); a member's death with its cause (hunger, old_age, no_household_left); once a day each settlement's population, households, hungry households, coins, treasury, food and deaths (settlement_day). Not recorded: the settlements' daily steps in detail, their trade, tax and journals, couriers (D6)."
   },
   {
    "system": "Judgment (Expansion 19): facts, beliefs, gossip, ledgers, trust",

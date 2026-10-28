@@ -78,6 +78,18 @@ the unchanged bodies `_ask_court` and `_propose`, called alone with no recorder 
 | The day | `WorldRecorder.hour` (the first hour of each day) | `_day_summaries` |
 | Multiplayer | `NetSession.host`, `c_hello` (joined, refused), `_on_peer_disconnected`, `_lost`, `s_welcome`, `apply_requests`, `send_syncs`, `s_sync`, `s_reply`; `WorldRecorder.hour` | `net_event`, `net_request`, `net_sync`, `net_state_maybe` |
 
+REC-DIAG hooks (owner directive 2026-10-27, X20-COMPLETE s.2A; `docs/directives/2026-10-27_complete_expansion20_first.md`). Each is one
+guarded call made after the change (the values are read, never computed by a call that writes):
+
+| System | Where | Call |
+|---|---|---|
+| Business tills (currency, business money) | `BusinessMoney.after_trade` (storefront and counter sales), `_settle` (necessity, owner's pay, top-up, escheat); `Stalls.after_trade`, `settle` (commission, settlement or escheat) | `till_flow` |
+| Ownership | `World.set_owner`, `set_tenant` (any thing: building, stall, pen, plot, field) | `ownership` |
+| Abandoned businesses | `Stalls.daily` (a built stall whose holder is gone passes to the manor, its stock to the granary) | `business_abandoned` |
+| Migration | `Migration._book` (each move between the village and a settlement) | `migration` |
+| Deaths | `World.kill` (`death_begin`), and a settlement member's death through `OffMapSettlement._died` -> `World.offmap_person` -> `Identity.move(..., why)` (the cause: hunger, old_age, no_household_left) | `_death_context`, `identity_move` |
+| The day | `WorldRecorder._day_summaries` | `_economy_day`, `_settlement_day` |
+
 Switch for a whole process: `MML_RECORD=DIR` (environment) makes `FlightRecorder.enabled()` true and roots every session there, named
 `s<unix>_p<process id>` so several processes (the network harness's host and guests) share one directory. The game never sets it.
 
@@ -252,6 +264,25 @@ All are `event` rows with participants and `state_change` rows; a pass or verb i
   households with members, regional coins and goods, capability levels and their changes, open contracts and reserved coins, open
   debts), `economy_model` (LE-01 when on: events, ordered, knowledge, needs recorded and dirty, offers, reservations, unbacked,
   contract links; outcome failed and a violation alert `economy.unbacked_reservation` if a reservation is unbacked).
+- **REC-DIAG** (2026-10-27):
+  - `till_sale`, `till_necessity`, `till_owner_pay`, `till_topup`, `till_escheat`, `till_commission`, `till_settle` (`system economy`,
+    subsystem `till`, `category transaction`, object the till's ref `front:<id>`, `counter:<id>`, `stall:<id>` or `shop:<id>`): the purse
+    (or `manor`, the treasury) and the till as participants and coin rows (authority `business.till`), the till's controller in the detail
+    (`EconActor.controller`, the rule the morning settlement pays by). The coin audit attributes these moves (they were unattributed holder
+    changes before).
+  - `owner_changed`, `tenant_changed` (`system world`, subsystem `property`, `category property`, object `place:<id>`): `from` and `to`
+    participants, the `owner` or `tenant` row, the thing's type and any storefront or counter till in the detail. Not in the first hour of a
+    session (setup gives every building its owner then).
+  - `business_abandoned` (`category property`, object the till ref): a built stall whose holder is gone passed to the manor; its stock to
+    the granary in the detail (its session was settled just before as till events).
+  - `migration_in`, `migration_out` (`category migration`, actor `settlement:<id>`): reason, people, coins and goods in the detail.
+  - A villager's `death` carries factors (source `death`): the deceased's coins, food carried and hunger; the household's purse, food units
+    and food days; the village's food in the stalls' stock, carried by its food traders, and in the granary. A settlement member's
+    `died` identity event names the cause (`cause=hunger`, `old_age`, `no_household_left`).
+  - `economy_day` (`category summary`, once a day): food (in the stalls, carried by traders, the granary, the pantries), each household's
+    purse, food units, food days and members (option `hh:<n>`), each till's coins (option `till`) and owner (option `till_owner`).
+  - `settlement_day` (once a day): for each settlement (option `settlement:<id>`) population, households, hungry households, coins,
+    treasury, food units, deaths and age deaths so far.
 - **Network** (`system net`, subsystem the role, `category network`): `host_started`, `guest_joined`, `guest_refused`, `guest_left`,
   `joined_host` and `host_lost` (guest), `request` (each request the host applied: kind, path, text; failed when the result says so),
   `prediction_differs` (a guest's own run of a verb gave another result than the host's), `net_state` (once a game hour per
@@ -329,8 +360,10 @@ identical at days 0, 5 and 10 with either set of switches; `recorder_test.gd` 20
 ## 7. Known limits (also in `recorder_coverage.json`)
 
 Since X20-FINAL phase 3 (section 3) contracts, credit, relations' other channels, memory over time, flows by actor, the day's summaries and
-multiplayer are recorded. Still not recorded: business tills, stalls, property, construction and the manor's works as events (their coins are
-detected by the hourly audit, named by holder and amount; the world total balances); courier deliveries (counted in `stats_delta` only);
+multiplayer are recorded; since REC-DIAG the business tills' coin moves, ownership and tenancy changes, abandoned stalls, migrations and the
+day's economy and settlement summaries. Still not recorded: the player's own premises' till moves (deposit, withdraw, collect), rents and
+attendants' wages, construction and the manor's works as events (their coins are detected by the hourly audit, named by holder and amount; the
+world total balances); courier deliveries (counted in `stats_delta` only);
 capability multipliers per unit; the settlements' daily phases beyond the daily totals; ledger decay (applied lazily on read: visible in the
 values every choice records); memory fading per memory (only the forgetting); the player's closeness ticks; moves and the per-tick villager
 and animal network snapshots. Coin changes outside the instrumented sites are detected hourly, not attributed. Item changes outside
@@ -344,7 +377,15 @@ nobody decides, acts, trades or is born again after their death; roles only chil
 move only while open, end once and leave no coins set aside; the snapshots' growing counters never fall and values stay in range; the
 recorded flags against the scenario's (`require_flags`); the coverage matrix's rows exercised (`recorder_coverage.json exercise`,
 `require_rows`); the owner's judgment chain (`chains`: crime facts, believers, those who only heard, later choices about the offender by
-believers); measures for review (re-decisions, choice profiles, flows). `--participants HOST GUEST...` compares network participants'
+believers); measures for review (re-decisions, choice profiles, flows); and REC-DIAG's `abnormal` report (class `Diag`, never a problem,
+WDR-022): findings each with seed, day, actor, evidence and cause chain (the actor's last eight events before it): `starved_with_means`
+(a villager starved while they, their household or the village's sellers held coins or food), `starved_without_means`,
+`violent_or_accidental_death`, `settlement_hunger_death` and `settlement_no_household_left_death` (with that day's settlement summary),
+`treasury_drain` (3 or more consecutive daily falls), `treasury_empty`, `household_purse_at_zero`, `village_food_short` (food days below
+1), `household_hardship` (purse 0 and food days below 1), `till_stuck_at_zero` (a till that held coins stays empty), `till_without_owner`
+(must never appear), `settlement_coins_drain`, `settlement_hunger`, `business_abandoned`, `till_escheated`,
+`business_premises_changed_hands`; and the counts of settlement deaths by cause and migrations by direction and reason. A run of
+`Diag.RUN` (3) days is a review measure, not an approved limit. `--participants HOST GUEST...` compares network participants'
 digests hour by hour (a section differing three or more consecutive hours is a problem). `tools/sim_suite.py` blocks on every problem.
 
 ## 8. Desktop recording and export (SIM-GATE-01 amendment, 2026-10-24)

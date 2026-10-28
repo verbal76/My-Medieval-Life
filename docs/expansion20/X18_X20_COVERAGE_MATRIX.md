@@ -131,7 +131,11 @@ an invalid transition, a flags mismatch or a required system not exercised block
 ## 6. Still open after this branch
 
 - Business tills, stalls, property and construction coin movements are still detected by the hourly audit, not attributed (the audit
-  names holder and amount; the world total balances).
+  names holder and amount; the world total balances). **Closed by REC-DIAG (2026-10-27, `wip/x20-foundation`)** for the storefront,
+  counter, stall and shop-session tills (till events), ownership and tenancy changes, abandoned stalls, migrations with their reason,
+  settlement members' causes of death, a death's context, and the daily economy and settlement summaries; `tools/recorder_archive.py`
+  reports abnormal-run evidence (`abnormal`; `docs/design/FLIGHT_RECORDER.md` s.3 and 7a). Still open: the player's own premises' till
+  moves, rents and wages, construction.
 - Courier deliveries are counted (stats) but not events; capability multipliers per unit are not recorded.
 - Ledger decay is applied lazily when an entry is read, so it is visible in the values each choice reads, not as its own rows.
 - Multiplayer black-box runs need the net harness (owned by the network worker) started with `MML_RECORD`; nothing here runs them.

@@ -227,6 +227,46 @@ def fake_sim(path, leak=0, items=None, alive=100, coins=3000, days=10):
     path.write_text(json.dumps({"samples": [sample(d) for d in range(0, days + 1, 5)], "deaths": [], "reached": days}))
 
 
+class AbnormalEvidence(unittest.TestCase):
+    """REC-DIAG: the archive's abnormal-run findings (recorder_archive.Diag), each with seed, day, actor and evidence; never problems."""
+
+    @staticmethod
+    def row(day, sub, actor):
+        return (day, 0.0, "", "", "", sub, actor, "ok", "")
+
+    def test_runs(self):
+        runs = recorder_archive.Diag.runs([(1, 0), (2, 0), (3, 0), (4, 0), (5, 1), (6, 0), (7, 0), (9, 0), (10, 0), (11, 0)], lambda v: v == 0)
+        self.assertEqual(runs, [(1, 4), (9, 11)])
+
+    def test_findings(self):
+        d = recorder_archive.Diag()
+        fac = {"source": 0, "event": 1, "option": 2, "factor": 3, "value": 4}
+        d.event(1, self.row(4, "death", "p:7"), "cause=starvation; role=adult job=farmer household=3 age=30.0")
+        d.other("factor", fac, ["death", 1, "deceased", "coins", 12])
+        d.other("factor", fac, ["death", 1, "village", "food_for_sale_stalls", 5])
+        d.event(2, self.row(5, "death", "p:8"), "cause=old age; role=elder job= household=3 age=70.0")
+        d.event(3, self.row(6, "died", "p:900"), "from=bourton to=dead; cause=hunger")
+        d.event(4, self.row(6, "business_abandoned", "hh:3"), "holder gone; stock to the granary=4")
+        d.event(5, self.row(6, "migration_out", "settlement:bourton"), "reason=work; people=2; coins=5; goods=0")
+        for day, t in ((1, 100), (2, 90), (3, 80), (4, 70), (5, 70)):
+            d.snapshot({"day": day, "treasury": t, "hh_purse_min": 0, "food_days": 2.0})
+        light = {10: (4, 0.0, "", "", "decision", "eat", "p:7", "empty", "")}
+        r = d.report({"seed": 3}, light)
+        kinds = r["counts"]
+        self.assertEqual(kinds.get("starved_with_means"), 1)
+        self.assertNotIn("violent_or_accidental_death", kinds)          # old age is ordinary
+        self.assertEqual(kinds.get("settlement_hunger_death"), 1)
+        self.assertEqual(kinds.get("treasury_drain"), 1)
+        self.assertEqual(kinds.get("household_purse_at_zero"), 1)
+        self.assertEqual(kinds.get("business_abandoned"), 1)
+        self.assertEqual(r["settlement_deaths"], {"bourton|hunger": 1})
+        self.assertEqual(r["migrations"], {"out|work": 2})
+        f = next(x for x in r["findings"] if x["kind"] == "starved_with_means")
+        self.assertEqual((f["seed"], f["day"], f["actor"]), (3, 4, "p:7"))
+        self.assertEqual(f["evidence"]["means"], {"deceased.coins": 12, "village.food_for_sale_stalls": 5})
+        self.assertEqual(f["chain"][0]["subtype"], "eat")
+
+
 class GateDecisions(unittest.TestCase):
     """The gate's own evaluation on fabricated outputs: a defect blocks, an outcome never does."""
 

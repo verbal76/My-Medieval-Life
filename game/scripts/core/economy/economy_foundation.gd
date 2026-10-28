@@ -88,7 +88,12 @@ func on_trade(buyer: Object, seller: Object, item: String, qty: int, total: int)
 	var s := Contracts.ref_of(seller)
 	var w := actors.w
 	var each := int(total / qty) if qty > 0 else 0
-	events.record_at(w.day(), int(fmod(w.minutes, World.DAY)), "trade", b, s, item, qty, total, "")
+	# the till the proceeds go into (a storefront's or a trade counter's, BusinessMoney.after_trade, which runs after this):
+	# named in the event so the model can follow the coins to the till and its owner (LE-01 till ownership)
+	var till := w.business.money.till_ref_for(seller) if w.business != null else ""
+	events.record_at(w.day(), int(fmod(w.minutes, World.DAY)), "trade", b, s, item, qty, total, ("till:" + till) if till != "" else "")
+	if till != "":
+		needs.mark(actors.controller(till))
 	knowledge.learn(b, s, item, EconKnowledge.SELLS, each, "dealing")
 	knowledge.learn(s, b, item, EconKnowledge.BUYS, each, "dealing")
 	for r in [b, s]:

@@ -235,6 +235,17 @@ func _init() -> void:
 			str(ec.events.ordered()), ec.knowledge.size(), ec.needs.recorded().size(), ec.needs.dirty.size(), ec.offers.records.size(), ec.reservations.records.size(),
 			ec.reservations.unbacked().size(), ec.contract_links.links.size()])
 		print("economy save bytes: %d" % JSON.stringify(ec.to_dict()).length())
+		var tc := 0                       # LE-01 till ownership: every till resolves to a controller and they add up to Business.tills
+		var held := 0
+		var lost: Array = []
+		for t in ec.actors.till_refs():
+			tc += ec.actors.coins(t)
+			if ec.actors.coins(t) > 0:
+				held += 1
+				if ec.actors.controller(t) == "":
+					lost.append(t)
+		print("economy tills: %d refs, %d holding coins, coins %d (Business.tills %d), without a controller %s" % [ec.actors.till_refs().size(),
+			held, tc, w.business.tills(), str(lost)])
 	var rec = w.recorder
 	w.dispose()
 	if rec != null:

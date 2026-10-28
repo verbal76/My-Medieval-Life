@@ -24,7 +24,9 @@ No `SAVE_VERSION` change.
 
 Read-only, uncached view over today's owners: `kind/exists/alive/coins/count/goods/holding/reserved`. Refs: `npc:<id>`,
 `hh:<n>`, `player`, `manor` (treasury and granary), `region:<settlement>/<holder>` (via `Regions.party`), plus read-only
-`chapel`, `stall:<id>`, `shop:<building id>` (tills, coins only). A dead villager exists but is not alive; an ended
+`chapel`, `stall:<id>`, `shop:<building id>`, `front:<building id>` (a household storefront's till, ECON-P3) and
+`counter:<building id>` (a trade counter's till, B18-DP-01) (tills, coins only; their controller is the one rule the morning
+settlement pays by, `BusinessMoney.front_owner` / `counter_owner`; `till_refs()` lists them all; `LE01_IMPLEMENTATION.md` s.6). A dead villager exists but is not alive; an ended
 household is not alive and holds nothing; a household has no purse. **No business identity**: OD-LE-04 and OD-LE-07 are
 open, so no `business:` ref exists. Consumers: reservations, events, later diagnostics.
 

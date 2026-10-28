@@ -324,9 +324,9 @@ func _new_person(sex: int, mother: Array, father: Array) -> int:
 
 
 ## A member dies: the register learns it. Nothing else changes.
-func _died(m: Array) -> void:
+func _died(m: Array, cause := "") -> void:
 	if person_hook.is_valid() and member_id(m) > 0:
-		person_hook.call("death", {"id": member_id(m), "settlement": id})
+		person_hook.call("death", {"id": member_id(m), "settlement": id, "cause": cause})     # REC-DIAG: the cause, for the record only
 
 
 func _age(m: Array) -> float:
@@ -397,7 +397,7 @@ func _old_age(salt: int) -> void:
 			var ag := _age(m)
 			var p := Life.death_chance(ag) if ag >= _mort_from else 0.0
 			if p > 0.0 and (p >= 1.0 or _roll(salt, day * 7 + 1, int(m[M_BORN]) * 64 + i) < p):
-				_died(m)
+				_died(m, "old_age")
 				_remove_member(h, j)
 				flows.age_deaths += 1
 				dead = true
@@ -461,7 +461,7 @@ func _after_loss(h: Dictionary) -> void:
 	if heir < 0:
 		flows.deaths += h.mem.size()                         # no household anywhere to take the children in
 		for m in h.mem:
-			_died(m)
+			_died(m, "no_household_left")
 		h.mem = []
 		gov.coins += int(h.coins)
 		h.coins = 0
@@ -1499,7 +1499,7 @@ func _lose_member(h: Dictionary) -> void:
 		elif not _is_adult(m):
 			pick = j
 	if pick >= 0:
-		_died(h.mem[pick])
+		_died(h.mem[pick], "hunger")
 		_remove_member(h, pick)
 	flows.deaths += 1
 	_after_loss(h)

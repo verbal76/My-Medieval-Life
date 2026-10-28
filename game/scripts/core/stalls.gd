@@ -158,6 +158,8 @@ func after_trade(seller: Object, id: String, qty: int, total: int) -> void:
 		return
 	n.coins -= total
 	s.till = int(s.get("till", 0)) + total
+	if w.recorder != null:
+		w.recorder.till_flow(till_ref(s), n, total, int(s.till), "sale")     # REC-DIAG
 	record_sale(s, World.npc_ref(n.id), id, qty, total)
 
 
@@ -173,6 +175,11 @@ func _payee(ref: String) -> Object:
 			return w.party(World.hh_ref(o.household))
 		return null
 	return w.party(ref)
+
+
+## REC-DIAG: the economy model's ref of this premises' till ("stall:<id>", or "shop:<building id>" for a shop).
+static func till_ref(s: Dictionary) -> String:
+	return ("shop:" if s.has("building") else "stall:") + str(s.get("id", ""))
 
 
 ## Settle the stall's session (Q13): the commission from the till to the treasury, the rest of the till to the seller.
@@ -203,6 +210,9 @@ func settle(s: Dictionary, why := "closed") -> Dictionary:
 	else:
 		w.treasury += net                 # nobody of theirs is left: to the manor, as an ended household's goods
 		w.stat("stall_net_escheat", net)
+	if w.recorder != null:                # REC-DIAG: the commission, then the rest, out of the till
+		w.recorder.till_flow(till_ref(s), null, -c, till - c, "commission")
+		w.recorder.till_flow(till_ref(s), to, -net, 0, "settle" if to != null else "escheat")
 	s.till = 0
 	out.net = net
 	s.erase("session")
@@ -403,6 +413,8 @@ func daily() -> void:
 			moved += int(stock[id])
 		s.stock = {}
 		s.prices = {}
+		if w.recorder != null:
+			w.recorder.business_abandoned(till_ref(s), ref, moved)     # REC-DIAG: before the manor takes it
 		s.owner = World.MANOR
 		s.tenant = World.MANOR            # never a vacancy a new merchant could be let (NPCBrain._install)
 		if moved > 0:
