@@ -1,5 +1,13 @@
 # Expansion 20: consolidated open-items plan
 
+> **Status note, 2026-10-28 (owner decision resolution and register cleanup).** This file is a 2026-10-24 snapshot and is not
+> current. Current status: the register and `docs/requirements/views/`. Since the snapshot: X20-SCOPE brought the FUTURE Living
+> Economy answers into Expansion 20; LE-01 and LE-02, the till ownership work (TILL-D1 approved, X20-TILL-KEEP), free migration
+> (REG-X20-D1), visible swords and REC-DIAG are integrated; Build 24 is a private checkpoint; Expansion 20 is then PAUSED (owner
+> 2026-10-28; `docs/handoffs/X20_RECOVERY_HANDOFF.md`). No Expansion 20 decision is OPEN: MP-INTERACT-Q2 answered (keep the current
+> behaviour); MP-INTERACT-Q1, REG-X20-D2, REG-X20-D4 and REG-CIRC-D1 are deferred findings, not owner actions; REG-X20-D3 approved
+> under REG-BUY-D1 (live path tracked as X20-SETTLE-FOOD); ARMOR-CATALOG-D1 and ID-D3 stay PROVISIONAL as recorded.
+
 **Snapshot of the requirements register** (`docs/requirements/requirements.json`) taken on 2026-10-24, after the owner's Expansion 20
 open-items reconciliation (`docs/directives/2026-10-24_expansion20_open_items_reconciliation.md`, umbrella record `X20-OPEN-ITEMS`).
 **The register is authoritative**; this file is a planning view of it. To refresh a status, read the register or the generated views

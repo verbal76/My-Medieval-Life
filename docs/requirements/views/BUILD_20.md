@@ -8,14 +8,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 87 |
-| Integrated | 76 of 87 (87%) |
-| Automated tests passed | 76 of 87 (87%) |
-| Integration verified | 43 of 87 (49%) |
-| Gameplay verified | 0 of 87 (0%) |
-| Owner playtested | 0 of 87 (0%) |
-| Complete | 2 of 87 (2%) |
-| Open (release blockers) | 85 |
+| Approved requirements in scope | 88 |
+| Integrated | 76 of 88 (86%) |
+| Automated tests passed | 76 of 88 (86%) |
+| Integration verified | 43 of 88 (49%) |
+| Gameplay verified | 0 of 88 (0%) |
+| Owner playtested | 0 of 88 (0%) |
+| Complete | 2 of 88 (2%) |
+| Open (release blockers) | 86 |
 | Open owner decisions (blocking) | 1 (0) |
 
 ## In development (worker assigned) (2)
@@ -110,7 +110,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (8)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (9)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -122,6 +122,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) | SJD-G | XS |
+| X20-SETTLE-FOOD | Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game | OWNER APPROVED | NOT STARTED | none | NOT TESTED | LE-05 (paused 2026-10-28). | design: UNKNOWN | UNKNOWN |
 
 ## Complete (2)
 

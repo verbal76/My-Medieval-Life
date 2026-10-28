@@ -59,13 +59,15 @@ Authority: `docs/directives/2026-10-27_complete_expansion20_first.md` (X20-COMPL
 6. **LE-07** release readiness; a completed Expansion 20 release still needs everything above (X20-COMPLETE).
 REC-DIAG gaps left on purpose: player premises' till moves, rents and attendants' wages, construction not yet recorded as events.
 
-## 4. Owner decisions
+## 4. Owner decisions (reconciled 2026-10-28)
 
-Deferred by the owner (2026-10-28 cleanup): MP-INTERACT-Q1 (player-to-player service contracts), MP-INTERACT-Q2 (Talk priority for
-players), REG-X20-D2 (hunger migration when no food is for sale), REG-X20-D4 (re-evaluate settlement circulation). Provisional:
-ARMOR-CATALOG-D1 (armour numbers, the owner's balance and art review), ID-D3 (identity baseline: needs a same-commit audit before
-promotion). Answered in this period: X20-SCOPE, REG-X20-D1 (free migration), TILL-D1 (household keeps its till), REG-X20-D3 (approved
-under REG-BUY-D1).
+No decision is OPEN. **Answered:** X20-SCOPE, REG-X20-D1 (free migration), TILL-D1 (Option A: a living household keeps its till;
+implemented), MP-INTERACT-Q2 (keep the current selection and Talk behaviour; no new priority rule), REG-X20-D3 (approved under
+REG-BUY-D1; the missing live path is the approved, not-started X20-SETTLE-FOOD, LE-05). **Deferred, not owner actions:**
+MP-INTERACT-Q1 (player service contracts: a separate optional capability, not authorized; goods contracts preserved), REG-X20-D2
+(implementation finding: hunger migration counts only coins, not empty stalls), REG-X20-D4 and REG-CIRC-D1 (settlement coin
+circulation: documented finding, no new policy). **Provisional:** ARMOR-CATALOG-D1 (implemented categories, items and assets stand;
+only unapproved numbers and materials provisional), ID-D3 (conditional approval: promote a baseline only after a same-commit audit).
 
 ## 5. Working notes for whoever resumes
 

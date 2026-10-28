@@ -7,11 +7,11 @@ The decision register is the `decision` records of the register. A recommendatio
 | Disposition | Count |
 |---|---|
 | OPEN | 0 |
-| APPROVED | 236 |
+| APPROVED | 237 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
 | REOPENED | 0 |
-| DEFERRED | 5 |
+| DEFERRED | 4 |
 
 ## Build 20: Living Economy: open, reopened or provisional (1)
 

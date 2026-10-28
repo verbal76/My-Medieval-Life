@@ -1,5 +1,10 @@
 # Living Economy: the owner's decisions (OD-LE-02 to OD-LE-15)
 
+> **Resolution note, 2026-10-28.** Every OD-LE decision in this packet is APPROVED in the register. X20-SCOPE (owner 2026-10-27)
+> brought the FUTURE-classed answers (OD-LE-03, -04, -08, -11, -13B, -14) into Expansion 20; lending, interest and manor emergency
+> loans stay excluded. LE-02 implemented OD-LE-02, -02B, -03 (per-unit contracts), -10 and -13 behind the economy switch (off).
+> TILL-D1 (a living household keeps its storefront till) was approved on 2026-10-27/28 and is implemented. Nothing here awaits the owner.
+
 HISTORICAL DECISION PACKET (prepared 2026-10-26): the 39-answer reconciliation was committed on 2026-10-27. All the previously presented OD-LE questions in this table have owner answers in the authoritative `docs/requirements/requirements.json` (the source of the generated `docs/requirements/views/DECISIONS.md`). **Do not ask the owner to answer them again.** The choices and recommendations below are retained as the original packet, not current decision status. Approved policy is not evidence that all gameplay implementations are complete.
 
 Prepared 2026-10-26 for the owner, from the register's then-open decisions and the Build 18 audit's analysis

@@ -869,8 +869,14 @@
      "date": "2026-10-27",
      "change": "owner_answer",
      "why": "owner answered (D16, answer B, CONDITIONAL) in docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md; conditional, stays open until its evidence exists"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "notes",
+     "why": "owner ruling 2026-10-28: implemented armour decisions and assets preserved; only unapproved numbers and materials stay provisional"
     }
-   ]
+   ],
+   "notes": "Owner 2026-10-28 (owner message 2026-10-28 (decision resolution and register cleanup)): Build 22's four categories, items and visuals and the implemented assets stand (D16); only the genuinely unapproved numerical values (armour, buffs including the fireball buff) and material choices remain PROVISIONAL for the owner's balance and art review."
   },
   {
    "id": "ARMOR-MATERIALS-01",
@@ -27381,8 +27387,14 @@
      "date": "2026-10-27",
      "change": "disposition: OPEN -> PROVISIONAL; owner_answer",
      "why": "owner answered (D38, answer A (conditional), CONDITIONAL) in docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md; conditional, stays open until its evidence exists"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "notes",
+     "why": "owner ruling 2026-10-28: conditional approval and validation requirement preserved"
     }
-   ]
+   ],
+   "notes": "Owner 2026-10-28 (owner message 2026-10-28 (decision resolution and register cleanup)): D38's conditional approval stands; a baseline is promoted only after a same-commit, current-branch conservation, determinism and first-divergence audit; the identity design is not reopened."
   },
   {
    "id": "INFO-01",
@@ -32253,9 +32265,14 @@
      "date": "2026-10-28",
      "change": "disposition: OPEN -> DEFERRED; decision reconciliation",
      "why": "docs/directives/2026-10-28_till_d1_and_pending_decision_triage.md"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "notes",
+     "why": "owner ruling 2026-10-28 recorded; the question itself (player service contracts) stays deferred"
     }
    ],
-   "notes": "Recommendation: goods only for this build (what the existing contract system supports); service contracts between players as a later item, since it needs a way to record and verify a player's work.\n2026-10-28: This optional extension remains genuinely unanswered; maintain already implemented goods contracts. Player-to-player service/work contracts deferred until Medieval development resumes. Do not ask during this build."
+   "notes": "Owner 2026-10-28 (owner message 2026-10-28 (decision resolution and register cleanup)): the implemented player-to-player goods contracts are preserved; service contracts between players are a separate optional capability, not authorized; no development without the owner's authorization. Not an open owner action."
   },
   {
    "id": "MP-INTERACT-Q2",
@@ -32264,8 +32281,8 @@
    "description": "Talk targeting: Talk takes the nearest person, so a closer villager comes before another player (a tap, a click or Next always reaches the player). Should players come first for Talk instead?",
    "source": "MP-INTERACT-01 worker report (wip/x20-mp-interact 0ce4c9e)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "DEFERRED",
+   "owner_answer": "Owner 2026-10-28 (owner message 2026-10-28 (decision resolution and register cleanup)): player targeting and interaction are implemented and tested; preserve the current selection and Talk behaviour (Talk takes the nearest person; a tap, click or Next reaches the player); do not invent a new priority rule.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -32288,6 +32305,11 @@
      "date": "2026-10-28",
      "change": "disposition: OPEN -> DEFERRED; decision reconciliation",
      "why": "docs/directives/2026-10-28_till_d1_and_pending_decision_triage.md"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "disposition: DEFERRED -> APPROVED; owner_answer",
+     "why": "owner ruling 2026-10-28: keep the implemented, tested selection and Talk behaviour; no new priority rule"
     }
    ],
    "notes": "Recommendation: players first for Talk when one is in reach (in a shared game a player beside you is nearly always who you mean); villagers stay reachable with Next, tap or click.\n2026-10-28: No new player-first Talk priority authorized; keep tested nearest-person/Next/tap targeting for the current playtest. Owner may revisit after device testing."
@@ -45191,8 +45213,14 @@
      "date": "2026-10-23",
      "change": "target_build: 18 -> 20+",
      "why": "owner deferred: document the concern (Netherton, household cash decline); no settlement redesign in Build 18 (docs/directives/2026-10-23_chapel_alms_build18_decisions.md)"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "notes",
+     "why": "owner ruling 2026-10-28 (with REG-X20-D4): finding only"
     }
-   ]
+   ],
+   "notes": "See REG-X20-D4 (owner 2026-10-28): documented finding; no new circulation policy approved."
   },
   {
    "id": "REG-COURIER-01",
@@ -45607,9 +45635,14 @@
      "date": "2026-10-28",
      "change": "disposition: OPEN -> DEFERRED; decision reconciliation",
      "why": "docs/directives/2026-10-28_till_d1_and_pending_decision_triage.md"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "notes",
+     "why": "owner ruling 2026-10-28: an implementation finding, not an approved policy"
     }
    ],
-   "notes": "Recommendation: yes (it is the rule's evident intent); measure before release of the change.\n2026-10-28: Preserve evidence of money-holding hungry households where no food is for sale. Policy/engineering change is not yet explicitly approved. Defer until Medieval resumes; no release delay."
+   "notes": "Owner 2026-10-28 (owner message 2026-10-28 (decision resolution and register cleanup)): preserve as an implementation finding (Garton starved holding coins with empty stalls; the hunger-migration test counts only coins). The lead's recommendation is NOT an approved policy; no change without the owner. Not an open owner action."
   },
   {
    "id": "REG-X20-D3",
@@ -45642,9 +45675,14 @@
      "date": "2026-10-28",
      "change": "disposition: OPEN -> APPROVED; owner_answer; completion CLOSED; decision reconciliation",
      "why": "docs/directives/2026-10-28_till_d1_and_pending_decision_triage.md"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "notes",
+     "why": "owner ruling 2026-10-28: approval verified under REG-BUY-D1; the missing live path tracked as X20-SETTLE-FOOD"
     }
    ],
-   "notes": "Missing capability, not a defect. Recommendation: schedule as engineering under the existing approval, measured.\n2026-10-28: Reconciled with existing REG-BUY-D1 authorization; do not start new coding solely because the question is closed.",
+   "notes": "Approval: REG-BUY-D1 (owner 2026-10-23), verified 2026-10-28; not to be asked again. Missing live integration tracked separately as X20-SETTLE-FOOD (LE-05).",
    "completion": "CLOSED"
   },
   {
@@ -45678,9 +45716,14 @@
      "date": "2026-10-28",
      "change": "disposition: OPEN -> DEFERRED; decision reconciliation",
      "why": "docs/directives/2026-10-28_till_d1_and_pending_decision_triage.md"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "notes",
+     "why": "owner ruling 2026-10-28: a documented finding; no new economic policy"
     }
    ],
-   "notes": "The owner's standing rule forbids artificial circulation merely to prevent decline; this asks only whether the evaluation REG-CIRC-D1 deferred should now happen.\n2026-10-28: Preserve the documented imbalance and REG-CIRC-D1 deferral. No automatic coin circulation or economic redesign authorized; revisit only when Medieval work resumes."
+   "notes": "Owner 2026-10-28 (owner message 2026-10-28 (decision resolution and register cleanup)): the settlement coin-circulation imbalance stays a documented finding; no new economic policy is approved. Not an open owner action."
   },
   {
    "id": "REL-14-16",
@@ -52364,10 +52407,15 @@
      "date": "2026-10-28",
      "change": "owner_answer; notes",
      "why": "owner answered 2026-10-28"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "notes",
+     "why": "owner confirmed 2026-10-28 (decision resolution message): Option A approved, scope restated"
     }
    ],
    "completion": "CLOSED",
-   "notes": "Option (a). DCR-01: compatible extension of ECON-P3, B18-DP-01/INT-392 and D03; implemented as X20-TILL-KEEP."
+   "notes": "Option (a). Owner confirmation 2026-10-28 (owner message 2026-10-28 (decision resolution and register cleanup)): when a living household gives up, loses, sells or vacates a property with its storefront (voluntary surrender of a lease, eviction for unpaid rent, sale or transfer, migration, other cessation), the till money stays the household's and transfers to it, never to the manor or the next occupant, who receives an empty till; deceased households, estates, inheritance and the player's businesses keep their existing rules; transfers conserved, recorded, save compatible. DCR-01: compatible extension of ECON-P3, B18-DP-01/INT-392 and D03. Implemented as X20-TILL-KEEP (00cfa87; merged e8cc44b; in the Build 24 release run): World.set_owner/set_tenant hand the till to the leaving holder (covers Property._release eviction, lease surrender, sale, letting); Migration takes it along; ended households keep the escheat."
   },
   {
    "id": "TIME-01",
@@ -60424,6 +60472,40 @@
     }
    ],
    "notes": "DCR-01: compatible extension (scheduling change only; each answer's content preserved). Lead's scope reading: the Expansion 22/23-tagged FUTURE answers (E22-OD-03 knowledge, E22-OD-04 physical caravans, E22-OD-05 regional population, E23-OD-01 bandit factions) are not Living Economy decisions and stay in their expansions; LE-05 keeps the six-day inter-settlement abstraction (E22-OD-04)."
+  },
+  {
+   "id": "X20-SETTLE-FOOD",
+   "kind": "approved",
+   "title": "Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game",
+   "description": "Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game",
+   "source": "docs/requirements/requirements.json REG-BUY-D1 (owner 2026-10-23); REG-X20-D3",
+   "owner_wording": "Settlements may sell food to other settlements, respecting real household needs, reserves (REG-BUY-D1)",
+   "approval": "owner, 2026-10-23 (REG-BUY-D1)",
+   "acceptance": [
+    "a settlement's surplus food can be bought by another settlement through the existing regional trade path, respecting household needs and reserves; conserved and recorded; no artificial rescue"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-28",
+     "change": "entered in the register",
+     "why": "docs/requirements/requirements.json REG-BUY-D1 (owner 2026-10-23); REG-X20-D3"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "next_action",
+     "why": "registered as the missing implementation of an approved policy; scheduled with LE-05; paused with Expansion 20"
+    }
+   ],
+   "next_action": "LE-05 (paused 2026-10-28)."
   },
   {
    "id": "X20-TILL-KEEP",
