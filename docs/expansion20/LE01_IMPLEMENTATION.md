@@ -152,13 +152,13 @@ and load (round trip; an older save without `front.till` and without a `counter`
 to the player, the `shop:` ref goes, the storefront stays with an empty till); the switch off (the live escheat does not need the model).
 Front and counter records are never removed by any code path, so "closure" of a villager storefront does not exist today.
 
-**Left for the owner (not built).** A living household that loses a house with coins in its storefront till (a lease taken back for
-arrears, `Property._release`; the lease given up) leaves the till in the house: the manor holds it (controller `manor`), `daily()` does not
-settle a manor-held storefront, and the next holder is paid it. No approved text says whose those coins are: the player's analogue
-(B18-DP-01, INT-392: a shop closes with the lease and its till returns to the player) and OD-LE-04/D03 ("ownership recorded separately from
-household money and estate inheritance") point to the leaving household, but that is a live behaviour change, so it is reported, not
-decided here. An explicit per-till owner record (D03, authorized 2026-10-27) was not added: the holder rule above already gives every till
-one traceable owner, and recording one separately would only change outcomes in exactly this unsettled case.
+**TILL-D1 (owner, 2026-10-28): "The household keeps its money. When it moves or gives up the property, its till balance is
+transferred to its own funds. The next occupant receives an empty till."** `World.set_owner` and `World.set_tenant` now call
+`World._handed_over`: when a house's holder changes, `BusinessMoney.keep_till` moves the whole storefront till to the household (or
+villager) that held it, while one of them lives (`World.party`; stat `front_till_kept`, recorder `till_kept`); a player's or the manor's
+storefront is unchanged, and a household with nobody left keeps the escheat. A whole household leaving the village takes its tills with it
+(`Migration._household_out` calls `keep_tills_of` before packing, so the coins cross with its purses). Tests:
+`till_ownership_test.gd::test_transfer` (let, lease ended, sale) and `test_till_d1_migration`.
 
 **Verification (2026-10-28, code at `700d985`, with REC-DIAG).** G0 (`tools/sim_gate.py`, seeds 1 and 2, 30 days): PASS, identical to the
 baseline. Suites: till_ownership_test 50/0, business_money_test 37/0, economy_model_test 113/0, economy_foundation_test 89/0,

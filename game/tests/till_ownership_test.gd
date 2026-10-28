@@ -187,6 +187,7 @@ func test_transfer() -> void:
 	var t0 := thead.coins
 	w.set_tenant(house, "")
 	check(e.coins(ref) == 0 and thead.coins == t0 + 12 and w.total_coins() == all, "TILL-D1: the lease given up or taken back: the tenant household keeps its till")
+	w.set_owner(house, World.hh_ref(n.household))               # the household owns the house outright before it sells it
 	house.front.till = 9
 	all = w.total_coins()
 	var c1 := head.coins
