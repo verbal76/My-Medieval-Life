@@ -651,6 +651,8 @@ func share(a: int, b: int, kind: String) -> void:
 	var sb := WorldRecorder.tie_before(t) if w.recorder != null else []      # REC-19 D4: the shared hour
 	if w.judgment != null:
 		w.judgment.meet_hourly(a, b, hk * 60)      # PROSPECTIVE (PROS-19): time together, word passes on (told over the next ticks)
+	if w.economy != null:
+		w.economy.on_encounter(a, b)               # EXPANSION 20 LE-02: a real encounter (offers seen, a bargain); null while disabled
 	var d: int = w.day()
 	if int(t.get("shared_day", -1)) != d:
 		t.shared_day = d

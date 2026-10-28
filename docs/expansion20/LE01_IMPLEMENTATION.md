@@ -74,6 +74,11 @@ the person. The weights and formulas are owner-held (LE-02+); LE-01 adds none.
 Each is a named constant that does nothing while the economy is off and decides nothing while it is on; all are listed in
 `economy.json` `owner_decisions`.
 
+**LE-02 (2026-10-28):** the owner's answers OD-LE-02B (D01) and OD-LE-10 (D09) are implemented and their placeholders are gone:
+`EconOffers.VISIBILITY` now records "local" offers, `EconKnowledge` accepts `in_person` and `word_of_mouth` and refuses
+`notice` and `rumour` for good (`SOURCES_REFUSED`), and `reliability()` reads source, age and the shared credibility of the
+teller (`LE02_IMPLEMENTATION.md` s.5). The other rows below stand.
+
 | Placeholder | Where | Holds | Decision |
 |---|---|---|---|
 | `EconOffers.VISIBILITY` | every offer's `visibility` | "undecided"; posting tells nobody | OD-LE-02B offer visibility |

@@ -1,6 +1,6 @@
 {
   "format": "mml-economy/1",
-  "note": "Expansion 20 (Living Economy) LE-01: the foundation records and the LE-01 model (needs, offers, knowledge, contract links). enabled is false: with it off the World builds none of these records and writes no save key. With it on the model only observes: nothing in live play reads it to decide.",
+  "note": "Expansion 20 (Living Economy) LE-01 foundation and model (needs, offers, knowledge, contract links) and the LE-02 market (adaptive bids and asks, negotiation, settlement through World.trade, CON-01 procurement and renegotiation). enabled is false: with it off the World builds none of these records and writes no save key. With it on and market.drive true the market acts: villagers post bids from their needs and asks from their stock, bargain when they meet, take bids to sellers they know as CON-01 contracts, and renegotiate contracts on their last day (docs/expansion20/LE02_IMPLEMENTATION.md). Activation is the owner's decision.",
   "enabled": false,
   "reservations": {
     "keep_finished": 200
@@ -16,13 +16,49 @@
     "keep_finished": 200
   },
   "owner_decisions": {
-    "note": "Placeholders that do nothing while the economy is off and decide nothing while it is on (docs/expansion20/LE01_IMPLEMENTATION.md section 3).",
-    "offer_visibility": "OWNER DECISION OD-LE-02B",
-    "knowledge_reliability_and_memory": "OWNER DECISION OD-LE-10",
+    "note": "Placeholders that do nothing while the economy is off and decide nothing while it is on (docs/expansion20/LE01_IMPLEMENTATION.md section 3). LE-02 implemented OD-LE-02B (D01: offers local to encounters, stalls and direct dialogue) and OD-LE-10 (D09: word of mouth through the existing gossip, reliability from source, age and trust): those placeholders are gone.",
+    "knowledge_reliability_and_memory": "DECIDED OD-LE-10 D09 (LE-02): EconKnowledge.reliability, word_of_mouth",
     "business_identity": "OWNER DECISION OD-LE-04 / OD-LE-07",
     "material_substitution": "OWNER DECISION OD-LE-08",
     "contract_death_of_party": "OWNER DECISION OD-LE-13B",
     "player_visibility": "OWNER DECISION OD-LE-14",
     "performance_budget": "OWNER DECISION OD-LE-15 (needs.refresh_budget is an engineering default, not an acceptance target)"
+  },
+  "knowledge": {
+    "_note": "LE-02 (OD-LE-10 D09). PROVISIONAL engineering parameters (agent decision 2026-10-28): half_life_days, the age at which a known price is half as reliable; max_hearsay, the word-of-mouth entries one villager keeps (oldest forgotten first); hearsay_without_judgment, the trust in a heard price when the judgment system is off.",
+    "half_life_days": 7,
+    "max_hearsay": 40,
+    "hearsay_without_judgment": 0.5
+  },
+  "market": {
+    "_note": "LE-02 (OD-LE-02, OD-LE-02B D01, OD-LE-03 D02, OD-LE-13). drive: the market acts (false or absent: the LE-01 model only observes). Every number is a PROVISIONAL agent engineering parameter (docs/DECISIONS.md 2026-10-28, LE-02), none an owner policy: offer lifetimes (bid_days, ask_days) and review_days, max_revisions and revise_share (a bid moves by a share of the gap to its own ceiling, at most that many times: no fixed raise, design s.19), max_rounds (counteroffers in one negotiation), concession and urgency_concession (the share of the gap each side gives in a round, spread by personality), bid_open (the opening bid against the believed price), supply_weight, demand_weight, knowledge_cap and txn_weight (how known sellers, buyers and seen prices move an ask), alternatives_discount, scarce_left and scarcity_floor, housing_urgency, min_reliability (knowledge below it is not acted on), the dawn budgets (posts_per_dawn, ask_sellers_per_dawn, ask_items_per_seller, dialogues_per_dawn), contract_days and max_extend_days, word_of_mouth_per_meeting, keep_deals.",
+    "drive": true,
+    "bid_days": 4,
+    "ask_days": 4,
+    "review_days": 1,
+    "max_revisions": 3,
+    "revise_share": 0.34,
+    "max_rounds": 3,
+    "concession": 0.35,
+    "urgency_concession": 0.3,
+    "bid_open": 0.85,
+    "supply_weight": 0.05,
+    "demand_weight": 0.05,
+    "knowledge_cap": 5,
+    "txn_weight": 0.5,
+    "alternatives_discount": 0.1,
+    "scarce_left": 2,
+    "scarcity_floor": 0.1,
+    "housing_urgency": 0.75,
+    "min_reliability": 0.25,
+    "posts_per_dawn": 6,
+    "ask_sellers_per_dawn": 6,
+    "ask_items_per_seller": 3,
+    "dialogues_per_dawn": 4,
+    "contract_days": 3,
+    "renegotiate": true,
+    "max_extend_days": 3,
+    "word_of_mouth_per_meeting": 2,
+    "keep_deals": 200
   }
 }
