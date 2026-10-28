@@ -32205,7 +32205,7 @@
    "source": "MP-INTERACT-01 worker report and audit (wip/x20-mp-interact 0ce4c9e)",
    "owner_wording": null,
    "owner_answer": null,
-   "disposition": "OPEN",
+   "disposition": "DEFERRED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -32228,9 +32228,14 @@
      "date": "2026-10-27",
      "change": "source",
      "why": "source reworded: the audit lives on the multiplayer branch only"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "disposition: OPEN -> DEFERRED; decision reconciliation",
+     "why": "docs/directives/2026-10-28_till_d1_and_pending_decision_triage.md"
     }
    ],
-   "notes": "Recommendation: goods only for this build (what the existing contract system supports); service contracts between players as a later item, since it needs a way to record and verify a player's work."
+   "notes": "Recommendation: goods only for this build (what the existing contract system supports); service contracts between players as a later item, since it needs a way to record and verify a player's work.\n2026-10-28: This optional extension remains genuinely unanswered; maintain already implemented goods contracts. Player-to-player service/work contracts deferred until Medieval development resumes. Do not ask during this build."
   },
   {
    "id": "MP-INTERACT-Q2",
@@ -32240,7 +32245,7 @@
    "source": "MP-INTERACT-01 worker report (wip/x20-mp-interact 0ce4c9e)",
    "owner_wording": null,
    "owner_answer": null,
-   "disposition": "OPEN",
+   "disposition": "DEFERRED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -32258,9 +32263,14 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "agent recommendation recorded (not an approval)"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "disposition: OPEN -> DEFERRED; decision reconciliation",
+     "why": "docs/directives/2026-10-28_till_d1_and_pending_decision_triage.md"
     }
    ],
-   "notes": "Recommendation: players first for Talk when one is in reach (in a shared game a player beside you is nearly always who you mean); villagers stay reachable with Next, tap or click."
+   "notes": "Recommendation: players first for Talk when one is in reach (in a shared game a player beside you is nearly always who you mean); villagers stay reachable with Next, tap or click.\n2026-10-28: No new player-first Talk priority authorized; keep tested nearest-person/Next/tap targeting for the current playtest. Owner may revisit after device testing."
   },
   {
    "id": "MP-MASTER",
@@ -45554,7 +45564,7 @@
    "source": "X20-FINAL settlement investigation 2026-10-27 (wip/x20-final eaf6652; probes in session scratch, no code change)",
    "owner_wording": null,
    "owner_answer": null,
-   "disposition": "OPEN",
+   "disposition": "DEFERRED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -45572,9 +45582,14 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "agent finding recorded; not a release blocker (WDR-022)"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "disposition: OPEN -> DEFERRED; decision reconciliation",
+     "why": "docs/directives/2026-10-28_till_d1_and_pending_decision_triage.md"
     }
    ],
-   "notes": "Recommendation: yes (it is the rule's evident intent); measure before release of the change."
+   "notes": "Recommendation: yes (it is the rule's evident intent); measure before release of the change.\n2026-10-28: Preserve evidence of money-holding hungry households where no food is for sale. Policy/engineering change is not yet explicitly approved. Defer until Medieval resumes; no release delay."
   },
   {
    "id": "REG-X20-D3",
@@ -45583,8 +45598,8 @@
    "description": "Off-map settlements: should settlement-to-settlement food trade get a live path? The owner's REG-BUY-D1 answer allows it, but road trade carries no food and RegionalMarket is not wired into the live game, so one settlement's surplus never reaches a starving neighbour.",
    "source": "X20-FINAL settlement investigation 2026-10-27 (wip/x20-final eaf6652; probes in session scratch, no code change)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Already approved by the owner under REG-BUY-D1 (2026-10-23): settlements may sell food to other settlements, respecting real household needs, reserves, production, pricing, willingness, physical supply and payment. This resolves trade PERMISSION; the live settlement-to-settlement food-trade path is still NOT wired and is tracked as remaining engineering, not as an unanswered policy decision.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -45602,9 +45617,15 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "agent finding recorded; not a release blocker (WDR-022)"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "disposition: OPEN -> APPROVED; owner_answer; completion CLOSED; decision reconciliation",
+     "why": "docs/directives/2026-10-28_till_d1_and_pending_decision_triage.md"
     }
    ],
-   "notes": "Missing capability, not a defect. Recommendation: schedule as engineering under the existing approval, measured."
+   "notes": "Missing capability, not a defect. Recommendation: schedule as engineering under the existing approval, measured.\n2026-10-28: Reconciled with existing REG-BUY-D1 authorization; do not start new coding solely because the question is closed.",
+   "completion": "CLOSED"
   },
   {
    "id": "REG-X20-D4",
@@ -45614,7 +45635,7 @@
    "source": "X20-FINAL settlement investigation 2026-10-27 (wip/x20-final eaf6652; probes in session scratch, no code change)",
    "owner_wording": null,
    "owner_answer": null,
-   "disposition": "OPEN",
+   "disposition": "DEFERRED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -45632,9 +45653,14 @@
      "date": "2026-10-27",
      "change": "notes",
      "why": "agent finding recorded; not a release blocker (WDR-022)"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "disposition: OPEN -> DEFERRED; decision reconciliation",
+     "why": "docs/directives/2026-10-28_till_d1_and_pending_decision_triage.md"
     }
    ],
-   "notes": "The owner's standing rule forbids artificial circulation merely to prevent decline; this asks only whether the evaluation REG-CIRC-D1 deferred should now happen."
+   "notes": "The owner's standing rule forbids artificial circulation merely to prevent decline; this asks only whether the evaluation REG-CIRC-D1 deferred should now happen.\n2026-10-28: Preserve the documented imbalance and REG-CIRC-D1 deferral. No automatic coin circulation or economic redesign authorized; revisit only when Medieval work resumes."
   },
   {
    "id": "REL-14-16",
@@ -52293,9 +52319,9 @@
    "title": "Storefront till of a living household that loses or gives up its house (lease taken back for arrears, lease given up, the household migrating away): whose are the coins? (a) they go with the household that earned them (recommended; matches B18-DP-01/INT-392 for the player's shop and D03 one owner per business); (b) to the manor, as when a household ends; (c) unchanged: they stay in the house and the next holder is paid them",
    "description": "Storefront till of a living household that loses or gives up its house (lease taken back for arrears, lease given up, the household migrating away): whose are the coins? (a) they go with the household that earned them (recommended; matches B18-DP-01/INT-392 for the player's shop and D03 one owner per business); (b) to the manor, as when a household ends; (c) unchanged: they stay in the house and the next holder is paid them",
    "source": "docs/directives/2026-10-27_complete_expansion20_first.md",
-   "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_wording": "Yes I agree with option A and also whatever documents you found those open questions for make sure that they are updated to reflect that answers have already been given and they are no longer open",
+   "owner_answer": "Owner, 2026-10-28: Option A. When a living household loses or gives up a storefront property (including eviction, voluntary surrender, and migration), its real till coins remain the household's property and transfer to its own funds before the next occupant takes possession. The next occupant receives an empty till. Preserve conservation; distinguish from an actually ended household's estate/escheat rule.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -52308,8 +52334,15 @@
      "date": "2026-10-28",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-27_complete_expansion20_first.md"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "disposition: OPEN -> APPROVED; owner_answer; completion CLOSED; decision reconciliation",
+     "why": "docs/directives/2026-10-28_till_d1_and_pending_decision_triage.md"
     }
-   ]
+   ],
+   "completion": "CLOSED",
+   "notes": "Implementation is still required and is NOT implied by decision approval."
   },
   {
    "id": "TIME-01",
