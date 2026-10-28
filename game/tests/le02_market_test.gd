@@ -522,6 +522,8 @@ func test_dawn_driver() -> void:
 func scenario(seed: int) -> String:
 	var w := new_world(seed)
 	var m := w.economy.market
+	for n: NPC in adults(w):
+		w.economy.needs.mark(ref(n))
 	w.economy.dawn(w.day())
 	for i in 300:
 		var ad := adults(w)
