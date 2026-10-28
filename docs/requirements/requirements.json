@@ -52330,7 +52330,7 @@
    "description": "Storefront till of a living household that loses or gives up its house (lease taken back for arrears, lease given up, the household migrating away): whose are the coins? (a) they go with the household that earned them (recommended; matches B18-DP-01/INT-392 for the player's shop and D03 one owner per business); (b) to the manor, as when a household ends; (c) unchanged: they stay in the house and the next holder is paid them",
    "source": "docs/directives/2026-10-27_complete_expansion20_first.md",
    "owner_wording": "Yes I agree with option A and also whatever documents you found those open questions for make sure that they are updated to reflect that answers have already been given and they are no longer open",
-   "owner_answer": "Owner, 2026-10-28: Option A. When a living household loses or gives up a storefront property (including eviction, voluntary surrender, and migration), its real till coins remain the household's property and transfer to its own funds before the next occupant takes possession. The next occupant receives an empty till. Preserve conservation; distinguish from an actually ended household's estate/escheat rule.",
+   "owner_answer": "(owner 2026-10-28, verbatim) Till-d1 The household keeps its money. When it moves or gives up the property, its till balance is transferred to its own funds. The next occupant receives an empty till.",
    "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
@@ -52349,10 +52349,15 @@
      "date": "2026-10-28",
      "change": "disposition: OPEN -> APPROVED; owner_answer; completion CLOSED; decision reconciliation",
      "why": "docs/directives/2026-10-28_till_d1_and_pending_decision_triage.md"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "owner_answer; notes",
+     "why": "owner answered 2026-10-28"
     }
    ],
    "completion": "CLOSED",
-   "notes": "Implementation is still required and is NOT implied by decision approval."
+   "notes": "Option (a). DCR-01: compatible extension of ECON-P3, B18-DP-01/INT-392 and D03; implemented as X20-TILL-KEEP."
   },
   {
    "id": "TIME-01",
@@ -60358,6 +60363,42 @@
     }
    ],
    "notes": "DCR-01: compatible extension (scheduling change only; each answer's content preserved). Lead's scope reading: the Expansion 22/23-tagged FUTURE answers (E22-OD-03 knowledge, E22-OD-04 physical caravans, E22-OD-05 regional population, E23-OD-01 bandit factions) are not Living Economy decisions and stay in their expansions; LE-05 keeps the six-day inter-settlement abstraction (E22-OD-04)."
+  },
+  {
+   "id": "X20-TILL-KEEP",
+   "kind": "approved",
+   "title": "A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1)",
+   "description": "A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1)",
+   "source": "owner message 2026-10-28 (TILL-D1 answer, recorded in the register)",
+   "owner_wording": "The household keeps its money. When it moves or gives up the property, its till balance is transferred to its own funds. The next occupant receives an empty till.",
+   "approval": "owner, 2026-10-28",
+   "acceptance": [
+    "lease taken back, lease given up, sale and migration away: the leaving household's storefront till coins go to its own funds (a living member's purse), conserved and recorded; the next holder starts with an empty till",
+    "an ended household (nobody left) keeps the existing rule (to the manor); old saves load; focused regression tests"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-28",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-28 (TILL-D1 answer, recorded in the register)"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/expansion20",
+     "why": "lead implementing"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/expansion20"
   },
   {
    "id": "XAUDIT-01",

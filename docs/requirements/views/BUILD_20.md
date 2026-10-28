@@ -8,22 +8,23 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 85 |
-| Integrated | 74 of 85 (87%) |
-| Automated tests passed | 74 of 85 (87%) |
-| Integration verified | 41 of 85 (48%) |
-| Gameplay verified | 0 of 85 (0%) |
-| Owner playtested | 0 of 85 (0%) |
-| Complete | 2 of 85 (2%) |
-| Open (release blockers) | 83 |
+| Approved requirements in scope | 86 |
+| Integrated | 74 of 86 (86%) |
+| Automated tests passed | 74 of 86 (86%) |
+| Integration verified | 41 of 86 (48%) |
+| Gameplay verified | 0 of 86 (0%) |
+| Owner playtested | 0 of 86 (0%) |
+| Complete | 2 of 86 (2%) |
+| Open (release blockers) | 84 |
 | Open owner decisions (blocking) | 1 (0) |
 
-## In development (worker assigned) (2)
+## In development (worker assigned) (3)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | IN DEVELOPMENT | LE-02 worker / wip/x20-le02 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (72)
 
