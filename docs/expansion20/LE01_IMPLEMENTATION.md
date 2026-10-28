@@ -159,3 +159,9 @@ settle a manor-held storefront, and the next holder is paid it. No approved text
 household money and estate inheritance") point to the leaving household, but that is a live behaviour change, so it is reported, not
 decided here. An explicit per-till owner record (D03, authorized 2026-10-27) was not added: the holder rule above already gives every till
 one traceable owner, and recording one separately would only change outcomes in exactly this unsettled case.
+
+**Verification (2026-10-28, code at `700d985`, with REC-DIAG).** G0 (`tools/sim_gate.py`, seeds 1 and 2, 30 days): PASS, identical to the
+baseline. Suites: till_ownership_test 50/0, business_money_test 37/0, economy_model_test 113/0, economy_foundation_test 89/0,
+property_test 123/0, business_test 160/0, run_tests 3600/0, start_test 523 steps/0, world_test 339/0, multiplayer_c_test 340/0,
+recorder_test 214/0, Python tests/test_sim_gate.py 36 OK. Recorded 30-day runs (seeds 1 and 2) end on the baseline's day-30 fingerprints
+(the recorder changes nothing); their archives verify with no problem.
