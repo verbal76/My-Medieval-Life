@@ -90,7 +90,7 @@ func test_disabled() -> void:
 	var od: Dictionary = j.get("owner_decisions", {})
 	var want := ["OD-LE-02B", "OD-LE-10", "OD-LE-04", "OD-LE-07", "OD-LE-08", "OD-LE-13B", "OD-LE-14", "OD-LE-15"]
 	var all := JSON.stringify(od)
-	check(want.all(func(x): return all.contains(x)), "economy.json lists every OWNER DECISION placeholder")
+	check(want.all(func(x): return all.contains(x)), "economy.json lists every OWNER DECISION placeholder (and the two LE-02 settled)")
 	check(EconOffers.VISIBILITY.contains("OD-LE-02B") and EconKnowledge.MEMORY.contains("OD-LE-10") and EconActor.BUSINESS_IDENTITY.contains("OD-LE-04")
 		and EconNeeds.SUBSTITUTION.contains("OD-LE-08") and EconContractLinks.DEATH_OF_PARTY.contains("OD-LE-13B"), "placeholders are named in code with their decision ids")
 
@@ -241,7 +241,7 @@ func test_offers() -> void:
 	check(y.ok and rs.available(br, "coins") == 40 - 20 and rs.get_record(of.get_offer(y.id).reservation).item == "coins", "a bid reserves its coins")
 	check(snap(w) == s0, "posting moves no coin and no good")
 	var o: Dictionary = of.get_offer(x.id)
-	check(o.visibility == EconOffers.VISIBILITY and o.state == "open" and o.location == w.economy.actors.location(ar), "offer record: visibility placeholder, open, located")
+	check(o.visibility == EconOffers.VISIBILITY and o.state == "open" and o.location == w.economy.actors.location(ar), "offer record: visibility (OD-LE-02B D01, local), open, located")
 	check(of.open_for("wheat").size() == 2 and of.open_for("wheat", "bid").size() == 1 and of.open_of(ar).size() == 1, "indexes by item, side and actor")
 	check(w.economy.knowledge.knows(ar, ar, "wheat", "sells") and w.economy.knowledge.knowers_of(ar, "wheat") == [ar], "only the poster knows of its offer (OD-LE-02B undecided)")
 	# a fill after a real trade
@@ -272,9 +272,11 @@ func test_knowledge() -> void:
 	var b: NPC = adults(w)[1]
 	var ar := World.npc_ref(a.id)
 	var br := World.npc_ref(b.id)
-	for src in ["in_person", "notice", "word_of_mouth", "rumour"]:
-		check(not k.learn(br, ar, "wheat", "sells", 3, src) and k.is_empty(), "source %s refused (OWNER DECISION %s)" % [src, EconKnowledge.SOURCES_UNDECIDED[src]])
-	check(int(k.refused.in_person) == 1, "refusals counted for diagnostics")
+	for src in ["notice", "rumour"]:
+		check(not k.learn(br, ar, "wheat", "sells", 3, src) and k.is_empty(), "source %s refused (%s)" % [src, EconKnowledge.SOURCES_REFUSED[src]])
+	check(int(k.refused.notice) == 1, "refusals counted for diagnostics")
+	check(not k.learn(br, ar, "wheat", "sells", 3, "word_of_mouth") and not k.learn(br, ar, "wheat", "sells", 3, "word_of_mouth", -1, "", -1, br) and k.is_empty(),
+		"word of mouth (OD-LE-10 D09) needs a teller other than the knower")
 	check(not k.learn(br, ar, "wheat", "sells", 3, "telepathy") and not k.learn(br, "npc:999999", "wheat", "sells") and not k.learn(br, br, "wheat", "sells", 1, "dealing"), "unknown source or party, or self-knowledge by dealing, refused")
 	check(k.learn(br, ar, "wheat", "sells", 3, "dealing"), "dealing: learned")
 	var e: Dictionary = k.known_by(br)[0]
@@ -284,9 +286,10 @@ func test_knowledge() -> void:
 	e = k.known_by(br)[0]
 	check(e.price_each == 5 and e.seen_day == w.day() and e.learned_day == w.day() - 2 and e.source == "dealing", "price and seen day refreshed; first source and day kept")
 	check(not e.has("trust") and not e.has("regard") and not e.has("opinion") and not e.has("confidence"), "no trust, regard or opinion stored in economic knowledge (shared Expansion 19 model)")
-	check(k.reliability(e) == EconKnowledge.RELIABILITY_UNDECIDED, "reliability is the OD-LE-10 placeholder")
+	check(k.reliability(e) == 1.0, "reliability (OD-LE-10 D09): a fresh firsthand price is fully believed")
 	w.minutes += World.DAY * 30
-	check(k.knows(br, ar, "wheat", "sells") and k.age(k.known_by(br)[0]) == 30, "nothing forgotten or decayed (OD-LE-10 undecided); age grows")
+	check(k.knows(br, ar, "wheat", "sells") and k.age(k.known_by(br)[0]) == 30 and k.reliability(k.known_by(br)[0]) < 0.1,
+		"firsthand knowledge is kept; its reliability falls with age (stale, OD-LE-10 D09)")
 	check(k.known_by(ar).is_empty() and k.knowers_of(ar, "wheat") == [br], "knowledge is per knower: the seller learned nothing from this")
 	check(k.known_by(br, "wheat", "buys").is_empty() and k.known_by(br, "wheat", "sells").size() == 1, "query by item and side")
 

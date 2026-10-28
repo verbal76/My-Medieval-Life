@@ -1195,12 +1195,16 @@ func meet(a: int, b: int) -> int:
 
 func _meet_now(a: int, b: int) -> int:
 	if not memories.has(a) and not memories.has(b):
+		if world != null and world.economy != null:
+			world.economy.on_meeting(a, b)         # EXPANSION 20 LE-02: prices pass even when no judged event does; null while disabled
 		return 0                                   # neither knows anything to tell
 	var t := Time.get_ticks_usec()
 	var lo := mini(a, b)
 	var hi := maxi(a, b)
 	var k := tell(lo, hi) + tell(hi, lo)
 	timing.meet_us = int(timing.get("meet_us", 0)) + Time.get_ticks_usec() - t
+	if world != null and world.economy != null:
+		world.economy.on_meeting(a, b)             # EXPANSION 20 LE-02 (OD-LE-10 D09): prices by word of mouth; null while disabled
 	return k
 
 
@@ -1383,6 +1387,12 @@ func tell(teller: int, listener: int) -> int:
 	var k := _tell(teller, listener)
 	rec.gossip_end(gev, teller, listener, k)
 	return k
+
+
+## EXPANSION 20 LE-02 (OD-LE-10 D09, a read only): whether `teller` would tell `listener` anything at a meeting, by the gossip's
+## own rule (their net judgment above the teller's share threshold). The Living Economy passes prices by word of mouth only then.
+func would_tell(teller: int, listener: int) -> bool:
+	return teller != listener and net(teller, listener) > threshold(teller, _g_share_at)
 
 
 func _tell(teller: int, listener: int) -> int:

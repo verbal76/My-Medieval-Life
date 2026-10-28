@@ -12,6 +12,13 @@ extends RefCounted
 ## (offers, reservations and contract links expire or follow their contracts; contract terms learned; dirty needs
 ## re-derived within a budget). The model OBSERVES: it moves no coin or good, draws no random number, writes no game
 ## state outside its own records, and nothing in live play reads it to decide.
+##
+## LE-02 market (EconMarket, docs/expansion20/LE02_IMPLEMENTATION.md): built with the model; it ACTS only with economy.json
+## "market": {"drive": true} (absent: false, so the LE-01 observers stay observers). Then two more guarded live calls reach it:
+## Relations.share -> on_encounter (two villagers spend an hour together: they see each other's offers and may bargain, settled
+## by World.trade) and JudgmentStore._meet_now -> on_meeting (the gossip's meetings: prices genuinely learned pass by word of
+## mouth); and dawn() runs the market's dawn after the model's (reviews, bids from needs, asks, direct dialogue that opens CON-01
+## contracts, renegotiation on a contract's last day).
 
 const KEY := "economy"
 const PATH := "res://data/economy.json"
@@ -26,6 +33,7 @@ var needs: EconNeeds
 var offers: EconOffers
 var knowledge: EconKnowledge
 var contract_links: EconContractLinks
+var market: EconMarket
 var contract_cursor := 0          # the highest CON-01 contract id whose terms the two parties have been told (knowledge "contract")
 
 
@@ -63,7 +71,7 @@ static func attach(world: World, saved := {}) -> EconomyFoundation:
 	f.needs = EconNeeds.new(f.actors, cfg.get("needs", {}))
 	f.offers = EconOffers.new(f.reservations, cfg.get("offers", {}))
 	f.offers.events = f.events
-	f.knowledge = EconKnowledge.new(f.actors)
+	f.knowledge = EconKnowledge.new(f.actors, cfg.get("knowledge", {}))
 	f.offers.knowledge = f.knowledge
 	f.contract_links = EconContractLinks.new(f.reservations)
 	f.reservations.load_dict(saved.get("reservations", {}))
@@ -73,12 +81,14 @@ static func attach(world: World, saved := {}) -> EconomyFoundation:
 	f.knowledge.load_dict(saved.get("knowledge", {}))
 	f.contract_links.load_dict(saved.get("contracts", {}))
 	f.contract_cursor = int(saved.get("contract_cursor", 0))
+	f.market = EconMarket.new(f, world, cfg.get("market", {}))
+	f.market.load_dict(saved.get("market", {}))
 	return f
 
 
 func is_empty() -> bool:
 	return reservations.is_empty() and events.is_empty() and needs.is_empty() and offers.is_empty() and knowledge.is_empty() \
-			and contract_links.is_empty() and contract_cursor == 0
+			and contract_links.is_empty() and contract_cursor == 0 and market.is_empty()
 
 
 ## World.trade, after a completed sale (observed only). Both parties learn of each other by the dealing; an event is noted;
@@ -123,6 +133,17 @@ func dawn(day: int) -> void:
 				needs.mark(r)
 		contract_cursor = top
 	needs.refresh()
+	market.dawn(day)
+
+
+## Relations.share (LE-02): villagers `a` and `b` spent an hour together. Nothing unless the market drives.
+func on_encounter(a: int, b: int) -> void:
+	market.on_encounter(a, b)
+
+
+## JudgmentStore._meet_now (LE-02, OD-LE-10): a gossip meeting between `a` and `b`. Nothing unless the market drives.
+func on_meeting(a: int, b: int) -> void:
+	market.on_meeting(a, b)
 
 
 ## {} when there is nothing to save (World then writes no key).
@@ -143,4 +164,6 @@ func to_dict() -> Dictionary:
 		d["contracts"] = contract_links.to_dict()
 	if contract_cursor != 0:
 		d["contract_cursor"] = contract_cursor
+	if not market.is_empty():
+		d["market"] = market.to_dict()
 	return d

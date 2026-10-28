@@ -1024,6 +1024,42 @@ func cancel(c: Dictionary, by_ref: String) -> String:
 	return ""
 
 
+## EXPANSION 20 LE-02 (owner OD-LE-13, APPROVED: "parties may negotiate partial delivery, extensions, changed payment terms or
+## cancellation depending on the original agreement and circumstances; no automatic penalty on every breach"): the two parties
+## of an open goods contract agree new terms. Called only by the Living Economy's market (EconMarket.renegotiate, switched off in
+## the shipped game) after the other party agreed, so the CON-01 rule "no renegotiation after acceptance" stands everywhere else.
+## `qty` (no fewer than delivered: fewer still owed is a partial delivery accepted), `price_each` for the units still to come
+## (units already paid keep their price; `paid` stays the sum actually paid), `extra_days` more to the deadline. The buyer's
+## set-aside coins follow: (qty - delivered) x price_each, the difference returned to it or set aside from its spendable coins
+## (fund_refusal). No fee, no penalty. A contract left owing nothing is fulfilled. "" or the reason nothing changed.
+func amend(c: Dictionary, by_ref: String, qty: int, price_each: int, extra_days: int) -> String:
+	if not is_open(c) or is_service(c):
+		return "That contract is not open."
+	if by_ref != c.buyer and by_ref != c.seller:
+		return "Only those who made it can change it."
+	if qty < int(c.delivered) or qty <= 0 or price_each <= 0 or extra_days < 0 or extra_days > int(cfg().max_days):
+		return "That's no kind of change."
+	var want := (qty - int(c.delivered)) * price_each
+	var delta := want - int(c.reserved)
+	if delta > 0 and fund_refusal(c.buyer, delta) != "":
+		return fund_refusal(c.buyer, delta)
+	_add_coins(c.buyer, -delta)
+	c.reserved = want
+	c.history.append({"day": w.day(), "by": by_ref, "what": "amend", "qty": qty, "price_each": price_each, "days": extra_days,
+		"was": {"qty": int(c.qty), "price_each": int(c.price_each), "deadline_day": int(c.deadline_day)}})
+	c.qty = qty
+	c.price_each = price_each
+	c.days = int(c.days) + extra_days
+	c.deadline_day = int(c.deadline_day) + extra_days
+	w.stat("contracts_amended")
+	if w.recorder != null:
+		w.recorder.contract_amended(c, delta, _coins(c.buyer))     # the coins set aside or returned, on the thread contract:<id>
+	w.note("%s and %s changed their contract: %d %s at %d each by day %d." % [w.ref_name(c.seller, true), w.ref_name(c.buyer), qty,
+			GameData.item_name(c.item).to_lower(), price_each, int(c.deadline_day) + 1])
+	_maybe_finish(c)
+	return ""
+
+
 ## Past its deadline: the contract lapses, the set-aside coins go back to the buyer, and the seller who let the buyer
 ## down loses regard with them (no money penalty, OD-29).
 func _lapse(c: Dictionary) -> void:

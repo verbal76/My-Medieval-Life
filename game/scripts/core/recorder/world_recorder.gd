@@ -1359,6 +1359,18 @@ func contract_paid(c: Dictionary, units: int, pay: int, seller_after: int) -> vo
 	end(ev)
 
 
+## Contracts.amend (EXPANSION 20 LE-02, OD-LE-13): new terms agreed; `delta` coins more set aside (negative: returned to the buyer).
+func contract_amended(c: Dictionary, delta: int, buyer_after: int) -> void:
+	var ev := begin("contracts", "contract", "contract", "amended", wref(str(c.seller)), {"object": "contract:%d" % int(c.id),
+		"detail": "contract=%d qty=%d price_each=%d deadline_day=%d delta=%d" % [int(c.id), int(c.qty), int(c.price_each), int(c.deadline_day), delta]})
+	_wpart(ev, str(c.buyer), "buyer")
+	_wpart(ev, str(c.seller), "seller")
+	if delta != 0:
+		state_change(ev, wref(str(c.buyer)), "coins", buyer_after + delta, buyer_after, "contracts")
+		state_change(ev, "contract:%d" % int(c.id), "coins", int(c.reserved) - delta, int(c.reserved), "contracts")
+	end(ev)
+
+
 ## Contracts._end: the contract ends in `state` (fulfilled, cancelled, lapsed); what was still set aside went back to the buyer.
 func contract_ended(c: Dictionary, was: String, held: int, buyer_after: int) -> void:
 	var ev := begin("contracts", "contract", "contract", str(c.state), wref(str(c.seller)), {"object": "contract:%d" % int(c.id),
