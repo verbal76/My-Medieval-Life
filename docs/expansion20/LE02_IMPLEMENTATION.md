@@ -125,7 +125,16 @@ records; a full driven day twice gives byte-identical saves.
 
 ## 8. Verification (2026-10-28)
 
-See the completion report in the register's evidence. `game/tests/le02_market_test.gd` covers: prices and the band; three actor
+| Check | Result |
+|---|---|
+| `le02_market_test.gd` | 101 checks, 0 failures |
+| `economy_model_test.gd` | 112 checks, 0 failures (the LE-01 refused-source checks rewritten for the decided sources; reliability now decays) |
+| `economy_foundation_test`, `till_ownership_test`, `contracts_test`, `contract_sign_test` | 89, 50, 154, 21 checks; 0 failures |
+| `judgment_test`, `judgment_live_test`, `relations_test`, `recorder_test` | 217, 161, 80, 214 checks; 0 failures |
+| `run_tests`, `start_test`, `world_test`, `multiplayer_c_test` | 3600 checks, 523 steps, 339, 340 checks; 0 failures |
+| G0, switch off (seeds 1 and 2, 30 days, checks 10 and 30) | identical to the accepted baseline 6ee13c7 (recorded from 5c303be): day-30 fingerprints c24e8660... and 45fd9acb...; leaks currency 0, items none. Against the older baseline d4686cd: day 10 identical, day 30 differs exactly as 5c303be itself does (free migration, REG-X20-D1) |
+
+`game/tests/le02_market_test.gd` covers: prices and the band; three actor
 types (a smith's input, a raw-goods merchant's stock, a woodcutter's contract obligation) answering the same plank shortage
 through actual trades, conserved, one bid left part filled; negative paths (no funds, no stock, a tool not for sale, no need,
 expiry, no agreement after the limited rounds); opinion weighed (the same dislike splits buyers of moderate need by personality,
