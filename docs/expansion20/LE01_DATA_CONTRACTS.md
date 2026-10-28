@@ -85,6 +85,15 @@ price, relationships and personality: an NPC may refuse a deal because of their 
 circumstances may deal out of necessity; there is no numerical cutoff that refuses automatically and no rule that every
 trade must stay possible regardless of preference (the owner's words: `LE01_IMPLEMENTATION.md` section 2).
 
+## LE-02 market
+
+Added 2026-10-28 (`LE02_IMPLEMENTATION.md`): `econ_market.gd` (`EconMarket`), same switch and save key (`economy.market`); it
+acts only with `market.drive` true. Offers gain optional `min_lot, committed, contracts, revisions, reviewed_day, need,
+seen_filled, dialogue_day` and the operations `revise`, `commit`, `resize`; knowledge entries gain `latest` and `via`, the
+sources `in_person` and `word_of_mouth`, and a computed `reliability`; CON-01 gains `Contracts.amend` (called only by the
+market). The section below lists what was missing at LE-01; LE-02 closed adaptive prices, negotiation, settlement and
+OD-LE-13's renegotiation.
+
 ## Still not here
 
 Adaptive prices, bids that move, negotiation and settlement (LE-02, under OD-LE-02's answer), credit terms (OD-LE-05B),
