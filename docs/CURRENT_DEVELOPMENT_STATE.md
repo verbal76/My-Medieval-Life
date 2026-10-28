@@ -32,10 +32,11 @@ Workers from 87b69ab (2026-10-27): M on `wip/x20-fixes` (SIM-F2, SIM-F3, player/
 
 **Owner directive 2026-10-27 (`docs/directives/2026-10-27_complete_expansion20_first.md`, X20-COMPLETE): finish Expansion 20
 before Expansion 21 (on hold, no agent). Build 23 stays a private checkpoint; never public without the owner.** Order:
-1. Foundation: till ownership in the economy model (storefront `front.till` and trade-counter `counter.till` have no economy
-   actor; live coins are counted and paid under ECON-P3 and B18-DP-01, so the gap is the model's, not lost money), then
-   REC-DIAG completion against the directive's event list.
-2. LE-02, LE-03, LE-04, LE-05 in order (approved decisions only; X20-SCOPE approved 2026-10-27 brings OD-LE-03, -04, -08, -11, -13B,
+1. Foundation DONE and merged on `wip/expansion20` (`5c303be`, 2026-10-28): till ownership (storefront and counter tills are
+   economy actors; ended-household till escheat fixed), REC-DIAG (abnormal-run report), free migration X20-MIGRATE
+   (REG-X20-D1), visible sword GP-SWORD-VIS. Simulation baseline replaced (SIM_BASELINE_CHANGES_X20_MIGRATE.md). Open owner
+   question TILL-D1. Local long runs die when the container is reclaimed while idle: run gates on GitHub Actions (long-sims).
+2. LE-02 IN DEVELOPMENT (worker, `wip/x20-le02` from `5c303be`); then LE-03, LE-04, LE-05 in order (approved decisions only; X20-SCOPE approved 2026-10-27 brings OD-LE-03, -04, -08, -11, -13B,
    -14 forward; lending excluded; X20-MIGRATE free migration per REG-X20-D1); carryovers EMP-PERM-01, GP-POLISH, SJD-G (SJD-H waits for the owner).
 3. LE-06 long runs on GitHub Actions, LE-07 readiness, one consolidated report.
 Owner device checks of Build 23 and the open decisions (MP-INTERACT-Q1/Q2, REG-X20-D1..D4, ARMOR-CATALOG-D1, ID-D3) never

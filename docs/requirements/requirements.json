@@ -25563,8 +25563,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -25572,8 +25572,22 @@
      "date": "2026-10-27",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-27_visible_sword_attacks.md"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> sword_visual_test, combat_test 41, world_test, run_tests, start_test, multiplayer_c_test 340, net_ui_test, wiki_test, gear_catalogue_test, pursuit_test, armour_worn_test: 0 failures; net_interact_test 67/0 (one earlier run failed 9 timing checks under full CPU load, passed on rerun and on c79b12c); G0 on 5c303be identical apart from free migration; test_commit: None -> 5c303be; commits + 8fd01fa; integrated_in + Expansion 20 wip/expansion20 5c303be; playtest",
+     "why": "visible sword strike merged (8fd01fa); screenshots of all 8 facings, carry, attack frames and armed NPCs looked at by the lead"
     }
-   ]
+   ],
+   "tests": "sword_visual_test, combat_test 41, world_test, run_tests, start_test, multiplayer_c_test 340, net_ui_test, wiki_test, gear_catalogue_test, pursuit_test, armour_worn_test: 0 failures; net_interact_test 67/0 (one earlier run failed 9 timing checks under full CPU load, passed on rerun and on c79b12c); G0 on 5c303be identical apart from free migration",
+   "test_commit": "5c303be",
+   "commits": [
+    "8fd01fa"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 5c303be"
+   ],
+   "playtest": "owner check on Windows (keyboard, controller) and Android: the sword seen in hand, swung and returned"
   },
   {
    "id": "GP-TABLE-ITEMS",
@@ -28295,7 +28309,7 @@
     "Unit tests and persistence"
    ],
    "implementation": "",
-   "tests": "on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks)",
+   "tests": "on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); till_ownership_test 50, business_money_test 37, economy_model_test 113, economy_foundation_test 89",
    "playtest": [],
    "branch": "wip/x20-le01",
    "commits": [
@@ -28307,7 +28321,7 @@
    "rules": [],
    "interactions": [],
    "wiki": [],
-   "next_action": "LE-02 (owner policies held: OD-LE-02B, -04, -05B, -07, -08, -10, -11, -13B, -14, -15). Gaps found at LE-01: no economy actor for villagers' storefront tills (front.till) or trade-counter tills (counter.till); judgment system lacks a read of one person's weighted opinion of another, and judged persons for manor, chapel, manor tills and neighbouring settlements; the model's save section reached about 400-440 KB by day 30 (trade knowledge), a phone budget question under OD-LE-15.",
+   "next_action": "LE-02 in development (wip/x20-le02). Open: TILL-D1 (a living household leaving a house with storefront coins).",
    "priority": "",
    "workstream": "",
    "superseded_by": null,
@@ -28352,6 +28366,11 @@
      "date": "2026-10-27",
      "change": "tests: on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0 -> on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); test_commit: b7e3c3b -> 4f50ffb",
      "why": "combined validation at wip/expansion20 4f50ffb (journal pager fix 126e358 merged)"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "tests: on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks) -> on b7e3c3b: economy_model_test 113/0, economy_foundation_test 89/0, x20_android_ui_test 68/0, start_test 523 steps/0, multiplayer_c_test 340/0, run_tests 3600/0; G0 identical to the baseline (seeds 1 and 2, days 10 and 30, no leaks); worker's 30-day switch-on runs seeds 1 and 2: no currency, item, deposit or animal leaks, fingerprints equal to G0; combined on wip/expansion20 4f50ffb: judgment 217/0, judgment_live 144/0, judgment_x19 117/0, family_first 104/0, recorder 189/0, migration 93/0, conservation 8/0, message_journal 50/0, economy_model 113/0, economy_foundation 89/0, x20_android_ui 95/0, multiplayer_c 340/0, player_family 88/0, save_transfer 21/0, wiki_test passed, start_test 523/0, run_tests 3600/0; G0 identical to the baseline (seeds 1-2, days 10 and 30, no leaks); till_ownership_test 50, business_money_test 37, economy_model_test 113, economy_foundation_test 89; test_commit: 4f50ffb -> 5c303be; next_action",
+     "why": "till-ownership gap closed: storefront and counter tills are economy actors with one shared owner rule; ended-household till escheat defect fixed (3a6eee8)"
     }
    ],
    "target_build": "20",
@@ -28367,7 +28386,7 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "assigned_worker": "worker F (LE-01)",
-   "test_commit": "4f50ffb"
+   "test_commit": "5c303be"
   },
   {
    "id": "LE-02",
@@ -28383,7 +28402,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/x20-le02",
    "commits": [],
    "parent": "EXP-D",
    "depends_on": [],
@@ -28416,6 +28435,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> LE-02 worker; branch:  -> wip/x20-le02",
+     "why": "LE-02 worker started on wip/x20-le02 from 5c303be"
     }
    ],
    "target_build": "20",
@@ -28424,10 +28448,11 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "assigned_worker": "LE-02 worker"
   },
   {
    "id": "LE-03",
@@ -44696,8 +44721,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -44735,16 +44760,28 @@
      "date": "2026-10-26",
      "change": "note",
      "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition implement (audit): analysis of judgment once D5 records it (batch R6); closure also waits on SIM-F2 and SIM-F3"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; branch: wip/recorder (read-only runs) -> wip/expansion20; tests: None -> recorder_test 214, test_rec_diag (recorded vs unrecorded identical), Python recorder tests; 30-day recorded runs seeds 1 and 2 verified clean, abnormal report produced; test_commit: 0b5287c -> 5c303be; commits + 3a6eee8; integrated_in + Expansion 20 wip/expansion20 5c303be; next_action",
+     "why": "flight-recorder diagnostics completed for the owner's list (wip/x20-foundation 3a6eee8, merged 5c303be)"
     }
    ],
    "assigned_worker": "lead",
-   "branch": "wip/recorder (read-only runs)",
-   "next_action": "run 2 only: 30 days, seeds 1 and 2, on the recorder head with FIX-RECF1 and D3; stop at day 30, a FATAL line or the storage cap",
+   "branch": "wip/expansion20",
+   "next_action": "Used in LE-06 reporting; gaps left: player premises till moves, rents and attendants' wages, construction not yet recorded as events",
    "related": [
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "analysis of judgment once D5 records it (batch R6); closure also waits on SIM-F2 and SIM-F3",
-   "test_commit": "0b5287c"
+   "test_commit": "5c303be",
+   "tests": "recorder_test 214, test_rec_diag (recorded vs unrecorded identical), Python recorder tests; 30-day recorded runs seeds 1 and 2 verified clean, abnormal report produced",
+   "commits": [
+    "3a6eee8"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 5c303be"
+   ]
   },
   {
    "id": "REC-F1",
@@ -60188,8 +60225,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -60197,7 +60234,21 @@
      "date": "2026-10-27",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-27_x20_scope_and_free_migration.md"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; branch: None -> wip/expansion20; tests: None -> migration_test 109 (test_free_migration), settlement/regions/identity/world/recorder/start suites 0 failures; G0 on 5c303be (GitHub Actions run 40622479865): day 30 differs only by the free-migration change, leak 0, item leaks none; baseline replaced (SIM_BASELINE_CHANGES_X20_MIGRATE.md); test_commit: None -> 5c303be; commits + 8df2f59; integrated_in + Expansion 20 wip/expansion20 5c303be",
+     "why": "implemented and merged into wip/expansion20 (8df2f59, b9c585a; merge 5c303be)"
     }
+   ],
+   "branch": "wip/expansion20",
+   "tests": "migration_test 109 (test_free_migration), settlement/regions/identity/world/recorder/start suites 0 failures; G0 on 5c303be (GitHub Actions run 40622479865): day 30 differs only by the free-migration change, leak 0, item leaks none; baseline replaced (SIM_BASELINE_CHANGES_X20_MIGRATE.md)",
+   "test_commit": "5c303be",
+   "commits": [
+    "8df2f59"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 5c303be"
    ]
   },
   {

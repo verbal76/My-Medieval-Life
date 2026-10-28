@@ -12,11 +12,11 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
+| LE-02 | 20 | IN DEVELOPMENT | LE-02 worker | wip/x20-le02 |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
-| REC-DIAG | 20 | IN DEVELOPMENT | lead | wip/recorder (read-only runs) |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
@@ -71,7 +71,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | WIKI-B17 | 17 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 
-## Awaiting owner playtest or device check (104)
+## Awaiting owner playtest or device check (105)
 
 | ID | Build | Verification | Needs |
 |---|---|---|---|
@@ -140,6 +140,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-STALL-PRICE-ON-PUTUP | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-STALL-RENT-WRONG-PITCH | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g |
 | GP-START-RUSTY-AXE | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
+| GP-SWORD-VIS | 20 | INTEGRATION VERIFIED | o, w, n, e, r,  , c, h, e, c, k,  , o, n,  , W, i, n, d, o, w, s,  , (, k, e, y, b, o, a, r, d, ,,  , c, o, n, t, r, o, l, l, e, r, ),  , a, n, d,  , A, n, d, r, o, i, d, :,  , t, h, e,  , s, w, o, r, d,  , s, e, e, n,  , i, n,  , h, a, n, d, ,,  , s, w, u, n, g,  , a, n, d,  , r, e, t, u, r, n, e, d |
 | GP-TABLE-ITEMS | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g |
 | GP-TARGET-ART-MATCH | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
 | GP-TRAIL-EDGES | 20 | INTEGRATION VERIFIED | d, e, v, i, c, e,  , c, h, e, c, k,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ;,  , P, C,  , w, h, e, r, e,  , i, t,  , a, p, p, l, i, e, s, ),  , n, o, t,  , y, e, t,  , d, o, n, e |
