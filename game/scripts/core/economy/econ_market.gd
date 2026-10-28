@@ -207,9 +207,12 @@ func for_sale(seller: NPC, item: String, own_ask := -1) -> int:
 	if NPCBrain.BUYS.get(w.brain.buy_role(seller), {}).has(item) and seller.job != "merchant":
 		return 0
 	var ref := World.npc_ref(seller.id)
-	var n := f.reservations.available(ref, item) - maxi(0, w.brain.reserve(seller, item) - w.contracts.held_for(seller, item))
+	var others := f.reservations.reserved(ref, item)
 	if own_ask >= 0:
-		n += f.offers.remaining(own_ask)
+		var rid := int(f.offers.get_offer(own_ask).get("reservation", -1))
+		if rid >= 0:
+			others -= int(f.reservations.get_record(rid).get("qty", 0))
+	var n := seller.inv.count(item) - f.reservations.contract_held(ref, item) - others - maxi(0, w.brain.reserve(seller, item) - w.contracts.held_for(seller, item))
 	return maxi(0, n)
 
 
@@ -237,6 +240,19 @@ func _judgment_cfg() -> Dictionary:
 func _weigh(chooser: NPC, profile: String, other_ref: String, factors: Dictionary, key: Array) -> Dictionary:
 	var cand := {"id": "deal", "counterparty": f.actors.judged_person(other_ref), "factors": factors}
 	return JudgmentWeighting.choose(w.judgment, _judgment_cfg(), chooser.id, profile, [cand], key)
+
+
+## The price factor for a buyer (0..100000): 50 points at its own ceiling (a fair price for what the need is worth), up to 100
+## as the price falls to the band's floor.
+static func buy_value(price: int, ceiling: int, item: String) -> int:
+	var lo := int(band(item)[0])
+	return clampi(50000 + 50000 * (ceiling - price) / maxi(1, ceiling - lo), 0, 100000)
+
+
+## The price factor for a seller (0..100000): 50 points at its own floor, up to 100 as the price rises to the band's top.
+static func sell_value(price: int, floor_: int, item: String) -> int:
+	var hi := int(band(item)[1])
+	return clampi(50000 + 50000 * (price - floor_) / maxi(1, hi - floor_), 0, 100000)
 
 
 static func _milli(x: float) -> int:
@@ -324,11 +340,11 @@ func negotiate(buyer: NPC, seller: NPC, item: String, want: int, bid_id := -1, a
 	var bd := band(item)
 	var key := [w.day(), item.hash(), buyer.id, seller.id]
 	var known := believed(br, item)
-	var bf := {"necessity": _milli(float(ce.urgency)), "price": _milli(float(ceiling - agreed) / float(maxi(1, ceiling - int(bd[0])))),
+	var bf := {"necessity": _milli(float(ce.urgency)), "price": buy_value(agreed, ceiling, item),
 		"sole_source": 100000 / maxi(1, int(known.sellers))}
 	if str(_weigh(buyer, "market_buy", sr, bf, key).chosen) != "deal":
 		return _out(out, "buyer_refused", br, sr, item)
-	var sf := {"necessity": JudgmentLive.coin_need(seller), "price": _milli(float(agreed - floor_) / float(maxi(1, int(bd[1]) - floor_))),
+	var sf := {"necessity": JudgmentLive.coin_need(seller), "price": sell_value(agreed, floor_, item),
 		"surplus": 100000 if ask_id >= 0 else 50000}
 	if str(_weigh(seller, "market_sell", br, sf, key).chosen) != "deal":
 		return _out(out, "seller_refused", br, sr, item)
@@ -726,7 +742,7 @@ func procure(bid_id: int, buyer: NPC, s: NPC) -> Dictionary:
 			out.outcome = "counter_beyond_limit"
 			break
 		var key := [w.day(), item.hash(), buyer.id, s.id, int(out.rounds)]
-		var bf := {"necessity": _milli(float(buyer_ceiling(buyer, item, need).urgency)), "price": _milli(float(ceiling - cp) / float(maxi(1, ceiling - int(band(item)[0])))),
+		var bf := {"necessity": _milli(float(buyer_ceiling(buyer, item, need).urgency)), "price": buy_value(cp, ceiling, item),
 			"sole_source": 100000 / maxi(1, int(believed(br, item).sellers))}
 		if str(_weigh(buyer, "market_buy", World.npc_ref(s.id), bf, key).chosen) != "deal":
 			out.outcome = "buyer_refused"
@@ -753,8 +769,9 @@ func procure(bid_id: int, buyer: NPC, s: NPC) -> Dictionary:
 ## (CON-01 means): more days when its work can manage the rest within max_extend_days (extension); a higher price when it must
 ## buy the goods dearer than the contract pays (changed payment, inside the band and the buyer's ceiling); else, holding or
 ## having delivered some, the quantity cut to what it has delivered and holds, with a day to bring it (partial delivery). The
-## buyer weighs it (market_buy) and agrees (Contracts.amend), or, no longer needing the goods, cancels (Contracts.cancel: no
-## fee); otherwise the contract lapses under CON-01's own rule. No penalty is added. Returns [contract id, what] pairs.
+## buyer weighs it (market_buy) and agrees (Contracts.amend); a buyer who no longer needs the goods cancels first
+## (Contracts.cancel: no fee); otherwise the contract lapses under CON-01's own rule. No penalty is added. Returns
+## [contract id, what] pairs.
 func renegotiate(day: int) -> Array:
 	var done := []
 	for c in w.contracts.list.duplicate():
@@ -772,6 +789,12 @@ func renegotiate(day: int) -> Array:
 		var owed := Contracts.left(c)
 		var held := s.inv.count(item)
 		if held >= owed:
+			continue
+		var need := need_for(str(c.buyer), item)
+		if need.is_empty():
+			if w.contracts.cancel(c, str(c.buyer)) == "":      # the goods no longer needed: ended by consent of circumstance, no fee
+				done.append([int(c.id), "cancel"])
+				_stat("renegotiated_cancel")
 			continue
 		var what := ""
 		var qty := int(c.qty)
@@ -794,17 +817,11 @@ func renegotiate(day: int) -> Array:
 				extra = 1 if held > 0 else 0
 		if what == "":
 			continue
-		var need := need_for(str(c.buyer), item)
-		if need.is_empty():
-			if w.contracts.cancel(c, str(c.buyer)) == "":
-				done.append([int(c.id), "cancel"])
-				_stat("renegotiated_cancel")
-			continue
 		var ce := buyer_ceiling(b, item, need)
 		if what == "price" and (price > int(ce.limit) or (price - int(c.price_each)) * owed > cash_for(b)):
 			_stat("renegotiation_refused")
 			continue
-		var bf := {"necessity": _milli(float(ce.urgency)), "price": _milli(float(int(ce.limit) - price) / float(maxi(1, int(ce.limit) - int(band(item)[0])))),
+		var bf := {"necessity": _milli(float(ce.urgency)), "price": buy_value(price, int(ce.limit), item),
 			"sole_source": 100000 / maxi(1, int(believed(str(c.buyer), item).sellers))}
 		if str(_weigh(b, "market_buy", str(c.seller), bf, [day, int(c.id)]).chosen) != "deal":
 			_stat("renegotiation_refused")
