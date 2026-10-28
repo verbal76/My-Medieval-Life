@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 168 still open, 63 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 608 (289 of them still open) |
-| **Open entries now** (rules excluded) | | **456** |
+| Entries added since | | 609 (290 of them still open) |
+| **Open entries now** (rules excluded) | | **457** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (63)
@@ -106,7 +106,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (608)
+## Added since the baseline (609)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -620,6 +620,7 @@ None.
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 18 |
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | TAILOR-Q | Where the tailor comes from | decision | APPROVED | owner decision |
+| TILL-D1 | Storefront till of a living household that loses or gives up its house (lease taken back for arrears, lease given up, the household migrating away): whose are the coins? (a) they go with the household that earned them (recommended; matches B18-DP-01/INT-392 for the player's shop and D03 one owner per business); (b) to the manor, as when a household ends; (c) unchanged: they stay in the house and the next holder is paid them | decision | OPEN | 20 |
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | proposal | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |

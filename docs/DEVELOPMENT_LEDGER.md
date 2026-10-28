@@ -781,7 +781,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (244)
+## Owner decisions (245)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -992,6 +992,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | STONE-Q3 | STONE-Q part 3: a dedicated Stoneworking skill and a mallet plus iron chisel (1B + 2B), Expansion 18 |  | APPROVED |  |
 | STONECUT-R1 | WDR-002: the stonecutter (X18-STONECUT) supplies no other profession; its building blocks are bought by the raw-goods merchant and built into houses and workshops by households and the manor, and the game has no builder trade. Approve a documented exception with checked evidence, as for the sage (B18-DP-15), or direct another remedy? | 18 | APPROVED | yes |
 | TAILOR-Q | Where the tailor comes from | owner decision | APPROVED |  |
+| TILL-D1 | Storefront till of a living household that loses or gives up its house (lease taken back for arrears, lease given up, the household migrating away): whose are the coins? (a) they go with the household that earned them (recommended; matches B18-DP-01/INT-392 for the player's shop and D03 one owner per business); (b) to the manor, as when a household ends; (c) unchanged: they stay in the house and the next holder is paid them | 20 | OPEN |  |
 | WDR-011-Q1 | Aspirations: the game has no illness system; should low health and near-starvation hunger count as illness for Rule 011's adaptation, or wait for an illness system? | 20 | APPROVED |  |
 | WDR-011-Q2 | Aspirations: should careers be steered only through accepting work and contracts, or add a job-choice decision (behind its own switch, after R2)? | 20 | APPROVED |  |
 | WDR-011-Q3 | Aspirations: may villagers who care about wealth or property favour suitors with means, or does courting stay attraction plus opinion in v1? | 20 | APPROVED |  |

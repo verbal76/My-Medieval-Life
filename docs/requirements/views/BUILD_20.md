@@ -16,7 +16,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Owner playtested | 0 of 85 (0%) |
 | Complete | 2 of 85 (2%) |
 | Open (release blockers) | 83 |
-| Open owner decisions (blocking) | 6 (0) |
+| Open owner decisions (blocking) | 7 (0) |
 
 ## In development (worker assigned) (2)
 
@@ -128,7 +128,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | INTEGRATION VERIFIED | NOT READY |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (6)
+## Open owner decisions (7)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
@@ -138,6 +138,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | REG-X20-D2 | Off-map settlements: should 'cannot buy a day's food' (hunger migration) also count when there is no food for sale at all, not only when the household lacks coins? In the switches-on run Garton starved holding 68-110 coins with empty stalls after its farmers moved to better-paid trades. | OPEN | no |  |
 | REG-X20-D3 | Off-map settlements: should settlement-to-settlement food trade get a live path? The owner's REG-BUY-D1 answer allows it, but road trade carries no food and RegionalMarket is not wired into the live game, so one settlement's surplus never reaches a starving neighbour. | OPEN | no |  |
 | REG-X20-D4 | Off-map settlements: revisit the deferred circulation question (REG-CIRC-D1) now its prerequisites exist? Settlement traders keep buying from the village and buy little back (netherton paid out 460 coins in 30 days and took in 41), draining treasuries until relief and day labour stop. | OPEN | no |  |
+| TILL-D1 | Storefront till of a living household that loses or gives up its house (lease taken back for arrears, lease given up, the household migrating away): whose are the coins? (a) they go with the household that earned them (recommended; matches B18-DP-01/INT-392 for the player's shop and D03 one owner per business); (b) to the manor, as when a household ends; (c) unchanged: they stay in the house and the next holder is paid them | OPEN | no |  |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (6)
 
