@@ -32,7 +32,7 @@ Workers from 87b69ab (2026-10-27): M on `wip/x20-fixes` (SIM-F2, SIM-F3, player/
 
 **Owner 2026-10-28 (`docs/directives/2026-10-28_x20_checkpoint_build_and_pause.md`, X20-CHECKPOINT): produce the Build 24 private
 checkpoint from `wip/expansion20`, write the recovery handoff, then PAUSE all Medieval development (Upwardly is the priority).** No
-Expansion 21, no LE-03, no new workers, never public. In progress by the lead: Build 24 validation and packaging, then the
+Expansion 21, no LE-03, no new workers, never public. Build 24 release run 40636966840 on `wip/expansion20` `4611d86` IN FLIGHT (private draft; never restart it, SIM-02); validation passed (multiplayer gate, targeted suites, Actions long-sims 40634549680 identical to the baseline), then the
 recovery handoff `docs/handoffs/X20_RECOVERY_HANDOFF.md` (written 2026-10-28: all remaining Expansion 20 work, branches, gates). X20-COMPLETE is suspended after the checkpoint. TILL-D1 done (X20-TILL-KEEP); LE-02 merged (`e8cc44b`).
 
 ## Sources

@@ -60179,10 +60179,18 @@
      "date": "2026-10-28",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/expansion20",
      "why": "lead executing the checkpoint"
+    },
+    {
+     "date": "2026-10-28",
+     "change": "tests: None -> on e8cc44b: le02_market 101, till_ownership 54, economy_model 112, contracts 154, mp_interact_ui 112, net_interact 67, net_mp4 148, start 523 steps, wiki passed, sword_visual 37, migration 109 (0 failures); GitHub Actions long-sims 40634549680 seeds 1,2 30 days: day-30 fingerprints identical to the accepted baseline (c24e8660..., 45fd9acb...), leak 0, no item leaks, no script errors; economy switch off; test_commit: None -> e8cc44b; next_action",
+     "why": "validated and dispatched: release run 40636966840 on wip/expansion20 4611d86 (private draft, build 24)"
     }
    ],
    "assigned_worker": "lead",
-   "branch": "wip/expansion20"
+   "branch": "wip/expansion20",
+   "tests": "on e8cc44b: le02_market 101, till_ownership 54, economy_model 112, contracts 154, mp_interact_ui 112, net_interact 67, net_mp4 148, start 523 steps, wiki passed, sword_visual 37, migration 109 (0 failures); GitHub Actions long-sims 40634549680 seeds 1,2 30 days: day-30 fingerprints identical to the accepted baseline (c24e8660..., 45fd9acb...), leak 0, no item leaks, no script errors; economy switch off",
+   "test_commit": "e8cc44b",
+   "next_action": "Release run 40636966840 (sim-gate then three exports; never restart it, SIM-02): verify checksums, signing certificate, versionCode 24, desktop packages; record the draft; then PAUSE Medieval development."
   },
   {
    "id": "X20-COMPLETE",
