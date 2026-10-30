@@ -17,7 +17,7 @@ Every integration goes through the transaction authority (`docs/expansion20/TRAN
 | 2 Contract estate claims on death (OD-LE-13B) | done (no migration needed) | section 2; `le04_test::test_estate_claims` |
 | 3 Speculation and stockpiling (OD-LE-11) | done | section 3; `le04_test::test_speculation` |
 | 4 Negotiated wages and services behind off flags (OD-LE-03 D02) | wages done (off); services not built (reason in s.4) | section 4; `le04_test::test_negotiated_wages` |
-| Milestone evidence: one G0 (seeds 1,2, 30 days) + one `--market` run | not run | the G0 may differ only by items 6 and 7 |
+| Milestone evidence: one G0 (seeds 1,2, 30 days) + one `--market` run | done | section 5 |
 
 Rules for whoever continues: the switch stays off; G0 identical except the item 6/7 fixes (report differences with conservation
 evidence); no unbounded saved state (the economy's save size is an activation blocker, LE-06); a migration that is not purely an
@@ -82,4 +82,8 @@ conservation-checked; `le04_test::test_settle_estate`.
 
 ## 5. Milestone evidence
 
-See the report; one G0 (seeds 1,2, 30 days) and one `--market` run at the LE-04 head.
+| Check | Result |
+|---|---|
+| G0, Actions run 41135548780 (`d292f41`, switch off, seeds 1 and 2, 30 days) | identical to `docs/release/sim_baseline.json`: day-30 fingerprints `c24e8660...` and `45fd9acb...`, judgment state hashes unchanged; the item 6/7 fixes did not alter these runs (no manor- or player-held till changed hands in them) |
+| Economy on, Actions run 41135583126 (`d292f41`, `--market`, seeds 1 and 2, 30 days) | both seeds passed (currency leak 0, item leaks none, 0 claims breaches). Seed 1: 61 deals, 134 negotiations, 233 bids (1118 unaffordable within budget), 17 CON-01 contracts, 15 tools bought by the manor through the authority (no commission needed), 25 speculative bids, 14 input earmarks, 613 yields, 77 stale cuts, 0 unbacked; economy save section 1.97 MB (knowledge 7752 entries): the LE-06 activation blocker stands |
+| Local suites (LE-04 head) | `le04_test` 61, `till_ownership_test` 71, `le03_transactions_test` 79, `le03_economy_test` 38, `le03_claims_test` 80, `le02_market_test` 101, `economy_model_test` 112, `contracts_test` 154, `business_test` 160, `business_money_test` 37, `world_test` 339, `conservation_test` 8, `property_test` 123, `stalls_test` 104, `recorder_test` 214: 0 failures |
