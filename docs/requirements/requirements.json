@@ -61122,7 +61122,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -61131,8 +61131,15 @@
      "date": "2026-10-30",
      "change": "entered in the register",
      "why": "owner message 2026-10-30 (Multiplayer Batch D decision and next steps)"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E (MP-economy integrity); branch: None -> wip/x20-mp-econ",
+     "why": "integrated base exists (wip/expansion20 8bbdcfb: Batch D + LE-03/LE-04 authority + food trade); owner directive 2026-10-30 x20_background s.5"
     }
-   ]
+   ],
+   "assigned_worker": "worker E (MP-economy integrity)",
+   "branch": "wip/x20-mp-econ"
   },
   {
    "id": "X20-OPEN-ITEMS",

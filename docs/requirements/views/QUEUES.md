@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (24)
+## Workers and task branches (25)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -26,6 +26,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-B24-REMED | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | X20-B24-REVIEW | 20 | IN DEVELOPMENT | lead (tracking); workers A and B | wip/expansion20 |
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
+| X20-MP-ECON-INTEGRITY | 20 | IN DEVELOPMENT | worker E (MP-economy integrity) | wip/x20-mp-econ |
 | X20-RESUME | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | X20-SETTLE-FOOD | 20 | IN DEVELOPMENT | worker B (settlement food trade) | wip/x20-settle-food |
 | X20-SETTLE-REOPEN | 20 | IN DEVELOPMENT | worker B | wip/x20-settle-food |
