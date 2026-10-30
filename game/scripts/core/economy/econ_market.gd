@@ -37,7 +37,8 @@ extends RefCounted
 ## (posts_per_dawn, ask_sellers_per_dawn, dialogues_per_dawn) with round-robin cursors; reviews wait review_days.
 ## Deterministic: sorted iteration, ids counting up, no World.rng; personal choices use the shared engine's seeded hashes.
 
-const BID_KINDS := ["contract", "housing", "input", "tool"]     # food stays with the existing household food rule (LE-03)
+const BID_KINDS := ["contract", "food", "housing", "input", "tool"]     # LE-03: food bids from a household's budget
+const BUDGET_ORDER := ["food", "contract", "tool", "housing", "input"]   # LE-03: ties of equal urgency only (no fixed rank)
 const PURPOSE := "market"
 
 var f: EconomyFoundation
@@ -276,7 +277,123 @@ func need_for(ref: String, item: String, kind := "") -> Dictionary:
 				var y := open_need(ref, x)
 				if int(y.qty) > 0:
 					return y
+	if n != null and (kind == "" or kind == "food") and NPCBrain.FOOD.has(item) and food_payer(n.household) == n:
+		for x in f.needs.needs_of(World.hh_ref(n.household)):
+			if str(x.kind) == "food" and (x.substitutes as Array).has(item):
+				var y := open_need(ref, food_units(x, item))
+				if int(y.qty) > 0:
+					return y
 	return {}
+
+
+## LE-03 (design s.8): who buys a household's food at market: its adult with the most coins (the lowest id on a tie); null for
+## none. Purses stay their own (no pooling): the payer spends from its own purse.
+func food_payer(h: int) -> NPC:
+	if h < 0 or h >= w.households.size() or w.households[h].get("ended", false):
+		return null
+	var best: NPC = null
+	for m in w.households[h].members:
+		var o := w.npc(int(m))
+		if o != null and o.alive and o.role == "adult" and (best == null or o.coins > best.coins or (o.coins == best.coins and o.id < best.id)):
+			best = o
+	return best
+
+
+## The food a household's payer bids for: the purchasable food (NPCBrain.FOOD) it believes cheapest per food point (its own
+## knowledge: believed price; the item's value when it knows nothing), lowest id on a tie.
+func food_item(buyer: NPC) -> String:
+	var best := ""
+	var per := INF
+	var ids: Array = NPCBrain.FOOD.duplicate()
+	ids.sort()
+	for id in ids:
+		var pts := NPCBrain.food_points(str(id))
+		if pts <= 0.0:
+			continue
+		var c := float(believed(World.npc_ref(buyer.id), str(id)).price) / pts
+		if c < per:
+			per = c
+			best = str(id)
+	return best
+
+
+## A household food need (in food points) as units of `item`, the item named.
+func food_units(need: Dictionary, item: String) -> Dictionary:
+	var y := need.duplicate(true)
+	y.item = item
+	y.qty = ceili(float(need.qty) / maxf(0.001, NPCBrain.food_points(item)))
+	return y
+
+
+## LE-03 household budget (design s.4 "Evaluate competing uses of money and time", s.8 household needs): the coins `buyer` puts
+## toward `need`. Obligations and necessities it answers for (COMMITTED: its household's food when it is the payer, goods it owes
+## on a contract, its trade's tool) are served first, in order of their own urgency (buyer_ceiling: food's missing days, a
+## contract's deadline, a tool 1.0; BUDGET_ORDER breaks ties only), each up to its open quantity at its ceiling. A discretionary
+## need (a trade input, a housing material) gets what is left after all of them, never more than its own cost: stock targets
+## (SHOP-01 wants) are not obligations and do not crowd each other out. Food draws on the whole purse net of other reservations
+## (OD-19: necessities out of any coins); everything else on the coins above the OD-19 reserve (cash_for). `own_bid` is not
+## counted against itself.
+const COMMITTED := ["food", "contract", "tool"]
+
+
+func budget_for(buyer: NPC, need: Dictionary, own_bid := -1) -> int:
+	var br := World.npc_ref(buyer.id)
+	var own := 0
+	if own_bid >= 0:
+		var rid := int(f.offers.get_offer(own_bid).get("reservation", -1))
+		if rid >= 0:
+			own = int(f.reservations.get_record(rid).get("qty", 0))
+	var purse := maxi(0, buyer.coins - f.reservations.reserved(br, EconReservations.COINS) + own)
+	var spend := mini(purse, cash_for(buyer, own_bid))
+	var target_kind := str(need.get("kind", ""))
+	var target_item := str(need.get("item", ""))
+	var list := []
+	for x in _needs_answered(buyer):
+		if not str(x.kind) in COMMITTED:
+			continue
+		var ce := buyer_ceiling(buyer, str(x.item), x)
+		list.append({"need": x, "u": float(ce.urgency), "cost": int(x.qty) * maxi(0, int(ce.limit))})
+	list.sort_custom(func(a, b):
+		if not is_equal_approx(float(a.u), float(b.u)):
+			return float(a.u) > float(b.u)
+		var ka := BUDGET_ORDER.find(str(a.need.kind))
+		var kb := BUDGET_ORDER.find(str(b.need.kind))
+		return ka < kb if ka != kb else str(a.need.item) < str(b.need.item))
+	for e in list:
+		var food: bool = str(e.need.kind) == "food"
+		var give := mini(int(e.cost), purse if food else spend)
+		if str(e.need.kind) == target_kind and str(e.need.item) == target_item:
+			return give
+		purse -= give
+		spend = mini(maxi(0, spend - (0 if food else give)), purse)
+	var cost := int(need.get("qty", 0)) * maxi(0, int(buyer_ceiling(buyer, target_item, need).limit))
+	return mini(cost, purse if target_kind == "food" else spend)
+
+
+## The needs `buyer` answers for, as bid-ready records (open quantities, food as units of its chosen food), sorted.
+func _needs_answered(buyer: NPC) -> Array:
+	var br := World.npc_ref(buyer.id)
+	var out := []
+	for x in f.needs.needs_of(br):
+		if str(x.kind) in BID_KINDS:
+			var y := open_need(br, x)
+			if int(y.qty) > 0:
+				out.append(y)
+	if buyer.household >= 0:
+		var hr := World.hh_ref(buyer.household)
+		var payer := food_payer(buyer.household) == buyer
+		var builder := w.construction.responsible_adult(buyer.household) == buyer
+		for x in f.needs.needs_of(hr):
+			var y := {}
+			if str(x.kind) == "food" and payer:
+				var it := food_item(buyer)
+				if it != "":
+					y = open_need(br, food_units(x, it))
+			elif str(x.kind) == "housing" and builder:
+				y = open_need(br, x)
+			if not y.is_empty() and int(y.qty) > 0:
+				out.append(y)
+	return out
 
 
 ## LE-03 (no duplicate purchase): the need less the units already coming to `ref` on its open or agreed contracts
@@ -526,7 +643,7 @@ func review(day: int) -> Array:
 				_stat("bid_withdrawn_need_met")
 				continue
 			var left := f.offers.remaining(id)
-			var cover := cash_for(n, id) / maxi(1, price)
+			var cover := budget_for(n, need, id) / maxi(1, price)     # LE-03: what its budget still puts toward this need
 			if mini(left, int(need.qty)) > cover or left > int(need.qty):
 				var keep := mini(mini(left, int(need.qty)), cover)
 				if keep < int(o.min_lot) or not f.offers.resize(id, int(o.filled) + int(o.committed) + keep):
@@ -536,7 +653,7 @@ func review(day: int) -> Array:
 			var ceiling := int(buyer_ceiling(n, item, need).limit)
 			if price < ceiling and int(o.revisions) < maxrev:
 				var up := mini(ceiling, price + ceili(float(ceiling - price) * share))
-				if f.offers.remaining(id) * up <= cash_for(n, id) and f.offers.revise(id, up):
+				if f.offers.remaining(id) * up <= budget_for(n, need, id) and f.offers.revise(id, up):
 					_stat("bid_raised")
 					continue
 			elif price > ceiling and int(o.revisions) < maxrev and ceiling >= int(band(item)[0]):
@@ -592,10 +709,17 @@ func post_bids(day: int) -> Array:
 				bidder = w.npc(World.ref_id(ref))
 			elif str(need.kind) == "housing":
 				bidder = w.construction.responsible_adult(World.ref_id(ref))
+			elif str(need.kind) == "food":
+				bidder = food_payer(World.ref_id(ref))     # LE-03: the household's payer bids for the food it believes cheapest
+				if bidder != null:
+					var fi := food_item(bidder)
+					if fi == "":
+						continue
+					need = food_units(need, fi)
 			if bidder == null or not bidder.alive or bidder.role != "adult":
 				continue
 			var br := World.npc_ref(bidder.id)
-			if f.offers.open_of(br).any(func(x): return x.side == EconOffers.BID and x.item == need.item):
+			if f.offers.open_of(br).any(func(x): return x.side == EconOffers.BID and (x.item == need.item or (str(need.kind) == "food" and str(x.need) == "food"))):
 				continue
 			need = open_need(br, need)              # LE-03: what its contracts already bring is not bid for again
 			if int(need.qty) <= 0:
@@ -614,7 +738,7 @@ func post_bid(buyer: NPC, item: String, need: Dictionary) -> int:
 		return -1
 	var price := bid_price(buyer, item, int(ce.limit))
 	var lot := maxi(1, w.brain.batch_unit(buyer, item)) if str(need.kind) == "input" else 1
-	var qty := mini(int(need.qty), cash_for(buyer) / maxi(1, price))
+	var qty := mini(int(need.qty), budget_for(buyer, need) / maxi(1, price))     # LE-03: its household budget, not every free coin
 	if qty < lot:
 		_stat("bid_unaffordable")
 		return -1

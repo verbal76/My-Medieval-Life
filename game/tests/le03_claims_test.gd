@@ -201,6 +201,11 @@ func test_contract_holds_bind() -> void:
 	check(audit_clean(w), "no breach")
 	var a := w.economy.offers.post(EconOffers.ASK, ref(car), "plank", 1, 3)
 	check(not a.ok, "nor can an ask reserve goods a contract holds")
+	# an ask first, then a contract for the same goods: the contract's hold wins and the ask is cut at once (Contracts._open)
+	car.inv.add("plank", 4)
+	var a2 := ask(w, car, "plank", 4, 3)
+	contract(w, car, lab, "plank", 3, 4)
+	check(w.economy.offers.remaining(a2) == 1 and audit_clean(w), "a contract opened over an ask's goods cuts the ask to what is left (%d)" % w.economy.offers.remaining(a2))
 
 
 # ------------------------------------------------------------------------------------------------ competing claims on one stock

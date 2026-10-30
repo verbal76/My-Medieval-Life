@@ -2320,8 +2320,13 @@ func work_craft(who, recipe: String, inv: Inventory) -> Dictionary:
 		return {"result": "level"}
 	if craft_tool(who, recipe) == "-":
 		return {"result": "tool"}
+	var econ_craft: bool = economy != null and who is NPC and inv == (who as NPC).inv
+	if econ_craft and not economy.claims.craft_ok(who, recipe):
+		return {"result": "materials"}       # LE-03: inputs earmarked for a contract this recipe does not serve (design s.6)
 	if not inv.remove_all(r["in"]):
 		return {"result": "materials"}
+	if econ_craft:
+		economy.claims.after_craft(who, recipe)     # LE-03: the contract's earmarks it drew on shrink with the use
 	var exact := bool(r.get("exact", false))
 	var conserve: Dictionary = r.get("conserve", {})
 	var out: Dictionary = (r.out as Dictionary).duplicate()

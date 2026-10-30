@@ -206,6 +206,85 @@ func inbound(ref: String, item: String) -> int:
 	return k
 
 
+## LE-03 production (design s.6: "An accepted order creates a real obligation ... Explicitly reserve or earmark material while
+## retaining physical ownership and location"): when a CON-01 goods contract the seller will craft opens (route "craft"), the
+## seller earmarks the inputs it holds for the units still owed (EconContractLinks.earmark: purpose "contract:<id>", expiring
+## with the contract's deadline, released by the dawn sweep whatever ends it). Only what is free of other claims; what it
+## lacks it must still buy. Market driving only. Returns the reservation ids made.
+func on_contract_open(c: Dictionary) -> Array:
+	var made := []
+	if not f.market.drive or str(c.get("route", "")) != "craft" or str(c.get("recipe", "")) == "" or not GameData.recipes.has(str(c.recipe)):
+		return made
+	var rec: Dictionary = GameData.recipes[str(c.recipe)]
+	var per := maxi(1, int((rec.out as Dictionary).get(str(c.item), 1)))
+	var batches := ceili(float(Contracts.left(c)) / float(per))
+	var ins: Array = (rec["in"] as Dictionary).keys()
+	ins.sort()
+	for i in ins:
+		if str(i) == str(c.item):
+			continue
+		var q := mini(batches * int(rec["in"][i]), f.reservations.available(str(c.seller), str(i)))
+		if q > 0:
+			var r := f.contract_links.earmark(int(c.id), str(i), q)
+			if r.ok:
+				made.append(int(r.id))
+				_stat("inputs_earmarked")
+	return made
+
+
+## The seller's input earmarks a recipe making `outputs` may draw on: those of its open contracts for one of the outputs.
+func _earmarks_for(ref: String, outputs: Dictionary) -> Array:
+	var out := []
+	for r in f.reservations.held_of(ref):
+		var purpose := str(r.purpose)
+		if not purpose.begins_with(EconContractLinks.PURPOSE):
+			continue
+		var c: Dictionary = f.actors.w.contracts.get_contract(int(purpose.substr(EconContractLinks.PURPOSE.length())))
+		if not c.is_empty() and outputs.has(str(c.item)):
+			out.append(int(r.id))
+	return out
+
+
+## Pure. Whether villager `n` may work `recipe` from its own pack without consuming inputs earmarked for a contract the recipe
+## does not serve (design s.6: "cannot silently divert committed stock to unrelated products"). True when nothing is earmarked.
+func craft_ok(n: NPC, recipe: String) -> bool:
+	var ref := World.npc_ref(n.id)
+	if not f.reservations._by_owner.has(ref) or not GameData.recipes.has(recipe):
+		return true
+	var rec: Dictionary = GameData.recipes[recipe]
+	var exempt := _earmarks_for(ref, rec.out)
+	for i in rec["in"]:
+		if not bool(plan(ref, str(i), int(rec["in"][i]), "", false, exempt).ok):
+			_stat("craft_refused_earmarked")
+			return false
+	return true
+
+
+## After `recipe` was worked from the pack: the earmarks it drew on (contracts for its outputs) shrink by what was used and
+## stay backed (consumed, the rest earmarked again within what is held).
+func after_craft(n: NPC, recipe: String) -> void:
+	var ref := World.npc_ref(n.id)
+	if not f.reservations._by_owner.has(ref) or not GameData.recipes.has(recipe):
+		return
+	var rec: Dictionary = GameData.recipes[recipe]
+	var used := {}
+	for i in rec["in"]:
+		used[str(i)] = int(rec["in"][i])
+	for rid in _earmarks_for(ref, rec.out):
+		var r := f.reservations.get_record(rid)
+		var it := str(r.item)
+		if int(used.get(it, 0)) <= 0:
+			continue
+		var take := mini(int(used[it]), int(r.qty))
+		used[it] = int(used[it]) - take
+		var cid := int(str(r.purpose).substr(EconContractLinks.PURPOSE.length()))
+		f.reservations.consume(rid)
+		var left := mini(int(r.qty) - take, f.reservations.available(ref, it))
+		if left > 0:
+			f.contract_links.earmark(cid, it, left)
+	f.contract_links.sweep()
+
+
 ## LE-03 audit (tests, economy_sim): every integrity breach found now, sorted. Empty when consistent. Checks: no negative
 ## coins or goods for any villager, household pantry or the player; every open priced offer holds a reservation covering
 ## exactly what remains (asks: units; bids: units x price); no reservation is unbacked except by an outflow not yet

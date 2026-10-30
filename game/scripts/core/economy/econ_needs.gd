@@ -108,7 +108,9 @@ func derive(ref: String) -> Array:
 			var n: NPC = w.npc(int(ref.get_slice(":", 1)))
 			if n.role == "adult":
 				var tool: String = NPCBrain.JOB_TOOL.get(n.job, "")
-				if tool != "" and not n.inv.has(tool) and w.brain._order_for(n).is_empty():
+				# LE-03 (no tool-order trap): while the market drives, a worker waiting on a manor order (EQ-19) may still seek the
+				# tool from anyone; the manor's tool goes to the next worker short of one if this one gets it first (_deliver_orders)
+				if tool != "" and not n.inv.has(tool) and (w.brain._order_for(n).is_empty() or (w.economy != null and w.economy.market.drive)):
 					out.append(_need(ref, "tool", tool, 1, 1, 1, -1.0, -1, [], "JOB_TOOL of " + n.job))
 				elif tool != "axe" and not n.inv.has("axe") and n.household >= 0 and str(w.households[n.household].get("build", "")) != "" \
 						and w.construction.responsible_adult(n.household) == n:

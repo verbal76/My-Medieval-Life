@@ -662,13 +662,14 @@ func _open(c: Dictionary) -> bool:
 	_add_coins(c.buyer, -total)
 	c.reserved = total
 	c.state = "accepted"
+	c.deadline_day = w.day() + int(c.days) - 1        # the last day it may be delivered on (days counts today)
+	if not list.has(c):
+		list.append(c)
 	if w.economy != null:                        # LE-03: the seller's goods now held for it, the buyer's coins set aside: own offers
 		w.economy.claims.reconcile(str(c.buyer), EconReservations.COINS)     # that lost their backing are cut at once
 		if not is_service(c):
 			w.economy.claims.reconcile(str(c.seller), str(c.item))
-	c.deadline_day = w.day() + int(c.days) - 1        # the last day it may be delivered on (days counts today)
-	if not list.has(c):
-		list.append(c)
+			w.economy.claims.on_contract_open(c)     # LE-03 production: the inputs it will craft them from, earmarked
 	if w.recorder != null:
 		w.recorder.contract_opened(c, _coins(c.buyer))     # X20-FINAL: the coins set aside, on the thread contract:<id>
 	var s := _npc_of(c.seller)

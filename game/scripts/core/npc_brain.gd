@@ -2323,6 +2323,8 @@ func _do_recipe(n: NPC, r: String) -> bool:
 		return false
 	if rec.has("tool") and w.craft_tool(n, r) == "-":     # STONE-01: the recipe's tool, as for the player
 		return false
+	if w.economy != null and not w.economy.claims.craft_ok(n, r):
+		return false                                       # LE-03: its inputs are earmarked for a contract this does not serve
 	var st := _station_for(n, rec.station)
 	if st == "":
 		w.stat("station_busy_" + str(rec.station))
