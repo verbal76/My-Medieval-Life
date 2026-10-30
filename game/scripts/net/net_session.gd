@@ -216,8 +216,7 @@ func stop() -> void:
 			if g != null:
 				g.away = true
 			rpc_id(int(id), "z_bye", "stopped")          # Batch D: so the guests do not wait to reconnect
-		if peer != null and peer.host != null:
-			peer.host.flush()
+		_drain(0.3)
 	upnp.stop()
 	_close_peer()
 	discovery.close()
@@ -253,6 +252,28 @@ func _close_peer() -> void:
 	multiplayer.multiplayer_peer = null          # first, so closing raises no signal of a lost server here
 	if p != null:
 		p.close()
+
+
+## Batch D, host: before closing, let the packets just sent (the goodbye) reach the guests: each connection is asked to end once its
+## queue is delivered, and ENet is run for up to `secs` (a fraction of a second, once, when hosting stops) until they have.
+func _drain(secs: float) -> void:
+	if peer == null or peer.host == null:
+		return
+	for id in multiplayer.get_peers():
+		var pp := peer.get_peer(id)
+		if pp != null:
+			pp.peer_disconnect_later()
+	var end := Time.get_ticks_msec() + int(secs * 1000.0)
+	while Time.get_ticks_msec() < end:
+		var ev: Array = peer.host.service(10)
+		if ev.is_empty() or int(ev[0]) == ENetConnection.EVENT_NONE:
+			var live := false
+			for id in multiplayer.get_peers():
+				var pp := peer.get_peer(id)
+				if pp != null and pp.get_state() != ENetPacketPeer.STATE_DISCONNECTED:
+					live = true
+			if not live:
+				break
 
 
 func _now() -> float:

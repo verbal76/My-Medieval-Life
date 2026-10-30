@@ -28,6 +28,7 @@ var held: Array = []
 var releasing := false
 var batch := {}           # the last release: {held, applied (in that one frame), frame}
 var _batch_from := -1
+var suspended := {}       # Batch D: the last "suspend": {minutes_before, secs}
 
 
 func _init() -> void:
@@ -201,6 +202,12 @@ func _commands() -> void:
 				main.net.rpc_id(id, "s_self", g.to_dict())
 		"census":
 			census = {"at": "now", "coins": w.total_coins(), "goods": _goods(), "away": _aways()}
+		"suspend":                                   # Batch D (net_fault_test): Android's background, as the app meets it: the pause
+			var m0: float = w.minutes                    # notification, the process frozen (no frames, no network) for `secs`, then
+			main._notification(Node.NOTIFICATION_APPLICATION_PAUSED)     # the resume notification before the next frame
+			OS.delay_msec(int(float(c.secs) * 1000.0))
+			main._notification(Node.NOTIFICATION_APPLICATION_RESUMED)
+			suspended = {"minutes_before": m0, "secs": float(c.secs)}
 		"give":                                      # MP C: goods for the guests' tests, entered in the books as imported
 			for id in main.net.by_peer:
 				var gp: PlayerState = w.player_by_pid(int(main.net.by_peer[id]))
@@ -472,7 +479,8 @@ func _status() -> void:
 		"journal": _journal_counts(w), "journal_kept": main.net.journal_kept,
 		"ui": _ui_state(), "offers": w.offers.duplicate(true), "spot": [spot.x, spot.y] if spot != Vector2.INF else [],
 		"held": held.size(), "holding": holding, "batch": batch, "why_last": why_last, "felled": felled, "rec": {"dir": str(w.recorder.dir) if w.recorder != null else "", "state": w.recorder.completeness() if w.recorder != null else ""}, "frozen": main.process_mode == Node.PROCESS_MODE_DISABLED,
-		"day": w.day()}
+		"day": w.day(), "net_d": {"duplicates": main.net.duplicates, "gaps": main.net.gaps_skipped, "resumes": main.net.resumes,
+			"log": main.net.applied_log.duplicate(), "tag": main.net.tag, "suspended": suspended, "upnp": main.net.upnp.state}}
 	var tmp := dir + "status.tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	f.store_string(JSON.stringify(d))

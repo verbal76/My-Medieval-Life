@@ -98,7 +98,7 @@ var shot_pick := 0.0
 var view_scale := 1.0          # phones draw the interface larger; the camera zoom makes up for it
 var walking := false           # the player moved this frame (resource prompts wait until they stop)
 var net: NetSession            # MP Batch A2: hosting and joining (scripts/net, docs/multiplayer/BATCH_A.md)
-var _net_resumed := false     # Batch D: a host's first frame back from Android's background (NetSession.on_app_resumed)
+const HOST_STALL_SECONDS := 1.0   # Batch D: a hosted world's frame longer than this was a freeze, not play: not caught up
 var guest_world := false       # this machine shows a host's world from its own character: it never simulates or saves it
 var avatar_sprites := {}       # the other players in the session, by pid
 var _offers_seen := {}          # MP-D8, MP-INTERACT-01: ids of the offers and messages to this player it was told of
@@ -1925,9 +1925,8 @@ func _refresh_player_worn() -> void:
 func _process(delta: float) -> void:
 	if world == null:
 		return
-	if _net_resumed:
-		_net_resumed = false
-		delta = minf(delta, 1.0 / 30.0)         # Batch D (MP-D6): time stopped while the host was away; no catching up
+	if delta > HOST_STALL_SECONDS and net.is_host():
+		delta = 1.0 / 30.0                      # Batch D (MP-D6): a hosting app frozen (Android background, a stall): time stopped meanwhile
 	_refresh_player_worn()
 	if player_sprite != null:                # WEAPON-VISIBLE-01: the weapon in hand is carried, drawn
 		player_sprite.wield(_in_hand())
@@ -5669,9 +5668,7 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_PAUSED and net != null:
 		net.on_app_paused()                     # Batch D (MP-D6): a host tells its guests it is paused; a guest notes the time
 	if what == NOTIFICATION_APPLICATION_RESUMED and net != null:
-		if net.is_host():
-			_net_resumed = true                 # Batch D: the hosted world's clock does not jump by the time spent away
-		net.on_app_resumed()                    # a guest away too long reconnects at once
+		net.on_app_resumed()                    # a guest away too long reconnects at once (a host's clock: HOST_STALL_SECONDS)
 
 
 func continue_as_heir() -> void:
