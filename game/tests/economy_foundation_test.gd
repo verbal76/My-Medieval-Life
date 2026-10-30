@@ -190,7 +190,9 @@ func test_unbacked() -> void:
 	var ref := World.npc_ref(a.id)
 	r.reserve(ref, "wheat", n, "order")
 	check(r.unbacked().is_empty(), "backed claim: nothing reported")
-	check(w.trade(b, a, "wheat", 2, 1), "a live trade takes goods the owner had reserved")
+	# LE-03: a sale may no longer take goods a reservation (not an offer) holds: World.trade refuses it (EconClaims)
+	check(not w.trade(b, a, "wheat", 2, 1) and a.inv.count("wheat") == n, "a live trade cannot take goods the owner had reserved (LE-03)")
+	a.inv.remove("wheat", 2)                   # an outflow nobody refuses (eaten, used, stolen): the claim loses its backing
 	var u := r.unbacked()
 	check(u.size() == 1 and u[0].owner == ref and u[0].short == 2 and u[0].held == n - 2, "unbacked() reports the shortfall")
 	check(r.reserved(ref, "wheat") == n, "report only: the claim is not changed")

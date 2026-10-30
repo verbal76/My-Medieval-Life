@@ -1551,7 +1551,7 @@ var trade_hook := Callable()
 ## (World.economy null) nothing here differs from before.
 func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int, total_price := -1, exempt := []) -> bool:
 	var total := qty * price_each if total_price < 0 else total_price
-	var refused := qty <= 0 or price_each < 0 or buyer == seller or int(buyer.coins) < total or not seller.inv.has(id, qty) or not buyer.inv.can_add(id)
+	var refused: bool = qty <= 0 or price_each < 0 or buyer == seller or int(buyer.coins) < total or not seller.inv.has(id, qty) or not buyer.inv.can_add(id)
 	var cuts := []
 	if not refused and economy != null:
 		var v: Dictionary = economy.claims.check_trade(buyer, seller, id, qty, total, exempt)
@@ -1618,7 +1618,7 @@ func claims_release(who: Object, item: String, qty: int, for_item := "", necessi
 func claims_free_coins(who: Object, for_item := "", necessity := false) -> int:
 	if economy == null or who == null:
 		return int(who.coins) if who != null else 0
-	return economy.claims.free(Contracts.ref_of(who), EconReservations.COINS, for_item, necessity)
+	return economy.claims.free_units(Contracts.ref_of(who), EconReservations.COINS, for_item, necessity)
 
 
 ## REG-COURIER-01 HOOK (a record only): `actor` (an NPC or the player) really dealt with the trader of `settlement` on a caravan

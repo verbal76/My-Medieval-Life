@@ -160,7 +160,7 @@ func reconcile_all() -> Array:
 
 ## The units of `item` ("coins") `ref` may part with for this purpose without breaking a claim that cannot yield (stale
 ## offers reconciled first). The holding itself when nothing is claimed.
-func free(ref: String, item: String, for_item := "", necessity := false) -> int:
+func free_units(ref: String, item: String, for_item := "", necessity := false) -> int:
 	if f.reservations._by_owner.has(ref):
 		reconcile(ref, item)
 	var held := f.actors.holding(ref, item)
