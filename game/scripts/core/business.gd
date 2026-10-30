@@ -1235,6 +1235,8 @@ func sell(s: Dictionary, n: NPC, id: String, qty: int, price: int, pantry := fal
 	var dest: Inventory = (w.households[n.household].pantry as Inventory) if pantry else n.inv
 	if qty <= 0 or int(s.stock.get(id, 0)) < qty or n.coins < total or not dest.can_add(id):
 		return false
+	if not w.claims_release(n, EconReservations.COINS, total, id, pantry or World.is_necessity(id)):
+		return false                       # LE-03: coins its own offers hold back are not spent here (nothing while the economy is off)
 	s.stock[id] = int(s.stock[id]) - qty
 	if int(s.stock[id]) == 0:
 		s.stock.erase(id)

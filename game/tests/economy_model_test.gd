@@ -245,7 +245,8 @@ func test_offers() -> void:
 	check(of.open_for("wheat").size() == 2 and of.open_for("wheat", "bid").size() == 1 and of.open_of(ar).size() == 1, "indexes by item, side and actor")
 	check(w.economy.knowledge.knows(ar, ar, "wheat", "sells") and w.economy.knowledge.knowers_of(ar, "wheat") == [ar], "only the poster knows of its offer (OD-LE-02B undecided)")
 	# a fill after a real trade
-	check(w.trade(b, a, "wheat", 3, 3), "a live trade of 3")
+	# LE-03: the trade that fills an offer names that offer's reservation (EconMarket._settle does), else the ask would yield first
+	check(w.trade(b, a, "wheat", 3, 3, -1, [int(of.get_offer(x.id).reservation)]), "a live trade of 3 that fills the ask")
 	check(of.record_fill(x.id, 3) and of.remaining(x.id) == 1 and rs.reserved(ar, "wheat") == 1, "record_fill books 3 and shrinks the reservation to the rest")
 	check(not of.record_fill(x.id, 2), "a fill beyond what remains is refused")
 	check(of.record_fill(x.id, 1) and of.get_offer(x.id).state == "filled" and rs.reserved(ar, "wheat") == 0, "the last unit fills the offer")

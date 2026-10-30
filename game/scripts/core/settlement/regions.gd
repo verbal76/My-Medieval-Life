@@ -14,7 +14,6 @@ extends RefCounted
 ## seed and steps them to the saved day, so no save version changes).
 
 const FORMAT := "mml-regions-world/1"
-const TX_KEEP := 64                  # X20-SETTLE-FOOD stand-in: closed shipments and outcomes kept (the authority's keep_* default)
 
 var list: Array = []                 # OffMapSettlement, in data order
 var by_id: Dictionary = {}
@@ -27,7 +26,6 @@ var suits: Dictionary = {}           # MIGRATE-18 marriage across the road: "<se
 var journal: Array = []              # the parties' exchange lines (SettlementParty.deal): {day, party, kind, item, n, coins, with}; not saved
 var party_options := {}              # fixtures' settings per party id (SettlementParty.option); not saved
 var food_seq: Dictionary = {}        # X20-SETTLE-FOOD: the last transaction sequence number used per namespace "settle_food/<place>" (saved)
-var food_custody := {"marks": {}, "outcomes": {}, "shipments": []}   # the TEMPORARY stand-in authority's state (ship_line; saved)
 var food_last: Dictionary = {}       # X20-SETTLE-FOOD: the last food round's result (food_round), for reports and tests; not saved
 var _world: WeakRef = null           # the world the settlements live in (bind_world), for its flight recorder; not saved
 
@@ -330,6 +328,9 @@ func food_round(d: int) -> Dictionary:
 			spare.append(s)
 	if short.is_empty() or spare.is_empty():
 		return food_last
+	if authority() == null:
+		food_last.unmet = short.map(func(x): return {"buyer": x.id + "/trader", "item": str(items[0]), "units": 0, "reason": "no_authority"})
+		return food_last
 	var ls: Array = []
 	var routes := route_table()
 	for s: OffMapSettlement in short:
@@ -353,7 +354,7 @@ func food_round(d: int) -> Dictionary:
 		var sb: OffMapSettlement = by_id[str(line.buyer).get_slice("/", 0)]
 		var ss: OffMapSettlement = by_id[str(line.seller).get_slice("/", 0)]
 		var due := d + trip_days(ss.id, sb.id, routes)
-		var res := ship_line(line, d, due)
+		var res := ship_line(line, due)
 		line["tx"] = str(res.get("txid", ""))
 		if bool(res.ok):
 			sb.await_shipment(str(line.tx), "trader", str(line.item), int(line.units), "region:" + str(line.seller), d, due, int(line.total))
@@ -391,182 +392,63 @@ func trip_days(from: String, to: String, routes := {}) -> int:
 
 
 # ------------------------------------------------------------------ the transaction step (X20-SETTLE-FOOD; LE-03 authority) ----------------
-## The settlement food trade's ONE goods-for-coins step: a plan line becomes a shipment through the transaction authority
-## (docs/expansion20/TRANSACTION_AUTHORITY.md, Worker A, LE-03): `ship` takes the seller's goods into transit custody (still the
-## seller's) and the buyer's price into escrow (still the buyer's), together or not at all; the buyer's settlement later asks for
-## `deliver` (goods to the buyer, escrow to the seller) or, when it cannot be, `fail` (goods back, price refunded). Each attempt has a
-## new id "settle_food/<buyer settlement>:<seq>" (`food_seq`, saved), so an id executes at most once whatever retries, reloads or
-## replays follow. Rejection codes are the authority's (no_stock, no_funds, party_unavailable, ...), nothing moved.
-##
-## When the world has the authority (`World.transactions`) every call goes to it. Until that lands on this branch, and for the
-## settlements alone (tests, regions_sim), a TEMPORARY stand-in with the same calls, codes and holdings (`food_custody`, saved) does
-## the same; it is removed when the branch is integrated with LE-03 (owner direction 2026-10-30: no second permanent path).
-func ship_line(line: Dictionary, d: int, due: int) -> Dictionary:
-	var place := str(line.buyer).get_slice("/", 0)
-	var ns := "settle_food/" + place
+## The settlement food trade's goods-for-coins step goes through the world's ONE transaction authority (World.transactions,
+## EconTransactions, Worker A's LE-03; docs/expansion20/TRANSACTION_AUTHORITY.md); this layer has no transfer of its own. A plan
+## line becomes a shipment: `ship` takes the seller's goods into transit custody (still the seller's) and the buyer's price into
+## escrow (still the buyer's), together or not at all; the buyer's settlement later asks for `deliver` (goods to the buyer, escrow to
+## the seller) or, when it cannot be, `fail` (goods back, price refunded). Each attempt has a new id "settle_food/<buyer place>:<seq>"
+## (`food_seq`, saved), so an id executes at most once whatever retries, reloads or replays follow; a rejection (no_stock, no_funds,
+## party_unavailable, ...) moves nothing. Settlements with no world (tests, regions_sim) have no authority: they plan, but buy nothing
+## ("no_authority").
+func ship_line(line: Dictionary, due: int) -> Dictionary:
+	var ns := "settle_food/" + str(line.buyer).get_slice("/", 0)
 	food_seq[ns] = int(food_seq.get(ns, 0)) + 1
-	var txid := "%s:%d" % [ns, int(food_seq[ns])]
-	return tx_ship(txid, "region:" + str(line.buyer), "region:" + str(line.seller), str(line.item), int(line.units), int(line.total), due)
+	return tx_ship("%s:%d" % [ns, int(food_seq[ns])], "region:" + str(line.buyer), "region:" + str(line.seller), str(line.item),
+		int(line.units), int(line.total), due)
 
 
-func _authority():
+func authority():
 	var w = _world.get_ref() if _world != null else null
-	if w != null and "transactions" in w and w.get("transactions") != null:
-		return w.get("transactions")
-	return null
+	return w.transactions if w != null and w.transactions != null else null
 
 
 func tx_ship(txid: String, buyer: String, seller: String, item: String, qty: int, total: int, due_day: int) -> Dictionary:
-	var a = _authority()
-	if a != null:
-		return a.ship(txid, buyer, seller, item, qty, total, due_day)
-	var seen = _tx_seen(txid)
-	if seen != null:
-		return seen
-	var res := _tx_check(txid, buyer, seller, item, qty, total)
-	if bool(res.ok):
-		var b := party(buyer)
-		var s := party(seller)
-		s.remove(item, qty)
-		b.outside_coins(-total)
-		food_custody.shipments.append({"txid": txid, "buyer": buyer, "seller": seller, "item": item, "qty": qty, "total": total,
-			"due_day": due_day, "state": "open"})
-		res.state = "open"
-	return _tx_record(txid, res)
+	var a = authority()
+	return a.ship(txid, buyer, seller, item, qty, total, due_day) if a != null else _no_authority(txid)
 
 
 func tx_deliver(txid: String) -> Dictionary:
-	var a = _authority()
-	if a != null:
-		return a.deliver(txid)
-	return _tx_close(txid, "delivered", "")
+	var a = authority()
+	return a.deliver(txid) if a != null else _no_authority(txid)
 
 
 func tx_fail(txid: String, why: String) -> Dictionary:
-	var a = _authority()
-	if a != null:
-		return a.fail(txid, why)
-	return _tx_close(txid, "failed", why)
-
-
-## Goods and coins in transit custody and escrow between two settlements (the authority's in_transit() less its village part):
-## held by nobody's books but the authority's, so Regions.coins/goods count them as a holder.
-func tx_in_transit() -> Dictionary:
-	var a = _authority()
-	if a != null:
-		var t: Dictionary = a.in_transit()
-		var g := {}
-		for k in t.get("goods", {}):
-			var n := int(t.goods[k]) - int(t.get("village_goods", {}).get(k, 0))
-			if n != 0:
-				g[k] = n
-		return {"coins": int(t.get("coins", 0)) - int(t.get("village_coins", 0)), "goods": g}
-	var out := {"coins": 0, "goods": {}}
-	for sh in food_custody.shipments:
-		if str(sh.state) == "open":
-			out.coins += int(sh.total)
-			OffMapSettlement._add(out.goods, str(sh.item), int(sh.qty))
-	return out
+	var a = authority()
+	return a.fail(txid, why) if a != null else _no_authority(txid)
 
 
 func tx_shipment(txid: String) -> Dictionary:
-	var a = _authority()
-	if a != null:
-		return a.get_shipment(txid)
-	for sh in food_custody.shipments:
-		if str(sh.txid) == txid:
-			return (sh as Dictionary).duplicate()
-	return {}
+	var a = authority()
+	return a.get_shipment(txid) if a != null else {}
 
 
-# --- the stand-in's own rules (the authority's sections 4 to 6, for settlement parties)
-func _tx_seen(txid: String):
-	var at := txid.rfind(":")
-	if at <= 0 or not txid.substr(at + 1).is_valid_int() or int(txid.substr(at + 1)) <= 0:
-		return {"ok": false, "code": "bad_id", "txid": txid, "replay": false, "state": ""}
-	var ns := txid.substr(0, at)
-	if int(txid.substr(at + 1)) <= int(food_custody.marks.get(ns, 0)):
-		var o = food_custody.outcomes.get(txid)
-		if o == null:
-			return {"ok": false, "code": "stale_id", "txid": txid, "replay": true, "state": ""}
-		var r: Dictionary = (o as Dictionary).duplicate()
-		r.replay = true
-		return r
-	return null
+static func _no_authority(txid: String) -> Dictionary:
+	return {"ok": false, "code": "no_authority", "txid": txid, "replay": false, "state": ""}
 
 
-func _tx_check(txid: String, buyer: String, seller: String, item: String, qty: int, total: int) -> Dictionary:
-	var res := {"ok": false, "code": "", "txid": txid, "replay": false, "state": ""}
-	if qty <= 0 or total < 0 or item == "" or item == "coins":
-		res.code = "invalid_quantity"
-	elif buyer == seller:
-		res.code = "same_party"
-	elif not buyer.begins_with("region:") or not seller.begins_with("region:"):
-		res.code = "unsupported_party"
-	else:
-		var b := party(buyer)
-		var s := party(seller)
-		if b == null or s == null:
-			res.code = "unknown_party" if not by_id.has(buyer.trim_prefix("region:").get_slice("/", 0)) or not by_id.has(seller.trim_prefix("region:").get_slice("/", 0)) else "party_unavailable"
-		elif s.held(item) < qty:
-			res.code = "no_stock"
-		elif b.purse() < total:
-			res.code = "no_funds"
-		elif not b.can_hold(item):
-			res.code = "no_room"
-		else:
-			res.ok = true
-	return res
-
-
-func _tx_record(txid: String, res: Dictionary) -> Dictionary:
-	if str(res.code) in ["bad_id"]:
-		return res
-	var at := txid.rfind(":")
-	var ns := txid.substr(0, at)
-	food_custody.marks[ns] = maxi(int(food_custody.marks.get(ns, 0)), int(txid.substr(at + 1)))
-	food_custody.outcomes[txid] = res.duplicate()
-	return res
-
-
-func _tx_close(txid: String, to_state: String, why: String) -> Dictionary:
-	for sh in food_custody.shipments:
-		if str(sh.txid) != txid:
-			continue
-		if str(sh.state) != "open":
-			return {"ok": str(sh.state) == to_state, "code": "duplicate" if str(sh.state) == to_state else "not_open", "txid": txid, "replay": true, "state": str(sh.state)}
-		var b := party(str(sh.buyer))
-		var s := party(str(sh.seller))
-		# delivered: goods to the buyer, escrow to the seller; failed: goods back to the seller, escrow back to the buyer
-		var gets_goods: SettlementParty = b if to_state == "delivered" else s
-		var gets_coins: SettlementParty = s if to_state == "delivered" else b
-		if gets_goods == null or gets_coins == null:
-			return {"ok": false, "code": "party_unavailable", "txid": txid, "replay": false, "state": "open"}
-		gets_goods.add(str(sh.item), int(sh.qty))
-		gets_coins.outside_coins(int(sh.total))
-		sh.state = to_state
-		if why != "":
-			sh["why"] = why
-		_tx_prune()
-		return {"ok": true, "code": "", "txid": txid, "replay": false, "state": to_state}
-	return {"ok": false, "code": "not_found", "txid": txid, "replay": false, "state": ""}
-
-
-## Keep every open shipment and the last TX_KEEP closed ones; the last TX_KEEP outcomes a namespace (the authority's keep_outcomes).
-func _tx_prune() -> void:
-	var closed: Array = food_custody.shipments.filter(func(x): return str(x.state) != "open")
-	while closed.size() > TX_KEEP:
-		food_custody.shipments.erase(closed.pop_front())
-	var keys: Array = food_custody.outcomes.keys()
-	if keys.size() > TX_KEEP * maxi(1, list.size()):
-		keys.sort_custom(func(x, y): return _tx_order(x) < _tx_order(y))
-		for k in keys.slice(0, keys.size() - TX_KEEP * maxi(1, list.size())):
-			food_custody.outcomes.erase(k)
-
-
-static func _tx_order(txid: String) -> String:
-	var at := txid.rfind(":")
-	return "%s:%012d" % [txid.substr(0, at), int(txid.substr(at + 1))]
+## Goods in transit custody and coins in escrow that belong to the settlements (the authority's in_transit() less its village parts):
+## they left a settlement's books as outside lines but never left the region, so Regions.coins/goods count them as a holder.
+func tx_in_transit() -> Dictionary:
+	var a = authority()
+	if a == null:
+		return {"coins": 0, "goods": {}}
+	var t: Dictionary = a.in_transit()
+	var g := {}
+	for k in t.goods:
+		var n := int(t.goods[k]) - int((t.village_goods as Dictionary).get(k, 0))
+		if n != 0:
+			g[k] = n
+	return {"coins": int(t.coins) - int(t.village_coins), "goods": g}
 
 
 ## The buyer's settlement asks for its shipment at the due day's step (OffMapSettlement._deliver): delivered when it can be; a
@@ -699,9 +581,11 @@ func _shipments_audit() -> String:
 			var sh := tx_shipment(str(e.tx))
 			if sh.is_empty() or str(sh.state) != "open":
 				return "%s awaits shipment %s, which is %s" % [s.id, str(e.tx), "unknown" if sh.is_empty() else str(sh.state)]
-	for sh in food_custody.shipments:
-		if str(sh.state) == "open" and not awaited.has(str(sh.txid)):
-			return "shipment %s is open but no settlement awaits it" % str(sh.txid)
+	var a = authority()
+	if a != null:
+		for sh in a.open_shipments():
+			if str(sh.txid).begins_with("settle_food/") and not awaited.has(str(sh.txid)):
+				return "shipment %s is open but no settlement awaits it" % str(sh.txid)
 	return ""
 
 
@@ -787,7 +671,7 @@ func net_migrants_counted() -> int:
 func to_dict() -> Dictionary:
 	return {"format": FORMAT, "day": day, "migrated_coins": migrated_coins, "settlements": list.map(func(s): return s.to_dict()),
 		"moves": moves.duplicate(true), "move_counts": move_counts.duplicate(), "suits": suits.duplicate(true),
-		"food_seq": food_seq.duplicate(), "food_custody": food_custody.duplicate(true)}
+		"food_seq": food_seq.duplicate()}
 
 
 ## The settlements of a save's "regions" section; an unknown format is refused (null), never reinterpreted.
@@ -807,17 +691,6 @@ static func from_dict(d: Dictionary, seed_: int) -> Regions:
 		r.move_counts[str(k)] = int(d.move_counts[k])
 	for k in d.get("food_seq", {}):                           # X20-SETTLE-FOOD (optional keys)
 		r.food_seq[str(k)] = int(d.food_seq[k])
-	var fc: Dictionary = d.get("food_custody", {})
-	for k in fc.get("marks", {}):
-		r.food_custody.marks[str(k)] = int(fc.marks[k])
-	for k in fc.get("outcomes", {}):
-		var o: Dictionary = fc.outcomes[k]
-		r.food_custody.outcomes[str(k)] = {"ok": bool(o.ok), "code": str(o.code), "txid": str(o.txid), "replay": bool(o.get("replay", false)), "state": str(o.get("state", ""))}
-	for sh in fc.get("shipments", []):
-		var x: Dictionary = (sh as Dictionary).duplicate()
-		for k in ["qty", "total", "due_day"]:
-			x[k] = int(x[k])
-		r.food_custody.shipments.append(x)
 	for k in d.get("suits", {}):
 		r.suits[str(k)] = {"pair": str(d.suits[k].pair), "since": int(d.suits[k].since)}
 	return r

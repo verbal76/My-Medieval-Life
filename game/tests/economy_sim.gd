@@ -17,6 +17,7 @@ extends SceneTree
 ##       an hour after the second killing (day 2 15:00), if still alive and the case still open; tools/sim_suite.py)
 ##       [--judgment]   (attach a fresh judgment store; Build 19 ships judgment on already; prints its counts at the end)
 ##       [--economy]   (Expansion 20 LE-01: the economy model on, observing only; prints its record counts at the end)
+##       [--market]    (Expansion 20 LE-03: the shipped economy.json switched on, the market driving; audits the claims at the end)
 ##       [--scenario strip_mine|contracts_fail|social_chain --at DAY]   (X20-FINAL phase 4, tools/sim_suite.py: economic stress
 ##       and the judgment chain through the game's own verbs; see _intervene and _scripted_step)
 ##       [--aspiration] [--job-choice]   (Expansion 20 R5, WDR-011-C: the NPC aspiration layer on, and its own job_choice flag;
@@ -91,7 +92,12 @@ func _init() -> void:
 			ov.job_choice = true
 		JudgmentAspiration.override = ov
 		print("aspiration: %s" % JSON.stringify(ov))
-	if "--economy" in args:               # EXPANSION 20 LE-01: the economy model attached, observing only (never shipped on)
+	if "--market" in args:                # EXPANSION 20 LE-03: the shipped economy.json switched on: the LE-02/LE-03 market drives
+		var ecfg: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/economy.json"))
+		ecfg.enabled = true
+		EconomyFoundation.set_override(ecfg)
+		print("economy: enabled with the shipped settings (market drive %s)" % str(ecfg.get("market", {}).get("drive", false)))
+	elif "--economy" in args:             # EXPANSION 20 LE-01: the economy model attached, observing only (never shipped on)
 		EconomyFoundation.set_override({"enabled": true})
 		print("economy: LE-01 model enabled (observing)")
 	w = World.new()
@@ -235,6 +241,12 @@ func _init() -> void:
 			str(ec.events.ordered()), ec.knowledge.size(), ec.needs.recorded().size(), ec.needs.dirty.size(), ec.offers.records.size(), ec.reservations.records.size(),
 			ec.reservations.unbacked().size(), ec.contract_links.links.size()])
 		print("economy save bytes: %d" % JSON.stringify(ec.to_dict()).length())
+		print("economy market: %s; deals %d" % [JSON.stringify(ec.market.stats), ec.market.deals.size()])
+		print("economy claims: %s" % JSON.stringify(ec.claims.stats))
+		var breaches: Array = ec.claims.audit().filter(func(x): return str(x.kind) != "unbacked")     # LE-03: integrity, not outcome
+		print("economy audit: %d breaches %s; unbacked earmarks %d" % [breaches.size(), JSON.stringify(breaches.slice(0, 10)), ec.reservations.unbacked().size()])
+		if not breaches.is_empty():
+			ok = false
 		var tc := 0                       # LE-01 till ownership: every till resolves to a controller and they add up to Business.tills
 		var held := 0
 		var lost: Array = []

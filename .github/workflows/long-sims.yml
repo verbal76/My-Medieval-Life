@@ -32,7 +32,7 @@ on:
         default: ""
         required: false
       sim_args:
-        description: "X20-FINAL: extra economy_sim switches, from: --aspiration --job-choice --economy --no-judgment --scenario NAME --at DAY (empty: the shipped switches)"
+        description: "X20-FINAL: extra economy_sim switches, from: --aspiration --job-choice --economy --market --no-judgment --scenario NAME --at DAY (empty: the shipped switches)"
         default: ""
         required: false
       record:
@@ -103,8 +103,8 @@ jobs:
           ok = ok and re.fullmatch(r"\d{1,3}", os.environ["EVERY"]) and int(os.environ["EVERY"]) >= 1
           if not ok:
               sys.exit("seeds must be 1-8 whole numbers, days 1-730, every >= 1")
-          if not re.fullmatch(r"((--aspiration|--job-choice|--economy|--no-judgment|--scenario [a-z_]+|--at \d{1,3})( |$))*", os.environ.get("SIM_ARGS", "").strip()):
-              sys.exit("sim_args: only --aspiration --job-choice --economy --no-judgment --scenario NAME --at DAY")
+          if not re.fullmatch(r"((--aspiration|--job-choice|--economy|--market|--no-judgment|--scenario [a-z_]+|--at \d{1,3})( |$))*", os.environ.get("SIM_ARGS", "").strip()):
+              sys.exit("sim_args: only --aspiration --job-choice --economy --market --no-judgment --scenario NAME --at DAY")
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
               jobs = [{"seed": int(s), "vi": i, "sets": v} for i, v in enumerate(variants) for s in seeds]
               f.write("jobs=" + json.dumps(jobs) + "\n")

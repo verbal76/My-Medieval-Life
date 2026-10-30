@@ -139,6 +139,7 @@ var settlement_profile := {}  # SET-B: today's all-industry profile (level, effe
 var settlement_foreign = null # a saved settlement section of an unknown format, kept and written back
 var justice: Justice          # GP-CRIME-PURSUIT A1: the authorities' file on each offender, by player reference (scripts/core/justice.gd). Saved as the optional key "justice" (a Build 20 save has none)
 var economy_foreign := {}   # D2: a saved "economy" section while the foundation is disabled: written back unchanged, never parsed or erased
+var transactions: EconTransactions = null   # LE-03: the transaction authority (docs/expansion20/TRANSACTION_AUTHORITY.md); saved as "transactions" only when non-empty
 var economy: EconomyFoundation = null   # EXPANSION 20 LE-01: null unless game/data/economy.json "enabled" (shipped false); saved as the optional key "economy" only when on and non-empty
 var credit: Credit            # TRADE-CREDIT: barter and recorded debts (scripts/core/credit.gd). Saved as the optional key "credit" (older saves have none)
 var contracts: Contracts      # CON-01: negotiated goods-procurement contracts (scripts/core/contracts.gd). Saved (older saves have none)
@@ -282,6 +283,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	couriers.daily()
 	settlement_profile = SettlementProfile.update(self, settlement_caps, day())   # SET-B: the starting profile (history begins here)
 	economy = EconomyFoundation.attach(self)     # EXPANSION 20 LE-01: null while disabled (nothing built, nothing saved)
+	transactions = EconTransactions.new(self)   # LE-03: always built; does nothing until called
 	note("Day 1 begins in the village.")
 
 
@@ -1544,12 +1546,25 @@ var trade_hook := Callable()
 
 ## Atomic sale: either goods and coins both move or nothing does. Parties are NPC or PlayerState.
 ## `total_price` (optional) is the whole bill when the units are priced one by one (player_buy_many).
-func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int, total_price := -1) -> bool:
+## EXPANSION 20 LE-03 (validate-then-commit; the one transaction path of village actors): with the Living Economy on, the
+## sale is first validated against every claim on the two parties (EconClaims.check_trade: contract holds and reservations;
+## `exempt` names the reservations of the offers a market settlement is filling), then the seller's own asks and the buyer's
+## own bids that must yield are cut, then the goods and coins move. A refused sale changes nothing. While the economy is off
+## (World.economy null) nothing here differs from before.
+func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int, total_price := -1, exempt := []) -> bool:
 	var total := qty * price_each if total_price < 0 else total_price
-	if qty <= 0 or price_each < 0 or buyer == seller or int(buyer.coins) < total or not seller.inv.has(id, qty) or not buyer.inv.can_add(id):
+	var refused: bool = qty <= 0 or price_each < 0 or buyer == seller or int(buyer.coins) < total or not seller.inv.has(id, qty) or not buyer.inv.can_add(id)
+	var cuts := []
+	if not refused and economy != null:
+		var v: Dictionary = economy.claims.check_trade(buyer, seller, id, qty, total, exempt)
+		refused = not bool(v.ok)
+		cuts = v.cuts
+	if refused:
 		if recorder != null:
 			recorder.trade_refused(buyer, seller, id, qty, price_each, total)     # REC-19: a refused sale is an event too
 		return false
+	if not cuts.is_empty():
+		economy.claims.apply(cuts)          # LE-03: the parties' own offers yield to this sale (validated above, cannot fail)
 	var rec_trade: Array = recorder.trade_begin(buyer, seller, id, qty, total) if recorder != null else []     # REC-19
 	seller.inv.remove(id, qty)
 	buyer.inv.add(id, qty)
@@ -1571,6 +1586,41 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 		business.stalls.after_trade(seller, id, qty, total)     # a merchant's sale at their market stall: its session (STALL-05)
 		business.money.after_trade(seller, total)               # a keeper's sale at the household's storefront: its till (ECON-P3)
 	return true
+
+
+## EXPANSION 20 LE-03: whether `who` (a villager or a player) may part with `qty` of `item` ("coins" for money) by a path
+## other than World.trade (a caravan purchase, a premises' counter, the manor's purchases) without breaking a claim on it;
+## `for_item` the thing bought (coins only: the buyer's own bids for it may yield), `necessity` a household necessity (any of
+## its bids may yield). Pure. Always true while the economy is off.
+func claims_allow(who: Object, item: String, qty: int, for_item := "", necessity := false) -> bool:
+	if economy == null or who == null:
+		return true
+	var ref := Contracts.ref_of(who)
+	if economy.reservations._by_owner.has(ref):
+		economy.claims.reconcile(ref, item)
+	return bool(economy.claims.plan(ref, item, qty, for_item, necessity).ok)
+
+
+## LE-03: the commit half of claims_allow, called just before the path moves the coins or goods: the actor's own offers that
+## must yield are cut. False (nothing changed) when the claims refuse. Always true while the economy is off.
+func claims_release(who: Object, item: String, qty: int, for_item := "", necessity := false) -> bool:
+	if economy == null or who == null:
+		return true
+	var ref := Contracts.ref_of(who)
+	if economy.reservations._by_owner.has(ref):
+		economy.claims.reconcile(ref, item)
+	var v: Dictionary = economy.claims.plan(ref, item, qty, for_item, necessity)
+	if not bool(v.ok):
+		return false
+	economy.claims.apply(v.cuts)
+	return true
+
+
+## LE-03: the coins `who` holds that no claim it cannot yield for this purchase holds back (its coins while the economy is off).
+func claims_free_coins(who: Object, for_item := "", necessity := false) -> int:
+	if economy == null or who == null:
+		return int(who.coins) if who != null else 0
+	return economy.claims.free_units(Contracts.ref_of(who), EconReservations.COINS, for_item, necessity)
 
 
 ## REG-COURIER-01 HOOK (a record only): `actor` (an NPC or the player) really dealt with the trader of `settlement` on a caravan
@@ -1757,12 +1807,15 @@ static func is_necessity(id: String) -> bool:
 ## "business purchases may still be economically justified when necessary to generate income": a trader holding none
 ## of `id`, an input of their own trade (NPCBrain.BUYS), may buy one unit with reserved coins to keep earning; with any
 ## in hand they work it first. The one rule for every purchase, whoever sells, the player or a villager (PAR-02).
+## LE-03: with the Living Economy on, the coins counted are those no claim holds back (claims_free_coins: its own bids yield to
+## a necessity or a purchase of the same thing); while it is off, the purse as before.
 func can_afford(buyer: NPC, price: int, for_need := false, id := "") -> bool:
+	var coins := buyer.coins if economy == null else claims_free_coins(buyer, id, for_need or World.is_necessity(id))
 	if for_need:
-		return buyer.coins >= price
-	if buyer.coins - price >= reserve_of(buyer):
+		return coins >= price
+	if coins - price >= reserve_of(buyer):
 		return true
-	return id != "" and buyer.inv.count(id) == 0 and NPCBrain.BUYS.get(brain.buy_role(buyer), {}).has(id) and buyer.coins >= price
+	return id != "" and buyer.inv.count(id) == 0 and NPCBrain.BUYS.get(brain.buy_role(buyer), {}).has(id) and coins >= price
 
 
 ## SHOP-01, TRADE-01: how many of the `offered` units of `id` business `buyer` buys from `seller` (the player or a
@@ -1779,8 +1832,9 @@ func purchase_qty(buyer: NPC, seller: Object, id: String, offered: int) -> int:
 	for c in prices:
 		bill += int(c)
 	var keep := reserve_of(buyer)
+	var coins := buyer.coins if economy == null else claims_free_coins(buyer, id, World.is_necessity(id))     # LE-03
 	while q > 0:
-		if buyer.coins >= bill and (buyer.coins - bill >= keep or (q == 1 and can_afford(buyer, bill, false, id))):
+		if coins >= bill and (coins - bill >= keep or (q == 1 and can_afford(buyer, bill, false, id))):
 			return q
 		q -= 1
 		bill -= int(prices[q])
@@ -2268,8 +2322,13 @@ func work_craft(who, recipe: String, inv: Inventory) -> Dictionary:
 		return {"result": "level"}
 	if craft_tool(who, recipe) == "-":
 		return {"result": "tool"}
+	var econ_craft: bool = economy != null and who is NPC and inv == (who as NPC).inv
+	if econ_craft and not economy.claims.craft_ok(who, recipe):
+		return {"result": "materials"}       # LE-03: inputs earmarked for a contract this recipe does not serve (design s.6)
 	if not inv.remove_all(r["in"]):
 		return {"result": "materials"}
+	if econ_craft:
+		economy.claims.after_craft(who, recipe)     # LE-03: the contract's earmarks it drew on shrink with the use
 	var exact := bool(r.get("exact", false))
 	var conserve: Dictionary = r.get("conserve", {})
 	var out: Dictionary = (r.out as Dictionary).duplicate()
@@ -5792,7 +5851,7 @@ func to_dict() -> Dictionary:
 		"mine_works": mine_works.to_dict(),
 		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged(_economy_section()).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged(_economy_section()).merged({EconTransactions.KEY: transactions.to_dict()} if transactions != null and not transactions.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
 	if judgment != null:
 		out.judgment = judgment.to_dict()                          # PROSPECTIVE (PROS-19): provisional section
 	elif not judgment_foreign.is_empty():
@@ -6269,6 +6328,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	settlement_profile = SettlementProfile.update(self, caps_now, day())
 	var economy_saved: Dictionary = d.get(EconomyFoundation.KEY, {})
 	economy = EconomyFoundation.attach(self, economy_saved)   # EXPANSION 20 LE-01: absent or disabled: none
+	transactions = EconTransactions.new(self)
+	transactions.load_dict(d.get(EconTransactions.KEY, {}))   # LE-03: optional key; older saves have none
 	economy_foreign = (economy_saved.duplicate(true) if economy == null else {})   # D2: kept untouched while disabled
 	_unstick()
 	if couriers != null:

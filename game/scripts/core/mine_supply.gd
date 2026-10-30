@@ -209,6 +209,8 @@ func procure() -> int:
 			var price := w.sell_price(seller, str(id))
 			if w.treasury - price < floor_coins:
 				return spent
+			if not w.claims_release(seller, str(id), 1):
+				break                    # LE-03: goods held for a contract or another claim (nothing while the economy is off)
 			seller.inv.remove(str(id))
 			w.manor_work.yard.add(str(id))
 			seller.coins += price

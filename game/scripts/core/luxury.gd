@@ -113,8 +113,11 @@ static func visit(w, on_road: Array) -> int:
 			continue
 		var p := price(id)
 		var seller: OffMapSettlement = w.regions.seller_for(id, on_road)
+		if not w.claims_allow(n, EconReservations.COINS, p, id):
+			continue                                     # LE-03: coins its own offers hold back (nothing while the economy is off)
 		if not seller.sell_to_village(id, 1, p):
 			continue
+		w.claims_release(n, EconReservations.COINS, p, id)
 		w.note_settlement_trade(n, seller)              # REG-COURIER-01: a dealing with that trader (a record only)
 		n.coins -= p
 		n.spent += p
