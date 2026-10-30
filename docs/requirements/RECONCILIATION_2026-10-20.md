@@ -10,7 +10,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 167 still open, 64 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 626 (300 of them still open) |
+| Entries added since | | 627 (300 of them still open) |
 | **Open entries now** (rules excluded) | | **466** |
 | Open entries moved to another build | | 15 |
 
@@ -107,7 +107,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (626)
+## Added since the baseline (627)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -721,7 +721,7 @@ None.
 | X20-B24-F6 | Review finding 6: stall commission recorded at the wrong moment (not at Stalls.settle) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | X20-B24-F7 | Review finding 7: a storefront or counter till did not go to its previous holder's own funds on every holder change (manor, players, dead villagers, ended households, counters skipped) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | X20-B24-F8 | Review finding 8: the recorder's 'starved with means' counted village food rather than the deceased's own and household means | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
-| X20-B24-REMED | Build 24 review remediation and Expansion 20 integration: per-finding register, failing-first regression tests, shared ownership-transition root causes, LE-04 on World.transactions with no double reservation, LE-06 bounded saves as an activation gate, X20-MP-ECON-INTEGRITY fault injection, SJD-G within budget, milestone report | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| X20-B24-REMED | Build 24 review remediation and Expansion 20 integration: per-finding register, failing-first regression tests, shared ownership-transition root causes, LE-04 on World.transactions with no double reservation, LE-06 bounded saves as an activation gate, X20-MP-ECON-INTEGRITY fault injection, SJD-G within budget, milestone report | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-B24-REVIEW | Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
@@ -732,8 +732,9 @@ None.
 | X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-SCOPE | Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forward into Expansion 20 (LE-02..LE-05)? | decision | APPROVED | 20 |
 | X20-SETTLE-FOOD | Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| X20-SETTLE-REOPEN | A closed settlement business reopens (or is re-established) when a household takes up its trade, through the existing business-creation and ownership rules, without restoring the former owner's money, stock, contracts, workforce or assets | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
-| X20-TRADER-CLOSE | Review finding 1 (settlement traders): once traders close when nobody works them, all five settlement traders close by days 21-35 on seeds 1 and 2 and never reopen, ending caravan trade (village coins day 60: 5429->3995 seed 1, 5236->3848 seed 2; conservation intact; run 41133027134 on wip/x20-settle-food 108d252). Choose: (a) ship the fix as is; (b) add a rule that reopens a closed trader when a household takes up the trade again; (c) retune trader pay (excluded by the owner's no-retuning rule); (d) keep the trader's exemption from closing (Build 24 behaviour) until the owner decides. Lead recommendation: (d) now, (b) if the owner wants traders to be able to fail and recover. | decision | OPEN | 20+ |
+| X20-TRADER-CLOSE | Review finding 1 (settlement traders): once traders close when nobody works them, all five settlement traders close by days 21-35 on seeds 1 and 2 and never reopen, ending caravan trade (village coins day 60: 5429->3995 seed 1, 5236->3848 seed 2; conservation intact; run 41133027134 on wip/x20-settle-food 108d252). Choose: (a) ship the fix as is; (b) add a rule that reopens a closed trader when a household takes up the trade again; (c) retune trader pay (excluded by the owner's no-retuning rule); (d) keep the trader's exemption from closing (Build 24 behaviour) until the owner decides. Lead recommendation: (d) now, (b) if the owner wants traders to be able to fail and recover. | decision | APPROVED | 20+ |
 | XAUDIT-01 | Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
 | XEXPL-01 | Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | XEXPL-D1 | Decision explainability: is an optional player-inspection panel wanted in this generation of builds, or only in-world explanation (dialogue, rumours, notices) for now? | decision | APPROVED | unassigned |

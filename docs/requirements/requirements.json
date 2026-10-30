@@ -60764,7 +60764,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -60773,8 +60773,15 @@
      "date": "2026-10-30",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/expansion20",
+     "why": "started"
     }
-   ]
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/expansion20"
   },
   {
    "id": "X20-B24-REVIEW",
@@ -61229,6 +61236,47 @@
    "branch": "wip/x20-settle-food"
   },
   {
+   "id": "X20-SETTLE-REOPEN",
+   "kind": "approved",
+   "title": "A closed settlement business reopens (or is re-established) when a household takes up its trade, through the existing business-creation and ownership rules, without restoring the former owner's money, stock, contracts, workforce or assets",
+   "description": "A closed settlement business reopens (or is re-established) when a household takes up its trade, through the existing business-creation and ownership rules, without restoring the former owner's money, stock, contracts, workforce or assets",
+   "source": "docs/directives/2026-10-30_x20_trader_close_decision.md",
+   "owner_wording": "Approve reopening settlement trading businesses when a household takes up the trade again.",
+   "approval": "owner, 2026-10-30",
+   "acceptance": [
+    "focused regression test: an unstaffed trader closes, stays inactive while unstaffed, and resumes legitimate trade after a new household enters the profession",
+    "applies to every settlement business type the simulation can establish; the Finding 1 fix stays",
+    "nothing of the former owner restored or duplicated; outstanding obligations follow existing ownership, estate and transaction rules; deterministic; exact coin and goods conservation"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "X20-B24-F1"
+   ],
+   "decisions": [
+    "X20-TRADER-CLOSE"
+   ],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_x20_trader_close_decision.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B; branch: None -> wip/x20-settle-food",
+     "why": "assigned"
+    }
+   ],
+   "assigned_worker": "worker B",
+   "branch": "wip/x20-settle-food"
+  },
+  {
    "id": "X20-TILL-KEEP",
    "kind": "approved",
    "title": "A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1)",
@@ -61284,8 +61332,8 @@
    "description": "Review finding 1 (settlement traders): once traders close when nobody works them, all five settlement traders close by days 21-35 on seeds 1 and 2 and never reopen, ending caravan trade (village coins day 60: 5429->3995 seed 1, 5236->3848 seed 2; conservation intact; run 41133027134 on wip/x20-settle-food 108d252). Choose: (a) ship the fix as is; (b) add a rule that reopens a closed trader when a household takes up the trade again; (c) retune trader pay (excluded by the owner's no-retuning rule); (d) keep the trader's exemption from closing (Build 24 behaviour) until the owner decides. Lead recommendation: (d) now, (b) if the owner wants traders to be able to fail and recover.",
    "source": "docs/directives/2026-10-30_build24_review_follow_through.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Approve reopening settlement trading businesses when a household takes up the trade again. A settlement business with zero workers must close and stop all trading activity; closure does not permanently eliminate that trade. Reopening through the existing business-creation and ownership rules, never restoring or duplicating the former owner's money, stock, contracts, workforce or assets; applies to all settlement businesses; deterministic; exact conservation.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20+",
    "related": [
@@ -61304,6 +61352,11 @@
      "date": "2026-10-30",
      "change": "notes",
      "why": "owner directive 2026-10-30 (b24_review_remediation) requires 'Businesses cannot continue operating with no workers': closure is confirmed, option (d) is no longer compatible; finding 1 is integrated. The open question narrows to (b), whether a closed settlement trader may reopen when a household takes the trade up again (without it, caravan trade ends for good by days 21-35)"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered: option (b) approved (docs/directives/2026-10-30_x20_trader_close_decision.md)"
     }
    ],
    "notes": "Narrowed 2026-10-30 by docs/directives/2026-10-30_b24_review_remediation_x20_integration.md: closure (a) is in force; open: approve (b) a reopen rule, or keep (a) and accept permanent loss of caravan trade. Lead recommends (b)."
