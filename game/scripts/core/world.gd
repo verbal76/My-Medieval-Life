@@ -1544,12 +1544,25 @@ var trade_hook := Callable()
 
 ## Atomic sale: either goods and coins both move or nothing does. Parties are NPC or PlayerState.
 ## `total_price` (optional) is the whole bill when the units are priced one by one (player_buy_many).
-func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int, total_price := -1) -> bool:
+## EXPANSION 20 LE-03 (validate-then-commit; the one transaction path of village actors): with the Living Economy on, the
+## sale is first validated against every claim on the two parties (EconClaims.check_trade: contract holds and reservations;
+## `exempt` names the reservations of the offers a market settlement is filling), then the seller's own asks and the buyer's
+## own bids that must yield are cut, then the goods and coins move. A refused sale changes nothing. While the economy is off
+## (World.economy null) nothing here differs from before.
+func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int, total_price := -1, exempt := []) -> bool:
 	var total := qty * price_each if total_price < 0 else total_price
-	if qty <= 0 or price_each < 0 or buyer == seller or int(buyer.coins) < total or not seller.inv.has(id, qty) or not buyer.inv.can_add(id):
+	var refused := qty <= 0 or price_each < 0 or buyer == seller or int(buyer.coins) < total or not seller.inv.has(id, qty) or not buyer.inv.can_add(id)
+	var cuts := []
+	if not refused and economy != null:
+		var v: Dictionary = economy.claims.check_trade(buyer, seller, id, qty, total, exempt)
+		refused = not bool(v.ok)
+		cuts = v.cuts
+	if refused:
 		if recorder != null:
 			recorder.trade_refused(buyer, seller, id, qty, price_each, total)     # REC-19: a refused sale is an event too
 		return false
+	if not cuts.is_empty():
+		economy.claims.apply(cuts)          # LE-03: the parties' own offers yield to this sale (validated above, cannot fail)
 	var rec_trade: Array = recorder.trade_begin(buyer, seller, id, qty, total) if recorder != null else []     # REC-19
 	seller.inv.remove(id, qty)
 	buyer.inv.add(id, qty)
@@ -1571,6 +1584,41 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 		business.stalls.after_trade(seller, id, qty, total)     # a merchant's sale at their market stall: its session (STALL-05)
 		business.money.after_trade(seller, total)               # a keeper's sale at the household's storefront: its till (ECON-P3)
 	return true
+
+
+## EXPANSION 20 LE-03: whether `who` (a villager or a player) may part with `qty` of `item` ("coins" for money) by a path
+## other than World.trade (a caravan purchase, a premises' counter, the manor's purchases) without breaking a claim on it;
+## `for_item` the thing bought (coins only: the buyer's own bids for it may yield), `necessity` a household necessity (any of
+## its bids may yield). Pure. Always true while the economy is off.
+func claims_allow(who: Object, item: String, qty: int, for_item := "", necessity := false) -> bool:
+	if economy == null or who == null:
+		return true
+	var ref := Contracts.ref_of(who)
+	if economy.reservations._by_owner.has(ref):
+		economy.claims.reconcile(ref, item)
+	return bool(economy.claims.plan(ref, item, qty, for_item, necessity).ok)
+
+
+## LE-03: the commit half of claims_allow, called just before the path moves the coins or goods: the actor's own offers that
+## must yield are cut. False (nothing changed) when the claims refuse. Always true while the economy is off.
+func claims_release(who: Object, item: String, qty: int, for_item := "", necessity := false) -> bool:
+	if economy == null or who == null:
+		return true
+	var ref := Contracts.ref_of(who)
+	if economy.reservations._by_owner.has(ref):
+		economy.claims.reconcile(ref, item)
+	var v: Dictionary = economy.claims.plan(ref, item, qty, for_item, necessity)
+	if not bool(v.ok):
+		return false
+	economy.claims.apply(v.cuts)
+	return true
+
+
+## LE-03: the coins `who` holds that no claim it cannot yield for this purchase holds back (its coins while the economy is off).
+func claims_free_coins(who: Object, for_item := "", necessity := false) -> int:
+	if economy == null or who == null:
+		return int(who.coins) if who != null else 0
+	return economy.claims.free(Contracts.ref_of(who), EconReservations.COINS, for_item, necessity)
 
 
 ## REG-COURIER-01 HOOK (a record only): `actor` (an NPC or the player) really dealt with the trader of `settlement` on a caravan
@@ -1757,12 +1805,15 @@ static func is_necessity(id: String) -> bool:
 ## "business purchases may still be economically justified when necessary to generate income": a trader holding none
 ## of `id`, an input of their own trade (NPCBrain.BUYS), may buy one unit with reserved coins to keep earning; with any
 ## in hand they work it first. The one rule for every purchase, whoever sells, the player or a villager (PAR-02).
+## LE-03: with the Living Economy on, the coins counted are those no claim holds back (claims_free_coins: its own bids yield to
+## a necessity or a purchase of the same thing); while it is off, the purse as before.
 func can_afford(buyer: NPC, price: int, for_need := false, id := "") -> bool:
+	var coins := buyer.coins if economy == null else claims_free_coins(buyer, id, for_need or World.is_necessity(id))
 	if for_need:
-		return buyer.coins >= price
-	if buyer.coins - price >= reserve_of(buyer):
+		return coins >= price
+	if coins - price >= reserve_of(buyer):
 		return true
-	return id != "" and buyer.inv.count(id) == 0 and NPCBrain.BUYS.get(brain.buy_role(buyer), {}).has(id) and buyer.coins >= price
+	return id != "" and buyer.inv.count(id) == 0 and NPCBrain.BUYS.get(brain.buy_role(buyer), {}).has(id) and coins >= price
 
 
 ## SHOP-01, TRADE-01: how many of the `offered` units of `id` business `buyer` buys from `seller` (the player or a
@@ -1779,8 +1830,9 @@ func purchase_qty(buyer: NPC, seller: Object, id: String, offered: int) -> int:
 	for c in prices:
 		bill += int(c)
 	var keep := reserve_of(buyer)
+	var coins := buyer.coins if economy == null else claims_free_coins(buyer, id, World.is_necessity(id))     # LE-03
 	while q > 0:
-		if buyer.coins >= bill and (buyer.coins - bill >= keep or (q == 1 and can_afford(buyer, bill, false, id))):
+		if coins >= bill and (coins - bill >= keep or (q == 1 and can_afford(buyer, bill, false, id))):
 			return q
 		q -= 1
 		bill -= int(prices[q])

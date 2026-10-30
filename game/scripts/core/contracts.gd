@@ -590,7 +590,10 @@ func fund_refusal(buyer_ref: String, total: int) -> String:
 	var b := _npc_of(buyer_ref)
 	if b == null or not b.alive:
 		return "The buyer is gone."
-	return "" if b.coins - total >= w.reserve_of(b) else "%s cannot set aside %d coins without touching what the household needs." % [b.name, total]
+	# LE-03: with the Living Economy on, coins its own offers hold back are not set aside again (World.claims_free_coins;
+	# the purse itself while the economy is off)
+	var coins := b.coins if w.economy == null else w.claims_free_coins(b)
+	return "" if coins - total >= w.reserve_of(b) else "%s cannot set aside %d coins without touching what the household needs." % [b.name, total]
 
 
 func _new_record(buyer_ref: String, seller_ref: String, id: String, qty: int, price_each: int, days: int, history: Array, svc := {}) -> Dictionary:
@@ -659,6 +662,10 @@ func _open(c: Dictionary) -> bool:
 	_add_coins(c.buyer, -total)
 	c.reserved = total
 	c.state = "accepted"
+	if w.economy != null:                        # LE-03: the seller's goods now held for it, the buyer's coins set aside: own offers
+		w.economy.claims.reconcile(str(c.buyer), EconReservations.COINS)     # that lost their backing are cut at once
+		if not is_service(c):
+			w.economy.claims.reconcile(str(c.seller), str(c.item))
 	c.deadline_day = w.day() + int(c.days) - 1        # the last day it may be delivered on (days counts today)
 	if not list.has(c):
 		list.append(c)
@@ -1204,6 +1211,8 @@ func order_input(b: NPC) -> bool:
 		var want: int = w.brain.wants(b, id)
 		if b.inv.count(id) > 0 or unit <= 0 or want < unit or _vendor(b, id) != null:
 			continue
+		if w.economy != null and w.economy.market.drive and w.economy.offers.open_of(World.npc_ref(b.id)).any(func(x): return x.side == EconOffers.BID and x.item == id):
+			continue                                 # LE-03: its open market bid already seeks it (one channel per need: no duplicate order)
 		var price: int = maxi(w.deal_price(World.buy_price_at(id, 0), b, null), GameData.value(id))
 		var qty := want
 		while qty > 0 and fund_refusal(World.npc_ref(b.id), qty * price) != "":

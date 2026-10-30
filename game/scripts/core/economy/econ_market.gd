@@ -265,14 +265,27 @@ func need_for(ref: String, item: String, kind := "") -> Dictionary:
 	if f.actors.kind(ref) != "npc":
 		return {}
 	for x in f.needs.needs_of(ref):
-		if str(x.item) == item and int(x.qty) > 0 and (str(x.kind) == kind if kind != "" else str(x.kind) in BID_KINDS):
-			return x
+		if str(x.item) == item and (str(x.kind) == kind if kind != "" else str(x.kind) in BID_KINDS):
+			var y := open_need(ref, x)
+			if int(y.qty) > 0:
+				return y
 	var n: NPC = w.npc(World.ref_id(ref))
 	if n != null and n.household >= 0 and w.construction.responsible_adult(n.household) == n:
 		for x in f.needs.needs_of(World.hh_ref(n.household)):
-			if str(x.kind) == "housing" and str(x.item) == item and int(x.qty) > 0:
-				return x
+			if str(x.kind) == "housing" and str(x.item) == item:
+				var y := open_need(ref, x)
+				if int(y.qty) > 0:
+					return y
 	return {}
+
+
+## LE-03 (no duplicate purchase): the need less the units already coming to `ref` on its open or agreed contracts
+## (EconClaims.inbound). An input's need is already net of them (NPCBrain.wants while the market drives).
+func open_need(ref: String, need: Dictionary) -> Dictionary:
+	var y := need.duplicate(true)
+	if str(need.kind) != "input":
+		y.qty = maxi(0, int(need.qty) - f.claims.inbound(ref, str(need.item)))
+	return y
 
 
 ## Buyer and seller meet and bargain over up to `want` units (OD-LE-02). {ok, outcome, qty, price_each, rounds, quotes, deal}.
@@ -372,8 +385,12 @@ func _settle(out: Dictionary, buyer: NPC, seller: NPC, item: String, q: int, pri
 			and (bid_id < 0 or f.offers.remaining(bid_id) >= q) and (ask_id < 0 or f.offers.remaining(ask_id) >= q)
 	if not ok:
 		return _out(out, "cannot_perform")
+	var exempt := []                     # LE-03: the two offers' own reservations back this very sale (World.trade's claims check)
+	for oid in [bid_id, ask_id]:
+		if oid >= 0 and int(f.offers.records[oid].reservation) >= 0:
+			exempt.append(int(f.offers.records[oid].reservation))
 	_busy = true
-	ok = w.trade(buyer, seller, item, q, price)
+	ok = w.trade(buyer, seller, item, q, price, -1, exempt)
 	if ok:
 		if ask_id >= 0:
 			f.offers.record_fill(ask_id, q)
@@ -492,6 +509,8 @@ func review(day: int) -> Array:
 	var maxrev := int(p("max_revisions", 3))
 	var share := float(p("revise_share", 0.34))
 	for id in ids:
+		if not f.offers.records.has(id) or f.offers.records[id].state != EconOffers.OPEN:
+			continue                       # LE-03: cut or withdrawn earlier in this pass (a yield, a stale offer)
 		var o: Dictionary = f.offers.records[id]
 		var ref := str(o.actor)
 		var n: NPC = w.npc(World.ref_id(ref)) if f.actors.kind(ref) == "npc" else null
@@ -564,10 +583,11 @@ func post_bids(day: int) -> Array:
 		var ref: String = refs[(start + i) % refs.size()]
 		bid_cursor = ref
 		done += 1
-		for need in f.needs.table[ref].needs:
-			if not str(need.kind) in BID_KINDS or int(need.qty) <= 0:
+		for need0 in f.needs.table[ref].needs:
+			if not str(need0.kind) in BID_KINDS or int(need0.qty) <= 0:
 				continue
 			var bidder: NPC = null
+			var need: Dictionary = need0
 			if f.actors.kind(ref) == "npc":
 				bidder = w.npc(World.ref_id(ref))
 			elif str(need.kind) == "housing":
@@ -576,6 +596,9 @@ func post_bids(day: int) -> Array:
 				continue
 			var br := World.npc_ref(bidder.id)
 			if f.offers.open_of(br).any(func(x): return x.side == EconOffers.BID and x.item == need.item):
+				continue
+			need = open_need(br, need)              # LE-03: what its contracts already bring is not bid for again
+			if int(need.qty) <= 0:
 				continue
 			var id := post_bid(bidder, str(need.item), need)
 			if id >= 0:
@@ -652,6 +675,8 @@ func dialogues(day: int) -> Array:
 	ids.sort()
 	var made := []
 	for id in ids.slice(0, int(p("dialogues_per_dawn", 4))):
+		if not f.offers.records.has(id) or f.offers.records[id].state != EconOffers.OPEN:
+			continue
 		var o: Dictionary = f.offers.records[id]
 		o.dialogue_day = day
 		var br := str(o.actor)

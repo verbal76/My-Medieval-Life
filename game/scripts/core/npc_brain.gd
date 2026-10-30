@@ -2047,6 +2047,8 @@ func wants(o: NPC, id: String) -> int:
 	if unit <= 0:
 		return 0
 	var want := mini(ceili(float(caps[id]) / unit) * unit, int(caps[id]))
+	if w.economy != null and w.economy.market.drive:
+		want -= w.economy.claims.inbound(World.npc_ref(o.id), id)     # LE-03: units already coming on its contracts are not bought twice
 	return maxi(0, want - o.inv.count(id))
 
 
@@ -3208,6 +3210,8 @@ func reeve_day() -> void:
 					break
 				# paid now; it waits at the seller's, the manor's, to be carried to the works yard and used
 				# in mending (ManorWork: used_repairs_ when used)
+				if not w.claims_release(o, id, 1):
+					break                         # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
 				w.manor_work.consign(o.inv, _workplace_cell(o), id, 1, {"kind": "yard"}, "repairs", _seller_words(o))
 				o.coins += price
 				o.earned += price
@@ -3229,6 +3233,8 @@ func reeve_day() -> void:
 				if w.treasury - price < reserve:
 					break
 				# bought now; it waits at the farmer's, the manor's, to be carried to the granary
+				if not w.claims_release(o, "wheat", 1):
+					break                         # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
 				w.manor_work.consign(o.inv, _workplace_cell(o), "wheat", 1, {"kind": "granary"}, "granary", _seller_words(o))
 				o.coins += price
 				o.earned += price
@@ -3355,6 +3361,8 @@ func _support_trades(obligations: float) -> int:
 			var price := w.sell_price(seller, tool)
 			if w.treasury - price < floor_coins:
 				break
+			if not w.claims_release(seller, tool, 1):
+				continue                          # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
 			seller.inv.remove(tool)
 			o.inv.add(tool)
 			seller.coins += price
@@ -3470,6 +3478,8 @@ func _public_works(obligations: float) -> int:
 				if price > budget:
 					break
 				# to the works yard, to be used in mending (ManorWork)
+				if not w.claims_release(o, id, 1):
+					break                         # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
 				w.manor_work.consign(o.inv, _workplace_cell(o), id, 1, {"kind": "yard"}, "works", _seller_words(o))
 				o.coins += price
 				o.earned += price
@@ -3553,6 +3563,9 @@ func _relief(obligations: float, reserve: float) -> int:
 			# TREAS-01 (owner, 2026-10-21: "The purchased goods become actual manor inventory. The manor can then use
 			# legitimately owned supplies through the existing relief system"): what is bought becomes the manor's before it
 			# is given; an emergency's goes through the granary at once, a carried one waits in the manor's lot
+			if src == (o.payee as NPC).inv and not w.claims_release(o.payee, o.item, qty):
+				k += 1                           # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
+				continue
 			var moved := false
 			if urgent and pantry.can_add(o.item):
 				moved = w.transfer(src, w.granary, o.item, qty) and w.transfer(w.granary, pantry, o.item, qty)
@@ -4691,6 +4704,9 @@ func caravan() -> void:
 			best[2] = 0                              # kept for a villager who needs it
 			w.stat("caravan_tool_kept_" + id)
 			continue
+		if not w.claims_release(o, id, 1):
+			best[2] = 0                              # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
+			continue
 		tool_stock[id] = int(tool_stock.get(id, 0)) - 1
 		best[2] = int(best[2]) - 1
 		var buyer: OffMapSettlement = w.regions.buyer_for(id, price, on_road)
@@ -4764,6 +4780,8 @@ func _caravan_imports(on_road := []) -> int:
 				var seller: OffMapSettlement = w.regions.seller_for(id, on_road)
 				if seller == null:
 					break                          # no trader on the road carries any
+				if not w.claims_release(o, EconReservations.COINS, price, id):
+					break                          # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
 				seller.sell_to_village(id, 1, price)
 				w.note_settlement_trade(o, seller)
 				o.coins -= price
@@ -4799,6 +4817,8 @@ func _caravan_apothecary(on_road := []) -> int:
 			break
 		var price := GameData.value(pick)
 		var from_trader: OffMapSettlement = w.regions.seller_for(pick, on_road)
+		if not w.claims_release(sage, EconReservations.COINS, price, pick, World.is_necessity(pick)):
+			break                                  # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
 		from_trader.sell_to_village(pick, 1, price)
 		w.note_settlement_trade(sage, from_trader)
 		sage.coins -= price
@@ -4835,6 +4855,8 @@ func _caravan_seeds(on_road := []) -> int:
 				break
 			var price := GameData.value(pick)
 			var from_trader: OffMapSettlement = w.regions.seller_for(pick, on_road)
+			if not w.claims_release(o, EconReservations.COINS, price, pick):
+				break                              # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
 			from_trader.sell_to_village(pick, 1, price)
 			w.note_settlement_trade(o, from_trader)
 			o.coins -= price
@@ -4929,8 +4951,11 @@ func _caravan_food_households(on_road: Array) -> int:
 			var payer := _payer_for(head, price)
 			if payer == null or not w.can_afford(payer, price, true):
 				break
+			if not w.claims_allow(payer, EconReservations.COINS, price, item, true):
+				break                              # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
 			if _food_unit(item, on_road, price) == 0:
 				break
+			w.claims_release(payer, EconReservations.COINS, price, item, true)
 			payer.coins -= price
 			payer.spent += price
 			pantry.add(item)
@@ -4996,8 +5021,9 @@ func _caravan_food_businesses(on_road: Array) -> int:
 				if seller == null:
 					break
 				var price := seller.food_price(id)
-				if not w.can_afford(o, price, false, id) or not o.inv.can_add(id) or _food_unit(id, on_road, price) == 0:
+				if not w.can_afford(o, price, false, id) or not o.inv.can_add(id) or not w.claims_allow(o, EconReservations.COINS, price, id) or _food_unit(id, on_road, price) == 0:
 					break
+				w.claims_release(o, EconReservations.COINS, price, id)     # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
 				o.coins -= price
 				o.spent += price
 				o.inv.add(id)
@@ -5033,6 +5059,8 @@ func _caravan_stone(on_road := []) -> int:
 			var seller: OffMapSettlement = w.regions.seller_for("stone", on_road)
 			if seller == null:
 				break
+			if not w.claims_release(o, EconReservations.COINS, price, "stone"):
+				break                              # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
 			seller.sell_to_village("stone", 1, price)
 			w.note_settlement_trade(o, seller)
 			o.coins -= price
