@@ -49808,7 +49808,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/x20-sjdg",
    "commits": [],
    "parent": "EXP-C",
    "depends_on": [
@@ -49862,6 +49862,11 @@
      "date": "2026-10-26",
      "change": "note",
      "why": "Build 19 recovery audit (docs/expansion20/B19_RECOVERY_MATRIX.md): code on wip/expansion20 0b5287c; 22 suites, 1,616 checks, 0 failures. Disposition implement (audit): 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker D (judgment calibration); branch:  -> wip/x20-sjdg",
+     "why": "worker D started (X20-RESUME carryover): soak and calibration measurement"
     }
    ],
    "target_build": "20",
@@ -49870,7 +49875,7 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -49883,7 +49888,8 @@
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5",
-   "test_commit": "0b5287c"
+   "test_commit": "0b5287c",
+   "assigned_worker": "worker D (judgment calibration)"
   },
   {
    "id": "SJD-H",
