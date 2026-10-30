@@ -28602,7 +28602,7 @@
     "Costs, default and refusal paths"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "le04_test 24/0, le03_transactions 79/0, le03_economy 38/0, le02_market 101/0, contracts 154/0, business_money 37/0, business 160/0, property 123/0, stalls 104/0, stall_putup 11/0, recorder 214/0, conservation 8/0, till_ownership 71/0",
    "playtest": [],
    "branch": "wip/x20-le04",
    "commits": [],
@@ -28642,6 +28642,11 @@
      "date": "2026-10-30",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (Living Economy); branch:  -> wip/x20-le04",
      "why": "worker A started LE-04 (X20-RESUME) plus review fixes 6-7"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "tests:  -> le04_test 24/0, le03_transactions 79/0, le03_economy 38/0, le02_market 101/0, contracts 154/0, business_money 37/0, business 160/0, property 123/0, stalls 104/0, stall_putup 11/0, recorder 214/0, conservation 8/0, till_ownership 71/0; test_commit: None -> 74b99de",
+     "why": "part 1 done on wip/x20-le04 74b99de: manor, households, chapel and tills as authority parties; manor tools bought or commissioned through it"
     }
    ],
    "target_build": "20",
@@ -28654,7 +28659,8 @@
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "assigned_worker": "worker A (Living Economy)"
+   "assigned_worker": "worker A (Living Economy)",
+   "test_commit": "74b99de"
   },
   {
    "id": "LE-05",
@@ -60390,11 +60396,16 @@
      "date": "2026-10-30",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead (tracking); workers A and B; branch: None -> wip/expansion20; notes",
      "why": "findings 4, 5, 8 fixed and merged (f8b3f10); 1-3 with worker B, 6-7 with worker A"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "notes",
+     "why": "findings 6 and 7 fixed at their cause on wip/x20-le04 74b99de (worker A)"
     }
    ],
    "assigned_worker": "lead (tracking); workers A and B",
    "branch": "wip/expansion20",
-   "notes": "Status 2026-10-30: (4) guest double sword strike, (5) phantom NPC blow on coming into view, (8) recorder 'starved with means' counted village food: fixed in wip/x20-review-fixes f8b3f10, merged into wip/expansion20. (1) settlement merchant never closed, (2) TILL-D1 for a last member leaving alone, (3) a leaving trader's stall takings escheated: worker B. (6) stall commission recorder flow, (7) manor/player-held storefront till passes to next holder: worker A. All remain present in frozen Build 24."
+   "notes": "Status 2026-10-30: (4) guest double sword strike, (5) phantom NPC blow on coming into view, (8) recorder 'starved with means' counted village food: fixed in f8b3f10, merged into wip/expansion20. (6) stall commission recorded at its own moment (Stalls.settle) and (7) a storefront or counter till always goes to its previous holder's own funds on any holder change (keep_till skipped the manor, players, dead villagers, ended households and counters): fixed on wip/x20-le04 74b99de, till_ownership_test 71/0 (12 new checks failing on the old code; sale, letting, eviction, manor/player/dead/ended holders, counters; exact conservation), stalls_test 104/0; merge with LE-04. (1) settlement business never closed, (2) TILL-D1 for last members leaving, (3) leaving trader's stall takings: worker B. All eight remain present in frozen Build 24."
   },
   {
    "id": "X20-CHECKPOINT",
