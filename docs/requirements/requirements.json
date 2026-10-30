@@ -61511,6 +61511,34 @@
    "branch": "wip/x20-trader-inv"
   },
   {
+   "id": "X20-WEAR-TRANSFER",
+   "kind": "approved",
+   "title": "Defect: a tool's saved wear does not travel when the tool changes hands (sale, gift, inheritance, loot), so a worn tool can become as good as new; wear must follow the item through every transfer (existing state, WDR-022 lost state)",
+   "description": "Defect: a tool's saved wear does not travel when the tool changes hands (sale, gift, inheritance, loot), so a worn tool can become as good as new; wear must follow the item through every transfer (existing state, WDR-022 lost state)",
+   "source": "docs/directives/2026-10-30_x20_background_development.md",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-20 WDR-022 (fix lost state); found by worker A during LE-05, 2026-10-30",
+   "acceptance": [
+    "failing-first test: a worn tool sold, given, inherited and looted keeps its wear; wear conserved across every transfer path; old saves load; deterministic"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_x20_background_development.md"
+    }
+   ]
+  },
+  {
    "id": "XAUDIT-01",
    "kind": "approved",
    "title": "Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence",

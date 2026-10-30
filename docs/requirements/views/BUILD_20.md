@@ -8,14 +8,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 102 |
-| Integrated | 80 of 102 (78%) |
-| Automated tests passed | 89 of 102 (87%) |
-| Integration verified | 44 of 102 (43%) |
-| Gameplay verified | 0 of 102 (0%) |
-| Owner playtested | 0 of 102 (0%) |
-| Complete | 2 of 102 (2%) |
-| Open (release blockers) | 100 |
+| Approved requirements in scope | 103 |
+| Integrated | 80 of 103 (78%) |
+| Automated tests passed | 89 of 103 (86%) |
+| Integration verified | 44 of 103 (43%) |
+| Gameplay verified | 0 of 103 (0%) |
+| Owner playtested | 0 of 103 (0%) |
+| Complete | 2 of 103 (2%) |
+| Open (release blockers) | 101 |
 | Open owner decisions (blocking) | 1 (0) |
 
 ## In development (worker assigned) (8)
@@ -114,7 +114,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 5c303be | INTEGRATION VERIFIED |  |  | verification only |
 | X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 e8cc44b | INTEGRATION VERIFIED |  |  | verification only |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (14)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (15)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -132,6 +132,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-B24-F7 | Review finding 7: a storefront or counter till did not go to its previous holder's own funds on every holder change (manor, players, dead villagers, ended households, counters skipped) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker A / wip/x20-le04 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | X20-BACKGROUND | Expansion 20 continues in the background within approved decisions (Upwardly Build 83 is the owner's primary priority): combined integration, one baseline simulation on the merged commit, LE-06 first, trader reopening, X20-MP-ECON-INTEGRITY, SJD-G evaluation; no build rushed; escalate only the listed cases | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | X20-RESUME, design: UNKNOWN | UNKNOWN |
 | X20-SETTLE-REOPEN | A closed settlement business reopens (or is re-established) when a household takes up its trade, through the existing business-creation and ownership rules, without restoring the former owner's money, stock, contracts, workforce or assets | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker B / wip/x20-settle-food | TARGETED TESTS PASSED |  | X20-B24-F1, design: UNKNOWN | UNKNOWN |
+| X20-WEAR-TRANSFER | Defect: a tool's saved wear does not travel when the tool changes hands (sale, gift, inheritance, loot), so a worn tool can become as good as new; wear must follow the item through every transfer (existing state, WDR-022 lost state) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Complete (2)
 
