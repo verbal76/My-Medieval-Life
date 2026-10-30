@@ -91,15 +91,18 @@ func _short(r: Regions, id: String, till: int) -> void:
 	s._pcache = {}
 
 
-## The region's coins and goods, transit included (Regions.coins/goods count the settlements' custody and escrow).
+## The region's coins and goods with the settlements' part of the transit custody and escrow (the LE-03 ledger rule).
 func _totals(r: Regions) -> Array:
 	var g := r.goods()
+	var t := r.tx_in_transit()
+	for k in t.goods:
+		g[k] = int(g.get(k, 0)) + int(t.goods[k])
 	var ks := g.keys()
 	ks.sort()
 	var o := {}
 	for k in ks:
 		o[k] = g[k]
-	return [r.coins(), JSON.stringify(o)]
+	return [r.coins() + int(t.coins), JSON.stringify(o)]
 
 
 # ------------------------------------------------------------------ tests ----------------

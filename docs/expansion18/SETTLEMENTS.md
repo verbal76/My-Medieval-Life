@@ -170,9 +170,10 @@ system, nothing in the village's `World.trade`, and the six-day abstraction of E
   again daily; `food_lapse_days` late it is `fail`ed (goods back, price refunded) when both parties can take them. A shipment found
   closed otherwise is dropped once (a failed one is written as never arrived). Imported food is for the place's own households:
   `trader_has`, `sell_to_village` and the trader's `sale_cap` leave it out until the place no longer wants food (`release_imported`).
-- **Books.** `Regions.coins()/goods()` count the settlements' part of `in_transit()` (custody and escrow) as a holder;
-  `net_paid_by_village()` adds the escrow back (it left a settlement as an outside line but never left the region); `economy_sim`'s
-  regional goods check adds the custody to its inflows. `Regions.audit` also fails on an orphan (an open `settle_food/` shipment no
+- **Books.** The shipment's sides are outside lines on each settlement (its audit balances); a count of the whole region adds the
+  settlements' part of `in_transit()` (`Regions.tx_in_transit`: custody and escrow) as a holder, the LE-03 ledger rule; the village's
+  currency check and `economy_sim`'s regional checks need nothing extra (the two outside lines cancel against each other once
+  delivered, and while in transit the seller's goods and the buyer's coins are booked out on both sides). `Regions.audit` also fails on an orphan (an open `settle_food/` shipment no
   settlement awaits, or an awaited one that is not open). Goods lost in transit (`lose`, `transactions.sunk`) are not used by this
   trade (E22-OD-04: route danger is a future stage).
 - **Records.** Flow counts `food_bought`, `food_sold`, `food_delivered`, `food_unmet`; journal lines in both settlements; flight

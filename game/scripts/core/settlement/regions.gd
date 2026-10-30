@@ -437,7 +437,7 @@ static func _no_authority(txid: String) -> Dictionary:
 
 
 ## Goods in transit custody and coins in escrow that belong to the settlements (the authority's in_transit() less its village parts):
-## they left a settlement's books as outside lines but never left the region, so Regions.coins/goods count them as a holder.
+## they left a settlement's books as outside lines (its audit balances), and a count of the whole region adds them as a holder.
 func tx_in_transit() -> Dictionary:
 	var a = authority()
 	if a == null:
@@ -501,18 +501,18 @@ func _food_event(what: String, info: Dictionary) -> void:
 
 
 # ------------------------------------------------------------------ books ----------------
-## The settlements' coins, and the price of food shipments between them held in escrow (X20-SETTLE-FOOD: still the buyers', in the
-## transaction authority's hands while the goods travel: a holder like the courier booths).
+## The settlements' own coins. (X20-SETTLE-FOOD: a price in escrow is in the transaction authority's hands, not here: it left the
+## buyer as an outside line; a whole-world count adds `tx_in_transit()`, as the LE-03 ledger rule says.)
 func coins() -> int:
-	var n := int(tx_in_transit().coins)
+	var n := 0
 	for s: OffMapSettlement in list:
 		n += s.coins()
 	return n
 
 
-## The settlements' goods, and the food on the road between them (still the sellers', in transit custody).
+## The settlements' own goods (food on the road is in the authority's custody: `tx_in_transit()`).
 func goods() -> Dictionary:
-	var g := (tx_in_transit().goods as Dictionary).duplicate()
+	var g := {}
 	for s: OffMapSettlement in list:
 		var sg := s.goods()
 		for k in sg:
@@ -596,7 +596,7 @@ func net_paid_by_village() -> int:
 	for s: OffMapSettlement in list:
 		n += int(s.flows.coins_from_village) - int(s.flows.coins_to_village)
 		n += int(s.flows.outside_coins_in) - int(s.flows.outside_coins_out)     # REG-COURIER-01: coins the couriers carried across
-	return n + int(tx_in_transit().coins)      # X20-SETTLE-FOOD: escrow left a settlement's books as an outside line but never left the region
+	return n
 
 
 ## An older save's caravan purse: its coins become the traders' (spread evenly over the traders, the rest to the first).
