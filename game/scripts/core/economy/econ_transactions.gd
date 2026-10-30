@@ -613,7 +613,14 @@ func load_dict(d: Dictionary) -> void:
 		var l := []
 		for e in d.outcomes[k]:
 			var r: Dictionary = e[1]
-			l.append([int(e[0]), {"ok": bool(r.ok), "code": str(r.code), "txid": str(r.txid), "replay": bool(r.get("replay", false)), "state": str(r.get("state", ""))}])
+			# X20-TXN-REPLAY-FIELDS: every field the first call answered (an estate claim's paid and written_off too), so a replay after
+			# a load answers exactly the same; the base fields typed as before, any other whole number back to an int (JSON reads floats)
+			var o := {"ok": bool(r.ok), "code": str(r.code), "txid": str(r.txid), "replay": bool(r.get("replay", false)), "state": str(r.get("state", ""))}
+			for f in r:
+				if not o.has(f):
+					var v = r[f]
+					o[str(f)] = int(v) if v is float and v == floorf(v) else v
+			l.append([int(e[0]), o])
 		outcomes[str(k)] = l
 	for r in d.get("shipments", []):
 		shipments[str(r.txid)] = {"txid": str(r.txid), "buyer": str(r.buyer), "seller": str(r.seller), "item": str(r.item), "qty": int(r.qty),
