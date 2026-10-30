@@ -15,7 +15,7 @@ Every integration goes through the transaction authority (`docs/expansion20/TRAN
 | 1b The manor's tools through the economy (buy via the authority, else CON-01 commission) | done `74b99de` | `econ_market.gd::manor_tools`; INT-608 |
 | 1 Business identity and separate accounts (recorded contributions and distributions; one owner per business) | done (see commit log) | section 1; `le04_test::test_business_accounts` |
 | 2 Contract estate claims on death (OD-LE-13B) | done (no migration needed) | section 2; `le04_test::test_estate_claims` |
-| 3 Speculation and stockpiling (OD-LE-11) | not started | |
+| 3 Speculation and stockpiling (OD-LE-11) | done | section 3; `le04_test::test_speculation` |
 | 4 Negotiated wages and services behind off flags (OD-LE-03 D02) | not started | |
 | Milestone evidence: one G0 (seeds 1,2, 30 days) + one `--market` run | not run | the G0 may differ only by items 6 and 7 |
 
@@ -33,7 +33,8 @@ economy on, every move between a till and its owner's purse (necessity draw, own
 is a recorded coin transfer through the authority (`EconTransactions.transfer_coins`), journalled with its purpose
 (`coins:necessity`, `coins:owner_pay`, `coins:topup`, `coins:kept`, `coins:contribution`, `coins:distribution`); such a move is
 neither earned nor spent; coins an offer holds back cannot be contributed (claims). No new saved record: ownership stays the
-existing owner/tenant records and the controller rule (one owner per till). Economy off: `BusinessMoney._move` exactly as before.
+existing owner/tenant records and the controller rule (one owner per till). Economy off, or on with the market not driving:
+`BusinessMoney._move` exactly as before.
 
 ## 2. Contract estate claims (OD-LE-13B D12)
 
@@ -53,3 +54,14 @@ are untouched; no penalty is added. With the switch off: the existing lapse rule
 
 **Save migration plan: none needed.** The claim is settled at the moment of death and nothing is persisted (no new key, no changed
 key, no `SAVE_VERSION` change). An older save's open advances are simply settled by this rule if their smith dies with the economy on.
+
+## 3. Speculation and stockpiling (OD-LE-11 D10)
+
+Owner answer: "Villager speculation and hoarding is an approved direction once adaptive prices, resource accounting and storage
+exist. Nothing manipulates supply by fiat; scarcity, inventory, consequences and finite purses govern." `EconMarket.speculate`
+(market dawn, after the bids from needs; `market.speculation`): up to `spec_per_dawn` merchants (round robin, a saved cursor) each
+weigh the goods their trade stocks; one that KNOWS (its own reliable knowledge) of an ask at least `spec_margin` under the resale it
+expects (the best bid it knows, else its believed price) bids for it (need kind `stock`): up to its stock caps (`NPCBrain.wants`:
+storage and its trade's limits) and `spec_share` of its spendable coins (never food or obligations: the budget's discretionary
+part). It resells by its usual asks (LE-02), which can fail: a speculation can lose. Withdrawn at review when the opportunity is
+gone. Nothing created; no new unbounded state (one cursor). Provisional numbers in `economy.json` (`spec_*`).

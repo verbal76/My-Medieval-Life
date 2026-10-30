@@ -39,6 +39,7 @@ func _init() -> void:
 	test_commission_refused_and_lapsed()
 	test_business_accounts()
 	test_estate_claims()
+	test_speculation()
 	test_switch()
 	EconomyFoundation.set_override({})
 	print("%d checks, %d failures" % [checks, failures])
@@ -229,7 +230,7 @@ func storefront(w: World) -> Array:
 
 
 func test_business_accounts() -> void:
-	var w := new_world(true, false)
+	var w := new_world()
 	var pair := storefront(w)
 	var o: NPC = pair[0]
 	var house: Dictionary = pair[1]
@@ -316,3 +317,45 @@ func test_estate_claims() -> void:
 	var t4 := w4.treasury
 	w4.kill(sm4, "old age")
 	check(w4.manor_orders.size() == 1 and w4.treasury == t4, "economy off: the existing lapse rule, unchanged")
+
+
+# ------------------------------------------------------------------------------------------------ speculation (OD-LE-11 D10)
+func test_speculation() -> void:
+	var w := new_world()
+	var m := w.economy.market
+	var mr: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and w.brain.buy_role(n) == "merchant_raw":
+			mr = n
+	var item := ""
+	var ids: Array = NPCBrain.BUYS.get("merchant_raw", {}).keys()
+	ids.sort()
+	for id in ids:
+		mr.inv.remove(id, mr.inv.count(id))
+		if item == "" and w.brain.wants(mr, id) > 0:
+			item = id
+	var ref := World.npc_ref(mr.id)
+	check(m.spec_need(mr, item).is_empty(), "knowing of no seller, a merchant does not speculate")
+	var v := GameData.value(item)
+	var a := adult(w, "farmer")
+	var b := adult(w, "laborer")
+	w.economy.knowledge.learn(ref, World.npc_ref(a.id), item, EconKnowledge.SELLS, maxi(1, roundi(v * 0.6)), "in_person")
+	w.economy.knowledge.learn(ref, World.npc_ref(b.id), item, EconKnowledge.BUYS, roundi(v * 1.5), "in_person")
+	var need := m.spec_need(mr, item)
+	check(not need.is_empty() and int(need.qty) <= w.brain.wants(mr, item) and int(need.limit) < int(need.resale), "a cheap ask and a better bid it knows of: worth stocking, within its caps (%s)" % str(need))
+	mr.coins = 100 + w.reserve_of(mr)
+	m.spec_cursor = w.npcs.find(mr) - 1
+	var posted := m.speculate(w.day())
+	check(posted.size() == 1, "it bids for the good (one speculation a dawn)")
+	if posted.size() == 1:
+		var o := w.economy.offers.get_offer(int(posted[0]))
+		check(o.need == "stock" and int(o.qty) * int(o.price_each) <= int(float(w.spendable(mr)) * 0.3) + int(o.price_each), "only a share of its spendable coins is at risk (%d x %d)" % [int(o.qty), int(o.price_each)])
+		# the opportunity gone (the cheap ask no longer known): withdrawn at review
+		w.economy.knowledge.entries.clear()
+		w.economy.knowledge.load_dict(w.economy.knowledge.to_dict())
+		w.minutes += World.DAY
+		m.review(w.day())
+		check(w.economy.offers.get_offer(int(posted[0])).state != "open", "with the opportunity gone the speculative bid is withdrawn")
+	check(m.to_dict().get("spec_cursor", -1) != -1, "its round-robin cursor is saved (bounded state)")
+	var full := new_world()
+	check(full.economy.market.p("speculation", false) == true, "on with the market (provisional)")

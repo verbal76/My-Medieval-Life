@@ -274,7 +274,7 @@ func _rec(ref: String, rec: Dictionary, who: Object, amount: int, why: String) -
 func _move(rec: Dictionary, who: Object, amount: int, out: bool, tref := "", purpose := "") -> bool:
 	if amount <= 0:
 		return false
-	if w.economy != null and tref != "" and who != null:
+	if w.economy != null and w.economy.market.drive and tref != "" and who != null:
 		# LE-04 (OD-LE-07 D06): with the Living Economy on, a move between a business's till and its owner is a recorded transfer
 		# through the transaction authority (explicit contribution or distribution, never silent pooling)
 		var me := Contracts.ref_of(who)

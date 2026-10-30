@@ -51,6 +51,7 @@ var stats := {}                 # counters (diagnostics; saved)
 var bid_cursor := ""            # the last needs-table actor a bid was posted for (round robin)
 var ask_cursor := -1            # index into World.npcs of the last seller reviewed for asks (round robin)
 var _busy := false
+var spec_cursor := -1          # LE-04: index into World.npcs of the last merchant weighed for speculation (round robin; saved)
 var tool_orders := {}           # LE-04: open CON-01 contract id (the manor's tool commission) -> worker id it is for (bounded: open ones)
 var _jcfg := {}
 
@@ -173,6 +174,9 @@ func buyer_ceiling(buyer: NPC, item: String, need: Dictionary) -> Dictionary:
 		"housing":
 			u = float(p("housing_urgency", 0.75))
 			benefit = v * lerpf(1.0, float(GameData.b("price_max")), u)
+		"stock":
+			u = 0.0                                   # LE-04: speculation is never urgent; its limit is the resale it expects
+			benefit = float(need.get("limit", v))
 		_:
 			u = clampf(float(need.get("shortfall", 0.0)) / maxf(1.0, float(need.get("target", 1.0))), 0.0, 1.0)
 			benefit = v * lerpf(1.0, float(GameData.b("price_max")), u)
@@ -266,6 +270,8 @@ static func _milli(x: float) -> int:
 func need_for(ref: String, item: String, kind := "") -> Dictionary:
 	if f.actors.kind(ref) != "npc":
 		return {}
+	if kind == "stock":
+		return spec_need(w.npc(World.ref_id(ref)), item)
 	for x in f.needs.needs_of(ref):
 		if str(x.item) == item and (str(x.kind) == kind if kind != "" else str(x.kind) in BID_KINDS):
 			var y := open_need(ref, x)
@@ -368,6 +374,8 @@ func budget_for(buyer: NPC, need: Dictionary, own_bid := -1) -> int:
 		purse -= give
 		spend = mini(maxi(0, spend - (0 if food else give)), purse)
 	var cost := int(need.get("qty", 0)) * maxi(0, int(buyer_ceiling(buyer, target_item, need).limit))
+	if target_kind == "stock":
+		spend = mini(spend, int(float(w.spendable(buyer)) * float(p("spec_share", 0.3))))     # LE-04: only a share at risk
 	return mini(cost, purse if target_kind == "food" else spend)
 
 
@@ -606,6 +614,8 @@ func dawn(day: int) -> void:
 		return
 	review(day)
 	post_bids(day)
+	if bool(p("speculation", false)):
+		speculate(day)
 	post_asks(day)
 	dialogues(day)
 	if bool(p("renegotiate", true)):
@@ -988,7 +998,7 @@ func _stat(k: String, n := 1) -> void:
 
 
 func is_empty() -> bool:
-	return deals.is_empty() and stats.is_empty() and next_deal == 0 and bid_cursor == "" and ask_cursor == -1 and tool_orders.is_empty()
+	return deals.is_empty() and stats.is_empty() and next_deal == 0 and bid_cursor == "" and ask_cursor == -1 and tool_orders.is_empty() and spec_cursor == -1
 
 
 func to_dict() -> Dictionary:
@@ -998,6 +1008,8 @@ func to_dict() -> Dictionary:
 	for k in ks:
 		st[k] = int(stats[k])
 	var d := {"deals": deals.duplicate(true), "next_deal": next_deal, "stats": st, "bid_cursor": bid_cursor, "ask_cursor": ask_cursor}
+	if spec_cursor != -1:
+		d["spec_cursor"] = spec_cursor
 	if not tool_orders.is_empty():
 		var ids: Array = tool_orders.keys()
 		ids.sort()
@@ -1020,6 +1032,7 @@ func load_dict(d: Dictionary) -> void:
 		stats[str(k)] = int(st[k])
 	bid_cursor = str(d.get("bid_cursor", ""))
 	ask_cursor = int(d.get("ask_cursor", -1))
+	spec_cursor = int(d.get("spec_cursor", -1))
 	tool_orders = {}
 	var to: Dictionary = d.get("tool_orders", {})
 	for k in to:
@@ -1101,3 +1114,64 @@ func _hand_out_tools(needers: Array) -> void:
 		if not o.inv.has(tool) and w.granary.has(tool) and o.inv.can_add(tool):
 			w.transfer(w.granary, o.inv, tool, 1)
 			_stat("manor_tool_handed")
+
+
+
+# ---------------------------------------------------------------- LE-04: speculation and stockpiling ------------
+## OD-LE-11 (D10, owner: "Villager speculation and hoarding is an approved direction once adaptive prices, resource accounting and
+## storage exist. Nothing manipulates supply by fiat; scarcity, inventory, consequences and finite purses govern"). A merchant
+## (buy_role merchant_*) that KNOWS (its own reliable knowledge, OD-LE-10) of a seller asking at least spec_margin under what it
+## expects to resell for (the best bid it knows, else its believed price) may bid for that good: at the cheapest ask it knows, up
+## to what its stock caps still take (NPCBrain.wants: storage and its trade's limits) and a spec_share of its spendable coins (its
+## household budget's discretionary part: never its food or obligations). It resells by its usual asks (LE-02), which rise toward
+## known bids and fall toward its floor when unsold: a speculation can lose. Nothing is created; the bid is withdrawn at review when
+## the opportunity is gone. Bounded: spec_per_dawn merchants a dawn, round robin (a saved cursor). Returns the bids posted.
+func speculate(day: int) -> Array:
+	var posted := []
+	var looked := 0
+	var tries := 0
+	while looked < int(p("spec_per_dawn", 3)) and tries < w.npcs.size():
+		tries += 1
+		spec_cursor = (spec_cursor + 1) % maxi(1, w.npcs.size())
+		var n: NPC = w.npcs[spec_cursor]
+		if not n.alive or n.role != "adult" or not str(w.brain.buy_role(n)).begins_with("merchant"):
+			continue
+		looked += 1
+		var ref := World.npc_ref(n.id)
+		var ids: Array = NPCBrain.BUYS.get(w.brain.buy_role(n), {}).keys()
+		ids.sort()
+		for item in ids:
+			if f.offers.open_of(ref).any(func(x): return x.side == EconOffers.BID and x.item == item):
+				continue
+			var need := spec_need(n, str(item))
+			if need.is_empty():
+				continue
+			var id := post_bid(n, str(item), need)
+			if id >= 0:
+				posted.append(id)
+				_stat("spec_bids")
+				break                                     # one speculation a merchant a dawn
+	return posted
+
+
+## The speculative "need" for `item`: {} when it is not (still) worth it. {kind "stock", item, qty, limit (the most it pays a unit),
+## ask (the cheapest ask it knows), resale}.
+func spec_need(n: NPC, item: String) -> Dictionary:
+	if n == null or not n.alive:
+		return {}
+	var ref := World.npc_ref(n.id)
+	var cheapest := -1
+	for e in f.knowledge.known_by(ref, item, EconKnowledge.SELLS):
+		if str(e.subject) == ref or int(e.price_each) <= 0 or f.knowledge.reliability(e) < float(p("min_reliability", 0.25)):
+			continue
+		cheapest = int(e.price_each) if cheapest < 0 else mini(cheapest, int(e.price_each))
+	if cheapest < 0:
+		return {}
+	var b := believed(ref, item)
+	var resale := int(b.best_bid) if int(b.best_bid) > 0 else roundi(float(b.price))
+	var limit := floori(float(resale) / (1.0 + float(p("spec_margin", 0.2))))
+	var room: int = w.brain.wants(n, item)
+	if cheapest > limit or room <= 0 or not n.inv.can_add(item):
+		return {}
+	return {"actor": ref, "kind": "stock", "item": item, "qty": room, "shortfall": 0.0, "target": float(room), "cover_days": -1.0,
+		"deadline": -1, "limit": mini(limit, int(band(item)[1])), "ask": cheapest, "resale": resale}
