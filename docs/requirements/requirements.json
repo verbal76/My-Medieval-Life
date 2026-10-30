@@ -8942,8 +8942,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -8971,8 +8971,23 @@
      "date": "2026-10-24",
      "change": "note",
      "why": "Build 21: all three platforms from 6567c04 with build number 21 in one private draft (422895130), checksums and APK signature verified by the lead; sim-gate passed in the same run"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; integrated_in + release.yml; Builds 21-24",
+     "why": "register hygiene (owner 2026-10-30, X20-RESUME s.11): status corrected to match shipped evidence: every build since Build 21 shipped Android, Windows and Linux from one commit, stably signed (Builds 21 6567c04, 22 b7e1c91, 23 c79b12c, 24 4611d86; checksums and certificate verified each time)"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "tests: None -> release runs 40065271734 (B20), Build 21 6567c04, 40398771937 (B22), 40526826846 (B23), 40636966840 (B24): three platforms each, SHA256SUMS OK, APK certificate 31704b80...76cb80e6 (B21-24), Linux start checked; test_commit: None -> 4611d86",
+     "why": "test evidence recorded"
     }
-   ]
+   ],
+   "integrated_in": [
+    "release.yml; Builds 21-24"
+   ],
+   "tests": "release runs 40065271734 (B20), Build 21 6567c04, 40398771937 (B22), 40526826846 (B23), 40636966840 (B24): three platforms each, SHA256SUMS OK, APK certificate 31704b80...76cb80e6 (B21-24), Linux start checked",
+   "test_commit": "4611d86"
   },
   {
    "id": "CAP-TOOLHOLDER",
@@ -17206,6 +17221,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: umbrella=True",
      "why": "an expansion or umbrella requirement: its children carry the work and are counted instead"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED",
+     "why": "register hygiene (owner 2026-10-30, X20-RESUME s.11): status corrected to match shipped evidence: umbrella; children SJD-B..SJD-F and the Expansion 19 core are integrated, SJD-G/H not started"
     }
    ],
    "target_build": "19",
@@ -17214,7 +17234,7 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23130,7 +23150,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23164,6 +23184,11 @@
      "date": "2026-10-24",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> full tests.yml 102 scripts 10,745 checks 0 failures; unittest 117; validators 0; G0 PASS; release run_tests and start_test passed in CI; test_commit: None -> 9feaf77; commits + 56c24cb; release_location",
      "why": "Build 20 built and uploaded: release run 40065271734 (success) from wip/multiplayer-b19 56c24cb, private draft release 422532601 'My Medieval Life Build 20' with the APK (disposable key), Windows ZIP, Linux ZIP and SHA256SUMS; the lead downloaded all three and the checksums match; predates SIM-GATE-01 as disclosed"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + contained in wip/expansion20 (Build 24 4611d86)",
+     "why": "register hygiene (owner 2026-10-30, X20-RESUME s.11): status corrected to match shipped evidence: Build 20 checkpoint (run 40065271734, draft 422532601) shipped; its branch wip/multiplayer-b19 is contained in wip/expansion20"
     }
    ],
    "assigned_worker": "primary development agent",
@@ -23173,7 +23198,10 @@
    "commits": [
     "56c24cb"
    ],
-   "release_location": "GitHub draft release 422532601 (build-20), run 40065271734"
+   "release_location": "GitHub draft release 422532601 (build-20), run 40065271734",
+   "integrated_in": [
+    "contained in wip/expansion20 (Build 24 4611d86)"
+   ]
   },
   {
    "id": "GP-CRIME-PURSUIT",
@@ -28294,16 +28322,23 @@
      "date": "2026-10-23",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; commits + 953998a; next_action",
      "why": "refreshed against Build 18 (953998a on wip/expansion20-preparation: corrections, data-owner map, LE-01 inventory, OD-LE table, risks, Expansion 19 interface); awaiting the owner's review of the architecture"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + wip/expansion20",
+     "why": "register hygiene (owner 2026-10-30, X20-RESUME s.11): status corrected to match shipped evidence: LE-00 audit documents are on wip/expansion20 (docs/expansion20/LE00_*.md)"
     }
    ],
    "target_build": "20+",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
-   "integrated_in": [],
+   "integrated_in": [
+    "wip/expansion20"
+   ],
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "approval_status": "OWNER APPROVED",
    "legacy_evidence": "v1 status COMPLETE AND VERIFIED with its recorded evidence (implementation, tests or commits)",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "UNKNOWN",
    "completion": "OPEN",
@@ -31794,7 +31829,7 @@
    "next_action": "reuse audit within MP-MASTER Batch A",
    "priority": "",
    "workstream": "multiplayer (isolated)",
-   "superseded_by": null,
+   "superseded_by": "MP-MASTER",
    "notes": "",
    "history": [
     {
@@ -31821,6 +31856,16 @@
      "date": "2026-10-24",
      "change": "next_action",
      "why": "superseded in scope by MP-MASTER (owner 2026-10-24): the 2026-10-19 prototype (d18d7d1, wip/multiplayer, preserved) is input to it; its doc and the 2026-10-21 audit copied to docs/multiplayer/"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "approval_status: OWNER APPROVED -> SUPERSEDED; superseded_by: None -> MP-MASTER",
+     "why": "register hygiene (owner 2026-10-30, X20-RESUME s.11): status corrected to match shipped evidence: superseded in scope by MP-MASTER (history 2026-10-24); prototype preserved on wip/multiplayer"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "completion: OPEN -> CLOSED",
+     "why": "superseded by MP-MASTER: closed"
     }
    ],
    "acceptance_derived": true,
@@ -31832,11 +31877,11 @@
     "multiplayer prototype wip/multiplayer"
    ],
    "migrated_from_status": "ACTIVE DEVELOPMENT",
-   "approval_status": "OWNER APPROVED",
+   "approval_status": "SUPERSEDED",
    "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "CLOSED"
   },
   {
    "id": "MP-ADOPTION-AGENCY",
@@ -31885,8 +31930,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -31894,8 +31939,23 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-24_owner_multiplayer_decisions.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; integrated_in + Builds 21-24 (wip/expansion20)",
+     "why": "register hygiene (owner 2026-10-30, X20-RESUME s.11): status corrected to match shipped evidence: one authoritative host simulation with guests acting through the host's verb path is the shipped architecture (MP-MASTER Batches A-C, Builds 21-24)"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "tests: None -> net_interact_test 67/0, net_mp4_test 148/0, mp_interact_ui_test 112/0, multiplayer_c_test 340/0 on wip/expansion20 e8cc44b (2026-10-28); test_commit: None -> e8cc44b",
+     "why": "test evidence recorded"
     }
-   ]
+   ],
+   "integrated_in": [
+    "Builds 21-24 (wip/expansion20)"
+   ],
+   "tests": "net_interact_test 67/0, net_mp4_test 148/0, mp_interact_ui_test 112/0, multiplayer_c_test 340/0 on wip/expansion20 e8cc44b (2026-10-28)",
+   "test_commit": "e8cc44b"
   },
   {
    "id": "MP-D1",
@@ -49156,6 +49216,11 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; integrated_in + Build 16 baseline",
+     "why": "register hygiene (owner 2026-10-30, X20-RESUME s.11): status corrected to match shipped evidence: the Build 16 baseline exists (docs/release/sim_baseline_build16.json, Build 16 released) and later expansions built on it"
     }
    ],
    "target_build": "16",
@@ -49163,10 +49228,12 @@
    "roadmap_reason": "the judgment system's Gate A is the Build 16 baseline itself",
    "b16_class": "required",
    "complexity": "S",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 16 baseline"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN"

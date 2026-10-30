@@ -2,18 +2,15 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (18)
+## Workers and task branches (15)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
-| LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
 | LE-03 | 20 | IN DEVELOPMENT | worker A (Living Economy) | wip/x20-le03 |
-| MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
 | MP-INET | multiplayer | IN DEVELOPMENT | worker C (multiplayer Batch D) | wip/mp-batchd |
 | MP-MASTER | multiplayer | IN DEVELOPMENT | worker C (multiplayer Batch D) | wip/mp-batchd |
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
@@ -44,9 +41,8 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | EQ-05 | 16 | PARTIALLY IMPLEMENTED |  |
 | FARM-08 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | FSE-00 | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
-| LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH |  |
+| LE-00 | 20+ | INTEGRATED |  |
 | MIN-G | 17 | INTEGRATED |  |
-| MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH |  |
 | OWN-08 | owner decision | PARTIALLY IMPLEMENTED |  |
 | OWN-19 | 20+ | PARTIALLY IMPLEMENTED |  |
 | OWN-22 | owner decision | PARTIALLY IMPLEMENTED |  |
@@ -64,6 +60,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | REC-003 | 15 | PARTIALLY IMPLEMENTED | owner confirms the policy (then CLAUDE.md section 8); aapt2 dump badging on a built APK |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH |  |
 | SET-C | 18 | PARTIALLY IMPLEMENTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |
+| SJD-A | 16 | INTEGRATED |  |
 | WDR-001-C | 17 | PARTIALLY IMPLEMENTED |  |
 | WDR-010-C | 15 | PARTIALLY IMPLEMENTED |  |
 | WDR-013-C | 17 | PARTIALLY IMPLEMENTED |  |

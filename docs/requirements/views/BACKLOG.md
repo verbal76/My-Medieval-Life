@@ -27,7 +27,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | FR-08 | Music and sound | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | FR-10 | Archery | approved | DEFERRED | NOT STARTED |
 | HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | approved | DEFERRED | NOT STARTED |
-| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
+| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | OWNER APPROVED | INTEGRATED |
 | MIN-L5 | Mining capability level 5 (integrated industrial mining) | proposal | PROPOSED | NOT STARTED |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | OWN-28 | Living world intent; Morris world; ordinary inhabitant; magic learnable; multiplayer 3-4 host; isometric 8-dir; research rules | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
@@ -140,18 +140,17 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | Q-10 | Hot Attic Games read-only registry | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 
-## Multiplayer track (11)
+## Multiplayer track (10)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
 | B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | approved | OWNER APPROVED | INTEGRATED |
-| BUILD-3PLATFORM | Every build produces Android, Windows and Linux together, stably signed | approved | OWNER APPROVED | NOT STARTED |
+| BUILD-3PLATFORM | Every build produces Android, Windows and Linux together, stably signed | approved | OWNER APPROVED | INTEGRATED |
 | CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | approved | OWNER APPROVED | NOT STARTED |
 | DGA-D3 | Connectivity with no server | proposal | PROPOSED | PARTIALLY IMPLEMENTED |
 | GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| GP-CHECKPOINT-1 | Checkpoint 1: private three-platform playtest release (Android, Windows, Linux) of the quick-win polish fixes | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| MP-ARCH | Multiplayer architecture approved in principle: one authoritative simulation, several full player characters, shared gameplay systems, single-player compatibility; with eight requirements: Build 19 simulation and single-player behaviour preserved; no separate simplified guest simulation; permanent identities and per-player ownership throughout; every platform a potential host and guest; the prototype kept as reference; multiplayer ahead of Expansion 20; explicit verification gates for Android, Windows, Linux, Steam Deck and mixed-platform sessions; the milestone in every status report until owner acceptance | approved | OWNER APPROVED | NOT STARTED |
+| GP-CHECKPOINT-1 | Checkpoint 1: private three-platform playtest release (Android, Windows, Linux) of the quick-win polish fixes | approved | OWNER APPROVED | INTEGRATED |
+| MP-ARCH | Multiplayer architecture approved in principle: one authoritative simulation, several full player characters, shared gameplay systems, single-player compatibility; with eight requirements: Build 19 simulation and single-player behaviour preserved; no separate simplified guest simulation; permanent identities and per-player ownership throughout; every platform a potential host and guest; the prototype kept as reference; multiplayer ahead of Expansion 20; explicit verification gates for Android, Windows, Linux, Steam Deck and mixed-platform sessions; the milestone in every status report until owner acceptance | approved | OWNER APPROVED | INTEGRATED |
 | MP-INET | Internet multiplayer is mandatory: free connection methods first; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal (costs, dependencies, privacy, alternatives) comes to the owner before internet support is declared complete | approved | OWNER APPROVED | IN DEVELOPMENT |
 | MP-MASTER | Full player-hosted multiplayer as the next milestone after Build 19 (before Expansion 20): 3-4 players including the host in one persistent host-authoritative world; full guest parity with the host in every existing system; Android, Windows and Linux (incl. Steam Deck) each host and join, every cross-platform combination validated on real devices; LAN and a documented internet method with no dedicated server and no paid service without owner approval; single player intact offline | approved | OWNER APPROVED | IN DEVELOPMENT |
 | SIM-GATE-01 | Permanent pre-build simulation, flight recorder and Excel quality gate | approved | OWNER APPROVED | INTEGRATED |

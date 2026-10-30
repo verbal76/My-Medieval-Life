@@ -7,14 +7,14 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 | | Baseline | Now |
 |---|---|---|
-| Open entries (rules excluded) | 231 | 168 still open, 63 closed since |
+| Open entries (rules excluded) | 231 | 167 still open, 64 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
 | Entries added since | | 613 (288 of them still open) |
-| **Open entries now** (rules excluded) | | **455** |
+| **Open entries now** (rules excluded) | | **454** |
 | Open entries moved to another build | | 15 |
 
-## Closed since the baseline (63)
+## Closed since the baseline (64)
 
 | ID | Item | Kind | Baseline status | Baseline build | State now | Build now |
 |---|---|---|---|---|---|---|
@@ -46,6 +46,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | EQ-16 | World equilibrium: an untouched world stays viable across generations; the player is the disruptive variable | approved | ACTIVE DEVELOPMENT | 16 | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | approved | PARTIALLY IMPLEMENTED | 15 | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | FR-07 | Economy and household simulations in CI (short variant) | approved | APPROVED — NOT STARTED | 15 | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
+| MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | approved | ACTIVE DEVELOPMENT | multiplayer | IMPLEMENTED ON TASK BRANCH / NOT TESTED / CLOSED | multiplayer |
 | OD-01 | Owner decision: deposit sustainability (P1) and the mine wage (B7-006) | decision | BLOCKED | 17 | APPROVED | 17 |
 | OD-02 | Owner decision: balance review of every provisional number | decision | BLOCKED | owner decision | APPROVED | owner decision |
 | OD-03 | Owner decisions: design gap assessment D1-D12 (isometric, magic, era, county) | decision | BLOCKED | owner decision | APPROVED | owner decision |
@@ -153,7 +154,7 @@ None.
 | BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | decision | APPROVED | owner decision |
-| BUILD-3PLATFORM | Every build produces Android, Windows and Linux together, stably signed | approved | NOT STARTED / NOT TESTED / OPEN | multiplayer |
+| BUILD-3PLATFORM | Every build produces Android, Windows and Linux together, stably signed | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | multiplayer |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | NOT STARTED / NOT TESTED / OPEN | 18 |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | CHAPEL-R1 | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) | decision | APPROVED | 18 |
@@ -278,7 +279,7 @@ None.
 | GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | multiplayer |
 | GP-BUSINESS-COURIER | Business courier integration: the courier hand-off at a business desk (individually traceable part of GP-BUSINESS-DESK) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
-| GP-CHECKPOINT-1 | Checkpoint 1: private three-platform playtest release (Android, Windows, Linux) of the quick-win polish fixes | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | multiplayer |
+| GP-CHECKPOINT-1 | Checkpoint 1: private three-platform playtest release (Android, Windows, Linux) of the quick-win polish fixes | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | multiplayer |
 | GP-CRIME-PURSUIT | Proportionate crime response, guard pursuit that survives loss of sight, coordinated manhunts and persistent wanted status | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-DIALOGUE-PERSPECTIVE | NPCs speak from their own perspective: I, we, my mother, you; witnessed versus heard; personal significance | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-DRAW-UNDER-HOUSE | Player drawn half under a house wall (Marsh house front) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
@@ -349,7 +350,7 @@ None.
 | JOB-02 | Offered compensation on the manor job board: each funded posting offers pay that eligible workers weigh and may decline; the manor may raise its offer; jobs may stay unfilled; pay from real funds, in full on completion; no extra pay to salaried hands; CON-01 contracts stay separate | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | JUICE-00 | Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 20+ |
 | LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
-| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20+ |
+| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | INTEGRATED / NOT TESTED / OPEN | 20+ |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
@@ -395,7 +396,7 @@ None.
 | MIN-STONE-Q | Are quarry stone and building blocks different items? | decision | APPROVED | owner decision |
 | MON-01 | Monsters, village defence, bounties and monster goods: skeletons underground and in the woods, lizards, a crab monster and boss monsters in forests and hills; rare attacks on the village where guards go first and villagers form a defensive line; the player can become a hero of the town; bounties to hunt monsters and bring back their pelts, building prestige; villagers may choose to become monster hunters; a market for specialty goods only monsters give; all of it moving villagers' emotions, their view of the player and their sense of safety | approved | NOT STARTED / NOT TESTED / OPEN | 26 |
 | MP-ADOPTION-AGENCY | Adoption agency concept (future, separate design item) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
-| MP-ARCH | Multiplayer architecture approved in principle: one authoritative simulation, several full player characters, shared gameplay systems, single-player compatibility; with eight requirements: Build 19 simulation and single-player behaviour preserved; no separate simplified guest simulation; permanent identities and per-player ownership throughout; every platform a potential host and guest; the prototype kept as reference; multiplayer ahead of Expansion 20; explicit verification gates for Android, Windows, Linux, Steam Deck and mixed-platform sessions; the milestone in every status report until owner acceptance | approved | NOT STARTED / NOT TESTED / OPEN | multiplayer |
+| MP-ARCH | Multiplayer architecture approved in principle: one authoritative simulation, several full player characters, shared gameplay systems, single-player compatibility; with eight requirements: Build 19 simulation and single-player behaviour preserved; no separate simplified guest simulation; permanent identities and per-player ownership throughout; every platform a potential host and guest; the prototype kept as reference; multiplayer ahead of Expansion 20; explicit verification gates for Android, Windows, Linux, Steam Deck and mixed-platform sessions; the milestone in every status report until owner acceptance | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | multiplayer |
 | MP-D1 | Multiplayer: what happens to a guest's character while that guest is disconnected (inactive and removed, physically present but idle, or continuing selected simulation activities)? Survival, combat, property and fairness consequences to be presented first | decision | APPROVED | multiplayer |
 | MP-D2 | Multiplayer: resting and sleeping that skip time (only when every connected player rests, no skipping with guests, or other)? | decision | APPROVED | multiplayer |
 | MP-D3 | Multiplayer: menus and placement mode that pause the world (never pause with guests connected, or only the host's menus pause)? | decision | APPROVED | multiplayer |
