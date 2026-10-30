@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 167 still open, 64 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 627 (300 of them still open) |
-| **Open entries now** (rules excluded) | | **466** |
+| Entries added since | | 628 (301 of them still open) |
+| **Open entries now** (rules excluded) | | **467** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (64)
@@ -107,7 +107,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (627)
+## Added since the baseline (628)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -723,6 +723,7 @@ None.
 | X20-B24-F8 | Review finding 8: the recorder's 'starved with means' counted village food rather than the deceased's own and household means | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | X20-B24-REMED | Build 24 review remediation and Expansion 20 integration: per-finding register, failing-first regression tests, shared ownership-transition root causes, LE-04 on World.transactions with no double reservation, LE-06 bounded saves as an activation gate, X20-MP-ECON-INTEGRITY fault injection, SJD-G within budget, milestone report | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-B24-REVIEW | Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| X20-BACKGROUND | Expansion 20 continues in the background within approved decisions (Upwardly Build 83 is the owner's primary priority): combined integration, one baseline simulation on the merged commit, LE-06 first, trader reopening, X20-MP-ECON-INTEGRITY, SJD-G evaluation; no build rushed; escalate only the listed cases | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
