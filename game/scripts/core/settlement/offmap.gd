@@ -1364,6 +1364,11 @@ func _close_business(t: String) -> void:
 ## The goods a trade would sell: its recipes' outputs, and a closed place's natural output.
 func _trade_goods(t: String) -> Array:
 	var out := {}
+	if t == "merchant":                          # X20-SETTLE-REOPEN: what traders bring a place: the goods they carry and food
+		for item in _rules.carry:
+			out[item] = true
+		for item in _rules.foods:
+			out[item] = true
 	for rid in btype(t).get("runs", {}):
 		for o in GameData.recipes[rid].out:
 			out[o] = true
@@ -1400,7 +1405,7 @@ func _open_trade(delta: Dictionary) -> void:
 	dev["streak"] = streak
 	var cands: Array = []
 	for t in _types:
-		if t == "merchant" or biz.has(t):
+		if biz.has(t) or (t == "merchant" and not closed.has(t)):      # X20-SETTLE-REOPEN: a closed trader may be taken up again
 			continue
 		if closed.has(t) or (not btype(t).get("runs", {}).is_empty() and (btype(t).get("out", {}) as Dictionary).is_empty()):
 			cands.append(t)
@@ -1446,8 +1451,21 @@ func _open_trade(delta: Dictionary) -> void:
 		nb = {"type": best, "workers": [], "till": 0, "stock": {}, "reserves": {}, "out": (T.get("out", {}) as Dictionary).duplicate(), "acc": {},
 			"reserve": int(T.get("reserve", 12)), "horses": 0, "foal": 0, "fed_miss": 0, "paid": 0, "week": 0, "rate": 0.0, "idle": 0}
 	else:
+		# X20-SETTLE-REOPEN (owner 2026-10-30): the place's own fields, woods, deposit and horses stay with it (`out`, `reserves`,
+		# `horses`), but nothing of the former owner's comes back: its till and stock were handed on when it closed, and its
+		# workforce, accounts and trading capital start afresh from what the new household brings, as for a new business
 		nb = rec
 		closed.erase(best)
+		nb.till = 0
+		nb.stock = {}
+		nb.erase("imported")
+		nb.acc = {}
+		nb.paid = 0
+		nb.week = 0
+		nb.rate = 0.0
+		nb.idle = 0
+		nb.fed_miss = 0
+		nb.reserve = int(btype(best).get("reserve", 12))
 	var old: Dictionary = biz[TRADE_BIZ[h.trade]]
 	old.workers.erase(pick)
 	nb.workers = [pick]
