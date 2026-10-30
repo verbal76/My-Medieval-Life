@@ -98,6 +98,7 @@ var shot_pick := 0.0
 var view_scale := 1.0          # phones draw the interface larger; the camera zoom makes up for it
 var walking := false           # the player moved this frame (resource prompts wait until they stop)
 var net: NetSession            # MP Batch A2: hosting and joining (scripts/net, docs/multiplayer/BATCH_A.md)
+const HOST_STALL_SECONDS := 1.0   # Batch D: a hosted world's frame longer than this was a freeze, not play: not caught up
 var guest_world := false       # this machine shows a host's world from its own character: it never simulates or saves it
 var avatar_sprites := {}       # the other players in the session, by pid
 var _offers_seen := {}          # MP-D8, MP-INTERACT-01: ids of the offers and messages to this player it was told of
@@ -1220,6 +1221,16 @@ func adopt_heir(d: Dictionary) -> void:
 	ui.hide_all()
 
 
+## Guest (Batch D): the connection to the host dropped; NetSession is reconnecting. The view stays, stopped (nothing here is
+## simulated), windows close, and the player is told; the host's world, sent again on the way back, replaces this copy.
+func net_interrupted(text: String) -> void:
+	cancel_action("")
+	move_to = Vector2.INF
+	ui.hide_all()
+	paused = true
+	ui.message(text, 30.0, "game")
+
+
 ## Guest: back to the title (the host left, the connection was lost, or the player chose to leave).
 func leave_guest_world(text := "") -> void:
 	if net.is_guest():
@@ -1914,6 +1925,8 @@ func _refresh_player_worn() -> void:
 func _process(delta: float) -> void:
 	if world == null:
 		return
+	if delta > HOST_STALL_SECONDS and net.is_host():
+		delta = 1.0 / 30.0                      # Batch D (MP-D6): a hosting app frozen (Android background, a stall): time stopped meanwhile
 	_refresh_player_worn()
 	if player_sprite != null:                # WEAPON-VISIBLE-01: the weapon in hand is carried, drawn
 		player_sprite.wield(_in_hand())
@@ -5652,6 +5665,10 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
 		if running:
 			save_game(false)
+	if what == NOTIFICATION_APPLICATION_PAUSED and net != null:
+		net.on_app_paused()                     # Batch D (MP-D6): a host tells its guests it is paused; a guest notes the time
+	if what == NOTIFICATION_APPLICATION_RESUMED and net != null:
+		net.on_app_resumed()                    # a guest away too long reconnects at once (a host's clock: HOST_STALL_SECONDS)
 
 
 func continue_as_heir() -> void:

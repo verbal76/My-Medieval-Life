@@ -807,8 +807,9 @@ func _save_live_and_restart() -> void:
 
 func _host_killed() -> void:
 	await command({"cmd": "crash"})
-	check(await until(func(): return not main.guest_world and not gs("g2").get("welcomed", true) and not gs("g3").get("welcomed", true), 30.0),
-		"the host is killed: every guest is out (\"%s\")" % main.ui.toast.text)
+	# Batch D: a host that vanished (no goodbye) is waited for: each guest's view stops and it reconnects by itself (INT-641)
+	check(await until(func(): return main.net.reconnecting and bool(gs("g2").get("reconnecting", false)) and bool(gs("g3").get("reconnecting", false)), 30.0),
+		"the host is killed: every guest's view stops and waits for it (\"%s\")" % main.ui.toast.text)
 	await until(func(): return not OS.is_process_running(host_proc), 15.0)
 	var saved: Dictionary = status().get("census", {})
 	await wait(2.0)
@@ -816,7 +817,14 @@ func _host_killed() -> void:
 	var loaded: Dictionary = status().get("census", {})
 	check(absf(float(loaded.get("minutes", -1)) - float(saved.get("minutes", -2))) < 0.01 and int(saved.get("coins", -1)) == int(loaded.get("coins", -2)),
 		"no minute passed while it was gone (%.2f / %.2f), the coins the same" % [float(saved.get("minutes", -1)), float(loaded.get("minutes", -1))])
-	check(await join_ann() and await rejoin("g2") and await rejoin("g3") and status().get("connected", []).size() == 3, "all three guests return")
+	var auto := await until(func(): return status().get("connected", []).size() == 3, 60.0)
+	if not auto:                               # the host took longer than the guests wait (RECONNECT_SECONDS): they join again
+		if not main.guest_world:
+			await join_ann()
+		for t in ["g2", "g3"]:
+			if not gs(t).get("welcomed", false):
+				await rejoin(t)
+	check(await until(func(): return status().get("connected", []).size() == 3 and main.guest_world and not main.net.reconnecting, 30.0), "all three guests return (%s)" % ("by themselves" if auto else "by joining again: the host's restart took longer than they wait"))
 	await stage()
 	await consistent("after the host was killed", ["g2", "g3"])
 	await packs_agree("after the host was killed")
