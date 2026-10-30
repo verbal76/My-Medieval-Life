@@ -15,7 +15,13 @@ register (`docs/requirements/`), and report to the lead.
 
 ## Shared interfaces (contracts)
 
-1. **One authoritative transaction per economy layer.** Village actors (villagers, players, tills, the manor) trade only through
+1. **REVISED 2026-10-30 (owner, `docs/directives/2026-10-30_le03_food_trade_coordinated_recovery.md`): ONE transaction authority for
+   all purchases, sales and settlement food transfers.** Worker A owns it (validate-then-commit over EconActor refs, settlement parties
+   `region:<settlement>/<holder>` included; atomic money and goods; rejection codes; idempotent transaction id; saved; deterministic;
+   spec in `docs/expansion20/TRANSACTION_AUTHORITY.md` on `wip/x20-le03`). Worker B builds settlement logistics and routes every
+   settlement-to-settlement goods-for-coins transfer through it; no settlement-only transfer path, currency or inventory. Superseded
+   text kept below for the record.
+   *(Original:)* **One authoritative transaction per economy layer.** Village actors (villagers, players, tills, the manor) trade only through
    `World.trade` (A owns it; LE-03 makes it the single path with validate-then-commit semantics). Settlement-to-settlement trade uses the
    existing settlement layer's `RegionalMarket.execute` and `SettlementLedger` buy/sell lines (B extends; no new purchase path). Where
    the village and a settlement trade, the existing caravan/courier path stays as it is. Nobody adds a third path.
