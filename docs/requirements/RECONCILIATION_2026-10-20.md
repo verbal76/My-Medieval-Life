@@ -353,8 +353,8 @@ None.
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | INTEGRATED / NOT TESTED / OPEN | 20+ |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
-| LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
-| LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
+| LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | approved | NOT STARTED / NOT TESTED / OPEN | 20 |

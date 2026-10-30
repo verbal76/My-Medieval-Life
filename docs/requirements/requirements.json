@@ -28528,9 +28528,83 @@
     "No tool-order traps; real opportunity response"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "le03_claims 80/0, le03_economy 38/0, le03_transactions 79/0, le02_market 101/0, economy_model 112/0, economy_foundation 89/0, contracts 154/0, conservation 8/0, till_ownership 54/0, contract_sign 21/0; run_tests 3600, start 523, world 339, multiplayer_c 340, business 160, credit 98, feast 37 (0 failures, 7784ed4); G0 identical (Actions 41118611434 bfde588, 41124728769 83d262e); economy-on with market 41127569935 (83d262e): leaks 0, integrity breaches 0",
    "playtest": [],
    "branch": "wip/x20-le03",
+   "commits": [
+    "8fff5ce"
+   ],
+   "parent": "EXP-D",
+   "depends_on": [],
+   "blockers": [],
+   "rules": [],
+   "interactions": [],
+   "wiki": [],
+   "next_action": "Merge into wip/expansion20 together with X20-SETTLE-FOOD once B passes; LE-04 started on wip/x20-le04 (worker A).",
+   "priority": "",
+   "workstream": "",
+   "superseded_by": null,
+   "notes": "",
+   "history": [
+    {
+     "date": "2026-10-20",
+     "change": "entered in the register",
+     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17"
+    },
+    {
+     "date": "2026-10-20",
+     "change": "target_build; roadmap_gate; roadmap_reason",
+     "why": "placed"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
+     "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-10-23",
+     "change": "reconciliation: target_build=20",
+     "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (Living Economy); branch:  -> wip/x20-le03",
+     "why": "worker A started (X20-RESUME)"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> le03_claims 80/0, le03_economy 38/0, le03_transactions 79/0, le02_market 101/0, economy_model 112/0, economy_foundation 89/0, contracts 154/0, conservation 8/0, till_ownership 54/0, contract_sign 21/0; run_tests 3600, start 523, world 339, multiplayer_c 340, business 160, credit 98, feast 37 (0 failures, 7784ed4); G0 identical (Actions 41118611434 bfde588, 41124728769 83d262e); economy-on with market 41127569935 (83d262e): leaks 0, integrity breaches 0; test_commit: None -> 8fff5ce; commits + 8fff5ce; next_action",
+     "why": "worker A finished LE-03 (8fff5ce, frozen): one transaction path, transaction authority, budgets, food bids, contract inputs; wages/services deferred to LE-04 behind flags; to merge with food trade"
+    }
+   ],
+   "target_build": "20",
+   "roadmap_gate": "owner decision first",
+   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
+   "integrated_in": [],
+   "migrated_from_status": "APPROVED — NOT STARTED",
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "assigned_worker": "worker A (Living Economy)",
+   "test_commit": "8fff5ce"
+  },
+  {
+   "id": "LE-04",
+   "title": "Living Economy stage LE-04: Organic finance, merchants and manor behavior",
+   "kind": "approved",
+   "owner_wording": null,
+   "description": "Living Economy stage LE-04: Organic finance, merchants and manor behavior",
+   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17",
+   "approval": "owner design 2026-10-20",
+   "acceptance": [
+    "Costs, default and refusal paths"
+   ],
+   "implementation": "",
+   "tests": "",
+   "playtest": [],
+   "branch": "wip/x20-le04",
    "commits": [],
    "parent": "EXP-D",
    "depends_on": [],
@@ -28566,8 +28640,8 @@
     },
     {
      "date": "2026-10-30",
-     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (Living Economy); branch:  -> wip/x20-le03",
-     "why": "worker A started (X20-RESUME)"
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (Living Economy); branch:  -> wip/x20-le04",
+     "why": "worker A started LE-04 (X20-RESUME) plus review fixes 6-7"
     }
    ],
    "target_build": "20",
@@ -28581,66 +28655,6 @@
    "release_status": "NOT READY",
    "completion": "OPEN",
    "assigned_worker": "worker A (Living Economy)"
-  },
-  {
-   "id": "LE-04",
-   "title": "Living Economy stage LE-04: Organic finance, merchants and manor behavior",
-   "kind": "approved",
-   "owner_wording": null,
-   "description": "Living Economy stage LE-04: Organic finance, merchants and manor behavior",
-   "source": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17",
-   "approval": "owner design 2026-10-20",
-   "acceptance": [
-    "Costs, default and refusal paths"
-   ],
-   "implementation": "",
-   "tests": "",
-   "playtest": [],
-   "branch": "",
-   "commits": [],
-   "parent": "EXP-D",
-   "depends_on": [],
-   "blockers": [],
-   "rules": [],
-   "interactions": [],
-   "wiki": [],
-   "next_action": "",
-   "priority": "",
-   "workstream": "",
-   "superseded_by": null,
-   "notes": "",
-   "history": [
-    {
-     "date": "2026-10-20",
-     "change": "entered in the register",
-     "why": "docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design.docx section 17"
-    },
-    {
-     "date": "2026-10-20",
-     "change": "target_build; roadmap_gate; roadmap_reason",
-     "why": "placed"
-    },
-    {
-     "date": "2026-10-23",
-     "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
-     "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
-    },
-    {
-     "date": "2026-10-23",
-     "change": "reconciliation: target_build=20",
-     "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
-    }
-   ],
-   "target_build": "20",
-   "roadmap_gate": "owner decision first",
-   "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
-   "integrated_in": [],
-   "migrated_from_status": "APPROVED — NOT STARTED",
-   "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
-   "release_status": "NOT READY",
-   "completion": "OPEN"
   },
   {
    "id": "LE-05",
