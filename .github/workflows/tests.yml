@@ -32,6 +32,12 @@ jobs:
         with:
           fetch-depth: 2           # the requirements check compares the register with the previous commit
 
+      - name: Fetch the integration branches named by records (the register tests check paths there too)
+        run: |
+          for b in staging/my-medieval-life wip/build18 wip/build17 wip/expansion18-preparation wip/expansion19-preparation wip/expansion20-preparation wip/expansion21-preparation; do
+            git fetch --depth=1 origin "$b:refs/remotes/origin/$b" || echo "note: $b not fetched"
+          done
+
       - name: Cache Godot
         id: godot
         uses: actions/cache@v4
