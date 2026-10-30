@@ -47,16 +47,21 @@ static func make(addresses: Array, port: int, tag: String) -> String:
 	return PREFIX + "-" + "-".join(groups)
 
 
-## {ok, port, tag, addresses: [{ip, kind}] in the order to try, error}. A pasted text with words around the code is fine.
+## {ok, port, tag, addresses: [{ip, kind}] in the order to try, error}. A pasted text with words around the code is fine: the code is
+## read up to the longest run of characters whose checksum holds.
 static func parse(text: String) -> Dictionary:
 	var t := text.strip_edges().to_upper()
-	var at := t.find(PREFIX + "-")
+	var at := -1
+	for sep in ["-", " ", ""]:
+		at = t.find(PREFIX + sep)
+		if at >= 0:
+			t = t.substr(at + PREFIX.length())
+			break
 	if at < 0:
 		return {"ok": false, "error": "not_code"}
-	t = t.substr(at + PREFIX.length() + 1)
 	var clean := ""
 	for ch in t:
-		if ch == "-" or ch == " ":
+		if ch == "-" or ch == " " or ch == "\n" or ch == "\t":
 			continue
 		var c := ch
 		if c == "O":
@@ -66,7 +71,19 @@ static func parse(text: String) -> Dictionary:
 		if not ALPHABET.contains(c):
 			break
 		clean += c
-	var b := _unb32(clean)
+	if clean.length() < 15:
+		return {"ok": false, "error": "short"}
+	var why := "typo"
+	for n in range(clean.length(), 14, -1):
+		var r := _read(_unb32(clean.left(n)))
+		if bool(r.ok):
+			return r
+		if str(r.error) == "version":
+			why = "version"
+	return {"ok": false, "error": why}
+
+
+static func _read(b: PackedByteArray) -> Dictionary:
 	if b.size() < 9:
 		return {"ok": false, "error": "short"}
 	var body := b.slice(0, b.size() - 2)

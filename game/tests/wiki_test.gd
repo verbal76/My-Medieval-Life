@@ -177,6 +177,9 @@ func _data_tests() -> void:
 	check(mpt.contains("open to friends") and mpt.contains("join a game") and mpt.contains("leave the game") and mpt.contains("47810") and mpt.contains("firewall")
 		and not w.pages.has("todo:multiplayer") and w.pages["todo:multiplayer_more"].text.contains("internet") and w.pages["todo:multiplayer_more"].text.contains("phone"),
 		"Build 21: Playing with friends is a page of how to host and join on the same network; internet play and phone hosting stay Not in the game yet")
+	check(mpt.contains("invite code") and mpt.contains("paste") and mpt.contains("mobile data") and mpt.contains("reconnects by itself") and mpt.contains("time stops")
+		and w.pages["todo:multiplayer_more"].text.contains("mobile data"),
+		"Batch D: the page explains invite codes, what they can reach (never claiming mobile data), reconnection and the host's pause; the rest stays Not in the game yet")
 	check("todo:injuries" in w.search("injury") or "todo:injuries" in w.search("injuries"), "search finds the health placeholders")
 	var plain := true
 	var odd := []

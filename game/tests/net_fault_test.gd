@@ -100,6 +100,11 @@ func rec(pid := -1) -> Dictionary:
 	return status().get("players", {}).get(str(pid if pid >= 0 else main.net.my_pid), {})
 
 
+## The pids of the guests connected to the host now (as whole numbers).
+func conn() -> Array:
+	return (status().get("connected", []) as Array).map(func(x): return int(x))
+
+
 func net_d() -> Dictionary:
 	return status().get("net_d", {})
 
@@ -207,7 +212,7 @@ func _join_by_code() -> void:
 	await until(func(): return not main.net.is_guest(), 10.0)
 	check(not main.guest_world and said.has(NetSession.OTHER_GAME), "a code for another world, at a live address, is refused, not joined (%s)" % str(said))
 	# a dead address first (as a friend's LAN address seen from elsewhere), then the live one
-	var code := NetInvite.make([{"ip": "198.51.100.7", "kind": "lan"}, {"ip": "127.0.0.1", "kind": "public"}], pport, tag)
+	var code := NetInvite.make([{"ip": "10.255.255.1", "kind": "lan"}, {"ip": "127.0.0.1", "kind": "public"}], pport, tag)
 	var r := NetInvite.parse(code)
 	var t0 := Time.get_ticks_msec()
 	main.net.join_targets(r.addresses, KEY, "Ann", "oak", str(r.tag))
@@ -276,14 +281,20 @@ func _lossy() -> void:
 	await until(func(): return host_food() <= n0 - 3, 8.0)
 	await wait(1.5)
 	var ps := read_json("proxy_status.json")
-	check(host_food() == n0 - 3 and int(status().applied) - a0 == 3, "20%% loss, 15%% repeats, 15%% reordering: three requests applied exactly once each (relay dropped %d, repeated %d, reordered %d)" % [int(ps.get("dropped", 0)), int(ps.get("duplicated", 0)), int(ps.get("reordered", 0))])
+	check(host_food() == n0 - 3, "20%% loss, 15%% repeats, 15%% reordering: three meals eaten exactly once each (%s %d -> %d; requests applied in all, the walk's included, %d; relay dropped %d, repeated %d, reordered %d; reconnecting %s, reconnects %d)" % [food, n0, host_food(), int(status().applied) - a0, int(ps.get("dropped", 0)), int(ps.get("duplicated", 0)), int(ps.get("reordered", 0)), str(net.reconnecting), net.reconnects])
 	await until(func():
 		var q: Array = rec().get("pos", [0, 0])
 		return Vector2(q[0], q[1]).distance_to(w.player.pos) < 0.5, 5.0)
 	var q2: Array = rec().get("pos", [0, 0])
 	check(in_game() and Vector2(q2[0], q2[1]).distance_to(w.player.pos) < 0.5 and w.player.pos.distance_to(from) > 0.0, "the walk arrives on the host (%.2f tiles apart)" % Vector2(q2[0], q2[1]).distance_to(w.player.pos))
-	check(int(status().coin_leak) == 0 and main.world.player.inv.count(food) == host_food(), "coins conserved, the packs agree")
 	await proxy({})
+	await until(func(): return main.world.player.inv.count(food) == host_food() and main.world.player.coins == int(rec().coins), 4.0)
+	var kinds := {}
+	for e in net_d().get("log", []):
+		if e.size() > 2:
+			kinds[str(e[2])] = int(kinds.get(str(e[2]), 0)) + 1
+	check(int(status().coin_leak) == 0 and main.world.player.inv.count(food) == host_food() and main.world.player.coins == int(rec().coins),
+		"coins conserved, the packs and purses agree (leak %d; %s %d/%d; coins %d/%d; applied %s)" % [int(status().coin_leak), food, main.world.player.inv.count(food), host_food(), main.world.player.coins, int(rec().coins), str(kinds)])
 
 
 # ---------------------------------------------------------------- the network gone ------------------
@@ -327,8 +338,8 @@ func _guest_pause() -> void:
 	check(net.reconnecting, "back from a pause longer than the host waits, the guest reconnects at once")
 	var back := await until(func(): return in_game() and net.reconnects == r0 + 1, 20.0)
 	check(back and net.my_pid == pid and int(net_d().resumes) > res0, "it takes its own character back with its token, no refusal (resumes %d)" % int(net_d().resumes))
-	await until(func(): return (status().connected as Array).has(pid), 3.0)
-	check((status().connected as Array).count(pid) == 1, "one connection for it on the host")
+	await until(func(): return conn().has(pid), 3.0)
+	check(conn().count(pid) == 1, "one connection for it on the host (%s)" % str(conn()))
 
 
 # ---------------------------------------------------------------- a second guest killed and frozen ---
@@ -341,19 +352,19 @@ func _guest_killed() -> void:
 	var pid2 := int(read_json("g2.json").pid)
 	var players0 := (status().players as Dictionary).size()
 	OS.kill(guest2_pid)
-	var gone := await until(func(): return not (status().connected as Array).has(pid2) and bool(rec(pid2).get("away", false)), 20.0)
+	var gone := await until(func(): return not conn().has(pid2) and bool(rec(pid2).get("away", false)), 20.0)
 	check(gone and int(status().coin_leak) == 0, "the second guest killed: the host drops it in its time, its character out of play, coins conserved")
 	guest2_pid = spawn("res://tests/net_fault_guest.gd", [str(port), KEY2, "Bea", "oak", "g2.json", dir])
 	var again := await until(func(): var g := read_json("g2.json"); return bool(g.get("welcomed", false)) and int(g.get("os_pid", -1)) == guest2_pid, 40.0)
 	check(again and int(read_json("g2.json").pid) == pid2 and (status().players as Dictionary).size() == players0, "started again, it is the same character (no duplicate)")
 	# frozen (SIGSTOP) longer than the timeouts, then let go: it reconnects by itself
 	OS.execute("kill", ["-STOP", str(guest2_pid)])
-	await until(func(): return not (status().connected as Array).has(pid2), 20.0)
+	await until(func(): return not conn().has(pid2), 20.0)
 	OS.execute("kill", ["-CONT", str(guest2_pid)])
 	var thawed := await until(func(): var g := read_json("g2.json"); return int(g.get("reconnects", 0)) >= 1 and bool(g.guest_world) and not bool(g.reconnecting), 30.0)
-	check(thawed and (status().connected as Array).has(pid2) and int(read_json("g2.json").pid) == pid2, "frozen past the timeouts and let go, it reconnects by itself as itself")
+	check(thawed and conn().has(pid2) and int(read_json("g2.json").pid) == pid2, "frozen past the timeouts and let go, it reconnects by itself as itself (%s; host %s)" % [str(read_json("g2.json")), str(conn())])
 	OS.kill(guest2_pid)
-	await until(func(): return not (status().connected as Array).has(pid2), 20.0)
+	await until(func(): return not conn().has(pid2), 20.0)
 
 
 # ---------------------------------------------------------------- an Android host paused ------------

@@ -122,7 +122,7 @@ var streams := {}                   # identity -> {next, done: {rid: answer}, or
 var duplicates := 0                 # repeated requests answered from the record, not applied again (tests, the log)
 var gaps_skipped := 0               # requests applied after giving up waiting for a missing earlier number
 var resumes := 0                    # connections that took their character back with the token
-var applied_log: Array = []         # [pid, rid] in the order applied (the last 200; tests)
+var applied_log: Array = []         # [pid, rid, verb] in the order applied (the last 200; tests)
 # Batch D, guest
 var targets: Array = []             # the addresses being tried: {ip, port, kind}
 var _attempt := -1
@@ -941,15 +941,23 @@ func s_fauna_life(born: Array, gone: Array) -> void:
 ## Guest (MP C, World.remote): send verb `path` with its arguments, named as both machines name them (NetActions.enc). The id of
 ## the request; the host's answer comes as s_reply, the world sections it changed as s_sync.
 func send_verb(path: String, args: Array) -> int:
+	if path in LOCAL_QUERIES:
+		return 0                                   # Batch D: a question, not an action: answered from this copy, nothing sent
 	var a := []
 	for v in args:
 		a.append(NetActions.enc(main.world, v))
 	return request("verb", {"path": path, "a": a})
 
 
+## Batch D: World verbs that only answer a question and change nothing (the interface asks container_pick every frame to word the
+## prompt beside a chest or table): a guest answers them from its copy and does not send them (they were requests to the host each
+## frame, about 14 a second while beside a container).
+const LOCAL_QUERIES := ["container_pick"]
+
+
 ## Guest: what this machine's own run of a sent verb gave (World.remote_done).
 func note_prediction(rid, r) -> void:
-	if rid is int:
+	if rid is int and rid > 0:
 		predicted[rid] = NetActions.enc(main.world, r)
 
 
@@ -1088,7 +1096,7 @@ func _open_stream(p: PlayerState, next_rid: int, resumed: bool) -> void:
 
 
 ## Host (Batch D): keep the answer to request `rid` of player `p`, for a repeat of it.
-func _remember(p: PlayerState, rid: int, r: Dictionary) -> void:
+func _remember(p: PlayerState, rid: int, r: Dictionary, what := "") -> void:
 	if p == null:
 		return
 	var st := _stream_of(p)
@@ -1096,7 +1104,7 @@ func _remember(p: PlayerState, rid: int, r: Dictionary) -> void:
 	st.order.append(rid)
 	while (st.order as Array).size() > REPLIES_KEPT:
 		st.done.erase(st.order.pop_front())
-	applied_log.append([p.pid, rid])
+	applied_log.append([p.pid, rid, what])
 	if applied_log.size() > 200:
 		applied_log.pop_front()
 
@@ -1120,7 +1128,7 @@ func apply_requests() -> void:
 		var p: PlayerState = main.world.player_by_pid(int(q.pid))
 		var r := NetActions.apply(main.world, p, str(q.kind), q.args if q.args is Dictionary else {})
 		applied += 1
-		_remember(p, int(q.rid), r)                # Batch D: a repeat of this number is answered, not applied again
+		_remember(p, int(q.rid), r, str(q.args.get("path", q.kind)) if q.args is Dictionary else str(q.kind))     # Batch D: a repeat of this number is answered, not applied again
 		if main.world.recorder != null:
 			main.world.recorder.net_request(self, p, str(q.kind), r)     # X20-FINAL: each player action the host applied
 		if r.has("heir_pid") and by_peer.has(int(q.peer)):
