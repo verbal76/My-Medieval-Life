@@ -422,8 +422,39 @@ func price_terms(n: NPC, buyer_ref: String, id: String, m: Dictionary, svc := {}
 	var let_down := ended_early_by(buyer_ref, World.npc_ref(n.id))
 	var risk := float(cfg().cancel_premium) * float(let_down)
 	var f := household - relationship + risk
+	var travel := travel_per_unit(n, buyer_ref) if svc.is_empty() else 0.0
 	return {"going": going, "cost": cost, "alternatives": alt, "household": household, "close": close, "relationship": relationship,
-		"cancelled_on_me": let_down, "risk": risk, "min": maxi(1, roundi(maxf(going, maxf(cost, alt)) * f))}
+		"cancelled_on_me": let_down, "risk": risk, "travel": travel, "min": maxi(1, roundi(maxf(going, maxf(cost, alt)) * f + travel))}
+
+
+## EXPANSION 20 LE-05 (design s.5: a seller's minimum covers "labor ... and opportunity cost"; travel "for LE-05's regional links";
+## LE02_IMPLEMENTATION s.9): what walking the goods over costs the seller a unit, from what the game already measures: the round
+## trip between its workplace and where the buyer takes delivery (the buyer's workplace, the manor's reeve, the player's home) at
+## walking speed, in game minutes, valued at the seller's own earnings a working minute (NPC.avg_income over the working day, the
+## measure `alternatives` already uses), spread over a delivery lot. 0 unless the Living Economy's market drives with
+## market.travel_cost on (the switch off: CON-01's price exactly as before).
+func travel_per_unit(n: NPC, buyer_ref: String) -> float:
+	if w.economy == null or not w.economy.market.drive or not bool(w.economy.market.p("travel_cost", false)):
+		return 0.0
+	var at := Vector2i(-1, -1)
+	if World.is_player_ref(buyer_ref):
+		var bp: PlayerState = w.player_for(buyer_ref)
+		if bp != null and bp.home != "" and w.buildings.has(bp.home):
+			at = w.building_door(bp.home)
+	elif buyer_ref == World.MANOR:
+		var reeve := w.npc(w.reeve_id)
+		if reeve != null and reeve.alive:
+			at = w.brain._workplace_cell(reeve)
+	else:
+		var b := _npc_of(buyer_ref)
+		if b != null:
+			at = w.brain._workplace_cell(b)
+	if at == Vector2i(-1, -1):
+		return 0.0
+	var tiles := Vector2(w.brain._workplace_cell(n)).distance_to(Vector2(at))
+	var minutes := 2.0 * tiles / float(GameData.b("walk_tiles_per_second")) * float(GameData.b("game_minutes_per_second"))
+	var per_minute := n.avg_income() / maxf(1.0, (NPCBrain.WORK_END - NPCBrain.WORK_START) * 60.0)
+	return minutes * per_minute / float(maxi(1, int(cfg().delivery_lot)))
 
 
 ## A friend, partner or kin of `n` (Relations, Life.kin): the ties that get a friend's price.

@@ -111,6 +111,7 @@ jobs:
           $godot --headless --path game --script res://tests/le03_transactions_test.gd   # Expansion 20 LE-03: the transaction authority
           $godot --headless --path game --script res://tests/le04_test.gd               # Expansion 20 LE-04: village parties, the manor's tools
           $godot --headless --path game --script res://tests/le06_save_test.gd          # Expansion 20 LE-06: the economy's save bounded
+          $godot --headless --path game --script res://tests/le05_test.gd               # Expansion 20 LE-05: travel in prices
           $godot --headless --path game --script res://tests/feast_test.gd
           $godot --headless --path game --script res://tests/horse_test.gd
           $godot --headless --path game --script res://tests/luxury_test.gd
