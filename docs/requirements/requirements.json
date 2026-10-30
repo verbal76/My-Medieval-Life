@@ -60366,6 +60366,402 @@
    ]
   },
   {
+   "id": "X20-B24-F1",
+   "kind": "approved",
+   "title": "Review finding 1: a settlement business (its trader) kept operating with nobody working it",
+   "description": "Review finding 1: a settlement business (its trader) kept operating with nobody working it",
+   "source": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-30",
+   "acceptance": [
+    "failing-first regression test; fixed at the cause on an Expansion 20 branch; integrated into wip/expansion20; Build 24 left unchanged"
+   ],
+   "target_build": "20",
+   "parent": "X20-B24-REVIEW",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> worker B; branch: None -> wip/x20-settle-food; tests: None -> settle_review_test 45/0; test_commit: None -> 30becac; commits + 108d252; notes",
+     "why": "fixed on wip/x20-settle-food (worker B); merging into wip/expansion20 2026-10-30"
+    }
+   ],
+   "assigned_worker": "worker B",
+   "branch": "wip/x20-settle-food",
+   "tests": "settle_review_test 45/0",
+   "test_commit": "30becac",
+   "commits": [
+    "108d252"
+   ],
+   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first check pending (lead)."
+  },
+  {
+   "id": "X20-B24-F2",
+   "kind": "approved",
+   "title": "Review finding 2: TILL-D1 not applied when a household's last members leave (the storefront till must go to the leavers' own funds)",
+   "description": "Review finding 2: TILL-D1 not applied when a household's last members leave (the storefront till must go to the leavers' own funds)",
+   "source": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-30",
+   "acceptance": [
+    "failing-first regression test; fixed at the cause on an Expansion 20 branch; integrated into wip/expansion20; Build 24 left unchanged"
+   ],
+   "target_build": "20",
+   "parent": "X20-B24-REVIEW",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> worker B; branch: None -> wip/x20-settle-food; tests: None -> settle_review_test 45/0; test_commit: None -> 30becac; commits + 108d252; notes",
+     "why": "fixed on wip/x20-settle-food (worker B); merging into wip/expansion20 2026-10-30"
+    }
+   ],
+   "assigned_worker": "worker B",
+   "branch": "wip/x20-settle-food",
+   "tests": "settle_review_test 45/0",
+   "test_commit": "30becac",
+   "commits": [
+    "108d252"
+   ],
+   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first check pending (lead)."
+  },
+  {
+   "id": "X20-B24-F3",
+   "kind": "approved",
+   "title": "Review finding 3: a leaving trader's stall takings not returned to that trader",
+   "description": "Review finding 3: a leaving trader's stall takings not returned to that trader",
+   "source": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-30",
+   "acceptance": [
+    "failing-first regression test; fixed at the cause on an Expansion 20 branch; integrated into wip/expansion20; Build 24 left unchanged"
+   ],
+   "target_build": "20",
+   "parent": "X20-B24-REVIEW",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> worker B; branch: None -> wip/x20-settle-food; tests: None -> settle_review_test 45/0; test_commit: None -> 30becac; commits + 108d252; notes",
+     "why": "fixed on wip/x20-settle-food (worker B); merging into wip/expansion20 2026-10-30"
+    }
+   ],
+   "assigned_worker": "worker B",
+   "branch": "wip/x20-settle-food",
+   "tests": "settle_review_test 45/0",
+   "test_commit": "30becac",
+   "commits": [
+    "108d252"
+   ],
+   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first check pending (lead)."
+  },
+  {
+   "id": "X20-B24-F4",
+   "kind": "approved",
+   "title": "Review finding 4: another player's one sword blow struck twice on a guest's screen",
+   "description": "Review finding 4: another player's one sword blow struck twice on a guest's screen",
+   "source": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-30",
+   "acceptance": [
+    "failing-first regression test; fixed at the cause on an Expansion 20 branch; integrated into wip/expansion20; Build 24 left unchanged"
+   ],
+   "target_build": "20",
+   "parent": "X20-B24-REVIEW",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/expansion20; tests: None -> sword_visual_test 43/0; tests/test_sim_gate.py; test_commit: None -> f8b3f10; commits + f8b3f10; integrated_in + wip/expansion20 f8b3f10; notes",
+     "why": "fixed and merged into wip/expansion20; failing-first re-checked 2026-10-30 by running the new tests against f8b3f10^ code"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "tests: sword_visual_test 43/0; tests/test_sim_gate.py -> sword_visual_test 43/0; tests/test_sim_gate.py; sword_visual_test 43/0; Python test_sim_gate",
+     "why": "wording: path only on wip branches"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "tests",
+     "why": "tests wording"
+    }
+   ],
+   "branch": "wip/expansion20",
+   "tests": "sword_visual_test 43/0",
+   "test_commit": "f8b3f10",
+   "commits": [
+    "f8b3f10"
+   ],
+   "integrated_in": [
+    "wip/expansion20 f8b3f10"
+   ],
+   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first: sword_visual_test: the four guest-blow checks cannot run on the old main.gd (_net_anim_view absent; the old path re-started the strike on every snapshot). Fixed: sword_visual_test 43/0, test_sim_gate pass."
+  },
+  {
+   "id": "X20-B24-F5",
+   "kind": "approved",
+   "title": "Review finding 5: a phantom NPC blow landed when the NPC came into view",
+   "description": "Review finding 5: a phantom NPC blow landed when the NPC came into view",
+   "source": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-30",
+   "acceptance": [
+    "failing-first regression test; fixed at the cause on an Expansion 20 branch; integrated into wip/expansion20; Build 24 left unchanged"
+   ],
+   "target_build": "20",
+   "parent": "X20-B24-REVIEW",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/expansion20; tests: None -> sword_visual_test 43/0; tests/test_sim_gate.py; test_commit: None -> f8b3f10; commits + f8b3f10; integrated_in + wip/expansion20 f8b3f10; notes",
+     "why": "fixed and merged into wip/expansion20; failing-first re-checked 2026-10-30 by running the new tests against f8b3f10^ code"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "tests: sword_visual_test 43/0; tests/test_sim_gate.py -> sword_visual_test 43/0; tests/test_sim_gate.py; sword_visual_test 43/0; Python test_sim_gate",
+     "why": "wording: path only on wip branches"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "tests",
+     "why": "tests wording"
+    }
+   ],
+   "branch": "wip/expansion20",
+   "tests": "sword_visual_test 43/0",
+   "test_commit": "f8b3f10",
+   "commits": [
+    "f8b3f10"
+   ],
+   "integrated_in": [
+    "wip/expansion20 f8b3f10"
+   ],
+   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first: sword_visual_test 2 failures on the old main.gd (first seen mid-fight; seen again after out of view). Fixed: sword_visual_test 43/0, test_sim_gate pass."
+  },
+  {
+   "id": "X20-B24-F6",
+   "kind": "approved",
+   "title": "Review finding 6: stall commission recorded at the wrong moment (not at Stalls.settle)",
+   "description": "Review finding 6: stall commission recorded at the wrong moment (not at Stalls.settle)",
+   "source": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-30",
+   "acceptance": [
+    "failing-first regression test; fixed at the cause on an Expansion 20 branch; integrated into wip/expansion20; Build 24 left unchanged"
+   ],
+   "target_build": "20",
+   "parent": "X20-B24-REVIEW",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> worker A; branch: None -> wip/x20-le04; tests: None -> till_ownership_test 71/0 (12 new checks reported failing on the old code), stalls_test 104/0; test_commit: None -> 74b99de; commits + 74b99de; notes",
+     "why": "fixed at the cause on wip/x20-le04 (worker A); merges with LE-04"
+    }
+   ],
+   "assigned_worker": "worker A",
+   "branch": "wip/x20-le04",
+   "tests": "till_ownership_test 71/0 (12 new checks reported failing on the old code), stalls_test 104/0",
+   "test_commit": "74b99de",
+   "commits": [
+    "74b99de"
+   ],
+   "notes": "Remains present in frozen Build 24 (4611d86). Covers sale, letting, eviction, manor, player, dead and ended holders, counters; exact conservation."
+  },
+  {
+   "id": "X20-B24-F7",
+   "kind": "approved",
+   "title": "Review finding 7: a storefront or counter till did not go to its previous holder's own funds on every holder change (manor, players, dead villagers, ended households, counters skipped)",
+   "description": "Review finding 7: a storefront or counter till did not go to its previous holder's own funds on every holder change (manor, players, dead villagers, ended households, counters skipped)",
+   "source": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-30",
+   "acceptance": [
+    "failing-first regression test; fixed at the cause on an Expansion 20 branch; integrated into wip/expansion20; Build 24 left unchanged"
+   ],
+   "target_build": "20",
+   "parent": "X20-B24-REVIEW",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> worker A; branch: None -> wip/x20-le04; tests: None -> till_ownership_test 71/0 (12 new checks reported failing on the old code), stalls_test 104/0; test_commit: None -> 74b99de; commits + 74b99de; notes",
+     "why": "fixed at the cause on wip/x20-le04 (worker A); merges with LE-04"
+    }
+   ],
+   "assigned_worker": "worker A",
+   "branch": "wip/x20-le04",
+   "tests": "till_ownership_test 71/0 (12 new checks reported failing on the old code), stalls_test 104/0",
+   "test_commit": "74b99de",
+   "commits": [
+    "74b99de"
+   ],
+   "notes": "Remains present in frozen Build 24 (4611d86). Covers sale, letting, eviction, manor, player, dead and ended holders, counters; exact conservation."
+  },
+  {
+   "id": "X20-B24-F8",
+   "kind": "approved",
+   "title": "Review finding 8: the recorder's 'starved with means' counted village food rather than the deceased's own and household means",
+   "description": "Review finding 8: the recorder's 'starved with means' counted village food rather than the deceased's own and household means",
+   "source": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-30",
+   "acceptance": [
+    "failing-first regression test; fixed at the cause on an Expansion 20 branch; integrated into wip/expansion20; Build 24 left unchanged"
+   ],
+   "target_build": "20",
+   "parent": "X20-B24-REVIEW",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/expansion20; tests: None -> sword_visual_test 43/0; tests/test_sim_gate.py; test_commit: None -> f8b3f10; commits + f8b3f10; integrated_in + wip/expansion20 f8b3f10; notes",
+     "why": "fixed and merged into wip/expansion20; failing-first re-checked 2026-10-30 by running the new tests against f8b3f10^ code"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "tests: sword_visual_test 43/0; tests/test_sim_gate.py -> sword_visual_test 43/0; tests/test_sim_gate.py; Python test_sim_gate (recorder archive means); notes",
+     "why": "wording: path only on wip branches"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "tests",
+     "why": "tests wording"
+    }
+   ],
+   "branch": "wip/expansion20",
+   "tests": "Python test_sim_gate (recorder archive means)",
+   "test_commit": "f8b3f10",
+   "commits": [
+    "f8b3f10"
+   ],
+   "integrated_in": [
+    "wip/expansion20 f8b3f10"
+   ],
+   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first: Python test_sim_gate 1 failure on the old recorder archive tool (f8b3f10^). Fixed: means count only the deceased's own and household coins and food; village food reported as village_food evidence."
+  },
+  {
+   "id": "X20-B24-REMED",
+   "kind": "approved",
+   "title": "Build 24 review remediation and Expansion 20 integration: per-finding register, failing-first regression tests, shared ownership-transition root causes, LE-04 on World.transactions with no double reservation, LE-06 bounded saves as an activation gate, X20-MP-ECON-INTEGRITY fault injection, SJD-G within budget, milestone report",
+   "description": "Build 24 review remediation and Expansion 20 integration: per-finding register, failing-first regression tests, shared ownership-transition root causes, LE-04 on World.transactions with no double reservation, LE-06 bounded saves as an activation gate, X20-MP-ECON-INTEGRITY fault injection, SJD-G within budget, milestone report",
+   "source": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md",
+   "owner_wording": "Maintain a per-finding register showing verification, fix commit, test evidence, integration status, and whether the defect remains in frozen Build 24.",
+   "approval": "owner, 2026-10-30",
+   "acceptance": [
+    "per-finding records X20-B24-F1..F8 kept current",
+    "businesses cannot operate with no workers; migrants keep their possessions and earnings; tills and stall proceeds go to the correct previous owner; death, migration, eviction, property transfer and household dissolution conserve coins and goods; recorder diagnostics match real transactions",
+    "milestone report covering the ten items of the directive"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "X20-B24-REVIEW"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_b24_review_remediation_x20_integration.md"
+    }
+   ]
+  },
+  {
    "id": "X20-B24-REVIEW",
    "kind": "approved",
    "title": "Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance",
@@ -60888,8 +61284,14 @@
      "date": "2026-10-30",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-30_build24_review_follow_through.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "notes",
+     "why": "owner directive 2026-10-30 (b24_review_remediation) requires 'Businesses cannot continue operating with no workers': closure is confirmed, option (d) is no longer compatible; finding 1 is integrated. The open question narrows to (b), whether a closed settlement trader may reopen when a household takes the trade up again (without it, caravan trade ends for good by days 21-35)"
     }
-   ]
+   ],
+   "notes": "Narrowed 2026-10-30 by docs/directives/2026-10-30_b24_review_remediation_x20_integration.md: closure (a) is in force; open: approve (b) a reopen rule, or keep (a) and accept permanent loss of caravan trade. Lead recommends (b)."
   },
   {
    "id": "XAUDIT-01",

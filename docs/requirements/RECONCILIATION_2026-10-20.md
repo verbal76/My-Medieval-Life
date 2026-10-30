@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 167 still open, 64 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 617 (291 of them still open) |
-| **Open entries now** (rules excluded) | | **457** |
+| Entries added since | | 626 (300 of them still open) |
+| **Open entries now** (rules excluded) | | **466** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (64)
@@ -107,7 +107,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (617)
+## Added since the baseline (626)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -713,6 +713,15 @@ None.
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | decision | APPROVED | 19 |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | decision | APPROVED | 19 |
+| X20-B24-F1 | Review finding 1: a settlement business (its trader) kept operating with nobody working it | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
+| X20-B24-F2 | Review finding 2: TILL-D1 not applied when a household's last members leave (the storefront till must go to the leavers' own funds) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
+| X20-B24-F3 | Review finding 3: a leaving trader's stall takings not returned to that trader | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
+| X20-B24-F4 | Review finding 4: another player's one sword blow struck twice on a guest's screen | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| X20-B24-F5 | Review finding 5: a phantom NPC blow landed when the NPC came into view | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| X20-B24-F6 | Review finding 6: stall commission recorded at the wrong moment (not at Stalls.settle) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
+| X20-B24-F7 | Review finding 7: a storefront or counter till did not go to its previous holder's own funds on every holder change (manor, players, dead villagers, ended households, counters skipped) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
+| X20-B24-F8 | Review finding 8: the recorder's 'starved with means' counted village food rather than the deceased's own and household means | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| X20-B24-REMED | Build 24 review remediation and Expansion 20 integration: per-finding register, failing-first regression tests, shared ownership-transition root causes, LE-04 on World.transactions with no double reservation, LE-06 bounded saves as an activation gate, X20-MP-ECON-INTEGRITY fault injection, SJD-G within budget, milestone report | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | X20-B24-REVIEW | Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |

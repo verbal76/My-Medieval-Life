@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (16)
+## Workers and task branches (21)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -17,6 +17,11 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | SJD-G | 20 | IN DEVELOPMENT | worker D (judgment calibration) | wip/x20-sjdg |
+| X20-B24-F1 | 20 | IMPLEMENTED ON TASK BRANCH | worker B | wip/x20-settle-food |
+| X20-B24-F2 | 20 | IMPLEMENTED ON TASK BRANCH | worker B | wip/x20-settle-food |
+| X20-B24-F3 | 20 | IMPLEMENTED ON TASK BRANCH | worker B | wip/x20-settle-food |
+| X20-B24-F6 | 20 | IMPLEMENTED ON TASK BRANCH | worker A | wip/x20-le04 |
+| X20-B24-F7 | 20 | IMPLEMENTED ON TASK BRANCH | worker A | wip/x20-le04 |
 | X20-B24-REVIEW | 20 | IN DEVELOPMENT | lead (tracking); workers A and B | wip/expansion20 |
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | X20-RESUME | 20 | IN DEVELOPMENT | lead | wip/expansion20 |

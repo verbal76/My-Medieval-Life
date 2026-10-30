@@ -8,14 +8,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 91 |
-| Integrated | 77 of 91 (85%) |
-| Automated tests passed | 78 of 91 (86%) |
-| Integration verified | 44 of 91 (48%) |
-| Gameplay verified | 0 of 91 (0%) |
-| Owner playtested | 0 of 91 (0%) |
-| Complete | 2 of 91 (2%) |
-| Open (release blockers) | 89 |
+| Approved requirements in scope | 100 |
+| Integrated | 80 of 100 (80%) |
+| Automated tests passed | 86 of 100 (86%) |
+| Integration verified | 44 of 100 (44%) |
+| Gameplay verified | 0 of 100 (0%) |
+| Owner playtested | 0 of 100 (0%) |
+| Complete | 2 of 100 (2%) |
+| Open (release blockers) | 98 |
 | Open owner decisions (blocking) | 1 (0) |
 
 ## In development (worker assigned) (6)
@@ -29,7 +29,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-SETTLE-FOOD | Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game | OWNER APPROVED | IN DEVELOPMENT | worker B (settlement food trade) / wip/x20-settle-food | NOT TESTED | LE-05 (paused 2026-10-28). | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (75)
+## Integrated, awaiting gameplay or owner verification (78)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -104,12 +104,15 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X19-FOUND | Expansion 19 foundations round: personality, relationship history and family reputation (judgment off) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | children complete; umbrella closes with them |  | verification only |
 | X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c; Expansion 20 wip/expansion20 4f50ffb | TARGETED TESTS PASSED | live as the owner approved (packet D); the false_accusation catalog event is never published (batch R1) |  | verification only |
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | live: stories passed at coming of age and at home, observers judge by their own knowledge |  | verification only |
+| X20-B24-F4 | Review finding 4: another player's one sword blow struck twice on a guest's screen | OWNER APPROVED | INTEGRATED | wip/expansion20 f8b3f10 | TARGETED TESTS PASSED |  |  | verification only |
+| X20-B24-F5 | Review finding 5: a phantom NPC blow landed when the NPC came into view | OWNER APPROVED | INTEGRATED | wip/expansion20 f8b3f10 | TARGETED TESTS PASSED |  |  | verification only |
+| X20-B24-F8 | Review finding 8: the recorder's 'starved with means' counted village food rather than the deceased's own and household means | OWNER APPROVED | INTEGRATED | wip/expansion20 f8b3f10 | TARGETED TESTS PASSED |  |  | verification only |
 | X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | OWNER APPROVED | INTEGRATED | Build 24 private draft 426357144 (wip/expansion20 4611d86) | INTEGRATION VERIFIED | PAUSED (owner 2026-10-28). Owner device checks of Build 24 when convenient; resume Expansion 20 only on the owner's instruction (handoff docs/handoffs/X20_RECOVERY_HANDOFF.md). |  | verification only |
 | X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 c79b12c | INTEGRATION VERIFIED | Owner device checks of Build 23 (phone install over Build 22, Windows, controller, two-device multiplayer, all nine host/guest pairs); owner decisions MP-INTERACT-Q1/Q2 and REG-X20-D1..D4. |  | verification only |
 | X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 5c303be | INTEGRATION VERIFIED |  |  | verification only |
 | X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 e8cc44b | INTEGRATION VERIFIED |  |  | verification only |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (8)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (14)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -120,6 +123,12 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) | SJD-G | XS |
+| X20-B24-F1 | Review finding 1: a settlement business (its trader) kept operating with nobody working it | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker B / wip/x20-settle-food | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| X20-B24-F2 | Review finding 2: TILL-D1 not applied when a household's last members leave (the storefront till must go to the leavers' own funds) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker B / wip/x20-settle-food | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| X20-B24-F3 | Review finding 3: a leaving trader's stall takings not returned to that trader | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker B / wip/x20-settle-food | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| X20-B24-F6 | Review finding 6: stall commission recorded at the wrong moment (not at Stalls.settle) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker A / wip/x20-le04 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| X20-B24-F7 | Review finding 7: a storefront or counter till did not go to its previous holder's own funds on every holder change (manor, players, dead villagers, ended households, counters skipped) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker A / wip/x20-le04 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| X20-B24-REMED | Build 24 review remediation and Expansion 20 integration: per-finding register, failing-first regression tests, shared ownership-transition root causes, LE-04 on World.transactions with no double reservation, LE-06 bounded saves as an activation gate, X20-MP-ECON-INTEGRITY fault injection, SJD-G within budget, milestone report | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | X20-B24-REVIEW, design: UNKNOWN | UNKNOWN |
 | X20-MP-ECON-INTEGRITY | When multiplayer and the economy systems are integrated, verify that disconnects, retries, duplicate requests and host recovery cannot duplicate or lose currency, goods or transactions | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Complete (2)
