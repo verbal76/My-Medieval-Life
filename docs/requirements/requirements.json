@@ -28602,10 +28602,12 @@
     "Costs, default and refusal paths"
    ],
    "implementation": "",
-   "tests": "le04_test 24/0, le03_transactions 79/0, le03_economy 38/0, le02_market 101/0, contracts 154/0, business_money 37/0, business 160/0, property 123/0, stalls 104/0, stall_putup 11/0, recorder 214/0, conservation 8/0, till_ownership 71/0",
+   "tests": "le04_test 24/0, le03_transactions 79/0, le03_economy 38/0, le02_market 101/0, contracts 154/0, business_money 37/0, business 160/0, property 123/0, stalls 104/0, stall_putup 11/0, recorder 214/0, conservation 8/0, till_ownership 71/0; le04_test 61/0, till_ownership_test 71/0, le03_transactions_test 79/0, le03_claims_test 80/0, contracts_test 154/0, business_test 160/0, world_test 339/0, property_test 123/0, stalls_test 104/0, recorder_test 214/0; G0 run 41135548780 identical to baseline; --market run 41135583126 no leaks",
    "playtest": [],
    "branch": "wip/x20-le04",
-   "commits": [],
+   "commits": [
+    "353d12b"
+   ],
    "parent": "EXP-D",
    "depends_on": [],
    "blockers": [],
@@ -28616,7 +28618,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "Provisional agent parameters (DECISIONS): speculation margin 0.2, coin share 0.3, 3 merchants/day; wage cap 1.25 (flag off). Economy save section 1.97 MB at day 30 seed 1 (7752 knowledge entries) - LE-06 activation blocker; LE-04 added no unbounded state (a round-robin cursor only).",
    "history": [
     {
      "date": "2026-10-20",
@@ -28647,6 +28649,11 @@
      "date": "2026-10-30",
      "change": "tests:  -> le04_test 24/0, le03_transactions 79/0, le03_economy 38/0, le02_market 101/0, contracts 154/0, business_money 37/0, business 160/0, property 123/0, stalls 104/0, stall_putup 11/0, recorder 214/0, conservation 8/0, till_ownership 71/0; test_commit: None -> 74b99de",
      "why": "part 1 done on wip/x20-le04 74b99de: manor, households, chapel and tills as authority parties; manor tools bought or commissioned through it"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: le04_test 24/0, le03_transactions 79/0, le03_economy 38/0, le02_market 101/0, contracts 154/0, business_money 37/0, business 160/0, property 123/0, stalls 104/0, stall_putup 11/0, recorder 214/0, conservation 8/0, till_ownership 71/0 -> le04_test 24/0, le03_transactions 79/0, le03_economy 38/0, le02_market 101/0, contracts 154/0, business_money 37/0, business 160/0, property 123/0, stalls 104/0, stall_putup 11/0, recorder 214/0, conservation 8/0, till_ownership 71/0; le04_test 61/0, till_ownership_test 71/0, le03_transactions_test 79/0, le03_claims_test 80/0, contracts_test 154/0, business_test 160/0, world_test 339/0, property_test 123/0, stalls_test 104/0, recorder_test 214/0; G0 run 41135548780 identical to baseline; --market run 41135583126 no leaks; test_commit: 74b99de -> 353d12b; commits + 353d12b; notes",
+     "why": "worker A milestone: business accounts, estate claims, speculation, negotiated wages (flag off), settle_estate; services flag has nothing behind it (no service demand exists; first case LE-05 construction labour)"
     }
    ],
    "target_build": "20",
@@ -28655,12 +28662,12 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "assigned_worker": "worker A (Living Economy)",
-   "test_commit": "74b99de"
+   "test_commit": "353d12b"
   },
   {
    "id": "LE-05",
@@ -28736,7 +28743,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/x20-le06",
    "commits": [],
    "parent": "EXP-D",
    "depends_on": [],
@@ -28774,6 +28781,11 @@
      "date": "2026-10-30",
      "change": "notes",
      "why": "owner 2026-10-30: the LE-03 save-data growth (2.06 MB economy section after 30 days, seed 1) blocks enabling the economy until LE-06 bounds storage and verifies long-term save/load"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (Living Economy); branch:  -> wip/x20-le06",
+     "why": "assigned; save growth first (activation blocker, owner directive 2026-10-30 b24_review_remediation)"
     }
    ],
    "target_build": "20",
@@ -28782,10 +28794,11 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "assigned_worker": "worker A (Living Economy)"
   },
   {
    "id": "LE-07",
