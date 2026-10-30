@@ -174,16 +174,59 @@ func household_ended(ref: String) -> void:
 ## funds (World.party: its head, or the villager), so the next holder starts with an empty till. A player's storefront keeps its
 ## shop's till (Business) and the manor's is not a household's: unchanged. Nobody of the household left: the escheat
 ## (household_ended) applies instead. Coins move only from the till to the purse (conserved).
+## TILL-D1 (owner: "The household keeps its money. When it moves or gives up the property, its till balance is transferred to its
+## own funds. The next occupant receives an empty till"), for every way a house's holder changes (World._handed_over: sale,
+## letting, a lease ended, given up or taken back for arrears, a household ending): the previous holder's till goes to its own
+## funds: a household's to its head, a villager's to them (one who died: to their household), the manor's to the treasury, a
+## player's to that player's purse; with nobody of theirs left, to the manor. Never to the next holder. (LE-04 review item 7.)
 func keep_till(b: Dictionary, ref: String) -> void:
-	var till := till_of(b)
-	if till <= 0 or ref == "" or World.is_player_ref(ref) or ref == World.MANOR:
+	if b.has("front"):
+		_keep(b, "front", ref)
+	if b.has("counter"):
+		# a counter's money was its owner's by counter_owner's rule under the previous holder: the holding household, else
+		# (the manor's or a player's building, or nobody left) the keeper serving it, else the manor
+		var k := int(b.counter.get("keeper", -1))
+		var keeper: NPC = w.npc(k) if k >= 0 else null
+		var owner := ref
+		if ref == "" or ref == World.MANOR or World.is_player_ref(ref) or w.party(ref) == null:
+			owner = World.npc_ref(k) if keeper != null and keeper.alive else World.MANOR
+		_keep(b, "counter", owner)
+
+
+func _keep(b: Dictionary, key: String, ref: String) -> void:
+	var rec: Dictionary = b[key]
+	var till := int(rec.get("till", 0))
+	var tref := key + ":" + str(b.get("id", ""))
+	if till <= 0 or ref == "":
+		return
+	if ref == World.MANOR:                       # LE-04 review 7 (TILL-D1): the manor keeps its money: to the treasury
+		rec.till = 0
+		w.treasury += till
+		w.stat(key + "_till_kept", till)
+		if w.recorder != null:
+			w.recorder.till_flow(tref, null, -till, 0, "kept")
+		return
+	if World.is_player_ref(ref):                 # and a player its own: to that player's purse
+		var pl: PlayerState = w.player_of_ref(ref)
+		if pl != null and _move(rec, pl, till, true):
+			w.stat(key + "_till_kept", till)
+			_rec(tref, rec, pl, -till, "kept")
 		return
 	var who: NPC = w.party(ref)
-	if who == null:
+	if who == null and ref.begins_with("npc:"):  # a holder who died: to their household (the stall payee's rule)
+		var o := w.npc(World.ref_id(ref))
+		if o != null and o.household >= 0:
+			who = w.party(World.hh_ref(o.household))
+	if who == null:                              # nobody of theirs left: to the manor (ECON-P3), never to the next holder
+		rec.till = 0
+		w.treasury += till
+		w.stat(key + "_till_escheat", till)
+		if w.recorder != null:
+			w.recorder.till_flow(tref, null, -till, 0, "escheat")
 		return
-	if _move(b.front, who, till, true):
-		w.stat("front_till_kept", till)
-		_rec("front:" + str(b.get("id", "")), b.front, who, -till, "kept")
+	if _move(rec, who, till, true):
+		w.stat(key + "_till_kept", till)
+		_rec(tref, rec, who, -till, "kept")
 
 
 ## TILL-D1: every storefront till of the houses `ref` holds goes to its own funds now (a whole household leaving the village:

@@ -32,6 +32,10 @@ func _init() -> void:
 	test_closure()
 	test_switch_off()
 	test_till_d1_migration()
+	test_manor_and_player_keep_till()
+	test_every_holder_change()
+	test_counter_holder_change()
+	test_stall_commission_recorded()
 	EconomyFoundation.set_override({})
 	print("till_ownership_test: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
@@ -329,3 +333,160 @@ func test_till_d1_migration() -> void:
 	check(ok, "TILL-D1: the household leaves for Wulstead")
 	check(int(house.front.get("till", 0)) == 0 and w.treasury == t0, "TILL-D1: its till went with it, not to the manor")
 	check(src0 - w.coin_sources == carried, "TILL-D1: the coins that crossed are its purses and its till (%d)" % carried)
+
+
+# ------------------------------------------------------------------------------------------------ LE-04 review fixes
+## Build 24 review item 7 (TILL-D1: "The household keeps its money ... The next occupant receives an empty till"): a manor-held or
+## player-held storefront's till goes to the manor's treasury or that player's own funds when the house changes hands; the next
+## holder starts with an empty till. Conserved.
+func test_manor_and_player_keep_till() -> void:
+	for on in [true, false]:
+		var w := new_world(on)
+		var n := householder(w)
+		var house := open_front(w, n)
+		var other := householder(w, n.household)
+		var oref := World.hh_ref(other.household)
+		w.set_owner(house, World.MANOR)
+		w.set_tenant(house, "")
+		house.front.till = 17
+		var t0 := w.treasury
+		var all := w.total_coins()
+		w.set_owner(house, oref)
+		check(int(house.front.till) == 0 and w.treasury == t0 + 17 and w.total_coins() == all,
+				"TILL-D1 (economy %s): a manor-held storefront sold to a household: the manor keeps its 17 coins, the buyer starts empty" % str(on))
+		w.set_owner(house, "player")
+		house.front.till = 23
+		var p0 := w.player.coins
+		all = w.total_coins()
+		w.set_owner(house, oref)
+		check(int(house.front.till) == 0 and w.player.coins == p0 + 23 and w.total_coins() == all,
+				"TILL-D1 (economy %s): a player-held storefront handed on: the player keeps its 23 coins, the next holder starts empty" % str(on))
+		w.set_owner(house, World.MANOR)
+		house.front.till = 8
+		t0 = w.treasury
+		w.set_tenant(house, oref)
+		check(int(house.front.till) == 0 and w.treasury == t0 + 8, "TILL-D1 (economy %s): a manor house let to a tenant: the manor keeps its till" % str(on))
+
+
+class TillRecorder:
+	var w: World
+	var calls: Array = []
+	func till_flow(till: String, who, amount: int, till_after: int, why: String) -> void:
+		calls.append({"till": till, "why": why, "amount": amount, "treasury": w.treasury, "holder": (who.coins if who != null else -1)})
+	func stat_moved(_key: String, _n: float, _before: float) -> void:
+		pass
+
+
+## Build 24 review item 6 (REC-DIAG): a stall's settlement records the commission at its own moment (the treasury holding the
+## commission only), then the rest (the seller's coins, or the treasury again when it escheats), so the recorder's before/after
+## coins of the manor are right.
+func test_stall_commission_recorded() -> void:
+	var w := new_world(false)
+	var s: Dictionary = {}
+	for id in w.stalls:
+		s = w.stalls[id]
+		break
+	check(not s.is_empty(), "a market stall exists")
+	var rec := TillRecorder.new()
+	rec.w = w
+	w.recorder = rec
+	s.session = {"gross": 100, "sold": {}, "day": w.day(), "hour": 9, "seller": "npc:999999"}     # nobody of theirs left: escheat
+	s.till = 100
+	s.frac = 0
+	var t0 := w.treasury
+	var r: Dictionary = w.business.stalls.settle(s)
+	w.recorder = null
+	var c := int(r.commission)
+	var net := int(r.net)
+	check(c > 0 and net > 0 and w.treasury == t0 + c + net, "the commission and the escheated rest went to the treasury (%d + %d)" % [c, net])
+	var com: Array = rec.calls.filter(func(x): return x.why == "commission")
+	var esc: Array = rec.calls.filter(func(x): return x.why == "escheat")
+	check(com.size() == 1 and int(com[0].treasury) == t0 + c, "the commission is recorded with the treasury after the commission only (%d, want %d)" % [int(com[0].treasury) if com.size() == 1 else -1, t0 + c])
+	check(esc.size() == 1 and int(esc[0].treasury) == t0 + c + net, "the escheat is recorded after the rest arrived")
+
+
+## Every other way a storefront's holder changes (owner 2026-10-30 follow-through on item 7): eviction for arrears, a dead
+## individual holder, a household with nobody left handing on its house, and a guest player; each exactly conserved and the next
+## holder starting empty.
+func test_every_holder_change() -> void:
+	var w := new_world()
+	var n := householder(w)
+	var house := open_front(w, n)
+	var other := householder(w, n.household)
+	var oref := World.hh_ref(other.household)
+	# eviction for arrears: the manor's house let to a household that cannot pay
+	w.set_owner(house, World.MANOR)
+	w.set_tenant(house, oref, 50)
+	house.front.till = 14
+	house.due_day = w.day()
+	house.missed = int(GameData.b("rent_evict_missed")) - 1
+	for m in w.households[other.household].members:
+		var o := w.npc(int(m))
+		if o != null:
+			o.coins = 0
+	var head: NPC = w.party(oref)
+	var all := w.total_coins()
+	w.property.collect_rents()
+	check(w.tenant_of(house) == "" and int(house.front.till) == 0 and head.coins == 14 and w.total_coins() == all,
+			"evicted for arrears: the tenant household keeps its 14 coins, the house goes back empty")
+	# a dead individual holder: to their household
+	var keeper := n
+	w.set_owner(house, World.npc_ref(keeper.id))
+	house.front.till = 6
+	keeper.alive = false
+	var hh_head: NPC = w.party(World.hh_ref(keeper.household))
+	all = w.total_coins()
+	if hh_head != null:
+		var c0 := hh_head.coins
+		w.set_owner(house, oref)
+		check(int(house.front.till) == 0 and hh_head.coins == c0 + 6 and w.total_coins() == all, "a holder who died: the till goes to their household, not the next holder")
+	keeper.alive = true
+	# a household with nobody left handing on its house (outside household_ended): to the manor
+	var hr := World.hh_ref(n.household)
+	w.set_owner(house, hr)
+	house.front.till = 11
+	for m in w.households[n.household].members:
+		var o := w.npc(int(m))
+		if o != null:
+			o.alive = false
+	var t0 := w.treasury
+	all = w.total_coins()
+	w.set_owner(house, oref)
+	check(int(house.front.till) == 0 and w.treasury == t0 + 11 and w.total_coins() == all, "nobody of the household left: its till escheats to the manor, the next holder starts empty")
+
+
+## The same rule for a trade counter's till (B18-DP-01): its money belongs to whom counter_owner named under the previous holder
+## (the holding household, else the keeper, else the manor); a change of holder never hands it to the next one.
+func test_counter_holder_change() -> void:
+	var w := new_world()
+	var k := w.tavern_keeper()
+	var tav: Dictionary = w.buildings[str(w.stations[k.workplace].building)]
+	tav.counter = {"till": 0, "earned": 0, "keeper": k.id}
+	var n := householder(w, k.household)
+	var hr := World.hh_ref(n.household)
+	var other := householder(w, n.household)
+	var oref := World.hh_ref(other.household)
+	w.set_tenant(tav, "")
+	w.set_owner(tav, World.MANOR)
+	tav.counter.till = 19
+	var k0 := k.coins
+	var all := w.total_coins()
+	w.set_owner(tav, hr)
+	check(int(tav.counter.till) == 0 and k.coins == k0 + 19 and w.total_coins() == all, "a manor tavern sold: its keeper's takings stay the keeper's, the buyer's counter starts empty")
+	tav.counter.till = 13
+	var head: NPC = w.party(hr)
+	var h0 := head.coins
+	all = w.total_coins()
+	w.set_owner(tav, oref)
+	check(int(tav.counter.till) == 0 and head.coins == h0 + 13 and w.total_coins() == all, "sold on: the selling household keeps its counter's 13 coins")
+	tav.counter.till = 5
+	tav.counter.keeper = 99999
+	var t0 := w.treasury
+	all = w.total_coins()
+	w.set_owner(tav, World.MANOR)
+	head = w.party(oref)
+	check(int(tav.counter.till) == 0 and w.total_coins() == all, "taken back by the manor: the holder household keeps its till (%d left)" % int(tav.counter.till))
+	tav.counter.till = 7
+	t0 = w.treasury
+	w.set_owner(tav, hr)
+	check(int(tav.counter.till) == 0 and w.treasury == t0 + 7, "no keeper left under the manor: the manor keeps it")
