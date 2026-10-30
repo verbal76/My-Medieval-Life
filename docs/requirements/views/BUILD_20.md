@@ -10,7 +10,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|
 | Approved requirements in scope | 102 |
 | Integrated | 80 of 102 (78%) |
-| Automated tests passed | 87 of 102 (85%) |
+| Automated tests passed | 88 of 102 (86%) |
 | Integration verified | 44 of 102 (43%) |
 | Gameplay verified | 0 of 102 (0%) |
 | Owner playtested | 0 of 102 (0%) |
@@ -18,11 +18,10 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Open (release blockers) | 100 |
 | Open owner decisions (blocking) | 1 (0) |
 
-## In development (worker assigned) (9)
+## In development (worker assigned) (8)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | IN DEVELOPMENT | worker A (Living Economy) / wip/x20-le06 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | IN DEVELOPMENT | worker D (judgment calibration) / wip/x20-sjdg | NOT TESTED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 |  | L |
 | X20-B24-REMED | Build 24 review remediation and Expansion 20 integration: per-finding register, failing-first regression tests, shared ownership-transition root causes, LE-04 on World.transactions with no double reservation, LE-06 bounded saves as an activation gate, X20-MP-ECON-INTEGRITY fault injection, SJD-G within budget, milestone report | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | X20-B24-REVIEW, design: UNKNOWN | UNKNOWN |
 | X20-B24-REVIEW | Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance | OWNER APPROVED | IN DEVELOPMENT | lead (tracking); workers A and B / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
@@ -115,7 +114,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 5c303be | INTEGRATION VERIFIED |  |  | verification only |
 | X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 e8cc44b | INTEGRATION VERIFIED |  |  | verification only |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (13)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (14)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -124,6 +123,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker A (Living Economy) / wip/x20-le03 | TARGETED TESTS PASSED | Merge into wip/expansion20 together with X20-SETTLE-FOOD once B passes; LE-04 started on wip/x20-le04 (worker A). | design: UNKNOWN | UNKNOWN |
 | LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker A (Living Economy) / wip/x20-le04 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker A (Living Economy) / wip/x20-le06 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) | SJD-G | XS |
 | X20-B24-F1 | Review finding 1: a settlement business (its trader) kept operating with nobody working it | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker B / wip/x20-settle-food | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
