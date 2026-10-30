@@ -387,10 +387,9 @@ func _host_pause() -> void:
 	var back := await until(func(): return in_game() and net.reconnects > r0, 60.0)
 	check(back and net.my_pid == pid, "the host back: the guest is in the game again, the same character")
 	var sp: Dictionary = net_d().get("suspended", {})
-	await until(func(): return float(status().minutes) > 0.0, 1.0)
 	var gmps := float(GameData.b("game_minutes_per_second"))
-	var ran := float(status().minutes) - float(sp.get("minutes_before", 0.0))
-	check(not sp.is_empty() and ran < gmps * 14.0 * 0.5, "the host's world did not run the frozen time on its return (%.1f game minutes since; the freeze was %.0f)" % [ran, gmps * 14.0])
+	var ran := float(sp.get("minutes_after", 1e9)) - float(sp.get("minutes_before", 0.0))
+	check(sp.has("minutes_after") and ran < gmps * 1.0, "the host's world did not run the frozen time on its return (%.2f game minutes over its first three frames back; the freeze was %.0f)" % [ran, gmps * float(sp.get("secs", 0.0))])
 	check(int(status().coin_leak) == 0, "coins conserved")
 
 

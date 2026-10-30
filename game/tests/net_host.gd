@@ -28,7 +28,8 @@ var held: Array = []
 var releasing := false
 var batch := {}           # the last release: {held, applied (in that one frame), frame}
 var _batch_from := -1
-var suspended := {}       # Batch D: the last "suspend": {minutes_before, secs}
+var suspended := {}       # Batch D: the last "suspend": {minutes_before, secs, minutes_after (three frames after the resume)}
+var suspend_frames := -1
 
 
 func _init() -> void:
@@ -124,6 +125,11 @@ func _process(delta: float) -> bool:
 	if not started:
 		return false
 	main.world.host_player().hunger = 100.0          # the idle host does not starve while the test runs
+	if suspend_frames >= 0:
+		suspend_frames += 1
+		if suspend_frames == 3:
+			suspended["minutes_after"] = main.world.minutes
+			suspend_frames = -1
 	for e in releases:
 		Input.parse_input_event(e)
 	releases.clear()
@@ -208,6 +214,7 @@ func _commands() -> void:
 			OS.delay_msec(int(float(c.secs) * 1000.0))
 			main._notification(Node.NOTIFICATION_APPLICATION_RESUMED)
 			suspended = {"minutes_before": m0, "secs": float(c.secs)}
+			suspend_frames = 0
 		"give":                                      # MP C: goods for the guests' tests, entered in the books as imported
 			for id in main.net.by_peer:
 				var gp: PlayerState = w.player_by_pid(int(main.net.by_peer[id]))
