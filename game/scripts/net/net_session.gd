@@ -331,7 +331,8 @@ func _drop_peer(id: int, quiet: bool) -> void:
 			changed.emit("%s left the world." % g.name)
 			main.save_game(false)
 	if quiet and peer != null and multiplayer.get_peers().has(id):
-		peer.disconnect_peer(id, true)             # the dead connection a guest came back from
+		peer.disconnect_peer(id)                   # the dead connection a guest came back from (not forced: a forced drop raises no
+		                                           # peer_disconnected, so Godot's multiplayer would keep a ghost peer and fail every broadcast)
 	players_changed.emit()
 
 

@@ -480,7 +480,8 @@ func _status() -> void:
 		"ui": _ui_state(), "offers": w.offers.duplicate(true), "spot": [spot.x, spot.y] if spot != Vector2.INF else [],
 		"held": held.size(), "holding": holding, "batch": batch, "why_last": why_last, "felled": felled, "rec": {"dir": str(w.recorder.dir) if w.recorder != null else "", "state": w.recorder.completeness() if w.recorder != null else ""}, "frozen": main.process_mode == Node.PROCESS_MODE_DISABLED,
 		"day": w.day(), "net_d": {"duplicates": main.net.duplicates, "gaps": main.net.gaps_skipped, "resumes": main.net.resumes,
-			"log": main.net.applied_log.duplicate(), "tag": main.net.tag, "suspended": suspended, "upnp": main.net.upnp.state}}
+			"log": main.net.applied_log.duplicate(), "tag": main.net.tag, "suspended": suspended, "upnp": main.net.upnp.state,
+			"mp_peers": main.net.multiplayer.get_peers().size() if main.net.peer != null else 0}}
 	var tmp := dir + "status.tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	f.store_string(JSON.stringify(d))

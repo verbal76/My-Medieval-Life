@@ -340,6 +340,8 @@ func _guest_pause() -> void:
 	check(back and net.my_pid == pid and int(net_d().resumes) > res0, "it takes its own character back with its token, no refusal (resumes %d)" % int(net_d().resumes))
 	await until(func(): return conn().has(pid), 3.0)
 	check(conn().count(pid) == 1, "one connection for it on the host (%s)" % str(conn()))
+	var clean := await until(func(): return int(net_d().get("mp_peers", -1)) == conn().size(), 12.0)
+	check(clean, "the old connection is gone from the host's network layer too (no ghost peer: %d peers, %d guests)" % [int(net_d().get("mp_peers", -1)), conn().size()])
 
 
 # ---------------------------------------------------------------- a second guest killed and frozen ---
@@ -353,7 +355,7 @@ func _guest_killed() -> void:
 	var players0 := (status().players as Dictionary).size()
 	OS.kill(guest2_pid)
 	var gone := await until(func(): return not conn().has(pid2) and bool(rec(pid2).get("away", false)), 20.0)
-	check(gone and int(status().coin_leak) == 0, "the second guest killed: the host drops it in its time, its character out of play, coins conserved")
+	check(gone and int(status().coin_leak) == 0, "the second guest killed: the host drops it in its time, its character out of play, coins conserved (dropped %s, leak %d)" % [str(gone), int(status().coin_leak)])
 	guest2_pid = spawn("res://tests/net_fault_guest.gd", [str(port), KEY2, "Bea", "oak", "g2.json", dir])
 	var again := await until(func(): var g := read_json("g2.json"); return bool(g.get("welcomed", false)) and int(g.get("os_pid", -1)) == guest2_pid, 40.0)
 	check(again and int(read_json("g2.json").pid) == pid2 and (status().players as Dictionary).size() == players0, "started again, it is the same character (no duplicate)")
