@@ -134,6 +134,8 @@ var resume_token := ""
 var good_target := {}               # the address that worked (the one reconnecting tries)
 var reconnecting := false
 var reconnect_until := 0.0
+var reconnect_paused := false       # the host had said it was paused when the connection dropped
+var reconnect_window := 0.0         # how long the current (or last) reconnection may take (tests, the log)
 var _retry_at := 0.0
 var _retries := 0
 var reconnects := 0                 # times this guest came back (tests)
@@ -216,7 +218,7 @@ func stop() -> void:
 			if g != null:
 				g.away = true
 			rpc_id(int(id), "z_bye", "stopped")          # Batch D: so the guests do not wait to reconnect
-		_drain(0.3)
+		_drain(1.0)
 	upnp.stop()
 	_close_peer()
 	discovery.close()
@@ -581,7 +583,9 @@ func _lost(text: String, retry := false) -> void:
 func _begin_reconnect() -> void:
 	reconnecting = true
 	_retries = 0
-	reconnect_until = _now() + (HOST_PAUSED_SECONDS if host_paused else RECONNECT_SECONDS)
+	reconnect_window = HOST_PAUSED_SECONDS if host_paused else RECONNECT_SECONDS
+	reconnect_paused = host_paused
+	reconnect_until = _now() + reconnect_window
 	_close_peer()
 	_retry_at = _now() + 0.5
 	predicted.clear()
@@ -696,6 +700,8 @@ func c_hello(version: String, key: String, who: String, pw_hash: String) -> void
 	if not is_host():
 		return
 	var id := multiplayer.get_remote_sender_id()
+	if not multiplayer.get_peers().has(id):
+		return                                     # Batch D: its connection was already reported gone (read after the disconnect)
 	var kh := NetProtocol.key_hash(key) if key.length() == 32 else ""
 	var extra: Dictionary = hello_extra.get(id, {})
 	var token := str(extra.get("token", ""))
@@ -1277,6 +1283,12 @@ func _process(dt: float) -> void:
 
 
 func _host_step(dt: float) -> void:
+	if by_peer.is_empty():
+		return
+	var live := multiplayer.get_peers()
+	for id in by_peer.keys():
+		if not live.has(int(id)):
+			_drop_peer(int(id), false)             # Batch D: a connection ENet has ended without a signal reaching here
 	if by_peer.is_empty():
 		return
 	if main.world.recorder != null:                    # X20: a recorded host's hour (its digest was just taken, World._on_hour)

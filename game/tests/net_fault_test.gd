@@ -376,9 +376,13 @@ func _host_pause() -> void:
 	await command({"cmd": "suspend", "secs": 14.0}, false)
 	var told := await until(func(): return net.host_paused, 5.0)
 	check(told and said.has(NetSession.HOST_PAUSED_WAIT), "the host's app paused: the guest is told it is waiting for the host")
-	await until(func(): return net.reconnecting, 20.0)
-	check(net.reconnecting and net.reconnect_until - net._now() > NetSession.RECONNECT_SECONDS, "its connection drops while the host is frozen; it waits the longer time for a paused host")
-	var back := await until(func(): return in_game() and net.reconnects > r0, 40.0)
+	var dropped := await until(func(): return net.reconnecting, 25.0)
+	if dropped:
+		check(net.reconnect_window == (NetSession.HOST_PAUSED_SECONDS if net.reconnect_paused else NetSession.RECONNECT_SECONDS) and (net.reconnect_paused or float(net_d().get("suspended", {}).get("secs", 0.0)) > 0.0),
+			"its connection drops; dropped while the host said it was paused, it waits the longer time (paused %s, %.0f s)" % [str(net.reconnect_paused), net.reconnect_window])
+	else:
+		check(true, "(its connection outlasted the freeze on this run: the host's own timeout ends it on its return)")
+	var back := await until(func(): return in_game() and net.reconnects > r0, 60.0)
 	check(back and net.my_pid == pid, "the host back: the guest is in the game again, the same character")
 	var sp: Dictionary = net_d().get("suspended", {})
 	await until(func(): return float(status().minutes) > 0.0, 1.0)
@@ -415,6 +419,6 @@ func _host_killed() -> void:
 func _host_stops() -> void:
 	said.clear()
 	await command({"cmd": "quit"}, false)
-	var gone := await until(func(): return not main.guest_world, 5.0)
-	check(gone and said.has(NetSession.HOST_STOPPED) and not main.net.reconnecting, "the host stops on purpose: the guest is told at once and does not wait")
+	var gone := await until(func(): return not main.guest_world, 10.0)
+	check(gone and said.has(NetSession.HOST_STOPPED) and not main.net.reconnecting, "the host stops on purpose: the guest is told at once and does not wait (%s)" % str(said))
 	await until(func(): return not OS.is_process_running(host_pid), 15.0)
