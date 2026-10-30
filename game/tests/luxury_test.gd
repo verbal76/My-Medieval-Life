@@ -73,7 +73,14 @@ func test_data() -> void:
 		last = GameData.value(id)
 		check(GameData.item(id).get("food", 0) == 0 and not GameData.item(id).has("bonus"), "%s is neither food nor worn: it is kept" % id)
 		for r in GameData.recipes:
-			check(not (GameData.recipes[r]["in"] as Dictionary).has(id), "no recipe (%s) takes %s" % [r, id])
+			if not (GameData.recipes[r]["in"] as Dictionary).has(id):
+				continue
+			# The armour and weapon catalogue (Build 22, owner D16: its items stand; materials provisional) uses fine cloth as
+			# silk in garments; no other recipe may take a luxury, and jewellery and spices go into nothing.
+			var worn := true
+			for o in (GameData.recipes[r].get("out", {}) as Dictionary):
+				worn = worn and str(GameData.item(str(o)).get("type", "")) in ["armor", "head"]
+			check(id == "fine_cloth" and worn, "only a catalogue garment may take a luxury: %s takes %s" % [r, id])
 	var r := Regions.create(1)
 	var holders := []
 	for s: OffMapSettlement in r.list:
