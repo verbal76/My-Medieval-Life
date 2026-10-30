@@ -25,7 +25,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90           # the Expansion 20 economy suites pushed a full run past 45 minutes (run 41123358434, 2026-10-30)
     steps:
       - uses: actions/checkout@v4
         with:
