@@ -55,4 +55,11 @@ Multi-seed long run (365 days, seeds 1 and 2, `--market`, checkpoints), determin
 
 ## 3. Evidence
 
-To be filled from the one 365-day `--market` run (sizes at days 30, 90, 365; market activity vs run 41135583126 at day 30).
+The one 365-day `--market` run on the merged branch (`5319993`, which contains `wip/expansion20` `8bbdcfb`): Actions run
+**41143001791**, seeds 1 and 2, every 10 days. Each checkpoint prints an `ECONOMY day N:` line (save bytes, knowledge entries,
+forgotten, exact load-back, claims breaches, save+load time); a load-back mismatch, a ledger leak or a regional books mismatch fails
+the run (FATAL at that checkpoint). To read: sizes at days 30, 90, 180 and 365; conservation; the load-back at every checkpoint;
+market activity against run 41135583126 at day 30; seconds per game day. Economy-off identity: no Actions G0 (the lead holds run
+41142767484 on `8bbdcfb`); by inspection every LE-06 change runs only with an economy present, and
+`le06_save_test::test_build24_save` shows a save with the economy off writes no new key; a local `tools/sim_gate.py` against the
+lead's new baseline when it is pushed.
