@@ -1384,8 +1384,7 @@ func _sync_avatars(dt: float) -> void:
 		var anim := str(e.get("anim", "idle"))
 		if who2 != null:                           # WEAPON-VISIBLE-01: their weapon carried
 			s.wield(who2.weapon)
-		if not (s.striking and anim in ["idle", "walk"]):      # GP-SWORD-VIS: a blow ("sword") is a strike with it; one under way plays through
-			s.play(anim if anim in NetSession.ANIMS else "idle")
+		_net_anim_view(s, anim)
 		if not bool(e.get("alive", true)) and s.anim != "death":
 			s.play("death", true)
 		s.visible = who2 == null or who2.map_level == world.player.map_level      # MP-INTERACT-01: another level is out of sight (MIN-A)
@@ -4315,8 +4314,13 @@ func plant_cutting(item: String) -> void:
 ## blows the weapon is carried. True when the sprite was handled here. View only.
 func _npc_strike_view(n: NPC, s: ActorSprite, look: String) -> bool:
 	var cd := n.attack_cd
-	var last := float(s.get_meta("cd", 0.0))
+	var frame := Engine.get_process_frames()
+	var seen_last_frame := int(s.get_meta("cd_frame", -10)) >= frame - 1   # watched without a gap (review 2026-10-30)
+	var last := float(s.get_meta("cd", cd))
 	s.set_meta("cd", cd)
+	s.set_meta("cd_frame", frame)
+	if not seen_last_frame:
+		last = cd                                  # just came into view (or first seen): no blow is taken to have landed now
 	if look != "sword":
 		if s.striking and look in ["idle", "walk"]:
 			return true
@@ -4338,6 +4342,18 @@ func _npc_strike_view(n: NPC, s: ActorSprite, look: String) -> bool:
 func _in_hand() -> String:
 	var w := world.player.weapon
 	return w if w != "" and world.player.inv.has(w) else ""
+
+
+## Another player's animation from the snapshots onto their sprite. GP-SWORD-VIS: a blow ("sword") is a strike with what they carry
+## and one under way plays through; a blow stays "sword" in the snapshots for as long as the sender's strike lasts, so only the change
+## to "sword" starts a strike here, never the same blow seen again (review 2026-10-30: it was drawn twice).
+func _net_anim_view(s: ActorSprite, anim: String) -> void:
+	var prev := str(s.get_meta("net_anim", ""))
+	s.set_meta("net_anim", anim)
+	if anim == "sword" and prev == "sword":
+		return
+	if not (s.striking and anim in ["idle", "walk"]):
+		s.play(anim if anim in NetSession.ANIMS else "idle")
 
 
 ## WEAPON-VISIBLE-01: the player's animation as the other players see it: a blow with the weapon is sent as "sword" (their

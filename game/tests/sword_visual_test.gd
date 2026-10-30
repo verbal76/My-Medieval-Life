@@ -240,6 +240,36 @@ func test_npcs() -> void:
 	main._npc_strike_view(v, vs, "sword")
 	check(vs.striking and vs.tool_item == "", "a villager with no weapon strikes bare-handed (%s)" % v.name)
 	v.anim = "idle"
+	# review 2026-10-30: a fighter coming into view mid-fight draws no blow that did not happen
+	var hs := ActorSprite.new()
+	main.actors.add_child(hs)
+	hs.setup_texture(load("res://assets/characters/villager_00.png"))
+	hs.wield(ActorSprite.npc_weapon(g))
+	g.anim = "sword"
+	g.attack_cd = 0.8
+	main._npc_strike_view(g, hs, "sword")
+	check(not hs.striking, "a fighter first seen mid-fight (the next blow 0.8 s away) is not shown striking")
+	hs.set_meta("cd", 0.1)
+	hs.set_meta("cd_frame", Engine.get_process_frames() - 50)      # last seen long ago, then out of view
+	main._npc_strike_view(g, hs, "sword")
+	check(not hs.striking, "nor one seen again after being out of view")
+	# review 2026-10-30: another player's one blow stays "sword" in several snapshots and is drawn once
+	var ps := ActorSprite.new()
+	main.actors.add_child(ps)
+	ps.setup_texture(load("res://assets/characters/villager_00.png"))
+	ps.wield(ActorSprite.npc_weapon(g))
+	main._net_anim_view(ps, "idle")
+	main._net_anim_view(ps, "sword")
+	check(ps.striking, "another player's blow starts a strike")
+	step_sprite(ps, 1.0)
+	check(not ps.striking, "which plays through and ends")
+	main._net_anim_view(ps, "sword")
+	check(not ps.striking, "the same blow still in a later snapshot is not drawn again")
+	main._net_anim_view(ps, "idle")
+	main._net_anim_view(ps, "sword")
+	check(ps.striking, "and the next blow is")
+	hs.queue_free()
+	ps.queue_free()
 	s.queue_free()
 	vs.queue_free()
 
