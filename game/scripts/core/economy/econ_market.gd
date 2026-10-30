@@ -1194,3 +1194,46 @@ func wage_bargain(pay: int, who: String) -> int:
 	var comfort := 1.0 - clampf(float(JudgmentLive.coin_need(n)) / 100000.0, 0.0, 1.0)
 	var top := float(pay) * float(p("wage_max_factor", 1.25))
 	return maxi(pay, roundi(lerpf(float(pay), top, comfort)))
+
+
+
+# ---------------------------------------------------------------- LE-05: the player's market journal (OD-LE-14 D13) ------
+## Owner (D13 answer C): "A personal market journal may track only offers the player actually learned, with date, place and
+## staleness, aligned with the persistent per-world Messages journal; no omniscient marketplace feed; must not break the guest
+## journal network path." When the acting player talks with villager `n` (Relations.talked, which a guest's verb reaches on the
+## host), it learns n's open offers in person (OD-LE-02B: offers are seen at real encounters and dialogue), and each price it did
+## not know, or knew older or different, becomes a "market" line of its Messages journal: who, buys or sells, what, at what price,
+## the day seen and the place. Staleness is the line's own day against today. The host's player keeps it through
+## World.player_tell (its own journal page); a guest's is kept under its reference in the host's world, the c_journal path's
+## record (saved there), with no new network verb. Nothing else lists offers to a player. Market not driving: nothing.
+func player_meets(n: NPC) -> int:
+	if not drive or n == null or not n.alive:
+		return 0
+	var me := w.acting_ref()
+	var told := 0
+	for o in f.offers.open_of(World.npc_ref(n.id)):
+		var side := EconKnowledge.SELLS if o.side == EconOffers.ASK else EconKnowledge.BUYS
+		var before := f.knowledge.get_entry(me, World.npc_ref(n.id), str(o.item), side)
+		f.knowledge.learn(me, World.npc_ref(n.id), str(o.item), side, int(o.price_each), "in_person", int(o.id), str(o.location))
+		if not before.is_empty() and int(before.price_each) == int(o.price_each) and int(before.seen_day) == w.day():
+			continue
+		var line := "%s %s %s %s at %d each (seen day %d, %s)." % [n.name, n.family, "sells" if side == EconKnowledge.SELLS else "buys",
+				GameData.item_name(str(o.item)).to_lower(), int(o.price_each), w.day() + 1, _place_words(str(o.location))]
+		if me == w.player_ref(w.player):
+			w.player_tell(line, "market")
+		else:
+			w.messages.record(me, w.minutes, "market", line)
+		told += 1
+	if told > 0:
+		_stat("player_journal_lines", told)
+	return told
+
+
+
+## A readable place for a journal line: a building's name (Property.building_name), "the market" for a stall, else "the village".
+func _place_words(loc: String) -> String:
+	if w.buildings.has(loc):
+		return w.property.building_name(w.buildings[loc])
+	if w.stalls.has(loc):
+		return "the market"
+	return "the village"

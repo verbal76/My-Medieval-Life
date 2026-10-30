@@ -14,7 +14,7 @@ Actions: none until LE-06's run 41143001791 reports; at the LE-05 milestone one 
 | Travel in a delivered contract's price (design s.5 "travel and risk", deferred from LE-02) | done | `contracts.gd::travel_per_unit`, `price_terms`; INT-612; `le05_test::test_travel` |
 | Risk in prices (route danger) | documented gap (section 2): no route-danger measure exists | |
 | Rental and repair (OD-LE-08 D07: "model real assets, time, repairs and contracts in phased LE work") | proposal for the lead's review, not implemented | `LE05_RENTAL_REPAIR_PROPOSAL.md` |
-| Player's market journal (OD-LE-14 D13; must not break the guest journal network path) | not started (player-facing: wiki and Messages journal) | |
+| Player's market journal (OD-LE-14 D13; must not break the guest journal network path) | done (section 3) | INT-613; `le05_test::test_market_journal` |
 | Construction: bids for materials, hiring (design s.9) | housing material bids exist since LE-02 (need kind `housing`); hiring is LE-04's wages flag (off) | |
 | Ecology / mining under existing depletion rules; bandits; regional links via `World.transactions` | not started; regional food trade is Worker B's (X20-SETTLE-FOOD, merged) | |
 
@@ -36,3 +36,13 @@ but nothing measures danger on a route (no record of losses or attacks per road,
 instruction no measure is invented: route risk is not priced. When the settlement or bandit layer records losses by route (e.g. the
 couriers' waylaid loads or caravan losses by road), a risk premium can read it here: the expected loss on the route over a trip,
 added to the seller's travel term and the buyer's ceiling. Until then a delivered contract prices travel time only (section 1).
+
+## 3. The player's market journal (OD-LE-14 D13)
+
+When the player talks with a villager (`Relations.talked`) and the market drives, it learns that villager's open offers in person
+(OD-LE-02B), and each price new to it, changed or older becomes a "market" line in its Messages journal: "<name> sells plank at 4
+each (seen day 1, <place>)". The category is added to the journal's bounded ordinary tier (`message_journal.json`); staleness is the
+line's day against today. Nothing else lists offers to a player (no feed). The host's player gets the line through
+`World.player_tell`; a guest's is recorded under its reference in the host's world (the `c_journal` record, saved there): no new
+network verb, so the guest journal path is unchanged. Known limit: a guest's own journal page shows those lines once its copy next
+syncs with the host's saved journal, not at the moment. Not playable while the economy is off, so no wiki page yet (WIKI-01).

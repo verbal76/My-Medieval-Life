@@ -687,6 +687,8 @@ func talked(n: NPC) -> void:
 	if w.mirrors():
 		w.mirror("relations.talked", talked.bind(n), [n])
 		return
+	if w.economy != null:
+		w.economy.market.player_meets(n)          # LE-05 (OD-LE-14 D13): the offers the player sees in person, into its journal
 	var sh: Dictionary = cfg().shared
 	var t := tie(w.acting_id(), n.id)
 	if int(t.get("shared_day", -1)) != w.day():

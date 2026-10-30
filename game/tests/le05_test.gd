@@ -30,6 +30,7 @@ func new_world(on := true) -> World:
 
 func _init() -> void:
 	test_travel()
+	test_market_journal()
 	EconomyFoundation.set_override({})
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
@@ -73,3 +74,30 @@ func test_travel() -> void:
 	so.income_days = [40, 40, 40, 40, 40]
 	check(off.contracts.travel_per_unit(so, World.npc_ref(far.id)) == 0.0 and not off.contracts.price_terms(so, World.npc_ref(far.id), "plank", off.contracts.means(so, "plank", 3)).get("travel", 0.0) > 0.0,
 		"economy off: CON-01's price exactly as before (no travel term)")
+
+
+# ------------------------------------------------------------------------------------------------ the player's market journal (OD-LE-14 D13)
+func market_lines(w: World) -> Array:
+	return w.messages.entries(w.player_ref(w.player)).filter(func(e): return str(e[1]) == "market")
+
+
+func test_market_journal() -> void:
+	var w := new_world(true)
+	var n: NPC = adults(w)[0]
+	n.inv.add("plank", 4)
+	var a := w.economy.offers.post(EconOffers.ASK, World.npc_ref(n.id), "plank", 3, 4, w.day() + 3, "", "market")
+	check(a.ok, "a villager has an open ask")
+	check(market_lines(w).is_empty() and not w.economy.knowledge.knows("player", World.npc_ref(n.id), "plank", "sells"), "the player knows nothing of it before meeting (no marketplace feed)")
+	w.relations.talked(n)
+	var lines := market_lines(w)
+	check(lines.size() == 1 and str(lines[0][2]).contains("sells plank at 4") and str(lines[0][2]).contains("seen day"), "talking with the villager: a journal line with what, price, day and place (%s)" % (str(lines[0][2]) if lines.size() == 1 else "none"))
+	check(w.economy.knowledge.knows("player", World.npc_ref(n.id), "plank", "sells"), "and the player now knows the price (in person)")
+	w.relations.talked(n)
+	check(market_lines(w).size() == 1, "talking again the same day adds nothing")
+	w.economy.offers.revise(int(a.id), 3)
+	w.relations.talked(n)
+	check(market_lines(w).size() == 2, "a changed price is a new line")
+	var off := new_world(false)
+	var n2: NPC = adults(off)[0]
+	off.relations.talked(n2)
+	check(market_lines(off).is_empty() and off.economy == null, "economy off: no market lines")
