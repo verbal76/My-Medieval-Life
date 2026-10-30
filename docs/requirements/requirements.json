@@ -28742,7 +28742,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "",
+   "notes": "ACTIVATION BLOCKER (owner 2026-10-30, docs/directives/2026-10-30_build24_review_follow_through.md): bounded economy save storage and verified long-term save/load are required before the Living Economy may be enabled.",
    "history": [
     {
      "date": "2026-10-20",
@@ -28763,6 +28763,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "notes",
+     "why": "owner 2026-10-30: the LE-03 save-data growth (2.06 MB economy section after 30 days, seed 1) blocks enabling the economy until LE-06 bounds storage and verifies long-term save/load"
     }
    ],
    "target_build": "20",
@@ -60353,6 +60358,43 @@
      "why": "owner answered 2026-10-23 (docs/directives/2026-10-23_owner_answers_x19_release_decisions.md)"
     }
    ]
+  },
+  {
+   "id": "X20-B24-REVIEW",
+   "kind": "approved",
+   "title": "Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance",
+   "description": "Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance",
+   "source": "docs/directives/2026-10-30_build24_review_follow_through.md",
+   "owner_wording": "For all eight Build 24 review findings, maintain a clear distinction between the original frozen Build 24 baseline and corrections made in the active Expansion 20 branches. Do not alter the frozen Build 24 baseline.",
+   "approval": "owner, 2026-10-30",
+   "acceptance": [
+    "findings 1-8 each fixed on an Expansion 20 branch at the underlying cause (not only the reported example), each with a failing-first regression test; property transitions (sale, letting, lease end, eviction, migration of whole or partial households, death) and conservation covered",
+    "Build 24 (tag build-24, 4611d86) unchanged; a report lists which defects remain in Build 24, which are corrected in Expansion 20 (commits), and whether any needs separate Build 24 maintenance"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_build24_review_follow_through.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead (tracking); workers A and B; branch: None -> wip/expansion20; notes",
+     "why": "findings 4, 5, 8 fixed and merged (f8b3f10); 1-3 with worker B, 6-7 with worker A"
+    }
+   ],
+   "assigned_worker": "lead (tracking); workers A and B",
+   "branch": "wip/expansion20",
+   "notes": "Status 2026-10-30: (4) guest double sword strike, (5) phantom NPC blow on coming into view, (8) recorder 'starved with means' counted village food: fixed in wip/x20-review-fixes f8b3f10, merged into wip/expansion20. (1) settlement merchant never closed, (2) TILL-D1 for a last member leaving alone, (3) a leaving trader's stall takings escheated: worker B. (6) stall commission recorder flow, (7) manor/player-held storefront till passes to next holder: worker A. All remain present in frozen Build 24."
   },
   {
    "id": "X20-CHECKPOINT",

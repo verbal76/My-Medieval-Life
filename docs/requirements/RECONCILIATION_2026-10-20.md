@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 167 still open, 64 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 615 (289 of them still open) |
-| **Open entries now** (rules excluded) | | **455** |
+| Entries added since | | 616 (290 of them still open) |
+| **Open entries now** (rules excluded) | | **456** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (64)
@@ -107,7 +107,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (615)
+## Added since the baseline (616)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -713,6 +713,7 @@ None.
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | decision | APPROVED | 19 |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | decision | APPROVED | 19 |
+| X20-B24-REVIEW | Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |

@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (683)
+## Approved requirement (684)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -680,6 +680,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X19-MISINFO | Deliberate misinformation and its correction: NPCs may fabricate false accusations; listeners weigh credibility; accusations can be investigated; a falsehood proven false immediately corrects the negative judgment it caused, independent grievances remain; deliberate dishonesty has consequences by intent, harm, repetition and relationships | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | X19-SCOPE | Expansion 19 ships complete: judgment, personality, relationships, family reputation, gossip, memory, deliberate lies, inherited family stories, stubbornness and the family-sacrifice hierarchy all enabled and influencing NPC decisions; nothing core deferred to 19.x | 19 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASE CANDIDATE | COMPLETE |
 | X19-STORY-LIFE | Family stories: reputation extends through a recognized family name, observers judge family members by their own knowledge, family reputation recovers through positive conduct, important stories may survive generations, minor stories fade when no longer retold | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| X20-B24-REVIEW | Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASE CANDIDATE | OPEN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASE CANDIDATE | OPEN |
