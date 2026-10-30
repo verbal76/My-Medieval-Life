@@ -66,6 +66,7 @@
     "spec_margin": 0.2,
     "spec_share": 0.3,
     "negotiated_wages": false,
+    "wage_max_factor": 1.25,
     "services": false
   }
 }

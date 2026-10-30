@@ -16,7 +16,7 @@ Every integration goes through the transaction authority (`docs/expansion20/TRAN
 | 1 Business identity and separate accounts (recorded contributions and distributions; one owner per business) | done (see commit log) | section 1; `le04_test::test_business_accounts` |
 | 2 Contract estate claims on death (OD-LE-13B) | done (no migration needed) | section 2; `le04_test::test_estate_claims` |
 | 3 Speculation and stockpiling (OD-LE-11) | done | section 3; `le04_test::test_speculation` |
-| 4 Negotiated wages and services behind off flags (OD-LE-03 D02) | not started | |
+| 4 Negotiated wages and services behind off flags (OD-LE-03 D02) | wages done (off); services not built (reason in s.4) | section 4; `le04_test::test_negotiated_wages` |
 | Milestone evidence: one G0 (seeds 1,2, 30 days) + one `--market` run | not run | the G0 may differ only by items 6 and 7 |
 
 Rules for whoever continues: the switch stays off; G0 identical except the item 6/7 fixes (report differences with conservation
@@ -65,3 +65,16 @@ expects (the best bid it knows, else its believed price) bids for it (need kind 
 storage and its trade's limits) and `spec_share` of its spendable coins (never food or obligations: the budget's discretionary
 part). It resells by its usual asks (LE-02), which can fail: a speculation can lose. Withdrawn at review when the opportunity is
 gone. Nothing created; no new unbounded state (one cursor). Provisional numbers in `economy.json` (`spec_*`).
+
+## 4. Negotiated wages and services (OD-LE-03 D02, broader part), behind off flags
+
+`market.negotiated_wages` (shipped false): a manor job's wage, still fixed when taken (X18-D6), is bargained once by
+`EconMarket.wage_bargain`: the existing skill-adjusted wage is the floor; a worker comfortable in coins (1 - `JudgmentLive.coin_need`)
+asks up to `wage_max_factor` (1.25, provisional) of it; a needy worker takes the existing wage; the treasury check uses the agreed
+wage. No universal wage; posted bases unchanged. `market.services` (shipped false) is reserved but nothing is behind it yet: CON-02
+services (dig, survey) are already priced per unit through CON-01's counteroffers, and no villager has a service demand to
+negotiate; construction labour (LE-05) is the natural first one. Recorded as remaining, not invented.
+
+## 5. Milestone evidence
+
+See the report; one G0 (seeds 1,2, 30 days) and one `--market` run at the LE-04 head.

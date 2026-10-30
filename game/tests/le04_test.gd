@@ -40,6 +40,7 @@ func _init() -> void:
 	test_business_accounts()
 	test_estate_claims()
 	test_speculation()
+	test_negotiated_wages()
 	test_switch()
 	EconomyFoundation.set_override({})
 	print("%d checks, %d failures" % [checks, failures])
@@ -359,3 +360,26 @@ func test_speculation() -> void:
 	check(m.to_dict().get("spec_cursor", -1) != -1, "its round-robin cursor is saved (bounded state)")
 	var full := new_world()
 	check(full.economy.market.p("speculation", false) == true, "on with the market (provisional)")
+
+
+# ------------------------------------------------------------------------------------------------ negotiated wages (OD-LE-03 D02, off flag)
+func test_negotiated_wages() -> void:
+	var w := new_world()
+	var job := {"kind": "mend", "wage": 10}
+	var n := adult(w, "laborer")
+	var who := World.npc_ref(n.id)
+	var base: int = w.manor_work.wage_for(job, who)
+	var c: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/economy.json"))
+	check(c.market.negotiated_wages == false and c.market.services == false, "shipped: negotiated wages and services off")
+	c.enabled = true
+	c.market.negotiated_wages = true
+	EconomyFoundation.set_override(c)
+	var w2 := World.new()
+	w2.setup(VillageMap.load_default(), 1)
+	var n2 := w2.npc(n.id)
+	n2.coins = 5000
+	var rich: int = w2.manor_work.wage_for(job, who)
+	n2.coins = 0
+	var poor: int = w2.manor_work.wage_for(job, who)
+	check(poor == base and rich >= base and rich <= roundi(base * 1.25), "flag on: a needy worker takes the existing wage (%d), a comfortable one asks more within the cap (%d)" % [poor, rich])
+	check(w.manor_work.wage_for(job, who) == base, "flag off: the existing wage, unchanged")

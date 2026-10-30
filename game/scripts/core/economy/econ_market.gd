@@ -1175,3 +1175,22 @@ func spec_need(n: NPC, item: String) -> Dictionary:
 		return {}
 	return {"actor": ref, "kind": "stock", "item": item, "qty": room, "shortfall": 0.0, "target": float(room), "cover_days": -1.0,
 		"deadline": -1, "limit": mini(limit, int(band(item)[1])), "ask": cheapest, "resale": resale}
+
+
+
+# ---------------------------------------------------------------- LE-04: negotiated wages (behind an off flag) ----------
+## OD-LE-03 (D02, owner: "Existing wage and hiring rules remain intact ... Broader negotiated wages and services are layered into
+## LE-03 behind flags; do not replace functioning pay or invent universal wages"). With `market.negotiated_wages` on (shipped off),
+## a manor job's wage is still fixed when a worker takes it (X18-D6) but bargained once: the existing wage (`pay`, skill-adjusted) is
+## the floor the manor offers; a worker who does not need the coins asks more, up to wage_max_factor x pay, in proportion to how
+## comfortable it is (1 - JudgmentLive.coin_need); a needy worker takes the existing wage. The manor's treasury check (can_fund)
+## uses the agreed wage, so an unaffordable ask means the job is not taken. No universal wage; the posted base is unchanged.
+func wage_bargain(pay: int, who: String) -> int:
+	if not who.begins_with("npc:"):
+		return pay
+	var n: NPC = w.npc(World.ref_id(who))
+	if n == null:
+		return pay
+	var comfort := 1.0 - clampf(float(JudgmentLive.coin_need(n)) / 100000.0, 0.0, 1.0)
+	var top := float(pay) * float(p("wage_max_factor", 1.25))
+	return maxi(pay, roundi(lerpf(float(pay), top, comfort)))
