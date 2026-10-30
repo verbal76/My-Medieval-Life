@@ -29,7 +29,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-MP-ECON-INTEGRITY | 20 | IN DEVELOPMENT | worker E (MP-economy integrity) | wip/x20-mp-econ |
 | X20-RESUME | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | X20-SETTLE-FOOD | 20 | IN DEVELOPMENT | worker B (settlement food trade) | wip/x20-settle-food |
-| X20-SETTLE-REOPEN | 20 | IN DEVELOPMENT | worker B | wip/x20-settle-food |
+| X20-SETTLE-REOPEN | 20 | IMPLEMENTED ON TASK BRANCH | worker B | wip/x20-settle-food |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
 ## Implemented but not tested (45)

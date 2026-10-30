@@ -12,12 +12,12 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Design work still required | 2 | 0 | 4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Design unknown | 15 | 8 | 87 | 6 | 4 | 2 | 0 | 1 | 5 | 1 |
 | Not started (incl. READY) | 2 | 1 | 6 | 2 | 3 | 1 | 0 | 1 | 5 | 1 |
-| In development (worker assigned) | 0 | 0 | 8 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| In development (worker assigned) | 0 | 0 | 7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Partially implemented | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Implemented on a task branch | 0 | 0 | 8 | 3 | 1 | 1 | 0 | 0 | 0 | 0 |
+| Implemented on a task branch | 0 | 0 | 9 | 3 | 1 | 1 | 0 | 0 | 0 | 0 |
 | Implementation blocked | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Integrated | 80 of 83 (96%) | 10 of 11 (91%) | 80 of 102 (78%) | 1 of 6 (17%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
-| Automated tests passed (targeted or better) | 78 of 83 (94%) | 10 of 11 (91%) | 88 of 102 (86%) | 2 of 6 (33%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
+| Automated tests passed (targeted or better) | 78 of 83 (94%) | 10 of 11 (91%) | 89 of 102 (87%) | 2 of 6 (33%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
 | Integration verified (suite on the integrated build) | 57 of 83 (69%) | 9 of 11 (82%) | 44 of 102 (43%) | 1 of 6 (17%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
 | Gameplay verified | 0 of 83 (0%) | 0 of 11 (0%) | 0 of 102 (0%) | 0 of 6 (0%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
 | Owner playtested | 0 of 83 (0%) | 0 of 11 (0%) | 0 of 102 (0%) | 0 of 6 (0%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
@@ -43,5 +43,5 @@ Build authority:
 - **Build 26 (Creatures and Heroes):** implementation **NOT AUTHORIZED**. PET-01, MON-01 (owner 2026-10-23): design only, no code
 - **Build 27 (World Exploration, Dungeons & Encounters):** implementation **NOT AUTHORIZED**. ROAD-Q1 (owner 2026-10-24): numbering only
 
-Future backlog and unassigned: 111 open records (`BACKLOG.md`). Open owner decisions: 2 (`DECISIONS.md`).
+Future backlog and unassigned: 112 open records (`BACKLOG.md`). Open owner decisions: 3 (`DECISIONS.md`).
 

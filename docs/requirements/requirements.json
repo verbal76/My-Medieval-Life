@@ -61316,8 +61316,8 @@
     "X20-TRADER-CLOSE"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -61330,10 +61330,21 @@
      "date": "2026-10-30",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B; branch: None -> wip/x20-settle-food",
      "why": "assigned"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> settle_review_test 104/0 (test_trader_reopens, test_reopen_every_type: 12 business types; both failed on the old code), settle_food_test 93/0, regions_test 118/0, regional_test 71/0, regional_food_test 47/0, settlement_test 89/0, migration_test 109/0, party_test 102/0, le03_transactions_test 79/0, wiki_test pass; Actions 41139763023 seeds 1,2 60 days: coin leak 0, no item leaks, audits clean; test_commit: None -> 3702566; commits + 3702566; notes",
+     "why": "worker B: implemented; merge into wip/expansion20 after the running G0 on 8bbdcfb finishes"
     }
    ],
    "assigned_worker": "worker B",
-   "branch": "wip/x20-settle-food"
+   "branch": "wip/x20-settle-food",
+   "tests": "settle_review_test 104/0 (test_trader_reopens, test_reopen_every_type: 12 business types; both failed on the old code), settle_food_test 93/0, regions_test 118/0, regional_test 71/0, regional_food_test 47/0, settlement_test 89/0, migration_test 109/0, party_test 102/0, le03_transactions_test 79/0, wiki_test pass; Actions 41139763023 seeds 1,2 60 days: coin leak 0, no item leaks, audits clean",
+   "test_commit": "3702566",
+   "commits": [
+    "3702566"
+   ],
+   "notes": "Reopening by the existing opening rule (two weeks of unmet demand + a household with savings); nothing of the former owner restored (till = new household's savings only; capital rule reset to 80); place assets (fields, deposits, horses) stay with the place. Day-60 village coins: seed 1 5429 (B24) / 3995 (closure) / 4191 (reopen); seed 2 5236 / 3848 / 4083. Traders reopen and close again in cycles because a reopened trader pays its household only above its 0.85 reserve: owner decision X20-TRADER-PAY."
   },
   {
    "id": "X20-TILL-KEEP",
@@ -61419,6 +61430,30 @@
     }
    ],
    "notes": "Narrowed 2026-10-30 by docs/directives/2026-10-30_b24_review_remediation_x20_integration.md: closure (a) is in force; open: approve (b) a reopen rule, or keep (a) and accept permanent loss of caravan trade. Lead recommends (b)."
+  },
+  {
+   "id": "X20-TRADER-PAY",
+   "kind": "decision",
+   "title": "Settlement traders reopen (X20-SETTLE-REOPEN) but close again within weeks: a trader keeps its till at its reserve (0.85 x starting till) and pays its household only from coins above it, so the household earns almost nothing and switches trade (Build 24's own rule). Trading stays well below Build 24 (day-60 village coins 4191 vs 5429 seed 1; 4083 vs 5236 seed 2), conservation exact. Options: (a) keep as is (legitimate outcome under WDR-022); (b) change the trader pay rule (e.g. pay the working household a share of turnover or a floor wage before holding the reserve), a retuning that needs approval. Lead recommendation: (a) for the next playtest, measure, revisit with the Living Economy wage work (LE-04 negotiated wages, off).",
+   "description": "Settlement traders reopen (X20-SETTLE-REOPEN) but close again within weeks: a trader keeps its till at its reserve (0.85 x starting till) and pays its household only from coins above it, so the household earns almost nothing and switches trade (Build 24's own rule). Trading stays well below Build 24 (day-60 village coins 4191 vs 5429 seed 1; 4083 vs 5236 seed 2), conservation exact. Options: (a) keep as is (legitimate outcome under WDR-022); (b) change the trader pay rule (e.g. pay the working household a share of turnover or a floor wage before holding the reserve), a retuning that needs approval. Lead recommendation: (a) for the next playtest, measure, revisit with the Living Economy wage work (LE-04 negotiated wages, off).",
+   "source": "docs/directives/2026-10-30_x20_trader_close_decision.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20+",
+   "related": [
+    "X20-SETTLE-REOPEN"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_x20_trader_close_decision.md"
+    }
+   ]
   },
   {
    "id": "XAUDIT-01",
