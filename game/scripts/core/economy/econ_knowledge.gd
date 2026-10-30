@@ -55,6 +55,8 @@ var _by_knower_item := {}       # knower + "|" + item -> {key: true}
 var _by_subject := {}           # subject + "|" + item -> {key: true}
 var refused := {}               # source -> times a learn by a refused source was refused (diagnostics)
 var forgotten := 0              # hearsay entries dropped by the max_hearsay bound (diagnostics)
+var forget_after := -1          # LE-06: days of age past which an entry can no longer be acted on and is forgotten (-1: never)
+var unusable_forgotten := 0     # entries forgotten that way (diagnostics)
 
 
 func _init(actors_: EconActor, cfg := {}) -> void:
@@ -62,6 +64,13 @@ func _init(actors_: EconActor, cfg := {}) -> void:
 	half_life_days = maxf(0.5, float(cfg.get("half_life_days", 7.0)))
 	max_hearsay = maxi(1, int(cfg.get("max_hearsay", 40)))
 	hearsay_without_judgment = clampf(float(cfg.get("hearsay_without_judgment", 0.5)), 0.0, 1.0)
+	# LE-06 (owner 2026-10-30: bound the economy's save storage without changing the intended knowledge and market behaviour):
+	# an entry's reliability is at most 0.5^(age / half_life_days) (trust is at most 1), so past the age at which that falls
+	# below the market's action threshold (min_reliability, which believed, dialogues and speculation all apply) nothing can
+	# ever act on it again: it is forgotten at dawn (forget_unusable; the design's own decay, OD-LE-10 D09 "may be stale").
+	var floor_r := clampf(float(cfg.get("min_reliability", 0.25)), 0.0001, 1.0)
+	if bool(cfg.get("forget_unusable", false)) and floor_r < 1.0:
+		forget_after = int(floor(half_life_days * log(1.0 / floor_r) / log(2.0)))
 
 
 static func key(knower: String, subject: String, item: String, side: String) -> String:
@@ -200,6 +209,22 @@ func _drop(k: String) -> void:
 				m.erase(pair[1])
 
 
+## LE-06: forgets every entry older than forget_after days (none acted on: see _init); returns how many. Dawn only; one pass
+## over the entries (bounded by who dealt with whom within the window, never by time).
+func forget_unusable(day: int) -> int:
+	if forget_after < 0:
+		return 0
+	var old := []
+	for k in entries:
+		if day - int(entries[k].seen_day) > forget_after:
+			old.append(k)
+	old.sort()
+	for k in old:
+		_drop(k)
+	unusable_forgotten += old.size()
+	return old.size()
+
+
 func size() -> int:
 	return entries.size()
 
@@ -208,13 +233,35 @@ func is_empty() -> bool:
 	return entries.is_empty()
 
 
+## LE-06 compact encoding (format 2): the same fields as rows of numbers and indexes into one sorted string table (refs,
+## items, sides, sources, locations), so an entry costs about a fifth of the bytes. load_dict reads it and the older "entries".
+const ROW := ["knower", "subject", "item", "side", "price_each", "offer", "source", "latest", "via", "learned_day", "learned_minute", "seen_day", "location"]
+const ROW_STR := ["knower", "subject", "item", "side", "source", "latest", "via", "location"]
+
+
 func to_dict() -> Dictionary:
 	var ks: Array = entries.keys()
 	ks.sort()
-	var arr := []
+	var seen := {}
 	for k in ks:
-		arr.append(entries[k].duplicate())
-	return {"entries": arr}
+		for f in ROW_STR:
+			seen[str(entries[k][f])] = true
+	var table: Array = seen.keys()
+	table.sort()
+	var at := {}
+	for i in table.size():
+		at[table[i]] = i
+	var rows := []
+	for k in ks:
+		var e: Dictionary = entries[k]
+		var r := []
+		for f in ROW:
+			r.append(int(at[str(e[f])]) if f in ROW_STR else int(e[f]))
+		rows.append(r)
+	var d := {"format": 2, "strings": table, "rows": rows}
+	if unusable_forgotten > 0:
+		d["unusable_forgotten"] = unusable_forgotten
+	return d
 
 
 func load_dict(d: Dictionary) -> void:
@@ -222,7 +269,17 @@ func load_dict(d: Dictionary) -> void:
 	_by_knower = {}
 	_by_knower_item = {}
 	_by_subject = {}
-	for x in d.get("entries", []):
+	unusable_forgotten = int(d.get("unusable_forgotten", 0))
+	var src: Array = d.get("entries", [])
+	if d.has("rows"):                          # format 2 (LE-06): rows over a string table
+		var table: Array = d.get("strings", [])
+		src = []
+		for r in d.rows:
+			var x := {}
+			for i in ROW.size():
+				x[ROW[i]] = str(table[int(r[i])]) if ROW[i] in ROW_STR else int(r[i])
+			src.append(x)
+	for x in src:
 		var e := {"knower": str(x.knower), "subject": str(x.subject), "item": str(x.item), "side": str(x.side), "price_each": int(x.price_each),
 			"offer": int(x.offer), "source": str(x.source), "latest": str(x.get("latest", x.source)), "via": str(x.get("via", "")),
 			"learned_day": int(x.learned_day), "learned_minute": int(x.learned_minute), "seen_day": int(x.seen_day), "location": str(x.location)}

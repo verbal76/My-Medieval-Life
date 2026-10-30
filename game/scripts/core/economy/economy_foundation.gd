@@ -72,7 +72,9 @@ static func attach(world: World, saved := {}) -> EconomyFoundation:
 	f.needs = EconNeeds.new(f.actors, cfg.get("needs", {}))
 	f.offers = EconOffers.new(f.reservations, cfg.get("offers", {}))
 	f.offers.events = f.events
-	f.knowledge = EconKnowledge.new(f.actors, cfg.get("knowledge", {}))
+	var kcfg: Dictionary = (cfg.get("knowledge", {}) as Dictionary).duplicate()
+	kcfg["min_reliability"] = (cfg.get("market", {}) as Dictionary).get("min_reliability", 0.25)     # LE-06: the market's action threshold
+	f.knowledge = EconKnowledge.new(f.actors, kcfg)
 	f.offers.knowledge = f.knowledge
 	f.contract_links = EconContractLinks.new(f.reservations)
 	f.reservations.load_dict(saved.get("reservations", {}))
@@ -119,6 +121,7 @@ func on_trade(buyer: Object, seller: Object, item: String, qty: int, total: int)
 func dawn(day: int) -> void:
 	offers.expire_due(day)
 	reservations.expire_due(day)
+	knowledge.forget_unusable(day)     # LE-06: entries past the age any decision could still act on (bounded save)
 	claims.reconcile_all()        # LE-03: offers whose backing went by an outflow nobody refuses (tax, eating, crafting) are cut
 	contract_links.sweep()
 	var cs: Contracts = actors.w.contracts
