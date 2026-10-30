@@ -14,7 +14,9 @@ extends RefCounted
 ## Deterministic: no RNG, no wall clock, sorted iteration; saved under the optional World key "transactions".
 
 const KEY := "transactions"
-const VILLAGE := ["npc", "player"]
+const VILLAGE := ["npc", "player", "manor", "hh", "chapel", "stall", "shop", "front", "counter"]     # LE-04: every village holder
+const PEOPLE := ["npc", "player"]          # parties World.trade serves (claims apply to them)
+const TILLS := ["stall", "shop", "front", "counter"]
 const OPEN := "open"
 const FINAL := {"deliver": "delivered", "fail": "returned", "lose": "lost"}
 
@@ -76,6 +78,11 @@ func _begin(txid: String) -> Dictionary:
 	return {}
 
 
+## A fresh id in `namespace` for a caller with no sequence of its own (the next above the namespace's mark).
+func next_txid(ns: String) -> String:
+	return "%s:%d" % [ns, int(marks.get(ns, 0)) + 1]
+
+
 func _end(txid: String, r: Dictionary) -> Dictionary:
 	var p := parse_id(txid)
 	var l: Array = outcomes.get(p[0], [])
@@ -98,9 +105,9 @@ func _party(ref: String) -> Dictionary:
 	var k := actors.kind(ref)
 	if not (k in VILLAGE or k == "region"):
 		return {"code": "unsupported_party"}
-	if not actors.alive(ref):
+	if k != "manor" and k not in TILLS and not actors.alive(ref):
 		return {"code": "party_unavailable"}
-	var obj: Object = null
+	var obj = null
 	match k:
 		"npc":
 			obj = w.npc(World.ref_id(ref))
@@ -108,21 +115,97 @@ func _party(ref: String) -> Dictionary:
 			obj = w.player_of_ref(ref)
 		"region":
 			obj = w.regions.party(ref)
+		"manor":
+			obj = w.granary
+		"hh":
+			obj = w.households[World.ref_id(ref)].pantry      # its goods; coins: its head's own purse (purses are not pooled)
+		"chapel":
+			obj = w.chapel.store if w.chapel != null else null
+		_:
+			obj = _till(ref)                                  # a till: coins only
 	if obj == null:
 		return {"code": "party_unavailable"}
 	return {"code": "", "kind": k, "obj": obj, "ref": ref}
 
 
-static func _held(p: Dictionary, item: String) -> int:
-	return int(p.obj.held(item)) if p.kind == "region" else int(p.obj.inv.count(item))
+## The record holding a till's coins ("till" key), or null.
+func _till(ref: String):
+	match actors.kind(ref):
+		"stall":
+			var k := ref.trim_prefix("stall:")
+			var st = w.stalls.get(k, w.stalls.get(int(k) if k.is_valid_int() else -1, null))
+			return st
+		"shop":
+			var b: Dictionary = w.buildings.get(ref.trim_prefix("shop:"), {})
+			return b.shop if b.has("shop") else null
+		"front", "counter":
+			var b: Dictionary = w.buildings.get(ref.get_slice(":", 1), {})
+			return b.get(actors.kind(ref), null)
+	return null
 
 
-static func _purse(p: Dictionary) -> int:
-	return int(p.obj.purse()) if p.kind == "region" else int(p.obj.coins)
+## A household's head, who pays and is paid for it (the keep_till and stall payee rule); null when nobody is left.
+func _head(p: Dictionary) -> NPC:
+	return w.party(str(p.ref))
 
 
-static func _room(p: Dictionary, item: String) -> bool:
-	return bool(p.obj.can_hold(item)) if p.kind == "region" else bool(p.obj.inv.can_add(item))
+## The goods store of a party (an Inventory or a SettlementParty); null for a till.
+static func _store(p: Dictionary):
+	if p.kind in TILLS:
+		return null
+	if p.kind in PEOPLE:
+		return p.obj.inv
+	return p.obj
+
+
+func _held(p: Dictionary, item: String) -> int:
+	if p.kind == "region":
+		return int(p.obj.held(item))
+	var st = _store(p)
+	return int(st.count(item)) if st != null else 0
+
+
+func _purse(p: Dictionary) -> int:
+	match str(p.kind):
+		"region":
+			return int(p.obj.purse())
+		"npc", "player":
+			return int(p.obj.coins)
+		"manor":
+			return w.treasury
+		"chapel":
+			return w.chapel.coins
+		"hh":
+			var h := _head(p)
+			return h.coins if h != null else 0
+	return int(p.obj.get("till", 0))                          # a till
+
+
+func _room(p: Dictionary, item: String) -> bool:
+	if p.kind == "region":
+		return bool(p.obj.can_hold(item))
+	var st = _store(p)
+	return st != null and bool(st.can_add(item))
+
+
+## Coins into (k > 0) or out of (k < 0) a village party's own holder. No boundary crossing here.
+func _add_coins(p: Dictionary, k: int) -> void:
+	match str(p.kind):
+		"npc", "player":
+			p.obj.coins += k
+			if p.obj is NPC:
+				if k > 0:
+					p.obj.earned += k
+				else:
+					p.obj.spent -= k
+		"manor":
+			w.treasury += k
+		"chapel":
+			w.chapel.coins += k
+		"hh":
+			_head(p).coins += k
+		_:
+			p.obj.till = int(p.obj.get("till", 0)) + k
 
 
 ## The shared checks of exchange and ship. "" when both sides can be met.
@@ -137,9 +220,12 @@ func _check(b: Dictionary, s: Dictionary, item: String, qty: int, total: int, ro
 		return "no_funds"
 	if room and not _room(b, item):
 		return "no_room"
-	if s.kind in VILLAGE and not w.claims_allow(s.obj, item, qty):
+	if b.kind == "hh" and total > 0 and _head(b) == null:
+		return "party_unavailable"
+	if s.kind in PEOPLE and not w.claims_allow(s.obj, item, qty):
 		return "claimed"
-	if b.kind in VILLAGE and not w.claims_allow(b.obj, EconReservations.COINS, total, item, World.is_necessity(item)):
+	var payer = b.obj if b.kind in PEOPLE else (_head(b) if b.kind == "hh" else null)
+	if payer != null and not w.claims_allow(payer, EconReservations.COINS, total, item, World.is_necessity(item)):
 		return "claimed"
 	return ""
 
@@ -153,11 +239,11 @@ func _valid(buyer: String, seller: String, item: String, qty: int, total: int) -
 
 
 # ------------------------------------------------------------------------------------------------ moves (validated first)
-func _goods_out(p: Dictionary, item: String, qty: int) -> void:      # into transit
+func _goods_out(p: Dictionary, item: String, qty: int) -> void:      # into transit (out of the village for a village party)
 	if p.kind == "region":
 		p.obj.remove(item, qty)
 	else:
-		p.obj.inv.remove(item, qty)
+		_store(p).remove(item, qty)
 		w.stat("exported_" + item, float(qty))
 
 
@@ -165,7 +251,7 @@ func _goods_in(p: Dictionary, item: String, qty: int) -> void:       # out of tr
 	if p.kind == "region":
 		p.obj.add(item, qty)
 	else:
-		p.obj.inv.add(item, qty)
+		_store(p).add(item, qty)
 		w.stat("imported_" + item, float(qty))
 
 
@@ -175,10 +261,8 @@ func _coins_out(p: Dictionary, k: int) -> void:
 	if p.kind == "region":
 		p.obj.outside_coins(-k)
 	else:
-		p.obj.coins -= k
+		_add_coins(p, -k)
 		w.coin_sources -= k
-		if p.obj is NPC:
-			p.obj.spent += k
 
 
 func _coins_in(p: Dictionary, k: int) -> void:
@@ -187,10 +271,8 @@ func _coins_in(p: Dictionary, k: int) -> void:
 	if p.kind == "region":
 		p.obj.outside_coins(k)
 	else:
-		p.obj.coins += k
+		_add_coins(p, k)
 		w.coin_sources += k
-		if p.obj is NPC:
-			p.obj.earned += k
 
 
 func _note(txid: String, op: String, r: Dictionary, state: String) -> void:
@@ -214,10 +296,21 @@ func exchange(txid: String, buyer: String, seller: String, item: String, qty: in
 	bad = _check(b, s, item, qty, total)
 	if bad != "":
 		return _end(txid, _res(false, bad, txid))
-	if b.kind in VILLAGE and s.kind in VILLAGE:
+	if b.kind in PEOPLE and s.kind in PEOPLE:
 		# the one village path: World.trade (its own claims, hooks, recorder); unit price for the record, the total paid
 		if not w.trade(b.obj, s.obj, item, qty, total / qty, total):
 			return _end(txid, _res(false, "claimed", txid))
+	elif b.kind in VILLAGE and s.kind in VILLAGE:
+		# LE-04: the manor, a household, the chapel or a till with another village party: inside the village, no boundary
+		if s.kind in PEOPLE:
+			w.claims_release(s.obj, item, qty)
+		var payer = b.obj if b.kind in PEOPLE else (_head(b) if b.kind == "hh" else null)
+		if payer != null:
+			w.claims_release(payer, EconReservations.COINS, total, item, World.is_necessity(item))
+		_store(s).remove(item, qty)
+		_store(b).add(item, qty)
+		_add_coins(b, -total)
+		_add_coins(s, total)
 	elif b.kind == "region" and s.kind == "region":
 		if not (s.obj.can_deal("sell", item, qty, total) and b.obj.can_deal("buy", item, qty, total)):
 			return _end(txid, _res(false, "no_funds", txid))
@@ -227,15 +320,18 @@ func exchange(txid: String, buyer: String, seller: String, item: String, qty: in
 		var v: Dictionary = b if b.kind in VILLAGE else s
 		var rp: Dictionary = s if v == b else b
 		if v == b:
-			w.claims_release(b.obj, EconReservations.COINS, total, item, World.is_necessity(item))
+			var payer = b.obj if b.kind in PEOPLE else (_head(b) if b.kind == "hh" else null)
+			if payer != null:
+				w.claims_release(payer, EconReservations.COINS, total, item, World.is_necessity(item))
 			rp.obj.deal("sell", Outside.new(buyer), item, qty, total, w.day())
-			b.obj.inv.add(item, qty)
+			_store(b).add(item, qty)
 			_coins_out(b, total)
 			w.stat("imported_" + item, float(qty))
 		else:
-			w.claims_release(s.obj, item, qty)
+			if s.kind in PEOPLE:
+				w.claims_release(s.obj, item, qty)
 			rp.obj.deal("buy", Outside.new(seller), item, qty, total, w.day())
-			s.obj.inv.remove(item, qty)
+			_store(s).remove(item, qty)
 			_coins_in(s, total)
 			w.stat("exported_" + item, float(qty))
 	_note(txid, "exchange", {"buyer": buyer, "seller": seller, "item": item, "qty": qty, "total": total}, "done")
@@ -255,10 +351,11 @@ func ship(txid: String, buyer: String, seller: String, item: String, qty: int, t
 	bad = _check(b, s, item, qty, total, false)      # room is checked on arrival (deliver), not now
 	if bad != "":
 		return _end(txid, _res(false, bad, txid))
-	if s.kind in VILLAGE:
+	if s.kind in PEOPLE:
 		w.claims_release(s.obj, item, qty)
-	if b.kind in VILLAGE:
-		w.claims_release(b.obj, EconReservations.COINS, total, item, World.is_necessity(item))
+	var payer = b.obj if b.kind in PEOPLE else (_head(b) if b.kind == "hh" else null)
+	if payer != null:
+		w.claims_release(payer, EconReservations.COINS, total, item, World.is_necessity(item))
 	_goods_out(s, item, qty)
 	_coins_out(b, total)
 	var r := {"txid": txid, "buyer": buyer, "seller": seller, "item": item, "qty": qty, "total": total, "due_day": due_day,

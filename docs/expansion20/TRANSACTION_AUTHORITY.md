@@ -24,7 +24,14 @@ it changes nothing and writes no save key (G0 unchanged).
 | `npc:<id>` | `NPC.coins` | `NPC.inv` | yes |
 | `player` (host), `player:<line>` (guest) | `PlayerState.coins` | the pack (`PlayerState.inv`) | yes |
 | `region:<settlement>/<holder>` (`trader`, a business type, `treasury`, `hh:<n>`) | `SettlementParty.purse()` | `SettlementParty.held()` | yes |
-| `manor`, `hh:<n>` (village household), `chapel`, tills | | | not yet: `unsupported_party` (LE-04 adds the manor and business accounts) |
+| `manor` (LE-04) | `World.treasury` | the granary (`World.granary`) | yes |
+| `hh:<n>` (village household, LE-04) | its head's own purse (`World.party`: the household's first living adult, elder or child) | its pantry | yes; refused when nobody of it is left |
+| `chapel` (LE-04) | `Chapel.coins` | `Chapel.store` | yes |
+| `stall:<id>`, `shop:<building>`, `front:<building>`, `counter:<building>` (LE-04) | the till | none (a till holds coins only: buying goods is `no_room`, selling `no_stock`) | yes |
+
+Village parties trade with each other inside the village (no boundary crossing); two people (villagers, players) still trade
+through `World.trade`. A household's coins are its head's own, paid and received explicitly (the TILL-D1 and stall-payee rule),
+never a pooled purse (OD-LE-07 D06). Claims (economy on) apply to villagers and players, and to a household's head when it pays.
 
 A party is **available** when `EconActor.alive(ref)` is true (a living villager, a present player, a live settlement holder).
 

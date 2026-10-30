@@ -108,6 +108,8 @@ func _add_coins(ref: String, k: int) -> void:
 func _pack(ref: String) -> Inventory:
 	if World.is_player_ref(ref):
 		return w.player_for(ref).inv
+	if ref == World.MANOR and w.economy != null:
+		return w.granary                         # LE-04: goods the manor buys on a contract go into its own stores
 	var n := _npc_of(ref)
 	return n.inv if n else null
 
@@ -1147,9 +1149,12 @@ func plan(n: NPC) -> bool:
 		var held := n.inv.count(c.item)
 		var lot := mini(owed, int(cfg().delivery_lot))
 		var home_ok: bool = not World.is_player_ref(c.buyer) or (w.player.home != "" and w.buildings.has(w.player.home))
+		var reeve: NPC = w.npc(w.reeve_id) if c.buyer == World.MANOR else null
+		if c.buyer == World.MANOR and (reeve == null or not reeve.alive or w.economy == null):
+			home_ok = false                         # LE-04: the manor takes delivery through its reeve (none: nobody to hand it to yet)
 		if held >= lot and home_ok:
 			n.doing = "delivering %s to %s" % [GameData.item_name(c.item).to_lower(), w.ref_name(c.buyer)]
-			var at: Vector2i = w.building_door(w.player.home) if World.is_player_ref(c.buyer) else w.brain._workplace_cell(_npc_of(c.buyer))
+			var at: Vector2i = w.building_door(w.player.home) if World.is_player_ref(c.buyer) else w.brain._workplace_cell(reeve if reeve != null else _npc_of(c.buyer))
 			n.plan = [w.brain.go(at), w.brain.doit("contract_deliver", {"id": int(c.id)})]
 			return true
 		if held >= owed:

@@ -51,6 +51,7 @@ var stats := {}                 # counters (diagnostics; saved)
 var bid_cursor := ""            # the last needs-table actor a bid was posted for (round robin)
 var ask_cursor := -1            # index into World.npcs of the last seller reviewed for asks (round robin)
 var _busy := false
+var tool_orders := {}           # LE-04: open CON-01 contract id (the manor's tool commission) -> worker id it is for (bounded: open ones)
 var _jcfg := {}
 
 
@@ -987,7 +988,7 @@ func _stat(k: String, n := 1) -> void:
 
 
 func is_empty() -> bool:
-	return deals.is_empty() and stats.is_empty() and next_deal == 0 and bid_cursor == "" and ask_cursor == -1
+	return deals.is_empty() and stats.is_empty() and next_deal == 0 and bid_cursor == "" and ask_cursor == -1 and tool_orders.is_empty()
 
 
 func to_dict() -> Dictionary:
@@ -996,7 +997,15 @@ func to_dict() -> Dictionary:
 	var st := {}
 	for k in ks:
 		st[k] = int(stats[k])
-	return {"deals": deals.duplicate(true), "next_deal": next_deal, "stats": st, "bid_cursor": bid_cursor, "ask_cursor": ask_cursor}
+	var d := {"deals": deals.duplicate(true), "next_deal": next_deal, "stats": st, "bid_cursor": bid_cursor, "ask_cursor": ask_cursor}
+	if not tool_orders.is_empty():
+		var ids: Array = tool_orders.keys()
+		ids.sort()
+		var t := {}
+		for id in ids:
+			t[str(id)] = int(tool_orders[id])
+		d["tool_orders"] = t
+	return d
 
 
 func load_dict(d: Dictionary) -> void:
@@ -1011,3 +1020,84 @@ func load_dict(d: Dictionary) -> void:
 		stats[str(k)] = int(st[k])
 	bid_cursor = str(d.get("bid_cursor", ""))
 	ask_cursor = int(d.get("ask_cursor", -1))
+	tool_orders = {}
+	var to: Dictionary = d.get("tool_orders", {})
+	for k in to:
+		tool_orders[int(k)] = int(to[k])
+
+
+# ---------------------------------------------------------------- LE-04: the manor as an economic actor --------
+## OD-16 (b) / EQ-19 under the Living Economy (design s.10 "Manor commissions tools: protect future tax receipts and production;
+## treasury expense; smith may fail"; s.12 "The manor is a constrained economic actor ... It may invest, tax, lend, commission or
+## refuse"). Called by NPCBrain._support_trades in place of its advance orders while the market drives. For a worker short of its
+## trade's tool: a tool on sale is BOUGHT through the transaction authority (the manor pays from the treasury, the tool goes into
+## its stores, then is handed to the worker); else the manor COMMISSIONS a smith by a CON-01 contract (Contracts.propose: the
+## smith's own evaluation accepts, counters or refuses; the treasury's coins are escrowed, paid on delivery, returned if it lapses
+## or is cancelled). A counter is met once when it stays inside the band and the treasury floor. Returns coins committed.
+func manor_tools(needers: Array, floor_coins: float) -> int:
+	var spent := 0
+	_sweep_tool_orders()
+	_hand_out_tools(needers)
+	for pair in needers:
+		var o: NPC = pair[0]
+		var tool: String = pair[1]
+		if o.inv.has(tool) or tool_orders.values().has(o.id) or not w.brain._order_for(o).is_empty():
+			continue                                   # (an advance from an older save is still being forged for it)
+		var seller: NPC = null
+		for role in ["merchant_goods", "smith"]:
+			for v: NPC in w.npcs:
+				if seller == null and v.alive and ((v.job == "smith") if role == "smith" else (w.brain.buy_role(v) == role)) and v.inv.has(tool) and not w.brain.keeps(v, tool):
+					seller = v
+		if seller != null:
+			var price := w.sell_price(seller, tool)
+			if w.treasury - price < floor_coins:
+				break
+			var r: Dictionary = w.transactions.exchange(w.transactions.next_txid("manor_tools"), World.MANOR, World.npc_ref(seller.id), tool, 1, price)
+			if not bool(r.ok):
+				_stat("manor_tool_buy_" + str(r.code))
+				continue
+			w.transfer(w.granary, o.inv, tool, 1)
+			spent += price
+			_stat("manor_tool_bought")
+			w.stat("gov_tools", price)
+			w.stat("gov_tool_given_" + tool)
+			continue
+		var smiths: Array = w.npcs.filter(func(v): return v.alive and v.role == "adult" and v.job == "smith")
+		smiths.sort_custom(func(a, b): return a.coins < b.coins or (a.coins == b.coins and a.id < b.id))
+		var price := maxi(int(band(tool)[0]), int(ceil(GameData.value(tool))))
+		var days := int(GameData.b("manor_order_days"))
+		for sm: NPC in smiths:
+			if w.treasury - price < floor_coins:
+				break
+			var r: Dictionary = w.contracts.propose(World.MANOR, sm, tool, 1, price, days)
+			if str(r.get("answer", "")) == "counter" and int(r.qty) >= 1 and int(r.price_each) <= int(band(tool)[1]) \
+					and w.treasury - int(r.qty) * int(r.price_each) >= floor_coins:
+				r = w.contracts.propose(World.MANOR, sm, tool, int(r.qty), int(r.price_each), int(r.days), r.get("history", []))
+			if r.has("contract"):
+				tool_orders[int(r.contract.id)] = o.id
+				spent += int(r.contract.qty) * int(r.contract.price_each)
+				_stat("manor_tool_commissioned")
+				w.stat("gov_tools", int(r.contract.qty) * int(r.contract.price_each))
+				break
+			_stat("manor_tool_refused")              # the smith may refuse: the manor asks the next or the worker waits
+	return spent
+
+
+## Commissions whose contract ended (delivered, lapsed, cancelled) are dropped (their escrow was returned by CON-01).
+func _sweep_tool_orders() -> void:
+	var ids: Array = tool_orders.keys()
+	ids.sort()
+	for id in ids:
+		if not Contracts.is_open(w.contracts.get_contract(int(id))):
+			tool_orders.erase(id)
+
+
+## Tools in the manor's stores go to workers short of them (the one each was commissioned for first): the manor's own goods,
+## handed over as EQ-19 hands its purchases.
+func _hand_out_tools(needers: Array) -> void:
+	for pair in needers:
+		var o: NPC = pair[0]
+		var tool: String = pair[1]
+		if not o.inv.has(tool) and w.granary.has(tool) and o.inv.can_add(tool):
+			w.transfer(w.granary, o.inv, tool, 1)
+			_stat("manor_tool_handed")

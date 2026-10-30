@@ -3346,6 +3346,9 @@ func _take_guard_post(n: NPC) -> void:
 ## goes to the worker when it is forged (_deliver_orders); an order not met within `manor_order_days` lapses. The treasury keeps `manor_support_floor_days` of its
 ## obligations. Coins and tools only move. Returns the coins spent.
 func _support_trades(obligations: float) -> int:
+	if w.economy != null and w.economy.market.drive:     # LE-04: the manor buys or commissions through the economy (no advances)
+		_deliver_orders()                                 # (advances already made in an older save still complete)
+		return w.economy.market.manor_tools(tool_needers(), obligations * float(GameData.b("manor_support_floor_days")))
 	_deliver_orders()
 	var floor_coins := obligations * float(GameData.b("manor_support_floor_days"))
 	var spent := 0
