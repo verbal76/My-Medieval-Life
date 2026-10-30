@@ -79,8 +79,9 @@ static func show_host(ui: GameUI) -> void:
 ## Batch D: this host's invite code ("" when it has no address to give).
 static func invite_code(net: NetSession) -> String:
 	var list := []
+	var mobile := NetInvite.mobile_addresses()
 	for a in NetDiscovery.lan_addresses():
-		if NetInvite.classify(a) == "lan":
+		if NetInvite.classify(a) == "lan" and not mobile.has(a):
 			list.append({"ip": a, "kind": "lan"})
 	for a in NetInvite.v6_addresses():
 		list.append({"ip": a, "kind": "v6"})
@@ -93,8 +94,9 @@ static func invite_code(net: NetSession) -> String:
 ## the port on a real public address; says why not otherwise.
 static func reach_lines(net: NetSession) -> Array:
 	var out := []
-	var lan: Array = NetDiscovery.lan_addresses().filter(func(a): return NetInvite.classify(a) == "lan")
-	var shared: bool = NetDiscovery.lan_addresses().any(func(a): return NetInvite.classify(a) == "cgnat")
+	var mobile := NetInvite.mobile_addresses()
+	var lan: Array = NetDiscovery.lan_addresses().filter(func(a): return NetInvite.classify(a) == "lan" and not mobile.has(a))
+	var shared: bool = not mobile.is_empty() or NetDiscovery.lan_addresses().any(func(a): return NetInvite.classify(a) == "cgnat")
 	out.append(["Friends on your Wi-Fi or home network: yes." if not lan.is_empty() else "Friends on your network: no network address (connect to Wi-Fi first).", not lan.is_empty()])
 	match net.upnp.state:
 		"checking":

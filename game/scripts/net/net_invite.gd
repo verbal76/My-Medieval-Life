@@ -147,12 +147,30 @@ static func classify(ip: String) -> String:
 	return "public"
 
 
-## This device's global IPv6 addresses (may be reachable from outside), sorted.
+## Interface names that are a phone's mobile data link (Android: rmnet, ccmni, pdp; Linux modems: wwan). Their addresses are the
+## carrier's private ones even when they look like a home network's (10.x): nobody outside, and no friend nearby, reaches them.
+const MOBILE_IFACES := ["rmnet", "v4-rmnet", "rev_rmnet", "ccmni", "pdp", "wwan", "clat"]
+
+
+## This device's addresses on mobile data interfaces (MOBILE_IFACES), from IP.get_local_interfaces.
+static func mobile_addresses() -> Array:
+	var out := []
+	for i in IP.get_local_interfaces():
+		var nm := str(i.get("name", "")).to_lower()
+		if MOBILE_IFACES.any(func(m): return nm.begins_with(m)):
+			for a in i.get("addresses", []):
+				out.append(str(a).split("%")[0])
+	out.sort()
+	return out
+
+
+## This device's global IPv6 addresses (may be reachable from outside), sorted; none on mobile data (carriers mostly block calls in).
 static func v6_addresses() -> Array:
 	var out := []
+	var mobile := mobile_addresses()
 	for a: String in IP.get_local_addresses():
 		var bare := a.split("%")[0]
-		if classify(bare) == "v6":
+		if classify(bare) == "v6" and not mobile.has(bare):
 			out.append(bare)
 	out.sort()
 	return out
