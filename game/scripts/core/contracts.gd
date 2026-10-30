@@ -1109,10 +1109,35 @@ func dawn() -> void:
 ## A villager died: its contracts end and the coins set aside go back to the buyer first (a dead buyer's pass on with
 ## the rest of what it leaves: World.kill calls this before the inheritance).
 func on_death(n: NPC) -> void:
+	if w.economy != null and w.economy.market.drive:
+		_estate_claims(n)                       # LE-04 (OD-LE-13B): before the dead's coins pass on
 	var me := World.npc_ref(n.id)
 	for c in list:
 		if (is_open(c) or str(c.state) in ["offered", "signing"]) and (c.buyer == me or c.seller == me):
 			_end(c, "cancelled", "%s died" % n.name)
+
+
+## LE-04 (OD-LE-13B D12, under the Living Economy): what a villager who died was paid in advance and had not yet delivered is a
+## claim on its estate. Today's only advances are the manor's (World.manor_orders: EQ-19 tools, MIN-EQUIP supplies; CON-01 itself
+## escrows and pays on delivery, so its contracts leave nothing owed). An order whose good the dead already made is completed from
+## its own stock (the good was paid for); otherwise the advance is paid back from the dead's own coins, up to what it holds, through
+## the transaction authority, and the rest written off. The heirs' own purses are never touched; nothing is saved (settled at once).
+func _estate_claims(n: NPC) -> void:
+	for x in w.manor_orders.duplicate():
+		if int(x.get("smith", -1)) != n.id:
+			continue
+		var tool := str(x.get("tool", ""))
+		if tool != "" and n.inv.has(tool):
+			n.inv.remove(tool)
+			var to: NPC = w.npc(int(x.get("for", -1)))
+			if to != null and to.alive and to.inv.can_add(tool):
+				to.inv.add(tool)
+			else:
+				w.manor_work.yard.add(tool)          # the manor's own (its works yard), as MIN-EQUIP's orders deliver
+			w.stat("estate_order_goods_" + tool)
+		else:
+			w.transactions.estate_claim(w.transactions.next_txid("estate"), n, World.MANOR, int(x.get("paid", 0)), "manor_order")
+		w.manor_orders.erase(x)
 
 
 ## The player died: their contracts end; coins they set aside go back to their purse (left where they fell, with the

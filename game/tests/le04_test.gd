@@ -38,6 +38,7 @@ func _init() -> void:
 	test_manor_commissions_tool()
 	test_commission_refused_and_lapsed()
 	test_business_accounts()
+	test_estate_claims()
 	test_switch()
 	EconomyFoundation.set_override({})
 	print("%d checks, %d failures" % [checks, failures])
@@ -259,3 +260,59 @@ func test_business_accounts() -> void:
 	var o2: NPC = p2[0]
 	o2.coins = 20
 	check(w2.business.money.to_till(h2, o2, 5) and int(h2.front.till) == 5 and o2.coins == 15 and w2.transactions.is_empty(), "economy off: a contribution as before, nothing recorded")
+
+
+# ------------------------------------------------------------------------------------------------ estate claims (OD-LE-13B D12)
+func smith_with_order(w: World, paid: int, coins: int) -> NPC:
+	var sm := adult(w, "smith")
+	var wc := adult(w, "woodcutter")
+	sm.coins = coins
+	sm.inv.remove("axe", sm.inv.count("axe"))
+	w.manor_orders.append({"smith": sm.id, "tool": "axe", "for": wc.id, "paid": paid, "day": w.day()})
+	return sm
+
+
+func heirs_coins(w: World, n: NPC) -> int:
+	var k := 0
+	if n.household >= 0:
+		for m in w.households[n.household].members:
+			var o := w.npc(int(m))
+			if o != null and o.alive and o != n:
+				k += o.coins
+	return k
+
+
+func test_estate_claims() -> void:
+	# advance 10, estate 6: the manor recovers 6, writes off 4; the heirs' own purses are untouched
+	var w := new_world()
+	var sm := smith_with_order(w, 10, 6)
+	var t0 := w.treasury
+	var h0 := heirs_coins(w, sm)
+	var all := w.total_coins()
+	w.kill(sm, "old age")
+	check(w.treasury == t0 + 6 and w.manor_orders.is_empty(), "a smith who died owing an advance: the manor recovers what the estate holds (6 of 10), the rest written off")
+	check(heirs_coins(w, sm) == h0, "the heirs' own coins are untouched (nothing of the estate was left to inherit)")
+	check(w.total_coins() == all, "conserved")
+	check(w.transactions.journal.any(func(j): return str(j.op) == "estate:manor_order" and int(j.total) == 6), "recorded through the authority")
+	# estate larger than the claim: only the advance is taken; the heirs inherit the rest by the existing rule
+	var w2 := new_world()
+	var sm2 := smith_with_order(w2, 10, 30)
+	var t2 := w2.treasury
+	var all2 := w2.total_coins()
+	w2.kill(sm2, "old age")
+	check(w2.treasury == t2 + 10 and w2.total_coins() == all2, "an estate larger than the claim pays the 10 owed, no more")
+	# the paid-for good already made: it goes to the worker, no coins claimed
+	var w3 := new_world()
+	var sm3 := smith_with_order(w3, 10, 30)
+	sm3.inv.add("axe", 1)
+	var wc: NPC = w3.npc(int(w3.manor_orders.back()["for"]))
+	wc.inv.remove("axe", wc.inv.count("axe"))
+	var t3 := w3.treasury
+	w3.kill(sm3, "old age")
+	check(wc.inv.has("axe") and w3.treasury == t3, "the tool the manor paid for, already forged, goes to its worker; no coin claim")
+	# economy off: as before (the order stays until it lapses)
+	var w4 := new_world(false)
+	var sm4 := smith_with_order(w4, 10, 6)
+	var t4 := w4.treasury
+	w4.kill(sm4, "old age")
+	check(w4.manor_orders.size() == 1 and w4.treasury == t4, "economy off: the existing lapse rule, unchanged")

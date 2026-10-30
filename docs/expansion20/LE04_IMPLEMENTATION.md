@@ -14,7 +14,7 @@ Every integration goes through the transaction authority (`docs/expansion20/TRAN
 | 1a Village parties of the authority (manor, households, chapel, tills) | done `74b99de` | `econ_transactions.gd`; INT-607; `le04_test` |
 | 1b The manor's tools through the economy (buy via the authority, else CON-01 commission) | done `74b99de` | `econ_market.gd::manor_tools`; INT-608 |
 | 1 Business identity and separate accounts (recorded contributions and distributions; one owner per business) | done (see commit log) | section 1; `le04_test::test_business_accounts` |
-| 2 Contract estate claims on death (OD-LE-13B) | not started; migration plan first | section 2 |
+| 2 Contract estate claims on death (OD-LE-13B) | done (no migration needed) | section 2; `le04_test::test_estate_claims` |
 | 3 Speculation and stockpiling (OD-LE-11) | not started | |
 | 4 Negotiated wages and services behind off flags (OD-LE-03 D02) | not started | |
 | Milestone evidence: one G0 (seeds 1,2, 30 days) + one `--market` run | not run | the G0 may differ only by items 6 and 7 |
@@ -35,6 +35,21 @@ is a recorded coin transfer through the authority (`EconTransactions.transfer_co
 neither earned nor spent; coins an offer holds back cannot be contributed (claims). No new saved record: ownership stays the
 existing owner/tenant records and the controller rule (one owner per till). Economy off: `BusinessMoney._move` exactly as before.
 
-## 2. Contract estate claims (OD-LE-13B D12): plan
+## 2. Contract estate claims (OD-LE-13B D12)
 
-To be written before any code (save migration plan; additive optional key only).
+Owner answer: "Death of a contract party can create estate claims up to real estate assets; heirs bear no automatic liability from
+separate personal funds. Current contract-death and lapse handling stays until the authorized contract and estate stage with
+migrations. No invented penalties."
+
+**Where a claim can arise.** CON-01 escrows the buyer's coins when a contract opens and pays per unit on delivery; on a party's death
+`Contracts.on_death` cancels its contracts and returns the unpaid escrow to the buyer, so a CON-01 contract leaves nobody owed. The
+only coins paid ahead of delivery in the game are the manor's advances (`World.manor_orders`: EQ-19 tools, MIN-EQUIP supplies).
+
+**Rule (economy on, market driving).** At the death (`Contracts._estate_claims`, before the dead's coins pass to the heir or lie as
+loot): an order whose good the dead already made is completed from its stock (to the worker, else the works yard); otherwise the
+advance is paid back to the treasury from the dead's own coins, never more than it holds, through
+`EconTransactions.estate_claim` (journalled `estate:manor_order`), and the rest is written off. The order ends. Heirs' own purses
+are untouched; no penalty is added. With the switch off: the existing lapse rule, unchanged.
+
+**Save migration plan: none needed.** The claim is settled at the moment of death and nothing is persisted (no new key, no changed
+key, no `SAVE_VERSION` change). An older save's open advances are simply settled by this rule if their smith dies with the economy on.

@@ -370,6 +370,27 @@ func transfer_coins(txid: String, from: String, to: String, amount: int, purpose
 	return _end(txid, _res(true, "ok", txid, "done"))
 
 
+## LE-04 (OD-LE-13B D12: "Death of a contract party can create estate claims up to real estate assets; heirs bear no automatic
+## liability from separate personal funds"): `claim` coins owed by a villager who has just died to village party `to`, paid from
+## the dead's own estate (its coins, before they pass on) and never more than it holds; the rest is written off. Single-use id,
+## journalled ("estate"). Returns the result with the amount paid in `paid`.
+func estate_claim(txid: String, dead: NPC, to: String, claim: int, why: String) -> Dictionary:
+	var rep := _begin(txid)
+	if not rep.is_empty():
+		return rep
+	var b := _party(to)
+	if dead == null or claim <= 0 or b.code != "" or not (b.kind in VILLAGE):
+		return _end(txid, _res(false, "invalid_quantity" if claim <= 0 else (str(b.code) if b.code != "" else "unknown_party"), txid))
+	var pay := mini(claim, maxi(0, dead.coins))
+	dead.coins -= pay
+	_add_coins(b, pay, false)
+	_note(txid, "estate:" + why, {"buyer": to, "seller": World.npc_ref(dead.id), "item": "", "qty": 0, "total": pay}, "done")
+	var r := _res(true, "ok", txid, "done")
+	r["paid"] = pay
+	r["written_off"] = claim - pay
+	return _end(txid, r)
+
+
 ## Shipment phase 1: the seller's goods into transit custody, the buyer's coins into escrow, together or nothing.
 func ship(txid: String, buyer: String, seller: String, item: String, qty: int, total: int, due_day: int) -> Dictionary:
 	var rep := _begin(txid)
