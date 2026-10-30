@@ -2,13 +2,14 @@ class_name NetProtocol
 extends RefCounted
 ## Multiplayer Batch A2 (carried forward from the MP-01 prototype d18d7d1; docs/multiplayer/BATCH_A.md): the shared protocol
 ## facts. The host runs the only simulation; guests send requests, the host applies them as that guest (World.as_actor) and
-## sends results. LAN and loopback only (MP-D5: the free methods first; no relay, no paid service).
+## sends results. LAN, invite codes and typed addresses (MP-D5: the free methods first; no relay, no paid service; Batch D,
+## docs/multiplayer/BATCH_D_CONNECTIVITY.md).
 ## Ports: the game itself over ENet (UDP) on GAME_PORT, LAN discovery as small UDP datagrams on
 ## DISCOVERY_PORT. A guest's lasting identity is a random key kept on their own device
 ## (user://identity.cfg); the host keeps only its SHA-256 hash, on the guest's character (PlayerState.net_key), so the key
 ## itself is never stored in a world save or shown to anyone. The hash maps to the character's permanent pid.
 
-const VERSION := "mml-net/2"          # bump on any protocol change: a host and a guest must match exactly (2: A2, players by pid)
+const VERSION := "mml-net/3"          # bump on any protocol change: a host and a guest must match exactly (2: A2, players by pid; 3: Batch D, numbered requests, resume, invite)
 const GAME_PORT := 47810
 const DISCOVERY_PORT := 47811
 const DISCOVER := "MML_DISCOVER/1"    # a guest's broadcast query

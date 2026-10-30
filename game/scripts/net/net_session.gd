@@ -18,6 +18,15 @@ extends Node
 ## (PlayerState.net_key), saved with the world. The same key returns the same character; a key already playing is refused
 ## (no duplicate characters). A guest who leaves goes out of active play (PlayerState.away, MP-D1): every record stays.
 ## Peer ids are only for the current connection.
+##
+## Batch D (docs/multiplayer/BATCH_D_CONNECTIVITY.md): joining by an invite code (NetInvite: the host's addresses that can work, tried
+## in order, each with its own time limit) or a typed address; the router asked to forward the port (NetUpnp, on a thread); ENet
+## timeouts of 4-10 s; a guest whose connection drops keeps its view and reconnects by itself (RECONNECT_SECONDS, longer while the
+## host says it is paused), taking its character back with the resume token the host gave it (never saved); a host that stops says
+## so (z_bye), so its guests do not retry; Android pause and resume (on_app_paused / on_app_resumed). Each guest request carries a
+## number: the host applies each number once, in number order, and answers a repeated one from its record (no second purchase,
+## gift or transaction); requests unanswered when a connection drops are not sent again (the world the host sends at the rejoin is
+## the truth). Tests may inject faults into a guest's requests (`faults`).
 
 signal changed(text: String)        # something the player should be told (joins, refusals, losses)
 signal answered(text: String)       # the host's answer to one of this guest's requests (shown, not kept: routine feedback)
@@ -32,6 +41,21 @@ const REFUSALS := {
 	"name": "Please give your character a name.",
 	"busy": "The host is not ready to take players yet.",
 }
+## Batch D: what a guest is told when it cannot get in or loses the host.
+const UNREACHABLE_ADDRESS := "Could not reach that game. Check the address, that both devices are on the same network, and that the host's firewall allows the game."
+const UNREACHABLE_CODE := "Could not reach the host at any address in the invite code (tried: %s). If you are not on the same network, the host's router or internet provider may not let games in from outside: see Playing with friends in the help."
+const OTHER_GAME := "That address leads to a different game than the invite code's. Ask the host for a new code."
+const HOST_STOPPED := "The host closed the world to friends. It has stopped until they play again."
+const HOST_LOST := "Lost the connection to the host. The world has stopped until the host plays again; your character waits there."
+const RECONNECTING := "Connection to the host lost. Reconnecting..."
+const HOST_PAUSED_WAIT := "The host's game is paused (in the background). Waiting for it to come back..."
+const RECONNECT_SECONDS := 60.0      # a guest whose connection dropped tries to come back this long
+const HOST_PAUSED_SECONDS := 300.0   # ... and this long when the host said it was paused (an Android host in the background)
+const TIMEOUT_MIN_MS := 4000         # ENet: a peer silent this long may be dropped, and is by TIMEOUT_MAX_MS (defaults 5 and 30 s)
+const TIMEOUT_MAX_MS := 10000
+const HOLD_SECONDS := 2.0            # host: a request numbered past a missing one waits this long for it, then goes ahead
+const REPLIES_KEPT := 64             # host: answers kept per guest to answer a repeated request without applying it again
+const RESUME_AFTER_PAUSE_MS := 4000  # guest: back from a pause longer than this, reconnect at once (the host may have dropped it)
 const LOOKS := ["res://assets/characters/player_02.png", "res://assets/characters/player_03.png", "res://assets/characters/player_00.png", "res://assets/characters/player_01.png"]
 const NPCS_PER_PACKET := 16          # villagers per snapshot packet (under 1 KB: ENet warns above its 1392-byte MTU)
 const ANIMS := ["idle", "walk", "sword", "swing", "gather", "work"]
@@ -89,6 +113,37 @@ var fauna_known := {}               # peer id -> {animal id: true}: the animals 
 var fauna_sent := {}                # peer id -> {animal id: [x, y, fx, fy, moving, act, hp]}: the live state last sent to it (as floats)
 var _n_animals := 0
 
+# Batch D, host
+var upnp := NetUpnp.new()
+var tag := ""                       # this world's tag (NetInvite.world_tag), told to each guest before the challenge
+var resume_tokens := {}             # pid -> the token its connection may come back with, this hosting session only (never saved)
+var hello_extra := {}               # peer id -> {token, next}: what a guest said before its hello (z_resume)
+var streams := {}                   # identity -> {next, done: {rid: answer}, order: [rid], held: {rid: queue entry}}
+var duplicates := 0                 # repeated requests answered from the record, not applied again (tests, the log)
+var gaps_skipped := 0               # requests applied after giving up waiting for a missing earlier number
+var resumes := 0                    # connections that took their character back with the token
+var applied_log: Array = []         # [pid, rid] in the order applied (the last 200; tests)
+# Batch D, guest
+var targets: Array = []             # the addresses being tried: {ip, port, kind}
+var _attempt := -1
+var _attempt_until := 0.0
+var tried_kinds: Array = []
+var expect_tag := ""                # the invite code's world tag ("" for a typed address)
+var seen_tag := ""
+var resume_token := ""
+var good_target := {}               # the address that worked (the one reconnecting tries)
+var reconnecting := false
+var reconnect_until := 0.0
+var _retry_at := 0.0
+var _retries := 0
+var reconnects := 0                 # times this guest came back (tests)
+var host_paused := false
+var bye := ""                       # the host said it stopped (no retries)
+var _paused_msec := -1
+var faults := {}                    # tests: {dup: true, delay_ms: n, reorder: true} on this guest's requests
+var _fault_out: Array = []
+var _fault_pair: Array = []
+
 var _t_players := 0.0
 var _t_npcs := 0.0
 var _t_move := 0.0
@@ -135,6 +190,11 @@ func host(opts: Dictionary) -> String:
 		return "Could not open the game to others (port %d is in use or blocked)." % port
 	multiplayer.multiplayer_peer = peer
 	role = "host"
+	tag = NetInvite.world_tag(main.world.seed, main.world.host_player().pid)
+	if bool(opts.get("upnp", false)):
+		upnp.start(port)                          # Batch D: the router asked to forward the port, in the background
+	else:
+		upnp.state = "off"
 	if main.world.recorder != null:
 		main.world.recorder.net_event(self, "host_started", main.world.host_player(), "max_players=%d" % max_players)     # X20-FINAL
 	discovery.host(_answer(), discovery_port)
@@ -155,12 +215,22 @@ func stop() -> void:
 			var g: PlayerState = main.world.player_by_pid(int(by_peer[id]))
 			if g != null:
 				g.away = true
-	if peer != null:
-		peer.close()
-	multiplayer.multiplayer_peer = null
-	peer = null
+			rpc_id(int(id), "z_bye", "stopped")          # Batch D: so the guests do not wait to reconnect
+		if peer != null and peer.host != null:
+			peer.host.flush()
+	upnp.stop()
+	_close_peer()
 	discovery.close()
 	role = ""
+	resume_tokens.clear()
+	hello_extra.clear()
+	streams.clear()
+	targets = []
+	_attempt = -1
+	reconnecting = false
+	host_paused = false
+	_fault_out.clear()
+	_fault_pair.clear()
 	by_peer.clear()
 	moves.clear()
 	queue.clear()
@@ -176,17 +246,54 @@ func stop() -> void:
 	players_changed.emit()
 
 
+## Batch D: drop the connection without telling anything (the peer object only), keeping the role and the guest's view.
+func _close_peer() -> void:
+	var p := peer
+	peer = null
+	multiplayer.multiplayer_peer = null          # first, so closing raises no signal of a lost server here
+	if p != null:
+		p.close()
+
+
+func _now() -> float:
+	return Time.get_ticks_msec() / 1000.0
+
+
+## Batch D: whether this guest has a live connection to the host.
+func connected() -> bool:
+	return peer != null and peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED
+
+
+func _set_timeout(id: int) -> void:
+	if peer == null:
+		return
+	var pp := peer.get_peer(id)
+	if pp != null:
+		pp.set_timeout(32, TIMEOUT_MIN_MS, TIMEOUT_MAX_MS)
+
+
 func _on_peer_connected(id: int) -> void:
 	if is_host():
+		_set_timeout(id)
+		rpc_id(id, "z_tag", tag)                    # Batch D: before the challenge (an older guest ignores it and is refused by version)
 		rpc_id(id, "s_challenge", salt)
 
 
 func _on_peer_disconnected(id: int) -> void:
+	hello_extra.erase(id)
 	if not is_host() or not by_peer.has(id):
 		return
+	_drop_peer(id, false)
+
+
+## Host: guest connection `id` is gone (it left, timed out, or came back on a new connection, `quiet`): its character goes out of
+## active play (MP-D1), every record kept, its waiting requests dropped, and the world saved.
+func _drop_peer(id: int, quiet: bool) -> void:
 	var g: PlayerState = main.world.player_by_pid(int(by_peer[id]))
 	if main.world.recorder != null:
-		main.world.recorder.net_event(self, "guest_left", g, "peer=%d" % id)     # X20-FINAL
+		main.world.recorder.net_event(self, "guest_resumed" if quiet else "guest_left", g, "peer=%d" % id)     # X20-FINAL
+	if g != null and streams.has(_ident(g)):
+		(streams[_ident(g)].held as Dictionary).clear()
 	by_peer.erase(id)
 	moves.erase(id)
 	synced.erase(id)
@@ -197,9 +304,17 @@ func _on_peer_disconnected(id: int) -> void:
 	discovery.info = _answer()
 	if g != null:
 		g.away = true                              # MP-D1: out of active play, every record kept
-		changed.emit("%s left the world." % g.name)
-		main.save_game(false)
+		if not quiet:
+			changed.emit("%s left the world." % g.name)
+			main.save_game(false)
+	if quiet and peer != null and multiplayer.get_peers().has(id):
+		peer.disconnect_peer(id, true)             # the dead connection a guest came back from
 	players_changed.emit()
+
+
+## Host: the identity a guest's requests are numbered under (its key's hash, which an heir carries on), else its pid.
+func _ident(p: PlayerState) -> String:
+	return p.net_key if p.net_key != "" else "pid:%d" % p.pid
 
 
 ## The guest character with this identity hash, null for none (a guest of an earlier visit, here or in the save). The line's
@@ -213,7 +328,9 @@ func guest_by_key(kh: String) -> PlayerState:
 
 
 ## Whether a guest with this key hash and name may come in now: "" or a refusal code.
-func admit(kh: String, version: String, pw_hash: String, who: String) -> String:
+## Batch D: `token`, the resume token the host gave this identity's connection earlier this session, lets a guest whose old connection
+## the host still holds (not yet timed out) take its character back on the new one; without it a second copy is refused as before.
+func admit(kh: String, version: String, pw_hash: String, who: String, token := "") -> String:
 	if version != NetProtocol.full_version():
 		return "version"
 	if NetProtocol.password_hash(password, salt) != pw_hash:
@@ -221,13 +338,18 @@ func admit(kh: String, version: String, pw_hash: String, who: String) -> String:
 	if who.strip_edges() == "":
 		return "name"
 	var known := guest_by_key(kh)
-	if known != null and by_peer.values().has(known.pid):
+	if known != null and by_peer.values().has(known.pid) and not resumable(known, token):
 		return "duplicate"
-	if 1 + by_peer.size() >= max_players:
+	if 1 + by_peer.size() - (1 if known != null and by_peer.values().has(known.pid) else 0) >= max_players:
 		return "full"
 	if main.world == null or not main.running:
 		return "busy"
 	return ""
+
+
+## Batch D: whether `token` is the one this hosting session gave player `p`'s connection.
+func resumable(p: PlayerState, token: String) -> bool:
+	return p != null and token != "" and str(resume_tokens.get(p.pid, "")) == token
 
 
 ## The guest's character: theirs from an earlier visit (back in play where they left), or a newcomer (MP-D7) beside the
@@ -336,36 +458,95 @@ func world_for(pid: int) -> PackedByteArray:
 # ---------------------------------------------------------------- joining --------------------
 ## Join the game at `ip`. The answer comes later as `changed` (and `refusal` on a refusal).
 func join(ip: String, game_port: int, key: String, who: String, pw := "") -> String:
+	return join_targets([{"ip": ip, "port": game_port, "kind": "direct"}], key, who, pw)
+
+
+## Batch D: join by an invite code (NetInvite.parse) or a typed address: `list` of {ip, port, kind} tried in order, each until it
+## answers or its time (NetInvite.ATTEMPT_SECONDS) runs out. `world_tag` ("" for a typed address): the code's world, so an address
+## that leads to another game is passed over. "" when the first attempt started, else why not.
+func join_targets(list: Array, key: String, who: String, pw := "", world_tag := "") -> String:
 	stop()
 	my_key = key
 	my_name = who
 	my_password = pw
 	refusal = ""
-	peer = ENetMultiplayerPeer.new()
-	var err := peer.create_client(ip, game_port)
-	if err != OK:
-		peer = null
-		return "Could not start joining (%s)." % error_string(err)
-	multiplayer.multiplayer_peer = peer
+	bye = ""
+	expect_tag = world_tag
+	resume_token = ""
+	good_target = {}
+	targets = list
+	_attempt = -1
+	tried_kinds = []
 	role = "guest"
+	if not _next_target():
+		role = ""
+		return "Could not start joining (no address to try)."
 	changed.emit("Joining world...")
 	return ""
 
 
+## Guest: open the next address of `targets`. False when none is left.
+func _next_target() -> bool:
+	_close_peer()
+	while _attempt + 1 < targets.size():
+		_attempt += 1
+		if _open_client(targets[_attempt]):
+			return true
+	return false
+
+
+func _open_client(t: Dictionary) -> bool:
+	_close_peer()
+	var p := ENetMultiplayerPeer.new()
+	if p.create_client(str(t.ip), int(t.port)) != OK:
+		return false
+	peer = p
+	multiplayer.multiplayer_peer = peer
+	seen_tag = ""
+	var kind := str(t.get("kind", "direct"))
+	if not tried_kinds.has(kind):
+		tried_kinds.append(kind)
+	_attempt_until = _now() + float(NetInvite.ATTEMPT_SECONDS.get(kind, 12.0))
+	return true
+
+
+## Guest: the address being tried did not answer (in time, or refused the connection): the next, else the end of the attempt.
+func _attempt_failed() -> void:
+	if reconnecting:
+		_retry_later()
+		return
+	if _next_target():
+		return
+	var only_typed: bool = tried_kinds.all(func(k): return k == "direct")
+	_lost(UNREACHABLE_ADDRESS if only_typed else UNREACHABLE_CODE % ", ".join(tried_kinds.map(func(k): return _kind_words(str(k)))))
+
+
+static func _kind_words(kind: String) -> String:
+	return {"lan": "your network", "loopback": "this device", "v6": "IPv6", "public": "the internet", "direct": "the address"}.get(kind, kind)
+
+
 func _on_connected() -> void:
 	my_id = multiplayer.get_unique_id()
+	_set_timeout(1)
 
 
 func _on_failed() -> void:
-	_lost("Could not reach that game. Check that both devices are on the same network.")
+	_attempt_failed()
 
 
 func _on_server_gone() -> void:
-	_lost("Host disconnected. The world has stopped until the host plays again.")
+	_lost(HOST_STOPPED if bye != "" else HOST_LOST, bye == "")
 
 
-func _lost(text: String) -> void:
+## Guest: the connection is over. `retry`: it dropped while playing, so try to come back (Batch D) before giving up.
+func _lost(text: String, retry := false) -> void:
 	var was_in: bool = is_guest() and main.guest_world
+	if was_in and retry and not good_target.is_empty():
+		if not reconnecting:
+			_begin_reconnect()
+		else:
+			_retry_later()
+		return
 	if was_in and main.world != null and main.world.recorder != null:
 		main.world.recorder.net_event(self, "host_lost", main.world.player, text.left(100), "interrupted")     # X20-FINAL
 	stop()
@@ -374,16 +555,119 @@ func _lost(text: String) -> void:
 		main.leave_guest_world(text)
 
 
+## Guest (Batch D): the connection dropped while playing. The view stays (stopped: the host's world is not simulated here) and the
+## guest tries the address that worked, again and again, until RECONNECT_SECONDS (HOST_PAUSED_SECONDS when the host said it is paused).
+func _begin_reconnect() -> void:
+	reconnecting = true
+	_retries = 0
+	reconnect_until = _now() + (HOST_PAUSED_SECONDS if host_paused else RECONNECT_SECONDS)
+	_close_peer()
+	_retry_at = _now() + 0.5
+	predicted.clear()
+	_fault_out.clear()
+	_fault_pair.clear()
+	if main.world != null and main.world.recorder != null:
+		main.world.recorder.net_event(self, "reconnecting", main.world.player, "", "interrupted")
+	main.net_interrupted(HOST_PAUSED_WAIT if host_paused else RECONNECTING)
+	changed.emit(HOST_PAUSED_WAIT if host_paused else RECONNECTING)
+
+
+func _retry_later() -> void:
+	_close_peer()
+	_retries += 1
+	_retry_at = _now() + minf(8.0, 0.5 * pow(2.0, _retries))
+
+
+func _reconnect_step() -> void:
+	if peer != null:
+		if peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTING and _now() > _attempt_until:
+			_retry_later()
+		return
+	if _now() > reconnect_until:
+		reconnecting = false
+		_lost(HOST_LOST)
+		return
+	if _now() >= _retry_at:
+		if not _open_client(good_target):
+			_retry_later()
+		else:
+			_attempt_until = _now() + 5.0
+
+
 ## Guest: leave the host's world.
 func leave() -> void:
 	stop()
 
 
+## Batch D, Android (Main._notification): the app goes to the background (or the screen locks). A host saves (Main does) and tells
+## its guests it is paused, so they wait for it longer; a guest notes the time.
+func on_app_paused() -> void:
+	_paused_msec = Time.get_ticks_msec()
+	if is_host() and peer != null:
+		for id in by_peer:
+			rpc_id(int(id), "z_paused", true)
+		peer.host.flush()
+
+
+## ... and comes back. A host tells its guests (those whose connections lasted; the others are reconnecting by themselves). A guest away
+## longer than the host would wait reconnects at once, rather than wait for its old connection to be found dead.
+func on_app_resumed() -> void:
+	var away_ms := Time.get_ticks_msec() - _paused_msec if _paused_msec >= 0 else 0
+	_paused_msec = -1
+	if is_host() and peer != null:
+		for id in by_peer:
+			rpc_id(int(id), "z_paused", false)
+	elif is_guest() and main.guest_world and not reconnecting and (away_ms > RESUME_AFTER_PAUSE_MS or not connected()):
+		_begin_reconnect()
+
+
 # ---------------------------------------------------------------- RPCs: handshake ------------
 @rpc("authority", "call_remote", "reliable")
 func s_challenge(host_salt: String) -> void:
+	if expect_tag != "" and seen_tag != expect_tag and not reconnecting:
+		_attempt_failed()                          # Batch D: this address leads to another game than the code's
+		if not is_guest():
+			changed.emit(OTHER_GAME)
+		return
 	var v := version_sent if version_sent != "" else NetProtocol.full_version()
+	rpc_id(1, "z_resume", resume_token, _next_request)     # Batch D: before the hello, on the same ordered channel
 	rpc_id(1, "c_hello", v, my_key, my_name, NetProtocol.password_hash(my_password, host_salt))
+
+
+## Batch D: the host's world tag, told before its challenge. (Batch D's RPCs are named z_... so the older RPCs keep their ids,
+## which Godot gives in name order: a guest of an older version still gets the version refusal.)
+@rpc("authority", "call_remote", "reliable")
+func z_tag(t: String) -> void:
+	seen_tag = t
+
+
+## Batch D, host: what a guest says before its hello: the resume token it was given (if any) and the number of its next request.
+@rpc("any_peer", "call_remote", "reliable")
+func z_resume(token: String, next_rid: int) -> void:
+	if is_host():
+		hello_extra[multiplayer.get_remote_sender_id()] = {"token": token.left(64), "next": next_rid}
+
+
+## Batch D, guest: the token this connection may come back with (this hosting session only).
+@rpc("authority", "call_remote", "reliable")
+func z_token(t: String) -> void:
+	resume_token = t
+
+
+## Batch D, guest: the host is closing the session on purpose (Stop hosting, quit): no reconnecting.
+@rpc("authority", "call_remote", "reliable")
+func z_bye(reason: String) -> void:
+	bye = reason if reason != "" else "stopped"
+
+
+## Batch D, guest: the host's app went to the background (true) or came back (false).
+@rpc("authority", "call_remote", "reliable")
+func z_paused(on: bool) -> void:
+	host_paused = on
+	if on:
+		changed.emit(HOST_PAUSED_WAIT)
+		if reconnecting:
+			reconnect_until = maxf(reconnect_until, _now() + HOST_PAUSED_SECONDS)
 
 
 @rpc("any_peer", "call_remote", "reliable")
@@ -392,20 +676,33 @@ func c_hello(version: String, key: String, who: String, pw_hash: String) -> void
 		return
 	var id := multiplayer.get_remote_sender_id()
 	var kh := NetProtocol.key_hash(key) if key.length() == 32 else ""
-	var why := admit(kh, version, pw_hash, who) if kh != "" else "version"
+	var extra: Dictionary = hello_extra.get(id, {})
+	var token := str(extra.get("token", ""))
+	var why := admit(kh, version, pw_hash, who, token) if kh != "" else "version"
 	if why != "":
 		if main.world != null and main.world.recorder != null:
 			main.world.recorder.net_event(self, "guest_refused", null, "code=%s" % why, "refused")     # X20-FINAL
 		rpc_id(id, "s_refuse", why)
 		get_tree().create_timer(0.5).timeout.connect(func(): if peer != null and multiplayer.get_peers().has(id): peer.disconnect_peer(id))
 		return
+	var back := guest_by_key(kh)
+	var resumed := resumable(back, token)
+	if back != null:
+		for old in by_peer.keys():
+			if int(by_peer[old]) == back.pid:
+				_drop_peer(int(old), true)         # Batch D: its old connection, not yet timed out, gives way to this one
+	if resumed:
+		resumes += 1
 	var p := guest_state(kh, who)
 	by_peer[id] = p.pid
+	_open_stream(p, int(extra.get("next", -1)), resumed)
+	resume_tokens[p.pid] = Crypto.new().generate_random_bytes(12).hex_encode()
 	if main.world.recorder != null:
 		main.world.recorder.net_event(self, "guest_joined", p, "peer=%d guests=%d" % [id, by_peer.size()])     # X20-FINAL
 	moves[id] = {"t": Time.get_ticks_msec(), "dir": Vector2.DOWN, "anim": "idle"}
 	discovery.info = _answer()
 	rpc_id(id, "s_welcome", world_for(p.pid), id)
+	rpc_id(id, "z_token", str(resume_tokens[p.pid]))
 	synced[id] = _welcome_digest
 	announce(p, id)                               # MP-INTERACT-01: the guests already here learn who came (their public record)
 	var known := {}
@@ -422,6 +719,12 @@ func c_hello(version: String, key: String, who: String, pw_hash: String) -> void
 func s_refuse(code: String) -> void:
 	refusal = code
 	var text: String = REFUSALS.get(code, "The host refused the connection.")
+	if reconnecting and code == "busy":
+		_retry_later()                             # Batch D: a restarted host still loading its world
+		return
+	if main != null and main.guest_world:
+		_lost(text)                                # Batch D: refused on the way back (the world filled meanwhile): to the title
+		return
 	stop()
 	changed.emit(text)
 
@@ -434,12 +737,18 @@ func s_welcome(blob: PackedByteArray, id: int) -> void:
 		_lost("The world could not be received. Try joining again.")
 		return
 	my_pid = int(d.net_pid)
+	var was_back := reconnecting
+	reconnecting = false
+	host_paused = false
+	good_target = targets[_attempt] if not was_back and _attempt >= 0 and _attempt < targets.size() else good_target
+	if was_back:
+		reconnects += 1
 	if not main.start_guest_world(d, my_pid):
 		_lost("The world could not be shown. Try joining again.")
 		return
 	if main.world != null and main.world.recorder != null:
 		main.world.recorder.net_event(self, "joined_host", main.world.player, "pid=%d" % my_pid)     # X20-FINAL: the guest's own session
-	changed.emit("Joined %s." % str(d.get("world_name", "the world")))
+	changed.emit(("Reconnected to %s." if was_back else "Joined %s.") % str(d.get("world_name", "the world")))
 	players_changed.emit()
 
 
@@ -629,11 +938,52 @@ func last_request() -> int:
 
 
 ## Guest: ask the host to do something; the answer lands in `replies[id]` (and the guest's character is updated from it).
+## Batch D: every request is numbered (rid, rising); the host applies each number once. Not connected (reconnecting): not sent,
+## answered here as refused (the world the host sends on the way back is the truth).
 func request(kind: String, args: Dictionary) -> int:
 	var rid := _next_request
 	_next_request += 1
-	rpc_id(1, "c_request", rid, kind, args)
+	if not connected():
+		replies[rid] = {"ok": false, "text": "Not connected to the host."}
+		return rid
+	if faults.is_empty():
+		rpc_id(1, "c_request", rid, kind, args)
+	else:
+		_fault_send({"rid": rid, "kind": kind, "args": args})
 	return rid
+
+
+## Tests (Batch D): a request sent as a faulty network might deliver it: twice (dup), late (delay_ms), or swapped with the next
+## (reorder). Late ones go from _process.
+func _fault_send(e: Dictionary) -> void:
+	e["at"] = _now() + float(faults.get("delay_ms", 0)) / 1000.0
+	var batch := [e]
+	if bool(faults.get("reorder", false)):
+		_fault_pair.append(e)
+		if _fault_pair.size() < 2:
+			e["pair_at"] = _now() + 1.0
+			return
+		batch = [_fault_pair[1], _fault_pair[0]]
+		_fault_pair.clear()
+	for x in batch:
+		_fault_out.append(x)
+		if bool(faults.get("dup", false)):
+			_fault_out.append(x.duplicate())
+
+
+func _fault_step() -> void:
+	if _fault_pair.size() == 1 and _now() >= float(_fault_pair[0].pair_at):
+		_fault_out.append(_fault_pair[0])          # no second came: the one held goes alone
+		_fault_pair.clear()
+	if not connected():
+		return
+	var keep := []
+	for e in _fault_out:
+		if _now() >= float(e.at):
+			rpc_id(1, "c_request", int(e.rid), str(e.kind), e.args)
+		else:
+			keep.append(e)
+	_fault_out = keep
 
 
 @rpc("any_peer", "call_remote", "reliable")
@@ -643,8 +993,91 @@ func c_request(rid: int, kind: String, args: Dictionary) -> void:
 	var id := multiplayer.get_remote_sender_id()
 	if not by_peer.has(id):
 		return
+	var p: PlayerState = main.world.player_by_pid(int(by_peer[id]))
+	if p == null:
+		return
+	var st: Dictionary = _stream_of(p)
+	var e := {"pid": p.pid, "peer": id, "rid": rid, "kind": kind, "args": args, "t": _now()}
+	if int(st.next) < 0:
+		st.next = rid                              # no number told (z_resume missing): the first one sets it
+	if rid < int(st.next) or (st.held as Dictionary).has(rid):
+		duplicates += 1                            # Batch D: applied (or waiting) already: never again
+		if (st.done as Dictionary).has(rid):
+			rpc_id(id, "s_reply", rid, st.done[rid])
+		return
+	if rid > int(st.next):
+		st.held[rid] = e                           # an earlier number has not come yet: wait for it (HOLD_SECONDS)
+		return
+	_enqueue(st, e)
+
+
+## Host (Batch D): request `e` is next in its guest's numbering: queued, then any held ones that now follow it.
+func _enqueue(st: Dictionary, e: Dictionary) -> void:
 	arrivals += 1
-	queue.append({"seq": arrivals, "pid": int(by_peer[id]), "peer": id, "rid": rid, "kind": kind, "args": args})
+	e["seq"] = arrivals
+	queue.append(e)
+	st.next = int(e.rid) + 1
+	while (st.held as Dictionary).has(int(st.next)):
+		var h: Dictionary = st.held[int(st.next)]
+		st.held.erase(int(st.next))
+		arrivals += 1
+		h["seq"] = arrivals
+		queue.append(h)
+		st.next = int(st.next) + 1
+
+
+## Host (Batch D): a held request has waited HOLD_SECONDS for a missing earlier number: the gap is given up and the held go in order.
+func _release_held() -> void:
+	for k in streams:
+		var st: Dictionary = streams[k]
+		var held: Dictionary = st.held
+		if held.is_empty():
+			continue
+		var first := int(held.keys().min())
+		if _now() - float(held[first].t) < HOLD_SECONDS:
+			continue
+		gaps_skipped += first - int(st.next)
+		var e: Dictionary = held[first]
+		held.erase(first)
+		if by_peer.has(int(e.peer)):
+			_enqueue(st, e)
+		else:
+			st.next = first + 1
+
+
+## Host (Batch D): this player's request numbering, made on its first join.
+func _stream_of(p: PlayerState) -> Dictionary:
+	var k := _ident(p)
+	if not streams.has(k):
+		streams[k] = {"next": -1, "done": {}, "order": [], "held": {}}
+	return streams[k]
+
+
+## Host (Batch D): at a join, the guest's numbering: kept when it came back with its token (the same run of numbers, so a request
+## repeated across the reconnection is still known), else begun afresh from the number it told (`next`, -1 for none).
+func _open_stream(p: PlayerState, next_rid: int, resumed: bool) -> void:
+	var st := _stream_of(p)
+	if not resumed:
+		st.done = {}
+		st.order = []
+		st.next = next_rid
+	elif next_rid > int(st.next):
+		st.next = next_rid                         # numbers sent before the drop that never arrived are not waited for
+	st.held = {}
+
+
+## Host (Batch D): keep the answer to request `rid` of player `p`, for a repeat of it.
+func _remember(p: PlayerState, rid: int, r: Dictionary) -> void:
+	if p == null:
+		return
+	var st := _stream_of(p)
+	st.done[rid] = r
+	st.order.append(rid)
+	while (st.order as Array).size() > REPLIES_KEPT:
+		st.done.erase(st.order.pop_front())
+	applied_log.append([p.pid, rid])
+	if applied_log.size() > 200:
+		applied_log.pop_front()
 
 
 ## X20 (net_mp4_test): a guest's copy changes its own offers before the host answers (World.player_answer takes the answered one
@@ -666,6 +1099,7 @@ func apply_requests() -> void:
 		var p: PlayerState = main.world.player_by_pid(int(q.pid))
 		var r := NetActions.apply(main.world, p, str(q.kind), q.args if q.args is Dictionary else {})
 		applied += 1
+		_remember(p, int(q.rid), r)                # Batch D: a repeat of this number is answered, not applied again
 		if main.world.recorder != null:
 			main.world.recorder.net_request(self, p, str(q.kind), r)     # X20-FINAL: each player action the host applied
 		if r.has("heir_pid") and by_peer.has(int(q.peer)):
@@ -683,6 +1117,8 @@ func apply_requests() -> void:
 
 @rpc("authority", "call_remote", "reliable")
 func s_reply(rid: int, r: Dictionary) -> void:
+	if replies.has(rid):
+		return                                     # Batch D: an answer repeated (the request came twice): taken once
 	replies[rid] = r
 	if main.world != null and main.guest_world and r.has("heir_pid"):
 		my_pid = int(r.heir_pid)
@@ -792,8 +1228,22 @@ func _process(dt: float) -> void:
 		return
 	discovery.poll(dt, discovery_port)
 	if is_host():
+		if upnp.poll():
+			players_changed.emit()                 # Batch D: the router answered; the window shows the new invite code
+		_release_held()
 		_host_step(dt)
-	elif is_guest() and main.guest_world:
+		return
+	if not is_guest():
+		return
+	if reconnecting:
+		_reconnect_step()
+		return
+	if peer != null and peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTING and _now() > _attempt_until:
+		_attempt_failed()                          # Batch D: this address did not answer in its time
+		return
+	if not faults.is_empty() or not _fault_out.is_empty():
+		_fault_step()
+	if main.guest_world and connected():
 		_guest_step(dt)
 
 
