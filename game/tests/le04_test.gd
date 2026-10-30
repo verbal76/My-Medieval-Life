@@ -41,6 +41,7 @@ func _init() -> void:
 	test_estate_claims()
 	test_speculation()
 	test_negotiated_wages()
+	test_settle_estate()
 	test_switch()
 	EconomyFoundation.set_override({})
 	print("%d checks, %d failures" % [checks, failures])
@@ -383,3 +384,62 @@ func test_negotiated_wages() -> void:
 	var poor: int = w2.manor_work.wage_for(job, who)
 	check(poor == base and rich >= base and rich <= roundi(base * 1.25), "flag on: a needy worker takes the existing wage (%d), a comfortable one asks more within the cap (%d)" % [poor, rich])
 	check(w.manor_work.wage_for(job, who) == base, "flag off: the existing wage, unchanged")
+
+
+# ------------------------------------------------------------------------------------------------ settle to estate (Worker B's gap)
+func total(w: World, item: String) -> Array:
+	var t: Dictionary = w.transactions.in_transit()
+	return [w.total_coins() + w.regions.coins() + int(t.coins) + w.transactions.outside_coins,
+		int(Census.goods(w).get(item, 0)) + int(w.regions.goods().get(item, 0)) + int(t.goods.get(item, 0)) + int(w.transactions.sunk.get(item, 0))]
+
+
+func trader(w: World) -> SettlementParty:
+	for p: SettlementParty in w.regions.parties():
+		if p.holder == "trader":
+			return p
+	return null
+
+
+func test_settle_estate() -> void:
+	var w := new_world(false)
+	var tx := w.transactions
+	var sp := trader(w)
+	sp.add("wheat", 6)
+	var a := adult(w, "laborer")
+	a.coins = 30
+	var heir: NPC = null
+	for m in w.households[a.household].members:
+		var o := w.npc(int(m))
+		if o != null and o.alive and o != a:
+			heir = o
+	check(tx.ship("est:1", World.npc_ref(a.id), sp.ref, "wheat", 3, 12, w.day() + 2).ok, "a villager's shipment from a settlement")
+	check(tx.settle_estate("est:1", "x").code == "not_departed", "both parties there: settle to estate refused (use deliver or fail)")
+	var before := total(w, "wheat")
+	var s0 := sp.held("wheat")
+	a.alive = false
+	check(tx.deliver("est:1").code == "party_unavailable" and tx.fail("est:1", "x").code == "party_unavailable", "the buyer gone: neither delivery nor refund can complete")
+	var h0 := heir.coins if heir != null else 0
+	var r := tx.settle_estate("est:1", "buyer died")
+	check(r.ok and r.state == "settled" and sp.held("wheat") == s0 + 3, "settled to the estate: the goods back to the seller")
+	if heir != null:
+		check(w.party(World.hh_ref(a.household)).coins >= 12 or heir.coins == h0 + 12, "the escrow to the dead buyer's household (its head)")
+	check(total(w, "wheat") == before and w.regions.audit() == "", "conserved; regional books balance")
+	check(tx.settle_estate("est:1", "again").replay and total(w, "wheat") == before, "idempotent: settling again changes nothing")
+	# a household with nobody left: to the manor
+	var b := adult(w, "farmer")
+	b.coins = 20
+	check(tx.ship("est:2", World.npc_ref(b.id), sp.ref, "wheat", 1, 5, w.day()).ok, "a second shipment")
+	for m in w.households[b.household].members:
+		var o := w.npc(int(m))
+		if o != null:
+			o.alive = false
+	var t0 := w.treasury
+	before = total(w, "wheat")
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	check(tx.settle_estate("est:2", "household gone").ok and w.treasury == t0 + 5, "nobody of the buyer's household left: the escrow escheats to the manor")
+	check(total(w, "wheat") == before, "conserved")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	var t2 := w2.treasury
+	check(w2.transactions.settle_estate("est:2", "after load").ok and w2.treasury == t2 + 5 and w2.transactions.settle_estate("est:2", "x").replay,
+		"after a save and load: settled once, the same way")

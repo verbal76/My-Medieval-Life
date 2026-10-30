@@ -75,6 +75,11 @@ wage. No universal wage; posted bases unchanged. `market.services` (shipped fals
 services (dig, survey) are already priced per unit through CON-01's counteroffers, and no villager has a service demand to
 negotiate; construction labour (LE-05) is the natural first one. Recorded as remaining, not invented.
 
+## 4b. Settle to estate (Worker B's gap, the lead 2026-10-30)
+
+`EconTransactions.settle_estate` and `estate_of` (TRANSACTION_AUTHORITY.md s.6): idempotent, saved (`outside_coins` optional field),
+conservation-checked; `le04_test::test_settle_estate`.
+
 ## 5. Milestone evidence
 
 See the report; one G0 (seeds 1,2, 30 days) and one `--market` run at the LE-04 head.

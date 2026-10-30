@@ -54,6 +54,9 @@ World.transactions.fail(txid: String, why: String) -> Dictionary   # goods back 
 World.transactions.lose(txid: String, why: String) -> Dictionary   # goods destroyed in transit (a legitimate loss: bandits,
                                                                   # spoilage); the SELLER bears it; escrow back to the buyer
 
+World.transactions.settle_estate(txid: String, why: String) -> Dictionary   # LE-04: a party is gone (see section 6)
+World.transactions.transfer_coins(txid, from, to, amount, purpose) -> Dictionary   # LE-04: coins only, village parties
+World.transactions.estate_claim(txid, dead: NPC, to, claim, why) -> Dictionary     # LE-04: OD-LE-13B, capped by the estate
 World.transactions.get_shipment(txid) -> Dictionary          # a copy of the record ({} unknown)
 World.transactions.open_shipments() -> Array                 # copies, by txid order
 World.transactions.overdue(day: int) -> Array                # open shipments whose due_day < day (for the caller's rule)
@@ -106,6 +109,13 @@ await between validation and commit). An interruption (the app suspended, the ga
 If the party a return or refund goes to is no longer available (a villager died, a household dissolved), the phase-2 call
 returns `party_unavailable` and the shipment stays open with its goods and coins where they are, never lost or duplicated; the
 caller may `deliver` instead (when the other party is still there) or settle the estate by its own rule later (OD-LE-13B).
+
+**Settle to estate (LE-04, Worker B's gap):** when a party of an open shipment is gone and `deliver`/`fail` answer
+`party_unavailable`, `settle_estate(txid, why)` closes it (state `settled`, once): the goods go back to the seller and the escrow
+to the buyer, a gone party's share to its estate (`estate_of`): a villager's household (its head), else the manor; an ended
+household's or a till's to the manor (ECON-P3); a settlement holder's to its settlement's treasury party; with nobody at all, the
+share leaves the world as an outside flow (`sunk` for goods, `outside_coins` for coins, both saved and counted by conservation).
+While both parties are there it answers `not_departed`.
 
 Inventory reservation: `ship` takes the goods out of the seller's holdings into custody, so they can be neither sold again nor
 used while in transit; the coins likewise. (Face-to-face reservations for offers stay `EconReservations`, INT-600.)

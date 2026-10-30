@@ -18,7 +18,7 @@ const VILLAGE := ["npc", "player", "manor", "hh", "chapel", "stall", "shop", "fr
 const PEOPLE := ["npc", "player"]          # parties World.trade serves (claims apply to them)
 const TILLS := ["stall", "shop", "front", "counter"]
 const OPEN := "open"
-const FINAL := {"deliver": "delivered", "fail": "returned", "lose": "lost"}
+const FINAL := {"deliver": "delivered", "fail": "returned", "lose": "lost", "estate": "settled"}
 
 ## The other end of a settlement party's side when it deals with a village actor (SettlementParty.deal reads other.id).
 class Outside extends RefCounted:
@@ -34,7 +34,8 @@ var keep_journal := 500
 var marks := {}                 # namespace -> highest seq seen
 var outcomes := {}              # namespace -> Array of [seq, result] (oldest first, bounded)
 var shipments := {}             # txid -> record
-var sunk := {}                  # item -> units destroyed in transit (lose)
+var sunk := {}                  # item -> units destroyed in transit (lose) or gone out with an estate nobody inherits
+var outside_coins := 0          # coins of an escrow whose buyer left the world with no heir (settle_estate): an outside flow
 var journal: Array = []
 
 
@@ -430,6 +431,42 @@ func lose(txid: String, why: String) -> Dictionary:
 	return _close(txid, "lose", why)
 
 
+## LE-04 (Worker B's gap): an open shipment a party of which is gone (a villager died, a household ended or left, a settlement
+## party dissolved) is settled to the estate: each side goes back to whom it belonged, the goods to the seller and the escrow to
+## the buyer, and a gone party's share to its estate by the existing rules (estate_of: a villager's household, else the manor; an
+## ended household's stores and coins to the manor, ECON-P3; a settlement holder's to its settlement's treasury, else out of the
+## world as an outside flow). Refused ("not_departed") while both parties are there: use deliver or fail. Changes state once.
+func settle_estate(txid: String, why: String) -> Dictionary:
+	if shipments.has(txid) and shipments[txid].state == OPEN:
+		var r: Dictionary = shipments[txid]
+		if _party(str(r.buyer)).code == "" and _party(str(r.seller)).code == "":
+			return _res(false, "not_departed", txid, OPEN)
+	return _close(txid, "estate", why)
+
+
+## Who receives a gone party's goods and coins (a usable party record), or {} when nobody in the world does (then the share leaves
+## as an outside flow, booked as a sink so conservation still closes).
+func estate_of(ref: String) -> Dictionary:
+	var p := _party(ref)
+	if p.code == "":
+		return p
+	match actors.kind(ref):
+		"npc":
+			var o := w.npc(World.ref_id(ref))
+			if o != null and o.household >= 0:
+				var h := _party(World.hh_ref(o.household))
+				if h.code == "" and _head(h) != null:
+					return h
+			return _party(World.MANOR)
+		"hh", "stall", "shop", "front", "counter":
+			return _party(World.MANOR)
+		"region":
+			var key := ref.trim_prefix("region:")
+			var t := _party("region:" + key.get_slice("/", 0) + "/treasury")
+			return t if t.code == "" else {}
+	return {}
+
+
 ## Phase 2: exactly one of deliver, fail (return and refund), lose (seller bears it; refund). Validated, then committed.
 func _close(txid: String, op: String, why: String) -> Dictionary:
 	if not shipments.has(txid):
@@ -466,6 +503,21 @@ func _close(txid: String, op: String, why: String) -> Dictionary:
 			sunk[item] = int(sunk.get(item, 0)) + qty
 			w.stat("lost_in_transit_" + item, float(qty))
 			_coins_in(b, total)
+		"estate":
+			var gs: Dictionary = s if s.code == "" else estate_of(str(r.seller))
+			var cb: Dictionary = b if b.code == "" else estate_of(str(r.buyer))
+			if not gs.is_empty() and not _room(gs, item):
+				gs = {}                                # nowhere to put the goods: they leave as an outside flow too
+			if gs.is_empty():
+				sunk[item] = int(sunk.get(item, 0)) + qty
+				w.stat("estate_out_" + item, float(qty))
+			else:
+				_goods_in(gs, item, qty)
+			if cb.is_empty():
+				outside_coins += total
+				w.stat("estate_out_coins", float(total))
+			else:
+				_coins_in(cb, total)
 	r.state = FINAL[op]
 	r.closed_day = w.day()
 	r.why = why
@@ -521,7 +573,7 @@ func in_transit() -> Dictionary:
 
 # ------------------------------------------------------------------------------------------------ save
 func is_empty() -> bool:
-	return marks.is_empty() and shipments.is_empty() and journal.is_empty() and sunk.is_empty()
+	return marks.is_empty() and shipments.is_empty() and journal.is_empty() and sunk.is_empty() and outside_coins == 0
 
 
 func to_dict() -> Dictionary:
@@ -542,7 +594,10 @@ func to_dict() -> Dictionary:
 	var sk := {}
 	for k in it:
 		sk[k] = int(sunk[k])
-	return {"marks": m, "outcomes": o, "shipments": sh, "sunk": sk, "journal": journal.duplicate(true)}
+	var d := {"marks": m, "outcomes": o, "shipments": sh, "sunk": sk, "journal": journal.duplicate(true)}
+	if outside_coins != 0:
+		d["outside_coins"] = outside_coins
+	return d
 
 
 func load_dict(d: Dictionary) -> void:
@@ -550,6 +605,7 @@ func load_dict(d: Dictionary) -> void:
 	outcomes = {}
 	shipments = {}
 	sunk = {}
+	outside_coins = 0
 	journal = []
 	for k in d.get("marks", {}):
 		marks[str(k)] = int(d.marks[k])
@@ -564,6 +620,7 @@ func load_dict(d: Dictionary) -> void:
 			"total": int(r.total), "due_day": int(r.due_day), "made_day": int(r.made_day), "state": str(r.state), "closed_day": int(r.closed_day), "why": str(r.why)}
 	for k in d.get("sunk", {}):
 		sunk[str(k)] = int(d.sunk[k])
+	outside_coins = int(d.get("outside_coins", 0))
 	for j in d.get("journal", []):
 		journal.append({"txid": str(j.txid), "op": str(j.op), "buyer": str(j.buyer), "seller": str(j.seller), "item": str(j.item), "qty": int(j.qty),
 			"total": int(j.total), "day": int(j.day), "minute": int(j.minute), "state": str(j.state)})
