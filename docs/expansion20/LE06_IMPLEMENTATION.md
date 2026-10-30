@@ -37,6 +37,17 @@ saves and loads exactly). Long-run sizes at days 30, 90 and 365 and the market c
 even immediately after the load, with the economy OFF (World.load_dict rebuilds state). Two worlds loaded from the same save do
 run on identically. So "save/load determinism" holds as deterministic replay from a save, not as save-transparency.
 
+## 1b. Profiling (local, seed 1, 2 days, `economy_sim --profile`, head `142d68c`)
+
+| Configuration | Wall time a game day | Economy save at day 2 |
+|---|---|---|
+| economy off | 25.39 s | none |
+| economy on, market driving | 25.07 s | 202 KB (LE-03's day-2 smoke before the bound: 540 KB) |
+
+The market's work is event-driven and bounded per dawn; its cost is inside run-to-run noise at this population (~106
+villagers). The OD-LE-15 target (~500 NPCs, ~4 ms a frame on a mid-range phone) needs a larger-population scenario and a device;
+recorded as remaining.
+
 ## 2. Remaining LE-06
 
 Multi-seed long run (365 days, seeds 1 and 2, `--market`, checkpoints), determinism, profiling (OD-LE-15), on the integrated
