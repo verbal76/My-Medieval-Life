@@ -43,10 +43,6 @@ var id := ""                      # "<settlement>/<holder>"
 var _needs := {}                  # item -> units a day, once per handle (a handle is made fresh for each plan)
 var _local := {}
 var _have := false
-## X20-SETTLE-FOOD: when set (the food round's buyers), what this party BUYS from a holder of another place goes on the road home and
-## arrives after a trip: place id -> days there and back (OffMapSettlement.ship_in, delivered by the settlement's own step). Unset,
-## a purchase is in hand at once, as before.
-var ship_days := {}
 ## X20-SETTLE-FOOD, the food round's sellers: `sells_only` -- it offers but wants nothing (no need, no demand: it is not a buyer in
 ## this round); `release` -- when set, the most of each good it may sell ({item: units}, OffMapSettlement.food_release: its
 ## settlement's rules for releasing food), on top of its own sale cap.
@@ -405,11 +401,7 @@ func deal(role: String, other, item: String, n: int, coins_: int, day := 0) -> b
 			coin_dir = -1
 		"carriage_earned":
 			coin_dir = 1
-	if goods_dir > 0 and n > 0 and ch == "regional" and ship_days.has(str(other.settlement)):
-		# X20-SETTLE-FOOD: bought and paid for, it is this settlement's now (its regional_in line), but it is on the road home
-		OffMapSettlement._add(s.flows.regional_in, item, n)
-		s.ship_in(holder, item, n, str(other.id), day, day + maxi(1, int(ship_days[str(other.settlement)])), coins_)
-	elif goods_dir != 0 and n > 0:
+	if goods_dir != 0 and n > 0:
 		_move_goods(item, goods_dir * n, ch)
 	if coin_dir != 0 and coins_ > 0:
 		_move_coins(coin_dir * coins_, ch)

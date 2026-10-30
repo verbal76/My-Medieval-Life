@@ -21,6 +21,7 @@
   "road_trade_every_days": 6,
   "_food_trade_note": "X20-SETTLE-FOOD (owner REG-BUY-D1, 2026-10-23; agent engineering, provisional, docs/DECISIONS.md 2026-10-30): on the traders' wholesale day a settlement short of food (under three days for its people, counting food on the road) sends its trader to buy these foods from another settlement's trader, through RegionalMarket at the seller's own price; the goods arrive after the trip there and back. Wheat is the staple every place grows and the unit the traders reckon a food shortfall in.",
   "food_trade_items": ["wheat"],
+  "food_lapse_days": 6,
   "foods": ["wheat", "pottage", "roast_meat", "bread", "cheese"],
   "wish": ["roast_meat", "ale", "wool_cloth", "leather", "linen_bandage", "hammer", "axe", "building_block", "plank"],
   "spend_rate": 0.4,

@@ -1078,6 +1078,9 @@ func _regions(start: Dictionary) -> Dictionary:
 		for k in st.flows.outside_out:
 			out_v[k] = int(out_v.get(k, 0)) + int(st.flows.outside_out[k])
 	var now_goods := r.goods()
+	var custody: Dictionary = r.tx_in_transit().goods      # X20-SETTLE-FOOD: food on the road between two settlements left the seller as an
+	for k in custody:                                         # outside line and is still in the region (Regions.goods counts it)
+		in_v[k] = int(in_v.get(k, 0)) + int(custody[k])
 	var bad_goods := {}
 	var ids := {}
 	for k in start.regions_goods:

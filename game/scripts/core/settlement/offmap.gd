@@ -70,6 +70,8 @@ const JOURNAL_MAX := 100             # lines of the settlement's own journal kep
 var person_hook := Callable()
 ## X20-SETTLE-FOOD: Regions' report of a delivery (flight recorder), when it lives in a world; not saved.
 var trade_hook := Callable()
+## X20-SETTLE-FOOD: Regions._arrive, which closes a shipment through the transaction authority (set by Regions._add); not saved.
+var arrive_hook := Callable()
 
 static var _data := {}
 static var _rules := {}               # _data.rules and _data.business_types, once loaded (the step reads them thousands of times)
@@ -107,12 +109,12 @@ var _pcache: Dictionary = {}         # today's whole-coin prices (cleared when a
 var _avail: Dictionary = {}          # item -> units on offer in all open offers
 var _toll_acc := 0.0
 var _want_left: Dictionary = {}      # what the settlement still wants this visit (begin_visit)
-## X20-SETTLE-FOOD: goods this settlement has BOUGHT from another settlement that are still on the road home (its own: they are in
-## goods() and its audit from the day of the sale, but nobody can eat or sell them before they arrive). Each entry
-## {id, to (holder: "trader"), item, n, from (the seller party id), sent, due, coins}; delivered once, at the first step on or after
-## `due` (_deliver), and then removed, so a save made while it travels delivers it once after loading. `ship_seq` numbers them.
+## X20-SETTLE-FOOD: shipments this settlement's trader has bought from another settlement and awaits (the goods are in the transaction
+## authority's transit custody, still the seller's, and the price in escrow, still the buyer's, until delivery: Regions.tx_ship).
+## Each entry {tx (the shipment's transaction id), to (holder: "trader"), item, n, from (the seller's ref), sent, due, coins};
+## at the first step on or after `due` the settlement asks for delivery (`arrive_hook`, Regions._arrive) and removes the entry once
+## delivered, so a save made while it travels delivers it once after loading.
 var transit: Array = []
-var ship_seq := 0
 
 
 # ------------------------------------------------------------------ data ----------------
@@ -634,8 +636,6 @@ func goods() -> Dictionary:
 			_add(g, k, int(biz[t].stock[k]))
 	for k in gov.granary:
 		_add(g, k, int(gov.granary[k]))
-	for e in transit:                                  # X20-SETTLE-FOOD: bought, owned, on the road home
-		_add(g, str(e.item), int(e.n))
 	return g
 
 
@@ -1885,39 +1885,42 @@ func transit_food_pts() -> float:
 	return p
 
 
-## A purchase from another settlement leaves for home (SettlementParty.deal, the buyer's side): `n` of `item`, now this settlement's,
-## for holder `to`, arriving on day `due`. The flow line was booked by the deal; this only puts the goods on the road.
-func ship_in(to: String, item: String, n: int, from: String, sent: int, due: int, coins_: int) -> Dictionary:
-	ship_seq += 1
-	var e := {"id": ship_seq, "to": to, "item": item, "n": n, "from": from, "sent": sent, "due": due, "coins": coins_}
+## A shipment this settlement's trader bought leaves for home (Regions.food_round, after the authority accepted it): the record the
+## settlement keeps of what it awaits.
+func await_shipment(tx: String, to: String, item: String, n: int, from: String, sent: int, due: int, coins_: int) -> Dictionary:
+	var e := {"tx": tx, "to": to, "item": item, "n": n, "from": from, "sent": sent, "due": due, "coins": coins_}
 	transit.append(e)
 	return e
 
 
-## Called by the settlement's step: every shipment due today or earlier arrives, in the order bought. Food for the trader goes into its
-## stock and is marked imported (for the local market); with no trader left the goods go to the council's granary. Each entry is removed
-## as it is delivered, so nothing arrives twice. Moves inside the settlement's own books: no flow line, nothing made.
+## Called by the settlement's step: every shipment due today or earlier is delivered (Regions._arrive -> the transaction authority's
+## deliver: the goods to the trader, the escrowed price to the seller, together), in the order bought, and marked imported (for the
+## local market). An entry is removed once its shipment is closed (delivered, or failed and refunded), so nothing arrives twice; one
+## the authority cannot close yet (a party unavailable) stays and is asked again at the next step, its goods and coins where they are.
 func _deliver() -> void:
 	var keep: Array = []
 	for e in transit:
 		if int(e.due) > day:
 			keep.append(e)
 			continue
-		var m := trader()
-		var where := "trader"
-		if str(e.to) == "trader" and not m.is_empty():
-			_add(m.stock, str(e.item), int(e.n))
-			if not m.has("imported"):
-				m["imported"] = {}
-			_add(m.imported, str(e.item), int(e.n))
+		var res: Dictionary = arrive_hook.call(e, day) if arrive_hook.is_valid() else {"ok": false, "code": "no_authority", "state": "open"}
+		var state := str(res.get("state", ""))
+		if state == "open" or (not bool(res.get("ok", false)) and state == ""):
+			keep.append(e)                             # cannot be closed now: asked again tomorrow
+			continue
+		if state == "delivered":
+			var m := trader()
+			if str(e.to) == "trader" and not m.is_empty():
+				if not m.has("imported"):
+					m["imported"] = {}
+				_add(m.imported, str(e.item), mini(int(e.n), int(m.stock.get(str(e.item), 0))))
+			flows.food_delivered += int(e.n)
+			note("%d %s bought in %s arrived." % [int(e.n), GameData.item_name(str(e.item)).to_lower(), place_name(str(e.from).trim_prefix("region:").get_slice("/", 0))])
 		else:
-			where = "granary"
-			_add(gov.granary, str(e.item), int(e.n))
-		flows.food_delivered += int(e.n)
-		note("%d %s bought in %s arrived%s." % [int(e.n), GameData.item_name(str(e.item)).to_lower(), place_name(str(e.from).get_slice("/", 0)),
-			"" if where == "trader" else " and went to the granary: no trader was left to take it"])
+			note("%d %s bought in %s never arrived (%s); the price was refunded." % [int(e.n), GameData.item_name(str(e.item)).to_lower(),
+				place_name(str(e.from).trim_prefix("region:").get_slice("/", 0)), str(res.get("code", state))])
 		if trade_hook.is_valid():
-			trade_hook.call("delivered", {"settlement": id, "entry": e, "where": where, "households": households()})
+			trade_hook.call("delivered", {"settlement": id, "entry": e, "state": state, "households": households()})
 	transit = keep
 
 
@@ -2170,7 +2173,7 @@ func to_dict() -> Dictionary:
 		"industries": industries.duplicate(), "hh": hs, "biz": bs, "gov": gv,
 		"prices": prices.duplicate(), "toll_acc": _toll_acc, "flows": flows.duplicate(true), "start": start.duplicate(true), "day": day,
 		"tax": tax.duplicate(true), "journal": journal.duplicate(true), "closed": closed.duplicate(true), "dev": dev.duplicate(true),
-		"transit": transit.duplicate(true), "ship_seq": ship_seq}
+		"transit": transit.duplicate(true)}
 
 
 static func from_dict(d: Dictionary) -> OffMapSettlement:
@@ -2249,9 +2252,8 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 		s.journal.append({"day": int(e.day), "text": str(e.text)})
 	s.start = {"coins": int(d.start.coins), "goods": _ints(d.start.goods)}
 	for e in d.get("transit", []):                             # X20-SETTLE-FOOD (optional keys: an older save has nothing on the road)
-		s.transit.append({"id": int(e.id), "to": str(e.to), "item": str(e.item), "n": int(e.n), "from": str(e.from),
+		s.transit.append({"tx": str(e.tx), "to": str(e.to), "item": str(e.item), "n": int(e.n), "from": str(e.from),
 			"sent": int(e.sent), "due": int(e.due), "coins": int(e.get("coins", 0))})
-	s.ship_seq = int(d.get("ship_seq", 0))
 	return s
 
 
