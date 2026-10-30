@@ -108,6 +108,8 @@ func _add_coins(ref: String, k: int) -> void:
 func _pack(ref: String) -> Inventory:
 	if World.is_player_ref(ref):
 		return w.player_for(ref).inv
+	if ref == World.MANOR and w.economy != null:
+		return w.granary                         # LE-04: goods the manor buys on a contract go into its own stores
 	var n := _npc_of(ref)
 	return n.inv if n else null
 
@@ -1107,10 +1109,35 @@ func dawn() -> void:
 ## A villager died: its contracts end and the coins set aside go back to the buyer first (a dead buyer's pass on with
 ## the rest of what it leaves: World.kill calls this before the inheritance).
 func on_death(n: NPC) -> void:
+	if w.economy != null and w.economy.market.drive:
+		_estate_claims(n)                       # LE-04 (OD-LE-13B): before the dead's coins pass on
 	var me := World.npc_ref(n.id)
 	for c in list:
 		if (is_open(c) or str(c.state) in ["offered", "signing"]) and (c.buyer == me or c.seller == me):
 			_end(c, "cancelled", "%s died" % n.name)
+
+
+## LE-04 (OD-LE-13B D12, under the Living Economy): what a villager who died was paid in advance and had not yet delivered is a
+## claim on its estate. Today's only advances are the manor's (World.manor_orders: EQ-19 tools, MIN-EQUIP supplies; CON-01 itself
+## escrows and pays on delivery, so its contracts leave nothing owed). An order whose good the dead already made is completed from
+## its own stock (the good was paid for); otherwise the advance is paid back from the dead's own coins, up to what it holds, through
+## the transaction authority, and the rest written off. The heirs' own purses are never touched; nothing is saved (settled at once).
+func _estate_claims(n: NPC) -> void:
+	for x in w.manor_orders.duplicate():
+		if int(x.get("smith", -1)) != n.id:
+			continue
+		var tool := str(x.get("tool", ""))
+		if tool != "" and n.inv.has(tool):
+			n.inv.remove(tool)
+			var to: NPC = w.npc(int(x.get("for", -1)))
+			if to != null and to.alive and to.inv.can_add(tool):
+				to.inv.add(tool)
+			else:
+				w.manor_work.yard.add(tool)          # the manor's own (its works yard), as MIN-EQUIP's orders deliver
+			w.stat("estate_order_goods_" + tool)
+		else:
+			w.transactions.estate_claim(w.transactions.next_txid("estate"), n, World.MANOR, int(x.get("paid", 0)), "manor_order")
+		w.manor_orders.erase(x)
 
 
 ## The player died: their contracts end; coins they set aside go back to their purse (left where they fell, with the
@@ -1147,9 +1174,12 @@ func plan(n: NPC) -> bool:
 		var held := n.inv.count(c.item)
 		var lot := mini(owed, int(cfg().delivery_lot))
 		var home_ok: bool = not World.is_player_ref(c.buyer) or (w.player.home != "" and w.buildings.has(w.player.home))
+		var reeve: NPC = w.npc(w.reeve_id) if c.buyer == World.MANOR else null
+		if c.buyer == World.MANOR and (reeve == null or not reeve.alive or w.economy == null):
+			home_ok = false                         # LE-04: the manor takes delivery through its reeve (none: nobody to hand it to yet)
 		if held >= lot and home_ok:
 			n.doing = "delivering %s to %s" % [GameData.item_name(c.item).to_lower(), w.ref_name(c.buyer)]
-			var at: Vector2i = w.building_door(w.player.home) if World.is_player_ref(c.buyer) else w.brain._workplace_cell(_npc_of(c.buyer))
+			var at: Vector2i = w.building_door(w.player.home) if World.is_player_ref(c.buyer) else w.brain._workplace_cell(reeve if reeve != null else _npc_of(c.buyer))
 			n.plan = [w.brain.go(at), w.brain.doit("contract_deliver", {"id": int(c.id)})]
 			return true
 		if held >= owed:

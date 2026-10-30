@@ -106,7 +106,7 @@ func test_ids_and_codes() -> void:
 	check(tx.exchange("t:3", r(b), r(a), "coins", 1, 1).code == "invalid_quantity", "coins are not goods")
 	check(tx.exchange("t:4", r(a), r(a), "wheat", 1, 1).code == "same_party", "no trade with oneself")
 	check(tx.exchange("t:5", "npc:99999", r(a), "wheat", 1, 1).code == "unknown_party", "an unknown party is refused")
-	check(tx.exchange("t:6", "manor", r(a), "wheat", 1, 1).code == "unsupported_party", "the manor is not yet a party (LE-04)")
+	check(tx.exchange("t:6", r(b), "manor", "iron_bar", 9999, 1).code == "no_stock", "the manor is a party (LE-04): more than its stores hold is refused")
 	check(tx.exchange("t:7", r(b), r(a), "wheat", 9, 2).code == "no_stock", "more than the seller holds")
 	check(tx.exchange("t:8", r(b), r(a), "wheat", 1, 999).code == "no_funds", "more than the buyer's purse")
 	var dead := adult(w, 2)

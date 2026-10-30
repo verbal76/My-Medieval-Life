@@ -5481,7 +5481,7 @@ func set_tenant(thing: Dictionary, ref: String, rent := 0) -> void:
 ## transferred to its own funds. The next occupant receives an empty till." A house whose holder changed: the storefront till
 ## goes to the household (or villager) that held it, while one of them lives (BusinessMoney.keep_till).
 func _handed_over(thing: Dictionary, was: String) -> void:
-	if business != null and thing.has("front") and was != holder_of(thing):
+	if business != null and (thing.has("front") or thing.has("counter")) and was != holder_of(thing):     # LE-04 review 7: counters too
 		business.money.keep_till(thing, was)
 
 

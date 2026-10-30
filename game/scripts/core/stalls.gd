@@ -197,6 +197,8 @@ func settle(s: Dictionary, why := "closed") -> Dictionary:
 	s.frac = h - c * 100
 	s.till = till - c
 	w.treasury += c
+	if w.recorder != null:                # REC-DIAG: the commission out of the till, recorded at its own moment (LE-04 review 6)
+		w.recorder.till_flow(till_ref(s), null, -c, till - c, "commission")
 	var net := int(s.till)
 	var ref := str(ses.get("seller", seller_ref(s)))
 	var to: Object = _payee(ref)
@@ -210,8 +212,7 @@ func settle(s: Dictionary, why := "closed") -> Dictionary:
 	else:
 		w.treasury += net                 # nobody of theirs is left: to the manor, as an ended household's goods
 		w.stat("stall_net_escheat", net)
-	if w.recorder != null:                # REC-DIAG: the commission, then the rest, out of the till
-		w.recorder.till_flow(till_ref(s), null, -c, till - c, "commission")
+	if w.recorder != null:                # REC-DIAG: then the rest out of the till, once it has arrived
 		w.recorder.till_flow(till_ref(s), to, -net, 0, "settle" if to != null else "escheat")
 	s.till = 0
 	out.net = net

@@ -51,6 +51,8 @@ var stats := {}                 # counters (diagnostics; saved)
 var bid_cursor := ""            # the last needs-table actor a bid was posted for (round robin)
 var ask_cursor := -1            # index into World.npcs of the last seller reviewed for asks (round robin)
 var _busy := false
+var spec_cursor := -1          # LE-04: index into World.npcs of the last merchant weighed for speculation (round robin; saved)
+var tool_orders := {}           # LE-04: open CON-01 contract id (the manor's tool commission) -> worker id it is for (bounded: open ones)
 var _jcfg := {}
 
 
@@ -172,6 +174,9 @@ func buyer_ceiling(buyer: NPC, item: String, need: Dictionary) -> Dictionary:
 		"housing":
 			u = float(p("housing_urgency", 0.75))
 			benefit = v * lerpf(1.0, float(GameData.b("price_max")), u)
+		"stock":
+			u = 0.0                                   # LE-04: speculation is never urgent; its limit is the resale it expects
+			benefit = float(need.get("limit", v))
 		_:
 			u = clampf(float(need.get("shortfall", 0.0)) / maxf(1.0, float(need.get("target", 1.0))), 0.0, 1.0)
 			benefit = v * lerpf(1.0, float(GameData.b("price_max")), u)
@@ -265,6 +270,8 @@ static func _milli(x: float) -> int:
 func need_for(ref: String, item: String, kind := "") -> Dictionary:
 	if f.actors.kind(ref) != "npc":
 		return {}
+	if kind == "stock":
+		return spec_need(w.npc(World.ref_id(ref)), item)
 	for x in f.needs.needs_of(ref):
 		if str(x.item) == item and (str(x.kind) == kind if kind != "" else str(x.kind) in BID_KINDS):
 			var y := open_need(ref, x)
@@ -367,6 +374,8 @@ func budget_for(buyer: NPC, need: Dictionary, own_bid := -1) -> int:
 		purse -= give
 		spend = mini(maxi(0, spend - (0 if food else give)), purse)
 	var cost := int(need.get("qty", 0)) * maxi(0, int(buyer_ceiling(buyer, target_item, need).limit))
+	if target_kind == "stock":
+		spend = mini(spend, int(float(w.spendable(buyer)) * float(p("spec_share", 0.3))))     # LE-04: only a share at risk
 	return mini(cost, purse if target_kind == "food" else spend)
 
 
@@ -605,6 +614,8 @@ func dawn(day: int) -> void:
 		return
 	review(day)
 	post_bids(day)
+	if bool(p("speculation", false)):
+		speculate(day)
 	post_asks(day)
 	dialogues(day)
 	if bool(p("renegotiate", true)):
@@ -987,7 +998,7 @@ func _stat(k: String, n := 1) -> void:
 
 
 func is_empty() -> bool:
-	return deals.is_empty() and stats.is_empty() and next_deal == 0 and bid_cursor == "" and ask_cursor == -1
+	return deals.is_empty() and stats.is_empty() and next_deal == 0 and bid_cursor == "" and ask_cursor == -1 and tool_orders.is_empty() and spec_cursor == -1
 
 
 func to_dict() -> Dictionary:
@@ -996,7 +1007,17 @@ func to_dict() -> Dictionary:
 	var st := {}
 	for k in ks:
 		st[k] = int(stats[k])
-	return {"deals": deals.duplicate(true), "next_deal": next_deal, "stats": st, "bid_cursor": bid_cursor, "ask_cursor": ask_cursor}
+	var d := {"deals": deals.duplicate(true), "next_deal": next_deal, "stats": st, "bid_cursor": bid_cursor, "ask_cursor": ask_cursor}
+	if spec_cursor != -1:
+		d["spec_cursor"] = spec_cursor
+	if not tool_orders.is_empty():
+		var ids: Array = tool_orders.keys()
+		ids.sort()
+		var t := {}
+		for id in ids:
+			t[str(id)] = int(tool_orders[id])
+		d["tool_orders"] = t
+	return d
 
 
 func load_dict(d: Dictionary) -> void:
@@ -1011,3 +1032,165 @@ func load_dict(d: Dictionary) -> void:
 		stats[str(k)] = int(st[k])
 	bid_cursor = str(d.get("bid_cursor", ""))
 	ask_cursor = int(d.get("ask_cursor", -1))
+	spec_cursor = int(d.get("spec_cursor", -1))
+	tool_orders = {}
+	var to: Dictionary = d.get("tool_orders", {})
+	for k in to:
+		tool_orders[int(k)] = int(to[k])
+
+
+# ---------------------------------------------------------------- LE-04: the manor as an economic actor --------
+## OD-16 (b) / EQ-19 under the Living Economy (design s.10 "Manor commissions tools: protect future tax receipts and production;
+## treasury expense; smith may fail"; s.12 "The manor is a constrained economic actor ... It may invest, tax, lend, commission or
+## refuse"). Called by NPCBrain._support_trades in place of its advance orders while the market drives. For a worker short of its
+## trade's tool: a tool on sale is BOUGHT through the transaction authority (the manor pays from the treasury, the tool goes into
+## its stores, then is handed to the worker); else the manor COMMISSIONS a smith by a CON-01 contract (Contracts.propose: the
+## smith's own evaluation accepts, counters or refuses; the treasury's coins are escrowed, paid on delivery, returned if it lapses
+## or is cancelled). A counter is met once when it stays inside the band and the treasury floor. Returns coins committed.
+func manor_tools(needers: Array, floor_coins: float) -> int:
+	var spent := 0
+	_sweep_tool_orders()
+	_hand_out_tools(needers)
+	for pair in needers:
+		var o: NPC = pair[0]
+		var tool: String = pair[1]
+		if o.inv.has(tool) or tool_orders.values().has(o.id) or not w.brain._order_for(o).is_empty():
+			continue                                   # (an advance from an older save is still being forged for it)
+		var seller: NPC = null
+		for role in ["merchant_goods", "smith"]:
+			for v: NPC in w.npcs:
+				if seller == null and v.alive and ((v.job == "smith") if role == "smith" else (w.brain.buy_role(v) == role)) and v.inv.has(tool) and not w.brain.keeps(v, tool):
+					seller = v
+		if seller != null:
+			var price := w.sell_price(seller, tool)
+			if w.treasury - price < floor_coins:
+				break
+			var r: Dictionary = w.transactions.exchange(w.transactions.next_txid("manor_tools"), World.MANOR, World.npc_ref(seller.id), tool, 1, price)
+			if not bool(r.ok):
+				_stat("manor_tool_buy_" + str(r.code))
+				continue
+			w.transfer(w.granary, o.inv, tool, 1)
+			spent += price
+			_stat("manor_tool_bought")
+			w.stat("gov_tools", price)
+			w.stat("gov_tool_given_" + tool)
+			continue
+		var smiths: Array = w.npcs.filter(func(v): return v.alive and v.role == "adult" and v.job == "smith")
+		smiths.sort_custom(func(a, b): return a.coins < b.coins or (a.coins == b.coins and a.id < b.id))
+		var price := maxi(int(band(tool)[0]), int(ceil(GameData.value(tool))))
+		var days := int(GameData.b("manor_order_days"))
+		for sm: NPC in smiths:
+			if w.treasury - price < floor_coins:
+				break
+			var r: Dictionary = w.contracts.propose(World.MANOR, sm, tool, 1, price, days)
+			if str(r.get("answer", "")) == "counter" and int(r.qty) >= 1 and int(r.price_each) <= int(band(tool)[1]) \
+					and w.treasury - int(r.qty) * int(r.price_each) >= floor_coins:
+				r = w.contracts.propose(World.MANOR, sm, tool, int(r.qty), int(r.price_each), int(r.days), r.get("history", []))
+			if r.has("contract"):
+				tool_orders[int(r.contract.id)] = o.id
+				spent += int(r.contract.qty) * int(r.contract.price_each)
+				_stat("manor_tool_commissioned")
+				w.stat("gov_tools", int(r.contract.qty) * int(r.contract.price_each))
+				break
+			_stat("manor_tool_refused")              # the smith may refuse: the manor asks the next or the worker waits
+	return spent
+
+
+## Commissions whose contract ended (delivered, lapsed, cancelled) are dropped (their escrow was returned by CON-01).
+func _sweep_tool_orders() -> void:
+	var ids: Array = tool_orders.keys()
+	ids.sort()
+	for id in ids:
+		if not Contracts.is_open(w.contracts.get_contract(int(id))):
+			tool_orders.erase(id)
+
+
+## Tools in the manor's stores go to workers short of them (the one each was commissioned for first): the manor's own goods,
+## handed over as EQ-19 hands its purchases.
+func _hand_out_tools(needers: Array) -> void:
+	for pair in needers:
+		var o: NPC = pair[0]
+		var tool: String = pair[1]
+		if not o.inv.has(tool) and w.granary.has(tool) and o.inv.can_add(tool):
+			w.transfer(w.granary, o.inv, tool, 1)
+			_stat("manor_tool_handed")
+
+
+
+# ---------------------------------------------------------------- LE-04: speculation and stockpiling ------------
+## OD-LE-11 (D10, owner: "Villager speculation and hoarding is an approved direction once adaptive prices, resource accounting and
+## storage exist. Nothing manipulates supply by fiat; scarcity, inventory, consequences and finite purses govern"). A merchant
+## (buy_role merchant_*) that KNOWS (its own reliable knowledge, OD-LE-10) of a seller asking at least spec_margin under what it
+## expects to resell for (the best bid it knows, else its believed price) may bid for that good: at the cheapest ask it knows, up
+## to what its stock caps still take (NPCBrain.wants: storage and its trade's limits) and a spec_share of its spendable coins (its
+## household budget's discretionary part: never its food or obligations). It resells by its usual asks (LE-02), which rise toward
+## known bids and fall toward its floor when unsold: a speculation can lose. Nothing is created; the bid is withdrawn at review when
+## the opportunity is gone. Bounded: spec_per_dawn merchants a dawn, round robin (a saved cursor). Returns the bids posted.
+func speculate(day: int) -> Array:
+	var posted := []
+	var looked := 0
+	var tries := 0
+	while looked < int(p("spec_per_dawn", 3)) and tries < w.npcs.size():
+		tries += 1
+		spec_cursor = (spec_cursor + 1) % maxi(1, w.npcs.size())
+		var n: NPC = w.npcs[spec_cursor]
+		if not n.alive or n.role != "adult" or not str(w.brain.buy_role(n)).begins_with("merchant"):
+			continue
+		looked += 1
+		var ref := World.npc_ref(n.id)
+		var ids: Array = NPCBrain.BUYS.get(w.brain.buy_role(n), {}).keys()
+		ids.sort()
+		for item in ids:
+			if f.offers.open_of(ref).any(func(x): return x.side == EconOffers.BID and x.item == item):
+				continue
+			var need := spec_need(n, str(item))
+			if need.is_empty():
+				continue
+			var id := post_bid(n, str(item), need)
+			if id >= 0:
+				posted.append(id)
+				_stat("spec_bids")
+				break                                     # one speculation a merchant a dawn
+	return posted
+
+
+## The speculative "need" for `item`: {} when it is not (still) worth it. {kind "stock", item, qty, limit (the most it pays a unit),
+## ask (the cheapest ask it knows), resale}.
+func spec_need(n: NPC, item: String) -> Dictionary:
+	if n == null or not n.alive:
+		return {}
+	var ref := World.npc_ref(n.id)
+	var cheapest := -1
+	for e in f.knowledge.known_by(ref, item, EconKnowledge.SELLS):
+		if str(e.subject) == ref or int(e.price_each) <= 0 or f.knowledge.reliability(e) < float(p("min_reliability", 0.25)):
+			continue
+		cheapest = int(e.price_each) if cheapest < 0 else mini(cheapest, int(e.price_each))
+	if cheapest < 0:
+		return {}
+	var b := believed(ref, item)
+	var resale := int(b.best_bid) if int(b.best_bid) > 0 else roundi(float(b.price))
+	var limit := floori(float(resale) / (1.0 + float(p("spec_margin", 0.2))))
+	var room: int = w.brain.wants(n, item)
+	if cheapest > limit or room <= 0 or not n.inv.can_add(item):
+		return {}
+	return {"actor": ref, "kind": "stock", "item": item, "qty": room, "shortfall": 0.0, "target": float(room), "cover_days": -1.0,
+		"deadline": -1, "limit": mini(limit, int(band(item)[1])), "ask": cheapest, "resale": resale}
+
+
+
+# ---------------------------------------------------------------- LE-04: negotiated wages (behind an off flag) ----------
+## OD-LE-03 (D02, owner: "Existing wage and hiring rules remain intact ... Broader negotiated wages and services are layered into
+## LE-03 behind flags; do not replace functioning pay or invent universal wages"). With `market.negotiated_wages` on (shipped off),
+## a manor job's wage is still fixed when a worker takes it (X18-D6) but bargained once: the existing wage (`pay`, skill-adjusted) is
+## the floor the manor offers; a worker who does not need the coins asks more, up to wage_max_factor x pay, in proportion to how
+## comfortable it is (1 - JudgmentLive.coin_need); a needy worker takes the existing wage. The manor's treasury check (can_fund)
+## uses the agreed wage, so an unaffordable ask means the job is not taken. No universal wage; the posted base is unchanged.
+func wage_bargain(pay: int, who: String) -> int:
+	if not who.begins_with("npc:"):
+		return pay
+	var n: NPC = w.npc(World.ref_id(who))
+	if n == null:
+		return pay
+	var comfort := 1.0 - clampf(float(JudgmentLive.coin_need(n)) / 100000.0, 0.0, 1.0)
+	var top := float(pay) * float(p("wage_max_factor", 1.25))
+	return maxi(pay, roundi(lerpf(float(pay), top, comfort)))

@@ -548,7 +548,10 @@ func wage_for(j: Dictionary, who: String) -> int:
 	if is_player_order(j) or is_staff(who):
 		return base
 	var ind := {"mend": "carpentry", "quarry": "mining"}.get(str(j.get("kind", "")), "") as String
-	return CapabilityHook.pay(base, ind, who) if ind != "" and who != "" else base
+	var pay := CapabilityHook.pay(base, ind, who) if ind != "" and who != "" else base
+	if w.economy != null and w.economy.market.drive and bool(w.economy.market.p("negotiated_wages", false)):
+		pay = w.economy.market.wage_bargain(pay, who)     # LE-04 (OD-LE-03 D02, behind its off flag): agreed when taken
+	return pay
 
 
 ## Whether the treasury can set this wage aside (manor hands are already paid: no wage). A day's job

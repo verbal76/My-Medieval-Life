@@ -59,6 +59,14 @@
     "renegotiate": true,
     "max_extend_days": 3,
     "word_of_mouth_per_meeting": 2,
-    "keep_deals": 200
+    "keep_deals": 200,
+    "_le04_note": "LE-04 PROVISIONAL agent parameters (docs/DECISIONS.md 2026-10-30): speculation (OD-LE-11 D10) by merchants who know of an ask at least spec_margin under the resale they expect; spec_per_dawn merchants weighed a dawn; spec_share of spendable coins at risk. negotiated_wages and services (OD-LE-03 D02, broader part) are off.",
+    "speculation": true,
+    "spec_per_dawn": 3,
+    "spec_margin": 0.2,
+    "spec_share": 0.3,
+    "negotiated_wages": false,
+    "wage_max_factor": 1.25,
+    "services": false
   }
 }

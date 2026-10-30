@@ -24,7 +24,14 @@ it changes nothing and writes no save key (G0 unchanged).
 | `npc:<id>` | `NPC.coins` | `NPC.inv` | yes |
 | `player` (host), `player:<line>` (guest) | `PlayerState.coins` | the pack (`PlayerState.inv`) | yes |
 | `region:<settlement>/<holder>` (`trader`, a business type, `treasury`, `hh:<n>`) | `SettlementParty.purse()` | `SettlementParty.held()` | yes |
-| `manor`, `hh:<n>` (village household), `chapel`, tills | | | not yet: `unsupported_party` (LE-04 adds the manor and business accounts) |
+| `manor` (LE-04) | `World.treasury` | the granary (`World.granary`) | yes |
+| `hh:<n>` (village household, LE-04) | its head's own purse (`World.party`: the household's first living adult, elder or child) | its pantry | yes; refused when nobody of it is left |
+| `chapel` (LE-04) | `Chapel.coins` | `Chapel.store` | yes |
+| `stall:<id>`, `shop:<building>`, `front:<building>`, `counter:<building>` (LE-04) | the till | none (a till holds coins only: buying goods is `no_room`, selling `no_stock`) | yes |
+
+Village parties trade with each other inside the village (no boundary crossing); two people (villagers, players) still trade
+through `World.trade`. A household's coins are its head's own, paid and received explicitly (the TILL-D1 and stall-payee rule),
+never a pooled purse (OD-LE-07 D06). Claims (economy on) apply to villagers and players, and to a household's head when it pays.
 
 A party is **available** when `EconActor.alive(ref)` is true (a living villager, a present player, a live settlement holder).
 
@@ -47,6 +54,9 @@ World.transactions.fail(txid: String, why: String) -> Dictionary   # goods back 
 World.transactions.lose(txid: String, why: String) -> Dictionary   # goods destroyed in transit (a legitimate loss: bandits,
                                                                   # spoilage); the SELLER bears it; escrow back to the buyer
 
+World.transactions.settle_estate(txid: String, why: String) -> Dictionary   # LE-04: a party is gone (see section 6)
+World.transactions.transfer_coins(txid, from, to, amount, purpose) -> Dictionary   # LE-04: coins only, village parties
+World.transactions.estate_claim(txid, dead: NPC, to, claim, why) -> Dictionary     # LE-04: OD-LE-13B, capped by the estate
 World.transactions.get_shipment(txid) -> Dictionary          # a copy of the record ({} unknown)
 World.transactions.open_shipments() -> Array                 # copies, by txid order
 World.transactions.overdue(day: int) -> Array                # open shipments whose due_day < day (for the caller's rule)
@@ -99,6 +109,13 @@ await between validation and commit). An interruption (the app suspended, the ga
 If the party a return or refund goes to is no longer available (a villager died, a household dissolved), the phase-2 call
 returns `party_unavailable` and the shipment stays open with its goods and coins where they are, never lost or duplicated; the
 caller may `deliver` instead (when the other party is still there) or settle the estate by its own rule later (OD-LE-13B).
+
+**Settle to estate (LE-04, Worker B's gap):** when a party of an open shipment is gone and `deliver`/`fail` answer
+`party_unavailable`, `settle_estate(txid, why)` closes it (state `settled`, once): the goods go back to the seller and the escrow
+to the buyer, a gone party's share to its estate (`estate_of`): a villager's household (its head), else the manor; an ended
+household's or a till's to the manor (ECON-P3); a settlement holder's to its settlement's treasury party; with nobody at all, the
+share leaves the world as an outside flow (`sunk` for goods, `outside_coins` for coins, both saved and counted by conservation).
+While both parties are there it answers `not_departed`.
 
 Inventory reservation: `ship` takes the goods out of the seller's holdings into custody, so they can be neither sold again nor
 used while in transit; the coins likewise. (Face-to-face reservations for offers stay `EconReservations`, INT-600.)

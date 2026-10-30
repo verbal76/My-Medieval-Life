@@ -97,17 +97,13 @@ func after_trade(seller: Object, total: int) -> void:
 func to_till(b: Dictionary, who: Object, amount: int) -> bool:
 	if amount <= 0 or not b.has("front") or int(who.coins) < amount:
 		return false
-	who.coins -= amount
-	b.front.till = till_of(b) + amount
-	return true
+	return _move(b.front, who, amount, false, "front:" + str(b.get("id", "")), "contribution")     # LE-04: recorded with the economy on
 
 
 func from_till(b: Dictionary, who: Object, amount: int) -> bool:
 	if amount <= 0 or not b.has("front") or till_of(b) < amount:
 		return false
-	b.front.till = till_of(b) - amount
-	who.coins += amount
-	return true
+	return _move(b.front, who, amount, true, "front:" + str(b.get("id", "")), "distribution")
 
 
 ## Each morning (Business.daily).
@@ -174,16 +170,59 @@ func household_ended(ref: String) -> void:
 ## funds (World.party: its head, or the villager), so the next holder starts with an empty till. A player's storefront keeps its
 ## shop's till (Business) and the manor's is not a household's: unchanged. Nobody of the household left: the escheat
 ## (household_ended) applies instead. Coins move only from the till to the purse (conserved).
+## TILL-D1 (owner: "The household keeps its money. When it moves or gives up the property, its till balance is transferred to its
+## own funds. The next occupant receives an empty till"), for every way a house's holder changes (World._handed_over: sale,
+## letting, a lease ended, given up or taken back for arrears, a household ending): the previous holder's till goes to its own
+## funds: a household's to its head, a villager's to them (one who died: to their household), the manor's to the treasury, a
+## player's to that player's purse; with nobody of theirs left, to the manor. Never to the next holder. (LE-04 review item 7.)
 func keep_till(b: Dictionary, ref: String) -> void:
-	var till := till_of(b)
-	if till <= 0 or ref == "" or World.is_player_ref(ref) or ref == World.MANOR:
+	if b.has("front"):
+		_keep(b, "front", ref)
+	if b.has("counter"):
+		# a counter's money was its owner's by counter_owner's rule under the previous holder: the holding household, else
+		# (the manor's or a player's building, or nobody left) the keeper serving it, else the manor
+		var k := int(b.counter.get("keeper", -1))
+		var keeper: NPC = w.npc(k) if k >= 0 else null
+		var owner := ref
+		if ref == "" or ref == World.MANOR or World.is_player_ref(ref) or w.party(ref) == null:
+			owner = World.npc_ref(k) if keeper != null and keeper.alive else World.MANOR
+		_keep(b, "counter", owner)
+
+
+func _keep(b: Dictionary, key: String, ref: String) -> void:
+	var rec: Dictionary = b[key]
+	var till := int(rec.get("till", 0))
+	var tref := key + ":" + str(b.get("id", ""))
+	if till <= 0 or ref == "":
+		return
+	if ref == World.MANOR:                       # LE-04 review 7 (TILL-D1): the manor keeps its money: to the treasury
+		rec.till = 0
+		w.treasury += till
+		w.stat(key + "_till_kept", till)
+		if w.recorder != null:
+			w.recorder.till_flow(tref, null, -till, 0, "kept")
+		return
+	if World.is_player_ref(ref):                 # and a player its own: to that player's purse
+		var pl: PlayerState = w.player_of_ref(ref)
+		if pl != null and _move(rec, pl, till, true, tref, "kept"):
+			w.stat(key + "_till_kept", till)
+			_rec(tref, rec, pl, -till, "kept")
 		return
 	var who: NPC = w.party(ref)
-	if who == null:
+	if who == null and ref.begins_with("npc:"):  # a holder who died: to their household (the stall payee's rule)
+		var o := w.npc(World.ref_id(ref))
+		if o != null and o.household >= 0:
+			who = w.party(World.hh_ref(o.household))
+	if who == null:                              # nobody of theirs left: to the manor (ECON-P3), never to the next holder
+		rec.till = 0
+		w.treasury += till
+		w.stat(key + "_till_escheat", till)
+		if w.recorder != null:
+			w.recorder.till_flow(tref, null, -till, 0, "escheat")
 		return
-	if _move(b.front, who, till, true):
-		w.stat("front_till_kept", till)
-		_rec("front:" + str(b.get("id", "")), b.front, who, -till, "kept")
+	if _move(rec, who, till, true, tref, "kept"):
+		w.stat(key + "_till_kept", till)
+		_rec(tref, rec, who, -till, "kept")
 
 
 ## TILL-D1: every storefront till of the houses `ref` holds goes to its own funds now (a whole household leaving the village:
@@ -208,19 +247,19 @@ func _settle(rec: Dictionary, who: Object, key: String, ref := "") -> void:
 		return
 	var short := maxi(0, w.reserve_of(who) - int(who.coins))
 	var draw := mini(short, till)
-	if draw > 0 and _move(rec, who, draw, true):
+	if draw > 0 and _move(rec, who, draw, true, ref, "necessity"):
 		w.stat(key + "_necessity", draw)
 		_rec(ref, rec, who, -draw, "necessity")
 	till = int(rec.get("till", 0))
 	var surplus := till - reserve_coins()
 	var pay := int(float(surplus) * payout_share()) if surplus > 0 else 0
-	if pay > 0 and _move(rec, who, pay, true):
+	if pay > 0 and _move(rec, who, pay, true, ref, "owner_pay"):
 		rec["paid"] = int(rec.get("paid", 0)) + pay
 		w.stat(key + "_owner_pay", pay)
 		_rec(ref, rec, who, -pay, "owner_pay")
 	elif till < reserve_coins():
 		var top := mini(reserve_coins() - till, w.spendable(who))
-		if top > 0 and _move(rec, who, top, false):
+		if top > 0 and _move(rec, who, top, false, ref, "topup"):
 			w.stat(key + "_topup", top)
 			_rec(ref, rec, who, top, "topup")
 
@@ -232,9 +271,16 @@ func _rec(ref: String, rec: Dictionary, who: Object, amount: int, why: String) -
 
 
 ## Coins between a till record and a purse: out of the till (`out`) or into it. Nothing moves unless all of `amount` can.
-func _move(rec: Dictionary, who: Object, amount: int, out: bool) -> bool:
+func _move(rec: Dictionary, who: Object, amount: int, out: bool, tref := "", purpose := "") -> bool:
 	if amount <= 0:
 		return false
+	if w.economy != null and w.economy.market.drive and tref != "" and who != null:
+		# LE-04 (OD-LE-07 D06): with the Living Economy on, a move between a business's till and its owner is a recorded transfer
+		# through the transaction authority (explicit contribution or distribution, never silent pooling)
+		var me := Contracts.ref_of(who)
+		var r: Dictionary = w.transactions.transfer_coins(w.transactions.next_txid("business"), tref if out else me, me if out else tref, amount,
+				purpose if purpose != "" else ("distribution" if out else "contribution"))
+		return bool(r.ok)
 	if out:
 		if int(rec.get("till", 0)) < amount:
 			return false
