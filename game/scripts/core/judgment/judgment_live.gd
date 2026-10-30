@@ -456,14 +456,24 @@ static func on_marriage(w, a: int, b: int) -> void:
 
 
 ## Round 2 (cost): whether the live rule's first pick must win whatever the other candidates are, so the full scan can
-## be skipped with the same result. True only under the shipped trade_sell form (argmax, no per-person spread, only
-## live_order, necessity and disposition weighed; necessity is the same for every candidate): another buyer can win
-## only by a disposition advantage worth more than live_order's step, and no other can have a disposition above the
-## best the seller holds of anyone in their ledger (or 50, for someone they have no opinion of).
+## be skipped with the same result. True only when live_order, necessity and disposition are the only weights (necessity
+## is the same for every candidate): another candidate can win only by a disposition advantage worth more than
+## live_order's step, and no other can have a disposition above the best the seller holds of anyone in their ledger (or
+## 50, for someone they have no opinion of), plus the most the family name can colour it.
+## SJD-G (2026-10-30): also under the shipped "margin" selection (SJD-Q09): there the first stands when no other can come
+## within the margin of it (step - gain > margin), so the seeded near-best pick has nobody to pick (JudgmentWeighting
+## _choose: the runner-up is drawn only from those within the margin). The full scan was 60% of a judgment-on day's
+## simulation time, because under "margin" the shortcut never applied. Also, the first's disposition is now computed as
+## the choice computes it (the personal disposition clamped, then the colour, clamped again), not as one clamp of the sum,
+## which overstated it when a NET beyond +-50 points met a colour; and the aspiration layer (which adds factors and scales
+## weights) and a recording run (whose archive keeps every weighed choice in full) always take the full scan.
 static func _first_stands(j: JudgmentStore, seller: int, first: int, profile := "trade_sell") -> bool:
 	var dc: Dictionary = j.cfg.decision
 	var wt: Dictionary = dc.profiles[profile].weights
-	if str(dc.selection) != "argmax":
+	var sel := str(dc.selection)
+	if sel != "argmax" and sel != "margin":
+		return false
+	if j.rec != null or (j.asp != null and j.asp.enabled):
 		return false
 	if j.pers.active and (j.pers.holds_stubbornness(seller) or j.pers.overriding(seller, j.now_minute() / 1440, j.now_minute() % 1440)):
 		return false                            # a stubborn chooser's penalties can move the choice
@@ -473,7 +483,10 @@ static func _first_stands(j: JudgmentStore, seller: int, first: int, profile := 
 	var wd := JudgmentWeighting.trait_weight(j.cfg, j.world_seed, seller, "disposition", int(wt.get("disposition", 0)), j)   # this seller's own weights (Q03/Q13)
 	var wo := JudgmentWeighting.trait_weight(j.cfg, j.world_seed, seller, "live_order", int(wt.get("live_order", 0)), j)
 	j._cu_read(seller)                          # the whole ledger is read below
-	var d0 := j.disposition(seller, first)
+	var d0 := j.personal_disposition(seller, first)
+	var col0 := j.colour(seller, first)
+	if col0 != 0:
+		d0 = JudgmentMath.clampi_(d0 + col0, 0, 100000)   # as JudgmentWeighting._choose computes it
 	var best := int(dc.disposition_mid)
 	for s in j.subjects(seller):
 		if int(s) != first:
@@ -481,6 +494,8 @@ static func _first_stands(j: JudgmentStore, seller: int, first: int, profile := 
 	best = mini(100000, best + j.colour_bound(seller))        # a stranger's family name can colour them up to this much
 	var gain := JudgmentMath.mul_div(wd, best, 1000) - JudgmentMath.mul_div(wd, d0, 1000)
 	var step := JudgmentMath.mul_div(wo, 100000, 1000) - JudgmentMath.mul_div(wo, 100000 - LIVE_ORDER_STEP, 1000)
+	if sel == "margin":
+		return gain < step - int(dc.margin)       # nobody else within the margin of the first: no near-best to draw
 	return gain <= step
 
 
