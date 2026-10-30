@@ -187,6 +187,22 @@ asks were not cut at once and no earmark could be made (`EconContractLinks.earma
 - Every claims read is the actor's own held reservations or open offers; `inbound` scans the contract list (bounded by CON-01's
   open and recent contracts). LE-06 profiles it.
 
-## 4. Evidence (CI and G0)
+## 4. The transaction authority (owner directive 2026-10-30, second message)
 
-Filled in when the runs finish.
+LE-03 and the settlement food trade converge on one mechanism, owned here: `EconTransactions` (`World.transactions`), contract
+in `docs/expansion20/TRANSACTION_AUTHORITY.md`, INT-606. Village-to-village exchanges go through `World.trade`; settlement
+parties and village actors exchange or ship through the authority (transit custody, escrow, deliver, fail with refund, lose),
+with single-use transaction ids, validation before any change, and the optional save key `transactions` (approved by the lead).
+Tests: `le03_transactions_test.gd` 79 checks, 0 failures.
+
+**Tester note:** once settlement shipments run in shipped play, saves carry the `transactions` key; a build without the authority
+(Build 24 and earlier) loading such a save drops it, losing open shipments' goods and escrowed coins in that build. Load those
+saves with a build that has it.
+
+## 5. Evidence (CI and G0)
+
+| Check | Result |
+|---|---|
+| Local frozen checkout of the priority 1 commit `7784ed4` (economy off code paths) | `run_tests` 3600 checks, `start_test` 523 steps, `world_test` 339, `multiplayer_c_test` 340, `business_test` 160, `credit_test` 98, `feast_test` 37: 0 failures. `luxury_test` 34 failures, all `fine_cloth` recipe-data checks, pre-existing on `4611d86` (confirmed by the lead; fixed on `wip/expansion20` `ebafdae`, cherry-picked) |
+| CI `tests.yml` run 41118607622 (`bfde588`) | failed in the Python step on a CI fault present since 2026-10-22 (the workflow did not fetch the integration branches); game tests skipped. Fix cherry-picked from staging (`5c3221f`); re-run 41123358434 |
+| G0, Actions run 41118611434 (`bfde588`, seeds 1 and 2, 30 days, every 10) | see the report (queued behind another branch's run under the old global concurrency group, fixed by `e363703`) |

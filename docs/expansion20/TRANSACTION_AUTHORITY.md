@@ -105,11 +105,13 @@ used while in transit; the coins likewise. (Face-to-face reservations for offers
 
 ## 7. Ledgers (nothing duplicated, lost or transferred twice)
 
-- **Village actors:** coins out of a villager or player into escrow, or out of the village to a settlement, and back, adjust
-  `World.coin_sources` exactly as the caravan does (coins leaving the village: `-`, entering: `+`), and goods crossing the
-  village boundary count in the item ledger as `imported_<item>` / `exported_<item>` at the moment they enter or leave a village
-  holder. Escrowed village coins and village goods in transit are reported by `in_transit()` (`village_coins`, `village_goods`)
-  and `World.total_coins()` includes the village escrow, so `economy_sim`'s currency and item ledgers balance mid-shipment.
+- **Village actors:** transit and escrow are OUTSIDE the village for its ledgers. Coins leaving a villager or player (paid to a
+  settlement, or into escrow) and arriving (from a settlement, or from escrow: a payment or a refund) adjust `World.coin_sources`
+  exactly as the caravan does (`-` out, `+` in); goods leaving a village holder (sold to a settlement, or into custody) count as
+  `exported_<item>`, goods arriving as `imported_<item>`. So `World.total_coins()` and `economy_sim`'s currency and item ledgers
+  balance at every moment without a new holder. `in_transit()` reports the village parts (`village_coins`, `village_goods`) for
+  information. A village-to-village exchange is `World.trade` (no boundary crossed); a village-to-village shipment crosses out
+  and back in.
 - **Settlement parties:** every side is booked through `SettlementParty` (B's books): `deal("sell"/"buy", ...)` for an exchange
   between two settlement parties (regional flow lines that cancel, `Regions.audit`); for a shipment, the goods and coins leaving
   a party into transit or escrow and arriving from it are its `outside_*` lines (`SettlementParty.remove/add/outside_coins`),
@@ -127,4 +129,14 @@ runs with the Living Economy off, when the `economy` key is not written.)
 
 ## 9. Status on `wip/x20-le03`
 
-See `docs/expansion20/LE03_IMPLEMENTATION.md` (section "Transaction authority") for what has landed, the tests and the evidence.
+Implemented at `8393449`: `game/scripts/core/economy/econ_transactions.gd`, `World.transactions` (built in `setup` and `load_dict`,
+saved as `transactions` only when non-empty; key approved by the lead 2026-10-30). Tests `game/tests/le03_transactions_test.gd`:
+79 checks, 0 failures (ids and every code; two buyers for the last unit; several transactions on the same funds and on escrowed
+coins; shipments delivered, failed with refund, lost; village-to-settlement both ways; rejected and interrupted transfers; save,
+load and replay including an open shipment; ten days of shipments, failures, retries and replays; claims with the economy on;
+determinism; the switch). Conservation is checked across the village, the settlements, transit and the sink, with
+`Regions.audit()` balanced, after every scenario. INT-606.
+
+**Tester note (save compatibility):** once settlement shipments run in shipped play, normal saves carry the `transactions` key. A
+build without this authority (Build 24 and earlier) loading such a save drops the key: open shipments' goods and escrowed coins
+would be lost to that build. Load such saves only with a build that has it (the same treatment as other optional keys).
