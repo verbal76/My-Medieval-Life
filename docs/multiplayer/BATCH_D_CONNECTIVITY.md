@@ -52,6 +52,10 @@ A guest can reach a host only if a packet sent to some address of the host arriv
   router search takes up to about six seconds and must not stall the frame); the mapping is removed when hosting stops. Lease 0
   (until removed), the form every IGD version accepts.
 - **Direct address** (advanced) stays: IPv4, IPv4:port, host names, and now `[IPv6]:port`.
+- **Mobile data told apart:** addresses on a phone's mobile-data interfaces (`rmnet`, `ccmni`, `pdp`, `wwan`, `clat`, by name from
+  `IP.get_local_interfaces`) are the carrier's private ones even when they look like a home network's (10.x); they are never put in a
+  code as "your network", and the window says nobody outside can reach a phone on mobile data. Interface names vary by phone maker:
+  **to be checked on the owner's Pixel**.
 - **Connection robustness** (section 5).
 
 What this reaches, plainly: friends on the same network always; friends elsewhere when the host is on home broadband whose router
@@ -86,6 +90,15 @@ provider and are not claimed here.
   answered when a connection dropped are not re-sent after reconnecting: the host's world, sent whole at the rejoin, is the truth.
 - **Save integrity.** The host saves (atomically, `SaveStore`) when a guest leaves or drops and when it is paused; a guest never
   saves. Coin and goods censuses before and after each fault are compared in the tests.
+
+## 5a. Defects found on the way (fixed on `wip/mp-batchd`)
+
+- A guest beside a chest, table or stall sent the host a request every frame (`container_pick`, a query Batch C mirrored as a verb):
+  measured 41 requests in a 3-second walk. Now answered from the guest's copy (`NetSession.LOCAL_QUERIES`).
+- Godot's `ENetMultiplayerPeer.disconnect_peer(id, true)` (forced) removes a peer without the disconnect signal, leaving a ghost peer
+  in the multiplayer layer that made every broadcast fail ("Invalid target peer"). The superseded connection is now ended gracefully.
+- A hello read after its connection was already reported gone could admit a guest on a dead connection; it is now ignored, and the
+  host sweeps any guest whose connection the network layer no longer has.
 
 ## 6. Decision package for the owner (MP-INET: "a practical connectivity proposal before declaring internet support complete")
 
