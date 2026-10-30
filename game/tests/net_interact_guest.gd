@@ -153,7 +153,8 @@ func _commands() -> void:
 func _status() -> void:
 	if main.guest_world and main.ui.toast.visible and (toasts.is_empty() or toasts[-1] != main.ui.toast.text):
 		toasts.append(main.ui.toast.text)
-	var d := {"seq": last_seq, "toasts": toasts.slice(-20), "welcomed": main.guest_world, "pid": main.net.my_pid, "refusal": main.net.refusal, "cmp": cmp,
+	var d := {"seq": last_seq, "toasts": toasts.slice(-20), "welcomed": main.guest_world, "pid": main.net.my_pid, "refusal": main.net.refusal,
+		"reconnecting": main.net.reconnecting, "connected": main.net.connected(), "cmp": cmp,
 		"world": main.world != null, "running": main.running}
 	if main.guest_world:
 		var w: World = main.world

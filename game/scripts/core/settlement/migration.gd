@@ -142,6 +142,40 @@ static func _pre_leave(w: World, ms: Array) -> void:
 		w.contracts.on_death(o)
 
 
+## Just before they pack (Build 24 review; owner 2026-10-30: a living household or person that leaves keeps what is theirs): every
+## stall whose open session or seller is one of the leavers, or a household they are the last of, is closed and settled to them
+## (Stalls.close: the manor's commission, the rest to their purse); and a household they are everyone left of keeps its storefront
+## tills (TILL-D1: to their purse) and its pantry, which goes with them. Returns that pantry (null when someone stays behind), so
+## nothing of theirs is left to escheat to the manor once they have gone. Moves coins and goods only between village holders.
+static func _take_own(w: World, ms: Array) -> Inventory:
+	var emptied: Array = []
+	for h in _households_of(ms):
+		var left := 0
+		for o: NPC in w.brain._members(h):
+			if not ms.has(o):
+				left += 1
+		if left == 0:
+			emptied.append(h)
+	if w.business != null:
+		var refs := {}
+		for o: NPC in ms:
+			refs[World.npc_ref(o.id)] = true
+		for h in emptied:
+			refs[World.hh_ref(h)] = true
+		var ids: Array = w.stalls.keys()
+		ids.sort()
+		for id in ids:
+			var st: Dictionary = w.stalls[id]
+			var seller := str(st.get("session", {}).get("seller", w.business.stalls.seller_ref(st)))
+			if refs.has(seller) and (int(st.get("till", 0)) > 0 or w.business.stalls.unsettled(st) > 0):
+				w.business.stalls.close(st, "moved away")
+		for h in emptied:
+			w.business.money.keep_tills_of(World.hh_ref(h))
+	if emptied.is_empty():
+		return null
+	return w.households[emptied[0]].pantry
+
+
 ## They have gone: the villagers leave the living (alive false, `away` the settlement), the village's accounts of coins and goods
 ## that crossed, and the posts and stalls they held are handed on exactly as after a death (NPCBrain.on_death).
 static func _gone(w: World, s: OffMapSettlement, ms: Array, load_: Dictionary, pantry: Inventory, reason: String) -> void:
@@ -428,13 +462,11 @@ static func spare_food_pts(s: OffMapSettlement) -> float:
 
 
 ## A household (or the part of one) of the village goes to `s`: it joins a business as a new household.
-static func _household_out(w: World, s: OffMapSettlement, ms: Array, whole: bool, reason: String, bt: String) -> bool:
+static func _household_out(w: World, s: OffMapSettlement, ms: Array, _whole: bool, reason: String, bt: String) -> bool:
 	if ms.is_empty() or bt == "" or not s.biz.has(bt):
 		return false
-	var pantry: Inventory = w.households[ms[0].household].pantry if whole else null
 	_pre_leave(w, ms)
-	if whole and w.business != null:
-		w.business.money.keep_tills_of(World.hh_ref(ms[0].household))     # TILL-D1: its storefront till goes with it
+	var pantry := _take_own(w, ms)                                          # TILL-D1: a household that leaves takes its till and stores
 	var load_ := _pack(w, ms, pantry)
 	var names := _names(ms)
 	var h := s.receive_household(load_.people, int(load_.coins), load_.goods, bt)
@@ -498,9 +530,10 @@ static func _work_out(w: World, s: OffMapSettlement, market_: Dictionary = {}) -
 		if int(market[job].open) > 0:
 			return false
 	_pre_leave(w, [who])
-	var load_ := _pack(w, [who])
+	var pantry := _take_own(w, [who])                                       # the last of a household takes its stores along
+	var load_ := _pack(w, [who], pantry)
 	var h := s.receive_person(load_.people[0], int(load_.coins), load_.goods, bt)
-	_gone(w, s, [who], load_, null, "work")
+	_gone(w, s, [who], load_, pantry, "work")
 	w.note("%s %s leaves for %s, where work is to be had." % [who.name, who.family, s.name])
 	s.note("%s arrives from the village for work, and joins the %s." % [who.name, OffMapSettlement.btype(bt).get("name", bt)])
 	return h >= 0
@@ -755,9 +788,10 @@ static func _marry_out(w: World, s: OffMapSettlement) -> bool:
 			_pre_leave(w, [bride])
 			if not _courted(w, s, "out", "%d:%d:%d" % [bride.id, g[0], int(gh.mem[g[1]][OffMapSettlement.M_BORN])]):
 				return false
-			var load_ := _pack(w, [bride])
+			var pantry := _take_own(w, [bride])
+			var load_ := _pack(w, [bride], pantry)
 			s.wed_in(g[0], g[1], load_.people[0], int(load_.coins), load_.goods)
-			_gone(w, s, [bride], load_, null, "marriage")
+			_gone(w, s, [bride], load_, pantry, "marriage")
 			w.stat("partnerships")
 			w.note("%s %s leaves to marry a man of %s." % [bride.name, bride.family, s.name])
 			s.note("%s arrives from the village and marries." % bride.name)

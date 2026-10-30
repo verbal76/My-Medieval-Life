@@ -245,6 +245,9 @@ class AbnormalEvidence(unittest.TestCase):
         d.other("factor", fac, ["death", 1, "deceased", "coins", 12])
         d.other("factor", fac, ["death", 1, "village", "food_for_sale_stalls", 5])
         d.event(2, self.row(5, "death", "p:8"), "cause=old age; role=elder job= household=3 age=70.0")
+        d.event(6, self.row(7, "death", "p:9"), "cause=starvation; role=adult job= household=4 age=40.0")   # penniless: food elsewhere is not theirs
+        d.other("factor", fac, ["death", 6, "deceased", "coins", 0])
+        d.other("factor", fac, ["death", 6, "village", "granary_food", 50])
         d.event(3, self.row(6, "died", "p:900"), "from=bourton to=dead; cause=hunger")
         d.event(4, self.row(6, "business_abandoned", "hh:3"), "holder gone; stock to the granary=4")
         d.event(5, self.row(6, "migration_out", "settlement:bourton"), "reason=work; people=2; coins=5; goods=0")
@@ -255,6 +258,9 @@ class AbnormalEvidence(unittest.TestCase):
         kinds = r["counts"]
         self.assertEqual(kinds.get("starved_with_means"), 1)
         self.assertNotIn("violent_or_accidental_death", kinds)          # old age is ordinary
+        self.assertEqual(kinds.get("starved_without_means"), 1)         # review 2026-10-30: the granary's grain is not the deceased's means
+        g = next(x for x in r["findings"] if x["kind"] == "starved_without_means")
+        self.assertEqual((g["actor"], g["evidence"]["village_food"]), ("p:9", {"village.granary_food": 50}))
         self.assertEqual(kinds.get("settlement_hunger_death"), 1)
         self.assertEqual(kinds.get("treasury_drain"), 1)
         self.assertEqual(kinds.get("household_purse_at_zero"), 1)
@@ -263,7 +269,8 @@ class AbnormalEvidence(unittest.TestCase):
         self.assertEqual(r["migrations"], {"out|work": 2})
         f = next(x for x in r["findings"] if x["kind"] == "starved_with_means")
         self.assertEqual((f["seed"], f["day"], f["actor"]), (3, 4, "p:7"))
-        self.assertEqual(f["evidence"]["means"], {"deceased.coins": 12, "village.food_for_sale_stalls": 5})
+        self.assertEqual(f["evidence"]["means"], {"deceased.coins": 12})       # village food is context, not the deceased's means
+        self.assertEqual(f["evidence"]["context"]["village.food_for_sale_stalls"], 5)
         self.assertEqual(f["chain"][0]["subtype"], "eat")
 
 

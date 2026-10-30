@@ -386,9 +386,13 @@ class Diag:
                 if "role=bandit" in detail:
                     continue
                 f = {"%s.%s" % (o, k): v for o, k, v in self.fac.get(i, [])}
-                means = {k: v for k, v in f.items() if k in ("deceased.coins", "deceased.food_carried", "household.purse", "household.food_units",
-                                                             "village.food_for_sale_stalls", "village.food_carried_by_traders", "village.granary_food")
+                # Means are the deceased's and their household's own coins and food: food elsewhere in the village (stalls, traders'
+                # packs, the manor's granary) is not theirs to eat, so it is context, not means (review 2026-10-30: counting it made
+                # nearly every hunger death "with means").
+                means = {k: v for k, v in f.items() if k in ("deceased.coins", "deceased.food_carried", "household.purse", "household.food_units")
                          and isinstance(v, (int, float)) and v > 0}
+                village_food = {k: v for k, v in f.items() if k in ("village.food_for_sale_stalls", "village.food_carried_by_traders", "village.granary_food")
+                                and isinstance(v, (int, float)) and v > 0}
                 chain = [{"event": j, "day": d, "minute": m, "category": c, "subtype": s, "outcome": o}
                          for d, m, j, c, s, o in sorted(x for x in by_actor.get(actor, []) if (x[0], x[1]) <= (day, minute))[-8:]]
                 if cause == "starvation" and means:
@@ -396,7 +400,7 @@ class Diag:
                 elif cause not in ("old age", "starvation"):
                     add("violent_or_accidental_death", day, actor, {"cause": cause, "event": i, "context": f, "detail": detail}, chain)
                 elif cause == "starvation":
-                    add("starved_without_means", day, actor, {"cause": cause, "event": i, "context": f, "detail": detail}, chain)
+                    add("starved_without_means", day, actor, {"cause": cause, "event": i, "village_food": village_food, "context": f, "detail": detail}, chain)
             elif sub == "died":
                 frm = self._detail(detail, "from")
                 cause = self._cause(detail) or "unrecorded"

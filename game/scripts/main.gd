@@ -98,6 +98,7 @@ var shot_pick := 0.0
 var view_scale := 1.0          # phones draw the interface larger; the camera zoom makes up for it
 var walking := false           # the player moved this frame (resource prompts wait until they stop)
 var net: NetSession            # MP Batch A2: hosting and joining (scripts/net, docs/multiplayer/BATCH_A.md)
+const HOST_STALL_SECONDS := 1.0   # Batch D: a hosted world's frame longer than this was a freeze, not play: not caught up
 var guest_world := false       # this machine shows a host's world from its own character: it never simulates or saves it
 var avatar_sprites := {}       # the other players in the session, by pid
 var _offers_seen := {}          # MP-D8, MP-INTERACT-01: ids of the offers and messages to this player it was told of
@@ -1220,6 +1221,16 @@ func adopt_heir(d: Dictionary) -> void:
 	ui.hide_all()
 
 
+## Guest (Batch D): the connection to the host dropped; NetSession is reconnecting. The view stays, stopped (nothing here is
+## simulated), windows close, and the player is told; the host's world, sent again on the way back, replaces this copy.
+func net_interrupted(text: String) -> void:
+	cancel_action("")
+	move_to = Vector2.INF
+	ui.hide_all()
+	paused = true
+	ui.message(text, 30.0, "game")
+
+
 ## Guest: back to the title (the host left, the connection was lost, or the player chose to leave).
 func leave_guest_world(text := "") -> void:
 	if net.is_guest():
@@ -1373,8 +1384,7 @@ func _sync_avatars(dt: float) -> void:
 		var anim := str(e.get("anim", "idle"))
 		if who2 != null:                           # WEAPON-VISIBLE-01: their weapon carried
 			s.wield(who2.weapon)
-		if not (s.striking and anim in ["idle", "walk"]):      # GP-SWORD-VIS: a blow ("sword") is a strike with it; one under way plays through
-			s.play(anim if anim in NetSession.ANIMS else "idle")
+		_net_anim_view(s, anim)
 		if not bool(e.get("alive", true)) and s.anim != "death":
 			s.play("death", true)
 		s.visible = who2 == null or who2.map_level == world.player.map_level      # MP-INTERACT-01: another level is out of sight (MIN-A)
@@ -1914,6 +1924,8 @@ func _refresh_player_worn() -> void:
 func _process(delta: float) -> void:
 	if world == null:
 		return
+	if delta > HOST_STALL_SECONDS and net.is_host():
+		delta = 1.0 / 30.0                      # Batch D (MP-D6): a hosting app frozen (Android background, a stall): time stopped meanwhile
 	_refresh_player_worn()
 	if player_sprite != null:                # WEAPON-VISIBLE-01: the weapon in hand is carried, drawn
 		player_sprite.wield(_in_hand())
@@ -4302,8 +4314,13 @@ func plant_cutting(item: String) -> void:
 ## blows the weapon is carried. True when the sprite was handled here. View only.
 func _npc_strike_view(n: NPC, s: ActorSprite, look: String) -> bool:
 	var cd := n.attack_cd
-	var last := float(s.get_meta("cd", 0.0))
+	var frame := Engine.get_process_frames()
+	var seen_last_frame := int(s.get_meta("cd_frame", -10)) >= frame - 1   # watched without a gap (review 2026-10-30)
+	var last := float(s.get_meta("cd", cd))
 	s.set_meta("cd", cd)
+	s.set_meta("cd_frame", frame)
+	if not seen_last_frame:
+		last = cd                                  # just came into view (or first seen): no blow is taken to have landed now
 	if look != "sword":
 		if s.striking and look in ["idle", "walk"]:
 			return true
@@ -4325,6 +4342,18 @@ func _npc_strike_view(n: NPC, s: ActorSprite, look: String) -> bool:
 func _in_hand() -> String:
 	var w := world.player.weapon
 	return w if w != "" and world.player.inv.has(w) else ""
+
+
+## Another player's animation from the snapshots onto their sprite. GP-SWORD-VIS: a blow ("sword") is a strike with what they carry
+## and one under way plays through; a blow stays "sword" in the snapshots for as long as the sender's strike lasts, so only the change
+## to "sword" starts a strike here, never the same blow seen again (review 2026-10-30: it was drawn twice).
+func _net_anim_view(s: ActorSprite, anim: String) -> void:
+	var prev := str(s.get_meta("net_anim", ""))
+	s.set_meta("net_anim", anim)
+	if anim == "sword" and prev == "sword":
+		return
+	if not (s.striking and anim in ["idle", "walk"]):
+		s.play(anim if anim in NetSession.ANIMS else "idle")
 
 
 ## WEAPON-VISIBLE-01: the player's animation as the other players see it: a blow with the weapon is sent as "sword" (their
@@ -5652,6 +5681,10 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST or what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_APPLICATION_FOCUS_OUT:
 		if running:
 			save_game(false)
+	if what == NOTIFICATION_APPLICATION_PAUSED and net != null:
+		net.on_app_paused()                     # Batch D (MP-D6): a host tells its guests it is paused; a guest notes the time
+	if what == NOTIFICATION_APPLICATION_RESUMED and net != null:
+		net.on_app_resumed()                    # a guest away too long reconnects at once (a host's clock: HOST_STALL_SECONDS)
 
 
 func continue_as_heir() -> void:

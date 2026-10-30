@@ -148,3 +148,74 @@ layer and a guest-only branch of `main.gd` (no simulation code); the G0 above is
    host plays again." and rejoin as the same characters.
 5. Touch accuracy on a real phone screen; a real mouse; a physical controller on Windows and Linux; the Steam Deck.
 6. The Windows firewall prompt on first hosting; a real LAN between two machines (loopback has no packet loss or latency).
+
+## Batch D cross-platform verification matrix (MP-MASTER Batch D, MP-INET, MP-D6; worker C, `wip/mp-batchd`, 2026-10-30)
+
+Design and connectivity findings: `docs/multiplayer/BATCH_D_CONNECTIVITY.md`. Legend: **A** automated on this machine (real Godot
+processes, real ENet over loopback), **S** simulated (faults injected by `game/tests/net_proxy.gd` into real ENet datagrams, by the
+fault hooks in `NetSession.faults`, or by freezing and killing processes), **D** needs physical devices, **N** needs real external
+networks (separate homes, mobile data, routers). D and N rows are **not verified**; nothing below claims otherwise.
+
+### Platform pairs (each host with each guest; LAN and internet)
+
+| Host \ Guest | Android guest | Windows guest | Linux guest | Steam Deck guest |
+|---|---|---|---|---|
+| Android host | D (LAN), N (internet) | D, N | D, N | D, N |
+| Windows host | D, N | D, N | D, N | D, N |
+| Linux host | D, N | D, N | **A** (loopback, same machine), D (two machines), N | D, N |
+| Steam Deck host | D, N | D, N | D, N | D, N |
+
+The protocol and code are the same on every platform (one ENet transport, one `mml-net/3` protocol, one save format); only the Linux
+build runs here. Android export permissions in `game/export_presets.cfg` (INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE,
+CHANGE_WIFI_MULTICAST_STATE) already cover LAN, internet and the router's UPnP search; no permission was added.
+
+### Connection methods
+
+| Method | Status | Evidence / what is missing |
+|---|---|---|
+| LAN discovery and typed LAN address | A (loopback) | `net_ui_test`, `net_g1_test`; real two-machine LAN: D |
+| Invite code: made, copied, pasted, read back, typing mistakes caught, wrong world refused, dead address passed over within its time | A | `net_fault_test` (codes, `_join_by_code`) |
+| Invite code reaching a host on another network through a UPnP-mapped port | N | needs a home router with UPnP on, two networks |
+| UPnP router search and mapping | A for "no router" (this container has none: the window and code claim no internet); mapped/refused/shared on a real router: N | `net_fault_test` `_router` |
+| Host on mobile data / CGNAT: window says friends elsewhere cannot join | logic A (classification and wording); on a real phone: D+N | `net_fault_test` |
+| Manual port forward + typed public address | N | |
+| IPv6 address in the code / typed `[v6]:port` | parsing A; connection: **not testable here** (no IPv6 in this container); N | |
+| Virtual LAN app (documented fallback) | N | owner: insufficient alone (MP-D5) |
+| Windows Firewall prompt on first hosting | D | |
+
+### Interruptions and message safety
+
+| Case | Status | Evidence |
+|---|---|---|
+| Requests repeated (each sent twice): applied once, answered once, pack exact, coins conserved | S | `net_fault_test` `_repeats` |
+| An applied request number sent again later: not applied | S | `_repeats` |
+| Requests late (250 ms) and swapped in pairs: applied once each, in the order sent | S | `_repeats` |
+| Lossy transport: 20% loss, 15% duplicate and 15% reordered datagrams, 30-70 ms delay: actions exactly once, walk arrives, coins conserved | S | `_lossy` |
+| Network gone 1.5 s: connection holds | S | `_dropped` |
+| Network gone past the timeouts: guest view stops, reconnects by itself to the same character; host takes it out of play meanwhile (MP-D1), no duplicate character, coins conserved, packs agree | S | `_dropped` |
+| Android guest paused past the host's timeout and resumed: reconnects at once, takes its character back with its token | S (notification + frozen node + blackholed network) | `_guest_pause`; on a phone: D |
+| Guest process killed: host drops it in its time, out of play, coins conserved; restarted: same character | S (SIGKILL) | `_guest_killed` |
+| Guest process frozen (SIGSTOP) past the timeouts, then let go: reconnects by itself | S | `_guest_killed` |
+| Android host paused: guests told, wait up to 5 minutes, come back; the host's clock does not run the frozen time | S (pause notification, process blocked 14 s, resume notification) | `_host_pause`; on a phone: D |
+| Host process killed after a save, restarted from the save on the same port: guest comes back by itself, world as saved, its requests applied once | S (SIGKILL) | `_host_killed` |
+| Host stops on purpose: guest told at once, no waiting | A | `_host_stops`, `net_g1_test` |
+| Android OS killing a backgrounded host; screen lock; Wi-Fi to mobile data change; battery/thermal | D | |
+| Three and four players under faults at once | partly A (two guests plus kill/freeze); real devices: D | |
+
+### Results (this machine, Linux, Godot 4.7.2, loopback; other workers' suites running alongside)
+
+New: `net_fault_test` **52 checks, 0 failures** on `1c019be` (the final Batch D code; three processes plus the relay). Earlier runs
+under load found three defects, fixed (`docs/multiplayer/BATCH_D_CONNECTIVITY.md` section 5a) and one loose measurement in the test.
+
+Regression on `f038daf`/`5266dea` (Batch D code before the last test-only change), all 0 failures, no script errors:
+`net_mp4_test` 148, `net_interact_test` 67, `mp_interact_ui_test` 112, `multiplayer_c_test` 340, `net_ui_test` 61, `net_g1_test` 45,
+`net_soak_test` 28, `save_transfer_test` 21, `net_batch_b_test` 44, `net_c_test` 35, `net_family_test` 22, `net_fauna_test` 13,
+`net_recorder_quit_test` 20, `multiplayer_a1_test` 67, `multiplayer_b_test` 31. On `157a978` (before the takeover fix, which touches
+only the network layer): `run_tests` 3600, `start_test` 523, `world_test` 339, `wiki_test` 141. `net_mp4_test`'s killed-host phase
+now expects the guests to wait and come back by themselves (INT-641), the intended Batch D behaviour.
+
+G0 (`tools/sim_gate.py`, seeds 1-2, days 10 and 30) on `a0114a8`: **PASS, identical to `docs/release/sim_baseline.json`**, currency and item
+leaks 0.
+
+What none of this shows: any real device, any second machine, any router, any network but loopback, IPv6, Android lifecycle on a
+phone, the Steam Deck. Those rows stay unverified above.

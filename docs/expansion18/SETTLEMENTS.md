@@ -138,6 +138,55 @@ The village's side is `NPCBrain._caravan_food` (households with no food to be ha
 food merchant, cook and tavern); see `docs/SYSTEM_INTERACTION_MANIFEST.md` INT-290 and INT-291. Every coin and unit crosses the
 border as in any caravan trade (`coin_sources`, `imported_*`, `caravan_coins_out`).
 
+## 4b. Food between the settlements (X20-SETTLE-FOOD, Expansion 20)
+
+REG-BUY-D1 (owner 2026-10-23) lets a settlement sell food to another; REG-X20-D3 found no live path (road trade carried no food,
+`RegionalMarket` was not wired in). Implemented on `wip/x20-settle-food` through the existing settlement layer only: no new purchasing
+system, nothing in the village's `World.trade`, and the six-day abstraction of E22-OD-04 (physical caravans are a future stage).
+
+- **When.** `Regions.food_round(d)` runs on the traders' wholesale day (`road_trade_every_days`, after `road_trade`), from both
+  `step_day` and `step_hour`; `Regions.day` (saved) guards against a second round on a loaded save.
+- **Who buys.** The trader of every settlement whose people hold under three days of food (`wants()._food_pts`, which now counts food
+  already bought and on the road). Its demand (SettlementParty trader need) is that shortfall in `rules.food_trade_items` (wheat).
+- **Who sells.** In every other settlement that is not short: its trader (food it carries, never food it imported) and its food
+  businesses, each capped by `food_release(items)`, the REG-BUY-P1 rules read only (food above the households' claim over
+  `reserve_days`; a business with a demonstrated cash shortfall up to that shortfall, at the settlement's price). Parties are
+  `SettlementParty` handles with `sells_only` and `release`; no business or household buys in this round.
+- **Negotiation and payment.** `RegionalMarket.plan(..., only = items)`: the seller asks its settlement's floating price
+  (`ask_of` -> `SettlementParty.ask_price`); the buyer pays at most `willing` (value plus `scarcity_premium` as it runs out) from
+  `spend_limit` (the trader's till above its floor and half its trading capital, the rule of `road_trade`); cheapest delivered
+  offer, then the shorter trip. Unmet demand keeps its reason: no supplier, price, funds, no carriage.
+- **The transaction (owner direction 2026-10-30: one transaction mechanism).** Each plan line is one call to the world's transaction
+  authority (`World.transactions`, Worker A's LE-03, `docs/expansion20/TRANSACTION_AUTHORITY.md`, INT-606) through `Regions.ship_line`:
+  `ship("settle_food/<buyer place>:<seq>", buyer, seller, item, qty, total, due)` takes the seller's goods into transit custody (still
+  the seller's) and the buyer's price into escrow (still the buyer's), together or not at all, booked as `outside_*` lines on both
+  settlements. A rejection (`no_stock`, `no_funds`, `party_unavailable`, ...) moves nothing. An id executes at most once; `food_seq`
+  (saved) numbers the attempts. This layer has no transfer of its own; without a world (regions_sim, Regions-only tests) there is no
+  authority and nothing is bought.
+- **Transport and delivery.** The buyer's trader fetches it: one load a round (`self_capacity`: a 12-unit pack, a 60-unit handcart where
+  its place keeps horses). Due day = twice the route's days, at least 1. The buyer's settlement keeps what it awaits in `transit`
+  (saved); at its first step on or after the due day (`_deliver`, before its market) it asks for `deliver` (goods to its trader, marked
+  `imported`; the escrow to the seller). One the authority cannot close (a party unavailable) stays awaited and open and is asked
+  again daily; `food_lapse_days` late it is `fail`ed (goods back, price refunded) when both parties can take them. A shipment found
+  closed otherwise is dropped once (a failed one is written as never arrived). Imported food is for the place's own households:
+  `trader_has`, `sell_to_village` and the trader's `sale_cap` leave it out until the place no longer wants food (`release_imported`).
+- **Books.** The shipment's sides are outside lines on each settlement (its audit balances); a count of the whole region adds the
+  settlements' part of `in_transit()` (`Regions.tx_in_transit`: custody and escrow) as a holder, the LE-03 ledger rule; the village's
+  currency check and `economy_sim`'s regional checks need nothing extra (the two outside lines cancel against each other once
+  delivered, and while in transit the seller's goods and the buyer's coins are booked out on both sides). `Regions.audit` also fails on an orphan (an open `settle_food/` shipment no
+  settlement awaits, or an awaited one that is not open). Goods lost in transit (`lose`, `transactions.sunk`) are not used by this
+  trade (E22-OD-04: route danger is a future stage).
+- **Records.** Flow counts `food_bought`, `food_sold`, `food_delivered`, `food_unmet`; journal lines in both settlements; flight
+  recorder events (INT-622). Interactions INT-620 to INT-622; tests `game/tests/settle_food_test.gd`.
+- **Saves.** Optional keys only: a settlement's `transit`, a trader's `imported`, the four flow counts, `Regions.food_seq`; the
+  authority's own `transactions` key (Worker A). An older save loads with nothing on the road.
+- **A trader that closes** (INT-623, Build 24 review): a settlement trader nobody works closes by `_close_idle` like any business;
+  food it bought still on the road is delivered at once (the grower paid) and goes to the granary with its stock. A place without a
+  trader buys no food abroad.
+- **Limits (provisional, agent).** Only wheat is traded between settlements (the staple every place grows; other foods still reach
+  households through local markets and the caravan). One load a round. Households and councils do not travel to buy food themselves
+  in this stage. No route loss or danger (E22-OD-04 future stage).
+
 ## 5. The plough horse
 
 The horse comes from a horse-dealer among the traders on the road that day: Wulstead and Higham keep horses (3 and 2 at the start; they
