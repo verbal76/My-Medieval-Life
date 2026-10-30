@@ -1292,8 +1292,8 @@ func _move_jobs() -> void:
 
 # ------------------------------------------------------------------ development (SET-D, owner B18-DP-05) ----------------
 ## Once a week, after the job moves, a settlement's businesses follow its people and its needs, by the numbers the job moves use:
-##   closing  a business with no living worker household for `switch_stay_days` (two looks) closes (not the traders: they are the
-##            settlement's contact with the road). Its till passes to the treasury; its stock is bought by the traders at market
+##   closing  a business with no living worker household for `switch_stay_days` (two looks) closes, the traders too (Build 24
+##            review, owner 2026-10-30: whichever way the last household went: a trade switch, death, leaving, another business). Its till passes to the treasury; its stock is bought by the traders at market
 ##            price as far as their till above its reserve reaches, and the rest goes into the treasury's granary (the rule of
 ##            a household with no kin). The fields, woods, quarry reserve and horses stay with the place (`closed`).
 ##   opening  a trade the settlement does not have opens when its goods went unmet (units wanted and not found for sale, priced)

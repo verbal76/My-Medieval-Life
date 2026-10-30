@@ -25,7 +25,10 @@ func _init() -> void:
 	GameData.ensure()
 	test_idle_trader_closes()
 	test_closing_trader_takes_in_shipments()
+	test_every_business_closes_by_every_path()
 	test_last_member_keeps_till()
+	test_lone_last_member_keeps_all()
+	test_non_trader_session_settled()
 	test_leaving_trader_settles_stall()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
@@ -159,4 +162,128 @@ func test_leaving_trader_settles_stall() -> void:
 	for i in 60:
 		w.update(1.0)
 	check(int(w.stats.get("stall_net_escheat", 0)) == 0, "nothing of theirs escheats to the manor afterwards (treasury %d -> %d)" % [t1, w.treasury])
+	w.dispose()
+
+
+# ------------------------------------------------------------------ the underlying causes (owner 2026-10-30) ----------------
+## Every business type left with no working household closes, whichever way its last household went: a trade switch, death, leaving
+## for the village, or a household that opened another business. The settlement's books balance and the closed record holds nothing.
+func test_every_business_closes_by_every_path() -> void:
+	var r := Regions.create(1)
+	r.step_day(0)
+	var s: OffMapSettlement = r.by_id["higham"]
+	var plan := {"merchant": "switch", "cook": "death", "smith": "leave", "tanner": "open_other", "farm": "death", "sawyer": "leave"}
+	var types: Array = plan.keys()
+	types.sort()
+	for t in types:
+		if not s.biz.has(t):
+			check(false, "Higham has a %s" % t)
+			continue
+		var b: Dictionary = s.biz[t]
+		for i in (b.workers as Array).duplicate():
+			var h: Dictionary = s.hh[i]
+			if not h.alive:
+				continue
+			match str(plan[t]):
+				"switch", "open_other":                # the household took up another trade (a switch, or a business it opened)
+					b.workers.erase(i)
+					var other := "weaver" if s.biz.has("weaver") else "mason"
+					s.biz[other].workers.append(i)
+					h.trade = OffMapSettlement._trade_of(other)
+				"death":
+					var guard := 0
+					while h.alive and guard < 20:
+						guard += 1
+						s._lose_member(h)
+				"leave":
+					s.release_household(i)
+	var days := 2 * int(OffMapSettlement.rules().switch_stay_days) + 2
+	var bad := ""
+	for d in range(1, days + 1):
+		r.step_day(d)
+		if r.audit() != "" and bad == "":
+			bad = "day %d: %s" % [d, r.audit()]
+	for t in types:
+		check(not s.biz.has(t) and s.closed.has(t), "%s with no working household (%s) closed" % [t, plan[t]])
+		check(int(s.closed.get(t, {}).get("till", -1)) == 0 and (s.closed.get(t, {}).get("stock", {"x": 1}) as Dictionary).is_empty(), "%s: its till and stock were handed on" % t)
+	check(bad == "", "every day's books balanced (%s)" % bad)
+
+
+## The village's coins (every holder World.total_coins counts) and the settlements' coins: constant when people move between them.
+func _all_coins(w: World) -> int:
+	return w.total_coins() + w.regions.coins() + int(w.regions.tx_in_transit().coins)
+
+
+## One good across the village's holders that a move touches (villagers' packs, pantries, the granary) and the settlements' books.
+func _all_goods(w: World, item: String) -> int:
+	var n := w.granary.count(item) + int(w.regions.goods().get(item, 0)) + int(w.regions.tx_in_transit().goods.get(item, 0))
+	for o: NPC in w.npcs:
+		if o.alive:
+			n += o.inv.count(item)
+	for hh in w.households:
+		n += (hh.pantry as Inventory).count(item)
+	return n
+
+
+## The last living member of a household leaves alone: they take its storefront till, its pantry and their own purse and pack; the
+## manor gets nothing of theirs; coins and goods conserved across the village and the settlements.
+func test_lone_last_member_keeps_all() -> void:
+	var w := new_world()
+	var n := householder(w)
+	var h := n.household
+	var house: Dictionary = w.buildings[n.home]
+	for id in w.business.storefront_cost():
+		n.inv.add(id, int(w.business.storefront_cost()[id]))
+	check(w.business.build_npc_front(house, n), "a storefront for the household")
+	house.front.till = 23
+	for o: NPC in w.brain._members(h):
+		if o != n:
+			w.kill(o, "old age")                   # (their estates go where a death sends them, before the test counts)
+	w.households[h].pantry.add("wheat", 15)
+	var wheat0 := _all_goods(w, "wheat")
+	var coins0 := _all_coins(w)
+	var t0 := w.treasury
+	var g0 := w.granary.count("wheat")
+	var s: OffMapSettlement = w.regions.by_id["wulstead"]
+	var ok := Migration._household_out(w, s, [n], false, "work", Migration.hiring(s) if Migration.hiring(s) != "" else "farm")
+	check(ok and not n.alive and str(n.away) == "wulstead", "the last member leaves alone")
+	check(int(house.front.get("till", 0)) == 0 and w.treasury == t0, "the till went with them, not to the manor")
+	check(w.households[h].pantry.count("wheat") == 0 and w.granary.count("wheat") == g0, "the household's stores went with them, not to the granary")
+	check(_all_coins(w) == coins0, "coins conserved across the village and the settlements (%d -> %d)" % [coins0, _all_coins(w)])
+	check(_all_goods(w, "wheat") == wheat0, "wheat conserved (%d -> %d)" % [wheat0, _all_goods(w, "wheat")])
+	check(w.regions.audit() == "", "the settlements' books balance (%s)" % w.regions.audit())
+	w.dispose()
+
+
+## A villager who is not a trader but sold at a stall (the open session is theirs) leaves while others of the household stay: the
+## session is settled to them before they pack; the household keeps its own till and stores.
+func test_non_trader_session_settled() -> void:
+	var w := new_world()
+	var st: Dictionary = {}
+	for id in w.stalls:
+		if w.business.stalls.is_merchant_stall(w.stalls[id]):
+			st = w.stalls[id]
+			break
+	var leaver: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job != "merchant" and o.household >= 3 and w.brain._members(o.household).size() >= 2:
+			leaver = o
+			break
+	check(not st.is_empty() and leaver != null, "a stall and a non-trader in a household of several")
+	if st.is_empty() or leaver == null:
+		return
+	st.till = int(st.get("till", 0)) + 40
+	w.business.stalls.record_sale(st, World.npc_ref(leaver.id), "egg", 10, 40)
+	var due := w.business.stalls.due(st)
+	var purse := leaver.coins
+	var till0 := int(st.till)
+	var coins0 := _all_coins(w)
+	var t0 := w.treasury
+	var s: OffMapSettlement = w.regions.by_id["wulstead"]
+	var ok := Migration._household_out(w, s, [leaver], false, "work", Migration.hiring(s) if Migration.hiring(s) != "" else "farm")
+	check(ok, "they leave; the rest of the household stays")
+	check(not st.has("session") and int(st.get("till", 0)) == 0 and w.treasury - t0 == due.x, "their session was settled: the manor's commission only (%d)" % due.x)
+	var last: Dictionary = w.regions.moves[-1] if not w.regions.moves.is_empty() else {}
+	check(int(last.get("coins", -1)) == purse + till0 - due.x, "the takings went with them (%d carried, expected %d)" % [int(last.get("coins", -1)), purse + till0 - due.x])
+	check(_all_coins(w) == coins0, "coins conserved (%d -> %d)" % [coins0, _all_coins(w)])
 	w.dispose()
