@@ -98,6 +98,9 @@ jobs:
           $godot --headless --path game --script res://tests/courier_live_test.gd
           $godot --headless --path game --script res://tests/credit_test.gd
           $godot --headless --path game --script res://tests/economy_foundation_test.gd
+          $godot --headless --path game --script res://tests/economy_model_test.gd
+          $godot --headless --path game --script res://tests/le02_market_test.gd
+          $godot --headless --path game --script res://tests/le03_claims_test.gd     # Expansion 20 LE-03: one transaction path (claims)
           $godot --headless --path game --script res://tests/feast_test.gd
           $godot --headless --path game --script res://tests/horse_test.gd
           $godot --headless --path game --script res://tests/luxury_test.gd
