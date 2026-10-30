@@ -136,10 +136,32 @@ static func _pack(w: World, ms: Array, pantry: Inventory = null) -> Dictionary:
 
 ## Before packing: what the leaving villagers had set aside for the player's quests and contracts is released to them as for a death
 ## (a refund lands in their purse, which then goes with them).
+## Then (Build 24 review): a market trader's own stall session is settled to them (Stalls.settle: the commission to the manor, the rest
+## to their purse), and when the leavers are everyone left in their household its storefront tills go to them (TILL-D1), so they
+## take their own takings and purse with them and nothing of theirs escheats to the manor after they have gone.
 static func _pre_leave(w: World, ms: Array) -> void:
 	for o: NPC in ms:
 		w.quests.on_giver_died(o)
 		w.contracts.on_death(o)
+	if w.business == null:
+		return
+	var refs := {}
+	for o: NPC in ms:
+		refs[World.npc_ref(o.id)] = true
+	var ids: Array = w.stalls.keys()
+	ids.sort()
+	for id in ids:
+		var st: Dictionary = w.stalls[id]
+		var seller := str(st.get("session", {}).get("seller", w.business.stalls.seller_ref(st)))
+		if refs.has(seller) and (int(st.get("till", 0)) > 0 or w.business.stalls.unsettled(st) > 0):
+			w.business.stalls.close(st, "moved away")
+	for h in _households_of(ms):
+		var left := 0
+		for o: NPC in w.brain._members(h):
+			if not ms.has(o):
+				left += 1
+		if left == 0:
+			w.business.money.keep_tills_of(World.hh_ref(h))
 
 
 ## They have gone: the villagers leave the living (alive false, `away` the settlement), the village's accounts of coins and goods
@@ -432,9 +454,7 @@ static func _household_out(w: World, s: OffMapSettlement, ms: Array, whole: bool
 	if ms.is_empty() or bt == "" or not s.biz.has(bt):
 		return false
 	var pantry: Inventory = w.households[ms[0].household].pantry if whole else null
-	_pre_leave(w, ms)
-	if whole and w.business != null:
-		w.business.money.keep_tills_of(World.hh_ref(ms[0].household))     # TILL-D1: its storefront till goes with it
+	_pre_leave(w, ms)                                                       # (TILL-D1: a household that leaves takes its storefront till)
 	var load_ := _pack(w, ms, pantry)
 	var names := _names(ms)
 	var h := s.receive_household(load_.people, int(load_.coins), load_.goods, bt)

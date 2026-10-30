@@ -180,6 +180,9 @@ system, nothing in the village's `World.trade`, and the six-day abstraction of E
   recorder events (INT-622). Interactions INT-620 to INT-622; tests `game/tests/settle_food_test.gd`.
 - **Saves.** Optional keys only: a settlement's `transit`, a trader's `imported`, the four flow counts, `Regions.food_seq`; the
   authority's own `transactions` key (Worker A). An older save loads with nothing on the road.
+- **A trader that closes** (INT-623, Build 24 review): a settlement trader nobody works closes by `_close_idle` like any business;
+  food it bought still on the road is delivered at once (the grower paid) and goes to the granary with its stock. A place without a
+  trader buys no food abroad.
 - **Limits (provisional, agent).** Only wheat is traded between settlements (the staple every place grows; other foods still reach
   households through local markets and the caravan). One load a round. Households and councils do not travel to buy food themselves
   in this stage. No route loss or danger (E22-OD-04 future stage).

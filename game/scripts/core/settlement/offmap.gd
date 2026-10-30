@@ -1316,9 +1316,7 @@ func _close_idle() -> void:
 	var types := biz.keys()
 	types.sort()
 	for t in types:
-		if t == "merchant":
-			continue
-		var b: Dictionary = biz[t]
+		var b: Dictionary = biz[t]                   # the traders too (Build 24 review): a trade nobody is left to work closes
 		if _workers(b) > 0:
 			b.idle = 0
 			continue
@@ -1328,9 +1326,15 @@ func _close_idle() -> void:
 
 
 func _close_business(t: String) -> void:
+	if t == "merchant" and not transit.is_empty():
+		# X20-SETTLE-FOOD: food its traders bought and are still bringing home is taken in now (the shipment delivered early, the
+		# seller paid), so it follows the trader's stock to the granary instead of waiting on the road for a trader who is gone
+		for e in transit:
+			e.due = mini(int(e.due), day)
+		_deliver()
 	var b: Dictionary = biz[t]
 	gov.coins += int(b.till)
-	var m: Dictionary = biz.get("merchant", {})
+	var m: Dictionary = biz.get("merchant", {}) if t != "merchant" else {}     # a closing trader's own stock goes to the council
 	var items: Array = b.stock.keys()
 	items.sort()
 	for item in items:
@@ -1345,6 +1349,7 @@ func _close_business(t: String) -> void:
 		_add(gov.granary, item, n)
 	b.till = 0
 	b.stock = {}
+	b.erase("imported")
 	b.acc = {}
 	b.workers = []
 	b.idle = 0
