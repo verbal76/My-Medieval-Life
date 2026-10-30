@@ -37,6 +37,7 @@ func _init() -> void:
 	test_manor_buys_tool()
 	test_manor_commissions_tool()
 	test_commission_refused_and_lapsed()
+	test_business_accounts()
 	test_switch()
 	EconomyFoundation.set_override({})
 	print("%d checks, %d failures" % [checks, failures])
@@ -211,3 +212,50 @@ func test_switch() -> void:
 	w.brain._support_trades(1.0)
 	check(w.economy == null and (not w.manor_orders.is_empty() or wc.inv.has("axe")), "economy off: EQ-19's advance or purchase as before")
 	check(not w.to_dict().has("transactions"), "economy off and no authority call: no transactions key")
+
+
+# ------------------------------------------------------------------------------------------------ business accounts (OD-LE-04 D03, OD-LE-07 D06)
+func storefront(w: World) -> Array:
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household >= 0 and o.home != "" and w.buildings.has(o.home) \
+				and w.holds(World.hh_ref(o.household), w.buildings[o.home]) and w.business.front_place(w.buildings[o.home]).size() > 0:
+			var house: Dictionary = w.buildings[o.home]
+			for id in w.business.storefront_cost():
+				o.inv.add(id, int(w.business.storefront_cost()[id]))
+			assert(w.business.build_npc_front(house, o))
+			return [o, house]
+	return []
+
+
+func test_business_accounts() -> void:
+	var w := new_world(true, false)
+	var pair := storefront(w)
+	var o: NPC = pair[0]
+	var house: Dictionary = pair[1]
+	var tref := "front:" + str(house.id)
+	var owner: NPC = w.party(w.business.money.front_owner(house))
+	check(w.economy.actors.controller(tref) != "" and owner != null, "one owner per business: the storefront's till has exactly one controller (%s)" % w.economy.actors.controller(tref))
+	house.front.till = 200
+	var all := w.total_coins()
+	var e0 := owner.earned
+	w.business.money.daily()
+	var lines: Array = w.transactions.journal.filter(func(j): return str(j.op).begins_with("coins:") and (j.seller == tref or j.buyer == tref))
+	check(not lines.is_empty() and w.total_coins() == all, "the day's owner pay or draw is a recorded transfer through the authority (%s), conserved" % str(lines.map(func(j): return j.op)))
+	check(owner.earned == e0, "a distribution is not income: the owner's earned is unchanged")
+	# a contribution of coins a bid holds back is refused (no silent use of committed money)
+	owner.coins = 10
+	var b := w.economy.offers.post(EconOffers.BID, World.npc_ref(owner.id), "plank", 2, 5, w.day() + 3, "", "market", 1, "input")
+	check(b.ok, "a bid holds the owner's 10 coins")
+	var t0 := int(house.front.till)
+	check(not w.business.money.to_till(house, owner, 5) and int(house.front.till) == t0 and owner.coins == 10, "a contribution of coins a bid holds back is refused")
+	w.economy.offers.withdraw(int(b.id))
+	check(w.business.money.to_till(house, owner, 5) and int(house.front.till) == t0 + 5, "freed, the contribution is made and recorded")
+	check(w.business.money.from_till(house, owner, 3) and owner.coins == 8, "and a distribution back")
+	check(w.transactions.journal.filter(func(j): return str(j.op) in ["coins:contribution", "coins:distribution"]).size() == 2, "both journalled")
+	# economy off: the same moves, unrecorded, exactly as before
+	var w2 := new_world(false)
+	var p2 := storefront(w2)
+	var h2: Dictionary = p2[1]
+	var o2: NPC = p2[0]
+	o2.coins = 20
+	check(w2.business.money.to_till(h2, o2, 5) and int(h2.front.till) == 5 and o2.coins == 15 and w2.transactions.is_empty(), "economy off: a contribution as before, nothing recorded")

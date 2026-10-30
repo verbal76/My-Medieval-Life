@@ -189,11 +189,11 @@ func _room(p: Dictionary, item: String) -> bool:
 
 
 ## Coins into (k > 0) or out of (k < 0) a village party's own holder. No boundary crossing here.
-func _add_coins(p: Dictionary, k: int) -> void:
+func _add_coins(p: Dictionary, k: int, books := true) -> void:
 	match str(p.kind):
 		"npc", "player":
 			p.obj.coins += k
-			if p.obj is NPC:
+			if p.obj is NPC and books:
 				if k > 0:
 					p.obj.earned += k
 				else:
@@ -335,6 +335,38 @@ func exchange(txid: String, buyer: String, seller: String, item: String, qty: in
 			_coins_in(s, total)
 			w.stat("exported_" + item, float(qty))
 	_note(txid, "exchange", {"buyer": buyer, "seller": seller, "item": item, "qty": qty, "total": total}, "done")
+	return _end(txid, _res(true, "ok", txid, "done"))
+
+
+## LE-04 (OD-LE-07 D06: "Owners can make explicit recorded contributions, legitimate profit distributions or estate transfers;
+## no silent pooling"): `amount` coins from one village party to another for `purpose` (contribution, distribution, necessity,
+## estate, wage...), validated then committed, single-use id, journalled. Coins only; inside the village (no boundary crossed).
+func transfer_coins(txid: String, from: String, to: String, amount: int, purpose: String) -> Dictionary:
+	var rep := _begin(txid)
+	if not rep.is_empty():
+		return rep
+	if amount <= 0:
+		return _end(txid, _res(false, "invalid_quantity", txid))
+	if from == to:
+		return _end(txid, _res(false, "same_party", txid))
+	var a := _party(from)
+	var b := _party(to)
+	if a.code != "" or b.code != "":
+		return _end(txid, _res(false, str(a.code if a.code != "" else b.code), txid))
+	if not (a.kind in VILLAGE and b.kind in VILLAGE):
+		return _end(txid, _res(false, "unsupported_party", txid))
+	if _purse(a) < amount:
+		return _end(txid, _res(false, "no_funds", txid))
+	if (a.kind == "hh" and _head(a) == null) or (b.kind == "hh" and _head(b) == null):
+		return _end(txid, _res(false, "party_unavailable", txid))
+	var payer = a.obj if a.kind in PEOPLE else (_head(a) if a.kind == "hh" else null)
+	if payer != null and not w.claims_allow(payer, EconReservations.COINS, amount):
+		return _end(txid, _res(false, "claimed", txid))
+	if payer != null:
+		w.claims_release(payer, EconReservations.COINS, amount)
+	_add_coins(a, -amount, false)            # a move between an owner and its business: neither earned nor spent
+	_add_coins(b, amount, false)
+	_note(txid, "coins:" + purpose, {"buyer": to, "seller": from, "item": "", "qty": 0, "total": amount}, "done")
 	return _end(txid, _res(true, "ok", txid, "done"))
 
 
