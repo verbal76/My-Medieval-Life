@@ -107,10 +107,67 @@ non-trade path leaves every holding and record byte-identical); rebook to backin
 `Business.sell`; save and load mid-reservation (a competing purchase after load ends exactly as without the save);
 determinism (byte-identical saves); the switch.
 
-## 2. Priority 2 (in progress)
+## 2. Priority 2: budgets, food bids, production (done except wages and services)
 
-Household budgets and food bids, production response without tool-order traps, negotiated wages and services behind their switch
-(OD-LE-03 D02), job choice behind its existing gate. Recorded here as it lands.
+All of it acts only while the economy is on and `market.drive` is true.
+
+### 2.1 Household budgets (`EconMarket.budget_for`)
+
+Design s.4 "Evaluate competing uses of money and time" and s.8. A villager's coins go first to the obligations and necessities it
+answers for, `COMMITTED`: its household's food (when it is the household's payer), goods it owes on a contract, its trade's tool.
+They are served in order of each need's own urgency (`buyer_ceiling`: food's missing days over the horizon, a contract's
+nearness to its deadline, a tool 1.0); `BUDGET_ORDER` breaks ties only, so there is no fixed rank. Each takes at most its open
+quantity at its own ceiling. Food draws on the whole purse net of other reservations (OD-19: necessities from any coins); the
+others on coins above the OD-19 reserve (`cash_for`). A discretionary need (a trade input, a housing material) gets what is left
+after them, never more than its own cost. Stock targets (SHOP-01 `wants`) are not obligations: a strictly sequential version let
+them, far larger than any purse, starve every bid, and was rejected. `post_bid` sizes a bid and `review` keeps or raises it within
+this budget, so a bid never holds coins the household's food or an obligation needs first. Purses are never pooled.
+
+### 2.2 Food bids
+
+`food` joins `BID_KINDS`. A household's food need (LE-01: `hh.econ.days` under `reserve_days`) is bid by its payer
+(`food_payer`: the adult with the most coins, lowest id on a tie) for the purchasable food it believes cheapest per food point
+(`food_item`, its own knowledge), in units for the missing days (`food_units`). One food bid per household (another food item does
+not open a second). The bid settles like any other (INT-580, INT-600): sellers met in person, direct dialogue, CON-01. The
+existing household food routines (`buy_food`, OD-19) still run; both go through `World.trade`, and a food purchase may draw on a
+bid's coins only by cutting the bid (INT-600), so nothing is spent twice. A household that cannot pay goes without (WDR-022).
+
+### 2.3 Production honours accepted contracts; no tool-order trap
+
+- **Earmarks** (design s.6): when a CON-01 goods contract the seller will craft opens (route "craft"), the inputs it holds for
+  the units still owed are earmarked (`EconContractLinks.earmark`, first live caller), in its own pack. They cannot be sold
+  (INT-600) or worked into another product (`EconClaims.craft_ok`: `NPCBrain._do_recipe` does not plan such a recipe,
+  `World.work_craft` refuses it). The contract's own recipe uses them and the earmark shrinks with the use (`after_craft`). It
+  ends with the contract, whatever ends it (deadline lapse, renegotiation, cancellation): the dawn sweep releases it. What the
+  seller lacks it must still buy; nothing is created.
+- **Tool orders**: while the market drives, a worker waiting on the manor's tool order (EQ-19) keeps its tool need, so it may
+  bid for the tool and buy it from whoever sells; the forged tool then goes to the next worker short of one, or waits at the
+  forge (EQ-19 unchanged). A manor order that cannot be met lapses by its own rule (`manor_order_days`).
+- **Opportunity response**: higher bids reach whoever knows of them (encounters, word of mouth, direct dialogue: LE-02), and
+  anyone with the tool, skill and source may take a CON-01 contract (`Contracts.means`, unchanged); a toolless worker is no
+  longer stuck behind an order. Job choice (changing trade) stays behind its own existing gate (`job_choice`, off), untouched.
+
+### 2.4 Not built in LE-03: negotiated wages and services (OD-LE-03 D02, broader part)
+
+The owner's answer: "Existing wage and hiring rules remain intact ... Broader negotiated wages and services are layered into LE-03
+behind flags; do not replace functioning pay or invent universal wages." The villagers have no demand for a service or a hire
+that the market could negotiate today: CON-02 services (dig, survey) are ordered by the player and the manor, guard and reeve
+wages are the manor's, attendants' wages the player's. Every one of those payers is LE-04's (the manor as an economic actor,
+business identity OD-LE-04/D03, accounts OD-LE-07/D06). Building a flag with nothing behind it would be a stub, and inventing a
+villager hiring demand would be a new mechanic. Proposed: layer negotiated wages and service prices onto the manor's hiring and
+the business accounts in LE-04, behind `market.negotiated_wages` and `market.services` (both off), with CON-01's existing
+counteroffer rounds as the negotiation. Recorded for the lead (not an owner question unless the lead decides otherwise).
+
+### 2.5 Verification (head `81620f0`)
+
+| Check | Result |
+|---|---|
+| `le03_economy_test.gd` (new) | 38 checks, 0 failures |
+| `le03_claims_test.gd` | 80 checks, 0 failures (a check added for the `_open` fix below) |
+| `le02_market_test`, `economy_model_test`, `economy_foundation_test`, `contracts_test` | 101, 112, 89, 154 checks; 0 failures |
+
+Defect found and fixed: `Contracts._open` ran the LE-03 hook before the new contract was in the contract list, so the seller's
+asks were not cut at once and no earmark could be made (`EconContractLinks.earmark` looks the contract up). Economy on only.
 
 ## 3. Known limits and notes for the lead
 
