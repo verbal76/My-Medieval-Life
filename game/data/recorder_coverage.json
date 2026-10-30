@@ -178,7 +178,7 @@
    "status": "Partially instrumented",
    "stage": "D3",
    "test": "test_identity_events",
-   "note": "REC-DIAG: each move between the village and a settlement as a migration event with its reason, people, coins and goods (Migration._book); a member's death with its cause (hunger, old_age, no_household_left); once a day each settlement's population, households, hungry households, coins, treasury, food and deaths (settlement_day). Not recorded: the settlements' daily steps in detail, their trade, tax and journals, couriers (D6)."
+   "note": "REC-DIAG: each move between the village and a settlement as a migration event with its reason, people, coins and goods (Migration._book); a member's death with its cause (hunger, old_age, no_household_left); once a day each settlement's population, households, hungry households, coins, treasury, food and deaths (settlement_day); X20-SETTLE-FOOD: each food purchase between settlements (settlement_food_purchase: buyer, seller, item, units, coins, due day; refused lines as refused), each shortfall the traders could not buy with its reason (settlement_food_unmet, failed) and each delivery (settlement_food_delivery: interrupted when no trader or no household was left to take it). Not recorded: the settlements' daily steps in detail, their other trade, tax and journals, couriers (D6)."
   },
   {
    "system": "Judgment (Expansion 19): facts, beliefs, gossip, ledgers, trust",

@@ -160,17 +160,35 @@ func resize(id: int, qty: int) -> bool:
 
 
 ## The offer's reservation made to cover exactly what remains (consumed, then the rest reserved again).
+## LE-03: when the actor no longer holds enough to back what remains (its goods or coins went by another use), the offer is
+## cut to what it can back (never left open without its reservation); with less than its lot backable it is withdrawn.
 func _rebook(o: Dictionary) -> void:
 	var id := int(o.id)
 	if int(o.reservation) >= 0:
 		reservations.consume(int(o.reservation))
 		o.reservation = -1
 	var left := remaining(id)
-	if left > 0:
-		var item := str(o.item) if o.side == ASK else EconReservations.COINS
-		var amount := left if o.side == ASK else left * int(o.price_each)
-		var r := reservations.reserve(str(o.actor), item, amount, "offer:%d" % id, int(o.expiry)) if amount > 0 else {"ok": false, "id": -1}
-		o.reservation = int(r.id) if r.ok else -1      # not re-backed: unbacked offers are reported by backed(), never repaired
+	if left <= 0:
+		return
+	var item := str(o.item) if o.side == ASK else EconReservations.COINS
+	var per := 1 if o.side == ASK else int(o.price_each)
+	if per <= 0:
+		return                                         # a bid of nothing holds nothing
+	var r := reservations.reserve(str(o.actor), item, left * per, "offer:%d" % id, int(o.expiry))
+	if r.ok:
+		o.reservation = int(r.id)
+		return
+	var keep := mini(left, reservations.available(str(o.actor), item) / per)
+	if keep > 0 and keep >= mini(int(o.min_lot), left):
+		o.qty = int(o.filled) + int(o.committed) + keep
+		o.min_lot = mini(int(o.min_lot), keep)
+		r = reservations.reserve(str(o.actor), item, keep * per, "offer:%d" % id, int(o.expiry))
+		if r.ok:
+			o.reservation = int(r.id)
+			_note("note", o, "offer cut to %d (backing)" % int(o.qty))
+			return
+	if o.state == OPEN:
+		_finish(id, "withdrawn")                       # nothing it can still back
 
 
 func remaining(id: int) -> int:

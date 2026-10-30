@@ -48,7 +48,8 @@ const FLOW_COUNTS := ["coins_from_village", "coins_to_village", "road_coins_in",
 	"wage_short", "relief_units", "tax_households", "tax_businesses", "wages_paid", "official_pay", "horses_foaled",
 	"horses_died", "horses_sold", "horses_start", "tolls", "day_labour", "job_moves", "births", "age_deaths", "households_formed",
 	"inheritances", "orphans_fostered", "regional_coins_in", "regional_coins_out",
-	"outside_coins_in", "outside_coins_out", "migrants_in", "migrants_out", "biz_opened", "biz_closed"]
+	"outside_coins_in", "outside_coins_out", "migrants_in", "migrants_out", "biz_opened", "biz_closed",
+	"food_bought", "food_sold", "food_delivered", "food_unmet"]
 ## A member of a household (REG-DEMO-01): [born, sex, partnered, unwilling]. `born` is a settlement day number (negative before the
 ## first step), so age in years is (day - born) / the calendar's year length and needs no daily update; sex 1 is female; partnered 1
 ## means the member is one of the household's couple; unwilling 1 is a person who will not marry (decided once, at birth or founding).
@@ -67,6 +68,10 @@ const JOURNAL_MAX := 100             # lines of the settlement's own journal kep
 ## ID-01: the world's register of people, when this settlement lives in one (Regions.bind_world); not saved. Called as
 ## hook.call(event, info) with "birth" {sex, born, mother, father} (returns the new person's id) or "death" {id}.
 var person_hook := Callable()
+## X20-SETTLE-FOOD: Regions' report of a delivery (flight recorder), when it lives in a world; not saved.
+var trade_hook := Callable()
+## X20-SETTLE-FOOD: Regions._arrive, which closes a shipment through the transaction authority (set by Regions._add); not saved.
+var arrive_hook := Callable()
 
 static var _data := {}
 static var _rules := {}               # _data.rules and _data.business_types, once loaded (the step reads them thousands of times)
@@ -104,6 +109,12 @@ var _pcache: Dictionary = {}         # today's whole-coin prices (cleared when a
 var _avail: Dictionary = {}          # item -> units on offer in all open offers
 var _toll_acc := 0.0
 var _want_left: Dictionary = {}      # what the settlement still wants this visit (begin_visit)
+## X20-SETTLE-FOOD: shipments this settlement's trader has bought from another settlement and awaits (the goods are in the transaction
+## authority's transit custody, still the seller's, and the price in escrow, still the buyer's, until delivery: Regions.tx_ship).
+## Each entry {tx (the shipment's transaction id), to (holder: "trader"), item, n, from (the seller's ref), sent, due, coins};
+## at the first step on or after `due` the settlement asks for delivery (`arrive_hook`, Regions._arrive) and removes the entry once
+## delivered, so a save made while it travels delivers it once after loading.
+var transit: Array = []
 
 
 # ------------------------------------------------------------------ data ----------------
@@ -734,7 +745,10 @@ func step_day(d: int) -> void:
 	_sup = {}
 	_pcache = {}
 	var t0 := Time.get_ticks_usec() if profile else 0
+	if not transit.is_empty():
+		_deliver()
 	_market()
+	_imported_left()
 	if profile:
 		t0 = _lap("market", t0)
 	_produce()
@@ -1278,8 +1292,8 @@ func _move_jobs() -> void:
 
 # ------------------------------------------------------------------ development (SET-D, owner B18-DP-05) ----------------
 ## Once a week, after the job moves, a settlement's businesses follow its people and its needs, by the numbers the job moves use:
-##   closing  a business with no living worker household for `switch_stay_days` (two looks) closes (not the traders: they are the
-##            settlement's contact with the road). Its till passes to the treasury; its stock is bought by the traders at market
+##   closing  a business with no living worker household for `switch_stay_days` (two looks) closes, the traders too (Build 24
+##            review, owner 2026-10-30: whichever way the last household went: a trade switch, death, leaving, another business). Its till passes to the treasury; its stock is bought by the traders at market
 ##            price as far as their till above its reserve reaches, and the rest goes into the treasury's granary (the rule of
 ##            a household with no kin). The fields, woods, quarry reserve and horses stay with the place (`closed`).
 ##   opening  a trade the settlement does not have opens when its goods went unmet (units wanted and not found for sale, priced)
@@ -1302,9 +1316,7 @@ func _close_idle() -> void:
 	var types := biz.keys()
 	types.sort()
 	for t in types:
-		if t == "merchant":
-			continue
-		var b: Dictionary = biz[t]
+		var b: Dictionary = biz[t]                   # the traders too (Build 24 review): a trade nobody is left to work closes
 		if _workers(b) > 0:
 			b.idle = 0
 			continue
@@ -1314,9 +1326,15 @@ func _close_idle() -> void:
 
 
 func _close_business(t: String) -> void:
+	if t == "merchant" and not transit.is_empty():
+		# X20-SETTLE-FOOD: food its traders bought and are still bringing home is taken in now (the shipment delivered early, the
+		# seller paid), so it follows the trader's stock to the granary instead of waiting on the road for a trader who is gone
+		for e in transit:
+			e.due = mini(int(e.due), day)
+		_deliver()
 	var b: Dictionary = biz[t]
 	gov.coins += int(b.till)
-	var m: Dictionary = biz.get("merchant", {})
+	var m: Dictionary = biz.get("merchant", {}) if t != "merchant" else {}     # a closing trader's own stock goes to the council
 	var items: Array = b.stock.keys()
 	items.sort()
 	for item in items:
@@ -1331,6 +1349,7 @@ func _close_business(t: String) -> void:
 		_add(gov.granary, item, n)
 	b.till = 0
 	b.stock = {}
+	b.erase("imported")
 	b.acc = {}
 	b.workers = []
 	b.idle = 0
@@ -1552,15 +1571,17 @@ func trader_cash() -> int:
 	return 0 if m.is_empty() else maxi(0, int(m.till) - int(_rules.trader_reserve_floor))
 
 
+## What the trader has of `item` to sell on the road: its stock, less food it bought from another settlement for its own people
+## (X20-SETTLE-FOOD: imported food is for the local market, not for the caravan, while its place still needs it).
 func trader_has(item: String) -> int:
 	var m := trader()
-	return 0 if m.is_empty() else int(m.stock.get(item, 0))
+	return 0 if m.is_empty() else maxi(0, int(m.stock.get(item, 0)) - int((m.get("imported", {}) as Dictionary).get(item, 0)))
 
 
 ## The trader sells `n` of `item` to the village at `unit` coins each: the goods leave its stock, the coins enter its till.
 func sell_to_village(item: String, n: int, unit: int) -> bool:
 	var m := trader()
-	if m.is_empty() or n <= 0 or int(m.stock.get(item, 0)) < n:
+	if m.is_empty() or n <= 0 or trader_has(item) < n:
 		return false
 	_take(m.stock, item, n)
 	m.till += n * unit
@@ -1650,6 +1671,7 @@ func wants() -> Dictionary:
 			pts += float(b.stock.get(f, 0)) * _pts(f)
 	for f in rl.foods:
 		pts += float(gov.granary.get(f, 0)) * _pts(f)
+	pts += transit_food_pts()                       # X20-SETTLE-FOOD: food already bought and on its way is not wanted again
 	out["_food_pts"] = maxf(0.0, 3.0 * need - pts)
 	return out
 
@@ -1800,6 +1822,136 @@ func food_price(item: String) -> int:
 	return price(item)
 
 
+# ------------------------------------------------------------------ food bought from other settlements (X20-SETTLE-FOOD) ----------------
+## The name of one of the five places by its id (settlements.json), or the id.
+static func place_name(pid: String) -> String:
+	for sp in data().settlements:
+		if str(sp.id) == pid:
+			return str(sp.name)
+	return pid
+
+
+## X20-SETTLE-FOOD: what this settlement's food businesses may sell of `items` to another settlement's trader, by the rules they
+## release food to the village's caravan by (stock_trader_food, REG-BUY-P1), read only: {business type: {item: units}}.
+##  2. food above the local claim (food_claim_pts): the businesses' food net of their keep and the horses' feed, less the claim, a
+##     business at a time (types in order) and its items in the given order;
+##  3. a business with a demonstrated cash shortfall (cash_shortfall) also out of the protected part, worth at most that shortfall
+##     at the settlement's own price (the price the buyer pays it: no trader in between takes a margin).
+## The buyer's coins, not a trader's, pay for it, so no trader's capital limits it.
+func food_release(items: Array) -> Dictionary:
+	var out := {}
+	var srcs: Array = []                       # [business, keep]
+	var types := biz.keys()
+	types.sort()
+	var held := 0.0
+	for t in types:
+		var b: Dictionary = biz[t]
+		if b.type == "merchant" or _workers(b) == 0 or not _makes_food(b):
+			continue
+		var keep := _keep(b)
+		srcs.append([b, keep])
+		for item in food_items():
+			held += float(_food_spare(b, item, keep)) * _pts(item)
+	var free := maxf(0.0, held - food_claim_pts())
+	for pass_no in 2:
+		for src in srcs:
+			var b: Dictionary = src[0]
+			var short := cash_shortfall(b) if pass_no == 1 else 0
+			if pass_no == 1 and short <= 0:
+				continue
+			if not out.has(b.type):
+				out[b.type] = {}
+			for item in items:
+				var spare := _food_spare(b, item, src[1]) - int(out[b.type].get(item, 0))
+				var n := spare
+				if pass_no == 0:
+					n = mini(n, floori(free / _pts(item)))
+				else:
+					n = mini(n, short / maxi(1, price(item)))
+				if n <= 0:
+					continue
+				out[b.type][item] = int(out[b.type].get(item, 0)) + n
+				if pass_no == 0:
+					free -= float(n) * _pts(item)
+				else:
+					short -= n * price(item)
+	for t in out.keys():
+		if (out[t] as Dictionary).is_empty():
+			out.erase(t)
+	return out
+
+
+## Food points of the goods bought and still on the road home.
+func transit_food_pts() -> float:
+	var p := 0.0
+	for e in transit:
+		if _rules.foods.has(str(e.item)):
+			p += float(e.n) * _pts(str(e.item))
+	return p
+
+
+## A shipment this settlement's trader bought leaves for home (Regions.food_round, after the authority accepted it): the record the
+## settlement keeps of what it awaits.
+func await_shipment(tx: String, to: String, item: String, n: int, from: String, sent: int, due: int, coins_: int) -> Dictionary:
+	var e := {"tx": tx, "to": to, "item": item, "n": n, "from": from, "sent": sent, "due": due, "coins": coins_}
+	transit.append(e)
+	return e
+
+
+## Called by the settlement's step: every shipment due today or earlier is delivered (Regions._arrive -> the transaction authority's
+## deliver: the goods to the trader, the escrowed price to the seller, together), in the order bought, and marked imported (for the
+## local market). An entry is removed once its shipment is closed (delivered, or failed and refunded), so nothing arrives twice; one
+## the authority cannot close yet (a party unavailable) stays and is asked again at the next step, its goods and coins where they are.
+func _deliver() -> void:
+	var keep: Array = []
+	for e in transit:
+		if int(e.due) > day:
+			keep.append(e)
+			continue
+		var res: Dictionary = arrive_hook.call(e, day) if arrive_hook.is_valid() else {"ok": false, "code": "no_authority", "state": "open"}
+		var state := str(res.get("state", ""))
+		if state == "open" or (not bool(res.get("ok", false)) and state == ""):
+			keep.append(e)                             # cannot be closed now: asked again tomorrow
+			continue
+		if state == "delivered":
+			var m := trader()
+			if str(e.to) == "trader" and not m.is_empty():
+				if not m.has("imported"):
+					m["imported"] = {}
+				_add(m.imported, str(e.item), mini(int(e.n), int(m.stock.get(str(e.item), 0))))
+			flows.food_delivered += int(e.n)
+			note("%d %s bought in %s arrived." % [int(e.n), GameData.item_name(str(e.item)).to_lower(), place_name(str(e.from).trim_prefix("region:").get_slice("/", 0))])
+		else:
+			note("%d %s bought in %s never arrived (%s); the price was refunded." % [int(e.n), GameData.item_name(str(e.item)).to_lower(),
+				place_name(str(e.from).trim_prefix("region:").get_slice("/", 0)), str(res.get("code", state))])
+		if trade_hook.is_valid():
+			trade_hook.call("delivered", {"settlement": id, "entry": e, "state": state, "households": households()})
+	transit = keep
+
+
+## After the morning market: imported food the locals bought is no longer marked (the mark never exceeds the stock).
+func _imported_left() -> void:
+	var m := trader()
+	if m.is_empty() or not m.has("imported"):
+		return
+	var keys: Array = (m.imported as Dictionary).keys()
+	for k in keys:
+		var left := mini(int(m.imported[k]), int(m.stock.get(k, 0)))
+		if left <= 0:
+			m.imported.erase(k)
+		else:
+			m.imported[k] = left
+	if (m.imported as Dictionary).is_empty():
+		m.erase("imported")
+
+
+## Once the settlement no longer wants food, what its trader imported is ordinary stock again (it may sell it on the road).
+func release_imported() -> void:
+	var m := trader()
+	if not m.is_empty():
+		m.erase("imported")
+
+
 # ------------------------------------------------------------------ a report ----------------
 func summary() -> Dictionary:
 	var hungry := 0
@@ -1822,7 +1974,9 @@ func summary() -> Dictionary:
 		"trader": int(trader().get("till", 0)), "pantry_days": food_pts / maxf(1.0, need), "horses": horses(),
 		"wage_short": int(flows.wage_short), "relief": int(flows.relief_units), "births": int(flows.births),
 		"age_deaths": int(flows.age_deaths), "households_formed": int(flows.households_formed),
-		"biz_opened": int(flows.biz_opened), "biz_closed": int(flows.biz_closed), "businesses": biz.size()}
+		"biz_opened": int(flows.biz_opened), "biz_closed": int(flows.biz_closed), "businesses": biz.size(),
+		"food_bought": int(flows.food_bought), "food_sold": int(flows.food_sold), "food_unmet": int(flows.food_unmet),
+		"in_transit": transit.size()}
 
 
 # ------------------------------------------------------------------ people moving to and from the village (MIGRATE-18) ----------------
@@ -2023,7 +2177,8 @@ func to_dict() -> Dictionary:
 	return {"id": id, "name": name, "kind": kind, "gov_name": gov_name, "miles": miles, "x": pos.x, "y": pos.y,
 		"industries": industries.duplicate(), "hh": hs, "biz": bs, "gov": gv,
 		"prices": prices.duplicate(), "toll_acc": _toll_acc, "flows": flows.duplicate(true), "start": start.duplicate(true), "day": day,
-		"tax": tax.duplicate(true), "journal": journal.duplicate(true), "closed": closed.duplicate(true), "dev": dev.duplicate(true)}
+		"tax": tax.duplicate(true), "journal": journal.duplicate(true), "closed": closed.duplicate(true), "dev": dev.duplicate(true),
+		"transit": transit.duplicate(true)}
 
 
 static func from_dict(d: Dictionary) -> OffMapSettlement:
@@ -2101,6 +2256,9 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 	for e in d.get("journal", []):
 		s.journal.append({"day": int(e.day), "text": str(e.text)})
 	s.start = {"coins": int(d.start.coins), "goods": _ints(d.start.goods)}
+	for e in d.get("transit", []):                             # X20-SETTLE-FOOD (optional keys: an older save has nothing on the road)
+		s.transit.append({"tx": str(e.tx), "to": str(e.to), "item": str(e.item), "n": int(e.n), "from": str(e.from),
+			"sent": int(e.sent), "due": int(e.due), "coins": int(e.get("coins", 0))})
 	return s
 
 
@@ -2116,6 +2274,8 @@ static func _biz_from(bd: Dictionary) -> Dictionary:
 	b.workers = (b.workers as Array).map(func(x): return int(x))
 	b.stock = _ints(b.stock)
 	b.reserves = _ints(b.reserves)
+	if b.has("imported"):                                      # X20-SETTLE-FOOD (a trader's imported food; optional)
+		b.imported = _ints(b.imported)
 	var acc := {}
 	for k in b.acc:
 		acc[k] = float(b.acc[k])

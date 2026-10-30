@@ -62,6 +62,12 @@ static func ask(item: String) -> int:
 	return maxi(1, GameData.value(item))
 
 
+## What seller `l` asks for a unit of `item` at its own door: its own price rule when it has one (a settlement's holder asks its
+## settlement's floating price, SettlementParty.ask_price; X20-SETTLE-FOOD), else the item's value (fixtures, snapshots).
+static func ask_of(l, item: String) -> int:
+	return maxi(1, int(l.ask_price(item))) if l.has_method("ask_price") else ask(item)
+
+
 ## What `l` will pay a unit of `item`, carriage included: its value, plus up to scarcity_premium times it as its store of
 ## the horizon need runs out (all of it when it holds none).
 static func willing(l, item: String) -> int:
@@ -73,6 +79,8 @@ static func willing(l, item: String) -> int:
 
 
 static func spendable(l) -> int:
+	if l.has_method("spend_limit"):                 # a party with a spending rule of its own (a settlement's trader; X20-SETTLE-FOOD)
+		return maxi(0, int(l.spend_limit()))
 	return maxi(0, l.purse() - int(cfg().cash_floor))
 
 
@@ -142,8 +150,9 @@ static func _carriage(s, b, r: Dictionary, room: Dictionary, carters: Array) -> 
 ## [[place_a, place_b, "preferred"]]. Returns {lines: [{seller, buyer, item, units, unit_price, total, carriage,
 ## carrier, fee_each, fee_total, days}], unmet: [{buyer, item, units, reason}], lost: [{seller, buyer, item, units, to}]}.
 ## `local` (analysis): also let parties of the same place buy from each other first, as the local market does (carriage
-## "local", no trip, no fee), so demand the place can meet itself is not sent abroad. Reads only.
-static func plan(ledgers: Array, routes: Dictionary, agreements: Array = [], local := false) -> Dictionary:
+## "local", no trip, no fee), so demand the place can meet itself is not sent abroad. `only` (X20-SETTLE-FOOD: the food round):
+## plan these goods alone; empty, every good. Reads only.
+static func plan(ledgers: Array, routes: Dictionary, agreements: Array = [], local := false, only: Array = []) -> Dictionary:
 	var ls := _sorted(ledgers)
 	var partners := {}
 	for a in agreements:
@@ -161,7 +170,7 @@ static func plan(ledgers: Array, routes: Dictionary, agreements: Array = [], loc
 	var unmet := []
 	var lost := []
 	var margin := float(cfg().preferred_margin_pct) / 100.0
-	for item in goods_of(ls):
+	for item in (goods_of(ls) if only.is_empty() else goods_of(ls).filter(func(g): return only.has(g))):
 		for l in ls:
 			left[l.id][item] = supply(l, item)
 		# the neediest buyer first (the share of its horizon it lacks), ties to the lower id
@@ -184,7 +193,7 @@ static func plan(ledgers: Array, routes: Dictionary, agreements: Array = [], loc
 					if s.id == b.id or int(left[s.id][item]) <= 0 or (s.settlement == b.settlement and not local):
 						continue
 					if s.settlement == b.settlement:
-						offers.append([ask(item), s.id, [0, "local", "", 1 << 30], {"days": 0.0}])
+						offers.append([ask_of(s, item), s.id, [0, "local", "", 1 << 30], {"days": 0.0}])
 						continue
 					var r: Dictionary = routes.get(s.settlement + ">" + b.settlement, {})
 					if r.is_empty():
@@ -193,7 +202,7 @@ static func plan(ledgers: Array, routes: Dictionary, agreements: Array = [], loc
 					if car.is_empty():
 						no_carriage = true
 						continue
-					offers.append([ask(item) + int(car[0]), s.id, car, r])
+					offers.append([ask_of(s, item) + int(car[0]), s.id, car, r])
 				if offers.is_empty():
 					if reason == "":
 						reason = "no carriage" if no_carriage else "no supplier"
@@ -222,8 +231,9 @@ static func plan(ledgers: Array, routes: Dictionary, agreements: Array = [], loc
 				var car: Array = pick[2]
 				var n := mini(mini(want, int(left[sid][item])), mini(int(car[3]), afford))
 				var fee_each := int(car[0])
-				lines.append({"seller": sid, "buyer": b.id, "item": item, "units": n, "unit_price": ask(item),
-					"total": n * ask(item), "carriage": str(car[1]), "carrier": str(car[2]), "fee_each": fee_each,
+				var unit := int(pick[0]) - fee_each      # the seller's own asking price (ask_of)
+				lines.append({"seller": sid, "buyer": b.id, "item": item, "units": n, "unit_price": unit,
+					"total": n * unit, "carriage": str(car[1]), "carrier": str(car[2]), "fee_each": fee_each,
 					"fee_total": n * fee_each, "days": float((pick[3] as Dictionary).days)})
 				for o in offers:            # competition: the others that could have sold these units lost them
 					if str(o[1]) != sid:

@@ -34,6 +34,7 @@ var offers: EconOffers
 var knowledge: EconKnowledge
 var contract_links: EconContractLinks
 var market: EconMarket
+var claims: EconClaims            # LE-03: the one validation of what an actor may part with (World.trade and the village paths)
 var contract_cursor := 0          # the highest CON-01 contract id whose terms the two parties have been told (knowledge "contract")
 
 
@@ -83,12 +84,14 @@ static func attach(world: World, saved := {}) -> EconomyFoundation:
 	f.contract_cursor = int(saved.get("contract_cursor", 0))
 	f.market = EconMarket.new(f, world, cfg.get("market", {}))
 	f.market.load_dict(saved.get("market", {}))
+	f.claims = EconClaims.new(f)
+	f.claims.load_dict(saved.get("claims", {}))
 	return f
 
 
 func is_empty() -> bool:
 	return reservations.is_empty() and events.is_empty() and needs.is_empty() and offers.is_empty() and knowledge.is_empty() \
-			and contract_links.is_empty() and contract_cursor == 0 and market.is_empty()
+			and contract_links.is_empty() and contract_cursor == 0 and market.is_empty() and claims.is_empty()
 
 
 ## World.trade, after a completed sale (observed only). Both parties learn of each other by the dealing; an event is noted;
@@ -116,6 +119,7 @@ func on_trade(buyer: Object, seller: Object, item: String, qty: int, total: int)
 func dawn(day: int) -> void:
 	offers.expire_due(day)
 	reservations.expire_due(day)
+	claims.reconcile_all()        # LE-03: offers whose backing went by an outflow nobody refuses (tax, eating, crafting) are cut
 	contract_links.sweep()
 	var cs: Contracts = actors.w.contracts
 	if cs != null:
@@ -166,4 +170,6 @@ func to_dict() -> Dictionary:
 		d["contract_cursor"] = contract_cursor
 	if not market.is_empty():
 		d["market"] = market.to_dict()
+	if not claims.is_empty():
+		d["claims"] = claims.to_dict()
 	return d
