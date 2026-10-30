@@ -177,6 +177,13 @@ asks were not cut at once and no earmark could be made (`EconContractLinks.earma
 - With the economy OFF, `NPCBrain`'s `buy_from` takes `min(wanted, vendor stock)` without subtracting the vendor's contract holds
   (`World.trade` does not check them there). Not changed (G0 must stay identical) and not verified as a live defect; with the
   economy on, `World.trade` refuses such a sale.
+- `economy_sim --economy` only ever attached the LE-01 observer (its override `{"enabled": true}` leaves `market.drive` absent),
+  so no economy-on Actions run before LE-03 exercised the market. `--market` (added; allowed in `long-sims.yml`) runs the shipped
+  `economy.json` switched on, prints the market's and the claims' counters and fails on an integrity breach. Smoke, seed 1, 2
+  days, head `81620f0`+: coins 3009 -> 3057 with leak 0 (+48 accounted external flow), item leaks none, 5 deals, 34 bids and 20
+  asks posted, 63 bids unaffordable within budget, 23 offers cut by a yield, 1 input earmark, 0 breaches, 1 earmark left unbacked
+  by an outflow nobody refuses (reported). The economy save section was 540 KB after 2 days (knowledge 1915 entries, mostly word
+  of mouth): LE-06 must measure and bound it.
 - Every claims read is the actor's own held reservations or open offers; `inbound` scans the contract list (bounded by CON-01's
   open and recent contracts). LE-06 profiles it.
 
