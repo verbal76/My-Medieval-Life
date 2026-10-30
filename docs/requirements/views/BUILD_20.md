@@ -8,14 +8,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 89 |
-| Integrated | 77 of 89 (87%) |
-| Automated tests passed | 77 of 89 (87%) |
-| Integration verified | 44 of 89 (49%) |
-| Gameplay verified | 0 of 89 (0%) |
-| Owner playtested | 0 of 89 (0%) |
-| Complete | 2 of 89 (2%) |
-| Open (release blockers) | 87 |
+| Approved requirements in scope | 90 |
+| Integrated | 77 of 90 (86%) |
+| Automated tests passed | 77 of 90 (86%) |
+| Integration verified | 44 of 90 (49%) |
+| Gameplay verified | 0 of 90 (0%) |
+| Owner playtested | 0 of 90 (0%) |
+| Complete | 2 of 90 (2%) |
+| Open (release blockers) | 88 |
 | Open owner decisions (blocking) | 1 (0) |
 
 ## In development (worker assigned) (5)
@@ -108,7 +108,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 5c303be | INTEGRATION VERIFIED |  |  | verification only |
 | X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 e8cc44b | INTEGRATION VERIFIED |  |  | verification only |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (7)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (8)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -119,6 +119,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) | SJD-G | XS |
+| X20-MP-ECON-INTEGRITY | When multiplayer and the economy systems are integrated, verify that disconnects, retries, duplicate requests and host recovery cannot duplicate or lose currency, goods or transactions | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Complete (2)
 

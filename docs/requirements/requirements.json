@@ -32231,8 +32231,8 @@
    "description": "Internet multiplayer beyond free methods: hosts on mobile data or behind carrier-grade NAT cannot be reached by invite code, UPnP or port forwarding. Options: (A) free methods only, as built (no cost; those hosts cannot host); (B) hole punching via free public STUN servers (no cost; third-party dependency, a second code from guest to host, still fails on much mobile data); (C) our own small rendezvous+relay server (covers every network incl. phone hosting; a small cloud server plus bandwidth each month, price to be quoted; recommended, with an owner-set spending cap); (D) a commercial relay service (new SDK, accounts, fees above a free tier); (E) Steam networking (excluded now; no Android). Default until decided: A. Note: the 2026-10-24 decision MP-D5 says free methods first, no relay, no paid service, so B-D would revise it (DCR-01).",
    "source": "BATCH_D_CONNECTIVITY.md in docs/multiplayer on wip/expansion20 (Batch D connectivity study, 2026-10-30)",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Owner 2026-10-30 (owner message 2026-10-30 (Multiplayer Batch D decision and next steps)): OPTION A for now. Retain free connection methods; no paid relay infrastructure, commercial networking services or new recurring expenses. Keep the networking architecture extensible so a relay can be added later without redesigning multiplayer. Before reconsidering paid networking, complete the existing cross-platform real-device and real-network test matrix and report actual connection limitations.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "multiplayer",
    "related": [
@@ -32245,8 +32245,14 @@
      "date": "2026-10-30",
      "change": "entered in the register",
      "why": "docs/multiplayer/BATCH_D_CONNECTIVITY.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "disposition: OPEN -> APPROVED; owner_answer; notes",
+     "why": "owner answered 2026-10-30: option A"
     }
-   ]
+   ],
+   "notes": "DCR-01: compatible with MP-D5 (free methods first, no relay, no paid service)."
   },
   {
    "id": "MP-INTERACT-01",
@@ -32529,9 +32535,14 @@
      "date": "2026-10-30",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; tests: A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS; lead rerun on 7bae490: multiplayer_c_test 241, net_c_test 35, net_g1_test 44, net_batch_b_test 44, world_test 339, manhunt_test 60, multiplayer_a1_test 67, multiplayer_b_test 31, all 0 failures; G0 identical; lead rerun on 2b92fa8: multiplayer_c_test 340, net_c_test 35, net_g1_test 44, run_tests 3598, start_test 523, all 0 failures; G0 identical; SIM-GATE suite PASS on 36b1e75 (agent) -> A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS; lead rerun on 7bae490: multiplayer_c_test 241, net_c_test 35, net_g1_test 44, net_batch_b_test 44, world_test 339, manhunt_test 60, multiplayer_a1_test 67, multiplayer_b_test 31, all 0 failures; G0 identical; lead rerun on 2b92fa8: multiplayer_c_test 340, net_c_test 35, net_g1_test 44, run_tests 3598, start_test 523, all 0 failures; G0 identical; SIM-GATE suite PASS on 36b1e75 (agent); net_fault_test 52/0 (three processes + a packet-damaging relay: loss, duplication, reorder, delay, blackout; kill/freeze/restart host and guests; Android pause/resume; coins and packs counted exactly) on 1c019be; net_mp4 148, net_interact 67, mp_interact_ui 112, multiplayer_c 340, net_ui 61, net_g1 45, net_soak 28, save_transfer 21, net_batch_b 44, net_c 35, net_family 22, net_fauna 13, net_recorder_quit 20, multiplayer_a1 67, multiplayer_b 31 (0 failures) on 5266dea; run_tests 3600, start_test 523, world_test 339, wiki_test 141 on 157a978; G0 identical to the baseline on a0114a8; merge tree identical to wip/mp-batchd 49932ec; test_commit: 2b92fa8 -> 49932ec; commits + 49932ec; integrated_in + Expansion 20 wip/expansion20 (Batch D merge); next_action; playtest",
      "why": "Batch D implemented (free methods) and merged into wip/expansion20 (merge of 49932ec); relay is an owner decision (MP-INET-RELAY)"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "next_action",
+     "why": "owner approved the Batch D integration at de8d225 (2026-10-30)"
     }
    ],
-   "next_action": "Owner: MP-INET-RELAY decision. Real-device and real-network matrix (the MP_TEST_MATRIX.md note on wip/expansion20, Batch D section): all nine platform pairs plus Steam Deck on LAN and across networks, UPnP on a real router, CGNAT/mobile data on the Pixel, IPv6, Android background/lock/network change, Windows firewall, 3-4 players.",
+   "next_action": "Real-device and real-network matrix (MP_TEST_MATRIX.md Batch D section on wip/expansion20), then report actual connection limitations before any paid networking is reconsidered (MP-INET-RELAY). Keep the transport extensible for a later relay.",
    "assigned_worker": "worker C (multiplayer Batch D)",
    "branch": "wip/mp-batchd",
    "tests": "A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS; lead rerun on 7bae490: multiplayer_c_test 241, net_c_test 35, net_g1_test 44, net_batch_b_test 44, world_test 339, manhunt_test 60, multiplayer_a1_test 67, multiplayer_b_test 31, all 0 failures; G0 identical; lead rerun on 2b92fa8: multiplayer_c_test 340, net_c_test 35, net_g1_test 44, run_tests 3598, start_test 523, all 0 failures; G0 identical; SIM-GATE suite PASS on 36b1e75 (agent); net_fault_test 52/0 (three processes + a packet-damaging relay: loss, duplication, reorder, delay, blackout; kill/freeze/restart host and guests; Android pause/resume; coins and packs counted exactly) on 1c019be; net_mp4 148, net_interact 67, mp_interact_ui 112, multiplayer_c 340, net_ui 61, net_g1 45, net_soak 28, save_transfer 21, net_batch_b 44, net_c 35, net_family 22, net_fauna 13, net_recorder_quit 20, multiplayer_a1 67, multiplayer_b 31 (0 failures) on 5266dea; run_tests 3600, start_test 523, world_test 339, wiki_test 141 on 157a978; G0 identical to the baseline on a0114a8; merge tree identical to wip/mp-batchd 49932ec",
@@ -60564,6 +60575,34 @@
    ],
    "integrated_in": [
     "Expansion 20 wip/expansion20 5c303be"
+   ]
+  },
+  {
+   "id": "X20-MP-ECON-INTEGRITY",
+   "kind": "approved",
+   "title": "When multiplayer and the economy systems are integrated, verify that disconnects, retries, duplicate requests and host recovery cannot duplicate or lose currency, goods or transactions",
+   "description": "When multiplayer and the economy systems are integrated, verify that disconnects, retries, duplicate requests and host recovery cannot duplicate or lose currency, goods or transactions",
+   "source": "owner message 2026-10-30 (Multiplayer Batch D decision and next steps)",
+   "owner_wording": "When multiplayer and the economy systems are integrated, explicitly verify that disconnects, retries, duplicate requests, and host recovery cannot duplicate or lose currency, goods, or transactions.",
+   "approval": "owner, 2026-10-30",
+   "acceptance": [
+    "on the integrated branch (Batch D + LE-03 transaction authority + settlement food trade): fault-injected multiplayer tests (drops, duplicates, reorder, host kill and recovery, guest reconnect, Android pause) during trades, offers, contracts and shipments show exact conservation of coins and goods, no transaction executed twice and none lost"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-30 (Multiplayer Batch D decision and next steps)"
+    }
    ]
   },
   {
