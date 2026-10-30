@@ -18,7 +18,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Open (release blockers) | 102 |
 | Open owner decisions (blocking) | 1 (0) |
 
-## In development (worker assigned) (6)
+## In development (worker assigned) (8)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -28,6 +28,8 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-B24-REVIEW | Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance | OWNER APPROVED | IN DEVELOPMENT | lead (tracking); workers A and B / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 | X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-TXN-REPLAY-FIELDS | Latent defect: the transaction authority's saved past results keep only basic fields, so an idempotent replay after a load returns a settle_estate result without its 'paid' amount; keep the full result (bounded) so a replay after load answers exactly as before | OWNER APPROVED | IN DEVELOPMENT | worker E / wip/x20-mp-econ | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-WEAR-TRANSFER | Defect: a tool's saved wear does not travel when the tool changes hands (sale, gift, inheritance, loot), so a worn tool can become as good as new; wear must follow the item through every transfer (existing state, WDR-022 lost state) | OWNER APPROVED | IN DEVELOPMENT | worker E / wip/x20-mp-econ | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (87)
 
@@ -121,7 +123,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-SETTLE-REOPEN | A closed settlement business reopens (or is re-established) when a household takes up its trade, through the existing business-creation and ownership rules, without restoring the former owner's money, stock, contracts, workforce or assets | OWNER APPROVED | INTEGRATED | wip/expansion20 ed6360f | INTEGRATION VERIFIED |  |  | verification only |
 | X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 e8cc44b | INTEGRATION VERIFIED |  |  | verification only |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (9)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (7)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -132,8 +134,6 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) | SJD-G | XS |
 | X20-BACKGROUND | Expansion 20 continues in the background within approved decisions (Upwardly Build 83 is the owner's primary priority): combined integration, one baseline simulation on the merged commit, LE-06 first, trader reopening, X20-MP-ECON-INTEGRITY, SJD-G evaluation; no build rushed; escalate only the listed cases | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | X20-RESUME, design: UNKNOWN | UNKNOWN |
 | X20-MP-ECON-INTEGRITY | When multiplayer and the economy systems are integrated, verify that disconnects, retries, duplicate requests and host recovery cannot duplicate or lose currency, goods or transactions | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker E (MP-economy integrity) / wip/x20-mp-econ | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
-| X20-TXN-REPLAY-FIELDS | Latent defect: the transaction authority's saved past results keep only basic fields, so an idempotent replay after a load returns a settle_estate result without its 'paid' amount; keep the full result (bounded) so a replay after load answers exactly as before | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| X20-WEAR-TRANSFER | Defect: a tool's saved wear does not travel when the tool changes hands (sale, gift, inheritance, loot), so a worn tool can become as good as new; wear must follow the item through every transfer (existing state, WDR-022 lost state) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Complete (2)
 

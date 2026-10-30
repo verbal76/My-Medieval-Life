@@ -61640,7 +61640,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -61649,8 +61649,15 @@
      "date": "2026-10-30",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-30_x20_background_development.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E; branch: None -> wip/x20-mp-econ",
+     "why": "assigned to worker E"
     }
-   ]
+   ],
+   "assigned_worker": "worker E",
+   "branch": "wip/x20-mp-econ"
   },
   {
    "id": "X20-WEAR-TRANSFER",
@@ -61668,7 +61675,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -61677,8 +61684,15 @@
      "date": "2026-10-30",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-30_x20_background_development.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E; branch: None -> wip/x20-mp-econ",
+     "why": "assigned to worker E"
     }
-   ]
+   ],
+   "assigned_worker": "worker E",
+   "branch": "wip/x20-mp-econ"
   },
   {
    "id": "XAUDIT-01",
