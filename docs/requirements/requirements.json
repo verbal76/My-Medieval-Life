@@ -28683,7 +28683,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/x20-le05",
    "commits": [],
    "parent": "EXP-D",
    "depends_on": [],
@@ -28716,6 +28716,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (Living Economy); branch:  -> wip/x20-le05",
+     "why": "worker A started LE-05 (travel cost in delivered-contract prices done, 1f72b48); rental/repair as a design proposal first"
     }
    ],
    "target_build": "20",
@@ -28724,10 +28729,11 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "assigned_worker": "worker A (Living Economy)"
   },
   {
    "id": "LE-06",

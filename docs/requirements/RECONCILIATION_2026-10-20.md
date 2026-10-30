@@ -355,7 +355,7 @@ None.
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
-| LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | LOG-01 | Unclaimed manor deliveries fall back to an available salaried manor hand or the reeve, physically, recorded once, without an extra wage; urgent relief keeps its protection until a physical replacement is safe | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | owner decision |
