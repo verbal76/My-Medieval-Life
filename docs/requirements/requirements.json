@@ -28495,7 +28495,7 @@
    "implementation": "",
    "tests": "",
    "playtest": [],
-   "branch": "",
+   "branch": "wip/x20-le03",
    "commits": [],
    "parent": "EXP-D",
    "depends_on": [],
@@ -28528,6 +28528,11 @@
      "date": "2026-10-23",
      "change": "reconciliation: target_build=20",
      "why": "OD-30 and OD-LE-01 (owner): Living Economy is Expansion 20; numbering and placement only, implementation not authorized"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker A (Living Economy); branch:  -> wip/x20-le03",
+     "why": "worker A started (X20-RESUME)"
     }
    ],
    "target_build": "20",
@@ -28536,10 +28541,11 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "assigned_worker": "worker A (Living Economy)"
   },
   {
    "id": "LE-04",
@@ -32129,7 +32135,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -32138,8 +32144,15 @@
      "date": "2026-10-24",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-24_owner_multiplayer_decisions.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker C (multiplayer Batch D); branch: None -> wip/mp-batchd",
+     "why": "Batch D resumed (owner 2026-10-30): worker C"
     }
-   ]
+   ],
+   "assigned_worker": "worker C (multiplayer Batch D)",
+   "branch": "wip/mp-batchd"
   },
   {
    "id": "MP-INTERACT-01",
@@ -32343,7 +32356,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -32412,11 +32425,16 @@
      "date": "2026-10-24",
      "change": "tests: A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS; lead rerun on 7bae490: multiplayer_c_test 241, net_c_test 35, net_g1_test 44, net_batch_b_test 44, world_test 339, manhunt_test 60, multiplayer_a1_test 67, multiplayer_b_test 31, all 0 failures; G0 identical -> A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS; lead rerun on 7bae490: multiplayer_c_test 241, net_c_test 35, net_g1_test 44, net_batch_b_test 44, world_test 339, manhunt_test 60, multiplayer_a1_test 67, multiplayer_b_test 31, all 0 failures; G0 identical; lead rerun on 2b92fa8: multiplayer_c_test 340, net_c_test 35, net_g1_test 44, run_tests 3598, start_test 523, all 0 failures; G0 identical; SIM-GATE suite PASS on 36b1e75 (agent); test_commit: 7bae490 -> 2b92fa8; commits + 2b92fa8; next_action",
      "why": "G2 complete: Batch C closed at wip/multiplayer-b19 36b1e75 (code) / 2b92fa8 (evidence notes); seven guest subsystems tested through the host's verb path (employment, manor work, couriers, farms and pens, construction and fittings, guardianship, feasts; one fix: Construction.place added to the network verbs); lead verified on 2b92fa8: multiplayer_c_test 340, net_c_test 35, net_g1_test 44, run_tests 3598, start_test 523, all 0 failures, G0 identical; agent: SIM-GATE PASS on 36b1e75; branch build-ready as Build 21 (tester notes), not built or published; project on hold (owner: Upwardly takes priority)"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: multiplayer worker (subagent), lead integrates -> worker C (multiplayer Batch D); branch: wip/multiplayer-b19 -> wip/mp-batchd; next_action",
+     "why": "Batch D resumed (owner 2026-10-30, X20-RESUME): worker C"
     }
    ],
-   "next_action": "ON HOLD (owner 2026-10-24). On resume: Batch D (menus, Android network permission and interruption MP-D6, internet MP-INET, Steam Deck) after owner approval; build Build 21 only with owner approval",
-   "assigned_worker": "multiplayer worker (subagent), lead integrates",
-   "branch": "wip/multiplayer-b19",
+   "next_action": "Batch D on wip/mp-batchd: invite-code joining (genuinely cross-network or documented limits), direct IP, menus, Android suspension and drops, reconnection, host loss, message duplication, save integrity, cross-platform matrix (docs/handoffs/PARALLEL_WORK_2026-10-30.md).",
+   "assigned_worker": "worker C (multiplayer Batch D)",
+   "branch": "wip/mp-batchd",
    "tests": "A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS; lead rerun on 7bae490: multiplayer_c_test 241, net_c_test 35, net_g1_test 44, net_batch_b_test 44, world_test 339, manhunt_test 60, multiplayer_a1_test 67, multiplayer_b_test 31, all 0 failures; G0 identical; lead rerun on 2b92fa8: multiplayer_c_test 340, net_c_test 35, net_g1_test 44, run_tests 3598, start_test 523, all 0 failures; G0 identical; SIM-GATE suite PASS on 36b1e75 (agent)",
    "test_commit": "2b92fa8",
    "commits": [
@@ -60273,7 +60291,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -60302,12 +60320,17 @@
      "date": "2026-10-28",
      "change": "implementation_status: IN DEVELOPMENT -> NOT STARTED; next_action",
      "why": "paused after Build 24 (owner 2026-10-28)"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; next_action",
+     "why": "pause lifted (owner 2026-10-30, X20-RESUME)"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/expansion20",
    "notes": "SUSPENDED (owner 2026-10-28, docs/directives/2026-10-28_x20_checkpoint_build_and_pause.md): remaining work (LE-03..LE-07, EMP-PERM-01, GP-POLISH, SJD-G/H) paused after the Build 24 private checkpoint; resume only on the owner's instruction.",
-   "next_action": "PAUSED after Build 24 (owner 2026-10-28). Resume only on the owner's instruction: LE-03 first (docs/handoffs/X20_RECOVERY_HANDOFF.md section 3)."
+   "next_action": "Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md)."
   },
   {
    "id": "X20-FINAL",
@@ -60462,6 +60485,45 @@
    "next_action": "Build 22 in development (wip/build22); Expansion 20 implementation begins after Build 22's private packages (owner 2026-10-26)"
   },
   {
+   "id": "X20-RESUME",
+   "kind": "approved",
+   "title": "Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only",
+   "description": "Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only",
+   "source": "docs/directives/2026-10-30_master_development_resumption.md",
+   "owner_wording": "I am formally lifting the October 28 development pause on My Medieval Life. ... I authorize automatic activation of the completed Living Economy once all documented acceptance tests, integration checks, required simulations, and integrity checks pass.",
+   "approval": "owner, 2026-10-30",
+   "acceptance": [
+    "LE-03..LE-07 completed in dependency order; LE-03 leaves one authoritative transaction path (no double spending, negative inventory, unaccounted coins or goods, stale fills, partial transfers)",
+    "X20-SETTLE-FOOD through real settlement transactions; no third purchasing path; failure allowed",
+    "Multiplayer Batch D: invite-code joining that genuinely works across networks (or documented limits), direct IP, timeouts, Android suspension, reconnection, host loss, duplicate/delayed messages, save integrity, cross-platform matrix; no paid infrastructure without the owner",
+    "Living Economy activated only when no second buying path, conservation, save/load and replay, migration, long-run calibration, dependencies and no critical defect are all shown; activation commit, evidence and configuration recorded",
+    "stale register entries corrected; PRs #2 and #3 closed only after verifying supersession; Expansion 21 on hold; no Expansions 22-27; no public release or Steam"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_master_development_resumption.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/expansion20",
+     "why": "lead coordinating; workers launched 2026-10-30"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/expansion20"
+  },
+  {
    "id": "X20-SCOPE",
    "kind": "decision",
    "title": "Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forward into Expansion 20 (LE-02..LE-05)?",
@@ -60507,7 +60569,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -60521,9 +60583,16 @@
      "date": "2026-10-28",
      "change": "next_action",
      "why": "registered as the missing implementation of an approved policy; scheduled with LE-05; paused with Expansion 20"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (settlement food trade); branch: None -> wip/x20-settle-food",
+     "why": "worker B started (X20-RESUME)"
     }
    ],
-   "next_action": "LE-05 (paused 2026-10-28)."
+   "next_action": "LE-05 (paused 2026-10-28).",
+   "assigned_worker": "worker B (settlement food trade)",
+   "branch": "wip/x20-settle-food"
   },
   {
    "id": "X20-TILL-KEEP",

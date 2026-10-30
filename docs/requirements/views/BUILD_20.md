@@ -8,15 +8,24 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 88 |
-| Integrated | 77 of 88 (88%) |
-| Automated tests passed | 77 of 88 (88%) |
-| Integration verified | 44 of 88 (50%) |
-| Gameplay verified | 0 of 88 (0%) |
-| Owner playtested | 0 of 88 (0%) |
-| Complete | 2 of 88 (2%) |
-| Open (release blockers) | 86 |
+| Approved requirements in scope | 89 |
+| Integrated | 77 of 89 (87%) |
+| Automated tests passed | 77 of 89 (87%) |
+| Integration verified | 44 of 89 (49%) |
+| Gameplay verified | 0 of 89 (0%) |
+| Owner playtested | 0 of 89 (0%) |
+| Complete | 2 of 89 (2%) |
+| Open (release blockers) | 87 |
 | Open owner decisions (blocking) | 1 (0) |
+
+## In development (worker assigned) (4)
+
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
+| LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | OWNER APPROVED | IN DEVELOPMENT | worker A (Living Economy) / wip/x20-le03 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
+| X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-SETTLE-FOOD | Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game | OWNER APPROVED | IN DEVELOPMENT | worker B (settlement food trade) / wip/x20-settle-food | NOT TESTED | LE-05 (paused 2026-10-28). | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (75)
 
@@ -104,20 +113,17 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | NOT STARTED | none | NOT TESTED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 |  | L |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (10)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (7)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it | design: UNKNOWN | UNKNOWN |
 | GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | OWNER APPROVED | NOT STARTED | none | NOT TESTED | P1 after Batch A1 (docs/gameplay_polish/SCHEDULE.md) | design: UNKNOWN | UNKNOWN |
-| LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) | SJD-G | XS |
-| X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | NOT STARTED | lead / wip/expansion20 | NOT TESTED | PAUSED after Build 24 (owner 2026-10-28). Resume only on the owner's instruction: LE-03 first (docs/handoffs/X20_RECOVERY_HANDOFF.md section 3). | design: UNKNOWN | UNKNOWN |
-| X20-SETTLE-FOOD | Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game | OWNER APPROVED | NOT STARTED | none | NOT TESTED | LE-05 (paused 2026-10-28). | design: UNKNOWN | UNKNOWN |
 
 ## Complete (2)
 

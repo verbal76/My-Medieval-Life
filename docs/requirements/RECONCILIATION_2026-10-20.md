@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 168 still open, 63 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 612 (287 of them still open) |
-| **Open entries now** (rules excluded) | | **454** |
+| Entries added since | | 613 (288 of them still open) |
+| **Open entries now** (rules excluded) | | **455** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (63)
@@ -106,7 +106,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (612)
+## Added since the baseline (613)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -352,7 +352,7 @@ None.
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20+ |
 | LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
-| LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
@@ -404,11 +404,11 @@ None.
 | MP-D6 | Multiplayer: an Android host leaving the app (world pauses for everyone, or a foreground service keeps hosting)? | decision | APPROVED | multiplayer |
 | MP-D7 | Multiplayer: a new guest character (a newcomer to the village, or a member of an existing household)? | decision | APPROVED | multiplayer |
 | MP-D8 | Multiplayer: player-to-player marriage, children and inheritance follow the same rules as with villagers (CRT-03)? | decision | APPROVED | multiplayer |
-| MP-INET | Internet multiplayer is mandatory: free connection methods first; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal (costs, dependencies, privacy, alternatives) comes to the owner before internet support is declared complete | approved | NOT STARTED / NOT TESTED / OPEN | multiplayer |
+| MP-INET | Internet multiplayer is mandatory: free connection methods first; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal (costs, dependencies, privacy, alternatives) comes to the owner before internet support is declared complete | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
 | MP-INTERACT-01 | Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | MP-INTERACT-Q1 | Player-to-player contracts: the contract system only has a way for villagers to do units of work, so contracts between two players are limited to goods. Should a player be able to hire another player for work (a service contract)? | decision | DEFERRED | 20 |
 | MP-INTERACT-Q2 | Talk targeting: Talk takes the nearest person, so a closer villager comes before another player (a tap, a click or Next always reaches the player). Should players come first for Talk instead? | decision | APPROVED | 20 |
-| MP-MASTER | Full player-hosted multiplayer as the next milestone after Build 19 (before Expansion 20): 3-4 players including the host in one persistent host-authoritative world; full guest parity with the host in every existing system; Android, Windows and Linux (incl. Steam Deck) each host and join, every cross-platform combination validated on real devices; LAN and a documented internet method with no dedicated server and no paid service without owner approval; single player intact offline | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | multiplayer |
+| MP-MASTER | Full player-hosted multiplayer as the next milestone after Build 19 (before Expansion 20): 3-4 players including the host in one persistent host-authoritative world; full guest parity with the host in every existing system; Android, Windows and Linux (incl. Steam Deck) each host and join, every cross-platform combination validated on real devices; LAN and a documented internet method with no dedicated server and no paid service without owner approval; single player intact offline | approved | IN DEVELOPMENT / TARGETED TESTS PASSED / OPEN | multiplayer |
 | MP-PLAYER-FAMILY | Children of player-to-player marriages: biological (male and female) and adoption with both spouses as parents | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | MP-Q-PLAYER-CHILDREN | Should a marriage between two players have children? (births currently need a villager parent) | decision | APPROVED | multiplayer |
 | MSW-01 | Minimum Sufficient Work: correctness mandatory, redundancy justified | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
@@ -712,12 +712,13 @@ None.
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | decision | APPROVED | 19 |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | decision | APPROVED | 19 |
 | X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
-| X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-OPEN-ITEMS | Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 20 |
+| X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-SCOPE | Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forward into Expansion 20 (LE-02..LE-05)? | decision | APPROVED | 20 |
-| X20-SETTLE-FOOD | Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| X20-SETTLE-FOOD | Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | XAUDIT-01 | Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
 | XEXPL-01 | Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |

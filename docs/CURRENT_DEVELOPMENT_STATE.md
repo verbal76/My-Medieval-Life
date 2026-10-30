@@ -1,6 +1,6 @@
 # Current development state — active handoff
 
-**Updated 2026-10-28 (Build 24 checkpoint released; Medieval development paused).** Fetch current heads before acting. The previous handoff is preserved at `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_pre_2026-10-27_authority_cleanup.md` as an archived audit snapshot, **not active tasks**.
+**Updated 2026-10-30 (development resumed: three workstreams).** Fetch current heads before acting. The previous handoff is preserved at `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_pre_2026-10-27_authority_cleanup.md` as an archived audit snapshot, **not active tasks**.
 
 ## Current baseline and mandatory release gate
 
@@ -30,11 +30,14 @@ Workers from 87b69ab (2026-10-27): M on `wip/x20-fixes` (SIM-F2, SIM-F3, player/
 
 ## Next actions (current work only)
 
-**MEDIEVAL DEVELOPMENT IS PAUSED (owner 2026-10-28, `docs/directives/2026-10-28_x20_checkpoint_build_and_pause.md`).** Build 24, the
-Expansion 20 checkpoint, is a private draft (release 426357144, tag `build-24`, `wip/expansion20` `4611d86`, run 40636966840), verified
-(checksums, permanent signing certificate, versionCode 24, Windows and Linux packages). No work is in flight: no workers, no runs.
-Do nothing on Medieval until the owner resumes it. To resume: `docs/handoffs/X20_RECOVERY_HANDOFF.md` (remaining Expansion 20 work,
-LE-03 first; branches, gates, decisions). Owner device checks of Builds 23 and 24 are outstanding and never block a resume.
+**DEVELOPMENT RESUMED (owner 2026-10-30, `docs/directives/2026-10-30_master_development_resumption.md`, X20-RESUME).** Plan and
+interface contracts: `docs/handoffs/PARALLEL_WORK_2026-10-30.md`. Integration branch `wip/expansion20` (Build 24 `4611d86`). Workers:
+- A Living Economy, LE-03 then LE-04..LE-07: `wip/x20-le03` (X20-COMPLETE, LE-03).
+- B settlement food trade: `wip/x20-settle-food` (X20-SETTLE-FOOD).
+- C multiplayer Batch D incl. internet play: `wip/mp-batchd` (MP-MASTER, MP-INET).
+Lead: integration, register, PRs #2/#3 review, stale register entries, handoff, private draft builds at milestones. Long runs on
+GitHub Actions only. Economy switch stays off until every readiness condition in X20-RESUME holds. Remaining work list:
+`docs/handoffs/X20_RECOVERY_HANDOFF.md`.
 
 ## Sources
 

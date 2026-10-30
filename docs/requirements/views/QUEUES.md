@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (12)
+## Workers and task branches (18)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -12,11 +12,17 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-CHECKPOINT-1 | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion20-preparation |
+| LE-03 | 20 | IN DEVELOPMENT | worker A (Living Economy) | wip/x20-le03 |
 | MP-01 | multiplayer | IMPLEMENTED ON TASK BRANCH | none | wip/multiplayer |
+| MP-INET | multiplayer | IN DEVELOPMENT | worker C (multiplayer Batch D) | wip/mp-batchd |
+| MP-MASTER | multiplayer | IN DEVELOPMENT | worker C (multiplayer Batch D) | wip/mp-batchd |
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
+| X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
+| X20-RESUME | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
+| X20-SETTLE-FOOD | 20 | IN DEVELOPMENT | worker B (settlement food trade) | wip/x20-settle-food |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
 ## Implemented but not tested (45)
