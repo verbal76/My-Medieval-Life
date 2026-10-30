@@ -28530,7 +28530,7 @@
    "implementation": "",
    "tests": "le03_claims 80/0, le03_economy 38/0, le03_transactions 79/0, le02_market 101/0, economy_model 112/0, economy_foundation 89/0, contracts 154/0, conservation 8/0, till_ownership 54/0, contract_sign 21/0; run_tests 3600, start 523, world 339, multiplayer_c 340, business 160, credit 98, feast 37 (0 failures, 7784ed4); G0 identical (Actions 41118611434 bfde588, 41124728769 83d262e); economy-on with market 41127569935 (83d262e): leaks 0, integrity breaches 0",
    "playtest": [],
-   "branch": "wip/x20-le03",
+   "branch": "wip/expansion20",
    "commits": [
     "8fff5ce"
    ],
@@ -28575,15 +28575,22 @@
      "date": "2026-10-30",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> le03_claims 80/0, le03_economy 38/0, le03_transactions 79/0, le02_market 101/0, economy_model 112/0, economy_foundation 89/0, contracts 154/0, conservation 8/0, till_ownership 54/0, contract_sign 21/0; run_tests 3600, start 523, world 339, multiplayer_c 340, business 160, credit 98, feast 37 (0 failures, 7784ed4); G0 identical (Actions 41118611434 bfde588, 41124728769 83d262e); economy-on with market 41127569935 (83d262e): leaks 0, integrity breaches 0; test_commit: None -> 8fff5ce; commits + 8fff5ce; next_action",
      "why": "worker A finished LE-03 (8fff5ce, frozen): one transaction path, transaction authority, budgets, food bids, contract inputs; wages/services deferred to LE-04 behind flags; to merge with food trade"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; branch: wip/x20-le03 -> wip/expansion20; integrated_in + wip/expansion20 5195c2c",
+     "why": "merged into wip/expansion20 with the food trade (5195c2c)"
     }
    ],
    "target_build": "20",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
-   "integrated_in": [],
+   "integrated_in": [
+    "wip/expansion20 5195c2c"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -28604,7 +28611,7 @@
    "implementation": "",
    "tests": "le04_test 24/0, le03_transactions 79/0, le03_economy 38/0, le02_market 101/0, contracts 154/0, business_money 37/0, business 160/0, property 123/0, stalls 104/0, stall_putup 11/0, recorder 214/0, conservation 8/0, till_ownership 71/0; le04_test 61/0, till_ownership_test 71/0, le03_transactions_test 79/0, le03_claims_test 80/0, contracts_test 154/0, business_test 160/0, world_test 339/0, property_test 123/0, stalls_test 104/0, recorder_test 214/0; G0 run 41135548780 identical to baseline; --market run 41135583126 no leaks",
    "playtest": [],
-   "branch": "wip/x20-le04",
+   "branch": "wip/expansion20",
    "commits": [
     "353d12b"
    ],
@@ -28654,20 +28661,27 @@
      "date": "2026-10-30",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: le04_test 24/0, le03_transactions 79/0, le03_economy 38/0, le02_market 101/0, contracts 154/0, business_money 37/0, business 160/0, property 123/0, stalls 104/0, stall_putup 11/0, recorder 214/0, conservation 8/0, till_ownership 71/0 -> le04_test 24/0, le03_transactions 79/0, le03_economy 38/0, le02_market 101/0, contracts 154/0, business_money 37/0, business 160/0, property 123/0, stalls 104/0, stall_putup 11/0, recorder 214/0, conservation 8/0, till_ownership 71/0; le04_test 61/0, till_ownership_test 71/0, le03_transactions_test 79/0, le03_claims_test 80/0, contracts_test 154/0, business_test 160/0, world_test 339/0, property_test 123/0, stalls_test 104/0, recorder_test 214/0; G0 run 41135548780 identical to baseline; --market run 41135583126 no leaks; test_commit: 74b99de -> 353d12b; commits + 353d12b; notes",
      "why": "worker A milestone: business accounts, estate claims, speculation, negotiated wages (flag off), settle_estate; services flag has nothing behind it (no service demand exists; first case LE-05 construction labour)"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; branch: wip/x20-le04 -> wip/expansion20; test_commit: 353d12b -> 8bbdcfb; integrated_in + wip/expansion20 8bbdcfb",
+     "why": "merged into wip/expansion20 (8bbdcfb); 41 targeted suites pass"
     }
    ],
    "target_build": "20",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
-   "integrated_in": [],
+   "integrated_in": [
+    "wip/expansion20 8bbdcfb"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "assigned_worker": "worker A (Living Economy)",
-   "test_commit": "353d12b"
+   "test_commit": "8bbdcfb"
   },
   {
    "id": "LE-05",
@@ -60408,8 +60422,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -60427,16 +60441,24 @@
      "date": "2026-10-30",
      "change": "notes",
      "why": "failing-first confirmed by the lead"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; branch: wip/x20-settle-food -> wip/expansion20; test_commit: 30becac -> ed6360f; integrated_in + wip/expansion20 5195c2c",
+     "why": "merged into wip/expansion20 (5195c2c); suites on the merge 0 failures"
     }
    ],
    "assigned_worker": "worker B",
-   "branch": "wip/x20-settle-food",
+   "branch": "wip/expansion20",
    "tests": "settle_review_test 45/0",
-   "test_commit": "30becac",
+   "test_commit": "ed6360f",
    "commits": [
     "108d252"
    ],
-   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first (lead, 2026-10-30): settle_review_test on the pre-fix code (e4f2423) 20/45 fail; finding 1 checks: 'a trader nobody works closes after 22 days', 'merchant with no working household closed', 'its till and stock were handed on'. Gameplay consequence: all five traders close by days 21-35 and none reopen (decision X20-TRADER-CLOSE, open part: a reopen rule)."
+   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first (lead, 2026-10-30): settle_review_test on the pre-fix code (e4f2423) 20/45 fail; finding 1 checks: 'a trader nobody works closes after 22 days', 'merchant with no working household closed', 'its till and stock were handed on'. Gameplay consequence: all five traders close by days 21-35 and none reopen (decision X20-TRADER-CLOSE, open part: a reopen rule).",
+   "integrated_in": [
+    "wip/expansion20 5195c2c"
+   ]
   },
   {
    "id": "X20-B24-F2",
@@ -60454,8 +60476,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -60473,16 +60495,24 @@
      "date": "2026-10-30",
      "change": "notes",
      "why": "failing-first confirmed by the lead"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; branch: wip/x20-settle-food -> wip/expansion20; test_commit: 30becac -> ed6360f; integrated_in + wip/expansion20 5195c2c",
+     "why": "merged into wip/expansion20 (5195c2c); suites on the merge 0 failures"
     }
    ],
    "assigned_worker": "worker B",
-   "branch": "wip/x20-settle-food",
+   "branch": "wip/expansion20",
    "tests": "settle_review_test 45/0",
-   "test_commit": "30becac",
+   "test_commit": "ed6360f",
    "commits": [
     "108d252"
    ],
-   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first (lead, 2026-10-30): settle_review_test on e4f2423: 'its storefront till went with them, not to the manor (treasury 270 -> 307)', 'the household's stores went with them, not to the granary', 'nothing of theirs escheats to the manor afterwards'. Root cause fixed in Migration._take_own for every leaving path (whole household, last members, lone leaver for work or marriage)."
+   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first (lead, 2026-10-30): settle_review_test on e4f2423: 'its storefront till went with them, not to the manor (treasury 270 -> 307)', 'the household's stores went with them, not to the granary', 'nothing of theirs escheats to the manor afterwards'. Root cause fixed in Migration._take_own for every leaving path (whole household, last members, lone leaver for work or marriage).",
+   "integrated_in": [
+    "wip/expansion20 5195c2c"
+   ]
   },
   {
    "id": "X20-B24-F3",
@@ -60500,8 +60530,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -60519,16 +60549,24 @@
      "date": "2026-10-30",
      "change": "notes",
      "why": "failing-first confirmed by the lead"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; branch: wip/x20-settle-food -> wip/expansion20; test_commit: 30becac -> ed6360f; integrated_in + wip/expansion20 5195c2c",
+     "why": "merged into wip/expansion20 (5195c2c); suites on the merge 0 failures"
     }
    ],
    "assigned_worker": "worker B",
-   "branch": "wip/x20-settle-food",
+   "branch": "wip/expansion20",
    "tests": "settle_review_test 45/0",
-   "test_commit": "30becac",
+   "test_commit": "ed6360f",
    "commits": [
     "108d252"
    ],
-   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first (lead, 2026-10-30): settle_review_test on e4f2423: 'the takings went with them (30 carried, expected 68)', 'the manor took only its commission (3), not the takings', 'the stall's session was settled before they went'."
+   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first (lead, 2026-10-30): settle_review_test on e4f2423: 'the takings went with them (30 carried, expected 68)', 'the manor took only its commission (3), not the takings', 'the stall's session was settled before they went'.",
+   "integrated_in": [
+    "wip/expansion20 5195c2c"
+   ]
   },
   {
    "id": "X20-B24-F4",
@@ -60547,7 +60585,7 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -60570,11 +60608,16 @@
      "date": "2026-10-30",
      "change": "tests",
      "why": "tests wording"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; test_commit: f8b3f10 -> 8bbdcfb",
+     "why": "integration suites on wip/expansion20 8bbdcfb (41 targeted suites) 0 failures"
     }
    ],
    "branch": "wip/expansion20",
    "tests": "sword_visual_test 43/0",
-   "test_commit": "f8b3f10",
+   "test_commit": "8bbdcfb",
    "commits": [
     "f8b3f10"
    ],
@@ -60600,7 +60643,7 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -60623,11 +60666,16 @@
      "date": "2026-10-30",
      "change": "tests",
      "why": "tests wording"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; test_commit: f8b3f10 -> 8bbdcfb",
+     "why": "integration suites on wip/expansion20 8bbdcfb (41 targeted suites) 0 failures"
     }
    ],
    "branch": "wip/expansion20",
    "tests": "sword_visual_test 43/0",
-   "test_commit": "f8b3f10",
+   "test_commit": "8bbdcfb",
    "commits": [
     "f8b3f10"
    ],
@@ -60652,8 +60700,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -60666,16 +60714,24 @@
      "date": "2026-10-30",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> worker A; branch: None -> wip/x20-le04; tests: None -> till_ownership_test 71/0 (12 new checks reported failing on the old code), stalls_test 104/0; test_commit: None -> 74b99de; commits + 74b99de; notes",
      "why": "fixed at the cause on wip/x20-le04 (worker A); merges with LE-04"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; branch: wip/x20-le04 -> wip/expansion20; test_commit: 74b99de -> ed6360f; integrated_in + wip/expansion20 8bbdcfb",
+     "why": "merged into wip/expansion20 (8bbdcfb); till_ownership_test 71/0 and settle_review_test on the combined tree"
     }
    ],
    "assigned_worker": "worker A",
-   "branch": "wip/x20-le04",
+   "branch": "wip/expansion20",
    "tests": "till_ownership_test 71/0 (12 new checks reported failing on the old code), stalls_test 104/0",
-   "test_commit": "74b99de",
+   "test_commit": "ed6360f",
    "commits": [
     "74b99de"
    ],
-   "notes": "Remains present in frozen Build 24 (4611d86). Covers sale, letting, eviction, manor, player, dead and ended holders, counters; exact conservation."
+   "notes": "Remains present in frozen Build 24 (4611d86). Covers sale, letting, eviction, manor, player, dead and ended holders, counters; exact conservation.",
+   "integrated_in": [
+    "wip/expansion20 8bbdcfb"
+   ]
   },
   {
    "id": "X20-B24-F7",
@@ -60693,8 +60749,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -60707,16 +60763,24 @@
      "date": "2026-10-30",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> worker A; branch: None -> wip/x20-le04; tests: None -> till_ownership_test 71/0 (12 new checks reported failing on the old code), stalls_test 104/0; test_commit: None -> 74b99de; commits + 74b99de; notes",
      "why": "fixed at the cause on wip/x20-le04 (worker A); merges with LE-04"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; branch: wip/x20-le04 -> wip/expansion20; test_commit: 74b99de -> ed6360f; integrated_in + wip/expansion20 8bbdcfb",
+     "why": "merged into wip/expansion20 (8bbdcfb); till_ownership_test 71/0 and settle_review_test on the combined tree"
     }
    ],
    "assigned_worker": "worker A",
-   "branch": "wip/x20-le04",
+   "branch": "wip/expansion20",
    "tests": "till_ownership_test 71/0 (12 new checks reported failing on the old code), stalls_test 104/0",
-   "test_commit": "74b99de",
+   "test_commit": "ed6360f",
    "commits": [
     "74b99de"
    ],
-   "notes": "Remains present in frozen Build 24 (4611d86). Covers sale, letting, eviction, manor, player, dead and ended holders, counters; exact conservation."
+   "notes": "Remains present in frozen Build 24 (4611d86). Covers sale, letting, eviction, manor, player, dead and ended holders, counters; exact conservation.",
+   "integrated_in": [
+    "wip/expansion20 8bbdcfb"
+   ]
   },
   {
    "id": "X20-B24-F8",
@@ -60735,7 +60799,7 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "INTEGRATED",
-   "verification_status": "TARGETED TESTS PASSED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -60758,11 +60822,16 @@
      "date": "2026-10-30",
      "change": "tests",
      "why": "tests wording"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; test_commit: f8b3f10 -> 8bbdcfb",
+     "why": "integration suites on wip/expansion20 8bbdcfb (41 targeted suites) 0 failures"
     }
    ],
    "branch": "wip/expansion20",
    "tests": "Python test_sim_gate (recorder archive means)",
-   "test_commit": "f8b3f10",
+   "test_commit": "8bbdcfb",
    "commits": [
     "f8b3f10"
    ],
@@ -61275,8 +61344,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -61294,11 +61363,26 @@
      "date": "2026-10-30",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B (settlement food trade); branch: None -> wip/x20-settle-food",
      "why": "worker B started (X20-RESUME)"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; branch: wip/x20-settle-food -> wip/expansion20; test_commit: None -> 8bbdcfb; integrated_in + wip/expansion20 5195c2c",
+     "why": "merged into wip/expansion20 (5195c2c); G0 Actions 41142767484 on 8bbdcfb: leak 0, item leaks 0, holders match, archive ok, Actions = local fingerprints"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "tests: None -> settle_food_test 93/0, settle_review_test 104/0, regional_food_test 47/0, regions_test 118/0 on ed6360f; G0 41142767484 (8bbdcfb) conservation exact, deterministic across machines",
+     "why": "test evidence"
     }
    ],
    "next_action": "LE-05 (paused 2026-10-28).",
    "assigned_worker": "worker B (settlement food trade)",
-   "branch": "wip/x20-settle-food"
+   "branch": "wip/expansion20",
+   "test_commit": "8bbdcfb",
+   "integrated_in": [
+    "wip/expansion20 5195c2c"
+   ],
+   "tests": "settle_food_test 93/0, settle_review_test 104/0, regional_food_test 47/0, regions_test 118/0 on ed6360f; G0 41142767484 (8bbdcfb) conservation exact, deterministic across machines"
   },
   {
    "id": "X20-SETTLE-REOPEN",
@@ -61322,8 +61406,8 @@
     "X20-TRADER-CLOSE"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -61346,16 +61430,24 @@
      "date": "2026-10-30",
      "change": "approval",
      "why": "owner approved the implementation in principle (docs/directives/2026-10-30_x20_trader_pay_decision.md); integrate after the 8bbdcfb baseline with the settlement regression suites, no repeat 60-day run"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; branch: wip/x20-settle-food -> wip/expansion20; test_commit: 3702566 -> ed6360f; integrated_in + wip/expansion20 ed6360f",
+     "why": "merged into wip/expansion20 (ed6360f); 14 settlement suites 0 failures on the combined tree"
     }
    ],
    "assigned_worker": "worker B",
-   "branch": "wip/x20-settle-food",
+   "branch": "wip/expansion20",
    "tests": "settle_review_test 104/0 (test_trader_reopens, test_reopen_every_type: 12 business types; both failed on the old code), settle_food_test 93/0, regions_test 118/0, regional_test 71/0, regional_food_test 47/0, settlement_test 89/0, migration_test 109/0, party_test 102/0, le03_transactions_test 79/0, wiki_test pass; Actions 41139763023 seeds 1,2 60 days: coin leak 0, no item leaks, audits clean",
-   "test_commit": "3702566",
+   "test_commit": "ed6360f",
    "commits": [
     "3702566"
    ],
-   "notes": "Reopening by the existing opening rule (two weeks of unmet demand + a household with savings); nothing of the former owner restored (till = new household's savings only; capital rule reset to 80); place assets (fields, deposits, horses) stay with the place. Day-60 village coins: seed 1 5429 (B24) / 3995 (closure) / 4191 (reopen); seed 2 5236 / 3848 / 4083. Traders reopen and close again in cycles because a reopened trader pays its household only above its 0.85 reserve: owner decision X20-TRADER-PAY."
+   "notes": "Reopening by the existing opening rule (two weeks of unmet demand + a household with savings); nothing of the former owner restored (till = new household's savings only; capital rule reset to 80); place assets (fields, deposits, horses) stay with the place. Day-60 village coins: seed 1 5429 (B24) / 3995 (closure) / 4191 (reopen); seed 2 5236 / 3848 / 4083. Traders reopen and close again in cycles because a reopened trader pays its household only above its 0.85 reserve: owner decision X20-TRADER-PAY.",
+   "integrated_in": [
+    "wip/expansion20 ed6360f"
+   ]
   },
   {
    "id": "X20-TILL-KEEP",
