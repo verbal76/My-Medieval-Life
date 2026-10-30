@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (26)
+## Workers and task branches (27)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -31,6 +31,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-RESUME | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | X20-SETTLE-FOOD | 20 | IN DEVELOPMENT | worker B (settlement food trade) | wip/x20-settle-food |
 | X20-SETTLE-REOPEN | 20 | IMPLEMENTED ON TASK BRANCH | worker B | wip/x20-settle-food |
+| X20-TRADER-PAY-INV | 20+ | IN DEVELOPMENT | worker B | wip/x20-trader-inv |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
 ## Implemented but not tested (45)

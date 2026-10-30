@@ -61491,7 +61491,7 @@
     "X20-TRADER-PAY"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -61500,8 +61500,15 @@
      "date": "2026-10-30",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-30_x20_trader_pay_decision.md"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker B; branch: None -> wip/x20-trader-inv",
+     "why": "assigned (analysis from existing records)"
     }
-   ]
+   ],
+   "assigned_worker": "worker B",
+   "branch": "wip/x20-trader-inv"
   },
   {
    "id": "XAUDIT-01",
