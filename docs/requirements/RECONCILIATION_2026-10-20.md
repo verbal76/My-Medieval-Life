@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 167 still open, 64 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 613 (288 of them still open) |
-| **Open entries now** (rules excluded) | | **454** |
+| Entries added since | | 614 (289 of them still open) |
+| **Open entries now** (rules excluded) | | **455** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (64)
@@ -107,7 +107,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (613)
+## Added since the baseline (614)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -405,11 +405,12 @@ None.
 | MP-D6 | Multiplayer: an Android host leaving the app (world pauses for everyone, or a foreground service keeps hosting)? | decision | APPROVED | multiplayer |
 | MP-D7 | Multiplayer: a new guest character (a newcomer to the village, or a member of an existing household)? | decision | APPROVED | multiplayer |
 | MP-D8 | Multiplayer: player-to-player marriage, children and inheritance follow the same rules as with villagers (CRT-03)? | decision | APPROVED | multiplayer |
-| MP-INET | Internet multiplayer is mandatory: free connection methods first; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal (costs, dependencies, privacy, alternatives) comes to the owner before internet support is declared complete | approved | IN DEVELOPMENT / NOT TESTED / OPEN | multiplayer |
+| MP-INET | Internet multiplayer is mandatory: free connection methods first; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal (costs, dependencies, privacy, alternatives) comes to the owner before internet support is declared complete | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | multiplayer |
+| MP-INET-RELAY | Internet multiplayer beyond free methods: hosts on mobile data or behind carrier-grade NAT cannot be reached by invite code, UPnP or port forwarding. Options: (A) free methods only, as built (no cost; those hosts cannot host); (B) hole punching via free public STUN servers (no cost; third-party dependency, a second code from guest to host, still fails on much mobile data); (C) our own small rendezvous+relay server (covers every network incl. phone hosting; a small cloud server plus bandwidth each month, price to be quoted; recommended, with an owner-set spending cap); (D) a commercial relay service (new SDK, accounts, fees above a free tier); (E) Steam networking (excluded now; no Android). Default until decided: A. Note: the 2026-10-24 decision MP-D5 says free methods first, no relay, no paid service, so B-D would revise it (DCR-01). | decision | OPEN | multiplayer |
 | MP-INTERACT-01 | Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | MP-INTERACT-Q1 | Player-to-player contracts: the contract system only has a way for villagers to do units of work, so contracts between two players are limited to goods. Should a player be able to hire another player for work (a service contract)? | decision | DEFERRED | 20 |
 | MP-INTERACT-Q2 | Talk targeting: Talk takes the nearest person, so a closer villager comes before another player (a tap, a click or Next always reaches the player). Should players come first for Talk instead? | decision | APPROVED | 20 |
-| MP-MASTER | Full player-hosted multiplayer as the next milestone after Build 19 (before Expansion 20): 3-4 players including the host in one persistent host-authoritative world; full guest parity with the host in every existing system; Android, Windows and Linux (incl. Steam Deck) each host and join, every cross-platform combination validated on real devices; LAN and a documented internet method with no dedicated server and no paid service without owner approval; single player intact offline | approved | IN DEVELOPMENT / TARGETED TESTS PASSED / OPEN | multiplayer |
+| MP-MASTER | Full player-hosted multiplayer as the next milestone after Build 19 (before Expansion 20): 3-4 players including the host in one persistent host-authoritative world; full guest parity with the host in every existing system; Android, Windows and Linux (incl. Steam Deck) each host and join, every cross-platform combination validated on real devices; LAN and a documented internet method with no dedicated server and no paid service without owner approval; single player intact offline | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | multiplayer |
 | MP-PLAYER-FAMILY | Children of player-to-player marriages: biological (male and female) and adoption with both spouses as parents | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | MP-Q-PLAYER-CHILDREN | Should a marriage between two players have children? (births currently need a villager parent) | decision | APPROVED | multiplayer |
 | MSW-01 | Minimum Sufficient Work: correctness mandatory, redundancy justified | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |

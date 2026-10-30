@@ -43,5 +43,5 @@ Build authority:
 - **Build 26 (Creatures and Heroes):** implementation **NOT AUTHORIZED**. PET-01, MON-01 (owner 2026-10-23): design only, no code
 - **Build 27 (World Exploration, Dungeons & Encounters):** implementation **NOT AUTHORIZED**. ROAD-Q1 (owner 2026-10-24): numbering only
 
-Future backlog and unassigned: 111 open records (`BACKLOG.md`). Open owner decisions: 2 (`DECISIONS.md`).
+Future backlog and unassigned: 111 open records (`BACKLOG.md`). Open owner decisions: 3 (`DECISIONS.md`).
 

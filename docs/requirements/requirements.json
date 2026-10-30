@@ -32195,8 +32195,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -32209,10 +32209,44 @@
      "date": "2026-10-30",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker C (multiplayer Batch D); branch: None -> wip/mp-batchd",
      "why": "Batch D resumed (owner 2026-10-30): worker C"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> net_fault_test 52/0 and net suites on wip/mp-batchd (see MP-MASTER); loopback only; test_commit: None -> 49932ec; commits + 49932ec",
+     "why": "free methods built (invite codes with LAN and UPnP-mapped public addresses, manual forward, IPv6, direct IP); they do not reach hosts on mobile data or behind carrier-grade NAT; relay needs the owner (MP-INET-RELAY)"
     }
    ],
    "assigned_worker": "worker C (multiplayer Batch D)",
-   "branch": "wip/mp-batchd"
+   "branch": "wip/mp-batchd",
+   "tests": "net_fault_test 52/0 and net suites on wip/mp-batchd (see MP-MASTER); loopback only",
+   "test_commit": "49932ec",
+   "commits": [
+    "49932ec"
+   ]
+  },
+  {
+   "id": "MP-INET-RELAY",
+   "kind": "decision",
+   "title": "Internet multiplayer beyond free methods: hosts on mobile data or behind carrier-grade NAT cannot be reached by invite code, UPnP or port forwarding. Options: (A) free methods only, as built (no cost; those hosts cannot host); (B) hole punching via free public STUN servers (no cost; third-party dependency, a second code from guest to host, still fails on much mobile data); (C) our own small rendezvous+relay server (covers every network incl. phone hosting; a small cloud server plus bandwidth each month, price to be quoted; recommended, with an owner-set spending cap); (D) a commercial relay service (new SDK, accounts, fees above a free tier); (E) Steam networking (excluded now; no Android). Default until decided: A. Note: the 2026-10-24 decision MP-D5 says free methods first, no relay, no paid service, so B-D would revise it (DCR-01).",
+   "description": "Internet multiplayer beyond free methods: hosts on mobile data or behind carrier-grade NAT cannot be reached by invite code, UPnP or port forwarding. Options: (A) free methods only, as built (no cost; those hosts cannot host); (B) hole punching via free public STUN servers (no cost; third-party dependency, a second code from guest to host, still fails on much mobile data); (C) our own small rendezvous+relay server (covers every network incl. phone hosting; a small cloud server plus bandwidth each month, price to be quoted; recommended, with an owner-set spending cap); (D) a commercial relay service (new SDK, accounts, fees above a free tier); (E) Steam networking (excluded now; no Android). Default until decided: A. Note: the 2026-10-24 decision MP-D5 says free methods first, no relay, no paid service, so B-D would revise it (DCR-01).",
+   "source": "BATCH_D_CONNECTIVITY.md in docs/multiplayer on wip/expansion20 (Batch D connectivity study, 2026-10-30)",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "multiplayer",
+   "related": [
+    "MP-INET"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/multiplayer/BATCH_D_CONNECTIVITY.md"
+    }
+   ]
   },
   {
    "id": "MP-INTERACT-01",
@@ -32416,7 +32450,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -32490,20 +32524,30 @@
      "date": "2026-10-30",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IN DEVELOPMENT; assigned_worker: multiplayer worker (subagent), lead integrates -> worker C (multiplayer Batch D); branch: wip/multiplayer-b19 -> wip/mp-batchd; next_action",
      "why": "Batch D resumed (owner 2026-10-30, X20-RESUME): worker C"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; tests: A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS; lead rerun on 7bae490: multiplayer_c_test 241, net_c_test 35, net_g1_test 44, net_batch_b_test 44, world_test 339, manhunt_test 60, multiplayer_a1_test 67, multiplayer_b_test 31, all 0 failures; G0 identical; lead rerun on 2b92fa8: multiplayer_c_test 340, net_c_test 35, net_g1_test 44, run_tests 3598, start_test 523, all 0 failures; G0 identical; SIM-GATE suite PASS on 36b1e75 (agent) -> A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS; lead rerun on 7bae490: multiplayer_c_test 241, net_c_test 35, net_g1_test 44, net_batch_b_test 44, world_test 339, manhunt_test 60, multiplayer_a1_test 67, multiplayer_b_test 31, all 0 failures; G0 identical; lead rerun on 2b92fa8: multiplayer_c_test 340, net_c_test 35, net_g1_test 44, run_tests 3598, start_test 523, all 0 failures; G0 identical; SIM-GATE suite PASS on 36b1e75 (agent); net_fault_test 52/0 (three processes + a packet-damaging relay: loss, duplication, reorder, delay, blackout; kill/freeze/restart host and guests; Android pause/resume; coins and packs counted exactly) on 1c019be; net_mp4 148, net_interact 67, mp_interact_ui 112, multiplayer_c 340, net_ui 61, net_g1 45, net_soak 28, save_transfer 21, net_batch_b 44, net_c 35, net_family 22, net_fauna 13, net_recorder_quit 20, multiplayer_a1 67, multiplayer_b 31 (0 failures) on 5266dea; run_tests 3600, start_test 523, world_test 339, wiki_test 141 on 157a978; G0 identical to the baseline on a0114a8; merge tree identical to wip/mp-batchd 49932ec; test_commit: 2b92fa8 -> 49932ec; commits + 49932ec; integrated_in + Expansion 20 wip/expansion20 (Batch D merge); next_action; playtest",
+     "why": "Batch D implemented (free methods) and merged into wip/expansion20 (merge of 49932ec); relay is an owner decision (MP-INET-RELAY)"
     }
    ],
-   "next_action": "Batch D on wip/mp-batchd: invite-code joining (genuinely cross-network or documented limits), direct IP, menus, Android suspension and drops, reconnection, host loss, message duplication, save integrity, cross-platform matrix (docs/handoffs/PARALLEL_WORK_2026-10-30.md).",
+   "next_action": "Owner: MP-INET-RELAY decision. Real-device and real-network matrix (the MP_TEST_MATRIX.md note on wip/expansion20, Batch D section): all nine platform pairs plus Steam Deck on LAN and across networks, UPnP on a real router, CGNAT/mobile data on the Pixel, IPv6, Android background/lock/network change, Windows firewall, 3-4 players.",
    "assigned_worker": "worker C (multiplayer Batch D)",
    "branch": "wip/mp-batchd",
-   "tests": "A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS; lead rerun on 7bae490: multiplayer_c_test 241, net_c_test 35, net_g1_test 44, net_batch_b_test 44, world_test 339, manhunt_test 60, multiplayer_a1_test 67, multiplayer_b_test 31, all 0 failures; G0 identical; lead rerun on 2b92fa8: multiplayer_c_test 340, net_c_test 35, net_g1_test 44, run_tests 3598, start_test 523, all 0 failures; G0 identical; SIM-GATE suite PASS on 36b1e75 (agent)",
-   "test_commit": "2b92fa8",
+   "tests": "A1: multiplayer_a1_test 59/59; tests.yml list 98 scripts, 96 exit 0, 10,461 checks with 1 failure (pre-existing contract_50ore_test); G0 sim_gate seeds 1-2 days 10/30 identical to docs/release/sim_baseline.json; net_g1_test 44 checks (two Godot processes over loopback); multiplayer_a1_test 67; G0 identical (per commit); full-suite rerun in progress; multiplayer_b_test 31, net_batch_b_test 44 (two and three processes), net_g1_test 44, multiplayer_a1_test 67, start_test 523, all 0 failures (lead rerun at 805a1c9); full tests.yml 109 scripts pass; unittest 140; G0 identical; SIM-GATE-01 suite PASS; lead rerun on 7bae490: multiplayer_c_test 241, net_c_test 35, net_g1_test 44, net_batch_b_test 44, world_test 339, manhunt_test 60, multiplayer_a1_test 67, multiplayer_b_test 31, all 0 failures; G0 identical; lead rerun on 2b92fa8: multiplayer_c_test 340, net_c_test 35, net_g1_test 44, run_tests 3598, start_test 523, all 0 failures; G0 identical; SIM-GATE suite PASS on 36b1e75 (agent); net_fault_test 52/0 (three processes + a packet-damaging relay: loss, duplication, reorder, delay, blackout; kill/freeze/restart host and guests; Android pause/resume; coins and packs counted exactly) on 1c019be; net_mp4 148, net_interact 67, mp_interact_ui 112, multiplayer_c 340, net_ui 61, net_g1 45, net_soak 28, save_transfer 21, net_batch_b 44, net_c 35, net_family 22, net_fauna 13, net_recorder_quit 20, multiplayer_a1 67, multiplayer_b 31 (0 failures) on 5266dea; run_tests 3600, start_test 523, world_test 339, wiki_test 141 on 157a978; G0 identical to the baseline on a0114a8; merge tree identical to wip/mp-batchd 49932ec",
+   "test_commit": "49932ec",
    "commits": [
     "a0bd3bb",
     "1c0f854",
     "805a1c9",
     "7bae490",
-    "2b92fa8"
-   ]
+    "2b92fa8",
+    "49932ec"
+   ],
+   "integrated_in": [
+    "Expansion 20 wip/expansion20 (Batch D merge)"
+   ],
+   "playtest": "all platform pairs, real routers and separate networks; nothing verified on hardware"
   },
   {
    "id": "MP-PLAYER-FAMILY",

@@ -34,7 +34,7 @@ Workers from 87b69ab (2026-10-27): M on `wip/x20-fixes` (SIM-F2, SIM-F3, player/
 interface contracts: `docs/handoffs/PARALLEL_WORK_2026-10-30.md`. Integration branch `wip/expansion20` (Build 24 `4611d86`). Workers:
 - A Living Economy, LE-03 then LE-04..LE-07: `wip/x20-le03` (X20-COMPLETE, LE-03).
 - B settlement food trade: `wip/x20-settle-food` (X20-SETTLE-FOOD).
-- C multiplayer Batch D incl. internet play: `wip/mp-batchd` (MP-MASTER, MP-INET).
+- C multiplayer Batch D: DONE and merged into `wip/expansion20` (`de8d225`, from `wip/mp-batchd` 49932ec): invite codes, UPnP, direct IP incl. IPv6, reconnection, duplicate-safe requests, Android pause; free methods only. Owner decision MP-INET-RELAY open (relay for mobile-data / CGNAT hosts). Real-device matrix outstanding.
 CI repaired 2026-10-30: staging `323db57` green in Tests run 41123423327 (Python tests, headless game tests, FR-07 short economy sim all pass; fixes 5c3221f Tests fetch, e363703 per-branch long-sims queue, 323db57 weapons pack credit; luxury_test fix ebafdae on wip/expansion20). Shared transaction authority: World.transactions on `wip/x20-le03` 83d262e (TRANSACTION_AUTHORITY.md; le03_transactions_test 79/0); worker B integrating through it. PRs #2/#3 closed as superseded. Lead: integration, register, stale register entries, handoff, private draft builds at milestones. Long runs on
 GitHub Actions only. Economy switch stays off until every readiness condition in X20-RESUME holds. Remaining work list:
 `docs/handoffs/X20_RECOVERY_HANDOFF.md`.

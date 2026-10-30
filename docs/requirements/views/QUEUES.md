@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (15)
+## Workers and task branches (13)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -11,8 +11,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-03 | 20 | IN DEVELOPMENT | worker A (Living Economy) | wip/x20-le03 |
-| MP-INET | multiplayer | IN DEVELOPMENT | worker C (multiplayer Batch D) | wip/mp-batchd |
-| MP-MASTER | multiplayer | IN DEVELOPMENT | worker C (multiplayer Batch D) | wip/mp-batchd |
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
@@ -72,7 +70,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | WIKI-B17 | 17 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 
-## Awaiting owner playtest or device check (105)
+## Awaiting owner playtest or device check (106)
 
 | ID | Build | Verification | Needs |
 |---|---|---|---|
@@ -153,6 +151,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | INV-18 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | MAP-01 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | MP-INTERACT-01 | 20 | INTEGRATION VERIFIED | A, l, l,  , n, i, n, e,  , h, o, s, t, /, g, u, e, s, t,  , p, l, a, t, f, o, r, m,  , p, a, i, r, s,  , n, e, e, d,  , o, w, n, e, r,  , d, e, v, i, c, e, s,  , (, A, n, d, r, o, i, d,  , p, h, o, n, e, ,,  , W, i, n, d, o, w, s,  , P, C, ,,  , r, e, a, l,  , c, o, n, t, r, o, l, l, e, r, ,,  , t, w, o, -, m, a, c, h, i, n, e,  , L, A, N, ), ;,  , o, n, l, y,  , L, i, n, u, x, -, h, o, s, t, -, L, i, n, u, x,  , r, a, n,  , e, n, d,  , t, o,  , e, n, d,  , o, n,  , t, h, e,  , b, u, i, l, d,  , m, a, c, h, i, n, e, ,,  , t, h, e,  , r, e, s, t,  , a, r, e,  , a, u, t, o, m, a, t, e, d,  , i, n, p, u, t,  , p, a, t, h, s,  , p, l, u, s,  , l, o, o, p, b, a, c, k |
+| MP-MASTER | multiplayer | TARGETED TESTS PASSED | a, l, l,  , p, l, a, t, f, o, r, m,  , p, a, i, r, s, ,,  , r, e, a, l,  , r, o, u, t, e, r, s,  , a, n, d,  , s, e, p, a, r, a, t, e,  , n, e, t, w, o, r, k, s, ;,  , n, o, t, h, i, n, g,  , v, e, r, i, f, i, e, d,  , o, n,  , h, a, r, d, w, a, r, e |
 | MP-PLAYER-FAMILY | 20 | TARGETED TESTS PASSED | r, e, a, l,  , d, e, v, i, c, e,  , c, h, e, c, k,  , o, u, t, s, t, a, n, d, i, n, g,  , (, t, w, o, -, d, e, v, i, c, e,  , m, a, r, r, i, a, g, e, ,,  , b, i, r, t, h,  , a, n, d,  , a, d, o, p, t, i, o, n,  , o, v, e, r,  , W, i, -, F, i, ) |
 | ORE-PLACE-01 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | PL1-03 | 15 | TARGETED TESTS PASSED | phone |
