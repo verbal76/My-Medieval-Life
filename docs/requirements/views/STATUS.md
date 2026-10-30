@@ -6,28 +6,28 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 
 | Measure | Build 18 | Build 19 | Build 20 | Build 21 | Build 22 | Build 23 | Build 24 | Build 25 | Build 26 | Build 27 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Approved requirements (in scope) | 83 | 11 | 103 | 6 | 4 | 2 | 0 | 1 | 5 | 1 |
-| Fully specified (design SPECIFIED) | 66 of 83 (80%) | 3 of 11 (27%) | 9 of 103 (9%) | 0 of 6 (0%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
+| Approved requirements (in scope) | 83 | 11 | 104 | 6 | 4 | 2 | 0 | 1 | 5 | 1 |
+| Fully specified (design SPECIFIED) | 66 of 83 (80%) | 3 of 11 (27%) | 9 of 104 (9%) | 0 of 6 (0%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
 | Waiting on an owner decision (design) | 0 | 0 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Design work still required | 2 | 0 | 4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Design unknown | 15 | 8 | 88 | 6 | 4 | 2 | 0 | 1 | 5 | 1 |
-| Not started (incl. READY) | 2 | 1 | 6 | 2 | 3 | 1 | 0 | 1 | 5 | 1 |
-| In development (worker assigned) | 0 | 0 | 7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Design unknown | 15 | 8 | 89 | 6 | 4 | 2 | 0 | 1 | 5 | 1 |
+| Not started (incl. READY) | 2 | 1 | 7 | 2 | 3 | 1 | 0 | 1 | 5 | 1 |
+| In development (worker assigned) | 0 | 0 | 6 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Partially implemented | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Implemented on a task branch | 0 | 0 | 1 | 3 | 1 | 1 | 0 | 0 | 0 | 0 |
+| Implemented on a task branch | 0 | 0 | 2 | 3 | 1 | 1 | 0 | 0 | 0 | 0 |
 | Implementation blocked | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Integrated | 80 of 83 (96%) | 10 of 11 (91%) | 89 of 103 (86%) | 1 of 6 (17%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
-| Automated tests passed (targeted or better) | 78 of 83 (94%) | 10 of 11 (91%) | 90 of 103 (87%) | 2 of 6 (33%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
-| Integration verified (suite on the integrated build) | 57 of 83 (69%) | 9 of 11 (82%) | 55 of 103 (53%) | 1 of 6 (17%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
-| Gameplay verified | 0 of 83 (0%) | 0 of 11 (0%) | 0 of 103 (0%) | 0 of 6 (0%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
-| Owner playtested | 0 of 83 (0%) | 0 of 11 (0%) | 0 of 103 (0%) | 0 of 6 (0%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
-| Complete | 2 of 83 (2%) | 9 of 11 (82%) | 2 of 103 (2%) | 0 of 6 (0%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
-| Release blockers (open in-scope requirements) | 81 | 2 | 101 | 6 | 4 | 2 | 0 | 1 | 5 | 1 |
+| Integrated | 80 of 83 (96%) | 10 of 11 (91%) | 89 of 104 (86%) | 1 of 6 (17%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
+| Automated tests passed (targeted or better) | 78 of 83 (94%) | 10 of 11 (91%) | 91 of 104 (88%) | 2 of 6 (33%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
+| Integration verified (suite on the integrated build) | 57 of 83 (69%) | 9 of 11 (82%) | 55 of 104 (53%) | 1 of 6 (17%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
+| Gameplay verified | 0 of 83 (0%) | 0 of 11 (0%) | 0 of 104 (0%) | 0 of 6 (0%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
+| Owner playtested | 0 of 83 (0%) | 0 of 11 (0%) | 0 of 104 (0%) | 0 of 6 (0%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
+| Complete | 2 of 83 (2%) | 9 of 11 (82%) | 2 of 104 (2%) | 0 of 6 (0%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
+| Release blockers (open in-scope requirements) | 81 | 2 | 102 | 6 | 4 | 2 | 0 | 1 | 5 | 1 |
 | Open owner decisions (of which blocking) | 0 (0) | 0 (0) | 1 (0) | 0 (0) | 0 (0) | 0 (0) | 0 (0) | 0 (0) | 0 (0) | 0 (0) |
 | Deferred with approval | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Proposals and ideas (not counted) | 3 | 3 | 2 | 5 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Integrated, awaiting gameplay or owner verification | 78 | 1 | 87 | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Remaining implementation by effort band (not yet integrated) | S 1, M 1, UNKNOWN 1 | UNKNOWN 1 | XS 1, L 1, UNKNOWN 12 | UNKNOWN 5 | UNKNOWN 4 | UNKNOWN 2 | none | UNKNOWN 1 | UNKNOWN 5 | UNKNOWN 1 |
+| Remaining implementation by effort band (not yet integrated) | S 1, M 1, UNKNOWN 1 | UNKNOWN 1 | XS 1, L 1, UNKNOWN 13 | UNKNOWN 5 | UNKNOWN 4 | UNKNOWN 2 | none | UNKNOWN 1 | UNKNOWN 5 | UNKNOWN 1 |
 | Readiness | RELEASED (private playtest draft (code 61ec528, run 39935635926, 2026-10-23)) | RELEASED (private playtest draft (code 2f72ec3, run 40044931601, 2026-10-24); complete as the development milestone (owner 2026-10-24)) | RELEASED (Build 23 private draft (code c79b12c, run 40526826846, release 425699977, 2026-10-27); MP-INTERACT-01 integrated last and validated before the build (X20-FINAL); Build 24 private draft (code 4611d86, run 40636966840, release 426357144, 2026-10-28): Expansion 20 checkpoint, then development paused (X20-CHECKPOINT)) | IN DEVELOPMENT (not feature complete) | IN DEVELOPMENT (not feature complete) | IN DEVELOPMENT (not feature complete) | NOT AUTHORIZED for implementation | NOT AUTHORIZED for implementation | NOT AUTHORIZED for implementation | NOT AUTHORIZED for implementation |
 
 Build authority:

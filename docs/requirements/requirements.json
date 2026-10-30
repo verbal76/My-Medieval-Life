@@ -61205,8 +61205,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -61219,10 +61219,21 @@
      "date": "2026-10-30",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E (MP-economy integrity); branch: None -> wip/x20-mp-econ",
      "why": "integrated base exists (wip/expansion20 8bbdcfb: Batch D + LE-03/LE-04 authority + food trade); owner directive 2026-10-30 x20_background s.5"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> net_econ_integrity_test 126/0 (126/3 on ab335b8 before the fix; economy off and on: offers, contracts, lossy network, shipments with escrow and transit, purchase across a dropped connection, Android host and guest pause, guest killed mid-shipment, crafted ownership requests, host killed and restored, guest death and heir); net_fault_test 52, net_soak_test 28, net_interact_test 67, net_mp4_test 148, net_batch_b_test 44, multiplayer_c_test 340, net_c_test 35, le03_transactions_test 79, le04_test 61, save_transfer_test 21: 0 failures; test_commit: None -> 6b13d91; commits + 6b13d91; notes",
+     "why": "worker E: fault-injected suite and one ownership defect fixed (guest contract actions not checked against the guest's side); merge into wip/expansion20 after the running baseline"
     }
    ],
    "assigned_worker": "worker E (MP-economy integrity)",
-   "branch": "wip/x20-mp-econ"
+   "branch": "wip/x20-mp-econ",
+   "tests": "net_econ_integrity_test 126/0 (126/3 on ab335b8 before the fix; economy off and on: offers, contracts, lossy network, shipments with escrow and transit, purchase across a dropped connection, Android host and guest pause, guest killed mid-shipment, crafted ownership requests, host killed and restored, guest death and heir); net_fault_test 52, net_soak_test 28, net_interact_test 67, net_mp4_test 148, net_batch_b_test 44, multiplayer_c_test 340, net_c_test 35, le03_transactions_test 79, le04_test 61, save_transfer_test 21: 0 failures",
+   "test_commit": "6b13d91",
+   "commits": [
+    "6b13d91"
+   ],
+   "notes": "Save transparency (economy off) classified benign: RNG reseeded on load, villager plans/paths in memory only, tree 'born' recomputed, float rounding at the 15th digit; no saved data lost or reinterpreted; host recovery reloads the ledger exactly (economy off and on). Latent: the authority keeps only basic fields of a past result, so a replayed estate claim after a load would lack its 'paid' amount (callers always use fresh ids; not reachable today)."
   },
   {
    "id": "X20-OPEN-ITEMS",
@@ -61612,6 +61623,34 @@
    ],
    "assigned_worker": "worker B",
    "branch": "wip/x20-trader-inv"
+  },
+  {
+   "id": "X20-TXN-REPLAY-FIELDS",
+   "kind": "approved",
+   "title": "Latent defect: the transaction authority's saved past results keep only basic fields, so an idempotent replay after a load returns a settle_estate result without its 'paid' amount; keep the full result (bounded) so a replay after load answers exactly as before",
+   "description": "Latent defect: the transaction authority's saved past results keep only basic fields, so an idempotent replay after a load returns a settle_estate result without its 'paid' amount; keep the full result (bounded) so a replay after load answers exactly as before",
+   "source": "docs/directives/2026-10-30_x20_background_development.md",
+   "owner_wording": null,
+   "approval": "owner, 2026-10-30 X20-BACKGROUND s.5 (idempotent across restored saves)",
+   "acceptance": [
+    "test: replaying a settled estate claim's txid after save/load returns the identical result; saved results stay bounded; old saves load"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-30",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_x20_background_development.md"
+    }
+   ]
   },
   {
    "id": "X20-WEAR-TRANSFER",
