@@ -60395,6 +60395,11 @@
      "date": "2026-10-30",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> worker B; branch: None -> wip/x20-settle-food; tests: None -> settle_review_test 45/0; test_commit: None -> 30becac; commits + 108d252; notes",
      "why": "fixed on wip/x20-settle-food (worker B); merging into wip/expansion20 2026-10-30"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "notes",
+     "why": "failing-first confirmed by the lead"
     }
    ],
    "assigned_worker": "worker B",
@@ -60404,7 +60409,7 @@
    "commits": [
     "108d252"
    ],
-   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first check pending (lead)."
+   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first (lead, 2026-10-30): settle_review_test on the pre-fix code (e4f2423) 20/45 fail; finding 1 checks: 'a trader nobody works closes after 22 days', 'merchant with no working household closed', 'its till and stock were handed on'. Gameplay consequence: all five traders close by days 21-35 and none reopen (decision X20-TRADER-CLOSE, open part: a reopen rule)."
   },
   {
    "id": "X20-B24-F2",
@@ -60436,6 +60441,11 @@
      "date": "2026-10-30",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> worker B; branch: None -> wip/x20-settle-food; tests: None -> settle_review_test 45/0; test_commit: None -> 30becac; commits + 108d252; notes",
      "why": "fixed on wip/x20-settle-food (worker B); merging into wip/expansion20 2026-10-30"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "notes",
+     "why": "failing-first confirmed by the lead"
     }
    ],
    "assigned_worker": "worker B",
@@ -60445,7 +60455,7 @@
    "commits": [
     "108d252"
    ],
-   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first check pending (lead)."
+   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first (lead, 2026-10-30): settle_review_test on e4f2423: 'its storefront till went with them, not to the manor (treasury 270 -> 307)', 'the household's stores went with them, not to the granary', 'nothing of theirs escheats to the manor afterwards'. Root cause fixed in Migration._take_own for every leaving path (whole household, last members, lone leaver for work or marriage)."
   },
   {
    "id": "X20-B24-F3",
@@ -60477,6 +60487,11 @@
      "date": "2026-10-30",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> worker B; branch: None -> wip/x20-settle-food; tests: None -> settle_review_test 45/0; test_commit: None -> 30becac; commits + 108d252; notes",
      "why": "fixed on wip/x20-settle-food (worker B); merging into wip/expansion20 2026-10-30"
+    },
+    {
+     "date": "2026-10-30",
+     "change": "notes",
+     "why": "failing-first confirmed by the lead"
     }
    ],
    "assigned_worker": "worker B",
@@ -60486,7 +60501,7 @@
    "commits": [
     "108d252"
    ],
-   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first check pending (lead)."
+   "notes": "Remains present in frozen Build 24 (4611d86). Failing-first (lead, 2026-10-30): settle_review_test on e4f2423: 'the takings went with them (30 carried, expected 68)', 'the manor took only its commission (3), not the takings', 'the stall's session was settled before they went'."
   },
   {
    "id": "X20-B24-F4",
