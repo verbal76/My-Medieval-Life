@@ -65,6 +65,8 @@ var flee_path := PackedVector2Array()   # SIM-GATE-01 crime_spree: the player's 
 const FLEE_TILES_PER_SECOND := 4.5      # the player's walking speed (docs: guards chase at 1.3 x walk_tiles_per_second)
 
 
+var econ_roundtrip_bad := 0      # LE-06: checkpoints whose economy section did not load back exactly
+
 func _init() -> void:
 	var args := OS.get_cmdline_user_args()
 	var arg := func(name: String, fallback: String) -> String:
@@ -167,6 +169,17 @@ func _init() -> void:
 			_print_sample(samples[-1])
 			min_hunger = 100.0
 			harness_us += Time.get_ticks_usec() - ts
+			if w.economy != null:                  # LE-06: the economy's save at each checkpoint, and whether it loads back exactly
+				var ts2 := Time.get_ticks_usec()
+				var ed: Dictionary = w.economy.to_dict()
+				var es := JSON.stringify(ed)
+				var back := EconomyFoundation.attach(w, JSON.parse_string(es))
+				var exact := back != null and JSON.stringify(back.to_dict()) == es
+				if not exact:
+					econ_roundtrip_bad += 1
+				print("ECONOMY day %d: save bytes %d (knowledge %d entries, %d bytes; forgotten %d); round trip exact %s; claims breaches %d; save+load %d ms" % [d + 1, es.length(),
+					w.economy.knowledge.size(), JSON.stringify(ed.get("knowledge", {})).length(), w.economy.knowledge.unusable_forgotten, str(exact),
+					w.economy.claims.audit().filter(func(x): return str(x.kind) != "unbacked").size(), (Time.get_ticks_usec() - ts2) / 1000])
 			if cap_on and str(d + 1) in cap_at:      # X18-SIM: a milestone read from this one run (SIM-01), read only
 				print("CAPABILITY@%d %s" % [d + 1, JSON.stringify(CapMetrics.report(cap_info, w, cap0, d + 1))])
 			# SIM-01 (owner, 2026-10-21): one long run, checked at every checkpoint; a broken ledger stops it there, with
@@ -234,7 +247,7 @@ func _init() -> void:
 			"seconds": secs, "start": _jsonable(start), "samples": samples, "deaths": death_log,
 			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows, "herd": herd_log, "herd_care": herd_care}, " ", false))
 		f.close()
-	var ok: bool = int(final.currency.leak) == 0 and (final.ledger.items as Dictionary).is_empty()
+	var ok: bool = int(final.currency.leak) == 0 and (final.ledger.items as Dictionary).is_empty() and econ_roundtrip_bad == 0
 	if w.economy != null:                 # EXPANSION 20 LE-01: what the model recorded (diagnostics; it decides nothing)
 		var ec: EconomyFoundation = w.economy
 		print("economy: events %d (ordered %s), knowledge %d, needs recorded %d (dirty %d), offers %d, reservations %d, unbacked %d, links %d" % [ec.events.size(),
