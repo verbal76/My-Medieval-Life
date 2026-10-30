@@ -25,6 +25,8 @@ var move_counts: Dictionary = {}     # "<dir>:<reason>" -> people moved, for goo
 var suits: Dictionary = {}           # MIGRATE-18 marriage across the road: "<settlement>|<dir>" -> {pair, since}, the pair meeting at the caravan and the day they began
 var journal: Array = []              # the parties' exchange lines (SettlementParty.deal): {day, party, kind, item, n, coins, with}; not saved
 var party_options := {}              # fixtures' settings per party id (SettlementParty.option); not saved
+var food_last: Dictionary = {}       # X20-SETTLE-FOOD: the last food round's result (food_round), for reports and tests; not saved
+var _world: WeakRef = null           # the world the settlements live in (bind_world), for its flight recorder; not saved
 
 
 static func create(seed_: int) -> Regions:
@@ -45,8 +47,10 @@ func _add(s: OffMapSettlement) -> void:
 ## The settlements now live in world `w`: a birth takes its id from the world's settlement band and enters the register, a death marks it.
 func bind_world(w: World) -> void:
 	var hook := Callable(w, "offmap_person")
+	_world = weakref(w)
 	for s: OffMapSettlement in list:
 		s.person_hook = hook
+		s.trade_hook = Callable(self, "_food_event")
 
 
 ## Give every member that has no id one, in settlement, household and member order (so two worlds from the same data agree), and
@@ -77,6 +81,7 @@ func step_day(d: int) -> void:
 	var every := int(OffMapSettlement.rules().road_trade_every_days)
 	if every > 0 and d % every == every - 1:
 		road_trade()
+		food_round(d)
 	day = d
 
 
@@ -100,6 +105,7 @@ func step_hour(d: int, h: int) -> void:
 		var every := int(OffMapSettlement.rules().road_trade_every_days)
 		if every > 0 and d % every == every - 1:
 			road_trade()
+			food_round(d)
 
 
 ## Bring a freshly founded set of settlements to day `to` (an older save), no trade with the village.
@@ -278,6 +284,135 @@ func road_trade() -> void:
 				seller.flows.road_coins_in += n * unit
 				buyer.flows.road_coins_out += n * unit
 				need -= n
+
+
+# ------------------------------------------------------------------ food between the settlements (X20-SETTLE-FOOD) ----------------
+## The food round, on the traders' wholesale day (every road_trade_every_days, after road_trade): the owner's REG-BUY-D1 (2026-10-23)
+## through the settlements' existing regional market, never a third purchasing path and never a rescue.
+##   want     a settlement whose people hold under three days of food, counting food already bought and on the road
+##            (OffMapSettlement.wants "_food_pts"), sends its trader to buy; its demand is that shortfall in the traded food
+##            (rules.food_trade_items), SettlementParty's trader need;
+##   offer    in each other settlement, the farms (and any food business) that grew it sell what their place lets go by the rules
+##            it releases food to the village's caravan by (OffMapSettlement.food_release, REG-BUY-P1: only food above its own
+##            households' claim over reserve_days, or a business with a demonstrated cash shortfall selling no more than that
+##            shortfall), and its trader what it already carries (never food it imported itself); a place that is itself short
+##            sells none;
+##   price    the seller's own floating price (ask_of) against what the buyer will pay (RegionalMarket.willing: the item's value,
+##            up to scarcity_premium more as its store runs out); too dear: no deal ("price");
+##   pay      from the buyer trader's own till above its floor and half its trading capital (spend_limit): no coins, no food
+##            ("funds");
+##   carry    the buyer's trader fetches it itself, one load a round (a pack, or a handcart where its place keeps horses;
+##            RegionalMarket.self_capacity); the goods are the buyer's from the sale and arrive after the trip there and back
+##            (2 x the route's days, at least 1), at the buyer's first step on or after that day (OffMapSettlement._deliver);
+##   books    RegionalMarket.execute: each line whole or refused, the coins and goods as matched regional_* lines on both
+##            settlements (Regions.audit). Nothing is created; nobody pays for anyone else.
+## A settlement that cannot find, afford or carry enough food still goes hungry (WDR-022). Returns {lines, unmet, refused, day}.
+func food_round(d: int) -> Dictionary:
+	var rl := OffMapSettlement.rules()
+	var items: Array = rl.get("food_trade_items", [])
+	food_last = {"day": d, "lines": [], "unmet": [], "refused": []}
+	if items.is_empty():
+		return food_last
+	var short := []
+	var spare := []
+	for s: OffMapSettlement in list:
+		if float(s.wants().get("_food_pts", 0.0)) > 0.0:
+			if not s.trader().is_empty():
+				short.append(s)                    # (a place with no trader has nobody to send)
+		else:
+			if s.trader().has("imported") and s.transit.is_empty():
+				s.release_imported()               # its people are provided for: what it imported is ordinary stock again
+			spare.append(s)
+	if short.is_empty() or spare.is_empty():
+		return food_last
+	var ls: Array = []
+	var routes := route_table()
+	for s: OffMapSettlement in short:
+		var b := SettlementParty.make(self, s, "trader")
+		for o: OffMapSettlement in spare:
+			var r: Dictionary = routes.get(o.id + ">" + s.id, {})
+			if not r.is_empty():
+				b.ship_days[o.id] = maxi(1, ceili(2.0 * float(r.days) - 1e-9))
+		ls.append(b)
+	for o: OffMapSettlement in spare:
+		if not o.trader().is_empty():
+			var t := SettlementParty.make(self, o, "trader")
+			t.sells_only = true                    # food its trader already carries (never food it imported: sale_cap)
+			ls.append(t)
+		var rel := o.food_release(items)
+		var types: Array = rel.keys()
+		types.sort()
+		for bt in types:
+			var f := SettlementParty.make(self, o, "trader" if bt == "merchant" else str(bt))
+			f.sells_only = true
+			f.release = rel[bt]
+			ls.append(f)
+	var p := RegionalMarket.plan(ls, routes, [], false, items)
+	var e := RegionalMarket.execute(p, ls, d)
+	for line in e.done:
+		var sb: OffMapSettlement = by_id[str(line.buyer).get_slice("/", 0)]
+		var ss: OffMapSettlement = by_id[str(line.seller).get_slice("/", 0)]
+		sb.flows.food_bought += int(line.units)
+		ss.flows.food_sold += int(line.units)
+		var due := d + maxi(1, int(_ship_of(ls, str(line.buyer)).get(ss.id, 1)))
+		sb.note("Our traders bought %d %s in %s for %d coins; it is on the road, %d days from home." % [int(line.units),
+			GameData.item_name(str(line.item)).to_lower(), ss.name, int(line.total), due - d])
+		ss.note("Our traders sold %d %s to %s for %d coins." % [int(line.units), GameData.item_name(str(line.item)).to_lower(), sb.name, int(line.total)])
+		_food_event("bought", {"line": line, "due": due})
+	for u in p.unmet:
+		var su: OffMapSettlement = by_id[str(u.buyer).get_slice("/", 0)]
+		su.flows.food_unmet += int(u.units)
+		su.note("Our traders could not buy %d %s for our people: %s." % [int(u.units), GameData.item_name(str(u.item)).to_lower(),
+			{"price": "it was too dear", "funds": "they had no money to spare", "no supplier": "no other place had any to spare",
+			"no carriage": "they could carry no more"}.get(str(u.reason), str(u.reason))])
+		_food_event("unmet", {"unmet": u})
+	for line in e.refused:
+		_food_event("refused", {"line": line})
+	food_last = {"day": d, "lines": e.done, "unmet": p.unmet, "refused": e.refused}
+	return food_last
+
+
+static func _ship_of(ls: Array, pid: String) -> Dictionary:
+	for l in ls:
+		if l.id == pid:
+			return l.ship_days
+	return {}
+
+
+## The flight recorder's record of the food trade (REC-DIAG), when the settlements live in a world that records: a purchase, a buyer
+## left short (with the reason), a refused line, and a delivery (to the trader, or to the granary of a place whose trader is gone).
+func _food_event(what: String, info: Dictionary) -> void:
+	var w = _world.get_ref() if _world != null else null
+	if w == null or w.recorder == null:
+		return
+	var rec = w.recorder
+	match what:
+		"bought":
+			var l: Dictionary = info.line
+			var b := "settlement:" + str(l.buyer).get_slice("/", 0)
+			var sl := "settlement:" + str(l.seller).get_slice("/", 0)
+			rec.occurrence("world", "settlement", "transaction", "settlement_food_purchase", b, [[b, "buyer"], [sl, "seller"]], [], "ok", "",
+				"item=%s; units=%d; coins=%d; due=%d" % [str(l.item), int(l.units), int(l.total), int(info.due)])
+		"unmet":
+			var u: Dictionary = info.unmet
+			var b := "settlement:" + str(u.buyer).get_slice("/", 0)
+			var why := str({"price": "refused_by_rules", "funds": "buyer_short_of_coins", "no supplier": "seller_lacks_item",
+				"no carriage": "pack_full"}.get(str(u.reason), "not_feasible"))
+			rec.occurrence("world", "settlement", "transaction", "settlement_food_unmet", b, [[b, "buyer"]], [], "failed", why,
+				"item=%s; units=%d; reason=%s" % [str(u.item), int(u.units), str(u.reason)])
+		"refused":
+			var l: Dictionary = info.line
+			var b := "settlement:" + str(l.buyer).get_slice("/", 0)
+			rec.occurrence("world", "settlement", "transaction", "settlement_food_purchase", b, [[b, "buyer"]], [], "refused", "invalid_trade",
+				"item=%s; units=%d; seller=%s" % [str(l.item), int(l.units), str(l.seller)])
+		"delivered":
+			var e: Dictionary = info.entry
+			var b := "settlement:" + str(info.settlement)
+			# a delivery to a place with no trader, or no household left, is the trade meeting abandonment: recorded as interrupted
+			var whole := str(info.where) == "trader" and int(info.households) > 0
+			rec.occurrence("world", "settlement", "transaction", "settlement_food_delivery", b, [[b, "buyer"]], [],
+				"ok" if whole else "interrupted", "" if whole else "target_gone",
+				"item=%s; units=%d; shipment=%d; from=%s; to=%s; households=%d" % [str(e.item), int(e.n), int(e.id), str(e.from), str(info.where), int(info.households)])
 
 
 # ------------------------------------------------------------------ books ----------------

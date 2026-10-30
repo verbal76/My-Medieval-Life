@@ -43,6 +43,15 @@ var id := ""                      # "<settlement>/<holder>"
 var _needs := {}                  # item -> units a day, once per handle (a handle is made fresh for each plan)
 var _local := {}
 var _have := false
+## X20-SETTLE-FOOD: when set (the food round's buyers), what this party BUYS from a holder of another place goes on the road home and
+## arrives after a trip: place id -> days there and back (OffMapSettlement.ship_in, delivered by the settlement's own step). Unset,
+## a purchase is in hand at once, as before.
+var ship_days := {}
+## X20-SETTLE-FOOD, the food round's sellers: `sells_only` -- it offers but wants nothing (no need, no demand: it is not a buyer in
+## this round); `release` -- when set, the most of each good it may sell ({item: units}, OffMapSettlement.food_release: its
+## settlement's rules for releasing food), on top of its own sale cap.
+var sells_only := false
+var release = null
 
 
 static func make(regions_: Regions, s_: OffMapSettlement, holder_: String) -> SettlementParty:
@@ -271,6 +280,8 @@ func refresh() -> void:
 
 
 func need_items() -> Array:
+	if sells_only:
+		return []
 	_derive()
 	var out := _needs.keys()
 	out.sort()
@@ -278,23 +289,36 @@ func need_items() -> Array:
 
 
 func need_rate(item: String) -> float:
+	if sells_only:
+		return 0.0
 	_derive()
 	return float(_needs.get(item, 0.0))
 
 
 func local_yield(item: String) -> int:
+	if sells_only:
+		return 0
 	_derive()
 	return int(_local.get(item, 0))
 
 
-## The most it will sell of `item`; -1 is no cap of its own.
+## The most it will sell of `item`; -1 is no cap of its own. A trader never sells on the food it bought for its own place
+## (X20-SETTLE-FOOD: its `imported` mark).
 func sale_cap(item: String) -> int:
 	if not alive():
 		return 0
+	if release != null:
+		return mini(_sale_cap(item), int((release as Dictionary).get(item, 0)))
+	return _sale_cap(item)
+
+
+func _sale_cap(item: String) -> int:
 	var rl := OffMapSettlement.rules()
 	var have := held(item)
 	match kind:
-		"trader", "business":
+		"trader":
+			return maxi(0, have - int(s._keep(_biz()).get(item, 0)) - int((_biz().get("imported", {}) as Dictionary).get(item, 0)))
+		"business":
 			return maxi(0, have - int(s._keep(_biz()).get(item, 0)))
 		"household":
 			var keep := 0
@@ -315,6 +339,22 @@ func sale_cap(item: String) -> int:
 				keep = ceili(float(rl.gov_upkeep[item]) * 6.0 * float(s.households()))
 			return maxi(0, have - keep)
 	return 0
+
+
+## X20-SETTLE-FOOD: what it asks for a unit of `item` at its own door: its settlement's own floating price (the price it charges
+## the village's caravan and its own market), not a fixed value (RegionalMarket.ask_of).
+func ask_price(item: String) -> int:
+	return s.price(item)
+
+
+## X20-SETTLE-FOOD: the coins it may spend in regional trade (RegionalMarket.spendable). A trader keeps its floor and half its
+## trading capital for the village's caravan, as in the traders' own wholesale round (Regions.road_trade); anyone else keeps the
+## market's cash floor.
+func spend_limit() -> int:
+	if kind == "trader":
+		var m := _biz()
+		return maxi(0, int(m.get("till", 0)) - int(OffMapSettlement.rules().trader_reserve_floor) - int(m.get("reserve", 0)) / 2)
+	return maxi(0, purse() - int(RegionalMarket.cfg().cash_floor))
 
 
 func _needs_basket(item: String) -> bool:
@@ -365,7 +405,11 @@ func deal(role: String, other, item: String, n: int, coins_: int, day := 0) -> b
 			coin_dir = -1
 		"carriage_earned":
 			coin_dir = 1
-	if goods_dir != 0 and n > 0:
+	if goods_dir > 0 and n > 0 and ch == "regional" and ship_days.has(str(other.settlement)):
+		# X20-SETTLE-FOOD: bought and paid for, it is this settlement's now (its regional_in line), but it is on the road home
+		OffMapSettlement._add(s.flows.regional_in, item, n)
+		s.ship_in(holder, item, n, str(other.id), day, day + maxi(1, int(ship_days[str(other.settlement)])), coins_)
+	elif goods_dir != 0 and n > 0:
 		_move_goods(item, goods_dir * n, ch)
 	if coin_dir != 0 and coins_ > 0:
 		_move_coins(coin_dir * coins_, ch)
