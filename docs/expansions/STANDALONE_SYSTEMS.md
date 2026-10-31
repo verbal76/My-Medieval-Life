@@ -2,8 +2,11 @@
 
 Owner directive 2026-10-31, `docs/directives/2026-10-31_documentation_reconciliation.md` (DOC-RECON-01). Conventions,
 precedence and status vocabulary: `docs/expansions/README.md`. This file covers every owner-approved system that no
-expansion file owns. Expansions 17-27 and multiplayer have their own files in `docs/expansions/`; where a system here
+expansion file owns. Expansions 17-27 and multiplayer have their own files in `docs/expansions/` (`EXPANSION_NN.md`); where a system here
 overlaps one of them, this file points there instead of repeating it.
+
+**Pending authority switch (DOC-AUTH-01, owner 2026-10-31).** When the owner approves the final revised specification
+set, this file is re-based on it; until then the precedence in the README applies.
 
 **Evidence base (2026-10-31).** Register: `docs/requirements/requirements.json` on `wip/requirements-control` (= staging
 `aeaa012` + the DOC-RECON-01 start commit). Code and tests: `origin/wip/expansion20` @ `ad281dc` (the Build 25 candidate; read
@@ -47,8 +50,8 @@ the multiplayer file (MP-PLAYER-FAMILY, CRT-03, MP-ADOPTION-AGENCY).
 
 | Status | Records | Evidence |
 |---|---|---|
-| IMPLEMENTED | FAM-01..07, REC-001, OWN-03, B8-029, FAM-SAC-01, CRT-01/02/04/05/07..12 | `guardianship.gd`, `life.gd`, `identity.gd`; tests `family_test`, `family_first_test`, `succession_test`, `aging_test`, `relations_test` (all in X). FAM-SAC-01 combined suites on X `4f50ffb`. Most carry TARGETED TESTS PASSED and open device checks |
-| IMPLEMENTED (code), register stale | ID-01 persistent identity | Commits `84d1880`, `45d68d3` are in X (via `801d24b`/`b2f7dc2`); `identity.gd`, `identity_test.gd`, `migration_test.gd` in X. Register still "IN DEVELOPMENT"; ID-01 itself is assessed in the Expansion 17-19 file; correction **(proposed)** below only if that file does not carry it |
+| IMPLEMENTED | FAM-01..07, REC-001, OWN-03, B8-029, CRT-01/02/04/05/07..12 | `guardianship.gd`, `life.gd`, `identity.gd`; tests `family_test`, `family_first_test`, `succession_test`, `aging_test`, `relations_test` (all in X). FAM-SAC-01 combined suites on X `4f50ffb`. Most carry TARGETED TESTS PASSED and open device checks |
+| Assessed in `EXPANSION_19.md` | ID-01 persistent identity (code in X: `identity.gd`, `identity_test`; commits `84d1880`, `45d68d3` in X via `801d24b`/`b2f7dc2`); FAM-SAC-01 | register still says ID-01 "IN DEVELOPMENT"; that file carries the correction |
 | PARTIAL | CRT-06 friendship benefits (votes wait on elections, Expansion 21); WDR-021-C (compliance audit) | `world.gd::player_quote`, `dialogue.gd::news` |
 | DESIGN ONLY, NOT AUTHORIZED | FAM-08 (an adult raised in the bandit clan chooses its future) | no code in X (searched) |
 | PROVISIONAL decision | ID-D3 identity-gate baseline: promote only after a same-commit conservation, determinism and first-divergence audit (owner D38, 2026-10-27; ruling 2026-10-28) | |
@@ -79,7 +82,7 @@ watering), CON-06 farm labour contracts. **Next authorized phase:** none beyond 
 
 ## 4. Couriers and transport (X18-Q12)
 
-Owned by the Expansion 18 file (`docs/expansions/`): X18-Q12, X18-Q12-BOOTH, X18-Q12-POST are IMPLEMENTED (INTEGRATION
+Owned by `docs/expansions/EXPANSION_18.md`: X18-Q12, X18-Q12-BOOTH, X18-Q12-POST are IMPLEMENTED (INTEGRATION
 VERIFIED; `couriers.json`, `courier_test`, `courier_live_test`, `courier_desk_test` in X; gameplay check open). Sources:
 `2026-10-21_courier_booths_known_recipients.md`, `2026-10-21_courier_contract_interface_pricing.md`. Courier fee coefficients
 stay provisional (CON-08-Q). Not repeated here.
@@ -186,19 +189,12 @@ GP-WIKI-LAYOUT, REL18-WIKI.
 
 ## 12. Flight recorder (REC-19, REC-D*, REC-DIAG, REC-STORE)
 
-**Approved scope.** `2026-10-23_build19_flight_recorder.md` (REC-19), decisions REC-D1..D4 (development and private playtest
-builds only, off by default; stop at the cap, never delete evidence; hourly samples; balance auditing on central paths),
-`2026-10-23_recf1_storage_decisions.md` (REC-STORE: every alternative kept), `2026-10-23_simulation_first_diagnostics.md`
-(REC-DIAG).
-
-| Status | Records | Evidence |
-|---|---|---|
-| IMPLEMENTED | REC-19 (TARGETED TESTS PASSED), REC-DIAG (INTEGRATION VERIFIED), REC-STORE, FIX-RECF1 | `game/scripts/core/recorder/*`, `game/scripts/recorder_export/*` (xlsx workbook), `tools/recorder_archive.py`, `tools/check_workbook.py`; `recorder_test`, `net_recorder_quit_test` in X |
-| Remaining approved (in Expansion 20 scope) | REC-19 stage D5 / D4 relations; REC-DIAG gaps (premises till moves, rents, attendants' wages, construction events) | register `remaining_work` |
-| Stale | REC-F1 (PROPOSED finding) | fixed by FIX-RECF1 → SUPERSEDED **(proposed)** |
-
+Owned by `docs/expansions/EXPANSION_19.md` (REC-19, REC-STORE, REC-DIAG, REC-D1..D4, FIX-RECF1 and REC-F1, which it proposes
+as SUPERSEDED by FIX-RECF1). In short: IMPLEMENTED (`game/scripts/core/recorder/*`, `game/scripts/recorder_export/*`,
+`tools/recorder_archive.py`, `recorder_test` in X), off by default in every build (REC-D1); remaining: REC-19 stage D5 / D4
+relations and the REC-DIAG gaps (premises till moves, rents, attendants' wages, construction events) in Expansion 20 scope.
 `docs/design/FLIGHT_RECORDER_DESIGN.md` names `tools/recorder_xlsx.py`, which was never written; the export was built in
-GDScript instead (`recorder_export/xlsx_writer.gd`, X). **Next authorized phase:** none beyond Expansion 20 validation.
+GDScript (`recorder_export/xlsx_writer.gd`, X).
 
 ## 13. Time model (TIME-*)
 
@@ -266,7 +262,7 @@ none; no juice implementation is authorized.
 | Status | Records |
 |---|---|
 | IMPLEMENTED | FR-04, FR-05, FR-06, FR-07 |
-| DESIGN ONLY, NOT AUTHORIZED | FR-01 lizards and spiders (Expansion 26 file), FR-02 props, FR-03 campfire for cooking outside the village (the only campfire in X is the bandit camp's, `main.gd`) |
+| DESIGN ONLY, NOT AUTHORIZED | FR-01 lizards and spiders (Expansion 26), FR-02 props, FR-03 campfire for cooking outside the village (the only campfire in X is the bandit camp's, `main.gd`) |
 | DEFERRED | FR-09 crime from desperation (target 19 passed), FR-10 archery |
 | OPEN DECISION | FR-11 personality, prestige and migration (2026-10-17 list; largely covered since by judgment, Expansion 19, and free migration, X20-SCOPE; the go-between and dislike-driven migration stay deferred, owner 2026-10-31). The owner should say whether anything of FR-11 remains |
 | Stale | FR-08 music and sound → SUPERSEDED by MUSIC-18 / SFX-18 **(proposed)** |
@@ -314,9 +310,9 @@ Done: AR-P0-1, AR-P0-2, Q-03..Q-06. Superseded: AR-P1-1 (by B13-15).
 ## 21. Proposed register changes
 
 The machine-readable list (status changes, new decision records, conflicts, missing sources) was handed to the lead
-(scratchpad `recon/standalone.json`). Summary: FR-08, B13-15, REC-002, REC-010, OWN-29, Q-11, REC-F1 to SUPERSEDED; REC-009 to
+(scratchpad `recon/standalone.json`). Summary: FR-08, B13-15, REC-002, REC-010, OWN-29, Q-11 to SUPERSEDED; REC-009 to
 DEFERRED; B12A-05 to OWNER APPROVED; DVW-B3 to PARTIALLY IMPLEMENTED; JUICE-00 to IMPLEMENTED ON TASK BRANCH; WIKI-B17 to
-COMPLETE (to confirm); ID-01 to INTEGRATED (if the Expansion 17-19 file does not carry it); notes on DVW-B6, F-1, FR-09
+COMPLETE (to confirm); notes on DVW-B6, F-1, FR-09
 (past targets), GP-REPAIR-SOCIAL and ARMOR-CATALOG-01 (stale next actions). New decisions: FARM-YIELD-D1, JUICE-JD1 (as
 superseded), JUICE-JD2..JD5, JUICE-J1. No genuine owner-versus-owner conflict was found in this scope: each disagreement has
 a later owner decision.

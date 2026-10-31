@@ -1,5 +1,8 @@
 # Player-hosted multiplayer (MP-01)
 
+> **Status (DOC-RECON-01, 2026-10-31): HISTORICAL.** This document is the MP-01 prototype, which was SUPERSEDED by MP-MASTER. It is not a current instruction. Current status:
+> `docs/expansions/MULTIPLAYER.md`. Precedence: `docs/expansions/README.md`. Content below kept unchanged.
+
 Owner directive, 2026-10-19: "Minecraft-style player-hosted multiplayer": 2 to 4 players in one
 persistent world, hosted by a player on a Windows or Linux PC or an Android device, with no
 dedicated server. The game stays fully playable alone.

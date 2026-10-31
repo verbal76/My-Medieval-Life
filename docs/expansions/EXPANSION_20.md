@@ -223,6 +223,10 @@ Not open:
 3. **No new expansion work.** Expansion 21 begins only at Build 27 on explicit authorization. Expansions 22-27 are not
    authorized.
 
+**Pending document replacement (DOC-AUTH-01, owner 2026-10-31).** The owner is preparing a revised set of expansion
+specifications. It supersedes this record's design sources only after the owner explicitly approves the final set. Until
+then, the latest explicit owner decisions and the validated baseline govern.
+
 ## 10. Proposed register corrections (not applied here)
 
 These proposals were submitted to the lead under DOC-RECON-01. Once applied, they appear as history lines in the register.

@@ -1,5 +1,7 @@
 # Build 18: overnight report (session of 2026-10-22, read 2026-10-23)
 
+> **HISTORICAL** (documentation reconciliation DOC-RECON-01, 2026-10-31). Current status: `docs/expansions/EXPANSION_18.md`. Overnight session report of 2026-10-22/23. Build 18 was completed and released as a private draft later on 2026-10-23 (`61ec528`, run 39935635926). Content below is kept unchanged as the historical record.
+
 Factual record of the overnight session under `docs/directives/2026-10-22_build18_master_overnight_execution.md`. Owner
 playtesting has not happened since you went to sleep. Nothing was built, published or released. Build 17 (`cd7439c`) is
 untouched.

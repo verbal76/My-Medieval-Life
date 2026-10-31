@@ -1,5 +1,8 @@
 # Multiplayer branch audit: `wip/multiplayer` against Build 15 and staging (MP-A, read-only)
 
+> **Status (DOC-RECON-01, 2026-10-31): HISTORICAL.** This document is an audit of the superseded `wip/multiplayer` prototype. It is not a current instruction. Current status:
+> `docs/expansions/MULTIPLAYER.md`. Precedence: `docs/expansions/README.md`. Content below kept unchanged.
+
 Prepared 2026-10-21 on `wip/roadmap-docs` as the Master Expansion Roadmap's MP-A documentation action. Read-only: no
 merge, no checkout of the branch into staging, no Godot run. The two-instance run itself (MP-B) is a later task.
 Merging `wip/multiplayer` into staging needs the owner's explicit authorization (CLAUDE.md section 0 step 8; register

@@ -1,5 +1,8 @@
 # Living Economy: the owner's decisions (OD-LE-02 to OD-LE-15)
 
+> **Status (DOC-RECON-01, 2026-10-31): HISTORICAL.** This document is the decision packet. All OD-LE decisions are APPROVED, and the implementation status has moved on. It is not a current instruction. Current status:
+> `docs/expansions/EXPANSION_20.md`. Precedence: `docs/expansions/README.md`. Content below kept unchanged.
+
 > **Resolution note, 2026-10-28.** Every OD-LE decision in this packet is APPROVED in the register. X20-SCOPE (owner 2026-10-27)
 > brought the FUTURE-classed answers (OD-LE-03, -04, -08, -11, -13B, -14) into Expansion 20; lending, interest and manor emergency
 > loans stay excluded. LE-02 implemented OD-LE-02, -02B, -03 (per-unit contracts), -10 and -13 behind the economy switch (off).

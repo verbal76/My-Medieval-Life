@@ -1,5 +1,7 @@
 # Build 18: Phase A inventory (2026-10-22)
 
+> **HISTORICAL** (documentation reconciliation DOC-RECON-01, 2026-10-31). Current status: `docs/expansions/EXPANSION_18.md`. Read-only inventory taken before the Build 18 work of 2026-10-22. Build 18 was integrated and released as a private draft on 2026-10-23 (`61ec528`). Content below is kept unchanged as the historical record.
+
 Read-only inventory for the Build 18 master integration directive
 (`docs/directives/2026-10-22_build18_master_integration.md`, B18-DIR) and the owner's character and armour correction
 (`docs/directives/2026-10-22_character_creation_armor_correction.md`). Inspected on Build 17's frozen tree (`dfec7ec`,

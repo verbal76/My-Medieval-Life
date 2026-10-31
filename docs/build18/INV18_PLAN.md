@@ -1,5 +1,7 @@
 # INV-18: Phase A inspection and plan (2026-10-22)
 
+> **HISTORICAL** (documentation reconciliation DOC-RECON-01, 2026-10-31). Current status: `docs/expansions/EXPANSION_18.md`. Phase A plan of 2026-10-22. INV-18 (categorized inventory) was integrated in Build 18 (`2e62c61`) and released (`61ec528`). Content below is kept unchanged as the historical record.
+
 The owner directive is `docs/directives/2026-10-22_build18_inventory_overhaul_inv18.md`. This plan was inspected on
 `wip/build18` (`0048b56`). Build 17 is untouched.
 
