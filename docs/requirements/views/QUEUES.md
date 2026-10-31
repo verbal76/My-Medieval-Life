@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (21)
+## Workers and task branches (22)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -25,6 +25,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-JUDG-C2 | 20 | IN DEVELOPMENT | worker F (judgment) | wip/x20-judgment |
 | X20-JUDG-C3 | 20 | IN DEVELOPMENT | worker D | wip/x20-bandit-ai |
 | X20-JUDG-C5 | 20 | IN DEVELOPMENT | worker F (judgment) | wip/x20-judgment |
+| X20-MERGED-VALIDATION | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | X20-RESUME | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 

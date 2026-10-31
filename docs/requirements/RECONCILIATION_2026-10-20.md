@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 167 still open, 64 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 642 (312 of them still open) |
-| **Open entries now** (rules excluded) | | **478** |
+| Entries added since | | 645 (315 of them still open) |
+| **Open entries now** (rules excluded) | | **481** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (64)
@@ -107,7 +107,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (642)
+## Added since the baseline (645)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -732,10 +732,13 @@ None.
 | X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
+| X20-GO-BETWEEN | Go-between purchasing (asking someone else to buy from a disliked seller): deferred, not in Expansion 20; concept preserved for later design and approval | idea | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | X20-JUDG-C1 | Judgment integration audit and calibration: every NPC decision system audited for where judgment is considered, where it changes the outcome and where it should participate but does not; missing integration added; weighting adjusted only where tests show legitimate judgment is ignored; practical motives preserved; no penalty inflation; no target percentage | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-JUDG-C2 | Second-hand memories of assault and lesser offences fade by existing memory rules while the opinion formed persists under the existing judgment and reputation decay; first-hand outweighs second-hand; killing permanent; family events weighted; reinforcement refreshes; bounded save growth | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-JUDG-C3 | Wrongdoing counted by incident: a continuous fight is one incident with its meaningful actions; severity reflects what happened (injury, attempted or actual murder, threat, robbery); multiple victims kept; a robbery that took nothing is attempted robbery, not theft, and still wrongdoing; a new encounter after real disengagement is a new incident | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-JUDG-C5 | Mixed feelings in real decisions: dislike, respect for ability, fear, dependence, family or friend loyalty and remembered help or harm compete in the existing decision evaluation; no single collapsed score; no automatic refusals; personality-consistent variety | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| X20-JUDG-MIGRATION | Judgment-driven migration (strong dislike as a fifth migration reason): deferred; the four approved migration reasons stay unchanged | idea | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| X20-MERGED-VALIDATION | Merged year-long validation after integrating workers D, F and G: one 30-day baseline replacement, then three 365-day runs on the merged SHA (seeds 1 and 2 normal settings, one economy-enabled), results per run against earlier evidence; then stop for the owner's review | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-MP-ECON-INTEGRITY | When multiplayer and the economy systems are integrated, verify that disconnects, retries, duplicate requests and host recovery cannot duplicate or lose currency, goods or transactions | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-OPEN-ITEMS | Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 20 |

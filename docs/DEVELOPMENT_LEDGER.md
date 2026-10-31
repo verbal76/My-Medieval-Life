@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (706)
+## Approved requirement (707)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -701,6 +701,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X20-JUDG-C2 | Second-hand memories of assault and lesser offences fade by existing memory rules while the opinion formed persists under the existing judgment and reputation decay; first-hand outweighs second-hand; killing permanent; family events weighted; reinforcement refreshes; bounded save growth | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | X20-JUDG-C3 | Wrongdoing counted by incident: a continuous fight is one incident with its meaningful actions; severity reflects what happened (injury, attempted or actual murder, threat, robbery); multiple victims kept; a robbery that took nothing is attempted robbery, not theft, and still wrongdoing; a new encounter after real disengagement is a new incident | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | X20-JUDG-C5 | Mixed feelings in real decisions: dislike, respect for ability, fear, dependence, family or friend loyalty and remembered help or harm compete in the existing decision evaluation; no single collapsed score; no automatic refusals; personality-consistent variety | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| X20-MERGED-VALIDATION | Merged year-long validation after integrating workers D, F and G: one 30-day baseline replacement, then three 365-day runs on the merged SHA (seeds 1 and 2 normal settings, one economy-enabled), results per run against earlier evidence; then stop for the owner's review | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | X20-MP-ECON-INTEGRITY | When multiplayer and the economy systems are integrated, verify that disconnects, retries, duplicate requests and host recovery cannot duplicate or lose currency, goods or transactions | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | X20-OPEN-ITEMS | Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy | 20 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | OPEN |
@@ -758,7 +759,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | VP-01D | Village politics stage: Political consequences in village life | 21 | PROPOSED | NOT STARTED | NOT APPLICABLE | NOT APPLICABLE | OPEN |
 | VP-01E | Village politics stage: Soak, calibration and owner review | 21 | PROPOSED | NOT STARTED | NOT APPLICABLE | NOT APPLICABLE | OPEN |
 
-## Unapproved idea (8)
+## Unapproved idea (10)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -770,6 +771,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B17F-PERF | Build 17 finding: long-run performance analysis (seed 2 took 118 min against 66-93) | 19 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | B17F-SIMREPORT | economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log | 18 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | 18 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| X20-GO-BETWEEN | Go-between purchasing (asking someone else to buy from a disliked seller): deferred, not in Expansion 20; concept preserved for later design and approval | unassigned | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| X20-JUDG-MIGRATION | Judgment-driven migration (strong dislike as a fifth migration reason): deferred; the four approved migration reasons stay unchanged | unassigned | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 
 ## World design rule (33)
 

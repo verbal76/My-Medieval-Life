@@ -8,17 +8,17 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 112 |
-| Integrated | 95 of 112 (85%) |
-| Automated tests passed | 95 of 112 (85%) |
-| Integration verified | 60 of 112 (54%) |
-| Gameplay verified | 0 of 112 (0%) |
-| Owner playtested | 0 of 112 (0%) |
-| Complete | 2 of 112 (2%) |
-| Open (release blockers) | 110 |
+| Approved requirements in scope | 113 |
+| Integrated | 95 of 113 (84%) |
+| Automated tests passed | 95 of 113 (84%) |
+| Integration verified | 60 of 113 (53%) |
+| Gameplay verified | 0 of 113 (0%) |
+| Owner playtested | 0 of 113 (0%) |
+| Complete | 2 of 113 (2%) |
+| Open (release blockers) | 111 |
 | Open owner decisions (blocking) | 1 (0) |
 
-## In development (worker assigned) (12)
+## In development (worker assigned) (13)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -33,6 +33,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-JUDG-C2 | Second-hand memories of assault and lesser offences fade by existing memory rules while the opinion formed persists under the existing judgment and reputation decay; first-hand outweighs second-hand; killing permanent; family events weighted; reinforcement refreshes; bounded save growth | OWNER APPROVED | IN DEVELOPMENT | worker F (judgment) / wip/x20-judgment | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-JUDG-C3 | Wrongdoing counted by incident: a continuous fight is one incident with its meaningful actions; severity reflects what happened (injury, attempted or actual murder, threat, robbery); multiple victims kept; a robbery that took nothing is attempted robbery, not theft, and still wrongdoing; a new encounter after real disengagement is a new incident | OWNER APPROVED | IN DEVELOPMENT | worker D / wip/x20-bandit-ai | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-JUDG-C5 | Mixed feelings in real decisions: dislike, respect for ability, fear, dependence, family or friend loyalty and remembered help or harm compete in the existing decision evaluation; no single collapsed score; no automatic refusals; personality-consistent variety | OWNER APPROVED | IN DEVELOPMENT | worker F (judgment) / wip/x20-judgment | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-MERGED-VALIDATION | Merged year-long validation after integrating workers D, F and G: one 30-day baseline replacement, then three 365-day runs on the merged SHA (seeds 1 and 2 normal settings, one economy-enabled), results per run against earlier evidence; then stop for the owner's review | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (93)

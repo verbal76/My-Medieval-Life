@@ -61349,6 +61349,37 @@
    "notes": "Build 23 (release 425699977, tag build-23, private draft, run 40526826846: sim-gate then three exports). Verified: SHA256SUMS all OK; APK signed with the permanent certificate 31704b80...76cb80e6 (same as Builds 21, 22), v2+v3, package com.hotatticgames.mymedievallife.dev, versionCode 23, versionName 0.1.23-test, permissions INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE, CHANGE_WIFI_MULTICAST_STATE (unchanged since Build 21); Windows zip holds MyMedievalLife.exe; Linux binary starts headless (Godot 4.7.2) and exits 0. Tester notes: BUILD_23_TESTER_NOTES.md in docs/release on wip/expansion20."
   },
   {
+   "id": "X20-GO-BETWEEN",
+   "kind": "idea",
+   "title": "Go-between purchasing (asking someone else to buy from a disliked seller): deferred, not in Expansion 20; concept preserved for later design and approval",
+   "description": "Go-between purchasing (asking someone else to buy from a disliked seller): deferred, not in Expansion 20; concept preserved for later design and approval",
+   "source": "docs/directives/2026-10-31_x20_merged_validation_decisions.md",
+   "owner_wording": "Do not implement purchasing through an intermediary in Expansion 20. Preserve the concept for later design and approval.",
+   "approval": "owner, 2026-10-31 (deferred)",
+   "acceptance": [],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "DEFERRED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT APPLICABLE",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_x20_merged_validation_decisions.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "approval_status: PROPOSED -> DEFERRED",
+     "why": "owner deferred"
+    }
+   ]
+  },
+  {
    "id": "X20-JUDG-C1",
    "kind": "approved",
    "title": "Judgment integration audit and calibration: every NPC decision system audited for where judgment is considered, where it changes the outcome and where it should participate but does not; missing integration added; weighting adjusted only where tests show legitimate judgment is ignored; practical motives preserved; no penalty inflation; no target percentage",
@@ -61501,6 +61532,73 @@
    ],
    "assigned_worker": "worker F (judgment)",
    "branch": "wip/x20-judgment"
+  },
+  {
+   "id": "X20-JUDG-MIGRATION",
+   "kind": "idea",
+   "title": "Judgment-driven migration (strong dislike as a fifth migration reason): deferred; the four approved migration reasons stay unchanged",
+   "description": "Judgment-driven migration (strong dislike as a fifth migration reason): deferred; the four approved migration reasons stay unchanged",
+   "source": "docs/directives/2026-10-31_x20_merged_validation_decisions.md",
+   "owner_wording": "Do not introduce strong dislike as a fifth independent migration reason. Keep the four previously approved migration reasons unchanged.",
+   "approval": "owner, 2026-10-31 (deferred)",
+   "acceptance": [],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "DEFERRED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT APPLICABLE",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_x20_merged_validation_decisions.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "approval_status: PROPOSED -> DEFERRED",
+     "why": "owner deferred"
+    }
+   ]
+  },
+  {
+   "id": "X20-MERGED-VALIDATION",
+   "kind": "approved",
+   "title": "Merged year-long validation after integrating workers D, F and G: one 30-day baseline replacement, then three 365-day runs on the merged SHA (seeds 1 and 2 normal settings, one economy-enabled), results per run against earlier evidence; then stop for the owner's review",
+   "description": "Merged year-long validation after integrating workers D, F and G: one 30-day baseline replacement, then three 365-day runs on the merged SHA (seeds 1 and 2 normal settings, one economy-enabled), results per run against earlier evidence; then stop for the owner's review",
+   "source": "docs/directives/2026-10-31_x20_merged_validation_decisions.md",
+   "owner_wording": "Report results separately for each run and compare them against the available earlier evidence. Do not conceal regressions behind averages.",
+   "approval": "owner, 2026-10-31",
+   "acceptance": [
+    "bandit intelligence and villager casualties; bandit deaths by phase; retreat, rescue and combat decisions; robbery and attempted-robbery counting; judgment-driven buying, hiring, contracts and seller choice; memory decay and save size; blacksmith necessity vs dislike; repairs and rentals with economy integrity; no coin or item creation or destruction; no new script errors, regressions or save/load failures",
+    "stop for the owner's review before another expansion or release"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_x20_merged_validation_decisions.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/expansion20",
+     "why": "lead integrating D, F, G into wip/expansion20"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/expansion20"
   },
   {
    "id": "X20-MIGRATE",

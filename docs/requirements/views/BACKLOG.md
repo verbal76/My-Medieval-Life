@@ -62,7 +62,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 
-## Approved, no build assigned (14)
+## Approved, no build assigned (16)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -78,6 +78,8 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-019-C | Comply with World Design Rule 19: Living Political Agency and Democratic Consequences | approved | OWNER APPROVED | NOT STARTED |
 | WDR-020-C | Comply with World Design Rule 20: Autonomous Housing | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | WDR-021-C | Comply with World Design Rule 21: Household Succession and Family Care | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
+| X20-GO-BETWEEN | Go-between purchasing (asking someone else to buy from a disliked seller): deferred, not in Expansion 20; concept preserved for later design and approval | idea | DEFERRED | NOT STARTED |
+| X20-JUDG-MIGRATION | Judgment-driven migration (strong dislike as a fifth migration reason): deferred; the four approved migration reasons stay unchanged | idea | DEFERRED | NOT STARTED |
 | XAUDIT-01 | Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | XEXPL-01 | Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion | approved | OWNER APPROVED | NOT STARTED |
 
