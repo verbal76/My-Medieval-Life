@@ -15,6 +15,9 @@ originals (including the Expansion 25 and 26 packets, which the owner holds), in
 comes here for code verification, discrepancy review and owner questions. `wip/requirements-control` stays isolated, and its
 owner-reviewed state is commit `3098a5f`, until the owner authorizes integration.
 
+**Open owner decisions, consolidated:** `docs/expansions/OWNER_DECISIONS_PENDING.md` (evidence, options, dependencies and an agent
+recommendation per question, clearly marked as a recommendation; questions a later owner decision answers are listed, not asked).
+
 ## Pending authority switch (owner, 2026-10-31, DOC-AUTH-01)
 
 The owner is preparing a revised, complete set of expansion specifications
