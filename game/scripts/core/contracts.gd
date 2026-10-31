@@ -871,10 +871,12 @@ func deliver(c: Dictionary, units: int, into: Inventory = null, actor: PlayerSta
 	var pay := units * int(c.price_each)
 	if units <= 0 or pay > int(c.reserved) or not to.can_add(c.item):
 		return 0
+	var wd := from.wear_leaving(c.item, units)     # X20-WEAR-TRANSFER
 	from.remove(c.item, units)
 	if World.is_player_ref(c.seller):
 		w.player_for(c.seller).trim_stolen()
 	to.add(c.item, units)
+	to.take_wear(c.item, wd)
 	if w.recorder != null:
 		w.recorder.contract_goods(c, units, from, to)      # X20-FINAL: the goods handed over
 	_pay_units(c, units)
@@ -1128,12 +1130,15 @@ func _estate_claims(n: NPC) -> void:
 			continue
 		var tool := str(x.get("tool", ""))
 		if tool != "" and n.inv.has(tool):
+			var wd := n.inv.wear_leaving(tool, 1)     # X20-WEAR-TRANSFER
 			n.inv.remove(tool)
 			var to: NPC = w.npc(int(x.get("for", -1)))
 			if to != null and to.alive and to.inv.can_add(tool):
 				to.inv.add(tool)
+				to.inv.take_wear(tool, wd)
 			else:
 				w.manor_work.yard.add(tool)          # the manor's own (its works yard), as MIN-EQUIP's orders deliver
+				w.manor_work.yard.take_wear(tool, wd)
 			w.stat("estate_order_goods_" + tool)
 		else:
 			w.transactions.estate_claim(w.transactions.next_txid("estate"), n, World.MANOR, int(x.get("paid", 0)), "manor_order")

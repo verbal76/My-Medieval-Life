@@ -616,6 +616,34 @@ func can_list(id: String) -> bool:
 	return GameData.items.has(id) and GameData.value(id) > 0
 
 
+## X20-WEAR-TRANSFER: a goods pool kept as a dictionary (a stall's or shop's sale stock, its back room) keeps the wear of its one worn
+## unit of an item beside it ("stock_wear", "store_wear": {item: durability left}; absent in older saves: none worn), as an Inventory
+## keeps `durability`. A worn unit that comes in joins the pool (Inventory.joined_wear); it leaves with the last of the item.
+const POOL_WEAR := {"stock": "stock_wear", "store": "store_wear"}
+
+
+func _pool_in(s: Dictionary, pool: String, id: String, d: int) -> void:
+	if d < 0:
+		return
+	var m: Dictionary = s.get(POOL_WEAR[pool], {})
+	var j := Inventory.joined_wear(id, int(m.get(id, -1)), d)
+	if j >= 0:
+		m[id] = j
+		s[POOL_WEAR[pool]] = m
+
+
+## The wear leaving pool `pool` with units of `id` when `left` units of it remain there (the worn one goes with the last), -1 for none.
+func _pool_out(s: Dictionary, pool: String, id: String, left: int) -> int:
+	var m: Dictionary = s.get(POOL_WEAR[pool], {})
+	if left > 0 or not m.has(id):
+		return -1
+	var d := int(m[id])
+	m.erase(id)
+	if m.is_empty():
+		s.erase(POOL_WEAR[pool])
+	return d
+
+
 ## Move `qty` of an item from the pack to the sale stock. "" when done, else why not.
 func list_item(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> String:
 	if actor != null and actor != w.player:
@@ -628,8 +656,10 @@ func list_item(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -
 		return "You do not have that many that you can sell."
 	if not s.stock.has(id) and s.stock.size() >= listing_cap(s):
 		return "It has room for %d kinds of goods%s." % [listing_cap(s), (" (more shelves hold more)" if is_shop(s) else "")]
+	var wd := w.player.inv.wear_leaving(id, qty)
 	w.player.inv.remove(id, qty)
 	s.stock[id] = int(s.stock.get(id, 0)) + qty
+	_pool_in(s, "stock", id, wd)
 	if not s.prices.has(id):
 		s.prices[id] = GameData.value(id)
 	return ""
@@ -646,6 +676,7 @@ func unlist(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> S
 		return w.player.inv.full_text(id)
 	s.stock[id] = have - qty
 	w.player.inv.add(id, qty)
+	w.player.inv.take_wear(id, _pool_out(s, "stock", id, have - qty))
 	if int(s.stock[id]) == 0:
 		s.stock.erase(id)
 		s.prices.erase(id)
@@ -712,13 +743,17 @@ func close(s: Dictionary, because := "You closed your stall.", actor: PlayerStat
 		return "%s %s" % [because, stalls.settle_text(s, stalls.close(s))]
 	var bag := Inventory.new()
 	var back := 0
-	for pool: Dictionary in [s.stock, s.get("store", {})]:
+	for pk in ["stock", "store"]:
+		var pool: Dictionary = s.get(pk, {})
 		for id in pool.keys():
 			var n := int(pool[id])
+			var wd := _pool_out(s, pk, id, 0)      # X20-WEAR-TRANSFER: the whole of it goes, its worn unit too
 			if w.player.inv.add(id, n):
 				back += n
+				w.player.inv.take_wear(id, wd)
 			else:
 				bag.add(id, n)
+				bag.take_wear(id, wd)
 	back += works.clear_into(s, bag)      # the workroom's materials and goods come back too (B18-DP-01)
 	var coins := collect(s)
 	var left := bag.total()
@@ -907,8 +942,10 @@ func store_item(s: Dictionary, id: String, qty: int, actor: PlayerState = null) 
 		return "You cannot store that."
 	if store_total(s) + qty > store_cap(s):
 		return "The stock chests are full (%d of %d)." % [store_total(s), store_cap(s)]
+	var wd := w.player.inv.wear_leaving(id, qty)
 	w.player.inv.remove(id, qty)
 	s.store[id] = int(s.store.get(id, 0)) + qty
+	_pool_in(s, "store", id, wd)
 	return ""
 
 
@@ -922,6 +959,7 @@ func fetch(s: Dictionary, id: String, qty: int, actor: PlayerState = null) -> St
 	if not w.player.inv.can_add(id):
 		return w.player.inv.full_text(id)
 	w.player.inv.add(id, qty)
+	w.player.inv.take_wear(id, _pool_out(s, "store", id, have - qty))
 	s.store[id] = have - qty
 	if int(s.store[id]) == 0:
 		s.store.erase(id)
@@ -936,6 +974,7 @@ func _restock(s: Dictionary, id: String) -> void:
 	var k := mini(have, int(GameData.b("shop_restock")))
 	s.stock[id] = k
 	s.store[id] = have - k
+	_pool_in(s, "stock", id, _pool_out(s, "store", id, have - k))
 	if int(s.store[id]) == 0:
 		s.store.erase(id)
 
@@ -1238,6 +1277,7 @@ func sell(s: Dictionary, n: NPC, id: String, qty: int, price: int, pantry := fal
 	if not w.claims_release(n, EconReservations.COINS, total, id, pantry or World.is_necessity(id)):
 		return false                       # LE-03: coins its own offers hold back are not spent here (nothing while the economy is off)
 	s.stock[id] = int(s.stock[id]) - qty
+	var wd := _pool_out(s, "stock", id, int(s.stock[id]))     # X20-WEAR-TRANSFER: the worn unit goes with the last on the shelf
 	if int(s.stock[id]) == 0:
 		s.stock.erase(id)
 		if int(s.get("store", {}).get(id, 0)) > 0:
@@ -1247,6 +1287,7 @@ func sell(s: Dictionary, n: NPC, id: String, qty: int, price: int, pantry := fal
 			if str(s.get("display", "")) == id:
 				s.erase("display")
 	dest.add(id, qty)
+	dest.take_wear(id, wd)
 	n.coins -= total
 	n.spent += total
 	s.till = int(s.till) + total

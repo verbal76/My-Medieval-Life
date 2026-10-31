@@ -110,6 +110,7 @@ jobs:
           $godot --headless --path game --script res://tests/le03_economy_test.gd    # Expansion 20 LE-03: budgets, food bids, production, no tool-order trap
           $godot --headless --path game --script res://tests/le03_transactions_test.gd   # Expansion 20 LE-03: the transaction authority
           $godot --headless --path game --script res://tests/le04_test.gd               # Expansion 20 LE-04: village parties, the manor's tools
+          $godot --headless --path game --script res://tests/wear_transfer_test.gd      # X20-WEAR-TRANSFER: a tool's wear travels with it
           $godot --headless --path game --script res://tests/feast_test.gd
           $godot --headless --path game --script res://tests/horse_test.gd
           $godot --headless --path game --script res://tests/luxury_test.gd

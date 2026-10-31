@@ -42,6 +42,7 @@ func _init() -> void:
 	test_speculation()
 	test_negotiated_wages()
 	test_settle_estate()
+	test_replay_after_load()
 	test_switch()
 	EconomyFoundation.set_override({})
 	print("%d checks, %d failures" % [checks, failures])
@@ -398,6 +399,44 @@ func trader(w: World) -> SettlementParty:
 		if p.holder == "trader":
 			return p
 	return null
+
+
+## X20-TXN-REPLAY-FIELDS: an id replayed after a save and load answers exactly what its first call answered, every field of the
+## result kept (an estate claim's `paid` and `written_off`), with the same types; the saved past results stay bounded.
+func test_replay_after_load() -> void:
+	var w := new_world(false)
+	var tx := w.transactions
+	var a := adult(w)
+	a.coins = 7
+	var first := tx.estate_claim("estate:1", a, World.MANOR, 10, "test")
+	var ex := tx.exchange("rp:1", World.MANOR, World.npc_ref(a.id), "wheat", 1, 1)       # refused (no stock): its outcome is kept too
+	check(int(first.paid) == 7 and int(first.written_off) == 3, "an estate claim pays what the estate holds (7 of 10)")
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict(), "", true, true))
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	var again := w2.transactions.estate_claim("estate:1", w2.npc(a.id), World.MANOR, 10, "test")
+	var want := first.duplicate()
+	want.replay = true
+	check(again == want, "replayed after a load: exactly the first answer, paid and written_off included (%s vs %s)" % [str(again), str(want)])
+	check(typeof(again.get("paid")) == TYPE_INT, "with the same types (paid a whole number)")
+	var ex2 := w2.transactions.exchange("rp:1", World.MANOR, World.npc_ref(a.id), "wheat", 1, 1)
+	var want2 := ex.duplicate()
+	want2.replay = true
+	check(ex2 == want2, "a refused call replays as refused, the same code")
+	check(JSON.stringify(w2.transactions.to_dict()) == JSON.stringify(tx.to_dict()), "the authority's save round-trips identically")
+	var old: Dictionary = d.duplicate(true)               # a save written before this change: the past results held only the base fields
+	for e in old.transactions.outcomes["estate"]:
+		(e[1] as Dictionary).erase("paid")
+		(e[1] as Dictionary).erase("written_off")
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), old)
+	var r3 := w3.transactions.estate_claim("estate:1", w3.npc(a.id), World.MANOR, 10, "test")
+	check(bool(r3.replay) and bool(r3.ok) and not r3.has("paid"), "an older save loads; its replay answers what it kept")
+	for i in 80:
+		w2.transactions.exchange("rp:%d" % (i + 2), World.MANOR, World.npc_ref(a.id), "wheat", 1, 1)
+	var w4 := World.new()
+	w4.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w2.to_dict(), "", true, true)))
+	check((w4.transactions.outcomes["rp"] as Array).size() == w4.transactions.keep_outcomes, "still bounded (%d kept per namespace)" % w4.transactions.keep_outcomes)
 
 
 func test_settle_estate() -> void:
