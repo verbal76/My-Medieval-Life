@@ -75,6 +75,28 @@ jobs:
             cat "$d/summary.json" 2>/dev/null || true
             grep -E '^(day +[0-9]+:|  neighbours:|  migration|  growth:|FATAL|ECONOMY day|=== seed|people:|food:|money:|trade:|currency:|ledger flows:)' "$d/sim.log" || true
           done
+      - name: Print a compact digest of each sim.json's checkpoint samples (read-only; Build 25 economic analysis)
+        run: |
+          for d in recovered/*/; do
+            [ -f "$d/sim.json" ] || continue
+            python3 - "$d/sim.json" <<'PY'
+          import json, sys
+          j = json.load(open(sys.argv[1]))
+          pick = lambda dct, keys: {k: dct.get(k) for k in keys if k in dct}
+          print("DIGEST_RUN", json.dumps({"seed": j.get("seed"), "days": j.get("days"), "reached": j.get("reached"), "every": j.get("every"), "samples": len(j.get("samples", []))}))
+          for s in j.get("samples", []):
+              p = s.get("people", {}); m = s.get("money", {}); c = s.get("currency", {}); f = s.get("food", {}); t = s.get("trade", {})
+              print("DIGEST", json.dumps({"day": s.get("day"),
+                  "people": pick(p, ["alive", "births", "deaths", "by_role", "by_job"]),
+                  "work": s.get("work"), "growth": pick(s.get("growth", {}), ["living", "households_founded", "courtships", "partnerships", "couples_needing_home", "crowded_households", "single_adults"]),
+                  "money": {"household_cash": m.get("household_cash"), "treasury": m.get("treasury"), "merchant_funds": m.get("merchant_funds"), "gov": m.get("gov"),
+                            "traders": {k: pick(v, ["coins", "n", "zero"]) for k, v in (m.get("traders") or {}).items()}},
+                  "holders": c.get("holders"), "coin_sources_delta": c.get("coin_sources_delta"),
+                  "food": pick(f, ["days_of_need", "game_food_days", "missed_meal_no_money", "missed_meal_no_food_for_sale", "relief_grain", "relief_bought_coins", "starvation_deaths", "mean_hunger", "made"]),
+                  "trade": pick(t, ["caravans", "coins_in", "coins_out", "exported", "imported"]),
+                  "building": s.get("building"), "manor_work": s.get("manor_work"), "events": s.get("events")}, separators=(",", ":")))
+          PY
+          done
 
   plan:
     if: inputs.recover_run == ''
