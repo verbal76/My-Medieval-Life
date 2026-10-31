@@ -26,15 +26,15 @@ the Build 24 behaviour, tested), as every judgment decision point is.
 | 7 | No repeated hopeless combat | a retreat once begun is kept (`under_way`) while the way is open; struck while falling back it weighs again (break out only if blocked); press is not offered while retreating. The re-robbing loop (below) is removed at its cause | judgment_bandit.gd, npc_brain.gd |
 | 8 | Villagers still organise and win retaliation | nothing in the villagers' family defence, reports, guards or pursuit changes; bandit_ai_test shows three villagers running a lone bandit down in the open | — |
 | 9 | Same judgment principles for both populations | the same `JudgmentWeighting.choose`, personality layer, Relations ties and word of mouth as villagers | — |
-| 10 | Learn through existing memory, judgment, experience | practical wisdom (routs), news memories (losses), Relations (bonds); no separate AI store, nothing new saved (the fall-back and the chosen prey are transient, like a chase target) | — |
+| 10 | Learn through existing memory, judgment, experience | practical wisdom (routs), news memories (losses), Relations (bonds); no separate AI store, nothing new saved (the fall-back is transient, like a chase target) | — |
 
 ## The re-robbing loop (defect, fixed at its cause)
 
 `NPCBrain.fight`: a bandit's strike at any non-guard villager ran the robbery branch. After robbing its prey it makes off; the
 victim (or a defender) strikes it; the blow sets the bandit's target to the striker; the next strike "robs" the striker again,
 every two game minutes, down to robberies of nothing, while the striker's blows land on a bandit that never fights back. Fix
-(with the flag on): the robbery is of the prey the bandit chose (`NPCBrain.bandit_prey`, set where `_bandit` picks it), once
-per encounter; a striker is fought (or fled from) by the weighing above. Off: unchanged.
+(with the flag on): one who is fighting the band (their target is a bandit: a victim striking back, a defender, or the foe of a fellow it
+went to help) is never robbed; it is fought, or fled from, by the weighing above. After a robbery the bandit makes off as before. Off: unchanged.
 
 ## Incidents (X20-JUDG-C3)
 

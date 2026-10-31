@@ -214,9 +214,7 @@ var buy_failed := {}
 ## SIM-F3: each bandit's last chase given up blocked ({prey, cell}: the prey's cell then); read by _bandit. Not saved, as
 ## the chase target is not.
 var stalk_lost := {}
-## X20-BANDIT-AI (JudgmentBandit): each bandit's chosen prey ({bandit: prey id}, set where _bandit picks it; a robbery is of the
-## prey only, once an encounter) and the bandits falling back to the camp ({bandit: minute begun}). Not saved, as targets are not.
-var bandit_prey := {}
+## X20-BANDIT-AI (JudgmentBandit): the bandits falling back to the camp ({bandit: minute begun}). Not saved, as targets are not.
 var bandit_retreat := {}
 const STALK_WATCH_MINUTES := 30.0    # SIM-F3: PROVISIONAL (agent, docs/DECISIONS.md): a stalking watch re-picks its prey at least this often
 const BUY_RETRY_MINUTES := 60.0      # SIM-F2: PROVISIONAL (agent, docs/DECISIONS.md): a failed purchase is tried again after an hour at most
@@ -1840,7 +1838,6 @@ func _bandit(n: NPC, h: float) -> void:
 			var held: bool = lost != null and int(lost.prey) == pid and Vector2i(lost.cell) == _cell_of(prey)
 			if not held and prey.pos.distance_to(n.pos) <= CHASE_RANGE:
 				n.target = pid
-				bandit_prey[n.id] = pid                    # X20-BANDIT-AI: the one it means to rob
 				n.target_ref = ""                          # (foe_player reads the player from the id)
 				return
 			n.plan = [{"k": "watch", "prey": pid, "cell": _cell_of(prey) if held else null, "until": w.minutes + STALK_WATCH_MINUTES}]
@@ -1849,6 +1846,14 @@ func _bandit(n: NPC, h: float) -> void:
 		return
 	n.doing = "lurking at the camp"
 	n.plan = [go(wander_cell(w.bandit_camp, 3)), work(w.rng.randf_range(30, 90), "poach", {}, "idle")]
+
+
+## X20-BANDIT-AI: whether `o` is fighting a bandit (its target is one).
+func _fights_band(o: NPC) -> bool:
+	if o.target < 0:
+		return false
+	var t: NPC = w.npc(o.target)
+	return t != null and t.role == "bandit"
 
 
 ## SIM-F3 (owner D18, answer C, ENGINEERING, 2026-10-27): whether a bandit's stalking watch (the plan step `s` made by
@@ -2970,10 +2975,10 @@ func fight(n: NPC, dt: float) -> void:
 	stalk_lost.erase(n.id)                              # SIM-F3: a chase that reached its target ends any blocked memory
 	if w.judgment != null:
 		w.judgment.note_blow(n.id, n.target)        # X19-EVENT-Q: who struck first in this fight, so an answer is not judged as an attack
-	# a bandit robs ordinary villagers rather than killing them. X20-BANDIT-AI: with judgment's bandit_danger on, only the prey it
-	# chose, once an encounter: one who comes at it (a victim striking back, a defender) is fought, never "robbed" again and again
-	if n.role == "bandit" and tnpc != null and tnpc.job != "guard" and (not JudgmentBandit.on(w) or int(bandit_prey.get(n.id, -999)) == tnpc.id):
-		bandit_prey.erase(n.id)
+	# a bandit robs ordinary villagers rather than killing them. X20-BANDIT-AI: with judgment's bandit_danger on, not one who is
+	# fighting the band (coming at this bandit, a victim striking back or a defender, or at a fellow it went to help): that one is
+	# fought, never "robbed" again and again
+	if n.role == "bandit" and tnpc != null and tnpc.job != "guard" and (not JudgmentBandit.on(w) or not _fights_band(tnpc)):
 		var take := tnpc.coins / 2
 		tnpc.coins -= take
 		n.coins += take

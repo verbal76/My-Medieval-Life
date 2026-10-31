@@ -128,7 +128,6 @@ func test_outnumbered_retreats() -> void:
 		stage(w, [ppl[1 + i]], p - back * 2.0 + back.orthogonal() * float(i - 1))
 		ppl[1 + i].target = b.id
 	b.target = v.id
-	w.brain.bandit_prey[b.id] = v.id
 	w.brain.fight(b, 0.5)
 	check(b.target == -1 and w.brain.bandit_retreat.has(b.id), "one bandit, three coming at it: it breaks off and falls back")
 	check(not b.plan.is_empty() and Vector2(b.plan[0].to).distance_to(Vector2(w.bandit_camp)) < 1.0, "...to the camp, where the band is")
@@ -191,9 +190,8 @@ func test_no_rerobbing() -> void:
 	stage(w, [v], p + Vector2(0.9, 0))
 	v.coins = 40
 	b.target = v.id
-	w.brain.bandit_prey[b.id] = v.id
 	w.brain.fight(b, 0.5)
-	check(v.coins == 20 and b.target == -1, "the bandit robs the prey it chose, once, and makes off")
+	check(v.coins == 20 and b.target == -1, "the bandit robs its prey once and makes off")
 	var coins_after := v.coins
 	for i in 6:                                                  # the victim strikes back, again and again
 		v.target = b.id
