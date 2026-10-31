@@ -61,6 +61,8 @@ var watch_lost := {}           # households that lost someone to hunger while wa
 var herd_log: Array = []       # FARM-08B: each pen kind's herd, a row on every day it changed (read only, changes nothing)
 var herd_last := {}            # kind -> the last row's key, to keep only the days that changed
 var herd_care := {}            # kind -> hours a pen had a hungry animal and too little in the trough, and why it was not fed
+var trader_diag := false       # X20-TRADER-PAY-INV: --trader-diag prints the settlements' traders and their households each day (reads only)
+var trader_ever := {}          # "<settlement>|<household id>" of every household that has worked a settlement's trade
 var flee_path := PackedVector2Array()   # SIM-GATE-01 crime_spree: the player's flight after a crime, cell by cell
 const FLEE_TILES_PER_SECOND := 4.5      # the player's walking speed (docs: guards chase at 1.3 x walk_tiles_per_second)
 
@@ -130,6 +132,9 @@ func _init() -> void:
 	_print_sample(samples[0])
 	var per_day := int(1440.0 / float(GameData.b("game_minutes_per_second")) / STEP)
 	var hp_before := w.player.hp
+	trader_diag = "--trader-diag" in args
+	if trader_diag:
+		_trader_diag(0)
 	var profile := "--profile" in args          # PERF-02: time per subsystem, printed at the end (changes nothing)
 	w.profiling = profile
 	w.map.profiling = profile
@@ -161,6 +166,8 @@ func _init() -> void:
 				hp_before = w.player.hp
 				player_min_hp = minf(player_min_hp, w.player.hp)
 		_herd_day(d + 1)
+		if trader_diag:
+			_trader_diag(d + 1)
 		if (d + 1) % every == 0 or d + 1 == days:
 			var ts := Time.get_ticks_usec()
 			samples.append(_sample(start))
@@ -1548,3 +1555,48 @@ func _on_trade(buyer: Object, seller: Object, id: String, qty: int, total: int) 
 	flows[k].n += qty
 	flows[k].coins += total
 	flows[k].items[id] = int(flows[k].items.get(id, 0)) + qty
+
+
+## X20-TRADER-PAY-INV (analysis, read only; owner 2026-10-30): at the end of each day, one TRADER line per settlement (the trader's
+## books and the settlement's cumulative trade flows) and one TRHH line per household that has ever worked its trade, and the
+## settlements' holders (SETTLE) and the food in transit (TRANSIT). Reads fields only: no price cache, no RNG, no call that
+## changes state (docs/expansion20/TRADER_SUSTAINABILITY_ANALYSIS.md).
+func _trader_diag(day: int) -> void:
+	var r: Regions = w.regions
+	for s: OffMapSettlement in r.list:
+		var m: Dictionary = s.biz.get("merchant", {})
+		var open := not m.is_empty()
+		var sv := 0
+		if open:
+			for item in m.stock:
+				sv += int(m.stock[item]) * maxi(1, roundi(float(s.prices.get(item, GameData.value(item)))))
+		var f: Dictionary = s.flows
+		var hh_coins := 0
+		for h in s.hh:
+			hh_coins += int(h.coins)
+		var tills := 0
+		for t in s.biz:
+			tills += int(s.biz[t].till)
+		print("TRADER %s" % JSON.stringify({"d": day, "s": s.id, "open": open, "w": (m.get("workers", []) as Array).duplicate(), "till": int(m.get("till", 0)),
+			"reserve": int(m.get("reserve", 0)), "paid": int(m.get("paid", 0)), "stock_value": sv, "rate": float(m.get("rate", 0.0)),
+			"cfv": int(f.coins_from_village), "ctv": int(f.coins_to_village), "rci": int(f.road_coins_in), "rco": int(f.road_coins_out),
+			"oci": int(f.outside_coins_in), "oco": int(f.outside_coins_out), "xci": int(f.regional_coins_in), "xco": int(f.regional_coins_out),
+			"horses_sold": int(f.horses_sold), "wages": int(f.wages_paid), "job_moves": int(f.job_moves), "opened": int(f.biz_opened), "closed": int(f.biz_closed),
+			"migrants_out": int(f.migrants_out), "coins": s.coins(), "treasury": int(s.gov.coins), "hh_coins": hh_coins, "tills": tills,
+			"food_price": maxi(1, roundi(float(s.prices.get("wheat", GameData.value("wheat")))))}))
+		for i in m.get("workers", []):
+			trader_ever["%s|%d" % [s.id, int(i)]] = true
+		var keys: Array = trader_ever.keys()
+		keys.sort()
+		for k in keys:
+			if not str(k).begins_with(s.id + "|"):
+				continue
+			var h: Dictionary = s.hh[int(str(k).get_slice("|", 1))]
+			var pts := 0.0
+			for fd in OffMapSettlement.rules().foods:
+				pts += float(h.pantry.get(fd, 0)) * OffMapSettlement._pts(fd)
+			print("TRHH %s" % JSON.stringify({"d": day, "s": s.id, "h": int(h.id), "trade": str(h.trade), "alive": bool(h.alive), "coins": int(h.coins),
+				"inc": int(h.inc), "rate": float(h.rate), "low": int(h.get("low", 0)), "stay": int(h.stay), "hungry": int(h.hungry),
+				"members": int(h.adults) + int(h.children), "pantry_days": pts / maxf(1.0, s._need_pts(h)), "need_pts": s._need_pts(h)}))
+	var t: Dictionary = r.call("tx_in_transit") if r.has_method("tx_in_transit") else {"coins": 0, "goods": {}}
+	print("TRANSIT %s" % JSON.stringify({"d": day, "coins": int(t.coins), "goods": t.goods, "coin_sources": w.coin_sources}))
