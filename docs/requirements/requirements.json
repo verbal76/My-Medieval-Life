@@ -9179,8 +9179,14 @@
      "date": "2026-10-31",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-31_documentation_reconciliation.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "notes",
+     "why": "owner 2026-10-31 (docs/directives/2026-10-31_doc_recon_review_decisions.md s.1, s.2, s.4): Build 26 scope widened"
     }
-   ]
+   ],
+   "notes": "Build 26 scope (owner 2026-10-31): repository recovery and consolidation; plus planning, reconciliation and dependency analysis (not implementation) of LE-07, EMP-PERM-01, the LE-05 remainder and economy activation preparation (mechanism and validation evidence; the economy stays disabled until explicit authorization); recovery and reconciliation of Expansion 21 phase 1 without activating political gameplay. Build 26 integration begins only after Build 25 is validated and frozen at its approved SHA."
   },
   {
    "id": "CAP-TOOLHOLDER",
@@ -12627,8 +12633,14 @@
      "date": "2026-10-31",
      "change": "note",
      "why": "policy acknowledged; waiting for the owner's revised document set"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "notes",
+     "why": "owner 2026-10-31 (docs/directives/2026-10-31_doc_recon_review_decisions.md s.6): the original Expansion 25 and 26 packets are with ChatGPT, not lost; ChatGPT rebuilds the master package; the docs/expansions status files are the implementation-evidence layer, never the replacement specifications"
     }
-   ]
+   ],
+   "notes": "The revised master package (rebuilt by ChatGPT from the owner's originals) will come for code verification, discrepancy review and owner questions; it supersedes older specifications only on the owner's explicit final approval. docs/expansions/ is the implementation-evidence layer supporting that work, not the replacement specification."
   },
   {
    "id": "DOC-RECON-01",
@@ -12674,6 +12686,36 @@
    "test_commit": "7864a61",
    "commits": [
     "7864a61"
+   ]
+  },
+  {
+   "id": "DOC-RECON-REVIEW-01",
+   "kind": "approved",
+   "title": "Owner review of DOC-RECON-01 (2026-10-31): wip/requirements-control stays isolated at the reviewed commit 3098a5f until the owner authorizes integration; decisions on the remaining Expansion 20 placement, economy activation, Expansion 26 bosses and heroes, Expansion 21 recovery, other political offices, original packets and open questions; one consolidated owner-decision report",
+   "description": "Owner review of DOC-RECON-01 (2026-10-31): wip/requirements-control stays isolated at the reviewed commit 3098a5f until the owner authorizes integration; decisions on the remaining Expansion 20 placement, economy activation, Expansion 26 bosses and heroes, Expansion 21 recovery, other political offices, original packets and open questions; one consolidated owner-decision report",
+   "source": "docs/directives/2026-10-31_doc_recon_review_decisions.md",
+   "owner_wording": "Keep wip/requirements-control isolated at commit 3098a5f47362bc77300e4b8bde05c467e4aa2e29 until I explicitly authorize integration.",
+   "approval": "owner, 2026-10-31",
+   "acceptance": [
+    "decisions recorded with dated history lines citing the verbatim directive",
+    "consolidated owner-decision report: each unresolved question with evidence, options, dependencies and a recommendation marked as such; no question repeated that a later owner decision answers",
+    "no merge of wip/requirements-control; Build 25 validation untouched"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_doc_recon_review_decisions.md"
+    }
    ]
   },
   {
@@ -15545,6 +15587,36 @@
    ]
   },
   {
+   "id": "E26-BOSS-D1",
+   "kind": "decision",
+   "title": "Expansion 26 bosses and hero status: does the 2026-10-27 parking of the imported boss roster (OD-17 D36g) and the ban on scripted titles (D36a) erase the 2026-10-23 boss roster and hero status chosen for MON-01?",
+   "description": "Expansion 26 bosses and hero status: does the 2026-10-27 parking of the imported boss roster (OD-17 D36g) and the ban on scripted titles (D36a) erase the 2026-10-23 boss roster and hero status chosen for MON-01?",
+   "source": "docs/directives/2026-10-31_doc_recon_review_decisions.md",
+   "owner_wording": null,
+   "owner_answer": "Preserve the October 23 boss roster as design scope: giant crab, Buwaya, minotaur, yeti, necromancer, dragons. The October 27 instruction to park the imported boss roster does not erase these previously approved design concepts. It does mean no implementation is authorized yet. Hero reputation and recognition should emerge from actual accomplishments, witnesses, and the existing judgment/history systems. Do not introduce automatically assigned or scripted hero titles. Any unresolved mechanics remain open owner decisions.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "26",
+   "related": [
+    "MON-01",
+    "OD-17"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_doc_recon_review_decisions.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (docs/directives/2026-10-31_doc_recon_review_decisions.md s.3)"
+    }
+   ]
+  },
+  {
    "id": "E26-OD-01",
    "kind": "decision",
    "title": "Foxes: pets only, or also companions? (recommendation: companions too; only their pen use is pets-only)",
@@ -16484,10 +16556,15 @@
      "date": "2026-10-31",
      "change": "notes",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md). Status confirmed with evidence. Evidence: origin/wip/expansion20:docs/DECISIONS.md line 244; origin/wip/expansion20:docs/expansion20/X18_X20_COVERAGE_MATRIX.md line 117"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "notes",
+     "why": "owner placed the remainder in the Build 26 recovery/integration scope for planning, reconciliation and dependency analysis only (docs/directives/2026-10-31_doc_recon_review_decisions.md s.1); implementation not automatically authorized"
     }
    ],
    "owner_answer": "ASSIGN TO BUILD 20. Permanent mine employment and general assigned production roles remain approved design requirements scheduled for Build 20. Preserve the distinction between permanent employment, wages, shifts, assigned workplaces, and negotiated quantity or service contracts. Do not treat temporary contracts or workshop attendants as proof that permanent mine employment is complete.",
-   "notes": "Reconciled 2026-10-31 (DOC-RECON-01): Confirmed NOT STARTED on wip/expansion20 ad281dc: docs/DECISIONS.md 2026-10-24 'Not built: ... permanent staff with terms (EMP-PERM-01)'; X18_X20_COVERAGE_MATRIX.md row 20.18 APPROVED-NI. Placement relative to the Build 25 freeze is an open owner question."
+   "notes": "Reconciled 2026-10-31 (DOC-RECON-01): Confirmed NOT STARTED on wip/expansion20 ad281dc: docs/DECISIONS.md 2026-10-24 'Not built: ... permanent staff with terms (EMP-PERM-01)'; X18_X20_COVERAGE_MATRIX.md row 20.18 APPROVED-NI. Placement relative to the Build 25 freeze is an open owner question.  | Placement (owner 2026-10-31, X20-REMAINING-PLACEMENT): Build 26 scope for planning, reconciliation and dependency analysis only; implementation needs its own authorization; Build 25 frozen first."
   },
   {
    "id": "ENV-RTK",
@@ -30054,7 +30131,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Reconciled 2026-10-31 (DOC-RECON-01): Done: tool repair (LE05-REPAIR, economy on or off), tool rental (LE05-RENTAL, switch), travel cost in contract prices (INT-612), player's market journal (INT-613). Not built: paid commercial repair (economy on), route risk in prices (documented gap: no route-danger measure), construction hiring (negotiated wages flag off), ecology/mining/bandits/regional links via World.transactions beyond X20-SETTLE-FOOD. No worker assigned since 2026-10-31.",
+   "notes": "Reconciled 2026-10-31 (DOC-RECON-01): Done: tool repair (LE05-REPAIR, economy on or off), tool rental (LE05-RENTAL, switch), travel cost in contract prices (INT-612), player's market journal (INT-613). Not built: paid commercial repair (economy on), route risk in prices (documented gap: no route-danger measure), construction hiring (negotiated wages flag off), ecology/mining/bandits/regional links via World.transactions beyond X20-SETTLE-FOOD. No worker assigned since 2026-10-31.  | Placement (owner 2026-10-31, X20-REMAINING-PLACEMENT): Build 26 scope for planning, reconciliation and dependency analysis only; implementation needs its own authorization; Build 25 frozen first.",
    "history": [
     {
      "date": "2026-10-20",
@@ -30090,6 +30167,11 @@
      "date": "2026-10-31",
      "change": "tests",
      "why": "DOC-RECON-01 consistency (checker rules): test evidence recorded from the reconciliation"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "notes",
+     "why": "owner placed the remainder in the Build 26 recovery/integration scope for planning, reconciliation and dependency analysis only (docs/directives/2026-10-31_doc_recon_review_decisions.md s.1); implementation not automatically authorized"
     }
    ],
    "target_build": "20",
@@ -30217,7 +30299,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Reconciled 2026-10-31 (DOC-RECON-01): Confirmed NOT STARTED (no LE-07 note, code or commit on wip/expansion20 ad281dc). Not to start before the owner's review of X20-MERGED-VALIDATION (2026-10-31); its build placement relative to the Build 25 freeze is an open owner question (DOC-RECON-01).",
+   "notes": "Reconciled 2026-10-31 (DOC-RECON-01): Confirmed NOT STARTED (no LE-07 note, code or commit on wip/expansion20 ad281dc). Not to start before the owner's review of X20-MERGED-VALIDATION (2026-10-31); its build placement relative to the Build 25 freeze is an open owner question (DOC-RECON-01).  | Placement (owner 2026-10-31, X20-REMAINING-PLACEMENT): Build 26 scope for planning, reconciliation and dependency analysis only; implementation needs its own authorization; Build 25 frozen first.",
    "history": [
     {
      "date": "2026-10-20",
@@ -30243,6 +30325,11 @@
      "date": "2026-10-31",
      "change": "notes",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md). Status confirmed; placement unresolved. Evidence: git log origin/wip/expansion20; docs/expansion20 file list"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "notes",
+     "why": "owner placed the remainder in the Build 26 recovery/integration scope for planning, reconciliation and dependency analysis only (docs/directives/2026-10-31_doc_recon_review_decisions.md s.1); implementation not automatically authorized"
     }
    ],
    "target_build": "20",
@@ -33541,10 +33628,15 @@
      "date": "2026-10-31",
      "change": "approval: owner idea 2026-10-23; build placement and authorization pending -> owner idea 2026-10-23; placement Expansion 26 (owner 2026-10-24 ROAD-Q3 and priority list); design only, implementation not authorized; decisions: [] -> [\"E26-OD-01\", \"E26-OD-02\", \"E26-OD-03\", \"E26-OD-04\", \"E26-OD-05\", \"E26-OD-06\", \"E26-OD-07\", \"E26-OD-08\", \"E26-OD-09\", \"ROAD-Q3\"]; notes",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md). approval text says 'build placement and authorization pending'; placement is settled by name (2026-10-24), authorization is not.; Genuine scope ambiguity between two owner decisions; must be visible on the record. Evidence: docs/directives/2026-10-24_owner_roadmap_question_decisions.md; docs/directives/2026-10-27_39_decisions_current_first_reconciliation.md s.4; docs/design/DECISION_CONTINUITY_REVIEW_2026-10-27.md s.2"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "notes",
+     "why": "owner 2026-10-31 (docs/directives/2026-10-31_doc_recon_review_decisions.md s.3, E26-BOSS-D1): the 2026-10-23 boss roster stays as design scope, not authorized; hero status only emergent, no scripted titles"
     }
    ],
    "next_action": "owner reviews docs/design/EXPANSION26_CREATURES_AND_HEROES.md; no code before approval",
-   "notes": "Reconciled 2026-10-31 (DOC-RECON-01): CONFLICT C-26-1 for the owner: the boss roster (crab, Buwaya, minotaur, yeti, necromancer, dragons) and hero status (2026-10-23) against OD-17 / D36g 'giant crab/dragon/necromancer/\"boss\" roster from old imported source is not approval to populate current MML' and D36a 'no … automatic special title … scripted award system' (2026-10-27). D36g's stated scope is the old GDD import; DCR-01 did not compare it with MON-01. Not resolved by an agent."
+   "notes": "Reconciled 2026-10-31 (DOC-RECON-01): CONFLICT C-26-1 for the owner: the boss roster (crab, Buwaya, minotaur, yeti, necromancer, dragons) and hero status (2026-10-23) against OD-17 / D36g 'giant crab/dragon/necromancer/\"boss\" roster from old imported source is not approval to populate current MML' and D36a 'no … automatic special title … scripted award system' (2026-10-27). D36g's stated scope is the old GDD import; DCR-01 did not compare it with MON-01. Not resolved by an agent.  | Resolved 2026-10-31 (E26-BOSS-D1): boss roster (giant crab, Buwaya, minotaur, yeti, necromancer, dragons) preserved as DESIGN SCOPE, implementation not authorized; hero reputation and recognition emerge from accomplishments, witnesses and the judgment/history systems; no automatically assigned or scripted hero titles; unresolved mechanics stay open owner decisions."
   },
   {
    "id": "MP-01",
@@ -39365,6 +39457,11 @@
      "date": "2026-10-31",
      "change": "next_action: owner review -> ON HOLD (owner 2026-10-27/28/30); stranded on wip/expansion21-preparation (base Build 18 239bdff, not in wip/expansion20); bring forward with the civic switch off in Build 26 recovery or Build 27 (owner to say which); owner review of the document(s) at Build 27",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md). next_action predates the hold and the build sequence. Evidence: BUILD-SEQ-25-27; git merge-base; git ls-tree origin/wip/expansion20 (no civic_records.gd)"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "note",
+     "why": "owner 2026-10-31 (docs/directives/2026-10-31_doc_recon_review_decisions.md s.4, X21-RECOVERY-D1): recovered and reconciled onto the current code in Build 26, political gameplay not activated; Expansion 21 development starts in Build 27 on authorization"
     }
    ],
    "assigned_worker": "lead",
@@ -39417,6 +39514,11 @@
      "date": "2026-10-31",
      "change": "next_action: treasury attribution through Expansion 20's event record; election record design against P21-MAYOR once P21-STRUCTURE and P21-RESIDENCY are answered -> ON HOLD (owner 2026-10-27/28/30); stranded on wip/expansion21-preparation (base Build 18 239bdff, not in wip/expansion20); bring forward with the civic switch off in Build 26 recovery or Build 27 (owner to say which); owner review of the document(s) at Build 27",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md). next_action predates the hold and the build sequence. Evidence: BUILD-SEQ-25-27; git merge-base; git ls-tree origin/wip/expansion20 (no civic_records.gd)"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "note",
+     "why": "owner 2026-10-31 (docs/directives/2026-10-31_doc_recon_review_decisions.md s.4, X21-RECOVERY-D1): recovered and reconciled onto the current code in Build 26, political gameplay not activated; Expansion 21 development starts in Build 27 on authorization"
     }
    ],
    "assigned_worker": "X21 foundation worker (Sonnet subagent)",
@@ -39469,6 +39571,11 @@
      "date": "2026-10-31",
      "change": "next_action: owner answers the packet (structure and noble authority first) -> ON HOLD (owner 2026-10-27/28/30); stranded on wip/expansion21-preparation (base Build 18 239bdff, not in wip/expansion20); bring forward with the civic switch off in Build 26 recovery or Build 27 (owner to say which); owner review of the document(s) at Build 27",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md). next_action predates the hold and the build sequence. Evidence: BUILD-SEQ-25-27; git merge-base; git ls-tree origin/wip/expansion20 (no civic_records.gd)"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "note",
+     "why": "owner 2026-10-31 (docs/directives/2026-10-31_doc_recon_review_decisions.md s.4, X21-RECOVERY-D1): recovered and reconciled onto the current code in Build 26, political gameplay not activated; Expansion 21 development starts in Build 27 on authorization"
     }
    ],
    "assigned_worker": "lead",
@@ -39505,6 +39612,37 @@
      "why": "docs/directives/2026-10-23_expansions_19_21_consolidated_design.md"
     }
    ]
+  },
+  {
+   "id": "P21-OFFICES-Q1",
+   "kind": "decision",
+   "title": "Political offices other than the mayor: their terms, succession, dismissal and vacancy rules (the mayor's rule is not extended to them automatically)",
+   "description": "Political offices other than the mayor: their terms, succession, dismissal and vacancy rules (the mayor's rule is not extended to them automatically)",
+   "source": "docs/directives/2026-10-31_doc_recon_review_decisions.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "21",
+   "related": [
+    "VP-01",
+    "Q-POL-6"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_doc_recon_review_decisions.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "notes",
+     "why": "owner 2026-10-31 (docs/directives/2026-10-31_doc_recon_review_decisions.md s.5): recorded as unresolved design questions; no policy invented"
+    }
+   ],
+   "notes": "Open by the owner's instruction: do not extend the mayor's tenure and removal rules to other offices; do not invent policies. Sub-questions: (a) terms, (b) succession, (c) dismissal, (d) vacancy, for each office the Expansion 21 design names."
   },
   {
    "id": "P21-RESIDENCY",
@@ -56198,6 +56336,11 @@
      "date": "2026-10-31",
      "change": "notes",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md): P21-03..05 recorded as aliases of VP-01A..E, not duplicated"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "note",
+     "why": "owner 2026-10-31 (docs/directives/2026-10-31_doc_recon_review_decisions.md s.4-5): mayor rule exact (four-year term ends early only by death or permanent absence; no recall, impeachment or misconduct-based removal); other offices open (P21-OFFICES-Q1)"
     }
    ],
    "acceptance_derived": true,
@@ -62465,11 +62608,16 @@
      "date": "2026-10-31",
      "change": "entered in the register",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md); source 2026-10-30_master_development_resumption.md s.4 vs 2026-10-31_x20_merged_validation_decisions.md and 2026-10-31_sjdh_decisions_le05_authorization.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (docs/directives/2026-10-31_doc_recon_review_decisions.md s.2): the 2026-10-31 instruction supersedes the 2026-10-30 automatic activation"
     }
    ],
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Keep the Living Economy disabled by default. The October 31 instruction supersedes the earlier automatic-activation approval. Do not automatically activate it after tests pass or during Build 26 recovery. Prepare the activation mechanism and validation evidence, but wait for my explicit authorization before enabling it in the normal game.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "related": [
     "X20-RESUME",
@@ -63816,11 +63964,16 @@
      "date": "2026-10-31",
      "change": "entered in the register",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md); source docs/directives/2026-10-27_complete_expansion20_first.md (X20-COMPLETE) vs docs/directives/2026-10-31_documentation_reconciliation.md (BUILD-SEQ-25-27)"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (docs/directives/2026-10-31_doc_recon_review_decisions.md s.1)"
     }
    ],
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Assign LE-07, permanent employment, remaining LE-05 functionality, and economy activation preparation to the Build 26 recovery/integration scope. This is authorization for planning, reconciliation, and dependency analysis only. Do not assume every outstanding feature is automatically authorized for implementation. Build 25 must finish validation and be frozen at its approved SHA before Build 26 integration begins.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "related": [
     "X20-COMPLETE",
@@ -63874,11 +64027,16 @@
      "date": "2026-10-31",
      "change": "tests",
      "why": "DOC-RECON-01 consistency (checker rules): test evidence recorded from the reconciliation"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "notes",
+     "why": "owner 2026-10-31 (docs/directives/2026-10-31_doc_recon_review_decisions.md s.2): its automatic activation on objective readiness is superseded; the economy stays disabled by default until explicit owner authorization; activation mechanism and evidence are prepared in Build 26"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/expansion20",
-   "notes": "Reconciled 2026-10-31 (DOC-RECON-01): Workstream A: LE-03, LE-04, LE-06 integrated; LE-05 partial; LE-07 not started. Workstream B: X20-SETTLE-FOOD and X20-SETTLE-REOPEN integrated. Workstream C: Batch D integrated de8d225. Activation NOT done: the owner's 2026-10-31 directives keep the economy disabled by default; whether this record's automatic-activation authority survives the Build 25 freeze is an owner question (DOC-RECON-01). Private-draft authority superseded for now by 2026-10-31 'do not package, release or publish'.",
+   "notes": "Reconciled 2026-10-31 (DOC-RECON-01): Workstream A: LE-03, LE-04, LE-06 integrated; LE-05 partial; LE-07 not started. Workstream B: X20-SETTLE-FOOD and X20-SETTLE-REOPEN integrated. Workstream C: Batch D integrated de8d225. Activation NOT done: the owner's 2026-10-31 directives keep the economy disabled by default; whether this record's automatic-activation authority survives the Build 25 freeze is an owner question (DOC-RECON-01). Private-draft authority superseded for now by 2026-10-31 'do not package, release or publish'.  | Automatic activation SUPERSEDED (owner 2026-10-31, X20-ACTIVATION-AUTHORITY): disabled by default; enabling it in the normal game needs explicit owner authorization.",
    "tests": "DOC-RECON-01 evidence: origin/wip/expansion20 merges 5195c2c, 8bbdcfb, a227158, ed6360f, de8d225, 25663e5; economy.json enabled:false"
   },
   {
@@ -64390,6 +64548,38 @@
    "notes": "Wear travels with the last unit on every path (trade, transfer, authority exchange and shipments, gifts and offers, stalls, contracts and estate orders, inheritance, loot, theft, manor). Additive save fields: shipment wear, stall stock_wear and store_wear. Existing model kept: one worn unit per holder per item; two worn units merge with remaining uses summed (never below 1); settlements count units only (no wear there).",
    "integrated_in": [
     "wip/expansion20 97f7ab6"
+   ]
+  },
+  {
+   "id": "X21-RECOVERY-D1",
+   "kind": "decision",
+   "title": "When is the Expansion 21 phase-1 work (P21-00..02 on wip/expansion21-preparation 8ac88f5, built on Build 18) brought onto the current code: in Build 26 recovery or as the first step of Build 27?",
+   "description": "When is the Expansion 21 phase-1 work (P21-00..02 on wip/expansion21-preparation 8ac88f5, built on Build 18) brought onto the current code: in Build 26 recovery or as the first step of Build 27?",
+   "source": "docs/directives/2026-10-31_doc_recon_review_decisions.md",
+   "owner_wording": null,
+   "owner_answer": "Recover and reconcile the existing Expansion 21 phase-1 work during Build 26, without activating political gameplay. Build 27 is the intended starting point for authorized Expansion 21 development. Preserve the mayor rule exactly: a four-year term ends early only through death or permanent absence. There is no recall, impeachment, or misconduct-based removal.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "21",
+   "related": [
+    "P21-00",
+    "P21-01",
+    "P21-02",
+    "BUILD-SEQ-25-27"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_doc_recon_review_decisions.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered (docs/directives/2026-10-31_doc_recon_review_decisions.md s.4)"
+    }
    ]
   },
   {

@@ -26,11 +26,14 @@ archived at `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-31.md`.
   - Recover the stranded work: `wip/expansion21-preparation` (`8ac88f5`), `wip/roadmap-docs` (`e1e8236`),
     `wip/x20-trader-inv` (`3f58ce6`), `wip/juice-assessment` (`bebf1f3`).
   - Not started; needs the Build 25 freeze first.
+- **Build 26 scope additions (owner 2026-10-31, `docs/directives/2026-10-31_doc_recon_review_decisions.md`):** planning,
+  reconciliation and dependency analysis (not implementation) of LE-07, EMP-PERM-01, the LE-05 remainder and economy activation
+  preparation; recovery of Expansion 21 phase 1 without activating political gameplay. The economy stays disabled by default.
 - **Build 27:** Expansion 21 only after Build 26 is frozen and the owner explicitly authorizes it.
 
 ## Documentation
 
-- **DOC-RECON-01** (lead): documentation reconciliation DONE, awaiting the owner's review, on the isolated branch `wip/requirements-control` (REQ-CTRL-02). It is
+- **DOC-RECON-01** (lead): documentation reconciliation reviewed by the owner at `3098a5f` (2026-10-31); stays isolated until the owner authorizes integration; owner decisions of that review recorded on top, on the isolated branch `wip/requirements-control` (REQ-CTRL-02). It is
   not merged into staging or the gameplay baseline without the owner's authorization.
 - **DOC-AUTH-01:** a revised owner specification set will supersede older design documents on the owner's explicit final
   approval, not before.

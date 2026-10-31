@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (720)
+## Approved requirement (721)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -173,6 +173,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | CTR-04 | Permanent counters are not market stalls: no stall commission on counters without an approved rule | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | DOC-AUTH-01 | Document authority replacement: once the owner explicitly approves and delivers the final revised expansion specification set, it is the sole authoritative current specification; older plans, roadmaps, packets, instructions and registers become historical evidence only; omitted features are not reintroduced (ask if materially ambiguous); code differences are reported, not silently changed; later explicit owner decisions supersede and are folded into the set; no third interpretation. Until then: latest explicit owner decisions and the validated baseline. The switch happens only on final approval, not on a draft. | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | DOC-RECON-01 | Documentation reconciliation and owner-decision protection: every expansion (17-27), multiplayer and standalone approved system has a current status document; register statuses corrected from code and test evidence; precedence hierarchy (latest explicit owner decision first); historical documents labelled; missing original sources listed; one authoritative entry point; on the isolated branch wip/requirements-control, not merged into the gameplay baseline without the owner | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
+| DOC-RECON-REVIEW-01 | Owner review of DOC-RECON-01 (2026-10-31): wip/requirements-control stays isolated at the reviewed commit 3098a5f until the owner authorizes integration; decisions on the remaining Expansion 20 placement, economy activation, Expansion 26 bosses and heroes, Expansion 21 recovery, other political offices, original packets and open questions; one consolidated owner-decision report | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | DVW-A1 | Stale heir comment (:26) |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | DVW-A10 | No black-hole spaces (:35) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | DVW-A11 | Threats never scale to player (:36) |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
@@ -837,7 +838,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (279)
+## Owner decisions (282)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -889,6 +890,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | E25-OD-07 | When to build Expansion 25 relative to Expansions 20-24 | 25 | PROVISIONAL |  |
 | E25-OD-08 | How long is a swept-away person missing? (recommendation: 1 to 3 game days by a seeded draw) | 25 | OPEN |  |
 | E25-OD-09 | Can a building be insured or protected (stone versus wood)? (recommendation: stone resists fire and wind better; no insurance in this expansion) | 25 | OPEN |  |
+| E26-BOSS-D1 | Expansion 26 bosses and hero status: does the 2026-10-27 parking of the imported boss roster (OD-17 D36g) and the ban on scripted titles (D36a) erase the 2026-10-23 boss roster and hero status chosen for MON-01? | 26 | APPROVED |  |
 | E26-OD-01 | Foxes: pets only, or also companions? (recommendation: companions too; only their pen use is pets-only) | 26 | OPEN |  |
 | E26-OD-02 | Monster respawn (recommendation: skeletons 3 days as approved, spiders alike; a killed boss not back for a game year, some never) | 26 | OPEN |  |
 | E26-OD-03 | How often a monster attacks the village (recommendation: about once in several game years, never more than one at a time) | 26 | OPEN |  |
@@ -991,6 +993,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | OD-LE-14 | Owner decision (Living Economy): Player intervention and visibility of market decisions | 20 | APPROVED | yes |
 | OD-LE-15 | Owner decision (Living Economy): Performance and population acceptance targets | 20 | APPROVED | yes |
 | OWN-09 | Build 8 private only; registry public-only; no sustainability changes until decided |  | APPROVED |  |
+| P21-OFFICES-Q1 | Political offices other than the mayor: their terms, succession, dismissal and vacancy rules (the mayor's rule is not extended to them automatically) | 21 | OPEN |  |
 | P21-RESIDENCY | How long must an adult live in a settlement to count as an established resident (to vote and stand for mayor)? | 21 | APPROVED |  |
 | P21-STRUCTURE | Beyond the elected mayor: councils and their powers, the manor or a lord's authority over the village, regional government, and whether smaller settlements have simpler government | 21 | APPROVED |  |
 | PACK-Q | Pack capacity: how many kinds the player can carry | owner decision | APPROVED |  |
@@ -1113,11 +1116,12 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X19-SWITCHES-D1 | Enable in normal play the integrated-but-off Build 19 recovery features: R5 aspirations (judgment.json aspiration.enabled, decision.integration.job_choice; WDR-011-C) and the R2 judgment-weighted witness report hook (decision.integration.report; SJD-F)? | 20+ | OPEN |  |
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | 19 | APPROVED |  |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | 19 | APPROVED |  |
-| X20-ACTIVATION-AUTHORITY | Does X20-RESUME's automatic Living Economy activation on objective readiness (2026-10-30) still stand after the 2026-10-31 instructions to keep the economy disabled by default and the Build 25 freeze, or does activation now need explicit owner approval? | unassigned | OPEN |  |
-| X20-REMAINING-PLACEMENT | Where does the remaining Expansion 20 scope go relative to the Build 25 freeze (LE-07, EMP-PERM-01, LE-05 remainder, economy activation, SJD-H review): finished before the freeze, in Build 26, or carried past it? | unassigned | OPEN |  |
+| X20-ACTIVATION-AUTHORITY | Does X20-RESUME's automatic Living Economy activation on objective readiness (2026-10-30) still stand after the 2026-10-31 instructions to keep the economy disabled by default and the Build 25 freeze, or does activation now need explicit owner approval? | unassigned | APPROVED |  |
+| X20-REMAINING-PLACEMENT | Where does the remaining Expansion 20 scope go relative to the Build 25 freeze (LE-07, EMP-PERM-01, LE-05 remainder, economy activation, SJD-H review): finished before the freeze, in Build 26, or carried past it? | unassigned | APPROVED |  |
 | X20-SCOPE | Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forward into Expansion 20 (LE-02..LE-05)? | 20 | APPROVED |  |
 | X20-SERVICES-SCOPE | Does X20-SCOPE's 'negotiated wages and service contracts behind their switches (OD-LE-03/D02)' include the approved service-contract records CON-03..CON-08 (CON02-S-1..6 answers), or do they stay unscheduled? | unassigned | OPEN |  |
 | X20-TRADER-CLOSE | Review finding 1 (settlement traders): once traders close when nobody works them, all five settlement traders close by days 21-35 on seeds 1 and 2 and never reopen, ending caravan trade (village coins day 60: 5429->3995 seed 1, 5236->3848 seed 2; conservation intact; run 41133027134 on wip/x20-settle-food 108d252). Choose: (a) ship the fix as is; (b) add a rule that reopens a closed trader when a household takes up the trade again; (c) retune trader pay (excluded by the owner's no-retuning rule); (d) keep the trader's exemption from closing (Build 24 behaviour) until the owner decides. Lead recommendation: (d) now, (b) if the owner wants traders to be able to fail and recover. | 20+ | APPROVED |  |
 | X20-TRADER-PAY | Settlement traders reopen (X20-SETTLE-REOPEN) but close again within weeks: a trader keeps its till at its reserve (0.85 x starting till) and pays its household only from coins above it, so the household earns almost nothing and switches trade (Build 24's own rule). Trading stays well below Build 24 (day-60 village coins 4191 vs 5429 seed 1; 4083 vs 5236 seed 2), conservation exact. Options: (a) keep as is (legitimate outcome under WDR-022); (b) change the trader pay rule (e.g. pay the working household a share of turnover or a floor wage before holding the reserve), a retuning that needs approval. Lead recommendation: (a) for the next playtest, measure, revisit with the Living Economy wage work (LE-04 negotiated wages, off). | 20+ | DEFERRED |  |
+| X21-RECOVERY-D1 | When is the Expansion 21 phase-1 work (P21-00..02 on wip/expansion21-preparation 8ac88f5, built on Build 18) brought onto the current code: in Build 26 recovery or as the first step of Build 27? | 21 | APPROVED |  |
 | XEXPL-D1 | Decision explainability: is an optional player-inspection panel wanted in this generation of builds, or only in-world explanation (dialogue, rumours, notices) for now? | unassigned | APPROVED |  |
 

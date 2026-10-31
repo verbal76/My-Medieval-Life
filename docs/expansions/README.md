@@ -7,6 +7,14 @@ next authorized phase. The requirements register (`docs/requirements/requirement
 these files and the register disagree, the register's latest history line with an owner source wins and the file is
 corrected.
 
+## What these files are (owner, 2026-10-31)
+
+These files are the **implementation-evidence layer**: what is built, partial, remaining or decided, with evidence. They are
+NOT the replacement design specifications. ChatGPT is rebuilding the original expansion documentation, from the owner's
+originals (including the Expansion 25 and 26 packets, which the owner holds), into a revised master package. That package
+comes here for code verification, discrepancy review and owner questions. `wip/requirements-control` stays isolated, and its
+owner-reviewed state is commit `3098a5f`, until the owner authorizes integration.
+
 ## Pending authority switch (owner, 2026-10-31, DOC-AUTH-01)
 
 The owner is preparing a revised, complete set of expansion specifications

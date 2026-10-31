@@ -18,8 +18,8 @@ expansion. Expansions 22-27 may not be implemented without explicit authorizatio
 | 17 Mining & Industry | IMPLEMENTED (Build 17); follow-ons are design only | none (follow-ons not placed) | `docs/expansions/EXPANSION_17.md` |
 | 18 Settlements & Regional Economy | PARTIAL: phases A-D shipped (Build 18); phase E continues as Expansion 22 | none | `docs/expansions/EXPANSION_18.md` |
 | 19 Judgment | PARTIAL: gates A-G integrated; gate H (owner review) under way: C1-C6 answered and integrated, the review takes the X20 validation report | owner's SJD-H review | `docs/expansions/EXPANSION_19.md` |
-| 20 Living Economy | PARTIAL: LE-00..04 and LE-06 integrated, LE-05 partial, LE-07 not started; economy OFF by default | Build 25 freeze after the owner approves the validation | `docs/expansions/EXPANSION_20.md` |
-| 21 Village Politics & Civic Authority | Phase 1 only (P21-00..02) on the stranded branch `wip/expansion21-preparation`; ON HOLD | Build 27, only after Build 26 and explicit authorization | `docs/expansions/EXPANSION_21.md` |
+| 20 Living Economy | PARTIAL: LE-00..04 and LE-06 integrated, LE-05 partial, LE-07 not started; economy OFF by default | Build 25 freeze after the owner approves the validation; remaining work planned in Build 26 (owner 2026-10-31); economy stays off until explicit authorization | `docs/expansions/EXPANSION_20.md` |
+| 21 Village Politics & Civic Authority | Phase 1 only (P21-00..02) on the stranded branch `wip/expansion21-preparation`; ON HOLD | phase-1 recovery in Build 26 (no political gameplay); development from Build 27 on authorization | `docs/expansions/EXPANSION_21.md` |
 | 23 Bandit Factions & Criminal Careers | DESIGN ONLY, NOT AUTHORIZED (audit done) | none | `docs/expansions/EXPANSION_23.md` |
 | 22 Settlement Advancement phase 2 | DESIGN ONLY, NOT AUTHORIZED (audit done) | none | `docs/expansions/EXPANSION_22.md` |
 | 24 Generational Legacy | DESIGN ONLY, NOT AUTHORIZED | none | `docs/expansions/EXPANSION_24.md` |

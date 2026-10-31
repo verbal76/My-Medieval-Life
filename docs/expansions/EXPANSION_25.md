@@ -1,5 +1,8 @@
 # Expansion 25: Weather, Seasons and Disasters
 
+> **Owner decisions 2026-10-31 (`docs/directives/2026-10-31_doc_recon_review_decisions.md`):** the original Weather, Seasons & Disasters packet is held by the owner (given to ChatGPT for the revised master package); it is not lost and is not reconstructed from git history. The deleted repository predecessors stay historical evidence only.
+
+
 **Current status:**
 - **DESIGN ONLY, NOT AUTHORIZED.**
 - Owner design answers are recorded; questions E25-OD-03, 06, 08 and 09 are open, and the packet itself is not yet

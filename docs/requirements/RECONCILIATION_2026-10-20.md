@@ -10,7 +10,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 699 (364 of them still open) |
+| Entries added since | | 703 (364 of them still open) |
 | **Open entries now** (rules excluded) | | **523** |
 | Open entries moved to another build | | 15 |
 
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (699)
+## Added since the baseline (703)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -200,6 +200,7 @@ None.
 | DCR-01 | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control | rule | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | DOC-AUTH-01 | Document authority replacement: once the owner explicitly approves and delivers the final revised expansion specification set, it is the sole authoritative current specification; older plans, roadmaps, packets, instructions and registers become historical evidence only; omitted features are not reintroduced (ask if materially ambiguous); code differences are reported, not silently changed; later explicit owner decisions supersede and are folded into the set; no third interpretation. Until then: latest explicit owner decisions and the validated baseline. The switch happens only on final approval, not on a draft. | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | DOC-RECON-01 | Documentation reconciliation and owner-decision protection: every expansion (17-27), multiplayer and standalone approved system has a current status document; register statuses corrected from code and test evidence; precedence hierarchy (latest explicit owner decision first); historical documents labelled; missing original sources listed; one authoritative entry point; on the isolated branch wip/requirements-control, not merged into the gameplay baseline without the owner | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
+| DOC-RECON-REVIEW-01 | Owner review of DOC-RECON-01 (2026-10-31): wip/requirements-control stays isolated at the reviewed commit 3098a5f until the owner authorizes integration; decisions on the remaining Expansion 20 placement, economy activation, Expansion 26 bosses and heroes, Expansion 21 recovery, other political offices, original packets and open questions; one consolidated owner-decision report | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
@@ -229,6 +230,7 @@ None.
 | E25-OD-07 | When to build Expansion 25 relative to Expansions 20-24 | decision | PROVISIONAL | 25 |
 | E25-OD-08 | How long is a swept-away person missing? (recommendation: 1 to 3 game days by a seeded draw) | decision | OPEN | 25 |
 | E25-OD-09 | Can a building be insured or protected (stone versus wood)? (recommendation: stone resists fire and wind better; no insurance in this expansion) | decision | OPEN | 25 |
+| E26-BOSS-D1 | Expansion 26 bosses and hero status: does the 2026-10-27 parking of the imported boss roster (OD-17 D36g) and the ban on scripted titles (D36a) erase the 2026-10-23 boss roster and hero status chosen for MON-01? | decision | APPROVED | 26 |
 | E26-OD-01 | Foxes: pets only, or also companions? (recommendation: companions too; only their pen use is pets-only) | decision | OPEN | 26 |
 | E26-OD-02 | Monster respawn (recommendation: skeletons 3 days as approved, spiders alike; a killed boss not back for a game year, some never) | decision | OPEN | 26 |
 | E26-OD-03 | How often a monster attacks the village (recommendation: about once in several game years, never more than one at a time) | decision | OPEN | 26 |
@@ -518,6 +520,7 @@ None.
 | P21-01 | Expansion 21 phase 1: isolated civic foundations (office ids, holders and tenure, jurisdiction, eligibility and authority metadata, succession events, treasury attribution, duty records, legacy records), all behaviour disabled | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 21 |
 | P21-02 | Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 21 |
 | P21-MAYOR | Elected mayor: elected by established adult residents who are also eligible to stand; four-game-year terms; incumbents may stand again; an early vacancy calls a replacement election as soon as possible, the longest-serving eligible civic official holding authority meanwhile; voters judge candidates individually by policies, competence, interests, trust, relationships, family and their own priorities | approved | NOT STARTED / NOT TESTED / OPEN | 21 |
+| P21-OFFICES-Q1 | Political offices other than the mayor: their terms, succession, dismissal and vacancy rules (the mayor's rule is not extended to them automatically) | decision | OPEN | 21 |
 | P21-RESIDENCY | How long must an adult live in a settlement to count as an established resident (to vote and stand for mayor)? | decision | APPROVED | 21 |
 | P21-STRUCTURE | Beyond the elected mayor: councils and their powers, the manor or a lord's authority over the village, regional government, and whether smaller settlements have simpler government | decision | APPROVED | 21 |
 | PACK-Q | Pack capacity: how many kinds the player can carry | decision | APPROVED | owner decision |
@@ -775,7 +778,7 @@ None.
 | X19-SWITCHES-D1 | Enable in normal play the integrated-but-off Build 19 recovery features: R5 aspirations (judgment.json aspiration.enabled, decision.integration.job_choice; WDR-011-C) and the R2 judgment-weighted witness report hook (decision.integration.report; SJD-F)? | decision | OPEN | 20+ |
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | decision | APPROVED | 19 |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | decision | APPROVED | 19 |
-| X20-ACTIVATION-AUTHORITY | Does X20-RESUME's automatic Living Economy activation on objective readiness (2026-10-30) still stand after the 2026-10-31 instructions to keep the economy disabled by default and the Build 25 freeze, or does activation now need explicit owner approval? | decision | OPEN | unassigned |
+| X20-ACTIVATION-AUTHORITY | Does X20-RESUME's automatic Living Economy activation on objective readiness (2026-10-30) still stand after the 2026-10-31 instructions to keep the economy disabled by default and the Build 25 freeze, or does activation now need explicit owner approval? | decision | APPROVED | unassigned |
 | X20-B24-F1 | Review finding 1: a settlement business (its trader) kept operating with nobody working it | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-B24-F2 | Review finding 2: TILL-D1 not applied when a household's last members leave (the storefront till must go to the leavers' own funds) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-B24-F3 | Review finding 3: a leaving trader's stall takings not returned to that trader | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
@@ -801,7 +804,7 @@ None.
 | X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-MP-ECON-INTEGRITY | When multiplayer and the economy systems are integrated, verify that disconnects, retries, duplicate requests and host recovery cannot duplicate or lose currency, goods or transactions | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-OPEN-ITEMS | Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 20 |
-| X20-REMAINING-PLACEMENT | Where does the remaining Expansion 20 scope go relative to the Build 25 freeze (LE-07, EMP-PERM-01, LE-05 remainder, economy activation, SJD-H review): finished before the freeze, in Build 26, or carried past it? | decision | OPEN | unassigned |
+| X20-REMAINING-PLACEMENT | Where does the remaining Expansion 20 scope go relative to the Build 25 freeze (LE-07, EMP-PERM-01, LE-05 remainder, economy activation, SJD-H review): finished before the freeze, in Build 26, or carried past it? | decision | APPROVED | unassigned |
 | X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | 20 |
 | X20-SCOPE | Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forward into Expansion 20 (LE-02..LE-05)? | decision | APPROVED | 20 |
 | X20-SERVICES-SCOPE | Does X20-SCOPE's 'negotiated wages and service contracts behind their switches (OD-LE-03/D02)' include the approved service-contract records CON-03..CON-08 (CON02-S-1..6 answers), or do they stay unscheduled? | decision | OPEN | unassigned |
@@ -814,6 +817,7 @@ None.
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 20+ |
 | X20-TXN-REPLAY-FIELDS | Latent defect: the transaction authority's saved past results keep only basic fields, so an idempotent replay after a load returns a settle_estate result without its 'paid' amount; keep the full result (bounded) so a replay after load answers exactly as before | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-WEAR-TRANSFER | Defect: a tool's saved wear does not travel when the tool changes hands (sale, gift, inheritance, loot), so a worn tool can become as good as new; wear must follow the item through every transfer (existing state, WDR-022 lost state) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
+| X21-RECOVERY-D1 | When is the Expansion 21 phase-1 work (P21-00..02 on wip/expansion21-preparation 8ac88f5, built on Build 18) brought onto the current code: in Build 26 recovery or as the first step of Build 27? | decision | APPROVED | 21 |
 | XAUDIT-01 | Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
 | XEXPL-01 | Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | XEXPL-D1 | Decision explainability: is an optional player-inspection panel wanted in this generation of builds, or only in-world explanation (dialogue, rumours, notices) for now? | decision | APPROVED | unassigned |

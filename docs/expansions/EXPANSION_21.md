@@ -1,5 +1,8 @@
 # Expansion 21: Village Politics and Civic Authority
 
+> **Owner decisions 2026-10-31 (`docs/directives/2026-10-31_doc_recon_review_decisions.md`):** the phase-1 work (P21-00..02, `wip/expansion21-preparation` `8ac88f5`) is recovered and reconciled onto the current code in **Build 26**, with political gameplay NOT activated; **Build 27** is the intended start of authorized Expansion 21 development (X21-RECOVERY-D1, APPROVED). The mayor rule stands exactly: a four-year term ends early only through death or permanent absence; no recall, impeachment or misconduct-based removal. The mayor's rule is **not** extended to other offices: their terms, succession, dismissal and vacancy rules are unresolved design questions (P21-OFFICES-Q1, OPEN); no policy is invented.
+
+
 **Current status:** scope approved. Phase 1 (P21-00, P21-01, P21-02) is built on a stranded task branch. Everything else is
 **ON HOLD**, and nothing more is authorized. **Next authorized phase:** Build 27. That build starts only after Build 26 is
 frozen and the owner explicitly authorizes Expansion 21's implementation.

@@ -1,5 +1,8 @@
 # Expansion 26: Creatures and Heroes
 
+> **Owner decisions 2026-10-31 (`docs/directives/2026-10-31_doc_recon_review_decisions.md`):** the 2026-10-23 boss roster (giant crab, Buwaya, minotaur, yeti, necromancer, dragons) is **preserved as design scope**; the 2026-10-27 parking of the imported roster does not erase it but means no implementation is authorized yet. Hero reputation and recognition emerge from actual accomplishments, witnesses and the existing judgment and history systems; **no automatically assigned or scripted hero titles**. Unresolved mechanics remain open owner decisions (E26-BOSS-D1, APPROVED; conflict C-26-1 resolved). The original Creatures & Heroes packet is held by the owner and is not lost.
+
+
 **Current status:**
 - **DESIGN ONLY, NOT AUTHORIZED.**
 - Owner design answers are recorded; questions E26-OD-01..09 are open, and the packet is not yet approved.

@@ -1,5 +1,8 @@
 # Missing and at-risk sources
 
+> **Owner decisions 2026-10-31 (`docs/directives/2026-10-31_doc_recon_review_decisions.md`):** the original Expansion 25 (Weather, Seasons & Disasters) and Expansion 26 (Creatures & Heroes) packets are **not lost**: the owner holds them and has given them to ChatGPT, which is rebuilding the revised master package. M-25-1 and M-26-1 below are therefore resolved as *held by the owner, outside the repository*; nothing is reconstructed from git history. The revised package will come here for code verification.
+
+
 Owner directive 2026-10-31 (`docs/directives/2026-10-31_documentation_reconciliation.md` §6, DOC-RECON-01): "If an original
 document is not accessible, record it as a missing source requiring recovery. Do not reconstruct its contents from
 assumptions or declare its features unapproved merely because the file is absent."

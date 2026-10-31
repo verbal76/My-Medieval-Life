@@ -1,5 +1,8 @@
 # Expansion 20: Living Economy (EXP-D, LE-00..LE-07) and its carryovers
 
+> **Owner decisions 2026-10-31 (`docs/directives/2026-10-31_doc_recon_review_decisions.md`):** the remaining Expansion 20 work (LE-07, permanent employment EMP-PERM-01, the LE-05 remainder, economy activation preparation) is assigned to the **Build 26** recovery/integration scope for **planning, reconciliation and dependency analysis only**; implementation is not automatically authorized; Build 25 is validated and frozen first (X20-REMAINING-PLACEMENT, APPROVED). The Living Economy stays **disabled by default**; the 2026-10-31 instruction supersedes the 2026-10-30 automatic activation; Build 26 prepares the activation mechanism and validation evidence, and enabling it in the normal game waits for explicit owner authorization (X20-ACTIVATION-AUTHORITY, APPROVED). Where this file below calls these two questions open, this note supersedes it.
+
+
 Status record under owner directive 2026-10-31 (`docs/directives/2026-10-31_documentation_reconciliation.md`, DOC-RECON-01).
 Vocabulary and precedence: `docs/expansions/README.md`. Reconciled 2026-10-31 against:
 - the code, tests and notes on `origin/wip/expansion20` at `ad281dc`;
