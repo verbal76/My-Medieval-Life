@@ -28914,8 +28914,8 @@
     "LE05-RENTAL-REPAIR"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -28928,10 +28928,23 @@
      "date": "2026-10-31",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker G (LE-05); branch: None -> wip/x20-le05",
      "why": "assigned"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: wip/x20-le05 -> wip/expansion20; tests: None -> le05_repair_test 57/0, le05_rental_test 53/0, le05_test 11/0, le02..le06, contracts, wear_transfer, equip, sharpen, business 0 failures on a3643c8; Actions 41169157542 (fa36ba7, --market): rentals 161/207 opened, repairs 8/4, conservation exact; seed 1 script error at day 350 in post_bids fixed in d01470c; test_commit: None -> a3643c8; commits + d01470c; integrated_in + wip/expansion20 a3643c8",
+     "why": "merged (25663e5; head a3643c8)"
     }
    ],
    "assigned_worker": "worker G (LE-05)",
-   "branch": "wip/x20-le05"
+   "branch": "wip/expansion20",
+   "tests": "le05_repair_test 57/0, le05_rental_test 53/0, le05_test 11/0, le02..le06, contracts, wear_transfer, equip, sharpen, business 0 failures on a3643c8; Actions 41169157542 (fa36ba7, --market): rentals 161/207 opened, repairs 8/4, conservation exact; seed 1 script error at day 350 in post_bids fixed in d01470c",
+   "test_commit": "a3643c8",
+   "commits": [
+    "d01470c"
+   ],
+   "integrated_in": [
+    "wip/expansion20 a3643c8"
+   ]
   },
   {
    "id": "LE05-RENTAL-REPAIR",
@@ -28981,8 +28994,8 @@
     "LE05-RENTAL-REPAIR"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -28995,10 +29008,23 @@
      "date": "2026-10-31",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker G (LE-05); branch: None -> wip/x20-le05",
      "why": "assigned"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: wip/x20-le05 -> wip/expansion20; tests: None -> le05_repair_test 57/0, le05_rental_test 53/0, le05_test 11/0, le02..le06, contracts, wear_transfer, equip, sharpen, business 0 failures on a3643c8; Actions 41169157542 (fa36ba7, --market): rentals 161/207 opened, repairs 8/4, conservation exact; seed 1 script error at day 350 in post_bids fixed in d01470c; test_commit: None -> a3643c8; commits + d01470c; integrated_in + wip/expansion20 a3643c8",
+     "why": "merged (25663e5; head a3643c8)"
     }
    ],
    "assigned_worker": "worker G (LE-05)",
-   "branch": "wip/x20-le05"
+   "branch": "wip/expansion20",
+   "tests": "le05_repair_test 57/0, le05_rental_test 53/0, le05_test 11/0, le02..le06, contracts, wear_transfer, equip, sharpen, business 0 failures on a3643c8; Actions 41169157542 (fa36ba7, --market): rentals 161/207 opened, repairs 8/4, conservation exact; seed 1 script error at day 350 in post_bids fixed in d01470c",
+   "test_commit": "a3643c8",
+   "commits": [
+    "d01470c"
+   ],
+   "integrated_in": [
+    "wip/expansion20 a3643c8"
+   ]
   },
   {
    "id": "LOG-01",
@@ -61136,8 +61162,8 @@
     "SJD-H-CAL"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -61150,10 +61176,23 @@
      "date": "2026-10-31",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker D; branch: None -> wip/x20-bandit-ai",
      "why": "assigned to worker D (judgment soak context)"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: wip/x20-bandit-ai -> wip/expansion20; tests: None -> bandit_ai_test 17/0 (6 fail with the layer off, 4 fail on c664b31); combat, family_first, family, justice, pursuit, manhunt, sim_f3, outlaw_return, od16 0 failures on a3643c8; Actions 41171898332 (first behaviour): deaths 54/72 vs 234/143, villagers slain 42/33 (corrected in 6db980a, local 60 days 1/0); test_commit: None -> a3643c8; commits + dd7dca1; integrated_in + wip/expansion20 a3643c8",
+     "why": "merged into wip/expansion20 (8dc6cef; head a3643c8); bandit_ai_test 17/0 and related suites on the merged tree; year-long check of the final behaviour in X20-MERGED-VALIDATION"
     }
    ],
    "assigned_worker": "worker D",
-   "branch": "wip/x20-bandit-ai"
+   "branch": "wip/expansion20",
+   "tests": "bandit_ai_test 17/0 (6 fail with the layer off, 4 fail on c664b31); combat, family_first, family, justice, pursuit, manhunt, sim_f3, outlaw_return, od16 0 failures on a3643c8; Actions 41171898332 (first behaviour): deaths 54/72 vs 234/143, villagers slain 42/33 (corrected in 6db980a, local 60 days 1/0)",
+   "test_commit": "a3643c8",
+   "commits": [
+    "dd7dca1"
+   ],
+   "integrated_in": [
+    "wip/expansion20 a3643c8"
+   ]
   },
   {
    "id": "X20-CHECKPOINT",
@@ -61401,8 +61440,8 @@
     "SJD-H-CAL"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -61415,10 +61454,23 @@
      "date": "2026-10-31",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker F (judgment); branch: None -> wip/x20-judgment",
      "why": "assigned"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: wip/x20-judgment -> wip/expansion20; tests: None -> judgment_calibration_test 86/0, judgment_test 217/0, judgment_live_test 161/0, judgment_x19/bonds/personality/soak/guard_save, aspiration 155/0, recorder_test 214/0 on a3643c8; Actions 41166571846 (d99ec66): sales changed 3.5-6.4%, judgment section 1.2-1.4 MB at day 365 (was 4.4-5.8 MB), no refusals; test_commit: None -> a3643c8; commits + 0d91b65; integrated_in + wip/expansion20 a3643c8",
+     "why": "merged (17432f0; head a3643c8, with the lead's fix recording tier-collapsed candidates' factors for the recorder)"
     }
    ],
    "assigned_worker": "worker F (judgment)",
-   "branch": "wip/x20-judgment"
+   "branch": "wip/expansion20",
+   "tests": "judgment_calibration_test 86/0, judgment_test 217/0, judgment_live_test 161/0, judgment_x19/bonds/personality/soak/guard_save, aspiration 155/0, recorder_test 214/0 on a3643c8; Actions 41166571846 (d99ec66): sales changed 3.5-6.4%, judgment section 1.2-1.4 MB at day 365 (was 4.4-5.8 MB), no refusals",
+   "test_commit": "a3643c8",
+   "commits": [
+    "0d91b65"
+   ],
+   "integrated_in": [
+    "wip/expansion20 a3643c8"
+   ]
   },
   {
    "id": "X20-JUDG-C2",
@@ -61439,8 +61491,8 @@
     "SJD-H-CAL"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -61453,10 +61505,23 @@
      "date": "2026-10-31",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker F (judgment); branch: None -> wip/x20-judgment",
      "why": "assigned"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: wip/x20-judgment -> wip/expansion20; tests: None -> judgment_calibration_test 86/0, judgment_test 217/0, judgment_live_test 161/0, judgment_x19/bonds/personality/soak/guard_save, aspiration 155/0, recorder_test 214/0 on a3643c8; Actions 41166571846 (d99ec66): sales changed 3.5-6.4%, judgment section 1.2-1.4 MB at day 365 (was 4.4-5.8 MB), no refusals; test_commit: None -> a3643c8; commits + 0d91b65; integrated_in + wip/expansion20 a3643c8",
+     "why": "merged (17432f0; head a3643c8, with the lead's fix recording tier-collapsed candidates' factors for the recorder)"
     }
    ],
    "assigned_worker": "worker F (judgment)",
-   "branch": "wip/x20-judgment"
+   "branch": "wip/expansion20",
+   "tests": "judgment_calibration_test 86/0, judgment_test 217/0, judgment_live_test 161/0, judgment_x19/bonds/personality/soak/guard_save, aspiration 155/0, recorder_test 214/0 on a3643c8; Actions 41166571846 (d99ec66): sales changed 3.5-6.4%, judgment section 1.2-1.4 MB at day 365 (was 4.4-5.8 MB), no refusals",
+   "test_commit": "a3643c8",
+   "commits": [
+    "0d91b65"
+   ],
+   "integrated_in": [
+    "wip/expansion20 a3643c8"
+   ]
   },
   {
    "id": "X20-JUDG-C3",
@@ -61476,8 +61541,8 @@
     "SJD-H-CAL"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -61490,10 +61555,23 @@
      "date": "2026-10-31",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker D; branch: None -> wip/x20-bandit-ai",
      "why": "assigned with the bandit work (robbery and assault events)"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: wip/x20-bandit-ai -> wip/expansion20; tests: None -> judgment_incident_test 15/0 (11 failed before) on a3643c8; test_commit: None -> a3643c8; commits + 8fb6244; integrated_in + wip/expansion20 a3643c8",
+     "why": "merged (8dc6cef)"
     }
    ],
    "assigned_worker": "worker D",
-   "branch": "wip/x20-bandit-ai"
+   "branch": "wip/expansion20",
+   "tests": "judgment_incident_test 15/0 (11 failed before) on a3643c8",
+   "test_commit": "a3643c8",
+   "commits": [
+    "8fb6244"
+   ],
+   "integrated_in": [
+    "wip/expansion20 a3643c8"
+   ]
   },
   {
    "id": "X20-JUDG-C5",
@@ -61514,8 +61592,8 @@
     "SJD-H-CAL"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -61528,10 +61606,23 @@
      "date": "2026-10-31",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker F (judgment); branch: None -> wip/x20-judgment",
      "why": "assigned"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: wip/x20-judgment -> wip/expansion20; tests: None -> judgment_calibration_test 86/0, judgment_test 217/0, judgment_live_test 161/0, judgment_x19/bonds/personality/soak/guard_save, aspiration 155/0, recorder_test 214/0 on a3643c8; Actions 41166571846 (d99ec66): sales changed 3.5-6.4%, judgment section 1.2-1.4 MB at day 365 (was 4.4-5.8 MB), no refusals; test_commit: None -> a3643c8; commits + 0d91b65; integrated_in + wip/expansion20 a3643c8",
+     "why": "merged (17432f0; head a3643c8, with the lead's fix recording tier-collapsed candidates' factors for the recorder)"
     }
    ],
    "assigned_worker": "worker F (judgment)",
-   "branch": "wip/x20-judgment"
+   "branch": "wip/expansion20",
+   "tests": "judgment_calibration_test 86/0, judgment_test 217/0, judgment_live_test 161/0, judgment_x19/bonds/personality/soak/guard_save, aspiration 155/0, recorder_test 214/0 on a3643c8; Actions 41166571846 (d99ec66): sales changed 3.5-6.4%, judgment section 1.2-1.4 MB at day 365 (was 4.4-5.8 MB), no refusals",
+   "test_commit": "a3643c8",
+   "commits": [
+    "0d91b65"
+   ],
+   "integrated_in": [
+    "wip/expansion20 a3643c8"
+   ]
   },
   {
    "id": "X20-JUDG-MIGRATION",

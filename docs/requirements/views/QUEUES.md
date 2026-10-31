@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (22)
+## Workers and task branches (15)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -11,20 +11,13 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-05 | 20 | IN DEVELOPMENT | worker A (Living Economy) | wip/x20-le05 |
-| LE05-RENTAL | 20 | IN DEVELOPMENT | worker G (LE-05) | wip/x20-le05 |
-| LE05-REPAIR | 20 | IN DEVELOPMENT | worker G (LE-05) | wip/x20-le05 |
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-B24-REMED | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | X20-B24-REVIEW | 20 | IN DEVELOPMENT | lead (tracking); workers A and B | wip/expansion20 |
-| X20-BANDIT-AI | 20 | IN DEVELOPMENT | worker D | wip/x20-bandit-ai |
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
-| X20-JUDG-C1 | 20 | IN DEVELOPMENT | worker F (judgment) | wip/x20-judgment |
-| X20-JUDG-C2 | 20 | IN DEVELOPMENT | worker F (judgment) | wip/x20-judgment |
-| X20-JUDG-C3 | 20 | IN DEVELOPMENT | worker D | wip/x20-bandit-ai |
-| X20-JUDG-C5 | 20 | IN DEVELOPMENT | worker F (judgment) | wip/x20-judgment |
 | X20-MERGED-VALIDATION | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | X20-RESUME | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
