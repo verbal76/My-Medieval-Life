@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (22)
+## Workers and task branches (21)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -11,7 +11,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
 | ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
 | LE-05 | 20 | IN DEVELOPMENT | worker A (Living Economy) | wip/x20-le05 |
-| LE-06 | 20 | IMPLEMENTED ON TASK BRANCH | worker A (Living Economy) | wip/x20-le06 |
 | LE05-RENTAL | 20 | IN DEVELOPMENT | worker G (LE-05) | wip/x20-le05 |
 | LE05-REPAIR | 20 | IN DEVELOPMENT | worker G (LE-05) | wip/x20-le05 |
 | P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |

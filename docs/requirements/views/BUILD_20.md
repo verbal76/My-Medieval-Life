@@ -9,9 +9,9 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 111 |
-| Integrated | 93 of 111 (84%) |
+| Integrated | 94 of 111 (85%) |
 | Automated tests passed | 94 of 111 (85%) |
-| Integration verified | 59 of 111 (53%) |
+| Integration verified | 60 of 111 (54%) |
 | Gameplay verified | 0 of 111 (0%) |
 | Owner playtested | 0 of 111 (0%) |
 | Complete | 2 of 111 (2%) |
@@ -35,7 +35,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-JUDG-C5 | Mixed feelings in real decisions: dislike, respect for ability, fear, dependence, family or friend loyalty and remembered help or harm compete in the existing decision evaluation; no single collapsed score; no automatic refusals; personality-consistent variety | OWNER APPROVED | IN DEVELOPMENT | worker F (judgment) / wip/x20-judgment | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (91)
+## Integrated, awaiting gameplay or owner verification (92)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -99,6 +99,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 e8cc44b | INTEGRATION VERIFIED | Paused (owner 2026-10-28). For LE-03: unify the villagers' existing buying routines with the market (reservations not read by npc_orders), food bids and household budgets, negotiated wages/services; all LE-02 parameters provisional until LE-06 economy-on runs. |  | verification only |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | OWNER APPROVED | INTEGRATED | wip/expansion20 5195c2c | TARGETED TESTS PASSED | Merge into wip/expansion20 together with X20-SETTLE-FOOD once B passes; LE-04 started on wip/x20-le04 (worker A). |  | verification only |
 | LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | OWNER APPROVED | INTEGRATED | wip/expansion20 8bbdcfb | INTEGRATION VERIFIED |  |  | verification only |
+| LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | INTEGRATED | wip/expansion20 a227158 | INTEGRATION VERIFIED |  |  | verification only |
 | MP-INTERACT-01 | Release blocker: player-to-player selection and interaction work for host and guest on Windows, Linux and Android (keyboard and mouse, touch, controller) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 87b69ab; Build 23 c79b12c | INTEGRATION VERIFIED | Owner device checks still needed (cross-platform host/guest and physical input devices). MP-INTERACT-Q1/Q2 are DEFERRED for the current playtest; preserve existing goods-contract and nearest-person Talk behavior. |  | verification only |
 | MP-PLAYER-FAMILY | Children of player-to-player marriages: biological (male and female) and adoption with both spouses as parents | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED | Build 22: implement on wip/b22-family, lead integrates on wip/build22 |  | verification only |
 | REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 4f50ffb | TARGETED TESTS PASSED | recorder stage D5 (judgment publish, learn, tell, trust, every choice with alternatives and factors) and D4 relations (batch R3) |  | verification only |
@@ -137,13 +138,12 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (5)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (4)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it | design: UNKNOWN | UNKNOWN |
 | GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | OWNER APPROVED | NOT STARTED | none | NOT TESTED | P1 after Batch A1 (docs/gameplay_polish/SCHEDULE.md) | design: UNKNOWN | UNKNOWN |
-| LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker A (Living Economy) / wip/x20-le06 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-BACKGROUND | Expansion 20 continues in the background within approved decisions (Upwardly Build 83 is the owner's primary priority): combined integration, one baseline simulation on the merged commit, LE-06 first, trader reopening, X20-MP-ECON-INTEGRITY, SJD-G evaluation; no build rushed; escalate only the listed cases | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | X20-RESUME, design: UNKNOWN | UNKNOWN |
 

@@ -28761,11 +28761,12 @@
     "No errors/leaks; legitimate failure allowed"
    ],
    "implementation": "",
-   "tests": "le06_save_test 21/0 (lossless string-table encoding, forgetting only past usability by the existing decay OD-LE-10 D09, identical believed prices and actionable entries, bounded over 60 days, load-replay at three checkpoints, Build 24 fixture b24_save_v23_single); LE suites green after merge",
+   "tests": "le06_save_test 21/0 (lossless string-table encoding, forgetting only past usability by the existing decay OD-LE-10 D09, identical believed prices and actionable entries, bounded over 60 days, load-replay at three checkpoints, Build 24 fixture b24_save_v23_single); LE suites green after merge; le06_save_test 21/0 (Build 24 fixture); LE suites 0 failures; local sim_gate PASS (economy off); Actions 41143001791 seeds 1,2 365 days --market: economy section 430-545 KB all year (seed 2 day 30 503 KB, day 90 473 KB, day 180 447 KB, day 365 439 KB; seed 1 day 365 528 KB), 37 exact load-backs each, claims breaches 0, leak 0, 24-30 s per game day",
    "playtest": [],
-   "branch": "wip/x20-le06",
+   "branch": "wip/expansion20",
    "commits": [
-    "857f9f8"
+    "857f9f8",
+    "7dcfab8"
    ],
    "parent": "EXP-D",
    "depends_on": [],
@@ -28777,7 +28778,7 @@
    "priority": "",
    "workstream": "",
    "superseded_by": null,
-   "notes": "Knowledge section day 3: 672 KB -> 131 KB (same 3043 entries); economy section day 2: 540 KB -> 202 KB. Market driving 25.07 vs 25.39 s per game day (economy off/on). Save version unchanged; format-1 knowledge still loads. Awaiting 41143001791 (days 30/90/180/365 sizes, conservation, load-backs). OD-LE-15 500-villager device budget not yet measured.",
+   "notes": "Save-growth activation blocker resolved (owner directive 2026-10-30 b24_review_remediation). Not covered: OD-LE-15 phone budget (needs a device and a 500-villager scenario); a second independent long run for determinism (replay-from-save proven by le06_save_test). Living Economy stays OFF by default: activation also needs LE-05 and LE-07 and the owner.",
    "history": [
     {
      "date": "2026-10-20",
@@ -28813,20 +28814,27 @@
      "date": "2026-10-30",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> le06_save_test 21/0 (lossless string-table encoding, forgetting only past usability by the existing decay OD-LE-10 D09, identical believed prices and actionable entries, bounded over 60 days, load-replay at three checkpoints, Build 24 fixture b24_save_v23_single); LE suites green after merge; test_commit: None -> 857f9f8; commits + 857f9f8; notes",
      "why": "save bound implemented and merged with wip/expansion20 8bbdcfb (worker A); 365-day --market run 41143001791 running"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; branch: wip/x20-le06 -> wip/expansion20; tests: le06_save_test 21/0 (lossless string-table encoding, forgetting only past usability by the existing decay OD-LE-10 D09, identical believed prices and actionable entries, bounded over 60 days, load-replay at three checkpoints, Build 24 fixture b24_save_v23_single); LE suites green after merge -> le06_save_test 21/0 (lossless string-table encoding, forgetting only past usability by the existing decay OD-LE-10 D09, identical believed prices and actionable entries, bounded over 60 days, load-replay at three checkpoints, Build 24 fixture b24_save_v23_single); LE suites green after merge; le06_save_test 21/0 (Build 24 fixture); LE suites 0 failures; local sim_gate PASS (economy off); Actions 41143001791 seeds 1,2 365 days --market: economy section 430-545 KB all year (seed 2 day 30 503 KB, day 90 473 KB, day 180 447 KB, day 365 439 KB; seed 1 day 365 528 KB), 37 exact load-backs each, claims breaches 0, leak 0, 24-30 s per game day; test_commit: 857f9f8 -> 7dcfab8; commits + 7dcfab8; integrated_in + wip/expansion20 a227158; notes",
+     "why": "merged into wip/expansion20 (a227158, tree = 7dcfab8); run 41143001791 recovered via 41165981302: economy save flat 430-545 KB over 365 days on both seeds, all checkpoints load back exactly, conservation exact"
     }
    ],
    "target_build": "20",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
-   "integrated_in": [],
+   "integrated_in": [
+    "wip/expansion20 a227158"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "assigned_worker": "worker A (Living Economy)",
-   "test_commit": "857f9f8"
+   "test_commit": "7dcfab8"
   },
   {
    "id": "LE-07",
