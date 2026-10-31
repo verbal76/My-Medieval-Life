@@ -7,6 +7,14 @@ next authorized phase. The requirements register (`docs/requirements/requirement
 these files and the register disagree, the register's latest history line with an owner source wins and the file is
 corrected.
 
+## Pending authority switch (owner, 2026-10-31, DOC-AUTH-01)
+
+The owner is preparing a revised, complete set of expansion specifications
+(`docs/directives/2026-10-31_document_authority_replacement_policy.md`). When the owner explicitly approves the FINAL set,
+it becomes the sole authoritative specification and these status records are re-based on it. Older documents then become
+historical evidence only: nothing is reintroduced from them, omissions are asked about, and code differences are
+reported, not changed. A draft does not switch authority. Until the switch, the precedence below applies.
+
 ## Precedence (owner, 2026-10-31)
 
 1. Latest explicit owner decision (`docs/directives/`, register `owner_answer` / owner approval).

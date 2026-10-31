@@ -12407,6 +12407,40 @@
    "completion": "OPEN"
   },
   {
+   "id": "DOC-AUTH-01",
+   "kind": "approved",
+   "title": "Document authority replacement: once the owner explicitly approves and delivers the final revised expansion specification set, it is the sole authoritative current specification; older plans, roadmaps, packets, instructions and registers become historical evidence only; omitted features are not reintroduced (ask if materially ambiguous); code differences are reported, not silently changed; later explicit owner decisions supersede and are folded into the set; no third interpretation. Until then: latest explicit owner decisions and the validated baseline. The switch happens only on final approval, not on a draft.",
+   "description": "Document authority replacement: once the owner explicitly approves and delivers the final revised expansion specification set, it is the sole authoritative current specification; older plans, roadmaps, packets, instructions and registers become historical evidence only; omitted features are not reintroduced (ask if materially ambiguous); code differences are reported, not silently changed; later explicit owner decisions supersede and are folded into the set; no third interpretation. Until then: latest explicit owner decisions and the validated baseline. The switch happens only on final approval, not on a draft.",
+   "source": "docs/directives/2026-10-31_document_authority_replacement_policy.md",
+   "owner_wording": "The authority switch occurs only after my explicit final approval—not when a draft is first delivered.",
+   "approval": "owner, 2026-10-31",
+   "acceptance": [
+    "on receiving drafts: review, verify implementation claims against code and tests, return specific questions and discrepancies to the owner",
+    "on final approval: the set is recorded as authoritative, older documents labelled historical, register reconciled to it; differences between code and the set reported, not changed"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_document_authority_replacement_policy.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "note",
+     "why": "policy acknowledged; waiting for the owner's revised document set"
+    }
+   ]
+  },
+  {
    "id": "DOC-RECON-01",
    "kind": "approved",
    "title": "Documentation reconciliation and owner-decision protection: every expansion (17-27), multiplayer and standalone approved system has a current status document; register statuses corrected from code and test evidence; precedence hierarchy (latest explicit owner decision first); historical documents labelled; missing original sources listed; one authoritative entry point; on the isolated branch wip/requirements-control, not merged into the gameplay baseline without the owner",
