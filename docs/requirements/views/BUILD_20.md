@@ -8,14 +8,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 113 |
-| Integrated | 102 of 113 (90%) |
-| Automated tests passed | 102 of 113 (90%) |
-| Integration verified | 60 of 113 (53%) |
-| Gameplay verified | 0 of 113 (0%) |
-| Owner playtested | 0 of 113 (0%) |
-| Complete | 2 of 113 (2%) |
-| Open (release blockers) | 111 |
+| Approved requirements in scope | 115 |
+| Integrated | 102 of 115 (89%) |
+| Automated tests passed | 102 of 115 (89%) |
+| Integration verified | 60 of 115 (52%) |
+| Gameplay verified | 0 of 115 (0%) |
+| Owner playtested | 0 of 115 (0%) |
+| Complete | 2 of 115 (2%) |
+| Open (release blockers) | 113 |
 | Open owner decisions (blocking) | 1 (0) |
 
 ## In development (worker assigned) (6)
@@ -140,10 +140,12 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (4)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (6)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| BUILD-SEQ-25-27 | Build sequence (owner, 2026-10-31): Build 25 = Expansion 20 validation and freeze (wip/expansion20 becomes the frozen baseline only after validation passes and the owner approves); Build 26 = repository recovery and consolidation on a separate branch from the exact frozen Build 25 SHA, validated and frozen after owner approval; Build 27 = Expansion 21 begins only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers. | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| DOC-RECON-01 | Documentation reconciliation and owner-decision protection: every expansion (17-27), multiplayer and standalone approved system has a current status document; register statuses corrected from code and test evidence; precedence hierarchy (latest explicit owner decision first); historical documents labelled; missing original sources listed; one authoritative entry point; on the isolated branch wip/requirements-control, not merged into the gameplay baseline without the owner | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it | design: UNKNOWN | UNKNOWN |
 | GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | OWNER APPROVED | NOT STARTED | none | NOT TESTED | P1 after Batch A1 (docs/gameplay_polish/SCHEDULE.md) | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

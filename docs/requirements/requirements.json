@@ -8990,6 +8990,34 @@
    "test_commit": "4611d86"
   },
   {
+   "id": "BUILD-SEQ-25-27",
+   "kind": "approved",
+   "title": "Build sequence (owner, 2026-10-31): Build 25 = Expansion 20 validation and freeze (wip/expansion20 becomes the frozen baseline only after validation passes and the owner approves); Build 26 = repository recovery and consolidation on a separate branch from the exact frozen Build 25 SHA, validated and frozen after owner approval; Build 27 = Expansion 21 begins only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers.",
+   "description": "Build sequence (owner, 2026-10-31): Build 25 = Expansion 20 validation and freeze (wip/expansion20 becomes the frozen baseline only after validation passes and the owner approves); Build 26 = repository recovery and consolidation on a separate branch from the exact frozen Build 25 SHA, validated and frozen after owner approval; Build 27 = Expansion 21 begins only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers.",
+   "source": "docs/directives/2026-10-31_documentation_reconciliation.md",
+   "owner_wording": "Do not confuse build numbers with expansion numbers.",
+   "approval": "owner, 2026-10-31",
+   "acceptance": [
+    "each build frozen only after owner approval; Expansion 21 not started before Build 26 is frozen and authorized"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_documentation_reconciliation.md"
+    }
+   ]
+  },
+  {
    "id": "CAP-TOOLHOLDER",
    "title": "Design review: a villager holding a tool only for sale counts as a capability practitioner",
    "kind": "idea",
@@ -12377,6 +12405,35 @@
    "verification_status": "NOT TESTED",
    "release_status": "NOT APPLICABLE",
    "completion": "OPEN"
+  },
+  {
+   "id": "DOC-RECON-01",
+   "kind": "approved",
+   "title": "Documentation reconciliation and owner-decision protection: every expansion (17-27), multiplayer and standalone approved system has a current status document; register statuses corrected from code and test evidence; precedence hierarchy (latest explicit owner decision first); historical documents labelled; missing original sources listed; one authoritative entry point; on the isolated branch wip/requirements-control, not merged into the gameplay baseline without the owner",
+   "description": "Documentation reconciliation and owner-decision protection: every expansion (17-27), multiplayer and standalone approved system has a current status document; register statuses corrected from code and test evidence; precedence hierarchy (latest explicit owner decision first); historical documents labelled; missing original sources listed; one authoritative entry point; on the isolated branch wip/requirements-control, not merged into the gameplay baseline without the owner",
+   "source": "docs/directives/2026-10-31_documentation_reconciliation.md",
+   "owner_wording": "The latest explicit owner decision takes precedence over all older documentation, regardless of which branch contains it.",
+   "approval": "owner, 2026-10-31",
+   "acceptance": [
+    "the eight acceptance criteria of the directive (section 8)",
+    "report: branch and SHA, files updated, status changes by category, owner decisions corrected, missing originals, contradictions for the owner, Build 25 validation undisturbed"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_documentation_reconciliation.md"
+    }
+   ]
   },
   {
    "id": "DVW-A1",

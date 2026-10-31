@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 167 still open, 64 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 645 (315 of them still open) |
-| **Open entries now** (rules excluded) | | **481** |
+| Entries added since | | 647 (317 of them still open) |
+| **Open entries now** (rules excluded) | | **483** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (64)
@@ -107,7 +107,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (645)
+## Added since the baseline (647)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -155,6 +155,7 @@ None.
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | decision | APPROVED | owner decision |
 | BUILD-3PLATFORM | Every build produces Android, Windows and Linux together, stably signed | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | multiplayer |
+| BUILD-SEQ-25-27 | Build sequence (owner, 2026-10-31): Build 25 = Expansion 20 validation and freeze (wip/expansion20 becomes the frozen baseline only after validation passes and the owner approves); Build 26 = repository recovery and consolidation on a separate branch from the exact frozen Build 25 SHA, validated and frozen after owner approval; Build 27 = Expansion 21 begins only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers. | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | NOT STARTED / NOT TESTED / OPEN | 18 |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | CHAPEL-R1 | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) | decision | APPROVED | 18 |
@@ -186,6 +187,7 @@ None.
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | CTR-04 | Permanent counters are not market stalls: no stall commission on counters without an approved rule | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | DCR-01 | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control | rule | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| DOC-RECON-01 | Documentation reconciliation and owner-decision protection: every expansion (17-27), multiplayer and standalone approved system has a current status document; register statuses corrected from code and test evidence; precedence hierarchy (latest explicit owner decision first); historical documents labelled; missing original sources listed; one authoritative entry point; on the isolated branch wip/requirements-control, not merged into the gameplay baseline without the owner | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
