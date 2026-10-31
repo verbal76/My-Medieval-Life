@@ -8,23 +8,24 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 104 |
-| Integrated | 93 of 104 (89%) |
-| Automated tests passed | 94 of 104 (90%) |
-| Integration verified | 59 of 104 (57%) |
-| Gameplay verified | 0 of 104 (0%) |
-| Owner playtested | 0 of 104 (0%) |
-| Complete | 2 of 104 (2%) |
-| Open (release blockers) | 102 |
+| Approved requirements in scope | 105 |
+| Integrated | 93 of 105 (89%) |
+| Automated tests passed | 94 of 105 (90%) |
+| Integration verified | 59 of 105 (56%) |
+| Gameplay verified | 0 of 105 (0%) |
+| Owner playtested | 0 of 105 (0%) |
+| Complete | 2 of 105 (2%) |
+| Open (release blockers) | 103 |
 | Open owner decisions (blocking) | 1 (0) |
 
-## In development (worker assigned) (5)
+## In development (worker assigned) (6)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | OWNER APPROVED | IN DEVELOPMENT | worker A (Living Economy) / wip/x20-le05 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-B24-REMED | Build 24 review remediation and Expansion 20 integration: per-finding register, failing-first regression tests, shared ownership-transition root causes, LE-04 on World.transactions with no double reservation, LE-06 bounded saves as an activation gate, X20-MP-ECON-INTEGRITY fault injection, SJD-G within budget, milestone report | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | X20-B24-REVIEW, design: UNKNOWN | UNKNOWN |
 | X20-B24-REVIEW | Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance | OWNER APPROVED | IN DEVELOPMENT | lead (tracking); workers A and B / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-BANDIT-AI | Bandit situational awareness, threat assessment and self-preservation comparable to villagers (recognise pursuit, threat and outnumbering from available information; anticipate retaliation; fight/flee/hide/regroup/defend/ambush by numbers, equipment, injuries, stamina, personality, relationships, escape; conditional cooperation; learning through existing memory and judgment); villager retaliation and family defence not weakened; no stat changes; no target death rate | OWNER APPROVED | IN DEVELOPMENT | worker D / wip/x20-bandit-ai | NOT TESTED |  | SJD-H-CAL, design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 | X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 

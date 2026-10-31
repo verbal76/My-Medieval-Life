@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (15)
+## Workers and task branches (16)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -18,6 +18,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-B24-REMED | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | X20-B24-REVIEW | 20 | IN DEVELOPMENT | lead (tracking); workers A and B | wip/expansion20 |
+| X20-BANDIT-AI | 20 | IN DEVELOPMENT | worker D | wip/x20-bandit-ai |
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | X20-RESUME | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |

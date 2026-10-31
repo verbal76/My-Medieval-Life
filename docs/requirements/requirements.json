@@ -50116,8 +50116,14 @@
      "date": "2026-10-31",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-30_mp_batch_d_decision.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "notes",
+     "why": "owner answered C4 (docs/directives/2026-10-31_sjdh_c4_bandit_intelligence.md): do not reduce bandit mortality or weaken villager defence; give bandits comparable awareness and self-preservation (X20-BANDIT-AI). C1-C3, C5, C6 and the re-robbing question remain open"
     }
-   ]
+   ],
+   "notes": "C4 answered 2026-10-31 -> X20-BANDIT-AI. Open: C1, C2, C3, C5, C6, bandit re-robbing (the re-robbing question is also investigated under X20-BANDIT-AI as a possible encounter inflator)."
   },
   {
    "id": "SJD-Q01",
@@ -61014,6 +61020,47 @@
      "why": "docs/directives/2026-10-30_x20_background_development.md"
     }
    ]
+  },
+  {
+   "id": "X20-BANDIT-AI",
+   "kind": "approved",
+   "title": "Bandit situational awareness, threat assessment and self-preservation comparable to villagers (recognise pursuit, threat and outnumbering from available information; anticipate retaliation; fight/flee/hide/regroup/defend/ambush by numbers, equipment, injuries, stamina, personality, relationships, escape; conditional cooperation; learning through existing memory and judgment); villager retaliation and family defence not weakened; no stat changes; no target death rate",
+   "description": "Bandit situational awareness, threat assessment and self-preservation comparable to villagers (recognise pursuit, threat and outnumbering from available information; anticipate retaliation; fight/flee/hide/regroup/defend/ambush by numbers, equipment, injuries, stamina, personality, relationships, escape; conditional cooperation; learning through existing memory and judgment); villager retaliation and family defence not weakened; no stat changes; no target death rate",
+   "source": "docs/directives/2026-10-31_sjdh_c4_bandit_intelligence.md",
+   "owner_wording": "The objective is believable, intelligent behavior on both sides of a conflict—not artificial numerical balance.",
+   "approval": "owner, 2026-10-31",
+   "acceptance": [
+    "investigation first, from the existing 365-day ON/OFF runs (41129188776, 41129193143): deaths during robbery or assault, in organised retaliation or pursuit, after disengaging; whether bandits recognise disadvantage, try to retreat, succeed, cooperate; whether repeated robbery or respawning inflates mortality",
+    "behaviour through the existing judgment, memory, experience and combat systems; no health, damage, speed or stat changes; villager family defence and retaliation unchanged",
+    "controlled-encounter tests and appropriate simulations measuring survival, successful retreats, defensive cooperation, pursuit outcomes and behavioural variety; conservation, determinism, saves; report before declaring C4 resolved"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "SJD-G"
+   ],
+   "decisions": [
+    "SJD-H-CAL"
+   ],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_sjdh_c4_bandit_intelligence.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker D; branch: None -> wip/x20-bandit-ai",
+     "why": "assigned to worker D (judgment soak context)"
+    }
+   ],
+   "assigned_worker": "worker D",
+   "branch": "wip/x20-bandit-ai"
   },
   {
    "id": "X20-CHECKPOINT",
