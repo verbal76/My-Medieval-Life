@@ -8,14 +8,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 111 |
-| Integrated | 94 of 111 (85%) |
-| Automated tests passed | 94 of 111 (85%) |
-| Integration verified | 60 of 111 (54%) |
-| Gameplay verified | 0 of 111 (0%) |
-| Owner playtested | 0 of 111 (0%) |
-| Complete | 2 of 111 (2%) |
-| Open (release blockers) | 109 |
+| Approved requirements in scope | 112 |
+| Integrated | 95 of 112 (85%) |
+| Automated tests passed | 95 of 112 (85%) |
+| Integration verified | 60 of 112 (54%) |
+| Gameplay verified | 0 of 112 (0%) |
+| Owner playtested | 0 of 112 (0%) |
+| Complete | 2 of 112 (2%) |
+| Open (release blockers) | 110 |
 | Open owner decisions (blocking) | 1 (0) |
 
 ## In development (worker assigned) (12)
@@ -35,7 +35,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-JUDG-C5 | Mixed feelings in real decisions: dislike, respect for ability, fear, dependence, family or friend loyalty and remembered help or harm compete in the existing decision evaluation; no single collapsed score; no automatic refusals; personality-consistent variety | OWNER APPROVED | IN DEVELOPMENT | worker F (judgment) / wip/x20-judgment | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (92)
+## Integrated, awaiting gameplay or owner verification (93)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -128,6 +128,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-MP-ECON-INTEGRITY | When multiplayer and the economy systems are integrated, verify that disconnects, retries, duplicate requests and host recovery cannot duplicate or lose currency, goods or transactions | OWNER APPROVED | INTEGRATED | wip/expansion20 5830c35 | INTEGRATION VERIFIED |  |  | verification only |
 | X20-SETTLE-FOOD | Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game | OWNER APPROVED | INTEGRATED | wip/expansion20 5195c2c | INTEGRATION VERIFIED | LE-05 (paused 2026-10-28). |  | verification only |
 | X20-SETTLE-REOPEN | A closed settlement business reopens (or is re-established) when a household takes up its trade, through the existing business-creation and ownership rules, without restoring the former owner's money, stock, contracts, workforce or assets | OWNER APPROVED | INTEGRATED | wip/expansion20 ed6360f | INTEGRATION VERIFIED |  |  | verification only |
+| X20-SPLASH | Opening splash: the Hot Attic Games studio logo shows when the game starts, before the game; the app icon is left as it is | OWNER APPROVED | INTEGRATED | wip/expansion20 4f236c9 | TARGETED TESTS PASSED |  |  | verification only |
 | X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 e8cc44b | INTEGRATION VERIFIED |  |  | verification only |
 | X20-TXN-REPLAY-FIELDS | Latent defect: the transaction authority's saved past results keep only basic fields, so an idempotent replay after a load returns a settle_estate result without its 'paid' amount; keep the full result (bounded) so a replay after load answers exactly as before | OWNER APPROVED | INTEGRATED | wip/expansion20 97f7ab6 | INTEGRATION VERIFIED |  |  | verification only |
 | X20-WEAR-TRANSFER | Defect: a tool's saved wear does not travel when the tool changes hands (sale, gift, inheritance, loot), so a worn tool can become as good as new; wear must follow the item through every transfer (existing state, WDR-022 lost state) | OWNER APPROVED | INTEGRATED | wip/expansion20 97f7ab6 | INTEGRATION VERIFIED |  |  | verification only |

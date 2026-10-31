@@ -79,7 +79,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-TRADER-PAY-INV | 20+ | PARTIALLY IMPLEMENTED |  |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 
-## Awaiting owner playtest or device check (106)
+## Awaiting owner playtest or device check (107)
 
 | ID | Build | Verification | Needs |
 |---|---|---|---|
@@ -189,3 +189,4 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | WORLD-LIFE-01 | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | X18-CAPCOMP | 18 | INTEGRATION VERIFIED | owner playtest on a device |
 | X18-CAPNUM | 18 | INTEGRATION VERIFIED | owner playtest on a device |
+| X20-SPLASH | 20 | TARGETED TESTS PASSED | A, n, d, r, o, i, d,  , a, n, d,  , W, i, n, d, o, w, s,  , d, e, v, i, c, e,  , c, h, e, c, k, :,  , t, h, e,  , l, o, g, o,  , o, n,  , a,  , p, h, o, n, e,  , s, c, r, e, e, n,  , (, p, o, r, t, r, a, i, t,  , a, n, d,  , l, a, n, d, s, c, a, p, e, ) |

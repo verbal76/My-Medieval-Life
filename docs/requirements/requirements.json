@@ -61826,6 +61826,49 @@
    ]
   },
   {
+   "id": "X20-SPLASH",
+   "kind": "approved",
+   "title": "Opening splash: the Hot Attic Games studio logo shows when the game starts, before the game; the app icon is left as it is",
+   "description": "Opening splash: the Hot Attic Games studio logo shows when the game starts, before the game; the app icon is left as it is",
+   "source": "owner message 2026-10-31 in the coordinating session (logo image supplied; recorded in docs/DECISIONS.md on wip/expansion20)",
+   "owner_wording": "What I gave you is supposed to be an opening splash screen so you start the game you see the splash screen and then you see the game",
+   "approval": "owner, 2026-10-31",
+   "acceptance": [
+    "logo shown on start before the title screen on Windows, Linux and Android; icon unchanged"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "owner message 2026-10-31 in the coordinating session (logo image supplied; recorded in docs/DECISIONS.md on wip/expansion20)"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/expansion20; tests: None -> viewed by eye (virtual display, 1280x720): logo then title screen; check_assets 0 problems; test_asset_pipeline OK; run_tests 3601/0; test_commit: None -> 4f236c9; commits + 4f236c9; integrated_in + wip/expansion20 4f236c9; playtest",
+     "why": "done on wip/expansion20 4f236c9: engine boot splash, black background, at least 2.5 s; seen in a 1280x720 window"
+    }
+   ],
+   "branch": "wip/expansion20",
+   "tests": "viewed by eye (virtual display, 1280x720): logo then title screen; check_assets 0 problems; test_asset_pipeline OK; run_tests 3601/0",
+   "test_commit": "4f236c9",
+   "commits": [
+    "4f236c9"
+   ],
+   "integrated_in": [
+    "wip/expansion20 4f236c9"
+   ],
+   "playtest": "Android and Windows device check: the logo on a phone screen (portrait and landscape)"
+  },
+  {
    "id": "X20-TILL-KEEP",
    "kind": "approved",
    "title": "A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1)",
