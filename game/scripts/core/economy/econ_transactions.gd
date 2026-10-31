@@ -248,11 +248,12 @@ func _goods_out(p: Dictionary, item: String, qty: int) -> void:      # into tran
 		w.stat("exported_" + item, float(qty))
 
 
-func _goods_in(p: Dictionary, item: String, qty: int) -> void:       # out of transit
+func _goods_in(p: Dictionary, item: String, qty: int, wear := -1) -> void:       # out of transit
 	if p.kind == "region":
 		p.obj.add(item, qty)
 	else:
 		_store(p).add(item, qty)
+		_store(p).take_wear(item, wear)                  # X20-WEAR-TRANSFER: the worn unit custody held (a settlement keeps no wear)
 		w.stat("imported_" + item, float(qty))
 
 
@@ -308,8 +309,10 @@ func exchange(txid: String, buyer: String, seller: String, item: String, qty: in
 		var payer = b.obj if b.kind in PEOPLE else (_head(b) if b.kind == "hh" else null)
 		if payer != null:
 			w.claims_release(payer, EconReservations.COINS, total, item, World.is_necessity(item))
+		var wd: int = _store(s).wear_leaving(item, qty)     # X20-WEAR-TRANSFER: a worn tool's wear goes with it
 		_store(s).remove(item, qty)
 		_store(b).add(item, qty)
+		_store(b).take_wear(item, wd)
 		_add_coins(b, -total)
 		_add_coins(s, total)
 	elif b.kind == "region" and s.kind == "region":
@@ -410,10 +413,13 @@ func ship(txid: String, buyer: String, seller: String, item: String, qty: int, t
 	var payer = b.obj if b.kind in PEOPLE else (_head(b) if b.kind == "hh" else null)
 	if payer != null:
 		w.claims_release(payer, EconReservations.COINS, total, item, World.is_necessity(item))
+	var wd: int = _store(s).wear_leaving(item, qty) if s.kind != "region" else -1     # X20-WEAR-TRANSFER: custody keeps a worn unit's wear
 	_goods_out(s, item, qty)
 	_coins_out(b, total)
 	var r := {"txid": txid, "buyer": buyer, "seller": seller, "item": item, "qty": qty, "total": total, "due_day": due_day,
 		"made_day": w.day(), "state": OPEN, "closed_day": -1, "why": ""}
+	if wd >= 0:
+		r["wear"] = wd
 	shipments[txid] = r
 	_note(txid, "ship", r, OPEN)
 	return _end(txid, _res(true, "ok", txid, OPEN))
@@ -488,14 +494,14 @@ func _close(txid: String, op: String, why: String) -> Dictionary:
 				return _res(false, str(b.code if b.code != "" else s.code), txid, OPEN)
 			if not _room(b, item):
 				return _res(false, "no_room", txid, OPEN)
-			_goods_in(b, item, qty)
+			_goods_in(b, item, qty, int(r.get("wear", -1)))
 			_coins_in(s, total)
 		"fail":
 			if b.code != "" or s.code != "":
 				return _res(false, str(b.code if b.code != "" else s.code), txid, OPEN)
 			if not _room(s, item):
 				return _res(false, "no_room", txid, OPEN)
-			_goods_in(s, item, qty)
+			_goods_in(s, item, qty, int(r.get("wear", -1)))
 			_coins_in(b, total)
 		"lose":
 			if b.code != "":
@@ -512,7 +518,7 @@ func _close(txid: String, op: String, why: String) -> Dictionary:
 				sunk[item] = int(sunk.get(item, 0)) + qty
 				w.stat("estate_out_" + item, float(qty))
 			else:
-				_goods_in(gs, item, qty)
+				_goods_in(gs, item, qty, int(r.get("wear", -1)))
 			if cb.is_empty():
 				outside_coins += total
 				w.stat("estate_out_coins", float(total))
@@ -613,11 +619,20 @@ func load_dict(d: Dictionary) -> void:
 		var l := []
 		for e in d.outcomes[k]:
 			var r: Dictionary = e[1]
-			l.append([int(e[0]), {"ok": bool(r.ok), "code": str(r.code), "txid": str(r.txid), "replay": bool(r.get("replay", false)), "state": str(r.get("state", ""))}])
+			# X20-TXN-REPLAY-FIELDS: every field the first call answered (an estate claim's paid and written_off too), so a replay after
+			# a load answers exactly the same; the base fields typed as before, any other whole number back to an int (JSON reads floats)
+			var o := {"ok": bool(r.ok), "code": str(r.code), "txid": str(r.txid), "replay": bool(r.get("replay", false)), "state": str(r.get("state", ""))}
+			for f in r:
+				if not o.has(f):
+					var v = r[f]
+					o[str(f)] = int(v) if v is float and v == floorf(v) else v
+			l.append([int(e[0]), o])
 		outcomes[str(k)] = l
 	for r in d.get("shipments", []):
 		shipments[str(r.txid)] = {"txid": str(r.txid), "buyer": str(r.buyer), "seller": str(r.seller), "item": str(r.item), "qty": int(r.qty),
 			"total": int(r.total), "due_day": int(r.due_day), "made_day": int(r.made_day), "state": str(r.state), "closed_day": int(r.closed_day), "why": str(r.why)}
+		if r.has("wear"):
+			shipments[str(r.txid)]["wear"] = int(r.wear)     # X20-WEAR-TRANSFER: a worn unit in custody (optional; older saves: none)
 	for k in d.get("sunk", {}):
 		sunk[str(k)] = int(d.sunk[k])
 	outside_coins = int(d.get("outside_coins", 0))

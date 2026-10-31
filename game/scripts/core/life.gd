@@ -826,8 +826,7 @@ static func make_heir(w: World, heir: PlayerState, kid: NPC, parent: PlayerState
 	if kid.household >= 0:
 		(w.households[kid.household].members as Array).erase(kid.id)
 	var bag := Inventory.new()
-	for id in kid.inv.ids():
-		bag.add(id, kid.inv.count(id))
+	bag.add_all_from(kid.inv)              # X20-WEAR-TRANSFER: with its wear
 	if bag.total() > 0 or kid.coins > 0:
 		w.loot.append({"pos": kid.pos, "inv": bag, "coins": kid.coins, "from": kid.name})
 	# ID-01: the child keeps their own permanent id and record (their history, ties and family links stay theirs, and the id is never

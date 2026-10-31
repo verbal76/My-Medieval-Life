@@ -167,6 +167,8 @@ func _init() -> void:
 			var ts := Time.get_ticks_usec()
 			samples.append(_sample(start))
 			_print_sample(samples[-1])
+			if w.judgment != null:            # SJD-G: the judgment store's soak measures, read only (JudgmentSoak changes nothing)
+				print("JUDGE " + JSON.stringify(JudgmentSoak.metrics(w.judgment)))
 			min_hunger = 100.0
 			harness_us += Time.get_ticks_usec() - ts
 			if w.economy != null:                  # LE-06: the economy's save at each checkpoint, and whether it loads back exactly
@@ -247,6 +249,10 @@ func _init() -> void:
 			"seconds": secs, "start": _jsonable(start), "samples": samples, "deaths": death_log,
 			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows, "herd": herd_log, "herd_care": herd_care}, " ", false))
 		f.close()
+	# SJD-G: save size and memory at the end, after the results above are written (World.to_dict tells any queued gossip first)
+	print("JUDGE_SAVE %s" % JSON.stringify({"judgment_bytes": JSON.stringify(w.judgment.to_dict()).length() if w.judgment != null else 0,
+		"world_bytes": JSON.stringify(w.to_dict()).length(), "static_mb": snappedf(OS.get_static_memory_usage() / 1048576.0, 0.1),
+		"peak_static_mb": snappedf(OS.get_static_memory_peak_usage() / 1048576.0, 0.1)}))
 	var ok: bool = int(final.currency.leak) == 0 and (final.ledger.items as Dictionary).is_empty() and econ_roundtrip_bad == 0
 	if w.economy != null:                 # EXPANSION 20 LE-01: what the model recorded (diagnostics; it decides nothing)
 		var ec: EconomyFoundation = w.economy

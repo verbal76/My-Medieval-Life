@@ -191,8 +191,10 @@ func give(giver: int, n: NPC, id: String, qty := 1) -> String:
 		return "I've no room to carry that, but thank you."
 	var e := gift_effect(giver, n, id)
 	var rg: Array = w.recorder.gift_begin(giver, from, n, id, peek(giver, n.id)) if w.recorder != null else []   # REC-19 D4
+	var wd := from.wear_leaving(id, qty)     # X20-WEAR-TRANSFER
 	from.remove(id, qty)
 	n.inv.add(id, qty)
+	n.inv.take_wear(id, wd)
 	if gp != null:
 		gp.unmark(id, n.id, qty)
 	var t := tie(giver, n.id)
