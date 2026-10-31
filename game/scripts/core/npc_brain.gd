@@ -767,13 +767,28 @@ func buy_held(n: NPC, v: NPC, item: String) -> bool:
 ## either from the goods merchant) with the villager's own coins above their reserve; false when none is for sale.
 func _fetch_dress_tool(n: NPC, kind: String) -> bool:
 	var maker := "smith" if kind == "chisel" else "carpenter"
+	var judged := JudgmentLive.on(w, "tool_buy")
+	var cands := []
 	for o: NPC in w.npcs:
 		if o.alive and o != n and not w.asleep(o) and (o.job == maker or buy_role(o) == "merchant_goods") \
 				and o.inv.has(kind) and not keeps(o, kind) and buy_open(n, o, kind):     # SIM-F2: buy_from's own price and rule
-			n.doing = "buying %s to dress stone" % ("an iron chisel" if kind == "chisel" else "a " + kind)
-			n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": kind, "qty": 1})]
-			return true
-	return false
+			if not judged:
+				return _plan_dress_tool(n, o, kind)
+			cands.append({"seller": o, "tier": 0, "price": w.deal_price(w.sell_price(o, kind), n, o)})   # C5: the live rule's order is villager order
+	if cands.is_empty():
+		return false
+	var pick := JudgmentLive.pick_tool_seller(w, n, kind, cands, 100000)      # the tools of the stonecutter's trade
+	if bool(pick.forgo):
+		n.doing = "putting off buying %s" % ("an iron chisel" if kind == "chisel" else "a " + kind)
+		n.plan = [go(_workplace_cell(n)), work(90, "", {}, "idle")]
+		return true
+	return _plan_dress_tool(n, pick.seller, kind)
+
+
+func _plan_dress_tool(n: NPC, o: NPC, kind: String) -> bool:
+	n.doing = "buying %s to dress stone" % ("an iron chisel" if kind == "chisel" else "a " + kind)
+	n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": kind, "qty": 1})]
+	return true
 
 
 ## STONE-01: a trip to buy the stone one batch of dressing is short of from the raw-goods merchant (or a labourer's), with
@@ -1288,7 +1303,7 @@ func _miner(n: NPC) -> bool:
 			if w.manor_work.seek_kind(n, ["trial", "excavate", "tunnel"]):
 				return true
 			# MIN-SHOVEL: posted earthwork it could do only with a shovel: it buys one, if one is for sale and it can pay
-			if OpenPits.held_tool(n, "shovel") == "" and w.manor_work.shovel_would_open(World.npc_ref(n.id)) and _buy_tool(n, "shovel"):
+			if OpenPits.held_tool(n, "shovel") == "" and w.manor_work.shovel_would_open(World.npc_ref(n.id)) and _buy_tool(n, "shovel", 30000):
 				return true
 		# the wanted seams are worked out: mine only what someone will still buy
 		var sellable := []
@@ -2303,17 +2318,37 @@ func _get_tool(n: NPC, tool: String) -> bool:
 
 ## A trip to buy `tool` from whoever sells it (the goods merchant first, the smith's wholesale buyer, B7-016; then the
 ## smith; MIN-SHOVEL: then the carpenter, who makes shovels): false when nobody has one for sale it can pay for.
-func _buy_tool(n: NPC, tool: String) -> bool:
-	for role in ["merchant_goods", "smith", "carpenter"]:
+## SJD-H C5 (judgment's tool_buy, JudgmentLive.pick_tool_seller): with judgment on, every seller the rule allows is weighed,
+## in the rule's order (its trades as tiers), and the villager may go to another seller or put the purchase off;
+## `necessity` (0..100000) is how badly they need it now (100 points: the tool of their trade, the axe for their own house).
+func _buy_tool(n: NPC, tool: String, necessity := 100000) -> bool:
+	var cands := []
+	var judged := JudgmentLive.on(w, "tool_buy")
+	var roles := ["merchant_goods", "smith", "carpenter"]
+	for ri in roles.size():
+		var role: String = roles[ri]
 		if role == "carpenter" and tool != "shovel":
 			continue
 		for o: NPC in w.npcs:
 			if o.alive and ((o.job == role) if role in ["smith", "carpenter"] else (buy_role(o) == role)) and o.inv.has(tool) and not keeps(o, tool):
 				if buy_open(n, o, tool):          # SIM-F2: the bargained price the act pays (the list price looped a woodcutter all day)
-					n.doing = "buying a new %s" % tool
-					n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": tool, "qty": 1})]
-					return true
-	return false
+					if not judged:
+						return _plan_tool_buy(n, o, tool)
+					cands.append({"seller": o, "tier": ri, "price": w.deal_price(w.sell_price(o, tool), n, o)})
+	if cands.is_empty():
+		return false
+	var pick := JudgmentLive.pick_tool_seller(w, n, tool, cands, necessity)
+	if bool(pick.forgo):
+		n.doing = "putting off buying a %s" % tool          # C5: they would rather not deal with the one who has it, for now
+		n.plan = [go(wander_cell(w.building_door(n.home), 4) if n.home != "" else n.cell()), work(90, "", {}, "idle")]
+		return true
+	return _plan_tool_buy(n, pick.seller, tool)
+
+
+func _plan_tool_buy(n: NPC, o: NPC, tool: String) -> bool:
+	n.doing = "buying a new %s" % tool
+	n.plan = [go(_workplace_cell(o)), doit("buy_from", {"vendor": o.id, "item": tool, "qty": 1})]
+	return true
 
 
 func _do_recipe(n: NPC, r: String) -> bool:

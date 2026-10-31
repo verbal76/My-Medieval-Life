@@ -39,6 +39,7 @@ func cfg() -> Dictionary:
 	c.traits = {"stubbornness_share_permille": 300}      # the Build 19 trait formula (judgment_personality_test) is off in these fixtures
 	c.bonds.reach = "none"                               # ... and the family name's colour (judgment_bonds_test)
 	c.lies.chance_permille = 0
+	c.decision.opinion_gain_permille = 1000   # the spec's own arithmetic (s.7.3: 50 + NET); the C1 gain is judgment_calibration_test's
 	return c
 
 

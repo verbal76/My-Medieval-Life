@@ -1190,10 +1190,29 @@ func colour_bound(observer: int) -> int:
 	return JudgmentMath.mul_div(strongest, _col_cap, 1000)
 
 
-## Large GOOD and BAD together (SJD-Q04): min(GOOD, BAD), clamped to 0..100 points.
+## Large GOOD and BAD together (SJD-Q04, mixed feelings): min(GOOD, BAD) of the effective parts (the decayed fading part plus
+## the permanent part, as NET reads them; SJD-H C5: the lifetime totals never fade, so read from them it would only grow),
+## clamped to 0..100 points.
 func ambivalence(observer: int, subject: int) -> int:
 	var l := ledger(observer, subject)
-	return mini(100000, mini(int(l[0]), int(l[1])))
+	return mini(100000, mini(int(l[3]) + int(l[5]), int(l[4]) + int(l[6])))
+
+
+## Trust as a decision factor (SJD-H C1, C5), milli-points 0..100000: 50 points, moved by what the observer's own dealings and
+## the tellings they have weighed have done to their reliance on the subject (trust_of less the first impression liking gives,
+## X19-REGARD: liking itself is not judgment and is left out). No record: exactly 50.
+func trust_factor(observer: int, subject: int) -> int:
+	var row: Dictionary = trust.get(observer, {})
+	if not row.has(subject):
+		return int(c("decision").disposition_mid)
+	var first := clampi(social.regard(observer, subject), 0, 100) * 1000 * _t_seed / 1000
+	return JudgmentMath.clampi_(int(c("decision").disposition_mid) + int(row[subject]) - first, 0, 100000)
+
+
+## Fear of the subject as a decision factor (SJD-H C5), milli-points 0..100000: the violence the observer holds against them
+## (the permanent BAD part of the ledger: assault, killing) x `per_point` permille a point, as the report choice reads it.
+func fear_of(observer: int, subject: int, per_point: int) -> int:
+	return JudgmentMath.clampi_(JudgmentMath.mul_div(int(ledger(observer, subject)[6]), per_point, 1000), 0, 100000)
 
 
 ## The subject `observer` thinks worst of (lowest NET, then lowest id), or -999 when they judge nobody below 0.

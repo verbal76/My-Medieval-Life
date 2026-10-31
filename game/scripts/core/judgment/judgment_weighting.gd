@@ -27,6 +27,15 @@ extends RefCounted
 ##     chooser's strongest personal judgment). It only colours: when the result is a refusal (forgo) that the personal
 ##     judgment alone would not have made, the choice is made again without the colour (X19-BOND-LIMITS: inherited
 ##     reputation alone can never cause a refusal).
+##   - SJD-H C1 (owner 2026-10-31): the disposition factor is the chooser's opinion read with decision.opinion_gain_permille
+##     (opinion()): 50 + gain x NET, so an opinion of a point or two (what the approved severities and decay give) is felt in a
+##     choice; the store's disposition stays the spec's 50 + NET.
+##   - SJD-H C5 (mixed feelings): the factors trust, fear, loyalty and ambivalence are read apart from the opinion (fill()), each
+##     weighed by its own per-person weight, so dislike, fear, dependence, loyalty, respect and remembered help or harm compete
+##     and are never collapsed into one score. A negative weight counts against an option.
+##   - Tiers (C1): a candidate may carry "tier": the live rule cannot tell the candidates of one tier apart, so the caller
+##     gives them the same live_order, and of those of one tier with identical factors (and stubbornness penalty) only the
+##     first is weighed: the live rule's pick among equals stands, and judgment decides between comparable options.
 ##   - Stubbornness (a holder only, X19-PERS-FORMULA): a penalty on every option that means dealing with someone the chooser
 ##     resents or giving up the choice they made last time in this decision, scaled stubbornness x (1 - wisdom of this
 ##     kind); while angry enough for the stubborn override the penalties are decisive.
@@ -96,6 +105,7 @@ static func _choose(store: JudgmentStore, cfg: Dictionary, chooser: int, profile
 	var scored := []
 	var tokens := {}
 	var coloured := false
+	var tiered := {}                       # a tier's signature -> the first candidate weighed with it
 	for cand in candidates:
 		var row := {"id": cand.id, "counterparty": int(cand.get("counterparty", -1)), "feasible": bool(cand.get("feasible", true))}
 		if not row.feasible:
@@ -104,19 +114,10 @@ static func _choose(store: JudgmentStore, cfg: Dictionary, chooser: int, profile
 			continue
 		var f: Dictionary = (cand.get("factors", {}) as Dictionary).duplicate()
 		var cp := int(row.counterparty)
-		if weights.has("disposition") and not f.has("disposition"):
-			if store != null and cp != -1:
-				f.disposition = store.personal_disposition(chooser, cp)
-				if with_colour:
-					var col := store.colour(chooser, cp)
-					if col != 0:
-						f.disposition = JudgmentMath.clampi_(int(f.disposition) + col, 0, 100000)
-						row.colour = col
-						coloured = coloured or col < 0
-			else:
-				f.disposition = int(dc.disposition_mid)
-		if weights.has("ambivalence") and not f.has("ambivalence"):
-			f.ambivalence = store.ambivalence(chooser, cp) if store != null and cp != -1 else 0
+		var col := _fill(store, cfg, profile, weights, chooser, cp, f, with_colour)
+		if col != 0:
+			row.colour = col
+			coloured = coloured or col < 0
 		if weights.has("sole_source") and not f.has("sole_source"):
 			f.sole_source = 100000 / maxi(1, feasible) if cp != -1 else 0
 		if asp != null and weights.has("aspiration") and not f.has("aspiration"):
@@ -140,11 +141,23 @@ static func _choose(store: JudgmentStore, cfg: Dictionary, chooser: int, profile
 			u += part
 		var tok := str(cp) if cp != -1 else str(cand.id)
 		tokens[cand.id] = tok
+		var st_total := 0
 		if sw > 0 or overriding:
 			var st := _stubborn_penalty(store, chooser, cp, tok, last, sw, overriding, pen)
 			if st.total > 0:
 				u -= int(st.total)
 				row.stubborn = st
+				st_total = int(st.total)
+		if cand.has("tier"):
+			var sig := _signature(cand.tier, f, st_total, weights)
+			if tiered.has(sig):
+				row.why = "indistinguishable from %s" % str(tiered[sig])     # the live rule's pick among equals stands
+				row.collapsed = true
+				trace.append(row)
+				if store != null:
+					store._stat("tier_collapsed")
+				continue
+			tiered[sig] = cand.id
 		row.factors = f
 		row.contributions = parts
 		row.utility = u
@@ -251,3 +264,82 @@ static func explain(result: Dictionary) -> String:
 		lines.append("%s: %s%s" % [str(row.id), JudgmentMath.pts(int(row.utility)), (" = " + " + ".join(bits)) if not bits.is_empty() else ""])
 	lines.append("chosen: %s (%s)" % [str(result.chosen), str(result.policy)])
 	return "\n".join(lines)
+
+
+## The chooser's opinion of `cp` as a decision reads it (C1): [factor milli-points, the family name's colour as applied].
+## The store's personal disposition (50 + NET, spec s.7.3) has its distance from neutral multiplied by the opinion gain
+## (decision.opinion_gain_permille, or the profile's own) and is clamped to 0..100 points; then the family name's colour,
+## multiplied by the same gain, is added and clamped again (as the choice always has: personal, then colour). Neutral (no
+## opinion) is exactly 50 points whatever the gain.
+static func opinion(store: JudgmentStore, cfg: Dictionary, profile: String, chooser: int, cp: int, with_colour := true) -> Array:
+	var dc: Dictionary = cfg.decision
+	var mid := int(dc.disposition_mid)
+	if store == null or cp == -1:
+		return [mid, 0]
+	var g := gain(cfg, profile)
+	var d := JudgmentMath.clampi_(mid + JudgmentMath.mul_div(store.personal_disposition(chooser, cp) - mid, g, 1000), 0, 100000)
+	if not with_colour:
+		return [d, 0]
+	var col := store.colour(chooser, cp)
+	if col == 0:
+		return [d, 0]
+	col = JudgmentMath.mul_div(col, g, 1000)
+	return [JudgmentMath.clampi_(d + col, 0, 100000), col]
+
+
+## The opinion gain of `profile`, permille (1000: the spec's 1:1 reading).
+static func gain(cfg: Dictionary, profile: String) -> int:
+	var dc: Dictionary = cfg.decision
+	var prof: Dictionary = (dc.profiles as Dictionary).get(profile, {})
+	return int(prof.get("opinion_gain_permille", dc.get("opinion_gain_permille", 1000)))
+
+
+## The factors `profile` weighs that the candidate's own `f` does not give, filled in place from the store (judgment's side of
+## a choice, C1 and C5), each read apart: disposition (opinion()), ambivalence, trust, fear, loyalty. Returns the colour applied
+## to the disposition (0 when none). A factor nobody gives (price, respect) stays absent and weighs 0.
+static func _fill(store: JudgmentStore, cfg: Dictionary, profile: String, weights: Dictionary, chooser: int, cp: int, f: Dictionary, with_colour: bool) -> int:
+	var dc: Dictionary = cfg.decision
+	var known := store != null and cp != -1
+	var col := 0
+	if weights.has("disposition") and not f.has("disposition"):
+		var o := opinion(store, cfg, profile, chooser, cp, with_colour)
+		f.disposition = int(o[0])
+		col = int(o[1])
+	if weights.has("ambivalence") and not f.has("ambivalence"):
+		# SJD-Q04 'wary but willing': strong GOOD and BAD at once, from the effective (decayed plus permanent) parts, read on the
+		# decision's scale (the opinion gain)
+		f.ambivalence = JudgmentMath.clampi_(JudgmentMath.mul_div(store.ambivalence(chooser, cp), gain(cfg, profile), 1000), 0, 100000) if known else 0
+	if weights.has("trust") and not f.has("trust"):
+		f.trust = store.trust_factor(chooser, cp) if known else int(dc.disposition_mid)
+	if weights.has("fear") and not f.has("fear"):
+		f.fear = store.fear_of(chooser, cp, int(dc.get("fear_permille_per_point", 25000))) if known else 0
+	if weights.has("loyalty") and not f.has("loyalty"):
+		var lo := 0
+		if known and store.social != null and cp != chooser:
+			if store.social.kin(chooser, cp):
+				lo = int(dc.get("kin_loyalty", 100000))
+			elif store.social.friends(chooser, cp):
+				lo = int(dc.get("friend_loyalty", 70000))
+		f.loyalty = lo
+	return col
+
+
+## The factors a choice under `profile` would weigh for `chooser` and counterparty `cp`, given the caller's `f` (tests and
+## diagnostics: the same fill as choose()).
+static func fill(store: JudgmentStore, cfg: Dictionary, profile: String, chooser: int, cp: int, f: Dictionary) -> Dictionary:
+	var out := f.duplicate()
+	var prof: Dictionary = cfg.decision.profiles[profile]
+	_fill(store, cfg, profile, prof.weights, chooser, cp, out, true)
+	return out
+
+
+## A candidate's identity within its tier: the tier, every factor the profile weighs but live_order (sorted by name) and its
+## stubbornness penalty. A factor weighed 0 cannot tell two candidates apart.
+static func _signature(tier, f: Dictionary, stubborn: int, weights: Dictionary) -> String:
+	var names := f.keys()
+	names.sort()
+	var parts := [str(tier), str(stubborn)]
+	for k in names:
+		if str(k) != "live_order" and int(weights.get(k, 0)) != 0:
+			parts.append("%s=%d" % [k, int(f[k])])
+	return "|".join(parts)

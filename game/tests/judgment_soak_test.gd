@@ -197,7 +197,7 @@ func test_margin_shortcut() -> void:
 		for x in j.subjects(seller.id):                # each mix starts from no opinion of anyone
 			j.set_ledger(seller.id, int(x), 0, 0)
 		for b in all:                                  # opinions from strong dislike (-90) to strong liking (+90): saturated dispositions
-			var unit := 15000 if k % 2 == 0 else 300          # every other mix mild (opinions within 2 points): the shortcut applies
+			var unit := 15000 if k % 2 == 0 else 30           # every other mix mild (opinions within 0.2 points, read with the C1 gain): the shortcut applies
 			var g: int = (k * 7919 + b.id * 31) % 7 * unit
 			var bad: int = (k * 104729 + b.id * 17) % 7 * unit
 			j.set_ledger(seller.id, b.id, g, bad)
