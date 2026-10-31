@@ -153,6 +153,9 @@ static func _choose(store: JudgmentStore, cfg: Dictionary, chooser: int, profile
 			if tiered.has(sig):
 				row.why = "indistinguishable from %s" % str(tiered[sig])     # the live rule's pick among equals stands
 				row.collapsed = true
+				row.factors = f                    # recorded as weighed (REC-STORE): it scored as the one it equals, it just does not compete
+				row.contributions = parts
+				row.utility = u
 				trace.append(row)
 				if store != null:
 					store._stat("tier_collapsed")
