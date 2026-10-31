@@ -711,6 +711,8 @@ func post_bids(day: int) -> Array:
 		var ref: String = refs[(start + i) % refs.size()]
 		bid_cursor = ref
 		done += 1
+		if not f.needs.table.has(ref):
+			continue              # its needs were derived again as empty during this pass (EconNeeds.needs_of erases an empty entry)
 		for need0 in f.needs.table[ref].needs:
 			if not str(need0.kind) in BID_KINDS or int(need0.qty) <= 0:
 				continue

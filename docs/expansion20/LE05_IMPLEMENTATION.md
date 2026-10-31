@@ -167,3 +167,29 @@ the LE-05 work (`ff41f18`) matched the baseline exactly (seed 1 `d4a1d71d`, seed
 
 The difference is the approved repair only (economy-off rental code never runs: no `rentals` key, `World.total_coins` unchanged
 with no economy). Outcomes are not judged (WDR-022). The baseline is the lead's to replace when LE-05 is integrated.
+
+### 5.3 Economy on: Actions run 41169157542 (365 days, `--market`, seeds 1 and 2, every 10; `fa36ba7`)
+
+The one run of the LE-05 milestone (read from the job logs; artifacts are not reachable from the session). Compared with LE-06's
+run 41143001791 (`5319993`, before LE-05's travel term, journal, repair and rental: a different world, so the village outcomes are
+context, not a comparison of rules).
+
+| | Seed 1 | Seed 2 |
+|---|---|---|
+| Job | **failure**: 1 script error (below); the simulation ran to day 365 (12,925 s, 35.4 s a game day) | success (9,660 s, 26.5 s a game day) |
+| Coins | leak 0, holders mismatch 0, `rental_escrow` 0 at the end; every checkpoint leak 0 | same |
+| Items | item leaks 0 at every checkpoint; no FATAL | same |
+| Claims audit | 0 breaches, 0 unbacked | 0 breaches, 1 unbacked earmark |
+| Rentals over the year | weighed 563, chosen 161 (buy chosen 1, forgone 401), opened 161 (68 axes, 93 pickaxes), returned 154, lost 7 (not held at a dawn), broken 0; fees paid daily 189 coins, settled from deposits 227 | weighed 221, chosen 209 (buy 3, forgone 9), owner refused 2, opened 207 (126 axes, 81 pickaxes), returned 207; fees paid 177, settled 0 |
+| Repairs (normal play) | 8 axes (507 uses mended) | 3 axes, 1 pickaxe (252 uses) |
+| Rentals' save at day 365 | 5,729 bytes (0 open; the 30 closed kept) | 5,925 bytes |
+| Economy save at day 365 | 602,867 bytes (LE-06: 527,690) | 640,742 bytes (LE-06: 438,945) |
+| World save, judgment, memory at day 365 | 8,034,781 bytes; judgment 1,686,126; 883.5 MB (peak 893.0) | 7,962,612; 2,071,206; 904.4 MB (peak 914.0) |
+| Village at day 365 (outcomes, not judged) | 332 alive, 0 starved, 121 unemployed, treasury 5 (LE-06: 272, 0, 87, 3) | 316 alive, 1 starved, 128 unemployed, treasury 100 (LE-06: 235, 0, 74, 13) |
+
+**The script error (seed 1, day 350's dawn):** `EconMarket.post_bids` (`econ_market.gd:714`) read `f.needs.table["hh:14"]` after the
+pass had re-derived that household's needs as empty, which erases its entry (`EconNeeds.needs_of` → `_store`); the list of refs is
+taken before the pass. A latent LE-02/LE-03 defect, not in LE-05 code, reached by this world's different evolution; the rest of
+that dawn's bid posting was skipped and the run went on with every ledger exact. Fixed after the run (`post_bids` skips a ref whose
+entry is gone; le02_market_test 102, le03_economy_test 38, le04_test 68, le05_rental_test 53: 0 failures). Per the brief's budget
+(one Actions run) it was not re-run; the lead decides whether the integrated branch's next `--market` run covers it.
