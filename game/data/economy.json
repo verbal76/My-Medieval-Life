@@ -28,7 +28,9 @@
     "_note": "LE-02 (OD-LE-10 D09). PROVISIONAL engineering parameters (agent decision 2026-10-28): half_life_days, the age at which a known price is half as reliable; max_hearsay, the word-of-mouth entries one villager keeps (oldest forgotten first); hearsay_without_judgment, the trust in a heard price when the judgment system is off.",
     "half_life_days": 7,
     "max_hearsay": 40,
-    "hearsay_without_judgment": 0.5
+    "hearsay_without_judgment": 0.5,
+    "_le06_note": "LE-06 (owner 2026-10-30, bound the save): forget_unusable forgets an entry once its age makes its reliability fall below market.min_reliability whatever the trust (half_life_days x log2(1/min_reliability) = 14 days with the provisional numbers): nothing acts on such an entry. The knowledge section is saved as rows over a string table (format 2).",
+    "forget_unusable": true
   },
   "market": {
     "_note": "LE-02 (OD-LE-02, OD-LE-02B D01, OD-LE-03 D02, OD-LE-13). drive: the market acts (false or absent: the LE-01 model only observes). Every number is a PROVISIONAL agent engineering parameter (docs/DECISIONS.md 2026-10-28, LE-02), none an owner policy: offer lifetimes (bid_days, ask_days) and review_days, max_revisions and revise_share (a bid moves by a share of the gap to its own ceiling, at most that many times: no fixed raise, design s.19), max_rounds (counteroffers in one negotiation), concession and urgency_concession (the share of the gap each side gives in a round, spread by personality), bid_open (the opening bid against the believed price), supply_weight, demand_weight, knowledge_cap and txn_weight (how known sellers, buyers and seen prices move an ask), alternatives_discount, scarce_left and scarcity_floor, housing_urgency, min_reliability (knowledge below it is not acted on), the dawn budgets (posts_per_dawn, ask_sellers_per_dawn, ask_items_per_seller, dialogues_per_dawn), contract_days and max_extend_days, word_of_mouth_per_meeting, keep_deals.",

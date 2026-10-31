@@ -590,6 +590,9 @@ func test_save_mid_negotiation() -> void:
 	for o in old.economy.get("offers", {}).get("records", []):
 		for k in ["min_lot", "committed", "contracts", "revisions", "reviewed_day", "need", "seen_filled", "dialogue_day"]:
 			o.erase(k)
+	var ks: Array = w.economy.knowledge.entries.keys()      # LE-06: an LE-01 save wrote its knowledge as "entries" (format 1)
+	ks.sort()
+	old.economy.knowledge = {"entries": ks.map(func(k): return w.economy.knowledge.entries[k].duplicate())}
 	for e in old.economy.get("knowledge", {}).get("entries", []):
 		e.erase("latest")
 		e.erase("via")
@@ -597,6 +600,7 @@ func test_save_mid_negotiation() -> void:
 	w3.load_dict(VillageMap.load_default(), old)
 	check(w3.economy != null and w3.economy.market.is_empty() and w3.economy.offers.records.size() == of.records.size(), "an LE-01 economy section loads (market empty, offers kept)")
 	check(w3.economy.offers.remaining(bid) == of.get_offer(bid).qty - of.get_offer(bid).filled, "LE-01 offers read with nothing committed")
+	check(w3.economy.knowledge.size() == w.economy.knowledge.size(), "an LE-01 (format 1, \"entries\") knowledge section loads every entry")
 	EconomyFoundation.set_override({})
 	var w4 := World.new()
 	w4.load_dict(VillageMap.load_default(), d)

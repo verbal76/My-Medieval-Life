@@ -73,7 +73,7 @@ jobs:
           for d in recovered/*/; do
             echo "=== $d"
             cat "$d/summary.json" 2>/dev/null || true
-            grep -E '^(day +[0-9]+:|  neighbours:|  migration|  growth:|FATAL|=== seed|people:|food:|money:|trade:|currency:|ledger flows:)' "$d/sim.log" || true
+            grep -E '^(day +[0-9]+:|  neighbours:|  migration|  growth:|FATAL|ECONOMY day|=== seed|people:|food:|money:|trade:|currency:|ledger flows:)' "$d/sim.log" || true
           done
 
   plan:
@@ -189,7 +189,7 @@ jobs:
           cat "$out/summary.json"                                      # the outcome at the end, in the log (artifacts are not always reachable)
           # every checkpoint (day lines, the neighbouring settlements, migration), the end-of-run totals and any FATAL line,
           # in the log too: the 100-day read and the regional trend must be readable where artifact downloads are blocked
-          grep -E '^(day +[0-9]+:|  neighbours:|  migration|  growth:|FATAL|=== seed|people:|food:|money:|trade:|currency:|ledger flows:|JUDGE|judgment)' "$out/sim.log" || true   # SJD-G: the judgment soak lines and growth (courtship pacing) too
+          grep -E '^(day +[0-9]+:|  neighbours:|  migration|  growth:|FATAL|ECONOMY day|=== seed|people:|food:|money:|trade:|currency:|ledger flows:|JUDGE|judgment)' "$out/sim.log" || true   # SJD-G: the judgment soak lines and growth (courtship pacing) too
           python3 -c "import json,sys; d=json.load(open(sys.argv[1])); print('FARMLINE', json.dumps({'sets': sys.argv[2], 'seed': int(sys.argv[3]), 'farm': d['samples'][-1].get('farm'), 'wheat': ((d['samples'][-1].get('ledger') or {}).get('table') or {}).get('wheat'), 'wheat_seed': ((d['samples'][-1].get('ledger') or {}).get('table') or {}).get('wheat_seed'), 'milk': ((d['samples'][-1].get('ledger') or {}).get('table') or {}).get('milk'), 'food': {k: d['samples'][-1]['food'].get(k) for k in ('starvation_deaths', 'missed_meal_no_money', 'missed_meal_no_food_for_sale', 'relief_grain', 'mean_hunger')}, 'famine_samples': sum(1 for x in d['samples'] if (x.get('farm') or {}).get('famine')), 'samples': len(d['samples'])}))" "$out/sim.json" "$SETS" "$SEED" || true
           python3 - "$out/sim.json" "$SETS" "$SEED" <<'PY' || true
           import json, sys
