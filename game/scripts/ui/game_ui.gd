@@ -3753,6 +3753,32 @@ func show_craft(station_id: String) -> void:
 		panel_body.add_child(h)
 	if gear > 0 and not st.has("home"):
 		_button("Armour and weapons (%d pieces)" % gear, func(): GearWindow.show(self, "craft", station_id)).name = "Gear catalogue"
+	if st.type == "anvil" and not st.has("home"):
+		_repair_rows(w, station_id, no)
+
+
+## LE05-REPAIR: at an anvil, each worn item of the player's that can be mended (it has a forge recipe), with what mending it takes
+## (the forge recipe's share for the wear, World.repair_terms) and a Repair button; core says whether it can be done now.
+func _repair_rows(w: World, station_id: String, no: String) -> void:
+	var p := w.player
+	var worn: Array = p.inv.ids().filter(func(id): return not World.repair_terms(p.inv, str(id)).is_empty())
+	if worn.is_empty():
+		return
+	_label("Repair", 18, Color(1, 0.85, 0.5))
+	for id in worn:
+		var t := World.repair_terms(p.inv, str(id))
+		var h := HBoxContainer.new()
+		h.add_child(_icon(str(id)))
+		var l := Label.new()
+		var ins := ", ".join((t["in"] as Dictionary).keys().map(func(k): return "%d %s (%d)" % [int(t["in"][k]), GameData.item_name(k), p.inv.count(k)]))
+		l.text = "%s, %d%% worn  <-  %s   [%s %d]" % [GameData.item_name(str(id)), roundi(100.0 * float(t.missing) / float(t.full)), ins,
+			GameData.skills[t.skill].name, int(t.level)]
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h.add_child(l)
+		var rid := str(id)
+		_button("Repair", func(): main.repair(rid, station_id), w.repair_refusal(p, rid, p.inv, p.inv) == "" and no == "", h)
+		panel_body.add_child(h)
 
 
 # ---------------------------------------------------------------- inventory ------------------

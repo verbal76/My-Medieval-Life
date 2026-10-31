@@ -35,6 +35,7 @@ var knowledge: EconKnowledge
 var contract_links: EconContractLinks
 var market: EconMarket
 var claims: EconClaims            # LE-03: the one validation of what an actor may part with (World.trade and the village paths)
+var rentals: EconRentals          # LE05-RENTAL: tools lent against a deposit (acts only with market.drive and market.rental)
 var contract_cursor := 0          # the highest CON-01 contract id whose terms the two parties have been told (knowledge "contract")
 
 
@@ -88,12 +89,14 @@ static func attach(world: World, saved := {}) -> EconomyFoundation:
 	f.market.load_dict(saved.get("market", {}))
 	f.claims = EconClaims.new(f)
 	f.claims.load_dict(saved.get("claims", {}))
+	f.rentals = EconRentals.new(f, world, cfg.get("market", {}))
+	f.rentals.load_dict(saved.get("rentals", {}))
 	return f
 
 
 func is_empty() -> bool:
 	return reservations.is_empty() and events.is_empty() and needs.is_empty() and offers.is_empty() and knowledge.is_empty() \
-			and contract_links.is_empty() and contract_cursor == 0 and market.is_empty() and claims.is_empty()
+			and contract_links.is_empty() and contract_cursor == 0 and market.is_empty() and claims.is_empty() and rentals.is_empty()
 
 
 ## World.trade, after a completed sale (observed only). Both parties learn of each other by the dealing; an event is noted;
@@ -141,6 +144,8 @@ func dawn(day: int) -> void:
 		contract_cursor = top
 	needs.refresh()
 	market.dawn(day)
+	if rentals.active():
+		rentals.dawn(day)             # LE05-RENTAL: fees billed, tools given back at the term's end, missing ones settled
 
 
 ## Relations.share (LE-02): villagers `a` and `b` spent an hour together. Nothing unless the market drives.
@@ -175,4 +180,6 @@ func to_dict() -> Dictionary:
 		d["market"] = market.to_dict()
 	if not claims.is_empty():
 		d["claims"] = claims.to_dict()
+	if not rentals.is_empty():
+		d["rentals"] = rentals.to_dict()
 	return d

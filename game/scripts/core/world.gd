@@ -1989,6 +1989,8 @@ func total_coins() -> int:
 		n += manor_work.reserved_total()
 	if contracts:
 		n += contracts.reserved_total()           # CON-01: buyers' coins set aside for contracts
+	if economy != null:
+		n += economy.rentals.escrow()             # LE05-RENTAL: deposits held for tools on rent (economy on only)
 	for a: NPC in npcs:
 		n += a.coins
 	for l in loot:
@@ -2284,6 +2286,8 @@ func _work_wear(who, tool: String, amount: int, skill: String, save_key: String)
 		return false
 	if who.inv.wear(tool, 0 if rng.randf() < Skills.value(who, skill, save_key) else amount):
 		stat("broke_" + tool)
+		if economy != null and economy.rentals.active():
+			economy.rentals.on_broke(who, tool)      # LE05-RENTAL: a rented tool broken in use ends its rental
 		return true
 	return false
 
@@ -2428,6 +2432,171 @@ func craft_tool_missing(who, recipe: String) -> String:
 		if tool_of_kind(who, str(kind)) == "":
 			return str(kind)
 	return ""
+
+
+# ---------------------------------------------------------------- repair (LE05-REPAIR) ----
+## Owner directive 2026-10-31 (LE-05 A, "basic tool repair is a normal gameplay mechanic and must not depend on the Living Economy
+## switch"): a worn tool, weapon or piece of armour is mended at an anvil, by the player or a smith, as anvil work. Its terms come from
+## the item's own forge recipe (forge_<id>: one unit at the anvil) and nothing else: each input in the share of the item's durability
+## that is missing, rounded UP to whole units (so every repair uses at least one of each input: a run of tiny repairs costs more than
+## one large one, never less), the recipe's minutes in the same share rounded up, its experience in the same share rounded DOWN (a
+## repair never earns more than the share of the forging), its Smithing level unchanged. The worn unit is mended to full (as
+## GP-SHARPEN mends: its durability record cleared), where it lies: it keeps its holder and its id; nothing is made, so the only
+## goods that change are the inputs used (counted used_<input>). An item with no forge recipe is not repaired.
+
+## The forge recipe that makes `id`, "" when it has none (then it cannot be repaired).
+static func repair_recipe(id: String) -> String:
+	var r := "forge_" + id
+	if not GameData.recipes.has(r) or int(GameData.item(id).get("durability", 0)) <= 0:
+		return ""
+	var rec: Dictionary = GameData.recipes[r]
+	return r if str(rec.station) == "anvil" and int((rec.out as Dictionary).get(id, 0)) == 1 else ""
+
+
+## The durability the worn unit of `id` in `inv` is missing (0: none worn, or not held).
+static func repair_missing(inv: Inventory, id: String) -> int:
+	var full := int(GameData.item(id).get("durability", 0))
+	if full <= 0 or not inv.has(id):
+		return 0
+	return maxi(0, full - int(inv.durability.get(id, full)))
+
+
+## The terms of mending the worn unit of `id` in `inv`: {recipe, skill, level, full, missing, in: {item: n}, minutes, xp}; {} when it
+## cannot be repaired (no forge recipe) or nothing of it is worn.
+static func repair_terms(inv: Inventory, id: String) -> Dictionary:
+	var r := repair_recipe(id)
+	var missing := repair_missing(inv, id)
+	if r == "" or missing <= 0:
+		return {}
+	var rec: Dictionary = GameData.recipes[r]
+	var full := int(GameData.item(id).get("durability", 0))
+	var need := {}
+	for k in rec["in"]:
+		need[k] = (int(rec["in"][k]) * missing + full - 1) / full          # ceil(qty x missing / full): at least 1 of each
+	return {"recipe": r, "skill": str(rec.skill), "level": int(rec.level), "full": full, "missing": missing, "in": need,
+		"minutes": maxi(1, (int(rec.minutes) * missing + full - 1) / full), "xp": int(rec.xp) * missing / full}
+
+
+## Why `who` cannot mend `id` in `tool_inv` with materials from `mats` now, "" if they can: no forge recipe, nothing worn, the
+## recipe's Smithing level, the materials.
+func repair_refusal(who, id: String, tool_inv: Inventory, mats: Inventory) -> String:
+	if not tool_inv.has(id):
+		return "You have no %s." % GameData.item_name(id).to_lower()
+	if repair_recipe(id) == "":
+		return "A %s cannot be mended at the anvil." % GameData.item_name(id).to_lower()
+	var t := repair_terms(tool_inv, id)
+	if t.is_empty():
+		return "Your %s is not worn." % GameData.item_name(id).to_lower()
+	if Skills.level(who, str(t.skill)) < int(t.level):
+		return "Needs %s level %d." % [GameData.skills[t.skill].name, int(t.level)]
+	if not mats.has_all(t["in"]):
+		return "You do not have the materials."
+	return ""
+
+
+## The mending itself, for the player and every smith alike (PAR-01): the worn unit of `id` in `tool_inv` (the worker's own pack, or a
+## member of its household's) is mended to full with the inputs from `mats` (the worker's pack); anvil work wears the worker's hammer
+## as forging does, and the share of experience is earned. Returns {result: "ok" | "refused", why, up, used}.
+func work_repair(who, id: String, tool_inv: Inventory, mats: Inventory) -> Dictionary:
+	var why := repair_refusal(who, id, tool_inv, mats)
+	if why != "":
+		return {"result": "refused", "why": why}
+	var t := repair_terms(tool_inv, id)
+	if economy != null and who is NPC and mats == (who as NPC).inv and not economy.claims.craft_ok(who, str(t.recipe)):
+		return {"result": "refused", "why": "materials"}    # LE-03: inputs earmarked for a contract (economy on only)
+	mats.remove_all(t["in"])
+	for k in t["in"]:
+		stat("used_" + k, float(t["in"][k]))
+	tool_inv.durability.erase(id)                           # mended to full (the one worn unit; the rest of a stack is unworn)
+	stat("repaired")
+	stat("repaired_" + id)
+	stat("repair_wear_mended", float(t.missing))
+	_work_wear(who, "hammer", 2, str(t.skill), "")
+	return {"result": "ok", "why": "", "up": Skills.gain(who, str(t.skill), int(t.xp)), "used": t["in"]}
+
+
+## The player sets to work mending `id` at the anvil `station` (the craft window's; without one, an anvil within 2 tiles). As
+## player_craft_begin: the station must be theirs to use and in reach; the time is the repair's minutes at the game's speed by the
+## skill's craft_time effect, and the anvil is held meanwhile. Returns {ok: true, station, secs} or {ok: false, why}.
+func player_repair_begin(id: String, station := "", actor: PlayerState = null) -> Dictionary:
+	if mirrors():
+		return mirror("player_repair_begin", player_repair_begin.bind(id, station), [id, station])
+	if actor != null and actor != player:
+		return as_actor(actor, player_repair_begin.bind(id, station))
+	var p := player
+	if station != "" and (not stations.has(station) or str(stations[station].type) != "anvil"):
+		return {"ok": false, "why": "Tools are mended at an anvil."}
+	if station != "" and (Vector2(station_use(station)) + Vector2(0.5, 0.5)).distance_to(p.pos) >= STATION_REACH \
+			and not station_in_reach(stations[station], p.pos, Vector2.ZERO):
+		return {"ok": false, "why": "That is out of reach."}
+	if station == "":
+		for sid in stations_of("anvil"):
+			if (Vector2(station_use(sid)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 2.0:
+				station = sid
+	if station == "":
+		return {"ok": false, "why": "Tools are mended at an anvil."}
+	var no := station_refusal(station)
+	if no != "":
+		return {"ok": false, "why": no}
+	var why := repair_refusal(p, id, p.inv, p.inv)
+	if why != "":
+		return {"ok": false, "why": why}
+	var t := repair_terms(p.inv, id)
+	var secs := float(t.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5 * Skills.value(p, str(t.skill), "craft_time", 1.0)
+	reserve_for_player(station, secs * float(GameData.b("game_minutes_per_second")) + 1.0)
+	return {"ok": true, "station": station, "secs": secs}
+
+
+## LE05-RENTAL (economy on: market.drive and market.rental): the acting player rents one `item` from villager `owner`, who must be
+## willing and have a spare; the deposit (the tool's value) is escrowed by the transaction authority. A guest's request goes to the
+## host (World.mirror) and is the guest's own rental (its reference). "" when done, else why not.
+func player_rent_tool(owner: NPC, item: String, actor: PlayerState = null) -> String:
+	if mirrors():
+		return mirror("player_rent_tool", player_rent_tool.bind(owner, item), [owner, item])
+	if actor != null and actor != player:
+		return as_actor(actor, player_rent_tool.bind(owner, item))
+	if economy == null or not economy.rentals.active():
+		return "Nobody rents out tools here."
+	if owner == null or not owner.alive or owner.pos.distance_to(player.pos) > OFFER_REACH:
+		return "That is out of reach."
+	var r: Dictionary = economy.rentals.open(player, owner, item)
+	if bool(r.ok):
+		return ""
+	match str(r.code):
+		"already_renting", "already_held":
+			return "You already have a %s." % GameData.item_name(item).to_lower()
+		"no_funds":
+			return "The deposit is %d coins." % EconRentals.deposit_for(item)
+		"owner_unwilling", "no_stock", "claimed":
+			return "%s will not lend you a %s." % [owner.name, GameData.item_name(item).to_lower()]
+		"no_room":
+			return "Your pack is full."
+	return "It cannot be rented now."
+
+
+## LE05-RENTAL: the acting player gives back the `item` it rents (only its own rental: a guest's is found by its reference). The fee
+## for the wear used is paid from the deposit, the rest comes back. "" when done, else why not.
+func player_return_tool(item: String, actor: PlayerState = null) -> String:
+	if mirrors():
+		return mirror("player_return_tool", player_return_tool.bind(item), [item])
+	if actor != null and actor != player:
+		return as_actor(actor, player_return_tool.bind(item))
+	if economy == null:
+		return "You rent nothing."
+	var r: Dictionary = economy.rentals.open_for(Contracts.ref_of(player), item)
+	if r.is_empty():
+		return "You rent no %s." % GameData.item_name(item).to_lower()
+	var g: Dictionary = economy.rentals.give_back(r, "returned by the renter")
+	return "" if bool(g.get("ok", false)) else "You no longer have the %s." % GameData.item_name(item).to_lower()
+
+
+## The player's mending of `id` is done: work_repair on the pack, as a smith's. Returns work_repair's result.
+func player_repair(id: String, actor: PlayerState = null) -> Dictionary:
+	if mirrors():
+		return mirror("player_repair", player_repair.bind(id), [id])
+	if actor != null and actor != player:
+		return as_actor(actor, player_repair.bind(id))
+	return work_repair(player, id, player.inv, player.inv)
 
 
 ## DVW-A12 R15: the player's reach, the distances the interface's target choice (main.gd _find_target) has always
@@ -3405,6 +3574,8 @@ func kill(n: NPC, cause: String, by_ref := "") -> void:
 		_player_killing(n, by_ref)
 	quests.on_giver_died(n)                # coins set aside for the player's quest pass on with the rest
 	contracts.on_death(n)                  # and those set aside for its contracts (CON-01)
+	if economy != null and economy.rentals.active():
+		economy.rentals.on_death(n)        # LE05-RENTAL: a dead renter's rented tools go back; a dead owner's estate succeeds it
 	var rec_death: Array = recorder.death_begin(n, cause) if recorder != null else []     # REC-19: from here the purse and goods pass on
 	Identity.move(self, n.id, Identity.DEAD)    # ID-01
 	var heir := _heir(n)

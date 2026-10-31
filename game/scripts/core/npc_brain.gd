@@ -141,6 +141,8 @@ func work_look(n: NPC) -> Array:
 			if st in ["anvil", "forge", "workbench", "sawhorse"]:
 				return ["swing", "hammer"]
 			return ["gather", ""]
+		"repair":                                      # LE05-REPAIR: mending at the anvil
+			return ["swing", "hammer"]
 	return [str(s.get("anim", "work")), ""]
 
 
@@ -1508,6 +1510,10 @@ func _smith(n: NPC) -> bool:
 			return _do_recipe(n, r)
 		if _fetch_for_order(n, GameData.recipes[r].in):
 			return true
+	# LE05-REPAIR (owner 2026-10-31): a worn tool of the smith's own, or of its household's, is mended at the anvil (normal play)
+	var mend := repair_job(n)
+	if not mend.is_empty() and _do_repair(n, mend[0], str(mend[1])):
+		return true
 	# forge whatever is scarcest (not with the iron an open order of the manor's is waiting for)
 	var ordered := w.manor_orders.any(func(x): return int(x.smith) == n.id and inv.count(str(x.tool)) == 0)
 	var wants := []
@@ -1561,6 +1567,46 @@ func _smith(n: NPC) -> bool:
 			return _plan_sell(n, id)
 	n.doing = "tending the forge, waiting for ore"
 	n.plan = [go(_workplace_cell(n)), work(30, "", {}, "idle")]
+	return true
+
+
+## LE05-REPAIR: the first worn item a smith `n` should mend now, as [holder NPC, item], or []: an item of its own or of a living
+## member of its household (by holder id, then item id), repairable (World.repair_recipe), at least balance repair.npc_min_missing of
+## its durability gone, within the smith's Smithing level, and the smith holding the share of the forge inputs (World.repair_terms).
+func repair_job(n: NPC) -> Array:
+	var min_share := float(GameData.b("repair").get("npc_min_missing", 0.5))
+	var holders: Array = [n]
+	if n.household >= 0:
+		for o: NPC in w.npcs:
+			if o.alive and o != n and o.household == n.household:
+				holders.append(o)
+	holders.sort_custom(func(a: NPC, b: NPC) -> bool: return a.id < b.id)
+	for o: NPC in holders:
+		var ids: Array = o.inv.durability.keys()
+		ids.sort()
+		for id in ids:
+			var t := World.repair_terms(o.inv, str(id))
+			if t.is_empty() or float(t.missing) < min_share * float(t.full):
+				continue
+			if w.repair_refusal(n, str(id), o.inv, n.inv) == "":
+				return [o, str(id)]
+	return []
+
+
+## LE05-REPAIR: the smith goes to an anvil it may use and mends `id` of `holder`'s (itself or one of its household) by the repair's
+## minutes; World.work_repair does the work when the step ends ("repair"). False when no anvil is free.
+func _do_repair(n: NPC, holder: NPC, id: String) -> bool:
+	var t := World.repair_terms(holder.inv, id)
+	if t.is_empty():
+		return false
+	var st := _station_for(n, "anvil")
+	if st == "":
+		w.stat("station_busy_anvil")
+		return false
+	w.stations[st].users[n.id] = w.minutes + w.map.data.w + float(t.minutes) + 60.0
+	n.doing = "mending a %s" % GameData.item_name(id).to_lower()
+	var mins := CapabilityHook.work_time(float(t.minutes), CapabilityHook.recipe_industry(str(t.recipe)), Skills.value(n, str(t.skill), "craft_time", 1.0), n)
+	n.plan = [go(w.station_use(st)), work(mins, "repair", {"item": id, "holder": holder.id, "station": st}, "work", _station_at(st))]
 	return true
 
 
@@ -2334,7 +2380,17 @@ func local_tool_need() -> Dictionary:
 
 
 func _get_tool(n: NPC, tool: String) -> bool:
-	if _buy_tool(n, tool):
+	if w.economy != null and w.economy.rentals.active():
+		# LE05-RENTAL (economy on): buying, renting from a willing owner, or doing without for now, weighed once a day
+		var c: Dictionary = w.economy.rentals.consider(n, tool, _tool_seller(n, tool))
+		if str(c.act) == "rent":
+			var o: NPC = c.owner
+			n.doing = "renting a %s" % tool
+			n.plan = [go(_workplace_cell(o) if o.job != "smith" else o.cell()), doit("rent_from", {"owner": o.id, "item": tool})]
+			return true
+		if str(c.act) == "buy" and _buy_tool(n, tool):
+			return true
+	elif _buy_tool(n, tool):
 		return true
 	if not noted.has("no_tool_%d_%d" % [n.id, w.day()]):
 		JudgmentLive.on_news(w, "no_tool", "npc:%d" % n.id, ["item:" + tool], n.pos)       # A5: they and their household know
@@ -2342,6 +2398,17 @@ func _get_tool(n: NPC, tool: String) -> bool:
 	n.doing = "out of work: needs a %s" % tool
 	n.plan = [go(wander_cell(w.building_door(n.home), 4)), work(90, "", {}, "idle")]
 	return true
+
+
+## LE05-RENTAL: the seller _buy_tool would go to for `tool` (the same order and test), null when none.
+func _tool_seller(n: NPC, tool: String) -> NPC:
+	for role in ["merchant_goods", "smith", "carpenter"]:
+		if role == "carpenter" and tool != "shovel":
+			continue
+		for o: NPC in w.npcs:
+			if o.alive and ((o.job == role) if role in ["smith", "carpenter"] else (buy_role(o) == role)) and o.inv.has(tool) and not keeps(o, tool) and buy_open(n, o, tool):
+				return o
+	return null
 
 
 ## A trip to buy `tool` from whoever sells it (the goods merchant first, the smith's wholesale buyer, B7-016; then the
@@ -2800,6 +2867,17 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if a.has("biz"):
 				return w.business.works.finish(n, a)       # B18-DP-01: the player's attendant at the player's own station
 			return w.work_craft(n, a.recipe, n.inv).result == "ok"     # the player's crafting (PAR-01, PAR-04)
+		"rent_from":                                               # LE05-RENTAL: at the owner's, the rental is made (or refused)
+			var ow := w.npc(int(a.get("owner", -1)))
+			if w.economy == null or ow == null or not ow.alive:
+				return false
+			return bool(w.economy.rentals.open(n, ow, str(a.item)).get("ok", false))
+		"repair":                                                  # LE05-REPAIR: a smith mends its own or its household's tool
+			release_station(n, a.get("station", ""))
+			var holder := w.npc(int(a.get("holder", n.id)))
+			if holder == null or not holder.alive or (holder != n and holder.household != n.household):
+				return false
+			return w.work_repair(n, str(a.item), holder.inv, n.inv).result == "ok"
 		"harvest":
 			var f := _field(a.field)
 			if f.is_empty() or not w.field_cuttable(f) or not w.quests.hired_on(f).is_empty():

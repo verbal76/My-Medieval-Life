@@ -4428,6 +4428,28 @@ func craft(recipe: String, station := "") -> void:
 		action["station"] = station          # released the moment the work ends or is cut short (Build 13)
 
 
+## LE05-REPAIR: mend worn item `id` at the anvil `station` (called from the craft panel's Repair rows). The rules are in core
+## (World.player_repair_begin, World.player_repair: the forge recipe's share of inputs, minutes and experience).
+func repair(id: String, station := "") -> void:
+	if guest_blocked():
+		return
+	var cp := world.player_repair_begin(id, station)
+	if not cp.ok:
+		ui.message(str(cp.why))
+		return
+	station = str(cp.station)
+	ui.hide_all()
+	start_action("Repairing", float(cp.secs), func():
+		var res := world.player_repair(id)
+		if res.result != "ok":
+			ui.message(str(res.get("why", "")))
+			return
+		_level_up("smithing", int(res.up))
+		ui.message("Mended your %s." % GameData.item_name(id).to_lower()), "swing", "hammer")
+	if station != "" and not action.is_empty():
+		action["station"] = station
+
+
 # ---------------------------------------------------------------- combat ---------------------
 ## A press of Attack: a swing of the weapon at whatever is in front; with `only`, it can hit nobody else.
 ## A press while swinging is kept for the next swing when the swing is nearly over (Combat, CQ-01).

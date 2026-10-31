@@ -67,8 +67,12 @@
     "spec_per_dawn": 3,
     "spec_margin": 0.2,
     "spec_share": 0.3,
+    "travel_cost": true,
     "negotiated_wages": false,
     "wage_max_factor": 1.25,
-    "services": false
+    "services": false,
+    "_le05_note": "LE05-RENTAL (owner 2026-10-31, LE-05 B) PROVISIONAL agent parameters: rental lets a worker short of its trade's tool rent a spare from a willing owner (deposit: the tool's value; fee: the value of the wear its use consumes, billed each dawn); rental_days is the term, after which the tool goes back.",
+    "rental": true,
+    "rental_days": 3
   }
 }

@@ -345,7 +345,8 @@ func exchange(txid: String, buyer: String, seller: String, item: String, qty: in
 ## LE-04 (OD-LE-07 D06: "Owners can make explicit recorded contributions, legitimate profit distributions or estate transfers;
 ## no silent pooling"): `amount` coins from one village party to another for `purpose` (contribution, distribution, necessity,
 ## estate, wage...), validated then committed, single-use id, journalled. Coins only; inside the village (no boundary crossed).
-func transfer_coins(txid: String, from: String, to: String, amount: int, purpose: String) -> Dictionary:
+## `books`: the coins are earnings and spending of the two (LE05-RENTAL's fees), not a move between an owner and its business.
+func transfer_coins(txid: String, from: String, to: String, amount: int, purpose: String, books := false) -> Dictionary:
 	var rep := _begin(txid)
 	if not rep.is_empty():
 		return rep
@@ -368,8 +369,8 @@ func transfer_coins(txid: String, from: String, to: String, amount: int, purpose
 		return _end(txid, _res(false, "claimed", txid))
 	if payer != null:
 		w.claims_release(payer, EconReservations.COINS, amount)
-	_add_coins(a, -amount, false)            # a move between an owner and its business: neither earned nor spent
-	_add_coins(b, amount, false)
+	_add_coins(a, -amount, books)            # a move between an owner and its business: neither earned nor spent (unless `books`)
+	_add_coins(b, amount, books)
 	_note(txid, "coins:" + purpose, {"buyer": to, "seller": from, "item": "", "qty": 0, "total": amount}, "done")
 	return _end(txid, _res(true, "ok", txid, "done"))
 
@@ -393,6 +394,80 @@ func estate_claim(txid: String, dead: NPC, to: String, claim: int, why: String) 
 	r["paid"] = pay
 	r["written_off"] = claim - pay
 	return _end(txid, r)
+
+
+## LE05-RENTAL (owner 2026-10-31, LE-05 B): one unit of `item` lent by `owner` to `renter` (villagers or players) against the renter's
+## `deposit`, which goes into ESCROW (held by the rental inside the village: World.total_coins counts EconRentals.escrow; no
+## boundary is crossed), together or not at all. The unit moves
+## with its wear (Inventory.move_to); a renter already holding one is refused ("already_held": a store keeps one worn unit, so the
+## rented one must be the only one). The result carries `wear`: the unit's durability when lent. Single-use id, journalled.
+func lend(txid: String, renter: String, owner: String, item: String, deposit: int) -> Dictionary:
+	var rep := _begin(txid)
+	if not rep.is_empty():
+		return rep
+	var bad := _valid(renter, owner, item, 1, deposit)
+	if bad != "":
+		return _end(txid, _res(false, bad, txid))
+	var b := _party(renter)
+	var s := _party(owner)
+	if b.code == "" and s.code == "" and not (b.kind in PEOPLE and s.kind in PEOPLE):
+		return _end(txid, _res(false, "unsupported_party", txid))
+	bad = _check(b, s, item, 1, deposit)
+	if bad == "" and b.obj.inv.has(item):
+		bad = "already_held"
+	if bad == "" and int(GameData.item(item).get("durability", 0)) <= 0:
+		bad = "invalid_quantity"
+	if bad != "":
+		return _end(txid, _res(false, bad, txid))
+	w.claims_release(s.obj, item, 1)
+	w.claims_release(b.obj, EconReservations.COINS, deposit, item, World.is_necessity(item))
+	var full := int(GameData.item(item).durability)
+	var d: int = s.obj.inv.wear_leaving(item, 1)
+	s.obj.inv.move_to(b.obj.inv, item, 1)
+	_add_coins(b, -deposit, false)                # into escrow: neither spent nor earned
+	_note(txid, "lend", {"buyer": renter, "seller": owner, "item": item, "qty": 1, "total": deposit}, "open")
+	var r := _res(true, "ok", txid, "open")
+	r["wear"] = d if d >= 0 else full
+	return _end(txid, r)
+
+
+## LE05-RENTAL: a rental ends. Of the escrowed `deposit`, `fee` goes to `owner` and the rest to `refund_to` (the renter, or its
+## estate; "-" or a party no longer there: out of the world as an outside flow, as settle_estate does); with `from_inv` (the
+## holder's store), the unit comes back to the owner's store with its wear. `owner` may be a villager, a household (its pantry; its
+## head's purse) or the manor (the granary; the treasury). Validated, then committed; single-use id, journalled.
+func end_rental(txid: String, owner: String, refund_to: String, item: String, from_inv: Inventory, deposit: int, fee: int) -> Dictionary:
+	var rep := _begin(txid)
+	if not rep.is_empty():
+		return rep
+	if deposit < 0 or fee < 0 or fee > deposit:
+		return _end(txid, _res(false, "invalid_quantity", txid))
+	var o := _party(owner)
+	if o.code != "":
+		o = estate_of(owner)
+	if o.is_empty() or not (o.kind in VILLAGE) or o.kind in TILLS or (o.kind == "hh" and _head(o) == null):
+		return _end(txid, _res(false, "party_unavailable", txid))
+	if from_inv != null and (not from_inv.has(item) or not _room(o, item)):
+		return _end(txid, _res(false, "no_stock" if not from_inv.has(item) else "no_room", txid))
+	var b: Dictionary = {} if refund_to == "-" else _party(refund_to)
+	if not b.is_empty() and (b.code != "" or (b.kind == "hh" and _head(b) == null)):
+		b = {}
+	if from_inv != null:
+		var d := from_inv.wear_leaving(item, 1)
+		if d < 0 and from_inv.durability.has(item):
+			d = int(from_inv.durability[item])          # the rented unit is the stack's worn one (the renter's own are as new)
+			from_inv.durability.erase(item)
+		from_inv.remove(item, 1)
+		_store(o).add(item, 1)
+		_store(o).take_wear(item, d)
+	_add_coins(o, fee, true)                      # the fee: the owner's earnings
+	if b.is_empty():
+		outside_coins += deposit - fee
+		w.coin_sources -= deposit - fee           # out of the village with nobody to take it (as settle_estate's outside flow)
+		w.stat("estate_out_coins", float(deposit - fee))
+	else:
+		_add_coins(b, deposit - fee, false)       # the rest of the deposit back
+	_note(txid, "rent_end", {"buyer": refund_to, "seller": owner, "item": item, "qty": 1 if from_inv != null else 0, "total": fee}, "done")
+	return _end(txid, _res(true, "ok", txid, "done"))
 
 
 ## Shipment phase 1: the seller's goods into transit custody, the buyer's coins into escrow, together or nothing.
