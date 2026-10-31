@@ -63,3 +63,31 @@ market activity against run 41135583126 at day 30; seconds per game day. Economy
 41142767484 on `8bbdcfb`); by inspection every LE-06 change runs only with an economy present, and
 `le06_save_test::test_build24_save` shows a save with the economy off writes no new key; a local `tools/sim_gate.py` against the
 lead's new baseline when it is pushed.
+
+
+### 3.1 Results of run 41143001791 (365 days, `--market`, seeds 1 and 2, every 10; `5319993`)
+
+| | Seed 1 | Seed 2 |
+|---|---|---|
+| Job | success (8,755.7 s, 23.99 s a game day) | success (10,928.0 s, 29.94 s a game day) |
+| Economy save at day 365 | 527,690 bytes (knowledge 4,556 entries) | 438,945 bytes (knowledge 3,376 entries) |
+| Before the bound (run 41135583126, day 30) | 1.97 MB (knowledge 7,752 entries) | |
+| Checkpoint load-backs (37 each) | all exact (a mismatch fails the job) | all exact |
+| Coins | leak 0, holders mismatch 0 | leak 0, holders mismatch 0 |
+| Items, regional books | no leak, no FATAL (either fails the job) | same |
+| Claims audit at the end | 0 breaches, 0 unbacked | 0 breaches, 0 unbacked |
+| Market over the year | 310 deals, 498 negotiations, 961 bids, 3,359 asks, 204 contracts, 78 speculative bids | 115 deals, 185 negotiations, 531 bids, 3,130 asks, 104 contracts, 29 speculative bids |
+| Village at day 365 (outcomes, not judged) | 272 alive, 0 starved, 87 unemployed, treasury 3 | 235 alive, 0 starved, 74 unemployed, treasury 13 |
+
+The per-checkpoint `ECONOMY day N:` lines (sizes at days 30, 90, 180) are in the run's artifact `sim.log` only: the job log
+printed the workflow's filtered checkpoint lines, which left them out (fixed in `long-sims.yml` for later runs), and the artifact
+host is not reachable from the session. The economy at day 365 is smaller than it was at day 30 before the bound, so growth is
+bounded (by recent dealings, not by time). Memory was not logged by this run (SJD-G's JUDGE_SAVE line arrived with the merge).
+Market activity at day 30 against 41135583126 is not separable from this run's year totals (the market counters are printed at the
+end); the equivalence of every decision's reads with and without forgetting is proven locally (`test_decisions_unchanged`).
+
+### 3.2 Economy off (merged `721f5ff`, wip/expansion20 `531da40` inside)
+
+`tools/sim_gate.py` locally against the committed baseline (`ed6360f`): **PASS, identical** (seeds 1 and 2, days 10 and 30; leaks 0).
+LE suites on the merged branch: `le06_save_test` 21, `economy_model_test` 112, `le02_market_test` 102, `economy_foundation_test` 89,
+`le03_claims_test` 80, `le03_economy_test` 38, `le03_transactions_test` 79, `le04_test` 68, `till_ownership_test` 71: 0 failures.
