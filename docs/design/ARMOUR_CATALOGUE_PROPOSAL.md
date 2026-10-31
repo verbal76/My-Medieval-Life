@@ -1,3 +1,5 @@
+> STATUS (2026-10-31, DOC-RECON-01): SUPERSEDED IN PART — the catalogue is implemented (ARMOR-CATALOG-01); owner D16 answer B (2026-10-27) and the 2026-10-28 ruling keep the categories, items and visuals, while numbers, buffs and materials stay PROVISIONAL (ARMOR-CATALOG-D1). Current status: docs/expansions/STANDALONE_SYSTEMS.md section 9.
+
 # Armour catalogue: proposal for the owner (ARMOR-CATALOG-01)
 
 Agent proposal, 2026-10-26. **Nothing here is approved until the owner says so** (ARMOR-01: classes and values are approved

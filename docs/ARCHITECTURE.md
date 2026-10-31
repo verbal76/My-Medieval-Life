@@ -1,3 +1,5 @@
+> STATUS (2026-10-31, DOC-RECON-01): HISTORICAL — an engine proposal from before the Godot game existed; the engine, platforms and save rules are settled (CLAUDE.md s.1 and s.7; OD-03). Current status: docs/expansions/HISTORICAL_DOCUMENTS.md and docs/expansions/STANDALONE_SYSTEMS.md.
+
 # My Medieval Life: architecture proposal
 
 Status: **proposal, awaiting owner approval** of the engine (U2), the primary platform (U1) and the
