@@ -182,7 +182,9 @@ system, nothing in the village's `World.trade`, and the six-day abstraction of E
   authority's own `transactions` key (Worker A). An older save loads with nothing on the road.
 - **A trader that closes** (INT-623, Build 24 review): a settlement trader nobody works closes by `_close_idle` like any business;
   food it bought still on the road is delivered at once (the grower paid) and goes to the granary with its stock. A place without a
-  trader buys no food abroad.
+  trader buys no food abroad until a household takes up trading again (X20-SETTLE-REOPEN, owner 2026-10-30): `_open_trade`
+  re-establishes any closed business, the trader included, by the existing opening rule (the traders' goods are the carried
+  goods and food), starting from the new household's savings; nothing of the former owner's comes back.
 - **Limits (provisional, agent).** Only wheat is traded between settlements (the staple every place grows; other foods still reach
   households through local markets and the caravan). One load a round. Households and councils do not travel to buy food themselves
   in this stage. No route loss or danger (E22-OD-04 future stage).

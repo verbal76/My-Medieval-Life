@@ -20,6 +20,12 @@ const DIRECTION_VERBS := ["player_through"]
 ## The arguments (by index) that are words a player wrote or was shown, passed as plain text and never decoded (MP-INTERACT-01: a
 ## message reading "player" would otherwise be taken for the host's reference and refused).
 const TEXT_ARGS := {"player_offer": [7], "player_tell": [0]}
+## X20-MP-ECON-INTEGRITY: the contract verbs whose contract (the first argument) a guest may act on only from its own side, as its
+## interface only ever calls them: "seller" (its own goods handed over; a villager's offer to it accepted, countered or declined; its
+## survey reported), "buyer" (a dig it paid for collected), "deliver" (the seller handing over, or the buyer collecting from a
+## villager seller beside it; never another player's goods). Contracts take the acting player as the party without checking it.
+const CONTRACT_SIDE := {"contracts.deliver": "deliver", "contracts.accept_offer": "seller", "contracts.counter_offer": "seller",
+	"contracts.decline_offer": "seller", "ContractServices:player_report": "seller", "ContractServices:player_collect": "buyer"}
 const VERB_REACH := 24.0              # tiles: what a guest acts on is on its screen (the interface's own reach rules apply in the verb)
 
 ## Every player verb a guest's interface can call, by the path World.mirror sends: "" the World itself, "<field>." a module the World
@@ -126,6 +132,8 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 		for a in args:                               # person ids (a giver, a suitor): only the guest's own, or a villager's
 			if a is int and Life.is_player_id(a) and a != w.person_id(p):
 				bad.why = "That is not yours."
+	if bad.why == "" and CONTRACT_SIDE.has(path) and args.size() >= 1 and args[0] is Dictionary and not _contract_side_ok(w, p, path, args[0]):
+		bad.why = "That is not yours."
 	if bad.why != "":
 		return _answer(w, p, false, str(bad.why))
 	if path == "player_loot" and args.size() == 1 and args[0] is Dictionary:
@@ -154,6 +162,19 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 	out["result"] = enc(w, r)
 	out["path"] = path
 	return out
+
+
+## X20-MP-ECON-INTEGRITY: whether guest `p` is on the side of contract `c` that verb `path` acts for (CONTRACT_SIDE).
+static func _contract_side_ok(w: World, p: PlayerState, path: String, c: Dictionary) -> bool:
+	var me := w.player_ref(p)
+	match str(CONTRACT_SIDE[path]):
+		"seller":
+			return str(c.get("seller", "")) == me
+		"buyer":
+			return str(c.get("buyer", "")) == me
+		"deliver":
+			return str(c.get("seller", "")) == me or (str(c.get("buyer", "")) == me and not World.is_player_ref(str(c.get("seller", ""))))
+	return false
 
 
 static func _pos_of(v) -> Variant:

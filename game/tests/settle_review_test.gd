@@ -25,6 +25,8 @@ func _init() -> void:
 	GameData.ensure()
 	test_idle_trader_closes()
 	test_closing_trader_takes_in_shipments()
+	test_trader_reopens()
+	test_reopen_every_type()
 	test_every_business_closes_by_every_path()
 	test_last_member_keeps_till()
 	test_lone_last_member_keeps_all()
@@ -287,3 +289,135 @@ func test_non_trader_session_settled() -> void:
 	check(int(last.get("coins", -1)) == purse + till0 - due.x, "the takings went with them (%d carried, expected %d)" % [int(last.get("coins", -1)), purse + till0 - due.x])
 	check(_all_coins(w) == coins0, "coins conserved (%d -> %d)" % [coins0, _all_coins(w)])
 	w.dispose()
+
+
+# ------------------------------------------------------------------ X20-SETTLE-REOPEN (owner 2026-10-30, X20-TRADER-CLOSE (b)) ----------------
+## Close a settlement's trader the way the game does: its households take up another trade and the closing rule runs.
+func _close_trader(s: OffMapSettlement) -> void:
+	var m: Dictionary = s.trader()
+	var other := "farm" if s.biz.has("farm") else str(s.biz.keys().filter(func(t): return t != "merchant")[0])
+	for i in (m.workers as Array).duplicate():
+		m.workers.erase(i)
+		s.biz[other].workers.append(i)
+		s.hh[i].trade = OffMapSettlement._trade_of(other)
+	for k in 3:
+		s._close_idle()
+
+
+## A household of the place ready to take up a trade by the opening rule: settled long enough, earning little, with savings.
+func _ready_household(s: OffMapSettlement, coins: int) -> Dictionary:
+	for h in s.hh:
+		if h.alive and OffMapSettlement.TRADE_BIZ.has(str(h.trade)) and s.biz.has(OffMapSettlement.TRADE_BIZ[h.trade]) and str(h.trade) != "merchant":
+			h.stay = 100
+			h.rate = 0.0
+			h.coins = int(h.coins) + coins
+			s.reopen_books()                        # (the test's gift is the opening books)
+			return h
+	return {}
+
+
+## An unstaffed trader closes, stays closed and trades nothing while nobody takes up the trade, and is re-established when a
+## household does (the opening rule, on the traders' own goods: carried goods and food that went unmet); the new trader starts
+## from the household's own savings, nothing of the former trader's comes back; coins and goods are conserved throughout; and it
+## trades again: buying food from a neighbour through the transaction authority.
+func test_trader_reopens() -> void:
+	var w := new_world()
+	var r := w.regions
+	var d := w.day()
+	r.step_day(d)
+	var g: OffMapSettlement = r.by_id["garton"]
+	var old_till := int(g.trader().till)
+	var old_stock: Dictionary = (g.trader().stock as Dictionary).duplicate()
+	var coins0 := g.coins()
+	var goods0 := JSON.stringify(g.goods())
+	_close_trader(g)
+	check(g.trader().is_empty() and g.closed.has("merchant"), "unstaffed, Garton's trader closes")
+	check(g.coins() == coins0 and JSON.stringify(g.goods()) == goods0 and g.audit() == "", "closing conserves the place's coins and goods (%s)" % g.audit())
+	var gov_after_close := int(g.gov.coins)
+	# while nobody takes up the trade: no trades, no caravan, no food-trade orders
+	for h in g.hh:
+		h.pantry = {}
+		h.credit = 0.0
+	for t in g.biz:
+		for f in g.food_items():
+			g.biz[t].stock.erase(f)
+	g.reopen_books()
+	var hi: OffMapSettlement = r.by_id["higham"]
+	for h in hi.hh:
+		h.pantry = {"wheat": 40}
+	hi.biz.farm.stock["wheat"] = 300
+	hi.biz.farm.till = 1000
+	hi.reopen_books()
+	check(float(g.wants()._food_pts) > 0.0, "Garton is short of food")
+	var res := r.food_round(d)
+	check(res.lines.filter(func(l): return str(l.buyer).begins_with("garton/")).is_empty() and g.transit.is_empty(), "with no trader it places no food order")
+	check(g.trader_cash() == 0 and g.trader_has("wheat_seed") == 0 and not g.buy_from_village("iron_bar", 1, 1) and not g.sell_to_village("wheat_seed", 1, 1),
+		"and its caravan neither buys nor sells")
+	check(r.party("region:garton/trader") == null, "its trader is no party to any transaction")
+	# a household takes up the trade by the opening rule (two weeks of the traders' goods going unmet)
+	var h := _ready_household(g, 500)
+	check(not h.is_empty(), "a household with savings ready to change trade")
+	var hcash := int(h.coins) - int(OffMapSettlement.rules().keep_cash_base) - int(OffMapSettlement.rules().keep_cash_per_member) * (int(h.adults) + int(h.children))
+	var coins1 := g.coins()
+	var goods1 := JSON.stringify(g.goods())
+	var weeks := maxi(1, int(OffMapSettlement.rules().switch_stay_days) / maxi(1, int(OffMapSettlement.rules().switch_every_days)))
+	for k in weeks:
+		g._open_trade({"wheat": 1000})
+	var m: Dictionary = g.trader()
+	check(not m.is_empty() and not g.closed.has("merchant") and str(h.trade) == "merchant" and m.workers == [int(h.id)], "the household took up trading and the trader is re-established")
+	check(int(m.till) == hcash and int(h.coins) == int(h.coins) and (m.stock as Dictionary).is_empty() and not m.has("imported"),
+		"it starts with the household's own savings (%d) and no stock: the former trader's %d coins and %d goods do not come back" % [hcash, old_till, old_stock.size()])
+	check(int(m.reserve) == int(OffMapSettlement.btype("merchant").reserve) and int(m.paid) == 0, "with a new trader's capital rule and fresh accounts")
+	check(int(g.gov.coins) == gov_after_close, "the council keeps what it received at the closing")
+	check(g.coins() == coins1 and JSON.stringify(g.goods()) == goods1 and g.audit() == "", "reopening conserves coins and goods (%s)" % g.audit())
+	# it trades again: Garton's trader buys food from Higham through the transaction authority
+	var res2 := r.food_round(d + 6)
+	var bought: Array = res2.lines.filter(func(l): return str(l.buyer) == "garton/trader")
+	check(not bought.is_empty() and g.transit.size() == bought.size(), "it resumes trade: a food purchase from a neighbour (%d lines)" % bought.size())
+	check(r.audit() == "", "the region's books balance (%s)" % r.audit())
+	w.dispose()
+
+
+## Every settlement business type the simulation can establish is re-established by the same rule after closing, from the new
+## household's savings, with the place's own deposit, fields and horses but none of the former owner's till or stock.
+func test_reopen_every_type() -> void:
+	var r := Regions.create(1)
+	r.step_day(0)
+	var s: OffMapSettlement = r.by_id["higham"]
+	var types: Array = s.biz.keys()
+	types.sort()
+	var weeks := maxi(1, int(OffMapSettlement.rules().switch_stay_days) / maxi(1, int(OffMapSettlement.rules().switch_every_days)))
+	for t in types:
+		if not s.biz.has(t):
+			continue
+		var b: Dictionary = s.biz[t]
+		var other: String = "mason" if t != "mason" else "sawyer"
+		if not s.biz.has(other):
+			other = str(s.biz.keys().filter(func(x): return x != t)[0])
+		for i in (b.workers as Array).duplicate():
+			b.workers.erase(i)
+			s.biz[other].workers.append(i)
+			s.hh[i].trade = OffMapSettlement._trade_of(other)
+		for k in 3:
+			s._close_idle()
+		if not s.closed.has(t):
+			check(false, "%s closed" % t)
+			continue
+		var place_out: Dictionary = (s.closed[t].out as Dictionary).duplicate()
+		var place_res: Dictionary = (s.closed[t].reserves as Dictionary).duplicate()
+		var horses := int(s.closed[t].horses)
+		var h := _ready_household(s, 400)
+		var coins0 := s.coins()
+		var delta := {}
+		for item in s._trade_goods(t):
+			delta[item] = 1000
+		for k in weeks:
+			s._open_trade(delta)
+		var ok := s.biz.has(t) and not s.closed.has(t)
+		check(ok, "%s re-established when a household takes it up" % t)
+		if ok:
+			var nb: Dictionary = s.biz[t]
+			check((nb.stock as Dictionary).is_empty() and int(nb.till) > 0 and nb.workers == [int(h.id)], "%s: the household's savings, no former stock" % t)
+			check(nb.out == place_out and nb.reserves == place_res and int(nb.horses) == horses, "%s: the place's own fields, deposit and horses are still the place's" % t)
+		check(s.coins() == coins0 and s.audit() == "", "%s: conserved (%s)" % [t, s.audit()])
+	check(r.audit() == "", "books balance")

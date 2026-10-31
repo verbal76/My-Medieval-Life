@@ -1117,8 +1117,10 @@ func player_answer(id: int, accept: bool, actor: PlayerState = null) -> String:
 				return b.inv.full_text(item)
 			offers.erase(o)
 			var marks: Dictionary = (a.stolen.get(item, {}) as Dictionary).duplicate()
+			var wd := a.inv.wear_leaving(item, qty)     # X20-WEAR-TRANSFER
 			a.inv.remove(item, qty)
 			b.inv.add(item, qty)
+			b.inv.take_wear(item, wd)
 			_carry_marks(a, b, item, qty, marks)
 			stat("player_gifts")
 		"sell":
@@ -1482,8 +1484,7 @@ func continue_as_heir(actor: PlayerState = null) -> void:
 	credit.on_player_died(Credit.slain_cause(p.death_cause), Life.player_heir_child(self))     # TRADE-CREDIT: debts and claims pass to the heir (written off where a villager's would be)
 	contracts.on_player_died()             # CON-01: coins the player set aside come back to them first, to lie with the rest
 	var bag := Inventory.new()
-	for id in p.inv.items:
-		bag.add(id, p.inv.items[id])
+	bag.add_all_from(p.inv)                # X20-WEAR-TRANSFER: with its wear
 	if bag.total() > 0 or p.coins > 0:
 		loot.append({"pos": p.pos, "inv": bag, "coins": p.coins, "from": "%s %s" % [p.name, p.family]})
 		_loot_on_player_level(loot[loot.size() - 1])
@@ -1566,8 +1567,10 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 	if not cuts.is_empty():
 		economy.claims.apply(cuts)          # LE-03: the parties' own offers yield to this sale (validated above, cannot fail)
 	var rec_trade: Array = recorder.trade_begin(buyer, seller, id, qty, total) if recorder != null else []     # REC-19
+	var wd: int = seller.inv.wear_leaving(id, qty)     # X20-WEAR-TRANSFER: a worn tool's wear goes with it
 	seller.inv.remove(id, qty)
 	buyer.inv.add(id, qty)
+	buyer.inv.take_wear(id, wd)
 	buyer.coins -= total
 	seller.coins += total
 	if buyer is NPC:
@@ -1637,8 +1640,10 @@ func transfer(from: Inventory, to: Inventory, id: String, qty: int) -> bool:
 			recorder.transfer_refused(from, to, id, qty)     # REC-19
 		return false
 	var rec_move: Array = recorder.transfer_begin(from, to, id, qty) if recorder != null else []     # REC-19
+	var wd := from.wear_leaving(id, qty)     # X20-WEAR-TRANSFER: a worn tool's wear goes with it
 	from.remove(id, qty)
 	to.add(id, qty)
+	to.take_wear(id, wd)
 	if recorder != null:
 		recorder.transfer_end(rec_move, from, to, id)
 	return true
@@ -3194,8 +3199,10 @@ func _player_loot(i: int) -> Dictionary:
 	var items := []
 	for id in l.inv.ids():
 		var n: int = l.inv.count(id)
+		var wd: int = l.inv.wear_leaving(id, n)     # X20-WEAR-TRANSFER
 		if player.inv.add(id, n):
 			l.inv.remove(id, n)
+			player.inv.take_wear(id, wd)
 			items.append([id, n])
 	var coins := int(l.coins)
 	player.coins += coins
@@ -3407,8 +3414,7 @@ func kill(n: NPC, cause: String, by_ref := "") -> void:
 	elif n.inv.total() > 0 or n.coins > 0:
 		# what someone slain carried lies where they fell (it can be looted), as it always has
 		var bag := Inventory.new()
-		for id in n.inv.items:
-			bag.add(id, n.inv.items[id])
+		bag.add_all_from(n.inv)            # X20-WEAR-TRANSFER: with its wear
 		n.inv = Inventory.new()
 		loot.append({"pos": n.pos, "inv": bag, "coins": n.coins, "from": n.name})
 		n.coins = 0
@@ -3484,6 +3490,7 @@ func _inherit(n: NPC, heir: NPC) -> void:
 			pantry.add(id, c)
 		else:
 			heir.inv.add(id, c)
+			heir.inv.take_wear(id, n.inv.wear_leaving(id, c))     # X20-WEAR-TRANSFER: the whole stack, its worn one too
 		stat("inherited_items", c)
 	n.inv = Inventory.new()
 	if n.coins > 0:
@@ -4288,8 +4295,10 @@ func guard_confront(g: NPC, taken: Dictionary, back: Inventory, owner: NPC, cis 
 		var k := mini(int(taken[id]), player.inv.count(id))
 		var to: Inventory = back if back != null else (owner.inv if owner and owner.alive else null)
 		if k > 0 and to != null and to.can_add(id):
+			var wd := player.inv.wear_leaving(id, k)     # X20-WEAR-TRANSFER
 			player.inv.remove(id, k)
 			to.add(id, k)
+			to.take_wear(id, wd)
 			player.unmark(id, owner.id if owner else -1, k)
 			returned.append("%d %s" % [k, GameData.item_name(id).to_lower()])
 	for slot in ["weapon", "armor", "tool"]:
@@ -4679,8 +4688,10 @@ func _player_take(c: Dictionary) -> String:
 		return "full"
 	var store := container_store(c)
 	var victim := container_owner(c)
+	var wd := store.wear_leaving(id, 1)     # X20-WEAR-TRANSFER
 	store.remove(id)
 	player.inv.add(id)
+	player.inv.take_wear(id, wd)
 	if victim:
 		player.mark_stolen(id, victim.id, 1)
 	witness("theft", "%s from %s" % [GameData.item_name(id).to_lower(), container_place(c)], victim, {id: 1}, store)
@@ -4878,8 +4889,10 @@ func _pickpocket_try(n: NPC) -> Dictionary:
 			if ids.is_empty():
 				return {"ok": true, "what": "", "text": "%s's pockets are empty." % n.name}
 			var id: String = ids[rng.randi() % ids.size()]
+			var wd := n.inv.wear_leaving(id, 1)     # X20-WEAR-TRANSFER
 			n.inv.remove(id)
 			player.inv.add(id)
+			player.inv.take_wear(id, wd)
 			player.mark_stolen(id, n.id, 1)
 			what = "1 " + GameData.item_name(id).to_lower()
 			got = {id: 1}
@@ -5191,6 +5204,7 @@ func player_drop(id: String, qty: int, actor: PlayerState = null) -> bool:
 		return mirror("player_drop", player_drop.bind(id, qty), [id, qty])
 	if actor != null and actor != player:
 		return as_actor(actor, player_drop.bind(id, qty))
+	var wd := player.inv.wear_leaving(id, qty)     # X20-WEAR-TRANSFER
 	if qty <= 0 or not player.inv.remove(id, qty):
 		return false
 	for slot in PlayerState.GEAR:
@@ -5199,6 +5213,7 @@ func player_drop(id: String, qty: int, actor: PlayerState = null) -> bool:
 	player.fit_caps()
 	var bag := Inventory.new()
 	bag.add(id, qty)
+	bag.take_wear(id, wd)
 	loot.append({"pos": player.pos + Vector2(0, 0.4), "inv": bag, "coins": 0, "from": "dropped by %s" % player.name})
 	_loot_on_player_level(loot[loot.size() - 1])
 	return true

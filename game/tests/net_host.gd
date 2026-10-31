@@ -1,7 +1,11 @@
 extends SceneTree
 ## Multiplayer A2 test host (carried forward from the MP-01 prototype): the real game (main.gd) hosting its world in its own
 ## Godot process, driven by game/tests/net_g1_test.gd (and net_batch_b_test.gd) through a command file and reporting through a
-## status file (both in the given directory). Args after "--": port discovery_port mode(new|continue) dir [max_players, default 2].
+## status file (both in the given directory). Args after "--": port discovery_port mode(new|continue) dir [max_players, default 2]
+## [flags: comma-separated; X20-MP-ECON-INTEGRITY (net_econ_integrity_test.gd): "econ" switches the Living Economy on (its market
+## driving) before the world is made or loaded, "still" keeps the world's simulation stopped while the network and the guests'
+## requests go on (main is disabled; this script runs NetSession's frame and applies the requests), so a ledger read before and
+## after a fault scenario must match exactly].
 
 var main
 var dir := "user://test_net/"
@@ -30,6 +34,9 @@ var batch := {}           # the last release: {held, applied (in that one frame)
 var _batch_from := -1
 var suspended := {}       # Batch D: the last "suspend": {minutes_before, secs, minutes_after (three frames after the resume)}
 var suspend_frames := -1
+var still := false         # X20-MP-ECON-INTEGRITY: the world stopped, the network and the requests going on (see the header)
+var ledger := {}           # the last "ledger": every coin and every good in the world, transit and escrow included
+var tx_last := {}          # the last "tx": the transaction authority's result
 
 
 func _init() -> void:
@@ -40,6 +47,13 @@ func _init() -> void:
 	dir = str(a[3])
 	if a.size() > 4:
 		max_players = int(a[4])
+	if a.size() > 5:
+		var flags := str(a[5]).split(",")
+		if flags.has("econ"):
+			var ec: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/economy.json"))
+			ec.enabled = true
+			EconomyFoundation.set_override(ec)
+		still = flags.has("still")
 	DirAccess.make_dir_recursive_absolute(dir)
 	main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
@@ -125,6 +139,10 @@ func _process(delta: float) -> bool:
 	if not started:
 		return false
 	main.world.host_player().hunger = 100.0          # the idle host does not starve while the test runs
+	if still:
+		main.process_mode = Node.PROCESS_MODE_DISABLED
+		main.net._process(delta)                     # the network's frame (snapshots, held requests, reconnections) ...
+		main.net.apply_requests()                    # ... and the guests' requests, at the same point Main's frame applies them
 	if suspend_frames >= 0:
 		suspend_frames += 1
 		if suspend_frames == 3:
@@ -206,6 +224,55 @@ func _commands() -> void:
 				if w.judgment != null:
 					w.as_actor(g, func(): JudgmentLive.on_gift(w, w.person_id(g), v, "bread"))      # MP C: the guest gives as itself
 				main.net.rpc_id(id, "s_self", g.to_dict())
+		"still":                                     # X20-MP-ECON-INTEGRITY: the world's simulation stopped (on) or running (off)
+			still = bool(c.on)
+			if not still:
+				main.process_mode = Node.PROCESS_MODE_INHERIT
+		"ledger":
+			ledger = _ledger()
+		"tx":                                        # a call of the transaction authority (World.transactions), refs by placeholder
+			var tr: EconTransactions = w.transactions
+			var b := _ref(str(c.get("buyer", "")))
+			var s := _ref(str(c.get("seller", "")))
+			match str(c.op):
+				"ship":
+					tx_last = tr.ship(str(c.txid), b, s, str(c.item), int(c.qty), int(c.total), w.day() + int(c.get("days", 1)))
+				"exchange":
+					tx_last = tr.exchange(str(c.txid), b, s, str(c.item), int(c.qty), int(c.total))
+				"deliver":
+					tx_last = tr.deliver(str(c.txid))
+				"fail":
+					tx_last = tr.fail(str(c.txid), str(c.get("why", "test")))
+				"lose":
+					tx_last = tr.lose(str(c.txid), str(c.get("why", "test")))
+				"settle":
+					tx_last = tr.settle_estate(str(c.txid), str(c.get("why", "test")))
+			tx_last["refs"] = [b, s]
+		"trader_stock":                              # goods and coins into a settlement trader from outside the region (before a ledger)
+			var tp: SettlementParty = _traders()[int(c.k)]
+			if int(c.get("n", 0)) > 0:
+				tp.add(str(c.id), int(c.n))
+			if int(c.get("coins", 0)) > 0:
+				tp.outside_coins(int(c.coins))
+		"give_pid":                                  # goods (and coins) for one player, entered in the books as from outside
+			var gq: PlayerState = w.player_by_pid(int(c.pid))
+			if gq != null:
+				if int(c.get("n", 0)) > 0:
+					gq.inv.add(str(c.id), int(c.n))
+					w.stat("imported_" + str(c.id), float(c.n))
+				if int(c.get("coins", 0)) > 0:
+					gq.coins += int(c.coins)
+					w.stat("scenario_coins_in", int(c.coins))
+				for id in main.net.by_peer:
+					if int(main.net.by_peer[id]) == gq.pid:
+						main.net.rpc_id(id, "s_self", gq.to_dict())
+		"npc_offer":                                 # a villager offers the host a contract (Contracts.offer_to_player): kept "offered"
+			for n: NPC in w.npcs:
+				if n.alive and n.role == "adult" and n.household >= 0:
+					why_last = str(int(w.contracts.offer_to_player(n, str(c.item), int(c.qty), int(c.price), int(c.days)).id))
+					break
+		"answer":                                    # the host answers an offer made to it, as its own window does (World.player_answer)
+			why_last = w.player_answer(int(c.id), bool(c.get("accept", true)))
 		"census":
 			census = {"at": "now", "coins": w.total_coins(), "goods": _goods(), "away": _aways()}
 		"suspend":                                   # Batch D (net_fault_test): Android's background, as the app meets it: the pause
@@ -488,7 +555,9 @@ func _status() -> void:
 		"held": held.size(), "holding": holding, "batch": batch, "why_last": why_last, "felled": felled, "rec": {"dir": str(w.recorder.dir) if w.recorder != null else "", "state": w.recorder.completeness() if w.recorder != null else ""}, "frozen": main.process_mode == Node.PROCESS_MODE_DISABLED,
 		"day": w.day(), "net_d": {"duplicates": main.net.duplicates, "gaps": main.net.gaps_skipped, "resumes": main.net.resumes,
 			"log": main.net.applied_log.duplicate(), "tag": main.net.tag, "suspended": suspended, "upnp": main.net.upnp.state,
-			"mp_peers": main.net.multiplayer.get_peers().size() if main.net.peer != null else 0}}
+			"mp_peers": main.net.multiplayer.get_peers().size() if main.net.peer != null else 0},
+		"still": still, "ledger": ledger, "tx_last": tx_last, "shipments": w.transactions.open_shipments() if w.transactions != null else [],
+		"contracts": _player_contracts(w), "traders": _traders().map(func(t): return t.ref)}
 	var tmp := dir + "status.tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	f.store_string(JSON.stringify(d))
@@ -545,6 +614,61 @@ func _aways() -> Dictionary:
 	var out := {}
 	for p: PlayerState in main.world.player_list():
 		out[str(p.pid)] = p.away
+	return out
+
+
+## X20-MP-ECON-INTEGRITY: every coin and every good in the world at this moment: the village (World.total_coins; the census of
+## every holder), the neighbouring settlements, the transaction authority's transit custody and escrow, and what left the world
+## through it (sunk goods, outside coins); with the economy simulation's currency ledger (its leak) and the regional audit.
+func _ledger() -> Dictionary:
+	var w: World = main.world
+	var t: Dictionary = w.transactions.in_transit()
+	var goods := SettlementHoldings.goods(w)
+	for src in [w.regions.goods(), t.goods, w.transactions.sunk]:
+		for id in src:
+			goods[str(id)] = int(goods.get(str(id), 0)) + int(src[id])
+	var ks := goods.keys()
+	ks.sort()
+	var g := {}
+	for k in ks:
+		if int(goods[k]) != 0:
+			g[str(k)] = int(goods[k])
+	var c_in := 0
+	for k in ["caravan_coins_in", "newcomer_coins_in", "scenario_coins_in", "outlaw_coins_in"]:
+		c_in += int(w.stats.get(k, 0))
+	return {"coins": w.total_coins() + w.regions.coins() + int(t.coins) + w.transactions.outside_coins, "village": w.total_coins(),
+		"goods": g, "transit": t, "open": w.transactions.open_shipments().size(), "reserved": w.contracts.reserved_total(),
+		"flow_in": c_in - int(w.stats.get("caravan_coins_out", 0)), "coin_sources": w.coin_sources, "audit": w.regions.audit(),
+		"minutes": w.minutes, "loot": w.loot.size(), "econ": w.economy != null, "drive": w.economy != null and w.economy.market != null and w.economy.market.drive}
+
+
+## A player reference by placeholder: "host", "pid:<n>" (that player's line reference), "trader:<k>", or the reference itself.
+func _ref(x: String) -> String:
+	if x == "host":
+		return World.PLAYER
+	if x.begins_with("pid:"):
+		var p: PlayerState = main.world.player_by_pid(int(x.get_slice(":", 1)))
+		return main.world.player_ref(p) if p != null else x
+	if x.begins_with("trader:"):
+		return str(_traders()[int(x.get_slice(":", 1))].ref)
+	return x
+
+
+func _traders() -> Array:
+	var out := []
+	for p: SettlementParty in main.world.regions.parties():
+		if p.holder == "trader":
+			out.append(p)
+	return out
+
+
+## The contracts a player is a party to: id, buyer, seller, item, state, delivered, paid, coins set aside.
+func _player_contracts(w: World) -> Array:
+	var out := []
+	for c in w.contracts.list:
+		if World.is_player_ref(str(c.buyer)) or World.is_player_ref(str(c.seller)):
+			out.append({"id": int(c.id), "buyer": str(c.buyer), "seller": str(c.seller), "item": str(c.item), "qty": int(c.qty), "state": str(c.state),
+				"delivered": int(c.delivered), "paid": int(c.paid), "reserved": int(c.get("reserved", 0)), "price_each": int(c.price_each)})
 	return out
 
 
