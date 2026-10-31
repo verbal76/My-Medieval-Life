@@ -145,13 +145,23 @@ static func on_theft(w, kind: String, victim: NPC, seen: Array, value: int) -> v
 
 
 ## An attack (World.raise_alarm): anyone's, the player's (-2) or a villager's (a bandit's robbery included).
+## X20-JUDG-C3 (owner 2026-10-31): one continuous fight is one assault incident: a further blow by the same aggressor on the
+## same victim within the fight window adds no new assault; whoever saw only that blow comes to know the incident itself.
 static func on_attack(w, attacker: int, aware: Dictionary) -> void:
 	var v: NPC = aware.get("victim", null)
 	if v != null and w.judgment.note_blow(attacker, v.id):
 		w.judgment._stat("self_defence_blows")       # X19-EVENT-Q (4): an attack answered within the same fight is not judged as an attack
 		return
+	if v != null:
+		var inc: int = w.judgment.incident(attacker, v.id)
+		if inc > 0:
+			w.judgment._stat("assault_blows_in_incident")
+			w.judgment.observe_all(inc, _ids(aware.seen))
+			return
 	var ev: int = w.judgment.publish("assault", [attacker], [v.id] if v != null else [], [], 0, by_tag(w, attacker))
 	if ev > 0:
+		if v != null:
+			w.judgment.set_incident(attacker, v.id, ev)
 		w.judgment.observe_all(ev, _ids(aware.seen))
 
 
@@ -279,8 +289,21 @@ static func on_unseen_pickpocket(w, victim: NPC, value: int) -> void:
 
 
 ## A bandit's robbery of a villager: a theft by an NPC, seen as the attack is (the same `aware`).
+## X20-JUDG-C3 (owner 2026-10-31): a robbery that took nothing is an attempted robbery, still wrongdoing (the catalog's
+## attempted_robbery), never a theft; tried again in the same fight it is the same attempt. One that took something is a theft.
 static func on_robbery(w, thief: NPC, victim: NPC, value: int, aware: Dictionary) -> void:
-	var ev: int = w.judgment.publish("theft", [thief.id], [victim.id], [], value)
+	var ev := -1
+	if value <= 0:
+		ev = w.judgment.incident(thief.id, victim.id, JudgmentStore.INC_ATTEMPT)
+		if ev > 0:
+			w.judgment._stat("robbery_tries_in_incident")
+		else:
+			ev = w.judgment.publish("attempted_robbery", [thief.id], [victim.id], [], 0)
+			if ev > 0:
+				w.judgment.note_blow(thief.id, victim.id)           # the try is part of the fight (the bandit's strike noted it already)
+				w.judgment.set_incident(thief.id, victim.id, ev, JudgmentStore.INC_ATTEMPT)
+	else:
+		ev = w.judgment.publish("theft", [thief.id], [victim.id], [], value)
 	if ev > 0:
 		w.judgment.observe_all(ev, _ids(aware.seen))
 	costly_mistake(w, victim.id, "travel_alone", float(value) / 10.0)      # coins lost out alone, with a guard post and a home to go to

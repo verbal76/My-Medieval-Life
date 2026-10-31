@@ -12,6 +12,7 @@
     "trade_cheat":      {"polarity": "BAD",  "severity": 1000, "family": "trade", "trust": -20000},
     "theft":            {"polarity": "BAD",  "severity": 1000, "family": "theft", "min_value": 0},
     "pickpocket":       {"polarity": "BAD",  "severity": 1000, "family": "theft"},
+    "attempted_robbery": {"polarity": "BAD", "severity": 1000, "family": "theft", "_status": "X20-JUDG-C3 (owner 2026-10-31, SJD-H C3: a robbery that took nothing is an attempted robbery, still wrongdoing, not a theft). Severity PROVISIONAL agent value: the theft it tried to be (1 point); the violence of the try is the fight's own assault incident"},
     "assault":          {"polarity": "BAD",  "severity": 2000, "family": "violence", "permanent": true},
     "self_defence":     {"polarity": "GOOD", "severity": 500,  "family": "violence"},
     "killing":          {"polarity": "BAD",  "severity": 3000, "family": "violence", "permanent": true},

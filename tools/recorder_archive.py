@@ -48,7 +48,7 @@ from collections import Counter, defaultdict
 SCHEMA = "mml-recorder/2"
 TABLES = ["event", "participant", "decision", "alternative", "factor", "state_change", "link", "alert", "sample", "snapshot"]
 COVERAGE_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "game", "data", "recorder_coverage.json")
-CRIME_FACTS = ("fact:theft", "fact:pickpocket", "fact:assault", "fact:killing", "fact:robbery", "fact:trade_cheat")
+CRIME_FACTS = ("fact:theft", "fact:pickpocket", "fact:assault", "fact:killing", "fact:robbery", "fact:trade_cheat", "fact:attempted_robbery")
 ROLE_STEPS = {("child", "adult"), ("adult", "elder")}
 GROWING = ("births", "deaths")
 
