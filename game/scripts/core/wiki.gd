@@ -713,7 +713,7 @@ func _guides() -> void:
 		links(["sys:mining", "sys:prospecting", "sys:open_pits", "sys:mining_underground", "node:iron_seam", "node:coal_seam", "node:copper_seam", "node:stone_seam", "node:boulder", "skill:mining", "sys:gather"])])
 	guide.call("smelt", "Smelt and forge", [
 		p("Ore becomes bars at the forge (ore and coal), and bars become tools, weapons and armour at the anvil. Smithing skill gates the better recipes."),
-		{"t": "chain", "id": "iron_sword"}, links(["station:forge", "station:anvil", "skill:smithing", "recipe:smelt_iron", "job:smith"])])
+		{"t": "chain", "id": "iron_sword"}, links(["station:forge", "station:anvil", "skill:smithing", "recipe:smelt_iron", "job:smith", "sys:repair"])])
 	guide.call("cook", "Cook", [
 		p("Cook at the stove (pottage, ale, herbal tonic) or the oven (roast meat). Cooked food restores more food than raw wheat or meat."),
 		links(["station:stove", "station:oven", "recipe:cook_pottage", "recipe:roast_meat", "recipe:brew_tonic", "skill:cooking"])])
@@ -755,7 +755,14 @@ func _systems() -> void:
 		links(["sys:needs", "controls:touch", "controls:kbm", "controls:gamepad", "sys:journal_map"])])
 	sys.call("sharpening", "Sharpening a weapon", [
 		p("In the smithy, stand at the grinding wheel (beside the workbench, the table with the hammer and tongs) and choose Sharpen: the smith, when at work there, puts a worn weapon to the wheel for %d coin, paid to the smith, and it is as good as new (its wear mended; it does not hit harder). A weapon that is not worn, an empty purse or the smith away and it cannot be done. Villagers and guards pay the smith the same." % World.SHARPEN_COINS),
-		links(["job:smith", "sys:needs"])])
+		links(["job:smith", "sys:repair", "sys:needs"])])
+	# LE05-REPAIR (owner 2026-10-31, LE-05 A: basic tool repair is normal play, with the Living Economy on or off)
+	sys.call("repair", "Repairing tools at the anvil", [
+		p("Tools, weapons and armour made at the anvil wear with use and break when worn out. Mend one before it breaks: stand at an anvil you may use, open it, and the Repair list shows each worn piece in your pack that can be mended, how worn it is and what mending it takes. Press Repair; the work takes a while at the anvil, and the piece comes back as good as new. It is still the same piece, yours, in your pack."),
+		p("Mending uses the materials the piece is forged from, in the share of it that is worn: half worn, about half of them. Each material is rounded up to whole units, so even a little wear takes at least one of each: mending a nearly new tool again and again costs far more than mending it once when it is well worn. A badly worn or nearly broken piece takes nearly what forging a new one does. The time and the Smithing experience follow the same share."),
+		p("You need the Smithing level its forging needs, and anvil work wears your hammer as forging does. Only what has a forging recipe at the anvil can be mended there: a shovel, a plough, a mallet, clothes and rusty finds cannot. A worn weapon can also be sharpened at the grinding wheel for a coin."),
+		p("The village's smiths mend their own tools, and their family's, by the same rule once about half the wear is gone, when they have the materials."),
+		links(["station:anvil", "skill:smithing", "job:smith", "sys:sharpening", "guide:smelt"])])
 	sys.call("multiplayer", "Playing with friends", [
 		p("A friend can play in your village with you: on the same Wi-Fi or home network, or from elsewhere when your router lets games in. Your world stays yours: it runs on your device, is saved there, and your friend's character is kept in it."),
 		h("Open your world"),

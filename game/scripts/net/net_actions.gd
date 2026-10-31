@@ -36,7 +36,7 @@ const VERBS := {
 	"player_yield": "C1", "player_wake": "C1", "player_rest": "C1",
 	# C2: gathering, inventory, crafting, stations
 	"player_pick_plant": "C2", "player_pick_fruit": "C2", "player_harvest": "C2", "player_mine": "C2", "player_chop": "C2",
-	"player_craft_begin": "C2", "player_craft": "C2", "player_take": "C2", "container_store": "C2", "container_pick": "C2",
+	"player_craft_begin": "C2", "player_craft": "C2", "player_repair_begin": "C2", "player_repair": "C2", "player_take": "C2", "container_store": "C2", "container_pick": "C2",
 	"player_home_move": "C2", "player_loot": "C2", "player_plant_sapling": "C2", "plant_bush": "C2",
 	"release_player_station": "C2", "chests.store": "C2", "chests.take": "C2", "chests.set_own_lock": "C2",
 	"player_pick_lock": "C2", "note_player_work": "C2", "player_xp": "C2", "player_set_down_cart": "C2",

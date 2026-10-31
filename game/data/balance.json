@@ -738,5 +738,6 @@
     "services": {"_note": "CON-02 service contracts (owner 2026-10-21: approved, inside CON-01; ContractServices, scripts/core/contract_services.gd). Agent decisions, provisional: overhead is the factor on a unit of work's own minutes for walking to it, tipping and setting up, in the time a seller can promise; survey_walk_minutes the walking a survey reading adds (to the stain, the forge and the buyer); survey_options how many stains (nearest the player first) the talk window offers to have surveyed. The going rate of a unit of work is the manor's job board's own rate for the same work (ManorWork), never a new wage.", "overhead": 1.25, "survey_walk_minutes": 60, "survey_options": 3},
     "formal_total": 50,
     "sign_reach": 3.0
-  }
+  },
+  "repair": {"_note": "LE05-REPAIR (owner 2026-10-31, LE-05 A; agent PROVISIONAL engineering parameter, docs/DECISIONS.md 2026-10-31): a smith mends its own worn tools, and those of its household, once at least npc_min_missing of the item's durability is gone (the cost of a repair is the forge recipe's share, rounded up, so mending earlier costs more for the wear it restores). The player mends whenever it chooses.", "npc_min_missing": 0.5}
 }

@@ -2430,6 +2430,128 @@ func craft_tool_missing(who, recipe: String) -> String:
 	return ""
 
 
+# ---------------------------------------------------------------- repair (LE05-REPAIR) ----
+## Owner directive 2026-10-31 (LE-05 A, "basic tool repair is a normal gameplay mechanic and must not depend on the Living Economy
+## switch"): a worn tool, weapon or piece of armour is mended at an anvil, by the player or a smith, as anvil work. Its terms come from
+## the item's own forge recipe (forge_<id>: one unit at the anvil) and nothing else: each input in the share of the item's durability
+## that is missing, rounded UP to whole units (so every repair uses at least one of each input: a run of tiny repairs costs more than
+## one large one, never less), the recipe's minutes in the same share rounded up, its experience in the same share rounded DOWN (a
+## repair never earns more than the share of the forging), its Smithing level unchanged. The worn unit is mended to full (as
+## GP-SHARPEN mends: its durability record cleared), where it lies: it keeps its holder and its id; nothing is made, so the only
+## goods that change are the inputs used (counted used_<input>). An item with no forge recipe is not repaired.
+
+## The forge recipe that makes `id`, "" when it has none (then it cannot be repaired).
+static func repair_recipe(id: String) -> String:
+	var r := "forge_" + id
+	if not GameData.recipes.has(r) or int(GameData.item(id).get("durability", 0)) <= 0:
+		return ""
+	var rec: Dictionary = GameData.recipes[r]
+	return r if str(rec.station) == "anvil" and int((rec.out as Dictionary).get(id, 0)) == 1 else ""
+
+
+## The durability the worn unit of `id` in `inv` is missing (0: none worn, or not held).
+static func repair_missing(inv: Inventory, id: String) -> int:
+	var full := int(GameData.item(id).get("durability", 0))
+	if full <= 0 or not inv.has(id):
+		return 0
+	return maxi(0, full - int(inv.durability.get(id, full)))
+
+
+## The terms of mending the worn unit of `id` in `inv`: {recipe, skill, level, full, missing, in: {item: n}, minutes, xp}; {} when it
+## cannot be repaired (no forge recipe) or nothing of it is worn.
+static func repair_terms(inv: Inventory, id: String) -> Dictionary:
+	var r := repair_recipe(id)
+	var missing := repair_missing(inv, id)
+	if r == "" or missing <= 0:
+		return {}
+	var rec: Dictionary = GameData.recipes[r]
+	var full := int(GameData.item(id).get("durability", 0))
+	var need := {}
+	for k in rec["in"]:
+		need[k] = (int(rec["in"][k]) * missing + full - 1) / full          # ceil(qty x missing / full): at least 1 of each
+	return {"recipe": r, "skill": str(rec.skill), "level": int(rec.level), "full": full, "missing": missing, "in": need,
+		"minutes": maxi(1, (int(rec.minutes) * missing + full - 1) / full), "xp": int(rec.xp) * missing / full}
+
+
+## Why `who` cannot mend `id` in `tool_inv` with materials from `mats` now, "" if they can: no forge recipe, nothing worn, the
+## recipe's Smithing level, the materials.
+func repair_refusal(who, id: String, tool_inv: Inventory, mats: Inventory) -> String:
+	if not tool_inv.has(id):
+		return "You have no %s." % GameData.item_name(id).to_lower()
+	if repair_recipe(id) == "":
+		return "A %s cannot be mended at the anvil." % GameData.item_name(id).to_lower()
+	var t := repair_terms(tool_inv, id)
+	if t.is_empty():
+		return "Your %s is not worn." % GameData.item_name(id).to_lower()
+	if Skills.level(who, str(t.skill)) < int(t.level):
+		return "Needs %s level %d." % [GameData.skills[t.skill].name, int(t.level)]
+	if not mats.has_all(t["in"]):
+		return "You do not have the materials."
+	return ""
+
+
+## The mending itself, for the player and every smith alike (PAR-01): the worn unit of `id` in `tool_inv` (the worker's own pack, or a
+## member of its household's) is mended to full with the inputs from `mats` (the worker's pack); anvil work wears the worker's hammer
+## as forging does, and the share of experience is earned. Returns {result: "ok" | "refused", why, up, used}.
+func work_repair(who, id: String, tool_inv: Inventory, mats: Inventory) -> Dictionary:
+	var why := repair_refusal(who, id, tool_inv, mats)
+	if why != "":
+		return {"result": "refused", "why": why}
+	var t := repair_terms(tool_inv, id)
+	if economy != null and who is NPC and mats == (who as NPC).inv and not economy.claims.craft_ok(who, str(t.recipe)):
+		return {"result": "refused", "why": "materials"}    # LE-03: inputs earmarked for a contract (economy on only)
+	mats.remove_all(t["in"])
+	for k in t["in"]:
+		stat("used_" + k, float(t["in"][k]))
+	tool_inv.durability.erase(id)                           # mended to full (the one worn unit; the rest of a stack is unworn)
+	stat("repaired")
+	stat("repaired_" + id)
+	stat("repair_wear_mended", float(t.missing))
+	_work_wear(who, "hammer", 2, str(t.skill), "")
+	return {"result": "ok", "why": "", "up": Skills.gain(who, str(t.skill), int(t.xp)), "used": t["in"]}
+
+
+## The player sets to work mending `id` at the anvil `station` (the craft window's; without one, an anvil within 2 tiles). As
+## player_craft_begin: the station must be theirs to use and in reach; the time is the repair's minutes at the game's speed by the
+## skill's craft_time effect, and the anvil is held meanwhile. Returns {ok: true, station, secs} or {ok: false, why}.
+func player_repair_begin(id: String, station := "", actor: PlayerState = null) -> Dictionary:
+	if mirrors():
+		return mirror("player_repair_begin", player_repair_begin.bind(id, station), [id, station])
+	if actor != null and actor != player:
+		return as_actor(actor, player_repair_begin.bind(id, station))
+	var p := player
+	if station != "" and (not stations.has(station) or str(stations[station].type) != "anvil"):
+		return {"ok": false, "why": "Tools are mended at an anvil."}
+	if station != "" and (Vector2(station_use(station)) + Vector2(0.5, 0.5)).distance_to(p.pos) >= STATION_REACH \
+			and not station_in_reach(stations[station], p.pos, Vector2.ZERO):
+		return {"ok": false, "why": "That is out of reach."}
+	if station == "":
+		for sid in stations_of("anvil"):
+			if (Vector2(station_use(sid)) + Vector2(0.5, 0.5)).distance_to(p.pos) < 2.0:
+				station = sid
+	if station == "":
+		return {"ok": false, "why": "Tools are mended at an anvil."}
+	var no := station_refusal(station)
+	if no != "":
+		return {"ok": false, "why": no}
+	var why := repair_refusal(p, id, p.inv, p.inv)
+	if why != "":
+		return {"ok": false, "why": why}
+	var t := repair_terms(p.inv, id)
+	var secs := float(t.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5 * Skills.value(p, str(t.skill), "craft_time", 1.0)
+	reserve_for_player(station, secs * float(GameData.b("game_minutes_per_second")) + 1.0)
+	return {"ok": true, "station": station, "secs": secs}
+
+
+## The player's mending of `id` is done: work_repair on the pack, as a smith's. Returns work_repair's result.
+func player_repair(id: String, actor: PlayerState = null) -> Dictionary:
+	if mirrors():
+		return mirror("player_repair", player_repair.bind(id), [id])
+	if actor != null and actor != player:
+		return as_actor(actor, player_repair.bind(id))
+	return work_repair(player, id, player.inv, player.inv)
+
+
 ## DVW-A12 R15: the player's reach, the distances the interface's target choice (main.gd _find_target) has always
 ## used, kept here so a host can refuse an action out of reach. A target is chosen near a probe TARGET_PROBE tiles in
 ## front of the player: people, loot and containers within TARGET_REACH of it (containers also within
