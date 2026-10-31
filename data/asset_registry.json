@@ -10993,6 +10993,58 @@
    ]
   },
   {
+   "id": "studio_logo",
+   "name": "Hot Attic Games studio logo",
+   "creator": "Hot Attic Games",
+   "sources": [
+    "Hot_Attic_Games_Logo.png"
+   ],
+   "storage": "public",
+   "licence": "own",
+   "permissions": "The owner's own.",
+   "categories": [
+    "branding"
+   ],
+   "status": "integrated",
+   "used_for": "The opening splash shown when the game starts (boot splash), before the title screen. Supplied by the owner on 2026-10-31.",
+   "scan": [
+    {
+     "source": "Hot_Attic_Games_Logo.png",
+     "present": true,
+     "files": 1,
+     "by_ext": {
+      ".png": 1
+     },
+     "licence_files": [],
+     "image_count": 1,
+     "sizes": {
+      "1254x1254": 1
+     },
+     "frame_grids": {},
+     "images": [
+      {
+       "member": "Hot_Attic_Games_Logo.png",
+       "sha": "ff1450cf09b011cb",
+       "size": [
+        1254,
+        1254
+       ],
+       "content": [
+        0,
+        24,
+        1248,
+        1254
+       ],
+       "atlas": true
+      }
+     ]
+    }
+   ],
+   "imported": [
+    "assets/branding/hot_attic_games_splash.png"
+   ]
+  },
+  {
    "id": "living_forest",
    "name": "Living Forest v1.3.2",
    "creator": "YET ART STUDIO",

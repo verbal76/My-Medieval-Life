@@ -37,6 +37,7 @@ size, SHA-256 and image dimensions, is in [`asset_manifest.csv`](asset_manifest.
 | `Animated Pixel Campfire (SMStudios)/` (folder) | CC BY 4.0 | 2 | 134.9 KB | Animated pixel campfire (FREE) by SMStudios (simon-develop.itch.io), supplied by the owner on 2026-10-24 for the bandit camp (GP-BANDIT-CAMP-ART): Campfire2D.gif, stored byte for byte as downloaded, 640 x 640, 24 frames at 150 ms, drawn on a 10-pixel grid (64 x 64 native; the fire is about 23 x 44 native pixels) on a white background. Sprite-sheet-campfire.png (from the owner's GitHub release "Campfire", stored byte for byte): one row of 24 frames, 15360 x 640, each 640 x 640 on a 10-pixel grid (64 x 64 native), transparent background: the production art. Itch.io page: asset licence Creative Commons Attribution v4.0 International; the author writes that nobody has to mention them (credited anyway, owner policy). |
 | `Flat Game UI Icon Pack/` (folder) | verify | 11 | 26.9 MB | Flat game UI pack supplied by the owner on 2026-10-18 in parts (the owner's folder is "Flat design UI pack"): icon sets 1 and 2 (white glyphs on dark rounded squares: interface, media and platform icons; RPG items, weapons, armour, potions, scrolls and status icons) as Illustrator .ai and .eps; "Flat game UI set 3" (login, skills, pause, levels, win, shop, upgrade and settings windows in several colour schemes) as .ai and .pdf; and preview images (exact duplicate uploads dropped). Set 3's .eps and .svg could not be uploaded; the .ai and .pdf hold the same art. No licence file. Source: "Flat design UI pack" by SunGraphica, in the owner's itch.io library (screenshot 2026-10-18); terms not stated in the files. |
 | `MiniFolks Forest Animals/` (folder) | free | 24 | 107.5 KB | MiniFolks - Forest Animals by LYASeeK (lyaseek.itch.io), supplied by the owner on 2026-10-19 as MinifolksForestAnimals.7z and ase.7z (name-your-own-price), stored extracted here byte for byte (the tools read only zips): 8 side-view animals on 32 x 32 frames (the bird 16 x 16), Outline/ and Without outline/ PNG sheets, plus the Aseprite sources (Aseprite/). Bear, boar, two deer, fox, wolf, bunny and bird; one row per animation (idle, walk, jump, attack, hit, death; the bear's roar and the wolf's howl). Itch.io page: use as you like, do not resell; credit not required but appreciated. |
+| `Hot_Attic_Games_Logo.png` (loose file) | | 1 | 707.4 KB | The studio logo of Hot Attic Games (the owner's own), supplied by the owner on 2026-10-31 for the game's opening splash: a white pixel-art attic roof with a glowing window and a flaming chimney over "HOT ATTIC GAMES" in orange pixel letters, 1254 x 1254 px RGBA on a transparent background. Imported unchanged by tools/import_game_assets.py as the boot splash. |
 | `Miniworld-Guide.docx` (loose file) | | 1 | 95.9 KB | Shade's guide to Miniworld buildings and animation timings. |
 | `punyworld-dungeon-tileset.png` (loose file) | | 1 | 25.2 KB | Loose copy of the Puny Dungeon tileset (identical to the one inside PUNY_DUNGEON_v1.zip); CC0. |
 
@@ -48,7 +49,7 @@ but forbids redistributing the original files. **free** = Shade's own terms say 
 
 | Extension | Count |
 |---|---:|
-| `.png` | 17117 |
+| `.png` | 17118 |
 | `.svg` | 1542 |
 | `.gif` | 354 |
 | `.txt` | 44 |

@@ -90,6 +90,7 @@ ICON_ZIP = "16x16 Survival RPG Icons.zip"
 COZY_ZIP = "CozyFarm_full_version.zip"
 SPLAT_ZIP = "kenney_splatpack.zip"
 APP_ICON_ZIP = "My_Medieval_Life_Icon_Pack.zip"
+STUDIO_LOGO = "Hot_Attic_Games_Logo.png"   # the studio logo for the opening splash (owner, 2026-10-31)
 BLOOD_SPLATS = [0, 4, 9, 13, 17, 21, 26, 31]   # varied shapes from the 36
 UI_PACK = "Flat Game UI Icon Pack"
 # icon tiles used by the game: name -> (file, row, column) in the pack's 9-column grids
@@ -840,6 +841,13 @@ def main():
     Image.open(io.BytesIO(icon_zip.read("My_Medieval_Life_256x256.png"))).convert("RGBA").save(
         dest, format="ICO", sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
     record(dest, APP_ICON_ZIP, "My_Medieval_Life_256x256.png", "saved as a Windows icon (16-256 px)")
+    # the opening splash (owner, 2026-10-31): the studio logo, copied unchanged; shown by the engine's boot
+    # splash (project.godot application/boot_splash/*) before the game; the app icon is separate and unchanged
+    branding = OUT / "branding"
+    branding.mkdir(parents=True, exist_ok=True)
+    dest = branding / "hot_attic_games_splash.png"
+    dest.write_bytes((REPO / STUDIO_LOGO).read_bytes())
+    record(dest, STUDIO_LOGO, STUDIO_LOGO, "copied unchanged")
     dest = icon_dir / "icon_background_432.png"
     Image.new("RGBA", (432, 432), (34, 24, 16, 255)).save(dest)
     prov.append({"file": str(dest.relative_to(REPO / "game")), "source": "", "member": "",

@@ -359,6 +359,22 @@
    "used_for": "App and window icon."
   },
   {
+   "id": "studio_logo",
+   "name": "Hot Attic Games studio logo",
+   "creator": "Hot Attic Games",
+   "sources": [
+    "Hot_Attic_Games_Logo.png"
+   ],
+   "storage": "public",
+   "licence": "own",
+   "permissions": "The owner's own.",
+   "categories": [
+    "branding"
+   ],
+   "status": "integrated",
+   "used_for": "The opening splash shown when the game starts (boot splash), before the title screen. Supplied by the owner on 2026-10-31."
+  },
+  {
    "id": "living_forest",
    "name": "Living Forest v1.3.2",
    "creator": "YET ART STUDIO",

@@ -1710,6 +1710,13 @@
    "sha256": "9f53de081ce699c918d95771f522a888801d3f8cc2656840364967921412d520"
   },
   {
+   "file": "assets/branding/hot_attic_games_splash.png",
+   "source": "Hot_Attic_Games_Logo.png",
+   "member": "Hot_Attic_Games_Logo.png",
+   "transform": "copied unchanged",
+   "sha256": "ff1450cf09b011cb9529f433e2ebbb695ccfb3f7c942df404721fdd6d17cb676"
+  },
+  {
    "file": "assets/icon/icon_background_432.png",
    "source": "",
    "member": "",

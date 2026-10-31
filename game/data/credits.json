@@ -37,6 +37,8 @@
    "sources": ["Character-Customizer.zip"]},
   {"creator": "Hot Attic Games", "packs": "My Medieval Life icon (supplied by the owner)", "licence": "Own",
    "sources": ["My_Medieval_Life_Icon_Pack.zip"]},
+  {"creator": "Hot Attic Games", "packs": "Hot Attic Games studio logo (opening splash, supplied by the owner)", "licence": "Own",
+   "sources": ["Hot_Attic_Games_Logo.png"]},
   {"creator": "Hot Attic Games", "packs": "Music: Sunrise over the Village, Prosperous Village and Misted Ancient (made with Suno for My Medieval Life)", "licence": "Own (made with Suno)", "sources": ["https://github.com/verbal76/My-Medieval-Life/releases/download/Songsmall/Prosperous.Village.wav", "https://github.com/verbal76/My-Medieval-Life/releases/download/Songmed/Sunrise.over.the.Village.wav", "https://github.com/verbal76/My-Medieval-Life/releases/download/Songbig/misted.ancient.wav"]},
   {"creator": "Spaceyyy (Bramble & Byte), aquumgifts.itch.io", "packs": "Cozy RPG SFX (ambience loops and sound effects)", "licence": "Use in games allowed, no royalties; the sounds are not redistributed as assets", "sources": ["cozy-rpg-sfx.zip", "cozy-rpg-sfx-ambience-1.zip", "cozy-rpg-sfx-ambience-2.zip"]},
   {"creator": "Leohpaz", "packs": "Minifantasy: Forgotten Plains SFX (footsteps, rustling, hits, ambience loops)", "licence": "Personal and commercial use; the pack is not redistributed", "sources": ["Minifantasy_Forgotten_Plains_SFX.zip"]},
