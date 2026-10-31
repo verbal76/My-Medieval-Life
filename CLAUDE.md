@@ -13,6 +13,10 @@ are. No file is read automatically because it exists: do these steps, in order, 
    development branch `staging/my-medieval-life`. Run `git fetch origin staging/my-medieval-life`, check out or
    update that branch, and note `git log origin/staging/my-medieval-life -1`.
 2. **Read `docs/PROJECT_MEMORY.md`**, the index of where every authoritative record lives.
+   Then **`docs/expansions/README.md`** (owner, 2026-10-31, DOC-RECON-01): the status of every expansion and system, the
+   precedence of owner decisions (latest explicit owner decision first, regardless of branch) and the one status vocabulary;
+   historical documents are indexed there and are never current instructions. A revised owner specification set becomes
+   authoritative only on the owner's explicit final approval (DOC-AUTH-01).
 3. **Read `docs/CURRENT_DEVELOPMENT_STATE.md`**, the handoff: branches, workers in flight, next actions,
    interrupted processes (session state only; it never restates a requirement's status).
 4. **Review the register and unresolved decisions:** the generated views in `docs/requirements/views/` (STATUS,
@@ -24,7 +28,7 @@ are. No file is read automatically because it exists: do these steps, in order, 
    `python3 tools/check_requirements.py` (it must report 0 problems).
 7. **Determine what was completed, what remains unverified and what is authorized next,** from the register's
    statuses and evidence and the state file's next tasks; never from memory of a conversation.
-8. **Resume only currently authorized work.** Use the live requirements register, latest owner directives and active worker branches. Build 24 (Expansion 20 checkpoint, `4611d86`, 2026-10-28) is the latest private three-platform draft. Development RESUMED (owner 2026-10-30, X20-RESUME): three workstreams per `docs/handoffs/PARALLEL_WORK_2026-10-30.md`; remaining work `docs/handoffs/X20_RECOVERY_HANDOFF.md`. Never answer owner decisions, compromise save/security rules, or merge to main without authorization. The earlier Build 17–19 sequencing and prototype-only restrictions are historical, not a gate against now-authorized Expansion 20.
+8. **Resume only currently authorized work.** Use the live requirements register, latest owner directives and active worker branches. Build sequence (owner, 2026-10-31, BUILD-SEQ-25-27): Build 25 = Expansion 20 validation and freeze (`wip/expansion20` `ad281dc`, frozen only after the owner approves the validation); Build 26 = repository recovery and consolidation from the frozen Build 25 SHA; Build 27 = Expansion 21, only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers. Expansions 22-27 are not authorized. Never answer owner decisions, compromise save/security rules, or merge to main without authorization.
 
 **After a context compaction or in a fresh session** (owner directive 2026-10-20, `docs/directives/2026-10-20_compaction_readiness.md`):
 - Do steps 1-8 before any further decision.

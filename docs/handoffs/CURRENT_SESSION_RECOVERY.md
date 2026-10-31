@@ -6,13 +6,13 @@ After a context compaction, or in a fresh session, do not rebuild state from the
 
 1. Run `CLAUDE.md` section 0, steps 1–8.
 2. Read `docs/CURRENT_DEVELOPMENT_STATE.md`: branches, workers in flight, next actions.
-3. Read `docs/requirements/views/STATUS.md`, `BUILD_18.md`, `DECISIONS.md` and `QUEUES.md`. These are generated from the
-   one register, `docs/requirements/requirements.json`.
+3. Read `docs/expansions/README.md` and the status file of the work in hand (DOC-RECON-01, 2026-10-31), then the generated
+   views `docs/requirements/views/STATUS.md`, `DECISIONS.md` and `QUEUES.md` (from the one register,
+   `docs/requirements/requirements.json`). The views named `BUILD_NN.md` are by expansion number, not release build.
 4. Before restarting anything, check whether it is still running (workers, GitHub Actions runs).
-5. **Expansion 20 (owner, 2026-10-24):** the consolidated scope is the umbrella record `X20-OPEN-ITEMS`, its planning snapshot
-   `docs/expansion20/X20_OPEN_ITEMS.md` and the live view `docs/requirements/views/BUILD_20.md`
-   (directive `docs/directives/2026-10-24_expansion20_open_items_reconciliation.md`). Recorded only: start nothing until the owner
-   authorizes it. Release numbers (Builds 20, 21 and the Build 22 mini-build) are not expansion numbers (the register's `builds` map).
+5. **Build sequence (owner, 2026-10-31, BUILD-SEQ-25-27):** Build 25 = Expansion 20 validation and freeze (`wip/expansion20`
+   `ad281dc`); Build 26 = repository recovery and consolidation; Build 27 = Expansion 21 only on explicit authorization.
+   The 2026-10-24 Expansion 20 open-items note that stood here is historical (`docs/handoffs/archive/`, X20_OPEN_ITEMS).
 
 ## Before a compaction
 

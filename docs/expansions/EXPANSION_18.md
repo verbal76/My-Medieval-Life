@@ -42,7 +42,7 @@ at `d63d8d7`; profile save fix `0e1a88b`.
 | SET-A | Requirement ids, cross-industry skill schema, save compatibility (capability history saved under `SettlementSave.KEY`, `world.gd:137`, kept on load `0e1a88b`) | `settlement_test`, `profile_test` | TARGETED TESTS PASSED |
 | SET-B, X18-CAPCOMP, X18-CAPNUM, X18-SIM, X18-D1..D9 | Per-industry capability from experience, tools, facilities; bounded modifiers; comparative simulations | `capability_test`, `capability_metrics`, `settlement_test` | INTEGRATION VERIFIED (CAPCOMP, CAPNUM); TARGETED (SET-B, SIM) |
 | SET-C-FIVE, SET-C-SIM, ECON-P1.3 | Five off-map settlements as lighter-detail economies; the caravan is their traders, paying only from real tills (`balance.json` `_caravan_note`: daily allowance, purse float and per-visit cap removed) | `regions_test`, `regional_test`, `regions_sim` | INTEGRATION VERIFIED |
-| SET-C (umbrella of C) | Close-out (`docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md`@X20): 10 MET, 1 PARTIAL (credit parity), 1 NOT MET (100/365-day multi-seed runs). Both since met: TRADE-CREDIT integrated (`a2ea741`); 365-day seeds 1-4 on the integrated Build 18 game (runs 39874405723 and 39904513181, leak 0, no FATAL). Only the multi-generation run is outstanding, and the owner deferred it to SET-D-MULTIGEN | as above + `credit_test` | Register PARTIAL: **proposed INTEGRATED / INTEGRATION VERIFIED**, multigeneration carried by SET-D-MULTIGEN |
+| SET-C (umbrella of C) | Close-out (`docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md`@X20): 10 MET, 1 PARTIAL (credit parity), 1 NOT MET (100/365-day multi-seed runs). Both since met: TRADE-CREDIT integrated (`a2ea741`); 365-day seeds 1-4 on the integrated Build 18 game (runs 39874405723 and 39904513181, leak 0, no FATAL). Only the multi-generation run is outstanding, and the owner deferred it to SET-D-MULTIGEN | as above + `credit_test` | Register PARTIAL: **INTEGRATED (applied in the register 2026-10-31) / INTEGRATION VERIFIED**, multigeneration carried by SET-D-MULTIGEN |
 | SET-D | Growth and decline, trades opening and closing from real demand and workers | `settlement_development_test`, `settlement_life_test` | TARGETED TESTS PASSED |
 | TRADE-CREDIT | Barter and credit with trust, recorded debts | `credit_test` | TARGETED TESTS PASSED |
 | MIGRATE-18, REG-DEMO-01, REG-BUY-01, REG-BUY-P1, REG-COURIER-01, REG-PARTY-01, REG-EVAL-01, REG-INV-01 | Two-way migration; settlement demography; the village buys from the settlements; couriers wired; one trading-party interface; evaluation and investigation | `migration_test`, `regional_food_test`, `courier_live_test`, `regions_test` | INTEGRATION VERIFIED (most) |
@@ -77,8 +77,8 @@ PL2-014 have verification NOT TESTED in the register (code exists; validation no
 
 | Requirement | Done | Remaining |
 |---|---|---|
-| EXP-B (umbrella) | SET-A, SET-B, SET-C, SET-D | SET-E (phase E) and SET-D-MULTIGEN. Register NOT STARTED: **proposed PARTIALLY IMPLEMENTED** |
-| DVW-B3 (coin sinks umbrella) | Chapel offerings, wedding and seasonal feasts, luxury imports | "heriot" from its title has no record and no code (`git grep -i heriot` on `ad281dc` finds nothing). Register NOT STARTED: **proposed PARTIALLY IMPLEMENTED**, heriot remaining (placement for the owner; it touches inheritance, Expansion 24) |
+| EXP-B (umbrella) | SET-A, SET-B, SET-C, SET-D | SET-E (phase E) and SET-D-MULTIGEN. Register NOT STARTED: **PARTIALLY IMPLEMENTED (applied in the register 2026-10-31)** |
+| DVW-B3 (coin sinks umbrella) | Chapel offerings, wedding and seasonal feasts, luxury imports | "heriot" from its title has no record and no code (`git grep -i heriot` on `ad281dc` finds nothing). Register NOT STARTED: **PARTIALLY IMPLEMENTED (applied in the register 2026-10-31)**, heriot remaining (placement for the owner; it touches inheritance, Expansion 24) |
 
 ## 4. Remaining approved work
 

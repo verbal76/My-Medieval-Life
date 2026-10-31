@@ -47,3 +47,14 @@ Build numbers are release checkpoints; expansion numbers are design scopes (owne
 register's views named `BUILD_NN.md` are by expansion number. Current sequence: Build 25 = Expansion 20 validation and
 freeze; Build 26 = repository recovery and consolidation; Build 27 = Expansion 21 begins, only on the owner's explicit
 authorization.
+
+## Register changes made from these files (2026-10-31)
+
+The register corrections these files proposed were applied on `wip/requirements-control` (commit `1c9f7db`, with a history line
+each), with four exceptions:
+- WIKI-B17 stays unchanged until its completion is confirmed;
+- DVW-B3-HERIOT was not added, because the owner did not choose heriot on 2026-10-23;
+- P21-03..P21-05 are recorded as aliases of VP-01A..E, not as new records;
+- E25-OD-07 is PROVISIONAL until the owner confirms it.
+Where a file still says a record is PROPOSED, that is the record's own approval status (an agent or owner-starter proposal),
+not a pending correction.

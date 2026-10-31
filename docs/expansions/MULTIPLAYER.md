@@ -79,7 +79,7 @@ Design notes are in `docs/multiplayer/BATCH_A.md`..`BATCH_C.md` and `BATCH_D_CON
 | Relay options B-E (STUN hole punching, own relay, commercial relay, Steam) | Not adopted: option A "for now"; architecture kept extensible | MP-INET-RELAY, owner 2026-10-30 |
 | MP-01 (two-player LAN prototype) and `docs/multiplayer/PROTOTYPE_MULTIPLAYER_2026-10-19.md`; `wip/multiplayer` `d18d7d1` | SUPERSEDED by MP-MASTER | Register |
 | `wip/mp-batch-c-snapshot` `8897246` | SUPERSEDED: an unreviewed work-in-progress snapshot; Batch C merged by another route | Branch |
-| DGA-D3 "Connectivity with no server" (historical design proposal) | Answered in substance by MP-D5 and MP-INET-RELAY (proposed: SUPERSEDED) | Register |
+| DGA-D3 "Connectivity with no server" (historical design proposal) | Answered in substance by MP-D5 and MP-INET-RELAY (SUPERSEDED; applied in the register 2026-10-31) | Register |
 | `docs/multiplayer/MULTIPLAYER_PREPARATION.md` "Preparation only: nothing is implemented"; `MULTIPLAYER_BRANCH_AUDIT_2026-10-21.md` | HISTORICAL; implementation done since | This record |
 
 ## 6. Outstanding owner decisions

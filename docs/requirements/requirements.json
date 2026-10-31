@@ -12647,7 +12647,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -12656,8 +12656,15 @@
      "date": "2026-10-31",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-31_documentation_reconciliation.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/requirements-control",
+     "why": "in progress on wip/requirements-control"
     }
-   ]
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/requirements-control"
   },
   {
    "id": "DVW-A1",

@@ -1,6 +1,6 @@
 # Project memory: start here
 
-This is the entry point for any new session (owner directives 2026-10-20, register MEM-01 and MEM-02; the session-start steps are CLAUDE.md section 0). The repository, not any conversation, is the record. Every file named below is authoritative for its subject. This index only says where things are and in what order to read them. It does not copy their contents.
+This is the entry point for any new session. For the status of every expansion and system, go straight to `docs/expansions/README.md` (DOC-RECON-01, 2026-10-31) (owner directives 2026-10-20, register MEM-01 and MEM-02; the session-start steps are CLAUDE.md section 0). The repository, not any conversation, is the record. Every file named below is authoritative for its subject. This index only says where things are and in what order to read them. It does not copy their contents.
 
 ## What the project is
 
@@ -44,26 +44,38 @@ The living-world philosophy is preserved in the nonbinding conceptual `docs/MEDI
 | Architecture | `docs/ARCHITECTURE.md`; rules and open questions of the prototype in `docs/BUILD_DECISIONS.md` |
 | Saves: format, safety, migration, carrying a save between builds, recovery | `docs/release/SAVE_CONTINUITY.md`; code in `game/scripts/core/save_store.gd` and `game/scripts/core/save_transfer.gd` |
 | Long-run simulations and their results | `docs/release/LONG_RUN_SIMULATION.md`; harness `game/tests/economy_sim.gd` |
-| Current releases and signing | Latest Build 22 private draft and active X20 restriction: live register/state file; signing: `docs/release/ANDROID_SIGNING.md`. Build 14 packets historical. |
+| Current releases and signing | Latest Build 24 private draft (frozen); Build 25 validation in progress; live register/state file; signing: `docs/release/ANDROID_SIGNING.md`. Build 14 packets historical. |
 | Harvestable resources and their uses | `game/data/resources.json` (`tools/check_resources.py`) |
 | Assets: registry, licences, scaling, the mandatory pipeline skill | `docs/assets/ASSET_REGISTRY.md`, `docs/assets/packs.json`, `docs/assets/ASSET_SCALING_STANDARD.md`, `.claude/skills/asset-integration-pipeline/SKILL.md` |
 | The world research (Morris) | `docs/world/` |
 | The open-items audit and the 231-entry reconciliation against the five builds (2026-10-20) | `docs/requirements/RECONCILIATION_2026-10-20.md` (generated: what has closed, moved or been added since), frozen baseline `docs/requirements/baseline_2026-10-20.json` (the 231 open and 142 closed approved entries at `a203c0b`); the audit before it: `docs/release/BUILD_14_OPEN_ITEMS_AUDIT.md` |
 | Builds 18–21, the Build 20+ backlog, multiplayer, owner decisions, owner or external actions | `docs/requirements/views/` (STATUS, BUILD_18..21, BACKLOG, DECISIONS, QUEUES) |
-| Known limitations | Live register, save continuity guide, current Build 22 tester notes and signing guide; early Build 14 and prototype reports historical. |
+| Known limitations | Live register, save continuity guide, current tester notes and signing guide; early Build 14 and prototype reports historical. |
 | Older recovery records (history; the register supersedes their counts) | `docs/requirements/RECOVERY_2026-10-19.md`, `docs/HANDOFF.md`, `docs/DEVELOPMENT_QUEUE.md`, `docs/DEVELOPMENT_PLAN.md` (all marked historical) |
 
 ## Requirement authority
 
 The only current decision/status source is `docs/requirements/requirements.json`, with `docs/requirements/SCHEMA.md` and generated views. Approval, implementation, testing, device verification and release are distinct. Do not promote proposals, old build claims or unmerged worker code to completed gameplay.
 
-## Current milestones (2026-10-27)
+## Current milestones (2026-10-31, DOC-RECON-01)
 
-- **Build 22**: latest private three-platform draft, `wip/build22` `b7e1c91`; not to be reopened.
-- **Expansion 20**: currently authorized and in active development. LE-01 foundation integrated but switched off; Android usability/Message journal, Build 19 recovery R1–R4 integrated. Six-domain aspirations R5 in isolation, later LE stages unfinished. Fetch latest heads before interpreting status.
-- **MP-INTERACT-01**: implemented on separate `wip/x20-mp-interact` branch, merges **LAST**. **No Expansion 20 build even a private draft until it is integrated and verified on Android/Windows/Linux as relevant host/guest.**
-- **Decisions**: current-first 39-answer reconciliation on staging `5484ce1`, DCR-01 later added. Two multiplayer questions open, armor/identity provisional at last observation; verify the register.
-- **Future priority**: 20 → 21 → 23 → 22 → 24 → 25 → 26 → 27. Design direction is not implementation authority. Historical Builds 15–19 sequencing does not constrain already completed builds.
+- **Status of every expansion and system:** `docs/expansions/README.md` and the files beside it (one per expansion 17-27,
+  multiplayer, standalone systems, historical documents, missing sources). They agree with the register.
+- **Build 24** (`4611d86`, tag `build-24`): latest private three-platform draft; frozen, never altered. Builds 22 and 23
+  are frozen too.
+- **Build 25:** `wip/expansion20` `ad281dc` (Expansion 20: LE-00..04 and LE-06 integrated, LE-05 partial, LE-07 not
+  started; economy OFF by default; all eight Build 24 review findings fixed; bandit intelligence, judgment calibration,
+  tool repair and rental merged). Year-long validation X20-MERGED-VALIDATION running (Actions 41233948995, 41233970504);
+  frozen only after it passes and the owner approves.
+- **Build 26:** repository recovery and consolidation from the frozen Build 25 SHA. Staging (directives, register) and
+  `wip/expansion20` (code and implementation notes) diverged on 2026-10-21 (`5b82a69`); stranded work is on
+  `wip/expansion21-preparation`, `wip/roadmap-docs`, `wip/x20-trader-inv` and `wip/juice-assessment`.
+- **Build 27:** Expansion 21 only after Build 26 is frozen and the owner explicitly authorizes it.
+- **Future priority:** 20 → 21 → 23 → 22 → 24 → 25 → 26 → 27. Expansions 22-27 are design only and not authorized.
+- **Pending authority switch (DOC-AUTH-01):** a revised owner specification set will supersede the older design documents
+  on the owner's explicit final approval, not before.
+- The milestones of 2026-10-27 that stood here (Build 22 latest, MP-INTERACT-01 to merge last) are historical:
+  MP-INTERACT-01 was merged (`87b69ab`) and shipped in Build 23.
 
 ## Open owner decisions and blockers
 
