@@ -430,9 +430,16 @@ func _plan_buy_seed(n: NPC) -> bool:
 	var short := int(Farming.seed_cfg().seed_keep) - have
 	if short <= 0:
 		return false
+	var sellers := []
 	for o: NPC in w.npcs:
 		if o == n or o.job != "merchant" or not w.farm.sells_seed(o) or w.asleep(o) or not o.inv.has(seed):
 			continue
+		sellers.append(o)
+	if JudgmentLive.on(w, "trade_buy_from") and sellers.size() > 1:
+		var pick := JudgmentLive.pick_comparable(w, n, sellers, "trade_buy_from", [seed.hash()])     # SJD-H C1: seed merchants, comparable
+		sellers.erase(pick)
+		sellers.push_front(pick)
+	for o: NPC in sellers:
 		var qty := mini(short, o.inv.count(seed))
 		if not w.can_afford(n, w.farm.seed_item_price(seed, n) * qty):
 			return false
@@ -569,10 +576,14 @@ func front_goods(h: int) -> Dictionary:
 
 ## Who sells iron bars: the smith or the goods stall, with one to spare.
 func _bar_seller(n: NPC) -> NPC:
+	var judged := JudgmentLive.on(w, "trade_buy_from")
+	var people := []
 	for o: NPC in w.npcs:
 		if o.alive and o != n and not w.asleep(o) and (o.job == "smith" or buy_role(o) == "merchant_goods") and o.inv.count("iron_bar") > 1:
-			return o
-	return null
+			if not judged:
+				return o
+			people.append(o)                      # SJD-H C1: the live rule takes the first in villager order: all comparable
+	return JudgmentLive.pick_comparable(w, n, people, "trade_buy_from", ["iron_bar".hash()])
 
 
 ## Where a household parks its cart: the first open cell beside the house door's step (B14).

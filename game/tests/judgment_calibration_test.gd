@@ -60,6 +60,7 @@ func _init() -> void:
 	test_c1_comparable_sellers_live()
 	test_c1_positive_judgment_live()
 	test_c1_yes_or_forgo_live()
+	test_c1_bar_seller_live()
 	test_c5_mixed_feelings_bare()
 	test_c5_blacksmith_live()
 	print("%d checks, %d failures" % [checks, failures])
@@ -352,6 +353,38 @@ func test_c1_yes_or_forgo_live() -> void:
 	check(refused_once > 0 and refused_once < n, "C1: assaulted once by the buyer, with coin to spare: some would rather not lend, not all (influence, not dictate): %d of %d refuse" % [refused_once, n])
 	check(refused_twice > refused_once and refused_twice * 100 >= n * 50, "...assaulted twice, more and most would rather not (%d of %d)" % [refused_twice, n])
 	check(refused_needy == 0, "...and in need of coin, every one of them lends (%d refuse)" % refused_needy)
+	w.dispose()
+
+
+## The iron-bar seller (NPCBrain._bar_seller, newly weighed): the live rule's first while neutral; a trusted second smith is
+## preferred by most once the buyer has dealt fairly with them.
+func test_c1_bar_seller_live() -> void:
+	var w := World.new()
+	w.setup(VillageMap.load_default(), 1)
+	var j: JudgmentStore = w.judgment
+	var ps := []
+	for o: NPC in w.npcs:
+		o.inv.remove("iron_bar", o.inv.count("iron_bar"))
+		if o.alive and o.role == "adult" and o.job not in ["guard", "smith"] and w.brain.buy_role(o) != "merchant_goods":
+			ps.append(o)
+	var a: NPC = ps.pop_front()
+	var b: NPC = ps.pop_front()
+	a.job = "smith"
+	b.job = "smith"
+	NPC.roles_version += 1
+	a.inv.add("iron_bar", 4)
+	b.inv.add("iron_bar", 4)
+	var first: NPC = w.brain._bar_seller(ps[0])
+	var second: NPC = b if first == a else a
+	var neutral := 0
+	var trusted := 0
+	for n: NPC in ps.slice(0, 30):
+		neutral += 1 if w.brain._bar_seller(n) == first else 0
+		j.trust_add(n.id, second.id, 8000)
+		trusted += 1 if w.brain._bar_seller(n) == second else 0
+		j.last_choice.clear()
+	check(neutral == 30, "iron bars: neutral buyers go to the live rule's first smith (%d of 30)" % neutral)
+	check(trusted * 100 >= 30 * 60, "...buyers who trust the other smith mostly go to him (%d of 30)" % trusted)
 	w.dispose()
 
 

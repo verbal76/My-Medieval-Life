@@ -632,6 +632,18 @@ static func pick_seller(w, brain, id: String, buyer: NPC) -> NPC:
 	return _pick(w, buyer.id, people, "trade_buy_from", [w.day(), id.hash()], {}, tiers)
 
 
+## trade_buy_from among sellers the live rule takes in villager order with nothing to tell them apart (SJD-H C1: the iron-bar
+## seller, NPCBrain._bar_seller; the seed merchant, NPCBrain._plan_buy_seed): one tier, so the buyer's opinion and trust
+## decide, and the live rule's first stands while they are neutral. `key` names the goods. null when `people` is empty.
+static func pick_comparable(w, buyer: NPC, people: Array, profile: String, key: Array) -> NPC:
+	if people.size() < 2:
+		return people[0] if not people.is_empty() else null
+	var tiers := []
+	tiers.resize(people.size())
+	tiers.fill(0)
+	return _pick(w, buyer.id, people, profile, [w.day()] + key, {}, tiers)
+
+
 ## hire_choice (Construction._keep_building): whom household `h` hires to carry for its house. The candidates are the
 ## live rule's (hirable, of another household, in villager order) who would take the work (work_refusal); the choice
 ## is the household's responsible adult's.
