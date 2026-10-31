@@ -214,6 +214,10 @@ var buy_failed := {}
 ## SIM-F3: each bandit's last chase given up blocked ({prey, cell}: the prey's cell then); read by _bandit. Not saved, as
 ## the chase target is not.
 var stalk_lost := {}
+## X20-BANDIT-AI (JudgmentBandit): the bandits falling back ({bandit: minute begun}) and whom each robbed lately ({bandit:
+## {victim: minute}}: it does not pick the same victim again within decision.bandit.rob_again_hours). Not saved, as targets are not.
+var bandit_retreat := {}
+var bandit_robbed := {}
 const STALK_WATCH_MINUTES := 30.0    # SIM-F3: PROVISIONAL (agent, docs/DECISIONS.md): a stalking watch re-picks its prey at least this often
 const BUY_RETRY_MINUTES := 60.0      # SIM-F2: PROVISIONAL (agent, docs/DECISIONS.md): a failed purchase is tried again after an hour at most
 
@@ -1817,6 +1821,7 @@ func _loot_to_recover(n: NPC) -> Dictionary:
 func _bandit(n: NPC, h: float) -> void:
 	# SIM-F4 (owner 2026-10-24, "heal at camp"): a badly hurt bandit rests at the camp as a hurt villager rests at home
 	# (below rest.seek_below of their health, for rest.day_minutes, restored by World.rest_recover, PAR-03)
+	bandit_retreat.erase(n.id)                 # X20-BANDIT-AI: deciding afresh, the fall-back (if any) is over
 	if n.hp < n.max_hp * float(GameData.b("rest").seek_below):
 		var mins := float(GameData.b("rest").day_minutes)
 		n.doing = "resting at the camp"
@@ -1843,6 +1848,14 @@ func _bandit(n: NPC, h: float) -> void:
 		return
 	n.doing = "lurking at the camp"
 	n.plan = [go(wander_cell(w.bandit_camp, 3)), work(w.rng.randf_range(30, 90), "poach", {}, "idle")]
+
+
+## X20-BANDIT-AI: whether `o` is fighting a bandit (its target is one).
+func _fights_band(o: NPC) -> bool:
+	if o.target < 0:
+		return false
+	var t: NPC = w.npc(o.target)
+	return t != null and t.role == "bandit"
 
 
 ## SIM-F3 (owner D18, answer C, ENGINEERING, 2026-10-27): whether a bandit's stalking watch (the plan step `s` made by
@@ -1950,9 +1963,13 @@ func _prey_for(n: NPC):
 			return pl
 	var best = null
 	var bd := 40.0
+	var lately: Dictionary = bandit_robbed.get(n.id, {}) if JudgmentBandit.on(w) else {}
+	var again := float(JudgmentBandit.cfg(w).get("rob_again_hours", 6)) * 60.0 if not lately.is_empty() else 0.0
 	for o: NPC in w.npcs:
 		if not o.alive or o.depth != n.depth or w.place_of(o.pos) != "" or o.role == "bandit" or o.clan != "" or o.job == "guard" or o.coins < 3:
 			continue
+		if lately.has(o.id) and w.minutes - float(lately[o.id]) < again:
+			continue                                   # X20-BANDIT-AI: robbed by this bandit lately: another is picked
 		if _guard_near(o.pos, 14.0):
 			continue
 		var d: float = o.pos.distance_to(Vector2(w.bandit_camp))
@@ -2914,7 +2931,12 @@ func fight(n: NPC, dt: float) -> void:
 		n.plan.clear()
 		if n.role == "bandit":
 			n.plan = [go(w.bandit_camp, 1.2)]
+			if not tdead and JudgmentBandit.on(w):
+				bandit_retreat[n.id] = w.minutes          # X20-BANDIT-AI: below the survival line it falls back, and holds to it
+				JudgmentBandit.fall_back(w, n, JudgmentBandit.perceive(w, n).attackers)     # ... away from them when the camp itself is where they are
 		return
+	if n.role == "bandit" and JudgmentBandit.on(w) and JudgmentBandit.decide(w, n):
+		return                                         # X20-BANDIT-AI: it weighed the danger and fell back
 	var d := tpos - n.pos
 	var on_case := n.job == "guard" and not n.pursuit.is_empty() and Life.is_player_id(n.target)
 	if (d.length() > CHASE_RANGE and not on_case) or (n.job == "guard" and tpos.distance_to(Vector2(w.bandit_camp)) < 12.0):
@@ -2960,8 +2982,14 @@ func fight(n: NPC, dt: float) -> void:
 	stalk_lost.erase(n.id)                              # SIM-F3: a chase that reached its target ends any blocked memory
 	if w.judgment != null:
 		w.judgment.note_blow(n.id, n.target)        # X19-EVENT-Q: who struck first in this fight, so an answer is not judged as an attack
-	# a bandit robs ordinary villagers rather than killing them
-	if n.role == "bandit" and tnpc != null and tnpc.job != "guard":
+	# a bandit robs ordinary villagers rather than killing them. X20-BANDIT-AI: with judgment's bandit_danger on, not one who is
+	# fighting the band (coming at this bandit, a victim striking back or a defender, or at a fellow it went to help): that one is
+	# fought, never "robbed" again and again
+	if n.role == "bandit" and tnpc != null and tnpc.job != "guard" and (not JudgmentBandit.on(w) or not _fights_band(tnpc)):
+		if JudgmentBandit.on(w):
+			if not bandit_robbed.has(n.id):
+				bandit_robbed[n.id] = {}
+			bandit_robbed[n.id][tnpc.id] = w.minutes     # X20-BANDIT-AI: not picked again for a while
 		var take := tnpc.coins / 2
 		tnpc.coins -= take
 		n.coins += take
@@ -3009,6 +3037,8 @@ func fight(n: NPC, dt: float) -> void:
 		w.wake_near(tnpc.pos, float(GameData.b("sleep_wake_radius")))    # the blow wakes them, and the noise others
 		if tnpc.target == -1:
 			tnpc.target = n.id
+		if tnpc.role == "bandit" and n.role != "bandit" and tnpc.hp > 0.0 and JudgmentBandit.on(w):
+			JudgmentBandit.on_struck(w, tnpc, n)           # X20-BANDIT-AI: the band sees one of its own struck
 		if n.role == "bandit":
 			w.raise_alarm(w.aware_of_attack(n.pos, tnpc), n.id)   # who sees it; the victim reports it (PAR-05)
 		if tnpc.hp <= 0.0:

@@ -34,13 +34,15 @@ const STEP := 0.5
 const MATERIALS := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "building_block", "log", "plank", "iron_bar", "copper_bar",
 	"wheat", "meat", "hide", "leather", "pottage", "roast_meat", "ale", "pickaxe", "axe", "hammer"]
 const Census := preload("res://tests/census.gd")
-const CapMetrics := preload("res://tests/capability_metrics.gd")     # X18-SIM (Expansion 18): analysis switch, off unless asked
+const CapMetrics := preload("res://tests/capability_metrics.gd")
+const BanditDiag := preload("res://tests/bandit_diag.gd")      # X20-BANDIT-AI: read-only bandit diagnostics (BANDIT_DEATH, BANDITS lines)     # X18-SIM (Expansion 18): analysis switch, off unless asked
 const MARKET_ROLES := Census.MARKET_ROLES
 
 var w: World
 var deaths := {}               # cause -> count (villagers)
 var deaths_by_job := {}        # job or role -> count
 var bandit_deaths := 0
+var bandits = BanditDiag.new()
 var death_log: Array = []      # [day, name, job, cause]
 var first_starvation_day := -1
 var pending_cause := ""
@@ -149,6 +151,7 @@ func _init() -> void:
 			var tu := Time.get_ticks_usec()
 			w.update(STEP)
 			update_us += Time.get_ticks_usec() - tu
+			bandits.tick(w)                    # X20-BANDIT-AI: each bandit's state, read only
 			w.player.hunger = 100.0            # the inert player is fed; it is not part of what is measured
 			if not flee_path.is_empty():
 				_flee_step()
@@ -167,6 +170,7 @@ func _init() -> void:
 			var ts := Time.get_ticks_usec()
 			samples.append(_sample(start))
 			_print_sample(samples[-1])
+			print(bandits.line(w))
 			if w.judgment != null:            # SJD-G: the judgment store's soak measures, read only (JudgmentSoak changes nothing)
 				print("JUDGE " + JSON.stringify(JudgmentSoak.metrics(w.judgment)))
 			min_hunger = 100.0
@@ -304,6 +308,7 @@ func _print_profile(update_us: int, harness_us: int, secs: float, days: int) -> 
 
 # ---------------------------------------------------------------- listeners ------------------
 func _on_event(t: String) -> void:
+	bandits.on_note(w, t)
 	var at := t.find("has died (")
 	if at >= 0:
 		pending_cause = t.substr(at + 10, t.rfind(")") - at - 10)
@@ -406,6 +411,7 @@ func _on_died(n: NPC) -> void:
 	pending_cause = ""
 	if n.role == "bandit":
 		bandit_deaths += 1
+		bandits.on_died(w, n, cause)
 		return
 	deaths[cause] = int(deaths.get(cause, 0)) + 1
 	var job: String = n.job if n.job != "" else n.role

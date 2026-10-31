@@ -128,7 +128,7 @@ var clock_abs := 0       # game minutes at the last gossip_tick (see now_minute)
 var lied := {}           # liar -> day of their last invented story (X19-MISINFO: at most one per liar per game year; saved)
 var story_pending := {}  # child -> [day they came of age, parents who have told them (bit 0 mother, bit 1 father)] (X19-STORY-LIFE; saved)
 var last_choice := {}    # chooser -> {decision key -> [token, day]}: a stubborn person's last choice in a decision (saved)
-var fights := {}         # pair key -> [aggressor, first blow minute, last blow minute]: a fight under way (X19-EVENT-Q self-defence; saved)
+var fights := {}         # pair key -> [aggressor, first blow minute, last blow minute, assault incident, attempted-robbery incident]: a fight under way (X19-EVENT-Q self-defence; X20-JUDG-C3 incidents; saved)
 var fact_refs := {}      # GM-01: event id -> what a fact touched and led to: {household, giver_household, plot, building, item, qty, cost, built_day, links: [[kind, target], ...]}; only facts that have any; retires with the fact (saved "refs")
 var history := {}        # GM-01: event id -> the historical record of a significant deed, kept after its fact retires: {type, day, actors, beneficiaries, value, refs, known: {person: [source, teller, generation]}} (saved "history")
 var trace := false       # developer diagnostics: keep each interpretation's parts in last_trace (off: the same numbers, no record)
@@ -1855,6 +1855,32 @@ func note_blow(attacker: int, victim: int) -> bool:
 	return false
 
 
+## X20-JUDG-C3 (owner 2026-10-31, SJD-H C3): wrongdoing is counted by incident. The fact of kind `slot` (INC_ASSAULT,
+## INC_ATTEMPT) that `attacker`, as the aggressor, has already committed against `victim` in the fight under way between them,
+## or 0: the same continuous fight is one incident however many blows or tries it holds. A fight that ended (no blow for
+## self_defence.fight_minutes) starts afresh at the next blow (note_blow), so a new encounter is a new incident.
+const INC_ASSAULT := 3
+const INC_ATTEMPT := 4
+
+
+func incident(attacker: int, victim: int, slot := INC_ASSAULT) -> int:
+	var f = fights.get(JudgmentBonds._pk(attacker, victim))
+	if f == null or now_minute() - int(f[2]) > _fight_min or int(f[0]) != attacker or (f as Array).size() <= slot:
+		return 0
+	var ev := int(f[slot])
+	return ev if facts.has(ev) else 0
+
+
+## Note fact `ev` as the incident of kind `slot` of the fight under way (made by note_blow).
+func set_incident(attacker: int, victim: int, ev: int, slot := INC_ASSAULT) -> void:
+	var f = fights.get(JudgmentBonds._pk(attacker, victim))
+	if f == null or int(f[0]) != attacker:
+		return
+	while (f as Array).size() <= INC_ATTEMPT:
+		(f as Array).append(0)
+	f[slot] = ev
+
+
 ## Whether `victim` struck first in a fight with `killer` that is still under way (the killing is then self-defence).
 func struck_first(victim: int, killer: int) -> bool:
 	var f = fights.get(JudgmentBonds._pk(victim, killer))
@@ -2284,7 +2310,10 @@ func to_dict() -> Dictionary:
 		var fl := []
 		for k in _sorted(fights):
 			var f: Array = fights[k]
-			fl.append([int((k >> 32) - JudgmentBonds.FAR), JudgmentBonds._lo(k), int(f[0]), int(f[1]), int(f[2])])
+			var row := [int((k >> 32) - JudgmentBonds.FAR), JudgmentBonds._lo(k), int(f[0]), int(f[1]), int(f[2])]
+			if f.size() > INC_ASSAULT and (int(f[INC_ASSAULT]) != 0 or int(f[INC_ATTEMPT]) != 0):
+				row.append_array([int(f[INC_ASSAULT]), int(f[INC_ATTEMPT])])     # X20-JUDG-C3: its incidents (an older game reads the first five)
+			fl.append(row)
 		out.fights = fl                          # fights under way (self-defence)
 	if not fact_refs.is_empty():
 		var rf := []
@@ -2431,7 +2460,7 @@ func load_dict(d: Dictionary) -> String:
 			last_choice[int(r[0])] = {}
 		last_choice[int(r[0])][str(r[1])] = [str(r[2]), int(r[3])]
 	for r in m.get("fights", []):
-		fights[JudgmentBonds._pk(int(r[0]), int(r[1]))] = [int(r[2]), int(r[3]), int(r[4])]
+		fights[JudgmentBonds._pk(int(r[0]), int(r[1]))] = [int(r[2]), int(r[3]), int(r[4]), int(r[5]) if r.size() > 5 else 0, int(r[6]) if r.size() > 6 else 0]
 	for r in m.get("refs", []):                  # GM-01: absent in version 1-2 sections (no references, no links)
 		if facts.has(int(r[0])):
 			fact_refs[int(r[0])] = _whole(r[1])

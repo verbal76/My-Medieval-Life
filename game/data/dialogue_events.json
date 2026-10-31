@@ -232,6 +232,10 @@
       "pickpocket": {
         "default": "{A} picked {Vs} pocket"
       },
+      "attempted_robbery": {
+        "default": "{A} tried to rob {V}",
+        "novictim": "{A} tried to rob someone"
+      },
       "gift": {
         "default": "{A} gave {B} {item}",
         "noitem": "{A} gave {B} a present",
