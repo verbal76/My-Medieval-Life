@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (20)
+## Workers and task branches (19)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -22,12 +22,11 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | X20-MP-ECON-INTEGRITY | 20 | IMPLEMENTED ON TASK BRANCH | worker E (MP-economy integrity) | wip/x20-mp-econ |
 | X20-RESUME | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
-| X20-TRADER-PAY-INV | 20+ | IN DEVELOPMENT | worker B | wip/x20-trader-inv |
 | X20-TXN-REPLAY-FIELDS | 20 | IN DEVELOPMENT | worker E | wip/x20-mp-econ |
 | X20-WEAR-TRANSFER | 20 | IN DEVELOPMENT | worker E | wip/x20-mp-econ |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (45)
+## Implemented but not tested (46)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -75,6 +74,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | WDR-021-C | unassigned | PARTIALLY IMPLEMENTED | compliance audit against the rule's verification scenario (human review) |
 | WDR-022-C | 15 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | WIKI-B17 | 17 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
+| X20-TRADER-PAY-INV | 20+ | PARTIALLY IMPLEMENTED |  |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 
 ## Awaiting owner playtest or device check (106)

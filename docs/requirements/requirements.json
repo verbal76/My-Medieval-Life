@@ -61600,7 +61600,7 @@
     "X20-TRADER-PAY"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -61619,10 +61619,20 @@
      "date": "2026-10-30",
      "change": "acceptance",
      "why": "owner's final decision adds scope (docs/directives/2026-10-30_x20_trader_pay_final_decision.md): business reserves and operating capital; effects of migration, closure and reopening; distinguish genuine economic failure from accounting defects or simulation artifacts; evidence-based compensation alternatives with consequences later"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; tests: None -> local --trader-diag runs on 3702566 seeds 1,2 60 days, fingerprints identical to Actions 41139763023 (diagnostic changes nothing); commits + 3f58ce6; notes",
+     "why": "worker B analysis done (docs/expansion20/TRADER_SUSTAINABILITY_ANALYSIS.md on wip/x20-trader-inv 3f58ce6); compensation alternatives remain for when LE wages and service contracts are ready"
     }
    ],
    "assigned_worker": "worker B",
-   "branch": "wip/x20-trader-inv"
+   "branch": "wip/x20-trader-inv",
+   "tests": "local --trader-diag runs on 3702566 seeds 1,2 60 days, fingerprints identical to Actions 41139763023 (diagnostic changes nothing)",
+   "commits": [
+    "3f58ce6"
+   ],
+   "notes": "Coins reconciled: world total unchanged (12258 / 12531); village shortfall vs Build 24 (1238 / 1153) equals the fall in net inflow from the settlements (coin_sources 2420->1182, 2270->1117), held by settlement treasuries (closed tills to councils), households and tills; transit and escrow empty daily. No accounting defect. Main cause: genuine insufficient profit (trader own result -349..+62 vs 140-840 wages due; 90% buy / price sell less 6% toll). Rule effects: 85% reserve withholds 120-670 per trader (wages 11-39% of due); caravan village purchases may spend down to the 20-coin floor while wages only pay above the reserve. Profession switch is the existing job-change rule (income under 4 a day), no hunger, migration follows failure in one case. Simulation artifact (all business types, conserved): an opening household's savings go into the till and half the surplus returns to it as wages, inflating the income the job-change rule sees. Measurement list for a later compensation proposal recorded."
   },
   {
    "id": "X20-TXN-REPLAY-FIELDS",
