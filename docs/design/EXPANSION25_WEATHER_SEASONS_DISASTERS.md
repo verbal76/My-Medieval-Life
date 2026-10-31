@@ -1,3 +1,5 @@
+> STATUS (2026-10-31, DOC-RECON-01): CURRENT DESIGN PACKET, DESIGN ONLY, NOT AUTHORIZED (owner 2026-10-24 "design-only status until specifically authorized"; 2026-10-30 "Do not begin Expansions 22–27"). Superseded in part: building condition is owned by Expansion 22 and reused here (ROAD-Q4, E22-CONDITION); E25-OD-07 is answered by the 2026-10-24 order. Designed together with Expansion 26 as the "Wild World" concept. An original owner-supplied packet, if distinct from this one, is a MISSING SOURCE. Current status: docs/expansions/EXPANSION_25.md; docs/expansions/MISSING_SOURCES.md.
+
 # Expansion 25: Weather, Seasons and Disasters
 
 **My Medieval Life — expansion packet (design specification, implementation plan and audit), 2026-10-23**

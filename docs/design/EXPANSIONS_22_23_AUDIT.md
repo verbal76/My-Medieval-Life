@@ -1,3 +1,5 @@
+> STATUS (2026-10-31, DOC-RECON-01): CURRENT-STATUS-ELSEWHERE. The audit (E22-P1, E23-BANA) awaits the owner's review and stays valid as a record of Build 18; parts of section 4 are stale (GP-CRIME-PURSUIT, DVW-B2 fines and X20-BANDIT-AI have since been integrated on the Expansion 20 line). No implementation is authorized (owner 2026-10-23, 2026-10-30). Current status: docs/expansions/EXPANSION_22.md and EXPANSION_23.md.
+
 # Expansion 22 (Settlement Advancement Phase 2) and Expansion 23 (Bandit Factions): audit (2026-10-23)
 
 Owner directive and renumbering answer: `docs/directives/2026-10-23_expansions_22_23_kickoff.md` (register E22-P1, E23-BANA,
