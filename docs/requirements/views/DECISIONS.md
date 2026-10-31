@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 0 |
+| OPEN | 1 |
 | APPROVED | 239 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 2 |
@@ -18,6 +18,12 @@ The decision register is the `decision` records of the register. A recommendatio
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
 | ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | PROVISIONAL | no | ARMOR-CATALOG-01, ARMOR-MATERIALS-01 | docs/design/ARMOUR_CATALOGUE_PROPOSAL.md |
+
+## Future backlog (Build 20 or later, not assigned): open, reopened or provisional (1)
+
+| ID | Question | Disposition | Blocks implementation | Affects | Source |
+|---|---|---|---|---|---|
+| SJD-H-CAL | SJD-H calibration package (worker D's SJD-G soak report on wip/x20-sjdg; defaults keep today's behaviour): C1 influence strength is barely visible in behaviour - keep until played, or raise deed severities? C2 permanent assault/killing memories for every hearer are 76-82% of memories and make the judgment save 4.4-5.8 MB a year - let hearsay assault memories fade while the judgment stays (murder unchanged)? C3 every blow and every robbery in a spree counts separately (a robbery that took nothing included) - one deed per episode via the existing fight window, no theft when nothing taken? C4 family danger: fight vs shield flips between seeds and judgment-on kills 143-234 bandits a year vs 6-7 off - intended? C5 mixed feelings (SJD-Q04) has weight 0 so it is not in behaviour - leave, or weight it on decayed values? C6 confirm the approved decay works as described. Also: bandits re-rob the same victim every 2 game minutes until nothing is left - intended? | OPEN | no |  | docs/directives/2026-10-30_mp_batch_d_decision.md |
 
 ## Approved, no build assigned: open, reopened or provisional (1)
 

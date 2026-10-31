@@ -16,7 +16,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
-| SJD-G | 20 | IN DEVELOPMENT | worker D (judgment calibration) | wip/x20-sjdg |
+| SJD-G | 20 | IMPLEMENTED ON TASK BRANCH | worker D (judgment calibration) | wip/x20-sjdg |
 | X20-B24-REMED | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | X20-B24-REVIEW | 20 | IN DEVELOPMENT | lead (tracking); workers A and B | wip/expansion20 |
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |

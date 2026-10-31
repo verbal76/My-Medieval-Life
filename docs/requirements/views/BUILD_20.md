@@ -10,7 +10,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|
 | Approved requirements in scope | 104 |
 | Integrated | 90 of 104 (87%) |
-| Automated tests passed | 93 of 104 (89%) |
+| Automated tests passed | 94 of 104 (90%) |
 | Integration verified | 56 of 104 (54%) |
 | Gameplay verified | 0 of 104 (0%) |
 | Owner playtested | 0 of 104 (0%) |
@@ -18,12 +18,11 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Open (release blockers) | 102 |
 | Open owner decisions (blocking) | 1 (0) |
 
-## In development (worker assigned) (6)
+## In development (worker assigned) (5)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | OWNER APPROVED | IN DEVELOPMENT | worker A (Living Economy) / wip/x20-le05 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | IN DEVELOPMENT | worker D (judgment calibration) / wip/x20-sjdg | NOT TESTED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 |  | L |
 | X20-B24-REMED | Build 24 review remediation and Expansion 20 integration: per-finding register, failing-first regression tests, shared ownership-transition root causes, LE-04 on World.transactions with no double reservation, LE-06 bounded saves as an activation gate, X20-MP-ECON-INTEGRITY fault injection, SJD-G within budget, milestone report | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | X20-B24-REVIEW, design: UNKNOWN | UNKNOWN |
 | X20-B24-REVIEW | Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance | OWNER APPROVED | IN DEVELOPMENT | lead (tracking); workers A and B / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
@@ -121,6 +120,12 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-SETTLE-FOOD | Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game | OWNER APPROVED | INTEGRATED | wip/expansion20 5195c2c | INTEGRATION VERIFIED | LE-05 (paused 2026-10-28). |  | verification only |
 | X20-SETTLE-REOPEN | A closed settlement business reopens (or is re-established) when a household takes up its trade, through the existing business-creation and ownership rules, without restoring the former owner's money, stock, contracts, workforce or assets | OWNER APPROVED | INTEGRATED | wip/expansion20 ed6360f | INTEGRATION VERIFIED |  |  | verification only |
 | X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 e8cc44b | INTEGRATION VERIFIED |  |  | verification only |
+
+## Ready to proceed now (approved, specified, nothing open blocks it) (1)
+
+| ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
+|---|---|---|---|---|---|---|---|---|
+| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker D (judgment calibration) / wip/x20-sjdg | TARGETED TESTS PASSED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 |  | L |
 
 ## Blocked (open owner decision, unfinished dependency or unsettled design) (8)
 

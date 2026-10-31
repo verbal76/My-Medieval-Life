@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 167 still open, 64 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 632 (304 of them still open) |
-| **Open entries now** (rules excluded) | | **470** |
+| Entries added since | | 633 (305 of them still open) |
+| **Open entries now** (rules excluded) | | **471** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (64)
@@ -97,7 +97,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 20 |
 | SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
-| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | approved | APPROVED — NOT STARTED | 19 | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | approved | APPROVED — NOT STARTED | 19 | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | approved | APPROVED — NOT STARTED | 19 | NOT STARTED / NOT TESTED / OPEN | 20 |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | approved | APPROVED — NOT STARTED | 20+ | NOT STARTED / NOT TESTED / OPEN | 21 |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | approved | PARTIALLY IMPLEMENTED | 19 | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
@@ -107,7 +107,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (632)
+## Added since the baseline (633)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -599,6 +599,7 @@ None.
 | SIM-F4 | Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases? | decision | APPROVED | 19 |
 | SIM-F9 | The REC-F1 root cause also affects plans that start with a work step in eating, taking medicine and a homeless villager's bed: their waits end at once. Fixing them changes eating and rest timing. Approve the same correction for those plans? | decision | APPROVED | 19 |
 | SIM-GATE-01 | Permanent pre-build simulation, flight recorder and Excel quality gate | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | multiplayer |
+| SJD-H-CAL | SJD-H calibration package (worker D's SJD-G soak report on wip/x20-sjdg; defaults keep today's behaviour): C1 influence strength is barely visible in behaviour - keep until played, or raise deed severities? C2 permanent assault/killing memories for every hearer are 76-82% of memories and make the judgment save 4.4-5.8 MB a year - let hearsay assault memories fade while the judgment stays (murder unchanged)? C3 every blow and every robbery in a spree counts separately (a robbery that took nothing included) - one deed per episode via the existing fight window, no theft when nothing taken? C4 family danger: fight vs shield flips between seeds and judgment-on kills 143-234 bandits a year vs 6-7 off - intended? C5 mixed feelings (SJD-Q04) has weight 0 so it is not in behaviour - leave, or weight it on decayed values? C6 confirm the approved decay works as described. Also: bandits re-rob the same victim every 2 game minutes until nothing is left - intended? | decision | OPEN | 20+ |
 | SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | STALL-01 | Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | STALL-02 | A stall's own inventory: goods are moved into it for sale and are in one place only | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |

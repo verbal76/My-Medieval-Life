@@ -599,7 +599,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | SJD-D | Judgment expansion Gate D: decision prototype (factor registry, utility profiles, the 50-iron scenario, explanation traces, determinism) | 19 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
 | SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | STALL-01 | Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -801,7 +801,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (248)
+## Owner decisions (249)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -991,6 +991,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | SIM-F3 | Recorder finding F3: bandits stalking at night leave their plan empty, so the brain re-decides every tick (400+ empty decisions a day each); behaviour works through the chase target. Approve giving the stalk a lasting plan step (performance fix, no behaviour change intended)? | 19 | APPROVED |  |
 | SIM-F4 | Recorder finding F4: the whole bandit band died within nine days; a bandit's only food purchase (_bandit_market) needs 15 coins and at least 60% health, so an injured or starving bandit with money cannot buy food. Confirm with death causes first; then should the health gate stop blocking food purchases? | 19 | APPROVED |  |
 | SIM-F9 | The REC-F1 root cause also affects plans that start with a work step in eating, taking medicine and a homeless villager's bed: their waits end at once. Fixing them changes eating and rest timing. Approve the same correction for those plans? | 19 | APPROVED |  |
+| SJD-H-CAL | SJD-H calibration package (worker D's SJD-G soak report on wip/x20-sjdg; defaults keep today's behaviour): C1 influence strength is barely visible in behaviour - keep until played, or raise deed severities? C2 permanent assault/killing memories for every hearer are 76-82% of memories and make the judgment save 4.4-5.8 MB a year - let hearsay assault memories fade while the judgment stays (murder unchanged)? C3 every blow and every robbery in a spree counts separately (a robbery that took nothing included) - one deed per episode via the existing fight window, no theft when nothing taken? C4 family danger: fight vs shield flips between seeds and judgment-on kills 143-234 bandits a year vs 6-7 off - intended? C5 mixed feelings (SJD-Q04) has weight 0 so it is not in behaviour - leave, or weight it on decayed values? C6 confirm the approved decay works as described. Also: bandits re-rob the same victim every 2 game minutes until nothing is left - intended? | 20+ | OPEN |  |
 | SJD-Q01 | Judgment open decision: Should there be a NEUTRAL objective event type, or must every judged event begin GOOD/BAD? | 19 | APPROVED |  |
 | SJD-Q02 | Judgment open decision: Should scores decay, or change only through new events, forgiveness and corrected beliefs? | 19 | APPROVED |  |
 | SJD-Q03 | Judgment open decision: Different disposition thresholds per NPC, or one calibrated scale? | 19 | APPROVED |  |

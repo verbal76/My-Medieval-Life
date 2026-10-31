@@ -49883,10 +49883,12 @@
     "As stated in the source document"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "judgment_soak_test 51/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, judgment_bonds 98/0, judgment_personality 91/0, aspiration 155/0; Actions 365-day ON 41129188776 and OFF 41129193143 seeds 1,2: leak 0, item leaks none, 0 script errors; local determinism repeats identical",
    "playtest": [],
    "branch": "wip/x20-sjdg",
-   "commits": [],
+   "commits": [
+    "ed9ade0"
+   ],
    "parent": "EXP-C",
    "depends_on": [
     "SJD-F"
@@ -49908,7 +49910,7 @@
    "priority": "future",
    "workstream": "expansion C",
    "superseded_by": null,
-   "notes": "",
+   "notes": "No score inflation, no duplicate postings, no loops, courtship unaffected, 0.24-0.29% of sales changed, no refusals of contracts/credit/barter/jobs; old saves B19-B24 load with judgment intact. Fixes: _first_stands shortcut now also under 'margin' selection (identical choices, ~10-24% faster); latent opinion-score mismatch fixed. Judgment save 4.4-5.8 MB after a year (C2). Seed 1 starvation (81 ON / 164 OFF deaths) is a legitimate outcome, not judgment. Calibration questions: SJD-H-CAL.",
    "history": [
     {
      "date": "2026-10-20",
@@ -49944,6 +49946,11 @@
      "date": "2026-10-30",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker D (judgment calibration); branch:  -> wip/x20-sjdg",
      "why": "worker D started (X20-RESUME carryover): soak and calibration measurement"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> judgment_soak_test 51/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, judgment_bonds 98/0, judgment_personality 91/0, aspiration 155/0; Actions 365-day ON 41129188776 and OFF 41129193143 seeds 1,2: leak 0, item leaks none, 0 script errors; local determinism repeats identical; test_commit: 0b5287c -> ed9ade0; commits + ed9ade0; notes",
+     "why": "worker D soak done: 365-day ON/OFF runs 41129188776/41129193143 (d0f623b), conservation exact at 148 checkpoints, two judgment defects fixed (32da11d), report docs/expansion20/SJDG_SOAK_REPORT.md on wip/x20-sjdg ed9ade0; merge into wip/expansion20 with a local G0"
     }
    ],
    "target_build": "20",
@@ -49952,8 +49959,8 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "PARTIAL",
@@ -49965,7 +49972,7 @@
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5",
-   "test_commit": "0b5287c",
+   "test_commit": "ed9ade0",
    "assigned_worker": "worker D (judgment calibration)"
   },
   {
@@ -50055,6 +50062,31 @@
    ],
    "remaining_work": "present the SJD-G report to the owner (batch R8)",
    "test_commit": "0b5287c"
+  },
+  {
+   "id": "SJD-H-CAL",
+   "kind": "decision",
+   "title": "SJD-H calibration package (worker D's SJD-G soak report on wip/x20-sjdg; defaults keep today's behaviour): C1 influence strength is barely visible in behaviour - keep until played, or raise deed severities? C2 permanent assault/killing memories for every hearer are 76-82% of memories and make the judgment save 4.4-5.8 MB a year - let hearsay assault memories fade while the judgment stays (murder unchanged)? C3 every blow and every robbery in a spree counts separately (a robbery that took nothing included) - one deed per episode via the existing fight window, no theft when nothing taken? C4 family danger: fight vs shield flips between seeds and judgment-on kills 143-234 bandits a year vs 6-7 off - intended? C5 mixed feelings (SJD-Q04) has weight 0 so it is not in behaviour - leave, or weight it on decayed values? C6 confirm the approved decay works as described. Also: bandits re-rob the same victim every 2 game minutes until nothing is left - intended?",
+   "description": "SJD-H calibration package (worker D's SJD-G soak report on wip/x20-sjdg; defaults keep today's behaviour): C1 influence strength is barely visible in behaviour - keep until played, or raise deed severities? C2 permanent assault/killing memories for every hearer are 76-82% of memories and make the judgment save 4.4-5.8 MB a year - let hearsay assault memories fade while the judgment stays (murder unchanged)? C3 every blow and every robbery in a spree counts separately (a robbery that took nothing included) - one deed per episode via the existing fight window, no theft when nothing taken? C4 family danger: fight vs shield flips between seeds and judgment-on kills 143-234 bandits a year vs 6-7 off - intended? C5 mixed feelings (SJD-Q04) has weight 0 so it is not in behaviour - leave, or weight it on decayed values? C6 confirm the approved decay works as described. Also: bandits re-rob the same victim every 2 game minutes until nothing is left - intended?",
+   "source": "docs/directives/2026-10-30_mp_batch_d_decision.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20+",
+   "related": [
+    "SJD-G",
+    "SJD-H"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_mp_batch_d_decision.md"
+    }
+   ]
   },
   {
    "id": "SJD-Q01",
