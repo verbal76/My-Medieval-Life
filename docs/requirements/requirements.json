@@ -61686,10 +61686,19 @@
      "date": "2026-10-31",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/expansion20",
      "why": "lead integrating D, F, G into wip/expansion20"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "commits + ad281dc; notes",
+     "why": "baseline replaced once on ad281dc (local, three identical runs); the three approved year-long runs dispatched on ad281dc: 41233948995 (seeds 1 and 2, normal settings) and 41233970504 (seed 1, --market; queued behind the first, same branch)"
     }
    ],
    "assigned_worker": "lead",
-   "branch": "wip/expansion20"
+   "branch": "wip/expansion20",
+   "commits": [
+    "ad281dc"
+   ],
+   "notes": "Merged SHA ad281dc9431b782582513ef8a083c962b5039b8f. Runs: 41233948995 (normal, seeds 1,2), 41233970504 (economy on, seed 1). Expected: normal about 3-4 h; the economy run starts after it."
   },
   {
    "id": "X20-MIGRATE",
