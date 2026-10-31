@@ -214,8 +214,10 @@ var buy_failed := {}
 ## SIM-F3: each bandit's last chase given up blocked ({prey, cell}: the prey's cell then); read by _bandit. Not saved, as
 ## the chase target is not.
 var stalk_lost := {}
-## X20-BANDIT-AI (JudgmentBandit): the bandits falling back to the camp ({bandit: minute begun}). Not saved, as targets are not.
+## X20-BANDIT-AI (JudgmentBandit): the bandits falling back ({bandit: minute begun}) and whom each robbed lately ({bandit:
+## {victim: minute}}: it does not pick the same victim again within decision.bandit.rob_again_hours). Not saved, as targets are not.
 var bandit_retreat := {}
+var bandit_robbed := {}
 const STALK_WATCH_MINUTES := 30.0    # SIM-F3: PROVISIONAL (agent, docs/DECISIONS.md): a stalking watch re-picks its prey at least this often
 const BUY_RETRY_MINUTES := 60.0      # SIM-F2: PROVISIONAL (agent, docs/DECISIONS.md): a failed purchase is tried again after an hour at most
 
@@ -1961,9 +1963,13 @@ func _prey_for(n: NPC):
 			return pl
 	var best = null
 	var bd := 40.0
+	var lately: Dictionary = bandit_robbed.get(n.id, {}) if JudgmentBandit.on(w) else {}
+	var again := float(JudgmentBandit.cfg(w).get("rob_again_hours", 6)) * 60.0 if not lately.is_empty() else 0.0
 	for o: NPC in w.npcs:
 		if not o.alive or o.depth != n.depth or w.place_of(o.pos) != "" or o.role == "bandit" or o.clan != "" or o.job == "guard" or o.coins < 3:
 			continue
+		if lately.has(o.id) and w.minutes - float(lately[o.id]) < again:
+			continue                                   # X20-BANDIT-AI: robbed by this bandit lately: another is picked
 		if _guard_near(o.pos, 14.0):
 			continue
 		var d: float = o.pos.distance_to(Vector2(w.bandit_camp))
@@ -2927,6 +2933,7 @@ func fight(n: NPC, dt: float) -> void:
 			n.plan = [go(w.bandit_camp, 1.2)]
 			if not tdead and JudgmentBandit.on(w):
 				bandit_retreat[n.id] = w.minutes          # X20-BANDIT-AI: below the survival line it falls back, and holds to it
+				JudgmentBandit.fall_back(w, n, JudgmentBandit.perceive(w, n).attackers)     # ... away from them when the camp itself is where they are
 		return
 	if n.role == "bandit" and JudgmentBandit.on(w) and JudgmentBandit.decide(w, n):
 		return                                         # X20-BANDIT-AI: it weighed the danger and fell back
@@ -2979,6 +2986,10 @@ func fight(n: NPC, dt: float) -> void:
 	# fighting the band (coming at this bandit, a victim striking back or a defender, or at a fellow it went to help): that one is
 	# fought, never "robbed" again and again
 	if n.role == "bandit" and tnpc != null and tnpc.job != "guard" and (not JudgmentBandit.on(w) or not _fights_band(tnpc)):
+		if JudgmentBandit.on(w):
+			if not bandit_robbed.has(n.id):
+				bandit_robbed[n.id] = {}
+			bandit_robbed[n.id][tnpc.id] = w.minutes     # X20-BANDIT-AI: not picked again for a while
 		var take := tnpc.coins / 2
 		tnpc.coins -= take
 		n.coins += take

@@ -1165,6 +1165,7 @@ func x20_steps(w: World) -> Dictionary:
 	var r: Dictionary = w.contracts.propose(World.npc_ref(b.id), a, item, 1, maxi(1, w.sell_price(a, item)), 2)
 	out.contract = str(r.get("answer", ""))
 	if r.has("contract"):
+		out.contract_id = int(r.contract.id)      # X20-BANDIT-AI: the checks read this contract's own thread (others may open in the run)
 		out.delivered = w.contracts.deliver(r.contract, 1)
 	var cr := {"result": "no pair", "debt": {}}
 	for s_ in adults:                         # a pair that trusts each other (trust is regard: set high here, the same in both runs)
@@ -1206,11 +1207,15 @@ func test_x20_phase3() -> void:
 	var sub_n := func(cat: String, st: String) -> int:
 		return d.event.filter(func(e): return e.category == cat and (st == "" or e.subtype == st)).size()
 	if str(ob.contract) == "accept":
-		check(sub_n.call("contract", "opened") == 1 and sub_n.call("contract", "delivered") == 1 and sub_n.call("contract", "paid") == 1 and sub_n.call("contract", "fulfilled") == 1,
+		# the test's own contract (its object thread): the villagers may open others of their own in the day it runs
+		var cref := "contract:%d" % int(ob.get("contract_id", -1))
+		var on_thread := func(st: String) -> int:
+			return d.event.filter(func(e): return e.category == "contract" and e.subtype == st and str(e.object) == cref).size()
+		check(on_thread.call("opened") == 1 and on_thread.call("delivered") == 1 and on_thread.call("paid") == 1 and on_thread.call("fulfilled") == 1,
 			"X20: a contract is opened, delivered, paid and fulfilled on one object thread")
 		var cc := 0
 		for c in d.state_change:
-			if str(c.ref).begins_with("contract:") and str(c.prop) == "coins":
+			if str(c.ref) == cref and str(c.prop) == "coins":
 				cc += int(c.delta)
 		check(cc == 0, "X20: the contract's set-aside coins come back to zero (%d)" % cc)
 	else:

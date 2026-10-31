@@ -28,6 +28,21 @@ the Build 24 behaviour, tested), as every judgment decision point is.
 | 9 | Same judgment principles for both populations | the same `JudgmentWeighting.choose`, personality layer, Relations ties and word of mouth as villagers | — |
 | 10 | Learn through existing memory, judgment, experience | practical wisdom (routs), news memories (losses), Relations (bonds); no separate AI store, nothing new saved (the fall-back is transient, like a chase target) | — |
 
+## After the first 365-day comparison (run 41171898332, c664b31)
+
+Three findings changed the behaviour (lead approved the direction; see the report):
+- A robber, not a killer: once the re-robbing loop was gone, a bandit struck back by a villager pressed an ordinary fight, and
+  bandits killed 42 and 33 villagers a year (none before). Population and the wiki say a bandit "robs rather than kills". Now,
+  against a villager (no guard) who is fighting the band, `press` is not an option: the bandit falls back, breaks out if
+  cornered, or stands by a fellow (`defend`). Guards are still fought.
+- Attacked at the camp: the dominant death before and after was a hurt bandit killed resting or lurking at its own camp by
+  the family defenders who followed it there (52 of 72, 34 of 54); "fall back to the camp" there meant standing still. Now
+  within camp_radius of the camp a fall-back goes escape_tiles away from the attackers and lies low lie_low_minutes
+  (`JudgmentBandit.escape_cell`, `fall_back`), and the break-out looks the same way. No hiding mechanic exists; lying low out
+  of the pursuers' reach is the nearest the game offers.
+- Same victim again: 66 and 95 robberies of a victim the same bandit had robbed within 30 minutes, from `_prey_for` picking
+  the villager nearest the camp again and again. Now a bandit does not pick a victim it robbed within rob_again_hours.
+
 ## The re-robbing loop (defect, fixed at its cause)
 
 `NPCBrain.fight`: a bandit's strike at any non-guard villager ran the robbery branch. After robbing its prey it makes off; the
@@ -47,11 +62,12 @@ saves its incidents as two optional trailing values.
 
 Profile `bandit_danger` weights: live_order 300, advantage 300, able 200 (press); outnumbered 500, hurt 400, wary 300,
 under_way 600 (retreat); cornered 700 (break_out); bond 500 (defend; with advantage). `decision.bandit`: cornered_radius 2.5,
-wary_days 8, wary_per_rout 25 points, wary_per_loss 15 points, friend_bond 30 points, rout_cost_points 2.
+camp_radius 6, escape_tiles 14, lie_low_minutes 45, rob_again_hours 6, wary_days 8, wary_per_rout 25 points, wary_per_loss 15
+points, friend_bond 30 points, rout_cost_points 2.
 
 ## Tests
 
 `game/tests/bandit_ai_test.gd` (controlled encounters: outnumbered retreat and holding to it, cornered break-out, aid to a friend
-and not to a stranger, no re-robbing, villagers winning, no repeated hopeless combat, off unchanged; 12 checks, written to fail
-without the layer: 6 behaviour checks fail with the flag off). `game/tests/judgment_incident_test.gd` (C3, 15 checks).
+and not to a stranger, no re-robbing, villagers winning, no repeated hopeless combat, off unchanged; 17 checks, written to fail
+first: 6 behaviour checks fail with the flag off, and the 4 checks added after the first comparison failed on c664b31). `game/tests/judgment_incident_test.gd` (C3, 15 checks).
 `game/tests/bandit_diag.gd` (read-only long-run diagnostics: BANDIT_DEATH and BANDITS lines).

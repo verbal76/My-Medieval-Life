@@ -8,6 +8,11 @@ extends SceneTree
 ##   5. villagers can still organise and win: three of them run a lone bandit down
 ##   6. no repeated hopeless combat: a hurt, outnumbered bandit struck again and again never turns back into the fight
 ##   7. off (decision.integration.bandit_danger false): the Build 24 behaviour, unchanged
+##   8. a robber, not a killer: struck back by a villager, a healthy bandit makes off rather than fight them (the 365-day run
+##      41171898332 had bandits killing 33-42 villagers a year once they fought back with blows)
+##   9. attacked at its own camp, a bandit falls back away from the attackers, not "to the camp" where it stands (the dominant
+##      death of both the old and the first new runs: hurt bandits killed resting at the camp)
+##  10. a bandit does not pick the victim it just robbed again within rob_again_hours
 ## Nothing is added to health, damage or speed anywhere.
 ##   godot --headless --path game --script res://tests/bandit_ai_test.gd
 
@@ -32,6 +37,9 @@ func _init() -> void:
 	test_villagers_win()
 	test_no_hopeless_combat()
 	test_off_is_unchanged()
+	test_robber_not_killer()
+	test_attacked_at_camp()
+	test_no_same_victim_again()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -277,4 +285,62 @@ func test_off_is_unchanged() -> void:
 	w.brain.fight(b, 0.5)
 	check(v.coins == 10, "off: the Build 24 rule is untouched (a second robbery, 40 -> 20 -> 10)")
 	check(int(w.judgment.stats.get("bandit_press", 0)) + int(w.judgment.stats.get("bandit_retreat", 0)) == 0, "...and nothing is weighed")
+	w.dispose()
+
+
+func test_robber_not_killer() -> void:
+	var w := world()
+	var b: NPC = bandits(w)[0]
+	var v: NPC = adults(w)[13]
+	var s := spot(w, 20.0)
+	var p: Vector2 = s[0]
+	var back: Vector2 = s[1]
+	clear_stage(w, [b, v])
+	stage(w, [b], p)
+	stage(w, [v], p - back * 0.9)
+	v.target = b.id                                              # the victim strikes back
+	b.target = v.id
+	var hp0 := v.hp
+	for i in 4:
+		b.attack_cd = 0.0
+		if b.target != -1:
+			w.brain.fight(b, 0.5)
+	check(v.hp == hp0 and b.target == -1 and w.brain.bandit_retreat.has(b.id), "a villager turns on a healthy bandit one to one: it makes off, it does not stay to kill them")
+	w.dispose()
+
+
+func test_attacked_at_camp() -> void:
+	var w := world()
+	var b: NPC = bandits(w)[0]
+	var ppl := adults(w)
+	var camp := Vector2(w.bandit_camp) + Vector2(0.5, 0.5)
+	clear_stage(w, [b, ppl[14], ppl[15]])
+	stage(w, [b], camp)
+	b.hp = b.max_hp * 0.25                                       # hurt, lying up at the camp
+	var from := w.map.nearest_walkable(Vector2i(floori(camp.x + 2), floori(camp.y)))
+	stage(w, [ppl[14], ppl[15]], Vector2(from) + Vector2(0.5, 0.5))
+	ppl[14].target = b.id
+	ppl[15].target = b.id
+	b.target = ppl[14].id                                        # the blow turned it to the striker
+	w.brain.fight(b, 0.5)
+	var to := Vector2(b.plan[0].to) if not b.plan.is_empty() else camp
+	check(b.target == -1 and to.distance_to(camp) > 6.0, "attacked at its own camp, a hurt bandit falls back out of it, not to where it stands")
+	check(to.distance_to(Vector2(from)) > camp.distance_to(Vector2(from)), "...away from those coming at it")
+	w.dispose()
+
+
+func test_no_same_victim_again() -> void:
+	var w := world()
+	var b: NPC = bandits(w)[0]
+	var v: NPC = adults(w)[16]
+	var s := spot(w, 20.0)
+	var p: Vector2 = s[0]
+	clear_stage(w, [b, v])
+	stage(w, [b], p)
+	stage(w, [v], p + Vector2(0.9, 0))
+	v.coins = 60
+	b.target = v.id
+	w.brain.fight(b, 0.5)
+	check(v.coins == 30, "the bandit robs a victim")
+	check(w.brain._prey_for(b) != v, "...and does not pick the same victim again straight after")
 	w.dispose()

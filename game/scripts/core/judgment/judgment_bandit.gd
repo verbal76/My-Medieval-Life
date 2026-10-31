@@ -65,7 +65,7 @@ static func perceive(w, b: NPC) -> Dictionary:
 				in_need = a
 	var blocker = null
 	var corner := float(c.get("cornered_radius", 2.5))
-	var home := Vector2(w.bandit_camp) + Vector2(0.5, 0.5) - b.pos
+	var home := Vector2(escape_cell(w, b, attackers)) + Vector2(0.5, 0.5) - b.pos
 	if home.length() > corner:
 		for o: NPC in attackers:
 			var d: Vector2 = o.pos - b.pos
@@ -73,6 +73,36 @@ static func perceive(w, b: NPC) -> Dictionary:
 				blocker = o
 				break
 	return {"threats": threats, "attackers": attackers, "allies": allies, "ally_in_need": in_need, "blocker": blocker}
+
+
+## Where `b` falls back to: the camp, where the band is; at the camp already (within camp_radius), away from those coming at it,
+## escape_tiles out, to the nearest open cell (a camp it cannot hold is no refuge: falling back to where it stands is no retreat).
+static func escape_cell(w, b: NPC, attackers: Array) -> Vector2i:
+	var c := cfg(w)
+	var camp := Vector2(w.bandit_camp) + Vector2(0.5, 0.5)
+	if b.pos.distance_to(camp) > float(c.get("camp_radius", 6.0)) or attackers.is_empty():
+		return w.bandit_camp
+	var from := Vector2.ZERO
+	for o: NPC in attackers:
+		from += o.pos
+	from /= float(attackers.size())
+	var away := b.pos - from
+	if away.length() < 0.01:
+		away = b.pos - camp if b.pos.distance_to(camp) > 0.01 else Vector2.RIGHT
+	var to := b.pos + away.normalized() * float(c.get("escape_tiles", 14.0))
+	return w.map.nearest_walkable(Vector2i(floori(to.x), floori(to.y)))
+
+
+## The fall-back plan: to the escape cell, and if that is not the camp, lying low there a while (no hiding mechanic exists; a
+## bandit out of sight of its pursuers waits before going home).
+static func fall_back(w, b: NPC, attackers: Array) -> void:
+	var to := escape_cell(w, b, attackers)
+	b.plan = [w.brain.go(to, 1.2)]
+	if to != w.bandit_camp:
+		b.plan.append(w.brain.work(float(cfg(w).get("lie_low_minutes", 45)), "", {}, "idle"))
+		b.doing = "slipping away from the camp"
+	else:
+		b.doing = "falling back to the camp"
 
 
 ## How wary `b` is from what it has been through and heard (0..100000): each rout it survived (its own experience,
@@ -110,7 +140,11 @@ static func decide(w, b: NPC) -> bool:
 	var outnumbered := clampi(int((float(threats.size()) / float(side) - 1.0) * 100000.0), 0, 100000)
 	var advantage := clampi(int((float(side) / float(maxi(1, threats.size())) - 1.0) * 100000.0), 0, 100000)
 	var opts := []
-	if not retreating:
+	# a robber robs; it does not stay to kill the villagers who turn on it (Population, the wiki: "robs rather than kills"): against
+	# a villager (no guard) fighting the band it presses no fight; it falls back, breaks out if cornered, or stands by a fellow
+	var tn: NPC = w.npc(b.target) if b.target >= 0 else null
+	var quarrel: bool = tn != null and tn.job != "guard" and tn.role != "bandit" and tn.target >= 0 and w.npc(tn.target) != null and w.npc(tn.target).role == "bandit"
+	if not retreating and not quarrel:
 		opts.append({"id": "press", "counterparty": b.target if b.target >= 0 else -1, "factors": {"live_order": 100000, "advantage": advantage, "able": int(hp_frac * 100000.0)}})
 	opts.append({"id": "retreat", "factors": {"outnumbered": outnumbered, "hurt": int((1.0 - hp_frac) * 100000.0), "wary": wariness(w, b), "under_way": 100000 if retreating and p.blocker == null else 0}})
 	if p.blocker != null:
@@ -133,8 +167,7 @@ static func decide(w, b: NPC) -> bool:
 			if w.recorder != null and b.target >= 0:
 				w.recorder.chase_end(b, "bandit_retreat")
 			b.target = -1
-			b.plan = [w.brain.go(w.bandit_camp, 1.2)]
-			b.doing = "falling back to the camp"
+			fall_back(w, b, p.attackers)
 			return true
 		"break_out":
 			w.brain.bandit_retreat.erase(b.id)
@@ -184,5 +217,4 @@ static func on_struck(w, b: NPC, attacker: NPC) -> void:
 				a.doing = "standing by %s" % b.name
 			"retreat":
 				w.brain.bandit_retreat[a.id] = j.now_minute()
-				a.plan = [w.brain.go(w.bandit_camp, 1.2)]
-				a.doing = "falling back to the camp"
+				fall_back(w, a, [attacker])
