@@ -152,3 +152,18 @@ Built with the economy (`EconomyFoundation.rentals`, `game/scripts/core/economy/
 
 See the commits' bodies and the lead's report for the counts: `le05_repair_test` (57 checks) and `le05_rental_test` (53 checks),
 both failing first (neither compiled against `784f0e5`+merge: the API did not exist).
+
+### 5.2 Economy off (G0): what repair changes
+
+Local, `economy_sim.gd` seeds 1 and 2, 30 days, every 10 (the `tools/sim_gate.py` command line), compared with
+`docs/release/sim_baseline.json` by `sim_gate.py`'s own `summarise` and `compare` (baseline not rewritten). The merged tree before
+the LE-05 work (`ff41f18`) matched the baseline exactly (seed 1 `d4a1d71d`, seed 2 `40a3f050` at day 30).
+
+| | Seed 1 | Seed 2 |
+|---|---|---|
+| Repairs in 30 days | 1 (an axe of the smith's household, 63 of 120 uses mended, before day 10) | 0 |
+| Against the baseline | differs from day 10 (fingerprint `292da391` at day 10, `e64c5530` at day 30; alive 113 vs 117, coins 3,958 vs 3,733, treasury 26 vs 6 at day 30): the repair's iron bar and plank and the smith's time, then the usual divergence of a changed run | identical at days 10 and 30 |
+| Conservation | currency leak 0, item ledger empty at every checkpoint (0, 10, 20, 30); no script error | same |
+
+The difference is the approved repair only (economy-off rental code never runs: no `rentals` key, `World.total_coins` unchanged
+with no economy). Outcomes are not judged (WDR-022). The baseline is the lead's to replace when LE-05 is integrated.
