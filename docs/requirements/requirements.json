@@ -61664,8 +61664,10 @@
    "owner_wording": "Report results separately for each run and compare them against the available earlier evidence. Do not conceal regressions behind averages.",
    "approval": "owner, 2026-10-31",
    "acceptance": [
-    "bandit intelligence and villager casualties; bandit deaths by phase; retreat, rescue and combat decisions; robbery and attempted-robbery counting; judgment-driven buying, hiring, contracts and seller choice; memory decay and save size; blacksmith necessity vs dislike; repairs and rentals with economy integrity; no coin or item creation or destruction; no new script errors, regressions or save/load failures",
-    "stop for the owner's review before another expansion or release"
+    "three 365-day runs on ad281dc reported separately: population, economy and conservation, bandits, judgment, repair and rental, integrity per 10-day checkpoint; limitations stated, no invented data",
+    "comparisons: seed 1 vs 2, normal vs economy, Expansion 20 vs earlier evidence; graphs where the evidence supports them",
+    "findings classified A blockers / B significant / C nonblocking; A and B with evidence, root cause and smallest correction",
+    "one consolidated report; stop for the owner's review; no release, no new testing without approval"
    ],
    "target_build": "20",
    "parent": null,
@@ -61691,6 +61693,11 @@
      "date": "2026-10-31",
      "change": "commits + ad281dc; notes",
      "why": "baseline replaced once on ad281dc (local, three identical runs); the three approved year-long runs dispatched on ad281dc: 41233948995 (seeds 1 and 2, normal settings) and 41233970504 (seed 1, --market; queued behind the first, same branch)"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "acceptance",
+     "why": "owner set the report's scope (docs/directives/2026-10-31_x20_yearlong_validation_release_readiness.md): per-run analysis, comparisons with graphs, integrity, A/B/C classification, one consolidated report"
     }
    ],
    "assigned_worker": "lead",
