@@ -6,7 +6,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
-| DOC-RECON-01 | 20 | IN DEVELOPMENT | lead | wip/requirements-control |
+| DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | JUICE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | none |  |

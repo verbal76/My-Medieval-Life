@@ -30,7 +30,7 @@ archived at `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-31.md`.
 
 ## Documentation
 
-- **DOC-RECON-01** (lead): documentation reconciliation on the isolated branch `wip/requirements-control` (REQ-CTRL-02). It is
+- **DOC-RECON-01** (lead): documentation reconciliation DONE, awaiting the owner's review, on the isolated branch `wip/requirements-control` (REQ-CTRL-02). It is
   not merged into staging or the gameplay baseline without the owner's authorization.
 - **DOC-AUTH-01:** a revised owner specification set will supersede older design documents on the owner's explicit final
   approval, not before.
