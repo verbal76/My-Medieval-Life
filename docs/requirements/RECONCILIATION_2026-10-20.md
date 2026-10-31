@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 167 still open, 64 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 633 (305 of them still open) |
-| **Open entries now** (rules excluded) | | **471** |
+| Entries added since | | 634 (306 of them still open) |
+| **Open entries now** (rules excluded) | | **472** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (64)
@@ -97,7 +97,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 20 |
 | SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
-| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | approved | APPROVED — NOT STARTED | 19 | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
+| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | approved | APPROVED — NOT STARTED | 19 | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | approved | APPROVED — NOT STARTED | 19 | NOT STARTED / NOT TESTED / OPEN | 20 |
 | VP-01 | Living village politics: offices, individual NPC voting, elections, civic authority | approved | APPROVED — NOT STARTED | 20+ | NOT STARTED / NOT TESTED / OPEN | 21 |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | approved | PARTIALLY IMPLEMENTED | 19 | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
@@ -107,7 +107,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (633)
+## Added since the baseline (634)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -358,6 +358,7 @@ None.
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| LE05-RENTAL-REPAIR | LE-05 tool repair and rental (OD-LE-08 direction approved; worker A's proposal on wip/x20-le05, nothing built; wear now travels with tools, X20-WEAR-TRANSFER): approve building, behind the Living Economy switch, (1) repair at an anvil by a smith or the player costing ceil(input x missing share) of the item's own forge recipe and the same share of minutes, items without a forge recipe not repairable; (2) rental by workers short of a tool from holders with a spare, deposit = the tool's value, daily fee = the value share its wear consumes per working day, deposit escrowed in World.transactions, forfeited if the tool breaks or is not returned, settled to the estate on death; additive bounded save keys; nothing with the economy off. Repair as a shipped player recipe with the economy off would be a separate decision. | decision | OPEN | 20+ |
 | LOG-01 | Unclaimed manor deliveries fall back to an available salaried manor hand or the reeve, physically, recorded once, without an extra wage; urgent relief keeps its protection until a physical replacement is safe | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | owner decision |
 | MAINT-01 | Need-driven maintenance, village expansion and road construction: structures and infrastructure wear with real consequences; the reeve arranges repair and construction projects with real materials, labour, time and money by priority (urgent, routine, logistics, growth, discretionary); roads as real infrastructure; no treasury-driven make-work | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | MAP-01 | Map shows where you are beyond the village | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |

@@ -599,7 +599,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | SJD-D | Judgment expansion Gate D: decision prototype (factor registry, utility profiles, the 50-iron scenario, explanation traces, determinism) | 19 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
 | SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
+| SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | STALL-01 | Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -801,7 +801,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (249)
+## Owner decisions (250)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -851,6 +851,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | ID-D3 | Identity gate baseline: approve the candidate new baseline (docs/design/IDENTITY_GATE_CANDIDATE.json)? Its only divergences (day 13 on both seeds) come from arrivals keeping their permanent band id, which changes traits Build 18 hashes from the id (chapel piety, caravan taste, skill seed, willingness, sprite). Alternatively those traits could be seeded from a stored per-person seed so they no longer depend on the id value (a design change). | unassigned | PROVISIONAL |  |
 | INV-Q1 | INV-18 borderline item classifications | owner decision | APPROVED |  |
 | INV-Q2 | INV-18 upgrade acquisition and cost | owner decision | APPROVED |  |
+| LE05-RENTAL-REPAIR | LE-05 tool repair and rental (OD-LE-08 direction approved; worker A's proposal on wip/x20-le05, nothing built; wear now travels with tools, X20-WEAR-TRANSFER): approve building, behind the Living Economy switch, (1) repair at an anvil by a smith or the player costing ceil(input x missing share) of the item's own forge recipe and the same share of minutes, items without a forge recipe not repairable; (2) rental by workers short of a tool from holders with a spare, deposit = the tool's value, daily fee = the value share its wear consumes per working day, deposit escrowed in World.transactions, forfeited if the tool breaks or is not returned, settled to the estate on death; additive bounded save keys; nothing with the economy off. Repair as a shipped player recipe with the economy off would be a separate decision. | 20+ | OPEN |  |
 | MIN-C-Q2 | Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics | owner decision | APPROVED |  |
 | MIN-D-Q1 | Should a business or the player be able to commission a survey through CON-01 (needs a service-contract term, OD-LE-03)? | owner decision | APPROVED |  |
 | MIN-D-Q2 | Should the player's tools and skills count toward the settlement's mining capability (built: they do not)? | owner decision | APPROVED |  |

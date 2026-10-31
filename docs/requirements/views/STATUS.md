@@ -14,11 +14,11 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Not started (incl. READY) | 2 | 1 | 5 | 2 | 3 | 1 | 0 | 1 | 5 | 1 |
 | In development (worker assigned) | 0 | 0 | 5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Partially implemented | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Implemented on a task branch | 0 | 0 | 2 | 3 | 1 | 1 | 0 | 0 | 0 | 0 |
+| Implemented on a task branch | 0 | 0 | 1 | 3 | 1 | 1 | 0 | 0 | 0 | 0 |
 | Implementation blocked | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Integrated | 80 of 83 (96%) | 10 of 11 (91%) | 92 of 104 (88%) | 1 of 6 (17%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
+| Integrated | 80 of 83 (96%) | 10 of 11 (91%) | 93 of 104 (89%) | 1 of 6 (17%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
 | Automated tests passed (targeted or better) | 78 of 83 (94%) | 10 of 11 (91%) | 94 of 104 (90%) | 2 of 6 (33%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
-| Integration verified (suite on the integrated build) | 57 of 83 (69%) | 9 of 11 (82%) | 58 of 104 (56%) | 1 of 6 (17%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
+| Integration verified (suite on the integrated build) | 57 of 83 (69%) | 9 of 11 (82%) | 59 of 104 (57%) | 1 of 6 (17%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
 | Gameplay verified | 0 of 83 (0%) | 0 of 11 (0%) | 0 of 104 (0%) | 0 of 6 (0%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
 | Owner playtested | 0 of 83 (0%) | 0 of 11 (0%) | 0 of 104 (0%) | 0 of 6 (0%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
 | Complete | 2 of 83 (2%) | 9 of 11 (82%) | 2 of 104 (2%) | 0 of 6 (0%) | 0 of 4 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |
@@ -26,8 +26,8 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Open owner decisions (of which blocking) | 0 (0) | 0 (0) | 1 (0) | 0 (0) | 0 (0) | 0 (0) | 0 (0) | 0 (0) | 0 (0) | 0 (0) |
 | Deferred with approval | 2 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Proposals and ideas (not counted) | 3 | 3 | 2 | 5 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Integrated, awaiting gameplay or owner verification | 78 | 1 | 90 | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Remaining implementation by effort band (not yet integrated) | S 1, M 1, UNKNOWN 1 | UNKNOWN 1 | XS 1, L 1, UNKNOWN 10 | UNKNOWN 5 | UNKNOWN 4 | UNKNOWN 2 | none | UNKNOWN 1 | UNKNOWN 5 | UNKNOWN 1 |
+| Integrated, awaiting gameplay or owner verification | 78 | 1 | 91 | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Remaining implementation by effort band (not yet integrated) | S 1, M 1, UNKNOWN 1 | UNKNOWN 1 | XS 1, UNKNOWN 10 | UNKNOWN 5 | UNKNOWN 4 | UNKNOWN 2 | none | UNKNOWN 1 | UNKNOWN 5 | UNKNOWN 1 |
 | Readiness | RELEASED (private playtest draft (code 61ec528, run 39935635926, 2026-10-23)) | RELEASED (private playtest draft (code 2f72ec3, run 40044931601, 2026-10-24); complete as the development milestone (owner 2026-10-24)) | RELEASED (Build 23 private draft (code c79b12c, run 40526826846, release 425699977, 2026-10-27); MP-INTERACT-01 integrated last and validated before the build (X20-FINAL); Build 24 private draft (code 4611d86, run 40636966840, release 426357144, 2026-10-28): Expansion 20 checkpoint, then development paused (X20-CHECKPOINT)) | IN DEVELOPMENT (not feature complete) | IN DEVELOPMENT (not feature complete) | IN DEVELOPMENT (not feature complete) | NOT AUTHORIZED for implementation | NOT AUTHORIZED for implementation | NOT AUTHORIZED for implementation | NOT AUTHORIZED for implementation |
 
 Build authority:
@@ -43,5 +43,5 @@ Build authority:
 - **Build 26 (Creatures and Heroes):** implementation **NOT AUTHORIZED**. PET-01, MON-01 (owner 2026-10-23): design only, no code
 - **Build 27 (World Exploration, Dungeons & Encounters):** implementation **NOT AUTHORIZED**. ROAD-Q1 (owner 2026-10-24): numbering only
 
-Future backlog and unassigned: 113 open records (`BACKLOG.md`). Open owner decisions: 3 (`DECISIONS.md`).
+Future backlog and unassigned: 114 open records (`BACKLOG.md`). Open owner decisions: 4 (`DECISIONS.md`).
 

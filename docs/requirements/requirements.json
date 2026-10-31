@@ -28889,6 +28889,30 @@
    "completion": "OPEN"
   },
   {
+   "id": "LE05-RENTAL-REPAIR",
+   "kind": "decision",
+   "title": "LE-05 tool repair and rental (OD-LE-08 direction approved; worker A's proposal on wip/x20-le05, nothing built; wear now travels with tools, X20-WEAR-TRANSFER): approve building, behind the Living Economy switch, (1) repair at an anvil by a smith or the player costing ceil(input x missing share) of the item's own forge recipe and the same share of minutes, items without a forge recipe not repairable; (2) rental by workers short of a tool from holders with a spare, deposit = the tool's value, daily fee = the value share its wear consumes per working day, deposit escrowed in World.transactions, forfeited if the tool breaks or is not returned, settled to the estate on death; additive bounded save keys; nothing with the economy off. Repair as a shipped player recipe with the economy off would be a separate decision.",
+   "description": "LE-05 tool repair and rental (OD-LE-08 direction approved; worker A's proposal on wip/x20-le05, nothing built; wear now travels with tools, X20-WEAR-TRANSFER): approve building, behind the Living Economy switch, (1) repair at an anvil by a smith or the player costing ceil(input x missing share) of the item's own forge recipe and the same share of minutes, items without a forge recipe not repairable; (2) rental by workers short of a tool from holders with a spare, deposit = the tool's value, daily fee = the value share its wear consumes per working day, deposit escrowed in World.transactions, forfeited if the tool breaks or is not returned, settled to the estate on death; additive bounded save keys; nothing with the economy off. Repair as a shipped player recipe with the economy off would be a separate decision.",
+   "source": "docs/directives/2026-10-30_x20_background_development.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20+",
+   "related": [
+    "LE-05"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-30_x20_background_development.md"
+    }
+   ]
+  },
+  {
    "id": "LOG-01",
    "title": "Unclaimed manor deliveries fall back to an available salaried manor hand or the reeve, physically, recorded once, without an extra wage; urgent relief keeps its protection until a physical replacement is safe",
    "kind": "approved",
@@ -49885,7 +49909,7 @@
    "implementation": "",
    "tests": "judgment_soak_test 51/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, judgment_bonds 98/0, judgment_personality 91/0, aspiration 155/0; Actions 365-day ON 41129188776 and OFF 41129193143 seeds 1,2: leak 0, item leaks none, 0 script errors; local determinism repeats identical",
    "playtest": [],
-   "branch": "wip/x20-sjdg",
+   "branch": "wip/expansion20",
    "commits": [
     "ed9ade0"
    ],
@@ -49951,16 +49975,23 @@
      "date": "2026-10-31",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests:  -> judgment_soak_test 51/0, judgment_live 161/0, judgment 217/0, judgment_x19 117/0, judgment_bonds 98/0, judgment_personality 91/0, aspiration 155/0; Actions 365-day ON 41129188776 and OFF 41129193143 seeds 1,2: leak 0, item leaks none, 0 script errors; local determinism repeats identical; test_commit: 0b5287c -> ed9ade0; commits + ed9ade0; notes",
      "why": "worker D soak done: 365-day ON/OFF runs 41129188776/41129193143 (d0f623b), conservation exact at 148 checkpoints, two judgment defects fixed (32da11d), report docs/expansion20/SJDG_SOAK_REPORT.md on wip/x20-sjdg ed9ade0; merge into wip/expansion20 with a local G0"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; branch: wip/x20-sjdg -> wip/expansion20; test_commit: ed9ade0 -> 531da40; integrated_in + wip/expansion20 531da40",
+     "why": "merged into wip/expansion20 (531da40); judgment suites 0 failures, sim_gate PASS identical to the baseline"
     }
    ],
    "target_build": "20",
    "roadmap_gate": "",
    "roadmap_reason": "the NPC Judgment System expansion",
-   "integrated_in": [],
+   "integrated_in": [
+    "wip/expansion20 531da40"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "TARGETED TESTS PASSED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "design": "PARTIAL",
@@ -49972,7 +50003,7 @@
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5",
-   "test_commit": "ed9ade0",
+   "test_commit": "531da40",
    "assigned_worker": "worker D (judgment calibration)"
   },
   {
