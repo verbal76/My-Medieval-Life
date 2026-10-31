@@ -61658,8 +61658,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -61672,10 +61672,20 @@
      "date": "2026-10-30",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E; branch: None -> wip/x20-mp-econ",
      "why": "assigned to worker E"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> le04_test 68/0 incl. test_replay_after_load (3 checks failed before the fix): replay equals the first answer with types, refused replays refused, save round-trip identical, old saves load, bounded at 64 per namespace; test_commit: None -> d20f63f; commits + 72f14cb",
+     "why": "worker E fixed on wip/x20-mp-econ (72f14cb); merging into wip/expansion20"
     }
    ],
    "assigned_worker": "worker E",
-   "branch": "wip/x20-mp-econ"
+   "branch": "wip/x20-mp-econ",
+   "tests": "le04_test 68/0 incl. test_replay_after_load (3 checks failed before the fix): replay equals the first answer with types, refused replays refused, save round-trip identical, old saves load, bounded at 64 per namespace",
+   "test_commit": "d20f63f",
+   "commits": [
+    "72f14cb"
+   ]
   },
   {
    "id": "X20-WEAR-TRANSFER",
@@ -61693,8 +61703,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -61707,10 +61717,21 @@
      "date": "2026-10-30",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker E; branch: None -> wip/x20-mp-econ",
      "why": "assigned to worker E"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> wear_transfer_test 32/0 (22/32 failed on the old code; every path with item-count conservation); le04 68, le03_transactions 79, business 160, stalls 104, contracts 154, decay 37, chests 72, succession 26, multiplayer_c 340, equip 51, exploit 36, sharpen 11, property 123, net_econ_integrity 126, wiki pass; local G0 seeds 1,2 identical with and without (d4a1d71d, 40a3f050); test_commit: None -> d20f63f; commits + d20f63f; notes",
+     "why": "worker E fixed on wip/x20-mp-econ (d20f63f); merging into wip/expansion20"
     }
    ],
    "assigned_worker": "worker E",
-   "branch": "wip/x20-mp-econ"
+   "branch": "wip/x20-mp-econ",
+   "tests": "wear_transfer_test 32/0 (22/32 failed on the old code; every path with item-count conservation); le04 68, le03_transactions 79, business 160, stalls 104, contracts 154, decay 37, chests 72, succession 26, multiplayer_c 340, equip 51, exploit 36, sharpen 11, property 123, net_econ_integrity 126, wiki pass; local G0 seeds 1,2 identical with and without (d4a1d71d, 40a3f050)",
+   "test_commit": "d20f63f",
+   "commits": [
+    "d20f63f"
+   ],
+   "notes": "Wear travels with the last unit on every path (trade, transfer, authority exchange and shipments, gifts and offers, stalls, contracts and estate orders, inheritance, loot, theft, manor). Additive save fields: shipment wear, stall stock_wear and store_wear. Existing model kept: one worn unit per holder per item; two worn units merge with remaining uses summed (never below 1); settlements count units only (no wear there)."
   },
   {
    "id": "XAUDIT-01",
