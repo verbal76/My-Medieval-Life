@@ -113,6 +113,7 @@ jobs:
           $godot --headless --path game --script res://tests/le06_save_test.gd          # Expansion 20 LE-06: the economy's save bounded
           $godot --headless --path game --script res://tests/le05_test.gd               # Expansion 20 LE-05: travel in prices
           $godot --headless --path game --script res://tests/le05_repair_test.gd        # LE05-REPAIR: tool repair at the anvil (economy on or off)
+          $godot --headless --path game --script res://tests/le05_rental_test.gd        # LE05-RENTAL: tool rental behind the switch
           $godot --headless --path game --script res://tests/wear_transfer_test.gd      # X20-WEAR-TRANSFER: a tool's wear travels with it
           $godot --headless --path game --script res://tests/feast_test.gd
           $godot --headless --path game --script res://tests/horse_test.gd

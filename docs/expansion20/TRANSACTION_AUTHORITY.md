@@ -55,8 +55,13 @@ World.transactions.lose(txid: String, why: String) -> Dictionary   # goods destr
                                                                   # spoilage); the SELLER bears it; escrow back to the buyer
 
 World.transactions.settle_estate(txid: String, why: String) -> Dictionary   # LE-04: a party is gone (see section 6)
-World.transactions.transfer_coins(txid, from, to, amount, purpose) -> Dictionary   # LE-04: coins only, village parties
+World.transactions.transfer_coins(txid, from, to, amount, purpose, books = false) -> Dictionary   # LE-04: coins only, village parties
+                                                                          # (books: earnings and spending, LE05-RENTAL's fees)
 World.transactions.estate_claim(txid, dead: NPC, to, claim, why) -> Dictionary     # LE-04: OD-LE-13B, capped by the estate
+World.transactions.lend(txid, renter, owner, item, deposit) -> Dictionary   # LE05-RENTAL: one unit to the renter (its wear with it),
+                                                                          # the deposit into escrow; result `wear`: durability when lent
+World.transactions.end_rental(txid, owner, refund_to, item, from_inv, deposit, fee) -> Dictionary   # LE05-RENTAL: fee to the owner (or
+                                                                          # its estate), the rest of the deposit back; from_inv: the unit back
 World.transactions.get_shipment(txid) -> Dictionary          # a copy of the record ({} unknown)
 World.transactions.open_shipments() -> Array                 # copies, by txid order
 World.transactions.overdue(day: int) -> Array                # open shipments whose due_day < day (for the caller's rule)
@@ -157,3 +162,13 @@ determinism; the switch). Conservation is checked across the village, the settle
 **Tester note (save compatibility):** once settlement shipments run in shipped play, normal saves carry the `transactions` key. A
 build without this authority (Build 24 and earlier) loading such a save drops the key: open shipments' goods and escrowed coins
 would be lost to that build. Load such saves only with a build that has it (the same treatment as other optional keys).
+
+## 10. Rentals (LE05-RENTAL, owner 2026-10-31; economy on only)
+
+`lend` and `end_rental` are the authority's two rental calls; the rental records themselves (terms, fees paid, state) are
+`EconRentals`, saved under `economy.rentals` (`docs/expansion20/LE05_IMPLEMENTATION.md` section 5). Unlike a shipment's escrow,
+a rental's deposit stays **inside** the village: both parties are village people and nothing crosses its boundary, so
+`World.total_coins` counts `EconRentals.escrow()` (economy_sim's `rental_escrow` holder) and `coin_sources` does not move. Only a
+refund with nobody at all to receive it (no estate) leaves as an outside flow (`outside_coins`), as `settle_estate` does. The lent
+unit moves with its wear both ways (X20-WEAR-TRANSFER); `lend` refuses a renter already holding the item (`already_held`), so the
+rented unit is always its holder's one worn unit and comes back as such.

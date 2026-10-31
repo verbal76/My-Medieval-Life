@@ -2337,7 +2337,17 @@ func local_tool_need() -> Dictionary:
 
 
 func _get_tool(n: NPC, tool: String) -> bool:
-	if _buy_tool(n, tool):
+	if w.economy != null and w.economy.rentals.active():
+		# LE05-RENTAL (economy on): buying, renting from a willing owner, or doing without for now, weighed once a day
+		var c: Dictionary = w.economy.rentals.consider(n, tool, _tool_seller(n, tool))
+		if str(c.act) == "rent":
+			var o: NPC = c.owner
+			n.doing = "renting a %s" % tool
+			n.plan = [go(_workplace_cell(o) if o.job != "smith" else o.cell()), doit("rent_from", {"owner": o.id, "item": tool})]
+			return true
+		if str(c.act) == "buy" and _buy_tool(n, tool):
+			return true
+	elif _buy_tool(n, tool):
 		return true
 	if not noted.has("no_tool_%d_%d" % [n.id, w.day()]):
 		JudgmentLive.on_news(w, "no_tool", "npc:%d" % n.id, ["item:" + tool], n.pos)       # A5: they and their household know
@@ -2345,6 +2355,17 @@ func _get_tool(n: NPC, tool: String) -> bool:
 	n.doing = "out of work: needs a %s" % tool
 	n.plan = [go(wander_cell(w.building_door(n.home), 4)), work(90, "", {}, "idle")]
 	return true
+
+
+## LE05-RENTAL: the seller _buy_tool would go to for `tool` (the same order and test), null when none.
+func _tool_seller(n: NPC, tool: String) -> NPC:
+	for role in ["merchant_goods", "smith", "carpenter"]:
+		if role == "carpenter" and tool != "shovel":
+			continue
+		for o: NPC in w.npcs:
+			if o.alive and ((o.job == role) if role in ["smith", "carpenter"] else (buy_role(o) == role)) and o.inv.has(tool) and not keeps(o, tool) and buy_open(n, o, tool):
+				return o
+	return null
 
 
 ## A trip to buy `tool` from whoever sells it (the goods merchant first, the smith's wholesale buyer, B7-016; then the
@@ -2783,6 +2804,11 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if a.has("biz"):
 				return w.business.works.finish(n, a)       # B18-DP-01: the player's attendant at the player's own station
 			return w.work_craft(n, a.recipe, n.inv).result == "ok"     # the player's crafting (PAR-01, PAR-04)
+		"rent_from":                                               # LE05-RENTAL: at the owner's, the rental is made (or refused)
+			var ow := w.npc(int(a.get("owner", -1)))
+			if w.economy == null or ow == null or not ow.alive:
+				return false
+			return bool(w.economy.rentals.open(n, ow, str(a.item)).get("ok", false))
 		"repair":                                                  # LE05-REPAIR: a smith mends its own or its household's tool
 			release_station(n, a.get("station", ""))
 			var holder := w.npc(int(a.get("holder", n.id)))

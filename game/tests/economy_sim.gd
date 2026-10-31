@@ -254,6 +254,19 @@ func _init() -> void:
 		"world_bytes": JSON.stringify(w.to_dict()).length(), "static_mb": snappedf(OS.get_static_memory_usage() / 1048576.0, 0.1),
 		"peak_static_mb": snappedf(OS.get_static_memory_peak_usage() / 1048576.0, 0.1)}))
 	var ok: bool = int(final.currency.leak) == 0 and (final.ledger.items as Dictionary).is_empty() and econ_roundtrip_bad == 0
+	# LE-05: repairs (normal play) and rentals (economy on), read from the world's counters (diagnostics; they decide nothing)
+	var le05 := {}
+	for k in w.stats.keys():
+		if str(k).begins_with("repair") or str(k).begins_with("rent_"):
+			le05[k] = w.stats[k]
+	var ks: Array = le05.keys()
+	ks.sort()
+	var le05s := {}
+	for k in ks:
+		le05s[k] = le05[k]
+	print("LE05 %s" % JSON.stringify({"stats": le05s, "rentals_open": w.economy.rentals.open_records().size() if w.economy != null else 0,
+		"rental_escrow": w.economy.rentals.escrow() if w.economy != null else 0,
+		"rentals_save_bytes": JSON.stringify(w.economy.rentals.to_dict()).length() if w.economy != null else 0}))
 	if w.economy != null:                 # EXPANSION 20 LE-01: what the model recorded (diagnostics; it decides nothing)
 		var ec: EconomyFoundation = w.economy
 		print("economy: events %d (ordered %s), knowledge %d, needs recorded %d (dirty %d), offers %d, reservations %d, unbacked %d, links %d" % [ec.events.size(),
@@ -1188,6 +1201,7 @@ func _coins() -> Dictionary:
 	var out := {"villagers": 0, "bandits": 0, "dead": 0, "player": w.player.coins, "treasury": w.treasury, "loot": 0,
 		"quest_reserves": w.quests.reserved_total(), "manor_wages_reserved": w.manor_work.reserved_total(),
 		"contract_reserves": w.contracts.reserved_total(),   # CON-01: buyers' coins set aside for contracts
+		"rental_escrow": w.economy.rentals.escrow() if w.economy != null else 0,   # LE05-RENTAL: deposits held for tools on rent
 		"stall_tills": w.business.tills(),
 		"chapel": w.chapel.coins,
 		"courier_booths": w.couriers.held_coins() if w.couriers != null else 0}                  # DVW-B3-CHAPEL: the offerings fund; takings held in stall tills until settled (STALL-05)

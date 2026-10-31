@@ -1989,6 +1989,8 @@ func total_coins() -> int:
 		n += manor_work.reserved_total()
 	if contracts:
 		n += contracts.reserved_total()           # CON-01: buyers' coins set aside for contracts
+	if economy != null:
+		n += economy.rentals.escrow()             # LE05-RENTAL: deposits held for tools on rent (economy on only)
 	for a: NPC in npcs:
 		n += a.coins
 	for l in loot:
@@ -2284,6 +2286,8 @@ func _work_wear(who, tool: String, amount: int, skill: String, save_key: String)
 		return false
 	if who.inv.wear(tool, 0 if rng.randf() < Skills.value(who, skill, save_key) else amount):
 		stat("broke_" + tool)
+		if economy != null and economy.rentals.active():
+			economy.rentals.on_broke(who, tool)      # LE05-RENTAL: a rented tool broken in use ends its rental
 		return true
 	return false
 
@@ -2541,6 +2545,49 @@ func player_repair_begin(id: String, station := "", actor: PlayerState = null) -
 	var secs := float(t.minutes) / float(GameData.b("game_minutes_per_second")) * 0.5 * Skills.value(p, str(t.skill), "craft_time", 1.0)
 	reserve_for_player(station, secs * float(GameData.b("game_minutes_per_second")) + 1.0)
 	return {"ok": true, "station": station, "secs": secs}
+
+
+## LE05-RENTAL (economy on: market.drive and market.rental): the acting player rents one `item` from villager `owner`, who must be
+## willing and have a spare; the deposit (the tool's value) is escrowed by the transaction authority. A guest's request goes to the
+## host (World.mirror) and is the guest's own rental (its reference). "" when done, else why not.
+func player_rent_tool(owner: NPC, item: String, actor: PlayerState = null) -> String:
+	if mirrors():
+		return mirror("player_rent_tool", player_rent_tool.bind(owner, item), [owner, item])
+	if actor != null and actor != player:
+		return as_actor(actor, player_rent_tool.bind(owner, item))
+	if economy == null or not economy.rentals.active():
+		return "Nobody rents out tools here."
+	if owner == null or not owner.alive or owner.pos.distance_to(player.pos) > OFFER_REACH:
+		return "That is out of reach."
+	var r: Dictionary = economy.rentals.open(player, owner, item)
+	if bool(r.ok):
+		return ""
+	match str(r.code):
+		"already_renting", "already_held":
+			return "You already have a %s." % GameData.item_name(item).to_lower()
+		"no_funds":
+			return "The deposit is %d coins." % EconRentals.deposit_for(item)
+		"owner_unwilling", "no_stock", "claimed":
+			return "%s will not lend you a %s." % [owner.name, GameData.item_name(item).to_lower()]
+		"no_room":
+			return "Your pack is full."
+	return "It cannot be rented now."
+
+
+## LE05-RENTAL: the acting player gives back the `item` it rents (only its own rental: a guest's is found by its reference). The fee
+## for the wear used is paid from the deposit, the rest comes back. "" when done, else why not.
+func player_return_tool(item: String, actor: PlayerState = null) -> String:
+	if mirrors():
+		return mirror("player_return_tool", player_return_tool.bind(item), [item])
+	if actor != null and actor != player:
+		return as_actor(actor, player_return_tool.bind(item))
+	if economy == null:
+		return "You rent nothing."
+	var r: Dictionary = economy.rentals.open_for(Contracts.ref_of(player), item)
+	if r.is_empty():
+		return "You rent no %s." % GameData.item_name(item).to_lower()
+	var g: Dictionary = economy.rentals.give_back(r, "returned by the renter")
+	return "" if bool(g.get("ok", false)) else "You no longer have the %s." % GameData.item_name(item).to_lower()
 
 
 ## The player's mending of `id` is done: work_repair on the pack, as a smith's. Returns work_repair's result.
@@ -3527,6 +3574,8 @@ func kill(n: NPC, cause: String, by_ref := "") -> void:
 		_player_killing(n, by_ref)
 	quests.on_giver_died(n)                # coins set aside for the player's quest pass on with the rest
 	contracts.on_death(n)                  # and those set aside for its contracts (CON-01)
+	if economy != null and economy.rentals.active():
+		economy.rentals.on_death(n)        # LE05-RENTAL: a dead renter's rented tools go back; a dead owner's estate succeeds it
 	var rec_death: Array = recorder.death_begin(n, cause) if recorder != null else []     # REC-19: from here the purse and goods pass on
 	Identity.move(self, n.id, Identity.DEAD)    # ID-01
 	var heir := _heir(n)
