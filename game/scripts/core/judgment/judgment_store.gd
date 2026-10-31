@@ -156,7 +156,12 @@ var _types: Array = []
 var _tix := {}
 var _sev := PackedInt64Array()
 var _pol := PackedInt64Array()   # 1 GOOD, -1 BAD, 0 NEUTRAL
-var _perm := PackedInt64Array()  # 1 a memory of it never fades (Q11: murder, or permanent_severity)
+var _perm := PackedInt64Array()  # 1 a memory of it never fades for anyone who knows (Q11: murder, or permanent_severity)
+var _perm_first := PackedInt64Array()  # SJD-H C2: 1 a memory of it never fades for those it personally touched only: the ones it
+                                       # happened to, eyewitnesses and the family of the one harmed (catalog "memory": "firsthand");
+                                       # anyone else's (hearsay) is an ordinary memory and fades, while the judgment stays (_jperm)
+var _perm_legacy := PackedInt64Array() # the rule before C2 (the type's "permanent" or permanent_severity), read only for saved
+                                       # memory rows without flags (rounds 1-3), so saved data is never reinterpreted
 var _jperm := PackedInt64Array() # 1 a judgment from it never decays (Q02: murder)
 var _famh := PackedInt64Array()  # the type's family, hashed (Q08 personal morality)
 var _news := PackedInt64Array()  # A5: 1 for a news type (family "news", NEUTRAL): known and told, never judged, apart from the moral memory and gossip
@@ -248,7 +253,11 @@ func _init(config: Dictionary = {}, social_view: JudgmentSocial = null, seed := 
 		_tix[_types[i]] = i
 		_sev.append(int(d.severity))
 		_pol.append(1 if str(d.polarity) == "GOOD" else (-1 if str(d.polarity) == "BAD" else 0))
-		_perm.append(1 if bool(d.get("permanent", false)) or int(d.severity) >= int(m.permanent_severity) else 0)
+		var legacy := bool(d.get("permanent", false)) or int(d.severity) >= int(m.permanent_severity)
+		var first := legacy and str(d.get("memory", "")) == "firsthand" and int(d.severity) < int(m.permanent_severity)
+		_perm.append(1 if legacy and not first else 0)
+		_perm_first.append(1 if first else 0)
+		_perm_legacy.append(1 if legacy else 0)
 		_jperm.append(1 if bool(d.get("permanent", false)) else 0)
 		_t_ev.append(int((d.get("trust", 0))))
 		_famh.append(str(d.get("family", "")).hash())
@@ -476,13 +485,23 @@ func ordinary_count(observer: int) -> int:
 	return n
 
 
-## Whether `observer`'s memory of fact `f` is permanent (Q11): a murder (the type's "permanent"), anything at least
-## memory.permanent_severity, or, for the one affected by it (a victim, or a beneficiary), anything at least
-## memory.permanent_personal_severity.
-func _mem_permanent(observer: int, f: PackedInt64Array) -> bool:
+## Whether `observer`'s memory of fact `f`, learnt from source index `src`, is permanent (Q11): a murder (the type's
+## "permanent"), anything at least memory.permanent_severity, or, for the one affected by it (a victim, or a beneficiary),
+## anything at least memory.permanent_personal_severity. SJD-H C2 (owner 2026-10-31): a type whose catalog entry says
+## "memory": "firsthand" (an assault) is permanent only for those it personally touched: a participant, an eyewitness, or
+## the family (JudgmentSocial.kin) of one it was done to; anyone else's account of it, told or rumoured, is an ordinary
+## memory (it fades and is bounded like any other), while the judgment formed from it stays where X19-ASSAULT puts it.
+func _mem_permanent(observer: int, f: PackedInt64Array, src := 0) -> bool:
 	var t := f[F_TYPE]
 	if _perm[t] == 1:
 		return true
+	if _perm_first[t] == 1:
+		if src < TOLD:
+			return true
+		for v in _fact_people(f, 0) + _fact_people(f, 1):
+			if int(v) == observer or social.kin(observer, int(v)):
+				return true
+		return false
 	if _sev[t] < _perm_personal:
 		return false
 	var at := F_NA + 1 + 2 * f[F_NA]                 # victims, then beneficiaries, read in place
@@ -495,6 +514,12 @@ func _mem_permanent(observer: int, f: PackedInt64Array) -> bool:
 
 
 ## `observer` saw it (witnessed) or took part in it (participant): firsthand, full confidence by default.
+## Whether facts of type index `t` are kept past the ordinary horizon: a permanent memory type (Q11), or one whose judgment
+## never fades (X19-ASSAULT): such a fact stays so a later telling is recognised and judged once (its knowers stay).
+func kept_type(t: int) -> bool:
+	return _perm[t] == 1 or _perm_first[t] == 1 or _jperm[t] == 1
+
+
 func observe(ev: int, observer: int, src := "witnessed") -> void:
 	if not facts.has(ev):
 		return
@@ -559,10 +584,11 @@ func learn(observer: int, ev: int, src: String, by: int, hops: int, conf: int, a
 		if rev > 0:
 			rec.end(rev)
 		return true
-	var perm := _mem_permanent(observer, f)
+	var was_perm := had and (((mem[ev] as PackedInt64Array)[M_FLAGS] & 1) == 1)
+	var perm := was_perm or _mem_permanent(observer, f, SOURCES.find(src))     # a permanent memory stays so; hearsay seen later becomes so (C2)
 	mem[ev] = _pack_mem(t, f[F_DAY], SOURCES.find(src), by, hops, conf, maxi(sal, old_sal), actors, 1 if perm else 0)
 	_gver += 1
-	if perm and not had:
+	if perm and not was_perm:
 		_perm_refs[ev] = int(_perm_refs.get(ev, 0)) + 1
 	_stat("beliefs")
 	_judge(observer, ev)
@@ -1164,10 +1190,29 @@ func colour_bound(observer: int) -> int:
 	return JudgmentMath.mul_div(strongest, _col_cap, 1000)
 
 
-## Large GOOD and BAD together (SJD-Q04): min(GOOD, BAD), clamped to 0..100 points.
+## Large GOOD and BAD together (SJD-Q04, mixed feelings): min(GOOD, BAD) of the effective parts (the decayed fading part plus
+## the permanent part, as NET reads them; SJD-H C5: the lifetime totals never fade, so read from them it would only grow),
+## clamped to 0..100 points.
 func ambivalence(observer: int, subject: int) -> int:
 	var l := ledger(observer, subject)
-	return mini(100000, mini(int(l[0]), int(l[1])))
+	return mini(100000, mini(int(l[3]) + int(l[5]), int(l[4]) + int(l[6])))
+
+
+## Trust as a decision factor (SJD-H C1, C5), milli-points 0..100000: 50 points, moved by what the observer's own dealings and
+## the tellings they have weighed have done to their reliance on the subject (trust_of less the first impression liking gives,
+## X19-REGARD: liking itself is not judgment and is left out). No record: exactly 50.
+func trust_factor(observer: int, subject: int) -> int:
+	var row: Dictionary = trust.get(observer, {})
+	if not row.has(subject):
+		return int(c("decision").disposition_mid)
+	var first := clampi(social.regard(observer, subject), 0, 100) * 1000 * _t_seed / 1000
+	return JudgmentMath.clampi_(int(c("decision").disposition_mid) + int(row[subject]) - first, 0, 100000)
+
+
+## Fear of the subject as a decision factor (SJD-H C5), milli-points 0..100000: the violence the observer holds against them
+## (the permanent BAD part of the ledger: assault, killing) x `per_point` permille a point, as the report choice reads it.
+func fear_of(observer: int, subject: int, per_point: int) -> int:
+	return JudgmentMath.clampi_(JudgmentMath.mul_div(int(ledger(observer, subject)[6]), per_point, 1000), 0, 100000)
 
 
 ## The subject `observer` thinks worst of (lowest NET, then lowest id), or -999 when they judge nobody below 0.
@@ -1990,7 +2035,7 @@ func begin_day(d: int) -> void:
 		if int(dd) >= cutoff:
 			break
 		for ev in by_day[dd]:
-			if facts.has(ev) and (_perm[(facts[ev] as PackedInt64Array)[F_TYPE]] == 1 or _perm_refs.has(ev)):
+			if facts.has(ev) and (kept_type((facts[ev] as PackedInt64Array)[F_TYPE]) or _perm_refs.has(ev)):
 				_stat("kept_permanent")                # Q11: a permanent record never retires with the ordinary horizon
 				continue
 			if facts.has(ev):
@@ -2412,7 +2457,7 @@ func load_dict(d: Dictionary) -> String:
 	for r in m.memories:
 		if not memories.has(int(r[0])):
 			memories[int(r[0])] = {}
-		var flags := int(r[10]) if (r as Array).size() > 10 else (1 if _perm[int(_tix[str(r[2])])] == 1 else 0)   # round-1..3 rows: by type
+		var flags := int(r[10]) if (r as Array).size() > 10 else (1 if _perm_legacy[int(_tix[str(r[2])])] == 1 else 0)   # round-1..3 rows: by type, the rule they were saved under
 		memories[int(r[0])][int(r[1])] = _pack_mem(int(_tix[str(r[2])]), int(r[3]), SOURCES.find(str(r[5])), int(r[6]), int(r[7]), int(r[8]), int(r[9]), _ints2(r[4]), flags)
 		if (flags & 1) == 1:
 			_perm_refs[int(r[1])] = int(_perm_refs.get(int(r[1]), 0)) + 1

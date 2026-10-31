@@ -29,10 +29,16 @@ extends RefCounted
 ##                   barter_accept   Credit.barter_quote     whether a villager takes the swap
 ##                   food_seller     Credit._cheapest_food   whom a short household asks for food
 ##                   family_help     Construction._family_help  whether a relative household gives toward a home
+##                   tool_buy        NPCBrain._buy_tool, _fetch_dress_tool  which seller of a tool a villager buys from, or
+##                                                           putting it off (SJD-H C5: the owner's blacksmith example)
 ##                   report          World.report_crime      whether a villager who knows of a crime tells a guard (R2,
 ##                                                           SJD-F; integration.report OFF until measured)
 ##                 each on only with a store attached and its decision.integration flag set; feasibility (stock,
 ##                 coins, purchase_qty, can_hire, can_court, regard thresholds) and conservation are never overridden.
+##                 SJD-H C1 (owner 2026-10-31; docs/expansion20/JUDGMENT_INTEGRATION_AUDIT.md): the choices among
+##                 alternatives give each candidate the tier of the live rule it belongs to (its trade, its price), so the
+##                 live order steps only between what the live rule can tell apart, and judgment decides among comparable
+##                 options; with neutral judgment the live rule's pick still stands (JudgmentWeighting: tiers).
 
 
 static var shortcut := true          # tests turn it off to compare with the full scan
@@ -487,6 +493,8 @@ static func on_marriage(w, a: int, b: int) -> void:
 		w.judgment.observe_all(ev, [a, b])
 
 
+## SJD-H C1: with tiers, "the other candidates" are those of later tiers (each at least one live_order step below); the
+## callers handle the first's own tier.
 ## Round 2 (cost): whether the live rule's first pick must win whatever the other candidates are, so the full scan can
 ## be skipped with the same result. True only when live_order, necessity and disposition are the only weights (necessity
 ## is the same for every candidate): another candidate can win only by a disposition advantage worth more than
@@ -515,15 +523,15 @@ static func _first_stands(j: JudgmentStore, seller: int, first: int, profile := 
 	var wd := JudgmentWeighting.trait_weight(j.cfg, j.world_seed, seller, "disposition", int(wt.get("disposition", 0)), j)   # this seller's own weights (Q03/Q13)
 	var wo := JudgmentWeighting.trait_weight(j.cfg, j.world_seed, seller, "live_order", int(wt.get("live_order", 0)), j)
 	j._cu_read(seller)                          # the whole ledger is read below
-	var d0 := j.personal_disposition(seller, first)
-	var col0 := j.colour(seller, first)
-	if col0 != 0:
-		d0 = JudgmentMath.clampi_(d0 + col0, 0, 100000)   # as JudgmentWeighting._choose computes it
-	var best := int(dc.disposition_mid)
+	var d0 := int(JudgmentWeighting.opinion(j, j.cfg, profile, seller, first, true)[0])   # as JudgmentWeighting._choose computes it (C1 gain)
+	var mid := int(dc.disposition_mid)
+	var best_pd := mid
 	for s in j.subjects(seller):
 		if int(s) != first:
-			best = maxi(best, j.disposition(seller, int(s)))
-	best = mini(100000, best + j.colour_bound(seller))        # a stranger's family name can colour them up to this much
+			best_pd = maxi(best_pd, j.personal_disposition(seller, int(s)))
+	var g := JudgmentWeighting.gain(j.cfg, profile)
+	var best := JudgmentMath.clampi_(mid + JudgmentMath.mul_div(best_pd - mid, g, 1000), 0, 100000)
+	best = mini(100000, best + JudgmentMath.mul_div(j.colour_bound(seller), g, 1000))    # a stranger's family name can colour them up to this much
 	var gain := JudgmentMath.mul_div(wd, best, 1000) - JudgmentMath.mul_div(wd, d0, 1000)
 	var step := JudgmentMath.mul_div(wo, 100000, 1000) - JudgmentMath.mul_div(wo, 100000 - LIVE_ORDER_STEP, 1000)
 	if sel == "margin":
@@ -544,41 +552,55 @@ static func pick_buyer(w, brain, n: NPC, id: String) -> NPC:
 	return b
 
 
+## SJD-H C1: the buyers of one trade (one OUTLETS role) are one tier: the live rule takes the first of them in villager order,
+## which says nothing about them, so judgment chooses among them; the live order steps between trades. When no buyer of a
+## later trade can come within the margin of the first (_first_stands), only the first's own trade is weighed: the same
+## pick as the full scan (the others could not be drawn), at the cost of a few buyers.
 static func _pick_buyer(w, brain, n: NPC, id: String) -> NPC:
 	var first: NPC = null                     # the live rule's own pick: the first who can buy, in OUTLETS order
-	for outlet in NPCBrain.OUTLETS.get(id, []):
-		for b in brain._with_buy_role(outlet):
+	var first_outlet := -1
+	var outlets: Array = NPCBrain.OUTLETS.get(id, [])
+	for oi in outlets.size():
+		for b in brain._with_buy_role(outlets[oi]):
 			if b != n and b.alive and w.purchase_qty(b, n, id, maxi(1, n.inv.count(id))) > 0:
 				first = b
+				first_outlet = oi
 				break
 		if first != null:
 			break
 	if first == null:
 		return null
-	if shortcut and _first_stands(w.judgment, n.id, first.id, "trade_sell"):
-		w.judgment._stat("trade_choices")
-		w.judgment._stat("trade_shortcut")
-		return first
+	var only_own := shortcut and _first_stands(w.judgment, n.id, first.id, "trade_sell")
 	var cands := []
 	var people := {}
 	var top := 1
-	for outlet in NPCBrain.OUTLETS.get(id, []):
-		for b in brain._with_buy_role(outlet):
+	var tier := -1
+	for oi in range(first_outlet, outlets.size()):
+		var in_tier := false
+		for b in brain._with_buy_role(outlets[oi]):
 			if b == n or not b.alive or people.has(b.id):
 				continue
 			var q: int = w.purchase_qty(b, n, id, maxi(1, n.inv.count(id)))
 			if q <= 0:
 				continue
+			if not in_tier:
+				in_tier = true
+				tier += 1
 			var unit := int(w.sale_prices(b, n, id, 1)[0])
 			top = maxi(top, unit)
 			people[b.id] = b
-			cands.append({"id": b.id, "counterparty": b.id, "unit": unit})
-	if cands.is_empty():
-		return null
+			cands.append({"id": b.id, "counterparty": b.id, "unit": unit, "tier": tier})
+		if only_own:
+			break                                 # later trades cannot come within the margin: the first's own trade decides
+	if only_own:
+		w.judgment._stat("trade_shortcut")        # the later trades were not scanned
+	if cands.size() == 1:
+		w.judgment._stat("trade_choices")
+		return first
 	var need := JudgmentMath.clampi_((50 - n.coins) * 2000, 0, 100000)      # under 50 coins a seller needs the sale more
 	for i in cands.size():
 		var c: Dictionary = cands[i]
-		c.factors = {"live_order": maxi(0, 100000 - LIVE_ORDER_STEP * i), "necessity": need, "price": JudgmentMath.mul_div(int(c.unit), 100000, top)}
+		c.factors = {"live_order": maxi(0, 100000 - LIVE_ORDER_STEP * int(c.tier)), "necessity": need, "price": JudgmentMath.mul_div(int(c.unit), 100000, top)}
 	var r := JudgmentWeighting.choose(w.judgment, w.judgment.cfg, n.id, "trade_sell", cands, [w.day(), id.hash()])
 	w.judgment._stat("trade_choices")
 	if r.chosen == null or not people.has(r.chosen):
@@ -593,19 +615,28 @@ static func _pick_buyer(w, brain, n: NPC, id: String) -> NPC:
 ## Among `people` (in the live rule's own order of preference), the one `chooser` picks under `profile`: the live order
 ## and the chooser's judgment of each (plus any `extra` factors per person id). With every judgment neutral the live
 ## rule's first stands. null when `people` is empty.
-static func _pick(w, chooser: int, people: Array, profile: String, key: Array, extra := {}) -> NPC:
+## SJD-H C1: `tiers` (one per person, non-decreasing: the live rule's groups, e.g. its trades) make those of one tier equal in
+## live order, so judgment chooses among comparable people; without tiers each person is a step below the one before.
+static func _pick(w, chooser: int, people: Array, profile: String, key: Array, extra := {}, tiers := []) -> NPC:
 	if people.is_empty():
 		return null
-	if extra.is_empty() and shortcut and _first_stands(w.judgment, chooser, people[0].id, profile):
+	var peers: bool = not tiers.is_empty() and people.size() > 1 and tiers[1] == tiers[0]
+	if extra.is_empty() and not peers and shortcut and _first_stands(w.judgment, chooser, people[0].id, profile):
 		w.judgment._stat(profile + "_choices")
 		return people[0]
 	var cands := []
+	var rank := 0
 	for i in people.size():
 		var o: NPC = people[i]
-		var f := {"live_order": maxi(0, 100000 - LIVE_ORDER_STEP * i)}
+		if not tiers.is_empty() and i > 0 and tiers[i] != tiers[i - 1]:
+			rank += 1
+		var f := {"live_order": maxi(0, 100000 - LIVE_ORDER_STEP * (rank if not tiers.is_empty() else i))}
 		for k in extra.get(o.id, {}):
 			f[k] = extra[o.id][k]
-		cands.append({"id": o.id, "counterparty": o.id, "factors": f})
+		var cand := {"id": o.id, "counterparty": o.id, "factors": f}
+		if not tiers.is_empty():
+			cand.tier = rank
+		cands.append(cand)
 	var r := JudgmentWeighting.choose(w.judgment, w.judgment.cfg, chooser, profile, cands, key)
 	w.judgment._stat(profile + "_choices")
 	for o in people:
@@ -620,14 +651,29 @@ static func _pick(w, chooser: int, people: Array, profile: String, key: Array, e
 ## rule's, in its order: carpenters and raw-goods merchants with stock, then (for logs) woodcutters with logs.
 static func pick_seller(w, brain, id: String, buyer: NPC) -> NPC:
 	var people := []
+	var tiers := []
 	for o: NPC in w.npcs:
 		if o.alive and o != buyer and not w.asleep(o) and (o.job == "carpenter" or brain.buy_role(o) == "merchant_raw") and o.inv.has(id):
 			people.append(o)
+			tiers.append(0)                       # C1: the carpenters and raw-goods merchants, in villager order: comparable
 	if id == "log":
 		for o: NPC in w.npcs:
 			if o.alive and o != buyer and not w.asleep(o) and o.job == "woodcutter" and o.inv.has(id):
 				people.append(o)
-	return _pick(w, buyer.id, people, "trade_buy_from", [w.day(), id.hash()])
+				tiers.append(1)                   # the woodcutters only after them, as the live rule has it
+	return _pick(w, buyer.id, people, "trade_buy_from", [w.day(), id.hash()], {}, tiers)
+
+
+## trade_buy_from among sellers the live rule takes in villager order with nothing to tell them apart (SJD-H C1: the iron-bar
+## seller, NPCBrain._bar_seller; the seed merchant, NPCBrain._plan_buy_seed): one tier, so the buyer's opinion and trust
+## decide, and the live rule's first stands while they are neutral. `key` names the goods. null when `people` is empty.
+static func pick_comparable(w, buyer: NPC, people: Array, profile: String, key: Array) -> NPC:
+	if people.size() < 2:
+		return people[0] if not people.is_empty() else null
+	var tiers := []
+	tiers.resize(people.size())
+	tiers.fill(0)
+	return _pick(w, buyer.id, people, profile, [w.day()] + key, {}, tiers)
 
 
 ## hire_choice (Construction._keep_building): whom household `h` hires to carry for its house. The candidates are the
@@ -642,7 +688,10 @@ static func pick_helper(w, h: int, wage: int) -> NPC:
 				people.append(o)
 	if boss == null:
 		return people[0] if not people.is_empty() else null
-	return _pick(w, boss.id, people, "hire_choice", [w.day(), h])
+	var tiers := []
+	tiers.resize(people.size())
+	tiers.fill(0)                                 # C1: every hirable villager is the live rule's equal (villager order)
+	return _pick(w, boss.id, people, "hire_choice", [w.day(), h], {}, tiers)
 
 
 ## work_accept (Construction.hire, Business.hire): why `worker` turns down work for `employer` (a person id: the player
@@ -672,7 +721,7 @@ static func befriend_ok(w, a: int, b: int, regard: float) -> bool:
 	if not on(w, "befriend"):
 		return true
 	var j: JudgmentStore = w.judgment
-	var disp := mini(j.disposition(a, b), j.disposition(b, a))
+	var disp := mini(int(JudgmentWeighting.opinion(j, j.cfg, "befriend", a, b)[0]), int(JudgmentWeighting.opinion(j, j.cfg, "befriend", b, a)[0]))   # C1: read with the opinion gain
 	var at := float(Relations.cfg().befriend_at)
 	var wt: Dictionary = j.cfg.decision.profiles.befriend.weights
 	var u := JudgmentMath.mul_div(int(wt.closeness), roundi(clampf(regard, 0.0, 100.0) * 1000.0), 1000) + JudgmentMath.mul_div(int(wt.disposition), disp, 1000)
@@ -756,7 +805,10 @@ static func contract_refusal(w, n: NPC, buyer_ref: String) -> String:
 static func seller_order(w, b: NPC, people: Array, key: Array) -> Array:
 	if people.size() < 2:
 		return people
-	var first := _pick(w, b.id, people, "contract_seller", key)
+	var tiers := []
+	tiers.resize(people.size())
+	tiers.fill(0)                                 # C1: the live rule asks in villager order: every seller its equal
+	var first := _pick(w, b.id, people, "contract_seller", key, {}, tiers)
 	if first == null or first == people[0]:
 		return people
 	var out := [first]
@@ -785,9 +837,12 @@ static func barter_ok(w, seller: NPC, buyer) -> bool:
 ## member asks. The cheapest stands unless judgment moves it. Returns the entry.
 static func pick_food_seller(w, buyer: NPC, cands: Array) -> Dictionary:
 	var cs := []
+	var rank := 0
 	for i in cands.size():
 		var s = cands[i].seller
-		cs.append({"id": i, "counterparty": w.id_of_party(s), "factors": {"live_order": maxi(0, 100000 - LIVE_ORDER_STEP * i)}})
+		if i > 0 and float(cands[i].per) != float(cands[i - 1].per):
+			rank += 1                             # C1: neighbours asking the same price per food point are comparable
+		cs.append({"id": i, "counterparty": w.id_of_party(s), "tier": rank, "factors": {"live_order": maxi(0, 100000 - LIVE_ORDER_STEP * rank)}})
 	var j: JudgmentStore = w.judgment
 	var r := JudgmentWeighting.choose(j, j.cfg, buyer.id, "food_seller", cs, [w.day(), buyer.household])
 	j._stat("food_seller_choices")
@@ -796,6 +851,46 @@ static func pick_food_seller(w, buyer: NPC, cands: Array) -> Dictionary:
 	if int(r.chosen) != 0:
 		j._stat("food_seller_changed")
 	return cands[int(r.chosen)]
+
+
+## tool_buy (SJD-H C5; NPCBrain._buy_tool, _fetch_dress_tool): which seller of `tool` villager `n` buys from, or whether they put
+## it off. `cands` are the live rule's feasible sellers in its own order, [{seller: NPC, tier, price}] (tier: the live rule's
+## group, e.g. its trade; price: the bargained price buy_qty pays); `necessity` 0..100000 (100 points for the tool of their
+## trade). The live rule's first costs nothing; a seller of a later tier costs `later`, a dearer one `dearer`; the buyer's
+## opinion, trust, fear, loyalty and ambivalence (JudgmentWeighting fill) and the seller's skill (respect) compete with them and
+## with the need (necessity, sole_source) against putting it off (the profile's forgo). Returns {seller: NPC or null, forgo}.
+static func pick_tool_seller(w, n: NPC, tool: String, cands: Array, necessity: int) -> Dictionary:
+	var j: JudgmentStore = w.judgment
+	if cands.is_empty():
+		return {"seller": null, "forgo": false}
+	var p0 := maxi(1, int(cands[0].price))
+	var cs := []
+	var rank := 0
+	for i in cands.size():
+		var c: Dictionary = cands[i]
+		if i > 0 and int(c.tier) != int(cands[i - 1].tier):
+			rank += 1
+		var o: NPC = c.seller
+		var dearer := clampi((int(c.price) - p0) * 100000 / p0, 0, 100000)
+		cs.append({"id": i, "counterparty": o.id, "tier": rank, "factors": {"later": 10000 * rank, "dearer": dearer, "necessity": necessity, "respect": respect(o)}})
+	var r := JudgmentWeighting.choose(j, j.cfg, n.id, "tool_buy", cs, [w.day(), tool.hash()])
+	j._stat("tool_buy_choices")
+	if str(r.chosen) == "forgo":
+		j._stat("tool_buy_forgone")
+		return {"seller": null, "forgo": true}
+	if r.chosen == null:
+		return {"seller": null, "forgo": false}
+	if int(r.chosen) != 0:
+		j._stat("tool_buy_changed")
+	return {"seller": cands[int(r.chosen)].seller, "forgo": false}
+
+
+## Respect for ability (C5): the best level `o` holds in the skills of their trade (Skills job_skills), 0..100000.
+static func respect(o: NPC) -> int:
+	var best := 0
+	for sk in (Skills.cfg().get("job_skills", {}) as Dictionary).get(o.job, []):
+		best = maxi(best, Skills.level(o, str(sk)))
+	return clampi(best * 100000 / maxi(1, Skills.max_level()), 0, 100000)
 
 
 ## family_help (Construction._family_help): whether the responsible adult of a relative household `giver` gives toward

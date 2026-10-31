@@ -45,7 +45,7 @@ static func metrics(j: JudgmentStore) -> Dictionary:
 		ntrust += (j.trust[a] as Dictionary).size()
 	var kept := 0
 	for ev in j.facts:
-		if j._perm[(j.facts[ev] as PackedInt64Array)[JudgmentStore.F_TYPE]] == 1 or j._perm_refs.has(ev):
+		if j.kept_type((j.facts[ev] as PackedInt64Array)[JudgmentStore.F_TYPE]) or j._perm_refs.has(ev):
 			kept += 1
 	# ledgers, effective values
 	var nets := PackedInt64Array()
