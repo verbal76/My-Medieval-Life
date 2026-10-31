@@ -437,9 +437,18 @@ static func at_of(w, ref: String):
 ## A5 (REPAIR_AUDIT D2): a death, as news. Its household and close family (Life's graph: parents, partner, children) know
 ## of it as participants, those near the body as witnesses. It names the kind of death ("cause:slain", "starvation",
 ## "old_age", "other"), never who did it: a killer is known only from the killing itself, seen or told.
+## X20-BANDIT-AI: a bandit's death is news too (tagged "bandit"): those near the body know of it, the band among them, and it
+## passes on by word of mouth like any news; it is how the band comes to know its losses (JudgmentBandit.wariness).
 static func on_death(w, n: NPC, kind: String) -> int:
-	if w == null or w.judgment == null or n.role == "bandit":
+	if w == null or w.judgment == null:
 		return -1
+	if n.role == "bandit":
+		if not JudgmentBandit.on(w):
+			return -1                                    # the Build 19 behaviour: a bandit's death is not news
+		var bev: int = w.judgment.publish("death", [], [n.id], [], 0, ["cause:" + kind, "bandit"])
+		if bev > 0:
+			w.judgment.observe_all(bev, _ids(w.near(n.pos, float(GameData.b("witness_radius")))).filter(func(o): return int(o) != n.id))
+		return bev
 	if w.judgment.asp.enabled:
 		for pid in [n.mother, n.father, n.partner] + n.children:
 			w.judgment.asp.on_loss(w, int(pid))        # R5: the loss of a partner, child or parent is a family setback, met by personality

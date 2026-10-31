@@ -616,8 +616,9 @@ func hour(h: int) -> void:
 	var cell := maxf(1.0, r)
 	var grid := {}
 	var people: Array = []
+	var band := JudgmentBandit.on(w)          # X20-BANDIT-AI: bandits' hours together at the camp build their ties (and pass word among them)
 	for n: NPC in w.npcs:
-		if n.alive and n.role != "bandit" and n.role != "child" and not w.asleep(n):
+		if n.alive and (n.role != "bandit" or band) and n.role != "child" and not w.asleep(n):
 			people.append(n)
 			var c := Vector2i(floori(n.pos.x / cell), floori(n.pos.y / cell))
 			if not grid.has(c):
@@ -632,6 +633,8 @@ func hour(h: int) -> void:
 				for o: NPC in grid.get(c + Vector2i(dx, dy), []):
 					if o.id <= n.id or n.pos.distance_to(o.pos) > r or o.depth != n.depth:     # MIN-A: not through rock
 						continue
+					if (n.role == "bandit") != (o.role == "bandit"):
+						continue                                   # X20-BANDIT-AI: the band shares its hours among itself only
 					var kind := "met"
 					if working and n.job != "" and (n.job == o.job or (n.workplace != "" and n.workplace == o.workplace)):
 						kind = "work"

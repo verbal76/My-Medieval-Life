@@ -27,6 +27,9 @@ var victims := {}             # bandit id -> {victim id: last minute it targeted
 var counts := {"robberies": 0, "robberies_nothing": 0, "rerob_same_victim": 0, "bandit_deaths": 0, "retreat_starts": 0,
 	"retreats_survived": 0, "outnumbered_minutes": 0, "fought_outnumbered_minutes": 0, "band_assist_minutes": 0}
 var retreating := {}          # bandit id -> minute a retreat began (cleared when it reaches the camp alive or dies)
+var first_seen := {}          # bandit id -> minute first seen alive (arrival, coming of age, or the start)
+var bandit_minutes := 0.0     # bandit-minutes lived (per-capita mortality: deaths per bandit-year)
+var lifespans: Array = []     # game days each dead bandit lived from first seen
 
 
 func tick(w: World) -> void:
@@ -39,6 +42,9 @@ func tick(w: World) -> void:
 	for b: NPC in w.npcs:
 		if not b.alive or b.role != "bandit":
 			continue
+		if not first_seen.has(b.id):
+			first_seen[b.id] = w.minutes
+		bandit_minutes += 1.0
 		var att: Array = by_target.get(b.id, [])
 		var hostile := 0
 		var band := 0
@@ -130,7 +136,9 @@ func on_died(w: World, n: NPC, cause: String) -> void:
 	elif kinds.size() == 1:
 		by = str(kinds.keys()[0])
 	retreating.erase(n.id)
-	var row := {"day": w.day(), "id": n.id, "name": n.name, "cause": cause, "phase": phase, "by": by, "attacker_kinds": kinds, "last": s}
+	var lived := (w.minutes - float(first_seen.get(n.id, w.minutes))) / float(World.DAY)
+	lifespans.append(lived)
+	var row := {"day": w.day(), "lived_days": snappedf(lived, 0.01), "id": n.id, "name": n.name, "cause": cause, "phase": phase, "by": by, "attacker_kinds": kinds, "last": s}
 	deaths.append(row)
 	print("BANDIT_DEATH " + JSON.stringify(row))
 
@@ -145,5 +153,10 @@ func line(w: World) -> String:
 	for r in deaths:
 		by_phase[r.phase] = int(by_phase.get(r.phase, 0)) + 1
 		by_who[r.by] = int(by_who.get(r.by, 0)) + 1
-	return "BANDITS " + JSON.stringify({"day": w.day(), "alive": alive, "arrived": int(w.stats.get("outlaws_arrived", 0)),
+	var mean_life := 0.0
+	for x in lifespans:
+		mean_life += float(x)
+	var years := bandit_minutes / float(World.DAY) / float(Life.year_days())
+	return "BANDITS " + JSON.stringify({"day": w.day(), "alive": alive, "seen": first_seen.size(), "bandit_days": snappedf(bandit_minutes / float(World.DAY), 0.1),
+		"deaths_per_bandit_year": snappedf(float(deaths.size()) / maxf(0.001, years), 0.01), "mean_lifespan_of_dead_days": snappedf(mean_life / maxf(1.0, float(lifespans.size())), 0.01), "arrived": int(w.stats.get("outlaws_arrived", 0)),
 		"came_of_age": int(w.stats.get("came_of_age_in_clan", 0)), "counts": counts, "deaths_by_phase": by_phase, "deaths_by_who": by_who})

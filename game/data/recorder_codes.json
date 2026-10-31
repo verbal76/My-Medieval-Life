@@ -41,6 +41,7 @@
     "craft_refused": "the craft could not be done",
     "target_gone": "fight(): the target died, left the level, or (an NPC target) went into another building",
     "bandit_low_hp": "fight(): a bandit below 30% health breaks off",
+    "bandit_retreat": "fight(): a bandit weighing the danger (JudgmentBandit, X20-BANDIT-AI) falls back to the camp",
     "out_of_range": "fight(): the target was more than 25 tiles away",
     "near_bandit_camp": "fight(): a guard's target was within 12 tiles of the bandit camp",
     "blocked": "fight(): the straight-line chase step landed in a solid cell (SIM-F4): the chase is given up; the corner case of GP-CRIME-PURSUIT",
