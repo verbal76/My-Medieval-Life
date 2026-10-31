@@ -9,9 +9,9 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 104 |
-| Integrated | 89 of 104 (86%) |
+| Integrated | 90 of 104 (87%) |
 | Automated tests passed | 91 of 104 (88%) |
-| Integration verified | 55 of 104 (53%) |
+| Integration verified | 56 of 104 (54%) |
 | Gameplay verified | 0 of 104 (0%) |
 | Owner playtested | 0 of 104 (0%) |
 | Complete | 2 of 104 (2%) |
@@ -31,7 +31,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-TXN-REPLAY-FIELDS | Latent defect: the transaction authority's saved past results keep only basic fields, so an idempotent replay after a load returns a settle_estate result without its 'paid' amount; keep the full result (bounded) so a replay after load answers exactly as before | OWNER APPROVED | IN DEVELOPMENT | worker E / wip/x20-mp-econ | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-WEAR-TRANSFER | Defect: a tool's saved wear does not travel when the tool changes hands (sale, gift, inheritance, loot), so a worn tool can become as good as new; wear must follow the item through every transfer (existing state, WDR-022 lost state) | OWNER APPROVED | IN DEVELOPMENT | worker E / wip/x20-mp-econ | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (87)
+## Integrated, awaiting gameplay or owner verification (88)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -119,11 +119,12 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | OWNER APPROVED | INTEGRATED | Build 24 private draft 426357144 (wip/expansion20 4611d86) | INTEGRATION VERIFIED | PAUSED (owner 2026-10-28). Owner device checks of Build 24 when convenient; resume Expansion 20 only on the owner's instruction (handoff docs/handoffs/X20_RECOVERY_HANDOFF.md). |  | verification only |
 | X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 c79b12c | INTEGRATION VERIFIED | Owner device checks of Build 23 (phone install over Build 22, Windows, controller, two-device multiplayer, all nine host/guest pairs); owner decisions MP-INTERACT-Q1/Q2 and REG-X20-D1..D4. |  | verification only |
 | X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 5c303be | INTEGRATION VERIFIED |  |  | verification only |
+| X20-MP-ECON-INTEGRITY | When multiplayer and the economy systems are integrated, verify that disconnects, retries, duplicate requests and host recovery cannot duplicate or lose currency, goods or transactions | OWNER APPROVED | INTEGRATED | wip/expansion20 5830c35 | INTEGRATION VERIFIED |  |  | verification only |
 | X20-SETTLE-FOOD | Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game | OWNER APPROVED | INTEGRATED | wip/expansion20 5195c2c | INTEGRATION VERIFIED | LE-05 (paused 2026-10-28). |  | verification only |
 | X20-SETTLE-REOPEN | A closed settlement business reopens (or is re-established) when a household takes up its trade, through the existing business-creation and ownership rules, without restoring the former owner's money, stock, contracts, workforce or assets | OWNER APPROVED | INTEGRATED | wip/expansion20 ed6360f | INTEGRATION VERIFIED |  |  | verification only |
 | X20-TILL-KEEP | A household that moves away or gives up a house takes its storefront till balance into its own funds; the next occupant gets an empty till (TILL-D1) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 e8cc44b | INTEGRATION VERIFIED |  |  | verification only |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (7)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (6)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -133,7 +134,6 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | NOT STARTED | none | NOT TESTED | present the SJD-G report to the owner (batch R8) | SJD-G | XS |
 | X20-BACKGROUND | Expansion 20 continues in the background within approved decisions (Upwardly Build 83 is the owner's primary priority): combined integration, one baseline simulation on the merged commit, LE-06 first, trader reopening, X20-MP-ECON-INTEGRITY, SJD-G evaluation; no build rushed; escalate only the listed cases | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | X20-RESUME, design: UNKNOWN | UNKNOWN |
-| X20-MP-ECON-INTEGRITY | When multiplayer and the economy systems are integrated, verify that disconnects, retries, duplicate requests and host recovery cannot duplicate or lose currency, goods or transactions | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | worker E (MP-economy integrity) / wip/x20-mp-econ | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 
 ## Complete (2)
 
