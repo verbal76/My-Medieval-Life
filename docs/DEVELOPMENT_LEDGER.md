@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (710)
+## Approved requirement (720)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -23,6 +23,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B12A-02 | Fixed (WHAT_WAS_DONE:135) |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B12A-03 | Fixed / one withdrawn (addendum :1631) |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B12A-04 | Not recorded as done |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
+| B12A-05 | Accessibility not yet added: text scaling, a colour-blind mode, key rebinding, turning off the blinking | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | B12A-06 | Sword page added by CQ-01 (`3e283b6`); others not recorded |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | B12A-07 | Art blockers: crop stages, tool swings, sitting poses, chimney, sawhorse (Craftpix crops could supply crop art, B14-10) | 20+ | OWNER APPROVED | IMPLEMENTATION BLOCKED | NOT TESTED | NOT READY | OPEN |
 | B12A-08 | Deferred features from the Build 12 audit (umbrella; each child item tracked on its own) | 20+ | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
@@ -43,7 +44,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B13-12 | B closes only quantity selector | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B13-13 | Touch sprint | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B13-14 | Station occupancy |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
-| B13-15 | Android signing stability | owner decision | OWNER APPROVED | IMPLEMENTATION BLOCKED | NOT TESTED | NOT READY | OPEN |
+| B13-15 | Android signing stability | owner decision | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT READY | CLOSED |
 | B14-01 | Harvest or talk: A works the resource, Y / T talks to the villager beside it | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B14-02 | Villagers' home production: forage, brew poultices, treat their own wounds |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | B14-03 | House storefronts (player and villager households) |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -73,7 +74,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B16-READY | Build 16 development audit and release-readiness report | 16 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B18-DIR | Build 18 master integration directive (visual polish, character customization, armour, crop sharing) | 18 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | OPEN |
 | B19-EMERGE | Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| B19-RECOVERY | Build 19 carryover recovery within Expansion 20: audit the 18 unfinished Build 19 requirements and the 9 awaiting verification against the code, then integrate, finish or implement them on the Expansion 20 line | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B19-RECOVERY | Build 19 carryover recovery within Expansion 20: audit the 18 unfinished Build 19 requirements and the 9 awaiting verification against the code, then integrate, finish or implement them on the Expansion 20 line | 20 | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | multiplayer | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B7-001 | Starting coins | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B7-002 | Quest rewards reserved |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
@@ -81,7 +82,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B7-004 | Harvest-work wheat theft |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B7-005 | Earning money discoverable; "Trade with" | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B7-006 | Hired work pays poorly (mine shift 8 for ore worth ~18; axe needed) | 17 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
-| B7-007 | Deposits never refill; no stone source | 17 | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| B7-007 | Deposits never refill; no stone source | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B7-008 | Player can drain buyers to 0, kill all wildlife | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | B7-009 | Treasury starts below reserve; no paid manor work until ~day 12 | 15 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B7-010 | HUD anchoring on Android | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -156,7 +157,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | CREATURE-OWN | Creature ownership: Expansion 26 owns the behaviour, survival, combat and other creature-specific mechanics of skeletons, lizards, spiders and its other creatures; Expansion 27 owns their placement in its exploration environments and encounters; no duplicate creature behaviour systems | 26 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | CRT-01 | Player courtship and marriage through gifts: attraction, dating, proposal that can be declined if too early | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | CRT-02 | Friendship: a Befriend option appears after help and gifts; no proposal needed | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | multiplayer | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | multiplayer | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | CRT-04 | Villagers court each other through gifts, dating and proposals by the player's rules, replacing the random pairing chance | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | CRT-05 | Gift tastes follow obvious things: a villager's trade and current needs; favourite gifts speed courting, traditional gifts always work | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | CRT-06 | Friendship benefits: better prices, help and favours, gossip and news, backing in disputes and votes | 20+ | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -188,7 +189,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | DVW-A9 | Player can always escape predators/bandits (:34) | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| DVW-B3 | Coin sinks people enjoy (luxury imports, feasts, weddings, offerings, heriot) | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | DVW-B3-CHAPEL | Coin sink: offerings at a village chapel or shrine (a chapel building is needed) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | DVW-B3-FEAST | Coin sink: wedding feasts and seasonal feasts at the tavern, food and ale really bought and eaten | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | DVW-B3-LUX | Coin sink: luxury imports sold by the caravan for status | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
@@ -199,7 +200,12 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | DVW-B8 | Skills for farming, husbandry, hunting, healing | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | DVW-B9 | Readable danger: howl/roar cues, lethal-need warnings, cause on succession screen | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | E20-P1 | Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy) | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| E22-A | Expansion 22 Phase A, architecture and regional ledger: one regional ledger view over the village and settlements; no duplicate ledgers or parallel NPC simulation | 22 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| E22-B | Expansion 22 Phase B, settlement capability model: capabilities from workers, tools, buildings, resources and knowledge transfer; unapproved formulas and thresholds left unresolved | 22 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| E22-C | Expansion 22 Phase C, abstract regional settlements: conserved economic state; promote and demote with identity, property and history kept (E22-OD-01) | 22 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | E22-CONDITION | Expansion 22 owns the one shared building-condition, damage, deterioration and repair system; Expansion 25 reuses it for weather and disaster effects (one extensible system, no separate damage models) | 22 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| E22-D | Expansion 22 Phase D, settlement development: dwellings, infrastructure, abandonment off-map; the shared building-condition system (E22-CONDITION) | 22 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| E22-E | Expansion 22 Phase E, persistent regional networks on real routes (E22-OD-02), including travel-time route banditry on Expansion 23's faction records (ROAD-Q2) | 22 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | E22-OD-01 | Hybrid regional simulation: detailed nearby NPCs and abstract distant settlements that preserve individual identities, households, property, economic state and history | 22 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | E22-OD-02 | Continuous geography: streamed regions, persistent world coordinates, persistent player and NPC modifications | 22 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | E22-P1 | Expansion 22 phase 1: read-only audit of the Settlement Advancement specification against Build 18 (complete, partial, missing), Phases A-E dependency map, capability matrix, regional data model proposal, player views and diagnostics plan; no implementation | 22 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
@@ -228,11 +234,15 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | EQ-20 | Bandit coins recirculate (OD-16 a): bandits spend their hoards at the market, and guards recover loot to the treasury | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | EQ-21 | The caravan buys more of the village's surplus (OD-16 c): meat, hides and other over-produced goods | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | EQ-22 | Caravan buying order: smiths first starves the hide and leather chain after parity | 16 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| EXP-22 | Expansion 22, Settlement Advancement Phase 2: a region of independent settlements that grow, stagnate, decline or disappear through simulated causes, building on Build 18 without rebuilding it (phases A-E) | 22 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| EXP-23 | Expansion 23, Bandit Factions and Criminal Careers: crime, enforcement, justice and consequences extending the existing bandit and judgment systems (World Design Rule 016) | 23 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| EXP-24 | Expansion 24, Generational Legacy: earlier generations' consequences influence later ones through permanent identity, family, property, reputation and mortality; graves, chronicles, genealogy, property histories; extends Expansion 19 memory and Expansion 20's event record, no second history database | 24 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| EXP-26 | Expansion 26, Creatures and Heroes: taming, pets and companions, monsters and bosses, village defence, bounties, heroes, monster goods; owns creature behaviour (ROAD-Q3); designed with Expansion 25 as the 'Wild World' concept | 26 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | EXP-27 | Expansion 27, World Exploration, Dungeons & Encounters: connect the starting village to a larger county and broader world with meaningful encounters and consequences rather than making the player the predetermined hero; phases WORLD-A (audit map scale, streaming, navigation, save identities, mining cave entrances), WORLD-B (overworld regions, encounter locations, travel persistence; no assumed infinite generation), WORLD-C (approved skeleton behaviours and loot under existing combat and conservation rules), WORLD-D (environmental encounters, performance, multiplayer boundaries; magic as separate scoped work before coding) | 27 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | 17 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
-| EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | 18 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| EXP-A | Expansion A: Mining & Industrial Development (independent future expansion; supporting document is the primary specification) | 17 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| EXP-B | Expansion B: Settlement Advancement & Regional Economy (independent future expansion; supporting document is the primary specification) | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | 19 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
-| EXP-D | Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| EXP-D | Living Economy Expansion: needs-driven economic architecture (needs, offers, adaptive prices, contracts, reservations, credit, bounded knowledge, organic safety levers) across households, employment, production, construction, markets, caravans, mining, the manor, bandits and NPC decisions; its OWN standalone build | 20 | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | F-1 | NPC workshop construction | 18 | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | F-2 | Births, children, aging, family growth |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | F-3 | Music and sound |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
@@ -269,10 +279,10 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | FR-05 | Title window opens scrolled into the controls list |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | FR-06 | Wiki pages missing: magic, the employer star, journal and map, death causes, caravan, bandits | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | FR-07 | Economy and household simulations in CI (short variant) | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
-| FR-08 | Music and sound | 20+ | OWNER APPROVED | IMPLEMENTATION BLOCKED | NOT TESTED | NOT READY | OPEN |
+| FR-08 | Music and sound | 20+ | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT READY | CLOSED |
 | FR-09 | Crime from desperation | 19 | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | FR-10 | Archery | 20+ | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
-| FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | 19 | OWNER DECISION REQUIRED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | 19 | OWNER DECISION REQUIRED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | 16 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -309,7 +319,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | GP-ANVIL | Workshop anvil: the touch and click target is the visible anvil (not the woodpile); the character walks to a valid spot beside it; tapping the woodpile never opens the anvil; artwork, layout and crafting unchanged; every workstation's graphic and interaction target checked for the same mismatch | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | GP-BACK-DOORS | Back doors not drawn on roofs; a trail leads to every door | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | GP-BANDIT-CAMP-ART | Bandit camp: crates, barrels and campfire drawn with the wrong tiles | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | multiplayer | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
+| GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | multiplayer | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | GP-BUSINESS-COURIER | Business courier integration: the courier hand-off at a business desk (individually traceable part of GP-BUSINESS-DESK) | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | GP-BUSINESS-DESK | Every business has a business desk: trade and courier in one place | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | GP-CHECKPOINT-1 | Checkpoint 1: private three-platform playtest release (Android, Windows, Linux) of the quick-win polish fixes | multiplayer | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -334,7 +344,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | GP-PACK-DETAIL-FIT | Pack item detail panel: action buttons cut off the bottom of the screen | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | GP-PAUSE-PANEL | Pause menu: a framed panel over the dimmed game, not a full-screen brown background | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | GP-PICKAXE-ANIM | Android mining shows the pickaxe swing synchronized with the work and stops when mining stops (PC already does); other long work animations checked; mining speed, output and rules unchanged | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| GP-POLISH | Gameplay and Controls Polish batch: anvil interaction, lockpicking minigame, Android joystick option, Android right-side action layout, Android pickaxe animation, continuous harvesting on all platforms, overhead activity progress bar on all platforms, cross-platform input consistency; after the multiplayer player-action architecture is stable and before Expansion 20 | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | GP-PROGRESS-BAR | One overhead activity progress bar on every platform (the Android 'Mining' bar): above the working character and following them, labelled with the activity, filling per work cycle and resetting each cycle in continuous work, hidden when work ends, readable at all resolutions, no duplicate indicators; mining, woodcutting, farming, crafting, construction and other timed work; per player in multiplayer from authoritative progress, without clutter from distant players | multiplayer | OWNER APPROVED | INTEGRATED | OWNER PLAYTESTED | NOT READY | COMPLETE |
 | GP-PROPERTY-NAME-DOUBLE | Village log doubles a property's location ('beside the smithy beside the smithy') | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | GP-QTY-PICKER-CONTROLLER | Quantity pickers (putting goods up at a stall, gifts): Max and Min reachable in one press on a controller | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -368,24 +378,24 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | HOUSE-10 | Smaller attached rooms for existing houses (OD-14): a bedroom-sized addition that fits the current tile grid, built through the existing construction and module systems on legitimate adjoining ground, with real materials, labour and time | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | 20+ | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | HOUSE-12 | Sleeping loft: a lightweight house improvement adding sleeping places after real construction (materials, labour, time), integrated with sleeping, occupancy and household behaviour; not a navigable second floor | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | unassigned | OWNER APPROVED | IN DEVELOPMENT | TARGETED TESTS PASSED | NOT READY | OPEN |
+| ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | unassigned | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | INFO-01 | Sharing and selling prospecting information (MIN-C-Q2) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | INFRA-01 | Long-run test reliability: preserve long-running simulation progress or prevent session-idle termination, without altering simulation results | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | INFRA-02 | Manual GitHub Actions workflow for long-duration simulations: seed and duration inputs, isolated output, artifacts, commit/seed/runtime/fingerprint/ledger recorded, clear failure, no builds or releases, no automatic year-long runs, bounded concurrency; validated against a local 10-day run first | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | INV-18 | Categorized inventory: eight capacity pools, separate equipment, two upgrade stages | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | JOB-01 | Shared job board for salaried manor hands: eligible for appropriate board work, no extra wage, specialised exclusions kept, no universal priority, no double booking | 17 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | JOB-02 | Offered compensation on the manor job board: each funded posting offers pay that eligible workers weigh and may decline; the manor may raise its offer; jobs may stay unfilled; pay from real funds, in full on completion; no extra pay to salaried hands; CON-01 contracts stay separate | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| JUICE-00 | Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
+| JUICE-00 | Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only) | 20+ | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT APPLICABLE | UNKNOWN | OPEN |
 | K-1 | 5 coins vs land 60+ |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | K-2 | Tavern child and sage on pallets; no lying frame |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | K-3 | Every provisional number awaits the owner's balance review |  | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | LAW-SKILL | Law skill: learned by witnessing and carrying documents, taught by the clergy or reeve; needed by a courier to notarise | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | 20+ | OWNER APPROVED | INTEGRATED | NOT TESTED | UNKNOWN | OPEN |
-| LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | 20+ | OWNER APPROVED | INTEGRATED | NOT APPLICABLE | UNKNOWN | OPEN |
+| LE-01 | Living Economy stage LE-01: Shared actor, need, offer, knowledge and contract model | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | 20 | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | LE05-RENTAL | Tool rental behind the Living Economy switch through World.transactions: willing owner, deposit by tool value, fee by wear consumed, ownership identifiable, wear follows the tool, every return/loss/theft/destruction/inheritance/transfer path reconciled, multiplayer-safe, idempotent; NPCs weigh renting against buying, borrowing, another tool or postponing | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -400,7 +410,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | MIN-A | Mining expansion phase A: Audit terrain, elevation, mining, inventory, recipes, AI, pathfinding, saves and map generation; architecture and measurable acceptance tests | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MIN-B | Mining expansion phase B: Exhausted ore outcrops stay quarryable stone; quarry chain and stone logistics | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MIN-C | Mining expansion phase C: Natural prospecting clues, prospector profession, forge-made toolkit, samples and assay | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| MIN-C-Q1 | Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts | 17 | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| MIN-C-Q1 | Prospector compensation: support manor commissioning, not as the only employer; compatible with negotiated contracts | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MIN-C-Q3 | The smith remains the assayer; no separate assayer profession without approval |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | MIN-COLLAPSE | Binary collapse outcome: a person caught survives or dies deterministically; deaths through existing death handling; survivors handled physically | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MIN-D | Mining expansion phase D: Finite hidden deposit discovery; settlement mining capability levels 1-4 with autonomous NPC adoption | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -410,7 +420,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | MIN-EQUIP | Mining equipment made by carpenters and smiths (supports, ladders, minecarts, metal parts, repair materials) and obtained by villagers and the manor through ordinary trade and procurement | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MIN-F | Mining expansion phase F: Underground and cave mining, cutaway presentation, supports, minecarts, track construction and full industrial dependencies | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MIN-F2 | Implement the owner's MIN-F-Q1..Q5: support deterioration and collapse, hidden underground ore and manor tunnelling jobs, minecart preference, vertical shafts and levels, player-directed backfilling | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | 17 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
+| MIN-G | Mining expansion phase G: 100/365-day multi-seed simulations and gameplay tests; save validation; economic conservation; no resource spawning | 17 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | MIN-H | Enterable caves and underground mining environments (roof-fade principle, NPC pathing, persistence) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MIN-RIGHTS | Open access to common ground; legitimate property respected (MIN-E-Q3) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MIN-SHOVEL | Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -528,15 +538,15 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | Q-08 | Resource depletion and wildlife sustainability | owner decision | OWNER APPROVED | IMPLEMENTATION BLOCKED | NOT TESTED | NOT READY | OPEN |
 | Q-10 | Hot Attic Games read-only registry | owner action | OWNER APPROVED | IMPLEMENTATION BLOCKED | NOT TESTED | NOT READY | OPEN |
 | REC-001 | Adoption and orphan guardianship (NPCs and the player) | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
-| REC-002 | Over-the-air updates on the Hot Attic Games Mote architecture (fully automatic) | 20+ | OWNER APPROVED | IMPLEMENTATION BLOCKED | NOT TESTED | NOT READY | OPEN |
+| REC-002 | Over-the-air updates on the Hot Attic Games Mote architecture (fully automatic) | 20+ | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT READY | CLOSED |
 | REC-003 | Android builds target API 36 (Hot Attic Games standing platform policy) | 15 | OWNER DECISION REQUIRED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | REC-004 | Merge the Game Designer ('Bob') corrected spec into the project docs and record its owner answers | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | REC-005 | Working title 'The Well'; repository, package and identifiers stay My Medieval Life |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | REC-006 | Castles, dungeons and caves in the world | 20+ | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | REC-007 | Several settlements (villages, towns, cities) with their own economies; NPC migration and regional jobs between them | 20+ | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | REC-008 | Near/far simulation tiers (detailed near the player, abstract far away, nothing duplicated on switching) | 20+ | OWNER DECISION REQUIRED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| REC-009 | Combat style: real-time aimed attacks, melee combos and abilities on cooldowns | 20+ | OWNER DECISION REQUIRED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| REC-010 | Class progression, 'system jobs' and a tech/research tree | owner decision | OWNER DECISION REQUIRED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| REC-009 | Combat style: real-time aimed attacks, melee combos and abilities on cooldowns | 20+ | DEFERRED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| REC-010 | Class progression, 'system jobs' and a tech/research tree | owner decision | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT READY | CLOSED |
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | 20+ | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | 20+ | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | REC-013 | Need-based maintenance (wear) model and the other unanswered job-board questions | 17 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -588,7 +598,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | SEED-04 | Households save planting material from their own harvests | 16 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | SET-A | Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | 18 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
+| SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -605,7 +615,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
 | SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | 20 | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | SKILL-TRADES-18 | Carpentry, Masonry and Tanning skills, started from each person's Crafting experience; the matching work earns them | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | STALL-01 | Stalls are built by anyone on cleared land through the construction system with real materials, under the realm's 5% sales lease | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | STALL-02 | A stall's own inventory: goods are moved into it for sale and are in one place only | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -693,9 +703,9 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X20-B24-F6 | Review finding 6: stall commission recorded at the wrong moment (not at Stalls.settle) | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | X20-B24-F7 | Review finding 7: a storefront or counter till did not go to its previous holder's own funds on every holder change (manor, players, dead villagers, ended households, counters skipped) | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | X20-B24-F8 | Review finding 8: the recorder's 'starved with means' counted village food rather than the deceased's own and household means | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| X20-B24-REMED | Build 24 review remediation and Expansion 20 integration: per-finding register, failing-first regression tests, shared ownership-transition root causes, LE-04 on World.transactions with no double reservation, LE-06 bounded saves as an activation gate, X20-MP-ECON-INTEGRITY fault injection, SJD-G within budget, milestone report | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
-| X20-B24-REVIEW | Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
-| X20-BACKGROUND | Expansion 20 continues in the background within approved decisions (Upwardly Build 83 is the owner's primary priority): combined integration, one baseline simulation on the merged commit, LE-06 first, trader reopening, X20-MP-ECON-INTEGRITY, SJD-G evaluation; no build rushed; escalate only the listed cases | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| X20-B24-REMED | Build 24 review remediation and Expansion 20 integration: per-finding register, failing-first regression tests, shared ownership-transition root causes, LE-04 on World.transactions with no double reservation, LE-06 bounded saves as an activation gate, X20-MP-ECON-INTEGRITY fault injection, SJD-G within budget, milestone report | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| X20-B24-REVIEW | Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| X20-BACKGROUND | Expansion 20 continues in the background within approved decisions (Upwardly Build 83 is the owner's primary priority): combined integration, one baseline simulation on the merged commit, LE-06 first, trader reopening, X20-MP-ECON-INTEGRITY, SJD-G evaluation; no build rushed; escalate only the listed cases | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | X20-BANDIT-AI | Bandit situational awareness, threat assessment and self-preservation comparable to villagers (recognise pursuit, threat and outnumbering from available information; anticipate retaliation; fight/flee/hide/regroup/defend/ambush by numbers, equipment, injuries, stamina, personality, relationships, escape; conditional cooperation; learning through existing memory and judgment); villager retaliation and family defence not weakened; no stat changes; no target death rate | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASE CANDIDATE | OPEN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
@@ -708,7 +718,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | X20-MP-ECON-INTEGRITY | When multiplayer and the economy systems are integrated, verify that disconnects, retries, duplicate requests and host recovery cannot duplicate or lose currency, goods or transactions | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | X20-OPEN-ITEMS | Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy | 20 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | OPEN |
-| X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | 20 | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | X20-SETTLE-FOOD | Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | X20-SETTLE-REOPEN | A closed settlement business reopens (or is re-established) when a household takes up its trade, through the existing business-creation and ownership rules, without restoring the former owner's money, stock, contracts, workforce or assets | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | X20-SPLASH | Opening splash: the Hot Attic Games studio logo shows when the game starts, before the game; the app icon is left as it is | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
@@ -719,16 +729,20 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | XAUDIT-01 | Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | XEXPL-01 | Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 
-## Proposal awaiting an owner decision (not approved) (38)
+## Proposal awaiting an owner decision (not approved) (51)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
+| BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | 23 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| BAN-C | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) | 23 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| BAN-D | Expansion 23 BAN-D: rank, challenge, leadership, schism and autonomous succession | 23 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| BAN-E | Expansion 23 BAN-E: economy, judgment and politics integration; long-run simulations | 23 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | DGA-D1 | Meaning of "isometric" | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | DGA-D10 | Formal platform/engine approval (U1, U2) | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | DGA-D11 | Living-society scope (U20, U21, P1-P3, balance review) | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | DGA-D12 | Approval to start phase 1 | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | DGA-D2 | Isometric art source (J-G4) | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
-| DGA-D3 | Connectivity with no server | multiplayer | PROPOSED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| DGA-D3 | Connectivity with no server | multiplayer | SUPERSEDED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT APPLICABLE | CLOSED |
 | DGA-D4 | Shared-world rules (pause, characters, heir) | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | DGA-D5 | Reputation/ownership/PvP (J-S3, U21) | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | DGA-D6 | Combat model and latency (U7) | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
@@ -749,11 +763,16 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | ECON-P2 | Wildlife carrying capacity, sex floor, migration pool, hunting rights/quota, extinction, seasons (:116-121) | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | ECON-P3.3 | Stock targets in days of sales (agent proposal P3.3, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 185) | 20 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | ECON-P3.4 | Hire wages from the market quote (agent proposal P3.4, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 186) | 20 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| LEG-A | Expansion 24 LEG-A: reconcile Expansion 19's event and belief store; prevent a second history database | 24 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| LEG-B | Expansion 24 LEG-B: persistent event graph, significance and retention, kinship and provenance links (on Expansion 20's event record) | 24 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| LEG-C | Expansion 24 LEG-C: dialogue from real history, memorial biographies, graveyard and chronicle presentation | 24 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| LEG-D | Expansion 24 LEG-D: lineage and heir continuity, political, criminal and professional careers, damaged, rebuilt and sold properties | 24 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| LEG-E | Expansion 24 LEG-E: historical query performance, saves and long-run multigenerational tests | 24 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | MIN-L5 | Mining capability level 5 (integrated industrial mining) | 20+ | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | OWN-02 | Wildlife balance follow-up; horse imported, use pending | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
-| OWN-29 | Era, county, atlas storage, Godot, Android, PCG32 | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
-| Q-11 | Design gap assessment, phased sequence | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
-| REC-F1 | Recorder finding (10-day run, seed 1): villagers holding goods nobody buys ('holding unsold pottage, log, stone, feathers') re-decide every few game minutes without acting (400-600 decisions a day each against 4-19 actions by day 9), tripling decision volume as unsold stock grows. Existing Build 18 behaviour; not changed. | 19 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| OWN-29 | Era, county, atlas storage, Godot, Android, PCG32 | owner decision | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
+| Q-11 | Design gap assessment, phased sequence | owner decision | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
+| REC-F1 | Recorder finding (10-day run, seed 1): villagers holding goods nobody buys ('holding unsold pottage, log, stone, feathers') re-decide every few game minutes without acting (400-600 decisions a day each against 4-19 actions by day 9), tripling decision volume as unsold stock grows. Existing Build 18 behaviour; not changed. | 19 | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | owner decision | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | TIME-03 | Recommended time retuning (outliers): proposals only, owner review before any change | 16 | PROPOSED | INTEGRATED | INTEGRATION VERIFIED | NOT APPLICABLE | COMPLETE |
 | VP-01A | Village politics stage: Audit of the reeve, guard pay and succession decision points | 21 | PROPOSED | NOT STARTED | NOT APPLICABLE | NOT APPLICABLE | OPEN |
@@ -761,12 +780,15 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | VP-01C | Village politics stage: Voting and the election lifecycle | 21 | PROPOSED | NOT STARTED | NOT APPLICABLE | NOT APPLICABLE | OPEN |
 | VP-01D | Village politics stage: Political consequences in village life | 21 | PROPOSED | NOT STARTED | NOT APPLICABLE | NOT APPLICABLE | OPEN |
 | VP-01E | Village politics stage: Soak, calibration and owner review | 21 | PROPOSED | NOT STARTED | NOT APPLICABLE | NOT APPLICABLE | OPEN |
+| WORLD-A | Expansion 27 WORLD-A: audit map scale, streaming, navigation, save identities and mining cave entrances | 27 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| WORLD-B | Expansion 27 WORLD-B: overworld regions, encounter locations and travel persistence; no assumed infinite procedural generation | 27 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| WORLD-C | Expansion 27 WORLD-C: approved skeleton behaviours and loot under existing combat and conservation rules (behaviour from Expansion 26, CREATURE-OWN; placement here) | 27 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
+| WORLD-D | Expansion 27 WORLD-D: environmental encounters, performance and multiplayer boundaries; magic defined as separate scoped work before coding (magic beyond Fireball parked, OD-17 D32i) | 27 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 
-## Unapproved idea (10)
+## Unapproved idea (9)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
-| B12A-05 | Accessibility not yet added: text scaling, a colour-blind mode, key rebinding, turning off the blinking | 20+ | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | B17F-DEPLETE | Build 17 finding: 26-28 ore seams worked out a seed by day 365; resource depletion trend | 18 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | B17F-FOOD | Build 17 finding: missed meals for want of money (606-5,417 a year across seeds) | 20+ | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | B17F-HENS | Build 17 finding: chickens died out early on seeds 2 and 3 | 20+ | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
@@ -815,7 +837,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (250)
+## Owner decisions (279)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -858,13 +880,38 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | E22-OD-04 | Regional trade and transport: do traders' trips take real travel time, carry limited loads and risk loss on routes (replacing the instant six-day road trade), and do settlements trade with each other beyond the village | 22 | APPROVED |  |
 | E22-OD-05 | Population across the region: should off-map settlements get housing and land that limit growth (REG-DEMO-D1 left this to future systems), and may whole settlements be abandoned | 22 | APPROVED |  |
 | E23-OD-01 | Bandit factions: territory and jurisdiction, how many factions may exist and how they form, how leadership changes, and whether crimes act only on real inventories reached by real travel | 23 | APPROVED |  |
+| E25-OD-01 | Rivers and creeks on the maps (none exist): add a river and creek to the village map and the overworld? | 25 | APPROVED |  |
+| E25-OD-02 | Where does the river run relative to the houses (flood risk)? | 25 | APPROVED |  |
+| E25-OD-03 | Wells for bucket lines away from the river (packet recommendation: one or two wells as public works the reeve can build) | 25 | OPEN |  |
+| E25-OD-04 | Rebuild where it stood or on a safer plot? | 25 | APPROVED |  |
+| E25-OD-05 | Does weather reach the off-map settlements? | 25 | APPROVED |  |
+| E25-OD-06 | May the reeve keep a disaster reserve in the treasury? (recommendation: yes, inside the existing reserve rule, no new money) | 25 | OPEN |  |
+| E25-OD-07 | When to build Expansion 25 relative to Expansions 20-24 | 25 | PROVISIONAL |  |
+| E25-OD-08 | How long is a swept-away person missing? (recommendation: 1 to 3 game days by a seeded draw) | 25 | OPEN |  |
+| E25-OD-09 | Can a building be insured or protected (stone versus wood)? (recommendation: stone resists fire and wind better; no insurance in this expansion) | 25 | OPEN |  |
+| E26-OD-01 | Foxes: pets only, or also companions? (recommendation: companions too; only their pen use is pets-only) | 26 | OPEN |  |
+| E26-OD-02 | Monster respawn (recommendation: skeletons 3 days as approved, spiders alike; a killed boss not back for a game year, some never) | 26 | OPEN |  |
+| E26-OD-03 | How often a monster attacks the village (recommendation: about once in several game years, never more than one at a time) | 26 | OPEN |  |
+| E26-OD-04 | Bounties when the treasury is empty (recommendation: no bounty without the coins; villagers may pool coins) | 26 | OPEN |  |
+| E26-OD-05 | Bounty prices (recommendation: set by the reeve within an owner-approved band, proposal 20-60 coins monsters, 150-400 bosses) | 26 | OPEN |  |
+| E26-OD-06 | Monster goods recipes (recommendation: one special item per boss plus bones and rusty gear from skeletons) | 26 | OPEN |  |
+| E26-OD-07 | Companion combat numbers (recommendation: wolf about a wild wolf, fox weaker but quicker; heal with rest and food) | 26 | OPEN |  |
+| E26-OD-08 | Can villagers' pets or guard dogs fight in village defence? (recommendation: guard dogs join the guards' line) | 26 | OPEN |  |
+| E26-OD-09 | When to build Expansion 26, and may phases 26-A..C and 26-F start before Expansion 25? | 26 | OPEN |  |
 | FARM-08-Q-CROP | How is a field's crop divided among the farmers who work it? |  | APPROVED |  |
+| FARM-YIELD-D1 | Shared farming model: which wheat yield per cell, and may shared_manor_farming (FSE-12, FARM-06) and seasonal_village_farming (FSE-13) be switched on in the normal game? | unassigned | OPEN |  |
 | HORSE-Q | Plough horse: price and what it does | owner decision | APPROVED |  |
 | ID-D1 | Identity: when an heir takes over, does the village's view of the player carry on to the heir (Build 18 behaviour), or do the parent's ties stay with the parent's own identity while the heir starts from the ties they had as a villager? | unassigned | APPROVED |  |
 | ID-D2 | Identity changes the determinism gate: off-map people and player characters now draw ids from the one counter, so later villagers' ids shift and id-seeded pair chemistry diverges from Build 18 (seeds 1 and 2 differ from day 10; no leaks). Options: (a) one counter as built, accept a new gate baseline; (b) off-map people and player characters in a separate id band (1,000,000+): village ids match Build 18 and day 10 is identical, day 30 still differs once a settlement-born person arrives keeping their id (inherent to the approved rule); accept a new baseline from that point. Either way a re-baseline is needed. Also: a kept heir-child record lets kin (a grandmother) take in that child's orphaned children, which Build 18 did not. | unassigned | APPROVED |  |
 | ID-D3 | Identity gate baseline: approve the candidate new baseline (docs/design/IDENTITY_GATE_CANDIDATE.json)? Its only divergences (day 13 on both seeds) come from arrivals keeping their permanent band id, which changes traits Build 18 hashes from the id (chapel piety, caravan taste, skill seed, willingness, sprite). Alternatively those traits could be seeded from a stored per-person seed so they no longer depend on the id value (a design change). | unassigned | PROVISIONAL |  |
 | INV-Q1 | INV-18 borderline item classifications | owner decision | APPROVED |  |
 | INV-Q2 | INV-18 upgrade acquisition and cost | owner decision | APPROVED |  |
+| JUICE-J1 | May phase J1 (quick wins: notification split, coin tick, prompt pulse, hurt frames, 'Reduce effects' setting, unused fx_dust; one pooled effects helper) be implemented, and in which build? | unassigned | OPEN |  |
+| JUICE-JD1 | Audio: may the owned Living Forest sounds be integrated as FR-08's first slice, which events first, default volumes? | unassigned | SUPERSEDED |  |
+| JUICE-JD2 | Day and night: should the picture darken at night (how dark at midnight; interiors; underground already dark)? | unassigned | OPEN |  |
+| JUICE-JD3 | Villager chatter: how often may villagers show what they are doing in bubbles (OWN-19 extension)? | unassigned | OPEN |  |
+| JUICE-JD4 | Screen shake and haptics: allowed at all, on which events, and default on or off? | unassigned | OPEN |  |
+| JUICE-JD5 | Notifications: which village notes the player sees in the corner log by default, and whether a filter exists. | unassigned | OPEN |  |
 | LE05-RENTAL-REPAIR | LE-05 tool repair and rental (OD-LE-08 direction approved; worker A's proposal on wip/x20-le05, nothing built; wear now travels with tools, X20-WEAR-TRANSFER): approve building, behind the Living Economy switch, (1) repair at an anvil by a smith or the player costing ceil(input x missing share) of the item's own forge recipe and the same share of minutes, items without a forge recipe not repairable; (2) rental by workers short of a tool from holders with a spare, deposit = the tool's value, daily fee = the value share its wear consumes per working day, deposit escrowed in World.transactions, forfeited if the tool breaks or is not returned, settled to the estate on death; additive bounded save keys; nothing with the economy off. Repair as a shipped player recipe with the economy off would be a separate decision. | 20+ | APPROVED |  |
 | MIN-C-Q2 | Sharing or selling discoveries: proposed, not approved; no ownership, access or extraction-rights mechanics | owner decision | APPROVED |  |
 | MIN-D-Q1 | Should a business or the player be able to commission a survey through CON-01 (needs a service-contract term, OD-LE-03)? | owner decision | APPROVED |  |
@@ -1063,9 +1110,13 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X19-REP-TRANSMIT | The numerical formulas for family reputation transmission (how stories, their significance and retelling set an inherited impression) | 19 | APPROVED |  |
 | X19-RUNNERUP | Near-best choices (SJD-Q09): the agent-proposed chance that a villager takes a close second instead of the best option is 150 permille (15%), only among options within 2 points of the best. Keep 15%, or another value? | 19 | APPROVED |  |
 | X19-SPILL-REACH | How far does reputation spillover reach through extended family (parents, children, siblings, cousins, in-laws)? | 19 | APPROVED |  |
+| X19-SWITCHES-D1 | Enable in normal play the integrated-but-off Build 19 recovery features: R5 aspirations (judgment.json aspiration.enabled, decision.integration.job_choice; WDR-011-C) and the R2 judgment-weighted witness report hook (decision.integration.report; SJD-F)? | 20+ | OPEN |  |
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | 19 | APPROVED |  |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | 19 | APPROVED |  |
+| X20-ACTIVATION-AUTHORITY | Does X20-RESUME's automatic Living Economy activation on objective readiness (2026-10-30) still stand after the 2026-10-31 instructions to keep the economy disabled by default and the Build 25 freeze, or does activation now need explicit owner approval? | unassigned | OPEN |  |
+| X20-REMAINING-PLACEMENT | Where does the remaining Expansion 20 scope go relative to the Build 25 freeze (LE-07, EMP-PERM-01, LE-05 remainder, economy activation, SJD-H review): finished before the freeze, in Build 26, or carried past it? | unassigned | OPEN |  |
 | X20-SCOPE | Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forward into Expansion 20 (LE-02..LE-05)? | 20 | APPROVED |  |
+| X20-SERVICES-SCOPE | Does X20-SCOPE's 'negotiated wages and service contracts behind their switches (OD-LE-03/D02)' include the approved service-contract records CON-03..CON-08 (CON02-S-1..6 answers), or do they stay unscheduled? | unassigned | OPEN |  |
 | X20-TRADER-CLOSE | Review finding 1 (settlement traders): once traders close when nobody works them, all five settlement traders close by days 21-35 on seeds 1 and 2 and never reopen, ending caravan trade (village coins day 60: 5429->3995 seed 1, 5236->3848 seed 2; conservation intact; run 41133027134 on wip/x20-settle-food 108d252). Choose: (a) ship the fix as is; (b) add a rule that reopens a closed trader when a household takes up the trade again; (c) retune trader pay (excluded by the owner's no-retuning rule); (d) keep the trader's exemption from closing (Build 24 behaviour) until the owner decides. Lead recommendation: (d) now, (b) if the owner wants traders to be able to fail and recover. | 20+ | APPROVED |  |
 | X20-TRADER-PAY | Settlement traders reopen (X20-SETTLE-REOPEN) but close again within weeks: a trader keeps its till at its reserve (0.85 x starting till) and pays its household only from coins above it, so the household earns almost nothing and switches trade (Build 24's own rule). Trading stays well below Build 24 (day-60 village coins 4191 vs 5429 seed 1; 4083 vs 5236 seed 2), conservation exact. Options: (a) keep as is (legitimate outcome under WDR-022); (b) change the trader pay rule (e.g. pay the working household a share of turnover or a floor wage before holding the reserve), a retuning that needs approval. Lead recommendation: (a) for the next playtest, measure, revisit with the Living Economy wage work (LE-04 negotiated wages, off). | 20+ | DEFERRED |  |
 | XEXPL-D1 | Decision explainability: is an optional player-inspection panel wanted in this generation of builds, or only in-world explanation (dialogue, rumours, notices) for now? | unassigned | APPROVED |  |

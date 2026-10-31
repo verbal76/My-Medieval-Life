@@ -18,3 +18,14 @@ Readiness: **NOT AUTHORIZED for implementation**
 | Open (release blockers) | 0 |
 | Open owner decisions (blocking) | 0 (0) |
 
+## Not counted: umbrellas, proposals, ideas, deferred (6)
+
+| ID | Item | Kind | Approval |
+|---|---|---|---|
+| EXP-24 | Expansion 24, Generational Legacy: earlier generations' consequences influence later ones through permanent identity, family, property, reputation and mortality; graves, chronicles, genealogy, property histories; extends Expansion 19 memory and Expansion 20's event record, no second history database | umbrella | OWNER APPROVED |
+| LEG-A | Expansion 24 LEG-A: reconcile Expansion 19's event and belief store; prevent a second history database | proposal | PROPOSED |
+| LEG-B | Expansion 24 LEG-B: persistent event graph, significance and retention, kinship and provenance links (on Expansion 20's event record) | proposal | PROPOSED |
+| LEG-C | Expansion 24 LEG-C: dialogue from real history, memorial biographies, graveyard and chronicle presentation | proposal | PROPOSED |
+| LEG-D | Expansion 24 LEG-D: lineage and heir continuity, political, criminal and professional careers, damaged, rebuilt and sold properties | proposal | PROPOSED |
+| LEG-E | Expansion 24 LEG-E: historical query performance, saves and long-run multigenerational tests | proposal | PROPOSED |
+

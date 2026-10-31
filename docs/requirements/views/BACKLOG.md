@@ -4,11 +4,11 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 
 Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backlog, approved work with no build, work waiting on an owner decision for its build, and proposals and ideas. Nothing here is assigned to Build 20 or 21 until the owner says so.
 
-## Build 20 or later (backlog) (53)
+## Build 20 or later (backlog) (52)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
-| B12A-05 | Accessibility not yet added: text scaling, a colour-blind mode, key rebinding, turning off the blinking | idea | PROPOSED | NOT STARTED |
+| B12A-05 | Accessibility not yet added: text scaling, a colour-blind mode, key rebinding, turning off the blinking | approved | OWNER APPROVED | NOT STARTED |
 | B12A-07 | Art blockers: crop stages, tool swings, sitting poses, chimney, sawhorse (Craftpix crops could supply crop art, B14-10) | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | B12A-08 | Deferred features from the Build 12 audit (umbrella; each child item tracked on its own) | approved | DEFERRED | NOT STARTED |
 | B14-10 | Craftpix farm plants: crop stages, produce, crates, fruit trees chopped like the others | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
@@ -24,9 +24,9 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | FAM-08 | Future: an adult raised in the bandit clan decides their own future from circumstances, relationships, opportunities, needs and personal decisions (NPC Judgment, bandit factions); beyond the interim rule of FAM-07 | approved | OWNER APPROVED | NOT STARTED |
 | FR-02 | Forgotten Memories waterfalls, fences and props | approved | OWNER APPROVED | NOT STARTED |
 | FR-03 | A campfire for cooking raw meat outside the village | approved | OWNER APPROVED | NOT STARTED |
-| FR-08 | Music and sound | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | FR-10 | Archery | approved | DEFERRED | NOT STARTED |
 | HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | approved | DEFERRED | NOT STARTED |
+| JUICE-00 | Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | OWNER APPROVED | INTEGRATED |
 | MIN-L5 | Mining capability level 5 (integrated industrial mining) | proposal | PROPOSED | NOT STARTED |
 | OWN-19 | Quest markers; Fireball storyline; side quests; busy-villager bubbles | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
@@ -48,11 +48,10 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | PVG-05 | Procedural villages: growth over generations through inhabitants' legitimate construction (homes, roads, workshops in response to population, land, resources and finances), never an omniscient builder | approved | OWNER APPROVED | NOT STARTED |
 | PVG-06 | Procedural villages: validation before acceptance (road access, no illegal parcel overlap, valid footprints, traversable routes, reasonable expansion opportunities, growth not blocked by the initial layout, terrain and resources fit the settlement type), configurable criteria, tested across seeds, terrain and densities | approved | OWNER APPROVED | NOT STARTED |
 | PVG-07 | Procedural villages: deterministic generation and persistence; buildings, parcels, modifications, ownership and construction progress persist; regenerating or loading a region never overwrites player or NPC changes | approved | OWNER APPROVED | NOT STARTED |
-| REC-002 | Over-the-air updates on the Hot Attic Games Mote architecture (fully automatic) | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | REC-006 | Castles, dungeons and caves in the world | approved | DEFERRED | NOT STARTED |
 | REC-007 | Several settlements (villages, towns, cities) with their own economies; NPC migration and regional jobs between them | approved | DEFERRED | NOT STARTED |
 | REC-008 | Near/far simulation tiers (detailed near the player, abstract far away, nothing duplicated on switching) | approved | OWNER DECISION REQUIRED | NOT STARTED |
-| REC-009 | Combat style: real-time aimed attacks, melee combos and abilities on cooldowns | approved | OWNER DECISION REQUIRED | NOT STARTED |
+| REC-009 | Combat style: real-time aimed attacks, melee combos and abilities on cooldowns | approved | DEFERRED | NOT STARTED |
 | REC-011 | Main storyline after the first story quest (side quests now, story later) | approved | DEFERRED | NOT STARTED |
 | REC-012 | Tiny Ranch pack: on hold by the owner, not cancelled | approved | DEFERRED | NOT STARTED |
 | SET-D-MULTIGEN | Multigenerational verification of settlement development (SET-D) over a horizon long enough to show several generations | approved | OWNER APPROVED | NOT STARTED |
@@ -68,7 +67,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 |---|---|---|---|---|
 | CON-02-KINDS | CON-02 unfinished service kinds: further labour and service contracts beyond dig and survey (e.g. work on the buyer's materials with existing recipes), tracked as open dependencies of the Build 17 approval | approved | OWNER APPROVED | NOT STARTED |
 | DCR-01 | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control | rule | PROPOSED | NOT STARTED |
-| ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | approved | OWNER APPROVED | IN DEVELOPMENT |
+| ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | approved | OWNER APPROVED | INTEGRATED |
 | MP-ADOPTION-AGENCY | Adoption agency concept (future, separate design item) | approved | DEFERRED | NOT STARTED |
 | RECON-01 | Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off | approved | OWNER APPROVED | INTEGRATED |
 | REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | OWNER APPROVED | INTEGRATED |
@@ -83,11 +82,10 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | XAUDIT-01 | Cross-expansion preservation audit of Expansions 19-23 against the repository (read-only): branch inventory, historical timeline, five capability matrices, ownership map, duplicates, regression risks, test evidence and gaps, requirements already met, remaining work, sequence | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | XEXPL-01 | Decision Explainability: a shared, deterministic, compact explanation record for significant NPC decisions (decision, principal factors, needs, obligations, resources, beliefs, relationships, information available, outcome and alternatives, event references), shown in three layers (in-world, player inspection limited to the character's knowledge, developer traces); one shared architecture, not one per expansion | approved | OWNER APPROVED | NOT STARTED |
 
-## Waiting on an owner decision for its build (44)
+## Waiting on an owner decision for its build (40)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
-| B13-15 | Android signing stability | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | CON-03 | Restricted negotiated service advances (CON02-S-1) | approved | OWNER APPROVED | NOT STARTED |
 | CON-04 | Negotiated service compensation structures: work, results, base plus bonus (CON02-S-2) | approved | OWNER APPROVED | NOT STARTED |
 | CON-05 | Contract protections and dispute process before the local authority (CON02-S-3) | approved | OWNER APPROVED | NOT STARTED |
@@ -122,12 +120,9 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | OWN-02 | Wildlife balance follow-up; horse imported, use pending | proposal | PROPOSED | NOT STARTED |
 | OWN-08 | Post-audit remediation (SaveStore, tests.yml, release gates, stable test key) | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | OWN-22 | Platforms: Android first then PC; touch/gamepad/KBM auto-detected; settings | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
-| OWN-29 | Era, county, atlas storage, Godot, Android, PCG32 | proposal | PROPOSED | NOT STARTED |
 | PIT-02 | Larger and deeper open pits, strata, spiral and switchback ramps (MIN-E-Q5) | approved | OWNER APPROVED | NOT STARTED |
 | PL1-11 | Google Drive cloud saves (staged) | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | Q-08 | Resource depletion and wildlife sustainability | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
-| Q-11 | Design gap assessment, phased sequence | proposal | PROPOSED | NOT STARTED |
-| REC-010 | Class progression, 'system jobs' and a tech/research tree | approved | OWNER DECISION REQUIRED | NOT STARTED |
 | REC-014 | Revisit the settlement, agriculture, food, resource, population and trade foundations using the recent research | approved | OWNER DECISION REQUIRED | NOT STARTED |
 | ROAD-02 | Master Expansion Roadmap and Documentation Pack (owner, 2026-10-21): 17 Mining, 18 Settlements, 19 Judgment approved; 20 Living Economy, 21 Politics, 22 Bandits, 23 Legacy, Exploration and Multiplayer as proposed numbering | proposal | PROPOSED | NOT STARTED |
 | ROAD-03 | Expansion development priority 2026-10-24: 20 Living Economy, 21 Politics, 23 Bandits & Crime, 22 Settlement Advancement, 24 Legacy, 25 Weather & Disasters, 26 Creatures & Heroes, 27 to be verified; numbers unchanged; planning only | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
@@ -143,15 +138,14 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | ENV-RTK | RTK token tool and its hook persistent in the cloud environment | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 | Q-10 | Hot Attic Games read-only registry | approved | OWNER APPROVED | IMPLEMENTATION BLOCKED |
 
-## Multiplayer track (10)
+## Multiplayer track (9)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
 | B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | approved | OWNER APPROVED | INTEGRATED |
 | BUILD-3PLATFORM | Every build produces Android, Windows and Linux together, stably signed | approved | OWNER APPROVED | INTEGRATED |
-| CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | approved | OWNER APPROVED | NOT STARTED |
-| DGA-D3 | Connectivity with no server | proposal | PROPOSED | PARTIALLY IMPLEMENTED |
-| GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
+| CRT-03 | Courtship between players in multiplayer (the other player may decline a proposal) | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
+| GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each difference explained | approved | OWNER APPROVED | INTEGRATED |
 | GP-CHECKPOINT-1 | Checkpoint 1: private three-platform playtest release (Android, Windows, Linux) of the quick-win polish fixes | approved | OWNER APPROVED | INTEGRATED |
 | MP-ARCH | Multiplayer architecture approved in principle: one authoritative simulation, several full player characters, shared gameplay systems, single-player compatibility; with eight requirements: Build 19 simulation and single-player behaviour preserved; no separate simplified guest simulation; permanent identities and per-player ownership throughout; every platform a potential host and guest; the prototype kept as reference; multiplayer ahead of Expansion 20; explicit verification gates for Android, Windows, Linux, Steam Deck and mixed-platform sessions; the milestone in every status report until owner acceptance | approved | OWNER APPROVED | INTEGRATED |
 | MP-INET | Internet multiplayer is mandatory: free connection methods first; a virtual-LAN workaround alone does not meet the final usability requirement; a practical connectivity proposal (costs, dependencies, privacy, alternatives) comes to the owner before internet support is declared complete | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
