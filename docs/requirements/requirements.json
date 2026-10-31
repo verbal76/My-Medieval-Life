@@ -28889,14 +28889,51 @@
    "completion": "OPEN"
   },
   {
+   "id": "LE05-RENTAL",
+   "kind": "approved",
+   "title": "Tool rental behind the Living Economy switch through World.transactions: willing owner, deposit by tool value, fee by wear consumed, ownership identifiable, wear follows the tool, every return/loss/theft/destruction/inheritance/transfer path reconciled, multiplayer-safe, idempotent; NPCs weigh renting against buying, borrowing, another tool or postponing",
+   "description": "Tool rental behind the Living Economy switch through World.transactions: willing owner, deposit by tool value, fee by wear consumed, ownership identifiable, wear follows the tool, every return/loss/theft/destruction/inheritance/transfer path reconciled, multiplayer-safe, idempotent; NPCs weigh renting against buying, borrowing, another tool or postponing",
+   "source": "docs/directives/2026-10-31_sjdh_decisions_le05_authorization.md",
+   "owner_wording": "Renting must not automatically be the preferred choice.",
+   "approval": "owner, 2026-10-31",
+   "acceptance": [
+    "failing-first tests for each path; conservation exact; save/load and replay; economy off: nothing changes"
+   ],
+   "target_build": "20",
+   "parent": "LE-05",
+   "depends_on": [],
+   "decisions": [
+    "LE05-RENTAL-REPAIR"
+   ],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_sjdh_decisions_le05_authorization.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker G (LE-05); branch: None -> wip/x20-le05",
+     "why": "assigned"
+    }
+   ],
+   "assigned_worker": "worker G (LE-05)",
+   "branch": "wip/x20-le05"
+  },
+  {
    "id": "LE05-RENTAL-REPAIR",
    "kind": "decision",
    "title": "LE-05 tool repair and rental (OD-LE-08 direction approved; worker A's proposal on wip/x20-le05, nothing built; wear now travels with tools, X20-WEAR-TRANSFER): approve building, behind the Living Economy switch, (1) repair at an anvil by a smith or the player costing ceil(input x missing share) of the item's own forge recipe and the same share of minutes, items without a forge recipe not repairable; (2) rental by workers short of a tool from holders with a spare, deposit = the tool's value, daily fee = the value share its wear consumes per working day, deposit escrowed in World.transactions, forfeited if the tool breaks or is not returned, settled to the estate on death; additive bounded save keys; nothing with the economy off. Repair as a shipped player recipe with the economy off would be a separate decision.",
    "description": "LE-05 tool repair and rental (OD-LE-08 direction approved; worker A's proposal on wip/x20-le05, nothing built; wear now travels with tools, X20-WEAR-TRANSFER): approve building, behind the Living Economy switch, (1) repair at an anvil by a smith or the player costing ceil(input x missing share) of the item's own forge recipe and the same share of minutes, items without a forge recipe not repairable; (2) rental by workers short of a tool from holders with a spare, deposit = the tool's value, daily fee = the value share its wear consumes per working day, deposit escrowed in World.transactions, forfeited if the tool breaks or is not returned, settled to the estate on death; additive bounded save keys; nothing with the economy off. Repair as a shipped player recipe with the economy off would be a separate decision.",
    "source": "docs/directives/2026-10-30_x20_background_development.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Tool repair approved for normal and Living Economy gameplay (not behind the switch): anvil, materials from the forging recipe scaled by wear, labour time, skill limits, identity and ownership kept, no tiny-repair exploits, saves compatible; paid repair services may depend on the economy. Tool rental approved behind the switch: willing owner, deposit by value, fee by wear consumed, through the transaction authority, ownership identifiable, every loss/theft/death/transfer path consistent, multiplayer-safe, idempotent; renting weighed against buying, borrowing, other tools or postponing.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20+",
    "related": [
@@ -28909,8 +28946,51 @@
      "date": "2026-10-31",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-30_x20_background_development.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner approved (docs/directives/2026-10-31_sjdh_decisions_le05_authorization.md): repair in normal gameplay (economy on or off), rental behind the switch"
     }
    ]
+  },
+  {
+   "id": "LE05-REPAIR",
+   "kind": "approved",
+   "title": "Tool repair at an anvil for the player and eligible NPC smiths, in normal gameplay (economy on or off): materials from the item's forge recipe scaled by wear with deterministic rounding, labour time, smithing skill limits, durability restored by existing rules, identity and ownership kept, no tiny-repair exploits, saves compatible",
+   "description": "Tool repair at an anvil for the player and eligible NPC smiths, in normal gameplay (economy on or off): materials from the item's forge recipe scaled by wear with deterministic rounding, labour time, smithing skill limits, durability restored by existing rules, identity and ownership kept, no tiny-repair exploits, saves compatible",
+   "source": "docs/directives/2026-10-31_sjdh_decisions_le05_authorization.md",
+   "owner_wording": "Basic tool repair is a normal gameplay mechanic and must not depend on the Living Economy switch.",
+   "approval": "owner, 2026-10-31",
+   "acceptance": [
+    "failing-first tests: partial, heavy and nearly broken tools; skill limits; no value created; tiny-repair exploit prevented; old saves",
+    "wiki page for the player; G0 difference (economy off) reported with conservation evidence"
+   ],
+   "target_build": "20",
+   "parent": "LE-05",
+   "depends_on": [],
+   "decisions": [
+    "LE05-RENTAL-REPAIR"
+   ],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_sjdh_decisions_le05_authorization.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker G (LE-05); branch: None -> wip/x20-le05",
+     "why": "assigned"
+    }
+   ],
+   "assigned_worker": "worker G (LE-05)",
+   "branch": "wip/x20-le05"
   },
   {
    "id": "LOG-01",
@@ -50101,8 +50181,8 @@
    "description": "SJD-H calibration package (worker D's SJD-G soak report on wip/x20-sjdg; defaults keep today's behaviour): C1 influence strength is barely visible in behaviour - keep until played, or raise deed severities? C2 permanent assault/killing memories for every hearer are 76-82% of memories and make the judgment save 4.4-5.8 MB a year - let hearsay assault memories fade while the judgment stays (murder unchanged)? C3 every blow and every robbery in a spree counts separately (a robbery that took nothing included) - one deed per episode via the existing fight window, no theft when nothing taken? C4 family danger: fight vs shield flips between seeds and judgment-on kills 143-234 bandits a year vs 6-7 off - intended? C5 mixed feelings (SJD-Q04) has weight 0 so it is not in behaviour - leave, or weight it on decayed values? C6 confirm the approved decay works as described. Also: bandits re-rob the same victim every 2 game minutes until nothing is left - intended?",
    "source": "docs/directives/2026-10-30_mp_batch_d_decision.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "C1 strengthen integration and effectiveness without forcing decisions (audit all decision systems; no penalty inflation; both positive and negative judgment). C2 approved with conditions (second-hand memories of assault and lesser offences fade; opinions formed persist under existing decay; killing permanent; family events weighted; saves compatible). C3 approved with modification (incidents, not blows; attempted robbery still wrongdoing; separate after real disengagement; multiple victims kept). C4 per the bandit directive. C5 implement mixed feelings in real decisions. C6 decay confirmed, unchanged.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20+",
    "related": [
@@ -50121,6 +50201,11 @@
      "date": "2026-10-31",
      "change": "notes",
      "why": "owner answered C4 (docs/directives/2026-10-31_sjdh_c4_bandit_intelligence.md): do not reduce bandit mortality or weaken villager defence; give bandits comparable awareness and self-preservation (X20-BANDIT-AI). C1-C3, C5, C6 and the re-robbing question remain open"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered C1-C6 (docs/directives/2026-10-31_sjdh_decisions_le05_authorization.md); C4 covered by X20-BANDIT-AI"
     }
    ],
    "notes": "C4 answered 2026-10-31 -> X20-BANDIT-AI. Open: C1, C2, C3, C5, C6, bandit re-robbing (the re-robbing question is also investigated under X20-BANDIT-AI as a possible encounter inflator)."
@@ -61254,6 +61339,160 @@
     "Expansion 20 wip/expansion20 c79b12c"
    ],
    "notes": "Build 23 (release 425699977, tag build-23, private draft, run 40526826846: sim-gate then three exports). Verified: SHA256SUMS all OK; APK signed with the permanent certificate 31704b80...76cb80e6 (same as Builds 21, 22), v2+v3, package com.hotatticgames.mymedievallife.dev, versionCode 23, versionName 0.1.23-test, permissions INTERNET, ACCESS_NETWORK_STATE, ACCESS_WIFI_STATE, CHANGE_WIFI_MULTICAST_STATE (unchanged since Build 21); Windows zip holds MyMedievalLife.exe; Linux binary starts headless (Godot 4.7.2) and exits 0. Tester notes: BUILD_23_TESTER_NOTES.md in docs/release on wip/expansion20."
+  },
+  {
+   "id": "X20-JUDG-C1",
+   "kind": "approved",
+   "title": "Judgment integration audit and calibration: every NPC decision system audited for where judgment is considered, where it changes the outcome and where it should participate but does not; missing integration added; weighting adjusted only where tests show legitimate judgment is ignored; practical motives preserved; no penalty inflation; no target percentage",
+   "description": "Judgment integration audit and calibration: every NPC decision system audited for where judgment is considered, where it changes the outcome and where it should participate but does not; missing integration added; weighting adjusted only where tests show legitimate judgment is ignored; practical motives preserved; no penalty inflation; no target percentage",
+   "source": "docs/directives/2026-10-31_sjdh_decisions_le05_authorization.md",
+   "owner_wording": "It must not become a passive reputation database.",
+   "approval": "owner, 2026-10-31",
+   "acceptance": [
+    "audit table of every decision system: considered / changes outcome / missing",
+    "tests: comparable sellers -> meaningful tendency to the trusted one; sole source of a needed item -> still bought despite dislike; positive and negative judgment both act",
+    "conservation, determinism, saves; G0 difference reported with evidence"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "SJD-G"
+   ],
+   "decisions": [
+    "SJD-H-CAL"
+   ],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_sjdh_decisions_le05_authorization.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker F (judgment); branch: None -> wip/x20-judgment",
+     "why": "assigned"
+    }
+   ],
+   "assigned_worker": "worker F (judgment)",
+   "branch": "wip/x20-judgment"
+  },
+  {
+   "id": "X20-JUDG-C2",
+   "kind": "approved",
+   "title": "Second-hand memories of assault and lesser offences fade by existing memory rules while the opinion formed persists under the existing judgment and reputation decay; first-hand outweighs second-hand; killing permanent; family events weighted; reinforcement refreshes; bounded save growth",
+   "description": "Second-hand memories of assault and lesser offences fade by existing memory rules while the opinion formed persists under the existing judgment and reputation decay; first-hand outweighs second-hand; killing permanent; family events weighted; reinforcement refreshes; bounded save growth",
+   "source": "docs/directives/2026-10-31_sjdh_decisions_le05_authorization.md",
+   "owner_wording": "Do not delete the social consequences of an event merely because its detailed secondhand memory expires.",
+   "approval": "owner, 2026-10-31",
+   "acceptance": [
+    "tests: a faded hearsay memory leaves its opinion, which decays by C6 rules; killing never fades; repeat offences refresh; first-hand weighs more; old saves load",
+    "judgment save size after a year measured against SJDG soak (4.4-5.8 MB)"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [
+    "SJD-H-CAL"
+   ],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_sjdh_decisions_le05_authorization.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker F (judgment); branch: None -> wip/x20-judgment",
+     "why": "assigned"
+    }
+   ],
+   "assigned_worker": "worker F (judgment)",
+   "branch": "wip/x20-judgment"
+  },
+  {
+   "id": "X20-JUDG-C3",
+   "kind": "approved",
+   "title": "Wrongdoing counted by incident: a continuous fight is one incident with its meaningful actions; severity reflects what happened (injury, attempted or actual murder, threat, robbery); multiple victims kept; a robbery that took nothing is attempted robbery, not theft, and still wrongdoing; a new encounter after real disengagement is a new incident",
+   "description": "Wrongdoing counted by incident: a continuous fight is one incident with its meaningful actions; severity reflects what happened (injury, attempted or actual murder, threat, robbery); multiple victims kept; a robbery that took nothing is attempted robbery, not theft, and still wrongdoing; a new encounter after real disengagement is a new incident",
+   "source": "docs/directives/2026-10-31_sjdh_decisions_le05_authorization.md",
+   "owner_wording": "Do not allow incident grouping to erase genuinely different offenses.",
+   "approval": "owner, 2026-10-31",
+   "acceptance": [
+    "failing-first tests for each rule above using the existing event and judgment infrastructure; conservation and saves"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [
+    "SJD-H-CAL"
+   ],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_sjdh_decisions_le05_authorization.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker D; branch: None -> wip/x20-bandit-ai",
+     "why": "assigned with the bandit work (robbery and assault events)"
+    }
+   ],
+   "assigned_worker": "worker D",
+   "branch": "wip/x20-bandit-ai"
+  },
+  {
+   "id": "X20-JUDG-C5",
+   "kind": "approved",
+   "title": "Mixed feelings in real decisions: dislike, respect for ability, fear, dependence, family or friend loyalty and remembered help or harm compete in the existing decision evaluation; no single collapsed score; no automatic refusals; personality-consistent variety",
+   "description": "Mixed feelings in real decisions: dislike, respect for ability, fear, dependence, family or friend loyalty and remembered help or harm compete in the existing decision evaluation; no single collapsed score; no automatic refusals; personality-consistent variety",
+   "source": "docs/directives/2026-10-31_sjdh_decisions_le05_authorization.md",
+   "owner_wording": "IMPLEMENT THE MISSING BEHAVIOR. DO NOT LEAVE IT COSMETIC.",
+   "approval": "owner, 2026-10-31",
+   "acceptance": [
+    "tests: the blacksmith example (sole source -> may trade; alternatives -> may pay more elsewhere, delay or abandon), outcomes vary with personality and circumstance",
+    "validated that mixed feelings change outcomes where meaningful alternatives exist; conservation, determinism, saves"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [
+    "SJD-H-CAL"
+   ],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_sjdh_decisions_le05_authorization.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker F (judgment); branch: None -> wip/x20-judgment",
+     "why": "assigned"
+    }
+   ],
+   "assigned_worker": "worker F (judgment)",
+   "branch": "wip/x20-judgment"
   },
   {
    "id": "X20-MIGRATE",
