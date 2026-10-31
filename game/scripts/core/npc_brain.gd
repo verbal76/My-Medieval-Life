@@ -2968,8 +2968,10 @@ func fight(n: NPC, dt: float) -> void:
 		var stolen := ""
 		for id in tnpc.inv.ids():
 			if not keeps(tnpc, id):
+				var wd := tnpc.inv.wear_leaving(id, 1)     # X20-WEAR-TRANSFER
 				tnpc.inv.remove(id)
 				n.inv.add(id)
+				n.inv.take_wear(id, wd)
 				stolen = id
 				break
 		tnpc.remember("robbed by %s" % n.name)
@@ -3368,8 +3370,10 @@ func _support_trades(obligations: float) -> int:
 				break
 			if not w.claims_release(seller, tool, 1):
 				continue                          # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
+			var wd := seller.inv.wear_leaving(tool, 1)     # X20-WEAR-TRANSFER
 			seller.inv.remove(tool)
 			o.inv.add(tool)
+			o.inv.take_wear(tool, wd)
 			seller.coins += price
 			seller.earned += price
 			w.treasury -= price
@@ -3454,8 +3458,10 @@ func _deliver_orders() -> void:
 					break
 		if to == null:
 			continue                                  # kept at the forge until a worker needs it
+		var wd := smith.inv.wear_leaving(tool, 1)     # X20-WEAR-TRANSFER
 		smith.inv.remove(tool)
 		to.inv.add(tool)
+		to.inv.take_wear(tool, wd)
 		w.manor_orders.erase(x)
 		w.stat("gov_tool_delivered_" + tool)
 

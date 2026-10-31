@@ -233,8 +233,7 @@ func fall_apart(c: Dictionary) -> void:
 	var held := inv.total()
 	if held > 0:
 		var bag := Inventory.new()
-		for id in inv.ids():
-			bag.add(id, inv.count(id))
+		bag.add_all_from(inv)              # X20-WEAR-TRANSFER: with its wear
 		w.loot.append({"pos": c.pos, "inv": bag, "coins": 0, "from": "a broken cart"})
 		if World.level_of(c) != 0:
 			w.loot[w.loot.size() - 1].level = World.level_of(c)      # MIN-F: it lies on the cart's level

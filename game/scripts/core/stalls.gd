@@ -411,6 +411,7 @@ func daily() -> void:
 		var stock: Dictionary = s.get("stock", {})
 		for id in stock.keys():
 			w.granary.add(id, int(stock[id]))
+			w.granary.take_wear(id, biz._pool_out(s, "stock", id, 0))     # X20-WEAR-TRANSFER
 			moved += int(stock[id])
 		s.stock = {}
 		s.prices = {}
@@ -526,8 +527,10 @@ func npc_stock(n: NPC, a: Dictionary) -> bool:
 		var q := mini(int(g[id]), pantry.count(id))
 		if q <= 0 or GameData.value(id) <= 0:
 			continue
+		var wd := pantry.wear_leaving(id, q)     # X20-WEAR-TRANSFER: the stock keeps a worn unit's wear (Business._pool_in)
 		pantry.remove(id, q)
 		s.stock[id] = int(s.stock.get(id, 0)) + q
+		biz._pool_in(s, "stock", id, wd)
 		if not s.prices.has(id):
 			s.prices[id] = GameData.value(id)
 		w.stat("stall_stocked_villager", q)

@@ -177,6 +177,56 @@ func wear(id: String, amount: int) -> bool:
 	return false
 
 
+## X20-WEAR-TRANSFER: the durability that `n` units of `id` leaving this store take with them, -1 for none (they are all as new).
+## A stack holds at most one worn unit (the one in use, `durability`); units leaving a larger stack are the unused ones (remove keeps
+## the worn one), so the worn unit leaves only with the last of the stack (as remove then forgets its durability).
+func wear_leaving(id: String, n: int) -> int:
+	return int(durability[id]) if durability.has(id) and n >= count(id) else -1
+
+
+## X20-WEAR-TRANSFER: units of `id` that just arrived (already added) included a worn one with durability `d` (-1: none). With no worn
+## unit here it becomes the stack's one in use; with one here already the two are joined into one in use keeping their remaining
+## uses together (d + mine - full: the rest of the stack stays as new), at least 1 (a transfer never breaks a tool). Nothing else changes.
+func take_wear(id: String, d: int) -> void:
+	if d < 0 or not has(id):
+		return
+	var j := joined_wear(id, int(durability.get(id, -1)), d)
+	if j >= 0:
+		durability[id] = j
+
+
+## X20-WEAR-TRANSFER: the durability of a stack's one worn unit after a worn unit `d` joins it, whose own worn unit is `mine` (-1 for
+## none): -1 when nothing is worn. Shared by Inventory.take_wear and the goods pools kept as dictionaries (a stall's stock).
+static func joined_wear(id: String, mine: int, d: int) -> int:
+	var full := int(GameData.item(id).get("durability", 0))
+	if full <= 0:
+		return -1
+	if d < 0 or d >= full:
+		return mine
+	if mine < 0 or mine >= full:
+		return d
+	return maxi(1, mine + d - full)
+
+
+## X20-WEAR-TRANSFER: `n` units of `id` from this store into `to`, their wear with them (wear_leaving, take_wear). The caller has
+## checked that this store holds them and `to` can take them; false (nothing moved) otherwise.
+func move_to(to: Inventory, id: String, n: int) -> bool:
+	if n <= 0 or not has(id, n) or not to.can_add(id):
+		return false
+	var d := wear_leaving(id, n)
+	remove(id, n)
+	to.add(id, n)
+	to.take_wear(id, d)
+	return true
+
+
+## X20-WEAR-TRANSFER: every unit of `src` added here with its wear (a bag made of what someone carried, an inheritance). `src` is unchanged.
+func add_all_from(src: Inventory) -> void:
+	for id in src.items:
+		add(id, int(src.items[id]))
+		take_wear(id, int(src.durability.get(id, -1)))
+
+
 func to_dict() -> Dictionary:
 	return {"items": items.duplicate(), "durability": durability.duplicate(), "max_stacks": max_stacks}
 
