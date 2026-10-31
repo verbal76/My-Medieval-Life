@@ -66,7 +66,7 @@ func tick(w: World) -> void:
 		if not b.plan.is_empty() and (b.plan[0] as Dictionary).has("to"):
 			to_camp = Vector2(b.plan[0].to).distance_to(Vector2(w.bandit_camp)) < 4.0
 		var low := b.hp < b.max_hp * 0.3
-		var retreat := b.target < 0 and (low or (to_camp and dcamp > 6.0 and not att.is_empty()))
+		var retreat := b.target < 0 and dcamp > 6.0 and (low or (to_camp and not att.is_empty()))     # away from the camp: a hurt bandit lying up there is not retreating
 		if retreat and not retreating.has(b.id):
 			retreating[b.id] = w.minutes
 			counts.retreat_starts += 1
@@ -95,7 +95,7 @@ func on_note(w: World, t: String) -> void:
 	var at := t.find(" robbed ")
 	if at < 0 or not t.contains(" coins"):
 		return
-	var m := RegEx.create_from_string("^(.+?) robbed (.+) of (\\d+) coins(?: and a (.+))?\\.$").search(t)
+	var m := RegEx.create_from_string("^(?:\\[[^\\]]*\\] )?(.+?) robbed (.+) of (\\d+) coins(?: and a (.+))?\\.$").search(t)     # the note carries the time in front
 	if m == null:
 		return
 	counts.robberies += 1
