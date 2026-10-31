@@ -162,9 +162,81 @@ Outcomes:
 
 ## 5. Measurements
 
-The tables below are filled from the local G0 run and the Actions run on this branch (see the commit that adds them).
+### 5.1 Local G0 (`tools/sim_gate.py`)
+
+- **Run:** seeds 1 and 2, 30 days, code `2a2700d`.
+- **Result:** differs from `docs/release/sim_baseline.json` at every checkpoint (28 differences). This
+  is expected: judgment is on by default and its choices now move.
+- **Conservation:** clean at all four checkpoints (days 10 and 30 of both seeds): currency leak 0, item
+  leaks none.
+
+| Checkpoint | Baseline → this branch |
+|---|---|
+| s1 day 10 | alive 110 → 108; treasury 11 → 1 |
+| s1 day 30 | alive 117 → 115; treasury 6 → 8 |
+| s2 day 10 | alive 105 → 113; treasury 106 → 95 |
+| s2 day 30 | alive 111 → 123; treasury 1 → 100 |
+
+- **Also differ:** fingerprints, currency, item ledger, deposits and animals.
+- **Baseline:** not rewritten; the lead replaces it at integration.
+
+### 5.2 Year-long runs
+
+The new run is Actions 41166571846 (jobs 124435342689 seed 1, 124435342660 seed 2): `d99ec66`, shipped
+switches, 365 days, every 10. Both ended with exit 0, 0 script errors and no FATAL line. Currency leak
+was 0 and item leaks none at all 37 checkpoints of each seed. It is compared with Worker D's 41129188776
+(`d0f623b`, before the SJD-G shortcut fix).
+
+The two runs are not matched worlds: the seeds diverge from day 0, and the populations differ.
+
+| | D s1 | F s1 | D s2 | F s2 |
+|---|---|---|---|---|
+| Day 365 alive; starved | 312; 81 | 360; 0 | 512; 0 | 290; 0 |
+| Sales (`trade_sell`) changed by judgment | 311 of 107113 (0.29%) | 5395 of 84638 (6.4%) | 275 of 114380 (0.24%) | 3791 of 108849 (3.5%) |
+| Timber (`trade_buy_from`) changed | 205 of 8901 (2.3%) | 1209 of 5069 (23.9%) | 113 of 5534 (2.0%) | 272 of 3779 (7.2%) |
+| Contract seller asked first changed | n/a | 209 of 249 | n/a | 367 of 463 |
+| Hiring changed | n/a | 0 of 7 | n/a | 66 of 76 |
+| Food from a neighbour changed | n/a | 12 of 55 | n/a | 10 of 44 |
+| Tool purchases weighed; changed; put off | n/a | 34; 3; 0 | n/a | 21; 1; 0 |
+| Friendships held back | 142 of 5983 (2.4%) | 274 of 2458 (11.1%) | 83 of 3672 (2.3%) | 38 of 1826 (2.1%) |
+| Refusals: contract, credit, barter, work | 0/148, 0/4, 0/6, 0/10398 | 0/111, 0/3, 0/0, 0/793 | 0/87, 0/5, 0/6, 0/61 | 0/170, 0/1, 0/6, 0/6584 |
+| Memories (permanent) | 33115 (25211) | 8265 (708) | 53207 (43422) | 5711 (376) |
+| Contributions; ledger entries | 27410; 34652 | 2648; 12749 | 45832; 25766 | 1705; 20427 |
+| Judgment section, bytes | 4428882 | 1396577 | 5752694 | 1228014 |
+| World save, bytes | 20201337 | 7676950 | 15438378 | 6411658 |
+| Judgment section, bytes per living person | 14195 | 3879 | 11236 | 4235 |
+| Static memory at end / peak, MB | 724 / 734 | 377 / 386 | 559 / 569 | 346 / 355 |
+| Runtime, s; judgment's trade-choice time, s | 11043; 4386 | 10570; 4128 | 15526; 4869 | 11111; 3774 |
+| Effective NET p1 / p5 / p50 (points) | −2.1 / −0.7 / 0 | −3.2 / −1.5 / −0.02 | −3.2 / −1.4 / −0.07 | −1.2 / −0.4 / 0 |
+| Courtships / partnerships at the last checkpoint | 167 / 110 | 84 / 66 | 147 / 89 | 64 / 65 |
+
+Readings:
+
+- **Judgment now moves choices among comparable options.** The "changed" figures for contract seller and
+  hiring are high because those live rules take villager order, which says nothing. A changed pick there
+  means judgment decided among equals, not that it overrode a practical preference.
+- **No refusals appeared in either year.** Yes-or-no offers were mostly made to people with neutral or
+  mild opinions, and need outweighs dislike. C1 sets no target, and none was forced.
+- **Tool purchases are rare.** None was put off, which is consistent with the sole-source guarantee.
+- **C2 cut the judgment section to about a third or less per living person.** Permanent memories fell
+  from 76–82% of all memories to 7–9%. NET distributions, the opinions themselves, stay of the same order.
+- **Performance did not regress.** Runtime and the judgment trade-choice time are below D's
+  (part of that is SJD-G's shortcut fix, which D's run predates), and memory is lower.
+- **Courtship pacing needs a matched comparison.** D's report showed no regression at day 100. This
+  run's day-100 figures are similar or higher: courtships about 14–22, partnerships 26–27. But the
+  year-end totals are lower, against larger or smaller populations. Friendships held back rose in seed 1
+  (11.1%), which the opinion gain on `befriend` can explain. A matched comparison (the same commit with
+  `opinion_gain_permille` 1000 for `befriend` only) would isolate it. **Flagged for the lead;** no run was
+  made beyond the budget.
+- **One permanent entry reaches −158 points** (s1; −110 in s2). It comes from 176 contributions against
+  one subject: repeated blows, each posted as an assault (twins: assault 113). That is the C3
+  episode-counting defect Worker D is fixing; it is not this calibration.
 
 ## 6. Wiki
 
-The wiki already says what villagers' opinions do. It was checked against the new behaviour:
-`game/scripts/core/wiki*.gd` pages on judgment and gossip. See the report for the pages updated.
+Updated `game/scripts/core/wiki_topics.gd`, page "What villagers think of you":
+- **Memory and time:** hearsay of an assault fades, while the opinion it formed stays.
+- **New section, Mixed feelings:** comparable sellers, the sole seller of a needed tool, paying more
+  elsewhere, putting off a purchase, less willingness to lend to someone who wronged you.
+
+`wiki_test` passes 141/0. No numbers or internals are shown.
