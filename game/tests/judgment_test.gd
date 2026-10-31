@@ -916,10 +916,10 @@ func test_q07_no_hop_limit() -> void:
 					far = maxi(far, int(b.hops))
 					if not day_reached.has(i):
 						day_reached[i] = d
-		if type == "killing" or type == "assault":                  # permanent (X19-ASSAULT: an assault is, like a murder, never forgotten)
+		if type == "killing":                  # permanent for everyone (Q11)
 			check(far == 39 and int(day_reached.get(39, -1)) >= 30, "no hop limit: a %s went %d retellings down the line, one meeting a day (the far end on day %d)" % [type, far, int(day_reached.get(39, -1))])
-		else:
-			check(far > 3 and far < 39, "an ordinary theft went %d retellings, past the old limit of 3, until too faint to remember" % far)
+		else:                                  # SJD-H C2 (owner 2026-10-31): hearsay of an assault fades like a theft's
+			check(far > 3 and far < 39, "an ordinary %s went %d retellings, past the old limit of 3, until too faint to remember" % [type, far])
 		var once := true
 		for i in 40:
 			if j.ledger(i, 99)[2] > 1:
@@ -970,7 +970,7 @@ func test_q11_permanent_memories() -> void:
 	var a := j.publish("assault", [JOHN], [BOB])
 	j.observe_all(a, [STRANGER])
 	check(bool(j.belief(BOB, a).permanent) and bool(j.belief(STRANGER, a).permanent),
-			"an assault is unforgettable to everyone who knows of it, as a murder is (X19-ASSAULT 'Permanent', 2026-10-23; before, only to the one assaulted)")
+			"an assault is unforgettable to the one assaulted and to an eyewitness (X19-ASSAULT; hearsay of it fades since SJD-H C2, judgment_calibration_test)")
 	for i in 10:
 		j.observe(j.publish("help_minor", [300 + i], [], [STRANGER]), STRANGER)
 	check(j.ordinary_count(STRANGER) == 3 and bool(j.belief(STRANGER, k).permanent), "ordinary memory stays bounded; the murder is not pushed out")
@@ -978,8 +978,8 @@ func test_q11_permanent_memories() -> void:
 		j.advance_day(d)
 	check(not j.belief(STRANGER, k).is_empty() and not j.belief(BOB, a).is_empty(), "120 days on, past the 30-day horizon: the murder and the personal assault are remembered")
 	check(j.has_fact(k) and j.has_fact(a), "...their facts never retire, so they can still be told (and judged once: the knowers stay)")
-	check(not j.belief(STRANGER, a).is_empty(), "the bystander's memory of the assault did not fade either (X19-ASSAULT)")
-	check(j.meet(STRANGER, 400) == 2 and not j.belief(400, k).is_empty() and not j.belief(400, a).is_empty(), "a murder and an assault can be told years later (both permanent, X19-ASSAULT)")
+	check(not j.belief(STRANGER, a).is_empty(), "the eyewitness's memory of the assault did not fade either (X19-ASSAULT, first-hand)")
+	check(j.meet(STRANGER, 400) == 2 and not j.belief(400, k).is_empty() and not j.belief(400, a).is_empty(), "a murder and an assault can be told years later (both kept by those who saw them)")
 	var j2 := store(c)
 	j2.load_dict(JSON.parse_string(JSON.stringify(j.to_dict())))
 	check(bool(j2.belief(STRANGER, k).permanent) and bool(j2.belief(BOB, a).permanent) and j2.has_fact(k), "a save and load keep permanent memories and their facts")
