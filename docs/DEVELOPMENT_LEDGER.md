@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (721)
+## Approved requirement (722)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -710,6 +710,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X20-BANDIT-AI | Bandit situational awareness, threat assessment and self-preservation comparable to villagers (recognise pursuit, threat and outnumbering from available information; anticipate retaliation; fight/flee/hide/regroup/defend/ambush by numbers, equipment, injuries, stamina, personality, relationships, escape; conditional cooperation; learning through existing memory and judgment); villager retaliation and family defence not weakened; no stat changes; no target death rate | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASE CANDIDATE | OPEN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| X20-ECON-SUSTAIN | Build 25 economic sustainability analysis: per-run checkpoint analysis and graphs (population, employment, money and its holders including the chapel, household purchasing power, production and trade, businesses and wages, bandits, judgment effects); three separate health questions (conservation, circulation, sustainability); comparison with earlier runs and economy on vs off; ranked corrective actions; analysis only | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASE CANDIDATE | OPEN |
 | X20-JUDG-C1 | Judgment integration audit and calibration: every NPC decision system audited for where judgment is considered, where it changes the outcome and where it should participate but does not; missing integration added; weighting adjusted only where tests show legitimate judgment is ignored; practical motives preserved; no penalty inflation; no target percentage | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | X20-JUDG-C2 | Second-hand memories of assault and lesser offences fade by existing memory rules while the opinion formed persists under the existing judgment and reputation decay; first-hand outweighs second-hand; killing permanent; family events weighted; reinforcement refreshes; bounded save growth | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |

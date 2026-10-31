@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (11)
+## Workers and task branches (12)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -15,6 +15,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
+| X20-ECON-SUSTAIN | 20 | IN DEVELOPMENT | lead | wip/requirements-control |
 | X20-MERGED-VALIDATION | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 

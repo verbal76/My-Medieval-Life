@@ -63414,6 +63414,44 @@
    "next_action": "Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md)."
   },
   {
+   "id": "X20-ECON-SUSTAIN",
+   "kind": "approved",
+   "title": "Build 25 economic sustainability analysis: per-run checkpoint analysis and graphs (population, employment, money and its holders including the chapel, household purchasing power, production and trade, businesses and wages, bandits, judgment effects); three separate health questions (conservation, circulation, sustainability); comparison with earlier runs and economy on vs off; ranked corrective actions; analysis only",
+   "description": "Build 25 economic sustainability analysis: per-run checkpoint analysis and graphs (population, employment, money and its holders including the chapel, household purchasing power, production and trade, businesses and wages, bandits, judgment effects); three separate health questions (conservation, circulation, sustainability); comparison with earlier runs and economy on vs off; ranked corrective actions; analysis only",
+   "source": "docs/directives/2026-10-31_build25_economic_sustainability_analysis.md",
+   "owner_wording": "Our objective is to determine whether My Medieval Life has a functioning, sustainable living economy—not merely whether its simulation can run for 365 days without crashing.",
+   "approval": "owner, 2026-10-31",
+   "acceptance": [
+    "the ten deliverables of section 6, with measurements, source logs, commit SHAs and reproducible analysis scripts; unavailable metrics named as unavailable",
+    "technical validation passed distinguished from economic sustainability demonstrated; no gameplay change without approval"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "X20-MERGED-VALIDATION"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-10-31",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-10-31_build25_economic_sustainability_analysis.md"
+    },
+    {
+     "date": "2026-10-31",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/requirements-control",
+     "why": "analysis in progress (lead): seed 2 normal log parsed; per-checkpoint samples recovered from sim.json artifacts by a read-only recover job (branch wip/val-recover, run 41251843562, no simulation)"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/requirements-control"
+  },
+  {
    "id": "X20-FINAL",
    "kind": "approved",
    "title": "Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release",

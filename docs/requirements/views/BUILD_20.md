@@ -8,21 +8,22 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 117 |
-| Integrated | 106 of 117 (91%) |
-| Automated tests passed | 110 of 117 (94%) |
-| Integration verified | 64 of 117 (55%) |
-| Gameplay verified | 0 of 117 (0%) |
-| Owner playtested | 0 of 117 (0%) |
-| Complete | 2 of 117 (2%) |
-| Open (release blockers) | 115 |
+| Approved requirements in scope | 118 |
+| Integrated | 106 of 118 (90%) |
+| Automated tests passed | 110 of 118 (93%) |
+| Integration verified | 64 of 118 (54%) |
+| Gameplay verified | 0 of 118 (0%) |
+| Owner playtested | 0 of 118 (0%) |
+| Complete | 2 of 118 (2%) |
+| Open (release blockers) | 116 |
 | Open owner decisions (blocking) | 1 (0) |
 
-## In development (worker assigned) (2)
+## In development (worker assigned) (3)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
+| X20-ECON-SUSTAIN | Build 25 economic sustainability analysis: per-run checkpoint analysis and graphs (population, employment, money and its holders including the chapel, household purchasing power, production and trade, businesses and wages, bandits, judgment effects); three separate health questions (conservation, circulation, sustainability); comparison with earlier runs and economy on vs off; ranked corrective actions; analysis only | OWNER APPROVED | IN DEVELOPMENT | lead / wip/requirements-control | NOT TESTED |  | X20-MERGED-VALIDATION, design: UNKNOWN | UNKNOWN |
 | X20-MERGED-VALIDATION | Merged year-long validation after integrating workers D, F and G: one 30-day baseline replacement, then three 365-day runs on the merged SHA (seeds 1 and 2 normal settings, one economy-enabled), results per run against earlier evidence; then stop for the owner's review | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (104)

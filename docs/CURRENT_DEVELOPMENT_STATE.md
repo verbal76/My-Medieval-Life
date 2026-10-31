@@ -38,6 +38,9 @@ archived at `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-31.md`.
 - **DOC-AUTH-01:** a revised owner specification set will supersede older design documents on the owner's explicit final
   approval, not before.
 
+- **X20-ECON-SUSTAIN** (lead): economic sustainability analysis of the Build 25 runs; per-checkpoint samples come from a read-only
+  recover job on `wip/val-recover` (`885723b`, workflow change only, no simulation). Analysis scripts in the report's appendix.
+
 ## Next actions
 
 1. When 41233948995 and 41233970504 finish: the consolidated validation report, then stop for the owner's review.
