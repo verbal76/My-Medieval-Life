@@ -117,6 +117,10 @@ Suspected or unverified (needs evidence before classification):
   as decimals (54 → 54.0). Severity: save continuity, not conservation. Proposed fix (small, additive): save and restore the random
   state as an optional key, keep inventory order, convert deposit amounts back to whole numbers on load; then a whole-world reload and
   continue check in the harness.
+  FIXED 2026-11-01 (`da1ed8c`, in Build 25 at `2c0a780`): random state saved (optional key `rng_state`), pack order saved (`order`),
+  deposit numbers whole on load; `save_continuity_test` 5 checks; save_transfer 21, migration 109, le06_save 21, le07_gates 25,
+  judgment_guard_save 20, start_test 523, conservation 8, run_tests 3,601 all pass (local). Known limitation, not a defect: a save does not
+  hold movement in progress (headings, plans, paths), so a loaded world is deterministic from its save but not identical to one never saved.
 
 ## Deferred or rejected (E, with the owner decision)
 
