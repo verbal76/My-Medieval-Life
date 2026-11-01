@@ -18,6 +18,16 @@ specific approved work missing (section C). Plan: `docs/release/build25_reconcil
 **Owner decisions 2026-11-01** (`docs/directives/2026-11-01_career_business_employment_final_decisions.md`): B25-CAREER-D1, B25-BUSINESS-D2,
 B25-EMPLOY-D3, B25-AMBITION-D4, all APPROVED for Build 25 implementation (B25-CAREER-SYSTEM and children).
 
+**REDUCED-RESOURCE MODE (owner 2026-11-01, resource directive; until the owner restores normal priority):** one Claude coding worker
+at a time; no new agents; computation through GitHub Actions (`long-sims.yml`: seeds, days, every, set, variants, sim_args; read results
+from compact lines, not raw logs); minimal reporting. Active: wip/b25-employ (skilled places and skill-aware hiring, from `7dfd3d5`,
+local head `7ce739d` at suspension of the others). Suspended at a safe checkpoint with "WIP (suspended):" commits pushed to their
+branches: wip/b25-juice, wip/b25-report, wip/b25-materials, wip/b25-capability, wip/b25-services (each from `2c0a780`; their worktrees
+are kept under `.claude/worktrees/agent-*`). No GitHub Actions jobs running. Resume order after the reset: integrate b25-employ; then
+business founding and permanent employment; then the suspended branches one at a time (finish, targeted tests, merge); then farming
+yield by simulation (Actions variants of shared_wheat_yield), LE-07 gates on the integrated candidate and economy activation
+(B25-LE-ACTIVATE-D1), validation once at the end (Actions: 30-day gate, full suites, year-long runs), packaging only on owner authorization.
+
 **Next actions (Build 25):** Build 25 source `wip/expansion20` at `2c0a780` (chapel, instrumentation, gossip fix, civic records,
 recovered documents, career ambition `7dfd3d5`, Living Economy remainder `63c0144`, save continuity `2c0a780`). Owner decisions of
 2026-11-01 recorded: B25-CAREER-D1..B25-AMBITION-D4, B25-NINE-D1..D9, B25-LE-ACTIVATE-D1 (economy on by default once the LE-07 gates
