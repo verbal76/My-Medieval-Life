@@ -54,6 +54,7 @@ func _init() -> void:
 	test_decay()
 	test_event_rules()
 	test_lies()
+	test_tell_forgotten_mid_meeting()
 	test_lie_frequency()
 	test_refutation_fact()
 	test_family_stories()
@@ -232,6 +233,48 @@ func test_lies() -> void:
 	check(j3.belief(LISTENER, any_lie).is_empty(), "the one the guard told corrects themselves")
 	if not j3.belief(21, any_lie).is_empty():
 		check(j3.net(21, SUBJ) < 0, "...but someone who has not learned it is false still believes it (they learn only by being told)")
+
+
+## X20-TELL-GUARD (owner authorization 2026-11-01): a story queued for a meeting can be forgotten before its turn comes. The teller
+## passes on a lie; the guard listening shows it false; learning the refutation is one memory more, and a teller at memory.capacity
+## forgets their least salient story, which may be one still queued for this meeting. The meeting goes on without it: a forgotten
+## story is not told, nothing else changes, and the outcome is the same every time.
+func test_tell_forgotten_mid_meeting() -> void:
+	var found := false
+	for cap in [1, 2, 3]:
+		var j := _tell_cap_world(cap)
+		var lie := -1
+		for fid in j.facts:
+			if j.is_lie(int(fid)):
+				lie = int(fid)
+		var held := (j.memories.get(LISTENER, {}) as Dictionary).size()
+		var forgotten0 := int(j.stats.get("forgotten", 0))
+		var told := j.tell(LISTENER, GUARD)
+		var forgotten := int(j.stats.get("forgotten", 0)) - forgotten0
+		if lie > 0 and int(j.stats.get("lies_refuted", 0)) >= 1 and forgotten >= 1:
+			found = true
+			check(j.belief(LISTENER, lie).is_empty() and (j.memories.get(LISTENER, {}) as Dictionary).size() <= maxi(cap, 1) + 1,
+					"capacity %d: the teller (%d stories) drops the lie and forgets %d story mid-meeting; the meeting goes on (%d told)" % [cap, held, forgotten, told])
+			var again := _tell_cap_world(cap)
+			again.tell(LISTENER, GUARD)
+			check(again.state_hash() == j.state_hash(), "capacity %d: the same meeting ends the same way every time" % cap)
+	check(found, "a meeting where a queued story is forgotten before its turn was produced (refutation at memory capacity)")
+
+
+func _tell_cap_world(cap: int) -> JudgmentStore:
+	var c := cfg()
+	c.lies.chance_permille = 1000
+	c.memory.capacity = cap
+	c.gossip.per_meeting = 8
+	var soc := JudgmentSocial.new().set_guard(GUARD).set_kin(SUBJ, KIN).set_regard(LISTENER, LIAR, 80).set_regard(GUARD, LIAR, 80).set_regard(GUARD, LISTENER, 80).set_regard(LISTENER, GUARD, 80)
+	var j := store(c, soc)
+	var ev := j.publish("theft", [SUBJ], [X], [], 5)
+	j.observe_all(ev, [LIAR])
+	var ev2 := j.publish("theft", [THIEF], [BOB], [], 3)
+	j.observe_all(ev2, [LIAR])
+	j.set_ledger(LIAR, SUBJ, 0, 30000)
+	j.meet(LIAR, LISTENER)
+	return j
 
 
 func test_lie_frequency() -> void:
