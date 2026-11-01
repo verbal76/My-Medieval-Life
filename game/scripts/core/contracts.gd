@@ -223,6 +223,12 @@ func open_of(ref: String, side := "") -> Array:
 	return out
 
 
+## Ended service contracts between the player and this villager with a retention still in dispute (CON-05), in id order.
+func disputes_with_player(n: NPC) -> Array:
+	var me := World.npc_ref(n.id)
+	return list.filter(func(c): return in_dispute(c) and ((w.is_acting_ref(c.buyer) and c.seller == me) or (w.is_acting_ref(c.seller) and c.buyer == me)))
+
+
 ## Open contracts and standing offers between the player and this villager.
 func with_player(n: NPC) -> Array:
 	var me := World.npc_ref(n.id)
@@ -552,10 +558,12 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 		return r
 	var bare := GameData.item_name(id).to_lower() if svc.is_empty() else "that work"
 	var item := _phrase(bare)
+	var adv := int((terms.get("advance", {}) as Dictionary).get("amount", 0)) if terms.get("advance", {}) is Dictionary else 0
+	if not svc.is_empty():
+		svc = svc.merged({"buyer": buyer_ref, "advance": adv})    # whose ground (CON-06), and the advance that meets the fees (CON-03)
 	var m := _means(n, id, days, price_each, svc)
-	var adv := int((terms.get("advance", {}) as Dictionary).get("amount", 0))
-	if adv > 0 and adv >= qty * int(m.cost):
-		m.cost = 0                                   # CON-03: the buyer's advance meets the work's own expense
+	if adv > 0 and qty > 0:
+		m.cost = maxf(0.0, float(m.cost) - float(adv) / float(qty))     # CON-03: what the advance meets is not asked for again in the price
 	var can := int(m.stock) + int(m.cap)
 	r.route = m.route
 	r.recipe = m.recipe
@@ -1031,8 +1039,16 @@ func _maybe_finish(c: Dictionary) -> void:
 		c.reserved = int(c.reserved) - kept
 		c.paid = int(c.paid) + kept
 		_add_coins(c.seller, kept)
+		var ks := _npc_of(c.seller)
+		if ks:
+			ks.earned += kept
+		var kb := _npc_of(c.buyer)
+		if kb:
+			kb.spent += kept
 		c.history.append({"day": w.day(), "by": c.buyer, "what": "release", "qty": kept, "price_each": 0, "days": 0})
 		w.stat("service_retention_released", kept)
+		if w.recorder != null:
+			w.recorder.contract_settled(c, "retention", kept, str(c.seller), _coins(c.seller))
 	_end(c, "fulfilled", "")
 	if is_service(c):
 		ContractServices.on_fulfilled(self, c)
@@ -1318,16 +1334,21 @@ func dispute(c: Dictionary, by_ref: String) -> String:
 func rule(c: Dictionary, by_ref: String) -> String:
 	if not in_dispute(c):
 		return ""
-	var r := ContractServices.ruling(c)
+	var r := ContractServices.ruling(self, c)
 	var kept := int(c.retained)
 	c.retained = 0
 	c.reserved = int(c.reserved) - kept
 	_add_coins(str(r.to), kept)
+	if w.recorder != null:
+		w.recorder.contract_settled(c, "ruling", kept, str(r.to), _coins(str(r.to)))
 	if str(r.to) == str(c.seller):
 		c.paid = int(c.paid) + kept
 		var s := _npc_of(c.seller)
 		if s:
 			s.earned += kept
+		var bb := _npc_of(c.buyer)
+		if bb:
+			bb.spent += kept
 	c.dispute.ruled = w.day()
 	c.dispute.to = str(r.to)
 	c.dispute.brought_by = by_ref

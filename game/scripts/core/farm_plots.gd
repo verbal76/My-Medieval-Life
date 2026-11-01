@@ -853,6 +853,12 @@ func land_requirement(h: int) -> int:
 ## crop's days, at the player's minutes a cell for sowing and harvesting (ploughing is done once). At least 1.
 func labour_cells(h: int) -> int:
 	var per_cell := task_minutes("sow", false) + task_minutes("harvest", false)
+	return maxi(1, floori(free_minutes(h) * Farming.crop_days("wheat") / per_cell))
+
+
+## The minutes a day household `h`'s able members have for its plots: an adult's evening from WORK_END to SLEEP (the working
+## day when out of work), an elder's working day. labour_cells' measure; CON-07 hiring weighs its own hands by it.
+func free_minutes(h: int) -> float:
 	var day_minutes := 0.0
 	for o: NPC in w.brain._members(h):
 		if not able(o):
@@ -861,7 +867,7 @@ func labour_cells(h: int) -> int:
 			day_minutes += (NPCBrain.SLEEP - NPCBrain.WORK_END) * 60.0
 		else:
 			day_minutes += (NPCBrain.WORK_END - NPCBrain.WORK_START) * 60.0
-	return maxi(1, floori(day_minutes * Farming.crop_days("wheat") / per_cell))
+	return day_minutes
 
 
 ## Food points one wheat cell nets in a year of the calendar's seasons.

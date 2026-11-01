@@ -25,7 +25,8 @@ const TEXT_ARGS := {"player_offer": [7], "player_tell": [0]}
 ## survey reported), "buyer" (a dig it paid for collected), "deliver" (the seller handing over, or the buyer collecting from a
 ## villager seller beside it; never another player's goods). Contracts take the acting player as the party without checking it.
 const CONTRACT_SIDE := {"contracts.deliver": "deliver", "contracts.accept_offer": "seller", "contracts.counter_offer": "seller",
-	"contracts.decline_offer": "seller", "ContractServices:player_report": "seller", "ContractServices:player_collect": "buyer"}
+	"contracts.decline_offer": "seller", "ContractServices:player_report": "seller", "ContractServices:player_collect": "buyer",
+	"ContractServices:player_harvest": "seller", "contracts.dispute": "party"}
 const VERB_REACH := 24.0              # tiles: what a guest acts on is on its screen (the interface's own reach rules apply in the verb)
 
 ## Every player verb a guest's interface can call, by the path World.mirror sends: "" the World itself, "<field>." a module the World
@@ -45,6 +46,7 @@ const VERBS := {
 	"player_learn_fireball": "C3", "contracts.propose": "C3", "contracts.deliver": "C3", "contracts.cancel": "C3",
 	"contracts.accept_offer": "C3", "contracts.counter_offer": "C3", "contracts.decline_offer": "C3", "credit.repay": "C3",
 	"credit.answer_request": "C3", "ContractServices:player_report": "C3", "ContractServices:player_collect": "C3",
+	"ContractServices:player_harvest": "C3", "contracts.dispute": "C3",
 	"quests.accept": "C3", "quests.complete": "C3", "manor_work.order_backfill": "C3", "manor_work.stock_backfill": "C3",
 	"manor_work.cancel_backfill": "C3", "manor_work.take": "C3",
 	"couriers.open_shop_booth": "C3", "couriers.book_route": "C3", "couriers.negotiate": "C3", "couriers.book_special": "C3", "counters.summon": "C3", "construction.hire": "C3", "employment.employ": "C3", "employment.dismiss": "C3",
@@ -102,7 +104,7 @@ static func target(w: World, path: String) -> Callable:
 	if path.contains(":"):
 		var cls := path.get_slice(":", 0)
 		var fn := path.get_slice(":", 1)
-		if (cls == "Guardianship" and fn == "player_adopt") or (cls == "ContractServices" and fn in ["player_report", "player_collect"]):
+		if (cls == "Guardianship" and fn == "player_adopt") or (cls == "ContractServices" and fn in ["player_report", "player_collect", "player_harvest"]):
 			return func(): pass                       # called by name in apply_verb (a static verb taking the World or its contracts first)
 		return Callable()
 	if path.contains("."):
@@ -152,6 +154,8 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 				return ContractServices.player_report(w.contracts, args[0]) if args.size() >= 1 else 0
 			"ContractServices:player_collect":
 				return ContractServices.player_collect(w.contracts, args[0]) if args.size() >= 1 else 0
+			"ContractServices:player_harvest":
+				return ContractServices.player_harvest(w.contracts, args[0], args[1]) if args.size() >= 2 and args[1] is Vector2i else "Nothing to do."
 		return c.callv(args))
 	var text := ""
 	if r is String:
@@ -172,6 +176,8 @@ static func _contract_side_ok(w: World, p: PlayerState, path: String, c: Diction
 			return str(c.get("seller", "")) == me
 		"buyer":
 			return str(c.get("buyer", "")) == me
+		"party":
+			return str(c.get("seller", "")) == me or str(c.get("buyer", "")) == me
 		"deliver":
 			return str(c.get("seller", "")) == me or (str(c.get("buyer", "")) == me and not World.is_player_ref(str(c.get("seller", ""))))
 	return false

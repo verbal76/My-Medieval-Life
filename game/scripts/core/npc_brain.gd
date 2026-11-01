@@ -137,6 +137,8 @@ func work_look(n: NPC) -> Array:
 			return ["swing", "hammer"]
 		"svc_step":                                    # CON-02: digging a pit with a pickaxe, sampling with the kit's hammer
 			var sc: Dictionary = w.contracts.get_contract(int(s.get("args", {}).get("id", -1)))
+			if str(sc.get("service", "")) == "harvest":
+				return ["gather", ""]                  # CON-06: cutting by hand, as a member's own harvest
 			return ["swing", "pickaxe" if str(sc.get("service", "")) == "dig" else "hammer"]
 		"hunt", "slaughter":
 			return ["swing", "rusty_sword"]

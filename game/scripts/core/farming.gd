@@ -282,15 +282,23 @@ func harvest_goods(c: Vector2i) -> Dictionary:
 
 
 func harvest(c: Vector2i, p: PlayerState) -> Dictionary:
+	var out := harvest_into(c, p.inv)
+	if not out.is_empty():
+		w.player_xp("farming", Skills.action_xp("harvest"))   # DVW-B8
+	return out
+
+
+## The cutting itself, into store `into` (the player's pack; the player's chest at home when a hired hand cuts it, CON-06): the
+## ripe cell's crop and seed back, the cell tilled and empty again. {} (nothing changed) when nothing is ripe or it will not fit.
+func harvest_into(c: Vector2i, into: Inventory) -> Dictionary:
 	var out := harvest_goods(c)
 	if out.is_empty():
 		return {}
-	if not p.inv.can_add_all(out):
+	if not into.can_add_all(out):
 		return {}
 	for id in out:
-		p.inv.add(id, int(out[id]))
+		into.add(id, int(out[id]))
 		w.stat("farm_harvest_" + id, float(out[id]))
-	w.player_xp("farming", Skills.action_xp("harvest"))   # DVW-B8
 	cells[c] = {"crop": "", "state": "tilled", "progress": 0.0, "cut": str(cells[c].crop)}    # GP-WHEAT-PICKED: what was cut (CropView)
 	_show(c)
 	return out
@@ -935,6 +943,10 @@ func targets_at(c: Vector2i, p: PlayerState, exact := true) -> Array:
 		return out
 	if w.farm_plots != null and w.farm_plots.in_church_plot(c):      # B18-DP-12: volunteering on the church's field
 		return w.farm_plots.church_targets(c, p)
+	var hired := ContractServices.harvest_for_player(w.contracts, c) if w.contracts != null else {}
+	if not hired.is_empty():                                          # CON-06: the player hired to cut this field (the crop is the owner's)
+		return [_t("contract_harvest", c, "Hired: harvest for %s (%d done of %d; the crop goes to them)" % [w.ref_name(str(hired.buyer)),
+				int(hired.delivered), int(hired.qty)], {"contract": int(hired.id)})]
 	if cells.has(c):
 		var cell: Dictionary = cells[c]
 		match str(cell.state):
@@ -989,6 +1001,12 @@ func plan(t: Dictionary, p: PlayerState) -> Dictionary:
 		return Terrain.plan(w, t, p)              # B14-07
 	if str(t.act) == "church":
 		return w.farm_plots.church_plan(t, p)     # B18-DP-12
+	if str(t.act) == "contract_harvest":          # CON-06: the hired hand's cutting, a harvest's own time
+		var hc: Dictionary = w.contracts.get_contract(int(t.get("contract", -1)))
+		if hc.is_empty() or not Contracts.is_open(hc):
+			return bad.call("You are not hired to harvest that any more.")
+		return {"ok": true, "label": "Harvesting for %s" % w.ref_name(str(hc.buyer)), "secs": CapabilityHook.time(float(cfg().harvest_seconds), "farming", p),
+				"anim": "gather", "tool": "", "run": func() -> Dictionary: return {"items": {}, "text": ContractServices.player_harvest(w.contracts, hc, c)}}
 	match str(t.act):
 		"till":
 			var no := till_refusal(c, p)
