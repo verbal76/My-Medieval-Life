@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 713 (374 of them still open) |
-| **Open entries now** (rules excluded) | | **533** |
+| Entries added since | | 714 (375 of them still open) |
+| **Open entries now** (rules excluded) | | **534** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (713)
+## Added since the baseline (714)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -791,6 +791,7 @@ None.
 | X20-B24-REVIEW | Build 24 code review: eight findings fixed in Expansion 20 at their underlying causes, with regression coverage for property transitions and conservation; the frozen Build 24 baseline is never changed; final report on which defects remain in Build 24 and whether any need Build 24 maintenance | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-BACKGROUND | Expansion 20 continues in the background within approved decisions (Upwardly Build 83 is the owner's primary priority): combined integration, one baseline simulation on the merged commit, LE-06 first, trader reopening, X20-MP-ECON-INTEGRITY, SJD-G evaluation; no build rushed; escalate only the listed cases | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | X20-BANDIT-AI | Bandit situational awareness, threat assessment and self-preservation comparable to villagers (recognise pursuit, threat and outnumbering from available information; anticipate retaliation; fight/flee/hide/regroup/defend/ambush by numbers, equipment, injuries, stamina, personality, relationships, escape; conditional cooperation; learning through existing memory and judgment); villager retaliation and family defence not weakened; no stat changes; no target death rate | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| X20-CAREER-AUDIT | Audit career progression, NPC ambition and skilled employment | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | X20-CHAPEL-FIX | Chapel economy correction: voluntary, affordable, individually decided donations (piety raises the chance, never triggers a payment; no penalty for declining); a modest operating reserve from anticipated expenses; the surplus paid as alms to the poorest households by genuine hardship (cash, wealth, dependents, essentials), conserved transfers; chapel economy instrumented; validated against the Build 25 baseline | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20 |
 | X20-CHAPEL-INTEGRATE | Integrate the chapel correction and the gossip fix into wip/expansion20 | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |

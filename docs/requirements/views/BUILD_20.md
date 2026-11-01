@@ -8,14 +8,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 127 |
-| Integrated | 106 of 127 (83%) |
-| Automated tests passed | 110 of 127 (87%) |
-| Integration verified | 64 of 127 (50%) |
-| Gameplay verified | 0 of 127 (0%) |
-| Owner playtested | 0 of 127 (0%) |
-| Complete | 2 of 127 (2%) |
-| Open (release blockers) | 125 |
+| Approved requirements in scope | 128 |
+| Integrated | 106 of 128 (83%) |
+| Automated tests passed | 110 of 128 (86%) |
+| Integration verified | 64 of 128 (50%) |
+| Gameplay verified | 0 of 128 (0%) |
+| Owner playtested | 0 of 128 (0%) |
+| Complete | 2 of 128 (2%) |
+| Open (release blockers) | 126 |
 | Open owner decisions (blocking) | 1 (0) |
 
 ## In development (worker assigned) (1)
@@ -139,7 +139,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | TARGETED TESTS PASSED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (19)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (20)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -150,6 +150,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it | design: UNKNOWN | UNKNOWN |
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | OWNER APPROVED | PARTIALLY IMPLEMENTED | worker A (Living Economy) / wip/x20-le05 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-CAREER-AUDIT | Audit career progression, NPC ambition and skilled employment | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-CHAPEL-FIX | Chapel economy correction: voluntary, affordable, individually decided donations (piety raises the chance, never triggers a payment; no penalty for declining); a modest operating reserve from anticipated expenses; the surplus paid as alms to the poorest households by genuine hardship (cash, wealth, dependents, essentials), conserved transfers; chapel economy instrumented; validated against the Build 25 baseline | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/x20-chapel | NOT TESTED |  | X20-ECON-SUSTAIN, design: UNKNOWN | UNKNOWN |
 | X20-CHAPEL-INTEGRATE | Integrate the chapel correction and the gossip fix into wip/expansion20 | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-ECON-AFFORD | Re-evaluate the unaffordable bids by interval, category, household condition and cause | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

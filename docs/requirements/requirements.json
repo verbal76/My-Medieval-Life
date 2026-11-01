@@ -63284,6 +63284,34 @@
    ]
   },
   {
+   "id": "X20-CAREER-AUDIT",
+   "kind": "approved",
+   "title": "Audit career progression, NPC ambition and skilled employment",
+   "description": "Audit career progression, NPC ambition and skilled employment",
+   "source": "docs/directives/2026-11-01_career_progression_audit.md",
+   "owner_wording": "Audit what exists first. Identify the broken or missing connections. Show me the evidence before proposing changes.",
+   "approval": "Owner directive 2026-11-01 (verbatim in docs/directives/2026-11-01_career_progression_audit.md)",
+   "acceptance": [
+    "Section 'Career Progression, NPC Ambition, and Skilled Employment' in the economic maturation audit: 18 mechanisms classified with code and evidence, the 12 required parts, both explicit questions answered; investigation and recommendations only, no gameplay code"
+   ],
+   "target_build": "20",
+   "parent": "X20-ECON-MATURE",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_career_progression_audit.md"
+    }
+   ]
+  },
+  {
    "id": "X20-CHAPEL-FIX",
    "kind": "approved",
    "title": "Chapel economy correction: voluntary, affordable, individually decided donations (piety raises the chance, never triggers a payment; no penalty for declining); a modest operating reserve from anticipated expenses; the surplus paid as alms to the poorest households by genuine hardship (cash, wealth, dependents, essentials), conserved transfers; chapel economy instrumented; validated against the Build 25 baseline",
