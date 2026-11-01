@@ -110,9 +110,13 @@ Suspected or unverified (needs evidence before classification):
 - Manor wage raise never fires; public works never spent.
 - Multiplayer: no net suite run recorded on `ad281dc` after the LE-05 guest verbs; real-device and real-network checks not done; `net_interact` timing flake.
 - Living Economy unaffordable bids (about 12,600 a year): under analysis with the new instrumentation (X20-ECON-AFFORD).
-- Save and load: the base game's run fingerprint differs after a save and load even with the economy off (found by the LE-07 gates
-  work on `wip/b25-econ`, 2026-11-01). Not yet investigated: it may be a field the fingerprint reads that is legitimately rebuilt on load,
-  or a real continuity loss (the audit found the harness never reloads and continues a whole world). To investigate before packaging.
+- Save and load (confirmed by a probe on `63c0144`, three game days, seed 1, 2026-11-01): no value is lost (coins, items, positions,
+  hunger, jobs equal), but a loaded world is not identical to the uninterrupted one: (1) the random-number state is not saved; load reseeds
+  it from the world seed and the clock (`world.gd:6264`), so a loaded game is repeatable from its save but follows a different random
+  path; (2) inventories come back with their items in sorted order, which can change "first item" choices; (3) deposit amounts come back
+  as decimals (54 → 54.0). Severity: save continuity, not conservation. Proposed fix (small, additive): save and restore the random
+  state as an optional key, keep inventory order, convert deposit amounts back to whole numbers on load; then a whole-world reload and
+  continue check in the harness.
 
 ## Deferred or rejected (E, with the owner decision)
 
