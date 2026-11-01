@@ -1,4 +1,4 @@
-> **STALE COPY. Not the current state.** Since 2026-11-01 (DOC-CONT-01) the current state is `docs/CURRENT_DEVELOPMENT_STATE.md` on branch `wip/requirements-control`, with history in `docs/DEVELOPMENT_CHANGELOG.md` there. This copy is kept for history only.
+> **STALE COPY. Not the current state.** Since 2026-11-01 (DOC-CONT-01) the current state is `docs/CURRENT_DEVELOPMENT_STATE.md` on branch `wip/requirements-control`, with the development changelog beside it. This copy is kept for history only.
 
 # Current development state
 
