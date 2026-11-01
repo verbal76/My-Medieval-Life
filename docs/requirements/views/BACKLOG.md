@@ -87,12 +87,12 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
-| CON-03 | Restricted negotiated service advances (CON02-S-1) | approved | OWNER APPROVED | NOT STARTED |
-| CON-04 | Negotiated service compensation structures: work, results, base plus bonus (CON02-S-2) | approved | OWNER APPROVED | NOT STARTED |
-| CON-05 | Contract protections and dispute process before the local authority (CON02-S-3) | approved | OWNER APPROVED | NOT STARTED |
-| CON-06 | Agricultural labour contracts (CON02-S-4) | approved | OWNER APPROVED | NOT STARTED |
-| CON-07 | Independent villager service hiring across industries (CON02-S-5) | approved | OWNER APPROVED | NOT STARTED |
-| CON-08 | Separate formal-signing threshold for service contracts (CON02-S-6) | approved | OWNER APPROVED | NOT STARTED |
+| CON-03 | Restricted negotiated service advances (CON02-S-1) | approved | OWNER APPROVED | INTEGRATED |
+| CON-04 | Negotiated service compensation structures: work, results, base plus bonus (CON02-S-2) | approved | OWNER APPROVED | INTEGRATED |
+| CON-05 | Contract protections and dispute process before the local authority (CON02-S-3) | approved | OWNER APPROVED | INTEGRATED |
+| CON-06 | Agricultural labour contracts (CON02-S-4) | approved | OWNER APPROVED | INTEGRATED |
+| CON-07 | Independent villager service hiring across industries (CON02-S-5) | approved | OWNER APPROVED | INTEGRATED |
+| CON-08 | Separate formal-signing threshold for service contracts (CON02-S-6) | approved | OWNER APPROVED | INTEGRATED |
 | DGA-D1 | Meaning of "isometric" | proposal | PROPOSED | NOT STARTED |
 | DGA-D10 | Formal platform/engine approval (U1, U2) | proposal | PROPOSED | NOT STARTED |
 | DGA-D11 | Living-society scope (U20, U21, P1-P3, balance review) | proposal | PROPOSED | NOT STARTED |

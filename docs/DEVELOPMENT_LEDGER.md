@@ -82,7 +82,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-BIZ-D3 | Unfinished business construction can be cancelled or abandoned through the existing cancellation system, with no money refund | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-BIZ-D4 | Permanent employment as one shared framework across professions with real work systems (miners, gatherers, farm workers, smiths, carpenters, tanners, cooks, attendants, construction workers) | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-BIZ-D5 | Businesses may be built (home-attached or standalone), bought, sold and expanded; selling a home workshop never sells the home; investigate the apparent two-shop limit | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25-BIZ-OWN | Build 25 business ownership, paid employment and economic expansion (five final owner decisions, milestones 1-6) | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-BIZ-OWN | Build 25 business ownership, paid employment and economic expansion (five final owner decisions, milestones 1-6) | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B25-BUSINESS-IMPL | Independent business formation by qualified villagers | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
@@ -159,12 +159,12 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | CON-02 | Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | CON-02-KINDS | CON-02 unfinished service kinds: further labour and service contracts beyond dig and survey (e.g. work on the buyer's materials with existing recipes), tracked as open dependencies of the Build 17 approval | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| CON-03 | Restricted negotiated service advances (CON02-S-1) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| CON-04 | Negotiated service compensation structures: work, results, base plus bonus (CON02-S-2) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| CON-05 | Contract protections and dispute process before the local authority (CON02-S-3) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| CON-06 | Agricultural labour contracts (CON02-S-4) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| CON-07 | Independent villager service hiring across industries (CON02-S-5) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| CON-08 | Separate formal-signing threshold for service contracts (CON02-S-6) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| CON-03 | Restricted negotiated service advances (CON02-S-1) | owner decision | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
+| CON-04 | Negotiated service compensation structures: work, results, base plus bonus (CON02-S-2) | owner decision | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
+| CON-05 | Contract protections and dispute process before the local authority (CON02-S-3) | owner decision | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
+| CON-06 | Agricultural labour contracts (CON02-S-4) | owner decision | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
+| CON-07 | Independent villager service hiring across industries (CON02-S-5) | owner decision | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
+| CON-08 | Separate formal-signing threshold for service contracts (CON02-S-6) | owner decision | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | CON-UX-01 | Contract window needs design work | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | CQ-01 | Sword responsiveness and hit detection (buffer, reach, phases, walls) | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | CREATURE-OWN | Creature ownership: Expansion 26 owns the behaviour, survival, combat and other creature-specific mechanics of skeletons, lizards, spiders and its other creatures; Expansion 27 owns their placement in its exploration environments and encounters; no duplicate creature behaviour systems | 26 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |

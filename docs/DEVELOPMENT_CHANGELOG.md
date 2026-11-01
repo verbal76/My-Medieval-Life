@@ -67,6 +67,33 @@ All the work below is Build 25, the consolidation build (B25-SCOPE-D1).
 - Records branch: `wip/requirements-control`.
 - Tests are local unless a run id is given.
 
+**B25-NINE-D2: informal services and CON-03..CON-08.**
+- Branch: `wip/b25-services`, merged as `8d71c5e`. Commits: `3bedaee` (catch-up merge of `d0dc0d7`), `c4911d4` (the missing
+  `ContractServices` functions, so the branch compiles again), `41de050` (contract window and `services_d2_test`), `19882ea` (docs),
+  `1388f36` (Godot uid file).
+- Change:
+  - Favours between friends, partners and relatives.
+  - CON-03: advances on assay fees.
+  - CON-04: pay for the work done, for results only, or a base plus a bonus per result.
+  - CON-05: held-back pay, with disputes ruled by the reeve.
+  - CON-06: harvest labour; the crop goes to the owner, and cutting under a contract is not theft.
+  - CON-07: households hire harvest help. It is on in normal play, through the balance key `contracts.services.npc_hire`.
+  - CON-08: a services signing line, left unset, so the 50-coin rule applies.
+  - INT-664 and INT-665; design note `docs/expansion20/SERVICES.md`.
+- Status: INTEGRATED, TESTED (local).
+- Evidence:
+  - On `41de050`: services_d2 89, services 51, contracts 154, contract_sign 21, contract_50ore 19, migration 109, save_transfer 21,
+    conservation 8, net_econ_integrity 126, business_founding 58, multiplayer_c 340, farming 224, farm_plots 104, le05_repair 57,
+    start_test 523.
+  - On game code identical to `19882ea`: run_tests 3601, wiki_test.
+  - The merge tree is identical to `1388f36`. services_d2 and conservation were re-run on `8d71c5e`.
+- Outstanding:
+  - The contract window rows have not been looked at on screen.
+  - The guest path of `ContractServices:player_harvest` and `contracts.dispute` is untested.
+  - CON-08-Q, the signing value, is still open.
+  - Provisional numbers: results premium 2.0, held-back share up to 50%, reeve rules after 3 days.
+  - A first-attempt merge command failed in the lead's shell; nothing was lost.
+
 **B25-BIZ-OWN: owner's final business decisions recorded (B25-BIZ-D1..D5).**
 - Branch: `wip/requirements-control`. Records only, no code yet.
 - Change: the five open business questions are answered, and the directive is saved verbatim. The register has a parent record

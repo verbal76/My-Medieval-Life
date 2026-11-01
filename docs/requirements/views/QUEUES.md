@@ -2,10 +2,11 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (11)
+## Workers and task branches (12)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
+| B25-BIZ-OWN | 20 | IN DEVELOPMENT | b25-bizown worker | wip/b25-bizown |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
@@ -18,7 +19,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (56)
+## Implemented but not tested (62)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -33,6 +34,12 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B7-009 | 15 | INTEGRATED |  |
 | B7-014 | 15 | INTEGRATED |  |
 | B8-007 | 20+ | PARTIALLY IMPLEMENTED |  |
+| CON-03 | owner decision | INTEGRATED |  |
+| CON-04 | owner decision | INTEGRATED |  |
+| CON-05 | owner decision | INTEGRATED |  |
+| CON-06 | owner decision | INTEGRATED |  |
+| CON-07 | owner decision | INTEGRATED |  |
+| CON-08 | owner decision | INTEGRATED |  |
 | DVW-A13 | 20+ | PARTIALLY IMPLEMENTED |  |
 | DVW-A14 | 15 | INTEGRATED |  |
 | DVW-A3 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |

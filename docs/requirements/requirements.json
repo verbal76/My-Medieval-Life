@@ -5614,7 +5614,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5623,8 +5623,15 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25-bizown worker; branch: None -> wip/b25-bizown",
+     "why": "one active worker started on milestones 1-6 after the services merge"
     }
-   ]
+   ],
+   "assigned_worker": "b25-bizown worker",
+   "branch": "wip/b25-bizown"
   },
   {
    "id": "B25-BUSINESS-D2",
@@ -10701,10 +10708,12 @@
     "Voluntary, purpose-bound, from real funds, auditable, reconciled, no duplicate reimbursement; coordinate with OD-LE-07"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "services_d2 89, services 51, contracts 154, contract_sign 21, contract_50ore 19, migration 109, save_transfer 21, conservation 8, net_econ_integrity 126, business_founding 58, multiplayer_c 340, farming 224, farm_plots 104, le05_repair 57, start_test 523 (41de050); run_tests 3601, wiki_test (game code = 19882ea); merge tree identical to 1388f36, services_d2 89 and conservation 8 re-run on 8d71c5e; all local",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "8d71c5e"
+   ],
    "parent": "CON-02",
    "depends_on": [],
    "blockers": [],
@@ -10736,16 +10745,24 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2): the service-contract categories and their dependencies are incorporated into Build 25"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests:  -> services_d2 89, services 51, contracts 154, contract_sign 21, contract_50ore 19, migration 109, save_transfer 21, conservation 8, net_econ_integrity 126, business_founding 58, multiplayer_c 340, farming 224, farm_plots 104, le05_repair 57, start_test 523 (41de050); run_tests 3601, wiki_test (game code = 19882ea); merge tree identical to 1388f36, services_d2 89 and conservation 8 re-run on 8d71c5e; all local; test_commit: None -> 8d71c5e; commits + 8d71c5e; integrated_in + Build 25 wip/expansion20",
+     "why": "B25-NINE-D2 services work (wip/b25-services 1388f36) merged into the Build 25 source"
     }
    ],
    "target_build": "owner decision",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "test_commit": "8d71c5e"
   },
   {
    "id": "CON-04",
@@ -10759,10 +10776,12 @@
     "Knowingly agreed, objectively verifiable, funded; work-based pay remains the default meanwhile"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "services_d2 89, services 51, contracts 154, contract_sign 21, contract_50ore 19, migration 109, save_transfer 21, conservation 8, net_econ_integrity 126, business_founding 58, multiplayer_c 340, farming 224, farm_plots 104, le05_repair 57, start_test 523 (41de050); run_tests 3601, wiki_test (game code = 19882ea); merge tree identical to 1388f36, services_d2 89 and conservation 8 re-run on 8d71c5e; all local",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "8d71c5e"
+   ],
    "parent": "CON-02",
    "depends_on": [],
    "blockers": [],
@@ -10794,16 +10813,24 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2): the service-contract categories and their dependencies are incorporated into Build 25"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests:  -> services_d2 89, services 51, contracts 154, contract_sign 21, contract_50ore 19, migration 109, save_transfer 21, conservation 8, net_econ_integrity 126, business_founding 58, multiplayer_c 340, farming 224, farm_plots 104, le05_repair 57, start_test 523 (41de050); run_tests 3601, wiki_test (game code = 19882ea); merge tree identical to 1388f36, services_d2 89 and conservation 8 re-run on 8d71c5e; all local; test_commit: None -> 8d71c5e; commits + 8d71c5e; integrated_in + Build 25 wip/expansion20",
+     "why": "B25-NINE-D2 services work (wip/b25-services 1388f36) merged into the Build 25 source"
     }
    ],
    "target_build": "owner decision",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "test_commit": "8d71c5e"
   },
   {
    "id": "CON-05",
@@ -10817,10 +10844,12 @@
     "Terms for deadlines, quality, retention, remedies; disputes decided on agreement, records and evidence; either party may win; coordinate with OD-LE-06; not in Build 17"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "services_d2 89, services 51, contracts 154, contract_sign 21, contract_50ore 19, migration 109, save_transfer 21, conservation 8, net_econ_integrity 126, business_founding 58, multiplayer_c 340, farming 224, farm_plots 104, le05_repair 57, start_test 523 (41de050); run_tests 3601, wiki_test (game code = 19882ea); merge tree identical to 1388f36, services_d2 89 and conservation 8 re-run on 8d71c5e; all local",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "8d71c5e"
+   ],
    "parent": "CON-02",
    "depends_on": [],
    "blockers": [],
@@ -10852,16 +10881,24 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2): the service-contract categories and their dependencies are incorporated into Build 25"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests:  -> services_d2 89, services 51, contracts 154, contract_sign 21, contract_50ore 19, migration 109, save_transfer 21, conservation 8, net_econ_integrity 126, business_founding 58, multiplayer_c 340, farming 224, farm_plots 104, le05_repair 57, start_test 523 (41de050); run_tests 3601, wiki_test (game code = 19882ea); merge tree identical to 1388f36, services_d2 89 and conservation 8 re-run on 8d71c5e; all local; test_commit: None -> 8d71c5e; commits + 8d71c5e; integrated_in + Build 25 wip/expansion20",
+     "why": "B25-NINE-D2 services work (wip/b25-services 1388f36) merged into the Build 25 source"
     }
    ],
    "target_build": "owner decision",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "test_commit": "8d71c5e"
   },
   {
    "id": "CON-06",
@@ -10875,10 +10912,12 @@
     "Work, pay, deadlines, responsibilities, crop ownership and access named; authorised harvest not theft; crop stays the owner's; farmers weigh hiring; workers may decline"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "services_d2 89, services 51, contracts 154, contract_sign 21, contract_50ore 19, migration 109, save_transfer 21, conservation 8, net_econ_integrity 126, business_founding 58, multiplayer_c 340, farming 224, farm_plots 104, le05_repair 57, start_test 523 (41de050); run_tests 3601, wiki_test (game code = 19882ea); merge tree identical to 1388f36, services_d2 89 and conservation 8 re-run on 8d71c5e; all local",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "8d71c5e"
+   ],
    "parent": "CON-02",
    "depends_on": [],
    "blockers": [],
@@ -10910,16 +10949,24 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2): the service-contract categories and their dependencies are incorporated into Build 25"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests:  -> services_d2 89, services 51, contracts 154, contract_sign 21, contract_50ore 19, migration 109, save_transfer 21, conservation 8, net_econ_integrity 126, business_founding 58, multiplayer_c 340, farming 224, farm_plots 104, le05_repair 57, start_test 523 (41de050); run_tests 3601, wiki_test (game code = 19882ea); merge tree identical to 1388f36, services_d2 89 and conservation 8 re-run on 8d71c5e; all local; test_commit: None -> 8d71c5e; commits + 8d71c5e; integrated_in + Build 25 wip/expansion20",
+     "why": "B25-NINE-D2 services work (wip/b25-services 1388f36) merged into the Build 25 source"
     }
    ],
    "target_build": "owner decision",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "test_commit": "8d71c5e"
   },
   {
    "id": "CON-07",
@@ -10933,10 +10980,12 @@
     "Eight-point evaluation by the hiring villager; one shared engine; phased by industry; no fabricated demand"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "services_d2 89, services 51, contracts 154, contract_sign 21, contract_50ore 19, migration 109, save_transfer 21, conservation 8, net_econ_integrity 126, business_founding 58, multiplayer_c 340, farming 224, farm_plots 104, le05_repair 57, start_test 523 (41de050); run_tests 3601, wiki_test (game code = 19882ea); merge tree identical to 1388f36, services_d2 89 and conservation 8 re-run on 8d71c5e; all local",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "8d71c5e"
+   ],
    "parent": "CON-02",
    "depends_on": [],
    "blockers": [],
@@ -10968,16 +11017,24 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2): the service-contract categories and their dependencies are incorporated into Build 25"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests:  -> services_d2 89, services 51, contracts 154, contract_sign 21, contract_50ore 19, migration 109, save_transfer 21, conservation 8, net_econ_integrity 126, business_founding 58, multiplayer_c 340, farming 224, farm_plots 104, le05_repair 57, start_test 523 (41de050); run_tests 3601, wiki_test (game code = 19882ea); merge tree identical to 1388f36, services_d2 89 and conservation 8 re-run on 8d71c5e; all local; test_commit: None -> 8d71c5e; commits + 8d71c5e; integrated_in + Build 25 wip/expansion20",
+     "why": "B25-NINE-D2 services work (wip/b25-services 1388f36) merged into the Build 25 source; on in normal play for harvests only, balance key contracts.services.npc_hire"
     }
    ],
    "target_build": "owner decision",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "test_commit": "8d71c5e"
   },
   {
    "id": "CON-08",
@@ -10991,10 +11048,12 @@
     "Independently configurable; inactive until the owner approves its number; 50-coin rule meanwhile"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "services_d2 89, services 51, contracts 154, contract_sign 21, contract_50ore 19, migration 109, save_transfer 21, conservation 8, net_econ_integrity 126, business_founding 58, multiplayer_c 340, farming 224, farm_plots 104, le05_repair 57, start_test 523 (41de050); run_tests 3601, wiki_test (game code = 19882ea); merge tree identical to 1388f36, services_d2 89 and conservation 8 re-run on 8d71c5e; all local",
    "playtest": [],
    "branch": "",
-   "commits": [],
+   "commits": [
+    "8d71c5e"
+   ],
    "parent": "CON-02",
    "depends_on": [],
    "blockers": [],
@@ -11026,16 +11085,24 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2): the service-contract categories and their dependencies are incorporated into Build 25"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests:  -> services_d2 89, services 51, contracts 154, contract_sign 21, contract_50ore 19, migration 109, save_transfer 21, conservation 8, net_econ_integrity 126, business_founding 58, multiplayer_c 340, farming 224, farm_plots 104, le05_repair 57, start_test 523 (41de050); run_tests 3601, wiki_test (game code = 19882ea); merge tree identical to 1388f36, services_d2 89 and conservation 8 re-run on 8d71c5e; all local; test_commit: None -> 8d71c5e; commits + 8d71c5e; integrated_in + Build 25 wip/expansion20",
+     "why": "B25-NINE-D2 services work (wip/b25-services 1388f36) merged into the Build 25 source; the services signing line exists but its value is unset pending CON-08-Q, so the 50-coin rule applies"
     }
    ],
    "target_build": "owner decision",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "test_commit": "8d71c5e"
   },
   {
    "id": "CON-08-Q",
@@ -65618,6 +65685,11 @@
      "date": "2026-11-01",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "Answered by the owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2, B25-NINE-D2)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: None -> INTEGRATED; commits + 8d71c5e; integrated_in + Build 25 wip/expansion20",
+     "why": "Decision 2 informal services integrated at 8d71c5e (docs/expansion20/SERVICES.md on the Build 25 source); contract window rows not yet looked at on screen; guest path of the two new verbs untested"
     }
    ],
    "owner_wording": null,
@@ -65633,6 +65705,13 @@
     "CON-06",
     "CON-07",
     "CON-08"
+   ],
+   "implementation_status": "INTEGRATED",
+   "commits": [
+    "8d71c5e"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
    ]
   },
   {

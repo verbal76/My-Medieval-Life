@@ -164,7 +164,7 @@ None.
 | B25-BIZ-D3 | Unfinished business construction can be cancelled or abandoned through the existing cancellation system, with no money refund | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25-BIZ-D4 | Permanent employment as one shared framework across professions with real work systems (miners, gatherers, farm workers, smiths, carpenters, tanners, cooks, attendants, construction workers) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25-BIZ-D5 | Businesses may be built (home-attached or standalone), bought, sold and expanded; selling a home workshop never sells the home; investigate the apparent two-shop limit | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
-| B25-BIZ-OWN | Build 25 business ownership, paid employment and economic expansion (five final owner decisions, milestones 1-6) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-BIZ-OWN | Build 25 business ownership, paid employment and economic expansion (five final owner decisions, milestones 1-6) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25-BUSINESS-D2 | May villagers establish independent businesses? | decision | APPROVED | owner decision |
 | B25-BUSINESS-IMPL | Independent business formation by qualified villagers | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-CAREER-D1 | How is career advancement decided? | decision | APPROVED | owner decision |
@@ -206,12 +206,12 @@ None.
 | CON-01 | Universal negotiated goods-procurement contracts (item, quantity, price per unit; accept, reject or counter; any party to any party) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 17 |
 | CON-02 | Service contracts in the universal CON-01 engine (labour and services; player-NPC, NPC-player, NPC-NPC; terms, feasibility, real work through existing systems, payment from real funds, signing rules) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 17 |
 | CON-02-KINDS | CON-02 unfinished service kinds: further labour and service contracts beyond dig and survey (e.g. work on the buyer's materials with existing recipes), tracked as open dependencies of the Build 17 approval | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
-| CON-03 | Restricted negotiated service advances (CON02-S-1) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
-| CON-04 | Negotiated service compensation structures: work, results, base plus bonus (CON02-S-2) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
-| CON-05 | Contract protections and dispute process before the local authority (CON02-S-3) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
-| CON-06 | Agricultural labour contracts (CON02-S-4) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
-| CON-07 | Independent villager service hiring across industries (CON02-S-5) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
-| CON-08 | Separate formal-signing threshold for service contracts (CON02-S-6) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
+| CON-03 | Restricted negotiated service advances (CON02-S-1) | approved | INTEGRATED / NOT TESTED / OPEN | owner decision |
+| CON-04 | Negotiated service compensation structures: work, results, base plus bonus (CON02-S-2) | approved | INTEGRATED / NOT TESTED / OPEN | owner decision |
+| CON-05 | Contract protections and dispute process before the local authority (CON02-S-3) | approved | INTEGRATED / NOT TESTED / OPEN | owner decision |
+| CON-06 | Agricultural labour contracts (CON02-S-4) | approved | INTEGRATED / NOT TESTED / OPEN | owner decision |
+| CON-07 | Independent villager service hiring across industries (CON02-S-5) | approved | INTEGRATED / NOT TESTED / OPEN | owner decision |
+| CON-08 | Separate formal-signing threshold for service contracts (CON02-S-6) | approved | INTEGRATED / NOT TESTED / OPEN | owner decision |
 | CON-08-Q | Numerical formal-signing threshold for service contracts (owner to choose; 50 coins remains the working default) | decision | APPROVED | owner decision |
 | CON-UX-01 | Contract window needs design work | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | CON02-S-1 | Service advances: should a buyer advance a seller's costs (e.g. assay fees), or the seller bear them (current default)? | decision | APPROVED | owner decision |
