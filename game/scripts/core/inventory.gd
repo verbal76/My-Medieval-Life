@@ -227,14 +227,22 @@ func add_all_from(src: Inventory) -> void:
 		take_wear(id, int(src.durability.get(id, -1)))
 
 
+## B25 save continuity (2026-11-01): "order" keeps the items in the order they were held, since a saved dictionary comes back with its
+## keys sorted and code that walks `items` (the first food, the first tool) would then choose differently after a load. Optional:
+## a save without it loads its items in the saved order, as before.
 func to_dict() -> Dictionary:
-	return {"items": items.duplicate(), "durability": durability.duplicate(), "max_stacks": max_stacks}
+	return {"items": items.duplicate(), "durability": durability.duplicate(), "max_stacks": max_stacks, "order": items.keys()}
 
 
 static func from_dict(d: Dictionary) -> Inventory:
 	var inv := Inventory.new()
-	for k in d.get("items", {}):
-		inv.items[k] = int(d.items[k])
+	var saved: Dictionary = d.get("items", {})
+	for k in d.get("order", []):
+		if saved.has(k) and not inv.items.has(k):
+			inv.items[k] = int(saved[k])
+	for k in saved:
+		if not inv.items.has(k):
+			inv.items[k] = int(saved[k])
 	for k in d.get("durability", {}):
 		inv.durability[k] = int(d.durability[k])
 	inv.max_stacks = int(d.get("max_stacks", 0))

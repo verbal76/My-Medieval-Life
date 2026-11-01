@@ -6052,7 +6052,7 @@ func to_dict() -> Dictionary:
 	for n: NPC in npcs:
 		ns.append(n.to_dict())
 	var out := {
-		"save_version": SAVE_VERSION, "format": "mml-save/%d" % SAVE_VERSION, "seed": seed, "minutes": minutes, "next_parcel": property.next_parcel,
+		"save_version": SAVE_VERSION, "format": "mml-save/%d" % SAVE_VERSION, "seed": seed, "minutes": minutes, "rng_state": str(rng.state), "next_parcel": property.next_parcel,
 		"construction": construction.to_dict(),
 		"manor_work": manor_work.to_dict(),
 		"tax": tax_state.duplicate(true), "treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
@@ -6262,6 +6262,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	map = m
 	seed = int(d.seed)
 	rng.seed = seed + int(d.minutes)
+	if d.has("rng_state"):
+		rng.state = int(str(d.rng_state))     # B25 save continuity: the random stream goes on where it stood (a save without it: reseeded, as before)
 	var ow: Dictionary = d.get("overworld", {})
 	m.overworld = Overworld.create(int(ow.get("seed", seed)), m)
 	m.overworld.load_dict(ow)
@@ -6355,6 +6357,14 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	manor_orders = d.get("manor_orders", [])
 	wage_offers = (d.get("wage_offers", {}) as Dictionary).duplicate(true)
 	deposits = d.deposits
+	for sd in deposits:                # B25 save continuity: a saved number comes back as a decimal; the amounts are whole units
+		for key in ["x", "y", "amount", "level", "found_day"]:
+			if sd.has(key) and (sd[key] is float):
+				sd[key] = int(sd[key])
+		if sd.has("host") and (sd.host is Dictionary):
+			for key in ["x", "y", "amount"]:
+				if sd.host.has(key) and (sd.host[key] is float):
+					sd.host[key] = int(sd.host[key])
 	# a seam the map gained after the save was made (the gold seam, Build 13; the gallery's seams, Build 17) starts
 	# full; seams are matched by (level, x, y) (MIN-A: a level seam may share (x, y) with one above it)
 	underground = Underground.create(seed, m)
