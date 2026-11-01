@@ -1,5 +1,24 @@
 # Owner decisions pending: consolidated report (2026-10-31)
 
+## 2026-11-01: owner decisions recorded (`docs/directives/2026-11-01_nine_owner_decisions_consolidated.md`)
+
+Nine decision rounds answered the Build 25 design choices; several rounds answered parts of one backlog entry. Answered, now APPROVED in
+the register: organic skills and career standing (B25-NINE-D1, also answering the meaning of apprentice, journeyman and master: a
+description of experience or standing, not a licence); informal services and the service-contract categories CON-03..CON-08
+(B25-NINE-D2, X20-SERVICES-SCOPE); simulation-driven farming yield (B25-NINE-D3, FARM-YIELD-D1); judgment-based witness reporting
+(B25-NINE-D4, the remaining part of X19-SWITCHES-D1); materials and production economy (B25-NINE-D5); armour classes and specialised
+bonuses (B25-NINE-D6, ARMOR-CATALOG-D1); ordinary clothing cosmetic (B25-NINE-D7); predefined capabilities with organic progression and
+milestone notifications (B25-NINE-D8); game juice J1 and J2 in Build 25 (B25-NINE-D9, JUICE-J1); and the Living Economy activated by
+default once the LE-07 readiness gates pass (B25-LE-ACTIVATE-D1, superseding X20-ACTIVATION-AUTHORITY for Build 25). Earlier the same
+day: Build 25 is the consolidation build (B25-SCOPE-D1) and the career, business, employment and ambition decisions (B25-CAREER-D1,
+B25-BUSINESS-D2, B25-EMPLOY-D3, B25-AMBITION-D4).
+
+Kept open for future owner review (not to be implemented now): Expansion 21 office rules and remaining government design; Expansion 22
+settlement and world architecture; Expansion 23 factions; Expansion 24 scope; Expansion 25 weather and disasters; Expansion 26 creatures,
+companions, monsters and bosses; Expansion 27 larger-world and magic implementation planning; night lighting, villager chatter,
+notification filtering, screen shake and haptics (JUICE-JD2..JD5); near and far simulation scaling. The entries below are kept as they
+were written; where one of them is answered above, the register holds the answer.
+
 Prepared at the owner's request of 2026-10-31 (`docs/directives/2026-10-31_doc_recon_review_decisions.md` s.7: "Prepare one
 consolidated owner-decision report that includes each unresolved question, existing evidence, available options,
 dependencies, and your recommendation clearly marked as a recommendation").

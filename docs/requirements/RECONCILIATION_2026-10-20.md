@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 725 (381 of them still open) |
-| **Open entries now** (rules excluded) | | **540** |
+| Entries added since | | 736 (378 of them still open) |
+| **Open entries now** (rules excluded) | | **537** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (725)
+## Added since the baseline (736)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -123,7 +123,7 @@ None.
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
 | ARMOR-CATALOG-01 | Every armour, helmet and cultural outfit in the Puny Characters pack can be made and bought at the armourer; cultural pieces cost more and need special materials; rarer pieces carry buffs | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
-| ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | decision | PROVISIONAL | 20 |
+| ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | decision | APPROVED | 20 |
 | ARMOR-MATERIALS-01 | Boar tusks and antlers as hunted materials, used in special armour and weapons | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | ARMOR-Q | Armour scope: Option A (exact text to be presented) | decision | APPROVED | owner decision |
 | B16-AUDIT | Build 16 complete status audit, maintained (docs/BUILD_16_STATUS.md) | approved | INTEGRATED / NOT TESTED / OPEN | 16 |
@@ -166,6 +166,17 @@ None.
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25-EMPLOY-D3 | How do skilled occupations grow? | decision | APPROVED | owner decision |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-LE-ACTIVATE-D1 | Living Economy activation policy for Build 25 | decision | APPROVED | owner decision |
+| B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-NINE-D1 | Organic skills, apprenticeship and career development | decision | APPROVED | owner decision |
+| B25-NINE-D2 | Informal services and expanded service contracts | decision | APPROVED | owner decision |
+| B25-NINE-D3 | Farming yield and food security | decision | APPROVED | owner decision |
+| B25-NINE-D4 | Individual crime-reporting judgment | decision | APPROVED | owner decision |
+| B25-NINE-D5 | Fully integrated materials and production economy | decision | APPROVED | owner decision |
+| B25-NINE-D6 | Armor classification and specialized bonuses | decision | APPROVED | owner decision |
+| B25-NINE-D7 | Ordinary clothing is cosmetic | decision | APPROVED | owner decision |
+| B25-NINE-D8 | Predefined capabilities and organic societal development | decision | APPROVED | owner decision |
+| B25-NINE-D9 | Game juice phases J1 and J2 | decision | APPROVED | owner decision |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20 |
 | B25-SCOPE-D1 | Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work from abandoned branches? | decision | APPROVED | owner decision |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
@@ -292,7 +303,7 @@ None.
 | FARM-09 | Farmland placement by drag: two green corners, live price at screen centre, lease or buy, confirm | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | FARM-CROP-01 | Share a field's crop among its cutters in proportion to their cutting work | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | FARM-CROP-SEED | Seed kept back from a shared field is split among its cutters by work, as the grain is | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
-| FARM-YIELD-D1 | Shared farming model: which wheat yield per cell, and may shared_manor_farming (FSE-12, FARM-06) and seasonal_village_farming (FSE-13) be switched on in the normal game? | decision | OPEN | unassigned |
+| FARM-YIELD-D1 | Shared farming model: which wheat yield per cell, and may shared_manor_farming (FSE-12, FARM-06) and seasonal_village_farming (FSE-13) be switched on in the normal game? | decision | APPROVED | unassigned |
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 20 |
 | FIX-D3 | Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 19 |
 | FIX-RECF1 | Fix the unsold-goods re-decision loop (REC-F1): find the actual cause and correct the condition that makes villagers reconsider an unavailable action hundreds of times; no arbitrary cooldown; autonomy, economy and prompt reaction preserved; isolated from other systems | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 19 |
@@ -404,7 +415,7 @@ None.
 | JOB-01 | Shared job board for salaried manor hands: eligible for appropriate board work, no extra wage, specialised exclusions kept, no universal priority, no double booking | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 17 |
 | JOB-02 | Offered compensation on the manor job board: each funded posting offers pay that eligible workers weigh and may decline; the manor may raise its offer; jobs may stay unfilled; pay from real funds, in full on completion; no extra pay to salaried hands; CON-01 contracts stay separate | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | JUICE-00 | Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only) | approved | IMPLEMENTED ON TASK BRANCH / NOT APPLICABLE / OPEN | 20+ |
-| JUICE-J1 | May phase J1 (quick wins: notification split, coin tick, prompt pulse, hurt frames, 'Reduce effects' setting, unused fx_dust; one pooled effects helper) be implemented, and in which build? | decision | OPEN | unassigned |
+| JUICE-J1 | May phase J1 (quick wins: notification split, coin tick, prompt pulse, hurt frames, 'Reduce effects' setting, unused fx_dust; one pooled effects helper) be implemented, and in which build? | decision | APPROVED | unassigned |
 | JUICE-JD1 | Audio: may the owned Living Forest sounds be integrated as FR-08's first slice, which events first, default volumes? | decision | SUPERSEDED | unassigned |
 | JUICE-JD2 | Day and night: should the picture darken at night (how dark at midnight; interiors; underground already dark)? | decision | OPEN | unassigned |
 | JUICE-JD3 | Villager chatter: how often may villagers show what they are doing in bubbles (OWN-19 extension)? | decision | OPEN | unassigned |
@@ -828,7 +839,7 @@ None.
 | X20-REMAINING-PLACEMENT | Where does the remaining Expansion 20 scope go relative to the Build 25 freeze (LE-07, EMP-PERM-01, LE-05 remainder, economy activation, SJD-H review): finished before the freeze, in Build 26, or carried past it? | decision | APPROVED | unassigned |
 | X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | 20 |
 | X20-SCOPE | Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forward into Expansion 20 (LE-02..LE-05)? | decision | APPROVED | 20 |
-| X20-SERVICES-SCOPE | Does X20-SCOPE's 'negotiated wages and service contracts behind their switches (OD-LE-03/D02)' include the approved service-contract records CON-03..CON-08 (CON02-S-1..6 answers), or do they stay unscheduled? | decision | OPEN | unassigned |
+| X20-SERVICES-SCOPE | Does X20-SCOPE's 'negotiated wages and service contracts behind their switches (OD-LE-03/D02)' include the approved service-contract records CON-03..CON-08 (CON02-S-1..6 answers), or do they stay unscheduled? | decision | APPROVED | unassigned |
 | X20-SETTLE-FOOD | Live settlement-to-settlement food purchasing (REG-BUY-D1 approval): one settlement's surplus can reach a neighbour through real trade; road trade carries food; RegionalMarket wired into the live game | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-SETTLE-REOPEN | A closed settlement business reopens (or is re-established) when a household takes up its trade, through the existing business-creation and ownership rules, without restoring the former owner's money, stock, contracts, workforce or assets | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-SPLASH | Opening splash: the Hot Attic Games studio logo shows when the game starts, before the game; the app icon is left as it is | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |

@@ -858,8 +858,8 @@
    "description": "Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md)",
    "source": "docs/design/ARMOUR_CATALOGUE_PROPOSAL.md",
    "owner_wording": null,
-   "owner_answer": "D16 answer B [CONDITIONAL]: Build 22's four armour categories, items and visuals stand. Numerical armour, buff and crafting rules stay PROVISIONAL pending the owner's balance and art review; not an approval of the exact fireball stats, cloth hats or material substitution. No Build 22 rebuild.",
-   "disposition": "PROVISIONAL",
+   "owner_answer": "APPROVED: Armor serves three distinct gameplay purposes (common and fine: physical protection; cultural and regional: technique bonuses not tied to ethnicity; rare and elemental: magical effects only where the mechanic exists) while preserving the existing four catalogue classes; ordinary clothing is cosmetic (Decision 7); numbers subject to evidence-based balancing.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [],
@@ -885,6 +885,11 @@
      "date": "2026-10-28",
      "change": "notes",
      "why": "owner ruling 2026-10-28: implemented armour decisions and assets preserved; only unapproved numbers and materials stay provisional"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: PROVISIONAL -> APPROVED; owner_answer",
+     "why": "Answered by the owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decisions 6 and 7, B25-NINE-D6, B25-NINE-D7)"
     }
    ],
    "notes": "Owner 2026-10-28 (owner message 2026-10-28 (decision resolution and register cleanup)): Build 22's four categories, items and visuals and the implemented assets stand (D16); only the genuinely unapproved numerical values (armour, buffs including the fireball buff) and material choices remain PROVISIONAL for the owner's balance and art review."
@@ -5646,6 +5651,324 @@
    ]
   },
   {
+   "id": "B25-LE-ACTIVATE-D1",
+   "kind": "decision",
+   "title": "Living Economy activation policy for Build 25",
+   "description": "Living Economy activation policy for Build 25",
+   "source": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md",
+   "owner_wording": null,
+   "owner_answer": "The owner has already approved automatic activation following successful objective validation. ... Once all thirteen applicable objective readiness gates pass, activate the Living Economy by default in the integrated Build 25 candidate. Do not request another owner approval merely to change the enabled flag after those requirements pass.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [
+    "B25-NINE"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    }
+   ]
+  },
+  {
+   "id": "B25-NINE",
+   "kind": "approved",
+   "title": "Build 25: implement the nine consolidated owner decisions of 2026-11-01",
+   "description": "Build 25: implement the nine consolidated owner decisions of 2026-11-01",
+   "source": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md",
+   "owner_wording": "Build 25 should become the complete approved consolidation package, ready for private testing once its actual requirements and validation gates are satisfied.",
+   "approval": "Owner directive 2026-11-01 (verbatim in docs/directives/2026-11-01_nine_owner_decisions_consolidated.md)",
+   "acceptance": [
+    "Decisions 1-9 implemented through existing systems; Living Economy activated by default once the LE-07 readiness gates pass; validation per Part 2 section 5 on the tested SHA; report per Part 4 Phase E"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md"
+    }
+   ]
+  },
+  {
+   "id": "B25-NINE-D1",
+   "kind": "decision",
+   "title": "Organic skills, apprenticeship and career development",
+   "description": "Organic skills, apprenticeship and career development",
+   "source": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md",
+   "owner_wording": null,
+   "owner_answer": "APPROVED: Learning through actual experience, without mandatory professional credentials. ... Personal projects contribute to skills just as paid work does. ... Apprentice, journeyman, and master may describe experience or occupational standing, but they are not universal mandatory licenses. ... No automatic professional promotion based solely on reaching a skill threshold.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [
+    "B25-NINE"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    }
+   ]
+  },
+  {
+   "id": "B25-NINE-D2",
+   "kind": "decision",
+   "title": "Informal services and expanded service contracts",
+   "description": "Informal services and expanded service contracts",
+   "source": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md",
+   "owner_wording": null,
+   "owner_answer": "APPROVED: Both informal skilled services and the previously authorized broader service-contract categories. ... Incorporate the previously approved CON-03 through CON-08 service categories ... Both players and NPCs participate under equivalent applicable rules.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [
+    "B25-NINE"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    }
+   ]
+  },
+  {
+   "id": "B25-NINE-D3",
+   "kind": "decision",
+   "title": "Farming yield and food security",
+   "description": "Farming yield and food security",
+   "source": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md",
+   "owner_wording": null,
+   "owner_answer": "APPROVED: Simulation-driven agricultural balancing, not an arbitrary fixed yield selection. ... Select and implement a defensible provisional baseline using simulation evidence. ... Proceed without another owner approval of arbitrary yield numbers unless a new material design conflict emerges.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [
+    "B25-NINE"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    }
+   ]
+  },
+  {
+   "id": "B25-NINE-D4",
+   "kind": "decision",
+   "title": "Individual crime-reporting judgment",
+   "description": "Individual crime-reporting judgment",
+   "source": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md",
+   "owner_wording": null,
+   "owner_answer": "APPROVED: Judgment-based witness reporting. ... Activate the approved reporting behavior after its applicable validation passes. No further approval is required merely to enable this approved feature.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [
+    "B25-NINE"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    }
+   ]
+  },
+  {
+   "id": "B25-NINE-D5",
+   "kind": "decision",
+   "title": "Fully integrated materials and production economy",
+   "description": "Fully integrated materials and production economy",
+   "source": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md",
+   "owner_wording": null,
+   "owner_answer": "APPROVED: Expanded resources, production chains, and economic uses. ... Steel, Tin, Bronze, Silk, Fur, Deer antlers, Boar tusks ... Mandatory rule: Every material introduced must have a legitimate acquisition or production pathway available to players and NPCs.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [
+    "B25-NINE"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    }
+   ]
+  },
+  {
+   "id": "B25-NINE-D6",
+   "kind": "decision",
+   "title": "Armor classification and specialized bonuses",
+   "description": "Armor classification and specialized bonuses",
+   "source": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md",
+   "owner_wording": null,
+   "owner_answer": "APPROVED: Armor serves three distinct gameplay purposes while preserving the existing four catalogue classes. ... does not authorize inventing an unrelated complete magic engine or prematurely enabling unimplemented spells.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [
+    "B25-NINE"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    }
+   ]
+  },
+  {
+   "id": "B25-NINE-D7",
+   "kind": "decision",
+   "title": "Ordinary clothing is cosmetic",
+   "description": "Ordinary clothing is cosmetic",
+   "source": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md",
+   "owner_wording": null,
+   "owner_answer": "APPROVED: Clothing and functional equipment remain distinct. ... Do not invent bonuses for ordinary garments.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [
+    "B25-NINE"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    }
+   ]
+  },
+  {
+   "id": "B25-NINE-D8",
+   "kind": "decision",
+   "title": "Predefined capabilities and organic societal development",
+   "description": "Predefined capabilities and organic societal development",
+   "source": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md",
+   "owner_wording": null,
+   "owner_answer": "APPROVED: A predefined library of possible capabilities with organic individual, settlement, and regional progression. ... Provide clear but unobtrusive announcements for personal skill advancement and newly achieved village industry milestones. ... Do not double-count skill productivity through settlement-wide bonuses.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [
+    "B25-NINE"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    }
+   ]
+  },
+  {
+   "id": "B25-NINE-D9",
+   "kind": "decision",
+   "title": "Game juice phases J1 and J2",
+   "description": "Game juice phases J1 and J2",
+   "source": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md",
+   "owner_wording": null,
+   "owner_answer": "APPROVED: Implement BOTH J1 and J2 in Build 25. ... J3, J4, and J5 are not authorized by this decision. Do not add unapproved screen shake, haptic policies, day/night darkness, or generalized NPC speech bubbles as part of J1/J2.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [
+    "B25-NINE"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    }
+   ]
+  },
+  {
    "id": "B25-SCOPE-AUDIT",
    "kind": "approved",
    "title": "Build 25 complete expansion and abandoned-work reconciliation audit (read-only)",
@@ -10149,6 +10472,11 @@
      "date": "2026-10-23",
      "change": "entered",
      "why": "Owner decisions docs/directives/2026-10-23_dp15_dp16_con02_empperm.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Build 25 scope (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2): the service-contract categories and their dependencies are incorporated into Build 25"
     }
    ]
   },
@@ -10194,6 +10522,11 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Build 25 scope (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2): the service-contract categories and their dependencies are incorporated into Build 25"
     }
    ],
    "target_build": "owner decision",
@@ -10247,6 +10580,11 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Build 25 scope (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2): the service-contract categories and their dependencies are incorporated into Build 25"
     }
    ],
    "target_build": "owner decision",
@@ -10300,6 +10638,11 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Build 25 scope (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2): the service-contract categories and their dependencies are incorporated into Build 25"
     }
    ],
    "target_build": "owner decision",
@@ -10353,6 +10696,11 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Build 25 scope (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2): the service-contract categories and their dependencies are incorporated into Build 25"
     }
    ],
    "target_build": "owner decision",
@@ -10406,6 +10754,11 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Build 25 scope (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2): the service-contract categories and their dependencies are incorporated into Build 25"
     }
    ],
    "target_build": "owner decision",
@@ -10459,6 +10812,11 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval OWNER APPROVED; implementation NOT STARTED; verification NOT TESTED; release NOT READY; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Build 25 scope (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2): the service-contract categories and their dependencies are incorporated into Build 25"
     }
    ],
    "target_build": "owner decision",
@@ -20859,11 +21217,16 @@
      "date": "2026-10-31",
      "change": "entered in the register",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md); source docs/directives/2026-10-21_fse12_fse13_farming_decision.md: 'I am not approving the existing 3-wheat-per-cell yield or selecting a replacement yield yet. Keep both FSE-12 and FSE-13 switches off ... Report the comparison results and your proposed value for my approval before enabling either switch globally.' Comparison: docs/design/FARM08_YIELD_COMPARISON.md ('Status: awaiting the owner's approval')."
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "Answered by the owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 3, B25-NINE-D3)"
     }
    ],
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Simulation-driven agricultural balancing, not an arbitrary fixed yield selection: select and implement a defensible provisional baseline using simulation evidence across shared farming, seasonal farming and the Living Economy.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "related": [
     "FSE-12",
@@ -29639,11 +30002,16 @@
      "date": "2026-10-31",
      "change": "entered in the register",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md); source docs/directives/2026-10-22_game_juice_preliminary_assessment.md ('Report the top ten improvements ... and wait for approval'); docs/juice/PRELIMINARY_ASSESSMENT.md section 7"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "Answered by the owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 9, B25-NINE-D9)"
     }
    ],
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "APPROVED: Implement BOTH J1 and J2 in Build 25.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "related": [
     "JUICE-00",
@@ -29695,6 +30063,11 @@
      "date": "2026-10-31",
      "change": "entered in the register",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md); source docs/juice/PRELIMINARY_ASSESSMENT.md section 6 D2 (origin/wip/juice-assessment bebf1f3)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Kept open by the owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Part 3: night lighting, villager chatter, notification filtering, screen shake and haptics stay future questions; not part of J1/J2)"
     }
    ],
    "owner_wording": null,
@@ -29721,6 +30094,11 @@
      "date": "2026-10-31",
      "change": "entered in the register",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md); source docs/juice/PRELIMINARY_ASSESSMENT.md section 6 D3"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Kept open by the owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Part 3: night lighting, villager chatter, notification filtering, screen shake and haptics stay future questions; not part of J1/J2)"
     }
    ],
    "owner_wording": null,
@@ -29746,6 +30124,11 @@
      "date": "2026-10-31",
      "change": "entered in the register",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md); source docs/juice/PRELIMINARY_ASSESSMENT.md section 6 D4"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Kept open by the owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Part 3: night lighting, villager chatter, notification filtering, screen shake and haptics stay future questions; not part of J1/J2)"
     }
    ],
    "owner_wording": null,
@@ -29770,6 +30153,11 @@
      "date": "2026-10-31",
      "change": "entered in the register",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md); source docs/juice/PRELIMINARY_ASSESSMENT.md section 6 D5"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Kept open by the owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Part 3: night lighting, villager chatter, notification filtering, screen shake and haptics stay future questions; not part of J1/J2)"
     }
    ],
    "owner_wording": null,
@@ -62994,6 +63382,11 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Partly answered by the owner 2026-11-01 (B25-AMBITION-D4, docs/directives/2026-11-01_career_business_employment_final_decisions.md): the career ambition system (aspiration layer and job_choice) is to be activated and corrected. Not blanket authorization: every other switch in this decision (e.g. the judgment-weighted witness report, integration.report) stays as it is and remains open"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Witness-report part answered by the owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 4, B25-NINE-D4): judgment-based reporting approved, to be activated after its validation passes; career ambition already answered by B25-AMBITION-D4. Every other switch named here remains as decided"
     }
    ],
    "owner_wording": null,
@@ -63077,6 +63470,11 @@
      "date": "2026-10-31",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered (docs/directives/2026-10-31_doc_recon_review_decisions.md s.2): the 2026-10-31 instruction supersedes the 2026-10-30 automatic activation"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Superseded for Build 25 by the owner 2026-11-01 (B25-LE-ACTIVATE-D1, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md Part 2 s.4): the Living Economy is activated by default in the integrated Build 25 candidate once all thirteen LE-07 readiness gates pass, without another approval; kept as history"
     }
    ],
    "owner_wording": null,
@@ -64960,11 +65358,16 @@
      "date": "2026-10-31",
      "change": "entered in the register",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md); source X20-SCOPE owner_answer; CON-03..08 target 'owner decision'; LE04_IMPLEMENTATION.md s.4 (market.services empty)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "Answered by the owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2, B25-NINE-D2)"
     }
    ],
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "APPROVED: Both informal skilled services and the previously authorized broader service-contract categories; incorporate CON-03 through CON-08 and their dependencies into Build 25.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "related": [
     "X20-SCOPE",

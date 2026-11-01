@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (738)
+## Approved requirement (739)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -81,6 +81,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | B7-001 | Starting coins | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B7-002 | Quest rewards reserved |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
@@ -855,11 +856,11 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (287)
+## Owner decisions (297)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
-| ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | 20 | PROVISIONAL |  |
+| ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | 20 | APPROVED |  |
 | ARMOR-Q | Armour scope: Option A (exact text to be presented) | owner decision | APPROVED |  |
 | B18-DP-01 | PL1-10: finish production chains (attendants work the player's stations), stall goods display, shops in leased village houses with existing systems? | 18 | APPROVED |  |
 | B18-DP-02 | PL2-008: treat ROOMS-18 as the answer to its open question and close on playtest (villager modules and module signs not in its text)? | 18 | APPROVED |  |
@@ -882,6 +883,16 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-BUSINESS-D2 | May villagers establish independent businesses? | owner decision | APPROVED |  |
 | B25-CAREER-D1 | How is career advancement decided? | owner decision | APPROVED |  |
 | B25-EMPLOY-D3 | How do skilled occupations grow? | owner decision | APPROVED |  |
+| B25-LE-ACTIVATE-D1 | Living Economy activation policy for Build 25 | owner decision | APPROVED |  |
+| B25-NINE-D1 | Organic skills, apprenticeship and career development | owner decision | APPROVED |  |
+| B25-NINE-D2 | Informal services and expanded service contracts | owner decision | APPROVED |  |
+| B25-NINE-D3 | Farming yield and food security | owner decision | APPROVED |  |
+| B25-NINE-D4 | Individual crime-reporting judgment | owner decision | APPROVED |  |
+| B25-NINE-D5 | Fully integrated materials and production economy | owner decision | APPROVED |  |
+| B25-NINE-D6 | Armor classification and specialized bonuses | owner decision | APPROVED |  |
+| B25-NINE-D7 | Ordinary clothing is cosmetic | owner decision | APPROVED |  |
+| B25-NINE-D8 | Predefined capabilities and organic societal development | owner decision | APPROVED |  |
+| B25-NINE-D9 | Game juice phases J1 and J2 | owner decision | APPROVED |  |
 | B25-SCOPE-D1 | Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work from abandoned branches? | owner decision | APPROVED |  |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | owner decision | APPROVED |  |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | owner decision | APPROVED |  |
@@ -923,14 +934,14 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | E26-OD-08 | Can villagers' pets or guard dogs fight in village defence? (recommendation: guard dogs join the guards' line) | 26 | OPEN |  |
 | E26-OD-09 | When to build Expansion 26, and may phases 26-A..C and 26-F start before Expansion 25? | 26 | OPEN |  |
 | FARM-08-Q-CROP | How is a field's crop divided among the farmers who work it? |  | APPROVED |  |
-| FARM-YIELD-D1 | Shared farming model: which wheat yield per cell, and may shared_manor_farming (FSE-12, FARM-06) and seasonal_village_farming (FSE-13) be switched on in the normal game? | unassigned | OPEN |  |
+| FARM-YIELD-D1 | Shared farming model: which wheat yield per cell, and may shared_manor_farming (FSE-12, FARM-06) and seasonal_village_farming (FSE-13) be switched on in the normal game? | unassigned | APPROVED |  |
 | HORSE-Q | Plough horse: price and what it does | owner decision | APPROVED |  |
 | ID-D1 | Identity: when an heir takes over, does the village's view of the player carry on to the heir (Build 18 behaviour), or do the parent's ties stay with the parent's own identity while the heir starts from the ties they had as a villager? | unassigned | APPROVED |  |
 | ID-D2 | Identity changes the determinism gate: off-map people and player characters now draw ids from the one counter, so later villagers' ids shift and id-seeded pair chemistry diverges from Build 18 (seeds 1 and 2 differ from day 10; no leaks). Options: (a) one counter as built, accept a new gate baseline; (b) off-map people and player characters in a separate id band (1,000,000+): village ids match Build 18 and day 10 is identical, day 30 still differs once a settlement-born person arrives keeping their id (inherent to the approved rule); accept a new baseline from that point. Either way a re-baseline is needed. Also: a kept heir-child record lets kin (a grandmother) take in that child's orphaned children, which Build 18 did not. | unassigned | APPROVED |  |
 | ID-D3 | Identity gate baseline: approve the candidate new baseline (docs/design/IDENTITY_GATE_CANDIDATE.json)? Its only divergences (day 13 on both seeds) come from arrivals keeping their permanent band id, which changes traits Build 18 hashes from the id (chapel piety, caravan taste, skill seed, willingness, sprite). Alternatively those traits could be seeded from a stored per-person seed so they no longer depend on the id value (a design change). | unassigned | PROVISIONAL |  |
 | INV-Q1 | INV-18 borderline item classifications | owner decision | APPROVED |  |
 | INV-Q2 | INV-18 upgrade acquisition and cost | owner decision | APPROVED |  |
-| JUICE-J1 | May phase J1 (quick wins: notification split, coin tick, prompt pulse, hurt frames, 'Reduce effects' setting, unused fx_dust; one pooled effects helper) be implemented, and in which build? | unassigned | OPEN |  |
+| JUICE-J1 | May phase J1 (quick wins: notification split, coin tick, prompt pulse, hurt frames, 'Reduce effects' setting, unused fx_dust; one pooled effects helper) be implemented, and in which build? | unassigned | APPROVED |  |
 | JUICE-JD1 | Audio: may the owned Living Forest sounds be integrated as FR-08's first slice, which events first, default volumes? | unassigned | SUPERSEDED |  |
 | JUICE-JD2 | Day and night: should the picture darken at night (how dark at midnight; interiors; underground already dark)? | unassigned | OPEN |  |
 | JUICE-JD3 | Villager chatter: how often may villagers show what they are doing in bubbles (OWN-19 extension)? | unassigned | OPEN |  |
@@ -1141,7 +1152,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X20-ACTIVATION-AUTHORITY | Does X20-RESUME's automatic Living Economy activation on objective readiness (2026-10-30) still stand after the 2026-10-31 instructions to keep the economy disabled by default and the Build 25 freeze, or does activation now need explicit owner approval? | unassigned | APPROVED |  |
 | X20-REMAINING-PLACEMENT | Where does the remaining Expansion 20 scope go relative to the Build 25 freeze (LE-07, EMP-PERM-01, LE-05 remainder, economy activation, SJD-H review): finished before the freeze, in Build 26, or carried past it? | unassigned | APPROVED |  |
 | X20-SCOPE | Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forward into Expansion 20 (LE-02..LE-05)? | 20 | APPROVED |  |
-| X20-SERVICES-SCOPE | Does X20-SCOPE's 'negotiated wages and service contracts behind their switches (OD-LE-03/D02)' include the approved service-contract records CON-03..CON-08 (CON02-S-1..6 answers), or do they stay unscheduled? | unassigned | OPEN |  |
+| X20-SERVICES-SCOPE | Does X20-SCOPE's 'negotiated wages and service contracts behind their switches (OD-LE-03/D02)' include the approved service-contract records CON-03..CON-08 (CON02-S-1..6 answers), or do they stay unscheduled? | unassigned | APPROVED |  |
 | X20-TRADER-CLOSE | Review finding 1 (settlement traders): once traders close when nobody works them, all five settlement traders close by days 21-35 on seeds 1 and 2 and never reopen, ending caravan trade (village coins day 60: 5429->3995 seed 1, 5236->3848 seed 2; conservation intact; run 41133027134 on wip/x20-settle-food 108d252). Choose: (a) ship the fix as is; (b) add a rule that reopens a closed trader when a household takes up the trade again; (c) retune trader pay (excluded by the owner's no-retuning rule); (d) keep the trader's exemption from closing (Build 24 behaviour) until the owner decides. Lead recommendation: (d) now, (b) if the owner wants traders to be able to fail and recover. | 20+ | APPROVED |  |
 | X20-TRADER-PAY | Settlement traders reopen (X20-SETTLE-REOPEN) but close again within weeks: a trader keeps its till at its reserve (0.85 x starting till) and pays its household only from coins above it, so the household earns almost nothing and switches trade (Build 24's own rule). Trading stays well below Build 24 (day-60 village coins 4191 vs 5429 seed 1; 4083 vs 5236 seed 2), conservation exact. Options: (a) keep as is (legitimate outcome under WDR-022); (b) change the trader pay rule (e.g. pay the working household a share of turnover or a floor wage before holding the reserve), a retuning that needs approval. Lead recommendation: (a) for the next playtest, measure, revisit with the Living Economy wage work (LE-04 negotiated wages, off). | 20+ | DEFERRED |  |
 | X21-RECOVERY-D1 | When is the Expansion 21 phase-1 work (P21-00..02 on wip/expansion21-preparation 8ac88f5, built on Build 18) brought onto the current code: in Build 26 recovery or as the first step of Build 27? | 21 | APPROVED |  |

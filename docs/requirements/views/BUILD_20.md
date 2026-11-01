@@ -8,15 +8,15 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 134 |
-| Integrated | 110 of 134 (82%) |
-| Automated tests passed | 110 of 134 (82%) |
-| Integration verified | 64 of 134 (48%) |
-| Gameplay verified | 0 of 134 (0%) |
-| Owner playtested | 0 of 134 (0%) |
-| Complete | 2 of 134 (1%) |
-| Open (release blockers) | 132 |
-| Open owner decisions (blocking) | 1 (0) |
+| Approved requirements in scope | 135 |
+| Integrated | 110 of 135 (81%) |
+| Automated tests passed | 110 of 135 (81%) |
+| Integration verified | 64 of 135 (47%) |
+| Gameplay verified | 0 of 135 (0%) |
+| Owner playtested | 0 of 135 (0%) |
+| Complete | 2 of 135 (1%) |
+| Open (release blockers) | 133 |
+| Open owner decisions (blocking) | 0 (0) |
 
 ## In development (worker assigned) (1)
 
@@ -143,7 +143,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | TARGETED TESTS PASSED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (22)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (23)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -151,6 +151,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | BUILD-SEQ-25-27 | Build sequence (owner, 2026-10-31): Build 25 = Expansion 20 validation and freeze (wip/expansion20 becomes the frozen baseline only after validation passes and the owner approves); Build 26 = repository recovery and consolidation on a separate branch from the exact frozen Build 25 SHA, validated and frozen after owner approval; Build 27 = Expansion 21 begins only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers. | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | DOC-AUTH-01 | Document authority replacement: once the owner explicitly approves and delivers the final revised expansion specification set, it is the sole authoritative current specification; older plans, roadmaps, packets, instructions and registers become historical evidence only; omitted features are not reintroduced (ask if materially ambiguous); code differences are reported, not silently changed; later explicit owner decisions supersede and are folded into the set; no third interpretation. Until then: latest explicit owner decisions and the validated baseline. The switch happens only on final approval, not on a draft. | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
@@ -176,12 +177,6 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | INTEGRATION VERIFIED | NOT READY |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | INTEGRATION VERIFIED | NOT READY |
-
-## Open owner decisions (1)
-
-| ID | Question | Disposition | Blocks | Affects |
-|---|---|---|---|---|
-| ARMOR-CATALOG-D1 | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials option A or B for Build 22, the example values (the rest by the same rules), and whether the cloth headgear is included (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md) | PROVISIONAL | no | ARMOR-CATALOG-01, ARMOR-MATERIALS-01 |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (6)
 
