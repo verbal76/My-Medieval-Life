@@ -63338,6 +63338,34 @@
    ]
   },
   {
+   "id": "X20-CHAPEL-INTEGRATE",
+   "kind": "approved",
+   "title": "Integrate the chapel correction and the gossip fix into wip/expansion20",
+   "description": "Integrate the chapel correction and the gossip fix into wip/expansion20",
+   "source": "docs/directives/2026-11-01_economic_maturation_master_directive.md",
+   "owner_wording": "Integrate the verified chapel correction and narrowly scoped gossip fix into the active Expansion 20 development source, provided the integration is clean and the relevant correctness checks pass.",
+   "approval": "Owner master directive 2026-11-01 (verbatim in docs/directives/2026-11-01_economic_maturation_master_directive.md)",
+   "acceptance": [
+    "Diff inspected, no unrelated changes, focused integration and regression checks pass, Build 25 artifacts and tag untouched, rollback point recorded"
+   ],
+   "target_build": "25",
+   "parent": "X20-ECON-MATURE",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_economic_maturation_master_directive.md"
+    }
+   ]
+  },
+  {
    "id": "X20-CHECKPOINT",
    "kind": "approved",
    "title": "Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development",
@@ -63466,6 +63494,174 @@
    "branch": "wip/expansion20",
    "notes": "SUSPENDED (owner 2026-10-28, docs/directives/2026-10-28_x20_checkpoint_build_and_pause.md): remaining work (LE-03..LE-07, EMP-PERM-01, GP-POLISH, SJD-G/H) paused after the Build 24 private checkpoint; resume only on the owner's instruction.\nReconciled 2026-10-31 (DOC-RECON-01): The 2026-10-28 SUSPENDED note is superseded: the owner lifted the pause 2026-10-30 (X20-RESUME). Done: REC-DIAG, till ownership, LE-02..LE-04, LE-06, SJD-G, GP-POLISH code. Remaining: LE-05 remainder, LE-07, EMP-PERM-01, SJD-H review, the completed-expansion build. Owner 2026-10-31: stop for review after the merged validation; Build 25 freezes ad281dc only on approval.",
    "next_action": "Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md)."
+  },
+  {
+   "id": "X20-ECON-AFFORD",
+   "kind": "approved",
+   "title": "Re-evaluate the unaffordable bids by interval, category, household condition and cause",
+   "description": "Re-evaluate the unaffordable bids by interval, category, household condition and cause",
+   "source": "docs/directives/2026-11-01_economic_maturation_master_directive.md",
+   "owner_wording": "Do not judge economic health from raw cumulative counts alone.",
+   "approval": "Owner master directive 2026-11-01 (verbatim in docs/directives/2026-11-01_economic_maturation_master_directive.md)",
+   "acceptance": [
+    "Unaffordable bids reported by 30-day interval, product category, household condition and cause, normalized; pattern (improving or not) identified; any defect named"
+   ],
+   "target_build": "25",
+   "parent": "X20-ECON-MATURE",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_economic_maturation_master_directive.md"
+    }
+   ]
+  },
+  {
+   "id": "X20-ECON-AUDIT",
+   "kind": "approved",
+   "title": "Audit which of 20 economic progression systems the year-long simulations exercise",
+   "description": "Audit which of 20 economic progression systems the year-long simulations exercise",
+   "source": "docs/directives/2026-11-01_economic_maturation_master_directive.md",
+   "owner_wording": "Determine whether the simulations genuinely exercise the game's complete economic progression systems or primarily repeat starting-condition behaviors.",
+   "approval": "Owner master directive 2026-11-01 (verbatim in docs/directives/2026-11-01_economic_maturation_master_directive.md)",
+   "acceptance": [
+    "Each of the 20 systems classified (exercised / implemented not exercised / partial / not implemented / undetermined) with source references and simulation evidence"
+   ],
+   "target_build": "25",
+   "parent": "X20-ECON-MATURE",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_economic_maturation_master_directive.md"
+    }
+   ]
+  },
+  {
+   "id": "X20-ECON-FIREWOOD",
+   "kind": "approved",
+   "title": "Re-evaluate firewood shortages by season, household, income and period",
+   "description": "Re-evaluate firewood shortages by season, household, income and period",
+   "source": "docs/directives/2026-11-01_economic_maturation_master_directive.md",
+   "owner_wording": "Distinguish isolated hardship from persistent systemic failure.",
+   "approval": "Owner master directive 2026-11-01 (verbatim in docs/directives/2026-11-01_economic_maturation_master_directive.md)",
+   "acceptance": [
+    "Shortages measured by season, household, income level and period; causes classified; no artificial resource creation"
+   ],
+   "target_build": "25",
+   "parent": "X20-ECON-MATURE",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_economic_maturation_master_directive.md"
+    }
+   ]
+  },
+  {
+   "id": "X20-ECON-LONGITUDINAL",
+   "kind": "approved",
+   "title": "Longitudinal economic evaluation framework (snapshots days 1/30/90/180/270/365 plus intervals; stages)",
+   "description": "Longitudinal economic evaluation framework (snapshots days 1/30/90/180/270/365 plus intervals; stages)",
+   "source": "docs/directives/2026-11-01_economic_maturation_master_directive.md",
+   "owner_wording": "Replace static, end-of-year-only economic assessments with longitudinal economic-development analysis.",
+   "approval": "Owner master directive 2026-11-01 (verbatim in docs/directives/2026-11-01_economic_maturation_master_directive.md)",
+   "acceptance": [
+    "Snapshots at days 1, 30, 90, 180, 270, 365 and periodic intervals for employment, businesses, market, households, production; unmeasured metrics marked with the instrumentation they need; standard recorded for future evaluations"
+   ],
+   "target_build": "25",
+   "parent": "X20-ECON-MATURE",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_economic_maturation_master_directive.md"
+    }
+   ]
+  },
+  {
+   "id": "X20-ECON-MATURE",
+   "kind": "approved",
+   "title": "Economic maturation: evaluate the economy as a developing system",
+   "description": "Economic maturation: evaluate the economy as a developing system",
+   "source": "docs/directives/2026-11-01_economic_maturation_master_directive.md",
+   "owner_wording": "The economy must be evaluated as a developing system, not a static starting village ... verify that the systems enabling economic development actually work.",
+   "approval": "Owner master directive 2026-11-01 (verbatim in docs/directives/2026-11-01_economic_maturation_master_directive.md)",
+   "acceptance": [
+    "Acceptance criteria 1-10 of section 11 of the directive"
+   ],
+   "target_build": "25",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_economic_maturation_master_directive.md"
+    }
+   ]
+  },
+  {
+   "id": "X20-ECON-MATURE-REPORT",
+   "kind": "approved",
+   "title": "Economic maturation report with the 16 required charts and the executive-summary questions",
+   "description": "Economic maturation report with the 16 required charts and the executive-summary questions",
+   "source": "docs/directives/2026-11-01_economic_maturation_master_directive.md",
+   "owner_wording": "Show me how the society evolves between them.",
+   "approval": "Owner master directive 2026-11-01 (verbatim in docs/directives/2026-11-01_economic_maturation_master_directive.md)",
+   "acceptance": [
+    "Report with charts 1-16 (unmeasured marked), executive summary answering the 14 questions, measured/interpretation/recommendation separated"
+   ],
+   "target_build": "25",
+   "parent": "X20-ECON-MATURE",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_economic_maturation_master_directive.md"
+    }
+   ]
   },
   {
    "id": "X20-ECON-SUSTAIN",
