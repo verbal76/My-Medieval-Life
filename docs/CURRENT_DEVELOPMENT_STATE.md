@@ -97,9 +97,19 @@ Build 25:
 
 ## Next authorized actions (in order)
 
-1. Done: business founding, business hiring and permanent employment (`d0dc0d7`). Watch for founding in the year-long runs
-   (provisional thresholds: skill 4, 20 working days; open questions Q1-Q5 in BUSINESS_FOUNDING.md, docs/expansion20 on the Build 25 source).
-2. **Suspended branches**, one at a time. Finish each, run targeted tests, then merge:
+1. Done: business founding, business hiring and permanent employment (`d0dc0d7`). Founding is not yet seen in a live run.
+2. **Business ownership, paid employment and economic expansion** (B25-BIZ-OWN, decisions B25-BIZ-D1..D5, owner 2026-11-01,
+   `docs/directives/2026-11-01_business_ownership_employment_final_decisions.md`). The owner answered the five open business
+   questions; four of the conservative choices merged in `d0dc0d7` are to be replaced. **Next for the one worker, once the services
+   work is finished and checkpointed** (the services work is not interrupted). Branch `wip/b25-bizown` from the Build 25 source.
+   Milestones, each pushed:
+   1. architecture audit, reuse plan and the two-shop investigation;
+   2. separate business finances and paid workshop employment;
+   3. permanent employment across professions;
+   4. buying, selling and ownership transfers, with home workshops kept separate from the home;
+   5. expansion, career changes and abandoning unfinished construction;
+   6. interface, wiki, targeted tests, longer simulations (on Actions) and integration.
+3. **Suspended branches**, one at a time. Finish each, run targeted tests, then merge:
    1. `wip/b25-services` (active)
    2. `wip/b25-report`
    3. `wip/b25-juice`
@@ -107,16 +117,16 @@ Build 25:
    5. `wip/b25-capability`
 
    The order may change if a dependency requires it.
-3. **Farming yield by simulation** (FARM-YIELD-D1, B25-NINE-D3). Use Actions variants of `shared_wheat_yield`.
-4. **Economy readiness:** run the 13 LE-07 gates on the integrated candidate, then switch the economy on by default
-   (B25-LE-ACTIVATE-D1). Together with EMP-PERM-01 (step 1), this closes X20-COMPLETE, the remaining Expansion 20 work (lead,
+4. **Farming yield by simulation** (FARM-YIELD-D1, B25-NINE-D3). Use Actions variants of `shared_wheat_yield`.
+5. **Economy readiness:** run the 13 LE-07 gates on the integrated candidate, then switch the economy on by default
+   (B25-LE-ACTIVATE-D1). Together with EMP-PERM-01 (steps 1-2), this closes X20-COMPLETE, the remaining Expansion 20 work (lead,
    in development).
-5. **Validation once, at the end, on Actions:**
+6. **Validation once, at the end, on Actions:**
    - a new 30-day baseline;
    - full suites including network suites;
    - year-long runs (normal settings seeds 1 and 2, economy on seed 1);
    - the X20-ECON-MATURE report.
-6. **Release-readiness report**, then packaging only on the owner's authorization.
+7. **Release-readiness report**, then packaging only on the owner's authorization.
 
 ## Restrictions in force
 

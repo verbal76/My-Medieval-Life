@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 737 (379 of them still open) |
-| **Open entries now** (rules excluded) | | **538** |
+| Entries added since | | 743 (385 of them still open) |
+| **Open entries now** (rules excluded) | | **544** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (737)
+## Added since the baseline (743)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -159,6 +159,12 @@ None.
 | B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | multiplayer |
 | B25-AMBITION-D4 | Activate the career ambition system? | decision | APPROVED | owner decision |
 | B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
+| B25-BIZ-D1 | Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-BIZ-D2 | Employees are paid: distinguish an independent craftsperson using another's stations from a paid business employee whose production belongs to the employer | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-BIZ-D3 | Unfinished business construction can be cancelled or abandoned through the existing cancellation system, with no money refund | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-BIZ-D4 | Permanent employment as one shared framework across professions with real work systems (miners, gatherers, farm workers, smiths, carpenters, tanners, cooks, attendants, construction workers) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-BIZ-D5 | Businesses may be built (home-attached or standalone), bought, sold and expanded; selling a home workshop never sells the home; investigate the apparent two-shop limit | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-BIZ-OWN | Build 25 business ownership, paid employment and economic expansion (five final owner decisions, milestones 1-6) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25-BUSINESS-D2 | May villagers establish independent businesses? | decision | APPROVED | owner decision |
 | B25-BUSINESS-IMPL | Independent business formation by qualified villagers | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-CAREER-D1 | How is career advancement decided? | decision | APPROVED | owner decision |

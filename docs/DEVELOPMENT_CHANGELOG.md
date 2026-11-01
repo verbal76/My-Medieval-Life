@@ -67,6 +67,24 @@ All the work below is Build 25, the consolidation build (B25-SCOPE-D1).
 - Records branch: `wip/requirements-control`.
 - Tests are local unless a run id is given.
 
+**B25-BIZ-OWN: owner's final business decisions recorded (B25-BIZ-D1..D5).**
+- Branch: `wip/requirements-control`. Records only, no code yet.
+- Change: the five open business questions are answered, and the directive is saved verbatim. The register has a parent record
+  (B25-BIZ-OWN) with five approved children:
+  - D1: business finances separate from the household's.
+  - D2: employees are paid; using a workshop independently is not employment.
+  - D3: unfinished business construction can be cancelled through the existing cancellation system, with no money refund.
+  - D4: permanent employment across all professions that have real work systems.
+  - D5: businesses can be built, bought, sold and expanded; a home workshop is sold without the home; the "two-shop limit" is to be
+    investigated.
+- DCR-01 classification:
+  - All five are compatible with earlier owner rules. D1 extends ECON-P3.
+  - D1, D2, D4 and D5 intentionally revise the agent's provisional choices Q1, Q2, Q4 and Q5 from `d0dc0d7`.
+  - D3 confirms Q3 (no refund) and adds a cancellation path.
+  - No conflict needs escalation.
+- Status: approved, not started. It is queued as the next work for the one worker, after the informal services work is
+  checkpointed.
+
 **B25-BUSINESS-IMPL and EMP-PERM-01: villager businesses, business hiring, the player's permanent employee (B25-BUSINESS-D2, B25-EMPLOY-D3).**
 - Branch: `wip/b25-business` (`cc830e0` design, `2f99b29` founding and closing, `04054bb` hiring and EMP-PERM-01, `c60ac0e` docs),
   merged as `d0dc0d7`.

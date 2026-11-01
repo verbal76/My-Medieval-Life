@@ -5446,6 +5446,187 @@
    ]
   },
   {
+   "id": "B25-BIZ-D1",
+   "kind": "approved",
+   "title": "Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system)",
+   "description": "Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system)",
+   "source": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md",
+   "owner_wording": "Business finances must remain separate from household finances.",
+   "approval": "owner directive 2026-11-01 (final decisions; answers B25-BUSINESS-IMPL open questions Q1-Q5)",
+   "acceptance": [
+    "Each business has its own account; revenue, materials, wages and costs go through it; owners invest and withdraw under the existing rules",
+    "A struggling business cannot consume the household's protected living reserves; failure has real consequences; conservation exact"
+   ],
+   "target_build": "20",
+   "parent": "B25-BIZ-OWN",
+   "depends_on": [
+    "ECON-P3"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md"
+    }
+   ]
+  },
+  {
+   "id": "B25-BIZ-D2",
+   "kind": "approved",
+   "title": "Employees are paid: distinguish an independent craftsperson using another's stations from a paid business employee whose production belongs to the employer",
+   "description": "Employees are paid: distinguish an independent craftsperson using another's stations from a paid business employee whose production belongs to the employer",
+   "source": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md",
+   "owner_wording": "Genuine employees receive compensation for their work. ... That arrangement may continue, but it is NOT employment.",
+   "approval": "owner directive 2026-11-01 (final decisions; answers B25-BUSINESS-IMPL open questions Q1-Q5)",
+   "acceptance": [
+    "Businesses hire under agreed terms; wages are real transfers; the employer owns the production; hiring weighs qualifications, availability, need, affordability and judgment",
+    "A business without money cannot keep employees; employees may leave; same rules for player and NPC businesses"
+   ],
+   "target_build": "20",
+   "parent": "B25-BIZ-OWN",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md"
+    }
+   ]
+  },
+  {
+   "id": "B25-BIZ-D3",
+   "kind": "approved",
+   "title": "Unfinished business construction can be cancelled or abandoned through the existing cancellation system, with no money refund",
+   "description": "Unfinished business construction can be cancelled or abandoned through the existing cancellation system, with no money refund",
+   "source": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md",
+   "owner_wording": "No automatic financial refunds for abandoned business construction. However, households and players must never become permanently trapped by a building project they cannot complete.",
+   "approval": "owner directive 2026-11-01 (final decisions; answers B25-BUSINESS-IMPL open questions Q1-Q5)",
+   "acceptance": [
+    "Voluntary cancellation and abandonment when completion is unreasonable; recoverable-material rules apply; the household is released from the obligation; no resources duplicated or destroyed"
+   ],
+   "target_build": "20",
+   "parent": "B25-BIZ-OWN",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md"
+    }
+   ]
+  },
+  {
+   "id": "B25-BIZ-D4",
+   "kind": "approved",
+   "title": "Permanent employment as one shared framework across professions with real work systems (miners, gatherers, farm workers, smiths, carpenters, tanners, cooks, attendants, construction workers)",
+   "description": "Permanent employment as one shared framework across professions with real work systems (miners, gatherers, farm workers, smiths, carpenters, tanners, cooks, attendants, construction workers)",
+   "source": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md",
+   "owner_wording": "A profession determines what work someone performs. Employment determines whom they work for and how they are compensated.",
+   "approval": "owner directive 2026-11-01 (final decisions; answers B25-BUSINESS-IMPL open questions Q1-Q5)",
+   "acceptance": [
+    "Players and NPC owners employ; consent, affordability, wages from existing negotiation and labour market; output belongs to the employer; dismissal and resignation; persists across days and saves; host-authoritative in multiplayer",
+    "The 10-coin miner wage is reviewed within the economy, not applied universally; no invented production capabilities"
+   ],
+   "target_build": "20",
+   "parent": "B25-BIZ-OWN",
+   "depends_on": [
+    "EMP-PERM-01"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md"
+    }
+   ]
+  },
+  {
+   "id": "B25-BIZ-D5",
+   "kind": "approved",
+   "title": "Businesses may be built (home-attached or standalone), bought, sold and expanded; selling a home workshop never sells the home; investigate the apparent two-shop limit",
+   "description": "Businesses may be built (home-attached or standalone), bought, sold and expanded; selling a home workshop never sells the home; investigate the apparent two-shop limit",
+   "source": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md",
+   "owner_wording": "Players and NPCs must have multiple legitimate ways to obtain or dispose of businesses.",
+   "approval": "owner directive 2026-11-01 (final decisions; answers B25-BUSINESS-IMPL open questions Q1-Q5)",
+   "acceptance": [
+    "Purchases and sales with a willing seller and buyer, agreed price, real funds, correct transfer of assets, employees and obligations, through NPC judgment and negotiation",
+    "Home-attached workshops transfer without the residence (smallest safe extension separating business rights from residential ownership)",
+    "Progression from home workshop to standalone enterprise; several businesses limited only by real constraints; the two-shop finding documented",
+    "Career changes (smith to carpenter and back, worker to owner, owner sells and changes trade) through existing skills, experience, ambition, property and labour-market rules; ownership grants no skill"
+   ],
+   "target_build": "20",
+   "parent": "B25-BIZ-OWN",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md"
+    }
+   ]
+  },
+  {
+   "id": "B25-BIZ-OWN",
+   "kind": "approved",
+   "title": "Build 25 business ownership, paid employment and economic expansion (five final owner decisions, milestones 1-6)",
+   "description": "Build 25 business ownership, paid employment and economic expansion (five final owner decisions, milestones 1-6)",
+   "source": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md",
+   "owner_wording": "OUR GOAL IS A LIVING ECONOMY, NOT A COLLECTION OF ISOLATED FEATURES. A business must be something a villager can establish, operate, grow, sell, purchase, inherit, or lose.",
+   "approval": "owner directive 2026-11-01 (final decisions; answers B25-BUSINESS-IMPL open questions Q1-Q5)",
+   "acceptance": [
+    "Milestones 1-6 of the directive done on a wip branch, merged into the Build 25 source after targeted tests",
+    "Longer simulations show whether NPCs found, buy, sell, operate and expand businesses without intervention"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "B25-BUSINESS-IMPL"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md"
+    }
+   ]
+  },
+  {
    "id": "B25-BUSINESS-D2",
    "kind": "decision",
    "title": "May villagers establish independent businesses?",
@@ -5506,6 +5687,11 @@
      "date": "2026-11-01",
      "change": "implementation_status: NOT STARTED -> INTEGRATED; tests: None -> business_founding 58, migration 109, save_continuity 5, save_transfer 21, run_tests 3601, check_interactions 0 problems (local, d0dc0d7); worker: business 160, business_money 37, till_ownership 71, skilled_employment 54, net_econ_integrity 126, conservation 8, start_test 523, wiki_test (c60ac0e); 30-day seed 1 leaks 0, 0 script errors, no founding observed; test_commit: None -> d0dc0d7; commits + d0dc0d7; integrated_in + Build 25 wip/expansion20",
      "why": "merged into the Build 25 source after targeted suites (lead review of wip/b25-business c60ac0e)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "owner answered Q1-Q5 on 2026-11-01 (B25-BIZ-D1..D5): the conservative implementation choices Q1 (household purse as business money), Q2 (no wage at a villager's workshop), Q4 (miner only) and Q5 (build only) are intentional revisions to be replaced by B25-BIZ-OWN; Q3 (no automatic refund) confirmed with a cancellation path required"
     }
    ],
    "tests": "business_founding 58, migration 109, save_continuity 5, save_transfer 21, run_tests 3601, check_interactions 0 problems (local, d0dc0d7); worker: business 160, business_money 37, till_ownership 71, skilled_employment 54, net_econ_integrity 126, conservation 8, start_test 523, wiki_test (c60ac0e); 30-day seed 1 leaks 0, 0 script errors, no founding observed",
