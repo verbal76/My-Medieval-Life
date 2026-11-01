@@ -39814,7 +39814,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -39848,14 +39848,22 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope (owner 2026-11-01, B25-SCOPE-D1): code on wip/expansion21-preparation 8ac88f5 (based on Build 18) not in ad281dc; to be ported with the civic switch off"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; tests: None -> game/tests/civic_records_test.gd; test_commit: None -> ab8ac71; commits + ab8ac71",
+     "why": "ported from 8ac88f5 (Build 18 base) onto Build 25 (552febf) and integrated into wip/expansion20 at ab8ac71; civic switch off (data/civic.json enabled false): 10-day fingerprints identical to 552febf with the switch off and on; civic_records_test 48, start_test, run_tests 3601, migration_test 109, save_transfer 21, le06_save 21, judgment_guard_save 20, conservation 8, wiki pass; INT-652. P21-MAYOR not authorized. Migrant returning to the village not yet observed (noted in P21_01_CIVIC_RECORDS.md)"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/expansion21-preparation",
    "commits": [
-    "64317eb"
+    "64317eb",
+    "ab8ac71"
    ],
-   "next_action": "ON HOLD (owner 2026-10-27/28/30); stranded on wip/expansion21-preparation (base Build 18 239bdff, not in wip/expansion20); bring forward with the civic switch off in Build 26 recovery or Build 27 (owner to say which); owner review of the document(s) at Build 27"
+   "next_action": "ON HOLD (owner 2026-10-27/28/30); stranded on wip/expansion21-preparation (base Build 18 239bdff, not in wip/expansion20); bring forward with the civic switch off in Build 26 recovery or Build 27 (owner to say which); owner review of the document(s) at Build 27",
+   "tests": "game/tests/civic_records_test.gd",
+   "test_commit": "ab8ac71"
   },
   {
    "id": "P21-01",
@@ -39876,7 +39884,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -39910,14 +39918,20 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope (owner 2026-11-01, B25-SCOPE-D1): code on wip/expansion21-preparation 8ac88f5 (based on Build 18) not in ad281dc; to be ported with the civic switch off"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; tests: civic_records_test 48, world_test 339, migration_test 92, save_transfer_test 21, family_test 51, succession_test 26, treasury_test 23; sim_gate identical; on/off identity 30 days -> civic_records_test 48, world_test 339, migration_test 92, save_transfer_test 21, family_test 51, succession_test 26, treasury_test 23; sim_gate identical; on/off identity 30 days; game/tests/civic_records_test.gd; test_commit: 8ac88f5 -> ab8ac71; commits + ab8ac71",
+     "why": "ported from 8ac88f5 (Build 18 base) onto Build 25 (552febf) and integrated into wip/expansion20 at ab8ac71; civic switch off (data/civic.json enabled false): 10-day fingerprints identical to 552febf with the switch off and on; civic_records_test 48, start_test, run_tests 3601, migration_test 109, save_transfer 21, le06_save 21, judgment_guard_save 20, conservation 8, wiki pass; INT-652. P21-MAYOR not authorized. Migrant returning to the village not yet observed (noted in P21_01_CIVIC_RECORDS.md)"
     }
    ],
    "assigned_worker": "X21 foundation worker (Sonnet subagent)",
    "branch": "wip/expansion21-preparation",
-   "tests": "civic_records_test 48, world_test 339, migration_test 92, save_transfer_test 21, family_test 51, succession_test 26, treasury_test 23; sim_gate identical; on/off identity 30 days",
-   "test_commit": "8ac88f5",
+   "tests": "civic_records_test 48, world_test 339, migration_test 92, save_transfer_test 21, family_test 51, succession_test 26, treasury_test 23; sim_gate identical; on/off identity 30 days; game/tests/civic_records_test.gd",
+   "test_commit": "ab8ac71",
    "commits": [
-    "8ac88f5"
+    "8ac88f5",
+    "ab8ac71"
    ],
    "next_action": "ON HOLD (owner 2026-10-27/28/30); stranded on wip/expansion21-preparation (base Build 18 239bdff, not in wip/expansion20); bring forward with the civic switch off in Build 26 recovery or Build 27 (owner to say which); owner review of the document(s) at Build 27"
   },
@@ -39938,7 +39952,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -39972,14 +39986,22 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope (owner 2026-11-01, B25-SCOPE-D1): code on wip/expansion21-preparation 8ac88f5 (based on Build 18) not in ad281dc; to be ported with the civic switch off"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; tests: None -> game/tests/civic_records_test.gd; test_commit: None -> ab8ac71; commits + ab8ac71",
+     "why": "ported from 8ac88f5 (Build 18 base) onto Build 25 (552febf) and integrated into wip/expansion20 at ab8ac71; civic switch off (data/civic.json enabled false): 10-day fingerprints identical to 552febf with the switch off and on; civic_records_test 48, start_test, run_tests 3601, migration_test 109, save_transfer 21, le06_save 21, judgment_guard_save 20, conservation 8, wiki pass; INT-652. P21-MAYOR not authorized. Migrant returning to the village not yet observed (noted in P21_01_CIVIC_RECORDS.md)"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/expansion21-preparation",
    "commits": [
-    "64317eb"
+    "64317eb",
+    "ab8ac71"
    ],
-   "next_action": "ON HOLD (owner 2026-10-27/28/30); stranded on wip/expansion21-preparation (base Build 18 239bdff, not in wip/expansion20); bring forward with the civic switch off in Build 26 recovery or Build 27 (owner to say which); owner review of the document(s) at Build 27"
+   "next_action": "ON HOLD (owner 2026-10-27/28/30); stranded on wip/expansion21-preparation (base Build 18 239bdff, not in wip/expansion20); bring forward with the civic switch off in Build 26 recovery or Build 27 (owner to say which); owner review of the document(s) at Build 27",
+   "tests": "game/tests/civic_records_test.gd",
+   "test_commit": "ab8ac71"
   },
   {
    "id": "P21-MAYOR",

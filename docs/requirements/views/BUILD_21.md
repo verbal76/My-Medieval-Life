@@ -9,7 +9,7 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 5 |
-| Integrated | 1 of 5 (20%) |
+| Integrated | 4 of 5 (80%) |
 | Automated tests passed | 2 of 5 (40%) |
 | Integration verified | 1 of 5 (20%) |
 | Gameplay verified | 0 of 5 (0%) |
@@ -18,19 +18,19 @@ Readiness: **IN DEVELOPMENT (not feature complete)**
 | Open (release blockers) | 5 |
 | Open owner decisions (blocking) | 1 (0) |
 
-## Integrated, awaiting gameplay or owner verification (1)
+## Integrated, awaiting gameplay or owner verification (4)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | ANDROID-RELEASE-SIGNING | Android builds signed with the permanent release identity from the four ANDROID_RELEASE_* secrets, no fallback | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED |  |  | verification only |
+| P21-00 | Expansion 21 phase 1: government architecture audit (what exists, works, is incomplete or absent, by civic system) | OWNER APPROVED | INTEGRATED | lead / wip/expansion21-preparation | NOT TESTED | ON HOLD (owner 2026-10-27/28/30); stranded on wip/expansion21-preparation (base Build 18 239bdff, not in wip/expansion20); bring forward with the civic switch off in Build 26 recovery or Build 27 (owner to say which); owner review of the document(s) at Build 27 |  | verification only |
+| P21-01 | Expansion 21 phase 1: isolated civic foundations (office ids, holders and tenure, jurisdiction, eligibility and authority metadata, succession events, treasury attribution, duty records, legacy records), all behaviour disabled | OWNER APPROVED | INTEGRATED | X21 foundation worker (Sonnet subagent) / wip/expansion21-preparation | TARGETED TESTS PASSED | ON HOLD (owner 2026-10-27/28/30); stranded on wip/expansion21-preparation (base Build 18 239bdff, not in wip/expansion20); bring forward with the civic switch off in Build 26 recovery or Build 27 (owner to say which); owner review of the document(s) at Build 27 |  | verification only |
+| P21-02 | Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet | OWNER APPROVED | INTEGRATED | lead / wip/expansion21-preparation | NOT TESTED | ON HOLD (owner 2026-10-27/28/30); stranded on wip/expansion21-preparation (base Build 18 239bdff, not in wip/expansion20); bring forward with the civic switch off in Build 26 recovery or Build 27 (owner to say which); owner review of the document(s) at Build 27 |  | verification only |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (4)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (1)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| P21-00 | Expansion 21 phase 1: government architecture audit (what exists, works, is incomplete or absent, by civic system) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/expansion21-preparation | NOT TESTED | ON HOLD (owner 2026-10-27/28/30); stranded on wip/expansion21-preparation (base Build 18 239bdff, not in wip/expansion20); bring forward with the civic switch off in Build 26 recovery or Build 27 (owner to say which); owner review of the document(s) at Build 27 | design: UNKNOWN | UNKNOWN |
-| P21-01 | Expansion 21 phase 1: isolated civic foundations (office ids, holders and tenure, jurisdiction, eligibility and authority metadata, succession events, treasury attribution, duty records, legacy records), all behaviour disabled | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) / wip/expansion21-preparation | TARGETED TESTS PASSED | ON HOLD (owner 2026-10-27/28/30); stranded on wip/expansion21-preparation (base Build 18 239bdff, not in wip/expansion20); bring forward with the civic switch off in Build 26 recovery or Build 27 (owner to say which); owner review of the document(s) at Build 27 | design: UNKNOWN | UNKNOWN |
-| P21-02 | Expansion 21 phase 1: political decision architecture map (owner system, information needed, open owner choices per decision) and the grouped 12-topic owner decision packet | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/expansion21-preparation | NOT TESTED | ON HOLD (owner 2026-10-27/28/30); stranded on wip/expansion21-preparation (base Build 18 239bdff, not in wip/expansion20); bring forward with the civic switch off in Build 26 recovery or Build 27 (owner to say which); owner review of the document(s) at Build 27 | design: UNKNOWN | UNKNOWN |
 | P21-MAYOR | Elected mayor: elected by established adult residents who are also eligible to stand; four-game-year terms; incumbents may stand again; an early vacancy calls a replacement election as soon as possible, the longest-serving eligible civic official holding authority meanwhile; voters judge candidates individually by policies, competence, interests, trust, relationships, family and their own priorities | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Open owner decisions (1)

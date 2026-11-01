@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (14)
+## Workers and task branches (11)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -11,9 +11,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | JUICE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | none |  |
-| P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
-| P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
-| P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-CAREER-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
@@ -46,8 +43,8 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | OWN-19 | 20+ | PARTIALLY IMPLEMENTED |  |
 | OWN-22 | owner decision | PARTIALLY IMPLEMENTED |  |
 | OWN-28 | 20+ | PARTIALLY IMPLEMENTED |  |
-| P21-00 | 21 | IMPLEMENTED ON TASK BRANCH |  |
-| P21-02 | 21 | IMPLEMENTED ON TASK BRANCH |  |
+| P21-00 | 21 | INTEGRATED |  |
+| P21-02 | 21 | INTEGRATED |  |
 | PERF-01 | 15 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | PL1-07 | 20+ | PARTIALLY IMPLEMENTED |  |
 | PL1-11 | owner decision | PARTIALLY IMPLEMENTED | stages after 1 (Google Drive cloud saves) need the owner's decision (network/paid-service rule, CLAUDE.md section 11) |
