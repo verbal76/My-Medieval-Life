@@ -74,7 +74,8 @@ All the work below is Build 25, the consolidation build (B25-SCOPE-D1).
   - Rewrote `docs/CURRENT_DEVELOPMENT_STATE.md` as the single current-state entry point. The old copy is archived.
   - Rewrote the recovery procedure as 11 steps.
   - Added a root `README.md` pointer.
-  - Marked the stale state-file copies on other branches.
+  - Marked the stale state-file copies on other branches: `staging/my-medieval-life` `baa6479` and `wip/expansion20` `343c220`
+    and `39b1662` (banner only, no code).
 - Reason: the owner directive.
 - Status: documentation only.
 - Validation: `check_requirements.py` reports 0 problems.
