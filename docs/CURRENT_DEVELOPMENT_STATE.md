@@ -40,13 +40,11 @@ archived at `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-31.md`.
 
 - **X20-ECON-SUSTAIN** (lead): economic sustainability analysis of the Build 25 runs; per-checkpoint samples come from a read-only
   recover job on `wip/val-recover` (`885723b`, workflow change only, no simulation). Analysis scripts in the report's appendix.
-- **X20-CHAPEL-FIX** (lead, IN DEVELOPMENT, owner directive 2026-11-01): voluntary chapel donations through the NPC decision
-  framework, a modest operating reserve and hardship-based alms. Branch `wip/x20-chapel` from the Build 25 source `ad281dc`;
-  `wip/expansion20` itself is not changed. Implemented at `ae8641d` (first cut `37680c7`, retuned after a 30-day measurement);
-  suites pass; 30-day seed 1: leaks 0, deterministic. Year-long comparison runs: Actions 41279031310 (normal, seeds 1 and 2, branch
-  `wip/x20-chapel`) and 41279051834 (economy on, seed 1, branch `wip/x20-chapel-econ`, same commit). Next: read them when they finish,
-  compare with the Build 25 runs (41233948995, 41233970504) and publish the before-and-after report. Not merged into `wip/expansion20`
-  without the owner.
+- **X20-CHAPEL-FIX** (lead, implemented on task branch, owner directive 2026-11-01): voluntary chapel giving through the decision
+  framework, an operating reserve and hardship-based alms, on `wip/x20-chapel` at `ae8641d` (also `wip/x20-chapel-econ`, same commit);
+  `wip/expansion20` unchanged. Year-long comparison done (Actions 41279031310, 41279051834): chapel share 77-83% -> about 1%, median
+  household cash 4-11 -> 161-203 coins, leaks 0. Report `docs/release/chapel_fix/chapel_report.html`. Waiting for the owner's review;
+  merging into the Build 25 source needs the owner. All script errors in the runs are X20-TELL-GUARD (12 in the economy-on run).
 
 ## Next actions
 

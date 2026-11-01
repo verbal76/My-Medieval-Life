@@ -63304,7 +63304,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -63323,6 +63323,11 @@
      "date": "2026-11-01",
      "change": "tests: None -> game/tests/chapel_test.gd; commits + ae8641d",
      "why": "implemented on wip/x20-chapel (37680c7, retuned ae8641d): voluntary gifts via JudgmentWeighting.choose (profile chapel_offering), operating reserve, hardship alms, instrumentation; chapel_test 123/0, conservation, wiki, recorder, judgment suites pass; 30-day seed 1 local: leaks 0, deterministic, fund 1.4% of coins at day 30; 365-day runs 41279031310 (seeds 1,2) and 41279051834 (economy on) dispatched"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH",
+     "why": "365-day comparison complete (Actions 41279031310 seeds 1,2; 41279051834 economy on; commit ae8641d): chapel share of coins 77-83% -> 0.9-1.2%, median household cash 4-11 -> 161-203, treasury 1-5 -> 221-646 (normal), jobs 45-46 -> 51-63; leaks 0 at every checkpoint; 37/37 economy saves exact; script errors 0/2/12, all X20-TELL-GUARD (judgment_store.gd:1490), none in chapel code. Report docs/release/chapel_fix/chapel_report.html. Awaiting owner review; not merged into wip/expansion20"
     }
    ],
    "assigned_worker": "lead",
