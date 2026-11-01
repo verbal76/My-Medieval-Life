@@ -2,10 +2,11 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (14)
+## Workers and task branches (15)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
+| B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
@@ -21,7 +22,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (48)
+## Implemented but not tested (49)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -29,6 +30,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B14-10 | 20+ | PARTIALLY IMPLEMENTED |  |
 | B16-AUDIT | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
 | B16-READY | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
+| B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |
 | B7-009 | 15 | INTEGRATED |  |
 | B7-014 | 15 | INTEGRATED |  |
 | B8-007 | 20+ | PARTIALLY IMPLEMENTED |  |

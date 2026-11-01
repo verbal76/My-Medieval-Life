@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 716 (376 of them still open) |
-| **Open entries now** (rules excluded) | | **535** |
+| Entries added since | | 725 (381 of them still open) |
+| **Open entries now** (rules excluded) | | **540** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (716)
+## Added since the baseline (725)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -157,7 +157,16 @@ None.
 | B19-EMERGE | Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | B19-RECOVERY | Build 19 carryover recovery within Expansion 20: audit the 18 unfinished Build 19 requirements and the 9 awaiting verification against the code, then integrate, finish or implement them on the Expansion 20 line | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | 20 |
 | B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | multiplayer |
-| B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-AMBITION-D4 | Activate the career ambition system? | decision | APPROVED | owner decision |
+| B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-BUSINESS-D2 | May villagers establish independent businesses? | decision | APPROVED | owner decision |
+| B25-BUSINESS-IMPL | Independent business formation by qualified villagers | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-CAREER-D1 | How is career advancement decided? | decision | APPROVED | owner decision |
+| B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-EMPLOY-D3 | How do skilled occupations grow? | decision | APPROVED | owner decision |
+| B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20 |
 | B25-SCOPE-D1 | Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work from abandoned branches? | decision | APPROVED | owner decision |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-C | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |

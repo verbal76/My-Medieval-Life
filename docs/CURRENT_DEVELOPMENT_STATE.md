@@ -12,8 +12,14 @@ Build 25 is the consolidation build: all previously approved expansion work and 
 superseded branches. Assigning work to Build 25 does not make it present; the read-only audit B25-SCOPE-AUDIT establishes what is.
 The 2026-10-31 sequence below is preserved as history; its Build 26 recovery assignments no longer control Build 25 scope.
 
-**B25-SCOPE-AUDIT** (lead, read-only, four agents): reconciliation of approved expansion work and abandoned branches against
-`ad281dc`; report under `docs/release/build25_reconciliation/`. No gameplay change, merge or recovery until it reports.
+**B25-SCOPE-AUDIT** (lead): reported 2026-11-01, `docs/release/build25_reconciliation/BUILD25_RECONCILIATION.md`: SCOPE INCOMPLETE,
+specific approved work missing (section C). Plan: `docs/release/build25_reconciliation/IMPLEMENTATION_PLAN.md`.
+
+**Owner decisions 2026-11-01** (`docs/directives/2026-11-01_career_business_employment_final_decisions.md`): B25-CAREER-D1, B25-BUSINESS-D2,
+B25-EMPLOY-D3, B25-AMBITION-D4, all APPROVED for Build 25 implementation (B25-CAREER-SYSTEM and children).
+
+**Next actions (Build 25):** step 0 integrate `wip/x20-tell-guard` (chapel, instrumentation, gossip fix) into `wip/expansion20` once its
+judgment suites pass; workstream 1 (career system) on its own task branch; workstreams 3-5 in parallel; owner questions Q1-Q4 in the plan.
 
 ## Historical build sequence (owner, 2026-10-31, BUILD-SEQ-25-27; superseded for Build 25 scope by B25-SCOPE-D1)
 
