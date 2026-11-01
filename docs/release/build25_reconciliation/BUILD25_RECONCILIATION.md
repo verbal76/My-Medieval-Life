@@ -110,6 +110,9 @@ Suspected or unverified (needs evidence before classification):
 - Manor wage raise never fires; public works never spent.
 - Multiplayer: no net suite run recorded on `ad281dc` after the LE-05 guest verbs; real-device and real-network checks not done; `net_interact` timing flake.
 - Living Economy unaffordable bids (about 12,600 a year): under analysis with the new instrumentation (X20-ECON-AFFORD).
+- Save and load: the base game's run fingerprint differs after a save and load even with the economy off (found by the LE-07 gates
+  work on `wip/b25-econ`, 2026-11-01). Not yet investigated: it may be a field the fingerprint reads that is legitimately rebuilt on load,
+  or a real continuity loss (the audit found the harness never reloads and continues a whole world). To investigate before packaging.
 
 ## Deferred or rejected (E, with the owner decision)
 
