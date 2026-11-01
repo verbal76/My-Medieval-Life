@@ -26,6 +26,18 @@ var body_scroll: ScrollContainer   # the window body's scroller (follows focus)
 var bar_labels := {}             # meter key -> the words drawn on its bar ("Health 80/100")
 var bar_danger := {}             # meter key -> true while that meter is low (B8-019)
 var coins_label: Label
+# JUICE J1 (owner Decision 9): the purse counts to its new value and says by how much it changed
+const COIN_COUNT_SECONDS := 0.35   # how long the number takes to count to the new purse
+const COIN_DELTA_SECONDS := 1.1    # how long "+5" / "-3" shows beside it
+const COIN_UP := Color8(150, 220, 110)
+const COIN_DOWN := Color8(240, 120, 96)
+var coin_delta: Label              # the one "+5" beside the purse (reused: never more than one)
+var coins_to := -1                 # the purse the counter is counting to (-1: none yet)
+var coins_from := 0.0
+var coins_t := 0.0                 # seconds of counting left
+var coins_world: Object = null     # the world whose purse it shows (a new world shows its purse at once)
+var coin_delta_t := 0.0
+var prompt_first := ""             # the prompt's first line last shown (a new target pulses it once)
 var clock_label: Label         # the time of day ("07:00")
 var date_label: Label          # the season, year and day ("Spring, Year 1  Day 3")
 var prompt_label: Label
@@ -1065,7 +1077,7 @@ func update_hud() -> void:
 	_meter_text("hp", bar_words(p.hp, p.hp_cap()), p.hp / maxf(1.0, p.hp_cap()))
 	_meter_text("hunger", bar_words(p.hunger, HUNGER_MAX), p.hunger / HUNGER_MAX)
 	_meter_text("stamina", bar_words(p.stamina, p.stamina_cap()), p.stamina / maxf(1.0, p.stamina_cap()))
-	coins_label.text = " %d" % p.coins
+	_coins_step(p.coins, get_process_delta_time())
 	wanted_hud.refresh(w)                           # GP-WANTED-INDICATOR: just under the status box, wherever that sits
 	if wanted_hud.visible:
 		wanted_hud.position = status_box.position + Vector2(0, status_box.size.y + 6.0)
@@ -1099,6 +1111,78 @@ func update_hud() -> void:
 			dismiss_message()
 
 
+## JUICE J1 (owner Decision 9): the purse in the status box counts to its new value over COIN_COUNT_SECONDS, tinted green
+## for more and red for less, and "+5" or "-3" shows beside it for a moment. A new world (a load, a start) shows its purse
+## at once, without a count. With Reduce effects the number changes at once and the amount stands still beside it.
+## Reads the purse only (World.player.coins, which the host's snapshots give a guest): every change of it is a real one.
+func _coins_step(coins: int, delta: float) -> void:
+	var w: Object = main.world if main != null else null
+	var still: bool = main != null and main.settings.reduce_effects
+	if w != coins_world or coins_to < 0:
+		coins_world = w
+		coins_to = coins
+		coins_t = 0.0
+		coin_delta_t = 0.0
+		if coin_delta != null:
+			coin_delta.visible = false
+	elif coins != coins_to:
+		var d := coins - coins_to
+		coins_from = float(coins_to) if coins_t <= 0.0 else _coins_now()
+		coins_to = coins
+		coins_t = 0.0 if still else COIN_COUNT_SECONDS
+		_show_coin_delta(d, still)
+	if coins_t > 0.0:
+		coins_t = maxf(0.0, coins_t - delta)
+	coins_label.text = " %d" % roundi(_coins_now())
+	if coin_delta_t > 0.0:
+		coin_delta_t -= delta
+		if coin_delta != null:
+			if not still:
+				coin_delta.position.y -= delta * 8.0
+			coin_delta.modulate.a = clampf(coin_delta_t / 0.4, 0.0, 1.0)
+			coin_delta.visible = coin_delta_t > 0.0
+	if coins_t <= 0.0 and coin_delta_t <= 0.0:
+		coins_label.remove_theme_color_override("font_color")
+
+
+## The number the counter shows now: on its way from coins_from to coins_to.
+func _coins_now() -> float:
+	if coins_t <= 0.0:
+		return float(coins_to)
+	return lerpf(float(coins_to), coins_from, coins_t / COIN_COUNT_SECONDS)
+
+
+func _show_coin_delta(d: int, still: bool) -> void:
+	if coin_delta == null:
+		coin_delta = Label.new()
+		coin_delta.name = "CoinDelta"
+		coin_delta.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		coin_delta.add_theme_font_size_override("font_size", 13)
+		coin_delta.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+		coin_delta.add_theme_constant_override("outline_size", 4)
+		hud.add_child(coin_delta)
+	var col := COIN_UP if d > 0 else COIN_DOWN
+	coin_delta.text = ("+%d" if d > 0 else "%d") % d
+	coin_delta.add_theme_color_override("font_color", col)
+	coins_label.add_theme_color_override("font_color", col)
+	# just right of the number, inside the status box's coins row (never over the corner log or the message)
+	var f := coins_label.get_theme_font("font")
+	var tw := f.get_string_size(coins_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, coins_label.get_theme_font_size("font_size")).x
+	coin_delta.position = coins_label.global_position - hud.global_position + Vector2(tw + 8.0, 0.0)
+	coin_delta.modulate.a = 1.0
+	coin_delta.visible = true
+	coin_delta_t = COIN_DELTA_SECONDS
+	if not still and fx() != null:
+		fx().pulse(coins_label, Color(1.25, 1.25, 1.25), 0.3)
+
+
+## The effects helper (Main.fx), or null before a world is shown.
+func fx() -> GameEffects:
+	if main == null or not ("fx" in main) or main.fx == null or not is_instance_valid(main.fx):
+		return null
+	return main.fx
+
+
 ## The text inside a bar (PL1-05): plain "current/max", e.g. "85/100". Health rounds up so a living
 ## player never reads 0; the maxima come from the player (gear changes them), never a fixed number.
 static func bar_words(value: float, cap: float) -> String:
@@ -1112,7 +1196,7 @@ func _meter_text(key: String, words: String, fraction: float) -> void:
 	bar_danger[key] = low
 	var fill := bars[key].get_theme_stylebox("fill") as StyleBoxFlat
 	fill.bg_color = DANGER_COLOUR if low else BAR_COLOURS[key]
-	var blink := low and int(Time.get_ticks_msec() / 400) % 2 == 0
+	var blink: bool = low and int(Time.get_ticks_msec() / 400) % 2 == 0 and not (main != null and main.settings.no_blink)
 	bars[key].modulate = Color(1.0, 0.7, 0.65) if blink else Color.WHITE
 
 
@@ -1207,6 +1291,10 @@ func prompt(text: String, more := false) -> void:
 		var at := opts.find(main.target) if main != null else -1
 		prompt_next.text = ("%d/%d  >" % [at + 1, opts.size()]) if at >= 0 and opts.size() > 1 else "Next  >"
 	prompt_label.text = "  ·  ".join(lines)
+	var first: String = str(lines[0]) if not lines.is_empty() else ""
+	if first != prompt_first and first != "" and fx() != null:
+		fx().pulse(prompt_box)               # JUICE J1: a new target catches the eye once (none with Reduce effects)
+	prompt_first = first
 	_fit_label(prompt_label, PROMPT_MAX_W)
 	_place_bottom(prompt_box, _prompt_bottom())
 	prompt_icon.texture = load(PROMPT % USE_ICON.get(scheme, "touch_tap"))
@@ -1291,21 +1379,38 @@ func dismiss_message() -> void:
 	_push_log()
 
 
-## Something gained or a quick hint ("+2 red berries"): a short line in the top-right corner that
-## fades quickly, keeping the middle of the screen clear for play (owner, 2026-10-18).
-func gain(text: String, item := "") -> void:
+## JUICE J1 (owner Decision 9, 2026-11-01): the corner log (top right) has two lanes, so a gain is never pushed out by village
+## news, nor news by a run of gains. The box keeps its size: still LOG_LINES lines at most, the player's own lane above the
+## village's; while both have something to say each keeps its newest line, and a lane alone may use both.
+## - Personal ("personal"): what the player gained ("+2 red berries", "+5 coins"), and the player's own announcements (a skill
+##   level). Entry points: gain(text, item) for a gain; personal(text, item, category, seconds) for anything else of the
+##   player's own, `category` (message_journal.json) keeping it on the journal's Messages page as message() does.
+## - Village ("village"): what happens in the village (every World.note, through World.event; Main connects it to village()).
+##   Code that announces something about the village (a milestone, a death, a sale at the market) writes World.note(text),
+##   which also keeps it in the village record and reaches a guest's corner with the host's record; never personal().
+## The full record of both stays where it was: the village record under the Journal, the kept messages on its Messages page.
+const LANE_PERSONAL := "personal"
+const LANE_VILLAGE := "village"
+const PERSONAL_MAX_W := 400.0    # within the corner log's own width (log_box.custom_minimum_size 420, less the backing's margins)
+const PERSONAL_EDGE := Color8(222, 178, 64)     # a thin gold edge marks the player's own lines (the stamina bar's gold)
+
+
+## Something gained or a quick hint ("+2 red berries"): a short line in the personal lane of the top-right corner that fades
+## quickly, keeping the middle of the screen clear for play (owner, 2026-10-18).
+func gain(text: String, item := "", seconds := GAIN_SECONDS) -> void:
 	if item == "" or not ResourceLoader.exists(ICON % item):
-		log_line(text, GAIN_SECONDS)
-		var l: Label = log_box.get_child(log_box.get_child_count() - 1)
-		l.autowrap_mode = TextServer.AUTOWRAP_OFF
-		l.size_flags_horizontal = Control.SIZE_SHRINK_END      # just the words, at the right edge
+		var pl := Label.new()
+		pl.text = text
+		pl.add_theme_font_size_override("font_size", 16)
+		pl.add_theme_stylebox_override("normal", _lane_style(LANE_PERSONAL))
+		_fit_label(pl, PERSONAL_MAX_W)                           # one line; a long announcement wraps within the box's width
+		pl.size_flags_horizontal = Control.SIZE_SHRINK_END      # just the words, at the right edge
+		_add_log(pl, seconds, LANE_PERSONAL)
 		return
 	# with an item id: its pack icon left of the words, in one compact line
 	var back := PanelContainer.new()
 	back.name = "GainLine"
-	var st := _style(Color(WINDOW, 0.88))
-	st.set_content_margin_all(4)
-	back.add_theme_stylebox_override("panel", st)
+	back.add_theme_stylebox_override("panel", _lane_style(LANE_PERSONAL, 4))
 	back.size_flags_horizontal = Control.SIZE_SHRINK_END
 	back.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var row := HBoxContainer.new()
@@ -1317,7 +1422,32 @@ func gain(text: String, item := "") -> void:
 	l.add_theme_font_size_override("font_size", 16)
 	row.add_child(l)
 	back.add_child(row)
-	_add_log(back, GAIN_SECONDS)
+	_add_log(back, seconds, LANE_PERSONAL)
+
+
+## The player's own announcement (a skill level, coins earned): a line in the personal lane, with `item`'s icon when it has
+## one, for `seconds`; with a `category` it is also kept on the journal's Messages page (World.player_tell), as message() keeps.
+func personal(text: String, item := "", category := "", seconds := GAIN_SECONDS) -> void:
+	if text == "":
+		return
+	gain(text, item, seconds)
+	if category != "" and main != null and main.world != null:
+		main.world.player_tell(text, category)
+
+
+## A village line (World.note through World.event): the village lane.
+func village(text: String, seconds := LOG_SECONDS) -> void:
+	log_line(text, seconds)
+
+
+## The backing of a corner line: the dark box of text over the map; the player's own lines with a gold edge at their left.
+func _lane_style(lane: String, margin := 8) -> StyleBoxFlat:
+	var st := _style(Color(WINDOW, 0.88))
+	st.set_content_margin_all(margin)
+	if lane == LANE_PERSONAL:
+		st.border_color = PERSONAL_EDGE
+		st.border_width_left = 3
+	return st
 
 
 ## A pack item's icon, sized for lines of text.
@@ -1330,27 +1460,45 @@ func _item_icon_rect(item: String, size: float) -> TextureRect:
 
 
 ## The words of the lines now in the corner log (a gain line with an icon keeps them in a child).
-func log_texts() -> Array:
+func log_texts(lane := "") -> Array:
 	var out := []
 	for c in log_box.get_children():
+		if lane != "" and str(c.get_meta("lane", LANE_VILLAGE)) != lane:
+			continue
 		for n in [c] if c is Label else c.find_children("*", "Label", true, false):
 			out.append(n.text)
 	return out
 
 
+## A village line (the name kept for its callers): the village lane.
 func log_line(text: String, seconds := LOG_SECONDS) -> void:
 	var l := Label.new()
 	l.text = text
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.add_theme_font_size_override("font_size", 16)
-	_backed(l)
-	_add_log(l, seconds)
+	l.add_theme_stylebox_override("normal", _lane_style(LANE_VILLAGE))
+	_add_log(l, seconds, LANE_VILLAGE)
 
 
-func _add_log(l: Control, seconds: float) -> void:
+func _add_log(l: Control, seconds: float, lane := LANE_VILLAGE) -> void:
+	l.set_meta("lane", lane)
 	log_box.add_child(l)
+	if lane == LANE_PERSONAL:              # the player's own lane above the village's
+		var at := 0
+		for c in log_box.get_children():
+			if c != l and str(c.get_meta("lane", LANE_VILLAGE)) == LANE_PERSONAL:
+				at = c.get_index() + 1
+		log_box.move_child(l, at)
+	# never more than LOG_LINES: the oldest line of the fuller lane goes, so each lane keeps its newest line
 	while log_box.get_child_count() > LOG_LINES:
-		var c := log_box.get_child(0)
+		var by := {LANE_PERSONAL: [], LANE_VILLAGE: []}
+		for c in log_box.get_children():
+			by[str(c.get_meta("lane", LANE_VILLAGE))].append(c)
+		var from: String = lane
+		var other: String = LANE_VILLAGE if lane == LANE_PERSONAL else LANE_PERSONAL
+		if (by[other] as Array).size() > (by[lane] as Array).size():
+			from = other
+		var c: Node = by[from][0]
 		log_box.remove_child(c)
 		c.queue_free()
 	# each line stays a few seconds, then fades away (the full record is under Menu)
@@ -2088,6 +2236,9 @@ func _settings_interface() -> void:
 	_choice("Harvesting", ["manual", "continuous"], st.harvest, func(v): st.harvest = v)     # GP-HARVEST-CONT, every platform
 	if st.phone or scheme == "touch":            # GP-JOYSTICK: walking by touch, a tap on the ground (default) or a thumbstick
 		_choice("Moving by touch", ["tap", "joystick"], st.touch_move, func(v): st.touch_move = v)
+	# JUICE J1 (owner Decision 9; B12A-05's accessibility slice): calmer effects, and no blinking
+	_choice("Reduce effects", ["off", "on"], "on" if st.reduce_effects else "off", func(v): st.reduce_effects = v == "on")
+	_choice("No blinking", ["off", "on"], "on" if st.no_blink else "off", func(v): st.no_blink = v == "on")
 
 
 func _setting_row(text: String, control: Control) -> void:

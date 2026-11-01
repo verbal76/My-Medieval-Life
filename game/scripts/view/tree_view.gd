@@ -30,6 +30,7 @@ var chunk_cells := {}                # overworld chunk -> Array of trunk cells
 var _queue: Array = []               # [chunk, record] waiting to be drawn
 var _fading := {}                    # cells whose canopy is faded or on its way
 var _poll := 0.0
+var reduce := false                  # JUICE J1: Settings, Interface, Reduce effects: no flying chips or leaves (the shudder stays)
 
 
 func setup(w: World) -> void:
@@ -192,6 +193,8 @@ func _on_hit(rec: Dictionary, side: int, _hits: int) -> void:
 	for dx in [-side, side, -side * 0.5, 0.0]:
 		tw.tween_property(n, "position:x", x0 + dx, 0.035)
 	var base := n.position
+	if reduce:
+		return
 	for k in 4:
 		var chip := Sprite2D.new()
 		chip.texture = Trees.texture(str(Trees.art().effects.chips[k % Trees.art().effects.chips.size()].file))
@@ -240,7 +243,7 @@ func _on_felled(rec: Dictionary, side: int) -> void:
 	tw.tween_callback(_poof.bind(land))
 	tw.tween_property(top, "modulate:a", 0.0, 0.5).set_delay(0.25)
 	tw.tween_callback(top.queue_free)
-	for k in 8:
+	for k in (0 if reduce else 8):
 		var leaf := Sprite2D.new()
 		var leaves: Array = v.leaves
 		leaf.texture = Trees.texture(str(leaves[k % leaves.size()]))
