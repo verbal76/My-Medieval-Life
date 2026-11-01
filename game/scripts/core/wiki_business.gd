@@ -73,4 +73,18 @@ static func add_pages(w: Wiki) -> void:
 			"Production: if you hold stations of your own (a workbench, anvil, forge, stove, oven or sawhorse in a room you hold), the window's Production section lets you order goods: \"Make\" some batches, or \"Keep\" a stock. Set the materials aside in the workroom from your pack. In the working day the attendant walks to a free station, works the real recipe (they need its skill level, and its tool in their own pack, as any villager would), and the goods go up for sale at their market value; when the stock is full they wait in the workroom. After each craft they spend an hour at the counter. While they are at the bench nobody is minding the counter. If something is missing (materials, skill, tool, a free station) the window says what.",
 			"An attendant is your employee, paid the daily wage. A worker hired by contract for one job is different (see the Contracts page); the attendant is not one.",
 		]),
-		Wiki.links(["guide:stall", "guide:shop", "sys:contracts"])], "", "attendant hire wage employee shop stall away production make craft workroom")
+		Wiki.links(["guide:stall", "guide:shop", "sys:contracts", "guide:employee"])], "", "attendant hire wage employee shop stall away production make craft workroom")
+	# EMP-PERM-01 (owner B18-DP-01): permanent employment by the player
+	var ewage := Employment.wage()
+	w.add_page("guide:employee", "How do I employ a permanent worker?", "guides", [
+		Wiki.p("You can take a villager into your service for good as your miner: they mine for you every working day until you let them go. Talk to them and choose Employ as your miner."),
+		Wiki.bullets([
+			"You need a home of your own with its family chest: that is where they bring what they mine.",
+			"Anyone grown with no trade of their own (out of work, a manor hand with no job taken, or a labourer) or a miner can be asked, if they are not minding a counter or carrying for a building that day. They may say no.",
+			"The wage is %d coins a day from your purse: today's when they agree, then every morning. If you cannot pay it, they leave your service." % ewage,
+			"In the working day (7 to 18) they go to the seams they are able to work and dig with their own pickaxe (they buy one if they have none). Gold needs a practised miner. The seams are the village's, and what is dug out is gone from them.",
+			"What they dig is yours: they carry it home a load at a time, and before the working day ends, into your family chest. If your chest is full, they keep carrying it until there is room.",
+			"While in your service they stay a miner and do not go looking for other work. Let them go whenever you like by talking to them; they keep their wages and their tools.",
+			"A permanent worker is different from a day's helper for your building (hired for one day), from an attendant at your counter, and from a contract for one job.",
+		]),
+		Wiki.links(["guide:attendant", "sys:contracts", "sys:skills"])], "", "employ employee permanent worker miner wage hire service staff ore chest")

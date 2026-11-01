@@ -773,7 +773,8 @@ func daily() -> void:
 			continue                       # MP-PLAYER-FAMILY: a player couple's home is the players' own (Life.sync_couple_homes)
 		_rehouse(h)
 		if str(hh.get("build", "")) != "":
-			_family_help(h)
+			if not hh.has("venture"):
+				_family_help(h)            # B25-BUSINESS-IMPL: relatives help build a home, not a business
 			_keep_building(h)
 		elif str(hh.home) == "":
 			_find_home(h)                  # lodging: a house of its own when it can pay for one
