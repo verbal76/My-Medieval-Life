@@ -97,9 +97,10 @@ ANCHORS = ["ROAD-01", "EQ-16", "EXP-A", "EXP-B", "EXP-C"] + ["SJD-Q%02d" % i for
 LINK_RE = re.compile(r"`((?:docs|tools|game|tests|\.github|\.claude)/[^`*\s]+|CLAUDE\.md)`")
 REF_LISTS = ("depends_on", "related", "decisions")
 ## Paths named by a record may live on an integration or prospective branch rather than on staging (code and design
-## notes of Builds 17-21); a path counts as existing if it is in the working tree or on one of these branches.
+## notes of Builds 17-21, and the Build 25 source); a path counts as existing if it is in the working tree or on one of these branches.
 PATH_REFS = ["origin/staging/my-medieval-life", "origin/wip/build18", "origin/wip/build17", "origin/wip/expansion18-preparation", "origin/wip/expansion19-preparation",
-             "origin/wip/expansion20-preparation", "origin/wip/expansion21-preparation"]
+             "origin/wip/expansion20-preparation", "origin/wip/expansion21-preparation",
+             "origin/wip/expansion20"]     # B25-SCOPE-D1: the Build 25 consolidation source
 _REF_FILES = {}
 
 

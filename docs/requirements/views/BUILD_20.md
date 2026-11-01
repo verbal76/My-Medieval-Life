@@ -9,7 +9,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 134 |
-| Integrated | 109 of 134 (81%) |
+| Integrated | 110 of 134 (82%) |
 | Automated tests passed | 110 of 134 (82%) |
 | Integration verified | 64 of 134 (48%) |
 | Gameplay verified | 0 of 134 (0%) |
@@ -24,13 +24,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (107)
+## Integrated, awaiting gameplay or owner verification (108)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | ARMOR-CATALOG-01 | Every armour, helmet and cultural outfit in the Puny Characters pack can be made and bought at the armourer; cultural pieces cost more and need special materials; rarer pieces carry buffs | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED | owner approves the catalogue proposal (docs/design/ARMOUR_CATALOGUE_PROPOSAL.md); then a Build 22 worker implements it on top of ARMOR-01 |  | verification only |
 | ARMOR-MATERIALS-01 | Boar tusks and antlers as hunted materials, used in special armour and weapons | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED |  |  | verification only |
 | B19-EMERGE | Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | applied for Build 19 (runs 2-4 classified); continues in the measurement batch (R6) |  | verification only |
+| B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | OWNER APPROVED | INTEGRATED | 7dfd3d5 | NOT TESTED |  |  | verification only |
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | satisfied by the judgment store (memories, ledgers, gossip, trust) read by greetings and help; 'prices read relationships' waits on OD-LE-10/14 (Living Economy) |  | verification only |
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | satisfied by GP-CRIME-PURSUIT (assault, killing, fines) and the owner's heir answer 'Case ends; stain stays'; close against acceptance |  | verification only |
 | E20-P1 | Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | owner reviews the architecture (LE00_BUILD18_REFRESH.md, LE01_DATA_CONTRACTS.md) and answers OD-LE-02, 04, 07, 10, 13, 15 |  | verification only |
@@ -142,11 +143,10 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | TARGETED TESTS PASSED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (23)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (22)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-BUSINESS-IMPL | Independent business formation by qualified villagers | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

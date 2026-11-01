@@ -158,7 +158,7 @@ None.
 | B19-RECOVERY | Build 19 carryover recovery within Expansion 20: audit the 18 unfinished Build 19 requirements and the 9 awaiting verification against the code, then integrate, finish or implement them on the Expansion 20 line | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | 20 |
 | B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | multiplayer |
 | B25-AMBITION-D4 | Activate the career ambition system? | decision | APPROVED | owner decision |
-| B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-BUSINESS-D2 | May villagers establish independent businesses? | decision | APPROVED | owner decision |
 | B25-BUSINESS-IMPL | Independent business formation by qualified villagers | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25-CAREER-D1 | How is career advancement decided? | decision | APPROVED | owner decision |
