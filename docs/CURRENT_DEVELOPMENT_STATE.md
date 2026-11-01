@@ -40,6 +40,10 @@ archived at `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-31.md`.
 
 - **X20-ECON-SUSTAIN** (lead): economic sustainability analysis of the Build 25 runs; per-checkpoint samples come from a read-only
   recover job on `wip/val-recover` (`885723b`, workflow change only, no simulation). Analysis scripts in the report's appendix.
+- **X20-CHAPEL-FIX** (lead, IN DEVELOPMENT, owner directive 2026-11-01): voluntary chapel donations through the NPC decision
+  framework, a modest operating reserve and hardship-based alms. Branch `wip/x20-chapel` from the Build 25 source `ad281dc`;
+  `wip/expansion20` itself is not changed. Validation: targeted suites, the 30-day gate, then 365-day comparison runs
+  (seeds 1 and 2 normal, seed 1 economy on) against the Build 25 runs.
 
 ## Next actions
 

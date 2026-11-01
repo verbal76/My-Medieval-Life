@@ -63284,6 +63284,46 @@
    ]
   },
   {
+   "id": "X20-CHAPEL-FIX",
+   "kind": "approved",
+   "title": "Chapel economy correction: voluntary, affordable, individually decided donations (piety raises the chance, never triggers a payment; no penalty for declining); a modest operating reserve from anticipated expenses; the surplus paid as alms to the poorest households by genuine hardship (cash, wealth, dependents, essentials), conserved transfers; chapel economy instrumented; validated against the Build 25 baseline",
+   "description": "Chapel economy correction: voluntary, affordable, individually decided donations (piety raises the chance, never triggers a payment; no penalty for declining); a modest operating reserve from anticipated expenses; the surplus paid as alms to the poorest households by genuine hardship (cash, wealth, dependents, essentials), conserved transfers; chapel economy instrumented; validated against the Build 25 baseline",
+   "source": "docs/directives/2026-11-01_chapel_economy_correction.md",
+   "owner_wording": "A donation is a choice, not a tax.",
+   "approval": "owner, 2026-11-01",
+   "acceptance": [
+    "code audit reported; donations decided per villager through the existing decision framework; nothing given that household survival or obligations need; no compulsory tithe or penalty",
+    "operating reserve from anticipated expenses; surplus to the poorest by hardship, not food stock alone, not to the wealthy; every transfer conserved",
+    "instrumentation of attendance, eligibility, donors, refusals vs inability, amounts, brackets, expenses, reserve, alms, recipients, treasury, chapel share, household cash over time",
+    "validation: leak 0, holder mismatch 0, item leaks 0, save/load, determinism; before-and-after measured over the whole year against the Build 25 baseline"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "X20-ECON-SUSTAIN"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_chapel_economy_correction.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/x20-chapel",
+     "why": "started: code audit (lead)"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/x20-chapel"
+  },
+  {
    "id": "X20-CHECKPOINT",
    "kind": "approved",
    "title": "Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development",
