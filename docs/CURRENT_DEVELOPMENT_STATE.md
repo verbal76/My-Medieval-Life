@@ -20,8 +20,9 @@ B25-EMPLOY-D3, B25-AMBITION-D4, all APPROVED for Build 25 implementation (B25-CA
 
 **REDUCED-RESOURCE MODE (owner 2026-11-01, resource directive; until the owner restores normal priority):** one Claude coding worker
 at a time; no new agents; computation through GitHub Actions (`long-sims.yml`: seeds, days, every, set, variants, sim_args; read results
-from compact lines, not raw logs); minimal reporting. Build 25 source now `265ddc1` (skilled employment merged). Next active worker after the reset: business founding and permanent
-employment (none running now). Suspended at a safe checkpoint with "WIP (suspended):" commits pushed to their
+from compact lines, not raw logs); minimal reporting. Build 25 source now `265ddc1` (skilled employment merged). Active worker (owner 2026-11-01: one at a time): business founding,
+businesses employing workers and permanent employment on wip/b25-business (worktree `.claude/worktrees/b25-business`, from
+`265ddc1`; milestones M1 design note, M2 founding and closing, M3 hiring and EMP-PERM-01, M4 docs and tests, each pushed). Suspended at a safe checkpoint with "WIP (suspended):" commits pushed to their
 branches: wip/b25-juice, wip/b25-report, wip/b25-materials, wip/b25-capability, wip/b25-services (each from `2c0a780`; heads juice `efd0cd0` untested beyond its own test, report `f15faf8` partly tested,
 materials `041a67c` untested, capability `f891a11` partly tested, services `68df430` does not compile yet; worktrees kept under
 `.claude/worktrees/agent-*`). No GitHub Actions jobs running. Resume order after the reset:
