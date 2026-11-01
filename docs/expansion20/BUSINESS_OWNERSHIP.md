@@ -192,3 +192,19 @@ Professions without a work system of their own are not offered (no invented prod
   `FarmPlots` (`_store`, `act`, seed and fence purchases), `World.trade`, `Business.tills`, `EconActor`,
   `EconTransactions`, `NetActions.VERBS`, `GameUI` (talk menu, workshop window, land office).
 - Tests: `game/tests/business_ownership_test.gd`.
+
+## 9. Evidence (source `b10eab3`, branch `wip/b25-bizown`)
+
+- `game/tests/business_ownership_test.gd`: 165 checks, 0 failures (every bullet of the directive's testing requirements;
+  section names in the file).
+- Regression set, 0 failures: business_founding 59, business 160, business_money 37, business_works 61, till_ownership 71,
+  skilled_employment 54, services_d2 89, contracts 154, le05_construction_hire 10, farm_plots 104, economy_model 112,
+  stalls 104, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, save_continuity 5, multiplayer_c 340,
+  wiki_test all passed, start_test 523 steps, run_tests 3601 checks. housing_test 115 checks with its one known
+  pre-existing failure (the loft check), unchanged by this work. `tools/check_interactions.py`: 391 interactions, 0 problems.
+- One local simulation, `economy_sim.gd --days 90 --seed 1 --every 30` (Living Economy off, the shipped defaults): currency
+  leak 0 and item leaks 0 at days 30, 60 and 90 (coins 3009 -> 4721, all by the caravan's recorded flows); no workshop was
+  built in the 90 days (`building.workshops_built` 0), so no venture opened, hired, was sold or expanded in this run. A
+  90-day run cannot tell normal conditions from overly strict founding requirements (the directive: do not read an absence
+  in a short run as a reason to change thresholds); longer, multi-seed runs on GitHub Actions are the lead's. The thresholds
+  were not changed.
