@@ -751,15 +751,49 @@ func post_bid(buyer: NPC, item: String, need: Dictionary) -> int:
 		return -1
 	var price := bid_price(buyer, item, int(ce.limit))
 	var lot := maxi(1, w.brain.batch_unit(buyer, item)) if str(need.kind) == "input" else 1
-	var qty := mini(int(need.qty), budget_for(buyer, need) / maxi(1, price))     # LE-03: its household budget, not every free coin
+	var budget := budget_for(buyer, need)
+	var qty := mini(int(need.qty), budget / maxi(1, price))     # LE-03: its household budget, not every free coin
 	if qty < lot:
 		_stat("bid_unaffordable")
+		_unaffordable_detail(buyer, item, need, budget)
 		return -1
 	var r := f.offers.post(EconOffers.BID, World.npc_ref(buyer.id), item, qty, price, w.day() + int(p("bid_days", 4)) - 1, "", PURPOSE, lot, str(need.kind))
 	if not r.ok:
 		return -1
 	_stat("bids_posted")
 	return int(r.id)
+
+
+## X20-ECON-AFFORD (owner directive 2026-11-01, instrumentation only: counts, never a decision): what an unaffordable bid was
+## for and why, as World statistics (eaff_*): the caller (a need or a merchant's speculation), the need's kind and item, the cause
+## (the buyer holds no coins; every coin is held back for the reserve and committed needs; or what is left is short of a lot at the
+## price) and the household's cash a member. Reads only coins and the budget already worked out; changes nothing.
+var _speculating := false
+
+
+func _unaffordable_detail(buyer: NPC, item: String, need: Dictionary, budget: int) -> void:
+	var cause := "no_coins" if buyer.coins <= 0 else ("held_back" if budget <= 0 else "short")
+	var cash := 0
+	var heads := 0
+	if buyer.household >= 0:
+		for o: NPC in w.brain._members(buyer.household):
+			cash += o.coins
+			heads += 1
+	else:
+		cash = buyer.coins
+		heads = 1
+	var per := cash / maxi(1, heads)
+	var band := "lt5" if per < 5 else ("5_19" if per < 20 else ("20_49" if per < 50 else "50up"))
+	w.stat("eaff_" + ("spec" if _speculating else "need"))
+	w.stat("eaff_kind_" + str(need.get("kind", "")))
+	w.stat("eaff_item_" + item)
+	w.stat("eaff_cause_" + cause)
+	w.stat("eaff_cash_" + band)
+	w.stat("eaff_" + ("spec" if _speculating else "need") + "_" + cause)
+	unaffordable_by[buyer.id] = int(unaffordable_by.get(buyer.id, 0)) + 1
+
+
+var unaffordable_by := {}                 # npc id -> unaffordable bids (instrumentation; not saved)
 
 
 ## Asks from traders' stock: up to ask_sellers_per_dawn villagers after the cursor (World.npcs order) whose trade sells to
@@ -1148,7 +1182,9 @@ func speculate(day: int) -> Array:
 			var need := spec_need(n, str(item))
 			if need.is_empty():
 				continue
+			_speculating = true
 			var id := post_bid(n, str(item), need)
+			_speculating = false
 			if id >= 0:
 				posted.append(id)
 				_stat("spec_bids")

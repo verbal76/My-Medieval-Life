@@ -166,6 +166,9 @@ func _init() -> void:
 				hp_before = w.player.hp
 				player_min_hp = minf(player_min_hp, w.player.hp)
 		_herd_day(d + 1)
+		if d + 1 == 1 and every > 1:                    # X20-ECON-LONGITUDINAL: day 1's development snapshot (read only)
+			dev_series.append(_dev(d + 1))
+			print("ECON10 " + JSON.stringify(dev_series[-1]))
 		if (d + 1) % every == 0 or d + 1 == days:
 			var ts := Time.get_ticks_usec()
 			samples.append(_sample(start))
@@ -174,6 +177,8 @@ func _init() -> void:
 			if w.judgment != null:            # SJD-G: the judgment store's soak measures, read only (JudgmentSoak changes nothing)
 				print("JUDGE " + JSON.stringify(JudgmentSoak.metrics(w.judgment)))
 			print("CHAPEL " + JSON.stringify(_chapel_line(d + 1)))
+			dev_series.append(_dev(d + 1))
+			print("ECON10 " + JSON.stringify(dev_series[-1]))
 			min_hunger = 100.0
 			harness_us += Time.get_ticks_usec() - ts
 			if w.economy != null:                  # LE-06: the economy's save at each checkpoint, and whether it loads back exactly
@@ -251,7 +256,7 @@ func _init() -> void:
 	if out != "":
 		var f := FileAccess.open(out, FileAccess.WRITE)
 		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "reached": reached, "every": every, "step": STEP,
-			"seconds": secs, "start": _jsonable(start), "samples": samples, "deaths": death_log,
+			"seconds": secs, "start": _jsonable(start), "samples": samples, "dev": dev_series, "deaths": death_log,
 			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows, "herd": herd_log, "herd_care": herd_care}, " ", false))
 		f.close()
 	# SJD-G: save size and memory at the end, after the results above are written (World.to_dict tells any queued gossip first)
@@ -899,6 +904,103 @@ func _contracts_summary() -> Dictionary:
 	return {"made": int(_st("contracts_made")), "units": int(_st("contract_units")), "paid": int(_st("contract_paid")),
 		"lapsed": int(_st("contracts_lapsed")), "cancelled": int(_st("contracts_cancelled")), "offers_to_player": int(_st("contract_offers_to_player")),
 		"reserved_now": w.contracts.reserved_total(), "on_record_by_item": items, "on_record_by_parties": pairs}
+
+
+var dev_series := []                       # X20-ECON-LONGITUDINAL: the development snapshots (_dev), day 1 and every checkpoint
+
+
+const DEV_STAT_PREFIXES := ["eaff_", "cold_", "burned_log", "stall", "storefront", "shop_", "luxury", "trade_", "spec_", "job_",
+	"apprentice", "hired", "newcomer", "relief", "gov_", "contract", "felled", "mined", "built", "chapel_", "wage_", "manor_"]
+
+
+## X20-ECON-LONGITUDINAL (owner directive 2026-11-01, sections 3-5; instrumentation only). A development snapshot that only
+## reads plain values (coins, inventories, skills, statistics, the labour market's open places): no cached price or reserve is
+## worked out here, so taking it changes nothing in the world (the run's fingerprint is the same with or without it).
+## Employment and skills, open places, households one by one (to follow each over time), the logs and who holds them, the
+## statistics that show business, stall, firewood and affordability activity, and the Living Economy market's counters.
+func _dev(day: int) -> Dictionary:
+	var st := {}
+	for k in w.stats:
+		for pfx in DEV_STAT_PREFIXES:
+			if str(k).begins_with(pfx):
+				st[k] = w.stats[k]
+				break
+	var skills := {}
+	var jobs := {}
+	for n: NPC in w.npcs:
+		if not n.alive or n.role != "adult":
+			continue
+		var best := 0
+		for sk in n.skills:
+			var lv := Skills.level(n, str(sk))
+			best = maxi(best, lv)
+			if lv >= 1:
+				var row: Array = skills.get(sk, [0, 0, 0, 0])
+				row[0] += 1
+				if lv >= 3:
+					row[1] += 1
+				if lv >= 6:
+					row[2] += 1
+				row[3] = maxi(int(row[3]), lv)
+				skills[sk] = row
+		var j: String = n.job if n.job != "" else "none"
+		var jr: Array = jobs.get(j, [0, 0, 0, 0])     # adults, sum of best skill level, coins, earned
+		jr[0] += 1
+		jr[1] += best
+		jr[2] += n.coins
+		jr[3] += n.earned
+		jobs[j] = jr
+	var open := {}
+	var jm: Dictionary = w.brain.job_market()
+	for k in jm:
+		if int((jm[k] as Dictionary).get("open", 0)) > 0:
+			open[k] = int(jm[k].open)
+	var hhs := []
+	for h in w.households.size():
+		var hh: Dictionary = w.households[h]
+		if hh.get("ended", false):
+			continue
+		var ms: Array = w.brain._members(h)
+		var cash := 0
+		var earned := 0
+		var adults := 0
+		var working := 0
+		var stores: Array = [hh.pantry]
+		for o: NPC in ms:
+			cash += o.coins
+			earned += o.earned
+			stores.append(o.inv)
+			if o.role == "adult":
+				adults += 1
+				if o.job != "":
+					working += 1
+		var logs := 0
+		for inv: Inventory in stores:
+			logs += inv.count("log")
+		var till := 0
+		var home: String = str(ms[0].home) if not ms.is_empty() else ""
+		if home != "" and w.buildings.has(home):
+			till = BusinessMoney.till_of(w.buildings[home])
+		hhs.append([h, ms.size(), adults, working, cash, earned, snappedf(NPCBrain.store_points(stores), 0.1), logs, till])
+	var logs_by := {"woodcutter": 0, "carpenter": 0, "merchant": 0, "other_villagers": 0, "households": 0, "granary": w.granary.count("log")}
+	for n: NPC in w.npcs:
+		if n.alive:
+			var g := n.job if n.job in ["woodcutter", "carpenter", "merchant"] else "other_villagers"
+			logs_by[g] += n.inv.count("log")
+	for hh in w.households:
+		if not hh.get("ended", false):
+			logs_by.households += (hh.pantry as Inventory).count("log")
+	var d := {"day": day, "stats": st, "skills": skills, "jobs": jobs, "open": open,
+		"households_cols": ["h", "members", "adults", "working", "cash", "earned", "food_pts", "logs", "till"], "households": hhs,
+		"logs_held": logs_by}
+	if w.economy != null:
+		d.market = (w.economy.market.stats as Dictionary).duplicate()
+		var ub: Dictionary = w.economy.market.unaffordable_by
+		var counts: Array = ub.values()
+		counts.sort()
+		counts.reverse()
+		d.unaffordable_buyers = {"distinct": ub.size(), "top5": counts.slice(0, 5)}
+	return d
 
 
 ## A sorted list's q-th percentile (nearest rank), 0 when empty.

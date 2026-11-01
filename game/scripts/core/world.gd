@@ -531,11 +531,14 @@ func _new_day() -> void:
 	if profiling:
 		_prof("daily: manor, rents, business, construction", t)
 	var cold := 0
-	for hh in households:
+	var seller_logs := -1
+	for hi in households.size():
+		var hh: Dictionary = households[hi]
 		if hh.get("ended", false):
 			continue                   # its stores went to the granary (Property.household_ended): nobody there to be cold
 		if not hh.pantry.remove("log"):
 			cold += 1
+			seller_logs = _cold_detail(hi, seller_logs)     # X20-ECON-FIREWOOD: counts only
 		else:
 			stat("burned_log")
 	if cold > 0:
@@ -1673,6 +1676,25 @@ func local_supply(id: String, at: Vector2, except: Object = null, skip := {}) ->
 		if s != skip and s.has("stock") and Vector2(int(s.x), int(s.y)).distance_squared_to(at) <= r2:
 			n += int(s.stock.get(id, 0))
 	return n
+
+
+## X20-ECON-FIREWOOD (owner directive 2026-11-01, instrumentation only: statistics, never a decision): a household that had no
+## log at dawn, by its cash (a log needs 3 coins to buy: NPCBrain._plan_provision), and whether the woodcutters, carpenters and
+## merchants held any logs that night. Per household too (cold_hh_<index>), to tell isolated hardship from persistent. Reads only
+## coins and inventories. Returns the logs the sellers hold (worked out once a dawn; -1 before).
+func _cold_detail(hi: int, seller_logs: int) -> int:
+	var cash := 0
+	for o: NPC in brain._members(hi):
+		cash += o.coins
+	stat("cold_cash_" + ("lt3" if cash < 3 else ("3_19" if cash < 20 else ("20_99" if cash < 100 else "100up"))))
+	stat("cold_hh_%d" % hi)
+	if seller_logs < 0:
+		seller_logs = 0
+		for o: NPC in npcs:
+			if o.alive and o.role == "adult" and o.job in ["woodcutter", "carpenter", "merchant"]:
+				seller_logs += o.inv.count("log")
+	stat("cold_sellers_had_logs" if seller_logs > 0 else "cold_sellers_had_none")
+	return seller_logs
 
 
 ## OD-19 (owner, 2026-10-20) and PAR-02A: a person's foreseeable necessities over reserve_days, from what they can know
