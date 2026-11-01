@@ -138,6 +138,8 @@ var settlement_caps := {}     # SET-A/B: the village's maintained capability his
 var settlement_profile := {}  # SET-B: today's all-industry profile (level, effective, workforce), derived at dawn and on load, not saved
 var settlement_foreign = null # a saved settlement section of an unknown format, kept and written back
 var justice: Justice          # GP-CRIME-PURSUIT A1: the authorities' file on each offender, by player reference (scripts/core/justice.gd). Saved as the optional key "justice" (a Build 20 save has none)
+var civic: CivicRecords = null  # P21-01 (Expansion 21): tenure history, succession and the legacy record; null while data/civic.json is disabled (shipped off: nothing built, no save key). Observes, never changes (scripts/core/civic/)
+var civic_foreign := {}       # P21-01: a saved "civic" section while the records are disabled: written back unchanged, never erased
 var economy_foreign := {}   # D2: a saved "economy" section while the foundation is disabled: written back unchanged, never parsed or erased
 var transactions: EconTransactions = null   # LE-03: the transaction authority (docs/expansion20/TRANSACTION_AUTHORITY.md); saved as "transactions" only when non-empty
 var economy: EconomyFoundation = null   # EXPANSION 20 LE-01: null unless game/data/economy.json "enabled" (shipped false); saved as the optional key "economy" only when on and non-empty
@@ -284,6 +286,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	settlement_profile = SettlementProfile.update(self, settlement_caps, day())   # SET-B: the starting profile (history begins here)
 	economy = EconomyFoundation.attach(self)     # EXPANSION 20 LE-01: null while disabled (nothing built, nothing saved)
 	transactions = EconTransactions.new(self)   # LE-03: always built; does nothing until called
+	civic = CivicRecords.attach(self)    # P21-01: null unless data/civic.json enables it; seeds the current holders, draws nothing
 	note("Day 1 begins in the village.")
 
 
@@ -3616,6 +3619,8 @@ func kill(n: NPC, cause: String, by_ref := "") -> void:
 	var who := "%s %s" % [n.name, n.family] if n.family != "" else n.name
 	var role := n.job if n.job != "" else n.role
 	note("%s the %s has died (%s)." % [who, role, cause])
+	if civic != null:
+		civic.on_death(n, cause)             # P21-01: the legacy record and the end of any tenure (observes only)
 	Outlaws.on_death(self, n)              # BANDIT-RETURN: the last bandit's death starts the wait for newcomers
 	# A5 (REPAIR_AUDIT D2): the household learns of the death, not who did it (that is the killing's own fact, seen or told)
 	var known_cause := "slain" if cause.begins_with("slain") else cause
@@ -6059,7 +6064,7 @@ func to_dict() -> Dictionary:
 		"mine_works": mine_works.to_dict(),
 		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged(_economy_section()).merged({EconTransactions.KEY: transactions.to_dict()} if transactions != null and not transactions.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged(_economy_section()).merged(_civic_section()).merged({EconTransactions.KEY: transactions.to_dict()} if transactions != null and not transactions.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
 	if judgment != null:
 		out.judgment = judgment.to_dict()                          # PROSPECTIVE (PROS-19): provisional section
 	elif not judgment_foreign.is_empty():
@@ -6539,6 +6544,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	transactions = EconTransactions.new(self)
 	transactions.load_dict(d.get(EconTransactions.KEY, {}))   # LE-03: optional key; older saves have none
 	economy_foreign = (economy_saved.duplicate(true) if economy == null else {})   # D2: kept untouched while disabled
+	var civic_saved: Dictionary = d.get(CivicRecords.KEY, {})
+	civic = CivicRecords.attach(self, civic_saved)     # P21-01: absent key or disabled: nothing built; a saved section is kept while disabled
+	civic_foreign = (civic_saved.duplicate(true) if civic == null else {})
 	_unstick()
 	if couriers != null:
 		couriers.seat_at_desks()       # GP-BUSINESS-DESK: a business's courier booth stands at its desk (an older save's at its station)
@@ -6553,6 +6561,14 @@ func _economy_section() -> Dictionary:
 	if economy != null:
 		return {EconomyFoundation.KEY: economy.to_dict()} if not economy.to_dict().is_empty() else {}
 	return {EconomyFoundation.KEY: economy_foreign.duplicate(true)} if not economy_foreign.is_empty() else {}
+
+
+## P21-01: the optional save key "civic", written only when there is something to write (the live records when on, else a
+## section carried through unchanged).
+func _civic_section() -> Dictionary:
+	if civic != null:
+		return {CivicRecords.KEY: civic.to_dict()} if not civic.is_empty() else {}
+	return {CivicRecords.KEY: civic_foreign.duplicate(true)} if not civic_foreign.is_empty() else {}
 
 
 ## Anyone saved standing where the map now has furniture or a wall (a bed added to a home by a later

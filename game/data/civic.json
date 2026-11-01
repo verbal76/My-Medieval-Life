@@ -1,0 +1,12 @@
+{
+ "format": "mml-civic/1",
+ "_note": "Expansion 21 P21-01 (owner directive 2026-10-23, VP-01): the civic records, a record only. 'enabled' false builds nothing, adds no save key and changes nothing in the simulation. When true the records OBSERVE today's offices (reeve, guards, sage) and who leaves a person's story, changing nothing they observe. The authority text below describes what a post does today in code; it grants no power and no rule reads it. No election, voting eligibility, tax rate, punishment or office power lives here (they await owner decisions, docs/expansion21/P21_READINESS.md section 5).",
+ "enabled": false,
+ "village_name": "the manor village",
+ "authority": {
+  "reeve": "Keeps the manor's business: once an evening collects the tax under TaxPolicy, pays relief, buys tools for the essential trades, orders repairs and public works (which wait for a living reeve) and buys grain for the granary. Serves for life; the office passes by the trades' succession of posts (NPCBrain._reeve_succession).",
+  "guard": "A guard of the manor's watch, on the day or the night shift: fights bandits seen, recovers loot, patrols posts, confronts and reports crime. Paid from the treasury each evening (NPCBrain.pay_guards); the post opens only while the treasury can afford one more.",
+  "sage": "The village's apothecary and healer: brews poultices and tonics and is paid from the treasury each evening. Holds no governing power."
+ },
+ "settlement_authority": "A named government of an off-map settlement (settlements.json 'government'). Its officials stay the off-map simulation's own (OffMapSettlement.gov); this record names the jurisdiction only."
+}

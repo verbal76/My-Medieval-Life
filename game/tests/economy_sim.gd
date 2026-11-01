@@ -17,6 +17,7 @@ extends SceneTree
 ##       an hour after the second killing (day 2 15:00), if still alive and the case still open; tools/sim_suite.py)
 ##       [--judgment]   (attach a fresh judgment store; Build 19 ships judgment on already; prints its counts at the end)
 ##       [--economy]   (Expansion 20 LE-01: the economy model on, observing only; prints its record counts at the end)
+##       [--civic]     (Expansion 21 P21-01: the civic records on; they only observe, so the fingerprint is identical to a run without)
 ##       [--market]    (Expansion 20 LE-03: the shipped economy.json switched on, the market driving; audits the claims at the end)
 ##       [--scenario strip_mine|contracts_fail|social_chain --at DAY]   (X20-FINAL phase 4, tools/sim_suite.py: economic stress
 ##       and the judgment chain through the game's own verbs; see _intervene and _scripted_step)
@@ -104,6 +105,8 @@ func _init() -> void:
 	elif "--economy" in args:             # EXPANSION 20 LE-01: the economy model attached, observing only (never shipped on)
 		EconomyFoundation.set_override({"enabled": true})
 		print("economy: LE-01 model enabled (observing)")
+	if "--civic" in args:                 # P21-01: the civic records on (they only observe; the fingerprint must not change)
+		CivicRecords.override = 1
 	w = World.new()
 	w.setup(VillageMap.load_default(), seed)
 	var parts := [w.brain, w.property, w.business, w.construction, w.fauna, w.farm, w.quests, w.manor_work, w.carts, w.relations]
@@ -1681,6 +1684,8 @@ func _print_final(s: Dictionary, start: Dictionary, seed: int, days: int, secs: 
 	print("deaths: %s" % JSON.stringify(death_log))
 	_print_faucets(s)
 	print("fingerprint %s" % _fingerprint())
+	if w.civic != null:
+		print("civic: %d tenures, %d legacy records, %d open, audit %s" % [w.civic.tenures.size(), w.civic.legacy.size(), w.civic._open.size(), str(w.civic.audit())])
 
 
 ## DVW-A4: what entered and left the village over the run, kept apart from trade inside it. Coins: the
