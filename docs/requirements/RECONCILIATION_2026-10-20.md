@@ -160,7 +160,7 @@ None.
 | B25-AMBITION-D4 | Activate the career ambition system? | decision | APPROVED | owner decision |
 | B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-BUSINESS-D2 | May villagers establish independent businesses? | decision | APPROVED | owner decision |
-| B25-BUSINESS-IMPL | Independent business formation by qualified villagers | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-BUSINESS-IMPL | Independent business formation by qualified villagers | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-CAREER-D1 | How is career advancement decided? | decision | APPROVED | owner decision |
 | B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
@@ -267,7 +267,7 @@ None.
 | ECON-P3.3 | Stock targets in days of sales (agent proposal P3.3, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 185) | proposal | NOT STARTED / NOT TESTED / OPEN | 20 |
 | ECON-P3.4 | Hire wages from the market quote (agent proposal P3.4, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 186) | proposal | NOT STARTED / NOT TESTED / OPEN | 20 |
 | EMP-CONTRACT-01 | Contracted services: the player negotiates a specific task or quantity (e.g. 50 iron ore) without employing the NPC, by existing contract conventions; real activity only | approved | NOT APPLICABLE / NOT APPLICABLE / CLOSED | 20 |
-| EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | EQ-17 | Long simulations: a household that loses its house leaves an empty home id; births and members then raise script errors | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | EQ-18 | Tool recovery and essential trades over a year: job seekers can buy the trade tool where tools are sold (seek_work looked among timber sellers, so nobody without an axe became a woodcutter and the trade died out), and an essential trade left for other work opens its succession post (seed 2 had no smith from day 240) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |
 | EQ-19 | The manor supports the essential trades from its treasury (OD-16 b): it keeps the smithy and the woodlands working by buying iron and tools for the village's workers, or lending to the smith against future output | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 15 |

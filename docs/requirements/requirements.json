@@ -5492,7 +5492,7 @@
     "B25-BUSINESS-D2"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5501,7 +5501,20 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_career_business_employment_final_decisions.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests: None -> business_founding 58, migration 109, save_continuity 5, save_transfer 21, run_tests 3601, check_interactions 0 problems (local, d0dc0d7); worker: business 160, business_money 37, till_ownership 71, skilled_employment 54, net_econ_integrity 126, conservation 8, start_test 523, wiki_test (c60ac0e); 30-day seed 1 leaks 0, 0 script errors, no founding observed; test_commit: None -> d0dc0d7; commits + d0dc0d7; integrated_in + Build 25 wip/expansion20",
+     "why": "merged into the Build 25 source after targeted suites (lead review of wip/b25-business c60ac0e)"
     }
+   ],
+   "tests": "business_founding 58, migration 109, save_continuity 5, save_transfer 21, run_tests 3601, check_interactions 0 problems (local, d0dc0d7); worker: business 160, business_money 37, till_ownership 71, skilled_employment 54, net_econ_integrity 126, conservation 8, start_test 523, wiki_test (c60ac0e); 30-day seed 1 leaks 0, 0 script errors, no founding observed",
+   "test_commit": "d0dc0d7",
+   "commits": [
+    "d0dc0d7"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
    ]
   },
   {
@@ -17283,7 +17296,7 @@
    "title": "Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages",
    "target_build": "20",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -17328,10 +17341,23 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope (owner 2026-11-01, B25-SCOPE-D1 and docs/directives/2026-11-01_career_business_employment_final_decisions.md): the 2026-10-31 assignment of this work to Build 26 is superseded; status unchanged until the work is done and verified"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests: None -> business_founding 58, migration 109, save_continuity 5, save_transfer 21, run_tests 3601, check_interactions 0 problems (local, d0dc0d7); worker: business 160, business_money 37, till_ownership 71, skilled_employment 54, net_econ_integrity 126, conservation 8, start_test 523, wiki_test (c60ac0e); 30-day seed 1 leaks 0, 0 script errors, no founding observed; test_commit: None -> d0dc0d7; commits + d0dc0d7; integrated_in + Build 25 wip/expansion20",
+     "why": "merged into the Build 25 source after targeted suites (lead review of wip/b25-business c60ac0e)"
     }
    ],
    "owner_answer": "ASSIGN TO BUILD 20. Permanent mine employment and general assigned production roles remain approved design requirements scheduled for Build 20. Preserve the distinction between permanent employment, wages, shifts, assigned workplaces, and negotiated quantity or service contracts. Do not treat temporary contracts or workshop attendants as proof that permanent mine employment is complete.",
-   "notes": "Reconciled 2026-10-31 (DOC-RECON-01): Confirmed NOT STARTED on wip/expansion20 ad281dc: docs/DECISIONS.md 2026-10-24 'Not built: ... permanent staff with terms (EMP-PERM-01)'; X18_X20_COVERAGE_MATRIX.md row 20.18 APPROVED-NI. Placement relative to the Build 25 freeze is an open owner question.  | Placement (owner 2026-10-31, X20-REMAINING-PLACEMENT): Build 26 scope for planning, reconciliation and dependency analysis only; implementation needs its own authorization; Build 25 frozen first."
+   "notes": "Reconciled 2026-10-31 (DOC-RECON-01): Confirmed NOT STARTED on wip/expansion20 ad281dc: docs/DECISIONS.md 2026-10-24 'Not built: ... permanent staff with terms (EMP-PERM-01)'; X18_X20_COVERAGE_MATRIX.md row 20.18 APPROVED-NI. Placement relative to the Build 25 freeze is an open owner question.  | Placement (owner 2026-10-31, X20-REMAINING-PLACEMENT): Build 26 scope for planning, reconciliation and dependency analysis only; implementation needs its own authorization; Build 25 frozen first.",
+   "tests": "business_founding 58, migration 109, save_continuity 5, save_transfer 21, run_tests 3601, check_interactions 0 problems (local, d0dc0d7); worker: business 160, business_money 37, till_ownership 71, skilled_employment 54, net_econ_integrity 126, conservation 8, start_test 523, wiki_test (c60ac0e); 30-day seed 1 leaks 0, 0 script errors, no founding observed",
+   "test_commit": "d0dc0d7",
+   "commits": [
+    "d0dc0d7"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
+   ]
   },
   {
    "id": "ENV-RTK",

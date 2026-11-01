@@ -18,7 +18,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (54)
+## Implemented but not tested (56)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -27,6 +27,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B16-AUDIT | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
 | B16-READY | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
 | B25-AMBITION-IMPL | 20 | INTEGRATED |  |
+| B25-BUSINESS-IMPL | 20 | INTEGRATED |  |
 | B25-EMPLOY-IMPL | 20 | INTEGRATED |  |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |
 | B7-009 | 15 | INTEGRATED |  |
@@ -37,6 +38,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | DVW-A3 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH |  |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH |  |
+| EMP-PERM-01 | 20 | INTEGRATED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it |
 | EQ-05 | 16 | PARTIALLY IMPLEMENTED |  |
 | FARM-08 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | FR-11 | 19 | PARTIALLY IMPLEMENTED |  |

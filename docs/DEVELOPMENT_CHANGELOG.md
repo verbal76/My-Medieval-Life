@@ -67,6 +67,26 @@ All the work below is Build 25, the consolidation build (B25-SCOPE-D1).
 - Records branch: `wip/requirements-control`.
 - Tests are local unless a run id is given.
 
+**B25-BUSINESS-IMPL and EMP-PERM-01: villager businesses, business hiring, the player's permanent employee (B25-BUSINESS-D2, B25-EMPLOY-D3).**
+- Branch: `wip/b25-business` (`cc830e0` design, `2f99b29` founding and closing, `04054bb` hiring and EMP-PERM-01, `c60ac0e` docs),
+  merged as `d0dc0d7`.
+- Change:
+  - Qualified smiths, carpenters, tanners and cooks may build a workshop of their own through normal construction (`ventures.gd`,
+    judgment profile `business_found`). A workshop closes after 14 idle days or passes to a family member in the trade.
+  - Open ventures offer places through the labour market.
+  - The player can employ a permanent miner, paid daily from the purse (`employment.gd`; optional save key `employment`; guest
+    verbs `employment.employ` and `employment.dismiss`).
+  - INT-661..663.
+- Status: INTEGRATED, TESTED (local).
+- Evidence:
+  - On `d0dc0d7`: `business_founding` 58, `migration` 109, `save_continuity` 5, `save_transfer` 21, `run_tests` 3601, 0 failures.
+  - On `c60ac0e`, the worker's run: `business` 160, `business_money` 37, `till_ownership` 71, `skilled_employment` 54,
+    `net_econ_integrity` 126, `conservation` 8, `start_test` 523, `wiki_test` passed. `housing_test` loft check fails, as before.
+  - 30-day seed 1: leaks 0, 0 script errors, **no founding happened**. Most skilled villagers start short of 20 working days in
+    their trade, and no workplace was full and busy. Treated as a legitimate outcome; not retuned.
+- Outstanding: provisional numbers. Five open questions are implemented the conservative way (Q1-Q5 in
+  `docs/expansion20/BUSINESS_FOUNDING.md`). Founding has not yet been observed in a live run.
+
 **DOC-CONT-01: documentation and AI continuity standard.**
 - Branch: `wip/requirements-control`. Commit: this changelog's commit.
 - Change:

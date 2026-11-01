@@ -17,8 +17,8 @@
 |---|---|
 | Current development build | **Build 25**, the consolidation build. It holds all approved expansion work and all approved recoverable abandoned-branch work (B25-SCOPE-D1, `docs/directives/2026-11-01_build25_scope_clarification.md`). |
 | Integration branch (Build 25 source) | `wip/expansion20` |
-| Development head | `265ddc1` (skilled employment merged; the branch head `39b1662` adds only the stale-copy banner). See `docs/DEVELOPMENT_CHANGELOG.md` for the chain from `ad281dc`. |
-| Latest verified SHA | `265ddc1`: suites TESTED locally, listed below. No CI run, no 30-day baseline and no year-long run on this SHA. The last SHA with year-long CI evidence is `ae8641d` (chapel fix). The last SHA with a complete validated gate is `ad281dc` (30-day baseline). Its year-long runs failed on the gossip crash, which is now fixed. |
+| Development head | `d0dc0d7` (business founding, business hiring and permanent employment merged). See `docs/DEVELOPMENT_CHANGELOG.md` for the chain from `ad281dc`. |
+| Latest verified SHA | `d0dc0d7`: suites TESTED locally, listed below. No CI run, no 30-day baseline and no year-long run on this SHA. The last SHA with year-long CI evidence is `ae8641d` (chapel fix). The last SHA with a complete validated gate is `ad281dc` (30-day baseline). Its year-long runs failed on the gossip crash, which is now fixed. |
 | Rollback point | `ad281dc` |
 | Records branch | `wip/requirements-control`. It holds the register, directives and this file. The register is edited only here, with `tools/requirements_update.py` and then `tools/check_requirements.py --write`. It is not merged into staging or `wip/expansion20` without the owner's authorization. |
 | `staging/my-medieval-life` | `baa6479` (2026-11-01; `aeaa012` plus the stale-copy banner). Behind on both code and records. Not where current work is. |
@@ -34,13 +34,12 @@ Every branch below holds real, unmerged work. None is disposable.
 
 | Worker or workstream | Register | Branch / worktree | Latest pushed | Unpushed | State and tests | Merge readiness | Next safe step |
 |---|---|---|---|---|---|---|---|
-| **ACTIVE:** business founding, businesses employing workers, permanent employment | B25-BUSINESS-IMPL, EMP-PERM-01 (B25-BUSINESS-D2, CON-03..08 overlap) | wip/b25-business; worktree `.claude/worktrees/b25-business` | not yet pushed (starts at `265ddc1`) | probe scripts only, as of 2026-11-01 evening | Milestones: M1 design note, M2 founding and closing, M3 hiring and EMP-PERM-01, M4 docs and tests. Each is pushed when done. | not ready | Lead reviews each milestone, then merges into `wip/expansion20` after targeted tests. |
+| **ACTIVE:** informal services | B25-NINE-D2, X20-SERVICES-SCOPE, CON-03..08 | `wip/b25-services`; worktree `.claude/worktrees/agent-*` | `68df430` | none at resume | **Does not compile** at resume: `ContractServices` functions are missing. Resumed 2026-11-01 after the business merge. | not ready | Implement the missing functions, compile, test, then the lead merges. |
 | Suspended: game juice J1 and J2 | JUICE-J1 (B25-NINE-D9) | `wip/b25-juice`; worktree `.claude/worktrees/agent-*` | `efd0cd0` | none | Own test only. Missing: fingerprint neutrality, suites, INT entry, the Decision 8 notification routing note. API: `GameUI.personal(text, item, category, seconds)`; `World.note(text)`. | not ready | Finish the missing items, run targeted suites, merge. |
 | Suspended: witness reporting | B25-NINE-D4 (X19-SWITCHES-D1) | `wip/b25-report` | `f15faf8` | none | `integration.report` is on. Several suites not run. Wiki still says every witness reports (`wiki_topics.gd`; `wiki.gd` lines ~803 and ~832). | not ready | Fix the wiki, run the judgment suites, merge. Activation follows validation (Decision 4). |
 | Suspended: materials, armour, clothing | B25-NINE-D5..D7, ARMOR-CATALOG-D1 | `wip/b25-materials` | `041a67c` | none | Untested. Remaining: `resources.json` with `check_resources.py --write`, icons through the asset pipeline, wiki, tests. | not ready | Complete the data and tests, then merge. |
 | Suspended: organic skills and capabilities | B25-NINE-D1, B25-NINE-D8 | `wip/b25-capability` | `f891a11` | none | Partly tested. Dependency: settlement capability knowledge needs supplier selection, which does not exist yet. | not ready | Finish, run targeted tests, merge. |
-| Suspended: informal services | B25-NINE-D2, X20-SERVICES-SCOPE, CON-03..08 | `wip/b25-services` | `68df430` | none | **Does not compile.** `ContractServices` functions are missing. | not ready | Implement the missing functions, compile, test. |
-| Merged and done | B25-AMBITION-IMPL, B25-EMPLOY-IMPL, LE-05/LE-07 remainder, P21-00..02, X20-CHAPEL-FIX, X20-TELL-GUARD | `wip/b25-ambition`, `wip/b25-employ`, `wip/b25-econ`, `wip/b25-civic`, `wip/x20-chapel`, `wip/x20-tell-guard` | merged into `wip/expansion20` | none | See the changelog. | merged | none |
+| Merged and done | B25-BUSINESS-IMPL and EMP-PERM-01 (`d0dc0d7`, from `wip/b25-business` `c60ac0e`), B25-AMBITION-IMPL, B25-EMPLOY-IMPL, LE-05/LE-07 remainder, P21-00..02, X20-CHAPEL-FIX, X20-TELL-GUARD | `wip/b25-ambition`, `wip/b25-employ`, `wip/b25-econ`, `wip/b25-civic`, `wip/x20-chapel`, `wip/x20-tell-guard` | merged into `wip/expansion20` | none | See the changelog. | merged | none |
 
 All suspended worktrees are kept on disk. Their branches are pushed, so GitHub has everything committed. The resume order is in
 "Next authorized actions" below.
@@ -51,6 +50,7 @@ All of these ran **locally** (Godot 4.7 headless), not in CI. Exact suites and c
 
 | SHA | Level | Evidence |
 |---|---|---|
+| `d0dc0d7` | TESTED | `business_founding` 58, `migration` 109, `save_continuity` 5, `save_transfer` 21, `run_tests` 3601, 0 failures; worker suites on `c60ac0e` in the changelog. 30-day seed 1 on `c60ac0e`: leaks 0, no villager founded a business (not yet seen in a live run) |
 | `265ddc1` | TESTED | `skilled_employment` 54, `run_tests` 3601, 0 failures |
 | `2c0a780` | TESTED | Save suites: `save_continuity` 5, `save_transfer` 21, `migration` 109, `le06_save` 21, `le07_gates` 25, `start_test` 523 |
 | `63c0144` | TESTED | LE-05 and LE-07 suites, `net_econ_integrity` 126 |
@@ -97,10 +97,10 @@ Build 25:
 
 ## Next authorized actions (in order)
 
-1. **Business founding, businesses employing workers and permanent employment.** This is the active worker. Merge milestone by
-   milestone.
+1. Done: business founding, business hiring and permanent employment (`d0dc0d7`). Watch for founding in the year-long runs
+   (provisional thresholds: skill 4, 20 working days; open questions Q1-Q5 in BUSINESS_FOUNDING.md, docs/expansion20 on the Build 25 source).
 2. **Suspended branches**, one at a time. Finish each, run targeted tests, then merge:
-   1. `wip/b25-services`
+   1. `wip/b25-services` (active)
    2. `wip/b25-report`
    3. `wip/b25-juice`
    4. `wip/b25-materials`
