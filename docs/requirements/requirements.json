@@ -5372,6 +5372,34 @@
    "playtest": "LAN play on real devices (PC host, Android guest; Windows Firewall UDP 47810/47811) not yet done"
   },
   {
+   "id": "B25-SCOPE-AUDIT",
+   "kind": "approved",
+   "title": "Build 25 complete expansion and abandoned-work reconciliation audit (read-only)",
+   "description": "Build 25 complete expansion and abandoned-work reconciliation audit (read-only)",
+   "source": "docs/directives/2026-11-01_build25_scope_reconciliation_audit.md",
+   "owner_wording": "I want proof that we fulfilled that agreement. ... Give me the complete reconciliation and a clear answer.",
+   "approval": "Owner directive 2026-11-01 (verbatim in docs/directives/2026-11-01_build25_scope_reconciliation_audit.md)",
+   "acceptance": [
+    "Report with A expansion completeness matrix, B abandoned-branch recovery matrix, C missing scope register, D bug and correction register, E private playtest readiness, F owner summary with one of the three conclusions; conflicts between directives identified, not reinterpreted; no code, merge, release"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_build25_scope_reconciliation_audit.md"
+    }
+   ]
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
