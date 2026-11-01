@@ -18,8 +18,10 @@ specific approved work missing (section C). Plan: `docs/release/build25_reconcil
 **Owner decisions 2026-11-01** (`docs/directives/2026-11-01_career_business_employment_final_decisions.md`): B25-CAREER-D1, B25-BUSINESS-D2,
 B25-EMPLOY-D3, B25-AMBITION-D4, all APPROVED for Build 25 implementation (B25-CAREER-SYSTEM and children).
 
-**Next actions (Build 25):** step 0 integrate `wip/x20-tell-guard` (chapel, instrumentation, gossip fix) into `wip/expansion20` once its
-judgment suites pass; workstream 1 (career system) on its own task branch; workstreams 3-5 in parallel; owner questions Q1-Q4 in the plan.
+**Next actions (Build 25):** status of 2026-11-01 in `docs/release/build25_reconciliation/STATUS_2026-11-01.md`. Build 25 source
+`wip/expansion20` at `ab8ac71` (chapel, instrumentation, gossip fix, civic records). Workers: ambition (`wip/b25-ambition` `16ef4a4`,
+pushed, awaiting review), stranded documents and economy remainder (agent worktrees, in progress). Then: integrate ambition; skilled
+places without fixed headcount (1b) and skill-aware hiring (1c); business formation and employment (2); validation once at the end.
 
 ## Historical build sequence (owner, 2026-10-31, BUILD-SEQ-25-27; superseded for Build 25 scope by B25-SCOPE-D1)
 
