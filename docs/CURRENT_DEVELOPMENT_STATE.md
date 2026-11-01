@@ -1,3 +1,5 @@
+> **STALE COPY. Not the current state.** Since 2026-11-01 (DOC-CONT-01) the current state is `docs/CURRENT_DEVELOPMENT_STATE.md` on branch `wip/requirements-control`, with history in `docs/DEVELOPMENT_CHANGELOG.md` there. This copy is kept for history only.
+
 # Current development state
 
 The session handoff (MEM-01, owner 2026-10-20; reshaped by REQ-CTRL-01, owner 2026-10-23). It holds **only
