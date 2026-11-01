@@ -59,6 +59,14 @@ func hungry_household(w: World) -> int:
 	return -1
 
 
+## What anyone thinks or remembers of anyone (the judgment store's facts, memories, contributions and ledgers), as text.
+func opinions(w: World) -> String:
+	if w.judgment == null:
+		return ""
+	var d: Dictionary = w.judgment.to_dict()
+	return JSON.stringify([d.get("facts"), d.get("memories"), d.get("contrib"), d.get("ledgers")])
+
+
 func adult_of(w: World, h: int) -> NPC:
 	for o: NPC in w.brain._members(h):
 		if o.role == "adult":
@@ -88,6 +96,9 @@ func test_places() -> void:
 	check(int(w.brain.job_market().preacher.open) == 1, "if the preacher dies the place opens in the labour market")
 
 
+## X20-CHAPEL-FIX (owner, 2026-11-01): giving is voluntary. Each adult and elder who can spare a coin decides through the
+## decision framework; piety moves the chance but never decides; amounts vary and are affordable; those who cannot spare are
+## counted unable, not unwilling; nothing is taken without a choice and nobody is penalised for declining.
 func test_offerings() -> void:
 	var w := new_world()
 	var c: Chapel = w.chapel
@@ -101,23 +112,81 @@ func test_offerings() -> void:
 	for hh in w.households:
 		wheat0 += (hh.pantry as Inventory).count("wheat")
 	wheat0 += c.store.count("wheat")
+	var judge0 := opinions(w)
 	var r := c.offerings()
-	check(int(r.coins) > 0 and c.coins == int(r.coins), "the pious give coins to the fund (%d)" % int(r.coins))
-	check(int(r.wheat) > 0 and c.store.count("wheat") == int(r.wheat), "households give wheat to the store (%d)" % int(r.wheat))
+	var s: Dictionary = c.last_service
+	check(int(r.coins) > 0 and c.coins == int(r.coins) and int(s.coins) == int(r.coins), "some choose to give coins to the fund (%d)" % int(r.coins))
+	check(int(s.donors) > 0 and int(s.declined) > 0 and int(s.donors) + int(s.declined) == int(s.considered) and int(s.considered) + int(s.unable) == int(s.present),
+			"giving is a choice: of %d who could give, %d gave and %d chose not to; %d could not spare a coin" % [s.considered, s.donors, s.declined, s.unable])
+	check(int(r.wheat) > 0 and c.store.count("wheat") == int(r.wheat), "households choose to give wheat to the store (%d)" % int(r.wheat))
 	var wheat1 := c.store.count("wheat")
 	for hh in w.households:
 		wheat1 += (hh.pantry as Inventory).count("wheat")
 	check(w.total_coins() == coins0 and wheat1 == wheat0, "offerings move coins and wheat, they make none")
-	var low := 0
+	check(opinions(w) == judge0, "giving or declining touches nobody's opinion, memory or ledger: no penalty, no reputation")
+	var sizes := {}
+	for g in s.gifts:
+		sizes[g] = true
+	check(sizes.size() > 1, "gifts vary in size (%d different amounts)" % sizes.size())
+	check(c.piety(w.npcs[3]) == new_world().chapel.piety(w.npcs[3]), "piety is a fixed number, the same in another world of the same seed")
+	# unable: nothing above the reserve and savings -> not asked, gives nothing, counted as unable
+	var poor: NPC = null
 	for n: NPC in w.npcs:
-		if n.alive and n.role in ["adult", "elder"] and c.piety(n) < float(c.cfg().min_piety):
-			low += 1
-	check(low > 0 and c.piety(w.npcs[3]) == c.piety(w.npcs[3]) and c.piety(w.npcs[3]) == new_world().chapel.piety(w.npcs[3]), "piety is a fixed number, the same in another world of the same seed; some give nothing")
-	var poor: NPC = w.npcs[20]
+		if n.alive and n.role == "adult" and n.household >= 0 and not Chapel.is_clergy(n):
+			poor = n
+			break
 	poor.coins = 3
+	check(c.affordable(poor) == 0, "someone with nothing above their reserve and savings cannot spare a coin")
 	var before: int = poor.coins
+	var unable0 := int(w.stats.get("chapel_unable", 0))
 	c.offerings()
-	check(poor.coins == before, "someone with nothing above their reserve gives nothing")
+	check(poor.coins == before and int(w.stats.get("chapel_unable", 0)) > unable0, "they give nothing and are counted unable, not unwilling")
+	# over many weeks: piety moves the chance, it decides nothing; a giver never gives more than they can spare
+	var gave := {}
+	var declined := {}
+	var over := 0
+	for week in 16:
+		w.minutes += 1440.0 * 7.0
+		for n: NPC in w.npcs:
+			if n.alive and n.role in ["adult", "elder"]:
+				n.coins = w.reserve_of(n) + int(Chapel.cfg().gift.keep_coins) + 1 + (n.id * 7 + week * 3) % 25     # a modest spare, 1 to 25
+		var spare := {}
+		var held := {}
+		for n: NPC in w.npcs:
+			spare[n.id] = c.affordable(n)
+			held[n.id] = n.coins
+		c.offerings()
+		for n: NPC in w.npcs:
+			if not n.alive or n.role not in ["adult", "elder"] or n.household < 0 or int(spare[n.id]) < 1:
+				continue
+			var g: int = int(held[n.id]) - n.coins
+			if g > int(spare[n.id]):
+				over += 1
+			if g > 0:
+				gave[n.id] = int(gave.get(n.id, 0)) + 1
+			else:
+				declined[n.id] = int(declined.get(n.id, 0)) + 1
+	var devout_declined := 0
+	var faithless_gave := 0
+	var devout_rate := [0, 0]
+	var faithless_rate := [0, 0]
+	for n: NPC in w.npcs:
+		var pt := c.piety(n)
+		var g := int(gave.get(n.id, 0))
+		var d := int(declined.get(n.id, 0))
+		if pt >= 0.8:
+			devout_declined += 1 if d > 0 else 0
+			devout_rate[0] += g
+			devout_rate[1] += g + d
+		elif pt <= 0.2:
+			faithless_gave += 1 if g > 0 else 0
+			faithless_rate[0] += g
+			faithless_rate[1] += g + d
+	check(over == 0, "nobody ever gives more than they can spare")
+	check(devout_declined > 0, "the devout sometimes keep their coins (%d devout villagers declined at least once)" % devout_declined)
+	check(faithless_gave > 0, "those of little faith sometimes give (%d gave at least once)" % faithless_gave)
+	check(devout_rate[1] > 0 and faithless_rate[1] > 0 and devout_rate[0] * faithless_rate[1] > faithless_rate[0] * devout_rate[1],
+			"the devout give more often (%d of %d choices) than those of little faith (%d of %d)" % [devout_rate[0], devout_rate[1], faithless_rate[0], faithless_rate[1]])
 	check(c.is_service_day() == ((w.day() + 1) % 7 == 0), "the weekly service day")
 
 
@@ -144,87 +213,110 @@ func test_wages() -> void:
 	check(pr.coins == p0 + 3 * c.wage_of("preacher") and c.owed.is_empty(), "what is owed is paid when the fund allows")
 
 
-## CHAPEL-R2 (owner, 2026-10-23): the alms. On the service day, after the wages, the fund keeps what the clergy are owed and
-## a week of their wages; the rest goes to adults and elders below their own necessity reserve, up to it, the households
-## with the largest shortfall first. Coins conserved, never below the keep, never paid twice.
+## CHAPEL-R2 (owner, 2026-10-23) as X20-CHAPEL-FIX (owner, 2026-11-01) corrects it: on the service day, after the wages, the fund
+## keeps its operating reserve (the clergy's wages for operating_reserve_days, wages owed, recent relief and seed spending) and
+## gives the surplus to the poorest households by hardship: not gated by the food they hold, never to the wealthy short of
+## coin, each up to its hardship, once. Coins conserved, never below the reserve.
 func test_alms() -> void:
 	var w := new_world()
 	var c: Chapel = w.chapel
 	while not c.is_service_day():
 		w.minutes += 1440.0
+	var days := int(Chapel.cfg().operating_reserve_days)
 	var keep := 0
 	for o: NPC in w.npcs:
 		if Chapel.is_clergy(o):
-			keep += c.wage_of(o.job) * int(Chapel.cfg().offering_every_days)
-	# three poor households: their adults and elders hold nothing
+			keep += c.wage_of(o.job) * days
+	check(c.operating_reserve() == keep, "with nothing owed or spent the reserve is the clergy's wages for %d days (%d)" % [days, keep])
+	c.spent_week = 70
+	c.coins = 0
+	c.alms()
+	check(c.spent == [70] and c.spent_week == 0 and c.operating_reserve() == keep + 70 * days / 7, "recent relief and seed spending is kept back too")
+	c.spent = []
+	# three poor households: no coins, but each with a full larder (food alone does not make them secure)
 	var poor := []
 	for h in w.households.size():
 		if poor.size() >= 3 or w.brain._members(h).is_empty():
 			continue
-		var ms: Array = w.brain._members(h).filter(func(o): return o.role in ["adult", "elder"] and not Chapel.is_clergy(o))
-		if ms.is_empty():
+		var ms: Array = w.brain._members(h)
+		if ms.any(func(o): return Chapel.is_clergy(o)) or not ms.any(func(o): return o.role == "adult"):
 			continue
 		for o: NPC in ms:
+			w.treasury += o.coins
 			o.coins = 0
+		(w.households[h].pantry as Inventory).add("wheat", 30)
 		poor.append(h)
-	var short_of := func(h: int) -> int:
-		return c.household_shortfall(h)
-	var need0: int = short_of.call(poor[0]) + short_of.call(poor[1]) + short_of.call(poor[2])
-	check(poor.size() == 3 and need0 > 0, "three households below their necessity reserve (short %d coins)" % need0)
-	# one need per household: its shortfall is the household's need less every member's coins, the same whoever asks
-	var h0: int = poor[0]
-	var m0: Array = w.brain._members(h0)
-	var held0 := 0
-	for o: NPC in m0:
-		held0 += o.coins
-	check(short_of.call(h0) == maxi(0, int(w.necessity(m0[0]).need) - held0) and int(w.necessity(m0[0]).need) == int(w.necessity(m0[-1]).need),
-			"a household's shortfall is its one need less all its members' coins (not each member's reserve)")
-	# a fund too small: nothing below the keep is given
+	for h in poor:
+		var m := c.household_means(h)
+		check(int(m.cash) == 0 and int(m.stock) > 0 and maxi(c.household_shortfall(h), int(m.line)) > c.household_shortfall(h) and int(m.wealth) < int(m.line) * int(Chapel.cfg().alms_wealth_lines),
+				"household %d holds food but no coins: its hardship (%d) is more than its necessity shortfall (%d), and it is not wealthy (wealth %d, line %d)" % [h, m.line, c.household_shortfall(h), m.wealth, m.line])
+	# one rich household short of coin today: wealth far above the line, excluded
+	var rich := -1
+	for h in w.households.size():
+		if not poor.has(h) and not w.brain._members(h).is_empty() and w.brain._members(h).any(func(o): return o.role == "adult" and not Chapel.is_clergy(o)):
+			rich = h
+			break
+	for o: NPC in w.brain._members(rich):
+		w.treasury += o.coins
+		o.coins = 0
+	(w.households[rich].pantry as Inventory).add("wheat", 3000)
+	var rm := c.household_means(rich)
+	check(int(rm.cash) == 0 and int(rm.wealth) >= int(rm.line) * int(Chapel.cfg().alms_wealth_lines), "a household rich in stores but short of coin today")
+	# a fund at the reserve gives nothing
 	c.coins = keep
 	var total0 := w.total_coins()
-	check(c.alms() == 0 and c.coins == keep and w.total_coins() == total0, "a fund at the keep (%d: a week of the clergy's wages) gives no alms" % keep)
-	# a fund with plenty: every shortfall filled, the rest kept
-	c.coins = keep + need0 + 5000
+	check(c.alms() == 0 and c.coins == keep and w.total_coins() == total0, "a fund at its reserve (%d) gives no alms" % keep)
+	# a fund with plenty: the poor are helped to one line of cash, the rich get nothing, the rest is kept
+	c.coins = keep + 5000
 	total0 = w.total_coins()
-	var all_short := 0
-	for h in w.households.size():
-		if not w.households[h].get("ended", false):
-			all_short += short_of.call(h)
 	var given := c.alms()
-	check(given == all_short and short_of.call(poor[0]) == 0 and short_of.call(poor[1]) == 0 and short_of.call(poor[2]) == 0,
-			"the alms fill every household's shortfall once (%d coins, the sum of the shortfalls %d)" % [given, all_short])
-	check(w.total_coins() == total0 and c.coins == keep + need0 + 5000 - given and c.coins >= keep, "coins conserved; the fund keeps the rest")
+	var helped := (c.last_service.recipients as Array).map(func(r): return int(r.household))
+	check(given > 0 and helped.has(poor[0]) and helped.has(poor[1]) and helped.has(poor[2]), "the alms reach the poor households with food but no coins (%d coins to %d)" % [given, helped.size()])
+	check(not helped.has(rich), "the wealthy short of coin get nothing")
+	var ok := true
+	for r in c.last_service.recipients:
+		if int(r.given) < 1 or int(r.cash_after) != int(r.cash_before) + int(r.given):
+			ok = false
+	for h in poor:
+		var m := c.household_means(h)
+		if int(m.cash) < int(m.line) and c.coins > keep:
+			ok = false
+	check(ok, "each recipient is given up to its hardship, and the poor are brought to their line while the fund allows")
+	check(w.total_coins() == total0 and c.coins == keep + 5000 - given and c.coins >= keep, "coins conserved; the fund keeps its reserve and what is left")
 	check(c.alms() == 0, "a second call the same day pays nobody twice")
-	# a fund that cannot fill them all: the largest shortfall first, never below the keep
+	# a fund that cannot help them all: the poorest for each member first, never below the reserve
 	for h in poor:
 		for o: NPC in w.brain._members(h):
-			if o.role in ["adult", "elder"] and not Chapel.is_clergy(o):
-				o.coins = 0
-	var s0: int = short_of.call(poor[0])
-	var s1: int = short_of.call(poor[1])
-	var s2: int = short_of.call(poor[2])
-	var order := [[s0, poor[0]], [s1, poor[1]], [s2, poor[2]]]
-	order.sort_custom(func(a, b): return a[0] > b[0] or (a[0] == b[0] and a[1] < b[1]))
-	c.coins = keep + int(order[0][0])
+			w.treasury += o.coins
+			o.coins = 0
+	c.coins = keep + 1
 	total0 = w.total_coins()
 	c.alms()
-	check(c.coins == keep and short_of.call(int(order[0][1])) == 0 and w.total_coins() == total0,
-			"with too little for all, the household with the largest shortfall is filled first and the fund stops at the keep")
+	var first: Dictionary = c.last_service.recipients[0] if not c.last_service.recipients.is_empty() else {}
+	check(c.coins == keep and w.total_coins() == total0 and int(first.get("given", 0)) == 1, "with too little for all the fund stops at its reserve")
+	var poorest := 999999999
+	for h in w.households.size():
+		if w.households[h].get("ended", false) or w.brain._members(h).is_empty():
+			continue
+		var m := c.household_means(h)
+		if int(m.wealth) < int(m.line) * int(Chapel.cfg().alms_wealth_lines) and maxi(c.household_shortfall(h), int(m.line) - int(m.cash)) > 0:
+			poorest = mini(poorest, int(m.wealth) * 1000 / int(m.members))
+	check(not first.is_empty() and int(first.wealth) * 1000 / int(first.members) <= poorest + 1000, "the poorest household for each member is helped first")
 	# owed wages are kept back too
 	c.owed = {"999999": 20}
 	c.coins = keep + 20
-	check(c.alms() == 0 and c.coins == keep + 20, "wages owed are kept back with the week's wages")
+	check(c.alms() == 0 and c.coins == keep + 20, "wages owed are kept back with the reserve")
 	c.owed = {}
 	# the evening: offerings, then wages, then alms, once
 	for h in poor:
 		for o: NPC in w.brain._members(h):
-			if o.role in ["adult", "elder"] and not Chapel.is_clergy(o):
-				o.coins = 0
+			w.treasury += o.coins
+			o.coins = 0
 	c.coins = 3000
 	c.evening_day = -1
 	total0 = w.total_coins()
 	c.evening()
-	check(short_of.call(poor[0]) == 0 and w.total_coins() == total0 and int(w.stats.get("chapel_alms_coins", 0)) > 0, "the service day's evening gives the alms after the wages; coins conserved")
+	check(w.total_coins() == total0 and int(w.stats.get("chapel_alms_coins", 0)) > 0 and c.household_means(poor[0]).cash > 0, "the service day's evening gives the alms after the wages; coins conserved")
 	var after := c.coins
 	c.evening()
 	check(c.coins == after, "the evening runs once a day")

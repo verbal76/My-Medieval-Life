@@ -13,10 +13,11 @@ extends RefCounted
 ## same sellers the manor's relief buys from (NPCBrain._relief_offers), with its own coins. The manor's relief (reeve_day, 17:00)
 ## sees the household's pantry as it then is, so it gives only what the church did not. Nothing is given to a household that
 ## did not ask, and nothing is hidden: a church with nothing to give gives nothing (WDR-022).
-## Why people give (agent decision, docs/DECISIONS.md): each has a piety, a fixed number 0 to 1 from the world seed and
-## their id. On the weekly service day those at or above min_piety give coin_share x their piety of the coins they hold above
-## their OD-19 reserve and keep_coins, and their household gives goods_share x its piety of the wheat it holds beyond goods_keep_days
-## of its own food.
+## Why people give (X20-CHAPEL-FIX, owner 2026-11-01, docs/directives/2026-11-01_chapel_economy_correction.md): giving is
+## voluntary. Each has a piety, a fixed number 0 to 1 from the world seed and their id; on the weekly service day each adult
+## and elder who can spare a coin decides through the villagers' decision framework (offerings, _decide) whether to give, and
+## a giver gives a varying, affordable share; households decide the same way about spare wheat. The fund keeps an operating
+## reserve (operating_reserve) and gives the surplus as alms to the poorest households by hardship (alms).
 ## Saved in the World's optional key "chapel"; a save without it (made before the chapel) has the chapel founded on load
 ## where the ground is free (found), without creating a villager (the clergy's places open in the labour market).
 
@@ -35,6 +36,10 @@ var owed := {}                      # npc id (text) -> wages owed
 var evening_day := -1               # the last day the evening business ran
 var player_asked_day := -1
 var booked := {}                    # household index -> the day a member is on the way to ask (not saved)
+var spent_week := 0                 # X20-CHAPEL-FIX: coins spent on relief food and seed since the last service (saved)
+var spent: Array = []               # the same for each of the last spend_weeks weeks (saved)
+var last_service := {}              # the last service's record: gifts, reserve, alms, recipients (instrumentation; not saved)
+var gift_hist := {}                 # gift size -> how many gifts of it (instrumentation; not saved)
 
 
 func _init(world) -> void:
@@ -168,41 +173,181 @@ func is_service_day() -> bool:
 	return (w.day() + 1) % int(cfg().offering_every_days) == 0
 
 
-## The weekly service: the pious give coins (a share of what they hold above their reserve) and their households wheat (a share
-## of what lies beyond what they need). Returns {coins, wheat}.
+## X20-CHAPEL-FIX (owner, 2026-11-01, docs/directives/2026-11-01_chapel_economy_correction.md): what a household has and
+## needs, read the same way for the gifts and the alms. {members, dependents, cash (its members' purses and its storefront's
+## till), stock (the food and firewood it holds, valued at today's asking prices), wealth (cash + stock), line (what its
+## essentials, food and a log a night, cost over line_days at today's prices), bracket (poor below one line of wealth,
+## modest below comfortable_lines, else comfortable)}.
+func household_means(h: int) -> Dictionary:
+	var members: Array = w.brain._members(h)
+	var gc: Dictionary = cfg().gift
+	var days := float(cfg().alms_line_days)
+	var stores: Array = [w.households[h].pantry]
+	var cash := 0
+	var need_pts := 0.0
+	var deps := 0
+	for o: NPC in members:
+		stores.append(o.inv)
+		cash += o.coins
+		need_pts += NPCBrain.food_factor(o) * 24.0 * float(GameData.b("hunger_per_hour")) * days
+		if o.role != "adult":
+			deps += 1
+	var home: String = str(members[0].home) if not members.is_empty() else ""
+	if home != "" and w.buildings.has(home):
+		cash += BusinessMoney.till_of(w.buildings[home])
+	var logs := 0
+	for inv: Inventory in stores:
+		logs += inv.count("log")
+	var food_price: float = w._market_price("food")
+	var log_price: float = w._market_price("log")
+	var stock := floori(NPCBrain.store_points(stores) * food_price + float(logs) * log_price)
+	var line := ceili(need_pts * food_price + ceilf(days) * log_price)
+	var wealth := cash + stock
+	var bracket := "poor"
+	if wealth >= line * int(gc.comfortable_lines):
+		bracket = "comfortable"
+	elif wealth >= line:
+		bracket = "modest"
+	return {"members": members.size(), "dependents": deps, "cash": cash, "stock": stock, "wealth": wealth, "line": line, "bracket": bracket}
+
+
+## What `n` could give today without touching what they need: their coins above their OD-19 necessity reserve
+## (World.reserve_of: their household's food, fuel, medicine and rent for the next days, less what the rest of the household
+## holds) and keep_coins of savings. 0 when they cannot give.
+func affordable(n: NPC) -> int:
+	return maxi(0, n.coins - w.reserve_of(n) - int(cfg().gift.keep_coins))
+
+
+## X20-CHAPEL-FIX: whether `chooser` gives this week, an individual choice through the villagers' one decision framework
+## (JudgmentWeighting.choose, judgment.json profile chapel_offering): one candidate, "give", against doing without (forgo).
+## Its factors, each 0..100 points: piety (their devotion), means (what they could spare, against means_full), occasion
+## (this week's circumstances and mood, a seeded roll for this person and day), dependents (the children and elders their
+## household feeds, per adult; it weighs against giving), and the giver's opinion of the preacher (the disposition, from
+## their judgment when it is on; neutral otherwise). Piety moves the chance but decides nothing: a devout person may keep
+## their money in a hard or sour week, and one of little faith may give in a good one. Returns the decision.
+func _decide(chooser: int, pt: float, spare: int, full: int, deps: int, adults: int, salt: int) -> Dictionary:
+	var preacher := -1
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job == "preacher":
+			preacher = o.id
+			break
+	var f := {
+		"piety": roundi(pt * 100000.0),
+		"means": mini(100000, spare * 100000 / maxi(1, full)),
+		"occasion": JudgmentMath.roll([w.seed, chooser, w.day(), salt]) * 100,
+		"dependents": mini(100000, deps * int(cfg().gift.dependent_points) / maxi(1, adults)),
+	}
+	var jcfg: Dictionary = w.judgment.cfg if w.judgment != null else _jcfg()
+	return JudgmentWeighting.choose(w.judgment, jcfg, chooser, "chapel_offering",
+		[{"id": "give", "counterparty": preacher, "factors": f}], [w.day(), chooser, salt])
+
+
+static var _jcfg_cache := {}
+
+
+static func _jcfg() -> Dictionary:
+	if _jcfg_cache.is_empty():
+		_jcfg_cache = JudgmentStore.default_cfg()
+	return _jcfg_cache
+
+
+## How much a giver gives: a share of what they can spare, more for the devout and in a good week, at least 1, never more
+## than they can spare.
+func _amount(spare: int, share: float, pt: float, occasion: int) -> int:
+	return clampi(floori(float(spare) * share * (0.5 + pt) * (0.5 + float(occasion) / 100000.0)), 1, spare)
+
+
+## The weekly service (X20-CHAPEL-FIX: voluntary). Every adult and elder of a household is at the service and may give.
+## One who cannot spare a coin (affordable() is 0) is not asked: unable, not unwilling. The others each decide (_decide);
+## a giver gives _amount of what they can spare. Nobody is penalised or remembered for not giving: the choice touches no
+## judgment, no reputation and no later decision. Each household, by its first adult, decides the same way whether to give
+## some of the wheat it holds beyond goods_keep_days of its own food. Nothing is taken without a choice: no tithe, no
+## deduction. Returns {coins, wheat} and records the service (stats chapel_*; last_service).
 func offerings() -> Dictionary:
+	var gc: Dictionary = cfg().gift
 	var gave_coins := 0
 	var gave_wheat := 0
+	var means := {}
+	var svc := {"day": w.day(), "present": 0, "unable": 0, "considered": 0, "donors": 0, "declined": 0, "coins": 0, "gifts": [],
+		"by": {"poor": [0, 0, 0, 0, 0], "modest": [0, 0, 0, 0, 0], "comfortable": [0, 0, 0, 0, 0]}}    # present, unable, donors, declined, coins
 	for n: NPC in w.npcs:
-		if not n.alive or n.role not in ["adult", "elder"] or n.household < 0 or n.coins <= 0:
+		if not n.alive or n.role not in ["adult", "elder"] or n.household < 0 or w.households[n.household].get("ended", false):
 			continue
+		if not means.has(n.household):
+			means[n.household] = household_means(n.household)
+		var m: Dictionary = means[n.household]
+		var by: Array = svc.by[m.bracket]
+		svc.present += 1
+		by[0] += 1
+		var spare := affordable(n)
+		if spare < 1:
+			svc.unable += 1
+			by[1] += 1
+			continue
+		svc.considered += 1
 		var pt := piety(n)
-		if pt < float(cfg().min_piety):
+		var adults := maxi(1, int(m.members) - int(m.dependents))
+		var r := _decide(n.id, pt, spare, int(gc.means_full_coins), int(m.dependents), adults, 7)
+		if str(r.chosen) != "give":
+			svc.declined += 1
+			by[3] += 1
 			continue
-		var spare: int = n.coins - w.reserve_of(n) - int(cfg().keep_coins)
-		var give := floori(float(spare) * pt * float(cfg().coin_share)) if spare > 0 else 0
-		if give >= 1:
-			n.coins -= give
-			coins += give
-			gave_coins += give
+		var give := _amount(spare, float(gc.share), pt, JudgmentMath.roll([w.seed, n.id, w.day(), 7]) * 100)
+		n.coins -= give
+		coins += give
+		gave_coins += give
+		svc.donors += 1
+		svc.coins += give
+		svc.gifts.append(give)
+		by[2] += 1
+		by[4] += give
 	for h in w.households.size():
 		if w.households[h].get("ended", false):
 			continue
-		var pt := _household_piety(h)
-		if pt < float(cfg().min_piety):
+		var who: NPC = null
+		for o: NPC in w.brain._members(h):
+			if o.alive and o.role == "adult" and (who == null or o.id < who.id):
+				who = o
+		if who == null:
 			continue
 		var pantry: Inventory = w.households[h].pantry
 		var keep := ceili(w.brain.household_day_food(h) * float(cfg().goods_keep_days) / NPCBrain.food_points("wheat"))
 		var spare := pantry.count("wheat") - keep
-		var give := floori(float(spare) * pt * float(cfg().goods_share)) if spare > 0 else 0
-		if give >= 1 and w.transfer(pantry, store, "wheat", give):
+		if spare < 1:
+			continue
+		var m: Dictionary = means[h] if means.has(h) else household_means(h)
+		var pt := _household_piety(h)
+		var r := _decide(who.id, pt, spare, int(gc.means_full_wheat), int(m.dependents), maxi(1, int(m.members) - int(m.dependents)), 11)
+		if str(r.chosen) != "give":
+			w.stat("chapel_wheat_declined")
+			continue
+		var give := _amount(spare, float(cfg().goods_share), pt, JudgmentMath.roll([w.seed, who.id, w.day(), 11]) * 100)
+		if w.transfer(pantry, store, "wheat", give):
 			gave_wheat += give
+			w.stat("chapel_wheat_donors")
+	w.stat("chapel_services")
+	w.stat("chapel_present", svc.present)
+	w.stat("chapel_unable", svc.unable)
+	w.stat("chapel_considered", svc.considered)
+	w.stat("chapel_donors", svc.donors)
+	w.stat("chapel_declined", svc.declined)
+	for b in svc.by:
+		var row: Array = svc.by[b]
+		w.stat("chapel_present_" + b, row[0])
+		w.stat("chapel_unable_" + b, row[1])
+		w.stat("chapel_donors_" + b, row[2])
+		w.stat("chapel_declined_" + b, row[3])
+		w.stat("chapel_gift_coins_" + b, row[4])
+	for g in svc.gifts:
+		gift_hist[g] = int(gift_hist.get(g, 0)) + 1
+	svc.wheat = gave_wheat
+	last_service = svc
 	if gave_coins > 0:
 		w.stat("chapel_offering_coins", gave_coins)
 	if gave_wheat > 0:
 		w.stat("chapel_offering_wheat", gave_wheat)
 	if gave_coins + gave_wheat > 0:
-		w.note("The village gave %d coins and %d measures of wheat at the chapel's weekly service." % [gave_coins, gave_wheat])
+		w.note("At the chapel's weekly service %d villagers gave %d coins, and households %d measures of wheat." % [svc.donors, gave_coins, gave_wheat])
 	return {"coins": gave_coins, "wheat": gave_wheat}
 
 
@@ -376,6 +521,7 @@ func relieve(h: int) -> float:
 			if o.item == "wheat":
 				held += qty
 			w.stat("chapel_relief_bought", price)
+			spent_week += price
 	var given := total - maxf(need, 0.0)
 	if given > 0.0:
 		w.stat("chapel_relief_points", given)
@@ -436,12 +582,13 @@ func _buy_seed() -> void:
 			o.coins += price * qty
 			o.earned += price * qty
 			coins -= price * qty
+			spent_week += price * qty
 			need -= qty
 			w.stat("chapel_seed_bought", qty)
 
 
 ## 16:00, before the manor's evening business: on the service day the offerings, then the clergy's wages from the fund, then
-## (service day) the alms from what is left (CHAPEL-R2).
+## (service day) the alms from the surplus above the operating reserve (CHAPEL-R2, X20-CHAPEL-FIX).
 func evening() -> void:
 	if not present or evening_day == w.day():
 		return
@@ -471,27 +618,54 @@ func evening() -> void:
 		alms()
 
 
-## CHAPEL-R2 (owner, 2026-10-23, Priest + alms: "offerings keep the priest, and what is left goes as alms to the poorest
-## households"; docs/directives/2026-10-23_chapel_alms_build18_decisions.md, _build18_overnight_completion_release.md). On the
-## service day, after the offerings and the wages: the fund keeps what the clergy are owed and seven days of their wages (to
-## the next service); the rest goes to the households short of their necessity reserve (World.necessity, OD-19/PAR-02A: the
-## household's foreseeable need less the coins all its members hold), each up to that shortfall, the largest shortfall first,
-## until it runs out. A household's need is one need: it is paid once, to one adult (else an elder; the lowest id), never to
-## each member. What is left stays in the fund. Every coin goes to a named person; nothing is made, and the fund never goes
-## below what it keeps. Returns the coins given.
-func alms() -> int:
-	if not present:
-		return 0
+## X20-CHAPEL-FIX (owner, 2026-11-01): the chapel's operating reserve, what it keeps back on the service day for the costs it
+## can foresee: its clergy's wages for operating_reserve_days, the wages it already owes, and what it has spent of late on
+## relief food and seed (the mean of the last spend_weeks weeks, for the same days). Everything above it is surplus.
+func operating_reserve() -> int:
+	var days := int(cfg().operating_reserve_days)
 	var keep := 0
 	for o: NPC in w.npcs:
 		if is_clergy(o):
-			keep += wage_of(o.job) * int(cfg().offering_every_days)
+			keep += wage_of(o.job) * days
 	for k in owed:
 		keep += int(owed[k])
+	if not spent.is_empty():
+		var sum := 0
+		for s in spent:
+			sum += int(s)
+		keep += ceili(float(sum) / float(spent.size()) * float(days) / float(cfg().offering_every_days))
+	return keep
+
+
+## CHAPEL-R2 (owner, 2026-10-23: "offerings keep the priest, and what is left goes as alms to the poorest households"), as
+## X20-CHAPEL-FIX (owner, 2026-11-01) corrects it. On the service day, after the offerings and the wages, the chapel keeps
+## its operating reserve and gives the surplus as alms to the poorest households by genuine hardship. A household's means
+## (household_means) count its cash, its storefront till and the value of the food and firewood it holds; a household whose
+## wealth is alms_wealth_lines or more of its essentials line gets nothing, however little cash it has on the day (the
+## wealthy who are short of coin are not poor). Each other household's hardship is the larger of its necessity shortfall
+## (World.necessity: food, fuel, medicine and rent due, less what its members hold) and what its cash falls short of one
+## line (food in the larder does not pay rent, buy firewood or let it trade). The poorest first: least wealth for each
+## member (so dependants count), then the greater hardship, then the household's index; each is given up to its hardship,
+## once, to one adult (else an elder; the lowest id). Every coin goes from the fund to a named person; the fund never goes
+## below its reserve. Returns the coins given.
+func alms() -> int:
+	if not present:
+		return 0
+	spent.append(spent_week)
+	while spent.size() > int(cfg().spend_weeks):
+		spent.pop_front()
+	spent_week = 0
+	var keep := operating_reserve()
 	var pot := coins - keep
+	var svc: Dictionary = last_service if int(last_service.get("day", -1)) == w.day() else {"day": w.day()}
+	svc.reserve = keep
+	svc.fund_before_alms = coins
+	svc.alms = 0
+	svc.recipients = []
+	last_service = svc
 	if pot <= 0:
 		return 0
-	var rows := []                      # [shortfall, household, the member who receives it]
+	var rows := []                      # [wealth per member, -hardship, household, payee, means]
 	for h in w.households.size():
 		if w.households[h].get("ended", false):
 			continue
@@ -505,21 +679,28 @@ func alms() -> int:
 				break
 		if payee == null:
 			continue
-		var short := household_shortfall(h)
-		if short > 0:
-			rows.append([short, h, payee])
-	rows.sort_custom(func(a: Array, b: Array) -> bool: return a[0] > b[0] or (a[0] == b[0] and a[1] < b[1]))
+		var m := household_means(h)
+		if int(m.wealth) >= int(m.line) * int(cfg().alms_wealth_lines):
+			continue
+		var hard := maxi(household_shortfall(h), int(m.line) - int(m.cash))
+		if hard > 0:
+			rows.append([int(m.wealth) * 1000 / maxi(1, int(m.members)), -hard, h, payee, m])
+	rows.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0] or (a[0] == b[0] and (a[1] < b[1] or (a[1] == b[1] and a[2] < b[2]))))
 	var given := 0
 	var helped := 0
 	for r in rows:
-		var give := mini(int(r[0]), pot)
+		var give := mini(-int(r[1]), pot)
 		if give <= 0:
 			break
-		(r[2] as NPC).coins += give
+		var m: Dictionary = r[4]
+		(r[3] as NPC).coins += give
 		coins -= give
 		pot -= give
 		given += give
 		helped += 1
+		svc.recipients.append({"household": int(r[2]), "bracket": m.bracket, "cash_before": int(m.cash), "cash_after": int(m.cash) + give,
+			"wealth": int(m.wealth), "line": int(m.line), "members": int(m.members), "given": give})
+	svc.alms = given
 	if given > 0:
 		w.stat("chapel_alms_coins", given)
 		w.stat("chapel_alms_households", helped)
@@ -577,7 +758,8 @@ func may_work(n: NPC) -> bool:
 # ---------------------------------------------------------------- save ------------------------
 func to_dict() -> Dictionary:
 	return {"present": present, "coins": coins, "store": store.to_dict(), "volunteers": volunteers.duplicate(), "asked": asked.duplicate(),
-		"owed": owed.duplicate(), "evening_day": evening_day, "player_asked_day": player_asked_day}
+		"owed": owed.duplicate(), "evening_day": evening_day, "player_asked_day": player_asked_day, "spent_week": spent_week,
+		"spent": spent.duplicate()}
 
 
 ## A saved chapel is read as it was; a save without the key (made before the chapel) has the chapel founded now.
@@ -594,6 +776,8 @@ func load_dict(d: Dictionary) -> void:
 	owed = (d.get("owed", {}) as Dictionary).duplicate()
 	evening_day = int(d.get("evening_day", -1))
 	player_asked_day = int(d.get("player_asked_day", -1))
+	spent_week = int(d.get("spent_week", 0))                 # X20-CHAPEL-FIX: optional (a save from before it spent nothing it knows of)
+	spent = (d.get("spent", []) as Array).map(func(v): return int(v))
 	if bool(d.get("present", true)):
 		found(false)
 	else:

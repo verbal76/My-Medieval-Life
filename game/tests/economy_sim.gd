@@ -173,6 +173,7 @@ func _init() -> void:
 			print(bandits.line(w))
 			if w.judgment != null:            # SJD-G: the judgment store's soak measures, read only (JudgmentSoak changes nothing)
 				print("JUDGE " + JSON.stringify(JudgmentSoak.metrics(w.judgment)))
+			print("CHAPEL " + JSON.stringify(_chapel_line(d + 1)))
 			min_hunger = 100.0
 			harness_us += Time.get_ticks_usec() - ts
 			if w.economy != null:                  # LE-06: the economy's save at each checkpoint, and whether it loads back exactly
@@ -900,6 +901,47 @@ func _contracts_summary() -> Dictionary:
 		"reserved_now": w.contracts.reserved_total(), "on_record_by_item": items, "on_record_by_parties": pairs}
 
 
+## A sorted list's q-th percentile (nearest rank), 0 when empty.
+func _q(sorted: Array, q: int) -> int:
+	return int(sorted[clampi(sorted.size() * q / 100, 0, sorted.size() - 1)]) if not sorted.is_empty() else 0
+
+
+## X20-CHAPEL-FIX instrumentation, read only: the services so far (who was there, unable, decided, gave, declined, by household
+## bracket), the gifts' total, mean and median, the fund's wages, reserve, alms and recipients, and its share of all coins.
+func _chapel_line(day: int) -> Dictionary:
+	var c: Chapel = w.chapel
+	var keys := ["services", "present", "unable", "considered", "donors", "declined", "offering_coins", "offering_wheat", "wheat_donors",
+		"wheat_declined", "wages", "alms_coins", "alms_households", "relief_bought", "seed_bought"]
+	var st := {}
+	for k in keys:
+		st[k] = int(_st("chapel_" + k))
+	var by := {}
+	for b in ["poor", "modest", "comfortable"]:
+		by[b] = {}
+		for k in ["present", "unable", "donors", "declined", "gift_coins"]:
+			by[b][k] = int(_st("chapel_%s_%s" % [k, b]))
+	var sizes: Array = c.gift_hist.keys()
+	sizes.sort()
+	var n := 0
+	var total := 0
+	for g in sizes:
+		n += int(c.gift_hist[g])
+		total += int(g) * int(c.gift_hist[g])
+	var median := 0
+	var seen := 0
+	for g in sizes:
+		seen += int(c.gift_hist[g])
+		if seen * 2 >= n:
+			median = int(g)
+			break
+	var last: Dictionary = c.last_service.duplicate(true)
+	last.erase("gifts")
+	var all_coins: int = w.total_coins()
+	return {"day": day, "fund": c.coins, "share_permille": c.coins * 1000 / maxi(1, all_coins), "treasury": w.treasury, "all_coins": all_coins,
+		"reserve_now": c.operating_reserve(), "stats": st, "by_bracket": by, "gifts": n, "gift_mean_x100": total * 100 / maxi(1, n),
+		"gift_median": median, "last_service": last}
+
+
 func _sample(start: Dictionary) -> Dictionary:
 	var s := {"day": w.day(), "clock": w.clock_text(), "fingerprint": _fingerprint()}       # the determinism gate compares these (PERF-03)
 	s.justice = _justice()                # GP-CRIME-PURSUIT: the case record and the guards' response (read only)
@@ -992,7 +1034,8 @@ func _sample(start: Dictionary) -> Dictionary:
 		if n.job == "merchant":
 			merchants += n.coins
 	s.money = {"household_cash": {"n": cash.size(), "min": cash[0] if not cash.is_empty() else 0, "median": cash[cash.size() / 2] if not cash.is_empty() else 0,
-		"max": cash[-1] if not cash.is_empty() else 0, "total": cash_total}, "traders": trade, "treasury": w.treasury, "merchant_funds": merchants,
+		"max": cash[-1] if not cash.is_empty() else 0, "total": cash_total,
+		"p10": _q(cash, 10), "p25": _q(cash, 25), "p75": _q(cash, 75), "p90": _q(cash, 90)}, "traders": trade, "treasury": w.treasury, "merchant_funds": merchants,
 		"gov": _keys_with("gov_", ["tax", "wages", "rent", "land_sales", "repairs", "public_works", "procurement", "relief_bought", "fines", "tools", "loot_recovered"]),
 		"od16": {"manor_tool_coins": int(_st("gov_tools")), "axes_given": int(_st("gov_tool_given_axe")), "axe_advances": int(_st("gov_tool_advance_axe")),
 			"axes_delivered": int(_st("gov_tool_delivered_axe")), "pickaxes_given": int(_st("gov_tool_given_pickaxe")), "pickaxe_advances": int(_st("gov_tool_advance_pickaxe")),
