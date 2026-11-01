@@ -63318,10 +63318,19 @@
      "date": "2026-11-01",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/x20-chapel",
      "why": "started: code audit (lead)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "tests: None -> game/tests/chapel_test.gd; commits + ae8641d",
+     "why": "implemented on wip/x20-chapel (37680c7, retuned ae8641d): voluntary gifts via JudgmentWeighting.choose (profile chapel_offering), operating reserve, hardship alms, instrumentation; chapel_test 123/0, conservation, wiki, recorder, judgment suites pass; 30-day seed 1 local: leaks 0, deterministic, fund 1.4% of coins at day 30; 365-day runs 41279031310 (seeds 1,2) and 41279051834 (economy on) dispatched"
     }
    ],
    "assigned_worker": "lead",
-   "branch": "wip/x20-chapel"
+   "branch": "wip/x20-chapel",
+   "tests": "game/tests/chapel_test.gd",
+   "commits": [
+    "ae8641d"
+   ]
   },
   {
    "id": "X20-CHECKPOINT",

@@ -42,8 +42,11 @@ archived at `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-31.md`.
   recover job on `wip/val-recover` (`885723b`, workflow change only, no simulation). Analysis scripts in the report's appendix.
 - **X20-CHAPEL-FIX** (lead, IN DEVELOPMENT, owner directive 2026-11-01): voluntary chapel donations through the NPC decision
   framework, a modest operating reserve and hardship-based alms. Branch `wip/x20-chapel` from the Build 25 source `ad281dc`;
-  `wip/expansion20` itself is not changed. Validation: targeted suites, the 30-day gate, then 365-day comparison runs
-  (seeds 1 and 2 normal, seed 1 economy on) against the Build 25 runs.
+  `wip/expansion20` itself is not changed. Implemented at `ae8641d` (first cut `37680c7`, retuned after a 30-day measurement);
+  suites pass; 30-day seed 1: leaks 0, deterministic. Year-long comparison runs: Actions 41279031310 (normal, seeds 1 and 2, branch
+  `wip/x20-chapel`) and 41279051834 (economy on, seed 1, branch `wip/x20-chapel-econ`, same commit). Next: read them when they finish,
+  compare with the Build 25 runs (41233948995, 41233970504) and publish the before-and-after report. Not merged into `wip/expansion20`
+  without the owner.
 
 ## Next actions
 
