@@ -63432,7 +63432,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -63446,10 +63446,19 @@
      "date": "2026-10-31",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/requirements-control",
      "why": "analysis in progress (lead): seed 2 normal log parsed; per-checkpoint samples recovered from sim.json artifacts by a read-only recover job (branch wip/val-recover, run 41251843562, no simulation)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; commits + docs/release/build25_validation; notes",
+     "why": "consolidated report delivered (analysis only)"
     }
    ],
    "assigned_worker": "lead",
-   "branch": "wip/requirements-control"
+   "branch": "wip/requirements-control",
+   "commits": [
+    "docs/release/build25_validation"
+   ],
+   "notes": "Report https://claude.ai/artifact/DABNtxh28oYx8cWztnoMCQ; scripts and data in docs/release/build25_validation/. Unavailable metrics named in the report (chapel flows, household cash spread, prices, business accounts, killer of slain villagers)."
   },
   {
    "id": "X20-FINAL",
@@ -63811,8 +63820,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "verification_status": "VERIFICATION FAILED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -63840,6 +63849,16 @@
      "date": "2026-10-31",
      "change": "notes",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md). No status change; documents that results are pending. Evidence: register notes"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> VERIFICATION FAILED; tests: None -> 41233948995 (seed 1: 365 days, leak 0, item leaks 0, 1 script error; seed 2: 0 script errors, leak 0), 41233970504 (365 days, 0 script errors, leak 0, 37/37 economy saves exact, claims breaches 0); report docs/release/build25_validation/; test_commit: None -> ad281dc; notes",
+     "why": "all three runs finished on ad281dc: 41233948995 seed 2 passed, seed 1 failed on 1 script error (X20-TELL-GUARD, reproduced, fix not applied), 41233970504 passed; consolidated report published; stopped for the owner's review"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "known_defects + X20-TELL-GUARD: gossip script error in normal seed 1 (judgment_store.gd:1490), fix awaiting owner approval",
+     "why": "names the defect behind the failed verification"
     }
    ],
    "assigned_worker": "lead",
@@ -63847,7 +63866,12 @@
    "commits": [
     "ad281dc"
    ],
-   "notes": "Merged SHA ad281dc9431b782582513ef8a083c962b5039b8f. Runs: 41233948995 (normal, seeds 1,2), 41233970504 (economy on, seed 1). Expected: normal about 3-4 h; the economy run starts after it.\nReconciled 2026-10-31 (DOC-RECON-01): Runs 41233948995 (normal, seeds 1-2) and 41233970504 (economy on, seed 1) on ad281dc: results not reported as of DOC-RECON-01 (2026-10-31); not queried by the documentation work."
+   "notes": "Report: https://claude.ai/artifact/DABNtxh28oYx8cWztnoMCQ and docs/release/build25_validation/. Category A: X20-TELL-GUARD. Category B: chapel concentration (77-83% of coins), jobs fixed near 45 while adults triple (67-77% idle), household cash collapse, households barely form; all long-standing in earlier runs. Waiting for the owner's review and decisions.",
+   "tests": "41233948995 (seed 1: 365 days, leak 0, item leaks 0, 1 script error; seed 2: 0 script errors, leak 0), 41233970504 (365 days, 0 script errors, leak 0, 37/37 economy saves exact, claims breaches 0); report docs/release/build25_validation/",
+   "test_commit": "ad281dc",
+   "known_defects": [
+    "X20-TELL-GUARD: gossip script error in normal seed 1 (judgment_store.gd:1490), fix awaiting owner approval"
+   ]
   },
   {
    "id": "X20-MIGRATE",

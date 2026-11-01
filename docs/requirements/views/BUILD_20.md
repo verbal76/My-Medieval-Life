@@ -18,13 +18,11 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Open (release blockers) | 117 |
 | Open owner decisions (blocking) | 1 (0) |
 
-## In development (worker assigned) (3)
+## In development (worker assigned) (1)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
-| X20-ECON-SUSTAIN | Build 25 economic sustainability analysis: per-run checkpoint analysis and graphs (population, employment, money and its holders including the chapel, household purchasing power, production and trade, businesses and wages, bandits, judgment effects); three separate health questions (conservation, circulation, sustainability); comparison with earlier runs and economy on vs off; ranked corrective actions; analysis only | OWNER APPROVED | IN DEVELOPMENT | lead / wip/requirements-control | NOT TESTED |  | X20-MERGED-VALIDATION, design: UNKNOWN | UNKNOWN |
-| X20-MERGED-VALIDATION | Merged year-long validation after integrating workers D, F and G: one 30-day baseline replacement, then three 365-day runs on the merged SHA (seeds 1 and 2 normal settings, one economy-enabled), results per run against earlier evidence; then stop for the owner's review | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (104)
 
@@ -141,7 +139,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | TARGETED TESTS PASSED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (9)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (11)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -152,6 +150,8 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it | design: UNKNOWN | UNKNOWN |
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | OWNER APPROVED | PARTIALLY IMPLEMENTED | worker A (Living Economy) / wip/x20-le05 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-ECON-SUSTAIN | Build 25 economic sustainability analysis: per-run checkpoint analysis and graphs (population, employment, money and its holders including the chapel, household purchasing power, production and trade, businesses and wages, bandits, judgment effects); three separate health questions (conservation, circulation, sustainability); comparison with earlier runs and economy on vs off; ranked corrective actions; analysis only | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/requirements-control | NOT TESTED |  | X20-MERGED-VALIDATION, design: UNKNOWN | UNKNOWN |
+| X20-MERGED-VALIDATION | Merged year-long validation after integrating workers D, F and G: one 30-day baseline replacement, then three 365-day runs on the merged SHA (seeds 1 and 2 normal settings, one economy-enabled), results per run against earlier evidence; then stop for the owner's review | OWNER APPROVED | PARTIALLY IMPLEMENTED | lead / wip/expansion20 | VERIFICATION FAILED | known: X20-TELL-GUARD: gossip script error in normal seed 1 (judgment_store.gd:1490), fix awaiting owner approval | design: UNKNOWN | UNKNOWN |
 | X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | OWNER APPROVED | PARTIALLY IMPLEMENTED | lead / wip/expansion20 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | X20-TELL-GUARD | Defect: JudgmentStore._tell reads a story the teller forgot during the same meeting (a refutation the teller learns, or the memory bound pushing out an ordinary memory), giving 'Out of bounds get index' and aborting the rest of that meeting's gossip; reachable more often since X20-JUDG-C2 made hearsay assault memories ordinary | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
