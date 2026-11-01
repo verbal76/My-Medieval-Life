@@ -1656,6 +1656,7 @@ func _build_scene() -> void:
 		if Vector2(float(t.x), float(t.y)).distance_to(world.player.pos) < 12.0:
 			audio.play_variant("tree_rustling"))
 	world.player_leveled.connect(_level_up)          # DVW-A12 R6: the banner for a level core awarded
+	world.village_milestone.connect(func(text: String, _category: String): ui.message(text, 4.0))   # B25-CAPABILITY: already journaled under "village" by World.announce_milestones
 	dying.clear()
 	fading.clear()
 	for n: NPC in world.npcs:
@@ -4391,9 +4392,7 @@ func _xp(skill: String, n: int) -> void:
 func _level_up(skill: String, up: int) -> void:
 	if up > 0:
 		audio.play_sfx("jingle_level_up")
-		var s: Dictionary = GameData.skills[skill]
-		var unlock := Skills.tier_text(skill, up)
-		ui.message("%s is now level %d!%s" % [s.name, up, (" Unlocked: " + unlock) if unlock != "" else ""], 4.0, "skill")
+		ui.message(Skills.level_up_text(skill, up), 4.0, "skill")     # B25-CAPABILITY: "Mining Level 3 Reached." (owner Decision 8)
 
 
 ## Craft a recipe at a station (called from the craft panel). Same recipe data as the NPCs.

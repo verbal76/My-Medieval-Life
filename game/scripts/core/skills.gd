@@ -98,6 +98,15 @@ static func kill_xp(species: String, damage: float) -> int:
 	return 2 * int(ceil(hp / maxf(damage, 0.5)))
 
 
+## B25-CAPABILITY (owner Decision 8, 2026-11-01): the personal level-up announcement, in the owner's words ("Mining Level 3
+## Reached."), with what the new level opens when it opens something. Shown to the player only (Main._level_up, journal
+## category "skill"); a villager's level-up is not announced.
+static func level_up_text(skill: String, lv: int) -> String:
+	GameData.ensure()
+	var unlock := tier_text(skill, lv)
+	return "%s Level %d Reached.%s" % [str(GameData.skills[skill].name), lv, (" Unlocked: " + unlock) if unlock != "" else ""]
+
+
 ## Adds xp to `who`; returns the new level if it went up, else 0.
 static func gain(who, skill: String, xp: int) -> int:
 	if xp <= 0:

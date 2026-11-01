@@ -26,6 +26,7 @@ signal bled(pos: Vector2)          # someone or something was slain here (drawn 
 signal level_tile_changed(level: int, cell: Vector2i, value: int)   # a seam below the surface changed (worked out): the level's view redraws it
 signal player_level_changed(level: int)   # the player went through a portal (Main fades the surface or the level)
 signal player_leveled(skill: String, level: int)   # DVW-A12 R6: player_xp raised a skill to a new level (Main shows the banner)
+signal village_milestone(text: String, category: String)   # B25-CAPABILITY: a village industry milestone first reached (already logged and journaled; Main may show it)
 
 const DAY := 1440.0
 
@@ -515,6 +516,7 @@ func _new_day() -> void:
 	mine_works.dawn()                  # MIN-F2: supports and ladders wear; excavations too weakly held may cave in
 	discovery.dawn()                   # MIN-D: the settlement's mining capability, from what the village has this morning
 	settlement_profile = SettlementProfile.update(self, settlement_caps, day())   # SET-B: the capability profile, maintained daily
+	announce_milestones(settlement_profile.get("reached", []))   # B25-CAPABILITY: first achievements only
 	brain.dawn()
 	if profiling:
 		t = _prof("daily: brain dawn (work, succession)", t)
@@ -3717,6 +3719,20 @@ func note(text: String) -> void:
 	if log_lines.size() > 300:
 		log_lines.pop_front()
 	event.emit(line)
+
+
+## B25-CAPABILITY (owner Decision 8): announce village industry milestones first reached today (SettlementProfile
+## .note_milestones: `reached`, [{industry, level}]), unobtrusively: one line in the village record (note), one entry in every
+## player's message journal under the category "village" (MessageJournal, significant tier), and the signal
+## village_milestone(text, "village") for the interface to show it as a village (not personal) message. Personal skill
+## level-ups stay player_leveled's (category "skill"). Presentation only: nothing in the simulation reads it.
+func announce_milestones(reached: Array) -> void:
+	for r in reached:
+		var text := SettlementProfile.milestone_text(str(r.industry), int(r.level))
+		note(text)
+		for pl: PlayerState in player_list():
+			messages.record(player_ref(pl), minutes, "village", text)
+		village_milestone.emit(text, "village")
 
 
 func alive_count(role := "") -> int:

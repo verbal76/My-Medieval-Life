@@ -1301,7 +1301,9 @@ func sell(s: Dictionary, n: NPC, id: String, qty: int, price: int, pantry := fal
 	w.stat("stall_sold_" + id, qty)
 	w.stat("stall_coins", total)
 	if not by_attendant:
-		w.player.gain("trading", 2)
+		var up := w.player.gain("trading", 2)
+		if up > 0:
+			w.player_leveled.emit("trading", up)     # B25-CAPABILITY: every player level-up is announced (Main._level_up)
 	if players:
 		w.note("%s %s bought %d %s from your %s for %d coins." % [n.name, n.family, qty, GameData.item_name(id).to_lower(), "shop" if is_shop(s) else "stall", total])
 	else:
