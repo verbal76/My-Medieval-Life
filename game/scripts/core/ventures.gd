@@ -124,6 +124,7 @@ func daily() -> void:
 		_check(b)
 	for b in open_ventures():
 		_hire(b)
+	_list_unused()
 	_consider()
 
 
@@ -340,6 +341,18 @@ func refusal(n: NPC, markets := {}, out := {}) -> String:
 	var working := ceili(float(econ.get("cost", 0.0)) * float(c.working_days))
 	if spare <= working:
 		return "the household cannot spare the money"
+	# B25-BIZ-D5: a workshop of the trade the household already owns opens again; one on sale is bought before one is built
+	# ("A person should not be forced to construct a new business when an existing business is available for purchase")
+	var info := {"kind": kind, "spare": spare, "busy": float(m.get("busy", 0.0)), "skill": lv}
+	var own := own_unused(n)
+	if not own.is_empty():
+		out.merge(info.merged({"reopen": own, "start": 0, "need": working}), true)
+		return ""
+	var listed := listed_for(n)
+	if not listed.is_empty() and spare >= price_for(listed, n) + working:
+		var price := price_for(listed, n)
+		out.merge(info.merged({"buy": listed, "price": price, "start": price, "need": price + working}), true)
+		return ""
 	if w.property.anchor_of(house).is_empty():
 		w.property.survey_under(house)       # HOUSE-09: an original house's ground is surveyed (nothing paid, nothing changes hands)
 	var anchor := house                      # a room of the property beside the house first (find_module_slot)
@@ -384,6 +397,18 @@ func decides(n: NPC, opt: Dictionary) -> bool:
 func found(n: NPC, opt: Dictionary) -> bool:
 	var h := n.household
 	var ref := World.hh_ref(h)
+	var rec: Dictionary = w.employment.record_of(n)
+	if not rec.is_empty():
+		w.employment.end(rec, "to run a business of their own")      # B25-BIZ-D4: an employee may leave to set up
+	if opt.has("reopen"):                  # B25-BIZ-D5: the household's own workshop opens again
+		var rb: Dictionary = opt.reopen
+		rb.erase("sale")
+		_open(rb, n.id, n.job, h, w.day())
+		w.stat("ventures_reopened")
+		return true
+	if opt.has("buy"):                     # B25-BIZ-D5: bought from a willing seller at the agreed price
+		var bb: Dictionary = opt.buy
+		return buy_refusal(bb, ref, n) == "" and _transfer(bb, ref, price_for(bb, n), n) == ""
 	var p: Dictionary = w.construction.place(str(opt.kind), opt.rect, ref, false, opt.house)
 	if p.is_empty():
 		return false
@@ -579,3 +604,271 @@ func _hire(b: Dictionary) -> void:
 		if w.employment.hire_for(ref_of(b), o, trade, wage) == "":
 			w.stat("venture_employees_hired")
 			return
+
+
+# ---------------------------------------------------------------- buying and selling (B25-BIZ-D5) -----------
+## A business building that can change hands: a finished workshop (its stations and fittings go with it).
+static func is_business(b: Dictionary) -> bool:
+	return not b.is_empty() and str(b.get("type", "")) == "workshop" and World.is_built(b)
+
+
+## The trades that work a workshop of `kind` (the founding kinds read backwards: a carpenter's shop serves a carpenter or a
+## tanner).
+static func trades_for(kind: String) -> Array:
+	var out := []
+	var kinds: Dictionary = cfg().get("kinds", {})
+	var ids: Array = kinds.keys()
+	ids.sort()
+	for job in ids:
+		if str(kinds[job]) == kind:
+			out.append(str(job))
+	return out
+
+
+## A seller's asking price for workshop `b` (a villager's; PROVISIONAL): what the land office values the building with its
+## ground at (Property.price_of), the price anyone would pay the manor for the same.
+func asking(b: Dictionary) -> int:
+	return w.property.price_of(b)
+
+
+## Why `ref` cannot offer workshop `b` for sale, "" when it can: its owner (not a tenant), finished, nothing let or being built,
+## not the first building of a property whose other rooms would be cut off, no shop of the seller's open in it.
+func offer_refusal(b: Dictionary, ref: String) -> String:
+	if not is_business(b):
+		return "That is not a workshop."
+	if w.owner_of(b) != ref:
+		return "It is not yours to sell."
+	var p: Dictionary = w.property.parcel_under(b)
+	if p.is_empty():
+		return "It has no ground of its own to sell with it."
+	for r in w.property.unit(b):
+		if w.tenant_of(r) != "":
+			return "It is let; it cannot be sold now."
+	if w.property.estate_id(p) == str(p.id) and w.property.estate_parcels(p).size() > 1:
+		return "Rooms are built onto it; it cannot be sold apart from them."
+	if b.has("shop"):
+		return "Close the shop there first."
+	return ""
+
+
+## The acting player offers their workshop `b` for sale at `price` coins. "" when done, else why not.
+func offer(b: Dictionary, price: int, actor: PlayerState = null) -> String:
+	if w.mirrors():
+		return w.mirror("ventures.offer", offer.bind(b, price), [b, price])
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, offer.bind(b, price))
+	var why := offer_refusal(b, w.acting_ref())
+	if why == "" and price < 1:
+		why = "Name a price."
+	if why != "":
+		return why
+	_offer(b, w.acting_ref(), price)
+	return ""
+
+
+func _offer(b: Dictionary, ref: String, price: int) -> void:
+	b.sale = {"by": ref, "price": price, "day": w.day()}
+	w.stat("businesses_offered")
+	w.note("%s offers %s for sale for %d coins." % [w.ref_name(ref, true), w.property.describe(b), price])
+
+
+## The acting player takes their offer back.
+func withdraw(b: Dictionary, actor: PlayerState = null) -> String:
+	if w.mirrors():
+		return w.mirror("ventures.withdraw", withdraw.bind(b), [b])
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, withdraw.bind(b))
+	if not b.has("sale") or not w.is_acting_ref(str(b.sale.by)):
+		return "You have not offered it for sale."
+	b.erase("sale")
+	return ""
+
+
+## Workshops offered for sale whose seller still owns them, in building id order (a stale offer is dropped).
+func offers() -> Array:
+	var out := []
+	var ids: Array = w.buildings.keys()
+	ids.sort()
+	for id in ids:
+		var b: Dictionary = w.buildings[id]
+		if not b.has("sale"):
+			continue
+		if offer_refusal(b, str(b.sale.by)) != "":
+			b.erase("sale")
+			continue
+		out.append(b)
+	return out
+
+
+## The price `buyer` (a villager or a player) and the seller agree on: the asking price, pulled each way by their Trading
+## (World.deal_price, the one bargaining rule for every deal).
+func price_for(b: Dictionary, buyer: Object) -> int:
+	var by := str(b.sale.by)
+	var seller: Object = w.player_for(by) if World.is_player_ref(by) else w.party(by)
+	return w.deal_price(int(b.sale.price), buyer, seller)
+
+
+## Why `ref` cannot buy workshop `b` now ("" when it can): a current offer by someone else, the money.
+func buy_refusal(b: Dictionary, ref: String, buyer: Object) -> String:
+	if not b.has("sale") or offer_refusal(b, str(b.sale.by)) != "":
+		return "It is not for sale."
+	if str(b.sale.by) == ref:
+		return "It is yours already."
+	if not World.is_player_ref(str(b.sale.by)) and w.party(str(b.sale.by)) == null:
+		return "Nobody is left to sell it."
+	var price := price_for(b, buyer)
+	if w.property.purse(ref) < price:
+		return "You need %d coins." % price if World.is_player_ref(ref) else "They cannot pay %d coins." % price
+	return ""
+
+
+## The acting player buys workshop `b` at the agreed price. "" when done, else why not.
+func buy(b: Dictionary, actor: PlayerState = null) -> String:
+	if w.mirrors():
+		return w.mirror("ventures.buy", buy.bind(b), [b])
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, buy.bind(b))
+	var why := buy_refusal(b, w.acting_ref(), w.player)
+	if why != "":
+		return why
+	return _transfer(b, w.acting_ref(), price_for(b, w.player), null)
+
+
+## The sale itself (one rule for the player and the villagers): the buyer pays the seller the agreed price (all or nothing);
+## the seller's business there closes (its till goes to the seller's household, TILL-D1; its employees' employment and its
+## hands' leave end: nothing of the seller's obligations passes on); a workshop added to the seller's house is detached from
+## that property (the house, its ground and its other rooms stay the seller's); the workshop with its ground, stations and
+## fittings passes to the buyer (World.set_owner). A villager buyer (`founder`) opens a business there at once.
+func _transfer(b: Dictionary, buyer: String, price: int, founder: NPC) -> String:
+	var seller := str(b.sale.by)
+	if not _pay(buyer, seller, price):
+		return "The money could not be paid."
+	b.erase("sale")
+	if b.has("venture"):
+		var keeper := w.npc(int(b.venture.keeper))
+		close(b, "it was sold")
+		if keeper != null and w.stations.has(keeper.workplace) and str(w.stations[keeper.workplace].get("building", "")) == str(b.id):
+			keeper.workplace = _other_station(keeper, keeper.job)
+	b.erase("allow")                       # the seller's leave to others does not pass with the building
+	detach(b)
+	for r in w.property.unit(b):
+		w.set_owner(r, buyer)
+	w.stat("businesses_sold")
+	w.stat("business_sale_coins", price)
+	w.note("%s buys %s from %s for %d coins." % [w.ref_name(buyer, true), w.property.describe(b), w.ref_name(seller), price])
+	if founder != null:
+		_open(b, founder.id, founder.job, founder.household, w.day())
+		w.stat("ventures_bought")
+	return ""
+
+
+## Coins from `from`'s purse (a player's, or a household's members', richest first) to `to` (a player, or a household's
+## head), all or nothing. With the Living Economy on, through the transaction authority, part by part.
+func _pay(from: String, to: String, amount: int) -> bool:
+	if amount <= 0:
+		return true
+	if w.property.purse(from) < amount:
+		return false
+	var dest: Object = w.player_for(to) if World.is_player_ref(to) else w.party(to)
+	if dest == null:
+		return false
+	if w.economy != null:
+		var parts := []
+		if World.is_player_ref(from):
+			parts.append([from, w.player_for(from), amount])
+		else:
+			var left := amount
+			for o: NPC in w.property._payers(from):
+				var k := mini(left, o.coins)
+				if k > 0:
+					parts.append([World.npc_ref(o.id), o, k])
+					left -= k
+		for p in parts:
+			if not w.claims_allow(p[1], EconReservations.COINS, int(p[2])):
+				return false
+		var to_ref := to if World.is_player_ref(to) else World.npc_ref((dest as NPC).id)
+		for p in parts:
+			if str(p[0]) == to_ref:
+				continue
+			var tx: Dictionary = w.transactions.transfer_coins(w.transactions.next_txid("business"), str(p[0]), to_ref, int(p[2]), "business_sale", true)
+			if not bool(tx.ok):
+				return false
+		return true
+	w.construction._take(from, amount)
+	dest.coins += amount
+	if dest is NPC:
+		dest.earned += amount
+	return true
+
+
+## A workshop module added to a house (its parcel marked with the property's `estate`) becomes a property of its own: the
+## mark goes, the doorway that joined it to the house is gone with it (doorways are derived: its wall cells are solid and drawn
+## again), and nothing else of the property changes. The smallest separation of a business from a residence (D5 D).
+func detach(b: Dictionary) -> void:
+	var p: Dictionary = w.property.parcel_under(b)
+	if p.is_empty() or str(p.get("estate", "")) == "" or str(p.estate) == str(p.id):
+		return
+	var before: Array = w.doorways.duplicate()
+	p.erase("estate")
+	w.index_interiors()
+	var still := {}
+	for dw: Dictionary in w.doorways:
+		for c: Vector2i in dw.cells:
+			still[c] = true
+	for dw: Dictionary in before:
+		for c: Vector2i in dw.cells:
+			if not still.has(c):
+				w.map.set_solid(c, true)
+				w.tile_changed.emit(c, "below", Doorways.WALL)
+	w.stat("workshops_detached")
+
+
+## A household offers a workshop it owns that nobody of the household works any more (its business closed, nobody of a trade
+## that works it at home), at the asking price; and takes the offer back when one of them takes the trade up again.
+func _list_unused() -> void:
+	var ids: Array = w.buildings.keys()
+	ids.sort()
+	for id in ids:
+		var b: Dictionary = w.buildings[id]
+		if not is_business(b) or b.has("venture"):
+			continue
+		var ref := w.owner_of(b)
+		if not ref.begins_with("hh:"):
+			continue
+		var h := World.ref_id(ref)
+		if h < 0 or h >= w.households.size() or w.households[h].get("ended", false):
+			continue
+		var trades := trades_for(str(b.get("kind", "")))
+		var works: bool = w.brain._members(h).any(func(o: NPC) -> bool: return o.alive and o.role == "adult" and trades.has(o.job))
+		if b.has("sale") and str(b.sale.by) == ref:
+			if works:
+				b.erase("sale")
+			continue
+		if not works and not b.has("sale") and not trades.is_empty() and offer_refusal(b, ref) == "":
+			_offer(b, ref, asking(b))
+			w.stat("businesses_offered_unused")
+
+
+## The cheapest workshop on sale that `n`'s trade works, not their own household's ({} none).
+func listed_for(n: NPC) -> Dictionary:
+	var best := {}
+	var best_price := 0
+	for b in offers():
+		if not trades_for(str(b.get("kind", ""))).has(n.job) or str(b.sale.by) == World.hh_ref(n.household):
+			continue
+		var p := price_for(b, n)
+		if best.is_empty() or p < best_price:
+			best = b
+			best_price = p
+	return best
+
+
+## A workshop of `n`'s trade their household already owns and nobody runs ({} none): it opens again without building.
+func own_unused(n: NPC) -> Dictionary:
+	var ids: Array = w.buildings.keys()
+	ids.sort()
+	for id in ids:
+		var b: Dictionary = w.buildings[id]
+		if is_business(b) and not b.has("venture") and w.owner_of(b) == World.hh_ref(n.household) and trades_for(str(b.get("kind", ""))).has(n.job):
+			return b
+	return {}

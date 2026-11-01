@@ -505,3 +505,191 @@ func test_obligations() -> void:
 	check(w.employment.refusal(a, "miner") != "", "a counter attendant cannot be employed over that obligation")
 	var r := open_one(w)
 	check(w.employment.refusal(r[0], "smith").contains("business of their own") or w.employment.refusal(r[0], "smith") != "", "a keeper of a business cannot be employed by another")
+
+
+# ---------------------------------------------------------------- D5: buying and selling ----------
+## Another smith of the village, made able and minded to found (test setup), in another household than `s`'s.
+func second_smith(w: World, s: NPC) -> NPC:
+	var o: NPC = null
+	for c: NPC in w.npcs:
+		if c.alive and c.role == "adult" and c.household >= 0 and c.household != s.household and w.employment.obligation(c) == "" \
+				and w.ventures.kept_by(c).is_empty():
+			var hh: Dictionary = w.households[c.household]
+			var house: Dictionary = w.buildings.get(str(hh.get("home", "")), {})
+			if not house.is_empty() and w.owner_of(house) == World.hh_ref(c.household) and str(hh.get("build", "")) == "":
+				o = c
+				break
+	o.job = "smith"
+	o.skills["smithing"] = maxi(int(o.skills.get("smithing", 0)), Skills.xp_for_level(5))
+	var key := World.npc_ref(o.id)
+	if not w.experience.minutes.has(key):
+		w.experience.minutes[key] = {}
+	w.experience.minutes[key]["smithing"] = 480.0 * 60.0
+	o.coins += 5000
+	w.brain.evaluate_household(o.household)
+	return o
+
+
+func test_sell_and_buy() -> void:
+	var w := world()
+	var r := open_one(w)
+	var s: NPC = r[0]
+	var b: Dictionary = r[1]
+	var seller_ref := World.hh_ref(s.household)
+	check(w.ventures.offer_refusal(b, World.PLAYER) == "It is not yours to sell.", "only the owner may offer a workshop")
+	# the keeper changes trade (the labour market's job change): the business closes, the unused workshop goes on sale
+	var e := candidate(w, b)
+	b.venture.till = 300
+	w.employment.hire_for(Ventures.ref_of(b), e, "smith", w.employment.market_wage("smith"))
+	for o: NPC in w.brain._members(s.household):
+		if o.job == "smith":
+			w.brain._change_job(o, "carpenter", "test: a smith who wants to be a carpenter")
+	var sk := int(s.skills.get("smithing", 0))
+	var xp := float(w.experience.minutes[World.npc_ref(s.id)]["smithing"])
+	var purse: int = w.property.purse(seller_ref)
+	var till := int(b.venture.till)
+	w.minutes += 1440.0
+	w.station_load = {}
+	w.ventures.daily()
+	check(not b.has("venture") and w.property.purse(seller_ref) >= purse + till, "the business closes and its till goes to the seller's household")
+	check(not w.employment.is_employed(e), "its employee's employment ends with it")
+	check(b.has("sale") and str(b.sale.by) == seller_ref and int(b.sale.price) == w.ventures.asking(b), "nobody of the household works it any more: it is offered for sale (%d)" % int(b.get("sale", {}).get("price", 0)))
+	check(int(s.skills.get("smithing", 0)) == sk and float(w.experience.minutes[World.npc_ref(s.id)]["smithing"]) == xp, "the career change keeps their smithing skill and experience")
+	# another smith of the village buys it rather than build one
+	var o := second_smith(w, s)
+	smithy_full(w)
+	var opt: Dictionary = w.ventures.eligible(o)
+	check(opt.has("buy") and opt.buy == b, "an eligible smith's option is the smithy on sale, not a new one")
+	var price := int(opt.price)
+	check(price == w.deal_price(int(b.sale.price), o, w.party(seller_ref)), "at the price both sides' Trading agrees (%d)" % price)
+	var coins := w.total_coins()
+	purse = w.property.purse(seller_ref)
+	var bp: int = w.property.purse(World.hh_ref(o.household))
+	var house: Dictionary = w.buildings[str(w.households[s.household].home)]
+	var sites := w.plots.size()
+	var buildings := w.buildings.size()
+	check(w.ventures.found(o, opt), "the smith buys it")
+	check(w.property.purse(seller_ref) == purse + price and bp - w.property.purse(World.hh_ref(o.household)) >= price, "the seller receives the agreed price from the buyer")
+	check(w.owner_of(b) == World.hh_ref(o.household) and not b.has("sale"), "the workshop is the buyer's")
+	check(b.has("venture") and int(b.venture.keeper) == o.id and int(b.venture.household) == o.household, "the buyer opens their business there at once")
+	check(w.owner_of(house) == seller_ref, "the seller's house stays the seller's")
+	check(w.plots.size() == sites and w.buildings.size() == buildings and w.total_coins() == coins, "nothing is duplicated: the same building and ground, and coins conserved")
+	for st in w.ventures.trade_stations(b, "smith"):
+		check(str(w.stations[st].owner) == World.hh_ref(o.household), "its station %s goes with it" % st)
+	check(not w.npc_may_use(s, w.stations[w.ventures.trade_stations(b, "smith")[0]]), "the seller's people have no leave there any more")
+
+
+## The player's house on the first surveyed plot with a smithy added to it as a room (materials given; test setup):
+## [house, smithy].
+func player_house_with_smithy(w: World) -> Array:
+	var plot: Dictionary = w.plots[0]
+	w.player.coins += 1000
+	w.buy_plot(plot)
+	w.start_site(plot)
+	for id in GameData.b("house_cost"):
+		w.player.inv.add(id, int(GameData.b("house_cost")[id]))
+	w.deliver(plot, w.player.inv)
+	var house: Dictionary = w.property.building_on(plot)
+	w.property.set_home(str(house.id))
+	var near := Rect2i(int(plot.x) - 14, int(plot.y) - 14, int(plot.w) + 28, int(plot.h) + 28)
+	for t in w.trees:
+		if t.state == "grown" and near.has_point(Vector2i(int(t.x), int(t.y))):
+			w.fell(t, 0)
+	var rect: Rect2i = w.construction.find_module_slot("smithy", plot, World.PLAYER)
+	var site: Dictionary = w.construction.place("smithy", rect, World.PLAYER, false, plot)
+	if site.is_empty():
+		return []
+	for id in site.site.need.duplicate():
+		w.player.inv.add(id, int(site.site.need[id]))
+	w.deliver(site, w.player.inv)
+	return [house, w.property.building_on(site)]
+
+
+func test_home_workshop_sale() -> void:
+	var w := world()
+	var r := player_house_with_smithy(w)
+	check(not r.is_empty(), "a smithy can be added to a house as a room of the property")
+	if r.is_empty():
+		return
+	var house: Dictionary = r[0]
+	var b: Dictionary = r[1]
+	var p: Dictionary = w.property.parcel_under(b)
+	var hp: Dictionary = w.property.parcel_under(house)
+	check(str(p.get("estate", "")) == str(hp.id), "the smithy's ground is a parcel of its own, marked as part of the house's property")
+	check(w.ventures.offer_refusal(house, World.PLAYER) != "", "the house is not a business to sell (and has a room built onto it)")
+	var doors_before := w.doorways.filter(func(d): return str(d.a) == str(b.id) or str(d.b) == str(b.id)).size()
+	check(w.ventures.offer(b, 60) == "", "the player offers the smithy added to their house")
+	w.player.chest.add("bread", 3)
+	var chest := w.player.chest.items.duplicate()
+	var pack := w.player.inv.items.duplicate()
+	var o: NPC = null
+	for c: NPC in of_job(w, "smith"):
+		o = c
+	o.skills["smithing"] = maxi(int(o.skills.get("smithing", 0)), Skills.xp_for_level(5))
+	o.coins += 5000
+	var key := World.npc_ref(o.id)
+	if not w.experience.minutes.has(key):
+		w.experience.minutes[key] = {}
+	w.experience.minutes[key]["smithing"] = 480.0 * 60.0
+	w.brain.evaluate_household(o.household)
+	smithy_full(w)
+	var opt: Dictionary = w.ventures.eligible(o)
+	var pc := w.player.coins
+	check(opt.has("buy") and opt.buy == b and w.ventures.found(o, opt), "a villager smith buys it")
+	check(w.player.coins == pc + int(opt.price), "the player receives the agreed price")
+	check(w.owner_of(b) == World.hh_ref(o.household) and w.owner_of(house) == World.PLAYER and w.owner_of(hp) == World.PLAYER and w.player.home == str(house.id),
+		"the workshop changes hands; the player's house, its ground and the home do not (D5 D)")
+	check(str(w.property.parcel_under(b).get("estate", "")) == "" and not w.property.estate_parcels(hp).has(w.property.parcel_under(b)),
+		"the workshop is detached from the house's property: a property of its own")
+	check(w.doorways.filter(func(d): return str(d.a) == str(b.id) or str(d.b) == str(b.id)).is_empty(), "no inner doorway joins it to the house any more (%d before)" % doors_before)
+	check(w.player.chest.items == chest and w.player.inv.items == pack, "the household's possessions are untouched")
+	check(not w.property.homes_of(World.hh_ref(o.household)).has(str(house.id)) and w.property.rooms_of(str(house.id)).size() >= 1, "no residential right passes to the buyer")
+	check(w.construction.module_refusal("smithy", hp, World.PLAYER) == "", "the house's property may have a smithy added again")
+
+
+func test_player_buys() -> void:
+	var w := world()
+	var r := open_one(w)
+	var s: NPC = r[0]
+	var b: Dictionary = r[1]
+	check(w.ventures.buy(b) == "It is not for sale.", "an unwilling owner's workshop cannot be bought")
+	b.erase("venture")
+	w.ventures._offer(b, World.hh_ref(s.household), 120)
+	w.player.coins = 10
+	check(w.ventures.buy(b).begins_with("You need"), "the buyer must hold the price")
+	w.player.coins = 1000
+	var price: int = w.ventures.price_for(b, w.player)
+	var coins := w.total_coins()
+	var purse: int = w.property.purse(World.hh_ref(s.household))
+	check(w.ventures.buy(b) == "" and w.player.coins == 1000 - price and w.property.purse(World.hh_ref(s.household)) == purse + price and w.total_coins() == coins,
+		"the player pays the seller the agreed price (%d); coins conserved" % price)
+	# the player sells it on to a villager who wants a smithy
+	check(w.ventures.offer(b, 0) == "Name a price.", "a sale needs a price")
+	check(w.ventures.offer(b, 90) == "" and int(b.sale.price) == 90, "the player offers it for sale")
+	check(w.ventures.withdraw(b) == "" and not b.has("sale"), "and may take the offer back")
+	w.ventures.offer(b, 90)
+	var o := second_smith(w, s)
+	smithy_full(w)
+	var opt: Dictionary = w.ventures.eligible(o)
+	var pc := w.player.coins
+	check(opt.has("buy") and w.ventures.found(o, opt), "a villager smith buys the player's workshop by the same rule")
+	check(w.player.coins == pc + int(opt.price) and w.owner_of(b) == World.hh_ref(o.household) and b.has("venture"), "the player receives the price; the villager runs it (players and villagers follow the same rules)")
+
+
+func test_standalone() -> void:
+	var w := world()
+	var s := founder(w)
+	smithy_full(w)
+	# no room beside the house: the workshop stands on ground of its own, owned and run on its own
+	var house: Dictionary = w.buildings[str(w.households[s.household].home)]
+	var opt: Dictionary = w.ventures.eligible(s)
+	opt.house = {}
+	opt.rect = w.construction.find_ground("smithy", w.building_door(str(house.id)), World.hh_ref(s.household))
+	check(w.ventures.found(s, opt), "a standalone smithy is founded on ground of its own")
+	var b := finish(w, s)
+	w.minutes += 1440.0
+	w.station_load = {}
+	w.ventures.daily()
+	var p: Dictionary = w.property.parcel_under(b)
+	check(b.has("venture") and w.property.estate_id(p) == str(p.id) and w.owner_of(b) == World.hh_ref(s.household), "it is a property of its own, run as a business")
+	check(w.ventures.offer_refusal(b, World.hh_ref(s.household)) == "", "and may be sold on its own")
