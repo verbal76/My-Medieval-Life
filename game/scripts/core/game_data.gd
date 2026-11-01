@@ -10,13 +10,16 @@ static var balance := {}
 static var quests := []                   # side quests (res://data/quests.json)
 static var resources := {}                # resource nodes and uses (res://data/resources.json; read through ResourceNodes)
 static var weapon_types := {}             # WEAPON-CATALOG-01: the weapon table (res://data/weapon_types.json) the catalogue is built from
+static var bonuses := {}                  # B25 Decision 6: the bonus table (items.json "bonuses"): kind, active or latent, mechanic
 static var _loaded := false
 
 
 static func ensure() -> void:
 	if _loaded:
 		return
-	items = _read("res://data/items.json").items
+	var item_data := _read("res://data/items.json")
+	items = item_data.items
+	bonuses = item_data.get("bonuses", {})
 	recipes = _read("res://data/recipes.json").recipes
 	skill_cfg = _read("res://data/skills.json")
 	skills = skill_cfg.skills

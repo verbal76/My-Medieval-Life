@@ -264,7 +264,7 @@ func means(n: NPC, id: String, days: int, price_each := 1 << 30) -> Dictionary:
 		if NPCBrain.FOOD.has(id) and n.household >= 0:
 			out.stock = maxi(0, int(out.stock) - ceili(w.brain.household_day_food(n.household) / maxf(1.0, NPCBrain.food_points(id))))
 	var mins := _work_minutes(n, days)
-	var ores := ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]
+	var ores := NPCBrain.MINED_ORES
 	if id in ores:
 		if not n.inv.has("pickaxe"):
 			out.why = "tool:pickaxe"

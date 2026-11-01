@@ -139,6 +139,10 @@ static func _row(ui, mode: String, ctx, id: String, again: Callable) -> void:
 		parts.append("armour %d" % int(it.armor))
 	if PlayerState.bonus_text(id) != "":
 		parts.append("worn: " + PlayerState.bonus_text(id))
+	if PlayerState.latent_text(id) != "":
+		parts.append("not in the game yet: " + PlayerState.latent_text(id))     # B25 Decision 6: never shown as working
+	if it.get("clothing", false):
+		parts.append("clothing")                     # B25 Decision 7: for looks, no armour or bonus
 	var rid := GearOrders.recipe_of(id)
 	var r: Dictionary = GameData.recipes.get(rid, {})
 	var why := ""

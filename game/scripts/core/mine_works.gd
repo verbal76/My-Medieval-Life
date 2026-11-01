@@ -1319,7 +1319,7 @@ func cart_haul_plan(n: NPC, seam_left: bool) -> Array:
 	var cc := Vector2i((cart.pos as Vector2).floor())
 	var plan := [b.go(cc, 1.0, n.depth), b.doit("mc_load", {"cart": int(cart.id)})]
 	var load := 0
-	for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
+	for o in NPCBrain.MINED_ORES:
 		load += n.inv.count(o)
 	if (cart.store as Inventory).total() + load >= int(cfg().minecart.trip) or not seam_left:
 		plan.append(b.doit("mc_hitch", {"cart": int(cart.id)}))
@@ -1381,7 +1381,7 @@ func cart_act(n: NPC, what: String, a: Dictionary) -> bool:
 				return false
 			cart.claim = ref
 			cart.claim_day = w.day()
-			for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
+			for o in NPCBrain.MINED_ORES:
 				var q := mini(n.inv.count(o), w.carts.room(cart))
 				if q > 0 and store.can_add(o):
 					w.transfer(n.inv, store, o, q)

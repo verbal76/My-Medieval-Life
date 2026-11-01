@@ -147,7 +147,22 @@ func damage() -> float:
 	var d := 2.0
 	if weapon != "" and inv.has(weapon):
 		d = float(GameData.item(weapon).get("damage", 2))
-	return (d + bonus("damage")) * Skills.value(self, "combat", "damage_mult", 1.0)     # ARMOR-CATALOG-01: worn gear's melee bonus
+	d += bonus("damage")                          # ARMOR-CATALOG-01: worn gear's melee bonus
+	if sword_in_hand():
+		d += bonus("sword_damage")                # B25 Decision 6: a regional technique bonus, only with a sword-like blade
+	return d * Skills.value(self, "combat", "damage_mult", 1.0)
+
+
+## B25 Decision 6: whether the weapon in hand is a sword-like blade (items.json bonuses.sword_damage: its weapon types and
+## plain swords), the weapon a sword-handling bonus works with.
+func sword_in_hand() -> bool:
+	if weapon == "" or not inv.has(weapon):
+		return false
+	var spec: Dictionary = GameData.bonuses.get("sword_damage", {})
+	if (spec.get("items", []) as Array).has(weapon):
+		return true
+	var g: Dictionary = GameData.item(weapon).get("gear", {})
+	return not g.is_empty() and (spec.get("weapons", []) as Array).has(str(g.get("wtype", "")))
 
 
 ## The tool of a kind the player uses: the one in hand if it is of that kind, else the best carried.
@@ -185,7 +200,7 @@ func bonus(stat: String) -> float:
 
 
 const BONUS_NAMES := {"max_hp": "health", "max_stamina": "stamina", "fire_damage": "fireball damage",
-	"stamina_regen": "stamina a second", "damage": "melee damage"}
+	"stamina_regen": "stamina a second", "damage": "melee damage", "sword_damage": "melee damage with a sword"}
 
 
 ## "+5 health, +2 fireball damage" for an item's worn bonus ("" for none).
@@ -195,6 +210,19 @@ static func bonus_text(id: String) -> String:
 	for k in b:
 		var v := float(b[k])
 		parts.append("+%s %s" % [str(int(v)) if v == floorf(v) else str(v), BONUS_NAMES.get(k, str(k).replace("_", " "))])
+	return ", ".join(parts)
+
+
+## B25 Decision 6: an item's latent bonuses (items.json "latent"), whose mechanic is not in the game yet: never applied by
+## bonus(), and worded only as not working yet ("+2 frost damage (needs an ice spell: only Fireball is in the game)"), "" for none.
+static func latent_text(id: String) -> String:
+	var b: Dictionary = GameData.item(id).get("latent", {})
+	var parts := []
+	for k in b:
+		var spec: Dictionary = GameData.bonuses.get(k, {})
+		var v := float(b[k])
+		parts.append("+%s %s (needs %s)" % [str(int(v)) if v == floorf(v) else str(v), str(spec.get("name", str(k).replace("_", " "))),
+			str(spec.get("needs", "a mechanic not in the game yet"))])
 	return ", ".join(parts)
 
 
