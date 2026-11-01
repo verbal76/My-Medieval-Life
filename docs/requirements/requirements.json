@@ -63348,7 +63348,7 @@
    "acceptance": [
     "Diff inspected, no unrelated changes, focused integration and regression checks pass, Build 25 artifacts and tag untouched, rollback point recorded"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": "X20-ECON-MATURE",
    "depends_on": [],
    "decisions": [],
@@ -63362,6 +63362,11 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_economic_maturation_master_directive.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "target_build",
+     "why": "target build corrected: Expansion 20 work (the register's build 25 is the weather build)"
     }
    ]
   },
@@ -63506,7 +63511,7 @@
    "acceptance": [
     "Unaffordable bids reported by 30-day interval, product category, household condition and cause, normalized; pattern (improving or not) identified; any defect named"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": "X20-ECON-MATURE",
    "depends_on": [],
    "decisions": [],
@@ -63520,6 +63525,11 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_economic_maturation_master_directive.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "target_build",
+     "why": "target build corrected: Expansion 20 work (the register's build 25 is the weather build)"
     }
    ]
   },
@@ -63534,7 +63544,7 @@
    "acceptance": [
     "Each of the 20 systems classified (exercised / implemented not exercised / partial / not implemented / undetermined) with source references and simulation evidence"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": "X20-ECON-MATURE",
    "depends_on": [],
    "decisions": [],
@@ -63553,6 +63563,11 @@
      "date": "2026-11-01",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH",
      "why": "audit of the 20 systems on ae8641d and its three 365-day runs written: docs/release/economic_maturation/AUDIT_20_SYSTEMS.md (11 exercised, 5 partial, 2 implemented but not exercised, 1 undetermined, plus the Living Economy interaction)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "target_build",
+     "why": "target build corrected: Expansion 20 work (the register's build 25 is the weather build)"
     }
    ]
   },
@@ -63567,7 +63582,7 @@
    "acceptance": [
     "Shortages measured by season, household, income level and period; causes classified; no artificial resource creation"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": "X20-ECON-MATURE",
    "depends_on": [],
    "decisions": [],
@@ -63581,6 +63596,11 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_economic_maturation_master_directive.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "target_build",
+     "why": "target build corrected: Expansion 20 work (the register's build 25 is the weather build)"
     }
    ]
   },
@@ -63595,7 +63615,7 @@
    "acceptance": [
     "Snapshots at days 1, 30, 90, 180, 270, 365 and periodic intervals for employment, businesses, market, households, production; unmeasured metrics marked with the instrumentation they need; standard recorded for future evaluations"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": "X20-ECON-MATURE",
    "depends_on": [],
    "decisions": [],
@@ -63609,6 +63629,11 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_economic_maturation_master_directive.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "target_build",
+     "why": "target build corrected: Expansion 20 work (the register's build 25 is the weather build)"
     }
    ]
   },
@@ -63623,7 +63648,7 @@
    "acceptance": [
     "Acceptance criteria 1-10 of section 11 of the directive"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": null,
    "depends_on": [],
    "decisions": [],
@@ -63637,6 +63662,11 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_economic_maturation_master_directive.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "target_build",
+     "why": "target build corrected: Expansion 20 work (the register's build 25 is the weather build)"
     }
    ]
   },
@@ -63651,7 +63681,7 @@
    "acceptance": [
     "Report with charts 1-16 (unmeasured marked), executive summary answering the 14 questions, measured/interpretation/recommendation separated"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": "X20-ECON-MATURE",
    "depends_on": [],
    "decisions": [],
@@ -63665,6 +63695,11 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_economic_maturation_master_directive.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "target_build",
+     "why": "target build corrected: Expansion 20 work (the register's build 25 is the weather build)"
     }
    ]
   },

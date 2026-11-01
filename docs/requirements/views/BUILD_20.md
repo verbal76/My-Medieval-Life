@@ -8,14 +8,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 120 |
-| Integrated | 106 of 120 (88%) |
-| Automated tests passed | 110 of 120 (92%) |
-| Integration verified | 64 of 120 (53%) |
-| Gameplay verified | 0 of 120 (0%) |
-| Owner playtested | 0 of 120 (0%) |
-| Complete | 2 of 120 (2%) |
-| Open (release blockers) | 118 |
+| Approved requirements in scope | 127 |
+| Integrated | 106 of 127 (83%) |
+| Automated tests passed | 110 of 127 (87%) |
+| Integration verified | 64 of 127 (50%) |
+| Gameplay verified | 0 of 127 (0%) |
+| Owner playtested | 0 of 127 (0%) |
+| Complete | 2 of 127 (2%) |
+| Open (release blockers) | 125 |
 | Open owner decisions (blocking) | 1 (0) |
 
 ## In development (worker assigned) (1)
@@ -139,7 +139,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | TARGETED TESTS PASSED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (12)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (19)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -151,6 +151,13 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | OWNER APPROVED | PARTIALLY IMPLEMENTED | worker A (Living Economy) / wip/x20-le05 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-CHAPEL-FIX | Chapel economy correction: voluntary, affordable, individually decided donations (piety raises the chance, never triggers a payment; no penalty for declining); a modest operating reserve from anticipated expenses; the surplus paid as alms to the poorest households by genuine hardship (cash, wealth, dependents, essentials), conserved transfers; chapel economy instrumented; validated against the Build 25 baseline | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/x20-chapel | NOT TESTED |  | X20-ECON-SUSTAIN, design: UNKNOWN | UNKNOWN |
+| X20-CHAPEL-INTEGRATE | Integrate the chapel correction and the gossip fix into wip/expansion20 | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-ECON-AFFORD | Re-evaluate the unaffordable bids by interval, category, household condition and cause | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-ECON-AUDIT | Audit which of 20 economic progression systems the year-long simulations exercise | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-ECON-FIREWOOD | Re-evaluate firewood shortages by season, household, income and period | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-ECON-LONGITUDINAL | Longitudinal economic evaluation framework (snapshots days 1/30/90/180/270/365 plus intervals; stages) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-ECON-MATURE | Economic maturation: evaluate the economy as a developing system | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| X20-ECON-MATURE-REPORT | Economic maturation report with the 16 required charts and the executive-summary questions | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-ECON-SUSTAIN | Build 25 economic sustainability analysis: per-run checkpoint analysis and graphs (population, employment, money and its holders including the chapel, household purchasing power, production and trade, businesses and wages, bandits, judgment effects); three separate health questions (conservation, circulation, sustainability); comparison with earlier runs and economy on vs off; ranked corrective actions; analysis only | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/requirements-control | NOT TESTED |  | X20-MERGED-VALIDATION, design: UNKNOWN | UNKNOWN |
 | X20-MERGED-VALIDATION | Merged year-long validation after integrating workers D, F and G: one 30-day baseline replacement, then three 365-day runs on the merged SHA (seeds 1 and 2 normal settings, one economy-enabled), results per run against earlier evidence; then stop for the owner's review | OWNER APPROVED | PARTIALLY IMPLEMENTED | lead / wip/expansion20 | VERIFICATION FAILED | known: X20-TELL-GUARD: gossip script error in normal seed 1 (judgment_store.gd:1490), fix awaiting owner approval | design: UNKNOWN | UNKNOWN |
 | X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | OWNER APPROVED | PARTIALLY IMPLEMENTED | lead / wip/expansion20 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |

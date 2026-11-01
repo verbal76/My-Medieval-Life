@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (12)
+## Workers and task branches (13)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -16,10 +16,11 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-CHAPEL-FIX | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/x20-chapel |
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
+| X20-ECON-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (46)
+## Implemented but not tested (47)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -66,6 +67,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | WDR-022-C | 15 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | WIKI-B17 | 17 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | X20-CHAPEL-FIX | 20 | IMPLEMENTED ON TASK BRANCH |  |
+| X20-ECON-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH |  |
 | X20-TRADER-PAY-INV | 20+ | PARTIALLY IMPLEMENTED |  |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
