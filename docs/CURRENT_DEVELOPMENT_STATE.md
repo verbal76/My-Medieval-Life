@@ -18,10 +18,15 @@ specific approved work missing (section C). Plan: `docs/release/build25_reconcil
 **Owner decisions 2026-11-01** (`docs/directives/2026-11-01_career_business_employment_final_decisions.md`): B25-CAREER-D1, B25-BUSINESS-D2,
 B25-EMPLOY-D3, B25-AMBITION-D4, all APPROVED for Build 25 implementation (B25-CAREER-SYSTEM and children).
 
-**Next actions (Build 25):** status of 2026-11-01 in `docs/release/build25_reconciliation/STATUS_2026-11-01.md`. Build 25 source
-`wip/expansion20` at `ab8ac71` (chapel, instrumentation, gossip fix, civic records). Workers: ambition (`wip/b25-ambition` `16ef4a4`,
-pushed, awaiting review), stranded documents and economy remainder (agent worktrees, in progress). Then: integrate ambition; skilled
-places without fixed headcount (1b) and skill-aware hiring (1c); business formation and employment (2); validation once at the end.
+**Next actions (Build 25):** Build 25 source `wip/expansion20` at `2c0a780` (chapel, instrumentation, gossip fix, civic records,
+recovered documents, career ambition `7dfd3d5`, Living Economy remainder `63c0144`, save continuity `2c0a780`). Owner decisions of
+2026-11-01 recorded: B25-CAREER-D1..B25-AMBITION-D4, B25-NINE-D1..D9, B25-LE-ACTIVATE-D1 (economy on by default once the LE-07 gates
+pass). Workers (each on its own branch from the Build 25 source; merge one at a time after targeted tests):
+`wip/b25-employ` (skilled places without fixed headcount, skill-aware hiring; from `7dfd3d5`), `wip/b25-juice` (J1+J2),
+`wip/b25-report` (witness reporting), `wip/b25-materials` (Decisions 5-7), `wip/b25-capability` (Decisions 1 and 8),
+`wip/b25-services` (Decision 2, CON-03..08). Still to start: business founding and permanent employment (after employ), farming yield
+by simulation (Decision 3, after the economy work is merged), LE-07 gates on the integrated candidate then economy activation,
+validation once at the end (new 30-day baseline, full suites incl. network, year-long runs), packaging on the owner's authorization.
 
 ## Historical build sequence (owner, 2026-10-31, BUILD-SEQ-25-27; superseded for Build 25 scope by B25-SCOPE-D1)
 
