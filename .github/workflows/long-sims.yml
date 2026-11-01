@@ -75,6 +75,13 @@ jobs:
             cat "$d/summary.json" 2>/dev/null || true
             grep -E '^(day +[0-9]+:|  neighbours:|  migration|  growth:|FATAL|ECONOMY day|=== seed|people:|food:|money:|trade:|currency:|ledger flows:)' "$d/sim.log" || true
           done
+      - name: List every script error's location in each run's sim.log (read-only)
+        run: |
+          for d in recovered/*/; do
+            [ -f "$d/sim.log" ] || continue
+            echo "ERRORS_RUN $d"
+            grep -A2 "^SCRIPT ERROR" "$d/sim.log" | grep -E "^SCRIPT ERROR|at: " | paste - - | sort | uniq -c | sed 's/^/ERRORS /' || true
+          done
       - name: Print a compact digest of each sim.json's checkpoint samples (read-only; Build 25 economic analysis)
         run: |
           for d in recovered/*/; do
