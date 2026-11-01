@@ -553,9 +553,9 @@ func next_spot(n: NPC) -> Dictionary:
 
 
 ## The smith who could assay `n`'s samples (awake, with the fuel and the level; `n` with the fee), the nearest to `n`.
-func assayer_for(n: NPC) -> NPC:
+func assayer_for(n: NPC, advanced := 0) -> NPC:
 	var ac: Dictionary = cfg().assay
-	if n.coins < int(ac.fee):
+	if n.coins + advanced < int(ac.fee):          # CON-03: a buyer's advance for the fee counts (ContractServices draws it at the forge)
 		return null
 	var best: NPC = null
 	var bd := 1e9

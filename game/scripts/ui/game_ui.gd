@@ -3003,6 +3003,16 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 	if w.construction.can_hire(n) == "" and not w.construction.sites_of(w.acting_ref()).is_empty():
 		_talk_choice(choices, "Hire to carry building materials", func():
 			_talk_view(n, "A day's carrying for %d coins? I'll fetch what's in your chest, or buy what's wanting at the market with your money, and bring it to your site." % int(GameData.b("helper_wage")), false, "", "", true))
+	# EMP-PERM-01, B25-BIZ-D4: lasting work for the player in a role with real work, or letting their own employee go
+	var emp: Dictionary = w.employment.record_of(n)
+	if not emp.is_empty() and w.is_acting_ref(str(emp.employer)):
+		_talk_choice(choices, "Their work for you", func(): show_employ(n))
+		_talk_choice(choices, "Let them go from your service", func():
+			var why: String = w.employment.dismiss(n)
+			message(why if why != "" else "%s no longer works for you." % n.name)
+			_talk_view(n, Dialogue.opening(w, n)))
+	elif emp.is_empty() and n.role == "adult" and Employment.ROLES.any(func(r): return n.job in Construction.HIRABLE or n.job == Employment.job_for(r)):
+		_talk_choice(choices, "Offer lasting work", func(): show_employ(n))
 	var sale: Array = w.brain.for_sale(n)
 	var buys: Dictionary = NPCBrain.BUYS.get(w.brain.buy_role(n), {})
 	if not sale.is_empty() or not buys.is_empty():
@@ -3151,6 +3161,20 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 				done.call(("You hand over %d %s and are paid %d coins." % [gave, item, gave * int(cc.price_each)]) if gave > 0 else "%s has no room for it." % n.name),
 					have > 0, h)
 			_button("Withdraw", func(): done.call(k.cancel(cc, w.acting_ref())), true, h)
+	for c in k.disputes_with_player(n):           # CON-05: pay held back on an ended contract, to be ruled on by the reeve
+		var dc: Dictionary = c
+		var dh := HBoxContainer.new()
+		var dl := Label.new()
+		dl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		dl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		dl.add_theme_font_size_override("font_size", 18)
+		dl.text = "In dispute: %d coins held back on the contract to %s (%s). The reeve rules on the agreement and the records." % [int(dc.retained),
+				k.describe(dc), str(dc.get("state", ""))]
+		dh.add_child(dl)
+		panel_body.add_child(dh)
+		_button("Bring it before the reeve", func():
+			message(k.dispute(dc, w.acting_ref()), 5.0, "contract")
+			show_contract(n, t), true, dh)
 	if not reply.is_empty():
 		_label("%s: \"%s\"" % [n.name, str(reply.say)], 20, Color(1, 0.85, 0.5))
 		_scroll_to_top()                  # TRADE-UI-02: the answer is drawn first; a window scrolled down to Propose would hide it
@@ -3160,7 +3184,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			ct.price = int(reply.price_each)
 			ct.days = int(reply.days)
 			_button("Agree: %d at %d each in %d days (%d coins)" % [int(ct.qty), int(ct.price), int(ct.days), int(ct.qty) * int(ct.price)], func():
-				var r2 := k.propose(w.acting_ref(), n, str(ct.get("item", "")), int(ct.qty), int(ct.price), int(ct.days), reply.get("history", []), ct.get("svc", {}))
+				var r2 := k.propose(w.acting_ref(), n, str(ct.get("item", "")), int(ct.qty), int(ct.price), int(ct.days), reply.get("history", []), ct.get("svc", {}), ct.get("terms", {}))
 				if r2.has("contract"):
 					message("Contract made with %s: %s." % [n.name, k.describe(r2.contract)], 4.0, "contract")
 					show_contract(n, {}, r2)
@@ -3246,7 +3270,7 @@ func _contract_item_step(n: NPC, t: Dictionary) -> void:
 			var oo: Dictionary = o
 			var sb := _button(str(oo.label), func():
 				var svc := {"service": oo.service, "site": oo.site}
-				var m3: Dictionary = ContractServices.means(k, n, svc, 3)
+				var m3: Dictionary = ContractServices.means(k, n, svc.merged({"buyer": w.acting_ref()}), 3)
 				show_contract(n, {"svc": svc, "label": str(oo.label), "all": all, "qty": clampi(int(m3.cap), 1, 10), "price": ceili(ContractServices.going(svc)), "days": 3,
 						"step": "qty"}), true, sgrid)
 			sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -3288,19 +3312,25 @@ func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 	var qty := int(t.qty)
 	var price := int(t.price)
 	var days := int(t.days)
-	var total := qty * price
+	var terms: Dictionary = t.get("terms", {}) if t.has("svc") and not counter else {}
+	var total := Contracts.set_aside_of(qty, price, terms) if t.has("svc") and not counter else qty * price
 	var by_day := w.day() + days
 	var next_btn: Button = null
 	if step == "sum":
 		var sentence := ""
 		if counter:
 			sentence = "You deliver %s to %s by the end of day %d for %d coins (%d each)." % [Contracts.counted(qty, what), n.name, by_day, total, price]
+		elif t.has("svc") and str(terms.get("pay", "")) == "favour":
+			sentence = "%s does this work for you as a favour, %s: %d units by the end of day %d, nothing paid." % [n.name, what, qty, by_day]
 		elif t.has("svc"):
-			sentence = "%s does this work for you, %s: %d units by the end of day %d for %d coins (%d each)." % [n.name, what, qty, by_day, total, price]
+			sentence = "%s does this work for you, %s: %d units by the end of day %d; %s %d coins set aside." % [n.name, what, qty, by_day,
+					ContractServices.terms_words(terms, price), total]
 		else:
 			sentence = "%s delivers %s by the end of day %d for %d coins (%d each)." % [n.name, Contracts.counted(qty, what), by_day, total, price]
 		var sl := _label(sentence, 24)
 		sl.name = "Summary"
+		if t.has("svc") and not counter:
+			_service_terms_rows(n, t)                 # Decision 2 / CON-03..05: how the work is paid
 		if not counter:
 			_label("Your coins for it are set aside when %s agrees, and paid as the goods come. You have %d coins." % [n.name, p.coins], 16)
 			if p.coins < total:
@@ -3316,7 +3346,7 @@ func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 			next_btn = _button("Propose to %s" % n.name, func():
 				var r: Dictionary
 				if t.has("svc"):
-					r = k.propose(w.acting_ref(), n, "", qty, price, days, [], t.svc)
+					r = k.propose(w.acting_ref(), n, "", qty, price if str(terms.get("pay", "")) != "favour" else 0, days, [], t.svc, terms)
 				else:
 					r = k.propose(w.acting_ref(), n, str(t.item), qty, price, days)
 				if r.has("contract"):
@@ -3351,6 +3381,44 @@ func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 func _focus_if_open(b: Control) -> void:
 	if is_instance_valid(b) and b.is_inside_tree() and b.is_visible_in_tree():
 		b.grab_focus()
+
+
+## Decision 2 / CON-03..CON-05: how hired work is paid, in the summary step: the pay structure (for the work done, the default; for
+## results only; a base and a bonus for each result; as a favour, nothing paid), a share held back until the work is complete, and
+## for a survey the assay fees advanced. Each choice is a button that moves to the next; the summary's total follows them.
+func _service_terms_rows(n: NPC, t: Dictionary) -> void:
+	var terms: Dictionary = t.get("terms", {})
+	var kind := str((t.svc as Dictionary).service)
+	var pays := ["on_delivery", "favour"] if kind == "harvest" else ["on_delivery", "on_result", "base_bonus", "favour"]
+	var at := pays.find(str(terms.get("pay", "on_delivery")))
+	var with := func(change: Dictionary) -> void:
+		var nt: Dictionary = t.duplicate(true)
+		var nterms: Dictionary = terms.duplicate(true)
+		nterms.merge(change, true)
+		for key in nterms.keys():
+			if nterms[key] == null:
+				nterms.erase(key)
+		nt.terms = nterms
+		show_contract(n, nt)
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 8)
+	panel_body.add_child(h)
+	var next_pay := str(pays[(at + 1) % pays.size()])
+	_button("Pay: %s" % ContractServices.PAY_NAMES[str(pays[maxi(at, 0)])], func():
+		with.call({"pay": next_pay, "bonus_each": int(t.price) if next_pay == "base_bonus" else null,
+				"retain": null if next_pay == "favour" else terms.get("retain"), "advance": null if next_pay == "favour" else terms.get("advance")}), true, h)
+	if str(terms.get("pay", "")) != "favour":
+		var shares := [0.0, 0.25, 0.5]
+		var si := shares.find(float(terms.get("retain", 0.0)))
+		var next_share: float = shares[(si + 1) % shares.size()]
+		_button("Held back until done: %d%%" % roundi(100.0 * float(terms.get("retain", 0.0))), func():
+			with.call({"retain": next_share if next_share > 0.0 else null}), true, h)
+		if ContractServices.PURPOSES.has(kind):
+			var fees := int(t.qty) * int(Prospecting.cfg().assay.fee)
+			var has_adv := int((terms.get("advance", {}) as Dictionary).get("amount", 0)) > 0
+			_button(("Advance the assay fees: %d coins" % fees) if not has_adv else "No advance", func():
+				with.call({"advance": null if has_adv else {"amount": fees, "purpose": str(ContractServices.PURPOSES[kind])}}), true, h)
+	_label(ContractServices.terms_help(terms), 16)
 
 
 ## One of the quantity, price-each or days rows of the contract window, with - and + buttons (touch, pad, keyboard).
@@ -3399,20 +3467,22 @@ func _service_row(n: NPC, cc: Dictionary, l: Label, h: HBoxContainer, done: Call
 			done.call(""), true, h)
 	elif w.is_acting_ref(cc.buyer):
 		var stone := int(cc.get("load", {}).get("stone", 0))
-		l.text = "%s works for you, to %s at %d a unit: %d done, due by the end of day %d. %d coins set aside." % [n.name, what, int(cc.price_each),
-				int(cc.delivered), int(cc.deadline_day) + 1, int(cc.reserved)]
+		l.text = "%s works for you, to %s, %s: %d done, due by the end of day %d. %d coins set aside." % [n.name, what,
+				ContractServices.terms_words(cc.get("terms", {}), int(cc.price_each)), int(cc.delivered), int(cc.deadline_day) + 1, int(cc.reserved)]
 		if stone > 0:
 			_button("Collect %d stone" % stone, func():
 				var got := ContractServices.player_collect(k, cc)
 				done.call(("%s hands over %d stone." % [n.name, got]) if got > 0 else "You have no room for it."), true, h)
 		_button("Cancel", func(): done.call(k.cancel(cc, w.acting_ref())), true, h)
 	else:
-		l.text = "You work for %s, to %s at %d a unit: %d done, due by the end of day %d." % [n.name, what, int(cc.price_each),
-				int(cc.delivered), int(cc.deadline_day) + 1]
+		l.text = "You work for %s, to %s, %s: %d done, due by the end of day %d." % [n.name, what,
+				ContractServices.terms_words(cc.get("terms", {}), int(cc.price_each)), int(cc.delivered), int(cc.deadline_day) + 1]
+		if str(cc.service) == "harvest":
+			l.text += " Cut the ripe cells of the field: the crop goes to %s." % n.name
 		if str(cc.service) == "survey":
 			_button("Report readings", func():
 				var told := ContractServices.player_report(k, cc)
-				done.call(("You tell %s %d readings and are paid %d coins." % [n.name, told, told * int(cc.price_each)]) if told > 0 \
+				done.call(("You tell %s %d readings; %d coins paid in all so far." % [n.name, told, int(cc.paid)]) if told > 0 \
 						else "You have no new readings of that stain to tell (take samples there and have a smith assay them)."), true, h)
 		_button("Withdraw", func(): done.call(k.cancel(cc, w.acting_ref())), true, h)
 
@@ -3647,6 +3717,66 @@ func show_trade(n: NPC, pick := {}) -> void:
 		_button("Credit and barter" + (" (%s asks you)" % n.name if main.world.credit.request_for(n.id).size() > 0 else ""), func(): CreditWindow.show(self, lender))       # TRADE-CREDIT
 		var talker := n
 		_button("Talk to %s" % n.name, func(): show_talk(talker))
+
+
+## B25-BIZ-D4: lasting work for the player (Employment): each role the villager could take, at the wage the labour market sets
+## (what they ask), and why not when they cannot; a crafter is told what to make (a recipe the player's own stations make).
+## For the player's own employee: what they do, their wage, and what a crafter makes now.
+func show_employ(n: NPC) -> void:
+	var w: World = main.world
+	_open("employ", "Work for %s" % n.name)
+	var emp: Dictionary = w.employment.record_of(n)
+	var again := func(): show_employ(n)
+	if not emp.is_empty() and w.is_acting_ref(str(emp.employer)):
+		_label("%s works for you as your %s for %d coins a day, paid each morning from your %s. What they make or dig is yours." % [n.name, str(emp.role),
+			int(emp.wage), "premises' till" if str(emp.get("account", "")) != "" else "purse"], 16)
+		if Employment.behaviour(str(emp.role)) == "craft":
+			_label("They make: %s." % str(emp.get("make", "")).replace("_", " "), 16)
+			for r in w.employment.makes(str(emp.role)).slice(0, 10):
+				var rr: String = r
+				_button("Make %s instead" % rr.replace("_", " "), func():
+					var why: String = w.employment.set_make(n, rr)
+					message(why if why != "" else "%s will make %s." % [n.name, rr.replace("_", " ")])
+					again.call(), str(emp.get("make", "")) != rr)
+		_button("Let them go", func():
+			var why: String = w.employment.dismiss(n)
+			message(why if why != "" else "%s no longer works for you." % n.name)
+			hide_all())
+		return
+	_label("Lasting work: they work for you every working day until you let them go, they leave, or the wage cannot be paid. The wage is what the work pays in the village now; it comes from your purse each morning, the first day on taking them on. You have %d coins." % w.player.coins, 15)
+	for role in Employment.ROLES:
+		if not (n.job in Construction.HIRABLE or n.job == Employment.job_for(role)):
+			continue
+		var why: String = w.employment.refusal(n, role)
+		var pay: int = w.employment.asking(n, role)
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 8)
+		var l := Label.new()
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		l.add_theme_font_size_override("font_size", 17)
+		l.text = "%s, %d coins a day%s" % [World.cap(role), pay, (". " + why) if why != "" else ""]
+		h.add_child(l)
+		panel_body.add_child(h)
+		var rl: String = role
+		if Employment.behaviour(role) != "craft":
+			_button("Employ", func():
+				var no: String = w.employment.employ(n, rl)
+				message(no if no != "" else "%s now works for you as your %s." % [n.name, rl], 4.0, "" if no != "" else "work")
+				if no == "":
+					hide_all()
+				else:
+					again.call(), why == "" and w.player.coins >= pay, h)
+		elif why == "":
+			for r in w.employment.makes(role).slice(0, 6):
+				var rr: String = r
+				_button("Employ to make %s" % rr.replace("_", " "), func():
+					var no: String = w.employment.employ(n, rl, -1, "", rr)
+					message(no if no != "" else "%s now makes %s for you." % [n.name, rr.replace("_", " ")], 4.0, "" if no != "" else "work")
+					if no == "":
+						hide_all()
+					else:
+						again.call(), w.player.coins >= pay)
 
 
 ## Fitting out a room of the player's: counter, shelves, equipment (scripts/ui/fit_window.gd).
@@ -4159,8 +4289,73 @@ func show_land(reeve: NPC = null) -> void:
 		_label("Nothing for sale or to let just now.", 16)
 	for t in offers:
 		_deal_row(t, again)
+	# B25-BIZ-D5 F (the two-shop finding): the office lists the surveyed plots and empty houses; any clear ground is bought on the spot
+	_label("More ground: anywhere clear that is nobody's, from the Build menu (Choose a place); the manor sells it to you there.", 15)
+	_business_sales(again)
 	if reeve != null:
 		_button("Talk to %s" % reeve.name, func(): show_talk(reeve))
+
+
+## B25-BIZ-D5: workshops their owners offer for sale (bought at the price both sides' Trading agrees, from the seller), and the
+## player's own workshops, to offer for sale or take the offer back. Selling a workshop never sells a house.
+func _business_sales(again: Callable) -> void:
+	var w: World = main.world
+	var v: Ventures = w.ventures
+	var mine: Array = []
+	var ids: Array = w.buildings.keys()
+	ids.sort()
+	for id in ids:
+		var b: Dictionary = w.buildings[id]
+		if Ventures.is_business(b) and w.owner_of(b) == w.acting_ref():
+			mine.append(b)
+	var listed: Array = v.offers()
+	if mine.is_empty() and listed.is_empty():
+		return
+	_label("Workshops changing hands:", 20, Color(1, 0.85, 0.5))
+	for b in listed:
+		var bb: Dictionary = b
+		var price: int = v.price_for(bb, w.player)
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 8)
+		var l := Label.new()
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		l.add_theme_font_size_override("font_size", 17)
+		var by := str(bb.sale.by)
+		l.text = "%s: offered by %s for %d coins" % [World.cap(w.property.describe(bb)), "you" if w.is_acting_ref(by) else w.ref_name(by), price if not w.is_acting_ref(by) else int(bb.sale.price)]
+		h.add_child(l)
+		if w.is_acting_ref(by):
+			_button("Take the offer back", func():
+				var no: String = v.withdraw(bb)
+				message(no if no != "" else "You no longer offer it for sale.")
+				again.call(), true, h)
+		else:
+			_button("Buy (%d)" % price, func():
+				var no: String = v.buy(bb)
+				message(no if no != "" else "It is yours: %s." % w.property.describe(bb), 4.0, "" if no != "" else "property")
+				again.call(), v.buy_refusal(bb, w.acting_ref(), w.player) == "", h)
+		panel_body.add_child(h)
+	for b in mine:
+		var bb: Dictionary = b
+		if bb.has("sale"):
+			continue
+		var value: int = v.asking(bb)
+		var why: String = v.offer_refusal(bb, w.acting_ref())
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 8)
+		var l := Label.new()
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		l.add_theme_font_size_override("font_size", 17)
+		l.text = "%s: yours%s" % [World.cap(w.property.describe(bb)), (". " + why) if why != "" else ""]
+		h.add_child(l)
+		for k in [3, 4, 5]:
+			var ask := maxi(1, value * k / 4)
+			_button("Offer for %d" % ask, func():
+				var no: String = v.offer(bb, ask)
+				message(no if no != "" else "You offer it for sale for %d coins." % ask, 4.0, "" if no != "" else "property")
+				again.call(), why == "", h)
+		panel_body.add_child(h)
 
 
 ## One house or piece of land on its own (at its door).

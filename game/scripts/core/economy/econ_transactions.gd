@@ -14,9 +14,9 @@ extends RefCounted
 ## Deterministic: no RNG, no wall clock, sorted iteration; saved under the optional World key "transactions".
 
 const KEY := "transactions"
-const VILLAGE := ["npc", "player", "manor", "hh", "chapel", "stall", "shop", "front", "counter"]     # LE-04: every village holder
+const VILLAGE := ["npc", "player", "manor", "hh", "chapel", "stall", "shop", "front", "counter", "venture"]     # LE-04: every village holder
 const PEOPLE := ["npc", "player"]          # parties World.trade serves (claims apply to them)
-const TILLS := ["stall", "shop", "front", "counter"]
+const TILLS := ["stall", "shop", "front", "counter", "venture"]     # B25-BIZ-D1: a venture's till
 const OPEN := "open"
 const FINAL := {"deliver": "delivered", "fail": "returned", "lose": "lost", "estate": "settled"}
 
@@ -139,7 +139,7 @@ func _till(ref: String):
 		"shop":
 			var b: Dictionary = w.buildings.get(ref.trim_prefix("shop:"), {})
 			return b.shop if b.has("shop") else null
-		"front", "counter":
+		"front", "counter", "venture":
 			var b: Dictionary = w.buildings.get(ref.get_slice(":", 1), {})
 			return b.get(actors.kind(ref), null)
 	return null
@@ -593,7 +593,7 @@ func estate_of(ref: String) -> Dictionary:
 				if h.code == "" and _head(h) != null:
 					return h
 			return _party(World.MANOR)
-		"hh", "stall", "shop", "front", "counter":
+		"hh", "stall", "shop", "front", "counter", "venture":
 			return _party(World.MANOR)
 		"region":
 			var key := ref.trim_prefix("region:")

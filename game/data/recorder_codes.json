@@ -73,6 +73,7 @@
     {"id": "elder_air", "factors": ["role"]},
     {"id": "construction_helper", "factors": ["hour"]},
     {"id": "stall_attendant", "factors": ["hour"]},
+    {"id": "employee", "factors": ["hour"]},
     {"id": "manor_work", "factors": ["hour"]},
     {"id": "contract", "factors": ["hour"]},
     {"id": "day_labour", "factors": ["hour", "job"]},
