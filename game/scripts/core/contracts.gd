@@ -149,6 +149,8 @@ static func formal_of(total: int, svc := {}) -> bool:
 ## Every coin the buyer sets aside for a contract: the most its pay structure can pay (CON-04: price and bonus for every unit)
 ## and any advance (CON-03).
 static func set_aside_of(qty: int, price_each: int, terms: Dictionary) -> int:
+	if str(terms.get("pay", "on_delivery")) == "favour":
+		return 0                                       # Decision 2: a favour sets nothing aside
 	var t := qty * price_each
 	if str(terms.get("pay", "on_delivery")) == "base_bonus":
 		t += qty * int(terms.get("bonus_each", 0))

@@ -3167,6 +3167,20 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 				done.call(("You hand over %d %s and are paid %d coins." % [gave, item, gave * int(cc.price_each)]) if gave > 0 else "%s has no room for it." % n.name),
 					have > 0, h)
 			_button("Withdraw", func(): done.call(k.cancel(cc, w.acting_ref())), true, h)
+	for c in k.disputes_with_player(n):           # CON-05: pay held back on an ended contract, to be ruled on by the reeve
+		var dc: Dictionary = c
+		var dh := HBoxContainer.new()
+		var dl := Label.new()
+		dl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		dl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		dl.add_theme_font_size_override("font_size", 18)
+		dl.text = "In dispute: %d coins held back on the contract to %s (%s). The reeve rules on the agreement and the records." % [int(dc.retained),
+				k.describe(dc), str(dc.get("state", ""))]
+		dh.add_child(dl)
+		panel_body.add_child(dh)
+		_button("Bring it before the reeve", func():
+			message(k.dispute(dc, w.acting_ref()), 5.0, "contract")
+			show_contract(n, t), true, dh)
 	if not reply.is_empty():
 		_label("%s: \"%s\"" % [n.name, str(reply.say)], 20, Color(1, 0.85, 0.5))
 		_scroll_to_top()                  # TRADE-UI-02: the answer is drawn first; a window scrolled down to Propose would hide it
@@ -3176,7 +3190,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			ct.price = int(reply.price_each)
 			ct.days = int(reply.days)
 			_button("Agree: %d at %d each in %d days (%d coins)" % [int(ct.qty), int(ct.price), int(ct.days), int(ct.qty) * int(ct.price)], func():
-				var r2 := k.propose(w.acting_ref(), n, str(ct.get("item", "")), int(ct.qty), int(ct.price), int(ct.days), reply.get("history", []), ct.get("svc", {}))
+				var r2 := k.propose(w.acting_ref(), n, str(ct.get("item", "")), int(ct.qty), int(ct.price), int(ct.days), reply.get("history", []), ct.get("svc", {}), ct.get("terms", {}))
 				if r2.has("contract"):
 					message("Contract made with %s: %s." % [n.name, k.describe(r2.contract)], 4.0, "contract")
 					show_contract(n, {}, r2)
@@ -3262,7 +3276,7 @@ func _contract_item_step(n: NPC, t: Dictionary) -> void:
 			var oo: Dictionary = o
 			var sb := _button(str(oo.label), func():
 				var svc := {"service": oo.service, "site": oo.site}
-				var m3: Dictionary = ContractServices.means(k, n, svc, 3)
+				var m3: Dictionary = ContractServices.means(k, n, svc.merged({"buyer": w.acting_ref()}), 3)
 				show_contract(n, {"svc": svc, "label": str(oo.label), "all": all, "qty": clampi(int(m3.cap), 1, 10), "price": ceili(ContractServices.going(svc)), "days": 3,
 						"step": "qty"}), true, sgrid)
 			sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -3304,19 +3318,25 @@ func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 	var qty := int(t.qty)
 	var price := int(t.price)
 	var days := int(t.days)
-	var total := qty * price
+	var terms: Dictionary = t.get("terms", {}) if t.has("svc") and not counter else {}
+	var total := Contracts.set_aside_of(qty, price, terms) if t.has("svc") and not counter else qty * price
 	var by_day := w.day() + days
 	var next_btn: Button = null
 	if step == "sum":
 		var sentence := ""
 		if counter:
 			sentence = "You deliver %s to %s by the end of day %d for %d coins (%d each)." % [Contracts.counted(qty, what), n.name, by_day, total, price]
+		elif t.has("svc") and str(terms.get("pay", "")) == "favour":
+			sentence = "%s does this work for you as a favour, %s: %d units by the end of day %d, nothing paid." % [n.name, what, qty, by_day]
 		elif t.has("svc"):
-			sentence = "%s does this work for you, %s: %d units by the end of day %d for %d coins (%d each)." % [n.name, what, qty, by_day, total, price]
+			sentence = "%s does this work for you, %s: %d units by the end of day %d; %s %d coins set aside." % [n.name, what, qty, by_day,
+					ContractServices.terms_words(terms, price), total]
 		else:
 			sentence = "%s delivers %s by the end of day %d for %d coins (%d each)." % [n.name, Contracts.counted(qty, what), by_day, total, price]
 		var sl := _label(sentence, 24)
 		sl.name = "Summary"
+		if t.has("svc") and not counter:
+			_service_terms_rows(n, t)                 # Decision 2 / CON-03..05: how the work is paid
 		if not counter:
 			_label("Your coins for it are set aside when %s agrees, and paid as the goods come. You have %d coins." % [n.name, p.coins], 16)
 			if p.coins < total:
@@ -3332,7 +3352,7 @@ func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 			next_btn = _button("Propose to %s" % n.name, func():
 				var r: Dictionary
 				if t.has("svc"):
-					r = k.propose(w.acting_ref(), n, "", qty, price, days, [], t.svc)
+					r = k.propose(w.acting_ref(), n, "", qty, price if str(terms.get("pay", "")) != "favour" else 0, days, [], t.svc, terms)
 				else:
 					r = k.propose(w.acting_ref(), n, str(t.item), qty, price, days)
 				if r.has("contract"):
@@ -3367,6 +3387,44 @@ func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 func _focus_if_open(b: Control) -> void:
 	if is_instance_valid(b) and b.is_inside_tree() and b.is_visible_in_tree():
 		b.grab_focus()
+
+
+## Decision 2 / CON-03..CON-05: how hired work is paid, in the summary step: the pay structure (for the work done, the default; for
+## results only; a base and a bonus for each result; as a favour, nothing paid), a share held back until the work is complete, and
+## for a survey the assay fees advanced. Each choice is a button that moves to the next; the summary's total follows them.
+func _service_terms_rows(n: NPC, t: Dictionary) -> void:
+	var terms: Dictionary = t.get("terms", {})
+	var kind := str((t.svc as Dictionary).service)
+	var pays := ["on_delivery", "favour"] if kind == "harvest" else ["on_delivery", "on_result", "base_bonus", "favour"]
+	var at := pays.find(str(terms.get("pay", "on_delivery")))
+	var with := func(change: Dictionary) -> void:
+		var nt: Dictionary = t.duplicate(true)
+		var nterms: Dictionary = terms.duplicate(true)
+		nterms.merge(change, true)
+		for key in nterms.keys():
+			if nterms[key] == null:
+				nterms.erase(key)
+		nt.terms = nterms
+		show_contract(n, nt)
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 8)
+	panel_body.add_child(h)
+	var next_pay := str(pays[(at + 1) % pays.size()])
+	_button("Pay: %s" % ContractServices.PAY_NAMES[str(pays[maxi(at, 0)])], func():
+		with.call({"pay": next_pay, "bonus_each": int(t.price) if next_pay == "base_bonus" else null,
+				"retain": null if next_pay == "favour" else terms.get("retain"), "advance": null if next_pay == "favour" else terms.get("advance")}), true, h)
+	if str(terms.get("pay", "")) != "favour":
+		var shares := [0.0, 0.25, 0.5]
+		var si := shares.find(float(terms.get("retain", 0.0)))
+		var next_share: float = shares[(si + 1) % shares.size()]
+		_button("Held back until done: %d%%" % roundi(100.0 * float(terms.get("retain", 0.0))), func():
+			with.call({"retain": next_share if next_share > 0.0 else null}), true, h)
+		if ContractServices.PURPOSES.has(kind):
+			var fees := int(t.qty) * int(Prospecting.cfg().assay.fee)
+			var has_adv := int((terms.get("advance", {}) as Dictionary).get("amount", 0)) > 0
+			_button(("Advance the assay fees: %d coins" % fees) if not has_adv else "No advance", func():
+				with.call({"advance": null if has_adv else {"amount": fees, "purpose": str(ContractServices.PURPOSES[kind])}}), true, h)
+	_label(ContractServices.terms_help(terms), 16)
 
 
 ## One of the quantity, price-each or days rows of the contract window, with - and + buttons (touch, pad, keyboard).
@@ -3415,20 +3473,22 @@ func _service_row(n: NPC, cc: Dictionary, l: Label, h: HBoxContainer, done: Call
 			done.call(""), true, h)
 	elif w.is_acting_ref(cc.buyer):
 		var stone := int(cc.get("load", {}).get("stone", 0))
-		l.text = "%s works for you, to %s at %d a unit: %d done, due by the end of day %d. %d coins set aside." % [n.name, what, int(cc.price_each),
-				int(cc.delivered), int(cc.deadline_day) + 1, int(cc.reserved)]
+		l.text = "%s works for you, to %s, %s: %d done, due by the end of day %d. %d coins set aside." % [n.name, what,
+				ContractServices.terms_words(cc.get("terms", {}), int(cc.price_each)), int(cc.delivered), int(cc.deadline_day) + 1, int(cc.reserved)]
 		if stone > 0:
 			_button("Collect %d stone" % stone, func():
 				var got := ContractServices.player_collect(k, cc)
 				done.call(("%s hands over %d stone." % [n.name, got]) if got > 0 else "You have no room for it."), true, h)
 		_button("Cancel", func(): done.call(k.cancel(cc, w.acting_ref())), true, h)
 	else:
-		l.text = "You work for %s, to %s at %d a unit: %d done, due by the end of day %d." % [n.name, what, int(cc.price_each),
-				int(cc.delivered), int(cc.deadline_day) + 1]
+		l.text = "You work for %s, to %s, %s: %d done, due by the end of day %d." % [n.name, what,
+				ContractServices.terms_words(cc.get("terms", {}), int(cc.price_each)), int(cc.delivered), int(cc.deadline_day) + 1]
+		if str(cc.service) == "harvest":
+			l.text += " Cut the ripe cells of the field: the crop goes to %s." % n.name
 		if str(cc.service) == "survey":
 			_button("Report readings", func():
 				var told := ContractServices.player_report(k, cc)
-				done.call(("You tell %s %d readings and are paid %d coins." % [n.name, told, told * int(cc.price_each)]) if told > 0 \
+				done.call(("You tell %s %d readings; %d coins paid in all so far." % [n.name, told, int(cc.paid)]) if told > 0 \
 						else "You have no new readings of that stain to tell (take samples there and have a smith assay them)."), true, h)
 		_button("Withdraw", func(): done.call(k.cancel(cc, w.acting_ref())), true, h)
 

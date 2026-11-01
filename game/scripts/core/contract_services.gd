@@ -44,6 +44,8 @@ extends RefCounted
 const KINDS := ["dig", "survey", "harvest"]
 const PAYS := ["on_delivery", "on_result", "base_bonus", "favour"]
 const PURPOSES := {"survey": "assay_fee"}            # CON-03: the expense of each kind an advance may meet
+const PAY_NAMES := {"on_delivery": "for the work done", "on_result": "for results only", "base_bonus": "a base and a bonus for each result",
+	"favour": "as a favour, nothing paid"}
 
 
 static func cfg() -> Dictionary:
@@ -443,7 +445,7 @@ static func _plan_survey(k, n: NPC, c: Dictionary) -> bool:
 	var pending := _pending(k, c)
 	var spot := _spot(k, c) if sids.size() < int(c.qty) and n.inv.has(Prospecting.KIT) else Vector2i(-1, -1)
 	if not pending.is_empty() and (spot.x < 0 or pending.size() >= int(Prospecting.cfg().carry_samples)):
-		var a: NPC = w.prospecting.assayer_for(n)
+		var a: NPC = w.prospecting.assayer_for(n, int(c.get("advance", 0)))
 		if a == null:
 			return false
 		n.doing = "taking samples to the assayer for %s" % w.ref_name(c.buyer)
@@ -634,6 +636,37 @@ static func options(k, buyer_ref: String) -> Array:
 
 
 # ---------------------------------------------------------------- Decision 2 / CON-03..CON-08: terms ---
+## The terms in words, for the contract window: "at 6 a unit", "6 for each result", "held back 25% until done".
+static func terms_words(terms: Dictionary, price_each: int) -> String:
+	var t := ""
+	match str(terms.get("pay", "on_delivery")):
+		"on_result":
+			t = "%d for each unit with a result, nothing for the rest" % price_each
+		"base_bonus":
+			t = "%d a unit and %d more for each result" % [price_each, int(terms.get("bonus_each", 0))]
+		"favour":
+			return "as a favour, nothing paid"
+		_:
+			t = "at %d a unit" % price_each
+	if float(terms.get("retain", 0.0)) > 0.0:
+		t += ", %d%% held back until it is all done" % roundi(100.0 * float(terms.retain))
+	var adv = terms.get("advance", {})
+	if adv is Dictionary and int(adv.get("amount", 0)) > 0:
+		t += ", %d coins advanced for the assay fees" % int(adv.amount)
+	return t
+
+
+## A line on what the chosen pay means for the buyer, for the contract window.
+static func terms_help(terms: Dictionary) -> String:
+	match str(terms.get("pay", "on_delivery")):
+		"on_result":
+			return "Paid only for units that bring something: stone from a dig, a trace of ore from a reading. A worker asks more a unit for the risk; a barren one pays nothing."
+		"base_bonus":
+			return "Each unit is paid, and each one that brings something earns the bonus too. The most it could cost is set aside."
+		"favour":
+			return "Nothing is paid. Only a friend, partner or kin does work for nothing, and only when they can spare the time."
+	return "Each unit of work is paid as it is done, from the coins set aside."
+
 ## Why these terms cannot be offered for this work ("" if they can): a known pay structure; a result only where the work has a
 ## verifiable one; a bonus with base_bonus; a retention within retain_max; an advance only for a named expense of the kind and no
 ## more than that expense could come to (CON-03: no unrestricted transfer disguised as an advance); a favour asks for nothing and
