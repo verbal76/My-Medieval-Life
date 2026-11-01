@@ -5418,7 +5418,7 @@
     "B25-AMBITION-D4"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5427,7 +5427,17 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_career_business_employment_final_decisions.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests: None -> game/tests/career_ambition_test.gd, game/tests/aspiration_test.gd; test_commit: None -> 7dfd3d5; commits + 7dfd3d5",
+     "why": "integrated into wip/expansion20 at 7dfd3d5 (merge of wip/b25-ambition 16ef4a4): aspiration.enabled and integration.job_choice on, limited to careers by aspiration.apply (factors, court, proposal off; X19-SWITCHES-D1 other parts unchanged); ambition layer's own trade skills (carpenter carpentry, tanner tanning, stonecutter masonry, farmer farming, sage healing, hunter hunting, prospector and laborer mining); ambitious employed villagers (profession priority >= 1100 permille, about a third) look one seeded morning a week and choose through job_choice with staying first. On the merged source: career_ambition 71, aspiration 157, civic_records 48, judgment_x19 122, chapel 123, competition 33, run_tests 3601, interactions 378/0; all 0 failures, 0 script errors (local). Simulation baselines change (normal play now runs the morning look)"
     }
+   ],
+   "tests": "game/tests/career_ambition_test.gd, game/tests/aspiration_test.gd",
+   "test_commit": "7dfd3d5",
+   "commits": [
+    "7dfd3d5"
    ]
   },
   {
