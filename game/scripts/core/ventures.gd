@@ -22,6 +22,16 @@ extends RefCounted
 ##
 ## State: household.venture {founder, trade, kind, plot, day} while setting up; building.venture {founder, keeper, trade, day,
 ## opened, household, idle, hands} once open. Both saved with their dicts (older saves: none).
+##
+## B25-BIZ-OWN (owner, 2026-11-01, docs/directives/2026-11-01_business_ownership_employment_final_decisions.md; specification
+## docs/expansion20/BUSINESS_OWNERSHIP.md):
+## - D1: an open venture keeps its own till in its record (till, earned, paid, costs, invested, drawn: BusinessMoney's
+##   settlement, ref "venture:<building id>"). On opening the household invests working capital. The business's goods are
+##   bookkept, never moved: the keeper's in `venture.goods`, a paid employee's in their employment record's `owed`; they are
+##   the units bought with the till's money (budget, fund) or made at its stations by its people (craft_begin/craft_end), and
+##   their sale pays the till (on_sale). Optional keys; an older open venture reads as an empty till.
+## - D2: the hands stay independent craftspeople (their own materials and sales); a venture also hires paid employees
+##   (_hire, Employment.hire_for) when it has work, room and the money.
 
 var w: World
 
@@ -82,7 +92,7 @@ func stations_for(n: NPC, kind: String) -> Array:
 	var out := []
 	for b in open_ventures():
 		var v: Dictionary = b.venture
-		if int(v.keeper) != n.id and not (v.hands as Array).has(n.id):
+		if int(v.keeper) != n.id and not (v.hands as Array).has(n.id) and str(w.employment.record_of(n).get("employer", "")) != ref_of(b):
 			continue
 		for id in trade_stations(b, str(v.trade)):
 			if str(w.stations[id].type) == kind:
@@ -112,6 +122,8 @@ func daily() -> void:
 	_open_finished()
 	for b in open_ventures():
 		_check(b)
+	for b in open_ventures():
+		_hire(b)
 	_consider()
 
 
@@ -131,14 +143,27 @@ func _open_finished() -> void:
 			continue
 		hh.erase("venture")
 		var b: Dictionary = w.buildings[str(p.building)]
-		b.venture = {"founder": int(rec.founder), "keeper": int(rec.founder), "trade": str(rec.trade), "day": int(rec.day),
-			"opened": w.day(), "household": h, "idle": 0, "hands": []}
-		w.stat("ventures_opened")
-		var k := w.npc(int(rec.founder))
-		if k != null and k.alive and k.job == str(rec.trade) and k.household == h:
-			_work_here(k, b)
-			w.note("%s %s opens %s %s." % [k.name, k.family, "a" if not str(b.kind).begins_with("a") else "an", Construction.kind_name(str(b.kind))])
+		_open(b, int(rec.founder), str(rec.trade), h, int(rec.day))
 		_check(b)
+
+
+## A venture opens in workshop `b` (built, bought or taken on): the record, the founder at its stations, and (B25-BIZ-D1) the
+## household's working capital invested in its till: working_days of its daily costs, as far as its head's coins above the
+## necessity reserve allow (World.spendable; never the protected reserve).
+func _open(b: Dictionary, founder: int, trade: String, h: int, day: int) -> void:
+	b.venture = {"founder": founder, "keeper": founder, "trade": trade, "day": day,
+		"opened": w.day(), "household": h, "idle": 0, "hands": [], "till": 0, "earned": 0, "paid": 0, "costs": {}, "goods": {}}
+	w.stat("ventures_opened")
+	var head: NPC = w.party(World.hh_ref(h))
+	var econ: Dictionary = w.households[h].get("econ", {}) if h >= 0 and h < w.households.size() else {}
+	var working := ceili(float(econ.get("cost", 0.0)) * float(cfg().working_days))
+	var put := mini(working, w.spendable(head)) if head != null else 0
+	if put > 0 and w.business.money.invest(b, "venture", head, put):
+		w.stat("venture_capital", put)
+	var k := w.npc(founder)
+	if k != null and k.alive and k.job == trade and k.household == h:
+		_work_here(k, b)
+		w.note("%s %s opens %s %s." % [k.name, k.family, "a" if not str(b.kind).begins_with("a") else "an", Construction.kind_name(str(b.kind))])
 
 
 ## An open venture's morning: its hands, its keeper (a change of hands or closing), its work.
@@ -197,6 +222,9 @@ func close(b: Dictionary, why: String) -> void:
 	if not b.has("venture"):
 		return
 	var v: Dictionary = b.venture
+	for rec in w.employment.of_employer(ref_of(b)):      # B25-BIZ-D2: its paid employees' employment ends with it
+		w.employment.end(rec, "the business closed")
+	w.business.money._keep(b, "venture", w.business.money.venture_owner(b))   # B25-BIZ-D1, TILL-D1: its till goes to its household
 	b.erase("venture")
 	var people: Array = (v.hands as Array).duplicate()
 	people.append(int(v.keeper))
@@ -367,3 +395,187 @@ func found(n: NPC, opt: Dictionary) -> bool:
 	w.note("%s %s sets about building %s of their own." % [n.name, n.family, Construction.kind_name(str(opt.kind), true)])
 	w.construction._keep_building(h)
 	return true
+
+
+# ---------------------------------------------------------------- the business's money and goods (B25-BIZ-D1) -----
+static func ref_of(b: Dictionary) -> String:
+	return "venture:" + str(b.get("id", ""))
+
+
+## The open venture an employer reference names ({} none).
+func by_ref(ref: String) -> Dictionary:
+	if not ref.begins_with("venture:"):
+		return {}
+	var b: Dictionary = w.buildings.get(ref.trim_prefix("venture:"), {})
+	return b if b.has("venture") else {}
+
+
+## The business `n` works for: the venture that employs them, else the one they keep ({} none). Hands (independent) have none.
+func business_of(n: NPC) -> Dictionary:
+	if n == null:
+		return {}
+	var rec: Dictionary = w.employment.record_of(n)
+	if not rec.is_empty():
+		return by_ref(str(rec.employer))
+	return kept_by(n)
+
+
+## The business's goods `n` holds for business `b`: a paid employee's employment record (`owed`), the keeper's `venture.goods`.
+func _holdings(n: NPC, b: Dictionary) -> Dictionary:
+	var rec: Dictionary = w.employment.record_of(n)
+	if not rec.is_empty() and str(rec.employer) == ref_of(b):
+		return rec.owed
+	if int(b.venture.keeper) == n.id:
+		if not b.venture.has("goods"):
+			b.venture.goods = {}
+		return b.venture.goods
+	return {}
+
+
+static var _inputs := {}              # trade -> {item: true}: what its recipes consume (derived from recipes.json, not saved)
+
+
+## Every input of a recipe made at trade `trade`'s stations (NPCBrain.TRADE_STATIONS): what its business buys with its money.
+static func trade_inputs(trade: String) -> Dictionary:
+	if not _inputs.has(trade):
+		var out := {}
+		var kinds: Array = NPCBrain.TRADE_STATIONS.get(trade, [])
+		for r in GameData.recipes:
+			if kinds.has(str(GameData.recipes[r].station)):
+				for id in GameData.recipes[r]["in"]:
+					out[str(id)] = true
+		_inputs[trade] = out
+	return _inputs[trade]
+
+
+## The coins `n` may spend on `item` for a business (its till), or -1 when the purchase is not a business's (NPCBrain.buy_qty).
+func budget(n: NPC, item: String) -> int:
+	var b := business_of(n)
+	if b.is_empty() or not trade_inputs(str(b.venture.trade)).has(item):
+		return -1
+	return BusinessMoney.venture_till_of(b)
+
+
+## The buy_from act: the business's coins for a purchase of `amount` go to its worker `n` for the deal. The business it was
+## drawn from, or {} (nothing moved).
+func fund(n: NPC, item: String, amount: int) -> Dictionary:
+	if budget(n, item) < amount or amount <= 0:
+		return {}
+	var b := business_of(n)
+	if not w.business.money.pay_out(b, "venture", n, amount, "materials"):
+		return {}
+	w.stat("venture_materials", amount)
+	return b
+
+
+## The deal is done: `qty` of `item` are the business's goods in `n`'s hands; what was not spent of `drawn` goes back.
+func bought(n: NPC, b: Dictionary, item: String, qty: int, drawn: int, spent: int) -> void:
+	if b.is_empty() or not b.has("venture"):
+		return
+	if drawn > spent:
+		w.business.money.pay_in(b, "venture", n, mini(drawn - spent, n.coins), "refund")
+	if qty > 0:
+		var h := _holdings(n, b)
+		h[item] = int(h.get(item, 0)) + qty
+
+
+## Before a craft at station `a.station` (NPCBrain act "craft"): when it is a station of the business `n` works for, what `n`
+## holds of the recipe's goods now ({} otherwise: the work is the worker's own).
+func craft_begin(n: NPC, a: Dictionary) -> Dictionary:
+	var b := business_of(n)
+	if b.is_empty() or str(venture_at(str(a.get("station", ""))).get("id", "")) != str(b.id) or not GameData.recipes.has(str(a.get("recipe", ""))):
+		return {}
+	var r: Dictionary = GameData.recipes[str(a.recipe)]
+	var counts := {}
+	for id in r["in"]:
+		counts[str(id)] = n.inv.count(str(id))
+	for id in r.out:
+		counts[str(id)] = n.inv.count(str(id))
+	return {"b": b, "counts": counts, "recipe": str(a.recipe)}
+
+
+## After it: inputs used leave the business's goods (as far as they were its), what came out is the business's.
+func craft_end(n: NPC, snap: Dictionary) -> void:
+	if snap.is_empty() or not (snap.b as Dictionary).has("venture"):
+		return
+	var h := _holdings(n, snap.b)
+	var r: Dictionary = GameData.recipes[str(snap.recipe)]
+	for id in r["in"]:
+		var used := int(snap.counts[str(id)]) - n.inv.count(str(id))
+		if used > 0 and h.has(str(id)):
+			var left := int(h[str(id)]) - used
+			if left > 0:
+				h[str(id)] = left
+			else:
+				h.erase(str(id))
+	for id in r.out:
+		var made := n.inv.count(str(id)) - int(snap.counts[str(id)])
+		if made > 0:
+			h[str(id)] = int(h.get(str(id), 0)) + made
+			w.stat("venture_made", made)
+
+
+## BusinessMoney.after_trade: `n` sold `qty` of `id` for `total`; the units that were the business's goods pay their share of
+## the price into its till. True when any were (the sale was the business's).
+func on_sale(n: NPC, id: String, qty: int, total: int) -> bool:
+	var b := business_of(n)
+	if b.is_empty():
+		return false
+	var h := _holdings(n, b)
+	var k := mini(qty, int(h.get(id, 0)))
+	if k <= 0:
+		return false
+	if int(h[id]) - k > 0:
+		h[id] = int(h[id]) - k
+	else:
+		h.erase(id)
+	var share := total * k / qty
+	if share > 0 and w.business.money.pay_in(b, "venture", n, share, "sale"):
+		w.stat("venture_sales", share)
+	return true
+
+
+## The business's goods of `b` that `n` still holds (never more than they carry), item -> count.
+func goods_of(n: NPC, b: Dictionary) -> Dictionary:
+	var out := {}
+	var h := _holdings(n, b)
+	var ids: Array = h.keys()
+	ids.sort()
+	for id in ids:
+		var k := mini(int(h[id]), n.inv.count(str(id)))
+		if k > 0:
+			out[str(id)] = k
+	return out
+
+
+# ---------------------------------------------------------------- paid employees (B25-BIZ-D2) ---------------
+## Each dawn, an open venture hires one paid employee when it needs and can afford one: its trade has work (skilled_place
+## `work`: the trade's people are busy at their stations), its own stations have room (fewer people work there than the
+## stations hold), and its till holds hire_runway_days days of the market wage. The candidate: the most suitable willing adult
+## of the trade or without a trade of their own, with some skill in it (NPCBrain.suitability: skill, then experience; then
+## the poorer, then by id), free of other obligations; they agree through JudgmentLive.work_refusal (Employment.hire_for).
+func _hire(b: Dictionary) -> void:
+	var v: Dictionary = b.venture
+	var trade := str(v.trade)
+	var places := 0
+	for st in trade_stations(b, trade):
+		places += int(w.stations[st].get("capacity", 1))
+	if 1 + (v.hands as Array).size() + w.employment.of_employer(ref_of(b)).size() >= places:
+		return
+	var wage: int = w.employment.market_wage(trade)
+	if BusinessMoney.venture_till_of(b) < wage * int(cfg().get("hire_runway_days", 7)):
+		return
+	if not bool(w.brain.skilled_place(trade).work):
+		return
+	var sk: String = w.brain._trade_skill(trade)
+	var cands := []
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household >= 0 and o.id != int(v.keeper) and (o.job in Construction.HIRABLE or o.job == trade) \
+				and sk != "" and int(o.skills.get(sk, 0)) > 0 and Skills.level(o, sk) >= 1 and kept_by(o).is_empty() \
+				and w.employment.refusal(o, trade, ref_of(b)) == "":
+			cands.append(o)
+	cands.sort_custom(func(a: NPC, c: NPC) -> bool: return w.brain._key_less(w.brain.suitability(a, trade) + [a.coins, a.id], w.brain.suitability(c, trade) + [c.coins, c.id]))
+	for o: NPC in cands:
+		if w.employment.hire_for(ref_of(b), o, trade, wage) == "":
+			w.stat("venture_employees_hired")
+			return

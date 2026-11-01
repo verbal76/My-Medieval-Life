@@ -78,7 +78,17 @@ static func is_church(p: Dictionary) -> bool:
 
 ## The store a worker's seed, tools and harvest go to: the church's for its plot, else the household's pantry.
 func _store(n: NPC, p: Dictionary) -> Inventory:
-	return w.chapel.store if is_church(p) else _pantry(n)
+	if is_church(p):
+		return w.chapel.store
+	var boss: Inventory = w.employment.farm_store(n, p) if w.employment != null else null     # B25-BIZ-D4: a farm hand: the employer's
+	return boss if boss != null else _pantry(n)
+
+
+## B25-BIZ-D4: the next piece of work for `n`, a permanent farm hand, on plot `p` of their employer (Employment): the same
+## harvest, sowing, clearing and ploughing steps, with the employer's seed, tools and store; nothing is bought and no fence
+## is built for the employer (their own decision). True when planned.
+func plan_hired(n: NPC, p: Dictionary) -> bool:
+	return able(n) and _plan_on(n, p, false, true)
 
 
 ## The next piece of work on the church plot for `n` (a volunteer or one of the clergy), planned into n.plan. True when planned.
@@ -477,7 +487,7 @@ func _sorted(cs: Array) -> Array:
 	return cs
 
 
-func _plan_on(n: NPC, p: Dictionary, light: bool) -> bool:
+func _plan_on(n: NPC, p: Dictionary, light: bool, hired := false) -> bool:
 	var r := rect_of(p)
 	var inner := r.grow(-1)
 	var pantry := _store(n, p)
@@ -497,7 +507,7 @@ func _plan_on(n: NPC, p: Dictionary, light: bool) -> bool:
 		var crop := _seed_crop([n.inv, pantry])
 		if crop != "":
 			return _batch(n, p, "sow", _sorted(empty), false, crop)
-		if not is_church(p) and _plan_buy_seed(n, empty.size()):
+		if not is_church(p) and not hired and _plan_buy_seed(n, empty.size()):
 			return true
 	# 3. clear the ground (light: plants and saplings only)
 	var obst := []
@@ -510,6 +520,8 @@ func _plan_on(n: NPC, p: Dictionary, light: bool) -> bool:
 		return _batch(n, p, "clear", obst, false)
 	if light:
 		return false
+	if hired and not bool(p.farm.get("fence", false)):
+		return false                     # B25-BIZ-D4: the employer fences their own farmland
 	# 4. the fence and gate, with materials in hand or bought
 	if not bool(p.farm.get("fence", false)):
 		var ref := World.hh_ref(n.household)
@@ -676,11 +688,11 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 	if church:
 		if not w.chapel.may_work(n):
 			return false
-	elif not w.holds(World.hh_ref(n.household), p):
+	elif not w.holds(World.hh_ref(n.household), p) and not w.employment.works_plot(n, p):
 		return false
 	var pantry := _store(n, p)
 	if what == "fp_fence":
-		if church:
+		if church or not w.holds(World.hh_ref(n.household), p):
 			return false
 		return build_fence(p, World.hh_ref(n.household), [n.inv, pantry]) == ""
 	var done := 0

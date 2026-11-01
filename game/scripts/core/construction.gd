@@ -274,6 +274,8 @@ func can_hire(n: NPC) -> String:
 		return "%s is already hired for today." % n.name
 	if w.business != null and w.business.is_attendant(n):
 		return "%s minds a counter already." % n.name
+	if w.employment != null and w.employment.is_employed(n):
+		return "%s works for someone already." % n.name     # B25-BIZ-D4: one employer at a time
 	return ""
 
 
