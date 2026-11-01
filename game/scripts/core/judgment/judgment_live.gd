@@ -513,7 +513,7 @@ static func _first_stands(j: JudgmentStore, seller: int, first: int, profile := 
 	var sel := str(dc.selection)
 	if sel != "argmax" and sel != "margin":
 		return false
-	if j.rec != null or (j.asp != null and j.asp.enabled):
+	if j.rec != null or (j.asp != null and j.asp.applies("factors")):     # B25-AMBITION-IMPL: the career ambition alone changes no profile read here
 		return false
 	if j.pers.active and (j.pers.holds_stubbornness(seller) or j.pers.overriding(seller, j.now_minute() / 1440, j.now_minute() % 1440)):
 		return false                            # a stubborn chooser's penalties can move the choice
@@ -742,7 +742,7 @@ static func pick_court(w, n: NPC, people: Array, attraction: Dictionary) -> NPC:
 	var cands := []
 	for o: NPC in people:
 		var f := {"attraction": roundi(clampf(float(attraction[o.id]), 0.0, 100.0) * 1000.0)}
-		if aspiring(w):
+		if aspiring(w) and w.judgment.asp.applies("court"):
 			f.merge(court_factors(w, n, o))                # R5 (FAD Q3): what else this villager values in a partner, weighed by their own priorities
 		cands.append({"id": o.id, "counterparty": o.id, "factors": f})
 	var r := JudgmentWeighting.choose(w.judgment, w.judgment.cfg, n.id, "court_choice", cands, [w.day(), n.id])

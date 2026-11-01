@@ -67,10 +67,11 @@ static func _choose(store: JudgmentStore, cfg: Dictionary, chooser: int, profile
 	var scaled: Dictionary = {}
 	if asp != null:
 		var fw: Dictionary = asp.c.get("factor_weights", {})
-		if fw.has(profile):
+		# B25-AMBITION-IMPL: each reader only when aspiration.apply has it on (Build 25 ships the career ambition alone)
+		if fw.has(profile) and asp.applies("factors"):
 			weights = weights.duplicate()
 			weights["aspiration"] = int(fw[profile])
-		elif profile == "court_choice" or profile == "proposal_accept":      # whom to court, and (WDR-011-Q8 A) whether to accept
+		elif (profile == "court_choice" and asp.applies("court")) or (profile == "proposal_accept" and asp.applies("proposal")):      # whom to court, and (WDR-011-Q8 A) whether to accept
 			weights = (((asp.c.get("court", {}) as Dictionary).get("weights", {})) as Dictionary).duplicate()
 			scaled = ((asp.c.get("court", {}) as Dictionary).get("scaled_by", {}) as Dictionary)
 		if prof.has("scaled_by"):

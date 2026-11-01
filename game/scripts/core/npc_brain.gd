@@ -4333,6 +4333,11 @@ func _field_workers(f: Dictionary) -> int:
 ## weigh what each open job actually pays against the cost of a tool and the walk from home, and only
 ## move for a clear gain. A taken opening is gone for the next villager. Deterministic: households in
 ## order, members by id.
+## B25-AMBITION-IMPL (owner B25-AMBITION-D4, 2026-11-01): with job_choice on, an employed villager who is not in need but
+## is ambitious (JudgmentAspiration.ambitious: their own profession priority) looks at the places still open on their own
+## weekly morning (looks_today), after everyone in need has chosen, and weighs them against staying (JudgmentLive.pick_job,
+## staying first in the live order). Skill and room to grow in a place count, scaled by that priority; no level moves anyone
+## by itself (X18-D3), and most mornings most villagers do not look.
 func seek_work() -> void:
 	var market := job_market()
 	var cooldown := int(GameData.b("job_switch_cooldown_days"))
@@ -4341,6 +4346,7 @@ func seek_work() -> void:
 	var no_game: bool = w.fauna.takeable_game() == 0
 	var seekers := 0               # WDR-012-C: villagers looking for work this morning
 	var judged_job := JudgmentLive.on(w, "job_choice")     # R5 (FAD Q2): off unless aspiration.enabled and integration.job_choice
+	var lookers := []              # B25-AMBITION-IMPL: [villager, household econ], weighed after those in need
 	for h in w.households.size():
 		var econ: Dictionary = w.households[h].get("econ", {})
 		if econ.is_empty():
@@ -4354,43 +4360,26 @@ func seek_work() -> void:
 			var share := float(econ.cost) / maxi(1, int(econ.adults))
 			if not unemployed:
 				var settling := n.left_job != "" and w.day() - n.job_since < cooldown     # just changed jobs: give it time
-				if int(econ.streak) < int(GameData.b("mobility_unsustainable_days")) or settling:
-					continue
-				if n.income_days.size() < 5 or n.avg_income(5) >= share:
+				var need := int(econ.streak) >= int(GameData.b("mobility_unsustainable_days")) and not settling \
+						and n.income_days.size() >= 5 and n.avg_income(5) < share
+				if not need:
+					if judged_job and not settling and w.judgment.asp.looks_today(n, w.day()) and w.judgment.asp.ambitious(n, w):
+						lookers.append([n, econ])
 					continue
 				if n.job == "merchant" and _relocate_stall(n):         # WDR-012-C: first to a better stall
 					continue
 			seekers += 1
 			var current := 0.0 if unemployed else n.avg_income(5)
-			var best := ""
-			var best_score := -1e9
-			var opts := []                 # R5 job_choice: every feasible option with its live score
-			var home := w.building_door(n.home)
-			for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector", "stonecutter", "tailor", "barber", "preacher", "church_assistant"]:
-				var opt: Dictionary = market[job]
-				if int(opt.open) <= 0 or job == n.job:
-					continue
-				if job == n.left_job and w.day() - n.job_since < int(GameData.b("job_return_days")):
-					continue
-				var setup := 0.0
-				if opt.tool != "" and not n.inv.has(opt.tool):
-					var price := tool_price(n, opt.tool)     # the smith or the goods merchant sells tools (not the timber sellers)
-					if price < 0 or n.coins < price:
-						continue
-					setup = price / 10.0
-				var score: float = float(opt.pay) - setup - Vector2(home).distance_to(Vector2(opt.at)) / 60.0
-				if judged_job:
-					opts.append([job, score])
-				if score > best_score:
-					best_score = score
-					best = job
+			var found := _job_options(n, market)
+			var best := str(found[0])
+			var best_score := float(found[1])
 			if best == "":
 				if unemployed:
 					once("no_work_%d_%d" % [n.id, w.day()], "%s %s looks for work and finds none." % [n.name, n.family])
 				continue
 			var live_switch := unemployed or best_score >= maxf(current * float(GameData.b("job_switch_margin")), current + float(GameData.b("job_switch_min_gain")))
 			if judged_job:
-				best = JudgmentLive.pick_job(w, n, opts, unemployed, current, best, live_switch, econ)
+				best = JudgmentLive.pick_job(w, n, found[2], unemployed, current, best, live_switch, econ)
 				if best == "":
 					continue                   # stays in the job they have
 			elif not live_switch:
@@ -4401,7 +4390,50 @@ func seek_work() -> void:
 			var left_place := n.workplace
 			_change_job(n, best, why)
 			_post_left(n, left, left_place)
+	for lk in lookers:
+		var n: NPC = lk[0]
+		var found := _job_options(n, market)
+		if str(found[0]) == "":
+			continue
+		w.judgment._stat("ambition_looks")
+		var pick := JudgmentLive.pick_job(w, n, found[2], false, n.avg_income(5), str(found[0]), false, lk[1])
+		if pick == "":
+			continue                           # content where they are: staying is a choice
+		w.judgment._stat("ambition_moves")
+		market[pick].open = int(market[pick].open) - 1
+		var left := n.job
+		var left_place := n.workplace
+		_change_job(n, pick, "looking for work that suits their skills")
+		_post_left(n, left, left_place)
 	_hiring_competition(int(market.manor_hand.open), seekers)
+
+
+## The open places `n` could take this morning (seek_work): [the live rule's best job ("" none), its score, every feasible
+## option as [job, live score] in the market's order]. The live score is the pay less a tenth of a tool's price (one they
+## must buy and can afford) less the walk from home over 60; their own job, a full place and one they left too lately are out.
+func _job_options(n: NPC, market: Dictionary) -> Array:
+	var best := ""
+	var best_score := -1e9
+	var opts := []
+	var home := w.building_door(n.home)
+	for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector", "stonecutter", "tailor", "barber", "preacher", "church_assistant"]:
+		var opt: Dictionary = market[job]
+		if int(opt.open) <= 0 or job == n.job:
+			continue
+		if job == n.left_job and w.day() - n.job_since < int(GameData.b("job_return_days")):
+			continue
+		var setup := 0.0
+		if opt.tool != "" and not n.inv.has(opt.tool):
+			var price := tool_price(n, opt.tool)     # the smith or the goods merchant sells tools (not the timber sellers)
+			if price < 0 or n.coins < price:
+				continue
+			setup = price / 10.0
+		var score: float = float(opt.pay) - setup - Vector2(home).distance_to(Vector2(opt.at)) / 60.0
+		opts.append([job, score])
+		if score > best_score:
+			best_score = score
+			best = job
+	return [best, best_score, opts]
 
 
 ## A merchant's stall falls vacant when they die or change work.

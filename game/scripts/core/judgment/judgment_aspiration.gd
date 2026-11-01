@@ -10,9 +10,12 @@ extends RefCounted
 ## enters the family_* profiles. Nothing here creates, moves or destroys a coin, a food point or an item: it reads the world
 ## and weighs options the live code already found feasible; a villager may fail and stay unmet (WDR-022: no hidden rescue).
 ##
-## OFF by default: judgment.json "aspiration".enabled is false, and decision.integration.job_choice (its own flag) is
-## false; with them off nothing here runs, no factor is added to any profile and the judgment section is written exactly
-## as before (version 3, no "aspire" key). Every number is in judgment.json "aspiration" and is a PROVISIONAL agent value
+## Switches: judgment.json "aspiration".enabled and decision.integration.job_choice (its own flag). Both ON since Build 25
+## for the career ambition only (owner B25-AMBITION-D4, 2026-11-01, resolving X19-SWITCHES-D1 for it): the dawn update,
+## job_choice and the ambitious look for work (NPCBrain.seek_work). The layer's other readers (the yes-or-forgo factor,
+## courting, proposals) stay off by "aspiration".apply until the owner decides them (`applies`). With enabled off nothing
+## here runs, no factor is added to any profile and the judgment section is written exactly as before (version 3, no
+## "aspire" key). Every number is in judgment.json "aspiration" and is a PROVISIONAL agent value
 ## except the owner's hunger survival floor (25, decision.family.survival_floor_hunger) and the ~30% stubbornness share
 ## (traits.stubbornness_share_permille), both read from where they already live.
 ##
@@ -69,6 +72,13 @@ func configure(section: Dictionary) -> void:
 
 func n_(key: String, fallback := 0) -> int:
 	return int(c.get(key, fallback))
+
+
+## Whether reader `use` of the layer is on (B25-AMBITION-IMPL): "factors" (the yes-or-forgo profiles' aspiration factor),
+## "court" (court_choice's courting factors), "proposal" (WDR-011-Q8 weighing). judgment.json "aspiration".apply; a
+## missing key is on (the full R5 design). The career decision needs only `enabled`.
+func applies(use: String) -> bool:
+	return enabled and bool((c.get("apply", {}) as Dictionary).get(use, true))
 
 
 static func domain_name(d: int) -> String:
@@ -315,8 +325,8 @@ func satisfaction(n: NPC, w) -> Array:
 	return out
 
 
-## Profession: 0 without a job; else the mean level of the trade's skills over profession_level_full, or, for a trade with
-## no listed skill, tenure over profession_tenure_full days.
+## Profession: 0 without a job; else the mean level of the trade's skills (trade_skills) over profession_level_full, or,
+## for a trade with no listed skill, tenure over profession_tenure_full days.
 func profession_sat(n: NPC, w) -> int:
 	if n.job == "":
 		return 0
@@ -326,11 +336,22 @@ func profession_sat(n: NPC, w) -> int:
 	return clampi((w.day() - n.job_since) * 100000 / maxi(1, n_("profession_tenure_full", 16)), 0, 100000)
 
 
-## The person's level in `job`'s skills (skill_start.job_skills), 0..100000; -1 when the trade lists none. A skill never
+## The skills trade `job`'s own work trains (B25-AMBITION-IMPL, owner B25-AMBITION-D4: judgment.json "aspiration".job_skills,
+## verified against the recipes' skills and the work acts that call Skills.gain: carpenter carpentry, tanner tanning,
+## stonecutter masonry, farmer farming, sage healing, hunter hunting). balance.json skill_start.job_skills, which named
+## crafting for the carpenter and the tanner and nothing for the farmer and the stonecutter, only seeds new worlds' starting
+## experience and is read here only when the section has no mapping. [] for a trade whose work trains no skill.
+func trade_skills(job: String) -> Array:
+	var js: Dictionary = c.get("job_skills", {})
+	if js.is_empty():
+		js = (GameData.b("skill_start") as Dictionary).get("job_skills", {})
+	return js.get(job, []) if job != "" and not job.begins_with("_") else []
+
+
+## The person's level in `job`'s skills (trade_skills), 0..100000; -1 when the trade lists none. A skill never
 ## practised (0 xp) counts as level 0.
 func skill_fit(n: NPC, job: String) -> int:
-	var js: Dictionary = (GameData.b("skill_start") as Dictionary).get("job_skills", {})
-	var list: Array = js.get(job, [])
+	var list: Array = trade_skills(job)
 	if list.is_empty():
 		return -1
 	var tot := 0
@@ -341,8 +362,7 @@ func skill_fit(n: NPC, job: String) -> int:
 
 ## Room to improve in `job`'s skills, 0..100000, only when the person has some experience in them.
 func growth_fit(n: NPC, job: String) -> int:
-	var js: Dictionary = (GameData.b("skill_start") as Dictionary).get("job_skills", {})
-	var list: Array = js.get(job, [])
+	var list: Array = trade_skills(job)
 	var tot := 0
 	var any := false
 	for sk in list:
@@ -592,6 +612,24 @@ func _record(w, n: NPC, kind: String, facts: Dictionary) -> void:
 	store._stat("aspire_event_" + kind)
 	if store.rec != null:
 		store.rec.aspiration_event(n.id, kind, facts)      # judgment/aspiration (recorder_codes.json)
+
+
+## B25-AMBITION-IMPL (owner B25-AMBITION-D4: "Not every NPC must be ambitious"): whether employed villager `n`, not in need,
+## looks at the open places this morning to weigh them against staying. Ambition is the person's own effective profession
+## priority (temperament, a seeded hash; age; the shifts their successes and setbacks have made; lowered by survival
+## pressure), at least job.ambition_from permille; the look comes once every job.look_days mornings, on a day of their own
+## (a seeded hash of the world and the person). No RNG, nothing stored. Looking promotes no one: the job_choice weighing
+## decides, staying is always an option, and a skill level alone never moves anyone (X18-D3).
+func ambitious(n: NPC, w) -> bool:
+	if not enabled or n == null or not rows.has(n.id):
+		return false
+	var jc: Dictionary = c.get("job", {})
+	return eff_priority(n, PROFESSION, survival(n, w), w) >= int(jc.get("ambition_from", 1100))
+
+
+func looks_today(n: NPC, today: int) -> bool:
+	var every := maxi(1, int((c.get("job", {}) as Dictionary).get("look_days", 7)))
+	return (today + JudgmentMath.hash_ints([seed_, n.id, 7301]) % every) % every == 0
 
 
 ## The configured job_choice flag needs the layer on: refused (with a logged reason) otherwise.
