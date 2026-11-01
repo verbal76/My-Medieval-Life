@@ -13362,6 +13362,39 @@
    "notes": "The revised master package (rebuilt by ChatGPT from the owner's originals) will come for code verification, discrepancy review and owner questions; it supersedes older specifications only on the owner's explicit final approval. docs/expansions/ is the implementation-evidence layer supporting that work, not the replacement specification."
   },
   {
+   "id": "DOC-CONT-01",
+   "kind": "approved",
+   "title": "Permanent development documentation and AI continuity: one current-state entry point, a chronological development changelog, SHA-bound test evidence with status levels, worker recovery records, an 11-step recovery procedure usable by any assistant",
+   "description": "Permanent development documentation and AI continuity: one current-state entry point, a chronological development changelog, SHA-bound test evidence with status levels, worker recovery records, an 11-step recovery procedure usable by any assistant",
+   "source": "docs/directives/2026-11-01_permanent_documentation_ai_continuity.md",
+   "owner_wording": "GitHub must preserve not only our code, but the reasoning, decisions, discoveries, mistakes, corrections, validation results, and development history that produced it.",
+   "approval": "owner directive 2026-11-01 (APPROVED, effective immediately)",
+   "acceptance": [
+    "One authoritative current-state document, discoverable from CLAUDE.md and the root README, naming build, integration branch, latest verified SHA, development head, active and suspended workers, pending branches, tests, defects, owner decisions, next action and history links",
+    "One chronological development changelog with the directive's ten fields, maintained at each milestone",
+    "Test evidence recorded against the exact SHA with the IMPLEMENTED/COMPILED/TESTED/VALIDATED/INTEGRATED/PACKAGED/RELEASED distinction; Actions conclusions kept in the repository",
+    "Every active or suspended workstream has a recoverable record (branch, pushed commit, unpushed work, worktree, tests, defects, merge readiness, dependencies, next step)",
+    "A standard 11-step recovery procedure that separates current state from history, usable by an external assistant",
+    "Stale copies on other branches cannot be mistaken for the current state; the register stays the only requirements and decision database"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_permanent_documentation_ai_continuity.md"
+    }
+   ]
+  },
+  {
    "id": "DOC-RECON-01",
    "kind": "approved",
    "title": "Documentation reconciliation and owner-decision protection: every expansion (17-27), multiplayer and standalone approved system has a current status document; register statuses corrected from code and test evidence; precedence hierarchy (latest explicit owner decision first); historical documents labelled; missing original sources listed; one authoritative entry point; on the isolated branch wip/requirements-control, not merged into the gameplay baseline without the owner",

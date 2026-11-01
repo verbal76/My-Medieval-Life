@@ -30,7 +30,7 @@ The living-world philosophy is preserved in the nonbinding conceptual `docs/MEDI
 | Decisions with date and who decided (owner or agent proposal) | `docs/DECISIONS.md` |
 | The five-build roadmap, the three expansions and their dependencies | `docs/EXPANSION_ROADMAP.md` |
 | Expansion specifications (primary): Mining & Industrial (Build 17); Settlement Advancement & Regional Economy (Build 18); NPC Judgment System (Build 19) | `docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf`, `docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf`, `docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf` (text copies beside each) |
-| Session state: branches, workers in flight, next actions (never requirement status) | `docs/CURRENT_DEVELOPMENT_STATE.md`; after a compaction `docs/handoffs/CURRENT_SESSION_RECOVERY.md` |
+| **Current state** (build, branches, workers, tests, defects, next action; never requirement status) | `docs/CURRENT_DEVELOPMENT_STATE.md` on `wip/requirements-control`; history `docs/DEVELOPMENT_CHANGELOG.md`; recovery `docs/handoffs/CURRENT_SESSION_RECOVERY.md` |
 | How systems affect each other (INT-### entries, validated) | `docs/SYSTEM_INTERACTION_MANIFEST.md` (`tools/check_interactions.py`) |
 | Design scopes for later work (upper floors and attics) | `docs/design/UPPER_FLOORS_SCOPE.md` |
 | Simulation performance (runtime, timing, restarts, checkpoint evaluation) | `docs/release/SIMULATION_PERFORMANCE.md` |
@@ -57,25 +57,17 @@ The living-world philosophy is preserved in the nonbinding conceptual `docs/MEDI
 
 The only current decision/status source is `docs/requirements/requirements.json`, with `docs/requirements/SCHEMA.md` and generated views. Approval, implementation, testing, device verification and release are distinct. Do not promote proposals, old build claims or unmerged worker code to completed gameplay.
 
-## Current milestones (2026-10-31, DOC-RECON-01)
+## Current state and history (DOC-CONT-01, 2026-11-01)
 
-- **Status of every expansion and system:** `docs/expansions/README.md` and the files beside it (one per expansion 17-27,
-  multiplayer, standalone systems, historical documents, missing sources). They agree with the register.
-- **Build 24** (`4611d86`, tag `build-24`): latest private three-platform draft; frozen, never altered. Builds 22 and 23
-  are frozen too.
-- **Build 25:** `wip/expansion20` `ad281dc` (Expansion 20: LE-00..04 and LE-06 integrated, LE-05 partial, LE-07 not
-  started; economy OFF by default; all eight Build 24 review findings fixed; bandit intelligence, judgment calibration,
-  tool repair and rental merged). Year-long validation X20-MERGED-VALIDATION running (Actions 41233948995, 41233970504);
-  frozen only after it passes and the owner approves.
-- **Build 26:** repository recovery and consolidation from the frozen Build 25 SHA. Staging (directives, register) and
-  `wip/expansion20` (code and implementation notes) diverged on 2026-10-21 (`5b82a69`); stranded work is on
-  `wip/expansion21-preparation`, `wip/roadmap-docs`, `wip/x20-trader-inv` and `wip/juice-assessment`.
-- **Build 27:** Expansion 21 only after Build 26 is frozen and the owner explicitly authorizes it.
-- **Future priority:** 20 → 21 → 23 → 22 → 24 → 25 → 26 → 27. Expansions 22-27 are design only and not authorized.
-- **Pending authority switch (DOC-AUTH-01):** a revised owner specification set will supersede the older design documents
-  on the owner's explicit final approval, not before.
-- The milestones of 2026-10-27 that stood here (Build 22 latest, MP-INTERACT-01 to merge last) are historical:
-  MP-INTERACT-01 was merged (`87b69ab`) and shipped in Build 23.
+- **Current state:** `docs/CURRENT_DEVELOPMENT_STATE.md` on branch `wip/requirements-control` (build, integration branch,
+  verified SHA, workers, tests, defects, owner decisions, next authorized action). Copies on other branches are stale.
+- **Development history:** `docs/DEVELOPMENT_CHANGELOG.md` (chronological, SHA-bound, with the IMPLEMENTED ... RELEASED levels).
+- **Recovery procedure (11 steps, also for an external assistant):** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
+- **Test and simulation evidence:** the changelog entries (SHA, run id, result); `docs/release/build25_validation/`,
+  `docs/release/chapel_fix/`, `docs/release/economic_maturation/`, `docs/release/build25_reconciliation/`,
+  `docs/release/LONG_RUN_SIMULATION.md`; the register's `tests` and `test_commit` fields.
+- The milestones of 2026-10-31 that stood here (Build 25 as Expansion 20 freeze, Builds 26 and 27) are history: Build 25 is the
+  consolidation build (B25-SCOPE-D1). The archived handoff keeps the old sequence.
 
 ## Open owner decisions and blockers
 
@@ -92,16 +84,7 @@ Never answer an open decision on the owner's behalf, and never treat a proposal 
 
 A few early register entries cite chat messages or uploads that were never committed (for example REC-002, REC-007 and REC-013). Their wording is copied into the entry itself, under `owner_wording`. Treat that copy as the record, and ask the owner only if it is not enough to act on.
 
-## Expansion 20 consolidated scope
+## Next approved work and restrictions
 
-The live register and `docs/requirements/views/BUILD_20.md` control current authorized scope; `docs/expansion20/X20_OPEN_ITEMS.md` is a planning snapshot. Owner authorization on 2026-10-26 supersedes the 2026-10-24 planning-only restriction. The economy foundation is not the completed economy. Multiplayer remains a final-integration release blocker.
-
-## Next approved work
-
-1. Fetch current remote branches/worktrees, current registry and running CI/simulations; do not restart ongoing work.
-2. Coordinate worker branches and test evidence from the register's queue; do not follow archived prototype task boards.
-3. Follow the current Expansion 20 multiplayer gate and avoid any build before the correction is integrated last and validated.
-
-## Current restrictions
-
-Do not merge to main, force-push shared branches, break save/identity continuity, disrupt other workers or auto-implement future expansions. Original GDD/Bob/Morris research is historical only. No X20 packaging until MP-INTERACT-01 is integrated last and validated; no automatic publication authorization. Preserve real money/item conservation, family-sacrifice decisions, six aspiration domains, Judgment weighting and host authority.
+See `docs/CURRENT_DEVELOPMENT_STATE.md` ("Next authorized actions", "Restrictions in force"). The Expansion 20 gate and
+multiplayer-last notes that stood here are history (satisfied for Build 23).

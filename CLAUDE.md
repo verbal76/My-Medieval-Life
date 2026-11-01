@@ -9,6 +9,10 @@ the owner says otherwise. Update it in the same PR as any change to the workflow
 The GitHub repository is the project's memory; conversation memory, the container and private artifacts never
 are. No file is read automatically because it exists: do these steps, in order, before any new work.
 
+**Current state (DOC-CONT-01, 2026-11-01): `docs/CURRENT_DEVELOPMENT_STATE.md` on branch `wip/requirements-control`** is the one
+entry point (copies on other branches are stale and marked so); history is `docs/DEVELOPMENT_CHANGELOG.md`; the standard 11-step
+recovery is `docs/handoffs/CURRENT_SESSION_RECOVERY.md`. Record every milestone there and in the register as part of the milestone.
+
 1. **Identify the repository, branch and latest remote commit.** Repository `verbal76/My-Medieval-Life`;
    development branch `staging/my-medieval-life`. Run `git fetch origin staging/my-medieval-life`, check out or
    update that branch, and note `git log origin/staging/my-medieval-life -1`.
@@ -28,11 +32,11 @@ are. No file is read automatically because it exists: do these steps, in order, 
    `python3 tools/check_requirements.py` (it must report 0 problems).
 7. **Determine what was completed, what remains unverified and what is authorized next,** from the register's
    statuses and evidence and the state file's next tasks; never from memory of a conversation.
-8. **Resume only currently authorized work.** Use the live requirements register, latest owner directives and active worker branches. Build sequence (owner, 2026-10-31, BUILD-SEQ-25-27): Build 25 = Expansion 20 validation and freeze (`wip/expansion20` `ad281dc`, frozen only after the owner approves the validation); Build 26 = repository recovery and consolidation from the frozen Build 25 SHA; Build 27 = Expansion 21, only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers. Expansions 22-27 are not authorized. Never answer owner decisions, compromise save/security rules, or merge to main without authorization.
+8. **Resume only currently authorized work.** Use the live requirements register, latest owner directives and active worker branches; the current build, branches and next authorized action are in `docs/CURRENT_DEVELOPMENT_STATE.md`. Build 25 is the consolidation build (owner, 2026-11-01, B25-SCOPE-D1); the 2026-10-31 Build 25-27 sequence (BUILD-SEQ-25-27) is history for Build 25 scope. Build numbers are not expansion numbers. Never answer owner decisions, compromise save/security rules, or merge to main without authorization.
 
 **After a context compaction or in a fresh session** (owner directive 2026-10-20, `docs/directives/2026-10-20_compaction_readiness.md`):
 - Do steps 1-8 before any further decision.
-- Build authority is the live requirements register, generated STATUS/QUEUES views and most recent explicit owner directives. Build 24 is the latest private test build; development resumed 2026-10-30 (X20-RESUME). WDR-022 remains in force. Recovery: `docs/handoffs/CURRENT_SESSION_RECOVERY.md`; checkpoint around 70–75% context.
+- Build authority is the live requirements register, generated STATUS/QUEUES views and most recent explicit owner directives. Build 24 is the latest private test build; Build 25 (consolidation) is in development. WDR-022 remains in force. Recovery: `docs/handoffs/CURRENT_SESSION_RECOVERY.md`; checkpoint around 70–75% context.
 - What a conversation summary lacks was not thereby unapproved: the register, the decision log and `docs/directives/` are the record.
 - Do not repeat completed work, and never restart a simulation or test before checking whether it is still running (the state file's workers and processes: GitHub Actions runs, local processes).
 - Compaction is not a reason to stop: continue the next approved task.
