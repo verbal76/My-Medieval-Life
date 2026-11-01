@@ -1,3 +1,5 @@
+> **STALE COPY. Not the current state.** Since 2026-11-01 (DOC-CONT-01) the current state is `docs/CURRENT_DEVELOPMENT_STATE.md` on branch `wip/requirements-control`, with the development changelog beside it. This copy is kept for history only.
+
 # Current development state — active handoff
 
 **Updated 2026-10-30 (development resumed: three workstreams).** Fetch current heads before acting. The previous handoff is preserved at `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_pre_2026-10-27_authority_cleanup.md` as an archived audit snapshot, **not active tasks**.
