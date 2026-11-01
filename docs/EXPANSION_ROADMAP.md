@@ -5,7 +5,12 @@ expansion in `docs/expansions/`. They agree with the register (`docs/requirement
 design is not permission to start it. A revised owner specification set is being prepared; it becomes authoritative only on
 the owner's explicit final approval (DOC-AUTH-01).
 
-**Build sequence (owner, 2026-10-31, BUILD-SEQ-25-27; build numbers are not expansion numbers):**
+**Build 25 scope (owner, 2026-11-01, B25-SCOPE-D1, `docs/directives/2026-11-01_build25_scope_clarification.md`; controls):**
+Build 25 is the consolidation build: all previously approved expansion work and all approved, recoverable work from abandoned or
+superseded branches. Assigning work to Build 25 does not make it present; the read-only audit B25-SCOPE-AUDIT establishes what is.
+The 2026-10-31 sequence below is preserved as history; its Build 26 recovery assignments no longer control Build 25 scope.
+
+**Historical build sequence (owner, 2026-10-31, BUILD-SEQ-25-27; build numbers are not expansion numbers):**
 - **Build 25:** Expansion 20 validation and freeze. `wip/expansion20` at `ad281dc` is being validated (X20-MERGED-VALIDATION, Actions 41233948995 and 41233970504). It becomes the frozen baseline only after the validation passes and the owner approves.
 - **Build 26:** repository recovery and consolidation, on a separate branch from the exact frozen Build 25 SHA.
 - **Build 27:** Expansion 21 begins, only after Build 26 is frozen and the owner explicitly authorizes it.

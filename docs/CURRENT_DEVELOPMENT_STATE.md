@@ -5,7 +5,17 @@
 Fetch current heads before acting. The previous handoff (2026-10-27 to 2026-10-31, with the full Expansion 20 worker history) is
 archived at `docs/handoffs/archive/CURRENT_DEVELOPMENT_STATE_to_2026-10-31.md`.
 
-## Build sequence (owner, 2026-10-31, BUILD-SEQ-25-27)
+## Build 25 scope (owner, 2026-11-01, B25-SCOPE-D1; controls)
+
+**Build 25 scope (owner, 2026-11-01, B25-SCOPE-D1, `docs/directives/2026-11-01_build25_scope_clarification.md`; controls):**
+Build 25 is the consolidation build: all previously approved expansion work and all approved, recoverable work from abandoned or
+superseded branches. Assigning work to Build 25 does not make it present; the read-only audit B25-SCOPE-AUDIT establishes what is.
+The 2026-10-31 sequence below is preserved as history; its Build 26 recovery assignments no longer control Build 25 scope.
+
+**B25-SCOPE-AUDIT** (lead, read-only, four agents): reconciliation of approved expansion work and abandoned branches against
+`ad281dc`; report under `docs/release/build25_reconciliation/`. No gameplay change, merge or recovery until it reports.
+
+## Historical build sequence (owner, 2026-10-31, BUILD-SEQ-25-27; superseded for Build 25 scope by B25-SCOPE-D1)
 
 - **Build 24** (`4611d86`, tag `build-24`): latest private three-platform draft. Frozen; never altered. Builds 22 and 23 frozen.
 - **Build 25** (Expansion 20 validation and freeze): `wip/expansion20` at `ad281dc9431b782582513ef8a083c962b5039b8f`.

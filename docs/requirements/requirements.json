@@ -5400,6 +5400,40 @@
    ]
   },
   {
+   "id": "B25-SCOPE-D1",
+   "kind": "decision",
+   "title": "Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work from abandoned branches?",
+   "description": "Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work from abandoned branches?",
+   "source": "docs/directives/2026-11-01_build25_scope_clarification.md",
+   "owner_wording": null,
+   "owner_answer": "Build 25 is the consolidation build. It is intended to contain all previously approved expansion work and all approved, recoverable development work from abandoned or superseded branches. The October 31 records assigning stranded-work recovery to Build 26 do not override this instruction.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [
+    "B25-SCOPE-AUDIT"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-01",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-01_build25_scope_clarification.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "disposition: OPEN -> APPROVED",
+     "why": "Owner 2026-11-01 (docs/directives/2026-11-01_build25_scope_clarification.md): yes, Build 25 is the consolidation build; controls Build 25 scope; the 2026-10-31 Build 26 recovery assignments are preserved as history and do not override it; work assigned to Build 25 is not thereby present: the audit establishes presence; approved work previously assigned to Build 26 and absent from Build 25 is missing Build 25 scope"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "owner_answer",
+     "why": "owner's words recorded (docs/directives/2026-11-01_build25_scope_clarification.md)"
+    }
+   ]
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
@@ -9212,6 +9246,11 @@
      "date": "2026-10-31",
      "change": "notes",
      "why": "owner 2026-10-31 (docs/directives/2026-10-31_doc_recon_review_decisions.md s.1, s.2, s.4): Build 26 scope widened"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Build 25 scope revised by the owner 2026-11-01 (B25-SCOPE-D1, docs/directives/2026-11-01_build25_scope_clarification.md): Build 25 is the consolidation build; this record's Build 26 recovery assignment is preserved as historical evidence and no longer controls Build 25 scope (DCR-01: intentional revision by the owner)"
     }
    ],
    "notes": "Build 26 scope (owner 2026-10-31): repository recovery and consolidation; plus planning, reconciliation and dependency analysis (not implementation) of LE-07, EMP-PERM-01, the LE-05 remainder and economy activation preparation (mechanism and validation evidence; the economy stays disabled until explicit authorization); recovery and reconciliation of Expansion 21 phase 1 without activating political gameplay. Build 26 integration begins only after Build 25 is validated and frozen at its approved SHA."
@@ -12743,6 +12782,11 @@
      "date": "2026-10-31",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-31_doc_recon_review_decisions.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Build 25 scope revised by the owner 2026-11-01 (B25-SCOPE-D1, docs/directives/2026-11-01_build25_scope_clarification.md): Build 25 is the consolidation build; this record's Build 26 recovery assignment is preserved as historical evidence and no longer controls Build 25 scope (DCR-01: intentional revision by the owner)"
     }
    ]
   },
@@ -64382,6 +64426,11 @@
      "date": "2026-10-31",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered (docs/directives/2026-10-31_doc_recon_review_decisions.md s.1)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Build 25 scope revised by the owner 2026-11-01 (B25-SCOPE-D1, docs/directives/2026-11-01_build25_scope_clarification.md): Build 25 is the consolidation build; this record's Build 26 recovery assignment is preserved as historical evidence and no longer controls Build 25 scope (DCR-01: intentional revision by the owner)"
     }
    ],
    "owner_wording": null,
