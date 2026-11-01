@@ -2,11 +2,10 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (12)
+## Workers and task branches (11)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
-| B25-BIZ-OWN | 20 | IN DEVELOPMENT | b25-bizown worker | wip/b25-bizown |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
@@ -19,7 +18,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (62)
+## Implemented but not tested (68)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -28,6 +27,12 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B16-AUDIT | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
 | B16-READY | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
 | B25-AMBITION-IMPL | 20 | INTEGRATED |  |
+| B25-BIZ-D1 | 20 | INTEGRATED |  |
+| B25-BIZ-D2 | 20 | INTEGRATED |  |
+| B25-BIZ-D3 | 20 | INTEGRATED |  |
+| B25-BIZ-D4 | 20 | INTEGRATED |  |
+| B25-BIZ-D5 | 20 | INTEGRATED |  |
+| B25-BIZ-OWN | 20 | INTEGRATED |  |
 | B25-BUSINESS-IMPL | 20 | INTEGRATED |  |
 | B25-EMPLOY-IMPL | 20 | INTEGRATED |  |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |

@@ -9,7 +9,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 141 |
-| Integrated | 113 of 141 (80%) |
+| Integrated | 119 of 141 (84%) |
 | Automated tests passed | 110 of 141 (78%) |
 | Integration verified | 64 of 141 (45%) |
 | Gameplay verified | 0 of 141 (0%) |
@@ -18,14 +18,13 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Open (release blockers) | 139 |
 | Open owner decisions (blocking) | 0 (0) |
 
-## In development (worker assigned) (2)
+## In development (worker assigned) (1)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| B25-BIZ-OWN | Build 25 business ownership, paid employment and economic expansion (five final owner decisions, milestones 1-6) | OWNER APPROVED | IN DEVELOPMENT | b25-bizown worker / wip/b25-bizown | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (111)
+## Integrated, awaiting gameplay or owner verification (117)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -33,6 +32,12 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | ARMOR-MATERIALS-01 | Boar tusks and antlers as hunted materials, used in special armour and weapons | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED |  |  | verification only |
 | B19-EMERGE | Build 19 verification and emergence principle: classify unexpected outcomes as emergent behaviour (preserve), actual defect (correct) or design question (present evidence to the owner); no artificial rescues; player inaction carries no artificial punishment; tests verify rules (determinism, conservation, identity, saves, decision validity, approved behaviour), not pleasant outcomes; Build 18 baseline kept as history, the Build 19 baseline proposed with explained differences | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | applied for Build 19 (runs 2-4 classified); continues in the measurement batch (R6) |  | verification only |
 | B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | OWNER APPROVED | INTEGRATED | 7dfd3d5 | NOT TESTED |  |  | verification only |
+| B25-BIZ-D1 | Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system) | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
+| B25-BIZ-D2 | Employees are paid: distinguish an independent craftsperson using another's stations from a paid business employee whose production belongs to the employer | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
+| B25-BIZ-D3 | Unfinished business construction can be cancelled or abandoned through the existing cancellation system, with no money refund | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
+| B25-BIZ-D4 | Permanent employment as one shared framework across professions with real work systems (miners, gatherers, farm workers, smiths, carpenters, tanners, cooks, attendants, construction workers) | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
+| B25-BIZ-D5 | Businesses may be built (home-attached or standalone), bought, sold and expanded; selling a home workshop never sells the home; investigate the apparent two-shop limit | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
+| B25-BIZ-OWN | Build 25 business ownership, paid employment and economic expansion (five final owner decisions, milestones 1-6) | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
 | B25-BUSINESS-IMPL | Independent business formation by qualified villagers | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | OWNER APPROVED | INTEGRATED | 265ddc1 | NOT TESTED |  |  | verification only |
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | satisfied by the judgment store (memories, ledgers, gossip, trust) read by greetings and help; 'prices read relationships' waits on OD-LE-10/14 (Living Economy) |  | verification only |
@@ -147,15 +152,10 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | TARGETED TESTS PASSED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (25)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (20)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| B25-BIZ-D1 | Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25-BIZ-D2 | Employees are paid: distinguish an independent craftsperson using another's stations from a paid business employee whose production belongs to the employer | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25-BIZ-D3 | Unfinished business construction can be cancelled or abandoned through the existing cancellation system, with no money refund | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25-BIZ-D4 | Permanent employment as one shared framework across professions with real work systems (miners, gatherers, farm workers, smiths, carpenters, tanners, cooks, attendants, construction workers) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25-BIZ-D5 | Businesses may be built (home-attached or standalone), bought, sold and expanded; selling a home workshop never sells the home; investigate the apparent two-shop limit | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

@@ -17,8 +17,8 @@
 |---|---|
 | Current development build | **Build 25**, the consolidation build. It holds all approved expansion work and all approved recoverable abandoned-branch work (B25-SCOPE-D1, `docs/directives/2026-11-01_build25_scope_clarification.md`). |
 | Integration branch (Build 25 source) | `wip/expansion20` |
-| Development head | `8d71c5e` (informal services and CON-03..CON-08 merged on top of business founding `d0dc0d7`). See `docs/DEVELOPMENT_CHANGELOG.md` for the chain from `ad281dc`. |
-| Latest verified SHA | `8d71c5e`: suites TESTED locally, listed below. No CI run, no 30-day baseline and no year-long run on this SHA. The last SHA with year-long CI evidence is `ae8641d` (chapel fix). The last SHA with a complete validated gate is `ad281dc` (30-day baseline). Its year-long runs failed on the gossip crash, which is now fixed. |
+| Development head | `908a17e` (business ownership, paid employment and expansion merged on top of services `8d71c5e`). See `docs/DEVELOPMENT_CHANGELOG.md` for the chain from `ad281dc`. |
+| Latest verified SHA | `908a17e`: suites TESTED locally, listed below. No CI run, no 30-day baseline and no year-long run on this SHA. The last SHA with year-long CI evidence is `ae8641d` (chapel fix). The last SHA with a complete validated gate is `ad281dc` (30-day baseline). Its year-long runs failed on the gossip crash, which is now fixed. |
 | Rollback point | `ad281dc` |
 | Records branch | `wip/requirements-control`. It holds the register, directives and this file. The register is edited only here, with `tools/requirements_update.py` and then `tools/check_requirements.py --write`. It is not merged into staging or `wip/expansion20` without the owner's authorization. |
 | `staging/my-medieval-life` | `baa6479` (2026-11-01; `aeaa012` plus the stale-copy banner). Behind on both code and records. Not where current work is. |
@@ -26,7 +26,7 @@
 | Packaging and release | No Build 25 package exists. Packaging needs the owner's authorization. No public release. |
 | Living Economy | Integrated but **off** by default. It switches on by default once the 13 LE-07 readiness gates pass on the integrated candidate, with no further approval (B25-LE-ACTIVATE-D1). |
 | Operating mode | **Reduced-resource mode** (owner, 2026-11-01): one Claude coding worker at a time, no new agents, heavy computation on GitHub Actions (`long-sims.yml`), minimal reporting. It lasts until the owner restores normal priority. |
-| GitHub Actions | None running. |
+| GitHub Actions | **Running:** long-sims 41362329381 on `908a17e`, 365 days, seeds 1 and 2, checkpoints every 30 days. Dispatched 2026-11-01 23:29 UTC; expect about 1-1.5 hours. Never cancel or rerun it (SIM-02). Read the `BIZ`, `CHAPEL`, `ECON10` and day lines when it finishes. |
 
 ## Workers and branches (recovery records)
 
@@ -34,12 +34,11 @@ Every branch below holds real, unmerged work. None is disposable.
 
 | Worker or workstream | Register | Branch / worktree | Latest pushed | Unpushed | State and tests | Merge readiness | Next safe step |
 |---|---|---|---|---|---|---|---|
-| **ACTIVE:** business ownership, paid employment, economic expansion | B25-BIZ-OWN (B25-BIZ-D1..D5) | `wip/b25-bizown` (from `8d71c5e`); worktree `.claude/worktrees/b25-bizown` | `8d71c5e` (start) | none at start | Started 2026-11-01. Milestones 1-6 of the directive, each pushed. | not ready | Lead reviews each milestone; merges after targeted tests. |
+| **ACTIVE:** witness reporting | B25-NINE-D4 (X19-SWITCHES-D1) | `wip/b25-report`; worktree `.claude/worktrees/agent-a93f29147d5552724` | `f15faf8` | none at resume | Resumed 2026-11-01. `integration.report` is on. Remaining: wiki lines that still say every witness reports, suites, catching up with `908a17e`. | not ready | Finish, run the judgment suites, then the lead merges. Activation follows validation (Decision 4). |
 | Suspended: game juice J1 and J2 | JUICE-J1 (B25-NINE-D9) | `wip/b25-juice`; worktree `.claude/worktrees/agent-*` | `efd0cd0` | none | Own test only. Missing: fingerprint neutrality, suites, INT entry, the Decision 8 notification routing note. API: `GameUI.personal(text, item, category, seconds)`; `World.note(text)`. | not ready | Finish the missing items, run targeted suites, merge. |
-| Suspended: witness reporting | B25-NINE-D4 (X19-SWITCHES-D1) | `wip/b25-report` | `f15faf8` | none | `integration.report` is on. Several suites not run. Wiki still says every witness reports (`wiki_topics.gd`; `wiki.gd` lines ~803 and ~832). | not ready | Fix the wiki, run the judgment suites, merge. Activation follows validation (Decision 4). |
 | Suspended: materials, armour, clothing | B25-NINE-D5..D7, ARMOR-CATALOG-D1 | `wip/b25-materials` | `041a67c` | none | Untested. Remaining: `resources.json` with `check_resources.py --write`, icons through the asset pipeline, wiki, tests. | not ready | Complete the data and tests, then merge. |
 | Suspended: organic skills and capabilities | B25-NINE-D1, B25-NINE-D8 | `wip/b25-capability` | `f891a11` | none | Partly tested. Dependency: settlement capability knowledge needs supplier selection, which does not exist yet. | not ready | Finish, run targeted tests, merge. |
-| Merged and done | B25-NINE-D2 services and CON-03..CON-08 (`8d71c5e`, from `wip/b25-services` `1388f36`), B25-BUSINESS-IMPL and EMP-PERM-01 (`d0dc0d7`, from `wip/b25-business` `c60ac0e`), B25-AMBITION-IMPL, B25-EMPLOY-IMPL, LE-05/LE-07 remainder, P21-00..02, X20-CHAPEL-FIX, X20-TELL-GUARD | `wip/b25-ambition`, `wip/b25-employ`, `wip/b25-econ`, `wip/b25-civic`, `wip/x20-chapel`, `wip/x20-tell-guard` | merged into `wip/expansion20` | none | See the changelog. | merged | none |
+| Merged and done | B25-BIZ-OWN (B25-BIZ-D1..D5; `908a17e`, from `wip/b25-bizown` `9926ddf`), B25-NINE-D2 services and CON-03..CON-08 (`8d71c5e`, from `wip/b25-services` `1388f36`), B25-BUSINESS-IMPL and EMP-PERM-01 (`d0dc0d7`, from `wip/b25-business` `c60ac0e`), B25-AMBITION-IMPL, B25-EMPLOY-IMPL, LE-05/LE-07 remainder, P21-00..02, X20-CHAPEL-FIX, X20-TELL-GUARD | `wip/b25-ambition`, `wip/b25-employ`, `wip/b25-econ`, `wip/b25-civic`, `wip/x20-chapel`, `wip/x20-tell-guard` | merged into `wip/expansion20` | none | See the changelog. | merged | none |
 
 All suspended worktrees are kept on disk. Their branches are pushed, so GitHub has everything committed. The resume order is in
 "Next authorized actions" below.
@@ -50,6 +49,7 @@ All of these ran **locally** (Godot 4.7 headless), not in CI. Exact suites and c
 
 | SHA | Level | Evidence |
 |---|---|---|
+| `908a17e` | TESTED | Merge tree identical to `wip/b25-bizown` `9926ddf`. Worker evidence on `b10eab3`: business_ownership 165 and 21 regression suites, run_tests 3601, 0 failures. Read-only `BIZ` line is fingerprint-neutral (10-day seed 1, `0e5e945a`). 90-day seed 1: leaks 0, **no workshop built**. Year-long run 41362329381 pending. |
 | `8d71c5e` | TESTED | Merge tree identical to `1388f36`. Worker evidence: services_d2 89, contracts 154, multiplayer_c 340, farming 224, migration 109, run_tests 3601 and more (changelog). services_d2 89 and conservation 8 re-run on the merge. Contract window rows not yet looked at on screen. |
 | `d0dc0d7` | TESTED | `business_founding` 58, `migration` 109, `save_continuity` 5, `save_transfer` 21, `run_tests` 3601, 0 failures; worker suites on `c60ac0e` in the changelog. 30-day seed 1 on `c60ac0e`: leaks 0, no villager founded a business (not yet seen in a live run) |
 | `265ddc1` | TESTED | `skilled_employment` 54, `run_tests` 3601, 0 failures |
@@ -101,8 +101,8 @@ Build 25:
 1. Done: business founding, business hiring and permanent employment (`d0dc0d7`). Founding is not yet seen in a live run.
 2. **Business ownership, paid employment and economic expansion** (B25-BIZ-OWN, decisions B25-BIZ-D1..D5, owner 2026-11-01,
    `docs/directives/2026-11-01_business_ownership_employment_final_decisions.md`). The owner answered the five open business
-   questions; four of the conservative choices merged in `d0dc0d7` are to be replaced. **Active now** (services work finished and merged first).
-   Branch `wip/b25-bizown` from `8d71c5e`.
+   questions; four of the conservative choices merged in `d0dc0d7` are to be replaced. **Merged at `908a17e`.** Spec: BUSINESS_OWNERSHIP.md in docs/expansion20 on the Build 25 source.
+   Still to show: whether villagers found, buy, sell, hire and expand on their own over a year (run 41362329381). From branch `wip/b25-bizown`.
    Milestones, each pushed:
    1. architecture audit, reuse plan and the two-shop investigation;
    2. separate business finances and paid workshop employment;
@@ -111,7 +111,7 @@ Build 25:
    5. expansion, career changes and abandoning unfinished construction;
    6. interface, wiki, targeted tests, longer simulations (on Actions) and integration.
 3. **Suspended branches**, one at a time. Finish each, run targeted tests, then merge:
-   1. `wip/b25-report`
+   1. `wip/b25-report` (active)
    2. `wip/b25-juice`
    3. `wip/b25-materials`
    4. `wip/b25-capability`

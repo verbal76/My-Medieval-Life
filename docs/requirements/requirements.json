@@ -5464,7 +5464,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5473,7 +5473,20 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests: None -> business_ownership 165, business_founding 59, business 160, business_money 37, business_works 61, till_ownership 71, skilled_employment 54, stalls 104, services_d2 89, contracts 154, le05_construction_hire 10, farm_plots 104, economy_model 112, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, save_continuity 5, multiplayer_c 340, wiki_test, start_test 523, run_tests 3601 (b10eab3, local); merge 908a17e tree = wip/b25-bizown 9926ddf (adds the read-only BIZ sim line, fingerprint-neutral); 90-day seed 1: leaks 0, no workshop built; test_commit: None -> b10eab3; commits + 908a17e; integrated_in + Build 25 wip/expansion20",
+     "why": "implemented on wip/b25-bizown (milestones 24b634d..2dadf5d) and merged into the Build 25 source; NPC behaviour over a year pending Actions run 41362329381"
     }
+   ],
+   "tests": "business_ownership 165, business_founding 59, business 160, business_money 37, business_works 61, till_ownership 71, skilled_employment 54, stalls 104, services_d2 89, contracts 154, le05_construction_hire 10, farm_plots 104, economy_model 112, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, save_continuity 5, multiplayer_c 340, wiki_test, start_test 523, run_tests 3601 (b10eab3, local); merge 908a17e tree = wip/b25-bizown 9926ddf (adds the read-only BIZ sim line, fingerprint-neutral); 90-day seed 1: leaks 0, no workshop built",
+   "test_commit": "b10eab3",
+   "commits": [
+    "908a17e"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
    ]
   },
   {
@@ -5493,7 +5506,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5502,7 +5515,20 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests: None -> business_ownership 165, business_founding 59, business 160, business_money 37, business_works 61, till_ownership 71, skilled_employment 54, stalls 104, services_d2 89, contracts 154, le05_construction_hire 10, farm_plots 104, economy_model 112, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, save_continuity 5, multiplayer_c 340, wiki_test, start_test 523, run_tests 3601 (b10eab3, local); merge 908a17e tree = wip/b25-bizown 9926ddf (adds the read-only BIZ sim line, fingerprint-neutral); 90-day seed 1: leaks 0, no workshop built; test_commit: None -> b10eab3; commits + 908a17e; integrated_in + Build 25 wip/expansion20",
+     "why": "implemented on wip/b25-bizown (milestones 24b634d..2dadf5d) and merged into the Build 25 source; NPC behaviour over a year pending Actions run 41362329381"
     }
+   ],
+   "tests": "business_ownership 165, business_founding 59, business 160, business_money 37, business_works 61, till_ownership 71, skilled_employment 54, stalls 104, services_d2 89, contracts 154, le05_construction_hire 10, farm_plots 104, economy_model 112, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, save_continuity 5, multiplayer_c 340, wiki_test, start_test 523, run_tests 3601 (b10eab3, local); merge 908a17e tree = wip/b25-bizown 9926ddf (adds the read-only BIZ sim line, fingerprint-neutral); 90-day seed 1: leaks 0, no workshop built",
+   "test_commit": "b10eab3",
+   "commits": [
+    "908a17e"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
    ]
   },
   {
@@ -5521,7 +5547,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5530,7 +5556,20 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests: None -> business_ownership 165, business_founding 59, business 160, business_money 37, business_works 61, till_ownership 71, skilled_employment 54, stalls 104, services_d2 89, contracts 154, le05_construction_hire 10, farm_plots 104, economy_model 112, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, save_continuity 5, multiplayer_c 340, wiki_test, start_test 523, run_tests 3601 (b10eab3, local); merge 908a17e tree = wip/b25-bizown 9926ddf (adds the read-only BIZ sim line, fingerprint-neutral); 90-day seed 1: leaks 0, no workshop built; test_commit: None -> b10eab3; commits + 908a17e; integrated_in + Build 25 wip/expansion20",
+     "why": "implemented on wip/b25-bizown (milestones 24b634d..2dadf5d) and merged into the Build 25 source; NPC behaviour over a year pending Actions run 41362329381"
     }
+   ],
+   "tests": "business_ownership 165, business_founding 59, business 160, business_money 37, business_works 61, till_ownership 71, skilled_employment 54, stalls 104, services_d2 89, contracts 154, le05_construction_hire 10, farm_plots 104, economy_model 112, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, save_continuity 5, multiplayer_c 340, wiki_test, start_test 523, run_tests 3601 (b10eab3, local); merge 908a17e tree = wip/b25-bizown 9926ddf (adds the read-only BIZ sim line, fingerprint-neutral); 90-day seed 1: leaks 0, no workshop built",
+   "test_commit": "b10eab3",
+   "commits": [
+    "908a17e"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
    ]
   },
   {
@@ -5552,7 +5591,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5561,7 +5600,20 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests: None -> business_ownership 165, business_founding 59, business 160, business_money 37, business_works 61, till_ownership 71, skilled_employment 54, stalls 104, services_d2 89, contracts 154, le05_construction_hire 10, farm_plots 104, economy_model 112, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, save_continuity 5, multiplayer_c 340, wiki_test, start_test 523, run_tests 3601 (b10eab3, local); merge 908a17e tree = wip/b25-bizown 9926ddf (adds the read-only BIZ sim line, fingerprint-neutral); 90-day seed 1: leaks 0, no workshop built; test_commit: None -> b10eab3; commits + 908a17e; integrated_in + Build 25 wip/expansion20",
+     "why": "implemented on wip/b25-bizown (milestones 24b634d..2dadf5d) and merged into the Build 25 source; NPC behaviour over a year pending Actions run 41362329381"
     }
+   ],
+   "tests": "business_ownership 165, business_founding 59, business 160, business_money 37, business_works 61, till_ownership 71, skilled_employment 54, stalls 104, services_d2 89, contracts 154, le05_construction_hire 10, farm_plots 104, economy_model 112, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, save_continuity 5, multiplayer_c 340, wiki_test, start_test 523, run_tests 3601 (b10eab3, local); merge 908a17e tree = wip/b25-bizown 9926ddf (adds the read-only BIZ sim line, fingerprint-neutral); 90-day seed 1: leaks 0, no workshop built",
+   "test_commit": "b10eab3",
+   "commits": [
+    "908a17e"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
    ]
   },
   {
@@ -5583,7 +5635,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5592,7 +5644,20 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests: None -> business_ownership 165, business_founding 59, business 160, business_money 37, business_works 61, till_ownership 71, skilled_employment 54, stalls 104, services_d2 89, contracts 154, le05_construction_hire 10, farm_plots 104, economy_model 112, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, save_continuity 5, multiplayer_c 340, wiki_test, start_test 523, run_tests 3601 (b10eab3, local); merge 908a17e tree = wip/b25-bizown 9926ddf (adds the read-only BIZ sim line, fingerprint-neutral); 90-day seed 1: leaks 0, no workshop built; test_commit: None -> b10eab3; commits + 908a17e; integrated_in + Build 25 wip/expansion20",
+     "why": "implemented on wip/b25-bizown (milestones 24b634d..2dadf5d) and merged into the Build 25 source; NPC behaviour over a year pending Actions run 41362329381"
     }
+   ],
+   "tests": "business_ownership 165, business_founding 59, business 160, business_money 37, business_works 61, till_ownership 71, skilled_employment 54, stalls 104, services_d2 89, contracts 154, le05_construction_hire 10, farm_plots 104, economy_model 112, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, save_continuity 5, multiplayer_c 340, wiki_test, start_test 523, run_tests 3601 (b10eab3, local); merge 908a17e tree = wip/b25-bizown 9926ddf (adds the read-only BIZ sim line, fingerprint-neutral); 90-day seed 1: leaks 0, no workshop built",
+   "test_commit": "b10eab3",
+   "commits": [
+    "908a17e"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
    ]
   },
   {
@@ -5614,7 +5679,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5628,10 +5693,21 @@
      "date": "2026-11-01",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25-bizown worker; branch: None -> wip/b25-bizown",
      "why": "one active worker started on milestones 1-6 after the services merge"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; commits + 908a17e; integrated_in + Build 25 wip/expansion20",
+     "why": "milestones 1-6 merged at 908a17e; acceptance 2 (NPCs found, buy, sell, operate, expand without intervention) awaits the 365-day Actions run 41362329381 (seeds 1, 2) and its BIZ lines"
     }
    ],
    "assigned_worker": "b25-bizown worker",
-   "branch": "wip/b25-bizown"
+   "branch": "wip/b25-bizown",
+   "commits": [
+    "908a17e"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
+   ]
   },
   {
    "id": "B25-BUSINESS-D2",

@@ -67,6 +67,41 @@ All the work below is Build 25, the consolidation build (B25-SCOPE-D1).
 - Records branch: `wip/requirements-control`.
 - Tests are local unless a run id is given.
 
+**B25-BIZ-OWN: business ownership, paid employment and economic expansion (B25-BIZ-D1..D5).**
+- Branch: `wip/b25-bizown`, merged as `908a17e`. Commits:
+  - `24b634d`: audit and two-shop finding.
+  - `ed4e8ed`: D1 separate money, D2 paid employees.
+  - `f3fb56f`: D4 one employment framework.
+  - `af6033f`: D5 buying and selling.
+  - `8173f5e`: D3 abandoning sites, plus expansion and career changes.
+  - `b10eab3`: interface, wiki and INT-666..669.
+  - `2dadf5d`: evidence.
+  - `9926ddf`: the lead's read-only `BIZ` simulation line.
+- Change:
+  - A villager business keeps its own till inside the workshop record, settled each morning by the existing storefront rule. The
+    owner invests and withdraws by choice.
+  - Paid employees are distinct from independent hands; wages come from the till.
+  - One employment framework for miner, woodcutter, farmer, builder, smith, carpenter, tanner, cook and stonecutter. Wages come from
+    the labour market, never below the manor day wage.
+  - Workshops can be offered for sale, bought at a Trading-skill price and reopened. A home workshop is detached from the house and
+    the doorway walled up, so the home never changes hands.
+  - A business with money in its till can open a second workshop.
+  - An unfinished site is given up through `World.cancel_site`, with no money refund.
+  - New host-checked verbs. Spec: `docs/expansion20/BUSINESS_OWNERSHIP.md`.
+- Two-shop finding: there is no coded limit. A new world's land office offered only `plot0` and `plot1`; a property has one room
+  of each kind; a player has one market pitch. The land office now points to the Build menu for more ground.
+- Status: INTEGRATED, TESTED (local).
+- Evidence:
+  - On `b10eab3`: business_ownership 165, plus 21 regression suites and run_tests 3601, 0 failures.
+  - The `BIZ` line is neutral: 10-day seed 1 fingerprint `0e5e945a...` is the same with and without it.
+  - Local 90-day seed 1: leaks 0, no workshop built.
+  - At day 10 only 1 of 10 founding-trade villagers had the 20 working days of experience.
+- Outstanding:
+  - Year-long Actions run 41362329381 (seeds 1 and 2) will show whether villagers found, buy, sell, hire and expand on their own.
+  - The windows have not been looked at on a device.
+  - Few new paths have been tested with the Living Economy on.
+  - Provisional values are listed in the spec.
+
 **B25-NINE-D2: informal services and CON-03..CON-08.**
 - Branch: `wip/b25-services`, merged as `8d71c5e`. Commits: `3bedaee` (catch-up merge of `d0dc0d7`), `c4911d4` (the missing
   `ContractServices` functions, so the branch compiles again), `41de050` (contract window and `services_d2_test`), `19882ea` (docs),
