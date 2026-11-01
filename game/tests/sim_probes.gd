@@ -41,7 +41,7 @@ func _init() -> void:
 	match probe:
 		"saveload":
 			if "--aspiration" in args:                 # X20-FINAL: the save and load of a flags-on world (aspirations, job choice, LE-01)
-				JudgmentAspiration.override = {"enabled": true, "job_choice": true}
+				JudgmentAspiration.override = {"enabled": true, "apply": {}, "job_choice": true}     # every reader of the layer (B25 ships the career ambition alone)
 			if "--economy" in args:
 				EconomyFoundation.set_override({"enabled": true})
 			r = saveload(seed, int(arg.call("--days", "2")), str(arg.call("--record", "")))

@@ -58,6 +58,7 @@ func asp_on(w: World, exact := true) -> JudgmentAspiration:
 	var j: JudgmentStore = w.judgment
 	var c: Dictionary = j.cfg.aspiration
 	c.enabled = true
+	c.apply = {}                 # the full R5 design: every reader on (Build 25 ships the career ambition alone: career_ambition_test)
 	if exact:
 		for k in ["priority_spread", "young_step", "old_step", "old_profession_step"]:
 			c[k] = 0
@@ -149,8 +150,10 @@ func last_family_trace(w: World) -> String:
 # ---------------------------------------------------------------- config --------------------------
 func test_config() -> void:
 	var c := JudgmentStore.default_cfg()
-	check(c.has("aspiration") and not bool(c.aspiration.enabled), "judgment.json ships the aspiration section OFF (FAD: until validation and owner review)")
-	check(not bool(c.decision.integration.get("job_choice", true)), "decision.integration.job_choice exists and ships OFF (its own flag, FAD Q2)")
+	check(c.has("aspiration") and bool(c.aspiration.enabled), "judgment.json ships the aspiration section ON for the career ambition (owner B25-AMBITION-D4)")
+	check(bool(c.decision.integration.get("job_choice", false)), "decision.integration.job_choice exists and ships ON (its own flag, FAD Q2; B25-AMBITION-D4)")
+	check(not bool(c.aspiration.apply.factors) and not bool(c.aspiration.apply.court) and not bool(c.aspiration.apply.proposal),
+			"...and the layer's other readers ship off (B25-AMBITION-D4 activates the career ambition only)")
 	check(c.decision.profiles.has("job_choice"), "the job_choice profile is defined")
 	check(str(c.aspiration._status).contains("PROVISIONAL"), "the aspiration numbers are marked PROVISIONAL (FAD Q5)")
 	check(int(c.decision.family.survival_floor_hunger) == 25 and int(c.traits.stubbornness_share_permille) == 300,
@@ -412,8 +415,8 @@ func open_cell(w: World) -> Vector2:
 func test_v4_job_choice() -> void:
 	var w := world()
 	var j: JudgmentStore = w.judgment
-	check(not JudgmentLive.on(w, "job_choice"), "V4: shipped: job_choice off")
-	j.cfg.decision.integration.job_choice = true
+	check(JudgmentLive.on(w, "job_choice"), "V4: shipped (B25-AMBITION-D4): job_choice on")
+	j.asp.enabled = false
 	check(not JudgmentLive.on(w, "job_choice"), "V4: the job_choice flag alone, with aspirations off, is refused (no ambition to weigh)")
 	var a := asp_on(w)
 	check(JudgmentLive.on(w, "job_choice"), "V4: both on: job_choice consults the weighing")
@@ -457,8 +460,8 @@ func test_v4_job_choice() -> void:
 	var hashes := []
 	for k in 2:
 		var x := world(2)
-		if k == 1:
-			x.judgment.cfg.decision.integration.job_choice = true
+		x.judgment.asp.enabled = false
+		x.judgment.cfg.decision.integration.job_choice = k == 1
 		for d in 2:
 			x.brain.dawn()
 		var jobs := []
@@ -895,9 +898,15 @@ func test_v8_save_load() -> void:
 	var wd := w.to_dict()
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(wd)))
-	check(w2.judgment != null and not w2.judgment.asp.enabled, "V8: a loaded world uses the shipped switch (off)")
-	check(JSON.stringify(w2.to_dict().judgment.aspire) == JSON.stringify(JSON.parse_string(JSON.stringify(wd)).judgment.aspire), "V8: ...and with the layer off its aspire section is carried unchanged, never dropped")
+	check(w2.judgment != null and w2.judgment.asp.enabled, "V8: a loaded world uses the shipped switch (on, B25-AMBITION-D4)")
+	check(JSON.stringify(JSON.parse_string(JSON.stringify(w2.to_dict().judgment.aspire))) == JSON.stringify(JSON.parse_string(JSON.stringify(wd)).judgment.aspire), "V8: ...and its aspire section is read and written back unchanged")
 	w2.dispose()
+	var off_cfg: Dictionary = j.cfg.duplicate(true)
+	off_cfg.aspiration.enabled = false
+	var ko := JudgmentStore.new(off_cfg, JudgmentSocial.new(), j.world_seed)
+	ko.world = w
+	check(ko.load_dict(JSON.parse_string(text)) == "" and not ko.asp.enabled and JSON.stringify(ko.to_dict().aspire) == JSON.stringify(JSON.parse_string(text).aspire),
+			"V8: with the layer off its aspire section is carried unchanged, never dropped")
 	# unknown column carried through
 	var dd: Dictionary = JSON.parse_string(text)
 	dd.aspire.domains.append("faith")
@@ -916,7 +925,7 @@ func test_v8_save_load() -> void:
 	check(int(fx.judgment.version) == 2 and not fx.judgment.has("aspire"), "V8: fixture b22_save_v23_single: judgment section version 2, no aspire")
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), fx)
-	check(int(w3.to_dict().judgment.version) == 3 and not w3.to_dict().judgment.has("aspire"), "V8: with the layer off it re-saves as version 3 with nothing invented")
+	check(int(w3.to_dict().judgment.version) == 3 and not w3.to_dict().judgment.has("aspire"), "V8: before its first dawn it re-saves as version 3 with nothing invented")
 	var a3 := asp_on(w3, false)
 	a3.dawn(w3)
 	var st: Dictionary = w3.judgment.stats
@@ -935,7 +944,8 @@ func test_v8_save_load() -> void:
 func test_v9_disabled_is_baseline() -> void:
 	var w := world(3)
 	var j: JudgmentStore = w.judgment
-	check(not j.asp.enabled, "V9: shipped off")
+	j.asp.enabled = false                     # Build 25 ships it on (B25-AMBITION-D4); off must still be the baseline
+	check(not j.asp.enabled, "V9: switched off")
 	var tr := []
 	for prof in ["work_accept", "contract_accept", "credit_lend", "barter_accept", "family_help"]:
 		var r := JudgmentWeighting.choose(j, j.cfg, adults(w)[0].id, prof, [{"id": "yes", "counterparty": adults(w)[1].id, "factors": {"live_order": 100000, "necessity": 0}}], [1])
@@ -955,8 +965,11 @@ func test_v9_disabled_is_baseline() -> void:
 	check(int(d.version) == 3 and not d.has("aspire"), "V9: off: the judgment section is version 3 without aspire (as before R5)")
 	# the same village with the layer's object present but off writes the same bytes as one whose flags were never read
 	var x := world(3)
+	x.judgment.asp.enabled = false
 	x.judgment.cfg.decision.integration.job_choice = true            # set, but refused while aspirations are off
 	var y := world(3)
+	y.judgment.asp.enabled = false
+	y.judgment.cfg.decision.integration.job_choice = false
 	for k in 2:
 		x.brain.dawn()
 		y.brain.dawn()

@@ -20,8 +20,10 @@ extends SceneTree
 ##       [--market]    (Expansion 20 LE-03: the shipped economy.json switched on, the market driving; audits the claims at the end)
 ##       [--scenario strip_mine|contracts_fail|social_chain --at DAY]   (X20-FINAL phase 4, tools/sim_suite.py: economic stress
 ##       and the judgment chain through the game's own verbs; see _intervene and _scripted_step)
-##       [--aspiration] [--job-choice]   (Expansion 20 R5, WDR-011-C: the NPC aspiration layer on, and its own job_choice flag;
-##       both shipped off; a measurement run, never the gate's; prints the aspiration rows' leads at the end)
+##       [--aspiration] [--job-choice] [--no-ambition]   (Expansion 20 R5, WDR-011-C: the layer and its own job_choice flag ship ON
+##       for the career ambition since Build 25 (B25-AMBITION-D4); --aspiration turns on every reader of the layer (the full R5
+##       design: aspiration.apply all on), --job-choice the job flag, --no-ambition both off (the pre-Build 25 path); a
+##       measurement run, never the gate's; prints the aspiration rows' leads at the end)
 ##       [--no-judgment]   (the Build 18 path: judgment off, as tools/sim_gate.py --sim-args=--no-judgment compares with the baseline)
 ##       [--capability L --cap-profile P] [--cap-scenario S] [--cap-industries a,b] [--cap-report] [--cap-at 30,60]   (Expansion 18 X18-SIM,
 ##       analysis only: tests/capability_metrics.gd)
@@ -90,10 +92,14 @@ func _init() -> void:
 	var cap_info := CapMetrics.pre_setup(args) if cap_on else {}
 	var t0 := Time.get_ticks_msec()
 	JudgmentLive.test_disabled = "--no-judgment" in args
-	if "--aspiration" in args or "--job-choice" in args:   # R5: set before the world (and its judgment store) is made
-		var ov := {"enabled": "--aspiration" in args}
+	if "--aspiration" in args or "--job-choice" in args or "--no-ambition" in args:   # R5: set before the world (and its judgment store) is made
+		var ov := {}
+		if "--aspiration" in args:
+			ov = {"enabled": true, "apply": {}}
 		if "--job-choice" in args:
 			ov.job_choice = true
+		if "--no-ambition" in args:                # B25-AMBITION-IMPL: the career ambition off, for comparison
+			ov = {"enabled": false, "job_choice": false}
 		JudgmentAspiration.override = ov
 		print("aspiration: %s" % JSON.stringify(ov))
 	if "--market" in args:                # EXPANSION 20 LE-03: the shipped economy.json switched on: the LE-02/LE-03 market drives
