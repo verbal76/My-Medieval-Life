@@ -296,3 +296,128 @@ func test_save_load() -> void:
 	w3.minutes += 1440.0
 	w3.ventures.daily()
 	check(true, "an older save runs its morning without error")
+
+
+# ---------------------------------------------------------------- EMP-PERM-01 --------------------
+## A home of the player's own with its chest: a house built on ground bought from the manor (the coins and materials given
+## here; earned and bought in play).
+func player_home(w: World) -> void:
+	if w.player.home != "" and w.buildings.has(w.player.home):
+		return
+	var sp = w.map.data.spawns.player
+	var c: Construction = w.construction
+	var rect := c.find_ground("house", Vector2i(int(sp[0]), int(sp[1])), World.PLAYER)
+	w.player.coins += w.property.land_price(rect.size.x, rect.size.y)
+	var p: Dictionary = c.place("house", rect, World.PLAYER)
+	for id in p.site.need.duplicate():
+		w.player.inv.add(id, int(p.site.need[id]))
+	w.deliver(p, w.player.inv)
+	w.property.set_home(str(p.building))
+
+
+func employable(w: World) -> NPC:
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household >= 0 and o.job in Construction.HIRABLE and w.employment.refusal(o) == "":
+			return o
+	return null
+
+
+func test_employment() -> void:
+	var w := world()
+	w.judgment.cfg.decision.integration.work_accept = false     # the villager's own yes is the JudgmentLive test's; here the terms
+	var any: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job in Construction.HIRABLE:
+			any = o
+			break
+	if w.player.home == "":
+		check(w.employment.refusal(any).begins_with("You need a home"), "no home with a chest: nobody can be employed to fill it")
+	player_home(w)
+	w.player.coins += 100
+	var n := employable(w)
+	check(n != null, "an adult without a trade of their own can be employed")
+	check(w.employment.refusal(w.npc(w.sage_id)) != "", "a villager with a trade of their own cannot")
+	var coins := w.total_coins()
+	var pc := w.player.coins
+	var nc := n.coins
+	check(w.employment.employ(n, "miner") == "", "the player employs a miner")
+	var wage := Employment.wage()
+	check(n.job == "miner" and w.employment.is_employed(n), "their work is now mining for the player")
+	check(w.player.coins == pc - wage and n.coins == nc + wage and w.total_coins() == coins, "the first day's wage moves from the player's purse to theirs; no coin made")
+	check(w.employment.employ(n, "miner") != "", "the same villager cannot be employed twice")
+	# a working morning: they go mining for the employer
+	w.minutes = float(w.day()) * 1440.0 + 9 * 60
+	if not n.inv.has("pickaxe"):
+		n.inv.add("pickaxe", 1)            # the employee's own tool (bought with their own coins in play)
+	n.plan.clear()
+	check(w.employment.plan(n) and n.plan.any(func(s): return str(s.get("act", "")) == "emp_mine"), "in the working day the employee plans to mine a seam")
+	var step: Dictionary = n.plan.filter(func(s): return str(s.get("act", "")) == "emp_mine")[0]
+	var d: Dictionary = w.deposit_at(Vector2i(int(step.args.x), int(step.args.y)), int(step.args.get("level", 0)))
+	var seam := int(d.amount)
+	var ore := str(d.ore)
+	var held := n.inv.count(ore)
+	for i in 3:
+		w.employment.act_mine(n, step.args)
+	var dug := n.inv.count(ore) - held
+	check(dug > 0 and seam - int(d.amount) == dug and int(w.employment.record_of(n).owed.get(ore, 0)) == dug, "the ore leaves the seam into their hands, owed to the employer (%d %s)" % [dug, ore])
+	var chest: Inventory = w.construction.store_of(World.PLAYER)
+	var in_chest := chest.count(ore)
+	check(w.employment.act_deliver(n) and chest.count(ore) - in_chest == dug and n.inv.count(ore) == held, "carried home, the ore goes into the employer's chest: nothing made or lost")
+	check(w.employment.carried(w.employment.record_of(n), n) == 0, "nothing more is owed")
+	# the labour market leaves them where they are
+	w.brain.seek_work()
+	check(n.job == "miner" and w.employment.is_employed(n), "the morning labour market does not move a permanent employee")
+	# each dawn the wage, from the purse; an unpaid wage ends it
+	w.minutes += 1440.0
+	pc = w.player.coins
+	nc = n.coins
+	coins = w.total_coins()
+	w.employment.daily()
+	check(w.player.coins == pc - wage and n.coins == nc + wage and w.total_coins() == coins, "the next day's wage is paid at dawn")
+	w.employment.daily()
+	check(w.player.coins == pc - wage, "paid once a day")
+	var spare := w.player.coins
+	w.player.coins = wage - 1
+	w.minutes += 1440.0
+	w.employment.daily()
+	check(not w.employment.is_employed(n) and n.job == "miner", "an unpaid wage ends the employment (they keep their trade)")
+	w.player.coins = spare
+	# dismissal by the employer
+	check(w.employment.employ(n, "miner") == "" and w.employment.dismiss(n) == "" and not w.employment.is_employed(n), "the employer can let their employee go")
+	# save and load
+	w.employment.employ(n, "miner")
+	w.employment.record_of(n).owed = {"coal": 2}
+	var wd: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	check(wd.has("employment") and int(wd.save_version) == World.SAVE_VERSION, "the employment is saved under its optional key (save_version unchanged)")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), wd)
+	var r2: Dictionary = w2.employment.record_of(w2.npc(n.id))
+	check(not r2.is_empty() and str(r2.employer) == World.PLAYER and int(r2.owed.coal) == 2 and int(r2.wage) == wage, "the employment is kept through save and load")
+	wd.erase("employment")
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), wd)
+	check(w3.employment.is_empty(), "a save from before it loads with no employees")
+	# a working day lived through: the employee really mines and brings the ore home, coins and goods kept
+	var w4 := world(2)
+	w4.judgment.cfg.decision.integration.work_accept = false
+	player_home(w4)
+	w4.player.coins += 100
+	var e := employable(w4)
+	w4.minutes = float(w4.day()) * 1440.0 + 7 * 60
+	w4.employment.employ(e, "miner")
+	if not e.inv.has("pickaxe"):
+		e.inv.add("pickaxe", 1)
+	e.plan.clear()
+	var c4 := w4.total_coins() + 0
+	var chest4: Inventory = w4.construction.store_of(World.PLAYER)
+	var before := 0
+	for o in Employment.ORES:
+		before += chest4.count(o)
+	for m in 11 * 60:
+		w4.update(0.5)
+		w4.player.hunger = 100.0
+	var after := 0
+	for o in Employment.ORES:
+		after += chest4.count(o)
+	check(int(w4.stats.get("employment_mined", 0)) > 0 and after > before, "in a lived working day the employee mines and the ore reaches the employer's chest (%d mined, %d delivered)" % [int(w4.stats.get("employment_mined", 0)), after - before])
+	check(w4.total_coins() == c4, "coins are conserved through the lived working day (%d)" % c4)

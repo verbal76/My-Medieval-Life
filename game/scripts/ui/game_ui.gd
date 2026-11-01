@@ -3003,6 +3003,22 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 	if w.construction.can_hire(n) == "" and not w.construction.sites_of(w.acting_ref()).is_empty():
 		_talk_choice(choices, "Hire to carry building materials", func():
 			_talk_view(n, "A day's carrying for %d coins? I'll fetch what's in your chest, or buy what's wanting at the market with your money, and bring it to your site." % int(GameData.b("helper_wage")), false, "", "", true))
+	# EMP-PERM-01: lasting work as the player's miner, or letting their own employee go
+	var emp: Dictionary = w.employment.record_of(n)
+	if not emp.is_empty() and w.is_acting_ref(str(emp.employer)):
+		_talk_choice(choices, "Let them go from your service", func():
+			var why: String = w.employment.dismiss(n)
+			message(why if why != "" else "%s no longer works for you." % n.name)
+			_talk_view(n, Dialogue.opening(w, n)))
+	elif emp.is_empty() and (n.job in Construction.HIRABLE or n.job == "miner") and n.role == "adult":
+		_talk_choice(choices, "Employ as your miner (%d coins a day)" % Employment.wage(), func():
+			var why: String = w.employment.employ(n, "miner")
+			if why != "":
+				message(why)
+				_talk_view(n, Dialogue.opening(w, n))
+				return
+			message("%s will mine for you each working day and bring the ore to your chest." % n.name, 4.0, "work")
+			_talk_view(n, "Steady work. I'll bring you what I dig."))
 	var sale: Array = w.brain.for_sale(n)
 	var buys: Dictionary = NPCBrain.BUYS.get(w.brain.buy_role(n), {})
 	if not sale.is_empty() or not buys.is_empty():

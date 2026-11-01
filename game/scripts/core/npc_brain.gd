@@ -290,6 +290,9 @@ func _decide(n: NPC) -> String:
 	# minding the player's stall or shop (PL1-10 stage 4)
 	if h >= WORK_START and h < WORK_END and w.business.plan_attendant(n):
 		return "stall_attendant"
+	# EMP-PERM-01: a player's permanent employee works the role they were taken on for
+	if h >= WORK_START and h < WORK_END and w.employment.plan(n):
+		return "employee"
 	# a job taken for the manor is carried on to the end (ManorWork)
 	if h >= WORK_START and h < WORK_END and w.manor_work.plan(n):
 		return "manor_work"
@@ -3042,6 +3045,10 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if foe:
 				n.target = foe.id
 			return true
+		"emp_mine":                                       # EMP-PERM-01: a permanent employee's swing, the ore the employer's
+			return w.employment.act_mine(n, a)
+		"emp_deliver":                                    # EMP-PERM-01: the employer's ore into the employer's store
+			return w.employment.act_deliver(n)
 		"helper_take", "helper_buy", "helper_own", "helper_deliver":
 			return w.construction.act(n, what, a)
 		"church_ask":                           # DVW-B3-CHAPEL: asking the church for food
@@ -4518,6 +4525,8 @@ func seek_work() -> void:
 		for n: NPC in members:
 			if n.role != "adult" or n.job in ["guard", "reeve", "sage", "tailor", "barber", "preacher", "church_assistant"]:
 				continue
+			if w.employment.is_employed(n):
+				continue                       # EMP-PERM-01: a permanent employee keeps the place the player gave them
 			var unemployed := n.job == "" or tool_short(n) or (n.job == "hunter" and no_game)
 			var share := float(econ.cost) / maxi(1, int(econ.adults))
 			if not unemployed:
