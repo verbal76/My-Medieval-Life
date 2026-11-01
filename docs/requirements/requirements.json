@@ -63748,7 +63748,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -63772,6 +63772,11 @@
      "date": "2026-11-01",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH",
      "why": "365-day comparison complete (Actions 41279031310 seeds 1,2; 41279051834 economy on; commit ae8641d): chapel share of coins 77-83% -> 0.9-1.2%, median household cash 4-11 -> 161-203, treasury 1-5 -> 221-646 (normal), jobs 45-46 -> 51-63; leaks 0 at every checkpoint; 37/37 economy saves exact; script errors 0/2/12, all X20-TELL-GUARD (judgment_store.gd:1490), none in chapel code. Report docs/release/chapel_fix/chapel_report.html. Awaiting owner review; not merged into wip/expansion20"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED",
+     "why": "integrated into wip/expansion20 at 552febf (fast-forward; with the observation-only instrumentation 55c0881 and the gossip fix 1e3b8cf)"
     }
    ],
    "assigned_worker": "lead",
@@ -63797,7 +63802,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -63811,7 +63816,15 @@
      "date": "2026-11-01",
      "change": "target_build",
      "why": "target build corrected: Expansion 20 work (the register's build 25 is the weather build)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; commits + 552febf",
+     "why": "wip/expansion20 fast-forwarded ad281dc -> 552febf: chapel correction (37680c7, ae8641d), observation-only instrumentation (55c0881; 30-day fingerprints identical), gossip fix (1e3b8cf); diff 14 files, no unrelated changes; rollback point ad281dc. The 30-day sim baseline (a3643c8) is stale until replaced after the Build 25 workstreams"
     }
+   ],
+   "commits": [
+    "552febf"
    ]
   },
   {
@@ -65087,7 +65100,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -65101,9 +65114,19 @@
      "date": "2026-10-31",
      "change": "notes",
      "why": "found in X20-MERGED-VALIDATION run 41233948995 seed 1 (job 124633691243: 1 script error, judgment_store.gd:1490, between days 47 and 50; simulation completed 365 days, conservation exact); reproduced locally on ad281dc seed 1 to day 52 (same error, key 171); a 2-line guard ('if not mem.has(ev): continue' before reading mem[ev] in the telling loop) removes it with the world fingerprint unchanged at day 52 (44ee6f38) and the judgment state changed (7954390 -> 4070350693: the meeting's remaining stories, lie and news are no longer cut off)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests: None -> game/tests/judgment_x19_test.gd; test_commit: None -> 1e3b8cf; commits + 1e3b8cf",
+     "why": "fixed (owner authorization 2026-11-01): trace on ad281dc seed 1 found the path (day 45, teller 85, listener 75, story 171: a refutation the teller had taken in before and forgotten is learned again at the meeting; the memory limit runs before the lie is dropped and pushes out a queued story); a story no longer held is not told. Regression test reproduces it (unfixed: same error at judgment_store.gd:1490, 0 told); fixed: 122 checks; judgment, history, family, bandit suites 12/12 pass. Integrated into wip/expansion20 at 552febf (fast-forward from ad281dc)"
     }
    ],
-   "notes": "Category A (script error in the normal game; the validation workflow fails on any script error). Smallest correction: the 2-line guard in JudgmentStore._tell. Not applied: awaiting the owner's approval; the Build 25 source is unchanged."
+   "notes": "Category A (script error in the normal game; the validation workflow fails on any script error). Smallest correction: the 2-line guard in JudgmentStore._tell. Not applied: awaiting the owner's approval; the Build 25 source is unchanged.",
+   "tests": "game/tests/judgment_x19_test.gd",
+   "test_commit": "1e3b8cf",
+   "commits": [
+    "1e3b8cf"
+   ]
   },
   {
    "id": "X20-TILL-KEEP",
