@@ -30558,6 +30558,11 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope (owner 2026-11-01, B25-SCOPE-D1 and docs/directives/2026-11-01_career_business_employment_final_decisions.md): the 2026-10-31 assignment of this work to Build 26 is superseded; status unchanged until the work is done and verified"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "Build 25 (63c0144, merge of wip/b25-econ 0ddfcb4): paid repair at a smith (econ_repairs.gd, INT-653, escrow via EconTransactions.hold_coins/release_coins, own flag market.paid_repair, inert while the economy is off) and construction hiring through the transaction authority (INT-654) added; tests le05_paid_repair 31, le05_construction_hire 10, le05_repair 57, le05_rental 53, net_econ_integrity 126, run_tests 3601 on the merged source (local). Still missing: route risk in prices (no per-route loss record or pricing rule designed), ecology/mining links (none designed). Economy off: 10-day fingerprints unchanged"
     }
    ],
    "target_build": "20",
@@ -30671,7 +30676,7 @@
     "All mandatory release gates green"
    ],
    "implementation": "",
-   "tests": "",
+   "tests": "game/tests/le07_gates_test.gd",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -30721,6 +30726,11 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope (owner 2026-11-01, B25-SCOPE-D1 and docs/directives/2026-11-01_career_business_employment_final_decisions.md): the 2026-10-31 assignment of this work to Build 26 is superseded; status unchanged until the work is done and verified"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; tests:  -> game/tests/le07_gates_test.gd; test_commit: None -> 63c0144",
+     "why": "automatable release gates added (le07_gates_test 25: switch off, flags off, one-day conservation with economy on, determinism, exact load-back, bounds, Build 24 save on, off-on) at 63c0144; the save-and-load fingerprint gate is not automatable yet (base game reload differs, see the save continuity finding)"
     }
    ],
    "target_build": "20",
@@ -30729,10 +30739,11 @@
    "integrated_in": [],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
-   "completion": "OPEN"
+   "completion": "OPEN",
+   "test_commit": "63c0144"
   },
   {
    "id": "LE05-RENTAL",
@@ -63997,6 +64008,11 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope (owner 2026-11-01, B25-SCOPE-D1 and docs/directives/2026-11-01_career_business_employment_final_decisions.md): the 2026-10-31 assignment of this work to Build 26 is superseded; status unchanged until the work is done and verified"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "activation preparation added at 63c0144: switch on/off for new games and existing saves, parked records, docs/expansion20/ACTIVATION.md (13-step checklist ending with the owner's authorization); economy stays off. Services wait on X20-SERVICES-SCOPE (OPEN)"
     }
    ],
    "assigned_worker": "lead",

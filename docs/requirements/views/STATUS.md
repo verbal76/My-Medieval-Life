@@ -11,9 +11,9 @@ Definitions: `docs/requirements/SCHEMA.md`. Counted: approved, in-scope requirem
 | Waiting on an owner decision (design) | 0 | 0 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Design work still required | 2 | 0 | 4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Design unknown | 15 | 8 | 119 | 5 | 9 | 2 | 0 | 1 | 5 | 1 |
-| Not started (incl. READY) | 2 | 0 | 14 | 1 | 8 | 1 | 0 | 1 | 5 | 1 |
+| Not started (incl. READY) | 2 | 0 | 13 | 1 | 8 | 1 | 0 | 1 | 5 | 1 |
 | In development (worker assigned) | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| Partially implemented | 0 | 1 | 4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| Partially implemented | 0 | 1 | 5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Implemented on a task branch | 0 | 0 | 5 | 0 | 1 | 1 | 0 | 0 | 0 | 0 |
 | Implementation blocked | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Integrated | 81 of 83 (98%) | 10 of 11 (91%) | 110 of 134 (82%) | 4 of 5 (80%) | 0 of 9 (0%) | 0 of 2 (0%) | 0 of 0 | 0 of 1 (0%) | 0 of 5 (0%) | 0 of 1 (0%) |

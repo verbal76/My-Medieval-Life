@@ -18,7 +18,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (52)
+## Implemented but not tested (53)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -40,6 +40,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | FARM-08 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | FR-11 | 19 | PARTIALLY IMPLEMENTED |  |
 | FSE-00 | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
+| LE-07 | 20 | PARTIALLY IMPLEMENTED |  |
 | OWN-08 | owner decision | PARTIALLY IMPLEMENTED |  |
 | OWN-19 | 20+ | PARTIALLY IMPLEMENTED |  |
 | OWN-22 | owner decision | PARTIALLY IMPLEMENTED |  |
