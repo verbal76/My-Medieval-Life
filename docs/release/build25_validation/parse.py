@@ -30,6 +30,7 @@ for l in L:
     elif l.startswith("BANDITS "): out["bandits"].append(json.loads(l[8:]))
     elif l.startswith("BANDIT_DEATH "): out["deaths"].append(json.loads(l[13:]))
     elif l.startswith("JUDGE "): out["judge"].append(json.loads(l[6:]))
+    elif l.startswith("CHAPEL "): out.setdefault("chapel", []).append(json.loads(l[7:]))     # X20-CHAPEL-FIX instrumentation
     elif l.startswith("ECONOMY day"):
         out["economy"].append({"day": num(r"ECONOMY day (\d+)", l), "bytes": num(r"save bytes (\d+)", l), "knowledge": num(r"knowledge (\d+) entries", l),
                                "exact": "round trip exact true" in l, "breaches": num(r"claims breaches (\d+)", l)})
