@@ -1603,7 +1603,7 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 		relations.note_trade(id_of_party(buyer), id_of_party(seller), day())     # MP C3: a guest trades as itself
 	if business:
 		business.stalls.after_trade(seller, id, qty, total)     # a merchant's sale at their market stall: its session (STALL-05)
-		business.money.after_trade(seller, total)               # a keeper's sale at the household's storefront: its till (ECON-P3)
+		business.money.after_trade(seller, total, id, qty)      # a keeper's sale at the household's storefront: its till (ECON-P3); a business's goods: its till (B25-BIZ-D1)
 	return true
 
 

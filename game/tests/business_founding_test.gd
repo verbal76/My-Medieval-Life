@@ -341,7 +341,8 @@ func test_employment() -> void:
 	var pc := w.player.coins
 	var nc := n.coins
 	check(w.employment.employ(n, "miner") == "", "the player employs a miner")
-	var wage := Employment.wage()
+	var wage := int(w.employment.record_of(n).wage)
+	check(wage == w.employment.market_wage("miner") and wage >= w.brain.manor_hand_wage(), "at the labour market's wage, never below the manor's day wage (%d)" % wage)
 	check(n.job == "miner" and w.employment.is_employed(n), "their work is now mining for the player")
 	check(w.player.coins == pc - wage and n.coins == nc + wage and w.total_coins() == coins, "the first day's wage moves from the player's purse to theirs; no coin made")
 	check(w.employment.employ(n, "miner") != "", "the same villager cannot be employed twice")
@@ -392,7 +393,7 @@ func test_employment() -> void:
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), wd)
 	var r2: Dictionary = w2.employment.record_of(w2.npc(n.id))
-	check(not r2.is_empty() and str(r2.employer) == World.PLAYER and int(r2.owed.coal) == 2 and int(r2.wage) == wage, "the employment is kept through save and load")
+	check(not r2.is_empty() and str(r2.employer) == World.PLAYER and int(r2.owed.coal) == 2 and int(r2.wage) == int(w.employment.record_of(n).wage), "the employment is kept through save and load")
 	wd.erase("employment")
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), wd)

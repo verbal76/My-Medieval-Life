@@ -772,9 +772,14 @@ func buy_qty(n: NPC, v: NPC, item: String, want: int, need := false, spent := 0)
 	if buy_held(n, v, item):
 		return 0
 	var up := w.deal_price(w.sell_price(v, item), n, v)
+	var q := mini(want, v.inv.count(item))
+	var biz: int = w.ventures.budget(n, item) if not need else -1
+	if biz >= 0:                          # B25-BIZ-D1: a business's materials, bought with its till's money only
+		while q > 0 and biz - spent - up * q < 0:
+			q -= 1
+		return q
 	var whole: bool = need or World.is_necessity(item) or JOB_TOOL.get(n.job, "") == item
 	var floor := 0 if whole else w.reserve_of(n)
-	var q := mini(want, v.inv.count(item))
 	while q > 0 and n.coins - spent - up * q < floor:
 		q -= 1
 	return q
@@ -2813,11 +2818,25 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var qty := mini(int(a.qty), v.inv.count(a.item))
 			var up := w.deal_price(w.sell_price(v, a.item), buyer, v)
 			var for_need: bool = a.get("pantry", false) or World.is_necessity(a.item) or JOB_TOOL.get(buyer.job, "") == a.item
-			while qty > 0 and not for_need and not w.can_afford(buyer, up * qty):
+			# B25-BIZ-D1: an input of the trade bought for a business is paid with the business's money (its till), only what it holds
+			var biz: int = w.ventures.budget(buyer, a.item) if not a.get("pantry", false) and buyer == n else -1
+			var funded := {}
+			var drawn := 0
+			if biz >= 0:
+				while qty > 0 and up * qty > biz:
+					qty -= 1
+				if qty > 0:
+					funded = w.ventures.fund(buyer, a.item, up * qty)
+					drawn = up * qty if not funded.is_empty() else 0
+					if funded.is_empty():
+						qty = 0
+			while qty > 0 and not for_need and funded.is_empty() and not w.can_afford(buyer, up * qty):
 				qty -= 1                          # stock and materials: only what leaves the household's reserve (OD-19)
 			var traded := qty > 0                 # SIM-F2: World.trade was asked (it records its own refusal)
 			while qty > 0 and not w.trade(buyer, v, a.item, qty, up):
 				qty -= 1
+			if not funded.is_empty():
+				w.ventures.bought(buyer, funded, str(a.item), qty, drawn, up * qty)
 			if qty > 0:
 				w.deal_xp(buyer, v, up * qty)
 			if qty > 0 and buyer != n:
@@ -2891,7 +2910,11 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			release_station(n, a.get("station", ""))
 			if a.has("biz"):
 				return w.business.works.finish(n, a)       # B18-DP-01: the player's attendant at the player's own station
-			return w.work_craft(n, a.recipe, n.inv).result == "ok"     # the player's crafting (PAR-01, PAR-04)
+			var biz_craft: Dictionary = w.ventures.craft_begin(n, a)     # B25-BIZ-D1: work at a business's station for it
+			var crafted: bool = w.work_craft(n, a.recipe, n.inv).result == "ok"     # the player's crafting (PAR-01, PAR-04)
+			if crafted:
+				w.ventures.craft_end(n, biz_craft)
+			return crafted
 		"rent_from":                                               # LE05-RENTAL: at the owner's, the rental is made (or refused)
 			var ow := w.npc(int(a.get("owner", -1)))
 			if w.economy == null or ow == null or not ow.alive:
@@ -3049,6 +3072,10 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"emp_mine":                                       # EMP-PERM-01: a permanent employee's swing, the ore the employer's
 			return w.employment.act_mine(n, a)
+		"emp_chop":                                       # B25-BIZ-D4: a permanent woodcutter fells for the employer
+			return w.employment.act_chop(n, a)
+		"emp_craft":                                      # B25-BIZ-D4: a permanent crafter makes for the employer at their station
+			return w.employment.act_craft(n, a)
 		"emp_deliver":                                    # EMP-PERM-01: the employer's ore into the employer's store
 			return w.employment.act_deliver(n)
 		"helper_take", "helper_buy", "helper_own", "helper_deliver":

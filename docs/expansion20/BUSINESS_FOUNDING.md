@@ -150,16 +150,19 @@ owns**, distinct from a day's building helper (`Construction.hire`), a counter a
   `GameUI` talk menu. Wiki: `sys:trade_experience` ("A business of their own"), `guide:employee`, "Not in the game yet".
   Interactions INT-661..663. Tests `game/tests/business_founding_test.gd`.
 
-## 8. Open questions (conservative option implemented)
+## 8. Open questions: answered by the owner (2026-11-01)
 
-- **Q1 (OD-LE-04 / OD-LE-07):** a business identity and accounts separate from the household. Implemented: none (the
-  household's purse is the business's money; no `business:` ref). Owner decision when separate accounts are wanted.
-- **Q2:** whether a venture's hands are paid a wage by the keeper and their output is the keeper's (true employment) rather
-  than working the keeper's benches for themselves with leave. Implemented: leave, no wage (the production and selling
-  code is unchanged; no coin can be lost). The player's permanent employee (EMP-PERM-01) is the wage-and-output model.
-- **Q3:** abandoning a venture site that cannot be finished (ground and materials). Implemented: it stays the household's
-  building goal; nothing is cancelled or refunded automatically.
-- **Q4:** further player employee roles (woodcutter, digger at the player's own pit, a crafter at the player's stations
-  beyond the attendant). Implemented: miner; the attendant's workshop production (`BusinessWorks`) is unchanged.
-- **Q5:** a venture buying or renting an existing workshop from another owner. Implemented: villagers build their own; no
-  villager-owned workshop is on the market today (`Property.market` sells and lets houses).
+The owner answered all five (`docs/directives/2026-11-01_business_ownership_employment_final_decisions.md`, B25-BIZ-D1..D5).
+The specification that replaces the provisional choices is **`docs/expansion20/BUSINESS_OWNERSHIP.md`**; the earlier
+conservative options are kept here as history only:
+
+- **Q1** (separate business accounts): was "none, the household's purse"; now **replaced** by Decision 1 (a venture keeps
+  its own till under the ECON-P3 rules, BUSINESS_OWNERSHIP.md section 2).
+- **Q2** (hands paid a wage): was "leave, no wage"; now **replaced** by Decision 2: hands stay independent craftspeople,
+  and businesses also hire paid employees whose production is the employer's (section 3).
+- **Q3** (abandoning a site): "no automatic refund" is **confirmed** by Decision 3, with a cancellation path through
+  `World.cancel_site` (section 4).
+- **Q4** (further player employee roles): was "miner only"; now **replaced** by Decision 4, one framework across the
+  professions with real work systems (section 5).
+- **Q5** (buying or renting an existing workshop): was "build only"; now **replaced** by Decision 5, buying, selling and
+  expanding (section 6).
