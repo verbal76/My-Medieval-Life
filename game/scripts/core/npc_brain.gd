@@ -2488,7 +2488,11 @@ func _do_recipe(n: NPC, r: String) -> bool:
 ## Only stations the villager may use count (a workshop is its holder's, and those given leave:
 ## World.npc_may_use), and the player working at one takes a place (World.reserve_for_player).
 func _station_for(n: NPC, kind: String) -> String:
+	var ids := w.ventures.stations_for(n, kind)         # B25-BUSINESS-IMPL: a venture's keeper and hands try its own stations first
 	for id in w.stations_of(kind):
+		if not ids.has(id):
+			ids.append(id)
+	for id in ids:
 		var st: Dictionary = w.stations[id]
 		if not w.npc_may_use(n, st):
 			continue
@@ -4246,7 +4250,7 @@ func job_market() -> Dictionary:
 func skilled_place(job: String) -> Dictionary:
 	var cfg: Dictionary = GameData.b("skilled_places")
 	var out := {"pay": float(GameData.b("manor_wage_per_day")), "open": 0, "tool": "", "at": Vector2i.ZERO, "place": "",
-		"room": false, "work": false, "afford": false}
+		"room": false, "work": false, "afford": false, "busy": 0.0}
 	var workers := []
 	for o: NPC in w.npcs:
 		if o.alive and o.role == "adult" and o.job == job:
@@ -4283,8 +4287,8 @@ func skilled_place(job: String) -> Dictionary:
 		for kind in TRADE_STATIONS.get(job, SKILLED_STATIONS.get(job, [])):
 			for st in w.stations_of(kind):
 				var sd: Dictionary = w.stations[st]
-				if not w.may_use("", sd):
-					continue                        # a workshop's own, not open to a hire
+				if not w.may_use("", sd) and not w.ventures.hiring_station(st):
+					continue                        # a workshop's own, not open to a hire (a venture's takes hands: B25-BUSINESS-IMPL)
 				var used := station_minutes(st)
 				var left := float(sd.get("capacity", 1)) * day - used
 				free += left
@@ -4294,6 +4298,7 @@ func skilled_place(job: String) -> Dictionary:
 					out.place = str(st)
 					out.at = w.station_use(st)
 		var per := mine / float(k)
+		out.busy = per / day                    # B25-BUSINESS-IMPL: the share of a working day each worker spends there
 		out.work = per >= float(cfg.busy_share) * day
 		out.room = per > 0.0 and free >= per
 	if k >= staff_target(job) and open_posts(job) == 0 and out.room and out.work and out.afford:
@@ -4577,6 +4582,7 @@ func _take_place(n: NPC, job: String, why: String, market: Dictionary) -> void:
 	var left := n.job
 	var left_place := n.workplace
 	_change_job(n, job, why, str(market[job].get("place", "")))
+	w.ventures.took_place(n, str(market[job].get("place", "")))      # B25-BUSINESS-IMPL: a venture's bench, with the keeper's leave
 	_post_left(n, left, left_place)
 
 

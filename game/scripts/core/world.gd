@@ -142,6 +142,7 @@ var justice: Justice          # GP-CRIME-PURSUIT A1: the authorities' file on ea
 var civic: CivicRecords = null  # P21-01 (Expansion 21): tenure history, succession and the legacy record; null while data/civic.json is disabled (shipped off: nothing built, no save key). Observes, never changes (scripts/core/civic/)
 var civic_foreign := {}       # P21-01: a saved "civic" section while the records are disabled: written back unchanged, never erased
 var economy_foreign := {}   # D2: a saved "economy" section while the foundation is disabled: written back unchanged, never parsed or erased
+var ventures: Ventures         # B25-BUSINESS-IMPL: villagers' own businesses (scripts/core/ventures.gd); state saved with households and buildings
 var transactions: EconTransactions = null   # LE-03: the transaction authority (docs/expansion20/TRANSACTION_AUTHORITY.md); saved as "transactions" only when non-empty
 var economy: EconomyFoundation = null   # EXPANSION 20 LE-01: null unless game/data/economy.json "enabled" (shipped false); saved as the optional key "economy" only when on and non-empty
 var credit: Credit            # TRADE-CREDIT: barter and recorded debts (scripts/core/credit.gd). Saved as the optional key "credit" (older saves have none)
@@ -188,6 +189,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	property = Property.new(self)
 	construction = Construction.new(self)
 	business = Business.new(self)
+	ventures = Ventures.new(self)
 	fitting = Fitting.new(self)
 	counters = Counters.new(self)
 	for b in m.data.buildings:
@@ -530,6 +532,7 @@ func _new_day() -> void:
 	if couriers != null:
 		couriers.daily()               # REG-COURIER-01: the village's booth, its keeper, the routes to the settlements
 	construction.daily()               # helpers' days end; crowded households split; founders build
+	ventures.daily()                   # B25-BUSINESS-IMPL: ventures open, change hands or close; villagers weigh founding one
 	farm_plots.daily()                 # households weigh taking farmland (FARM-05)
 	chapel.dawn()                      # DVW-B3-CHAPEL: this morning's volunteers for the church plot, and its seed
 	if profiling:
@@ -6296,6 +6299,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	property.next_parcel = int(d.get("next_parcel", 0))
 	construction = Construction.new(self)
 	business = Business.new(self)
+	ventures = Ventures.new(self)
 	fitting = Fitting.new(self)
 	counters = Counters.new(self)
 	minutes = float(d.minutes)
