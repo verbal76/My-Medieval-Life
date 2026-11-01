@@ -1487,6 +1487,8 @@ func _tell(teller: int, listener: int) -> int:
 		if k >= _g_per or int(told_today.get(teller, 0)) >= _g_budget:
 			break
 		var ev := key & ((1 << 40) - 1)
+		if not mem.has(ev):
+			continue                               # X20-TELL-GUARD: forgotten since it was queued (a refutation taken in earlier in this meeting pushed it out): not told
 		var m: PackedInt64Array = mem[ev]
 		if _g_floor < 1000 and JudgmentMath.roll([world_seed, ev, teller, listener, _stamp, day]) >= close_chance(listener, teller):
 			_stat("withheld")                      # not passed on this time: the pair are not close enough (a later meeting may)

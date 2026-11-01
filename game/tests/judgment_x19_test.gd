@@ -235,45 +235,64 @@ func test_lies() -> void:
 		check(j3.net(21, SUBJ) < 0, "...but someone who has not learned it is false still believes it (they learn only by being told)")
 
 
-## X20-TELL-GUARD (owner authorization 2026-11-01): a story queued for a meeting can be forgotten before its turn comes. The teller
-## passes on a lie; the guard listening shows it false; learning the refutation is one memory more, and a teller at memory.capacity
-## forgets their least salient story, which may be one still queued for this meeting. The meeting goes on without it: a forgotten
-## story is not told, nothing else changes, and the outcome is the same every time.
+## X20-TELL-GUARD (owner authorization 2026-11-01; reproduced in the year-long runs, seed 1 day 45: teller 85, listener 75, story
+## 171). A story queued for a meeting can be forgotten before its turn: the teller passes on a lie first, the listener (a guard) shows
+## it false, learning the refutation is one memory more, and a teller at memory.capacity forgets their least salient story, which
+## here is still queued for this meeting. The meeting goes on without it: a story the teller no longer holds is not told, the rest
+## of the meeting is unchanged, and the outcome is the same every time.
 func test_tell_forgotten_mid_meeting() -> void:
-	var found := false
-	for cap in [1, 2, 3]:
-		var j := _tell_cap_world(cap)
-		var lie := -1
-		for fid in j.facts:
-			if j.is_lie(int(fid)):
-				lie = int(fid)
-		var held := (j.memories.get(LISTENER, {}) as Dictionary).size()
-		var forgotten0 := int(j.stats.get("forgotten", 0))
-		var told := j.tell(LISTENER, GUARD)
-		var forgotten := int(j.stats.get("forgotten", 0)) - forgotten0
-		if lie > 0 and int(j.stats.get("lies_refuted", 0)) >= 1 and forgotten >= 1:
-			found = true
-			check(j.belief(LISTENER, lie).is_empty() and (j.memories.get(LISTENER, {}) as Dictionary).size() <= maxi(cap, 1) + 1,
-					"capacity %d: the teller (%d stories) drops the lie and forgets %d story mid-meeting; the meeting goes on (%d told)" % [cap, held, forgotten, told])
-			var again := _tell_cap_world(cap)
-			again.tell(LISTENER, GUARD)
-			check(again.state_hash() == j.state_hash(), "capacity %d: the same meeting ends the same way every time" % cap)
-	check(found, "a meeting where a queued story is forgotten before its turn was produced (refutation at memory capacity)")
+	var j := _tell_cap_world()
+	var lie := -1
+	var dull := -1
+	for fid in j.facts:
+		if j.is_lie(int(fid)):
+			lie = int(fid)
+		elif j.fact(int(fid)).type == "trade_fair":
+			dull = int(fid)
+	var mem: Dictionary = j.memories.get(LISTENER, {})
+	check(lie > 0 and mem.has(lie) and dull > 0 and mem.has(dull) and mem.size() == int(j.cfg.memory.capacity),
+			"the teller holds the lie and a duller true story, at their memory capacity (%d)" % mem.size())
+	# the live path (seed 1 day 45): the teller had taken in the refutation of this lie before and forgotten it, so learning it
+	# again at this meeting is not news (has_contribution): the lie is not dropped on learning, the memory limit runs first and
+	# pushes out the queued duller story, and only then is the lie dropped
+	var rf := j._refutation(lie, LIAR)
+	j._hold(LISTENER, rf)
+	var f0 := int(j.stats.get("forgotten", 0))
+	var told := j.tell(LISTENER, GUARD)
+	check(int(j.stats.get("lies_refuted", 0)) >= 1 and int(j.stats.get("forgotten", 0)) > f0 and not (j.memories.get(LISTENER, {}) as Dictionary).has(dull),
+			"the guard shows the lie false, and learning that pushes the queued duller story out of the teller's memory mid-meeting")
+	check(j.belief(GUARD, dull).is_empty(), "a story the teller no longer holds is not told")
+	check(told == 1, "the meeting finishes: the true story told before the lie still counts (%d told)" % told)
+	var again := _tell_cap_world()
+	for fid in again.facts:
+		if again.is_lie(int(fid)):
+			again._hold(LISTENER, again._refutation(int(fid), LIAR))
+	again.tell(LISTENER, GUARD)
+	check(again.state_hash() == j.state_hash(), "the same meeting ends the same way every time")
 
 
-func _tell_cap_world(cap: int) -> JudgmentStore:
+## LIAR saw SUBJ rob X and resents SUBJ; LISTENER heard it (and LIAR's invented story) from LIAR and saw a fair trade (low
+## severity, so least salient), and holds exactly memory.capacity stories. GUARD can show the lie false.
+func _tell_cap_world() -> JudgmentStore:
 	var c := cfg()
 	c.lies.chance_permille = 1000
-	c.memory.capacity = cap
 	c.gossip.per_meeting = 8
 	var soc := JudgmentSocial.new().set_guard(GUARD).set_kin(SUBJ, KIN).set_regard(LISTENER, LIAR, 80).set_regard(GUARD, LIAR, 80).set_regard(GUARD, LISTENER, 80).set_regard(LISTENER, GUARD, 80)
+	var probe := store(c, soc)
+	var ev := probe.publish("theft", [SUBJ], [X], [], 5)
+	probe.observe_all(ev, [LIAR])
+	probe.set_ledger(LIAR, SUBJ, 0, 30000)
+	probe.meet(LIAR, LISTENER)
+	var fair := probe.publish("trade_fair", [BOB], [THIEF])
+	probe.observe_all(fair, [LISTENER])
+	c.memory.capacity = (probe.memories.get(LISTENER, {}) as Dictionary).size()
 	var j := store(c, soc)
-	var ev := j.publish("theft", [SUBJ], [X], [], 5)
-	j.observe_all(ev, [LIAR])
-	var ev2 := j.publish("theft", [THIEF], [BOB], [], 3)
+	var ev2 := j.publish("theft", [SUBJ], [X], [], 5)
 	j.observe_all(ev2, [LIAR])
 	j.set_ledger(LIAR, SUBJ, 0, 30000)
 	j.meet(LIAR, LISTENER)
+	var fair2 := j.publish("trade_fair", [BOB], [THIEF])
+	j.observe_all(fair2, [LISTENER])
 	return j
 
 
