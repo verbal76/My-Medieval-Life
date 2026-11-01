@@ -119,6 +119,7 @@ func setting_up() -> Dictionary:
 
 # ---------------------------------------------------------------- each dawn ---------------------
 func daily() -> void:
+	_review_setup()
 	_open_finished()
 	for b in open_ventures():
 		_check(b)
@@ -144,23 +145,40 @@ func _open_finished() -> void:
 			continue
 		hh.erase("venture")
 		var b: Dictionary = w.buildings[str(p.building)]
-		_open(b, int(rec.founder), str(rec.trade), h, int(rec.day))
+		_open(b, int(rec.founder), str(rec.trade), h, int(rec.day), bool(rec.get("expansion", false)))
 		_check(b)
 
 
 ## A venture opens in workshop `b` (built, bought or taken on): the record, the founder at its stations, and (B25-BIZ-D1) the
 ## household's working capital invested in its till: working_days of its daily costs, as far as its head's coins above the
 ## necessity reserve allow (World.spendable; never the protected reserve).
-func _open(b: Dictionary, founder: int, trade: String, h: int, day: int) -> void:
+func _open(b: Dictionary, founder: int, trade: String, h: int, day: int, expansion := false) -> void:
 	b.venture = {"founder": founder, "keeper": founder, "trade": trade, "day": day,
 		"opened": w.day(), "household": h, "idle": 0, "hands": [], "till": 0, "earned": 0, "paid": 0, "costs": {}, "goods": {}}
 	w.stat("ventures_opened")
 	var head: NPC = w.party(World.hh_ref(h))
-	var econ: Dictionary = w.households[h].get("econ", {}) if h >= 0 and h < w.households.size() else {}
-	var working := ceili(float(econ.get("cost", 0.0)) * float(cfg().working_days))
-	var put := mini(working, w.spendable(head)) if head != null else 0
-	if put > 0 and w.business.money.invest(b, "venture", head, put):
-		w.stat("venture_capital", put)
+	if expansion:
+		# its working capital comes from the keeper's first business (the runway kept for staffing it), through the household
+		var first: Dictionary = {}
+		for o in open_ventures():
+			if o != b and int(o.venture.keeper) == founder and not bool(o.venture.get("expansion", false)):
+				first = o
+				break
+		var runway: int = w.employment.market_wage(trade) * int(cfg().get("hire_runway_days", 7))
+		var move := mini(runway, BusinessMoney.venture_till_of(first)) if not first.is_empty() else 0
+		if head != null and move > 0 and w.business.money.pay_out(first, "venture", head, move, "premises"):
+			w.business.money.invest(b, "venture", head, move)
+	else:
+		var econ: Dictionary = w.households[h].get("econ", {}) if h >= 0 and h < w.households.size() else {}
+		var working := ceili(float(econ.get("cost", 0.0)) * float(cfg().working_days))
+		var put := mini(working, w.spendable(head)) if head != null else 0
+		if put > 0 and w.business.money.invest(b, "venture", head, put):
+			w.stat("venture_capital", put)
+	if expansion:
+		b.venture.expansion = true          # B25-BIZ-D5: a second workshop of the keeper's, staffed by hiring
+		w.stat("ventures_expanded")
+		w.note("%s now has a second workshop: %s." % [w.ref_name(World.hh_ref(h), true), w.property.describe(b)])
+		return
 	var k := w.npc(founder)
 	if k != null and k.alive and k.job == trade and k.household == h:
 		_work_here(k, b)
@@ -289,6 +307,8 @@ func _consider() -> void:
 		if kind_for(n.job) == "" or busy.has(n.job) or not looks_today(n):
 			continue
 		var opt := eligible(n, markets)
+		if opt.is_empty() and not kept_by(n).is_empty():
+			opt = expansion(n, markets)        # B25-BIZ-D5: a keeper whose business has the money may open another
 		if opt.is_empty():
 			continue
 		w.stat("ventures_considered")
@@ -406,7 +426,18 @@ func found(n: NPC, opt: Dictionary) -> bool:
 		_open(rb, n.id, n.job, h, w.day())
 		w.stat("ventures_reopened")
 		return true
-	if opt.has("buy"):                     # B25-BIZ-D5: bought from a willing seller at the agreed price
+	if opt.has("expand"):                  # B25-BIZ-D5: the business pays its household for new premises (its cost "premises")
+		var biz: Dictionary = opt.expand
+		var head: NPC = w.party(ref)
+		if head == null or not w.business.money.pay_out(biz, "venture", head, int(opt.start), "premises"):
+			return false
+		if opt.has("buy"):
+			var eb: Dictionary = opt.buy
+			if buy_refusal(eb, ref, n) != "" or _transfer(eb, ref, price_for(eb, n), null) != "":
+				return false
+			_open(eb, n.id, n.job, h, w.day(), true)
+			return true
+	elif opt.has("buy"):                   # B25-BIZ-D5: bought from a willing seller at the agreed price
 		var bb: Dictionary = opt.buy
 		return buy_refusal(bb, ref, n) == "" and _transfer(bb, ref, price_for(bb, n), n) == ""
 	var p: Dictionary = w.construction.place(str(opt.kind), opt.rect, ref, false, opt.house)
@@ -415,6 +446,8 @@ func found(n: NPC, opt: Dictionary) -> bool:
 	var hh: Dictionary = w.households[h]
 	hh.build = str(p.id)
 	hh.venture = {"founder": n.id, "trade": n.job, "kind": str(opt.kind), "plot": str(p.id), "day": w.day()}
+	if opt.has("expand"):
+		hh.venture.expansion = true
 	w.stat("ventures_founded")
 	w.stat("ventures_founded_" + n.job)
 	w.note("%s %s sets about building %s of their own." % [n.name, n.family, Construction.kind_name(str(opt.kind), true)])
@@ -872,3 +905,97 @@ func own_unused(n: NPC) -> Dictionary:
 		if is_business(b) and not b.has("venture") and w.owner_of(b) == World.hh_ref(n.household) and trades_for(str(b.get("kind", ""))).has(n.job):
 			return b
 	return {}
+
+
+
+# ---------------------------------------------------------------- expansion (B25-BIZ-D5 E) --------------
+## A keeper's option to open another workshop of their trade paid by their business ({} none): the trade has work and no room
+## (the founding test), the household builds nothing else, and the business's till holds the start (a workshop on sale at the
+## agreed price, else a standalone workshop's ground and first materials near the business) plus hire_runway_days of the market
+## wage to staff it. Several businesses are limited only by money, ground, sellers, staff and work.
+func expansion(n: NPC, markets := {}) -> Dictionary:
+	var biz := kept_by(n)
+	var kind := kind_for(n.job)
+	if biz.is_empty() or kind == "" or str(biz.venture.trade) != n.job or n.household < 0:
+		return {}
+	var h := n.household
+	var hh: Dictionary = w.households[h]
+	var ref := World.hh_ref(h)
+	var bp: Dictionary = w.plot(str(hh.get("build", "")))
+	var building: bool = not bp.is_empty() and not bp.site.is_empty() and not bp.site.get("done", false)
+	if hh.get("ended", false) or hh.has("venture") or building or not (hh.get("housing", {}) as Dictionary).is_empty():
+		return {}
+	if not markets.has(n.job):
+		markets[n.job] = w.brain.skilled_place(n.job)
+	var m: Dictionary = markets[n.job]
+	if not bool(m.work) or bool(m.room):
+		return {}
+	var till := BusinessMoney.venture_till_of(biz)
+	var working: int = w.employment.market_wage(n.job) * int(cfg().get("hire_runway_days", 7))
+	var info := {"kind": kind, "expand": biz, "spare": till, "busy": float(m.get("busy", 0.0)), "skill": Skills.level(n, w.brain._trade_skill(n.job))}
+	var listed := listed_for(n)
+	if not listed.is_empty():
+		var price := price_for(listed, n)
+		if till >= price + working:
+			return info.merged({"buy": listed, "price": price, "start": price, "need": price + working})
+	var rect: Rect2i = w.construction.find_ground(kind, w.building_door(str(biz.id)), ref)
+	if rect.size == Vector2i.ZERO:
+		return {}
+	var land: int = w.property.land_price(rect.size.x, rect.size.y)
+	var start: int = w.construction._start_of(h, w.construction.cost_of(kind), land)
+	if till < start + working:
+		return {}
+	return info.merged({"rect": rect, "house": {}, "start": start, "need": start + working})
+
+
+# ---------------------------------------------------------------- abandoning a site (B25-BIZ-D3) -----------
+## The household gives up the business it is setting up: the existing cancellation (World.cancel_site) takes the frame down and
+## returns every delivered load to the household's store (what does not fit lies at the door); nothing is refunded as money
+## and the ground stays the household's; its helpers' day contracts on the site end; the household is free of the building
+## goal (hh.build) to see to its home and its living. False when it was setting nothing up.
+func abandon(h: int, why: String) -> bool:
+	if h < 0 or h >= w.households.size() or not w.households[h].has("venture"):
+		return false
+	var hh: Dictionary = w.households[h]
+	var p: Dictionary = w.plot(str(hh.venture.plot))
+	if not p.is_empty():
+		for c in w.construction.contracts.duplicate():
+			if str(c.site) == str(p.id):
+				w.construction.end_contract(c, "the building was given up")
+		if not p.site.is_empty() and not p.site.get("done", false):
+			var store: Inventory = w.construction.store_of(World.hh_ref(h))
+			w.cancel_site(p, store if store != null else hh.pantry)
+	hh.erase("venture")
+	if not p.is_empty() and str(hh.get("build", "")) == str(p.id):
+		hh.erase("build")
+	w.stat("ventures_abandoned")
+	w.stat("ventures_abandoned_given_up")
+	w.note("The %s family gives up the workshop it was building: %s." % [hh.family, why])
+	return true
+
+
+## Each dawn, a business being set up whose completion has become unreasonable is given up: the household has a home to see to
+## (a housing goal: crowded, without a home, a couple without one: home first), or the site has made no progress for
+## stall_days days and the household cannot spare what its remaining materials cost (Construction.estimate).
+func _review_setup() -> void:
+	for h in w.households.size():
+		var hh: Dictionary = w.households[h]
+		if not hh.has("venture") or hh.get("ended", false):
+			continue
+		var rec: Dictionary = hh.venture
+		var p: Dictionary = w.plot(str(rec.plot))
+		if p.is_empty() or p.site.is_empty() or p.site.get("done", false):
+			continue
+		if not w.construction.housing_goals(h).is_empty():
+			abandon(h, "the family needs its home seen to first")
+			continue
+		var prog: float = w.site_progress(p)
+		if prog > float(rec.get("progress", -1.0)):
+			rec.progress = prog
+			rec.moved = w.day()
+			continue
+		if w.day() - int(rec.get("moved", rec.day)) < int(cfg().get("stall_days", 30)):
+			continue
+		var spare: int = w.property.purse(World.hh_ref(h)) - w.construction._keep(h, w.brain._members(h).size()) - w.construction._tool_reserve(h)
+		if spare < w.construction.estimate(p.site.need):
+			abandon(h, "it could not be finished")

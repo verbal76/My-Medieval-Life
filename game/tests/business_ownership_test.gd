@@ -68,6 +68,19 @@ func smithy_full(w: World) -> void:
 	w.station_load = {"day": w.day(), "today": {}, "past": past}
 
 
+## Every smith station busy, the businesses' own included: work for the trade and no room anywhere.
+func all_full(w: World) -> void:
+	var day := (NPCBrain.WORK_END - NPCBrain.WORK_START) * 60.0
+	var past := []
+	for i in int(GameData.b("skilled_places").window_days):
+		var d := {}
+		for kind in NPCBrain.TRADE_STATIONS.smith:
+			for st in w.stations_of(kind):
+				d[st] = {"smith": day * float(w.stations[st].get("capacity", 1))}
+		past.append(d)
+	w.station_load = {"day": w.day(), "today": {}, "past": past}
+
+
 func founder(w: World) -> NPC:
 	var s: NPC = null
 	for o: NPC in of_job(w, "smith"):
@@ -693,3 +706,142 @@ func test_standalone() -> void:
 	var p: Dictionary = w.property.parcel_under(b)
 	check(b.has("venture") and w.property.estate_id(p) == str(p.id) and w.owner_of(b) == World.hh_ref(s.household), "it is a property of its own, run as a business")
 	check(w.ventures.offer_refusal(b, World.hh_ref(s.household)) == "", "and may be sold on its own")
+
+
+# ---------------------------------------------------------------- D3 ------------------------------
+func test_abandon() -> void:
+	var w := world()
+	var s := found_one(w)
+	var h := s.household
+	var hh: Dictionary = w.households[h]
+	var p: Dictionary = w.plot(str(hh.build))
+	var pantry: Inventory = hh.pantry
+	# half the materials delivered
+	var half := {}
+	for id in p.site.need:
+		half[id] = int(p.site.need[id]) / 2
+		pantry.add(id, int(half[id]))
+	w.deliver(p, pantry)
+	var delivered: Dictionary = w.site_delivered(p)
+	var coins := w.total_coins()
+	var purse: int = w.property.purse(World.hh_ref(h))
+	var before := {}
+	for id in delivered:
+		before[id] = goods(w, str(id))
+	check(w.ventures.abandon(h, "test: given up"), "a business being set up can be given up voluntarily (D3)")
+	check(not hh.has("venture") and str(hh.get("build", "")) == "", "the household is released from the building obligation")
+	w.minutes += 1440.0
+	w.construction.daily()
+	check(str(hh.get("build", "")) == "" and not hh.has("venture"), "and the next morning's building work does not take it up again")
+	check(p.site.is_empty() and w.owner_of(p) == World.hh_ref(h), "the frame comes down; the ground stays the household's")
+	check(w.property.purse(World.hh_ref(h)) == purse and w.total_coins() == coins, "no money is refunded and none is made")
+	var same := true
+	for id in delivered:
+		same = same and goods(w, str(id)) == int(before[id])
+		same = same and pantry.count(str(id)) >= int(delivered[id])
+	check(same and not delivered.is_empty(), "the delivered materials are recovered into the household's store, none duplicated or lost")
+	check(w.ventures.refusal(s) != "keeps a business already", "they may pursue other plans")
+	# a housing need makes completion unreasonable: home first
+	var w2 := world()
+	var s2 := found_one(w2)
+	var hh2: Dictionary = w2.households[s2.household]
+	hh2.housing = {"crowded": {"need": "crowded", "since": w2.day(), "plan": "quarters"}}
+	w2.minutes += 1440.0
+	w2.ventures._review_setup()
+	check(not hh2.has("venture") and str(hh2.get("build", "")) == "", "a family that needs its home seen to gives up the workshop it was building")
+	# no progress for stall_days and the household cannot pay for the rest
+	var w3 := world()
+	var s3 := found_one(w3)
+	var hh3: Dictionary = w3.households[s3.household]
+	w3.ventures._review_setup()
+	for o: NPC in w3.brain._members(s3.household):
+		o.coins = 0
+	w3.minutes += 1440.0 * (int(GameData.b("ventures").stall_days) - 1)
+	w3.ventures._review_setup()
+	check(hh3.has("venture"), "a stalled site is kept until stall_days have passed")
+	w3.minutes += 1440.0
+	w3.ventures._review_setup()
+	check(not hh3.has("venture") and int(w3.stats.get("ventures_abandoned_given_up", 0)) == 1, "after stall_days without progress, a site the household cannot afford is given up")
+	# the player's own site: the existing cancellation, materials back, no refund
+	var w4 := world()
+	player_home(w4)
+	var rect: Rect2i = w4.construction.find_ground("smithy", Vector2i(int(w4.map.data.spawns.player[0]), int(w4.map.data.spawns.player[1])) + Vector2i(0, 14), World.PLAYER)
+	w4.player.coins += w4.property.land_price(rect.size.x, rect.size.y)
+	var ps: Dictionary = w4.construction.place("smithy", rect, World.PLAYER)
+	var need: Dictionary = ps.site.need.duplicate()
+	var k := str(need.keys()[0])
+	w4.player.inv.add(k, int(need[k]))
+	w4.deliver(ps, w4.player.inv)
+	var pcoins := w4.player.coins
+	var back: Dictionary = w4.cancel_site(ps, w4.player.inv)
+	check(int(back.get(k, 0)) == int(need[k]) and w4.player.inv.count(k) >= int(need[k]) and w4.player.coins == pcoins and ps.site.is_empty(),
+		"the player's unfinished workshop is given up through the same cancellation: materials back, no money")
+
+
+# ---------------------------------------------------------------- D5: expansion and careers -------
+func test_expansion() -> void:
+	var w := world()
+	var r := open_one(w)
+	var s: NPC = r[0]
+	var b: Dictionary = r[1]
+	all_full(w)
+	b.venture.till = 0
+	check(w.ventures.expansion(s).is_empty(), "a business without the money does not expand")
+	b.venture.till = 5000
+	var opt: Dictionary = w.ventures.expansion(s)
+	check(not opt.is_empty() and opt.expand == b and not opt.has("buy"), "a thriving business may open a standalone workshop of its own (%s)" % str(opt.get("rect", "")))
+	var coins := w.total_coins()
+	check(w.ventures.found(s, opt), "the keeper sets up a second workshop, paid by the business")
+	var hh: Dictionary = w.households[s.household]
+	check(hh.has("venture") and bool(hh.venture.get("expansion", false)) and int((b.venture.costs as Dictionary).get("premises", 0)) == int(opt.start) and w.total_coins() == coins,
+		"the business pays the household for the premises (%d, its cost recorded); nothing made" % int(opt.start))
+	var b2 := finish(w, s)
+	w.minutes += 1440.0
+	w.station_load = {}
+	w.ventures.daily()
+	check(b2.has("venture") and bool(b2.venture.get("expansion", false)) and int(b2.venture.keeper) == s.id and str(w.stations[s.workplace].building) == str(b.id),
+		"the second workshop opens; the keeper stays at their first")
+	check(int(b2.venture.till) > 0, "its working capital comes from the first business's till (%d)" % int(b2.venture.till))
+	check(w.ventures.open_ventures().filter(func(x): return int(x.venture.household) == s.household).size() == 2, "the family runs two businesses: no fixed cap")
+	var w2 := world()
+	var r2 := open_one(w2)
+	var b9: Dictionary = r2[1]
+	b9.venture.till = 5000
+	var rr := player_house_with_smithy(w2)
+	all_full(w2)
+	if not rr.is_empty():
+		w2.ventures.offer(rr[1], 40)
+		var opt2: Dictionary = w2.ventures.expansion(r2[0])
+		check(opt2.has("buy") and opt2.buy == rr[1], "a business expanding buys a workshop on sale before building one")
+
+
+func test_career() -> void:
+	var w := world()
+	var r := open_one(w)
+	var s: NPC = r[0]
+	var b: Dictionary = r[1]
+	var sm := int(s.skills.get("smithing", 0))
+	var cp := int(s.skills.get("carpentry", 0))
+	var ex: Dictionary = (w.experience.minutes.get(World.npc_ref(s.id), {}) as Dictionary).duplicate()
+	# the smith becomes a carpenter through the labour market's job change
+	w.brain._change_job(s, "carpenter", "test: a career change")
+	check(s.job == "carpenter" and int(s.skills.get("smithing", 0)) == sm and int(s.skills.get("carpentry", 0)) == cp, "a career change keeps every skill; it grants none")
+	check((w.experience.minutes.get(World.npc_ref(s.id), {}) as Dictionary) == ex, "and every recorded working day")
+	w.minutes += 1440.0
+	w.station_load = {}
+	w.ventures.daily()
+	check(not b.has("venture"), "the smithy's business closes with nobody of the family in the trade")
+	# owning a workshop grants no skill: buying one needs the same skill and experience as founding
+	var o := second_smith(w, s)
+	o.skills["smithing"] = Skills.xp_for_level(1)
+	smithy_full(w)
+	check(w.ventures.refusal(o) == "not skilled enough yet", "an unskilled villager cannot buy their way into a trade's business")
+	w.player.coins += 1000
+	var before := int(w.player.skills.get("smithing", 0)) if w.player.get("skills") != null else 0
+	if b.has("sale"):
+		w.ventures.buy(b)
+	check(w.owner_of(b) == World.PLAYER and (int(w.player.skills.get("smithing", 0)) if w.player.get("skills") != null else 0) == before,
+		"the player who buys the smithy owns it and gains no smithing by it")
+	# back again: the carpenter returns to smithing and the household's money from the sale is theirs
+	w.brain._change_job(s, "smith", "test: back to the forge")
+	check(int(s.skills.get("smithing", 0)) == sm, "returning to the old trade, the skill is still theirs")
