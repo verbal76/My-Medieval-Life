@@ -18,7 +18,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (53)
+## Implemented but not tested (54)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -27,6 +27,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B16-AUDIT | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
 | B16-READY | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
 | B25-AMBITION-IMPL | 20 | INTEGRATED |  |
+| B25-EMPLOY-IMPL | 20 | INTEGRATED |  |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |
 | B7-009 | 15 | INTEGRATED |  |
 | B7-014 | 15 | INTEGRATED |  |

@@ -5638,7 +5638,7 @@
     "B25-EMPLOY-D3"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5647,7 +5647,17 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_career_business_employment_final_decisions.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests: None -> game/tests/skilled_employment_test.gd; test_commit: None -> 265ddc1; commits + 265ddc1",
+     "why": "integrated into wip/expansion20 at 265ddc1 (merge of wip/b25-employ 99815ca; manifest entry renumbered INT-660): skilled places from workplace room, work and earnings, no fixed cap (staff_target only the succession floor); skill-aware hiring and succession; retraining. On the merged tree: skilled_employment 54, le05_paid_repair 31, save_continuity 5, career_ambition 71, run_tests 3601, 0 failures (local); housing_test loft check fails identically before the change. 60-day seed 1: smiths 2 -> 3, others flat, leaks 0. Open: tavern measure, immigrants offered only vacancies, succession floor, provisional busy_share 0.35"
     }
+   ],
+   "tests": "game/tests/skilled_employment_test.gd",
+   "test_commit": "265ddc1",
+   "commits": [
+    "265ddc1"
    ]
   },
   {

@@ -165,7 +165,7 @@ None.
 | B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25-EMPLOY-D3 | How do skilled occupations grow? | decision | APPROVED | owner decision |
-| B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-LE-ACTIVATE-D1 | Living Economy activation policy for Build 25 | decision | APPROVED | owner decision |
 | B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25-NINE-D1 | Organic skills, apprenticeship and career development | decision | APPROVED | owner decision |

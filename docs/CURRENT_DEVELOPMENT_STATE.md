@@ -20,10 +20,11 @@ B25-EMPLOY-D3, B25-AMBITION-D4, all APPROVED for Build 25 implementation (B25-CA
 
 **REDUCED-RESOURCE MODE (owner 2026-11-01, resource directive; until the owner restores normal priority):** one Claude coding worker
 at a time; no new agents; computation through GitHub Actions (`long-sims.yml`: seeds, days, every, set, variants, sim_args; read results
-from compact lines, not raw logs); minimal reporting. Active: wip/b25-employ (skilled places and skill-aware hiring, from `7dfd3d5`,
-local head `7ce739d` at suspension of the others). Suspended at a safe checkpoint with "WIP (suspended):" commits pushed to their
-branches: wip/b25-juice, wip/b25-report, wip/b25-materials, wip/b25-capability, wip/b25-services (each from `2c0a780`; their worktrees
-are kept under `.claude/worktrees/agent-*`). No GitHub Actions jobs running. Resume order after the reset: integrate b25-employ; then
+from compact lines, not raw logs); minimal reporting. Build 25 source now `265ddc1` (skilled employment merged). Next active worker after the reset: business founding and permanent
+employment (none running now). Suspended at a safe checkpoint with "WIP (suspended):" commits pushed to their
+branches: wip/b25-juice, wip/b25-report, wip/b25-materials, wip/b25-capability, wip/b25-services (each from `2c0a780`; heads juice `efd0cd0` untested beyond its own test, report `f15faf8` partly tested,
+materials `041a67c` untested, capability `f891a11` partly tested, services `68df430` does not compile yet; worktrees kept under
+`.claude/worktrees/agent-*`). No GitHub Actions jobs running. Resume order after the reset:
 business founding and permanent employment; then the suspended branches one at a time (finish, targeted tests, merge); then farming
 yield by simulation (Actions variants of shared_wheat_yield), LE-07 gates on the integrated candidate and economy activation
 (B25-LE-ACTIVATE-D1), validation once at the end (Actions: 30-day gate, full suites, year-long runs), packaging only on owner authorization.
