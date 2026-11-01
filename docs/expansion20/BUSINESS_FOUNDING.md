@@ -17,7 +17,9 @@ property** through the existing construction rules, plus a small record of who r
 - **Premises:** the workshop building (`World.buildings`, type `workshop`, owned by `hh:<n>`) and its stations
   (`World._workshop_stations`, owner the household). Built by `Construction.place(kind, rect, hh_ref, false, house)` beside
   the household's house (`find_module_slot`, `module_refusal`: a property it holds, nothing else being built there, no room
-  of that kind yet), the ground bought from the manor on the spot (`Property.claim`), the materials delivered by the
+  of that kind yet) or, when there is no legal ground beside it, as a workshop on ground of its own near the house
+  (`Construction.find_ground`; the owner's "a house first" rule holds: the household owns its house), the ground bought
+  from the manor on the spot (`Property.claim`), the materials delivered by the
   household and its hired helpers (`_keep_building`, `hh.build`), exactly as households already build quarters and rooms.
 - **Trade to workshop kind:** smith `smithy` (forge, anvil), carpenter `carpentry` (workbench, sawhorse), tanner
   `carpentry` (its workbench), cook `bakehouse` (oven, stove). Tavernkeepers have the tavern; merchants already found
@@ -38,8 +40,8 @@ market (`Ventures.daily`), an adult villager is **considered** only when every c
 1. **Ability and experience:** in a founding trade (above), level at least `min_level` in the trade's own skill
    (`NPCBrain._trade_skill`, the corrected B25 mapping) and at least `min_trade_days` working days in its industry
    (`WorkExperience`). These make one eligible, never founders (X18-D3; no credentials, nine-decisions D1).
-2. **Premises:** their household owns (not leases) the house it lives in, it has no room of that kind yet, there is legal
-   ground beside it (`find_module_slot` + `can_place`), and the household is building nothing (`hh.build` empty) and has
+2. **Premises:** their household owns (not leases) the house it lives in, there is legal ground beside it
+   (`find_module_slot` + `can_place`) or near it (`find_ground`), and the household is building nothing (`hh.build` empty) and has
    no housing goal (a crowded or homeless household puts its home first).
 3. **Capital and household finances:** the household's purse, less what it keeps for its people (`Construction._keep`) and
    its workers' missing tools (`_tool_reserve`), covers the start (`_start_of`: the ground and `found_start_share` of the
@@ -136,7 +138,19 @@ owns**, distinct from a day's building helper (`Construction.hire`), a counter a
 | `judgment.json decision.profiles.business_found` | weights ambition 350, demand 250, capital 200, skill 200; forgo 45000 | the founding decision |
 | `employment.wage` | 10 | a permanent employee's daily wage (attendant 8, the manor's day wage) |
 
-## 7. Open questions (conservative option implemented)
+## 7. Implementation (Build 25, branch `wip/b25-business`)
+
+- `game/scripts/core/ventures.gd` (`Ventures`, `World.ventures`): `daily`, `_consider`, `refusal`/`eligible`, `decides`,
+  `found`, `_open_finished`, `_check`, `close`, `took_place`, `hiring_station`, `stations_for`.
+- `game/scripts/core/employment.gd` (`Employment`, `World.employment`): `employ`, `refusal`, `dismiss`, `daily`, `plan`,
+  `act_mine`, `act_deliver`, `to_dict`/`load_dict`.
+- Hooks: `NPCBrain.skilled_place` (venture stations as room; `busy`), `_take_place` (`took_place`), `_station_for`,
+  `_decide` (branch `employee`, `recorder_codes.json`), `act` (`emp_mine`, `emp_deliver`), `seek_work` (employees stay);
+  `Construction.daily` (no family help for a venture); `World._new_day`, `to_dict`, `load_dict`; `NetActions.VERBS`;
+  `GameUI` talk menu. Wiki: `sys:trade_experience` ("A business of their own"), `guide:employee`, "Not in the game yet".
+  Interactions INT-661..663. Tests `game/tests/business_founding_test.gd`.
+
+## 8. Open questions (conservative option implemented)
 
 - **Q1 (OD-LE-04 / OD-LE-07):** a business identity and accounts separate from the household. Implemented: none (the
   household's purse is the business's money; no `business:` ref). Owner decision when separate accounts are wanted.
