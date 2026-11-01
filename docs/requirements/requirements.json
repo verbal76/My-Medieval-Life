@@ -63327,7 +63327,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -63336,6 +63336,11 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_career_progression_audit.md"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH",
+     "why": "career progression section written (docs/release/economic_maturation/CAREER_PROGRESSION.md): skills develop but career moves are sideways and necessity-driven; skilled posts capped at the starting count (staff_target); ambition layer off (X19-SWITCHES-D1 open); workshops/business founding deferred (F-1, OD-LE-04); no individual careers recoverable (recorder off); 7 ranked recommendations, all needing owner decisions"
     }
    ]
   },
