@@ -845,3 +845,177 @@ func test_career() -> void:
 	# back again: the carpenter returns to smithing and the household's money from the sale is theirs
 	w.brain._change_job(s, "smith", "test: back to the forge")
 	check(int(s.skills.get("smithing", 0)) == sm, "returning to the old trade, the skill is still theirs")
+
+
+# ---------------------------------------------------------------- the two-shop finding ------------
+func test_no_shop_cap() -> void:
+	var w := world()
+	check(w.property.held_by(World.PLAYER).is_empty() and w.property.market().size() == 2, "a new world: the player holds nothing and the land office offers exactly the two surveyed plots")
+	w.player.coins += 100
+	check(w.business.rent() == "" and w.business.rent() == "You already rent a stall.", "one manor pitch per player (a market rule, not a shop cap)")
+	# shops in as many rooms as the player holds, on the two plots and on ground claimed anywhere
+	w.player.coins += 20000
+	var heads := []
+	for plot in [w.plots[0], w.plots[1]]:
+		w.buy_plot(plot)
+		w.start_site(plot)
+		for id in GameData.b("house_cost"):
+			w.player.inv.add(id, int(GameData.b("house_cost")[id]))
+		w.deliver(plot, w.player.inv)
+		heads.append(plot)
+	var h3 := player_build(w, "house", Vector2i(20, 60))
+	if not h3.is_empty():
+		heads.append(w.property.parcel_under(h3))
+	w.property.set_home(str(w.property.building_on(heads[0]).id))
+	var opened := 0
+	for head in heads:
+		var near := Rect2i(int(head.x) - 14, int(head.y) - 14, int(head.w) + 28, int(head.h) + 28)
+		for t in w.trees:
+			if t.state == "grown" and near.has_point(Vector2i(int(t.x), int(t.y))):
+				w.fell(t, 0)
+		var site: Dictionary = w.construction.place("storage", w.construction.find_module_slot("storage", head, World.PLAYER), World.PLAYER, false, head)
+		if site.is_empty():
+			continue
+		for id in site.site.need.duplicate():
+			w.player.inv.add(id, int(site.site.need[id]))
+		w.deliver(site, w.player.inv)
+		var b: Dictionary = w.property.building_on(site)
+		for id in Fitting.cost("counter"):
+			w.player.inv.add(id, int(Fitting.cost("counter")[id]))
+		var cells: Array = w.fitting.floor_set(b).keys()
+		cells.sort_custom(func(m: Vector2i, n: Vector2i): return m.y > n.y or (m.y == n.y and m.x < n.x))
+		for c: Vector2i in cells:
+			if w.fitting.why_not(b, "counter", c) == "":
+				w.fitting.place(b, "counter", c)
+				break
+		if w.business.open_shop(b) == "":
+			opened += 1
+		check(w.construction.module_refusal("storage", head, World.PLAYER) == "The property already has a storeroom.", "one room of a kind per property")
+	check(opened >= 3 and w.business.shops().size() == opened, "the player opens a shop in each of %d storerooms: no coded two-shop limit" % opened)
+
+
+# ---------------------------------------------------------------- saving, verbs, determinism -----
+func test_save_load() -> void:
+	var w := world()
+	var r := open_one(w)
+	var s: NPC = r[0]
+	var b: Dictionary = r[1]
+	b.venture.till = 300
+	b.venture.goods = {"iron_bar": 2}
+	var e := candidate(w, b)
+	w.employment.hire_for(Ventures.ref_of(b), e, "smith", w.employment.market_wage("smith"))
+	w.employment.record_of(e).owed = {"iron_ore": 1}
+	player_home(w)
+	w.player.coins += 500
+	var shop := player_build(w, "carpentry", Vector2i(int(w.player.pos.x), int(w.player.pos.y)) + Vector2i(14, 0))
+	var cp := hirable(w, [e])
+	cp.skills["carpentry"] = maxi(int(cp.skills.get("carpentry", 0)), Skills.xp_for_level(1))
+	var hired_cp: bool = not shop.is_empty() and w.employment.employ(cp, "carpenter", -1, "", "saw_planks") == ""
+	w.ventures._offer(b, World.hh_ref(s.household), 99)
+	var till := int(b.venture.till)
+	var coins := w.total_coins()
+	var wd: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	check(int(wd.save_version) == World.SAVE_VERSION, "save_version unchanged (%d)" % int(wd.save_version))
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), wd)
+	var b2: Dictionary = w2.buildings[str(b.id)]
+	check(int(b2.venture.till) == till and int(b2.venture.goods.iron_bar) == 2, "the business's till (%d) and goods are kept" % till)
+	var r2: Dictionary = w2.employment.record_of(w2.npc(e.id))
+	check(str(r2.get("employer", "")) == Ventures.ref_of(b) and int(r2.owed.iron_ore) == 1 and str(r2.role) == "smith", "a business's employee is kept with their employer, role and owed goods")
+	if hired_cp:
+		check(str(w2.employment.record_of(w2.npc(cp.id)).get("make", "")) == "saw_planks", "a player's crafter keeps what they make")
+	check(int(b2.sale.price) == 99 and str(b2.sale.by) == World.hh_ref(s.household), "an offer for sale is kept")
+	check(w2.total_coins() == coins, "coins are the same after loading (%d)" % coins)
+	w2.minutes += 1440.0
+	w2.business.money.daily()
+	w2.ventures.daily()
+	w2.employment.daily()
+	check(true, "the loaded world runs its morning")
+	# a save from before these decisions: no till, no goods, no sale, an employment record without role or wage
+	var old: Dictionary = wd.duplicate(true)
+	for bd in (old.buildings as Dictionary).values():
+		(bd as Dictionary).erase("sale")
+		if (bd as Dictionary).has("venture"):
+			for k in ["till", "earned", "paid", "costs", "goods", "invested", "drawn", "expansion"]:
+				(bd.venture as Dictionary).erase(k)
+	old.employment = {"list": [{"npc": e.id, "employer": World.PLAYER, "since": 0, "paid_day": -1, "owed": {}}]}
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), old)
+	var r3: Dictionary = w3.employment.record_of(w3.npc(e.id))
+	check(str(r3.role) == "miner" and int(r3.wage) == Employment.wage(), "an older employment record loads as the miner at its old wage")
+	check(BusinessMoney.venture_till_of(w3.buildings[str(b.id)]) == 0 and w3.ventures.offers().is_empty(), "an older open venture loads with an empty till and no offer")
+	w3.minutes += 1440.0
+	w3.business.money.daily()
+	w3.ventures.daily()
+	w3.employment.daily()
+	check(true, "and runs its morning without error")
+
+
+func test_verbs() -> void:
+	var w := world()
+	for v in ["employment.employ", "employment.dismiss", "employment.set_make", "ventures.offer", "ventures.withdraw", "ventures.buy"]:
+		check(NetActions.VERBS.has(v) and NetActions.target(w, v).is_valid(), "%s is a host-validated network verb" % v)
+	var g := PlayerState.new()
+	g.name = "Gwen"
+	g.family = "Fairlight"
+	g.sex = "female"
+	g.born = w.player.born
+	Identity.register_player(w, g)
+	w.give_start_kit(g)
+	g.net_key = "ab".repeat(32)
+	w.add_guest(g)
+	var r := open_one(w)
+	var s: NPC = r[0]
+	var b: Dictionary = r[1]
+	# the host employs a miner; the guest cannot dismiss them
+	player_home(w)
+	w.player.coins += 500
+	var n := hirable(w)
+	w.employment.employ(n, "miner")
+	g.pos = n.pos
+	var res: Dictionary = NetActions.apply_verb(w, g, "employment.dismiss", [NetActions.enc(w, n)])
+	check(w.employment.is_employed(n) and str(w.employment.record_of(n).employer) == World.PLAYER, "a guest cannot dismiss the host's employee (%s)" % str(res.get("text", "")))
+	# the host offers the smithy; the guest cannot take the offer back, but may buy it with their own coins
+	b.erase("venture")
+	w.ventures._offer(b, World.hh_ref(s.household), 80)
+	g.pos = Vector2(float(b.x), float(b.y))
+	res = NetActions.apply_verb(w, g, "ventures.withdraw", [NetActions.enc(w, b)])
+	check(b.has("sale"), "a guest cannot withdraw someone else's offer")
+	g.coins = 1000
+	var hc := w.player.coins
+	var price: int = w.ventures.price_for(b, g)
+	var coins := w.total_coins()
+	res = NetActions.apply_verb(w, g, "ventures.buy", [NetActions.enc(w, b)])
+	check(bool(res.get("ok", false)) and w.owner_of(b) == w.player_ref(g) and g.coins == 1000 - price and w.player.coins == hc and w.total_coins() == coins,
+		"the guest buys the workshop with their own coins, applied once by the host (%s)" % str(res.get("text", "")))
+	res = NetActions.apply_verb(w, g, "ventures.offer", [NetActions.enc(w, b), 50])
+	check(str(b.get("sale", {}).get("by", "")) == w.player_ref(g), "and offers it as their own")
+	check(w.ventures.withdraw(b) != "", "the host cannot withdraw the guest's offer")
+
+
+func snapshot(w: World) -> String:
+	var t := ""
+	for b in w.ventures.open_ventures():
+		t += JSON.stringify(b.venture)
+	for b in w.ventures.offers():
+		t += JSON.stringify(b.sale)
+	t += JSON.stringify(w.employment.to_dict())
+	return t + str(w.total_coins())
+
+
+func test_determinism() -> void:
+	var a := world(3)
+	var b := world(3)
+	for w: World in [a, b]:
+		var r := open_one(w)
+		(r[1] as Dictionary).venture.till = 800
+		for o: NPC in of_job(w, "smith"):
+			o.income_days = [40, 40, 40, 40, 40]
+			o.job_since = -100
+		for d in 6:
+			w.minutes += 1440.0
+			all_full(w)
+			w.business.money.daily()
+			w.ventures.daily()
+			w.employment.daily()
+	check(snapshot(a) == snapshot(b), "the same seed takes the same business decisions on the same mornings")

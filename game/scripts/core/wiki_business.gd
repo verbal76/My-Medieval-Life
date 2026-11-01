@@ -74,17 +74,30 @@ static func add_pages(w: Wiki) -> void:
 			"An attendant is your employee, paid the daily wage. A worker hired by contract for one job is different (see the Contracts page); the attendant is not one.",
 		]),
 		Wiki.links(["guide:stall", "guide:shop", "sys:contracts", "guide:employee"])], "", "attendant hire wage employee shop stall away production make craft workroom")
-	# EMP-PERM-01 (owner B18-DP-01): permanent employment by the player
-	var ewage := Employment.wage()
+	# EMP-PERM-01 (owner B18-DP-01), B25-BIZ-D4 (owner 2026-11-01): permanent employment by the player, across the trades
 	w.add_page("guide:employee", "How do I employ a permanent worker?", "guides", [
-		Wiki.p("You can take a villager into your service for good as your miner: they mine for you every working day until you let them go. Talk to them and choose Employ as your miner."),
+		Wiki.p("You can take a villager into your service for good: they work for you every working day until you let them go, they leave, or you cannot pay them. Talk to them and choose Offer lasting work. The work they do is their trade's own work; what it makes is yours."),
 		Wiki.bullets([
-			"You need a home of your own with its family chest: that is where they bring what they mine.",
-			"Anyone grown with no trade of their own (out of work, a manor hand with no job taken, or a labourer) or a miner can be asked, if they are not minding a counter or carrying for a building that day. They may say no.",
-			"The wage is %d coins a day from your purse: today's when they agree, then every morning. If you cannot pay it, they leave your service." % ewage,
-			"In the working day (7 to 18) they go to the seams they are able to work and dig with their own pickaxe (they buy one if they have none). Gold needs a practised miner. The seams are the village's, and what is dug out is gone from them.",
-			"What they dig is yours: they carry it home a load at a time, and before the working day ends, into your family chest. If your chest is full, they keep carrying it until there is room.",
-			"While in your service they stay a miner and do not go looking for other work. Let them go whenever you like by talking to them; they keep their wages and their tools.",
+			"Miner: digs the village's seams with their own pickaxe and carries the ore to your chest. Gold needs a practised miner.",
+			"Woodcutter: fells grown trees with their own axe and carries the logs to your chest.",
+			"Farmer: works your farmland (harvests, sows with the seed in your chest, clears and ploughs inside the fence); the crop goes to your chest. Fence your farmland and keep seed in your chest yourself.",
+			"Builder: carries the materials in your chest to your own building sites.",
+			"Smith, carpenter, tanner, cook or stonecutter: makes the thing you choose at a station of yours of that trade (a forge, anvil, workbench, sawhorse, stove or oven in a building you hold), taking the materials from your chest as they work and putting what they make back into it. You can change what they make at any time.",
+			"You need a home of your own with its family chest, and for a farm hand your own farmland, for a crafter your own station of the trade.",
+			"Anyone grown with no trade of their own, or already in that trade, can be asked, if nothing else binds them that day (a manor job, a building helper's day, a counter, a contract, a business of their own). They may say no.",
+			"The wage is what that work pays in the village now, never less than the manor's day wage; offer less and they refuse. It is paid from your purse: today's when they agree, then every morning. If you cannot pay it, they leave your service.",
+			"Someone paid well below what their work earns elsewhere may leave you for better pay. Let them go whenever you like by talking to them; they keep their wages, their tools and their trade, and hand over what they still carry of yours.",
 			"A permanent worker is different from a day's helper for your building (hired for one day), from an attendant at your counter, and from a contract for one job.",
 		]),
-		Wiki.links(["guide:attendant", "sys:contracts", "sys:skills"])], "", "employ employee permanent worker miner wage hire service staff ore chest")
+		Wiki.links(["guide:attendant", "guide:business_sale", "sys:contracts", "sys:skills"])], "", "employ employee permanent worker miner woodcutter farmer builder smith carpenter tanner cook wage hire service staff chest")
+	# B25-BIZ-D5 (owner 2026-11-01): buying and selling workshops
+	w.add_page("guide:business_sale", "How do I buy or sell a workshop?", "guides", [
+		Wiki.p("Workshops (a smithy, a carpenter's shop, a bakehouse, a kitchen, an apothecary's room) can change hands between their owners. The land office at the manor lists those on offer under Workshops changing hands, with the price you would pay, and your own workshops with the prices you can ask."),
+		Wiki.bullets([
+			"To buy: choose Buy beside one on offer. You pay the seller the price shown (bargaining with your Trading and theirs pulls it a little either way); you need the coins in your purse.",
+			"To sell: offer a workshop you own (not one you lease) at one of the prices shown; take the offer back whenever you like. A villager who wants a workshop of that trade, can afford it and is skilled enough to run it may buy it, and the money comes to your purse.",
+			"The building, its ground, its stations and what you fitted in it change hands. Goods you keep elsewhere stay yours, and a shop open in it must be closed first.",
+			"A workshop built onto your house is sold on its own: your house, its ground and its other rooms stay yours, and the doorway between them is walled up. A building that has rooms built onto it is sold together with them through the land office's own sale.",
+			"Villagers sell a workshop that nobody in the family works any more, and buy one on sale before they build. When a villager's workshop is sold its own business there closes: its money goes to the family and its paid workers leave.",
+		]),
+		Wiki.links(["sys:trade_experience", "guide:employee", "sys:property"])], "", "buy sell workshop business smithy carpenter bakehouse offer price land office trade")
