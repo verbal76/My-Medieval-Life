@@ -29598,6 +29598,11 @@
      "date": "2026-10-31",
      "change": "implementation_status: INTEGRATED -> IMPLEMENTED ON TASK BRANCH; verification_status: INTEGRATION VERIFIED -> NOT APPLICABLE; completion: COMPLETE -> OPEN; notes",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md). Register says INTEGRATED / INTEGRATION VERIFIED / COMPLETE although its only artifact was never merged. Evidence: git merge-base --is-ancestor bebf1f3 origin/wip/expansion20 -> false; register implementation field points at wip/juice-assessment"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "stranded document(s) recovered into Build 25 (B25-SCOPE-D1): wip/expansion20 at a034c2a (from wip/b25-docs; sources 3f58ce6, bebf1f3, e1e8236; .docx byte-identical; --trader-diag ported read-only, 10-day fingerprints identical with and without it). No gameplay change; the underlying decisions stay as they were"
     }
    ],
    "target_build": "20+",
@@ -49204,6 +49209,11 @@
      "date": "2026-10-23",
      "change": "schema v2: APPROVED — NOT STARTED -> approval PROPOSED; implementation NOT STARTED; verification NOT TESTED; release NOT APPLICABLE; OPEN",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "stranded document(s) recovered into Build 25 (B25-SCOPE-D1): wip/expansion20 at a034c2a (from wip/b25-docs; sources 3f58ce6, bebf1f3, e1e8236; .docx byte-identical; --trader-diag ported read-only, 10-day fingerprints identical with and without it). No gameplay change; the underlying decisions stay as they were"
     }
    ],
    "target_build": "owner decision",
@@ -65319,6 +65329,11 @@
      "date": "2026-10-31",
      "change": "notes",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md). Records stranded state. Evidence: git rev-list origin/wip/x20-trader-inv --not origin/wip/expansion20 = 1 (3f58ce6)"
+    },
+    {
+     "date": "2026-11-01",
+     "change": "note",
+     "why": "stranded document(s) recovered into Build 25 (B25-SCOPE-D1): wip/expansion20 at a034c2a (from wip/b25-docs; sources 3f58ce6, bebf1f3, e1e8236; .docx byte-identical; --trader-diag ported read-only, 10-day fingerprints identical with and without it). No gameplay change; the underlying decisions stay as they were"
     }
    ],
    "assigned_worker": "worker B",
