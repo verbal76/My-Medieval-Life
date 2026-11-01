@@ -62,6 +62,7 @@ var trees: Array = []              # the village's trees (Trees: the one tree mo
 var tree_damage := {}              # Vector2i -> {hits, side, at}: the axe blows a mature tree has taken (not saved: they heal)
 var wage_offers := {}              # WDR-012-C: the manor's raise on its hands' wage to fill its places {job: {raise, short, met}}. Saved (older saves have none)
 var manor_orders: Array = []       # tools the manor paid a smith for in advance (EQ-19, OD-16 b): {smith, tool, for, paid, day}. Saved (older saves have none)
+var station_load := {}             # B25-EMPLOY-IMPL: the minutes worked at each station by trade, today and the last few days {day, today, past} (NPCBrain.note_station_work). Saved (older saves have none: an empty record)
 var vacancies: Array = []          # essential posts open after a death (B8-016, NPCBrain succession): {job, workplace, home, household, day, who}. Saved (older saves have none)
 var deposits: Array = []           # {x, y, ore, amount}: the mine's seams (the sims, miners and the caravan's stone rule look at these only)
 var boulders: Array = []           # the village's small grey boulders (B8-026): {x, y, ore: "stone", amount, boulder: true}, a few
@@ -720,6 +721,9 @@ func _note_work(n: NPC, s: Dictionary, mins: float) -> void:
 		var kind := str(manor_work.job(int(args.get("job", -1))).get("kind", "")) if act == "mj_step" else ""
 		ind = WorkExperience.industry_of_step(act, args, kind)
 	experience.credit(World.npc_ref(n.id), ind, mins, minutes)
+	var st := str(s.get("args", {}).get("station", ""))
+	if st != "" and n.job != "":
+		brain.note_station_work(st, n.job, mins)      # B25-EMPLOY-IMPL: how busy the trade's workplaces are (skilled places)
 	var sx := Skills.step_xp(act)         # DVW-B8: Farming and Husbandry are trained by the work, the villager's as the player's
 	if not sx.is_empty() and n.role in ["adult", "elder"]:
 		Skills.gain(n, str(sx.skill), int(sx.xp))
@@ -6052,7 +6056,7 @@ func to_dict() -> Dictionary:
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"overworld": map.overworld.to_dict() if map.overworld != null else {},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
-		"vacancies": vacancies, "wage_offers": wage_offers, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
+		"vacancies": vacancies, "station_load": station_load, "wage_offers": wage_offers, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
 		"chapel": chapel.to_dict(), "feast": feast.to_dict(),
 		"player": _host_player.to_dict(), "players": _players_to_dict(), "coin_sources": coin_sources, "regions": regions.to_dict(), "couriers": couriers.to_dict(), "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
@@ -6347,6 +6351,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	vacancies = d.get("vacancies", [])
 	manor_orders = d.get("manor_orders", [])
 	wage_offers = (d.get("wage_offers", {}) as Dictionary).duplicate(true)
+	station_load = (d.get("station_load", {}) as Dictionary).duplicate(true)     # B25-EMPLOY-IMPL: absent in older saves
 	deposits = d.deposits
 	# a seam the map gained after the save was made (the gold seam, Build 13; the gallery's seams, Build 17) starts
 	# full; seams are matched by (level, x, y) (MIN-A: a level seam may share (x, y) with one above it)
