@@ -8,20 +8,21 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 119 |
-| Integrated | 106 of 119 (89%) |
-| Automated tests passed | 110 of 119 (92%) |
-| Integration verified | 64 of 119 (54%) |
-| Gameplay verified | 0 of 119 (0%) |
-| Owner playtested | 0 of 119 (0%) |
-| Complete | 2 of 119 (2%) |
-| Open (release blockers) | 117 |
+| Approved requirements in scope | 120 |
+| Integrated | 106 of 120 (88%) |
+| Automated tests passed | 110 of 120 (92%) |
+| Integration verified | 64 of 120 (53%) |
+| Gameplay verified | 0 of 120 (0%) |
+| Owner playtested | 0 of 120 (0%) |
+| Complete | 2 of 120 (2%) |
+| Open (release blockers) | 118 |
 | Open owner decisions (blocking) | 1 (0) |
 
-## In development (worker assigned) (1)
+## In development (worker assigned) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| X20-CHAPEL-FIX | Chapel economy correction: voluntary, affordable, individually decided donations (piety raises the chance, never triggers a payment; no penalty for declining); a modest operating reserve from anticipated expenses; the surplus paid as alms to the poorest households by genuine hardship (cash, wealth, dependents, essentials), conserved transfers; chapel economy instrumented; validated against the Build 25 baseline | OWNER APPROVED | IN DEVELOPMENT | lead / wip/x20-chapel | NOT TESTED |  | X20-ECON-SUSTAIN, design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (104)
