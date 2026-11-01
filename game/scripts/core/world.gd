@@ -2016,6 +2016,9 @@ func total_coins() -> int:
 		n += contracts.reserved_total()           # CON-01: buyers' coins set aside for contracts
 	if economy != null:
 		n += economy.rentals.escrow()             # LE05-RENTAL: deposits held for tools on rent (economy on only)
+		n += economy.repairs.escrow()             # LE-05 paid repair: prices held for repairs not yet done (economy on only)
+	elif not economy_foreign.is_empty():
+		n += EconomyFoundation.parked_coins(economy_foreign)    # activation: a parked section's escrow (economy switched off on a save that had it on)
 	for a: NPC in npcs:
 		n += a.coins
 	for l in loot:
@@ -2314,6 +2317,8 @@ func _work_wear(who, tool: String, amount: int, skill: String, save_key: String)
 		if economy != null and economy.rentals.active():
 			economy.rentals.on_broke(who, tool)      # LE05-RENTAL: a rented tool broken in use ends its rental
 		return true
+	if economy != null and economy.repairs.active():
+		economy.repairs.on_wear(who, tool)           # LE-05 paid repair: a villager's tool worn past the share weighs an order at dawn
 	return false
 
 
@@ -3601,6 +3606,8 @@ func kill(n: NPC, cause: String, by_ref := "") -> void:
 	contracts.on_death(n)                  # and those set aside for its contracts (CON-01)
 	if economy != null and economy.rentals.active():
 		economy.rentals.on_death(n)        # LE05-RENTAL: a dead renter's rented tools go back; a dead owner's estate succeeds it
+	if economy != null:
+		economy.repairs.on_death(n)        # LE-05 paid repair: a dead customer's order refunded to its estate, a dead smith's to its customers
 	var rec_death: Array = recorder.death_begin(n, cause) if recorder != null else []     # REC-19: from here the purse and goods pass on
 	Identity.move(self, n.id, Identity.DEAD)    # ID-01
 	var heir := _heir(n)

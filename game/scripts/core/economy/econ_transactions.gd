@@ -470,6 +470,60 @@ func end_rental(txid: String, owner: String, refund_to: String, item: String, fr
 	return _end(txid, _res(true, "ok", txid, "done"))
 
 
+## LE-05 paid repair (owner 2026-10-31, LE-05 A; EconRepairs): `amount` coins of village person `from` (a villager or a player) into
+## ESCROW for a service not yet done (held by the order inside the village: World.total_coins counts EconRepairs.escrow; no boundary
+## is crossed). Validated (funds, claims), then committed; single-use id, journalled.
+func hold_coins(txid: String, from: String, amount: int, purpose: String) -> Dictionary:
+	var rep := _begin(txid)
+	if not rep.is_empty():
+		return rep
+	if amount <= 0:
+		return _end(txid, _res(false, "invalid_quantity", txid))
+	var a := _party(from)
+	if a.code != "":
+		return _end(txid, _res(false, str(a.code), txid))
+	if not (a.kind in PEOPLE):
+		return _end(txid, _res(false, "unsupported_party", txid))
+	if _purse(a) < amount:
+		return _end(txid, _res(false, "no_funds", txid))
+	if not w.claims_allow(a.obj, EconReservations.COINS, amount):
+		return _end(txid, _res(false, "claimed", txid))
+	w.claims_release(a.obj, EconReservations.COINS, amount)
+	_add_coins(a, -amount, false)                 # into escrow: neither spent nor earned yet
+	_note(txid, "hold:" + purpose, {"buyer": "", "seller": from, "item": "", "qty": 0, "total": amount}, "open")
+	return _end(txid, _res(true, "ok", txid, "open"))
+
+
+## LE-05 paid repair: an escrow of `held` coins ends: `pay` to `payee` (the smith's earnings; "" with pay 0) and the rest to
+## `refund_to` (the customer, its estate, or "-" / a party no longer there: out of the world as an outside flow, as end_rental and
+## settle_estate do). Validated, then committed; single-use id, journalled.
+func release_coins(txid: String, payee: String, pay: int, refund_to: String, held: int, purpose: String) -> Dictionary:
+	var rep := _begin(txid)
+	if not rep.is_empty():
+		return rep
+	if held < 0 or pay < 0 or pay > held:
+		return _end(txid, _res(false, "invalid_quantity", txid))
+	var o: Dictionary = {}
+	if pay > 0:
+		o = _party(payee)
+		if o.code != "" or not (o.kind in VILLAGE) or o.kind in TILLS or (o.kind == "hh" and _head(o) == null):
+			return _end(txid, _res(false, "party_unavailable", txid))
+	var b: Dictionary = {} if refund_to == "-" else _party(refund_to)
+	if not b.is_empty() and (b.code != "" or not (b.kind in VILLAGE) or b.kind in TILLS or (b.kind == "hh" and _head(b) == null)):
+		b = {}
+	if pay > 0:
+		_add_coins(o, pay, true)                  # the price: the smith's earnings
+	if held - pay > 0:
+		if b.is_empty():
+			outside_coins += held - pay
+			w.coin_sources -= held - pay          # out of the village with nobody to take it (as settle_estate's outside flow)
+			w.stat("estate_out_coins", float(held - pay))
+		else:
+			_add_coins(b, held - pay, false)      # the refund
+	_note(txid, "release:" + purpose, {"buyer": refund_to, "seller": payee, "item": "", "qty": 0, "total": pay}, "done")
+	return _end(txid, _res(true, "ok", txid, "done"))
+
+
 ## Shipment phase 1: the seller's goods into transit custody, the buyer's coins into escrow, together or nothing.
 func ship(txid: String, buyer: String, seller: String, item: String, qty: int, total: int, due_day: int) -> Dictionary:
 	var rep := _begin(txid)

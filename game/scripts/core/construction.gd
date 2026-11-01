@@ -301,13 +301,13 @@ func hire(employer: String, n: NPC, p: Dictionary, budget: int) -> String:
 	if why == "" and not own and w.judgment != null:                # PROSPECTIVE (PROS-19, Q14): off unless attached
 		var boss: NPC = responsible_adult(int(employer.trim_prefix("hh:"))) if employer.begins_with("hh:") else null
 		why = JudgmentLive.work_refusal(w, n, World.id_of_ref(employer) if World.is_player_ref(employer) else (boss.id if boss != null else -1),
-				0 if World.is_player_ref(employer) and w.relations.player_friend(n) else int(GameData.b("helper_wage")),
+				0 if World.is_player_ref(employer) and w.relations.player_friend(n) else helper_wage_for(employer, n),
 				World.is_player_ref(employer) and w.relations.player_friend(n))
 	if why != "":
 		return why
 	# a friend of the player carries as a favour, for no wage (CRT-06)
 	var favour: bool = World.is_player_ref(employer) and w.relations.player_friend(n)
-	var wage := 0 if own or favour else int(GameData.b("helper_wage"))
+	var wage := 0 if own or favour else helper_wage_for(employer, n)
 	if not _pay(employer, n, wage):
 		why = "You need %d coins for the wage." % wage if World.is_player_ref(employer) else "They cannot pay the wage."
 		return why
@@ -324,16 +324,59 @@ func hire(employer: String, n: NPC, p: Dictionary, budget: int) -> String:
 	return ""
 
 
+## The day's wage a helper `n` is hired at by `employer`: balance helper_wage. LE-05 construction hiring (design s.9 "Construction:
+## bid for materials, hire"; OD-LE-03 D02 broader part, behind market.negotiated_wages, shipped false): with the Living Economy on and
+## that flag, a household's helper agrees its wage when hired (EconMarket.wage_bargain, the rule the manor's jobs use, ManorWork.wage_for),
+## from the posted wage up to wage_max_factor by its own comfort. The player's hire pays the posted wage as before (its window states
+## it; as the player's orders at the manor do). Economy off: helper_wage, unchanged.
+func helper_wage_for(employer: String, n: NPC) -> int:
+	var base := int(GameData.b("helper_wage"))
+	if n == null or World.is_player_ref(employer) or w.economy == null or not w.economy.market.drive \
+			or not bool(w.economy.market.p("negotiated_wages", false)):
+		return base
+	return w.economy.market.wage_bargain(base, World.npc_ref(n.id))
+
+
 ## The wage, from the employer's purse to the worker's (the player's coins, or a household's members'
-## richest first). Nothing moves unless all of it can.
+## richest first). Nothing moves unless all of it can. LE-05 (economy on): through the transaction authority
+## (World.transactions.transfer_coins, purpose "wage"), each payer's part validated against its claims first.
 func _pay(employer: String, n: NPC, amount: int) -> bool:
 	if amount <= 0:
 		return true
 	if w.property.purse(employer) < amount:
 		return false
+	if w.economy != null:
+		return _pay_by_authority(employer, n, amount)
 	_take(employer, amount)
 	n.coins += amount
 	n.earned += amount
+	return true
+
+
+## LE-05 (economy on): the wage through World.transactions, one transfer per payer (the player; a household's members, richest
+## first, as _take), each booked as the payer's spending and the worker's earnings. Every part is checked against the payer's
+## claims (LE-03) before any moves: all of it or nothing.
+func _pay_by_authority(employer: String, n: NPC, amount: int) -> bool:
+	var parts := []
+	if World.is_player_ref(employer):
+		parts.append([employer, w.player_for(employer), amount])
+	else:
+		var left := amount
+		for o: NPC in w.property._payers(employer):
+			var k := mini(left, o.coins)
+			if k > 0:
+				parts.append([World.npc_ref(o.id), o, k])
+				left -= k
+		if left > 0:
+			return false
+	for p in parts:
+		if p[1] == n or not w.claims_allow(p[1], EconReservations.COINS, int(p[2])):
+			return false
+	for p in parts:
+		var tx: Dictionary = w.transactions.transfer_coins(w.transactions.next_txid("wage"), str(p[0]), World.npc_ref(n.id), int(p[2]), "wage", true)
+		if not bool(tx.ok):
+			push_error("LE-05 wage: a validated part was refused (%s)" % str(tx.code))
+			return false
 	return true
 
 
@@ -1297,7 +1340,7 @@ func _keep_building(h: int) -> void:
 					helper = o
 					break
 	if helper != null:
-		hire(ref, helper, p, budget - wage)
+		hire(ref, helper, p, budget - helper_wage_for(ref, helper))     # LE-05: the agreed wage (helper_wage while the economy is off)
 		return
 	# a household carries its own only when it can buy something or has something put by; otherwise its
 	# people work and save (EQ-07)
