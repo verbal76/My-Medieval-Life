@@ -17,10 +17,11 @@ Actions: none until LE-06's run 41143001791 reports; at the LE-05 milestone one 
 | Risk in prices (route danger) | documented gap (section 2): no route-danger measure exists | |
 | Tool repair (owner 2026-10-31, LE-05 A: normal play, economy on or off) | done (section 4); Worker G | INT-650; `le05_repair_test.gd` |
 | Tool rental (owner 2026-10-31, LE-05 B: behind the switch) | done (section 5); Worker G | INT-651; `le05_rental_test.gd` |
-| Paid commercial repair (a smith mending another's tool for coins; economy on) | not built: next step (section 4.4) | |
+| Paid commercial repair (a smith mending another's tool for coins; economy on) | done, Build 25 (`wip/b25-econ`; section 4.4) | INT-653; `le05_paid_repair_test.gd` |
 | Player's market journal (OD-LE-14 D13; must not break the guest journal network path) | done (section 3) | INT-613; `le05_test::test_market_journal` |
-| Construction: bids for materials, hiring (design s.9) | housing material bids exist since LE-02 (need kind `housing`); hiring is LE-04's wages flag (off) | |
-| Ecology / mining under existing depletion rules; bandits; regional links via `World.transactions` | not started; regional food trade is Worker B's (X20-SETTLE-FOOD, merged) | |
+| Construction: bids for materials, hiring (design s.9) | housing material bids exist since LE-02 (need kind `housing`); households already hire helpers in normal play (`Construction._keep_building`); Build 25: the wage through the authority with the economy on, and agreed when hired behind `market.negotiated_wages` (off) (section 6) | INT-654; `le05_construction_hire_test.gd` |
+| Ecology / mining under existing depletion rules; bandits; regional links via `World.transactions` | not built: no further link is specified (section 7); regional food trade is Worker B's (X20-SETTLE-FOOD, merged) | |
+| Activation mechanism and LE-07 gates | Build 25: `docs/expansion20/ACTIVATION.md` | INT-655; `le07_gates_test.gd` |
 
 ## 1. Travel in a delivered contract's price
 
@@ -97,14 +98,32 @@ smith's own pack; `_do_repair` reserves an anvil the smith may use and plans the
 act calls `work_repair` with the item in its holder's pack and the smith's materials. A household's tools are mended where they are
 (an abstraction like the household's shared pantry; nothing moves). Nobody outside the household: that is paid repair.
 
-### 4.4 Paid commercial repair: the next step (not built)
+### 4.4 Paid commercial repair (built Build 25, `wip/b25-econ`; economy on, `market.paid_repair`)
 
-A smith mending another's tool for coins belongs behind the switch (directive: "Paid commercial repair services and their
-associated financial transactions may depend on the economy system"). It does not fit cleanly yet: the tool would have to be
-handed over and back (custody), the price agreed, and the work scheduled, which is a CON-02 service contract (`market.services`,
-off, "nothing behind it yet", LE-04). Next step: a `repair` service kind under `market.services` whose price is the repair's inputs
-at the smith's asking prices plus its minutes at its earnings a minute (the CON-01 travel/opportunity measure), the tool in the
-authority's custody during the work. GP-SHARPEN (a weapon sharpened for a coin at the grinding wheel) is unchanged.
+Directive: "Paid commercial repair services and their associated financial transactions may depend on the economy system"
+(LE05-RENTAL-REPAIR, APPROVED). `game/scripts/core/economy/econ_repairs.gd` (`EconRepairs`), INT-653.
+
+- **Its own switch, not `market.services`** (agent decision): the earlier proposal put it under `market.services`; that flag is
+  now tied to the open owner decision X20-SERVICES-SCOPE (does OD-LE-03's "service contracts" include CON-03..CON-08?). Paid
+  repair has its own approval, so it has its own flag (`market.paid_repair`, true, inert while the economy is off) and does not
+  wait on, or answer, that decision. It is not a CON-02 contract: an order held by the authority.
+- **The work** is basic repair (4.1), done by the smith at an anvil with its own materials: the tool is **mended where it lies**
+  in the customer's pack (the household-repair abstraction of 4.3, extended to a paying customer), so no custody moves and the
+  tool keeps its holder, identity and ownership (requirement 8). Agent decision; the alternative (hand-over and back) would put a
+  worn tool into the smith's stack and lose which unit is whose.
+- **Price** (`quote`): the repair's materials at the smith's own selling prices (`World.sell_price`) plus its minutes at its
+  earnings a working minute (`NPC.avg_income` over the working day, the CON-01 opportunity measure). No new number.
+- **Who and when** (event-driven): a villager's repairable tool worn past `repair.npc_min_missing` in use marks it
+  (`World._work_wear` → `on_wear`); at dawn, at most `repair_per_dawn` (6, provisional) of them, by ref, weigh paying each able
+  smith outside the household against doing without (`consider`, JudgmentWeighting `market_buy`: the share of the tool's life
+  gone, the price against its purse, its opinion of the smith); the smith may refuse (`smith_willing`, `market_sell`, the rental
+  owner's rule). A household with a smith is mended for nothing (4.3), never paid. Smiths are found among the village's smiths
+  (as rental finds lenders), not through the bounded knowledge model: a known limit.
+- **Money**: the price into escrow at the order (`EconTransactions.hold_coins`, claims-checked; `World.total_coins` counts it); paid
+  to the smith as earnings on completion (`release_coins`); refunded whole when not done within `repair_order_days` (3,
+  provisional), when the tool went or is no longer worn, when the smith dies, or when `paid_repair` is switched off; a dead
+  customer's refund to its estate. The smith takes paid orders after the manor's and before its household's mending.
+- **Saves**: optional `economy.repairs` {records: open and the last 30 closed, candidates}. GP-SHARPEN is unchanged.
 
 ### 4.5 Saves
 
@@ -193,3 +212,34 @@ taken before the pass. A latent LE-02/LE-03 defect, not in LE-05 code, reached b
 that dawn's bid posting was skipped and the run went on with every ledger exact. Fixed after the run (`post_bids` skips a ref whose
 entry is gone; le02_market_test 102, le03_economy_test 38, le04_test 68, le05_rental_test 53: 0 failures). Per the brief's budget
 (one Actions run) it was not re-run; the lead decides whether the integrated branch's next `--market` run covers it.
+
+## 6. Construction hiring (Build 25, `wip/b25-econ`; INT-654)
+
+Design s.9: "Construction: bid for materials, hire, pause, finish". Material bids exist (LE-02, need kind `housing`), and a building
+household already hires a helper each morning in normal play (`Construction._keep_building` → `hire`, `balance.json`
+`helper_wage`). What the economy adds, and nothing more:
+- **Through the authority** (economy on): the wage moves as `World.transactions.transfer_coins` "wage" parts, one per payer (the
+  player; a household's members richest first, the same payers and amounts as before), each checked against the payer's claims
+  before any moves (`Construction._pay_by_authority`). Economy off: `_take` as before.
+- **Agreed when hired** (behind `market.negotiated_wages`, shipped false; OD-LE-03 D02 broader part): a household's helper asks
+  from `helper_wage` up to `wage_max_factor` by its own comfort (`EconMarket.wage_bargain`, the rule LE-04 gave the manor's jobs,
+  `ManorWork.wage_for`); `Construction.helper_wage_for`. The player's hire stays at the posted wage its window states (as the
+  player's orders at the manor do).
+Not built (not specified): who else may hire for construction (only the existing household and player paths hire), pausing a site
+for want of funds (the existing site simply waits for materials), hiring for workshops or public works.
+
+## 7. What LE-05 still lacks, and why it is not built here
+
+- **Route risk in prices** (design s.5 "travel and risk"): still no danger measure per route. Re-checked 2026-11-01 on `ab8ac71`:
+  the bandit AI (X20-BANDIT-AI) gives bandits awareness and retreat, `JudgmentFamily.danger` reads threats near a household, and a
+  courier's interrupted journey is a record in `CourierService` (state "interrupted"), but nothing counts losses or attacks by road,
+  settlement link or area, and the design gives no formula. Missing: a per-route loss record (e.g. couriers' waylaid loads and
+  caravan losses by route, with a window) and the owner's or design's rule for turning it into a premium. Section 2 stands.
+- **Bandits in the market**: OD-LE-09 (D08 answer A, CURRENT) "Retain current bandit buying and off-village trading. No ban on
+  bandits at stalls, no stolen-goods merchant system." Bandit buying already goes through `World.trade` (the authority's village
+  path). Nothing further is specified.
+- **Ecology and mining through the economy**: the design (s.11) requires that prices cannot create ore, trees or tools, which holds
+  (every good is mined, felled or forged by the existing rules; asks follow supply and knowledge, LE-02). No further link is
+  specified (no prospecting-on-price or conservation decision rule is designed): not invented.
+- **Regional links beyond the food trade**: X20-SCOPE's notes keep the six-day inter-settlement abstraction (E22-OD-04); physical
+  caravans and regional population are Expansion 22. No further LE-05 link is specified.

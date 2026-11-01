@@ -1510,6 +1510,12 @@ func _smith(n: NPC) -> bool:
 			return _do_recipe(n, r)
 		if _fetch_for_order(n, GameData.recipes[r].in):
 			return true
+	# LE-05 paid repair (economy on, market.paid_repair): a customer's order, its price already in escrow, comes before the
+	# household's own mending (a paid commitment, like the manor's orders)
+	if w.economy != null and w.economy.repairs.active():
+		var paid := w.economy.repairs.job_for(n)
+		if not paid.is_empty() and _do_repair(n, paid.holder, str(paid.item), str(paid.txid)):
+			return true
 	# LE05-REPAIR (owner 2026-10-31): a worn tool of the smith's own, or of its household's, is mended at the anvil (normal play)
 	var mend := repair_job(n)
 	if not mend.is_empty() and _do_repair(n, mend[0], str(mend[1])):
@@ -1594,8 +1600,9 @@ func repair_job(n: NPC) -> Array:
 
 
 ## LE05-REPAIR: the smith goes to an anvil it may use and mends `id` of `holder`'s (itself or one of its household) by the repair's
-## minutes; World.work_repair does the work when the step ends ("repair"). False when no anvil is free.
-func _do_repair(n: NPC, holder: NPC, id: String) -> bool:
+## minutes; World.work_repair does the work when the step ends ("repair"). False when no anvil is free. `order`: a paid order's id
+## (LE-05 paid repair, economy on): `holder` is then its customer, outside the household.
+func _do_repair(n: NPC, holder: NPC, id: String, order := "") -> bool:
 	var t := World.repair_terms(holder.inv, id)
 	if t.is_empty():
 		return false
@@ -1606,7 +1613,10 @@ func _do_repair(n: NPC, holder: NPC, id: String) -> bool:
 	w.stations[st].users[n.id] = w.minutes + w.map.data.w + float(t.minutes) + 60.0
 	n.doing = "mending a %s" % GameData.item_name(id).to_lower()
 	var mins := CapabilityHook.work_time(float(t.minutes), CapabilityHook.recipe_industry(str(t.recipe)), Skills.value(n, str(t.skill), "craft_time", 1.0), n)
-	n.plan = [go(w.station_use(st)), work(mins, "repair", {"item": id, "holder": holder.id, "station": st}, "work", _station_at(st))]
+	var a := {"item": id, "holder": holder.id, "station": st}
+	if order != "":
+		a["order"] = order
+	n.plan = [go(w.station_use(st)), work(mins, "repair", a, "work", _station_at(st))]
 	return true
 
 
@@ -2875,7 +2885,15 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 		"repair":                                                  # LE05-REPAIR: a smith mends its own or its household's tool
 			release_station(n, a.get("station", ""))
 			var holder := w.npc(int(a.get("holder", n.id)))
-			if holder == null or not holder.alive or (holder != n and holder.household != n.household):
+			if holder == null or not holder.alive:
+				return false
+			if a.has("order"):                                     # LE-05 paid repair: a customer's order, paid on completion from escrow
+				if w.economy == null or not w.economy.repairs.is_open(str(a.order), n, holder):
+					return false
+				if w.work_repair(n, str(a.item), holder.inv, n.inv).result != "ok":
+					return false
+				return bool(w.economy.repairs.complete(str(a.order)).get("ok", false))
+			if holder != n and holder.household != n.household:
 				return false
 			return w.work_repair(n, str(a.item), holder.inv, n.inv).result == "ok"
 		"harvest":

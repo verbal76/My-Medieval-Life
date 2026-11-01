@@ -36,6 +36,7 @@ var contract_links: EconContractLinks
 var market: EconMarket
 var claims: EconClaims            # LE-03: the one validation of what an actor may part with (World.trade and the village paths)
 var rentals: EconRentals          # LE05-RENTAL: tools lent against a deposit (acts only with market.drive and market.rental)
+var repairs: EconRepairs          # LE-05 paid repair: a smith mends another's tool for coins (acts only with market.drive and market.paid_repair)
 var contract_cursor := 0          # the highest CON-01 contract id whose terms the two parties have been told (knowledge "contract")
 
 
@@ -91,12 +92,15 @@ static func attach(world: World, saved := {}) -> EconomyFoundation:
 	f.claims.load_dict(saved.get("claims", {}))
 	f.rentals = EconRentals.new(f, world, cfg.get("market", {}))
 	f.rentals.load_dict(saved.get("rentals", {}))
+	f.repairs = EconRepairs.new(f, world, cfg.get("market", {}))
+	f.repairs.load_dict(saved.get("repairs", {}))
 	return f
 
 
 func is_empty() -> bool:
 	return reservations.is_empty() and events.is_empty() and needs.is_empty() and offers.is_empty() and knowledge.is_empty() \
-			and contract_links.is_empty() and contract_cursor == 0 and market.is_empty() and claims.is_empty() and rentals.is_empty()
+			and contract_links.is_empty() and contract_cursor == 0 and market.is_empty() and claims.is_empty() and rentals.is_empty() \
+			and repairs.is_empty()
 
 
 ## World.trade, after a completed sale (observed only). Both parties learn of each other by the dealing; an event is noted;
@@ -146,6 +150,8 @@ func dawn(day: int) -> void:
 	market.dawn(day)
 	if rentals.active():
 		rentals.dawn(day)             # LE05-RENTAL: fees billed, tools given back at the term's end, missing ones settled
+	if repairs.active() or not repairs.records.is_empty():
+		repairs.dawn(day)            # LE-05 paid repair: overdue orders refunded, today's candidates weigh an order
 
 
 ## Relations.share (LE-02): villagers `a` and `b` spent an hour together. Nothing unless the market drives.
@@ -182,4 +188,42 @@ func to_dict() -> Dictionary:
 		d["claims"] = claims.to_dict()
 	if not rentals.is_empty():
 		d["rentals"] = rentals.to_dict()
+	if not repairs.is_empty():
+		d["repairs"] = repairs.to_dict()
 	return d
+
+
+# ---------------------------------------------------------------- activation (X20-ACTIVATION-AUTHORITY) ------------------
+## Owner 2026-10-31 (docs/directives/2026-10-31_doc_recon_review_decisions.md s.2): "Prepare the activation mechanism and validation
+## evidence, but wait for my explicit authorization before enabling it in the normal game." The switch is economy.json "enabled"
+## (shipped false); this section is the mechanism and its checks only, never a decision to enable (docs/expansion20/ACTIVATION.md).
+##   New game, switch on: attach() builds empty records; the model derives needs from the world as it is.
+##   Existing save without an "economy" section (every save_version 23 save written with the switch off), switch on: the same as a
+##     new game from that day, attach(world, {}): nothing to migrate, nothing dropped or rewritten, no save_version change.
+##   Save with a section, switch off: the section is PARKED (World.economy_foreign, D2): written back unchanged, never acted on; the
+##     coins its open rentals and paid-repair orders hold in escrow stay counted (parked_coins, World.total_coins), so the ledger is
+##     exact. A rented tool stays with its renter; nothing acts on the records until the switch is on again.
+##   Switch on again: attach() reads the parked section; open rentals and orders resume where they stood.
+
+## The coins a saved (or parked) "economy" section holds in escrow: open rentals' deposits and open paid-repair orders.
+static func parked_coins(saved: Dictionary) -> int:
+	if saved.is_empty():
+		return 0
+	var k := 0
+	for r in (saved.get("rentals", {}) as Dictionary).get("records", []):
+		if str(r.get("state", "")) == EconRentals.OPEN:
+			k += int(r.get("deposit", 0))
+	return k + EconRepairs.saved_escrow(saved.get("repairs", {}))
+
+
+## The state of the switch for `world` (the activation checklist, the LE-07 gates): {enabled, attached, parked, parked_coins,
+## open_rentals, open_repairs, flags}. Read only.
+static func activation_state(world: World) -> Dictionary:
+	var m: Dictionary = config().get("market", {})
+	var f: EconomyFoundation = world.economy
+	return {"enabled": enabled(), "attached": f != null, "parked": f == null and not world.economy_foreign.is_empty(),
+		"parked_coins": parked_coins(world.economy_foreign) if f == null else 0,
+		"open_rentals": f.rentals.open_records().size() if f != null else 0,
+		"open_repairs": f.repairs.open_records().size() if f != null else 0,
+		"flags": {"drive": bool(m.get("drive", false)), "rental": bool(m.get("rental", false)), "paid_repair": bool(m.get("paid_repair", false)),
+			"negotiated_wages": bool(m.get("negotiated_wages", false)), "services": bool(m.get("services", false))}}

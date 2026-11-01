@@ -73,6 +73,10 @@
     "services": false,
     "_le05_note": "LE05-RENTAL (owner 2026-10-31, LE-05 B) PROVISIONAL agent parameters: rental lets a worker short of its trade's tool rent a spare from a willing owner (deposit: the tool's value; fee: the value of the wear its use consumes, billed each dawn); rental_days is the term, after which the tool goes back.",
     "rental": true,
-    "rental_days": 3
+    "rental_days": 3,
+    "_le05_paid_repair_note": "LE-05 paid repair (owner 2026-10-31, LE-05 A: 'Paid commercial repair services and their associated financial transactions may depend on the economy system'; EconRepairs, docs/expansion20/LE05_IMPLEMENTATION.md s.4.4). Its own switch, not market.services (services stays reserved while X20-SERVICES-SCOPE is an open owner decision). PROVISIONAL agent parameters: repair_order_days, the days a smith has to do a paid repair before the price is refunded; repair_per_dawn, the villagers with a worn tool who weigh an order at one dawn.",
+    "paid_repair": true,
+    "repair_order_days": 3,
+    "repair_per_dawn": 6
   }
 }
