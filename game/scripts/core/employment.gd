@@ -160,6 +160,48 @@ func refusal(n: NPC, role := "miner", employer := "") -> String:
 	return ""
 
 
+## The recipes a crafter of `role` can be set to make for `employer`: those of the trade made at a station the employer holds,
+## in id order (the catalogue weapons are made to order, never by an employee's routine).
+func makes(role: String, employer := "") -> Array:
+	if employer == "":
+		employer = w.acting_ref()
+	var kinds := {}
+	for st in employer_stations(employer, role):
+		kinds[str(w.stations[st].type)] = true
+	var out := []
+	var ids: Array = GameData.recipes.keys()
+	ids.sort()
+	for r in ids:
+		if kinds.has(str(GameData.recipes[r].station)) and not GameData.is_catalogue_recipe(r):
+			out.append(r)
+	return out
+
+
+func make_refusal(role: String, make: String) -> String:
+	if make == "":
+		return "Choose what they are to make."
+	if not makes(role).has(make):
+		return "Your stations do not make that."
+	return ""
+
+
+## The acting player tells their crafter `n` what to make from now on. "" when done.
+func set_make(n: NPC, make: String, actor: PlayerState = null) -> String:
+	if w.mirrors():
+		return w.mirror("employment.set_make", set_make.bind(n, make), [n, make])
+	if actor != null and actor != w.player:
+		return w.as_actor(actor, set_make.bind(n, make))
+	var rec := record_of(n)
+	if rec.is_empty() or not w.is_acting_ref(str(rec.employer)) or behaviour(str(rec.role)) != "craft":
+		return "%s does not make things for you." % (n.name if n != null else "They")
+	var why := make_refusal(str(rec.role), make)
+	if why != "":
+		return why
+	rec.make = make
+	n.plan.clear()
+	return ""
+
+
 ## The stations of the trade `role` in buildings `employer` holds, in id order.
 func employer_stations(employer: String, role: String) -> Array:
 	var kinds: Array = NPCBrain.TRADE_STATIONS.get(job_for(role), [])
@@ -176,14 +218,18 @@ func employer_stations(employer: String, role: String) -> Array:
 
 # ---------------------------------------------------------------- taking on and letting go -------
 ## The acting player employs `n` as `role` for `pay` coins a day (-1: what they ask), paid from their purse or from the till of
-## their premises `account` (a stall's or shop's id). "" when done, else why not.
-func employ(n: NPC, role := "miner", pay := -1, account := "", actor: PlayerState = null) -> String:
+## their premises `account` (a stall's or shop's id). A crafter is told what to make (`make`, a recipe of their trade the
+## employer's stations make; set_make changes it), so the employer's materials are used only for what the employer chose.
+## "" when done, else why not.
+func employ(n: NPC, role := "miner", pay := -1, account := "", make := "", actor: PlayerState = null) -> String:
 	# MP C (World.mirror): a guest's verb goes to the host
 	if w.mirrors():
-		return w.mirror("employment.employ", employ.bind(n, role, pay, account), [n, role, pay, account])
+		return w.mirror("employment.employ", employ.bind(n, role, pay, account, make), [n, role, pay, account, make])
 	if actor != null and actor != w.player:
-		return w.as_actor(actor, employ.bind(n, role, pay, account))
+		return w.as_actor(actor, employ.bind(n, role, pay, account, make))
 	var why := refusal(n, role)
+	if why == "" and behaviour(role) == "craft":
+		why = make_refusal(role, make)
 	if why != "":
 		return why
 	if account != "" and not w.business.is_mine(w.business.record(account)):
@@ -199,6 +245,8 @@ func employ(n: NPC, role := "miner", pay := -1, account := "", actor: PlayerStat
 	var rec := {"npc": n.id, "employer": w.acting_ref(), "role": role, "wage": wg, "since": w.day(), "paid_day": -1, "owed": {}}
 	if account != "":
 		rec.account = account
+	if make != "":
+		rec.make = make
 	if _funds(rec) < wg:
 		return "You need %d coins for the first day's wage." % wg
 	_start(rec, n, "%s %s" % [w.player.name, w.player.family])
@@ -461,16 +509,14 @@ func _plan_build(n: NPC, rec: Dictionary) -> bool:
 	return false
 
 
-## A crafter for a player: the first recipe (in id order) of their trade that they have the skill and tool for, at a free
-## station the employer holds, with the inputs in the employer's store.
+## A crafter for a player: the recipe the employer chose (`make`), when they have the skill and tool for it, at a free station
+## the employer holds, with the inputs in the employer's store.
 func _plan_craft(n: NPC, rec: Dictionary, name: String) -> bool:
 	var store: Inventory = w.construction.store_of(str(rec.employer))
-	if store == null:
+	if store == null or not GameData.recipes.has(str(rec.get("make", ""))):
 		return false
 	var sts := employer_stations(str(rec.employer), str(rec.role))
-	var ids: Array = GameData.recipes.keys()
-	ids.sort()
-	for r in ids:
+	for r in [str(rec.make)]:
 		var rd: Dictionary = GameData.recipes[r]
 		if GameData.is_catalogue_recipe(r) or not w.brain._can_make(n, r) or not store.has_all(rd["in"]):
 			continue

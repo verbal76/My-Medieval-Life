@@ -49,7 +49,7 @@ const VERBS := {
 	"ContractServices:player_harvest": "C3", "contracts.dispute": "C3",
 	"quests.accept": "C3", "quests.complete": "C3", "manor_work.order_backfill": "C3", "manor_work.stock_backfill": "C3",
 	"manor_work.cancel_backfill": "C3", "manor_work.take": "C3",
-	"couriers.open_shop_booth": "C3", "couriers.book_route": "C3", "couriers.negotiate": "C3", "couriers.book_special": "C3", "counters.summon": "C3", "construction.hire": "C3", "employment.employ": "C3", "employment.dismiss": "C3",
+	"couriers.open_shop_booth": "C3", "couriers.book_route": "C3", "couriers.negotiate": "C3", "couriers.book_special": "C3", "counters.summon": "C3", "construction.hire": "C3", "employment.employ": "C3", "employment.dismiss": "C3", "employment.set_make": "C3",
 	"player_rent_tool": "C3", "player_return_tool": "C3", "farm.buy_seed": "C3", "farm.buy_seed_item": "C3", "farm.buy_animal": "C3", "farm.buy_horse": "C3",
 	# C4: property, construction, farms, pens, chests, carts, businesses
 	"buy_plot": "C4", "start_site": "C4", "deliver": "C4", "cancel_site": "C4", "player_helper_budget": "C4",

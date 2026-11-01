@@ -131,7 +131,10 @@ Professions without a work system of their own are not offered (no invented prod
   resignation (`Employment._resign`: on their weekly morning an employee whose wage is below `employment.resign_below`
   (PROVISIONAL 0.75) of the market wage leaves; one who founds or buys a business of their own leaves), death, the
   employer gone. On leaving, the employer's goods they still carry are handed over (to the store, or to the keeper).
-- **Saved** under the optional key `employment`; **verbs** `employment.employ`, `employment.dismiss` through `World.mirror`.
+- **What a crafter makes for a player:** the player chooses the recipe (`make`, one their own stations make;
+  `Employment.set_make` changes it), so the employer's stored materials are used only for what the employer chose.
+- **Saved** under the optional key `employment`; **verbs** `employment.employ`, `employment.dismiss`, `employment.set_make`
+  through `World.mirror`.
 
 ## 6. Decision 5: building, buying, selling and expanding businesses
 

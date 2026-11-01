@@ -329,3 +329,179 @@ func test_close_keeps_till() -> void:
 	check(not b.has("venture") and w.property.purse(World.hh_ref(s.household)) == purse + till and w.total_coins() == coins,
 		"a closing business's till goes to its household (TILL-D1), nothing made (%d)" % till)
 	check(not w.employment.is_employed(e), "its employees' employment ends with it")
+
+
+# ---------------------------------------------------------------- D4 ------------------------------
+## A home of the player's own with its chest (ground and materials given here; earned and bought in play).
+func player_home(w: World) -> Dictionary:
+	if w.player.home != "" and w.buildings.has(w.player.home):
+		return w.buildings[w.player.home]
+	var sp = w.map.data.spawns.player
+	var c: Construction = w.construction
+	var rect := c.find_ground("house", Vector2i(int(sp[0]), int(sp[1])), World.PLAYER)
+	w.player.coins += w.property.land_price(rect.size.x, rect.size.y)
+	var p: Dictionary = c.place("house", rect, World.PLAYER)
+	for id in p.site.need.duplicate():
+		w.player.inv.add(id, int(p.site.need[id]))
+	w.deliver(p, w.player.inv)
+	w.property.set_home(str(p.building))
+	return w.buildings[str(p.building)]
+
+
+## A building of `kind` of the player's on ground of its own near `near` (materials and the ground given).
+func player_build(w: World, kind: String, near: Vector2i) -> Dictionary:
+	var rect: Rect2i = w.construction.find_ground(kind, near, World.PLAYER)
+	w.player.coins += w.property.land_price(rect.size.x, rect.size.y)
+	var p: Dictionary = w.construction.place(kind, rect, World.PLAYER)
+	if p.is_empty():
+		return {}
+	for id in p.site.need.duplicate():
+		w.player.inv.add(id, int(p.site.need[id]))
+	w.deliver(p, w.player.inv)
+	return w.buildings.get(str(p.get("building", "")), {})
+
+
+func hirable(w: World, skip := []) -> NPC:
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household >= 0 and o.job in Construction.HIRABLE and not skip.has(o) and w.employment.obligation(o) == "":
+			return o
+	for o: NPC in w.npcs:                 # few are out of work on a new world: one who has just left their work (test setup)
+		if o.alive and o.role == "adult" and o.household >= 0 and not skip.has(o) and w.employment.obligation(o) == "" and o.job in ["farmer", "woodcutter", "miner"]:
+			o.job = ""
+			return o
+	return null
+
+
+func test_roles() -> void:
+	var w := world()
+	var used := []
+	check(w.employment.refusal(hirable(w), "woodcutter").begins_with("You need a home"), "no home store: nobody can be employed to fill it")
+	var home := player_home(w)
+	w.player.coins += 500
+	var chest: Inventory = w.construction.store_of(World.PLAYER)
+	check(w.employment.refusal(hirable(w), "jester") != "", "no role without a work system of its own is offered")
+	# woodcutter
+	var wc := hirable(w)
+	used.append(wc)
+	check(w.employment.employ(wc, "woodcutter") == "" and wc.job == "woodcutter", "a woodcutter is employed (D4)")
+	wc.inv.add("axe", 1)
+	w.minutes = float(w.day()) * 1440.0 + 9 * 60
+	wc.plan.clear()
+	check(w.employment.plan(wc) and wc.plan.any(func(s): return str(s.get("act", "")) == "emp_chop"), "they plan to fell a tree for the employer")
+	var step: Dictionary = wc.plan.filter(func(s): return str(s.get("act", "")) == "emp_chop")[0]
+	var logs := goods(w, "log")
+	var held := wc.inv.count("log")
+	check(w.employment.act_chop(wc, step.args), "the tree is felled by the woodcutter's rule")
+	var got := wc.inv.count("log") - held
+	check(got > 0 and int(w.employment.record_of(wc).owed.get("log", 0)) == got and goods(w, "log") == logs + got, "the logs come from the tree, owed to the employer (%d)" % got)
+	var c0 := chest.count("log")
+	w.employment.act_deliver(wc)
+	check(chest.count("log") - c0 == got, "and are delivered into the employer's chest")
+	# builder
+	var bd := hirable(w, used)
+	used.append(bd)
+	var rect: Rect2i = w.construction.find_ground("house", Vector2i(int(home.x), int(home.y)) + Vector2i(0, 14), World.PLAYER)
+	w.player.coins += w.property.land_price(rect.size.x, rect.size.y)
+	var site: Dictionary = w.construction.place("house", rect, World.PLAYER)
+	check(not site.is_empty(), "the player marks out a building site")
+	for id in site.site.need:
+		chest.add(id, int(site.site.need[id]))
+	check(w.employment.employ(bd, "builder") == "" and bd.job == "laborer", "a builder is employed")
+	bd.plan.clear()
+	var planned: bool = w.employment.plan(bd)
+	var hc: Dictionary = w.construction.contract_of(bd)
+	check(planned and bool(hc.get("employment", false)) and int(hc.wage) == 0 and int(hc.budget) == 0,
+		"they carry the employer's materials to the employer's site through the helper's work, no second wage, no spending")
+	check(bd.plan.any(func(s): return str(s.get("act", "")) in ["helper_take", "helper_deliver"]), "fetching from the employer's store")
+	# craft (a carpenter at the player's own carpenter's shop)
+	var cp := hirable(w, used)
+	used.append(cp)
+	check(w.employment.refusal(cp, "carpenter").begins_with("You hold no"), "no station of the trade: no crafter")
+	var shop := player_build(w, "carpentry", Vector2i(int(home.x), int(home.y)) + Vector2i(14, 0))
+	check(not shop.is_empty(), "the player builds a carpenter's shop")
+	cp.skills["carpentry"] = maxi(int(cp.skills.get("carpentry", 0)), Skills.xp_for_level(1))
+	check(w.employment.employ(cp, "carpenter") == "Choose what they are to make.", "a crafter is told what to make")
+	check(w.employment.employ(cp, "carpenter", -1, "", "forge_axe") != "", "only what the employer's stations make")
+	check(w.employment.employ(cp, "carpenter", -1, "", "saw_planks") == "" and cp.job == "carpenter", "a carpenter is employed to saw planks")
+	chest.add("log", 3)
+	var lg := chest.count("log")
+	var pl := chest.count("plank")
+	cp.plan.clear()
+	check(w.employment.plan(cp) and cp.plan.any(func(s): return str(s.get("act", "")) == "emp_craft"), "they plan the real recipe at the employer's station")
+	var cs: Dictionary = cp.plan.filter(func(s): return str(s.get("act", "")) == "emp_craft")[0]
+	var r := str(cs.args.recipe)
+	check(str(w.stations[str(cs.args.station)].building) == str(shop.id), "at the employer's own station (%s, %s)" % [r, str(cs.args.station)])
+	var outk := str(GameData.recipes[r].out.keys()[0])
+	var ink := str(GameData.recipes[r]["in"].keys()[0])
+	var o0 := chest.count(outk)
+	var i0 := chest.count(ink)
+	check(w.employment.act_craft(cp, cs.args), "the work is done (World.work_craft)")
+	check(r == "saw_planks" and chest.count(ink) < i0 and chest.count(outk) > o0, "the materials came out of the employer's chest and the goods (%s) went into it" % outk)
+	check(w.employment.carried(w.employment.record_of(cp), cp) == 0, "nothing of it stays with the employee")
+	# farmer
+	var fm := hirable(w, used)
+	used.append(fm)
+	check(w.employment.refusal(fm, "farmer").begins_with("You hold no farmland"), "no farmland: no farm hand")
+	var fr: Rect2i = w.farm_plots.find_ground(Vector2i(6, 5), Vector2i(int(home.x), int(home.y)), 0)
+	w.player.coins += 500
+	var plot: Dictionary = w.farm_plots.claim(fr, World.PLAYER, false)
+	check(not plot.is_empty(), "the player buys farmland")
+	plot.farm.fence = true
+	check(w.employment.employ(fm, "farmer") == "", "a farm hand is employed")
+	fm.plan.clear()
+	var fp: bool = w.employment.plan(fm)
+	var fs: Array = fm.plan.filter(func(s): return str(s.get("act", "")) == "fp_work")
+	check(fp and not fs.is_empty() and str(fs[0].args.plot) == str(plot.id), "they plan work on the employer's farmland (%s)" % (str(fs[0].args.task) if not fs.is_empty() else "none"))
+	if not fs.is_empty():
+		check(w.farm_plots.act(fm, "fp_work", fs[0].args), "the employer's farmland may be worked by their farm hand")
+	check(not w.farm_plots.act(hirable(w, used), "fp_work", fs[0].args if not fs.is_empty() else {}), "nobody else's")
+	check(w.farm_plots._store(fm, plot) == chest, "the crop of the employer's field goes to the employer's store")
+	# account: the wage from a premises' till
+	var ms := hirable(w, used)
+	w.player.coins += 100
+	w.business.rent()
+	var pitch: Dictionary = w.business.mine()
+	w.business.deposit(pitch, 50)
+	var pc := w.player.coins
+	check(w.employment.employ(ms, "miner", -1, str(pitch.id)) == "" and int(pitch.till) == 50 - int(w.employment.record_of(ms).wage) and w.player.coins == pc,
+		"the wage can be paid from a premises' till instead of the purse")
+
+
+func test_wage_and_resign() -> void:
+	var w := world()
+	player_home(w)
+	w.player.coins += 500
+	var n := hirable(w)
+	var m: int = w.employment.market_wage("miner")
+	check(m >= w.brain.manor_hand_wage(), "the market wage is never below the manor's day wage (%d)" % m)
+	check(w.employment.employ(n, "miner", m - 1) .begins_with(n.name + " wants at least"), "an offer below the market wage is declined")
+	check(w.employment.employ(n, "miner", m + 3) == "" and int(w.employment.record_of(n).wage) == m + 3, "a better offer is taken at the agreed wage")
+	check(w.employment.dismiss(n) == "" and not w.employment.is_employed(n), "the employer dismisses the employee")
+	check(w.employment.employ(n, "miner") == "", "taken on again")
+	var rec: Dictionary = w.employment.record_of(n)
+	rec.wage = 1
+	var gone := false
+	for d in 8:
+		w.minutes += 1440.0
+		w.player.coins += 50
+		w.employment.daily()
+		if not w.employment.is_employed(n):
+			gone = true
+			break
+	check(gone and int(w.stats.get("employees_resigned", 0)) == 1 and n.job == "miner", "an employee paid well below the market leaves on their weekly morning, keeping their trade")
+	check(int(GameData.b("employment").get("wage", 0)) == 10 and Employment.wage() == 10, "the old flat wage remains only for records saved without one")
+
+
+func test_obligations() -> void:
+	var w := world()
+	player_home(w)
+	w.player.coins += 500
+	var n := hirable(w)
+	check(w.employment.employ(n, "miner") == "", "employed")
+	check(w.business.hire_refusal(n) != "" and w.construction.can_hire(n) != "", "an employee is not hired by another at the same time")
+	var a := hirable(w, [n])
+	w.business.rent()
+	w.business.hire(w.business.mine(), a)
+	check(w.employment.refusal(a, "miner") != "", "a counter attendant cannot be employed over that obligation")
+	var r := open_one(w)
+	check(w.employment.refusal(r[0], "smith").contains("business of their own") or w.employment.refusal(r[0], "smith") != "", "a keeper of a business cannot be employed by another")
