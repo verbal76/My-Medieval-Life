@@ -13,9 +13,9 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 
 ## Summary
 
-- Implemented node types: 29 (22 the player may harvest, 7 the keeper's livestock).
-- Materials they produce: 33 (antler, apple, apple_sapling, blueberries, boar_tusk, carrot, carrot_seed, coal, copper_ore, dirt, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, ore_sample, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, spoil, stone, topsoil, wheat, wheat_seed, wool).
-- Finite node types: 10 (boulder, coal_seam, copper_seam, gold_seam, horse_pen, iron_seam, open_pit, prospect_clue, stone_seam, tunnel_rock); with no replacement once worked out: 5 (gold_seam, horse_pen, open_pit, prospect_clue, tunnel_rock).
+- Implemented node types: 30 (23 the player may harvest, 7 the keeper's livestock).
+- Materials they produce: 34 (antler, apple, apple_sapling, blueberries, boar_tusk, carrot, carrot_seed, coal, copper_ore, dirt, egg, feather, flower, gold_ore, herb_seed, hide, iron_ore, log, meat, milk, oak_sapling, ore_sample, pine_sapling, potato, potato_seed, rabbit_pelt, red_berries, spoil, stone, tin_ore, topsoil, wheat, wheat_seed, wool).
+- Finite node types: 11 (boulder, coal_seam, copper_seam, gold_seam, horse_pen, iron_seam, open_pit, prospect_clue, stone_seam, tin_seam, tunnel_rock); with no replacement once worked out: 5 (gold_seam, horse_pen, open_pit, prospect_clue, tunnel_rock).
 - At risk of overharvesting: 4 (coal_seam, copper_seam, iron_seam, stone_seam).
 - Not Gather-compatible: 7 (chicken_pen, cow_pen, horse_pen, pig_pen, player_field, player_pen, sheep_pen).
 
@@ -40,6 +40,7 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 | `red_berry_bush` Red berry bush | forage | natural | none | none | 2 red_berries | regrows | yes | yes | yes | implemented |
 | `sheep_pen` Sheep | livestock | bred | none | none | 1 hide, 3 meat | breeds | no | yes | no | implemented |
 | `stone_seam` Stone seam | mineral | natural | pickaxe | mining | 1 stone | finite | yes | yes | yes | implemented |
+| `tin_seam` Tin vein | mineral | natural | pickaxe | mining | 1 tin_ore | finite | yes | yes | yes | implemented |
 | `tree` Tree | wood | natural | axe | woodcutting | 1 apple_sapling, 4 log, 1 oak_sapling, 1 pine_sapling | regrows | yes | yes | yes | implemented |
 | `tunnel_rock` Tunnel rock | mineral | natural | pickaxe | mining | 1 spoil, 1 stone | finite | yes | yes | yes | implemented |
 | `wheat_field` Wheat field | crop | cultivated | none | none | 6 wheat | ripens | yes | yes | yes | implemented |
@@ -395,6 +396,24 @@ Status: **implemented** is in the game; **defect** is in the game but broken; **
 - **Risk:** Overharvested before MIN-B: worked out on day 10 (seed 1), 79% of it exported raw by the caravan (ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1; the caravan no longer buys it). The host rock of worked-out ore seams and the boulders are the village's stone after the seams (MIN-B).
 - **Code:** `game/scripts/core/world.gd::mine_unit`, `game/scripts/core/world.gd::deposit_at`, `game/scripts/core/world.gd::nearest_seam`, `game/scripts/main.gd::interact`, `game/scripts/core/npc_brain.gd::_miner`, `game/scripts/core/manor_work.gd::mine_into`, `game/scripts/core/manor_work.gd::post_quarry`
 
+### `tin_seam` · Tin vein
+
+- **Status:** implemented. **Category:** mineral, natural. **Found by:** `{"kind": "deposit", "ore": "tin_ore"}`.
+- **Where:** Below ground only: one hidden vein in the deep rock of the mine gallery, the cave and each deep level (underground.json hidden; the village has no tin at the surface). **In the world:** 0 tin_ore in 0 seams.
+- **Action:** Mining (interact): "Mine tin ore". **Range (tiles):** 1. The cell 0.9 tiles in front of the player, or one of its four neighbours (main.gd _find_target).
+- **Tool:** pickaxe (required). You need a pickaxe. The smith and the goods merchant sell them, or forge one at the anvil (2 iron bars and a plank). Where to get it: `pickaxe`: recipe (forge_pickaxe); resold by the merchant_goods; `rusty_pickaxe`: start kit (player_start_items).
+- **Skill:** mining, level 1.
+- **Time:** `mine_minutes` (25 game minutes). As for every seam: mine_minutes game minutes a unit for a villager; the player's swing is shorter, divided by the pickaxe's speed.
+- **Cost:** stamina 0, tool wear 1. No stamina. The pickaxe wears 1 a swing; from Mining 4 the player's wears only half the time.
+- **Yields a cycle:** 1 tin_ore. Player only: from Mining 2, a 25% chance of a second unit from the same seam.
+- **Total:** 24 a level (underground.json hidden tin_ore amount; B25 Decision 5, agent proposal, provisional), on the levels that exist: the gallery and the cave, and each deep level a shaft opens.
+- **Depletion:** finite. None: hidden until a tunnel or shaft opens a cell beside it (MineWorks: then an ordinary seam with host rock, found_tin_ore), never refilled; once its ore is out its host rock gives stone and the cell opens (MIN-B).
+- **Owner:** Nobody: the seams belong to no one (P1.2 proposes the manor's mining rights). **Theft:** Never theft.
+- **Harvested by:** the player yes; villagers yes. Once found, miners take tin when the seams their buyers want are worked out (NPCBrain._miner falls back to any seam with a buyer); the smith buys it (BUYS.smith tin_ore). Until then the smiths buy tin from the caravan (caravan_import_stock), which carries what Garton's diggings bring up from their finite reserve.
+- **Gather mode:** yes. **Icon:** `tin_ore`.
+- **Risk:** Scarce: hidden below ground and finite; bronze depends on it or on the caravan.
+- **Code:** `game/scripts/core/world.gd::mine_unit`, `game/scripts/main.gd::interact`, `game/scripts/core/npc_brain.gd::_miner`, `game/scripts/core/underground.gd::_place_hidden`
+
 ### `tree` · Tree
 
 - **Status:** implemented. **Category:** wood, natural. **Found by:** `{"kind": "tree"}`.
@@ -603,6 +622,7 @@ Objects the player can use or take from that are not resource nodes, so the dist
 | `open_pit` | staked in play (MIN-E): each 5 x 5 cells over the layers 2 topsoil, 3 dirt, 3 spoil, 8 stone | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
 | `prospect_clue` | generated from the world seed (MIN-C): a clue in about 35% of the village's 15-cell blocks, 4 samples each; 55% lie over a mineral body | **none** |
 | `stone_seam` | 240 stone in 3 seams | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
+| `tin_seam` | 0 tin_ore in 0 seams | When the village's seams of an ore or coal are down to caravan_import_when_left, each smith buys up to this stock from the caravan. (`game/scripts/core/npc_brain.gd::_caravan_imports`) |
 | `tunnel_rock` | cut in play below ground (MIN-F): each rock cell under the hill gives 3 stone, 2 spoil | When the village's stone is down to caravan_import_when_left, the caravan sells up to caravan_stone.load a visit to the raw-goods merchants. (`game/scripts/core/npc_brain.gd::_caravan_stone`) |
 
 Other permanent losses: a felled tree whose ground is bought for building is cleared and never
@@ -635,6 +655,7 @@ Evidence from `docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md` and `docs/relea
 | `red_berry_bush` | Not at risk: nobody else uses these. Yields and regrowth are provisional (balance review pending). |
 | `sheep_pen` | Not at risk: pens hold at about their caps (LONG_RUN_SIMULATION.md). |
 | `stone_seam` | Overharvested before MIN-B: worked out on day 10 (seed 1), 79% of it exported raw by the caravan (ECONOMY_SUSTAINABILITY_PROPOSALS.md section 1; the caravan no longer buys it). The host rock of worked-out ore seams and the boulders are the village's stone after the seams (MIN-B). |
+| `tin_seam` | Scarce: hidden below ground and finite; bronze depends on it or on the caravan. |
 | `tree` | Pressure, not exhaustion: households burn a log a night (8744 logs a year); grown trees settle at about 208 of 305 and firewood runs short on 16-58 household-nights a year (LONG_RUN_SIMULATION.md, finding 9). |
 | `tunnel_rock` | MIN-F2: an excavated cell too weakly held (supports worn, few, far) may cave in at dawn (MineWorks.stability, collapse_chance): rubble refills it (spoil, dug out again); supports wear and fail unrepaired. Ventilation and lighting as needs are not simulated. The hill holds little rock beyond the galleries, so tunnelling is short; hidden ore lies in its deep rock (Underground.hidden). |
 | `wheat_field` | Not at risk: farmers hold surplus grain (14495 wheat by day 365, seed 1; LONG_RUN_SIMULATION.md finding 6). |

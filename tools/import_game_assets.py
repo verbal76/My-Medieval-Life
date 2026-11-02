@@ -226,6 +226,11 @@ ICONS = {
     # DVW-B3-LUX luxury imports: the orange-red dried herb bundle as the spices (the pack has no spice jar), a crimson silk
     # fabric as the fine cloth (the white one is the bandage)
     "spice": "Plants & Alchemy/Herb-Bundle-04", "fine_cloth": "Textile/Silk-Fabric-16",
+    # B25 Decision 5 materials: the pale grey ore and ingot as tin, the brown-gold ingot as bronze, the blue-grey ingot as
+    # steel, the undyed cream fabric as raw silk (the crimson one is the woven fine cloth), the brown canine pelt as dressed
+    # fur (the deer pelt is the raw hide)
+    "tin_ore": "Metal/Metal-Ore-03", "tin_bar": "Metal/Metal-Ingot-03", "bronze_bar": "Metal/Metal-Ingot-04",
+    "steel_bar": "Metal/Metal-Ingot-06", "silk": "Textile/Silk-Fabric-05", "fur": "Textile/Canine-Pelt-08",
 }
 # Cozy Farm's item sheets (PL2-015): item id -> (sheet member, column, row) of the 16 x 16 cell. items.png is the
 # produce (10 columns: vegetables, eggs, milk, wool and cloth), seeds.png the seed packets (7 columns).

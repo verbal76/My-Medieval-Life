@@ -60,8 +60,8 @@ const OUTLETS := {
 	"coal": ["smith", "merchant_raw"], "stone": ["merchant_raw"], "rubble": ["merchant_raw"], "building_block": ["merchant_raw"], "log": ["carpenter", "cook", "merchant_raw"],
 	"plank": ["smith", "merchant_raw"], "wheat": ["cook", "merchant_food"], "meat": ["cook", "merchant_food"],
 	"hide": ["tanner", "merchant_goods"], "rabbit_pelt": ["tanner", "merchant_goods"], "feather": ["merchant_goods"], "leather": ["smith", "merchant_goods"],
-	"boar_tusk": ["merchant_goods"], "antler": ["merchant_goods"],
-	"tin_ore": ["smith"], "fur": ["merchant_goods"], "fine_cloth": ["merchant_goods"], "silk": ["tanner"],     # B25 Decision 5    # ARMOR-MATERIALS-01: a hunter's tusks and antlers, for the catalogue's special pieces
+	"boar_tusk": ["merchant_goods"], "antler": ["merchant_goods"],    # ARMOR-MATERIALS-01: a hunter's tusks and antlers, for the catalogue's special pieces
+	"tin_ore": ["smith"], "fur": ["merchant_goods"], "fine_cloth": ["merchant_goods"], "silk": ["tanner"],     # B25 Decision 5
 	"pottage": ["tavernkeeper", "merchant_food"], "roast_meat": ["tavernkeeper", "merchant_food"], "ale": ["tavernkeeper", "merchant_food", "sage"],
 	"flower": ["sage"],                       # FSE-B07: the Apothecary buys foragers' flowers (BUYS.sage)
 	"egg": ["cook", "merchant_food"], "milk": ["cook", "merchant_food"], "cheese": ["tavernkeeper", "cook", "merchant_food"],
