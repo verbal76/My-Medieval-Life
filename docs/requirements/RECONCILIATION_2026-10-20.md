@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 757 (397 of them still open) |
-| **Open entries now** (rules excluded) | | **556** |
+| Entries added since | | 759 (399 of them still open) |
+| **Open entries now** (rules excluded) | | **558** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (757)
+## Added since the baseline (759)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -201,6 +201,8 @@ None.
 | BANDIT-RETURN | Outlaws return: a season after the band is wiped out, 2-3 outlaws arrive from outside and camp in the woods | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | BARBER-01 | Barber service: change hairstyle in the village through the economy | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | decision | APPROVED | owner decision |
+| BRANCH-POL-01 | Branch and worktree policy: one code integration branch (wip/expansion20), short-lived task branches, prompt audited merges, no unrelated ancestry, nothing deleted with unmerged work, every integration SHA recorded | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
+| BRANCH-POL-Q1 | Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion20 (code), with notices on the code line's copies (recommended); or authorize bringing the records into wip/expansion20 as one reviewed change (files only, not the old ancestry)? | decision | OPEN | unassigned |
 | BUILD-3PLATFORM | Every build produces Android, Windows and Linux together, stably signed | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | multiplayer |
 | BUILD-SEQ-25-27 | Build sequence (owner, 2026-10-31): Build 25 = Expansion 20 validation and freeze (wip/expansion20 becomes the frozen baseline only after validation passes and the owner approves); Build 26 = repository recovery and consolidation on a separate branch from the exact frozen Build 25 SHA, validated and frozen after owner approval; Build 27 = Expansion 21 begins only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers. | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | NOT STARTED / NOT TESTED / OPEN | 18 |

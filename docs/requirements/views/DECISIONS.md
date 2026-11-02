@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 25 |
+| OPEN | 26 |
 | APPROVED | 270 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 3 |
@@ -60,10 +60,11 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | X19-SWITCHES-D1 | Enable in normal play the integrated-but-off Build 19 recovery features: R5 aspirations (judgment.json aspiration.enabled, decision.integration.job_choice; WDR-011-C) and the R2 judgment-weighted witness report hook (decision.integration.report; SJD-F)? | OPEN | no |  | game/data/judgment.json@origin/wip/expansion20 ad281dc (_aspiration_note: 'OFF (enabled false) until validation and owner review'); R5_ASPIRATIONS_DESIGN.md (expansion20 notes, on wip/expansion20)@X20; merge 9b90e05 |
 
-## Approved, no build assigned: open, reopened or provisional (5)
+## Approved, no build assigned: open, reopened or provisional (6)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
+| BRANCH-POL-Q1 | Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion20 (code), with notices on the code line's copies (recommended); or authorize bringing the records into wip/expansion20 as one reviewed change (files only, not the old ancestry)? | OPEN | no |  | docs/decisions/BRANCH-POL-01.md |
 | ID-D3 | Identity gate baseline: approve the candidate new baseline (docs/design/IDENTITY_GATE_CANDIDATE.json)? Its only divergences (day 13 on both seeds) come from arrivals keeping their permanent band id, which changes traits Build 18 hashes from the id (chapel piety, caravan taste, skill seed, willingness, sprite). Alternatively those traits could be seeded from a stored per-person seed so they no longer depend on the id value (a design change). | PROVISIONAL | no |  | docs/directives/2026-10-23_id_d2_succession_decisions.md |
 | JUICE-JD2 | Day and night: should the picture darken at night (how dark at midnight; interiors; underground already dark)? | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D2 (origin/wip/juice-assessment bebf1f3) |
 | JUICE-JD3 | Villager chatter: how often may villagers show what they are doing in bubbles (OWN-19 extension)? | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D3 |

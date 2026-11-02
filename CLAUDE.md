@@ -13,9 +13,11 @@ are. No file is read automatically because it exists: do these steps, in order, 
 entry point (copies on other branches are stale and marked so); history is `docs/DEVELOPMENT_CHANGELOG.md`; the standard 11-step
 recovery is `docs/handoffs/CURRENT_SESSION_RECOVERY.md`. Record every milestone there and in the register as part of the milestone.
 
-1. **Identify the repository, branch and latest remote commit.** Repository `verbal76/My-Medieval-Life`;
-   development branch `staging/my-medieval-life`. Run `git fetch origin staging/my-medieval-life`, check out or
-   update that branch, and note `git log origin/staging/my-medieval-life -1`.
+1. **Identify the repository, branches and latest remote commits.** Repository `verbal76/My-Medieval-Life`. The one
+   code integration branch is **`wip/expansion20`**; records (register, directives, state file, this file's authoritative
+   copy) are on **`wip/requirements-control`**; `staging/my-medieval-life` is historical (section 5a, BRANCH-POL-01).
+   Run `git fetch origin`, note both heads, and run `python3 tools/branch_audit.py --worktrees` (on the integration
+   branch) to see every worker branch's unique work, stale base and file overlap.
 2. **Read `docs/PROJECT_MEMORY.md`**, the index of where every authoritative record lives.
    Then **`docs/expansions/README.md`** (owner, 2026-10-31, DOC-RECON-01): the status of every expansion and system, the
    precedence of owner decisions (latest explicit owner decision first, regardless of branch) and the one status vocabulary;
@@ -253,9 +255,10 @@ corresponding documentation.** Every agent and worker, on every task:
 ## 5. Branching, commits, tests, releases
 
 - **GitHub is the source of truth; the cloud machine is a temporary workspace (owner, 2026-10-18).**
-  - `staging/my-medieval-life` is the remote branch for ongoing development. Committing and pushing
-    development checkpoints to it is a **standing authorization**: push completed, tested work
-    regularly, without asking. Never force-push or delete it (`tools/git_hooks/pre-push`, enabled
+  - The code integration branch is `wip/expansion20` and the records branch `wip/requirements-control` (section 5a;
+    `staging/my-medieval-life` held this role until Build 24 and is now historical). Committing and pushing
+    development checkpoints to them is a **standing authorization**: push completed, tested work
+    regularly, without asking. Never force-push or delete any of them (`tools/git_hooks/pre-push`, enabled
     with `git config core.hooksPath tools/git_hooks`, refuses both).
   - Unfinished agent work goes to `wip/<worktree name>` branches as snapshot commits.
   - `python3 tools/checkpoint.py --push [--wip <worktrees>]` does both and checks every remote hash.
@@ -279,7 +282,7 @@ corresponding documentation.** Every agent and worker, on every task:
   python3 tools/miniworld_anims.py && python3 tools/miniworld_buildings.py && python3 tools/build_manifest.py
   python3 tools/lore/build_registries.py && python3 tools/lore/build_constraints.py && python3 tools/lore/render_world_docs.py
   python3 tools/assets/check_assets.py && python3 tools/assets/scan_packs.py
-  python3 tools/check_requirements.py --against origin/staging/my-medieval-life
+  python3 tools/check_requirements.py --against origin/wip/requirements-control   # on the records branch
   git status   # regenerated data must show no diff unless the change was intended
   ```
   A failing test is fixed, never skipped, disabled or weakened to pass.
@@ -367,6 +370,35 @@ corresponding documentation.** Every agent and worker, on every task:
     installations cannot be inspected from this session (the proxy refuses those endpoints), nor
     can rulesets or branch protection be written, so staging is protected by the local hook only.
 
+## 5a. Branch and worktree policy (owner, 2026-11-02, BRANCH-POL-01; permanent)
+
+`docs/directives/2026-11-02_branch_consolidation_worktree_control.md`; rationale `docs/decisions/BRANCH-POL-01.md`.
+
+- **One integration branch for code: `wip/expansion20`.** Every finished, validated unit of work lands there. No other
+  branch is a development mainline, and no worker redefines the baseline: a worker never merges another worker's branch,
+  never rebases the integration branch and never starts a branch from anything but the integration head.
+- **Records are separate, not a second mainline.** `wip/requirements-control` holds the register, directives, decision
+  records, the state file, changelog and known issues, and is edited by the lead only. The owner keeps it isolated from the
+  code line (DOC-RECON-01 review, 2026-10-31: "Do not merge wip/requirements-control into staging, wip/expansion20, or the
+  gameplay baseline without my approval"), so nobody merges the two lines without the owner.
+- **Worker branches are short-lived.** One branch `wip/b25-<task>` (or the build's prefix) per task, from the current
+  integration head, in its own worktree, owning a named set of files and systems. A worker pushes snapshots there and
+  reports; the lead reviews and merges each validated unit **promptly** (the same session, not after other work piles up).
+  A read-only investigation needs no branch: it reports findings, and any fix gets its own task branch.
+- **Before every merge into the integration branch:** run `python3 tools/branch_audit.py --worktrees`. A stale base (more
+  than 20 integration commits behind) is brought up to date by merging the integration branch into the worker branch
+  first; an overlap between two active branches is settled by naming one owner per file, or by merging the first
+  finished branch and having the other merge it in before it submits. Conflicts are resolved by the owner decisions and
+  the implementation's requirements, never by taking the newer file.
+- **No unrelated ancestry.** Never merge historical lines (`staging/my-medieval-life`, old `wip/agent-*`, snapshot or
+  backup branches) into the integration branch to make a graph look clean; content from one is carried as a reviewed
+  change with its source named.
+- **Nothing is deleted while it holds unmerged work.** A branch or worktree is retired only when `branch_audit.py` reports
+  it INTEGRATED and its worktree has no uncommitted files; otherwise it stays, named in the state file.
+- **Record every integration:** the merge SHA, the worker branch and head it came from, the tests run, and any conflict
+  decision go in the changelog and the state file's workers table in the same session.
+- **Experimental work stays on its branch** until it is reviewed and validated; it is never merged to tidy the graph.
+
 ## 6. Deterministic generation
 
 - Same generator version + same inputs (seed, size, options) = byte-identical output on every
@@ -424,7 +456,8 @@ manually maintained register of requirements and owner decisions (owner directiv
 `docs/requirements/SCHEMA.md`). Everything else is generated (`docs/DEVELOPMENT_LEDGER.md`, `docs/requirements/views/`)
 or historical (`docs/DECISIONS.md` narrative log, `docs/DEVELOPMENT_QUEUE.md`, archived handoffs).
 
-- **One copy, edited on staging only.** The lead edits the register on `staging/my-medieval-life` with
+- **One copy, edited on the records branch only.** The lead edits the register on `wip/requirements-control` (formerly
+  `staging/my-medieval-life`; section 5a) with
   `tools/requirements_update.py`; build and task branches carry a synchronized copy and never edit it (the pre-push
   hook refuses it). Workers report to the lead; they do not edit the register.
 - **Separate dimensions.** Approval, implementation, verification and release status are separate fields (SCHEMA.md);
@@ -467,7 +500,8 @@ or historical (`docs/DECISIONS.md` narrative log, `docs/DEVELOPMENT_QUEUE.md`, a
 
 ## 10. Parallel agents
 
-- The lead agent integrates and pushes to `staging/my-medieval-life` under section 5's standing authorization. A
+- The lead agent integrates code into `wip/expansion20` and records into `wip/requirements-control` under sections 5 and
+  5a. A
   parallel agent (a subagent or another session working beside the lead) uses one branch and one draft PR per task,
   or a `wip/*` branch, and says which files and areas the task owns.
 - Do not edit files another open PR owns. Coordinate through the PR or ask the owner.

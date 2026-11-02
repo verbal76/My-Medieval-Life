@@ -19,7 +19,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (71)
+## Implemented but not tested (72)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -40,6 +40,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B7-009 | 15 | INTEGRATED |  |
 | B7-014 | 15 | INTEGRATED |  |
 | B8-007 | 20+ | PARTIALLY IMPLEMENTED |  |
+| BRANCH-POL-01 | unassigned | INTEGRATED |  |
 | CHAPEL-PURPOSE | 20 | INTEGRATED |  |
 | CON-03 | owner decision | INTEGRATED |  |
 | CON-04 | owner decision | INTEGRATED |  |

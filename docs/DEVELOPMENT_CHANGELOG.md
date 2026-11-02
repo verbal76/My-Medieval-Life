@@ -61,6 +61,26 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
 
 ## 2026-11-02
 
+**Branch consolidation and the permanent branch policy (BRANCH-POL-01, owner 2026-11-02). INTEGRATED (`d73bd0a`).**
+- **Content audit.** `git merge-tree` against the integration tip, not ahead/behind counts:
+  - 21 of the 22 recent `wip/b25-*` branches are already integrated, including the four from the previous consolidation;
+  - only `wip/b25-home-door` holds unique work (6 files, in progress);
+  - farming Phase 2 and the investigation have no commits yet; their work is uncommitted in their worktrees.
+- **Cause of the apparent divergence:**
+  - `CLAUDE.md` still named `staging` as the development branch;
+  - the code branch's copy of the rules was stale;
+  - the lead opened branches for read-only and run-only purposes;
+  - nothing checked stale bases or overlapping files before merges.
+- **Fix:**
+  - `CLAUDE.md` section 5a (on both lines), with the corrected branch names on the records line;
+  - `tools/branch_audit.py`, read-only;
+  - workers told the integration head, where to submit and which files they own;
+  - the integrated `b25-ci-green` worktree retired (its branch kept).
+- **Not done:** nothing merged to tidy the graph, no branch deleted, no run cancelled. Tests 41509578455 keeps running on
+  `0d194c8`. Python suite 178 tests OK.
+- **Open owner question:** BRANCH-POL-Q1, whether the records line should join the code line. Rationale:
+  `docs/decisions/BRANCH-POL-01.md`.
+
 **Farming yield chosen by simulation: 1.75 (FARM-YIELD-D1, B25-NINE-D3). VALIDATED (CI), not yet implemented.**
 - Dispatch B on `8acbdea`, `--market`, shared and seasonal farming on, 365 days. All three runs were food-secure with clean
   integrity:

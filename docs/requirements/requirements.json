@@ -10294,6 +10294,67 @@
    "blocks_implementation": false
   },
   {
+   "id": "BRANCH-POL-01",
+   "kind": "approved",
+   "title": "Branch and worktree policy: one code integration branch (wip/expansion20), short-lived task branches, prompt audited merges, no unrelated ancestry, nothing deleted with unmerged work, every integration SHA recorded",
+   "description": "Branch and worktree policy: one code integration branch (wip/expansion20), short-lived task branches, prompt audited merges, no unrelated ancestry, nothing deleted with unmerged work, every integration SHA recorded",
+   "source": "docs/directives/2026-11-02_branch_consolidation_worktree_control.md",
+   "owner_wording": "Consolidate the active development work into one integration branch. ... Correct the underlying workflow problem, not merely the current branch structure.",
+   "approval": "owner, 2026-11-02",
+   "acceptance": [
+    "Integration branch and SHA identified; every active branch and worktree audited by content",
+    "Completed reviewed work integrated; unfinished work left isolated; no work lost; no running test or simulation cancelled or restarted",
+    "Workers told the integration head, what is integrated, where to submit and which files they own",
+    "Permanent policy recorded (CLAUDE.md section 5a) with rationale; stale bases and file overlaps detected by a tool before merges"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-02",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-02_branch_consolidation_worktree_control.md"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; commits + d73bd0a",
+     "why": "applied: CLAUDE.md section 5a and tools/branch_audit.py on wip/expansion20 d73bd0a (Python suite 178 OK); authoritative CLAUDE.md branch names corrected; decision record docs/decisions/BRANCH-POL-01.md; workers aligned"
+    }
+   ],
+   "commits": [
+    "d73bd0a"
+   ]
+  },
+  {
+   "id": "BRANCH-POL-Q1",
+   "kind": "decision",
+   "title": "Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion20 (code), with notices on the code line's copies (recommended); or authorize bringing the records into wip/expansion20 as one reviewed change (files only, not the old ancestry)?",
+   "description": "Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion20 (code), with notices on the code line's copies (recommended); or authorize bringing the records into wip/expansion20 as one reviewed change (files only, not the old ancestry)?",
+   "source": "docs/decisions/BRANCH-POL-01.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-02",
+     "change": "entered in the register",
+     "why": "docs/decisions/BRANCH-POL-01.md"
+    }
+   ]
+  },
+  {
    "id": "BUILD-3PLATFORM",
    "kind": "approved",
    "title": "Every build produces Android, Windows and Linux together, stably signed",
