@@ -246,6 +246,9 @@ func test_save_20_fixture() -> void:
 	w.load_dict(VillageMap.load_default(), JSON.parse_string(text))
 	check(w.load_error == "" and w.players.size() == 1 and w.player_list()[0] == w.player, "a version 20 save loads with its \"player\" as the only player")
 	var p := _norm(w.player.to_dict())
+	for k in ["inv", "chest"]:                   # the save continuity fix (da1ed8c) writes an inventory's item order beside its
+		if p.get(k) is Dictionary:               # items; a Build 19 save predates that key, so it is the one key not compared
+			(p[k] as Dictionary).erase("order")
 	var same := true
 	for k in d.player:
 		if JSON.stringify(p.get(k), "", true) != JSON.stringify(d.player[k], "", true):
