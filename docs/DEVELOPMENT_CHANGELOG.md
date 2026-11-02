@@ -122,6 +122,20 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**Owner directive: chapel economic purpose (CHAPEL-PURPOSE, CHAPEL-LENDING), 2026-11-02.**
+- The directive is saved verbatim.
+- What the owner set:
+  - The chapel maintains itself and does not enrich itself.
+  - It keeps food only for clergy, livestock, seed and a modest reserve; the rest is for charity.
+  - The 14-day hardship line applies to both food and money aid. This replaces the 6-day food line from `35fbd48`.
+  - There is a faster emergency path with priority, plus proactive, fair and legitimate delivery.
+  - The operating reserve is to be audited.
+  - Starvation deaths while the chapel held food or funds are to be investigated.
+  - The whole cycle is to be instrumented.
+  - Lending is approved as a concept only, through a separate proposal.
+- B25-CHAPEL-FOOD-Q is answered: accumulate when prosperous, use when needed.
+- Work started on `wip/b25-chapel-purpose` from `91cf244`.
+
 **First CI run on the Build 25 source (LE-07 gate 1).**
 - Run: Tests [41446921087](https://github.com/verbal76/My-Medieval-Life/actions/runs/41446921087) on `f583086`.
 - Result: **failed 1 of 339 world_test checks**, `DVW-A12 R6: a new level is announced by core and shown by the interface`.
