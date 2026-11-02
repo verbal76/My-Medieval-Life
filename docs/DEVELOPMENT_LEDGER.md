@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (757)
+## Approved requirement (758)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -87,11 +87,12 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-CLOSE-01 | Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
-| B25-CLOSE-02 | Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final year-long campaign (seeds 1 and 2 normal, seed 1 economy-on) on it, present B25-ECON-P1..P5, JOB-02/CON-02-KINDS/PIT-02/FSE-10 as future-scope candidates, LE-07 gate 11 open for an owner device test, no packaging until the gates pass | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| B25-CLOSE-02 | Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final year-long campaign (seeds 1 and 2 normal, seed 1 economy-on) on it, present B25-ECON-P1..P5, JOB-02/CON-02-KINDS/PIT-02/FSE-10 as future-scope candidates, LE-07 gate 11 open for an owner device test, no packaging until the gates pass | 20 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
+| B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B7-001 | Starting coins | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B7-002 | Quest rewards reserved |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B7-003 | Jewellery/helmets have buyers |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
@@ -590,7 +591,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | REG-EVAL-01 | After REG-PARTY-01, REG-BUY-01, REG-COURIER-01 and REG-DEMO-01, evaluate whether the regional economy has genuine circulation failures (REG-CIRC-D1), against the 2026-10-23 baseline evidence | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | REG-INV-01 | Regional economy investigation: Higham's treasury decline, village sustainability under settlement traders, village buying from settlements, courier booths on the five settlements, settlement demographics | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | REG-PARTY-01 | One trading-party interface over the five settlements (trader, businesses, treasury, households) replacing the prospective SettlementLedger parties in RegionalMarket and Couriers | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| REGION-NAV-01 | Regional economy, world navigation, envoys and independent inter-village commerce: physical settlements, discovery and world map, NPC travel, envoy surveys with provenance, information network, independent NPC trade over CON-01, regional demand in business decisions, integrity and measurements | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| REGION-NAV-01 | Regional economy, world navigation, envoys and independent inter-village commerce: physical settlements, discovery and world map, NPC travel, envoy surveys with provenance, information network, independent NPC trade over CON-01, regional demand in business decisions, integrity and measurements | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold | 15 | SUPERSEDED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | CLOSED |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | 15 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | OPEN |
 | REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |

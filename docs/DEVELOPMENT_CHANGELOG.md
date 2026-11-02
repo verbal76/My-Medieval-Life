@@ -61,6 +61,22 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
 
 ## 2026-11-02
 
+**Build 25 scope corrected: the regional economy is mandatory Build 25 work (B25-SCOPE-REGION, REGION-NAV-01).**
+- **Phase 1 audit** (`wip/region-nav` `78bec8e`): the player never meets another village because the five settlements are
+  off-map daily economic simulations with no place in the overworld. The owner kept in-person visits for "20+" (Q18-8,
+  2026-10-23).
+- **Plan** (`611c294`): eight architecture decisions:
+  - physical sites at the recorded distances;
+  - named keepers over the existing books;
+  - the reeve as leadership;
+  - villagers walking the road network;
+  - intel records with their source;
+  - CON-01 trade decided by the tradesperson;
+  - founding through real work;
+  - a world map toggle.
+  Eight stages, S1-S8.
+- **Effect on the baseline:** the freeze of `4b51c92` is superseded. Its campaigns are baseline evidence.
+
 **Build 25 candidate frozen at `4b51c92` and the one final campaign dispatched (B25-CLOSE-01/02). TESTED locally; campaign RUNNING (CI).**
 - Integrated by fast-forward from `wip/b25-farm-phase2`:
   - farming Phase 2 (yield 1.75, shared and seasonal farming on, the old-save seed-corn start, wiki);

@@ -8,14 +8,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 147 |
-| Integrated | 123 of 147 (84%) |
-| Automated tests passed | 110 of 147 (75%) |
-| Integration verified | 64 of 147 (44%) |
-| Gameplay verified | 0 of 147 (0%) |
-| Owner playtested | 0 of 147 (0%) |
-| Complete | 2 of 147 (1%) |
-| Open (release blockers) | 145 |
+| Approved requirements in scope | 149 |
+| Integrated | 123 of 149 (83%) |
+| Automated tests passed | 110 of 149 (74%) |
+| Integration verified | 64 of 149 (43%) |
+| Gameplay verified | 0 of 149 (0%) |
+| Owner playtested | 0 of 149 (0%) |
+| Complete | 2 of 149 (1%) |
+| Open (release blockers) | 147 |
 | Open owner decisions (blocking) | 6 (0) |
 
 ## In development (worker assigned) (3)
@@ -23,7 +23,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | B25-CLOSE-01 | Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop | OWNER APPROVED | IN DEVELOPMENT | lead (single worker, MML-CONSERVE-01) / wip/b25-farm-phase2 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25-CLOSE-02 | Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final year-long campaign (seeds 1 and 2 normal, seed 1 economy-on) on it, present B25-ECON-P1..P5, JOB-02/CON-02-KINDS/PIT-02/FSE-10 as future-scope candidates, LE-07 gate 11 open for an owner device test, no packaging until the gates pass | OWNER APPROVED | IN DEVELOPMENT | lead (single worker) / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| REGION-NAV-01 | Regional economy, world navigation, envoys and independent inter-village commerce: physical settlements, discovery and world map, NPC travel, envoy surveys with provenance, information network, independent NPC trade over CON-01, regional demand in business decisions, integrity and measurements | OWNER APPROVED | IN DEVELOPMENT | lead (single worker) / wip/region-nav | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (121)
@@ -158,15 +158,17 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | TARGETED TESTS PASSED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (20)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (22)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| B25-CLOSE-02 | Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final year-long campaign (seeds 1 and 2 normal, seed 1 economy-on) on it, present B25-ECON-P1..P5, JOB-02/CON-02-KINDS/PIT-02/FSE-10 as future-scope candidates, LE-07 gate 11 open for an owner device test, no packaging until the gates pass | OWNER APPROVED | PARTIALLY IMPLEMENTED | lead (single worker) / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | BUILD-SEQ-25-27 | Build sequence (owner, 2026-10-31): Build 25 = Expansion 20 validation and freeze (wip/expansion20 becomes the frozen baseline only after validation passes and the owner approves); Build 26 = repository recovery and consolidation on a separate branch from the exact frozen Build 25 SHA, validated and frozen after owner approval; Build 27 = Expansion 21 begins only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers. | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | CHAPEL-LENDING | Chapel community lending and grants (concept approved): hardship recovery, viable businesses in temporary difficulty, village improvements, infrastructure, downturn relief - via a separate implementation proposal built on existing loan, credit, property and repayment systems | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | DOC-AUTH-01 | Document authority replacement: once the owner explicitly approves and delivers the final revised expansion specification set, it is the sole authoritative current specification; older plans, roadmaps, packets, instructions and registers become historical evidence only; omitted features are not reintroduced (ask if materially ambiguous); code differences are reported, not silently changed; later explicit owner decisions supersede and are folded into the set; no third interpretation. Until then: latest explicit owner decisions and the validated baseline. The switch happens only on final approval, not on a draft. | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

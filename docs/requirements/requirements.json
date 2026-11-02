@@ -5998,7 +5998,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -6012,6 +6012,11 @@
      "date": "2026-11-02",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead (single worker); branch: None -> wip/expansion20; commits + 4b51c92",
      "why": "frozen candidate wip/expansion20 4b51c92 (fast-forward from wip/b25-farm-phase2: farming Phase 2 at 1.75 with both switches, old-save seed corn counted as imported, cart-hitch fix, simulator resume keeps load-time counts; on 34e1041 home-door). Targeted, all 0 failures 0 script errors: farming 224, farm_plots 104, crop_share 26, farm_shared_save 17, home_ref 40, home 124, housing 117, aging 136, migration 109, save_continuity 5, save_transfer 21, le06_save 21, le07_gates 31, conservation 8, net_econ_integrity 126, wiki_test pass, world 339, chapel 173, start 523, run_tests 3602; seed-1 10-day smoke 166eaf82 leak 0; seed-2 replay day 200-212 from the campaign save 0 script errors, leaks 0, 0 starved (first replay caught the seed-corn ledger gap, fixed). Reused: full CI 41509578455 on 0d194c8 green. Campaign dispatched: flight 41536805310 (seeds 1,2, 365 days, every 10, recorded, 100-day segments) and economy-on 41536810831 (seed 1, --market, 365, every 10)."
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED",
+     "why": "freeze of 4b51c92 superseded by the owner's scope correction (B25-SCOPE-REGION): 4b51c92 stays the tested baseline; the running campaigns 41536805310 and 41536810831 finish as baseline evidence, not final release validation"
     }
    ],
    "assigned_worker": "lead (single worker)",
@@ -6649,6 +6654,37 @@
      "date": "2026-11-01",
      "change": "owner_answer",
      "why": "owner's words recorded (docs/directives/2026-11-01_build25_scope_clarification.md)"
+    }
+   ]
+  },
+  {
+   "id": "B25-SCOPE-REGION",
+   "kind": "approved",
+   "title": "Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release",
+   "description": "Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release",
+   "source": "docs/directives/2026-11-02_build25_scope_correction_regional_economy.md",
+   "owner_wording": "They are mandatory components of the current Build 25 Living Economy expansion.",
+   "approval": "owner, 2026-11-02",
+   "acceptance": [
+    "REGION-NAV-01 implemented and validated as Build 25 scope",
+    "Toggleable world map, discoverable and reachable villages, actual travel, regional economic information and inter-village trade in the Build 25 acceptance criteria",
+    "External demand integrated into the business-founding investigation before any change to the 35% threshold",
+    "A consolidated final Living Economy validation campaign proposed after targeted validation, reusing applicable evidence"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-02",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-02_build25_scope_correction_regional_economy.md"
     }
    ]
   },
@@ -49842,8 +49878,8 @@
     "Phase 1 audit with code references",
     "The final report's ten questions answered with evidence (villages generated and reachable; discovery and navigation; accurate world map; envoys travel and survey individuals; reports reach leadership and participants; NPCs initiate and negotiate; goods and money move correctly; regional demand influences business decisions; integrity and determinism; Android and desktop performance)"
    ],
-   "target_build": "unassigned",
-   "parent": null,
+   "target_build": "20",
+   "parent": "X20-COMPLETE",
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
@@ -49861,6 +49897,11 @@
      "date": "2026-11-02",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead (single worker); branch: None -> wip/region-nav",
      "why": "Phase 1 audit done on wip/region-nav (docs/region_nav/ARCHITECTURE_AUDIT.md); topology and leadership owner decisions asked before code (the directive's stop rule)"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "target_build: unassigned -> 20; parent",
+     "why": "owner scope correction 2026-11-02 (B25-SCOPE-REGION): mandatory Build 25 scope, not future; implementation authorized; plan docs/region_nav/IMPLEMENTATION_PLAN.md on wip/region-nav (8 architecture decisions, stages S1-S8). DCR-01: intentional revision of Q18-8 (in-person visits kept for 20+) and the countryside answer (towns off-map for now), both of which anticipated it"
     }
    ],
    "assigned_worker": "lead (single worker)",

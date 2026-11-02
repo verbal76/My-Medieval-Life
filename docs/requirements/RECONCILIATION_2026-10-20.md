@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 763 (403 of them still open) |
-| **Open entries now** (rules excluded) | | **562** |
+| Entries added since | | 764 (404 of them still open) |
+| **Open entries now** (rules excluded) | | **563** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (763)
+## Added since the baseline (764)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -173,7 +173,7 @@ None.
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25-CHAPEL-FOOD-Q | The church plot (8x7 cells, replaces its own seed, ripens every 2 days) yields about 12-18 wheat a day; in a food-secure village (yield 2.0) almost no household needs relief or food alms, so the chapel's store grows to 760-2,140 wheat a year (now limited only by normal spoilage, fixed 2026-11-02). What should the church do with food it does not need? Options: A the church farms only to need - it sows the plot only while its store is below a ceiling (recommended by the worker and the lead: no waste, no new flow, nothing created); B it sells the surplus at market and gives the coins as alms; C it passes the surplus to the manor's granary; D leave it (spoilage caps it). Evidence: docs/release/chapel_fix/CHAPEL_FOOD_FINDINGS.md on the Build 25 source. | decision | APPROVED | 20 |
 | B25-CLOSE-01 | Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
-| B25-CLOSE-02 | Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final year-long campaign (seeds 1 and 2 normal, seed 1 economy-on) on it, present B25-ECON-P1..P5, JOB-02/CON-02-KINDS/PIT-02/FSE-10 as future-scope candidates, LE-07 gate 11 open for an owner device test, no packaging until the gates pass | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| B25-CLOSE-02 | Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final year-long campaign (seeds 1 and 2 normal, seed 1 economy-on) on it, present B25-ECON-P1..P5, JOB-02/CON-02-KINDS/PIT-02/FSE-10 as future-scope candidates, LE-07 gate 11 open for an owner device test, no packaging until the gates pass | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 20 |
 | B25-ECON-P1 | Business founding requires the trade's benches to be full and busy (Ventures.refusal, skilled_place busy_share 0.35); in seed 1 the founding trades' benches were 2-20% busy all 120 days, so every one of 172 weekly looks stopped there. Options: A keep the rule (businesses form when demand exists); B let a founder weigh independence even with idle benches (the judgment weighing decides); C a lower busy threshold for founding only. Recommendation: A, and act on demand (P2-P4) rather than the gate. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | OPEN | 20 |
 | B25-ECON-P2 | Coinless adults cannot take open miner or woodcutter places because those jobs need a tool and the manor's tool help covers only workers already in the trade (all 10 jobless at day 120 came of age in the run and hold median 0 coins). Options: A keep; B the household buys a member's first work tool from its own purse (existing purchase rules); C the manor advances the tool against wages; D tool rental outside the Living Economy. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | OPEN | 20 |
 | B25-ECON-P3 | Retired villagers keep trade stock forever (day 120: 68 iron ore, 47 coal, 24 iron bars, 8 pickaxes, 7 axes held by elders while the working smith held nothing). Options: A keep; B elders and adults between jobs sell their goods through the existing sell rule; C the stock passes to the trade's successor as tools already do. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | OPEN | 20 |
@@ -195,6 +195,7 @@ None.
 | B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20 |
 | B25-SCOPE-D1 | Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work from abandoned branches? | decision | APPROVED | owner decision |
+| B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-C | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-D | Expansion 23 BAN-D: rank, challenge, leadership, schism and autonomous succession | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
@@ -668,7 +669,7 @@ None.
 | REG-X20-D2 | Off-map settlements: should 'cannot buy a day's food' (hunger migration) also count when there is no food for sale at all, not only when the household lacks coins? In the switches-on run Garton starved holding 68-110 coins with empty stalls after its farmers moved to better-paid trades. | decision | DEFERRED | 20 |
 | REG-X20-D3 | Off-map settlements: should settlement-to-settlement food trade get a live path? The owner's REG-BUY-D1 answer allows it, but road trade carries no food and RegionalMarket is not wired into the live game, so one settlement's surplus never reaches a starving neighbour. | decision | APPROVED | 20 |
 | REG-X20-D4 | Off-map settlements: revisit the deferred circulation question (REG-CIRC-D1) now its prerequisites exist? Settlement traders keep buying from the village and buy little back (netherton paid out 460 coins in 30 days and took in 41), draining treasuries until relief and day labour stop. | decision | DEFERRED | 20 |
-| REGION-NAV-01 | Regional economy, world navigation, envoys and independent inter-village commerce: physical settlements, discovery and world map, NPC travel, envoy surveys with provenance, information network, independent NPC trade over CON-01, regional demand in business decisions, integrity and measurements | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
+| REGION-NAV-01 | Regional economy, world navigation, envoys and independent inter-village commerce: physical settlements, discovery and world map, NPC travel, envoy surveys with provenance, information network, independent NPC trade over CON-01, regional demand in business decisions, integrity and measurements | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 15 |
 | REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
 | REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |

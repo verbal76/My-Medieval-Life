@@ -61,7 +61,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 
-## Approved, no build assigned (22)
+## Approved, no build assigned (21)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -75,7 +75,6 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | MML-CONSERVE-01 | Credit conservation: MML second priority behind Upwardly; one worker; finish and integrate KI-HOME-DOOR only; pause farming Phase 2 and the flight-finding investigations; no 365-day campaign, new features or scheduled follow-up without owner approval; standby when done | approved | OWNER APPROVED | INTEGRATED |
 | MP-ADOPTION-AGENCY | Adoption agency concept (future, separate design item) | approved | DEFERRED | NOT STARTED |
 | RECON-01 | Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off | approved | OWNER APPROVED | INTEGRATED |
-| REGION-NAV-01 | Regional economy, world navigation, envoys and independent inter-village commerce: physical settlements, discovery and world map, NPC travel, envoy surveys with provenance, information network, independent NPC trade over CON-01, regional demand in business decisions, integrity and measurements | approved | OWNER APPROVED | IN DEVELOPMENT |
 | REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | OWNER APPROVED | INTEGRATED |
 | REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | approved | OWNER APPROVED | INTEGRATED |
 | WDR-017-C | Comply with World Design Rule 17: Generational Memory and Living History | approved | OWNER APPROVED | NOT STARTED |

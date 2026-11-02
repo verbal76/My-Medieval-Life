@@ -2,18 +2,17 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (14)
+## Workers and task branches (13)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | B25-CLOSE-01 | 20 | IN DEVELOPMENT | lead (single worker, MML-CONSERVE-01) | wip/b25-farm-phase2 |
-| B25-CLOSE-02 | 20 | IN DEVELOPMENT | lead (single worker) | wip/expansion20 |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | JUICE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | none |  |
-| REGION-NAV-01 | unassigned | IN DEVELOPMENT | lead (single worker) | wip/region-nav |
+| REGION-NAV-01 | 20 | IN DEVELOPMENT | lead (single worker) | wip/region-nav |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-CAREER-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
@@ -21,7 +20,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (74)
+## Implemented but not tested (75)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -37,6 +36,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-BIZ-D5 | 20 | INTEGRATED |  |
 | B25-BIZ-OWN | 20 | INTEGRATED |  |
 | B25-BUSINESS-IMPL | 20 | INTEGRATED |  |
+| B25-CLOSE-02 | 20 | PARTIALLY IMPLEMENTED |  |
 | B25-EMPLOY-IMPL | 20 | INTEGRATED |  |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |
 | B7-009 | 15 | INTEGRATED |  |

@@ -13,9 +13,34 @@ build, not package an incomplete development snapshot".
 
 Integration branch: `wip/expansion20`. Frozen candidate SHA: see section 3.
 
+## 0. Scope correction (owner, 2026-11-02, B25-SCOPE-REGION)
+
+The regional economy and world navigation (REGION-NAV-01) is **mandatory Build 25 scope**. The scope correction is in
+`docs/directives/2026-11-02_build25_scope_correction_regional_economy.md`, and the behaviour it adds is in
+`..._regional_economy_navigation_envoys_master.md`.
+
+**What it adds to the acceptance criteria:**
+- multiple villages, generated and reachable;
+- discovery, and travel by the player and by villagers;
+- a toggleable world map;
+- envoy surveys of every accessible owner and crafter, with their source;
+- reports that reach the leadership and the people they concern;
+- independent, negotiated trade between villages, with goods and money conserved;
+- regional demand in the business-founding measurement;
+- integrity and determinism;
+- Android and desktop performance.
+
+**Effect on the closure position:**
+- The `4b51c92` freeze is superseded. `4b51c92` stays a tested baseline.
+- Its two campaigns are baseline evidence, not final validation.
+- Plan: `docs/region_nav/IMPLEMENTATION_PLAN.md`, on `wip/region-nav`.
+- Final validation will be one consolidated Living Economy campaign after targeted validation of the whole scope.
+
 ## 1. Classification of every outstanding item
 
 ### A. Required for this build and unfinished
+
+**Plus REGION-NAV-01 in full (section 0).**
 
 | Item | What is missing | Why it cannot be finished now | Needs |
 |---|---|---|---|
