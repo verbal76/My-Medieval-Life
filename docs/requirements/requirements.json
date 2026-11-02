@@ -49831,6 +49831,42 @@
    "notes": "Owner 2026-10-28 (owner message 2026-10-28 (decision resolution and register cleanup)): the settlement coin-circulation imbalance stays a documented finding; no new economic policy is approved. Not an open owner action."
   },
   {
+   "id": "REGION-NAV-01",
+   "kind": "approved",
+   "title": "Regional economy, world navigation, envoys and independent inter-village commerce: physical settlements, discovery and world map, NPC travel, envoy surveys with provenance, information network, independent NPC trade over CON-01, regional demand in business decisions, integrity and measurements",
+   "description": "Regional economy, world navigation, envoys and independent inter-village commerce: physical settlements, discovery and world map, NPC travel, envoy surveys with provenance, information network, independent NPC trade over CON-01, regional demand in business decisions, integrity and measurements",
+   "source": "docs/directives/2026-11-02_regional_economy_navigation_envoys_master.md",
+   "owner_wording": "The envoy discovers the opportunity. The business owner decides whether to pursue it. The parties negotiate. The world carries out the transaction.",
+   "approval": "owner, 2026-11-02",
+   "acceptance": [
+    "Phase 1 audit with code references",
+    "The final report's ten questions answered with evidence (villages generated and reachable; discovery and navigation; accurate world map; envoys travel and survey individuals; reports reach leadership and participants; NPCs initiate and negotiate; goods and money move correctly; regional demand influences business decisions; integrity and determinism; Android and desktop performance)"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-02",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-02_regional_economy_navigation_envoys_master.md"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead (single worker); branch: None -> wip/region-nav",
+     "why": "Phase 1 audit done on wip/region-nav (docs/region_nav/ARCHITECTURE_AUDIT.md); topology and leadership owner decisions asked before code (the directive's stop rule)"
+    }
+   ],
+   "assigned_worker": "lead (single worker)",
+   "branch": "wip/region-nav"
+  },
+  {
    "id": "REL-14-16",
    "title": "Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditions hold",
    "kind": "approved",

@@ -63,6 +63,7 @@ Every branch below holds real, unmerged work. None is disposable.
 
 | Worker or workstream | Register | Branch / worktree | Latest pushed | Unpushed | State and tests | Merge readiness | Next safe step |
 |---|---|---|---|---|---|---|---|
+| **ACTIVE (lead, single worker):** regional economy and world navigation | REGION-NAV-01 | `wip/region-nav` from `4b51c92` (Build 25 untouched); worktree `.claude/worktrees/region-nav` | `78bec8e` | none | Phase 1 audit done (ARCHITECTURE_AUDIT.md in docs/region_nav on that branch). Waiting on the owner's topology and leadership decisions before code. | not for Build 25 | Owner answers, then the implementation plan. |
 | Merged: farming yield Phase 2, cart-hitch fix | FARM-YIELD-D1, B25-CLOSE-01/02 | `wip/b25-farm-phase2` `4b51c92`, fast-forwarded into `wip/expansion20` | `4b51c92` | none | Targeted suites green (see the register, B25-CLOSE-02). | merged | none |
 | Merged: KI-HOME-DOOR fix | FR-REPAIR-01 | `wip/b25-home-door` `bcff138`, fast-forwarded into `wip/expansion20`, then `34e1041` | `bcff138` | none | See KNOWN_ISSUES KI-HOME-DOOR. | merged | none |
 | **PAUSED:** flight findings investigation (read-only) | FR-REPAIR-01 point 6 | worktree `.claude/worktrees/fr-investigate` (clean); `wip/b25-fr-investigate` holds nothing | — | none | Findings recorded: KI-FR-CARTHITCH (loop, fix proposed, not made), KI-FR-WHEATSALE (market outcome), KI-FR-CONTRACTS (no-player artefact). Logs in the session scratchpad `fri/`. | report only | Awaits the owner. |
