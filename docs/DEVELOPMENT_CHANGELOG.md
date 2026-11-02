@@ -122,6 +122,32 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**LE-07: the 13 Living Economy readiness gates reviewed on the integrated candidate.**
+- Branch: `wip/b25-le07` (`8f288a2`, `40f8494`, `60f4cf4`, `ddf2fdf`), merged as `28d5280`.
+- Change:
+  - New check: a save made with the economy off loads with it on, and the ledger stays exact through a dawn.
+  - `le05_paid_repair`, `le05_construction_hire`, `le07_gates` and `save_continuity` are added to `tests.yml`; CI never ran them
+    before.
+  - Tests that mean "economy off" now set it off explicitly (`EconomyFoundation.off_config`). Flipping the switch had broken 15
+    suites and run_tests, because those tests were reading the installed setting.
+  - Gate record: `docs/expansion20/LE07_GATE_STATUS.md`.
+- Gates on `eca0e7d`:
+
+  | Gate | Status |
+  |---|---|
+  | 2, 3, 5, 7, 8 | Passed |
+  | 1, 4, 6, 9 | Need the final runs |
+  | 10 | Waits on the LE-05 remainder |
+  | 11 | Needs a device (a profiling target per OD-LE-15) |
+  | 12, 13 | Go in with the activation commit |
+
+- No gate failed on a defect.
+- The activation change is prepared, not applied: `economy.json` enabled, six "shipped off" checks flipped, the baseline
+  re-recorded, and the wiki pages.
+- Observation for calibration: with the economy on, a builder's wage can wait behind the founder's open market bids (a house
+  finished on day 7 instead of day 5). Coins are conserved; recorded as a calibration question.
+- Next: the LE-05 remainder, then the final long runs on the final candidate (gates 1, 4, 6, 9).
+
 **Farming yield calibration, Phase 1 (B25-NINE-D3, FARM-YIELD-D1), and a harness defect fixed.**
 - Branch: `wip/b25-farming` (`1400efa`, `97a1e8b`), merged into the Build 25 source as `eca0e7d`.
 - Change:

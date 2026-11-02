@@ -31571,7 +31571,7 @@
     "All mandatory release gates green"
    ],
    "implementation": "",
-   "tests": "game/tests/le07_gates_test.gd",
+   "tests": "game/tests/le07_gates_test.gd; le07_gates 31, run_tests 3602, start_test 523, wiki_test and 28 more suites (eca0e7d, local)",
    "playtest": [],
    "branch": "",
    "commits": [],
@@ -31626,6 +31626,11 @@
      "date": "2026-11-01",
      "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; tests:  -> game/tests/le07_gates_test.gd; test_commit: None -> 63c0144",
      "why": "automatable release gates added (le07_gates_test 25: switch off, flags off, one-day conservation with economy on, determinism, exact load-back, bounds, Build 24 save on, off-on) at 63c0144; the save-and-load fingerprint gate is not automatable yet (base game reload differs, see the save continuity finding)"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "tests: game/tests/le07_gates_test.gd -> game/tests/le07_gates_test.gd; le07_gates 31, run_tests 3602, start_test 523, wiki_test and 28 more suites (eca0e7d, local); test_commit: 63c0144 -> eca0e7d",
+     "why": "gate review on eca0e7d merged at 28d52806 (wip/b25-le07 ddf2fdf; docs/expansion20/LE07_GATE_STATUS.md on the Build 25 source). PASSED: 2 (le07_gates 31), 3 (off-path differences explained: baseline reproduces at the economy merge 63c0144), 5 (determinism, two local 30-day economy-on runs identical), 7 (Build 24 and current saves load with the economy on), 8 (no uncontrolled buying path). NEEDS RUN: 1 (Tests workflow), 4, 6, 9 (long-sims seeds 1-4, 365 days, every 10, --market, on the final candidate). Gate 10: LE-05 remainder (route risk, regional links) still to implement; no critical defect. Gate 11 phone performance: a profiling target per OD-LE-15, needs a device. Gates 12-13 applied with the activation commit. CI gap fixed: four suites added to tests.yml; tests set economy-off explicitly."
     }
    ],
    "target_build": "20",
@@ -31638,7 +31643,7 @@
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "test_commit": "63c0144"
+   "test_commit": "eca0e7d"
   },
   {
    "id": "LE05-RENTAL",
