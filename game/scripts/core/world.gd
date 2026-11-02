@@ -566,6 +566,8 @@ func _update_npc(n: NPC, dt: float) -> void:
 			JudgmentLive.on_hungry(self, n)          # a missed meal with food to hand is a costly mistake (practical wisdom)
 		n.hp -= gm / 60.0 * float(GameData.b("starve_damage_per_hour"))
 		if n.hp <= 0.0:
+			if chapel != null:
+				chapel.on_starved(n)           # CHAPEL-PURPOSE instrumentation (read only): the household's and the chapel's position
 			kill(n, "starvation")
 			return
 	n.attack_cd = maxf(0.0, n.attack_cd - dt)

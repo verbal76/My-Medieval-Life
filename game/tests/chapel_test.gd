@@ -28,9 +28,13 @@ func _init() -> void:
 	test_wages()
 	test_alms()
 	test_food_alms()
-	test_store_spoils()
-	test_relief_first()
+	test_fair_share()
+	test_oldest_first()
+	test_emergency()
+	test_transfer()
 	test_relief_bought()
+	test_reserve_audit()
+	test_store_spoils()
 	test_plot_work()
 	test_player()
 	test_player_volunteers()
@@ -324,8 +328,9 @@ func test_alms() -> void:
 	check(c.coins == after, "the evening runs once a day")
 
 
-## Chapel food (2026-11-02): the store keeps a reserve for the relief it has lately given and gives the food above it to the
-## households shortest of food, the poorest first, in whole units from store to pantry; the wealthy get none; nothing is made.
+## CHAPEL-PURPOSE (owner 2026-11-02): the store keeps only its emergency reserve (recent emergency relief for
+## food_reserve_days); the food above it is set aside for the households under the 14-day hardship line (alms_line_days, the
+## coin alms' line), shared, the wealthy excluded; it is the chapel's until carried; nothing is made.
 func test_food_alms() -> void:
 	var w := new_world()
 	var c: Chapel = w.chapel
@@ -333,8 +338,8 @@ func test_food_alms() -> void:
 		w.minutes += 1440.0
 	w.brain.update_market()
 	var wp := NPCBrain.food_points("wheat")
-	var line := float(Chapel.cfg().goods_keep_days)
-	# two households emptied of food and coins: short of food; one rich in stores: excluded
+	var line := float(Chapel.cfg().alms_line_days)
+	check(line == 14.0, "the food alms use the owner's 14-day hardship line, the coin alms' line")
 	var short := []
 	for h in range(3, w.households.size()):
 		if short.size() >= 2:
@@ -354,51 +359,329 @@ func test_food_alms() -> void:
 			rich = h
 			break
 	(w.households[rich].pantry as Inventory).add("wheat", 3000)
+	# a household with 8 days of food: above the old 6-day line, under the 14-day one
+	var mid := -1
+	for h in range(3, w.households.size()):
+		if short.has(h) or h == rich or w.brain._members(h).is_empty() or w.brain._members(h).any(func(o): return Chapel.is_clergy(o)):
+			continue
+		mid = h
+		break
+	(w.households[mid].pantry as Inventory).items.clear()
+	for o: NPC in w.brain._members(mid):
+		o.inv.items.clear()
+		w.treasury += o.coins
+		o.coins = 0
+	(w.households[mid].pantry as Inventory).add("wheat", ceili(8.0 * w.brain.household_day_food(mid) / wp / 2.0) * 2)
+	var mid_days: float = w.brain.household_food_days(mid)
+	check(mid_days > 6.0 and mid_days < line, "a household with %.1f days of food: inside the hardship line" % mid_days)
+	var mid_wheat := (w.households[mid].pantry as Inventory).count("wheat")
+	c.offerings()
+	check((w.households[mid].pantry as Inventory).count("wheat") == mid_wheat, "a household inside the hardship line offers no wheat (it would be given back as alms)")
 	check(w.brain.household_food_days(short[0]) < line and w.brain.household_food_days(rich) >= line, "two households short of food, one with plenty")
-	# no recent relief: no reserve; a reserve follows the relief lately given
+	# the reserve: recent emergency relief for food_reserve_days
 	c.relief_week = 0.0
 	c.relief_hist = []
 	check(c.food_reserve() == 0, "with no relief given lately the food reserve is nothing")
 	c.relief_hist = [700.0]
-	check(c.food_reserve() == ceili(700.0 * float(Chapel.cfg().operating_reserve_days) / float(Chapel.cfg().offering_every_days)), "the reserve is the recent relief for operating_reserve_days")
+	check(c.food_reserve() == ceili(700.0 * float(Chapel.cfg().food_reserve_days) / float(Chapel.cfg().offering_every_days)), "the reserve is the recent emergency relief for food_reserve_days (%d)" % int(Chapel.cfg().food_reserve_days))
 	# a store at its reserve gives nothing
 	c.relief_hist = []
-	c.relief_week = 0.0
 	c.store.items.clear()
 	c.store.add("wheat", 10)
-	c.relief_week = 10.0 * wp * float(Chapel.cfg().offering_every_days) / float(Chapel.cfg().operating_reserve_days)
-	var items0: int = c.store.count("wheat") + _pantry_wheat(w)
-	check(is_zero_approx(c.food_alms()) and c.store.count("wheat") == 10, "a store at its reserve gives no food")
-	# a large store: the short households are given up to their shortfall, the rich nothing, the reserve kept
+	c.relief_week = 10.0 * wp * float(Chapel.cfg().offering_every_days) / float(Chapel.cfg().food_reserve_days)
+	check(is_zero_approx(c.food_alms()) and c.store.count("wheat") == 10 and c.parcels.is_empty(), "a store at its reserve gives no food")
+	check(int(w.stats.get("chapel_unhelped_alms_reserve", 0)) >= 2, "the households it could not help are counted, with the reason (the reserve)")
+	# a large store: the households under the line get food set aside, the rich nothing
 	c.relief_hist = []
 	c.relief_week = 0.0
 	c.store.add("wheat", 2000)
-	items0 = c.store.count("wheat") + _pantry_wheat(w)
+	var items0: int = c.store.count("wheat") + _pantry_wheat(w) + _parcel_wheat(c)
 	var rich0 := (w.households[rich].pantry as Inventory).count("wheat")
+	var pantry0 := _pantry_wheat(w)
 	var coins0 := w.total_coins()
 	var given := c.food_alms()
-	check(given > 0.0 and int(c.last_service.food_recipients) >= 2, "the surplus food goes to households short of food (%.0f points to %d)" % [given, int(c.last_service.food_recipients)])
-	for h in short:
-		check(w.brain.household_food_days(h) >= line - 0.01, "household %d is brought to %d days of food (%.1f)" % [h, int(line), w.brain.household_food_days(h)])
-	check((w.households[rich].pantry as Inventory).count("wheat") == rich0, "the household rich in stores gets nothing")
-	check(c.store.count("wheat") + _pantry_wheat(w) == items0 and w.total_coins() == coins0, "every unit moved from the store to a pantry: none made or lost, no coins moved")
-	check(int(w.stats.get("chapel_food_alms_wheat", 0)) == 2010 - c.store.count("wheat"), "counted")
+	check(given > 0.0 and int(c.last_service.food_recipients) >= 3, "the surplus is set aside for the households under the line (%.0f points to %d)" % [given, int(c.last_service.food_recipients)])
+	check(_pantry_wheat(w) == pantry0 and not c.parcels.is_empty(), "nothing appears in a pantry: the food waits in parcels, the chapel's, to be carried")
+	for h in short + [mid]:
+		check(c.projected_days(h) >= line - 0.01, "household %d has 14 days of food with what is on its way (%.1f)" % [h, c.projected_days(h)])
+	check(c.parcels_for(rich).is_empty() and (w.households[rich].pantry as Inventory).count("wheat") == rich0, "the household rich in stores gets nothing")
+	check(c.store.count("wheat") + _pantry_wheat(w) + _parcel_wheat(c) == items0 and w.total_coins() == coins0, "every unit moved from the store to a parcel: none made or lost, no coins moved")
+	check(int(w.stats.get("chapel_alms_wheat", 0)) == 2010 - c.store.count("wheat"), "counted")
+	var door := c.door_cell()
+	check(c.parcels.all(func(p): return int(p.at[0]) == door.x and int(p.at[1]) == door.y and not bool(p.urgent) and str(p.why) == "alms"), "the alms wait at the chapel's door")
 	var left := c.store.count("wheat")
 	c.food_alms()
-	var again := c.store.count("wheat")
-	check(again <= left, "a second call gives only to those still short")
-	# the service-day evening runs it after the coin alms, and the record survives a save
+	check(c.store.count("wheat") == left, "a second call gives nothing more: what is on its way counts")
+	# saved and loaded: the record and the parcels
 	c.relief_week = 123.0
+	c.note_missed(adult_of(w, short[0]))
 	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), d)
 	check(is_equal_approx(w2.chapel.relief_week, 123.0) and w2.chapel.relief_hist.size() == c.relief_hist.size(), "the relief record survives a save")
+	check(w2.chapel.parcels.size() == c.parcels.size() and _parcel_wheat(w2.chapel) == _parcel_wheat(c) and w2.chapel.next_parcel == c.next_parcel \
+		and w2.chapel.is_missing_meals(short[0]), "the parcels on their way and the missed meals survive a save")
 	var d2: Dictionary = d.duplicate(true)
-	(d2.chapel as Dictionary).erase("relief_week")
-	(d2.chapel as Dictionary).erase("relief_hist")
+	for k in ["relief_week", "relief_hist", "parcels", "next_parcel", "missed"]:
+		(d2.chapel as Dictionary).erase(k)
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), d2)
-	check(is_zero_approx(w3.chapel.relief_week) and w3.chapel.relief_hist.is_empty(), "a save from before it loads with no relief record")
+	check(is_zero_approx(w3.chapel.relief_week) and w3.chapel.relief_hist.is_empty() and w3.chapel.parcels.is_empty() and w3.chapel.missed.is_empty(), "a save from before it loads with no relief record and nothing on its way")
+
+
+func _parcel_wheat(c: Chapel) -> int:
+	var k := 0
+	for p in c.parcels:
+		k += (p.inv as Inventory).count("wheat")
+	return k
+
+
+## Households emptied of food and coins (index >= 3, no clergy, with an adult): `k` of them.
+func emptied(w: World, k: int) -> Array:
+	var out := []
+	for h in range(3, w.households.size()):
+		if out.size() >= k:
+			break
+		var ms: Array = w.brain._members(h)
+		if ms.any(func(o): return Chapel.is_clergy(o)) or not ms.any(func(o): return o.role == "adult"):
+			continue
+		(w.households[h].pantry as Inventory).items.clear()
+		for o: NPC in ms:
+			o.inv.items.clear()
+			w.treasury += o.coins
+			o.coins = 0
+		out.append(h)
+	return out
+
+
+## CHAPEL-PURPOSE: a surplus too small for all is shared, the fewest days first, not spent on the first household.
+func test_fair_share() -> void:
+	var w := new_world()
+	var c: Chapel = w.chapel
+	w.brain.update_market()
+	var hs := emptied(w, 3)
+	c.store.items.clear()
+	c.store.add("wheat", 6)                  # three pots for three households
+	c.relief_hist = []
+	c.relief_week = 0.0
+	var rows := []
+	for h in hs:
+		rows.append(c._row(h, c.projected_days(h), 0))
+	c._share_store(rows, float(Chapel.cfg().alms_line_days), 6.0 * NPCBrain.food_points("wheat"), false, "alms", false)
+	var got := hs.map(func(h): return _parcel_wheat_for(c, h))
+	check(got.all(func(k): return k == 2), "three households each get a pot, none all six (%s)" % str(got))
+
+
+func _parcel_wheat_for(c: Chapel, h: int) -> int:
+	var k := 0
+	for p in c.parcels_for(h):
+		k += (p.inv as Inventory).count("wheat")
+	return k
+
+
+## CHAPEL-PURPOSE: the food nearest to spoiling (the fastest-spoiling: the store records no ages) leaves first; grain last.
+func test_oldest_first() -> void:
+	var order := Chapel.give_order()
+	check(order.find("milk") < order.find("pottage") and order.find("pottage") < order.find("wheat") and order[-1] != "milk", "the give order puts the fastest-spoiling food first (%s)" % str(order.slice(0, 4)))
+	var keeps := true
+	for i in range(1, order.size()):
+		if Decay.rate(order[i]) > Decay.rate(order[i - 1]):
+			keeps = false
+	check(keeps, "the order follows the spoil rates")
+	var w := new_world()
+	var c: Chapel = w.chapel
+	w.brain.update_market()
+	var hs := emptied(w, 1)
+	c.store.items.clear()
+	c.store.add("wheat", 40)
+	c.store.add("milk", 2)
+	c.relief_hist = []
+	c.relief_week = 0.0
+	c.food_alms()
+	var milk := 0
+	for p in c.parcels_for(hs[0]):
+		milk += (p.inv as Inventory).count("milk")
+	check(c.store.count("milk") == 0 and milk == 2, "the milk is given before the grain")
+
+
+## CHAPEL-PURPOSE: the emergency round finds households in imminent hunger itself, every day (no one need ask), gives from
+## the whole store (its reserve included), those missing meals first, then children and elders; its parcels are carried
+## before the ordinary alms.
+func test_emergency() -> void:
+	var w := new_world()
+	var c: Chapel = w.chapel
+	w.brain.update_market()
+	var hs := emptied(w, 2)
+	var a: int = hs[0]
+	var b: int = hs[1]
+	c.note_missed(adult_of(w, b))
+	check(c.is_missing_meals(b) and not c.is_missing_meals(a), "a member of one household missed a meal for want of food")
+	c.store.items.clear()
+	c.coins = 0
+	var one_day := ceili(w.brain.household_day_food(b) / NPCBrain.food_points("wheat"))
+	one_day += one_day % 2
+	c.store.add("wheat", one_day)            # about one day for the household that missed meals
+	c.relief_hist = [100000.0]               # a large reserve: the emergency round uses it all the same
+	check(c.food_reserve() > 0, "a food reserve is kept")
+	c.relief_round()
+	check(_parcel_wheat_for(c, b) >= 2 and _parcel_wheat_for(c, b) >= _parcel_wheat_for(c, a), "the household missing meals is served first (%d, other %d)" % [_parcel_wheat_for(c, b), _parcel_wheat_for(c, a)])
+	check(int(w.stats.get("chapel_emergency_found", 0)) >= 2 and int(w.stats.get("chapel_asked", 0)) == 0, "found without anyone asking")
+	check(int(w.stats.get("chapel_unhelped_chapel_empty", 0)) >= 1, "a household still short with the chapel empty is counted as unhelped, with the reason")
+	check(c.parcels.all(func(p): return bool(p.urgent) and str(p.why) == "relief"), "emergency parcels are urgent")
+	# with enough for both: each brought to one day first, then toward relief_fill_days
+	var w2 := new_world()
+	var c2: Chapel = w2.chapel
+	w2.brain.update_market()
+	var hs2 := emptied(w2, 2)
+	c2.store.items.clear()
+	c2.coins = 0
+	c2.store.add("wheat", 400)
+	c2.relief_round()
+	for h in hs2:
+		check(c2.projected_days(h) >= float(GameData.b("relief_fill_days")) - 0.01, "household %d brought to %d days of food (%.1f)" % [h, int(GameData.b("relief_fill_days")), c2.projected_days(h)])
+	# an alms parcel and an emergency parcel: a clergy member carries the emergency first
+	c2.store.add("wheat", 200)
+	var alms := c2._parcel(hs2[0], c2.door_cell(), false, "alms")
+	w2.transfer(c2.store, alms.inv, "wheat", 2)
+	alms.day = w2.day() - 3                  # older, but not urgent
+	var cl: NPC = jobber(w2, "church_assistant")[0]
+	check(c2.plan_deliver(cl), "the church assistant takes up a parcel")
+	var picked := c2.parcel(int(cl.plan[1].args.p))
+	check(bool(picked.urgent), "the emergency parcel before the older alms")
+	# the evening: emergency relief before the coin alms
+	var w3 := new_world()
+	var c3: Chapel = w3.chapel
+	while not c3.is_service_day():
+		w3.minutes += 1440.0
+	w3.brain.update_market()
+	emptied(w3, 1)
+	c3.store.items.clear()
+	c3.coins = c3.operating_reserve() + 30
+	c3.evening_day = -1
+	var total0 := w3.total_coins()
+	c3.evening()
+	check(int(w3.stats.get("chapel_relief_bought", 0)) > 0 and w3.total_coins() == total0, "on the service day the emergency is bought for before the alms are given; coins conserved")
+
+
+## CHAPEL-PURPOSE: legitimate transfer. The food is the chapel's until a person carries it: a clergy member walks to it,
+## takes up a load (manor_jobs.haul_max units), walks to the house and puts it in the pantry; a member who comes to the
+## chapel takes home what waits there. The manor's relief does not give what the chapel is bringing.
+func test_transfer() -> void:
+	var w := new_world()
+	var c: Chapel = w.chapel
+	w.brain.update_market()
+	var hs := emptied(w, 1)
+	var h: int = hs[0]
+	c.store.items.clear()
+	c.coins = 0
+	c.store.add("wheat", 400)
+	var census0 := _census_wheat(w)
+	c.relief_round()
+	var pantry := w.households[h].pantry as Inventory
+	check(pantry.count("wheat") == 0 and _parcel_wheat_for(c, h) > 0, "set aside, not yet in the pantry")
+	check(_census_wheat(w) == census0, "the census counts the parcels as the chapel's: nothing made or lost")
+	# the manor sees the food on its way
+	w.treasury = 5000
+	var obligations: float = w.brain.daily_obligations()
+	var g0 := int(w.stats.get("gov_relief_grain", 0)) + int(w.stats.get("gov_relief_bought", 0))
+	w.brain._relief(obligations, obligations * float(GameData.b("treasury_reserve_days")))
+	check(w.manor_work.pending_for(h) == 0 and int(w.stats.get("gov_relief_grain", 0)) + int(w.stats.get("gov_relief_bought", 0)) == g0, "the manor's relief counts the chapel's food on its way and sends nothing")
+	# a clergy member carries it
+	var cl: NPC = jobber(w, "preacher")[0]
+	var want := _parcel_wheat_for(c, h)
+	check(c.plan_deliver(cl) and cl.plan.size() == 4 and cl.plan[1].act == "church_pickup" and cl.plan[3].act == "church_deliver", "the preacher plans the walk: to the food, take it up, to the house, put it in")
+	check(cl.plan[2].to == c._dest(h), "to the household's door")
+	var pid := int(cl.plan[1].args.p)
+	check(not c.plan_deliver(jobber(w, "church_assistant")[0]) or int(jobber(w, "church_assistant")[0].plan[1].args.p) != pid, "nobody else takes the same parcel")
+	check(w.brain.act(cl, "church_pickup", {"p": pid}), "taken up")
+	var load := (c.parcel(pid).inv as Inventory).total()
+	check(load <= int(GameData.b("manor_jobs").haul_max), "a load of at most %d units (%d)" % [int(GameData.b("manor_jobs").haul_max), load])
+	check(w.brain.act(cl, "church_deliver", {"p": pid}) and pantry.count("wheat") == load and c.parcel(pid).is_empty(), "put into the pantry on arrival")
+	check(_census_wheat(w) == census0, "still nothing made or lost")
+	# a carrier whose plan is given up sets the load down where they stand; another may take it up there
+	var cl2: NPC = jobber(w, "church_assistant")[0]
+	if c.plan_deliver(cl2):
+		var p2 := int(cl2.plan[1].args.p)
+		w.brain.act(cl2, "church_pickup", {"p": p2})
+		cl2.plan.clear()
+		c.release_stale()
+		var pp := c.parcel(p2)
+		check(int(pp.carrier) == -1 and not bool(pp.held) and int(pp.at[0]) == cl2.cell().x and int(pp.at[1]) == cl2.cell().y, "an abandoned load lies where its carrier stood, for another to carry")
+	# a household member fetching: they come for what is waiting at the door and take it home
+	var w2 := new_world()
+	var c2: Chapel = w2.chapel
+	w2.brain.update_market()
+	var h2: int = emptied(w2, 1)[0]
+	var n := adult_of(w2, h2)
+	c2.store.items.clear()
+	c2.coins = 0
+	c2.store.add("wheat", 60)
+	check(c2.plan_ask(n) and n.plan[1].act == "church_ask", "a member of a household short of food goes to the chapel")
+	n.plan.clear()
+	check(w2.brain.act(n, "church_ask", {}), "asking is answered")
+	var pantry2 := w2.households[h2].pantry as Inventory
+	check(pantry2.count("wheat") == 0 and n.plan.size() >= 2 and n.plan[0].to == c2._dest(h2) and n.plan[1].act == "church_deliver", "they carry it home")
+	for s in n.plan.duplicate():
+		if str(s.get("k", "")) == "do":
+			w2.brain.act(n, s.act, s.args)
+	check(pantry2.count("wheat") > 0 and w2.brain.household_food_days(h2) >= float(GameData.b("relief_trigger_days")), "and put it in the pantry (%.1f days)" % w2.brain.household_food_days(h2))
+	check(int(w2.stats.get("chapel_relieved", 0)) == 1 and int(w2.stats.get("chapel_asked", 0)) == 1, "counted as church relief")
+	# an empty church gives nothing, and says so by doing nothing
+	var w3 := new_world()
+	var h3: int = emptied(w3, 1)[0]
+	w3.chapel.store.items.clear()
+	w3.chapel.coins = 0
+	check(not w3.chapel.can_give() and not w3.chapel.plan_ask(adult_of(w3, h3)), "a church with nothing does not send anyone to ask")
+
+
+func _census_wheat(w: World) -> int:
+	var g: Dictionary = SettlementHoldings.holders(w)
+	var k := 0
+	for part in g:
+		if g[part] is Dictionary:
+			k += int((g[part] as Dictionary).get("wheat", 0))
+	return k
+
+
+## CHAPEL-PURPOSE: with no food in store the emergency round buys with the fund, paid to the sellers; the food is the
+## chapel's where it was bought, to be carried from there.
+func test_relief_bought() -> void:
+	var w := new_world()
+	var c: Chapel = w.chapel
+	var h: int = emptied(w, 1)[0]
+	w.brain.update_market()
+	c.store.items.clear()
+	c.coins = 200
+	var total0 := w.total_coins()
+	c.relief_round()
+	check(c.coins < 200 and c.pending_points(h) > 0.0, "with no food in store the church buys food with its coins (%d spent)" % (200 - c.coins))
+	check(w.total_coins() == total0, "the coins went to the sellers: none made or lost")
+	check(int(w.stats.get("chapel_relief_bought", 0)) == 200 - c.coins, "counted")
+	var door := c.door_cell()
+	check(c.parcels.any(func(p): return int(p.at[0]) != door.x or int(p.at[1]) != door.y), "bought food lies at the seller's, to be carried from there")
+
+
+## CHAPEL-PURPOSE section 2, the reserve audit: the fund keeps the clergy's wages for operating_reserve_days, wages owed and
+## its recent relief and seed spending; nothing for undesigned projects. Section 5-6: the death record reads and changes nothing.
+func test_reserve_audit() -> void:
+	var w := new_world()
+	var c: Chapel = w.chapel
+	var wages := 0
+	for o: NPC in w.npcs:
+		if Chapel.is_clergy(o):
+			wages += c.wage_of(o.job)
+	c.spent = []
+	c.owed = {}
+	check(c.operating_reserve() == wages * int(Chapel.cfg().operating_reserve_days), "the reserve is wages only when nothing is owed or spent (%d)" % c.operating_reserve())
+	check(c.operating_reserve() < 200, "a modest reserve: %d coins" % c.operating_reserve())
+	# the death record changes nothing
+	var h: int = emptied(w, 1)[0]
+	var n := adult_of(w, h)
+	var before := JSON.stringify(w.to_dict())
+	var rng0: int = w.rng.state
+	c.on_starved(n)
+	check(JSON.stringify(w.to_dict()) == before and w.rng.state == rng0 and c.death_log.size() == 1, "the starvation record reads the world and changes nothing")
+	check(c.death_log[0].has("chapel_points") and c.death_log[0].has("hh_coins") and c.death_log[0].has("parcels_pending"), "it records the household's and the chapel's position")
 
 
 func _pantry_wheat(w: World) -> int:
@@ -417,55 +700,6 @@ func test_store_spoils() -> void:
 	Decay.dawn(w)
 	var lost := before - c.store.count("wheat")
 	check(lost >= floori(5000 * float((GameData.b("decay").spoil as Dictionary).wheat)) and lost > 0 and int(w.stats.get("chapel_spoiled", 0)) == lost, "the chapel's grain spoils at the store rate (%d of 5000)" % lost)
-
-
-func test_relief_first() -> void:
-	var w := new_world()
-	var c: Chapel = w.chapel
-	var h := hungry_household(w)
-	var n := adult_of(w, h)
-	w.brain.update_market()
-	check(w.brain.household_food_days(h) < float(GameData.b("relief_trigger_days")), "the household is short of food")
-	c.store.add("wheat", 60)
-	var planned := c.plan_ask(n)
-	check(planned and n.plan.size() == 2 and n.plan[1].act == "church_ask", "a member of a household in need goes to the chapel to ask")
-	check(not c.plan_ask(n), "once a day for the household")
-	var wheat0 := c.store.count("wheat")
-	check(w.brain.act(n, "church_ask", {}), "asking is answered")
-	var days: float = w.brain.household_food_days(h)
-	check(days >= float(GameData.b("relief_trigger_days")) and c.store.count("wheat") < wheat0, "the church fills the pantry from its store (%.1f days)" % days)
-	check(int(w.stats.get("chapel_relieved", 0)) == 1, "counted as church relief")
-	w.treasury = 5000
-	var obligations: float = w.brain.daily_obligations()
-	var given0 := int(w.stats.get("gov_relief_grain", 0)) + int(w.stats.get("gov_relief_bought", 0))
-	var helped: int = w.brain._relief(obligations, obligations * float(GameData.b("treasury_reserve_days")))
-	var given1 := int(w.stats.get("gov_relief_grain", 0)) + int(w.stats.get("gov_relief_bought", 0))
-	var hh_pending: int = w.manor_work.pending_for(h)
-	check(hh_pending == 0 and given1 >= given0, "the manor's relief then finds the household fed: it sent it nothing (pending %d)" % hh_pending)
-	# an empty church gives nothing, and says so by doing nothing
-	var w2 := new_world()
-	var h3 := hungry_household(w2)
-	var n3 := adult_of(w2, h3)
-	w2.chapel.store.items.clear()
-	w2.chapel.coins = 0
-	check(not w2.chapel.can_give() and not w2.chapel.plan_ask(n3), "a church with nothing does not send anyone to ask")
-
-
-func test_relief_bought() -> void:
-	var w := new_world()
-	var c: Chapel = w.chapel
-	var h := hungry_household(w)
-	var n := adult_of(w, h)
-	w.brain.update_market()
-	c.store.items.clear()
-	c.coins = 200
-	var total0 := w.total_coins()
-	var pantry0: float = NPCBrain.store_points([w.households[h].pantry])
-	c.ask(n)
-	var pantry1: float = NPCBrain.store_points([w.households[h].pantry])
-	check(c.coins < 200 and pantry1 > pantry0, "with no food in store the church buys food with its coins (%d spent)" % (200 - c.coins))
-	check(w.total_coins() == total0, "the coins went to the sellers: none made or lost")
-	check(int(w.stats.get("chapel_relief_bought", 0)) == 200 - c.coins, "counted")
 
 
 func test_plot_work() -> void:

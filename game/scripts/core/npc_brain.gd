@@ -1006,6 +1006,8 @@ func _plan_evening(n: NPC, h: float) -> void:
 		return
 	if _plan_buy_seed(n):
 		return
+	if w.chapel.plan_deliver(n):               # CHAPEL-PURPOSE: the clergy and volunteers carry the chapel's food to those in need
+		return
 	if w.chapel.plan_ask(n):                   # DVW-B3-CHAPEL: a household short of food asks the church first
 		return
 	if w.farm_plots.plan_work(n):              # FARM-04: the family's farmland, in the time the day leaves
@@ -1140,6 +1142,7 @@ func _plan_eat(n: NPC) -> bool:
 		return false                       # FAMILY-01: leaves the food to those in their care, down to the survival floor
 	var why := "no_money" if priced else "no_food_for_sale"
 	w.stat("missed_meal_" + why)
+	w.chapel.note_missed(n)                # CHAPEL-PURPOSE: the chapel's emergency round puts this household first
 	if track_misses:
 		var best := _richest_in_household(n) if n.household >= 0 else n
 		miss_log.append([w.day(), snappedf(w.hour(), 0.1), n.job if n.job != "" else n.role, why, best.coins if best else n.coins, n.household, n.coins, n.hunger, w.households[n.household].pantry.items.duplicate() if n.household >= 0 else {}, n.doing])
@@ -3139,8 +3142,12 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return w.employment.act_deliver(n)
 		"helper_take", "helper_buy", "helper_own", "helper_deliver":
 			return w.construction.act(n, what, a)
-		"church_ask":                           # DVW-B3-CHAPEL: asking the church for food
+		"church_ask":                           # DVW-B3-CHAPEL: asking the church for food (CHAPEL-PURPOSE: or fetching what it set aside)
 			return w.chapel.ask(n)
+		"church_pickup":                        # CHAPEL-PURPOSE: the chapel's food taken up where it lies
+			return w.chapel.pickup(n, a)
+		"church_deliver":                       # CHAPEL-PURPOSE: and put into the household's pantry
+			return w.chapel.deliver(n, a)
 		"fp_work", "fp_fence":                  # FARM-02..04: work on the family's farmland (FarmPlots)
 			return w.farm_plots.act(n, what, a)
 	return true
@@ -3792,7 +3799,9 @@ func _relief(obligations: float, reserve: float) -> int:
 	var order := []
 	for h in w.households.size():
 		if not _members(h).is_empty():
-			var d := household_food_days(h)
+			# CHAPEL-PURPOSE: the chapel's food on its way to the household (set aside today or yesterday) is counted, so the
+			# manor does not give what the church is already bringing
+			var d := household_food_days(h) + w.chapel.pending_points(h, w.day() - 1) / maxf(1.0, household_day_food(h))
 			if d < float(GameData.b("relief_trigger_days")):
 				order.append([d, h])
 	order.sort_custom(func(x, y): return x[0] < y[0] or (x[0] == y[0] and x[1] < y[1]))

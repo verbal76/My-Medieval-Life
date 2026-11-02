@@ -30,6 +30,9 @@ static func holders(w: World) -> Dictionary:
 	add.call(g.granary, w.granary)
 	if w.chapel != null:
 		add.call(g.chapel, w.chapel.store)           # DVW-B3-CHAPEL: food offered and grown, and the plot's seed
+		var pg: Dictionary = w.chapel.parcel_goods()   # CHAPEL-PURPOSE: its food on the way to households
+		for id in pg:
+			g.chapel[id] = int(g.chapel.get(id, 0)) + int(pg[id])
 	for pl: PlayerState in w.player_list():        # every player character (one in single player)
 		add.call(g.player, pl.inv)
 		add.call(g.player, pl.chest)
