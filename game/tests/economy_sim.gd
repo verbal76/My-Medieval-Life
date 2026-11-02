@@ -136,7 +136,10 @@ func _init() -> void:
 		w.setup(VillageMap.load_default(), seed)
 	else:
 		w.load_dict(VillageMap.load_default(), fr_resumed.world)
+		var on_load: Dictionary = w.stats.duplicate()   # what happened in the load itself (a migration's grant, plants lost): kept on top
 		w.stats = fr_resumed.world_stats           # the game's running counters (World.stats: diagnostics, not saved), which the ledgers read
+		for k in on_load:
+			w.stats[k] = float(w.stats.get(k, 0.0)) + float(on_load[k])
 		print("resumed: day %d from %s (the world's own save; movement in progress is not saved, so the run goes on from the save, not exactly as an unbroken run)" % [int(fr_resumed.day), str(arg.call("--resume", ""))])
 	var parts :=[w.brain, w.property, w.business, w.construction, w.fauna, w.farm, w.quests, w.manor_work, w.carts, w.relations]
 	if parts.has(null):                   # a game script failed to compile: stop with an error rather than run on broken
