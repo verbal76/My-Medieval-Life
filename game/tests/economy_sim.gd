@@ -80,6 +80,10 @@ var job_whys := {}             # reason key -> count
 var no_work_found := 0
 var ore_start := {}            # ore -> its deposits' amount at the start
 var npcs_at_start := 0         # villager records at the start (a higher id was born or arrived during the run)
+# FLIGHT-REC-01 (owner directive 2026-11-02, flight recorder campaigns; docs/release/flight_recorder/README.md): the run's stop
+# reason, the extinction watch and the segment save/resume of a chained GitHub run. See the "flight recorder" functions at the end.
+var fr_stop := ""              # "" while running; then completed, segment, extinct, fatal
+var fr_extinct_since := -1     # the first day of the current stretch with no living villager and no open succession post
 
 func _init() -> void:
 	var args := OS.get_cmdline_user_args()
@@ -123,8 +127,18 @@ func _init() -> void:
 	if "--civic" in args:                 # P21-01: the civic records on (they only observe; the fingerprint must not change)
 		CivicRecords.override = 1
 	w = World.new()
-	w.setup(VillageMap.load_default(), seed)
-	var parts := [w.brain, w.property, w.business, w.construction, w.fauna, w.farm, w.quests, w.manor_work, w.carts, w.relations]
+	var fr_resumed := _fr_read(str(arg.call("--resume", "")), seed)   # FLIGHT-REC-01: {} unless --resume STATE (a chained segment)
+	if fr_resumed.has("error"):
+		printerr("economy_sim: --resume: " + str(fr_resumed.error))
+		quit(2)
+		return
+	if fr_resumed.is_empty():
+		w.setup(VillageMap.load_default(), seed)
+	else:
+		w.load_dict(VillageMap.load_default(), fr_resumed.world)
+		w.stats = fr_resumed.world_stats           # the game's running counters (World.stats: diagnostics, not saved), which the ledgers read
+		print("resumed: day %d from %s (the world's own save; movement in progress is not saved, so the run goes on from the save, not exactly as an unbroken run)" % [int(fr_resumed.day), str(arg.call("--resume", ""))])
+	var parts :=[w.brain, w.property, w.business, w.construction, w.fauna, w.farm, w.quests, w.manor_work, w.carts, w.relations]
 	if parts.has(null):                   # a game script failed to compile: stop with an error rather than run on broken
 		printerr("economy_sim: the world did not set up (a script failed to load); see the errors above")
 		quit(2)
@@ -135,6 +149,8 @@ func _init() -> void:
 	if "--record" in args:                # REC-19: the flight recorder writes its archive under DIR (off by default; the run is otherwise identical)
 		WorldRecorder.attach(w, {"root": str(arg.call("--record", ""))})
 		print("recorder: recording to ", w.recorder.dir)
+		if not fr_resumed.is_empty():
+			w.recorder.world_loaded(fr_resumed.world)     # FLIGHT-REC-01: the segment's session notes the save it went on from
 	print("CONFIG " + JSON.stringify(_config_line()))
 	w.event.connect(_on_event)
 	w.brain.track_misses = true
@@ -151,9 +167,16 @@ func _init() -> void:
 	npcs_at_start = w.npcs.size()
 	for dp in w.deposits:
 		ore_start[str(dp.ore)] = int(ore_start.get(str(dp.ore), 0)) + int(dp.amount)
-	var samples: Array = [_sample(start)]
-	_herd_day(0)
-	_print_sample(samples[0])
+	var samples: Array = []
+	var d0 := 0                                    # FLIGHT-REC-01: the first day this process steps (a resumed segment's saved day)
+	if fr_resumed.is_empty():
+		samples.append(_sample(start))
+		_herd_day(0)
+		_print_sample(samples[0])
+	else:
+		d0 = _fr_restore(fr_resumed)       # the harness's own records (ledger start, samples, counts) as the segment saved them
+		start = fr_resumed.harness_start
+		samples = fr_resumed.samples
 	var per_day := int(1440.0 / float(GameData.b("game_minutes_per_second")) / STEP)
 	var hp_before := w.player.hp
 	trader_diag = "--trader-diag" in args
@@ -165,7 +188,9 @@ func _init() -> void:
 	var update_us := 0
 	var harness_us := 0
 	var reached := days               # the day the run got to: `days`, or the checkpoint where a ledger broke
-	for d in days:
+	var fr_save_at := int(arg.call("--save-at", "0"))     # FLIGHT-REC-01: end this segment at this day, saving the world to --state
+	var fr_extinct_days := int(arg.call("--extinct-days", "30"))
+	for d in range(d0, days):
 		if scenario != "" and d == scenario_day:
 			_intervene(scenario)
 		for i in per_day:
@@ -245,6 +270,24 @@ func _init() -> void:
 				print("FATAL day %d seed %d: currency leak %d; items %s; deposits %s; animals %s" % [reached, seed, int(bad.currency.leak),
 					JSON.stringify(bad.ledger.items), JSON.stringify(bad.ledger.deposits), JSON.stringify(bad.ledger.animals)])
 				break
+		# FLIGHT-REC-01: the two other ends of a run. Extinction (no villager alive and no way back for fr_extinct_days) and the
+		# end of a chained segment (the world saved for the next job). Starvation, hardship and decline never stop the run (WDR-022).
+		var fr_end := ""
+		if fr_extinct_days > 0 and _fr_extinct(d + 1, fr_extinct_days):
+			fr_end = "extinct"
+		elif fr_save_at > 0 and d + 1 == fr_save_at and d + 1 < days:
+			fr_end = "segment"
+		if fr_end != "":
+			reached = d + 1
+			fr_stop = fr_end
+			if (d + 1) % every != 0:
+				samples.append(_sample(start))     # the stop day's own checkpoint, so the ledgers are checked where the run ends
+				_print_sample(samples[-1])
+			if fr_end == "segment":
+				_fr_write(str(arg.call("--state", "")), seed, d + 1, start, samples)
+			break
+	if fr_stop == "":
+		fr_stop = "completed" if reached == days else "fatal"
 	var secs := (Time.get_ticks_msec() - t0) / 1000.0
 	if profile:
 		_print_profile(update_us, harness_us, secs, days)
@@ -302,6 +345,7 @@ func _init() -> void:
 		"world_bytes": JSON.stringify(w.to_dict()).length(), "static_mb": snappedf(OS.get_static_memory_usage() / 1048576.0, 0.1),
 		"peak_static_mb": snappedf(OS.get_static_memory_peak_usage() / 1048576.0, 0.1)}))
 	var ok: bool = int(final.currency.leak) == 0 and (final.ledger.items as Dictionary).is_empty() and econ_roundtrip_bad == 0
+	ok = ok and fr_stop != "fatal"     # a FATAL stop (the settlements' books too, which the ledgers above do not cover) fails the run
 	# LE-05: repairs (normal play) and rentals (economy on), read from the world's counters (diagnostics; they decide nothing)
 	var le05 := {}
 	for k in w.stats.keys():
@@ -342,6 +386,7 @@ func _init() -> void:
 	w.dispose()
 	if rec != null:
 		print("recorder: %s; rows %s; chunks %d; %d bytes; peak buffer %d; early flushes %d" % [rec.completeness(), JSON.stringify(rec.counts), rec.chunks, rec.bytes, rec.peak_buffer, rec.early_flushes])
+	_fr_status(str(arg.call("--status", "")), seed, days, d0, reached, final, ok, secs, args, rec)
 	quit(0 if ok else 1)
 
 
@@ -2362,3 +2407,103 @@ func _trader_diag(day: int) -> void:
 				"members": int(h.adults) + int(h.children), "pantry_days": pts / maxf(1.0, s._need_pts(h)), "need_pts": s._need_pts(h)}))
 	var t: Dictionary = r.call("tx_in_transit") if r.has_method("tx_in_transit") else {"coins": 0, "goods": {}}
 	print("TRANSIT %s" % JSON.stringify({"d": day, "coins": int(t.coins), "goods": t.goods, "coin_sources": w.coin_sources}))
+
+
+# ---------------------------------------------------------------- flight recorder (FLIGHT-REC-01) ----------------------
+# Owner directive 2026-11-02 (docs/release/flight_recorder/README.md). Read only, except the segment save (World.to_dict, the
+# game's own save, which also tells any queued gossip first, as every save does).
+const FR_STATE := "mml-flight-state/1"
+const FR_SKIP := ["w", "bandits", "fr_stop"]      # the world (saved on its own) and the read-only bandit diagnostics are not harness state
+
+
+## Extinction: no villager alive (bandits and the inert player are not villagers) and no open succession post for `limit` days in a
+## row. The game's repopulation paths are births (need living villagers), the succession newcomer (an open post brings one within
+## newcomer_max_days, so an open post keeps the run going) and migration in (MIGRATE-18: on caravan days, each settlement on the road
+## at least every 8 days, when the village has a post or food and a home to offer). Any arrival ends the stretch; `limit` days with
+## nobody coming (default 30: newcomer_max_days 10 and about four visits of the farthest settlement) is the stop.
+func _fr_extinct(day: int, limit: int) -> bool:
+	if not _villagers().is_empty() or not w.vacancies.is_empty():
+		if fr_extinct_since >= 0:
+			print("EXTINCT_WATCH day %d: the village has people again (%d alive, %d open posts)" % [day, _villagers().size(), w.vacancies.size()])
+		fr_extinct_since = -1
+		return false
+	if fr_extinct_since < 0:
+		fr_extinct_since = day
+		print("EXTINCT_WATCH day %d: no villager alive and no open succession post; the run stops after %d such days unless someone arrives" % [day, limit])
+	if day - fr_extinct_since >= limit:
+		print("EXTINCT day %d seed %d: no villager alive since day %d and nobody arrived in %d days (succession newcomers, migration, births): the run stops" % [
+			day, w.seed, fr_extinct_since, limit])
+		return true
+	return false
+
+
+## The end of a chained segment: the world's own save (JSON, as SaveStore writes it), the world's running counters (World.stats, which
+## a save does not hold and the ledgers read) and the harness's records (ledger start, samples, counts: every script variable but the
+## world), gzip-compressed, for --resume in the next job.
+func _fr_write(path: String, seed: int, day: int, start: Dictionary, samples: Array) -> void:
+	if path == "":
+		printerr("economy_sim: --save-at needs --state PATH")
+		return
+	var wd: Dictionary = w.to_dict()
+	if w.recorder != null:
+		w.recorder.saved(wd)
+	var h := {}
+	for p in get_property_list():
+		if (int(p.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE) and not (str(p.name) in FR_SKIP) and typeof(get(p.name)) != TYPE_OBJECT:
+			h[p.name] = get(p.name)
+	var ws := JSON.stringify(wd)
+	var f := FileAccess.open_compressed(path, FileAccess.WRITE, FileAccess.COMPRESSION_GZIP)
+	if f == null:
+		printerr("economy_sim: cannot write the state file %s" % path)
+		return
+	f.store_string(var_to_str({"format": FR_STATE, "seed": seed, "day": day, "commit": OS.get_environment("MML_COMMIT"), "harness": h,
+		"harness_start": start, "samples": samples, "world": ws, "world_stats": w.stats}))
+	f.close()
+	print("SEGMENT day %d seed %d: the world (%d bytes of save) and the harness saved to %s; fingerprint %s" % [day, seed, ws.length(), path, _fingerprint()])
+
+
+## --resume STATE: the saved state ({} without the switch; {"error": ...} when it cannot be used).
+func _fr_read(path: String, seed: int) -> Dictionary:
+	if path == "":
+		return {}
+	var f := FileAccess.open_compressed(path, FileAccess.READ, FileAccess.COMPRESSION_GZIP)
+	if f == null:
+		return {"error": "cannot open %s" % path}
+	var d = str_to_var(f.get_as_text())
+	f.close()
+	if not (d is Dictionary) or str(d.get("format", "")) != FR_STATE:
+		return {"error": "%s is not a flight recorder state file (%s)" % [path, FR_STATE]}
+	if int(d.seed) != seed:
+		return {"error": "the state is seed %d, the run seed %d" % [int(d.seed), seed]}
+	var wd = JSON.parse_string(str(d.world))
+	if not (wd is Dictionary):
+		return {"error": "the world save in %s does not parse" % path}
+	d.world = wd
+	return d
+
+
+## The harness's records as the segment saved them. Returns the day to go on from.
+func _fr_restore(d: Dictionary) -> int:
+	for k in d.harness:
+		set(k, d.harness[k])
+	fr_stop = ""
+	return int(d.day)
+
+
+## --status PATH: the machine-readable end of every run (the workflow adds crash and timeout itself when this file is missing).
+func _fr_status(path: String, seed: int, days: int, d0: int, reached: int, final: Dictionary, ok: bool, secs: float, args: PackedStringArray, rec) -> void:
+	if path == "":
+		return
+	var people: Dictionary = final.get("people", {})
+	var st := {"format": "mml-flight-status/1", "seed": seed, "days_requested": days, "start_day": d0, "days_reached": reached,
+		"stop_reason": fr_stop, "ok": ok, "commit": OS.get_environment("MML_COMMIT"), "args": " ".join(args), "sample_day": final.get("day"),
+		"alive": people.get("alive"), "households": people.get("households"), "births": people.get("births"), "deaths": people.get("deaths"),
+		"currency_leak": (final.get("currency", {}) as Dictionary).get("leak"), "item_leaks": (final.get("ledger", {}) as Dictionary).get("items"),
+		"regions_audit": str((final.get("regions", {}) as Dictionary).get("audit", "")), "econ_roundtrip_bad": econ_roundtrip_bad,
+		"extinct_since": fr_extinct_since, "fingerprint": final.get("fingerprint"), "wall_seconds": snappedf(secs, 0.1),
+		"recorder": {} if rec == null else {"dir": str(rec.dir), "completeness": str(rec.completeness()), "bytes": int(rec.bytes), "chunks": int(rec.chunks)}}
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	if f != null:
+		f.store_string(JSON.stringify(st, " ", true))
+		f.close()
+	print("STATUS " + JSON.stringify(st))

@@ -1,0 +1,215 @@
+name: Flight recorder (one seed)
+
+# FLIGHT-REC-01 (owner directive 2026-11-02; docs/release/flight_recorder/README.md): one seed's run, called by
+# flight-recorder-campaign.yml once per seed, so each seed goes through its segments and its analysis on its own, whatever happens to the other seed.
+# A recorded year does not fit one six-hour job, so the run is chained: each segment job goes on from the world the previous one
+# saved (the game's own save, World.to_dict / load_dict) and saves it again at its last day. At most four segments.
+# Then the analysis job checks and searches the whole archive (tools/recorder_archive.py, tools/flight_analyse.py), builds the
+# workbook (game/tests/flight_workbook.gd, tools/check_workbook.py --flight) and uploads the results, whatever happened before.
+
+on:
+  workflow_call:
+    inputs:
+      seed: {type: string, required: true}
+      days: {type: string, required: true}
+      every: {type: string, required: true}
+      sim_args: {type: string, required: false, default: ""}
+      record: {type: boolean, required: true}
+      segment_days: {type: string, required: true}
+      godot_version: {type: string, required: true}
+
+permissions:
+  contents: read          # nothing more: a called workflow may not ask for more than its caller grants (long-sims grants contents: read)
+
+jobs:
+  seg1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    outputs:
+      next: ${{ steps.seg.outputs.next }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: seg
+        uses: ./.github/actions/flight-segment
+        with: {seed: "${{ inputs.seed }}", segment: "1", segment_days: "${{ inputs.segment_days }}", days: "${{ inputs.days }}", every: "${{ inputs.every }}",
+               sim_args: "${{ inputs.sim_args }}", record: "${{ inputs.record }}", godot_version: "${{ inputs.godot_version }}"}
+      - name: Fail on a defect (after everything was kept)
+        if: steps.seg.outputs.failed == 'true'
+        run: echo "::error::seed ${{ inputs.seed }} segment 1 stopped with ${{ steps.seg.outputs.stop_reason }}; see its status and log" && exit 1
+
+  seg2:
+    needs: seg1
+    if: always() && needs.seg1.outputs.next == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    outputs:
+      next: ${{ steps.seg.outputs.next }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: seg
+        uses: ./.github/actions/flight-segment
+        with: {seed: "${{ inputs.seed }}", segment: "2", segment_days: "${{ inputs.segment_days }}", days: "${{ inputs.days }}", every: "${{ inputs.every }}",
+               sim_args: "${{ inputs.sim_args }}", record: "${{ inputs.record }}", godot_version: "${{ inputs.godot_version }}"}
+      - name: Fail on a defect (after everything was kept)
+        if: steps.seg.outputs.failed == 'true'
+        run: echo "::error::seed ${{ inputs.seed }} segment 2 stopped with ${{ steps.seg.outputs.stop_reason }}; see its status and log" && exit 1
+
+  seg3:
+    needs: seg2
+    if: always() && needs.seg2.outputs.next == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    outputs:
+      next: ${{ steps.seg.outputs.next }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: seg
+        uses: ./.github/actions/flight-segment
+        with: {seed: "${{ inputs.seed }}", segment: "3", segment_days: "${{ inputs.segment_days }}", days: "${{ inputs.days }}", every: "${{ inputs.every }}",
+               sim_args: "${{ inputs.sim_args }}", record: "${{ inputs.record }}", godot_version: "${{ inputs.godot_version }}"}
+      - name: Fail on a defect (after everything was kept)
+        if: steps.seg.outputs.failed == 'true'
+        run: echo "::error::seed ${{ inputs.seed }} segment 3 stopped with ${{ steps.seg.outputs.stop_reason }}; see its status and log" && exit 1
+
+  seg4:
+    needs: seg3
+    if: always() && needs.seg3.outputs.next == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    outputs:
+      next: ${{ steps.seg.outputs.next }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: seg
+        uses: ./.github/actions/flight-segment
+        with: {seed: "${{ inputs.seed }}", segment: "4", segment_days: "${{ inputs.segment_days }}", days: "${{ inputs.days }}", every: "${{ inputs.every }}",
+               sim_args: "${{ inputs.sim_args }}", record: "${{ inputs.record }}", godot_version: "${{ inputs.godot_version }}"}
+      - name: Fail on a defect (after everything was kept)
+        if: steps.seg.outputs.failed == 'true'
+        run: echo "::error::seed ${{ inputs.seed }} segment 4 stopped with ${{ steps.seg.outputs.stop_reason }}; see its status and log" && exit 1
+
+  analyse:
+    needs: [seg1, seg2, seg3, seg4]
+    if: always() && needs.seg1.result != 'skipped' && needs.seg1.result != 'cancelled'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch every segment's archive, log and status
+        uses: actions/download-artifact@v4
+        with:
+          pattern: fr-seed${{ inputs.seed }}-seg*
+          path: ${{ runner.temp }}/dl
+
+      - name: Lay the segments out
+        env:
+          SEED: ${{ inputs.seed }}
+        run: |
+          run="$RUNNER_TEMP/run"
+          for d in "$RUNNER_TEMP"/dl/fr-seed$SEED-seg*-run; do
+            [ -d "$d" ] || continue
+            n=$(basename "$d" | sed -E 's/.*-seg([0-9]+)-run/\1/')
+            mkdir -p "$run/seg$n" && cp -r "$d"/. "$run/seg$n/"
+            [ -f "$run/seg$n/sim.log.gz" ] && gunzip -f "$run/seg$n/sim.log.gz"
+          done
+          for d in "$RUNNER_TEMP"/dl/fr-seed$SEED-seg*-archive; do
+            [ -d "$d" ] || continue
+            n=$(basename "$d" | sed -E 's/.*-seg([0-9]+)-archive/\1/')
+            mkdir -p "$run/seg$n/rec" && mv "$d"/* "$run/seg$n/rec/" 2>/dev/null || true
+          done
+          rm -rf "$RUNNER_TEMP/dl"
+          du -sh "$run"/* || true
+
+      - name: Analyse the whole archive
+        id: analyse
+        run: |
+          out="$RUNNER_TEMP/results"
+          mkdir -p "$out"
+          set +e
+          python3 tools/flight_analyse.py "$RUNNER_TEMP/run" --out "$out" > "$out/analyse.log" 2>&1
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          set -e
+          tail -n 40 "$out/analyse.log"
+          cat "$out/findings.md" 2>/dev/null | head -c 60000 || true
+
+      - name: Cache Godot
+        id: godot
+        uses: actions/cache@v4
+        with:
+          path: ~/godot-bin
+          key: godot-${{ inputs.godot_version }}-linux-editor
+
+      - name: Install Godot (editor only)
+        if: steps.godot.outputs.cache-hit != 'true'
+        env:
+          GODOT_VERSION: ${{ inputs.godot_version }}
+        run: |
+          mkdir -p ~/godot-bin
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -sSfL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip && mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" ~/godot-bin/godot && rm godot.zip
+
+      - name: Build and check the workbook
+        if: always() && hashFiles('game/project.godot') != ''
+        env:
+          SEED: ${{ inputs.seed }}
+        run: |
+          out="$RUNNER_TEMP/results"
+          [ -f "$out/workbook_data.json" ] || { echo "no workbook data (the analysis failed)"; exit 0; }
+          export XDG_DATA_HOME="$RUNNER_TEMP/wb-userdata" TMPDIR="$RUNNER_TEMP/wb-tmp"
+          mkdir -p "$XDG_DATA_HOME" "$TMPDIR"
+          ~/godot-bin/godot --headless --path game --import > "$out/import.log" 2>&1 || true
+          ~/godot-bin/godot --headless --path game --script res://tests/flight_workbook.gd -- --spec "$out/workbook_data.json" \
+            --out "$out/flight-recorder-seed$SEED.xlsx" 2>&1 | grep -E "WORKBOOK|ERROR" | tee "$out/workbook.log" || true
+          python3 tools/check_workbook.py "$out/flight-recorder-seed$SEED.xlsx" --flight > "$out/workbook_check.json" || echo "::warning::the workbook check found problems"
+          cat "$out/workbook_check.json" || true
+
+      - name: Summary
+        if: always()
+        env:
+          SEED: ${{ inputs.seed }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          out = os.path.join(os.environ["RUNNER_TEMP"], "results")
+          s = {}
+          try:
+              s = json.load(open(os.path.join(out, "summary.json")))
+          except (OSError, ValueError):
+              pass
+          wb = {}
+          try:
+              wb = json.load(open(os.path.join(out, "workbook_check.json")))
+          except (OSError, ValueError):
+              pass
+          L = ["## Flight recorder: seed %s" % os.environ["SEED"], "",
+               "- Run: %s (artifacts: `fr-seed%s-results`, `fr-seed%s-seg*-archive`, `fr-seed%s-seg*-run`)" % (os.environ["RUN_URL"], os.environ["SEED"], os.environ["SEED"], os.environ["SEED"]),
+               "- Commit: `%s`" % s.get("commit", os.environ.get("GITHUB_SHA")),
+               "- Days reached: **%s** of %s; stopped: **%s**" % (s.get("days_reached"), s.get("days_requested"), s.get("stop_reason")),
+               "- Findings: %s; confirmed defects: %s; archive checks ok: %s; workbook: %s" % (s.get("severity_counts"), s.get("confirmed_defects"), s.get("archive_ok"),
+                                                                                              "ok" if wb.get("ok") else ("problems" if wb else "not built")), "", "Top findings:", ""]
+          for f in s.get("top_findings", []):
+              L.append("- %s **%s**%s: %s (NPC %s, day %s, count %s)" % (f["id"], f["severity"], " confirmed" if f["confirmed"] else "", f["title"], f["npc"] or "-", f["day_from"], f["count"]))
+          if not s:
+              L.append("- the analysis produced no summary: see analyse.log in the results artifact")
+          open(os.environ["GITHUB_STEP_SUMMARY"], "a").write("\n".join(L) + "\n")
+          print("\n".join(L))
+          PY
+
+      - name: Keep the results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fr-seed${{ inputs.seed }}-results
+          path: ${{ runner.temp }}/results
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Fail when the analysis failed or found a confirmed defect
+        if: always()
+        run: |
+          [ "${{ steps.analyse.outputs.code }}" = "0" ] || { echo "::error::the analysis failed"; exit 1; }
+          python3 -c "import json,os,sys; s=json.load(open(os.path.join(os.environ['RUNNER_TEMP'],'results','summary.json'))); sys.exit(1 if s.get('confirmed_defects') else 0)" \
+            || { echo "::error::confirmed defects: see findings.md"; exit 1; }

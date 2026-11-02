@@ -9,6 +9,8 @@ zip of XML parts it is and checks:
     currency and treasury at the end, villager deaths, and births plus newcomers equal what economy_sim.gd wrote (--out).
 
     python3 tools/check_workbook.py WORKBOOK.xlsx [--sims run=sim.json,run2=sim2.json]
+    python3 tools/check_workbook.py FLIGHT.xlsx --flight     # FLIGHT-REC-01: the flight recorder campaign workbook's 14 sheets
+                                                             # and charts (sim_workbook.json "flight_recorder")
 """
 import argparse
 import json
@@ -164,9 +166,11 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("workbook")
     ap.add_argument("--sims", default="", help="run=sim.json,... to reconcile the Runs sheet")
+    ap.add_argument("--flight", action="store_true", help="check a flight recorder campaign workbook (FLIGHT-REC-01)")
     a = ap.parse_args()
     sims = dict(kv.split("=", 1) for kv in a.sims.split(",") if "=" in kv) if a.sims else None
-    res = check(a.workbook, sims=sims)
+    defs = json.load(open(DEFS))["flight_recorder"] if a.flight else None
+    res = check(a.workbook, defs=defs, sims=sims)
     print(json.dumps(res, indent=1))
     return 0 if res["ok"] else 1
 

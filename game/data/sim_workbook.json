@@ -63,5 +63,20 @@
     "unattributed_holder_alerts_per_day": "measured",
     "seconds_per_sim_day": "measured",
     "recorder_overhead_share": "measured"
+  },
+  "flight_recorder": {
+    "note": "FLIGHT-REC-01 (owner directive 2026-11-02): the flight recorder campaign workbook's 14 sheets (the directive's section 6, in its order), written from tools/flight_analyse.py's workbook_data.json by tests/flight_workbook.gd; tools/check_workbook.py --flight checks them.",
+    "required_sheets": ["Executive Summary", "Population and Survival", "Food Production and Use", "Economy and Employment", "Businesses and Trade", "Chapel and Relief", "Contracts and Credit", "NPC Behaviour and Decisions", "Repeated Failed Actions", "System Interaction Anomalies", "Currency and Inventory", "Critical Events and Deaths", "Trends and Graphs", "Coverage and Limitations"],
+    "required_charts": {
+      "Population and Survival": ["Population over the year", "Hunger and starvation"],
+      "Food Production and Use": ["Food in store", "Food made and eaten"],
+      "Economy and Employment": ["Employment", "Currency and treasury"],
+      "Businesses and Trade": ["Trade activity"],
+      "Chapel and Relief": ["Chapel fund and alms"],
+      "NPC Behaviour and Decisions": ["How villagers spent their hours"],
+      "System Interaction Anomalies": ["Failures over the year"],
+      "Currency and Inventory": ["Currency in the world"],
+      "Trends and Graphs": ["Village over the year", "Wealth over the year", "Food security"]
+    }
   }
 }

@@ -36,6 +36,7 @@ X20-FINAL phase 5 (owner directive 2026-10-27): the black-box checks of the arch
     python3 tools/recorder_archive.py ARCHIVE_SESSION_DIR      # prints the report; exit 1 if the archive is not valid
     python3 tools/recorder_archive.py --participants HOST_DIR GUEST_DIR...   # compares a network session's participants
 """
+from array import array
 import glob
 import gzip
 import hashlib
@@ -69,7 +70,9 @@ class Deep:
         self.events_n = int(sess.get("events", 0) or 0)
         self.ids = bytearray(self.events_n + 2) if self.events_n else None
         self.id_dup = self.id_out = 0
-        self.refs = []                          # (table, event id) rows naming events, checked at the end
+        # table -> the event ids its rows name, checked at the end. FLIGHT-REC-01: compact arrays (8 bytes a row), not tuples: a
+        # recorded year holds tens of millions of factor and alternative rows. A value that is not a whole number is kept as 0 (bad).
+        self.refs = defaultdict(lambda: array("q"))
         self.bad_refs = Counter()
         self.ev = {}                            # id -> (day, minute, system, subsystem, category, subtype, actor, outcome, object)
         self.keep = set()                       # ids of the events the transition and chain checks need
@@ -93,6 +96,9 @@ class Deep:
         self.decisions = {}                     # choice event id -> chosen
         self.diag = Diag()                      # REC-DIAG: abnormal-run evidence (findings, never problems)
 
+    def _ref(self, table, e):
+        self.refs[table].append(e if isinstance(e, int) and not isinstance(e, bool) and -2**62 < e < 2**62 else 0)
+
     # --- feeding
     def event_rows(self, cols, rows):
         ix = {c: i for i, c in enumerate(cols)}
@@ -108,7 +114,7 @@ class Deep:
                     self.ids[i] = 1
             par = g(r, "parent", -1)
             if isinstance(par, int) and par > 0:
-                self.refs.append(("event.parent", par))
+                self.refs["event.parent"].append(par)
             row = (g(r, "day", 0), g(r, "minute", 0.0), g(r, "system", ""), g(r, "subsystem", ""), g(r, "category", ""), g(r, "subtype", ""),
                    g(r, "actor", ""), g(r, "outcome", ""), g(r, "object", ""))
             cat, sub, sysn, subsys, actor = row[4], row[5], row[2], row[3], row[6]
@@ -128,11 +134,11 @@ class Deep:
         key = {"participant": "event", "decision": "event", "alternative": "event", "factor": "event", "state_change": "event"}.get(table)
         for r in rows:
             if key and key in ix:
-                self.refs.append((table, r[ix[key]]))
+                self._ref(table, r[ix[key]])
             if table == "link":
                 for c in ("from", "to"):
                     if c in ix:
-                        self.refs.append(("link." + c, r[ix[c]]))
+                        self._ref("link." + c, r[ix[c]])
             if table in ("factor", "participant"):
                 self.diag.other(table, ix, r)
             if table == "participant" and "event" in ix:
@@ -179,7 +185,11 @@ class Deep:
             missing = self.events_n - sum(self.ids[1:self.events_n + 1])
             if missing or self.id_dup or self.id_out:
                 probs.append("event ids: %d missing, %d doubled, %d out of range (of %d)" % (missing, self.id_dup, self.id_out, self.events_n))
-            bad = Counter(t for t, e in self.refs if not (isinstance(e, int) and 1 <= e <= self.events_n and self.ids[e]))
+            bad = Counter()
+            for t, arr in self.refs.items():
+                for e in arr:
+                    if not (1 <= e <= self.events_n and self.ids[e]):
+                        bad[t] += 1
             if bad:
                 probs.append("rows naming an event that was not recorded: %s" % dict(bad))
         # life: births once; after a death no decision, action, trade or verb by that person

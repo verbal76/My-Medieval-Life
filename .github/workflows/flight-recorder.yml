@@ -1,0 +1,51 @@
+name: Flight recorder
+
+# FLIGHT-REC-01 (owner directive 2026-11-02; docs/release/flight_recorder/README.md): a thin dispatch wrapper around
+# flight-recorder-campaign.yml, kept for when it is on main (GitHub dispatches only workflows whose file is on the default
+# branch). Until then the campaign is dispatched through long-sims.yml with flight: true. The defaults are the directive's.
+
+on:
+  workflow_dispatch:
+    inputs:
+      seeds:
+        description: "World seeds, comma-separated (one independent run each; at most two simulate at once)"
+        default: "1,2"
+        required: true
+      days:
+        description: "Game days to simulate"
+        default: "365"
+        required: true
+      every:
+        description: "Checkpoint every N days (read the 30-, 90-, 180-day milestones from these; never separate runs)"
+        default: "10"
+        required: true
+      sim_args:
+        description: "Extra economy_sim switches; empty is normal integrated play (allowed: --aspiration --job-choice --economy --market --no-judgment --scenario NAME --at DAY)"
+        default: ""
+        required: false
+      record:
+        description: "Record with the flight recorder"
+        type: boolean
+        default: true
+      segment_days:
+        description: "Game days per chained job (a multiple of every; at most four jobs per seed)"
+        default: "100"
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flight-recorder-${{ github.run_id }}   # its own group, one per run: a campaign never cancels or queues behind another
+  cancel-in-progress: false
+
+jobs:
+  campaign:
+    uses: ./.github/workflows/flight-recorder-campaign.yml
+    with:
+      seeds: ${{ inputs.seeds }}
+      days: ${{ inputs.days }}
+      every: ${{ inputs.every }}
+      sim_args: ${{ inputs.sim_args }}
+      record: ${{ inputs.record }}
+      segment_days: ${{ inputs.segment_days }}

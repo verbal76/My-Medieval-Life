@@ -43,12 +43,23 @@ on:
         description: "Instead of simulating: an earlier run's id whose artifacts are read back and their checkpoints printed in this log (where artifact downloads are blocked); empty to simulate"
         default: ""
         required: false
+      flight:
+        description: "FLIGHT-REC-01 'Run flight recorder': instead of the comparison runs, a flight recorder campaign (flight-recorder-campaign.yml; set seeds 1,2, days 365, every 10, record true; sim_args as usual; set and variants empty)"
+        type: boolean
+        default: false
+      segment_days:
+        description: "Flight recorder only: game days per chained job (a multiple of every; days at most 4 x this)"
+        default: "100"
+        required: false
 
 permissions:
   contents: read
 
 concurrency:
-  group: long-sims-${{ github.ref }}   # one dispatch at a time per branch; parallel workstreams' branches no longer cancel each other's waiting runs (2026-10-30: run 41118155447 was cancelled that way)
+  # one dispatch at a time per branch; parallel workstreams' branches no longer cancel each other's waiting runs (2026-10-30: run
+  # 41118155447 was cancelled that way). FLIGHT-REC-01: a flight recorder campaign has its own group, one per run, so it never
+  # cancels or waits for anything, nor anything for it; without flight the group is long-sims-<ref> exactly as before.
+  group: ${{ inputs.flight && format('flight-recorder-{0}', github.run_id) || format('long-sims-{0}', github.ref) }}
   cancel-in-progress: false
 
 env:
@@ -56,7 +67,7 @@ env:
 
 jobs:
   recover:
-    if: inputs.recover_run != ''
+    if: inputs.recover_run != '' && !inputs.flight
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -77,7 +88,7 @@ jobs:
           done
 
   plan:
-    if: inputs.recover_run == ''
+    if: inputs.recover_run == '' && !inputs.flight
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -228,3 +239,18 @@ jobs:
             ${{ env.OUT }}/rec
           if-no-files-found: warn
           retention-days: 30
+
+  # FLIGHT-REC-01 (owner directive 2026-11-02; docs/release/flight_recorder/README.md): "Run flight recorder" through this
+  # workflow, which is on main (GitHub dispatches only workflows whose file is on the default branch, and then runs the version on
+  # the dispatched ref, the workflows it calls by a local path included). The plan, recover and sim jobs above are skipped.
+  flight:
+    if: inputs.flight && inputs.recover_run == ''
+    uses: ./.github/workflows/flight-recorder-campaign.yml
+    with:
+      seeds: ${{ inputs.seeds }}
+      days: ${{ inputs.days }}
+      every: ${{ inputs.every }}
+      sim_args: ${{ inputs.sim_args }}
+      record: ${{ inputs.record }}
+      segment_days: ${{ inputs.segment_days }}
+      unsupported: ${{ inputs.set }}${{ inputs.variants }}
