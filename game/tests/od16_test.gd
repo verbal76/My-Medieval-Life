@@ -278,6 +278,8 @@ func test_caravan_buys_by_need() -> void:
 	for s: OffMapSettlement in w.regions.list:   # DVW-B3-LUX: and no luxuries on the carts, so no purse here is spent on one (luxury_test covers them)
 		for id: String in Luxury.items():
 			s.trader().stock.erase(id)
+		for id in ["tin_ore", "tin_bar", "silk", "fur"]:   # B25 Decision 5: nor the new materials the carts sell villagers, whose price would fill this purse mid-visit
+			s.trader().stock.erase(id)
 		s.reopen_books()
 	var smith: NPC = b._first_with_job("smith")
 	var tanner: NPC = b._first_with_job("tanner")
