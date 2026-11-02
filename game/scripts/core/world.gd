@@ -1694,13 +1694,20 @@ func local_supply(id: String, at: Vector2, except: Object = null, skip := {}) ->
 
 ## X20-ECON-FIREWOOD (owner directive 2026-11-01, instrumentation only: statistics, never a decision): a household that had no
 ## log at dawn, by its cash (a log needs 3 coins to buy: NPCBrain._plan_provision), and whether the woodcutters, carpenters and
-## merchants held any logs that night. Per household too (cold_hh_<index>), to tell isolated hardship from persistent. Reads only
+## merchants held any logs that night. Per household too (cold_hh_<index>), to tell isolated hardship from persistent; and whose
+## purse could have paid for a log (cold_payer_adult, _elder, _child or _none: a member holding 3 coins or more). Reads only
 ## coins and inventories. Returns the logs the sellers hold (worked out once a dawn; -1 before).
 func _cold_detail(hi: int, seller_logs: int) -> int:
 	var cash := 0
+	var payer := "none"                # X20-FIREWOOD: whose purse could pay a log's 3 coins (adult, else elder, else child)
 	for o: NPC in brain._members(hi):
 		cash += o.coins
+		if o.coins >= 3:
+			var r := "adult" if o.role == "adult" else ("elder" if o.role == "elder" else "child")
+			if payer == "none" or r == "adult" or (r == "elder" and payer == "child"):
+				payer = r
 	stat("cold_cash_" + ("lt3" if cash < 3 else ("3_19" if cash < 20 else ("20_99" if cash < 100 else "100up"))))
+	stat("cold_payer_" + payer)
 	stat("cold_hh_%d" % hi)
 	if seller_logs < 0:
 		seller_logs = 0
