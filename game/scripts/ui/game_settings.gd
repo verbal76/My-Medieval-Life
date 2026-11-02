@@ -22,6 +22,8 @@ var ui_size := "normal"            # small | normal | large
 var touch_buttons := "auto"        # auto (when touch is in use) | always | never
 var harvest := "manual"            # GP-HARVEST-CONT: "manual" (Use works a resource once; Gather mode for more) | "continuous" (Use gathers it until it runs out)
 var touch_move := "tap"            # GP-JOYSTICK: walking by touch: "tap" (tap the ground, the default) | "joystick" (an on-screen stick)
+var reduce_effects := false        # JUICE J1 (owner Decision 9, B12A-05 slice): particles become one still puff; no flashes or pulses
+var no_blink := false              # JUICE J1 (B12A-05: "turning off the blinking"): low meters and a fallen body stay steady
 var phone := false                 # a phone or tablet: no windows, a larger interface
 var save_copy := ""                # SAVE-05: a file outside the game kept up to date with the save ("" none)
 var record_gameplay := false       # SIM-GATE-01 amendment: the flight recorder in play, Windows and Linux only (off by default)
@@ -51,6 +53,8 @@ func load_file(path := PATH) -> void:
 	touch_buttons = t if t in ["auto", "always", "never"] else "auto"
 	var tm: String = str(cf.get_value("interface", "touch_move", touch_move))
 	touch_move = tm if tm in ["tap", "joystick"] else "tap"
+	reduce_effects = bool(cf.get_value("accessibility", "reduce_effects", reduce_effects))
+	no_blink = bool(cf.get_value("accessibility", "no_blink", no_blink))
 	var hv: String = str(cf.get_value("gameplay", "harvest", harvest))
 	harvest = hv if hv in ["manual", "continuous"] else "manual"
 	save_copy = str(cf.get_value("saves", "copy", save_copy))
@@ -71,6 +75,8 @@ func save_file(path := PATH) -> void:
 	cf.set_value("interface", "size", ui_size)
 	cf.set_value("interface", "touch_buttons", touch_buttons)
 	cf.set_value("interface", "touch_move", touch_move)
+	cf.set_value("accessibility", "reduce_effects", reduce_effects)
+	cf.set_value("accessibility", "no_blink", no_blink)
 	cf.set_value("gameplay", "harvest", harvest)
 	cf.set_value("saves", "copy", save_copy)
 	cf.set_value("developer", "record_gameplay", record_gameplay)
