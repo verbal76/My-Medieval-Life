@@ -23,6 +23,7 @@ func check(cond: bool, what: String) -> void:
 func _init() -> void:
 	GameData.ensure()
 	test_eligibility()
+	test_tenant_standalone()
 	test_no_demand_no_venture()
 	test_decision()
 	test_found_conserves()
@@ -98,6 +99,23 @@ func test_eligibility() -> void:
 	s.coins = coins
 	var tanner: NPC = of_job(w, "merchant")[0]
 	check(w.ventures.refusal(tanner) == "not in a founding trade", "a merchant founds no workshop (stalls and storefronts are theirs)")
+
+
+## Owner rule of 2026-10-18 ("a house first, then workshops"): a tenant household builds no workshop, but B25-BIZ-D5 B
+## lets it buy one that is offered for sale (buying builds nothing).
+func test_tenant_standalone() -> void:
+	var w := world()
+	var s := founder(w)
+	smithy_full(w)
+	var ref := World.hh_ref(s.household)
+	var house: Dictionary = w.buildings.get(str(w.households[s.household].get("home", "")), {})
+	w.set_owner(house, World.MANOR)
+	w.set_tenant(house, ref)
+	w.brain.evaluate_household(s.household)
+	var anchor_before := w.property.anchor_of(house)
+	check(w.ventures.refusal(s) == "the household does not own its house", "a tenant builds no workshop (a house first)")
+	check(w.owner_of(house) == World.MANOR and w.tenant_of(house) == ref and w.property.anchor_of(house) == anchor_before,
+			"weighing it changes nothing about the rented house")
 
 
 func test_no_demand_no_venture() -> void:

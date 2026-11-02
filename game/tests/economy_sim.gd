@@ -1036,7 +1036,7 @@ func _biz_line(day: int) -> Dictionary:
 		if str(k).begins_with("venture"):
 			st[k] = int(w.stats[k])
 	var c := Ventures.cfg()
-	var gate := {"founding_trade": 0, "skilled": 0, "experienced": 0, "household_free": 0, "owns_house": 0}
+	var gate := {"founding_trade": 0, "skilled": 0, "experienced": 0, "household_free": 0, "has_home": 0, "owns_house": 0}
 	for n: NPC in w.npcs:
 		if Ventures.kind_for(n.job) == "" or not n.alive or n.role != "adult" or n.household < 0:
 			continue
@@ -1056,8 +1056,10 @@ func _biz_line(day: int) -> Dictionary:
 			continue
 		gate.household_free += 1
 		var house: Dictionary = w.buildings.get(str(hh.get("home", "")), {})
-		if not house.is_empty() and w.owner_of(house) == World.hh_ref(n.household):
-			gate.owns_house += 1
+		if not house.is_empty():
+			gate.has_home += 1           # B25-BIZ-D5 A: owning the house is needed only for a workshop beside it
+			if w.owner_of(house) == World.hh_ref(n.household):
+				gate.owns_house += 1
 	var roles := {}
 	for r in w.employment.list:
 		roles[str(r.get("role", ""))] = int(roles.get(str(r.get("role", "")), 0)) + 1

@@ -347,8 +347,8 @@ func refusal(n: NPC, markets := {}, out := {}) -> String:
 	if hh.get("ended", false) or hh.has("venture") or str(hh.get("build", "")) != "" or not (hh.get("housing", {}) as Dictionary).is_empty():
 		return "the household has building or a home to see to first"
 	var house: Dictionary = w.buildings.get(str(hh.get("home", "")), {})
-	if house.is_empty() or w.owner_of(house) != ref:
-		return "the household does not own its house"
+	if house.is_empty():
+		return "the household has no home to start from"
 	if not markets.has(job):
 		markets[job] = w.brain.skilled_place(job)
 	var m: Dictionary = markets[job]
@@ -373,6 +373,11 @@ func refusal(n: NPC, markets := {}, out := {}) -> String:
 		var price := price_for(listed, n)
 		out.merge(info.merged({"buy": listed, "price": price, "start": price, "need": price + working}), true)
 		return ""
+	# Building needs a house of the household's own (owner rule of 2026-10-18: "a house first, then workshops";
+	# Construction.may_build). Reopening or buying a workshop above builds nothing, so a tenant household may do those
+	# (B25-BIZ-D5 B). Year-long runs 41362329381: owning the house kept every eligible villager from founding.
+	if w.owner_of(house) != ref:
+		return "the household does not own its house"
 	if w.property.anchor_of(house).is_empty():
 		w.property.survey_under(house)       # HOUSE-09: an original house's ground is surveyed (nothing paid, nothing changes hands)
 	var anchor := house                      # a room of the property beside the house first (find_module_slot)

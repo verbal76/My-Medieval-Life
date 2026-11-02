@@ -214,7 +214,7 @@ static func means(k, n: NPC, svc: Dictionary, days: int) -> Dictionary:
 			if ripe.is_empty():
 				out.why = "source"
 			else:
-				var per := CapabilityHook.time(harvest_minutes(), "farming", n) * float(cfg().get("overhead", 1.25)) + float(cfg().get("harvest_walk_minutes", 30)) / float(maxi(1, ripe.size()))
+				var per := CapabilityHook.work_time(harvest_minutes(), "farming", 1.0, n) * float(cfg().get("overhead", 1.25)) + float(cfg().get("harvest_walk_minutes", 30)) / float(maxi(1, ripe.size()))
 				out.rate = 1.0 / per
 				out.cap = mini(ripe.size(), Contracts._by_time(float(out.rate) * mins))
 				out.route = "service"
@@ -379,7 +379,7 @@ static func _plan_harvest(k, n: NPC, c: Dictionary) -> bool:
 		c.cell = [cell.x, cell.y]
 		n.doing = "harvesting %s field" % ("the player's" if World.is_player_ref(c.buyer) else w.ref_name(c.buyer) + "'s")
 		var stand: Vector2i = cell if not w.map.is_solid(cell) else b.beside(cell, n.cell())
-		n.plan = [b.go(stand), b.work(CapabilityHook.time(harvest_minutes(), "farming", n), "svc_step", {"id": int(c.id)}, "gather", cell)]
+		n.plan = [b.go(stand), b.work(CapabilityHook.work_time(harvest_minutes(), "farming", 1.0, n), "svc_step", {"id": int(c.id)}, "gather", cell)]
 		return true
 	return false
 
