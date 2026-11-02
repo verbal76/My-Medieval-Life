@@ -59,6 +59,31 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
 
 ---
 
+## 2026-11-02
+
+**B25-NINE-D4: judgment-based witness reporting.**
+- Branch: `wip/b25-report`, merged as `2c364d1`. Commits: `f15faf8` (implementation, from before the suspension), `fa58b44`
+  (catch-up merge of `908a17e`), `eab25e2` (wiki and DCR-01), `5bf548c` (evidence).
+- Change:
+  - Each witness or victim weighs whether to tell a guard, by severity, kinship with the victim, and liking or fear of the
+    offender. Keeping quiet forgets nothing.
+  - `integration.report` is on.
+  - This intentionally revises PAR-05's rule that every witness reports, as the owner approved in Decision 4. A parent fetching
+    help stays a rule.
+- Status: INTEGRATED, TESTED (local).
+- Evidence on `eab25e2`, 0 failures:
+  - judgment suites: live 180, judgment 217, x19 122, calibration 86;
+  - justice 33, pursuit 35, family 51 and 104;
+  - recorder 214, migration 109, multiplayer_c 340;
+  - start_test 523, run_tests 3601.
+- 30-day seed 1: 0 script errors, leaks 0. There were 29 report choices, all attacks, and **every witness chose to tell**.
+- Outstanding:
+  - Nobody kept quiet in normal play. The values were not tuned to force an outcome. Provisional values: harm_killing 100000,
+    harm_victim_theft 50000, victim_kin 100000.
+  - Theft from shops, containers and livestock is still noticed only by guards. This is unchanged.
+  - The crime_spree scenario was not run.
+  - The year-long validation will come with the end-of-build runs.
+
 ## 2026-11-01
 
 All the work below is Build 25, the consolidation build (B25-SCOPE-D1).

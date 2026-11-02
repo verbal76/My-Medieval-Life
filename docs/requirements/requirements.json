@@ -6112,6 +6112,11 @@
      "date": "2026-11-01",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "implemented and merged into the Build 25 source at 2c364d1 (wip/b25-report 5bf548c; integration.report on). Tests on eab25e2 local: judgment suites (live 180, judgment 217, x19 122, calibration 86, guard_save 20, incident 15), justice 33, pursuit 35, history 28, family 51/104, player_family 88, bandit_ai 17, recorder 214, migration 109, save_transfer 21, conservation 8, multiplayer_c 340, start 523, run_tests 3601, wiki_test; 30-day seed 1: 0 errors, leaks 0, 29 report choices all 'tell' (none kept quiet). Year-long validation pending with the end-of-build runs."
     }
    ]
   },
