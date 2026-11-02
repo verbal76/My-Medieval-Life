@@ -11,6 +11,19 @@
   - History lives in `docs/DEVELOPMENT_CHANGELOG.md`.
 - **Recovery after lost context:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
 
+## PAUSED (owner, 2026-11-02 ~02:00 UTC: "Pause all work")
+
+All development is paused until the owner says to resume.
+- No worker is running. The skills and capabilities worker was told to commit and push its work as "WIP (paused)" on
+  `wip/b25-capability` and stop. Check that branch's head before resuming.
+- The scheduled check-in on the Actions run was cancelled.
+- The GitHub Actions run long-sims 41362329381 (`908a17e`, 365 days, seeds 1 and 2) was left running, not cancelled (SIM-02). It
+  ends by about 05:00 UTC at the latest. Its logs and artifacts can be read when work resumes.
+- **To resume:**
+  1. Read run 41362329381's `BIZ` and day lines and record them.
+  2. Review `wip/b25-capability` and finish it.
+  3. Continue with "Next authorized actions" below.
+
 ## Position
 
 | Item | Value |
