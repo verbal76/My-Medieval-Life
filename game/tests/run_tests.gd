@@ -870,7 +870,13 @@ func test_trades_and_works() -> void:
 			break
 	smith.coins = 200
 	smith.inv.remove("iron_ore", smith.inv.count("iron_ore"))
-	check(w.brain._caravan_imports() == 0 or w.deposits.filter(func(d): return d.ore == "iron_ore" and int(d.amount) > 0).is_empty(), "no imports while the village has its own ore")
+	# (B25 Decision 5: tin, of which the village has no seam it knows of, may still come; nothing of an ore it has)
+	var own := {}
+	for d in w.deposits:
+		if int(d.amount) > 0:
+			own[str(d.ore)] = int(w.stats.get("imported_" + str(d.ore), 0))
+	w.brain._caravan_imports()
+	check(own.keys().all(func(o): return int(w.stats.get("imported_" + o, 0)) == int(own[o])), "no imports of an ore while the village has its own (%s)" % str(own.keys()))
 	for d in w.deposits:
 		d.amount = 0
 	smith.inv.remove("iron_ore", smith.inv.count("iron_ore"))
