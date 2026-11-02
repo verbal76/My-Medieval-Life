@@ -1,5 +1,17 @@
 # Expansion status records: the authoritative entry point for what is designed, built and remaining
 
+> **Current state first (2026-11-02):** for what is happening now, read `docs/CURRENT_DEVELOPMENT_STATE.md` and `docs/DEVELOPMENT_CHANGELOG.md`.
+> Two owner decisions of 2026-11-01 supersede the 2026-10-31 notes below:
+> - **B25-SCOPE-D1:** Build 25 is the consolidation build, holding all approved expansion work and the recoverable work from abandoned
+>   branches. It is no longer only the Expansion 20 validation and freeze, and the Build 26 recovery assignments are history.
+> - **B25-LE-ACTIVATE-D1:** the Living Economy switches on by default once its 13 LE-07 readiness gates pass. This replaces the
+>   2026-10-31 "wait for explicit authorization".
+>
+> Since then the remaining Expansion 20 work has been integrated on `wip/expansion20`: LE-05 remainder, LE-07 gate tests, EMP-PERM-01,
+> business ownership, services, witness reporting, juice, materials and capabilities. The text below is the 2026-10-31 snapshot,
+> kept as history.
+
+
 Owner directive 2026-10-31 (`docs/directives/2026-10-31_documentation_reconciliation.md`, register DOC-RECON-01). One file per
 expansion (17-27), one for multiplayer and one for standalone approved systems. Each states the current approved scope,
 what is implemented, partial, remaining, deferred or superseded, the open owner decisions, dependencies, evidence and the

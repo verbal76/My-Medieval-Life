@@ -1,5 +1,17 @@
 # Expansion 20: Living Economy (EXP-D, LE-00..LE-07) and its carryovers
 
+> **Current state first (2026-11-02):** for what is happening now, read `docs/CURRENT_DEVELOPMENT_STATE.md` and `docs/DEVELOPMENT_CHANGELOG.md`.
+> Two owner decisions of 2026-11-01 supersede the 2026-10-31 notes below:
+> - **B25-SCOPE-D1:** Build 25 is the consolidation build, holding all approved expansion work and the recoverable work from abandoned
+>   branches. It is no longer only the Expansion 20 validation and freeze, and the Build 26 recovery assignments are history.
+> - **B25-LE-ACTIVATE-D1:** the Living Economy switches on by default once its 13 LE-07 readiness gates pass. This replaces the
+>   2026-10-31 "wait for explicit authorization".
+>
+> Since then the remaining Expansion 20 work has been integrated on `wip/expansion20`: LE-05 remainder, LE-07 gate tests, EMP-PERM-01,
+> business ownership, services, witness reporting, juice, materials and capabilities. The text below is the 2026-10-31 snapshot,
+> kept as history.
+
+
 > **Owner decisions 2026-10-31 (`docs/directives/2026-10-31_doc_recon_review_decisions.md`):** the remaining Expansion 20 work (LE-07, permanent employment EMP-PERM-01, the LE-05 remainder, economy activation preparation) is assigned to the **Build 26** recovery/integration scope for **planning, reconciliation and dependency analysis only**; implementation is not automatically authorized; Build 25 is validated and frozen first (X20-REMAINING-PLACEMENT, APPROVED). The Living Economy stays **disabled by default**; the 2026-10-31 instruction supersedes the 2026-10-30 automatic activation; Build 26 prepares the activation mechanism and validation evidence, and enabling it in the normal game waits for explicit owner authorization (X20-ACTIVATION-AUTHORITY, APPROVED). Where this file below calls these two questions open, this note supersedes it.
 
 
