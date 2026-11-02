@@ -17,7 +17,9 @@ extends RefCounted
 ## voluntary. Each has a piety, a fixed number 0 to 1 from the world seed and their id; on the weekly service day each adult
 ## and elder who can spare a coin decides through the villagers' decision framework (offerings, _decide) whether to give, and
 ## a giver gives a varying, affordable share; households decide the same way about spare wheat. The fund keeps an operating
-## reserve (operating_reserve) and gives the surplus as alms to the poorest households by hardship (alms).
+## reserve (operating_reserve) and gives the surplus as alms to the poorest households by hardship (alms). Its food store
+## does the same (food_alms): it keeps a food reserve for the relief it has lately given and gives the food above it to the
+## households shortest of food, the poorest first; what it holds spoils as any store does (Decay.dawn).
 ## Saved in the World's optional key "chapel"; a save without it (made before the chapel) has the chapel founded on load
 ## where the ground is free (found), without creating a villager (the clergy's places open in the labour market).
 
@@ -38,6 +40,8 @@ var player_asked_day := -1
 var booked := {}                    # household index -> the day a member is on the way to ask (not saved)
 var spent_week := 0                 # X20-CHAPEL-FIX: coins spent on relief food and seed since the last service (saved)
 var spent: Array = []               # the same for each of the last spend_weeks weeks (saved)
+var relief_week := 0.0              # chapel food (2026-11-02): food points given as relief since the last service (saved)
+var relief_hist: Array = []         # the same for each of the last spend_weeks weeks (saved)
 var last_service := {}              # the last service's record: gifts, reserve, alms, recipients (instrumentation; not saved)
 var gift_hist := {}                 # gift size -> how many gifts of it (instrumentation; not saved)
 
@@ -525,6 +529,7 @@ func relieve(h: int) -> float:
 	var given := total - maxf(need, 0.0)
 	if given > 0.0:
 		w.stat("chapel_relief_points", given)
+		relief_week += given
 	return given
 
 
@@ -616,6 +621,7 @@ func evening() -> void:
 			owed.erase(k)
 	if is_service_day():
 		alms()
+		food_alms()
 
 
 ## X20-CHAPEL-FIX (owner, 2026-11-01): the chapel's operating reserve, what it keeps back on the service day for the costs it
@@ -708,6 +714,92 @@ func alms() -> int:
 	return given
 
 
+## Chapel food (2026-11-02; CHAPEL-R2 and X20-CHAPEL-FIX applied to the food store): the food the store keeps back, in food
+## points: the mean relief it gave over the last spend_weeks weeks, for operating_reserve_days. What is above it is surplus.
+func food_reserve() -> int:
+	if relief_hist.is_empty():
+		return 0
+	var sum := 0.0
+	for r in relief_hist:
+		sum += float(r)
+	return ceili(sum / float(relief_hist.size()) * float(cfg().operating_reserve_days) / float(cfg().offering_every_days))
+
+
+## Chapel food (2026-11-02): on the service day, after the coin alms, the food in the store above food_reserve is given as alms,
+## as the coins are (CHAPEL-R2, owner 2026-10-23: "what is left goes as alms to the poorest households"; X20-CHAPEL-FIX, owner
+## 2026-11-01: after the operating reserve, the surplus goes in charitable alms by genuine hardship, food security among it).
+## Food hardship: a household holding less than alms_line_days of food (NPCBrain.household_food_days: what it holds and what
+## its coins would buy now) lacks the rest of those days' food; a household worth alms_wealth_lines lines or more
+## (household_means) gets nothing. The poorest for each member first (wealth per member, then the greater shortfall, then the
+## household's index), each given up to its shortfall, once, into its pantry: grain first, then the other food, in whole
+## units, never taking the store below its reserve. Every unit moves from the store to a pantry (World.transfer); nothing is
+## made. Returns the food points given.
+func food_alms() -> float:
+	if not present:
+		return 0.0
+	relief_hist.append(relief_week)
+	while relief_hist.size() > int(cfg().spend_weeks):
+		relief_hist.pop_front()
+	relief_week = 0.0
+	var keep := food_reserve()
+	var pot := _store_points() - float(keep)
+	var svc: Dictionary = last_service if int(last_service.get("day", -1)) == w.day() else {"day": w.day()}
+	svc.food_reserve = keep
+	svc.food_before_alms = roundi(_store_points())
+	svc.food_alms = 0
+	svc.food_recipients = 0
+	last_service = svc
+	if pot <= 0.0:
+		return 0.0
+	var line_days := float(cfg().alms_line_days)
+	var rows := []                      # [wealth per member, -shortfall, household]
+	for h in w.households.size():
+		if w.households[h].get("ended", false) or w.brain._members(h).is_empty():
+			continue
+		var m := household_means(h)
+		if int(m.wealth) >= int(m.line) * int(cfg().alms_wealth_lines):
+			continue
+		var days: float = w.brain.household_food_days(h)
+		if days >= line_days:
+			continue
+		var short: float = (line_days - days) * w.brain.household_day_food(h)
+		if short > 0.0:
+			rows.append([int(m.wealth) * 1000 / maxi(1, int(m.members)), -short, h])
+	rows.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0] or (a[0] == b[0] and (a[1] < b[1] or (a[1] == b[1] and a[2] < b[2]))))
+	var order: Array = ["wheat"]
+	for f in NPCBrain.EDIBLE:
+		if f != "wheat":
+			order.append(f)
+	var given := 0.0
+	var helped := 0
+	for r in rows:
+		if pot <= 0.0:
+			break
+		var need: float = -float(r[1])
+		var pantry: Inventory = w.households[int(r[2])].pantry
+		var got := 0.0
+		for f in order:
+			var pts := NPCBrain.food_points(f)
+			if pts <= 0.0 or need <= 0.0 or not store.has(f):
+				continue
+			var k := mini(store.count(f), mini(ceili(need / pts), floori(pot / pts)))
+			if k > 0 and w.transfer(store, pantry, f, k):
+				need -= float(k) * pts
+				pot -= float(k) * pts
+				got += float(k) * pts
+				w.stat("chapel_food_alms_" + f, k)
+		if got > 0.0:
+			given += got
+			helped += 1
+	svc.food_alms = roundi(given)
+	svc.food_recipients = helped
+	if given > 0.0:
+		w.stat("chapel_food_alms_points", given)
+		w.stat("chapel_food_alms_households", helped)
+		w.note("The chapel gave food from its store to %d of the village's households shortest of food." % helped)
+	return given
+
+
 ## The coins household `h` lacks for its foreseeable necessities: its need (World.necessity, the same for every member) less
 ## what all its members hold. 0 when it has enough.
 func household_shortfall(h: int) -> int:
@@ -759,7 +851,7 @@ func may_work(n: NPC) -> bool:
 func to_dict() -> Dictionary:
 	return {"present": present, "coins": coins, "store": store.to_dict(), "volunteers": volunteers.duplicate(), "asked": asked.duplicate(),
 		"owed": owed.duplicate(), "evening_day": evening_day, "player_asked_day": player_asked_day, "spent_week": spent_week,
-		"spent": spent.duplicate()}
+		"spent": spent.duplicate(), "relief_week": relief_week, "relief_hist": relief_hist.duplicate()}
 
 
 ## A saved chapel is read as it was; a save without the key (made before the chapel) has the chapel founded now.
@@ -778,6 +870,8 @@ func load_dict(d: Dictionary) -> void:
 	player_asked_day = int(d.get("player_asked_day", -1))
 	spent_week = int(d.get("spent_week", 0))                 # X20-CHAPEL-FIX: optional (a save from before it spent nothing it knows of)
 	spent = (d.get("spent", []) as Array).map(func(v): return int(v))
+	relief_week = float(d.get("relief_week", 0.0))             # chapel food (2026-11-02): optional (an older save gave none it knows of)
+	relief_hist = (d.get("relief_hist", []) as Array).map(func(v): return float(v))
 	if bool(d.get("present", true)):
 		found(false)
 	else:
