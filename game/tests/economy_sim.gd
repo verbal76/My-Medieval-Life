@@ -1521,7 +1521,22 @@ func _ore_line(day: int) -> Dictionary:
 	for k in ["prospect_samples", "prospect_reports", "assays", "assay_traces", "trial_pits", "trial_misses", "seams_found", "seams_found_below",
 			"surveys_reported", "pit_seams", "employment_mined", "quarried_for_own_use"]:
 		pros[k] = int(_st(k))
-	return {"day": day, "ores": _sorted_dict(ores), "goods": goods, "people": people, "miner_places_open": _miner_open(),
+	# the neighbours' side (read only): what each settlement's trader could sell the village (trader_has) and its quarry's reserve
+	var region := {}
+	for so: OffMapSettlement in w.regions.list:
+		var row := {}
+		for id in ["iron_ore", "coal", "copper_ore", "iron_bar"]:
+			if so.trader_has(id) > 0:
+				row[id] = so.trader_has(id)
+		var q: Dictionary = so.biz.get("quarry", {})
+		if not q.is_empty():
+			row.reserves = (q.get("reserves", {}) as Dictionary).duplicate()
+			row.quarry_stock = {}
+			for id in ["iron_ore", "coal", "copper_ore"]:
+				row.quarry_stock[id] = int((q.get("stock", {}) as Dictionary).get(id, 0))
+		region[so.id] = row
+	return {"day": day, "ores": _sorted_dict(ores), "goods": goods, "people": people, "region": region,
+		"caravan_coins_out": int(_st("caravan_coins_out")), "miner_places_open": _miner_open(),
 		"prospecting": pros, "mining_level": int((w.settlement_caps.get("levels", {}) as Dictionary).get("mining", 0)), "seams_worked_out": events.seams_worked_out}
 
 
