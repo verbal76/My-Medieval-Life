@@ -41,6 +41,25 @@ recovery is `docs/handoffs/CURRENT_SESSION_RECOVERY.md`. Record every milestone 
 - Do not repeat completed work, and never restart a simulation or test before checking whether it is still running (the state file's workers and processes: GitHub Actions runs, local processes).
 - Compaction is not a reason to stop: continue the next approved task.
 
+### Standing owner commands (owner, 2026-11-02, FLIGHT-REC-01; `docs/directives/2026-11-02_permanent_flight_recorder_simulation_system.md`)
+
+- **"Run flight recorder"** means: dispatch the dedicated flight-recorder workflow on GitHub Actions at once. No questions and no
+  further approval. The workflow is `.github/workflows/flight-recorder.yml`, on the Build 25 source `wip/expansion20` once
+  integrated; until then use `long-sims.yml` with `record: true`.
+  - **Defaults:** 365 days, seeds 1 and 2 as independent jobs (two at most), recorder on, checkpoints every 10 days, normal
+    integrated play, on the latest suitable integrated commit. If a known imminent fix would spoil the run, use the corrected
+    commit.
+  - The owner's own seeds, duration or scenario override the defaults.
+  - Give the Actions run link at once and keep developing. Never block other work, never cancel older runs automatically, and
+    never rerun a failed year without examining the failure.
+- **"What did the flight recorder find?"** means: fetch the latest flight-recorder run's summary, findings report and workbook
+  from its Actions artifacts, then explain it, most important first:
+  1. what happened, what worked, what failed;
+  2. which NPCs behaved strangely and which systems may be interfering;
+  3. what deserves investigation.
+
+  Keep confirmed defects separate from suspicions.
+
 At each meaningful checkpoint, and before a session ends, a context handoff or a build: update
 `docs/CURRENT_DEVELOPMENT_STATE.md` and every touched register entry, run
 `python3 tools/check_requirements.py --write`, commit and push to staging, and confirm the remote head.
