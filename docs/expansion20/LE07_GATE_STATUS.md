@@ -26,7 +26,7 @@ Candidate measured: **`eca0e7d`** (Build 25 source), worktree branch `wip/b25-le
 | 7 | Migration: a Build 24 (v23) save and a Build 25 economy-off save switched on load and run | Test suite (local) | **PASSED** | `le07_gates_test::test_activation_old_save` (Build 24 fixture) and `::test_activation_current_save` (new, a save of this build with Build 25's businesses and employment running): nothing else in the save changes, every coin in place, a dawn run with the ledger exact. `SAVE_VERSION` stays 23; no migration code is needed |
 | 8 | No second uncontrolled buying path | Code audit + test suites | **PASSED** | s.5 |
 | 9 | Calibration: the PROVISIONAL LE-02..LE-05 parameters reviewed against the long-run evidence (measured, not pass/fail; WDR-022) | Document (review of the gate-4 run) | **NEEDS RUN**, then review | One observation already (s.6) |
-| 10 | Mandatory dependencies integrated, no unresolved critical defect | Document (the register) | **NEEDS LEAD (register)** | No critical defect found in this work. Register points to settle: s.7 |
+| 10 | Mandatory dependencies integrated, no unresolved critical defect | Document (the register) | **NEEDS LEAD (register)** | No critical defect found in this work. Register points to settle: s.7. LE-05 remainder (2026-11-02, `wip/b25-le05-risk`): route risk in prices built (INT-673, `le05_route_risk_test`, economy off unchanged); regional links beyond the food trade done as specified (nothing further specified; LE05_IMPLEMENTATION s.7). Awaiting integration and the lead's register update |
 | 11 | Performance (OD-LE-15): about 500 villagers, about 4 ms a frame, mid-range Android phone | Device check | **NEEDS DEVICE** | Not measurable here. OD-LE-15: "a target to PROFILE, not a success claim"; whether it blocks activation is the lead's or owner's call (s.7) |
 | 12 | Wiki (WIKI-01): player pages for what becomes playable; `todo:tool_rental` retired, in the same change as the switch | Document, applied with the switch | **PREPARED** (applied in the activation commit) | Pages listed in s.8 |
 | 13 | The owner's authorization, then the one-line change, recording commit, evidence and configuration | Document | **GIVEN, conditional on 1-12** | B25-LE-ACTIVATE-D1 (owner 2026-11-01) replaces the per-occasion approval of X20-ACTIVATION-AUTHORITY (2026-10-31) |
@@ -144,6 +144,10 @@ it should call `World.claims_release` as construction wages do. The LE-03 suites
   the activation commit.
 - **LE-05** is PARTIALLY IMPLEMENTED (route risk in prices: documented gap; regional links beyond X20-SETTLE-FOOD). Whether these
   are mandatory dependencies of activation (gate 10) is the lead's reading of LE-05's acceptance ("Integration matrix covered").
+  Update 2026-11-02 (`wip/b25-le05-risk`, from `28d5280`): route risk in prices is built (a per-route loss record of real losses and
+  a PROVISIONAL expected-loss term, INT-673, LE05_IMPLEMENTATION s.2), and regional links beyond the food trade are confirmed in code
+  as nothing further specified (s.7). Once merged, the two LE-05 parts gate 10 named are no longer missing; the register is the
+  lead's to update.
 - **Gate 11** cannot be decided by an automated run. If it is "applicable" in the owner's sense, activation waits for a device
   profile; if not, record why. LE-06's desktop profile (`142d68c`, 106 villagers): 25.07 s a game day on, 25.39 s off.
 
@@ -162,6 +166,9 @@ What becomes playable with the switch, from the code (`econ_market.gd`, `econ_re
   open; each new price goes in the journal with the day and place (only what you learned in person).
 - **`todo:tool_rental` retired**; a new "Not in the game yet" entry for what the player still cannot do: renting a tool or paying a
   smith from the menus (the world has the actions, `World.player_rent_tool`, but no window uses them).
+- **`sys:market` also says** (LE-05 route risk, INT-673): a villager who agrees to deliver goods asks a little more when goods
+  have been lost on the way lately (a delivery robbed by bandits, a courier's load lost on the road); with nothing lost, nothing
+  is added.
 - `wiki_test`: a check that the new pages exist, that `todo:tool_rental` is gone and that the replacement todo says "Not in the game yet."
 
 ## 9. The activation change (prepared, NOT applied)
