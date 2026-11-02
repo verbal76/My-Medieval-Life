@@ -27,6 +27,8 @@ func _init() -> void:
 	test_offerings()
 	test_wages()
 	test_alms()
+	test_food_alms()
+	test_store_spoils()
 	test_relief_first()
 	test_relief_bought()
 	test_plot_work()
@@ -320,6 +322,101 @@ func test_alms() -> void:
 	var after := c.coins
 	c.evening()
 	check(c.coins == after, "the evening runs once a day")
+
+
+## Chapel food (2026-11-02): the store keeps a reserve for the relief it has lately given and gives the food above it to the
+## households shortest of food, the poorest first, in whole units from store to pantry; the wealthy get none; nothing is made.
+func test_food_alms() -> void:
+	var w := new_world()
+	var c: Chapel = w.chapel
+	while not c.is_service_day():
+		w.minutes += 1440.0
+	w.brain.update_market()
+	var wp := NPCBrain.food_points("wheat")
+	var line := float(Chapel.cfg().goods_keep_days)
+	# two households emptied of food and coins: short of food; one rich in stores: excluded
+	var short := []
+	for h in range(3, w.households.size()):
+		if short.size() >= 2:
+			break
+		var ms: Array = w.brain._members(h)
+		if ms.any(func(o): return Chapel.is_clergy(o)) or not ms.any(func(o): return o.role == "adult"):
+			continue
+		(w.households[h].pantry as Inventory).items.clear()
+		for o: NPC in ms:
+			o.inv.items.clear()
+			w.treasury += o.coins
+			o.coins = 0
+		short.append(h)
+	var rich := -1
+	for h in w.households.size():
+		if not short.has(h) and not w.brain._members(h).is_empty() and not w.brain._members(h).any(func(o): return Chapel.is_clergy(o)):
+			rich = h
+			break
+	(w.households[rich].pantry as Inventory).add("wheat", 3000)
+	check(w.brain.household_food_days(short[0]) < line and w.brain.household_food_days(rich) >= line, "two households short of food, one with plenty")
+	# no recent relief: no reserve; a reserve follows the relief lately given
+	c.relief_week = 0.0
+	c.relief_hist = []
+	check(c.food_reserve() == 0, "with no relief given lately the food reserve is nothing")
+	c.relief_hist = [700.0]
+	check(c.food_reserve() == ceili(700.0 * float(Chapel.cfg().operating_reserve_days) / float(Chapel.cfg().offering_every_days)), "the reserve is the recent relief for operating_reserve_days")
+	# a store at its reserve gives nothing
+	c.relief_hist = []
+	c.relief_week = 0.0
+	c.store.items.clear()
+	c.store.add("wheat", 10)
+	c.relief_week = 10.0 * wp * float(Chapel.cfg().offering_every_days) / float(Chapel.cfg().operating_reserve_days)
+	var items0: int = c.store.count("wheat") + _pantry_wheat(w)
+	check(is_zero_approx(c.food_alms()) and c.store.count("wheat") == 10, "a store at its reserve gives no food")
+	# a large store: the short households are given up to their shortfall, the rich nothing, the reserve kept
+	c.relief_hist = []
+	c.relief_week = 0.0
+	c.store.add("wheat", 2000)
+	items0 = c.store.count("wheat") + _pantry_wheat(w)
+	var rich0 := (w.households[rich].pantry as Inventory).count("wheat")
+	var coins0 := w.total_coins()
+	var given := c.food_alms()
+	check(given > 0.0 and int(c.last_service.food_recipients) >= 2, "the surplus food goes to households short of food (%.0f points to %d)" % [given, int(c.last_service.food_recipients)])
+	for h in short:
+		check(w.brain.household_food_days(h) >= line - 0.01, "household %d is brought to %d days of food (%.1f)" % [h, int(line), w.brain.household_food_days(h)])
+	check((w.households[rich].pantry as Inventory).count("wheat") == rich0, "the household rich in stores gets nothing")
+	check(c.store.count("wheat") + _pantry_wheat(w) == items0 and w.total_coins() == coins0, "every unit moved from the store to a pantry: none made or lost, no coins moved")
+	check(int(w.stats.get("chapel_food_alms_wheat", 0)) == 2010 - c.store.count("wheat"), "counted")
+	var left := c.store.count("wheat")
+	c.food_alms()
+	var again := c.store.count("wheat")
+	check(again <= left, "a second call gives only to those still short")
+	# the service-day evening runs it after the coin alms, and the record survives a save
+	c.relief_week = 123.0
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	check(is_equal_approx(w2.chapel.relief_week, 123.0) and w2.chapel.relief_hist.size() == c.relief_hist.size(), "the relief record survives a save")
+	var d2: Dictionary = d.duplicate(true)
+	(d2.chapel as Dictionary).erase("relief_week")
+	(d2.chapel as Dictionary).erase("relief_hist")
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), d2)
+	check(is_zero_approx(w3.chapel.relief_week) and w3.chapel.relief_hist.is_empty(), "a save from before it loads with no relief record")
+
+
+func _pantry_wheat(w: World) -> int:
+	var k := 0
+	for hh in w.households:
+		k += (hh.pantry as Inventory).count("wheat")
+	return k
+
+
+## DVW-B4: the chapel's store spoils as every store does.
+func test_store_spoils() -> void:
+	var w := new_world()
+	var c: Chapel = w.chapel
+	c.store.add("wheat", 5000)
+	var before := c.store.count("wheat")
+	Decay.dawn(w)
+	var lost := before - c.store.count("wheat")
+	check(lost >= floori(5000 * float((GameData.b("decay").spoil as Dictionary).wheat)) and lost > 0 and int(w.stats.get("chapel_spoiled", 0)) == lost, "the chapel's grain spoils at the store rate (%d of 5000)" % lost)
 
 
 func test_relief_first() -> void:

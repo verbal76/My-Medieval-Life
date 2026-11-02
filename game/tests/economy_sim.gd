@@ -1580,7 +1580,13 @@ func _chapel_line(day: int) -> Dictionary:
 	var all_coins: int = w.total_coins()
 	return {"day": day, "fund": c.coins, "share_permille": c.coins * 1000 / maxi(1, all_coins), "treasury": w.treasury, "all_coins": all_coins,
 		"reserve_now": c.operating_reserve(), "stats": st, "by_bracket": by, "gifts": n, "gift_mean_x100": total * 100 / maxi(1, n),
-		"gift_median": median, "last_service": last}
+		"gift_median": median, "last_service": last,
+		# chapel food workstream (2026-11-02): the store's food and its flows, read only
+		"store_points": snappedf(NPCBrain.store_points([c.store]), 0.1), "store_wheat": c.store.count("wheat"),
+		"store_seed": c.store.count(str(Farming.crops().wheat.seed)),
+		"food": {"relief_wheat": int(_st("chapel_relief_wheat")), "relief_points": int(_st("chapel_relief_points")),
+			"asked": int(_st("chapel_asked")), "relieved": int(_st("chapel_relieved")), "food_alms_points": int(_st("chapel_food_alms_points")),
+			"food_alms_households": int(_st("chapel_food_alms_households")), "spoiled": int(_st("chapel_spoiled"))}}
 
 
 func _sample(start: Dictionary) -> Dictionary:

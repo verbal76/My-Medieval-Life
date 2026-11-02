@@ -91,6 +91,11 @@ static func dawn(w: World) -> void:
 	for h in w.households.size():
 		lost += spoil_inv(w, w.households[h].pantry, "hh:%d" % h)
 	lost += spoil_inv(w, w.granary, "granary")
+	if w.chapel != null:                            # DVW-B4 "wherever it is kept": the chapel's store (food offered and grown)
+		var ch := spoil_inv(w, w.chapel.store, "chapel")
+		if ch > 0:
+			w.stat("chapel_spoiled", float(ch))
+		lost += ch
 	for pl: PlayerState in w.player_list():         # MP C2: every player's pack and chest (the host's keys as before)
 		var host: bool = w.is_host(pl)
 		lost += spoil_inv(w, pl.inv, "player" if host else w.player_ref(pl))
