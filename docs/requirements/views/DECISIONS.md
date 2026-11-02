@@ -6,18 +6,12 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 20 |
-| APPROVED | 268 |
+| OPEN | 19 |
+| APPROVED | 269 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 3 |
 | REOPENED | 0 |
 | DEFERRED | 5 |
-
-## Build 20: Living Economy: open, reopened or provisional (1)
-
-| ID | Question | Disposition | Blocks implementation | Affects | Source |
-|---|---|---|---|---|---|
-| B25-BIZ-TENANT-Q | May a household that does not own its house (a tenant, a family in a manor cottage) build a standalone workshop on land it buys? Your rule of 2026-10-18 says 'a house first, then workshops' (Construction.may_build refuses it); Decision 5 A says 'a person with sufficient resources may also establish a standalone workshop elsewhere on legally acquired land' and also 'Both options must follow existing property, construction, resource, and ownership rules'. In the year-long runs 41362329381 no villager founded a business: at day 365 only 0-1 of the eligible owned their house (most families live in manor cottages). Options: A keep house-first (tenants may only buy or reopen a workshop, as now); B a tenant may build a standalone workshop on purchased land, house-first still applying to workshops attached to a house (recommended); C tenants may also rent premises (not built). | OPEN | no |  | docs/directives/2026-11-01_business_ownership_employment_final_decisions.md |
 
 ## Build 21: Village Politics: open, reopened or provisional (1)
 

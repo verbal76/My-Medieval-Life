@@ -5721,8 +5721,8 @@
    "description": "May a household that does not own its house (a tenant, a family in a manor cottage) build a standalone workshop on land it buys? Your rule of 2026-10-18 says 'a house first, then workshops' (Construction.may_build refuses it); Decision 5 A says 'a person with sufficient resources may also establish a standalone workshop elsewhere on legally acquired land' and also 'Both options must follow existing property, construction, resource, and ownership rules'. In the year-long runs 41362329381 no villager founded a business: at day 365 only 0-1 of the eligible owned their house (most families live in manor cottages). Options: A keep house-first (tenants may only buy or reopen a workshop, as now); B a tenant may build a standalone workshop on purchased land, house-first still applying to workshops attached to a house (recommended); C tenants may also rent premises (not built).",
    "source": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "OPTION B IS APPROVED. A villager who rents their residence may establish a standalone workshop on legally purchased land. A legitimately rented home satisfies housing-first for separately owned standalone commercial property; a tenant may not build additions to a landlord's house; home-attached workshops, storefronts and shops for owners are preserved; buying an existing workshop needs no owned residence.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -5735,6 +5735,11 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_business_ownership_employment_final_decisions.md"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-11-02: Option B approved"
     }
    ]
   },
@@ -6316,6 +6321,37 @@
      "date": "2026-11-01",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    }
+   ]
+  },
+  {
+   "id": "B25-OVN-0211",
+   "kind": "approved",
+   "title": "Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return",
+   "description": "Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return",
+   "source": "docs/directives/2026-11-02_overnight_autonomous_development_directive.md",
+   "owner_wording": "If one task requires a question, document it and continue working on something else.",
+   "approval": "owner directive 2026-11-02",
+   "acceptance": [
+    "Option B implemented with regression tests for every existing business-establishment path",
+    "Business-founding funnel measured across the 20 listed stages, with the six outcome categories distinguished and the judgment and aspiration systems' state verified",
+    "Profession distribution and unemployment, and ore depletion, investigated with evidence; defects fixed, policy questions recorded with options",
+    "Consolidated report: completed, in progress, economic findings, decisions, next"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-02",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-02_overnight_autonomous_development_directive.md"
     }
    ]
   },
