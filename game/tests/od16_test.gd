@@ -25,6 +25,7 @@ func _init() -> void:
 	GameData.ensure()
 	test_manor_buys_a_tool_on_sale()
 	test_manor_pays_the_smith_in_advance()
+	test_advance_pays_the_orders_inputs()
 	test_bandit_spends_at_the_market()
 	test_guard_recovers_loot()
 	test_caravan_buys_producers_surplus()
@@ -114,6 +115,71 @@ func test_manor_pays_the_smith_in_advance() -> void:
 		check(not w.brain.tool_short(n2), "while the order is open the miner waits for the pickaxe")
 		w.brain._deliver_orders()
 		check(w.brain._order_for(n2).is_empty() and w.brain.tool_short(n2), "an order not met in time lapses and the miner may seek other work")
+
+
+## X20-FIREWOOD: the advance is the order's, not the smith's savings. A new smith whose household holds no other coins (so its
+## necessity reserve, OD-19, takes most of the advance) still buys every input the ordered axe lacks: the inputs of a tool paid
+## for in advance are a due obligation (PAR-02A). Before the fix the reserve stopped the ore half way and the order lapsed
+## undelivered with the advance spent (the year runs: 0 of 30-56 axes advanced were delivered).
+func test_advance_pays_the_orders_inputs() -> void:
+	var w := new_world()
+	w.minutes = 1440.0 + 9.0 * 60.0
+	var n := woodcutter_without_axe(w)
+	var smith: NPC = null
+	for o: NPC in w.npcs:
+		if not o.alive:
+			continue
+		if o.job == "smith" or w.brain.buy_role(o) == "merchant_goods":
+			o.inv.remove("axe", o.inv.count("axe"))
+		if o.job != "smith":
+			for id in ["iron_ore", "coal", "iron_bar"]:
+				o.inv.remove(id, o.inv.count(id))
+		if w.brain.buy_role(o) == "merchant_raw":
+			o.inv.add("iron_ore", 40)
+			o.inv.add("coal", 12)
+	for o: NPC in w.npcs:
+		if o.alive and o.job == "smith":
+			for id in o.inv.ids():
+				if id != "hammer":
+					o.inv.remove(id, o.inv.count(id))
+			o.coins = 0 if smith == null else 500        # the first is the poorest: the advance goes to it
+			if smith == null:
+				smith = o
+	for o: NPC in w.brain._members(smith.household):
+		o.coins = 0
+	var pantry: Inventory = w.households[smith.household].pantry
+	for id in pantry.ids():
+		pantry.remove(id, pantry.count(id))
+	w.treasury = 2000
+	var total0 := w.total_coins()
+	w.brain._support_trades(w.brain.daily_obligations())
+	var order: Dictionary = w.brain._order_for(n)
+	check(not order.is_empty() and int(order.smith) == smith.id, "the poorest smith is paid an axe's worth in advance")
+	check(w.reserve_of(smith) > 0 and smith.coins - 16 < w.reserve_of(smith), "its household's needs reserve most of the advance (%d of %d coins)" % [w.reserve_of(smith), smith.coins])
+	var bought := {}
+	for i in 8:
+		smith.plan.clear()
+		w.brain._smith(smith)
+		var last: Dictionary = smith.plan[-1] if not smith.plan.is_empty() else {}
+		if str(last.get("act", "")) == "buy_from":
+			check(last.args.get("order", false), "the trip for %s is marked as the order's" % last.args.item)
+			smith.pos = Vector2(w.brain._workplace_cell(w.npc(int(last.args.vendor))))
+			var c0: int = smith.inv.count(str(last.args.item))
+			w.brain.act(smith, "buy_from", last.args)
+			bought[str(last.args.item)] = int(bought.get(str(last.args.item), 0)) + smith.inv.count(str(last.args.item)) - c0
+		elif str(smith.doing) in ["smelt iron", "forge axe"]:
+			var r := str(smith.doing).replace(" ", "_")
+			for id in GameData.recipes[r].in:
+				smith.inv.remove(str(id), int(GameData.recipes[r].in[id]))
+			for id in GameData.recipes[r].out:
+				smith.inv.add(str(id), int(GameData.recipes[r].out[id]))     # (the recipe's run is the engine's own, tested elsewhere)
+			if r == "forge_axe":
+				break
+		w.minutes += 61.0
+	check(int(bought.get("iron_ore", 0)) >= 4, "the smith buys all the ore two bars need, reserve or not (%s)" % str(bought))
+	w.brain._deliver_orders()
+	check(n.inv.has("axe") and w.brain._order_for(n).is_empty(), "the axe is forged and handed to the woodcutter")
+	check(w.total_coins() == total0, "coins only moved")
 
 
 ## EQ-20: a bandit with coins buys food at a stall no guard is near; the coins reach the seller.

@@ -284,6 +284,8 @@ func _decide(n: NPC) -> String:
 		n.plan = [go(wander_cell(spot, 6), 0.9), work(w.rng.randf_range(20, 60), "", {}, "idle")]
 		return "child_play"
 	if n.role == "elder":
+		if _elder_provides(n) and _plan_provision(n):     # X20-FIREWOOD: the household's firewood and grain, from an elder's purse
+			return "elder_provision"
 		if w.farm_plots.plan_work(n):          # FARM-04: an elder's light work on the family's farmland, by day
 			return "elder_farm"
 		if w.chapel.plan_volunteer(n):         # DVW-B3-CHAPEL: or on the church's plot, when they volunteered
@@ -348,6 +350,20 @@ func _plan_rest_hurt(n: NPC) -> bool:
 		return true
 	n.doing = "resting a wound"
 	_plan_bed(n, float(GameData.b("rest").day_minutes))
+	return true
+
+
+## X20-FIREWOOD (OD-19, PAR-02A: a household's necessities may be bought out of any of its coins): whether elder `n` stocks the
+## household's pantry (_plan_provision) because no working-age member can. Adults do it in the evening (_plan_evening); an
+## elder is otherwise retired from work and never reached that step, so a household whose coins were all in elders' purses
+## (retired parents, an elder-only home) went without firewood every night while sellers held logs. True when no living adult
+## of the household holds a log's price (the 3 coins _plan_provision asks for firewood).
+func _elder_provides(n: NPC) -> bool:
+	if n.household < 0 or n.household >= w.households.size() or w.households[n.household].get("ended", false):
+		return false
+	for o: NPC in _members(n.household):
+		if o.alive and o.role == "adult" and o.coins >= 3:
+			return false
 	return true
 
 
@@ -1671,7 +1687,7 @@ func _fetch_for_order(n: NPC, need: Dictionary) -> bool:
 		var c := _first_with_job("carpenter")
 		if c != null and c.inv.has("plank") and n.coins >= w.sell_price(c, "plank") and not w.asleep(c):
 			n.doing = "fetching a plank for the manor's order"
-			n.plan = [go(_workplace_cell(c)), doit("buy_from", {"vendor": c.id, "item": "plank", "qty": 1})]
+			n.plan = [go(_workplace_cell(c)), doit("buy_from", {"vendor": c.id, "item": "plank", "qty": 1, "order": true})]
 			return true
 	var bars_short := int(need.get("iron_bar", 0)) - inv.count("iron_bar")
 	if bars_short > 0:
@@ -1682,7 +1698,7 @@ func _fetch_for_order(n: NPC, need: Dictionary) -> bool:
 			for v: NPC in w.npcs:
 				if v.alive and v != n and buy_role(v) == "merchant_raw" and v.inv.count(id) > 0 and not w.asleep(v) and n.coins >= w.sell_price(v, id):
 					n.doing = "buying %s for the manor's order" % GameData.item_name(id).to_lower()
-					n.plan = [go(_workplace_cell(v)), doit("buy_from", {"vendor": v.id, "item": id, "qty": short})]
+					n.plan = [go(_workplace_cell(v)), doit("buy_from", {"vendor": v.id, "item": id, "qty": short, "order": true})]
 					return true
 	return false
 
@@ -2844,7 +2860,9 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				buyer = n
 			var qty := mini(int(a.qty), v.inv.count(a.item))
 			var up := w.deal_price(w.sell_price(v, a.item), buyer, v)
-			var for_need: bool = a.get("pantry", false) or World.is_necessity(a.item) or JOB_TOOL.get(buyer.job, "") == a.item
+			# X20-FIREWOOD: the inputs of a tool the manor paid for in advance (EQ-19, _fetch_for_order) are a due obligation, which
+			# OD-19/PAR-02A lets reserved coins pay, as a household's necessities are (the advance is not the smith's savings)
+			var for_need: bool = a.get("pantry", false) or a.get("order", false) or World.is_necessity(a.item) or JOB_TOOL.get(buyer.job, "") == a.item
 			# B25-BIZ-D1: an input of the trade bought for a business is paid with the business's money (its till), only what it holds
 			var biz: int = w.ventures.budget(buyer, a.item) if not a.get("pantry", false) and buyer == n else -1
 			var funded := {}
