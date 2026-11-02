@@ -41,7 +41,7 @@ Directive: `docs/directives/2026-11-02_overnight_autonomous_development_directiv
 | Packaging and release | No Build 25 package exists. Packaging needs the owner's authorization. No public release. |
 | Living Economy | Integrated but **off** by default. It switches on by default once the 13 LE-07 readiness gates pass on the integrated candidate, with no further approval (B25-LE-ACTIVATE-D1). |
 | Operating mode | Overnight autonomous development (B25-OVN-0211): several independent workstreams. Reduced-resource mode (2026-11-01) is superseded for this session. |
-| GitHub Actions | **Running:** Tests [41451824267](https://github.com/verbal76/My-Medieval-Life/actions/runs/41451824267) on `91cf244`. The first CI run, [41446921087](https://github.com/verbal76/My-Medieval-Life/actions/runs/41446921087) on `f583086`, failed 1 of 339 world_test checks (DVW-A12 R6, a stale banner expectation; fixed in `91cf244`). Last long-sims run: 41403541582. Next: farming Dispatch B on the leak-fix commit. |
+| GitHub Actions | **Running:** the flight recorder campaign [41458375116](https://github.com/verbal76/My-Medieval-Life/actions/runs/41458375116) (owner command 14:03 UTC): long-sims with `record: true`, seeds 1 and 2, 365 days, every 10, normal play, on `91cf244`. It ends by about 19:35 UTC at the latest (330-minute limit; a recorded year may not fit). Check-in 18:04 UTC. Also running: Tests [41451824267](https://github.com/verbal76/My-Medieval-Life/actions/runs/41451824267) on `91cf244`. Next: farming Dispatch B on the leak-fix commit. |
 
 ## Workers and branches (recovery records)
 

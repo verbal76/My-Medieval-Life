@@ -122,6 +122,16 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**"Run flight recorder" (owner command, 2026-11-02 14:03 UTC).**
+- Dispatched long-sims [41458375116](https://github.com/verbal76/My-Medieval-Life/actions/runs/41458375116) on `91cf244`: `record: true`,
+  seeds 1 and 2, 365 days, every 10, normal integrated play.
+- The dedicated flight-recorder workflow (with the analyser and workbook) is still being built on `wip/b25-flight-recorder`, so
+  this run uses the existing recorded path: the archive plus `recorder_archive.py`'s independent check.
+- Why this commit: the known `coin_sources` leak has appeared only with `--market`. Normal play ran a full clean year
+  (41362329381).
+- Risk: a recorded year may exceed the 330-minute job limit. If it does, the run's partial archive and log are kept and the
+  dedicated workflow's resume handles the next campaign.
+
 **Owner directive: permanent flight recorder system (FLIGHT-REC-01), 2026-11-02.**
 - The directive is saved verbatim.
 - "Run flight recorder" is now a standing command: a 365-day, two-seed, recorded GitHub campaign with anomaly detection, an Excel
