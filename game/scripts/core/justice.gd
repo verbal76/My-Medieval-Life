@@ -787,7 +787,11 @@ func sighting(n: NPC) -> bool:
 			continue
 		seen[str(n.id)] = w.minutes
 		c.sighted = seen
-		w.report_crime(n, World.id_of_ref(ref), "sighting", "attack", ref, [int(c.aware[str(n.id)])])
+		# Decision 4: the choice weighs the crime of the case this villager knows of (its kind and victim: what they know)
+		var ci := int(c.aware[str(n.id)])
+		var known: Dictionary = c.crimes[ci] if ci >= 0 and ci < c.crimes.size() else {}
+		w.report_crime(n, World.id_of_ref(ref), "sighting", "attack", ref, [ci], true, int(known.get("victim", -1)),
+				JudgmentLive.severity_of(str(known.get("kind", "assault"))))
 		w.stat("justice_sightings")
 		return true
 	return false

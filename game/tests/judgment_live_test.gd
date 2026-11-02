@@ -60,6 +60,9 @@ func _init() -> void:
 	test_bonds_live()
 	test_r2_report_off()
 	test_r2_report_on()
+	test_d4_report_judgment()
+	test_d4_witnessing_kept()
+	test_d4_determinism_save()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -895,10 +898,10 @@ func _r2_alarm(w: World) -> Array:
 	return people.slice(0, 5)
 
 
-## Off (the shipped default, decision.integration.report false): every villager who knows of the crime takes up a report,
-## exactly as Build 18 to 19; no report choice is weighed.
+## Off (decision.integration.report false; the shipped value until owner Decision 4, 2026-11-01, turned it on): every
+## villager who knows of the crime takes up a report, exactly as Build 18 to 19; no report choice is weighed.
 func test_r2_report_off() -> void:
-	check(not bool(JudgmentStore.default_cfg().decision.integration.get("report", true)), "R2: judgment.json ships the report hook OFF")
+	check(bool(JudgmentStore.default_cfg().decision.integration.get("report", false)), "Decision 4: judgment.json ships the report hook ON")
 	check(JudgmentStore.default_cfg().decision.profiles.has("report"), "R2: the report profile is configured")
 	var w := _r2_world(false)
 	var ppl := _r2_alarm(w)
@@ -988,3 +991,183 @@ func test_r2_report_on() -> void:
 	check(quiet_kin < kin_pairs.size(), "R2 on: ...but kinship decides nothing alone: some kin still tell")
 	check(fond.report.is_empty() and not neutral.report.is_empty(), "R2 on: the same assault: the witness fond of the attacker keeps quiet, the one with no opinion reports")
 	w.dispose()
+
+
+# ---------------------------------------------------------------- owner Decision 4 (2026-11-01): judgment-based reporting -----
+## The kin pairs [witness, relative, stranger] among the adults (the stranger kin of neither), the witness's own ledger of
+## both left empty (a fresh world): a comparable offence by a relative and by a stranger.
+func _d4_kin_cases(w: World) -> Array:
+	var j: JudgmentStore = w.judgment
+	var all := adults(w)
+	var out := []
+	for n: NPC in all:
+		for o: NPC in all:
+			if n == o or not j.social.kin(n.id, o.id):
+				continue
+			for s: NPC in all:
+				if s != n and s != o and not j.social.kin(n.id, s.id) and not j.social.kin(o.id, s.id):
+					out.append([n, o, s])
+					break
+	return out
+
+
+## A witness reports a stranger's theft and protects a relative for the same offence (typical weights: the shipped profile);
+## graver crimes press harder toward reporting across a population, never mandatorily; two witnesses of the same crime may
+## differ; kinship with the victim presses toward telling; only the witness's own knowledge enters.
+func test_d4_report_judgment() -> void:
+	var w := new_world()
+	var j := JudgmentLive.attach(w, plain_cfg())
+	check(JudgmentLive.on(w, "report"), "Decision 4: the report hook is on with the shipped config")
+	var rc: Dictionary = j.cfg.decision.report
+	check(JudgmentLive.report_harm(rc, "saw", "killing") > JudgmentLive.report_harm(rc, "saw", "attack")
+			and JudgmentLive.report_harm(rc, "saw", "attack") > JudgmentLive.report_harm(rc, "saw", "theft"), "Decision 4: severity scales the harm a witness weighs: killing > assault > theft")
+	check(JudgmentLive.report_harm(rc, "victim", "attack") > JudgmentLive.report_harm(rc, "victim", "theft")
+			and JudgmentLive.report_harm(rc, "victim", "theft") > JudgmentLive.report_harm(rc, "saw", "theft"), "Decision 4: a victim feels their own harm more, an attack more than a theft")
+	check(JudgmentLive.severity_of("killing") == "killing" and JudgmentLive.severity_of("guard_assault") == "attack" and JudgmentLive.severity_of("pickpocket") == "theft", "Decision 4: a case's crime kinds map to the three severities")
+	# the same witness, the same theft, a stranger and a relative (through the live call, World.report_crime)
+	var cases := _d4_kin_cases(w)
+	var both := 0
+	var stranger_told := 0
+	var kin_quiet := 0
+	var example := ""
+	for cs in cases:
+		var wit: NPC = cs[0]
+		wit.report = {}
+		var told_s := w.report_crime(wit, (cs[2] as NPC).id, "saw", "theft", "", [], true, -1)
+		wit.report = {}
+		var told_k := w.report_crime(wit, (cs[1] as NPC).id, "saw", "theft", "", [], true, -1)
+		wit.report = {}
+		stranger_told += 1 if told_s else 0
+		kin_quiet += 0 if told_k else 1
+		if told_s and not told_k:
+			both += 1
+			if example == "":
+				example = "%s reports %s, protects %s" % [wit.name, (cs[2] as NPC).name, (cs[1] as NPC).name]
+	check(not cases.is_empty() and both * 2 > cases.size(), "Decision 4: a witness reports a stranger's theft but protects a relative for the same theft (%d of %d witnesses; %s)" % [both, cases.size(), example])
+	check(stranger_told > cases.size() - kin_quiet, "Decision 4: ...strangers are reported far more often than relatives (%d strangers told, %d of %d relatives protected)" % [stranger_told, kin_quiet, cases.size()])
+	check(kin_quiet < cases.size(), "Decision 4: ...but protecting family is weighed, not a rule: some still report a relative")
+	# severity across a population: everyone fond of the same offender to the same degree
+	var pool := adults(w)
+	var off: NPC = pool[0]
+	var counts := {}
+	for crime in ["theft", "attack", "killing"]:
+		var said := 0
+		for n: NPC in pool.slice(1):
+			j.set_ledger(n.id, off.id, 60000, 0)
+			if JudgmentLive.will_report(w, n, off.id, "saw", crime):
+				said += 1
+		counts[crime] = said
+	var size := pool.size() - 1
+	check(int(counts.killing) >= int(counts.attack) and int(counts.attack) >= int(counts.theft) and int(counts.killing) > int(counts.theft),
+			"Decision 4: graver crimes are reported more often across a population (of %d fond witnesses: theft %d, assault %d, killing %d)" % [size, int(counts.theft), int(counts.attack), int(counts.killing)])
+	check(int(counts.attack) > 0 and int(counts.attack) < size, "Decision 4: two witnesses of the same assault reach different conclusions (%d tell, %d keep quiet)" % [int(counts.attack), size - int(counts.attack)])
+	check(int(counts.killing) < size or int(counts.theft) < size, "Decision 4: reporting is never mandatory: even a grave crime is not told by everyone who is fond of the offender")
+	# kinship with the victim presses toward telling (loyalty to one's own who was harmed)
+	var told_plain := 0
+	var told_vkin := 0
+	for cs in cases:
+		var wit: NPC = cs[0]
+		var stranger: NPC = cs[2]
+		j.set_ledger(wit.id, stranger.id, 60000, 0)
+		told_plain += 1 if JudgmentLive.will_report(w, wit, stranger.id, "saw", "attack", -1) else 0
+		told_vkin += 1 if JudgmentLive.will_report(w, wit, stranger.id, "saw", "attack", (cs[1] as NPC).id) else 0
+	check(told_vkin > told_plain, "Decision 4: a witness tells more readily when the one harmed is their own kin (%d vs %d of %d)" % [told_vkin, told_plain, cases.size()])
+	# no leakage: only the witness's own ledger counts; another villager's opinion or fear of the offender changes nothing
+	var wit0: NPC = pool[1]
+	var before := []
+	for n: NPC in pool.slice(1):                  # a witness whose answer turns on the severity (a contested choice)
+		before = []
+		for crime in ["theft", "attack", "killing"]:
+			before.append(JudgmentLive.will_report(w, n, off.id, "saw", crime))
+		wit0 = n
+		if before.has(true) and before.has(false):
+			break
+	var other: NPC = pool[1] if wit0 != pool[1] else pool[2]
+	j.set_ledger(other.id, off.id, 0, 90000)
+	var after := []
+	for crime in ["theft", "attack", "killing"]:
+		after.append(JudgmentLive.will_report(w, wit0, off.id, "saw", crime))
+	check(before == after, "Decision 4: no leakage: another villager's opinion of the offender does not enter a witness's choice (%s, %s)" % [str(before), str(after)])
+	w.dispose()
+
+
+## Witnessing is not reporting: a witness who keeps quiet still remembers the deed, judges it and is on the case's aware list
+## (so a later sighting can still be weighed); someone who did not see it knows nothing. A guard who sees it answers it as
+## ever, and only reports taken up reach a guard.
+func test_d4_witnessing_kept() -> void:
+	var w := new_world()
+	var j := JudgmentLive.attach(w, plain_cfg())
+	var people := adults(w)
+	var victim: NPC = people[0]
+	var wits: Array = people.slice(1, 13)
+	var far: NPC = people[-1]
+	var guard: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.job == "guard":
+			guard = n
+			break
+	w.player.pos = victim.pos
+	for n: NPC in wits + [guard]:
+		n.pos = victim.pos + Vector2(0.3, 0)
+		n.anim = "idle"
+		n.report = {}
+		n.target = -1
+		if n.job != "guard":
+			j.set_ledger(n.id, ME, 90000, 0)                 # all fond of the player to the same degree
+	far.pos = victim.pos + Vector2(200, 200)
+	far.report = {}
+	var ref := w.acting_ref()
+	w.player_assault(victim)
+	var fact := last_fact(j, "assault")
+	var c: Dictionary = w.justice.case_of(ref)
+	var quiet := []
+	var told := []
+	for n: NPC in wits:
+		if n.report.is_empty():
+			quiet.append(n)
+		else:
+			told.append(n)
+	check(not quiet.is_empty() and not told.is_empty(), "Decision 4: the same assault, witnesses fond of the player alike: some tell, some keep quiet (%d, %d)" % [told.size(), quiet.size()])
+	var kept := 0
+	for n: NPC in quiet:
+		if c.aware.has(str(n.id)) and not j.belief(n.id, int(fact.id)).is_empty() and n.memory.any(func(m): return str(m).begins_with("saw ")):
+			kept += 1
+	check(not quiet.is_empty() and kept == quiet.size(), "Decision 4: witnessing != reporting: every witness who kept quiet still remembers it, judges it and is on the case's aware list (%d of %d)" % [kept, quiet.size()])
+	check(far.report.is_empty() and j.belief(far.id, int(fact.id)).is_empty() and not c.aware.has(str(far.id)), "Decision 4: no leakage: a villager who did not see it knows nothing and reports nothing")
+	check(guard != null and guard.target != -1, "Decision 4: a guard who sees the attack answers it as ever (judgment never stands in the guard's way)")
+	check(float(w.stats.get("crime_reports_withheld", 0.0)) == float(quiet.size()) and int(j.stats.get("report_kept_quiet", 0)) >= quiet.size(), "Decision 4: each witness kept quiet is counted (%s withheld)" % str(w.stats.get("crime_reports_withheld", 0.0)))
+	w.dispose()
+
+
+## The same choices on the same world are reproducible, and survive a save and load (the shipped config, its layers on).
+func test_d4_determinism_save() -> void:
+	var answers := []
+	for k in 2:
+		var wk := new_world(3)
+		var pk := adults(wk)
+		var ok: NPC = pk[0]
+		var a := []
+		for n: NPC in pk.slice(1):
+			wk.judgment.set_ledger(n.id, ok.id, 60000, 0)
+			for crime in ["theft", "attack", "killing"]:
+				a.append(JudgmentLive.will_report(wk, n, ok.id, "saw", crime))
+		answers.append(a)
+		wk.dispose()
+	check(answers[0] == answers[1] and answers[0].has(true) and answers[0].has(false), "Decision 4: deterministic: the same world and the same crimes give the same choices (%d choices)" % answers[0].size())
+	var w := new_world(3)
+	var pool := adults(w)
+	var off: NPC = pool[0]
+	for n: NPC in pool.slice(1):
+		w.judgment.set_ledger(n.id, off.id, 60000, 0)
+		JudgmentLive.will_report(w, n, off.id, "saw", "attack")      # history the stubbornness layer keeps
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	var a1 := []
+	var a2 := []
+	for i in range(1, pool.size()):
+		var n: NPC = pool[i]
+		a1.append(JudgmentLive.will_report(w, n, off.id, "saw", "theft"))
+		a2.append(JudgmentLive.will_report(w2, w2.npc(n.id), off.id, "saw", "theft"))
+	check(w2.judgment != null and a1 == a2, "Decision 4: after a save and load the same witnesses make the same choices (%d)" % a1.size())
+	w.dispose()
+	w2.dispose()

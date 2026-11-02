@@ -193,6 +193,7 @@ func _init() -> void:
 			if w.judgment != null:            # SJD-G: the judgment store's soak measures, read only (JudgmentSoak changes nothing)
 				print("JUDGE " + JSON.stringify(JudgmentSoak.metrics(w.judgment)))
 			print("CHAPEL " + JSON.stringify(_chapel_line(d + 1)))
+			print("BIZ " + JSON.stringify(_biz_line(d + 1)))
 			dev_series.append(_dev(d + 1))
 			print("ECON10 " + JSON.stringify(dev_series[-1]))
 			min_hunger = 100.0
@@ -1026,6 +1027,44 @@ func _q(sorted: Array, q: int) -> int:
 
 ## X20-CHAPEL-FIX instrumentation, read only: the services so far (who was there, unable, decided, gave, declined, by household
 ## bracket), the gifts' total, mean and median, the fund's wages, reserve, alms and recipients, and its share of all coins.
+## B25-BIZ-OWN: villager businesses and permanent employment at a checkpoint, read only. The recorded ventures_* stats, the
+## open ventures and employment records, and how many villagers of the founding trades pass each of Ventures.refusal's own
+## personal checks (skill, experience, household, house) -- repeated here without its later stages, which can survey ground.
+func _biz_line(day: int) -> Dictionary:
+	var st := {}
+	for k in w.stats:
+		if str(k).begins_with("venture"):
+			st[k] = int(w.stats[k])
+	var c := Ventures.cfg()
+	var gate := {"founding_trade": 0, "skilled": 0, "experienced": 0, "household_free": 0, "owns_house": 0}
+	for n: NPC in w.npcs:
+		if Ventures.kind_for(n.job) == "" or not n.alive or n.role != "adult" or n.household < 0:
+			continue
+		gate.founding_trade += 1
+		var sk: String = w.brain._trade_skill(n.job)
+		var lv := Skills.level(n, sk) if sk != "" and int(n.skills.get(sk, 0)) > 0 else 0
+		if lv < int(c.min_level):
+			continue
+		gate.skilled += 1
+		var ind: String = NPCBrain.TRADE_INDUSTRY.get(n.job, "")
+		var days := w.experience.days(World.npc_ref(n.id), ind) if ind != "" else float(w.day() - n.job_since)
+		if days < float(c.min_trade_days):
+			continue
+		gate.experienced += 1
+		var hh: Dictionary = w.households[n.household]
+		if hh.get("ended", false) or hh.has("venture") or str(hh.get("build", "")) != "" or not (hh.get("housing", {}) as Dictionary).is_empty():
+			continue
+		gate.household_free += 1
+		var house: Dictionary = w.buildings.get(str(hh.get("home", "")), {})
+		if not house.is_empty() and w.owner_of(house) == World.hh_ref(n.household):
+			gate.owns_house += 1
+	var roles := {}
+	for r in w.employment.list:
+		roles[str(r.get("role", ""))] = int(roles.get(str(r.get("role", "")), 0)) + 1
+	return {"day": day, "stats": st, "open": w.ventures.open_ventures().size(), "setting_up": w.ventures.setting_up().size(),
+		"employed": roles, "founding_gates": gate}
+
+
 func _chapel_line(day: int) -> Dictionary:
 	var c: Chapel = w.chapel
 	var keys := ["services", "present", "unable", "considered", "donors", "declined", "offering_coins", "offering_wheat", "wheat_donors",

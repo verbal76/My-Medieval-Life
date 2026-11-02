@@ -1384,6 +1384,18 @@ func contract_ended(c: Dictionary, was: String, held: int, buyer_after: int) -> 
 	end(ev, "ok" if str(c.state) == "fulfilled" else "failed", "", "")
 
 
+## Decision 2 / CON-03, CON-05: `amount` coins left a contract's set-aside coins for party `to` (an advance drawn for its expense, a
+## retention released or ruled on by the reeve; a negative amount went back into the contract).
+func contract_settled(c: Dictionary, what: String, amount: int, to: String, to_after: int) -> void:
+	var ev := begin("contracts", "contract", "contract", what, wref(to), {"object": "contract:%d" % int(c.id),
+		"detail": "contract=%d %s=%d to=%s" % [int(c.id), what, amount, to]})
+	_wpart(ev, str(c.seller), "seller")
+	_wpart(ev, str(c.buyer), "buyer")
+	state_change(ev, "contract:%d" % int(c.id), "coins", int(c.reserved) + amount, int(c.reserved), "contracts")
+	state_change(ev, wref(to), "coins", to_after - amount, to_after, "contracts")
+	end(ev)
+
+
 # ---------------------------------------------------------------- credit --------------------
 func _party_ref(o) -> String:
 	return ref_of(o) if (o is NPC or o is PlayerState) else "obj:?"

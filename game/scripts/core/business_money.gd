@@ -19,6 +19,11 @@ extends RefCounted
 ##      the necessity reserve), never from the family's food money.
 ## Coins only move between a till and a purse (conserved; World.total_coins counts the tills). A household that has
 ## ended leaves its till to the manor, as a stall's net does.
+## B25-BIZ-D1 (owner, 2026-11-01, docs/expansion20/BUSINESS_OWNERSHIP.md section 2): an open villager business (a venture,
+## Ventures) keeps its own till in the same way, in its workshop's `venture` record ({till, earned, paid, costs, invested,
+## drawn}; absent reads as empty), settled each morning by the same rule and paid to the household that runs it. Its sales of
+## the business's goods come in through after_trade (with the item: Ventures.on_sale); its materials and wages go out of it
+## (Ventures.fund, Employment). The owner invests and withdraws by choice (invest, withdraw).
 
 var w: World
 
@@ -66,8 +71,11 @@ func keeping(n: NPC) -> Dictionary:
 
 
 ## World.trade's hook: a keeper's sale at the household's storefront goes into the storefront's till, not the keeper's purse.
-func after_trade(seller: Object, total: int) -> void:
+## B25-BIZ-D1: a sale of a business's goods by its keeper or employee (`id`, `qty`) goes into the business's till first.
+func after_trade(seller: Object, total: int, id := "", qty := 0) -> void:
 	if total <= 0 or not (seller is NPC) or int(seller.coins) < total:
+		return
+	if id != "" and qty > 0 and w.ventures != null and w.ventures.on_sale(seller, id, qty, total):
 		return
 	var b := keeping(seller)
 	if not b.is_empty():
@@ -106,6 +114,80 @@ func from_till(b: Dictionary, who: Object, amount: int) -> bool:
 	return _move(b.front, who, amount, true, "front:" + str(b.get("id", "")), "distribution")
 
 
+## B25-BIZ-D1: the owner invests `amount` of `who`'s own coins in the business whose till record is `b[key]` ("front",
+## "counter", "venture"), or withdraws it from the till. All or nothing; recorded on the record (invested, drawn).
+func invest(b: Dictionary, key: String, who: Object, amount: int) -> bool:
+	if amount <= 0 or who == null or not b.has(key) or int(who.coins) < amount:
+		return false
+	if not _move(b[key], who, amount, false, key + ":" + str(b.get("id", "")), "contribution"):
+		return false
+	b[key]["invested"] = int(b[key].get("invested", 0)) + amount
+	w.stat(key + "_till_invested", amount)
+	return true
+
+
+func withdraw(b: Dictionary, key: String, who: Object, amount: int) -> bool:
+	if amount <= 0 or who == null or not b.has(key) or int(b[key].get("till", 0)) < amount:
+		return false
+	if not _move(b[key], who, amount, true, key + ":" + str(b.get("id", "")), "distribution"):
+		return false
+	b[key]["drawn"] = int(b[key].get("drawn", 0)) + amount
+	w.stat(key + "_till_drawn", amount)
+	return true
+
+
+## B25-BIZ-D1: a payment out of a business's till (`key` record of `b`) to `who` for `purpose` ("materials", "wage",
+## "premises"), counted in the record's costs. All or nothing: a business cannot spend money it does not hold.
+func pay_out(b: Dictionary, key: String, who: Object, amount: int, purpose: String) -> bool:
+	if amount <= 0 or who == null or not b.has(key) or int(b[key].get("till", 0)) < amount:
+		return false
+	if not _move(b[key], who, amount, true, key + ":" + str(b.get("id", "")), purpose):
+		return false
+	var costs: Dictionary = b[key].get("costs", {})
+	costs[purpose] = int(costs.get(purpose, 0)) + amount
+	b[key]["costs"] = costs
+	return true
+
+
+## B25-BIZ-D1: coins into a business's till from `who` (a sale's price, a purchase's unspent funds), counted as earned for a
+## sale. All or nothing.
+func pay_in(b: Dictionary, key: String, who: Object, amount: int, purpose: String) -> bool:
+	if amount <= 0 or who == null or not b.has(key) or int(who.coins) < amount:
+		return false
+	if not _move(b[key], who, amount, false, key + ":" + str(b.get("id", "")), purpose):
+		return false
+	if purpose == "sale":
+		b[key]["earned"] = int(b[key].get("earned", 0)) + amount
+	elif purpose == "refund":
+		var costs: Dictionary = b[key].get("costs", {})
+		costs["materials"] = maxi(0, int(costs.get("materials", 0)) - amount)
+		b[key]["costs"] = costs
+	return true
+
+
+## Open villager businesses (B25-BIZ-D1), in building id order.
+func venture_buildings() -> Array:
+	var out := []
+	var ids: Array = w.buildings.keys()
+	ids.sort()
+	for id in ids:
+		if w.buildings[id].has("venture"):
+			out.append(w.buildings[id])
+	return out
+
+
+static func venture_till_of(b: Dictionary) -> int:
+	return int(b.get("venture", {}).get("till", 0))
+
+
+## Coins in the villager businesses' tills (counted with the village's money: Business.tills).
+func venture_tills() -> int:
+	var t := 0
+	for b in venture_buildings():
+		t += venture_till_of(b)
+	return t
+
+
 ## Each morning (Business.daily).
 func daily() -> void:
 	for b in fronts():
@@ -117,6 +199,14 @@ func daily() -> void:
 		_settle(b.front, w.party(front_owner(b)), "front_till", "front:" + str(b.id))
 	for b in counter_buildings():
 		_settle(b.counter, _payee(b), "counter_till", "counter:" + str(b.id))
+	for b in venture_buildings():                    # B25-BIZ-D1: an open villager business, paid to the household that runs it
+		_settle(b.venture, w.party(venture_owner(b)), "venture_till", "venture:" + str(b.id))
+
+
+## B25-BIZ-D1: whose money a venture's till is: the household that runs it (the manor once that household is gone).
+func venture_owner(b: Dictionary) -> String:
+	var ref := World.hh_ref(int(b.get("venture", {}).get("household", -1)))
+	return ref if int(b.get("venture", {}).get("household", -1)) >= 0 and w.party(ref) != null else World.MANOR
 
 
 # ---------------------------------------------------------------- whose till (one rule) -----
@@ -178,6 +268,8 @@ func household_ended(ref: String) -> void:
 func keep_till(b: Dictionary, ref: String) -> void:
 	if b.has("front"):
 		_keep(b, "front", ref)
+	if b.has("venture"):
+		_keep(b, "venture", venture_owner(b))     # B25-BIZ-D1: a business's till is its household's, never the next holder's
 	if b.has("counter"):
 		# a counter's money was its owner's by counter_owner's rule under the previous holder: the holding household, else
 		# (the manor's or a player's building, or nobody left) the keeper serving it, else the manor
