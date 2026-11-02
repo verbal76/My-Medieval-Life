@@ -3,7 +3,7 @@
 **This is the one current-state document.** Owner directives MEM-01 and DOC-CONT-01 make it the entry point.
 
 - **Updated:** 2026-11-01.
-- **Snapshot last verified:** 2026-11-02 21:15 UTC by the lead, against wip/expansion20 `34e1041`, wip/requirements-control (this commit), Actions runs to 41509578455.
+- **Snapshot last verified:** 2026-11-02 22:25 UTC by the lead, against wip/expansion20 `4b51c92`, wip/requirements-control (this commit), Actions runs to 41536810831.
   - **Convention:** whoever checks this file against the live GitHub state writes this line as
     `YYYY-MM-DD HH:MM UTC by <session or agent>, against wip/expansion20 <sha>, wip/requirements-control <sha>, Actions runs
     to <newest run id>`.
@@ -40,7 +40,7 @@ Directive: `docs/directives/2026-11-02_overnight_autonomous_development_directiv
 |---|---|
 | Current development build | **Build 25**, the consolidation build. It holds all approved expansion work and all approved recoverable abandoned-branch work (B25-SCOPE-D1, `docs/directives/2026-11-01_build25_scope_clarification.md`). |
 | Integration branch (Build 25 source) | `wip/expansion20`, the **one** code integration branch (BRANCH-POL-01, owner 2026-11-02; CLAUDE.md section 5a). Task branches start from its head and are merged back promptly after `branch_audit.py --worktrees` (run on `wip/expansion20`). |
-| Development head | `34e1041` (2026-11-02): KI-HOME-DOOR fix integrated (from `wip/b25-home-door` `bcff138`, fast-forward) and `home_ref_test` registered in CI; on `d73bd0a` (BRANCH-POL-01), `0d194c8`, `a5667ed` (CI-green), `9c56199`. Earlier chain in `docs/DEVELOPMENT_CHANGELOG.md`. |
+| Development head | **`4b51c92` FROZEN Build 25 candidate** (B25-CLOSE-02): farming Phase 2 (yield 1.75, shared and seasonal farming on, old-save seed corn), the cart-hitch fix and the simulator's resume counters, fast-forwarded from `wip/b25-farm-phase2`; on `34e1041` (KI-HOME-DOOR). Nothing else lands on `wip/expansion20` while the final campaign runs. |
 | Latest verified SHA | `3c7e45b`: suites TESTED locally, listed below. No CI run, no 30-day baseline and no year-long run on this SHA. The last SHA with year-long CI evidence is `ae8641d` (chapel fix). The last SHA with a complete validated gate is `ad281dc` (30-day baseline). Its year-long runs failed on the gossip crash, which is now fixed. |
 | Rollback point | `ad281dc` |
 | Records branch | `wip/requirements-control`. It holds the register, directives and this file. The register is edited only here, with `tools/requirements_update.py` and then `tools/check_requirements.py --write`. It is not merged into staging or `wip/expansion20` without the owner's authorization. |
@@ -49,7 +49,7 @@ Directive: `docs/directives/2026-11-02_overnight_autonomous_development_directiv
 | Packaging and release | No Build 25 package exists. Packaging needs the owner's authorization. No public release. |
 | Living Economy | Integrated but **off** by default. It switches on by default once the 13 LE-07 readiness gates pass on the integrated candidate, with no further approval (B25-LE-ACTIVATE-D1). |
 | Operating mode | **STANDBY** (owner, 2026-11-02, MML-CONSERVE-01): MML is second priority behind Upwardly. At most one Claude worker; no parallel investigators, background sessions, scheduled follow-ups, new features or 365-day campaigns without the owner's approval. Nothing is being worked on. |
-| GitHub Actions | **Running:** Tests [41509578455](https://github.com/verbal76/My-Medieval-Life/actions/runs/41509578455) on `0d194c8` (dispatched 19:24 UTC; not cancelled by the consolidation). **Finished:** flight campaign [41469410306](https://github.com/verbal76/My-Medieval-Life/actions/runs/41469410306) (`8acbdea`; seed 1 clean, seed 2 KI-HOME-DOOR); farming B1 41469335443 and B2 41469341029 (both food-secure; baseline 1.75, KI-01); long-sims 41458375116 (KI-REC-RUNNER); Tests 41482218360 (135/138, fixed by the CI-green merge). No long simulation is to start until FR-REPAIR-01's focused repairs pass. |
+| GitHub Actions | **Running, the one final campaign (owner B25-CLOSE-02) on `4b51c92`:** flight [41536805310](https://github.com/verbal76/My-Medieval-Life/actions/runs/41536805310) (seeds 1 and 2, 365 days, every 10, 100-day segments, recorded) and economy-on [41536810831](https://github.com/verbal76/My-Medieval-Life/actions/runs/41536810831) (seed 1, `--market`, 365 days, every 10). Do not cancel, rerun or duplicate (SIM-02). Done: Tests 41509578455 on `0d194c8` green (full CI, reused). |
 
 ## Workers and branches (recovery records)
 
@@ -63,7 +63,7 @@ Every branch below holds real, unmerged work. None is disposable.
 
 | Worker or workstream | Register | Branch / worktree | Latest pushed | Unpushed | State and tests | Merge readiness | Next safe step |
 |---|---|---|---|---|---|---|---|
-| **PAUSED:** farming yield Phase 2 | B25-NINE-D3, FARM-YIELD-D1 | `wip/b25-farm-phase2` `710fce9` (WIP, pushed); worktree `.claude/worktrees/farm-phase2` | `710fce9` | none | Yield 1.75 and both switches set; old-save seed corn (`World.start_shared_farming`, `farm_shared_save_test`); stale tests and wiki updated; 25 suites 0 failures; smoke `166eaf82`. | not ready | On resumption: commit the test's uid file, merge `wip/expansion20` (overlaps home-door in `world.gd`, DECISIONS, manifest), rerun the targeted suites, merge. |
+| Merged: farming yield Phase 2, cart-hitch fix | FARM-YIELD-D1, B25-CLOSE-01/02 | `wip/b25-farm-phase2` `4b51c92`, fast-forwarded into `wip/expansion20` | `4b51c92` | none | Targeted suites green (see the register, B25-CLOSE-02). | merged | none |
 | Merged: KI-HOME-DOOR fix | FR-REPAIR-01 | `wip/b25-home-door` `bcff138`, fast-forwarded into `wip/expansion20`, then `34e1041` | `bcff138` | none | See KNOWN_ISSUES KI-HOME-DOOR. | merged | none |
 | **PAUSED:** flight findings investigation (read-only) | FR-REPAIR-01 point 6 | worktree `.claude/worktrees/fr-investigate` (clean); `wip/b25-fr-investigate` holds nothing | — | none | Findings recorded: KI-FR-CARTHITCH (loop, fix proposed, not made), KI-FR-WHEATSALE (market outcome), KI-FR-CONTRACTS (no-player artefact). Logs in the session scratchpad `fri/`. | report only | Awaits the owner. |
 | Merged: make CI green | HAG-MEM-02, CI | `wip/b25-ci-green` `a5667ed`, merged into `wip/expansion20`, then `0d194c8` (two uid files) | `a5667ed` | none | `ci-out` excluded from the asset check; `refuge_test` compares timers within a microminute; `housing_test` clears trees for open ground; `tests.yml` timeout 210. | merged | Worktree retired 2026-11-02 (INTEGRATED, leftover files identical); branch kept. Read Tests 41509578455. |
@@ -135,7 +135,7 @@ Build 25:
 
 ## Next authorized actions (in order)
 
-**B25-CLOSE-01 (owner 2026-11-02): complete Build 25 before packaging, one worker (the lead).** In progress on `wip/b25-farm-phase2`: farming Phase 2, the cart-hitch fix and the seed-corn ledger fix, then one frozen SHA and targeted validation. Closure audit: `docs/release/build25_reconciliation/BUILD25_CLOSURE_2026-11-02.md`. Packaging waits on the owner decisions listed there (a year-long campaign, B25-ECON-P1..P5, LE-07 gate 11, reconciliation Q2). The items below are not picked up without the owner.
+**B25-CLOSE-01/02 (owner 2026-11-02): complete Build 25 before packaging, one worker (the lead).** Candidate frozen at `4b51c92`; the one final campaign is running (41536805310, 41536810831). Next: read it, then the owner's answers to B25-ECON-P1..P5 and the phone test (gate 11). Closure audit: `docs/release/build25_reconciliation/BUILD25_CLOSURE_2026-11-02.md`. Packaging waits on the owner decisions listed there (a year-long campaign, B25-ECON-P1..P5, LE-07 gate 11, reconciliation Q2). The items below are not picked up without the owner.
 
 0. **Flight recorder repair** (FR-REPAIR-01, owner 2026-11-02, `docs/directives/2026-11-02_flight_recorder_investigation_repair.md`): KI-HOME-DOOR fix and evidence, then the cart_hitch, wheat-sale and contract-cancellation classification. **No full 365-day campaign** until the focused repairs and regression tests pass; then propose it with the exact fixed SHA and the reusable evidence.
 1. Done: business founding, business hiring and permanent employment (`d0dc0d7`). Founding is not yet seen in a live run.

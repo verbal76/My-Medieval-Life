@@ -61,6 +61,23 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
 
 ## 2026-11-02
 
+**Build 25 candidate frozen at `4b51c92` and the one final campaign dispatched (B25-CLOSE-01/02). TESTED locally; campaign RUNNING (CI).**
+- Integrated by fast-forward from `wip/b25-farm-phase2`:
+  - farming Phase 2 (yield 1.75, shared and seasonal farming on, the old-save seed-corn start, wiki);
+  - the KI-FR-CARTHITCH fix (the held cart is used, a skipped stop still parks, villagers let go of carts on load);
+  - the seed-corn grant counted in the item ledger;
+  - the simulator's resume keeping load-time counts.
+- Found by the targeted replay: the first seed 2 resume from the day-200 campaign save stopped at day 201 with a wheat_seed
+  residual of 396 (the migration grant, unrecorded). It was fixed in two places, the game's counter and the harness. The rerun
+  for days 200-212 had 0 script errors, leaks 0 and 0 starved.
+- Targeted suites: 20 suites, 0 failures and 0 script errors, including `run_tests` 3,602 and `home_test` 124. Seed 1 10-day
+  smoke: `166eaf82`. Reused: full CI 41509578455 on `0d194c8`.
+- Campaign: flight
+  [41536805310](https://github.com/verbal76/My-Medieval-Life/actions/runs/41536805310) (seeds 1 and 2, normal game) and
+  economy-on [41536810831](https://github.com/verbal76/My-Medieval-Life/actions/runs/41536810831) (seed 1).
+- Owner decisions written up: `docs/release/build25_reconciliation/BUSINESS_FOUNDING_DECISIONS_AND_PHONE_TEST.md`
+  (B25-ECON-P1..P5, and the LE-07 gate 11 phone test).
+
 **KI-HOME-DOOR fixed and integrated; MML enters standby (FR-REPAIR-01, MML-CONSERVE-01). INTEGRATED (`34e1041`), TESTED locally.**
 - **Cause:** a legitimately homeless household (seed 2, day 225), plus `_rehouse` leaving stale homes when a household lost its
   house.

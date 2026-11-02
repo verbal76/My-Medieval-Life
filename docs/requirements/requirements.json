@@ -5998,7 +5998,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -6007,7 +6007,17 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-02_build25_closure_scope_and_campaign.md"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead (single worker); branch: None -> wip/expansion20; commits + 4b51c92",
+     "why": "frozen candidate wip/expansion20 4b51c92 (fast-forward from wip/b25-farm-phase2: farming Phase 2 at 1.75 with both switches, old-save seed corn counted as imported, cart-hitch fix, simulator resume keeps load-time counts; on 34e1041 home-door). Targeted, all 0 failures 0 script errors: farming 224, farm_plots 104, crop_share 26, farm_shared_save 17, home_ref 40, home 124, housing 117, aging 136, migration 109, save_continuity 5, save_transfer 21, le06_save 21, le07_gates 31, conservation 8, net_econ_integrity 126, wiki_test pass, world 339, chapel 173, start 523, run_tests 3602; seed-1 10-day smoke 166eaf82 leak 0; seed-2 replay day 200-212 from the campaign save 0 script errors, leaks 0, 0 starved (first replay caught the seed-corn ledger gap, fixed). Reused: full CI 41509578455 on 0d194c8 green. Campaign dispatched: flight 41536805310 (seeds 1,2, 365 days, every 10, recorded, 100-day segments) and economy-on 41536810831 (seed 1, --market, 365, every 10)."
     }
+   ],
+   "assigned_worker": "lead (single worker)",
+   "branch": "wip/expansion20",
+   "commits": [
+    "4b51c92"
    ]
   },
   {
@@ -22121,6 +22131,11 @@
      "date": "2026-11-02",
      "change": "note",
      "why": "Phase 2 paused by owner (MML-CONSERVE-01) after a WIP commit 710fce9 on wip/b25-farm-phase2: yield 1.75 and both switches set, old-save seed-corn start (World.start_shared_farming), farm_shared_save_test, stale tests updated, wiki; 25 suites 0 failures, smoke 166eaf82; remaining: uid file, merge integration head (overlaps home-door in world.gd, DECISIONS, manifest), rerun targeted suites. Yield 1.75 stays the approved baseline."
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; commits + 4b51c92",
+     "why": "Phase 2 integrated in the frozen candidate 4b51c92 (wip/b25-farm-phase2 710fce9..4b51c92): targeted suites green; year-long check in campaign 41536805310"
     }
    ],
    "owner_wording": null,
@@ -22135,8 +22150,11 @@
     "OD-26"
    ],
    "notes": "Both switches and shared_wheat_yield are 0 in game/data/balance.json on wip/expansion20. No decision record holds this question today; four PARTIAL records wait on it.",
-   "implementation_status": "IN DEVELOPMENT",
-   "branch": "wip/b25-farm-phase2"
+   "implementation_status": "INTEGRATED",
+   "branch": "wip/b25-farm-phase2",
+   "commits": [
+    "4b51c92"
+   ]
   },
   {
    "id": "FIX-D1D2",
