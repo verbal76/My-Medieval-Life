@@ -22192,6 +22192,41 @@
    "remaining_work": ""
   },
   {
+   "id": "FLIGHT-REC-01",
+   "kind": "approved",
+   "title": "Permanent flight recorder simulation system: 'Run flight recorder' launches, without further approval, an independent GitHub Actions campaign (365 days, seeds 1 and 2, at most 2 concurrent jobs, recorder on, checkpoints every 10 days) with automatic anomaly detection, Excel workbook, findings report and preserved evidence",
+   "description": "Permanent flight recorder simulation system: 'Run flight recorder' launches, without further approval, an independent GitHub Actions campaign (365 days, seeds 1 and 2, at most 2 concurrent jobs, recorder on, checkpoints every 10 days) with automatic anomaly detection, Excel workbook, findings report and preserved evidence",
+   "source": "docs/directives/2026-11-02_permanent_flight_recorder_simulation_system.md",
+   "owner_wording": "From now on: \"RUN FLIGHT RECORDER\" Means: Launch independent 365-day My Medieval Life simulations on GitHub, with full flight recording, automatic behavioral analysis, Excel reports, and preserved diagnostic evidence. No additional explanation or approval is required.",
+   "approval": "owner directive 2026-11-02 (standing authorization)",
+   "acceptance": [
+    "A dedicated, isolated GitHub workflow reusing economy_sim, the recorder, recorder_archive.py and the workbook tooling; defaults as specified; overrides honoured; tied to the exact commit; no auto-cancel or auto-rerun",
+    "Early termination only for an extinct village with no repopulation path or genuine fatal integrity defects; evidence saved; stop reason and day reported",
+    "Recorder coverage audited against Expansion 20 systems with gaps listed; recording proven not to change outcomes",
+    "Automatic anomaly detection over the full archive (decision loops, economic, survival, integration abnormalities) with NPC, event, day, count, systems and evidence; nothing suppressed",
+    "Excel workbook with the 14 listed sheets and charts; full archive analysed beyond the 20,000-event presentation cap; workbook kept usable",
+    "Findings report categorised CRITICAL/HIGH/MEDIUM/INFORMATIONAL, confirmed defects distinguished from observations",
+    "Results preserved even on failure (archives, logs, workbook, findings, JSON, checkpoints, commit, seed, config, days completed, stop reason); a run summary with links; timeout fits a recorded 365-day run or checkpoint/resume",
+    "CLAUDE.md documents the command and the 'What did the flight recorder find?' review"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-02",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-02_permanent_flight_recorder_simulation_system.md"
+    }
+   ]
+  },
+  {
    "id": "FR-01",
    "title": "Lizards and spiders as enemies",
    "kind": "approved",

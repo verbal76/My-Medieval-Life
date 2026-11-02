@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 753 (393 of them still open) |
-| **Open entries now** (rules excluded) | | **552** |
+| Entries added since | | 754 (394 of them still open) |
+| **Open entries now** (rules excluded) | | **553** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (753)
+## Added since the baseline (754)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -324,6 +324,7 @@ None.
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 20 |
 | FIX-D3 | Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 19 |
 | FIX-RECF1 | Fix the unsold-goods re-decision loop (REC-F1): find the actual cause and correct the condition that makes villagers reconsider an unavailable action hundreds of times; no arbitrary cooldown; autonomy, economy and prompt reaction preserved; isolated from other systems | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 19 |
+| FLIGHT-REC-01 | Permanent flight recorder simulation system: 'Run flight recorder' launches, without further approval, an independent GitHub Actions campaign (365 days, seeds 1 and 2, at most 2 concurrent jobs, recorder on, checkpoints every 10 days) with automatic anomaly detection, Excel workbook, findings report and preserved evidence | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | approved | INTEGRATED / NOT TESTED / OPEN | 16 |
 | FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |

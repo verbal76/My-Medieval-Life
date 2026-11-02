@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (749)
+## Approved requirement (750)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -290,6 +290,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
 | FIX-D3 | Friendly-guard fine rule behind the judgment switch: Build 18 behaviour exactly with judgment off; halve, never waive, with judgment on | 19 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
 | FIX-RECF1 | Fix the unsold-goods re-decision loop (REC-F1): find the actual cause and correct the condition that makes villagers reconsider an unavailable action hundreds of times; no arbitrary cooldown; autonomy, economy and prompt reaction preserved; isolated from other systems | 19 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
+| FLIGHT-REC-01 | Permanent flight recorder simulation system: 'Run flight recorder' launches, without further approval, an independent GitHub Actions campaign (365 days, seeds 1 and 2, at most 2 concurrent jobs, recorder on, checkpoints every 10 days) with automatic anomaly detection, Excel workbook, findings report and preserved evidence | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | FR-01 | Lizards and spiders as enemies | 26 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | FR-02 | Forgotten Memories waterfalls, fences and props | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | FR-03 | A campfire for cooking raw meat outside the village | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
