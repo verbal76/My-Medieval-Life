@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (751)
+## Approved requirement (752)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -302,6 +302,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | FR-09 | Crime from desperation | 19 | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | FR-10 | Archery | 20+ | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | 19 | OWNER DECISION REQUIRED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
+| FR-REPAIR-01 | Flight recorder repair: KI-HOME-DOOR root cause, homeless-safe evening, regression tests, 10-day resume, independent investigation of cart_hitch, wheat-sale and contract-cancellation findings; no full campaign until fixed | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | 16 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |

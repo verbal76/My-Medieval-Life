@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (11)
+## Workers and task branches (12)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -10,6 +10,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
+| FR-REPAIR-01 | unassigned | IN DEVELOPMENT | home-door fix worker; flight findings investigator | wip/b25-home-door |
 | JUICE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | none |  |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-CAREER-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |

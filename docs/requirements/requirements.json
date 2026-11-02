@@ -23016,6 +23016,47 @@
    ]
   },
   {
+   "id": "FR-REPAIR-01",
+   "kind": "approved",
+   "title": "Flight recorder repair: KI-HOME-DOOR root cause, homeless-safe evening, regression tests, 10-day resume, independent investigation of cart_hitch, wheat-sale and contract-cancellation findings; no full campaign until fixed",
+   "description": "Flight recorder repair: KI-HOME-DOOR root cause, homeless-safe evening, regression tests, 10-day resume, independent investigation of cart_hitch, wheat-sale and contract-cancellation findings; no full campaign until fixed",
+   "source": "docs/directives/2026-11-02_flight_recorder_investigation_repair.md",
+   "owner_wording": "Continue the MML Flight Recorder investigation and repair as planned. For KI-HOME-DOOR, distinguish the immediate exception from its underlying cause.",
+   "approval": "owner, 2026-11-02",
+   "acceptance": [
+    "Every villager with a missing, invalid or stale home in the day-200 seed-2 snapshot listed and classified by cause",
+    "Stale home references fixed at their source; _plan_evening handles legitimate homelessness safely and deterministically",
+    "Regression tests: begins homeless, loses home, moves home, sold or removed building; evening never dereferences an invalid building",
+    "Seed 2 resumed from day 200 for at least 10 days on the fix: zero related script errors, residents still rest",
+    "Original failing evidence preserved with a before/after comparison",
+    "KI-FR-CARTHITCH, wheat-sale and contract-cancellation findings each classified as loop, expected market outcome or needing evidence",
+    "Next full campaign proposed with the exact fixed SHA and the reusable prior evidence, only after the focused repairs and tests pass"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-02",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-02_flight_recorder_investigation_repair.md"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> home-door fix worker; flight findings investigator; branch: None -> wip/b25-home-door",
+     "why": "fix worker briefed with the owner's points 1-5 on wip/b25-home-door; independent investigator on wip/b25-fr-investigate for point 6"
+    }
+   ],
+   "assigned_worker": "home-door fix worker; flight findings investigator",
+   "branch": "wip/b25-home-door"
+  },
+  {
    "id": "FSE-00",
    "title": "Food security, household production, land use, markets and goal-driven economic behavior (final master directive)",
    "kind": "approved",
