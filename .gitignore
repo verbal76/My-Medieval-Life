@@ -1,4 +1,6 @@
 out/
+# CI's per-suite logs, results.jsonl and ci-report.json (tools/ci_report.py; HAG-MEM-02)
+ci-out/
 __pycache__/
 game/.godot/
 .claude/*
