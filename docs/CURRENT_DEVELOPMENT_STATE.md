@@ -41,7 +41,7 @@ Directive: `docs/directives/2026-11-02_overnight_autonomous_development_directiv
 | Packaging and release | No Build 25 package exists. Packaging needs the owner's authorization. No public release. |
 | Living Economy | Integrated but **off** by default. It switches on by default once the 13 LE-07 readiness gates pass on the integrated candidate, with no further approval (B25-LE-ACTIVATE-D1). |
 | Operating mode | Overnight autonomous development (B25-OVN-0211): several independent workstreams. Reduced-resource mode (2026-11-01) is superseded for this session. |
-| GitHub Actions | [41403541582](https://github.com/verbal76/My-Medieval-Life/actions/runs/41403541582) on `eca0e7d` (farming Dispatch A). Seed 1 at yield 1.5: done. Seed 2 at yield 2.0: done. Seed 2 at yield 1.5: **FAILED on integrity** (`FATAL day 180 seed 2: currency leak -2`; coin_sources_mismatch -2, holders match the world total). Seed 1 at yield 2.0: still running, check at about 11:45 UTC. Never cancel it. |
+| GitHub Actions | None running. Last: [41403541582](https://github.com/verbal76/My-Medieval-Life/actions/runs/41403541582), farming Dispatch A, finished. Three jobs valid; seed 2 at yield 1.5 failed on integrity. Next: Dispatch B on the leak-fix commit, yield 1.75 on seeds 1 and 2 plus seed 2 at 1.5 (two dispatches; inputs in FARM-YIELD-D1's history). |
 
 ## Workers and branches (recovery records)
 

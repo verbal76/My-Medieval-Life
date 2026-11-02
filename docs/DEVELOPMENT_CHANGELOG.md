@@ -122,6 +122,28 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**Farming Dispatch A: results (Actions 41403541582, `eca0e7d`).**
+- Setup: `--market`, shared and seasonal farming on, 365 days, every 5.
+- Decision rule from FARMING_YIELD_CALIBRATION.md, applied by the lead's read-only analysis:
+
+  | Run | Starved | Famine checkpoints | Meals missed, no food | Lowest food | Classification |
+  |---|---|---|---|---|---|
+  | Yield 1.5, seed 1 | 15 (from day 323) | 3 | 49,009 | 0.6 days | **Scarcity** |
+  | Yield 2.0, seed 1 | 0 | 0 | 17 | 3.5 days | **Food-secure** |
+  | Yield 2.0, seed 2 | 0 | 0 | 6 | 3.8 days | **Food-secure** |
+
+- At yield 1.5 the population grew from 104 to 345 against six fixed manor fields; the shortage is late-year, not a winter gap.
+- All three runs are integrity-clean. Seed 2 at 1.5 is not a result (see below).
+- Rule row 2: test yield 1.75 next.
+  - Final choice: 1.75 if it passes on both seeds, otherwise 2.0.
+  - Dispatch B (yield 1.75 on seeds 1 and 2, plus seed 2 at 1.5 as evidence) goes on the leak-fix commit so it cannot stop on the
+    same defect.
+- Observations:
+  - The wheat price sat at its floor of 2 on every run.
+  - At yield 2.0 the chapel held 91,600 and 257,060 food points, more than all households together; to examine.
+  - Seed corn was thin (18-63 left), with imports covering it.
+  - Run times: 3 h 37 min, 4 h 16 min, 2 h 26 min.
+
 **Farming Dispatch A: an integrity failure found (Actions 41403541582, `eca0e7d`).**
 - Result: the job for seed 2 at yield 1.5 with `--market` stopped with `FATAL day 180 seed 2: currency leak -2`.
   - World total and holders agree (`holders_mismatch` 0), but `World.coin_sources` is out by 2 (`coin_sources_mismatch` -2): an

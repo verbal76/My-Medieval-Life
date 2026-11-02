@@ -21832,6 +21832,11 @@
      "date": "2026-11-01",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "Answered by the owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 3, B25-NINE-D3)"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "Dispatch A (Actions 41403541582, eca0e7d, --market, shared and seasonal farming on, 365 days, every 5): yield 1.5 seed 1 FAILS by scarcity (15 starved from day 323, 3 famine checkpoints, 49,009 meals missed for no food, food 0.6-0.9 days before the deaths; population 104 -> 345 against six fixed manor fields); yield 2.0 FOOD-SECURE on seeds 1 and 2 (0 starved, 0 famine, 17 and 6 meals missed for no food; lowest food 3.5 and 3.8 days); integrity clean on all three (0 leaks, 0 script errors); seed 2 yield 1.5 not a result (integrity FATAL day 180, leak fix in progress). Rule row 2: Dispatch B tests 1.75 on seeds 1 and 2 (plus seed 2 at 1.5 as evidence), dispatched on the leak-fix commit; final choice 1.75 if it passes on both seeds, else 2.0. Observations: wheat price at floor 2 on every run; chapel held 91,600-257,060 food points at 2.0 (more than households) - to examine; seed corn thin (18-63 left, imports cover)."
     }
    ],
    "owner_wording": null,
