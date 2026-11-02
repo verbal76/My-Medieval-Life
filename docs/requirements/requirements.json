@@ -21976,6 +21976,11 @@
      "date": "2026-11-02",
      "change": "note",
      "why": "Dispatch B on the leak-fix commit 8acbdea: B1 41469335443 (yield 1.75, seeds 1 and 2) on wip/b25-farm-b1 and B2 41469341029 (seed 2, yield 1.5) on wip/b25-farm-b2 - separate run branches at the same commit so the two do not replace each other in the long-sims concurrency queue. --market, shared and seasonal farming on, 365 days, every 5."
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: None -> IN DEVELOPMENT; branch: None -> wip/b25-farm-phase2",
+     "why": "Dispatch B on 8acbdea (--market, shared and seasonal farming on, 365 days, every 5), integrity clean on all three (exit 0, 0 script errors, currency and item leaks 0). Yield 1.75 seed 1 (41469335443): FOOD-SECURE, 0 starved, 0/74 famine, 326 meals missed for no food (319 were guards at night, hours 0-6, days 90-150: an access/timing observation), lowest food 3.0 days, cattle 12 at end. Yield 1.75 seed 2: FOOD-SECURE, 0 starved, 0 famine, 7 missed for no food, lowest 3.0 days. Yield 1.5 seed 2 (41469341029): FOOD-SECURE, 0 starved, 10 missed, lowest 2.6 days. Rule (FARMING_YIELD_CALIBRATION.md section 5): lowest yield secure on both seeds; 1.5 failed by scarcity on seed 1 (Dispatch A), so the baseline is 1.75. Phase 2 starts on wip/b25-farm-phase2."
     }
    ],
    "owner_wording": null,
@@ -21989,7 +21994,9 @@
     "FARM-08",
     "OD-26"
    ],
-   "notes": "Both switches and shared_wheat_yield are 0 in game/data/balance.json on wip/expansion20. No decision record holds this question today; four PARTIAL records wait on it."
+   "notes": "Both switches and shared_wheat_yield are 0 in game/data/balance.json on wip/expansion20. No decision record holds this question today; four PARTIAL records wait on it.",
+   "implementation_status": "IN DEVELOPMENT",
+   "branch": "wip/b25-farm-phase2"
   },
   {
    "id": "FIX-D1D2",

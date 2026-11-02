@@ -61,6 +61,20 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
 
 ## 2026-11-02
 
+**Farming yield chosen by simulation: 1.75 (FARM-YIELD-D1, B25-NINE-D3). VALIDATED (CI), not yet implemented.**
+- Dispatch B on `8acbdea`, `--market`, shared and seasonal farming on, 365 days. All three runs were food-secure with clean
+  integrity:
+  - yield 1.75 on seeds 1 and 2 ([41469335443](https://github.com/verbal76/My-Medieval-Life/actions/runs/41469335443));
+  - yield 1.5 on seed 2 ([41469341029](https://github.com/verbal76/My-Medieval-Life/actions/runs/41469341029)).
+- Yield 1.5 failed by scarcity on seed 1 in Dispatch A, so the pre-written rule chooses 1.75. Details: KNOWN_ISSUES KI-01.
+- Phase 2 (switches on, wiki, old-save seed corn test) started on `wip/b25-farm-phase2`.
+
+**Owner directive FR-REPAIR-01 (flight recorder repair) captured.**
+- Saved verbatim in `docs/directives/2026-11-02_flight_recorder_investigation_repair.md`.
+- The KI-HOME-DOOR fix worker was given the owner's points 1-5. A separate read-only investigation of KI-FR-CARTHITCH, the
+  wheat sales and the contract cancellations was started (point 6).
+- No full campaign runs until the focused repairs pass.
+
 **B25-NINE-D5..D7: materials, armour bonuses, cosmetic clothing.**
 - Branch: `wip/b25-materials`, merged as `48acc91`. Commits: `041a67c` (WIP), `017d357` (catch-up merge), `394e77d` (the remaining
   work: resources, six icons through the pipeline, wiki, INT-671, DECISIONS row, `materials_b25_test`), and `c7c51f1`, `5fd39b9`

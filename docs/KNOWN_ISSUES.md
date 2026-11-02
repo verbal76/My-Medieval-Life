@@ -30,7 +30,7 @@ repeat a failed approach because the conversation that tried it is gone. Owner d
 
 ## Open and in progress
 
-### KI-01 Farming yield: scarcity at yield 1.5 (INVESTIGATING)
+### KI-01 Farming yield: scarcity at yield 1.5 (RESOLVED BY CALIBRATION: baseline 1.75; Phase 2 in development)
 - **Register:** B25-NINE-D3, FARM-YIELD-D1.
 - **Symptom:** in year-long runs with shared and seasonal farming on, the village starves late in the year at the
   provisional wheat yield.
@@ -55,6 +55,19 @@ repeat a failed approach because the conversation that tried it is gone. Owner d
     1.75, seeds 1 and 2) and B2 [41469341029](https://github.com/verbal76/My-Medieval-Life/actions/runs/41469341029) (seed 2
     at 1.5). Both were running on 2026-11-02.
   - Final choice: 1.75 if it passes on both seeds, otherwise 2.0.
+- **Dispatch B results (2026-11-02, `8acbdea`, integrity clean on all three: exit 0, 0 script errors, leaks 0):**
+
+  | Run | Starved | Famine checkpoints | Meals missed, no food | Lowest food | Classification |
+  |---|---|---|---|---|---|
+  | Yield 1.75, seed 1 ([41469335443](https://github.com/verbal76/My-Medieval-Life/actions/runs/41469335443)) | 0 | 0 of 74 | 326 | 3.0 days | food-secure |
+  | Yield 1.75, seed 2 (same run) | 0 | 0 of 74 | 7 | 3.0 days | food-secure |
+  | Yield 1.5, seed 2 ([41469341029](https://github.com/verbal76/My-Medieval-Life/actions/runs/41469341029)) | 0 | 0 of 74 | 10 | 2.6 days | food-secure |
+
+- **Decision:** by the rule written before any result, the baseline is the lowest yield secure on both seeds. 1.5 failed by
+  scarcity on seed 1, so the baseline is **1.75**. Phase 2 (switches on, wiki, old-save seed corn test) is on
+  `wip/b25-farm-phase2`.
+- **Observation, not a failure:** 319 of seed 1's 326 missed meals at 1.75 were guards at night (hours 0-6, days 90-150), with
+  food in the village. This is an access or timing pattern for night-shift guards; it is open for a later look.
 - **Remaining risks:**
   - Phase 2 changes the starting wheat for the player and households, and the wiki must follow.
   - An older save loaded after the switch has no seed corn; this needs a test.
