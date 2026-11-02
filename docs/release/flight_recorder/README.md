@@ -11,36 +11,45 @@ outcomes to report, never reasons to stop or to call something a defect.
 
 ## Running it
 
-Workflow: `.github/workflows/flight-recorder.yml` (manual only). Defaults are the directive's:
+The campaign is the reusable workflow `.github/workflows/flight-recorder-campaign.yml` (plan, one chain per seed through
+`flight-recorder-seed.yml`, campaign report). GitHub dispatches only workflows whose file is on the default branch (`main`), and
+then runs the version on the dispatched ref, including every workflow it calls by a local path (`uses: ./.github/workflows/...`)
+and every local action. So **today the campaign is dispatched through `long-sims.yml` with `flight: true`** (long-sims is on
+`main`; nothing on `main` changes). `flight-recorder.yml` is a thin dispatch wrapper with the directive's defaults, kept for when
+it reaches `main` with an owner-authorized merge; it calls the same campaign.
 
-| input | default | meaning |
+Through long-sims (`flight: true`; its own defaults are the comparison runs', so set them):
+
+| input | value for "Run flight recorder" | meaning |
 |---|---|---|
+| `flight` | `true` | the campaign instead of the comparison runs (`plan`, `sim`, `recover` are skipped) |
 | `seeds` | `1,2` | one independent run per seed (at most four; at most two simulate at once) |
 | `days` | `365` | game days |
 | `every` | `10` | checkpoint every N days: the 30-, 90-, 180-day milestones are read from these, never from separate runs (SIM-01) |
-| `sim_args` | empty | normal integrated play (the shipped switches); allowed: `--aspiration --job-choice --economy --market --no-judgment --scenario NAME --at DAY` |
 | `record` | `true` | the flight recorder on |
+| `sim_args` | empty | normal integrated play (the shipped switches); allowed: `--aspiration --job-choice --economy --market --no-judgment --scenario NAME --at DAY` |
 | `segment_days` | `100` | game days per chained job (see "Why segments"); a multiple of `every`; `days` at most 4 x this |
+| `set`, `variants`, `recover_run` | empty | a flight run refuses `set` or `variants`; `recover_run` must be empty |
 
 ```sh
-gh workflow run flight-recorder.yml --ref <integration branch> \
-  -f seeds=1,2 -f days=365 -f every=10 -f sim_args= -f record=true -f segment_days=100
-gh run list --workflow flight-recorder.yml -L 1 --json databaseId,url,headSha,status   # the run's link
+gh workflow run long-sims.yml --ref <integration branch> \
+  -f flight=true -f seeds=1,2 -f days=365 -f every=10 -f record=true -f sim_args= -f segment_days=100 \
+  -f set= -f variants= -f recover_run=
+gh run list --workflow long-sims.yml -L 1 --json databaseId,url,headSha,status   # the run's link
+# once flight-recorder.yml is on main: gh workflow run flight-recorder.yml --ref <branch>   (its defaults are the directive's)
 ```
 
-The GitHub MCP tool `actions_run_trigger` (workflow `flight-recorder.yml`, the same inputs) does the same. Give the owner the run
-link at once; do not wait for it. **Use the latest suitable integration commit** (the `--ref`): if a known, imminent fix makes the
-current commit unsuitable, wait for the fix rather than spend a campaign on a known defect.
-
-GitHub only dispatches a workflow whose file is also on the default branch (`main`). Until `flight-recorder.yml`,
-`flight-recorder-seed.yml` and `.github/actions/flight-segment/` are on `main` (a merge the owner authorizes), dispatching it
-fails; the branch given as `--ref` supplies the version that runs.
+The GitHub MCP tool `actions_run_trigger` (workflow `long-sims.yml`, the same inputs) does the same. Give the owner the run link
+at once; do not wait for it. **Use the latest suitable integration commit** (the `--ref`): if a known, imminent fix makes the
+current commit unsuitable, wait for the fix rather than spend a campaign on a known defect. A flight dispatch of long-sims has
+its own concurrency group (`flight-recorder-<run id>`); without `flight` long-sims keeps `long-sims-<ref>` exactly as before.
 
 ### Independence and spending
 
 - Its own concurrency group per run (`flight-recorder-<run id>`): a campaign never cancels or queues behind another, and nothing
-  in CI, long-sims, packaging or releases waits for it. Before dispatching, check `gh run list --workflow flight-recorder.yml`
-  for one still running: two campaigns at once double the runner time for nothing.
+  in CI, the long-sims comparison runs, packaging or releases waits for it. Before dispatching, check the long-sims runs
+  (`gh run list --workflow long-sims.yml`, a flight run's jobs are named `flight / ...`) for a campaign still running: two at once
+  double the runner time for nothing.
 - `max-parallel: 2` seeds; each seed is its own chain of jobs (`flight-recorder-seed.yml`), so one seed failing never stops the
   other (`fail-fast: false`).
 - Every artifact and status names the commit (`GITHUB_SHA`); the analysis reads it from each segment's status.
@@ -157,13 +166,14 @@ Coverage and its gaps: `COVERAGE.md` (this folder).
 GitHub produced everything; reviewing needs no running process. With `gh` (or the GitHub MCP tools, or the REST API):
 
 ```sh
-gh run list --workflow flight-recorder.yml -L 5 --json databaseId,url,headSha,status,conclusion,createdAt
-gh run view <run id>                                    # jobs, conclusions and the step summaries
+gh run list --workflow long-sims.yml -L 10 --json databaseId,url,headSha,status,conclusion,createdAt   # (flight-recorder.yml once on main)
+gh run view <run id>                                    # a flight run's jobs are named "flight / ..."; the step summaries
 gh run download <run id> -n fr-seed1-results -D fr/seed1   # findings.md, findings.json, the workbook
 gh run download <run id> -n flight-recorder-campaign -D fr
 ```
 
-REST, for ChatGPT or any client: `GET /repos/verbal76/My-Medieval-Life/actions/workflows/flight-recorder.yml/runs`,
+REST, for ChatGPT or any client: `GET /repos/verbal76/My-Medieval-Life/actions/workflows/long-sims.yml/runs` (a flight run has
+the artifact `flight-recorder-campaign`),
 `GET /repos/verbal76/My-Medieval-Life/actions/runs/{run_id}/artifacts`, `GET /repos/verbal76/My-Medieval-Life/actions/artifacts/{artifact_id}/zip`
 (authenticated), and the job logs `GET /repos/verbal76/My-Medieval-Life/actions/jobs/{job_id}/logs`. Where artifact downloads
 are blocked, the logs still hold the essentials: each segment job prints its status, checkpoint lines and any FATAL line, and
@@ -177,7 +187,8 @@ defect without evidence, and never answer an owner decision.
 
 ## Files
 
-- `.github/workflows/flight-recorder.yml`, `.github/workflows/flight-recorder-seed.yml`, `.github/actions/flight-segment/action.yml`
+- `.github/workflows/long-sims.yml` (`flight`, `segment_days`), `.github/workflows/flight-recorder-campaign.yml`, `.github/workflows/flight-recorder-seed.yml`,
+  `.github/actions/flight-segment/action.yml`, `.github/workflows/flight-recorder.yml` (the wrapper for main)
 - `game/tests/economy_sim.gd` (`--status`, `--save-at`, `--state`, `--resume`, `--extinct-days`)
 - `tools/flight_analyse.py`, `tools/recorder_archive.py`, `tools/check_workbook.py --flight`
 - `game/tests/flight_workbook.gd`, `game/scripts/recorder_export/workbook_builder.gd` (`build_spec`), `game/data/sim_workbook.json` (`flight_recorder`)

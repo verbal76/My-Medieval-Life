@@ -345,6 +345,7 @@ func _init() -> void:
 		"world_bytes": JSON.stringify(w.to_dict()).length(), "static_mb": snappedf(OS.get_static_memory_usage() / 1048576.0, 0.1),
 		"peak_static_mb": snappedf(OS.get_static_memory_peak_usage() / 1048576.0, 0.1)}))
 	var ok: bool = int(final.currency.leak) == 0 and (final.ledger.items as Dictionary).is_empty() and econ_roundtrip_bad == 0
+	ok = ok and fr_stop != "fatal"     # a FATAL stop (the settlements' books too, which the ledgers above do not cover) fails the run
 	# LE-05: repairs (normal play) and rentals (economy on), read from the world's counters (diagnostics; they decide nothing)
 	var le05 := {}
 	for k in w.stats.keys():

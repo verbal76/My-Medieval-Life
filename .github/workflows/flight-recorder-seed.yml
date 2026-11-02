@@ -1,7 +1,7 @@
 name: Flight recorder (one seed)
 
-# FLIGHT-REC-01 (owner directive 2026-11-02; docs/release/flight_recorder/README.md): one seed's run, called by flight-recorder.yml
-# once per seed, so each seed goes through its segments and its analysis on its own, whatever happens to the other seed.
+# FLIGHT-REC-01 (owner directive 2026-11-02; docs/release/flight_recorder/README.md): one seed's run, called by
+# flight-recorder-campaign.yml once per seed, so each seed goes through its segments and its analysis on its own, whatever happens to the other seed.
 # A recorded year does not fit one six-hour job, so the run is chained: each segment job goes on from the world the previous one
 # saved (the game's own save, World.to_dict / load_dict) and saves it again at its last day. At most four segments.
 # Then the analysis job checks and searches the whole archive (tools/recorder_archive.py, tools/flight_analyse.py), builds the
@@ -19,8 +19,7 @@ on:
       godot_version: {type: string, required: true}
 
 permissions:
-  contents: read
-  actions: read
+  contents: read          # nothing more: a called workflow may not ask for more than its caller grants (long-sims grants contents: read)
 
 jobs:
   seg1:

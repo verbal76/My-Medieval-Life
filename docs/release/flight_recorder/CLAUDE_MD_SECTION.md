@@ -6,14 +6,14 @@ For the lead to place in `CLAUDE.md` section 5 (after "Simulation monitoring"). 
 
 - **Flight recorder campaigns (owner, 2026-11-02, FLIGHT-REC-01, `docs/directives/2026-11-02_permanent_flight_recorder_simulation_system.md`;
   permanent standing authorization; `docs/release/flight_recorder/README.md`).**
-  - **"Run flight recorder"** means, with no further question or approval: dispatch `.github/workflows/flight-recorder.yml` on
-    the latest suitable integration commit (if a known, imminent fix makes it unsuitable, use the corrected commit) with the
-    defaults (seeds `1,2`, `days` 365, `every` 10, `sim_args` empty = normal integrated play, `record` true, `segment_days` 100),
-    or the seeds, days or scenario the owner names. Check first that no flight recorder run is still in progress
-    (`gh run list --workflow flight-recorder.yml`); give the owner the run link at once; never wait for it, and continue
+  - **"Run flight recorder"** means, with no further question or approval: dispatch `.github/workflows/long-sims.yml` with `flight=true`
+    (until `flight-recorder.yml` is on main) on the latest suitable integration commit (if a known, imminent fix makes it
+    unsuitable, use the corrected commit) with `seeds=1,2 days=365 every=10 record=true sim_args= segment_days=100` and `set`,
+    `variants`, `recover_run` empty (normal integrated play), or the seeds, days or scenario the owner names. Check first that
+    no flight recorder campaign is still in progress (`gh run list --workflow long-sims.yml`; its jobs are named `flight / ...`); give the owner the run link at once; never wait for it, and continue
     development. It is independent of CI, long-sims, packaging and releases, and never blocks other work. Never cancel, restart
     or rerun a running or failed campaign before reading why it stopped (SIM-02).
-  - **"What did the flight recorder find?"** means: take the latest completed run (`gh run list --workflow flight-recorder.yml`),
+  - **"What did the flight recorder find?"** means: take the latest completed flight run (`gh run list --workflow long-sims.yml`; the run with the `flight-recorder-campaign` artifact),
     read each seed's `summary.json` and `findings.md` (artifact `fr-seed<N>-results`; if downloads are blocked, the analysis job's
     log prints them), and the workbook for trends. Report, most important first: what happened (commit, days reached, stop reason
     per seed), what worked, what failed, which NPCs behaved strangely (with the finding ids, days and counts), which systems may be

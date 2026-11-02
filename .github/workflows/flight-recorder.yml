@@ -1,14 +1,8 @@
 name: Flight recorder
 
-# FLIGHT-REC-01, the owner's standing command "Run flight recorder" (owner directive 2026-11-02,
-# docs/directives/2026-11-02_permanent_flight_recorder_simulation_system.md; docs/release/flight_recorder/README.md):
-# independent 365-game-day simulations of normal integrated village play, seeds 1 and 2 by default, each fully recorded by the
-# flight recorder, its whole archive checked and searched for abnormal behaviour, with a findings report and an Excel workbook.
-#
-# Separate from CI, the long-sims comparisons, packaging and releases: manual only (never on a push), its own concurrency group
-# per run (so no run, older or newer, is ever cancelled by another), at most two seeds simulating at once, each seed on its own
-# chain of jobs (flight-recorder-seed.yml). Every result names its commit (GITHUB_SHA). Results are kept whatever happens:
-# archives (30 days), logs, status, saved worlds, findings and workbook (90 days). It builds and publishes nothing.
+# FLIGHT-REC-01 (owner directive 2026-11-02; docs/release/flight_recorder/README.md): a thin dispatch wrapper around
+# flight-recorder-campaign.yml, kept for when it is on main (GitHub dispatches only workflows whose file is on the default
+# branch). Until then the campaign is dispatched through long-sims.yml with flight: true. The defaults are the directive's.
 
 on:
   workflow_dispatch:
@@ -30,123 +24,28 @@ on:
         default: ""
         required: false
       record:
-        description: "Record with the flight recorder (about 1 MB a game day early on, more as the village grows)"
+        description: "Record with the flight recorder"
         type: boolean
         default: true
       segment_days:
-        description: "Game days per chained job (a multiple of every; at most four jobs per seed; 100 keeps a recorded segment well inside six hours)"
+        description: "Game days per chained job (a multiple of every; at most four jobs per seed)"
         default: "100"
         required: true
 
 permissions:
   contents: read
-  actions: read
 
 concurrency:
-  group: flight-recorder-${{ github.run_id }}   # its own group, one per run: a new campaign never cancels or queues behind an older one
+  group: flight-recorder-${{ github.run_id }}   # its own group, one per run: a campaign never cancels or queues behind another
   cancel-in-progress: false
 
-env:
-  GODOT_VERSION: "4.7.2"
-
 jobs:
-  plan:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    outputs:
-      seeds: ${{ steps.p.outputs.seeds }}
-      godot: ${{ steps.p.outputs.godot }}
-    steps:
-      - id: p
-        env:
-          SEEDS: ${{ inputs.seeds }}
-          DAYS: ${{ inputs.days }}
-          EVERY: ${{ inputs.every }}
-          SIM_ARGS: ${{ inputs.sim_args }}
-          SEGDAYS: ${{ inputs.segment_days }}
-        run: |
-          python3 - <<'PY'
-          import json, os, re, sys
-          seeds = [s.strip() for s in os.environ["SEEDS"].split(",") if s.strip()]
-          if not seeds or len(seeds) > 4 or not all(re.fullmatch(r"\d{1,9}", s) for s in seeds) or len(set(seeds)) != len(seeds):
-              sys.exit("seeds: one to four different whole numbers")
-          if not (re.fullmatch(r"\d{1,4}", os.environ["DAYS"]) and 1 <= int(os.environ["DAYS"]) <= 730):
-              sys.exit("days: 1 to 730")
-          every, seg, days = os.environ["EVERY"], os.environ["SEGDAYS"], os.environ["DAYS"]
-          if not (re.fullmatch(r"\d{1,3}", every) and int(every) >= 1 and re.fullmatch(r"\d{1,4}", seg) and int(seg) >= 1):
-              sys.exit("every and segment_days: whole numbers")
-          if int(seg) % int(every) != 0:
-              sys.exit("segment_days must be a multiple of every (a segment ends on a checkpoint)")
-          if int(days) > 4 * int(seg):
-              sys.exit("days must be at most 4 x segment_days (four chained jobs per seed)")
-          if not re.fullmatch(r"((--aspiration|--job-choice|--economy|--market|--no-judgment|--scenario [a-z_]+|--at \d{1,3})( |$))*", os.environ.get("SIM_ARGS", "").strip()):
-              sys.exit("sim_args: only --aspiration --job-choice --economy --market --no-judgment --scenario NAME --at DAY")
-          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-              f.write("seeds=%s\ngodot=%s\n" % (json.dumps(seeds), os.environ["GODOT_VERSION"]))
-          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
-              f.write("# Flight recorder campaign\n\n- Commit: `%s`\n- Seeds %s, %s days, checkpoints every %s, segments of %s days, record %s, sim_args `%s`\n- Run: %s/%s/actions/runs/%s\n" % (
-                  os.environ["GITHUB_SHA"], ", ".join(seeds), days, every, seg, "${{ inputs.record }}", os.environ.get("SIM_ARGS", ""),
-                  os.environ["GITHUB_SERVER_URL"], os.environ["GITHUB_REPOSITORY"], os.environ["GITHUB_RUN_ID"]))
-          PY
-
-  seed:
-    needs: plan
-    strategy:
-      fail-fast: false          # the seeds are independent: one failing never stops the other
-      max-parallel: 2           # at most two seeds simulating at once (the directive's default)
-      matrix:
-        seed: ${{ fromJSON(needs.plan.outputs.seeds) }}
-    uses: ./.github/workflows/flight-recorder-seed.yml
+  campaign:
+    uses: ./.github/workflows/flight-recorder-campaign.yml
     with:
-      seed: ${{ matrix.seed }}
+      seeds: ${{ inputs.seeds }}
       days: ${{ inputs.days }}
       every: ${{ inputs.every }}
       sim_args: ${{ inputs.sim_args }}
       record: ${{ inputs.record }}
       segment_days: ${{ inputs.segment_days }}
-      godot_version: ${{ needs.plan.outputs.godot }}
-
-  report:
-    needs: [plan, seed]
-    if: always() && needs.plan.result == 'success'
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: Fetch each seed's results
-        uses: actions/download-artifact@v4
-        with:
-          pattern: fr-seed*-results
-          path: results
-      - name: Campaign summary
-        env:
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: |
-          python3 - <<'PY'
-          import glob, json, os
-          seeds = []
-          for p in sorted(glob.glob("results/*/summary.json")):
-              try:
-                  seeds.append(json.load(open(p)))
-              except (OSError, ValueError):
-                  pass
-          camp = {"format": "mml-flight-campaign/1", "run_url": os.environ["RUN_URL"], "commit": os.environ["GITHUB_SHA"], "seeds": seeds}
-          os.makedirs("campaign", exist_ok=True)
-          json.dump(camp, open("campaign/campaign.json", "w"), indent=1)
-          L = ["## Campaign result", "", "Run: %s" % os.environ["RUN_URL"], "", "| seed | days reached | stopped | CRITICAL | HIGH | MEDIUM | confirmed defects |", "|---|---|---|---|---|---|---|"]
-          for s in seeds:
-              c = s.get("severity_counts") or {}
-              L.append("| %s | %s of %s | %s | %s | %s | %s | %s |" % (s.get("seed"), s.get("days_reached"), s.get("days_requested"), s.get("stop_reason"),
-                                                                 c.get("CRITICAL"), c.get("HIGH"), c.get("MEDIUM"), s.get("confirmed_defects")))
-          if not seeds:
-              L.append("| - | no seed produced results | | | | | |")
-          L += ["", "Per seed: `fr-seed<N>-results` (findings.md, findings.json, summary.json, the workbook), `fr-seed<N>-seg<K>-archive` (the full archive), `fr-seed<N>-seg<K>-run` (log, status, sim.json)."]
-          open(os.environ["GITHUB_STEP_SUMMARY"], "a").write("\n".join(L) + "\n")
-          print("\n".join(L))
-          PY
-      - name: Keep the campaign summary
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: flight-recorder-campaign
-          path: campaign
-          retention-days: 90
