@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 745 (386 of them still open) |
-| **Open entries now** (rules excluded) | | **545** |
+| Entries added since | | 750 (391 of them still open) |
+| **Open entries now** (rules excluded) | | **550** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (745)
+## Added since the baseline (750)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -171,6 +171,11 @@ None.
 | B25-CAREER-D1 | How is career advancement decided? | decision | APPROVED | owner decision |
 | B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-ECON-P1 | Business founding requires the trade's benches to be full and busy (Ventures.refusal, skilled_place busy_share 0.35); in seed 1 the founding trades' benches were 2-20% busy all 120 days, so every one of 172 weekly looks stopped there. Options: A keep the rule (businesses form when demand exists); B let a founder weigh independence even with idle benches (the judgment weighing decides); C a lower busy threshold for founding only. Recommendation: A, and act on demand (P2-P4) rather than the gate. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | OPEN | 20 |
+| B25-ECON-P2 | Coinless adults cannot take open miner or woodcutter places because those jobs need a tool and the manor's tool help covers only workers already in the trade (all 10 jobless at day 120 came of age in the run and hold median 0 coins). Options: A keep; B the household buys a member's first work tool from its own purse (existing purchase rules); C the manor advances the tool against wages; D tool rental outside the Living Economy. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | OPEN | 20 |
+| B25-ECON-P3 | Retired villagers keep trade stock forever (day 120: 68 iron ore, 47 coal, 24 iron bars, 8 pickaxes, 7 axes held by elders while the working smith held nothing). Options: A keep; B elders and adults between jobs sell their goods through the existing sell rule; C the stock passes to the trade's successor as tools already do. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | OPEN | 20 |
+| B25-ECON-P4 | Ore imports stall: Garton's quarry stock rose 63 to 175 but its trader had no coins to buy it, so 0 iron ore came to the village in 120 days (2 in a year for seed 2). Options: A keep as an outcome; B the trader carries ore on consignment (paid on sale); C smiths buy from the quarry directly. Recommendation: decide after the final year-long runs; leaning B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | OPEN | 20 |
+| B25-ECON-P5 | Village land (fields, trees, game, ore) is fixed while population roughly triples in a year, so unemployment rises with population. Should fields grow with population? Recommendation: no change on present evidence. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | OPEN | 20 |
 | B25-EMPLOY-D3 | How do skilled occupations grow? | decision | APPROVED | owner decision |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-LE-ACTIVATE-D1 | Living Economy activation policy for Build 25 | decision | APPROVED | owner decision |

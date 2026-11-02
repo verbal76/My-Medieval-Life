@@ -122,6 +122,38 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**Economic investigation: business funnel, professions and unemployment, ore (B25-OVN-0211 sections 4-6).**
+- Branch: `wip/b25-econ-funnel` (`50497cf`, `006ca8f`, `6603daf`, `50cc561`, `d5e32ef`, `86c0b80`), merged as `d6ab686`.
+- Change:
+  - Read-only diagnostics: venture refusal-stage counts, and `CONFIG`, `FUNNEL`, `JOBS` and `ORE` lines in economy_sim, also
+    printed by long-sims.
+  - Neutrality proven: the 10-day seed 1 fingerprints are identical to `3c7e45b`.
+  - Fixed a fault in the worker's own counting (dead villagers counted as looks), with a test.
+- Evidence: a local 120-day seed 1 run plus the logs of year run 41362329381. Tests on the branch: business_founding 73,
+  business_ownership 165, skilled_employment 54, career_ambition 71, conservation 8, net_econ_integrity 126, migration 109,
+  run_tests 3602, all 0 failures.
+- Findings:
+  - **Decision systems:** all on (judgment, business_found, job_choice, aspiration); the economy is off.
+  - **Business funnel:**
+    - All 172 weekly looks were refused before any decision: no work 106, experience 36, skill 29, bench room 1.
+    - The founding trades' benches were only 2-20% busy, against the 0.35 the rule needs.
+    - So the outcome is **nobody eligible**: a legitimate result of the approved demand rule, not a defect.
+    - The year runs' "owns house 0" was the BIZ line counting gates in sequence. In fact 22-23 of 25-26 households own their
+      homes.
+  - **Unemployment:**
+    - Counts adults aged 16-55 with no job; all at day 120 had come of age in the run and never worked.
+    - Places are capped by land, the treasury (near 0) and first tools.
+    - Founding trades stay at their starting strength, refilled by succession.
+  - **Ore:**
+    - The original seams were gone by day 30-60; mining outran smelting, so stock piled up.
+    - Prospecting stopped when the treasury emptied.
+    - This follows the owner's rules (finite seams, OD-01).
+    - Imports stalled because Garton's trader had no coins.
+- Owner questions B25-ECON-P1..P5 recorded with options and recommendations: founding gate, first tool, retirees' stock, ore
+  imports, land growth.
+- Outstanding: year-long FUNNEL, JOBS and ORE evidence comes from the final validation runs on the finished candidate. No separate
+  run.
+
 **LE-07: the 13 Living Economy readiness gates reviewed on the integrated candidate.**
 - Branch: `wip/b25-le07` (`8f288a2`, `40f8494`, `60f4cf4`, `ddf2fdf`), merged as `28d5280`.
 - Change:
