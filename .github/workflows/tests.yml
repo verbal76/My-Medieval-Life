@@ -230,6 +230,7 @@ jobs:
           res://tests/ecology_test.gd
           res://tests/stalls_test.gd
           res://tests/farm_plots_test.gd
+          res://tests/farm_shared_save_test.gd   # FARM-YIELD-D1: an old-model save moves to the shared fields once on load
           res://tests/farm_place_test.gd
           res://tests/herd_test.gd
           res://tests/contracts_test.gd

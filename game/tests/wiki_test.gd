@@ -151,6 +151,11 @@ func _data_tests() -> void:
 			and con.contains("%d contracts at once" % int(Contracts.cfg().max_open_per_seller)) and con.contains("villagers use the same contracts"),
 		"the contracts page: proposing, coins set aside, lapsing without a fine, the seller's limit, villagers' own orders")
 	check("sys:contracts" in w.search("contract") and "sys:contracts" in w.search("counteroffer"), "search finds the contracts page")
+	# FARM-YIELD-D1 Phase 2: the shared wheat yield and the manor's shared, seasonal fields, from the game's own settings
+	var farm_txt: String = w.pages.get("sys:farming", {}).get("text", "")
+	check(farm_txt.contains(WikiFarming.wheat_yield_text().to_lower()) and farm_txt.contains("1.75") and not farm_txt.contains("3 wheat a cell")
+			and farm_txt.contains("the manor's fields are farmed by the same rules as yours") and farm_txt.contains("only from spring to autumn"),
+		"the farming page states the shared wheat yield (%s) and the manor's fields' seed-a-cell, seasonal rules" % WikiFarming.wheat_yield_text())
 	var dec: String = w.pages.get("sys:decay", {}).get("text", "")
 	check(dec.contains("wheat") and dec.contains("handcart") and dec.contains("falling apart") and "sys:decay" in w.search("spoil"), "the spoiling and wear page, found by searching spoil")
 	check(w.pages["item:wheat"].text.contains("spoil a day") and w.pages["item:leather_armor"].text.contains("days worn") and not w.pages["item:iron_ore"].text.contains("spoil"),

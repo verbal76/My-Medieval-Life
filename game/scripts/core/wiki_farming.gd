@@ -12,8 +12,11 @@ static func add_pages(w: Wiki) -> void:
 	ids.sort()
 	for id in ids:
 		var c: Dictionary = crops[id]
-		crop_lines.append("%s: ripe in %s game days of spring or summer growth, %d %s a cell and %d seed back; seed costs %d coins." % [
-				c.name, str(Farming.crop_days(str(id))), int(c.yield), GameData.item_name(str(c.item)).to_lower(), int(c.seeds_back), int(c.seed_price)])
+		var got := "%d %s a cell" % [int(c.yield), GameData.item_name(str(c.item)).to_lower()]
+		if str(id) == "wheat":
+			got = wheat_yield_text()          # FARM-08: the one wheat yield of every field, the player's, the families' and the manor's
+		crop_lines.append("%s: ripe in %s game days of spring or summer growth, %s and %d seed back; seed costs %d coins." % [
+				c.name, str(Farming.crop_days(str(id))), got, int(c.seeds_back), int(c.seed_price)])
 	var rates: Dictionary = f.season_rate
 	w.add_page("sys:farming", "Farming: your own field", "systems", [
 		Wiki.p("On ground you own or lease from the manor you can farm. Fell the trees (an axe), dig out the stumps (an axe), pull up saplings and grub up wild plants by hand, and mine boulders away (a pickaxe). Then face a cleared cell and Use to till it. Each tilled cell joins your field, so a field can be any shape."),
@@ -22,7 +25,8 @@ static func add_pages(w: Wiki) -> void:
 		Wiki.p("Sow a tilled cell with seed from your pack (Use). Crops grow by the hour at the season's pace: spring and summer full speed, autumn at %d%%, winter not at all, and nothing can be sown in winter. A ripe cell is harvested with Use: you get its crop and some seed back, so a field can be sown again without buying seed. Seed is sold by the farmers and by the food stall's merchant." % roundi(float(rates.get("Autumn", 0.5)) * 100.0)),
 		Wiki.p("You can tell how far a crop has come by looking: a sown cell shows a small shoot, then a taller plant as it grows. Ripe wheat stands golden with heads of grain; ripe carrots and potatoes show the root at the surface, and ripe herbs are in yellow flower. Cut wheat leaves stubble: as a ripe manor field is cut, by you a handful at a time or by its farmers, the cut part shows stubble, spreading from where the cutting began, and the whole field does once it is cut, until it is sown again. A wheat cell of your own farm or plot shows stubble after you harvest it, until you sow it again."),
 		Wiki.bullets(crop_lines),
-		Wiki.p("Wheat, carrots, potatoes and herbs sell to the cook and the food merchant (and to the sage, for herbs), at the market or from your own stall. The manor's own fields and their farmers are not affected: their crops are theirs, and taking them is theft."),
+		Wiki.p("Wheat, carrots, potatoes and herbs sell to the cook and the food merchant (and to the sage, for herbs), at the market or from your own stall."),
+		Wiki.p(manor_fields_text()),
 		Wiki.p("You can hire a villager to harvest your ripe field for you: talk to them, choose Propose a contract and then Harvest your field. They are paid for each cell they cut, and the crop is brought to your chest at home (you need a home for it). Villagers can hire you to cut theirs too: the crop goes to them. See Contracts."),
 		Wiki.links(["guide:farm_start", "guide:animals", "sys:farmland", "item:plough", "recipe:craft_plough", "item:wheat_seed", "item:carrot", "item:potato", "animal:chicken", "sys:property", "sys:contracts"])])
 	w.add_page("sys:farm_goods", "Eggs, milk and wool in the village", "systems", [
@@ -52,6 +56,24 @@ static func add_pages(w: Wiki) -> void:
 				int(f.products.cow.qty), roundi(float(f.products.sheep.days)), int(f.product_cap)]),
 		Wiki.links(["animal:cow", "animal:sheep", "animal:horse", "sys:caravan", "guide:farm_start", "item:egg", "item:milk", "item:wool", "recipe:press_cheese", "recipe:weave_cloth", "recipe:sew_bandages", "recipe:bake_egg_bread"])])
 	add_farmland_page(w)
+
+
+## FARM-08, FARM-YIELD-D1: the wheat a cell gives, the same for every wheat field (Farming.wheat_yield). A whole number is
+## every cell's; otherwise the cells give the whole number or one more, the average stated.
+static func wheat_yield_text() -> String:
+	var y := Farming.wheat_yield()
+	var whole := int(floor(y))
+	if is_equal_approx(y, float(whole)):
+		return "%d wheat a cell" % whole
+	return "%s wheat a cell on average (each ripe cell gives %d or %d)" % [String.num(y, 2), whole, whole + 1]
+
+
+## FSE-12, FSE-13: how the manor's fields are farmed, from the switches (so the page follows the game).
+static func manor_fields_text() -> String:
+	if Farming.shared_manor() and Farming.seasonal_fields():
+		return "The manor's fields are farmed by the same rules as yours: their farmers sow one seed a cell, only from spring to autumn, the crop grows at the season's pace, and each cell sown gives the same %s and %d seed back. A field they have no seed for stays unsown until they save or buy some. Their crops are theirs, and taking them is theft." % [
+				wheat_yield_text(), int(Farming.crops().wheat.seeds_back)]
+	return "The manor's own fields and their farmers are not affected: their crops are theirs, and taking them is theft."
 
 
 ## FARM-01..05, FARM-09 (owner Q9, Q11): family farmland of any size. Prices come from the land office's own rules

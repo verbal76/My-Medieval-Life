@@ -127,6 +127,7 @@ var guard_posts: Array = []        # patrol points
 var bandit_camp := Vector2i.ZERO
 var law_lessons := {}              # LAW-SKILL: pupil ref -> [day, lessons that day] (Law.teach); saved only when set
 var outlaw_gone_day := -1            # BANDIT-RETURN: the day the last bandit died (-1 while one lives); saved only when set (Outlaws)
+var shared_farming_start := false    # FARM-YIELD-D1: the shared field model's seed corn has been given (world setup or once on load); saved when set
 var sage_id := -1
 var reeve_id := -1
 var detail_radius := 34.0          # tiles: NPCs nearer the player get every-frame updates
@@ -6109,7 +6110,7 @@ func to_dict() -> Dictionary:
 		"mine_works": mine_works.to_dict(),
 		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"employment": employment.to_dict()} if not employment.is_empty() else {}).merged(_economy_section()).merged(_civic_section()).merged({EconTransactions.KEY: transactions.to_dict()} if transactions != null and not transactions.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"employment": employment.to_dict()} if not employment.is_empty() else {}).merged(_economy_section()).merged(_civic_section()).merged({EconTransactions.KEY: transactions.to_dict()} if transactions != null and not transactions.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"shared_farming_start": true} if shared_farming_start else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
 	if judgment != null:
 		out.judgment = judgment.to_dict()                          # PROSPECTIVE (PROS-19): provisional section
 	elif not judgment_foreign.is_empty():
@@ -6562,6 +6563,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		quests.start_story()                         # saves from before the storyline get its quests (X20: never a guest's copy of a
 		                                             # host's world, NetSession.world_for: the host migrated it; here it would give the host's
 		                                             # public record a quest and the log a line the host never wrote)
+	start_shared_farming(d)                          # FARM-YIELD-D1: a save from before the shared field model moves to it once
 	if int(d.get("save_version", 1)) < 7:
 		quests.migrate_reserves()
 	manor_work = ManorWork.new(self)
@@ -6613,6 +6615,32 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		WorldRecorder.attach(self)     # REC-19: a loaded game records too (off unless recorder.json enables it)
 	if recorder != null:
 		recorder.world_loaded(d)       # REC-19: a session note: loaded, its save version, the ids unchanged
+
+
+## FARM-YIELD-D1 Phase 2 (agent decision, docs/DECISIONS.md 2026-11-02): a world saved before the shared, seasonal field model
+## (no "shared_farming_start" key, so made with shared_manor_farming 0) moves to it once on load, as a new world starts: each
+## manor field's farmers are given its seed corn (Farming.give_seed_corn, a field's worth, as Population gives at world setup;
+## under the old model a field was sown without seed, so a farmer held at most seed_cap and bought only seed_keep, never a
+## field's worth); a field growing under the old model counts as sown whole (it was) and, with seasonal fields, keeps the
+## share of its growth already done. Recorded in the save, reported in the log and a stat: never repeated, never silent.
+## Not on a guest's copy of a host's world (the host moved it). The saved fields and their crops are otherwise as saved.
+func start_shared_farming(d: Dictionary) -> void:
+	shared_farming_start = bool(d.get("shared_farming_start", false))
+	if shared_farming_start or not Farming.shared_manor() or d.has("net_pid"):
+		return
+	for f: Dictionary in fields:
+		if str(f.state) != "growing":
+			continue
+		if not f.has("sown"):
+			f.sown = Farming.field_cells(f)
+		if Farming.seasonal_fields() and not f.has("progress"):
+			var span := field_grow_days(f) * DAY
+			f.progress = clampf(1.0 - (float(f.ready) - minutes) / span, 0.0, 1.0) if span > 0.0 else 1.0
+			f.ready = 1.0e18 if float(f.progress) < 1.0 else minutes
+	var given := Farming.give_seed_corn(self)
+	shared_farming_start = true
+	stat("shared_farming_seed_corn", float(given))
+	note("The manor's fields are now sown a cell at a time with real seed, in season: the farmers were given %d seed corn for them." % given)
 
 
 ## D2: the optional save key "economy": the live records when on, else a section carried through unchanged.

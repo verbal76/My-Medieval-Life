@@ -224,7 +224,10 @@ func test_food_rules() -> void:
 	# a field is ripe once it has grown, not at the next sunrise
 	var f: Dictionary = w.fields[0]
 	w.set_field(f, "growing")
-	f.ready = w.minutes + 30.0
+	if Farming.seasonal_fields():          # FSE-13 (on since FARM-YIELD-D1): ripe when its seasonal growth completes, half an hour's left
+		f.progress = 1.0 - 0.5 * w.farm.season_rate() / (w.field_grow_days(f) * 24.0)
+	else:
+		f.ready = w.minutes + 30.0
 	for i in 60:
 		w.update(0.5)
 	check(f.state == "ripe", "a field ripens when it has grown (%s)" % f.state)

@@ -188,7 +188,14 @@ func test_crops() -> void:
 	var coins0 := p.coins
 	var fc0 := farmer.coins
 	var fs0 := farmer.inv.count("wheat_seed")
-	check(fs0 == int(Farming.seed_cfg().seed_stock.farmer.wheat_seed), "a farmer starts with seed stock of their own (%d)" % fs0)
+	var corn := 0                                  # FSE-12 (on since FARM-YIELD-D1): plus their share of their field's seed corn
+	if Farming.shared_manor():
+		for f: Dictionary in w.fields:
+			var ws: Array = w.field_workers(f)
+			var i := ws.find(farmer)
+			if i >= 0:
+				corn = Farming.field_cells(f) / ws.size() + (1 if i < Farming.field_cells(f) % ws.size() else 0)
+	check(fs0 == int(Farming.seed_cfg().seed_stock.farmer.wheat_seed) + corn, "a farmer starts with seed stock of their own (%d, %d of it seed corn for their field)" % [fs0, corn])
 	check(not w.brain.for_sale(farmer).has("wheat_seed"), "seed is not sold as ordinary goods, only through the seed offer")
 	check(w.farm.buy_seed(farmer, "wheat", 5, p) == "" and p.inv.count("wheat_seed") == 5 and p.coins == coins0 - 5 * w.farm.seed_price("wheat") and farmer.coins == fc0 + 5 * w.farm.seed_price("wheat"), "five seeds bought from the farmer with real coins")
 	# Build 13 economy rule 3: seed comes out of the seller's stock, never from nowhere
@@ -234,9 +241,11 @@ func test_crops() -> void:
 	check(w.farm.cells[c].state == "ripe", "ripe after %.0f days of spring growth" % days)
 	var wheat0 := p.inv.count("wheat")
 	var seed0 := p.inv.count("wheat_seed")
+	var want := w.farm.cell_yield("wheat", c)       # FARM-08: the shared wheat yield, this cell's share today (1 or 2 at 1.75)
 	var got: Dictionary = w.farm.harvest(c, p)
 	var cr: Dictionary = Farming.crops().wheat
-	check(int(got.get("wheat", 0)) == int(cr.yield) and p.inv.count("wheat") == wheat0 + int(cr.yield), "harvest gives the wheat (%d)" % int(cr.yield))
+	check(want >= int(floor(Farming.wheat_yield())) and want <= int(ceil(Farming.wheat_yield())) and int(got.get("wheat", 0)) == want and p.inv.count("wheat") == wheat0 + want,
+			"harvest gives the cell's wheat (%d of the %.2f average)" % [want, Farming.wheat_yield()])
 	check(p.inv.count("wheat_seed") == seed0 + int(cr.seeds_back) and w.farm.cells[c].state == "tilled", "seed saving: part of the harvest returns as seed, the cell is empty tilled soil again")
 	check(w.farm.sow(c, "wheat", p) == "", "the saved seed sows it again, no purchase needed")
 	# seasons: autumn grows slower, winter not at all and cannot be sown

@@ -224,8 +224,9 @@ func test_player_farming() -> void:
 		w.farm.hour()
 	check(str(w.farm.cells[c].state) == "ripe", "it ripens in the crop's days")
 	var wheat0 := w.player.inv.count("wheat")
+	var want := w.farm.cell_yield("wheat", c)        # FARM-08: the shared wheat yield, this cell's share today
 	var got := w.farm.harvest(c, w.player)
-	check(int(got.get("wheat", 0)) == 3 and w.player.inv.count("wheat") == wheat0 + 3, "the harvest goes to the player")
+	check(want > 0 and int(got.get("wheat", 0)) == want and w.player.inv.count("wheat") == wheat0 + want, "the harvest goes to the player (%d wheat)" % want)
 
 
 func test_household_farming() -> void:
@@ -268,9 +269,13 @@ func test_household_farming() -> void:
 	check(fp.cells.values().filter(func(e): return e.state == "ripe").size() == 3, "the sown cells ripen at the player's rate")
 	var wheat0 := pantry.count("wheat")
 	var made0 := st(w, "farm_harvest_wheat")
+	var want := 0                                     # FARM-08: each ripe cell's share of the shared wheat yield today
+	for k in fp.cells:
+		if str(fp.cells[k].state) == "ripe":
+			want += w.farm.cell_yield("wheat", k)
 	fp.act(n, "fp_work", {"plot": str(p.id), "task": "harvest", "cells": cs})
-	check(pantry.count("wheat") == wheat0 + 9 and pantry.count("wheat_seed") == 3, "the harvest (3 wheat a cell and the seed back) goes to the family chest")
-	check(st(w, "farm_harvest_wheat") - made0 == 9, "counted as farm_harvest_ (the ledger's faucet)")
+	check(want >= 3 and pantry.count("wheat") == wheat0 + want and pantry.count("wheat_seed") == 3, "the harvest (%d wheat from 3 cells, at %.2f a cell on average, and the seed back) goes to the family chest" % [want, Farming.wheat_yield()])
+	check(st(w, "farm_harvest_wheat") - made0 == want, "counted as farm_harvest_ (the ledger's faucet)")
 	check(w.total_coins() == coins0, "coins are conserved")
 	# another household's member cannot work it
 	for o: NPC in w.npcs:

@@ -704,8 +704,24 @@ func seed_offers(n: NPC) -> Array:
 ## crop's seed, from the field's farmers' packs, then their households' pantries; as many cells as there is seed), each
 ## sown cell yields the crop's `yield` and gives back `seeds_back` seed to the cutter, and the work takes the player's
 ## time a cell (sowing, cutting, ploughing). Off (0), the old field model: a field yields field_yield, sown without seed.
+## On in the game since FARM-YIELD-D1 Phase 2 (with seasonal_village_farming and shared_wheat_yield 1.75).
 static func shared_manor() -> bool:
 	return int(GameData.b("shared_manor_farming")) == 1
+
+
+## FSE-12: the village's seed corn under the shared model, a field's worth for each manor field shared among the field's
+## farmers (the first `cells % workers` get one more). Given at world setup (Population) and once to a world saved before
+## the shared model (World.start_shared_farming); never again. Returns the seed given.
+static func give_seed_corn(w: World) -> int:
+	var given := 0
+	for f: Dictionary in w.fields:
+		var ws: Array = w.field_workers(f)
+		var cells := field_cells(f)
+		for i in ws.size():
+			var k := cells / ws.size() + (1 if i < cells % ws.size() else 0)
+			(ws[i] as NPC).inv.add("wheat_seed", k)
+			given += k
+	return given
 
 
 ## FSE-13 (owner, 2026-10-21: comparison first, then owner review): with balance `seasonal_village_farming` 1, the
@@ -715,8 +731,8 @@ static func seasonal_fields() -> bool:
 	return int(GameData.b("seasonal_village_farming")) == 1
 
 
-## FARM-08 (owner, 2026-10-21): one shared per-cell yield for the player's and the manor's wheat under comparison. With
-## balance `shared_wheat_yield` above 0 (a comparison setting, 0 in the game), a wheat cell yields that many on average:
+## FARM-08 (owner, 2026-10-21): one shared per-cell yield for the player's and the manor's wheat. With balance
+## `shared_wheat_yield` above 0 (1.75 in the game since FARM-YIELD-D1 Phase 2), a wheat cell yields that many on average:
 ## the whole part always, the fraction by a hash of the cell and the day (deterministic, no RNG draw). 0: the crop's own.
 static func wheat_yield() -> float:
 	var y := float(GameData.b("shared_wheat_yield"))
@@ -952,7 +968,7 @@ func targets_at(c: Vector2i, p: PlayerState, exact := true) -> Array:
 		match str(cell.state):
 			"ripe":
 				var cr: Dictionary = crops()[cell.crop]
-				out.append(_t("harvest", c, "Harvest %s (%d, and seed)" % [str(cr.name).to_lower(), int(cr.yield)]))
+				out.append(_t("harvest", c, "Harvest %s (%d, and seed)" % [str(cr.name).to_lower(), cell_yield(str(cell.crop), c)]))   # FARM-08: this cell's crop today
 			"growing":
 				var d := days_left(c)
 				out.append({"kind": "info", "id": "grow:%d,%d" % [c.x, c.y], "text": "", "label": "%s growing: %s" % [crops()[cell.crop].name, ("ripe in about %.1f days" % d) if d != INF else "it will not grow in winter"]})

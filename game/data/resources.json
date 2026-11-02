@@ -1100,7 +1100,7 @@
   "code_sources": [
     {"items": ["pickaxe", "axe", "meat", "log", "plank", "hammer", "iron_bar", "coal", "iron_ore", "iron_sword", "leather", "hide", "wheat", "pottage", "roast_meat", "ale", "stone", "copper_sword", "leather_armor"], "text": "The villagers' starting stock (a one-time source: each job starts with its tools and some goods).", "source": "game/scripts/core/population.gd::_equip"},
     {"items": ["pottage", "wheat"], "text": "Each household's pantry starts with 3 pottage and start_household_wheat_per_member wheat a member.", "source": "game/scripts/core/population.gd::populate"},
-    {"items": ["wheat_seed"], "text": "With the shared manor farming switch on (FSE-12), the manor fields' farmers start with one wheat seed a field cell, shared among them.", "source": "game/scripts/core/population.gd::populate"},
+    {"items": ["wheat_seed"], "text": "With the shared manor farming switch on (FSE-12, on in the game since FARM-YIELD-D1), the manor fields' farmers start with one wheat seed a field cell, shared among them: at world setup (Population.populate), or once when a save made before the shared model is loaded (World.start_shared_farming), never again.", "source": "game/scripts/core/farming.gd::give_seed_corn"},
     {"items": ["copper_sword"], "text": "Each bandit starts with a copper sword.", "source": "game/scripts/core/population.gd::populate"},
     {"items": ["wheat"], "text": "The granary starts with start_granary_days of the village's food in wheat.", "source": "game/scripts/core/world.gd::setup"}
   ],

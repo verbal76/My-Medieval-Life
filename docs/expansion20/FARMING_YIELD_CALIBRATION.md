@@ -6,8 +6,9 @@ and implement a defensible provisional baseline using simulation evidence. Retai
 ... Proceed without another owner approval of arbitrary yield numbers unless a new material design conflict emerges."
 Register: FARM-YIELD-D1, B25-NINE-D3, FSE-12, FSE-13, FARM-06, FARM-08.
 
-**Status: Phase 1, the plan.** No game behaviour has changed. The campaign has not been dispatched; the lead dispatches it.
-Phase 2 applies the decision rule below to the results and implements the chosen baseline.
+**Status: Phase 2 done (section 8).** The decision rule chose **1.75**; the game now ships with `shared_manor_farming` 1,
+`seasonal_village_farming` 1 and `shared_wheat_yield` 1.75. Sections 1-7 are the plan as written before any result; the
+"Now" column of section 1 is the Phase 1 state.
 
 ## 1. The switches and what each does (Build 25 source `8dbe74f`)
 
@@ -194,3 +195,44 @@ paid-repair escrow (`economy.repairs.escrow()`), which `World.total_coins` count
 not yet done showed a false currency leak and stopped the run with `FATAL` (seed 1, day 10: 19 coins, exactly the
 escrow). Every `--market` year-long run would have risked this. The holder is now listed; the fix only reads, and the
 day-10 fingerprint is unchanged (`311fef9de8d5e39a82d118e9bb739754` before and after).
+
+## 8. Phase 2 result (2026-11-02)
+
+**Decision by section 5.** Dispatch A: 2.0 passed on both seeds; 1.5 failed by **scarcity** on seed 1 (Actions
+41403541582). That is the table's second row, so Dispatch B tested 1.75. 1.75 is FOOD-SECURE on both seeds (Actions
+41469335443), so the baseline is **1.75**, the lowest tested yield secure on both seeds.
+
+| Run (365 days, `--market`, both switches on) | Starved | Famine samples | Meals missed, no food for sale | Lowest food days | Integrity |
+|---|---|---|---|---|---|
+| 1.75, seed 1 | 0 | 0 | 326 (319 of them night guards, days 90-150) | 3.0 | clean |
+| 1.75, seed 2 | 0 | 0 | 7 | 3.0 | clean |
+| 1.5, seed 2 | 0 | 0 | 10 | 2.6 | clean |
+
+Integrity clean: exit 0, no script error, no `FATAL`, currency and item leaks 0 at every checkpoint. All three meet F1-F4
+(F4: 326 against the 1,000 limit). Seed 1's missed meals are almost all night guards in one stretch (days 90-150), a
+distribution pattern for the lead to look at, not a yield shortfall: food was held throughout (never below 3.0 days).
+
+**What changed in the game (Phase 2 commit).**
+
+- `game/data/balance.json`: the three values, with a `_shared_farming_note` citing this report.
+- Every wheat cell, the player's, the households', the chapel's plot and the manor's fields, yields 1.75 on average
+  (`Farming.cell_yield`: 2 or 1 by a hash of the cell and the day; a manor field `round(sown x 1.75)`). Carrots, potatoes
+  and herbs keep their own yields. The player's harvest action now names the cell's own crop instead of the crop's base 3.
+- The wiki (`wiki_farming.gd`, `wiki.gd`): the wheat line states the shared yield; the farming page, the farmer's job and
+  the wheat field say the manor's fields are sown a seed a cell, in season, at the same yield.
+- **Old saves** (section 6; agent decision in `docs/DECISIONS.md`, 2026-11-02): a save without the `shared_farming_start`
+  key (made with the old model) is moved once on load by `World.start_shared_farming`: each field's farmers are given its
+  seed corn, the start a new world gets (`Farming.give_seed_corn`, shared with `Population`); a field growing under the old
+  model counts as sown whole and keeps its growth; the key is saved so it never repeats, with a stat and a log line. Seed
+  purchase alone could not do it: farmers buy only up to `seed_keep` (2) and hold at most `seed_cap` (12) against a
+  field's 66 cells. Tested by `game/tests/farm_shared_save_test.gd` on the Build 24 fixture.
+- Tests with stale expectations of the old defaults: `farming_test` (a farmer's starting seed now includes their share of
+  the field's seed corn; the player's harvest is the cell's shared yield, not 3), `farm_plots_test` (the player's and a
+  family's harvest at the shared yield), `crop_share_test` (the old seed-keeping rule now sets `shared_manor_farming` 0
+  itself and restores the setting, instead of assuming it is off). `wiki_test` checks the farming page's yield and manor
+  field text. `world_test`'s FSE-12/13 checks already set and restore their switches and pass unchanged.
+
+**Kept for later balancing** (section 5, secondary): the end food days, wheat held unsold, the end price, cattle and seed
+measures of the four Dispatch A runs and the three Dispatch B runs are in their job logs; Phase 2 changes no rule outside
+the yield.
+

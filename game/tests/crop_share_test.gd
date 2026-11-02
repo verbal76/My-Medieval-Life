@@ -165,7 +165,10 @@ func _grain(w: World, n: NPC) -> int:
 
 ## FARM-CROP-SEED (owner, 2026-10-23): the seed kept back is split by work like the grain; nothing made or lost.
 func _test_seed_share() -> void:
-	# the earlier model: seed_keep (2) of the crop, equal work: one seed each
+	# the earlier model (still the code behind shared_manor_farming 0; the game has the shared model on since FARM-YIELD-D1):
+	# seed_keep (2) of the crop, equal work: one seed each
+	var keep_sw = GameData.balance.get("shared_manor_farming", 0)
+	GameData.balance["shared_manor_farming"] = 0
 	var w := _world()
 	var s := _setup(w, 90.0, 101)
 	var a: NPC = s[1]
@@ -204,7 +207,7 @@ func _test_seed_share() -> void:
 	w4.brain.act(a4, "harvest", {"field": s4[0].id, "min": 90.0})
 	check(a4.inv.count("wheat_seed") + b4.inv.count("wheat_seed") == 7 and absi(a4.inv.count("wheat_seed") - b4.inv.count("wheat_seed")) == 1,
 		"shared model: 7 seed back are split 4 and 3 by equal work (%d, %d)" % [a4.inv.count("wheat_seed"), b4.inv.count("wheat_seed")])
-	GameData.balance["shared_manor_farming"] = 0
+	GameData.balance["shared_manor_farming"] = keep_sw
 
 
 ## Owner D7 (2026-10-23): shares are minutes x the cutter's own work rate (base-minute equivalents).
