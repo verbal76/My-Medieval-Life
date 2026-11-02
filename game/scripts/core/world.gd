@@ -3666,8 +3666,8 @@ func _player_killing(n: NPC, ref: String) -> void:
 		if o.job == "guard":
 			justice.learn(o, ref, [ci], player.pos)
 		else:
-			report_crime(o, id_of_ref(ref), "saw", "attack", ref, [ci])
-			justice.case_of(ref).aware[str(o.id)] = ci
+			report_crime(o, id_of_ref(ref), "saw", "attack", ref, [ci], true, n.id, "killing")     # Decision 4: weighed as the gravest crime
+			justice.case_of(ref).aware[str(o.id)] = ci                          # witnessing stands, whatever they chose
 	if not seen.is_empty():
 		# A3 (owner answer 1): a murder seen raises the hue and cry: everyone within earshot learns of it at once
 		var blows: Array = []
@@ -4595,6 +4595,7 @@ func raise_alarm(aware: Dictionary, attacker: int, ref := "", cis := []) -> int:
 	if judgment != null:
 		JudgmentLive.on_attack(self, attacker, aware)              # PROSPECTIVE (PROS-19)
 	var k := 0
+	var v: NPC = aware.get("victim", null)
 	for n: NPC in aware.seen:
 		if n.job == "guard":
 			if ref != "":
@@ -4605,8 +4606,7 @@ func raise_alarm(aware: Dictionary, attacker: int, ref := "", cis := []) -> int:
 				if ref != "":
 					justice.engage(n, ref, "pursuing")             # A2: the chase is on the case: it survives losing sight
 		elif n.role != "bandit" and n.id != attacker:
-			report_crime(n, attacker, "saw", "attack", ref, cis)
-	var v: NPC = aware.get("victim", null)
+			report_crime(n, attacker, "saw", "attack", ref, cis, true, v.id if v != null else -1)
 	if v != null and v.alive and v.role != "bandit" and v.id != attacker:
 		if v.job == "guard":
 			if ref != "":
@@ -4632,9 +4632,13 @@ func raise_alarm(aware: Dictionary, attacker: int, ref := "", cis := []) -> int:
 ## it tells of (`cis`); a report the villager already holds on the same player gains the new crimes.
 ## R2 (SJD-F): with decision.integration.report on, the villager first weighs telling against keeping quiet
 ## (JudgmentLive.will_report); `weigh` false for a rule that is never weighed (a family member fetching help,
-## JudgmentFamily). Off (the default), every call reports as before. True when the report is taken up.
-func report_crime(n: NPC, offender: int, how: String, crime := "attack", ref := "", cis := [], weigh := true) -> bool:
-	if weigh and JudgmentLive.on(self, "report") and not JudgmentLive.will_report(self, n, offender, how, crime):
+## JudgmentFamily). Owner Decision 4 (2026-11-01): on since then; off, every call reports as before. True when the report is
+## taken up. Keeping quiet changes only this: the villager still remembers the deed and knows the offender (the caller's own
+## record of what they saw). `severity` is what the choice weighs (JudgmentLive.report_harm: "killing", "attack" or "theft";
+## "" the crime itself), while the report carries `crime` (the guard's answer stays the live rule's); `victim` the one harmed
+## (-1 none), for the witness's kinship with them.
+func report_crime(n: NPC, offender: int, how: String, crime := "attack", ref := "", cis := [], weigh := true, victim := -1, severity := "") -> bool:
+	if weigh and JudgmentLive.on(self, "report") and not JudgmentLive.will_report(self, n, offender, how, severity if severity != "" else crime, victim):
 		stat("crime_reports_withheld")
 		return false
 	var had: Dictionary = n.report
@@ -5130,7 +5134,7 @@ func _pickpocket_try(n: NPC) -> Dictionary:
 		var ci := last_crime                  # A1: the case's record of this try (witness)
 		for o: NPC in near(player.pos, sight):
 			if o != n and o.role != "bandit" and o.job != "guard":
-				report_crime(o, acting_id(), "saw", "theft", acting_ref(), [ci])
+				report_crime(o, acting_id(), "saw", "theft", acting_ref(), [ci], true, n.id)
 		if n.alive and n.job != "guard":
 			report_crime(n, acting_id(), "victim", "theft", acting_ref(), [ci])
 	if last_guard != "":
