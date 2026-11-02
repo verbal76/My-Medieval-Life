@@ -9,7 +9,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 142 |
-| Integrated | 120 of 142 (85%) |
+| Integrated | 121 of 142 (85%) |
 | Automated tests passed | 110 of 142 (77%) |
 | Integration verified | 64 of 142 (45%) |
 | Gameplay verified | 0 of 142 (0%) |
@@ -24,7 +24,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (118)
+## Integrated, awaiting gameplay or owner verification (119)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -132,6 +132,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-CHAPEL-FIX | Chapel economy correction: voluntary, affordable, individually decided donations (piety raises the chance, never triggers a payment; no penalty for declining); a modest operating reserve from anticipated expenses; the surplus paid as alms to the poorest households by genuine hardship (cash, wealth, dependents, essentials), conserved transfers; chapel economy instrumented; validated against the Build 25 baseline | OWNER APPROVED | INTEGRATED | lead / wip/x20-chapel | NOT TESTED |  |  | verification only |
 | X20-CHAPEL-INTEGRATE | Integrate the chapel correction and the gossip fix into wip/expansion20 | OWNER APPROVED | INTEGRATED | 552febf | NOT TESTED |  |  | verification only |
 | X20-CHECKPOINT | Build 24: private three-platform checkpoint of Expansion 20 groundwork (till ownership, TILL-D1, flight recorder, free migration, visible sword, LE-02 behind the off switch), then recovery handoff and a pause of Medieval development | OWNER APPROVED | INTEGRATED | Build 24 private draft 426357144 (wip/expansion20 4611d86) | INTEGRATION VERIFIED | PAUSED (owner 2026-10-28). Owner device checks of Build 24 when convenient; resume Expansion 20 only on the owner's instruction (handoff docs/handoffs/X20_RECOVERY_HANDOFF.md). |  | verification only |
+| X20-ECON-FIREWOOD | Re-evaluate firewood shortages by season, household, income and period | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
 | X20-FINAL | Expansion 20 final validation, flight-recorder and black-box modernization for Expansions 18-20, defect correction, and automatic three-platform release | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 c79b12c | INTEGRATION VERIFIED | Owner device checks of Build 23 (phone install over Build 22, Windows, controller, two-device multiplayer, all nine host/guest pairs); owner decisions MP-INTERACT-Q1/Q2 and REG-X20-D1..D4. |  | verification only |
 | X20-JUDG-C1 | Judgment integration audit and calibration: every NPC decision system audited for where judgment is considered, where it changes the outcome and where it should participate but does not; missing integration added; weighting adjusted only where tests show legitimate judgment is ignored; practical motives preserved; no penalty inflation; no target percentage | OWNER APPROVED | INTEGRATED | wip/expansion20 a3643c8 | TARGETED TESTS PASSED |  |  | verification only |
 | X20-JUDG-C2 | Second-hand memories of assault and lesser offences fade by existing memory rules while the opinion formed persists under the existing judgment and reputation decay; first-hand outweighs second-hand; killing permanent; family events weighted; reinforcement refreshes; bounded save growth | OWNER APPROVED | INTEGRATED | wip/expansion20 a3643c8 | TARGETED TESTS PASSED |  |  | verification only |
@@ -153,7 +154,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | TARGETED TESTS PASSED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (20)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (19)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -170,7 +171,6 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | X20-CAREER-AUDIT | Audit career progression, NPC ambition and skilled employment | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-ECON-AFFORD | Re-evaluate the unaffordable bids by interval, category, household condition and cause | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-ECON-AUDIT | Audit which of 20 economic progression systems the year-long simulations exercise | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| X20-ECON-FIREWOOD | Re-evaluate firewood shortages by season, household, income and period | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-ECON-LONGITUDINAL | Longitudinal economic evaluation framework (snapshots days 1/30/90/180/270/365 plus intervals; stages) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-ECON-MATURE | Economic maturation: evaluate the economy as a developing system | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-ECON-MATURE-REPORT | Economic maturation report with the 16 required charts and the executive-summary questions | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

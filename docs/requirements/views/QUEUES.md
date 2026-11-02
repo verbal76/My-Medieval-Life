@@ -18,7 +18,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (68)
+## Implemented but not tested (69)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -86,6 +86,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-CHAPEL-FIX | 20 | INTEGRATED |  |
 | X20-CHAPEL-INTEGRATE | 20 | INTEGRATED |  |
 | X20-ECON-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |
+| X20-ECON-FIREWOOD | 20 | INTEGRATED |  |
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH |  |
 | X20-TELL-GUARD | 20 | INTEGRATED |  |
 | X20-TRADER-PAY-INV | 20+ | PARTIALLY IMPLEMENTED |  |

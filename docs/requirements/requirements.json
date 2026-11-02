@@ -65092,6 +65092,11 @@
      "date": "2026-11-01",
      "change": "target_build",
      "why": "target build corrected: Expansion 20 work (the register's build 25 is the weather build)"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "investigated (merged 8654451): unaffordable bids occur only with the market on (normal play posts none). With --market about 35 a day, steady: 92% traders restocking inputs, 8% merchant speculation, 0 household food bids; traders' purses short. OUTCOME. Report per trader per day, not an annual total."
     }
    ]
   },
@@ -65149,7 +65154,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -65163,7 +65168,20 @@
      "date": "2026-11-01",
      "change": "target_build",
      "why": "target build corrected: Expansion 20 work (the register's build 25 is the weather build)"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests: None -> elder_provision 11, run_tests 3602 and 9 suites (3b530d5); merge 8654451: elder_provision 11, le05_route_risk 37, conservation 8, net_econ_integrity 126; test_commit: None -> 8654451; commits + 8654451; integrated_in + Build 25 wip/expansion20",
+     "why": "investigated and fixed (wip/b25-firewood 15c4d57, merged at 8654451): DEFECT 1 elders never bought firewood (only adults reach _plan_provision) - fixed by _elder_provides under OD-19/PAR-02A; DEFECT 2 manor-advanced axes not delivered (a coinless apprentice smith's ore purchase was blocked by its reserve) - order inputs may use reserved coins as due obligations (PAR-02A, EQ-19). 160-day seed 1: cold household-nights 159 -> 37; leaks 0. OUTCOMES: woodcutter decline (no first axe for coinless youths: owner P2); manor wage raise never fires (surplus labour). Tests: elder_provision 11, run_tests 3602 and 9 suites, 0 failures (3b530d5); merge checks 8654451."
     }
+   ],
+   "tests": "elder_provision 11, run_tests 3602 and 9 suites (3b530d5); merge 8654451: elder_provision 11, le05_route_risk 37, conservation 8, net_econ_integrity 126",
+   "test_commit": "8654451",
+   "commits": [
+    "8654451"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
    ]
   },
   {

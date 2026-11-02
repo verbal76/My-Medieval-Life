@@ -730,7 +730,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | X20-ECON-AFFORD | Re-evaluate the unaffordable bids by interval, category, household condition and cause | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | X20-ECON-AUDIT | Audit which of 20 economic progression systems the year-long simulations exercise | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
-| X20-ECON-FIREWOOD | Re-evaluate firewood shortages by season, household, income and period | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| X20-ECON-FIREWOOD | Re-evaluate firewood shortages by season, household, income and period | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | X20-ECON-LONGITUDINAL | Longitudinal economic evaluation framework (snapshots days 1/30/90/180/270/365 plus intervals; stages) | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | X20-ECON-MATURE | Economic maturation: evaluate the economy as a developing system | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | X20-ECON-MATURE-REPORT | Economic maturation report with the 16 required charts and the executive-summary questions | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
