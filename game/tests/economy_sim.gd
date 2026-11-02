@@ -1586,7 +1586,44 @@ func _chapel_line(day: int) -> Dictionary:
 		"store_seed": c.store.count(str(Farming.crops().wheat.seed)),
 		"food": {"relief_wheat": int(_st("chapel_relief_wheat")), "relief_points": int(_st("chapel_relief_points")),
 			"asked": int(_st("chapel_asked")), "relieved": int(_st("chapel_relieved")), "food_alms_points": int(_st("chapel_food_alms_points")),
-			"food_alms_households": int(_st("chapel_food_alms_households")), "spoiled": int(_st("chapel_spoiled"))}}
+			"food_alms_households": int(_st("chapel_food_alms_households")), "spoiled": int(_st("chapel_spoiled"))},
+		"cycle": _chapel_cycle()}
+
+
+## CHAPEL-PURPOSE (owner 2026-11-02, section 6) instrumentation, read only: the chapel's whole cycle so far. Food in points
+## (wheat 120 a unit as cooked) unless named in units; coins in coins. ops_food_used is 0 by design: nothing in the chapel
+## eats from its store (the clergy are paid wages and eat at home; it keeps no animals; seed is counted as sown).
+func _chapel_cycle() -> Dictionary:
+	var c: Chapel = w.chapel
+	var unhelped := {}
+	for k in w.stats:
+		if str(k).begins_with("chapel_unhelped_"):
+			unhelped[str(k).trim_prefix("chapel_unhelped_")] = int(w.stats[k])
+	var pend := 0.0
+	var carried := 0
+	for p in c.parcels:
+		pend += NPCBrain.store_points([p.inv])
+		if int(p.carrier) >= 0:
+			carried += 1
+	var deaths: Array = c.death_log.slice(maxi(0, c.death_log.size() - 8))
+	return {"in": {"offered_coins": int(_st("chapel_offering_coins")), "offered_wheat": int(_st("chapel_offering_wheat")),
+			"harvest_wheat": int(_st("chapel_harvest_wheat")), "sown": int(_st("chapel_sown"))},
+		"use": {"ops_food_used": 0, "wages": int(_st("chapel_wages")), "relief_bought_coins": int(_st("chapel_relief_bought")),
+			"seed_bought_units": int(_st("chapel_seed_bought")), "seed_coins": int(_st("chapel_seed_coins"))},
+		"out": {"relief_points": int(_st("chapel_relief_points")), "relief_store_wheat": int(_st("chapel_relief_wheat")),
+			"alms_points": int(_st("chapel_food_alms_points")), "alms_store_wheat": int(_st("chapel_alms_wheat")),
+			"delivered_points": int(_st("chapel_delivered_points")), "delivered_relief": int(_st("chapel_delivered_relief_points")),
+			"delivered_alms": int(_st("chapel_delivered_alms_points")), "deliveries": int(_st("chapel_deliveries")),
+			"fetched": int(_st("chapel_fetched")), "carry_trips": int(_st("chapel_carry_trips")), "carry_dropped": int(_st("chapel_carry_dropped")),
+			"returned_points": int(_st("chapel_returned_points")), "spoiled_units": int(_st("chapel_spoiled")), "coin_alms": int(_st("chapel_alms_coins"))},
+		"held": {"store_points": snappedf(NPCBrain.store_points([c.store]), 1), "food_reserve": c.food_reserve(), "fund": c.coins,
+			"coin_reserve": c.operating_reserve(), "parcels": c.parcels.size(), "parcels_carried": carried, "parcel_points": snappedf(pend, 1)},
+		"people": {"asked": int(_st("chapel_asked")), "emergency_found": int(_st("chapel_emergency_found")),
+			"emergency_given": int(_st("chapel_relief_households")), "alms_eligible": int(_st("chapel_food_alms_eligible")),
+			"alms_given": int(_st("chapel_food_alms_households")), "food_reached_households": c.diag_recipients.size(),
+			"emergency_households": c.diag_helped.size(), "coin_alms_households": c.diag_alms_recipients.size(), "unhelped": unhelped},
+		"starvation": {"deaths": int(_st("chapel_starved")), "eligible": int(_st("chapel_starved_eligible")),
+			"eligible_chapel_had_means": int(_st("chapel_starved_eligible_chapel_had_means")), "log_total": c.death_log.size(), "last": deaths}}
 
 
 func _sample(start: Dictionary) -> Dictionary:

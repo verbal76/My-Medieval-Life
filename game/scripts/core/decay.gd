@@ -93,6 +93,8 @@ static func dawn(w: World) -> void:
 	lost += spoil_inv(w, w.granary, "granary")
 	if w.chapel != null:                            # DVW-B4 "wherever it is kept": the chapel's store (food offered and grown)
 		var ch := spoil_inv(w, w.chapel.store, "chapel")
+		for pc in w.chapel.parcels:                 # CHAPEL-PURPOSE: its food on the way to a household spoils as any store does
+			ch += spoil_inv(w, pc.inv, "chapel_parcel:%d" % int(pc.id))
 		if ch > 0:
 			w.stat("chapel_spoiled", float(ch))
 		lost += ch

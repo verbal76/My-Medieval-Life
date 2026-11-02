@@ -710,9 +710,16 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 func work_cell(p: Dictionary, c: Vector2i, task: String, crop: String, inv: Inventory, store: Inventory) -> String:
 	match task:
 		"harvest":
-			return "" if not harvest(c, store).is_empty() else "x"
+			var got: Dictionary = harvest(c, store)
+			if is_church(p):
+				for id in got:
+					w.stat("chapel_harvest_" + str(id), float(got[id]))      # CHAPEL-PURPOSE instrumentation: the plot's crop
+			return "" if not got.is_empty() else "x"
 		"sow":
-			return sow(c, crop, [inv, store])
+			var why := sow(c, crop, [inv, store])
+			if why == "" and is_church(p):
+				w.stat("chapel_sown")                                         # CHAPEL-PURPOSE instrumentation: seed sown on the plot
+			return why
 		"till":
 			return till(p, c, inv, store)
 		"clear":
