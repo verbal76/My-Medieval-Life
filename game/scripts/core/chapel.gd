@@ -678,8 +678,10 @@ func relief_round() -> float:
 	if rows.is_empty():
 		return 0.0
 	w.stat("chapel_emergency_found", rows.size())
-	var given := _share_store(rows, 1.0, _store_points(), true, "relief", true)
-	given += _share_store(rows, fill, _store_points(), true, "relief", false)
+	# the whole store, the reserve included (no point limit: a last odd grain, worth only its raw food in the store's
+	# reckoning, would otherwise never be given)
+	var given := _share_store(rows, 1.0, INF, true, "relief", true)
+	given += _share_store(rows, fill, INF, true, "relief", false)
 	if coins > 0:
 		given += _buy_for(rows, 1.0, true)
 		given += _buy_for(rows, fill, false)
@@ -1245,7 +1247,7 @@ func on_starved(n: NPC) -> void:
 	w.stat("chapel_starved")
 	if qualified:
 		w.stat("chapel_starved_eligible")
-	if qualified and (cp > 0.0 or coins > 0):
+	if qualified and (cp >= day_food or coins > 0):          # a day of the household's food in store, or any coins
 		w.stat("chapel_starved_eligible_chapel_had_means")
 
 
