@@ -122,6 +122,33 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**X20-CHAPEL-FIX follow-up: the chapel's food store.**
+- Branch: `wip/b25-chapel-food` (`d08b18c`, `df4f7db`, `fa75bd1`), merged as `35fbd48`. The merge also committed two Godot uid
+  files the firewood merge had missed.
+- Finding:
+  - At yield 2.0 the chapel ended the year with 763 and 2,142 wheat. The source is the church plot's own harvest, about 12-18
+    wheat a day; offerings were under 1 a day.
+  - Its only outflow was relief on request, which stops once the village is food-secure.
+- Defects fixed:
+  - The chapel's store never spoiled. `decay.gd` skipped it, against DVW-B4's "wherever it is kept".
+  - The food store had no reserve or surplus rule; X20-CHAPEL-FIX and CHAPEL-R2 had been applied to coins only.
+  - New weekly `Chapel.food_alms`:
+    - it keeps a reserve of 4 weeks of relief for 14 days;
+    - it gives the rest to households below `goods_keep_days` (6, PROVISIONAL) of food, counting what their coins can buy;
+    - poorest per member go first;
+    - only goods move, so conservation holds.
+  - The lead kept the 6-day line rather than the 14-day essentials line. Below 6 days a household offers no wheat, so food given
+    as alms cannot be offered straight back. Both values are agent-provisional.
+- Evidence:
+  - On the branch: chapel_test 137, conservation 8, net_econ_integrity 126, migration 109, wiki_test, all 0 failures.
+  - On the merge: chapel 137, conservation 8, elder_provision 11. run_tests is running.
+  - The default fingerprint changes to `b01fbf44`, because of the first service's food alms.
+- Outstanding:
+  - The plot's surplus in a food-secure village still accumulates, now limited by spoilage. Owner question B25-CHAPEL-FOOD-Q;
+    the recommendation is that the church sows only to need.
+  - A `currency leak -4` at day 40 appeared in the worker's first-version run, with the same signature as the `wip/b25-leak2`
+    defect.
+
 **X20-FIREWOOD and X20-AFFORD: two firewood defects fixed; affordability is an outcome.**
 - Branch: `wip/b25-firewood` (`2021a5b` read-only cold-payer diagnostic, `3b530d5` fixes, `0069250` docs, `8938f56`/`15c4d57`
   findings), merged as `8654451`. The merge resolved a DECISIONS.md conflict by keeping both rows, and committed the missing
