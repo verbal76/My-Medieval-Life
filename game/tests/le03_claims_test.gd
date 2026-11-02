@@ -480,10 +480,11 @@ func test_determinism() -> void:
 
 # ------------------------------------------------------------------------------------------------ the switch
 func test_switch_off() -> void:
-	EconomyFoundation.set_override({})
+	check(not bool(EconomyFoundation.file_config().enabled), "shipped: economy.json enabled false")
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var w := World.new()
 	w.setup(VillageMap.load_default(), 1)
-	check(w.economy == null, "shipped: economy.json enabled false, nothing built")
+	check(w.economy == null, "economy off: nothing built")
 	var car := job(w, "carpenter")
 	check(w.claims_allow(car, "plank", 999) and w.claims_release(car, "coins", 999) and w.claims_free_coins(car) == car.coins,
 		"the claims entry points do nothing while the economy is off")

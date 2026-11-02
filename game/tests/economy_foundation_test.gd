@@ -18,7 +18,7 @@ func check(cond: bool, what: String) -> void:
 
 
 func new_world(on := true, seed := 1) -> World:
-	EconomyFoundation.set_override({"enabled": true, "reservations": {"keep_finished": 5}, "events": {"capacity": 8, "save": true}} if on else {})
+	EconomyFoundation.set_override({"enabled": true, "reservations": {"keep_finished": 5}, "events": {"capacity": 8, "save": true}} if on else EconomyFoundation.off_config())
 	var w := World.new()
 	w.setup(VillageMap.load_default(), seed)
 	return w
@@ -68,7 +68,7 @@ func test_disabled() -> void:
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), d)
 	check(w2.economy == null, "disabled: load builds nothing")
-	check(not EconomyFoundation.enabled(), "shipped economy.json is disabled")
+	check(not bool(EconomyFoundation.file_config().enabled), "shipped economy.json is disabled")
 	var f := FileAccess.open("res://data/economy.json", FileAccess.READ)
 	var j = JSON.parse_string(f.get_as_text())
 	check(j.format == "mml-economy/1" and j.enabled == false, "economy.json format and enabled=false")
@@ -321,7 +321,7 @@ func test_save() -> void:
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), old)
 	check(w3.economy != null and w3.economy.is_empty(), "old save (no key) loads with empty records")
-	EconomyFoundation.set_override({})
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var w4 := World.new()
 	w4.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
 	check(w4.economy == null and w4.total_coins() == w.total_coins(), "disabled: a save with the key loads, nothing constructed")
@@ -343,7 +343,7 @@ func test_save() -> void:
 	var w5 := World.new()
 	w5.load_dict(VillageMap.load_default(), cur)
 	check(w5.economy != null and JSON.stringify(w5.economy.to_dict()) == JSON.stringify(w.economy.to_dict()) and w5.economy_foreign.is_empty(), "enabled: the kept section is restored as before")
-	EconomyFoundation.set_override({})
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var w6 := World.new()
 	w6.load_dict(VillageMap.load_default(), old)
 	check(w6.economy == null and not w6.to_dict().has("economy"), "disabled + no key: nothing written")

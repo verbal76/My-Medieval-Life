@@ -24,7 +24,7 @@ func new_world(on := false) -> World:
 		c.enabled = true
 		EconomyFoundation.set_override(c)
 	else:
-		EconomyFoundation.set_override({})
+		EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var w := World.new()
 	w.setup(VillageMap.load_default(), 1)
 	return w

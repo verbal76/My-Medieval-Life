@@ -45,11 +45,18 @@ func _init() -> void:
 	test_property_migration()
 	test_construction()
 	test_helpers()
+	# LE-07: these two check the base game's own rules (a founder's helper paid from the purse; a woodcutter short of an axe buys
+	# from the goods merchant first), so they run with the Living Economy off whatever the installed switch says. With it on,
+	# market bids hold a founder's coins and a woodcutter may rent (LE05-RENTAL): the economy suites cover those paths.
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	test_households_split()
+	EconomyFoundation.set_override({})
 	test_construction_migration()
 	test_build7_economy()
 	test_manor_work()
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	test_long_run_economy()
+	EconomyFoundation.set_override({})
 	test_resource_registry()
 	test_wild_plants()
 	test_save_store()

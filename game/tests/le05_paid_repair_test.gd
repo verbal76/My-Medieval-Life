@@ -28,7 +28,7 @@ func new_world(on := true, paid := true) -> World:
 		c.market.paid_repair = paid
 		EconomyFoundation.set_override(c)
 	else:
-		EconomyFoundation.set_override({})
+		EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var w := World.new()
 	w.setup(VillageMap.load_default(), 1)
 	return w
@@ -240,7 +240,7 @@ func test_save_and_replay() -> void:
 	check(back.economy.repairs.escrow() == price and back.economy.repairs.to_dict() == rp.to_dict() and ledger(back) == c0,
 		"load: the order, its escrow and the candidates come back exactly; the ledger matches")
 	# switched off: the section is parked and its escrow still counted
-	EconomyFoundation.set_override({})
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var parked := World.new()
 	parked.load_dict(VillageMap.load_default(), JSON.parse_string(s))
 	check(parked.economy == null and EconomyFoundation.parked_coins(parked.economy_foreign) == price and ledger(parked) == c0,

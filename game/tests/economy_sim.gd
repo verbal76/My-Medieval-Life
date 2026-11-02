@@ -1883,6 +1883,7 @@ func _coins() -> Dictionary:
 		"quest_reserves": w.quests.reserved_total(), "manor_wages_reserved": w.manor_work.reserved_total(),
 		"contract_reserves": w.contracts.reserved_total(),   # CON-01: buyers' coins set aside for contracts
 		"rental_escrow": w.economy.rentals.escrow() if w.economy != null else 0,   # LE05-RENTAL: deposits held for tools on rent
+		"repair_escrow": w.economy.repairs.escrow() if w.economy != null else 0,   # LE-05 paid repair: prices held for repairs not yet done (World.total_coins counts them)
 		"stall_tills": w.business.tills(),
 		"chapel": w.chapel.coins,
 		"courier_booths": w.couriers.held_coins() if w.couriers != null else 0}                  # DVW-B3-CHAPEL: the offerings fund; takings held in stall tills until settled (STALL-05)

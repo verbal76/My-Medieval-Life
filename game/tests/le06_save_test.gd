@@ -180,7 +180,7 @@ func test_continuation() -> void:
 func test_build24_save() -> void:
 	var fx: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/b24_save_v23_single.json"))
 	check(int(fx.save_version) == 23 and not fx.has("economy") and not fx.has("transactions"), "the Build 24 fixture: save version 23, no economy or transactions key")
-	EconomyFoundation.set_override({})
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var off := World.new()
 	off.load_dict(VillageMap.load_default(), fx.duplicate(true))
 	check(off.economy == null and not off.to_dict().has("economy") and not off.to_dict().has("transactions"), "economy off: it loads and writes no new key")

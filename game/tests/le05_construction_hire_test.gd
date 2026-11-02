@@ -25,7 +25,7 @@ func new_world(on: bool, negotiated := false) -> World:
 		c.market.negotiated_wages = negotiated
 		EconomyFoundation.set_override(c)
 	else:
-		EconomyFoundation.set_override({})
+		EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var w := World.new()
 	w.setup(VillageMap.load_default(), 1)
 	return w
