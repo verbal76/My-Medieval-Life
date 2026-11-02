@@ -122,6 +122,27 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**Farming yield calibration, Phase 1 (B25-NINE-D3, FARM-YIELD-D1), and a harness defect fixed.**
+- Branch: `wip/b25-farming` (`1400efa`, `97a1e8b`), merged into the Build 25 source as `eca0e7d`.
+- Change:
+  - Plan in `docs/expansion20/FARMING_YIELD_CALIBRATION.md`, written before any results:
+    - six year-long jobs in two dispatches;
+    - a food-security rule judged on integrity, starvation, famine checkpoints and missed meals;
+    - failures classified as scarcity or access, with only scarcity raising the yield.
+  - **Defect fixed in the harness:** `economy_sim.gd` missed the paid-repair escrow among coin holders. Every run with the market
+    or economy on stopped on a false leak once a paid repair was unfinished (control run: FATAL on day 10, exactly the 19 escrowed
+    coins). The fix only reads; fingerprint unchanged.
+- Evidence: local 10-day smoke tests for every variant, with no errors or leaks.
+- Earlier yield evidence (Build 16, FARM-08) only narrows the search.
+- Dispatched Actions run 41403541582: Dispatch A, yields 1.5 and 2.0.
+- Outstanding:
+  - Dispatch B.
+  - Phase 2 sets the yield, which also changes the player's and households' wheat from 3 to the chosen value; the wiki needs
+    updating.
+  - An older save loaded after the switch has no seed corn; this needs a test.
+- Workstreams: LE-07 readiness gates started on `wip/b25-le07`. Eight merged worktrees were removed to free disk; their branches
+  stay on GitHub.
+
 **B25-BIZ-TENANT-Q answered: Option B, and the overnight directive B25-OVN-0211.**
 - Branch: `wip/expansion20` `3c7e45b`.
 - Change:
