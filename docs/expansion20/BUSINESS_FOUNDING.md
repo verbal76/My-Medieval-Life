@@ -64,7 +64,7 @@ layer off (`JudgmentLive.on(w, "business_found")` false) nobody founds (conserva
 On founding: `Construction.place` marks out the site (ground paid from the household purse by the land office);
 `hh.build` is the site, `hh.venture` the record; the household builds by `_keep_building` (helpers or the founder,
 materials bought with its own coins). Family help (`_family_help`) is for homes only and is not given to a venture.
-Stats `ventures_considered`, `ventures_founded`, `ventures_founded_<trade>`.
+Stats `ventures_considered`, `ventures_founded`, `ventures_founded_<trade>`. Diagnostics only (B25 economic investigation, `docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md`): `venture_looks`, `venture_refused_<stage>` (the stage `refusal` stopped at, `Ventures.last_refusal`), `venture_option_<kind>`, `ventures_declined`, `ventures_found_failed`; nothing decides by them.
 
 ## 3. Opening, working and hiring
 
