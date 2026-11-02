@@ -9,7 +9,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 142 |
-| Integrated | 119 of 142 (84%) |
+| Integrated | 120 of 142 (85%) |
 | Automated tests passed | 110 of 142 (77%) |
 | Integration verified | 64 of 142 (45%) |
 | Gameplay verified | 0 of 142 (0%) |
@@ -24,7 +24,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (117)
+## Integrated, awaiting gameplay or owner verification (118)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -99,6 +99,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 e8cc44b | INTEGRATION VERIFIED | Paused (owner 2026-10-28). For LE-03: unify the villagers' existing buying routines with the market (reservations not read by npc_orders), food bids and household budgets, negotiated wages/services; all LE-02 parameters provisional until LE-06 economy-on runs. |  | verification only |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | OWNER APPROVED | INTEGRATED | wip/expansion20 5195c2c | INTEGRATION VERIFIED | Merge into wip/expansion20 together with X20-SETTLE-FOOD once B passes; LE-04 started on wip/x20-le04 (worker A). |  | verification only |
 | LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | OWNER APPROVED | INTEGRATED | wip/expansion20 8bbdcfb | INTEGRATION VERIFIED |  |  | verification only |
+| LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | TARGETED TESTS PASSED |  |  | verification only |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | OWNER APPROVED | INTEGRATED | wip/expansion20 a227158 | INTEGRATION VERIFIED |  |  | verification only |
 | LE05-RENTAL | Tool rental behind the Living Economy switch through World.transactions: willing owner, deposit by tool value, fee by wear consumed, ownership identifiable, wear follows the tool, every return/loss/theft/destruction/inheritance/transfer path reconciled, multiplayer-safe, idempotent; NPCs weigh renting against buying, borrowing, another tool or postponing | OWNER APPROVED | INTEGRATED | wip/expansion20 a3643c8 | TARGETED TESTS PASSED |  |  | verification only |
 | LE05-REPAIR | Tool repair at an anvil for the player and eligible NPC smiths, in normal gameplay (economy on or off): materials from the item's forge recipe scaled by wear with deterministic rounding, labour time, smithing skill limits, durability restored by existing rules, identity and ownership kept, no tiny-repair exploits, saves compatible | OWNER APPROVED | INTEGRATED | wip/expansion20 a3643c8 | TARGETED TESTS PASSED |  |  | verification only |
@@ -152,7 +153,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | TARGETED TESTS PASSED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (21)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (20)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -165,7 +166,6 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | DOC-AUTH-01 | Document authority replacement: once the owner explicitly approves and delivers the final revised expansion specification set, it is the sole authoritative current specification; older plans, roadmaps, packets, instructions and registers become historical evidence only; omitted features are not reintroduced (ask if materially ambiguous); code differences are reported, not silently changed; later explicit owner decisions supersede and are folded into the set; no third interpretation. Until then: latest explicit owner decisions and the validated baseline. The switch happens only on final approval, not on a draft. | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | DOC-RECON-01 | Documentation reconciliation and owner-decision protection: every expansion (17-27), multiplayer and standalone approved system has a current status document; register statuses corrected from code and test evidence; precedence hierarchy (latest explicit owner decision first); historical documents labelled; missing original sources listed; one authoritative entry point; on the isolated branch wip/requirements-control, not merged into the gameplay baseline without the owner | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/requirements-control | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | DOC-RECON-REVIEW-01 | Owner review of DOC-RECON-01 (2026-10-31): wip/requirements-control stays isolated at the reviewed commit 3098a5f until the owner authorizes integration; decisions on the remaining Expansion 20 placement, economy activation, Expansion 26 bosses and heroes, Expansion 21 recovery, other political offices, original packets and open questions; one consolidated owner-decision report | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | OWNER APPROVED | PARTIALLY IMPLEMENTED | worker A (Living Economy) / wip/x20-le05 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-CAREER-AUDIT | Audit career progression, NPC ambition and skilled employment | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-ECON-AFFORD | Re-evaluate the unaffordable bids by interval, category, household condition and cause | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

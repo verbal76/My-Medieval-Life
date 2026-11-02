@@ -441,7 +441,7 @@ None.
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
-| LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | 20 |
+| LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 20 |
 | LE05-RENTAL | Tool rental behind the Living Economy switch through World.transactions: willing owner, deposit by tool value, fee by wear consumed, ownership identifiable, wear follows the tool, every return/loss/theft/destruction/inheritance/transfer path reconciled, multiplayer-safe, idempotent; NPCs weigh renting against buying, borrowing, another tool or postponing | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |

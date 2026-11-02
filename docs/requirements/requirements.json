@@ -31510,10 +31510,12 @@
     "Integration matrix covered"
    ],
    "implementation": "",
-   "tests": "DOC-RECON-01 evidence: origin/wip/expansion20:LE05_IMPLEMENTATION.md (expansion20 notes on wip/expansion20) status table; merge 25663e5; le05_repair_test 57, le05_rental_test 53, le05_test; Actions 41169157542",
+   "tests": "DOC-RECON-01 evidence: origin/wip/expansion20:LE05_IMPLEMENTATION.md (expansion20 notes on wip/expansion20) status table; merge 25663e5; le05_repair_test 57, le05_rental_test 53, le05_test; Actions 41169157542; le05_route_risk 37, run_tests 3602 and 16 suites (cb648ec, local); merge 0c122b6: le05_route_risk 37, business_founding 73, conservation 8, fingerprint 67b6c604",
    "playtest": [],
    "branch": "wip/x20-le05",
-   "commits": [],
+   "commits": [
+    "0c122b6"
+   ],
    "parent": "EXP-D",
    "depends_on": [],
    "blockers": [],
@@ -31575,19 +31577,27 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 (63c0144, merge of wip/b25-econ 0ddfcb4): paid repair at a smith (econ_repairs.gd, INT-653, escrow via EconTransactions.hold_coins/release_coins, own flag market.paid_repair, inert while the economy is off) and construction hiring through the transaction authority (INT-654) added; tests le05_paid_repair 31, le05_construction_hire 10, le05_repair 57, le05_rental 53, net_econ_integrity 126, run_tests 3601 on the merged source (local). Still missing: route risk in prices (no per-route loss record or pricing rule designed), ecology/mining links (none designed). Economy off: 10-day fingerprints unchanged"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> INTEGRATED; tests: DOC-RECON-01 evidence: origin/wip/expansion20:LE05_IMPLEMENTATION.md (expansion20 notes on wip/expansion20) status table; merge 25663e5; le05_repair_test 57, le05_rental_test 53, le05_test; Actions 41169157542 -> DOC-RECON-01 evidence: origin/wip/expansion20:LE05_IMPLEMENTATION.md (expansion20 notes on wip/expansion20) status table; merge 25663e5; le05_repair_test 57, le05_rental_test 53, le05_test; Actions 41169157542; le05_route_risk 37, run_tests 3602 and 16 suites (cb648ec, local); merge 0c122b6: le05_route_risk 37, business_founding 73, conservation 8, fingerprint 67b6c604; test_commit: None -> 0c122b6; commits + 0c122b6; integrated_in + Build 25 wip/expansion20",
+     "why": "route risk in delivered prices merged at 0c122b6 (wip/b25-le05-risk ba2cc3e): EconRouteRisk per-route loss record (waylaid courier loads, robbery of contracted goods; caravans have no loss event) and a PROVISIONAL route_risk term in Contracts.price_terms (loss rate x unit value x risk_weight 1.0, window 30 days, exactly 0 with no losses; economy-gated; seller bears it as with travel, an engineering choice). Regional links beyond the food trade: confirmed nothing further specified (E22-OD-04). Default game unchanged (fingerprint 67b6c604 on 28d5280, branch and merge). Tests local 0 failures: le05_route_risk 37, le05 suites, le02_market 102, le03_claims 81, contracts 154, services_d2 89, net_econ_integrity 126, courier_live 138, le07_gates 31, run_tests 3602. LE-05 scope now implemented; the term has not yet risen in a live run (no losses on routes in 30 days)."
     }
    ],
    "target_build": "20",
    "roadmap_gate": "owner decision first",
    "roadmap_reason": "a standalone build whose number and placement the owner decides (OD-LE-01); not part of Builds 16-18",
-   "integrated_in": [],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
+   ],
    "migrated_from_status": "APPROVED — NOT STARTED",
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "assigned_worker": "worker A (Living Economy)"
+   "assigned_worker": "worker A (Living Economy)",
+   "test_commit": "0c122b6"
   },
   {
    "id": "LE-06",

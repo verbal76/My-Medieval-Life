@@ -122,6 +122,25 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**LE-05: route risk in delivered prices.**
+- Branch: `wip/b25-le05-risk` (`cb648ec`, `ba2cc3e`), merged as `0c122b6`.
+- Change:
+  - `EconRouteRisk` keeps a per-route record of value carried and value lost over a rolling 30-day window. Losses come from
+    interrupted courier loads and from robbery of goods owed on a contract; caravans have no loss event.
+  - A PROVISIONAL `route_risk` term in `Contracts.price_terms`: the loss rate times the unit's value times `risk_weight` 1.0.
+    It is exactly 0 with no recorded losses. The seller bears it, as with travel.
+  - It works only with the Living Economy on, under `market.route_risk`. The record is saved under the optional key
+    `economy.route_risk`.
+  - Regional links beyond the food trade: confirmed in code that nothing further is specified.
+  - INT-673.
+- Status: INTEGRATED, TESTED (local). LE-05 scope implemented; LE-07 gate 10 no longer waits on it.
+- Evidence:
+  - le05_route_risk 37, run_tests 3602 and 16 suites, all 0 failures.
+  - The default game is fingerprint-identical (`67b6c604`), on the branch and on the merge with `d6ab686`.
+  - 30-day economy-on run: no leaks. Value was carried on six routes and no losses happened, so the term stayed 0.
+- Outstanding: the term has not risen in a live run; settlement-road losses are recorded but priced nowhere yet (every delivered
+  contract is in-village).
+
 **Economic investigation: business funnel, professions and unemployment, ore (B25-OVN-0211 sections 4-6).**
 - Branch: `wip/b25-econ-funnel` (`50497cf`, `006ca8f`, `6603daf`, `50cc561`, `d5e32ef`, `86c0b80`), merged as `d6ab686`.
 - Change:

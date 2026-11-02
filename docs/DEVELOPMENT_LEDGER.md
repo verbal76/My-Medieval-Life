@@ -411,7 +411,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | LE-02 | Living Economy stage LE-02: Adaptive bids, asks, negotiation and settlement | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | LE-03 | Living Economy stage LE-03: Production, job choice and household budgets | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | LE-04 | Living Economy stage LE-04: Organic finance, merchants and manor behavior | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | 20 | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| LE-05 | Living Economy stage LE-05: Construction, ecology, mining, bandits and regional links | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | LE-06 | Living Economy stage LE-06: Multi-seed long-run, determinism and profiling | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | 20 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | LE05-RENTAL | Tool rental behind the Living Economy switch through World.transactions: willing owner, deposit by tool value, fee by wear consumed, ownership identifiable, wear follows the tool, every return/loss/theft/destruction/inheritance/transfer path reconciled, multiplayer-safe, idempotent; NPCs weigh renting against buying, borrowing, another tool or postponing | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
