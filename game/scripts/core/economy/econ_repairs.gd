@@ -225,7 +225,8 @@ func complete(txid: String) -> Dictionary:
 func _end(r: Dictionary, outcome: String, why: String, payee := "", pay := 0, refund_to := "") -> Dictionary:
 	if str(r.state) != OPEN:
 		return {"ok": false, "code": "not_open"}
-	var to := refund_to if refund_to != "" else str(r.customer)
+	# B25-LEAK2: a refund owed to a customer no longer there (left the village, died) goes to its estate, never out of the world
+	var to: String = w.transactions.refund_party(refund_to if refund_to != "" else str(r.customer))
 	var tx: Dictionary = w.transactions.release_coins(w.transactions.next_txid("repair_end"), payee, pay, to, int(r.price), "repair")
 	if not bool(tx.ok):
 		w.stat("paid_repair_end_refused_" + str(tx.code))
@@ -250,6 +251,18 @@ func on_death(n: NPC) -> void:
 			_end(r, "settled", "customer died", "", 0, str(est.get("ref", "")) if not est.is_empty() else "-")
 		elif str(r.smith) == me:
 			_end(r, "cancelled", "smith died")
+
+
+## B25-LEAK2, Migration._pre_leave: a customer who leaves the village before its order is done is refunded to its own purse (which
+## then goes with it); a smith who leaves leaves its orders undone, refunded to the customers (as for a death).
+func on_leave(n: NPC) -> void:
+	var me := World.npc_ref(n.id)
+	candidates.erase(me)
+	for r in open_records():
+		if str(r.customer) == me:
+			_end(r, "cancelled", "customer moved away", "", 0, me)
+		elif str(r.smith) == me:
+			_end(r, "cancelled", "smith moved away")
 
 
 ## The market's dawn: open orders past their day, or whose tool went or is no longer worn, are refunded (all of them once the

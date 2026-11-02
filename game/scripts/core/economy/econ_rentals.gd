@@ -252,7 +252,8 @@ func _end(r: Dictionary, outcome: String, why: String, from_inv: Inventory = nul
 	var back := outcome == "returned" or (outcome == "settled" and from_inv != null)
 	var use := used(r) if back else int(r.lent_wear)
 	var fee := mini(int(r.deposit), maxi(0, fee_for(item, use) - int(r.paid)))
-	var to := refund_to if refund_to != "" else str(r.renter)
+	# B25-LEAK2: a refund owed to a renter no longer there (left the village, died) goes to its estate, never out of the world
+	var to: String = w.transactions.refund_party(refund_to if refund_to != "" else str(r.renter))
 	var tx: Dictionary = w.transactions.end_rental(w.transactions.next_txid("rent_end"), str(r.owner), to, item, from_inv if back else null,
 		int(r.deposit), fee)
 	if not bool(tx.ok):
@@ -299,6 +300,22 @@ func on_death(n: NPC) -> void:
 			var est2: Dictionary = w.transactions.estate_of(me)
 			r.owner = str(est2.get("ref", World.MANOR)) if not est2.is_empty() else World.MANOR
 			w.stat("rent_owner_inherited")
+
+
+## B25-LEAK2, Migration._pre_leave: a renter who leaves the village gives back what it holds on rent before it packs, settled as
+## for a death but refunded to its own purse (which then goes with it, as quests and contracts are released to it); one whose
+## owner cannot take the tool back (no room) keeps it and pays its whole lent durability. A leaving owner's rentals run on: at
+## their end its estate takes the fee and the tool (end_rental resolves an owner no longer there to its estate).
+func on_leave(n: NPC) -> void:
+	var me := World.npc_ref(n.id)
+	for r in open_records():
+		if str(r.renter) != me:
+			continue
+		var tx: Dictionary = {"ok": false}
+		if n.inv.has(str(r.item)):
+			tx = _end(r, "settled", "renter moved away", n.inv, me)
+		if not bool(tx.get("ok", false)):
+			_end(r, "settled", "renter moved away with the tool" if n.inv.has(str(r.item)) else "renter moved away; the tool was not held", null, me)
 
 
 ## The market's dawn: each open rental (by id) is billed; one whose tool its renter no longer holds ends "lost" (stolen, sold, given

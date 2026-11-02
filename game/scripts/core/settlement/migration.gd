@@ -134,12 +134,15 @@ static func _pack(w: World, ms: Array, pantry: Inventory = null) -> Dictionary:
 	return {"people": packs, "coins": coins, "goods": goods}
 
 
-## Before packing: what the leaving villagers had set aside for the player's quests and contracts is released to them as for a death
-## (a refund lands in their purse, which then goes with them).
+## Before packing: what the leaving villagers had set aside for the player's quests and contracts, and the escrows of their LE-05
+## rentals and paid repairs (B25-LEAK2), is released to them as for a death (a refund lands in their purse, which then goes with them).
 static func _pre_leave(w: World, ms: Array) -> void:
 	for o: NPC in ms:
 		w.quests.on_giver_died(o)
 		w.contracts.on_death(o)
+		if w.economy != null:
+			w.economy.rentals.on_leave(o)       # B25-LEAK2: a tool on rent goes back, the deposit's rest to their purse
+			w.economy.repairs.on_leave(o)       # B25-LEAK2: a paid repair not yet done is refunded to them (or to its customers)
 
 
 ## Just before they pack (Build 24 review; owner 2026-10-30: a living household or person that leaves keeps what is theirs): every
