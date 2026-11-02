@@ -117,6 +117,7 @@ jobs:
           $godot --headless --path game --script res://tests/le05_paid_repair_test.gd   # LE-05 paid repair behind the switch, its escrow and refunds
           $godot --headless --path game --script res://tests/le05_construction_hire_test.gd   # LE-05 construction wages through the transaction authority
           $godot --headless --path game --script res://tests/le05_route_risk_test.gd    # LE-05 route risk: the per-route loss record and its price term
+          $godot --headless --path game --script res://tests/b25_leak2_departure_test.gd   # B25-LEAK2: a leaver's rentals and paid repairs settled, no coin lost
           $godot --headless --path game --script res://tests/le07_gates_test.gd         # LE-07: the automatable release gates and the activation mechanism
           $godot --headless --path game --script res://tests/save_continuity_test.gd    # random state, pack order and deposits kept across a save and load
           $godot --headless --path game --script res://tests/wear_transfer_test.gd      # X20-WEAR-TRANSFER: a tool's wear travels with it

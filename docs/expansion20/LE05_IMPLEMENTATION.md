@@ -182,7 +182,10 @@ Built with the economy (`EconomyFoundation.rentals`, `game/scripts/core/economy/
   durability it had when lent; not held at a dawn (lost, stolen, sold, given away, not returned): the same, the tool staying where
   it went; the renter died (`World.kill` → `on_death`, before the inheritance): what it holds goes back to the owner (it is not
   inherited), the refund to its estate (`estate_of`); the owner died: its estate (household, else the manor) succeeds it and later
-  receives the tool and the fees.
+  receives the tool and the fees; the renter moved to a settlement (`Migration._pre_leave` → `on_leave`, B25-LEAK2): settled as
+  for a death, the refund to its own purse, which goes with it (a paid-repair order of a leaving customer or smith is refunded the
+  same way, `EconRepairs.on_leave`). A refund owed to a party no longer there goes to its estate (`EconTransactions.refund_party`),
+  never out of the world.
 - **Coins:** the escrow stays inside the village (`World.total_coins` counts `EconRentals.escrow`; economy_sim's `rental_escrow`).
   No coin or good is made or lost on any path (`le05_rental_test`, exact checks per path).
 - **Players and guests:** `World.player_rent_tool(owner, item)` and `player_return_tool(item)`, host verbs (`NetActions.VERBS`, C3):

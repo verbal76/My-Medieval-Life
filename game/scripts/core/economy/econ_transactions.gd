@@ -602,6 +602,22 @@ func estate_of(ref: String) -> Dictionary:
 	return {}
 
 
+## B25-LEAK2: where an escrow refund owed to village party `ref` goes: `ref` itself while it can take it (alive, present, a purse),
+## else its estate (estate_of: a household, else the manor), else "-" (nobody: end_rental and release_coins then book an outside
+## flow). A renter or customer who left the village or died before its rental or order ended keeps the coins in the world.
+func refund_party(ref: String) -> String:
+	if ref == "-" or ref == "":
+		return "-"
+	var p := _party(ref)
+	if p.code == "" and p.kind in VILLAGE and not (p.kind in TILLS) and not (p.kind == "hh" and _head(p) == null):
+		return ref
+	var e := estate_of(ref)
+	if not e.is_empty() and str(e.get("code", "")) == "" and str(e.get("kind", "")) in VILLAGE and not (str(e.kind) in TILLS) \
+			and not (str(e.kind) == "hh" and _head(e) == null):
+		return str(e.ref)
+	return "-"
+
+
 ## Phase 2: exactly one of deliver, fail (return and refund), lose (seller bears it; refund). Validated, then committed.
 func _close(txid: String, op: String, why: String) -> Dictionary:
 	if not shipments.has(txid):
