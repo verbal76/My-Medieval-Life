@@ -71,6 +71,7 @@ func _init() -> void:
 	test_default()
 	test_running_gates()
 	test_activation_old_save()
+	test_activation_current_save()
 	test_switch_off_and_on()
 	EconomyFoundation.set_override({})
 	print("%d checks, %d failures" % [checks, failures])
@@ -138,6 +139,34 @@ func test_activation_old_save() -> void:
 	run(on, 26.0)
 	check(ledger(on) == c0, "the activated old save runs a day (through a dawn) with the ledger exact (%d -> %d)" % [c0, ledger(on)])
 	check(not on.economy.is_empty(), "and the economy has begun to record (needs, offers, events)")
+
+
+## LE-07 checklist item 7, second half: a save written by this build with the economy off (the shipped state until activation;
+## Build 25's businesses, employment and ventures running, so their records are in it) loads with the switch on with nothing
+## else in it changed, and runs through a dawn with the ledger exact. The Build 24 fixture above predates those systems.
+func test_activation_current_save() -> void:
+	var w := new_world(false)
+	run(w, 26.0)
+	var text := JSON.stringify(w.to_dict())
+	var d: Dictionary = JSON.parse_string(text)
+	check(int(d.get("save_version", 0)) == World.SAVE_VERSION and not d.has(EconomyFoundation.KEY),
+		"a save of this build with the economy off (save_version %d) has no economy section" % World.SAVE_VERSION)
+	EconomyFoundation.set_override({})
+	var off := World.new()
+	off.load_dict(VillageMap.load_default(), JSON.parse_string(text))
+	EconomyFoundation.set_override(on_cfg())
+	var on := World.new()
+	on.load_dict(VillageMap.load_default(), JSON.parse_string(text))
+	check(on.economy != null and on.economy.is_empty(), "switched on: this build's economy-off save loads with an empty economy")
+	var a := off.to_dict()
+	var b := on.to_dict()
+	b.erase(EconomyFoundation.KEY)
+	check(JSON.stringify(a) == JSON.stringify(b), "switched on: nothing else in this build's save changes on loading")
+	check(on.total_coins() == off.total_coins(), "and every coin is where it was")
+	var c0 := ledger(on)
+	run(on, 26.0)
+	check(ledger(on) == c0, "the activated save runs a day (through a dawn) with the ledger exact (%d -> %d)" % [c0, ledger(on)])
+	check(not on.economy.is_empty(), "and the economy has begun to record")
 
 
 func test_switch_off_and_on() -> void:
