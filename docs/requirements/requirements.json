@@ -5937,6 +5937,43 @@
    ]
   },
   {
+   "id": "B25-CLOSE-01",
+   "kind": "approved",
+   "title": "Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop",
+   "description": "Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop",
+   "source": "docs/directives/2026-11-02_complete_current_build_before_packaging.md",
+   "owner_wording": "Our objective is to COMPLETE the current build, not package an incomplete development snapshot.",
+   "approval": "owner, 2026-11-02",
+   "acceptance": [
+    "Closure audit classifying every outstanding item",
+    "Farming Phase 2 and the cart-hitch fix integrated with the home-door fix preserved",
+    "Targeted validation on one frozen SHA",
+    "Packaging only after acceptance; otherwise stop and report the blocker"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-02",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-02_complete_current_build_before_packaging.md"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; branch: None -> wip/b25-farm-phase2",
+     "why": "closure audit written (docs/release/build25_reconciliation/BUILD25_CLOSURE_2026-11-02.md); farming Phase 2 + cart-hitch fix + seed-corn ledger fix on wip/b25-farm-phase2, validation running; packaging blocked on owner decisions (year-long campaign, B25-ECON-P1..P5, LE-07 gate 11, reconciliation Q2)"
+    }
+   ],
+   "branch": "wip/b25-farm-phase2"
+  },
+  {
    "id": "B25-ECON-P1",
    "kind": "decision",
    "title": "Business founding requires the trade's benches to be full and busy (Ventures.refusal, skilled_place busy_share 0.35); in seed 1 the founding trades' benches were 2-20% busy all 120 days, so every one of 172 weekly looks stopped there. Options: A keep the rule (businesses form when demand exists); B let a founder weigh independence even with idle benches (the judgment weighing decides); C a lower busy threshold for founding only. Recommendation: A, and act on demand (P2-P4) rather than the gate. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686).",
