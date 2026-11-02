@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 754 (394 of them still open) |
-| **Open entries now** (rules excluded) | | **553** |
+| Entries added since | | 755 (395 of them still open) |
+| **Open entries now** (rules excluded) | | **554** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (754)
+## Added since the baseline (755)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -205,8 +205,9 @@ None.
 | BUILD-SEQ-25-27 | Build sequence (owner, 2026-10-31): Build 25 = Expansion 20 validation and freeze (wip/expansion20 becomes the frozen baseline only after validation passes and the owner approves); Build 26 = repository recovery and consolidation on a separate branch from the exact frozen Build 25 SHA, validated and frozen after owner approval; Build 27 = Expansion 21 begins only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers. | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | NOT STARTED / NOT TESTED / OPEN | 18 |
 | CC-01 | Character creator replaces the eight preset looks (appearance only, civilian) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
+| CHAPEL-GIVE-14-Q | With the 14-day hardship line now governing chapel food alms, households offer wheat to the chapel only above 14 days of their own food (was 6, goods_keep_days), so food given as alms is not offered back. Accept this change to the giving rule? Options: A accept (recommended: consistent with the 14-day line, prevents give-and-take, keeps donations voluntary and from comfortable households); B keep the 6-day offering line (some households would both receive alms and offer wheat). Implemented provisionally as A at 8b203c5. | decision | OPEN | 20 |
 | CHAPEL-LENDING | Chapel community lending and grants (concept approved): hardship recovery, viable businesses in temporary difficulty, village improvements, infrastructure, downturn relief - via a separate implementation proposal built on existing loan, credit, property and repayment systems | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
-| CHAPEL-PURPOSE | Chapel economic purpose: a charitable institution that maintains itself, not enriches itself - accumulate when the village prospers, distribute food and money when villagers need help | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| CHAPEL-PURPOSE | Chapel economic purpose: a charitable institution that maintains itself, not enriches itself - accumulate when the village prospers, distribute food and money when villagers need help | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | CHAPEL-R1 | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) | decision | APPROVED | 18 |
 | CHAPEL-R2 | Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long-run evidence before the owner decides. | decision | APPROVED | 18 |
 | CHAPEL-R3 | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of removing them (22 plants today)? | decision | APPROVED | 18 |

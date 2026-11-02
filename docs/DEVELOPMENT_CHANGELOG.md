@@ -122,6 +122,28 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**CHAPEL-PURPOSE implemented.**
+- Branch: `wip/b25-chapel-purpose` (`2745be7`, `933c1da`, `c5be409`, `780dcfd`, `8ec9a85`), merged as `8b203c5`.
+- **Food:**
+  - The chapel keeps only an emergency reserve: 7 days of recent relief, PROVISIONAL.
+  - Weekly food alms go to households under the 14-day line, shared fairly.
+  - A daily emergency path finds households itself, with priority to missed meals, children and elders.
+  - Fastest-spoiling food goes out first.
+  - Delivery is by clergy or volunteer in parcels that stay the chapel's until handed over; this replaces the instant transfer.
+- **Money:** the reserve audit found nothing held beyond legitimate needs, so no change.
+- **Giving rule (PROVISIONAL, owner question CHAPEL-GIVE-14-Q):** households offer wheat only above 14 days of food, so alms
+  food is not offered back.
+- **Starvation investigation** (stress test at yield 0.5): three deaths on day 34, in a village-wide famine.
+  - The chapel held 1 grain and 0 coins. The households had asked and had been delivered food.
+  - None was preventable.
+  - One defect fixed: the last odd grain was never given.
+- **Before and after, 10 days:** relief rose from 9,201 to 24,600 points, to 20 households, with 59 deliveries.
+- **Tests:** chapel_test 173, run_tests 3602, conservation, net_econ_integrity, migration, save_transfer and wiki_test, all 0
+  failures. The merge tree is identical to the branch.
+- **Fingerprint:** `b01fbf44` became `fdbdde28`, because the emergency round now reaches households that never asked.
+- **Lending:** a proposal only, with nine owner questions; nothing built.
+- **Outstanding:** no run past day 40. The stress runs hit the `coin_sources` leak, the same one being fixed on `wip/b25-leak2`.
+
 **"Run flight recorder" (owner command, 2026-11-02 14:03 UTC).**
 - Dispatched long-sims [41458375116](https://github.com/verbal76/My-Medieval-Life/actions/runs/41458375116) on `91cf244`: `record: true`,
   seeds 1 and 2, 365 days, every 10, normal integrated play.

@@ -10603,6 +10603,30 @@
    "remaining_work": "owner playtest; phone layout and cost of the runtime sprite not checked on a device; Build 18 release gate"
   },
   {
+   "id": "CHAPEL-GIVE-14-Q",
+   "kind": "decision",
+   "title": "With the 14-day hardship line now governing chapel food alms, households offer wheat to the chapel only above 14 days of their own food (was 6, goods_keep_days), so food given as alms is not offered back. Accept this change to the giving rule? Options: A accept (recommended: consistent with the 14-day line, prevents give-and-take, keeps donations voluntary and from comfortable households); B keep the 6-day offering line (some households would both receive alms and offer wheat). Implemented provisionally as A at 8b203c5.",
+   "description": "With the 14-day hardship line now governing chapel food alms, households offer wheat to the chapel only above 14 days of their own food (was 6, goods_keep_days), so food given as alms is not offered back. Accept this change to the giving rule? Options: A accept (recommended: consistent with the 14-day line, prevents give-and-take, keeps donations voluntary and from comfortable households); B keep the 6-day offering line (some households would both receive alms and offer wheat). Implemented provisionally as A at 8b203c5.",
+   "source": "docs/directives/2026-11-02_chapel_economic_purpose_correction.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "CHAPEL-PURPOSE"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-02",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-02_chapel_economic_purpose_correction.md"
+    }
+   ]
+  },
+  {
    "id": "CHAPEL-LENDING",
    "kind": "approved",
    "title": "Chapel community lending and grants (concept approved): hardship recovery, viable businesses in temporary difficulty, village improvements, infrastructure, downturn relief - via a separate implementation proposal built on existing loan, credit, property and repayment systems",
@@ -10627,6 +10651,11 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-02_chapel_economic_purpose_correction.md"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "proposal written (docs/expansion20/CHAPEL_LENDING_PROPOSAL.md on the Build 25 source, 8b203c5): reuses existing credit, contracts and transactions; nothing built. Nine owner questions listed there: interest, eligible borrowers, security, repayment schedule, default, lending limit, grants versus loans, who decides, the player as a borrower."
     }
    ]
   },
@@ -10653,7 +10682,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -10662,7 +10691,20 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-02_chapel_economic_purpose_correction.md"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; tests: None -> chapel_test 173 (2745be7, 780dcfd), run_tests 3602 (c5be409), conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, elder_provision 11, wiki_test (local); test_commit: None -> 780dcfd; commits + 8b203c5; integrated_in + Build 25 wip/expansion20",
+     "why": "implemented and merged at 8b203c5 (wip/b25-chapel-purpose 8ec9a85): food kept only as an emergency reserve (7 days of recent relief, PROVISIONAL; clergy eat at home, no chapel livestock, seed never given); ordinary weekly food alms at the 14-day line (same as coin alms), shared a portion at a time to the fewest days of food; daily emergency path (dawn, 16:00, on visits) finding households itself (under 2 days, or a missed meal and under 3), priority missed meals then children/elders, may use the reserve and buy with coins; fastest-spoiling food out first (the store has no age record); delivery by clergy or volunteers in parcels that stay the chapel's until handed over (instant transfer replaced), or collected by a household member; reserve audit: no change needed (14 days wages, owed wages, recent relief and seed spending). Starvation investigation (yield 0.5 stress, 3 deaths day 34): chapel held 1 grain and 0 coins, households had asked and been delivered - no preventable starvation; defect fixed: the last odd grain was never given. Before/after 10 days: relief 9,201 -> 24,600 points to 20 households, 59 deliveries. Tests: chapel_test 173, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, elder_provision 11, wiki_test, run_tests 3602 (local). Fingerprint b01fbf44 -> fdbdde28 (the emergency round reaches households that never asked)."
     }
+   ],
+   "tests": "chapel_test 173 (2745be7, 780dcfd), run_tests 3602 (c5be409), conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, elder_provision 11, wiki_test (local)",
+   "test_commit": "780dcfd",
+   "commits": [
+    "8b203c5"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
    ]
   },
   {
