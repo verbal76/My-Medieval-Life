@@ -68,6 +68,7 @@
     {"id": "sleep", "factors": ["hour"]},
     {"id": "feast", "factors": []},
     {"id": "child_play", "factors": ["role"]},
+    {"id": "elder_provision", "factors": ["role"]},
     {"id": "elder_farm", "factors": ["role"]},
     {"id": "elder_chapel", "factors": ["role"]},
     {"id": "elder_air", "factors": ["role"]},
