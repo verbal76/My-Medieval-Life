@@ -122,6 +122,32 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**X20-FIREWOOD and X20-AFFORD: two firewood defects fixed; affordability is an outcome.**
+- Branch: `wip/b25-firewood` (`2021a5b` read-only cold-payer diagnostic, `3b530d5` fixes, `0069250` docs, `8938f56`/`15c4d57`
+  findings), merged as `8654451`. The merge resolved a DECISIONS.md conflict by keeping both rows, and committed the missing
+  `le05_route_risk_test.gd.uid`.
+- Defects fixed:
+  - Elders never bought household firewood, because only adults reach `_plan_provision`. Fixed with `_elder_provides`, under
+    OD-19 and PAR-02A.
+  - A coinless apprentice smith could not spend the manor's axe advance on ore, because its reserve blocked the purchase. Order
+    inputs may now use reserved coins as due obligations, under PAR-02A and EQ-19.
+- Evidence:
+  - 160-day seed 1 run: cold household-nights fell from 159 to 37; leaks 0.
+  - Tests: elder_provision 11, run_tests 3602 and 9 suites, 0 failures.
+  - The diagnostic is fingerprint-neutral (`67b6c604`).
+- Outcomes, not defects:
+  - Woodcutters decline because the jobless have no coins for a first axe (owner question P2).
+  - The manor wage raise never fires, because manor places fill the same morning.
+  - Unaffordable bids happen only with the market on: about 35 a day, mostly traders restocking inputs, none for household food.
+- Open:
+  - 7 cold nights where an adult could pay (the first seller only?), to check in the year run.
+  - A note of 48 tin ore mined against 0 taken from deposits in the LEAKS line, to check.
+- **od16_test fixed (lead, `f583086`):** it had failed 2 checks since the materials merge `48acc91` (bisected: 38/0 at `ba94edd`,
+  38/2 at `48acc91`). The carts now sell villagers tin and silk, which filled the trader's test purse mid-visit with real coins.
+  The test now keeps the new materials off the carts, as it already did luxuries. Legitimate behaviour, no check loosened; 46
+  checks pass.
+- First full CI run on the Build 25 source dispatched: Tests 41446921087.
+
 **Farming Dispatch A: results (Actions 41403541582, `eca0e7d`).**
 - Setup: `--market`, shared and seasonal farming on, 365 days, every 5.
 - Decision rule from FARMING_YIELD_CALIBRATION.md, applied by the lead's read-only analysis:
