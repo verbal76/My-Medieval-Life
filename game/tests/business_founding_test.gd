@@ -101,8 +101,9 @@ func test_eligibility() -> void:
 	check(w.ventures.refusal(tanner) == "not in a founding trade", "a merchant founds no workshop (stalls and storefronts are theirs)")
 
 
-## Owner rule of 2026-10-18 ("a house first, then workshops"): a tenant household builds no workshop, but B25-BIZ-D5 B
-## lets it buy one that is offered for sale (buying builds nothing).
+## Owner 2026-11-02, B25-BIZ-TENANT-Q Option B, and regression of every way a business can be established:
+## an owner adds the workshop to its house (test_eligibility); a tenant builds a standalone workshop on bought ground and
+## never onto the landlord's house; a household with no home builds nothing; the player follows the same rule.
 func test_tenant_standalone() -> void:
 	var w := world()
 	var s := founder(w)
@@ -113,9 +114,25 @@ func test_tenant_standalone() -> void:
 	w.set_tenant(house, ref)
 	w.brain.evaluate_household(s.household)
 	var anchor_before := w.property.anchor_of(house)
-	check(w.ventures.refusal(s) == "the household does not own its house", "a tenant builds no workshop (a house first)")
+	var why: String = w.ventures.refusal(s)
+	check(why == "", "a tenant smith who can spare the start may found (%s)" % why)
+	var opt: Dictionary = w.ventures.eligible(s)
+	check(not opt.is_empty() and (opt.get("house", {}) as Dictionary).is_empty() and (opt.rect as Rect2i).size != Vector2i.ZERO,
+			"the tenant's option is a standalone workshop on ground of its own, never a room of the landlord's house")
 	check(w.owner_of(house) == World.MANOR and w.tenant_of(house) == ref and w.property.anchor_of(house) == anchor_before,
 			"weighing it changes nothing about the rented house")
+	var slot: Rect2i = w.construction.find_module_slot("smithy", house, ref)
+	if slot.size != Vector2i.ZERO:
+		check(w.construction.can_place("smithy", slot, ref, house) != "", "a tenant may not build onto the landlord's house")
+	check(w.construction.may_build("smithy", ref) == "", "the rented home satisfies 'a house first' for a standalone workshop")
+	# a household with no home: housing first
+	w.set_tenant(house, "")
+	check(w.construction.may_build("smithy", ref).begins_with("A house comes first"), "no home: no workshop (a house first)")
+	# player parity: the same rule for the player
+	check(w.construction.may_build("smithy", World.PLAYER).begins_with("A house comes first") == w.property.homes_of(World.PLAYER).is_empty(),
+			"the player is held to the same housing rule")
+	w.set_tenant(house, World.PLAYER)
+	check(w.construction.may_build("smithy", World.PLAYER) == "", "a player renting a home may build a standalone workshop too")
 
 
 func test_no_demand_no_venture() -> void:

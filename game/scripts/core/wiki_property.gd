@@ -30,7 +30,7 @@ static func add_pages(w: Wiki) -> void:
 			"Rooms are separate buildings with their own door, walls, roof and inside; the roof of the one you stand in fades. Their stations work as anywhere else.",
 			"Where two rooms of your property stand side by side, a doorway is cut through the wall they share, so you can walk from one into the other without going out into the street. It opens only where nothing is in the way on either side (the wall must be bare and the floor inside it free and reachable), so it appears when the second room is finished, and not at all if furniture lines the wall. A house's east wall is lined with furniture, so a room to its east gets no doorway; the suggested place for a new room goes to the house's west side when that gives one. Rooms one above the other have a yard between them and no doorway. Nothing in either room is moved, and the street doors stay.",
 			"No room ties you to a trade: anyone may use a forge, an oven or a workbench they have leave to use, and a house can have a smithy, a kitchen and a bakehouse together.",
-			"A standalone shop (a workshop on its own ground) is still possible once you own a house; it just does not need to be. Storerooms and living quarters only come as rooms of a property.",
+			"A standalone shop (a workshop on its own ground) is possible once you have a home, owned or rented; a rented home lets you build on ground of your own, never onto the landlord's house. Storerooms and living quarters only come as rooms of a property.",
 			"Older saves load as they were: every existing building is a property of its own."]),
 		Wiki.links(["guide:property_rooms", "sys:property", "guide:rent", "station:forge", "station:stove", "station:workbench"])])
 	var kinds := {

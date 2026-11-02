@@ -373,17 +373,17 @@ func refusal(n: NPC, markets := {}, out := {}) -> String:
 		var price := price_for(listed, n)
 		out.merge(info.merged({"buy": listed, "price": price, "start": price, "need": price + working}), true)
 		return ""
-	# Building needs a house of the household's own (owner rule of 2026-10-18: "a house first, then workshops";
-	# Construction.may_build). Reopening or buying a workshop above builds nothing, so a tenant household may do those
-	# (B25-BIZ-D5 B). Year-long runs 41362329381: owning the house kept every eligible villager from founding.
-	if w.owner_of(house) != ref:
-		return "the household does not own its house"
-	if w.property.anchor_of(house).is_empty():
-		w.property.survey_under(house)       # HOUSE-09: an original house's ground is surveyed (nothing paid, nothing changes hands)
-	var anchor := house                      # a room of the property beside the house first (find_module_slot)
-	var rect: Rect2i = w.construction.find_module_slot(kind, house, ref)
-	if rect.size != Vector2i.ZERO and w.construction.can_place(kind, rect, ref, house) != "":
-		rect = Rect2i()
+	# Owner 2026-11-02 (B25-BIZ-TENANT-Q Option B): a household that owns its house adds the workshop to that property first;
+	# a tenant household (its rented home satisfies "a house first") builds a standalone workshop on ground it buys and never
+	# builds onto the landlord's house. Reopening or buying (above) needs no owned residence.
+	var anchor := house
+	var rect := Rect2i()
+	if w.owner_of(house) == ref:
+		if w.property.anchor_of(house).is_empty():
+			w.property.survey_under(house)   # HOUSE-09: an original house's ground is surveyed (nothing paid, nothing changes hands)
+		rect = w.construction.find_module_slot(kind, house, ref)
+		if rect.size != Vector2i.ZERO and w.construction.can_place(kind, rect, ref, house) != "":
+			rect = Rect2i()
 	if rect.size == Vector2i.ZERO:
 		anchor = {}                          # else a workshop on its own ground near the house (owner rule: a house first)
 		rect = w.construction.find_ground(kind, w.building_door(str(house.id)), ref)

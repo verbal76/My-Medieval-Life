@@ -89,7 +89,10 @@ func stations_of_kind(kind: String) -> Array:
 	return st.get("stations", []).map(func(s): return str(s.type))
 
 
-## Owner rule: a house first, then workshops. A workshop needs a house the builder owns.
+## Owner rule: a house first, then workshops. A standalone workshop needs a home the builder holds, owned or legitimately
+## rented (owner 2026-11-02, B25-BIZ-TENANT-Q Option B: "A legitimately rented home also satisfies the housing requirement
+## for separately owned standalone commercial property"). Additions to a house stay the owner's (module_refusal: a tenant
+## never builds onto a landlord's house).
 func may_build(kind: String, ref: String, anchor := {}) -> String:
 	if not KINDS.has(kind):
 		return "Nothing of that kind can be built."
@@ -99,10 +102,9 @@ func may_build(kind: String, ref: String, anchor := {}) -> String:
 		return "A %s is added to a property you hold; it does not stand alone." % kind_name(kind)
 	if kind == "house":
 		return ""
-	for id in w.property.homes_of(ref):
-		if w.owner_of(w.buildings[id]) == ref:
-			return ""
-	return "A house comes first: own a house before building a workshop."
+	if not w.property.homes_of(ref).is_empty():        # owned or rented (Property.homes_of: World.holds)
+		return ""
+	return "A house comes first: have a home of your own or a rented one before building a workshop."
 
 
 ## Why a building of this kind cannot go on this ground for `ref`, "" if it can: the house-first

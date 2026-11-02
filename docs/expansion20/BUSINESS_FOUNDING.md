@@ -18,7 +18,7 @@ property** through the existing construction rules, plus a small record of who r
   (`World._workshop_stations`, owner the household). Built by `Construction.place(kind, rect, hh_ref, false, house)` beside
   the household's house (`find_module_slot`, `module_refusal`: a property it holds, nothing else being built there, no room
   of that kind yet) or, when there is no legal ground beside it, as a workshop on ground of its own near the house
-  (`Construction.find_ground`; the owner's "a house first" rule holds: the household owns its house), the ground bought
+  (`Construction.find_ground`; the owner's "a house first" rule holds: the household has a home; owner 2026-11-02, B25-BIZ-TENANT-Q Option B: an owned home allows a workshop beside it, an owned or rented home a standalone one on bought ground), the ground bought
   from the manor on the spot (`Property.claim`), the materials delivered by the
   household and its hired helpers (`_keep_building`, `hh.build`), exactly as households already build quarters and rooms.
 - **Trade to workshop kind:** smith `smithy` (forge, anvil), carpenter `carpentry` (workbench, sawhorse), tanner
