@@ -8,15 +8,15 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 142 |
-| Integrated | 121 of 142 (85%) |
-| Automated tests passed | 110 of 142 (77%) |
-| Integration verified | 64 of 142 (45%) |
-| Gameplay verified | 0 of 142 (0%) |
-| Owner playtested | 0 of 142 (0%) |
-| Complete | 2 of 142 (1%) |
-| Open (release blockers) | 140 |
-| Open owner decisions (blocking) | 6 (0) |
+| Approved requirements in scope | 144 |
+| Integrated | 121 of 144 (84%) |
+| Automated tests passed | 110 of 144 (76%) |
+| Integration verified | 64 of 144 (44%) |
+| Gameplay verified | 0 of 144 (0%) |
+| Owner playtested | 0 of 144 (0%) |
+| Complete | 2 of 144 (1%) |
+| Open (release blockers) | 142 |
+| Open owner decisions (blocking) | 5 (0) |
 
 ## In development (worker assigned) (1)
 
@@ -154,7 +154,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | TARGETED TESTS PASSED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (19)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (21)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -164,6 +164,8 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | BUILD-SEQ-25-27 | Build sequence (owner, 2026-10-31): Build 25 = Expansion 20 validation and freeze (wip/expansion20 becomes the frozen baseline only after validation passes and the owner approves); Build 26 = repository recovery and consolidation on a separate branch from the exact frozen Build 25 SHA, validated and frozen after owner approval; Build 27 = Expansion 21 begins only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers. | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| CHAPEL-LENDING | Chapel community lending and grants (concept approved): hardship recovery, viable businesses in temporary difficulty, village improvements, infrastructure, downturn relief - via a separate implementation proposal built on existing loan, credit, property and repayment systems | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| CHAPEL-PURPOSE | Chapel economic purpose: a charitable institution that maintains itself, not enriches itself - accumulate when the village prospers, distribute food and money when villagers need help | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | DOC-AUTH-01 | Document authority replacement: once the owner explicitly approves and delivers the final revised expansion specification set, it is the sole authoritative current specification; older plans, roadmaps, packets, instructions and registers become historical evidence only; omitted features are not reintroduced (ask if materially ambiguous); code differences are reported, not silently changed; later explicit owner decisions supersede and are folded into the set; no third interpretation. Until then: latest explicit owner decisions and the validated baseline. The switch happens only on final approval, not on a draft. | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | DOC-RECON-01 | Documentation reconciliation and owner-decision protection: every expansion (17-27), multiplayer and standalone approved system has a current status document; register statuses corrected from code and test evidence; precedence hierarchy (latest explicit owner decision first); historical documents labelled; missing original sources listed; one authoritative entry point; on the isolated branch wip/requirements-control, not merged into the gameplay baseline without the owner | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/requirements-control | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | DOC-RECON-REVIEW-01 | Owner review of DOC-RECON-01 (2026-10-31): wip/requirements-control stays isolated at the reviewed commit 3098a5f until the owner authorizes integration; decisions on the remaining Expansion 20 placement, economy activation, Expansion 26 bosses and heroes, Expansion 21 recovery, other political offices, original packets and open questions; one consolidated owner-decision report | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
@@ -185,11 +187,10 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | INTEGRATION VERIFIED | NOT READY |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (6)
+## Open owner decisions (5)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
-| B25-CHAPEL-FOOD-Q | The church plot (8x7 cells, replaces its own seed, ripens every 2 days) yields about 12-18 wheat a day; in a food-secure village (yield 2.0) almost no household needs relief or food alms, so the chapel's store grows to 760-2,140 wheat a year (now limited only by normal spoilage, fixed 2026-11-02). What should the church do with food it does not need? Options: A the church farms only to need - it sows the plot only while its store is below a ceiling (recommended by the worker and the lead: no waste, no new flow, nothing created); B it sells the surplus at market and gives the coins as alms; C it passes the surplus to the manor's granary; D leave it (spoilage caps it). Evidence: docs/release/chapel_fix/CHAPEL_FOOD_FINDINGS.md on the Build 25 source. | OPEN | no |  |
 | B25-ECON-P1 | Business founding requires the trade's benches to be full and busy (Ventures.refusal, skilled_place busy_share 0.35); in seed 1 the founding trades' benches were 2-20% busy all 120 days, so every one of 172 weekly looks stopped there. Options: A keep the rule (businesses form when demand exists); B let a founder weigh independence even with idle benches (the judgment weighing decides); C a lower busy threshold for founding only. Recommendation: A, and act on demand (P2-P4) rather than the gate. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | OPEN | no |  |
 | B25-ECON-P2 | Coinless adults cannot take open miner or woodcutter places because those jobs need a tool and the manor's tool help covers only workers already in the trade (all 10 jobless at day 120 came of age in the run and hold median 0 coins). Options: A keep; B the household buys a member's first work tool from its own purse (existing purchase rules); C the manor advances the tool against wages; D tool rental outside the Living Economy. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | OPEN | no |  |
 | B25-ECON-P3 | Retired villagers keep trade stock forever (day 120: 68 iron ore, 47 coal, 24 iron bars, 8 pickaxes, 7 axes held by elders while the working smith held nothing). Options: A keep; B elders and adults between jobs sell their goods through the existing sell rule; C the stock passes to the trade's successor as tools already do. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | OPEN | no |  |

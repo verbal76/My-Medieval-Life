@@ -6,18 +6,17 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 25 |
-| APPROVED | 269 |
+| OPEN | 24 |
+| APPROVED | 270 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 3 |
 | REOPENED | 0 |
 | DEFERRED | 5 |
 
-## Build 20: Living Economy: open, reopened or provisional (6)
+## Build 20: Living Economy: open, reopened or provisional (5)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
-| B25-CHAPEL-FOOD-Q | The church plot (8x7 cells, replaces its own seed, ripens every 2 days) yields about 12-18 wheat a day; in a food-secure village (yield 2.0) almost no household needs relief or food alms, so the chapel's store grows to 760-2,140 wheat a year (now limited only by normal spoilage, fixed 2026-11-02). What should the church do with food it does not need? Options: A the church farms only to need - it sows the plot only while its store is below a ceiling (recommended by the worker and the lead: no waste, no new flow, nothing created); B it sells the surplus at market and gives the coins as alms; C it passes the surplus to the manor's granary; D leave it (spoilage caps it). Evidence: docs/release/chapel_fix/CHAPEL_FOOD_FINDINGS.md on the Build 25 source. | OPEN | no |  | docs/directives/2026-11-01_chapel_economy_correction.md |
 | B25-ECON-P1 | Business founding requires the trade's benches to be full and busy (Ventures.refusal, skilled_place busy_share 0.35); in seed 1 the founding trades' benches were 2-20% busy all 120 days, so every one of 172 weekly looks stopped there. Options: A keep the rule (businesses form when demand exists); B let a founder weigh independence even with idle benches (the judgment weighing decides); C a lower busy threshold for founding only. Recommendation: A, and act on demand (P2-P4) rather than the gate. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | OPEN | no |  | docs/directives/2026-11-02_overnight_autonomous_development_directive.md |
 | B25-ECON-P2 | Coinless adults cannot take open miner or woodcutter places because those jobs need a tool and the manor's tool help covers only workers already in the trade (all 10 jobless at day 120 came of age in the run and hold median 0 coins). Options: A keep; B the household buys a member's first work tool from its own purse (existing purchase rules); C the manor advances the tool against wages; D tool rental outside the Living Economy. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | OPEN | no |  | docs/directives/2026-11-02_overnight_autonomous_development_directive.md |
 | B25-ECON-P3 | Retired villagers keep trade stock forever (day 120: 68 iron ore, 47 coal, 24 iron bars, 8 pickaxes, 7 axes held by elders while the working smith held nothing). Options: A keep; B elders and adults between jobs sell their goods through the existing sell rule; C the stock passes to the trade's successor as tools already do. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | OPEN | no |  | docs/directives/2026-11-02_overnight_autonomous_development_directive.md |

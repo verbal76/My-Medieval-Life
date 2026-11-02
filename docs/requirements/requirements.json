@@ -5914,8 +5914,8 @@
    "description": "The church plot (8x7 cells, replaces its own seed, ripens every 2 days) yields about 12-18 wheat a day; in a food-secure village (yield 2.0) almost no household needs relief or food alms, so the chapel's store grows to 760-2,140 wheat a year (now limited only by normal spoilage, fixed 2026-11-02). What should the church do with food it does not need? Options: A the church farms only to need - it sows the plot only while its store is below a ceiling (recommended by the worker and the lead: no waste, no new flow, nothing created); B it sells the surplus at market and gives the coins as alms; C it passes the surplus to the manor's granary; D leave it (spoilage caps it). Evidence: docs/release/chapel_fix/CHAPEL_FOOD_FINDINGS.md on the Build 25 source.",
    "source": "docs/directives/2026-11-01_chapel_economy_correction.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "The chapel should accumulate resources when the village is prosperous and use those resources when villagers need help. It should maintain itself, not enrich itself. (docs/directives/2026-11-02_chapel_economic_purpose_correction.md)",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -5928,6 +5928,11 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_chapel_economy_correction.md"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "answered by the owner's chapel purpose directive 2026-11-02 (CHAPEL-PURPOSE): the chapel accumulates when the village is prosperous and uses resources when villagers need help; food beyond clergy, livestock, seed and a modest emergency reserve is available for charitable distribution; spoilage applies. No sowing cap was asked for."
     }
    ]
   },
@@ -10596,6 +10601,69 @@
    "test_commit": "83d3afc",
    "design": "SPECIFIED",
    "remaining_work": "owner playtest; phone layout and cost of the runtime sprite not checked on a device; Build 18 release gate"
+  },
+  {
+   "id": "CHAPEL-LENDING",
+   "kind": "approved",
+   "title": "Chapel community lending and grants (concept approved): hardship recovery, viable businesses in temporary difficulty, village improvements, infrastructure, downturn relief - via a separate implementation proposal built on existing loan, credit, property and repayment systems",
+   "description": "Chapel community lending and grants (concept approved): hardship recovery, viable businesses in temporary difficulty, village improvements, infrastructure, downturn relief - via a separate implementation proposal built on existing loan, credit, property and repayment systems",
+   "source": "docs/directives/2026-11-02_chapel_economic_purpose_correction.md",
+   "owner_wording": "The concept of chapel-supported community lending is approved. ... Do not invent interest rates, collateral seizure, repayment schedules, or debt enforcement without an approved design. Prepare a separate implementation proposal for lending using existing economic systems wherever possible.",
+   "approval": "owner directive 2026-11-02 (concept approved; implementation by separate proposal)",
+   "acceptance": [
+    "A written proposal inspecting existing loan, credit, property and repayment systems, with open policy questions listed for the owner; nothing built until the design is approved"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-02",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-02_chapel_economic_purpose_correction.md"
+    }
+   ]
+  },
+  {
+   "id": "CHAPEL-PURPOSE",
+   "kind": "approved",
+   "title": "Chapel economic purpose: a charitable institution that maintains itself, not enriches itself - accumulate when the village prospers, distribute food and money when villagers need help",
+   "description": "Chapel economic purpose: a charitable institution that maintains itself, not enriches itself - accumulate when the village prospers, distribute food and money when villagers need help",
+   "source": "docs/directives/2026-11-02_chapel_economic_purpose_correction.md",
+   "owner_wording": "The chapel should accumulate resources when the village is prosperous and use those resources when villagers need help. It should maintain itself, not enrich itself.",
+   "approval": "owner directive 2026-11-02",
+   "acceptance": [
+    "Food kept only for clergy, chapel livestock, seed and a modest justified emergency reserve; the rest available for charitable distribution; spoilage applies; oldest usable food out first",
+    "The 14-day hardship assessment is the ordinary eligibility line for both food and money; a distinct faster emergency path for imminent hunger with higher priority (children, elders, missed meals)",
+    "Proactive identification of households needing food; legitimate delivery, collection or transfer (no teleporting, nothing invented); fair distribution, not all to the first household",
+    "Operating reserve audited; money beyond legitimate operating needs supports the community; no speculative reserves for undesigned upgrades; donations stay voluntary",
+    "Starvation deaths while the chapel held usable food or enough money to buy available food investigated per death; verified defects corrected",
+    "The chapel's whole cycle instrumented (donations, harvest, use, distribution, spoilage, alms, expenses, reserves, requests, recipients, qualified-but-unhelped with reasons, eligible-household starvation); before/after compared with focused tests and representative simulations"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "X20-CHAPEL-FIX"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-02",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-02_chapel_economic_purpose_correction.md"
+    }
+   ]
   },
   {
    "id": "CHAPEL-R1",
