@@ -122,6 +122,28 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**HAG-MEM-02: permanent GitHub memory, decision rationale and CI reporting.**
+- The directive is saved verbatim and registered as HAG-MEM-02.
+- Records branch `7026f3f`:
+  - `docs/decisions/` holds the rationale standard and records for HAG-MEM-02, B25-BIZ-TENANT-Q, CHAPEL-PURPOSE, FLIGHT-REC-01
+    and B25-OVN-0211, plus the superseded 6-day chapel line.
+  - `docs/KNOWN_ISSUES.md` is new.
+  - PROJECT_MEMORY maps components A to F.
+  - The recovery entry point now follows the directive's 10 steps.
+  - The snapshot-verified convention is added.
+- CI branch `docs/hag-memory-rationale-2026-11-02` `4309029`, merged as `9c56199`:
+  - `tools/ci_report.py` with 10 tests.
+  - `tests.yml` runs all 148 suites and the 10-day sim, even after a failure. It writes a job summary and `ci-report.json`
+    (`mml-ci-report/1`) with per-suite logs, and still fails the job if any suite failed.
+  - `requirements.yml` gets the same reporting; `release.yml` gets a summary step only.
+- Reconnaissance findings:
+  - CI had stopped at the first failing suite.
+  - CI ran by itself only on staging pushes.
+  - 34 suites are not in CI, including the new business, employment, materials and services suites. Adding them is an open
+    decision.
+  - The `wip/val-recover` green runs simulated nothing.
+- First full-report CI run: Tests 41482218360.
+
 **The coin_sources leak fixed, and the second farming batch and first full flight campaign dispatched.**
 - **Leak** (`wip/b25-leak2` `3ab9a39`/`57a7022`, merged as `8acbdea`):
   - Cause: a villager moving to a settlement left an LE-05 tool rental open. At the next dawn the rental ended "lost", and the

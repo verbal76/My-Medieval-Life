@@ -3,7 +3,7 @@
 **This is the one current-state document.** Owner directives MEM-01 and DOC-CONT-01 make it the entry point.
 
 - **Updated:** 2026-11-01.
-- **Snapshot last verified:** not yet stamped under the HAG-MEM-02 convention.
+- **Snapshot last verified:** 2026-11-02 16:31 UTC against `wip/expansion20` `9c56199` and the latest 20 Actions runs (lead).
   - **Convention:** whoever checks this file against the live GitHub state writes this line as
     `YYYY-MM-DD HH:MM UTC by <session or agent>, against wip/expansion20 <sha>, wip/requirements-control <sha>, Actions runs
     to <newest run id>`.
@@ -40,7 +40,7 @@ Directive: `docs/directives/2026-11-02_overnight_autonomous_development_directiv
 |---|---|
 | Current development build | **Build 25**, the consolidation build. It holds all approved expansion work and all approved recoverable abandoned-branch work (B25-SCOPE-D1, `docs/directives/2026-11-01_build25_scope_clarification.md`). |
 | Integration branch (Build 25 source) | `wip/expansion20` |
-| Development head | `e55cc7f`: multiplayer_a1 fixture comparison fix; `8acbdea` the coin_sources leak fix; `cad96c4`: flight recorder system; then `8b203c5`: chapel purpose corrections; then `91cf244`: world_test R6 reads the personal lane; then `35fbd48`: chapel food spoilage and alms; then `f583086`: od16 test isolation fix; firewood fixes `8654451`; LE-05 route risk `0c122b6`; on top of `d6ab686`: the economic investigation's read-only diagnostics, on top of `28d5280` (LE-07 gate evidence) and `eca0e7d`: the paid-repair escrow fix in the harness `1400efa` and the farming calibration plan, on top of Option B `3c7e45b`. All five branches suspended on 2026-11-01 are merged. The year-long run 41362329381 runs on `908a17e`. See `docs/DEVELOPMENT_CHANGELOG.md` for the chain from `ad281dc`. |
+| Development head | `9c56199`: CI reporting (every suite runs; summary and `ci-report.json`); then `e55cc7f`: multiplayer_a1 fixture comparison fix; `8acbdea` the coin_sources leak fix; `cad96c4`: flight recorder system; then `8b203c5`: chapel purpose corrections; then `91cf244`: world_test R6 reads the personal lane; then `35fbd48`: chapel food spoilage and alms; then `f583086`: od16 test isolation fix; firewood fixes `8654451`; LE-05 route risk `0c122b6`; on top of `d6ab686`: the economic investigation's read-only diagnostics, on top of `28d5280` (LE-07 gate evidence) and `eca0e7d`: the paid-repair escrow fix in the harness `1400efa` and the farming calibration plan, on top of Option B `3c7e45b`. All five branches suspended on 2026-11-01 are merged. The year-long run 41362329381 runs on `908a17e`. See `docs/DEVELOPMENT_CHANGELOG.md` for the chain from `ad281dc`. |
 | Latest verified SHA | `3c7e45b`: suites TESTED locally, listed below. No CI run, no 30-day baseline and no year-long run on this SHA. The last SHA with year-long CI evidence is `ae8641d` (chapel fix). The last SHA with a complete validated gate is `ad281dc` (30-day baseline). Its year-long runs failed on the gossip crash, which is now fixed. |
 | Rollback point | `ad281dc` |
 | Records branch | `wip/requirements-control`. It holds the register, directives and this file. The register is edited only here, with `tools/requirements_update.py` and then `tools/check_requirements.py --write`. It is not merged into staging or `wip/expansion20` without the owner's authorization. |
@@ -49,7 +49,7 @@ Directive: `docs/directives/2026-11-02_overnight_autonomous_development_directiv
 | Packaging and release | No Build 25 package exists. Packaging needs the owner's authorization. No public release. |
 | Living Economy | Integrated but **off** by default. It switches on by default once the 13 LE-07 readiness gates pass on the integrated candidate, with no further approval (B25-LE-ACTIVATE-D1). |
 | Operating mode | Overnight autonomous development (B25-OVN-0211): several independent workstreams. Reduced-resource mode (2026-11-01) is superseded for this session. |
-| GitHub Actions | **Running:** (1) the first full flight-mode campaign [41469410306](https://github.com/verbal76/My-Medieval-Life/actions/runs/41469410306) (`8acbdea`, seeds 1 and 2, 365 days, every 10, 100-day segments); (2) the older recorded campaign [41458375116](https://github.com/verbal76/My-Medieval-Life/actions/runs/41458375116) (`91cf244`; ends by about 19:35 UTC); (3) farming B1 [41469335443](https://github.com/verbal76/My-Medieval-Life/actions/runs/41469335443) (yield 1.75, seeds 1 and 2) and B2 [41469341029](https://github.com/verbal76/My-Medieval-Life/actions/runs/41469341029) (seed 2 at 1.5), both on `8acbdea` via run branches `wip/b25-farm-b1` and `wip/b25-farm-b2`. Done: flight trial 41464356721 (success). Tests [41451824267](https://github.com/verbal76/My-Medieval-Life/actions/runs/41451824267) failed on multiplayer_a1 (a stale fixture comparison), fixed in `e55cc7f`. All 149 CI suites are running locally before the next CI dispatch. |
+| GitHub Actions | **Running:** (1) the first full flight-mode campaign [41469410306](https://github.com/verbal76/My-Medieval-Life/actions/runs/41469410306) (`8acbdea`, seeds 1 and 2, 365 days, every 10, 100-day segments); (2) the older recorded campaign [41458375116](https://github.com/verbal76/My-Medieval-Life/actions/runs/41458375116) (`91cf244`; ends by about 19:35 UTC); (3) farming B1 [41469335443](https://github.com/verbal76/My-Medieval-Life/actions/runs/41469335443) (yield 1.75, seeds 1 and 2) and B2 [41469341029](https://github.com/verbal76/My-Medieval-Life/actions/runs/41469341029) (seed 2 at 1.5), both on `8acbdea` via run branches `wip/b25-farm-b1` and `wip/b25-farm-b2`. Done: flight trial 41464356721 (success). Tests [41451824267](https://github.com/verbal76/My-Medieval-Life/actions/runs/41451824267) failed on multiplayer_a1 (a stale fixture comparison), fixed in `e55cc7f`. CI with the new reporting: Tests [41482218360](https://github.com/verbal76/My-Medieval-Life/actions/runs/41482218360) on `9c56199`, the first run that reports every suite. The local all-suites run was stopped at 48 of 149 with no failures, because GitHub now does it. |
 
 ## Workers and branches (recovery records)
 
@@ -94,6 +94,8 @@ All of these ran **locally** (Godot 4.7 headless), not in CI. Exact suites and c
 These are planned once, at the end.
 
 ## Known defects and risks
+
+**The durable record is `docs/KNOWN_ISSUES.md` (HAG-MEM-02).** Where the list below differs, that file is newer: the firewood defects are fixed, unaffordable bids are an outcome, the coin_sources leak is fixed.
 
 - **Pre-existing failure:** the `housing_test` loft check fails. It failed before the 2026-11-01 changes too. Not yet classified.
 - **Suspected, not yet classified (X20-FIREWOOD):**
