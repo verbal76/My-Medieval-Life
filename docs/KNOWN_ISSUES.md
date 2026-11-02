@@ -289,22 +289,103 @@ repeat a failed approach because the conversation that tried it is gone. Owner d
 - **Remaining risk:** single-job recorded runs (`record=true` without `flight`) should not be used for a full year.
 
 
-## KI-HOME-DOOR: script errors when a villager's home is not a building (2026-11-02, CRITICAL, open)
+## KI-HOME-DOOR: script errors when a villager's home is not a building (2026-11-02, CRITICAL; FIXED, integrated `wip/expansion20` `34e1041`)
 
-- **Symptom:** in the flight campaign 41469410306 (`8acbdea`, seed 2, normal play) there were 5,359 script errors in days
-  200-300 and 5,813 in days 300-365. Each one is "Invalid access to property or key of type 'String' on a base object of type
-  'Dictionary'" at `World.building_door` (world.gd:4140), called from `NPCBrain._plan_evening` (npc_brain.gd:1037,
-  `w.building_door(n.home)`).
-- **Not seen in:** seed 1, or seed 2's days 0-200. The same commit's run 41458375116 seed 2 used the older recorded path; its
-  script-error count was not read.
-- **Context:** seed 2 grew to 306 villagers (153 arrivals, 221 births).
-- **Suspected causes:** either villagers with no home (legitimate under a housing shortage, but the evening plan crashes), or a
-  stale home reference to a building that was sold, detached or removed (a deeper defect).
-- **Status:** fix in progress on `wip/b25-home-door`, resuming from the campaign's saved day-200 state.
-- **Evidence:** run 41469410306, artifacts `fr-seed2-results` and `fr-seed2-seg3/4-*`.
+- **Original symptom (kept as found).** In the flight campaign 41469410306 (`8acbdea`, seed 2, normal play) there were 5,359
+  script errors in days 200-300 and 5,813 in days 300-365. Each one is "Invalid access to property or key of type 'String' on a
+  base object of type 'Dictionary'" at `World.building_door` (world.gd:4140), called from `NPCBrain._plan_evening`
+  (npc_brain.gd:1037, `w.building_door(n.home)`). Seed 1 and seed 2's days 0-200 were clean. Evidence: run 41469410306,
+  artifacts `fr-seed2-results` and `fr-seed2-seg3/4-*`.
+- **Immediate exception versus underlying cause.**
+  - The exception: four code paths looked up the door of a home that did not exist:
+    - the evening rest;
+    - a child's play;
+    - the home meal (`World.home_cell`);
+    - the morning job walk.
+  - The underlying causes:
+    1. A household that arrives unable to afford a house is legitimately homeless (WDR-022). On resume from the day-200 save,
+       household 35 (Hayward, 4 people, day 225) produced every error. The campaign's first errors were also in days 221-230.
+    2. A source defect: when a household lost its house (sale or lost lease), `construction.gd` `_rehouse` tried only one host
+       household and, with none, left members pointing at a house no longer theirs.
+- **Census, by cause:**
 
-## KI-FR-CARTHITCH: villagers repeatedly fail to hitch a cart (2026-11-02, HIGH suspicion, open)
+  | When | Cause | Villagers |
+  |---|---|---|
+  | Day-200 save | Bad references | 0 |
+  | Day-200 save | Living in non-house buildings (tavern, manor, chapel, hut) | 28; these are the founding households' intended homes, correct |
+  | Day 232, fixed code | Housing shortage, never housed | 4 |
+  | Day 232, fixed code | Sold or lost lease, lodging with kin | 11 |
+  | Either | Building removal, ownership transfer, reassignment | 0; no code path removes a building |
 
-- p:40 failed `cart_hitch` 76 times in a row (days 196-229); p:1000138 failed it 52 times in a row (days 134-152). Run
-  41469410306 seed 2.
-- Not yet investigated. It may be a decision loop.
+- **Fix (`wip/b25-home-door` `bcff138`):**
+  - **At the source:** `_rehouse` and the new `_kin_home` try the household it came from, then its family. With no kin, members
+    of the lost house become homeless instead of keeping a stale reference.
+  - **Safe homelessness, `NPCBrain.rest_cell`:**
+    - the villager rests by their own door, else their household's, else the manor door (the existing rule for homeless
+      arrivals, `Migration._place`), else where they stand;
+    - used by evening, child play, elder walks, the idle hunter, the worker without a tool and the job walk;
+    - `home_spot` and `home_cell` fall back the same way;
+    - nobody is given a house.
+  - INT-060 extended; DECISIONS row (DCR-01 engineering correction).
+- **Evidence:**
+  - **New `home_ref_test`:** 40 checks, 0 failures. It covers starting homeless, a home sold with kin, a home sold without kin,
+    moving to another house and a removed home. The evening, bed, child day and meal are all planned at a cell that exists.
+    The old code failed 8 checks of an earlier version, with 4 door errors.
+  - **Seed 2 resumed from day 200 to day 232 (32 days):** 0 script errors on the fix against 447 on the old code (days
+    225-231); coin and item leaks 0 on every day.
+  - **Night check (36 game hours):** 0 errors on the fix against 97 on the old code. 215 of 218 villagers asleep at 02:00 on
+    both. Homeless children rest near the manor instead of the map corner (0,0), which is where the failed lookup had put them.
+  - **Seed 1 10-day fingerprint:** `fdbdde28` unchanged.
+  - **Suites after the merge with the integration head:** `home_ref_test` 40/0, `housing_test` 117/0, `aging` 136/0,
+    `home_test` 113/0, `migration` 109/0, `conservation` 8/0.
+  - **Suites before the merge:** `run_tests` 3602/0, `family` 51/0, `succession` 26/0, `net_econ_integrity` 126/0,
+    `save_transfer` 21/0.
+- **Kept:** before and after logs in the session scratchpad (`keep/`), plus the campaign artifacts on GitHub (to 2026-12-02).
+- **Not verified:** a full 365-day campaign on the fix (needs owner approval under MML-CONSERVE-01); devices.
+
+## KI-FR-CARTHITCH: villagers repeatedly fail to hitch a cart (2026-11-02, HIGH; cause found, fix NOT made; PAUSED)
+
+- **Symptom:** p:40 failed `cart_hitch` 76 times in a row (days 196-229); p:1000138 failed 52 times in a row (days 134-152). Run
+  41469410306, seed 2.
+- **Classification:** a genuine behavioural loop (read-only investigation, 2026-11-02, from instrumented local resumes of the
+  day-100 and day-200 saves).
+- **The loop:** a villager is still holding a household handcart. `_plan_market_run` (npc_brain.gd:642-669) picks another free
+  cart without checking `carts.pulled_by(n)`. `Carts.hitch` (carts.gd:114) refuses with "pulling a cart already", and the plan
+  repeats until the market cutoff. A household with only one cart loses it silently.
+- **How carts get stranded:**
+  1. `cart_sell` (npc_brain.gd:2815) fails when the stop's item is missing, so the run ends before `cart_park`. Seen twice
+     between days 118 and 120. Why the item is missing is unconfirmed.
+  2. Saves keep a cart's `puller`, but villagers' plans are not saved, so everyone mid-run when the save was made comes back
+     holding a cart with no park step. This is certain: seen in both segment saves. It also affects player saves.
+- **Proposed smallest fix (not implemented):**
+  - (b) `_plan_market_run` uses or parks the cart the villager already holds; this alone stops the loop;
+  - (a) `cart_sell` skips an absent item rather than failing;
+  - (c) carts held by villagers are released on load.
+- **Analyser note:** HIGH is justified. The analyser should also flag a cart held for more than 24 hours.
+- **Evidence:** scratchpad `fri/run1-3_dbg.log`, local only. Not verified: why the item is missing, and how the campaign streaks
+  ended.
+
+## KI-FR-WHEATSALE: repeated failed wheat sales (2026-11-02, MEDIUM; expected market outcome; PAUSED)
+
+- **Symptom:** 12 MEDIUM findings for seed 2 farmers, with streaks of 15-32 failed sales (F007-F022).
+- **Cause:** the merchants' `wants()` was 0, so the reply was "has all the wheat they can use". Some failures were the cook's
+  "keeps a reserve" with 0-2 coins.
+- **Why it repeats:** farmers holding 80-300 wheat set off together, and the first fills the small demand. This is a glut, a
+  legitimate outcome under WDR-022. The check made on arrival is correct. The cost is 2-5 wasted walks a day per farmer.
+- **Latent, not seen:** planning offers `max(1, count)` but the sale offers `count - reserve`. Every reserve seen was 0.
+- **Analyser:**
+  - record the refusal reason;
+  - fold the refusals into one INFORMATIONAL glut finding;
+  - fix the misleading `that_day` field.
+
+## KI-FR-CONTRACTS: 580 contracts cancelled (2026-11-02, MEDIUM; expected in a run with no player; PAUSED)
+
+- **Symptom:** finding F005, 580 contracts cancelled.
+- **Cause:** they are standing offers villagers made to the player (p:1000230) for inputs nobody in the village sells: iron ore,
+  logs, an axe, apples (`contracts.gd:1451-1521`, `850-860`). `economy_sim` has no acting player, so every offer expires after
+  2 days. The real signal is that iron ore and logs are not sold locally, which is a shortage outcome.
+- **Analyser:**
+  - mark offers to an absent player as INFORMATIONAL;
+  - add `item=` to `contract_ended`;
+  - group by buyer and item.
+

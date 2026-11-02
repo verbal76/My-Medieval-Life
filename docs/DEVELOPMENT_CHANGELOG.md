@@ -61,6 +61,25 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
 
 ## 2026-11-02
 
+**KI-HOME-DOOR fixed and integrated; MML enters standby (FR-REPAIR-01, MML-CONSERVE-01). INTEGRATED (`34e1041`), TESTED locally.**
+- **Cause:** a legitimately homeless household (seed 2, day 225), plus `_rehouse` leaving stale homes when a household lost its
+  house.
+- **Fix:** at the source in `construction.gd`, plus safe homeless rest via `NPCBrain.rest_cell`.
+- **Evidence:**
+  - `home_ref_test` 40/0, now in CI;
+  - seed 2 resumed for days 200-232: 0 script errors against 447 on the old code;
+  - night rest unchanged (215 of 218 asleep);
+  - `housing` 117/0, `home` 113/0;
+  - seed 1 fingerprint unchanged.
+  Full details: KNOWN_ISSUES.
+- **Credit conservation (owner):**
+  - farming Phase 2 paused at WIP `710fce9`;
+  - the flight-finding investigation paused, with its findings recorded (cart-hitch loop, a wheat glut, contract offers to an
+    absent player);
+  - the scheduled check-in deleted;
+  - no workers running.
+- **Next:** no year-long campaign without owner approval. Tests 41509578455 on `0d194c8` is left to finish.
+
 **Branch consolidation and the permanent branch policy (BRANCH-POL-01, owner 2026-11-02). INTEGRATED (`d73bd0a`).**
 - **Content audit.** `git merge-tree` against the integration tip, not ahead/behind counts:
   - 21 of the 22 recent `wip/b25-*` branches are already integrated, including the four from the previous consolidation;

@@ -22042,6 +22042,11 @@
      "date": "2026-11-02",
      "change": "implementation_status: None -> IN DEVELOPMENT; branch: None -> wip/b25-farm-phase2",
      "why": "Dispatch B on 8acbdea (--market, shared and seasonal farming on, 365 days, every 5), integrity clean on all three (exit 0, 0 script errors, currency and item leaks 0). Yield 1.75 seed 1 (41469335443): FOOD-SECURE, 0 starved, 0/74 famine, 326 meals missed for no food (319 were guards at night, hours 0-6, days 90-150: an access/timing observation), lowest food 3.0 days, cattle 12 at end. Yield 1.75 seed 2: FOOD-SECURE, 0 starved, 0 famine, 7 missed for no food, lowest 3.0 days. Yield 1.5 seed 2 (41469341029): FOOD-SECURE, 0 starved, 10 missed, lowest 2.6 days. Rule (FARMING_YIELD_CALIBRATION.md section 5): lowest yield secure on both seeds; 1.5 failed by scarcity on seed 1 (Dispatch A), so the baseline is 1.75. Phase 2 starts on wip/b25-farm-phase2."
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "Phase 2 paused by owner (MML-CONSERVE-01) after a WIP commit 710fce9 on wip/b25-farm-phase2: yield 1.75 and both switches set, old-save seed-corn start (World.start_shared_farming), farm_shared_save_test, stale tests updated, wiki; 25 suites 0 failures, smoke 166eaf82; remaining: uid file, merge integration head (overlaps home-door in world.gd, DECISIONS, manifest), rerun targeted suites. Yield 1.75 stays the approved baseline."
     }
    ],
    "owner_wording": null,
@@ -23105,7 +23110,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -23119,10 +23124,18 @@
      "date": "2026-11-02",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> home-door fix worker; flight findings investigator; branch: None -> wip/b25-home-door",
      "why": "fix worker briefed with the owner's points 1-5 on wip/b25-home-door; independent investigator on wip/b25-fr-investigate for point 6"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; commits + 34e1041",
+     "why": "KI-HOME-DOOR points 1-5 done and integrated at wip/expansion20 34e1041 (from wip/b25-home-door bcff138): census and causes, source fix in construction.gd _rehouse/_kin_home, NPCBrain.rest_cell for legitimate homelessness, home_ref_test 40/0 (registered in tests.yml), seed 2 resumed day 200-232 0 script errors vs 447 on old code, night check 0 vs 97 with rest preserved (215/218 asleep both), housing 117/0, home 113/0, aging 136/0, migration 109/0, conservation 8/0, run_tests 3602/0, seed-1 fingerprint fdbdde28 unchanged. Point 6 findings recorded (KNOWN_ISSUES KI-FR-CARTHITCH loop, KI-FR-WHEATSALE market outcome, KI-FR-CONTRACTS no-player artefact); fixes not made, paused under MML-CONSERVE-01. Point 7: next campaign needs owner approval (MML-CONSERVE-01)."
     }
    ],
    "assigned_worker": "home-door fix worker; flight findings investigator",
-   "branch": "wip/b25-home-door"
+   "branch": "wip/b25-home-door",
+   "commits": [
+    "34e1041"
+   ]
   },
   {
    "id": "FSE-00",
@@ -35353,6 +35366,44 @@
    "migrated_from_status": "COMPLETE AND VERIFIED",
    "disposition": "APPROVED",
    "blocks_implementation": false
+  },
+  {
+   "id": "MML-CONSERVE-01",
+   "kind": "approved",
+   "title": "Credit conservation: MML second priority behind Upwardly; one worker; finish and integrate KI-HOME-DOOR only; pause farming Phase 2 and the flight-finding investigations; no 365-day campaign, new features or scheduled follow-up without owner approval; standby when done",
+   "description": "Credit conservation: MML second priority behind Upwardly; one worker; finish and integrate KI-HOME-DOOR only; pause farming Phase 2 and the flight-finding investigations; no 365-day campaign, new features or scheduled follow-up without owner approval; standby when done",
+   "source": "docs/directives/2026-11-02_credit_conservation_controlled_development.md",
+   "owner_wording": "Effective immediately, change operating mode. ... Reduce active Claude workers to ONE. ... After consolidation and the KI-HOME-DOOR repair are verified, update project records and enter standby.",
+   "approval": "owner, 2026-11-02",
+   "acceptance": [
+    "Other workers saved their work and stopped cleanly",
+    "KI-HOME-DOOR fixed, tested and integrated",
+    "Records updated; standby with no scheduled follow-up"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-02",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-02_credit_conservation_controlled_development.md"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; commits + 34e1041",
+     "why": "applied 2026-11-02: farming Phase 2 saved as WIP 710fce9 and stopped; investigation reported and stopped (no commits); scheduled check-in deleted; home-door integrated at 34e1041; standby"
+    }
+   ],
+   "commits": [
+    "34e1041"
+   ]
   },
   {
    "id": "MON-01",

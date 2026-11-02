@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (753)
+## Approved requirement (754)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -303,7 +303,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | FR-09 | Crime from desperation | 19 | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | FR-10 | Archery | 20+ | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | 19 | OWNER DECISION REQUIRED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
-| FR-REPAIR-01 | Flight recorder repair: KI-HOME-DOOR root cause, homeless-safe evening, regression tests, 10-day resume, independent investigation of cart_hitch, wheat-sale and contract-cancellation findings; no full campaign until fixed | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| FR-REPAIR-01 | Flight recorder repair: KI-HOME-DOOR root cause, homeless-safe evening, regression tests, 10-day resume, independent investigation of cart_hitch, wheat-sale and contract-cancellation findings; no full campaign until fixed | unassigned | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | FSE-00 | Food security, household production, land use, markets and goal-driven economic behavior (final master directive) | 16 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | FSE-01 | Current-system audit: agriculture, consumption, hunting, husbandry, land and commerce | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | FSE-02 | Food sustainability calculation: food and productive land per villager, household and village | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -447,6 +447,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | MIN-RIGHTS | Open access to common ground; legitimate property respected (MIN-E-Q3) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MIN-SHOVEL | Craftable shovels for topsoil and loose earth; pickaxes for rock; both wear (MIN-E-Q2) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | MIN-SKILLCAP | Capability counts real skills, equipment and facilities, not job titles; specialists and equipped labourers both dig (MIN-E-Q4) | 17 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| MML-CONSERVE-01 | Credit conservation: MML second priority behind Upwardly; one worker; finish and integrate KI-HOME-DOOR only; pause farming Phase 2 and the flight-finding investigations; no 365-day campaign, new features or scheduled follow-up without owner approval; standby when done | unassigned | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | MON-01 | Monsters, village defence, bounties and monster goods: skeletons underground and in the woods, lizards, a crab monster and boss monsters in forests and hills; rare attacks on the village where guards go first and villagers form a defensive line; the player can become a hero of the town; bounties to hunt monsters and bring back their pelts, building prestige; villagers may choose to become monster hunters; a market for specialty goods only monsters give; all of it moving villagers' emotions, their view of the player and their sense of safety | 26 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | MP-01 | Player-hosted multiplayer: two-player LAN milestone, host-authoritative | multiplayer | SUPERSEDED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | CLOSED |
 | MP-ADOPTION-AGENCY | Adoption agency concept (future, separate design item) | unassigned | DEFERRED | NOT STARTED | NOT TESTED | NOT READY | OPEN |

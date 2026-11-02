@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (12)
+## Workers and task branches (11)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -10,7 +10,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
-| FR-REPAIR-01 | unassigned | IN DEVELOPMENT | home-door fix worker; flight findings investigator | wip/b25-home-door |
 | JUICE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | none |  |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-CAREER-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
@@ -19,7 +18,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (72)
+## Implemented but not tested (74)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -58,8 +57,10 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | FARM-08 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | FLIGHT-REC-01 | 20 | INTEGRATED |  |
 | FR-11 | 19 | PARTIALLY IMPLEMENTED |  |
+| FR-REPAIR-01 | unassigned | INTEGRATED |  |
 | FSE-00 | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
 | LE-07 | 20 | PARTIALLY IMPLEMENTED |  |
+| MML-CONSERVE-01 | unassigned | INTEGRATED |  |
 | OWN-08 | owner decision | PARTIALLY IMPLEMENTED |  |
 | OWN-19 | 20+ | PARTIALLY IMPLEMENTED |  |
 | OWN-22 | owner decision | PARTIALLY IMPLEMENTED |  |
