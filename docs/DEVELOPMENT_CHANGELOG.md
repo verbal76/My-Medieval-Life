@@ -132,7 +132,8 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
 - Reason: the owner's Option B. It replaces the lead's interim `f8f9cac` rule.
 - Status: INTEGRATED, TESTED (local).
 - Evidence: business_founding 66, business_ownership 165, business 160, conservation 8, wiki_test, all 0 failures.
-- Outstanding: run_tests and start_test (running); whether villagers now found businesses (economic investigation and Actions).
+- run_tests 3602 and start_test 523 steps on `3c7e45b`: 0 failures.
+- Outstanding: whether villagers now found businesses (economic investigation and Actions).
 - The overnight directive authorises parallel workstreams. Started: the economic investigation on `wip/b25-econ-funnel`.
 
 **B25-NINE-D1 and D8: organic skills and capability milestones.**
