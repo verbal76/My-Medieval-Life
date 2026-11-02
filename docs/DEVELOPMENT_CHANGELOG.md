@@ -122,6 +122,18 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**First full flight-mode campaign:** [41469410306](https://github.com/verbal76/My-Medieval-Life/actions/runs/41469410306) on `8acbdea`, normal play, 365 days.
+- **Seed 1:** passed every segment and its analysis.
+- **Seed 2:** completed the year, but its analysis found 2 confirmed defects, both the same script error.
+  - 5,359 errors in segment 3 and 5,813 in segment 4.
+  - Every one is at `World.building_door` from `_plan_evening`: a villager's home is not a building.
+- **Also flagged (suspicions, not proven):**
+  - HIGH: repeated `cart_hitch` failures (76 and 52 in a row).
+  - MEDIUM 19: repeated failed wheat sales; one party with 580 goods contracts cancelled.
+- **Seed 2 population:** grew from 104 to 306.
+- **Next:** the fix is on `wip/b25-home-door`, reproduced from the saved day-200 state. No rerun of the campaign until it is
+  fixed (owner and Bob agree).
+
 **First CI run with full reporting:** Tests [41482218360](https://github.com/verbal76/My-Medieval-Life/actions/runs/41482218360) on `9c56199`.
 - The reporting worked: the report artifact `ci-report-41482218360-1` was kept and the outcome was recorded as FAILED, even
   though the job was cut off.

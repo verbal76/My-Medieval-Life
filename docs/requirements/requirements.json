@@ -22285,6 +22285,11 @@
      "date": "2026-11-02",
      "change": "note",
      "why": "owner's first 'Run flight recorder' (long-sims record=true, 41458375116, 91cf244, older recorded path): seed 2 completed 365 days in 11,207 s - leak 0 at every checkpoint, no FATAL, alive 104 -> 188, starved 0, food 19.7 days, ore exhausted by day 300; archive artifact 626 MB (sim-v0-seed2-days365, ID 13163966642, kept 30 days); BIZ: 0 ventures, 473 looks refused mostly at skill (209) and no work (174). Seed 1's Simulate step was cancelled at 2.5 h (16:35 UTC) by GitHub, not by us; its log returns 404 and its results step was skipped, so its outcome is unknown (likely runner loss; a recorded single-job year is fragile - the segmented flight mode exists for this). Full flight campaign 41469410306: both seeds through segment 2 (day 200), segment 3 running."
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "first full flight-mode campaign 41469410306 (8acbdea, normal play, 365 days, 100-day segments) complete with all reporting artifacts. Seed 1: all segments and analysis passed. Seed 2: completed 365 days (archives checked ok, 6.78 M events analysed) but CRITICAL 2 - 5,359 script errors in seg3 and 5,813 in seg4, all World.building_door (world.gd:4140) from NPCBrain._plan_evening (npc_brain.gd:1037): a villager's home is empty or no longer a building. HIGH 2: cart_hitch failing 76 and 52 times in a row (p:40, p:1000138). MEDIUM 19: repeated failed sell_to wheat, a party with 580 goods contracts cancelled, 53 hours of 20+ failed actions. INFORMATIONAL: population 104 -> 306 (221 births, 153 arrivals; 86 old-age deaths, 4 slain), 5,313 unattributed coin sites, settlement hunger. Defect fix on wip/b25-home-door, resuming from the day-200 state."
     }
    ],
    "commits": [

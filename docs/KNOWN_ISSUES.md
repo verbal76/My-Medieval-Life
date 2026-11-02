@@ -274,3 +274,24 @@ repeat a failed approach because the conversation that tried it is gone. Owner d
 - **Resolution in place:** the flight mode in long-sims (FLIGHT-REC-01) records in 100-day segments, with save and resume and
   uploads after each segment. Run 41469410306 reached day 200 on both seeds with no loss.
 - **Remaining risk:** single-job recorded runs (`record=true` without `flight`) should not be used for a full year.
+
+
+## KI-HOME-DOOR: script errors when a villager's home is not a building (2026-11-02, CRITICAL, open)
+
+- **Symptom:** in the flight campaign 41469410306 (`8acbdea`, seed 2, normal play) there were 5,359 script errors in days
+  200-300 and 5,813 in days 300-365. Each one is "Invalid access to property or key of type 'String' on a base object of type
+  'Dictionary'" at `World.building_door` (world.gd:4140), called from `NPCBrain._plan_evening` (npc_brain.gd:1037,
+  `w.building_door(n.home)`).
+- **Not seen in:** seed 1, or seed 2's days 0-200. The same commit's run 41458375116 seed 2 used the older recorded path; its
+  script-error count was not read.
+- **Context:** seed 2 grew to 306 villagers (153 arrivals, 221 births).
+- **Suspected causes:** either villagers with no home (legitimate under a housing shortage, but the evening plan crashes), or a
+  stale home reference to a building that was sold, detached or removed (a deeper defect).
+- **Status:** fix in progress on `wip/b25-home-door`, resuming from the campaign's saved day-200 state.
+- **Evidence:** run 41469410306, artifacts `fr-seed2-results` and `fr-seed2-seg3/4-*`.
+
+## KI-FR-CARTHITCH: villagers repeatedly fail to hitch a cart (2026-11-02, HIGH suspicion, open)
+
+- p:40 failed `cart_hitch` 76 times in a row (days 196-229); p:1000138 failed it 52 times in a row (days 134-152). Run
+  41469410306 seed 2.
+- Not yet investigated. It may be a decision loop.
