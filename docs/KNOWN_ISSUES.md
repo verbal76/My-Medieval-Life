@@ -262,3 +262,15 @@ repeat a failed approach because the conversation that tried it is gone. Owner d
 - **Remaining:**
   - No run past day 40 on `8b203c5`. The flight campaign on `8acbdea` covers it.
   - Owner question CHAPEL-GIVE-14-Q.
+
+
+## KI-REC-RUNNER: an unsegmented recorded year-long job lost on GitHub (2026-11-02)
+
+- **Symptom:** in long-sims run 41458375116 (`91cf244`, `record=true`, normal play), seed 1's Simulate step ended as *cancelled*
+  after about 2.5 hours (16:35 UTC). It was not cancelled by the project; GitHub stopped it. The job log returns 404, and the
+  "Keep the results" step was skipped, so nothing was kept.
+- **Same run, seed 2:** completed the full year. Its recorded archive was 626 MB.
+- **Likely cause (unconfirmed, no log):** runner loss or resource exhaustion while recording a whole year in one job.
+- **Resolution in place:** the flight mode in long-sims (FLIGHT-REC-01) records in 100-day segments, with save and resume and
+  uploads after each segment. Run 41469410306 reached day 200 on both seeds with no loss.
+- **Remaining risk:** single-job recorded runs (`record=true` without `flight`) should not be used for a full year.

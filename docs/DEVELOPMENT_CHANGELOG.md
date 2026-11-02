@@ -122,6 +122,18 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**The owner's first "Run flight recorder" (41458375116, `91cf244`, older recorded path): results.**
+- **Seed 2:** completed 365 days in 3.1 hours.
+  - Leak 0 at every checkpoint, no FATAL.
+  - Population 104 grew to 188; 0 starved; food 19.7 days at the end.
+  - Ore was exhausted by day 300.
+  - The recorded archive is 626 MB (artifact `sim-v0-seed2-days365`).
+  - Businesses: still 0. Of 473 founding looks, the refusals were mostly skill (209) and no work (174); with Option B, tenancy no
+    longer blocks.
+- **Seed 1:** GitHub cancelled the job at 2.5 hours. There is no log (404) and no results; recorded in KNOWN_ISSUES as
+  KI-REC-RUNNER.
+- **The segmented flight campaign** 41469410306 is healthy: both seeds are through day 200 and segment 3 is running.
+
 **HAG-MEM-02: permanent GitHub memory, decision rationale and CI reporting.**
 - The directive is saved verbatim and registered as HAG-MEM-02.
 - Records branch `7026f3f`:

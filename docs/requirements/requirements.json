@@ -22280,6 +22280,11 @@
      "date": "2026-11-02",
      "change": "note",
      "why": "GitHub trial 41464356721 (cad96c4, seed 1, 20 days, two 10-day segments) succeeded end to end: segment 2 resumed from segment 1's save, 20 of 20 days, stop reason completed, both archives checked ok, analyser read all rows (111,804 events), 14-sheet workbook built and check_workbook --flight ok, results and campaign artifacts kept, step summary written; findings CRITICAL 0, HIGH 0, MEDIUM 2 (p:1000261 35 goods contracts cancelled with none fulfilled; a first-evening burst of failed actions), INFORMATIONAL 4. First full flight-mode campaign dispatched: 41469410306 on 8acbdea (seeds 1 and 2, 365 days, every 10, 100-day segments)."
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "owner's first 'Run flight recorder' (long-sims record=true, 41458375116, 91cf244, older recorded path): seed 2 completed 365 days in 11,207 s - leak 0 at every checkpoint, no FATAL, alive 104 -> 188, starved 0, food 19.7 days, ore exhausted by day 300; archive artifact 626 MB (sim-v0-seed2-days365, ID 13163966642, kept 30 days); BIZ: 0 ventures, 473 looks refused mostly at skill (209) and no work (174). Seed 1's Simulate step was cancelled at 2.5 h (16:35 UTC) by GitHub, not by us; its log returns 404 and its results step was skipped, so its outcome is unknown (likely runner loss; a recorded single-job year is fragile - the segmented flight mode exists for this). Full flight campaign 41469410306: both seeds through segment 2 (day 200), segment 3 running."
     }
    ],
    "commits": [
