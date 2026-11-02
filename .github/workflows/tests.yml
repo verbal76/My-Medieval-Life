@@ -208,6 +208,7 @@ jobs:
           res://tests/farming_test.gd
           res://tests/health_jobs_test.gd
           res://tests/home_test.gd
+          res://tests/home_ref_test.gd
           res://tests/wildlife_test.gd
           res://tests/refuge_test.gd
           res://tests/combat_test.gd
