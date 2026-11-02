@@ -136,6 +136,7 @@ func _init() -> void:
 		w.setup(VillageMap.load_default(), seed)
 	else:
 		w.load_dict(VillageMap.load_default(), fr_resumed.world)
+		w.stats = fr_resumed.world_stats           # the game's running counters (World.stats: diagnostics, not saved), which the ledgers read
 		print("resumed: day %d from %s (the world's own save; movement in progress is not saved, so the run goes on from the save, not exactly as an unbroken run)" % [int(fr_resumed.day), str(arg.call("--resume", ""))])
 	var parts :=[w.brain, w.property, w.business, w.construction, w.fauna, w.farm, w.quests, w.manor_work, w.carts, w.relations]
 	if parts.has(null):                   # a game script failed to compile: stop with an error rather than run on broken
@@ -2398,8 +2399,9 @@ func _fr_extinct(day: int, limit: int) -> bool:
 	return false
 
 
-## The end of a chained segment: the world's own save (JSON, as SaveStore writes it) and the harness's records (ledger start, samples,
-## counts: every script variable but the world), gzip-compressed, for --resume in the next job.
+## The end of a chained segment: the world's own save (JSON, as SaveStore writes it), the world's running counters (World.stats, which
+## a save does not hold and the ledgers read) and the harness's records (ledger start, samples, counts: every script variable but the
+## world), gzip-compressed, for --resume in the next job.
 func _fr_write(path: String, seed: int, day: int, start: Dictionary, samples: Array) -> void:
 	if path == "":
 		printerr("economy_sim: --save-at needs --state PATH")
@@ -2417,7 +2419,7 @@ func _fr_write(path: String, seed: int, day: int, start: Dictionary, samples: Ar
 		printerr("economy_sim: cannot write the state file %s" % path)
 		return
 	f.store_string(var_to_str({"format": FR_STATE, "seed": seed, "day": day, "commit": OS.get_environment("MML_COMMIT"), "harness": h,
-		"harness_start": start, "samples": samples, "world": ws}))
+		"harness_start": start, "samples": samples, "world": ws, "world_stats": w.stats}))
 	f.close()
 	print("SEGMENT day %d seed %d: the world (%d bytes of save) and the harness saved to %s; fingerprint %s" % [day, seed, ws.length(), path, _fingerprint()])
 

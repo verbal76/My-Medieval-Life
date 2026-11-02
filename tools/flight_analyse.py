@@ -559,18 +559,21 @@ class Analyser:
                          ["trade", "economy"], npc=actor, day_from=day, day_to=day, count=n, events=[self.dup_ev[(actor, day, minute, detail)]],
                          evidence={"minute": minute, "detail": detail})
         # contracts failing repeatedly for the same party and item
-        cf = defaultdict(lambda: [0, 0, []])
+        cf = defaultdict(lambda: [0, 0, [], [], []])     # (party, item) -> [failed, fulfilled, contracts, days, events]
         for obj, c in self.contracts.items():
             k = (c["actor"], c["item"])
             if any(s in ("cancelled", "lapsed") for s in c["states"]):
                 cf[k][0] += 1
                 cf[k][2].append(obj)
+                cf[k][3] += [c["day0"], c["day1"]]
+                cf[k][4] += c["ids"][:1]
             if "fulfilled" in c["states"]:
                 cf[k][1] += 1
-        for (actor, item), (bad, good, objs) in cf.items():
+        for (actor, item), (bad, good, objs, days, evs) in cf.items():
             if bad >= T["contract_fail_party"] and good == 0:
                 self.add("MEDIUM", "contracts_failing", "%s: %d contracts for %s failed, none fulfilled" % (actor, bad, item or "goods"),
-                         ["contracts", "economy"], npc=actor, count=bad, evidence={"contracts": objs[:10]})
+                         ["contracts", "economy"], npc=actor, count=bad, day_from=min(days), day_to=max(days), events=evs,
+                         evidence={"contracts": objs[:10], "states": dict(Counter(st for o in objs for st in self.contracts[o]["states"]))})
         # cascades: hours with far more failures than usual
         fails = sorted(x[1] for x in self.hourly_fail if x[1])
         if fails:
@@ -831,8 +834,10 @@ def workbook_spec(r, an, logs, checks):
     findings = r["findings"]
     sheets = []
 
-    def sheet(name, blocks):
-        sheets.append({"name": name, "blocks": [b for b in blocks if b]})
+    FW = [7, 13, 10, 60, 12, 8, 8, 8, 26, 22, 70, 50]          # column widths of a sheet led by a findings table
+
+    def sheet(name, blocks, widths=None):
+        sheets.append({"name": name, "blocks": [b for b in blocks if b], "widths": widths or []})
 
     def blk(title, header, rows, charts=None, cap=5000):
         return {"title": title, "header": header, "rows": [[_r(v) for v in row] for row in rows[:cap]], "charts": charts or []}
@@ -854,8 +859,11 @@ def workbook_spec(r, an, logs, checks):
                                      ["archive checks", "all ok" if checks and all(c["ok"] for c in checks) else ("not run" if not checks else "PROBLEMS: see Currency and Inventory Integrity")],
                                      ["villagers start / end", "%s / %s" % (D[days[0]].get("alive") if days else None, D[days[-1]].get("alive") if days else None)],
                                      ["read me", "A village is allowed to fail; the simulation is not (WDR-022). CRITICAL = confirmed defect; HIGH and MEDIUM = suspicions with evidence; INFORMATIONAL = observations."]]),
-        blk("Most significant findings", fhead, [frow(f) for f in top[:25]] or [["-", "none", "", "no CRITICAL, HIGH or MEDIUM finding", "", None, None, 0, "", "", "", ""]]),
-    ])
+        blk("Most significant findings", ["finding", "what", "NPC", "from day", "to day", "count", "systems", "events", "evidence", "reproduce"],
+            [["%s %s %s" % (f["id"], f["severity"], "confirmed" if f["confirmed"] else "suspected"), f["title"], f["npc"], f["day_from"], f["day_to"], f["count"],
+              ", ".join(f["systems"]), json.dumps(f["events"][:5]), json.dumps(f["evidence"], default=str)[:600], f.get("reproduce", "")] for f in top[:25]]
+            or [["none", "no CRITICAL, HIGH or MEDIUM finding", "", None, None, 0, "", "", "", ""]]),
+    ], [32, 90, 14, 9, 9, 8, 26, 22, 70, 50])
     # 2. Population and survival
     pop = [[d, D[d].get("alive"), D[d].get("households"), D[d].get("adults"), D[d].get("children"), D[d].get("elders"), D[d].get("births"),
             D[d].get("deaths"), D[d].get("villager_deaths", 0), D[d].get("death:starvation", 0), _r(D[d].get("mean_hunger")), D[d].get("starving_hours", 0),
@@ -937,7 +945,7 @@ def workbook_spec(r, an, logs, checks):
         blk("Longest failure streaks (all, for context)", ["actor", "action", "target", "longest streak", "from day", "to day", "most in one day", "failed total", "ok total"],
             sorted([[a, k, key, b[0], b[1], b[2], st["bestday"][0], st["fail"], st["ok"]] for (a, k, key), st in an.fail.items() for b in [an._best(st)] if b],
                    key=lambda x: -x[3])[:200]),
-    ])
+    ], FW)
     # 10. System interaction anomalies
     sheet("System Interaction Anomalies", [
         blk("", fhead, [frow(f) for f in findings if f["kind"] in ("station_contention", "failure_cascade", "stuck_npc", "duplicate_trades", "starving_with_means",
@@ -946,7 +954,7 @@ def workbook_spec(r, an, logs, checks):
         blk("Failed actions and navigation failures by day", ["day", "failed actions", "walk lost", "actions"],
             [[d, D[d].get("actions_failed_h", 0), D[d].get("walk_lost_h", 0), D[d].get("actions_h", 0)] for d in days],
             [{"type": "line", "title": "Failures over the year", "y_cols": [1, 2], "y_title": "a day"}]),
-    ])
+    ], FW)
     # 11. Currency and inventory integrity
     integ = [[s["segment"], s["stop_reason"], s["start_day"], s["days_reached"], s["ok"], s["script_errors"], "; ".join(s["fatal"])[:500]] for s in st["segments"]]
     sheet("Currency and Inventory", [
@@ -964,7 +972,7 @@ def workbook_spec(r, an, logs, checks):
         blk("", fhead, [frow(f) for f in findings if f["severity"] in ("CRITICAL", "HIGH")] or [["-", "none", "", "no CRITICAL or HIGH finding", "", None, None, 0, "", "", "", ""]]),
         blk("Deaths", ["day", "minute", "person", "cause", "detail", "event"], [d for d in an.deaths if "role=bandit" not in d[4]], cap=3000),
         blk("Deaths by cause", ["cause", "deaths"], Counter(d[3] for d in an.deaths if "role=bandit" not in d[4]).most_common()),
-    ])
+    ], FW)
     # 13. Trends and graphs
     sheet("Trends and Graphs", [
         blk("", ["day", "villagers alive", "employed", "food days in store", "median household purse", "treasury", "starving villager-hours", "trades"],
