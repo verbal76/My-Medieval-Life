@@ -29024,6 +29024,40 @@
    ]
   },
   {
+   "id": "HAG-MEM-02",
+   "kind": "approved",
+   "title": "Permanent GitHub memory, decision history (with rationale) and CI reporting: six memory components, a decision-rationale standard, known-issues record, recovery entry point, Markdown+JSON CI reports even on failure, durable conclusions in the repository",
+   "description": "Permanent GitHub memory, decision history (with rationale) and CI reporting: six memory components, a decision-rationale standard, known-issues record, recovery entry point, Markdown+JSON CI reports even on failure, durable conclusions in the repository",
+   "source": "docs/directives/2026-11-02_hag_permanent_github_memory_reporting_directive.md",
+   "owner_wording": "Establish GitHub as the permanent project memory and require detailed CI reporting and documented development reasoning.",
+   "approval": "owner directive 2026-11-02 (Hot Attic Games permanent operating requirement)",
+   "acceptance": [
+    "Reconnaissance of the repository and the latest 20 Actions runs; existing components reused, gaps filled without competing systems",
+    "Decision-rationale standard and records: problem, owner direction (quoted, separate from interpretation), reasoning and alternatives (UNKNOWN where unknown), consequences, implementation, reconsideration",
+    "Known issues and investigations record with symptoms, reproduction, causes, failed approaches, status, resolution and evidence",
+    "CI workflows write a Markdown job summary and a JSON report (identification, purpose, tests attempted/passed/failed/skipped, failures, outcome classification) even when tests fail, without hiding failures",
+    "This directive recorded as an owner process decision with its rationale; recovery entry point names where to begin"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [
+    "DOC-CONT-01"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-02",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-02_hag_permanent_github_memory_reporting_directive.md"
+    }
+   ]
+  },
+  {
    "id": "HEALTH-01",
    "title": "Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions)",
    "kind": "approved",

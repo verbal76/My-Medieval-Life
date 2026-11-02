@@ -61,13 +61,14 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 
-## Approved, no build assigned (17)
+## Approved, no build assigned (18)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
 | CON-02-KINDS | CON-02 unfinished service kinds: further labour and service contracts beyond dig and survey (e.g. work on the buyer's materials with existing recipes), tracked as open dependencies of the Build 17 approval | approved | OWNER APPROVED | NOT STARTED |
 | DCR-01 | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control | rule | PROPOSED | NOT STARTED |
 | DOC-CONT-01 | Permanent development documentation and AI continuity: one current-state entry point, a chronological development changelog, SHA-bound test evidence with status levels, worker recovery records, an 11-step recovery procedure usable by any assistant | approved | OWNER APPROVED | NOT STARTED |
+| HAG-MEM-02 | Permanent GitHub memory, decision history (with rationale) and CI reporting: six memory components, a decision-rationale standard, known-issues record, recovery entry point, Markdown+JSON CI reports even on failure, durable conclusions in the repository | approved | OWNER APPROVED | NOT STARTED |
 | ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | approved | OWNER APPROVED | INTEGRATED |
 | MP-ADOPTION-AGENCY | Adoption agency concept (future, separate design item) | approved | DEFERRED | NOT STARTED |
 | RECON-01 | Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off | approved | OWNER APPROVED | INTEGRATED |
