@@ -14,8 +14,9 @@ extends RefCounted
 ## own mouth on the surface (its own portal) and its own salt, so its passages are not the gallery's. Maps of different
 ## levels may lie under the same ground (levels stack); `levels_at` lists every level a point may lie on.
 
-const GEN_VERSION := 3                 # 2 (MIN-F): the natural cave under the hill added (the adit gallery is unchanged);
-                                       # 3 (MIN-F2): hidden ore in the deep rock of every level (nothing visible moved)
+const GEN_VERSION := 4                 # 2 (MIN-F): the natural cave under the hill added (the adit gallery is unchanged);
+                                       # 3 (MIN-F2): hidden ore in the deep rock of every level (nothing visible moved);
+                                       # 4 (B25 Decision 5): one hidden tin vein last on every level (nothing before it moved)
 const SURFACE := 0
 
 var seed := 1

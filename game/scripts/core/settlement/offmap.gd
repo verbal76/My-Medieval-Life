@@ -2244,6 +2244,7 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 		s.biz[t] = _biz_from(d.biz[t])
 	for t in d.get("closed", {}):
 		s.closed[t] = _biz_from(d.closed[t])
+	s.add_new_outputs()
 	var dv: Dictionary = d.get("dev", {})
 	s.dev = {"seen": _ints(dv.get("seen", {})), "streak": _ints(dv.get("streak", {}))}
 	var g: Dictionary = (d.gov as Dictionary).duplicate(true)
@@ -2281,6 +2282,27 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 
 
 ## A business as saved (an older save has no `idle`).
+## B25 Decision 5 (additive save migration): a business saved before an output was added to its type (the weavers' raw
+## silk) or to its settlement's diggings (Garton's tin and its finite reserve) gains it, as a new world would have it;
+## nothing it already has changes. The ground's reserve is geology (like the hill's hidden veins, regenerated from the
+## data), never goods: nothing enters any stock until it is worked.
+func add_new_outputs() -> void:
+	var spec := {}
+	for sp in data().settlements:
+		if str(sp.id) == id:
+			spec = sp
+	for t in biz:
+		var b: Dictionary = biz[t]
+		if not b.has("out"):
+			b.out = {}
+		var outs: Dictionary = spec.get("quarry", {}) if str(t) == "quarry" else btype(str(t)).get("out", {})
+		for k in outs:
+			if not (b.out as Dictionary).has(k):
+				b.out[k] = outs[k]
+				if str(t) == "quarry" and (spec.get("reserves", {}) as Dictionary).has(k) and not (b.reserves as Dictionary).has(k):
+					b.reserves[k] = int(spec.reserves[k])
+
+
 static func _biz_from(bd: Dictionary) -> Dictionary:
 	var b: Dictionary = bd.duplicate(true)
 	for k in ["till", "reserve", "horses", "foal", "fed_miss"]:

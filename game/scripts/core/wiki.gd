@@ -434,6 +434,10 @@ func _items() -> void:
 			rows.append(["Works as", "a %s%s" % [tool_kind_name(str(it.tool)), "" if kin.is_empty() else " (so does the " + " or the ".join(kin) + ")"]])     # GP-WIKI-RECIPE-TOOLS
 		if PlayerState.bonus_text(id) != "":
 			rows.append(["Bonus", PlayerState.bonus_text(id) + " while worn"])
+		if PlayerState.latent_text(id) != "":
+			rows.append(["Not in the game yet", PlayerState.latent_text(id)])     # B25 Decision 6: a latent bonus does nothing
+		if it.get("clothing", false):
+			rows.append(["Clothing", "for looks only: no armour, no bonus"])     # B25 Decision 7
 		if it.has("plant"):
 			rows.append(["Grows into", "a %s tree" % it.plant])
 		var blocks := [stats(rows)]

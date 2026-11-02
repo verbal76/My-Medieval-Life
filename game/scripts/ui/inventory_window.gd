@@ -322,6 +322,10 @@ func _build_details() -> void:
 		lines.append("Swings %s." % ("faster" if float(it.attack_speed) > 1.0 else "slower"))     # WEAPON-CATALOG-01
 	if PlayerState.bonus_text(id) != "":
 		lines.append("While worn: %s." % PlayerState.bonus_text(id))     # ARMOR-CATALOG-01: every worn bonus, by name
+	if PlayerState.latent_text(id) != "":
+		lines.append("Not in the game yet: %s." % PlayerState.latent_text(id))     # B25 Decision 6: never shown as working
+	if GameData.item(id).get("clothing", false):
+		lines.append("Clothing: worn for looks, no armour and no bonus.")     # B25 Decision 7
 	if str(it.get("class", "")) != "":
 		lines.append("%s piece; made to order by the %s." % [str(it["class"]).capitalize(), GearOrders.maker_job(id)])
 	if it.has("durability"):

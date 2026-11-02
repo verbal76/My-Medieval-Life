@@ -12,9 +12,11 @@ const CHASE_RANGE := 25.0    # a chase is given up beyond this many tiles (NPCBr
 
 # what each job buys, with the stock it stops buying at
 const BUYS := {
-	"smith": {"iron_ore": 30, "copper_ore": 20, "gold_ore": 10, "coal": 30, "plank": 10, "leather": 6},
+	"smith": {"iron_ore": 30, "copper_ore": 20, "gold_ore": 10, "coal": 30, "plank": 10, "leather": 6,
+		"tin_ore": 10},                      # B25 Decision 5: tin for bronze (smelt_tin, alloy_bronze)
 	"carpenter": {"log": 30, "shovel_blade": 1},      # MIN-SHOVEL: one smith's blade on hand for a shovel to order
-	"tanner": {"hide": 15, "rabbit_pelt": 15, "wool": 12},          # wool: woven into cloth (Build 13)
+	"tanner": {"hide": 15, "rabbit_pelt": 15, "wool": 12,          # wool: woven into cloth (Build 13)
+		"silk": 4},                         # B25 Decision 5: raw silk woven into fine cloth (weave_fine_cloth)
 	"sage": {"flower": 20, "linen_bandage": 8, "ale": 2},   # flowers for poultices and tonics (PL1-04); bandages the tanner sews (Build 13); ale for the strong tonic (PAR-04)
 	"cook": {"wheat": 60, "meat": 15, "log": 10, "egg": 20, "milk": 12, "cheese": 10, "carrot": 20, "potato": 20},    # the last five: the player's farm goods (PL2-015)
 	"tavernkeeper": {"pottage": 60, "roast_meat": 20, "ale": 20, "bread": 12, "cheese": 8},    # bread and cheese: the tavern's suppers (Build 13)
@@ -32,6 +34,7 @@ const BUYS := {
 		"copper_ring": 3, "gold_ring": 2, "amulet": 2, "leather_cap": 3, "iron_helmet": 2, "plough": 2,     # plough: PAR-04
 		"herbal_poultice": 8,                      # households' home-brewed poultices, brought to market (B14)
 		"boar_tusk": 10, "antler": 10,             # ARMOR-MATERIALS-01 (Build 22): hunters' tusks and antlers, sold on to whoever commissions gear
+		"fur": 6, "fine_cloth": 4,               # B25 Decision 5: the tanner's dressed fur and silk cloth, for commissions
 		"nails": 24, "mallet": 2, "chisel": 2,     # STONE-06: the smith's iron chisels, forged to order for the dressers; B14-07: the stuff of wooden stairs and walkways, forged and made to order (PAR-04)
 		"shovel": 2},                              # MIN-SHOVEL (owner MIN-E-Q4): diggers' shovels, assembled to order
 }
@@ -58,6 +61,7 @@ const OUTLETS := {
 	"plank": ["smith", "merchant_raw"], "wheat": ["cook", "merchant_food"], "meat": ["cook", "merchant_food"],
 	"hide": ["tanner", "merchant_goods"], "rabbit_pelt": ["tanner", "merchant_goods"], "feather": ["merchant_goods"], "leather": ["smith", "merchant_goods"],
 	"boar_tusk": ["merchant_goods"], "antler": ["merchant_goods"],    # ARMOR-MATERIALS-01: a hunter's tusks and antlers, for the catalogue's special pieces
+	"tin_ore": ["smith"], "fur": ["merchant_goods"], "fine_cloth": ["merchant_goods"], "silk": ["tanner"],     # B25 Decision 5
 	"pottage": ["tavernkeeper", "merchant_food"], "roast_meat": ["tavernkeeper", "merchant_food"], "ale": ["tavernkeeper", "merchant_food", "sage"],
 	"flower": ["sage"],                       # FSE-B07: the Apothecary buys foragers' flowers (BUYS.sage)
 	"egg": ["cook", "merchant_food"], "milk": ["cook", "merchant_food"], "cheese": ["tavernkeeper", "cook", "merchant_food"],
@@ -81,7 +85,9 @@ const COOKED := ["roast_meat", "pottage", "ale", "cheese", "bread"]     # cheese
 const EDIBLE := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread", "red_berries", "blueberries", "apple", "egg", "milk", "carrot", "potato"]
 # the mine's raw output: finite, and the forge's and the builders' own input. The caravan sells it to
 # the village (when the seams are worked out) but does not carry the village's away (B7-007)
-const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "rubble", "building_block"]     # STONE-01: blocks are the village's stone, dressed
+const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "rubble", "building_block", "tin_ore"]     # STONE-01: blocks are the village's stone, dressed
+# what a miner digs and carries to sale: the ores and stone of the seams (B25 Decision 5: tin last, so nothing before it moves)
+const MINED_ORES := ["iron_ore", "coal", "copper_ore", "stone", "gold_ore", "tin_ore"]
 
 var w: World
 var noted := {}          # one-off notes already written
@@ -1307,7 +1313,7 @@ func _idle_at_work(n: NPC, why: String) -> bool:
 
 func _miner(n: NPC) -> bool:
 	if not n.inv.has("pickaxe"):
-		for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
+		for o in MINED_ORES:
 			if n.inv.has(o) and _buyer_for(n, o) != null:
 				return _plan_sell_all(n)
 		return _get_tool(n, "pickaxe")
@@ -1316,7 +1322,7 @@ func _miner(n: NPC) -> bool:
 		var raw := _buyer_for(n, "stone")
 		ores = ["stone"] if raw != null else ["coal"]
 	var carried := 0
-	for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
+	for o in MINED_ORES:
 		carried += n.inv.count(o)
 	var mcp := w.mine_works.supply.miner_cart_plan(n) if carried == 0 else []
 	if not mcp.is_empty():
@@ -1340,7 +1346,7 @@ func _miner(n: NPC) -> bool:
 				return true
 		# the wanted seams are worked out: mine only what someone will still buy
 		var sellable := []
-		for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
+		for o in MINED_ORES:
 			if _buyer_for(n, o) != null and _can_mine(n, o):
 				sellable.append(o)
 		if not sellable.is_empty():
@@ -1348,7 +1354,7 @@ func _miner(n: NPC) -> bool:
 	if d.is_empty():
 		if carried > 0:
 			return _plan_sell_all(n)
-		if w.nearest_seam(n, ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"].filter(func(o: String) -> bool: return _can_mine(n, o))).is_empty():
+		if w.nearest_seam(n, MINED_ORES.filter(func(o: String) -> bool: return _can_mine(n, o))).is_empty():
 			# the mine is worked out: the manor takes on those who lose their living
 			_change_job(n, "manor_hand", "the mine is worked out")
 			return false
@@ -1486,6 +1492,16 @@ func _tanner(n: NPC) -> bool:
 		list.append("weave_cloth")
 	if sage != null and sage.alive and wants(sage, "linen_bandage") >= 3 and n.inv.count("linen_bandage") < 3:
 		list.append("sew_bandages")
+	# B25 Decision 5: fur (dressed pelts or hides) and fine cloth (woven raw silk) for a buyer, a couple at a time
+	for id in ["fur", "fine_cloth"]:
+		if n.inv.count(id) > 0 and _buyer_for(n, id) != null:
+			return _plan_sell(n, id)
+	if _buyer_for(n, "fur") != null:
+		for r in ["dress_fur", "dress_fur_hide"]:
+			if _can_make(n, r):
+				list.append(r)
+	if _buyer_for(n, "fine_cloth") != null and _can_make(n, "weave_fine_cloth"):
+		list.append("weave_fine_cloth")
 	for id in ["leather_cap", "leather_armor"]:        # PAR-04: for a buyer, once the hides are tanned
 		if n.inv.count(id) > 0 and _buyer_for(n, id) != null:
 			return _plan_sell(n, id)
@@ -1500,6 +1516,9 @@ func _smith(n: NPC) -> bool:
 		return _do_recipe(n, "smelt_iron")
 	if inv.has_all({"copper_ore": 2, "coal": 1}) and inv.count("copper_bar") < 6:
 		return _do_recipe(n, "smelt_copper")
+	# B25 Decision 5: tin ore (the hill's veins, the caravan's) is smelted into a bar or two for bronze
+	if inv.has_all({"tin_ore": 2, "coal": 1}) and inv.count("tin_bar") < 2 and _can_make(n, "smelt_tin"):
+		return _do_recipe(n, "smelt_tin")
 	# PAR-04: gold ore is smelted when someone wants the bar or a gold ring, and the smith has Smithing 3
 	if inv.has_all({"gold_ore": 2, "coal": 1}) and inv.count("gold_bar") < 2 and _can_make(n, "smelt_gold") \
 			and (_buyer_for(n, "gold_bar") != null or _buyer_for(n, "gold_ring") != null):
@@ -1555,6 +1574,14 @@ func _smith(n: NPC) -> bool:
 		if inv.count(out) < 1 and inv.has_all(GameData.recipes[r].in) and _can_make(n, r) and _buyer_for(n, out) != null:
 			wants.append([inv.count(out), r])
 			for_buyer.append(r)
+	# B25 Decision 5: a few steel and bronze bars kept for the armour and weapons ordered (GearOrders takes them from stock);
+	# steel only from iron beyond the three bars a tool needs, and not while the manor's order waits for the iron
+	for r in ["make_steel", "alloy_bronze"]:
+		if ordered and (GameData.recipes[r].in as Dictionary).has("iron_bar"):
+			continue
+		var out: String = GameData.recipes[r].out.keys()[0]
+		if inv.count(out) < 2 and inv.has_all(GameData.recipes[r].in) and _can_make(n, r) and (r != "make_steel" or inv.count("iron_bar") >= 3):
+			wants.append([inv.count(out), r])
 	wants.sort()
 	if not wants.is_empty():
 		var rs: Array = wants.map(func(x: Array) -> String: return x[1])
@@ -5324,6 +5351,28 @@ func _caravan_imports(on_road := []) -> int:
 					break                          # no trader on the road carries any
 				if not w.claims_release(o, EconReservations.COINS, price, id):
 					break                          # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
+				seller.sell_to_village(id, 1, price)
+				w.note_settlement_trade(o, seller)
+				o.coins -= price
+				o.spent += price
+				o.inv.add(id)
+				w.coin_sources -= price
+				w.stat("caravan_coins_out", price)
+				spent += price
+				w.stat("imported_" + id)
+	# B25 Decision 5: a trade's imported input (balance.json caravan_trade_imports: raw silk for the tanner's fine cloth), only
+	# while the trade can work it and someone wants what it makes, from the traders' own stock (none made for the sale)
+	var trade_in: Dictionary = GameData.b("caravan_trade_imports")
+	for id in trade_in:
+		var spec: Dictionary = trade_in[id]
+		var price := maxi(1, roundi(GameData.value(id) * float(GameData.b("caravan_import_markup"))))
+		for o: NPC in w.npcs:
+			if not o.alive or o.job != str(spec.job) or not _can_make(o, str(spec.recipe)) or _buyer_for(o, str(spec["for"])) == null:
+				continue
+			while o.inv.count(id) < int(spec.stock) and w.can_afford(o, price, false, id):
+				var seller: OffMapSettlement = w.regions.seller_for(id, on_road)
+				if seller == null or not w.claims_release(o, EconReservations.COINS, price, id):
+					break
 				seller.sell_to_village(id, 1, price)
 				w.note_settlement_trade(o, seller)
 				o.coins -= price
