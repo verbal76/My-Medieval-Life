@@ -61,6 +61,39 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
 
 ## 2026-11-02
 
+**B25-NINE-D5..D7: materials, armour bonuses, cosmetic clothing.**
+- Branch: `wip/b25-materials`, merged as `48acc91`. Commits: `041a67c` (WIP), `017d357` (catch-up merge), `394e77d` (the remaining
+  work: resources, six icons through the pipeline, wiki, INT-671, DECISIONS row, `materials_b25_test`), and `c7c51f1`, `5fd39b9`
+  and `c1dfb02` (existing tests updated for the tin seam; the lead reviewed them and none was loosened).
+- Change:
+  - Material pathways:
+    - Tin: hidden veins, Garton diggings and caravan stock.
+    - Bronze: smelted from copper, tin and coal.
+    - Steel: iron and coal.
+    - Fur: dressed from a hide or pelts.
+    - Silk: neighbouring towns' weavers, sold through the caravan.
+    - Antlers and tusks: unchanged, from killed animals.
+  - Bronze and steel gear now uses real bars.
+  - Armour pieces are marked physical, regional, rare or elemental.
+  - One working regional bonus: samurai armour gives +1 damage with a sword.
+  - Frost, lightning, wind and mounted bonuses are recorded but not applied (no system for them yet), and shown as "not in the
+    game yet".
+  - 33 ordinary clothes are cosmetic. **This removes stats players had:** the musketeer and hunter hats and the traveller's robe
+    lose armour and stamina, as Decision 7 requires.
+- Status: INTEGRATED, TESTED (local).
+- Evidence:
+  - On `c1dfb02`: materials_b25 104, run_tests 3602, 25+ suites, Python tests, all with 0 failures.
+  - check_resources, check_interactions and check_assets: 0 problems.
+  - check_materials open findings went from 20 to 28, because the new materials have few uses. They are left open, not excepted.
+  - 30-day seed 1: no errors or leaks. Tin, bronze, steel and fur were made. **No villager used them** (only player orders do). No
+    silk was bought (likely the tanner's Crafting level, unconfirmed).
+- Outstanding:
+  - Villager demand for the new materials.
+  - Silk has no village-grown source (no silkworm system).
+  - Elemental bonuses wait on a magic system.
+  - The tin seam has not been looked at underground.
+  - An older-save edge case: a hidden vein beside an already-cut cell is not exposed.
+
 **JUICE-J1 (B25-NINE-D9): game juice J1 and J2.**
 - Branch: `wip/b25-juice`, merged as `ba94edd`. Commits:
   - `efd0cd0`: implementation and wiki.

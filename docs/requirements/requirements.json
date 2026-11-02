@@ -6146,6 +6146,11 @@
      "date": "2026-11-01",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "implemented and merged into the Build 25 source at 48acc91 (wip/b25-materials c1dfb02). Tests local on c1dfb02: materials_b25 104, run_tests 3602, gear_catalogue 61, armour_worn 264, combat 41, crafts 20, equip 51, trade_skills 96, wildlife 61, underground suites 95/113/90, discovery 66, regions 120, settlement 89, luxury 122, interdependency 30, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, save_continuity 5, multiplayer_c 340, start 523, tailor_barber, wiki_test; Python 164 OK; check_resources/interactions/assets 0 problems; check_materials open findings 20 -> 28 (new materials thinly used, left open). 30-day seed 1: no errors or leaks; tin, bronze, steel and fur made, none used by villagers; no silk bought."
     }
    ]
   },
@@ -6175,6 +6180,11 @@
      "date": "2026-11-01",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "implemented and merged into the Build 25 source at 48acc91 (wip/b25-materials c1dfb02). Tests local on c1dfb02: materials_b25 104, run_tests 3602, gear_catalogue 61, armour_worn 264, combat 41, crafts 20, equip 51, trade_skills 96, wildlife 61, underground suites 95/113/90, discovery 66, regions 120, settlement 89, luxury 122, interdependency 30, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, save_continuity 5, multiplayer_c 340, start 523, tailor_barber, wiki_test; Python 164 OK; check_resources/interactions/assets 0 problems; check_materials open findings 20 -> 28 (new materials thinly used, left open). 30-day seed 1: no errors or leaks; tin, bronze, steel and fur made, none used by villagers; no silk bought."
     }
    ]
   },
@@ -6204,6 +6214,11 @@
      "date": "2026-11-01",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "implemented and merged into the Build 25 source at 48acc91 (wip/b25-materials c1dfb02). Tests local on c1dfb02: materials_b25 104, run_tests 3602, gear_catalogue 61, armour_worn 264, combat 41, crafts 20, equip 51, trade_skills 96, wildlife 61, underground suites 95/113/90, discovery 66, regions 120, settlement 89, luxury 122, interdependency 30, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, save_continuity 5, multiplayer_c 340, start 523, tailor_barber, wiki_test; Python 164 OK; check_resources/interactions/assets 0 problems; check_materials open findings 20 -> 28 (new materials thinly used, left open). 30-day seed 1: no errors or leaks; tin, bronze, steel and fur made, none used by villagers; no silk bought."
     }
    ]
   },
