@@ -122,6 +122,15 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**Owner directive: permanent flight recorder system (FLIGHT-REC-01), 2026-11-02.**
+- The directive is saved verbatim.
+- "Run flight recorder" is now a standing command: a 365-day, two-seed, recorded GitHub campaign with anomaly detection, an Excel
+  workbook, findings and preserved evidence, needing no further approval.
+- CLAUDE.md (on `wip/requirements-control`) documents the command and the "What did the flight recorder find?" review.
+- Implementation started on `wip/b25-flight-recorder`, reusing the existing recorder, archive check, workbook builder and
+  long-sims.
+- The first campaign goes on the leak-fix commit, because the known `coin_sources` defect could stop it.
+
 **Owner directive: chapel economic purpose (CHAPEL-PURPOSE, CHAPEL-LENDING), 2026-11-02.**
 - The directive is saved verbatim.
 - What the owner set:
