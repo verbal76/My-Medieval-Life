@@ -30,6 +30,9 @@ func _init() -> void:
 	_test_roads_reachable()
 	print("reachable ", Time.get_ticks_msec() - tp); tp = Time.get_ticks_msec()
 	_test_regions()
+	_test_sites(1)
+	_test_sites(2)
+	print("sites ", Time.get_ticks_msec() - tp); tp = Time.get_ticks_msec()
 	print("overworld core tests took ", Time.get_ticks_msec() - t0, " ms")
 	main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
@@ -555,3 +558,53 @@ func _run_scene() -> void:
 	check(w2.trees.size() >= main.map.data.trees.size(), "the village's trees are all there")
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
+
+
+## REGION-NAV-01 (Build 25 scope, AD-1): the five neighbouring settlements stand in the overworld at their own positions
+## (OffMapSettlement.pos: x across, miles x tiles_per_mile south of the village's centre), cleared like the village, joined to
+## the road network, and reachable on foot from the village; the same seed places them the same way; a generation-2 save's tree
+## planted where a site now stands is dropped and counted.
+func _test_sites(seed_value: int) -> void:
+	var m := VillageMap.load_default()
+	var o := Overworld.create(seed_value, m)
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/settlements.json"))
+	check(o.sites.size() == (data.settlements as Array).size() and o.sites.size() == 5, "seed %d: five settlement sites (%d)" % [seed_value, o.sites.size()])
+	var again := Overworld.create(seed_value, m)
+	var same := true
+	for k in o.sites.size():
+		same = same and o.sites[k].center == again.sites[k].center and o.sites[k].rect == again.sites[k].rect
+	check(same, "seed %d: the same seed places the sites the same way" % seed_value)
+	var box := Rect2i(-200, -40, 520, 0)
+	for k in o.sites.size():
+		var st: Dictionary = o.sites[k]
+		var spec: Dictionary = data.settlements[k]
+		var want := o.village.get_center() + Vector2i(int(spec.get("x", 0)), int(spec.miles) * int(data.tiles_per_mile))
+		check(st.center == want and str(st.id) == str(spec.id), "%s stands at its recorded place %s (%d miles)" % [st.name, want, int(spec.miles)])
+		var blocked := 0
+		var road := 0
+		for y in range(st.rect.position.y, st.rect.end.y):
+			for x in range(st.rect.position.x, st.rect.end.x):
+				if o.is_solid(Vector2i(x, y)):
+					blocked += 1
+				if o.is_road(Vector2i(x, y)):
+					road += 1
+		check(blocked == 0, "%s: its site is clear ground (%d blocked cells)" % [st.name, blocked])
+		check(road > 0, "%s: a road runs into it (%d road cells)" % [st.name, road])
+		check(o.site_at(st.center) == st and o.site(str(st.id)) == st, "%s: found by cell and by id" % st.name)
+		box = box.merge(st.rect.grow(20))
+	var south: Vector2i = Vector2i.ZERO
+	for e in m.exits():
+		if e.side == 2:
+			south = e.out
+	var seen := _flood(o, [south], box)
+	var lost := []
+	for st in o.sites:
+		if not seen.has(st.center):
+			lost.append(st.name)
+	check(lost.is_empty(), "seed %d: every settlement is reachable on foot from the village's south gate (%d cells open; cut off: %s)" % [seed_value, seen.size(), lost])
+	# a generation-2 save planted a tree where a site now stands: dropped and counted, not placed in the settlement
+	var st0: Dictionary = o.sites[0]
+	var c: Vector2i = st0.center + Vector2i(3, 3)
+	var o2 := Overworld.create(seed_value, m)
+	o2.load_dict({"seed": seed_value, "gen": 2, "changes": [{"x": c.x, "y": c.y, "state": "sapling", "regrow": 0.0, "born": 0.0, "species": "oak_summer", "planted": true}], "rocks": [], "flowers": [], "works": []})
+	check(o2.dropped_in_sites == 1 and not o2.changes.has(c), "a generation-2 save's tree planted inside %s is dropped and counted" % st0.name)

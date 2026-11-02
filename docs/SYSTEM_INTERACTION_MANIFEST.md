@@ -3087,3 +3087,10 @@ Rules:
 | Settlements | INT-230, INT-231, INT-232, INT-233, INT-250, INT-251, INT-252, INT-260, INT-270, INT-271, INT-280, INT-281, INT-282, INT-290, INT-291, INT-300, INT-310, INT-311, INT-312, INT-313, INT-320, INT-321, INT-324, INT-325, INT-350, INT-380, INT-381, INT-405, INT-470, INT-471, INT-473, INT-601, INT-606, INT-620, INT-621, INT-622, INT-623, INT-643, INT-644, INT-652, INT-672, INT-673, INT-676 |
 
 <!-- index:end -->
+
+### INT-677 · The neighbouring settlements stand in the overworld (REGION-NAV-01, Build 25)
+- **Trigger:** Overworld.create (a new world or a loaded one): the settlement sites are placed from settlements.json; each chunk generated near a site keeps it clear.
+- **Source:** `game/scripts/core/overworld.gd::_setup_sites`, `game/scripts/core/overworld.gd::_vdist`, `game/scripts/core/overworld.gd::site_at`, `game/scripts/core/overworld.gd::load_dict`, `game/scripts/core/settlement/offmap.gd::create`
+- **Affects:** Overworld, Settlements, Movement, Save
+- **Expected:** (owner 2026-11-02, REGION-NAV-01 and B25-SCOPE-REGION) Each of the five settlements is a cleared 36 x 28 site centred on its OffMapSettlement.pos (x across, miles x tiles_per_mile south of the village centre), joined to the road network by roads to its three nearest road nodes, so it can be reached on foot; GEN_VERSION 3, generations 1 and 2 still load (a tree an older save planted inside a site is dropped and counted). The village gates' trails are unchanged.
+- **Tests:** `game/tests/overworld_test.gd::_test_sites` (place, clear ground, road, reachable from the south gate, determinism, older save), `game/tests/countryside_test.gd` (gate trails unchanged)

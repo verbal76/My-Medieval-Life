@@ -17,22 +17,21 @@ Both files are in `docs/directives/` on `wip/requirements-control`. Audit: `ARCH
 These are agent decisions, made within the directive and recorded in `docs/DECISIONS.md` as each one lands. None changes an
 approved rule; the continuity notes cite DCR-01.
 
-**AD-1. Settlements are physical places in the overworld at their recorded distance.**
-- **Where each one goes:**
-  - Each of the five settlements is placed at `miles × tiles_per_mile` from the village: 240-864 tiles.
-  - It sits on the overworld road node nearest that point, so the existing global road network reaches it.
-  - Wulstead lies on the road **south** (CANON: "the road south ... through Wulstead", `docs/expansion18/SETTLEMENTS.md`). The
-    other four bearings are **GAME EXPANSION**: fixed in `settlements.json` by sector, so the settlements spread around the
-    compass and never overlap.
-- **What a place is:** a cleared site with a market square and one building for each of its businesses, drawn with the
-  existing building art.
-- **Generation:** the overworld becomes generation 3. Saves of generations 1 and 2 still load (`GEN_COMPATIBLE`); only the
-  site areas change, and the saved changes (felled trees, works) inside a site are dropped and counted.
+**AD-1. Settlements are physical places in the overworld at their recorded positions.**
+- **Where each one goes:** each of the five stands at its existing `OffMapSettlement.pos`, relative to the village's centre:
+  `x` tiles across and `miles × tiles_per_mile` south, so 240-864 tiles. This is the one geography the regional trade already
+  measures distances by (`regions.gd`), and it matches the canon road south through Wulstead.
+- **What a place is:** a cleared site of 36 × 28 tiles (`settlements.json` "site"). It is kept clear like the village (no
+  cliffs, objects thinning out) and joined to the road network like a village gate, to its three nearest road nodes.
+- **Generation:** the overworld becomes generation 3. Saves of generations 1 and 2 still load. A tree an older save planted
+  inside a site is dropped and counted.
+- **Done in S1a:** `overworld_test` checks that the sites are deterministic, clear, joined by road and reachable on foot from
+  the south gate on seeds 1 and 2.
 - **Rejected alternatives:**
+  - New bearings. A first draft gave each settlement a bearing; that would have made a second geography.
   - Keep the settlements off-map. That contradicts the directive.
   - Run each settlement as a full second village, a World with walking villagers. That is about six times the simulation work
-    on an Android phone, against the OD-LE-15 target of about 4 ms a frame at 500 villagers, and it would duplicate the
-    settlement economy that is already audited.
+    on an Android phone, against the OD-LE-15 target, and it would duplicate the audited settlement economy.
 
 **AD-2. One economy per settlement: the existing books, with named people.**
 - `OffMapSettlement` and `SettlementParty` stay the settlement's economy, stepped daily, with the same conservation and audits.

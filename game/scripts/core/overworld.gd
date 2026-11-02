@@ -32,11 +32,11 @@ extends RefCounted
 ##  - Trees and rocks are single solid cells, never within a cell of each other or of a cliff, so
 ##    they cannot wall anything in. Flowers and bushes are walkable decoration.
 
-const GEN_VERSION := 2
+const GEN_VERSION := 3
 ## Generator versions whose saved changes still apply (their trees, rocks, flowers and roads are in the same cells): 2 (PL1-12,
 ## 2026-10-21) only draws the low red flower (tile 2656) among the wild flowers (overworld_tiles.json flowers), so a flower
 ## may be another colour than in version 1, and nothing else moved.
-const GEN_COMPATIBLE := [1, 2]
+const GEN_COMPATIBLE := [1, 2, 3]
 const CHUNK := 32
 const PAD := 4                           # cells computed round a chunk, so neighbours' rules need no other chunk
 const AREA := CHUNK + 2 * PAD
@@ -76,6 +76,15 @@ var works := {}                          # B14-07: Vector2i -> a cliff rim cell 
                                          # "walkway" (built), with "_ns" / "_ew" for the way it runs; saved like `changes`
 var works_version := 0                   # bumped on each change of `works` (the view redraws them)
 var clock := 0.0                         # the game minute (World keeps it): changed trees grow lazily by it
+## REGION-NAV-01 (owner 2026-11-02, Build 25 scope; docs/region_nav/IMPLEMENTATION_PLAN.md AD-1): the five neighbouring
+## settlements stand in the overworld. Each is a cleared site (settlements.json "site" w x h) centred on the settlement's own
+## position (OffMapSettlement.pos: x tiles across, miles x tiles_per_mile south of the village's centre, the one geography the
+## regional trade already measures distances by), kept clear like the village (no cliff within VILLAGE_CLEAR, objects thinning
+## from OBJECT_MARGIN) and joined to the road network like a village gate (to its three nearest road nodes). GEN_VERSION 3:
+## only the sites and their joining roads differ from generation 2.
+var sites: Array = []                    # {id, name, kind, center: Vector2i, rect: Rect2i}, in settlements.json order
+var _near_sites: Array = []
+var dropped_in_sites := 0              # REGION-NAV-01: planted trees of an older save dropped because a site now stands there              # the sites near the chunk being generated (_generate), for _vdist
 var cache := {}                          # Vector2i -> Chunk
 var generated := 0                       # chunks generated so far (tests: the cache bound, no work for loaded chunks)
 var _use := 0
@@ -94,7 +103,49 @@ static func create(world_seed: int, m: VillageMap) -> Overworld:
 	for e in m.exits():
 		o.gates.append({"out": e.out, "dir": e.dir})
 	o._setup_gates()
+	o._setup_sites()
 	return o
+
+
+## REGION-NAV-01: the settlement sites and the roads that join them to the network (see `sites`).
+func _setup_sites() -> void:
+	sites.clear()
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/settlements.json"))
+	var size := Vector2i(int(data.site.w), int(data.site.h))
+	var origin := village.get_center()
+	var si := 0
+	for spec in data.settlements:
+		var center := origin + Vector2i(int(spec.get("x", 0)), int(spec.miles) * int(data.tiles_per_mile))
+		sites.append({"id": str(spec.id), "name": str(spec.name), "kind": str(spec.kind), "center": center,
+			"rect": Rect2i(center - size / 2, size)})
+		var ci := fdiv(center.x, NODE)
+		var cj := fdiv(center.y, NODE)
+		var near: Array = []
+		for j in range(cj - 3, cj + 4):
+			for i in range(ci - 3, ci + 4):
+				var p := node_pos(i, j)
+				if not _node_excluded(p):
+					near.append([(p - center).length_squared(), i, j, p])
+		near.sort()
+		for k in mini(3, near.size()):
+			_links.append({"a": center, "b": near[k][3], "key": 2000 + si * 8 + k})
+		si += 1
+
+
+## REGION-NAV-01: the settlement site containing cell `c`, or {}.
+func site_at(c: Vector2i) -> Dictionary:
+	for st in sites:
+		if (st.rect as Rect2i).has_point(c):
+			return st
+	return {}
+
+
+## REGION-NAV-01: the site with this settlement id, or {}.
+func site(id: String) -> Dictionary:
+	for st in sites:
+		if str(st.id) == id:
+			return st
+	return {}
 
 
 # ---------------------------------------------------------------- integer noise --------------
@@ -285,6 +336,8 @@ func gate_trails() -> Array:
 	var base := -1
 	for li in _links.size():
 		var l: Dictionary = _links[li]
+		if int(l.key) >= 2000:
+			continue                              # REGION-NAV-01: a settlement site's road, not a village gate's trail
 		var j := (int(l.key) - 1000) % 8
 		if j == 0:
 			base = li
@@ -387,8 +440,15 @@ func _evict() -> void:
 
 
 func _vdist(x: int, y: int) -> int:
-	var dx := maxi(maxi(village.position.x - x, x - (village.end.x - 1)), 0)
-	var dy := maxi(maxi(village.position.y - y, y - (village.end.y - 1)), 0)
+	var d := _rdist(village, x, y)
+	for st in _near_sites:                    # REGION-NAV-01: a settlement site is kept clear like the village
+		d = mini(d, _rdist(st.rect, x, y))
+	return d
+
+
+func _rdist(r: Rect2i, x: int, y: int) -> int:
+	var dx := maxi(maxi(r.position.x - x, x - (r.end.x - 1)), 0)
+	var dy := maxi(maxi(r.position.y - y, y - (r.end.y - 1)), 0)
 	return maxi(dx, dy)
 
 
@@ -396,6 +456,11 @@ func _generate(cx: int, cy: int) -> Chunk:
 	generated += 1
 	var ox := cx * CHUNK - PAD
 	var oy := cy * CHUNK - PAD
+	_near_sites.clear()
+	var site_reach := Rect2i(ox, oy, AREA, AREA).grow(VILLAGE_CLEAR + OBJECT_RAMP + 2)
+	for st in sites:
+		if (st.rect as Rect2i).intersects(site_reach):
+			_near_sites.append(st)
 	var fe := _field(ox, oy, 1, [128, 64, 32])
 	var fm := _field(ox, oy, 2, [320, 160])
 	var ff := _field(ox, oy, 3, [96, 48, 24])
@@ -875,6 +940,9 @@ func load_dict(d: Dictionary) -> void:
 		var cell := Vector2i(int(e.x), int(e.y))
 		var t := {}
 		if bool(e.get("planted", false)):
+			if int(d.get("gen", GEN_VERSION)) < 3 and not site_at(cell).is_empty():
+				dropped_in_sites += 1             # REGION-NAV-01: a tree planted where a settlement now stands (a generation-2 save)
+				continue
 			t = {"x": cell.x, "y": cell.y, "trunk": -1, "top": -1, "bottom": -1, "ow": true, "planted": true}
 		else:
 			t = base_tree(cell)
