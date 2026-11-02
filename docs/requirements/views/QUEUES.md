@@ -18,7 +18,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (70)
+## Implemented but not tested (71)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -54,6 +54,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | EMP-PERM-01 | 20 | INTEGRATED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it |
 | EQ-05 | 16 | PARTIALLY IMPLEMENTED |  |
 | FARM-08 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
+| FLIGHT-REC-01 | 20 | INTEGRATED |  |
 | FR-11 | 19 | PARTIALLY IMPLEMENTED |  |
 | FSE-00 | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
 | LE-07 | 20 | PARTIALLY IMPLEMENTED |  |

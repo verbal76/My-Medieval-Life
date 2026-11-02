@@ -44,8 +44,13 @@ recovery is `docs/handoffs/CURRENT_SESSION_RECOVERY.md`. Record every milestone 
 ### Standing owner commands (owner, 2026-11-02, FLIGHT-REC-01; `docs/directives/2026-11-02_permanent_flight_recorder_simulation_system.md`)
 
 - **"Run flight recorder"** means: dispatch the dedicated flight-recorder workflow on GitHub Actions at once. No questions and no
-  further approval. The workflow is `.github/workflows/flight-recorder.yml`, on the Build 25 source `wip/expansion20` once
-  integrated; until then use `long-sims.yml` with `record: true`.
+  further approval. Dispatch `long-sims.yml` on the integration branch (`wip/expansion20`) with these inputs:
+  `flight=true seeds=1,2 days=365 every=10 record=true segment_days=100`, and `sim_args`, `set`, `variants` and `recover_run`
+  left empty.
+  - The run goes through the reusable workflows `flight-recorder-campaign.yml` and `flight-recorder-seed.yml`.
+  - `flight-recorder.yml` becomes directly dispatchable only once it is on `main`.
+  - Results are the `fr-seed<N>-results` and `flight-recorder-campaign` artifacts and the run summary. Guide:
+    `docs/release/flight_recorder/README.md`.
   - **Defaults:** 365 days, seeds 1 and 2 as independent jobs (two at most), recorder on, checkpoints every 10 days, normal
     integrated play, on the latest suitable integrated commit. If a known imminent fix would spoil the run, use the corrected
     commit.

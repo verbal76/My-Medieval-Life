@@ -9,7 +9,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 145 |
-| Integrated | 122 of 145 (84%) |
+| Integrated | 123 of 145 (85%) |
 | Automated tests passed | 110 of 145 (76%) |
 | Integration verified | 64 of 145 (44%) |
 | Gameplay verified | 0 of 145 (0%) |
@@ -24,7 +24,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (120)
+## Integrated, awaiting gameplay or owner verification (121)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -45,6 +45,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | satisfied by GP-CRIME-PURSUIT (assault, killing, fines) and the owner's heir answer 'Case ends; stain stays'; close against acceptance |  | verification only |
 | E20-P1 | Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | owner reviews the architecture (LE00_BUILD18_REFRESH.md, LE01_DATA_CONTRACTS.md) and answers OD-LE-02, 04, 07, 10, 13, 15 |  | verification only |
 | EMP-PERM-01 | Permanent employment by the player for production roles (miner at a mine, smith at a forge, carpenter, attendant, assigned production role) through the existing job-offer and wage systems, working on during normal simulation subject to real resources, equipment and wages | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it |  | verification only |
+| FLIGHT-REC-01 | Permanent flight recorder simulation system: 'Run flight recorder' launches, without further approval, an independent GitHub Actions campaign (365 days, seeds 1 and 2, at most 2 concurrent jobs, recorder on, checkpoints every 10 days) with automatic anomaly detection, Excel workbook, findings report and preserved evidence | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
 | GM-01 | Generational memory and historical consequences (the 30-planks chain) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 5770d00 | TARGETED TESTS PASSED | historical memory: fact links and entity refs (building, item, household), the 30-planks chain, significance rule, dialogue from records, save migration (batch R4) |  | verification only |
 | GP-ACTIONBAR | Android action controls redesigned into two readable right-side columns (proposed: Run, Gather, Fire, Skills, Menu / Use, Attack, Pack, Map), every action kept, comfortable non-overlapping targets, centre and upper-left HUD clear, insets respected, stable positions, Gather on/off state unmistakable; baseline the owner's screenshot docs/gameplay_polish/reference/android_mining_hud_2026-10-24.png | OWNER APPROVED | INTEGRATED | Build 21 wip/multiplayer-b19 6567c04 | INTEGRATION VERIFIED | P1: right after multiplayer Batch A1 lands, on wip/multiplayer-b19 |  | verification only |
 | GP-ANDROID-ACTION-BUTTONS | Android right-side action controls: compact circular backgrounds, closer to the right edge, glyphs and labels kept | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 a16dbbe | INTEGRATION VERIFIED | awaiting the owner's authorization to implement (recorded only, 2026-10-24) |  | verification only |
@@ -155,7 +156,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | TARGETED TESTS PASSED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (21)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (20)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -169,7 +170,6 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | DOC-AUTH-01 | Document authority replacement: once the owner explicitly approves and delivers the final revised expansion specification set, it is the sole authoritative current specification; older plans, roadmaps, packets, instructions and registers become historical evidence only; omitted features are not reintroduced (ask if materially ambiguous); code differences are reported, not silently changed; later explicit owner decisions supersede and are folded into the set; no third interpretation. Until then: latest explicit owner decisions and the validated baseline. The switch happens only on final approval, not on a draft. | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | DOC-RECON-01 | Documentation reconciliation and owner-decision protection: every expansion (17-27), multiplayer and standalone approved system has a current status document; register statuses corrected from code and test evidence; precedence hierarchy (latest explicit owner decision first); historical documents labelled; missing original sources listed; one authoritative entry point; on the isolated branch wip/requirements-control, not merged into the gameplay baseline without the owner | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/requirements-control | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | DOC-RECON-REVIEW-01 | Owner review of DOC-RECON-01 (2026-10-31): wip/requirements-control stays isolated at the reviewed commit 3098a5f until the owner authorizes integration; decisions on the remaining Expansion 20 placement, economy activation, Expansion 26 bosses and heroes, Expansion 21 recovery, other political offices, original packets and open questions; one consolidated owner-decision report | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| FLIGHT-REC-01 | Permanent flight recorder simulation system: 'Run flight recorder' launches, without further approval, an independent GitHub Actions campaign (365 days, seeds 1 and 2, at most 2 concurrent jobs, recorder on, checkpoints every 10 days) with automatic anomaly detection, Excel workbook, findings report and preserved evidence | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-CAREER-AUDIT | Audit career progression, NPC ambition and skilled employment | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-ECON-AFFORD | Re-evaluate the unaffordable bids by interval, category, household condition and cause | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

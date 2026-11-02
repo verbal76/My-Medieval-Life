@@ -22256,7 +22256,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -22265,7 +22265,18 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-02_permanent_flight_recorder_simulation_system.md"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; commits + cad96c4; integrated_in + Build 25 wip/expansion20",
+     "why": "implemented and merged at cad96c4 (wip/b25-flight-recorder 8e59dfb): flight mode in long-sims.yml (flight, segment_days inputs; 10 dispatch inputs) calling flight-recorder-campaign.yml and flight-recorder-seed.yml (main need not change); 100-day segments with save/resume (deterministic from the save; World.stats carried), 320-minute inner limit in a 345-minute job; early stop only when extinct for 30 days with no open succession post, or on fatal integrity; status always written (mml-flight-status/1); tools/flight_analyse.py over the full archive (decision loops, refused purchases, oscillation, impossible tasks, stuck, starving with means, job flip-flops, contract failures, relief gaps; CRITICAL only for confirmed defects); 14-sheet workbook with charts; COVERAGE.md lists gaps (chapel, manor work, farming and mining scripts partly uninstrumented; ~150 coin sites unattributed); recording neutral (fingerprint identical with and without --record); settlements FATAL now exits 1. Merge check: fingerprint fdbdde28 identical to the chapel branch, analyser tests OK, chapel 173. GitHub trial 41464356721 (seed 1, 20 days, 10-day segments) dispatched. First full flight campaign waits for the leak fix; the owner's first command ran as 41458375116 through the older recorded path."
     }
+   ],
+   "commits": [
+    "cad96c4"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
    ]
   },
   {

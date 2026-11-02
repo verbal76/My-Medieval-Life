@@ -122,6 +122,35 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**FLIGHT-REC-01: the permanent flight recorder system is integrated.**
+- Branch: `wip/b25-flight-recorder` (`4dd8362`, `98f4342`, `8e59dfb`), merged as `cad96c4`.
+- Change:
+  - `long-sims.yml` gains `flight` and `segment_days` inputs. Flight runs call the reusable `flight-recorder-campaign.yml` and
+    `flight-recorder-seed.yml`, plus the composite action `flight-segment`. They have their own concurrency group, so they never
+    cancel or wait behind other runs.
+  - 100-day segments with save and resume: deterministic from the save; `World.stats` and harness records carried.
+  - Early stop only when the village is extinct for 30 days with no open succession post, or on a fatal integrity failure. A
+    status file is always written.
+  - `tools/flight_analyse.py` reads the full archive and detects loops, refused purchases, oscillation, impossible tasks, stuck
+    villagers, starving with means, job flip-flops, contract failures and relief gaps. CRITICAL is reserved for confirmed
+    defects.
+  - A 14-sheet workbook (`flight_workbook.gd`, `check_workbook.py --flight`).
+  - `COVERAGE.md` with honest gaps; a README.
+  - A settlements FATAL now exits 1.
+  - `recorder_archive.py` uses compact arrays to save memory.
+- Why through long-sims: GitHub dispatches only workflows whose file exists on `main`. `long-sims.yml` does, and `main` is the
+  owner's.
+- Evidence:
+  - Local: actionlint clean, Python tests 168, resume determinism (same fingerprint chained and recorded or not), recording
+    neutral, workbook looked at.
+  - On the merge: fingerprint `fdbdde28` identical to the chapel branch, analyser tests OK, chapel 173.
+  - GitHub trial 41464356721 dispatched; the reusable workflows were accepted.
+- Outstanding:
+  - Trial results.
+  - The full-year runtime and analyser memory on a year's archive.
+  - The extinction stop has not been exercised.
+  - CLAUDE.md now carries the exact dispatch inputs.
+
 **CHAPEL-PURPOSE implemented.**
 - Branch: `wip/b25-chapel-purpose` (`2745be7`, `933c1da`, `c5be409`, `780dcfd`, `8ec9a85`), merged as `8b203c5`.
 - **Food:**
