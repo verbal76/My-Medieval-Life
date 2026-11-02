@@ -1528,6 +1528,15 @@ func _ore_line(day: int) -> Dictionary:
 		for id in ["iron_ore", "coal", "copper_ore", "iron_bar"]:
 			if so.trader_has(id) > 0:
 				row[id] = so.trader_has(id)
+		var tm := so.trader()
+		if not tm.is_empty():
+			row.trader_till = int(tm.get("till", 0))
+			row.trader_cash = so.trader_cash()
+			var stock := {}
+			for id in (tm.get("stock", {}) as Dictionary):
+				if int(tm.stock[id]) > 0:
+					stock[id] = int(tm.stock[id])
+			row.trader_stock = _sorted_dict(stock)
 		var q: Dictionary = so.biz.get("quarry", {})
 		if not q.is_empty():
 			row.reserves = (q.get("reserves", {}) as Dictionary).duplicate()
