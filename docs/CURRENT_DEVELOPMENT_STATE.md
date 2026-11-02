@@ -14,14 +14,21 @@
 ## PAUSED (owner, 2026-11-02 ~02:00 UTC: "Pause all work")
 
 All development is paused until the owner says to resume.
-- No worker is running. The skills and capabilities worker was told to commit and push its work as "WIP (paused)" on
-  `wip/b25-capability` and stop. Check that branch's head before resuming.
+- No worker is running. The skills and capabilities worker stopped cleanly. Its branch `wip/b25-capability` is at `4976137`, pushed,
+  with a clean tree; it contains the catch-up merge of `48acc91`, the milestone routing through `World.note` and
+  `GameUI.personal`, and INT-672.
+  - Tests on `4976137`: run_tests 3602 and 20+ suites pass.
+  - **experience_test fails 1 of 79**, on the contract harvest experience code from the services merge. This is not yet
+    reproduced on `wip/expansion20` alone; check that first when resuming.
+  - Not run: start_test, the underground suites, regional_food_test.
+  - The 30-day simulation was stopped after day 10.
+  - Supplier selection is recorded as a dependency, not built.
 - The scheduled check-in on the Actions run was cancelled.
 - The GitHub Actions run long-sims 41362329381 (`908a17e`, 365 days, seeds 1 and 2) was left running, not cancelled (SIM-02). It
   ends by about 05:00 UTC at the latest. Its logs and artifacts can be read when work resumes.
 - **To resume:**
   1. Read run 41362329381's `BIZ` and day lines and record them.
-  2. Review `wip/b25-capability` and finish it.
+  2. Check experience_test on `wip/expansion20`, review `wip/b25-capability`, and finish its tests.
   3. Continue with "Next authorized actions" below.
 
 ## Position
