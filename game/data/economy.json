@@ -77,6 +77,10 @@
     "_le05_paid_repair_note": "LE-05 paid repair (owner 2026-10-31, LE-05 A: 'Paid commercial repair services and their associated financial transactions may depend on the economy system'; EconRepairs, docs/expansion20/LE05_IMPLEMENTATION.md s.4.4). Its own switch, not market.services (services stays reserved while X20-SERVICES-SCOPE is an open owner decision). PROVISIONAL agent parameters: repair_order_days, the days a smith has to do a paid repair before the price is refunded; repair_per_dawn, the villagers with a worn tool who weigh an order at one dawn.",
     "paid_repair": true,
     "repair_order_days": 3,
-    "repair_per_dawn": 6
+    "repair_per_dawn": 6,
+    "_le05_route_risk_note": "LE-05 route risk (design s.5 'travel and risk'; EconRouteRisk, docs/expansion20/LE05_IMPLEMENTATION.md s.2). route_risk: a delivered CON-01 contract's price adds the expected loss on the route, the observed loss rate over the last risk_window_days (value lost on the road / value carried on it, from losses that really happened: couriers' interrupted loads, a delivery's goods taken by a bandit) times the value of the unit, times risk_weight. Exactly 0 with no recorded loss. PROVISIONAL rule and PROVISIONAL agent parameters (docs/DECISIONS.md 2026-11-02), not an owner policy.",
+    "route_risk": true,
+    "risk_window_days": 30,
+    "risk_weight": 1.0
   }
 }

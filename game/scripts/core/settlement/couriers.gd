@@ -778,6 +778,7 @@ func book_special(order: Dictionary, fee: int) -> Dictionary:
 	job.depart = _day()
 	job.arrive = _day() + float(q.days)
 	job.history.append([_day(), "agreed at %d coins; fee held at the booth; the courier takes the goods" % fee])
+	_note_carried(job, EconRouteRisk.value_of(job.cargo))
 	return job
 
 
@@ -852,6 +853,7 @@ func _depart(r: Dictionary, day: float) -> void:
 		j.depart = day
 		j.arrive = day + float(r.days)
 		j.history.append([day, "left on the route"])
+		_note_carried(j, EconRouteRisk.value_of(j.cargo))
 
 
 func _arrive(j: Dictionary, day: float) -> void:
@@ -904,6 +906,7 @@ func _arrive(j: Dictionary, day: float) -> void:
 	j.outcome = "delivered"
 	j.state = "returning"
 	j.history.append([day, "handed over%s" % (" and payment collected" if not col.is_empty() else "")])
+	_note_carried(j, EconRouteRisk.value_of(j.cargo, int(j.carried_coins)))     # the way back with the payment
 
 
 ## A notarised delivery the recipient did not sign (nobody to sign, would not, could not): the agreement stays unsigned.
@@ -997,10 +1000,25 @@ func interrupt(j: Dictionary, why: String) -> void:
 		hb.escrow = int(hb.escrow) - int(j.fee)
 		add_coins(str(j.sender), int(j.fee))
 	if not (j.cargo as Dictionary).is_empty() or int(j.carried_coins) > 0:
+		var rr := EconRouteRisk.of(w)
+		if rr != null:                                          # LE-05 route risk: the load did not arrive (a record only)
+			rr.note_lost(_route_key(j), int(_day()), EconRouteRisk.value_of(j.cargo, int(j.carried_coins)), true)
 		_drop_load(j)
 	j.state = "interrupted"
 	j.outcome = why
 	j.history.append([_day(), "interrupted: " + why])
+
+
+## LE-05 route risk (EconRouteRisk, economy on only): the road a delivery travels, between the sender's place and the recipient's.
+func _route_key(j: Dictionary) -> String:
+	return EconRouteRisk.route(place_of(str(j.sender)), str(j.settlement))
+
+
+## LE-05 route risk: a load of `value` set out on the delivery's road (a record only; nothing while the economy is off).
+func _note_carried(j: Dictionary, value: int) -> void:
+	var rr := EconRouteRisk.of(w)
+	if rr != null:
+		rr.note_carried(_route_key(j), int(_day()), value)
 
 
 ## The load of a journey that stopped lies where the courier fell, for anyone to find (a loot pile: the world counts it): goods

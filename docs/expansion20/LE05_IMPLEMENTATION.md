@@ -14,13 +14,14 @@ Actions: none until LE-06's run 41143001791 reports; at the LE-05 milestone one 
 | Part | State | Where |
 |---|---|---|
 | Travel in a delivered contract's price (design s.5 "travel and risk", deferred from LE-02) | done | `contracts.gd::travel_per_unit`, `price_terms`; INT-612; `le05_test::test_travel` |
-| Risk in prices (route danger) | documented gap (section 2): no route-danger measure exists | |
+| Risk in prices (route danger) | done, Build 25 (`wip/b25-le05-risk`; section 2): a per-route loss record and a PROVISIONAL expected-loss term, economy on | INT-673; `le05_route_risk_test.gd` |
 | Tool repair (owner 2026-10-31, LE-05 A: normal play, economy on or off) | done (section 4); Worker G | INT-650; `le05_repair_test.gd` |
 | Tool rental (owner 2026-10-31, LE-05 B: behind the switch) | done (section 5); Worker G | INT-651; `le05_rental_test.gd` |
 | Paid commercial repair (a smith mending another's tool for coins; economy on) | done, Build 25 (`wip/b25-econ`; section 4.4) | INT-653; `le05_paid_repair_test.gd` |
 | Player's market journal (OD-LE-14 D13; must not break the guest journal network path) | done (section 3) | INT-613; `le05_test::test_market_journal` |
 | Construction: bids for materials, hiring (design s.9) | housing material bids exist since LE-02 (need kind `housing`); households already hire helpers in normal play (`Construction._keep_building`); Build 25: the wage through the authority with the economy on, and agreed when hired behind `market.negotiated_wages` (off) (section 6) | INT-654; `le05_construction_hire_test.gd` |
 | Ecology / mining under existing depletion rules; bandits; regional links via `World.transactions` | not built: no further link is specified (section 7); regional food trade is Worker B's (X20-SETTLE-FOOD, merged) | |
+| Regional links beyond the food trade | done as specified (section 7): nothing further is specified; confirmed in code 2026-11-02 | |
 | Activation mechanism and LE-07 gates | Build 25: `docs/expansion20/ACTIVATION.md` | INT-655; `le07_gates_test.gd` |
 
 ## 1. Travel in a delivered contract's price
@@ -33,14 +34,38 @@ minute (`NPC.avg_income` over the working day: the measure `alternatives` alread
 only `market.travel_cost` (on) gates it; the switch off leaves CON-01 exactly as before. A seller who earns nothing values its walk
 at nothing. Face-to-face market deals (encounters) carry no travel (nothing is carried).
 
-## 2. Route risk in prices: a documented gap (not invented)
+## 2. Route risk in prices (Build 25, `wip/b25-le05-risk`; INT-673)
 
-Design s.5 asks buyers to weigh "travel and risk". Read-only search of the settlement and bandit layers (2026-10-30): couriers can
-be waylaid (`settlement/couriers.gd`: the load drops as loot), and `Outlaws.band_alive` / `camp_cell` say whether a band is about,
-but nothing measures danger on a route (no record of losses or attacks per road, per settlement link or per area). Per the lead's
-instruction no measure is invented: route risk is not priced. When the settlement or bandit layer records losses by route (e.g. the
-couriers' waylaid loads or caravan losses by road), a risk premium can read it here: the expected loss on the route over a trip,
-added to the seller's travel term and the buyer's ceiling. Until then a delivered contract prices travel time only (section 1).
+Design s.5 asks buyers to weigh "travel and risk". Until 2026-11-01 nothing measured danger on a route (the earlier search: couriers
+can be waylaid, `Outlaws.band_alive` says whether a band is about, but no losses were counted by road), so route risk was left
+unpriced rather than invented. Build 25 adds the measure and a PROVISIONAL rule (docs/DECISIONS.md 2026-11-02, agent decision):
+
+- **The record** (`game/scripts/core/economy/econ_route_risk.gd`, `EconRouteRisk`; built with the economy foundation, so nothing
+  exists while the switch is off). Per route and per day, over a rolling window (`market.risk_window_days`, 30, PROVISIONAL): the value
+  **carried** and the value **lost**, goods at `GameData.value`, coins at 1. Only losses that already happen are counted:
+  - a courier's journey interrupted on the road (`CourierService.interrupt`: the courier died on the road, did not arrive, did not come
+    back): its load and the takings it held, which lie where it fell as a loot pile, as before;
+  - a delivery's goods a bandit took (`NPCBrain.fight`'s robbery → `_note_delivery_loss`): the stolen unit counts only when the victim
+    owes that item on an open CON-01 goods contract (a robbery of goods nobody owes is not a delivery loss).
+  Carried: a courier's load when it sets out (`book_special`, `_depart`) and the payment it brings back (`_arrive`); goods handed over
+  on a CON-01 delivery (`Contracts.deliver`); a robbed delivery's unit is counted as carried as well as lost, so the rate stays 0..1.
+  A route is the pair of places (`CourierService.place_of`'s rule: "village" or a settlement id), unordered ("village|wulstead");
+  every in-village delivery is on "village". Not counted, because no loss happens there: the regional caravan and the settlements'
+  food trade (the six-day abstraction, E22-OD-04: "no route loss or danger"; `EconTransactions.lose` has no live caller).
+  A record only: it moves no coin or good, draws no random number, saves sorted (optional key `route_risk` inside the "economy"
+  section; an older save loads with an empty record; a parked section keeps it unchanged) and drops days that left the window at dawn.
+- **The price** (`Contracts.route_risk_per_unit`, a `route_risk` term of `Contracts.price_terms`, added to the minimum beside
+  `travel`): the expected loss on the trip = the route's observed loss rate (value lost / value carried over the window) x the unit's
+  value x `market.risk_weight` (1.0, PROVISIONAL). Exactly 0.0 with no recorded loss on the route, so prices are then identical to
+  before. Only while the economy is on, the market drives and `market.route_risk` is on.
+- **Who bears it.** The seller: CON-01 pays on delivery from coins set aside, so the goods are the seller's until handed over, as
+  the walk is (section 1). The buyer's ceiling (`EconMarket.buyer_ceiling`) is unchanged; a seller's higher minimum reaches the buyer
+  through the counter it makes, which the buyer weighs against its own ceiling as before. Face-to-face LE-02 deals carry no trip and
+  no risk.
+- **What it changes in practice.** Every CON-01 delivered contract is in the village today, so the term reads the "village" route:
+  it rises only after a bandit has robbed a seller of goods it owed. The settlement roads' record (couriers) is kept and would price a
+  delivered contract to a settlement party, but no Living Economy price is set on those roads yet (courier fees and the regional
+  trade have their own rules, untouched).
 
 ## 3. The player's market journal (OD-LE-14 D13)
 
@@ -230,16 +255,18 @@ for want of funds (the existing site simply waits for materials), hiring for wor
 
 ## 7. What LE-05 still lacks, and why it is not built here
 
-- **Route risk in prices** (design s.5 "travel and risk"): still no danger measure per route. Re-checked 2026-11-01 on `ab8ac71`:
-  the bandit AI (X20-BANDIT-AI) gives bandits awareness and retreat, `JudgmentFamily.danger` reads threats near a household, and a
-  courier's interrupted journey is a record in `CourierService` (state "interrupted"), but nothing counts losses or attacks by road,
-  settlement link or area, and the design gives no formula. Missing: a per-route loss record (e.g. couriers' waylaid loads and
-  caravan losses by route, with a window) and the owner's or design's rule for turning it into a premium. Section 2 stands.
+- **Route risk in prices**: built in Build 25 (section 2): the per-route loss record and a PROVISIONAL expected-loss term. What
+  stays open is calibration only (the window and the weight are agent values, docs/DECISIONS.md 2026-11-02), and attacks that take
+  nothing are not counted (the design asks for losses, and no other danger is invented).
 - **Bandits in the market**: OD-LE-09 (D08 answer A, CURRENT) "Retain current bandit buying and off-village trading. No ban on
   bandits at stalls, no stolen-goods merchant system." Bandit buying already goes through `World.trade` (the authority's village
   path). Nothing further is specified.
 - **Ecology and mining through the economy**: the design (s.11) requires that prices cannot create ore, trees or tools, which holds
   (every good is mined, felled or forged by the existing rules; asks follow supply and knowledge, LE-02). No further link is
   specified (no prospecting-on-price or conservation decision rule is designed): not invented.
-- **Regional links beyond the food trade**: X20-SCOPE's notes keep the six-day inter-settlement abstraction (E22-OD-04); physical
-  caravans and regional population are Expansion 22. No further LE-05 link is specified.
+- **Regional links beyond the food trade**: done as specified. X20-SCOPE's notes keep the six-day inter-settlement abstraction
+  (E22-OD-04); physical caravans and regional population are Expansion 22. No further LE-05 link is specified. Confirmed in code on
+  `28d5280` (2026-11-02): the settlements trade with each other only on the traders' wholesale day every `road_trade_every_days`
+  (6, `settlements.json`; `Regions.step_day` / `step_hour` → `road_trade`, `food_round`), the food round goes through the transaction
+  authority (`Regions.ship_line` → `World.transactions.ship`, delivered by `_deliver` on the due day), nothing travels physically
+  between settlements, and no other inter-settlement link exists in `game/scripts/core/settlement/`. Nothing is built for it.
