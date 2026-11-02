@@ -5980,6 +5980,37 @@
    "assigned_worker": "lead (single worker, MML-CONSERVE-01)"
   },
   {
+   "id": "B25-CLOSE-02",
+   "kind": "approved",
+   "title": "Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final year-long campaign (seeds 1 and 2 normal, seed 1 economy-on) on it, present B25-ECON-P1..P5, JOB-02/CON-02-KINDS/PIT-02/FSE-10 as future-scope candidates, LE-07 gate 11 open for an owner device test, no packaging until the gates pass",
+   "description": "Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final year-long campaign (seeds 1 and 2 normal, seed 1 economy-on) on it, present B25-ECON-P1..P5, JOB-02/CON-02-KINDS/PIT-02/FSE-10 as future-scope candidates, LE-07 gate 11 open for an owner device test, no packaging until the gates pass",
+   "source": "docs/directives/2026-11-02_build25_closure_scope_and_campaign.md",
+   "owner_wording": "Owner authorizes ONE final year-long validation campaign on that frozen SHA, consisting only of the required two seed simulations and one seed 1 economy-on run. Do not dispatch until the targeted tests are green.",
+   "approval": "owner, 2026-11-02",
+   "acceptance": [
+    "Targeted tests and the seed 1 smoke and seed 2 replay green and preserved",
+    "One frozen SHA; the one campaign dispatched on it only after the targeted tests are green",
+    "B25-ECON-P1..P5 presented with current behaviour, thresholds and recommendations; no balance change without approval",
+    "Phone test procedure and threshold provided; gate 11 open"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-02",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-02_build25_closure_scope_and_campaign.md"
+    }
+   ]
+  },
+  {
    "id": "B25-ECON-P1",
    "kind": "decision",
    "title": "Business founding requires the trade's benches to be full and busy (Ventures.refusal, skilled_place busy_share 0.35); in seed 1 the founding trades' benches were 2-20% busy all 120 days, so every one of 172 weekly looks stopped there. Options: A keep the rule (businesses form when demand exists); B let a founder weigh independence even with idle benches (the judgment weighing decides); C a lower busy threshold for founding only. Recommendation: A, and act on demand (P2-P4) rather than the gate. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686).",
