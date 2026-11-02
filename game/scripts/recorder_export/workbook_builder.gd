@@ -45,6 +45,45 @@ func build(path: String, runs: Array, gate: Dictionary, workbook_defs: Dictionar
 	return {"ok": ok, "error": x.error, "sheets": x.sheets.map(func(s): return s.name), "charts": x.chart_count}
 
 
+## FLIGHT-REC-01 (owner directive 2026-11-02): a workbook from a ready-made specification, the flight recorder campaign's 14 sheets
+## that tools/flight_analyse.py writes (workbook_data.json, format mml-flight-workbook/1) from the WHOLE archive. spec: {sheets: [{name,
+## blocks: [{title, header, rows, charts: [{type, title, y_cols, x_col, x_title, y_title}]}]}]}. A sheet's first block takes the
+## sheet's header row; each later block follows two blank rows, its title and its own header. A chart plots its block's rows (the
+## columns are 0-based; the block's header names the series). Returns {ok, error, sheets, charts}.
+func build_spec(path: String, spec: Dictionary) -> Dictionary:
+	x = XlsxWriter.new()
+	if not x.open(path):
+		return {"ok": false, "error": x.error}
+	for sh in spec.get("sheets", []):
+		var blocks: Array = sh.get("blocks", [])
+		if blocks.is_empty():
+			blocks = [{"header": ["(nothing recorded)"], "rows": []}]
+		for bi in blocks.size():
+			var b: Dictionary = blocks[bi]
+			var header: Array = b.get("header", [])
+			var header_row := 1
+			if bi == 0:
+				x.begin_sheet(str(sh.get("name", "Sheet")), header, sh.get("widths", []))
+			else:
+				_blank(2)
+				if str(b.get("title", "")) != "":
+					x.row([str(b.title)])
+				x.row(header)
+				header_row = int(x.cur.rows)
+			for r in b.get("rows", []):
+				x.row(r if r is Array else [r])
+			var last := int(x.cur.rows)
+			for c in b.get("charts", []):
+				if last <= header_row:
+					continue
+				x.chart({"type": str(c.get("type", "line")), "title": str(c.get("title", "")), "x_col": int(c.get("x_col", 0)),
+					"y_cols": (c.get("y_cols", [1]) as Array).map(func(v): return int(v)), "first_row": header_row + 1, "last_row": last,
+					"header_row": header_row, "x_title": str(c.get("x_title", "day")), "y_title": str(c.get("y_title", ""))})
+				charts += 1
+	var ok: bool = x.close()
+	return {"ok": ok, "error": x.error, "sheets": x.sheets.map(func(s): return s.name), "charts": x.chart_count}
+
+
 func _label(r: Dictionary) -> String:
 	return str(r.run)
 

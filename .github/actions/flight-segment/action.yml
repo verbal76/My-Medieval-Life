@@ -1,0 +1,164 @@
+name: Flight recorder segment
+description: >
+  FLIGHT-REC-01 (owner directive 2026-11-02): one segment of a flight recorder run of one seed. Installs Godot, goes on from the
+  previous segment's saved world (or sets the village up), runs game/tests/economy_sim.gd with the flight recorder to the segment's
+  last day, saves the world there for the next segment, and uploads the archive, the log, the status and the saved world, whatever
+  happened. A segment is a chained job so a recorded year fits GitHub's six-hour job limit (docs/release/flight_recorder/README.md).
+
+inputs:
+  seed: {required: true, description: "world seed"}
+  segment: {required: true, description: "1-based segment number"}
+  segment_days: {required: true, description: "game days per segment"}
+  days: {required: true, description: "game days of the whole run"}
+  every: {required: true, description: "checkpoint every N days"}
+  sim_args: {required: false, default: "", description: "extra economy_sim switches (empty: normal integrated play)"}
+  record: {required: true, description: "'true' to record with the flight recorder"}
+  extinct_days: {required: false, default: "30", description: "days with nobody alive and no way back before the run stops"}
+  godot_version: {required: true, description: "Godot version"}
+
+outputs:
+  next:
+    description: "'true' when this segment saved the world for the next one"
+    value: ${{ steps.run.outputs.next }}
+  stop_reason:
+    description: "segment, completed, extinct, fatal, crash or timeout"
+    value: ${{ steps.run.outputs.stop_reason }}
+  failed:
+    description: "'true' for a fatal integrity stop, a crash, a timeout, script errors or a broken ledger"
+    value: ${{ steps.run.outputs.failed }}
+
+runs:
+  using: composite
+  steps:
+    - name: Cache Godot
+      id: godot
+      uses: actions/cache@v4
+      with:
+        path: ~/godot-bin
+        key: godot-${{ inputs.godot_version }}-linux-editor
+
+    - name: Install Godot (editor only)
+      if: steps.godot.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        GODOT_VERSION: ${{ inputs.godot_version }}
+      run: |
+        mkdir -p ~/godot-bin
+        base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+        curl -sSfL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+        unzip -q godot.zip && mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" ~/godot-bin/godot && rm godot.zip
+
+    - name: Name the previous segment
+      id: prev
+      shell: bash
+      env:
+        SEG: ${{ inputs.segment }}
+      run: echo "n=$(( SEG - 1 ))" >> "$GITHUB_OUTPUT"
+
+    - name: Fetch the previous segment's saved world
+      if: inputs.segment != '1'
+      uses: actions/download-artifact@v4
+      with:
+        name: fr-seed${{ inputs.seed }}-state${{ steps.prev.outputs.n }}
+        path: ${{ runner.temp }}/prev-state
+
+    - name: Simulate the segment
+      id: run
+      shell: bash
+      env:
+        SEED: ${{ inputs.seed }}
+        SEG: ${{ inputs.segment }}
+        SEGDAYS: ${{ inputs.segment_days }}
+        DAYS: ${{ inputs.days }}
+        EVERY: ${{ inputs.every }}
+        SIM_ARGS: ${{ inputs.sim_args }}
+        RECORD: ${{ inputs.record }}
+        EXTINCT: ${{ inputs.extinct_days }}
+      run: |
+        out="$RUNNER_TEMP/fr/seg$SEG"                 # the segment's files, laid out as tools/flight_analyse.py reads them
+        mkdir -p "$out" "$RUNNER_TEMP/fr-userdata" "$RUNNER_TEMP/fr-tmp" "$RUNNER_TEMP/fr-state"
+        export XDG_DATA_HOME="$RUNNER_TEMP/fr-userdata" TMPDIR="$RUNNER_TEMP/fr-tmp"
+        godot=~/godot-bin/godot
+        $godot --headless --path game --import > "$out/import.log" 2>&1 || true
+        end=$(( SEG * SEGDAYS )); [ "$end" -gt "$DAYS" ] && end=$DAYS
+        extra=()
+        [ "$RECORD" = "true" ] && extra+=(--record "$out/rec")
+        [ "$end" -lt "$DAYS" ] && extra+=(--save-at "$end" --state "$RUNNER_TEMP/fr-state/state.gz")
+        [ "$SEG" != "1" ] && extra+=(--resume "$RUNNER_TEMP/prev-state/state.gz")
+        echo "segment $SEG: days to $end of $DAYS; ${extra[*]} $SIM_ARGS"
+        start=$(date +%s)
+        set +e
+        # 320 minutes for the simulation, inside the job's 345: the uploads below always get their turn
+        MML_COMMIT="$GITHUB_SHA" MML_SCENARIO="flight-seed$SEED-seg$SEG" timeout 19200 $godot --headless --path game --script res://tests/economy_sim.gd -- \
+          --days "$DAYS" --seed "$SEED" --every "$EVERY" --extinct-days "$EXTINCT" --out "$out/sim.json" --status "$out/status.json" "${extra[@]}" $SIM_ARGS > "$out/sim.log" 2>&1
+        code=$?
+        set -e
+        errors=$(grep -c "SCRIPT ERROR" "$out/sim.log" || true)
+        python3 - "$out" "$code" "$(( $(date +%s) - start ))" "$errors" "$SEG" <<'PY'
+        import json, os, re, sys
+        out, code, secs, errors, seg = sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4]), int(sys.argv[5])
+        p = os.path.join(out, "status.json")
+        try:
+            st = json.load(open(p))
+        except (OSError, ValueError):
+            # no status: the process died or was stopped; the day it reached is its last checkpoint line in the log
+            day = 0
+            for line in open(os.path.join(out, "sim.log"), errors="replace"):
+                m = re.match(r"^day +(\d+):", line)
+                if m:
+                    day = int(m.group(1))
+            st = {"format": "mml-flight-status/1", "seed": int(os.environ["SEED"]), "days_requested": int(os.environ["DAYS"]),
+                  "start_day": (seg - 1) * int(os.environ["SEGDAYS"]), "days_reached": day, "ok": False,
+                  "stop_reason": "timeout" if code == 124 else "crash", "commit": os.environ["GITHUB_SHA"],
+                  "args": os.environ.get("SIM_ARGS", ""), "note": "written by the workflow: the simulation ended without its status"}
+        st.update({"exit_code": code, "script_errors": errors, "job_seconds": secs, "segment": seg, "workflow_commit": os.environ["GITHUB_SHA"],
+                   "runner": os.environ.get("RUNNER_NAME", ""), "run_url": "%s/%s/actions/runs/%s" % (os.environ["GITHUB_SERVER_URL"], os.environ["GITHUB_REPOSITORY"], os.environ["GITHUB_RUN_ID"])})
+        json.dump(st, open(p, "w"), indent=1)
+        failed = st["stop_reason"] in ("fatal", "crash", "timeout") or errors > 0 or code not in (0,) or not st.get("ok", False)
+        nxt = st["stop_reason"] == "segment" and code == 0
+        with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+            f.write("next=%s\nstop_reason=%s\nfailed=%s\n" % (str(nxt).lower(), st["stop_reason"], str(failed).lower()))
+        with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
+            f.write("### Seed %s, segment %d: %s at day %s (exit %d, %d s, script errors %d)\n" % (st["seed"], seg, st["stop_reason"], st["days_reached"], code, secs, errors))
+        print(json.dumps(st, indent=1))
+        PY
+        # the checkpoints, stops and integrity lines, in the job log too (readable where artifact downloads are blocked)
+        grep -E '^(day +[0-9]+:|FATAL|EXTINCT|SEGMENT|resumed:|STATUS|CHAPEL|JOBS|BIZ|recorder:)' "$out/sim.log" | cut -c1-2000 || true
+        tail -n 20 "$out/sim.log"
+        if [ -f "$RUNNER_TEMP/fr-state/state.gz" ]; then
+          mkdir -p "$RUNNER_TEMP/fr/state-up" && cp "$RUNNER_TEMP/fr-state/state.gz" "$RUNNER_TEMP/fr/state-up/state.gz"
+          echo "saved=true" >> "$GITHUB_OUTPUT"
+        fi
+        gzip -kf "$out/sim.log"
+
+    - name: Keep the saved world for the next segment
+      if: always() && steps.run.outputs.saved == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: fr-seed${{ inputs.seed }}-state${{ inputs.segment }}
+        path: ${{ runner.temp }}/fr/state-up/state.gz
+        compression-level: 0
+        retention-days: 30
+
+    - name: Keep the archive
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: fr-seed${{ inputs.seed }}-seg${{ inputs.segment }}-archive
+        path: ${{ runner.temp }}/fr/seg${{ inputs.segment }}/rec
+        compression-level: 0          # the chunks are gzip already
+        if-no-files-found: ignore
+        retention-days: 30
+
+    - name: Keep the log, status and results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: fr-seed${{ inputs.seed }}-seg${{ inputs.segment }}-run
+        path: |
+          ${{ runner.temp }}/fr/seg${{ inputs.segment }}/status.json
+          ${{ runner.temp }}/fr/seg${{ inputs.segment }}/sim.json
+          ${{ runner.temp }}/fr/seg${{ inputs.segment }}/sim.log.gz
+          ${{ runner.temp }}/fr/seg${{ inputs.segment }}/import.log
+        if-no-files-found: warn
+        retention-days: 90
