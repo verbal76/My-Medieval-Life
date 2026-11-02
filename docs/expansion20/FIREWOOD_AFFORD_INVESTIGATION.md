@@ -100,7 +100,20 @@ ore; the axe is forged and delivered; coins only move).
 
 ### 2.5 Effect (run F)
 
-Run F (160 days, seed 1, the two fixes) is in progress; its results are added when it ends.
+Run F (`3b530d5`, seed 1, 160 days, `--every 20`): currency leak 0, item leaks 0, exit 0, fingerprint
+`c7666dd8ee86db8409a7be6b58c4d8ba`. Identical to run A up to day 120 (the same checkpoints, cold nights 5, 8, 13, 4, 1, 2:
+no household lacked an adult with a log's price before then, so the fix changed nothing).
+
+| Days | 120-140 | 140-160 | 0-160 |
+|---|---|---|---|
+| Cold household-nights, run A (`d6ab686`) | 38 | 58 | 159 |
+| Cold household-nights, run F (fixes) | 2 | 2 | 37 |
+| Logs burned to day 160 | | | A 3,972, F 4,088 |
+
+Run F's 37 cold nights by whose purse could have paid (`cold_payer_*`): nobody in the household held 3 coins 30 (poverty: an
+outcome), an adult held the price 7 (section 2.2 item 3), an elder 0. The cold nights from day 120 are those of households
+with 3-19 coins. Everything else at day 160 is within the runs' divergence (alive 127 both, woodcutters 4 both, jobless 17
+and 16, treasury 602 and 694). No manor advance fell due in either run by day 160, so fix 2 is shown by its test only.
 
 ## 3. The manor's wage raise (WDR-012-C, `hiring_competition`)
 
@@ -172,9 +185,13 @@ post (`post_bid`), from `post_bids` (needs) and `speculate` (merchants). That ma
 (`--days 10 --seed 1 --every 5`): `67b6c604d4f2f83ee99132517f961630` at `d6ab686` (a temporary worktree, removed) and with
 the diagnostic (`2021a5b`): identical.
 
+Note: the message of commit `0069250` attributes "3602 checks" to run_tests; that is run_tests' count (exit 0) on `3b530d5`,
+and wiki_test printed "wiki_test: all passed".
+
 ## 7. Not verified
 
-- The year-long effect on both seeds (run F reaches day 160); the lead's Actions run (section 8).
+- The year-long effect on both seeds (run F reaches day 160; days 160-365 and seed 2 not run); the lead's Actions run
+  (section 8). Fix 2 in a long run (no advance fell due by day 160).
 - The cold nights of households where an adult held the price (if any remain in the year run, `cold_payer_adult`).
 - Devices: nothing here is visible on screen beyond the wiki text.
 
