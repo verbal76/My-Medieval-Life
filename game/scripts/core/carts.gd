@@ -293,6 +293,15 @@ func to_dict() -> Dictionary:
 	return {"next_id": next_id, "carts": out}
 
 
+## KI-FR-CARTHITCH: on loading a save, villagers let go of the carts they were pulling. Their plans (the run's
+## cart_park step) are not saved, so a cart left in a villager's hand would stay held for good. The cart stays where
+## it stands with what it holds; its household takes it up again on a later run. The player's hold is kept.
+func release_npc_pullers() -> void:
+	for c in carts:
+		if str(c.puller).begins_with("npc:"):
+			c.puller = ""
+
+
 func load_dict(d: Dictionary) -> void:
 	next_id = int(d.get("next_id", 1))
 	carts = []

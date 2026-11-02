@@ -6316,6 +6316,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	chests = Chests.new(self)
 	carts = Carts.new(self)
 	carts.load_dict(d.get("carts", {}))           # saves before B14 have no carts
+	carts.release_npc_pullers()                   # KI-FR-CARTHITCH: villagers' plans are not saved, so none holds a cart on load
 	relations = Relations.new(self)
 	relations.load_dict(d.get("relations", {}))   # saves before CRT-01 have no ties: everyone starts as strangers
 	experience = WorkExperience.new()

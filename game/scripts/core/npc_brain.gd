@@ -643,9 +643,17 @@ func _plan_market_run(n: NPC, house: Dictionary) -> bool:
 	if house.is_empty() or w.hour() >= float(hp_cfg().storefront_close_hour) - 2.0:
 		return false
 	var cart := {}
-	for c in w.carts.of(World.hh_ref(n.household)):
-		if str(c.puller) == "":
-			cart = c
+	var held: Dictionary = w.carts.pulled_by(World.npc_ref(n.id))
+	if not held.is_empty():
+		# KI-FR-CARTHITCH: a villager still holding a cart takes that one (Carts.hitch refuses a second: "pulling a
+		# cart already"), and one holding someone else's cart (a hired attendant's) plans no run of its own
+		if str(held.owner) != World.hh_ref(n.household):
+			return false
+		cart = held
+	else:
+		for c in w.carts.of(World.hh_ref(n.household)):
+			if str(c.puller) == "":
+				cart = c
 	if cart.is_empty():
 		return false
 	var goods := front_goods(n.household)
@@ -2829,8 +2837,11 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"cart_sell":
 			var c: Dictionary = w.carts.pulled_by(World.npc_ref(n.id))
-			if c.is_empty() or not (c.store as Inventory).has(a.item):
+			if c.is_empty():
 				return false
+			if not (c.store as Inventory).has(a.item):   # KI-FR-CARTHITCH: nothing of it loaded; skip the stop, the run goes on to cart_park
+				w.stat("cart_sell_nothing_loaded")
+				return true
 			w.transfer(c.store, n.inv, a.item, (c.store as Inventory).count(a.item))
 			act(n, "sell_to", {"buyer": a.buyer, "item": a.item})
 			if n.inv.has(a.item):                         # what the buyer would not take goes back in the cart

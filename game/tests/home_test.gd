@@ -33,6 +33,7 @@ func _init() -> void:
 	test_local_pricing()
 	test_apple_trees()
 	test_carts_in_play()
+	test_cart_hitch_loop()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -566,3 +567,56 @@ func test_carts_in_play() -> void:
 	check(pulled, "a household member took the cart")
 	check(str(cart.puller) == "" and (cart.store as Inventory).total() == 0, "the cart came home parked and empty")
 	check(pantry.count("apple") < sold0 and w2.total_coins() == total + w2.coin_sources, "apples were sold (%d left at home), coins conserved" % pantry.count("apple"))
+
+
+## KI-FR-CARTHITCH (flight recorder run 41469410306, seed 2: p:40 failed cart_hitch 76 times in a row, p:1000138 52 times). A
+## villager still holding a household cart plans the market run with that cart, never another ("pulling a cart already"); a
+## stop whose good is not in the cart is skipped and the run still parks the cart; on loading a save no villager holds a cart.
+func test_cart_hitch_loop() -> void:
+	var w := new_world()
+	w.minutes = 2.0 * 1440.0 + 9.0 * 60.0
+	var m := _villager(w)
+	var house: Dictionary = w.buildings[m.home]
+	var held: Dictionary = w.carts.place(World.hh_ref(m.household), Vector2(w.brain.cart_spot(m.home)) + Vector2(0.5, 0.5))
+	var other: Dictionary = w.carts.place(World.hh_ref(m.household), Vector2(w.brain.cart_spot(m.home)) + Vector2(1.5, 0.5))
+	check(w.carts.hitch(held, World.npc_ref(m.id)) == "", "the villager is left holding one household cart")
+	w.households[m.household].pantry.add("apple", int(GameData.b("home_production").berries_keep) + int(Carts.cfg().trip_min) + 2)
+	check(w.brain._plan_market_run(m, house), "a villager already holding a cart still plans a market run")
+	var hitch_ids := []
+	for st in m.plan:
+		if str(st.get("act", "")) == "cart_hitch":
+			hitch_ids.append(int(st.args.cart))
+	check(hitch_ids == [int(held.id)], "the run hitches the cart already held, not another (%s, held %d)" % [str(hitch_ids), int(held.id)])
+	check(w.carts.hitch(held, World.npc_ref(m.id)) == "", "hitching the cart already held succeeds (no 'pulling a cart already')")
+	var pulled_other := false
+	for i in int(6.0 * 60.0 / float(GameData.b("game_minutes_per_second")) / 0.5):
+		w.update(0.5)
+		pulled_other = pulled_other or str(other.puller) == World.npc_ref(m.id)     # another member may take it for a run of their own
+		if str(held.puller) == "":
+			break
+	check(not pulled_other, "the villager holding a cart never took the second household cart")
+	check(str(held.puller) == "", "the held cart was parked at the end of the run")
+	# someone else's cart in hand (a hired attendant with the player's cart): no run of the household's own
+	var w3 := new_world()
+	w3.minutes = 2.0 * 1440.0 + 9.0 * 60.0
+	var a := _villager(w3)
+	var pc: Dictionary = w3.carts.place(World.PLAYER, a.pos)
+	pc.puller = World.npc_ref(a.id)
+	w3.carts.place(World.hh_ref(a.household), Vector2(w3.brain.cart_spot(a.home)) + Vector2(0.5, 0.5))
+	w3.households[a.household].pantry.add("apple", int(GameData.b("home_production").berries_keep) + int(Carts.cfg().trip_min) + 2)
+	check(not w3.brain._plan_market_run(a, w3.buildings[a.home]), "a villager holding another owner's cart plans no household market run")
+	# a stop whose good is not in the cart: skipped, and the cart is still parked
+	var w2 := new_world()
+	var v := _villager(w2)
+	var c: Dictionary = w2.carts.place(World.hh_ref(v.household), v.pos)
+	w2.carts.hitch(c, World.npc_ref(v.id))
+	check(w2.brain.act(v, "cart_sell", {"buyer": v.id, "item": "apple"}), "cart_sell with nothing of that good loaded is skipped, not a failure that ends the run")
+	check(w2.brain.act(v, "cart_park", {}) and str(c.puller) == "", "the run's last step still parks the cart")
+	# a save made while a villager pulls a cart: on load nobody but the player holds one
+	w2.carts.hitch(c, World.npc_ref(v.id))
+	var pcart: Dictionary = w2.carts.place(World.PLAYER, w2.player.pos)
+	pcart.puller = World.PLAYER
+	var b := World.new()
+	b.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w2.to_dict())))
+	check(str(b.carts.by_id(int(c.id)).puller) == "", "a villager's cart is let go when the save is loaded (their plan is not saved)")
+	check(str(b.carts.by_id(int(pcart.id)).puller) == World.PLAYER, "the player's hold on a cart is kept across save and load")
