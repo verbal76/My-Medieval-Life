@@ -73,6 +73,13 @@ const FLEE_TILES_PER_SECOND := 4.5      # the player's walking speed (docs: guar
 
 
 var econ_roundtrip_bad := 0      # LE-06: checkpoints whose economy section did not load back exactly
+# B25 economic investigation (owner directive 2026-11-02 sections 4-6; read only): the job changes the village notes, by
+# direction and reason (parsed from NPCBrain._change_job's note), and the mornings a villager looked for work and found none.
+var job_moves := {}            # "from>to" -> count ("none" for no job)
+var job_whys := {}             # reason key -> count
+var no_work_found := 0
+var ore_start := {}            # ore -> its deposits' amount at the start
+var npcs_at_start := 0         # villager records at the start (a higher id was born or arrived during the run)
 
 func _init() -> void:
 	var args := OS.get_cmdline_user_args()
@@ -128,6 +135,7 @@ func _init() -> void:
 	if "--record" in args:                # REC-19: the flight recorder writes its archive under DIR (off by default; the run is otherwise identical)
 		WorldRecorder.attach(w, {"root": str(arg.call("--record", ""))})
 		print("recorder: recording to ", w.recorder.dir)
+	print("CONFIG " + JSON.stringify(_config_line()))
 	w.event.connect(_on_event)
 	w.brain.track_misses = true
 	w.trade_hook = _on_trade
@@ -140,6 +148,9 @@ func _init() -> void:
 	var start := {"stats": w.stats.duplicate(), "goods": _all_goods(), "coins": _coins(), "coin_sources": w.coin_sources, "regions_coins": w.regions.coins(), "regions_goods": w.regions.goods(),
 		"deposits": w.deposits.map(func(d): return int(d.amount)), "hosts": _hosts(), "boulders": _boulder_stone(), "pits": w.pits.ground_left(), "cut": w.mine_works.ground_cut(), "fill_out": w.mine_works.fill_out, "fill_in": w.mine_works.fill_in(), "animals": _animal_counts(), "alive": _villagers().size(),
 		"households": w.households.size(), "npcs": w.npcs.size()}
+	npcs_at_start = w.npcs.size()
+	for dp in w.deposits:
+		ore_start[str(dp.ore)] = int(ore_start.get(str(dp.ore), 0)) + int(dp.amount)
 	var samples: Array = [_sample(start)]
 	_herd_day(0)
 	_print_sample(samples[0])
@@ -194,6 +205,9 @@ func _init() -> void:
 				print("JUDGE " + JSON.stringify(JudgmentSoak.metrics(w.judgment)))
 			print("CHAPEL " + JSON.stringify(_chapel_line(d + 1)))
 			print("BIZ " + JSON.stringify(_biz_line(d + 1)))
+			print("FUNNEL " + JSON.stringify(_funnel_line(d + 1)))
+			print("JOBS " + JSON.stringify(_jobs_line(d + 1)))
+			print("ORE " + JSON.stringify(_ore_line(d + 1)))
 			dev_series.append(_dev(d + 1))
 			print("ECON10 " + JSON.stringify(dev_series[-1]))
 			# B25-CAPABILITY: the village's current industry levels, its milestone record (first days), the milestones announced
@@ -369,6 +383,7 @@ func _on_event(t: String) -> void:
 		events.caravans += 1
 	elif t.ends_with(" broke."):
 		events.tools_broke += 1
+	_job_note(t)
 
 
 ## --watch-from (B7-015, FSE-16): each game hour, every household with a member under 25 hunger: its pantry, members
@@ -1072,6 +1087,466 @@ func _biz_line(day: int) -> Dictionary:
 		roles[str(r.get("role", ""))] = int(roles.get(str(r.get("role", "")), 0)) + 1
 	return {"day": day, "stats": st, "open": w.ventures.open_ventures().size(), "setting_up": w.ventures.setting_up().size(),
 		"employed": roles, "founding_gates": gate}
+
+
+# ---------------------------------------------------------------- B25 economic investigation (read only) ----------
+## Owner directive 2026-11-02 (overnight autonomous development, sections 4-6). Everything below only reads the world: plain
+## values, the labour market's skilled_place (whose station-load roll is idempotent within a day), the construction's ground
+## search (find_ground, find_module_slot, can_place: pure searches) and price estimates. It never calls Ventures.refusal (an
+## original house's ground would be surveyed) or Ventures.offers (it drops stale offers): their stages are repeated here.
+
+## Which decision systems this run has on (the business funnel must not mistake a switched-off system for a lack of founders).
+func _config_line() -> Dictionary:
+	var j = w.judgment
+	var integ: Dictionary = (j.cfg.decision.get("integration", {}) as Dictionary) if j != null else {}
+	return {"judgment_attached": j != null, "judgment_test_disabled": JudgmentLive.test_disabled,
+		"business_found": JudgmentLive.on(w, "business_found"), "job_choice": JudgmentLive.on(w, "job_choice"),
+		"integration_business_found": bool(integ.get("business_found", false)), "integration_job_choice": bool(integ.get("job_choice", false)),
+		"aspiration_enabled": JudgmentLive.aspiring(w), "aspiration_apply": (j.asp.c.get("apply", {}) as Dictionary).duplicate() if j != null else {},
+		"aspiration_override": JudgmentAspiration.override, "economy": w.economy != null, "ventures": Ventures.cfg().duplicate(true).merged({"_note": ""}, true),
+		"skilled_places": GameData.b("skilled_places").duplicate().merged({"_note": ""}, true)}
+
+
+## A job-change note (NPCBrain._change_job) or a fruitless search (_choose_job), counted by direction and reason.
+func _job_note(t: String) -> void:
+	if t.ends_with(" looks for work and finds none."):
+		no_work_found += 1
+		return
+	var from := ""
+	var to := ""
+	var why := ""
+	var i := t.find(" takes work as a ")
+	if i >= 0:
+		var rest := t.substr(i + 17)
+		from = "none"
+		to = rest.get_slice(" (", 0)
+		why = rest.substr(rest.find(" (") + 2).trim_suffix(".").trim_suffix(")")
+	else:
+		i = t.find(" leaves work as a ")
+		if i >= 0 and " to be a " in t:
+			var rest := t.substr(i + 18)
+			from = rest.get_slice(" to be a ", 0)
+			var tail := rest.get_slice(" to be a ", 1)
+			to = tail.get_slice(": ", 0)
+			why = tail.substr(tail.find(": ") + 2).trim_suffix(".")
+		else:
+			i = t.find(" loses the work as ")
+			if i < 0:
+				return
+			var rest := t.substr(i + 19)
+			from = rest.get_slice(": ", 0)
+			to = "none"
+			why = rest.substr(rest.find(": ") + 2).trim_suffix(".")
+	var key := from.replace(" ", "_") + ">" + to.replace(" ", "_")
+	job_moves[key] = int(job_moves.get(key, 0)) + 1
+	var wk := why
+	if "did not keep the household fed" in why:
+		wk = "work did not keep the household fed"
+	elif why.begins_with("employed by"):
+		wk = "employed by an employer"
+	elif why.begins_with("the manor let them"):
+		wk = "the manor let them a stall"
+	wk = wk.left(48).replace(" ", "_")
+	job_whys[wk] = int(job_whys.get(wk, 0)) + 1
+
+
+## A dictionary's keys sorted, as a new dictionary (stable JSON).
+func _sorted_dict(d: Dictionary) -> Dictionary:
+	var ks: Array = d.keys()
+	ks.sort()
+	var out := {}
+	for k in ks:
+		out[k] = d[k]
+	return out
+
+
+## The business-founding funnel (directive section 4, measures 1-20) at a checkpoint.
+func _funnel_line(day: int) -> Dictionary:
+	var c := Ventures.cfg()
+	var kinds: Dictionary = c.kinds
+	var trades: Array = kinds.keys()
+	trades.sort()
+	# 1. population and workforce
+	var pop := {"adults": 0, "elders": 0, "children": 0, "adults_with_job": 0, "adults_without_job": 0}
+	for n: NPC in w.npcs:
+		if not n.alive or n.role == "bandit":
+			continue
+		if n.role == "adult":
+			pop.adults += 1
+			if n.job != "":
+				pop.adults_with_job += 1
+			else:
+				pop.adults_without_job += 1
+		elif n.role == "elder":
+			pop.elders += 1
+		elif n.role == "child":
+			pop.children += 1
+	# 2-4. the founding trades: workers, skill in the trade's own skill, recorded experience; and adults of other jobs with that skill
+	var tr := {}
+	for job in trades:
+		tr[job] = {"workers": 0, "levels": [0, 0, 0, 0, 0, 0, 0, 0, 0], "experienced": 0, "ready": 0, "outside_skilled": 0, "outside_skilled_jobs": {}}
+	for n: NPC in w.npcs:
+		if not n.alive or n.role != "adult" or n.household < 0:
+			continue
+		for job in trades:
+			var sk: String = w.brain._trade_skill(job)
+			var lv := Skills.level(n, sk) if sk != "" and int(n.skills.get(sk, 0)) > 0 else 0
+			if n.job == job:
+				var row: Dictionary = tr[job]
+				row.workers += 1
+				row.levels[clampi(lv, 0, 8)] += 1
+				var ind: String = NPCBrain.TRADE_INDUSTRY.get(job, "")
+				var days := w.experience.days(World.npc_ref(n.id), ind) if ind != "" else float(w.day() - n.job_since)
+				if days >= float(c.min_trade_days):
+					row.experienced += 1
+					if lv >= int(c.min_level):
+						row.ready += 1
+			elif lv >= int(c.min_level):
+				tr[job].outside_skilled += 1
+				var oj: String = n.job if n.job != "" else "none"
+				tr[job].outside_skilled_jobs[oj] = int(tr[job].outside_skilled_jobs.get(oj, 0)) + 1
+	# 5-6. housing: households, homes, ownership and tenancy, building, housing goals
+	var housing := {"households": 0, "with_home": 0, "no_home": 0, "owns_home": 0, "rents_home": 0, "manor_home_not_let": 0, "other_owner": 0,
+		"building": 0, "housing_goal": 0, "setting_up_venture": 0}
+	for h in w.households.size():
+		var hh: Dictionary = w.households[h]
+		if hh.get("ended", false) or w.brain._members(h).is_empty():
+			continue
+		housing.households += 1
+		var house: Dictionary = w.buildings.get(str(hh.get("home", "")), {})
+		if house.is_empty():
+			housing.no_home += 1
+		else:
+			housing.with_home += 1
+			var ref := World.hh_ref(h)
+			if w.owner_of(house) == ref:
+				housing.owns_home += 1
+			elif w.tenant_of(house) == ref:
+				housing.rents_home += 1
+			elif w.owner_of(house) == World.MANOR:
+				housing.manor_home_not_let += 1
+			else:
+				housing.other_owner += 1
+		if str(hh.get("build", "")) != "":
+			housing.building += 1
+		if not (hh.get("housing", {}) as Dictionary).is_empty():
+			housing.housing_goal += 1
+		if hh.has("venture"):
+			housing.setting_up_venture += 1
+	# 7-8, 10, 12. per workshop kind: ground near the manor, the start (ground + found_start_share of the materials at today's
+	# prices), the whole cost, and the materials the village holds against what one workshop needs
+	var held: Dictionary = {}
+	for g in _holders().values():
+		for id in g:
+			held[id] = int(held.get(id, 0)) + int(g[id])
+	var centre := w.building_door(w.brain._manor_id())
+	var any_ref := ""                      # a household that holds a home (the house-first rule), for the ground search
+	for h in w.households.size():
+		if not w.households[h].get("ended", false) and not w.property.homes_of(World.hh_ref(h)).is_empty():
+			any_ref = World.hh_ref(h)
+			break
+	var kinds_out := {}
+	for kind in ["smithy", "carpentry", "bakehouse"]:
+		var cost: Dictionary = w.construction.cost_of(kind)
+		var fp: Vector2i = w.construction.footprint(kind)
+		var mats := {}
+		for id in cost:
+			mats[id] = [int(cost[id]), int(held.get(id, 0)), w.construction.open_need(str(id))]
+		var ground: Rect2i = w.construction.find_ground(kind, centre, any_ref) if any_ref != "" else Rect2i()
+		kinds_out[kind] = {"ground_near_manor": ground.size != Vector2i.ZERO, "land": w.property.land_price(fp.x, fp.y),
+			"start": w.construction.start_cost(kind, fp), "whole": w.property.land_price(fp.x, fp.y) + w.construction.estimate(cost),
+			"materials_need_held_open": mats}
+	# 13-14, 16. demand, capacity and earnings of each founding trade
+	var market := {}
+	for job in trades:
+		var m: Dictionary = w.brain.skilled_place(job)
+		var stations := 0
+		var open_to_hire := 0
+		var cap := 0
+		var used := 0.0
+		for kind in NPCBrain.TRADE_STATIONS.get(job, []):
+			for st in w.stations_of(kind):
+				var sd: Dictionary = w.stations[st]
+				stations += 1
+				cap += int(sd.get("capacity", 1))
+				used += w.brain.station_minutes(st)
+				if w.may_use("", sd) or w.ventures.hiring_station(st):
+					open_to_hire += 1
+		var inc := 0.0
+		var k := 0
+		for n: NPC in w.npcs:
+			if n.alive and n.role == "adult" and n.job == job:
+				inc += n.avg_income(5)
+				k += 1
+		market[job] = {"open": int(m.open), "work": bool(m.work), "room": bool(m.room), "afford": bool(m.afford), "busy": snappedf(float(m.busy), 0.001),
+			"pay": snappedf(float(m.pay), 0.1), "staff_target": NPCBrain.staff_target(job), "open_posts": w.brain.open_posts(job),
+			"stations": stations, "stations_open_to_hire": open_to_hire, "capacity": cap, "station_minutes_a_day": roundi(used),
+			"avg_income": snappedf(inc / maxf(1.0, k), 0.01)}
+	# 15. workshops: all, on sale (a valid offer, read without dropping stale ones), unused of a household, ventures
+	var shops := {"workshops": 0, "household_owned": 0, "for_sale": 0, "open_ventures": w.ventures.open_ventures().size(),
+		"setting_up": w.ventures.setting_up().size()}
+	for id in w.buildings:
+		var b: Dictionary = w.buildings[id]
+		if not Ventures.is_business(b):
+			continue
+		shops.workshops += 1
+		if w.owner_of(b).begins_with("hh:"):
+			shops.household_owned += 1
+		if b.has("sale") and w.ventures.offer_refusal(b, str(b.sale.by)) == "":
+			shops.for_sale += 1
+	# 9, 11, 19 (now). each founding-trade worker's first failing stage, in Ventures.refusal's order, and every stage independently
+	var first := {}
+	var passes := {"skill": 0, "experience": 0, "not_keeper": 0, "household_free": 0, "has_home": 0, "owns_home": 0, "opening": 0,
+		"means_known": 0, "spare_over_working": 0, "spare_over_start_and_working": 0}
+	var cands := []
+	var markets := {}
+	for n: NPC in w.npcs:
+		if Ventures.kind_for(n.job) == "" or not n.alive or n.role != "adult" or n.household < 0:
+			continue
+		var r := _venture_stages(n, markets)
+		for key in passes:
+			if bool(r.pass.get(key, false)):
+				passes[key] += 1
+		first[r.first] = int(first.get(r.first, 0)) + 1
+		cands.append([n.id, n.job, int(r.level), snappedf(float(r.days), 0.1), r.first, int(r.spare), int(r.working), int(r.start)])
+	# 17-20. the recorded counts of the decision, attempts, refusals and outcomes
+	var st := {}
+	for k2 in w.stats:
+		if str(k2).begins_with("venture") or str(k2).begins_with("business") or str(k2) in ["skilled_hires", "skilled_hires_untrained", "skilled_hires_retrained"]:
+			st[k2] = int(w.stats[k2])
+	var asp := {}
+	if w.judgment != null:
+		for k3 in ["ambition_looks", "ambition_moves"]:
+			asp[k3] = int(w.judgment.stats.get(k3, 0))
+	return {"day": day, "population": pop, "trades": tr, "housing": housing, "kinds": kinds_out, "market": market, "workshops": shops,
+		"now_first_refusal": _sorted_dict(first), "now_passes": passes,
+		"candidates_cols": ["id", "job", "level", "trade_days", "first_refusal", "spare", "working", "start"], "candidates": cands,
+		"stats": _sorted_dict(st), "ambition": asp}
+
+
+## Ventures.refusal's stages for `n`, repeated without its state changes: {first: the first failing stage ("" none), pass:
+## {stage: bool} each judged on its own, level, days, spare, working, start}. Ground beside an unsurveyed original house is
+## not searched (refusal would survey it first); a workshop on ground of its own near the house is searched instead.
+func _venture_stages(n: NPC, markets: Dictionary) -> Dictionary:
+	var c := Ventures.cfg()
+	var job := n.job
+	var kind := Ventures.kind_for(job)
+	var out := {"first": "", "pass": {}, "level": 0, "days": 0.0, "spare": 0, "working": 0, "start": 0}
+	var fail := func(key: String) -> void:
+		if out.first == "":
+			out.first = key
+	var sk: String = w.brain._trade_skill(job)
+	var lv := Skills.level(n, sk) if sk != "" and int(n.skills.get(sk, 0)) > 0 else 0
+	out.level = lv
+	out.pass.skill = lv >= int(c.min_level)
+	if not out.pass.skill:
+		fail.call("skill")
+	var ind: String = NPCBrain.TRADE_INDUSTRY.get(job, "")
+	var days := w.experience.days(World.npc_ref(n.id), ind) if ind != "" else float(w.day() - n.job_since)
+	out.days = days
+	out.pass.experience = days >= float(c.min_trade_days)
+	if not out.pass.experience:
+		fail.call("experience")
+	out.pass.not_keeper = w.ventures.kept_by(n).is_empty()
+	if not out.pass.not_keeper:
+		fail.call("keeps_one")
+	var h := n.household
+	var hh: Dictionary = w.households[h]
+	var ref := World.hh_ref(h)
+	out.pass.household_free = not (hh.get("ended", false) or hh.has("venture") or str(hh.get("build", "")) != "" or not (hh.get("housing", {}) as Dictionary).is_empty())
+	if not out.pass.household_free:
+		fail.call("household_ended" if hh.get("ended", false) else "household_venture" if hh.has("venture") \
+				else "household_building" if str(hh.get("build", "")) != "" else "household_housing_goal")
+	var house: Dictionary = w.buildings.get(str(hh.get("home", "")), {})
+	out.pass.has_home = not house.is_empty()
+	out.pass.owns_home = not house.is_empty() and w.owner_of(house) == ref
+	if house.is_empty():
+		fail.call("no_home")
+	if not markets.has(job):
+		markets[job] = w.brain.skilled_place(job)
+	var m: Dictionary = markets[job]
+	out.pass.opening = bool(m.work) and not bool(m.room)
+	if not out.pass.opening:
+		fail.call("no_work" if not bool(m.work) else "bench_room")
+	var econ: Dictionary = hh.get("econ", {})
+	out.pass.means_known = not econ.is_empty()
+	if econ.is_empty():
+		fail.call("means_unknown")
+		return out
+	var spare: int = w.property.purse(ref) - w.construction._keep(h, w.brain._members(h).size()) - w.construction._tool_reserve(h)
+	var working := ceili(float(econ.get("cost", 0.0)) * float(c.working_days))
+	out.spare = spare
+	out.working = working
+	out.pass.spare_over_working = spare > working
+	if not out.pass.spare_over_working:
+		fail.call("money_working")
+	if not w.ventures.own_unused(n).is_empty():
+		out.pass.spare_over_start_and_working = out.pass.spare_over_working
+		if out.first == "":
+			out.first = "would_reopen"
+		return out
+	# the cheapest valid offer of a workshop the trade works (as listed_for, without dropping stale offers)
+	var best := -1
+	for id in w.buildings:
+		var b: Dictionary = w.buildings[id]
+		if b.has("sale") and w.ventures.offer_refusal(b, str(b.sale.by)) == "" and Ventures.trades_for(str(b.get("kind", ""))).has(job) and str(b.sale.by) != ref:
+			var p := w.ventures.price_for(b, n)
+			best = p if best < 0 else mini(best, p)
+	if best >= 0 and spare >= best + working:
+		out.start = best
+		out.pass.spare_over_start_and_working = true
+		if out.first == "":
+			out.first = "would_buy"
+		return out
+	if house.is_empty():
+		return out
+	var rect := Rect2i()
+	if w.owner_of(house) == ref and not w.property.anchor_of(house).is_empty():
+		rect = w.construction.find_module_slot(kind, house, ref)
+		if rect.size != Vector2i.ZERO and w.construction.can_place(kind, rect, ref, house) != "":
+			rect = Rect2i()
+	if rect.size == Vector2i.ZERO:
+		rect = w.construction.find_ground(kind, w.building_door(str(house.id)), ref)
+	if rect.size == Vector2i.ZERO:
+		fail.call("no_ground")
+		return out
+	var start: int = w.construction._start_of(h, w.construction.cost_of(kind), w.property.land_price(rect.size.x, rect.size.y))
+	out.start = start
+	out.pass.spare_over_start_and_working = spare >= start + working
+	if not out.pass.spare_over_start_and_working:
+		fail.call("money_start")
+	if out.first == "":
+		out.first = "eligible"
+	return out
+
+
+## Profession and unemployment (directive section 5) at a checkpoint: jobs, who the adults without a job are, the job changes
+## so far by direction and reason, apprentices and the open places.
+func _jobs_line(day: int) -> Dictionary:
+	var by_job := {}
+	var idle := {"n": 0, "never_had_job": 0, "had_job": {}, "days_without": [0, 0, 0, 0, 0], "age": [0, 0, 0, 0], "sick": 0,
+		"with_children_home_and_earner": 0, "partner_works": 0, "skill_best": [0, 0, 0, 0], "coins_median": 0, "household_unsustainable": 0,
+		"arrived_or_born_in_run": 0}
+	var coins := []
+	for n: NPC in w.npcs:
+		if not n.alive or n.role != "adult":
+			continue
+		var j: String = n.job if n.job != "" else "none"
+		by_job[j] = int(by_job.get(j, 0)) + 1
+		if n.job != "":
+			continue
+		idle.n += 1
+		coins.append(n.coins)
+		if n.left_job == "":
+			idle.never_had_job += 1
+		else:
+			idle.had_job[n.left_job] = int(idle.had_job.get(n.left_job, 0)) + 1
+		var dw := w.day() - n.job_since
+		idle.days_without[0 if dw < 7 else 1 if dw < 30 else 2 if dw < 90 else 3 if dw < 180 else 4] += 1
+		var age := Life.age_years(n.born, w.minutes)
+		idle.age[0 if age < 20.0 else 1 if age < 35.0 else 2 if age < 50.0 else 3] += 1
+		if n.hp < n.max_hp * 0.5:
+			idle.sick += 1
+		var ms: Array = w.brain._members(n.household) if n.household >= 0 else []
+		var kids := ms.any(func(o: NPC) -> bool: return o.alive and o.role == "child")
+		var earner := ms.any(func(o: NPC) -> bool: return o.alive and o != n and o.role == "adult" and o.job != "")
+		if kids and earner:
+			idle.with_children_home_and_earner += 1
+		var p := w.npc(n.partner) if n.partner >= 0 else null
+		if p != null and p.alive and p.job != "":
+			idle.partner_works += 1
+		var best := 0
+		for sk in n.skills:
+			best = maxi(best, Skills.level(n, str(sk)))
+		idle.skill_best[0 if best == 0 else 1 if best < 3 else 2 if best < 6 else 3] += 1
+		var econ: Dictionary = w.households[n.household].get("econ", {}) if n.household >= 0 else {}
+		if int(econ.get("streak", 0)) >= int(GameData.b("mobility_unsustainable_days")):
+			idle.household_unsustainable += 1
+		if n.born > 0.0 or n.id >= npcs_at_start:
+			idle.arrived_or_born_in_run += 1
+	coins.sort()
+	idle.coins_median = _q(coins, 50)
+	var appr := {}
+	for job in ["smith", "carpenter", "tanner", "cook", "tavernkeeper", "merchant"]:
+		appr[job] = int(_st("skilled_hires_" + job))
+	return {"day": day, "by_job": _sorted_dict(by_job), "without_job": idle, "job_moves": _sorted_dict(job_moves), "job_whys": _sorted_dict(job_whys),
+		"looked_found_none": no_work_found, "job_changes": int(_st("job_changes")), "skilled_hires": appr,
+		"skilled_hires_untrained": int(_st("skilled_hires_untrained")), "skilled_hires_retrained": int(_st("skilled_hires_retrained")),
+		"retired": int(_st("retired")), "came_of_age": int(_st("came_of_age")), "posts_left": _keys_with("posts_left_", NPCBrain.SKILLED + ["farmer", "woodcutter", "miner"]),
+		"vacancies": w.vacancies.map(func(v): return str(v.job)), "migrants_in": int(_st("migrants_in")), "migrants_out": int(_st("migrants_out"))}
+
+
+## The miners' places open now, as NPCBrain.job_market reckons them (reachable ore and quarry stone over ore_per_miner, less the
+## miners and labourers), without the rest of the market.
+func _miner_open() -> int:
+	var ore := 0
+	for dp in w.deposits:
+		if w.villagers_reach(dp):
+			ore += int(dp.amount)
+	ore += w.quarry_stone_left()
+	return maxi(0, ore / int(GameData.b("ore_per_miner")) - w.brain.living_in("miner") - w.brain.living_in("laborer"))
+
+
+## Ore and mining (directive section 6) at a checkpoint: each ore's deposits (start, left, reachable), what was found, mined,
+## used, imported and exported, what the village holds, and mining's people, places and prospecting.
+func _ore_line(day: int) -> Dictionary:
+	var held: Dictionary = {}
+	for g in _holders().values():
+		for id in g:
+			held[id] = int(held.get(id, 0)) + int(g[id])
+	var ores := {}
+	for dp in w.deposits:
+		var o := str(dp.ore)
+		if not ores.has(o):
+			ores[o] = {"start": int(ore_start.get(o, 0)), "left": 0, "reachable_left": 0, "seams": 0, "seams_left": 0}
+		var r: Dictionary = ores[o]
+		r.left += int(dp.amount)
+		r.seams += 1
+		if int(dp.amount) > 0:
+			r.seams_left += 1
+			if w.villagers_reach(dp):
+				r.reachable_left += int(dp.amount)
+	for o in ores:
+		for k in ["found_", "mined_", "made_", "used_", "imported_", "exported_"]:
+			ores[o][k.trim_suffix("_")] = int(_st(k + str(o)))
+		ores[o].held = int(held.get(o, 0))
+	var goods := {}
+	for id in ["iron_bar", "copper_bar", "gold_bar", "pickaxe", "hammer", "axe", "shovel", "chisel"]:
+		goods[id] = {"made": int(_st("made_" + id)), "used": int(_st("used_" + id)), "imported": int(_st("imported_" + id)), "held": int(held.get(id, 0))}
+	var people := {}
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and n.job in ["miner", "laborer", "prospector", "smith", "stonecutter"]:
+			people[n.job] = int(people.get(n.job, 0)) + 1
+	var pros := {}
+	for k in ["prospect_samples", "prospect_reports", "assays", "assay_traces", "trial_pits", "trial_misses", "seams_found", "seams_found_below",
+			"surveys_reported", "pit_seams", "employment_mined", "quarried_for_own_use"]:
+		pros[k] = int(_st(k))
+	# the neighbours' side (read only): what each settlement's trader could sell the village (trader_has) and its quarry's reserve
+	var region := {}
+	for so: OffMapSettlement in w.regions.list:
+		var row := {}
+		for id in ["iron_ore", "coal", "copper_ore", "iron_bar"]:
+			if so.trader_has(id) > 0:
+				row[id] = so.trader_has(id)
+		var tm := so.trader()
+		if not tm.is_empty():
+			row.trader_till = int(tm.get("till", 0))
+			row.trader_cash = so.trader_cash()
+			var stock := {}
+			for id in (tm.get("stock", {}) as Dictionary):
+				if int(tm.stock[id]) > 0:
+					stock[id] = int(tm.stock[id])
+			row.trader_stock = _sorted_dict(stock)
+		var q: Dictionary = so.biz.get("quarry", {})
+		if not q.is_empty():
+			row.reserves = (q.get("reserves", {}) as Dictionary).duplicate()
+			row.quarry_stock = {}
+			for id in ["iron_ore", "coal", "copper_ore"]:
+				row.quarry_stock[id] = int((q.get("stock", {}) as Dictionary).get(id, 0))
+		region[so.id] = row
+	return {"day": day, "ores": _sorted_dict(ores), "goods": goods, "people": people, "region": region,
+		"caravan_coins_out": int(_st("caravan_coins_out")), "miner_places_open": _miner_open(),
+		"prospecting": pros, "mining_level": int((w.settlement_caps.get("levels", {}) as Dictionary).get("mining", 0)), "seams_worked_out": events.seams_worked_out}
 
 
 func _chapel_line(day: int) -> Dictionary:
