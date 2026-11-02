@@ -122,6 +122,18 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**Farming Dispatch A: an integrity failure found (Actions 41403541582, `eca0e7d`).**
+- Result: the job for seed 2 at yield 1.5 with `--market` stopped with `FATAL day 180 seed 2: currency leak -2`.
+  - World total and holders agree (`holders_mismatch` 0), but `World.coin_sources` is out by 2 (`coin_sources_mismatch` -2): an
+    external coin flow was not recorded.
+  - Day 175 had passed.
+  - Artifact `sim-v0-seed2-days365` (ID 13127007444) on the run page, kept 30 days.
+- Classification: a defect (SIM-01; Category E integrity). It is not a yield result: under the calibration rule that job does not
+  count.
+- Action: a worker is root-causing it on `wip/b25-leak2`. Dispatch B will rerun that job after the fix.
+- Also seen in that log: `bid_unaffordable` 7394 by day 180 under `--market`. The X20-AFFORD investigation is on
+  `wip/b25-firewood`.
+
 **LE-05: route risk in delivered prices.**
 - Branch: `wip/b25-le05-risk` (`cb648ec`, `ba2cc3e`), merged as `0c122b6`.
 - Change:
