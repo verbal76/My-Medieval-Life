@@ -376,6 +376,10 @@ func update(real_dt: float) -> void:
 		_on_hour(h % 24)
 		if profiling:
 			t = _prof("hourly (incl. daily)", t)
+	Atlas.note_position(self, _host_player)              # REGION-NAV-01: the region a player sees and the places they reach
+	for id in _guests:
+		if not _guests[id].away:
+			Atlas.note_position(self, _guests[id])
 	if judgment != null:
 		judgment.gossip_tick(int(minutes))   # PROSPECTIVE (PROS-19): a few of the hour's queued meetings are told each tick
 	for n: NPC in npcs:
@@ -1527,6 +1531,8 @@ func continue_as_heir(actor: PlayerState = null) -> void:
 		heir.born = Life.born_for_age(float(Life.cfg().player_start_age[0]), minutes)    # a relative: a young adult
 		heir.sex = "female" if heir.name in Life.FEMALE else "male"
 	heir.home = p.home
+	heir.places = p.places.duplicate(true)     # REGION-NAV-01: the family knows the places and the country its own have seen
+	heir.explored = p.explored.duplicate()
 	heir.chest = p.chest
 	heir.chest_stolen = p.chest_stolen
 	heir.deaths = p.deaths

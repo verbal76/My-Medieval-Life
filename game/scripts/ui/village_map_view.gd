@@ -205,6 +205,9 @@ func outside() -> Dictionary:
 func _fit() -> void:
 	var scroll := get_parent().get_parent() as Control if get_parent() else null
 	var h: float = scroll.size.y if scroll and scroll.size.y > 100.0 else main.get_viewport().get_visible_rect().size.y - 100.0
+	var first := get_parent().get_child(0) as Control if get_parent() else null
+	if first != null and first != self:
+		h -= first.size.y + 8.0                    # REGION-NAV-01: the Village | Region bar above the map
 	if absf(custom_minimum_size.y - h) > 0.5:
 		custom_minimum_size = Vector2(0, h)
 

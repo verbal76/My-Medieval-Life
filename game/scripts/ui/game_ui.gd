@@ -4160,11 +4160,28 @@ func toggle_map() -> void:
 
 ## The whole village drawn small, with the named places, your home and where you are
 ## (scripts/ui/village_map_view.gd). Close it with Map, the X, M, the pad's B or LB, or Back.
-func show_map() -> void:
-	_open("map", "Village map")
-	var m := VillageMapPanel.new()
-	panel_body.add_child(m)
-	m.setup(main)
+## REGION-NAV-01: Village | Region toggles between the village drawn small and the region as you know it
+## (scripts/ui/region_map_view.gd); the window remembers which you looked at last.
+var map_mode := "village"
+
+
+func show_map(mode := "") -> void:
+	if mode != "":
+		map_mode = mode
+	_open("map", "Village map" if map_mode == "village" else "Region map")
+	var bar := HBoxContainer.new()
+	bar.add_theme_constant_override("separation", 8)
+	_button("Village", func(): show_map("village"), map_mode != "village", bar)
+	_button("Region", func(): show_map("region"), map_mode != "region", bar)
+	panel_body.add_child(bar)
+	if map_mode == "region":
+		var r := RegionMapPanel.new()
+		panel_body.add_child(r)
+		r.setup(main)
+	else:
+		var m := VillageMapPanel.new()
+		panel_body.add_child(m)
+		m.setup(main)
 
 
 func show_recenter(on: bool) -> void:

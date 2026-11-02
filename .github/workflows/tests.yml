@@ -100,6 +100,7 @@ jobs:
           res://tests/furniture_test.gd
           res://tests/play_test.gd
           res://tests/overworld_test.gd
+          res://tests/atlas_test.gd
           res://tests/tree_test.gd
           res://tests/world_test.gd
           res://tests/aging_test.gd

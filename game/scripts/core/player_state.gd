@@ -17,6 +17,9 @@ var line := 0                 # MP Batch B (MP-D4): a guest heir's family line, 
 var sprite := "res://assets/characters/player_00.png"
 var heir_sprite := "res://assets/characters/player_01.png"
 var pos := Vector2.ZERO
+var places := {}              # REGION-NAV-01 (Atlas): settlement id -> {how, day, by}, the settlements whose place this player knows
+var explored := {}            # REGION-NAV-01 (Atlas): overworld chunk -> its ground summary, the region this player has seen
+var atlas_chunk := Vector2i(1 << 30, 1 << 30)   # the chunk they last stood in (not saved)
 var inv := Inventory.new():
 	set(v):
 		inv = v
@@ -363,7 +366,8 @@ func to_dict() -> Dictionary:
 		"alive": alive, "deaths": deaths, "last_damage": last_damage, "death_cause": death_cause, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "appearance": appearance.duplicate(true), "heir_appearance": heir_appearance.duplicate(true), "born": born, "mother": mother, "father": father, "partner": partner, "children": children.duplicate(), "crimes": crimes.duplicate(true),
 		"quests": quests.duplicate(true), "stolen": stolen.duplicate(true), "chest_stolen": chest_stolen.duplicate(true),
 		"pack_level": pack_level,
-	}.merged({"map_level": map_level} if map_level != 0 else {}).merged({"net_key": net_key} if net_key != "" else {}).merged({"away": true} if away else {}).merged({"line": line} if line > 0 else {})
+	}.merged({"map_level": map_level} if map_level != 0 else {}).merged({"net_key": net_key} if net_key != "" else {}).merged({"away": true} if away else {}).merged({"line": line} if line > 0 else {}).merged(
+		{"places": Atlas.places_to_save(self), "explored": Atlas.explored_to_save(self)} if not places.is_empty() or not explored.is_empty() else {})
 
 
 static func from_dict(d: Dictionary) -> PlayerState:
@@ -384,6 +388,7 @@ static func from_dict(d: Dictionary) -> PlayerState:
 	p.net_key = str(d.get("net_key", ""))             # MP A2 (save 21, optional): a guest's identity hash
 	p.away = bool(d.get("away", false))               # MP A2 (MP-D1): a guest out of play when saved
 	p.line = int(d.get("line", 0))                    # MP B (MP-D4, optional): a guest heir's family line
+	Atlas.load_into(p, d)                             # REGION-NAV-01 (optional): the places and region this player knows
 	p.inv = Inventory.from_dict(d.inv)
 	p.chest = Inventory.from_dict(d.chest)
 	for k in d.skills:
