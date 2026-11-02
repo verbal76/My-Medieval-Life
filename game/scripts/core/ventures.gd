@@ -34,6 +34,10 @@ extends RefCounted
 ##   (_hire, Employment.hire_for) when it has work, room and the money.
 
 var w: World
+## Diagnostics only (B25 economic investigation, economy_sim's FUNNEL line): the key of the stage at which `refusal` last
+## stopped ("" when it did not). Written by refusal, read by _consider for its venture_refused_<key> counts; nothing in the
+## game decides by it, and it is not saved.
+var last_refusal := ""
 
 
 func _init(world: World) -> void:
@@ -303,19 +307,31 @@ func _consider() -> void:
 	for h in setting_up():
 		busy[str(setting_up()[h].trade)] = true
 	var markets := {}
+	# The venture_* counts below are diagnostics (the founding funnel, B25 economic investigation): w.stat only adds to the
+	# world's counters; no decision reads them, and they draw no random number and change no order.
 	for n: NPC in w.npcs:
-		if kind_for(n.job) == "" or busy.has(n.job) or not looks_today(n):
+		if kind_for(n.job) == "" or not looks_today(n):
+			continue
+		w.stat("venture_looks")
+		if busy.has(n.job):
+			w.stat("venture_refused_trade_setting_up")
 			continue
 		var opt := eligible(n, markets)
+		if opt.is_empty():
+			w.stat("venture_refused_" + last_refusal)
 		if opt.is_empty() and not kept_by(n).is_empty():
 			opt = expansion(n, markets)        # B25-BIZ-D5: a keeper whose business has the money may open another
 		if opt.is_empty():
 			continue
 		w.stat("ventures_considered")
+		w.stat("venture_option_" + ("expand" if opt.has("expand") else "reopen" if opt.has("reopen") else "buy" if opt.has("buy") else "build"))
 		if not decides(n, opt):
+			w.stat("ventures_declined")
 			continue
 		if found(n, opt):
 			busy[n.job] = true
+		else:
+			w.stat("ventures_found_failed")
 
 
 ## Why `n` cannot found a business now ("" when they could, the option in `out`): ability and experience, premises, the
@@ -326,40 +342,51 @@ func eligible(n: NPC, markets := {}, out := {}) -> Dictionary:
 
 
 func refusal(n: NPC, markets := {}, out := {}) -> String:
+	last_refusal = ""
 	var c := cfg()
 	var job := n.job
 	var kind := kind_for(job)
 	if kind == "" or not n.alive or n.role != "adult" or n.household < 0:
+		last_refusal = "trade"
 		return "not in a founding trade"
 	var sk: String = w.brain._trade_skill(job)
 	var lv := Skills.level(n, sk) if sk != "" and int(n.skills.get(sk, 0)) > 0 else 0
 	if lv < int(c.min_level):
+		last_refusal = "skill"
 		return "not skilled enough yet"
 	var ind: String = NPCBrain.TRADE_INDUSTRY.get(job, "")
 	var days := w.experience.days(World.npc_ref(n.id), ind) if ind != "" else float(w.day() - n.job_since)
 	if days < float(c.min_trade_days):
+		last_refusal = "experience"
 		return "too little experience in the trade"
 	if not kept_by(n).is_empty():
+		last_refusal = "keeps_one"
 		return "keeps a business already"
 	var h := n.household
 	var hh: Dictionary = w.households[h]
 	var ref := World.hh_ref(h)
 	if hh.get("ended", false) or hh.has("venture") or str(hh.get("build", "")) != "" or not (hh.get("housing", {}) as Dictionary).is_empty():
+		last_refusal = "household_ended" if hh.get("ended", false) else "household_venture" if hh.has("venture") \
+				else "household_building" if str(hh.get("build", "")) != "" else "household_housing_goal"
 		return "the household has building or a home to see to first"
 	var house: Dictionary = w.buildings.get(str(hh.get("home", "")), {})
 	if house.is_empty():
+		last_refusal = "no_home"
 		return "the household has no home to start from"
 	if not markets.has(job):
 		markets[job] = w.brain.skilled_place(job)
 	var m: Dictionary = markets[job]
 	if not bool(m.work) or bool(m.room):
+		last_refusal = "no_work" if not bool(m.work) else "bench_room"
 		return "no opening for another workshop of the trade"
 	var econ: Dictionary = hh.get("econ", {})
 	if econ.is_empty():
+		last_refusal = "means_unknown"
 		return "the household's means are not known"
 	var spare: int = w.property.purse(ref) - w.construction._keep(h, w.brain._members(h).size()) - w.construction._tool_reserve(h)
 	var working := ceili(float(econ.get("cost", 0.0)) * float(c.working_days))
 	if spare <= working:
+		last_refusal = "money_working"
 		return "the household cannot spare the money"
 	# B25-BIZ-D5: a workshop of the trade the household already owns opens again; one on sale is bought before one is built
 	# ("A person should not be forced to construct a new business when an existing business is available for purchase")
@@ -388,10 +415,12 @@ func refusal(n: NPC, markets := {}, out := {}) -> String:
 		anchor = {}                          # else a workshop on its own ground near the house (owner rule: a house first)
 		rect = w.construction.find_ground(kind, w.building_door(str(house.id)), ref)
 		if rect.size == Vector2i.ZERO:
+			last_refusal = "no_ground"
 			return "no ground for a workshop"
 	var land: int = w.property.land_price(rect.size.x, rect.size.y)
 	var start: int = w.construction._start_of(h, w.construction.cost_of(kind), land)
 	if spare < start + working:
+		last_refusal = "money_start"
 		return "the household cannot spare the money"
 	out.merge({"kind": kind, "rect": rect, "house": anchor, "start": start, "need": start + working, "spare": spare,
 		"busy": float(m.get("busy", 0.0)), "skill": lv}, true)
