@@ -10,7 +10,7 @@ extends RefCounted
 ## attach()/extract() take the save dictionary, and the integration step calls them from World.
 ##
 ## Section shape (format mml-settlements/0, provisional; becomes /1 at integration):
-##   {"format", "capabilities": {settlement_id: {levels, since, history}}, "regions": [SettlementLedger.to_dict()],
+##   {"format", "capabilities": {settlement_id: {levels, since, history, milestones?}}, "regions": [SettlementLedger.to_dict()],
 ##    "agreements": [[a, b, kind]], "day": int}
 
 const KEY := "x18_settlements"
@@ -52,6 +52,14 @@ static func extract(save: Dictionary) -> Dictionary:
 		for e in c.get("history", []):
 			hist.append({"day": int(e.day), "industry": str(e.industry), "from": int(e.from), "to": int(e.to)})
 		c.history = hist
+		if c.has("milestones"):                 # B25-CAPABILITY: optional (absent: seeded silently at the next update)
+			var ms := {}
+			for ind in c.milestones:
+				var m := {}
+				for l in c.milestones[ind]:
+					m[str(int(float(l)))] = int(c.milestones[ind][l])
+				ms[str(ind)] = m
+			c.milestones = ms
 	return out
 
 

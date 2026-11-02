@@ -196,6 +196,13 @@ func _init() -> void:
 			print("BIZ " + JSON.stringify(_biz_line(d + 1)))
 			dev_series.append(_dev(d + 1))
 			print("ECON10 " + JSON.stringify(dev_series[-1]))
+			# B25-CAPABILITY: the village's current industry levels, its milestone record (first days), the milestones announced
+			# so far (World.announce_milestones: one village note and one journal entry per player each) and stone quarried for
+			# own building. Read only.
+			print("CAPMS " + JSON.stringify({"day": d + 1, "levels": w.settlement_caps.get("levels", {}),
+				"milestones": w.settlement_caps.get("milestones", {}), "announced": int(w.stats.get("village_milestones", 0.0)),
+				"quarried_for_own_use": int(w.stats.get("quarried_for_own_use", 0.0)),
+				"player_journal_village": w.messages.entries(w.player_ref(w.player)).filter(func(e): return str(e[1]) == "village").size()}))
 			min_hunger = 100.0
 			harness_us += Time.get_ticks_usec() - ts
 			if w.economy != null:                  # LE-06: the economy's save at each checkpoint, and whether it loads back exactly

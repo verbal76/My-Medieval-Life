@@ -520,6 +520,7 @@ func _new_day() -> void:
 	mine_works.dawn()                  # MIN-F2: supports and ladders wear; excavations too weakly held may cave in
 	discovery.dawn()                   # MIN-D: the settlement's mining capability, from what the village has this morning
 	settlement_profile = SettlementProfile.update(self, settlement_caps, day())   # SET-B: the capability profile, maintained daily
+	announce_milestones(settlement_profile.get("reached", []))   # B25-CAPABILITY: first achievements only
 	brain.dawn()
 	if profiling:
 		t = _prof("daily: brain dawn (work, succession)", t)
@@ -3727,6 +3728,20 @@ func note(text: String) -> void:
 	if log_lines.size() > 300:
 		log_lines.pop_front()
 	event.emit(line)
+
+
+## B25-CAPABILITY (owner Decision 8): announce village industry milestones first reached today (SettlementProfile
+## .note_milestones: `reached`, [{industry, level}]), unobtrusively and as village news: one line by note() (the village
+## record, and the corner log's village lane through `event`, JUICE-J1; never the personal lane) and one entry in every
+## player's message journal under the category "village" (significant tier). Showing it once is the milestone record's job
+## (only a first achievement is in `reached`). Presentation only: nothing in the simulation reads it.
+func announce_milestones(reached: Array) -> void:
+	for r in reached:
+		var text := SettlementProfile.milestone_text(str(r.industry), int(r.level))
+		note(text)
+		for pl: PlayerState in player_list():
+			messages.record(player_ref(pl), minutes, "village", text)
+		stat("village_milestones")
 
 
 func alive_count(role := "") -> int:

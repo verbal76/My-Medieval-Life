@@ -150,7 +150,9 @@ static func build(w: World, p: PlayerState, what: String, from: Vector2i, dir: V
 	var tool := p.tool_of(str(k.tool))
 	if w._work_wear(p, tool, int(k.wear), str(k.skill), "tool_wear_save" if what == "steps" else ""):
 		w.note("Your %s broke." % GameData.item_name(tool).to_lower())
-	p.gain(str(k.skill), int(k.xp))
+	var up := p.gain(str(k.skill), int(k.xp))
+	if up > 0 and p == w.player:
+		w.player_leveled.emit(str(k.skill), up)      # B25-CAPABILITY: the level-up is announced as every other (Main._level_up)
 	var kind := ("steps" if what == "steps" else what) + run_of(dir)
 	for c: Vector2i in cells:
 		o.note_work(c, kind)

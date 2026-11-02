@@ -532,7 +532,25 @@ func _dress_own(n: NPC, c: Dictionary, need: Dictionary) -> bool:
 			w.stat("dressed_for_own_use")
 			return true
 		return false
-	return b._fetch_dress_stone(n)
+	return b._fetch_dress_stone(n) or _quarry_own(n)
+
+
+## B25-CAPABILITY (owner Decision 1, 2026-11-01: "A villager who mines stone to build his own house gains Mining experience
+## even if he has never worked professionally as a miner"): when no stone for the dressing can be bought, a builder who
+## holds a pickaxe quarries it themselves from the nearest seam of stone they can reach, by the player's swing
+## (World.work_mine through the "mine" act: the stone comes out of the seam, the pickaxe wears, the swing earns Mining xp
+## and Mining hours whatever the miner's trade). A personal project, not a job: no title is needed or given. True when
+## planned. Agent decision (docs/DECISIONS.md, 2026-11-01).
+func _quarry_own(n: NPC) -> bool:
+	if not n.inv.has("pickaxe") or not n.inv.can_add("stone"):
+		return false
+	var d := w.nearest_seam(n, ["stone"])
+	if d.is_empty():
+		return false
+	n.doing = "quarrying stone for their own building"
+	n.plan = w.brain.seam_steps(n, d, "mine", {})
+	w.stat("quarried_for_own_use")
+	return true
 
 
 ## The nearest villager selling a material whom the helper can pay (from the employer's purse,

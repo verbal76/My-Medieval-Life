@@ -146,8 +146,8 @@ func _lane_tests() -> void:
 	# a skill level is the player's own: the personal lane, and kept on the journal's Messages page
 	var before: int = main.world.player_messages().size()
 	main._level_up("mining", 3)
-	check(ui.log_texts(GameUI.LANE_PERSONAL).any(func(t): return str(t).begins_with("Mining is now level 3")),
-		"a skill level shows in the personal lane")
+	check(ui.log_texts(GameUI.LANE_PERSONAL).any(func(t): return str(t).begins_with("Mining Level 3 Reached.")),
+		"a skill level shows in the personal lane, in the owner's words (Decision 8)")
 	check(main.world.player_messages().size() == before + 1, "and is kept in the journal (category skill)")
 	# World.note reaches the village lane (the API for village announcements)
 	main.world.note("The village has a milestone")

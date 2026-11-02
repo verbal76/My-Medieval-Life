@@ -4426,10 +4426,9 @@ func _xp(skill: String, n: int) -> void:
 func _level_up(skill: String, up: int) -> void:
 	if up > 0:
 		audio.play_sfx("jingle_level_up")
-		var s: Dictionary = GameData.skills[skill]
-		var unlock := Skills.tier_text(skill, up)
-		# JUICE J1: the player's own news goes in the personal lane of the corner log (kept on the journal's Messages page)
-		ui.personal("%s is now level %d!%s" % [s.name, up, (" Unlocked: " + unlock) if unlock != "" else ""], "", "skill", 4.0)
+		# JUICE J1 + B25-CAPABILITY: the player's own news in the personal lane (kept on the journal's Messages page), in the
+		# owner's words "Mining Level 3 Reached." (Decision 8)
+		ui.personal(Skills.level_up_text(skill, up), "", "skill", 4.0)
 
 
 ## Craft a recipe at a station (called from the craft panel). Same recipe data as the NPCs.
