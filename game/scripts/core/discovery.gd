@@ -393,7 +393,7 @@ func need_holds(need: Dictionary) -> bool:
 	match str(need.kind):
 		"deposit_access":
 			var lv := int(need.get("level", 0))
-			for d in w._quarry_sources(["iron_ore", "coal", "copper_ore", "gold_ore", "stone"]):
+			for d in w._quarry_sources(["iron_ore", "coal", "copper_ore", "gold_ore", "stone", "tin_ore"]):
 				if int(d.amount) > 0 and World.level_of(d) == lv and w.villagers_reach(d):
 					return true
 			return false

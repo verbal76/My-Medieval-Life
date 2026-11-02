@@ -15,6 +15,108 @@
     "rule": "INV-18 (Build 18): every item has exactly one category, the pack tab it is carried in and the capacity pool it counts against. Precedence: weapon, tool, armour and clothing (anything worn), food, medicine, whatever made them; raw = gathered, dug, cut or taken from animals before any workshop step (seeds and planting stock included); crafted = made in a workshop and none of the above (jewellery included); general = what is left, kept short.",
     "owner": "INV-Q1 decided by the owner 2026-10-22 (docs/directives/2026-10-22_build18_owner_decisions_inventory_tailor_armor.md): rings and amulets crafted goods and valuables; wheat raw; raw meat food; seeds, saplings and cuttings raw; herbal tonic medicine; lockpicks and padlocks tools."
   },
+  "bonuses": {
+    "_note": "B25 Decision 6 (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md): every worn or held bonus an item may carry, the kinds of piece it belongs to and whether the game has the mechanic it works through. An item's \"bonus\" holds only active bonuses (PlayerState.bonus applies them); a bonus whose mechanic is not in the game yet is kept in the item's \"latent\" and is never applied or shown as working (the Pack and the encyclopedia list it as not in the game yet). An armour piece's \"bonus_kind\": physical (Common and Fine: protection from material, construction and craftsmanship, never a bonus), regional (Cultural: a fighting technique the equipment supports, open to anyone who can make or order it, never tied to the wearer), rare or elemental (Rare: exceptional pieces; elemental when a bonus belongs to an element). Ordinary clothing (\"clothing\": true, Decision 7) has no armour and no bonus. Values are PROVISIONAL (docs/DECISIONS.md 2026-11-01).",
+    "max_hp": {
+      "name": "health",
+      "active": true,
+      "kinds": [
+        "rare"
+      ],
+      "mechanic": "PlayerState.hp_cap"
+    },
+    "max_stamina": {
+      "name": "stamina",
+      "active": true,
+      "kinds": [
+        "regional",
+        "rare"
+      ],
+      "mechanic": "PlayerState.stamina_cap"
+    },
+    "stamina_regen": {
+      "name": "stamina a second",
+      "active": true,
+      "kinds": [
+        "regional",
+        "rare"
+      ],
+      "mechanic": "World.update (stamina regeneration)"
+    },
+    "damage": {
+      "name": "melee damage",
+      "active": true,
+      "kinds": [
+        "regional",
+        "rare"
+      ],
+      "mechanic": "PlayerState.damage"
+    },
+    "sword_damage": {
+      "name": "melee damage with a sword",
+      "active": true,
+      "kinds": [
+        "regional"
+      ],
+      "mechanic": "PlayerState.damage, only with a sword-like blade in the hand",
+      "weapons": [
+        "sword",
+        "greatsword",
+        "katana",
+        "scimitar",
+        "rapier"
+      ],
+      "items": [
+        "copper_sword",
+        "iron_sword",
+        "rusty_sword"
+      ]
+    },
+    "fire_damage": {
+      "name": "fireball damage",
+      "active": true,
+      "kinds": [
+        "elemental"
+      ],
+      "element": "fire",
+      "mechanic": "World.player_fireball_hit (the Fireball spell)"
+    },
+    "frost_damage": {
+      "name": "frost damage",
+      "active": false,
+      "kinds": [
+        "elemental"
+      ],
+      "element": "ice",
+      "needs": "an ice spell: only Fireball is in the game"
+    },
+    "lightning_damage": {
+      "name": "lightning damage",
+      "active": false,
+      "kinds": [
+        "elemental"
+      ],
+      "element": "lightning",
+      "needs": "a lightning spell: only Fireball is in the game"
+    },
+    "wind_damage": {
+      "name": "wind damage",
+      "active": false,
+      "kinds": [
+        "elemental"
+      ],
+      "element": "wind",
+      "needs": "a wind spell: only Fireball is in the game"
+    },
+    "mounted_mobility": {
+      "name": "mounted mobility",
+      "active": false,
+      "kinds": [
+        "regional"
+      ],
+      "needs": "riding and mounted combat: horses only pull the plough"
+    }
+  },
   "items": {
     "copper_ore": {
       "name": "Copper ore",
@@ -230,7 +332,8 @@
       "order": {
         "maker": "tanner",
         "fee": 6
-      }
+      },
+      "bonus_kind": "physical"
     },
     "iron_armor": {
       "name": "Iron armour",
@@ -243,7 +346,8 @@
       "order": {
         "maker": "smith",
         "fee": 8
-      }
+      },
+      "bonus_kind": "physical"
     },
     "rusty_sword": {
       "name": "Rusty sword",
@@ -355,7 +459,8 @@
       "value": 2,
       "armor": 0,
       "durability": 240,
-      "category": "armour"
+      "category": "armour",
+      "clothing": true
     },
     "leather_cap": {
       "name": "Leather cap",
@@ -368,7 +473,8 @@
       "order": {
         "maker": "tanner",
         "fee": 2
-      }
+      },
+      "bonus_kind": "physical"
     },
     "iron_helmet": {
       "name": "Iron helmet",
@@ -381,7 +487,8 @@
       "order": {
         "maker": "smith",
         "fee": 4
-      }
+      },
+      "bonus_kind": "physical"
     },
     "copper_ring": {
       "name": "Copper ring",
@@ -681,6 +788,42 @@
       "value": 8,
       "category": "raw"
     },
+    "tin_ore": {
+      "name": "Tin ore",
+      "type": "resource",
+      "value": 5,
+      "category": "raw"
+    },
+    "tin_bar": {
+      "name": "Tin bar",
+      "type": "resource",
+      "value": 14,
+      "category": "crafted"
+    },
+    "bronze_bar": {
+      "name": "Bronze bar",
+      "type": "resource",
+      "value": 12,
+      "category": "crafted"
+    },
+    "steel_bar": {
+      "name": "Steel bar",
+      "type": "resource",
+      "value": 18,
+      "category": "crafted"
+    },
+    "silk": {
+      "name": "Raw silk",
+      "type": "resource",
+      "value": 12,
+      "category": "raw"
+    },
+    "fur": {
+      "name": "Fur",
+      "type": "resource",
+      "value": 9,
+      "category": "crafted"
+    },
     "bronze_armor": {
       "name": "Bronze armour",
       "type": "armor",
@@ -692,7 +835,8 @@
       "order": {
         "maker": "smith",
         "fee": 6
-      }
+      },
+      "bonus_kind": "physical"
     },
     "steel_armor": {
       "name": "Steel armour",
@@ -705,7 +849,8 @@
       "order": {
         "maker": "smith",
         "fee": 32
-      }
+      },
+      "bonus_kind": "physical"
     },
     "gold_armor": {
       "name": "Gold armour",
@@ -726,7 +871,8 @@
         "max_hp": 10,
         "stamina_regen": 1
       },
-      "about": "Gilded plate: a bearer who seems never to tire."
+      "about": "Gilded plate: a bearer who seems never to tire.",
+      "bonus_kind": "rare"
     },
     "viking_karl_armor": {
       "name": "Viking karl armour",
@@ -740,11 +886,13 @@
         "maker": "smith",
         "fee": 40,
         "bring": {
-          "hide": 4,
+          "fur": 2,
+          "hide": 2,
           "wool_cloth": 2
         }
       },
-      "about": "A free northman's mail over fur and wool."
+      "about": "A free northman's mail over fur and wool.",
+      "bonus_kind": "regional"
     },
     "viking_warrior_armor": {
       "name": "Viking warrior armour",
@@ -765,7 +913,8 @@
       "bonus": {
         "damage": 1
       },
-      "about": "Mail hung with boar tusks: every blow lands a little harder."
+      "about": "Mail hung with boar tusks: every blow lands a little harder.",
+      "bonus_kind": "regional"
     },
     "viking_jarl_armor": {
       "name": "Viking jarl armour",
@@ -779,7 +928,8 @@
         "maker": "smith",
         "fee": 90,
         "bring": {
-          "hide": 4,
+          "fur": 2,
+          "hide": 2,
           "gold_bar": 2,
           "antler": 2
         }
@@ -787,7 +937,8 @@
       "bonus": {
         "max_hp": 10
       },
-      "about": "A chieftain's gilded mail and antler clasps."
+      "about": "A chieftain's gilded mail and antler clasps.",
+      "bonus_kind": "rare"
     },
     "mongol_cherbi_armor": {
       "name": "Mongol cherbi armour",
@@ -807,7 +958,11 @@
       "bonus": {
         "max_stamina": 5
       },
-      "about": "Light lamellar for a long ride."
+      "about": "Light lamellar for a long ride.",
+      "latent": {
+        "mounted_mobility": 1
+      },
+      "bonus_kind": "regional"
     },
     "mongol_kheshig_armor": {
       "name": "Mongol kheshig armour",
@@ -822,13 +977,17 @@
         "fee": 40,
         "bring": {
           "wool_cloth": 2,
-          "hide": 2
+          "fur": 2
         }
       },
       "bonus": {
         "max_stamina": 5
       },
-      "about": "A guardsman's lamellar over a fur-lined coat."
+      "about": "A guardsman's lamellar over a fur-lined coat.",
+      "latent": {
+        "mounted_mobility": 1
+      },
+      "bonus_kind": "regional"
     },
     "mongol_noyon_armor": {
       "name": "Mongol noyon armour",
@@ -849,7 +1008,11 @@
       "bonus": {
         "max_stamina": 5
       },
-      "about": "A commander's lamellar, faced with silk."
+      "about": "A commander's lamellar, faced with silk.",
+      "latent": {
+        "mounted_mobility": 1
+      },
+      "bonus_kind": "regional"
     },
     "mongol_khaan_armor": {
       "name": "Mongol khaan armour",
@@ -872,7 +1035,11 @@
         "max_stamina": 10,
         "stamina_regen": 1
       },
-      "about": "A khan's gilded lamellar: breath for the whole day."
+      "about": "A khan's gilded lamellar: breath for the whole day.",
+      "latent": {
+        "mounted_mobility": 1
+      },
+      "bonus_kind": "rare"
     },
     "samurai_armor_lime": {
       "name": "Samurai armour (green)",
@@ -886,10 +1053,15 @@
         "maker": "smith",
         "fee": 50,
         "bring": {
-          "fine_cloth": 3
+          "fine_cloth": 2,
+          "silk": 1
         }
       },
-      "about": "Laced iron plates on silk cords."
+      "about": "Laced plates of iron and steel on silk cords, made for sword work: a sword in the hand cuts a little deeper.",
+      "bonus": {
+        "sword_damage": 1
+      },
+      "bonus_kind": "regional"
     },
     "samurai_armor_purple": {
       "name": "Samurai armour (purple)",
@@ -903,10 +1075,15 @@
         "maker": "smith",
         "fee": 50,
         "bring": {
-          "fine_cloth": 3
+          "fine_cloth": 2,
+          "silk": 1
         }
       },
-      "about": "Laced iron plates on silk cords."
+      "about": "Laced plates of iron and steel on silk cords, made for sword work: a sword in the hand cuts a little deeper.",
+      "bonus": {
+        "sword_damage": 1
+      },
+      "bonus_kind": "regional"
     },
     "ronin_robe_blue": {
       "name": "Ronin's robe (blue)",
@@ -926,7 +1103,8 @@
       "bonus": {
         "stamina_regen": 1
       },
-      "about": "A wanderer's robe over a leather vest."
+      "about": "A wanderer's robe over a leather vest.",
+      "bonus_kind": "regional"
     },
     "yabusame_robe_blue": {
       "name": "Yabusame robe (blue)",
@@ -947,7 +1125,11 @@
       "bonus": {
         "max_stamina": 5
       },
-      "about": "A mounted archer's robe."
+      "about": "A mounted archer's robe.",
+      "latent": {
+        "mounted_mobility": 1
+      },
+      "bonus_kind": "regional"
     },
     "ronin_robe_red": {
       "name": "Ronin's robe (red)",
@@ -967,7 +1149,8 @@
       "bonus": {
         "stamina_regen": 1
       },
-      "about": "A wanderer's robe over a leather vest."
+      "about": "A wanderer's robe over a leather vest.",
+      "bonus_kind": "regional"
     },
     "yabusame_robe_red": {
       "name": "Yabusame robe (red)",
@@ -988,7 +1171,11 @@
       "bonus": {
         "max_stamina": 5
       },
-      "about": "A mounted archer's robe."
+      "about": "A mounted archer's robe.",
+      "latent": {
+        "mounted_mobility": 1
+      },
+      "bonus_kind": "regional"
     },
     "ninja_garb": {
       "name": "Ninja garb",
@@ -1002,19 +1189,20 @@
         "maker": "tanner",
         "fee": 50,
         "bring": {
-          "fine_cloth": 2
+          "silk": 2
         }
       },
       "bonus": {
         "stamina_regen": 2
       },
-      "about": "Close black silk: quick breath, little protection."
+      "about": "Close black silk: quick breath, little protection.",
+      "bonus_kind": "regional"
     },
     "traveller_robe": {
       "name": "Traveller's robe",
       "type": "armor",
       "value": 80,
-      "armor": 1,
+      "armor": 0,
       "durability": 200,
       "category": "armour",
       "class": "cultural",
@@ -1025,11 +1213,8 @@
           "fine_cloth": 1
         }
       },
-      "bonus": {
-        "max_stamina": 5,
-        "stamina_regen": 1
-      },
-      "about": "A road robe for long journeys."
+      "about": "A road robe for long journeys: clothing, not armour.",
+      "clothing": true
     },
     "french_hunter_coat": {
       "name": "Hunter's coat",
@@ -1050,7 +1235,8 @@
       "bonus": {
         "max_stamina": 5
       },
-      "about": "A French huntsman's coat."
+      "about": "A French huntsman's coat.",
+      "bonus_kind": "regional"
     },
     "musketeer_coat_purple": {
       "name": "Musketeer's coat (purple)",
@@ -1071,7 +1257,8 @@
       "bonus": {
         "max_stamina": 5
       },
-      "about": "A musketeer's tabard coat."
+      "about": "A musketeer's tabard coat.",
+      "bonus_kind": "regional"
     },
     "musketeer_coat_red": {
       "name": "Musketeer's coat (red)",
@@ -1092,7 +1279,8 @@
       "bonus": {
         "max_stamina": 5
       },
-      "about": "A musketeer's tabard coat."
+      "about": "A musketeer's tabard coat.",
+      "bonus_kind": "regional"
     },
     "grunt_helm": {
       "name": "Grunt helm",
@@ -1105,7 +1293,8 @@
       "order": {
         "maker": "smith",
         "fee": 4
-      }
+      },
+      "bonus_kind": "physical"
     },
     "scout_helm": {
       "name": "Scout helm",
@@ -1118,7 +1307,8 @@
       "order": {
         "maker": "smith",
         "fee": 4
-      }
+      },
+      "bonus_kind": "physical"
     },
     "knight_helm": {
       "name": "Knight helm",
@@ -1131,7 +1321,8 @@
       "order": {
         "maker": "smith",
         "fee": 15
-      }
+      },
+      "bonus_kind": "physical"
     },
     "soldier_bronze_helm_red": {
       "name": "Soldier's bronze helm (red plume)",
@@ -1144,7 +1335,8 @@
       "order": {
         "maker": "smith",
         "fee": 4
-      }
+      },
+      "bonus_kind": "physical"
     },
     "soldier_bronze_helm_blue": {
       "name": "Soldier's bronze helm (blue plume)",
@@ -1157,7 +1349,8 @@
       "order": {
         "maker": "smith",
         "fee": 4
-      }
+      },
+      "bonus_kind": "physical"
     },
     "soldier_iron_helm_red": {
       "name": "Soldier's iron helm (red plume)",
@@ -1170,7 +1363,8 @@
       "order": {
         "maker": "smith",
         "fee": 4
-      }
+      },
+      "bonus_kind": "physical"
     },
     "soldier_iron_helm_blue": {
       "name": "Soldier's iron helm (blue plume)",
@@ -1183,7 +1377,8 @@
       "order": {
         "maker": "smith",
         "fee": 4
-      }
+      },
+      "bonus_kind": "physical"
     },
     "soldier_steel_helm_red": {
       "name": "Soldier's steel helm (red plume)",
@@ -1196,7 +1391,8 @@
       "order": {
         "maker": "smith",
         "fee": 16
-      }
+      },
+      "bonus_kind": "physical"
     },
     "soldier_steel_helm_blue": {
       "name": "Soldier's steel helm (blue plume)",
@@ -1209,7 +1405,8 @@
       "order": {
         "maker": "smith",
         "fee": 16
-      }
+      },
+      "bonus_kind": "physical"
     },
     "soldier_gold_helm_red": {
       "name": "Soldier's gold helm (red plume)",
@@ -1228,7 +1425,8 @@
       },
       "bonus": {
         "max_hp": 5
-      }
+      },
+      "bonus_kind": "rare"
     },
     "soldier_gold_helm_blue": {
       "name": "Soldier's gold helm (blue plume)",
@@ -1247,7 +1445,8 @@
       },
       "bonus": {
         "max_hp": 5
-      }
+      },
+      "bonus_kind": "rare"
     },
     "dark_knight_helm": {
       "name": "Dark knight helm",
@@ -1268,7 +1467,8 @@
       "bonus": {
         "damage": 2
       },
-      "about": "Black steel crowned with antler: a heavier hand in a fight."
+      "about": "Black steel crowned with antler: a heavier hand in a fight.",
+      "bonus_kind": "rare"
     },
     "dragon_knight_helm": {
       "name": "Dragon knight helm",
@@ -1289,7 +1489,8 @@
       "bonus": {
         "fire_damage": 3
       },
-      "about": "Tusked like a dragon's jaw: your fireballs burn hotter."
+      "about": "Tusked like a dragon's jaw: your fireballs burn hotter.",
+      "bonus_kind": "elemental"
     },
     "paladin_helm": {
       "name": "Paladin helm",
@@ -1311,7 +1512,8 @@
         "max_hp": 5,
         "stamina_regen": 1
       },
-      "about": "A winged holy helm."
+      "about": "A winged holy helm.",
+      "bonus_kind": "rare"
     },
     "viking_karl_helm": {
       "name": "Viking karl helm",
@@ -1327,7 +1529,8 @@
         "bring": {
           "antler": 2
         }
-      }
+      },
+      "bonus_kind": "regional"
     },
     "viking_warrior_helm_red": {
       "name": "Viking warrior helm (red)",
@@ -1343,7 +1546,8 @@
         "bring": {
           "antler": 2
         }
-      }
+      },
+      "bonus_kind": "regional"
     },
     "viking_warrior_helm_yellow": {
       "name": "Viking warrior helm (yellow)",
@@ -1359,7 +1563,8 @@
         "bring": {
           "antler": 2
         }
-      }
+      },
+      "bonus_kind": "regional"
     },
     "valkyrie_helm": {
       "name": "Valkyrie helm",
@@ -1380,7 +1585,8 @@
       "bonus": {
         "max_stamina": 5
       },
-      "about": "Winged: light on the head and the feet."
+      "about": "Winged: light on the head and the feet.",
+      "bonus_kind": "regional"
     },
     "viking_jarl_helm": {
       "name": "Viking jarl helm",
@@ -1400,7 +1606,8 @@
       },
       "bonus": {
         "max_hp": 5
-      }
+      },
+      "bonus_kind": "rare"
     },
     "mongol_cherbi_helm": {
       "name": "Mongol cherbi helm",
@@ -1417,7 +1624,8 @@
           "wool_cloth": 1,
           "feather": 2
         }
-      }
+      },
+      "bonus_kind": "regional"
     },
     "mongol_kheshig_helm": {
       "name": "Mongol kheshig helm",
@@ -1431,9 +1639,10 @@
         "maker": "smith",
         "fee": 30,
         "bring": {
-          "hide": 1
+          "fur": 1
         }
-      }
+      },
+      "bonus_kind": "regional"
     },
     "mongol_noyon_helm": {
       "name": "Mongol noyon helm",
@@ -1453,7 +1662,8 @@
       },
       "bonus": {
         "max_stamina": 5
-      }
+      },
+      "bonus_kind": "regional"
     },
     "mongol_khaan_helm": {
       "name": "Mongol khaan helm",
@@ -1468,14 +1678,15 @@
         "fee": 80,
         "bring": {
           "gold_bar": 1,
-          "hide": 2,
+          "fur": 2,
           "feather": 2
         }
       },
       "bonus": {
         "max_stamina": 5,
         "stamina_regen": 1
-      }
+      },
+      "bonus_kind": "rare"
     },
     "samurai_helm": {
       "name": "Samurai helm",
@@ -1491,7 +1702,8 @@
         "bring": {
           "fine_cloth": 1
         }
-      }
+      },
+      "bonus_kind": "regional"
     },
     "daimyo_helm": {
       "name": "Daimyo helm",
@@ -1512,7 +1724,8 @@
       "bonus": {
         "fire_damage": 2,
         "max_hp": 5
-      }
+      },
+      "bonus_kind": "elemental"
     },
     "shogun_helm_green": {
       "name": "Shogun helm (green)",
@@ -1532,7 +1745,8 @@
       },
       "bonus": {
         "fire_damage": 4
-      }
+      },
+      "bonus_kind": "elemental"
     },
     "shogun_helm_purple": {
       "name": "Shogun helm (purple)",
@@ -1552,13 +1766,14 @@
       },
       "bonus": {
         "fire_damage": 4
-      }
+      },
+      "bonus_kind": "elemental"
     },
     "musketeer_hat_purple": {
       "name": "Musketeer's hat (purple)",
       "type": "head",
       "value": 65,
-      "armor": 1,
+      "armor": 0,
       "durability": 240,
       "category": "armour",
       "class": "cultural",
@@ -1570,15 +1785,13 @@
           "feather": 2
         }
       },
-      "bonus": {
-        "max_stamina": 5
-      }
+      "clothing": true
     },
     "musketeer_hat_red": {
       "name": "Musketeer's hat (red)",
       "type": "head",
       "value": 65,
-      "armor": 1,
+      "armor": 0,
       "durability": 240,
       "category": "armour",
       "class": "cultural",
@@ -1590,15 +1803,13 @@
           "feather": 2
         }
       },
-      "bonus": {
-        "max_stamina": 5
-      }
+      "clothing": true
     },
     "hunter_hat_blue": {
       "name": "Hunter's hat (blue)",
       "type": "head",
       "value": 65,
-      "armor": 1,
+      "armor": 0,
       "durability": 240,
       "category": "armour",
       "class": "cultural",
@@ -1610,15 +1821,13 @@
           "feather": 2
         }
       },
-      "bonus": {
-        "max_stamina": 5
-      }
+      "clothing": true
     },
     "hunter_hat_indigo": {
       "name": "Hunter's hat (indigo)",
       "type": "head",
       "value": 65,
-      "armor": 1,
+      "armor": 0,
       "durability": 240,
       "category": "armour",
       "class": "cultural",
@@ -1630,15 +1839,13 @@
           "feather": 2
         }
       },
-      "bonus": {
-        "max_stamina": 5
-      }
+      "clothing": true
     },
     "hunter_hat_red": {
       "name": "Hunter's hat (red)",
       "type": "head",
       "value": 65,
-      "armor": 1,
+      "armor": 0,
       "durability": 240,
       "category": "armour",
       "class": "cultural",
@@ -1650,9 +1857,7 @@
           "feather": 2
         }
       },
-      "bonus": {
-        "max_stamina": 5
-      }
+      "clothing": true
     },
     "mage_hat_cyan": {
       "name": "Mage hat (cyan)",
@@ -1672,7 +1877,11 @@
       },
       "bonus": {
         "fire_damage": 2
-      }
+      },
+      "latent": {
+        "frost_damage": 2
+      },
+      "bonus_kind": "elemental"
     },
     "mage_hat_red": {
       "name": "Mage hat (red)",
@@ -1692,7 +1901,8 @@
       },
       "bonus": {
         "fire_damage": 2
-      }
+      },
+      "bonus_kind": "elemental"
     },
     "mage_hat_yellow": {
       "name": "Mage hat (yellow)",
@@ -1712,7 +1922,11 @@
       },
       "bonus": {
         "fire_damage": 2
-      }
+      },
+      "latent": {
+        "lightning_damage": 2
+      },
+      "bonus_kind": "elemental"
     },
     "high_mage_hat_cyan": {
       "name": "High mage hat (cyan)",
@@ -1732,7 +1946,11 @@
       },
       "bonus": {
         "fire_damage": 4
-      }
+      },
+      "latent": {
+        "frost_damage": 2
+      },
+      "bonus_kind": "elemental"
     },
     "high_mage_hat_red": {
       "name": "High mage hat (red)",
@@ -1752,7 +1970,8 @@
       },
       "bonus": {
         "fire_damage": 4
-      }
+      },
+      "bonus_kind": "elemental"
     },
     "high_mage_hat_yellow": {
       "name": "High mage hat (yellow)",
@@ -1772,7 +1991,11 @@
       },
       "bonus": {
         "fire_damage": 4
-      }
+      },
+      "latent": {
+        "lightning_damage": 2
+      },
+      "bonus_kind": "elemental"
     },
     "esper_hat_blue": {
       "name": "Esper hat (blue)",
@@ -1793,7 +2016,8 @@
       "bonus": {
         "fire_damage": 2,
         "max_stamina": 5
-      }
+      },
+      "bonus_kind": "elemental"
     },
     "esper_hat_red": {
       "name": "Esper hat (red)",
@@ -1814,7 +2038,8 @@
       "bonus": {
         "fire_damage": 2,
         "max_stamina": 5
-      }
+      },
+      "bonus_kind": "elemental"
     },
     "esper_hood_cyan": {
       "name": "Esper hood (cyan)",
@@ -1835,7 +2060,11 @@
       "bonus": {
         "fire_damage": 2,
         "stamina_regen": 1
-      }
+      },
+      "latent": {
+        "frost_damage": 2
+      },
+      "bonus_kind": "elemental"
     },
     "esper_hood_red": {
       "name": "Esper hood (red)",
@@ -1856,7 +2085,8 @@
       "bonus": {
         "fire_damage": 2,
         "stamina_regen": 1
-      }
+      },
+      "bonus_kind": "elemental"
     },
     "sorcerer_hood_cyan": {
       "name": "Sorcerer hood (cyan)",
@@ -1876,7 +2106,11 @@
       },
       "bonus": {
         "fire_damage": 3
-      }
+      },
+      "latent": {
+        "frost_damage": 2
+      },
+      "bonus_kind": "elemental"
     },
     "sorcerer_hood_red": {
       "name": "Sorcerer hood (red)",
@@ -1896,7 +2130,8 @@
       },
       "bonus": {
         "fire_damage": 3
-      }
+      },
+      "bonus_kind": "elemental"
     },
     "villager_straw_hat": {
       "name": "Villager's straw hat",
@@ -1909,7 +2144,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "traveller_straw_hat": {
       "name": "Traveller's straw hat",
@@ -1922,7 +2158,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "traveller_straw_hat_cyan": {
       "name": "Traveller's straw hat (cyan)",
@@ -1935,7 +2172,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "ronin_straw_hat_blue": {
       "name": "Ronin's straw hat (blue)",
@@ -1948,7 +2186,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "ronin_straw_hat_red": {
       "name": "Ronin's straw hat (red)",
@@ -1961,7 +2200,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "yabusame_straw_hat_blue": {
       "name": "Yabusame straw hat (blue)",
@@ -1974,7 +2214,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "yabusame_straw_hat_red": {
       "name": "Yabusame straw hat (red)",
@@ -1987,7 +2228,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "ninja_bandana_black": {
       "name": "Ninja bandana (black)",
@@ -2000,7 +2242,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "ninja_bandana_blue": {
       "name": "Ninja bandana (blue)",
@@ -2013,7 +2256,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "ninja_bandana_red": {
       "name": "Ninja bandana (red)",
@@ -2026,7 +2270,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "archer_hat_cyan": {
       "name": "Archer's hat (cyan)",
@@ -2039,7 +2284,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "archer_hat_green": {
       "name": "Archer's hat (green)",
@@ -2052,7 +2298,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "archer_hat_yellow": {
       "name": "Archer's hat (yellow)",
@@ -2065,7 +2312,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "ranger_hat_cyan": {
       "name": "Ranger's hat (cyan)",
@@ -2078,7 +2326,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "ranger_hat_green": {
       "name": "Ranger's hat (green)",
@@ -2091,7 +2340,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "ranger_hat_yellow": {
       "name": "Ranger's hat (yellow)",
@@ -2104,7 +2354,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "rogue_hat": {
       "name": "Rogue's hat",
@@ -2117,7 +2368,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "assassin_bandana_black": {
       "name": "Assassin's bandana (black)",
@@ -2130,7 +2382,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "assassin_bandana_green": {
       "name": "Assassin's bandana (green)",
@@ -2143,7 +2396,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "assassin_bandana_red": {
       "name": "Assassin's bandana (red)",
@@ -2156,7 +2410,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "thief_bandana_green": {
       "name": "Thief's bandana (green)",
@@ -2169,7 +2424,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "thief_bandana_lime": {
       "name": "Thief's bandana (lime)",
@@ -2182,7 +2438,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "thief_bandana_red": {
       "name": "Thief's bandana (red)",
@@ -2195,7 +2452,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "stalker_hood_black": {
       "name": "Stalker's hood (black)",
@@ -2208,7 +2466,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "stalker_hood_purple": {
       "name": "Stalker's hood (purple)",
@@ -2221,7 +2480,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     },
     "stalker_hood_red": {
       "name": "Stalker's hood (red)",
@@ -2234,7 +2494,8 @@
       "order": {
         "maker": "tailor",
         "fee": 3
-      }
+      },
+      "clothing": true
     }
   }
 }

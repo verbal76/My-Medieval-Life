@@ -1013,6 +1013,8 @@ func hire_refusal(n: NPC) -> String:
 		return "%s is hired for building work today." % n.name
 	if is_attendant(n):
 		return "%s minds a counter already." % n.name
+	if w.employment != null and w.employment.is_employed(n):
+		return "%s works for someone already." % n.name     # B25-BIZ-D4: one employer at a time
 	return ""
 
 
@@ -1321,4 +1323,4 @@ func tills() -> int:
 		t += int(w.stalls[id].get("till", 0))
 	for s in every_shop():
 		t += int(s.get("till", 0))
-	return t + money.front_tills() + money.counter_tills()
+	return t + money.front_tills() + money.counter_tills() + money.venture_tills()

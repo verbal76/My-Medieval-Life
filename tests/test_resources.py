@@ -74,7 +74,7 @@ class ResourceRegistryTest(unittest.TestCase):
         s = cr.summary(self.ctx)
         self.assertEqual(s["no_source"], [])                # Build 13: the gold seam gives gold ore a source; B14: apple trees give apples
         self.assertEqual(s["missing_recipes"], [])          # so smelt_gold and forge_gold_ring can be made
-        self.assertEqual(s["finite"], ["boulder", "coal_seam", "copper_seam", "gold_seam", "horse_pen", "iron_seam", "open_pit", "prospect_clue", "stone_seam", "tunnel_rock"])
+        self.assertEqual(s["finite"], ["boulder", "coal_seam", "copper_seam", "gold_seam", "horse_pen", "iron_seam", "open_pit", "prospect_clue", "stone_seam", "tin_seam", "tunnel_rock"])
         # Build 13: scarce by design; the caravan brings no gold. MIN-C: a clue's samples are finite by design (new
         # ground to read is MIN-D's). MIN-E: a pit's earth is its finite ground; nothing brings topsoil, dirt or spoil
         self.assertEqual(s["finite_no_replacement"], ["gold_seam", "horse_pen", "open_pit", "prospect_clue", "tunnel_rock"])

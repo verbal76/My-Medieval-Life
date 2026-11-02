@@ -12,9 +12,11 @@ const CHASE_RANGE := 25.0    # a chase is given up beyond this many tiles (NPCBr
 
 # what each job buys, with the stock it stops buying at
 const BUYS := {
-	"smith": {"iron_ore": 30, "copper_ore": 20, "gold_ore": 10, "coal": 30, "plank": 10, "leather": 6},
+	"smith": {"iron_ore": 30, "copper_ore": 20, "gold_ore": 10, "coal": 30, "plank": 10, "leather": 6,
+		"tin_ore": 10},                      # B25 Decision 5: tin for bronze (smelt_tin, alloy_bronze)
 	"carpenter": {"log": 30, "shovel_blade": 1},      # MIN-SHOVEL: one smith's blade on hand for a shovel to order
-	"tanner": {"hide": 15, "rabbit_pelt": 15, "wool": 12},          # wool: woven into cloth (Build 13)
+	"tanner": {"hide": 15, "rabbit_pelt": 15, "wool": 12,          # wool: woven into cloth (Build 13)
+		"silk": 4},                         # B25 Decision 5: raw silk woven into fine cloth (weave_fine_cloth)
 	"sage": {"flower": 20, "linen_bandage": 8, "ale": 2},   # flowers for poultices and tonics (PL1-04); bandages the tanner sews (Build 13); ale for the strong tonic (PAR-04)
 	"cook": {"wheat": 60, "meat": 15, "log": 10, "egg": 20, "milk": 12, "cheese": 10, "carrot": 20, "potato": 20},    # the last five: the player's farm goods (PL2-015)
 	"tavernkeeper": {"pottage": 60, "roast_meat": 20, "ale": 20, "bread": 12, "cheese": 8},    # bread and cheese: the tavern's suppers (Build 13)
@@ -32,6 +34,7 @@ const BUYS := {
 		"copper_ring": 3, "gold_ring": 2, "amulet": 2, "leather_cap": 3, "iron_helmet": 2, "plough": 2,     # plough: PAR-04
 		"herbal_poultice": 8,                      # households' home-brewed poultices, brought to market (B14)
 		"boar_tusk": 10, "antler": 10,             # ARMOR-MATERIALS-01 (Build 22): hunters' tusks and antlers, sold on to whoever commissions gear
+		"fur": 6, "fine_cloth": 4,               # B25 Decision 5: the tanner's dressed fur and silk cloth, for commissions
 		"nails": 24, "mallet": 2, "chisel": 2,     # STONE-06: the smith's iron chisels, forged to order for the dressers; B14-07: the stuff of wooden stairs and walkways, forged and made to order (PAR-04)
 		"shovel": 2},                              # MIN-SHOVEL (owner MIN-E-Q4): diggers' shovels, assembled to order
 }
@@ -40,6 +43,12 @@ const BUYS := {
 # (batch_unit, wants). Goods in BUYS that no recipe of the trade consumes are stock it holds for sale or use.
 const TRADE_STATIONS := {"smith": ["forge", "anvil"], "carpenter": ["sawhorse", "workbench"], "tanner": ["workbench"], "stonecutter": ["workbench"],
 	"sage": ["stove"], "cook": ["stove", "prep", "oven"]}
+# B25-EMPLOY-IMPL: the workplace of a skilled trade that has no recipes of its own (skilled_place)
+const SKILLED_STATIONS := {"tavernkeeper": ["tavern_counter"]}
+static var _job_skills := {}     # B25-CAREER-IMPL: judgment.json aspiration.job_skills, read once (_trade_skill)
+# B25-EMPLOY-IMPL: the industry whose recorded working days (WorkExperience) are a candidate's experience in a trade
+const TRADE_INDUSTRY := {"smith": "smithing", "carpenter": "carpentry", "tanner": "tanning", "merchant": "trade", "stonecutter": "masonry",
+	"miner": "mining", "woodcutter": "forestry", "farmer": "farming"}
 # items an NPC keeps for its own work and will not sell
 const KEEPS := {"sage": ["flower"], "miner": ["pickaxe", "shovel"], "prospector": ["prospecting_kit"], "laborer": ["pickaxe", "shovel", "mallet", "chisel"], "stonecutter": ["mallet", "chisel"], "woodcutter": ["axe"], "smith": ["hammer"],
 	# seed is sold only through the seed offer (Farming.buy_seed, Build 13)
@@ -52,6 +61,7 @@ const OUTLETS := {
 	"plank": ["smith", "merchant_raw"], "wheat": ["cook", "merchant_food"], "meat": ["cook", "merchant_food"],
 	"hide": ["tanner", "merchant_goods"], "rabbit_pelt": ["tanner", "merchant_goods"], "feather": ["merchant_goods"], "leather": ["smith", "merchant_goods"],
 	"boar_tusk": ["merchant_goods"], "antler": ["merchant_goods"],    # ARMOR-MATERIALS-01: a hunter's tusks and antlers, for the catalogue's special pieces
+	"tin_ore": ["smith"], "fur": ["merchant_goods"], "fine_cloth": ["merchant_goods"], "silk": ["tanner"],     # B25 Decision 5
 	"pottage": ["tavernkeeper", "merchant_food"], "roast_meat": ["tavernkeeper", "merchant_food"], "ale": ["tavernkeeper", "merchant_food", "sage"],
 	"flower": ["sage"],                       # FSE-B07: the Apothecary buys foragers' flowers (BUYS.sage)
 	"egg": ["cook", "merchant_food"], "milk": ["cook", "merchant_food"], "cheese": ["tavernkeeper", "cook", "merchant_food"],
@@ -75,7 +85,9 @@ const COOKED := ["roast_meat", "pottage", "ale", "cheese", "bread"]     # cheese
 const EDIBLE := ["roast_meat", "pottage", "wheat", "ale", "cheese", "bread", "red_berries", "blueberries", "apple", "egg", "milk", "carrot", "potato"]
 # the mine's raw output: finite, and the forge's and the builders' own input. The caravan sells it to
 # the village (when the seams are worked out) but does not carry the village's away (B7-007)
-const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "rubble", "building_block"]     # STONE-01: blocks are the village's stone, dressed
+const NOT_EXPORTED := ["iron_ore", "copper_ore", "gold_ore", "coal", "stone", "rubble", "building_block", "tin_ore"]     # STONE-01: blocks are the village's stone, dressed
+# what a miner digs and carries to sale: the ores and stone of the seams (B25 Decision 5: tin last, so nothing before it moves)
+const MINED_ORES := ["iron_ore", "coal", "copper_ore", "stone", "gold_ore", "tin_ore"]
 
 var w: World
 var noted := {}          # one-off notes already written
@@ -131,6 +143,8 @@ func work_look(n: NPC) -> Array:
 			return ["swing", "hammer"]
 		"svc_step":                                    # CON-02: digging a pit with a pickaxe, sampling with the kit's hammer
 			var sc: Dictionary = w.contracts.get_contract(int(s.get("args", {}).get("id", -1)))
+			if str(sc.get("service", "")) == "harvest":
+				return ["gather", ""]                  # CON-06: cutting by hand, as a member's own harvest
 			return ["swing", "pickaxe" if str(sc.get("service", "")) == "dig" else "hammer"]
 		"hunt", "slaughter":
 			return ["swing", "rusty_sword"]
@@ -284,6 +298,9 @@ func _decide(n: NPC) -> String:
 	# minding the player's stall or shop (PL1-10 stage 4)
 	if h >= WORK_START and h < WORK_END and w.business.plan_attendant(n):
 		return "stall_attendant"
+	# EMP-PERM-01: a player's permanent employee works the role they were taken on for
+	if h >= WORK_START and h < WORK_END and w.employment.plan(n):
+		return "employee"
 	# a job taken for the manor is carried on to the end (ManorWork)
 	if h >= WORK_START and h < WORK_END and w.manor_work.plan(n):
 		return "manor_work"
@@ -761,9 +778,14 @@ func buy_qty(n: NPC, v: NPC, item: String, want: int, need := false, spent := 0)
 	if buy_held(n, v, item):
 		return 0
 	var up := w.deal_price(w.sell_price(v, item), n, v)
+	var q := mini(want, v.inv.count(item))
+	var biz: int = w.ventures.budget(n, item) if not need else -1
+	if biz >= 0:                          # B25-BIZ-D1: a business's materials, bought with its till's money only
+		while q > 0 and biz - spent - up * q < 0:
+			q -= 1
+		return q
 	var whole: bool = need or World.is_necessity(item) or JOB_TOOL.get(n.job, "") == item
 	var floor := 0 if whole else w.reserve_of(n)
-	var q := mini(want, v.inv.count(item))
 	while q > 0 and n.coins - spent - up * q < floor:
 		q -= 1
 	return q
@@ -1291,7 +1313,7 @@ func _idle_at_work(n: NPC, why: String) -> bool:
 
 func _miner(n: NPC) -> bool:
 	if not n.inv.has("pickaxe"):
-		for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
+		for o in MINED_ORES:
 			if n.inv.has(o) and _buyer_for(n, o) != null:
 				return _plan_sell_all(n)
 		return _get_tool(n, "pickaxe")
@@ -1300,7 +1322,7 @@ func _miner(n: NPC) -> bool:
 		var raw := _buyer_for(n, "stone")
 		ores = ["stone"] if raw != null else ["coal"]
 	var carried := 0
-	for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
+	for o in MINED_ORES:
 		carried += n.inv.count(o)
 	var mcp := w.mine_works.supply.miner_cart_plan(n) if carried == 0 else []
 	if not mcp.is_empty():
@@ -1324,7 +1346,7 @@ func _miner(n: NPC) -> bool:
 				return true
 		# the wanted seams are worked out: mine only what someone will still buy
 		var sellable := []
-		for o in ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"]:
+		for o in MINED_ORES:
 			if _buyer_for(n, o) != null and _can_mine(n, o):
 				sellable.append(o)
 		if not sellable.is_empty():
@@ -1332,7 +1354,7 @@ func _miner(n: NPC) -> bool:
 	if d.is_empty():
 		if carried > 0:
 			return _plan_sell_all(n)
-		if w.nearest_seam(n, ["iron_ore", "coal", "copper_ore", "stone", "gold_ore"].filter(func(o: String) -> bool: return _can_mine(n, o))).is_empty():
+		if w.nearest_seam(n, MINED_ORES.filter(func(o: String) -> bool: return _can_mine(n, o))).is_empty():
 			# the mine is worked out: the manor takes on those who lose their living
 			_change_job(n, "manor_hand", "the mine is worked out")
 			return false
@@ -1470,6 +1492,16 @@ func _tanner(n: NPC) -> bool:
 		list.append("weave_cloth")
 	if sage != null and sage.alive and wants(sage, "linen_bandage") >= 3 and n.inv.count("linen_bandage") < 3:
 		list.append("sew_bandages")
+	# B25 Decision 5: fur (dressed pelts or hides) and fine cloth (woven raw silk) for a buyer, a couple at a time
+	for id in ["fur", "fine_cloth"]:
+		if n.inv.count(id) > 0 and _buyer_for(n, id) != null:
+			return _plan_sell(n, id)
+	if _buyer_for(n, "fur") != null:
+		for r in ["dress_fur", "dress_fur_hide"]:
+			if _can_make(n, r):
+				list.append(r)
+	if _buyer_for(n, "fine_cloth") != null and _can_make(n, "weave_fine_cloth"):
+		list.append("weave_fine_cloth")
 	for id in ["leather_cap", "leather_armor"]:        # PAR-04: for a buyer, once the hides are tanned
 		if n.inv.count(id) > 0 and _buyer_for(n, id) != null:
 			return _plan_sell(n, id)
@@ -1484,6 +1516,9 @@ func _smith(n: NPC) -> bool:
 		return _do_recipe(n, "smelt_iron")
 	if inv.has_all({"copper_ore": 2, "coal": 1}) and inv.count("copper_bar") < 6:
 		return _do_recipe(n, "smelt_copper")
+	# B25 Decision 5: tin ore (the hill's veins, the caravan's) is smelted into a bar or two for bronze
+	if inv.has_all({"tin_ore": 2, "coal": 1}) and inv.count("tin_bar") < 2 and _can_make(n, "smelt_tin"):
+		return _do_recipe(n, "smelt_tin")
 	# PAR-04: gold ore is smelted when someone wants the bar or a gold ring, and the smith has Smithing 3
 	if inv.has_all({"gold_ore": 2, "coal": 1}) and inv.count("gold_bar") < 2 and _can_make(n, "smelt_gold") \
 			and (_buyer_for(n, "gold_bar") != null or _buyer_for(n, "gold_ring") != null):
@@ -1539,6 +1574,14 @@ func _smith(n: NPC) -> bool:
 		if inv.count(out) < 1 and inv.has_all(GameData.recipes[r].in) and _can_make(n, r) and _buyer_for(n, out) != null:
 			wants.append([inv.count(out), r])
 			for_buyer.append(r)
+	# B25 Decision 5: a few steel and bronze bars kept for the armour and weapons ordered (GearOrders takes them from stock);
+	# steel only from iron beyond the three bars a tool needs, and not while the manor's order waits for the iron
+	for r in ["make_steel", "alloy_bronze"]:
+		if ordered and (GameData.recipes[r].in as Dictionary).has("iron_bar"):
+			continue
+		var out: String = GameData.recipes[r].out.keys()[0]
+		if inv.count(out) < 2 and inv.has_all(GameData.recipes[r].in) and _can_make(n, r) and (r != "make_steel" or inv.count("iron_bar") >= 3):
+			wants.append([inv.count(out), r])
 	wants.sort()
 	if not wants.is_empty():
 		var rs: Array = wants.map(func(x: Array) -> String: return x[1])
@@ -2482,7 +2525,11 @@ func _do_recipe(n: NPC, r: String) -> bool:
 ## Only stations the villager may use count (a workshop is its holder's, and those given leave:
 ## World.npc_may_use), and the player working at one takes a place (World.reserve_for_player).
 func _station_for(n: NPC, kind: String) -> String:
+	var ids := w.ventures.stations_for(n, kind)         # B25-BUSINESS-IMPL: a venture's keeper and hands try its own stations first
 	for id in w.stations_of(kind):
+		if not ids.has(id):
+			ids.append(id)
+	for id in ids:
 		var st: Dictionary = w.stations[id]
 		if not w.npc_may_use(n, st):
 			continue
@@ -2798,11 +2845,25 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			var qty := mini(int(a.qty), v.inv.count(a.item))
 			var up := w.deal_price(w.sell_price(v, a.item), buyer, v)
 			var for_need: bool = a.get("pantry", false) or World.is_necessity(a.item) or JOB_TOOL.get(buyer.job, "") == a.item
-			while qty > 0 and not for_need and not w.can_afford(buyer, up * qty):
+			# B25-BIZ-D1: an input of the trade bought for a business is paid with the business's money (its till), only what it holds
+			var biz: int = w.ventures.budget(buyer, a.item) if not a.get("pantry", false) and buyer == n else -1
+			var funded := {}
+			var drawn := 0
+			if biz >= 0:
+				while qty > 0 and up * qty > biz:
+					qty -= 1
+				if qty > 0:
+					funded = w.ventures.fund(buyer, a.item, up * qty)
+					drawn = up * qty if not funded.is_empty() else 0
+					if funded.is_empty():
+						qty = 0
+			while qty > 0 and not for_need and funded.is_empty() and not w.can_afford(buyer, up * qty):
 				qty -= 1                          # stock and materials: only what leaves the household's reserve (OD-19)
 			var traded := qty > 0                 # SIM-F2: World.trade was asked (it records its own refusal)
 			while qty > 0 and not w.trade(buyer, v, a.item, qty, up):
 				qty -= 1
+			if not funded.is_empty():
+				w.ventures.bought(buyer, funded, str(a.item), qty, drawn, up * qty)
 			if qty > 0:
 				w.deal_xp(buyer, v, up * qty)
 			if qty > 0 and buyer != n:
@@ -2876,7 +2937,11 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			release_station(n, a.get("station", ""))
 			if a.has("biz"):
 				return w.business.works.finish(n, a)       # B18-DP-01: the player's attendant at the player's own station
-			return w.work_craft(n, a.recipe, n.inv).result == "ok"     # the player's crafting (PAR-01, PAR-04)
+			var biz_craft: Dictionary = w.ventures.craft_begin(n, a)     # B25-BIZ-D1: work at a business's station for it
+			var crafted: bool = w.work_craft(n, a.recipe, n.inv).result == "ok"     # the player's crafting (PAR-01, PAR-04)
+			if crafted:
+				w.ventures.craft_end(n, biz_craft)
+			return crafted
 		"rent_from":                                               # LE05-RENTAL: at the owner's, the rental is made (or refused)
 			var ow := w.npc(int(a.get("owner", -1)))
 			if w.economy == null or ow == null or not ow.alive:
@@ -3032,6 +3097,14 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if foe:
 				n.target = foe.id
 			return true
+		"emp_mine":                                       # EMP-PERM-01: a permanent employee's swing, the ore the employer's
+			return w.employment.act_mine(n, a)
+		"emp_chop":                                       # B25-BIZ-D4: a permanent woodcutter fells for the employer
+			return w.employment.act_chop(n, a)
+		"emp_craft":                                      # B25-BIZ-D4: a permanent crafter makes for the employer at their station
+			return w.employment.act_craft(n, a)
+		"emp_deliver":                                    # EMP-PERM-01: the employer's ore into the employer's store
+			return w.employment.act_deliver(n)
 		"helper_take", "helper_buy", "helper_own", "helper_deliver":
 			return w.construction.act(n, what, a)
 		"church_ask":                           # DVW-B3-CHAPEL: asking the church for food
@@ -4160,9 +4233,11 @@ func evaluate_household(h: int, daily := false) -> Dictionary:
 
 
 ## The jobs open to a villager who needs better work, built from the village's existing jobs: what
-## those doing them have actually earned lately, and how many more the work can take. Skilled trades
-## (smith, carpenter, tanner, cook, tavern, merchant) need training the game does not have, and
-## government posts are appointed, so neither is open here.
+## those doing them have actually earned lately, and how many more the work can take. Government posts
+## are appointed, so they are not open here. B25-EMPLOY-IMPL (owner B25-EMPLOY-D3, 2026-11-01): the
+## skilled trades (smith, carpenter, tanner, cook, tavernkeeper, merchant) are listed with the places
+## their workplaces, work and earnings justify (skilled_place); they are no longer kept to the strength
+## the village began with.
 func job_market() -> Dictionary:
 	var earn := {}
 	var heads := {}
@@ -4209,7 +4284,138 @@ func job_market() -> Dictionary:
 		market[sj] = service_place(sj)
 	for cj in Population.CLERGY:
 		market[cj] = w.chapel.place(cj)             # DVW-B3-CHAPEL: the clergy's places, open when nobody holds them
+	for sk in SKILLED:
+		market[sk] = skilled_place(sk)              # B25-EMPLOY-IMPL: places from workplace room, work and earnings
 	return market
+
+
+# ---------------------------------------------------------------- skilled places -------------
+## B25-EMPLOY-IMPL (owner B25-EMPLOY-D3, 2026-11-01: "Businesses hire and train workers according to production needs and
+## affordability, without fixed headcount caps"; docs/DECISIONS.md). A skilled trade's place in the labour market:
+## {pay, open, tool, at, place, room, work, afford}. One more place is open (open 1) only while every condition the game can
+## see holds at once:
+## - room: the trade's workplaces have room for another hand. A crafting trade: the stations of its kinds (TRADE_STATIONS;
+##   the tavern's counter for the tavernkeeper) that a hire may use (the manor's, or a workshop open to all: World.may_use)
+##   had, over the last skilled_places.window_days days (station_minutes, from the work actually done there), free working
+##   time (capacity x the working day, less everyone's minutes there) at least what one of the trade's workers spends there
+##   a day. A merchant: a vacant merchants' stall of the manor's market (never a pitch or a built stall). A workshop a
+##   villager founds later simply adds its stations here.
+## - work: there is work for another hand. A crafting trade: its workers spent at least busy_share of a working day at
+##   those stations (they are not waiting for materials or orders); a merchant: no merchant is short of the coins to buy
+##   stock (the traders able to buy).
+## - afford: the trade's last five days' earnings, shared among one more worker (`pay`, what the place is offered at),
+##   still cover each worker's share of their household's daily costs (evaluate_household), and none of its workers is
+##   new to it (fewer than five days of earnings, or within job_switch_cooldown_days of joining): the trade sees how its
+##   last hand works out before taking another.
+## Below the strength succession keeps (staff_target, B8-016) or with a post already open, the post is succession's to
+## fill and no place is offered here. A place that fails any condition is simply not offered: nobody is dismissed, and a
+## trade whose work or earnings fall away stops hiring and shrinks only as its people leave, retire or die.
+func skilled_place(job: String) -> Dictionary:
+	var cfg: Dictionary = GameData.b("skilled_places")
+	var out := {"pay": float(GameData.b("manor_wage_per_day")), "open": 0, "tool": "", "at": Vector2i.ZERO, "place": "",
+		"room": false, "work": false, "afford": false, "busy": 0.0}
+	var workers := []
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job == job:
+			workers.append(o)
+	var k := workers.size()
+	if k == 0:
+		return out                                  # an empty trade is succession's (a vacancy, a newcomer)
+	var earned := 0.0
+	var need := 0.0
+	var settled := true
+	var cooldown := int(GameData.b("job_switch_cooldown_days"))
+	for o: NPC in workers:
+		earned += o.avg_income(5)
+		var e: Dictionary = w.households[o.household].get("econ", {}) if o.household >= 0 else {}
+		need += float(e.get("cost", 0.0)) / maxi(1, int(e.get("adults", 1)))
+		if o.income_days.size() < 5 or (o.left_job != "" and w.day() - o.job_since < cooldown):
+			settled = false
+	out.pay = earned / float(k + 1)
+	out.afford = settled and float(out.pay) >= need / float(k)
+	if job == "merchant":
+		for sid in _sorted_keys(w.stalls):
+			var s: Dictionary = w.stalls[sid]
+			if w.tenant_of(s) == "" and not Business.is_pitch(s) and not s.get("built", false):
+				out.place = str(sid)
+				out.at = Vector2i(int(s.use[0]), int(s.use[1]))
+				out.room = true
+				break
+		out.work = workers.all(func(o: NPC) -> bool: return o.coins > w.reserve_of(o))
+	else:
+		var day := (WORK_END - WORK_START) * 60.0
+		var free := 0.0
+		var mine := 0.0
+		var most := -1e9
+		for kind in TRADE_STATIONS.get(job, SKILLED_STATIONS.get(job, [])):
+			for st in w.stations_of(kind):
+				var sd: Dictionary = w.stations[st]
+				if not w.may_use("", sd) and not w.ventures.hiring_station(st):
+					continue                        # a workshop's own, not open to a hire (a venture's takes hands: B25-BUSINESS-IMPL)
+				var used := station_minutes(st)
+				var left := float(sd.get("capacity", 1)) * day - used
+				free += left
+				mine += station_minutes(st, job)
+				if left > most:
+					most = left
+					out.place = str(st)
+					out.at = w.station_use(st)
+		var per := mine / float(k)
+		out.busy = per / day                    # B25-BUSINESS-IMPL: the share of a working day each worker spends there
+		out.work = per >= float(cfg.busy_share) * day
+		out.room = per > 0.0 and free >= per
+	if k >= staff_target(job) and open_posts(job) == 0 and out.room and out.work and out.afford:
+		out.open = 1
+	return out
+
+
+## B25-EMPLOY-IMPL: `mins` minutes worked at station `st` by a worker of trade `job` (World._note_work, from the work step
+## itself), kept for today and the last skilled_places.window_days days (World.station_load, saved).
+func note_station_work(st: String, job: String, mins: float) -> void:
+	_roll_station_load()
+	var today: Dictionary = w.station_load.today
+	var by: Dictionary = today.get(st, {})
+	by[job] = float(by.get(job, 0.0)) + mins
+	today[st] = by
+
+
+## A new day's record once the day has changed (a day with no work recorded counts as an empty day); window_days kept.
+func _roll_station_load() -> void:
+	var sl: Dictionary = w.station_load
+	var d := w.day()
+	if not sl.has("day"):
+		sl.day = d
+		sl.today = {}
+		sl.past = []
+		return
+	var gap := d - int(sl.day)
+	if gap <= 0:
+		return
+	var keep := int(GameData.b("skilled_places").window_days)
+	var past: Array = sl.past
+	past.append(sl.today)
+	for i in mini(gap - 1, keep):
+		past.append({})
+	while past.size() > keep:
+		past.pop_front()
+	sl.day = d
+	sl.today = {}
+
+
+## The mean minutes a day worked at station `st` over the recorded past days, by trade `job` alone ("" everyone); 0 with
+## no day recorded yet.
+func station_minutes(st: String, job := "") -> float:
+	_roll_station_load()
+	var past: Array = w.station_load.get("past", [])
+	if past.is_empty():
+		return 0.0
+	var tot := 0.0
+	for day in past:
+		var by: Dictionary = (day as Dictionary).get(st, {})
+		for j in _sorted_keys(by):
+			if job == "" or str(j) == job:
+				tot += float(by[j])
+	return tot / float(past.size())
 
 
 ## X18-STONECUT: the stonecutter's place in the labour market. One place, open while nobody living cuts stone for a living,
@@ -4365,6 +4571,7 @@ func seek_work() -> void:
 	var seekers := 0               # WDR-012-C: villagers looking for work this morning
 	var judged_job := JudgmentLive.on(w, "job_choice")     # R5 (FAD Q2): off unless aspiration.enabled and integration.job_choice
 	var lookers := []              # B25-AMBITION-IMPL: [villager, household econ], weighed after those in need
+	var applicants := []           # B25-EMPLOY-IMPL: those who chose a skilled place; the trade takes the most suitable (_hire_skilled)
 	for h in w.households.size():
 		var econ: Dictionary = w.households[h].get("econ", {})
 		if econ.is_empty():
@@ -4374,6 +4581,8 @@ func seek_work() -> void:
 		for n: NPC in members:
 			if n.role != "adult" or n.job in ["guard", "reeve", "sage", "tailor", "barber", "preacher", "church_assistant"]:
 				continue
+			if w.employment.is_employed(n):
+				continue                       # EMP-PERM-01: a permanent employee keeps the place the player gave them
 			var unemployed := n.job == "" or tool_short(n) or (n.job == "hunter" and no_game)
 			var share := float(econ.cost) / maxi(1, int(econ.adults))
 			if not unemployed:
@@ -4387,27 +4596,14 @@ func seek_work() -> void:
 				if n.job == "merchant" and _relocate_stall(n):         # WDR-012-C: first to a better stall
 					continue
 			seekers += 1
-			var current := 0.0 if unemployed else n.avg_income(5)
-			var found := _job_options(n, market)
-			var best := str(found[0])
-			var best_score := float(found[1])
+			var best := _choose_job(n, market, unemployed, econ, judged_job)
 			if best == "":
-				if unemployed:
-					once("no_work_%d_%d" % [n.id, w.day()], "%s %s looks for work and finds none." % [n.name, n.family])
 				continue
-			var live_switch := unemployed or best_score >= maxf(current * float(GameData.b("job_switch_margin")), current + float(GameData.b("job_switch_min_gain")))
-			if judged_job:
-				best = JudgmentLive.pick_job(w, n, found[2], unemployed, current, best, live_switch, econ)
-				if best == "":
-					continue                   # stays in the job they have
-			elif not live_switch:
-				continue
-			market[best].open = int(market[best].open) - 1
 			var why := "out of work" if unemployed else "%s did not keep the household fed" % (n.job.replace("_", " ") + " work")
-			var left := n.job
-			var left_place := n.workplace
-			_change_job(n, best, why)
-			_post_left(n, left, left_place)
+			if SKILLED.has(best):
+				applicants.append({"n": n, "job": best, "why": why, "unemployed": unemployed, "econ": econ, "looker": false})
+				continue                       # B25-EMPLOY-IMPL: the trade chooses among those who want its place (_hire_skilled)
+			_take_place(n, best, why, market)
 	for lk in lookers:
 		var n: NPC = lk[0]
 		var found := _job_options(n, market)
@@ -4417,26 +4613,135 @@ func seek_work() -> void:
 		var pick := JudgmentLive.pick_job(w, n, found[2], false, n.avg_income(5), str(found[0]), false, lk[1])
 		if pick == "":
 			continue                           # content where they are: staying is a choice
+		if SKILLED.has(pick):
+			applicants.append({"n": n, "job": pick, "why": "looking for work that suits their skills", "unemployed": false, "econ": lk[1], "looker": true})
+			continue
 		w.judgment._stat("ambition_moves")
-		market[pick].open = int(market[pick].open) - 1
-		var left := n.job
-		var left_place := n.workplace
-		_change_job(n, pick, "looking for work that suits their skills")
-		_post_left(n, left, left_place)
+		_take_place(n, pick, "looking for work that suits their skills", market)
+	_hire_skilled(applicants, market, judged_job)
 	_hiring_competition(int(market.manor_hand.open), seekers)
+
+
+## `n`'s choice of work this morning among the places still open (seek_work): the live rule's best when it is a clear gain
+## (or they are out of work), weighed by the career ambition with job_choice on; "" to stay as they are. `skip`: jobs left
+## out (a skilled place already given to another applicant, _hire_skilled).
+func _choose_job(n: NPC, market: Dictionary, unemployed: bool, econ: Dictionary, judged_job: bool, skip := []) -> String:
+	var current := 0.0 if unemployed else n.avg_income(5)
+	var found := _job_options(n, market, skip)
+	var best := str(found[0])
+	var best_score := float(found[1])
+	if best == "":
+		if unemployed:
+			once("no_work_%d_%d" % [n.id, w.day()], "%s %s looks for work and finds none." % [n.name, n.family])
+		return ""
+	var live_switch := unemployed or best_score >= maxf(current * float(GameData.b("job_switch_margin")), current + float(GameData.b("job_switch_min_gain")))
+	if judged_job:
+		return JudgmentLive.pick_job(w, n, found[2], unemployed, current, best, live_switch, econ)     # "": stays in the job they have
+	return best if live_switch else ""
+
+
+## `n` takes the open place in `job` (seek_work): the place is gone for the next villager, and the post they leave is
+## handed on as after a death when its trade falls short (_post_left).
+func _take_place(n: NPC, job: String, why: String, market: Dictionary) -> void:
+	market[job].open = int(market[job].open) - 1
+	var left := n.job
+	var left_place := n.workplace
+	_change_job(n, job, why, str(market[job].get("place", "")))
+	w.ventures.took_place(n, str(market[job].get("place", "")))      # B25-BUSINESS-IMPL: a venture's bench, with the keeper's leave
+	_post_left(n, left, left_place)
+
+
+## B25-EMPLOY-IMPL, B25-CAREER-IMPL (owner B25-EMPLOY-D3, B25-CAREER-D1, 2026-11-01: "Employers evaluate candidates through
+## the existing hiring framework"; no automatic promotion, X18-D3). Each skilled trade with a place open takes, among this
+## morning's applicants for it (those in need, out of work or ambitious who chose it), the most suitable (suitability: their
+## level in the trade's own skill, then their recorded working days in its industry, then those out of work, then by id);
+## an applicant with no skill in it is taken when nobody more skilled applied, and learns on the job. Someone from another
+## trade may apply and retrain. Those not taken who need work choose again among the other places still open (never
+## another skilled place this morning); an ambitious applicant not taken stays where they are.
+func _hire_skilled(applicants: Array, market: Dictionary, judged_job: bool) -> void:
+	if applicants.is_empty():
+		return
+	var turned := []
+	for job in SKILLED:
+		var pool := applicants.filter(func(a: Dictionary) -> bool: return str(a.job) == job)
+		while not pool.is_empty():
+			var best: Dictionary = pool[0]
+			for a in pool:
+				if _more_suitable(a, best, job):
+					best = a
+			pool.erase(best)
+			var n: NPC = best.n
+			if int(market[job].open) <= 0 or (job == "merchant" and n.coins < int(GameData.b("stall_min_coins"))):
+				turned.append(best)
+				continue
+			w.stat("skilled_hires")
+			w.stat("skilled_hires_" + job)
+			if int(n.skills.get(_trade_skill(job), 0)) == 0:
+				w.stat("skilled_hires_untrained")       # an apprentice: learns the trade at the work
+			if n.job != "" and n.job != "manor_hand" and n.job != "laborer":
+				w.stat("skilled_hires_retrained")      # from another trade
+			if bool(best.looker):
+				w.judgment._stat("ambition_moves")
+			_take_place(n, job, str(best.why), market)
+	for a in turned:
+		if bool(a.looker):
+			continue                                   # content to stay where they are
+		var n: NPC = a.n
+		var again := _choose_job(n, market, bool(a.unemployed), a.econ, judged_job, SKILLED)
+		if again != "":
+			_take_place(n, again, str(a.why), market)
+
+
+## Whether applicant `a` is more suitable for trade `job` than `b` (see _hire_skilled; suitability).
+func _more_suitable(a: Dictionary, b: Dictionary, job: String) -> bool:
+	var ka := suitability(a.n, job) + [0 if bool(a.unemployed) else 1, (a.n as NPC).id]
+	var kb := suitability(b.n, job) + [0 if bool(b.unemployed) else 1, (b.n as NPC).id]
+	return _key_less(ka, kb)
+
+
+## B25-CAREER-IMPL: how suitable `n` is for trade `job`, as a sort key (smaller first): [-level in the trade's own skill
+## (judgment.json aspiration.job_skills, the corrected mapping; 0 for one never practised), -recorded working days in
+## the trade's industry (WorkExperience)]. Skill and experience make a candidate better, never certain (X18-D3).
+func suitability(n: NPC, job: String) -> Array:
+	var sk := _trade_skill(job)
+	var lv := Skills.level(n, sk) if sk != "" and int(n.skills.get(sk, 0)) > 0 else 0
+	var ind: String = TRADE_INDUSTRY.get(job, "")
+	var days := snappedf(w.experience.days(World.npc_ref(n.id), ind), 0.01) if ind != "" else 0.0
+	return [-lv, -days]
+
+
+## Lexicographic comparison of two sort keys of numbers.
+func _key_less(a: Array, b: Array) -> bool:
+	for i in mini(a.size(), b.size()):
+		if float(a[i]) != float(b[i]):
+			return float(a[i]) < float(b[i])
+	return a.size() < b.size()
+
+
+## The skill trade `job`'s own work trains: the career ambition's corrected mapping (judgment.json aspiration.job_skills,
+## B25-AMBITION-IMPL), the first listed; "" for a trade whose work trains none.
+func _trade_skill(job: String) -> String:
+	if _job_skills.is_empty():
+		_job_skills = ((JudgmentStore.default_cfg().get("aspiration", {}) as Dictionary).get("job_skills", {}) as Dictionary).duplicate()
+	var list: Array = _job_skills.get(job, []) if not job.begins_with("_") else []
+	return str(list[0]) if not list.is_empty() else ""
 
 
 ## The open places `n` could take this morning (seek_work): [the live rule's best job ("" none), its score, every feasible
 ## option as [job, live score] in the market's order]. The live score is the pay less a tenth of a tool's price (one they
 ## must buy and can afford) less the walk from home over 60; their own job, a full place and one they left too lately are out.
-func _job_options(n: NPC, market: Dictionary) -> Array:
+## B25-EMPLOY-IMPL: the skilled trades' places (skilled_place) are among them; a merchant's stall needs stall_min_coins to
+## stock it. `skip`: jobs left out.
+func _job_options(n: NPC, market: Dictionary, skip := []) -> Array:
 	var best := ""
 	var best_score := -1e9
 	var opts := []
 	var home := w.building_door(n.home)
-	for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector", "stonecutter", "tailor", "barber", "preacher", "church_assistant"]:
+	for job in MARKET_JOBS:
 		var opt: Dictionary = market[job]
-		if int(opt.open) <= 0 or job == n.job:
+		if int(opt.open) <= 0 or job == n.job or skip.has(job):
+			continue
+		if job == "merchant" and n.coins < int(GameData.b("stall_min_coins")):
 			continue
 		if job == n.left_job and w.day() - n.job_since < int(GameData.b("job_return_days")):
 			continue
@@ -4517,8 +4822,8 @@ func _change_job(n: NPC, job: String, why: String, place := "") -> void:
 
 # ---------------------------------------------------------------- succession ----------------
 ## Essential trades are handed on (B8-016, owner 2026-10-19: "Apprentice, then newcomer"). A skilled
-## trade (smith, carpenter, tanner, cook, tavernkeeper, merchant) is kept at the strength the village
-## began with; of farmers, woodcutters and miners (whom the job market refills while any remain) at
+## trade (smith, carpenter, tanner, cook, tavernkeeper, merchant) is kept at least at the strength the
+## village began with (and may grow above it: skilled_place, B25-EMPLOY-IMPL); of farmers, woodcutters and miners (whom the job market refills while any remain) at
 ## least one must work. When one dies, the post, its workstation and its home are open for
 ## `succession_days`; then an adult without a trade takes it (an apprentice: the dead worker's own
 ## household first), and with none a newcomer comes with the next caravan, at the latest
@@ -4526,11 +4831,18 @@ func _change_job(n: NPC, job: String, why: String, place := "") -> void:
 ## village, World.coin_sources) and lodging in the dead worker's household, house or another empty
 ## house. Death stays permanent: nobody is resurrected. World.vacancies is the saved list.
 const SKILLED := ["smith", "carpenter", "tanner", "cook", "tavernkeeper", "merchant"]
+# the labour market's jobs in the order a seeker weighs them (_job_options); the skilled trades last (B25-EMPLOY-IMPL)
+const MARKET_JOBS := ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector", "stonecutter", "tailor", "barber", "preacher",
+	"church_assistant", "smith", "carpenter", "tanner", "cook", "tavernkeeper", "merchant"]
 const FLOOR_JOBS := ["farmer", "woodcutter", "miner"]
 const APPRENTICE_FROM := ["", "manor_hand", "laborer"]          # the adults who can be taken on, in order of preference
 
 
 ## How many hold a trade when the village is whole: the starting count for a skilled trade, one for the rest.
+## B25-EMPLOY-IMPL (owner B25-EMPLOY-D3, 2026-11-01; DCR-01 intentional revision of B8-016/EQ-04): this is only the strength
+## succession restores after a death, retirement or departure (replacement stays); it is no longer a ceiling. A trade grows
+## above it through the places its work and earnings justify (skilled_place), and one above it does not refill a post its
+## people leave unless those conditions open a place again.
 static func staff_target(job: String) -> int:
 	return int(Population.JOBS.get(job, 1)) if SKILLED.has(job) or job == "guard" else 1     # the watch too (EQ-04, _guard_posts)
 
@@ -4628,19 +4940,51 @@ func succession_caravan() -> void:
 ## An adult without a trade (or a labourer or manor hand), the dead worker's household first, then by
 ## id; a merchant also needs the coins to stock a stall. null if there is none. (B8-029: children now grow up
 ## at 16 and become adults without a trade, so they are in this pool; adolescents of 12-16 are not: adults only.)
+## B25-CAREER-IMPL (owner B25-CAREER-D1, B25-EMPLOY-D3, 2026-11-01: "Hiring must consider the actual skills and suitability
+## of candidates"; "Workers can pursue new professions through legitimate retraining"): for a skilled trade's post the most
+## suitable comes first (suitability: their level in the trade's own skill, then their recorded working days in it), then
+## the order above; someone working in another trade is a candidate too when they would move for it by the ordinary
+## job-switch rule (_would_retrain). Nobody is moved by a level alone (X18-D3); with nobody skilled, the unskilled adult
+## takes it and learns at the work.
 func _apprentice_for(v: Dictionary) -> NPC:
 	var best: NPC = null
-	var best_key := 1 << 30
+	var best_key := []
+	var skilled := SKILLED.has(str(v.job))
 	for o: NPC in w.npcs:
-		if not o.alive or o.role != "adult" or not APPRENTICE_FROM.has(o.job) or o.id == int(v.get("left_by", -1)):
+		if not o.alive or o.role != "adult" or o.id == int(v.get("left_by", -1)):
 			continue                                   # (not the worker who just left the trade)
+		var pref := APPRENTICE_FROM.find(o.job)
+		if pref < 0:
+			if not skilled or not _would_retrain(o, str(v.job)):
+				continue
+			pref = APPRENTICE_FROM.size()             # retraining: after those without a trade, at the same skill
 		if v.job == "merchant" and o.coins < int(GameData.b("stall_min_coins")):
 			continue
-		var key := APPRENTICE_FROM.find(o.job) * 100000 + (0 if (int(v.household) >= 0 and o.household == int(v.household)) else 50000) + o.id
-		if key < best_key:
+		var key := (suitability(o, str(v.job)) if skilled else []) + [pref, 0 if (int(v.household) >= 0 and o.household == int(v.household)) else 1, o.id]
+		if best == null or _key_less(key, best_key):
 			best_key = key
 			best = o
 	return best
+
+
+## B25-CAREER-IMPL: whether `o`, working in another trade, would take up skilled trade `job`'s post: not in an appointed or
+## service post, not just settled in their own work, with five days of earnings to judge by, and the post's pay (what the
+## trade's workers earn a day, else the manor's wage) a clear gain on theirs by the job-switch rule (job_switch_margin,
+## job_switch_min_gain).
+func _would_retrain(o: NPC, job: String) -> bool:
+	if o.job == job or o.job in ["guard", "reeve", "sage", "tailor", "barber", "preacher", "church_assistant"]:
+		return false
+	if o.income_days.size() < 5 or (o.left_job != "" and w.day() - o.job_since < int(GameData.b("job_switch_cooldown_days"))):
+		return false
+	var earned := 0.0
+	var k := 0
+	for p: NPC in w.npcs:
+		if p.alive and p.role == "adult" and p.job == job and p.income_days.size() >= 3:
+			earned += p.avg_income(5)
+			k += 1
+	var pay := earned / k if k > 0 else float(GameData.b("manor_wage_per_day"))
+	var cur := o.avg_income(5)
+	return pay >= maxf(cur * float(GameData.b("job_switch_margin")), cur + float(GameData.b("job_switch_min_gain")))
 
 
 ## Put someone in the post: the job, the workstation (or stall) and, with the trade's tool, the tools.
@@ -4658,7 +5002,11 @@ func _install(n: NPC, v: Dictionary, why: String) -> void:
 					break
 		if place == "":
 			return
+	var left := n.job
+	var left_place := n.workplace
 	_change_job(n, str(v.job), why, place)
+	if not APPRENTICE_FROM.has(left):
+		_post_left(n, left, left_place)              # B25-CAREER-IMPL: one who retrained leaves their old trade's post to be handed on
 	if w.civic != null:
 		w.civic.on_installed(n, str(v.job))          # P21-01: a guard's or the sage's tenure begins (observes only)
 	for tool in KEEPS.get(v.job, []):
@@ -5003,6 +5351,28 @@ func _caravan_imports(on_road := []) -> int:
 					break                          # no trader on the road carries any
 				if not w.claims_release(o, EconReservations.COINS, price, id):
 					break                          # LE-03: no claim on it broken (World.claims_release; nothing while the economy is off)
+				seller.sell_to_village(id, 1, price)
+				w.note_settlement_trade(o, seller)
+				o.coins -= price
+				o.spent += price
+				o.inv.add(id)
+				w.coin_sources -= price
+				w.stat("caravan_coins_out", price)
+				spent += price
+				w.stat("imported_" + id)
+	# B25 Decision 5: a trade's imported input (balance.json caravan_trade_imports: raw silk for the tanner's fine cloth), only
+	# while the trade can work it and someone wants what it makes, from the traders' own stock (none made for the sale)
+	var trade_in: Dictionary = GameData.b("caravan_trade_imports")
+	for id in trade_in:
+		var spec: Dictionary = trade_in[id]
+		var price := maxi(1, roundi(GameData.value(id) * float(GameData.b("caravan_import_markup"))))
+		for o: NPC in w.npcs:
+			if not o.alive or o.job != str(spec.job) or not _can_make(o, str(spec.recipe)) or _buyer_for(o, str(spec["for"])) == null:
+				continue
+			while o.inv.count(id) < int(spec.stock) and w.can_afford(o, price, false, id):
+				var seller: OffMapSettlement = w.regions.seller_for(id, on_road)
+				if seller == null or not w.claims_release(o, EconReservations.COINS, price, id):
+					break
 				seller.sell_to_village(id, 1, price)
 				w.note_settlement_trade(o, seller)
 				o.coins -= price

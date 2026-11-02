@@ -26,7 +26,6 @@ signal bled(pos: Vector2)          # someone or something was slain here (drawn 
 signal level_tile_changed(level: int, cell: Vector2i, value: int)   # a seam below the surface changed (worked out): the level's view redraws it
 signal player_level_changed(level: int)   # the player went through a portal (Main fades the surface or the level)
 signal player_leveled(skill: String, level: int)   # DVW-A12 R6: player_xp raised a skill to a new level (Main shows the banner)
-signal village_milestone(text: String, category: String)   # B25-CAPABILITY: a village industry milestone first reached (already logged and journaled; Main may show it)
 
 const DAY := 1440.0
 
@@ -63,6 +62,7 @@ var trees: Array = []              # the village's trees (Trees: the one tree mo
 var tree_damage := {}              # Vector2i -> {hits, side, at}: the axe blows a mature tree has taken (not saved: they heal)
 var wage_offers := {}              # WDR-012-C: the manor's raise on its hands' wage to fill its places {job: {raise, short, met}}. Saved (older saves have none)
 var manor_orders: Array = []       # tools the manor paid a smith for in advance (EQ-19, OD-16 b): {smith, tool, for, paid, day}. Saved (older saves have none)
+var station_load := {}             # B25-EMPLOY-IMPL: the minutes worked at each station by trade, today and the last few days {day, today, past} (NPCBrain.note_station_work). Saved (older saves have none: an empty record)
 var vacancies: Array = []          # essential posts open after a death (B8-016, NPCBrain succession): {job, workplace, home, household, day, who}. Saved (older saves have none)
 var deposits: Array = []           # {x, y, ore, amount}: the mine's seams (the sims, miners and the caravan's stone rule look at these only)
 var boulders: Array = []           # the village's small grey boulders (B8-026): {x, y, ore: "stone", amount, boulder: true}, a few
@@ -142,6 +142,8 @@ var justice: Justice          # GP-CRIME-PURSUIT A1: the authorities' file on ea
 var civic: CivicRecords = null  # P21-01 (Expansion 21): tenure history, succession and the legacy record; null while data/civic.json is disabled (shipped off: nothing built, no save key). Observes, never changes (scripts/core/civic/)
 var civic_foreign := {}       # P21-01: a saved "civic" section while the records are disabled: written back unchanged, never erased
 var economy_foreign := {}   # D2: a saved "economy" section while the foundation is disabled: written back unchanged, never parsed or erased
+var employment: Employment     # EMP-PERM-01: the players' permanent employees (scripts/core/employment.gd); saved as the optional key "employment"
+var ventures: Ventures         # B25-BUSINESS-IMPL: villagers' own businesses (scripts/core/ventures.gd); state saved with households and buildings
 var transactions: EconTransactions = null   # LE-03: the transaction authority (docs/expansion20/TRANSACTION_AUTHORITY.md); saved as "transactions" only when non-empty
 var economy: EconomyFoundation = null   # EXPANSION 20 LE-01: null unless game/data/economy.json "enabled" (shipped false); saved as the optional key "economy" only when on and non-empty
 var credit: Credit            # TRADE-CREDIT: barter and recorded debts (scripts/core/credit.gd). Saved as the optional key "credit" (older saves have none)
@@ -188,6 +190,8 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	property = Property.new(self)
 	construction = Construction.new(self)
 	business = Business.new(self)
+	ventures = Ventures.new(self)
+	employment = Employment.new(self)
 	fitting = Fitting.new(self)
 	counters = Counters.new(self)
 	for b in m.data.buildings:
@@ -531,6 +535,8 @@ func _new_day() -> void:
 	if couriers != null:
 		couriers.daily()               # REG-COURIER-01: the village's booth, its keeper, the routes to the settlements
 	construction.daily()               # helpers' days end; crowded households split; founders build
+	ventures.daily()                   # B25-BUSINESS-IMPL: ventures open, change hands or close; villagers weigh founding one
+	employment.daily()                 # EMP-PERM-01: permanent employees paid for the day, or their employment ends
 	farm_plots.daily()                 # households weigh taking farmland (FARM-05)
 	chapel.dawn()                      # DVW-B3-CHAPEL: this morning's volunteers for the church plot, and its seed
 	if profiling:
@@ -722,6 +728,9 @@ func _note_work(n: NPC, s: Dictionary, mins: float) -> void:
 		var kind := str(manor_work.job(int(args.get("job", -1))).get("kind", "")) if act == "mj_step" else ""
 		ind = WorkExperience.industry_of_step(act, args, kind)
 	experience.credit(World.npc_ref(n.id), ind, mins, minutes)
+	var st := str(s.get("args", {}).get("station", ""))
+	if st != "" and n.job != "":
+		brain.note_station_work(st, n.job, mins)      # B25-EMPLOY-IMPL: how busy the trade's workplaces are (skilled places)
 	var sx := Skills.step_xp(act)         # DVW-B8: Farming and Husbandry are trained by the work, the villager's as the player's
 	if not sx.is_empty() and n.role in ["adult", "elder"]:
 		Skills.gain(n, str(sx.skill), int(sx.xp))
@@ -1595,7 +1604,7 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 		relations.note_trade(id_of_party(buyer), id_of_party(seller), day())     # MP C3: a guest trades as itself
 	if business:
 		business.stalls.after_trade(seller, id, qty, total)     # a merchant's sale at their market stall: its session (STALL-05)
-		business.money.after_trade(seller, total)               # a keeper's sale at the household's storefront: its till (ECON-P3)
+		business.money.after_trade(seller, total, id, qty)      # a keeper's sale at the household's storefront: its till (ECON-P3); a business's goods: its till (B25-BIZ-D1)
 	return true
 
 
@@ -3658,8 +3667,8 @@ func _player_killing(n: NPC, ref: String) -> void:
 		if o.job == "guard":
 			justice.learn(o, ref, [ci], player.pos)
 		else:
-			report_crime(o, id_of_ref(ref), "saw", "attack", ref, [ci])
-			justice.case_of(ref).aware[str(o.id)] = ci
+			report_crime(o, id_of_ref(ref), "saw", "attack", ref, [ci], true, n.id, "killing")     # Decision 4: weighed as the gravest crime
+			justice.case_of(ref).aware[str(o.id)] = ci                          # witnessing stands, whatever they chose
 	if not seen.is_empty():
 		# A3 (owner answer 1): a murder seen raises the hue and cry: everyone within earshot learns of it at once
 		var blows: Array = []
@@ -3722,17 +3731,17 @@ func note(text: String) -> void:
 
 
 ## B25-CAPABILITY (owner Decision 8): announce village industry milestones first reached today (SettlementProfile
-## .note_milestones: `reached`, [{industry, level}]), unobtrusively: one line in the village record (note), one entry in every
-## player's message journal under the category "village" (MessageJournal, significant tier), and the signal
-## village_milestone(text, "village") for the interface to show it as a village (not personal) message. Personal skill
-## level-ups stay player_leveled's (category "skill"). Presentation only: nothing in the simulation reads it.
+## .note_milestones: `reached`, [{industry, level}]), unobtrusively and as village news: one line by note() (the village
+## record, and the corner log's village lane through `event`, JUICE-J1; never the personal lane) and one entry in every
+## player's message journal under the category "village" (significant tier). Showing it once is the milestone record's job
+## (only a first achievement is in `reached`). Presentation only: nothing in the simulation reads it.
 func announce_milestones(reached: Array) -> void:
 	for r in reached:
 		var text := SettlementProfile.milestone_text(str(r.industry), int(r.level))
 		note(text)
 		for pl: PlayerState in player_list():
 			messages.record(player_ref(pl), minutes, "village", text)
-		village_milestone.emit(text, "village")
+		stat("village_milestones")
 
 
 func alive_count(role := "") -> int:
@@ -4601,6 +4610,7 @@ func raise_alarm(aware: Dictionary, attacker: int, ref := "", cis := []) -> int:
 	if judgment != null:
 		JudgmentLive.on_attack(self, attacker, aware)              # PROSPECTIVE (PROS-19)
 	var k := 0
+	var v: NPC = aware.get("victim", null)
 	for n: NPC in aware.seen:
 		if n.job == "guard":
 			if ref != "":
@@ -4611,8 +4621,7 @@ func raise_alarm(aware: Dictionary, attacker: int, ref := "", cis := []) -> int:
 				if ref != "":
 					justice.engage(n, ref, "pursuing")             # A2: the chase is on the case: it survives losing sight
 		elif n.role != "bandit" and n.id != attacker:
-			report_crime(n, attacker, "saw", "attack", ref, cis)
-	var v: NPC = aware.get("victim", null)
+			report_crime(n, attacker, "saw", "attack", ref, cis, true, v.id if v != null else -1)
 	if v != null and v.alive and v.role != "bandit" and v.id != attacker:
 		if v.job == "guard":
 			if ref != "":
@@ -4638,9 +4647,13 @@ func raise_alarm(aware: Dictionary, attacker: int, ref := "", cis := []) -> int:
 ## it tells of (`cis`); a report the villager already holds on the same player gains the new crimes.
 ## R2 (SJD-F): with decision.integration.report on, the villager first weighs telling against keeping quiet
 ## (JudgmentLive.will_report); `weigh` false for a rule that is never weighed (a family member fetching help,
-## JudgmentFamily). Off (the default), every call reports as before. True when the report is taken up.
-func report_crime(n: NPC, offender: int, how: String, crime := "attack", ref := "", cis := [], weigh := true) -> bool:
-	if weigh and JudgmentLive.on(self, "report") and not JudgmentLive.will_report(self, n, offender, how, crime):
+## JudgmentFamily). Owner Decision 4 (2026-11-01): on since then; off, every call reports as before. True when the report is
+## taken up. Keeping quiet changes only this: the villager still remembers the deed and knows the offender (the caller's own
+## record of what they saw). `severity` is what the choice weighs (JudgmentLive.report_harm: "killing", "attack" or "theft";
+## "" the crime itself), while the report carries `crime` (the guard's answer stays the live rule's); `victim` the one harmed
+## (-1 none), for the witness's kinship with them.
+func report_crime(n: NPC, offender: int, how: String, crime := "attack", ref := "", cis := [], weigh := true, victim := -1, severity := "") -> bool:
+	if weigh and JudgmentLive.on(self, "report") and not JudgmentLive.will_report(self, n, offender, how, severity if severity != "" else crime, victim):
 		stat("crime_reports_withheld")
 		return false
 	var had: Dictionary = n.report
@@ -5136,7 +5149,7 @@ func _pickpocket_try(n: NPC) -> Dictionary:
 		var ci := last_crime                  # A1: the case's record of this try (witness)
 		for o: NPC in near(player.pos, sight):
 			if o != n and o.role != "bandit" and o.job != "guard":
-				report_crime(o, acting_id(), "saw", "theft", acting_ref(), [ci])
+				report_crime(o, acting_id(), "saw", "theft", acting_ref(), [ci], true, n.id)
 		if n.alive and n.job != "guard":
 			report_crime(n, acting_id(), "victim", "theft", acting_ref(), [ci])
 	if last_guard != "":
@@ -6075,7 +6088,7 @@ func to_dict() -> Dictionary:
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"overworld": map.overworld.to_dict() if map.overworld != null else {},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
-		"vacancies": vacancies, "wage_offers": wage_offers, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
+		"vacancies": vacancies, "station_load": station_load, "wage_offers": wage_offers, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
 		"chapel": chapel.to_dict(), "feast": feast.to_dict(),
 		"player": _host_player.to_dict(), "players": _players_to_dict(), "coin_sources": coin_sources, "regions": regions.to_dict(), "couriers": couriers.to_dict(), "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
@@ -6087,7 +6100,7 @@ func to_dict() -> Dictionary:
 		"mine_works": mine_works.to_dict(),
 		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged(_economy_section()).merged(_civic_section()).merged({EconTransactions.KEY: transactions.to_dict()} if transactions != null and not transactions.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"employment": employment.to_dict()} if not employment.is_empty() else {}).merged(_economy_section()).merged(_civic_section()).merged({EconTransactions.KEY: transactions.to_dict()} if transactions != null and not transactions.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
 	if judgment != null:
 		out.judgment = judgment.to_dict()                          # PROSPECTIVE (PROS-19): provisional section
 	elif not judgment_foreign.is_empty():
@@ -6308,6 +6321,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	property.next_parcel = int(d.get("next_parcel", 0))
 	construction = Construction.new(self)
 	business = Business.new(self)
+	ventures = Ventures.new(self)
+	employment = Employment.new(self)
+	employment.load_dict(d.get("employment", {}))    # EMP-PERM-01: older saves have no employees
 	fitting = Fitting.new(self)
 	counters = Counters.new(self)
 	minutes = float(d.minutes)
@@ -6372,6 +6388,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	vacancies = d.get("vacancies", [])
 	manor_orders = d.get("manor_orders", [])
 	wage_offers = (d.get("wage_offers", {}) as Dictionary).duplicate(true)
+	station_load = (d.get("station_load", {}) as Dictionary).duplicate(true)     # B25-EMPLOY-IMPL: absent in older saves
 	deposits = d.deposits
 	for sd in deposits:                # B25 save continuity: a saved number comes back as a decimal; the amounts are whole units
 		for key in ["x", "y", "amount", "level", "found_day"]:

@@ -12,8 +12,9 @@ static func add_pages(w: Wiki) -> void:
 	for t in GameData.weapon_types.get("types", {}):
 		_weapon_type(w, str(t))
 	w.add_page("todo:gear_orders", "Armour and weapon orders: what is still to come", "notyet", [
-		Wiki.note("Not in the game yet. An order is made while you wait: the maker does not yet take it away to the forge and call you back when it is done. The tailor keeps no cloth or straw of their own, so you bring what a hat is made of. The makers do not yet make catalogue pieces for stock or for other villagers, and the hired help of your own shop does not make them: you make them yourself or order them. Steel, bronze, fur and silk are not goods of their own yet: iron and coal stand in for steel, copper for bronze, hides for fur and fine cloth for silk."),
-		Wiki.links(["sys:armoury"], "See also")], "", "not implemented planned armour weapon order steel bronze silk fur")
+		Wiki.note("Not in the game yet. An order is made while you wait: the maker does not yet take it away to the forge and call you back when it is done. The tailor keeps no cloth or straw of their own, so you bring what a hat is made of. The makers do not yet make catalogue pieces for stock or for other villagers, and the hired help of your own shop does not make them: you make them yourself or order them."),
+		Wiki.note("Not in the game yet: bonuses some pieces are made for but that have nothing to work on. Only the Fireball spell is in the game, so the frost and lightning of the cyan and yellow mage's pieces do nothing yet; there is no riding or fighting from horseback (horses only pull the plough), so the Mongol pieces and the yabusame robes give nothing for it yet. The Pack lists these under the piece as not in the game yet. Nobody in the village rears silkworms: raw silk comes only from the weavers of the neighbouring towns, by the caravan."),
+		Wiki.links(["sys:armoury"], "See also")], "", "not implemented planned armour weapon order silk frost lightning ice wind riding mounted horseback")
 
 
 ## A weapon type's name in the plural ("knives").
@@ -41,21 +42,24 @@ static func _armoury(w: Wiki) -> void:
 		if bonus_ex.has(k):
 			bonus_rows.append("+%s: %s (for example the %s)." % [PlayerState.BONUS_NAMES[k], {"max_hp": "more health at most", "max_stamina": "more stamina at most",
 				"fire_damage": "each fireball does that much more damage", "stamina_regen": "stamina comes back faster, that much more each second",
-				"damage": "each blow does that much more damage"}.get(k, ""), GameData.item_name(bonus_ex[k]).to_lower()])
+				"damage": "each blow does that much more damage", "sword_damage": "each blow with a sword, greatsword, katana, scimitar or rapier does that much more damage"}.get(k, ""), GameData.item_name(bonus_ex[k]).to_lower()])
 	w.add_page("sys:armoury", "Armour and weapons: the catalogue", "systems", [
 		Wiki.p("Every body armour, helmet and outfit drawn for the villagers' world, and every weapon of the smith's pattern sheets, can be made and ordered: %d body armours and outfits, %d helmets, hats and hoods, and %d weapons (16 kinds, each in bronze, iron, steel and gold, 30 patterns of each)." % [counts.armor, counts.head, counts.weapon]),
 		Wiki.h("Who makes them"),
 		Wiki.p("The smith is the village's armourer and weapon smith: metal armour, helmets and every weapon, at the anvil with Smithing. The tanner makes the leather and cloth pieces (the Japanese robes, the French coats and hats, the mage's hats and hoods) at the workbench with Tanning or Crafting. The tailor sews the plain hats, hoods and bandanas. Talk to them and choose the order: pick the kind, then the piece (for a weapon, its metal and one of its 30 patterns)."),
 		Wiki.p("You can make any piece yourself at an anvil or a workbench you may use, with its skill level and its materials in your pack: open the station and choose Armour and weapons."),
 		Wiki.h("Classes"),
-		Wiki.bullets(["Common: plain bronze, iron and leather. Made from the maker's own stock; you pay its materials and a small fee for the work.",
-			"Fine: steel (iron worked with coal), a higher Smithing level, more armour or damage, a larger fee.",
-			"Cultural: Viking, Mongol, Japanese and French pieces. A commission: you bring the special materials (hides, wool or fine cloth, feathers, tusks or antlers) and pay a higher fee for the work.",
-			"Rare: the striking pieces (gold, the knights' and lords' helms, the jarl, the khaan, the shogun, the mage's hats, and the masterwork patterns 22 to 30 of every weapon). Commissioned only, at the highest levels, and each carries a worn bonus.",
+		Wiki.bullets(["Common: plain bronze, iron and leather. Made from the maker's own stock; you pay its materials and a small fee for the work. Its protection is its armour, nothing more.",
+			"Fine: steel, a higher Smithing level, more armour or damage, a larger fee. Also protection only: no bonus.",
+			"Cultural: Viking, Mongol, Japanese and French pieces. A commission: you bring the special materials (fur, hides, wool cloth, fine cloth or silk, feathers, tusks or antlers) and pay a higher fee for the work. Some help the fighting they were made for (below); anyone may order and wear them.",
+			"Rare: the striking pieces (gold, the knights' and lords' helms, the jarl, the khaan, the shogun, the mage's hats and hoods, and the masterwork patterns 22 to 30 of every weapon). Commissioned only, at the highest levels, and each carries a worn bonus.",
 			"Plain: the tailor's hats and bandanas: clothing, no armour, no bonus."]),
-		Wiki.p("The maker supplies what the piece needs from its own stock (iron and copper bars, leather, coal, planks) and charges each at its base price, on top of the fee. If it has run out of something, you can bring that too, and then you do not pay for it. The maker must have the recipe's skill level: a smith not yet practised enough cannot make the finest pieces. The order is made while you wait, the coins go to the maker and nothing is made from nothing."),
+		Wiki.p("Ordinary clothing is worn for looks only, whatever it is made of: plain clothes, straw hats, bandanas, hoods, the archers', rangers', hunters' and musketeers' hats and the traveller's robe give no armour and no bonus. The Pack says \"Clothing\" under them."),
+		Wiki.h("Materials"),
+		Wiki.p("Bronze bars are copper and tin alloyed at the forge (3 copper bars, 1 tin bar and coal make 4), steel bars iron bars worked again with coal (Smithing 3). Tin ore is smelted like the other ores; the village has no tin at the surface, but one vein lies hidden in the deep rock of each level below ground, found when a tunnel or shaft opens beside it, and the smiths buy tin from the caravan, which brings it from Garton's diggings while they last. The tanner dresses fur from a hide or three rabbit pelts (Tanning 2) and weaves fine cloth from raw silk (Crafting 3); raw silk comes from the weavers of the neighbouring towns by the caravan, and the tanner buys some while someone wants fine cloth. Fur and fine cloth are sold to the goods merchant, where you can buy them for a commission."),
+		Wiki.p("The maker supplies what the piece needs from its own stock (iron, copper, bronze and steel bars, leather, coal, planks) and charges each at its base price, on top of the fee. If it has run out of something, you can bring that too, and then you do not pay for it. The maker must have the recipe's skill level: a smith not yet practised enough cannot make the finest pieces. The order is made while you wait, the coins go to the maker and nothing is made from nothing."),
 		Wiki.h("Worn bonuses"),
-		Wiki.p("Rarer pieces give a bonus while worn or held in the hand, once for each piece (a piece in the pack gives nothing). The Pack shows it under the piece:"),
+		Wiki.p("Rarer pieces give a bonus while worn or held in the hand, once for each piece (a piece in the pack gives nothing). A bonus belongs to what the piece is for: a cultural piece helps the fighting it was made for (the samurai armour a sword in the hand, the Viking warrior's mail every blow, Mongol lamellar and the Japanese robes a long day's stamina), a rare piece is exceptional work, and the mage's elemental pieces strengthen the Fireball. None makes you better at everything, and none depends on who you are. The Pack shows it under the piece:"),
 		Wiki.bullets(bonus_rows),
 		Wiki.h("Tusks and antlers"),
 		Wiki.p("Boar tusks and antlers go into special armour and weapons. They come only from animals really killed: a grown wild boar gives %d tusks, a grown stag (a male deer) %d antlers, whoever kills it, you or the hunter. Hunters sell theirs to the goods merchant, where you can buy them." % [int(boar.get("tusks", 0)), int(deer.get("antlers_m", 0))]),
@@ -63,9 +67,9 @@ static func _armoury(w: Wiki) -> void:
 		Wiki.p("Every armour, helmet, hat and outfit of the catalogue is drawn on you while you wear it, in every direction, and other players see it too; taking it off shows your own clothes again. The weapon in your hand is carried drawn at your side while you stand or walk, and an attack slashes with it: raised back, swung the way you face as the blow lands, then back at your side. Guards and bandits carry theirs the same way, and anyone who fights strikes with the weapon they have, or bare-handed with none."),
 		Wiki.h("Weapons"),
 		Wiki.p("Each kind has its own damage, speed and wear: a knife or rapier swings quickly for little damage, a greatsword or battle hammer slowly and heavily. Steel does more and lasts longer than iron, bronze less. Patterns 13 to 21 are finer work (one more damage, a level more), 22 to 30 masterwork (two more damage, two levels more, a commission with tusks or antlers, and a worn bonus)."),
-		Wiki.links(["item:boar_tusk", "item:antler", "job:smith", "job:tanner", "station:anvil", "station:workbench", "skill:smithing", "skill:tanning", "todo:gear_orders"] +
+		Wiki.links(["item:boar_tusk", "item:antler", "item:tin_ore", "item:bronze_bar", "item:steel_bar", "item:fur", "item:silk", "job:smith", "job:tanner", "station:anvil", "station:workbench", "skill:smithing", "skill:tanning", "todo:gear_orders"] +
 			(GameData.weapon_types.get("types", {}) as Dictionary).keys().map(func(k): return "gear:" + str(k)), "See also")],
-		"", "armour armor weapon catalogue armourer order commission rare cultural buff bonus fireball tusk antler smith tanner tailor")
+		"", "armour armor weapon catalogue armourer order commission rare cultural regional elemental buff bonus fireball tusk antler smith tanner tailor steel bronze tin fur silk clothing cosmetic")
 
 
 static func _weapon_type(w: Wiki, tid: String) -> void:

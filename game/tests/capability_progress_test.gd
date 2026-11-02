@@ -148,7 +148,7 @@ func test_milestone_once() -> void:
 func test_live_announcement() -> void:
 	var w := _fresh(4)
 	var shown := []
-	w.village_milestone.connect(func(t: String, c: String): shown.append([t, c]))
+	w.event.connect(func(line: String): shown.append(line))     # the village lane (World.note -> event -> GameUI.village)
 	var ind := ""
 	for id in w.settlement_caps.levels:
 		if int(w.settlement_caps.levels[id]) > 0:
@@ -160,7 +160,7 @@ func test_live_announcement() -> void:
 	check((p.reached as Array).size() == 1 and str(p.reached[0].industry) == ind, "the update finds it newly reached")
 	w.announce_milestones(p.reached)
 	var text := SettlementProfile.milestone_text(ind, int(p.reached[0].level))
-	check(shown.size() == 1 and shown[0][0] == text and shown[0][1] == "village", "announced once, as a village message: %s" % text)
+	check(shown.filter(func(l): return str(l).ends_with(text)).size() == 1, "announced once, as village news through note(): %s" % text)
 	var kept: Array = w.messages.entries(w.player_ref(w.player))
 	check(kept.any(func(e): return str(e[1]) == "village" and str(e[2]) == text), "kept in the player's journal under 'village'")
 	check(w.log_lines.any(func(l): return str(l).ends_with(text)), "and in the village record")

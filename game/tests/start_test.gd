@@ -1491,9 +1491,13 @@ func _plant_gather_tests() -> void:
 		run_frames(1, 0.05)
 		guard += 1
 	check(p.inv.count("blueberries") == bb0 + 2 and other.state == "picked" and main.gather.is_empty() and main.gather_mode, "Gather mode walks to the bush, picks it, and stops (Gather stays on)")
-	var gains: Array = ui.log_texts()
-	check(gains.any(func(t): return t.begins_with("+2 ")) and not ui.toast.text.begins_with("You pick") and not ui.prompt_text.begins_with("Picking"),
-			"a pick is a short line in the corner, not a banner in the middle: %s, toast \"%s\"" % [gains, ui.toast.text])
+	# JUICE J1 (owner Decision 9): gains go to the corner log's personal lane; with village news showing, that lane keeps its
+	# newest line, so a pick's two lines (the berries, then the cutting) may show as the later one. Both went to the corner.
+	var gains: Array = ui.log_texts(GameUI.LANE_PERSONAL)
+	var picked: Array = main.gain_log.slice(-2).map(func(g): return str(g[1]))
+	check(picked.any(func(t): return t.begins_with("+2 ")) and not gains.is_empty() and gains.all(func(t): return t in picked)
+			and not ui.toast.text.begins_with("You pick") and not ui.prompt_text.begins_with("Picking"),
+			"a pick is a short line in the corner, not a banner in the middle: %s of %s, toast \"%s\"" % [gains, picked, ui.toast.text])
 	# a full pack refuses
 	main.stop_gather("")
 	var third: Dictionary = {}

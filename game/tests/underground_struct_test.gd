@@ -245,8 +245,8 @@ func _test_hidden_ore() -> void:
 	var lm := _gallery(w)
 	var mw := w.mine_works
 	var hid: Array = w.underground.hidden.filter(func(h): return int(h.level) == -1)
-	check(hid.size() == 2 and w.deposits.all(func(d): return w.underground.hidden_at(World.level_of(d), Vector2i(int(d.x), int(d.y))).is_empty()),
-			"the gallery's rock holds two hidden seams, none of them in World.deposits")
+	check(hid.size() == 3 and str(hid[2].ore) == "tin_ore" and w.deposits.all(func(d): return w.underground.hidden_at(World.level_of(d), Vector2i(int(d.x), int(d.y))).is_empty()),
+			"the gallery's rock holds three hidden seams (iron, coal and, B25 Decision 5, tin placed last), none of them in World.deposits")
 	check(Underground.create(1, w.map).fingerprint() == w.underground.fingerprint(), "the hidden ore is part of the world's generation from the seed (the same every time)")
 	var h: Dictionary = hid[0]
 	var hc := Vector2i(int(h.x), int(h.y))

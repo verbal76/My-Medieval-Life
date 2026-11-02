@@ -200,7 +200,8 @@ func test_ambitious_moves_content_stays() -> void:
 
 
 ## X18-D3: no skill level promotes anyone. Off, a master manor hand never moves on skill; on, a content master stays too;
-## and the weighing never offers a skilled trade (smith, carpenter, tanner, cook): only job_market's open places.
+## and the weighing offers only job_market's open places: a skilled trade (smith, carpenter, tanner, cook) only when its
+## work justifies one (B25-EMPLOY-IMPL; skilled_employment_test shows the places opening).
 func test_no_threshold_promotion() -> void:
 	for on in [false, true]:
 		var f := career_world(4)
@@ -217,9 +218,11 @@ func test_no_threshold_promotion() -> void:
 		check(calm.job == "manor_hand", "%s: a content master of farming and smithing stays a manor hand (no promotion by level)" % ("on" if on else "off"))
 		if not on:
 			check((f.keen as NPC).job == "manor_hand", "off: nobody not in need looks for other work (the live rule)")
+		# B25-EMPLOY-IMPL (owner B25-EMPLOY-D3): the skilled trades are in the market now, but only with the places their
+		# workplaces, work and earnings justify (skilled_place); a new world has seen no work yet, so none is open to anyone
 		var m: Dictionary = w.brain.job_market()
 		for t in ["smith", "carpenter", "tanner", "cook", "merchant"]:
-			check(not m.has(t), "%s: %s is not a place the weighing can offer" % ["on" if on else "off", t])
+			check(m.has(t) and int(m[t].open) == 0, "%s: %s is listed and has no place open without evidence of work" % ["on" if on else "off", t])
 		GameData.balance["field_workers_max"] = 2
 		w.dispose()
 

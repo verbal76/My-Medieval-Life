@@ -32,7 +32,7 @@ extends RefCounted
 ##                   tool_buy        NPCBrain._buy_tool, _fetch_dress_tool  which seller of a tool a villager buys from, or
 ##                                                           putting it off (SJD-H C5: the owner's blacksmith example)
 ##                   report          World.report_crime      whether a villager who knows of a crime tells a guard (R2,
-##                                                           SJD-F; integration.report OFF until measured)
+##                                                           SJD-F; ON since owner Decision 4, 2026-11-01)
 ##                 each on only with a store attached and its decision.integration flag set; feasibility (stock,
 ##                 coins, purchase_qty, can_hire, can_court, regard thresholds) and conservation are never overridden.
 ##                 SJD-H C1 (owner 2026-10-31; docs/expansion20/JUDGMENT_INTEGRATION_AUDIT.md): the choices among
@@ -901,31 +901,63 @@ static func family_gives(w, giver: NPC, builder: NPC) -> bool:
 
 # ---------------------------------------------------------------- SJD-F crime: whether to report (R2) ---------------
 ## report (World.report_crime): whether villager `n`, who knows of `offender`'s crime (`how`: "saw", "victim" or
-## "sighting"; `crime`: "attack" or "theft"), tells a guard or keeps quiet. Both options are feasible (who may report
-## and how a report travels stay the live rule's); the choice between them is weighed by the one shared interface,
-## never decided by a cutoff (owner, 2026-10-26: judgment influences, never dictates). Telling: the live rule's yes
-## (live_order) and the harm done. Keeping quiet: what `n` thinks of the offender (disposition, the family name's colour
-## included), kinship with them, and fear of them (the violence `n` holds against them). Each person weighs these by
-## their own personality (trait_spread, life shift, stubbornness), so two witnesses of the same crime may decide
-## differently. Every choice is recorded by the flight recorder when one is attached (JudgmentWeighting.choose).
-static func will_report(w, n: NPC, offender: int, how: String, crime: String) -> bool:
+## "sighting"; `crime`: "killing", "attack" or "theft", the severity as `n` knows it, severity_of), tells a guard or keeps
+## quiet. Both options are feasible (who may report and how a report travels stay the live rule's); the choice between them
+## is weighed by the one shared interface, never decided by a cutoff (owner, 2026-10-26: judgment influences, never
+## dictates; owner Decision 4, 2026-11-01: reporting is never mandatory, and different witnesses may differ). Telling: the
+## live rule's yes (live_order), the harm done (graver crimes press harder: killing > attack > theft; a victim feels their
+## own harm more, report_harm) and kinship with `victim` (the one harmed, -1 none: loyalty to one's own kin who was harmed).
+## Keeping quiet: what `n` thinks of the offender (disposition, the family name's colour included), kinship with them, and
+## fear of them (the violence `n` holds against them). Only what `n` legitimately knows enters: the crime they saw or heard
+## of (its kind and its victim), their own ledger of the offender, their own family. Each person weighs these by their own
+## personality (trait_spread, life shift, stubbornness), so two witnesses of the same crime may decide differently.
+## Deciding is apart from witnessing: the caller has already given `n` the knowledge (memory, judgment, the case's aware
+## list), and keeping quiet takes none of it away. Every choice is recorded by the flight recorder when one is attached
+## (JudgmentWeighting.choose).
+static func will_report(w, n: NPC, offender: int, how: String, crime: String, victim := -1) -> bool:
 	var j: JudgmentStore = w.judgment
 	if offender == n.id:
 		return true
 	var rc: Dictionary = j.cfg.decision.get("report", {})
-	var harm := int(rc.get("harm_victim", 0)) if how == "victim" else int(rc.get("harm_attack" if crime == "attack" else "harm_theft", 0))
+	var harm := report_harm(rc, how, crime)
 	var kin := 100000 if j.social != null and j.social.kin(n.id, offender) else 0
+	var vkin := 0
+	if victim >= 0 and victim != n.id and victim != offender and j.social != null and j.social.kin(n.id, victim):
+		vkin = int(rc.get("victim_kin", 0))
 	var fear := JudgmentMath.clampi_(JudgmentMath.mul_div(int(j.ledger(n.id, offender)[6]), int(rc.get("fear_permille_per_point", 0)), 1000), 0, 100000)
 	var cands := [
-		{"id": "report", "counterparty": -1, "factors": {"live_order": 100000, "harm": harm, "disposition": 0, "kinship": 0, "fear": 0}},
+		{"id": "report", "counterparty": -1, "factors": {"live_order": 100000, "harm": harm, "disposition": 0, "kinship": vkin, "fear": 0}},
 		{"id": "silent", "counterparty": offender, "factors": {"live_order": 0, "harm": 0, "kinship": kin, "fear": fear}},
 	]
 	var r := JudgmentWeighting.choose(j, j.cfg, n.id, "report", cands, [w.day(), offender, how.hash(), crime.hash()])
 	j._stat("report_choices")
+	j._stat("report_choices_" + crime)
 	if str(r.chosen) == "silent":
 		j._stat("report_kept_quiet")
+		j._stat("report_kept_quiet_" + crime)
 		return false
 	return true
+
+
+## The harm a report weighs (decision.report, milli-points): the victim's own (harm_victim for an attack, harm_victim_theft
+## for a theft), or a witness's by severity (harm_killing, harm_attack, harm_theft). Owner Decision 4: graver crimes press
+## harder toward reporting.
+static func report_harm(rc: Dictionary, how: String, crime: String) -> int:
+	if how == "victim":
+		return int(rc.get("harm_victim_theft", rc.get("harm_victim", 0))) if crime == "theft" else int(rc.get("harm_victim", 0))
+	if crime == "killing":
+		return int(rc.get("harm_killing", rc.get("harm_attack", 0)))
+	return int(rc.get("harm_attack" if crime == "attack" else "harm_theft", 0))
+
+
+## The severity a report weighs for a crime record's kind (Justice's case, World.crime_record): a killing; an attack (an
+## assault, a blow at a guard); or a theft (every taking: theft, pickpocket, lockpicking, livestock).
+static func severity_of(kind: String) -> String:
+	if kind == "killing":
+		return "killing"
+	if kind in ["assault", "guard_assault"]:
+		return "attack"
+	return "theft"
 
 
 # ---------------------------------------------------------------- R5 aspirations (WDR-011-C) -----------------------

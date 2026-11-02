@@ -274,6 +274,8 @@ func can_hire(n: NPC) -> String:
 		return "%s is already hired for today." % n.name
 	if w.business != null and w.business.is_attendant(n):
 		return "%s minds a counter already." % n.name
+	if w.employment != null and w.employment.is_employed(n):
+		return "%s works for someone already." % n.name     # B25-BIZ-D4: one employer at a time
 	return ""
 
 
@@ -791,7 +793,8 @@ func daily() -> void:
 			continue                       # MP-PLAYER-FAMILY: a player couple's home is the players' own (Life.sync_couple_homes)
 		_rehouse(h)
 		if str(hh.get("build", "")) != "":
-			_family_help(h)
+			if not hh.has("venture"):
+				_family_help(h)            # B25-BUSINESS-IMPL: relatives help build a home, not a business
 			_keep_building(h)
 		elif str(hh.home) == "":
 			_find_home(h)                  # lodging: a house of its own when it can pay for one
