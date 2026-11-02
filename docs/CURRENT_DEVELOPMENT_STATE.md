@@ -3,6 +3,14 @@
 **This is the one current-state document.** Owner directives MEM-01 and DOC-CONT-01 make it the entry point.
 
 - **Updated:** 2026-11-01.
+- **Snapshot last verified:** not yet stamped under the HAG-MEM-02 convention.
+  - **Convention:** whoever checks this file against the live GitHub state writes this line as
+    `YYYY-MM-DD HH:MM UTC by <session or agent>, against wip/expansion20 <sha>, wip/requirements-control <sha>, Actions runs
+    to <newest run id>`.
+  - It is rewritten at each checkpoint; earlier stamps live in git history.
+  - A reader who finds newer commits or runs than the stamp names must treat this file as stale where they disagree. See
+    `docs/handoffs/CURRENT_SESSION_RECOVERY.md`, step 3.
+  - Defects and investigations: `docs/KNOWN_ISSUES.md`. Decision rationale: `docs/decisions/`.
 - **Where the authoritative copy lives:** branch `wip/requirements-control`. The owner keeps that branch isolated, so copies of this
   file on `staging/my-medieval-life`, `wip/expansion20` and older branches are stale. Each of those copies carries a banner saying so.
 - **What this file holds:** session state only.

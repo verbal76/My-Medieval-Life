@@ -1,63 +1,101 @@
-# Standard session recovery (any Claude session, ChatGPT or engineer)
+# Session recovery: start here (any Claude or ChatGPT session, or an engineer)
 
-This procedure follows owner directive DOC-CONT-01, section 11 (`docs/directives/2026-11-01_permanent_documentation_ai_continuity.md`),
-and works alongside `CLAUDE.md` section 0. Use it after a context compaction, in a fresh session, or as an external assistant with
-only GitHub access. Do not rebuild state from a conversation summary. The repository is the record.
+The one entry point for recovering My Medieval Life from GitHub alone. Owner directives:
+- HAG-MEM-02, Part 8 (`docs/directives/2026-11-02_hag_permanent_github_memory_reporting_directive.md`);
+- DOC-CONT-01 (`docs/directives/2026-11-01_permanent_documentation_ai_continuity.md`).
 
-## The 11 steps
+It works alongside `CLAUDE.md` section 0. The repository is the record. Never rebuild state from a conversation summary.
 
-1. **Identify the repository and objective.**
-   - Repository: `verbal76/My-Medieval-Life`, a Godot 4.7 medieval village simulation.
-   - The objective is the current build named in `docs/CURRENT_DEVELOPMENT_STATE.md`. As of 2026-11-01 that is Build 25, the
-     consolidation build.
-2. **Read the root agent instructions:** `CLAUDE.md` (project rules, release and save policy, what needs the owner).
-3. **Open the current-state entry point,** `docs/CURRENT_DEVELOPMENT_STATE.md`, **from branch `wip/requirements-control`.**
-   - Copies on `staging/my-medieval-life`, `wip/expansion20` and other branches are stale and carry a banner saying so.
-   - Anything under `docs/handoffs/archive/`, or marked HISTORICAL, is history, not current state.
-4. **Fetch current branch heads:** `git fetch origin`, then compare with the heads the state file names (integration branch, records
-   branch, every worker branch). A newer head than recorded means work landed after the last checkpoint. Read its commits before
-   acting.
-5. **Read recent changelog entries:** the top of `docs/DEVELOPMENT_CHANGELOG.md`, plus `git log` on the integration branch since
-   the last entry.
-6. **Review the applicable owner decisions.**
-   - Register records of kind `decision` are listed in `docs/requirements/views/DECISIONS.md`.
-   - The owner's verbatim words are in `docs/directives/` (dated files, newest last).
-   - An APPROVED decision has an `owner_answer`. A proposal or recommendation is not an approval. Do not reopen settled decisions.
-7. **Review the active and suspended workstreams** in the "Workers and branches" table of the state file.
+## The 10 steps
+
+1. **Identify the repository and the active branches.**
+   - Repository: `verbal76/My-Medieval-Life`, a Godot 4.7 medieval village simulation (Hot Attic Games).
+   - Current development (the Build 25 source): **`wip/expansion20`**.
+   - Records (register, directives, state file): **`wip/requirements-control`**. Read every document below from this branch.
+     Copies elsewhere are stale and carry a banner saying so.
+   - `staging/my-medieval-life` is behind. `main` changes only by the owner.
+   - Run `git fetch origin` and compare the heads with those named in the state file. A newer head means work landed after the
+     last checkpoint, so read those commits first.
+2. **Read the permanent memory and the authoritative requirements.**
+   - `CLAUDE.md` (rules, what needs the owner) and [`docs/PROJECT_MEMORY.md`](../PROJECT_MEMORY.md) (the index).
+   - The register, [`docs/requirements/requirements.json`](../requirements/requirements.json), read through
+     [`views/STATUS.md`](../requirements/views/STATUS.md) and [`views/QUEUES.md`](../requirements/views/QUEUES.md). It is the
+     only source of requirement and decision status.
+3. **Read the current snapshot,** [`docs/CURRENT_DEVELOPMENT_STATE.md`](../CURRENT_DEVELOPMENT_STATE.md).
+   - Check its "Snapshot last verified" line. If that is older than the newest commits or runs, treat the snapshot as stale
+     where they disagree.
+4. **Read recent changes and owner decisions, with their reasons.**
+   - The top of [`docs/DEVELOPMENT_CHANGELOG.md`](../DEVELOPMENT_CHANGELOG.md), plus `git log` since its newest entry on both
+     branches.
+   - [`views/DECISIONS.md`](../requirements/views/DECISIONS.md) for decision status.
+   - [`docs/decisions/`](../decisions/README.md) for why.
+   - `docs/directives/` for the owner's exact words.
+   - A proposal or recommendation is not an approval. Never answer an open owner decision.
+5. **Inspect the latest 20 GitHub Actions runs and their jobs**
+   (`https://github.com/verbal76/My-Medieval-Life/actions`, or the API's workflow-runs list).
+   - For each run, note its workflow, branch, SHA, status and conclusion. Note which are still running.
+   - The workflows are `tests.yml`, `requirements.yml`, `long-sims.yml` (including flight-recorder campaigns) and
+     `release.yml`.
+6. **Read the reports and the failure evidence.**
+   - Open each run's job summary.
+   - `tests.yml` and `requirements.yml` upload `ci-report.json` (format `mml-ci-report/1`) with every suite's result and
+     first failure lines. Long simulations upload `summary.json` and logs. Flight campaigns upload findings and a workbook.
+   - A green run is not proof that every feature passed. Check what it actually ran:
+     - which suites;
+     - whether any were skipped;
+     - whether it was a read-only "recover" run that simulated nothing.
+   - Known defects, outcomes and past investigations are in [`docs/KNOWN_ISSUES.md`](../KNOWN_ISSUES.md). Read it before
+     starting a new investigation.
+7. **Verify release and package status.**
+   - GitHub Releases (Build 24, `4611d86`, is the latest private draft; it is frozen) and the state file's "Position" table.
+   - The levels are distinct: IMPLEMENTED, COMPILED, TESTED, VALIDATED, INTEGRATED, PACKAGED, RELEASED (changelog header), and
+     uploading to Steam is separate again.
+   - Results apply only to the SHA they name.
+8. **Identify active tests and workstreams before starting anything.**
+   - Check the state file's "Workers and branches" table and the running Actions runs.
+   - Never restart, cancel or duplicate a running simulation (SIM-02).
+   - Never start a second worker on a branch someone holds.
    - Never treat an unmerged branch as disposable.
-   - Never start a second worker on a branch someone already holds.
-8. **Identify the latest verified integration SHA** and what "verified" means for it. Use the levels in the changelog:
-   IMPLEMENTED, COMPILED, TESTED, VALIDATED, INTEGRATED, PACKAGED, RELEASED. Results apply only to the SHA they name.
-9. **Inspect recent CI results:**
-   - GitHub Actions runs of `long-sims.yml`, `tests.yml` and `release.yml`.
-   - Check whether anything is still running before starting anything. Never restart or cancel a running simulation (SIM-02).
-   - Artifacts expire; the durable conclusions are in the changelog and in `docs/release/`.
-10. **Identify outstanding defects and dependencies:** the "Known defects" and "Outstanding owner decisions" sections of the state
-    file, and `docs/requirements/views/QUEUES.md` and `STATUS.md`.
-11. **Resume the next authorized action** from the state file's "Next authorized actions". If it is blocked on the owner, ask, and
-    continue with the next unblocked item.
+9. **Reconcile conflicts** by authority, then chronology, then commit evidence:
+   - the owner's latest directive and the register beat any handoff or summary;
+   - newer commits and runs beat an older snapshot;
+   - `docs/handoffs/archive/` and anything marked HISTORICAL is history only.
+10. **Summarise the current state and pick the next authorized action** from the state file's "Next authorized actions".
+    - If it is blocked on the owner, record the question with options and continue with the next unblocked item.
 
-## Reports a reader can build from the repository
+## Where things are recorded
 
-| Report | Sources |
+| Need | Record |
 |---|---|
-| Current status | `docs/CURRENT_DEVELOPMENT_STATE.md` |
-| Last 24 hours | the newest dated section of `docs/DEVELOPMENT_CHANGELOG.md`; `git log --since="24 hours ago"` on the integration branch and `wip/requirements-control` |
-| Build history | the changelog and its index of earlier records; `docs/expansions/README.md`; GitHub Releases |
-| Owner decisions | `docs/requirements/views/DECISIONS.md`; `docs/directives/`; `docs/DECISIONS.md` (older narrative log) |
-| Technical progress | `docs/requirements/views/STATUS.md` and `BUILD_NN.md` (by expansion number); the register's implementation and verification fields |
-| Release readiness | the state file's tests and defects sections; the register's LE-07 gate records; `docs/release/` |
+| Status of a requirement or decision | The register and its views (generated; never hand-edit) |
+| Why a decision was made | [`docs/decisions/`](../decisions/README.md) |
+| What happened, when, on which commit | [`docs/DEVELOPMENT_CHANGELOG.md`](../DEVELOPMENT_CHANGELOG.md) |
+| Defects and investigations | [`docs/KNOWN_ISSUES.md`](../KNOWN_ISSUES.md) |
+| Current work, workers, blockers, next action | [`docs/CURRENT_DEVELOPMENT_STATE.md`](../CURRENT_DEVELOPMENT_STATE.md) |
+| Release evidence | `docs/release/` and GitHub Releases |
 
-## Before a compaction or the end of a session
+**Durable versus temporary.** Actions artifacts and logs expire. Every durable conclusion must be written into the changelog or
+known issues, with the run link:
+- a cause;
+- a fix;
+- a measurement;
+- a verification result.
+
+Automation never commits reports to a code branch under test, because a commit would change the SHA being validated. There
+is no automatic reporting branch; see [the HAG-MEM-02 decision record](../decisions/HAG-MEM-02.md).
+
+## Checkpoint: before a compaction or the end of a session
 
 Do this early, at about 70-75% context where it can be measured.
 
-1. Record any new owner words: save them verbatim in `docs/directives/`, then add the register record with
-   `tools/requirements_update.py`.
-2. Update `docs/CURRENT_DEVELOPMENT_STATE.md`: position, workers table, tests, next actions.
-3. Add changelog entries for the milestones reached.
-4. Run `python3 tools/check_requirements.py --write`. It must report 0 problems.
-5. Commit and push `wip/requirements-control` and any worker branches. Confirm the remote heads. Local uncommitted work is not
-   preserved by GitHub; say so if any remains.
+1. Save any new owner words verbatim in `docs/directives/`, and add the register record with `tools/requirements_update.py`.
+2. Write a rationale record in `docs/decisions/` for each lasting decision (HAG-MEM-02, Part 5).
+3. Update the state file (position, workers, tests, next actions) and its "Snapshot last verified" line.
+4. Add changelog entries for the milestones reached, and known-issues entries for defects found, causes established or
+   approaches that failed.
+5. Run `python3 tools/check_requirements.py --write`. It must report 0 problems.
+6. Commit and push `wip/requirements-control` and every worker branch, then confirm the remote heads. Say plainly if any work
+   is local only; GitHub does not hold uncommitted work.
 
-Earlier recovery notes are in `docs/handoffs/archive/` (history only).
+The earlier 11-step version of this procedure (DOC-CONT-01) is in git history. Its content is kept in the steps above. Older
+recovery notes are in `docs/handoffs/archive/` (history only).

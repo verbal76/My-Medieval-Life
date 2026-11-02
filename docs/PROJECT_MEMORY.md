@@ -62,12 +62,51 @@ The only current decision/status source is `docs/requirements/requirements.json`
 - **Current state:** `docs/CURRENT_DEVELOPMENT_STATE.md` on branch `wip/requirements-control` (build, integration branch,
   verified SHA, workers, tests, defects, owner decisions, next authorized action). Copies on other branches are stale.
 - **Development history:** `docs/DEVELOPMENT_CHANGELOG.md` (chronological, SHA-bound, with the IMPLEMENTED ... RELEASED levels).
-- **Recovery procedure (11 steps, also for an external assistant):** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
+- **Recovery procedure (10 steps since HAG-MEM-02; 11 under DOC-CONT-01; also for an external assistant):** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
 - **Test and simulation evidence:** the changelog entries (SHA, run id, result); `docs/release/build25_validation/`,
   `docs/release/chapel_fix/`, `docs/release/economic_maturation/`, `docs/release/build25_reconciliation/`,
   `docs/release/LONG_RUN_SIMULATION.md`; the register's `tests` and `test_commit` fields.
 - The milestones of 2026-10-31 that stood here (Build 25 as Expansion 20 freeze, Builds 26 and 27) are history: Build 25 is the
   consolidation build (B25-SCOPE-D1). The archived handoff keeps the old sequence.
+
+## Permanent memory components (HAG-MEM-02, 2026-11-02)
+
+Owner directive HAG-MEM-02 (`docs/directives/2026-11-02_hag_permanent_github_memory_reporting_directive.md`) asks every
+repository for six components. Here they are existing files, with two additions (D's rationale and E):
+
+| Component | Where | Since |
+|---|---|---|
+| A. Project memory (permanent; never rewritten from scratch) | This file, plus the records it links | MEM-01, 2026-10-20 |
+| B. Current development state, with "Snapshot last verified" | [`docs/CURRENT_DEVELOPMENT_STATE.md`](CURRENT_DEVELOPMENT_STATE.md), on `wip/requirements-control` | DOC-CONT-01 |
+| C. Development history | [`docs/DEVELOPMENT_CHANGELOG.md`](DEVELOPMENT_CHANGELOG.md) | DOC-CONT-01 |
+| D. Owner decision register: status | [`docs/requirements/requirements.json`](requirements/requirements.json) and [`views/DECISIONS.md`](requirements/views/DECISIONS.md) | REQ-CTRL-01 |
+| D. Owner decision register: reasoning | [`docs/decisions/`](decisions/README.md) (standard, template, records linked by register ID) | HAG-MEM-02 |
+| E. Known issues and investigations | [`docs/KNOWN_ISSUES.md`](KNOWN_ISSUES.md) | HAG-MEM-02 |
+| F. Session recovery entry point | [`docs/handoffs/CURRENT_SESSION_RECOVERY.md`](handoffs/CURRENT_SESSION_RECOVERY.md) | DOC-CONT-01, aligned to HAG-MEM-02 Part 8 |
+
+**CI reporting.** Every substantial workflow run writes a job summary. `tests.yml` and `requirements.yml` also write
+`ci-report.json` (format `mml-ci-report/1`, written by the ci_report.py tool) and per-suite logs as an artifact. They run every
+suite even after a failure, and classify the run as TESTED, FAILED or INCOMPLETE, never VALIDATED or RELEASED. The tool and
+the workflow changes are on the CI branch docs/hag-memory-rationale-2026-11-02 until the lead merges them into the Build 25
+source. `long-sims.yml` and the
+flight-recorder workflows already wrote summaries.
+
+Artifacts expire, so durable conclusions go into the changelog and known issues, with run links. Automation never commits to
+a code branch under test (see [the HAG-MEM-02 decision record](decisions/HAG-MEM-02.md)).
+
+### What Part 2A asks for, and where it is
+
+| Item | Where |
+|---|---|
+| Vision and intended experience | "What the project is", above; `docs/WORLD_DESIGN_RULES.md` |
+| Target platforms | Android first, then Windows and Linux, always built together (CLAUDE.md sections 1, 5 and 8; BUILD-3PLATFORM) |
+| Main systems and architecture | `docs/ARCHITECTURE.md`; [`docs/SYSTEM_INTERACTION_MANIFEST.md`](SYSTEM_INTERACTION_MANIFEST.md) (INT-### entries) |
+| Owner-approved design principles | `docs/WORLD_DESIGN_RULES.md` (Rule 022: "A village is allowed to fail. The simulation is not.") |
+| Technical constraints | CLAUDE.md sections 5-8 (determinism, saves and migrations, signing, platforms); `docs/release/SAVE_CONTINUITY.md` |
+| Features implemented, feature status, milestones | [`docs/expansions/README.md`](expansions/README.md) (one status file per expansion); [`views/STATUS.md`](requirements/views/STATUS.md); the changelog |
+| Rejected or superseded directions | Register entries with disposition SUPERSEDED or REJECTED (2026-11-02: OD-10, CARAVAN-TMP and JUICE-JD1 superseded; none rejected); superseded rationale records in `docs/decisions/`; old-design content parked as GDD-REVIEW (see "Authority" above) |
+| Long-term objectives | `docs/EXPANSION_ROADMAP.md` (expansion order 20, 21, 23, 22, 24, 25, 26, 27; 22-27 not authorized) |
+| Authoritative specifications | `docs/directives/` (verbatim, including the expansion PDFs and their text copies) |
 
 ## Open owner decisions and blockers
 

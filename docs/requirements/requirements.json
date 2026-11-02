@@ -29054,6 +29054,11 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-02_hag_permanent_github_memory_reporting_directive.md"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "documentation worker: rationale standard and 6 records in docs/decisions/ (HAG-MEM-02, B25-BIZ-TENANT-Q, CHAPEL-PURPOSE, superseded X20-CHAPEL-FIX 6-day food line, FLIGHT-REC-01, B25-OVN-0211); docs/KNOWN_ISSUES.md; PROJECT_MEMORY component map; recovery aligned to Part 8's 10 steps; 'Snapshot last verified' convention in the state file (wip/requirements-control). CI reporting on docs/hag-memory-rationale-2026-11-02 4309029 (tools/ci_report.py: every suite runs past a failure; job summary and ci-report.json mml-ci-report/1 in tests.yml and requirements.yml; summary-only step in release.yml; actionlint clean; test_ci_report 10 OK), not yet merged into wip/expansion20 nor run in Actions. No automatic reporting branch (reason in docs/decisions/HAG-MEM-02.md)."
     }
    ]
   },
