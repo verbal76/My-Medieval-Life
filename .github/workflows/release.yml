@@ -338,3 +338,35 @@ jobs:
           draft: ${{ inputs.visibility != 'public' }}
           body_path: notes.md
           files: release/*
+
+      # HAG-MEM-02 Part 3: a job summary on every outcome. Reporting only; it changes nothing about packaging, signing or
+      # publishing. PACKAGED is not RELEASED: a private draft is visible to collaborators only, and nothing here uploads to Steam.
+      - name: Report (job summary)
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+          GATE_RESULT: ${{ needs.sim-gate.result }}
+          VISIBILITY: ${{ inputs.visibility }}
+          BUILD_NUMBER: ${{ inputs.build_number || github.run_number }}
+        run: |
+          if [ "$JOB_STATUS" = "success" ]; then
+            if [ "$VISIBILITY" = "public" ]; then outcome="PACKAGED and published on GitHub Releases (not uploaded to Steam)"; else outcome="PACKAGED as a private draft release (not RELEASED publicly; not uploaded to Steam)"; fi
+          else
+            outcome="FAILED ($JOB_STATUS): no complete three-platform package from this run"
+          fi
+          {
+            echo "## Build and release: build $BUILD_NUMBER"
+            echo
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Repository | $GITHUB_REPOSITORY |"
+            echo "| Branch | $GITHUB_REF_NAME |"
+            echo "| Commit | \`$GITHUB_SHA\` |"
+            echo "| Run | $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID (attempt $GITHUB_RUN_ATTEMPT) |"
+            echo "| Trigger | $GITHUB_EVENT_NAME by $GITHUB_ACTOR |"
+            echo "| Visibility requested | $VISIBILITY |"
+            echo "| Simulation gate job | $GATE_RESULT |"
+            echo "| Outcome | **$outcome** |"
+            echo
+            if [ -f release/SHA256SUMS.txt ]; then echo "Files (SHA256SUMS.txt):"; echo; echo '```'; cat release/SHA256SUMS.txt; echo '```'; else echo "No release/SHA256SUMS.txt: packaging did not finish."; fi
+          } >> "$GITHUB_STEP_SUMMARY"

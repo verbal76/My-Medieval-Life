@@ -26,7 +26,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 90           # the Expansion 20 economy suites pushed a full run past 45 minutes (run 41123358434, 2026-10-30)
+    env:
+      CI_OUT: ${{ github.workspace }}/ci-out   # per-suite logs, results.jsonl, ci-report.json (HAG-MEM-02 Part 3)
     steps:
+      - name: Note the start time
+        run: echo "CI_STARTED=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2           # the requirements check compares the register with the previous commit
@@ -59,209 +64,238 @@ jobs:
       - name: Install the tools' dependencies (Pillow, numpy)
         run: python3 -m pip install pillow==10.4.0 numpy==2.1.3
 
+      # HAG-MEM-02 Part 3 (owner directive 2026-11-02): every suite runs even when an earlier one fails (tools/ci_report.py
+      # records each suite's exit code, its "N checks, M failures" line and first FAIL lines, and fails the step at the end
+      # if any suite failed). Later steps run unless the run was cancelled, so one failure no longer hides the rest.
       - name: Python tests and data checks
+        id: python
         run: |
+          cat > "$RUNNER_TEMP/python.txt" <<'EOF'
           python3 -m unittest discover -s tests
           python3 tools/check_interactions.py
           python3 tools/check_requirements.py --against HEAD~1   # no approved requirement lost or closed without a record
           python3 tools/check_resources.py
           python3 tools/build_weapons.py          # WEAPON-CATALOG-01: the generated catalogue matches its table
           python3 tools/check_materials.py   # material and profession coverage (WDR-007-C); fails on broken references or stale exceptions
+          EOF
+          python3 tools/ci_report.py run --group python --list "$RUNNER_TEMP/python.txt" --logs "$CI_OUT/logs" --results "$CI_OUT/results.jsonl"
+
+      - name: Import the project (headless)
+        id: import
+        if: ${{ !cancelled() }}
+        run: ~/godot-bin/godot --headless --path game --import
 
       - name: Game tests (headless)
+        id: game
+        if: ${{ !cancelled() && steps.import.outcome == 'success' }}
         run: |
-          godot=~/godot-bin/godot
-          $godot --headless --path game --import
-          $godot --headless --path game --script res://tests/run_tests.gd
-          $godot --headless --path game --script res://tests/start_test.gd
-          $godot --headless --path game --script res://tests/character_look_test.gd
-          $godot --headless --path game --script res://tests/furniture_test.gd
-          $godot --headless --path game --script res://tests/play_test.gd
-          $godot --headless --path game --script res://tests/overworld_test.gd
-          $godot --headless --path game --script res://tests/tree_test.gd
-          $godot --headless --path game --script res://tests/world_test.gd
-          $godot --headless --path game --script res://tests/aging_test.gd
-          $godot --headless --path game --script res://tests/wiki_test.gd
-          $godot --headless --path game --script res://tests/audio_test.gd
-          $godot --headless --path game --script res://tests/stone_test.gd
-          $godot --headless --path game --script res://tests/job_board_test.gd
-          $godot --headless --path game --script res://tests/early_game_test.gd
-          $godot --headless --path game --script res://tests/parity_mining_test.gd
-          $godot --headless --path game --script res://tests/equip_test.gd
-          $godot --headless --path game --script res://tests/inventory18_test.gd
-          $godot --headless --path game --script res://tests/crop_share_test.gd
-          $godot --headless --path game --script res://tests/skills_test.gd
-          $godot --headless --path game --script res://tests/chests_test.gd
-          $godot --headless --path game --script res://tests/property_test.gd
-          $godot --headless --path game --script res://tests/business_test.gd
-          $godot --headless --path game --script res://tests/business_money_test.gd
-          $godot --headless --path game --script res://tests/till_ownership_test.gd
-          $godot --headless --path game --script res://tests/business_works_test.gd
+          cat > "$RUNNER_TEMP/game.txt" <<'EOF'
+          res://tests/run_tests.gd
+          res://tests/start_test.gd
+          res://tests/character_look_test.gd
+          res://tests/furniture_test.gd
+          res://tests/play_test.gd
+          res://tests/overworld_test.gd
+          res://tests/tree_test.gd
+          res://tests/world_test.gd
+          res://tests/aging_test.gd
+          res://tests/wiki_test.gd
+          res://tests/audio_test.gd
+          res://tests/stone_test.gd
+          res://tests/job_board_test.gd
+          res://tests/early_game_test.gd
+          res://tests/parity_mining_test.gd
+          res://tests/equip_test.gd
+          res://tests/inventory18_test.gd
+          res://tests/crop_share_test.gd
+          res://tests/skills_test.gd
+          res://tests/chests_test.gd
+          res://tests/property_test.gd
+          res://tests/business_test.gd
+          res://tests/business_money_test.gd
+          res://tests/till_ownership_test.gd
+          res://tests/business_works_test.gd
           # Build 18 suites (REL18-SUITES: every suite runs in CI)
-          $godot --headless --path game --script res://tests/chapel_test.gd
-          $godot --headless --path game --script res://tests/competition_test.gd
-          $godot --headless --path game --script res://tests/countryside_test.gd
-          $godot --headless --path game --script res://tests/courier_live_test.gd
-          $godot --headless --path game --script res://tests/credit_test.gd
-          $godot --headless --path game --script res://tests/economy_foundation_test.gd
-          $godot --headless --path game --script res://tests/economy_model_test.gd
-          $godot --headless --path game --script res://tests/le02_market_test.gd
-          $godot --headless --path game --script res://tests/le03_claims_test.gd     # Expansion 20 LE-03: one transaction path (claims)
-          $godot --headless --path game --script res://tests/le03_economy_test.gd    # Expansion 20 LE-03: budgets, food bids, production, no tool-order trap
-          $godot --headless --path game --script res://tests/le03_transactions_test.gd   # Expansion 20 LE-03: the transaction authority
-          $godot --headless --path game --script res://tests/le04_test.gd               # Expansion 20 LE-04: village parties, the manor's tools
-          $godot --headless --path game --script res://tests/le06_save_test.gd          # Expansion 20 LE-06: the economy's save bounded
-          $godot --headless --path game --script res://tests/le05_test.gd               # Expansion 20 LE-05: travel in prices
-          $godot --headless --path game --script res://tests/le05_repair_test.gd        # LE05-REPAIR: tool repair at the anvil (economy on or off)
-          $godot --headless --path game --script res://tests/le05_rental_test.gd        # LE05-RENTAL: tool rental behind the switch
-          $godot --headless --path game --script res://tests/le05_paid_repair_test.gd   # LE-05 paid repair behind the switch, its escrow and refunds
-          $godot --headless --path game --script res://tests/le05_construction_hire_test.gd   # LE-05 construction wages through the transaction authority
-          $godot --headless --path game --script res://tests/le05_route_risk_test.gd    # LE-05 route risk: the per-route loss record and its price term
-          $godot --headless --path game --script res://tests/b25_leak2_departure_test.gd   # B25-LEAK2: a leaver's rentals and paid repairs settled, no coin lost
-          $godot --headless --path game --script res://tests/le07_gates_test.gd         # LE-07: the automatable release gates and the activation mechanism
-          $godot --headless --path game --script res://tests/save_continuity_test.gd    # random state, pack order and deposits kept across a save and load
-          $godot --headless --path game --script res://tests/wear_transfer_test.gd      # X20-WEAR-TRANSFER: a tool's wear travels with it
-          $godot --headless --path game --script res://tests/feast_test.gd
-          $godot --headless --path game --script res://tests/horse_test.gd
-          $godot --headless --path game --script res://tests/luxury_test.gd
-          $godot --headless --path game --script res://tests/migration_test.gd
-          $godot --headless --path game --script res://tests/identity_test.gd
-          $godot --headless --path game --script res://tests/multiplayer_a1_test.gd
+          res://tests/chapel_test.gd
+          res://tests/competition_test.gd
+          res://tests/countryside_test.gd
+          res://tests/courier_live_test.gd
+          res://tests/credit_test.gd
+          res://tests/economy_foundation_test.gd
+          res://tests/economy_model_test.gd
+          res://tests/le02_market_test.gd
+          res://tests/le03_claims_test.gd     # Expansion 20 LE-03: one transaction path (claims)
+          res://tests/le03_economy_test.gd    # Expansion 20 LE-03: budgets, food bids, production, no tool-order trap
+          res://tests/le03_transactions_test.gd   # Expansion 20 LE-03: the transaction authority
+          res://tests/le04_test.gd               # Expansion 20 LE-04: village parties, the manor's tools
+          res://tests/le06_save_test.gd          # Expansion 20 LE-06: the economy's save bounded
+          res://tests/le05_test.gd               # Expansion 20 LE-05: travel in prices
+          res://tests/le05_repair_test.gd        # LE05-REPAIR: tool repair at the anvil (economy on or off)
+          res://tests/le05_rental_test.gd        # LE05-RENTAL: tool rental behind the switch
+          res://tests/le05_paid_repair_test.gd   # LE-05 paid repair behind the switch, its escrow and refunds
+          res://tests/le05_construction_hire_test.gd   # LE-05 construction wages through the transaction authority
+          res://tests/le05_route_risk_test.gd    # LE-05 route risk: the per-route loss record and its price term
+          res://tests/b25_leak2_departure_test.gd   # B25-LEAK2: a leaver's rentals and paid repairs settled, no coin lost
+          res://tests/le07_gates_test.gd         # LE-07: the automatable release gates and the activation mechanism
+          res://tests/save_continuity_test.gd    # random state, pack order and deposits kept across a save and load
+          res://tests/wear_transfer_test.gd      # X20-WEAR-TRANSFER: a tool's wear travels with it
+          res://tests/feast_test.gd
+          res://tests/horse_test.gd
+          res://tests/luxury_test.gd
+          res://tests/migration_test.gd
+          res://tests/identity_test.gd
+          res://tests/multiplayer_a1_test.gd
           # MP Batch A2, gate G1: a host and a guest in two Godot processes over loopback (join, move, an action the host applies, same state, rejoin, host restart)
-          $godot --headless --path game --script res://tests/net_g1_test.gd
+          res://tests/net_g1_test.gd
           # MP Batch B: guest characters kept in the host's world (load out of play, not targetable away, a guest's heir by its own choice)
-          $godot --headless --path game --script res://tests/multiplayer_b_test.gd
+          res://tests/multiplayer_b_test.gd
           # MP Batch B, gate G1 persistence: per-player records across a host restart and a killed host, reconnect, mid-action and mid-save, death and heir, a newcomer
-          $godot --headless --path game --script res://tests/net_batch_b_test.gd
+          res://tests/net_batch_b_test.gd
           # MP Batch C: per-player identities, verb parity host/guest, the G2 matrix, save 22 and the Build 20 migration
-          $godot --headless --path game --script res://tests/multiplayer_c_test.gd
+          res://tests/multiplayer_c_test.gd
           # MP Batch C over loopback: the guest's verbs applied by the host, the copies agreeing, several players across a restart
-          $godot --headless --path game --script res://tests/net_c_test.gd
+          res://tests/net_c_test.gd
           # Build 21 over loopback: the guest's copy of the animals follows the host's (moved, hurt, killed, born, pens)
-          $godot --headless --path game --script res://tests/net_fauna_test.gd
+          res://tests/net_fauna_test.gd
           # Build 21: the host and join menus (compact, on screen at phone and PC sizes) and a two-process smoke over loopback through them
-          $godot --headless --path game --script res://tests/net_ui_test.gd
+          res://tests/net_ui_test.gd
           # X20-MP-ECON-INTEGRITY: guests' trades, contracts and the transaction authority under network faults, host recovery and
           # succession, economy off and on: every coin and good conserved, each request applied once (three processes and a relay, ~3 min)
-          $godot --headless --path game --script res://tests/net_econ_integrity_test.gd
+          res://tests/net_econ_integrity_test.gd
           # GP-POLISH P1 (owner directive 2026-10-24): stations opened by a tap on them; the mining swing on touch; the touch action columns
-          $godot --headless --path game --script res://tests/station_tap_test.gd
+          res://tests/station_tap_test.gd
           # (GP-ACTIONBAR and GP-PICKAXE-ANIM are checked in start_test.gd)
           # GP-POLISH P2 (the owner's reports of 2026-10-24): drawing order at house fronts and the rest of the batch
-          $godot --headless --path game --script res://tests/polish_p2_test.gd
+          res://tests/polish_p2_test.gd
           # GP-BANDIT-CAMP-ART (Build 21): the camp's animated campfire, grounded and y-sorted; the camp's tiles; the credit
-          $godot --headless --path game --script res://tests/campfire_test.gd
+          res://tests/campfire_test.gd
           # GP-MARKET-SHELVES (Build 21): every market stall's shelf and the goods on offer
-          $godot --headless --path game --script res://tests/market_shelf_test.gd
+          res://tests/market_shelf_test.gd
           # GP-GIFT-QUANTITY (Build 21): a gift asks how many, from one; never a stack by accident
-          $godot --headless --path game --script res://tests/gift_quantity_test.gd
-          $godot --headless --path game --script res://tests/pad_shortcuts_test.gd
-          $godot --headless --path game --script res://tests/wanted_indicator_test.gd
-          $godot --headless --path game --script res://tests/armour_worn_test.gd
+          res://tests/gift_quantity_test.gd
+          res://tests/pad_shortcuts_test.gd
+          res://tests/wanted_indicator_test.gd
+          res://tests/armour_worn_test.gd
           # ARMOR-CATALOG-01, WEAPON-CATALOG-01, WEAPON-VISIBLE-01 (Build 22): the armour and weapon catalogue
-          $godot --headless --path game --script res://tests/gear_catalogue_test.gd
-          $godot --headless --path game --script res://tests/mine_frame_test.gd
-          $godot --headless --path game --script res://tests/lockpick_test.gd
+          res://tests/gear_catalogue_test.gd
+          res://tests/mine_frame_test.gd
+          res://tests/lockpick_test.gd
           # X20-B2 (Expansion 20): Recenter, the smaller status box, the round action buttons, Use / Talk targeting, the
           # usable things' outlines and the contextual prompt's lifecycle
-          $godot --headless --path game --script res://tests/x20_android_ui_test.gd
+          res://tests/x20_android_ui_test.gd
           # GP-MESSAGE-JOURNAL (Expansion 20): the Messages journal saved with the world; Build 21 and 22 saves load with none
-          $godot --headless --path game --script res://tests/message_journal_test.gd
+          res://tests/message_journal_test.gd
           # GP-STALL-PRICE-ON-PUTUP (Build 21): the price chosen with the number when putting goods up; the workroom's verbs
-          $godot --headless --path game --script res://tests/stall_putup_test.gd
+          res://tests/stall_putup_test.gd
           # GP-JOYSTICK, GP-INPUT-CONSIST (Build 21): the optional thumbstick walks by the same move actions as keys and pads
-          $godot --headless --path game --script res://tests/joystick_test.gd
+          res://tests/joystick_test.gd
           # GP-HARVEST-CONT (Build 21): the Harvesting setting, continuous or manual, the same yield and time a cycle
-          $godot --headless --path game --script res://tests/harvest_setting_test.gd
+          res://tests/harvest_setting_test.gd
           # GP-SMITHY-WORKBENCH, GP-SHARPEN (Build 21): the workbench table, sharpening at the grinding wheel
-          $godot --headless --path game --script res://tests/sharpen_test.gd
-          $godot --headless --path game --script res://tests/outlaw_return_test.gd
-          $godot --headless --path game --script res://tests/party_test.gd
-          $godot --headless --path game --script res://tests/regional_food_test.gd
-          $godot --headless --path game --script res://tests/regions_test.gd
-          $godot --headless --path game --script res://tests/settlement_development_test.gd
-          $godot --headless --path game --script res://tests/tailor_barber_test.gd
-          $godot --headless --path game --script res://tests/tax_test.gd
-          $godot --headless --path game --script res://tests/trade_skills_test.gd
-          $godot --headless --path game --script res://tests/farming_test.gd
-          $godot --headless --path game --script res://tests/health_jobs_test.gd
-          $godot --headless --path game --script res://tests/home_test.gd
-          $godot --headless --path game --script res://tests/wildlife_test.gd
-          $godot --headless --path game --script res://tests/refuge_test.gd
-          $godot --headless --path game --script res://tests/combat_test.gd
-          $godot --headless --path game --script res://tests/pursuit_test.gd   # REPAIR S3: a guard chasing the player goes round walls
-          $godot --headless --path game --script res://tests/justice_test.gd   # GP-CRIME-PURSUIT A1: one case per offender, by player reference
-          $godot --headless --path game --script res://tests/manhunt_test.gd   # GP-CRIME-PURSUIT A3: hue and cry, sharing, sightings, yield, proportionate force
-          $godot --headless --path game --script res://tests/relations_test.gd
-          $godot --headless --path game --script res://tests/dialogue_perspective_test.gd   # REPAIR S1-S2: who speaks to whom, from what they know
-          $godot --headless --path game --script res://tests/save_transfer_test.gd
-          $godot --headless --path game --script res://tests/housing_test.gd
-          $godot --headless --path game --script res://tests/conservation_test.gd
-          $godot --headless --path game --script res://tests/recf1_test.gd
-          $godot --headless --path game --script res://tests/family_test.gd
-          $godot --headless --path game --script res://tests/od16_test.gd
-          $godot --headless --path game --script res://tests/parity_test.gd
-          $godot --headless --path game --script res://tests/reserve_test.gd
-          $godot --headless --path game --script res://tests/treasury_test.gd
-          $godot --headless --path game --script res://tests/exploit_test.gd
-          $godot --headless --path game --script res://tests/succession_test.gd
-          $godot --headless --path game --script res://tests/ecology_test.gd
-          $godot --headless --path game --script res://tests/stalls_test.gd
-          $godot --headless --path game --script res://tests/farm_plots_test.gd
-          $godot --headless --path game --script res://tests/farm_place_test.gd
-          $godot --headless --path game --script res://tests/herd_test.gd
-          $godot --headless --path game --script res://tests/contracts_test.gd
-          $godot --headless --path game --script res://tests/contract_50ore_test.gd
-          $godot --headless --path game --script res://tests/decay_test.gd
-          $godot --headless --path game --script res://tests/terrain_test.gd
-          $godot --headless --path game --script res://tests/underground_test.gd
-          $godot --headless --path game --script res://tests/quarry_test.gd
-          $godot --headless --path game --script res://tests/crafts_test.gd
-          $godot --headless --path game --script res://tests/prospecting_test.gd
-          $godot --headless --path game --script res://tests/discovery_test.gd
-          $godot --headless --path game --script res://tests/openpit_test.gd
-          $godot --headless --path game --script res://tests/services_test.gd
-          $godot --headless --path game --script res://tests/underground_ext_test.gd
-          $godot --headless --path game --script res://tests/underground_struct_test.gd
+          res://tests/sharpen_test.gd
+          res://tests/outlaw_return_test.gd
+          res://tests/party_test.gd
+          res://tests/regional_food_test.gd
+          res://tests/regions_test.gd
+          res://tests/settlement_development_test.gd
+          res://tests/tailor_barber_test.gd
+          res://tests/tax_test.gd
+          res://tests/trade_skills_test.gd
+          res://tests/farming_test.gd
+          res://tests/health_jobs_test.gd
+          res://tests/home_test.gd
+          res://tests/wildlife_test.gd
+          res://tests/refuge_test.gd
+          res://tests/combat_test.gd
+          res://tests/pursuit_test.gd   # REPAIR S3: a guard chasing the player goes round walls
+          res://tests/justice_test.gd   # GP-CRIME-PURSUIT A1: one case per offender, by player reference
+          res://tests/manhunt_test.gd   # GP-CRIME-PURSUIT A3: hue and cry, sharing, sightings, yield, proportionate force
+          res://tests/relations_test.gd
+          res://tests/dialogue_perspective_test.gd   # REPAIR S1-S2: who speaks to whom, from what they know
+          res://tests/save_transfer_test.gd
+          res://tests/housing_test.gd
+          res://tests/conservation_test.gd
+          res://tests/recf1_test.gd
+          res://tests/family_test.gd
+          res://tests/od16_test.gd
+          res://tests/parity_test.gd
+          res://tests/reserve_test.gd
+          res://tests/treasury_test.gd
+          res://tests/exploit_test.gd
+          res://tests/succession_test.gd
+          res://tests/ecology_test.gd
+          res://tests/stalls_test.gd
+          res://tests/farm_plots_test.gd
+          res://tests/farm_place_test.gd
+          res://tests/herd_test.gd
+          res://tests/contracts_test.gd
+          res://tests/contract_50ore_test.gd
+          res://tests/decay_test.gd
+          res://tests/terrain_test.gd
+          res://tests/underground_test.gd
+          res://tests/quarry_test.gd
+          res://tests/crafts_test.gd
+          res://tests/prospecting_test.gd
+          res://tests/discovery_test.gd
+          res://tests/openpit_test.gd
+          res://tests/services_test.gd
+          res://tests/underground_ext_test.gd
+          res://tests/underground_struct_test.gd
           # PROSPECTIVE Expansion 19 (PROS-19, wip/expansion19-preparation): the isolated judgment prototype
-          $godot --headless --path game --script res://tests/judgment_test.gd
-          $godot --headless --path game --script res://tests/judgment_live_test.gd
-          $godot --headless --path game --script res://tests/judgment_personality_test.gd
-          $godot --headless --path game --script res://tests/judgment_bonds_test.gd
-          $godot --headless --path game --script res://tests/family_first_test.gd
-          $godot --headless --path game --script res://tests/judgment_x19_test.gd
-          $godot --headless --path game --script res://tests/judgment_guard_save_test.gd
-          $godot --headless --path game --script res://tests/judgment_decay_demo.gd
-          $godot --headless --path game --script res://tests/judgment_perf.gd -- --sizes 100 --days 10
+          res://tests/judgment_test.gd
+          res://tests/judgment_live_test.gd
+          res://tests/judgment_personality_test.gd
+          res://tests/judgment_bonds_test.gd
+          res://tests/family_first_test.gd
+          res://tests/judgment_x19_test.gd
+          res://tests/judgment_guard_save_test.gd
+          res://tests/judgment_decay_demo.gd
+          res://tests/judgment_perf.gd -- --sizes 100 --days 10
           # REC-19 (wip/recorder): the flight recorder, off by default; archive, context links, cap, recovery, coin audit
-          $godot --headless --path game --script res://tests/recorder_test.gd
+          res://tests/recorder_test.gd
           # SIM-GATE-01: the desktop live export (workbook, analysis, archive) by the one GDScript XLSX writer
-          $godot --headless --path game --script res://tests/live_export_test.gd
+          res://tests/live_export_test.gd
           # Expansion 18 prospective suites (PROS-18, wip/expansion18-preparation only until integration)
-          $godot --headless --path game --script res://tests/interdependency_test.gd   # WDR-002-C: Rule 2 verification scenario
-          $godot --headless --path game --script res://tests/settlement_test.gd
-          $godot --headless --path game --script res://tests/settlement_life_test.gd
-          $godot --headless --path game --script res://tests/regional_test.gd
-          $godot --headless --path game --script res://tests/capability_test.gd
-          $godot --headless --path game --script res://tests/courier_test.gd
-          $godot --headless --path game --script res://tests/contract_sign_test.gd
-          $godot --headless --path game --script res://tests/experience_test.gd
-          $godot --headless --path game --script res://tests/profile_test.gd       # SET-A/B: the maintained capability profile
-          $godot --headless --path game --script res://tests/civic_records_test.gd   # Expansion 21 P21-01: civic records (offices, tenures, legacy); shipped disabled
+          res://tests/interdependency_test.gd   # WDR-002-C: Rule 2 verification scenario
+          res://tests/settlement_test.gd
+          res://tests/settlement_life_test.gd
+          res://tests/regional_test.gd
+          res://tests/capability_test.gd
+          res://tests/courier_test.gd
+          res://tests/contract_sign_test.gd
+          res://tests/experience_test.gd
+          res://tests/profile_test.gd       # SET-A/B: the maintained capability profile
+          res://tests/civic_records_test.gd   # Expansion 21 P21-01: civic records (offices, tenures, legacy); shipped disabled
+          EOF
+          python3 tools/ci_report.py run --group game --list "$RUNNER_TEMP/game.txt" --prefix "$HOME/godot-bin/godot --headless --path game --script" --logs "$CI_OUT/logs" --results "$CI_OUT/results.jsonl"
 
       - name: Short economy simulation (FR-07)
+        id: sim
+        if: ${{ !cancelled() && steps.import.outcome == 'success' }}
         run: |
           # 10 game days, seed 1: fails on a currency or item leak (economy_sim's own exit code) and on any
           # script error in the log, which Godot reports without stopping. Year-long runs: long-sims.yml.
-          godot=~/godot-bin/godot
-          set +e
-          timeout 900 $godot --headless --path game --script res://tests/economy_sim.gd -- --days 10 --seed 1 --every 5 --out "$RUNNER_TEMP/sim.json" > "$RUNNER_TEMP/sim.log" 2>&1
-          code=$?
-          set -e
-          tail -n 12 "$RUNNER_TEMP/sim.log"
-          errors=$(grep -c "SCRIPT ERROR" "$RUNNER_TEMP/sim.log" || true)
-          if [ "$code" -ne 0 ] || [ "$errors" -ne 0 ]; then
-            grep -m1 -A12 "SCRIPT ERROR" "$RUNNER_TEMP/sim.log" || true
-            echo "::error::economy simulation failed (exit $code, $errors script errors)"
-            exit 1
-          fi
+          echo 'res://tests/economy_sim.gd -- --days 10 --seed 1 --every 5 --out "$CI_OUT/sim.json"' > "$RUNNER_TEMP/sim.txt"
+          python3 tools/ci_report.py run --group sim --list "$RUNNER_TEMP/sim.txt" --prefix "$HOME/godot-bin/godot --headless --path game --script" --logs "$CI_OUT/logs" --results "$CI_OUT/results.jsonl" --timeout 900 --fail-on-script-errors
+
+      # The report never decides the outcome: the steps above already failed if a suite did. It runs whatever happened,
+      # writes the job summary and ci-report.json (mml-ci-report/1), and names any missing evidence.
+      - name: Report (job summary and ci-report.json)
+        if: always()
+        run: |
+          python3 tools/ci_report.py report --results "$CI_OUT/results.jsonl" \
+            --expect python --expect game --expect sim \
+            --step python=${{ steps.python.outcome }} --step import=${{ steps.import.outcome }} \
+            --step game=${{ steps.game.outcome }} --step sim=${{ steps.sim.outcome }} \
+            --started "$CI_STARTED" \
+            --purpose "Automated Python, data and headless Godot suites plus a 10-day economy smoke run on this commit (tests.yml; ${{ github.event_name }})" \
+            --json "$CI_OUT/ci-report.json" --markdown "$GITHUB_STEP_SUMMARY" > /dev/null
+
+      - name: Keep the report and per-suite logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ci-out
+          if-no-files-found: warn
+          retention-days: 30
