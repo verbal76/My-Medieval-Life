@@ -30410,6 +30410,11 @@
      "date": "2026-11-01",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "Answered by the owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 9, B25-NINE-D9)"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "implementation_status: None -> INTEGRATED; tests: None -> juice 44, message_journal 51, x20_android_ui 95, net_ui 61, mp_interact_ui 112, multiplayer_c 340, migration 109, wiki_test, start_test 523, run_tests 3601 (1a483de, local); test_commit: None -> 1a483de; commits + ba94edd; integrated_in + Build 25 wip/expansion20",
+     "why": "J1 and J2 merged into the Build 25 source at ba94edd (wip/b25-juice 4b72103); presentation only: 10-day seed 1 fingerprint 0e5e945a identical to 2c364d1; one headless screenshot looked at; flinch, Reduce effects and phone layout not looked at; no device check"
     }
    ],
    "owner_wording": null,
@@ -30420,7 +30425,16 @@
     "JUICE-00",
     "B12A-05"
    ],
-   "notes": "JD6 (effect art source) is not proposed as a record: under CLAUDE.md s.3 asset use is the team's decision."
+   "notes": "JD6 (effect art source) is not proposed as a record: under CLAUDE.md s.3 asset use is the team's decision.",
+   "implementation_status": "INTEGRATED",
+   "tests": "juice 44, message_journal 51, x20_android_ui 95, net_ui 61, mp_interact_ui 112, multiplayer_c 340, migration 109, wiki_test, start_test 523, run_tests 3601 (1a483de, local)",
+   "test_commit": "1a483de",
+   "commits": [
+    "ba94edd"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
+   ]
   },
   {
    "id": "JUICE-JD1",

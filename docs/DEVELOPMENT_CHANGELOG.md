@@ -61,6 +61,34 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
 
 ## 2026-11-02
 
+**JUICE-J1 (B25-NINE-D9): game juice J1 and J2.**
+- Branch: `wip/b25-juice`, merged as `ba94edd`. Commits:
+  - `efd0cd0`: implementation and wiki.
+  - `f905c3e`: catch-up merge.
+  - `f6801fd`: INT-670, DECISIONS row, `docs/juice/J1_J2_IMPLEMENTATION.md`.
+  - `1a483de`: start_test adapted to the two-lane log; reviewed by the lead, it tests the same intent.
+  - `4b72103`: screenshot script.
+- Change:
+  - J1:
+    - The corner log has two lanes, one for personal gains and skill levels and one for village news.
+    - The coin counter counts to the new amount.
+    - A hurt flinch.
+    - Dust and a prompt pulse.
+    - "Reduce effects" and "No blinking" settings.
+  - J2 is work effects: chips, sparks, sawdust, earth, site progress, finished-building dust and an exhausted seam.
+  - Not built: J3-J5, screen shake, haptics, darkness, speech bubbles.
+- Status: INTEGRATED, TESTED (local).
+- Evidence:
+  - juice 44, message_journal 51, x20_android_ui 95, net_ui 61, mp_interact_ui 112, multiplayer_c 340, migration 109, wiki_test,
+    start_test 523, run_tests 3601, all 0 failures on `1a483de`.
+  - 10-day seed 1 fingerprint `0e5e945a...` is identical with and without the effects.
+  - One headless screenshot was looked at.
+- Outstanding:
+  - Not looked at: the flinch in motion, Reduce effects, the phone layout.
+  - No device check.
+  - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
+  - The optional notification filter is not approved, so it was not built.
+
 **B25-NINE-D4: judgment-based witness reporting.**
 - Branch: `wip/b25-report`, merged as `2c364d1`. Commits: `f15faf8` (implementation, from before the suspension), `fa58b44`
   (catch-up merge of `908a17e`), `eab25e2` (wiki and DCR-01), `5bf548c` (evidence).
