@@ -122,6 +122,27 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**B25-NINE-D1 and D8: organic skills and capability milestones.**
+- Branch: `wip/b25-capability`, merged as `625e362`. Commits: `f891a11` (WIP), `4976137` (catch-up and notification routing,
+  INT-672), `ae36a6d` (catch-up with `f8f9cac`), `54a4850` (read-only `CAPMS` sim line). The lead's `8dbe74f` prints `CAPMS` in the
+  long-run logs.
+- Change:
+  - Experience comes from successful work, whatever it is for. A builder who cannot buy stone quarries it for their own house.
+  - Apprentice, journeyman and master gate nothing.
+  - The village keeps a record of the best level each industry has ever reached. A level is announced once, only when it beats
+    that record, as village news through `World.note`.
+  - A player's level-ups are personal lines in the corner log.
+- Status: INTEGRATED, TESTED (local).
+- Evidence:
+  - On `ae36a6d`: run_tests 3602, start 523, experience 79, underground 95/113/90, regional_food 47.
+  - On `4976137`: 20 more suites.
+  - 30-day seed 1: 4 milestones (Masonry 1, Forestry 2, Trade 2, Mining 2), each announced once; no leaks.
+- Outstanding:
+  - Supplier selection by capability is a dependency, not built. No system lets other settlements learn the village's capability.
+  - Learning faster beside a master is not modelled.
+  - Own-house quarrying has not happened in a simulation.
+  - Not checked on a device.
+
 **Year-long business run 41362329381 (`908a17e`, normal settings, seeds 1 and 2), and the lead's fixes.**
 - Runs: seed 1 took 13751 s (37.7 s a game day); seed 2 took 15767 s (43.2 s a day). These are slower than earlier builds, because
   the population grew.

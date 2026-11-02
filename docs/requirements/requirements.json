@@ -6054,6 +6054,11 @@
      "date": "2026-11-01",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "implemented and merged into the Build 25 source at 625e3627 (wip/b25-capability 54a4850; log filter 8dbe74f). Tests local, 0 failures: run_tests 3602, start 523, experience 79, underground 95/113/90, regional_food 47 (ae36a6d); multiplayer_c 340, business_ownership 165, aspiration 157, net_econ_integrity 126, regions 120, migration 109, settlement 89, capability 72, capability_progress 40, juice 44, message_journal 51 and more (4976137). 30-day seed 1 (54a4850): no errors or leaks; 4 village milestones announced once each; own-house quarrying not exercised. Supplier selection by capability is a dependency, not built."
     }
    ]
   },
@@ -6277,6 +6282,11 @@
      "date": "2026-11-01",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "implemented and merged into the Build 25 source at 625e3627 (wip/b25-capability 54a4850; log filter 8dbe74f). Tests local, 0 failures: run_tests 3602, start 523, experience 79, underground 95/113/90, regional_food 47 (ae36a6d); multiplayer_c 340, business_ownership 165, aspiration 157, net_econ_integrity 126, regions 120, migration 109, settlement 89, capability 72, capability_progress 40, juice 44, message_journal 51 and more (4976137). 30-day seed 1 (54a4850): no errors or leaks; 4 village milestones announced once each; own-house quarrying not exercised. Supplier selection by capability is a dependency, not built."
     }
    ]
   },
