@@ -8,20 +8,21 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 145 |
-| Integrated | 123 of 145 (85%) |
-| Automated tests passed | 110 of 145 (76%) |
-| Integration verified | 64 of 145 (44%) |
-| Gameplay verified | 0 of 145 (0%) |
-| Owner playtested | 0 of 145 (0%) |
-| Complete | 2 of 145 (1%) |
-| Open (release blockers) | 143 |
+| Approved requirements in scope | 146 |
+| Integrated | 123 of 146 (84%) |
+| Automated tests passed | 110 of 146 (75%) |
+| Integration verified | 64 of 146 (44%) |
+| Gameplay verified | 0 of 146 (0%) |
+| Owner playtested | 0 of 146 (0%) |
+| Complete | 2 of 146 (1%) |
+| Open (release blockers) | 144 |
 | Open owner decisions (blocking) | 6 (0) |
 
-## In development (worker assigned) (1)
+## In development (worker assigned) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
+| B25-CLOSE-01 | Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop | OWNER APPROVED | IN DEVELOPMENT | lead (single worker, MML-CONSERVE-01) / wip/b25-farm-phase2 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (121)

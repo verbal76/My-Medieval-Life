@@ -5969,9 +5969,15 @@
      "date": "2026-11-02",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; branch: None -> wip/b25-farm-phase2",
      "why": "closure audit written (docs/release/build25_reconciliation/BUILD25_CLOSURE_2026-11-02.md); farming Phase 2 + cart-hitch fix + seed-corn ledger fix on wip/b25-farm-phase2, validation running; packaging blocked on owner decisions (year-long campaign, B25-ECON-P1..P5, LE-07 gate 11, reconciliation Q2)"
+    },
+    {
+     "date": "2026-11-02",
+     "change": "assigned_worker: None -> lead (single worker, MML-CONSERVE-01)",
+     "why": "lead is the one worker"
     }
    ],
-   "branch": "wip/b25-farm-phase2"
+   "branch": "wip/b25-farm-phase2",
+   "assigned_worker": "lead (single worker, MML-CONSERVE-01)"
   },
   {
    "id": "B25-ECON-P1",

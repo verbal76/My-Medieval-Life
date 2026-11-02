@@ -2,10 +2,11 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (11)
+## Workers and task branches (12)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
+| B25-CLOSE-01 | 20 | IN DEVELOPMENT | lead (single worker, MML-CONSERVE-01) | wip/b25-farm-phase2 |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |

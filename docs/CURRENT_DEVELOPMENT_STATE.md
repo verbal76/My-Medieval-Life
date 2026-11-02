@@ -135,7 +135,7 @@ Build 25:
 
 ## Next authorized actions (in order)
 
-**STANDBY (MML-CONSERVE-01, owner 2026-11-02).** Do not pick up any item below without the owner's instruction. The list is kept for when MML resumes.
+**B25-CLOSE-01 (owner 2026-11-02): complete Build 25 before packaging, one worker (the lead).** In progress on `wip/b25-farm-phase2`: farming Phase 2, the cart-hitch fix and the seed-corn ledger fix, then one frozen SHA and targeted validation. Closure audit: `docs/release/build25_reconciliation/BUILD25_CLOSURE_2026-11-02.md`. Packaging waits on the owner decisions listed there (a year-long campaign, B25-ECON-P1..P5, LE-07 gate 11, reconciliation Q2). The items below are not picked up without the owner.
 
 0. **Flight recorder repair** (FR-REPAIR-01, owner 2026-11-02, `docs/directives/2026-11-02_flight_recorder_investigation_repair.md`): KI-HOME-DOOR fix and evidence, then the cart_hitch, wheat-sale and contract-cancellation classification. **No full 365-day campaign** until the focused repairs and regression tests pass; then propose it with the exact fixed SHA and the reusable evidence.
 1. Done: business founding, business hiring and permanent employment (`d0dc0d7`). Founding is not yet seen in a live run.
