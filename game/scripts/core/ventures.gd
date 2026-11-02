@@ -312,12 +312,15 @@ func _consider() -> void:
 	for n: NPC in w.npcs:
 		if kind_for(n.job) == "" or not looks_today(n):
 			continue
-		w.stat("venture_looks")
+		var counted := n.alive and n.role == "adult"   # a dead villager's record keeps its job; it is not a look
+		if counted:
+			w.stat("venture_looks")
 		if busy.has(n.job):
-			w.stat("venture_refused_trade_setting_up")
+			if counted:
+				w.stat("venture_refused_trade_setting_up")
 			continue
 		var opt := eligible(n, markets)
-		if opt.is_empty():
+		if opt.is_empty() and counted:
 			w.stat("venture_refused_" + last_refusal)
 		if opt.is_empty() and not kept_by(n).is_empty():
 			opt = expansion(n, markets)        # B25-BIZ-D5: a keeper whose business has the money may open another

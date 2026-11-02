@@ -25,6 +25,7 @@ func _init() -> void:
 	test_eligibility()
 	test_tenant_standalone()
 	test_no_demand_no_venture()
+	test_funnel_counts()
 	test_decision()
 	test_found_conserves()
 	test_open_and_hire()
@@ -144,6 +145,50 @@ func test_no_demand_no_venture() -> void:
 		w.minutes = float(d) * 1440.0 + 6 * 60
 		w.ventures.daily()
 	check(int(w.stats.get("ventures_founded", 0)) == 0 and w.ventures.setting_up().is_empty(), "four weeks without demand found nothing")
+
+
+## B25 economic investigation (owner directive 2026-11-02, section 4): the founding funnel's read-only counts. Each look by a
+## living adult of a founding trade is counted, and a refusal under the stage at which Ventures.refusal stopped
+## (last_refusal); a dead villager's record is no look; counting draws no random number and founds nothing.
+func test_funnel_counts() -> void:
+	var w := world()
+	var s := founder(w)
+	smithy_full(w)
+	check(w.ventures.refusal(s) == "" and w.ventures.last_refusal == "", "an eligible founder: no refusal stage")
+	var lv: int = int(s.skills.smithing)
+	s.skills.smithing = Skills.xp_for_level(2)
+	w.ventures.refusal(s)
+	check(w.ventures.last_refusal == "skill", "too little skill: stage 'skill'")
+	s.skills.smithing = lv
+	w.experience.minutes[World.npc_ref(s.id)]["smithing"] = 480.0
+	w.ventures.refusal(s)
+	check(w.ventures.last_refusal == "experience", "too little experience: stage 'experience'")
+	w.experience.minutes[World.npc_ref(s.id)]["smithing"] = 480.0 * 60.0
+	w.station_load = {}
+	w.ventures.refusal(s)
+	check(w.ventures.last_refusal == "no_work", "no work seen at the trade's stations: stage 'no_work'")
+	var ghost: NPC = null                     # a dead smith's record still carries the job
+	for o: NPC in of_job(w, "smith"):
+		if o != s:
+			ghost = o
+	if ghost != null:
+		ghost.alive = false
+	var rng0 = w.rng.state
+	for d in 7:                               # one week: every villager's own look day comes once
+		w.minutes = float(d) * 1440.0 + 6 * 60
+		w.ventures._consider()
+	var looks := int(w.stats.get("venture_looks", 0))
+	var refused := 0
+	for k in w.stats:
+		if str(k).begins_with("venture_refused_"):
+			refused += int(w.stats[k])
+	var living := 0
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and Ventures.kind_for(o.job) != "":
+			living += 1
+	check(looks == living, "each living adult of a founding trade looks once a week (%d looks, %d of them)" % [looks, living])
+	check(refused == looks and int(w.stats.get("venture_refused_no_work", 0)) >= 1, "with no work at the stations every look is refused, the founder's under no_work (%d)" % refused)
+	check(w.rng.state == rng0 and int(w.stats.get("ventures_founded", 0)) == 0, "counting draws no random number and founds nothing")
 
 
 func test_decision() -> void:
