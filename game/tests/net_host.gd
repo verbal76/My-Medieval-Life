@@ -3,7 +3,7 @@ extends SceneTree
 ## Godot process, driven by game/tests/net_g1_test.gd (and net_batch_b_test.gd) through a command file and reporting through a
 ## status file (both in the given directory). Args after "--": port discovery_port mode(new|continue) dir [max_players, default 2]
 ## [flags: comma-separated; X20-MP-ECON-INTEGRITY (net_econ_integrity_test.gd): "econ" switches the Living Economy on (its market
-## driving) before the world is made or loaded, "still" keeps the world's simulation stopped while the network and the guests'
+## driving) before the world is made or loaded, "noecon" keeps it off whatever the installed switch says (LE-07), "still" keeps the world's simulation stopped while the network and the guests'
 ## requests go on (main is disabled; this script runs NetSession's frame and applies the requests), so a ledger read before and
 ## after a fault scenario must match exactly].
 
@@ -53,6 +53,8 @@ func _init() -> void:
 			var ec: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/economy.json"))
 			ec.enabled = true
 			EconomyFoundation.set_override(ec)
+		elif flags.has("noecon"):                 # the economy-off path, whatever the installed switch says (LE-07)
+			EconomyFoundation.set_override(EconomyFoundation.off_config())
 		still = flags.has("still")
 	DirAccess.make_dir_recursive_absolute(dir)
 	main = load("res://scenes/main.tscn").instantiate()

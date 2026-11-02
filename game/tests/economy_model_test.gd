@@ -21,7 +21,7 @@ func check(cond: bool, what: String) -> void:
 
 
 func new_world(on := true, seed := 1) -> World:
-	EconomyFoundation.set_override(ON if on else {})
+	EconomyFoundation.set_override(ON if on else EconomyFoundation.off_config())
 	var w := World.new()
 	w.setup(VillageMap.load_default(), seed)
 	return w
@@ -438,7 +438,7 @@ func test_save() -> void:
 	w4.load_dict(VillageMap.load_default(), none)
 	check(w4.economy != null and w4.economy.is_empty(), "a save without the key loads with an empty model")
 	# D2: off, the section with every new part is carried byte-identical
-	EconomyFoundation.set_override({})
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var want := JSON.stringify(JSON.parse_string(JSON.stringify(d)).economy)
 	var cur: Dictionary = JSON.parse_string(JSON.stringify(d))
 	var ok := true

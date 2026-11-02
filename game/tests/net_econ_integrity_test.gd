@@ -32,7 +32,7 @@ var seq := 0
 var ann := 0
 var host_pid := 0
 var bea := 0
-var flags := "still"
+var flags := "still,noecon"
 const KEY := "a0b1c2d3e4f5061728394a5b6c7d8e9f"
 const KEY2 := "9f8e7d6c5b4a39281706f5e4d3c2b1a0"
 const IT := "apple"
@@ -330,7 +330,7 @@ func _economy(which: String) -> void:
 
 # ---------------------------------------------------------------- negotiated offers under repeats -----
 func _offers() -> void:
-	print("== offers (economy %s)" % ("on" if flags.contains("econ") else "off"))
+	print("== offers (economy %s)" % ("on" if flags.split(",").has("econ") else "off"))
 	var net: NetSession = main.net
 	var l0 := await led()
 	var a_c := coins(ann)
@@ -365,7 +365,7 @@ func _offers() -> void:
 
 # ---------------------------------------------------------------- a contract: coins set aside, deliveries --
 func _contract() -> void:
-	print("== contract (economy %s)" % ("on" if flags.contains("econ") else "off"))
+	print("== contract (economy %s)" % ("on" if flags.split(",").has("econ") else "off"))
 	var net: NetSession = main.net
 	var l0 := await led()
 	var h_c := coins(host_pid)
@@ -409,7 +409,7 @@ func _contract() -> void:
 
 # ---------------------------------------------------------------- a lossy, repeating, reordering network --
 func _lossy() -> void:
-	print("== lossy (economy %s)" % ("on" if flags.contains("econ") else "off"))
+	print("== lossy (economy %s)" % ("on" if flags.split(",").has("econ") else "off"))
 	var net: NetSession = main.net
 	var l0 := await led()
 	var a_c := coins(ann)
@@ -436,7 +436,7 @@ func _lossy() -> void:
 
 # ---------------------------------------------------------------- the authority with guests as parties --
 func _authority() -> void:
-	print("== authority (economy %s)" % ("on" if flags.contains("econ") else "off"))
+	print("== authority (economy %s)" % ("on" if flags.split(",").has("econ") else "off"))
 	var l0 := await led()
 	var a_c := coins(ann)
 	var a_w := has(ann, WH)
@@ -470,7 +470,7 @@ func _authority() -> void:
 
 # ---------------------------------------------------------------- a request lost in a dropped connection --
 func _dropped() -> void:
-	print("== dropped (economy %s)" % ("on" if flags.contains("econ") else "off"))
+	print("== dropped (economy %s)" % ("on" if flags.split(",").has("econ") else "off"))
 	var net: NetSession = main.net
 	var l0 := await led()
 	var a_c := coins(ann)
@@ -505,7 +505,7 @@ func _dropped() -> void:
 
 # ---------------------------------------------------------------- an Android host paused -------------
 func _host_pause() -> void:
-	print("== host_pause (economy %s)" % ("on" if flags.contains("econ") else "off"))
+	print("== host_pause (economy %s)" % ("on" if flags.split(",").has("econ") else "off"))
 	var net: NetSession = main.net
 	var l0 := await led()
 	var a_c := coins(ann)
@@ -523,7 +523,7 @@ func _host_pause() -> void:
 
 # ---------------------------------------------------------------- an Android guest paused -------------
 func _guest_pause() -> void:
-	print("== guest_pause (economy %s)" % ("on" if flags.contains("econ") else "off"))
+	print("== guest_pause (economy %s)" % ("on" if flags.split(",").has("econ") else "off"))
 	var net: NetSession = main.net
 	var l0 := await led()
 	var a_c := coins(ann)
@@ -550,7 +550,7 @@ func _guest_pause() -> void:
 
 # ---------------------------------------------------------------- guests leaving mid-transaction -------
 func _leaving() -> void:
-	print("== leaving (economy %s)" % ("on" if flags.contains("econ") else "off"))
+	print("== leaving (economy %s)" % ("on" if flags.split(",").has("econ") else "off"))
 	var net: NetSession = main.net
 	var l0 := await led()
 	var b_c := coins(bea)
@@ -594,7 +594,7 @@ func _leaving() -> void:
 
 # ---------------------------------------------------------------- ownership: a contract not one's own ----
 func _ownership() -> void:
-	print("== ownership (economy %s)" % ("on" if flags.contains("econ") else "off"))
+	print("== ownership (economy %s)" % ("on" if flags.split(",").has("econ") else "off"))
 	var net: NetSession = main.net
 	var l0 := await led()
 	# the host supplies Ann (the host the seller, Ann the buyer, her coins set aside)
@@ -635,7 +635,7 @@ func _contract_state(cid: int) -> String:
 
 # ---------------------------------------------------------------- the host killed and restored ---------
 func _host_crash() -> void:
-	print("== host_crash (economy %s)" % ("on" if flags.contains("econ") else "off"))
+	print("== host_crash (economy %s)" % ("on" if flags.split(",").has("econ") else "off"))
 	var net: NetSession = main.net
 	await stage()
 	var s := await tx({"op": "ship", "txid": "net/crash:1", "buyer": "pid:%d" % ann, "seller": "trader:0", "item": WH, "qty": 3, "total": 9, "days": 3})
@@ -695,7 +695,7 @@ func _host_crash() -> void:
 
 # ---------------------------------------------------------------- death and succession ----------------
 func _succession() -> void:
-	print("== succession (economy %s)" % ("on" if flags.contains("econ") else "off"))
+	print("== succession (economy %s)" % ("on" if flags.split(",").has("econ") else "off"))
 	var net: NetSession = main.net
 	await stage()
 	var ref := ann_ref()
@@ -742,7 +742,7 @@ func _succession() -> void:
 
 # ---------------------------------------------------------------- the world running, the market driving --
 func _live() -> void:
-	print("== live (economy %s)" % ("on" if flags.contains("econ") else "off"))
+	print("== live (economy %s)" % ("on" if flags.split(",").has("econ") else "off"))
 	var net: NetSession = main.net
 	await command({"cmd": "still", "on": false})
 	await stage()

@@ -42,7 +42,7 @@ func _init() -> void:
 
 
 func new_world(on := true) -> World:
-	EconomyFoundation.set_override(ON if on else {})
+	EconomyFoundation.set_override(ON if on else EconomyFoundation.off_config())
 	var w := World.new()
 	w.setup(VillageMap.load_default(), 1)
 	w.minutes = 1440.0 + 10.0 * 60.0
