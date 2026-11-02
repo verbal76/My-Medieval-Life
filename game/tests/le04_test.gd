@@ -26,7 +26,7 @@ func new_world(on := true, drive := true) -> World:
 		c.market.drive = drive
 		EconomyFoundation.set_override(c)
 	else:
-		EconomyFoundation.set_override({})
+		EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var w := World.new()
 	w.setup(VillageMap.load_default(), 1)
 	return w

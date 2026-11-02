@@ -601,7 +601,7 @@ func test_save_mid_negotiation() -> void:
 	check(w3.economy != null and w3.economy.market.is_empty() and w3.economy.offers.records.size() == of.records.size(), "an LE-01 economy section loads (market empty, offers kept)")
 	check(w3.economy.offers.remaining(bid) == of.get_offer(bid).qty - of.get_offer(bid).filled, "LE-01 offers read with nothing committed")
 	check(w3.economy.knowledge.size() == w.economy.knowledge.size(), "an LE-01 (format 1, \"entries\") knowledge section loads every entry")
-	EconomyFoundation.set_override({})
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var w4 := World.new()
 	w4.load_dict(VillageMap.load_default(), d)
 	check(w4.economy == null and JSON.stringify(w4.to_dict().economy) == JSON.stringify(d.economy), "switched off: the market section is carried untouched (D2)")
@@ -617,7 +617,7 @@ func fingerprint(w: World) -> String:
 func test_switch() -> void:
 	var f: Dictionary = shipped()
 	check(f.enabled == false and f.market.drive == true, "shipped: the economy off (activation is the owner's); its market would drive when switched on")
-	EconomyFoundation.set_override({})
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var off := World.new()
 	off.setup(VillageMap.load_default(), 2)
 	EconomyFoundation.set_override(cfg_on(false))

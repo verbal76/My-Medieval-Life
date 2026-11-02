@@ -36,7 +36,7 @@ func on_cfg() -> Dictionary:
 
 
 func new_world(on: bool) -> World:
-	EconomyFoundation.set_override(on_cfg() if on else {})
+	EconomyFoundation.set_override(on_cfg() if on else EconomyFoundation.off_config())
 	var w := World.new()
 	w.setup(VillageMap.load_default(), SEED)
 	return w
@@ -79,7 +79,7 @@ func _init() -> void:
 
 
 func test_default() -> void:
-	EconomyFoundation.set_override({})
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var shipped: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/economy.json"))
 	check(not bool(shipped.get("enabled", true)), "the shipped switch is off (economy.json enabled false; owner 2026-10-31)")
 	var m: Dictionary = shipped.market
@@ -123,7 +123,7 @@ func test_activation_old_save() -> void:
 	var text := FileAccess.get_file_as_string("res://tests/fixtures/b24_save_v23_single.json")
 	var d: Dictionary = JSON.parse_string(text)
 	check(int(d.get("save_version", 0)) == 23 and not d.has(EconomyFoundation.KEY), "the fixture is a Build 24 save (save_version 23) with no economy section")
-	EconomyFoundation.set_override({})
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var off := World.new()
 	off.load_dict(VillageMap.load_default(), JSON.parse_string(text))
 	EconomyFoundation.set_override(on_cfg())
@@ -151,7 +151,7 @@ func test_activation_current_save() -> void:
 	var d: Dictionary = JSON.parse_string(text)
 	check(int(d.get("save_version", 0)) == World.SAVE_VERSION and not d.has(EconomyFoundation.KEY),
 		"a save of this build with the economy off (save_version %d) has no economy section" % World.SAVE_VERSION)
-	EconomyFoundation.set_override({})
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var off := World.new()
 	off.load_dict(VillageMap.load_default(), JSON.parse_string(text))
 	EconomyFoundation.set_override(on_cfg())
@@ -185,7 +185,7 @@ func test_switch_off_and_on() -> void:
 	check(opened.ok and dep > 0, "an open rental holds %d coins in escrow" % dep)
 	var c0 := ledger(w)
 	var s := JSON.stringify(w.to_dict())
-	EconomyFoundation.set_override({})
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var off := World.new()
 	off.load_dict(VillageMap.load_default(), JSON.parse_string(s))
 	var st := EconomyFoundation.activation_state(off)

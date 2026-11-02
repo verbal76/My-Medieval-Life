@@ -43,6 +43,11 @@ var contract_cursor := 0          # the highest CON-01 contract id whose terms t
 static func config() -> Dictionary:
 	if not _override.is_empty():
 		return _override
+	return file_config()
+
+
+## The installed settings (game/data/economy.json), whatever a test override says.
+static func file_config() -> Dictionary:
 	if _cfg.is_empty():
 		var f := FileAccess.open(PATH, FileAccess.READ)
 		_cfg = JSON.parse_string(f.get_as_text()) if f != null else {"enabled": false}
@@ -54,6 +59,14 @@ static func config() -> Dictionary:
 ## Tests only: replace the file's settings (e.g. {"enabled": true}); {} restores the file.
 static func set_override(cfg: Dictionary) -> void:
 	_override = cfg
+
+
+## Tests only: the installed settings with the switch off, so a test of the economy-off path tests it whatever the
+## installed switch says (LE-07: the shipped default is the one thing that changes on activation).
+static func off_config() -> Dictionary:
+	var c: Dictionary = file_config().duplicate(true)
+	c.enabled = false
+	return c
 
 
 static func enabled() -> bool:
