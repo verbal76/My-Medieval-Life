@@ -2003,7 +2003,10 @@ func _dvw_a12_xp() -> void:
 	p.skills["magic"] = Skills.xp_for_level(2) - 1
 	var up := w.player_xp("magic", 1)
 	w.player_leveled.disconnect(cb)
-	check(up == 2 and heard == [["magic", 2]] and main.ui.toast.text.contains("level 2"), "DVW-A12 R6: a new level is announced by core and shown by the interface (%s)" % main.ui.toast.text)
+	# B25-NINE-D8 routing (owner 2026-11-01, Decision 9's split): a player's level-up is a personal line in the corner log
+	var lines: Array = main.ui.log_texts(GameUI.LANE_PERSONAL)
+	check(up == 2 and heard == [["magic", 2]] and lines.any(func(t): return str(t).contains("Level 2 Reached")),
+			"DVW-A12 R6: a new level is announced by core and shown by the interface (%s)" % str(lines))
 	check(w.player_xp("magic", 1) == 0, "DVW-A12 R6: no banner without a new level")
 	_restore_pack(keep)
 
