@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 743 (385 of them still open) |
-| **Open entries now** (rules excluded) | | **544** |
+| Entries added since | | 744 (386 of them still open) |
+| **Open entries now** (rules excluded) | | **545** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (743)
+## Added since the baseline (744)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -165,6 +165,7 @@ None.
 | B25-BIZ-D4 | Permanent employment as one shared framework across professions with real work systems (miners, gatherers, farm workers, smiths, carpenters, tanners, cooks, attendants, construction workers) | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-BIZ-D5 | Businesses may be built (home-attached or standalone), bought, sold and expanded; selling a home workshop never sells the home; investigate the apparent two-shop limit | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-BIZ-OWN | Build 25 business ownership, paid employment and economic expansion (five final owner decisions, milestones 1-6) | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
+| B25-BIZ-TENANT-Q | May a household that does not own its house (a tenant, a family in a manor cottage) build a standalone workshop on land it buys? Your rule of 2026-10-18 says 'a house first, then workshops' (Construction.may_build refuses it); Decision 5 A says 'a person with sufficient resources may also establish a standalone workshop elsewhere on legally acquired land' and also 'Both options must follow existing property, construction, resource, and ownership rules'. In the year-long runs 41362329381 no villager founded a business: at day 365 only 0-1 of the eligible owned their house (most families live in manor cottages). Options: A keep house-first (tenants may only buy or reopen a workshop, as now); B a tenant may build a standalone workshop on purchased land, house-first still applying to workshops attached to a house (recommended); C tenants may also rent premises (not built). | decision | OPEN | 20 |
 | B25-BUSINESS-D2 | May villagers establish independent businesses? | decision | APPROVED | owner decision |
 | B25-BUSINESS-IMPL | Independent business formation by qualified villagers | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-CAREER-D1 | How is career advancement decided? | decision | APPROVED | owner decision |

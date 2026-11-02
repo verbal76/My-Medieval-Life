@@ -11,25 +11,14 @@
   - History lives in `docs/DEVELOPMENT_CHANGELOG.md`.
 - **Recovery after lost context:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
 
-## PAUSED (owner, 2026-11-02 ~02:00 UTC: "Pause all work")
+## Resumed (owner, 2026-11-02: "Continue")
 
-All development is paused until the owner says to resume.
-- No worker is running. The skills and capabilities worker stopped cleanly. Its branch `wip/b25-capability` is at `4976137`, pushed,
-  with a clean tree; it contains the catch-up merge of `48acc91`, the milestone routing through `World.note` and
-  `GameUI.personal`, and INT-672.
-  - Tests on `4976137`: run_tests 3602 and 20+ suites pass.
-  - **experience_test fails 1 of 79**, on the contract harvest experience code from the services merge. This is not yet
-    reproduced on `wip/expansion20` alone; check that first when resuming.
-  - Not run: start_test, the underground suites, regional_food_test.
-  - The 30-day simulation was stopped after day 10.
-  - Supplier selection is recorded as a dependency, not built.
-- The scheduled check-in on the Actions run was cancelled.
-- The GitHub Actions run long-sims 41362329381 (`908a17e`, 365 days, seeds 1 and 2) was left running, not cancelled (SIM-02). It
-  ends by about 05:00 UTC at the latest. Its logs and artifacts can be read when work resumes.
-- **To resume:**
-  1. Read run 41362329381's `BIZ` and day lines and record them.
-  2. Check experience_test on `wip/expansion20`, review `wip/b25-capability`, and finish its tests.
-  3. Continue with "Next authorized actions" below.
+The pause recorded at about 02:00 UTC is over. Done on resuming:
+- The year-long run 41362329381 was read (see the changelog).
+- `experience_test` was fixed on the Build 25 source (`9989f3c`).
+- Tenants may now buy or reopen a workshop (`f8f9cac`).
+- Owner question B25-BIZ-TENANT-Q was raised.
+- The skills and capabilities worker was resumed on `wip/b25-capability`.
 
 ## Position
 
@@ -37,8 +26,8 @@ All development is paused until the owner says to resume.
 |---|---|
 | Current development build | **Build 25**, the consolidation build. It holds all approved expansion work and all approved recoverable abandoned-branch work (B25-SCOPE-D1, `docs/directives/2026-11-01_build25_scope_clarification.md`). |
 | Integration branch (Build 25 source) | `wip/expansion20` |
-| Development head | `48acc91` (materials, armour and clothing merged on top of game juice `ba94edd`). The year-long run 41362329381 runs on `908a17e`. See `docs/DEVELOPMENT_CHANGELOG.md` for the chain from `ad281dc`. |
-| Latest verified SHA | `48acc91`: suites TESTED locally, listed below. No CI run, no 30-day baseline and no year-long run on this SHA. The last SHA with year-long CI evidence is `ae8641d` (chapel fix). The last SHA with a complete validated gate is `ad281dc` (30-day baseline). Its year-long runs failed on the gossip crash, which is now fixed. |
+| Development head | `f8f9cac`: materials `48acc91`, plus the contract-harvest timing fix `9989f3c`, plus tenants may buy or reopen a workshop `f8f9cac`. The year-long run 41362329381 runs on `908a17e`. See `docs/DEVELOPMENT_CHANGELOG.md` for the chain from `ad281dc`. |
+| Latest verified SHA | `f8f9cac`: suites TESTED locally, listed below. No CI run, no 30-day baseline and no year-long run on this SHA. The last SHA with year-long CI evidence is `ae8641d` (chapel fix). The last SHA with a complete validated gate is `ad281dc` (30-day baseline). Its year-long runs failed on the gossip crash, which is now fixed. |
 | Rollback point | `ad281dc` |
 | Records branch | `wip/requirements-control`. It holds the register, directives and this file. The register is edited only here, with `tools/requirements_update.py` and then `tools/check_requirements.py --write`. It is not merged into staging or `wip/expansion20` without the owner's authorization. |
 | `staging/my-medieval-life` | `baa6479` (2026-11-01; `aeaa012` plus the stale-copy banner). Behind on both code and records. Not where current work is. |
@@ -46,7 +35,7 @@ All development is paused until the owner says to resume.
 | Packaging and release | No Build 25 package exists. Packaging needs the owner's authorization. No public release. |
 | Living Economy | Integrated but **off** by default. It switches on by default once the 13 LE-07 readiness gates pass on the integrated candidate, with no further approval (B25-LE-ACTIVATE-D1). |
 | Operating mode | **Reduced-resource mode** (owner, 2026-11-01): one Claude coding worker at a time, no new agents, heavy computation on GitHub Actions (`long-sims.yml`), minimal reporting. It lasts until the owner restores normal priority. |
-| GitHub Actions | **Running:** long-sims 41362329381 on `908a17e`, 365 days, seeds 1 and 2, checkpoints every 30 days. Dispatched 2026-11-01 23:29 UTC; expect about 1-1.5 hours. Never cancel or rerun it (SIM-02). Read the `BIZ`, `CHAPEL`, `ECON10` and day lines when it finishes. |
+| GitHub Actions | None running. Last: long-sims 41362329381 on `908a17e` (365 days, seeds 1 and 2), finished. No leaks, and no businesses founded. |
 
 ## Workers and branches (recovery records)
 
@@ -54,7 +43,7 @@ Every branch below holds real, unmerged work. None is disposable.
 
 | Worker or workstream | Register | Branch / worktree | Latest pushed | Unpushed | State and tests | Merge readiness | Next safe step |
 |---|---|---|---|---|---|---|---|
-| **ACTIVE:** organic skills and capabilities | B25-NINE-D1, B25-NINE-D8 | `wip/b25-capability`; worktree `.claude/worktrees/agent-ada94e8bdaa4ebdee` | `f891a11` | none at resume | Resumed 2026-11-02. Partly tested. Dependency: settlement capability knowledge needs supplier selection, which does not exist yet. | not ready | Finish, test, then the lead merges. |
+| **ACTIVE:** organic skills and capabilities | B25-NINE-D1, B25-NINE-D8 | `wip/b25-capability`; worktree `.claude/worktrees/agent-ada94e8bdaa4ebdee` | `4976137` | none at the pause | Catch-up with `48acc91` done; run_tests 3602 and 20+ suites pass. Paused before start_test, the underground suites, regional_food_test and the 30-day run. Resumed 2026-11-02 to merge `f8f9cac` and finish those. Supplier selection is a recorded dependency, not built. | not ready | Finish the tests, then the lead merges. |
 | Merged and done | B25-NINE-D5..D7 materials, armour and clothing (`48acc91`, from `wip/b25-materials` `c1dfb02`), JUICE-J1 game juice J1 and J2 (`ba94edd`, from `wip/b25-juice` `4b72103`), B25-NINE-D4 witness reporting (`2c364d1`, from `wip/b25-report` `5bf548c`), B25-BIZ-OWN (B25-BIZ-D1..D5; `908a17e`, from `wip/b25-bizown` `9926ddf`), B25-NINE-D2 services and CON-03..CON-08 (`8d71c5e`, from `wip/b25-services` `1388f36`), B25-BUSINESS-IMPL and EMP-PERM-01 (`d0dc0d7`, from `wip/b25-business` `c60ac0e`), B25-AMBITION-IMPL, B25-EMPLOY-IMPL, LE-05/LE-07 remainder, P21-00..02, X20-CHAPEL-FIX, X20-TELL-GUARD | `wip/b25-ambition`, `wip/b25-employ`, `wip/b25-econ`, `wip/b25-civic`, `wip/x20-chapel`, `wip/x20-tell-guard` | merged into `wip/expansion20` | none | See the changelog. | merged | none |
 
 All suspended worktrees are kept on disk. Their branches are pushed, so GitHub has everything committed. The resume order is in
@@ -66,6 +55,7 @@ All of these ran **locally** (Godot 4.7 headless), not in CI. Exact suites and c
 
 | SHA | Level | Evidence |
 |---|---|---|
+| `f8f9cac` | TESTED | Lead fixes: experience_test 79 (it had failed 1 since the services merge), services_d2 89, contracts 154, business_founding 61, business_ownership 165, conservation 8, all 0 failures. |
 | `48acc91` | TESTED | Merge tree identical to `wip/b25-materials` `c1dfb02`. materials_b25 104, run_tests 3602, 20+ gear, combat, underground, settlement and save suites, 0 failures. 30-day seed 1 fingerprint changes (new materials), no errors or leaks. |
 | `ba94edd` | TESTED | Merge tree identical to `wip/b25-juice` `4b72103`. juice 44, UI and net UI suites, multiplayer_c 340, run_tests 3601, 0 failures (`1a483de`). Presentation only: 10-day seed 1 fingerprint `0e5e945a` identical to `2c364d1`. |
 | `2c364d1` | TESTED | Merge tree identical to `wip/b25-report` `5bf548c`. Worker evidence on `eab25e2`: judgment, justice, family, recorder and save suites, multiplayer_c 340, run_tests 3601, 0 failures. 30-day seed 1: 29 report choices, all chose to tell. |

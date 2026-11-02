@@ -16,7 +16,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Owner playtested | 0 of 141 (0%) |
 | Complete | 2 of 141 (1%) |
 | Open (release blockers) | 139 |
-| Open owner decisions (blocking) | 0 (0) |
+| Open owner decisions (blocking) | 1 (0) |
 
 ## In development (worker assigned) (1)
 
@@ -183,6 +183,12 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | INTEGRATION VERIFIED | NOT READY |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | INTEGRATION VERIFIED | NOT READY |
+
+## Open owner decisions (1)
+
+| ID | Question | Disposition | Blocks | Affects |
+|---|---|---|---|---|
+| B25-BIZ-TENANT-Q | May a household that does not own its house (a tenant, a family in a manor cottage) build a standalone workshop on land it buys? Your rule of 2026-10-18 says 'a house first, then workshops' (Construction.may_build refuses it); Decision 5 A says 'a person with sufficient resources may also establish a standalone workshop elsewhere on legally acquired land' and also 'Both options must follow existing property, construction, resource, and ownership rules'. In the year-long runs 41362329381 no villager founded a business: at day 365 only 0-1 of the eligible owned their house (most families live in manor cottages). Options: A keep house-first (tenants may only buy or reopen a workshop, as now); B a tenant may build a standalone workshop on purchased land, house-first still applying to workshops attached to a house (recommended); C tenants may also rent premises (not built). | OPEN | no |  |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (6)
 

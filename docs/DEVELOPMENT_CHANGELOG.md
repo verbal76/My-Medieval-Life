@@ -122,6 +122,34 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**Year-long business run 41362329381 (`908a17e`, normal settings, seeds 1 and 2), and the lead's fixes.**
+- Runs: seed 1 took 13751 s (37.7 s a game day); seed 2 took 15767 s (43.2 s a day). These are slower than earlier builds, because
+  the population grew.
+- Result:
+  - All 365 days were simulated. Currency and item leaks were 0 at every checkpoint. No FATAL lines.
+  - Population reached 356 (seed 1) and 308 (seed 2), with 141 and 112 unemployed.
+  - Ore was exhausted by day 360 in both seeds.
+- **Businesses:**
+  - In neither seed did any villager consider, found, buy, sell, hire or expand a business. The `ventures_*` stats stayed empty all
+    year.
+  - Founding gates at day 365, as founding trades / skilled / experienced / household free / owns house:
+    - seed 1: 9 / 5 / 3 / 1 / 0;
+    - seed 2: 8 / 4 / 2 / 0 / 0.
+  - Most families live in manor cottages, so owning the house is the gate that stops them.
+- **Fixes on `wip/expansion20`:**
+  - `9989f3c`: a contract harvest is timed through `CapabilityHook.work_time`, as felling is. It is identical while the hook is
+    off. experience_test had failed 1 of 79 checks since the services merge `8d71c5e`; it now passes.
+  - `f8f9cac`:
+    - A tenant household may now reopen or buy a workshop, since neither builds anything.
+    - Building still needs an owned house (owner rule of 2026-10-18, "a house first, then workshops").
+    - The lead first tried letting tenants build a standalone workshop. `Construction.may_build` refused it under that rule, so
+      the change was undone, and owner question B25-BIZ-TENANT-Q was raised.
+    - New tenant check in business_founding (61 checks); business_ownership 165 passes.
+- Outstanding:
+  - The owner's answer to B25-BIZ-TENANT-Q.
+  - Few villagers work in founding trades (8-9 among 300+).
+  - Business behaviour over a year is still not shown.
+
 **B25-NINE-D4: judgment-based witness reporting.**
 - Branch: `wip/b25-report`, merged as `2c364d1`. Commits: `f15faf8` (implementation, from before the suspension), `fa58b44`
   (catch-up merge of `908a17e`), `eab25e2` (wiki and DCR-01), `5bf548c` (evidence).
