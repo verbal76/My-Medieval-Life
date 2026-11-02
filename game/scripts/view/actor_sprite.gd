@@ -66,6 +66,10 @@ var tool_item := ""            # the item id of the tool shown ("" = none)
 var weapon_icon: Sprite2D      # WEAPON-VISIBLE-01: the weapon carried in the hand while standing or walking
 var weapon_item := ""          # the item id of the weapon carried ("" = none)
 var striking := false          # a swing of the carried weapon is playing through (strike)
+var hurt_left := 0.0           # JUICE J1: seconds of the flinch (the sheet's own hurt frames) still to play
+var after_hurt := ""           # the looping animation to go back to when the flinch is over (the work or walk it broke into)
+var impact := false            # JUICE J2: a swing's blow landed this frame (the stroke frame came round); read by take_impact
+var _last_i := -1              # the animation frame index shown last (to see the stroke frame come round)
 # WEAPON-VISIBLE-01 (owner, 2026-10-26: "walk around with it drawn so we get a chance to see it"): how a carried weapon is
 # held, by the way the carrier faces ("side" is east, mirrored for west, as SWING_POSES): [hand x, hand y (from the feet),
 # the direction its head points (degrees: 0 ahead, -90 up), mirror the icon, drawn behind the body]. Held low at the side,
@@ -201,6 +205,7 @@ func wield(item: String) -> void:
 ## through, then back to carrying it. GP-SWORD-VIS: posed as a slash (STRIKE_POSES); with nothing in hand a bare-handed
 ## blow (the sheet's own sword frames draw a small sword and a slash, which is not what is held, so they are not used).
 func strike() -> void:
+	hurt_left = 0.0                    # a blow struck back ends a flinch
 	hold(weapon_item)
 	play("swing", true)
 	striking = true
@@ -287,7 +292,36 @@ func face(v: Vector2) -> void:
 	dir = int(round(a / (TAU / 8.0))) % 8
 
 
+## JUICE J1 (owner Decision 9; assessment 2.6): the flinch, the sheet's own "hurt" frames (columns 19-21, never shown
+## before), played once when a blow or a bite actually took health (Main sees the health fall). Nothing else may replace it
+## while it plays, except a fall; lying in bed or seated, or dead, there is no flinch.
+func hurt() -> void:
+	if pose != "" or anim == "death":
+		return
+	if hurt_left <= 0.0:
+		after_hurt = anim if not once else "idle"
+	anim = "hurt"
+	once = false                       # it ends by its own clock (hurt_left), then goes back to after_hurt
+	t = 0.0
+	striking = false
+	hurt_left = float(ANIMS.hurt[1]) * (ANIMS.hurt[0] as Array).size()
+
+
+## JUICE J2: true once for each blow of a swing that has landed (the stroke frame) since the last call; the caller draws the
+## blow's chips, sparks or dust where the swing lands. A swing is what the drawn character is doing, so a villager's blows
+## show on a guest as on the host.
+func take_impact() -> bool:
+	var was := impact
+	impact = false
+	return was
+
+
 func play(name: String, play_once := false) -> void:
+	if hurt_left > 0.0 and name != "death":
+		if not play_once and name != "sword":
+			after_hurt = name          # the flinch plays through first (a fall cuts it short), then this
+		return
+	hurt_left = 0.0
 	if name == "sword":
 		# GP-SWORD-VIS: a fighter's blow ("sword" in the world and over the network) is a strike with what they carry,
 		# one after another while it lasts; a strike under way plays through
@@ -304,9 +338,18 @@ func play(name: String, play_once := false) -> void:
 
 func _process(delta: float) -> void:
 	t += delta * speed_scale
+	if hurt_left > 0.0:
+		hurt_left -= delta
+		if hurt_left <= 0.0 and anim == "hurt":
+			anim = after_hurt if after_hurt != "" else "idle"
+			once = false
+			t = 0.0
 	var a: Array = ANIMS.get(anim, ANIMS.idle)
 	var cols: Array = a[0]
 	var i := int(t / a[1])
+	if anim == "swing" and not striking and i != _last_i and i % cols.size() == STRIKE_FRAME:
+		impact = true                  # the tool's stroke lands (VIS-AXE-01's second pose: the head at the work)
+	_last_i = i if anim == "swing" else -1
 	if once and i >= cols.size():
 		i = cols.size() - 1
 		if anim != "death":

@@ -26,6 +26,18 @@ var body_scroll: ScrollContainer   # the window body's scroller (follows focus)
 var bar_labels := {}             # meter key -> the words drawn on its bar ("Health 80/100")
 var bar_danger := {}             # meter key -> true while that meter is low (B8-019)
 var coins_label: Label
+# JUICE J1 (owner Decision 9): the purse counts to its new value and says by how much it changed
+const COIN_COUNT_SECONDS := 0.35   # how long the number takes to count to the new purse
+const COIN_DELTA_SECONDS := 1.1    # how long "+5" / "-3" shows beside it
+const COIN_UP := Color8(150, 220, 110)
+const COIN_DOWN := Color8(240, 120, 96)
+var coin_delta: Label              # the one "+5" beside the purse (reused: never more than one)
+var coins_to := -1                 # the purse the counter is counting to (-1: none yet)
+var coins_from := 0.0
+var coins_t := 0.0                 # seconds of counting left
+var coins_world: Object = null     # the world whose purse it shows (a new world shows its purse at once)
+var coin_delta_t := 0.0
+var prompt_first := ""             # the prompt's first line last shown (a new target pulses it once)
 var clock_label: Label         # the time of day ("07:00")
 var date_label: Label          # the season, year and day ("Spring, Year 1  Day 3")
 var prompt_label: Label
@@ -1065,7 +1077,7 @@ func update_hud() -> void:
 	_meter_text("hp", bar_words(p.hp, p.hp_cap()), p.hp / maxf(1.0, p.hp_cap()))
 	_meter_text("hunger", bar_words(p.hunger, HUNGER_MAX), p.hunger / HUNGER_MAX)
 	_meter_text("stamina", bar_words(p.stamina, p.stamina_cap()), p.stamina / maxf(1.0, p.stamina_cap()))
-	coins_label.text = " %d" % p.coins
+	_coins_step(p.coins, get_process_delta_time())
 	wanted_hud.refresh(w)                           # GP-WANTED-INDICATOR: just under the status box, wherever that sits
 	if wanted_hud.visible:
 		wanted_hud.position = status_box.position + Vector2(0, status_box.size.y + 6.0)
@@ -1099,6 +1111,78 @@ func update_hud() -> void:
 			dismiss_message()
 
 
+## JUICE J1 (owner Decision 9): the purse in the status box counts to its new value over COIN_COUNT_SECONDS, tinted green
+## for more and red for less, and "+5" or "-3" shows beside it for a moment. A new world (a load, a start) shows its purse
+## at once, without a count. With Reduce effects the number changes at once and the amount stands still beside it.
+## Reads the purse only (World.player.coins, which the host's snapshots give a guest): every change of it is a real one.
+func _coins_step(coins: int, delta: float) -> void:
+	var w: Object = main.world if main != null else null
+	var still: bool = main != null and main.settings.reduce_effects
+	if w != coins_world or coins_to < 0:
+		coins_world = w
+		coins_to = coins
+		coins_t = 0.0
+		coin_delta_t = 0.0
+		if coin_delta != null:
+			coin_delta.visible = false
+	elif coins != coins_to:
+		var d := coins - coins_to
+		coins_from = float(coins_to) if coins_t <= 0.0 else _coins_now()
+		coins_to = coins
+		coins_t = 0.0 if still else COIN_COUNT_SECONDS
+		_show_coin_delta(d, still)
+	if coins_t > 0.0:
+		coins_t = maxf(0.0, coins_t - delta)
+	coins_label.text = " %d" % roundi(_coins_now())
+	if coin_delta_t > 0.0:
+		coin_delta_t -= delta
+		if coin_delta != null:
+			if not still:
+				coin_delta.position.y -= delta * 8.0
+			coin_delta.modulate.a = clampf(coin_delta_t / 0.4, 0.0, 1.0)
+			coin_delta.visible = coin_delta_t > 0.0
+	if coins_t <= 0.0 and coin_delta_t <= 0.0:
+		coins_label.remove_theme_color_override("font_color")
+
+
+## The number the counter shows now: on its way from coins_from to coins_to.
+func _coins_now() -> float:
+	if coins_t <= 0.0:
+		return float(coins_to)
+	return lerpf(float(coins_to), coins_from, coins_t / COIN_COUNT_SECONDS)
+
+
+func _show_coin_delta(d: int, still: bool) -> void:
+	if coin_delta == null:
+		coin_delta = Label.new()
+		coin_delta.name = "CoinDelta"
+		coin_delta.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		coin_delta.add_theme_font_size_override("font_size", 13)
+		coin_delta.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+		coin_delta.add_theme_constant_override("outline_size", 4)
+		hud.add_child(coin_delta)
+	var col := COIN_UP if d > 0 else COIN_DOWN
+	coin_delta.text = ("+%d" if d > 0 else "%d") % d
+	coin_delta.add_theme_color_override("font_color", col)
+	coins_label.add_theme_color_override("font_color", col)
+	# just right of the number, inside the status box's coins row (never over the corner log or the message)
+	var f := coins_label.get_theme_font("font")
+	var tw := f.get_string_size(coins_label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, coins_label.get_theme_font_size("font_size")).x
+	coin_delta.position = coins_label.global_position - hud.global_position + Vector2(tw + 8.0, 0.0)
+	coin_delta.modulate.a = 1.0
+	coin_delta.visible = true
+	coin_delta_t = COIN_DELTA_SECONDS
+	if not still and fx() != null:
+		fx().pulse(coins_label, Color(1.25, 1.25, 1.25), 0.3)
+
+
+## The effects helper (Main.fx), or null before a world is shown.
+func fx() -> GameEffects:
+	if main == null or not ("fx" in main) or main.fx == null or not is_instance_valid(main.fx):
+		return null
+	return main.fx
+
+
 ## The text inside a bar (PL1-05): plain "current/max", e.g. "85/100". Health rounds up so a living
 ## player never reads 0; the maxima come from the player (gear changes them), never a fixed number.
 static func bar_words(value: float, cap: float) -> String:
@@ -1112,7 +1196,7 @@ func _meter_text(key: String, words: String, fraction: float) -> void:
 	bar_danger[key] = low
 	var fill := bars[key].get_theme_stylebox("fill") as StyleBoxFlat
 	fill.bg_color = DANGER_COLOUR if low else BAR_COLOURS[key]
-	var blink := low and int(Time.get_ticks_msec() / 400) % 2 == 0
+	var blink: bool = low and int(Time.get_ticks_msec() / 400) % 2 == 0 and not (main != null and main.settings.no_blink)
 	bars[key].modulate = Color(1.0, 0.7, 0.65) if blink else Color.WHITE
 
 
@@ -1207,6 +1291,10 @@ func prompt(text: String, more := false) -> void:
 		var at := opts.find(main.target) if main != null else -1
 		prompt_next.text = ("%d/%d  >" % [at + 1, opts.size()]) if at >= 0 and opts.size() > 1 else "Next  >"
 	prompt_label.text = "  ·  ".join(lines)
+	var first: String = str(lines[0]) if not lines.is_empty() else ""
+	if first != prompt_first and first != "" and fx() != null:
+		fx().pulse(prompt_box)               # JUICE J1: a new target catches the eye once (none with Reduce effects)
+	prompt_first = first
 	_fit_label(prompt_label, PROMPT_MAX_W)
 	_place_bottom(prompt_box, _prompt_bottom())
 	prompt_icon.texture = load(PROMPT % USE_ICON.get(scheme, "touch_tap"))
@@ -1291,21 +1379,38 @@ func dismiss_message() -> void:
 	_push_log()
 
 
-## Something gained or a quick hint ("+2 red berries"): a short line in the top-right corner that
-## fades quickly, keeping the middle of the screen clear for play (owner, 2026-10-18).
-func gain(text: String, item := "") -> void:
+## JUICE J1 (owner Decision 9, 2026-11-01): the corner log (top right) has two lanes, so a gain is never pushed out by village
+## news, nor news by a run of gains. The box keeps its size: still LOG_LINES lines at most, the player's own lane above the
+## village's; while both have something to say each keeps its newest line, and a lane alone may use both.
+## - Personal ("personal"): what the player gained ("+2 red berries", "+5 coins"), and the player's own announcements (a skill
+##   level). Entry points: gain(text, item) for a gain; personal(text, item, category, seconds) for anything else of the
+##   player's own, `category` (message_journal.json) keeping it on the journal's Messages page as message() does.
+## - Village ("village"): what happens in the village (every World.note, through World.event; Main connects it to village()).
+##   Code that announces something about the village (a milestone, a death, a sale at the market) writes World.note(text),
+##   which also keeps it in the village record and reaches a guest's corner with the host's record; never personal().
+## The full record of both stays where it was: the village record under the Journal, the kept messages on its Messages page.
+const LANE_PERSONAL := "personal"
+const LANE_VILLAGE := "village"
+const PERSONAL_MAX_W := 400.0    # within the corner log's own width (log_box.custom_minimum_size 420, less the backing's margins)
+const PERSONAL_EDGE := Color8(222, 178, 64)     # a thin gold edge marks the player's own lines (the stamina bar's gold)
+
+
+## Something gained or a quick hint ("+2 red berries"): a short line in the personal lane of the top-right corner that fades
+## quickly, keeping the middle of the screen clear for play (owner, 2026-10-18).
+func gain(text: String, item := "", seconds := GAIN_SECONDS) -> void:
 	if item == "" or not ResourceLoader.exists(ICON % item):
-		log_line(text, GAIN_SECONDS)
-		var l: Label = log_box.get_child(log_box.get_child_count() - 1)
-		l.autowrap_mode = TextServer.AUTOWRAP_OFF
-		l.size_flags_horizontal = Control.SIZE_SHRINK_END      # just the words, at the right edge
+		var pl := Label.new()
+		pl.text = text
+		pl.add_theme_font_size_override("font_size", 16)
+		pl.add_theme_stylebox_override("normal", _lane_style(LANE_PERSONAL))
+		_fit_label(pl, PERSONAL_MAX_W)                           # one line; a long announcement wraps within the box's width
+		pl.size_flags_horizontal = Control.SIZE_SHRINK_END      # just the words, at the right edge
+		_add_log(pl, seconds, LANE_PERSONAL)
 		return
 	# with an item id: its pack icon left of the words, in one compact line
 	var back := PanelContainer.new()
 	back.name = "GainLine"
-	var st := _style(Color(WINDOW, 0.88))
-	st.set_content_margin_all(4)
-	back.add_theme_stylebox_override("panel", st)
+	back.add_theme_stylebox_override("panel", _lane_style(LANE_PERSONAL, 4))
 	back.size_flags_horizontal = Control.SIZE_SHRINK_END
 	back.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var row := HBoxContainer.new()
@@ -1317,7 +1422,32 @@ func gain(text: String, item := "") -> void:
 	l.add_theme_font_size_override("font_size", 16)
 	row.add_child(l)
 	back.add_child(row)
-	_add_log(back, GAIN_SECONDS)
+	_add_log(back, seconds, LANE_PERSONAL)
+
+
+## The player's own announcement (a skill level, coins earned): a line in the personal lane, with `item`'s icon when it has
+## one, for `seconds`; with a `category` it is also kept on the journal's Messages page (World.player_tell), as message() keeps.
+func personal(text: String, item := "", category := "", seconds := GAIN_SECONDS) -> void:
+	if text == "":
+		return
+	gain(text, item, seconds)
+	if category != "" and main != null and main.world != null:
+		main.world.player_tell(text, category)
+
+
+## A village line (World.note through World.event): the village lane.
+func village(text: String, seconds := LOG_SECONDS) -> void:
+	log_line(text, seconds)
+
+
+## The backing of a corner line: the dark box of text over the map; the player's own lines with a gold edge at their left.
+func _lane_style(lane: String, margin := 8) -> StyleBoxFlat:
+	var st := _style(Color(WINDOW, 0.88))
+	st.set_content_margin_all(margin)
+	if lane == LANE_PERSONAL:
+		st.border_color = PERSONAL_EDGE
+		st.border_width_left = 3
+	return st
 
 
 ## A pack item's icon, sized for lines of text.
@@ -1330,27 +1460,45 @@ func _item_icon_rect(item: String, size: float) -> TextureRect:
 
 
 ## The words of the lines now in the corner log (a gain line with an icon keeps them in a child).
-func log_texts() -> Array:
+func log_texts(lane := "") -> Array:
 	var out := []
 	for c in log_box.get_children():
+		if lane != "" and str(c.get_meta("lane", LANE_VILLAGE)) != lane:
+			continue
 		for n in [c] if c is Label else c.find_children("*", "Label", true, false):
 			out.append(n.text)
 	return out
 
 
+## A village line (the name kept for its callers): the village lane.
 func log_line(text: String, seconds := LOG_SECONDS) -> void:
 	var l := Label.new()
 	l.text = text
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.add_theme_font_size_override("font_size", 16)
-	_backed(l)
-	_add_log(l, seconds)
+	l.add_theme_stylebox_override("normal", _lane_style(LANE_VILLAGE))
+	_add_log(l, seconds, LANE_VILLAGE)
 
 
-func _add_log(l: Control, seconds: float) -> void:
+func _add_log(l: Control, seconds: float, lane := LANE_VILLAGE) -> void:
+	l.set_meta("lane", lane)
 	log_box.add_child(l)
+	if lane == LANE_PERSONAL:              # the player's own lane above the village's
+		var at := 0
+		for c in log_box.get_children():
+			if c != l and str(c.get_meta("lane", LANE_VILLAGE)) == LANE_PERSONAL:
+				at = c.get_index() + 1
+		log_box.move_child(l, at)
+	# never more than LOG_LINES: the oldest line of the fuller lane goes, so each lane keeps its newest line
 	while log_box.get_child_count() > LOG_LINES:
-		var c := log_box.get_child(0)
+		var by := {LANE_PERSONAL: [], LANE_VILLAGE: []}
+		for c in log_box.get_children():
+			by[str(c.get_meta("lane", LANE_VILLAGE))].append(c)
+		var from: String = lane
+		var other: String = LANE_VILLAGE if lane == LANE_PERSONAL else LANE_PERSONAL
+		if (by[other] as Array).size() > (by[lane] as Array).size():
+			from = other
+		var c: Node = by[from][0]
 		log_box.remove_child(c)
 		c.queue_free()
 	# each line stays a few seconds, then fades away (the full record is under Menu)
@@ -2088,6 +2236,9 @@ func _settings_interface() -> void:
 	_choice("Harvesting", ["manual", "continuous"], st.harvest, func(v): st.harvest = v)     # GP-HARVEST-CONT, every platform
 	if st.phone or scheme == "touch":            # GP-JOYSTICK: walking by touch, a tap on the ground (default) or a thumbstick
 		_choice("Moving by touch", ["tap", "joystick"], st.touch_move, func(v): st.touch_move = v)
+	# JUICE J1 (owner Decision 9; B12A-05's accessibility slice): calmer effects, and no blinking
+	_choice("Reduce effects", ["off", "on"], "on" if st.reduce_effects else "off", func(v): st.reduce_effects = v == "on")
+	_choice("No blinking", ["off", "on"], "on" if st.no_blink else "off", func(v): st.no_blink = v == "on")
 
 
 func _setting_row(text: String, control: Control) -> void:
@@ -3003,6 +3154,16 @@ func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "",
 	if w.construction.can_hire(n) == "" and not w.construction.sites_of(w.acting_ref()).is_empty():
 		_talk_choice(choices, "Hire to carry building materials", func():
 			_talk_view(n, "A day's carrying for %d coins? I'll fetch what's in your chest, or buy what's wanting at the market with your money, and bring it to your site." % int(GameData.b("helper_wage")), false, "", "", true))
+	# EMP-PERM-01, B25-BIZ-D4: lasting work for the player in a role with real work, or letting their own employee go
+	var emp: Dictionary = w.employment.record_of(n)
+	if not emp.is_empty() and w.is_acting_ref(str(emp.employer)):
+		_talk_choice(choices, "Their work for you", func(): show_employ(n))
+		_talk_choice(choices, "Let them go from your service", func():
+			var why: String = w.employment.dismiss(n)
+			message(why if why != "" else "%s no longer works for you." % n.name)
+			_talk_view(n, Dialogue.opening(w, n)))
+	elif emp.is_empty() and n.role == "adult" and Employment.ROLES.any(func(r): return n.job in Construction.HIRABLE or n.job == Employment.job_for(r)):
+		_talk_choice(choices, "Offer lasting work", func(): show_employ(n))
 	var sale: Array = w.brain.for_sale(n)
 	var buys: Dictionary = NPCBrain.BUYS.get(w.brain.buy_role(n), {})
 	if not sale.is_empty() or not buys.is_empty():
@@ -3151,6 +3312,20 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 				done.call(("You hand over %d %s and are paid %d coins." % [gave, item, gave * int(cc.price_each)]) if gave > 0 else "%s has no room for it." % n.name),
 					have > 0, h)
 			_button("Withdraw", func(): done.call(k.cancel(cc, w.acting_ref())), true, h)
+	for c in k.disputes_with_player(n):           # CON-05: pay held back on an ended contract, to be ruled on by the reeve
+		var dc: Dictionary = c
+		var dh := HBoxContainer.new()
+		var dl := Label.new()
+		dl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		dl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		dl.add_theme_font_size_override("font_size", 18)
+		dl.text = "In dispute: %d coins held back on the contract to %s (%s). The reeve rules on the agreement and the records." % [int(dc.retained),
+				k.describe(dc), str(dc.get("state", ""))]
+		dh.add_child(dl)
+		panel_body.add_child(dh)
+		_button("Bring it before the reeve", func():
+			message(k.dispute(dc, w.acting_ref()), 5.0, "contract")
+			show_contract(n, t), true, dh)
 	if not reply.is_empty():
 		_label("%s: \"%s\"" % [n.name, str(reply.say)], 20, Color(1, 0.85, 0.5))
 		_scroll_to_top()                  # TRADE-UI-02: the answer is drawn first; a window scrolled down to Propose would hide it
@@ -3160,7 +3335,7 @@ func show_contract(n: NPC, t := {}, reply := {}) -> void:
 			ct.price = int(reply.price_each)
 			ct.days = int(reply.days)
 			_button("Agree: %d at %d each in %d days (%d coins)" % [int(ct.qty), int(ct.price), int(ct.days), int(ct.qty) * int(ct.price)], func():
-				var r2 := k.propose(w.acting_ref(), n, str(ct.get("item", "")), int(ct.qty), int(ct.price), int(ct.days), reply.get("history", []), ct.get("svc", {}))
+				var r2 := k.propose(w.acting_ref(), n, str(ct.get("item", "")), int(ct.qty), int(ct.price), int(ct.days), reply.get("history", []), ct.get("svc", {}), ct.get("terms", {}))
 				if r2.has("contract"):
 					message("Contract made with %s: %s." % [n.name, k.describe(r2.contract)], 4.0, "contract")
 					show_contract(n, {}, r2)
@@ -3246,7 +3421,7 @@ func _contract_item_step(n: NPC, t: Dictionary) -> void:
 			var oo: Dictionary = o
 			var sb := _button(str(oo.label), func():
 				var svc := {"service": oo.service, "site": oo.site}
-				var m3: Dictionary = ContractServices.means(k, n, svc, 3)
+				var m3: Dictionary = ContractServices.means(k, n, svc.merged({"buyer": w.acting_ref()}), 3)
 				show_contract(n, {"svc": svc, "label": str(oo.label), "all": all, "qty": clampi(int(m3.cap), 1, 10), "price": ceili(ContractServices.going(svc)), "days": 3,
 						"step": "qty"}), true, sgrid)
 			sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -3288,19 +3463,25 @@ func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 	var qty := int(t.qty)
 	var price := int(t.price)
 	var days := int(t.days)
-	var total := qty * price
+	var terms: Dictionary = t.get("terms", {}) if t.has("svc") and not counter else {}
+	var total := Contracts.set_aside_of(qty, price, terms) if t.has("svc") and not counter else qty * price
 	var by_day := w.day() + days
 	var next_btn: Button = null
 	if step == "sum":
 		var sentence := ""
 		if counter:
 			sentence = "You deliver %s to %s by the end of day %d for %d coins (%d each)." % [Contracts.counted(qty, what), n.name, by_day, total, price]
+		elif t.has("svc") and str(terms.get("pay", "")) == "favour":
+			sentence = "%s does this work for you as a favour, %s: %d units by the end of day %d, nothing paid." % [n.name, what, qty, by_day]
 		elif t.has("svc"):
-			sentence = "%s does this work for you, %s: %d units by the end of day %d for %d coins (%d each)." % [n.name, what, qty, by_day, total, price]
+			sentence = "%s does this work for you, %s: %d units by the end of day %d; %s %d coins set aside." % [n.name, what, qty, by_day,
+					ContractServices.terms_words(terms, price), total]
 		else:
 			sentence = "%s delivers %s by the end of day %d for %d coins (%d each)." % [n.name, Contracts.counted(qty, what), by_day, total, price]
 		var sl := _label(sentence, 24)
 		sl.name = "Summary"
+		if t.has("svc") and not counter:
+			_service_terms_rows(n, t)                 # Decision 2 / CON-03..05: how the work is paid
 		if not counter:
 			_label("Your coins for it are set aside when %s agrees, and paid as the goods come. You have %d coins." % [n.name, p.coins], 16)
 			if p.coins < total:
@@ -3316,7 +3497,7 @@ func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 			next_btn = _button("Propose to %s" % n.name, func():
 				var r: Dictionary
 				if t.has("svc"):
-					r = k.propose(w.acting_ref(), n, "", qty, price, days, [], t.svc)
+					r = k.propose(w.acting_ref(), n, "", qty, price if str(terms.get("pay", "")) != "favour" else 0, days, [], t.svc, terms)
 				else:
 					r = k.propose(w.acting_ref(), n, str(t.item), qty, price, days)
 				if r.has("contract"):
@@ -3351,6 +3532,44 @@ func _contract_term_step(n: NPC, t: Dictionary, step: String) -> void:
 func _focus_if_open(b: Control) -> void:
 	if is_instance_valid(b) and b.is_inside_tree() and b.is_visible_in_tree():
 		b.grab_focus()
+
+
+## Decision 2 / CON-03..CON-05: how hired work is paid, in the summary step: the pay structure (for the work done, the default; for
+## results only; a base and a bonus for each result; as a favour, nothing paid), a share held back until the work is complete, and
+## for a survey the assay fees advanced. Each choice is a button that moves to the next; the summary's total follows them.
+func _service_terms_rows(n: NPC, t: Dictionary) -> void:
+	var terms: Dictionary = t.get("terms", {})
+	var kind := str((t.svc as Dictionary).service)
+	var pays := ["on_delivery", "favour"] if kind == "harvest" else ["on_delivery", "on_result", "base_bonus", "favour"]
+	var at := pays.find(str(terms.get("pay", "on_delivery")))
+	var with := func(change: Dictionary) -> void:
+		var nt: Dictionary = t.duplicate(true)
+		var nterms: Dictionary = terms.duplicate(true)
+		nterms.merge(change, true)
+		for key in nterms.keys():
+			if nterms[key] == null:
+				nterms.erase(key)
+		nt.terms = nterms
+		show_contract(n, nt)
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 8)
+	panel_body.add_child(h)
+	var next_pay := str(pays[(at + 1) % pays.size()])
+	_button("Pay: %s" % ContractServices.PAY_NAMES[str(pays[maxi(at, 0)])], func():
+		with.call({"pay": next_pay, "bonus_each": int(t.price) if next_pay == "base_bonus" else null,
+				"retain": null if next_pay == "favour" else terms.get("retain"), "advance": null if next_pay == "favour" else terms.get("advance")}), true, h)
+	if str(terms.get("pay", "")) != "favour":
+		var shares := [0.0, 0.25, 0.5]
+		var si := shares.find(float(terms.get("retain", 0.0)))
+		var next_share: float = shares[(si + 1) % shares.size()]
+		_button("Held back until done: %d%%" % roundi(100.0 * float(terms.get("retain", 0.0))), func():
+			with.call({"retain": next_share if next_share > 0.0 else null}), true, h)
+		if ContractServices.PURPOSES.has(kind):
+			var fees := int(t.qty) * int(Prospecting.cfg().assay.fee)
+			var has_adv := int((terms.get("advance", {}) as Dictionary).get("amount", 0)) > 0
+			_button(("Advance the assay fees: %d coins" % fees) if not has_adv else "No advance", func():
+				with.call({"advance": null if has_adv else {"amount": fees, "purpose": str(ContractServices.PURPOSES[kind])}}), true, h)
+	_label(ContractServices.terms_help(terms), 16)
 
 
 ## One of the quantity, price-each or days rows of the contract window, with - and + buttons (touch, pad, keyboard).
@@ -3399,20 +3618,22 @@ func _service_row(n: NPC, cc: Dictionary, l: Label, h: HBoxContainer, done: Call
 			done.call(""), true, h)
 	elif w.is_acting_ref(cc.buyer):
 		var stone := int(cc.get("load", {}).get("stone", 0))
-		l.text = "%s works for you, to %s at %d a unit: %d done, due by the end of day %d. %d coins set aside." % [n.name, what, int(cc.price_each),
-				int(cc.delivered), int(cc.deadline_day) + 1, int(cc.reserved)]
+		l.text = "%s works for you, to %s, %s: %d done, due by the end of day %d. %d coins set aside." % [n.name, what,
+				ContractServices.terms_words(cc.get("terms", {}), int(cc.price_each)), int(cc.delivered), int(cc.deadline_day) + 1, int(cc.reserved)]
 		if stone > 0:
 			_button("Collect %d stone" % stone, func():
 				var got := ContractServices.player_collect(k, cc)
 				done.call(("%s hands over %d stone." % [n.name, got]) if got > 0 else "You have no room for it."), true, h)
 		_button("Cancel", func(): done.call(k.cancel(cc, w.acting_ref())), true, h)
 	else:
-		l.text = "You work for %s, to %s at %d a unit: %d done, due by the end of day %d." % [n.name, what, int(cc.price_each),
-				int(cc.delivered), int(cc.deadline_day) + 1]
+		l.text = "You work for %s, to %s, %s: %d done, due by the end of day %d." % [n.name, what,
+				ContractServices.terms_words(cc.get("terms", {}), int(cc.price_each)), int(cc.delivered), int(cc.deadline_day) + 1]
+		if str(cc.service) == "harvest":
+			l.text += " Cut the ripe cells of the field: the crop goes to %s." % n.name
 		if str(cc.service) == "survey":
 			_button("Report readings", func():
 				var told := ContractServices.player_report(k, cc)
-				done.call(("You tell %s %d readings and are paid %d coins." % [n.name, told, told * int(cc.price_each)]) if told > 0 \
+				done.call(("You tell %s %d readings; %d coins paid in all so far." % [n.name, told, int(cc.paid)]) if told > 0 \
 						else "You have no new readings of that stain to tell (take samples there and have a smith assay them)."), true, h)
 		_button("Withdraw", func(): done.call(k.cancel(cc, w.acting_ref())), true, h)
 
@@ -3647,6 +3868,66 @@ func show_trade(n: NPC, pick := {}) -> void:
 		_button("Credit and barter" + (" (%s asks you)" % n.name if main.world.credit.request_for(n.id).size() > 0 else ""), func(): CreditWindow.show(self, lender))       # TRADE-CREDIT
 		var talker := n
 		_button("Talk to %s" % n.name, func(): show_talk(talker))
+
+
+## B25-BIZ-D4: lasting work for the player (Employment): each role the villager could take, at the wage the labour market sets
+## (what they ask), and why not when they cannot; a crafter is told what to make (a recipe the player's own stations make).
+## For the player's own employee: what they do, their wage, and what a crafter makes now.
+func show_employ(n: NPC) -> void:
+	var w: World = main.world
+	_open("employ", "Work for %s" % n.name)
+	var emp: Dictionary = w.employment.record_of(n)
+	var again := func(): show_employ(n)
+	if not emp.is_empty() and w.is_acting_ref(str(emp.employer)):
+		_label("%s works for you as your %s for %d coins a day, paid each morning from your %s. What they make or dig is yours." % [n.name, str(emp.role),
+			int(emp.wage), "premises' till" if str(emp.get("account", "")) != "" else "purse"], 16)
+		if Employment.behaviour(str(emp.role)) == "craft":
+			_label("They make: %s." % str(emp.get("make", "")).replace("_", " "), 16)
+			for r in w.employment.makes(str(emp.role)).slice(0, 10):
+				var rr: String = r
+				_button("Make %s instead" % rr.replace("_", " "), func():
+					var why: String = w.employment.set_make(n, rr)
+					message(why if why != "" else "%s will make %s." % [n.name, rr.replace("_", " ")])
+					again.call(), str(emp.get("make", "")) != rr)
+		_button("Let them go", func():
+			var why: String = w.employment.dismiss(n)
+			message(why if why != "" else "%s no longer works for you." % n.name)
+			hide_all())
+		return
+	_label("Lasting work: they work for you every working day until you let them go, they leave, or the wage cannot be paid. The wage is what the work pays in the village now; it comes from your purse each morning, the first day on taking them on. You have %d coins." % w.player.coins, 15)
+	for role in Employment.ROLES:
+		if not (n.job in Construction.HIRABLE or n.job == Employment.job_for(role)):
+			continue
+		var why: String = w.employment.refusal(n, role)
+		var pay: int = w.employment.asking(n, role)
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 8)
+		var l := Label.new()
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		l.add_theme_font_size_override("font_size", 17)
+		l.text = "%s, %d coins a day%s" % [World.cap(role), pay, (". " + why) if why != "" else ""]
+		h.add_child(l)
+		panel_body.add_child(h)
+		var rl: String = role
+		if Employment.behaviour(role) != "craft":
+			_button("Employ", func():
+				var no: String = w.employment.employ(n, rl)
+				message(no if no != "" else "%s now works for you as your %s." % [n.name, rl], 4.0, "" if no != "" else "work")
+				if no == "":
+					hide_all()
+				else:
+					again.call(), why == "" and w.player.coins >= pay, h)
+		elif why == "":
+			for r in w.employment.makes(role).slice(0, 6):
+				var rr: String = r
+				_button("Employ to make %s" % rr.replace("_", " "), func():
+					var no: String = w.employment.employ(n, rl, -1, "", rr)
+					message(no if no != "" else "%s now makes %s for you." % [n.name, rr.replace("_", " ")], 4.0, "" if no != "" else "work")
+					if no == "":
+						hide_all()
+					else:
+						again.call(), w.player.coins >= pay)
 
 
 ## Fitting out a room of the player's: counter, shelves, equipment (scripts/ui/fit_window.gd).
@@ -4159,8 +4440,73 @@ func show_land(reeve: NPC = null) -> void:
 		_label("Nothing for sale or to let just now.", 16)
 	for t in offers:
 		_deal_row(t, again)
+	# B25-BIZ-D5 F (the two-shop finding): the office lists the surveyed plots and empty houses; any clear ground is bought on the spot
+	_label("More ground: anywhere clear that is nobody's, from the Build menu (Choose a place); the manor sells it to you there.", 15)
+	_business_sales(again)
 	if reeve != null:
 		_button("Talk to %s" % reeve.name, func(): show_talk(reeve))
+
+
+## B25-BIZ-D5: workshops their owners offer for sale (bought at the price both sides' Trading agrees, from the seller), and the
+## player's own workshops, to offer for sale or take the offer back. Selling a workshop never sells a house.
+func _business_sales(again: Callable) -> void:
+	var w: World = main.world
+	var v: Ventures = w.ventures
+	var mine: Array = []
+	var ids: Array = w.buildings.keys()
+	ids.sort()
+	for id in ids:
+		var b: Dictionary = w.buildings[id]
+		if Ventures.is_business(b) and w.owner_of(b) == w.acting_ref():
+			mine.append(b)
+	var listed: Array = v.offers()
+	if mine.is_empty() and listed.is_empty():
+		return
+	_label("Workshops changing hands:", 20, Color(1, 0.85, 0.5))
+	for b in listed:
+		var bb: Dictionary = b
+		var price: int = v.price_for(bb, w.player)
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 8)
+		var l := Label.new()
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		l.add_theme_font_size_override("font_size", 17)
+		var by := str(bb.sale.by)
+		l.text = "%s: offered by %s for %d coins" % [World.cap(w.property.describe(bb)), "you" if w.is_acting_ref(by) else w.ref_name(by), price if not w.is_acting_ref(by) else int(bb.sale.price)]
+		h.add_child(l)
+		if w.is_acting_ref(by):
+			_button("Take the offer back", func():
+				var no: String = v.withdraw(bb)
+				message(no if no != "" else "You no longer offer it for sale.")
+				again.call(), true, h)
+		else:
+			_button("Buy (%d)" % price, func():
+				var no: String = v.buy(bb)
+				message(no if no != "" else "It is yours: %s." % w.property.describe(bb), 4.0, "" if no != "" else "property")
+				again.call(), v.buy_refusal(bb, w.acting_ref(), w.player) == "", h)
+		panel_body.add_child(h)
+	for b in mine:
+		var bb: Dictionary = b
+		if bb.has("sale"):
+			continue
+		var value: int = v.asking(bb)
+		var why: String = v.offer_refusal(bb, w.acting_ref())
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 8)
+		var l := Label.new()
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		l.add_theme_font_size_override("font_size", 17)
+		l.text = "%s: yours%s" % [World.cap(w.property.describe(bb)), (". " + why) if why != "" else ""]
+		h.add_child(l)
+		for k in [3, 4, 5]:
+			var ask := maxi(1, value * k / 4)
+			_button("Offer for %d" % ask, func():
+				var no: String = v.offer(bb, ask)
+				message(no if no != "" else "You offer it for sale for %d coins." % ask, 4.0, "" if no != "" else "property")
+				again.call(), why == "", h)
+		panel_body.add_child(h)
 
 
 ## One house or piece of land on its own (at its door).

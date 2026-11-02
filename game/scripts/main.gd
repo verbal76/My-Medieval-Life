@@ -73,6 +73,14 @@ var multi_touch := false               # two fingers were down: lifting them is 
 var cam_free := false                  # looking around: the camera stays at cam_at instead of following the player
 var cam_at := Vector2.ZERO             # where the camera looks while cam_free (pixels)
 var site_bars := {}                    # plot id -> the progress bar over its building frame
+# JUICE J1/J2 (owner Decision 9, 2026-11-01): the one effects helper (view/effects.gd) and what it is fed from. Presentation
+# only: every effect follows something that happened (a health fall, a blow landed, a delivery, a building finished, a seam
+# worked out); nothing here is read by the world.
+var fx: GameEffects
+var hp_seen := {}                      # npc id (-1 the player) -> the health last drawn (a fall of HURT_MIN or more: the flinch)
+var site_seen := {}                    # plot id -> the building progress last drawn (a rise: a delivery)
+var fx_sprint_was := false             # sprinting last frame (a start kicks up dust)
+const HURT_MIN := 1.0                  # health lost in one frame that shows as a flinch (starving's slow loss does not)
 var follow_at := Vector2.ZERO          # where the camera looks while following the player (pixels)
 # The player walks freely inside a box this fraction of the view in the middle of the screen; the
 # camera moves only when they push against its edge (owner: a camera dead zone)
@@ -1586,6 +1594,11 @@ func _build_scene() -> void:
 	above = Node2D.new()
 	above.z_index = 10
 	add_child(above)
+	fx = GameEffects.new()                       # JUICE J1/J2: chips, dust, sparks and puffs from real events (pooled, culled)
+	fx.name = "Effects"
+	add_child(fx)
+	hp_seen.clear()
+	site_seen.clear()
 	target_marker = Sprite2D.new()
 	target_marker.texture = load("res://assets/icons/iron_sword.png")
 	target_marker.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -1655,13 +1668,18 @@ func _build_scene() -> void:
 	world.tree_felled.connect(func(t: Dictionary, _side: int):          # SFX-18: a tree coming down near the player rustles
 		if Vector2(float(t.x), float(t.y)).distance_to(world.player.pos) < 12.0:
 			audio.play_variant("tree_rustling"))
+	world.tree_felled.connect(func(t: Dictionary, _side: int):          # JUICE J1: dust from the stump as it comes down
+		if world.player_level == 0:
+			fx.burst("dust", (Vector2(float(t.x), float(t.y)) + Vector2(0.5, 0.9)) * T))
+	world.tile_changed.connect(_fx_tile_changed)
+	world.building_added.connect(_fx_building_added)
 	world.player_leveled.connect(_level_up)          # DVW-A12 R6: the banner for a level core awarded
 	dying.clear()
 	fading.clear()
 	for n: NPC in world.npcs:
 		if not n.alive:
 			dying[n.id] = 0.0          # long dead: no flicker after loading
-	world.event.connect(func(t): ui.log_line(t))
+	world.event.connect(func(t): ui.village(t))       # JUICE J1: the corner log's village lane (GameUI.village)
 	world.building_added.connect(_on_building_added)
 	world.show_tables()                  # the tavern's tables show only the food that is on them
 	_build_levels()
@@ -1957,6 +1975,7 @@ func _process(delta: float) -> void:
 		ui.show_death()
 	if running and not world.offers.is_empty():
 		_tell_offers()                       # MP-D8, MP-INTERACT-01: what another player asked or said, told once
+	_fx_step()
 	_sync_sprites()
 	_sync_levels(delta)
 	_sync_gather_mark()
@@ -2026,6 +2045,7 @@ func _sync_sprites() -> void:
 			s.setup(n.sprite)
 			actors.add_child(s)
 			sprites[n.id] = s
+		_flinch_check(n.id, n.hp, n.alive, s)            # JUICE J1: the hurt frames when health actually fell
 		var near := n.pos.distance_to(cam) < 30.0
 		if not n.alive and (n.away != "" or n.became_player):
 			s.visible = false                      # MIGRATE-18: moved to a settlement, not dead: nothing falls (ID-01: nor a child who became the player)
@@ -2034,7 +2054,7 @@ func _sync_sprites() -> void:
 			# the body falls, flickers and is gone
 			var left: float = dying.get(n.id, FLICKER) - get_process_delta_time()
 			dying[n.id] = left
-			s.visible = left > 0.0 and near and not _covered(n) and int(left * 12.0) % 2 == 0
+			s.visible = left > 0.0 and near and not _covered(n) and (settings.no_blink or int(left * 12.0) % 2 == 0)     # JUICE J1: No blinking
 			s.stand()
 			if s.visible:
 				s.position = n.pos * T
@@ -2069,8 +2089,11 @@ func _sync_sprites() -> void:
 		if s.tool_item != look[1]:
 			s.hold(look[1])
 		s.play(look[0] if look[0] != "sleep" else "idle")
+		if s.take_impact():
+			_work_fx(n, s)                         # JUICE J2: a working villager's blow lands (chips, sparks, sawdust, earth)
 	var p := world.player
 	player_sprite.position = p.pos * T
+	_flinch_check(-1, p.hp, p.alive, player_sprite)
 	var ring := player_sprite.get_node_or_null("WantedRing") as WantedRing
 	if ring != null:
 		ring.set_on(bool(WantedHud.alert_of(world).get("hunted", false)), get_process_delta_time())     # GP-WANTED-INDICATOR
@@ -2203,8 +2226,15 @@ func _sync_sites() -> void:
 			site_bars[pl.id] = bar
 		if bar:
 			bar.visible = building
-			bar.value = world.site_progress(pl) * 100.0
+			var prog := world.site_progress(pl)
+			bar.value = prog * 100.0
 			bar.position = (Vector2(world._frame_cell(pl)) + Vector2(0.5, 0)) * T + Vector2(-14, -14)
+			# JUICE J2: a load delivered to the site (its progress rose; by anyone, the host's record on a guest): the bar
+			# brightens and a few chips and dust fall at the frame
+			if building and site_seen.has(pl.id) and prog > float(site_seen[pl.id]) + 0.0001 and world.player_level == 0:
+				fx.flash(bar)
+				fx.burst("deliver", (Vector2(world._frame_cell(pl)) + Vector2(0.5, 0.7)) * T)
+			site_seen[pl.id] = prog if building else 0.0
 
 
 func _sync_bubbles() -> void:
@@ -3652,6 +3682,7 @@ func _use() -> void:
 					ui.message(world.pack_full_text([str(dep.get("ore", "stone"))]) + " The ore is left at your feet.")
 				else:
 					_gain("+%d %s" % [int(r.n), GameData.item_name(str(r.ore))], str(r.ore))
+				_player_fx("stone", Vector2i(int(dep.x), int(dep.y)))     # JUICE J2: the blow that brought the ore out
 				if r.broke:
 					ui.message("Your %s broke." % GameData.item_name(pick).to_lower())
 				_level_up("mining", int(r.up)), "swing", pick)
@@ -3949,6 +3980,7 @@ func _pit_dig(pit: Dictionary, cell: Vector2i, tool: String) -> void:
 			ui.message(str(r.why))
 			return
 		_gain("+1 %s" % GameData.item_name(str(r.item)), str(r.item))
+		_player_fx("earth", cell)                  # JUICE J2: earth thrown up by the dug unit
 		if not (r.exposed as Dictionary).is_empty():
 			ui.message("The pit strikes %s: a new seam is opened." % GameData.item_name(str(r.exposed.ore)).to_lower(), 4.0, "find")
 		if r.broke:
@@ -4080,6 +4112,7 @@ func _tunnel_cut(cell: Vector2i, tool: String) -> void:
 			ui.message(str(r.why))
 			return
 		_gain("+1 %s" % GameData.item_name(str(r.item)), str(r.item))
+		_player_fx("stone", cell)                  # JUICE J2: the rock face cut
 		if r.opened:
 			ui.message("The rock is cut through: the tunnel goes on.")
 		if r.broke:
@@ -4137,6 +4170,7 @@ func _shaft_dig(cell: Vector2i, tool: String) -> void:
 			ui.message(str(r.why))
 			return
 		_gain("+1 %s" % GameData.item_name(str(r.item)), str(r.item))
+		_player_fx("earth", cell)                  # JUICE J2: the shaft dug deeper
 		if r.done:
 			ui.message("The shaft breaks through to the level below. Set a ladder in it to climb down.", 4.0, "find")
 		_level_up("mining", int(r.up)), "swing", "pickaxe")
@@ -4192,6 +4226,7 @@ func _trial_dig(c: Dictionary, cell: Vector2i, tool: String) -> void:
 		if r.result != "ok":
 			ui.message(str(r.why))
 			return
+		_player_fx("earth", cell)                  # JUICE J2: the trial pit dug
 		if (r.found as Dictionary).is_empty():
 			ui.message("The trial pit finds no ore.", 4.0, "find")
 		else:
@@ -4393,7 +4428,8 @@ func _level_up(skill: String, up: int) -> void:
 		audio.play_sfx("jingle_level_up")
 		var s: Dictionary = GameData.skills[skill]
 		var unlock := Skills.tier_text(skill, up)
-		ui.message("%s is now level %d!%s" % [s.name, up, (" Unlocked: " + unlock) if unlock != "" else ""], 4.0, "skill")
+		# JUICE J1: the player's own news goes in the personal lane of the corner log (kept on the journal's Messages page)
+		ui.personal("%s is now level %d!%s" % [s.name, up, (" Unlocked: " + unlock) if unlock != "" else ""], "", "skill", 4.0)
 
 
 ## Craft a recipe at a station (called from the craft panel). Same recipe data as the NPCs.
@@ -4419,6 +4455,7 @@ func craft(recipe: String, station := "") -> void:
 		if res.result != "ok":
 			return
 		_level_up(str(r.skill), int(res.up))
+		_player_fx(_station_fx(str(r.station)))    # JUICE J2: sparks at the anvil or forge, sawdust at the bench or sawhorse
 		# INV-18: what the pack had no place for is set down at the player's feet (World.player_gain), and said so
 		var left: Array = r.out.keys().filter(func(o): return world.player.inv.count(o) <= int(had[o]) and not world.player.inv.can_add(o))
 		ui.message("Made %s.%s" % [", ".join(r.out.keys().map(func(k): return GameData.item_name(k))),
@@ -4445,6 +4482,7 @@ func repair(id: String, station := "") -> void:
 			ui.message(str(res.get("why", "")))
 			return
 		_level_up("smithing", int(res.up))
+		_player_fx("sparks")                       # JUICE J2: the mending's blows at the anvil
 		ui.message("Mended your %s." % GameData.item_name(id).to_lower()), "swing", "hammer")
 	if station != "" and not action.is_empty():
 		action["station"] = station
@@ -4741,6 +4779,93 @@ func _hit_fx(sprite: Node2D, top: float, hp: float, dmg: float) -> void:
 	get_tree().create_timer(3.1).timeout.connect(func():
 		if is_instance_valid(bar) and Time.get_ticks_msec() >= int(bar.get_meta("until", 0)):
 			bar.visible = false)
+
+
+# ---------------------------------------------------------------- effects (JUICE J1/J2) -----
+## Each frame: the helper follows the camera (culling) and the settings; a sprint that starts kicks up dust at the feet.
+func _fx_step() -> void:
+	if fx == null:
+		return
+	fx.reduce = settings.reduce_effects
+	fx.focus = camera.get_screen_center_position() if camera != null else Vector2.INF
+	if tree_view != null:
+		tree_view.reduce = settings.reduce_effects
+	if sprinting and not fx_sprint_was and world.player.alive:
+		fx.burst("dust", world.player.pos * T + Vector2(0, -1))
+	fx_sprint_was = sprinting
+
+
+## JUICE J1: the flinch (ActorSprite.hurt, the sheet's own hurt frames) when a character's health fell by HURT_MIN or more
+## since it was last drawn: a blow, a bite, an arrow, from anyone (on a guest, as the host's records say). `id` -1: the player.
+func _flinch_check(id: int, hp: float, alive: bool, s: ActorSprite) -> void:
+	var was: float = float(hp_seen.get(id, hp))
+	hp_seen[id] = hp
+	if alive and s != null and s.visible and hp <= was - HURT_MIN:
+		s.hurt()
+
+
+## JUICE J2: what a working villager's blow throws up, by the work its plan holds (the same reading NPCBrain.work_look makes
+## for the swing and the tool in hand): stone chips at a seam or a sample, earth from a dig, sparks at the anvil or forge,
+## sawdust at the workbench or sawhorse. Felling shows its own chips (TreeView); fighting and hunting show none.
+func _work_fx(n: NPC, s: ActorSprite) -> void:
+	if n.plan.is_empty() or str(n.plan[0].get("k", "")) != "work" or _covered(n):
+		return
+	var st: Dictionary = n.plan[0]
+	var args: Dictionary = st.get("args", {})
+	var kind := ""
+	match str(st.get("act", "")):
+		"mine", "mj_mine", "prospect":
+			kind = "stone"
+		"mj_step":
+			kind = "earth" if str(world.manor_work.job(int(args.get("job", -1))).get("kind", "")) == "excavate" else "dust"
+		"svc_step":
+			kind = "earth" if str(world.contracts.get_contract(int(args.get("id", -1))).get("service", "")) == "dig" else "stone"
+		"craft":
+			kind = _station_fx(str(world.stations[args.station].type) if world.stations.has(args.get("station", "")) else "")
+		"repair":
+			kind = "sparks"
+	if kind != "":
+		fx.burst(kind, _blow_point(n.pos, s.dir))
+
+
+## Sparks at the anvil and the forge, sawdust at the workbench and the sawhorse; nothing elsewhere (an oven, a loom).
+static func _station_fx(station: String) -> String:
+	if station in ["anvil", "forge"]:
+		return "sparks"
+	if station in ["workbench", "sawhorse"]:
+		return "sawdust"
+	return ""
+
+
+## Where a swing facing direction index `dir` (ActorSprite.DIRS) from feet at `pos` (tiles) lands: just ahead, at hand height.
+static func _blow_point(pos: Vector2, dir: int) -> Vector2:
+	var a := float(dir) * TAU / 8.0
+	return pos * T + Vector2(sin(a), cos(a)) * 9.0 + Vector2(0, -6)
+
+
+## JUICE J2: the player's own work done (called from its successful outcome only): `kind` at `cell` (tiles), or where the
+## player's swing lands when no cell is given.
+func _player_fx(kind: String, cell := Vector2i(-99999, -99999)) -> void:
+	if fx == null or kind == "":
+		return
+	var at := (Vector2(cell) + Vector2(0.5, 0.5)) * T if cell.x != -99999 else _blow_point(world.player.pos, player_sprite.dir)
+	fx.burst(kind, at)
+
+
+## JUICE J2: a seam on the surface worked out (its tile turns to spent rock): a grey puff and chips where it was.
+func _fx_tile_changed(cell: Vector2i, _kind: String, value: int) -> void:
+	if fx != null and world.player_level == 0 and value == int(map.data.tiles.depleted_rock):
+		fx.burst("deplete", (Vector2(cell) + Vector2(0.5, 0.5)) * T)
+
+
+## JUICE J2: a building finished (World.building_added, as built; a guest's from the host's record): dust puffs along its
+## front where the frame stood. Loading a world draws its buildings without this (Main._apply_world_changes).
+func _fx_building_added(b: Dictionary) -> void:
+	if fx == null or world.player_level != 0:
+		return
+	var y := float(int(b.y) + int(b.h)) - 0.6
+	for i in 3:
+		fx.burst("complete", Vector2(float(b.x) + float(b.w) * (0.25 + 0.25 * i), y) * T)
 
 
 func fireball() -> void:
@@ -6872,6 +6997,9 @@ func _build_levels() -> void:
 		if spec.has("mouth") and view.layer(str(spec.mouth.layer)) != null:     # MIN-H: a cave's own mouth in the rock face
 			view.set_tile(view.layer(str(spec.mouth.layer)), Vector2i(int(spec.portal.door[0]), int(spec.portal.door[1])), int(spec.mouth.tile))
 	world.level_tile_changed.connect(_on_level_tile_changed)
+	world.level_tile_changed.connect(func(level: int, cell: Vector2i, value: int):     # JUICE J2: a seam below worked out
+		if level == world.player_level and value == int(map.data.tiles.depleted_rock):
+			fx.burst("deplete", (Vector2(cell) + Vector2(0.5, 0.5)) * T))
 	if world.mine_works != null:
 		world.mine_works.changed.connect(_on_works_changed)
 		surface_works = WorksView.new()               # MIN-F: track in the mine's yard, faded with the surface
