@@ -4067,6 +4067,8 @@ func asleep(n: NPC) -> bool:
 ## A villager's own spot of a kind ("bed", "table", "chest", "hearth") in their home: the household
 ## shares them out by member order (beds first, then the straw pallets); {} if the home has none.
 func home_spot(n: NPC, kind: String) -> Dictionary:
+	if not buildings.has(n.home):            # KI-HOME-DOOR: no house standing, no spot in it
+		return {}
 	var mine := []
 	var pallets := []
 	for room in (property.rooms_of(n.home) if kind == "bed" else [n.home]):     # living quarters and small rooms add beds
@@ -4098,8 +4100,12 @@ func _sleep_order(hh: int) -> Array:
 	return family + lodgers
 
 
-## The cell to go to for a home spot (the use cell), or the home's door when it has none.
+## The cell to go to for a home spot (the use cell), or the home's door when it has none; for one with no house standing
+## (KI-HOME-DOOR) the cell they rest by (NPCBrain.rest_cell): the household's pantry goes with it, so meals and stores are
+## still had there.
 func home_cell(n: NPC, kind: String) -> Vector2i:
+	if not buildings.has(n.home):
+		return brain.rest_cell(n) if brain != null else n.cell()
 	var s := home_spot(n, kind)
 	if s.is_empty():
 		return building_door(n.home)

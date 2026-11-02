@@ -1151,13 +1151,32 @@ func _rehouse(h: int) -> void:
 	var hh: Dictionary = w.households[h]
 	if hh.get("ended", false) or not w.buildings.has(str(hh.home)) or w.holds(World.hh_ref(h), w.buildings[hh.home]):
 		return
-	var from := int(hh.get("founded_from", -1))
-	var host := str(w.households[from].home) if from >= 0 else ""
-	w.note("The %s household no longer holds %s and lodges with family." % [hh.family, w.property.describe(w.buildings[hh.home])])
+	var lost := str(hh.home)
+	var host := _kin_home(h)
+	w.note("The %s household no longer holds %s and %s." % [hh.family, w.property.describe(w.buildings[lost]),
+			"lodges with family" if host != "" else "has nowhere to live"])
 	hh.home = ""
+	# KI-HOME-DOOR: every member who lived in the lost house leaves it (to the kin's house, or homeless when there is none: before,
+	# they went on sleeping in a house the household no longer held). A member lodging elsewhere already stays where they are.
 	for o: NPC in w.brain._members(h):
-		if host != "" and w.buildings.has(host):
+		if o.home == lost or not w.buildings.has(o.home):
 			o.home = host
+
+
+## The house a household that lost its own lodges in (_rehouse): the household it was founded from, else the first household of
+## its family, that still lives and holds a house; "" when there is none.
+func _kin_home(h: int) -> String:
+	var hh: Dictionary = w.households[h]
+	var from := int(hh.get("founded_from", -1))
+	var order := [from] if from >= 0 and from < w.households.size() else []
+	for k in w.households.size():
+		if k != h and k != from and str(w.households[k].family) == str(hh.family):
+			order.append(k)
+	for k in order:
+		var kh: Dictionary = w.households[k]
+		if not kh.get("ended", false) and w.buildings.has(str(kh.home)) and not w.brain._members(k).is_empty() and not Life.is_couple(kh):
+			return str(kh.home)
+	return ""
 
 
 ## A crowded household splits (owner rule): its founder takes a share of the family's coins for a home

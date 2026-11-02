@@ -279,7 +279,7 @@ func _decide(n: NPC) -> String:
 	if w.feast.plan_attend(n):                 # DVW-B3-FEAST: an invited guest goes to the tavern in the evening
 		return "feast"
 	if n.role == "child":
-		var spot := w.building_door(n.home) if w.rng.randf() < 0.6 else Vector2i(w.map.data.spawns.player[0], w.map.data.spawns.player[1])
+		var spot := rest_cell(n) if w.rng.randf() < 0.6 else Vector2i(w.map.data.spawns.player[0], w.map.data.spawns.player[1])
 		n.doing = "playing"
 		n.plan = [go(wander_cell(spot, 6), 0.9), work(w.rng.randf_range(20, 60), "", {}, "idle")]
 		return "child_play"
@@ -290,7 +290,7 @@ func _decide(n: NPC) -> String:
 			return "elder_farm"
 		if w.chapel.plan_volunteer(n):         # DVW-B3-CHAPEL: or on the church's plot, when they volunteered
 			return "elder_chapel"
-		var spot := w.building_door(n.home) if w.rng.randf() < 0.7 else w.station_use(w.stations_of("well")[0])
+		var spot := rest_cell(n) if w.rng.randf() < 0.7 else w.station_use(w.stations_of("well")[0])
 		n.doing = "taking the air"
 		n.plan = [go(wander_cell(spot, 3), 0.6), work(w.rng.randf_range(40, 90), "", {}, "idle")]
 		return "elder_air"
@@ -330,7 +330,7 @@ func _plan_sleep(n: NPC) -> void:
 ## restores health as the player's does (World.rest_recover, PAR-03).
 func _plan_bed(n: NPC, mins: float, to_morning := false) -> void:
 	var done := work(mins, "rest_end", {"min": mins, "morning": to_morning}, "sleep")
-	if n.home == "":
+	if not w.buildings.has(n.home):                   # homeless (KI-HOME-DOOR: or a home that is not a building): rest where one stands
 		done.anim = "idle"
 		n.plan = [first(n, done)]
 		return
@@ -493,7 +493,7 @@ func _plan_buy_seed(n: NPC) -> bool:
 ## real plants and the household's own stock; a household keeps poultice_keep poultices and
 ## berries_keep berries.
 func _plan_home_work(n: NPC) -> bool:
-	if n.role != "adult" or n.household < 0 or n.home == "":
+	if n.role != "adult" or n.household < 0 or not w.buildings.has(n.home):
 		return false
 	var cfg := hp_cfg()
 	var pantry: Inventory = w.households[n.household].pantry
@@ -1034,7 +1034,7 @@ func _plan_evening(n: NPC, h: float) -> void:
 		n.plan = [go(wander_cell(counter + Vector2i(-6, 4), 3)), work(w.rng.randf_range(30, 70), "drink", {}, "idle")]
 		return
 	n.doing = "resting"
-	n.plan = [go(wander_cell(w.building_door(n.home), 4), 0.8), work(w.rng.randf_range(20, 50), "", {}, "idle")]
+	n.plan = [go(wander_cell(rest_cell(n), 4), 0.8), work(w.rng.randf_range(20, 50), "", {}, "idle")]
 
 
 ## CRT-11 (owner: "if the single character has extra money and resources it should make them want to spend
@@ -1282,7 +1282,22 @@ func _manor_id() -> String:
 	for id in w.buildings:
 		if w.buildings[id].type == "manor":
 			return id
-	return w.npc(w.reeve_id).home
+	var rv := w.npc(w.reeve_id)
+	return rv.home if rv != null else ""
+
+
+## KI-HOME-DOOR (flight recorder F001/F002, seed 2, days 220-365: 11,172 script errors): the cell a villager rests and strolls
+## by. Their home's door; for one with no house standing (a household that came for land and is still building, one still
+## seeking a home, or one that lost its house with no kin to lodge with) their household's house if it has one, else the
+## manor's door (where a household seeking a home arrives, Migration._place), else where they stand. Never the door of a
+## building that is not there; a homeless villager is not given a house (WDR-022: the outcome stands).
+func rest_cell(n: NPC) -> Vector2i:
+	if n.home != "" and w.buildings.has(n.home):
+		return w.building_door(n.home)
+	if n.household >= 0 and n.household < w.households.size() and w.buildings.has(str(w.households[n.household].get("home", ""))):
+		return w.household_cell(n.household, n.cell())
+	var m := _manor_id()
+	return w.building_door(m) if w.buildings.has(m) else n.cell()
 
 
 ## Who pays on the family tab: the member with the most coins who can buy, an elder as well as an
@@ -1903,7 +1918,7 @@ func _hunter(n: NPC) -> bool:
 	var prey: Animal = w.fauna.nearest_game(n.pos)
 	if prey == null:
 		n.doing = "letting the game recover"
-		n.plan = [go(wander_cell(w.building_door(n.home), 4)), work(120, "", {}, "idle")]
+		n.plan = [go(wander_cell(rest_cell(n), 4)), work(120, "", {}, "idle")]
 		return true
 	w.fauna.claims[prey.id] = n.id
 	n.doing = "hunting %s" % prey.label().to_lower()
@@ -2482,7 +2497,7 @@ func _get_tool(n: NPC, tool: String) -> bool:
 		JudgmentLive.on_news(w, "no_tool", "npc:%d" % n.id, ["item:" + tool], n.pos)       # A5: they and their household know
 	once("no_tool_%d_%d" % [n.id, w.day()], "%s %s has no %s and cannot get one." % [n.name, n.family, tool])
 	n.doing = "out of work: needs a %s" % tool
-	n.plan = [go(wander_cell(w.building_door(n.home), 4)), work(90, "", {}, "idle")]
+	n.plan = [go(wander_cell(rest_cell(n), 4)), work(90, "", {}, "idle")]
 	return true
 
 
@@ -2521,7 +2536,7 @@ func _buy_tool(n: NPC, tool: String, necessity := 100000) -> bool:
 	var pick := JudgmentLive.pick_tool_seller(w, n, tool, cands, necessity)
 	if bool(pick.forgo):
 		n.doing = "putting off buying a %s" % tool          # C5: they would rather not deal with the one who has it, for now
-		n.plan = [go(wander_cell(w.building_door(n.home), 4) if n.home != "" else n.cell()), work(90, "", {}, "idle")]
+		n.plan = [go(wander_cell(rest_cell(n), 4)), work(90, "", {}, "idle")]
 		return true
 	return _plan_tool_buy(n, pick.seller, tool)
 
@@ -2790,7 +2805,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			for id in ["flower", "red_berries", "blueberries", "apple"] + Farming.propagule_items():
 				if n.inv.has(id):
 					w.transfer(n.inv, pantry, id, n.inv.count(id))
-			while n.inv.has("handcart"):                  # B14: a household's handcart is set down at its house
+			while n.inv.has("handcart") and w.buildings.has(n.home):      # B14: a household's handcart is set down at its house (kept in hand with none)
 				n.inv.remove("handcart", 1)
 				w.carts.place(World.hh_ref(n.household), Vector2(cart_spot(n.home)) + Vector2(0.5, 0.5))
 			return true
@@ -4779,7 +4794,7 @@ func _job_options(n: NPC, market: Dictionary, skip := []) -> Array:
 	var best := ""
 	var best_score := -1e9
 	var opts := []
-	var home := w.building_door(n.home)
+	var home := rest_cell(n)
 	for job in MARKET_JOBS:
 		var opt: Dictionary = market[job]
 		if int(opt.open) <= 0 or job == n.job or skip.has(job):
