@@ -5,6 +5,12 @@ Register X20-ACTIVATION-AUTHORITY (APPROVED, owner 2026-10-31, `docs/directives/
 explicit authorization before enabling it in the normal game." LE-07 (design s.16, s.17: "All mandatory release gates green").
 Build 25 scope by B25-SCOPE-D1 (owner 2026-11-01). Branch `wip/b25-econ` (from `ab8ac71`).
 
+**Revised 2026-11-01 (B25-LE-ACTIVATE-D1, `docs/directives/2026-11-01_nine_owner_decisions_consolidated.md` s.4):** "Once all
+thirteen applicable objective readiness gates pass, activate the Living Economy by default in the integrated Build 25 candidate. Do
+not request another owner approval merely to change the enabled flag after those requirements pass." The checklist of section 3 is
+those thirteen gates; item 13 is now the recording of that authorization with the commit, evidence and configuration, not a new
+request. Gate-by-gate status and the prepared activation change: `docs/expansion20/LE07_GATE_STATUS.md`.
+
 **Nothing here enables the economy.** `game/data/economy.json` `"enabled": false` is unchanged and a test (`le07_gates_test`)
 fails if it is ever shipped on. Enabling it is one line in that file, made only on the owner's explicit authorization, with the
 commit, evidence and configuration recorded (X20-RESUME's "Record the exact activation commit, evidence, and configuration").
@@ -65,7 +71,8 @@ Each line needs evidence on the exact candidate commit (reuse valid evidence on 
     profile, needs a device).
 12. [ ] Wiki (WIKI-01): what becomes playable on activation (rental, paid mending, the market journal) gets player pages, and
     `todo:tool_rental` is retired, in the same change as the switch.
-13. [ ] The owner's explicit authorization, then the one-line change, recording commit, evidence and configuration.
+13. [ ] The owner's authorization (given by B25-LE-ACTIVATE-D1 once 1-12 pass), then the one-line change, recording commit,
+    evidence and configuration.
 
 ## 4. Open owner decisions that bound this work
 
