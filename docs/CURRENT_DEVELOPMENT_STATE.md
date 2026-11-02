@@ -11,14 +11,20 @@
   - History lives in `docs/DEVELOPMENT_CHANGELOG.md`.
 - **Recovery after lost context:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
 
-## Resumed (owner, 2026-11-02: "Continue")
+## Overnight autonomous development (owner, 2026-11-02, B25-OVN-0211; controls this session)
 
-The pause recorded at about 02:00 UTC is over. Done on resuming:
-- The year-long run 41362329381 was read (see the changelog).
-- `experience_test` was fixed on the Build 25 source (`9989f3c`).
-- Tenants may now buy or reopen a workshop (`f8f9cac`).
-- Owner question B25-BIZ-TENANT-Q was raised.
-- The skills and capabilities worker was resumed on `wip/b25-capability`.
+Directive: `docs/directives/2026-11-02_overnight_autonomous_development_directive.md`.
+- **Operating rules:**
+  - Broad engineering discretion within the owner's rules.
+  - Several independent workstreams where they don't share files.
+  - Never idle on one question: record it with options and continue elsewhere.
+  - GitHub Actions does the heavy runs.
+  - This replaces reduced-resource mode's one-worker limit.
+- **Owner answer:** B25-BIZ-TENANT-Q is APPROVED as Option B. It is implemented on the Build 25 source at `3c7e45b`:
+  - A rented home satisfies "a house first" for a standalone workshop on bought ground.
+  - Additions to a house stay the owner's.
+  - Reopening or buying a workshop needs no owned home.
+- **On return the owner wants a consolidated report:** completed, in progress, economic findings, decisions, next.
 
 ## Position
 
@@ -26,15 +32,15 @@ The pause recorded at about 02:00 UTC is over. Done on resuming:
 |---|---|
 | Current development build | **Build 25**, the consolidation build. It holds all approved expansion work and all approved recoverable abandoned-branch work (B25-SCOPE-D1, `docs/directives/2026-11-01_build25_scope_clarification.md`). |
 | Integration branch (Build 25 source) | `wip/expansion20` |
-| Development head | `8dbe74f`: capability milestones merged at `625e362`, on top of `f8f9cac`. All five branches suspended on 2026-11-01 are now merged. The year-long run 41362329381 runs on `908a17e`. See `docs/DEVELOPMENT_CHANGELOG.md` for the chain from `ad281dc`. |
-| Latest verified SHA | `625e362`: suites TESTED locally, listed below. No CI run, no 30-day baseline and no year-long run on this SHA. The last SHA with year-long CI evidence is `ae8641d` (chapel fix). The last SHA with a complete validated gate is `ad281dc` (30-day baseline). Its year-long runs failed on the gossip crash, which is now fixed. |
+| Development head | `3c7e45b` (Option B for tenants' standalone workshops) on top of `8dbe74f` (capability milestones `625e362`). All five branches suspended on 2026-11-01 are merged. The year-long run 41362329381 runs on `908a17e`. See `docs/DEVELOPMENT_CHANGELOG.md` for the chain from `ad281dc`. |
+| Latest verified SHA | `3c7e45b`: suites TESTED locally, listed below. No CI run, no 30-day baseline and no year-long run on this SHA. The last SHA with year-long CI evidence is `ae8641d` (chapel fix). The last SHA with a complete validated gate is `ad281dc` (30-day baseline). Its year-long runs failed on the gossip crash, which is now fixed. |
 | Rollback point | `ad281dc` |
 | Records branch | `wip/requirements-control`. It holds the register, directives and this file. The register is edited only here, with `tools/requirements_update.py` and then `tools/check_requirements.py --write`. It is not merged into staging or `wip/expansion20` without the owner's authorization. |
 | `staging/my-medieval-life` | `baa6479` (2026-11-01; `aeaa012` plus the stale-copy banner). Behind on both code and records. Not where current work is. |
 | Latest packaged build | Build 24: commit `4611d86`, run 40636966840, private three-platform draft. Frozen. There is no `build-24` git tag; the draft release is the record. Builds 22 and 23 are frozen. |
 | Packaging and release | No Build 25 package exists. Packaging needs the owner's authorization. No public release. |
 | Living Economy | Integrated but **off** by default. It switches on by default once the 13 LE-07 readiness gates pass on the integrated candidate, with no further approval (B25-LE-ACTIVATE-D1). |
-| Operating mode | **Reduced-resource mode** (owner, 2026-11-01): one Claude coding worker at a time, no new agents, heavy computation on GitHub Actions (`long-sims.yml`), minimal reporting. It lasts until the owner restores normal priority. |
+| Operating mode | Overnight autonomous development (B25-OVN-0211): several independent workstreams. Reduced-resource mode (2026-11-01) is superseded for this session. |
 | GitHub Actions | None running. Last: long-sims 41362329381 on `908a17e` (365 days, seeds 1 and 2), finished. No leaks, and no businesses founded. |
 
 ## Workers and branches (recovery records)
@@ -43,7 +49,8 @@ Every branch below holds real, unmerged work. None is disposable.
 
 | Worker or workstream | Register | Branch / worktree | Latest pushed | Unpushed | State and tests | Merge readiness | Next safe step |
 |---|---|---|---|---|---|---|---|
-| **ACTIVE:** farming yield by simulation | B25-NINE-D3, FARM-YIELD-D1 | branch farming yield (to be created from `8dbe74f`) | — | — | Next. | — | Set up the variants; the lead dispatches the Actions runs. |
+| **ACTIVE:** farming yield by simulation | B25-NINE-D3, FARM-YIELD-D1 | `wip/b25-farming`; worktree `.claude/worktrees/b25-farming` | `8dbe74f` (start) | — | Phase 1: plan, variants, decision rule and local smoke tests; no behaviour change. | not ready | The lead dispatches the Actions campaign (at most 6 jobs), then Phase 2 sets the baseline. |
+| **ACTIVE:** economic investigation (business funnel, professions and unemployment, ore) | B25-OVN-0211 sections 4-6, B25-BIZ-OWN | `wip/b25-econ-funnel`; worktree `.claude/worktrees/b25-econ-funnel` | `3c7e45b` (start) | — | Read-only funnel diagnostics (neutrality proven by fingerprint), checks that the decision systems are on, local runs of up to 120 days, defects fixed with tests, policy questions recorded. | not ready | The lead dispatches any year-long Actions run it recommends. |
 | Merged and done | B25-NINE-D1 and D8 skills and milestones (`625e362`, from `wip/b25-capability` `54a4850`), B25-NINE-D5..D7 materials, armour and clothing (`48acc91`, from `wip/b25-materials` `c1dfb02`), JUICE-J1 game juice J1 and J2 (`ba94edd`, from `wip/b25-juice` `4b72103`), B25-NINE-D4 witness reporting (`2c364d1`, from `wip/b25-report` `5bf548c`), B25-BIZ-OWN (B25-BIZ-D1..D5; `908a17e`, from `wip/b25-bizown` `9926ddf`), B25-NINE-D2 services and CON-03..CON-08 (`8d71c5e`, from `wip/b25-services` `1388f36`), B25-BUSINESS-IMPL and EMP-PERM-01 (`d0dc0d7`, from `wip/b25-business` `c60ac0e`), B25-AMBITION-IMPL, B25-EMPLOY-IMPL, LE-05/LE-07 remainder, P21-00..02, X20-CHAPEL-FIX, X20-TELL-GUARD | `wip/b25-ambition`, `wip/b25-employ`, `wip/b25-econ`, `wip/b25-civic`, `wip/x20-chapel`, `wip/x20-tell-guard` | merged into `wip/expansion20` | none | See the changelog. | merged | none |
 
 All suspended worktrees are kept on disk. Their branches are pushed, so GitHub has everything committed. The resume order is in
@@ -55,6 +62,7 @@ All of these ran **locally** (Godot 4.7 headless), not in CI. Exact suites and c
 
 | SHA | Level | Evidence |
 |---|---|---|
+| `3c7e45b` | TESTED | Option B: business_founding 66 (tenant standalone, no build onto the landlord's house, no home refused, player parity), business_ownership 165, business 160, conservation 8, wiki_test, all 0 failures. run_tests and start_test running locally. |
 | `625e362` | TESTED | Merge tree identical to `wip/b25-capability` `54a4850`. run_tests 3602, start 523, experience 79, underground and regional_food suites, plus 20 suites on `4976137`, 0 failures. 30-day seed 1: 4 milestones, each announced once; no leaks. |
 | `f8f9cac` | TESTED | Lead fixes: experience_test 79 (it had failed 1 since the services merge), services_d2 89, contracts 154, business_founding 61, business_ownership 165, conservation 8, all 0 failures. |
 | `48acc91` | TESTED | Merge tree identical to `wip/b25-materials` `c1dfb02`. materials_b25 104, run_tests 3602, 20+ gear, combat, underground, settlement and save suites, 0 failures. 30-day seed 1 fingerprint changes (new materials), no errors or leaks. |

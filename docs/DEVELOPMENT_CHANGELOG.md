@@ -122,6 +122,19 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**B25-BIZ-TENANT-Q answered: Option B, and the overnight directive B25-OVN-0211.**
+- Branch: `wip/expansion20` `3c7e45b`.
+- Change:
+  - `Construction.may_build` accepts a home held owned or rented for a standalone workshop.
+  - `module_refusal` is unchanged, so a tenant never builds onto the landlord's house.
+  - `Ventures.refusal`: an owner adds the workshop to its house first; a tenant builds standalone on bought ground.
+  - Wiki (skills, property) and BUSINESS_FOUNDING.md updated.
+- Reason: the owner's Option B. It replaces the lead's interim `f8f9cac` rule.
+- Status: INTEGRATED, TESTED (local).
+- Evidence: business_founding 66, business_ownership 165, business 160, conservation 8, wiki_test, all 0 failures.
+- Outstanding: run_tests and start_test (running); whether villagers now found businesses (economic investigation and Actions).
+- The overnight directive authorises parallel workstreams. Started: the economic investigation on `wip/b25-econ-funnel`.
+
 **B25-NINE-D1 and D8: organic skills and capability milestones.**
 - Branch: `wip/b25-capability`, merged as `625e362`. Commits: `f891a11` (WIP), `4976137` (catch-up and notification routing,
   INT-672), `ae36a6d` (catch-up with `f8f9cac`), `54a4850` (read-only `CAPMS` sim line). The lead's `8dbe74f` prints `CAPMS` in the
