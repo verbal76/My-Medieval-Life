@@ -728,9 +728,10 @@ func food_reserve() -> int:
 ## Chapel food (2026-11-02): on the service day, after the coin alms, the food in the store above food_reserve is given as alms,
 ## as the coins are (CHAPEL-R2, owner 2026-10-23: "what is left goes as alms to the poorest households"; X20-CHAPEL-FIX, owner
 ## 2026-11-01: after the operating reserve, the surplus goes in charitable alms by genuine hardship, food security among it).
-## Food hardship: a household holding less than alms_line_days of food (NPCBrain.household_food_days: what it holds and what
-## its coins would buy now) lacks the rest of those days' food; a household worth alms_wealth_lines lines or more
-## (household_means) gets nothing. The poorest for each member first (wealth per member, then the greater shortfall, then the
+## Food hardship: a household holding less than goods_keep_days of food (NPCBrain.household_food_days: what it holds and what
+## its coins would buy now) lacks the rest of those days' food: the same line below which a household gives no wheat
+## (offerings), so food given is not offered back; a household worth alms_wealth_lines lines or more (household_means)
+## gets nothing. The poorest for each member first (wealth per member, then the greater shortfall, then the
 ## household's index), each given up to its shortfall, once, into its pantry: grain first, then the other food, in whole
 ## units, never taking the store below its reserve. Every unit moves from the store to a pantry (World.transfer); nothing is
 ## made. Returns the food points given.
@@ -751,7 +752,7 @@ func food_alms() -> float:
 	last_service = svc
 	if pot <= 0.0:
 		return 0.0
-	var line_days := float(cfg().alms_line_days)
+	var line_days := float(cfg().goods_keep_days)
 	var rows := []                      # [wealth per member, -shortfall, household]
 	for h in w.households.size():
 		if w.households[h].get("ended", false) or w.brain._members(h).is_empty():

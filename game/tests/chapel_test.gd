@@ -333,7 +333,7 @@ func test_food_alms() -> void:
 		w.minutes += 1440.0
 	w.brain.update_market()
 	var wp := NPCBrain.food_points("wheat")
-	var line := float(Chapel.cfg().alms_line_days)
+	var line := float(Chapel.cfg().goods_keep_days)
 	# two households emptied of food and coins: short of food; one rich in stores: excluded
 	var short := []
 	for h in range(3, w.households.size()):
