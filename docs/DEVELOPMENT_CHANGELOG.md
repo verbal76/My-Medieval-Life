@@ -122,6 +122,17 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**First CI run with full reporting:** Tests [41482218360](https://github.com/verbal76/My-Medieval-Life/actions/runs/41482218360) on `9c56199`.
+- The reporting worked: the report artifact `ci-report-41482218360-1` was kept and the outcome was recorded as FAILED, even
+  though the job was cut off.
+- The job hit its 90-minute timeout. Totals: 138 suites attempted, 135 passed, 3 failed, 1 cancelled. The remaining suites
+  never started.
+- Failures:
+  - Python `test_manifest_covers_exactly_the_assets` (likely a stale generated asset manifest).
+  - `refuge_test`: "saved and loaded again it has the same refuges and timers" (possible save defect).
+  - `housing_test`: the long-standing loft check.
+- All three, and the timeout, are assigned to a worker on `wip/b25-ci-green`.
+
 **The owner's first "Run flight recorder" (41458375116, `91cf244`, older recorded path): results.**
 - **Seed 2:** completed 365 days in 3.1 hours.
   - Leak 0 at every checkpoint, no FATAL.
