@@ -3044,7 +3044,7 @@ Rules:
 ### INT-677 · The neighbouring settlements stand in the overworld (REGION-NAV-01, Build 25)
 - **Trigger:** Overworld.create (a new world or a loaded one): the settlement sites are placed from settlements.json; each chunk generated near a site keeps it clear.
 - **Source:** `game/scripts/core/overworld.gd::_setup_sites`, `game/scripts/core/overworld.gd::_vdist`, `game/scripts/core/overworld.gd::site_at`, `game/scripts/core/overworld.gd::load_dict`, `game/scripts/core/settlement/offmap.gd::create`
-- **Affects:** Overworld, Settlements, Movement, Save
+- **Affects:** Overworld, Settlements, Save
 - **Expected:** (owner 2026-11-02, REGION-NAV-01 and B25-SCOPE-REGION) Each of the five settlements is a cleared 36 x 28 site centred on its OffMapSettlement.pos (x across, miles x tiles_per_mile south of the village centre), joined to the road network by roads to its three nearest road nodes, so it can be reached on foot; GEN_VERSION 3, generations 1 and 2 still load (a tree an older save planted inside a site is dropped and counted). The village gates' trails are unchanged.
 - **Tests:** `game/tests/overworld_test.gd::_test_sites` (place, clear ground, road, reachable from the south gate, determinism, older save), `game/tests/countryside_test.gd` (gate trails unchanged)
 
