@@ -2177,6 +2177,20 @@ func keeps(o: NPC, id: String) -> bool:
 			and str(w.households[o.household].get("build", "")) != "" and w.construction.responsible_adult(o.household) == o
 
 
+## LE-05 route risk (EconRouteRisk; nothing while the economy is off): a bandit took a unit of `id` from `victim`, who owed `id` on
+## an open goods contract (CON-01): a delivery's goods lost on the way, recorded on the route to that contract's buyer (the
+## lowest contract id owing it). A record only: the robbery itself is unchanged.
+func _note_delivery_loss(victim: NPC, id: String) -> void:
+	var rr := EconRouteRisk.of(w)
+	if rr == null or w.contracts == null:
+		return
+	var me := World.npc_ref(victim.id)
+	for c in w.contracts.open_of(me, "seller"):
+		if str(c.item) == id and not Contracts.is_service(c) and Contracts.left(c) > 0:
+			rr.note_lost(EconRouteRisk.route_of(me, str(c.buyer)), w.day(), GameData.value(id), false)
+			return
+
+
 ## How many of `id` this NPC will still buy (SHOP-01): of an input its trade works (TRADE_STATIONS), none when it lacks
 ## the skill for every recipe that takes it; otherwise what keeps its holding at or below its want: its trade's stock
 ## (BUYS) rounded up to whole batches (batch_unit), capped by that same stock. A part lot towards a batch is bought.
@@ -3220,6 +3234,8 @@ func fight(n: NPC, dt: float) -> void:
 		tnpc.remember("robbed by %s" % n.name)
 		if w.recorder != null:
 			w.recorder.robbery(n, tnpc, take, stolen)      # REC-19
+		if stolen != "":
+			_note_delivery_loss(tnpc, stolen)              # LE-05 route risk (a record only; economy on)
 		var aware: Dictionary = w.aware_of_attack(n.pos, tnpc)
 		if w.judgment != null:
 			JudgmentLive.on_robbery(w, n, tnpc, take + (GameData.value(stolen) if stolen != "" else 0), aware)    # PROSPECTIVE (PROS-19)

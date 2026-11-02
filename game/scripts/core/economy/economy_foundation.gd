@@ -37,6 +37,7 @@ var market: EconMarket
 var claims: EconClaims            # LE-03: the one validation of what an actor may part with (World.trade and the village paths)
 var rentals: EconRentals          # LE05-RENTAL: tools lent against a deposit (acts only with market.drive and market.rental)
 var repairs: EconRepairs          # LE-05 paid repair: a smith mends another's tool for coins (acts only with market.drive and market.paid_repair)
+var route_risk: EconRouteRisk     # LE-05 route risk: losses on the road by route (a record only; priced with market.drive and market.route_risk)
 var contract_cursor := 0          # the highest CON-01 contract id whose terms the two parties have been told (knowledge "contract")
 
 
@@ -107,13 +108,15 @@ static func attach(world: World, saved := {}) -> EconomyFoundation:
 	f.rentals.load_dict(saved.get("rentals", {}))
 	f.repairs = EconRepairs.new(f, world, cfg.get("market", {}))
 	f.repairs.load_dict(saved.get("repairs", {}))
+	f.route_risk = EconRouteRisk.new(cfg.get("market", {}))
+	f.route_risk.load_dict(saved.get("route_risk", {}))
 	return f
 
 
 func is_empty() -> bool:
 	return reservations.is_empty() and events.is_empty() and needs.is_empty() and offers.is_empty() and knowledge.is_empty() \
 			and contract_links.is_empty() and contract_cursor == 0 and market.is_empty() and claims.is_empty() and rentals.is_empty() \
-			and repairs.is_empty()
+			and repairs.is_empty() and route_risk.is_empty()
 
 
 ## World.trade, after a completed sale (observed only). Both parties learn of each other by the dealing; an event is noted;
@@ -160,6 +163,7 @@ func dawn(day: int) -> void:
 				needs.mark(r)
 		contract_cursor = top
 	needs.refresh()
+	route_risk.dawn(day)          # LE-05 route risk: days that left the window are dropped
 	market.dawn(day)
 	if rentals.active():
 		rentals.dawn(day)             # LE05-RENTAL: fees billed, tools given back at the term's end, missing ones settled
@@ -203,6 +207,8 @@ func to_dict() -> Dictionary:
 		d["rentals"] = rentals.to_dict()
 	if not repairs.is_empty():
 		d["repairs"] = repairs.to_dict()
+	if not route_risk.is_empty():
+		d["route_risk"] = route_risk.to_dict()
 	return d
 
 
@@ -239,4 +245,5 @@ static func activation_state(world: World) -> Dictionary:
 		"open_rentals": f.rentals.open_records().size() if f != null else 0,
 		"open_repairs": f.repairs.open_records().size() if f != null else 0,
 		"flags": {"drive": bool(m.get("drive", false)), "rental": bool(m.get("rental", false)), "paid_repair": bool(m.get("paid_repair", false)),
-			"negotiated_wages": bool(m.get("negotiated_wages", false)), "services": bool(m.get("services", false))}}
+			"negotiated_wages": bool(m.get("negotiated_wages", false)), "services": bool(m.get("services", false)),
+			"route_risk": bool(m.get("route_risk", false))}}

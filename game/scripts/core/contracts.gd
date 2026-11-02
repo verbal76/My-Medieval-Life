@@ -470,8 +470,22 @@ func price_terms(n: NPC, buyer_ref: String, id: String, m: Dictionary, svc := {}
 	var risk := float(cfg().cancel_premium) * float(let_down)
 	var f := household - relationship + risk
 	var travel := travel_per_unit(n, buyer_ref) if svc.is_empty() else 0.0
+	var route_risk := route_risk_per_unit(n, buyer_ref, id) if svc.is_empty() else 0.0
 	return {"going": going, "cost": cost, "alternatives": alt, "household": household, "close": close, "relationship": relationship,
-		"cancelled_on_me": let_down, "risk": risk, "travel": travel, "min": maxi(1, roundi(maxf(going, maxf(cost, alt)) * f + travel))}
+		"cancelled_on_me": let_down, "risk": risk, "travel": travel, "route_risk": route_risk,
+		"min": maxi(1, roundi(maxf(going, maxf(cost, alt)) * f + travel + route_risk))}
+
+
+## EXPANSION 20 LE-05 route risk (design s.5 "travel and risk"; LE05_IMPLEMENTATION s.2; PROVISIONAL rule): what the seller expects
+## to lose carrying a unit of `id` to `buyer_ref`, from the losses really recorded on that route (EconRouteRisk: the observed loss
+## rate over the window times the unit's value, times market.risk_weight). The seller bears it: CON-01 pays on delivery, so the
+## goods are the seller's until handed over, and the buyer's ceiling is unchanged. Exactly 0.0 with no recorded loss on the route,
+## and 0 unless the Living Economy's market drives with market.route_risk on (the switch off: CON-01's price exactly as before).
+func route_risk_per_unit(n: NPC, buyer_ref: String, id: String) -> float:
+	var rr := EconRouteRisk.of(w)
+	if rr == null or not rr.pricing():
+		return 0.0
+	return rr.expected_loss(EconRouteRisk.route_of(World.npc_ref(n.id), buyer_ref), w.day(), float(GameData.value(id)))
 
 
 ## EXPANSION 20 LE-05 (design s.5: a seller's minimum covers "labor ... and opportunity cost"; travel "for LE-05's regional links";
@@ -989,6 +1003,9 @@ func deliver(c: Dictionary, units: int, into: Inventory = null, actor: PlayerSta
 	to.take_wear(c.item, wd)
 	if w.recorder != null:
 		w.recorder.contract_goods(c, units, from, to)      # X20-FINAL: the goods handed over
+	var rr := EconRouteRisk.of(w)
+	if rr != null:                                       # LE-05 route risk: a record only (economy on)
+		rr.note_carried(EconRouteRisk.route_of(str(c.seller), str(c.buyer)), w.day(), GameData.value(str(c.item)) * units)
 	_pay_units(c, units)
 	return units
 
