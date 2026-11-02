@@ -4,6 +4,12 @@ Hot Attic Games. Repository `verbal76/My-Medieval-Life`. This file is the single
 rules for every agent and contributor. If another document disagrees with it, this file wins until
 the owner says otherwise. Update it in the same PR as any change to the workflow it describes.
 
+> **Stale copy notice (BRANCH-POL-01, 2026-11-02).** This branch, `wip/expansion20`, is the one **code integration
+> branch**. The authoritative `CLAUDE.md`, the register, directives and the current state are on
+> **`wip/requirements-control`** (read them there: `git show origin/wip/requirements-control:CLAUDE.md`). Parts of this
+> copy below are older; where it names `staging/my-medieval-life` as the development branch, that is history. Section 5a
+> below is current and binding on every worker.
+
 ## 0. Session start (mandatory, every session; owner directives 2026-10-20, MEM-01 and MEM-02)
 
 The GitHub repository is the project's memory; conversation memory, the container and private artifacts never
@@ -331,6 +337,35 @@ corresponding documentation.** Every agent and worker, on every task:
     the occasional independent disaster-recovery copy. Webhooks, Pages, environments and app
     installations cannot be inspected from this session (the proxy refuses those endpoints), nor
     can rulesets or branch protection be written, so staging is protected by the local hook only.
+
+## 5a. Branch and worktree policy (owner, 2026-11-02, BRANCH-POL-01; permanent)
+
+`docs/directives/2026-11-02_branch_consolidation_worktree_control.md`; rationale `docs/decisions/BRANCH-POL-01.md`.
+
+- **One integration branch for code: `wip/expansion20`.** Every finished, validated unit of work lands there. No other
+  branch is a development mainline, and no worker redefines the baseline: a worker never merges another worker's branch,
+  never rebases the integration branch and never starts a branch from anything but the integration head.
+- **Records are separate, not a second mainline.** `wip/requirements-control` holds the register, directives, decision
+  records, the state file, changelog and known issues, and is edited by the lead only. The owner keeps it isolated from the
+  code line (DOC-RECON-01 review, 2026-10-31: "Do not merge wip/requirements-control into staging, wip/expansion20, or the
+  gameplay baseline without my approval"), so nobody merges the two lines without the owner.
+- **Worker branches are short-lived.** One branch `wip/b25-<task>` (or the build's prefix) per task, from the current
+  integration head, in its own worktree, owning a named set of files and systems. A worker pushes snapshots there and
+  reports; the lead reviews and merges each validated unit **promptly** (the same session, not after other work piles up).
+  A read-only investigation needs no branch: it reports findings, and any fix gets its own task branch.
+- **Before every merge into the integration branch:** run `python3 tools/branch_audit.py --worktrees`. A stale base (more
+  than 20 integration commits behind) is brought up to date by merging the integration branch into the worker branch
+  first; an overlap between two active branches is settled by naming one owner per file, or by merging the first
+  finished branch and having the other merge it in before it submits. Conflicts are resolved by the owner decisions and
+  the implementation's requirements, never by taking the newer file.
+- **No unrelated ancestry.** Never merge historical lines (`staging/my-medieval-life`, old `wip/agent-*`, snapshot or
+  backup branches) into the integration branch to make a graph look clean; content from one is carried as a reviewed
+  change with its source named.
+- **Nothing is deleted while it holds unmerged work.** A branch or worktree is retired only when `branch_audit.py` reports
+  it INTEGRATED and its worktree has no uncommitted files; otherwise it stays, named in the state file.
+- **Record every integration:** the merge SHA, the worker branch and head it came from, the tests run, and any conflict
+  decision go in the changelog and the state file's workers table in the same session.
+- **Experimental work stays on its branch** until it is reviewed and validated; it is never merged to tidy the graph.
 
 ## 6. Deterministic generation
 
