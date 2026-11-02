@@ -46,6 +46,15 @@ func _saved(d: Dictionary) -> Dictionary:
 	return JSON.parse_string(JSON.stringify(d, "", true, true))
 
 
+## The same saved time. The game writes every float at full precision (17 digits, correct), but Godot's JSON reader
+## (String.to_float) is not correctly rounded: about one 17-digit number in 200 comes back one unit in the last place
+## off (3180.2352905273438 reads as 3180.235290527344). Which timers hit that depends on the random draws (since the
+## save continuity fix da1ed8c the loaded world goes on with the saved random stream). A timer that was reset or drawn
+## again differs by days, never by a millionth of a minute, so this still tells a kept timer from a new one.
+func _same_time(a: float, b: float) -> bool:
+	return absf(a - b) <= 1e-6
+
+
 func _of(w: World, species: String, area := "") -> Array:
 	return w.fauna.animals.filter(func(a): return a.alive and a.species == species and (area == "" or a.area == area))
 
@@ -296,11 +305,11 @@ func test_save_round_trip() -> void:
 	for i in rf.list.size():
 		var a: Dictionary = rf.list[i]
 		var b: Dictionary = rf2.list[i]
-		if a.id != b.id or float(a.next_birth) != float(b.next_birth) or int(a.stock) != int(b.stock) or a.x != b.x or a.y != b.y \
-				or a.cohort.size() != b.cohort.size() or (not a.cohort.is_empty() and (int(a.cohort.n) != int(b.cohort.n) or float(a.cohort.born) != float(b.cohort.born))):
+		if a.id != b.id or not _same_time(float(a.next_birth), float(b.next_birth)) or int(a.stock) != int(b.stock) or a.x != b.x or a.y != b.y \
+				or a.cohort.size() != b.cohort.size() or (not a.cohort.is_empty() and (int(a.cohort.n) != int(b.cohort.n) or not _same_time(float(a.cohort.born), float(b.cohort.born)))):
 			same = false
 	check(same, "identity, place, stock, cohorts and breeding timers are kept exactly")
-	check(rf2.migrants.size() == 1 and float(rf2.migrants[0].arrive) == w.minutes + 500.0, "a migrant on its way is kept, arrival time and all")
+	check(rf2.migrants.size() == 1 and _same_time(float(rf2.migrants[0].arrive), w.minutes + 500.0), "a migrant on its way is kept, arrival time and all")
 	check(w2.fauna.animals.size() == w.fauna.animals.size(), "no animal duplicated or lost (%d = %d)" % [w2.fauna.animals.size(), w.fauna.animals.size()])
 	var d2: Animal = w2.fauna.by_id(disp.id)
 	check(d2 != null and d2.dest == disp.dest and d2.settle_by == disp.settle_by and d2.origin == disp.origin, "a dispersing animal keeps its destination")
@@ -330,11 +339,14 @@ func test_old_save() -> void:
 	w2.load_dict(VillageMap.load_default(), _saved(d))
 	check(w2.fauna.refuges.list.size() == 13, "an older save gains its refuges on loading (%d)" % w2.fauna.refuges.list.size())
 	check(w2.fauna.animals.size() == n_animals, "and its animals are unchanged (%d)" % w2.fauna.animals.size())
-	var timers := w2.fauna.refuges.list.map(func(r): return float(r.next_birth))
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), _saved(w2.to_dict()))
-	check(w3.fauna.refuges.list.size() == 13 and w3.fauna.refuges.list.map(func(r): return float(r.next_birth)) == timers,
-		"once: saved and loaded again it has the same refuges and timers")
+	var kept := w3.fauna.refuges.list.size() == 13
+	for i in mini(w3.fauna.refuges.list.size(), w2.fauna.refuges.list.size()):
+		var a: Dictionary = w2.fauna.refuges.list[i]
+		var b: Dictionary = w3.fauna.refuges.list[i]
+		kept = kept and a.id == b.id and a.x == b.x and a.y == b.y and _same_time(float(a.next_birth), float(b.next_birth))
+	check(kept, "once: saved and loaded again it has the same refuges and timers")
 
 
 func test_determinism() -> void:

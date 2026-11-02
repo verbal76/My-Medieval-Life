@@ -25,7 +25,11 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 90           # the Expansion 20 economy suites pushed a full run past 45 minutes (run 41123358434, 2026-10-30)
+    # Every suite runs since HAG-MEM-02: run 41482218360 (9c56199) needed 90 min for 138 suites (5400 s, Python 178 s) and
+    # was stopped there; the 16 suites it never reached take about 12 min more (712 s measured headless on 9c56199), plus
+    # the 10-day smoke run (capped at 15 min) and setup: about 2 h at most. 210 min leaves room for runner speed varying by up to ~1.8x (as the
+    # long-sims runs did). One job keeps one results.jsonl and one ci_report, so the report stays the complete suite.
+    timeout-minutes: 210
     env:
       CI_OUT: ${{ github.workspace }}/ci-out   # per-suite logs, results.jsonl, ci-report.json (HAG-MEM-02 Part 3)
     steps:
