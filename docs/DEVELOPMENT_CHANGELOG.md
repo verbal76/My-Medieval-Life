@@ -122,6 +122,17 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**First CI run on the Build 25 source (LE-07 gate 1).**
+- Run: Tests [41446921087](https://github.com/verbal76/My-Medieval-Life/actions/runs/41446921087) on `f583086`.
+- Result: **failed 1 of 339 world_test checks**, `DVW-A12 R6: a new level is announced by core and shown by the interface`.
+  - The check still looked for a level-up in the top banner.
+  - Since the capability merge `625e362`, the approved routing makes a player's level-up a personal line in the corner log.
+  - It is a stale test expectation, not a game defect.
+- Fix in `91cf244`: the check reads the personal lane for "Level 2 Reached". Same intent; world_test passes 339 of 339 locally.
+- Re-dispatched as Tests [41451824267](https://github.com/verbal76/My-Medieval-Life/actions/runs/41451824267).
+- Lesson: `tests.yml` runs only on staging pushes, so several suites (od16, world_test) never ran on the Build 25 source in CI.
+  It is now dispatched by hand on `wip/expansion20` at milestones.
+
 **X20-CHAPEL-FIX follow-up: the chapel's food store.**
 - Branch: `wip/b25-chapel-food` (`d08b18c`, `df4f7db`, `fa75bd1`), merged as `35fbd48`. The merge also committed two Godot uid
   files the firewood merge had missed.
