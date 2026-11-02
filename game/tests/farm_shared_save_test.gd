@@ -94,6 +94,8 @@ func _init() -> void:
 	check(others_same, "nobody else is given seed")
 	check(w.shared_farming_start and float(w.stats.get("shared_farming_seed_corn", 0.0)) == float(cells),
 			"recorded: the world is marked and the stat counts the %d seed given" % cells)
+	check(float(w.stats.get("imported_wheat_seed", 0.0)) == float(cells),
+		"the item ledger counts the seed corn as entering the world (imported_wheat_seed %s), so a resumed run has no wheat_seed residual" % str(w.stats.get("imported_wheat_seed", 0.0)))
 	var noted := false
 	for l in w.log_lines:
 		noted = noted or str(l).contains("seed corn")

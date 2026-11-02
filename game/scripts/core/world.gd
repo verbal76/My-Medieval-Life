@@ -6647,6 +6647,9 @@ func start_shared_farming(d: Dictionary) -> void:
 	var given := Farming.give_seed_corn(self)
 	shared_farming_start = true
 	stat("shared_farming_seed_corn", float(given))
+	# the item ledger: this one-time grant enters the loaded world from outside it, as the seed corn a new world starts
+	# with is part of its starting stock (a flight-recorder resume of an older save caught it as a wheat_seed residual)
+	stat("imported_wheat_seed", float(given))
 	note("The manor's fields are now sown a cell at a time with real seed, in season: the farmers were given %d seed corn for them." % given)
 
 
