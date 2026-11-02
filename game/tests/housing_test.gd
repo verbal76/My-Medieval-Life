@@ -648,6 +648,18 @@ func test_housing_options_weighed() -> void:
 			bag.add(str(id), int(p.site.need[id]))
 		w.deliver(p, bag)
 		c.move_in(h, "house_" + str(p.id))
+		# Since the v16 village (GP-MARKET-SPACING, 66fd330) this ground has grown trees wherever the quarters would stand,
+		# and a tree in the way is not legitimate ground (Property: "a tree (fell it first)"), so the household rightly
+		# had only the loft and the small room to weigh. The ground beside the house is cleared here, as its premise says.
+		var house: Dictionary = w.buildings[str(hh.home)]
+		for i in 10:
+			var slot := c.find_module_slot("quarters", house, ref)
+			if slot.size == Vector2i.ZERO or not c.can_place("quarters", slot, ref, house).begins_with("a tree"):
+				break
+			for t in w.trees:
+				if t.state == "grown" and slot.has_point(Vector2i(int(t.x), int(t.y))):
+					w.fell(t, 0)
+		check(c.can_place("quarters", c.find_module_slot("quarters", house, ref), ref, house) == "", "open ground beside the new house for living quarters")
 		var guard := 0
 		var lacking := c.beds_needed(h) - c.beds_in(str(hh.home))
 		var target := int(Construction.loft_cfg().beds) + 1 if want_quarters else 1
