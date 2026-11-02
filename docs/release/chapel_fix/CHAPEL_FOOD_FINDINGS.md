@@ -79,9 +79,12 @@ says what the church should do with food nobody needs. This is not a defect: see
      given up to its shortfall, once.
    - **How it moves.** Grain first, then other food, in whole units, from store to pantry by `World.transfer`. The store
      never goes below its reserve. No coins move.
-   - **Why the 6-day line.** It is the line below which a household offers no wheat. Food given therefore cannot be
-     offered straight back. A first version used `alms_line_days` (14). In the seed 2 run to day 40, wheat offerings rose
-     from 21 to 76 against 89 wheat given, which is churn, so the line was changed.
+   - **Why the 6-day line.** It is the line below which a household offers no wheat. A household is brought only up to
+     the line, so it has no wheat above it to offer back. A first version used `alms_line_days` (14 days), so a household
+     brought to 14 days could offer back part of what it was given. In the seed 2 run to day 40, wheat offerings rose from
+     21 (baseline) to 76 with that first version. The final version (6-day line) gave 80, so that rise was the run's
+     changed trajectory, not churn. The 6-day line stands on its design reason alone. 14 days, the approved provisional
+     hardship threshold for coins, is the alternative if the lead prefers it.
    - **Parameters.** No new balance parameters; it uses existing provisional values.
 3. Wiki: `game/scripts/core/wiki_chapel.gd`, Alms section (food shared the same way; the store spoils) and the plot
    paragraph (crop goes to relief and food alms). Manifest: new INT-674. `docs/DECISIONS.md` has a row.
@@ -124,11 +127,14 @@ any service. Its line was not compared with a `0c122b6` run (no baseline worktre
 | baseline `0c122b6` | 40 | 60,720 | 506 | 21 | - | - |
 | first version (line 14) | 20 | 22,820 | 191 | 2 | 7,680 / 5 | 5 |
 | first version (line 14) | 40 | 54,500 | 455 | 76 | 10,680 / 14 | 30 |
-| this branch (line 6) | 20 | RESULT_20 | | | | |
-| this branch (line 6) | 40 | RESULT_40 | | | | |
+| this branch (line 6) | 20 | 28,320 | 236 | 4 | 2,760 / 7 | 7 |
+| this branch (line 6) | 40 | 67,460 | 563 | 80 | 4,080 / 10 | 34 |
 
-The food alms reach households short of food, but in this food-secure village they are a small outflow. The store still
-grows by most of the plot's output. Part C stands.
+All three runs had 0 starved by day 40. The food alms reach households short of food, but in this food-secure village they
+are a small outflow: 4,080 points (34 wheat) in 40 days at the 6-day line, against a plot output of about 600 wheat. The
+store still grows by nearly all of the plot's output; the difference from the baseline at day 40 is the runs' different
+trajectories (harvest timing), not the fix. **The fix does not end the build-up: Part C is the cause, and it needs the
+owner's answer.** The final-version run to day 40 completed with no FATAL line.
 
 **Integrity note.** The first-version run stopped at day 40 with `FATAL day 40 seed 2: currency leak -4`
 (`coin_sources_mismatch` -4, `holders_mismatch` 0). This change moves no coins: `food_alms` and the spoilage move goods
@@ -154,7 +160,8 @@ volunteers, and it ends the hoard without new trade or new transfers. It also ta
 
 ## Not verified
 
-- No year-long run of the fix. The local runs reached day 40 only, on seed 2 only.
+- No year-long run of the fix. The local runs reached day 40 only, on seed 2 only. Day-40 store figures differ between
+  runs because the trajectories diverge, so a single day-40 comparison does not isolate the fix.
 - The year-end store under the fix is not measured.
 - Not measured: the economic effect of food alms on farmers' grain sales.
 - The day-5 identity against `0c122b6`.
