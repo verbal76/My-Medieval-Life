@@ -8,7 +8,7 @@ on:
     branches: [staging/my-medieval-life]
     paths: ["docs/requirements/**", "docs/directives/**", "docs/CURRENT_DEVELOPMENT_STATE.md", "docs/PROJECT_MEMORY.md",
             "docs/DEVELOPMENT_LEDGER.md", "tools/check_requirements.py", "tools/requirements_report.py",
-            "tools/requirements_update.py", "tests/test_requirements.py", ".github/workflows/requirements.yml"]
+            "tools/requirements_update.py", "tools/ci_report.py", "tests/test_requirements.py", ".github/workflows/requirements.yml"]
   workflow_dispatch:
 
 permissions:
@@ -30,7 +30,24 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Validate the register and its generated views
-        run: python3 tools/check_requirements.py --against HEAD~1
-      - name: Register tests
-        run: python3 -m unittest tests.test_requirements -v
+      # HAG-MEM-02 Part 3: both checks run even when the first fails; the job summary and ci-report.json say which failed.
+      - name: Validate the register and its generated views, and the register tests
+        id: register
+        run: |
+          printf '%s\n' 'python3 tools/check_requirements.py --against HEAD~1' 'python3 -m unittest tests.test_requirements -v' > "$RUNNER_TEMP/register.txt"
+          python3 tools/ci_report.py run --group register --list "$RUNNER_TEMP/register.txt" --logs ci-out/logs --results ci-out/results.jsonl
+      - name: Report (job summary and ci-report.json)
+        if: always()
+        run: |
+          python3 tools/ci_report.py report --results ci-out/results.jsonl --expect register \
+            --step register=${{ steps.register.outcome }} \
+            --purpose "Structural validation of the requirements register and its generated views (REQ-CTRL-01; ${{ github.event_name }})" \
+            --json ci-out/ci-report.json --markdown "$GITHUB_STEP_SUMMARY" > /dev/null
+      - name: Keep the report and logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ci-out
+          if-no-files-found: warn
+          retention-days: 30
