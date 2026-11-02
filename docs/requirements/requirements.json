@@ -21971,6 +21971,11 @@
      "date": "2026-11-02",
      "change": "note",
      "why": "Dispatch A (Actions 41403541582, eca0e7d, --market, shared and seasonal farming on, 365 days, every 5): yield 1.5 seed 1 FAILS by scarcity (15 starved from day 323, 3 famine checkpoints, 49,009 meals missed for no food, food 0.6-0.9 days before the deaths; population 104 -> 345 against six fixed manor fields); yield 2.0 FOOD-SECURE on seeds 1 and 2 (0 starved, 0 famine, 17 and 6 meals missed for no food; lowest food 3.5 and 3.8 days); integrity clean on all three (0 leaks, 0 script errors); seed 2 yield 1.5 not a result (integrity FATAL day 180, leak fix in progress). Rule row 2: Dispatch B tests 1.75 on seeds 1 and 2 (plus seed 2 at 1.5 as evidence), dispatched on the leak-fix commit; final choice 1.75 if it passes on both seeds, else 2.0. Observations: wheat price at floor 2 on every run; chapel held 91,600-257,060 food points at 2.0 (more than households) - to examine; seed corn thin (18-63 left, imports cover)."
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "Dispatch B on the leak-fix commit 8acbdea: B1 41469335443 (yield 1.75, seeds 1 and 2) on wip/b25-farm-b1 and B2 41469341029 (seed 2, yield 1.5) on wip/b25-farm-b2 - separate run branches at the same commit so the two do not replace each other in the long-sims concurrency queue. --market, shared and seasonal farming on, 365 days, every 5."
     }
    ],
    "owner_wording": null,
@@ -22270,6 +22275,11 @@
      "date": "2026-11-02",
      "change": "implementation_status: NOT STARTED -> INTEGRATED; commits + cad96c4; integrated_in + Build 25 wip/expansion20",
      "why": "implemented and merged at cad96c4 (wip/b25-flight-recorder 8e59dfb): flight mode in long-sims.yml (flight, segment_days inputs; 10 dispatch inputs) calling flight-recorder-campaign.yml and flight-recorder-seed.yml (main need not change); 100-day segments with save/resume (deterministic from the save; World.stats carried), 320-minute inner limit in a 345-minute job; early stop only when extinct for 30 days with no open succession post, or on fatal integrity; status always written (mml-flight-status/1); tools/flight_analyse.py over the full archive (decision loops, refused purchases, oscillation, impossible tasks, stuck, starving with means, job flip-flops, contract failures, relief gaps; CRITICAL only for confirmed defects); 14-sheet workbook with charts; COVERAGE.md lists gaps (chapel, manor work, farming and mining scripts partly uninstrumented; ~150 coin sites unattributed); recording neutral (fingerprint identical with and without --record); settlements FATAL now exits 1. Merge check: fingerprint fdbdde28 identical to the chapel branch, analyser tests OK, chapel 173. GitHub trial 41464356721 (seed 1, 20 days, 10-day segments) dispatched. First full flight campaign waits for the leak fix; the owner's first command ran as 41458375116 through the older recorded path."
+    },
+    {
+     "date": "2026-11-02",
+     "change": "note",
+     "why": "GitHub trial 41464356721 (cad96c4, seed 1, 20 days, two 10-day segments) succeeded end to end: segment 2 resumed from segment 1's save, 20 of 20 days, stop reason completed, both archives checked ok, analyser read all rows (111,804 events), 14-sheet workbook built and check_workbook --flight ok, results and campaign artifacts kept, step summary written; findings CRITICAL 0, HIGH 0, MEDIUM 2 (p:1000261 35 goods contracts cancelled with none fulfilled; a first-evening burst of failed actions), INFORMATIONAL 4. First full flight-mode campaign dispatched: 41469410306 on 8acbdea (seeds 1 and 2, 365 days, every 10, 100-day segments)."
     }
    ],
    "commits": [

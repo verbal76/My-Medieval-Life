@@ -122,6 +122,40 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
   - Skill levels are now a corner line rather than a top banner, as Decision 9's split asks.
   - The optional notification filter is not approved, so it was not built.
 
+**The coin_sources leak fixed, and the second farming batch and first full flight campaign dispatched.**
+- **Leak** (`wip/b25-leak2` `3ab9a39`/`57a7022`, merged as `8acbdea`):
+  - Cause: a villager moving to a settlement left an LE-05 tool rental open. At the next dawn the rental ended "lost", and the
+    remaining deposit (2 coins) was refunded to a renter no longer counted. It left the world unrecorded in the village's
+    recorded flows.
+  - Fix:
+    - `Migration._pre_leave` settles rentals and paid repairs before departure (`EconRentals.on_leave`,
+      `EconRepairs.on_leave`).
+    - Safety net `EconTransactions.refund_party`: a refund owed to an absent party goes to their household, or failing that the
+      manor.
+  - Test `b25_leak2_departure_test` (20 checks): 8 of them fail without the fix.
+  - Seed-2 reproduction: it now reaches day 200 with leak 0, where it had stopped with FATAL on day 180.
+  - The default fingerprint is unchanged (economy-gated).
+  - The merge renumbered its interaction entry to INT-676, because the chapel work already used INT-674 and INT-675. Merge
+    checks: leak test 20, chapel 173, conservation 8, net_econ_integrity 126.
+- **Farming Dispatch B** on `8acbdea`:
+  - B1 41469335443: yield 1.75, seeds 1 and 2.
+  - B2 41469341029: seed 2 at 1.5.
+  - They use separate run branches at the same commit, because a second dispatch in the same concurrency group would replace a
+    waiting one.
+- **Flight trial** 41464356721 succeeded end to end:
+  - segment resume;
+  - archive checks;
+  - the full-archive analyser (111,804 events);
+  - the 14-sheet workbook, checked;
+  - artifacts and summary.
+
+  Findings: 2 MEDIUM, 4 INFORMATIONAL, 0 confirmed defects.
+- **First full flight-mode campaign:** 41469410306 on `8acbdea`.
+- **CI:** Tests 41451824267 failed 1 of 67 multiplayer_a1 checks. A Build 19 fixture's inventories differed only by the
+  item-order key that `da1ed8c` adds. The comparison now drops that key; fixed in `e55cc7f`.
+  - Each CI run stops at its first failing suite, so all 149 CI suites are being run locally to find every remaining failure
+    before the next CI dispatch.
+
 **FLIGHT-REC-01: the permanent flight recorder system is integrated.**
 - Branch: `wip/b25-flight-recorder` (`4dd8362`, `98f4342`, `8e59dfb`), merged as `cad96c4`.
 - Change:
