@@ -7671,6 +7671,33 @@
    ]
   },
   {
+   "id": "B25R1-Q5",
+   "kind": "decision",
+   "title": "Save compatibility for Revision 1: must existing saves migrate across the B25R1 world changes (generator, regional reconstruction, band move, water)?",
+   "description": "Save compatibility for Revision 1: must existing saves migrate across the B25R1 world changes (generator, regional reconstruction, band move, water)?",
+   "source": "owner message 2026-11-03",
+   "owner_wording": null,
+   "owner_answer": "No migration required for B25R1 world changes: the owner is the only player and erases the save at each play test. Lead's application: build no new migrations for the region, water, band or homestead changes; an older save that the new code cannot load correctly is refused with a clear message and the file kept (CLAUDE.md section 7: never silently drop or reinterpret); compatibility already built stays. This waives CLAUDE.md section 11's save-compatibility authorization for these B25R1 changes only.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "owner message 2026-11-03"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner 2026-11-03: \"Don't worry about saved games. I'm the only one playing this right now and I erase my game every time you give me a new play test\""
+    }
+   ]
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",

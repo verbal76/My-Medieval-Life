@@ -10,7 +10,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 796 (426 of them still open) |
+| Entries added since | | 797 (426 of them still open) |
 | **Open entries now** (rules excluded) | | **584** |
 | Open entries moved to another build | | 15 |
 
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (796)
+## Added since the baseline (797)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -219,6 +219,7 @@ None.
 | B25R1-Q2 | Bandit band as a woodland community: move the band to a hidden overworld claim with a household (a), keep the village camp and put only turned outlaws on claims (b), or abstract bandits offscreen (c)? | decision | APPROVED | 20 |
 | B25R1-Q3 | Water for wilderness settlements: wells built from real materials, streams added by an overworld generator change, or both? | decision | APPROVED | 20 |
 | B25R1-Q4 | Outlaw camp defenders: add a surrender outcome to combat, or fight or flee only (B25R1-014 section 8 'according to existing systems'; combat has no surrender)? | decision | APPROVED | 20 |
+| B25R1-Q5 | Save compatibility for Revision 1: must existing saves migrate across the B25R1 world changes (generator, regional reconstruction, band move, water)? | decision | APPROVED | 20 |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-C | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-D | Expansion 23 BAN-D: rank, challenge, leadership, schism and autonomous succession | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
