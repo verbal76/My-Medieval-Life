@@ -76,6 +76,10 @@ func _run() -> void:
 		b2.get_chunk(cc)                                # other chunks first: a chunk never depends on what was made before it
 	check(fingerprint(b2, true) == fa, "and independent of the order chunks are made in")
 	var area := Rect2i(-160, 90, 420, 520)
+	var passed := {}
+	for cc in a.anchored_courses():
+		for sid in cc.get("passes", []):
+			passed[str(sid)] = true
 	var n := {"water": 0, "bridge": 0, "fall": 0, "ford": 0}
 	var ford_bad := 0
 	var bad_solid := 0
@@ -92,7 +96,9 @@ func _run() -> void:
 				var wv: int = ch.water[i]
 				if wv == 0:
 					continue
-				if a._rdist(a.village, c.x, c.y) < Overworld.VILLAGE_CLEAR or a.sites.any(func(st): return a._rdist(st.rect, c.x, c.y) < Overworld.VILLAGE_CLEAR):
+				# never on built ground; within the clearance only beside a settlement a canonical course passes (the layout's
+				# passes_settlement: the Netherton stream, the river round Higham)
+				if a._rdist(a.village, c.x, c.y) < Overworld.VILLAGE_CLEAR - 1 or a.sites.any(func(st): return a._rdist(st.rect, c.x, c.y) < (1 if passed.has(str(st.id)) else Overworld.VILLAGE_CLEAR - 1)):
 					near_places += 1
 				match wv:
 					4:
@@ -112,7 +118,7 @@ func _run() -> void:
 	check(bad_solid == 0, "every stream, pool and waterfall cell is water and solid (%d not)" % bad_solid)
 	check(n.ford > 0 and ford_bad == 0, "streams have fords, stepping stones walked across (%d cells, %d not walkable)" % [n.ford, ford_bad])
 	check(bridge_bad == 0, "every bridge is a road cell, walkable, not water (%d not)" % bridge_bad)
-	check(near_places == 0, "no water within %d tiles of the village or a settlement (%d cells)" % [Overworld.VILLAGE_CLEAR, near_places])
+	check(near_places == 0, "no water on any settlement's ground, nor within %d tiles of the village or a settlement a canonical course does not pass (%d cells)" % [Overworld.VILLAGE_CLEAR, near_places])
 	# --- the roads stay walkable and joined
 	var off := 0
 	var sampled := 0
@@ -221,13 +227,87 @@ func _run() -> void:
 	for c in courses:
 		if str(c.joins) != "":
 			fed += 1
+		if c.has("canonical"):
+			continue                                   # a canonical course follows the novel's geography (checked below)
 		var pts: Array = c.pts
 		for q in range(2, pts.size(), 2):
 			if ow._height(Vector2i((pts[q] as Vector2).round())) > ow._height(Vector2i((pts[q - 2] as Vector2).round())) + 6:
 				uphill += 1
 	check(rivers.size() >= 2 and courses.size() > rivers.size(), "rivers and streams both (%d rivers, %d courses)" % [rivers.size(), courses.size()])
 	check(fed >= 2 and rivers.any(func(r): return not (graph[r.id].tributaries as Array).is_empty()), "streams feed rivers: a network (%d streams join a river)" % fed)
-	check(uphill == 0, "every course runs downhill, step by step (%d steps up)" % uphill)
+	check(uphill == 0, "every generated course runs downhill, step by step (%d steps up)" % uphill)
+	# --- B25R1-018: the canonical water (game/data/water_anchors.json until the region layout carries it)
+	var canon := {}
+	for c in ow.anchored_courses():
+		canon[str(c.id)] = c
+	check(canon.has("canon:upmeads_water") and canon.has("canon:netherton_stream") and canon.has("canon:coldlake") and canon.has("canon:st_ann_pool"),
+		"the region layout's water is there: Upmeads Water, the Netherton stream, Coldlake round Higham, the chapel pool on the Downs (%s)" % str(canon.keys()))
+	if canon.has("canon:netherton_stream"):
+		check(str(canon["canon:netherton_stream"].joins) == "canon:upmeads_water", "the Netherton stream runs into Upmeads Water")
+	if canon.has("canon:upmeads_water"):
+		var up: Array = canon["canon:upmeads_water"].pts
+		check((up[up.size() - 1] as Vector2).x > (up[0] as Vector2).x + 400.0 and int(canon["canon:upmeads_water"].order) >= 2,
+			"Upmeads Water is a river flowing west to east past the village (%s -> %s)" % [up[0], up[up.size() - 1]])
+		var east := 0
+		for cy in range(Overworld.fdiv(int((up[0] as Vector2).y) - 20, 32), Overworld.fdiv(int((up[0] as Vector2).y) + 40, 32) + 1):
+			for cx in range(Overworld.fdiv(-200, 32), Overworld.fdiv(300, 32) + 1):
+				if ow.chunk_in_village(Vector2i(cx, cy)):
+					continue
+				var ch := ow.get_chunk(Vector2i(cx, cy))
+				for i in 1024:
+					if ch.water[i] != 0 and ch.level[i] >= 2 and (ch.flow[i] == 1 or ch.flow[i] == 2 or ch.flow[i] == 8):
+						east += 1
+		check(east > 200, "its water flows east (%d river cells running E, SE or NE)" % east)
+	var kinds := {}
+	var on_roads := 0
+	var ok_x := 0
+	for f in ow._forced:
+		var at: Vector2 = f[0]
+		var got := ""
+		var road_there := false
+		for dy in range(-6, 7):
+			for dx in range(-6, 7):
+				var c := Vector2i(at.floor()) + Vector2i(dx, dy)
+				if not ow.is_road(c):
+					continue
+				road_there = true
+				if ow.is_bridge(c) and got == "":
+					got = "bridge"
+				elif ow.is_ford(c) and got == "":
+					got = "ford"
+		kinds[str(f[2]) + "@" + str(Vector2i(at))] = got if road_there else "(no road here yet)"
+		if road_there:
+			on_roads += 1
+			if (str(f[2]) == "ford" and got == "ford") or (str(f[2]) != "ford" and got == "bridge"):
+				ok_x += 1
+	# the layout's crossings sit on the region workstream's roads; on a branch without them some have no road yet
+	check(ow._forced.size() == 5 and ok_x == on_roads, "each of the layout's 5 crossings with a road through it is that crossing (%d of %d with a road): %s" % [ok_x, on_roads, str(kinds)])
+	var stone_drawn := false
+	var view_ow: Overworld = main.ow_view.overworld
+	main.ow_view.overworld = ow                       # the view's tile choice for this world's cells (the save test loaded another)
+	for f in ow._forced:
+		if str(f[2]) != "stone_bridge":
+			continue
+		for dy in range(-6, 7):
+			for dx in range(-6, 7):
+				var c := Vector2i((f[0] as Vector2).floor()) + Vector2i(dx, dy)
+				if ow.is_bridge(c) and ow.forced_crossing(c) == "stone_bridge":
+					var t: int = main.ow_view.road_tile(c, -1)
+					if t == int(ow.tiles.water.bridge.stone_ns) or t == int(ow.tiles.water.bridge.stone_ew):
+						stone_drawn = true
+	main.ow_view.overworld = view_ow
+	check(stone_drawn or not str(kinds).contains("stone_bridge@(20, 830)\": \"bridge"), "a stone bridge of the layout is drawn in stone (where its road is)")
+	var downs_water := 0
+	var downs_springs := 0
+	for c in ow.streams_in(Rect2i(-500, ow._downs.position.y, 1100, ow._downs.size.y)):
+		if c.has("canonical"):
+			continue                                   # the canon's own water (the river round Higham reaches the Downs' edge)
+		for pt in c.pts:
+			if ow.in_downs(Vector2i((pt as Vector2).round())):
+				downs_water += 1
+		if ow.in_downs(Vector2i((c.pts[0] as Vector2).round())):
+			downs_springs += 1
+	check(ow._downs.has_area() and downs_water == 0 and downs_springs == 0, "the Downs are waterless: no generated course rises or runs there (%d points, %d springs)" % [downs_water, downs_springs])
 	var rv: Dictionary = rivers[0] if not rivers.is_empty() else {}
 	check(not rv.is_empty() and float(graph[rv.id].catchment) >= float(rv.length) and int(graph[rv.id].order) == 2, "the course graph keeps order, length and catchment (%s)" % str(graph.get(rv.get("id", ""), {})))
 	# per cell: flow, level, bank
@@ -251,20 +331,9 @@ func _run() -> void:
 					banks += 1
 				if ch.water[i] == 3:
 					nfalls += 1
-					# a genuine drop: along the rim either side, rock or more of the fall, and above it the raised ground (a top or
-					# its rim) within a few cells
-					var side := false
-					for e in [Vector2i(1, 0), Vector2i(-1, 0)]:
-						var n2: Vector2i = c + e
-						while a.flow_at(n2) != 0 and a.is_water(n2) and n2.distance_to(c) < 8:
-							n2 += e
-						if a.is_solid(n2) and not a.is_water(n2):
-							side = true
-					var up := false
-					for dd in range(1, 5):
-						if a.is_top(c + Vector2i(0, -dd)) or (a.is_solid(c + Vector2i(1, -dd)) and not a.is_water(c + Vector2i(1, -dd))):
-							up = true
-					if side and up:
+					# a genuine drop: a mountain top just above (inside the rim), and no top just below: the water leaves the
+					# raised ground over its edge
+					if (a.is_top(c + Vector2i(0, -1)) or a.is_top(c + Vector2i(0, -2))) and not a.is_top(c + Vector2i(0, 1)) and a.is_solid(c):
 						fall_rim += 1
 					for dd in range(1, 5):
 						if a.flow_at(c + Vector2i(0, dd)) == Overworld.FLOW_FOAM:
@@ -276,7 +345,7 @@ func _run() -> void:
 	check(moving > 1000, "the water flows: %d cells carry a downstream direction (%s)" % [moving, str(flows)])
 	check(lv.has(1) and lv.has(2), "levels: streams 1, rivers 2 (%s)" % str(lv.keys()))
 	check(banks > 500, "dry cells beside the water keep their bank height, the floodplain (%d)" % banks)
-	check(nfalls > 0 and fall_rim * 10 >= nfalls * 8, "waterfalls stand in cliff rims, a genuine drop: rock along the rim either side and raised ground above (%d of %d)" % [fall_rim, nfalls])
+	check(nfalls > 0 and fall_rim == nfalls, "every waterfall is a genuine drop: a mountain top just above it, low ground below (%d of %d)" % [fall_rim, nfalls])
 	check(int(flows.get(Overworld.FLOW_FOAM, 0)) > 0 and foam_near_fall > 0, "a foaming pool below the falls (%d foam cells; %d falls with foam just below)" % [int(flows.get(Overworld.FLOW_FOAM, 0)), foam_near_fall])
 	# the weather hooks: nothing changes the water now; set_level and on_level_changed are there for it
 	var heard := []

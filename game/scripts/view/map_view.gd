@@ -12,6 +12,7 @@ const ROAD_OVERGROWN_ROW := 6          # B25R1-011: rows 6-7 grown-over dirt roa
 const ROAD_DAMAGED_ROW := 8
 const WATER_ATLAS := 5                 # B25R1-Q3: game/assets/tiles/water_tiles.png (tools/water_tiles.py): 4 animation frames a row
 const WATER_FRAMES := 4
+const WATER_STILL_ATLAS := 6           # B25R1-019: the same water sheet with no animation (its first frame): water out of the live range
 
 var tileset := TileSet.new()
 var sources: Array[TileSetAtlasSource] = []
@@ -109,6 +110,12 @@ func _add_water_tiles() -> void:
 	sources.append(src)
 	columns.append(WATER_FRAMES)
 	tileset.add_source(src)
+	var still := TileSetAtlasSource.new()
+	still.texture = src.texture
+	still.texture_region_size = Vector2i(T, T)
+	sources.append(still)
+	columns.append(WATER_FRAMES)
+	tileset.add_source(still)
 
 
 ## The fourth atlas: one tile, the paid atlas's plain boulder scaled down (nearest) and stood on the

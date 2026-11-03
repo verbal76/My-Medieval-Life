@@ -521,6 +521,11 @@ const FLOW_STILL := 0
 const FLOW_FOAM := 9
 var _area_fords: Array = []               # [point, radius] of the fords near the chunk being generated (_water_corners)
 var _river_cache := {}                    # river lattice cell -> its course (a pure function of the seed; not saved)
+var _anchored: Array = []                 # B25R1-018: the canonical courses (anchored_courses), traced once
+var _anchored_done := false
+var _forced: Array = []                   # B25R1-018: [centre, radius, kind (bridge, stone_bridge, ford)] the canonical crossings
+var _downs := Rect2i()                    # B25R1-018: the waterless Downs (no stream rises or runs there): its bounding rect
+var _downs_poly := PackedVector2Array()   # and its outline (the layout's polygon), when given
 ## Weather hooks (B25R1-017; docs/design/WATER.md). Nothing sets them in Build 25 Revision 1: the water is constant.
 var seasonal_flow := 1.0                  # a factor on every course's flow and level (seasons: a later system sets it)
 var level_override := {}                  # Vector2i -> a water level set by set_level (rain, flood); not saved yet
@@ -569,6 +574,147 @@ func _kept_clear(p: Vector2i) -> bool:
 	return false
 
 
+## B25R1-018 (owner directive 2026-11-03, the regional world reconstruction, section 8): the canonical water. The region
+## layout (game/data/region_layout.json, format mml-region-layout/1, the region workstream's; until it is merged the stub
+## game/data/water_anchors.json, the same keys) gives, in absolute overworld tiles of the village frame:
+##  - rivers[]: {id, name, order, width (tiles), points [[x, y]...] upstream to downstream, joins (the course it ends in),
+##    passes_settlement [ids]} : each traced through its points with the generator's own meander (a bend that is nought at
+##    every point, so the course passes exactly through each), with fords, pools and falls as any course has; a course that
+##    passes a settlement may come within the settlements' clearance, never onto its built ground;
+##  - crossings[]: {kind ford | bridge, x, y, course, material}: a crossing the road keeps there (a ford; a bridge of the road's
+##    type, or of stone when material is stone);
+##  - downs: {rect, polygon, springs "none", water_ok [landmark ids]}: the waterless Downs, where no generated stream rises or
+##    runs; the landmarks it names (kind pool, x, y, r) are its only water (a still pool).
+## Loaded once; with the seed's roads, a pure function of the seed.
+func anchored_courses() -> Array:
+	if _anchored_done:
+		return _anchored
+	_anchored_done = true
+	_anchored.clear()
+	_forced.clear()
+	_downs = Rect2i()
+	_downs_poly = PackedVector2Array()
+	if gen < 4:
+		return _anchored
+	var spec := {}
+	for path in ["res://data/region_layout.json", "res://data/water_anchors.json"]:
+		if FileAccess.file_exists(path):
+			var d: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+			if d is Dictionary and (d as Dictionary).has("rivers"):
+				spec = d
+				break
+	if spec.is_empty():
+		return _anchored
+	var dn: Dictionary = spec.get("downs", {})
+	if dn.has("rect"):
+		var r: Array = dn.rect
+		_downs = Rect2i(int(r[0]), int(r[1]), int(r[2]), int(r[3]))
+	for v in dn.get("polygon", []):
+		_downs_poly.append(Vector2(float(v[0]), float(v[1])))
+	var widths := {}
+	var k := 0
+	for rv in spec.rivers:
+		var pts: Array = []
+		for v in rv.points:
+			pts.append(Vector2(float(v[0]), float(v[1])))
+		widths[str(rv.id)] = float(rv.get("width", 2))
+		if pts.size() >= 2:
+			_anchored.append(_trace_through(pts, rv, 7001 + k * 131))
+		k += 1
+	for cr in spec.get("crossings", []):
+		var kind := str(cr.kind)
+		if kind == "bridge" and str(cr.get("material", "")) == "stone":
+			kind = "stone_bridge"
+		_forced.append([Vector2(float(cr.x), float(cr.y)) + Vector2(0.5, 0.5), float(widths.get(str(cr.get("course", "")), 2.0)) / 2.0 + 4.0, kind])
+	for lm in spec.get("landmarks", []):
+		if str(lm.get("kind", "")) == "pool" and str(lm.id) in (dn.get("water_ok", []) as Array):
+			var at := Vector2(float(lm.x), float(lm.y))
+			_anchored.append({"id": "canon:" + str(lm.id), "name": str(lm.get("name", lm.id)), "order": 1, "pts": [at, at],
+				"r": [0.5, 0.5], "heading": [FLOW_STILL], "pools": [[at, float(lm.get("r", 3)), false]], "falls": [], "fords": [],
+				"joins": "", "length": 0.0, "box": Rect2i(Vector2i(at.floor()), Vector2i.ONE).grow(int(lm.get("r", 3)) + 3),
+				"canonical": true, "passes": []})
+	return _anchored
+
+
+## A canonical course through its control points: STREAM_STEP-tile steps between each pair, bent off the straight line by a
+## meander that is nought at both ends (so it meets every point), the width growing from width[0] to width[1].
+func _trace_through(ctrl: Array, cs: Dictionary, key: int) -> Dictionary:
+	var order := int(cs.get("order", 1))
+	var w0 := maxf(0.8, float(cs.get("width", 2)) / 2.0 * 0.85)        # a canonical course widens a little downstream
+	var w1 := maxf(0.9, float(cs.get("width", 2)) / 2.0)
+	var amp := 3.0 if order == 2 else 2.2
+	var total := 0.0
+	for q in range(ctrl.size() - 1):
+		total += (ctrl[q] as Vector2).distance_to(ctrl[q + 1])
+	var pts: Array = [ctrl[0]]
+	var rs: Array = [w0]
+	var heads: Array = []
+	var fords: Array = []
+	var pools: Array = []
+	var falls: Array = []
+	var done := 0.0
+	var step := 0
+	var was_mountain := _mountain(Vector2i((ctrl[0] as Vector2).round()))
+	for q in range(ctrl.size() - 1):
+		var a: Vector2 = ctrl[q]
+		var b: Vector2 = ctrl[q + 1]
+		var n := maxi(1, int(ceil(a.distance_to(b) / float(STREAM_STEP))))
+		var side := (b - a).normalized().orthogonal()
+		var phase := float(hash32(seed, key, q, 150) % 628) / 100.0
+		for k in range(1, n + 1):
+			var f := float(k) / float(n)
+			var p := a.lerp(b, f) + side * amp * sin(PI * f) * sin(f * PI * 2.0 + phase) if k < n else b
+			heads.append(_dir8(p - (pts[pts.size() - 1] as Vector2)))
+			done += (pts[pts.size() - 1] as Vector2).distance_to(p)
+			pts.append(p)
+			rs.append(lerpf(w0, w1, clampf(done / maxf(total, 1.0), 0.0, 1.0)))
+			step += 1
+			var cell := Vector2i(p.round())
+			var mtn := _mountain(cell)
+			if step % FORD_EVERY == FORD_EVERY / 2 and not mtn and not was_mountain and not _near_forced(p, 10.0):
+				fords.append([p, float(rs[rs.size() - 1]) + 1.0])
+			if was_mountain and not mtn:
+				falls.append(cell)
+				pools.append([p, float(rs[rs.size() - 1]) + 1.2, true])
+			was_mountain = mtn
+	if bool(cs.get("end_pool", false)):
+		pools.append([pts[pts.size() - 1], w1 + 1.6, false])
+	var lo := Vector2(INF, INF)
+	var hi := -lo
+	for p in pts:
+		lo = lo.min(p)
+		hi = hi.max(p)
+	var box := Rect2i(Vector2i(lo.floor()) - Vector2i(8, 8), Vector2i((hi - lo).ceil()) + Vector2i(17, 17))
+	return {"id": "canon:" + str(cs.id), "name": str(cs.get("name", cs.id)), "order": order, "pts": pts, "r": rs, "heading": heads,
+		"pools": pools, "falls": falls, "fords": fords, "joins": ("canon:" + str(cs.joins)) if str(cs.get("joins", "")) != "" else "",
+		"length": done, "box": box, "canonical": true, "passes": (cs.get("passes_settlement", []) as Array).duplicate()}
+
+
+func _near_forced(p: Vector2, extra: float) -> bool:
+	for f in _forced:
+		if (f[0] as Vector2).distance_to(p) <= float(f[1]) + extra:
+			return true
+	return false
+
+
+## B25R1-018: the canonical crossing at cell `c` ("bridge", "stone_bridge" or "ford"), or "".
+func forced_crossing(c: Vector2i) -> String:
+	anchored_courses()
+	var p := Vector2(c) + Vector2(0.5, 0.5)
+	for f in _forced:
+		if (f[0] as Vector2).distance_to(p) <= float(f[1]):
+			return str(f[2])
+	return ""
+
+
+## B25R1-018: whether a cell lies in the waterless Downs.
+func in_downs(p: Vector2i) -> bool:
+	anchored_courses()
+	if not _downs.has_point(p):
+		return false
+	return _downs_poly.size() < 3 or Geometry2D.is_point_in_polygon(Vector2(p), _downs_poly)
+
+
 ## The river rising in river lattice cell (i, j), or {} (see course_at for its keys). Cached.
 func river_at(i: int, j: int) -> Dictionary:
 	var key := Vector2i(i, j)
@@ -579,7 +725,7 @@ func river_at(i: int, j: int) -> Dictionary:
 		for t in 6:
 			var p := Vector2i(i * RIVER_LATTICE + 40 + hash32(seed, i, j, 141 + 2 * t) % (RIVER_LATTICE - 80),
 				j * RIVER_LATTICE + 40 + hash32(seed, i, j, 142 + 2 * t) % (RIVER_LATTICE - 80))
-			if not _kept_clear(p) and _height(p) >= RIVER_HIGH:
+			if not _kept_clear(p) and not in_downs(p) and _height(p) >= RIVER_HIGH:
 				out = _trace(p, i * 6007 + j * 90001 + 77, 2, "river:%d,%d" % [i, j], [])
 				break
 	_river_cache[key] = out
@@ -598,7 +744,7 @@ func stream_at(i: int, j: int) -> Dictionary:
 		for t in 6:
 			var p := Vector2i(i * STREAM_LATTICE + 20 + hash32(seed, i, j, 111 + 2 * t) % (STREAM_LATTICE - 40),
 				j * STREAM_LATTICE + 20 + hash32(seed, i, j, 112 + 2 * t) % (STREAM_LATTICE - 40))
-			if _kept_clear(p) or _height(p) < STREAM_HIGH:
+			if _kept_clear(p) or in_downs(p) or _height(p) < STREAM_HIGH:
 				continue
 			if _mountain(p):
 				src = p
@@ -654,8 +800,8 @@ func _trace(src: Vector2i, key: int, order: int, id: String, into: Array) -> Dic
 				score = sc
 				pick = a
 		var nxt := at + Vector2i((dirs[pick] * STREAM_STEP).round())
-		if _height(nxt) > here + 6 or _kept_clear(nxt):
-			break                                          # the ground rises all round, or the village is near: a pool here
+		if _height(nxt) > here + 6 or _kept_clear(nxt) or in_downs(nxt):
+			break                                          # the ground rises all round, the village is near or the Downs begin: a pool
 		var wk := minf(w1, w0 + float(k) * (w1 - w0) / 24.0)
 		# a stream that reaches a river ends in it: the junction is the nearest point of the river's line
 		var met := _meets(Vector2(nxt), into)
@@ -725,6 +871,9 @@ func rivers_in(area: Rect2i) -> Array:
 	var out := []
 	if gen < 4:
 		return out
+	for c in anchored_courses():
+		if int(c.order) >= 2 and (c.box as Rect2i).intersects(area.grow(RIVER_REACH)):
+			out.append(c)                              # B25R1-018: the canonical rivers first
 	var grown := area.grow(RIVER_REACH)
 	for j in range(fdiv(grown.position.y, RIVER_LATTICE), fdiv(grown.end.y, RIVER_LATTICE) + 1):
 		for i in range(fdiv(grown.position.x, RIVER_LATTICE), fdiv(grown.end.x, RIVER_LATTICE) + 1):
@@ -736,9 +885,12 @@ func rivers_in(area: Rect2i) -> Array:
 
 ## Every course (rivers first, then streams, each in lattice order) whose water may reach `area` (tiles).
 func streams_in(area: Rect2i) -> Array:
-	var out := rivers_in(area)
+	var out := rivers_in(area).filter(func(c): return (c.box as Rect2i).intersects(area))
 	if gen < 4:
 		return out
+	for c in anchored_courses():
+		if int(c.order) == 1 and (c.box as Rect2i).intersects(area):
+			out.append(c)                              # B25R1-018: the canonical streams
 	var grown := area.grow(STREAM_STEP * STREAM_STEPS + 12)
 	for j in range(fdiv(grown.position.y, STREAM_LATTICE), fdiv(grown.end.y, STREAM_LATTICE) + 1):
 		for i in range(fdiv(grown.position.x, STREAM_LATTICE), fdiv(grown.end.x, STREAM_LATTICE) + 1):
@@ -765,6 +917,19 @@ func course_graph(area: Rect2i) -> Dictionary:
 	return out
 
 
+## B25R1-018: whether water may lie at corner (wx, wy) for its settlements: never within VILLAGE_CLEAR of the village or a
+## settlement, except that a course passing a settlement (`passes`, the layout's passes_settlement) keeps only off its built
+## ground (its site and a tile round it).
+func _water_clear(wx: int, wy: int, passes: Array) -> bool:
+	if _rdist(village, wx, wy) < VILLAGE_CLEAR:
+		return false
+	for st in _near_sites:
+		var lim := 2 if str(st.id) in passes else VILLAGE_CLEAR
+		if _rdist(st.rect, wx, wy) < lim:
+			return false
+	return true
+
+
 ## B25R1-017 (owner: "keep ... existing roads dry"): whether water may lie on corner (i, j) of the area given the roads round
 ## it: off the road, yes; on a road (one of the corner's four cells), only where the course crosses it, its heading
 ## (`along`) at least 50 degrees off the road's own line there (the principal axis of the road cells in the 5 x 5 round the
@@ -780,6 +945,8 @@ func _water_may_cross(road: PackedByteArray, i: int, j: int, along: Vector2) -> 
 			on = true
 	if not on:
 		return true
+	if not _forced.is_empty() and _near_forced(Vector2(_wc_ox + i, _wc_oy + j), 0.0):
+		return true                                    # B25R1-018: a canonical crossing: the road crosses here
 	if along.length_squared() == 0.0:
 		return false                                   # a pool keeps off the road
 	var sxx := 0.0
@@ -813,7 +980,14 @@ static func _seg_dist(p: Vector2, a: Vector2, b: Vector2) -> float:
 ## The water corners of the GRID x GRID corners at (ox + i, oy + j): [wc (1 water), flow (the claiming course's direction,
 ## FLOW_STILL in a pool, FLOW_FOAM in a fall's pool), order (1 stream, 2 river), bank (tiles from the nearest water's edge,
 ## 0-BANK_REACH, 255 beyond)].
+var _wc_ox := 0
+var _wc_oy := 0
+
+
 func _water_corners(ox: int, oy: int, road := PackedByteArray()) -> Array:
+	_wc_ox = ox
+	_wc_oy = oy
+	anchored_courses()
 	var wc := PackedByteArray()
 	var fl := PackedByteArray()
 	var od := PackedByteArray()
@@ -832,6 +1006,7 @@ func _water_corners(ox: int, oy: int, road := PackedByteArray()) -> Array:
 		var pts: Array = st.pts
 		var rs: Array = st.r
 		var heads: Array = st.heading
+		var passes: Array = st.get("passes", [])
 		for q in range(pts.size() - 1):
 			var a: Vector2 = pts[q]
 			var b: Vector2 = pts[q + 1]
@@ -846,7 +1021,7 @@ func _water_corners(ox: int, oy: int, road := PackedByteArray()) -> Array:
 					var wy := oy + j
 					var d := _seg_dist(Vector2(wx, wy), a, b)
 					var bank := float(hash32(seed, wx, wy, 130) % 100) / 200.0 - 0.25
-					if d <= r + bank and _vdist(wx, wy) >= VILLAGE_CLEAR and _water_may_cross(road, i, j, b - a):
+					if d <= r + bank and _water_clear(wx, wy, passes) and _water_may_cross(road, i, j, b - a):
 						if wc[k] == 0 or int(st.order) > od[k]:
 							wc[k] = 1
 							fl[k] = int(heads[mini(q, heads.size() - 1)])
@@ -862,7 +1037,7 @@ func _water_corners(ox: int, oy: int, road := PackedByteArray()) -> Array:
 					var wx := ox + i
 					var wy := oy + j
 					var bank := float(hash32(seed, wx, wy, 131) % 100) / 100.0 - 0.5
-					if Vector2(wx, wy).distance_to(c) <= r2 + bank and _vdist(wx, wy) >= VILLAGE_CLEAR and _water_may_cross(road, i, j, Vector2.ZERO):
+					if Vector2(wx, wy).distance_to(c) <= r2 + bank and _water_clear(wx, wy, passes) and _water_may_cross(road, i, j, Vector2.ZERO):
 						var k := j * GRID + i
 						wc[k] = 1
 						fl[k] = FLOW_FOAM if bool(pool[2]) else FLOW_STILL
@@ -1259,7 +1434,7 @@ func _generate(cx: int, cy: int) -> Chunk:
 				ch.solid[c] = 1
 			if wn[q] > 0:
 				_water_cell(ch, c, q, gk, wdata, wn, blocked[q] == 1 and inner[q] == 0, road[q] == 1, wx, wy,
-					inner[q - AREA] == 1 or (blocked[q - AREA] == 1 and inner[q - 2 * AREA] == 1), inner[q + AREA] == 0)
+					_is_fall(q, wn, blocked, inner), _is_fall(q - AREA, wn, blocked, inner) or _is_fall(q - 2 * AREA, wn, blocked, inner) or _is_fall(q - 3 * AREA, wn, blocked, inner))
 			elif not wdata.is_empty():
 				ch.bank[c] = (wdata[3] as PackedByteArray)[gk]       # B25R1-017: the floodplain's height above the water
 			if road[q] == 1:
@@ -1306,8 +1481,18 @@ func _generate(cx: int, cy: int) -> Chunk:
 ## through, north to south, the waterfall: a genuine drop; another wet rim cell its water tile, or its cliff where only a
 ## corner is wet), it is water when two or more corners are (solid), a bridge where a road runs on it, a ford at the course's
 ## fords, and now and then a rock stands in open water. B25R1-017: its flow, level and bank are kept.
+## B25R1-017: whether area cell q is a waterfall: a cliff rim cell (blocked, not inside the rim) with water above and below
+## it, a mountain top just above (or the rim, then the top) and no top below: water leaving the raised ground over its edge.
+func _is_fall(q: int, wn: PackedByteArray, blocked: PackedByteArray, inner: PackedByteArray) -> bool:
+	if q - 2 * AREA < 0 or q + AREA >= AREA * AREA:
+		return false
+	if blocked[q] != 1 or inner[q] != 0 or wn[q] < 2 or wn[q - AREA] < 2 or wn[q + AREA] < 2:
+		return false
+	return (inner[q - AREA] == 1 or (blocked[q - AREA] == 1 and inner[q - 2 * AREA] == 1)) and inner[q + AREA] == 0
+
+
 func _water_cell(ch: Chunk, c: int, q: int, gk: int, wdata: Array, wn: PackedByteArray, rim: bool, on_road: bool, wx: int, wy: int,
-		top_above := false, low_below := true) -> void:
+		fall := false, below_fall := false) -> void:
 	var wc: PackedByteArray = wdata[0]
 	var fl: PackedByteArray = wdata[1]
 	var od: PackedByteArray = wdata[2]
@@ -1323,6 +1508,8 @@ func _water_cell(ch: Chunk, c: int, q: int, gk: int, wdata: Array, wn: PackedByt
 			if order == 0 or fl[k] == FLOW_FOAM:
 				flow = fl[k]
 			order = maxi(order, od[k])
+	if below_fall and not rim:
+		flow = FLOW_FOAM                               # the pool just below a waterfall foams
 	ch.flow[c] = flow
 	ch.bank[c] = 0
 	var river: Array = tiles.water.river
@@ -1332,7 +1519,7 @@ func _water_cell(ch: Chunk, c: int, q: int, gk: int, wdata: Array, wn: PackedByt
 			return                                     # a corner of the rim wet: the rock stays
 		# a waterfall only where the water leaves a mountain top over its rim, heading down (south, as the rock face is
 		# drawn): the top above, the low ground below. Elsewhere a wet rim cell is plain water cut through the rock.
-		var falls: bool = wn[q - AREA] >= 2 and wn[q + AREA] >= 2 and top_above and low_below
+		var falls: bool = fall
 		ch.ground[c] = int(tiles.water.fall) if falls else (tile if tile >= 0 else int(tiles.water.flow_base) + (flow * 16 + 15) * 4)
 		ch.water[c] = 3 if falls else 1
 		ch.level[c] = order
@@ -1342,7 +1529,12 @@ func _water_cell(ch: Chunk, c: int, q: int, gk: int, wdata: Array, wn: PackedByt
 		ch.ground[c] = tile
 	if wn[q] >= 2:
 		ch.level[c] = order
-		if on_road:
+		if on_road and forced_crossing(Vector2i(wx, wy)) == "ford":
+			ch.water[c] = 4                            # B25R1-018: a canonical ford: the road goes through the shallows
+			ch.solid[c] = 0
+			if wn[q] == 4:
+				ch.ground[c] = int(tiles.water.ford)
+		elif on_road:
 			ch.water[c] = 2                            # a bridge: the road runs on over the water
 			ch.solid[c] = 0
 		elif _area_fords.any(func(f: Array): return (f[0] as Vector2).distance_to(Vector2(wx, wy) + Vector2(0.5, 0.5)) <= float(f[1])):
@@ -1574,7 +1766,29 @@ func nearest_fall(c: Vector2i, radius: int) -> Vector2i:
 
 
 ## B25R1-Q3: where to stand to drink: the open cell beside the water nearest `c` within `radius` (the bank), or NO_WATER.
-func nearest_water_access(c: Vector2i, radius: int) -> Vector2i:
+## B25R1-018: `wells` (optional) is the one well registry's lookup, `w.wilds.wells_near` (cell, radius) -> nearest first,
+## each a well record (its cell as `cell`, or `x` and `y`) or a Vector2i: Overworld keeps no well data and has no World, so
+## the caller passes it; a well nearer than the stream's bank wins (its own cell: a well is stood at). nearest_water stays
+## streams only, with its agreed signature.
+func nearest_water_access(c: Vector2i, radius: int, wells: Callable = Callable()) -> Vector2i:
+	var well := NO_WATER
+	if wells.is_valid():
+		var list: Variant = wells.call(c, radius)
+		if list is Array and not (list as Array).is_empty():
+			var e: Variant = list[0]
+			if e is Vector2i:
+				well = e
+			elif e is Dictionary:
+				well = Vector2i(e.cell) if (e as Dictionary).has("cell") else Vector2i(int(e.get("x", 0)), int(e.get("y", 0)))
+	var bank := _bank_access(c, radius)
+	if well == NO_WATER:
+		return bank
+	if bank == NO_WATER or Vector2(well).distance_to(Vector2(c)) <= Vector2(bank).distance_to(Vector2(c)):
+		return well
+	return bank
+
+
+func _bank_access(c: Vector2i, radius: int) -> Vector2i:
 	var wtr := nearest_water(c, radius)
 	if wtr == NO_WATER:
 		return NO_WATER

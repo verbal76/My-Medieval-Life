@@ -66,6 +66,20 @@ func _setup() -> void:
 		queue.append(["ford", Vector2(ford) + Vector2(0.5, 0.5)])
 	if river != Vector2i.ZERO:
 		queue.append(["river", Vector2(ow.nearest_water_access(river, 6)) + Vector2(0.5, 0.5)])
+	# B25R1-018: the canonical crossings (Upmeads Water's bridge and ford; the stone bridge and fords south of Higham), the
+	# player on the road beside each
+	var k := 0
+	for f in ow._forced:
+		var at := Vector2i((f[0] as Vector2).floor())
+		var stand := at
+		for r in range(0, 9):
+			for dy in range(-r, r + 1):
+				for dx in range(-r, r + 1):
+					var c := at + Vector2i(dx, dy)
+					if stand == at and ow.is_road(c) and not ow.is_bridge(c) and not ow.is_water(c) and not ow.is_solid(c):
+						stand = c
+		queue.append(["canon_%d_%s" % [k, str(f[2])], Vector2(stand) + Vector2(0.5, 0.5)])
+		k += 1
 	queue.append(["map", Vector2(bridge) + Vector2(0.5, 0.5)])
 	_next()
 	process_frame.connect(_wait)

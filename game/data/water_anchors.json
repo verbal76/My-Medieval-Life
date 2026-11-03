@@ -1,0 +1,392 @@
+{
+ "format": "mml-region-layout/1",
+ "_note": "B25R1-018: a STUB of the region workstream's game/data/region_layout.json (origin/wip/b25r1-region 0d1c45c), holding only the keys the water reads (tiles_per_mile, rivers, crossings, downs, the water landmarks), copied unchanged so the water branch can be built and tested before the two branches meet. The overworld reads region_layout.json when it is present and this file only when it is not; delete this file when the region branch is merged (the region workstream owns the layout).",
+ "tiles_per_mile": 12,
+ "rivers": [
+  {
+   "id": "upmeads_water",
+   "name": "Upmeads Water",
+   "order": 3,
+   "direction": "west to east",
+   "width": 6,
+   "label": "CANON",
+   "src": [
+    "BONE-C1-P009",
+    "BONE-C3-P003"
+   ],
+   "note": "the course is ours; CANON: it winds from west to east through meadows with a low ridge along its south side",
+   "points": [
+    [
+     -700,
+     175
+    ],
+    [
+     -560,
+     150
+    ],
+    [
+     -430,
+     166
+    ],
+    [
+     -330,
+     160
+    ],
+    [
+     -220,
+     134
+    ],
+    [
+     -110,
+     122
+    ],
+    [
+     -20,
+     120
+    ],
+    [
+     40,
+     129
+    ],
+    [
+     110,
+     122
+    ],
+    [
+     190,
+     140
+    ],
+    [
+     260,
+     133
+    ],
+    [
+     300,
+     128
+    ],
+    [
+     420,
+     150
+    ],
+    [
+     560,
+     138
+    ],
+    [
+     720,
+     162
+    ]
+   ]
+  },
+  {
+   "id": "netherton_stream",
+   "name": "Netherton stream",
+   "order": 1,
+   "direction": "north-east, from the foot of the Downs down to Upmeads Water",
+   "width": 2,
+   "label": "CANON-INFERRED",
+   "src": [
+    "BONE-C4-P002"
+   ],
+   "note": "CANON: a stream beside Netherton at the Downs' foot; its course and its joining Upmeads Water are ours (GAME EXPANSION); it rises at the scarp foot, never on the Downs",
+   "points": [
+    [
+     22,
+     412
+    ],
+    [
+     34,
+     392
+    ],
+    [
+     62,
+     368
+    ],
+    [
+     86,
+     330
+    ],
+    [
+     128,
+     280
+    ],
+    [
+     150,
+     262
+    ],
+    [
+     196,
+     214
+    ],
+    [
+     236,
+     172
+    ],
+    [
+     262,
+     133
+    ]
+   ],
+   "joins": "upmeads_water",
+   "passes_settlement": [
+    "netherton"
+   ]
+  },
+  {
+   "id": "coldlake",
+   "name": "Coldlake",
+   "order": 2,
+   "direction": "west to east round Higham, then south and away south-west through the meadows",
+   "width": 4,
+   "label": "CANON",
+   "src": [
+    "BONE-C3-P038",
+    "BONE-C5-P002",
+    "BONE-C7-P003"
+   ],
+   "note": "CANON: a little river winding about Higham's meadows and lapping the town about; the road south is straight and crosses it thrice (a stone bridge, two fords). The course is ours",
+   "points": [
+    [
+     -360,
+     712
+    ],
+    [
+     -250,
+     722
+    ],
+    [
+     -150,
+     728
+    ],
+    [
+     -60,
+     722
+    ],
+    [
+     0,
+     720
+    ],
+    [
+     50,
+     722
+    ],
+    [
+     82,
+     738
+    ],
+    [
+     90,
+     765
+    ],
+    [
+     96,
+     792
+    ],
+    [
+     100,
+     815
+    ],
+    [
+     -10,
+     835
+    ],
+    [
+     -30,
+     848
+    ],
+    [
+     60,
+     860
+    ],
+    [
+     80,
+     874
+    ],
+    [
+     -10,
+     890
+    ],
+    [
+     -60,
+     905
+    ],
+    [
+     -130,
+     940
+    ],
+    [
+     -220,
+     985
+    ],
+    [
+     -330,
+     1030
+    ]
+   ],
+   "passes_settlement": [
+    "higham"
+   ]
+  }
+ ],
+ "crossings": [
+  {
+   "kind": "ford",
+   "x": 40,
+   "y": 129,
+   "course": "upmeads_water",
+   "name": "the Ford",
+   "label": "CANON",
+   "src": [
+    "BONE-C3-P002"
+   ],
+   "note": "the ford in the ingle of the river by the willow copse; here on the village's road south"
+  },
+  {
+   "kind": "bridge",
+   "x": -170,
+   "y": 128,
+   "course": "upmeads_water",
+   "name": "the fair bridge",
+   "material": "stone",
+   "label": "CANON",
+   "src": [
+    "BONE-C3-P004"
+   ],
+   "note": "on the high road from Upmeads to Wulstead, late built between King Peter and a house of Canons on the north side"
+  },
+  {
+   "kind": "bridge",
+   "x": 20,
+   "y": 830,
+   "course": "coldlake",
+   "name": "the stone bridge",
+   "material": "stone",
+   "label": "CANON",
+   "src": [
+    "BONE-C7-P003"
+   ]
+  },
+  {
+   "kind": "ford",
+   "x": 20,
+   "y": 855,
+   "course": "coldlake",
+   "name": "the first ford",
+   "label": "CANON",
+   "src": [
+    "BONE-C7-P003"
+   ]
+  },
+  {
+   "kind": "ford",
+   "x": 20,
+   "y": 885,
+   "course": "coldlake",
+   "name": "the second ford",
+   "label": "CANON",
+   "src": [
+    "BONE-C7-P003"
+   ]
+  }
+ ],
+ "downs": {
+  "name": "the Downs",
+  "label": "CANON",
+  "src": [
+   "BONE-C3-P037",
+   "BONE-C4-P006"
+  ],
+  "note": "open, treeless, waterless chalk uplands: downs on downs, no road but the Greenway, no castle, church or homestead, only shepherds' huts; water only in the chalk hollow of the chapel pool. The extent (north foot by Netherton, south foot by Garton above Higham, about 25 miles across north to south) is CANON-INFERRED; its east and west ends are ours",
+  "rect": [
+   -470,
+   385,
+   940,
+   320
+  ],
+  "polygon": [
+   [
+    -470,
+    430
+   ],
+   [
+    -300,
+    400
+   ],
+   [
+    -160,
+    420
+   ],
+   [
+    -40,
+    405
+   ],
+   [
+    30,
+    412
+   ],
+   [
+    150,
+    392
+   ],
+   [
+    300,
+    420
+   ],
+   [
+    470,
+    402
+   ],
+   [
+    470,
+    690
+   ],
+   [
+    300,
+    700
+   ],
+   [
+    160,
+    688
+   ],
+   [
+    60,
+    700
+   ],
+   [
+    -40,
+    690
+   ],
+   [
+    -160,
+    705
+   ],
+   [
+    -300,
+    690
+   ],
+   [
+    -470,
+    700
+   ]
+  ],
+  "springs": "none",
+  "water_ok": [
+   "st_ann_pool"
+  ]
+ },
+ "landmarks": [
+  {
+   "id": "st_ann_pool",
+   "name": "the chapel pool",
+   "kind": "pool",
+   "x": -112,
+   "y": 582,
+   "r": 3,
+   "label": "CANON",
+   "src": [
+    "BONE-C3-P037"
+   ],
+   "note": "where the water hath trickled into a pool: the only water on the Downs"
+  }
+ ]
+}

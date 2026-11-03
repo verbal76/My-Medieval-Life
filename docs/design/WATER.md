@@ -31,12 +31,33 @@ code is `game/scripts/core/overworld.gd` (the section "water"), the art `tools/w
   degrees or more to the road's own line, else the road keeps to the bank, dry; pools keep off roads. Every 4 steps (about 24
   tiles) off the mountains a ford: shallow water with stepping stones, walkable, so no course walls a stretch of country off.
 
+## 1a. The canonical water (B25R1-018)
+
+The region layout (`game/data/region_layout.json`, `mml-region-layout/1`, owned by the region workstream; until its branch is
+merged, the stub `game/data/water_anchors.json` holds a copy of just its water keys, and the layout file wins when present)
+anchors the network on Morris's geography, in absolute overworld tiles of the village frame (12 tiles a mile):
+
+- `rivers[]` `{id, name, order, width, points [[x, y]...] upstream to downstream, joins, passes_settlement}`: traced through
+  the points by the generator's own meander (`Overworld._trace_through`: a bend that is nought at every point, so the course
+  passes through each exactly), widening slightly downstream, with fords, pools and falls as every course has. Upmeads Water
+  (order 3) runs west to east past the village; the Netherton stream rises at the Downs' foot and joins it; Coldlake laps
+  round Higham and crosses the south road three times. A course that passes a settlement (`passes_settlement`) may come within
+  the clearance, never onto the settlement's built ground (its site and a tile round it).
+- `crossings[]` `{kind ford | bridge, x, y, course, material}`: where a road crosses the course there, the road keeps that
+  crossing: a ford (walkable shallows with stepping stones, on the road), a bridge of the road's type, or stone when the
+  material is stone (`Overworld.forced_crossing`).
+- `downs` `{rect, polygon, springs: none, water_ok}`: the waterless Downs (`Overworld.in_downs`): no generated stream rises or
+  runs there; its one water is the landmark it names (the chapel pool, a still pool).
+- Generated streams and rivers fill in elsewhere and may end in a canonical river. The layout's courses follow the novel
+  rather than the mountain field, so the "downhill" rule is the layout's own direction for them.
+
 ## 2. Using it
 
 - `Overworld.is_water(cell: Vector2i) -> bool` (a stream, pool, waterfall or ford; a bridge is not water) and
   `Overworld.nearest_water(cell: Vector2i, radius: int) -> Vector2i` (`Vector2i(1 << 30, 0)` = `Overworld.NO_WATER` when none,
-  always for generation 3): the homestead workstream's agreed signature. Also `nearest_water_access` (the open bank cell beside
-  it, to stand on and drink), `is_bridge`, `is_ford`, `flow_at`, `water_level`, `bank_height`, `nearest_fall`, `crossing_id`.
+  always for generation 3): the homestead workstream's agreed signature, streams and rivers only. Also
+  `nearest_water_access(cell, radius, wells := Callable())` (the open bank cell beside the water, to stand on and drink; with
+  `wells`, the one well registry's lookup `w.wilds.wells_near`, a nearer well wins: Overworld keeps no well data), `is_bridge`, `is_ford`, `flow_at`, `water_level`, `bank_height`, `nearest_fall`, `crossing_id`.
 - Walking: water and waterfalls are solid in `Overworld.is_solid`, so every path-finder (VillageMap.find_path_world, NPC
   walks, RegionTravel) goes round them or over a bridge or a ford.
 - The Region map draws the courses (rivers wider), pools and bridges from the course data, without generating chunks.
@@ -46,6 +67,10 @@ code is `game/scripts/core/overworld.gd` (the section "water"), the art `tools/w
   bridge, once a person, bridge and day; object and place `crossing:bridge:<x>,<y>`, the bridge's first cell: stable),
   `route_crossing` (a planned route crosses water: chosen bridge, ford or detour, alternatives, counts),
   `travel_blocked_by_water` (a trip refused or a walk given up because of water: outcome failed, reason no_crossing).
+
+- Live range (B25R1-019): water animates and is heard only inside the player's live range. The animated tiles are drawn
+  only in the chunks loaded round the camera (OverworldView), and the sound asks `Main.water_live(cell)`, the one call site
+  that switches to the presence workstream's query when it lands. The water data itself is permanent.
 
 ## 3. Extension points for weather, rain, flooding and seasons (not built now)
 

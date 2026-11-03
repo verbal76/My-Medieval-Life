@@ -4658,6 +4658,7 @@ func _audio_step(delta: float) -> void:
 	_hp_seen = p.hp
 	_footsteps(p)
 	_water_sound(delta)                       # B25R1-017: streams, rivers and waterfalls heard by distance
+	_water_live_step()                        # B25R1-019: water animates only inside the live range
 
 
 ## A fight: a bandit or anyone fighting the player within 12 cells, or a wild animal angry at the player.
@@ -4675,6 +4676,38 @@ func _in_fight() -> bool:
 
 
 ## Soft footsteps, one every `stride_cells` walked on foot (the minimum gap in music.json drops them in a sprint).
+## B25R1-019 (owner: water animation and sound only inside the player's live range): whether water at `cell` is live. The
+## ONE call site to switch to the presence workstream's query (Presence.in_live_range) when it lands; until then the live
+## range is the overworld chunks drawn round the camera (OverworldView.chunks: the view and its margin), which is also all
+## the water whose tiles animate (an unloaded chunk draws nothing).
+func water_live(cell: Vector2i) -> bool:
+	var pr: Variant = world.get("presence") if world != null else null
+	if pr != null:
+		return bool(pr.cell_live(cell))              # the presence workstream's live range (B25R1-019)
+	return ow_view != null and ow_view.chunks.has(Overworld.chunk_of(cell))
+
+
+## B25R1-019: the view's water animates in a chunk only when it is live: the presence query when it is there (Main sets the
+## view's live_check once a world is up, and bumps live_version when presence's version moves), else every loaded chunk.
+func _water_live_rect(r: Rect2) -> bool:
+	var pr: Variant = world.get("presence") if world != null else null
+	return pr == null or bool(pr.rect_live(r))
+
+
+var _presence_seen := -1
+
+
+func _water_live_step() -> void:
+	if ow_view == null:
+		return
+	if not ow_view.live_check.is_valid():
+		ow_view.live_check = _water_live_rect
+	var pr: Variant = world.get("presence") if world != null else null
+	if pr != null and int(pr.version) != _presence_seen:
+		_presence_seen = int(pr.version)
+		ow_view.live_version += 1
+
+
 ## B25R1-017: twice a second, the nearest water and waterfall round the player set the audio's water layer (a stream or a
 ## river loop, a waterfall loop, each louder the nearer). Nothing below the surface or in a world without streams.
 var _water_scan := 0.0
@@ -4692,6 +4725,10 @@ func _water_sound(delta: float) -> void:
 	var c := Vector2i(world.player.pos.floor())
 	var wc := ow.nearest_water(c, 12)
 	var fc := ow.nearest_fall(c, 16)
+	if wc != Overworld.NO_WATER and not water_live(wc):
+		wc = Overworld.NO_WATER                      # B25R1-019: heard only inside the player's live range
+	if fc != Overworld.NO_WATER and not water_live(fc):
+		fc = Overworld.NO_WATER
 	var d := INF if wc == Overworld.NO_WATER else Vector2(wc).distance_to(Vector2(c))
 	var fd := INF if fc == Overworld.NO_WATER else Vector2(fc).distance_to(Vector2(c))
 	audio.set_water(("water_river" if ow.water_level(wc) >= 2.0 else "water_stream") if wc != Overworld.NO_WATER else "", d, fd)
