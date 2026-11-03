@@ -373,3 +373,23 @@ Civic art, checked through the asset pipeline:
   - Recommended: assemble the abbey church and towers from Puny World's modular stone-wall and slate-roof kit, as
     build_village.py assembles its workshops.
   - The alternative is a pack from the owner.
+
+### Civic art as built (second region worker)
+
+All of it is cut from the paid Puny World tileset by `tools/build_region_stamps.py` into `game/data/region_stamps.json`
+(`stamps`, `wall`, the `white` look). The layout's `plan` places it: `civic` [{stamp, at, id}], `walls`, `castle`.
+
+| Piece | Source in the art | Where |
+|---|---|---|
+| Town walls | castle sample's Walls layer: 9-row east-west run (merlons, walkway, parapet, stone face), 5-column north-south run, the face's end column; banners from its Object layer | Higham: round the town, gates 7 wide on the main street N and S, gate towers |
+| White castle | the same wall kit, its faces in the light grey brick (rows 3139-3800), a keep in slate and light stone | beyond Higham's NE corner, gate to the south |
+| Abbey church, churches, towers | slate hall: the manor roof of sample village-2 (ridge N-S, any odd width and length), front in the wall kit's stone face with Shade's door and shuttered windows; a tower is a narrow hall with a tall face | Higham north band (abbey + tower, church + tower x2), Wulstead west (Black Canons), Netherton east |
+| Buttercross | a small slate roof on the round-arched stone arcade (4019-4021), open beneath | Wulstead's square |
+| Fountain | the round stone basin (3225/3226/3445/3446) | Wulstead's square |
+| Grave-mounds | Cozy Farm's 3 x 3 rough-turf patch, walked over | seven in a row on the Greenway's low hill |
+| Chalk figures, Bear Castle | chalk cut into the turf by the chunk generator (`_marks`): the figure from its rows in the layout (a tree, a bear ramping either side) at scale 3; the earthwork a broken ring bank | the west bent of Bear Hill; its top |
+
+Art gaps (no suitable art in the registered packs): a standing stone cross (Garton's street cross; also Wulstead's
+cross head on the buttercross), a true white-stone battlement (the castle's merlons are the grey kit's), and a fountain with
+water. Options: a pack from the owner, or leave the cross out as now (the Landmarks entry is withheld until it stands).
+The site plan stays a street grid with seeded variation. Breaking it up further (bent streets, yards, gardens) is still open.

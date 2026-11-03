@@ -110,7 +110,10 @@ func _run() -> void:
 	main.recenter()
 	view.follow(w.player.pos, w.player.pos, 0.0, -1)     # every chunk round the player built now, as a load does
 	var gate_cell := Vector2i(st.gate)
-	var lane_cell: Vector2i = lanes.keys().filter(func(c): return (st.rect as Rect2i).has_point(c))[0]
+	# a street cell of Wulstead's beside where the player stands (B25R1-018: the site is wider than the chunks drawn round the
+	# player, so its first street cell may lie in a chunk not built yet)
+	var lane_cell: Vector2i = lanes.keys().filter(func(c): return (st.rect as Rect2i).has_point(c) and c != gate_cell \
+			and (c as Vector2i).distance_to(gate_cell) < 6.0)[0]
 	var built: Dictionary = view.chunks.get(Overworld.chunk_of(lane_cell), {})
 	check(not built.is_empty() and (built.path as TileMapLayer).get_cell_source_id(lane_cell) == 4, "in the world, Wulstead's street is drawn with the stone road tiles (atlas 4)")
 	check(not built.is_empty() and (view.chunks.get(Overworld.chunk_of(gate_cell), built).path as TileMapLayer).get_cell_source_id(gate_cell) == 4, "and so is the road where it comes into the site")

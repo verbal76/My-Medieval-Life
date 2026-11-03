@@ -267,7 +267,7 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 	var box := Rect2i(cc * Overworld.CHUNK, Vector2i(Overworld.CHUNK, Overworld.CHUNK))
 	var layers := {}
 	var sorted: TileMapLayer = null       # this chunk's site front walls, drawn among the characters
-	for st in overworld.sites:
+	for st in overworld.sites + overworld.structures:   # (B25R1-018: and the landmarks built in the country)
 		if not (st.rect as Rect2i).intersects(box):
 			continue
 		for sl in st.slots:
@@ -290,8 +290,9 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 					if str(lname).begins_with("above"):
 						above_layers.append(l)
 				var cells: Array = stamp.layers[lname]
-				for j in int(stamp.h):
-					for i in int(stamp.w):
+				var clip := r.intersection(box)          # only this chunk's part (a town's walls are one stamp round it all)
+				for j in range(clip.position.y - r.position.y, clip.end.y - r.position.y):
+					for i in range(clip.position.x - r.position.x, clip.end.x - r.position.x):
 						var v := int(cells[j * int(stamp.w) + i])
 						if not swap.is_empty():
 							v = int(swap.get(str(v), v))

@@ -616,6 +616,44 @@ func _test_sites(seed_value: int) -> void:
 			if not seen.has(sl.spot):
 				lost.append("%s %s" % [st.name, sl.trade])
 	check(lost.is_empty(), "seed %d: every settlement's every door is reachable on foot from the village's south gate (%d cells open; cut off: %s)" % [seed_value, seen.size(), lost])
+	# B25R1-018 phase 3: the civic buildings and the landmarks built in the country
+	var hig := o.site("higham")
+	var ids := {}
+	for sl in hig.slots:
+		ids[str(sl.get("id", ""))] = sl
+	check(ids.has("walls") and ids.has("castle") and ids.has("keep") and ids.has("abbey") and ids.has("church"),
+		"seed %d: Higham has its walls, the castle with its keep, the abbey and a church (%s)" % [seed_value, ids.keys()])
+	if ids.has("walls"):
+		var wr: Rect2i = ids.walls.rect
+		var cx: int = (hig.center as Vector2i).x
+		check(o.is_solid(wr.position + Vector2i(2, 2)) and o.is_solid(Vector2i(wr.end.x - 3, wr.position.y + 20))
+				and not o.is_solid(Vector2i(cx, wr.position.y + 4)) and not o.is_solid(Vector2i(cx, wr.end.y - 4)),
+			"seed %d: the town walls are solid, their north and south gates open on the main street" % seed_value)
+		check(seen.has(Vector2i(ids.keep.spot)), "seed %d: the castle's keep is reached on foot through the castle gate" % seed_value)
+	var wul := o.site("wulstead")
+	var wids := {}
+	for sl in wul.slots:
+		wids[str(sl.get("id", ""))] = sl
+	check(wids.has("fountain") and wids.has("buttercross") and (wul.square as Rect2i).encloses(wids.fountain.rect)
+			and (wul.square as Rect2i).encloses(wids.buttercross.rect) and wids.has("canons")
+			and int(wids.canons.rect.position.x) < (wul.center as Vector2i).x - 40,
+		"seed %d: Wulstead's fountain and buttercross stand in its market square, the Black Canons at its west" % seed_value)
+	var lmk := {}
+	for lp in o.landmark_places():
+		lmk[str(lp.id)] = lp
+	check(lmk.has("region:seven_mounds") and lmk.has("region:st_ann_chapel") and lmk.has("region:bear_castle")
+			and lmk.has("region:bear_figures") and lmk.has("region:higham_castle") and not lmk.has("region:garton_cross"),
+		"seed %d: the landmarks that stand in the world are places to find; one not built yet is not (%d)" % [seed_value, lmk.size()])
+	var chapel: Dictionary = {}
+	var mounds := 0
+	for stc in o.structures:
+		if str(stc.id) == "st_ann_chapel":
+			chapel = stc
+		if str(stc.id) == "seven_mounds":
+			mounds = stc.slots.size()
+	check(not chapel.is_empty() and o.is_solid(Vector2i(chapel.slots[0].rect.position) + Vector2i(2, 2))
+			and not o.is_solid(Vector2i(chapel.slots[0].spot)) and mounds == 7,
+		"seed %d: Saint Ann's Chapel stands, solid, its door open; seven grave-mounds in a row" % seed_value)
 	# REGION-NAV-01 AD-4: a walking route along the roads from the south gate to each settlement: from the gate to the site's lane,
 	# every step to a neighbouring cell, none of it blocked, the same each time
 	var gi := -1
