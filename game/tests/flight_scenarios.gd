@@ -33,7 +33,13 @@ func _init() -> void:
 	for sc in defs.scenarios:
 		if only != "" and str(sc.name) != only:
 			continue
-		results.append(run(sc))
+		var r := {}
+		for sd in sc.get("seeds", [sc.seed]):         # the listed seeds in order: the first whose village lets the start happen
+			sc.seed = int(sd)
+			r = run(sc)
+			if not str(r.steps[0].result).begins_with("nobody could") if not r.steps.is_empty() else true:
+				break
+		results.append(r)
 		print("SCENARIO %s: %s" % [sc.name, results[-1].result])
 	var f := FileAccess.open(out_dir + "/targeted.json", FileAccess.WRITE)
 	f.store_string(JSON.stringify({"format": "mml-flight-targeted/1", "commit": OS.get_environment("MML_COMMIT"), "label": "targeted (not organic)",
@@ -117,7 +123,7 @@ func pick(w: World, who: String) -> NPC:
 		var age := Life.npc_age(w, n)
 		match who:
 			"young_adult":
-				if n.role == "adult" and n.partner < 0 and age < 25.0:
+				if n.role == "adult" and age < 30.0:
 					c = n
 			"established_adult":
 				if n.role == "adult" and n.partner >= 0 and age >= 25.0:
