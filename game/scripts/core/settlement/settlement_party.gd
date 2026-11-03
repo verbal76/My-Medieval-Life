@@ -85,6 +85,8 @@ var name: String:
 				return "%s of %s" % [s.gov_name, s.name]
 			"household":
 				return "household %s of %s" % [holder.trim_prefix("hh:"), s.name]
+		if holder.begins_with("own:"):
+			return "a %s of %s working on their own account" % [OffMapSettlement._trade_of(_btype_name()), s.name]
 		return "the %s of %s" % [holder, s.name]
 
 var ref: String:
@@ -162,7 +164,16 @@ func _hh() -> Dictionary:
 
 
 func _biz() -> Dictionary:
+	if holder.begins_with("own:"):
+		return s.own.get(holder.trim_prefix("own:"), {})     # REGION-NAV-01 Q4: a self-employed crafter's own trade
 	return s.biz.get("merchant" if holder == "trader" else holder, {})
+
+
+## The business type this party's books follow: its own for a business, its trade's for a self-employed crafter.
+func _btype_name() -> String:
+	if holder.begins_with("own:"):
+		return str(_biz().get("type", ""))
+	return holder
 
 
 ## The holder's own record: the household, the business or the treasury.
@@ -251,7 +262,7 @@ func _derive() -> void:
 				_needs["wheat"] = maxf(float(_needs.get("wheat", 0.0)), float(units + int(all.get("wheat", 0))) / wd)
 		"business":
 			var b := _biz()
-			var T := OffMapSettlement.btype(holder)
+			var T := OffMapSettlement.btype(_btype_name())
 			var n := s._workers(b)
 			for rid in T.get("runs", {}):
 				var r: Dictionary = GameData.recipes[rid]

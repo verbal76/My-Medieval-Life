@@ -92,6 +92,7 @@ var miles := 0
 var pos := Vector2i.ZERO
 var industries: Array = []
 var hh: Array = []                   # households: {id, trade, adults, children, mem[[born, sex, pair, unwilling]], parents[], kids[], coins, pantry{}, credit, hungry, acc{}, alive}
+var own: Dictionary = {}             # REGION-NAV-01 Q4 (option C): str(household id) -> the household's own trade, a business-shaped record {type, workers: [that household], till, stock, ...}: a self-employed crafter (see _setup_own)
 var biz: Dictionary = {}             # business type -> {type, workers[], till, stock{}, reserves{}, out{}, acc{}, reserve, horses, foal, fed_miss}
 var gov: Dictionary = {}             # {coins, granary{}, officials[], acc{}}
 var prices: Dictionary = {}          # item -> float, the market price (today's whole-coin price is its rounding)
@@ -236,6 +237,7 @@ static func create(spec: Dictionary, world_seed: int, index: int) -> OffMapSettl
 	for h in s.hh:
 		s._seed_ages(h, arng, 0)
 	s.flows = _blank_flows()
+	s._setup_own(spec, world_seed, index)
 	s.flows.horses_start = s.horses()
 	s.start = {"coins": s.coins(), "goods": s.goods()}
 	return s
@@ -465,6 +467,7 @@ func _after_loss(h: Dictionary) -> void:
 	_recount(h)
 	if int(h.adults) > 0:
 		return
+	_wind_up_own(h)
 	var heir := _heir(h)
 	if heir < 0 and not h.mem.is_empty():
 		heir = _guardian(h)
@@ -604,6 +607,7 @@ func _marry(wh: Dictionary, wj: int, mh: Dictionary, mj: int) -> void:
 	flows.households_formed += 1
 	for o in [wh, mh]:
 		if o.mem.is_empty():                                         # the last of a household goes with the couple: it closes, nothing left behind
+			_wind_up_own(o)
 			o.alive = false
 			_recount(o)
 			for k in o.pantry:
@@ -623,6 +627,8 @@ func coins() -> int:
 		n += int(h.coins)
 	for t in biz:
 		n += int(biz[t].till)
+	for k in own:
+		n += int(own[k].till)
 	return n
 
 
@@ -634,6 +640,9 @@ func goods() -> Dictionary:
 	for t in biz:
 		for k in biz[t].stock:
 			_add(g, k, int(biz[t].stock[k]))
+	for o in own:
+		for k in own[o].stock:
+			_add(g, k, int(own[o].stock[k]))
 	for k in gov.granary:
 		_add(g, k, int(gov.granary[k]))
 	return g
@@ -755,6 +764,7 @@ func step_day(d: int) -> void:
 	if profile:
 		t0 = _lap("produce", t0)
 	_pay_wages()
+	_pay_own()
 	_taxes_and_officials()
 	if profile:
 		t0 = _lap("wages+tax", t0)
@@ -829,8 +839,12 @@ func _open_offers() -> void:
 	var types := biz.keys()
 	types.sort()
 	var rot := day % maxi(1, types.size())
+	var sellers: Array = []
 	for k in types.size():
-		var b: Dictionary = biz[types[(k + rot) % types.size()]]
+		sellers.append(biz[types[(k + rot) % types.size()]])
+	for k in _own_ids():
+		sellers.append(own[k])                     # REGION-NAV-01 Q4: a self-employed crafter sells in the same market
+	for b: Dictionary in sellers:
 		var keep := _keep(b)
 		var items: Array = b.stock.keys()
 		items.sort()
@@ -911,6 +925,8 @@ func _market() -> void:
 	types.sort()
 	for t in types:
 		_business_buys(biz[t])
+	for k in _own_ids():
+		_business_buys(own[k])                     # REGION-NAV-01 Q4: a crafter buys its inputs and tools from its own working purse
 	if profile:
 		t0 = _lap("m:businesses", t0)
 	_trader_collects()
@@ -1082,9 +1098,13 @@ func _trader_collects() -> void:
 func _produce() -> void:
 	var types := biz.keys()
 	types.sort()
+	var makers: Array = []
 	for t in types:
-		var b: Dictionary = biz[t]
-		var T := btype(t)
+		makers.append(biz[t])
+	for k in _own_ids():
+		makers.append(own[k])                      # REGION-NAV-01 Q4: a crafter works by the same rules, one household's hands
+	for b: Dictionary in makers:
+		var T := btype(str(b.type))
 		var n := _workers(b)
 		if n == 0:
 			continue
@@ -1144,6 +1164,137 @@ func _run_recipe(b: Dictionary, T: Dictionary, r: Dictionary) -> bool:
 		_add(b.stock, o, int(r.out[o]))
 		_add(flows.produced, o, int(r.out[o]))
 	return true
+
+
+# --- REGION-NAV-01 Q4 (owner 2026-11-03, option C): self-employed crafters
+## A household working on its own account: its own trade is a business-shaped record (own[str(id)]) whose only worker is that
+## household, run by the same rules as a business (production by its trade's recipes and natural outputs, _produce; inputs and
+## tools bought from its own working purse, _business_buys; sales in the same market, _open_offers; the same keep), and whose
+## profit is the household's living (_pay_own): not a business of the settlement, not employed by one.
+##   Who: the settlement's data names some at the start (settlements.json "independent": [{trade, capital, reserves}]: a new
+##     household of that trade, part of the opening books); and once a week one craft household that earns under `switch_below`
+##     and has savings of at least own_start_capital, two weeks running short of work, may set up on its own (_own_week): those
+##     coins become its working purse.
+##     Not every worker household: one a week, by need and means.
+##   Going back: one whose working purse and stock are both spent for own_fail_days rejoins its trade's business (or, with none,
+##     stays and earns what it can).
+##   An ended household (death with no adult, the last leaving, moving to the village, marrying in) first winds up its trade:
+##     purse to its coins, stock to its pantry, so the existing rules carry them on (_wind_up_own). Nothing is created.
+const OWN_TRADES := ["smith", "sawyer", "mason", "tanner", "weaver", "cook", "healer", "miner"]
+
+
+func _own_ids() -> Array:
+	var ks: Array = own.keys()
+	ks.sort_custom(func(a, b) -> bool: return int(a) < int(b))
+	return ks
+
+
+func _own_record(bt: String, hid: int, till: int) -> Dictionary:
+	var T := btype(bt)
+	return {"type": bt, "workers": [hid], "till": till, "stock": {}, "reserves": {}, "out": (T.get("out", {}) as Dictionary).duplicate(),
+		"acc": {}, "reserve": int(T.get("reserve", 12)), "horses": 0, "foal": 0, "fed_miss": 0, "paid": 0, "week": 0, "rate": 0.0,
+		"idle": 0, "own": true}
+
+
+## The data's self-employed crafters of a new settlement: a household each, with its working purse and the tools its trade wants.
+func _setup_own(spec: Dictionary, world_seed: int, index: int) -> void:
+	var list: Array = (data().get("independent", {}) as Dictionary).get(str(spec.id), [])
+	var rng := RandomNumberGenerator.new()
+	rng.seed = world_seed * 7919 + (index + 1) * 104729 + 9001
+	for e in list:
+		var t := str(e.trade)
+		if not TRADE_BIZ.has(t):
+			continue
+		var bt: String = TRADE_BIZ[t]
+		var pantry_per := int(GameData.b("start_household_wheat_per_member"))
+		var adults := 1 + (1 if rng.randf() < 0.5 else 0)
+		var h := {"id": hh.size(), "trade": t, "adults": adults, "children": 0,
+			"coins": rng.randi_range(int(data().rules.household_coins[0]), int(data().rules.household_coins[1])),
+			"pantry": {"wheat": pantry_per * adults}, "credit": 0.0, "hungry": 0, "acc": {}, "alive": true, "inc": 0, "stay": 0,
+			"low": 0, "rate": 0.0, "landless": 0}
+		hh.append(h)
+		_seed_ages(h, rng, maxi(0, day))
+		var rec := _own_record(bt, int(h.id), int(e.get("capital", 40)))
+		if bt == "quarry":
+			rec.out = (e.get("out", {}) as Dictionary).duplicate()       # an independent miner digs a claim of its own, never the quarry's
+			for k in e.get("reserves", {}):
+				rec.reserves[k] = int(e.reserves[k])
+		var T := btype(bt)
+		for tool in T.get("tools", {}):
+			rec.stock[tool] = _tool_stock(T, tool, 1)
+		own[str(h.id)] = rec
+
+
+## Each day after wages: of what a crafter's working purse holds above its reserve, the household takes its living (all of it:
+## there are no other workers); counted as the household's income, as a wage is.
+func _pay_own() -> void:
+	for k in _own_ids():
+		var o: Dictionary = own[k]
+		var h: Dictionary = hh[int(k)]
+		if not bool(h.alive):
+			continue
+		var pay := maxi(0, int(o.till) - int(o.reserve))
+		if pay > 0:
+			o.till -= pay
+			h.coins += pay
+			h.inc = int(h.get("inc", 0)) + pay
+			o.paid = int(o.get("paid", 0)) + pay
+			o.week = int(o.get("week", 0)) + pay
+		var stock_n := 0
+		for i in o.stock:
+			stock_n += int(o.stock[i])
+		o.idle = int(o.get("idle", 0)) + 1 if int(o.till) <= 1 and stock_n == 0 else 0
+
+
+## Once a week: one craft household short of work sets up on its own (its savings become its working purse), and a crafter
+## whose trade has failed for own_fail_days goes back to its trade's business.
+func _own_week() -> void:
+	var cap := int((data().get("independent", {}) as Dictionary).get("own_start_capital", 30))
+	for i in hh.size():
+		var h: Dictionary = hh[i]
+		var t := str(h.trade)
+		if not bool(h.alive) or not t in OWN_TRADES or own.has(str(i)) or int(h.get("low", 0)) < 2 or int(h.coins) < cap:
+			continue
+		var bt: String = TRADE_BIZ.get(t, "")
+		if bt == "" or bt == "quarry":
+			continue                                     # a miner needs a claim of its own: only the data gives one
+		if biz.has(bt):
+			biz[bt].workers.erase(i)
+		h.coins -= cap
+		var rec := _own_record(bt, i, cap)
+		own[str(i)] = rec
+		flows.own_started = int(flows.get("own_started", 0)) + 1
+		note("%s set up on their own account as a %s." % ["A household", t])
+		break
+	for k in _own_ids():
+		var o: Dictionary = own[k]
+		if int(o.get("idle", 0)) >= int((data().get("independent", {}) as Dictionary).get("own_fail_days", 14)):
+			var h: Dictionary = hh[int(k)]
+			_wind_up_own(h)
+			if biz.has(str(o.type)) and bool(h.alive):
+				biz[str(o.type)].workers.append(int(k))
+			flows.own_ended = int(flows.get("own_ended", 0)) + 1
+
+
+## A household's own trade is wound up into the household: its working purse into its coins, its stock into its pantry.
+func _wind_up_own(h: Dictionary) -> void:
+	var k := str(h.id)
+	if not own.has(k):
+		return
+	var o: Dictionary = own[k]
+	h.coins += int(o.till)
+	for i in o.stock:
+		_add(h.pantry, i, int(o.stock[i]))
+	own.erase(k)
+
+
+func _own_save() -> Dictionary:
+	var out := {}
+	for k in _own_ids():
+		var o: Dictionary = (own[k] as Dictionary).duplicate(true)
+		_clean(o.acc)
+		out[k] = o
+	return out
 
 
 # --- wages, tax, officials
@@ -1283,6 +1434,7 @@ func _move_jobs() -> void:
 					h.stay = 0
 					flows.job_moves += 1
 					break                      # one household a business a week
+	_own_week()
 	_develop()
 	for t in biz:
 		biz[t].week = 0
@@ -2043,6 +2195,8 @@ func person_load(hi: int, j: int) -> Dictionary:
 
 ## Member `j` leaves household `hi` with person_load's coins and goods; the household closes if they were its last.
 func release_person(hi: int, j: int) -> Dictionary:
+	if (hh[hi].mem as Array).size() <= 1:
+		_wind_up_own(hh[hi])                                     # REGION-NAV-01 Q4: the last of the household takes its own trade's purse and stock
 	var l := person_load(hi, j)
 	var h: Dictionary = hh[hi]
 	h.coins -= int(l.coins)
@@ -2068,6 +2222,7 @@ func household_load(hi: int) -> Dictionary:
 
 ## The whole household leaves with its coins and pantry; it is dissolved (its business keeps its other households).
 func release_household(hi: int) -> Dictionary:
+	_wind_up_own(hh[hi])                                         # REGION-NAV-01 Q4: its own trade goes with it (purse and stock)
 	var l := household_load(hi)
 	var h: Dictionary = hh[hi]
 	h.coins = 0
@@ -2151,6 +2306,7 @@ func wed_in(gi: int, gj: int, p: Dictionary, coins: int, goods: Dictionary) -> i
 	biz[bt].workers.append(h.id)
 	flows.households_formed += 1
 	if gh.mem.is_empty():
+		_wind_up_own(gh)
 		gh.alive = false
 		for k in gh.pantry:
 			_add(h.pantry, k, int(gh.pantry[k]))
@@ -2193,7 +2349,7 @@ func to_dict() -> Dictionary:
 	var gv: Dictionary = gov.duplicate(true)
 	_clean(gv.acc)
 	return {"id": id, "name": name, "kind": kind, "gov_name": gov_name, "miles": miles, "x": pos.x, "y": pos.y,
-		"industries": industries.duplicate(), "hh": hs, "biz": bs, "gov": gv,
+		"industries": industries.duplicate(), "hh": hs, "biz": bs, "gov": gv, "own": _own_save(),
 		"prices": prices.duplicate(), "toll_acc": _toll_acc, "flows": flows.duplicate(true), "start": start.duplicate(true), "day": day,
 		"tax": tax.duplicate(true), "journal": journal.duplicate(true), "closed": closed.duplicate(true), "dev": dev.duplicate(true),
 		"transit": transit.duplicate(true)}
@@ -2242,6 +2398,8 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 			s._recount(c)
 	for t in d.biz:
 		s.biz[t] = _biz_from(d.biz[t])
+	for k in d.get("own", {}):                         # REGION-NAV-01 Q4 (optional key): older saves have no self-employed crafters
+		s.own[str(k)] = _biz_from(d.own[k])
 	for t in d.get("closed", {}):
 		s.closed[t] = _biz_from(d.closed[t])
 	s.add_new_outputs()

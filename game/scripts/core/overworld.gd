@@ -177,50 +177,49 @@ func site_building_at(c: Vector2i) -> bool:
 ## lane. Cells, 4-connected, from the gate's outside cell to the site's gate cell. Empty when no road joins them (a journey then
 ## fails and is recorded).
 func road_route(gate: int, sid: String) -> PackedVector2Array:
-	var st := site(sid)
-	if st.is_empty() or gate < 0 or gate >= gates.size():
+	return route_between(_gate_end(gate), _site_end(sid))
+
+
+## REGION-NAV-01 Q3 (owner 2026-11-03: one geography): the road route between two ends, each a village gate or a settlement
+## (_gate_end, _site_end: {base: the link from the end to its far point, nodes: road node -> the link from the far point to it}).
+## The regional trade's distances and the couriers' days are these routes' lengths (Regions.route_table), so travel and trade
+## measure the same roads.
+func route_between(ea: Dictionary, eb: Dictionary) -> PackedVector2Array:
+	if ea.is_empty() or eb.is_empty() or (ea.nodes as Dictionary).is_empty() or (eb.nodes as Dictionary).is_empty():
 		return PackedVector2Array()
-	# the links at each end: link index -> the node it reaches
-	var starts := {}                              # node Vector2i(i, j) -> the link index from the gate's far point
-	var ends := {}                                # node -> the link index of the site's road from its far point
-	var base := -1
-	var site_base := -1
-	for li in _links.size():
-		var key := int(_links[li].key)
-		if key >= 2000:
-			if (key - 2000) / 8 == sites.find(st):
-				if (key - 2000) % 8 == 0:
-					site_base = li
-				else:
-					ends[_node_of(_links[li].b)] = li
-		elif (key - 1000) / 8 == gate:
-			if (key - 1000) % 8 == 0:
-				base = li
-			else:
-				starts[_node_of(_links[li].b)] = li
-	if base < 0 or site_base < 0 or starts.is_empty() or ends.is_empty():
-		return PackedVector2Array()
-	# Dijkstra over the road nodes in a box round both ends
-	var lo := Vector2i(mini(fdiv(gates[gate].out.x, NODE), fdiv(st.gate.x, NODE)) - 4, mini(fdiv(gates[gate].out.y, NODE), fdiv(st.gate.y, NODE)) - 4)
-	var hi := Vector2i(maxi(fdiv(gates[gate].out.x, NODE), fdiv(st.gate.x, NODE)) + 4, maxi(fdiv(gates[gate].out.y, NODE), fdiv(st.gate.y, NODE)) + 4)
+	var all_pts: Array = []
+	for e in [ea, eb]:
+		all_pts.append(Vector2i(_links[int(e.base)].a))
+	var lo := Vector2i(mini(fdiv(all_pts[0].x, NODE), fdiv(all_pts[1].x, NODE)) - 4, mini(fdiv(all_pts[0].y, NODE), fdiv(all_pts[1].y, NODE)) - 4)
+	var hi := Vector2i(maxi(fdiv(all_pts[0].x, NODE), fdiv(all_pts[1].x, NODE)) + 4, maxi(fdiv(all_pts[0].y, NODE), fdiv(all_pts[1].y, NODE)) + 4)
+	var starts: Dictionary = ea.nodes
+	var ends: Dictionary = eb.nodes
 	var dist := {}
 	var prev := {}
 	var open: Array = []                          # [cost, j, i]
 	for nd: Vector2i in starts:
-		var c0 := _segment(Vector3i(starts[nd], 0, -1), _links[starts[nd]].a, _links[starts[nd]].b, int(_links[starts[nd]].key)).size() / 2
+		var li: int = starts[nd]
+		var c0 := _segment(Vector3i(li, 0, -1), _links[li].a, _links[li].b, int(_links[li].key)).size() / 2
 		if not dist.has(nd) or c0 < int(dist[nd]):
 			dist[nd] = c0
 			open.append([c0, nd.y, nd.x])
 	var goal := Vector2i(1 << 30, 0)
+	var GOAL := Vector2i(1 << 29, 1 << 29)          # the destination's far point: reached from an end node over its road in
 	while not open.is_empty():
 		open.sort()
 		var top: Array = open.pop_front()
 		var nd := Vector2i(int(top[2]), int(top[1]))
+		if nd == GOAL:
+			break                                          # the shortest way, the road in counted
 		if int(top[0]) > int(dist.get(nd, 1 << 30)):
 			continue
 		if ends.has(nd):
-			goal = nd
-			break
+			var lb0: int = ends[nd]
+			var whole := int(top[0]) + _segment(Vector3i(lb0, 0, -1), _links[lb0].a, _links[lb0].b, int(_links[lb0].key)).size() / 2
+			if whole < int(dist.get(GOAL, 1 << 30)):
+				dist[GOAL] = whole
+				goal = nd
+				open.append([whole, GOAL.y, GOAL.x])
 		for e in _node_edges(nd):
 			var nb: Vector2i = e[0]
 			if nb.x < lo.x or nb.y < lo.y or nb.x > hi.x or nb.y > hi.y:
@@ -232,15 +231,16 @@ func road_route(gate: int, sid: String) -> PackedVector2Array:
 				open.append([cost, nb.y, nb.x])
 	if goal.x == 1 << 30:
 		return PackedVector2Array()
-	# cells: gate out -> far, far -> first node, node chain, last node -> site gate
 	var out := PackedVector2Array()
 	var chain: Array = []
 	var at := goal
 	while prev.has(at):
 		chain.push_front([prev[at][0], at, prev[at][1]])
 		at = prev[at][0]
-	_append_cells(out, _segment(Vector3i(base, 0, -1), _links[base].a, _links[base].b, int(_links[base].key)), false)
-	_append_cells(out, _segment(Vector3i(starts[at], 0, -1), _links[starts[at]].a, _links[starts[at]].b, int(_links[starts[at]].key)), false)
+	var base_a: int = ea.base
+	var la: int = starts[at]
+	_append_cells(out, _segment(Vector3i(base_a, 0, -1), _links[base_a].a, _links[base_a].b, int(_links[base_a].key)), false)
+	_append_cells(out, _segment(Vector3i(la, 0, -1), _links[la].a, _links[la].b, int(_links[la].key)), false)
 	for step in chain:
 		var seg: Array = step[2]                      # [i, j, k, forward]
 		var a := node_pos(int(seg[0]), int(seg[1]))
@@ -248,10 +248,50 @@ func road_route(gate: int, sid: String) -> PackedVector2Array:
 		var nj: int = int(seg[1]) + [0, 1, 1, 1][int(seg[2])]
 		var cells := _segment(Vector3i(int(seg[0]), int(seg[1]), int(seg[2])), a, node_pos(ni, nj), (int(seg[0]) * 7919 + int(seg[1]) * 104729 + int(seg[2])) & 0xFFFFFF)
 		_append_cells(out, cells, not bool(seg[3]))
-	var li_end: int = ends[goal]
-	_append_cells(out, _segment(Vector3i(li_end, 0, -1), _links[li_end].a, _links[li_end].b, int(_links[li_end].key)), true)
-	_append_cells(out, _segment(Vector3i(site_base, 0, -1), _links[site_base].a, _links[site_base].b, int(_links[site_base].key)), true)
+	var lb: int = ends[goal]
+	var base_b: int = eb.base
+	_append_cells(out, _segment(Vector3i(lb, 0, -1), _links[lb].a, _links[lb].b, int(_links[lb].key)), true)
+	_append_cells(out, _segment(Vector3i(base_b, 0, -1), _links[base_b].a, _links[base_b].b, int(_links[base_b].key)), true)
 	return out
+
+
+## The road end of village gate `gate`: its base link (out -> far) and its node links.
+func _gate_end(gate: int) -> Dictionary:
+	if gate < 0 or gate >= gates.size():
+		return {}
+	var base := -1
+	var nodes := {}
+	for li in _links.size():
+		var key := int(_links[li].key)
+		if key < 2000 and (key - 1000) / 8 == gate:
+			if (key - 1000) % 8 == 0:
+				base = li
+			else:
+				nodes[_node_of(_links[li].b)] = li
+	return {} if base < 0 else {"base": base, "nodes": nodes}
+
+
+## The road end of settlement `sid`: its base link (lane -> far below the site) and its node links.
+func _site_end(sid: String) -> Dictionary:
+	var st := site(sid)
+	if st.is_empty():
+		return {}
+	var si := sites.find(st)
+	var base := -1
+	var nodes := {}
+	for li in _links.size():
+		var key := int(_links[li].key)
+		if key >= 2000 and (key - 2000) / 8 == si:
+			if (key - 2000) % 8 == 0:
+				base = li
+			else:
+				nodes[_node_of(_links[li].b)] = li
+	return {} if base < 0 else {"base": base, "nodes": nodes}
+
+
+## REGION-NAV-01 Q3: the road route between two settlements (cells from a's lane to b's lane).
+func site_route(a: String, b: String) -> PackedVector2Array:
+	return route_between(_site_end(a), _site_end(b))
 
 
 ## The road node a node position belongs to (the grid cell whose jittered node it is).

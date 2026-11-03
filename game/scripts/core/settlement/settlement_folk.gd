@@ -9,18 +9,22 @@ extends RefCounted
 ##             worker), at the door of the business's building (Overworld site slot of its trade); speaks for the business's
 ##             till and stock (SettlementParty "region:<id>/<business>", the merchant business as "region:<id>/trader")
 ##   official  the eldest adult of the first official household, at the hall's door; speaks for the treasury
+##   crafter   (REGION-NAV-01 Q4, owner 2026-11-03, option C) the head of each household working on its own account
+##             (OffMapSettlement.own), along the lane under the last row; met while they have their own work to sell; speaks for
+##             their own trade's purse and stock (party "region:<id>/own:<household>")
 ## A settlement's businesses are run by worker households sharing one till (OffMapSettlement), so the keeper IS the business's
-## owner in this model, and there is no household producing on its own account to meet besides them.
+## owner in this model; a worker household that is not self-employed speaks through its business's keeper.
 ##
 ## Names are drawn from the household and member (the world seed, the settlement, the household id, the member index), so a
 ## person keeps their name while their household lives; nothing extra is saved. Presence: at their door in working hours
 ## (work_hours), else at home (not met); a trader is away while on the road to the village (Regions.visiting). A business that is
 ## closed or has no living worker has nobody at its door.
 ##
-## Trading with a person moves goods and coins only through the courier service's edge on the settlement's books
-## (CourierService.inv_of / add_coins: the party's outside_* flow line and the village's imported_/exported_, coin_sources and
-## caravan_coins_* counts), at the settlement's own market price (OffMapSettlement.price), within what the person will sell
-## (SettlementParty.sale_cap) or wants (need_rate), and what the buyer's purse pays: nothing is created or destroyed.
+## Trading with a person (REGION-NAV-01 Q5, owner 2026-11-03): the settlement's side is SettlementParty.deal (its checks, its
+## outside_* flow line, its journal line naming the other party); the village's side is booked exactly as the courier service's
+## edge books it (_village_side: imported_/exported_, coin_sources, caravan_coins_*). At the settlement's market price
+## (OffMapSettlement.price), within what the person will sell (sale_cap) or wants (need_rate) and what the buyer's purse pays:
+## nothing is created or destroyed. settlement_folk_test proves the books equal to the courier edge's for the same trade.
 
 const WORK_FROM := 7
 const WORK_TO := 18
@@ -72,6 +76,21 @@ static func people(w: World, sid: String) -> Array:
 		var sex := "female" if int(s.hh[hid].mem[who][1]) == 1 else "male"
 		out.append({"ref": "region:%s/%s" % [sid, holder], "role": role, "business": holder, "trade": trade,
 			"name": name_of(w, sid, hid, who, sex), "sex": sex, "household": hid, "spot": sl.spot, "settlement": sid})
+	# REGION-NAV-01 Q4: the self-employed crafters (OffMapSettlement.own), each the head of the household working on its own
+	# account, along the lane under the last row of buildings, in household order
+	var k := 0
+	for key in s._own_ids():
+		var hid := int(key)
+		if hid >= s.hh.size() or not bool(s.hh[hid].alive):
+			continue
+		var who := _eldest(s.hh[hid])
+		if who < 0:
+			continue
+		var sex := "female" if int(s.hh[hid].mem[who][1]) == 1 else "male"
+		out.append({"ref": "region:%s/own:%d" % [sid, hid], "role": "crafter", "business": "own:%d" % hid,
+			"trade": OffMapSettlement._trade_of(str(s.own[key].type)), "name": name_of(w, sid, hid, who, sex), "sex": sex,
+			"household": hid, "spot": Vector2i(st.gate) + Vector2i(-9 + 3 * (k % 7), 0), "settlement": sid})
+		k += 1
 	return out
 
 
@@ -102,6 +121,8 @@ static func present(w: World, person: Dictionary) -> bool:
 		for s: OffMapSettlement in w.regions.visiting(w.day()):
 			if s.id == str(person.settlement):
 				return false
+	if str(person.role) == "crafter" and offers(w, person).sells.is_empty():
+		return false                     # REGION-NAV-01 Q4: a crafter is met while actively offering goods
 	return w.regions.party(str(person.ref)) != null
 
 
@@ -112,6 +133,8 @@ static func absent_reason(w: World, person: Dictionary) -> String:
 		return "%s is at home: they keep their door from %d:00 to %d:00." % [person.name, WORK_FROM, WORK_TO]
 	if str(person.business) == "trader" and not present(w, person):
 		return "%s is on the road with the caravan today." % person.name
+	if str(person.role) == "crafter" and not present(w, person):
+		return "%s has nothing of their own work to sell today." % person.name
 	return ""
 
 
@@ -156,12 +179,9 @@ static func buy_from(w: World, buyer: String, person: Dictionary, item: String, 
 	var to = cs.inv_of(buyer)
 	if to == null or not to.can_add(item):
 		return "You have no room for it."
-	var from = cs.inv_of(str(person.ref))
-	if not from.remove(item, n):
+	if not p.deal("sell", {"id": buyer}, item, n, total, w.day()):
 		return "%s cannot hand it over." % person.name
-	to.add(item, n)
-	cs.add_coins(buyer, -total)
-	cs.add_coins(str(person.ref), total)
+	_village_side(w, buyer, item, n, -total)
 	w.stat("region_bought_" + item, float(n))
 	return ""
 
@@ -187,10 +207,28 @@ static func sell_to(w: World, seller: String, person: Dictionary, item: String, 
 	var from = cs.inv_of(seller)
 	if from == null or from.count(item) < n:
 		return "You do not have that many."
-	if not from.remove(item, n):
-		return "You cannot hand it over."
-	cs.inv_of(str(person.ref)).add(item, n)
-	cs.add_coins(str(person.ref), -total)
-	cs.add_coins(seller, total)
+	if not p.deal("buy", {"id": seller}, item, n, total, w.day()):
+		return "%s cannot take it." % person.name
+	_village_side(w, seller, item, -n, total)
 	w.stat("region_sold_" + item, float(n))
 	return ""
+
+
+## REGION-NAV-01 Q5 (owner 2026-11-03): the village's side of a trade with a settlement's person. The settlement's side is
+## SettlementParty.deal (its checks, its outside_* flow lines, its journal line naming the other party); this books the village's
+## side exactly as the courier service's edge does (CourierService._Edge, add_coins): the goods into or out of the village
+## person's pack with an imported_ or exported_ count, and the coins out of or into their purse with coin_sources and
+## caravan_coins_out / _in, so both audits balance. `goods` > 0: into the village; `coins` > 0: into the village.
+static func _village_side(w: World, who: String, item: String, goods: int, coins: int) -> void:
+	var cs: CourierService = w.couriers
+	var inv = cs.inv_of(who)
+	if goods > 0:
+		inv.add(item, goods)
+		w.stat("imported_" + item, float(goods))
+	elif goods < 0:
+		inv.remove(item, -goods)
+		w.stat("exported_" + item, float(-goods))
+	cs.add_coins(who, coins)
+	if coins != 0:
+		w.coin_sources += coins
+		w.stat("caravan_coins_in" if coins > 0 else "caravan_coins_out", float(absi(coins)))

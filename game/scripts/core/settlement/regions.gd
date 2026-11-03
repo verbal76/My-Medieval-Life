@@ -147,26 +147,50 @@ func party(ref: String) -> SettlementParty:
 	return p if p.alive() and p.holder != "" else null
 
 
-## The roads between the settlements for RegionalMarket, between places: {"a>b": route}, both ways. The way between two is
-## the straight distance of their places on the regional map, along roads (provisional: the settlements are linked by road).
+## The roads between the settlements for RegionalMarket, between places: {"a>b": route}, both ways. REGION-NAV-01 Q3: the way
+## between two is the length of the road between them in the overworld (_road_tiles); with no world, the straight distance.
 func route_table() -> Dictionary:
 	var out := {}
 	for a: OffMapSettlement in list:
 		for b: OffMapSettlement in list:
 			if a.id == b.id:
 				continue
-			var tiles := maxi(1, roundi(Vector2(a.pos).distance_to(Vector2(b.pos))))
+			var tiles := _road_tiles(a.id, b.id, maxi(1, roundi(Vector2(a.pos).distance_to(Vector2(b.pos)))))
 			out[a.id + ">" + b.id] = TradeRoutes.abstract_route(a.id, b.id, tiles, {"road": 1.0}, "carrier")
 	return out
 
 
+## REGION-NAV-01 Q3 (owner 2026-11-03: "one consistent geographical model, not separate coordinates for economic simulation and
+## physical travel"): in a world with an overworld, the length of the road the travellers walk between two places (Overworld.
+## site_route; from the village, road_route from its south gate, the gate the journeys use), cached (a pure function of the seed);
+## `fallback` (the straight distance of the places) only for settlements with no world (analysis and tests without a map).
+var _road_len := {}
+
+
+func _road_tiles(a: String, b: String, fallback: int) -> int:
+	var key := a + ">" + b
+	if _road_len.has(key):
+		return int(_road_len[key])
+	var w = _world.get_ref() if _world != null else null
+	if w == null or w.map == null or w.map.overworld == null:
+		return fallback
+	var ow: Overworld = w.map.overworld
+	var lo := a if a < b else b                       # one measure for both directions: the road from the earlier id to the later
+	var hi := b if a < b else a
+	var r := ow.road_route(Journeys.gate_index(w), b) if a == SettlementFacts.VILLAGE else ow.site_route(lo, hi)
+	var n := r.size() if not r.is_empty() else fallback
+	_road_len[key] = n
+	_road_len[b + ">" + a] = n
+	return n
+
+
 ## The roads from the village to each settlement and back, for the courier service: {"village>a": route, "a>village": route}.
-## The length is the settlement's distance from the village in tiles (settlements.json: its miles times tiles_per_mile, and its
-## offset), hauled by a carrier along roads, the same rule as route_table (provisional: the village is at the map's origin).
+## REGION-NAV-01 Q3: the length is the road from the village's south gate to the settlement (_road_tiles), hauled by a carrier;
+## with no world, the settlement's straight distance from the village.
 func village_route_table() -> Dictionary:
 	var out := {}
 	for a: OffMapSettlement in list:
-		var tiles := maxi(1, roundi(Vector2(a.pos).length()))
+		var tiles := _road_tiles(SettlementFacts.VILLAGE, a.id, maxi(1, roundi(Vector2(a.pos).length())))
 		out[SettlementFacts.VILLAGE + ">" + a.id] = TradeRoutes.abstract_route(SettlementFacts.VILLAGE, a.id, tiles, {"road": 1.0}, "carrier")
 		out[a.id + ">" + SettlementFacts.VILLAGE] = TradeRoutes.abstract_route(a.id, SettlementFacts.VILLAGE, tiles, {"road": 1.0}, "carrier")
 	return out
