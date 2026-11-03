@@ -15,6 +15,12 @@ var root: Control
 var stick: VirtualStick           # GP-JOYSTICK: the optional on-screen thumbstick (lower left), touch only
 var compact_width := 0.0         # Build 21: > 0 while the open window is sized to its content (compact), centred
 var compact_top := false         # ... and placed at the top (a phone's keyboard covers the lower half)
+var card_size := Vector2.ZERO    # B25R1-008: > 0 while the open window is a card of at most this size, centred (creation)
+var dimmer: ColorRect            # B25R1-008 (7D): dims the HUD and the world behind an open window and takes stray touches
+var creation_tab := "body"       # the creator's open page of choices, kept while its window is rebuilt
+var preview_pose := "walk"       # the creator's preview: its pose, its facing and whether it turns by itself
+var preview_dir := 0
+var preview_turning := true
 var hud: Control
 var hud_root: Control            # the HUD's own full-screen root: system bars kept clear, cutouts avoided per element
 var status_box: PanelContainer   # health, hunger, stamina, coins and the clock, in the top-left corner
@@ -173,6 +179,7 @@ const STATUS_PAD := 6.0
 const STATUS_ICON := 20.0
 const STATUS_BAR := Vector2(136, 16)
 const SCHEME_NAMES :={"touch": "Touch", "kbm": "Keyboard and mouse", "gamepad": "Gamepad"}
+const MODAL_NO_HUD := ["title", "creation", "origin", "death", "demo_expired"]   # B25R1-008: windows with no HUD behind them
 
 
 func build(m) -> void:
@@ -182,6 +189,14 @@ func build(m) -> void:
 	hud_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	hud_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(hud_root)                # under the windows' root: windows draw over the HUD
+	# B25R1-008 (7D): while a window is open, the HUD and the world behind it are dimmed, and a touch or click outside the
+	# window lands here, not on a HUD button under it
+	dimmer = ColorRect.new()
+	dimmer.name = "ModalDimmer"
+	dimmer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dimmer.mouse_filter = Control.MOUSE_FILTER_STOP
+	dimmer.visible = false
+	add_child(dimmer)
 	root = Control.new()
 	root.set_anchors_preset(Control.PRESET_FULL_RECT)
 	root.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -190,6 +205,7 @@ func build(m) -> void:
 	hud_root.theme = root.theme
 	_build_hud()
 	_build_panel()
+	panel.visibility_changed.connect(func(): dimmer.visible = panel.visible)
 	fit_safe_area()
 	get_viewport().size_changed.connect(fit_safe_area)
 	root.resized.connect(_fit_compact)
@@ -1585,6 +1601,7 @@ func _open(kind: String, title: String, pause := true) -> void:
 	panel_kind = kind
 	compact_width = 0.0
 	compact_top = false
+	card_size = Vector2.ZERO
 	panel_back = Callable()
 	inner_back = Callable()
 	title_label.text = title.to_upper()
@@ -1595,8 +1612,12 @@ func _open(kind: String, title: String, pause := true) -> void:
 		c.queue_free()
 	panel_body.size_flags_vertical = Control.SIZE_FILL
 	panel.add_theme_stylebox_override("panel", _style(WINDOW))
+	panel.texture_filter = CanvasItem.TEXTURE_FILTER_PARENT_NODE
 	top_row.visible = true
-	hud.visible = true
+	# B25R1-008 (7D): the screens before and between lives (title, creation, origin, death) show no HUD at all; behind any
+	# other window it stays, dimmed (dimmer), and takes no touches
+	hud.visible = not kind in MODAL_NO_HUD
+	dimmer.color = Color(0.04, 0.02, 0.01, 0.72 if kind in MODAL_NO_HUD else 0.38)
 	for side in ["offset_left", "offset_top"]:
 		panel.set(side, 8)
 	for side in ["offset_right", "offset_bottom"]:
@@ -1621,6 +1642,15 @@ func compact(width := 560.0, top := false) -> void:
 
 
 func _fit_compact() -> void:
+	if card_size != Vector2.ZERO and panel.visible:
+		var v := root.size
+		var cw := minf(card_size.x, v.x - 8.0)
+		var ch := minf(card_size.y, v.y - 8.0)
+		panel.offset_left = floorf((v.x - cw) / 2.0)
+		panel.offset_right = -ceilf((v.x - cw) / 2.0)
+		panel.offset_top = floorf((v.y - ch) / 2.0)
+		panel.offset_bottom = -ceilf((v.y - ch) / 2.0)
+		return
 	if compact_width <= 0.0 or not panel.visible:
 		return
 	var view := root.size
@@ -1783,19 +1813,35 @@ func show_credits() -> void:
 	_button("Back", func(): show_title(main.can_continue()))
 
 
-## Character creation: name, family, male or female, and an appearance (CC-01, owner 2026-10-22): a recipe of the
-## PUNY CHARACTERS layers drawn by CharacterLook, chosen feature by feature or at random, within what an ordinary
-## medieval villager wears (game/data/character_style.json "creation": human, natural skin, hair and eyes, plain
-## clothes or a tunic, leather boots or none; no headwear, armour or gloves). Appearance only: the starting kit
-## and coins are the same for everyone. The preview is drawn from the live recipe.
-const CREATION_FEATURES := [
-	["Skin", "swatch", "skin"], ["Hair", "pick", "hair"], ["Hair colour", "swatch", "hair"],
-	["Beard", "pick", "facial-hair"], ["Eyes", "swatch", "eyes"], ["Eyelashes", "pick", "eyelashes"],
-	["Clothes", "pick", "clothes"], ["Clothes colour", "swatch", "clothes"], ["Boots", "pick", "shoes"],
-	["Boots colour", "swatch", "leather_shoes"],
-]
+## Character creation: name, family, man or woman, and an appearance (CC-01, owner 2026-10-22): a recipe of the PUNY
+## CHARACTERS layers drawn by CharacterLook, chosen feature by feature or at random. B25R1-007 (owner directive 2026-11-03,
+## section 6: "Unlock all cosmetic character customization options"): everything the art draws, for everyone, man or woman
+## (game/data/character_style.json "creation": three bodies, ears and horns, a jaw, every skin, hair and eye colour the
+## pack has and more added after its own, every hair style, beard and eyelash, plain clothes or a tunic in any dye, leather
+## boots or none). Headwear, armour, gloves and metal boots are equipment and never chosen here. Appearance only: the
+## starting kit and coins are the same for everyone. B25R1-008 (section 7A): a framed card, the large animated preview on
+## the left (it turns by itself; turn it and change its pose), the choices on the right in four pages (CREATION_TABS); every
+## colour is a swatch to tap. Every change shows at once in the preview.
+const CREATION_TABS := [["body", "Body"], ["hair", "Hair"], ["face", "Face"], ["clothes", "Clothes"]]
+# each page's rows: [label, kind, key]; "pick": < its option >, "swatch": every colour at once
+const CREATION_PAGES := {
+	"body": [["Body", "pick", "race"], ["Skin", "swatch", "skin"], ["Ears & horns", "pick", "ears-&-horns"]],
+	"hair": [["Hair", "pick", "hair"], ["Beard", "pick", "facial-hair"], ["Hair colour", "swatch", "hair"]],
+	"face": [["Eyes", "swatch", "eyes"], ["Eyelashes", "pick", "eyelashes"], ["Jaw", "pick", "jaw"]],
+	"clothes": [["Clothes", "pick", "clothes"], ["Clothes colour", "swatch", "clothes"], ["Boots", "pick", "shoes"],
+		["Boots colour", "swatch", "leather_shoes"]],
+}
 const CREATION_NAMES := {"basic": "Plain clothes", "tunic": "Tunic", "leather-boots": "Leather boots",
-	"beard1": "Beard", "beard2": "Full beard", "mustache": "Moustache"}
+	"beard1": "Beard", "beard2": "Full beard", "mustache": "Moustache", "human": "Human", "cyclops": "Cyclops",
+	"skeleton": "Skeleton", "elven-ears": "Elven ears", "cat-ears-1": "Cat ears", "cat-ears-2": "Tufted cat ears",
+	"bunny-ears-1": "Rabbit ears", "bunny-ears-2": "Lop rabbit ears", "goat-horns-1": "Goat horns",
+	"goat-horns-2": "Curled goat horns", "antlers": "Antlers", "unicorn-horn": "Unicorn horn",
+	"skeleton-small-horns": "Small bone horns", "skeleton-big-horns": "Great horns", "jaw": "Jutting jaw"}
+
+
+## The interface unit's art pixel for UIStyle: 2 on a desktop window, 1 in the phone layout (whose unit is ~2.4 screen pixels).
+func ui_px() -> int:
+	return 1 if main.settings.phone else 2
 
 
 func show_creation(spec: Dictionary) -> void:
@@ -1807,20 +1853,40 @@ func show_creation(spec: Dictionary) -> void:
 		recipe = CharacterLook.random_recipe(rng, sx)
 	_open("creation", "Who are you?", false)
 	panel_back = func(): show_title(main.can_continue())
+	var px := ui_px()
+	var phone: bool = main.settings.phone
+	top_row.visible = false                         # the card has its own heading
+	panel.add_theme_stylebox_override("panel", UIStyle.frame(px))
+	panel.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	card_size = Vector2(1000, 450) if phone else Vector2(980, 572)
+	panel_body.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	var gap := 8 if phone else 12
+	var lay := HBoxContainer.new()
+	lay.name = "CreationLayout"
+	lay.theme = UIStyle.theme(px)
+	lay.add_theme_constant_override("separation", gap + 4)
+	lay.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lay.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	panel_body.add_child(lay)
+	# the right column's fields come first: the rest reads them (current)
+	var right := VBoxContainer.new()
+	right.add_theme_constant_override("separation", gap)
+	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var names := HBoxContainer.new()
-	panel_body.add_child(names)
+	names.add_theme_constant_override("separation", gap)
+	right.add_child(names)
 	var name_edit := LineEdit.new()
 	name_edit.placeholder_text = "Your name"
 	name_edit.text = spec.get("name", "")
 	name_edit.max_length = 16
-	name_edit.custom_minimum_size = Vector2(0, 52)
+	name_edit.custom_minimum_size = Vector2(0, UIStyle.BUTTON_H)
 	name_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	names.add_child(name_edit)
 	var fam_edit := LineEdit.new()
 	fam_edit.placeholder_text = "Family name"
 	fam_edit.text = spec.get("family", "")
 	fam_edit.max_length = 16
-	fam_edit.custom_minimum_size = Vector2(0, 52)
+	fam_edit.custom_minimum_size = Vector2(0, UIStyle.BUTTON_H)
 	fam_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	names.add_child(fam_edit)
 	var current := func() -> Dictionary:
@@ -1829,95 +1895,206 @@ func show_creation(spec: Dictionary) -> void:
 		var nxt: Dictionary = current.call()
 		change.call(nxt)
 		show_creation(nxt)
-	var sexes := HBoxContainer.new()
-	panel_body.add_child(sexes)
-	for choice in ["male", "female"]:
-		var c: String = choice
-		var b := _button(("> " if c == sx else "") + c.capitalize(), func(): redo.call(func(n): n.sex = c), true, sexes)
-		b.custom_minimum_size = Vector2(150, 52)
-	var gap := Control.new()
-	gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	sexes.add_child(gap)
-	_button("Back", func(): show_title(main.can_continue()), true, sexes).custom_minimum_size = Vector2(120, 52)
+	# ---- the left column: the heading, the preview, its controls, the random looks
+	var left := VBoxContainer.new()
+	left.add_theme_constant_override("separation", gap)
+	left.custom_minimum_size.x = 210.0 if phone else 260.0
+	lay.add_child(left)
+	lay.add_child(right)
+	left.add_child(UIStyle.label("Who are you?", "title"))
+	var box := PanelContainer.new()
+	box.name = "PreviewBox"
+	box.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	left.add_child(box)
+	var preview := LookPreview.new(CharacterLook.texture(recipe), preview_pose, preview_dir, preview_turning)
+	preview.name = "Preview"
+	box.add_child(LookPreview.Stage.new(preview, 112.0 if phone else 196.0))
+	var turn := HBoxContainer.new()
+	turn.add_theme_constant_override("separation", 4)
+	left.add_child(turn)
+	for t in [["Turn left", "<", 7], ["Pose", "", 0], ["Turn right", ">", 1]]:
+		var step: int = t[2]
+		var b: Button
+		if t[0] == "Pose":
+			b = _button(LookPreview.POSES.get(preview_pose, "Walking"), func(): pass, true, turn)
+			var pose_btn := b
+			b.pressed.connect(func():
+				var keys := LookPreview.POSES.keys()
+				preview_pose = keys[(keys.find(preview.anim) + 1) % keys.size()]
+				preview.anim = preview_pose
+				pose_btn.text = LookPreview.POSES[preview_pose])
+			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			b.tooltip_text = "Change the preview's pose: walking, standing, a sword swing or carrying."
+		else:
+			b = _button(str(t[1]), func():
+				preview.turning = false
+				preview_turning = false
+				preview.dir = (preview.dir + step) % 8
+				preview_dir = preview.dir, true, turn)
+			b.custom_minimum_size = Vector2(UIStyle.BUTTON_H + 4, UIStyle.BUTTON_H)
+			b.tooltip_text = str(t[0])
+		b.name = str(t[0])
+	var rnd := _button("Randomize", func():
+		var rng := RandomNumberGenerator.new()
+		rng.randomize()
+		redo.call(func(n): n.appearance = CharacterLook.random_recipe(rng, sx, true)), true, left)
+	rnd.name = "Randomize"
+	rnd.size_flags_horizontal = Control.SIZE_FILL
+	rnd.tooltip_text = "Any look at all: any body, ears, horns and colours."
+	var plain := _button("Plain villager", func():
+		var rng := RandomNumberGenerator.new()
+		rng.randomize()
+		redo.call(func(n): n.appearance = CharacterLook.random_recipe(rng, sx)), true, left)
+	plain.name = "Plain villager"
+	plain.size_flags_horizontal = Control.SIZE_FILL
+	plain.tooltip_text = "An ordinary human villager's look."
+	# ---- the right column: the pages of choices, then Back and Begin
+	var tabs := HBoxContainer.new()
+	tabs.add_theme_constant_override("separation", 4)
+	right.add_child(tabs)
+	var page_box := PanelContainer.new()
+	page_box.name = "Choices"
+	page_box.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	right.add_child(page_box)
+	var pages := {}
+	var tab_btns := {}
+	var show_tab := func(id: String) -> void:
+		creation_tab = id
+		for k in pages:
+			pages[k].visible = k == id
+			UIStyle.button(tab_btns[k], "selected" if k == id else "normal", px)
+	for t in CREATION_TABS:
+		var id: String = t[0]
+		var b := _button(str(t[1]), func(): show_tab.call(id), true, tabs)
+		b.name = "Tab " + str(t[1])
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		tab_btns[id] = b
+		var page := VBoxContainer.new()
+		page.name = "Page " + str(t[1])
+		page.add_theme_constant_override("separation", 6 if phone else 14)
+		page_box.add_child(page)
+		pages[id] = page
+		if id == "body":
+			# a man or a woman: who the character is to the village; every look on these pages is open to both
+			var who := HBoxContainer.new()
+			who.add_theme_constant_override("separation", 6)
+			page.add_child(who)
+			var wl := UIStyle.label("You are", "head")
+			wl.custom_minimum_size.x = 118 if phone else 150
+			who.add_child(wl)
+			for choice in ["male", "female"]:
+				var c: String = choice
+				var sb := _button(c.capitalize(), func(): redo.call(func(n): n.sex = c), true, who)
+				sb.name = c.capitalize()
+				sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				sb.custom_minimum_size.y = UIStyle.BUTTON_H
+				sb.tooltip_text = "Who your character is to the village; every look is open to a man and a woman alike."
+				UIStyle.button(sb, "selected" if c == sx else "normal", px)
+		for f in CREATION_PAGES[id]:
+			_creation_row(page, f, recipe, redo, phone)
+	show_tab.call(creation_tab if pages.has(creation_tab) else "body")
+	var foot := HBoxContainer.new()
+	foot.add_theme_constant_override("separation", gap)
+	right.add_child(foot)
+	var note := UIStyle.label("Looks only: everyone starts with the same clothes, tools and coins.", "muted")
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	note.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	note.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	foot.add_child(note)
+	var back := _button("Back", func(): show_title(main.can_continue()), true, foot)
+	back.name = "Back"
+	back.custom_minimum_size = Vector2(110, UIStyle.BUTTON_H)
 	var begin := _button("Begin", func():
 		var spec2: Dictionary = current.call()
 		if spec2.name == "":
 			message("Give your character a name.")
+			name_edit.grab_focus()
 			return
 		if spec2.family == "":
 			spec2.family = "Wanderer"
-		main.new_game(spec2), true, sexes)
-	begin.custom_minimum_size = Vector2(160, 52)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 16)
-	panel_body.add_child(row)
-	# the preview: facing you large, and the four sides it walks
-	var left := VBoxContainer.new()
-	row.add_child(left)
-	var sheet := CharacterLook.texture(recipe)
-	var preview := TextureRect.new()
-	preview.name = "Preview"
-	preview.custom_minimum_size = Vector2(160, 160)
-	preview.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	preview.texture = _sheet_frame(sheet, 0)
-	left.add_child(preview)
-	var sides := HBoxContainer.new()
-	left.add_child(sides)
-	for d in [2, 4, 6]:                          # east, north, west (ActorSprite.DIRS)
-		var t := TextureRect.new()
-		t.custom_minimum_size = Vector2(52, 52)
-		t.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-		t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		t.texture = _sheet_frame(sheet, d)
-		sides.add_child(t)
-	var rnd := _button("Randomize", func():
-		var rng := RandomNumberGenerator.new()
-		rng.randomize()
-		redo.call(func(n): n.appearance = CharacterLook.random_recipe(rng, sx)), true, left)
-	rnd.custom_minimum_size = Vector2(160, 52)
-	# one row per feature: < its value >
-	var grid := GridContainer.new()
-	grid.columns = 4
-	grid.add_theme_constant_override("h_separation", 8)
-	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.add_child(grid)
-	for f in CREATION_FEATURES:
-		var label: String = f[0]
-		var kind: String = f[1]
-		var key: String = f[2]
-		if kind == "swatch" and key == "clothes" and recipe.picks.get("clothes", "") == "tunic":
-			key = "tunic"                        # a tunic has its own ramp of colours
-		if kind == "swatch" and key == "leather_shoes" and recipe.picks.get("shoes", "") == "":
-			continue                             # no boots, no boot colour
-		var opts: Array = CharacterLook.options(key) if kind == "pick" else CharacterLook.rows(key)
-		if opts.size() < 2:
-			continue
-		var now = recipe.picks.get(key, "") if kind == "pick" else int(recipe.swatches.get(key, opts[0]))
-		var at := maxi(opts.find(now), 0)
-		var name_l := Label.new()
-		name_l.text = label
-		name_l.add_theme_font_size_override("font_size", 16)
-		name_l.add_theme_color_override("font_color", Color8(246, 236, 214))
-		grid.add_child(name_l)
+		main.new_game(spec2), true, foot)
+	begin.name = "Begin"
+	begin.custom_minimum_size = Vector2(150, UIStyle.BUTTON_H)
+	UIStyle.button(begin, "primary", px)
+	_fit_compact()
+
+
+## One row of the creator's choices: a label and < its option >, or a label, the chosen colour's name and every colour as
+## a swatch. Rows the recipe does not use are left out (no boots: no boot colour; a cyclops and a skeleton have their own
+## eyes and no eyelashes; a skeleton's bone takes the place of skin; a tunic has its own dyes).
+func _creation_row(page: VBoxContainer, f: Array, recipe: Dictionary, redo: Callable, phone: bool) -> void:
+	var label: String = f[0]
+	var kind: String = f[1]
+	var key: String = f[2]
+	var race := str(recipe.picks.get("race", "human"))
+	if kind == "swatch" and key == "clothes" and recipe.picks.get("clothes", "") == "tunic":
+		key = "tunic"                            # a tunic has its own ramp of colours
+	if kind == "swatch" and key == "leather_shoes" and recipe.picks.get("shoes", "") == "":
+		return                                   # no boots, no boot colour
+	if key == "skin" and race == "skeleton":
+		key = "skeleton"                         # a skeleton's bone and eye glow, not skin
+		label = "Bone"
+	if race != "human" and key in ["eyes", "eyelashes"]:
+		if key == "eyes":
+			var own := UIStyle.label("A %s has eyes of its own: no eye colour or eyelashes to choose." % race, "muted")
+			own.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			page.add_child(own)
+		return
+	var opts: Array = CharacterLook.options(key) if kind == "pick" else CharacterLook.rows(key)
+	if opts.size() < 2:
+		return
+	var now = recipe.picks.get(key, "") if kind == "pick" else int(recipe.swatches.get(key, opts[0]))
+	var at := maxi(opts.find(now), 0)
+	if kind == "pick":
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 6)
+		page.add_child(h)
+		var name_l := UIStyle.label(label, "head")
+		name_l.custom_minimum_size.x = 118 if phone else 150
+		h.add_child(name_l)
 		for step in [-1, 1]:
 			var nxt_v = opts[(at + step + opts.size()) % opts.size()]
 			var k := key
 			var b := Button.new()
 			b.text = "<" if step < 0 else ">"
 			b.name = "%s %s" % [label, b.text]
-			b.custom_minimum_size = Vector2(48, 44)
-			b.pressed.connect(func(): redo.call(func(n):
-				if kind == "pick":
-					n.appearance.picks[k] = nxt_v
-				else:
-					CharacterLook.set_swatch(n.appearance, k, int(nxt_v))))
-			grid.add_child(b)
+			b.custom_minimum_size = Vector2(UIStyle.BUTTON_H + 4, UIStyle.BUTTON_H)
+			b.pressed.connect(func(): redo.call(func(n): n.appearance.picks[k] = nxt_v))
+			h.add_child(b)
 			if step < 0:
-				grid.add_child(_creation_value(kind, key, now, at, opts.size()))
-	_label("Your looks only: everyone starts with the same clothes, tools and coins.", 15)
+				var v := _creation_value(kind, key, now, at, opts.size())
+				v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				v.name = label + " value"
+				h.add_child(v)
+		return
+	# the label with the chosen colour's name under it, then every colour beside them
+	var h2 := HBoxContainer.new()
+	h2.add_theme_constant_override("separation", 6)
+	page.add_child(h2)
+	var head := VBoxContainer.new()
+	head.add_theme_constant_override("separation", 0)
+	head.custom_minimum_size.x = 118 if phone else 150
+	h2.add_child(head)
+	head.add_child(UIStyle.label(label, "head"))
+	var chosen := UIStyle.label(CharacterLook.swatch_name(key, int(now)).capitalize(), "muted")
+	chosen.name = label + " value"
+	chosen.tooltip_text = "%d of %d" % [at + 1, opts.size()]
+	head.add_child(chosen)
+	var flow := HFlowContainer.new()
+	flow.name = label + " swatches"
+	flow.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	flow.add_theme_constant_override("h_separation", 4)
+	flow.add_theme_constant_override("v_separation", 4)
+	h2.add_child(flow)
+	for row in opts:
+		var r := int(row)
+		var sw := UIStyle.Swatch.new(CharacterLook.swatch_color(key, r), r == int(now), 30.0 if phone else 34.0)
+		sw.accent = CharacterLook.swatch_accent(key, r)
+		sw.name = "%s %d" % [label, r]
+		sw.tooltip_text = "%s: %s" % [label, CharacterLook.swatch_name(key, r)]
+		var k := key
+		sw.pressed.connect(func(): redo.call(func(n): CharacterLook.set_swatch(n.appearance, k, r)))
+		flow.add_child(sw)
 
 
 ## BARBER-18: the barber's chair: the creator's hair, beard and hair colour pickers with a preview from the live recipe;
@@ -2028,17 +2205,82 @@ func _look_frame(sheet: String) -> AtlasTexture:
 	return at
 
 
-## The origin: a short, skippable story. Nothing in it is a quest.
+## The origin: a short, skippable story. Nothing in it is a quest. B25R1-008 (owner directive 2026-11-03, 7B: "an
+## intentional game introduction, not a giant debugging dialog"): a centred card in the creator's frame, the character
+## standing in a framed box beside its name, the story (its words unchanged) on a parchment page at a comfortable reading
+## width, and one clear Begin.
+const ORIGIN_STORY := [
+	"You worked another family's farm three valleys over until the harvest failed and the farmer could no longer feed you. There were hard words, and you left before dawn.",
+	"You carry what you could: a rusty sword that was your father's, a pickaxe nobody wanted, an axe as rusty, a loaf of bread, an apple going soft, two linen bandages and %d coins.",
+	"This is the first village you have seen with smoke in its chimneys. A hundred people live here, and every one of them has their own work and their own worries. None of them owes you anything.",
+]
+const ORIGIN_LAST := "Find a way to live."
+
+
 func show_origin() -> void:
 	var p: PlayerState = main.world.player
 	_open("origin", "%s %s" % [p.name, p.family], true)
-	_label("You worked another family's farm three valleys over until the harvest failed and the farmer could no longer feed you. There were hard words, and you left before dawn.")
-	_label("You carry what you could: a rusty sword that was your father's, a pickaxe nobody wanted, an axe as rusty, a loaf of bread, an apple going soft, two linen bandages and %d coins." % int(GameData.b("start_coins_player")))
-	_label("This is the first village you have seen with smoke in its chimneys. A hundred people live here, and every one of them has their own work and their own worries. None of them owes you anything.")
-	_label("Find a way to live.", 20, Color(1, 0.85, 0.5))
-	_button("Begin", func():
+	var px := ui_px()
+	var phone: bool = main.settings.phone
+	top_row.visible = false
+	panel.add_theme_stylebox_override("panel", UIStyle.frame(px))
+	panel.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	var lay := HBoxContainer.new()
+	lay.name = "OriginLayout"
+	lay.theme = UIStyle.theme(px)
+	lay.add_theme_constant_override("separation", 14 if phone else 20)
+	panel_body.add_child(lay)
+	# the character, framed, with its name and Begin under it
+	var side := VBoxContainer.new()
+	side.add_theme_constant_override("separation", 8)
+	side.custom_minimum_size.x = 170.0 if phone else 210.0
+	lay.add_child(side)
+	var box := PanelContainer.new()
+	box.name = "Portrait"
+	side.add_child(box)
+	var sheet := CharacterLook.player_sheet(p)
+	if sheet != null:
+		var fig := LookPreview.new(sheet, "idle", 0, false)
+		fig.name = "Figure"
+		box.add_child(LookPreview.Stage.new(fig, 112.0 if phone else 168.0))
+	var who := UIStyle.label("%s %s" % [p.name, p.family], "title")
+	who.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	who.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	side.add_child(who)
+	var sub := UIStyle.label("How you came here", "muted")
+	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	side.add_child(sub)
+	var gap := Control.new()
+	gap.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	side.add_child(gap)
+	var begin := _button("Begin", func():
 		hide_all()
-		main.resume_after_origin())
+		main.resume_after_origin(), true, side)
+	begin.name = "Begin"
+	begin.custom_minimum_size = Vector2(0, UIStyle.BUTTON_H + 4)
+	UIStyle.button(begin, "primary", px)
+	# the story on parchment
+	var page := PanelContainer.new()
+	page.name = "Story"
+	page.add_theme_stylebox_override("panel", UIStyle.parchment(px))
+	page.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	page.custom_minimum_size.x = 560.0 if phone else 600.0
+	page.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	lay.add_child(page)
+	var text := VBoxContainer.new()
+	text.add_theme_constant_override("separation", 6 if phone else 12)
+	page.add_child(text)
+	for i in ORIGIN_STORY.size():
+		var s: String = ORIGIN_STORY[i]
+		var l := UIStyle.label(s % int(GameData.b("start_coins_player")) if s.contains("%d") else s, "ink")
+		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		l.add_theme_font_size_override("font_size", 15 if phone else 17)
+		l.add_theme_constant_override("line_spacing", 1 if phone else 3)
+		text.add_child(l)
+	var last := UIStyle.label(ORIGIN_LAST, "ink_head")
+	last.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	text.add_child(last)
+	compact(820.0 if phone else 880.0)
 
 
 func show_pause() -> void:
