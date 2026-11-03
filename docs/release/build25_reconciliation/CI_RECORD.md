@@ -88,3 +88,29 @@ The campaign finished at 05:58 EST (GitHub Actions 06:05-10:58 UTC). The four se
 - Artifacts: `fr-seed1-results`, `fr-seed2-results` and `flight-recorder-campaign` (artifact 13225470964).
 
 **Verdict: the final flight on `c4c3490` is clean.** Packaging was dispatched at 06:03 EST: `release.yml` run 41624309659, private, build number 25, on `c4c3490`.
+
+## Release run 41624309659 on `c4c3490` (dispatched 2026-11-03 06:03 EST): FAILED at the simulation gate; no draft release created
+
+**Packages (all passed, 06:03-06:14 EST):** six package jobs, plus Windows launch smoke tests of the full game and the demo.
+- Android full: `com.hotatticgames.mymedievallife.dev`.
+- Android demo: `com.hotatticgames.mymedievallife.dev.demo`.
+- Both APKs: versionCode 25, versionName 0.1.25-test, signed with APK schemes v2 and v3 by the release identity (CN=Hot Attic Games, certificate SHA-256 `31704b80...cb80e6`), each with the four network permissions.
+- The signing key was removed from the runner after each Android job.
+
+**Simulation gate (SIM-GATE-01), 06:03-07:26 EST:** FAIL, 1 blocking failure of 19 runs.
+- `social_chain_off`: "recorder output invalid: flag aspiration is True in the recording; the scenario requires False".
+- Accepted baseline: identical, 36 values.
+- Determinism: identical with the shipped switches and with the Expansion 20 switches.
+- Results: artifact `sim-gate` (13229554670).
+
+**Root cause:**
+- `tools/sim_suite.py` `SHIPPED_FLAGS` still listed `aspiration: False`.
+- Since the owner's B25-AMBITION-D4 (`eeae76e`, 2026-11-01), `judgment.json` ships `aspiration.enabled: true`, so the recording was correct.
+- **Classification:** a stale expectation in the gate harness. Not a game defect.
+
+**Correction:** `726ceeb`, `tools/sim_suite.py` only.
+- `SHIPPED_FLAGS` now records aspiration as True.
+- The scenario's description is corrected to match.
+- No game code changed, so the final flight on `c4c3490` stands for `726ceeb`: `git diff --stat c4c3490 726ceeb` shows 1 file, `tools/sim_suite.py`.
+
+**Verification:** `tests/test_sim_gate.py` passes 36 of 36. A local targeted run (`sim_suite --only social_chain_off`) is in progress.
