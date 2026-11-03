@@ -180,6 +180,9 @@ static func create(spec: Dictionary, world_seed: int, index: int) -> OffMapSettl
 	s.kind = str(spec.kind)
 	s.miles = int(spec.miles)
 	s.pos = Vector2i(int(spec.get("x", 0)), s.miles * int(data().tiles_per_mile))
+	if RegionGeo.has_anchor(s.id):                   # B25R1-018 (overworld GEN_VERSION 4): the region layout's anchor, from the village's centre
+		var v: Dictionary = RegionGeo.data().village
+		s.pos = RegionGeo.anchor(s.id) - Vector2i(int(v.x), int(v.y))
 	s.industries = (spec.get("industries", []) as Array).duplicate()
 	s.gov_name = str(spec.government.name)
 	var rng := RandomNumberGenerator.new()

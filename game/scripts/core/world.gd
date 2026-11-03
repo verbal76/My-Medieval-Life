@@ -6342,6 +6342,13 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	if int(d.get("save_version", 0)) == 22:
 		d = migrate_22_to_23(d)                    # MP-PLAYER-FAMILY: save 22 to 23 (above)
 	map = m
+	var ow_gen := int((d.get("overworld", {}) as Dictionary).get("gen", Overworld.GEN_VERSION))
+	if not ow_gen in Overworld.GEN_COMPATIBLE:
+		# B25R1-018 / B25R1-Q5 (owner 2026-11-03: "Don't worry about saved games"): the region was laid out anew in overworld
+		# generation 4 (settlements, roads, the Downs and the waters elsewhere); an older world is refused, never migrated, and
+		# the caller keeps its file (CLAUDE.md section 7)
+		load_error = "this save's world was made before the region was rebuilt (overworld generation %d; this build makes generation %d), so it cannot be loaded; start a new world (the file is kept)" % [ow_gen, Overworld.GEN_VERSION]
+		return
 	seed = int(d.seed)
 	rng.seed = seed + int(d.minutes)
 	if d.has("rng_state"):

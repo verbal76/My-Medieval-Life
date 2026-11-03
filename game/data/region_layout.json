@@ -1013,10 +1013,6 @@
    "note": "the village's road south over the Ford to the high road",
    "points": [
     [
-     60,
-     92
-    ],
-    [
      46,
      112
     ],
@@ -1137,6 +1133,10 @@
    "note": "the green road waving over the Downs from Bear Castle to Higham",
    "points": [
     [
+     84,
+     446
+    ],
+    [
      92,
      466
     ],
@@ -1217,7 +1217,7 @@
      500
     ],
     [
-     80,
+     92,
      466
     ]
    ]
