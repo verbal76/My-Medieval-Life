@@ -35,6 +35,8 @@ const ROAD := Color8(222, 204, 164)
 const ROAD_EDGE := Color8(58, 42, 28)
 const TRAIL := Color8(170, 124, 78)
 const STONE := Color8(178, 182, 176)          # B25R1-Q1: stone road, the paving's grey
+const WATER := Color8(40, 160, 200)           # B25R1-Q3: streams and pools
+const BRIDGE := Color8(150, 96, 44)
 const SITE := Color8(150, 92, 58)
 const DEST := Color8(96, 196, 232)
 const DRAG := 12.0              # pixels a press may move and still be a tap
@@ -47,6 +49,8 @@ var bounds := Rect2i()          # the tiles the terrain image covers
 var network := Rect2i()         # the village and every settlement: what the map opens on
 var roads: Array = []           # [{pts: PackedVector2Array (tile centres), kind, box: Rect2}]
 var worn: Array = []            # B25R1-011: [cell, kind] of the ways footfall or paving made, beyond the generated ones
+var streams: Array = []         # B25R1-Q3: the streams in the map (Overworld.streams_in: lines, widths, pools)
+var bridges: Array = []         # B25R1-Q3: where a road crosses one (tile positions)
 var zoom := 1.0                 # screen pixels a tile
 var centre := Vector2.ZERO      # the tile at the middle of the map
 var fitted := false
@@ -81,6 +85,8 @@ func setup(m) -> void:
 	tex = ImageTexture.create_from_image(build_image(w, w.player))
 	roads = road_lines(w.map.overworld, bounds)
 	worn = worn_ways(w.map.overworld)
+	streams = w.map.overworld.streams_in(bounds)
+	bridges = bridge_points(w.map.overworld, streams, bounds)
 	for k in ["mineral", "combat", "tool"]:
 		_icons[k] = load("res://assets/markers/%s.png" % k)
 	_icons.home = load("res://assets/ui/home.png")
@@ -180,6 +186,32 @@ static func worn_ways(ow: Overworld) -> Array:
 		var lv := RoadWear.level(ow, c)
 		if lv >= 1 and lv != RoadWear.base_level(ow, c):
 			out.append([c, ["", "trail", "road", "stone"][lv]])
+	return out
+
+
+## B25R1-Q3: where the roads cross the streams: a point of a stream's line within its width of a road cell (the road's own
+## cells, RegionRoads.segments), one mark per crossing. From the data, without generating a chunk.
+static func bridge_points(ow: Overworld, sts: Array, area: Rect2i) -> Array:
+	var roads := {}
+	for seg in RegionRoads.segments(ow, area):
+		var cells: PackedInt32Array = seg.cells
+		for q in cells.size() / 2:
+			roads[Vector2i(cells[q * 2], cells[q * 2 + 1])] = true
+	var out := []
+	for st in sts:
+		var pts: Array = st.pts
+		for q in range(pts.size() - 1):
+			var a: Vector2 = pts[q]
+			var b: Vector2 = pts[q + 1]
+			var n := maxi(1, int(a.distance_to(b) * 2.0))
+			for k in n:
+				var p := a.lerp(b, k / float(n))
+				var hit := false
+				for d in [Vector2i.ZERO, Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+					if roads.has(Vector2i(p.floor()) + d):
+						hit = true
+				if hit and not out.any(func(o: Vector2): return o.distance_to(p) < 4.0):
+					out.append(p)
 	return out
 
 
@@ -507,6 +539,20 @@ func _draw() -> void:
 				draw_polyline(pts, ROAD, wd)
 			else:
 				draw_polyline(pts, TRAIL, clampf(zoom * 0.7, 1.2, 8.0))
+	# B25R1-Q3: the streams and their pools, under the roads' bridges
+	for st in streams:
+		if not (Rect2(st.box) as Rect2).intersects(view):
+			continue
+		var line := PackedVector2Array()
+		for sp in st.pts:
+			line.append(to_screen(sp))
+		draw_polyline(line, WATER, clampf(zoom * 2.6, 2.0, 40.0))
+		for pool in st.pools:
+			draw_circle(to_screen(pool[0]), maxf(2.0, float(pool[1]) * zoom), WATER)
+	for b in bridges:
+		var bs := clampf(zoom * 2.0, 4.0, 24.0)
+		draw_rect(Rect2(to_screen(b) - Vector2(bs, bs) / 2.0, Vector2(bs, bs)), BRIDGE)
+		draw_rect(Rect2(to_screen(b) - Vector2(bs, bs) / 2.0, Vector2(bs, bs)), ROAD_EDGE, false, 1.0)
 	# B25R1-011: the ways worn in or paved since, cell by cell
 	var cs := maxf(zoom, 2.0)
 	for e in worn:
@@ -614,6 +660,10 @@ func _draw() -> void:
 	x = _legend_word(font, x + 30, yy, "Dirt road")
 	draw_line(Vector2(x, yy), Vector2(x + 24, yy), TRAIL, 2.0)
 	x = _legend_word(font, x + 30, yy, "Trail")
+	draw_line(Vector2(x, yy), Vector2(x + 24, yy), WATER, 4.0)
+	x = _legend_word(font, x + 30, yy, "Stream")
+	draw_rect(Rect2(Vector2(x, yy - 5), Vector2(10, 10)), BRIDGE)
+	x = _legend_word(font, x + 16, yy, "Bridge")
 	draw_rect(Rect2(Vector2(x, yy - 6), Vector2(12, 12)), SITE)
 	x = _legend_word(font, x + 18, yy, "Settlement")
 	draw_texture_rect(_icons.mineral, Rect2(Vector2(x, yy - 9), Vector2(18, 18)), false)

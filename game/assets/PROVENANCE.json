@@ -26453,6 +26453,13 @@
    "member": "PUNY-WORLD-PAID_v1/Tiled/punyworld-tiles.png tiles 10150, 10151, 10370, 10371; PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/punyworld-overworld-tiles.tsx dirt pathways",
    "transform": "B25R1 road tiles: 16 dirt path tiles (overworld_tiles.json dirt_path) x 4 rows with their dirt replaced by the paid flagstone ground and the rim darkened to 0.74 (stone road), x 2 rows narrowed by one ring with 22% grass through the dirt (trail); grown-over dirt road and trail rows (30% grass tufts); damaged and broken stone rows (12% and 34% of the paving gone to dirt and grass holes)",
    "sha256": "a450d9b12b22e8f9a06a9cd464ada4b536eef13a0235cdcfa3121b87b5dba4f4"
+  },
+  {
+   "file": "assets/tiles/water_tiles.png",
+   "source": "PUNY_WORLD_v1.zip + PUNY-WORLD-PAID_v1.zip",
+   "member": "PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/punyworld-overworld-tiles.tsx grass/river corner tiles and their animations, tiles 598-601, 847, 876; PUNY-WORLD-PAID_v1/Tiled/punyworld-tiles.png tile 10150",
+   "transform": "B25R1-Q3 water tiles: 4 animation frames x 21 rows, 1:1 (rows 0-15 grass/river corners by water-corner bits, 16 waterfall, 17-18 plank bridges, 19-20 stone bridges: the flagstone with its edges darkened to 0.62, 21 a ford: the full water with tile 703's stones set in twice)",
+   "sha256": "24f66d024b5a669d51ea0967f15c7c41cb20435989a9fab7becddec680ddef5f"
   }
  ]
 }

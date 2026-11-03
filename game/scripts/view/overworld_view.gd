@@ -150,6 +150,8 @@ func road_tile(cell: Vector2i, dirt: int) -> int:
 		return -1
 	if sources.size() <= 4:
 		return dirt
+	if overworld.is_bridge(cell) and sources.size() > WATER_ATLAS:
+		return _bridge_tile(cell, look)
 	var bits: int = int(_dirt_bits.get(dirt, 0)) if dirt >= 0 else 0
 	var lanes := RegionRoads.lane_cells(overworld)
 	for k in 4:
@@ -182,6 +184,21 @@ func road_tile(cell: Vector2i, dirt: int) -> int:
 		"stone_broken":
 			row = ROAD_DAMAGED_ROW + 1
 	return ROAD_TILES + row * 16 + bits
+
+
+## B25R1-Q3: a road over a stream: a stone bridge on a stone road, else a plank one, running the way the road does.
+func _bridge_tile(cell: Vector2i, look: String) -> int:
+	# across the stream: water further up and down the column than along the row means it flows north-south, so the
+	# bridge runs east-west (and the other way), whichever way the road's cells step across it
+	var col := 0
+	var row := 0
+	for d in range(-3, 4):
+		if d == 0:
+			continue
+		col += 1 if overworld.is_water(cell + Vector2i(0, d)) or overworld.is_bridge(cell + Vector2i(0, d)) else 0
+		row += 1 if overworld.is_water(cell + Vector2i(d, 0)) or overworld.is_bridge(cell + Vector2i(d, 0)) else 0
+	var run := "ew" if col > row else "ns" if row > col else ("ns" if RoadWear.is_way(overworld, cell + Vector2i(0, -1)) or RoadWear.is_way(overworld, cell + Vector2i(0, 1)) else "ew")
+	return int(overworld.tiles.water.bridge[("stone_" if look.begins_with("stone") else "plank_") + run])
 
 
 ## B25R1-011: draw a loaded cell's way again (its look changed), with its four neighbours (their joins may change).

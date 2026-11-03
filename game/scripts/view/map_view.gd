@@ -10,6 +10,8 @@ const ROAD_STONE_ROWS := 4             # rows 0-3 stone road (paving variants), 
 const ROAD_TRAIL_ROW := 4
 const ROAD_OVERGROWN_ROW := 6          # B25R1-011: rows 6-7 grown-over dirt road and trail, rows 8-9 damaged and broken stone
 const ROAD_DAMAGED_ROW := 8
+const WATER_ATLAS := 5                 # B25R1-Q3: game/assets/tiles/water_tiles.png (tools/water_tiles.py): 4 animation frames a row
+const WATER_FRAMES := 4
 
 var tileset := TileSet.new()
 var sources: Array[TileSetAtlasSource] = []
@@ -50,6 +52,7 @@ func build(m: VillageMap, above_parent: Node2D, sorted_parent: Node2D = null) ->
 		tileset.add_source(src)
 	_add_small_boulder(m)
 	_add_road_tiles()
+	_add_water_tiles()
 	for k in m.data.animated:
 		animated[int(k)] = m.data.animated[k].size()
 	for lay in m.data.layers:
@@ -93,6 +96,18 @@ func _add_road_tiles() -> void:
 	src.texture_region_size = Vector2i(T, T)
 	sources.append(src)
 	columns.append(16)
+	tileset.add_source(src)
+
+
+## B25R1-Q3: the sixth atlas, the streams' water, waterfall and bridges (overworld_tiles.json "water"), each row 4 frames.
+func _add_water_tiles() -> void:
+	if sources.size() != 5:
+		return
+	var src := TileSetAtlasSource.new()
+	src.texture = load("res://assets/tiles/water_tiles.png")
+	src.texture_region_size = Vector2i(T, T)
+	sources.append(src)
+	columns.append(WATER_FRAMES)
 	tileset.add_source(src)
 
 
@@ -148,7 +163,11 @@ func _put(layer: TileMapLayer, cell: Vector2i, v: int) -> void:
 	if not src.has_tile(coords):
 		src.create_tile(coords)
 		src.get_tile_data(coords, 0).y_sort_origin = SORT_ORIGIN
-		if animated.has(t):
+		if atlas == WATER_ATLAS:                    # B25R1-Q3: the water's own frames, left to right
+			src.set_tile_animation_frames_count(coords, WATER_FRAMES)
+			for f in WATER_FRAMES:
+				src.set_tile_animation_frame_duration(coords, f, 0.15)
+		elif animated.has(t):
 			src.set_tile_animation_columns(coords, animated[t])
 			src.set_tile_animation_frames_count(coords, animated[t])
 			for f in animated[t]:

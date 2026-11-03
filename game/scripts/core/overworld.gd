@@ -32,11 +32,14 @@ extends RefCounted
 ##  - Trees and rocks are single solid cells, never within a cell of each other or of a cliff, so
 ##    they cannot wall anything in. Flowers and bushes are walkable decoration.
 
-const GEN_VERSION := 3
+const GEN_VERSION := 4
 ## Generator versions whose saved changes still apply (their trees, rocks, flowers and roads are in the same cells): 2 (PL1-12,
 ## 2026-10-21) only draws the low red flower (tile 2656) among the wild flowers (overworld_tiles.json flowers), so a flower
 ## may be another colour than in version 1, and nothing else moved.
-const GEN_COMPATIBLE := [1, 2, 3]
+## B25R1-Q3 (owner 2026-11-03): GEN_VERSION 4 adds streams (_streams_round, below). A world keeps the generation it was made
+## with (`gen`, saved): a save of 1, 2 or 3 is drawn by generation 3 exactly as before, with no streams (its trees, rocks and
+## changes stay where they were); a new world is generation 4.
+const GEN_COMPATIBLE := [1, 2, 3, 4]
 const CHUNK := 32
 const PAD := 4                           # cells computed round a chunk, so neighbours' rules need no other chunk
 const AREA := CHUNK + 2 * PAD
@@ -63,9 +66,13 @@ class Chunk extends RefCounted:
 	var road := PackedByteArray()        # AREA x AREA road mask round the chunk (cell (x, y) at (y + PAD) * AREA + x + PAD)
 	var top := PackedByteArray()         # 1 on a mountain top (all four corners cliff: inside the rim). B14-07: ground but for its
 	                                     # trees and boulders, reached only by the steps, stairs or walkways the player makes
+	var water := PackedByteArray()       # B25R1-Q3 (generation 4): 1 a stream or pool (solid), 2 a bridge (a road over water), 3 a
+	                                     # waterfall (solid), 4 a ford (stepping stones: walkable); 0 dry
 	var last_use := 0
 
 var seed := 1
+var gen := GEN_VERSION                   # B25R1-Q3: the generation this world is drawn with (load_dict: a save keeps its own; 1-3 -> 3)
+var _stream_cache := {}                  # stream lattice cell -> its stream (a pure function of the seed; not saved)
 var village := Rect2i(0, 0, 120, 90)
 var gates: Array = []                    # {out: Vector2i, dir: Vector2i}: where the village's roads leave
 var tiles := {}                          # overworld_tiles.json
@@ -472,6 +479,219 @@ func _noise1(salt: int, t: int, period: int, amp: int) -> int:
 	return ((a + (((b - a) * f) >> 8)) * amp) / 512
 
 
+# ---------------------------------------------------------------- streams (B25R1-Q3) --------
+## GEN_VERSION 4 (owner decision B25R1-Q3, 2026-11-03: winding streams with grassy banks and rocks, waterfalls over cliff
+## edges into pools, bridges where roads cross). Global features like the roads, so they cross chunk seams unbroken: a
+## stream may rise in each STREAM_LATTICE cell (hash), on high ground only (the mountain field fm above STREAM_HIGH), and runs
+## downhill on fm a STREAM_STEP at a time, holding its heading (it turns at most 60 degrees a step, the wobble hashed), until
+## the ground rises on every side (a pool there) or STREAM_STEPS steps (a pool). Where it leaves the mountain mask (fm and fe
+## as the cliffs use them) a pool opens below the drop; a rim cell it crosses heading south is a waterfall. It never comes
+## within VILLAGE_CLEAR + 6 tiles of the village or a settlement (it ends there in a pool). Rasterised per chunk as water
+## corners (the "overworld" corner set's river colour): a corner within the stream's width of its line (0.8 tiles at the
+## source to 1.7, each bank corner pushed in or out by its hash) or inside a pool. A cell with 2 or more water corners is
+## water (solid) unless a road runs on it (a bridge) or it lies at one of the stream's fords (every FORD_EVERY steps off the
+## mountains: shallow water with stepping stones, walked across, so no stream ever walls a stretch of country off). Pure integer and float arithmetic of the seed; no global random.
+const STREAM_LATTICE := 176
+const STREAM_STEP := 6
+const STREAM_STEPS := 48
+const STREAM_HIGH := 540
+const STREAM_REACH := STREAM_STEP * STREAM_STEPS + 12
+const STREAM_KEEP_CLEAR := VILLAGE_CLEAR + 6
+const FORD_EVERY := 4                     # steps between fords (about 24 tiles): open ground stays joined across every stream
+const FORD_R := 2.7                       # tiles round a ford point its stepping stones cover (wider than the stream)
+var _area_fords: Array = []               # the fords near the chunk being generated (_water_corners), for _water_cell
+
+
+## One sample of _field at world corner (x, y): the same value noise, so a stream follows the ground the chunks draw.
+func _point(salt: int, periods: Array, x: int, y: int) -> int:
+	var acc := 0
+	var total := 0
+	for k in periods.size():
+		var p: int = periods[k]
+		var wgt := 1 << (periods.size() - 1 - k)
+		total += wgt
+		var lx := fdiv(x, p)
+		var ly := fdiv(y, p)
+		var xx := _smooth(((x - lx * p) * 256) / p)
+		var yy := _smooth(((y - ly * p) * 256) / p)
+		var v00 := hash32(seed, lx, ly, salt * 8 + k) & 1023
+		var v10 := hash32(seed, lx + 1, ly, salt * 8 + k) & 1023
+		var v01 := hash32(seed, lx, ly + 1, salt * 8 + k) & 1023
+		var v11 := hash32(seed, lx + 1, ly + 1, salt * 8 + k) & 1023
+		var top := v00 + (((v10 - v00) * xx) >> 8)
+		var bot := v01 + (((v11 - v01) * xx) >> 8)
+		acc += (top + (((bot - top) * yy) >> 8)) * wgt
+	return acc / total
+
+
+func _height(p: Vector2i) -> int:
+	return _point(2, [320, 160], p.x, p.y)
+
+
+## Whether the mountain mask holds at p (as the cliffs: fm high and fe near its middle; passes and roads not counted).
+func _mountain(p: Vector2i) -> bool:
+	var reach := (_height(p) - 470) / 4
+	return reach > 0 and absi(_point(1, [128, 64, 32], p.x, p.y) - 512) < reach
+
+
+func _kept_clear(p: Vector2i) -> bool:
+	if _rdist(village, p.x, p.y) < STREAM_KEEP_CLEAR:
+		return true
+	for st in sites:
+		if _rdist(st.rect, p.x, p.y) < STREAM_KEEP_CLEAR:
+			return true
+	return false
+
+
+## The stream rising in lattice cell (i, j), or {}: {pts: Array[Vector2] (its line), r: Array[float] (width at each point),
+## pools: [[Vector2 centre, radius]], falls: Array[Vector2i] (where it leaves the mountain), box: Rect2i}. Cached.
+func stream_at(i: int, j: int) -> Dictionary:
+	var key := Vector2i(i, j)
+	if _stream_cache.has(key):
+		return _stream_cache[key]
+	var out := {}
+	if hash32(seed, i, j, 110) % 100 < 70:
+		# a spring: the first of six hashed places in the cell on a mountain, else the first on high ground
+		var src := RegionRoads.NONE
+		for t in 6:
+			var p := Vector2i(i * STREAM_LATTICE + 20 + hash32(seed, i, j, 111 + 2 * t) % (STREAM_LATTICE - 40),
+				j * STREAM_LATTICE + 20 + hash32(seed, i, j, 112 + 2 * t) % (STREAM_LATTICE - 40))
+			if _kept_clear(p) or _height(p) < STREAM_HIGH:
+				continue
+			if _mountain(p):
+				src = p
+				break
+			if src == RegionRoads.NONE:
+				src = p
+		if src != RegionRoads.NONE:
+			out = _trace(src, i * 7919 + j * 104729)
+	_stream_cache[key] = out
+	return out
+
+
+func _trace(src: Vector2i, key: int) -> Dictionary:
+	var pts: Array = [Vector2(src)]
+	var rs: Array = [0.8]
+	var pools: Array = []
+	var falls: Array = []
+	var fords: Array = []
+	var at := src
+	var dirs: Array[Vector2] = []
+	for a in 12:
+		dirs.append(Vector2.RIGHT.rotated(a * PI / 6.0))
+	# the first heading: the steepest way down
+	var hd := 0
+	var best := 1 << 30
+	for a in 12:
+		var h := _height(at + Vector2i((dirs[a] * STREAM_STEP).round()))
+		if h < best:
+			best = h
+			hd = a
+	var was_mountain := _mountain(at)
+	for k in STREAM_STEPS:
+		var here := _height(at)
+		var pick := -1
+		var score := 1 << 30
+		var bend := roundi(1.6 * sin(float(k) * 0.7 + float(hash32(seed, key, 0, 119) % 628) / 100.0))     # it meanders
+		for t in [-2, -1, 0, 1, 2]:
+			var a := posmod(hd + t, 12)
+			var to := at + Vector2i((dirs[a] * STREAM_STEP).round())
+			var sc := _height(to) * 4 + absi(t - bend) * 14 + hash32(seed, key, k, 113 + t) % 12
+			if sc < score:
+				score = sc
+				pick = a
+		var nxt := at + Vector2i((dirs[pick] * STREAM_STEP).round())
+		if _height(nxt) > here + 6 or _kept_clear(nxt):
+			break                                          # the ground rises all round, or the village is near: a pool here
+		# a little wobble off the straight line, half way
+		var mid := (Vector2(at) + Vector2(nxt)) / 2.0 + dirs[posmod(pick + 3, 12)] * (float(hash32(seed, key, k, 120) % 400) / 100.0 - 2.0)
+		pts.append(mid)
+		rs.append(minf(1.7, 0.8 + float(k) * 0.04))
+		pts.append(Vector2(nxt))
+		rs.append(minf(1.7, 0.82 + float(k) * 0.04))
+		var mtn := _mountain(nxt)
+		if k % FORD_EVERY == FORD_EVERY / 2 and not mtn and not was_mountain:
+			fords.append(Vector2(nxt))                     # a ford: stepping stones across, so no stream walls the country off
+		if was_mountain and not mtn:
+			falls.append(nxt)
+			pools.append([Vector2(nxt) + dirs[pick] * 2.0, 2.4 + float(hash32(seed, key, k, 121) % 10) / 10.0])
+		was_mountain = mtn
+		at = nxt
+		hd = pick
+	if pts.size() < 3:
+		return {}
+	pools.append([pts[pts.size() - 1], 2.6 + float(hash32(seed, key, 0, 122) % 12) / 10.0])      # where it ends: a pool
+	var lo := Vector2(INF, INF)
+	var hi := -lo
+	for p in pts:
+		lo = lo.min(p)
+		hi = hi.max(p)
+	var box := Rect2i(Vector2i(lo.floor()) - Vector2i(6, 6), Vector2i((hi - lo).ceil()) + Vector2i(13, 13))
+	return {"pts": pts, "r": rs, "pools": pools, "falls": falls, "fords": fords, "box": box}
+
+
+## The streams whose water may reach `area` (tiles), in lattice order.
+func streams_in(area: Rect2i) -> Array:
+	var out := []
+	if gen < 4:
+		return out
+	var grown := area.grow(STREAM_REACH)
+	for j in range(fdiv(grown.position.y, STREAM_LATTICE), fdiv(grown.end.y, STREAM_LATTICE) + 1):
+		for i in range(fdiv(grown.position.x, STREAM_LATTICE), fdiv(grown.end.x, STREAM_LATTICE) + 1):
+			var st := stream_at(i, j)
+			if not st.is_empty() and (st.box as Rect2i).intersects(area):
+				out.append(st)
+	return out
+
+
+static func _seg_dist(p: Vector2, a: Vector2, b: Vector2) -> float:
+	var ab := b - a
+	var l2 := ab.length_squared()
+	var t := 0.0 if l2 == 0.0 else clampf((p - a).dot(ab) / l2, 0.0, 1.0)
+	return p.distance_to(a + ab * t)
+
+
+## The water corners of the GRID x GRID corners at (ox + i, oy + j): 1 water.
+func _water_corners(ox: int, oy: int) -> PackedByteArray:
+	var wc := PackedByteArray()
+	wc.resize(GRID * GRID)
+	var area := Rect2i(ox, oy, GRID, GRID)
+	_area_fords.clear()
+	for st in streams_in(area):
+		for f in st.fords:
+			if Rect2(area).grow(FORD_R + 1.0).has_point(f):
+				_area_fords.append(f)
+		var pts: Array = st.pts
+		var rs: Array = st.r
+		for q in range(pts.size() - 1):
+			var a: Vector2 = pts[q]
+			var b: Vector2 = pts[q + 1]
+			var r: float = maxf(float(rs[q]), float(rs[q + 1]))
+			var lo := Vector2i((a.min(b) - Vector2(r + 1, r + 1)).floor()) - Vector2i(ox, oy)
+			var hi := Vector2i((a.max(b) + Vector2(r + 1, r + 1)).ceil()) - Vector2i(ox, oy)
+			for j in range(maxi(0, lo.y), mini(GRID, hi.y + 1)):
+				for i in range(maxi(0, lo.x), mini(GRID, hi.x + 1)):
+					var k := j * GRID + i
+					if wc[k] == 1:
+						continue
+					var wx := ox + i
+					var wy := oy + j
+					var bank := float(hash32(seed, wx, wy, 130) % 100) / 200.0 - 0.25
+					if _seg_dist(Vector2(wx, wy), a, b) <= r + bank and _vdist(wx, wy) >= VILLAGE_CLEAR:
+						wc[k] = 1
+		for pool in st.pools:
+			var c: Vector2 = pool[0]
+			var r2: float = pool[1]
+			for j in range(maxi(0, int(floor(c.y - r2 - 1)) - oy), mini(GRID, int(ceil(c.y + r2 + 1)) - oy + 1)):
+				for i in range(maxi(0, int(floor(c.x - r2 - 1)) - ox), mini(GRID, int(ceil(c.x + r2 + 1)) - ox + 1)):
+					var wx := ox + i
+					var wy := oy + j
+					var bank := float(hash32(seed, wx, wy, 131) % 100) / 100.0 - 0.5
+					if Vector2(wx, wy).distance_to(c) <= r2 + bank and _vdist(wx, wy) >= VILLAGE_CLEAR:
+						wc[j * GRID + i] = 1
+	return wc
+
+
 # ---------------------------------------------------------------- roads ----------------------
 func _node_excluded(p: Vector2i) -> bool:
 	if village.grow(24).has_point(p):
@@ -718,6 +938,14 @@ func _generate(cx: int, cy: int) -> Chunk:
 	var fs := _field(ox, oy, 6, [160, 80])
 	var fl := _field(ox, oy, 7, [28, 14])
 	var road := _road_mask(ox, oy)
+	var wc := _water_corners(ox, oy) if gen >= 4 else PackedByteArray()      # B25R1-Q3: generation 4's streams
+	var wn := PackedByteArray()                   # water corners per cell (0-4)
+	wn.resize(AREA * AREA)
+	if not wc.is_empty():
+		for j in AREA:
+			for i in AREA:
+				var k := j * GRID + i
+				wn[j * AREA + i] = wc[k] + wc[k + 1] + wc[k + GRID] + wc[k + GRID + 1]
 	var open := PackedByteArray()                 # road and one cell round it
 	open.resize(AREA * AREA)
 	for j in range(1, AREA - 1):
@@ -780,6 +1008,8 @@ func _generate(cx: int, cy: int) -> Chunk:
 			var vd := _vdist(x, y)
 			if vd < OBJECT_MARGIN or open[q] == 1 or open[q - AREA] == 1:
 				continue
+			if wn[q] > 0 or wn[q - AREA] > 0:
+				continue                                  # B25R1-Q3: no tree or rock in a stream or on its bank
 			var hv := hash32(seed, x, y, 60) & 1023
 			prio[q] = hash32(seed, x, y, 61)
 			if blocked[q] == 1:
@@ -820,6 +1050,7 @@ func _generate(cx: int, cy: int) -> Chunk:
 	ch.kind.fill(NO_TREE)
 	ch.snow.resize(cells)
 	ch.top.resize(cells)
+	ch.water.resize(cells)
 	ch.path.fill(-1)
 	ch.deco.fill(-1)
 	var grass: Array = tiles.grass
@@ -843,6 +1074,8 @@ func _generate(cx: int, cy: int) -> Chunk:
 			ch.ground[c] = opts[hash32(seed, wx, wy, 70) % opts.size()]
 			if blocked[q] == 1:
 				ch.solid[c] = 1
+			if wn[q] > 0:
+				_water_cell(ch, c, q, gk, wc, wn, blocked[q] == 1 and inner[q] == 0, road[q] == 1, wx, wy)
 			if road[q] == 1:
 				var bits := _road_bits(road, i, j, wx, wy)
 				var popts: Array = tiles.dirt_path[bits if bits != 0 else 10]
@@ -869,7 +1102,7 @@ func _generate(cx: int, cy: int) -> Chunk:
 				ch.trees.append(kidx)
 				if mine == 1:
 					ch.solid[c] = 1
-			elif blocked[q] == 0:
+			elif blocked[q] == 0 and wn[q] == 0:
 				var hd := hash32(seed, wx, wy, 80) & 1023
 				var vd := _vdist(wx, wy)
 				var fl_p := clampi((fl[gk] - 560) / 2, 0, 90)
@@ -881,6 +1114,42 @@ func _generate(cx: int, cy: int) -> Chunk:
 					var bs: Array = tiles.bushes
 					ch.deco[c] = bs[hash32(seed, wx, wy, 82) % bs.size()]
 	return ch
+
+
+## B25R1-Q3: a cell with water corners: its ground is the river tile for its corners (a rim cell a stream runs through, north
+## to south, the waterfall; another wet rim cell its river tile, or its cliff where only a corner is wet), it is water when two or
+## more corners are (solid), a bridge where a road runs on it, and now and then a rock stands in open water.
+func _water_cell(ch: Chunk, c: int, q: int, gk: int, wc: PackedByteArray, wn: PackedByteArray, rim: bool, on_road: bool, wx: int, wy: int) -> void:
+	var bits: int = wc[gk] | (wc[gk + 1] << 1) | (wc[gk + GRID + 1] << 2) | (wc[gk + GRID] << 3)
+	if bits == 5:
+		bits = 7                                       # the set has no diagonal pair: the nearest it has
+	elif bits == 10:
+		bits = 11
+	var river: Array = tiles.water.river
+	if rim:
+		if wn[q] < 2:
+			return                                     # a corner of the rim wet: the rock stays
+		var falls: bool = wn[q - AREA] >= 2 and wn[q + AREA] >= 2
+		ch.ground[c] = int(tiles.water.fall) if falls else int(river[bits][0]) if not (river[bits] as Array).is_empty() else int(river[15][0])
+		ch.water[c] = 3 if falls else 1
+		ch.solid[c] = 1
+		return
+	if not (river[bits] as Array).is_empty():
+		ch.ground[c] = int(river[bits][0])
+	if wn[q] >= 2:
+		if on_road:
+			ch.water[c] = 2                            # a bridge: the road runs on over the water
+			ch.solid[c] = 0
+		elif _area_fords.any(func(f: Vector2): return f.distance_to(Vector2(wx, wy) + Vector2(0.5, 0.5)) <= FORD_R):
+			ch.water[c] = 4                            # a ford: shallow water and stepping stones, walked across
+			ch.solid[c] = 0
+			if wn[q] == 4:
+				ch.ground[c] = int(tiles.water.ford)   # the stones in open water; its banks keep their own shape
+		else:
+			ch.water[c] = 1
+			ch.solid[c] = 1
+			if wn[q] == 4 and hash32(seed, wx, wy, 132) % 100 < 3:
+				ch.deco[c] = int(tiles.rock)           # a rock in the water
 
 
 func _road_bits(road: PackedByteArray, i: int, j: int, wx: int, wy: int) -> int:
@@ -927,6 +1196,8 @@ func is_solid(c: Vector2i) -> bool:
 		return false                                   # B14-07: steps, stairs or a walkway through the cliff's rim
 	var ch := get_chunk(chunk_of(c))
 	var i := _cell_of(ch, c)
+	if ch.water[i] == 1 or ch.water[i] == 3:
+		return true                                    # B25R1-Q3: a stream, a pool or a waterfall (a bridge is walked on)
 	if changes.has(c):
 		# a felled, growing or planted tree: its recorded stage says. A query never grows a tree:
 		# World.sync_tree does (hourly, and on use), keeping a tree from turning solid under someone.
@@ -942,6 +1213,75 @@ func is_solid(c: Vector2i) -> bool:
 	if ch.top[i] == 1 and ch.kind[i] == NO_TREE and ch.deco[i] < 0:
 		return false                                   # B14-07: a mountain top is ground once reached (its trees and boulders stand)
 	return ch.solid[i] != 0
+
+
+## B25R1-Q3: whether cell `c` is water: a stream, a pool, a waterfall or a ford (a ford is walked across; a bridge is a road,
+## not water). Generation 3 worlds: never.
+func is_water(c: Vector2i) -> bool:
+	if gen < 4 or village.has_point(c):
+		return false
+	var ch := get_chunk(chunk_of(c))
+	var w: int = ch.water[_cell_of(ch, c)]
+	return w == 1 or w == 3 or w == 4
+
+
+## B25R1-Q3: whether cell `c` is a ford (shallow water with stepping stones: walkable).
+func is_ford(c: Vector2i) -> bool:
+	if gen < 4 or village.has_point(c):
+		return false
+	var ch := get_chunk(chunk_of(c))
+	return ch.water[_cell_of(ch, c)] == 4
+
+
+## B25R1-Q3: whether cell `c` is a bridge (a road over a stream).
+func is_bridge(c: Vector2i) -> bool:
+	if gen < 4 or village.has_point(c):
+		return false
+	var ch := get_chunk(chunk_of(c))
+	return ch.water[_cell_of(ch, c)] == 2
+
+
+const NO_WATER := Vector2i(-1048576, -1048576)
+
+
+## B25R1-Q3: the water cell nearest `c` within `radius` tiles (Chebyshev rings, then row and column order), or NO_WATER (a
+## generation 3 world has no streams: wells are the fallback).
+func nearest_water(c: Vector2i, radius: int) -> Vector2i:
+	if gen < 4:
+		return NO_WATER
+	if is_water(c):
+		return c
+	for r in range(1, radius + 1):
+		var best := NO_WATER
+		var bd := INF
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var n := c + Vector2i(dx, dy)
+				if is_water(n):
+					var d := Vector2(dx, dy).length()
+					if d < bd:
+						bd = d
+						best = n
+		if best != NO_WATER:
+			return best
+	return NO_WATER
+
+
+## B25R1-Q3: where to stand to drink: the open cell beside the water nearest `c` within `radius` (the bank), or NO_WATER.
+func nearest_water_access(c: Vector2i, radius: int) -> Vector2i:
+	var wtr := nearest_water(c, radius)
+	if wtr == NO_WATER:
+		return NO_WATER
+	var best := NO_WATER
+	var bd := INF
+	for d in [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]:
+		var n: Vector2i = wtr + d
+		if not is_solid(n) and not is_bridge(n) and Vector2(n).distance_to(Vector2(c)) < bd:
+			bd = Vector2(n).distance_to(Vector2(c))
+			best = n
+	return best
 
 
 ## B14-07: whether a cell is on a mountain top (inside the cliff's rim).
@@ -1168,7 +1508,7 @@ func to_dict() -> Dictionary:
 	wcells.sort()
 	for c: Vector2i in wcells:
 		wk.append([c.x, c.y, str(works[c])])
-	var out := {"seed": seed, "gen": GEN_VERSION, "changes": list, "rocks": rocks, "flowers": flowers, "works": wk}
+	var out := {"seed": seed, "gen": gen, "changes": list, "rocks": rocks, "flowers": flowers, "works": wk}
 	if not road_state.is_empty():
 		out["roads"] = RoadWear.to_save(self)     # B25R1-011 (optional: an older save has none)
 	return out
@@ -1183,6 +1523,12 @@ func load_dict(d: Dictionary) -> void:
 	works.clear()
 	works_version += 1
 	road_state.clear()
+	var g := int(d.get("gen", GEN_VERSION))
+	var keep := 3 if g < 4 else mini(g, GEN_VERSION)          # B25R1-Q3: a world keeps its generation (1-3 are drawn as 3)
+	if keep != gen:
+		gen = keep
+		cache.clear()                                    # chunks drawn by another generation are dropped
+		_stream_cache.clear()
 	for f in d.get("flowers", []):
 		plant_changes[Vector2i(int(f[0]), int(f[1]))] = int(f[2])
 	if not int(d.get("gen", GEN_VERSION)) in GEN_COMPATIBLE:

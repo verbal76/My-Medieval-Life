@@ -88,7 +88,7 @@ func _run() -> void:
 	var drawn := {"stone": 0, "road": 0, "trail": 0}
 	var wrong := 0
 	for k in by:
-		for cell in (by[k] as Array).slice(0, 40):
+		for cell in (by[k] as Array).filter(func(c): return not ow.is_bridge(c)).slice(0, 40):     # (a bridge has its own tile: water_test)
 			var ch := ow.get_chunk(Overworld.chunk_of(cell))
 			var i: int = (cell.y - ch.cy * Overworld.CHUNK) * Overworld.CHUNK + cell.x - ch.cx * Overworld.CHUNK
 			var t: int = view.road_tile(cell, ch.path[i])
@@ -101,7 +101,7 @@ func _run() -> void:
 			else:
 				wrong += 0 if in_atlas and row >= MapView.ROAD_TRAIL_ROW else 1
 			drawn[k] += 1
-	check(wrong == 0 and view.sources.size() == 5, "each type has its own tiles: dirt roads the dirt path, stone the paving rows, trails the trail rows (%s, %d wrong)" % [str(drawn), wrong])
+	check(wrong == 0 and view.sources.size() >= 5, "each type has its own tiles: dirt roads the dirt path, stone the paving rows, trails the trail rows (%s, %d wrong)" % [str(drawn), wrong])
 	# the real chunk drawing: stand in Wulstead and let the chunks build
 	var st: Dictionary = ow.site("wulstead")
 	w.player.pos = Vector2(st.gate) + Vector2(0.5, 0.5)
