@@ -17,6 +17,8 @@ on:
       record: {type: boolean, required: true}
       segment_days: {type: string, required: true}
       godot_version: {type: string, required: true}
+      tag: {type: string, required: false, default: ""}
+      retention_days: {type: string, required: false, default: "30"}
 
 permissions:
   contents: read          # nothing more: a called workflow may not ask for more than its caller grants (long-sims grants contents: read)
@@ -32,7 +34,8 @@ jobs:
       - id: seg
         uses: ./.github/actions/flight-segment
         with: {seed: "${{ inputs.seed }}", segment: "1", segment_days: "${{ inputs.segment_days }}", days: "${{ inputs.days }}", every: "${{ inputs.every }}",
-               sim_args: "${{ inputs.sim_args }}", record: "${{ inputs.record }}", godot_version: "${{ inputs.godot_version }}"}
+               sim_args: "${{ inputs.sim_args }}", record: "${{ inputs.record }}", godot_version: "${{ inputs.godot_version }}",
+               tag: "${{ inputs.tag }}", retention_days: "${{ inputs.retention_days }}"}
       - name: Fail on a defect (after everything was kept)
         if: steps.seg.outputs.failed == 'true'
         run: echo "::error::seed ${{ inputs.seed }} segment 1 stopped with ${{ steps.seg.outputs.stop_reason }}; see its status and log" && exit 1
@@ -49,7 +52,8 @@ jobs:
       - id: seg
         uses: ./.github/actions/flight-segment
         with: {seed: "${{ inputs.seed }}", segment: "2", segment_days: "${{ inputs.segment_days }}", days: "${{ inputs.days }}", every: "${{ inputs.every }}",
-               sim_args: "${{ inputs.sim_args }}", record: "${{ inputs.record }}", godot_version: "${{ inputs.godot_version }}"}
+               sim_args: "${{ inputs.sim_args }}", record: "${{ inputs.record }}", godot_version: "${{ inputs.godot_version }}",
+               tag: "${{ inputs.tag }}", retention_days: "${{ inputs.retention_days }}"}
       - name: Fail on a defect (after everything was kept)
         if: steps.seg.outputs.failed == 'true'
         run: echo "::error::seed ${{ inputs.seed }} segment 2 stopped with ${{ steps.seg.outputs.stop_reason }}; see its status and log" && exit 1
@@ -66,7 +70,8 @@ jobs:
       - id: seg
         uses: ./.github/actions/flight-segment
         with: {seed: "${{ inputs.seed }}", segment: "3", segment_days: "${{ inputs.segment_days }}", days: "${{ inputs.days }}", every: "${{ inputs.every }}",
-               sim_args: "${{ inputs.sim_args }}", record: "${{ inputs.record }}", godot_version: "${{ inputs.godot_version }}"}
+               sim_args: "${{ inputs.sim_args }}", record: "${{ inputs.record }}", godot_version: "${{ inputs.godot_version }}",
+               tag: "${{ inputs.tag }}", retention_days: "${{ inputs.retention_days }}"}
       - name: Fail on a defect (after everything was kept)
         if: steps.seg.outputs.failed == 'true'
         run: echo "::error::seed ${{ inputs.seed }} segment 3 stopped with ${{ steps.seg.outputs.stop_reason }}; see its status and log" && exit 1
@@ -83,7 +88,8 @@ jobs:
       - id: seg
         uses: ./.github/actions/flight-segment
         with: {seed: "${{ inputs.seed }}", segment: "4", segment_days: "${{ inputs.segment_days }}", days: "${{ inputs.days }}", every: "${{ inputs.every }}",
-               sim_args: "${{ inputs.sim_args }}", record: "${{ inputs.record }}", godot_version: "${{ inputs.godot_version }}"}
+               sim_args: "${{ inputs.sim_args }}", record: "${{ inputs.record }}", godot_version: "${{ inputs.godot_version }}",
+               tag: "${{ inputs.tag }}", retention_days: "${{ inputs.retention_days }}"}
       - name: Fail on a defect (after everything was kept)
         if: steps.seg.outputs.failed == 'true'
         run: echo "::error::seed ${{ inputs.seed }} segment 4 stopped with ${{ steps.seg.outputs.stop_reason }}; see its status and log" && exit 1
@@ -99,12 +105,12 @@ jobs:
       - name: Fetch every segment's archive, log and status
         uses: actions/download-artifact@v4
         with:
-          pattern: fr-seed${{ inputs.seed }}-seg*
+          pattern: fr-seed${{ inputs.seed }}${{ inputs.tag }}-seg*
           path: ${{ runner.temp }}/dl
 
       - name: Lay the segments out
         env:
-          SEED: ${{ inputs.seed }}
+          SEED: ${{ inputs.seed }}${{ inputs.tag }}
         run: |
           run="$RUNNER_TEMP/run"
           for d in "$RUNNER_TEMP"/dl/fr-seed$SEED-seg*-run; do
@@ -132,6 +138,12 @@ jobs:
           set -e
           tail -n 40 "$out/analyse.log"
           cat "$out/findings.md" 2>/dev/null | head -c 60000 || true
+
+      - name: Living-world reports (B25R1-016)
+        if: always()
+        run: |
+          python3 tools/flight_lives.py "$RUNNER_TEMP/run" --out "$RUNNER_TEMP/results/lives" > "$RUNNER_TEMP/results/lives.log" 2>&1 || echo "::warning::the living-world reports failed: see lives.log"
+          tail -n 40 "$RUNNER_TEMP/results/lives.log"
 
       - name: Cache Godot
         id: godot
@@ -202,7 +214,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: fr-seed${{ inputs.seed }}-results
+          name: fr-seed${{ inputs.seed }}${{ inputs.tag }}-results
           path: ${{ runner.temp }}/results
           if-no-files-found: warn
           retention-days: 90

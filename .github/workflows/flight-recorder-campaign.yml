@@ -33,6 +33,10 @@ jobs:
     timeout-minutes: 5
     outputs:
       seeds: ${{ steps.p.outputs.seeds }}
+      runs: ${{ steps.p.outputs.runs }}
+      twin: ${{ steps.p.outputs.twin }}
+      sim_args: ${{ steps.p.outputs.sim_args }}
+      retention: ${{ steps.p.outputs.retention }}
       godot: ${{ steps.p.outputs.godot }}
     steps:
       - id: p
@@ -61,10 +65,18 @@ jobs:
               sys.exit("segment_days must be a multiple of every (a segment ends on a checkpoint)")
           if int(days) > 4 * int(seg):
               sys.exit("days must be at most 4 x segment_days (four chained jobs per seed)")
-          if not re.fullmatch(r"((--aspiration|--job-choice|--economy|--market|--no-judgment|--scenario [a-z_]+|--at \d{1,3})( |$))*", os.environ.get("SIM_ARGS", "").strip()):
-              sys.exit("sim_args: only --aspiration --job-choice --economy --market --no-judgment --scenario NAME --at DAY")
+          if not re.fullmatch(r"((--aspiration|--job-choice|--economy|--market|--no-judgment|--twin|--scenario [a-z_]+|--at \d{1,3})( |$))*", os.environ.get("SIM_ARGS", "").strip()):
+              sys.exit("sim_args: only --aspiration --job-choice --economy --market --no-judgment --twin --scenario NAME --at DAY")
+          # B25R1-016: --twin is the campaign's own switch, never the simulation's: a second independent run of each seed with the same
+          # configuration (the determinism comparison of event streams and fingerprints), the living-world reports over both, and the
+          # archives kept 90 days. It is taken out of the simulation's arguments here.
+          words = os.environ.get("SIM_ARGS", "").split()
+          twin = "--twin" in words
+          sim_args = " ".join(w for w in words if w != "--twin")
+          runs = [{"seed": s, "tag": ""} for s in seeds] + ([{"seed": s, "tag": "-twin"} for s in seeds] if twin else [])
           with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-              f.write("seeds=%s\ngodot=%s\n" % (json.dumps(seeds), os.environ["GODOT_VERSION"]))
+              f.write("seeds=%s\nruns=%s\ntwin=%s\nsim_args=%s\nretention=%s\ngodot=%s\n" % (json.dumps(seeds), json.dumps(runs), str(twin).lower(), sim_args,
+                      "90" if twin else "30", os.environ["GODOT_VERSION"]))
           with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as f:
               f.write("# Flight recorder campaign\n\n- Commit: `%s`\n- Seeds %s, %s days, checkpoints every %s, segments of %s days, record %s, sim_args `%s`\n- Run: %s/%s/actions/runs/%s\n" % (
                   os.environ["GITHUB_SHA"], ", ".join(seeds), days, every, seg, "${{ inputs.record }}", os.environ.get("SIM_ARGS", ""),
@@ -75,15 +87,17 @@ jobs:
     needs: plan
     strategy:
       fail-fast: false          # the seeds are independent: one failing never stops the other
-      max-parallel: 2           # at most two seeds simulating at once (the directive's default)
+      max-parallel: 2           # at most two runs simulating at once (the directive's default; with --twin: one seed and its twin)
       matrix:
-        seed: ${{ fromJSON(needs.plan.outputs.seeds) }}
+        include: ${{ fromJSON(needs.plan.outputs.runs) }}
     uses: ./.github/workflows/flight-recorder-seed.yml
     with:
       seed: ${{ matrix.seed }}
+      tag: ${{ matrix.tag }}
+      retention_days: ${{ needs.plan.outputs.retention }}
       days: ${{ inputs.days }}
       every: ${{ inputs.every }}
-      sim_args: ${{ inputs.sim_args }}
+      sim_args: ${{ needs.plan.outputs.sim_args }}
       record: ${{ inputs.record }}
       segment_days: ${{ inputs.segment_days }}
       godot_version: ${{ needs.plan.outputs.godot }}
@@ -132,3 +146,66 @@ jobs:
           name: flight-recorder-campaign
           path: campaign
           retention-days: 90
+
+  # B25R1-016 (owner directive 2026-11-03, 365-day flight recorder): with --twin, each seed's two independent runs are read together:
+  # the living-world reports A-I over the first (tools/flight_lives.py) and the comparison of the two runs' event streams and
+  # checkpoint fingerprints (identical, or the first day they differ). Kept 90 days.
+  lives:
+    needs: [plan, seed]
+    if: always() && needs.plan.outputs.twin == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: ${{ fromJSON(needs.plan.outputs.seeds) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch both runs' archives and statuses
+        uses: actions/download-artifact@v4
+        with:
+          pattern: fr-seed${{ matrix.seed }}*-seg*
+          path: ${{ runner.temp }}/dl
+      - name: Lay the runs out
+        env:
+          SEED: ${{ matrix.seed }}
+        run: |
+          for tag in "" "-twin"; do
+            run="$RUNNER_TEMP/run$tag"
+            for d in "$RUNNER_TEMP"/dl/fr-seed$SEED$tag-seg*-run; do
+              [ -d "$d" ] || continue
+              n=$(basename "$d" | sed -E 's/.*-seg([0-9]+)-run/\1/')
+              mkdir -p "$run/seg$n" && cp -r "$d"/. "$run/seg$n/"
+              [ -f "$run/seg$n/sim.log.gz" ] && gunzip -f "$run/seg$n/sim.log.gz"
+            done
+            for d in "$RUNNER_TEMP"/dl/fr-seed$SEED$tag-seg*-archive; do
+              [ -d "$d" ] || continue
+              n=$(basename "$d" | sed -E 's/.*-seg([0-9]+)-archive/\1/')
+              mkdir -p "$run/seg$n/rec" && mv "$d"/* "$run/seg$n/rec/" 2>/dev/null || true
+            done
+          done
+          rm -rf "$RUNNER_TEMP/dl"
+          du -sh "$RUNNER_TEMP"/run* || true
+      - name: Living-world reports and the determinism comparison
+        id: lives
+        run: |
+          out="$RUNNER_TEMP/lives"
+          set +e
+          python3 tools/flight_lives.py "$RUNNER_TEMP/run" --compare "$RUNNER_TEMP/run-twin" --out "$out" > "$RUNNER_TEMP/lives.log" 2>&1
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          set -e
+          cp "$RUNNER_TEMP/lives.log" "$out/" 2>/dev/null || true
+          cat "$RUNNER_TEMP/lives.log" | head -c 20000
+          cat "$out/A_executive.md" >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
+      - name: Keep the reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fr-living-world-seed${{ matrix.seed }}
+          path: ${{ runner.temp }}/lives
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Fail when the two runs differ or the reports failed
+        if: always()
+        run: |
+          [ "${{ steps.lives.outputs.code }}" = "0" ] || { echo "::error::the two runs of seed ${{ matrix.seed }} differ, or the reports failed: see lives.log and I_evidence_index.md"; exit 1; }

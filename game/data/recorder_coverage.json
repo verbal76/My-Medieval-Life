@@ -1,7 +1,7 @@
 {
  "format": "mml-recorder-coverage/1",
  "note": "What the flight recorder instruments, system by system (docs/design/FLIGHT_RECORDER_DESIGN.md section 2). Never read a row as broader than its scope text. A row is 'Fully instrumented' only when it names a test in game/tests/recorder_test.gd that exercises it (checked by that test); everything not listed as instrumented is not recorded. Updated by the stage that instruments a system.",
- "as_of": "stage D1 + D2 choke points + D3 systems (identity, life, employment, government, crime, player verbs, save and load), 2026-10-23; schema 2 (SIM-GATE-01: hourly village snapshots, combat chases, the closing snapshot), 2026-10-24; D5 judgment and D4 relations shared hours, gifts and harm (Expansion 20 batch R3), 2026-10-26; X20-FINAL phase 3 (production, consumption and unmet-need flows; contracts and credit; relations' help, talk, cooling, courting and proposals; memory forgotten, personality, grievances, history; daily summaries; multiplayer), 2026-10-27",
+ "as_of": "stage D1 + D2 choke points + D3 systems (identity, life, employment, government, crime, player verbs, save and load), 2026-10-23; schema 2 (SIM-GATE-01: hourly village snapshots, combat chases, the closing snapshot), 2026-10-24; D5 judgment and D4 relations shared hours, gifts and harm (Expansion 20 batch R3), 2026-10-26; X20-FINAL phase 3 (production, consumption and unmet-need flows; contracts and credit; relations' help, talk, cooling, courting and proposals; memory forgotten, personality, grievances, history; daily summaries; multiplayer), 2026-10-27; B25R1-016 (wip/b25r1-recorder, 2026-11-03): the living-world vocabulary (chronicle), roads, the player's region travel, landmarks, the dawn census, adapters for the journeys' and homesteads' own calls",
  "rows": [
   {
    "system": "Decisions",
@@ -268,6 +268,57 @@
    "stage": "X20-FINAL phase 3",
    "test": "test_x20_phase3",
    "note": "A guest's world never simulates, so its archive holds only its network events and digests (no audit there). MML_RECORD=DIR records every process of the network harness. Moves and the per-tick villager and animal snapshots are not rows. tools/recorder_archive.py --participants compares the digests."
+  },
+  {
+   "system": "Roads (B25R1-011)",
+   "interaction": "a cell's look changed by footfall (road_formed: level up; road_cleared: a grown-over road walked; road_wear: stone damaged or broken), paving and repair with who did it and the stone, worn paths that lost a level and walked roads that grew over (one event a dawn each, the cells counted), the network's looks a dawn (roads_day)",
+   "where": "RoadWear.foot, pave, repair, prune (Overworld.recorder); ManorWork._pave and Paving.done pass the paver",
+   "status": "Partially instrumented",
+   "stage": "B25R1-016",
+   "test": "b25_recorder_test.gd test_roads",
+   "note": "A step that changes no look is not an event (the footfall percent is in RoadWear's state). A generated road never walked turns grown over without an event (only walked cells are compared at dawn; roads_day counts the network's looks). Stone ageing by time alone shows in roads_day, and as road_wear only when a step crosses a state."
+  },
+  {
+   "system": "The player's region travel (B25R1-006)",
+   "interaction": "a destination chosen (route waypoints, road cells) or refused, the walk suspended (manual input, a blocked way), dismissed, arrived",
+   "where": "TravelDriver.start, suspend, dismiss, step (arrival)",
+   "status": "Partially instrumented",
+   "stage": "B25R1-016",
+   "note": "The driver runs in the game's frame loop (Main), so a headless simulation has no player journeys; no automated test exercises it."
+  },
+  {
+   "system": "Landmarks (B25R1-003)",
+   "interaction": "a place found on foot by the player (kind, place, cell)",
+   "where": "Landmarks.note",
+   "status": "Partially instrumented",
+   "stage": "B25R1-016",
+   "test": "b25_recorder_test.gd test_landmark_and_census",
+   "note": "Player discovery only (the system has no NPC discovery)."
+  },
+  {
+   "system": "Population census (B25R1-016 s.10)",
+   "interaction": "a dawn: the village by life stage and occupation, households, births and deaths so far, off-map and wilderness populations; each clan's members and dependants; each wilderness settlement's state (Homesteads.recorder_rows when present)",
+   "where": "WorldRecorder._b25_day",
+   "status": "Partially instrumented",
+   "stage": "B25R1-016",
+   "test": "b25_recorder_test.gd test_landmark_and_census",
+   "note": "settlement_state and the wilderness population need Homesteads.recorder_rows (not in this build: zero)."
+  },
+  {
+   "system": "Resident journeys (REGION-NAV-01, B25R1-009)",
+   "interaction": "journey begin, refusal, arrival, provisioning, purchases, waiting, errand failure, designation of a seed traveller, end with how",
+   "where": "WorldRecorder.journey_event (adapter for Journeys.record)",
+   "status": "Not instrumented",
+   "stage": "B25R1-016",
+   "note": "The adapter is here and tested (b25_recorder_test.gd test_adapters); the calls are on wip/b25r1-travelers (Journeys.record, RegionTrade, SeedTravelers) until merged. Ambient travellers are scenery with no identity and are never recorded."
+  },
+  {
+   "system": "Homesteads and life decisions (B25R1-010, B25R1-014)",
+   "interaction": "homestead choice, safeguard, set out, claim, materials, built (residence), trips, trade, members, failure, abandonment, affiliation; runaway choice; the band's answer to a recruit; leaving the band",
+   "where": "WorldRecorder.life_event (adapter for Homesteads._rec, LifeDecisions._rec)",
+   "status": "Not instrumented",
+   "stage": "B25R1-016",
+   "note": "The adapter is here and tested (test_adapters); the calls are on wip/b25r1-homestead until merged. Kinds with no mapping are kept as unmapped_event and listed in the exception report."
   },
   {
    "system": "Expansions 20, 21, 22 (hybrid), 23",
