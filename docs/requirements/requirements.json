@@ -7121,7 +7121,7 @@
   {
    "id": "B25R1-009",
    "kind": "approved",
-   "title": "Seed travelers: real settlement residents travel the roads to buy an item and return; no decorative travelers",
+   "title": "Seed travelers: real settlement residents travel the roads to buy an item and return, alongside the existing ambient travellers",
    "description": "Seed travelers: real settlement residents travel the roads to buy an item and return; no decorative travelers",
    "source": "docs/directives/2026-11-03_b25r1_seed_travelers.md",
    "owner_wording": "We are seeding reasons for existing people to travel, not seeding fake people into the countryside.",
@@ -7134,7 +7134,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7148,9 +7148,16 @@
      "date": "2026-11-03",
      "change": "owner_answer",
      "why": "owner 2026-11-03 ~14:15 EST on the ambient pedlars, pilgrims and wayfarers: \"We can have them as well\": they stay (with their talk) alongside the real seed travelers; worker told"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-travelers worker; branch: None -> wip/b25r1-travelers; title",
+     "why": "scope audit under B25R1-015: title said 'no decorative travelers', but the owner later kept the ambient pedlars, pilgrims and wayfarers ('We can have them as well'); title corrected, worker running"
     }
    ],
-   "owner_answer": "Keep the ambient travellers as well as the real seed travelers (owner, 2026-11-03)"
+   "owner_answer": "Keep the ambient travellers as well as the real seed travelers (owner, 2026-11-03)",
+   "assigned_worker": "b25r1-travelers worker",
+   "branch": "wip/b25r1-travelers"
   },
   {
    "id": "B25R1-010",
@@ -7168,7 +7175,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7187,10 +7194,17 @@
      "date": "2026-11-03",
      "change": "disposition: None -> APPROVED; owner_answer",
      "why": "owner decisions 2026-11-03 (outlaw communities directive): D1 the shared judgment architecture approved with clarifications (evaluated at household formation or relocation events; factors property ambition, occupation/resource fit, money, village housing and work, family, isolation and safety, settlement prosperity, taxes minor; young-adult homesteading around 2% or less of eligible formations over five game years, a safeguard not a chance); D2 established adults may homestead now, with a much higher threshold and much smaller allowance, from prolonged housing failure, family change, strong ambition, a viable opportunity or employment change, never routinely abandoning obligations"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-homestead worker; branch: None -> wip/b25r1-homestead",
+     "why": "scope audit under B25R1-015: in development by the homesteading worker; full scope ships in Revision 1 with its decision switches on, nothing deferred or disabled"
     }
    ],
    "disposition": "APPROVED",
-   "owner_answer": "D1 approved with clarifications; D2 established adults included now (higher threshold, smaller allowance)"
+   "owner_answer": "D1 approved with clarifications; D2 established adults included now (higher threshold, smaller allowance)",
+   "assigned_worker": "b25r1-homestead worker",
+   "branch": "wip/b25r1-homestead"
   },
   {
    "id": "B25R1-011",
@@ -7302,7 +7316,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7316,10 +7330,17 @@
      "date": "2026-11-03",
      "change": "disposition: None -> APPROVED; owner_answer",
      "why": "owner decisions 2026-11-03 (outlaw communities directive): D1 runaway judgment approved (after sustained hardship or major events, at most once a season unless a new major event; outcomes stay home, seek help, work while home, move to another settlement, survive alone, approach an outlaw community; bandit acceptance a separate decision); D3 age 12 normally, younger only in extreme sustained danger or deprivation with a much higher threshold, younger children strongly prefer kin or safe households; FAM-07/OD-11 kept and reconciled; D4 adult bandits may leave now"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-homestead worker; branch: None -> wip/b25r1-homestead",
+     "why": "scope audit under B25R1-015: in development by the homesteading worker; full scope ships in Revision 1 with its decision switches on, nothing deferred or disabled"
     }
    ],
    "disposition": "APPROVED",
-   "owner_answer": "D1 approved; D3 minimum age 12, younger only in extremes; D4 adult bandits may leave the clan now (B25R1-014)"
+   "owner_answer": "D1 approved; D3 minimum age 12, younger only in extremes; D4 adult bandits may leave the clan now (B25R1-014)",
+   "assigned_worker": "b25r1-homestead worker",
+   "branch": "wip/b25r1-homestead"
   },
   {
    "id": "B25R1-014",
@@ -7337,7 +7358,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7346,6 +7367,45 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_outlaw_communities.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-homestead worker; branch: None -> wip/b25r1-homestead",
+     "why": "scope audit under B25R1-015: in development by the homesteading worker; full scope ships in Revision 1 with its decision switches on, nothing deferred or disabled"
+    }
+   ],
+   "assigned_worker": "b25r1-homestead worker",
+   "branch": "wip/b25r1-homestead"
+  },
+  {
+   "id": "B25R1-015",
+   "kind": "rule",
+   "title": "Full approved Revision 1 scope is mandatory: no deferral, disabling, placeholder or narrowing without the owner",
+   "description": "Full approved Revision 1 scope is mandatory: no deferral, disabling, placeholder or narrowing without the owner",
+   "source": "docs/directives/2026-11-03_b25r1_full_scope_mandatory.md",
+   "owner_wording": "We are building the complete approved Revision 1, not a reduced version that happens to pass tests. If we hit a wall, bring the problem and possible solutions to me. We will work through it. Do not lower the scope without my explicit decision.",
+   "approval": "owner, 2026-11-03",
+   "acceptance": [
+    "Every B25R1 requirement (001-014, Q1) implemented, integrated and validated in Revision 1 with its behaviour on in the shipped configuration",
+    "No approved function deferred, disabled, replaced by a placeholder or narrowed without an owner decision",
+    "Blockers reported with obstacle, systems, feasible solutions, recommendation and consequences (performance, determinism, compatibility, time)",
+    "Tests verify gameplay behaviour; conservation, identity, mortality, economy, persistence, deterministic replay and multigenerational stability validated",
+    "Build 25 draft preserved as rollback"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "PROPOSED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT APPLICABLE",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_full_scope_mandatory.md"
     }
    ]
   },

@@ -21,15 +21,16 @@
 
 ## Build 25 Revision 1 (owner, 2026-11-03; controls this session)
 
-- **Directives:** `docs/directives/2026-11-03_b25r1_master_directive.md` (B25R1-001..008), `2026-11-03_b25r1_seed_travelers.md` (B25R1-009), `2026-11-03_b25r1_homesteading.md` (B25R1-010).
+- **Directives:** `docs/directives/2026-11-03_b25r1_master_directive.md` (B25R1-001..008), `2026-11-03_b25r1_seed_travelers.md` (B25R1-009), `2026-11-03_b25r1_homesteading.md` (B25R1-010), `2026-11-03_b25r1_road_wear.md` (B25R1-011), `2026-11-03_b25r1_owner_clarifications.md` (B25R1-012 and clarifications), `2026-11-03_b25r1_youth_runaways.md` (B25R1-013), `2026-11-03_b25r1_outlaw_communities.md` (B25R1-014, the four decisions), `2026-11-03_b25r1_full_scope_mandatory.md` (B25R1-015).
+- **Scope rule (B25R1-015, owner 2026-11-03):** every approved B25R1 function ships in Revision 1, working, with its switches on in the shipped configuration. Nothing is deferred, disabled, replaced by a placeholder or narrowed without an owner decision. Blockers go to the owner with obstacle, systems, solutions, recommendation and consequences; unblocked work continues. The Revision 1 draft is not ready until all of it is implemented, integrated and validated.
 - **Rollback point:** the Build 25 private draft (`build-25`, release id 432836586, from `a459186`, run 41666958781). Never overwritten: Revision 1 gets its own draft (use `build_number` other than 25, e.g. 26 or a distinct tag; check release.yml's tag naming before dispatching).
-- **Workstreams (each its own branch; worker branches are named under wip/ with the prefix b25r1- and appear on the remote when the worker first pushes):**
-  - `wip/b25r1-interact` (lead): B25R1-002 release blocker, fixed at `10491e7` (root causes in the commit and the register). Sim gate re-check pending.
-  - b25r1-map (worker, base `a459186`): B25R1-003..006 region map, roads audit, tap-to-travel.
-  - b25r1-ui (worker, base `a459186`): B25R1-007..008 character creation, origin, modal HUD.
-  - b25r1-travelers (worker, base `10491e7`): B25R1-009 seed travelers (real residents); removes the ambient decorative travellers.
-  - b25r1-homestead (worker, base `10491e7`): B25R1-010 homesteading (audit document first, in docs/design).
-- **Next:** merge the branches into one candidate (on top of `wip/expansion20`), focused tests, the sim gate, screenshots at 1280x720 and 2400x1080, then a separate private six-package draft; record in `docs/release/build25_reconciliation/CI_RECORD.md`.
+- **Integration branch:** `wip/b25r1` (worktree `x20main`), head `1fe530d`: interaction fixes, map, UI, roads and wear, gamepad map merged; merged suites pass.
+- **Workstreams:**
+  - `wip/b25r1-interact` (lead): B25R1-002, merged. The integrated interaction verification and a real-device playtest stay on the release checklist.
+  - `wip/b25r1-map`, `wip/b25r1-ui`, `wip/b25r1-roads`: B25R1-003..008, 011, Q1, merged; B25R1-012 gamepad map by the lead, merged.
+  - `wip/b25r1-travelers` (worker running): B25R1-009 real resident travellers, keeping the existing ambient pedlars, pilgrims and wayfarers (owner: "We can have them as well").
+  - `wip/b25r1-homestead` (worker running): B25R1-010 homesteading, B25R1-013 youth runaways, B25R1-014 shared lawful and outlaw wilderness settlements, bandit recruitment and departure. Owns the household, family, faction and life-decision systems; no competing worker.
+- **Lead next:** region map restyle with `UIStyle` and the pad focus on the Village tab; merge the travelers and homestead branches as they report; final candidate with focused suites, the sim gate on that exact commit, and screenshots at 1280x720 and 2400x1080; then a separate private six-package draft recorded in `docs/release/build25_reconciliation/CI_RECORD.md`.
 
 ## Overnight autonomous development (owner, 2026-11-02, B25-OVN-0211; controls this session)
 

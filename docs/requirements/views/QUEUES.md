@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (23)
+## Workers and task branches (27)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -16,8 +16,12 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25R1-006 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
 | B25R1-007 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
 | B25R1-008 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
+| B25R1-009 | 20 | IN DEVELOPMENT | b25r1-travelers worker | wip/b25r1-travelers |
+| B25R1-010 | 20 | IN DEVELOPMENT | b25r1-homestead worker | wip/b25r1-homestead |
 | B25R1-011 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
 | B25R1-012 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
+| B25R1-013 | 20 | IN DEVELOPMENT | b25r1-homestead worker | wip/b25r1-homestead |
+| B25R1-014 | 20 | IN DEVELOPMENT | b25r1-homestead worker | wip/b25r1-homestead |
 | DEMO-01 | 20 | IN DEVELOPMENT | lead session | wip/expansion20 |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |

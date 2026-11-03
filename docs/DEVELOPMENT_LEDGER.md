@@ -102,12 +102,12 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25R1-007 | Character creation: unrestricted cosmetic options | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
-| B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return; no decorative travelers | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return, alongside the existing ambient travellers | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25R1-012 | Gamepad destination selection on the region map (cursor, D-pad, confirm, zoom, recentre) | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
-| B25R1-013 | Youth runaways from sustained household hardship, and bandit recruitment as a separate outcome | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25R1-014 | Shared wilderness settlement foundation: lawful homesteads and outlaw communities; sustainable bandit populations; adult bandits may leave | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25R1-013 | Youth runaways from sustained household hardship, and bandit recruitment as a separate outcome | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| B25R1-014 | Shared wilderness settlement foundation: lawful homesteads and outlaw communities; sustainable bandit populations; adult bandits may leave | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B7-001 | Starting coins | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B7-002 | Quest rewards reserved |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B7-003 | Jewellery/helmets have buyers |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
@@ -855,13 +855,14 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | X20-GO-BETWEEN | Go-between purchasing (asking someone else to buy from a disliked seller): deferred, not in Expansion 20; concept preserved for later design and approval | unassigned | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | X20-JUDG-MIGRATION | Judgment-driven migration (strong dislike as a fifth migration reason): deferred; the four approved migration reasons stay unchanged | unassigned | DEFERRED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 
-## World design rule (33)
+## World design rule (34)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
 | AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | 16 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | B17-DIR | Build 17 combined integration direction: continue MIN-D, DVW-A12, FARM-08 and MIN-C visual verification; reuse passing evidence; no new distributable without explicit owner approval | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | B18-SCOPE | Build 18 stays combined: tracks A, B and C; multiplayer excluded | 18 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
+| B25R1-015 | Full approved Revision 1 scope is mandatory: no deferral, disabling, placeholder or narrowing without the owner | 20 | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | DCR-01 | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control | unassigned | PROPOSED | NOT STARTED | NOT TESTED | NOT APPLICABLE | OPEN |
 | MILE-01 | Milestone assignments are respected: nothing moves into Build 16 from the expansions (the Living Economy build, Build 19's NPC Judgment) without the owner | 16 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | MSW-01 | Minimum Sufficient Work: correctness mandatory, redundancy justified |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
