@@ -583,15 +583,15 @@ func _draw() -> void:
 	for l in labels:
 		_label(font, l[0], l[1], l[2], l[3], l[4])
 	if cursor != Vector2.INF:                      # B25R1-012: the pad's cursor, and what A would do
-		var cs := to_screen(cursor)
+		var cur_s := to_screen(cursor)
 		var ring := Color8(255, 236, 140)
-		draw_arc(cs, 13.0, 0, TAU, 32, Color.BLACK, 5.0)
-		draw_arc(cs, 13.0, 0, TAU, 32, ring, 2.5)
+		draw_arc(cur_s, 13.0, 0, TAU, 32, Color.BLACK, 5.0)
+		draw_arc(cur_s, 13.0, 0, TAU, 32, ring, 2.5)
 		for dv in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
-			draw_line(cs + dv * 7.0, cs + dv * 20.0, Color.BLACK, 4.0)
-			draw_line(cs + dv * 7.0, cs + dv * 20.0, ring, 2.0)
+			draw_line(cur_s + dv * 7.0, cur_s + dv * 20.0, Color.BLACK, 4.0)
+			draw_line(cur_s + dv * 7.0, cur_s + dv * 20.0, ring, 2.0)
 		var what := "A: travel here  ·  %s" % RegionTravel.bearing(main.world.player.pos, cursor)
-		_text(font, cs + Vector2(18, -16), what, 14, ring)
+		_text(font, cur_s + Vector2(18, -16), what, 14, ring)
 	# north and the status line
 	var nx := Vector2(ms.x - 26, 30)
 	draw_colored_polygon(PackedVector2Array([nx + Vector2(0, -16), nx + Vector2(8, 6), nx + Vector2(-8, 6)]), PALE)
