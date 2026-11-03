@@ -7594,6 +7594,11 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-presence worker; branch: None -> wip/b25r1-presence",
      "why": "assigned to the presence worker on wip/b25r1-presence (design note and API first)"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "note",
+     "why": "owner 2026-11-03 clarification: \"that math problem when it's unseen still has to walk from town to town and buy stuff and go back. I should be able to meet up with that math problem on the road somewhere and it should come into view be real while I'm there and if it passes me and walks down the road and keeps going. It turns back into a math problem but it still has to run that errand.\" Calculated people make real errands on actual routes in real time with real purchases; position known each minute; meetable on the road; the errand completes after they leave view; inter-settlement trade carried by such journeys, not abstract transfers"
     }
    ],
    "assigned_worker": "b25r1-presence worker",
