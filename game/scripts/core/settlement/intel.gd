@@ -30,14 +30,55 @@ static func fresh(w: World, r: Dictionary) -> bool:
 	return str(r.get("kind", "")) == "confirmed" and age(w, r) <= int(cfg().stale_days)
 
 
-## The items a villager's trade buys and makes (what records about them concern).
+## The items a villager's trade buys and makes (what records about them concern): its raw goods (NPCBrain.TRADE_GOODS) and the
+## products of the recipes made at its trade's stations (S7: a crafter hears of a place wanting what their workshop makes).
 static func interests(w: World, n: NPC) -> Dictionary:
+	var role: String = w.brain.buy_role(n)
+	var key := role + "|" + n.job
+	if _interests.has(key):
+		return _interests[key]                         # (the same for every villager of the role and trade: built once)
 	var out := {}
-	for id in NPCBrain.BUYS.get(w.brain.buy_role(n), {}):
-		out[str(id)] = "buys"
+	for id in trade_products(n.job):
+		out[id] = "makes"
 	for id in NPCBrain.TRADE_GOODS.get(n.job, []):
 		out[str(id)] = "makes"
+	for id in NPCBrain.BUYS.get(role, {}):
+		out[str(id)] = "buys"
+	_interests[key] = out
 	return out
+
+
+static var _interests := {}
+
+
+static var _products := {}
+
+
+## The products of the recipes made at trade `job`'s stations (NPCBrain.TRADE_STATIONS), sorted; cached per trade.
+static func trade_products(job: String) -> Array:
+	if _products.has(job):
+		return _products[job]
+	var kinds: Array = NPCBrain.TRADE_STATIONS.get(job, [])
+	var out := {}
+	if not kinds.is_empty():
+		for r in GameData.recipes:
+			var rec: Dictionary = GameData.recipes[r]
+			if kinds.has(str(rec.get("station", ""))):
+				for id in rec.get("out", {}):
+					out[str(id)] = true
+	var list := out.keys()
+	list.sort()
+	_products[job] = list
+	return list
+
+
+## The best price `n` was told a neighbouring place would pay for `id` (a fresh "want" record), or 0.
+static func told_price(w: World, n: NPC, id: String) -> int:
+	var best := 0
+	for r in n.intel:
+		if str(r.item) == id and str(r.side) == "want" and fresh(w, r):
+			best = maxi(best, int(r.price))
+	return best
 
 
 ## Whether record `r` concerns `n`: something they buy that a place has, or something they make that a place wants.

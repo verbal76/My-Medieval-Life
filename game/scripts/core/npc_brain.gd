@@ -1500,7 +1500,8 @@ func recipe_return(n: NPC, r: String) -> float:
 	var rec: Dictionary = GameData.recipes[r]
 	var got := 0.0
 	for id in rec.out:
-		got += float(rec.out[id]) * float(w.sell_price(n, id))
+		got += float(rec.out[id]) * float(maxi(w.sell_price(n, id), Intel.told_price(w, n, id)))     # REGION-NAV-01 S7: a place wanting it, as told
+
 	var cost := 0.0
 	for id in rec["in"]:
 		cost += float(rec["in"][id]) * float(World.sell_price_at(id, 0, w.local_supply(id, n.pos, n)))

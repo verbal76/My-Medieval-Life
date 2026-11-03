@@ -178,5 +178,68 @@ static func sell(w: World, n: NPC) -> bool:
 		var job := cs.book_route(order)
 		if not job.has("error"):
 			w.stat("region_trade_sent")
+			w.stat("region_trade_sent_" + id, qty)
+			var ex: Dictionary = Envoys.book(w).get("exports", {})
+			ex[n.job] = w.day()                          # S7: the day this trade last sent goods to a neighbouring place
+			Envoys.book(w).exports = ex
 			return true
 	return false
+
+
+## REGION-NAV-01 S7 (plan AD-7: regional demand reaches business founding only through real work; the 35 % gate unchanged): a
+## founding is counted with its cause: "regional" when the founder's trade sent goods to a neighbouring place within the last
+## `regional_days`, else "local".
+static func note_founding(w: World, n: NPC) -> void:
+	var last := int((Envoys.book(w).get("exports", {}) as Dictionary).get(n.job, -100000))
+	var cause := "regional" if w.day() - last <= int(OffMapSettlement.data().get("trade", {}).get("regional_days", 30)) else "local"
+	w.stat("ventures_founded_cause_" + cause)
+
+
+## REGION-NAV-01 S7 measurement (the directive's Phase 7 and the B25-ECON P2/P3 findings; measured only, nothing decided):
+##   busy        each crafting trade's busy share (NPCBrain.skilled_place: the share of a working day each worker spends at
+##               its stations) against the founding gate (skilled_places.busy_share)
+##   exports     the day each trade last sent goods to a neighbouring place, and the units sent and bought so far
+##   foundings   ventures founded, by cause (regional, local)
+##   p2_jobless_no_tool  adults with no job, no coins above their reserve and no tool, while a tool trade (NPCBrain.JOB_TOOL) has a
+##               place open (the first-tool finding)
+##   p3_idle_stock       trade goods (the crafting trades' inputs and products) held by elders and adults with no job, against
+##               what the working holders of those trades hold (the retiree-stock finding)
+static func measure(w: World) -> Dictionary:
+	var out := {"day": w.day(), "busy": {}, "gate": float(GameData.b("skilled_places").busy_share), "exports": (Envoys.book(w).get("exports", {}) as Dictionary).duplicate(),
+		"sent": int(w.stats.get("region_trade_sent", 0.0)), "bought": int(w.stats.get("region_trade_bought", 0.0)),
+		"foundings": {"regional": int(w.stats.get("ventures_founded_cause_regional", 0.0)), "local": int(w.stats.get("ventures_founded_cause_local", 0.0))},
+		"p2_jobless_no_tool": 0, "p3_idle_stock": 0, "p3_working_stock": 0}
+	var jobs := NPCBrain.TRADE_STATIONS.keys()
+	jobs.sort()
+	for job in jobs:
+		var any := false
+		for o: NPC in w.npcs:
+			if o.alive and o.role == "adult" and o.job == job:
+				any = true
+				break
+		if any:
+			out.busy[job] = snappedf(float(w.brain.skilled_place(job).busy), 0.001)
+	var tool_open := false
+	for job in NPCBrain.JOB_TOOL:
+		if int(w.brain.skilled_place(job).open) > 0 or w.brain.open_posts(job) > 0:
+			tool_open = true
+	var goods := {}
+	for job in jobs:
+		for id in Intel.trade_products(job):
+			goods[id] = true
+		for id in NPCBrain.BUYS.get(job, {}):
+			goods[str(id)] = true
+	for o: NPC in w.npcs:
+		if not o.alive:
+			continue
+		var idle := o.role == "elder" or (o.role == "adult" and o.job == "")
+		if tool_open and o.role == "adult" and o.job == "" and o.coins <= w.reserve_of(o) and not o.inv.has("axe") and not o.inv.has("pickaxe"):
+			out.p2_jobless_no_tool += 1
+		var held := 0
+		for id in goods:
+			held += o.inv.count(str(id))
+		if idle:
+			out.p3_idle_stock += held
+		elif o.role == "adult" and NPCBrain.TRADE_STATIONS.has(o.job):
+			out.p3_working_stock += held
+	return out

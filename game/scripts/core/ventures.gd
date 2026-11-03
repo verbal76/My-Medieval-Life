@@ -487,6 +487,7 @@ func found(n: NPC, opt: Dictionary) -> bool:
 		hh.venture.expansion = true
 	w.stat("ventures_founded")
 	w.stat("ventures_founded_" + n.job)
+	RegionTrade.note_founding(w, n)          # REGION-NAV-01 S7: counted with its cause (regional demand or local)
 	w.note("%s %s sets about building %s of their own." % [n.name, n.family, Construction.kind_name(str(opt.kind), true)])
 	w.construction._keep_building(h)
 	return true
