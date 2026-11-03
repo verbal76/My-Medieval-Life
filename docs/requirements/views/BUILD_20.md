@@ -8,22 +8,23 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 151 |
-| Integrated | 127 of 151 (84%) |
-| Automated tests passed | 111 of 151 (74%) |
-| Integration verified | 64 of 151 (42%) |
-| Gameplay verified | 0 of 151 (0%) |
-| Owner playtested | 0 of 151 (0%) |
-| Complete | 2 of 151 (1%) |
-| Open (release blockers) | 149 |
+| Approved requirements in scope | 152 |
+| Integrated | 127 of 152 (84%) |
+| Automated tests passed | 111 of 152 (73%) |
+| Integration verified | 64 of 152 (42%) |
+| Gameplay verified | 0 of 152 (0%) |
+| Owner playtested | 0 of 152 (0%) |
+| Complete | 2 of 152 (1%) |
+| Open (release blockers) | 150 |
 | Open owner decisions (blocking) | 6 (0) |
 
-## In development (worker assigned) (3)
+## In development (worker assigned) (4)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | B25-CLOSE-01 | Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop | OWNER APPROVED | IN DEVELOPMENT | lead (single worker, MML-CONSERVE-01) / wip/b25-farm-phase2 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-FINISH-01 | Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release | OWNER APPROVED | IN DEVELOPMENT | lead session / wip/region-nav | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| DEMO-01 | Replayable 120-Minute Demo and Steam Integration (with the six-package release pipeline) | OWNER APPROVED | IN DEVELOPMENT | lead session / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (125)

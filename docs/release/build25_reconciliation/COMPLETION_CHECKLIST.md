@@ -25,11 +25,11 @@ Status words: **DONE** (criteria met, evidence cited), **TESTING** (built; tests
 | A1 | S1 Settlement placement, discovery, the region map | TESTING | `2745f2f`, `3fd24e2`, `6c88df0` | Close with S2's run (Q3 geography check included) | overworld 179/0, atlas 17/0, countryside 38/0; region_geography 130/0 before D4 |
 | A2 | S2 Settlement people: keepers and crafters (Q4), trade through `deal` (Q5), save and load, one geography (Q3) | TESTING | `909b180`..`8792886`, `b18f418` (D1–D4 fixes), `5e3b803` (records) | Finish the running suite pass on `b18f418`; S2 completion report | 9 suites already green on `b18f418` (section F) |
 | A3 | S3 Villager long-distance travel | TESTING | `aafcc4d`, `b18f418` | Wiki not needed (no journeys in play until S4); stage report | journey 14/0, journey_s3 19/0 (arrival determinism, blocked route turns home, death conserves), INT-682 |
-| A4 | S4 Envoy post: the reeve assigns; journey; interviews every accessible keeper **and crafter**; return; report; home survey | TO DO | — | All | — |
-| A5 | S5 Intel network: the reeve's book, telling tradespeople, word of mouth, ageing | TO DO | — | All | — |
-| A6 | S6 Independent trade over CON-01 and couriers; in-person purchase | TO DO | — | All | — |
-| A7 | S7 Regional demand in founding (measurement); P2 and P3 findings measured | TO DO | — | All | — |
-| A8 | S8 `economy_sim` regional measurements; desktop performance; Android profile | TO DO | — | All | — |
+| A4 | S4 Envoy post | DONE | `b281e90`, `14bbd86` | — | envoy_test 31/0 |
+| A5 | S5 Intel network | DONE | `619fcc2` | — | intel_test 13/0 |
+| A6 | S6 Independent trade | DONE | `14bbd86` | — | region_trade_test 23/0 |
+| A7 | S7 Regional demand and founding measurement | DONE | `5a00993` | — | region_demand_test 11/0 |
+| A8 | S8 Measurements, determinism, save mid-mission | DONE (Android profile: gate 11 device check) | `b540971` | Phone profile | region_sim_test 8/0; economy_sim REGION line |
 | A9 | Crafters among `Regions.parties()` so the regional market and envoys reach them (from the validation agent's report; Q4 "envoys interview every relevant crafter") | TO DO, in S4 | — | With S4 | — |
 
 ## B. Living Economy integration and activation
@@ -127,6 +127,23 @@ the acceptance criteria name.
 3. **C9, SJD-H:** the owner's Judgment review. *Recommendation:* review with the playtest build.
 4. **G, reconciliation Q2:** JOB-02, CON-02-KINDS, PIT-02 and FSE-10 not in Build 25. *Recommendation:* confirm.
 
+
+## I. DEMO-01: replayable 120-minute demo, Steam integration, six-package pipeline (owner 2026-11-03)
+
+Directive: `docs/directives/2026-11-03_demo01_steam_release_pipeline.md`. Register: DEMO-01. A bounded release work package, not a
+ninth regional stage.
+
+| # | Item | Status |
+|---|---|---|
+| I1 | Demo build configuration (one source; demo flag; the full game never restricted) | TO DO |
+| I2 | Active-play clock (monotonic, injectable; counts only while the world runs) | TO DO |
+| I3 | Per-world allowance saved with stable world identity; warnings 30/10/5/1 once per world; creation notice | TO DO |
+| I4 | Expiry: simulation stops, final save, expiry screen (new world, menu, exit, full-game note, Steam); expired worlds marked | TO DO |
+| I5 | Full game loads demo saves unrestricted; legacy saves migrate; Android save export/import | TO DO |
+| I6 | Steam promotion: one configured destination; "Coming Soon on Steam" until the owner supplies the page; menus and expiry screen | TO DO |
+| I7 | Focused tests (timer, persistence, expiry, compatibility, Steam, demo-equals-full simulation) | TO DO |
+| I8 | Six packages from one SHA in parallel jobs; name, size, SHA-256, run, evidence; private draft release | TO DO |
+
 ## Order of work (no new scope)
 
 1. Finish the S2 suite pass and report S2 and S3.
@@ -138,4 +155,5 @@ the acceptance criteria name.
 7. E2 candidate CI.
 8. E3 flight.
 9. C7 analyses from the final runs.
-10. E4 packages.
+10. DEMO-01 (I1-I7) alongside, before E2's candidate CI.
+11. E4 packages: six (I8).

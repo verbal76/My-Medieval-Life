@@ -13458,6 +13458,49 @@
    ]
   },
   {
+   "id": "DEMO-01",
+   "kind": "approved",
+   "title": "Replayable 120-Minute Demo and Steam Integration (with the six-package release pipeline)",
+   "description": "Replayable 120-Minute Demo and Steam Integration (with the six-package release pipeline)",
+   "source": "docs/directives/2026-11-03_demo01_steam_release_pipeline.md",
+   "owner_wording": "A 120-minute replayable demo. Steam promotional integration. Six verified packages in a private draft GitHub release. DEMO-01 is a bounded release work package, not a ninth regional-development stage.",
+   "approval": "owner, 2026-11-03 (consolidated directive, supersedes earlier DEMO-01 instructions and the Steam wishlist amendment)",
+   "acceptance": [
+    "Each new world 120 minutes of active play, its own timer, kept across save, load, restart, rename and copy; shared by every character in it; unlimited new worlds; no day limit; all Build 25 systems on",
+    "A monotonic active-play clock: counts only while the world runs; not paused, menus, loading, background, closed, pausing modals; no suspended-frame or clock jumps; injectable for tests",
+    "Unobtrusive timer; warnings at 30, 10, 5 and 1 minutes once per world across saves; an explanation at world creation",
+    "Expiry: simulation stops safely, a final save, the expiry screen (new world, main menu, exit, full-game note, Steam action); expired worlds kept, marked, never resumed in the demo",
+    "Saves: existing format and migration; stable world identity (not the filename); a demo save loads in the full game with no restriction and nothing lost; legacy saves migrate; no accounts, DRM or online checks; an explicit Android save export/import",
+    "Steam: one configured destination (store.steampowered.com, 'Coming Soon on Steam' until the owner supplies the page, then 'Wishlist on Steam'); buttons on the full and demo main menus and the expiry screen; external URL per platform; failure handled; no SteamCMD",
+    "One source; a demo build configuration; the full game never restricted; demo and full simulations identical before expiry (tested)",
+    "Six packages (full and demo: Android APK, Windows ZIP, Linux ZIP) from one SHA in parallel GitHub jobs; name, size, SHA-256, run and evidence recorded; private draft release; not published, not uploaded to Steam",
+    "Focused automated tests for timer, persistence, expiry, full-game compatibility, Steam links; no real-time two-hour waits"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_demo01_steam_release_pipeline.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead session; branch: None -> wip/expansion20",
+     "why": "recorded; implementation starting (lead)"
+    }
+   ],
+   "assigned_worker": "lead session",
+   "branch": "wip/expansion20"
+  },
+  {
    "id": "DEV-GOV-01",
    "kind": "approved",
    "title": "Development governance: agents make technical decisions within approved requirements; the owner approves scope and sequence (no skipping, moving, merging, splitting, renaming, reordering or deferring work packages, no stage marked complete with criteria outstanding, dependencies raised before the sequence changes)",
