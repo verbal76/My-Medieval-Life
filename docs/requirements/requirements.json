@@ -7280,6 +7280,34 @@
    ]
   },
   {
+   "id": "B25R1-013",
+   "kind": "approved",
+   "title": "Youth runaways from sustained household hardship, and bandit recruitment as a separate outcome",
+   "description": "Youth runaways from sustained household hardship, and bandit recruitment as a separate outcome",
+   "source": "docs/directives/2026-11-03_b25r1_youth_runaways.md",
+   "owner_wording": "Extend the event-driven NPC life-decision framework to recognize young people who leave their households because of persistent hardship.",
+   "approval": "owner, 2026-11-03",
+   "acceptance": [
+    "Audit of childhood, hardship, bandit membership (incl. FAM-07) and decision systems; event-driven decisions from accumulated hardship through the existing judgment (no random roll, never from one bad day); outcomes distinguished (endure, seek help, work or shelter elsewhere, run to a settlement, survive alone, approach bandits); recruitment a distinct event the bandits may accept, exploit or reject; identity, age, skills and relationships kept; no free gear, skills or money; children not instant fighters; family records kept and reactions where supported; population accounted; uncommon; tracked; distinct from homesteading; scenarios incl. hardship without runaway and a legitimate runaway"
+   ],
+   "target_build": "20",
+   "parent": "B25R1-001",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_youth_runaways.md"
+    }
+   ]
+  },
+  {
    "id": "B25R1-Q1",
    "kind": "decision",
    "title": "Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)?",
