@@ -123,6 +123,8 @@ jobs:
           res://tests/region_sim_test.gd
           res://tests/demo_test.gd
           res://tests/outside_interact_test.gd
+          res://tests/homestead_test.gd          # B25R1-010: a homestead from setting out to a house and a life there
+          res://tests/player_homestead_test.gd   # B25R1-010: the player's homestead, saved and loaded
           res://tests/tree_test.gd
           res://tests/world_test.gd
           res://tests/aging_test.gd
