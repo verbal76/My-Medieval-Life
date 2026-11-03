@@ -6827,6 +6827,11 @@
      "date": "2026-11-03",
      "change": "tests: outside_interact_test 23/0; countryside 38/0; wildlife 61/0; refuge 59/0; settlement_folk 36/0; net_fauna 13/0; world 339/0; polish_p2 110/0; wiki passed -> outside_interact_test 23/0; countryside 38/0; wildlife 61/0; refuge 59/0; settlement_folk 36/0; net_fauna 13/0; world 339/0; polish_p2 110/0; wiki passed; outside_interact_test 23/0; countryside 38/0; wildlife 61/0; refuge 59/0; settlement_folk 36/0; net_fauna 13/0; world 339/0; polish_p2 110/0; wiki passed; sim_gate seeds 1,2 x 30 days PASS identical to baseline, leaks 0",
      "why": "sim gate on 10491e7: seeds 1 and 2, 30 days, identical to the accepted baseline, leaks 0 (the villagers' simulation unchanged)"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "owner_answer",
+     "why": "owner 2026-11-03 accepts the interaction fixes and focused evidence; the final integrated interaction verification and a real-device playtest stay on the release checklist"
     }
    ],
    "branch": "wip/b25r1-interact",
@@ -6834,7 +6839,8 @@
    "test_commit": "10491e7",
    "commits": [
     "10491e7"
-   ]
+   ],
+   "owner_answer": "Fixes and focused test evidence accepted; final integrated verification and real-device playtest remain on the release checklist"
   },
   {
    "id": "B25R1-003",
@@ -7047,6 +7053,11 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> char_create_test 0 failures (117 layer options x 3 bodies x 8 directions x animations; save/load, old save); start_test 523/0; character_look_test 0 failures; wiki passed; outside_interact 23/0; region_travel 56/0; polish_p2 110/0; countryside 38/0; screenshots 1280x720 and 2400x1080 looked at (worker and lead); test_commit: None -> 932739d; commits + 932739d",
      "why": "implemented by the UI worker on wip/b25r1-ui (9c3f762; audit docs/ui/CHARACTER_CUSTOMIZATION_AUDIT_B25R1.md), merged into wip/b25r1 (932739d); suites pass on the merge"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "owner_answer",
+     "why": "owner clarification 2026-11-03: no free-form colour picker and no new save field for one; the expanded palettes are sufficient"
     }
    ],
    "branch": "wip/b25r1",
@@ -7054,7 +7065,8 @@
    "test_commit": "932739d",
    "commits": [
     "932739d"
-   ]
+   ],
+   "owner_answer": "No free-form colour picker; the expanded palettes are sufficient; keep bodies, combinations, preview and save compatibility"
   },
   {
    "id": "B25R1-008",
@@ -7159,6 +7171,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_homesteading.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "note",
+     "why": "owner clarification 2026-11-03: before implementing NPC homesteading decisions, audit how the NPC simulation makes major life choices (systems, ambition, occupation, skills, money, household, marriage, family, housing, other settlements, adulthood, judgment/aspiration, costs/benefits/risks, population safeguards, decision to action) and present a concise proposed decision process; no isolated random-percentage system; the 1-3% is a balancing constraint, not the reasoning; unrelated work continues"
     }
    ]
   },
@@ -7205,6 +7222,34 @@
     }
    ],
    "owner_answer": "Main dirt roads fade very slowly, never below visible (overgrown until walked again, no upkeep but use); usage paths fade faster; stone roads damage slowly, hamper carts when damaged, and need materials to repair"
+  },
+  {
+   "id": "B25R1-012",
+   "kind": "approved",
+   "title": "Gamepad destination selection on the region map (cursor, D-pad, confirm, zoom, recentre)",
+   "description": "Gamepad destination selection on the region map (cursor, D-pad, confirm, zoom, recentre)",
+   "source": "docs/directives/2026-11-03_b25r1_owner_clarifications.md",
+   "owner_wording": "Implement gamepad destination selection using the existing controller conventions.",
+   "approval": "owner, 2026-11-03",
+   "acceptance": [
+    "Visible cursor moved by the D-pad; Interact/Confirm selects the cursor's world point through the same route planning as taps and clicks; any reachable point; nonconflicting zoom and recentre inputs; Resume and Dismiss kept; the character does not move under the open map; tested with controller input (select, move, zoom, interrupt, resume, dismiss)"
+   ],
+   "target_build": "20",
+   "parent": "B25R1-001",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_owner_clarifications.md"
+    }
+   ]
   },
   {
    "id": "B25R1-Q1",
