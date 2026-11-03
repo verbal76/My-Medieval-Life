@@ -7239,8 +7239,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -7248,7 +7248,18 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_owner_clarifications.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> gamepad_map_test 19/0 (real joypad events); region_travel_test 56/0; wiki passed; 2400x1080 screenshot looked at; test_commit: None -> e66feaf; commits + e66feaf",
+     "why": "implemented by the lead on wip/b25r1 (e66feaf): pad cursor on the Region map, A travels through the same tap/route planning, LT/RT zoom, R3 centre, X resume, Y dismiss, B close; gamepad_map_test 19/0 with real joypad events; screenshot looked at"
     }
+   ],
+   "branch": "wip/b25r1",
+   "tests": "gamepad_map_test 19/0 (real joypad events); region_travel_test 56/0; wiki passed; 2400x1080 screenshot looked at",
+   "test_commit": "e66feaf",
+   "commits": [
+    "e66feaf"
    ]
   },
   {

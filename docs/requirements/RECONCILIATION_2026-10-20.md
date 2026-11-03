@@ -208,7 +208,7 @@ None.
 | B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return; no decorative travelers | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
-| B25R1-012 | Gamepad destination selection on the region map (cursor, D-pad, confirm, zoom, recentre) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25R1-012 | Gamepad destination selection on the region map (cursor, D-pad, confirm, zoom, recentre) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-Q1 | Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)? | decision | APPROVED | 20 |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-C | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
