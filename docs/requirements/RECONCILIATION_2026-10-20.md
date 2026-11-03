@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 771 (411 of them still open) |
-| **Open entries now** (rules excluded) | | **570** |
+| Entries added since | | 771 (405 of them still open) |
+| **Open entries now** (rules excluded) | | **564** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -671,12 +671,12 @@ None.
 | REG-X20-D3 | Off-map settlements: should settlement-to-settlement food trade get a live path? The owner's REG-BUY-D1 answer allows it, but road trade carries no food and RegionalMarket is not wired into the live game, so one settlement's surplus never reaches a starving neighbour. | decision | APPROVED | 20 |
 | REG-X20-D4 | Off-map settlements: revisit the deferred circulation question (REG-CIRC-D1) now its prerequisites exist? Settlement traders keep buying from the village and buy little back (netherton paid out 460 coins in 30 days and took in 41), draining treasuries until relief and day labour stop. | decision | DEFERRED | 20 |
 | REGION-NAV-01 | Regional economy, world navigation, envoys and independent inter-village commerce: physical settlements, discovery and world map, NPC travel, envoy surveys with provenance, information network, independent NPC trade over CON-01, regional demand in business decisions, integrity and measurements | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 20 |
-| REGION-NAV-Q1 | Stage structure: keep the eight approved REGION-NAV-01 stages as the only work packages (the lead's a/b/c labels withdrawn, commit labels only), or approve the sub-packages S1a/b, S2a/b/c, S3a/b? | decision | OPEN | 20 |
-| REGION-NAV-Q2 | Moved work: accept the site buildings in S2 and the roads-through-sites fix in S3 as recorded moves, or re-attribute them to S1 and reopen S1? | decision | OPEN | 20 |
-| REGION-NAV-Q3 | AD-1: settlements at their existing OffMapSettlement.pos (built, one geography with trade distances), or at the approved bearings? | decision | OPEN | 20 |
-| REGION-NAV-Q4 | Crafters in S2 and S4: (a) business keepers and the official only (built); (b) also every worker household's head; (c) extend the settlement model to households working on their own account? | decision | OPEN | 20 |
-| REGION-NAV-Q5 | S2 trade path: keep the courier edge (books both sides) as an approved deviation, or rework onto SettlementParty.deal as planned? | decision | OPEN | 20 |
-| REGION-NAV-Q6 | Next: finish S2's outstanding items (save and load test; crafters per Q4) and S3's three outstanding tests, then report S2 and S3 for review before S4? | decision | OPEN | 20 |
+| REGION-NAV-Q1 | Stage structure: keep the eight approved REGION-NAV-01 stages as the only work packages (the lead's a/b/c labels withdrawn, commit labels only), or approve the sub-packages S1a/b, S2a/b/c, S3a/b? | decision | APPROVED | 20 |
+| REGION-NAV-Q2 | Moved work: accept the site buildings in S2 and the roads-through-sites fix in S3 as recorded moves, or re-attribute them to S1 and reopen S1? | decision | APPROVED | 20 |
+| REGION-NAV-Q3 | AD-1: settlements at their existing OffMapSettlement.pos (built, one geography with trade distances), or at the approved bearings? | decision | APPROVED | 20 |
+| REGION-NAV-Q4 | Crafters in S2 and S4: (a) business keepers and the official only (built); (b) also every worker household's head; (c) extend the settlement model to households working on their own account? | decision | APPROVED | 20 |
+| REGION-NAV-Q5 | S2 trade path: keep the courier edge (books both sides) as an approved deviation, or rework onto SettlementParty.deal as planned? | decision | APPROVED | 20 |
+| REGION-NAV-Q6 | Next: finish S2's outstanding items (save and load test; crafters per Q4) and S3's three outstanding tests, then report S2 and S3 for review before S4? | decision | APPROVED | 20 |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 15 |
 | REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
 | REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |

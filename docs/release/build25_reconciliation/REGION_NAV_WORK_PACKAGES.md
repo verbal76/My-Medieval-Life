@@ -81,7 +81,33 @@ Neither move was approved before it happened.
 | **S8** | `economy_sim` regional measurements; performance on desktop; Android profile | Not started | — | S3-S7 | All |
 | **After S8** | Proposal for one consolidated Living Economy validation campaign; packaging only on the owner's authorization | — | — | S8; merge into `wip/expansion20` | All |
 
-## Owner decisions requested
+## Owner decisions (answered 2026-11-03, `docs/directives/2026-11-03_region_nav_owner_decisions_q1_q6.md`)
+
+| ID | Decision |
+|---|---|
+| **Q1** | The eight stages S1-S8 are the milestones. Subtasks are internal only. A stage is complete only against its original criteria. |
+| **Q2** | The buildings stay in S2 and the road fix in S3. Work is documented under the requirement it satisfies. An earlier stage with unmet criteria stays open. |
+| **Q3** | The existing trade coordinates, **conditional** on verifying that physical locations, distances, roads, travel times and economic geography agree as one model. Approved design amendment: `docs/decisions/REGION-NAV-AD1.md`. |
+| **Q4** | **Option C:** independent crafting and self-employment within the regional economy, integrated with skills, ownership, inventory, negotiation and conservation. It must not be every worker household. Crafters are met when actively offering, and envoys interview each relevant one. **This adds to S2 and S4.** |
+| **Q5** | The courier hand-over is kept, **conditionally**: two-sided accounting, real transfers, conservation, save and load, and determinism must be verified, and any required semantics of `deal` integrated. Equivalence is documented and tested. |
+| **Q6** | S2 first, then S3's tests and records, each reported complete with SHAs and evidence. Then S4-S8 in order without further approval. |
+
+## Stage status (DEV-GOV-01 reporting; kept current with development)
+
+| Stage | State | Outstanding deliverables | Current evidence | Blocker | Next action |
+|---|---|---|---|---|---|
+| S1 | Testing (criteria met; Q3 geography check pending) | The Q3 agreement check (positions, distances, roads, travel times, economy) | overworld 179/0 at `6c88df0`; atlas 17/0 at `3fd24e2`; countryside 38/0 | — | Geography agreement test (shared with S2) |
+| S2 | Actively developing | Independent crafters (Q4); save and load test; trade-path equivalence (Q5) | settlement_folk 21/0 at `8a57974` | — | Crafters in the settlement model |
+| S3 | Testing | Deterministic arrival; blocked route; death mid-journey; manifest, decision and wiki records | journey 14/0 at `aafcc4d`; routes in overworld 179/0 | — | After S2 |
+| S4 | Not started | All | — | S2, S3 | — |
+| S5 | Not started | All | — | S4 | — |
+| S6 | Not started | All | — | S5 | — |
+| S7 | Not started | All | — | S6 | — |
+| S8 | Not started | All | — | S7 | — |
+
+Summary: eight approved packages; none complete; one in development (S2); two in testing (S1, S3); five not started.
+
+## Owner decisions requested (as asked; answered above)
 
 | ID | Question | Recommendation |
 |---|---|---|

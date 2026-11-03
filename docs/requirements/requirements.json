@@ -49971,8 +49971,8 @@
    "description": "Stage structure: keep the eight approved REGION-NAV-01 stages as the only work packages (the lead's a/b/c labels withdrawn, commit labels only), or approve the sub-packages S1a/b, S2a/b/c, S3a/b?",
    "source": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Retain the original eight stages S1-S8 as the official milestones; internal subtasks do not replace, redefine or complete a stage; each stage must satisfy its original acceptance criteria",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "20",
    "related": [],
@@ -49983,6 +49983,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner 2026-11-03 (docs/directives/2026-11-03_region_nav_owner_decisions_q1_q6.md)"
     }
    ]
   },
@@ -49993,8 +49998,8 @@
    "description": "Moved work: accept the site buildings in S2 and the roads-through-sites fix in S3 as recorded moves, or re-attribute them to S1 and reopen S1?",
    "source": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Accept the settlement buildings in S2 and the road correction in S3; do not undo functioning code; document the work under the requirements it satisfies; an earlier stage with unmet criteria stays open",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "20",
    "related": [],
@@ -50005,6 +50010,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner 2026-11-03 (docs/directives/2026-11-03_region_nav_owner_decisions_q1_q6.md)"
     }
    ]
   },
@@ -50015,8 +50025,8 @@
    "description": "AD-1: settlements at their existing OffMapSettlement.pos (built, one geography with trade distances), or at the approved bearings?",
    "source": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Retain the existing regional trade coordinates, conditional on verifying that physical locations, regional distances, road connections, travel times and economic geography all agree; one geographical model; an explicitly approved design amendment with rationale",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "20",
    "related": [],
@@ -50027,6 +50037,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner 2026-11-03 (docs/directives/2026-11-03_region_nav_owner_decisions_q1_q6.md)"
     }
    ]
   },
@@ -50037,8 +50052,8 @@
    "description": "Crafters in S2 and S4: (a) business keepers and the official only (built); (b) also every worker household's head; (c) extend the settlement model to households working on their own account?",
    "source": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Option C: independent crafting and self-employment within the regional economy, integrated with skills, household ownership, inventory, negotiated transactions and conservation; not every worker household; discoverable to the player and envoys when actively offering; envoys interview every relevant independent crafter",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "20",
    "related": [],
@@ -50049,6 +50064,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner 2026-11-03 (docs/directives/2026-11-03_region_nav_owner_decisions_q1_q6.md)"
     }
    ]
   },
@@ -50059,8 +50079,8 @@
    "description": "S2 trade path: keep the courier edge (books both sides) as an approved deviation, or rework onto SettlementParty.deal as planned?",
    "source": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Conditionally keep the courier hand-over: verify two-sided accounting, real transfers, conservation, save/load consistency and determinism; integrate any required semantics of SettlementParty.deal; document why it is correct and which tests establish equivalence",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "20",
    "related": [],
@@ -50071,6 +50091,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner 2026-11-03 (docs/directives/2026-11-03_region_nav_owner_decisions_q1_q6.md)"
     }
    ]
   },
@@ -50081,8 +50106,8 @@
    "description": "Next: finish S2's outstanding items (save and load test; crafters per Q4) and S3's three outstanding tests, then report S2 and S3 for review before S4?",
    "source": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Finish S2, then S3's tests and records; report each stage complete with SHAs and evidence; then S4, S5, S6, S7, S8 in order without further approval when prerequisites are met",
+   "disposition": "APPROVED",
    "blocks_implementation": true,
    "target_build": "20",
    "related": [],
@@ -50093,6 +50118,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner 2026-11-03 (docs/directives/2026-11-03_region_nav_owner_decisions_q1_q6.md)"
     }
    ]
   },
