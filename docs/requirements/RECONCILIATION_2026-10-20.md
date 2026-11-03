@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 795 (425 of them still open) |
-| **Open entries now** (rules excluded) | | **583** |
+| Entries added since | | 796 (426 of them still open) |
+| **Open entries now** (rules excluded) | | **584** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (795)
+## Added since the baseline (796)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -214,6 +214,7 @@ None.
 | B25R1-015 | Full approved Revision 1 scope is mandatory: no deferral, disabling, placeholder or narrowing without the owner | rule | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-016 | 365-day flight recorder campaign proving the living world: migration, homesteading, runaways, bandit recruitment and departure, economy, multigenerational life histories | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25R1-017 | Integration, real water system (streams, rivers, waterfalls, bridges, wells), credits regression diagnosis, existing-world compatibility, water events in the flight recorder | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| B25R1-018 | Complete regional world reconstruction: Morris geography (Downs, landmarks, rivers), meandering roads, explorable principal settlements with real residents, game-original hamlets, scale (J-D2, J-G1), save compatibility | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-Q1 | Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)? | decision | APPROVED | 20 |
 | B25R1-Q2 | Bandit band as a woodland community: move the band to a hidden overworld claim with a household (a), keep the village camp and put only turned outlaws on claims (b), or abstract bandits offscreen (c)? | decision | APPROVED | 20 |
 | B25R1-Q3 | Water for wilderness settlements: wells built from real materials, streams added by an overworld generator change, or both? | decision | APPROVED | 20 |

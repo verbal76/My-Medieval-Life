@@ -7513,6 +7513,44 @@
    "branch": "wip/b25r1"
   },
   {
+   "id": "B25R1-018",
+   "kind": "approved",
+   "title": "Complete regional world reconstruction: Morris geography (Downs, landmarks, rivers), meandering roads, explorable principal settlements with real residents, game-original hamlets, scale (J-D2, J-G1), save compatibility",
+   "description": "Complete regional world reconstruction: Morris geography (Downs, landmarks, rivers), meandering roads, explorable principal settlements with real residents, game-original hamlets, scale (J-D2, J-G1), save compatibility",
+   "source": "docs/directives/2026-11-03_b25r1_regional_world_reconstruction.md",
+   "owner_wording": "I want to walk out of my village and feel as though I'm entering a real medieval world. ... William Morris supplies the geographical foundation. We fill in the world between his locations thoughtfully and consistently.",
+   "approval": "owner, 2026-11-03",
+   "acceptance": [
+    "Geography classified A canonical / B interpretation / C game-original, documented with paragraph ids; canon preserved",
+    "Settlement relationships match the source (south journey, forty miles Wulstead-Higham); main route meanders through believable terrain with bridges and fords; no ruler-straight strip",
+    "Downs (open chalk, treeless, waterless), Bear Hill and figures, Bear Castle, Greenway, seven grave-mounds, Saint Ann's Chapel, the two villages by the Downs, the waste, Wood Perilous, vine valleys south of Higham as real places",
+    "Six principal settlements physically explorable with streets and civic spaces per their source identity; Higham walled with castle, abbey and towers",
+    "Game-original hamlets of about five or six households placed organically east and west, Morris-style names documented as game-original, count measured and justified",
+    "Every household and shop is real persistent residents and businesses in the existing population and economy systems; no ghosts, no respawn; initial population model documented; economy and demography stable over long runs",
+    "Water network anchored on Upmeads Water (west to east), the Netherton stream, Higham's river, the stone bridge and two fords south of Higham; little water on the Downs",
+    "J-D2 and J-G1 resolved by documented analysis; existing saves compatible; determinism and conservation validated",
+    "Drone views: overview, roads, water, Downs and landmarks, principal settlements, hamlets, compared with the seed-1 corridor map"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "B25R1-017"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_regional_world_reconstruction.md"
+    }
+   ]
+  },
+  {
    "id": "B25R1-Q1",
    "kind": "decision",
    "title": "Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)?",

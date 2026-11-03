@@ -8,14 +8,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 168 |
-| Integrated | 128 of 168 (76%) |
-| Automated tests passed | 121 of 168 (72%) |
-| Integration verified | 64 of 168 (38%) |
-| Gameplay verified | 0 of 168 (0%) |
-| Owner playtested | 0 of 168 (0%) |
-| Complete | 2 of 168 (1%) |
-| Open (release blockers) | 166 |
+| Approved requirements in scope | 169 |
+| Integrated | 128 of 169 (76%) |
+| Automated tests passed | 121 of 169 (72%) |
+| Integration verified | 64 of 169 (38%) |
+| Gameplay verified | 0 of 169 (0%) |
+| Owner playtested | 0 of 169 (0%) |
+| Complete | 2 of 169 (1%) |
+| Open (release blockers) | 167 |
 | Open owner decisions (blocking) | 6 (0) |
 
 ## In development (worker assigned) (9)
@@ -169,7 +169,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | TARGETED TESTS PASSED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (30)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (31)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -188,6 +188,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-012 | Gamepad destination selection on the region map (cursor, D-pad, confirm, zoom, recentre) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| B25R1-018 | Complete regional world reconstruction: Morris geography (Downs, landmarks, rivers), meandering roads, explorable principal settlements with real residents, game-original hamlets, scale (J-D2, J-G1), save compatibility | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | B25R1-017, design: UNKNOWN | UNKNOWN |
 | BUILD-SEQ-25-27 | Build sequence (owner, 2026-10-31): Build 25 = Expansion 20 validation and freeze (wip/expansion20 becomes the frozen baseline only after validation passes and the owner approves); Build 26 = repository recovery and consolidation on a separate branch from the exact frozen Build 25 SHA, validated and frozen after owner approval; Build 27 = Expansion 21 begins only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers. | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | CHAPEL-LENDING | Chapel community lending and grants (concept approved): hardship recovery, viable businesses in temporary difficulty, village improvements, infrastructure, downturn relief - via a separate implementation proposal built on existing loan, credit, property and repayment systems | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | DOC-AUTH-01 | Document authority replacement: once the owner explicitly approves and delivers the final revised expansion specification set, it is the sole authoritative current specification; older plans, roadmaps, packets, instructions and registers become historical evidence only; omitted features are not reintroduced (ask if materially ambiguous); code differences are reported, not silently changed; later explicit owner decisions supersede and are folded into the set; no third interpretation. Until then: latest explicit owner decisions and the validated baseline. The switch happens only on final approval, not on a draft. | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
