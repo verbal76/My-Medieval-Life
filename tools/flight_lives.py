@@ -317,7 +317,7 @@ def homestead_ledger(lv):
     hs = {}
     people_track = {}
     for e in lv.k(*HS_STAGES, "settlement_created", "settlement_construction", "settlement_occupancy", "settlement_affiliation", "settlement_abandoned",
-                  "settlement_discovered", "settlement_state", "water_source_selected", "water_unavailable", "wild_production", "wild_consumption", "wild_trade", "wild_shortage", "livestock_change", "wild_craft", "raid"):
+                  "settlement_discovered", "settlement_state", "band_relocated", "water_source_selected", "water_unavailable", "wild_production", "wild_consumption", "wild_trade", "wild_shortage", "livestock_change", "wild_craft", "raid"):
         key = e["object"] if str(e["object"]).startswith("homestead:") else (e["settlement"] if str(e["settlement"]).startswith("homestead:") else "")
         if e["actor"].startswith("p:") and ctx(e, "track"):
             people_track[e["actor"]] = ctx(e, "track")
@@ -334,6 +334,11 @@ def homestead_ledger(lv):
                 h["founder"] = e["actor"]
             if sub in ("homestead_residence", "homestead_family_change") or (sub == "settlement_occupancy" and ctx(e, "action") != "out"):
                 h["residents"].add(e["actor"])
+        for r, ro in e["parts"]:
+            if ro == "resident" and sub in ("band_relocated", "settlement_occupancy", "homestead_residence", "settlement_created"):
+                h["residents"].add(r)
+        if sub == "band_relocated" and not h["founder"] and e["actor"].startswith("p:"):
+            h["founder"] = e["actor"]
         h["track"] = h["track"] or ctx(e, "track")
         h["path"] = ctx(e, "path") or h["path"]
         if sub == "homestead_sustain":

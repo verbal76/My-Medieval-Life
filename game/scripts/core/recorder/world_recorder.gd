@@ -2389,6 +2389,10 @@ func life_event(kind: String, data: Dictionary) -> void:
 						rel[k] = "p:%d" % int(data[k])
 				if data.get("raiders") is Array:
 					rel["raider"] = (data.raiders as Array).map(func(p) -> String: return "p:%d" % int(p))
+				if data.get("people") is Array and not (data.people as Array).is_empty():
+					rel["resident"] = (data.people as Array).map(func(p) -> String: return "p:%d" % int(p))
+					if who == null:
+						who = int(data.people[0])             # the first of the people moved is the event's person
 				if not rel.is_empty():
 					f["related"] = rel
 			else:
