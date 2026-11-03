@@ -2,7 +2,7 @@
 
 **This is the one current-state document.** Owner directives MEM-01 and DOC-CONT-01 make it the entry point.
 
-- **Updated:** 2026-11-01.
+- **Updated:** 2026-11-03 (Build 25 Revision 1 in progress).
 - **Snapshot last verified:** 2026-11-03 01:10 UTC by the lead, against wip/region-nav `aafcc4d`, wip/expansion20 `4b51c92` (campaigns 41536805310 and 41536810831 running), wip/requirements-control (this commit).
   - **Convention:** whoever checks this file against the live GitHub state writes this line as
     `YYYY-MM-DD HH:MM UTC by <session or agent>, against wip/expansion20 <sha>, wip/requirements-control <sha>, Actions runs
@@ -18,6 +18,18 @@
     `docs/requirements/views/`.
   - History lives in `docs/DEVELOPMENT_CHANGELOG.md`.
 - **Recovery after lost context:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
+
+## Build 25 Revision 1 (owner, 2026-11-03; controls this session)
+
+- **Directives:** `docs/directives/2026-11-03_b25r1_master_directive.md` (B25R1-001..008), `2026-11-03_b25r1_seed_travelers.md` (B25R1-009), `2026-11-03_b25r1_homesteading.md` (B25R1-010).
+- **Rollback point:** the Build 25 private draft (`build-25`, release id 432836586, from `a459186`, run 41666958781). Never overwritten: Revision 1 gets its own draft (use `build_number` other than 25, e.g. 26 or a distinct tag; check release.yml's tag naming before dispatching).
+- **Workstreams (each its own branch; worker branches are named under wip/ with the prefix b25r1- and appear on the remote when the worker first pushes):**
+  - `wip/b25r1-interact` (lead): B25R1-002 release blocker, fixed at `10491e7` (root causes in the commit and the register). Sim gate re-check pending.
+  - b25r1-map (worker, base `a459186`): B25R1-003..006 region map, roads audit, tap-to-travel.
+  - b25r1-ui (worker, base `a459186`): B25R1-007..008 character creation, origin, modal HUD.
+  - b25r1-travelers (worker, base `10491e7`): B25R1-009 seed travelers (real residents); removes the ambient decorative travellers.
+  - b25r1-homestead (worker, base `10491e7`): B25R1-010 homesteading (audit document first, in docs/design).
+- **Next:** merge the branches into one candidate (on top of `wip/expansion20`), focused tests, the sim gate, screenshots at 1280x720 and 2400x1080, then a separate private six-package draft; record in `docs/release/build25_reconciliation/CI_RECORD.md`.
 
 ## Overnight autonomous development (owner, 2026-11-02, B25-OVN-0211; controls this session)
 
