@@ -536,7 +536,7 @@ country, `cell:<x>,<y>` a road cell, `landmark:<id>`, `journey:<person id>:<star
 | `sale_refused` | wilds / production / production |  | a legitimate resource sale refused (reason: no_demand, counter_full, no_buyer, price) |
 | `livestock_change` | wilds / livestock / production |  | livestock born, died, bought, sold, stolen or slaughtered (action) |
 | `skill_progress` | wilds / skill / production |  | a skill rose through actual work (summary: skill:<id> before -> after) |
-| `craft` | wilds / craft / production |  | inputs made into finished goods (items: inputs negative, outputs positive) |
+| `wild_craft` | wilds / craft / production |  | inputs made into finished goods (items: inputs negative, outputs positive) |
 | `raid` | outlaw / raid / raid |  | a raid on a settlement, homestead or traveller (outcome ok / failed / refused; goods and coins taken) |
 | `raid_defended` | outlaw / raid / raid |  | defenders met a raid (outcome ok: repelled) |
 | `journey_begin` | travel / journey / journey |  | a traveller set out (origin, destination, action: buy, sell, envoy, visit, seed; object journey:<id>) |

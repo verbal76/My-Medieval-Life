@@ -15,6 +15,8 @@ inputs:
   record: {required: true, description: "'true' to record with the flight recorder"}
   extinct_days: {required: false, default: "30", description: "days with nobody alive and no way back before the run stops"}
   godot_version: {required: true, description: "Godot version"}
+  tag: {required: false, default: "", description: "B25R1-016: a suffix of every artifact name (\"-twin\": the determinism twin of the same seed)"}
+  retention_days: {required: false, default: "30", description: "days the archive and the saved worlds are kept (B25R1-016 campaign: 90)"}
 
 outputs:
   next:
@@ -59,7 +61,7 @@ runs:
       if: inputs.segment != '1'
       uses: actions/download-artifact@v4
       with:
-        name: fr-seed${{ inputs.seed }}-state${{ steps.prev.outputs.n }}
+        name: fr-seed${{ inputs.seed }}${{ inputs.tag }}-state${{ steps.prev.outputs.n }}
         path: ${{ runner.temp }}/prev-state
 
     - name: Simulate the segment
@@ -135,26 +137,26 @@ runs:
       if: always() && steps.run.outputs.saved == 'true'
       uses: actions/upload-artifact@v4
       with:
-        name: fr-seed${{ inputs.seed }}-state${{ inputs.segment }}
+        name: fr-seed${{ inputs.seed }}${{ inputs.tag }}-state${{ inputs.segment }}
         path: ${{ runner.temp }}/fr/state-up/state.gz
         compression-level: 0
-        retention-days: 30
+        retention-days: ${{ inputs.retention_days }}
 
     - name: Keep the archive
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: fr-seed${{ inputs.seed }}-seg${{ inputs.segment }}-archive
+        name: fr-seed${{ inputs.seed }}${{ inputs.tag }}-seg${{ inputs.segment }}-archive
         path: ${{ runner.temp }}/fr/seg${{ inputs.segment }}/rec
         compression-level: 0          # the chunks are gzip already
         if-no-files-found: ignore
-        retention-days: 30
+        retention-days: ${{ inputs.retention_days }}
 
     - name: Keep the log, status and results
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: fr-seed${{ inputs.seed }}-seg${{ inputs.segment }}-run
+        name: fr-seed${{ inputs.seed }}${{ inputs.tag }}-seg${{ inputs.segment }}-run
         path: |
           ${{ runner.temp }}/fr/seg${{ inputs.segment }}/status.json
           ${{ runner.temp }}/fr/seg${{ inputs.segment }}/sim.json

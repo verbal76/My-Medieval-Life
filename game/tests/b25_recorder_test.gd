@@ -28,6 +28,7 @@ func _init() -> void:
 	test_chronicle()
 	test_roads()
 	test_landmark_and_census()
+	test_adapters()
 	test_recording_changes_nothing()
 	print("%d checks, %d failures" % [checks, failures])
 	_remove(tmp_root)
@@ -237,3 +238,33 @@ func test_recording_changes_nothing() -> void:
 		"the world and its random state are identical with the recorder on")
 	a.dispose()
 	b.dispose()
+
+
+## The other systems' own calls (Journeys.record -> journey_event, Homesteads / LifeDecisions -> life_event) land on the vocabulary.
+func test_adapters() -> void:
+	var w := new_world()
+	var rec := WorldRecorder.attach(w, {"root": sub("adapt")})
+	var n: NPC = w.npcs.filter(func(o): return o.alive and o.role == "adult")[0]
+	rec.journey_event(n.id, World.npc_ref(n.id), "started", {"from": "village", "to": "higham", "purpose": {"kind": "buy"}, "trigger": "buy", "coins": 9})
+	rec.journey_event(n.id, World.npc_ref(n.id), "arrived", {"to": "higham", "since": 0})
+	rec.journey_event(n.id, World.npc_ref(n.id), "ended", {"to": "higham", "how": "died"})
+	var b := evs(rec, "journey_begin")
+	var e := evs(rec, "journey_end")
+	check(b.size() == 1 and e.size() == 1 and b[0].object == e[0].object and b[0].object.begins_with("journey:%d:" % n.id) and e[0].outcome == "failed" and e[0].reason == "died",
+		"journey_event: begin and end share the journey's object key; a death on the road ends it failed")
+	check(evs(rec, "journey_leg").size() == 1 and evs(rec, "journey_leg")[0].settlement == "settlement:higham", "journey_event: the arrival is a leg at the settlement")
+	rec.life_event("homestead_set_out", {"claim": "hs1", "household": "hh:30", "from": "hh:%d" % n.household, "people": [n.id], "path": "young", "site": [200, 40], "why": "crowded", "day": 0})
+	rec.life_event("homestead_built", {"claim": "hs1", "owner": "hh:30", "cost": {}, "house": "b1", "day": 0})
+	var res := evs(rec, "homestead_residence")
+	check(evs(rec, "homestead_travel_begin").size() == 1 and res.size() == 1 and res[0].actor == "p:%d" % n.id and res[0].object == "homestead:hs1",
+		"life_event: set out and built map to travel_begin and residence on the founder, the claim as homestead:hs1")
+	check(str(ctx(rec, int(res[0].id)).get("ctx.track", "")) == "young_adult", "life_event: the claim's track is remembered (young -> young_adult)")
+	rec.life_event("band_recruit", {"person": n.id, "leader": w.npcs[0].id, "answer": "accept", "source": "displaced", "band": 4, "age": 20.0, "day": 0})
+	var j := evs(rec, "recruit_joined")
+	check(j.size() == 1 and evs(rec, "recruit_accepted").size() == 1 and str(ctx(rec, int(j[0].id)).get("ctx.source", "")) == "displaced_adult",
+		"life_event: an accepted recruit is accepted and joined, source displaced_adult")
+	rec.life_event("something_new", {"day": 0, "person": n.id})
+	var u := evs(rec, "unmapped_event")
+	check(u.size() == 1 and u[0].detail == "life_event:something_new", "life_event: an unknown kind is kept as unmapped_event (the exception report lists it)")
+	check(rec.unknown_codes.is_empty(), "the adapters use listed codes only (%s)" % str(rec.unknown_codes))
+	w.dispose()

@@ -83,6 +83,7 @@ var npcs_at_start := 0         # villager records at the start (a higher id was 
 # FLIGHT-REC-01 (owner directive 2026-11-02, flight recorder campaigns; docs/release/flight_recorder/README.md): the run's stop
 # reason, the extinction watch and the segment save/resume of a chained GitHub run. See the "flight recorder" functions at the end.
 var fr_stop := ""              # "" while running; then completed, segment, extinct, fatal
+var fr_roundtrip := {}         # B25R1-016: the segment save loaded back into a fresh world and saved again ({} until a segment saves)
 var fr_extinct_since := -1     # the first day of the current stretch with no living villager and no open succession post
 
 func _init() -> void:
@@ -2450,7 +2451,7 @@ func _trader_diag(day: int) -> void:
 # Owner directive 2026-11-02 (docs/release/flight_recorder/README.md). Read only, except the segment save (World.to_dict, the
 # game's own save, which also tells any queued gossip first, as every save does).
 const FR_STATE := "mml-flight-state/1"
-const FR_SKIP := ["w", "bandits", "fr_stop"]      # the world (saved on its own) and the read-only bandit diagnostics are not harness state
+const FR_SKIP := ["w", "bandits", "fr_stop", "fr_roundtrip"]      # the world (saved on its own) and the read-only bandit diagnostics are not harness state
 
 
 ## Extinction: no villager alive (bandits and the inert player are not villagers) and no open succession post for `limit` days in a
@@ -2497,6 +2498,30 @@ func _fr_write(path: String, seed: int, day: int, start: Dictionary, samples: Ar
 		"harness_start": start, "samples": samples, "world": ws, "world_stats": w.stats}))
 	f.close()
 	print("SEGMENT day %d seed %d: the world (%d bytes of save) and the harness saved to %s; fingerprint %s" % [day, seed, ws.length(), path, _fingerprint()])
+	fr_roundtrip = _fr_roundtrip(ws, day)
+	print("SAVE_ROUNDTRIP day %d seed %d: %s" % [day, seed, JSON.stringify(fr_roundtrip)])
+
+
+## B25R1-016 (checkpointed save/load verification): the segment's save loaded into a fresh World and saved again; each top-level
+## section compared by content (a JSON round trip, keys sorted). The run itself goes on from the same save in the next job; this
+## only reads it, at the very end of the segment (after its checkpoint and its state file), so it changes nothing measured.
+func _fr_roundtrip(ws: String, day: int) -> Dictionary:
+	var a = JSON.parse_string(ws)
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(ws))
+	var b = JSON.parse_string(JSON.stringify(w2.to_dict()))
+	w2.dispose()
+	CapabilityHook.bind(w.experience)        # the fresh world bound the static capability hook to its own record: give it back
+	var differ := []
+	var keys: Array = (a as Dictionary).keys()
+	for k in (b as Dictionary).keys():
+		if not keys.has(k):
+			keys.append(k)
+	keys.sort()
+	for k in keys:
+		if JSON.stringify(a.get(k), "", true) != JSON.stringify(b.get(k), "", true):
+			differ.append(str(k))
+	return {"day": day, "exact": differ.is_empty(), "sections": keys.size(), "differ": differ}
 
 
 ## --resume STATE: the saved state ({} without the switch; {"error": ...} when it cannot be used).
@@ -2537,6 +2562,7 @@ func _fr_status(path: String, seed: int, days: int, d0: int, reached: int, final
 		"alive": people.get("alive"), "households": people.get("households"), "births": people.get("births"), "deaths": people.get("deaths"),
 		"currency_leak": (final.get("currency", {}) as Dictionary).get("leak"), "item_leaks": (final.get("ledger", {}) as Dictionary).get("items"),
 		"regions_audit": str((final.get("regions", {}) as Dictionary).get("audit", "")), "econ_roundtrip_bad": econ_roundtrip_bad,
+		"save_roundtrip": fr_roundtrip,
 		"extinct_since": fr_extinct_since, "fingerprint": final.get("fingerprint"), "wall_seconds": snappedf(secs, 0.1),
 		"recorder": {} if rec == null else {"dir": str(rec.dir), "completeness": str(rec.completeness()), "bytes": int(rec.bytes), "chunks": int(rec.chunks)}}
 	var f := FileAccess.open(path, FileAccess.WRITE)
