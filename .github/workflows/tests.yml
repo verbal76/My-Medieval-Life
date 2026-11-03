@@ -131,6 +131,7 @@ jobs:
           res://tests/player_homestead_test.gd   # B25R1-010: the player's homestead, saved and loaded
           res://tests/life_decisions_test.gd     # B25R1-014: homesteading, runaways, the band's answer, leaving the band
           res://tests/gamepad_map_test.gd
+          res://tests/seed_traveler_test.gd
           res://tests/tree_test.gd
           res://tests/world_test.gd
           res://tests/aging_test.gd

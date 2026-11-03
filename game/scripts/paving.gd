@@ -90,8 +90,8 @@ func done(m, cell: Vector2i) -> void:
 	w.stat("used_stone", float(job.stone))
 	w.stat("road_paved_by_player" if str(job.mode) == "pave" else "road_repaired_by_player")
 	if str(job.mode) == "pave":
-		RoadWear.pave(w.map.overworld, cell)
+		RoadWear.pave(w.map.overworld, cell, w.player_ref(w.player))
 		m.ui.message("You lay %d stone: this stretch is stone road now." % int(job.stone), 4.0)
 	else:
-		RoadWear.repair(w.map.overworld, cell)
+		RoadWear.repair(w.map.overworld, cell, w.player_ref(w.player))
 		m.ui.message("You reset the broken stones with %d stone." % int(job.stone), 4.0)

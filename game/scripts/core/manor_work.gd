@@ -1122,7 +1122,7 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 			return true
 		"mend":
 			if j.has("pave"):
-				_pave(j)
+				_pave(j, who)
 				_finish(j, who)
 				return true
 			for id in j.load.ids():
@@ -1136,7 +1136,7 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 
 ## B25R1-011: a paving job's work at the road: each of its cells still wanting it is paved or repaired with the load's stone
 ## (used up, used_stone); stone left over (a cell paved meanwhile) goes back to the works yard.
-func _pave(j: Dictionary) -> void:
+func _pave(j: Dictionary, who := "") -> void:
 	var ow: Overworld = w.map.overworld
 	for e in j.pave:
 		var c := Vector2i(int(e[0]), int(e[1]))
@@ -1147,9 +1147,9 @@ func _pave(j: Dictionary) -> void:
 		w.stat("used_stone", float(job.stone))
 		w.stat("road_paved_by_village" if str(job.mode) == "pave" else "road_repaired_by_village")
 		if str(job.mode) == "pave":
-			RoadWear.pave(ow, c)
+			RoadWear.pave(ow, c, who)
 		else:
-			RoadWear.repair(ow, c)
+			RoadWear.repair(ow, c, who)
 	if j.load.count("stone") > 0:
 		w.transfer(j.load, yard, "stone", j.load.count("stone"))
 	j.load = Inventory.new()

@@ -48,6 +48,15 @@ func _frames(n: int) -> void:
 		await process_frame
 
 
+## The triggers zoom by time held, and frame times vary on a loaded machine: hold for up to two seconds of frames,
+## stopping once the condition holds (the check after it still fails if it never does).
+func _hold_until(cond: Callable) -> void:
+	for i in 240:
+		await process_frame
+		if cond.call():
+			return
+
+
 func _map() -> RegionMapPanel:
 	var found: Array = main.ui.panel_body.find_children("*", "RegionMapPanel", true, false)
 	return found[0] if not found.is_empty() else null
@@ -88,13 +97,13 @@ func _run() -> void:
 	# zoom with the triggers, about the cursor
 	var z0: float = r.zoom
 	_axis(JOY_AXIS_TRIGGER_RIGHT, 1.0)
-	await _frames(20)
+	await _hold_until(func(): return r.zoom > z0 * 1.1)
 	_axis(JOY_AXIS_TRIGGER_RIGHT, 0.0)
 	await _frames(1)
 	check(r.zoom > z0 * 1.1, "RT zooms in (%.2f -> %.2f)" % [z0, r.zoom])
 	var z1: float = r.zoom
 	_axis(JOY_AXIS_TRIGGER_LEFT, 1.0)
-	await _frames(20)
+	await _hold_until(func(): return r.zoom < z1 * 0.9)
 	_axis(JOY_AXIS_TRIGGER_LEFT, 0.0)
 	await _frames(1)
 	check(r.zoom < z1 * 0.9, "LT zooms out (%.2f -> %.2f)" % [z1, r.zoom])
