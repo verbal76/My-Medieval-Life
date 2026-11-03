@@ -3,7 +3,7 @@
 **This is the one current-state document.** Owner directives MEM-01 and DOC-CONT-01 make it the entry point.
 
 - **Updated:** 2026-11-01.
-- **Snapshot last verified:** 2026-11-02 22:25 UTC by the lead, against wip/expansion20 `4b51c92`, wip/requirements-control (this commit), Actions runs to 41536810831.
+- **Snapshot last verified:** 2026-11-03 00:30 UTC by the lead, against wip/region-nav `8a57974`, wip/expansion20 `4b51c92` (baseline; campaigns 41536805310 and 41536810831 running), wip/requirements-control (this commit).
   - **Convention:** whoever checks this file against the live GitHub state writes this line as
     `YYYY-MM-DD HH:MM UTC by <session or agent>, against wip/expansion20 <sha>, wip/requirements-control <sha>, Actions runs
     to <newest run id>`.
@@ -63,7 +63,7 @@ Every branch below holds real, unmerged work. None is disposable.
 
 | Worker or workstream | Register | Branch / worktree | Latest pushed | Unpushed | State and tests | Merge readiness | Next safe step |
 |---|---|---|---|---|---|---|---|
-| **ACTIVE (lead, single worker):** regional economy and world navigation, **Build 25 scope** (B25-SCOPE-REGION) | REGION-NAV-01 | `wip/region-nav` from `4b51c92`; worktree `.claude/worktrees/region-nav` | `611c294` | none | Audit and plan done (ARCHITECTURE_AUDIT.md, IMPLEMENTATION_PLAN.md in docs/region_nav on that branch). Stage S1 next: settlement placement, discovery and the world map. | merges stage by stage into `wip/expansion20` after the running campaigns finish | S1 |
+| **ACTIVE (lead, single worker):** regional economy and world navigation, **Build 25 scope** (B25-SCOPE-REGION) | REGION-NAV-01 | `wip/region-nav` from `4b51c92`; worktree `.claude/worktrees/region-nav` | `8a57974` | none | Done: S1a settlements in the overworld (reachable on foot), S1b discovery and the Region map, S2a buildings per trade, S2b named keepers and trade through the courier edge. Tests: overworld 159/0, countryside 38/0, atlas 17/0, settlement_folk 21/0 (local). Next: S2c keepers drawn and the player's talk window, then S3 villager travel, S4 envoys, S5 intel, S6 NPC trade, S7 demand, S8 measurements. | merges stage by stage into `wip/expansion20` after the running campaigns finish | S2c |
 | Merged: farming yield Phase 2, cart-hitch fix | FARM-YIELD-D1, B25-CLOSE-01/02 | `wip/b25-farm-phase2` `4b51c92`, fast-forwarded into `wip/expansion20` | `4b51c92` | none | Targeted suites green (see the register, B25-CLOSE-02). | merged | none |
 | Merged: KI-HOME-DOOR fix | FR-REPAIR-01 | `wip/b25-home-door` `bcff138`, fast-forwarded into `wip/expansion20`, then `34e1041` | `bcff138` | none | See KNOWN_ISSUES KI-HOME-DOOR. | merged | none |
 | **PAUSED:** flight findings investigation (read-only) | FR-REPAIR-01 point 6 | worktree `.claude/worktrees/fr-investigate` (clean); `wip/b25-fr-investigate` holds nothing | — | none | Findings recorded: KI-FR-CARTHITCH (loop, fix proposed, not made), KI-FR-WHEATSALE (market outcome), KI-FR-CONTRACTS (no-player artefact). Logs in the session scratchpad `fri/`. | report only | Awaits the owner. |

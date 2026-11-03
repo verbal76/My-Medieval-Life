@@ -49902,10 +49902,19 @@
      "date": "2026-11-02",
      "change": "target_build: unassigned -> 20; parent",
      "why": "owner scope correction 2026-11-02 (B25-SCOPE-REGION): mandatory Build 25 scope, not future; implementation authorized; plan docs/region_nav/IMPLEMENTATION_PLAN.md on wip/region-nav (8 architecture decisions, stages S1-S8). DCR-01: intentional revision of Q18-8 (in-person visits kept for 20+) and the countryside answer (towns off-map for now), both of which anticipated it"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "tests: None -> overworld_test 159/0, countryside_test 38/0, atlas_test 17/0, settlement_folk_test 21/0 (local); commits + 8a57974",
+     "why": "S1a 2745f2f: five settlements placed in the overworld at their OffMapSettlement.pos, sites reachable on foot (GEN_VERSION 3); S1b 3fd24e2: per-player places and explored ground, Region map toggle; S2a 909b180: one building per trade drawn with the village stamps, solid, every door reachable (screenshots looked at); S2b 8a57974: named keepers per business speak for their books, trading through the courier edge conserves both ledgers. Tests: overworld 159/0, countryside 38/0, atlas 17/0, settlement_folk 21/0. Next: S2c keepers drawn and the player's talk window, S3 villager travel, S4 envoys."
     }
    ],
    "assigned_worker": "lead (single worker)",
-   "branch": "wip/region-nav"
+   "branch": "wip/region-nav",
+   "tests": "overworld_test 159/0, countryside_test 38/0, atlas_test 17/0, settlement_folk_test 21/0 (local)",
+   "commits": [
+    "8a57974"
+   ]
   },
   {
    "id": "REL-14-16",
