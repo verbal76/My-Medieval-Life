@@ -1333,6 +1333,9 @@ func _wheat_held(w: World) -> int:
 		if j.get("load") is Inventory:
 			n += (j.load as Inventory).count("wheat")
 	n += w.manor_work.yard.count("wheat")
+	if w.chapel != null:
+		for p in w.chapel.parcels:          # alms set aside at the chapel's door (chapel_relief_wheat counts them given) are still held
+			n += (p.inv as Inventory).count("wheat")
 	return n
 
 
