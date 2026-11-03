@@ -75,6 +75,10 @@ var rock_changes := {}                   # Vector2i -> uses left of a boulder th
 var works := {}                          # B14-07: Vector2i -> a cliff rim cell made passable (Terrain): "steps" (cut), "stairs" or
                                          # "walkway" (built), with "_ns" / "_ew" for the way it runs; saved like `changes`
 var works_version := 0                   # bumped on each change of `works` (the view redraws them)
+var road_state := {}                     # B25R1-011 (RoadWear): Vector2i -> {u, t, p, d, dd}, the cells worn, paved or damaged
+                                         # other than the generator and the clock alone give; saved ("roads", optional)
+var road_dirty := {}                     # cells whose look changed since the view last drew them (not saved)
+var road_rev := 0                        # bumped on each such change
 var clock := 0.0                         # the game minute (World keeps it): changed trees grow lazily by it
 ## REGION-NAV-01 (owner 2026-11-02, Build 25 scope; docs/region_nav/IMPLEMENTATION_PLAN.md AD-1): the five neighbouring
 ## settlements stand in the overworld. Each is a cleared site (settlements.json "site" w x h) centred on the settlement's own
@@ -1187,7 +1191,10 @@ func to_dict() -> Dictionary:
 	wcells.sort()
 	for c: Vector2i in wcells:
 		wk.append([c.x, c.y, str(works[c])])
-	return {"seed": seed, "gen": GEN_VERSION, "changes": list, "rocks": rocks, "flowers": flowers, "works": wk}
+	var out := {"seed": seed, "gen": GEN_VERSION, "changes": list, "rocks": rocks, "flowers": flowers, "works": wk}
+	if not road_state.is_empty():
+		out["roads"] = RoadWear.to_save(self)     # B25R1-011 (optional: an older save has none)
+	return out
 
 
 ## Apply saved changes: the seed is set by the caller (create); a save from another generator
@@ -1198,6 +1205,7 @@ func load_dict(d: Dictionary) -> void:
 	plant_changes.clear()
 	works.clear()
 	works_version += 1
+	road_state.clear()
 	for f in d.get("flowers", []):
 		plant_changes[Vector2i(int(f[0]), int(f[1]))] = int(f[2])
 	if not int(d.get("gen", GEN_VERSION)) in GEN_COMPATIBLE:
@@ -1206,6 +1214,7 @@ func load_dict(d: Dictionary) -> void:
 		rock_changes[Vector2i(int(r[0]), int(r[1]))] = int(r[2])
 	for r in d.get("works", []):                       # B14-07 (older saves have none)
 		works[Vector2i(int(r[0]), int(r[1]))] = str(r[2])
+	RoadWear.load_into(self, d.get("roads", []))      # B25R1-011 (older saves have none)
 	for e in d.get("changes", []):
 		var cell := Vector2i(int(e.x), int(e.y))
 		var t := {}

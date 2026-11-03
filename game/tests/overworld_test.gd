@@ -406,8 +406,8 @@ func _run_scene() -> void:
 	check(tn.drawn == "stump" and tn.cuts == null, "the view shows the stump")
 	var cc := Overworld.chunk_of(tcell)
 	var d := o.to_dict()
-	check(d.keys().size() == 6 and d.changes.size() == 1 and d.rocks.is_empty() and d.flowers.is_empty() and d.works.is_empty() and int(d.seed) == o.seed,
-			"only the seed, the tree change, the boulders, flowers and ways through cliffs worked on (none) are saved, never the terrain")
+	check(d.keys().size() == (7 if d.has("roads") else 6) and d.changes.size() == 1 and d.rocks.is_empty() and d.flowers.is_empty() and d.works.is_empty() and int(d.seed) == o.seed,
+			"only the seed, the tree change, the boulders, flowers and ways through cliffs worked on (none) and the ways worn by footfall (B25R1-011, optional) are saved, never the terrain")
 	# the chunk unloads and loads again: the stump is still a stump
 	var far := Vector2(tcell) + Vector2(400.5, 0.5)
 	w.player.pos = far

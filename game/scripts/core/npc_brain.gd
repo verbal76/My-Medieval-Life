@@ -3531,6 +3531,7 @@ func reeve_day() -> void:
 	# stone for the works from the village's own seams, when the yard lacks it (a job for the reeve's list)
 	if budget > 0:
 		w.manor_work.post_quarry()
+		w.manor_work.post_paving()                    # B25R1-011: a stretch of road outside the village paved with the yard's stone
 	Envoys.post(w)                                   # REGION-NAV-01 S4: one envoy to the settlement the reeve knows least about
 	w.manor_work.post_discovery()                    # MIN-D: a survey or a trial pit, as the village's mining capability allows
 	w.manor_work.post_pits()                         # MIN-E: a load of the manor's open pit, or a pit staked for a find out of a trial's reach

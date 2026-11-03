@@ -85,11 +85,22 @@ func _init() -> void:
 			ok = false
 		seen_none_hair = seen_none_hair or r.picks.hair == ""
 	check(ok and seen_none_hair, "300 random looks stay within creation's choices (no beard on a woman; a beard the hair's colour)")
-	check(not allowed.has("headwear") and not allowed.has("gloves") and not allowed.has("ears-&-horns") and allowed.race == ["human"]
-		and allowed.clothes == ["basic", "tunic"] and not (CharacterLook.options("shoes") as Array).has("metal-boots"),
-		"no headwear, gloves, horns, armour or metal boots; human only")
-	check(CharacterLook.rows("skin") == [0, 1, 2, 3, 4, 5, 6] and CharacterLook.rows("hair") == [0, 1, 2, 3, 4] and CharacterLook.options("hair").size() == 14,
-		"natural skin (7) and hair colours (5); 13 hair styles and none")
+	# B25R1-007 (owner directive 2026-11-03 section 6, an intentional revision of CC-01's natural-only limits): every cosmetic
+	# layer and colour is offered; equipment (headwear, armour, gloves, metal boots) still is not; a random look is still an
+	# ordinary villager unless asked for anything
+	check(not allowed.has("headwear") and not allowed.has("gloves") and allowed.clothes == ["basic", "tunic"]
+		and not (CharacterLook.options("shoes") as Array).has("metal-boots"), "no headwear, gloves, armour or metal boots (equipment)")
+	check(allowed.race == ["human", "cyclops", "skeleton"] and CharacterLook.options("ears-&-horns").size() == 12
+		and CharacterLook.options("jaw") == ["", "jaw"], "every body, ear, horn and jaw the art draws (B25R1-007)")
+	check(CharacterLook.rows("skin").size() == 21 and CharacterLook.rows("hair").size() == 22 and CharacterLook.rows("eyes").size() == 22
+		and CharacterLook.options("hair").size() == 14, "21 skins, 22 hair and 22 eye colours (the pack's and the added rows); 13 hair styles and none")
+	var natural_ok := true
+	for i in 100:
+		rng.seed = 900 + i
+		var r := CharacterLook.random_recipe(rng, "female")
+		natural_ok = natural_ok and r.picks.race == "human" and r.picks["ears-&-horns"] == "" and r.picks.jaw == "" \
+			and int(r.swatches.skin) <= 6 and int(r.swatches.hair) <= 4 and int(r.swatches.eyes) in CharacterLook.NATURAL_ROWS.eyes
+	check(natural_ok, "a random look is an ordinary villager (human, natural colours) unless anything is asked for")
 	rng.seed = 42
 	var a := CharacterLook.random_recipe(rng)
 	rng.seed = 42

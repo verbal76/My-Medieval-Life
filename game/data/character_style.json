@@ -44,6 +44,7 @@
   "leather_shoes": "leather",
   "metal_armour": "metal",
   "metal_headwear": "metal",
+  "skeleton": "skeleton",
   "skin": "skin",
   "tunic": "tunic"
  },
@@ -97,6 +98,62 @@
     "636363ff",
     "424242ff",
     "242424ff"
+   ],
+   [
+    "ae6f42ff",
+    "7d5030ff",
+    "6a4428ff",
+    "452c1aff",
+    "291a0fff"
+   ],
+   [
+    "343434ff",
+    "262626ff",
+    "202020ff",
+    "151515ff",
+    "0c0c0cff"
+   ],
+   [
+    "ece7d9ff",
+    "d1c3a0ff",
+    "c6b589ff",
+    "b29a5eff",
+    "978148ff"
+   ],
+   [
+    "9f45c9ff",
+    "742c97ff",
+    "62257fff",
+    "401853ff",
+    "260e31ff"
+   ],
+   [
+    "243c90ff",
+    "1a2b68ff",
+    "162457ff",
+    "0e1839ff",
+    "080e22ff"
+   ],
+   [
+    "379e34ff",
+    "277126ff",
+    "216020ff",
+    "163e15ff",
+    "0d250cff"
+   ],
+   [
+    "dda840ff",
+    "ae7e1fff",
+    "936a1aff",
+    "604511ff",
+    "39290aff"
+   ],
+   [
+    "fcfcfcff",
+    "d2d2d2ff",
+    "c1c1c1ff",
+    "a2a2a2ff",
+    "898989ff"
    ]
   ],
   "eyes": [
@@ -169,6 +226,46 @@
     "e8e8e8ff",
     "e8e8e8ff",
     "e8e8e8ff"
+   ],
+   [
+    "e8e8e8ff",
+    "7f21b9ff",
+    "431161ff"
+   ],
+   [
+    "e8e8e8ff",
+    "df4890ff",
+    "a21d5dff"
+   ],
+   [
+    "e8e8e8ff",
+    "f3a91aff",
+    "9d6a08ff"
+   ],
+   [
+    "e8e8e8ff",
+    "90cae3ff",
+    "3da3ceff"
+   ],
+   [
+    "e8e8e8ff",
+    "8b929cff",
+    "585e67ff"
+   ],
+   [
+    "e8e8e8ff",
+    "9d9127ff",
+    "524c15ff"
+   ],
+   [
+    "e8e8e8ff",
+    "f97414ff",
+    "a14604ff"
+   ],
+   [
+    "e8e8e8ff",
+    "71e155ff",
+    "3caf1fff"
    ]
   ],
   "hair": [
@@ -248,6 +345,83 @@
     "c800c8ff",
     "7e007eff",
     "4a004aff"
+   ],
+   [
+    "d9c47cff",
+    "d0b75eff",
+    "c1a338ff",
+    "9f862eff",
+    "7b6824ff"
+   ],
+   [
+    "e06723ff",
+    "c1571cff",
+    "934215ff",
+    "6c3110ff",
+    "431e0aff"
+   ],
+   [
+    "974c2cff",
+    "804125ff",
+    "62311cff",
+    "482415ff",
+    "2d170dff"
+   ],
+   [
+    "d7755fff",
+    "cf5a41ff",
+    "af432cff",
+    "8c3623ff",
+    "66271aff"
+   ],
+   [
+    "26314fff",
+    "202a43ff",
+    "192033ff",
+    "121826ff",
+    "0b0f17ff"
+   ],
+   [
+    "8434b5ff",
+    "712d9aff",
+    "562275ff",
+    "3f1956ff",
+    "271036ff"
+   ],
+   [
+    "d96797ff",
+    "d14982ff",
+    "b72e68ff",
+    "942554ff",
+    "6f1c3eff"
+   ],
+   [
+    "2cb0a0ff",
+    "269689ff",
+    "1d7268ff",
+    "15544dff",
+    "0d3430ff"
+   ],
+   [
+    "f97d23ff",
+    "f06906ff",
+    "bd5205ff",
+    "923f04ff",
+    "642b03ff"
+   ],
+   [
+    "8da1b3ff",
+    "768ea4ff",
+    "5c748aff",
+    "4a5d6fff",
+    "374653ff"
+   ],
+   [
+    "2c7e2aff",
+    "256c24ff",
+    "1c521bff",
+    "153c14ff",
+    "0d260dff"
    ]
   ],
   "leather": [
@@ -303,6 +477,58 @@
     "974909ff",
     "6c2b00ff",
     "3a170bff"
+   ]
+  ],
+  "skeleton": [
+   [
+    "f6f6f6ff",
+    "edededff",
+    "c7c7c7ff",
+    "a3a3a3ff",
+    "7d7d7dff",
+    "646464ff",
+    "ce00d6ff",
+    "7a0096ff"
+   ],
+   [
+    "f7f7e5ff",
+    "f1f0c7ff",
+    "d4d39fff",
+    "aea87dff",
+    "867a5aff",
+    "6a5d49ff",
+    "d80000ff",
+    "730909ff"
+   ],
+   [
+    "f6f6f6ff",
+    "edededff",
+    "c7c7c7ff",
+    "a3a3a3ff",
+    "7d7d7dff",
+    "646464ff",
+    "0056d6ff",
+    "003c96ff"
+   ],
+   [
+    "f6f6f6ff",
+    "edededff",
+    "c7c7c7ff",
+    "a3a3a3ff",
+    "7d7d7dff",
+    "646464ff",
+    "04d600ff",
+    "039600ff"
+   ],
+   [
+    "f6f6f6ff",
+    "edededff",
+    "c7c7c7ff",
+    "a3a3a3ff",
+    "7d7d7dff",
+    "646464ff",
+    "d6a700ff",
+    "967500ff"
    ]
   ],
   "skin": [
@@ -393,6 +619,86 @@
     "a90000ff",
     "6d0f0fff",
     "4a0c0cff"
+   ],
+   [
+    "d6e5f3ff",
+    "b8d2eaff",
+    "85b2dbff",
+    "478bc9ff",
+    "306da6ff",
+    "275987ff"
+   ],
+   [
+    "9aacddff",
+    "8299d5ff",
+    "5978c8ff",
+    "3857a7ff",
+    "2c4484ff",
+    "24386bff"
+   ],
+   [
+    "dbd9d8ff",
+    "c9c6c4ff",
+    "aba7a4ff",
+    "86817cff",
+    "6a6562ff",
+    "56534fff"
+   ],
+   [
+    "fafafbff",
+    "e3e5e8ff",
+    "bdc2c9ff",
+    "8f97a3ff",
+    "6e7887ff",
+    "5b6470ff"
+   ],
+   [
+    "808793ff",
+    "737b87ff",
+    "616872ff",
+    "4b5058ff",
+    "3b3f45ff",
+    "303338ff"
+   ],
+   [
+    "bee6dfff",
+    "a4ddd2ff",
+    "78ccbdff",
+    "45b5a1ff",
+    "368f7fff",
+    "2c7467ff"
+   ],
+   [
+    "f5dee5ff",
+    "edc0cdff",
+    "de8ca5ff",
+    "cc4e74ff",
+    "ae3257ff",
+    "8f2948ff"
+   ],
+   [
+    "c2d7adff",
+    "b2cd97ff",
+    "96ba71ff",
+    "749c4bff",
+    "5b7b3bff",
+    "4a6430ff"
+   ],
+   [
+    "ffffffff",
+    "ecf1f3ff",
+    "c3d3dbff",
+    "90afbdff",
+    "6c95a7ff",
+    "588193ff"
+   ],
+   [
+    "eed4aeff",
+    "e8c591ff",
+    "ddab60ff",
+    "ca8a2bff",
+    "9f6d22ff",
+    "81581bff"
    ]
   ],
   "tunic": [
@@ -431,6 +737,24 @@
      [
       "skin",
       "skin"
+     ]
+    ]
+   },
+   "cyclops": {
+    "sheet": "res://assets/characters/layers/race/cyclops.png",
+    "ramps": [
+     [
+      "skin",
+      "skin"
+     ]
+    ]
+   },
+   "skeleton": {
+    "sheet": "res://assets/characters/layers/race/skeleton.png",
+    "ramps": [
+     [
+      "skeleton",
+      "skeleton"
      ]
     ]
    }
@@ -566,6 +890,17 @@
      [
       "leather",
       "leather_gloves"
+     ]
+    ]
+   }
+  },
+  "jaw": {
+   "jaw": {
+    "sheet": "res://assets/characters/layers/jaw/jaw.png",
+    "ramps": [
+     [
+      "skin",
+      "skin"
      ]
     ]
    }
@@ -1063,6 +1398,62 @@
     "ramps": []
    }
   },
+  "ears-&-horns": {
+   "elven-ears": {
+    "sheet": "res://assets/characters/layers/ears-&-horns/elven-ears.png",
+    "ramps": [
+     [
+      "skin",
+      "skin"
+     ]
+    ]
+   },
+   "cat-ears-1": {
+    "sheet": "res://assets/characters/layers/ears-&-horns/cat-ears-1.png",
+    "ramps": []
+   },
+   "cat-ears-2": {
+    "sheet": "res://assets/characters/layers/ears-&-horns/cat-ears-2.png",
+    "ramps": []
+   },
+   "bunny-ears-1": {
+    "sheet": "res://assets/characters/layers/ears-&-horns/bunny-ears-1.png",
+    "ramps": []
+   },
+   "bunny-ears-2": {
+    "sheet": "res://assets/characters/layers/ears-&-horns/bunny-ears-2.png",
+    "ramps": []
+   },
+   "goat-horns-1": {
+    "sheet": "res://assets/characters/layers/ears-&-horns/goat-horns-1.png",
+    "ramps": []
+   },
+   "goat-horns-2": {
+    "sheet": "res://assets/characters/layers/ears-&-horns/goat-horns-2.png",
+    "ramps": []
+   },
+   "antlers": {
+    "sheet": "res://assets/characters/layers/ears-&-horns/antlers.png",
+    "ramps": []
+   },
+   "unicorn-horn": {
+    "sheet": "res://assets/characters/layers/ears-&-horns/unicorn-horn.png",
+    "ramps": []
+   },
+   "skeleton-small-horns": {
+    "sheet": "res://assets/characters/layers/ears-&-horns/skeleton-small-horns.png",
+    "ramps": [
+     [
+      "skeleton",
+      "skeleton"
+     ]
+    ]
+   },
+   "skeleton-big-horns": {
+    "sheet": "res://assets/characters/layers/ears-&-horns/skeleton-big-horns.png",
+    "ramps": []
+   }
+  },
   "weapon-overlay": {
    "weapon-overlay": {
     "sheet": "res://assets/characters/layers/weapon-overlay/weapon-overlay.png",
@@ -1073,7 +1464,27 @@
  "creation": {
   "picks": {
    "race": [
-    "human"
+    "human",
+    "cyclops",
+    "skeleton"
+   ],
+   "ears-&-horns": [
+    null,
+    "elven-ears",
+    "cat-ears-1",
+    "cat-ears-2",
+    "bunny-ears-1",
+    "bunny-ears-2",
+    "goat-horns-1",
+    "goat-horns-2",
+    "antlers",
+    "unicorn-horn",
+    "skeleton-small-horns",
+    "skeleton-big-horns"
+   ],
+   "jaw": [
+    null,
+    "jaw"
    ],
    "hair": [
     null,
@@ -1125,14 +1536,45 @@
     3,
     4,
     5,
-    6
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
    ],
    "hair": [
     0,
     1,
     2,
     3,
-    4
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
    ],
    "eyes": [
     0,
@@ -1145,7 +1587,18 @@
     7,
     8,
     9,
-    12
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
    ],
    "clothes": [
     0,
@@ -1154,7 +1607,15 @@
     3,
     4,
     5,
-    6
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
    ],
    "tunic": [
     0,
@@ -1167,10 +1628,69 @@
     0,
     1,
     2
+   ],
+   "skeleton": [
+    0,
+    1,
+    2,
+    3,
+    4
    ]
   },
   "linked": {
    "facial_hair": "hair"
+  }
+ },
+ "added_rows": {
+  "skin": {
+   "11": "sky blue",
+   "12": "deep blue",
+   "13": "stone grey",
+   "14": "ash",
+   "15": "charcoal",
+   "16": "teal",
+   "17": "rose",
+   "18": "moss",
+   "19": "frost white",
+   "20": "ochre"
+  },
+  "hair": {
+   "11": "flaxen",
+   "12": "copper",
+   "13": "chestnut",
+   "14": "strawberry",
+   "15": "raven blue",
+   "16": "violet",
+   "17": "rose pink",
+   "18": "teal",
+   "19": "orange",
+   "20": "silver blue",
+   "21": "forest"
+  },
+  "eyes": {
+   "14": "violet",
+   "15": "pink",
+   "16": "amber",
+   "17": "ice blue",
+   "18": "grey",
+   "19": "hazel",
+   "20": "orange",
+   "21": "light green"
+  },
+  "clothes": {
+   "7": "brown",
+   "8": "black",
+   "9": "cream",
+   "10": "purple",
+   "11": "navy",
+   "12": "forest green",
+   "13": "ochre",
+   "14": "white"
+  },
+  "skeleton": {
+   "2": "blue glow",
+   "3": "green glow",
+   "4": "gold glow"
   }
  },
  "worn_layers": {

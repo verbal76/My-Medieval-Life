@@ -20,6 +20,10 @@ var pos := Vector2.ZERO
 var places := {}              # REGION-NAV-01 (Atlas): settlement id -> {how, day, by}, the settlements whose place this player knows
 var explored := {}            # REGION-NAV-01 (Atlas): overworld chunk -> its ground summary, the region this player has seen
 var atlas_chunk := Vector2i(1 << 30, 1 << 30)   # the chunk they last stood in (not saved)
+var landmarks := {}           # B25R1-003 (Landmarks): place id -> {kind, name, x, y, day}, the smaller places this player has found
+var landmark_cell := Vector2i(1 << 30, 1 << 30)  # the cell Landmarks last looked round (not saved)
+var wear_cell := Vector2i(1 << 30, 1 << 30)      # B25R1-011: the cell RoadWear last counted this player's step on (not saved)
+var travel := {}              # B25R1-006 (RegionTravel): {x, y, active}, the destination chosen on the Region map; {} none
 var inv := Inventory.new():
 	set(v):
 		inv = v
@@ -367,7 +371,9 @@ func to_dict() -> Dictionary:
 		"quests": quests.duplicate(true), "stolen": stolen.duplicate(true), "chest_stolen": chest_stolen.duplicate(true),
 		"pack_level": pack_level,
 	}.merged({"map_level": map_level} if map_level != 0 else {}).merged({"net_key": net_key} if net_key != "" else {}).merged({"away": true} if away else {}).merged({"line": line} if line > 0 else {}).merged(
-		{"places": Atlas.places_to_save(self), "explored": Atlas.explored_to_save(self)} if not places.is_empty() or not explored.is_empty() else {})
+		{"places": Atlas.places_to_save(self), "explored": Atlas.explored_to_save(self)} if not places.is_empty() or not explored.is_empty() else {}).merged(
+		{"landmarks": Landmarks.to_save(self)} if not landmarks.is_empty() else {}).merged(
+		{"travel": RegionTravel.to_save(self)} if not travel.is_empty() else {})       # B25R1 (optional: absent, none found, no destination)
 
 
 static func from_dict(d: Dictionary) -> PlayerState:
@@ -389,6 +395,8 @@ static func from_dict(d: Dictionary) -> PlayerState:
 	p.away = bool(d.get("away", false))               # MP A2 (MP-D1): a guest out of play when saved
 	p.line = int(d.get("line", 0))                    # MP B (MP-D4, optional): a guest heir's family line
 	Atlas.load_into(p, d)                             # REGION-NAV-01 (optional): the places and region this player knows
+	Landmarks.load_into(p, d)                         # B25R1-003 (optional): an older save has found none
+	RegionTravel.load_into(p, d)                      # B25R1-006 (optional): no destination; the route is planned again on load
 	p.inv = Inventory.from_dict(d.inv)
 	p.chest = Inventory.from_dict(d.chest)
 	for k in d.skills:

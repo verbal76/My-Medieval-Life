@@ -537,6 +537,8 @@ func _new_day() -> void:
 	if profiling:
 		t = _prof("daily: brain dawn (work, succession)", t)
 	manor_work.dawn()                  # undone manor jobs are released
+	if map.overworld != null:
+		RoadWear.prune(map.overworld)  # B25R1-011: road cells back to what the generator and the clock give are forgotten
 	RegionTrade.dawn(self)             # REGION-NAV-01 S6: a few tradespeople weigh what they were told of the neighbouring places
 	justice.dawn()                     # GP-CRIME-PURSUIT A1: outstanding crimes past their tier's wanted_days lapse
 	if judgment != null:
@@ -725,6 +727,10 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 			n.work_left = float(n.plan[1].min)
 		return true
 	var speed: float = float(GameData.b("walk_tiles_per_second")) * s.get("speed", 1.0) * Life.walk_factor(n)    # elders walk slower (B8-029)
+	var outside := n.depth == 0 and map.overworld != null and not map.in_village(n.cell())
+	var cart := outside and not carts.pulled_by(npc_ref(n.id)).is_empty()
+	if cart:
+		speed *= RoadWear.cart_factor(map.overworld, n.cell())     # B25R1-011: damaged stone hampers a cart
 	var budget := speed * dt
 	n.anim = "carry" if n.inv.total() >= 4 and n.role == "adult" else "walk"
 	while budget > 0.0 and n.path_i < n.path.size():
@@ -735,6 +741,8 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 			n.pos = goal
 			budget -= l
 			n.path_i += 1
+			if outside:
+				RoadWear.foot(map.overworld, Vector2i(goal.floor()), cart)      # B25R1-011: footfall wears the way
 		else:
 			n.pos += d / l * budget
 			n.facing = d

@@ -106,6 +106,7 @@ jobs:
           res://tests/run_tests.gd
           res://tests/start_test.gd
           res://tests/character_look_test.gd
+          res://tests/char_create_test.gd
           res://tests/furniture_test.gd
           res://tests/play_test.gd
           res://tests/overworld_test.gd
@@ -114,6 +115,9 @@ jobs:
           res://tests/settlement_crafter_test.gd
           res://tests/region_geography_test.gd
           res://tests/journey_test.gd
+          res://tests/region_travel_test.gd
+          res://tests/road_types_test.gd
+          res://tests/road_wear_test.gd
           res://tests/journey_s3_test.gd
           res://tests/loot_recover_test.gd
           res://tests/envoy_test.gd
@@ -125,6 +129,7 @@ jobs:
           res://tests/outside_interact_test.gd
           res://tests/homestead_test.gd          # B25R1-010: a homestead from setting out to a house and a life there
           res://tests/player_homestead_test.gd   # B25R1-010: the player's homestead, saved and loaded
+          res://tests/gamepad_map_test.gd
           res://tests/tree_test.gd
           res://tests/world_test.gd
           res://tests/aging_test.gd

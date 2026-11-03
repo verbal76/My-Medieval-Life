@@ -18139,6 +18139,104 @@
    "sha256": "16b0c508567a638822478d7164a339ac0e2c421fa3871d4beb81e75bb8679543"
   },
   {
+   "file": "assets/characters/layers/ears-&-horns/antlers.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/ears-&-horns/antlers.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "557eddb8ba4e2ab8f2c0edd1f68af3abcc464c4b141100cd018f6d5bdec33397"
+  },
+  {
+   "file": "assets/characters/layers/ears-&-horns/bunny-ears-1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/ears-&-horns/bunny-ears-1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "64804d7142dc2151e72f6557a72bb848e910c63fc0ecaf04ec0e038e4b2d2d75"
+  },
+  {
+   "file": "assets/characters/layers/ears-&-horns/bunny-ears-2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/ears-&-horns/bunny-ears-2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "bd7c20f69de5e5780b271cc4ca5666b504d3e26b53e0e95ebe6d09613207b622"
+  },
+  {
+   "file": "assets/characters/layers/ears-&-horns/cat-ears-1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/ears-&-horns/cat-ears-1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "4faa346e8dee2c1fe0c93035686e25bedc9c7082725b99e7c46dd0fcec21598b"
+  },
+  {
+   "file": "assets/characters/layers/ears-&-horns/cat-ears-2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/ears-&-horns/cat-ears-2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "3d698b4e8e8d439aed9f9e27e97671b849207a8ddec1dd14ccf61f2949f84c37"
+  },
+  {
+   "file": "assets/characters/layers/ears-&-horns/elven-ears.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/ears-&-horns/elven-ears.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "50adf3caf683a3744280220e19d451f60898e7190e72c58ccf62693244d55adc"
+  },
+  {
+   "file": "assets/characters/layers/ears-&-horns/goat-horns-1.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/ears-&-horns/goat-horns-1.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "beacc8789b215616fbfdfb6309a3cb5c3555894c06ac012effd77022712e3ece"
+  },
+  {
+   "file": "assets/characters/layers/ears-&-horns/goat-horns-2.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/ears-&-horns/goat-horns-2.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "ab113078e1f39074f83aaa1d003d307cc8dcd67075bf977372175e325dc79262"
+  },
+  {
+   "file": "assets/characters/layers/ears-&-horns/skeleton-big-horns.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/ears-&-horns/skeleton-big-horns.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "048bb7c763b74e6897e2f71ba3d87fd9a2ce841de1cc3dee88de3377a53b5475"
+  },
+  {
+   "file": "assets/characters/layers/ears-&-horns/skeleton-small-horns.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/ears-&-horns/skeleton-small-horns.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "de81f11f3d310c7f1a756437a868f263960cd020945fc7f7e32efe807d2784e0"
+  },
+  {
+   "file": "assets/characters/layers/ears-&-horns/unicorn-horn.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/ears-&-horns/unicorn-horn.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "a4ffb915b133713d353998ca7e72d340cd007667267a2c318353574e992d5094"
+  },
+  {
+   "file": "assets/characters/layers/jaw/jaw.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/jaw/jaw.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "193dbe4d5cdcc8934fa62303be5debe43c51e87b5204ece02bb9c4d978547a25"
+  },
+  {
+   "file": "assets/characters/layers/race/cyclops.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/race/cyclops.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "4a4286b39e74a56ba5dc5ccaabc932870b348b620febf363fd4db5504df45213"
+  },
+  {
+   "file": "assets/characters/layers/race/skeleton.png",
+   "source": "PUNY_CHARACTERS_v2.1_tdsm-2026.zip",
+   "member": "assets/race/skeleton.png",
+   "transform": "copied unchanged (CC-01 run-time layer; recoloured in the game by its ramps)",
+   "sha256": "437b967e337d128978dc7554607cf8b54d3a5f9e1eb16b6df2e3250e26825301"
+  },
+  {
    "file": "assets/music/sunrise_over_the_village.ogg",
    "source": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songmed/Sunrise.over.the.Village.wav",
    "member": "Sunrise.over.the.Village.wav",
@@ -26348,6 +26446,13 @@
    "member": "14_Wind_loop.wav",
    "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
    "sha256": "63069d9e3772ff7e99487037a998a7e11d55306461f083ccebd5314062ccec54"
+  },
+  {
+   "file": "assets/tiles/road_tiles.png",
+   "source": "PUNY-WORLD-PAID_v1.zip + PUNY_WORLD_v1.zip",
+   "member": "PUNY-WORLD-PAID_v1/Tiled/punyworld-tiles.png tiles 10150, 10151, 10370, 10371; PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/punyworld-overworld-tiles.tsx dirt pathways",
+   "transform": "B25R1 road tiles: 16 dirt path tiles (overworld_tiles.json dirt_path) x 4 rows with their dirt replaced by the paid flagstone ground and the rim darkened to 0.74 (stone road), x 2 rows narrowed by one ring with 22% grass through the dirt (trail); grown-over dirt road and trail rows (30% grass tufts); damaged and broken stone rows (12% and 34% of the paving gone to dirt and grass holes)",
+   "sha256": "a450d9b12b22e8f9a06a9cd464ada4b536eef13a0235cdcfa3121b87b5dba4f4"
   }
  ]
 }

@@ -19,7 +19,7 @@
     "props"
    ],
    "status": "integrated",
-   "used_for": "The village map and overworld tiles (village.json atlases), deposits, the mine cart (stand-in cart art).",
+   "used_for": "The village map and overworld tiles (village.json atlases), deposits, the mine cart (stand-in cart art); B25R1-Q1: its flagstone ground (tiles 10150, 10151, 10370, 10371) paves the stone roads and settlement streets (tools/road_tiles.py, game/assets/tiles/road_tiles.png).",
    "scale": "16 px tiles, 1:1 (the world's reference)",
    "scan": [
     {
@@ -595,7 +595,7 @@
     "terrain"
    ],
    "status": "integrated",
-   "used_for": "Overworld grass/cliff wangset (overworld_tiles.json).",
+   "used_for": "Overworld grass/cliff wangset (overworld_tiles.json); its dirt pathway tiles are the dirt roads, and the shapes of the stone road and trail tiles (tools/road_tiles.py).",
    "scale": "16 px, 1:1",
    "scan": [
     {
@@ -656,7 +656,7 @@
     "animations"
    ],
    "status": "integrated",
-   "used_for": "Every villager, bandit and the player (generated layered sheets in game/assets/characters).",
+   "used_for": "Every villager, bandit and the player (generated layered sheets in game/assets/characters); the player's look drawn at run time from its layer sheets (CharacterLook, CC-01), with every body (human, cyclops, skeleton), ear, horn, jaw, hair style and colour ramp offered in character creation (B25R1-007).",
    "scale": "32 px frames, about 14 x 16 px visible: the reference human",
    "scan": [
     {
@@ -3807,6 +3807,17 @@
     "assets/characters/layers/clothes/viking_warrior_armor.png",
     "assets/characters/layers/clothes/yabusame_robe_blue.png",
     "assets/characters/layers/clothes/yabusame_robe_red.png",
+    "assets/characters/layers/ears-&-horns/antlers.png",
+    "assets/characters/layers/ears-&-horns/bunny-ears-1.png",
+    "assets/characters/layers/ears-&-horns/bunny-ears-2.png",
+    "assets/characters/layers/ears-&-horns/cat-ears-1.png",
+    "assets/characters/layers/ears-&-horns/cat-ears-2.png",
+    "assets/characters/layers/ears-&-horns/elven-ears.png",
+    "assets/characters/layers/ears-&-horns/goat-horns-1.png",
+    "assets/characters/layers/ears-&-horns/goat-horns-2.png",
+    "assets/characters/layers/ears-&-horns/skeleton-big-horns.png",
+    "assets/characters/layers/ears-&-horns/skeleton-small-horns.png",
+    "assets/characters/layers/ears-&-horns/unicorn-horn.png",
     "assets/characters/layers/eyelashes/f1.png",
     "assets/characters/layers/eyelashes/f2.png",
     "assets/characters/layers/eyelashes/f3.png",
@@ -3905,7 +3916,10 @@
     "assets/characters/layers/headwear/villager_straw_hat.png",
     "assets/characters/layers/headwear/yabusame_straw_hat_blue.png",
     "assets/characters/layers/headwear/yabusame_straw_hat_red.png",
+    "assets/characters/layers/jaw/jaw.png",
+    "assets/characters/layers/race/cyclops.png",
     "assets/characters/layers/race/human.png",
+    "assets/characters/layers/race/skeleton.png",
     "assets/characters/layers/shoes/leather-boots.png",
     "assets/characters/layers/weapon-overlay/weapon-overlay.png",
     "assets/characters/player_00.png",

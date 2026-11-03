@@ -8,7 +8,8 @@ extends RefCounted
 ##             traveller, an envoy). Knowing where a place is tells nothing of its trade: that is learned from its people.
 ##   explored  overworld chunk -> a 16-byte summary of the ground the player has seen there (summarize: one class per 8 x 8
 ##             tile block, read from the generated chunk itself), the 3 x 3 chunks round the player as they walk.
-## The region map (RegionMapPanel) draws only these: explored ground as it is, known settlements by name, the rest blank.
+## The region map (RegionMapPanel) draws explored ground as it is and the rest dark; B25R1-003: every settlement is on it from day 1
+## whatever `places` holds (places is extra knowledge, e.g. for trade), and Landmarks keeps the smaller places found on foot.
 ## Pure reads of the overworld; nothing here changes the world, a ledger, a coin or an item.
 
 const BLOCK := 8                                   # tiles a summary class covers along each side
@@ -76,6 +77,13 @@ static func note_position(w: World, p: PlayerState) -> String:
 				var k := cc + Vector2i(dx, dy)
 				if not p.explored.has(k) and not ow.chunk_in_village(k):
 					p.explored[k] = summarize(ow, k)
+	if cell != p.wear_cell:
+		p.wear_cell = cell
+		RoadWear.foot(ow, cell, not w.carts.pulled_by(w.player_ref(p)).is_empty())     # B25R1-011: the player's footfall
+	for nm in Landmarks.note(w, p):                  # B25R1-003: the smaller places, found on foot (an icon on the map)
+		w.stat("landmark_found")
+		if p == w.player:
+			w.note("You mark %s on your map." % nm.to_lower())
 	if ow.village.has_point(cell):
 		return ""
 	var st := ow.site_at(cell)
