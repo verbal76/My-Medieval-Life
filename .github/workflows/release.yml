@@ -40,6 +40,10 @@ on:
         description: "Build number to stamp (digits only; empty = this run's number). Use it when a failed run used up a number"
         type: string
         default: ""
+      reuse_gate_run:
+        description: "Owner-approved only (private builds): an earlier release run whose simulation gate passed; reused instead of running the gate, when nothing the simulation runs has changed since"
+        type: string
+        default: ""
 
 permissions:
   contents: write
@@ -53,6 +57,7 @@ env:
 
 jobs:
   sim-gate:
+    if: inputs.reuse_gate_run == ''
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -361,6 +366,8 @@ jobs:
 
   release:
     needs: [sim-gate, package, smoke-windows]
+    # the gate passed on this commit, or (owner-approved, private only) an earlier run's passing gate is reused: see below
+    if: always() && needs.package.result == 'success' && needs.smoke-windows.result == 'success' && (needs.sim-gate.result == 'success' || (needs.sim-gate.result == 'skipped' && inputs.reuse_gate_run != '' && inputs.visibility == 'private'))
     runs-on: ubuntu-latest
     timeout-minutes: 20
     environment: ${{ inputs.visibility == 'public' && 'public-release' || 'private-testing' }}
@@ -368,6 +375,8 @@ jobs:
       BUILD_N: ${{ inputs.build_number || github.run_number }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0                  # a reused gate is checked against the diff since its commit
 
       - name: Collect the six packages
         uses: actions/download-artifact@v4
@@ -408,18 +417,33 @@ jobs:
         with:
           name: sim-gate
           path: sim-gate
+          run-id: ${{ inputs.reuse_gate_run || github.run_id }}
+          github-token: ${{ github.token }}
 
       - name: Check the gate ran on this commit and write its section of the notes
+        env:
+          REUSE: ${{ inputs.reuse_gate_run }}
         run: |
           python3 - <<'PY'
-          import json, os, sys
+          import json, os, subprocess, sys
           g = json.load(open("sim-gate/gate.json"))
-          if g["commit"] != os.environ["GITHUB_SHA"] or not g["result"].startswith("PASS") or g.get("subset") or g.get("injected"):
-              sys.exit("::error::the simulation gate did not pass on this commit (%s, %s)" % (g["commit"], g["result"]))
+          reuse = os.environ.get("REUSE", "")
+          if not g["result"].startswith("PASS") or g.get("subset") or g.get("injected"):
+              sys.exit("::error::the simulation gate did not pass (%s, %s)" % (g["commit"], g["result"]))
+          note = ""
+          if g["commit"] != os.environ["GITHUB_SHA"]:
+              if not reuse:
+                  sys.exit("::error::the simulation gate did not run on this commit (%s)" % g["commit"])
+              # a reused gate stands only when nothing the simulation runs changed: no simulation code, data or gate tools
+              changed = subprocess.run(["git", "diff", "--name-only", g["commit"], os.environ["GITHUB_SHA"]], capture_output=True, text=True, check=True).stdout.split()
+              sim = [f for f in changed if f.startswith(("game/scripts/core/", "game/data/", "game/tests/economy_sim", "tools/sim_", "docs/release/sim_baseline"))]
+              if sim:
+                  sys.exit("::error::the reused gate's commit %s differs in simulation files: %s" % (g["commit"][:7], ", ".join(sim)))
+              note = "\n- **Simulation gate reused (owner-approved):** this commit differs from the gate's commit `%s` only in %s, none of which the simulation runs.\n" % (g["commit"][:7], ", ".join("`%s`" % f for f in changed))
           summary = open("sim-gate/SIM_GATE_SUMMARY.md").read()
           with open("notes.md", "a") as f:
-              f.write("\n" + summary + "\n- Simulation gate run: %s/%s/actions/runs/%s (artifact `sim-gate`); recorder schema `%s`.\n" % (
-                  os.environ["GITHUB_SERVER_URL"], os.environ["GITHUB_REPOSITORY"], os.environ["GITHUB_RUN_ID"], g["schema"]))
+              f.write("\n" + summary + note + "\n- Simulation gate run: %s/%s/actions/runs/%s (artifact `sim-gate`); recorder schema `%s`.\n" % (
+                  os.environ["GITHUB_SERVER_URL"], os.environ["GITHUB_REPOSITORY"], reuse or os.environ["GITHUB_RUN_ID"], g["schema"]))
           PY
 
       - uses: softprops/action-gh-release@v2
