@@ -7502,6 +7502,11 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-water and b25r1-homestead workers; branch: None -> wip/b25r1",
      "why": "recorded; water system assigned to the water worker (wip/b25r1-water), settlement water decisions to the homestead worker; credits regression diagnosed by the lead (test infrastructure, fixed at c5299cd)"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "note",
+     "why": "owner 2026-11-03 ~16:30 EST: 'We have a weather expansion in the pipeline that includes rain and flooding... we need rivers and streams, we might as well do them now, there are water asset packs and waterfall packs in the repository... and the water needs to be flowing.' Rivers and streams both now, animated flow following each course's direction, owned packs (Forgotten Memories WaterTiles-6frames and waterfalls, Miniworld Cliff-Water, Puny World water, Forgotten Plains water and waterfall sound loops), flood-ready data (per-cell level and bank height, course graph) without building weather"
     }
    ],
    "assigned_worker": "b25r1-water and b25r1-homestead workers",
