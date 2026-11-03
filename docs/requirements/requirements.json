@@ -7599,6 +7599,33 @@
    ]
   },
   {
+   "id": "B25R1-Q4",
+   "kind": "decision",
+   "title": "Outlaw camp defenders: add a surrender outcome to combat, or fight or flee only (B25R1-014 section 8 'according to existing systems'; combat has no surrender)?",
+   "description": "Outlaw camp defenders: add a surrender outcome to combat, or fight or flee only (B25R1-014 section 8 'according to existing systems'; combat has no surrender)?",
+   "source": "second homestead worker finding 2026-11-03",
+   "owner_wording": null,
+   "owner_answer": "Fight or flee only: defenders fight, flee or abandon the settlement under existing combat; no surrender mechanic",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "second homestead worker finding 2026-11-03"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-11-03 via question: 'Fight or flee only'"
+    }
+   ]
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
