@@ -8,7 +8,10 @@ extends RefCounted
 ## same animals and walkers on every machine, with no random generator, no wall-clock time and nothing saved. The
 ## memoised legs and chunk lists below only save work; a fresh instance returns the same answers. It is ambient only:
 ## nothing here is in Fauna, the population, a ledger, a coin or an item, so the village economy and its tests
-## are untouched (an animal here cannot be hunted, a traveller cannot be talked to or robbed). Numbers: balance.json
+## are untouched. B25R1-002 (owner 2026-11-03: "Animals encountered outside the village must remain part of the functional
+## simulation"; an intentional revision of WORLD-LIFE-01's "cannot be hunted"): an animal the player comes near is adopted
+## into Fauna (area Fauna.COUNTRY) and drawn by the fauna from then on; `taken` (World.country_taken) hides it here until
+## it is given back, and for good once it has died. A traveller can be talked to (Main: the "traveller" target). Numbers: balance.json
 ## "countryside". The view (Main._sync_countryside) draws what `animals_near` and `travellers_near` return, culled to
 ## the camera. Other towns stay off the map.
 
@@ -21,6 +24,7 @@ var _chunks := {}                       # Vector2i -> Array of {key, species, se
 var _legs := {}                         # animal key -> {n, to} the memoised target of its current leg
 var _animals := {}                      # animal key -> Animal (drawn through AnimalSprite)
 var _trails: Array = []
+var taken := {}                         # B25R1-002: World.country_taken (the same dictionary)
 
 
 func _init(overworld: Overworld) -> void:
@@ -131,6 +135,8 @@ func animals_near(center: Vector2, radius: float, now: float) -> Array:
 	for cy in range(c0.y, c1.y + 1):
 		for cx in range(c0.x, c1.x + 1):
 			for e: Dictionary in chunk_animals(Vector2i(cx, cy)):
+				if taken.has(str(e.key)):
+					continue                                    # adopted into the fauna, or dead (B25R1-002)
 				var st := animal_state(e, now)
 				if (st.pos as Vector2).distance_to(center) > radius:
 					continue

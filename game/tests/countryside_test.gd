@@ -63,7 +63,9 @@ func _run_scene() -> void:
 	main._sync_countryside()
 	for i in 3:
 		main._sync_countryside()
-	check(main.country_sprites.size() <= n0, "far away only what lives there is drawn (%d)" % main.country_sprites.size())
+	# (B25R1-002: the animals near the player are adopted into the fauna and drawn by it, so the count beside the player is
+	# no bound for the count elsewhere: what was drawn is freed, and only a few are drawn here too)
+	check(main.country_sprites.size() <= 12, "far away only what lives there is drawn (%d)" % main.country_sprites.size())
 	var d: Dictionary = w.to_dict()
 	check(not JSON.stringify(d).contains("countryside"), "a save carries no countryside")
 	print("%d checks, %d failures" % [checks, failures])

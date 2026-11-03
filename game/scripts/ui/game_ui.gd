@@ -3828,6 +3828,49 @@ func show_desk(t: Dictionary) -> void:
 ## REGION-NAV-01: a settlement's keeper or official met at their door (SettlementFolk): who they are, what their books hold
 ## for sale and what their business wants, both at the settlement's market price, and the way to the other settlements
 ## (they know their neighbours: asking tells you where they lie, nothing of their trade). Rules in SettlementFolk and Atlas.
+## B25R1-002: a traveller met on the road (Countryside: a pedlar, a pilgrim or a wayfarer passing between the roads and the
+## village's gates). They are passing through and carry nothing to sell: a word, and the way to the settlements, which a
+## traveller knows (Atlas.learn_place, the same knowledge a settlement's keeper gives).
+const TRAVELLER_WORDS := {
+	"pedlar": "\"Pots, pins and ribbons, all sold at the last town. I'm off to fill my pack again.\"",
+	"pilgrim": "\"God keep you. I walk to give thanks, and I've a long road yet.\"",
+	"wayfarer": "\"Just passing through, friend. The road's been kind today.\"",
+}
+
+
+func show_traveller(e: Dictionary) -> void:
+	var w: World = main.world
+	var p := w.player
+	var kind := str(e.get("kind", "wayfarer"))
+	_open("traveller", "A %s on the road" % kind)
+	_label(str(TRAVELLER_WORDS.get(kind, TRAVELLER_WORDS.wayfarer)))
+	var ask := func() -> void:
+		var lines := []
+		var o: Overworld = w.map.overworld
+		var told := 0
+		for st in o.sites:
+			var d: Vector2 = Vector2(st.center) - p.pos
+			var miles := d.length() / float(OffMapSettlement.data().get("tiles_per_mile", 12))
+			lines.append("%s: %s, about %d mile%s." % [str(st.name), compass(d), maxi(1, roundi(miles)), "" if roundi(miles) == 1 else "s"])
+			if Atlas.learn_place(w, p, str(st.id), "traveller"):
+				told += 1
+		_open("traveller", "The roads, as the %s tells them" % kind)
+		for l in lines:
+			_label(l, 16)
+		_button("Thank them", func(): hide_all())
+	_button("Ask about the roads to the settlements", ask)
+	_button("Go on your way", func(): hide_all())
+
+
+## Eight-way compass words for a direction on the map (north is up).
+static func compass(d: Vector2) -> String:
+	if d.length() < 0.5:
+		return "here"
+	var names := ["east", "south-east", "south", "south-west", "west", "north-west", "north", "north-east"]
+	var i := posmod(roundi(atan2(d.y, d.x) / (PI / 4.0)), 8)
+	return names[i]
+
+
 func show_keeper(person: Dictionary) -> void:
 	var w: World = main.world
 	var p := w.player

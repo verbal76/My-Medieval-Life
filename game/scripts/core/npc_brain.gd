@@ -181,12 +181,15 @@ func doit(act: String, args := {}) -> Dictionary:
 	return {"k": "do", "act": act, "args": args}
 
 
-func beside(c: Vector2i, from: Vector2i, level := 0) -> Vector2i:
+## `world_ground`: the player's stand outside the village (B25R1-002): the overworld's own ground there, not the village map's
+## (to which everything outside the village is a wall). The villagers' work keeps the village map.
+func beside(c: Vector2i, from: Vector2i, level := 0, world_ground := false) -> Vector2i:
 	var best := c
 	var bd := 1e9
 	for d in [Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1), Vector2i(1, 1), Vector2i(-1, 1)]:
 		var n: Vector2i = c + d
-		if not (w.map.is_solid(n) if level == 0 else w.underground.is_solid(level, n)):      # MIN-A: on the seam's own level
+		var solid: bool = (w.map.is_solid_world(n) if world_ground else w.map.is_solid(n)) if level == 0 else w.underground.is_solid(level, n)
+		if not solid:      # MIN-A: on the seam's own level
 			var dd := from.distance_to(n)
 			if dd < bd:
 				bd = dd

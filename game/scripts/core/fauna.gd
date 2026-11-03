@@ -42,10 +42,44 @@ func _init(world) -> void:
 	refuges = Refuges.new(self)
 
 
+# ---------------------------------------------------------------- the countryside (B25R1-002) ---------
+## The area of a countryside animal (WORLD-LIFE-01's ambient wildlife) that the player has come near: it is then a real
+## animal of the fauna, under the same rules (it flees, fights, is hunted, bleeds, becomes meat), moving over the
+## overworld's own ground. It has no cells to wander or graze from a list: it strolls round where it is and finds grass
+## anywhere in the open country, and it does not breed (its kind's numbers out there are the countryside's). Main adopts
+## it from the countryside when the player is near and gives it back, unharmed and far behind, so the countryside stays
+## the one source of its numbers; one that dies stays gone (Main.country_taken). The village's hunters never go after it.
+const COUNTRY := "country"
+
+
+func adopt_country(species: String, sex: String, skin: String, pos: Vector2) -> Animal:
+	var s: Dictionary = GameData.b("animals")[species]
+	var a := Animal.new()
+	a.id = next_id
+	next_id += 1
+	a.species = species
+	a.sex = sex
+	a.skin = skin
+	a.area = COUNTRY
+	a.born = w.minutes - (Animal.stage_days(s, "grow") + 1.0) * 1440.0       # a grown animal, as the countryside draws them
+	a.next_birth = 1.0e15
+	a.hp = float(s.hp)
+	a.hunger = 100.0
+	a.pos = pos
+	a.wait = 1.0
+	animals.append(a)
+	w.stat("country_adopted")
+	return a
+
+
 # ---------------------------------------------------------------- areas ----------------------
 func cells(area: String) -> Array:
 	if _cells.has(area):
 		return _cells[area]
+	if area == COUNTRY:
+		_cells[area] = []
+		_cell_set[area] = {}
+		return []
 	var out := []
 	var r: Dictionary = pens[area] if pens.has(area) else woods[area]
 	var inset := 1 if pens.has(area) else 0       # a pen's fence is its border
@@ -181,6 +215,9 @@ func tick(gm: float) -> void:
 
 
 func _eat(a: Animal, gm := 60.0) -> void:
+	if a.area == COUNTRY:
+		a.hunger = 100.0                               # open country: grass, seeds and small game for the taking
+		return
 	if a.wild():
 		match a.diet():
 			"graze":
@@ -426,7 +463,7 @@ func new_day() -> void:
 	_old_age(now)
 	var born := {}
 	for a: Animal in animals.duplicate():
-		if not a.alive or a.sex != "f" or not well_fed(a) or not a.breeds(now) or now < a.next_birth:
+		if not a.alive or a.sex != "f" or not well_fed(a) or not a.breeds(now) or now < a.next_birth or a.area == COUNTRY:
 			continue
 		if not _has_mate(a):
 			continue
@@ -576,8 +613,8 @@ func nearest_game(from: Vector2, max_d := 200.0) -> Animal:
 	var best: Animal = null
 	var bd := max_d
 	for a: Animal in animals:
-		if not a.alive or not a.wild() or not a.adult(w.minutes) or claims.has(a.id) or not bool(a.spec().get("game", true)):
-			continue                                    # the village hunter leaves wolves, foxes and bears alone (B14)
+		if not a.alive or not a.wild() or not a.adult(w.minutes) or claims.has(a.id) or not bool(a.spec().get("game", true)) or a.area == COUNTRY:
+			continue                                    # the village hunter leaves wolves, foxes and bears alone (B14), and the open country's game
 		if count(a.area, a.species, true) - _claimed(a.area, a.species) <= int(a.spec().keep) or not spare(a, int(wl().hunter_spare)):
 			continue                                    # the hunter leaves the predators their share (B14)
 		var d := a.pos.distance_to(from)
@@ -722,6 +759,13 @@ func _move(a: Animal, dt: float) -> void:
 		if a.wait > 0.0:
 			return
 		var cs := cells(a.area)
+		if a.area == COUNTRY:                           # a stroll round where it is, over open ground
+			var c2 := a.cell() + Vector2i(w.rng.randi_range(-4, 4), w.rng.randi_range(-4, 4))
+			if not w.map.is_solid_world(c2):
+				a.goal = Vector2(c2) + Vector2(0.5, 0.5)
+			else:
+				a.wait = w.rng.randf_range(1.0, 3.0)
+			return
 		if cs.is_empty():
 			return
 		var c: Vector2i = cs[w.rng.randi() % cs.size()]
@@ -744,7 +788,7 @@ func _move(a: Animal, dt: float) -> void:
 		return
 	var nxt: Vector2 = a.pos + d / d.length() * step
 	var nc := Vector2i(floori(nxt.x), floori(nxt.y))
-	if w.map.is_solid(nc) or (not in_area(a.area, nc) and in_area(a.area, a.cell())):
+	if (w.map.is_solid_world(nc) if a.area == COUNTRY else w.map.is_solid(nc)) or (not in_area(a.area, nc) and in_area(a.area, a.cell())):
 		a.goal = Vector2.INF
 		a.wait = w.rng.randf_range(0.5, 2.0)
 		a.moving = false

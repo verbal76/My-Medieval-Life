@@ -62,6 +62,7 @@ var walk_i := 0
 var walk_goal := Vector2i(-1, -1)      # the cell walk_path leads to
 var walk_stuck := 0.0                  # seconds without progress along the route
 var talk_to: NPC = null                # a tapped villager the player walks up to, to talk
+var talk_traveller := -1               # B25R1-002: the key of a tapped countryside traveller the player walks up to, to talk
 var talk_player := 0                   # MP-INTERACT-01: the pid of a tapped or clicked player the player walks up to (0: none)
 var reach_to := Vector2.INF            # a tapped shop counter, stall or container the player walks up to, to use
 var reach_station := ""                # GP-ANVIL: a tapped crafting station; reach_to is then its use cell
@@ -2376,6 +2377,36 @@ func _sync_animals() -> void:
 			f[0].visible = int(f[1] * 12.0) % 2 == 0
 
 
+## B25R1-002: the countryside's animals near the player become real animals of the fauna (Fauna.adopt_country: hunted,
+## fleeing, fighting and becoming meat by the fauna's own rules); one left far behind and unharmed goes back to the
+## countryside's ambient life, one that died stays gone (World.country_taken). Not below the surface, not on a guest (the
+## host's world adopts them: its fauna is what guests are sent).
+const COUNTRY_ADOPT := 10.0             # tiles from the player: past the farthest flee distance, so an animal is real before it runs
+
+
+func _adopt_country_animals(radius: float) -> void:
+	countryside.taken = world.country_taken
+	if guest_world:
+		return
+	for key in world.country_taken.keys():
+		var id := int(world.country_taken[key])
+		if id < 0:
+			continue
+		var a: Animal = world.fauna.by_id(id)
+		if a == null or not a.alive:
+			world.country_taken[key] = -1               # hunted, or dead some other way: gone from the countryside for good
+			continue
+		if world.nearest_player_distance(a.pos) > radius + COUNTRY_ADOPT and a.anger == "" and a.hp >= float(a.spec().hp) - 0.01:
+			world.fauna.animals.erase(a)                # unharmed and out of sight: back to the countryside's ambient life
+			world.country_taken.erase(key)
+	if world.player_level != 0 or not world.player.alive:
+		return
+	for amb: Animal in countryside.animals_near(world.player.pos, COUNTRY_ADOPT, world.minutes):
+		var real := world.fauna.adopt_country(amb.species, amb.sex, amb.skin, amb.pos)
+		real.facing = amb.facing
+		world.country_taken[str(amb.id)] = real.id
+
+
 ## WORLD-LIFE-01: the countryside's ambient animals and travellers within view of the camera, from Countryside (a function of
 ## the seed and the clock). Sprites exist only while their subject is in view and are freed when it leaves (a few at a time).
 func _sync_countryside() -> void:
@@ -2383,6 +2414,7 @@ func _sync_countryside() -> void:
 		return
 	var cam := camera.get_screen_center_position() / T
 	var radius := float(Countryside.cfg().cull_radius)
+	_adopt_country_animals(radius)
 	var dt := get_process_delta_time()
 	var seen := {}
 	for a: Animal in countryside.animals_near(cam, radius, world.minutes):
@@ -2540,6 +2572,7 @@ func _player_step(delta: float) -> void:
 	_gather_step()
 	_chase_step()
 	_talk_step()
+	_traveller_step()
 	_talk_player_step()
 	_reach_step()
 	if v.length() > 0.1:
@@ -2734,6 +2767,55 @@ func _talk_step() -> void:
 	approach(who)
 
 
+## B25R1-002: the settlement keeper drawn at a map position (at their door), or {}.
+func _keeper_at(wpos: Vector2) -> Dictionary:
+	if world.map.overworld == null:
+		return {}
+	var at := wpos + Vector2(0, 0.4)
+	var st: Dictionary = world.map.overworld.site_at(Vector2i(at.floor()))
+	if st.is_empty():
+		return {}
+	for person in SettlementFolk.people(world, str(st.id)):
+		if SettlementFolk.present(world, person) and (Vector2(person.spot) + Vector2(0.5, 0.8)).distance_to(at) < 0.9:
+			return person
+	return {}
+
+
+## B25R1-002: a countryside traveller (not the wagon) within `r` of a map position, or {}.
+func _traveller_at(wpos: Vector2, r := 0.9) -> Dictionary:
+	if countryside == null:
+		return {}
+	var best := {}
+	var bd := r
+	for e: Dictionary in countryside.travellers_near(wpos + Vector2(0, 0.4), r, world.minutes):
+		if str(e.kind) != "wagon" and (e.pos as Vector2).distance_to(wpos + Vector2(0, 0.4)) < bd:
+			bd = (e.pos as Vector2).distance_to(wpos + Vector2(0, 0.4))
+			best = e
+	return best
+
+
+## Walk up to a tapped traveller, following as they walk, and talk when beside them.
+func _traveller_step() -> void:
+	if talk_traveller < 0 or countryside == null:
+		return
+	var e := {}
+	for t: Dictionary in countryside.travellers_near(world.player.pos, 25.0, world.minutes):
+		if int(t.key) == talk_traveller:
+			e = t
+	if e.is_empty() or world.player_level != 0:
+		talk_traveller = -1                       # gone on their way
+		move_to = Vector2.INF
+		return
+	var d: Vector2 = (e.pos as Vector2) - world.player.pos
+	if d.length() > 1.3:
+		move_to = e.pos
+		return
+	move_to = Vector2.INF
+	player_sprite.face(d)
+	talk_traveller = -1
+	ui.show_traveller(e)
+
+
 ## Walk up to a tapped counter, stall or container and use it once beside it.
 func _reach_step() -> void:
 	if reach_to == Vector2.INF:
@@ -2856,6 +2938,10 @@ func _find_target() -> void:
 			if d < 1.5:
 				near.append([d, near.size(), {"kind": "keeper", "person": person, "label": "Talk to %s (%s)" % [person.name,
 					"official" if str(person.role) == "official" else str(person.trade)]}])
+	if countryside != null and world.player_level == 0:     # B25R1-002: a traveller on the road
+		for e: Dictionary in countryside.travellers_near(probe, 1.5, world.minutes):
+			if str(e.kind) != "wagon":
+				near.append([(e.pos as Vector2).distance_to(probe), near.size(), {"kind": "traveller", "t": e, "label": "Talk to the %s" % str(e.kind)}])
 	for pt in _player_targets(probe):                # MP-INTERACT-01: another player in reach, among the people
 		near.append([pt[0], near.size(), pt[1]])
 	for c in world.containers:
@@ -3604,6 +3690,8 @@ func _use() -> void:
 			ui.show_trade(target.npc)
 		"keeper":
 			ui.show_keeper(target.person)                  # REGION-NAV-01: a settlement's keeper at their door
+		"traveller":
+			ui.show_traveller(target.t)                    # B25R1-002: a traveller on the road
 		"stall":
 			ui.show_stall(str(target.id))
 		"front_build":
@@ -5670,6 +5758,20 @@ func _tap(screen_pos: Vector2) -> void:
 	if tapped is NPC and tapped.role != "bandit":
 		talk_to = tapped                  # walk up to them (following if they move) and talk
 		return
+	talk_traveller = -1
+	if tapped == null:
+		var kp := _keeper_at(wpos)        # B25R1-002: a settlement's keeper at their door: walk up and talk, as to a villager
+		if not kp.is_empty():
+			reach_to = Vector2(kp.spot) + Vector2(0.5, 0.5)
+			if reach_to.distance_to(world.player.pos) > 1.7:
+				move_to = reach_to
+			else:
+				_reach_step()
+			return
+		var tv := _traveller_at(wpos)     # ... and a traveller on the road (following as they walk)
+		if not tv.is_empty():
+			talk_traveller = int(tv.key)
+			return
 	# a seam, a tree or a field: walk to it and use it once (B7-011; Gather mode keeps going)
 	var res := _resource_tap(wpos)
 	if not res.is_empty() and str(res.def.match.kind) != "animal":
@@ -6887,15 +6989,17 @@ func _gather_stand(d: Dictionary, ref) -> Vector2:
 	var cell := ResourceNodes.cell_of(world, d, ref)
 	if str(d.match.kind) == "plant":
 		return Vector2(cell) + Vector2(0.5, 0.5)          # plants are walked on: pick them standing there
-	return Vector2(world.brain.beside(cell, Vector2i(floori(p.pos.x), floori(p.pos.y)), world.player_level)) + Vector2(0.5, 0.5)
+	return Vector2(world.brain.beside(cell, Vector2i(floori(p.pos.x), floori(p.pos.y)), world.player_level, true)) + Vector2(0.5, 0.5)
 
 
 func _gather_target(d: Dictionary, ref) -> Dictionary:
 	match str(d.match.kind):
-		"deposit":
+		"deposit", "boulder":                       # B25R1-002: a boulder is mined as a seam is (it had no target: a tap on one did nothing)
 			return {"kind": "deposit", "dep": ref, "label": ""}
 		"tree":
 			return {"kind": "tree", "tree": ref, "label": ""}
+		"fruit_tree":                               # ... and an apple tree's fruit is picked as Use picks it
+			return {"kind": "fruit", "tree": ref, "label": ""}
 		"field":
 			return {"kind": "field", "field": ref, "label": ""}
 		"plant":
