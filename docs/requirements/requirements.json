@@ -6822,10 +6822,15 @@
      "date": "2026-11-03",
      "change": "target_build: 25 -> 20",
      "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "tests: outside_interact_test 23/0; countryside 38/0; wildlife 61/0; refuge 59/0; settlement_folk 36/0; net_fauna 13/0; world 339/0; polish_p2 110/0; wiki passed -> outside_interact_test 23/0; countryside 38/0; wildlife 61/0; refuge 59/0; settlement_folk 36/0; net_fauna 13/0; world 339/0; polish_p2 110/0; wiki passed; outside_interact_test 23/0; countryside 38/0; wildlife 61/0; refuge 59/0; settlement_folk 36/0; net_fauna 13/0; world 339/0; polish_p2 110/0; wiki passed; sim_gate seeds 1,2 x 30 days PASS identical to baseline, leaks 0",
+     "why": "sim gate on 10491e7: seeds 1 and 2, 30 days, identical to the accepted baseline, leaks 0 (the villagers' simulation unchanged)"
     }
    ],
    "branch": "wip/b25r1-interact",
-   "tests": "outside_interact_test 23/0; countryside 38/0; wildlife 61/0; refuge 59/0; settlement_folk 36/0; net_fauna 13/0; world 339/0; polish_p2 110/0; wiki passed",
+   "tests": "outside_interact_test 23/0; countryside 38/0; wildlife 61/0; refuge 59/0; settlement_folk 36/0; net_fauna 13/0; world 339/0; polish_p2 110/0; wiki passed; outside_interact_test 23/0; countryside 38/0; wildlife 61/0; refuge 59/0; settlement_folk 36/0; net_fauna 13/0; world 339/0; polish_p2 110/0; wiki passed; sim_gate seeds 1,2 x 30 days PASS identical to baseline, leaks 0",
    "test_commit": "10491e7",
    "commits": [
     "10491e7"
