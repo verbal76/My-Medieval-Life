@@ -5,6 +5,9 @@ extends Node2D
 
 const T := 16
 const SMALL_BOULDER_TILE := 300000     # PL1-06: the extra "runtime" atlas (index 3, tile 0): the plain boulder drawn smaller, for small boulders
+const ROAD_TILES := 400000             # B25R1-Q1: atlas 4, game/assets/tiles/road_tiles.png (tools/road_tiles.py): + row * 16 + connection index
+const ROAD_STONE_ROWS := 4             # rows 0-3 stone road (paving variants), rows 4-5 dirt trail
+const ROAD_TRAIL_ROW := 4
 
 var tileset := TileSet.new()
 var sources: Array[TileSetAtlasSource] = []
@@ -44,6 +47,7 @@ func build(m: VillageMap, above_parent: Node2D, sorted_parent: Node2D = null) ->
 		columns.append(int(a.columns))
 		tileset.add_source(src)
 	_add_small_boulder(m)
+	_add_road_tiles()
 	for k in m.data.animated:
 		animated[int(k)] = m.data.animated[k].size()
 	for lay in m.data.layers:
@@ -76,6 +80,18 @@ func build(m: VillageMap, above_parent: Node2D, sorted_parent: Node2D = null) ->
 			var twin: TileMapLayer = sorted_of[layer]
 			for cell in layer.get_used_cells() + twin.get_used_cells():
 				_refront(cell)
+
+
+## B25R1-Q1: the fifth atlas, the stone road and trail tiles (ROAD_TILES), drawn by OverworldView on those road cells.
+func _add_road_tiles() -> void:
+	if sources.size() != 4:
+		return
+	var src := TileSetAtlasSource.new()
+	src.texture = load("res://assets/tiles/road_tiles.png")
+	src.texture_region_size = Vector2i(T, T)
+	sources.append(src)
+	columns.append(16)
+	tileset.add_source(src)
 
 
 ## The fourth atlas: one tile, the paid atlas's plain boulder scaled down (nearest) and stood on the

@@ -28,6 +28,7 @@ const YOU := Color8(214, 52, 36)
 const ROAD := Color8(222, 204, 164)
 const ROAD_EDGE := Color8(58, 42, 28)
 const TRAIL := Color8(170, 124, 78)
+const STONE := Color8(178, 182, 176)          # B25R1-Q1: stone road, the paving's grey
 const SITE := Color8(150, 92, 58)
 const DEST := Color8(96, 196, 232)
 const DRAG := 12.0              # pixels a press may move and still be a tap
@@ -124,24 +125,37 @@ static func build_image(w: World, p: PlayerState) -> Image:
 	return img
 
 
-## The roads in `area` as lines through their cells' centres (every other cell; the ends kept), with their kind. A road is
-## never drawn inside the village (its cells there are the village's own streets, as the world draws them: Overworld._stamp).
+## The roads in `area` as lines through their cells' centres (every other cell; the ends kept), split where the road's type
+## changes (B25R1-Q1: stone, road or trail, RegionRoads, the same types the world draws). A road is never drawn inside the
+## village (its cells there are the village's own streets, as the world draws them: Overworld._stamp).
 static func road_lines(ow: Overworld, area: Rect2i) -> Array:
 	var out := []
+	var kinds := RegionRoads.main_kinds(ow)
 	for seg in RegionRoads.segments(ow, area):
 		var cells: PackedInt32Array = seg.cells
 		var n := cells.size() / 2
-		var kind := RegionRoads.kind_of(ow, seg)
 		var pts := PackedVector2Array()
+		var kind := ""
 		for q in n:
 			var cell := Vector2i(cells[q * 2], cells[q * 2 + 1])
 			var inside := ow.village.has_point(cell)
-			if not inside and (q % 2 == 0 or q == n - 1 or pts.is_empty()):
-				pts.append(Vector2(cell) + Vector2(0.5, 0.5))
-			if (inside or q == n - 1) and pts.size() >= 2:
-				out.append(_line(pts, kind))
+			var k := str(kinds.get(cell, "trail"))
+			var at := Vector2(cell) + Vector2(0.5, 0.5)
 			if inside:
+				if pts.size() >= 2:
+					out.append(_line(pts, kind))
 				pts = PackedVector2Array()
+				continue
+			if k != kind and not pts.is_empty():
+				pts.append(at)                         # the two types meet here
+				if pts.size() >= 2:
+					out.append(_line(pts, kind))
+				pts = PackedVector2Array()
+			kind = k
+			if pts.is_empty() or q % 2 == 0 or q == n - 1:
+				pts.append(at)
+		if pts.size() >= 2:
+			out.append(_line(pts, kind))
 	return out
 
 
@@ -352,14 +366,18 @@ func _draw() -> void:
 	draw_texture_rect(tex, Rect2(to_screen(Vector2(bounds.position)), Vector2(bounds.size) * zoom), false)
 	var view := Rect2(to_tile(Vector2.ZERO), ms / zoom).grow(4.0)
 	# roads: trails under roads
-	for pass_kind in ["trail", "road"]:
+	for pass_kind in ["trail", "road", "stone"]:
 		for r in roads:
 			if r.kind != pass_kind or not (r.box as Rect2).grow(1.0).intersects(view):
 				continue
 			var pts := PackedVector2Array()
 			for c in r.pts:
 				pts.append(to_screen(c))
-			if pass_kind == "road":
+			if pass_kind == "stone":
+				var ws := clampf(zoom * 1.3, 3.0, 14.0)
+				draw_polyline(pts, ROAD_EDGE, ws + 2.0)
+				draw_polyline(pts, STONE, ws)
+			elif pass_kind == "road":
 				var wd := clampf(zoom * 1.1, 2.0, 12.0)
 				draw_polyline(pts, ROAD_EDGE, wd + 2.0)
 				draw_polyline(pts, ROAD, wd)
@@ -449,9 +467,12 @@ func _draw() -> void:
 	draw_line(Vector2(0, ly), Vector2(size.x, ly), Color8(111, 74, 44), 2.0)
 	var x := 12.0
 	var yy := ly + LEGEND_H / 2.0
+	draw_line(Vector2(x, yy), Vector2(x + 24, yy), ROAD_EDGE, 7.0)
+	draw_line(Vector2(x, yy), Vector2(x + 24, yy), STONE, 5.0)
+	x = _legend_word(font, x + 30, yy, "Stone road")
 	draw_line(Vector2(x, yy), Vector2(x + 24, yy), ROAD_EDGE, 6.0)
 	draw_line(Vector2(x, yy), Vector2(x + 24, yy), ROAD, 4.0)
-	x = _legend_word(font, x + 30, yy, "Road")
+	x = _legend_word(font, x + 30, yy, "Dirt road")
 	draw_line(Vector2(x, yy), Vector2(x + 24, yy), TRAIL, 2.0)
 	x = _legend_word(font, x + 30, yy, "Trail")
 	draw_rect(Rect2(Vector2(x, yy - 6), Vector2(12, 12)), SITE)

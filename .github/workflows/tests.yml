@@ -115,6 +115,7 @@ jobs:
           res://tests/region_geography_test.gd
           res://tests/journey_test.gd
           res://tests/region_travel_test.gd
+          res://tests/road_types_test.gd
           res://tests/journey_s3_test.gd
           res://tests/loot_recover_test.gd
           res://tests/envoy_test.gd

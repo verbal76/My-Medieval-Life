@@ -57,8 +57,8 @@ static func segments(ow: Overworld, area: Rect2i) -> Array:
 	return out
 
 
-## The cells (Vector2i -> true) of the roads joining the village's gates and the settlements to one another: the "road" kind.
-## Computed once per overworld (a pure function of the seed) and kept on it.
+## The cells of the roads joining the village's gates and the settlements to one another (Vector2i -> how many of those routes
+## pass along it, each pair of places once): the main roads. Computed once per overworld (a pure function of the seed), kept on it.
 static func main_cells(ow: Overworld) -> Dictionary:
 	if ow.has_meta("b25r1_main_roads"):
 		return ow.get_meta("b25r1_main_roads")
@@ -72,8 +72,12 @@ static func main_cells(ow: Overworld) -> Dictionary:
 		for b in range(a + 1, ends.size()):
 			if a < ow.gates.size() and b < ow.gates.size():
 				continue                          # gate to gate goes round the village: not a road between places
+			var seen := {}
 			for c in ow.route_between(ends[a], ends[b], false):
-				cells[Vector2i(c)] = true
+				var ci := Vector2i(c)
+				if not seen.has(ci):
+					seen[ci] = true
+					cells[ci] = int(cells.get(ci, 0)) + 1
 	ow.set_meta("b25r1_main_roads", cells)
 	return cells
 
@@ -90,3 +94,68 @@ static func kind_of(ow: Overworld, seg: Dictionary) -> String:
 		if main.has(Vector2i(cells[q * 2], cells[q * 2 + 1])):
 			on += 1
 	return "road" if on * 2 >= n else "trail"
+
+
+# ------------------------------------------------------------------ the road hierarchy (B25R1-Q1) ---------------
+## Owner decision B25R1-Q1 (2026-11-03): three road types, from the network's own data, on the same cells (so walking, routes
+## and saves are unchanged):
+##   stone  improved sections: a main road's approach to the village and to each settlement (within STONE_NEAR tiles of its
+##          rectangle), and its most travelled stretches (at least STONE_HEAVY of the routes between places pass along it); and
+##          each settlement's street (the middle row of each lane its doors open onto, lane_cells). The overworld has no rivers,
+##          so there is no bridge or ford to pave.
+##   road   the dirt roads between the places: the rest of main_cells.
+##   trail  every other road cell of the network: the secondary ways off into the country.
+const STONE_NEAR := 24
+const STONE_HEAVY := 14
+
+
+## Main road cell -> "stone" or "road" (cached on the overworld).
+static func main_kinds(ow: Overworld) -> Dictionary:
+	if ow.has_meta("b25r1_road_kinds"):
+		return ow.get_meta("b25r1_road_kinds")
+	var out := {}
+	var main := main_cells(ow)
+	var places: Array[Rect2i] = [ow.village.grow(STONE_NEAR)]
+	for st in ow.sites:
+		places.append((st.rect as Rect2i).grow(STONE_NEAR))
+	for c: Vector2i in main:
+		var stone := int(main[c]) >= STONE_HEAVY
+		if not stone:
+			for r in places:
+				if r.has_point(c):
+					stone = true
+					break
+		out[c] = "stone" if stone else "road"
+	ow.set_meta("b25r1_road_kinds", out)
+	return out
+
+
+## The settlements' streets: the middle row of each lane under a row of buildings, from the site's margin to margin, on open
+## ground (Vector2i -> true; cached). Walkable already (a lane is never built on); paving it changes no rule.
+static func lane_cells(ow: Overworld) -> Dictionary:
+	if ow.has_meta("b25r1_lanes"):
+		return ow.get_meta("b25r1_lanes")
+	var out := {}
+	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/settlements.json"))
+	var lay: Dictionary = data.site
+	var bh := int(ow.stamps.house.h)
+	for st in ow.sites:
+		var r: Rect2i = st.rect
+		var rows := (r.size.y - 2 * int(lay.margin)) / (bh + int(lay.lane))
+		for k in rows:
+			var y := r.position.y + int(lay.margin) + k * (bh + int(lay.lane)) + bh + int(lay.lane) / 2
+			for x in range(r.position.x + int(lay.margin), r.end.x - int(lay.margin)):
+				var c := Vector2i(x, y)
+				if not ow.site_building_at(c):
+					out[c] = true
+	ow.set_meta("b25r1_lanes", out)
+	return out
+
+
+## The type of a road cell: "stone", "road" or "trail" (a settlement's street is stone); "" for a cell that is no road.
+static func cell_kind(ow: Overworld, c: Vector2i) -> String:
+	if lane_cells(ow).has(c):
+		return "stone"
+	if not ow.is_road(c):
+		return ""
+	return str(main_kinds(ow).get(c, "trail"))

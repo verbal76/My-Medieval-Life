@@ -22,6 +22,7 @@ var _works_seen := -1                 # B14-07: Overworld.works_version last dra
 var _works_tex := {}                  # way kind ("steps_ns", "stairs_ew", ...) -> its 16 px tile (game/assets/terrain)
 var _site_sorted_parent: Node2D       # the characters' y-sorted node (the village MapView's): where a site building's front wall is drawn
 var _site_roofs := {}                 # the village's roof layer names (village.json "roof_layers")
+var _dirt_bits := {}                  # B25R1-Q1: dirt path tile -> its connected sides (overworld_tiles.json dirt_path)
 
 
 func setup(src: MapView, o: Overworld, load_radius: int) -> void:
@@ -39,6 +40,9 @@ func setup(src: MapView, o: Overworld, load_radius: int) -> void:
 	for k in o.tiles.trees:
 		pairs.append([int(k.top), int(k.bottom)])
 		tops_set[int(k.top)] = true
+	for k in (o.tiles.dirt_path as Array).size():
+		for t in o.tiles.dirt_path[k]:
+			_dirt_bits[int(t)] = k
 	canopy = CanopyFade.new()
 	add_child(canopy)
 	canopy.setup(self, pairs)
@@ -130,6 +134,28 @@ func _steps_low_side(cell: Vector2i, ew: bool) -> int:
 	return -1 if ends[0] and not ends[1] else 1   # ends[0] is the + end: a top there puts the ground at the - end
 
 
+## B25R1-Q1: the tile a road cell is drawn with, by its type (RegionRoads.cell_kind): a dirt road keeps the generated dirt path
+## tile `dirt`; a stone road or a settlement's street takes the paved tile, a trail the narrow worn one, for the same connected
+## sides (a stone cell also joins a street beside it). Drawing only: the cell, its walkability and the chunk data are unchanged.
+func road_tile(cell: Vector2i, dirt: int) -> int:
+	var kind := RegionRoads.cell_kind(overworld, cell)
+	if kind == "road" or kind == "" or sources.size() <= 4:
+		return dirt
+	var bits: int = int(_dirt_bits.get(dirt, 0)) if dirt >= 0 else 0
+	if kind == "stone":
+		var lanes := RegionRoads.lane_cells(overworld)
+		for k in 4:
+			var n: Vector2i = cell + [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][k]
+			if lanes.has(n) or (lanes.has(cell) and overworld.is_road(n)):
+				bits |= 1 << k
+		if bits == 0:
+			bits = 10                                   # alone: the east-west piece, as the dirt path's default
+		var v := Overworld.hash32(overworld.seed, cell.x, cell.y, 91) % ROAD_STONE_ROWS
+		return ROAD_TILES + v * 16 + bits
+	var tv := Overworld.hash32(overworld.seed, cell.x, cell.y, 92) % 2
+	return ROAD_TILES + (ROAD_TRAIL_ROW + tv) * 16 + (bits if bits != 0 else 10)
+
+
 func _layer(root: Node2D, z: int) -> TileMapLayer:
 	var l := TileMapLayer.new()
 	l.tile_set = tileset
@@ -150,14 +176,15 @@ func _build(cc: Vector2i) -> void:
 	var tops := _layer(root, 10)
 	var x0 := cc.x * Overworld.CHUNK
 	var y0 := cc.y * Overworld.CHUNK
+	var lanes := RegionRoads.lane_cells(overworld)
 	for y in Overworld.CHUNK:
 		for x in Overworld.CHUNK:
 			var i := y * Overworld.CHUNK + x
 			var cell := Vector2i(x0 + x, y0 + y)
 			if ch.ground[i] >= 0:
 				set_tile(ground, cell, ch.ground[i])
-			if ch.path[i] >= 0:
-				set_tile(path, cell, ch.path[i])
+			if ch.path[i] >= 0 or lanes.has(cell):
+				set_tile(path, cell, road_tile(cell, ch.path[i]))
 			if ch.deco[i] >= 0 and not overworld.rock_gone(cell) and not overworld.flower_gone(cell):    # a broken boulder or a picked flower stays gone
 				var v: int = ch.deco[i]
 				if v == int(overworld.tiles.rock) and ResourceNodes.boulder_small(cell) and sources.size() > 3:
