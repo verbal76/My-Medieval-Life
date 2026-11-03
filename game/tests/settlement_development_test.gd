@@ -67,9 +67,9 @@ func test_opening() -> void:
 	check(o.coins() == coins0, "the opening created no coin")
 	var worker_biz_ok := true
 	for h in o.hh:
-		if h.alive and h.trade != "official":
+		if h.alive and h.trade != "official" and not o.own.has(str(h.id)):       # REGION-NAV-01 Q4: a self-employed household works for itself
 			worker_biz_ok = worker_biz_ok and o.biz.has(OffMapSettlement.TRADE_BIZ[h.trade]) and o.biz[OffMapSettlement.TRADE_BIZ[h.trade]].workers.has(h.id)
-	check(worker_biz_ok, "every working household belongs to the business of its trade")
+	check(worker_biz_ok, "every working household not on its own account belongs to the business of its trade")
 
 
 func test_no_demand_no_opening() -> void:

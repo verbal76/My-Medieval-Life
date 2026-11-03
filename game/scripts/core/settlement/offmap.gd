@@ -49,7 +49,7 @@ const FLOW_COUNTS := ["coins_from_village", "coins_to_village", "road_coins_in",
 	"horses_died", "horses_sold", "horses_start", "tolls", "day_labour", "job_moves", "births", "age_deaths", "households_formed",
 	"inheritances", "orphans_fostered", "regional_coins_in", "regional_coins_out",
 	"outside_coins_in", "outside_coins_out", "migrants_in", "migrants_out", "biz_opened", "biz_closed",
-	"food_bought", "food_sold", "food_delivered", "food_unmet"]
+	"food_bought", "food_sold", "food_delivered", "food_unmet", "own_started", "own_ended"]
 ## A member of a household (REG-DEMO-01): [born, sex, partnered, unwilling]. `born` is a settlement day number (negative before the
 ## first step), so age in years is (day - born) / the calendar's year length and needs no daily update; sex 1 is female; partnered 1
 ## means the member is one of the household's couple; unwilling 1 is a person who will not marry (decided once, at birth or founding).
@@ -1263,7 +1263,7 @@ func _own_week() -> void:
 		h.coins -= cap
 		var rec := _own_record(bt, i, cap)
 		own[str(i)] = rec
-		flows.own_started = int(flows.get("own_started", 0)) + 1
+		flows.own_started += 1
 		note("%s set up on their own account as a %s." % ["A household", t])
 		break
 	for k in _own_ids():
@@ -1273,7 +1273,7 @@ func _own_week() -> void:
 			_wind_up_own(h)
 			if biz.has(str(o.type)) and bool(h.alive):
 				biz[str(o.type)].workers.append(int(k))
-			flows.own_ended = int(flows.get("own_ended", 0)) + 1
+			flows.own_ended += 1
 
 
 ## A household's own trade is wound up into the household: its working purse into its coins, its stock into its pantry.
