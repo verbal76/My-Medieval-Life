@@ -4598,11 +4598,33 @@ func show_recenter(on: bool) -> void:
 ## What to build (Menu > Build, or H): a house, or a workshop once the family owns a house (owner
 ## rule: house first, then workshops), each with what it takes; then a place for it (main
 ## begin_placement). The family's unfinished sites are listed to open.
+## B25R1-011: the Build menu's paving buttons.
+func _toggle_paving() -> void:
+	hide_all()
+	main.paving.toggle(main)
+
+
+func _pave_here() -> void:
+	hide_all()
+	main.paving.here(main)
+
+
 func show_build_menu() -> void:
 	var w: World = main.world
 	var c: Construction = w.construction
 	_open("build_menu", "Build")
 	_label("Choose what to build, then a place for it: anywhere the ground is clear and nobody else's. The manor sells or leases you the ground on the spot. Then a wooden frame goes up; bring the materials (or hire a helper: ask a villager out of work) and it stands when the last load is in.", 16)
+	var ph := HBoxContainer.new()             # B25R1-011: paving the roads outside the village with stone (scripts/paving.gd)
+	ph.add_theme_constant_override("separation", 8)
+	var pl := Label.new()
+	pl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	pl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pl.add_theme_font_size_override("font_size", 17)
+	pl.text = "Stone road: pave a dirt road or trail outside the village, %d stone a stretch, or repair damaged stone with %d (you have %d stone)" % [RoadWear.PAVE_STONE, RoadWear.REPAIR_STONE, w.player.inv.count("stone")]
+	ph.add_child(pl)
+	_button("Stop paving" if main.paving.active else "Pave roads", _toggle_paving, true, ph)
+	_button("Pave here", _pave_here, true, ph)
+	panel_body.add_child(ph)
 	for kind in Construction.STANDALONE:
 		var cost := c.cost_of(kind)
 		var no := c.may_build(kind, w.acting_ref())

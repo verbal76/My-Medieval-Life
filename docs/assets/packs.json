@@ -19,7 +19,7 @@
     "props"
    ],
    "status": "integrated",
-   "used_for": "The village map and overworld tiles (village.json atlases), deposits, the mine cart (stand-in cart art).",
+   "used_for": "The village map and overworld tiles (village.json atlases), deposits, the mine cart (stand-in cart art); B25R1-Q1: its flagstone ground (tiles 10150, 10151, 10370, 10371) paves the stone roads and settlement streets (tools/road_tiles.py, game/assets/tiles/road_tiles.png).",
    "scale": "16 px tiles, 1:1 (the world's reference)"
   },
   {
@@ -37,7 +37,7 @@
     "terrain"
    ],
    "status": "integrated",
-   "used_for": "Overworld grass/cliff wangset (overworld_tiles.json).",
+   "used_for": "Overworld grass/cliff wangset (overworld_tiles.json); its dirt pathway tiles are the dirt roads, and the shapes of the stone road and trail tiles (tools/road_tiles.py).",
    "scale": "16 px, 1:1"
   },
   {

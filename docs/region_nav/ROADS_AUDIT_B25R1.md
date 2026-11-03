@@ -30,7 +30,7 @@ roads." Audited on `wip/expansion20` at `a459186`, branch `wip/b25r1-map`.
 
 ## Findings
 
-1. **Stone roads do not exist** in the game data or the art in use. Both shipped tilesets' road wangsets offer dirt, sand and
+1. **Stone roads did not exist** (before B25R1-Q1, below) in the game data or the art in use. Both shipped tilesets' road wangsets offer dirt, sand and
    water paths only (`tools/puny_world_terrain.py`: the "pathways" edge wangset has `dirt-paths`, `sand-paths`, `water-paths`);
    the only grey cobbled art in the project is the quarry slab (`ROCK_SLAB`, used for pits and mine floors), not a road autotile.
    No design document or register entry defines a stone road. **Gap: owner decision or art needed** to add stone roads in the
@@ -52,6 +52,55 @@ roads." Audited on `wip/expansion20` at `a459186`, branch `wip/b25r1-map`.
    simply crosses the village's own ground, which is walkable.
 5. **Streaming continuity:** roads are rasterised per chunk from global segments, so they meet across chunk seams; nothing in
    this revision changes chunk generation, and the map's lines come from the same segments.
+
+## Owner decision B25R1-Q1 (2026-11-03) and what was built
+
+"Option 2, with a realistic road hierarchy. Add stone roads using suitable existing stone artwork where possible ... three
+recognizable road types: 1. Stone roads ... 2. Dirt roads ... 3. Dirt trails ... Do not convert every intersettlement road into
+stone. Reuse the existing road network, navigation, and movement systems." Built on `wip/b25r1-roads`:
+
+- **Art** (`tools/road_tiles.py`, run by `tools/import_game_assets.py`; `game/assets/tiles/road_tiles.png`, provenance recorded):
+  the free tileset's 16 dirt path tiles (the shapes the world already draws, grass edges included) with their dirt replaced by
+  the paid Puny World tileset's flagstone ground (tiles 10150, 10151, 10370, 10371) and the rim darkened into a kerb: 4 paving
+  variants; and the same tiles narrowed by one ring with tufts of grass through the dirt for trails: 2 variants. No pack's
+  outdoor road art exists (the stone families are floor-and-wall blocks with wall rims, which would read as building blocks),
+  so the stone is set into the road's own shapes.
+- **Placement** (`RegionRoads.main_kinds`, `lane_cells`, `cell_kind`; pure functions of the seed, cached): **stone** on main
+  road cells within 24 tiles of the village or a settlement (the approaches) and on the most travelled stretches (14 or more of
+  the 30 routes between places pass along them), plus each settlement's street (the middle row of each lane its doors open
+  onto); **dirt road** on the rest of the main roads; **trail** on every other road cell. Seed 1: 1,213 of 6,297 main road
+  cells stone (19%), 504 street cells. The overworld has no rivers, so there are no bridges or fords to pave.
+- **Drawing only:** `OverworldView.road_tile` chooses the tile for the same cells (atlas 4 of `MapView`); chunk data,
+  `GEN_VERSION`, walkability, routes and saves are unchanged. The village's own streets are left as they are.
+- **Map:** three line styles and a legend (Stone road, Dirt road, Trail), split cell by cell by the same `cell_kind`.
+- **Checked:** `game/tests/road_types_test.gd` (all three present; stone not most of the main roads; every settlement
+  approach paved; every sampled cell of every type open road with the world's type; each type drawn with its own tiles in the
+  view and in a built chunk; the map's types match the world's; one journey walks over all three). Screenshots
+  (`game/tests/road_types_shot.gd`): a settlement street, stone giving way to dirt road, a dirt road, a trail; the map at
+  1280 x 720 and 2400 x 1080.
+
+## B25R1-011: wear, fading, overgrowth, damage and paving (owner 2026-11-03)
+
+"The heavier a road or path is used, it should start to upgrade by percentage ... Villages can upgrade their own roads by
+paying a worker and supplying stone"; refined: "Main dirt roads fade very slowly, dirt paths that come from usage fade
+faster ... Stone roads can get damaged and cause problems for carts and need materials to fix, but damage is slow".
+`game/scripts/core/road_wear.gd` (numbers: `docs/DECISIONS.md` 2026-11-03, agent decisions):
+
+- Levels grass, trail, dirt road, stone road. Footfall of the player and of villagers and travellers walking their paths
+  outside the village raises a cell 5% a step (10% with a cart), a level per 100% above its generated level (at most dirt
+  road); a usage path fades 12% a day unwalked, never below its generated level. The generated network never goes: unwalked
+  12 days it is drawn grown over (tile rows 6-7) and stays road, routed and on the map; a step clears it; no upkeep cost.
+- Stone: damage from traffic, 0.05% a person's step and 12 times that a cart's passage (`balance.json` `road_wear`), and
+  0.25% a day from time alone; worn at 40% (row 8), broken at 75% (row 9); a cart is slowed
+  to 85% and 60% (`Carts.pull_speed_for`, `World._walk`); walking is not. Repair: 1 stone.
+- Paving: the player (Build > Pave roads, then a tap on a road cell; or Pave here) with 2 stone a cell; the village by a
+  manor paving job (a `mend` job with `pave` cells: the yard's stone, the mending wage from the treasury), damaged stone first,
+  then the busiest dirt road within 36 tiles of the village. Stone used is counted `used_stone`.
+- Same cells and walkability; routes: a straight leg over worn or generated way costs as road (`RegionTravel._line_cost`).
+  The village map's own streets do not wear. Stored sparsely (`Overworld.road_state`, saved as "roads", pruned at dawn),
+  evaluated lazily by the game day: deterministic.
+- Checked: `game/tests/road_wear_test.gd`; screenshots `game/tests/road_wear_shot.gd` (a worn path and a paved stretch; 30
+  days on: the path faded, the dirt road grown over; 80 days on: the stone broken).
 
 ## Not changed
 

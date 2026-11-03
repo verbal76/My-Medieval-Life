@@ -77,6 +77,9 @@ static func note_position(w: World, p: PlayerState) -> String:
 				var k := cc + Vector2i(dx, dy)
 				if not p.explored.has(k) and not ow.chunk_in_village(k):
 					p.explored[k] = summarize(ow, k)
+	if cell != p.wear_cell:
+		p.wear_cell = cell
+		RoadWear.foot(ow, cell, not w.carts.pulled_by(w.player_ref(p)).is_empty())     # B25R1-011: the player's footfall
 	for nm in Landmarks.note(w, p):                  # B25R1-003: the smaller places, found on foot (an icon on the map)
 		w.stat("landmark_found")
 		if p == w.player:

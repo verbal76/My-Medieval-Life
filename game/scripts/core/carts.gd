@@ -150,6 +150,9 @@ static func pull_speed() -> float:
 func pull_speed_for(c: Dictionary) -> float:
 	if kind_of(c) == "minecart" and w.mine_works != null and w.mine_works.track_at(World.level_of(c), Vector2i((c.pos as Vector2).floor())):
 		return float(MineWorks.cfg().minecart.track_speed)
+	var cell := Vector2i((c.pos as Vector2).floor())
+	if World.level_of(c) == 0 and w.map.overworld != null and not w.map.in_village(cell):
+		return pull_speed() * RoadWear.cart_factor(w.map.overworld, cell)     # B25R1-011: damaged stone hampers a cart
 	return pull_speed()
 
 

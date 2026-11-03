@@ -22,6 +22,7 @@ var explored := {}            # REGION-NAV-01 (Atlas): overworld chunk -> its gr
 var atlas_chunk := Vector2i(1 << 30, 1 << 30)   # the chunk they last stood in (not saved)
 var landmarks := {}           # B25R1-003 (Landmarks): place id -> {kind, name, x, y, day}, the smaller places this player has found
 var landmark_cell := Vector2i(1 << 30, 1 << 30)  # the cell Landmarks last looked round (not saved)
+var wear_cell := Vector2i(1 << 30, 1 << 30)      # B25R1-011: the cell RoadWear last counted this player's step on (not saved)
 var travel := {}              # B25R1-006 (RegionTravel): {x, y, active}, the destination chosen on the Region map; {} none
 var inv := Inventory.new():
 	set(v):
