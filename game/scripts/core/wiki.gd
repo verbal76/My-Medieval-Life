@@ -778,6 +778,12 @@ func _systems() -> void:
 		p("Prices move with what people know and what is scarce: a seller with no takers lowers the ask, a buyer who cannot find a seller raises the bid. Word of prices spreads from person to person, and old news counts for less. A villager who agrees to deliver goods asks a little more when goods have been lost on that road lately, robbed by bandits or lost with a courier; with nothing lost, nothing is added."),
 		p("Talking with a villager shows you the offers they have open, and each price you learn in person goes into your journal's Messages, with the day and the place."),
 		links(["sys:trading", "sys:tool_rental", "sys:repair", "sys:journal_map"])])
+	# DEMO-01 (owner 2026-11-03): the demo build's 120 minutes a world (the same page in both builds)
+	sys.call("demo", "The demo: 120 minutes a world", [
+		p("The demo of My Medieval Life is the whole game, with one limit: each world you start has 120 minutes of play. The clock counts only while your world is running: never while it is paused, on a menu or the title screen, while loading, or while the game is in the background. The time left shows under the date, and you are told when 30, 10, 5 and 1 minutes remain."),
+		p("When the time is up, the world stops and is saved, and it is kept: it cannot be played on in the demo, but the full game continues it exactly where you left off. You can start as many new worlds in the demo as you like, each with its own 120 minutes. On a phone the demo and the full game are separate apps: export the world in the demo (Settings, Saves) and import it in the full game."),
+		p("The main menu and the demo's end screen have a button to the game's page on Steam."),
+		links(["sys:journal_map"])])
 	sys.call("tool_rental", "Villagers renting tools", [
 		p("A worker short of the tool its trade needs, an axe or a pickaxe, may rent a spare from someone willing to lend it, instead of buying one: it leaves a deposit, the tool's value, and pays a fee for the wear its use takes, for a few days, then gives the tool back and has the deposit returned. A tool lost or broken while rented keeps its deposit with the owner."),
 		links(["sys:market", "sys:repair", "job:woodcutter", "job:miner"])])

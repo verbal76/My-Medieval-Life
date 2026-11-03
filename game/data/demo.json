@@ -1,0 +1,7 @@
+{
+  "format": "mml-demo/1",
+  "_note": "DEMO-01 (owner 2026-11-03): the demo build's per-world allowance of active play (Demo). allowance_seconds: 120 minutes; warn_at: seconds remaining at which a warning shows, once per world; max_step: the most one frame may count (a frame after a suspension or a clock jump counts no more than this). Read only in the demo build (the export's 'demo' feature); the full game ignores it.",
+  "allowance_seconds": 7200,
+  "warn_at": [1800, 600, 300, 60],
+  "max_step": 0.25
+}

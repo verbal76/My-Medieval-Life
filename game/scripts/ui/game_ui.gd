@@ -40,6 +40,7 @@ var coin_delta_t := 0.0
 var prompt_first := ""             # the prompt's first line last shown (a new target pulses it once)
 var clock_label: Label         # the time of day ("07:00")
 var date_label: Label          # the season, year and day ("Spring, Year 1  Day 3")
+var demo_label: Label          # DEMO-01: "Demo time left: 1h 42m" under the date (the demo build only)
 var prompt_label: Label
 var prompt_box: PanelContainer
 var prompt_icon: TextureRect
@@ -582,6 +583,11 @@ func _build_hud() -> void:
 	date_label = Label.new()
 	date_label.add_theme_font_size_override("font_size", 13)
 	v.add_child(date_label)
+	demo_label = Label.new()                    # DEMO-01: the demo's time left in this world, small, under the date (demo build only)
+	demo_label.add_theme_font_size_override("font_size", 12)
+	demo_label.add_theme_color_override("font_color", Color(1.0, 0.86, 0.55))
+	demo_label.visible = Demo.is_demo()
+	v.add_child(demo_label)
 	wanted_hud = WantedHud.new()
 	wanted_hud.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	hud.add_child(wanted_hud)
@@ -1085,6 +1091,9 @@ func update_hud() -> void:
 	var cut := when.rfind(" ")
 	date_label.text = when.left(cut).strip_edges()
 	clock_label.text = when.substr(cut + 1)
+	demo_label.visible = Demo.is_demo()
+	if demo_label.visible:
+		demo_label.text = "Demo time left: " + Demo.text(Demo.remaining(main.save_meta))
 	# the prompt and toast follow their own size (a container's minimum size settles a frame late)
 	if prompt_box.visible:
 		_place_bottom(prompt_box, _prompt_bottom())
@@ -1702,9 +1711,12 @@ func _item_row(id: String, count: int, text: String, btn: String, cb: Callable, 
 
 # ---------------------------------------------------------------- title / pause / death ------
 func show_title(can_continue: bool) -> void:
-	_open("title", "My Medieval Life  (working title: The Well)", false)
+	_open("title", "My Medieval Life  (working title: The Well)" + ("  Demo" if Demo.is_demo() else ""), false)
 	_label("A living village of a hundred people who work, trade, eat and sleep whether or not you are watching. You are one of them.")
-	_button("Continue", func(): main.continue_game(), can_continue)
+	if Demo.is_demo():
+		_label("Demo: each world you start has 120 minutes of play, and continues in the full game.", 14)
+	var spent: bool = can_continue and main.demo_save_expired()      # DEMO-01: a world whose demo time is used up, kept and marked
+	_button("Continue (demo time used: continue it in the full game)" if spent else "Continue", func(): main.continue_game(), can_continue)
 	_button("New game", func(): show_creation({}))
 	_button("Join a game", func(): NetWindow.show_join(self))      # Build 21: a friend's world on this network
 	_button("Settings", func(): show_settings(func(): show_title(main.can_continue()), "audio"))
@@ -1713,8 +1725,32 @@ func show_title(can_continue: bool) -> void:
 	_button("Controls", func(): show_controls(func(): show_title(main.can_continue())))
 	_button("Encyclopedia", func(): show_wiki(func(): show_title(main.can_continue())))
 	_button("Credits", show_credits)
+	_steam_button()                       # DEMO-01: the Steam promotion, in the full game and the demo alike
 	_controls_list(scheme)
 	_scroll_to_top()                      # FR-05: the controls list must not scroll the menu out of view
+
+
+## DEMO-01: the Steam promotional button and its note (SteamPromo: one configured destination; the label says "Coming Soon on Steam"
+## until the game's store page is set). A failure to open says why; nothing else changes (the world, the save, the demo clock).
+func _steam_button() -> void:
+	var b := _button(SteamPromo.label(), func():
+		var why := SteamPromo.open()
+		if why != "":
+			message(why, 8.0))
+	b.name = "SteamButton"
+	if SteamPromo.note() != "":
+		_label(SteamPromo.note(), 13)
+
+
+## DEMO-01: the demo's end for this world: saved and kept, continued in the full game; start a new world, the main menu, or exit.
+func show_demo_expired() -> void:
+	_open("demo_expired", "Demo time is up for this world", false)
+	_label(Demo.EXPIRED_NOTE)
+	_button("Start a new world", func(): show_creation({}))
+	_button("Main menu", func(): show_title(main.can_continue()))
+	if not main.settings.phone:
+		_button("Exit", func(): main.get_tree().quit())
+	_steam_button()
 
 
 ## Show a window from its top once it has laid out (its focus and growing lists can leave it scrolled down).

@@ -17,7 +17,8 @@
 #
 # SIM-GATE-01 (owner, 2026-10-24, permanent; amended the same day): before anything is packaged, the "sim-gate" job runs the
 # village simulation suite with the flight recorder on (tools/sim_suite.py) on this same commit, writes the analysis
-# workbook with the game's own exporter and checks it. The "build" job needs it: a failed gate packages nothing. The gate's
+# workbook with the game's own exporter and checks it. The "release" job needs it: a failed gate publishes nothing (the six
+# package jobs build in parallel with it; DEMO-01). The gate's
 # results (workbook, summary, gate.json, logs, analyses) are uploaded as the workflow artifact "sim-gate" whether it passes
 # or fails; the workbook is an internal CI artifact, never attached to the release; the release notes carry a short
 # summary with the gate's run id and the recorder schema.
@@ -117,12 +118,24 @@ jobs:
           if-no-files-found: warn
           path: out/sim-gate/*/rec/
 
-  build:
-    needs: sim-gate
+  # DEMO-01 (owner 2026-11-03): six packages from this one commit, built in parallel: the full game and the demo (the same source
+  # exported with the "demo" feature: game/export_presets.cfg "... Demo" presets), each for Android, Windows and Linux. No package
+  # waits for another; the release job collects them, checks them and makes the private draft.
+  package:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     # a public release waits here for the owner's approval in the protected environment
     environment: ${{ inputs.visibility == 'public' && 'public-release' || 'private-testing' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [android, windows, linux]
+        edition: [full, demo]
+    name: package (${{ matrix.edition }}, ${{ matrix.target }})
+    env:
+      BUILD_N: ${{ inputs.build_number || github.run_number }}
+      SUFFIX: ${{ matrix.edition == 'demo' && '-Demo' || '' }}
+      PRESET_SUFFIX: ${{ matrix.edition == 'demo' && ' Demo' || '' }}
     steps:
       - name: Check the request
         env:
@@ -133,10 +146,12 @@ jobs:
             echo "::error::A public release needs confirm_public set to 'publish publicly' (and the owner's approval)."
             exit 1
           fi
+          case "$BUILD_N" in ''|*[!0-9]*) echo "::error::build_number must be digits only"; exit 1 ;; esac
 
       - uses: actions/checkout@v4
 
       - uses: actions/setup-java@v4
+        if: matrix.target == 'android'
         with:
           distribution: temurin
           java-version: "17"
@@ -166,6 +181,7 @@ jobs:
         run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
 
       - name: Point Godot at the Android SDK and the JDK, and check the release-signing secrets are present
+        if: matrix.target == 'android'
         env:
           KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEYSTORE_PASSWORD }}
@@ -203,29 +219,30 @@ jobs:
       - name: Fetch the music as WAV (Windows and Linux carry it; Android carries Ogg)
         # MUSIC-18: the owner's three songs are release assets of this repository (173 MB, never committed), and the two
         # Minifantasy songs come from the zip in the owner's Minifantasy release (the pack is never committed). Each is checked
-        # against the size and sha256 in game/data/music.json, and saved with an import file that keeps plain PCM. The
-        # Android preset excludes the WAVs and the PC presets exclude the Ogg copies (game/export_presets.cfg).
+        # against the size and sha256 in game/data/music.json. The Android presets exclude the WAVs and the PC presets the Ogg copies.
+        if: matrix.target != 'android'
         run: python3 tools/fetch_music.py
 
-      - name: Import the project and run the tests
+      - name: Import the project and run the tests (once, in the full Linux cell)
         run: |
           godot --headless --path game --import
-          godot --headless --path game --script res://tests/run_tests.gd
-          godot --headless --path game --script res://tests/start_test.gd
+          if [ "${{ matrix.target }}-${{ matrix.edition }}" = "linux-full" ]; then
+            godot --headless --path game --script res://tests/run_tests.gd
+            godot --headless --path game --script res://tests/start_test.gd
+            godot --headless --path game --script res://tests/demo_test.gd
+          fi
 
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: Install the icon check's one dependency (Pillow)
+        if: matrix.target == 'windows'
         run: python3 -m pip install pillow==10.4.0
 
       - name: Stamp the build number into the versions
-        env:
-          BUILD_N: ${{ inputs.build_number || github.run_number }}
         run: |
           n="$BUILD_N"
-          case "$n" in ''|*[!0-9]*) echo "::error::build_number must be digits only"; exit 1 ;; esac
           # Android needs a rising version code to update an install; Windows shows the file version
           sed -i -E "s/^package\/signed=.*/package\/signed=false/; s/^version\/code=.*/version\/code=${n}/; s/^version\/name=.*/version\/name=\"0.1.${n}-test\"/; s/^application\/file_version=.*/application\/file_version=\"0.1.${n}.0\"/; s/^application\/product_version=.*/application\/product_version=\"0.1.${n}.0\"/" game/export_presets.cfg
           grep -E '^(package/signed|version/code|version/name|application/file_version|application/product_version)=' game/export_presets.cfg
@@ -233,34 +250,32 @@ jobs:
           sed -i "/^\[application\]/a config/version=\"0.1.${n}-test\"" game/project.godot
           grep -E '^config/version=' game/project.godot
 
-      - name: Export Android, Windows and Linux
+      - name: Export Android (${{ matrix.edition }})
+        if: matrix.target == 'android'
         env:
-          BUILD_N: ${{ inputs.build_number || github.run_number }}
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}
         run: |
-          mkdir -p out/pc/windows out/pc/linux release
-          godot --headless --path game --export-debug "Android" ../out/mymedievallife-unsigned.apk
+          mkdir -p out pkg
+          godot --headless --path game --export-debug "Android${PRESET_SUFFIX}" ../out/unsigned.apk
           # SIM-GATE-01 amendment: the APK carries no workbook or desktop export code (export_presets.cfg exclude_filter)
-          if unzip -l out/mymedievallife-unsigned.apk | grep -E "recorder_export|sim_workbook"; then
+          if unzip -l out/unsigned.apk | grep -E "recorder_export|sim_workbook"; then
             echo "::error::the Android package contains the desktop recording export (scripts/recorder_export or data/sim_workbook.json)"
             exit 1
           fi
-          # sign with the permanent release identity (the two passwords are passed separately, never assumed equal)
           tools_dir="$(ls -d "$ANDROID_SDK_ROOT"/build-tools/*/ | sort -V | tail -1)"
           # 16 KB page alignment for native libraries (Android 15 devices); older build-tools know only -p (4 KB)
-          "${tools_dir}zipalign" -f -P 16 4 out/mymedievallife-unsigned.apk out/mymedievallife-aligned.apk \
-            || "${tools_dir}zipalign" -f -p 4 out/mymedievallife-unsigned.apk out/mymedievallife-aligned.apk
+          "${tools_dir}zipalign" -f -P 16 4 out/unsigned.apk out/aligned.apk || "${tools_dir}zipalign" -f -p 4 out/unsigned.apk out/aligned.apk
+          apk="pkg/MyMedievalLife-B${BUILD_N}${SUFFIX}-Android.apk"
           if ! "${tools_dir}apksigner" sign --ks "$RUNNER_TEMP/android-release.keystore" \
                --ks-pass env:KEYSTORE_PASSWORD --ks-key-alias "$KEY_ALIAS" --key-pass env:KEY_PASSWORD \
-               --out out/mymedievallife-dev.apk out/mymedievallife-aligned.apk > out/apksigner-sign.log 2>&1; then
+               --out "$apk" out/aligned.apk > out/apksigner-sign.log 2>&1; then
             # the log is kept on the runner only and never printed (no credential can reach the job log)
-            echo "::error::apksigner could not sign the APK with the ANDROID_RELEASE_* identity (wrong keystore password, alias or key password, or an unreadable keystore). No fallback key is used: the build stops."
+            echo "::error::apksigner could not sign the APK with the ANDROID_RELEASE_* identity. No fallback key is used: the build stops."
             exit 1
           fi
-          "${tools_dir}apksigner" verify --verbose --print-certs out/mymedievallife-dev.apk > out/apk-signature.txt
-          # the certificate lines' labels differ between apksigner versions ("Signer #1 ...", "Signer (minSdkVersion=...) ...")
+          "${tools_dir}apksigner" verify --verbose --print-certs "$apk" > out/apk-signature.txt
           grep -E "^Verifies|Verified using|certificate (DN|SHA-256)|Number of signers" out/apk-signature.txt
           digests="$(sed -n 's/^.*certificate SHA-256 digest: *//p' out/apk-signature.txt | sort -u)"
           fingerprint="$(printf '%s' "$digests" | tr 'a-f' 'A-F' | sed 's/../&:/g; s/:$//')"
@@ -268,41 +283,123 @@ jobs:
             echo "::error::the signed APK did not verify, or apksigner printed no single certificate SHA-256 (apksigner verify)"
             exit 1
           fi
-          echo "APK_CERT_SHA256=${fingerprint}" >> "$GITHUB_ENV"
-          echo "Release certificate SHA-256: ${fingerprint}"
-          # Build 21 (LAN play): the APK's manifest must ask for the network permissions (granted at install, no prompt)
-          aapt="$(ls -d "$ANDROID_SDK_ROOT"/build-tools/*/ | sort -V | tail -1)aapt"
-          "$aapt" dump badging out/mymedievallife-dev.apk | grep -E "^package:" | tee out/apk-package.txt
-          "$aapt" dump permissions out/mymedievallife-dev.apk | tee out/apk-permissions.txt
+          aapt="${tools_dir}aapt"
+          "$aapt" dump badging "$apk" | grep -E "^package:" | tee out/apk-package.txt
+          # the full game keeps the owner's package id; the demo has its own, so both install side by side (DEMO-01)
+          want="com.hotatticgames.mymedievallife.dev"
+          [ "${{ matrix.edition }}" = "demo" ] && want="com.hotatticgames.mymedievallife.dev.demo"
+          grep -q "name='${want}'" out/apk-package.txt || { echo "::error::the APK's package id is not ${want}"; exit 1; }
+          "$aapt" dump permissions "$apk" | tee out/apk-permissions.txt
           for perm in INTERNET ACCESS_NETWORK_STATE ACCESS_WIFI_STATE CHANGE_WIFI_MULTICAST_STATE; do
             if ! grep -q "android.permission.${perm}'\?\$" out/apk-permissions.txt; then
               echo "::error::the APK's manifest lacks android.permission.${perm} (game/export_presets.cfg)"
               exit 1
             fi
           done
-          godot --headless --path game --export-release "Windows Desktop" ../out/pc/windows/MyMedievalLife.exe
-          # the .exe must carry the game's icon (Godot 4.7 embeds application/icon itself: no rcedit/Wine)
-          python3 tools/check_exe_icon.py out/pc/windows/MyMedievalLife.exe
-          godot --headless --path game --export-release "Linux" ../out/pc/linux/MyMedievalLife.x86_64
-          n="$BUILD_N"
-          cp out/mymedievallife-dev.apk "release/MyMedievalLife-build${n}-android.apk"
-          (cd out/pc/windows && zip -q -9 "$GITHUB_WORKSPACE/release/MyMedievalLife-build${n}-windows-x86_64.zip" MyMedievalLife.exe)
-          (cd out/pc/linux && zip -q -9 "$GITHUB_WORKSPACE/release/MyMedievalLife-build${n}-linux-x86_64.zip" MyMedievalLife.x86_64)
-          ls -la release
-          { echo "Android signing certificate of MyMedievalLife-build${n}-android.apk (apksigner verify --print-certs)"
+          { echo "Android signing certificate of $(basename "$apk") (apksigner verify --print-certs)"
             echo "SHA-256 fingerprint: ${fingerprint}"
             cat out/apk-package.txt
-            grep -E "^Verifies|Verified using|certificate (DN|SHA-256)|Number of signers" out/apk-signature.txt; } > "release/MyMedievalLife-build${n}-android-signature.txt"
-          sha256sum release/* > release/SHA256SUMS.txt
-          { if [ "${{ inputs.visibility }}" != "public" ]; then echo "**Private testing build:** a draft release, visible only to the repository's collaborators. Not for distribution."; echo; fi
-            echo "Build ${n}, from \`${{ github.ref_name }}\` at commit ${{ github.sha }}. Linux, Windows and Android are built from that one commit."
+            grep -E "^Verifies|Verified using|certificate (DN|SHA-256)|Number of signers" out/apk-signature.txt; } > "${apk%.apk}-signature.txt"
+
+      - name: Export Windows (${{ matrix.edition }})
+        if: matrix.target == 'windows'
+        run: |
+          mkdir -p out/win pkg
+          exe="MyMedievalLife${SUFFIX/-/}.exe"
+          godot --headless --path game --export-release "Windows Desktop${PRESET_SUFFIX}" "../out/win/${exe}"
+          # the .exe must carry the game's icon (Godot 4.7 embeds application/icon itself: no rcedit/Wine)
+          python3 tools/check_exe_icon.py "out/win/${exe}"
+          (cd out/win && zip -q -9 "$GITHUB_WORKSPACE/pkg/MyMedievalLife-B${BUILD_N}${SUFFIX}-Windows.zip" "${exe}")
+
+      - name: Export Linux (${{ matrix.edition }})
+        if: matrix.target == 'linux'
+        run: |
+          mkdir -p out/lin pkg
+          bin="MyMedievalLife${SUFFIX/-/}.x86_64"
+          godot --headless --path game --export-release "Linux${PRESET_SUFFIX}" "../out/lin/${bin}"
+          # launch smoke check: the exported game starts headless and quits (DEMO-01: export and launch checks)
+          timeout 120 "out/lin/${bin}" --headless --quit-after 300 > out/launch.log 2>&1 || { echo "::error::the Linux ${{ matrix.edition }} build did not start and quit cleanly"; tail -20 out/launch.log; exit 1; }
+          if grep -q "SCRIPT ERROR" out/launch.log; then echo "::error::script errors when the Linux ${{ matrix.edition }} build started"; grep -m5 "SCRIPT ERROR" out/launch.log; exit 1; fi
+          (cd out/lin && zip -q -9 "$GITHUB_WORKSPACE/pkg/MyMedievalLife-B${BUILD_N}${SUFFIX}-Linux.zip" "${bin}")
+
+      - name: Remove the signing key from the runner
+        if: always() && matrix.target == 'android'
+        run: rm -f "$RUNNER_TEMP/android-release.keystore" "$HOME/.config/godot/editor_settings-4.7.tres"
+
+      - name: Keep the package
+        uses: actions/upload-artifact@v4
+        with:
+          name: pkg-${{ matrix.edition }}-${{ matrix.target }}
+          path: pkg/*
+          if-no-files-found: error
+          retention-days: 30
+
+  # Launch smoke check of the two Windows packages on Windows (the Linux packages are launched in their own package jobs).
+  smoke-windows:
+    needs: package
+    runs-on: windows-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        edition: [full, demo]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: pkg-${{ matrix.edition }}-windows
+          path: pkg
+      - name: Unzip, start headless and quit
+        shell: pwsh
+        run: |
+          $zip = Get-ChildItem pkg -Filter *.zip | Select-Object -First 1
+          Expand-Archive $zip.FullName -DestinationPath run
+          $exe = Get-ChildItem run -Filter *.exe | Select-Object -First 1
+          $p = Start-Process -FilePath $exe.FullName -ArgumentList "--headless","--quit-after","300" -PassThru -Wait -RedirectStandardOutput out.log -RedirectStandardError err.log
+          Get-Content out.log, err.log -ErrorAction SilentlyContinue | Select-Object -Last 20
+          if ($p.ExitCode -ne 0) { Write-Error "the Windows ${{ matrix.edition }} build exited with $($p.ExitCode)"; exit 1 }
+          if (Select-String -Path out.log, err.log -Pattern "SCRIPT ERROR" -Quiet) { Write-Error "script errors when the Windows ${{ matrix.edition }} build started"; exit 1 }
+
+  release:
+    needs: [sim-gate, package, smoke-windows]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: ${{ inputs.visibility == 'public' && 'public-release' || 'private-testing' }}
+    env:
+      BUILD_N: ${{ inputs.build_number || github.run_number }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Collect the six packages
+        uses: actions/download-artifact@v4
+        with:
+          pattern: pkg-*
+          path: release
+          merge-multiple: true
+
+      - name: Check all six are here, and write the checksums and the notes
+        run: |
+          n="$BUILD_N"
+          for f in "MyMedievalLife-B${n}-Android.apk" "MyMedievalLife-B${n}-Windows.zip" "MyMedievalLife-B${n}-Linux.zip" \
+                   "MyMedievalLife-B${n}-Demo-Android.apk" "MyMedievalLife-B${n}-Demo-Windows.zip" "MyMedievalLife-B${n}-Demo-Linux.zip"; do
+            [ -s "release/$f" ] || { echo "::error::missing package: $f (a build with fewer than six packages is not complete)"; exit 1; }
+          done
+          (cd release && sha256sum * > SHA256SUMS.txt)
+          (cd release && for f in *.apk *.zip; do printf '%s\t%s bytes\n' "$f" "$(stat -c %s "$f")"; done > SIZES.txt)
+          cat release/SHA256SUMS.txt release/SIZES.txt
+          fp="$(sed -n 's/^SHA-256 fingerprint: //p' "release/MyMedievalLife-B${n}-Android-signature.txt")"
+          { if [ "${{ inputs.visibility }}" != "public" ]; then echo "**Private testing build:** a draft release, visible only to the repository's collaborators. Not for distribution; not uploaded to Steam."; echo; fi
+            echo "Build ${n}, from \`${{ github.ref_name }}\` at commit ${{ github.sha }}. All six packages are built from that one commit."
             echo
-            echo "- **Android:** \`MyMedievalLife-build${n}-android.apk\`, signed with the permanent release key (certificate SHA-256 \`${fingerprint}\`; details in \`MyMedievalLife-build${n}-android-signature.txt\`). Later builds signed with this key install over it and keep the save. Builds signed with earlier keys cannot be updated by it: in the earlier build export your save (Settings > Saves) to a folder outside the app, check the file is there, uninstall the earlier build, install this one (allow installs from unknown sources) and import the save."
-            echo "- **Windows:** unzip and run \`MyMedievalLife.exe\`"
-            echo "- **Linux:** unzip and run \`MyMedievalLife.x86_64\`"
-            echo "- \`SHA256SUMS.txt\` lists each file's checksum."
+            echo "**Full game**"
+            echo "- Android: \`MyMedievalLife-B${n}-Android.apk\`, signed with the permanent release key (certificate SHA-256 \`${fp}\`). Later builds signed with this key install over it and keep the save."
+            echo "- Windows: unzip and run \`MyMedievalLife.exe\`. Linux: unzip and run \`MyMedievalLife.x86_64\`."
             echo
-            # the build's own tester notes (what is new, known limitations) when they exist (owner release condition 5)
+            echo "**Demo** (120 minutes of play per world; a demo world continues in the full game)"
+            echo "- Android: \`MyMedievalLife-B${n}-Demo-Android.apk\` (its own app, beside the full game; move a world across with Settings > Saves, Export in the demo and Import in the full game)."
+            echo "- Windows: \`MyMedievalLife-B${n}-Demo-Windows.zip\`. Linux: \`MyMedievalLife-B${n}-Demo-Linux.zip\`."
+            echo
+            echo "\`SHA256SUMS.txt\` lists each file's checksum, \`SIZES.txt\` its size."
+            echo
             if [ -f "docs/release/BUILD_${n}_TESTER_NOTES.md" ]; then cat "docs/release/BUILD_${n}_TESTER_NOTES.md"; echo; fi
             cat docs/release/TESTING_CHECKLIST.md; } > notes.md
 
@@ -325,10 +422,6 @@ jobs:
                   os.environ["GITHUB_SERVER_URL"], os.environ["GITHUB_REPOSITORY"], os.environ["GITHUB_RUN_ID"], g["schema"]))
           PY
 
-      - name: Remove the signing key from the runner
-        if: always()
-        run: rm -f "$RUNNER_TEMP/android-release.keystore" "$HOME/.config/godot/editor_settings-4.7.tres"
-
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ inputs.build_number || github.run_number }}
@@ -339,23 +432,23 @@ jobs:
           body_path: notes.md
           files: release/*
 
-      # HAG-MEM-02 Part 3: a job summary on every outcome. Reporting only; it changes nothing about packaging, signing or
-      # publishing. PACKAGED is not RELEASED: a private draft is visible to collaborators only, and nothing here uploads to Steam.
+      # HAG-MEM-02 Part 3: a job summary on every outcome. Reporting only. PACKAGED is not RELEASED: a private draft is visible to
+      # collaborators only, and nothing here uploads to Steam.
       - name: Report (job summary)
         if: always()
         env:
           JOB_STATUS: ${{ job.status }}
           GATE_RESULT: ${{ needs.sim-gate.result }}
+          PACKAGE_RESULT: ${{ needs.package.result }}
           VISIBILITY: ${{ inputs.visibility }}
-          BUILD_NUMBER: ${{ inputs.build_number || github.run_number }}
         run: |
           if [ "$JOB_STATUS" = "success" ]; then
             if [ "$VISIBILITY" = "public" ]; then outcome="PACKAGED and published on GitHub Releases (not uploaded to Steam)"; else outcome="PACKAGED as a private draft release (not RELEASED publicly; not uploaded to Steam)"; fi
           else
-            outcome="FAILED ($JOB_STATUS): no complete three-platform package from this run"
+            outcome="FAILED ($JOB_STATUS): no complete six-package release from this run"
           fi
           {
-            echo "## Build and release: build $BUILD_NUMBER"
+            echo "## Build and release: build $BUILD_N"
             echo
             echo "| | |"
             echo "|---|---|"
@@ -366,7 +459,8 @@ jobs:
             echo "| Trigger | $GITHUB_EVENT_NAME by $GITHUB_ACTOR |"
             echo "| Visibility requested | $VISIBILITY |"
             echo "| Simulation gate job | $GATE_RESULT |"
+            echo "| Package jobs (six) | $PACKAGE_RESULT |"
             echo "| Outcome | **$outcome** |"
             echo
-            if [ -f release/SHA256SUMS.txt ]; then echo "Files (SHA256SUMS.txt):"; echo; echo '```'; cat release/SHA256SUMS.txt; echo '```'; else echo "No release/SHA256SUMS.txt: packaging did not finish."; fi
+            if [ -f release/SHA256SUMS.txt ]; then echo "Files:"; echo; echo '```'; cat release/SHA256SUMS.txt release/SIZES.txt; echo '```'; else echo "No release/SHA256SUMS.txt: packaging did not finish."; fi
           } >> "$GITHUB_STEP_SUMMARY"

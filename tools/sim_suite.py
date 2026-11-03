@@ -60,7 +60,7 @@ COVERAGE = {"A": "normal village equilibrium", "B": "resource shortages and econ
 # run names the coverage-matrix rows (docs/expansion20/X18_X20_COVERAGE_MATRIX.md) it must exercise (require_rows).
 X20_ON = ["--aspiration", "--job-choice", "--economy"]
 X20_FLAGS = {"aspiration": True, "job_choice": True, "economy": True}
-SHIPPED_FLAGS = {"judgment": True, "aspiration": False, "economy": False}
+SHIPPED_FLAGS = {"judgment": True, "aspiration": False, "economy": True}     # B25-LE-ACTIVATE-D1: the Living Economy ships on
 DET_PAIRS = [("eq_s1", "det_s1", "shipped switches"), ("x20_on_s1", "x20_on_det_s1", "Expansion 20 switches on")]
 
 # The fixed scenarios. Seeds 1 and 2 at 30 days are the accepted baseline's (sim_baseline.json, checks at days 10 and 30).
@@ -97,7 +97,7 @@ SCENARIOS = [
     {"run": "social_chain", "scenario": "E, F, I and J: two pockets picked in sight of the village, then the player's offers to every adult (switches on)",
      "cover": "EFIJ", "seed": 1, "days": 15, "record": True, "args": X20_ON + ["--scenario", "social_chain", "--at", "3"], "flags": X20_FLAGS,
      "rows": ["19.1", "19.7", "19.10", "19.11"], "chain": True},
-    {"run": "social_chain_off", "scenario": "E, F and J: the same with the shipped switches (judgment on, aspirations and LE-01 off)", "cover": "EFJ",
+    {"run": "social_chain_off", "scenario": "E, F and J: the same with the shipped switches (judgment and the Living Economy on, aspirations off)", "cover": "EFJ",
      "seed": 1, "days": 15, "record": True, "args": ["--scenario", "social_chain", "--at", "3"], "flags": SHIPPED_FLAGS,
      "rows": ["19.1", "19.7", "19.10", "19.11"], "chain": True},
 ]

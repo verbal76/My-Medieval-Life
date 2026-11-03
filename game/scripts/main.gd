@@ -1468,6 +1468,14 @@ func _start(fresh := false) -> void:
 	running = true
 	autosave_hour = int(world.minutes / 60.0)
 	ui.hide_all()
+	if Demo.is_demo():
+		Demo.state(save_meta)                 # DEMO-01: this world's allowance (a new world: a fresh one)
+		if Demo.expired(save_meta):
+			paused = true                     # an expired demo world is never resumed in the demo: kept, and shown as such
+			ui.show_demo_expired()
+			return
+		if fresh:
+			ui.message(Demo.CREATION_NOTE, 14.0, "game")
 	if fresh:
 		ui.message("%s %s, %s. %s" % [world.player.name, world.player.family, world.clock_text(), GameUI.OPENING_HINT], 8.0, "game")
 	else:
@@ -1960,6 +1968,8 @@ func _process(delta: float) -> void:
 	elif net.has_guests() and (paused or not world.player.alive):
 		net.apply_requests()
 		world.update(delta)                 # MP-D3: guests are playing, so the host's menu or fall does not stop the world
+	if Demo.is_demo() and not guest_world and not _demo_step(delta):
+		return                              # DEMO-01: this world's demo time is used up (or the window is in the background): it waits
 	if not guest_world and not paused and world.player.alive:
 		net.apply_requests()                # MP A2: the guests' requests, at this one fixed point of the host's frame
 		world.update(delta)
@@ -5845,7 +5855,52 @@ func _exit_tree() -> void:
 	end_recording()
 
 
+## DEMO-01: one frame of the demo's clock, counted where the world advances (not paused, alive or hosting guests; the window in the
+## foreground); false when the world must not advance this frame (expired, or the application in the background).
+var app_focused := true
+
+
+func _demo_step(delta: float) -> bool:
+	if not running or Demo.expired(save_meta):
+		return not running
+	if not app_focused:
+		return false                        # the demo's world waits while the game is in the background: no time is counted
+	var advancing := (not paused and world.player.alive) or (net.has_guests() and (paused or not world.player.alive))
+	if not advancing:
+		return true
+	for ev in Demo.tick(save_meta, delta):
+		if str(ev).begins_with("warn:"):
+			ui.message(Demo.warning(int(str(ev).substr(5))), 12.0, "game")
+		elif ev == "expired":
+			_demo_expire()
+			return false
+	return true
+
+
+## DEMO-01: the allowance is used up: the world stops where it is, is saved, and the expiry screen is shown.
+func _demo_expire() -> void:
+	cancel_action("")
+	save_game(false)
+	paused = true
+	ui.show_demo_expired()
+
+
+## DEMO-01: whether the world in the save slot has used up its demo time (the title marks it).
+func demo_save_expired() -> bool:
+	if not Demo.is_demo():
+		return false
+	var r := SaveStore.inspect(save_path, World.SAVE_VERSION)
+	if r.state != "ok":
+		return false
+	var meta: Dictionary = (r.data as Dictionary).get("meta", {}).duplicate(true)
+	return Demo.expired(meta) if meta.has("demo") else false
+
+
 func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT or what == NOTIFICATION_APPLICATION_PAUSED:
+		app_focused = false                 # DEMO-01: the demo's clock stops in the background
+	elif what == NOTIFICATION_APPLICATION_FOCUS_IN or what == NOTIFICATION_APPLICATION_RESUMED:
+		app_focused = true
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
 		# Android's Back: closes an open window (the map, the pack...); otherwise saves and quits as before
 		if ui and ui.modal() and ui.close_btn.visible:

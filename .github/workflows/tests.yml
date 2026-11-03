@@ -121,6 +121,7 @@ jobs:
           res://tests/region_trade_test.gd
           res://tests/region_demand_test.gd
           res://tests/region_sim_test.gd
+          res://tests/demo_test.gd
           res://tests/tree_test.gd
           res://tests/world_test.gd
           res://tests/aging_test.gd
