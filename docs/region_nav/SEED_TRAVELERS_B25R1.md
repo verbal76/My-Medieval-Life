@@ -81,13 +81,21 @@ mechanic failing its function (WDR-022), so it is fixed within the existing rule
 
 ## 3. Evidence
 
-`game/tests/seed_traveler_test.gd` (in `.github/workflows/tests.yml`): see the final report on the branch for the counts.
-Covers designation (count, real residents, affordability, no duplicates, population unchanged, not re-sent on load), one whole
+`game/tests/seed_traveler_test.gd` (in `.github/workflows/tests.yml`), 48 checks, 0 failures. In seed 1 the nearest seed
+traveler, Wat Shepherd (farmer), walks to Netherton for a healing tonic, finds the trader away on the caravan road and buys
+wheat from Joan Stone, the farm's keeper, instead (SeedTravelers.refresh), and is home the next day. Covers designation (count, real residents, affordability, no duplicates, population unchanged, not re-sent on load), one whole
 journey (road, site, purchase in person, item in pack, seller's stock down by one, village goods up by one booked as imported,
 coins conserved every minute, books balance, home, the same person, ordinary life after, not sent again), determinism (same
 choices and the same hourly trace from two worlds of one seed), save/load mid-road (same person, place and journey; walks on,
 buys, comes home; coins conserved), and the real main scene (a seed traveler on the road is tapped, walked up to, talked to,
 and says where they are going).
+
+Other suites on the same code: run_tests (3 days) 3602/0, world_test 339/0, outside_interact_test 23/0, countryside_test
+38/0, journey_test 14/0, journey_s3_test 19/0, envoy_test 31/0, region_trade_test 23/0, region_sim_test 8/0,
+settlement_folk_test 36/0, conservation_test 8/0, wiki_test passed; `tools/check_interactions.py` 0 problems. Test
+corrections, each explained in its commit: region_trade_test's "no forced trade" check skips the seed travelers (not sent by
+RegionTrade); run_tests' grain census counts the chapel's alms parcels (as `Census` already did); region_sim_test's
+save-mid-mission world has no seed travelers (with them seed 1's envoy post goes untaken for 20 days, an outcome).
 
 ## 4. Limitations
 

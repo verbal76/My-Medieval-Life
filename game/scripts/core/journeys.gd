@@ -17,6 +17,7 @@ extends RefCounted
 const REST_FROM := 20
 const REST_TO := 6
 const EAT_BELOW := 40.0
+const MARGIN_MINUTES := 720.0      # B25R1-009: food for half a day more than the walk (provision, buy_food)
 
 
 static func active(n: NPC) -> bool:
@@ -44,7 +45,7 @@ static func start(w: World, n: NPC, sid: String, purpose: Dictionary) -> String:
 		return "There is no road to %s." % w.map.overworld.site(sid).name
 	n.journey = {"to": sid, "purpose": purpose.duplicate(true), "leg": "out", "since": w.day(), "gate": gi}
 	n.plan.clear()
-	provision(w, n, trip_minutes(w, sid))       # B25R1-009: food for the road from the household's pantry
+	provision(w, n, trip_minutes(w, sid) + MARGIN_MINUTES)       # B25R1-009: food for the road from the household's pantry
 	w.stat("journey_started")
 	w.stat("journey_started_" + str(purpose.get("kind", "visit")))
 	return ""
@@ -67,9 +68,12 @@ static func resume(w: World, n: NPC) -> bool:
 			return true                                    # the purpose has given them work at the site (it plans it)
 		if w.hour() < float(REST_TO) or n.journey.get("stay_until", -1) > w.minutes:
 			return _rest(n)
+		var home_trip := trip_minutes(w, str(n.journey.to)) + MARGIN_MINUTES
+		if w.hour() < float(SettlementFolk.WORK_FROM) and _short(n, home_trip) > 0.0 and n.coins > 0:
+			return _rest(n)                                # B25R1-009: short of food for the road home: wait for the sellers' doors to open
 		n.journey.leg = "back"
 		w.stat("journey_leaving_" + str(n.journey.to))
-		buy_food(w, n, trip_minutes(w, str(n.journey.to)))      # B25R1-009: food for the road home, bought at the site
+		buy_food(w, n, home_trip)                          # B25R1-009: food for the road home, bought at the site
 		leg = "back"
 	var road := PackedVector2Array()
 	if leg == "out":
