@@ -138,3 +138,14 @@ The release also carries `SHA256SUMS.txt`, `SIZES.txt`, each APK's `.idsig` file
 **Known issue found after packaging (owner report, 2026-11-03 09:10 EST):** settlement-site buildings outside the village (REGION-NAV-01 S2a, `909b180`) are drawn by `OverworldView._draw_site_buildings` entirely over the characters. They lack the GP-DRAW-UNDER-HOUSE front-wall sorting, so a character at a settlement building's front wall is drawn half under it.
 - Village buildings are correct: `polish_p2_test` passes 104 of 104, and 8 `house_front_shot` screenshots were looked at.
 - The fix and its timing (in Build 25 or after) await the owner's decision.
+- Owner decision (2026-11-03 10:30 EST): fix it in Build 25.
+
+## Settlement-building draw order fixed for Build 25: `0efaf32`; release rerun 41665356439
+
+- **Fix:** `OverworldView._draw_site_buildings` now applies the village's GP-DRAW-UNDER-HOUSE rule. A site building's front-wall bottom row, and its non-roof overlays on solid cells, are drawn in a y-sorted layer among the characters. The rest of the roof stays over everyone, and the layer is freed with its chunk.
+- **Tests:**
+  - `polish_p2_test` has 6 new site checks and passes 110 of 110. Its first new check fails on the old code.
+  - `overworld_test` 179/0, `tree_test` 45/0, `region_geography_test` 132/0, `journey_test` 14/0, `world_test` 339/0.
+- **Screenshots** (`house_front_shot` "site" mode, Wulstead), looked at: before the fix only the characters' feet showed under the wall; after it, the player and a villager are whole in front of it.
+- **Simulation:** drawing only, so it is unchanged. `git diff --stat c4c3490 0efaf32 -- game/scripts game/data` shows only `game/scripts/view/overworld_view.gd`, and the final flight on `c4c3490` stands.
+- **New release:** release run 41665356439 on `0efaf32` (private, build 25), dispatched 2026-11-03 10:34 EST. It replaces the `726ceeb` draft as the Build 25 candidate.
