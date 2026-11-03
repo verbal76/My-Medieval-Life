@@ -7028,8 +7028,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -7042,7 +7042,18 @@
      "date": "2026-11-03",
      "change": "target_build: 25 -> 20",
      "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> char_create_test 0 failures (117 layer options x 3 bodies x 8 directions x animations; save/load, old save); start_test 523/0; character_look_test 0 failures; wiki passed; outside_interact 23/0; region_travel 56/0; polish_p2 110/0; countryside 38/0; screenshots 1280x720 and 2400x1080 looked at (worker and lead); test_commit: None -> 932739d; commits + 932739d",
+     "why": "implemented by the UI worker on wip/b25r1-ui (9c3f762; audit docs/ui/CHARACTER_CUSTOMIZATION_AUDIT_B25R1.md), merged into wip/b25r1 (932739d); suites pass on the merge"
     }
+   ],
+   "branch": "wip/b25r1",
+   "tests": "char_create_test 0 failures (117 layer options x 3 bodies x 8 directions x animations; save/load, old save); start_test 523/0; character_look_test 0 failures; wiki passed; outside_interact 23/0; region_travel 56/0; polish_p2 110/0; countryside 38/0; screenshots 1280x720 and 2400x1080 looked at (worker and lead)",
+   "test_commit": "932739d",
+   "commits": [
+    "932739d"
    ]
   },
   {
@@ -7061,8 +7072,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -7075,7 +7086,18 @@
      "date": "2026-11-03",
      "change": "target_build: 25 -> 20",
      "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> char_create_test 0 failures (117 layer options x 3 bodies x 8 directions x animations; save/load, old save); start_test 523/0; character_look_test 0 failures; wiki passed; outside_interact 23/0; region_travel 56/0; polish_p2 110/0; countryside 38/0; screenshots 1280x720 and 2400x1080 looked at (worker and lead); test_commit: None -> 932739d; commits + 932739d",
+     "why": "implemented by the UI worker on wip/b25r1-ui (9c3f762; audit docs/ui/CHARACTER_CUSTOMIZATION_AUDIT_B25R1.md), merged into wip/b25r1 (932739d); suites pass on the merge"
     }
+   ],
+   "branch": "wip/b25r1",
+   "tests": "char_create_test 0 failures (117 layer options x 3 bodies x 8 directions x animations; save/load, old save); start_test 523/0; character_look_test 0 failures; wiki passed; outside_interact 23/0; region_travel 56/0; polish_p2 110/0; countryside 38/0; screenshots 1280x720 and 2400x1080 looked at (worker and lead)",
+   "test_commit": "932739d",
+   "commits": [
+    "932739d"
    ]
   },
   {

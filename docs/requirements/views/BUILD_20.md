@@ -10,7 +10,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|
 | Approved requirements in scope | 163 |
 | Integrated | 127 of 163 (78%) |
-| Automated tests passed | 116 of 163 (71%) |
+| Automated tests passed | 118 of 163 (72%) |
 | Integration verified | 64 of 163 (39%) |
 | Gameplay verified | 0 of 163 (0%) |
 | Owner playtested | 0 of 163 (0%) |
@@ -178,8 +178,8 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | OWNER APPROVED | PARTIALLY IMPLEMENTED | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-007 | Character creation: unrestricted cosmetic options | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| B25R1-007 | Character creation: unrestricted cosmetic options | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return; no decorative travelers | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

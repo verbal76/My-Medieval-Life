@@ -100,8 +100,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | 20 | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
-| B25R1-007 | Character creation: unrestricted cosmetic options | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25R1-007 | Character creation: unrestricted cosmetic options | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
+| B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return; no decorative travelers | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |

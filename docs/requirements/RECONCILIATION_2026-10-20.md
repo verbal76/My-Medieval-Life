@@ -203,8 +203,8 @@ None.
 | B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
-| B25R1-007 | Character creation: unrestricted cosmetic options | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
-| B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25R1-007 | Character creation: unrestricted cosmetic options | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return; no decorative travelers | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
