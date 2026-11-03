@@ -8,6 +8,8 @@ const SMALL_BOULDER_TILE := 300000     # PL1-06: the extra "runtime" atlas (inde
 const ROAD_TILES := 400000             # B25R1-Q1: atlas 4, game/assets/tiles/road_tiles.png (tools/road_tiles.py): + row * 16 + connection index
 const ROAD_STONE_ROWS := 4             # rows 0-3 stone road (paving variants), rows 4-5 dirt trail
 const ROAD_TRAIL_ROW := 4
+const ROAD_OVERGROWN_ROW := 6          # B25R1-011: rows 6-7 grown-over dirt road and trail, rows 8-9 damaged and broken stone
+const ROAD_DAMAGED_ROW := 8
 
 var tileset := TileSet.new()
 var sources: Array[TileSetAtlasSource] = []

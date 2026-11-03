@@ -36,6 +36,11 @@ extends RefCounted
 ##    support beside a face the manor would tunnel ("prop"), repair a worn support ("repair") or set a ladder into a
 ##    shaft whose ladder is gone ("ladder"), with the yard's goods and its mallet carried in the job's load (the mallet
 ##    comes back to the yard); paid at the mending rate (`mend_wage`: no wage of its own).
+##  - B25R1-011 (owner 2026-11-03: "Villages can upgrade their own roads by paying a worker and supplying stone"): while the
+##    works yard holds more stone than a mend needs and the busiest dirt road just outside the village (or a damaged stone
+##    stretch) waits (RoadWear.village_targets), one paving job at a time: a "mend" job carrying `pave` (its cells), whose load
+##    is the yard's stone only (RoadWear.PAVE_STONE a cell, REPAIR_STONE to repair one) and whose work, at the road, paves or
+##    repairs those cells (RoadWear.pave, repair); paid at the mending rate from the treasury, the stone used up (used_stone).
 ## A household under a day of food is not left waiting: its relief is delivered at once, as before.
 ##
 ## Jobs are paid from the treasury, set aside when a job is taken (the treasury keeps
@@ -234,7 +239,7 @@ func refresh() -> void:
 	var claimed := 0
 	for j in jobs:
 		if j.kind == "mend" and j.load.total() == 0:
-			claimed += int(cfg("mend_load"))
+			claimed += int(j.qty) if j.has("pave") else int(cfg("mend_load"))
 	var free := yard.total() - claimed
 	while free >= int(cfg("mend_load")) and not sites.is_empty():
 		var site: Array = sites[next_id % sites.size()]
@@ -262,6 +267,35 @@ func post_quarry() -> void:
 	if _works_stock("stone") >= 2 * int(cfg("mend_load")):
 		return
 	_post({"kind": "quarry", "item": "stone", "qty": int(cfg("quarry_qty")), "wage": int(cfg("quarry_wage"))})   # X18-D6: posted at the base rate; the taker's wage is set at acceptance (wage_for)
+
+
+## B25R1-011, the reeve's evening: one paving job at a time, while the yard holds the stone for it beyond a mend's load and a
+## stretch of road just outside the village waits for it (damaged stone first, then the busiest dirt road).
+const PAVE_REACH := 36          # tiles round the village the manor paves (a walk a villager's path-finder reaches)
+const PAVE_CELLS := 3           # cells a paving job lays
+
+
+func post_paving() -> void:
+	if w.map.overworld == null or jobs.any(func(j): return j.kind == "mend" and j.has("pave")):
+		return
+	var targets := RoadWear.village_targets(w.map.overworld, PAVE_REACH, PAVE_CELLS)
+	if targets.is_empty():
+		return
+	var cells := []
+	var stone := 0
+	for t in targets:
+		var c: Vector2i = t.cell
+		cells.append([c.x, c.y, str(t.mode)])
+		stone += RoadWear.PAVE_STONE if str(t.mode) == "pave" else RoadWear.REPAIR_STONE
+	var claimed := 0
+	for j in jobs:
+		if j.kind == "mend" and j.load.total() == 0:
+			claimed += int(cfg("mend_load"))
+	if yard.count("stone") < stone + int(cfg("mend_load")) or yard.total() - claimed < stone + int(cfg("mend_load")):
+		return
+	var first := Vector2i(int(cells[0][0]), int(cells[0][1]))
+	_post({"kind": "mend", "qty": stone, "pave": cells, "site": [first.x, first.y], "place": "the road outside the village",
+		"wage": int(cfg("mend_wage"))})
 
 
 ## MIN-D, the reeve's evening: one survey of a clue the manor has heard nothing of, and one trial pit for the best
@@ -839,6 +873,8 @@ func describe(j: Dictionary) -> String:
 		"quarry":
 			return "Quarry %d stone for the manor's works and bring it to the works yard" % int(j.qty)
 		"mend":
+			if j.has("pave"):
+				return "Pave %s with %d stone from the works yard (%d hours)" % [str(j.place), int(j.qty), roundi(float(cfg("mend_minutes")) / 60.0)]
 			return "Mend %s with %d loads of materials from the works yard (%d hours)" % [str(j.get("place", "the road")), int(j.qty), roundi(float(cfg("mend_minutes")) / 60.0)]
 		"survey":
 			var c := w.prospecting.clue(str(j.clue))
@@ -902,6 +938,12 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 				if l.inv.total() == 0:
 					lots.erase(l)
 				return j.load.total() > 0
+			if j.has("pave"):                      # B25R1-011: a paving job's load is the yard's stone
+				if yard.count("stone") < int(j.qty):
+					last_refusal = "The works yard has too little stone for the paving."
+					return false
+				w.transfer(yard, j.load, "stone", int(j.qty))
+				return true
 			# mend: a load of materials from the yard, the most plentiful first
 			var want := int(cfg("mend_load"))
 			while want > 0 and yard.total() > 0:
@@ -1079,6 +1121,10 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 				_finish(j, who)
 			return true
 		"mend":
+			if j.has("pave"):
+				_pave(j)
+				_finish(j, who)
+				return true
 			for id in j.load.ids():
 				w.stat("used_repairs_" + id, j.load.count(id))
 			j.load = Inventory.new()
@@ -1086,6 +1132,28 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 			_finish(j, who)
 			return true
 	return false
+
+
+## B25R1-011: a paving job's work at the road: each of its cells still wanting it is paved or repaired with the load's stone
+## (used up, used_stone); stone left over (a cell paved meanwhile) goes back to the works yard.
+func _pave(j: Dictionary) -> void:
+	var ow: Overworld = w.map.overworld
+	for e in j.pave:
+		var c := Vector2i(int(e[0]), int(e[1]))
+		var job := RoadWear.work_for(ow, c) if ow != null else {"why": "no road"}
+		if str(job.why) != "" or str(job.mode) != str(e[2]) or j.load.count("stone") < int(job.stone):
+			continue
+		j.load.remove("stone", int(job.stone))
+		w.stat("used_stone", float(job.stone))
+		w.stat("road_paved_by_village" if str(job.mode) == "pave" else "road_repaired_by_village")
+		if str(job.mode) == "pave":
+			RoadWear.pave(ow, c)
+		else:
+			RoadWear.repair(ow, c)
+	if j.load.count("stone") > 0:
+		w.transfer(j.load, yard, "stone", j.load.count("stone"))
+	j.load = Inventory.new()
+	w.stat("works_paved")
 
 
 ## MIN-EQUIP: a shore job's step. "take": its goods and the mallet from the works yard into the job's load; "prop": set

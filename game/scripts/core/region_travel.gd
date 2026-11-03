@@ -43,6 +43,21 @@ static func _oct(a: Vector2i, b: Vector2i) -> float:
 	return maxi(dx, dy) + 0.4142 * mini(dx, dy)
 
 
+## B25R1-011: the cost of going straight from a to b: a cell that is a way (generated or worn in by footfall, RoadWear) costs
+## one, open country OFF_ROAD, so a path worn across the country is preferred as a road is.
+static func _line_cost(w: World, a: Vector2i, b: Vector2i) -> float:
+	var ow: Overworld = w.map.overworld
+	var n := maxi(absi(b.x - a.x), absi(b.y - a.y))
+	if n == 0:
+		return 0.0
+	var per := _oct(a, b) / float(n)
+	var cost := 0.0
+	for k in range(1, n + 1):
+		var c := Vector2i((Vector2(a).lerp(Vector2(b), k / float(n))).round())
+		cost += per * (1.0 if RoadWear.is_way(ow, c) else OFF_ROAD)
+	return cost
+
+
 ## Whether the pathfinder walks from a to b (it returns a partial path when it cannot reach b: the last cell must be b).
 static func walkable(w: World, a: Vector2i, b: Vector2i) -> bool:
 	if a == b:
@@ -236,7 +251,7 @@ static func plan(w: World, from: Vector2i, to: Vector2i) -> Dictionary:
 	var same_site := not ow.site_at(from).is_empty() and ow.site_at(from) == ow.site_at(dest)
 	if both_village or same_site or (span.x <= CHECK and span.y <= CHECK):
 		if both_village or walkable(w, from, dest):
-			direct = {"cost": _oct(from, dest) * (1.0 if both_village or same_site else OFF_ROAD),
+			direct = {"cost": _oct(from, dest) if both_village or same_site else _line_cost(w, from, dest),
 				"cells": PackedVector2Array([Vector2(from), Vector2(dest)])}
 	if both_village or same_site:
 		return {"ok": true, "dest": dest, "cells": direct.cells, "road": 0, "direct": true} if not direct.is_empty() \

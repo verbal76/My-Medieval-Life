@@ -79,6 +79,29 @@ stone. Reuse the existing road network, navigation, and movement systems." Built
   (`game/tests/road_types_shot.gd`): a settlement street, stone giving way to dirt road, a dirt road, a trail; the map at
   1280 x 720 and 2400 x 1080.
 
+## B25R1-011: wear, fading, overgrowth, damage and paving (owner 2026-11-03)
+
+"The heavier a road or path is used, it should start to upgrade by percentage ... Villages can upgrade their own roads by
+paying a worker and supplying stone"; refined: "Main dirt roads fade very slowly, dirt paths that come from usage fade
+faster ... Stone roads can get damaged and cause problems for carts and need materials to fix, but damage is slow".
+`game/scripts/core/road_wear.gd` (numbers: `docs/DECISIONS.md` 2026-11-03, agent decisions):
+
+- Levels grass, trail, dirt road, stone road. Footfall of the player and of villagers and travellers walking their paths
+  outside the village raises a cell 5% a step (10% with a cart), a level per 100% above its generated level (at most dirt
+  road); a usage path fades 12% a day unwalked, never below its generated level. The generated network never goes: unwalked
+  12 days it is drawn grown over (tile rows 6-7) and stays road, routed and on the map; a step clears it; no upkeep cost.
+- Stone: damage from traffic, 0.05% a person's step and 12 times that a cart's passage (`balance.json` `road_wear`), and
+  0.25% a day from time alone; worn at 40% (row 8), broken at 75% (row 9); a cart is slowed
+  to 85% and 60% (`Carts.pull_speed_for`, `World._walk`); walking is not. Repair: 1 stone.
+- Paving: the player (Build > Pave roads, then a tap on a road cell; or Pave here) with 2 stone a cell; the village by a
+  manor paving job (a `mend` job with `pave` cells: the yard's stone, the mending wage from the treasury), damaged stone first,
+  then the busiest dirt road within 36 tiles of the village. Stone used is counted `used_stone`.
+- Same cells and walkability; routes: a straight leg over worn or generated way costs as road (`RegionTravel._line_cost`).
+  The village map's own streets do not wear. Stored sparsely (`Overworld.road_state`, saved as "roads", pruned at dawn),
+  evaluated lazily by the game day: deterministic.
+- Checked: `game/tests/road_wear_test.gd`; screenshots `game/tests/road_wear_shot.gd` (a worn path and a paved stretch; 30
+  days on: the path faded, the dirt road grown over; 80 days on: the stone broken).
+
 ## Not changed
 
 - No generator version bump, no tile change, no new road. NPC journeys and the regional trade's distances are unchanged.

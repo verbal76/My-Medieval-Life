@@ -40,6 +40,7 @@ var tex: ImageTexture
 var bounds := Rect2i()          # the tiles the terrain image covers
 var network := Rect2i()         # the village and every settlement: what the map opens on
 var roads: Array = []           # [{pts: PackedVector2Array (tile centres), kind, box: Rect2}]
+var worn: Array = []            # B25R1-011: [cell, kind] of the ways footfall or paving made, beyond the generated ones
 var zoom := 1.0                 # screen pixels a tile
 var centre := Vector2.ZERO      # the tile at the middle of the map
 var fitted := false
@@ -70,6 +71,7 @@ func setup(m) -> void:
 	bounds = region_bounds(w, w.player)
 	tex = ImageTexture.create_from_image(build_image(w, w.player))
 	roads = road_lines(w.map.overworld, bounds)
+	worn = worn_ways(w.map.overworld)
 	for k in ["mineral", "combat", "tool"]:
 		_icons[k] = load("res://assets/markers/%s.png" % k)
 	_icons.home = load("res://assets/ui/home.png")
@@ -156,6 +158,19 @@ static func road_lines(ow: Overworld, area: Rect2i) -> Array:
 				pts.append(at)
 		if pts.size() >= 2:
 			out.append(_line(pts, kind))
+	return out
+
+
+## B25R1-011: the cells whose way now differs from the generated network's (worn in by footfall, paved): [cell, kind],
+## kind as the legend's ("stone", "road", "trail"), in cell order.
+static func worn_ways(ow: Overworld) -> Array:
+	var out := []
+	var cells: Array = ow.road_state.keys()
+	cells.sort()
+	for c: Vector2i in cells:
+		var lv := RoadWear.level(ow, c)
+		if lv >= 1 and lv != RoadWear.base_level(ow, c):
+			out.append([c, ["", "trail", "road", "stone"][lv]])
 	return out
 
 
@@ -383,6 +398,11 @@ func _draw() -> void:
 				draw_polyline(pts, ROAD, wd)
 			else:
 				draw_polyline(pts, TRAIL, clampf(zoom * 0.7, 1.2, 8.0))
+	# B25R1-011: the ways worn in or paved since, cell by cell
+	var cs := maxf(zoom, 2.0)
+	for e in worn:
+		var col: Color = STONE if e[1] == "stone" else ROAD if e[1] == "road" else TRAIL
+		draw_rect(Rect2(to_screen(Vector2(e[0])) - Vector2(cs, cs) * 0.5 + Vector2(zoom, zoom) * 0.5, Vector2(cs, cs)), col)
 	# the route planned to the destination, from where the player is
 	var tv = main.travel
 	if RegionTravel.has_destination(p):
