@@ -159,12 +159,53 @@ func _build(cc: Vector2i) -> void:
 				set_tile(objects, cell, v)
 	if tree_sink != null:
 		tree_sink.load_chunk(cc, overworld.chunk_trees(cc))
+	var site_above := _draw_site_buildings(root, cc)
 	var works := Node2D.new()             # B14-07: steps, stairs and walkways, over the ground and the cliff's rim
 	works.name = "works"
 	root.add_child(works)
-	chunks[cc] = {"root": root, "ground": ground, "path": path, "objects": objects, "tops": tops, "works": works}
+	chunks[cc] = {"root": root, "ground": ground, "path": path, "objects": objects, "tops": tops, "works": works, "site_above": site_above}
 	above_layers.append(tops)
 	_draw_works(cc)
+
+
+## REGION-NAV-01: the buildings of a settlement site in this chunk, painted from the village's building stamps (the same
+## art and layers as a house or workshop in the village): ground, path and "below" layers under the characters, "above"
+## layers (roofs) over them. Only the cells inside this chunk, so a building across a seam is drawn once.
+func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
+	var box := Rect2i(cc * Overworld.CHUNK, Vector2i(Overworld.CHUNK, Overworld.CHUNK))
+	var layers := {}
+	for st in overworld.sites:
+		if not (st.rect as Rect2i).intersects(box):
+			continue
+		for sl in st.slots:
+			var r: Rect2i = sl.rect
+			if not r.intersects(box):
+				continue
+			var stamp: Dictionary = overworld.stamps.get(str(sl.stamp), overworld.stamps.house)
+			var names: Array = (stamp.layers as Dictionary).keys()
+			names.sort_custom(func(a: String, b: String) -> bool:
+				var ra := 0 if a.begins_with("ground") else 1 if a.begins_with("path") else 2 if a.begins_with("below") else 3
+				var rb := 0 if b.begins_with("ground") else 1 if b.begins_with("path") else 2 if b.begins_with("below") else 3
+				return ra < rb or (ra == rb and a < b))
+			for lname in names:
+				var l: TileMapLayer = layers.get(lname)
+				if l == null:
+					l = _layer(root, 10 if str(lname).begins_with("above") else 0)
+					layers[lname] = l
+					if str(lname).begins_with("above"):
+						above_layers.append(l)
+				var cells: Array = stamp.layers[lname]
+				for j in int(stamp.h):
+					for i in int(stamp.w):
+						var v := int(cells[j * int(stamp.w) + i])
+						var cell := r.position + Vector2i(i, j)
+						if v >= 0 and box.has_point(cell):
+							set_tile(l, cell, v)
+	var above := []
+	for lname in layers:
+		if str(lname).begins_with("above"):
+			above.append(layers[lname])
+	return above
 
 
 func _free(cc: Vector2i) -> void:
@@ -173,6 +214,8 @@ func _free(cc: Vector2i) -> void:
 		tree_sink.unload_chunk(cc)
 	var c: Dictionary = chunks[cc]
 	above_layers.erase(c.tops)
+	for l in c.get("site_above", []):
+		above_layers.erase(l)
 	c.root.queue_free()
 	chunks.erase(cc)
 

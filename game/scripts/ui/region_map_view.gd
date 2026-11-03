@@ -8,7 +8,7 @@ extends Control
 ## named mark on dark ground until they walk there. Drawing only (the rules live in Atlas).
 
 const COLOURS := [Color8(30, 22, 15), Color8(104, 128, 70), Color8(46, 78, 42), Color8(132, 124, 112),
-		Color8(196, 164, 112), Color8(176, 132, 84), Color8(176, 132, 84)]      # by Atlas class: unknown, grass, wood, rock, road, site, village
+		Color8(196, 164, 112), Color8(138, 82, 52), Color8(111, 74, 44)]      # by Atlas class: unknown, grass, wood, rock, road, settlement (roofs), village
 const BACK := Color8(43, 29, 19)
 const PALE := Color8(236, 214, 170)
 const HOME := Color8(255, 214, 90)

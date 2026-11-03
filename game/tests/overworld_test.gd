@@ -584,12 +584,20 @@ func _test_sites(seed_value: int) -> void:
 		var road := 0
 		for y in range(st.rect.position.y, st.rect.end.y):
 			for x in range(st.rect.position.x, st.rect.end.x):
-				if o.is_solid(Vector2i(x, y)):
+				var cell := Vector2i(x, y)
+				if o.is_solid(cell) and not o.site_building_at(cell):
 					blocked += 1
-				if o.is_road(Vector2i(x, y)):
+				if o.is_road(cell):
 					road += 1
-		check(blocked == 0, "%s: its site is clear ground (%d blocked cells)" % [st.name, blocked])
+		check(blocked == 0, "%s: its site is clear ground but for its buildings (%d other blocked cells)" % [st.name, blocked])
 		check(road > 0, "%s: a road runs into it (%d road cells)" % [st.name, road])
+		var trades: Array = (spec.trades as Dictionary).keys()
+		var doors_ok: bool = st.slots.size() == trades.size()
+		for q in st.slots.size():
+			var sl: Dictionary = st.slots[q]
+			doors_ok = doors_ok and str(sl.trade) == str(trades[q]) and st.rect.encloses(sl.rect) and o.site_building_at(sl.rect.position + Vector2i(1, 1)) \
+				and not o.is_solid(sl.spot)
+		check(doors_ok, "%s: one building per trade (%d), inside the site, solid, with open ground at its door" % [st.name, st.slots.size()])
 		check(o.site_at(st.center) == st and o.site(str(st.id)) == st, "%s: found by cell and by id" % st.name)
 		box = box.merge(st.rect.grow(20))
 	var south: Vector2i = Vector2i.ZERO
@@ -599,12 +607,13 @@ func _test_sites(seed_value: int) -> void:
 	var seen := _flood(o, [south], box)
 	var lost := []
 	for st in o.sites:
-		if not seen.has(st.center):
-			lost.append(st.name)
-	check(lost.is_empty(), "seed %d: every settlement is reachable on foot from the village's south gate (%d cells open; cut off: %s)" % [seed_value, seen.size(), lost])
+		for sl in st.slots:
+			if not seen.has(sl.spot):
+				lost.append("%s %s" % [st.name, sl.trade])
+	check(lost.is_empty(), "seed %d: every settlement's every door is reachable on foot from the village's south gate (%d cells open; cut off: %s)" % [seed_value, seen.size(), lost])
 	# a generation-2 save planted a tree where a site now stands: dropped and counted, not placed in the settlement
 	var st0: Dictionary = o.sites[0]
-	var c: Vector2i = st0.center + Vector2i(3, 3)
+	var c: Vector2i = st0.gate
 	var o2 := Overworld.create(seed_value, m)
 	o2.load_dict({"seed": seed_value, "gen": 2, "changes": [{"x": c.x, "y": c.y, "state": "sapling", "regrow": 0.0, "born": 0.0, "species": "oak_summer", "planted": true}], "rocks": [], "flowers": [], "works": []})
 	check(o2.dropped_in_sites == 1 and not o2.changes.has(c), "a generation-2 save's tree planted inside %s is dropped and counted" % st0.name)

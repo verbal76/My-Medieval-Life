@@ -82,7 +82,9 @@ var clock := 0.0                         # the game minute (World keeps it): cha
 ## regional trade already measures distances by), kept clear like the village (no cliff within VILLAGE_CLEAR, objects thinning
 ## from OBJECT_MARGIN) and joined to the road network like a village gate (to its three nearest road nodes). GEN_VERSION 3:
 ## only the sites and their joining roads differ from generation 2.
-var sites: Array = []                    # {id, name, kind, center: Vector2i, rect: Rect2i}, in settlements.json order
+var sites: Array = []                    # {id, name, kind, center: Vector2i, rect: Rect2i, slots: [{trade, stamp, rect, door, spot}]}, in settlements.json order
+var _solid_rows := {}                    # stamp name -> its "solid" rows (village.json), for the site buildings
+var stamps := {}                         # the village's building stamps (village.json), which the view paints the site buildings with
 var _near_sites: Array = []
 var dropped_in_sites := 0              # REGION-NAV-01: planted trees of an older save dropped because a site now stands there              # the sites near the chunk being generated (_generate), for _vdist
 var cache := {}                          # Vector2i -> Chunk
@@ -103,33 +105,67 @@ static func create(world_seed: int, m: VillageMap) -> Overworld:
 	for e in m.exits():
 		o.gates.append({"out": e.out, "dir": e.dir})
 	o._setup_gates()
-	o._setup_sites()
+	o.stamps = m.data.stamps
+	for k in m.data.stamps:
+		o._solid_rows[k] = m.data.stamps[k].get("solid", [])
+	o._setup_sites(m.data.stamps)
 	return o
 
 
 ## REGION-NAV-01: the settlement sites and the roads that join them to the network (see `sites`).
-func _setup_sites() -> void:
+func _setup_sites(stamps: Dictionary) -> void:
 	sites.clear()
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/settlements.json"))
-	var size := Vector2i(int(data.site.w), int(data.site.h))
+	var lay: Dictionary = data.site
 	var origin := village.get_center()
 	var si := 0
 	for spec in data.settlements:
 		var center := origin + Vector2i(int(spec.get("x", 0)), int(spec.miles) * int(data.tiles_per_mile))
-		sites.append({"id": str(spec.id), "name": str(spec.name), "kind": str(spec.kind), "center": center,
-			"rect": Rect2i(center - size / 2, size)})
-		var ci := fdiv(center.x, NODE)
-		var cj := fdiv(center.y, NODE)
+		var trades: Array = (spec.trades as Dictionary).keys()
+		var bw := int(stamps.house.w)
+		var bh := int(stamps.house.h)
+		var cols := int(lay.cols)
+		var rows := ceili(trades.size() / float(cols))
+		var size := Vector2i(cols * bw + (cols - 1) * int(lay.gap) + 2 * int(lay.margin), rows * (bh + int(lay.lane)) + 2 * int(lay.margin))
+		var rect := Rect2i(center - size / 2, size)
+		var slots := []
+		for k in trades.size():
+			var t := str(trades[k])
+			var stamp := str((lay.stamps as Dictionary).get(t, "house"))
+			var at := rect.position + Vector2i(int(lay.margin) + (k % cols) * (bw + int(lay.gap)), int(lay.margin) + (k / cols) * (bh + int(lay.lane)))
+			var door := at + Vector2i(int(stamps[stamp].door[0]), int(stamps[stamp].door[1]))
+			slots.append({"trade": t, "stamp": stamp, "rect": Rect2i(at, Vector2i(int(stamps[stamp].w), int(stamps[stamp].h))),
+				"door": door, "spot": door + Vector2i(0, 1)})
+		var gate := Vector2i(center.x, rect.end.y - int(lay.margin) - int(lay.lane) / 2 - 1)    # the lane under the last row: the road comes in here
+		sites.append({"id": str(spec.id), "name": str(spec.name), "kind": str(spec.kind), "center": center, "rect": rect, "slots": slots,
+			"gate": gate})
+		var ci := fdiv(gate.x, NODE)
+		var cj := fdiv(gate.y, NODE)
 		var near: Array = []
 		for j in range(cj - 3, cj + 4):
 			for i in range(ci - 3, ci + 4):
 				var p := node_pos(i, j)
 				if not _node_excluded(p):
-					near.append([(p - center).length_squared(), i, j, p])
+					near.append([(p - gate).length_squared(), i, j, p])
 		near.sort()
 		for k in mini(3, near.size()):
-			_links.append({"a": center, "b": near[k][3], "key": 2000 + si * 8 + k})
+			_links.append({"a": gate, "b": near[k][3], "key": 2000 + si * 8 + k})
 		si += 1
+
+
+## REGION-NAV-01: whether a site's building stands on cell `c` (its stamp's solid cells; a building is not entered).
+func site_building_at(c: Vector2i) -> bool:
+	var st := site_at(c)
+	if st.is_empty():
+		return false
+	for sl in st.slots:
+		var r: Rect2i = sl.rect
+		if r.has_point(c):
+			var rows: Array = _solid_rows.get(str(sl.stamp), [])
+			var ry := c.y - r.position.y
+			var rx := c.x - r.position.x
+			return ry < rows.size() and rx < str(rows[ry]).length() and str(rows[ry])[rx] == "1"
+	return false
 
 
 ## REGION-NAV-01: the settlement site containing cell `c`, or {}.
@@ -672,6 +708,8 @@ func _cell_of(chunk: Chunk, c: Vector2i) -> int:
 func is_solid(c: Vector2i) -> bool:
 	if village.has_point(c):
 		return false
+	if site_building_at(c):
+		return true                                    # REGION-NAV-01: a settlement's building
 	if works.has(c):
 		return false                                   # B14-07: steps, stairs or a walkway through the cliff's rim
 	var ch := get_chunk(chunk_of(c))
