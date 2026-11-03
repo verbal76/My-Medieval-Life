@@ -7410,6 +7410,49 @@
    ]
   },
   {
+   "id": "B25R1-016",
+   "kind": "approved",
+   "title": "365-day flight recorder campaign proving the living world: migration, homesteading, runaways, bandit recruitment and departure, economy, multigenerational life histories",
+   "description": "365-day flight recorder campaign proving the living world: migration, homesteading, runaways, bandit recruitment and departure, economy, multigenerational life histories",
+   "source": "docs/directives/2026-11-03_b25r1_365_day_flight_recorder.md",
+   "owner_wording": "I want proof that My Medieval Life is actually living. ... The goal is not merely a stable simulation. The goal is a believable, measurable, persistent living world.",
+   "approval": "owner, 2026-11-03",
+   "acceptance": [
+    "Existing recorder (mml-recorder/2) instruments every B25R1 system onscreen and offscreen with stable NPC, household, settlement and clan ids; no second simulation engine",
+    "One continuous 365-day campaign on the final integrated candidate under normal rules, completed, artifacts retained in GitHub Actions",
+    "Reports A-I: executive, migration ledger, bandit population ledger, homestead ledger, economic ledger, life histories A-G, line and scatter charts, exception report, evidence index; facts separated from interpretation",
+    "Each feature classified (no opportunity, rejected, failed, partial, completed, sustained); unobserved rare features get labelled deterministic targeted scenarios, reported separately from organic results",
+    "Homestead lifecycle stages recorded separately; young-adult rate measured against eligible household formations over five game years (about 2% or less)",
+    "Determinism (identical event streams and fingerprints), checkpointed save/load, NPC, money, item, livestock and equipment conservation, no duplicate or vanished people, no migration loops or uncontrolled depopulation",
+    "Release acceptance per directive section 16; Build 25 draft untouched"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "B25R1-015"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_365_day_flight_recorder.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-recorder worker; branch: None -> wip/b25r1-recorder",
+     "why": "recorded; reporting layer and instrumentation of the merged B25R1 systems assigned to a recorder worker; homestead and travelers workers instrument their own systems"
+    }
+   ],
+   "assigned_worker": "b25r1-recorder worker",
+   "branch": "wip/b25r1-recorder"
+  },
+  {
    "id": "B25R1-Q1",
    "kind": "decision",
    "title": "Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)?",

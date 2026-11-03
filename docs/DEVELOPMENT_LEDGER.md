@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (776)
+## Approved requirement (777)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -108,6 +108,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25R1-012 | Gamepad destination selection on the region map (cursor, D-pad, confirm, zoom, recentre) | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25R1-013 | Youth runaways from sustained household hardship, and bandit recruitment as a separate outcome | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B25R1-014 | Shared wilderness settlement foundation: lawful homesteads and outlaw communities; sustainable bandit populations; adult bandits may leave | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| B25R1-016 | 365-day flight recorder campaign proving the living world: migration, homesteading, runaways, bandit recruitment and departure, economy, multigenerational life histories | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B7-001 | Starting coins | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B7-002 | Quest rewards reserved |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B7-003 | Jewellery/helmets have buyers |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |

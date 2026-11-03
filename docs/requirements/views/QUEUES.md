@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (27)
+## Workers and task branches (28)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -22,6 +22,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25R1-012 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
 | B25R1-013 | 20 | IN DEVELOPMENT | b25r1-homestead worker | wip/b25r1-homestead |
 | B25R1-014 | 20 | IN DEVELOPMENT | b25r1-homestead worker | wip/b25r1-homestead |
+| B25R1-016 | 20 | IN DEVELOPMENT | b25r1-recorder worker | wip/b25r1-recorder |
 | DEMO-01 | 20 | IN DEVELOPMENT | lead session | wip/expansion20 |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |

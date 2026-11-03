@@ -8,17 +8,17 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 166 |
-| Integrated | 127 of 166 (77%) |
-| Automated tests passed | 120 of 166 (72%) |
-| Integration verified | 64 of 166 (39%) |
-| Gameplay verified | 0 of 166 (0%) |
-| Owner playtested | 0 of 166 (0%) |
-| Complete | 2 of 166 (1%) |
-| Open (release blockers) | 164 |
+| Approved requirements in scope | 167 |
+| Integrated | 127 of 167 (76%) |
+| Automated tests passed | 120 of 167 (72%) |
+| Integration verified | 64 of 167 (38%) |
+| Gameplay verified | 0 of 167 (0%) |
+| Owner playtested | 0 of 167 (0%) |
+| Complete | 2 of 167 (1%) |
+| Open (release blockers) | 165 |
 | Open owner decisions (blocking) | 6 (0) |
 
-## In development (worker assigned) (8)
+## In development (worker assigned) (9)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -28,6 +28,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | OWNER APPROVED | IN DEVELOPMENT | b25r1-homestead worker / wip/b25r1-homestead | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-013 | Youth runaways from sustained household hardship, and bandit recruitment as a separate outcome | OWNER APPROVED | IN DEVELOPMENT | b25r1-homestead worker / wip/b25r1-homestead | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-014 | Shared wilderness settlement foundation: lawful homesteads and outlaw communities; sustainable bandit populations; adult bandits may leave | OWNER APPROVED | IN DEVELOPMENT | b25r1-homestead worker / wip/b25r1-homestead | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| B25R1-016 | 365-day flight recorder campaign proving the living world: migration, homesteading, runaways, bandit recruitment and departure, economy, multigenerational life histories | OWNER APPROVED | IN DEVELOPMENT | b25r1-recorder worker / wip/b25r1-recorder | NOT TESTED |  | B25R1-015, design: UNKNOWN | UNKNOWN |
 | DEMO-01 | Replayable 120-Minute Demo and Steam Integration (with the six-package release pipeline) | OWNER APPROVED | IN DEVELOPMENT | lead session / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 
