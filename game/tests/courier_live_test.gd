@@ -186,13 +186,15 @@ func test_special_and_fees() -> void:
 	var held0 := wulstead().held(ITEM)
 	var paid0 := int(w.regions.by_id["wulstead"].flows.outside_coins_out)
 	var pc0: int = w.player.coins
-	var kc0: int = w.npc(int(courier.trim_prefix("npc:"))).coins
+	var kn: NPC = w.npc(int(courier.trim_prefix("npc:")))
 	run_days(float(q.days) + 0.2)
 	check(wulstead().held(ITEM) == held0 + 3 and str(job.outcome) == "delivered", "the courier delivers to Wulstead's trader after the days on the road")
+	var ke1: int = kn.earned                          # (the courier lives a day or two on the road: its purse moves with its own life)
+	var ks1: int = kn.spent
 	check(int(vb.escrow) == int(n.fee) and w.player.coins == pc0, "the fee is still held while the courier is away (the payment is not yet home)")
 	run_days(float(q.days) + 0.3)
 	check(str(job.state) == "fulfilled" and w.player.coins == pc0 + 5 and int(vb.escrow) == 0, "back home: the 5 coins collected go to the sender and the contract is fulfilled")
-	check(w.npc(int(courier.trim_prefix("npc:"))).coins - kc0 >= int(n.fee), "the courier is paid its fee only when the work is done (no free transport) (%d vs %d, fee %d)" % [w.npc(int(courier.trim_prefix("npc:"))).coins, kc0, int(n.fee)])
+	check(kn.earned - ke1 >= int(n.fee), "the courier is paid its fee only when the work is done (no free transport) (earned %d on the way home, fee %d; spent %d meanwhile)" % [kn.earned - ke1, int(n.fee), kn.spent - ks1])
 	check(int(w.regions.by_id["wulstead"].flows.outside_coins_out) == paid0 + 5, "Wulstead paid from its own till")
 	check(coin_gap() == gap0 and item_gap() == item0 and w.regions.audit() == "", "coins and goods balance; settlement books balance")
 	# a delivery to a settlement the player has not dealt with is refused
