@@ -79,6 +79,7 @@ var road_state := {}                     # B25R1-011 (RoadWear): Vector2i -> {u,
                                          # other than the generator and the clock alone give; saved ("roads", optional)
 var road_dirty := {}                     # cells whose look changed since the view last drew them (not saved)
 var road_rev := 0                        # bumped on each such change
+var recorder = null                      # B25R1-016: the World's flight recorder (WorldRecorder.attach), null when off; never saved, never read by the game
 var clock := 0.0                         # the game minute (World keeps it): changed trees grow lazily by it
 ## REGION-NAV-01 (owner 2026-11-02, Build 25 scope; docs/region_nav/IMPLEMENTATION_PLAN.md AD-1): the five neighbouring
 ## settlements stand in the overworld. Each is a cleared site (settlements.json "site" w x h) centred on the settlement's own

@@ -54,6 +54,11 @@ func replan(m) -> String:
 func start(m, cell: Vector2i) -> String:
 	var w: World = m.world
 	var r := RegionTravel.choose(w, w.player, cell)
+	if w.recorder != null:                         # B25R1-016: the player's journeys (set or refused, the route's length and road share)
+		w.recorder.chronicle("travel_destination_set" if bool(r.ok) else "travel_refused", w.player, {"destination": "cell:%d,%d" % [cell.x, cell.y],
+			"place": RegionTravel.place_name(w, w.player, cell), "outcome": "ok" if bool(r.ok) else "refused", "reason": "" if bool(r.ok) else "unreachable",
+			"needs": {"waypoints": (r.get("cells", PackedVector2Array()) as PackedVector2Array).size(), "road_cells": int(r.get("road", 0)), "direct": bool(r.get("direct", false))},
+			"detail": "" if bool(r.ok) else str(r.get("why", "")).left(160)})
 	if not bool(r.ok):
 		return str(r.why)
 	reset()
@@ -86,6 +91,21 @@ func resume(m) -> String:
 
 ## Dismiss Destination: the journey is cancelled, the destination and route cleared.
 func dismiss(m) -> void:
+	_note(m, "travel_dismissed")
+	_finish(m)
+
+
+## B25R1-016: the flight recorder's note of the player's journey (one guarded call; null recorder: nothing).
+func _note(m, kind: String, why := "") -> void:
+	var w: World = m.world
+	if w == null or w.recorder == null or not RegionTravel.has_destination(w.player):
+		return
+	var d := RegionTravel.destination(w.player)
+	w.recorder.chronicle(kind, w.player, {"destination": "cell:%d,%d" % [d.x, d.y], "place": RegionTravel.place_name(w, w.player, d),
+		"needs": {"route_left": maxi(0, route.size() - idx)}, "detail": why.left(160)})
+
+
+func _finish(m) -> void:
 	_stop_own_walk(m)
 	RegionTravel.dismiss(m.world.player)
 	reset()
@@ -93,6 +113,7 @@ func dismiss(m) -> void:
 
 ## Suspend: the player has taken control (or the way is blocked). The destination stays.
 func suspend(m, why := "") -> void:
+	_note(m, "travel_suspended", why)
 	_stop_own_walk(m)
 	RegionTravel.suspend(m.world.player)
 	reset()
@@ -141,6 +162,7 @@ func step(m, v: Vector2, delta: float) -> void:
 	if route.is_empty():
 		var why := replan(m)
 		if why != "":
+			_note(m, "travel_suspended", why)
 			RegionTravel.suspend(p)
 			m.ui.message(why, 6.0)
 			return
@@ -148,7 +170,8 @@ func step(m, v: Vector2, delta: float) -> void:
 		idx += 1
 	if idx >= route.size():
 		var name := RegionTravel.place_name(w, p, RegionTravel.destination(p))
-		dismiss(m)
+		_note(m, "travel_arrived")
+		_finish(m)
 		m.ui.message("You have arrived at %s." % name if name != "the marked place" else "You have reached the marked place.", 5.0)
 		return
 	var j := idx

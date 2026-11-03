@@ -66,6 +66,9 @@ static func note(w: World, p: PlayerState) -> Array:
 		if p.landmarks.has(id) or maxi(absi(at.x - cell.x), absi(at.y - cell.y)) > SEE:
 			continue
 		p.landmarks[id] = {"kind": str(lm.kind), "name": str(lm.name), "x": at.x, "y": at.y, "day": w.day()}
+		if w.recorder != null:                       # B25R1-016
+			w.recorder.chronicle("landmark_discovered", p, {"place": "landmark:" + id, "object": "landmark:" + id, "action": str(lm.kind),
+				"x": at.x, "y": at.y, "detail": str(lm.name)})
 		found.append(str(lm.name))
 	return found
 

@@ -50,6 +50,8 @@ static func attach(world, config := {}) -> WorldRecorder:
 		r._chain.append(str(b.id))
 		r._chain_factors[str(b.id)] = b.factors
 	world.recorder = r
+	if world.map != null and world.map.overworld != null:
+		world.map.overworld.recorder = r   # B25R1-016: RoadWear reports road changes (formed, cleared, worn, paved, repaired, faded)
 	if world.judgment != null:
 		world.judgment.rec = r             # REC-19 D5: the judgment store reports to the recorder (JudgmentLive.attach does it for a later store)
 		world.judgment.pers.rec = r        # X20-FINAL: the personality layer too
@@ -709,7 +711,7 @@ func death_end(t: Array, n: NPC, cause: String, heir: NPC) -> void:
 		else:
 			var lc := _loot_coins()
 			state_change(ev, "loot", "coins", lc - moved, lc, "life.inherit")      # what lay with the dead lies where they fell
-	end(ev, "ok", "", "cause=%s; role=%s job=%s household=%d age=%.1f" % [cause, n.role, n.job, n.household, Life.npc_age(w, n)])
+	end(ev, "ok", "", "cause=%s; role=%s job=%s household=%d age=%.1f; faction=%s" % [cause, n.role, n.job, n.household, Life.npc_age(w, n), faction_of(n)])
 
 
 func player_died(p: PlayerState, cause: String) -> void:
@@ -1681,6 +1683,7 @@ func _day_summaries() -> void:
 			alert("violation", "economy.unbacked_reservation", "world", "unbacked=%d" % ec.reservations.unbacked().size(), em)
 	_economy_day(d)                              # REC-DIAG: food, households' resources, tills with their owners
 	_settlement_day(d)                           # REC-DIAG: the off-map settlements' conditions
+	_b25_day(d)                                  # B25R1-016: population by stage and occupation, clans, wilderness settlements
 
 
 ## {key: change} of the numeric entries of `now` against `seen` (then updated), sorted keys.
@@ -1952,3 +1955,238 @@ func _death_context(ev: int, n: NPC) -> void:
 	factor(ev, "village", "food_for_sale_stalls", int(fs.stalls), "units", "death")
 	factor(ev, "village", "food_carried_by_traders", int(fs.traders), "units", "death")
 	factor(ev, "village", "granary_food", food_units(w.granary), "units", "death")
+
+
+# ================================================================ B25R1 (owner directive 2026-11-03, B25R1-016): the living world
+## The vocabulary of the 365-day flight recorder (docs/design/FLIGHT_RECORDER.md section 9; recorder_codes.json "chronicle"):
+## life transitions, the twelve homestead stages, runaways, bandit recruitment by source, departures and reintegration, wilderness
+## settlements and their economy, raids, journeys, roads and landmarks. One call per event: `chronicle(kind, who, f)`, where `kind`
+## is a key of the "chronicle" table (its system, subsystem, category and stage come from there; an unknown kind is counted in
+## unknown_codes, which the recorder test requires to be zero) and `f` holds the directive's section 3 fields that apply
+## (recorder_codes.json "chronicle_fields"). The person's name, age and life stage, household and faction are read here from the
+## live record when the caller does not give them. Read only, as everything in this file: no draw, no decision, no state change.
+var _road_seen := {}                    # cell -> [level, look] of a worn cell at the last dawn (fade and overgrowth are lazy)
+var _roads_day := -1
+
+
+## A person reference and the record behind it: [ref, NPC or null, PlayerState or null].
+func _whom(who) -> Array:
+	if who == null:
+		return ["world", null, null]
+	if who is NPC:
+		return [ref_of(who), who, null]
+	if who is PlayerState:
+		return [ref_of(who), null, who]
+	if typeof(who) == TYPE_INT:
+		return ["p:%d" % int(who), w.npc(int(who)), null]
+	var s := str(who)
+	if s.begins_with("p:") and s.substr(2).is_valid_int():
+		return [s, w.npc(int(s.substr(2))), null]
+	return [s, null, null]
+
+
+## A household given as an index or a ref.
+static func _hh(h) -> String:
+	if typeof(h) == TYPE_INT:
+		return World.hh_ref(int(h)) if int(h) >= 0 else "none"
+	return str(h)
+
+
+## The faction a villager record says they belong to: their clan, else the village.
+static func faction_of(n: NPC) -> String:
+	if n.clan != "":
+		return "clan:" + n.clan
+	if n.role == "bandit":
+		return "clan:bandit"
+	return "village"
+
+
+## One B25R1 event (see above). Returns the event id (0 when not recording).
+func chronicle(kind: String, who, f := {}) -> int:
+	if stopped or finished:
+		return 0
+	var spec = (codes.get("chronicle", {}) as Dictionary).get(kind)
+	if spec == null:
+		unknown_codes["chronicle:" + kind] = int(unknown_codes.get("chronicle:" + kind, 0)) + 1
+		spec = ["lifecourse", "transition", "lifecourse", 0, ""]
+	var wh := _whom(who)
+	var ref: String = wh[0]
+	var n: NPC = wh[1]
+	var p: PlayerState = wh[2]
+	var opts := {"rule": str(f.get("trigger", "")), "settlement": str(f.get("place", "")), "detail": str(f.get("detail", "")).left(160)}
+	for k in ["object", "parent", "x", "y"]:
+		if f.has(k):
+			opts[k] = f[k]
+	if not opts.has("x"):
+		opts.merge(_xy(n if n != null else p))
+	var ev := begin(str(spec[0]), str(spec[1]), str(spec[2]), kind, ref, opts)
+	if ev <= 0:
+		return 0
+	if ref != "world":
+		participant(ev, ref, role_of(p, "person") if p != null else "person")
+	var ctx := {}
+	if n != null:
+		ctx = {"name": "%s %s" % [n.name, n.family], "age": snappedf(Life.npc_age(w, n), 0.1), "stage": Life.stage(n, w.minutes),
+			"role": n.role, "job": n.job, "household": World.hh_ref(n.household) if n.household >= 0 else "none", "faction": faction_of(n)}
+	elif p != null:
+		ctx = {"name": str(p.name) if "name" in p else "player", "role": "player", "faction": "village"}
+	elif ref.begins_with("p:") and w.people.has(int(ref.substr(2))):
+		var e: Dictionary = w.people[int(ref.substr(2))]
+		ctx = {"name": "%s %s" % [str(e.get("name", "")), str(e.get("family", ""))], "where": str(e.get("where", ""))}
+	if f.has("household"):
+		ctx["household"] = _hh(f.household)
+	if int(spec[3]) > 0:
+		ctx["stage_no"] = int(spec[3])
+	for k in ["origin", "destination", "place", "faction", "faction_before", "legal", "legal_before", "track", "path", "source", "trigger", "action"]:
+		if f.has(k):
+			ctx[k] = str(f[k])
+	for k in ctx:
+		factor(ev, "ctx", str(k), ctx[k], "text" if typeof(ctx[k]) == TYPE_STRING else ("years" if k == "age" else "number"), "chronicle")
+	var needs: Dictionary = f.get("needs", {})
+	for k in needs:
+		factor(ev, "needs", str(k), needs[k], "value", "live_code")
+	var jf: Dictionary = f.get("factors", {})
+	for k in jf:
+		factor(ev, "judgment", str(k), jf[k], "value", "judgment" if str(f.get("basis", "live_rule")) == "judgment" else "live_code")
+	if f.has("chosen") or f.has("alternatives"):
+		decision(ev, ref, "life_choice", str(f.get("chosen", "none")), str(f.get("basis", "live_rule")))
+		for a in f.get("alternatives", []):
+			var al: Array = a if a is Array else [a]
+			alternative(ev, str(al[0]), "yes", bool(al[1]) if al.size() > 1 else NOT_EVALUATED, "", al[2] if al.size() > 2 else NOT_EVALUATED)
+			if al.size() > 3 and str(al[3]) != "":
+				factor(ev, str(al[0]), "why", str(al[3]), "text", "live_code")
+	var rel: Dictionary = f.get("related", {})
+	for role in rel:
+		var v = rel[role]
+		for r in (v if v is Array else [v]):
+			participant(ev, _hh(r) if typeof(r) == TYPE_INT else str(r), str(role))
+	if f.has("faction_before") and f.has("faction") and str(f.faction_before) != str(f.faction):
+		state_change(ev, ref, "faction", str(f.faction_before), str(f.faction), "lifecourse")
+	if f.has("legal_before") and f.has("legal") and str(f.legal_before) != str(f.legal):
+		state_change(ev, ref, "legal", str(f.legal_before), str(f.legal), "lifecourse")
+	for c in f.get("coins", []):
+		state_change(ev, str(c[0]), "coins", int(c[1]), int(c[2]), "wilds.coins")
+	for c in f.get("items", []):
+		state_change(ev, str(c[0]), "item:" + str(c[1]), int(c[2]), int(c[3]), "wilds.items")
+	for c in f.get("summary", []):
+		state_change(ev, str(c[0]), str(c[1]), c[2], c[3], "summary")
+	var reason := str(f.get("reason", ""))
+	if reason != "":
+		(_open[ev] as Array)[EV_REASON] = reason      # a free snake_case reason (the B25R1 systems' own words), not a code of the table
+	end(ev, str(f.get("outcome", "ok")))
+	return ev
+
+
+# ---------------------------------------------------------------- roads (B25R1-011) --------
+## RoadWear.foot: a step changed a cell's look (Overworld.recorder; called only then). `lv`, `look`: before the step.
+func road_step(ow: Overworld, c: Vector2i, lv: int, look: String, cart: bool) -> void:
+	var lv2 := RoadWear.level(ow, c)
+	var look2 := RoadWear.visual(ow, c)
+	var kind := "road_formed" if lv2 > lv else ("road_cleared" if look.ends_with("_overgrown") and not look2.ends_with("_overgrown") else ("road_wear" if lv2 == 3 else ""))
+	if kind == "":
+		return
+	var summ := [["cell:%d,%d" % [c.x, c.y], "level", lv, lv2], ["cell:%d,%d" % [c.x, c.y], "look", look, look2]]
+	chronicle(kind, null, {"x": c.x, "y": c.y, "object": "cell:%d,%d" % [c.x, c.y], "summary": summ,
+		"needs": {"base_level": RoadWear.base_level(ow, c), "gained": snappedf(RoadWear.gained(ow, c), 0.1), "damage": snappedf(RoadWear.damage(ow, c), 0.1), "cart": cart}})
+
+
+## RoadWear.pave / repair: `by` the ref of who did it (the player, the manor's mender), the stone used.
+func road_work(ow: Overworld, c: Vector2i, mode: String, before: String, by: String, stone: int) -> void:
+	var cell := "cell:%d,%d" % [c.x, c.y]
+	chronicle("road_paved" if mode == "pave" else "road_repaired", wref(by) if by != "" else null, {"x": c.x, "y": c.y, "object": cell,
+		"action": mode, "summary": [[cell, "look", before, RoadWear.visual(ow, c)]], "needs": {"stone": stone}})
+
+
+## Dawn (RoadWear.prune, before it forgets): worn paths that lost a level and walked roads that grew over since the last dawn, as
+## one event each, and the network's looks. Reads RoadWear's pure functions only.
+func roads_dawn(ow: Overworld) -> void:
+	var d := RoadWear.day_of(ow)
+	if d == _roads_day or stopped or finished:
+		return
+	_roads_day = d
+	var faded := []
+	var grown := []
+	var cells: Array = ow.road_state.keys()
+	cells.sort()
+	var now := {}
+	for c: Vector2i in cells:
+		var lv := RoadWear.level(ow, c)
+		var look := RoadWear.visual(ow, c)
+		now[c] = [lv, look]
+		var was = _road_seen.get(c)
+		if was != null:
+			if lv < int(was[0]):
+				faded.append(c)
+			if look.ends_with("_overgrown") and not str(was[1]).ends_with("_overgrown"):
+				grown.append(c)
+	_road_seen = now
+	for pair in [["road_faded", faded], ["road_overgrown", grown]]:
+		var list: Array = pair[1]
+		if not list.is_empty():
+			var txt := PackedStringArray()
+			for c: Vector2i in list.slice(0, 12):
+				txt.append("%d,%d" % [c.x, c.y])
+			chronicle(str(pair[0]), null, {"needs": {"cells": list.size()}, "detail": "cells " + " ".join(txt) + (" ..." if list.size() > 12 else "")})
+	var looks := {}
+	var main: Dictionary = ow.get_meta("b25r1_main_roads") if ow.has_meta("b25r1_main_roads") else {}     # never computed here
+	for c: Vector2i in main:
+		var lk := RoadWear.visual(ow, c)
+		looks["network:" + (lk if lk != "" else "grass")] = int(looks.get("network:" + (lk if lk != "" else "grass"), 0)) + 1
+	for c: Vector2i in now:
+		if not main.has(c) and int(now[c][0]) > RoadWear.base_level(ow, c):
+			looks["worn_in:" + str(now[c][1])] = int(looks.get("worn_in:" + str(now[c][1]), 0)) + 1
+	looks["stored_cells"] = ow.road_state.size()
+	chronicle("roads_day", null, {"needs": looks})
+
+
+# ---------------------------------------------------------------- the day's census (B25R1-016 s.10) --------
+## Once a dawn: the village by life stage and occupation, households, the clans (the bandit ledger's check), the wilderness
+## settlements (Homesteads.recorder_rows, when that system is present) and the off-map settlements' people.
+func _b25_day(d: int) -> void:
+	var st := {}
+	var jobs := {}
+	var clans := {}
+	var alive := 0
+	for n: NPC in w.npcs:
+		if not n.alive:
+			continue
+		alive += 1
+		var sg := "bandit" if n.role == "bandit" else Life.stage(n, w.minutes)
+		st["stage:" + sg] = int(st.get("stage:" + sg, 0)) + 1
+		if n.job != "":
+			jobs["job:" + n.job] = int(jobs.get("job:" + n.job, 0)) + 1
+		if n.role == "bandit" or n.clan != "":
+			var cl := faction_of(n)
+			if not clans.has(cl):
+				clans[cl] = {"members": 0, "dependants": 0}
+			clans[cl]["members" if n.role == "bandit" else "dependants"] += 1
+	var needs := {"alive": alive, "households": 0, "births": _births, "deaths": _deaths}
+	for h in w.households.size():
+		if not w.households[h].get("ended", false) and not w.brain._members(h).is_empty():
+			needs.households += 1
+	needs.merge(st)
+	needs.merge(jobs)
+	if w.regions != null:
+		var off := 0
+		for s in w.regions.list:
+			off += int(s.population())
+		needs["offmap_population"] = off
+	var rows: Array = []
+	var hs = w.get("homesteads") if "homesteads" in w else null
+	if hs != null and hs.has_method("recorder_rows"):
+		rows = hs.recorder_rows()
+	var wild := 0
+	for r in rows:
+		wild += int((r as Dictionary).get("population", 0))
+	needs["wilderness_population"] = wild
+	chronicle("population_day", null, {"needs": needs, "detail": "day=%d" % d})
+	var cks := clans.keys()
+	cks.sort()
+	for cl in cks:
+		chronicle("clan_census", null, {"place": cl, "object": cl, "needs": clans[cl]})
+	for r in rows:
+		var rd: Dictionary = r
+		var vals := rd.duplicate()
+		vals.erase("id")
+		chronicle("settlement_state", null, {"place": "homestead:" + str(rd.get("id", "?")), "object": "homestead:" + str(rd.get("id", "?")),
+			"path": str(rd.get("path", "")), "needs": vals})
