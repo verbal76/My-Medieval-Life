@@ -7558,6 +7558,48 @@
    "branch": "wip/b25r1-region"
   },
   {
+   "id": "B25R1-019",
+   "kind": "approved",
+   "title": "Presence by view range: everything within the player's view plus a margin (growing with zoom) is live (people, animals, moving water, trees swaying in the breeze); everything beyond is calculation, the starting village included",
+   "description": "Presence by view range: everything within the player's view plus a margin (growing with zoom) is live (people, animals, moving water, trees swaying in the breeze); everything beyond is calculation, the starting village included",
+   "source": "owner messages 2026-11-03 (B25R1-Q6, B25R1-Q7)",
+   "owner_wording": "picture my view radius around me. What I can see on the screen go just a little bit past that. If anything falls inside of that they become a live thing, an animal, a person moving water, a swaying tree. And yes, the tree should sway a little bit in the breeze. ... outside of that range. Everything's just a math problem. I only need to see what's in my general area now. If I'm on the phone and I zoom out yeah then it's going to have to show",
+   "approval": "owner, 2026-11-03",
+   "acceptance": [
+    "One shared presence system: a live radius of the camera's visible rect plus a margin, recomputed with zoom and window size, on every platform",
+    "People (village, settlements, hamlets, travellers, bandits, homesteaders), animals, water animation and tree sway are live inside it and calculated outside it; one persistent record per person or animal, state carried over both ways, never duplicated, respawned or lost",
+    "Calculated mode advances needs, work, trade, travel position, family and mortality by the same economic rules, with money, goods and people conserved; the village economy re-validated on this model",
+    "Trees sway gently in the breeze (slender trees most), only inside the live range",
+    "Determinism (same seed and actions, same world); the effect of mere observation measured and documented; sim gate re-baselined with evidence; CPU and memory measured, phone projection"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "B25R1-Q6",
+    "B25R1-Q7"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "owner messages 2026-11-03 (B25R1-Q6, B25R1-Q7)"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-presence worker; branch: None -> wip/b25r1-presence",
+     "why": "assigned to the presence worker on wip/b25r1-presence (design note and API first)"
+    }
+   ],
+   "assigned_worker": "b25r1-presence worker",
+   "branch": "wip/b25r1-presence"
+  },
+  {
    "id": "B25R1-Q1",
    "kind": "decision",
    "title": "Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)?",
@@ -7721,6 +7763,33 @@
      "date": "2026-11-03",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner 2026-11-03: \"the other villagers in those towns don't need to be there unless I'm there so they can stay just math calculations until I walk into the town as I walk to where they should be. They should come into range if there's one traveling to a town when he's just off screen of me he should become visible and be able to interact with me. And as soon as he's off the screen and I can't see him disappear, he should turn back into a math problem.\""
+    }
+   ]
+  },
+  {
+   "id": "B25R1-Q7",
+   "kind": "decision",
+   "title": "Does the live-near-the-player rule (B25R1-Q6) also apply to the starting village's people, or only to the rest of the region?",
+   "description": "Does the live-near-the-player rule (B25R1-Q6) also apply to the starting village's people, or only to the rest of the region?",
+   "source": "owner message 2026-11-03",
+   "owner_wording": null,
+   "owner_answer": "Everywhere, the starting village included: villagers off screen are calculations too, accepting that the village economy is rebuilt on the shared presence model and re-validated",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "owner message 2026-11-03"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-11-03 via question: 'Everywhere, village too'"
     }
    ]
   },

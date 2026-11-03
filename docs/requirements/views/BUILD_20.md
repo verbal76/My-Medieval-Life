@@ -8,17 +8,17 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 169 |
-| Integrated | 128 of 169 (76%) |
-| Automated tests passed | 121 of 169 (72%) |
-| Integration verified | 64 of 169 (38%) |
-| Gameplay verified | 0 of 169 (0%) |
-| Owner playtested | 0 of 169 (0%) |
-| Complete | 2 of 169 (1%) |
-| Open (release blockers) | 167 |
+| Approved requirements in scope | 170 |
+| Integrated | 128 of 170 (75%) |
+| Automated tests passed | 121 of 170 (71%) |
+| Integration verified | 64 of 170 (38%) |
+| Gameplay verified | 0 of 170 (0%) |
+| Owner playtested | 0 of 170 (0%) |
+| Complete | 2 of 170 (1%) |
+| Open (release blockers) | 168 |
 | Open owner decisions (blocking) | 6 (0) |
 
-## In development (worker assigned) (10)
+## In development (worker assigned) (11)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -30,6 +30,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | B25R1-016 | 365-day flight recorder campaign proving the living world: migration, homesteading, runaways, bandit recruitment and departure, economy, multigenerational life histories | OWNER APPROVED | IN DEVELOPMENT | b25r1-recorder worker / wip/b25r1-recorder | NOT TESTED |  | B25R1-015, design: UNKNOWN | UNKNOWN |
 | B25R1-017 | Integration, real water system (streams, rivers, waterfalls, bridges, wells), credits regression diagnosis, existing-world compatibility, water events in the flight recorder | OWNER APPROVED | IN DEVELOPMENT | b25r1-water and b25r1-homestead workers / wip/b25r1 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-018 | Complete regional world reconstruction: Morris geography (Downs, landmarks, rivers), meandering roads, explorable principal settlements with real residents, game-original hamlets, scale (J-D2, J-G1), save compatibility | OWNER APPROVED | IN DEVELOPMENT | b25r1-region worker / wip/b25r1-region | NOT TESTED |  | B25R1-017, design: UNKNOWN | UNKNOWN |
+| B25R1-019 | Presence by view range: everything within the player's view plus a margin (growing with zoom) is live (people, animals, moving water, trees swaying in the breeze); everything beyond is calculation, the starting village included | OWNER APPROVED | IN DEVELOPMENT | b25r1-presence worker / wip/b25r1-presence | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | DEMO-01 | Replayable 120-Minute Demo and Steam Integration (with the six-package release pipeline) | OWNER APPROVED | IN DEVELOPMENT | lead session / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 

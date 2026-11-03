@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (779)
+## Approved requirement (780)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -111,6 +111,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25R1-016 | 365-day flight recorder campaign proving the living world: migration, homesteading, runaways, bandit recruitment and departure, economy, multigenerational life histories | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B25R1-017 | Integration, real water system (streams, rivers, waterfalls, bridges, wells), credits regression diagnosis, existing-world compatibility, water events in the flight recorder | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B25R1-018 | Complete regional world reconstruction: Morris geography (Downs, landmarks, rivers), meandering roads, explorable principal settlements with real residents, game-original hamlets, scale (J-D2, J-G1), save compatibility | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| B25R1-019 | Presence by view range: everything within the player's view plus a margin (growing with zoom) is live (people, animals, moving water, trees swaying in the breeze); everything beyond is calculation, the starting village included | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B7-001 | Starting coins | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B7-002 | Quest rewards reserved |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B7-003 | Jewellery/helmets have buyers |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
@@ -897,7 +898,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (318)
+## Owner decisions (319)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -948,6 +949,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25R1-Q4 | Outlaw camp defenders: add a surrender outcome to combat, or fight or flee only (B25R1-014 section 8 'according to existing systems'; combat has no surrender)? | 20 | APPROVED |  |
 | B25R1-Q5 | Save compatibility for Revision 1: must existing saves migrate across the B25R1 world changes (generator, regional reconstruction, band move, water)? | 20 | APPROVED |  |
 | B25R1-Q6 | Population architecture for the reconstructed region (B25R1-018 section 6): full NPCs everywhere, or persistent people simulated by calculation when away from the player and made present near the player? | 20 | APPROVED |  |
+| B25R1-Q7 | Does the live-near-the-player rule (B25R1-Q6) also apply to the starting village's people, or only to the rest of the region? | 20 | APPROVED |  |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | owner decision | APPROVED |  |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | owner decision | APPROVED |  |
 | BRANCH-POL-Q1 | Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion20 (code), with notices on the code line's copies (recommended); or authorize bringing the records into wip/expansion20 as one reviewed change (files only, not the old ancestry)? | unassigned | OPEN |  |

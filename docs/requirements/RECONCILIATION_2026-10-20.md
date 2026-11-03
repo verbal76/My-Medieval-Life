@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 798 (426 of them still open) |
-| **Open entries now** (rules excluded) | | **584** |
+| Entries added since | | 800 (427 of them still open) |
+| **Open entries now** (rules excluded) | | **585** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (798)
+## Added since the baseline (800)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -215,12 +215,14 @@ None.
 | B25R1-016 | 365-day flight recorder campaign proving the living world: migration, homesteading, runaways, bandit recruitment and departure, economy, multigenerational life histories | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25R1-017 | Integration, real water system (streams, rivers, waterfalls, bridges, wells), credits regression diagnosis, existing-world compatibility, water events in the flight recorder | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25R1-018 | Complete regional world reconstruction: Morris geography (Downs, landmarks, rivers), meandering roads, explorable principal settlements with real residents, game-original hamlets, scale (J-D2, J-G1), save compatibility | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| B25R1-019 | Presence by view range: everything within the player's view plus a margin (growing with zoom) is live (people, animals, moving water, trees swaying in the breeze); everything beyond is calculation, the starting village included | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25R1-Q1 | Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)? | decision | APPROVED | 20 |
 | B25R1-Q2 | Bandit band as a woodland community: move the band to a hidden overworld claim with a household (a), keep the village camp and put only turned outlaws on claims (b), or abstract bandits offscreen (c)? | decision | APPROVED | 20 |
 | B25R1-Q3 | Water for wilderness settlements: wells built from real materials, streams added by an overworld generator change, or both? | decision | APPROVED | 20 |
 | B25R1-Q4 | Outlaw camp defenders: add a surrender outcome to combat, or fight or flee only (B25R1-014 section 8 'according to existing systems'; combat has no surrender)? | decision | APPROVED | 20 |
 | B25R1-Q5 | Save compatibility for Revision 1: must existing saves migrate across the B25R1 world changes (generator, regional reconstruction, band move, water)? | decision | APPROVED | 20 |
 | B25R1-Q6 | Population architecture for the reconstructed region (B25R1-018 section 6): full NPCs everywhere, or persistent people simulated by calculation when away from the player and made present near the player? | decision | APPROVED | 20 |
+| B25R1-Q7 | Does the live-near-the-player rule (B25R1-Q6) also apply to the starting village's people, or only to the rest of the region? | decision | APPROVED | 20 |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-C | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-D | Expansion 23 BAN-D: rank, challenge, leadership, schism and autonomous succession | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
