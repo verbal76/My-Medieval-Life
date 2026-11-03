@@ -132,5 +132,38 @@ func _init() -> void:
 		var v0 := w.total_coins() - w.coin_sources
 		check(SettlementFolk.buy_from(w, World.PLAYER, seller, str(line.item), 1) == "", "the player buys a %s from %s, the %s" % [line.item, seller.name, seller.trade])
 		check(w.total_coins() - w.coin_sources == v0 and w.regions.audit() == "", "the village's coins and the settlements' audit balance")
+	_long_run()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
+
+
+## Validation D2 and D3 (2026-11-03): over 150 days of two seeds no crafter household is ever also in a business's workers (a
+## trade opening never takes one), and a crafter household that leaves takes exactly what household_load said it would: its
+## own trade's purse and stock with its own.
+func _long_run() -> void:
+	for sd in [1, 2]:
+		var r := Regions.create(sd)
+		var both := ""
+		for d in range(0, 150):
+			r.catch_up(d)
+			for s: OffMapSettlement in r.list:
+				for k in s.own:
+					for t in s.biz:
+						if both == "" and (s.biz[t].workers as Array).has(int(k)):
+							both = "seed %d day %d %s household %s (%s, in %s)" % [sd, d, s.id, k, str(s.own[k].type), t]
+		check(both == "", "seed %d, 150 days: no crafter household is ever in a business's workers too (%s)" % [sd, both])
+		check(r.audit() == "", "seed %d, 150 days: the audit balances (%s)" % [sd, r.audit()])
+		var left := false
+		for s: OffMapSettlement in r.list:
+			if left:
+				break
+			for k in s.own.keys():
+				var hi := int(k)
+				if int(s.own[k].till) <= 0 and (s.own[k].stock as Dictionary).is_empty():
+					continue
+				var said := s.household_load(hi)
+				var went := s.release_household(hi)
+				check(int(said.coins) == int(went.coins) and JSON.stringify(said.goods) == JSON.stringify(went.goods) and not s.own.has(k),
+					"seed %d: a crafter household of %s leaves with what it was said to take, its own trade's purse and stock included (%d coins)" % [sd, s.name, int(went.coins)])
+				left = true
+				break

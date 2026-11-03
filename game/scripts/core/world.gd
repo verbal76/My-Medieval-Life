@@ -3625,6 +3625,8 @@ func kill(n: NPC, cause: String, by_ref := "") -> void:
 	n.alive = false
 	n.hp = 0.0
 	n.plan.clear()
+	if not n.journey.is_empty():
+		Journeys.end(self, n, "died")      # REGION-NAV-01 S3: the journey ends with them; what they carried passes on below
 	if cause.begins_with("slain"):
 		bled.emit(n.pos)
 	n.target = -1
@@ -6497,6 +6499,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	_load_guests(d.get("players", {}))              # save 21 (absent: the "player" above is the only player)
 	if not _load_identity(d):
 		return
+	if couriers != null:
+		couriers.refresh_links()          # REGION-NAV-01 Q3: the couriers' routes are the roads' lengths, measured once the regions know the world
 	_load_underground(d.get("underground", {}))      # MIN-A: the level the player was on (absent: the surface)
 	if int(d.get("save_version", 0)) < 15:
 		Skills.seed_villagers(self)    # PAR-01: an older save's villagers had no skills

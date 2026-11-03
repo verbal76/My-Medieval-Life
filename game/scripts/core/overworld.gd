@@ -82,6 +82,8 @@ var clock := 0.0                         # the game minute (World keeps it): cha
 ## regional trade already measures distances by), kept clear like the village (no cliff within VILLAGE_CLEAR, objects thinning
 ## from OBJECT_MARGIN) and joined to the road network like a village gate (to its three nearest road nodes). GEN_VERSION 3:
 ## only the sites and their joining roads differ from generation 2.
+var closed := {}                         # REGION-NAV-01 AD-4: road node (Vector2i) -> true: it cannot be passed (close_node); not saved
+var closed_rev := 0
 var sites: Array = []                    # {id, name, kind, center: Vector2i, rect: Rect2i, slots: [{trade, stamp, rect, door, spot}]}, in settlements.json order
 var _solid_rows := {}                    # stamp name -> its "solid" rows (village.json), for the site buildings
 var stamps := {}                         # the village's building stamps (village.json), which the view paints the site buildings with
@@ -176,15 +178,29 @@ func site_building_at(c: Vector2i) -> bool:
 ## lengths in cells, ties by node order, so the same seed always gives the same route), and the settlement's road in to its
 ## lane. Cells, 4-connected, from the gate's outside cell to the site's gate cell. Empty when no road joins them (a journey then
 ## fails and is recorded).
-func road_route(gate: int, sid: String) -> PackedVector2Array:
-	return route_between(_gate_end(gate), _site_end(sid))
+func road_route(gate: int, sid: String, honour_closed := true) -> PackedVector2Array:
+	return route_between(_gate_end(gate), _site_end(sid), honour_closed)
+
+
+## REGION-NAV-01 AD-4: a road node that cannot be passed (`shut`), or opened again. A route through it is blocked: route_between
+## finds another way or none. Not saved; nothing in play closes a road yet (tests do), so `closed` is empty in a normal game.
+## closed_rev counts the changes, so a traveller on the road plans the way ahead again when one happens (Journeys).
+func close_node(nd: Vector2i, shut := true) -> void:
+	if shut == closed.has(nd):
+		return
+	if shut:
+		closed[nd] = true
+	else:
+		closed.erase(nd)
+	closed_rev += 1
 
 
 ## REGION-NAV-01 Q3 (owner 2026-11-03: one geography): the road route between two ends, each a village gate or a settlement
 ## (_gate_end, _site_end: {base: the link from the end to its far point, nodes: road node -> the link from the far point to it}).
 ## The regional trade's distances and the couriers' days are these routes' lengths (Regions.route_table), so travel and trade
 ## measure the same roads.
-func route_between(ea: Dictionary, eb: Dictionary) -> PackedVector2Array:
+func route_between(ea: Dictionary, eb: Dictionary, honour_closed := true) -> PackedVector2Array:
+	var shut: Dictionary = closed if honour_closed else {}
 	if ea.is_empty() or eb.is_empty() or (ea.nodes as Dictionary).is_empty() or (eb.nodes as Dictionary).is_empty():
 		return PackedVector2Array()
 	var all_pts: Array = []
@@ -198,6 +214,8 @@ func route_between(ea: Dictionary, eb: Dictionary) -> PackedVector2Array:
 	var prev := {}
 	var open: Array = []                          # [cost, j, i]
 	for nd: Vector2i in starts:
+		if shut.has(nd):
+			continue
 		var li: int = starts[nd]
 		var c0 := _segment(Vector3i(li, 0, -1), _links[li].a, _links[li].b, int(_links[li].key)).size() / 2
 		if not dist.has(nd) or c0 < int(dist[nd]):
@@ -213,7 +231,7 @@ func route_between(ea: Dictionary, eb: Dictionary) -> PackedVector2Array:
 			break                                          # the shortest way, the road in counted
 		if int(top[0]) > int(dist.get(nd, 1 << 30)):
 			continue
-		if ends.has(nd):
+		if ends.has(nd) and not shut.has(nd):
 			var lb0: int = ends[nd]
 			var whole := int(top[0]) + _segment(Vector3i(lb0, 0, -1), _links[lb0].a, _links[lb0].b, int(_links[lb0].key)).size() / 2
 			if whole < int(dist.get(GOAL, 1 << 30)):
@@ -222,7 +240,7 @@ func route_between(ea: Dictionary, eb: Dictionary) -> PackedVector2Array:
 				open.append([whole, GOAL.y, GOAL.x])
 		for e in _node_edges(nd):
 			var nb: Vector2i = e[0]
-			if nb.x < lo.x or nb.y < lo.y or nb.x > hi.x or nb.y > hi.y:
+			if nb.x < lo.x or nb.y < lo.y or nb.x > hi.x or nb.y > hi.y or shut.has(nb):
 				continue
 			var cost := int(top[0]) + int(e[1])
 			if cost < int(dist.get(nb, 1 << 30)):

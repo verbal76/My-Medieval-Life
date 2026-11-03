@@ -1240,10 +1240,7 @@ func _pay_own() -> void:
 			h.inc = int(h.get("inc", 0)) + pay
 			o.paid = int(o.get("paid", 0)) + pay
 			o.week = int(o.get("week", 0)) + pay
-		var stock_n := 0
-		for i in o.stock:
-			stock_n += int(o.stock[i])
-		o.idle = int(o.get("idle", 0)) + 1 if int(o.till) <= 1 and stock_n == 0 else 0
+		o.idle = int(o.get("idle", 0)) + 1 if pay == 0 else 0      # a day the trade yielded the household nothing (its tools stay in stock)
 
 
 ## Once a week: one craft household short of work sets up on its own (its savings become its working purse), and a crafter
@@ -1587,6 +1584,8 @@ func _open_trade(delta: Dictionary) -> void:
 	for h in hh:
 		if not h.alive or not TRADE_BIZ.has(str(h.trade)) or int(h.stay) < int(_rules.switch_stay_days):
 			continue
+		if own.has(str(h.id)):
+			continue                       # REGION-NAV-01 Q4: a household working on its own account is in no business to leave
 		var ob: String = TRADE_BIZ[h.trade]
 		if not biz.has(ob) or best_pay < 2.0 * float(h.rate):        # REG-X20-D1: a business's only household may go too
 			continue
@@ -2139,6 +2138,8 @@ func summary() -> Dictionary:
 	var tills := 0
 	for t in biz:
 		tills += int(biz[t].till)
+	for k in own:
+		tills += int(own[k].till)                        # REGION-NAV-01 Q4: the crafters' working purses are tills too
 	return {"id": id, "population": population(), "households": households(), "hungry": hungry, "deaths": int(flows.deaths),
 		"coins": coins(), "household_coins": cash, "tills": tills, "treasury": int(gov.coins),
 		"trader": int(trader().get("till", 0)), "pantry_days": food_pts / maxf(1.0, need), "horses": horses(),
@@ -2190,7 +2191,9 @@ func person_load(hi: int, j: int) -> Dictionary:
 		var q: int = int(h.pantry[k]) if n == 1 else int(h.pantry[k]) / n
 		if q > 0:
 			goods[k] = q
-	return {"people": [_pack_of(h.mem[j], 0)], "coins": int(h.coins) if n == 1 else int(h.coins) / n, "goods": goods}
+	if n == 1:
+		_with_own(h, goods)                 # the last member takes the household's own trade too (release_person winds it up)
+	return {"people": [_pack_of(h.mem[j], 0)], "coins": int(h.coins) + _own_till(h) if n == 1 else int(h.coins) / n, "goods": goods}
 
 
 ## Member `j` leaves household `hi` with person_load's coins and goods; the household closes if they were its last.
@@ -2217,7 +2220,20 @@ func household_load(hi: int) -> Dictionary:
 	var people := []
 	for m in h.mem:
 		people.append(_pack_of(m, int(m[M_PAIR])))
-	return {"people": people, "coins": int(h.coins), "goods": (h.pantry as Dictionary).duplicate()}
+	var goods: Dictionary = (h.pantry as Dictionary).duplicate()
+	_with_own(h, goods)                     # REGION-NAV-01 Q4: and its own trade's purse and stock (release_household winds it up)
+	return {"people": people, "coins": int(h.coins) + _own_till(h), "goods": goods}
+
+
+## A household's own trade, counted into what it would take when it leaves (nothing changes: the wind-up is at the release).
+func _own_till(h: Dictionary) -> int:
+	return int((own.get(str(h.id), {}) as Dictionary).get("till", 0))
+
+
+func _with_own(h: Dictionary, goods: Dictionary) -> void:
+	var o: Dictionary = own.get(str(h.id), {})
+	for i in o.get("stock", {}):
+		goods[i] = int(goods.get(i, 0)) + int(o.stock[i])
 
 
 ## The whole household leaves with its coins and pantry; it is dissolved (its business keeps its other households).

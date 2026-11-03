@@ -102,6 +102,10 @@ jobs:
           res://tests/overworld_test.gd
           res://tests/atlas_test.gd
           res://tests/settlement_folk_test.gd
+          res://tests/settlement_crafter_test.gd
+          res://tests/region_geography_test.gd
+          res://tests/journey_test.gd
+          res://tests/journey_s3_test.gd
           res://tests/tree_test.gd
           res://tests/world_test.gd
           res://tests/aging_test.gd

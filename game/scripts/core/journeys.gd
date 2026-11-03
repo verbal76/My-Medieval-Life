@@ -10,7 +10,8 @@ extends RefCounted
 ## (resume). Out: the village's own path to the south gate, then the road; there: the purpose's work at the site (purpose hook,
 ## World.journey_hook), else they stay till the next morning; back: the road, then the village path home. At night (20:00 to
 ## 6:00) a traveller rests where they are on the road (the homeless rest rule, KI-HOME-DOOR), and when hungry eats from their pack.
-## A route that cannot be found fails the journey (recorded: journey_failed_no_road) and the villager stays or turns home. Nothing
+## A route that cannot be found fails the journey (recorded: journey_failed_no_road): refused at the start, and on the way out
+## (a road closed ahead, Overworld.close_node) the traveller turns home along the road they came by (journey_ended_turned_back). Nothing
 ## is created or destroyed: what they carry is in their pack all the way (a death on the road leaves it where they fall).
 
 const REST_FROM := 20
@@ -68,7 +69,16 @@ static func resume(w: World, n: NPC) -> bool:
 		n.journey.leg = "back"
 		w.stat("journey_leaving_" + str(n.journey.to))
 		leg = "back"
-	var road := ow.road_route(int(n.journey.gate), str(n.journey.to))
+	var road := PackedVector2Array()
+	if leg == "out":
+		road = ow.road_route(int(n.journey.gate), str(n.journey.to))
+		if road.is_empty():                                # the way ahead is blocked: the journey fails, recorded, and they turn home
+			w.stat("journey_failed_no_road")
+			n.journey.leg = "back"
+			n.journey.failed = true
+			leg = "back"
+	if leg == "back":
+		road = ow.road_route(int(n.journey.gate), str(n.journey.to), false)       # home the way they came
 	if road.is_empty():
 		w.stat("journey_failed_no_road")
 		end(w, n, "no road")
@@ -134,7 +144,7 @@ static func leg_done(w: World, n: NPC) -> void:
 			w.stat("journey_arrived")
 			w.stat("journey_arrived_" + str(n.journey.to))
 		"back":
-			end(w, n, "home")
+			end(w, n, "turned_back" if bool(n.journey.get("failed", false)) else "home")
 
 
 static func end(w: World, n: NPC, how: String) -> void:
@@ -154,6 +164,11 @@ static func night_and_food(w: World, n: NPC) -> bool:
 				w.stat("eaten_food", float(GameData.item(f).food))
 				w.stat("eaten_" + f)
 				break
+	var ow: Overworld = w.map.overworld
+	if ow != null and int(n.journey.get("rev", 0)) != ow.closed_rev:
+		n.journey.rev = ow.closed_rev                  # a road was closed or opened: the way ahead is planned again (resume)
+		if str(n.journey.leg) == "out":
+			n.plan.clear()
 	var hr := w.hour()
 	if (hr >= float(REST_FROM) or hr < float(REST_TO)) and str(n.journey.leg) != "there":
 		n.anim = "idle"

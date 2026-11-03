@@ -37,6 +37,9 @@ func _one(seed_value: int) -> void:
 	var routes := w.regions.route_table()
 	var vroutes := w.regions.village_route_table()
 	var links: Dictionary = w.couriers.links
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(JSON.stringify(w2.couriers.links) == JSON.stringify(links), "seed %d: after a save and load the couriers' routes are the same road lengths (validation D4)" % seed_value)
 	var walk := float(GameData.b("walk_tiles_per_second")) / float(GameData.b("game_minutes_per_second"))      # tiles a game minute
 	for s: OffMapSettlement in w.regions.list:
 		var st: Dictionary = ow.site(s.id)
