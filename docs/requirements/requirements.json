@@ -7197,6 +7197,11 @@
      "date": "2026-11-03",
      "change": "owner_answer",
      "why": "owner refinement 2026-11-03 ~14:58 EST replaces 'stone stays': main dirt roads fade very slowly to an overgrown but visible state (never lost, usage restores, no upkeep), usage-made paths fade faster, stone roads take slow damage that hampers carts and need materials to repair; worker told"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "note",
+     "why": "owner addition 2026-11-03 ~15:00 EST: carts wear stone roads faster than people; worker told"
     }
    ],
    "owner_answer": "Main dirt roads fade very slowly, never below visible (overgrown until walked again, no upkeep but use); usage paths fade faster; stone roads damage slowly, hamper carts when damaged, and need materials to repair"
