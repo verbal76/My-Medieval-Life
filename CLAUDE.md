@@ -500,6 +500,13 @@ or historical (`docs/DECISIONS.md` narrative log, `docs/DEVELOPMENT_QUEUE.md`, a
 
 ## 12. Reporting
 
+- **Timestamps (owner, 2026-11-03, REPORT-TS-01, `docs/directives/2026-11-03_reporting_timestamps.md`; permanent).** Every
+  development progress update, test report, commit report and completion summary begins
+  `[YYYY-MM-DD HH:MM EST/EDT] — Project / Build / Status`, in America/New_York time (EST or EDT as in force), read from the
+  system clock when the report is written (`TZ=America/New_York date '+%Y-%m-%d %H:%M %Z'`), never invented or estimated, and
+  stamped when the report is generated, not when the work began. GitHub Actions runs give their actual start and completion
+  times where available; earlier commits and tests are cited with their own recorded times, kept apart from the report's.
+  The work-package status and evidence standards (DEV-GOV-01) still apply. Reporting only: it starts no test or validation.
 - Report what was done, how it was verified, and what was not done, plainly. Never report a skipped
   step or an unlooked-at output as verified.
 - Blockers that need the owner: state the decision needed, the options, and a recommendation, then
