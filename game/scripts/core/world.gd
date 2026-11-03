@@ -115,6 +115,7 @@ var player: PlayerState:
 			_host_player = v
 var coin_sources := 0              # coins that entered the village (caravan)
 var couriers: CourierService         # REG-COURIER-01 (Expansion 18): the five settlements' booths and the village's, regular routes and special deliveries; saved under "couriers" (optional key; absent: no deliveries on the road)
+var journey_hook := Callable()       # REGION-NAV-01: what a traveller does at the settlement (the envoy's survey, S4): (n) -> bool, true when it gave them work
 var regions: Regions                # SET-C-FIVE (Expansion 18): the five off-map settlements and their traders, who are the caravan (ECON-P1.3); saved under "regions" (optional key)
 var quests: Quests                 # side quests on offer (scripts/core/quests.gd)
 var manor_work: ManorWork          # the reeve's jobs: the manor's goods carried and used (scripts/core/manor_work.gd)
@@ -588,6 +589,12 @@ func _update_npc(n: NPC, dt: float) -> void:
 	if not n.pursuit.is_empty():
 		brain.pursue(n)                # A2: a guard on a case looks for the offender (responding, searching); sight brings back the chase
 		if n.target != -1:
+			return
+	if not n.journey.is_empty():
+		if Journeys.night_and_food(self, n):            # REGION-NAV-01: a traveller rests by the road at night, eats from their pack
+			return
+		if n.plan.is_empty() and Journeys.resume(self, n):
+			_run_plan(n, dt, gm)
 			return
 	if n.plan.is_empty():
 		var t := Time.get_ticks_usec() if profiling else 0

@@ -2735,6 +2735,9 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			n.anim = "idle"
 			w.rest_recover(n, float(a.get("min", 0.0)), bool(a.get("morning", false)))
 			return true
+		"journey_leg":                                  # REGION-NAV-01: the end of a leg of a journey (Journeys)
+			Journeys.leg_done(w, n)
+			return true
 		"eat":
 			for f in ([str(a.item)] if a.has("item") else (COOKED if a.get("cooked_only", false) else EDIBLE)):
 				if n.inv.has(f):

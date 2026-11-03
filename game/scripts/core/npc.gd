@@ -44,6 +44,7 @@ var facing := Vector2.DOWN
 var attack_cd := 0.0
 var target := -1             # npc id being fought (-1 none, -2 the player)
 var target_ref := ""         # A7, A8: with target -2, which player ("player", "player:<pid>"; "" the acting player, as before). Not saved, as target is not
+var journey := {}            # REGION-NAV-01 (Journeys): {to, purpose, leg, since, gate}: on the road to or at a neighbouring settlement; {} at home. Saved (optional key)
 var pursuit := {}            # A2 (GP-CRIME-PURSUIT): a guard on a player's case: {ref, state: pursuing | responding | searching, at: [x, y] last-known, t, until, cells: [[x, y]], i, share}; {} none. Saved (optional key): the wanted hunt survives save and load (Justice)
 var chase_route := false     # S3: a guard chasing a player is following `path` round what stands between them (NPCBrain.fight; not saved, as `target` is not)
 var memory: Array = []       # notable events this NPC knows about
@@ -135,6 +136,8 @@ func to_dict() -> Dictionary:
 		d.became_player = true           # ID-01: written only for a child who became the player
 	if not adoptive.is_empty():
 		d.adoptive = adoptive.duplicate()    # MP-PLAYER-FAMILY (save 23): written only for a child adopted by a player couple
+	if not journey.is_empty():
+		d.journey = journey.duplicate(true)  # REGION-NAV-01: written only for a traveller
 	return d
 
 
@@ -167,6 +170,7 @@ static func from_dict(d: Dictionary) -> NPC:
 	n.clan = str(d.get("clan", ""))                           # older saves: none
 	n.report = (d.get("report", {}) as Dictionary).duplicate()        # older saves: none
 	n.pursuit = (d.get("pursuit", {}) as Dictionary).duplicate(true)  # A2: older saves (a Build 20 save): no guard on a case
+	n.journey = (d.get("journey", {}) as Dictionary).duplicate(true)  # REGION-NAV-01: older saves: nobody on the road
 	for ref in d.get("talked", {}):                                   # A6: older saves: nothing told yet
 		var t := {}
 		for k in d.talked[ref]:
