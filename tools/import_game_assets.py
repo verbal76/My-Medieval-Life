@@ -279,24 +279,85 @@ HATS = {
     "guard": ["soldier-helm", "knight-helm", "novice-helm"],
 }
 # CC-01 (owner, 2026-10-22: an ordinary medieval civilian, appearance only): what character creation offers.
-# None = "none". No headwear, armour, foreign or fantasy clothes, gloves, horns or ears; human only.
+# None = "none". B25R1-007 (owner directive 2026-11-03 section 6, "Unlock all cosmetic character customization options. If a
+# player wants to create a green elf, that is acceptable"; an intentional revision of CC-01's natural-only limits): every
+# cosmetic layer the pack draws for every character: all three bodies (human, cyclops, skeleton), all ears and horns, the
+# jaw, every hair style, beard and eyelash. Still not offered, because they are equipment the game sells, makes or finds
+# (the owner: "Character creation must not grant equipment"): headwear, armour and the other gear clothes, gloves and metal
+# boots. character_look_test and char_create_test check both.
 CREATION_PICKS = {
-    "race": ["human"],
+    "race": ["human", "cyclops", "skeleton"],
+    "ears-&-horns": [None, "elven-ears", "cat-ears-1", "cat-ears-2", "bunny-ears-1", "bunny-ears-2", "goat-horns-1",
+                     "goat-horns-2", "antlers", "unicorn-horn", "skeleton-small-horns", "skeleton-big-horns"],
+    "jaw": [None, "jaw"],
     "hair": [None, "f1", "f2", "f3", "f4", "m1", "m2", "m3", "m4", "m5", "m6", "m7", "m8", "m9"],
     "facial-hair": [None, "beard1", "beard2", "mustache"],
     "eyelashes": [None, "f1", "f2", "f3", "m1", "m2", "n1", "n2", "n3"],
     "clothes": ["basic", "tunic"],
     "shoes": [None, "leather-boots"],
 }
-# swatch rows offered per colour selection: natural skin (0-6); natural hair: golden, brown, black, grey, white
-# (NATURAL_HAIR without row 6, which is lemon yellow (255, 255, 27) in the game, not a blonde; the other rows are
-# pure reds, greens, blues and magentas); eyes without the red (10, 11) and blank white (13) rows; every row of
-# the clothes, tunic and leather ramps (plain dyed cloth and leather)
-CREATION_SWATCHES = {
-    "skin": list(range(7)), "hair": [0, 1, 2, 3, 4], "eyes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12],
-    "clothes": list(range(7)), "tunic": list(range(5)), "leather_shoes": list(range(3)),
+# B25R1-007: the pack's ramps have no blue or grey skin, no natural blonde or copper hair, no violet or amber eyes and no
+# brown, black or white cloth. These rows are added after the pack's own (GAME EXPANSION: generated here, not the pack's
+# art), so every saved row number keeps its colour. Each is [base row of the pack's ramp, hue (0-1), saturation (0-1),
+# lightness scale, lightness shift]: every shade of the base row keeps its place in the ramp and its lightness (scaled and
+# shifted), with the hue and saturation given, so the shading of the art is the pack's own. A hue of None keeps the base's.
+EXTRA_RAMP_ROWS = {
+    "skin": {   # base row 1 (a light natural tone: six shades)
+        "sky blue": [1, 0.58, 0.55, 1.0, 0.0], "deep blue": [1, 0.62, 0.5, 0.82, 0.0], "stone grey": [1, 0.08, 0.04, 0.95, 0.0],
+        "ash": [1, 0.6, 0.1, 1.05, 0.04], "charcoal": [1, 0.6, 0.08, 0.6, 0.0], "teal": [1, 0.47, 0.45, 0.92, 0.0],
+        "rose": [1, 0.95, 0.55, 1.0, 0.02], "moss": [1, 0.25, 0.35, 0.85, 0.0], "frost white": [1, 0.55, 0.25, 1.0, 0.12],
+        "ochre": [1, 0.1, 0.65, 0.9, 0.0],
+    },
+    "hair": {   # base row 0 (golden: five shades)
+        "flaxen": [0, 0.13, 0.55, 1.0, 0.16], "copper": [0, 0.06, 0.75, 1.0, 0.0], "chestnut": [0, 0.05, 0.55, 0.75, 0.0],
+        "strawberry": [0, 0.03, 0.6, 1.0, 0.1], "raven blue": [0, 0.62, 0.35, 0.45, 0.0], "violet": [0, 0.77, 0.55, 0.9, 0.0],
+        "rose pink": [0, 0.93, 0.6, 1.0, 0.12], "teal": [0, 0.48, 0.6, 0.85, 0.0], "orange": [0, 0.07, 0.95, 1.0, 0.05],
+        "silver blue": [0, 0.58, 0.2, 1.0, 0.12], "forest": [0, 0.33, 0.5, 0.65, 0.0],
+    },
+    "eyes": {   # base row 3 (white, iris, dark iris): the white is kept
+        "violet": [3, 0.77, 0.7, 1.0, 0.0], "pink": [3, 0.92, 0.7, 1.0, 0.15], "amber": [3, 0.11, 0.9, 1.0, 0.1],
+        "ice blue": [3, 0.55, 0.6, 1.0, 0.3], "grey": [3, 0.6, 0.08, 1.0, 0.15], "hazel": [3, 0.15, 0.6, 0.9, 0.0],
+        "orange": [3, 0.07, 0.95, 1.0, 0.1], "light green": [3, 0.3, 0.7, 1.0, 0.18],
+    },
+    "clothes": {   # base row 0 (red: five shades)
+        "brown": [0, 0.07, 0.45, 0.8, 0.0], "black": [0, 0.0, 0.0, 0.35, 0.0], "cream": [0, 0.12, 0.35, 1.0, 0.3],
+        "purple": [0, 0.78, 0.55, 0.9, 0.0], "navy": [0, 0.63, 0.6, 0.6, 0.0], "forest green": [0, 0.33, 0.5, 0.7, 0.0],
+        "ochre": [0, 0.11, 0.7, 0.95, 0.0], "white": [0, 0.0, 0.0, 1.0, 0.4],
+    },
+    "skeleton": {   # base row 0 (bone, its eye glow the last two shades: the glow takes the hue)
+        "blue glow": [0, 0.6, None, 1.0, 0.0], "green glow": [0, 0.33, None, 1.0, 0.0], "gold glow": [0, 0.13, None, 1.0, 0.0],
+    },
 }
+# swatch rows offered per colour selection: every row of every ramp the creation layers use, the pack's and the added ones
 CREATION_LINKED = {"facial_hair": "hair"}    # a beard takes the hair's colour, as the importer's looks always had
+
+
+def _extra_row(base, hue, sat, lscale, lshift, ramp):
+    """One added ramp row (EXTRA_RAMP_ROWS): the base row's shades, each with its lightness kept (scaled, shifted) and the
+    hue and saturation given. Eyes keep their white (the first shade); a skeleton's bone keeps its colour and only its eye
+    glow (the last two shades) takes the hue."""
+    import colorsys
+    out = []
+    for i, hx in enumerate(base):
+        r, g, b, a = (int(hx[k:k + 2], 16) for k in (0, 2, 4, 6))
+        if (ramp == "eyes" and i == 0) or (ramp == "skeleton" and i < len(base) - 2):
+            out.append(hx)
+            continue
+        h, l, s = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+        l2 = min(1.0, max(0.0, l * lscale + lshift))
+        s2 = s if sat is None else sat
+        r2, g2, b2 = colorsys.hls_to_rgb(hue if hue is not None else h, l2, s2)
+        out.append("%02x%02x%02x%02x" % (round(r2 * 255), round(g2 * 255), round(b2 * 255), a))
+    return out
+
+
+def creation_swatches(ramps):
+    """Every row of each colour selection creation offers (B25R1-007)."""
+    # in CC-01's order, the skeleton's bone last (CharacterLook.random_recipe rolls them in this order: a seed's
+    # ordinary villager stays the same look)
+    sel = {"skin": "skin", "hair": "hair", "eyes": "eyes", "clothes": "clothes", "tunic": "tunic",
+           "leather_shoes": "leather", "skeleton": "skeleton"}
+    return {s: list(range(len(ramps[r]))) for s, r in sel.items()}
 ALWAYS_LAYERS = {"eyes": "eyes", "weapon-overlay": "weapon-overlay"}   # drawn without a pick (puny_chargen.render)
 HUMAN_ONLY = ["eyes", "eyelashes"]
 # ARMOR-01 (owner Option A, 2026-10-22; docs/DECISIONS.md): worn item id -> the layer it draws while worn, from the
@@ -326,7 +387,9 @@ def civilian_recipe(recipe):
     """The part of a puny_chargen recipe the run-time look keeps: the creation layers' picks and the swatches
     the layers drawn actually use. Drawing it gives the same sheet as puny_chargen.render(recipe) when the
     recipe has nothing outside the creation layers."""
-    picks = {k: recipe["picks"].get(k) for k in CREATION_PICKS}
+    # the Build 7-17 looks: CC-01's layers only (they are human with no ears, horns or jaw; CharacterLook.normalize gives
+    # the later layers as none)
+    picks = {k: recipe["picks"].get(k) for k in CREATION_PICKS if k not in ("ears-&-horns", "jaw")}
     sels = {"eyes"}
     for layer, code in picks.items():
         if code is not None:
@@ -367,6 +430,12 @@ def _import_character_layers(record, style, zip_name):
     for r in sorted(used_ramps):
         img = style.ramps[r].convert("RGBA")
         ramps[r] = [["%02x%02x%02x%02x" % img.getpixel((x, y)) for x in range(img.width)] for y in range(img.height)]
+    names = {}
+    for r, extra in EXTRA_RAMP_ROWS.items():          # B25R1-007: added rows after the pack's own (keeps saved rows)
+        names[r] = {}
+        for name, (base, hue, sat, lscale, lshift) in extra.items():
+            names[r][str(len(ramps[r]))] = name
+            ramps[r].append(_extra_row(ramps[r][base], hue, sat, lscale, lshift, r))
     selections = {sel: ramp for sel, ramp in sorted(puny_chargen.SELECTIONS.items()) if ramp in used_ramps
                   and any(sel == s for lay in layers.values() for o in lay.values() for _, s in o["ramps"])}
     data = {
@@ -375,7 +444,9 @@ def _import_character_layers(record, style, zip_name):
         "dim": puny_chargen.DIM, "frames": puny_chargen.FRAMES, "directions": puny_chargen.DIRECTIONS,
         "draw_order": puny_chargen.DRAW_ORDER, "always": ALWAYS_LAYERS, "human_only": HUMAN_ONLY,
         "selections": selections, "ramps": ramps, "layers": layers,
-        "creation": {"picks": CREATION_PICKS, "swatches": CREATION_SWATCHES, "linked": CREATION_LINKED},
+        "creation": {"picks": CREATION_PICKS, "swatches": creation_swatches(ramps), "linked": CREATION_LINKED},
+        # B25R1-007: the ramp rows added after the pack's (ramp -> row -> name); every other row is the pack's own
+        "added_rows": names,
         # ARMOR-01: worn item id -> {"layer", "option", "swatches", "hides": [layers], "also": [{"layer", "option"}]} (WORN_LAYERS)
         "worn_layers": WORN_LAYERS,
     }

@@ -234,6 +234,29 @@ static func set_swatch(recipe: Dictionary, selection: String, row: int) -> void:
 			recipe.swatches[str(s)] = row
 
 
+## B25R1-007: the name of a colour selection's ramp row, for the colour pickers: the pack's rows by eye, the added rows
+## by the name the importer gives them (character_style.json "added_rows").
+const PACK_ROW_NAMES := {
+	"skin": ["ivory", "fair", "light", "peach", "tan", "brown", "deep brown", "lavender", "green", "yellow-green", "red"],
+	"hair": ["golden", "brown", "black", "grey", "white", "lemon", "red", "green", "cyan", "blue", "magenta"],
+	"eyes": ["black", "grey", "navy", "blue", "dark teal", "teal", "olive", "green", "brown", "amber brown", "dark red", "red",
+		"jet", "white"],
+	"clothes": ["red", "teal", "green", "blue", "yellow", "magenta", "grey"],
+	"tunic": ["brown", "russet", "olive", "sand", "stone"],
+	"leather": ["brown", "tan", "golden"],
+	"skeleton": ["bone, violet glow", "old bone, red glow"],
+}
+
+
+static func swatch_name(selection: String, row: int) -> String:
+	var ramp := str(style().selections.get(selection, selection))
+	var added: Dictionary = style().get("added_rows", {}).get(ramp, {})
+	if added.has(str(row)):
+		return str(added[str(row)])
+	var names: Array = PACK_ROW_NAMES.get(ramp, [])
+	return str(names[row]) if row >= 0 and row < names.size() else "colour %d" % (row + 1)
+
+
 ## A colour selection's swatch as one colour for a button (the ramp row's second shade: the main tone of skin,
 ## hair and cloth, the iris of an eye).
 static func swatch_color(selection: String, row: int) -> Color:
@@ -242,19 +265,41 @@ static func swatch_color(selection: String, row: int) -> Color:
 	return Color.html(str(line[mini(1, line.size() - 1)]))
 
 
-## A random ordinary villager within what creation offers, with the generator's chances of "none" (hair as
-## likely absent as any one style, eyelashes and boots half the time); a woman has no beard.
-static func random_recipe(rng: RandomNumberGenerator, sex := "male") -> Dictionary:
+## B25R1-007: a second colour that tells two rows of one selection apart when their main tone is alike (a skeleton's eye
+## glow: every row's bone is near white); null when the main tone says it all.
+static func swatch_accent(selection: String, row: int):
+	if selection != "skeleton":
+		return null
+	var r: Array = style().ramps[str(style().selections[selection])]
+	var line: Array = r[clampi(row, 0, r.size() - 1)]
+	return Color.html(str(line[line.size() - 2]))
+
+
+## B25R1-007: what an ordinary villager looks like (CC-01's limits, kept for "Random villager" and every random look the game
+## draws for itself): human, no ears, horns or jaw, natural skin (the pack's rows 0-6), natural hair (golden, brown, black,
+## grey, white: rows 0-4) and eyes (not red or blank white: rows 0-9 and 12). Creation itself offers everything (options, rows).
+const NATURAL := {"race": ["human"], "ears-&-horns": [""], "jaw": [""]}
+const NATURAL_ROWS := {"skin": [0, 1, 2, 3, 4, 5, 6], "hair": [0, 1, 2, 3, 4], "eyes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 12]}
+
+
+## A random look within what creation offers, with the generator's chances of "none" (hair as likely absent as any one
+## style, eyelashes and boots half the time). By default an ordinary villager (NATURAL, NATURAL_ROWS), and a woman has no
+## beard; `wild`: anything creation offers, every body, ear, horn and colour, a beard for anyone.
+static func random_recipe(rng: RandomNumberGenerator, sex := "male", wild := false) -> Dictionary:
 	var picks := {}
 	for layer in style().creation.picks:
 		var opts := options(layer)
+		if not wild and NATURAL.has(layer):
+			opts = NATURAL[layer]
 		var real := opts.filter(func(o): return o != "")
 		var none_ok := opts.has("")
 		var pick := ""
-		if layer == "hair":
+		if real.is_empty():
+			pick = ""
+		elif layer == "hair" or layer == "race":
 			pick = opts[rng.randi_range(0, opts.size() - 1)]
 		elif layer == "facial-hair":
-			pick = "" if sex == "female" or rng.randf() < 0.5 else real[rng.randi_range(0, real.size() - 1)]
+			pick = "" if (sex == "female" and not wild) or rng.randf() < 0.5 else real[rng.randi_range(0, real.size() - 1)]
 		elif none_ok and rng.randf() < 0.5:
 			pick = ""
 		else:
@@ -263,6 +308,8 @@ static func random_recipe(rng: RandomNumberGenerator, sex := "male") -> Dictiona
 	var r := {"picks": picks, "swatches": {}}
 	for sel in style().creation.swatches:
 		var rs := rows(sel)
+		if not wild and NATURAL_ROWS.has(sel):
+			rs = NATURAL_ROWS[sel]
 		r.swatches[sel] = rs[rng.randi_range(0, rs.size() - 1)]
 	for s in style().creation.get("linked", {}):
 		r.swatches[s] = r.swatches[str(style().creation.linked[s])]
