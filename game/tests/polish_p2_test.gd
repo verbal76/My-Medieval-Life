@@ -36,6 +36,7 @@ func _init() -> void:
 func _run() -> void:
 	main.new_game()
 	_draw_under_house()
+	_draw_under_site_building()
 	_wheat_picked()
 	_back_doors()
 	await _pack_fit()
@@ -98,6 +99,57 @@ func _draw_under_house() -> void:
 		check(left == 0, "draw order: lifting %s's roof lifts its front edge too (%d cells left)" % [str(b.id), left])
 		roofs.restore_all()
 		check(roofed.call(Vector2i(x, y)), "draw order: the front edge comes back when the roof does")
+
+
+## GP-DRAW-UNDER-HOUSE at the settlement sites (owner 2026-11-03: half the character went under a building's sprite): the
+## site buildings' front walls are drawn among the characters, the rest of their roofs over them, and the front walls go with
+## the chunk when it unloads.
+func _draw_under_site_building() -> void:
+	var ow: OverworldView = main.ow_view
+	var o = main.map.overworld
+	check(ow != null and o != null and not o.sites.is_empty(), "site draw order: the overworld has settlement sites")
+	if ow == null or o == null or o.sites.is_empty():
+		return
+	var sl: Dictionary = o.sites[0].slots[0]
+	var r: Rect2i = sl.rect
+	var stamp: Dictionary = o.stamps.get(str(sl.stamp), o.stamps.house)
+	var cc := Vector2i(floori(float(r.position.x) / Overworld.CHUNK), floori(float(r.position.y) / Overworld.CHUNK))
+	if not ow.chunks.has(cc):
+		ow._build(cc)
+	var site_above: Array = ow.chunks[cc].site_above
+	var sorted: Array = site_above.filter(func(l): return l.get_parent() == main.actors)
+	check(sorted.size() == 1 and (sorted[0] as TileMapLayer).y_sort_enabled, "site draw order: the chunk's front walls are one y-sorted layer among the characters")
+	if sorted.size() != 1:
+		return
+	var front: TileMapLayer = sorted[0]
+	var roofed_below := func(c: Vector2i) -> bool:          # a roof-layer tile of this building south of c
+		var i := c.x - r.position.x
+		var j := c.y + 1 - r.position.y
+		if j >= int(stamp.h) or i < 0 or i >= int(stamp.w):
+			return false
+		for rn in main.map.data.get("roof_layers", []):
+			var rl: Array = (stamp.layers as Dictionary).get(str(rn), [])
+			if not rl.is_empty() and int(rl[j * int(stamp.w) + i]) >= 0:
+				return true
+		return false
+	var fronts := 0
+	var wrong := 0
+	for c: Vector2i in front.get_used_cells():
+		fronts += 1
+		if not o.site_building_at(c):
+			wrong += 1
+	var over := 0
+	for l: TileMapLayer in site_above:
+		if l == front or not main.map.data.get("roof_layers", []).has(str(l.name)):
+			continue
+		for c: Vector2i in l.get_used_cells():
+			if r.has_point(c) and o.site_building_at(c) and not roofed_below.call(c):
+				over += 1
+	check(fronts > 0, "site draw order: %s's front wall is drawn among the characters (%d cells)" % [str(sl.stamp), fronts])
+	check(wrong == 0, "site draw order: only the buildings' solid cells are sorted (%d wrong)" % wrong)
+	check(over == 0, "site draw order: no front-wall cell of a site building is drawn over the characters (%d)" % over)
+	ow._free(cc)
+	check(front.is_queued_for_deletion(), "site draw order: the front walls go with their chunk")
 
 
 ## GP-WHEAT-PICKED (owner: "when i harvest the wheat it doesnt turn into a picked wheat sprite").

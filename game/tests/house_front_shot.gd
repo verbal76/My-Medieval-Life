@@ -2,7 +2,8 @@ extends SceneTree
 ## GP-DRAW-UNDER-HOUSE: the player and a villager standing on the ground just in front of building fronts (as close as
 ## their feet let them), in the real game scene, saved as screenshots so the drawing order is looked at: both must be
 ## drawn whole, over the wall's bottom row. Needs a display (not --headless):
-##   xvfb-run -a godot --rendering-driver opengl3 --path game --script res://tests/house_front_shot.gd -- OUT_DIR [count]
+##   xvfb-run -a godot --rendering-driver opengl3 --path game --script res://tests/house_front_shot.gd -- OUT_DIR [count] [inside|site]
+## "site": the same in front of the settlement sites' buildings on the overworld (REGION-NAV-01).
 
 var main
 var out := "/tmp"
@@ -12,6 +13,7 @@ var queue: Array = []
 var current: Dictionary = {}
 var spots: Array = []          # [player pos, npc pos]
 var inside := false            # third argument "inside": the player stands just inside the door (the roof lifts)
+var site := false              # third argument "site": the settlement sites' buildings
 
 
 func _init() -> void:
@@ -21,6 +23,7 @@ func _init() -> void:
 	if args.size() > 1:
 		count = int(args[1])
 	inside = args.size() > 2 and args[2] == "inside"
+	site = args.size() > 2 and args[2] == "site"
 	main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
 	process_frame.connect(_setup, CONNECT_ONE_SHOT)
@@ -30,18 +33,37 @@ func _setup() -> void:
 	main.save_path = "user://test_saves/house_front_shot/save1.json"
 	main.new_game()
 	main.ui.hide_all()
-	var ids: Array = main.world.buildings.keys()
-	ids.sort()
-	for id in ids:
-		var b: Dictionary = main.world.buildings[id]
-		if b.has("door") and queue.size() < count:
-			queue.append(b)
+	if site:
+		var o = main.map.overworld
+		for st in o.sites:
+			for sl in st.slots:
+				var r: Rect2i = sl.rect
+				var stamp: Dictionary = o.stamps.get(str(sl.stamp), o.stamps.house)
+				if queue.size() < count:
+					queue.append({"id": "%s_%s" % [str(st.id), str(sl.trade)], "door": [r.position.x + int(stamp.door[0]), r.position.y + int(stamp.door[1])],
+						"x": r.position.x, "y": r.position.y, "h": r.size.y, "stamp": stamp})
+	else:
+		var ids: Array = main.world.buildings.keys()
+		ids.sort()
+		for id in ids:
+			var b: Dictionary = main.world.buildings[id]
+			if b.has("door") and queue.size() < count:
+				queue.append(b)
 	_next()
 	process_frame.connect(_wait)
 
 
 ## The row just below the building's drawn front in column x: the first cell going down with no roof-layer tile.
 func _below_front(x: int, b: Dictionary) -> int:
+	if b.has("stamp"):                       # a site building: its stamp's roof layers
+		var st: Dictionary = b.stamp
+		var i := x - int(b.x)
+		for j in range(int(st.h) - 1, -1, -1):
+			for n in main.map.data.get("roof_layers", []):
+				var rl: Array = (st.layers as Dictionary).get(str(n), [])
+				if not rl.is_empty() and i >= 0 and i < int(st.w) and int(rl[j * int(st.w) + i]) >= 0:
+					return int(b.y) + j + 1
+		return int(b.y) + int(b.h)
 	var lays: Array = []
 	for n in main.map.data.get("roof_layers", []):
 		lays.append(main.view.layer(str(n)))
@@ -81,7 +103,7 @@ func _wait() -> void:
 	if frames < (40 if inside else 20):
 		return
 	var img := root.get_texture().get_image()
-	var path := "%s/%s_%s.png" % [out, "inside" if inside else "front", str(current.id)]
+	var path := "%s/%s_%s.png" % [out, "inside" if inside else ("site" if site else "front"), str(current.id)]
 	img.save_png(path)
 	print("saved ", path, " player ", spots[0], " npc ", spots[1])
 	if queue.is_empty():

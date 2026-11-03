@@ -20,6 +20,8 @@ var _center := Vector2i(1 << 30, 1 << 30)
 var _pending: Array[Vector2i] = []
 var _works_seen := -1                 # B14-07: Overworld.works_version last drawn
 var _works_tex := {}                  # way kind ("steps_ns", "stairs_ew", ...) -> its 16 px tile (game/assets/terrain)
+var _site_sorted_parent: Node2D       # the characters' y-sorted node (the village MapView's): where a site building's front wall is drawn
+var _site_roofs := {}                 # the village's roof layer names (village.json "roof_layers")
 
 
 func setup(src: MapView, o: Overworld, load_radius: int) -> void:
@@ -29,6 +31,10 @@ func setup(src: MapView, o: Overworld, load_radius: int) -> void:
 	sources = src.sources
 	columns = src.columns
 	animated = src.animated
+	_site_sorted_parent = src._sorted_parent
+	if src.map != null:
+		for n in src.map.data.get("roof_layers", []):
+			_site_roofs[str(n)] = true
 	var pairs := []
 	for k in o.tiles.trees:
 		pairs.append([int(k.top), int(k.bottom)])
@@ -174,6 +180,7 @@ func _build(cc: Vector2i) -> void:
 func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 	var box := Rect2i(cc * Overworld.CHUNK, Vector2i(Overworld.CHUNK, Overworld.CHUNK))
 	var layers := {}
+	var sorted: TileMapLayer = null       # this chunk's site front walls, drawn among the characters
 	for st in overworld.sites:
 		if not (st.rect as Rect2i).intersects(box):
 			continue
@@ -191,6 +198,7 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 				var l: TileMapLayer = layers.get(lname)
 				if l == null:
 					l = _layer(root, 10 if str(lname).begins_with("above") else 0)
+					l.name = str(lname)
 					layers[lname] = l
 					if str(lname).begins_with("above"):
 						above_layers.append(l)
@@ -199,13 +207,43 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 					for i in int(stamp.w):
 						var v := int(cells[j * int(stamp.w) + i])
 						var cell := r.position + Vector2i(i, j)
-						if v >= 0 and box.has_point(cell):
+						if v < 0 or not box.has_point(cell):
+							continue
+						if str(lname).begins_with("above") and _site_sorts(stamp, str(lname), i, j, cell):
+							if sorted == null:
+								sorted = TileMapLayer.new()
+								sorted.name = "site_front_%d_%d" % [cc.x, cc.y]
+								sorted.tile_set = tileset
+								sorted.y_sort_enabled = true
+								_site_sorted_parent.add_child(sorted)
+							_put(sorted, cell, v)
+						else:
 							set_tile(l, cell, v)
 	var above := []
 	for lname in layers:
 		if str(lname).begins_with("above"):
 			above.append(layers[lname])
+	if sorted != null:
+		above.append(sorted)              # (freed with the chunk; see _free)
 	return above
+
+
+## GP-DRAW-UNDER-HOUSE for the settlement sites (owner 2026-11-03: "half of them would go under the building's sprite"): an
+## "above" tile of a site building is drawn among the characters, by its cell's bottom edge, when its cell is one of the
+## building's solid cells and either it is not a roof layer (an overlay on a solid cell, B8-025) or no roof-layer tile of the
+## stamp lies south of it (the bottom row of the front wall). The rest of the roof stays over everyone, as in the village.
+func _site_sorts(stamp: Dictionary, lname: String, i: int, j: int, cell: Vector2i) -> bool:
+	if _site_sorted_parent == null or not overworld.site_building_at(cell):
+		return false
+	if not _site_roofs.has(lname):
+		return true
+	if j + 1 >= int(stamp.h):
+		return true
+	for rn in _site_roofs:
+		var rl: Array = (stamp.layers as Dictionary).get(rn, [])
+		if not rl.is_empty() and int(rl[(j + 1) * int(stamp.w) + i]) >= 0:
+			return false
+	return true
 
 
 func _free(cc: Vector2i) -> void:
@@ -216,6 +254,8 @@ func _free(cc: Vector2i) -> void:
 	above_layers.erase(c.tops)
 	for l in c.get("site_above", []):
 		above_layers.erase(l)
+		if is_instance_valid(l) and l.get_parent() == _site_sorted_parent:
+			l.queue_free()                # a front-wall layer lives among the characters, not under this chunk's root
 	c.root.queue_free()
 	chunks.erase(cc)
 
