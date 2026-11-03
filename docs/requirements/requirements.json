@@ -7147,8 +7147,8 @@
    "description": "Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)?",
    "source": "docs/region_nav/ROADS_AUDIT_B25R1.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Option 2, with a realistic road hierarchy: stone roads near important settlements, market centres, bridges and heavily travelled places; dirt roads for the main country connections; dirt trails for secondary routes. Use existing stone artwork; do not convert every road to stone; reuse the network and navigation; legend and terrain consistent; all three traversable.",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [],
@@ -7159,6 +7159,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/region_nav/ROADS_AUDIT_B25R1.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-11-03: Option 2 with a road hierarchy (stone near settlements/markets/bridges/busy stretches, dirt roads between settlements, dirt trails for remote/resource/homestead routes; existing stone art; same network and navigation; legend and terrain consistent). Worker assigned on wip/b25r1-roads"
     }
    ]
   },

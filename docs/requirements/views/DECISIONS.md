@@ -6,14 +6,14 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 27 |
-| APPROVED | 276 |
+| OPEN | 26 |
+| APPROVED | 277 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 3 |
 | REOPENED | 0 |
 | DEFERRED | 5 |
 
-## Build 20: Living Economy: open, reopened or provisional (7)
+## Build 20: Living Economy: open, reopened or provisional (6)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
@@ -22,7 +22,6 @@ The decision register is the `decision` records of the register. A recommendatio
 | B25-ECON-P3 | Retired villagers keep trade stock forever (day 120: 68 iron ore, 47 coal, 24 iron bars, 8 pickaxes, 7 axes held by elders while the working smith held nothing). Options: A keep; B elders and adults between jobs sell their goods through the existing sell rule; C the stock passes to the trade's successor as tools already do. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | OPEN | no |  | docs/directives/2026-11-02_overnight_autonomous_development_directive.md |
 | B25-ECON-P4 | Ore imports stall: Garton's quarry stock rose 63 to 175 but its trader had no coins to buy it, so 0 iron ore came to the village in 120 days (2 in a year for seed 2). Options: A keep as an outcome; B the trader carries ore on consignment (paid on sale); C smiths buy from the quarry directly. Recommendation: decide after the final year-long runs; leaning B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | OPEN | no |  | docs/directives/2026-11-02_overnight_autonomous_development_directive.md |
 | B25-ECON-P5 | Village land (fields, trees, game, ore) is fixed while population roughly triples in a year, so unemployment rises with population. Should fields grow with population? Recommendation: no change on present evidence. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | OPEN | no |  | docs/directives/2026-11-02_overnight_autonomous_development_directive.md |
-| B25R1-Q1 | Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)? | OPEN | no |  | docs/region_nav/ROADS_AUDIT_B25R1.md |
 | CHAPEL-GIVE-14-Q | With the 14-day hardship line now governing chapel food alms, households offer wheat to the chapel only above 14 days of their own food (was 6, goods_keep_days), so food given as alms is not offered back. Accept this change to the giving rule? Options: A accept (recommended: consistent with the 14-day line, prevents give-and-take, keeps donations voluntary and from comfortable households); B keep the 6-day offering line (some households would both receive alms and offer wheat). Implemented provisionally as A at 8b203c5. | OPEN | no |  | docs/directives/2026-11-02_chapel_economic_purpose_correction.md |
 
 ## Build 21: Village Politics: open, reopened or provisional (1)
