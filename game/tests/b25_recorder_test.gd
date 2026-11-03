@@ -263,6 +263,11 @@ func test_adapters() -> void:
 	var j := evs(rec, "recruit_joined")
 	check(j.size() == 1 and evs(rec, "recruit_accepted").size() == 1 and str(ctx(rec, int(j[0].id)).get("ctx.source", "")) == "displaced_adult",
 		"life_event: an accepted recruit is accepted and joined, source displaced_adult")
+	rec.life_event("water_source_selected", {"claim": "hs1", "source": "stream", "cell": [200, 41], "distance": 6, "day": 0})
+	rec.life_event("settlement_attempt_failed", {"person": n.id, "reason": "no_water", "day": 0})
+	var fa := evs(rec, "settlement_attempt_failed")
+	check(evs(rec, "water_source_selected").size() == 1 and fa.size() == 1 and fa[0].outcome == "failed" and fa[0].reason == "no_water",
+		"life_event: B25R1-017 water source and a failed settlement attempt (outcome failed, reason no_water)")
 	rec.life_event("something_new", {"day": 0, "person": n.id})
 	var u := evs(rec, "unmapped_event")
 	check(u.size() == 1 and u[0].detail == "life_event:something_new", "life_event: an unknown kind is kept as unmapped_event (the exception report lists it)")

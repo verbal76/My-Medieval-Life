@@ -6463,7 +6463,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 			t.bottom = int(k.bottom)
 		if not t.has("species"):
 			t.species = _tree_species(t) if not k.is_empty() else "oak_summer"
-		if not t.has("born"):
+		# a stump has no "born" until it sprouts (Trees.advance sets it then, and nothing reads it before), so only
+		# a growing or grown record without one (older saves) gets it: a reloaded world matches the unbroken one
+		if not t.has("born") and str(t.state) != "stump":
 			t.born = -1.0e7 if t.state == "grown" else Trees.born_of(t)
 	# a plant's place and tile are map data; its state is the save's (older saves: every plant ripe)
 	_make_plants(m)
