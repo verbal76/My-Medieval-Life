@@ -106,6 +106,7 @@ jobs:
           res://tests/run_tests.gd
           res://tests/start_test.gd
           res://tests/character_look_test.gd
+          res://tests/char_create_test.gd
           res://tests/furniture_test.gd
           res://tests/play_test.gd
           res://tests/overworld_test.gd
