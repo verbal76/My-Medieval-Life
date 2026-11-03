@@ -53,7 +53,7 @@ static func add_pages(w: Wiki) -> void:
 			"They live there as any homestead does: they build a house from real materials, fetch water, fell trees, grow food, keep animals and walk to market.",
 			"Now and then they raid: some of them walk the road to the village in the afternoon, wait for dark by the old camp ground and rob whoever they catch outdoors, then go home with what they took. A hungry, poor band raids more often than a fed one; guards and wounds make them think twice.",
 			"An outlaw with a smith's skill can work at a smithy built at the camp and make weapons the ordinary way, from real metal and tools. The band sells what it makes to its own; it trades with an outsider only one it trusts.",
-			"The camp is defended by the people who live there. Whatever is in its stores, or on its people, is really there: take it and it is theft.",
+			"The camp is defended by the people who live there: they fight or flee. Whatever is in its stores, or on its people, is really there: take it and it is theft.",
 			"Children born at the camp grow up in the band; at coming of age they may leave for kin in the village."]),
 		Wiki.links(["sys:leaving_home", "sys:wild_water", "sys:homesteads"])], "", "bandit camp outlaw raid hideout smith wild")
 	w.add_page("todo:homestead_more", "More for a homestead", "notyet", [Wiki.note("Not in the game yet. Your own homestead has only its house and its field: you cannot build its well, pen or workshop yourself yet, no extra rooms or lofts go up out in the country, and no hired helpers carry materials there. Streams are not yet in the open country; until they come, every homestead digs a well.")], "", "not implemented planned homestead")

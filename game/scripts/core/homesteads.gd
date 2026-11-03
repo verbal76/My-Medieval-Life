@@ -1520,7 +1520,7 @@ func _errand(n: NPC, c: Dictionary, trip: Dictionary) -> bool:
 			n.doing = "buying firewood"
 			n.plan = [b.go(b._workplace_cell(s)), b.doit("buy_from", {"vendor": s.id, "item": "log", "qty": b.buy_qty(n, s, "log", 2, true), "pantry": true})]
 			return true
-	if str(c.status) == "built" and w.wilds != null and w.wilds.errand(n, c, trip):
+	if str(c.status) != "intended" and w.wilds != null and w.wilds.errand(n, c, trip):
 		return true                                     # animals for the pen, what the claim's open work needs
 	for id in ["plank", "building_block", "log", "stone", "iron_bar"]:
 		if not need.has(id) or tried.has("buy_" + id):
@@ -1715,6 +1715,8 @@ func act(n: NPC, a: Dictionary) -> bool:
 				trip.leg = "market"
 			return true
 		"home", "arrive":
+			if w.wilds != null and (trips.has(str(n.id)) or str(c.status) == "intended"):
+				w.wilds.carried_home(n, c)               # water carried from the village's well on the way
 			trips.erase(str(n.id))
 			if str(c.status) == "intended":
 				_arrive(n, c)

@@ -117,6 +117,17 @@ func choose_water(c: Dictionary, acc: Dictionary) -> void:
 		_new_work(c, "well", Rect2i(cell, Vector2i.ONE))
 
 
+## Homesteads.act "home": back from the village, `n` brings water from the village's well in a skin (carry_units; real water of
+## the village, carried by them), so a new homestead lives until its own well is dug.
+func carried_home(n: NPC, c: Dictionary) -> void:
+	var cf := cfg()
+	var got := mini(int(cf.carry_units), int(cf.water_store) - int(c.get("water", 0)))
+	if got <= 0:
+		return
+	c.water = int(c.get("water", 0)) + got
+	_rec("water_drawn", {"claim": str(c.id), "person": n.id, "units": got, "source": "village_well"})
+
+
 ## Each dawn: the residents drink (water_per_person each, from the claim's store); short, they go thirsty (thirst_damage),
 ## recorded. Returns the units short.
 func _drink(c: Dictionary, members: Array) -> int:
@@ -463,9 +474,11 @@ func plan_work(n: NPC, c: Dictionary) -> bool:
 		n.plan = [b.go(b.beside(src, n.cell(), 0, true) if str(c.water_src.source) == "stream" else src + Vector2i(0, 1)),
 			b.work(float(cf.draw_minutes), "homestead", {"step": "draw_water"}, "gather")]
 		return true
-	if str(c.status) != "built":
-		return false
-	_maybe_begin(n, c)
+	var wk0 := open_work(c)
+	if str(c.status) != "built" and (wk0.is_empty() or str(wk0.kind) != "well"):
+		return false                                    # (before the house stands only the well is worked on: water first)
+	if str(c.status) == "built":
+		_maybe_begin(n, c)
 	var wk := open_work(c)
 	if not wk.is_empty():
 		var at := Vector2i(int(wk.cell[0]), int(wk.cell[1])) + Vector2i(0, int(wk.rect[3]))
