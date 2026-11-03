@@ -6765,7 +6765,7 @@
    "acceptance": [
     "Children B25R1-002..008 complete; separate private draft of six packages from one commit; the original Build 25 draft preserved"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": null,
    "depends_on": [],
    "decisions": [],
@@ -6779,6 +6779,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "target_build: 25 -> 20",
+     "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
     }
    ]
   },
@@ -6793,7 +6798,7 @@
    "acceptance": [
     "Root cause recorded; NPCs, animals and resources interactive outside the village, at settlements, on roads, in the wilderness, after save/load; interactive gameplay tests (scenarios A-D, F)"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": "B25R1-001",
    "depends_on": [],
    "decisions": [],
@@ -6812,6 +6817,11 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1-interact; tests: None -> outside_interact_test 23/0; countryside 38/0; wildlife 61/0; refuge 59/0; settlement_folk 36/0; net_fauna 13/0; world 339/0; polish_p2 110/0; wiki passed; test_commit: None -> 10491e7; commits + 10491e7",
      "why": "Root causes found and fixed on wip/b25r1-interact (10491e7): (1) the player's stand beside an overworld tree or rock used the village map (all outside is wall), so taps ended 'You can't reach it from here.'; (2) boulder and fruit_tree had no gather target anywhere (tap threw a script error); (3) countryside animals and travellers were drawn only (WORLD-LIFE-01), now adopted into Fauna near the player / talkable; (4) a tapped keeper only walked there. outside_interact_test 23/0 by taps in the real scene (scenarios A, B, C, D, F)"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "target_build: 25 -> 20",
+     "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
     }
    ],
    "branch": "wip/b25r1-interact",
@@ -6832,7 +6842,7 @@
    "acceptance": [
     "Every settlement in world data, with name, distance and direction, visible from day 1; roads drawn; discovered points of interest get persistent icons from real world objects"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": "B25R1-001",
    "depends_on": [],
    "decisions": [],
@@ -6846,6 +6856,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "target_build: 25 -> 20",
+     "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
     }
    ]
   },
@@ -6860,7 +6875,7 @@
    "acceptance": [
     "Audit recorded; both supported types render, connect and are walkable; map and world agree (scenario G)"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": "B25R1-001",
    "depends_on": [],
    "decisions": [],
@@ -6874,6 +6889,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "target_build: 25 -> 20",
+     "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
     }
    ]
   },
@@ -6888,7 +6908,7 @@
    "acceptance": [
     "Opens on the settlement network; pinch, wheel, drag, centre control; labels legible; a drag never starts travel"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": "B25R1-001",
    "depends_on": [],
    "decisions": [],
@@ -6902,6 +6922,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "target_build: 25 -> 20",
+     "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
     }
    ]
   },
@@ -6916,7 +6941,7 @@
    "acceptance": [
     "Reachability; road-preferring route; real movement with the world running; camera follows; manual input suspends; Resume and Dismiss; saved and restored safely (scenario E)"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": "B25R1-001",
    "depends_on": [],
    "decisions": [],
@@ -6930,6 +6955,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "target_build: 25 -> 20",
+     "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
     }
    ]
   },
@@ -6944,7 +6974,7 @@
    "acceptance": [
     "Audit recorded; broad skin, hair and eye colours, all styles, no gender restriction; preview and gameplay correct in every animation; saved; no equipment or advantage (scenario H)"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": "B25R1-001",
    "depends_on": [],
    "decisions": [],
@@ -6958,6 +6988,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "target_build: 25 -> 20",
+     "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
     }
    ]
   },
@@ -6972,7 +7007,7 @@
    "acceptance": [
     "Consistent medieval framing; preview left, controls right; origin centred with portrait; map uses the screen; HUD hidden or dimmed under modals; screenshots at phone and desktop sizes looked at (scenario I)"
    ],
-   "target_build": "25",
+   "target_build": "20",
    "parent": "B25R1-001",
    "depends_on": [],
    "decisions": [],
@@ -6986,6 +7021,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "target_build: 25 -> 20",
+     "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
     }
    ]
   },

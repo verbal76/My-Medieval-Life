@@ -94,14 +94,14 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25R1-001 | Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish | 25 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25R1-002 | Full interaction outside the starting village (release blocker) | 25 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | 25 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | 25 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | 25 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | 25 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25R1-007 | Character creation: unrestricted cosmetic options | 25 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | 25 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25R1-001 | Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25R1-002 | Full interaction outside the starting village (release blocker) | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
+| B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25R1-007 | Character creation: unrestricted cosmetic options | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B7-001 | Starting coins | 15 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B7-002 | Quest rewards reserved |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
 | B7-003 | Jewellery/helmets have buyers |  | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | UNKNOWN | COMPLETE |
