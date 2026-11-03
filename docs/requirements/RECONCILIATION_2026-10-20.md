@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 793 (424 of them still open) |
-| **Open entries now** (rules excluded) | | **582** |
+| Entries added since | | 794 (425 of them still open) |
+| **Open entries now** (rules excluded) | | **583** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (793)
+## Added since the baseline (794)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -205,7 +205,7 @@ None.
 | B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-007 | Character creation: unrestricted cosmetic options | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
-| B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return, alongside the existing ambient travellers | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return, alongside the existing ambient travellers | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-012 | Gamepad destination selection on the region map (cursor, D-pad, confirm, zoom, recentre) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
@@ -213,6 +213,7 @@ None.
 | B25R1-014 | Shared wilderness settlement foundation: lawful homesteads and outlaw communities; sustainable bandit populations; adult bandits may leave | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25R1-015 | Full approved Revision 1 scope is mandatory: no deferral, disabling, placeholder or narrowing without the owner | rule | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-016 | 365-day flight recorder campaign proving the living world: migration, homesteading, runaways, bandit recruitment and departure, economy, multigenerational life histories | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| B25R1-017 | Integration, real water system (streams, rivers, waterfalls, bridges, wells), credits regression diagnosis, existing-world compatibility, water events in the flight recorder | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25R1-Q1 | Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)? | decision | APPROVED | 20 |
 | B25R1-Q2 | Bandit band as a woodland community: move the band to a hidden overworld claim with a household (a), keep the village camp and put only turned outlaws on claims (b), or abstract bandits offscreen (c)? | decision | APPROVED | 20 |
 | B25R1-Q3 | Water for wilderness settlements: wells built from real materials, streams added by an overworld generator change, or both? | decision | APPROVED | 20 |

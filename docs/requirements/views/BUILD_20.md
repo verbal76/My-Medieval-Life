@@ -8,14 +8,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 167 |
-| Integrated | 127 of 167 (76%) |
-| Automated tests passed | 120 of 167 (72%) |
-| Integration verified | 64 of 167 (38%) |
-| Gameplay verified | 0 of 167 (0%) |
-| Owner playtested | 0 of 167 (0%) |
-| Complete | 2 of 167 (1%) |
-| Open (release blockers) | 165 |
+| Approved requirements in scope | 168 |
+| Integrated | 128 of 168 (76%) |
+| Automated tests passed | 121 of 168 (72%) |
+| Integration verified | 64 of 168 (38%) |
+| Gameplay verified | 0 of 168 (0%) |
+| Owner playtested | 0 of 168 (0%) |
+| Complete | 2 of 168 (1%) |
+| Open (release blockers) | 166 |
 | Open owner decisions (blocking) | 6 (0) |
 
 ## In development (worker assigned) (9)
@@ -24,15 +24,15 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | B25-CLOSE-01 | Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop | OWNER APPROVED | IN DEVELOPMENT | lead (single worker, MML-CONSERVE-01) / wip/b25-farm-phase2 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-FINISH-01 | Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release | OWNER APPROVED | IN DEVELOPMENT | lead session / wip/region-nav | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return, alongside the existing ambient travellers | OWNER APPROVED | IN DEVELOPMENT | b25r1-travelers worker / wip/b25r1-travelers | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | OWNER APPROVED | IN DEVELOPMENT | b25r1-homestead worker / wip/b25r1-homestead | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-013 | Youth runaways from sustained household hardship, and bandit recruitment as a separate outcome | OWNER APPROVED | IN DEVELOPMENT | b25r1-homestead worker / wip/b25r1-homestead | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-014 | Shared wilderness settlement foundation: lawful homesteads and outlaw communities; sustainable bandit populations; adult bandits may leave | OWNER APPROVED | IN DEVELOPMENT | b25r1-homestead worker / wip/b25r1-homestead | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-016 | 365-day flight recorder campaign proving the living world: migration, homesteading, runaways, bandit recruitment and departure, economy, multigenerational life histories | OWNER APPROVED | IN DEVELOPMENT | b25r1-recorder worker / wip/b25r1-recorder | NOT TESTED |  | B25R1-015, design: UNKNOWN | UNKNOWN |
+| B25R1-017 | Integration, real water system (streams, rivers, waterfalls, bridges, wells), credits regression diagnosis, existing-world compatibility, water events in the flight recorder | OWNER APPROVED | IN DEVELOPMENT | b25r1-water and b25r1-homestead workers / wip/b25r1 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | DEMO-01 | Replayable 120-Minute Demo and Steam Integration (with the six-package release pipeline) | OWNER APPROVED | IN DEVELOPMENT | lead session / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (125)
+## Integrated, awaiting gameplay or owner verification (126)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -50,6 +50,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | OWNER APPROVED | INTEGRATED | 265ddc1 | NOT TESTED |  |  | verification only |
+| B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return, alongside the existing ambient travellers | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 | TARGETED TESTS PASSED |  |  | verification only |
 | CHAPEL-PURPOSE | Chapel economic purpose: a charitable institution that maintains itself, not enriches itself - accumulate when the village prospers, distribute food and money when villagers need help | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | satisfied by the judgment store (memories, ledgers, gossip, trust) read by greetings and help; 'prices read relationships' waits on OD-LE-10/14 (Living Economy) |  | verification only |
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | satisfied by GP-CRIME-PURSUIT (assault, killing, fines) and the owner's heir answer 'Case ends; stain stays'; close against acceptance |  | verification only |

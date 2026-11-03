@@ -7134,8 +7134,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -7153,11 +7153,24 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-travelers worker; branch: None -> wip/b25r1-travelers; title",
      "why": "scope audit under B25R1-015: title said 'no decorative travelers', but the owner later kept the ambient pedlars, pilgrims and wayfarers ('We can have them as well'); title corrected, worker running"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> seed_traveler 48/0, run_tests 3602/0 on c5299cd; test_commit: None -> c5299cd; commits + b329da0; integrated_in + B25R1 wip/b25r1",
+     "why": "merged into wip/b25r1 at the travelers merge (manifest entry renumbered INT-696); merged suites pass: seed_traveler 48/0, run_tests 3602/0, outside_interact 23/0, recorder 214/0, check_interactions 0 problems"
     }
    ],
    "owner_answer": "Keep the ambient travellers as well as the real seed travelers (owner, 2026-11-03)",
    "assigned_worker": "b25r1-travelers worker",
-   "branch": "wip/b25r1-travelers"
+   "branch": "wip/b25r1-travelers",
+   "tests": "seed_traveler 48/0, run_tests 3602/0 on c5299cd",
+   "test_commit": "c5299cd",
+   "commits": [
+    "b329da0"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1"
+   ]
   },
   {
    "id": "B25R1-010",
@@ -7451,6 +7464,48 @@
    ],
    "assigned_worker": "b25r1-recorder worker",
    "branch": "wip/b25r1-recorder"
+  },
+  {
+   "id": "B25R1-017",
+   "kind": "approved",
+   "title": "Integration, real water system (streams, rivers, waterfalls, bridges, wells), credits regression diagnosis, existing-world compatibility, water events in the flight recorder",
+   "description": "Integration, real water system (streams, rivers, waterfalls, bridges, wells), credits regression diagnosis, existing-world compatibility, water events in the flight recorder",
+   "source": "docs/directives/2026-11-03_b25r1_integration_water_directive.md",
+   "owner_wording": "Deliver B25R1 as one coherent, fully integrated game build, with functioning travelers, roads, waterways, homesteading, outlaw settlements, preserved credits, compatible saves, and verifiable long-term simulation evidence.",
+   "approval": "owner, 2026-11-03",
+   "acceptance": [
+    "Water is a world system: persistent connected courses, flow by elevation, pathfinding needs crossings, bridges are traversable structures, homesteads draw from streams or wells through one shared access system, deterministic and saved; clean extension points for weather, rain, flooding and seasons (not built now)",
+    "Presentation: winding streams and rivers, uneven banks, rocks and shallows, animated water, waterfalls only at real drops with pools, plank bridges on trails and unpaved routes, stone bridges on stone roads, from owned Miniworld and Forgotten Memories art; screenshots beside the player at normal zoom",
+    "Existing saves keep their maps; no waterway through existing buildings, roads or settlements; wells keep old worlds playable; targeted save/load and migration tests",
+    "Settlement decisions weigh water access and terrain; nothing spawned to make settlements work",
+    "Recorder: water-source selection, water or terrain failures, bridge use, crossing route choices, water outcomes",
+    "Travelers and roads verified intact after integration; credits regression diagnosed and fixed without weakening the test"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "B25R1-Q3"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_integration_water_directive.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-water and b25r1-homestead workers; branch: None -> wip/b25r1",
+     "why": "recorded; water system assigned to the water worker (wip/b25r1-water), settlement water decisions to the homestead worker; credits regression diagnosed by the lead (test infrastructure, fixed at c5299cd)"
+    }
+   ],
+   "assigned_worker": "b25r1-water and b25r1-homestead workers",
+   "branch": "wip/b25r1"
   },
   {
    "id": "B25R1-Q1",
