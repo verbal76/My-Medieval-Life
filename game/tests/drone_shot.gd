@@ -4,6 +4,8 @@ extends SceneTree
 ##   xvfb-run -a godot --rendering-driver opengl3 --resolution 1280x720 --path game --script res://tests/drone_shot.gd -- OUT.png [PX_PER_TILE] [MARGIN]
 ## PX_PER_TILE (default 4) is the stitched image's scale; MARGIN (default 40 tiles) the countryside shown round the network.
 ## Prints each settlement's name and its place in the image (for labels).
+## B25R1-018: an optional fourth argument X,Y,W,H (tiles, the village frame) shoots that area instead (a close view of a place,
+## or the whole region), e.g.  -- out/higham.png 8 0 -40,720,120,100
 
 const SHOT_PX_PER_TILE := 10.0          # the camera while shooting: 128 x 72 tiles a 1280x720 shot, inside the loaded chunks
 var main
@@ -11,6 +13,7 @@ var out := "/tmp/drone.png"
 var ppt := 4
 var margin := 40
 var area := Rect2i()
+var fixed := Rect2i()
 var shots: Array = []
 var img: Image
 var i := 0
@@ -25,6 +28,9 @@ func _init() -> void:
 		ppt = int(args[1])
 	if args.size() > 2:
 		margin = int(args[2])
+	if args.size() > 3:
+		var p := args[3].split(",")
+		fixed = Rect2i(int(p[0]), int(p[1]), int(p[2]), int(p[3]))
 	main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
 	process_frame.connect(_setup, CONNECT_ONE_SHOT)
@@ -36,7 +42,7 @@ func _setup() -> void:
 	main.new_game()
 	var w: World = main.world
 	var o: Overworld = w.map.overworld
-	area = RegionMapPanel.settlement_network(w).grow(margin)
+	area = RegionMapPanel.settlement_network(w).grow(margin) if fixed.size == Vector2i.ZERO else fixed
 	var view := Vector2(root.get_visible_rect().size) / SHOT_PX_PER_TILE      # tiles a shot covers
 	var step := Vector2i(int(view.x) - 4, int(view.y) - 4)
 	for y in range(area.position.y + step.y / 2, area.end.y + step.y / 2, step.y):

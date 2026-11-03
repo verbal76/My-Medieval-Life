@@ -7,6 +7,8 @@ tileset), so the game can draw with the atlases it already has. Nothing is drawn
 
   grass, cliff   the free PUNY_WORLD_v1 "overworld" corner wangset: the grass tiles, and for every
                  grass/cliff corner combination the transition tile (a raised, rock-rimmed plateau)
+  chalk, dry     (B25R1-018) the same corner set's grass/sand and grass/dirt transitions: the Downs' chalk
+                 patches and the waste's dry earth, for every corner combination
   dirt_path      the "pathways" edge wangset: the dirt road tile for each set of connected sides
   trees, sapling the (trunk, canopy top, canopy bottom) tree stamps and the sapling tile the village uses
   rock, flowers, bushes   single-tile objects of the paid tileset, identified visually
@@ -26,6 +28,7 @@ OUT = REPO / "game" / "data" / "overworld_tiles.json"
 VILLAGE = REPO / "game" / "data" / "village.json"
 FREE = 100000
 GRASS, CLIFF = 1, 4          # wangset colours in the free tileset's "overworld" corner set
+DIRT, SAND = 2, 3            # B25R1-018: bare ground in the same corner set: sand drawn as the Downs' chalk, dirt as the waste's dry earth
 # tree kinds by look (paid tileset, keyed by the canopy's bottom tile): a region can favour one group
 TREE_GROUPS = {456: "leafy", 458: "autumn", 460: "conifer", 1120: "leafy", 1780: "mixed", 1782: "mixed"}
 ROCK = 1964                  # a grey boulder (also the village's worked-out ore rock)
@@ -45,6 +48,13 @@ def build():
     for k in range(16):
         key = tuple(CLIFF if k >> b & 1 else GRASS for b in range(4))
         cliff.append(sorted(tiles[key]))
+    # B25R1-018: grass with patches of chalk (sand) and of dry earth (dirt), indexed as the cliff corners
+    soil = {}
+    for name, colour in (("chalk", SAND), ("dry", DIRT)):
+        soil[name] = []
+        for k in range(16):
+            key = tuple(colour if k >> b & 1 else GRASS for b in range(4))
+            soil[name].append(sorted(tiles[key]))
     # connected sides: bit 0 north, 1 east, 2 south, 3 west (index 0, no side, has no tile)
     assert tuple(pwt.DIRS) == ((0, -1), (1, 0), (0, 1), (-1, 0)), pwt.DIRS   # N E S W
     path = []
@@ -65,6 +75,8 @@ def build():
             "grass": [FREE + t for t in grass],
             "cliff": [[FREE + t for t in ts] for ts in cliff],
             "dirt_path": [[FREE + t for t in ts] for ts in path],
+            "chalk": [[FREE + t for t in ts] for ts in soil["chalk"]],
+            "dry": [[FREE + t for t in ts] for ts in soil["dry"]],
             "trees": trees, "sapling": village["tiles"]["sapling"], "rock": ROCK, "flowers": FLOWERS, "bushes": BUSHES,
             "water": water}
 

@@ -140,6 +140,12 @@ static func lane_cells(ow: Overworld) -> Dictionary:
 	var lay: Dictionary = data.site
 	var bh := int(ow.stamps.house.h)
 	for st in ow.sites:
+		if st.has("streets"):                       # B25R1-018: the site's own streets (Overworld._site_plan)
+			for cells in st.streets:
+				for c: Vector2i in cells:
+					if not ow.site_building_at(c):
+						out[c] = true
+			continue
 		var r: Rect2i = st.rect
 		var rows := (r.size.y - 2 * int(lay.margin)) / (bh + int(lay.lane))
 		for k in rows:

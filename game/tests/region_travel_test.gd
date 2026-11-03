@@ -175,9 +175,10 @@ func _route_prefers_road() -> void:
 		var again := RegionTravel.plan(w, from, Vector2i(wul.slots[0].spot))
 		check(again.cells == r.cells, "the same route every time (deterministic)")
 	# a point off the road far down it: the route goes by road, then leaves it for the point
-	var far := _open_beside(_road_point(160), 6)
+	var far := _open_beside(_road_point(220), 6)
 	var r2 := RegionTravel.plan(w, from, far)
-	check(bool(r2.ok) and not bool(r2.direct) and int(r2.road) > 100, "a point off the road far away: by road, then off it (%d road cells)" % int(r2.get("road", 0)))
+	check(bool(r2.ok) and not bool(r2.direct) and int(r2.road) > 60,   # B25R1-018: the road bends away from the point sooner
+		 "a point off the road far away: by road, then off it (%d road cells)" % int(r2.get("road", 0)))
 	if bool(r2.ok):
 		var last: Vector2 = r2.cells[r2.cells.size() - 1]
 		check(Vector2i(last) == far, "the route ends at the point itself")

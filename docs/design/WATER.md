@@ -39,8 +39,8 @@ code is `game/scripts/core/overworld.gd` (the section "water"), the art `tools/w
 
 ## 1a. The canonical water (B25R1-018)
 
-The region layout (`game/data/region_layout.json`, `mml-region-layout/1`, owned by the region workstream; until its branch is
-merged, the stub `game/data/water_anchors.json` holds a copy of just its water keys, and the layout file wins when present)
+The region layout (`game/data/region_layout.json`, `mml-region-layout/1`, owned by the region workstream; the water reads its
+`rivers`, `crossings`, `downs` and `landmarks`)
 anchors the network on Morris's geography, in absolute overworld tiles of the village frame (12 tiles a mile):
 
 - `rivers[]` `{id, name, order, width, points [[x, y]...] upstream to downstream, joins, passes_settlement}`: traced through

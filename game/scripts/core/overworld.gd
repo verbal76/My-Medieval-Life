@@ -36,10 +36,11 @@ const GEN_VERSION := 4
 ## Generator versions whose saved changes still apply (their trees, rocks, flowers and roads are in the same cells): 2 (PL1-12,
 ## 2026-10-21) only draws the low red flower (tile 2656) among the wild flowers (overworld_tiles.json flowers), so a flower
 ## may be another colour than in version 1, and nothing else moved.
-## B25R1-Q3 (owner 2026-11-03): GEN_VERSION 4 adds streams (_streams_round, below). A world keeps the generation it was made
-## with (`gen`, saved): a save of 1, 2 or 3 is drawn by generation 3 exactly as before, with no streams (its trees, rocks and
-## changes stay where they were); a new world is generation 4.
-const GEN_COMPATIBLE := [1, 2, 3, 4]
+## B25R1-018 / B25R1-Q5 (owner 2026-11-03: "Don't worry about saved games"): generation 4 lays the region out anew (the
+## settlements at the region layout's anchors, the main roads along its routes, the Downs, the waste and the Wood Perilous as
+## their own country; the water worker's courses), so an older generation's changes are not applied (the save is refused by
+## SaveStore.MIN_VERSION before it gets here).
+const GEN_COMPATIBLE := [4]
 const CHUNK := 32
 const PAD := 4                           # cells computed round a chunk, so neighbours' rules need no other chunk
 const AREA := CHUNK + 2 * PAD
@@ -51,6 +52,9 @@ const OBJECT_MARGIN := 5                 # no tree or rock this close to the vil
 const OBJECT_RAMP := 20                  # ... and they thin out over the next tiles
 const PASS_LATTICE := 72                 # distance between mountain passes
 const NO_TREE := 255
+const VNODE := 1 << 20                   # B25R1-018: a route node's id is (VNODE + index, VNODE), apart from the grid nodes'
+const ROUTE_KEY := 3000                  # link keys of the main routes and their joins (gates 1000+, sites 2000+)
+const SITE_ROUTE_REACH := 110            # a site joins every main route passing this near (tiles)
 const M := 0xFFFFFFFF
 
 class Chunk extends RefCounted:
@@ -112,6 +116,16 @@ var _links: Array = []                   # the gates' road polylines: {a, b, key
 var _gate_inner := {}                    # village cells a gate road joins (they count as road for the tile drawn)
 var _wob := {}                           # axis noise cache
 var _trails: Array = []                  # gate_trails() cache (not saved: a function of the seed)
+## B25R1-018: the main routes (RegionGeo.routes): their control points are road nodes of their own ("route nodes"), joined in
+## order by links, and joined to the sites, the village's gates and the nearest grid nodes. All a pure function of the seed.
+var _vpos: Array[Vector2i] = []          # route node index -> position
+var _vidx := {}                          # position -> route node index
+var _vadj: Array = []                    # route node index -> [[neighbour node id (Vector2i), link index]]
+var _junction := {}                      # grid node id -> [[route node id, link index]]
+var _site_vlinks := {}                   # site index -> {node id: [link index, base link index]}
+var _site_bases := {}                    # site index -> {side: base link index} (side 0 N, 1 E, 2 S, 3 W; S is the lane's base)
+var _gate_vlinks := {}                   # gate index -> {node id: link index}
+var route_kind := {}                     # link index -> the route's kind ("main", "dirt", "ancient", "side")
 
 
 static func create(world_seed: int, m: VillageMap) -> Overworld:
@@ -127,6 +141,7 @@ static func create(world_seed: int, m: VillageMap) -> Overworld:
 	for k in m.data.stamps:
 		o._solid_rows[k] = m.data.stamps[k].get("solid", [])
 	o._setup_sites(m.data.stamps)
+	o._setup_routes()
 	return o
 
 
@@ -139,26 +154,19 @@ func _setup_sites(stamps: Dictionary) -> void:
 	var si := 0
 	for spec in data.settlements:
 		var center := origin + Vector2i(int(spec.get("x", 0)), int(spec.miles) * int(data.tiles_per_mile))
-		var trades: Array = (spec.trades as Dictionary).keys()
-		var bw := int(stamps.house.w)
-		var bh := int(stamps.house.h)
-		var cols := int(lay.cols)
-		var rows := ceili(trades.size() / float(cols))
-		var size := Vector2i(cols * bw + (cols - 1) * int(lay.gap) + 2 * int(lay.margin), rows * (bh + int(lay.lane)) + 2 * int(lay.margin))
-		var rect := Rect2i(center - size / 2, size)
-		var slots := []
-		for k in trades.size():
-			var t := str(trades[k])
-			var stamp := str((lay.stamps as Dictionary).get(t, "house"))
-			var at := rect.position + Vector2i(int(lay.margin) + (k % cols) * (bw + int(lay.gap)), int(lay.margin) + (k / cols) * (bh + int(lay.lane)))
-			var door := at + Vector2i(int(stamps[stamp].door[0]), int(stamps[stamp].door[1]))
-			slots.append({"trade": t, "stamp": stamp, "rect": Rect2i(at, Vector2i(int(stamps[stamp].w), int(stamps[stamp].h))),
-				"door": door, "spot": door + Vector2i(0, 1)})
-		var gate := Vector2i(center.x, rect.end.y - int(lay.margin) - int(lay.lane) / 2 - 1)    # the lane under the last row: the road comes in here
-		var far := Vector2i(center.x, rect.end.y + 14)                                          # straight down out of the site, as a village gate's road
+		if RegionGeo.has_anchor(str(spec.id)):
+			center = RegionGeo.anchor(str(spec.id))       # B25R1-018 (GEN_VERSION 4): the region layout's anchor
+		var plan := _site_plan(spec, center, stamps, lay, si)
+		var rect: Rect2i = plan.rect
+		var slots: Array = plan.slots
+		var gate: Vector2i = plan.gate
+		var far := Vector2i(gate.x, rect.end.y + 14)                                            # straight down out of the site, as a village gate's road
 		sites.append({"id": str(spec.id), "name": str(spec.name), "kind": str(spec.kind), "center": center, "rect": rect, "slots": slots,
-			"gate": gate})
+			"gate": gate, "streets": plan.streets, "square": plan.square})
 		_links.append({"a": gate, "b": far, "key": 2000 + si * 8})
+		si += 1
+	for k0 in sites.size():                        # B25R1-018: joined to the grid once every site stands (a link never crosses another site)
+		var far: Vector2i = Vector2i(sites[k0].gate.x, (sites[k0].rect as Rect2i).end.y + 14)
 		var ci := fdiv(far.x, NODE)
 		var cj := fdiv(far.y, NODE)
 		var near: Array = []
@@ -166,12 +174,337 @@ func _setup_sites(stamps: Dictionary) -> void:
 			for i in range(ci - 3, ci + 4):
 				var p := node_pos(i, j)
 				var bb := Rect2i(mini(p.x, far.x), mini(p.y, far.y), absi(p.x - far.x), absi(p.y - far.y))
-				if not _node_excluded(p) and not bb.grow(4).intersects(rect):
+				if not _node_excluded(p) and not bb.grow(4).intersects(sites[k0].rect) and not _crosses_site(bb):
 					near.append([(p - far).length_squared(), i, j, p])
 		near.sort()
 		for k in mini(3, near.size()):
-			_links.append({"a": far, "b": near[k][3], "key": 2000 + si * 8 + 1 + k})
-		si += 1
+			_links.append({"a": far, "b": near[k][3], "key": 2000 + k0 * 8 + 1 + k})
+
+
+## B25R1-018 phase 3: a settlement laid out along its streets. Every household of the founding has a home (a house stamp; slot
+## {kind "home", hh: the household id, trade ""}), every business a building (its trade's stamp, as before: {kind "work",
+## trade}), the officials their hall, and a few spare houses stand empty for the households formed later ({kind "home", hh -1}).
+## Streets run east-west, the buildings on their north side with the doors opening onto them (the stamps' doors are at the
+## bottom); a main street runs north-south through the middle, where the routes come in and go on, and the middle street opens
+## into a square (the market). Rows differ in length and start, the gaps between houses vary: a pure function of the seed and
+## the settlement, never a grid. Sizes from the layout's `plan` ({row: buildings a street, spare}; by kind otherwise).
+func _site_plan(spec: Dictionary, center: Vector2i, stamps: Dictionary, lay: Dictionary, si: int) -> Dictionary:
+	var trades: Dictionary = spec.trades
+	var plan: Dictionary = {}
+	for s in RegionGeo.data().settlements:
+		if str(s.id) == str(spec.id):
+			plan = s.get("plan", {})
+	var kind := str(spec.kind)
+	var per_row := int(plan.get("row", 10 if kind.contains("town") else 6 if kind == "village" or kind == "abbey village" else 4))
+	var bw := int(stamps.house.w)
+	var bh := int(stamps.house.h)
+	var lane := 3
+	var mid := 4                                    # the main street's width
+	var items: Array = []                           # [kind, trade, stamp, hh]
+	var tids := trades.keys()
+	tids.sort()
+	for t in trades.keys():                         # the businesses' buildings (settlements.json order, as before)
+		var st := str((lay.stamps as Dictionary).get(t, ""))
+		if st != "" or t == "official" or t == "merchant":
+			items.append(["work", str(t), st if st != "" else "house", -1])
+	var hid := 0
+	for t in tids:                                  # the homes, in OffMapSettlement's household order (trades sorted, then count)
+		for k in int(trades[t]):
+			items.append(["home", "", "house", hid])
+			hid += 1
+	for k in int(plan.get("spare", maxi(1, hid / 8))):
+		items.append(["home", "", "house", -1])
+	var half := ceili(per_row / 2.0)
+	var rows := ceili(items.size() / float(2 * half))
+	var square_row := rows / 2 if rows >= 3 else -1
+	if square_row >= 0 and rows * 2 * half - 2 * mini(2, half) < items.size():
+		rows += 1                                   # the square takes buildings out of its row: one more street for them
+	var slots := []
+	var streets: Array = []
+	var row_h := bh + lane
+	var top := center.y - (rows * row_h) / 2
+	var minx := center.x
+	var maxx := center.x
+	var q := 0
+	for r in rows:
+		var y := top + r * row_h
+		var gap_seed := hash32(seed, si, r, 940)
+		for side in 2:                              # west half then east half of the row, outward from the main street
+			var x := center.x - mid / 2 - 1 if side == 0 else center.x + mid / 2 + 1
+			x += (1 if side == 1 else -1) * (gap_seed >> (side * 3) & 3)
+			var n := half
+			if r == square_row:
+				n = maxi(0, half - 2)               # the square: the two buildings either side of the main street stand back
+				x += (1 if side == 1 else -1) * (2 * (bw + 2))
+			for k in n:
+				if q >= items.size():
+					break
+				var it: Array = items[q]
+				q += 1
+				var g := 1 + (hash32(seed, si, q, 941) % 3)
+				var at := Vector2i(x - bw if side == 0 else x, y + (hash32(seed, si, q, 942) % 2))
+				var sd: Dictionary = stamps[str(it[2])]
+				var door := at + Vector2i(int(sd.door[0]), int(sd.door[1]))
+				var look := ""                      # region_stamps.json variant: about half the homes thatched, more in the villages
+				if str(it[2]) == "house" and hash32(seed, si, q, 943) % 100 < (35 if kind.contains("town") else 60):
+					look = "thatch"
+				slots.append({"kind": it[0], "trade": it[1], "stamp": it[2], "hh": it[3], "rect": Rect2i(at, Vector2i(int(sd.w), int(sd.h))),
+					"door": door, "spot": Vector2i(door.x, y + bh + 1), "look": look})
+				minx = mini(minx, at.x)
+				maxx = maxi(maxx, at.x + bw)
+				x = (at.x - g) if side == 0 else (at.x + bw + g)
+	var margin := 3
+	var rect := Rect2i(minx - margin, top - margin, maxx - minx + 2 * margin, rows * row_h + 2 * margin)
+	for r in rows:                                  # each street: the row under the buildings, across the whole site
+		var sy := top + r * row_h + bh + 1
+		var cells: Array[Vector2i] = []
+		for x in range(rect.position.x + 1, rect.end.x - 1):
+			cells.append(Vector2i(x, sy))
+		streets.append(cells)
+	var main_st: Array[Vector2i] = []
+	for y in range(rect.position.y, rect.end.y):
+		main_st.append(Vector2i(center.x, y))
+	streets.append(main_st)
+	var sq := Rect2i()
+	if square_row >= 0:
+		var sy0 := top + square_row * row_h
+		sq = Rect2i(center.x - mid / 2 - 2 * (bw + 2), sy0, mid + 4 * (bw + 2), row_h)
+	var gate := Vector2i(center.x, top + (rows - 1) * row_h + bh + 1)   # the main street at the last street: the road comes in here
+	return {"rect": rect, "slots": slots, "gate": gate, "streets": streets, "square": sq}
+
+## B25R1-018: the main routes of the region layout as road nodes and links (see _vpos), and their joins to the sites, the
+## gates and the grid network. A route's control points give its course (the meander along the country: round Bear Hill, over
+## the Downs by the Greenway, the straight causeway over Higham's meadows, BONE-C7-P003); each link between two is drawn with
+## the network's own bent polyline. A site joins each route passing within SITE_ROUTE_REACH by a link from the side of the site
+## facing it; a site no route passes near (a hamlet off in the country) gets a side road of its own to the nearest route node,
+## bent through a few points of its own (_side_road). Order: the file's routes in order, then the sites, then the gates.
+func _setup_routes() -> void:
+	_vpos.clear()
+	_vidx.clear()
+	_vadj.clear()
+	_junction.clear()
+	_site_vlinks.clear()
+	_site_bases.clear()
+	_gate_vlinks.clear()
+	route_kind.clear()
+	var n := 0
+	var through := {}                             # site index -> [route node indices that join it]: a route passing a settlement
+	for r in RegionGeo.routes():
+		var prev := -1
+		for p: Vector2i in r.points:
+			var in_site := -1
+			for si in sites.size():
+				if (sites[si].rect as Rect2i).grow(6).has_point(p):
+					in_site = si
+			if in_site >= 0:                          # the route goes into the settlement here and out again: it is split at it
+				if prev >= 0:
+					var t: Array = through.get(in_site, [])
+					t.append(prev)
+					through[in_site] = t
+				prev = -2 - in_site
+				continue
+			var cur := _vnode(p)
+			if prev >= 0:
+				_route_link(prev, cur, str(r.kind))
+			elif prev <= -2:
+				var t2: Array = through.get(-2 - prev, [])
+				t2.append(cur)
+				through[-2 - prev] = t2
+			prev = cur
+	for si in through:
+		for vi in through[si]:
+			_site_join(si, vi, "main")
+	for si in sites.size():
+		var st: Dictionary = sites[si]
+		var best := {}                            # route id -> [d2, node index]
+		for r in RegionGeo.routes():
+			var near := -1
+			var nd := 1 << 40
+			for p: Vector2i in r.points:
+				if not _vidx.has(p):
+					continue                          # a point inside a settlement (the route was split there)
+				var d2 := (p - (st.center as Vector2i)).length_squared()
+				if d2 < nd:
+					nd = d2
+					near = _vidx[p]
+			if nd <= SITE_ROUTE_REACH * SITE_ROUTE_REACH:
+				best[str(r.id)] = near
+		var joined := {}
+		for e in (_site_vlinks.get(si, {}) as Dictionary):
+			joined[int(e.x) - VNODE] = true
+		for rid in best:
+			var vi: int = best[rid]
+			if joined.has(vi):
+				continue
+			joined[vi] = true
+			_site_join(si, vi, "main")
+		if joined.is_empty():
+			_side_road(si)
+		_site_ring(si)
+	for g in gates.size():
+		var far: Vector2i = _links[_gate_base(g)].b
+		var vi := _nearest_vnode(far)
+		if vi >= 0 and (_vpos[vi] - far).length_squared() <= 160 * 160:
+			var li := _links.size()
+			_links.append({"a": far, "b": _vpos[vi], "key": ROUTE_KEY + li})
+			route_kind[li] = "main"
+			_gate_vlinks[g] = {_vid(vi): li}
+			_vadj[vi].append([Vector2i(-1 - g, -1), li])   # (a gate end: route_between never walks into it from a node)
+	# each route node joins the nearest grid node in reach, so the country trails meet the main roads
+	for vi in _vpos.size():
+		var p: Vector2i = _vpos[vi]
+		var ci := fdiv(p.x, NODE)
+		var cj := fdiv(p.y, NODE)
+		var near: Array = []
+		for j in range(cj - 1, cj + 2):
+			for i in range(ci - 1, ci + 2):
+				var q := node_pos(i, j)
+				if not _node_excluded(q) and (q - p).length_squared() <= 60 * 60 and not _crosses_site(Rect2i(mini(p.x, q.x), mini(p.y, q.y), absi(p.x - q.x), absi(p.y - q.y))):
+					near.append([(q - p).length_squared(), j, i, q])
+		if near.is_empty():
+			continue
+		near.sort()
+		var gn := Vector2i(int(near[0][2]), int(near[0][1]))
+		var li2 := _links.size()
+		_links.append({"a": p, "b": near[0][3], "key": ROUTE_KEY + li2})
+		route_kind[li2] = "trail"
+		_vadj[vi].append([gn, li2])
+		var js: Array = _junction.get(gn, [])
+		js.append([_vid(vi), li2])
+		_junction[gn] = js
+
+
+func _vid(vi: int) -> Vector2i:
+	return Vector2i(VNODE + vi, VNODE)
+
+
+func _vnode(p: Vector2i) -> int:
+	if not _vidx.has(p):
+		_vidx[p] = _vpos.size()
+		_vpos.append(p)
+		_vadj.append([])
+	return _vidx[p]
+
+
+func _route_link(va: int, vb: int, kind: String) -> int:
+	var li := _links.size()
+	_links.append({"a": _vpos[va], "b": _vpos[vb], "key": ROUTE_KEY + li})
+	route_kind[li] = kind
+	_vadj[va].append([_vid(vb), li])
+	_vadj[vb].append([_vid(va), -1 - li])       # walked from b to a: the link reversed
+	return li
+
+
+func _nearest_vnode(p: Vector2i) -> int:
+	var best := -1
+	var bd := 1 << 40
+	for vi in _vpos.size():
+		var d2 := (_vpos[vi] - p).length_squared()
+		if d2 < bd:
+			bd = d2
+			best = vi
+	return best
+
+
+func _gate_base(g: int) -> int:
+	for li in _links.size():
+		if int(_links[li].key) == 1000 + g * 8:
+			return li
+	return -1
+
+
+## The far point of site `si`'s side facing `toward` (its base link made on first use: side 2, south, is the lane's own base).
+func _site_side(si: int, toward: Vector2i) -> Array:
+	var st: Dictionary = sites[si]
+	var r: Rect2i = st.rect
+	var d := toward - (st.center as Vector2i)
+	var side := 2
+	if absi(d.x) > absi(d.y) * 2:
+		side = 1 if d.x > 0 else 3
+	elif d.y < 0:
+		side = 0
+	var bases: Dictionary = _site_bases.get(si, {})
+	if bases.is_empty():
+		for li in _links.size():
+			if int(_links[li].key) == 2000 + si * 8:
+				bases[2] = li
+		_site_bases[si] = bases
+	if not bases.has(side):
+		var gy: int = (st.gate as Vector2i).y           # the lane under the last row runs margin to margin: open at both ends
+		var a: Vector2i = [Vector2i((st.center as Vector2i).x, r.position.y), Vector2i(r.end.x - 1, gy), Vector2i(st.gate),
+			Vector2i(r.position.x, gy)][side]
+		var dir: Vector2i = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][side]
+		var far := a + dir * 13
+		var li := _links.size()
+		_links.append({"a": a, "b": far, "key": ROUTE_KEY + li})
+		route_kind[li] = "site"
+		bases[side] = li
+	return [bases[side], Vector2i(_links[bases[side]].b)]
+
+
+func _site_join(si: int, vi: int, kind: String) -> void:
+	var sb := _site_side(si, _vpos[vi])
+	var li := _links.size()
+	_links.append({"a": sb[1], "b": _vpos[vi], "key": ROUTE_KEY + li})
+	route_kind[li] = kind
+	var m: Dictionary = _site_vlinks.get(si, {})
+	m[_vid(vi)] = [li, int(sb[0])]
+	_site_vlinks[si] = m
+	var fv := _vnode(sb[1])                            # the side's far point is a route node too: through traffic goes round the site
+	_vadj[fv].append([_vid(vi), li])
+	_vadj[vi].append([_vid(fv), -1 - li])
+
+
+## B25R1-018: a road round site `si` joining the far points of its sides (and its four corners, 10 tiles out), so a route that
+## comes to a settlement from one side goes on from another without walking through its buildings. Phase 3 lays the
+## settlements' own streets along the routes; until then this is their way round.
+func _site_ring(si: int) -> void:
+	var bases: Dictionary = _site_bases.get(si, {})
+	if bases.size() < 2:
+		return
+	var r: Rect2i = (sites[si].rect as Rect2i).grow(13)
+	var ring: Array[Vector2i] = []
+	var corners := [r.position, Vector2i(r.end.x, r.position.y), r.end, Vector2i(r.position.x, r.end.y)]
+	for side in 4:
+		if bases.has(side):
+			ring.append(Vector2i(_links[bases[side]].b))
+		ring.append(corners[(side + 1) % 4] if side < 3 else corners[0])
+	for k in ring.size():
+		var a: Vector2i = ring[k]
+		var b: Vector2i = ring[(k + 1) % ring.size()]
+		if a != b:
+			_route_link(_vnode(a), _vnode(b), "ring")
+
+
+## A hamlet's own road to the nearest route node: a few bent points between (each pushed sideways by the hash, up to a fifth
+## of the way's length), every one a route node, so the way winds like a farm road rather than running ruler-straight.
+func _side_road(si: int) -> void:
+	var st: Dictionary = sites[si]
+	var vi := _nearest_vnode(st.center)
+	if vi < 0:
+		return
+	var from: Vector2i = _site_side(si, _vpos[vi])[1]
+	var to: Vector2i = _vpos[vi]
+	var d := to - from
+	var steps := clampi(int(d.length()) / 60, 1, 6)
+	var prev := -1
+	var first := -1
+	for k in range(1, steps):
+		var base := from + d * k / steps
+		var off := ((hash32(seed, si, k, 905) % 2001) - 1000) * int(d.length()) / 5000
+		var perp := Vector2i(-d.y, d.x)
+		var p := base + Vector2i(perp.x * off / maxi(1, int(d.length())), perp.y * off / maxi(1, int(d.length())))
+		var cur := _vnode(p)
+		if prev >= 0:
+			_route_link(prev, cur, "side")
+		else:
+			first = cur
+		prev = cur
+	if prev >= 0:
+		_route_link(prev, vi, "side")
+		_site_join(si, first, "side")
+	else:
+		_site_join(si, vi, "side")
 
 
 ## REGION-NAV-01: whether a site's building stands on cell `c` (its stamp's solid cells; a building is not entered).
@@ -216,6 +549,17 @@ func close_node(nd: Vector2i, shut := true) -> void:
 ## The regional trade's distances and the couriers' days are these routes' lengths (Regions.route_table), so travel and trade
 ## measure the same roads.
 func route_between(ea: Dictionary, eb: Dictionary, honour_closed := true) -> PackedVector2Array:
+	# B25R1-018: one road between two places, the same both ways: the search always runs from the end with the lower base link
+	# and the cells are reversed for the other direction (the search seeds its start nodes without the area bound its ends
+	# are reached under, so the two directions could find different ways)
+	if not ea.is_empty() and not eb.is_empty() and int(ea.base) > int(eb.base):
+		var back := _route_search(eb, ea, honour_closed)
+		back.reverse()
+		return back
+	return _route_search(ea, eb, honour_closed)
+
+
+func _route_search(ea: Dictionary, eb: Dictionary, honour_closed: bool) -> PackedVector2Array:
 	var shut: Dictionary = closed if honour_closed else {}
 	if ea.is_empty() or eb.is_empty() or (ea.nodes as Dictionary).is_empty() or (eb.nodes as Dictionary).is_empty():
 		return PackedVector2Array()
@@ -233,7 +577,7 @@ func route_between(ea: Dictionary, eb: Dictionary, honour_closed := true) -> Pac
 		if shut.has(nd):
 			continue
 		var li: int = starts[nd]
-		var c0 := _segment(Vector3i(li, 0, -1), _links[li].a, _links[li].b, int(_links[li].key)).size() / 2
+		var c0 := _seg_len(li) + _seg_len(int((ea.get("base_of", {}) as Dictionary).get(nd, ea.base)))
 		if not dist.has(nd) or c0 < int(dist[nd]):
 			dist[nd] = c0
 			open.append([c0, nd.y, nd.x])
@@ -249,14 +593,14 @@ func route_between(ea: Dictionary, eb: Dictionary, honour_closed := true) -> Pac
 			continue
 		if ends.has(nd) and not shut.has(nd):
 			var lb0: int = ends[nd]
-			var whole := int(top[0]) + _segment(Vector3i(lb0, 0, -1), _links[lb0].a, _links[lb0].b, int(_links[lb0].key)).size() / 2
+			var whole := int(top[0]) + _seg_len(lb0) + _seg_len(int((eb.get("base_of", {}) as Dictionary).get(nd, eb.base)))
 			if whole < int(dist.get(GOAL, 1 << 30)):
 				dist[GOAL] = whole
 				goal = nd
 				open.append([whole, GOAL.y, GOAL.x])
 		for e in _node_edges(nd):
 			var nb: Vector2i = e[0]
-			if nb.x < lo.x or nb.y < lo.y or nb.x > hi.x or nb.y > hi.y or shut.has(nb):
+			if (nb.x < VNODE and (nb.x < lo.x or nb.y < lo.y or nb.x > hi.x or nb.y > hi.y)) or shut.has(nb):
 				continue
 			var cost := int(top[0]) + int(e[1])
 			if cost < int(dist.get(nb, 1 << 30)):
@@ -271,22 +615,34 @@ func route_between(ea: Dictionary, eb: Dictionary, honour_closed := true) -> Pac
 	while prev.has(at):
 		chain.push_front([prev[at][0], at, prev[at][1]])
 		at = prev[at][0]
-	var base_a: int = ea.base
+	var base_a: int = int((ea.get("base_of", {}) as Dictionary).get(at, ea.base))
 	var la: int = starts[at]
 	_append_cells(out, _segment(Vector3i(base_a, 0, -1), _links[base_a].a, _links[base_a].b, int(_links[base_a].key)), false)
-	_append_cells(out, _segment(Vector3i(la, 0, -1), _links[la].a, _links[la].b, int(_links[la].key)), false)
+	if la >= 0:
+		_append_cells(out, _segment(Vector3i(la, 0, -1), _links[la].a, _links[la].b, int(_links[la].key)), false)
 	for step in chain:
-		var seg: Array = step[2]                      # [i, j, k, forward]
+		var seg: Array = step[2]                      # [i, j, k, forward], or ["L", link, forward] (B25R1-018: a route link)
+		if seg[0] is String:
+			var l: Dictionary = _links[int(seg[1])]
+			_append_cells(out, _segment(Vector3i(int(seg[1]), 0, -1), l.a, l.b, int(l.key)), not bool(seg[2]))
+			continue
 		var a := node_pos(int(seg[0]), int(seg[1]))
 		var ni: int = int(seg[0]) + [1, 0, 1, -1][int(seg[2])]
 		var nj: int = int(seg[1]) + [0, 1, 1, 1][int(seg[2])]
 		var cells := _segment(Vector3i(int(seg[0]), int(seg[1]), int(seg[2])), a, node_pos(ni, nj), (int(seg[0]) * 7919 + int(seg[1]) * 104729 + int(seg[2])) & 0xFFFFFF)
 		_append_cells(out, cells, not bool(seg[3]))
 	var lb: int = ends[goal]
-	var base_b: int = eb.base
-	_append_cells(out, _segment(Vector3i(lb, 0, -1), _links[lb].a, _links[lb].b, int(_links[lb].key)), true)
+	var base_b: int = int((eb.get("base_of", {}) as Dictionary).get(goal, eb.base))
+	if lb >= 0:
+		_append_cells(out, _segment(Vector3i(lb, 0, -1), _links[lb].a, _links[lb].b, int(_links[lb].key)), true)
 	_append_cells(out, _segment(Vector3i(base_b, 0, -1), _links[base_b].a, _links[base_b].b, int(_links[base_b].key)), true)
 	return out
+
+
+func _seg_len(li: int) -> int:
+	if li < 0:
+		return 0                                      # a site side's own far point: no link beyond its base
+	return _segment(Vector3i(li, 0, -1), _links[li].a, _links[li].b, int(_links[li].key)).size() / 2
 
 
 ## The road end of village gate `gate`: its base link (out -> far) and its node links.
@@ -302,6 +658,8 @@ func _gate_end(gate: int) -> Dictionary:
 				base = li
 			else:
 				nodes[_node_of(_links[li].b)] = li
+	for nd in _gate_vlinks.get(gate, {}):           # B25R1-018: the main route the gate's road joins
+		nodes[nd] = _gate_vlinks[gate][nd]
 	return {} if base < 0 else {"base": base, "nodes": nodes}
 
 
@@ -320,7 +678,32 @@ func _site_end(sid: String) -> Dictionary:
 				base = li
 			else:
 				nodes[_node_of(_links[li].b)] = li
-	return {} if base < 0 else {"base": base, "nodes": nodes}
+	var base_of := {}                               # B25R1-018: a route joined from another side of the site leaves by that side
+	var vl: Dictionary = _site_vlinks.get(si, {})
+	for nd in vl:
+		nodes[nd] = int(vl[nd][0])
+		base_of[nd] = int(vl[nd][1])
+	for side in (_site_bases.get(si, {}) as Dictionary):  # each side's far point is a route node: a way in from there needs only the base
+		var bl: int = _site_bases[si][side]
+		var fp: Vector2i = _links[bl].b
+		if _vidx.has(fp):
+			nodes[_vid(int(_vidx[fp]))] = -1
+			base_of[_vid(int(_vidx[fp]))] = bl
+	return {} if base < 0 else {"base": base, "nodes": nodes, "base_of": base_of}
+
+
+## B25R1-018: the cells where roads enter settlement `sid`: the lane gate and each side's way in (a route arriving from
+## another side ends there).
+func site_entries(sid: String) -> Array:
+	var st := site(sid)
+	if st.is_empty():
+		return []
+	var out := [Vector2i(st.gate)]
+	for side in (_site_bases.get(sites.find(st), {}) as Dictionary):
+		var c: Vector2i = _links[_site_bases[sites.find(st)][side]].a
+		if not out.has(c):
+			out.append(c)
+	return out
 
 
 ## REGION-NAV-01 Q3: the road route between two settlements (cells from a's lane to b's lane).
@@ -330,6 +713,8 @@ func site_route(a: String, b: String) -> PackedVector2Array:
 
 ## The road node a node position belongs to (the grid cell whose jittered node it is).
 func _node_of(p: Vector2i) -> Vector2i:
+	if _vidx.has(p):
+		return _vid(int(_vidx[p]))
 	var ci := fdiv(p.x, NODE)
 	var cj := fdiv(p.y, NODE)
 	for j in range(cj - 1, cj + 2):
@@ -343,6 +728,18 @@ func _node_of(p: Vector2i) -> Vector2i:
 ## them (_road_mask): both ends outside the village's exclusion, the edge present, and its box clear of the village.
 func _node_edges(nd: Vector2i) -> Array:
 	var out := []
+	if nd.x >= VNODE:                                 # B25R1-018: a route node: its links
+		for e in _vadj[nd.x - VNODE]:
+			var nb: Vector2i = e[0]
+			if nb.x < 0:
+				continue                              # a site's or gate's join: only ever its own end
+			var li: int = int(e[1])
+			var fwd := li >= 0
+			var lx := li if fwd else -1 - li
+			out.append([nb, _seg_len(lx), ["L", lx, fwd]])
+		return out
+	for e in _junction.get(nd, []):                   # the route nodes joined to this grid node (link: route node -> grid node)
+		out.append([e[0], _seg_len(int(e[1])), ["L", int(e[1]), false]])
 	var keep := Rect2i(village.grow(10))
 	var a := node_pos(nd.x, nd.y)
 	if _node_excluded(a):
@@ -599,8 +996,8 @@ func _kept_clear(p: Vector2i) -> bool:
 
 
 ## B25R1-018 (owner directive 2026-11-03, the regional world reconstruction, section 8): the canonical water. The region
-## layout (game/data/region_layout.json, format mml-region-layout/1, the region workstream's; until it is merged the stub
-## game/data/water_anchors.json, the same keys) gives, in absolute overworld tiles of the village frame:
+## layout (game/data/region_layout.json, format mml-region-layout/1, the region workstream's) gives, in absolute overworld
+## tiles of the village frame:
 ##  - rivers[]: {id, name, order, width (tiles), points [[x, y]...] upstream to downstream, joins (the course it ends in),
 ##    passes_settlement [ids]} : each traced through its points with the generator's own meander (a bend that is nought at
 ##    every point, so the course passes exactly through each), with fords, pools and falls as any course has; a course that
@@ -621,7 +1018,7 @@ func anchored_courses() -> Array:
 	if gen < 4:
 		return _anchored
 	var spec := {}
-	for path in ["res://data/region_layout.json", "res://data/water_anchors.json"]:
+	for path in ["res://data/region_layout.json"]:
 		if FileAccess.file_exists(path):
 			var d: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 			if d is Dictionary and (d as Dictionary).has("rivers"):
@@ -1077,7 +1474,10 @@ func _node_excluded(p: Vector2i) -> bool:
 	for st in sites:                              # REGION-NAV-01: no road node in or right by a settlement
 		if (st.rect as Rect2i).grow(12).has_point(p):
 			return true
-	return false
+	# B25R1-018: no country trail on the Downs ("never a road to call a road", BONE-C3-P037), across the waste or through the
+	# Wood Perilous (one beaten way, BONE-C8-P002): their only ways are the layout's routes
+	var reg := RegionGeo.region_at(p.x, p.y)
+	return reg == "downs" or reg == "dry_waste" or reg == "wood_perilous"
 
 
 ## REGION-NAV-01: whether a network road's box crosses a settlement (it is dropped there, as round the village: a settlement's
@@ -1104,7 +1504,7 @@ func _edge(i: int, j: int, k: int) -> bool:
 
 
 func _raw_edge(i: int, j: int, k: int) -> bool:
-	return hash32(seed, i, j, 30 + k) % 100 < [62, 62, 16, 16][k]
+	return hash32(seed, i, j, 30 + k) % 100 < [46, 46, 14, 14][k]   # B25R1-018: sparser country trails (a network, not a grid)
 
 
 ## The cells of road segment `key`, joining a to b: waypoints along the way pushed sideways by the
@@ -1315,6 +1715,9 @@ func _generate(cx: int, cy: int) -> Chunk:
 	var fr := _field(ox, oy, 5, [72, 36])
 	var fs := _field(ox, oy, 6, [160, 80])
 	var fl := _field(ox, oy, 7, [28, 14])
+	# B25R1-018: the kind of country at each cell corner (RegionGeo; R_* codes) and a patch field for its bare ground
+	var reg := _region_codes(ox, oy)
+	var fp := _field(ox, oy, 8, [14, 7])
 	var road := _road_mask(ox, oy)
 	var open := PackedByteArray()                 # road and one cell round it
 	open.resize(AREA * AREA)
@@ -1358,6 +1761,8 @@ func _generate(cx: int, cy: int) -> Chunk:
 				continue
 			if _vdist(wx, wy) < VILLAGE_CLEAR:
 				continue
+			if reg[k] != R_NONE and reg[k] != R_HILLS:
+				continue                          # B25R1-018: the region's own country has no rock-rimmed ranges (open downs, waste, wood, vales)
 			# never beside a road: all four cells round the corner must be clear of road and its margin
 			if (j > 0 and i > 0 and open[(j - 1) * AREA + i - 1] == 1) or (j > 0 and i < AREA and open[(j - 1) * AREA + i] == 1) \
 					or (i > 0 and j < AREA and open[j * AREA + i - 1] == 1) or (i < AREA and j < AREA and open[j * AREA + i] == 1):
@@ -1412,6 +1817,24 @@ func _generate(cx: int, cy: int) -> Chunk:
 			if fc[k] < 220:
 				tree_p /= 3                          # a clearing
 			var rock_p := 2 + clampi((fr[k] - 600) * 2, 0, 100) + clampi((fm[k] - 460) / 3, 0, 60)
+			match int(reg[k]):                        # B25R1-018: each country its own cover (docs/design/REGION_RECONSTRUCTION_B25R1.md)
+				R_DOWNS:                              # "no trees thereon" (BONE-C4-P006): a lone thorn at most, a few sarsens
+					tree_p = 3
+					rock_p = mini(rock_p, 6)
+				R_WASTE:                              # "rough waste ... a few bushes scattered" (BONE-C8-P002): stony, treeless
+					tree_p = 0
+					rock_p = 18 + rock_p / 2
+				R_WOOD:                               # "a wood thick with trees, and no break in them" (BONE-C8-P002)
+					tree_p = maxi(tree_p, 620)
+					rock_p = mini(rock_p, 8)
+				R_VALE:                               # "more of wild-wood trees" (BONE-C7-P007)
+					tree_p = maxi(tree_p, 260)
+				R_VINE:                               # vineyards and orchards on the hill-sides (BONE-C7-P004): orchard rows
+					tree_p = 1000 if (posmod(x, 5) == 0 and posmod(y, 5) == 0 and fl[k] > 560) else 0
+					rock_p = mini(rock_p, 3)
+				R_FARM:                               # meadows and tillage: hedgerow trees and copses, not forest
+					tree_p = tree_p / 8 if fc[k] >= 220 else tree_p / 3
+					rock_p = mini(rock_p, 6)
 			if hv < rock_p * ramp / 1024:
 				cand[q] = 2
 			elif hv < (rock_p + tree_p) * ramp / 1024:
@@ -1454,6 +1877,10 @@ func _generate(cx: int, cy: int) -> Chunk:
 			ch.top[c] = inner[q]
 			var corners: int = cliff[gk] | (cliff[gk + 1] << 1) | (cliff[gk + GRID + 1] << 2) | (cliff[gk + GRID] << 3)
 			var opts: Array = cliff_tiles[corners]
+			if corners == 0:                          # B25R1-018: chalk on the Downs, bare earth in the waste (the free tileset's corner sets)
+				var soil := _soil_bits(reg, fp, gk)
+				if soil.x != 0:
+					opts = (tiles.chalk if soil.y == 1 else tiles.dry)[soil.x]
 			ch.ground[c] = opts[hash32(seed, wx, wy, 70) % opts.size()]
 			if blocked[q] == 1:
 				ch.solid[c] = 1
@@ -1481,7 +1908,8 @@ func _generate(cx: int, cy: int) -> Chunk:
 				if mine == 2:
 					ch.solid[c] = 1
 			elif mine == 1 or mine == 3:
-				var kidx := _tree_kind(tree_kinds, fs[gk], fm[gk], wx, wy, mine == 3)
+				var wood := reg[gk] == R_WOOD or reg[gk] == R_VALE   # beech and the wild-wood: broadleaf
+				var kidx := _tree_kind(tree_kinds, 100 if wood else fs[gk], 0 if wood else fm[gk], wx, wy, mine == 3)
 				ch.kind[c] = kidx
 				ch.snow[c] = 2 if mine == 3 else (1 if fm[gk] > 600 else 0)
 				ch.trees.append(wx)
@@ -1494,6 +1922,18 @@ func _generate(cx: int, cy: int) -> Chunk:
 				var vd := _vdist(wx, wy)
 				var fl_p := clampi((fl[gk] - 560) / 2, 0, 90)
 				var bush_p := 8 + clampi((ff[gk] - 500) / 2, 0, 260)
+				match int(reg[gk]):                   # B25R1-018
+					R_DOWNS:
+						bush_p = 6
+						fl_p = fl_p / 2 + 10
+					R_WASTE:
+						bush_p = 40
+						fl_p = 0
+					R_VINE:                           # the vine rows: bushes along every third row where the vineyard lies
+						bush_p = 1024 if (posmod(wy, 3) == 0 and fl[gk] <= 560 and fc[gk] > 380) else 4
+					R_FARM:
+						fl_p += 20
+						bush_p /= 2
 				if vd > 2 and hd < fl_p:
 					var fls: Array = tiles.flowers
 					ch.deco[c] = fls[hash32(seed, wx, wy, 81) % fls.size()]
@@ -1588,6 +2028,51 @@ func _water_cell(ch: Chunk, c: int, q: int, gk: int, wdata: Array, wn: PackedByt
 			ch.solid[c] = 1
 			if wn[q] == 4 and hash32(seed, wx, wy, 132) % 100 < int(W.rock_in_water_percent):
 				ch.deco[c] = int(tiles.rock)           # a rock in the water
+
+
+## B25R1-018: region codes per cell corner of the area (GRID x GRID), from RegionGeo with the seed's edge jitter.
+const R_NONE := 0
+const R_DOWNS := 1
+const R_WASTE := 2
+const R_WOOD := 3
+const R_VINE := 4
+const R_VALE := 5
+const R_FARM := 6
+const R_HILLS := 7
+const _R_OF := {"downs": R_DOWNS, "waste": R_WASTE, "great wood": R_WOOD, "vineyards": R_VINE, "wildwood valley": R_VALE,
+	"farmland": R_FARM, "meadows": R_FARM, "hills": R_HILLS}
+
+
+func _region_codes(ox: int, oy: int) -> PackedByteArray:
+	var out := PackedByteArray()
+	out.resize(GRID * GRID)
+	for j in GRID:
+		for i in GRID:
+			out[j * GRID + i] = int(_R_OF.get(RegionGeo.kind_at(ox + i, oy + j, seed), R_NONE))
+	return out
+
+
+## The bare-ground corners of the cell whose top-left corner is `gk`: (bits, 1 chalk | 2 dry earth), (0, 0) when all grass.
+## Bits as the cliff corners: 0 top-left, 1 top-right, 2 bottom-right, 3 bottom-left.
+func _soil_bits(reg: PackedByteArray, fp: PackedInt32Array, gk: int) -> Vector2i:
+	var bits := 0
+	var kind := 0
+	var idx := [gk, gk + 1, gk + GRID + 1, gk + GRID]
+	for b in 4:
+		var k: int = idx[b]
+		if reg[k] == R_DOWNS and fp[k] > 740:
+			bits |= 1 << b
+			kind = maxi(kind, 1)
+		elif reg[k] == R_WASTE and fp[k] > 400:
+			bits |= 1 << b
+			kind = 2
+	if kind == 2:                                       # a corner of chalk beside dry earth: drawn as earth (no chalk/earth tiles)
+		bits = 0
+		for b in 4:
+			var k2: int = idx[b]
+			if (reg[k2] == R_WASTE and fp[k2] > 400) or (reg[k2] == R_DOWNS and fp[k2] > 740):
+				bits |= 1 << b
+	return Vector2i(bits, kind)
 
 
 func _road_bits(road: PackedByteArray, i: int, j: int, wx: int, wy: int) -> int:

@@ -1,17 +1,17 @@
 extends SceneTree
 ## B25R1-Q3 (owner 2026-11-03: streams in the overworld, waterfalls into pools, bridges where roads cross, water to use),
 ## overworld generator version 4, headless:  godot --headless --path game --script res://tests/water_test.gd
-## Old worlds keep their maps (generation 3 exactly as before, by golden hashes recorded before streams existed), a save
-## of a generation-3 world loads as generation 3; generation 4 is deterministic, has streams, waterfalls and bridges, water is
+## Generation 4 (the region rebuilt, B25R1-018, with the water on it) is pinned by golden hashes; an older world's save is
+## refused (owner B25R1-Q5); generation 4 is deterministic, has streams, waterfalls and bridges, water is
 ## solid and bridges walkable, every road stays walkable and joined, the village and settlements are never touched, the
 ## water query answers, and the Region map has the streams and bridges.
 
 var main
 var checks := 0
 var failures := 0
-# md5 of seven chunks per seed (ground, path, deco, solid, kind, snow, top, trees), generation 3, recorded on wip/b25r1 at
-# 1fe530d before the streams were added
-const GOLDEN_3 := {1: "4f4eae43380bb0c6444d2dee8f8118de", 2: "ed2a2fb118007bc7b133260b95c92ed3", 7: "5c957dd6377d14fabb94afffc8ebb8ae"}
+# md5 of seven chunks per seed (ground, path, deco, solid, kind, snow, top, trees, water), generation 4, recorded on
+# wip/b25r1-water after merging the region layout (1fe523e): any change to the generator's output changes these
+const GOLDEN_4 := {1: "cb3ae9b7c0f7f1f2455ca6aebf4b1a7a", 2: "a4dd6192fd28420b0c8e02c6d2819ee3", 7: "e9c2686918fd80813f81bc704da11b56"}
 const CHUNKS := [Vector2i(-3, 2), Vector2i(1, 4), Vector2i(2, 9), Vector2i(-2, -3), Vector2i(5, 1), Vector2i(0, 20), Vector2i(-6, 12)]
 
 
@@ -44,27 +44,15 @@ static func fingerprint(ow: Overworld, with_water := false) -> String:
 	return "|".join(parts).md5_text()
 
 
-func _old(s: int) -> Overworld:
-	var ow := Overworld.create(s, main.map)
-	ow.load_dict({"seed": s, "gen": 3, "changes": [], "rocks": [], "flowers": [], "works": []})
-	return ow
-
-
 func _run() -> void:
 	main.set_process(false)
 	var m: VillageMap = main.map if main.map != null else VillageMap.load_default()
 	if main.map == null:
 		main.map = m
-	# --- old worlds keep their maps
-	for s in GOLDEN_3:
-		check(fingerprint(_old(s)) == GOLDEN_3[s], "seed %d, a generation-3 world: every chunk exactly as before the streams" % s)
-	var o3 := _old(1)
-	check(o3.gen == 3 and o3.streams_in(Rect2i(-500, -500, 1500, 2000)).is_empty() and not o3.is_water(Vector2i(108, 189)), "a generation-3 world has no streams and no water")
-	check(o3.nearest_water(Vector2i(108, 189), 40) == Overworld.NO_WATER, "and its water query answers none (wells are the fallback)")
-	check(int(o3.to_dict().gen) == 3, "and it is saved as generation 3 again")
-	var o1 := _old(1)
-	o1.load_dict({"gen": 1})
-	check(o1.gen == 3, "a generation-1 or -2 save is drawn as generation 3, as it was")
+	# --- generation 4 pinned
+	for s in GOLDEN_4:
+		var fp := fingerprint(Overworld.create(s, m), true)
+		check(fp == GOLDEN_4[s], "seed %d, generation 4: every chunk and its water as recorded (%s)" % [s, fp])
 	# --- generation 4: deterministic, streams there
 	var a := Overworld.create(1, m)
 	var b := Overworld.create(1, m)
@@ -194,28 +182,21 @@ func _run() -> void:
 		var wplan := RegionTravel.plan(w, Vector2i(w.player.pos.floor()), ow.nearest_water(br, 6))
 		check(bool(wplan.ok) and Vector2i(wplan.dest) != ow.nearest_water(br, 6) and not ow.is_water(Vector2i(wplan.dest)), "a tap on the water itself plans to the open bank beside it")
 	for st in ow.sites:
-		check(bool(RegionTravel.plan(w, Vector2i(w.player.pos.floor()), Vector2i(st.slots[0].spot)).ok), "%s is still reached from home" % st.name)
+		var sp := RegionTravel.plan(w, Vector2i(w.player.pos.floor()), Vector2i(st.slots[0].spot))
+		check(bool(sp.ok), "%s is still reached from home (%s %s %s)" % [st.name, st.slots[0].spot, sp.get("why", ""), sp.get("reason", "")])
 	# --- water as a resource
 	var near := ow.nearest_water(br + Vector2i(0, 0), 8) if br != Vector2i.ZERO else Overworld.NO_WATER
 	check(near != Overworld.NO_WATER and ow.is_water(near), "nearest_water finds the stream (%s)" % near)
 	var bank := ow.nearest_water_access(br, 8)
 	check(bank != Overworld.NO_WATER and not ow.is_solid(bank) and Vector2(bank).distance_to(Vector2(near)) < 1.5, "nearest_water_access gives an open cell beside it to drink from (%s)" % bank)
 	check(ow.nearest_water(ow.village.get_center(), 10) == Overworld.NO_WATER, "none inside the village (wells are the fallback there)")
-	# --- a saved generation-4 world loads as generation 4; a generation-3 save keeps its map
+	# --- a saved generation-4 world says so; an older generation's save is refused (owner B25R1-Q5)
 	check(main.save_game(false), "saved")
 	var d := SaveStore.inspect(main.save_path, World.SAVE_VERSION)
 	check(int(d.data.overworld.gen) == 4, "a new world's save says generation 4")
-	d.data.overworld.gen = 3
-	main._load_save(d.data)
-	main.ui.hide_all()
-	var ow3: Overworld = main.world.map.overworld
-	check(ow3.gen == 3 and not ow3.is_water(near) and ow3.streams_in(Rect2i(-500, -500, 1500, 2000)).is_empty(), "the same save marked generation 3 loads as generation 3: no water")
-	var ref := _old(ow3.seed)
-	var same := 0
-	for cc in CHUNKS:
-		if str(ow3.get_chunk(cc).ground) == str(ref.get_chunk(cc).ground) and str(ow3.get_chunk(cc).solid) == str(ref.get_chunk(cc).solid):
-			same += 1
-	check(same == CHUNKS.size(), "and its chunks are generation 3's, unchanged (%d of %d)" % [same, CHUNKS.size()])
+	var w3 := World.new()
+	w3.load_dict(m, {"seed": 1, "save_version": World.SAVE_VERSION, "overworld": {"seed": 1, "gen": 3}})
+	check(not w3.load_error.is_empty(), "a generation-3 save is refused with a message, not drawn (%s)" % w3.load_error)
 	# --- B25R1-017: rivers and streams, a connected network, flowing downhill
 	check(Overworld.NO_WATER == Vector2i(1 << 30, 0), "nearest_water's none is Vector2i(1 << 30, 0), the agreed signature")
 	var big := Rect2i(-260, -200, 640, 1200)
@@ -236,7 +217,7 @@ func _run() -> void:
 	check(rivers.size() >= 2 and courses.size() > rivers.size(), "rivers and streams both (%d rivers, %d courses)" % [rivers.size(), courses.size()])
 	check(fed >= 2 and rivers.any(func(r): return not (graph[r.id].tributaries as Array).is_empty()), "streams feed rivers: a network (%d streams join a river)" % fed)
 	check(uphill == 0, "every generated course runs downhill, step by step (%d steps up)" % uphill)
-	# --- B25R1-018: the canonical water (game/data/water_anchors.json until the region layout carries it)
+	# --- B25R1-018: the canonical water (game/data/region_layout.json)
 	var canon := {}
 	for c in ow.anchored_courses():
 		canon[str(c.id)] = c
