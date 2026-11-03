@@ -101,6 +101,7 @@ jobs:
           res://tests/play_test.gd
           res://tests/overworld_test.gd
           res://tests/atlas_test.gd
+          res://tests/settlement_folk_test.gd
           res://tests/tree_test.gd
           res://tests/world_test.gd
           res://tests/aging_test.gd
