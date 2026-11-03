@@ -80,7 +80,7 @@ Status words: **DONE** (criteria met, evidence cited), **TESTING** (built; tests
 | # | Item | Status | Remaining work |
 |---|---|---|---|
 | E1 | Merge `wip/region-nav` into `wip/expansion20` | DONE | Fast-forward to `b540971` (2026-11-02 22:5x EST) |
-| E2 | Final candidate SHA and full CI | RUNNING | Candidate `a72ed0a`. CI on the activation commit `b00439f` (run 41576207072): shards 1-3 121 suites, 0 failures; shard 0 finishing. Candidate CI: run 41580777660 (dispatched 2026-11-02 23:54 EST) |
+| E2 | Final candidate SHA and full CI | RUNNING | Candidate `da7c8c1` (`a72ed0a` plus a test-only fix). Run 41580777660 on `a72ed0a`: shard 3 passed; shard 0's Python unittest failed on a test expectation (fixed in `da7c8c1`, 179/179 locally), its game suites, data checks and economy run passed; shards 1-2 running. Record: `CI_RECORD.md` |
 | E3 | Final 365-day flight recorder on that exact SHA with the Living Economy on (B7), under the existing acceptance rules. On a genuine defect: fix, focused tests, rerun the flight | TO DO | — |
 | E4 | Packages: Android APK (permanent signing identity), Windows ZIP, Linux ZIP from the one SHA; export and launch smoke checks; private draft release with the test evidence, simulation report and SHA | TO DO | Not published |
 
