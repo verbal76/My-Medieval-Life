@@ -443,3 +443,8 @@ Agent decisions (provisional, recorded in DECISIONS.md): a band too poor to pay 
 tries each dawn (it is not given the means); raids last one night; one open work at a time on a claim; a pen's first animal kind
 is chickens (pen_kinds); the player's own homestead cannot yet build a well, pen or workshop (players have no thirst, and the
 player-side construction UI is not built). Defenders fight or flee (owner B25R1-Q4: no surrender).
+
+**Raid size (not tuned).** `wilds.raid_keep_home` is 1: of a band of six fit bandits, five go on a raid and one stays at the
+camp. In the 6-day probe on seed 1 the first raid nights cost three of six bandits in fights with the guards. The 240-day
+measurement (seed 1, every 40 days) will show what this does to the band over generations; the value is left as it is until
+that evidence is read.
