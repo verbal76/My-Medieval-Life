@@ -2742,6 +2742,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 		"journey_leg":                                  # REGION-NAV-01: the end of a leg of a journey (Journeys)
 			Journeys.leg_done(w, n)
 			return true
+		"life":                                         # B25R1-014: a runaway reaches the bandits' camp (LifeDecisions.act)
+			return w.life.act(n, a) if w.life != null else false
 		"homestead":                                    # B25R1-010: the end of a homesteader's walk (Homesteads.act)
 			return w.homesteads.act(n, a) if w.homesteads != null else false
 		"eat":

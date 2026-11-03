@@ -10,8 +10,7 @@ extends RefCounted
 ## for everybody). A claim creates no village, government or tax jurisdiction.
 ##
 ## People: the moments are household formation (Construction._found, _found_couple) for a young adult and, much more rarely, an
-## adult whose household's housing need has waited long. WHO chooses to go is the decision model awaiting the owner (see
-## "deciding" below: it is to come from the judgment and life-decision architecture); until it is approved nobody decides. Once
+## established adult's relocation event. WHO chooses to go is LifeDecisions' judged choice (see "deciding" below). Once
 ## chosen, the settlement must be healthy (no decline over `health_days`, enough working adults and households left, the
 ## household viable, nobody from it lately), a site found and the coins in hand, or nothing happens (the gates, begin / _go).
 ##
@@ -250,7 +249,7 @@ func _new_claim(owner: String, lay: Dictionary, founder: int, status: String) ->
 		"w": land.size.x, "h": land.size.y, "house": {"x": house.position.x, "y": house.position.y, "w": house.size.x,
 		"h": house.size.y, "door": [door.x, door.y]}, "site": {}, "status": status, "stage": "travel", "day": w.day(),
 		"store": Inventory.new(), "building": "", "trade": "", "trades": {}, "why": "", "anchor": {}, "known": [], "members": [],
-		"poor_days": 0}
+		"poor_days": 0, "faction": "lawful", "concealed": false, "allegiance": [[w.day(), "lawful"]]}
 	next_id += 1
 	claims.append(c)
 	_claim_cache.clear()
@@ -287,6 +286,7 @@ func deliver(c: Dictionary, inv: Inventory, by := "") -> bool:
 				need.erase(id)
 	if given > 0:
 		w.stat("homestead_loads", float(given))
+		_rec("homestead_materials", {"claim": str(c.id), "by": by, "loads": given, "need": c.site.need.duplicate()})
 		if by != "" and by != str(c.owner):
 			w.stat("site_loads_by_others", given)
 	if need.is_empty() and clear_ground(c).is_empty():
@@ -305,6 +305,7 @@ func _finish(c: Dictionary) -> void:
 	c.stage = "live"
 	c.built_day = w.day()
 	_count("built")
+	_rec("homestead_built", {"claim": str(c.id), "owner": str(c.owner), "cost": c.site.cost.duplicate(), "house": str(c.building)})
 	_sync_overworld()
 	w.note("%s's house in the country is finished." % _owner_name(c))
 
@@ -398,6 +399,7 @@ func player_claim(p: PlayerState) -> String:
 	_mark_site(c)
 	clear_ground(c)
 	_count("player_claimed")
+	_rec("homestead_claimed", {"claim": str(c.id), "owner": str(c.owner), "by": w.person_id(p), "land": [c.x, c.y, c.w, c.h]})
 	w.note("You claim a piece of open country and mark out a house on it.")
 	return ""
 
@@ -486,10 +488,10 @@ func note_player(p: PlayerState) -> void:
 	if _seen_cell.get(p.pid, Vector2i(1 << 30, 0)) == cell:
 		return
 	_seen_cell[p.pid] = cell
-	var r := float(cfg().discover_radius)
 	for c in claims:
 		if (c.known as Array).has(p.pid):
 			continue
+		var r := float(cfg().discover_hidden) if bool(c.get("concealed", false)) else float(cfg().discover_radius)
 		if Vector2(cell).distance_to(Vector2(house_of(c).get_center())) <= r:
 			c.known.append(p.pid)
 			_count("discovered")
@@ -506,19 +508,50 @@ func known_markers(p: PlayerState) -> Array:
 			continue
 		var own := str(c.owner) == w.player_ref(p)
 		out.append({"id": str(c.id), "cell": house_of(c).get_center(), "name": "Your homestead" if own else "%s homestead" % _owner_name(c),
-			"own": own, "built": str(c.get("building", "")) != "", "abandoned": str(c.status) == "abandoned"})
+			"own": own, "built": str(c.get("building", "")) != "", "abandoned": str(c.status) == "abandoned",
+			"faction": str(c.get("faction", "lawful")), "concealed": bool(c.get("concealed", false))})
 	return out
 
 
+# ---------------------------------------------------------------- allegiance ---------------------
+## B25R1-014 section 2 (one wilderness settlement foundation for lawful and outlaw places): a claim's faction ("lawful" or
+## "outlaw") and concealment change with its people, never the claim itself: its id, land, buildings, stores, owner, residents,
+## discovery and history stay as they are; the change is dated in `allegiance`. A concealed claim is found only from
+## discover_hidden tiles (Homesteads.note_player), the region map's hook reports both. Returns true when anything changed.
+func set_faction(c: Dictionary, faction: String, concealed: bool, why := "") -> bool:
+	if str(c.get("faction", "lawful")) == faction and bool(c.get("concealed", false)) == concealed:
+		return false
+	c.faction = faction
+	c.concealed = concealed
+	if not c.has("allegiance"):
+		c.allegiance = []
+	c.allegiance.append([w.day(), faction, why])
+	_count("allegiance_" + faction)
+	_rec("settlement_affiliation", {"claim": str(c.id), "faction": faction, "concealed": concealed, "why": why})
+	return true
+
+
+## A claim's faction follows its people: outlaw when every living resident adult is of the band (or its clan), lawful when none
+## is. Called each dawn for the claims with residents (Homesteads.dawn).
+func _allegiance(c: Dictionary, members: Array) -> void:
+	var adults := members.filter(func(o: NPC) -> bool: return o.role != "child")
+	if adults.is_empty():
+		return
+	var outl := adults.filter(func(o: NPC) -> bool: return o.role == "bandit" or o.clan != "")
+	if outl.size() == adults.size():
+		set_faction(c, "outlaw", true, "its people are outlaws")
+	elif outl.is_empty():
+		set_faction(c, "lawful", false, "its people live by the law")
+
+
 # ---------------------------------------------------------------- deciding -----------------------
-## OWNER DECISION PENDING (owner clarification 2026-11-03, docs/directives/2026-11-03_b25r1_owner_clarifications.md section 3):
-## the choice to homestead must come from the existing judgment and life-decision architecture (docs/design/HOMESTEADING_B25R1.md
-## section 7, the proposal put to the owner), with the 1-3 % as a population brake, never an isolated random percentage. Until
-## that model is approved nobody in the game decides to homestead: the hooks at household formation (consider, consider_couple)
-## and at dawn (_adults_dawn) return without effect. What is built and tested is everything after a decision: begin(), the
-## gates, the site, the coins, travel, claim, construction and life on the land.
-## `decider`: the approved decision model plugs in here, (h, founder, leaving, path) -> the person who chooses to go, or null.
+## Who chooses to homestead is LifeDecisions.homestead_decider (owner decision D1/D2 on B25R1-010, 2026-11-03: the judged
+## choice homestead_choice, with the 1-3 % as a population brake), installed by World as `decider`: at household formation
+## (consider, consider_couple: young adults) and at an established adult's relocation event (LifeDecisions._adults_dawn).
+## Unset (a test, or the judgment layer off), nobody decides. begin() is the start after the choice, the gates, the site, the
+## coins, then travel, claim, construction and life on the land.
 var decider := Callable()
+var pending_site := {}               # the site the decision weighed (LifeDecisions), used by the _go that follows it; not saved
 
 
 func _decide(h: int, founder: NPC, leaving: Array, path: String) -> NPC:
@@ -603,35 +636,6 @@ func consider_couple(f: NPC, m: NPC) -> bool:
 	return who != null and _go(f.household, who, [f, m], "young", m.household)
 
 
-## Each dawn: an adult whose household's housing need has waited `adult_wait_days` (lodging, crowded, a couple apart) is the
-## secondary candidate (directive section 3); the decision model weighs them (none decides until it is approved).
-func _adults_dawn() -> void:
-	if not decider.is_valid():
-		return
-	var cf := cfg()
-	for h in w.households.size():
-		var hh: Dictionary = w.households[h]
-		if hh.get("ended", false) or hh.has("homestead") or Life.is_couple(hh):
-			continue
-		var waited := false
-		for g in w.construction.housing_goals(h).values():
-			waited = waited or w.day() - int(g.get("since", w.day())) >= int(cf.adult_wait_days)
-		if not waited:
-			continue
-		for o: NPC in w.brain._members(h):
-			if o.role != "adult" or not w.construction._may_found(o):
-				continue
-			var leaving: Array = [o]
-			var p := w.npc(o.partner) if o.partner >= 0 else null
-			if p != null and p.alive and p.household == h:
-				if not w.construction._may_found(p):
-					continue
-				leaving.append(p)
-			var who := _decide(h, o, leaving, "adult")
-			if who != null and _go(h, who, leaving, "adult"):
-				return                                 # one a morning at most
-
-
 ## The decision made: gates, a site, the coins; the household is founded and sets out. False (nothing changed) when any is
 ## missing. `h2`: the partner's household when a couple from two households goes.
 func _go(h: int, who: NPC, leaving: Array, path: String, h2 := -1) -> bool:
@@ -641,7 +645,8 @@ func _go(h: int, who: NPC, leaving: Array, path: String, h2 := -1) -> bool:
 	if why != "":
 		_count("gate_" + why)
 		return false
-	var site := find_site(who)
+	var site := pending_site if not pending_site.is_empty() else find_site(who)
+	pending_site = {}
 	if site.is_empty():
 		_count("gate_no_site")
 		return false
@@ -703,6 +708,10 @@ func _go(h: int, who: NPC, leaving: Array, path: String, h2 := -1) -> bool:
 	trips[str(who.id)] = {"claim": str(c.id), "leg": "market", "n": 0, "day": w.day(), "tried": {}, "outfit": true}
 	_count("decided")
 	_count("decided_" + path)
+	_rec("homestead_set_out", {"claim": str(c.id), "household": World.hh_ref(nid), "from": World.hh_ref(h), "people": leaving.map(func(o: NPC) -> int: return o.id),
+		"path": path, "site": [c.x, c.y], "why": str(c.why)})
+	if w.life != null:
+		w.life.homestead_started(path)
 	w.note("%s %s leaves the village to make a home in the open country, %s%s." % [who.name, who.family, str(site.why),
 		"" if leaving.size() == 1 else ", with " + (leaving[1] if leaving[0] == who else leaving[0]).name])
 	for hi: int in homes:
@@ -863,8 +872,6 @@ func dawn() -> void:
 	var keep := int(cfg().health_days) + 1
 	while pop_history.size() > keep:
 		pop_history.pop_front()
-	if enabled and bool(cfg().enabled):
-		_adults_dawn()
 	for c in claims.duplicate():
 		if World.is_player_ref(str(c.owner)) or str(c.status) == "abandoned":
 			continue
@@ -879,15 +886,18 @@ func dawn() -> void:
 				continue
 			c.members.erase(id)
 			trips.erase(str(id))
+			_rec("homestead_member_left", {"claim": str(c.id), "person": int(id), "now": World.hh_ref(o.household)})
 			if not w.map.in_village(o.cell()):
 				returning[str(id)] = true
 				o.plan.clear()
 		for o: NPC in members:
 			if not (c.members as Array).has(o.id):
 				c.members.append(o.id)                 # born there, or joined
+				_rec("homestead_member_joined", {"claim": str(c.id), "person": o.id})
 		if hh.get("ended", false) or members.is_empty():
 			_abandon(c, "ended")
 			continue
+		_allegiance(c, members)
 		var cash := 0
 		for o: NPC in members:
 			cash += o.coins
@@ -917,6 +927,7 @@ func _fail(c: Dictionary, why: String) -> void:
 	c.end_day = w.day()
 	c.end_why = why
 	_count("failed")
+	_rec("homestead_failed", {"claim": str(c.id), "owner": str(c.owner), "why": why, "returned": back.duplicate()})
 	if h >= 0 and h < w.households.size():
 		w.households[h].erase("homestead")
 		for o: NPC in w.brain._members(h):
@@ -961,6 +972,7 @@ func _abandon(c: Dictionary, why: String) -> void:
 	c.end_day = w.day()
 	c.end_why = why
 	_count("abandoned")
+	_rec("homestead_abandoned", {"claim": str(c.id), "owner": str(c.owner), "why": why, "standing": str(c.get("building", "")) != ""})
 	_claim_cache.clear()
 	_sync_overworld()
 
@@ -1196,6 +1208,7 @@ func _start_trip(n: NPC, c: Dictionary) -> void:
 		w.transfer(pantry, n.inv, "log", spare)          # the logs beyond the hearth's go to market
 	trips[str(n.id)] = {"claim": str(c.id), "leg": "out", "n": 0, "day": w.day(), "tried": {}}
 	_count("trips")
+	_rec("homestead_trip", {"claim": str(c.id), "by": n.id, "pantry_days": snappedf(w.brain.household_food_days(n.household), 0.1), "coins": n.coins})
 	_lay_village(n, c)
 
 
@@ -1245,6 +1258,12 @@ func _errand(n: NPC, c: Dictionary, trip: Dictionary) -> bool:
 			if b._buyer_for(n, id) != null:
 				b._plan_sell(n, id)
 				return true
+			if id == "log":
+				var hh := _firewood_buyer(n)
+				if hh >= 0:
+					n.doing = "selling firewood at a door"
+					n.plan = [b.go(w.household_cell(hh, n.cell())), b.doit("homestead", {"step": "firewood", "hh": hh})]
+					return true
 			c.unsold_day = w.day()                      # nobody in the village buys it today
 			_count("unsold_" + id)
 	var trade := str((c.trades as Dictionary).get(str(n.id), c.trade))
@@ -1291,6 +1310,39 @@ func _errand(n: NPC, c: Dictionary, trip: Dictionary) -> bool:
 			n.plan = [b.go(b._workplace_cell(s)), b.doit("buy_from", {"vendor": s.id, "item": id, "qty": q})]
 			return true
 	return false
+
+
+## A village household short of firewood (fewer than two logs in its pantry, NPCBrain's evening provisioning would buy them)
+## whose purse can pay a log's price: the homesteader sells at its door (World.trade, the household's payer, logs into its
+## pantry). B25R1-014: the village's businesses are often stocked by their own woodcutters; households are buyers too. -1 none.
+func _firewood_buyer(n: NPC) -> int:
+	var price := w.sell_price(n, "log")
+	for h in w.households.size():
+		var hh: Dictionary = w.households[h]
+		if hh.get("ended", false) or hh.has("homestead") or str(hh.home) == "" or (hh.pantry as Inventory).count("log") >= 2:
+			continue
+		for o: NPC in w.brain._members(h):
+			if o.role != "child" and o.coins >= price + w.reserve_of(o):
+				return h
+	return -1
+
+
+func _sell_firewood(n: NPC, h: int) -> bool:
+	var price := w.sell_price(n, "log")
+	var keep := int(cfg().keep_logs)
+	var q := mini(2 - (w.households[h].pantry as Inventory).count("log"), n.inv.count("log") - keep)
+	if q <= 0:
+		return false
+	var payer: NPC = null
+	for o: NPC in w.brain._members(h):
+		if o.role != "child" and o.coins >= price * q + w.reserve_of(o) and (payer == null or o.coins > payer.coins):
+			payer = o
+	if payer == null or not w.trade(payer, n, "log", q, price):
+		return false
+	w.transfer(payer.inv, w.households[h].pantry, "log", q)
+	_count("firewood_sold", q)
+	_rec("homestead_trade", {"by": n.id, "to": World.hh_ref(h), "item": "log", "qty": q, "price": price})
+	return true
 
 
 ## The nearest villager awake who sells a building material (Construction.SELLERS) and holds some to spare.
@@ -1440,6 +1492,8 @@ func act(n: NPC, a: Dictionary) -> bool:
 				_arrive(n, c)
 			_unpack(n, c)
 			return true
+		"firewood":
+			return _sell_firewood(n, int(a.get("hh", -1)))
 		"deliver":
 			if n.cell().distance_to(step_of(c)) > 2.5:
 				return false
@@ -1492,6 +1546,7 @@ func _arrive(n: NPC, c: Dictionary) -> void:
 	clear_ground(c)
 	c.stage = "build"
 	_count("claimed")
+	_rec("homestead_claimed", {"claim": str(c.id), "owner": str(c.owner), "by": n.id, "land": [c.x, c.y, c.w, c.h]})
 	w.note("%s %s claims a piece of open country and marks out a house on it." % [n.name, n.family])
 
 
@@ -1559,3 +1614,12 @@ func load_dict(d: Dictionary) -> void:
 	counts = (d.get("counts", {}) as Dictionary).duplicate()
 	_claim_cache.clear()
 	_sync_overworld()
+
+
+## B25R1-016 (the 365-day flight recorder): every stage of a homestead's life and every life choice is offered to the recorder,
+## read only (never a state change, never a random number): recorder.life_event(kind, data) when the recorder has it (its
+## vocabulary is the recorder worker's, wip/b25r1-recorder); people by their Identity ids, households "hh:<n>", claims by id.
+func _rec(kind: String, data: Dictionary) -> void:
+	if w.recorder != null and w.recorder.has_method("life_event"):
+		data["day"] = w.day()
+		w.recorder.life_event(kind, data)

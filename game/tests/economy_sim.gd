@@ -2231,6 +2231,14 @@ func _print_sample(s: Dictionary) -> void:
 	print("  neighbours: %d people, %d coins (village paid net %d); %s%s" % [rg.population, rg.coins, rg.village_paid_net, "; ".join(per),
 		("  AUDIT " + str(rg.audit)) if str(rg.audit) != "" else ""])
 	print("  migration (MIGRATE-18): %d to the settlements, %d to the village; by reason %s" % [rg.migrants_out, rg.migrants_in, JSON.stringify(rg.moves)])
+	if w.homesteads != null and w.life != null:      # B25R1-010/013/014: the village by age, the rural people, runaways, the band
+		var occ := {}
+		for n: NPC in w.npcs:
+			if n.alive and n.role == "adult":
+				var j := n.job if n.job != "" else "none"
+				occ[j] = int(occ.get(j, 0)) + 1
+		print("  LIFE %s" % JSON.stringify({"day": w.day(), "homesteads": w.homesteads.report(), "life": w.life.report(), "occupations": occ,
+			"deaths": int(w.stats.get("old_age_deaths", 0)), "starved": int(w.stats.get("starved", 0)), "food_days": snappedf(w.food_days, 0.01)}))
 
 
 ## What holds back births, partnering and new households (EQ-07; read only): beds against people, couples

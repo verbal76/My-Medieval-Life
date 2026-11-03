@@ -80,6 +80,7 @@ var business: Business             # the player's market stall and the villagers
 var fitting: Fitting               # equipment the player places in their rooms: counters, shelves, stations (PL1-10 stage 3)
 var counters: Counters             # skilled-trade counters: ring, the keeper walks over and serves (CTR-01..03, ARM-01)
 var construction: Construction     # building kinds, placement, hired helpers, households that split
+var life: LifeDecisions            # B25R1-014: homesteading, runaways, recruitment and leaving the band (saved, optional)
 var homesteads: Homesteads         # B25R1-010: homestead claims in the open country and the households living on them (saved, optional)
 var loot: Array = []               # {pos: Vector2, inv: Inventory, coins, from}
 var fauna: Fauna                   # livestock in the pens, wild animals in the woods
@@ -171,7 +172,7 @@ var recorder = null           # REC-19: the flight recorder (WorldRecorder), or 
 
 func _init() -> void:
 	GameData.ensure()
-	journey_hook = func(n: NPC) -> bool: return Envoys.at_site(self, n) or RegionTrade.at_site(self, n)      # REGION-NAV-01: an envoy's interviews (S4), a buyer's purchase (S6)
+	journey_hook = func(n: NPC) -> bool: return Envoys.at_site(self, n) or RegionTrade.at_site(self, n) or (life != null and life.at_site(n))      # REGION-NAV-01: an envoy's interviews (S4), a buyer's purchase (S6); B25R1-014: a runaway joins the settlement
 
 
 # ---------------------------------------------------------------- setup ----------------------
@@ -196,6 +197,8 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	property = Property.new(self)
 	construction = Construction.new(self)
 	homesteads = Homesteads.new(self)          # B25R1-010
+	life = LifeDecisions.new(self)             # B25R1-014
+	homesteads.decider = life.homestead_decider
 	business = Business.new(self)
 	ventures = Ventures.new(self)
 	employment = Employment.new(self)
@@ -550,7 +553,8 @@ func _new_day() -> void:
 	if couriers != null:
 		couriers.daily()               # REG-COURIER-01: the village's booth, its keeper, the routes to the settlements
 	construction.daily()               # helpers' days end; crowded households split; founders build
-	homesteads.dawn()                  # B25R1-010: the decline gate's count, adults' rare departures, homesteads given up or ended
+	homesteads.dawn()                  # B25R1-010: the decline gate's count, homesteads given up or ended
+	life.dawn()                        # B25R1-014: hardship records; adults' homesteading, runaways, leaving the band (judged)
 	ventures.daily()                   # B25-BUSINESS-IMPL: ventures open, change hands or close; villagers weigh founding one
 	employment.daily()                 # EMP-PERM-01: permanent employees paid for the day, or their employment ends
 	farm_plots.daily()                 # households weigh taking farmland (FARM-05)
@@ -606,6 +610,11 @@ func _update_npc(n: NPC, dt: float) -> void:
 		if n.plan.is_empty() and Journeys.resume(self, n):
 			_run_plan(n, dt, gm)
 			return
+	if life.drives(n):                               # B25R1-014: a runaway on the way to the bandits' camp
+		if n.plan.is_empty():
+			life.plan(n)
+		_run_plan(n, dt, gm)
+		return
 	if homesteads.drives(n):                         # B25R1-010: a homesteader's day is laid out by Homesteads, never the village brain
 		homesteads.tick(n)
 		if n.plan.is_empty():
@@ -6148,6 +6157,7 @@ func to_dict() -> Dictionary:
 		"save_version": SAVE_VERSION, "format": "mml-save/%d" % SAVE_VERSION, "seed": seed, "minutes": minutes, "rng_state": str(rng.state), "next_parcel": property.next_parcel,
 		"construction": construction.to_dict(),
 		"homesteads": homesteads.to_dict(),
+		"life": life.to_dict(),
 		"manor_work": manor_work.to_dict(),
 		"tax": tax_state.duplicate(true), "treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
 		"village": {"format": map.data.format, "seed": map.data.seed},
@@ -6387,6 +6397,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	property.next_parcel = int(d.get("next_parcel", 0))
 	construction = Construction.new(self)
 	homesteads = Homesteads.new(self)          # B25R1-010 (loaded below, once the overworld and the households are back)
+	life = LifeDecisions.new(self)             # B25R1-014 (loaded below)
+	homesteads.decider = life.homestead_decider
 	business = Business.new(self)
 	ventures = Ventures.new(self)
 	employment = Employment.new(self)
@@ -6659,6 +6671,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	index_interiors()
 	construction.load_dict(d.get("construction", {}))
 	homesteads.load_dict(d.get("homesteads", {}))     # B25R1-010 (older saves: no homesteads)
+	life.load_dict(d.get("life", {}))                 # B25R1-014 (older saves: no records)
 	Life.sync_roles(self)              # B8-029: roles follow age on load
 	if int(d.get("save_version", 1)) < 4:
 		_move_indoors(d)

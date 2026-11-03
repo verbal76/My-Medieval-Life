@@ -1,9 +1,9 @@
 extends SceneTree
 ## B25R1-010 (owner directive 2026-11-03, docs/directives/2026-11-03_b25r1_homesteading.md; docs/design/HOMESTEADING_B25R1.md):
 ## a villager's homestead from the moment they set out to a house standing in the open country and a life there, through the
-## real World (World.update in game-minute steps, as economy_sim). The decision WHO goes is the owner's pending model (section 7
-## of the design): the game decides nobody (checked first); the test then starts one explicitly (Homesteads.begin), the entry the
-## approved model will call. Checked: land eligibility (the village's and the settlements' land, roads, other claims), the
+## real World (World.update in game-minute steps, as economy_sim). WHO goes is LifeDecisions' judged choice (tested in
+## life_decisions_test); here the brake is checked first, then one household is started explicitly (Homesteads.begin), the
+## entry the choice calls. Checked: land eligibility (the village's and the settlements' land, roads, other claims), the
 ## gates, the sequence (outfit, travel, claim, clearing, materials bought and delivered, the house built, sleeping in its beds,
 ## the pantry), identity kept, the posts left, the claim persistent and unique, the house solid in the overworld, coins and the
 ## goods ledger conserved (economy_sim's flow rule over the materials, food and logs), a save and load in the middle of the
@@ -74,7 +74,8 @@ func _init() -> void:
 		if w.construction.founder_of(h) != null:
 			w.construction._found(h)
 			break
-	check(hs.claims.is_empty() and not hs.decider.is_valid(), "with no approved decision model no villager founds a homestead at household formation")
+	check(hs.claims.is_empty() and hs.decider.is_valid() and int(w.life.counts.get("brake_young", 0)) >= 1,
+		"the first household formations found no homestead: the population brake (2 %% of formations) allows none yet (%s)" % w.life.counts)
 	check(w.households.size() >= hh0, "(household formation goes on as before)")
 	# ---- a young adult sets out (an explicit start, the entry the decision model will use)
 	var cands := []
