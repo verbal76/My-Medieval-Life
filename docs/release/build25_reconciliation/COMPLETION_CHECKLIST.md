@@ -81,7 +81,7 @@ Status words: **DONE** (criteria met, evidence cited), **TESTING** (built; tests
 |---|---|---|---|
 | E1 | Merge `wip/region-nav` into `wip/expansion20` | DONE | Fast-forward to `b540971` (2026-11-02 22:5x EST) |
 | E2 | Final candidate SHA and full CI | DONE | Candidate `c4c3490` (`a72ed0a` plus two test-only fixes). Run 41580777660 on `a72ed0a`: shards 2 and 3 passed. Shard 0's Python test (`da7c8c1`, 179/179) and shard 1's `od16_test` (`c4c3490`, 46/0) failed on stale test expectations, both fixed; every other suite, the data checks and the FR-07 run passed. Record: `CI_RECORD.md` |
-| E3 | Final 365-day flight recorder on that exact SHA with the Living Economy on (B7), under the existing acceptance rules. On a genuine defect: fix, focused tests, rerun the flight | RUNNING | Run 41587688728 on `c4c3490`, dispatched 2026-11-03 01:05 EST; seeds 1 and 2, 365 days |
+| E3 | Final 365-day flight recorder on that exact SHA with the Living Economy on (B7), under the existing acceptance rules. On a genuine defect: fix, focused tests, rerun the flight | DONE | Run 41587688728 on `c4c3490`: seeds 1 and 2, 365 of 365 days, CRITICAL 0, confirmed defects 0, archives and workbooks ok (seed 1: HIGH 32, MEDIUM 39; seed 2: HIGH 58, MEDIUM 14). Record: `CI_RECORD.md` |
 | E4 | Packages: Android APK (permanent signing identity), Windows ZIP, Linux ZIP from the one SHA; export and launch smoke checks; private draft release with the test evidence, simulation report and SHA | TO DO | Not published |
 
 ## F. Evidence already on `b18f418` (2026-11-02 21:2x EST, local)
@@ -142,7 +142,7 @@ ninth regional stage.
 | I5 | Full game loads demo saves unrestricted; legacy saves migrate; Android save export/import | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
 | I6 | Steam promotion: one configured destination; "Coming Soon on Steam" until the owner supplies the page; menus and expiry screen | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
 | I7 | Focused tests (timer, persistence, expiry, compatibility, Steam, demo-equals-full simulation) | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
-| I8 | Six packages from one SHA in parallel jobs; private draft release | PIPELINE READY (release.yml, `ca27195`); runs after the final flight |
+| I8 | Six packages from one SHA in parallel jobs; private draft release | RUNNING: `release.yml` run 41624309659 on `c4c3490` (private, build 25), dispatched 2026-11-03 06:03 EST |
 
 ## Order of work (no new scope)
 

@@ -73,3 +73,18 @@ No full re-run was made for the two test-only corrections.
 **Final 365-day flight (E3):** run 41587688728 on `c4c3490`, dispatched 2026-11-03 01:05 EST (06:05 UTC).
 - Seeds 1 and 2, 365 days, checkpoints every 10 days, recorded.
 - Flight mode, segments of 100 days, Living Economy on (the shipped default).
+
+### Final flight result, read 2026-11-03 06:03 EST
+
+The campaign finished at 05:58 EST (GitHub Actions 06:05-10:58 UTC). The four segments of each seed and both analyses passed. The step that fails on a defect did not trigger in any segment or analysis.
+
+| Seed | Days | Stopped | CRITICAL | HIGH | MEDIUM | Confirmed defects | Archive and workbook |
+|---|---|---|---|---|---|---|---|
+| 1 | 365 of 365 | completed | 0 | 32 | 39 | 0 | ok (analysis job 125870169396) |
+| 2 | 365 of 365 | completed | 0 | 58 | 14 | 0 | ok (analysis job 125864218439; also 9 INFORMATIONAL) |
+
+- Seed 2's top HIGH findings are repeated failed trades: buying logs or coal, selling building blocks, and refused trades. For example, F001: p:68 failed to sell building blocks 2,380 times in a row from day 127.
+- These are recorded as measurements, not confirmed defects: under the existing acceptance rules only CRITICAL findings and confirmed defects block, and the analyser confirmed none (WDR-022).
+- Artifacts: `fr-seed1-results`, `fr-seed2-results` and `flight-recorder-campaign` (artifact 13225470964).
+
+**Verdict: the final flight on `c4c3490` is clean.** Packaging was dispatched at 06:03 EST: `release.yml` run 41624309659, private, build number 25, on `c4c3490`.
