@@ -66,8 +66,12 @@ func _init() -> void:
 	check(st.call(a, "envoy_posted") > 0 and st.call(a, "journey_started") > 0, "in %d days the reeve posts envoys and villagers travel (%d posted, %d journeys, %d interviews)" % [DAYS, st.call(a, "envoy_posted"), st.call(a, "journey_started"), st.call(a, "envoy_interviews")])
 	check(_state(a) == _state(b), "two runs of seed 1 for %d days end in the same state, the regional systems included" % DAYS)
 	check(coin_gap(a) == gap0 and a.regions.audit() == "", "the currency ledger balances across the village's boundary (gap %d, was %d) and every settlement's books" % [coin_gap(a), gap0])
-	# save mid-mission
+	# save mid-mission (a world without the founding's seed travellers, B25R1-009: with them, seed 1's envoy post goes untaken
+	# for the first 20 days, an outcome of the changed village, so this scenario's envoy would never set out)
+	var seeds0 := int(OffMapSettlement.data().seed_travelers.count)
+	OffMapSettlement.data().seed_travelers.count = 0
 	var w := _world()
+	OffMapSettlement.data().seed_travelers.count = seeds0
 	var until := w.minutes + 20.0 * 1440.0
 	while w.minutes < until and _envoy(w) == null:
 		w.update(0.5)
