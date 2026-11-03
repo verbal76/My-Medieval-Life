@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 785 (418 of them still open) |
-| **Open entries now** (rules excluded) | | **577** |
+| Entries added since | | 786 (419 of them still open) |
+| **Open entries now** (rules excluded) | | **578** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (785)
+## Added since the baseline (786)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -207,6 +207,7 @@ None.
 | B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return; no decorative travelers | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-Q1 | Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)? | decision | APPROVED | 20 |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-C | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |

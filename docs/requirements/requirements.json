@@ -7141,6 +7141,34 @@
    ]
   },
   {
+   "id": "B25R1-011",
+   "kind": "approved",
+   "title": "Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages",
+   "description": "Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages",
+   "source": "docs/directives/2026-11-03_b25r1_road_wear.md",
+   "owner_wording": "The heavier a road or path is used, it should start to upgrade by percentage. Grass traveled enough turns to a path. We should be able to upgrade sections of road with stone by clicking on it and having the materials. Villages can upgrade their own roads by paying a worker and supplying stone",
+   "approval": "owner, 2026-11-03",
+   "acceptance": [
+    "Traffic on a cell (player and NPC footfall) raises its wear by percentage; enough turns grass to a trail and a trail to a dirt road, saved, deterministic; the player can pave a road section with stone by tapping it with the materials (consumed); a village pays a worker and supplies stone to pave its own roads through the existing work/treasury systems; map and world agree; all types traversable"
+   ],
+   "target_build": "20",
+   "parent": "B25R1-001",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_road_wear.md"
+    }
+   ]
+  },
+  {
    "id": "B25R1-Q1",
    "kind": "decision",
    "title": "Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)?",
