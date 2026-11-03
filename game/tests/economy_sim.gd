@@ -233,6 +233,7 @@ func _init() -> void:
 				print("JUDGE " + JSON.stringify(JudgmentSoak.metrics(w.judgment)))
 			print("CHAPEL " + JSON.stringify(_chapel_line(d + 1)))
 			print("BIZ " + JSON.stringify(_biz_line(d + 1)))
+			print("REGION " + JSON.stringify(_region_line()))           # REGION-NAV-01 S8: envoys, word, journeys, trade, demand
 			print("FUNNEL " + JSON.stringify(_funnel_line(d + 1)))
 			print("JOBS " + JSON.stringify(_jobs_line(d + 1)))
 			print("ORE " + JSON.stringify(_ore_line(d + 1)))
@@ -341,7 +342,7 @@ func _init() -> void:
 		var f := FileAccess.open(out, FileAccess.WRITE)
 		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "reached": reached, "every": every, "step": STEP,
 			"seconds": secs, "start": _jsonable(start), "samples": samples, "dev": dev_series, "deaths": death_log,
-			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows, "herd": herd_log, "herd_care": herd_care}, " ", false))
+			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows, "herd": herd_log, "herd_care": herd_care, "region": _region_line()}, " ", false))
 		f.close()
 	# SJD-G: save size and memory at the end, after the results above are written (World.to_dict tells any queued gossip first)
 	print("JUDGE_SAVE %s" % JSON.stringify({"judgment_bytes": JSON.stringify(w.judgment.to_dict()).length() if w.judgment != null else 0,
@@ -2137,6 +2138,39 @@ func _ledger(start: Dictionary) -> Dictionary:
 
 ## A digest of the world's state: equal digests mean the same run (used to check that the ledger
 ## counters change nothing).
+## REGION-NAV-01 S8 (the regional economy directive's Phase 7 measurements): the envoys' missions and what they found, how far word
+## spread, the villagers' journeys, their trade with the neighbours, regional demand in the workshops and foundings
+## (RegionTrade.measure), and the P2/P3 findings. Read only.
+func _region_line() -> Dictionary:
+	var st := func(k: String) -> int: return int(w.stats.get(k, 0.0))
+	var book := Envoys.book(w)
+	var told := 0
+	var knows := 0
+	for n: NPC in w.npcs:
+		if n.alive and not n.intel.is_empty():
+			knows += 1
+			told += n.intel.size()
+	var m := RegionTrade.measure(w)
+	return {"day": w.day(),
+		"envoys": {"posted": st.call("envoy_posted"), "done": st.call("envoy_missions_done"), "interviews": st.call("envoy_interviews"), "absent": st.call("envoy_absent"),
+			"no_road": st.call("envoy_failed_no_road"), "reports": st.call("envoy_reports"), "places_surveyed": (book.visits as Dictionary).size(), "book_records": (book.records as Array).size()},
+		"word": {"told_by_envoy": st.call("intel_told_by_envoy"), "word_of_mouth": st.call("intel_word_of_mouth"), "villagers_knowing": knows, "records_held": told},
+		"journeys": {"started": st.call("journey_started"), "arrived": st.call("journey_arrived"), "home": st.call("journey_ended_home"), "turned_back": st.call("journey_ended_turned_back"),
+			"died": st.call("journey_ended_died"), "no_road": st.call("journey_failed_no_road")},
+		"trade": {"trips": st.call("region_trade_trips"), "bought": st.call("region_trade_bought"), "sent": st.call("region_trade_sent"), "refused": st.call("region_trade_refused"),
+			"out_of_date": st.call("region_trade_out_of_date")},
+		"demand": {"busy": m.busy, "gate": m.gate, "foundings": m.foundings, "p2_jobless_no_tool": m.p2_jobless_no_tool, "p3_idle_stock": m.p3_idle_stock, "p3_working_stock": m.p3_working_stock},
+		"crafters": _crafters_count()}
+
+
+func _crafters_count() -> int:
+	var k := 0
+	if w.regions != null:
+		for s: OffMapSettlement in w.regions.list:
+			k += s.own.size()
+	return k
+
+
 func _fingerprint() -> String:
 	var parts := PackedStringArray([str(w.minutes), str(w.treasury), str(w.coin_sources), str(w.rng.state), str(w.granary.items)])
 	for n: NPC in w.npcs:
