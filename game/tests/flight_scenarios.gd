@@ -39,6 +39,16 @@ func _init() -> void:
 			r = run(sc)
 			if not str(r.steps[0].result).begins_with("nobody could") if not r.steps.is_empty() else true:
 				break
+		if not r.steps.is_empty() and str(r.steps[0].result).begins_with("nobody could") and sc.has("setup"):
+			# the lead's ruling (2026-11-03): when the game's own gates refuse every listed seed, the documented start conditions are
+			# set up (never the gates relaxed) and the normal rules run from there; still labelled targeted
+			var sc2: Dictionary = sc.duplicate(true)
+			sc2.seed = int(sc.get("seeds", [sc.seed])[0])
+			sc2.steps = [sc.setup] + (sc.steps as Array).slice(1)
+			var refused: String = str(r.steps[0].result)
+			r = run(sc2)
+			r["start_conditions_set_up"] = true
+			r["refused_without_setup"] = refused
 		results.append(r)
 		print("SCENARIO %s: %s" % [sc.name, results[-1].result])
 	var f := FileAccess.open(out_dir + "/targeted.json", FileAccess.WRITE)
@@ -161,7 +171,7 @@ func step(w: World, st: Dictionary) -> String:
 		return "ran %d days" % int(st.days)
 	if op in ["hardship", "weigh_runaway", "recruit", "leave_band"] and (ld == null or not ld.has_method("set_hardship")):
 		return "not run: LifeDecisions (B25R1-014) is not in this build"
-	if op in ["homestead_begin", "faction"] and (hs == null or not hs.has_method("begin")):
+	if op in ["homestead_begin", "homestead_setup", "faction"] and (hs == null or not hs.has_method("begin")):
 		return "not run: Homesteads (B25R1-010) is not in this build"
 	var who := str(st.get("who", ""))
 	var n := pick(w, who) if who != "" else null
@@ -180,6 +190,8 @@ func step(w: World, st: Dictionary) -> String:
 				var k := why if why != "" else "no_site_or_coins"
 				tried[k] = int(tried.get(k, 0)) + 1
 			return "nobody could set out: %s" % JSON.stringify(tried)
+		"homestead_setup":
+			return _setup_homestead(w, hs, who, str(st.path))
 		"faction":
 			var cl: Array = hs.claims
 			if cl.is_empty():
@@ -205,3 +217,47 @@ func step(w: World, st: Dictionary) -> String:
 					w.kill(p, "scenario")
 			return "orphaned p:%d" % n.id
 	return "unknown op " + op
+
+
+## The documented start conditions of a homestead scenario (only when the game's own gates refused every listed seed): the first
+## candidate whose household keeps another working adult and who can be barred only by their work: let go from an employment
+## (Employment.dismiss) or a trade the gates bar (NPCBrain._change_job), given the start coins the family cannot spare as coins
+## from outside (World.coin_sources, as a newcomer's purse), and a site in reach (Homesteads.find_site). The gates are then
+## asked as always; nothing in them is changed. Every change is listed in the result.
+func _setup_homestead(w: World, hs, who: String, path: String) -> String:
+	var barred_jobs := ["merchant", "guard", "smith", "carpenter", "cook", "tavernkeeper"]
+	var notes := []
+	for c: NPC in candidates(w, who):
+		if c.household < 3 or c.id == w.reeve_id or c.id == w.sage_id:
+			continue
+		var leaving := [c]
+		if c.partner >= 0 and w.npc(c.partner) != null and w.npc(c.partner).alive:
+			leaving.append(w.npc(c.partner))
+		var staying: Array = w.brain._members(c.household).filter(func(o: NPC) -> bool: return o.role == "adult" and not leaving.has(o))
+		if staying.is_empty():
+			continue
+		if hs.find_site(c).is_empty():
+			notes.append("p:%d no site" % c.id)
+			continue
+		var changes := []
+		for o: NPC in leaving:
+			if w.employment != null and w.employment.is_employed(o):
+				w.employment.dismiss(o)
+				changes.append("p:%d let go from an employment" % o.id)
+			if o.job in barred_jobs:
+				changes.append("p:%d gave up the trade %s" % [o.id, o.job])
+				w.brain._change_job(o, "", "targeted scenario start")
+		var start := ceili(w.construction.estimate(w.construction.cost_of("house")) * float(GameData.b("found_start_share")))
+		var own := 0
+		for o: NPC in leaving:
+			own += o.coins
+		if own < start:
+			c.coins += start - own
+			w.coin_sources += start - own                  # coins from outside, counted as a newcomer's purse is
+			changes.append("p:%d given %d coins from outside" % [c.id, start - own])
+		var why: String = hs.gate(c.household, leaving)
+		if why == "" and hs.begin(c.household, c, leaving, path):
+			picked[who] = c
+			return "set up and set out: p:%d of hh:%d; start conditions: %s" % [c.id, c.household, "; ".join(changes) if not changes.is_empty() else "none needed"]
+		notes.append("p:%d still refused (%s)" % [c.id, why if why != "" else "begin false"])
+	return "nobody could set out even with the start conditions: " + "; ".join(notes.slice(0, 8))
