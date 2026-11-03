@@ -271,6 +271,17 @@ static func _doing_words(n: NPC) -> String:
 
 ## What they are doing right now (NPC.doing), said aloud.
 static func _doing(w: World, n: NPC) -> String:
+	if Journeys.active(n) and w.map.overworld != null:       # B25R1-009: a villager met on the road says where they are going and why
+		var place := str(w.map.overworld.site(str(n.journey.to)).get("name", "another place"))
+		var pur: Dictionary = n.journey.get("purpose", {})
+		var what := GameData.item_name(str(pur.get("item", ""))).to_lower() if str(pur.get("kind", "")) == "buy" else ""
+		match str(n.journey.get("leg", "")):
+			"out":
+				return "I'm on the road to %s%s." % [place, " to buy %s" % what if what != "" else ""]
+			"there":
+				return "I'm here in %s%s." % [place, " to buy %s" % what if what != "" and not bool(pur.get("done", false)) else ", and I'll be home soon"]
+			"back":
+				return "I'm on my way home from %s." % place
 	var d := _doing_words(n)
 	if d.begins_with("out of work: needs "):
 		return "I can't work: I need %s." % d.substr(19)
