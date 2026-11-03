@@ -29,7 +29,9 @@ code is `game/scripts/core/overworld.gd` (the section "water"), the art `tools/w
 - **Crossings.** A road cell on water is a bridge (walkable): plank on dirt roads and trails, stone on stone roads, one bridge
   laid one way (its planks run the long way of the crossing). Water never lies along a road: it may cross a road only at 50
   degrees or more to the road's own line, else the road keeps to the bank, dry; pools keep off roads. Every 4 steps (about 24
-  tiles) off the mountains a ford: shallow water with stepping stones, walkable, so no course walls a stretch of country off.
+  tiles) off the mountains a ford: shallow water with stepping stones, walkable, so no course walls a stretch of country off;
+  a ford is a band straight across the course (`water.json` `ford_band`, half-width 1.3 tiles), a line of stones from bank to
+  bank, not a field of them. A canonical ford keeps its stones on the road (its edges shallows).
   The tile beside a road is kept walkable too: water there that flanks no crossing is shallows (`water` 4, no stones drawn), so
   a road beside a course is never pinched; only the deep water either side of a bridge or ford lies next to a road.
 - **Tuning in one place (EA-01).** The numbers above (lattices, chances, steps, widths, end pools, meanders, ford spacing and
@@ -100,9 +102,18 @@ from the world's own clock and seeded state.
 ## 4. Art
 
 The free Puny World tileset's own grass/river corner set (the tileset the overworld's grass and cliffs are drawn with), its
-waterfall, plank walks and pebbles, and the paid Puny World flagstone for stone bridges, through `tools/water_tiles.py`
-(`game/assets/tiles/water_tiles.png`, provenance recorded). The flowing water is the set's own tiles with their open water
-replaced by a ripple pattern of the set's lighter water colours scrolled 4 px a frame in the flow's direction (four frames, a
-seamless loop), so it runs visibly downstream; pools keep the set's shimmer; the pool below a fall foams. The Forgotten
+waterfall, pebbles, wooden walk and castle wall-walk, through `tools/water_tiles.py` (`game/assets/tiles/water_tiles.png`,
+provenance recorded; its layout read by `tools/build_overworld_tiles.py`). EA-01 (owner, store quality):
+- **Flowing water** is the set's own tiles with their open water replaced by three long, soft ripples of the set's lighter
+  water colours, drawn along the flow and scrolled 2 px a frame downstream (eight frames of `water.json` `frame_seconds`,
+  0.18 s: about 11 px a second, a seamless loop). Two looks with the ripples in other places are picked per cell
+  (`Overworld._water_cell`), so no lattice of streaks shows. Pools keep the set's shimmer, held two frames a step.
+- **Waterfalls**: the rim's fall has its splash cut so it runs on into the cell below, its foot (`fall_foot`: the fall's
+  lower cascade, its splash, foam): two cells tall at every fall; the pool below foams, its flecks drifting south.
+- **Bridges** are the tileset's own walks: wooden (rails both sides, the north end capped with posts, the south end on legs
+  in the water; east-west the rounded ends; `OverworldView._bridge_tile` picks the end pieces) and, for stone, the castle
+  wall-walk with crenellated parapets both sides. The plank and stone tiles replace the earlier flagstone with darkened edges.
+- **Shores**: the set's corner tiles step at 45 degrees; look 1 sets a small tuft of the set's bank grass where a corner
+  tile's shore turns, softening the steps (the art's own corners decide where). The Forgotten
 Memories water (owned) has rock shores in another palette on a 32 px grid and was not used beside this grass; Miniworld's
 Cliff-Water likewise belongs to the Miniworld look.

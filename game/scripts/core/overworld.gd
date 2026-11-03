@@ -940,7 +940,7 @@ static func water_cfg() -> Dictionary:
 	return W
 const FLOW_STILL := 0
 const FLOW_FOAM := 9
-var _area_fords: Array = []               # [point, radius] of the fords near the chunk being generated (_water_corners)
+var _area_fords: Array = []               # [point, radius, along] of the fords near the chunk being generated (_water_corners)
 var _river_cache := {}                    # river lattice cell -> its course (a pure function of the seed; not saved)
 var _anchored: Array = []                 # B25R1-018: the canonical courses (anchored_courses), traced once
 var _anchored_done := false
@@ -1093,7 +1093,7 @@ func _trace_through(ctrl: Array, cs: Dictionary, key: int) -> Dictionary:
 			var cell := Vector2i(p.round())
 			var mtn := _mountain(cell)
 			if step % FORD_EVERY == FORD_EVERY / 2 and not mtn and not was_mountain and not _near_forced(p, 10.0):
-				fords.append([p, float(rs[rs.size() - 1]) + 1.0])
+				fords.append([p, float(rs[rs.size() - 1]) + 1.0, (p - (pts[pts.size() - 2] as Vector2)).normalized()])
 			if was_mountain and not mtn:
 				falls.append(cell)
 				pools.append([p, float(rs[rs.size() - 1]) + 1.2, true])
@@ -1245,7 +1245,7 @@ func _trace(src: Vector2i, key: int, order: int, id: String, into: Array) -> Dic
 		length += Vector2(at).distance_to(mid) + mid.distance_to(Vector2(nxt))
 		var mtn := _mountain(nxt)
 		if k % FORD_EVERY == FORD_EVERY / 2 and not mtn and not was_mountain:
-			fords.append([Vector2(nxt), maxf(FORD_R, wk + 1.0)])      # stepping stones across, so no course walls the country off
+			fords.append([Vector2(nxt), maxf(FORD_R, wk + 1.0), (Vector2(nxt) - mid).normalized()])      # stepping stones across, so no course walls the country off
 		if was_mountain and not mtn:
 			falls.append(nxt)
 			pools.append([Vector2(nxt) + dirs[pick] * 2.0, maxf(wk + 1.0, 2.4 + float(hash32(seed, key, k, 121) % 10) / 10.0), true])
@@ -1957,6 +1957,16 @@ func _is_fall(q: int, wn: PackedByteArray, blocked: PackedByteArray, inner: Pack
 	return (inner[q - AREA] == 1 or (blocked[q - AREA] == 1 and inner[q - 2 * AREA] == 1)) and inner[q + AREA] == 0
 
 
+## B25R1-017, EA-01: whether point p is on ford f [point, radius, along]: within its radius of the point and on the band
+## straight across the course there (water.json "ford_band": half its width in tiles), so a ford is a line of stepping
+## stones from bank to bank, not a field of them.
+func _in_ford(f: Array, p: Vector2) -> bool:
+	var d := p - (f[0] as Vector2)
+	if d.length() > float(f[1]):
+		return false
+	return f.size() < 3 or absf(d.dot(f[2] as Vector2)) <= float(W.get("ford_band", 1.3))
+
+
 ## B25R1-017: whether area cell q is water at a road's edge (the tile beside the road) that flanks no crossing: kept
 ## walkable as shallows, so a road running beside a course is never pinched. Water beside a bridge or ford stays deep.
 func _road_shallows(q: int, road: PackedByteArray, open: PackedByteArray, wn: PackedByteArray) -> bool:
@@ -2012,8 +2022,8 @@ func _water_cell(ch: Chunk, c: int, q: int, gk: int, wdata: Array, wn: PackedByt
 		ch.ground[c] = int(tiles.water.fall_foot)      # EA-01: the fall runs on into the cell below and splashes there
 	if wn[q] >= 2:
 		ch.level[c] = order
-		if forced_crossing(Vector2i(wx, wy)) == "ford":
-			ch.water[c] = 4                            # B25R1-018: a canonical ford: the road (and its edges) go through the shallows
+		if on_road and forced_crossing(Vector2i(wx, wy)) == "ford":
+			ch.water[c] = 4                            # B25R1-018: a canonical ford: the road goes through the shallows (its edges: shallows)
 			ch.solid[c] = 0
 			if wn[q] == 4:
 				ch.ground[c] = int(tiles.water.ford)
@@ -2023,7 +2033,7 @@ func _water_cell(ch: Chunk, c: int, q: int, gk: int, wdata: Array, wn: PackedByt
 		elif shallows:
 			ch.water[c] = 4                            # the shallows at a road's edge: walked through, no stones drawn
 			ch.solid[c] = 0
-		elif _area_fords.any(func(f: Array): return (f[0] as Vector2).distance_to(Vector2(wx, wy) + Vector2(0.5, 0.5)) <= float(f[1])):
+		elif _area_fords.any(func(f: Array): return _in_ford(f, Vector2(wx, wy) + Vector2(0.5, 0.5))):
 			ch.water[c] = 4                            # a ford: shallow water and stepping stones, walked across
 			ch.solid[c] = 0
 			if wn[q] == 4:

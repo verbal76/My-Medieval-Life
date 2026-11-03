@@ -19,7 +19,7 @@
     "props"
    ],
    "status": "integrated",
-   "used_for": "The village map and overworld tiles (village.json atlases), deposits, the mine cart (stand-in cart art); B25R1-Q1: its flagstone ground (tiles 10150, 10151, 10370, 10371) paves the stone roads and settlement streets (tools/road_tiles.py, game/assets/tiles/road_tiles.png); B25R1-Q3: the same flagstone, its edges darkened into a parapet, is the stone bridge (tools/water_tiles.py).",
+   "used_for": "The village map and overworld tiles (village.json atlases), deposits, the mine cart (stand-in cart art); B25R1-Q1: its flagstone ground (tiles 10150, 10151, 10370, 10371) paves the stone roads and settlement streets (tools/road_tiles.py, game/assets/tiles/road_tiles.png).",
    "scale": "16 px tiles, 1:1 (the world's reference)",
    "scan": [
     {
@@ -595,7 +595,7 @@
     "terrain"
    ],
    "status": "integrated",
-   "used_for": "Overworld grass/cliff wangset (overworld_tiles.json); its dirt pathway tiles are the dirt roads, and the shapes of the stone road and trail tiles (tools/road_tiles.py); B25R1-Q3: its grass/river corner tiles with their four-frame animations, the animated waterfall (598-601), the plank walks (847, 876) and pebbles (703) are the streams, rivers, pools, waterfalls, fords and plank bridges, its open water given a ripple pattern of its own lighter water colours scrolled downstream for the flowing water (tools/water_tiles.py, game/assets/tiles/water_tiles.png; B25R1-017).",
+   "used_for": "Overworld grass/cliff wangset (overworld_tiles.json); its dirt pathway tiles are the dirt roads, and the shapes of the stone road and trail tiles (tools/road_tiles.py); B25R1-Q3: its grass/river corner tiles with their four-frame animations, the animated waterfall (598-601, run on into a foot cell with its splash and foam), the pebbles (703), the wooden walk with rails and end pieces (723, 750, 777, 875-877) and the castle wall-walk with parapets (747, 775) are the streams, rivers, pools, waterfalls, fords, plank bridges and stone bridges, its open water given long soft ripples of its own lighter water colours scrolled downstream for the flowing water, and tufts of its bank grass on corner steps (tools/water_tiles.py, game/assets/tiles/water_tiles.png; B25R1-017, EA-01).",
    "scale": "16 px, 1:1",
    "scan": [
     {
@@ -637,7 +637,8 @@
     "assets/terrain/steps_ew_mid.png",
     "assets/terrain/steps_ns.png",
     "assets/terrain/steps_ns_mid.png",
-    "assets/tiles/punyworld-overworld-tiles.png"
+    "assets/tiles/punyworld-overworld-tiles.png",
+    "assets/tiles/water_tiles.png"
    ]
   },
   {

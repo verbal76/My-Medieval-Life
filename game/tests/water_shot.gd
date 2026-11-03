@@ -81,18 +81,24 @@ func _setup() -> void:
 				if fall == Overworld.NO_WATER:
 					fall = ow.nearest_fall(Vector2i(pts[pi]), 7)
 		if fall != Overworld.NO_WATER:
-			queue.append(["waterfall", Vector2(ow.nearest_water_access(fall + Vector2i(0, 3), 6)) + Vector2(0.5, 0.5)])
+			queue.append(["waterfall", Vector2(_access(ow, fall + Vector2i(0, 3), 6)) + Vector2(0.5, 0.5)])
 	if _want("river"):
 		for crs in ow.anchored_courses():
 			if str(crs.id) == "canon:upmeads_water":
 				var pts: Array = crs.pts
 				var p := Vector2i(pts[pts.size() / 3])
-				queue.append(["river", Vector2(ow.nearest_water_access(p, 8)) + Vector2(0.5, 0.5)])
+				queue.append(["river", Vector2(_access(ow, p, 8)) + Vector2(0.5, 0.5)])
 	if _want("map"):
 		queue.append(["map", Vector2(plank) + Vector2(0.5, 0.5)])
 	print("shots ", queue.map(func(q): return "%s %s" % [q[0], q[1]]))
 	_next()
 	process_frame.connect(_wait)
+
+
+## The open bank beside the water at c (where the player stands to look), else c itself (never NO_WATER's far point).
+func _access(ow: Overworld, c: Vector2i, r: int) -> Vector2i:
+	var a := ow.nearest_water_access(c, r)
+	return c if a == Overworld.NO_WATER else a
 
 
 func _next() -> void:
