@@ -28,6 +28,7 @@ var party_options := {}              # fixtures' settings per party id (Settleme
 var food_seq: Dictionary = {}        # X20-SETTLE-FOOD: the last transaction sequence number used per namespace "settle_food/<place>" (saved)
 var food_last: Dictionary = {}       # X20-SETTLE-FOOD: the last food round's result (food_round), for reports and tests; not saved
 var _world: WeakRef = null           # the world the settlements live in (bind_world), for its flight recorder; not saved
+var people: SettlementPeople = null  # B25R1-019: the residents' presence provider (made live in view, folded back out of it); not saved
 
 
 static func create(seed_: int) -> Regions:
@@ -50,6 +51,8 @@ func _add(s: OffMapSettlement) -> void:
 func bind_world(w: World) -> void:
 	var hook := Callable(w, "offmap_person")
 	_world = weakref(w)
+	if people == null:
+		people = SettlementPeople.attach(w, self)
 	for s: OffMapSettlement in list:
 		s.person_hook = hook
 		s.trade_hook = Callable(self, "_food_event")
@@ -77,13 +80,16 @@ func assign_member_ids(w: World) -> int:
 func step_day(d: int) -> void:
 	if d <= day:
 		return
+	SettlementTrips.advance(self, _now(d, 6))
 	for s: OffMapSettlement in list:
 		if s.day < d:
 			s.step_day(d)
+			_after_step(s, _now(d, 6))
 	var every := int(OffMapSettlement.rules().road_trade_every_days)
 	if every > 0 and d % every == every - 1:
+		food_round(d)                      # B25R1-019: food first: the traders' walkers go for food before wholesale goods
 		road_trade()
-		food_round(d)
+	SettlementTrips.advance(self, _now(d, 23))
 	day = d
 
 
@@ -91,14 +97,18 @@ func step_day(d: int) -> void:
 ## phone does a fifth of the work in a frame. A hand that cannot be there at the hour finds the settlement stepped at the
 ## next call: a settlement behind its day is stepped when asked. The traders' round follows the last.
 func step_hour(d: int, h: int) -> void:
+	SettlementTrips.advance(self, _now(d, h))       # B25R1-019: the walkers on the roads arrive, deal and come home in their hour
+	_wells()
 	if h < 6:
 		return
-	var upto := mini(list.size() - 1, h - 6)
+	var per := ceili(list.size() / 5.0)              # B25R1-018: with the hamlets, a few places an hour, all stepped by ten o'clock
+	var upto := mini(list.size() - 1, (h - 5) * per - 1)
 	var done := true
 	for i in upto + 1:
 		var s: OffMapSettlement = list[i]
 		if s.day < d:
 			s.step_day(d)
+			_after_step(s, _now(d, h))
 	for s: OffMapSettlement in list:
 		if s.day < d:
 			done = false
@@ -106,8 +116,98 @@ func step_hour(d: int, h: int) -> void:
 		day = d
 		var every := int(OffMapSettlement.rules().road_trade_every_days)
 		if every > 0 and d % every == every - 1:
+			food_round(d)                      # B25R1-019: food first
 			road_trade()
-			food_round(d)
+
+
+## The game minute: the world's clock when the settlements live in one, else hour `h` of day `d`.
+func _now(d: int, h: int) -> float:
+	var w = _world.get_ref() if _world != null else null
+	if w != null and int(w.day()) == d:
+		return float(w.minutes)
+	return float(d) * 1440.0 + float(h) * 60.0
+
+
+## After a settlement's day: a hamlet's people set out for market and its elder with the lord's dues (SettlementTrips.plan_hamlet).
+func _after_step(s: OffMapSettlement, now: float) -> void:
+	if s.hamlet:
+		SettlementTrips.plan_hamlet(self, s, now)
+
+
+# ------------------------------------------------------------------ trips (B25R1-019) ----------------
+var _trip_routes := {}               # "a>b" -> the road walked from a to b (a pure function of the seed); not saved
+
+
+## The road a walker takes from place `a` to place `b`: Overworld.site_route in a world with an overworld, else (settlements with no
+## world: tests, regions_sim) the straight line between the places' positions, cell by cell. Cached.
+func trip_route(a: String, b: String) -> PackedVector2Array:
+	var key := a + ">" + b
+	if _trip_routes.has(key):
+		return _trip_routes[key]
+	var out := PackedVector2Array()
+	var w = _world.get_ref() if _world != null else null
+	if w != null and w.map != null and w.map.overworld != null:
+		out = w.map.overworld.site_route(a, b)
+	elif by_id.has(a) and by_id.has(b):
+		var pa := Vector2(by_id[a].pos)
+		var pb := Vector2(by_id[b].pos)
+		var n := maxi(1, ceili(pa.distance_to(pb)))
+		for i in n + 1:
+			out.append((pa + (pb - pa) * float(i) / float(n)).round())
+	_trip_routes[key] = out
+	return out
+
+
+## Every trip on the road, [settlement, trip], in settlement and trip order.
+func all_trips() -> Array:
+	var out := []
+	for s: OffMapSettlement in list:
+		for t in s.trips:
+			out.append([s, t])
+	return out
+
+
+## The flight recorder's line for a trip (journey_* kinds), when the settlements live in a world that records.
+func trip_event(kind: String, s: OffMapSettlement, t: Dictionary, f: Dictionary) -> void:
+	var w = _world.get_ref() if _world != null else null
+	if w == null or w.recorder == null:
+		return
+	var g := {"origin": str(t.from), "destination": str(t.to), "object": "trip:" + str(t.tx), "place": str(f.get("place", s.id)),
+		"action": str(f.get("action", "")), "detail": str(f.get("detail", ""))}
+	w.recorder.chronicle(kind, "p:%d" % int(t.who), g)
+
+
+## B25R1-018: a hamlet whose water is a well builds it once its world has the well registry (Wilds.add_well, owner
+## "settlement:<id>"), at the side of its main street below the last row, paid from the stone and logs in its store. The goods leave
+## the settlement's books as an outside line and enter the village ledger as imported_, where add_well counts them used_building_:
+## both ledgers balance. A hamlet without the stone and logs has no well yet (WDR-022).
+func _wells() -> void:
+	var w = _world.get_ref() if _world != null else null
+	if w == null or w.map == null or w.map.overworld == null:
+		return
+	var wilds = w.get("wilds")
+	if wilds == null:
+		return
+	for s: OffMapSettlement in list:
+		if s.water != "well" or s.well != "":
+			continue
+		var st: Dictionary = w.map.overworld.site(s.id)
+		if st.is_empty():
+			continue
+		var cost: Dictionary = (GameData.balance.get("wilds", {}) as Dictionary).get("well_cost", {"stone": 6, "log": 2})
+		var tp := SettlementParty.make(self, s, "treasury")
+		var ok := true
+		for k in cost:
+			ok = ok and tp.held(str(k)) >= int(cost[k])
+		if not ok:
+			continue
+		for k in cost:
+			tp.remove(str(k), int(cost[k]))
+			w.stat("imported_" + str(k), float(cost[k]))
+		var cell := Vector2i(st.gate) + Vector2i(3, 2)
+		var wl: Dictionary = wilds.add_well("settlement:" + s.id, cell, true, cost)
+		s.well = str(wl.get("id", "built"))
+		s.note("The well was dug by the main street.")
 
 
 ## Bring a freshly founded set of settlements to day `to` (an older save), no trade with the village.
@@ -207,7 +307,7 @@ func visiting(d: int) -> Array:
 	var out := []
 	var v := d / 2
 	for s: OffMapSettlement in list:
-		if v % cadence(s) == 0:
+		if v % cadence(s) == 0 and not s.trader().is_empty():      # B25R1-018: a hamlet has no trader on the caravan road
 			out.append(s)
 	return out
 
@@ -283,33 +383,42 @@ func road_trade() -> void:
 		var m: Dictionary = buyer.trader()
 		if m.is_empty():
 			continue
+		# a trader keeps half its trading capital for the village's caravan; only the rest goes on wholesale buying
+		var cash := maxi(0, int(m.till) - int(OffMapSettlement.rules().trader_reserve_floor) - int(m.reserve) / 2)
+		var need := {}
 		for item in items:
-			var need: int = int(wants[buyer.id].get(item, 0))
-			if need <= 0:
+			need[item] = mini(int(wants[buyer.id].get(item, 0)), int(carry[item]) - int(m.stock.get(item, 0)))
+		for seller: OffMapSettlement in list:
+			if seller == buyer or seller.trader().is_empty() or _trip_to(buyer, seller.id, "wholesale"):
 				continue
-			for seller: OffMapSettlement in list:
-				if seller == buyer or need <= 0:
+			var sm: Dictionary = seller.trader()
+			var buy := {}
+			var coins := 0
+			for item in items:
+				if int(need[item]) <= 0 or int(wants[seller.id].get(item, 0)) > 0:
 					continue
-				var sm: Dictionary = seller.trader()
-				if sm.is_empty() or int(wants[seller.id].get(item, 0)) > 0:
-					continue
-				var spare := int(sm.stock.get(item, 0)) - int(keep.get(item, 0))
 				var unit := GameData.value(item)
-				# a trader keeps half its trading capital for the village's caravan; only the rest goes on wholesale buying
-				var cash := maxi(0, int(m.till) - int(OffMapSettlement.rules().trader_reserve_floor) - int(m.reserve) / 2)
-				var n := mini(mini(need, spare), cash / unit)
-				n = mini(n, int(OffMapSettlement.rules().carry[item]) - int(m.stock.get(item, 0)))
+				var n := mini(mini(int(need[item]), int(sm.stock.get(item, 0)) - int(keep.get(item, 0))), (cash - coins) / unit)
 				if n <= 0:
 					continue
-				OffMapSettlement._take(sm.stock, item, n)
-				OffMapSettlement._add(m.stock, item, n)
-				sm.till += n * unit
-				m.till -= n * unit
-				OffMapSettlement._add(seller.flows.road_out, item, n)
-				OffMapSettlement._add(buyer.flows.road_in, item, n)
-				seller.flows.road_coins_in += n * unit
-				buyer.flows.road_coins_out += n * unit
-				need -= n
+				buy[item] = n
+				coins += n * unit
+				need[item] = int(need[item]) - n
+			if not buy.is_empty():
+				var t := SettlementTrips.start(self, buyer, "trader", seller.id, {"kind": "wholesale", "buy": buy}, coins, {}, _now(buyer.day, 8))
+				if t.is_empty():
+					for item in buy:
+						need[item] = int(need[item]) + int(buy[item])     # nobody to send: the need stands for the next seller
+				else:
+					cash -= coins
+
+
+## Whether `s` has a walker out on a `kind` errand to `to`.
+func _trip_to(s: OffMapSettlement, to: String, kind: String) -> bool:
+	for t in s.trips:
+		if str(t.to) == to and str(t.purpose.get("kind", "")) == kind:
+			return true
+	return false
 
 
 # ------------------------------------------------------------------ food between the settlements (X20-SETTLE-FOOD) ----------------
@@ -352,9 +461,6 @@ func food_round(d: int) -> Dictionary:
 			spare.append(s)
 	if short.is_empty() or spare.is_empty():
 		return food_last
-	if authority() == null:
-		food_last.unmet = short.map(func(x): return {"buyer": x.id + "/trader", "item": str(items[0]), "units": 0, "reason": "no_authority"})
-		return food_last
 	var ls: Array = []
 	var routes := route_table()
 	for s: OffMapSettlement in short:
@@ -374,27 +480,37 @@ func food_round(d: int) -> Dictionary:
 			ls.append(f)
 	var p := RegionalMarket.plan(ls, routes, [], false, items)
 	var e := {"done": [], "refused": []}
+	# B25R1-019: the plan is what the buyer's trader sets out to buy; one walker goes from each buyer to each seller's place with the
+	# coins, buys there at the seller's own price (never dearer than planned), and carries the food home (SettlementTrips, "food")
+	var groups := {}
+	var order := []
 	for line in p.lines:
-		var sb: OffMapSettlement = by_id[str(line.buyer).get_slice("/", 0)]
-		var ss: OffMapSettlement = by_id[str(line.seller).get_slice("/", 0)]
-		var due := d + trip_days(ss.id, sb.id, routes)
-		var res := ship_line(line, due)
-		line["tx"] = str(res.get("txid", ""))
-		if bool(res.ok):
-			sb.await_shipment(str(line.tx), "trader", str(line.item), int(line.units), "region:" + str(line.seller), d, due, int(line.total))
-			line["due"] = due
-			e.done.append(line)
-		else:
-			line["code"] = str(res.code)
-			e.refused.append(line)
+		var key := str(line.buyer).get_slice("/", 0) + ">" + str(line.seller).get_slice("/", 0)
+		if not groups.has(key):
+			groups[key] = []
+			order.append(key)
+		groups[key].append(line)
+	for key in order:
+		var sb: OffMapSettlement = by_id[str(key).get_slice(">", 0)]
+		var ss: OffMapSettlement = by_id[str(key).get_slice(">", 1)]
+		var ls2 := []
+		var coins := 0
+		for line in groups[key]:
+			ls2.append({"holder": str(line.seller).get_slice("/", 1), "item": str(line.item), "n": int(line.units),
+				"unit": int(line.total) / maxi(1, int(line.units))})
+			coins += int(line.total)
+		var t := SettlementTrips.start(self, sb, "trader", ss.id, {"kind": "food", "lines": ls2}, coins, {}, _now(d, 8))
+		for line in groups[key]:
+			if t.is_empty():
+				line["code"] = "no_walker"
+				e.refused.append(line)
+			else:
+				line["tx"] = str(t.tx)
+				line["due"] = int(floor(SettlementTrips.arrives(self, t) / 1440.0))
+				e.done.append(line)
+		if not t.is_empty():
+			sb.note("Our traders set out for %s to buy food for %d coins." % [ss.name, coins])
 	for line in e.done:
-		var sb: OffMapSettlement = by_id[str(line.buyer).get_slice("/", 0)]
-		var ss: OffMapSettlement = by_id[str(line.seller).get_slice("/", 0)]
-		sb.flows.food_bought += int(line.units)
-		ss.flows.food_sold += int(line.units)
-		sb.note("Our traders bought %d %s in %s for %d coins; it is on the road, %d days from home." % [int(line.units),
-			GameData.item_name(str(line.item)).to_lower(), ss.name, int(line.total), int(line.due) - d])
-		ss.note("Our traders sold %d %s to %s for %d coins, paid when it arrives." % [int(line.units), GameData.item_name(str(line.item)).to_lower(), sb.name, int(line.total)])
 		_food_event("bought", {"line": line, "due": int(line.due)})
 	for u in p.unmet:
 		var su: OffMapSettlement = by_id[str(u.buyer).get_slice("/", 0)]
@@ -696,6 +812,7 @@ func to_dict() -> Dictionary:
 	return {"format": FORMAT, "day": day, "migrated_coins": migrated_coins, "settlements": list.map(func(s): return s.to_dict()),
 		"moves": moves.duplicate(true), "move_counts": move_counts.duplicate(), "suits": suits.duplicate(true),
 		"food_seq": food_seq.duplicate()}
+
 
 
 ## The settlements of a save's "regions" section; an unknown format is refused (null), never reinterpreted.

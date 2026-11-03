@@ -50,12 +50,13 @@ func _json(d: Dictionary) -> String:
 # ------------------------------------------------------------------ the five ----------------
 func test_founding() -> void:
 	var r := Regions.create(1)
-	check(r.list.size() == 5, "five settlements are founded")
+	var big: Array = r.list.filter(func(x): return not x.hamlet)     # B25R1-018: the five principal places (the hamlets: hamlet_test)
+	check(big.size() == 5, "five settlements are founded")
 	var kinds := {}
-	for s: OffMapSettlement in r.list:
+	for s: OffMapSettlement in big:
 		kinds[s.kind] = true
 	check(kinds.size() == 5, "of five different kinds (%s)" % ", ".join(kinds.keys()))
-	var names := r.list.map(func(s): return s.name)
+	var names := big.map(func(s): return s.name)
 	check(names == ["Wulstead", "Netherton", "Garton", "Higham-on-the-Way", "Bourton Abbas"], "they are places from the lore's gazetteer (%s)" % ", ".join(names))
 	var industries := {}
 	for s: OffMapSettlement in r.list:
@@ -63,7 +64,7 @@ func test_founding() -> void:
 			industries[i] = true
 	for i in ["forestry", "carpentry", "masonry", "smithing", "farming", "tanning", "trade", "mining"]:
 		check(industries.has(i), "the owner's first industry %s is practised somewhere" % i)
-	for s: OffMapSettlement in r.list:
+	for s: OffMapSettlement in big:
 		var members := 0
 		var purses := 0
 		var pantry := 0
@@ -214,9 +215,11 @@ func test_roads() -> void:
 	var rin := 0
 	var gin := 0
 	for s: OffMapSettlement in r.list:
-		rin += int(s.flows.road_coins_in)
+		rin += int(s.flows.road_coins_in) + int(s.flows.regional_coins_in)     # B25R1-019: walkers buy at the seller's place (regional lines)
 		for k in s.flows.road_in:
 			gin += int(s.flows.road_in[k])
+		for k in s.flows.regional_in:
+			gin += int(s.flows.regional_in[k])
 	check(r.audit() == "", "after the traders' wholesale rounds the books still balance (and their road coins and goods cancel)")
 	print("      road trade in 30 days: %d goods, %d coins" % [gin, rin])
 	check(gin > 0 and rin > 0, "the traders did trade among themselves in thirty days (%d goods)" % gin)
@@ -238,7 +241,7 @@ func _net(w: World) -> int:
 
 func test_world_caravan() -> void:
 	var w := _world(1)
-	check(w.regions != null and w.regions.list.size() == 5, "a new world has the five settlements")
+	check(w.regions != null and w.regions.list.filter(func(x): return not x.hamlet).size() == 5, "a new world has the five settlements")
 	check(w.get("caravan_purse") == null, "the caravan has no purse of its own")
 	check(not GameData.balance.has("caravan_allowance") and not GameData.balance.has("caravan_float"), "the daily allowance and the float are gone from the balance data")
 	var net0 := _net(w)
@@ -311,6 +314,8 @@ func test_world_caravan() -> void:
 	var w3 := _world(1)
 	for s: OffMapSettlement in w3.regions.list:
 		var m: Dictionary = s.trader()
+		if m.is_empty():
+			continue                         # a hamlet has no trader
 		m.stock.clear()
 		s.start.goods = s.goods()
 	var exp3 := 0
@@ -354,7 +359,7 @@ func test_old_save() -> void:
 	old["caravan_purse"] = 321
 	var w3 := World.new()
 	w3.load_dict(map, old)
-	check(w3.regions.list.size() == 5 and w3.regions.audit() == "", "an older save is given the five settlements, founded from its seed, and their books balance")
+	check(w3.regions.list.filter(func(x): return not x.hamlet).size() == 5 and w3.regions.audit() == "", "an older save is given the five settlements, founded from its seed, and their books balance")
 	var traders := 0
 	for s: OffMapSettlement in w3.regions.list:
 		traders += int(s.flows.migrated_in)
@@ -399,13 +404,14 @@ func test_staggered_step() -> void:
 	var r := Regions.create(1)
 	r.step_hour(0, 7)
 	var done := r.list.filter(func(s): return s.day == 0).size()
-	check(done == 2, "the settlements step one an hour from six (by 07:00 two have taken day 0's step)")
+	var per := ceili(r.list.size() / 5.0)
+	check(done == 2 * per, "the settlements step %d an hour from six (by 07:00 %d have taken day 0's step)" % [per, 2 * per])
 	r.step_hour(0, 10)
 	check(r.list.all(func(s): return s.day == 0) and r.day == 0, "by ten o'clock all five have")
 	r.step_hour(0, 11)
 	check(r.list.all(func(s): return s.day == 0), "a later hour of the same day steps nothing twice")
 	r.step_hour(1, 6)
-	check(r.list.filter(func(s): return s.day == 1).size() == 1, "the next morning starts again with the first")
+	check(r.list.filter(func(s): return s.day == 1).size() == per, "the next morning starts again with the first")
 
 
 ## REG-INV-01 / PAR-02A: a business's working reserve never keeps its own hungry worker household from a day's food; a

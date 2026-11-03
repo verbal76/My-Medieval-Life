@@ -13,6 +13,8 @@ extends RefCounted
 ##   <business>  a business type: farm, herd, forest, quarry, sawyer, mason, smith, tanner, cook, weaver, healer
 ##   treasury    the manor, abbey or council: its coins and granary
 ##   hh:<n>      the household with that id (living households only)
+##   trip:<tx>   B25R1-019: the pack of a walker on an errand (SettlementTrips): its coins and goods, still their owner's and in the
+##               settlement's books; the walker deals with it at the place they walked to
 ## `Regions.party(ref)` makes one, `Regions.parties()` lists them all; a handle is cheap and is made fresh for each plan.
 ##
 ## Every change is one SIDE of a matched exchange, made through `deal` (a sale, a purchase, a carriage fee paid or earned) or
@@ -74,6 +76,8 @@ var kind: String:
 			return "trader"
 		if holder == "treasury":
 			return "treasury"
+		if holder.begins_with("trip:"):
+			return "traveller"
 		return "household" if holder.begins_with("hh:") else "business"
 
 var name: String:
@@ -85,6 +89,8 @@ var name: String:
 				return "%s of %s" % [s.gov_name, s.name]
 			"household":
 				return "household %s of %s" % [holder.trim_prefix("hh:"), s.name]
+			"traveller":
+				return "a walker from %s" % s.name
 		if holder.begins_with("own:"):
 			return "a %s of %s working on their own account" % [OffMapSettlement._trade_of(_btype_name()), s.name]
 		return "the %s of %s" % [holder, s.name]
@@ -181,6 +187,8 @@ func record() -> Dictionary:
 	match kind:
 		"treasury":
 			return s.gov
+		"traveller":
+			return SettlementTrips.find(s, holder.trim_prefix("trip:"))
 		"household":
 			return _hh()
 	return _biz()
@@ -192,6 +200,9 @@ func _goods() -> Dictionary:
 			return s.gov.granary
 		"household":
 			return _hh().pantry
+		"traveller":
+			var t := record()
+			return t.pack if not t.is_empty() else {}
 	return _biz().stock
 
 
@@ -334,6 +345,8 @@ func _sale_cap(item: String) -> int:
 			elif _needs_basket(item):
 				keep = ceili(float(rl.basket[item]) * 4.0 * (float(_hh().adults) + float(_hh().children)))
 			return maxi(0, have - keep)
+		"traveller":
+			return have                               # B25R1-019: a walker sells what they carried there to sell
 		"treasury":
 			var keep := 0
 			if rl.foods.has(item):

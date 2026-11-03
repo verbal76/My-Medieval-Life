@@ -116,6 +116,22 @@ var _want_left: Dictionary = {}      # what the settlement still wants this visi
 ## at the first step on or after `due` the settlement asks for delivery (`arrive_hook`, Regions._arrive) and removes the entry once
 ## delivered, so a save made while it travels delivers it once after loading.
 var transit: Array = []
+## B25R1-018 section 5 (hamlets; docs/design/REGION_RECONSTRUCTION_B25R1.md (d), (f)): a hamlet or thorp (settlements.json "hamlet":
+## true) has no trader and no officials; its elder keeps the lord's box (gov.coins: the tolls and the tax), which the elder carries to
+## the lord's treasury (`lord`, a settlement id; "" no lord: no toll, no tax). `market`: where its people go to buy and sell.
+## `water`: "stream" or "well"; `well`: the well registry's id once its well stands ("" not yet).
+var hamlet := false
+var lord := ""
+var market := ""
+var water := ""
+var well := ""
+## B25R1-019 (trips, SettlementTrips): the errands this settlement's people are on, each one walker carrying a pack of coins and
+## goods that stay their owner's (a household, a business) and are counted in this settlement's books; saved.
+var trips: Array = []
+var trip_seq := 0
+## B25R1-019: person id -> true while the member is a live NPC in the world (SettlementPeople); their own acts (a trip's
+## progress, an old-age death) wait until they are folded back. Not saved: a save folds everyone first.
+var live: Dictionary = {}
 
 
 # ------------------------------------------------------------------ data ----------------
@@ -185,6 +201,10 @@ static func create(spec: Dictionary, world_seed: int, index: int) -> OffMapSettl
 		s.pos = RegionGeo.anchor(s.id) - Vector2i(int(v.x), int(v.y))
 	s.industries = (spec.get("industries", []) as Array).duplicate()
 	s.gov_name = str(spec.government.name)
+	s.hamlet = bool(spec.get("hamlet", false))
+	s.lord = str(spec.government.get("lord", ""))
+	s.market = str(spec.get("market", ""))
+	s.water = str(spec.get("water", ""))
 	var rng := RandomNumberGenerator.new()
 	rng.seed = world_seed * 7919 + (index + 1) * 104729 + 17
 	var trades: Dictionary = spec.trades
@@ -229,6 +249,8 @@ static func create(spec: Dictionary, world_seed: int, index: int) -> OffMapSettl
 		for tool in T.get("tools", {}):
 			_add(s.biz[t].stock, tool, s._tool_stock(T, tool, s.biz[t].workers.size()))
 	s.gov = {"coins": int(spec.government.coins), "granary": {}, "officials": [], "acc": {}}
+	for k in spec.get("granary", {}):                 # B25R1-018: a hamlet's store of the stone and logs its well is built of
+		s.gov.granary[str(k)] = int(spec.granary[k])
 	for h in s.hh:
 		if h.trade == "official":
 			s.gov.officials.append(h.id)
@@ -411,7 +433,7 @@ func _old_age(salt: int) -> void:
 		for j in range(h.mem.size() - 1, -1, -1):
 			var m: Array = h.mem[j]
 			var ag := _age(m)
-			var p := Life.death_chance(ag) if ag >= _mort_from else 0.0
+			var p := Life.death_chance(ag) if ag >= _mort_from and not live.has(member_id(m)) else 0.0
 			if p > 0.0 and (p >= 1.0 or _roll(salt, day * 7 + 1, int(m[M_BORN]) * 64 + i) < p):
 				_died(m, "old_age")
 				_remove_member(h, j)
@@ -632,6 +654,8 @@ func coins() -> int:
 		n += int(biz[t].till)
 	for k in own:
 		n += int(own[k].till)
+	for t in trips:
+		n += int(t.coins)                            # B25R1-019: coins in a walker's pack are still their owner's
 	return n
 
 
@@ -648,6 +672,9 @@ func goods() -> Dictionary:
 			_add(g, k, int(own[o].stock[k]))
 	for k in gov.granary:
 		_add(g, k, int(gov.granary[k]))
+	for t in trips:
+		for k in t.pack:
+			_add(g, k, int(t.pack[k]))
 	return g
 
 
@@ -677,6 +704,11 @@ func treasury() -> int:
 
 func trader() -> Dictionary:
 	return biz.get("merchant", {})
+
+
+## B25R1-018: a hamlet with no lord collects no toll and no tax (Rushford, Ashcombe: Upmeads has no lord's officials in the game).
+func untaxed() -> bool:
+	return hamlet and lord == ""
 
 
 ## "" when every coin and good is accounted for by a flow line, else what is not.
@@ -900,6 +932,8 @@ func _purchase(buyer: Dictionary, key: String, store, item: String, want: int, b
 
 ## The market toll (or the abbey's tithe) on a sale of `amount` coins: whole coins as the fractions add up.
 func _toll(amount: int) -> int:
+	if untaxed():
+		return 0                                     # B25R1-018: a hamlet with no lord pays no toll
 	_toll_acc = _q(_toll_acc + float(amount) * float(_rules.toll_rate))
 	var t := int(floor(_toll_acc + 1e-9))
 	_toll_acc = _q(_toll_acc - float(t))
@@ -1358,7 +1392,7 @@ func _taxes_and_officials() -> void:
 	var ts := TaxPolicy.step(tax, float(gov.coins), float(ob), day)
 	for line: String in ts.notes:
 		note(line)
-	var rate := float(ts.rate)
+	var rate := float(ts.rate) if not untaxed() else 0.0
 	if rate > 0.0:
 		for h in hh:
 			if not h.alive:
@@ -2059,6 +2093,16 @@ func transit_food_pts() -> float:
 	for e in transit:
 		if _rules.foods.has(str(e.item)):
 			p += float(e.n) * _pts(str(e.item))
+	for t in trips:                                  # B25R1-019: food a walker is sent for, or carries home
+		if str(t.purpose.get("kind", "")) != "food":
+			continue
+		if str(t.leg) == "out":
+			for l in t.purpose.get("lines", []):
+				p += float(l.n) * _pts(str(l.item))
+		else:
+			for k in t.pack:
+				if _rules.foods.has(str(k)):
+					p += float(t.pack[k]) * _pts(str(k))
 	return p
 
 
@@ -2371,7 +2415,8 @@ func to_dict() -> Dictionary:
 		"industries": industries.duplicate(), "hh": hs, "biz": bs, "gov": gv, "own": _own_save(),
 		"prices": prices.duplicate(), "toll_acc": _toll_acc, "flows": flows.duplicate(true), "start": start.duplicate(true), "day": day,
 		"tax": tax.duplicate(true), "journal": journal.duplicate(true), "closed": closed.duplicate(true), "dev": dev.duplicate(true),
-		"transit": transit.duplicate(true)}
+		"transit": transit.duplicate(true), "hamlet": hamlet, "lord": lord, "market": market, "water": water, "well": well,
+		"trips": trips.duplicate(true), "trip_seq": trip_seq}
 
 
 static func from_dict(d: Dictionary) -> OffMapSettlement:
@@ -2455,6 +2500,14 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 	for e in d.get("transit", []):                             # X20-SETTLE-FOOD (optional keys: an older save has nothing on the road)
 		s.transit.append({"tx": str(e.tx), "to": str(e.to), "item": str(e.item), "n": int(e.n), "from": str(e.from),
 			"sent": int(e.sent), "due": int(e.due), "coins": int(e.get("coins", 0))})
+	s.hamlet = bool(d.get("hamlet", false))                  # B25R1-018/019 (optional keys)
+	s.lord = str(d.get("lord", ""))
+	s.market = str(d.get("market", ""))
+	s.water = str(d.get("water", ""))
+	s.well = str(d.get("well", ""))
+	s.trip_seq = int(d.get("trip_seq", 0))
+	for t in d.get("trips", []):
+		s.trips.append(SettlementTrips.from_dict(t))
 	return s
 
 

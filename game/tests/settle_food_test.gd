@@ -12,6 +12,9 @@ extends SceneTree
 ##   * interrupted delivery (buyer unavailable) and failure with refund; abandonment (no household left)
 ##   * imported food kept for the place's people; repeated trade over many rounds; decline and starvation as outcomes, not defects
 ##   * the flight recorder's events
+## B25R1-019 (owner 2026-11-03, trips): the purchase is now carried by a real walker -- the buyer's trader walks to the seller's place
+## with the coins (SettlementTrips, purpose "food"), buys there at the seller's own price (never dearer than planned) through
+## SettlementParty.deal, and carries the food home; the shipment authority's own checks (replay, competing transfers) stay below.
 ##   godot --headless --path game --script res://tests/settle_food_test.gd
 
 var checks := 0
@@ -105,6 +108,22 @@ func _totals(r: Regions) -> Array:
 	return [r.coins() + int(t.coins), JSON.stringify(o)]
 
 
+
+## Walk every trip on to minute `to`, an hour at a time.
+func _walk(r: Regions, from: float, to: float) -> void:
+	var m := from
+	while m <= to:
+		SettlementTrips.advance(r, m)
+		m += 60.0
+
+
+func _food_trip(g: OffMapSettlement) -> Dictionary:
+	for t in g.trips:
+		if str(t.purpose.kind) == "food":
+			return t
+	return {}
+
+
 # ------------------------------------------------------------------ tests ----------------
 func test_purchase_and_books() -> void:
 	var w := _world()
@@ -118,23 +137,20 @@ func test_purchase_and_books() -> void:
 	var farm0 := int(hi.biz.farm.till)
 	var wheat0 := int(hi.biz.farm.stock.wheat)
 	var res := r.food_round(w.day())
-	check(res.lines.size() >= 1, "a purchase is made (%d lines)" % res.lines.size())
+	check(res.lines.size() >= 1, "a purchase is planned (%d lines)" % res.lines.size())
 	var line: Dictionary = res.lines[0] if not res.lines.is_empty() else {}
-	check(str(line.get("buyer", "")) == "garton/trader" and str(line.get("seller", "")) == "higham/farm", "Garton's trader buys from Higham's farm (%s <- %s)" % [line.get("buyer"), line.get("seller")])
+	check(str(line.get("buyer", "")) == "garton/trader" and str(line.get("seller", "")) == "higham/farm", "Garton's trader means to buy from Higham's farm (%s <- %s)" % [line.get("buyer"), line.get("seller")])
 	check(int(line.get("unit_price", 0)) == hi.price("wheat"), "at Higham's own floating price (%d)" % hi.price("wheat"))
 	var n := int(line.get("units", 0))
 	var paid := int(line.get("total", 0))
-	var sh := w.transactions.get_shipment(str(line.get("tx", "")))
-	check(str(sh.get("state", "")) == "open" and str(sh.get("buyer", "")) == "region:garton/trader" and str(sh.get("seller", "")) == "region:higham/farm",
-		"the transaction authority holds it as an open shipment (%s)" % str(line.get("tx")))
-	check(int(g.trader().till) == till0 - paid and int(hi.biz.farm.till) == farm0, "the price is in escrow: out of the buyer's till, not yet the seller's")
-	check(int(hi.biz.farm.stock.wheat) == wheat0 - n and int(g.trader().stock.get("wheat", 0)) == 0, "the wheat is in transit: out of the farm, not yet in Garton")
-	check(int(r.tx_in_transit().coins) == paid and int(r.tx_in_transit().goods.get("wheat", 0)) == n, "transit holds exactly the price and the wheat")
+	var t := _food_trip(g)
+	check(not t.is_empty() and str(t.to) == "higham" and int(t.coins) == paid and str(t.tx) == str(line.get("tx", "")), "a walker sets out for Higham with the coins (%s)" % str(line.get("tx")))
+	check(int(g.trader().till) == till0 - paid and int(hi.biz.farm.till) == farm0, "the coins are in the walker's pack: out of the till, not yet the seller's")
+	check(int(hi.biz.farm.stock.wheat) == wheat0, "the wheat is still in Higham's farm until the walker arrives")
 	check(g.audit() == "" and hi.audit() == "" and r.audit() == "", "audits hold (%s)" % r.audit())
-	check(_totals(r) == before, "nothing made or lost: the region's coins and goods, transit included, are the same")
-	check(int(g.flows.food_bought) == n and int(hi.flows.food_sold) == n, "food counts on both sides")
+	check(_totals(r) == before, "nothing made or lost: the pack is in Garton's books")
 	var want1 := float(g.wants()._food_pts)
-	check(absf(want1 - maxf(0.0, want0 - float(n) * OffMapSettlement._pts("wheat"))) < 1e-6, "food on the road counts against the want (%.0f -> %.0f)" % [want0, want1])
+	check(absf(want1 - maxf(0.0, want0 - float(n) * OffMapSettlement._pts("wheat"))) < 1e-6, "food on its way counts against the want (%.0f -> %.0f)" % [want0, want1])
 	w.dispose()
 
 
@@ -143,25 +159,26 @@ func test_delivery_once() -> void:
 	var r := w.regions
 	var g: OffMapSettlement = r.by_id["garton"]
 	var hi: OffMapSettlement = r.by_id["higham"]
-	var d := w.day()
-	var res := r.food_round(d)
+	var res := r.food_round(w.day())
 	var line: Dictionary = res.lines[0]
-	var due := int(g.transit[0].due)
-	check(due > d and str(g.transit[0].tx) == str(line.tx), "Garton awaits the shipment, due day %d" % due)
+	var t := _food_trip(g)
 	var farm0 := int(hi.biz.farm.till)
-	for dd in range(d + 1, due):
-		g.step_day(dd)
-		check(g.transit.size() == 1, "day %d: still on the road" % dd)
-	g.step_day(due)
-	check(g.transit.is_empty() and int(g.flows.food_delivered) == int(line.units), "delivered at the due day's step (%d)" % int(line.units))
-	check(str(w.transactions.get_shipment(str(line.tx)).state) == "delivered", "the authority closed it as delivered")
-	check(int(hi.biz.farm.till) == farm0 + int(line.total), "the escrowed price reached the grower on delivery")
+	var there := SettlementTrips.arrives(r, t)
+	check(there > w.minutes, "the walk to Higham takes time (arrives at minute %d)" % int(there))
+	_walk(r, w.minutes, there - 61.0)
+	check(str(t.leg) == "out" and int(g.flows.food_bought) == 0, "on the road: nothing bought yet")
+	_walk(r, there - 60.0, there + 60.0)
+	check(str(t.leg) == "back" and int(t.pack.get("wheat", 0)) == int(line.units) and int(hi.biz.farm.till) == farm0 + int(line.total),
+		"at Higham the walker buys %d wheat and the grower is paid %d" % [int(line.units), int(line.total)])
+	check(int(g.flows.food_bought) == int(line.units) and int(hi.flows.food_sold) == int(line.units), "food counts on both sides")
+	check(r.audit() == "", "audits hold on the way home (%s)" % r.audit())
+	var home := SettlementTrips.arrives(r, t)
+	_walk(r, there + 60.0, home + 60.0)
+	check(_food_trip(g).is_empty() and int(g.flows.food_delivered) == int(line.units), "home: delivered into the trader's stock (%d)" % int(line.units))
 	check(g.audit() == "" and hi.audit() == "" and r.audit() == "", "audits hold after delivery (%s)" % r.audit())
-	check(int(r.tx_in_transit().coins) == 0 and (r.tx_in_transit().goods as Dictionary).is_empty(), "nothing left in transit")
 	var delivered := int(g.flows.food_delivered)
 	var farm1 := int(hi.biz.farm.till)
-	g.step_day(due + 1)
-	g.step_day(due + 2)
+	_walk(r, home + 60.0, home + 2000.0)
 	check(int(g.flows.food_delivered) == delivered and int(hi.biz.farm.till) == farm1, "and never again")
 	w.dispose()
 
@@ -172,21 +189,22 @@ func test_save_load_in_transit() -> void:
 	var d := w.day()
 	r.food_round(d)
 	r.day = d
-	var e: Dictionary = r.by_id["garton"].transit[0].duplicate()
+	var t: Dictionary = _food_trip(r.by_id["garton"])
+	var mid := (float(t.depart) + SettlementTrips.arrives(r, t)) / 2.0
+	_walk(r, w.minutes, mid)
 	var saved: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict(), "", true, true))
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), saved)
 	var r2 := w2.regions
 	var g2: OffMapSettlement = r2.by_id["garton"]
-	check(g2.transit.size() == 1 and str(g2.transit[0].tx) == str(e.tx) and int(g2.transit[0].due) == int(e.due), "the awaited shipment is saved and loaded")
-	check(str(w2.transactions.get_shipment(str(e.tx)).get("state", "")) == "open", "and the authority's open shipment with it")
+	var t2 := _food_trip(g2)
+	check(not t2.is_empty() and JSON.stringify(t2) == JSON.stringify(t), "the walker's trip is saved and loaded as it was")
+	check(SettlementTrips.pos(r2, t2, mid) == SettlementTrips.pos(r, t, mid), "at the same place on the road")
 	check(r2.audit() == "" and _totals(r2) == _totals(r), "the loaded books balance and match (%s)" % r2.audit())
-	var paid := int(g2.flows.outside_coins_out)
-	for dd in range(d + 1, int(e.due) + 3):
-		g2.step_day(dd)
-	check(int(g2.flows.food_delivered) == int(e.n) and g2.transit.is_empty(), "after loading it is delivered once")
-	check(int(g2.flows.outside_coins_out) == paid, "no second payment")
-	check(r2.food_seq == r.food_seq, "the attempt numbers are saved")
+	_walk(r, mid, mid + 5000.0)
+	_walk(r2, mid, mid + 5000.0)
+	check(int(g2.flows.food_delivered) == int(r.by_id["garton"].flows.food_delivered) and int(g2.flows.food_delivered) > 0, "after loading it is bought and delivered once, as without the save")
+	check(JSON.stringify(r2.to_dict()) == JSON.stringify(r.to_dict()), "the loaded world goes on exactly as the original")
 	check(r2.audit() == "", "audit holds (%s)" % r2.audit())
 	w.dispose()
 	w2.dispose()
@@ -382,51 +400,39 @@ func test_idempotent_replay() -> void:
 	var g: OffMapSettlement = r.by_id["garton"]
 	var hi: OffMapSettlement = r.by_id["higham"]
 	var d := w.day()
-	var res := r.food_round(d)
-	var tx := str(res.lines[0].tx)
+	var tx := "settle_food/test:1"
+	var first := r.tx_ship(tx, "region:garton/trader", "region:higham/farm", "wheat", 5, 20, d + 2)
 	var paid := int(g.flows.outside_coins_out)
 	var again := r.tx_ship(tx, "region:garton/trader", "region:higham/farm", "wheat", 1, 1, d + 2)
-	check(bool(again.replay) and int(g.flows.outside_coins_out) == paid, "the same id again is a replay: nothing executes")
+	check(bool(first.ok) and bool(again.replay) and int(g.flows.outside_coins_out) == paid, "the same id again is a replay: nothing executes")
 	var t1 := r.tx_deliver(tx)
 	var farm := int(hi.biz.farm.till)
 	var t2 := r.tx_deliver(tx)
 	check(bool(t1.ok) and bool(t2.ok) and str(t2.code) == "duplicate" and int(hi.biz.farm.till) == farm, "deliver twice: the second is a duplicate, no second payment")
 	check(str(r.tx_fail(tx, "late").code) == "not_open", "a different close after delivery: not_open")
-	# the settlement still awaits it (delivered early by hand here); at its step it learns it is delivered and counts it once
-	g.step_day(int(g.transit[0].due))
-	check(g.transit.is_empty() and int(g.flows.food_delivered) == int(res.lines[0].units), "the settlement counts the delivery once")
 	check(r.audit() == "", "audit holds (%s)" % r.audit())
 	w.dispose()
 
 
-## The buyer cannot take the goods when they arrive (its trader gone): the shipment stays open with goods and coins where they are
-## (the lapse's refund cannot reach a buyer that is gone either): never lost, never twice; with a trader again, it is delivered. And a
-## shipment failed by the authority returns the goods and refunds the price; the settlement records that it never arrived.
+## The buyer's trader is gone when the walker comes home: the pack goes to the council's store, nothing lost. A walker who finds the
+## food dearer than planned buys none and brings the coins home.
 func test_interrupted_delivery() -> void:
 	var w := _world()
 	var r := w.regions
 	var g: OffMapSettlement = r.by_id["garton"]
-	var d := w.day()
-	r.food_round(d)
-	var e: Dictionary = g.transit[0].duplicate()
-	var m: Dictionary = g.trader().duplicate(true)
+	r.food_round(w.day())
+	var t := _food_trip(g)
+	var there := SettlementTrips.arrives(r, t)
+	_walk(r, w.minutes, there + 60.0)
+	var n := int(t.pack.get("wheat", 0))
+	var m: Dictionary = g.trader()
 	g.gov.coins += int(m.till)                     # the trader's own books handed to the council, so the test loses nothing itself
 	for k in m.stock:
 		OffMapSettlement._add(g.gov.granary, k, int(m.stock[k]))
 	g.biz.erase("merchant")
-	g.reopen_books()
-	var lapse := int(OffMapSettlement.rules().food_lapse_days)
-	for dd in range(d + 1, int(e.due) + lapse + 2):
-		g.step_day(dd)
-	check(g.transit.size() == 1 and str(w.transactions.get_shipment(str(e.tx)).state) == "open", "undeliverable: it stays open, awaited")
-	check(int(r.tx_in_transit().goods.get("wheat", 0)) == int(e.n), "its goods still in custody, nothing lost")
-	check(r.audit() == "", "audit holds (%s)" % r.audit())
-	m.till = 0
-	m.stock = {}
-	g.biz["merchant"] = m
-	g.reopen_books()
-	g.step_day(int(e.due) + lapse + 2)
-	check(g.transit.is_empty() and str(w.transactions.get_shipment(str(e.tx)).state) == "delivered", "with a trader again it is delivered, once")
+	var gran := int(g.gov.granary.get("wheat", 0))     # (till and stock moved within Garton's own books: no reopening)
+	_walk(r, there + 60.0, there + 5000.0)
+	check(_food_trip(g).is_empty() and int(g.gov.granary.get("wheat", 0)) == gran + n, "no trader to take it: the %d wheat goes to the council's store" % n)
 	check(r.audit() == "", "audit holds (%s)" % r.audit())
 	w.dispose()
 	var w2 := _world()
@@ -434,34 +440,34 @@ func test_interrupted_delivery() -> void:
 	var g2: OffMapSettlement = r2.by_id["garton"]
 	var hi2: OffMapSettlement = r2.by_id["higham"]
 	r2.food_round(w2.day())
-	var e2: Dictionary = g2.transit[0]
+	var t2 := _food_trip(g2)
+	var coins := int(t2.coins)
 	var till := int(g2.trader().till)
-	var wheat := int(hi2.biz.farm.stock.wheat)
-	var f := r2.tx_fail(str(e2.tx), "the road was flooded")
-	check(bool(f.ok) and int(g2.trader().till) == till + int(e2.coins) and int(hi2.biz.farm.stock.wheat) == wheat + int(e2.n), "fail: goods back to the farm, price back to the trader")
-	g2.step_day(int(e2.due))
-	check(g2.transit.is_empty() and int(g2.flows.food_delivered) == 0 and g2.journal.any(func(j): return "never arrived" in str(j.text)), "the settlement drops it and records that it never arrived")
+	hi2.prices["wheat"] = float(hi2.price("wheat") * 3)
+	hi2._pcache = {}
+	_walk(r2, w2.minutes, w2.minutes + 6000.0)
+	check(_food_trip(g2).is_empty() and int(g2.flows.food_bought) == 0 and int(g2.trader().till) == till + coins, "too dear on arrival: nothing bought, the %d coins come home" % coins)
 	check(r2.audit() == "", "audit holds (%s)" % r2.audit())
 	w2.dispose()
 
 
-## A buyer whose people are all gone when the food arrives: delivered once to its trader, reported with no household left.
+## A buyer whose people are all gone while the walker is out: the walker is gone with them, the pack is the trader's again, reported
+## with no household left.
 func test_abandoned_buyer() -> void:
 	var w := _world()
 	var r := w.regions
 	var g: OffMapSettlement = r.by_id["garton"]
-	var d := w.day()
-	r.food_round(d)
-	var n := int(g.transit[0].n)
-	var due := int(g.transit[0].due)
+	r.food_round(w.day())
+	var t := _food_trip(g)
+	var coins := int(t.coins)
+	var till := int(g.trader().till)
 	var events := []
 	g.trade_hook = func(what, info): events.append([what, info])
 	for h in g.hh:
 		h.alive = false
-	for dd in range(d + 1, due + 1):
-		g.step_day(dd)
-	check(g.transit.is_empty() and int(g.flows.food_delivered) == n, "the food still arrives, once")
-	check(events.size() == 1 and int(events[0][1].households) == 0, "and the delivery reports no household left (recorded as interrupted)")
+	_walk(r, w.minutes, w.minutes + 120.0)
+	check(_food_trip(g).is_empty() and int(g.trader().till) == till + coins, "the errand ends: the pack is the trader's books again")
+	check(events.size() == 1 and int(events[0][1].households) == 0, "and the end reports no household left")
 	check(r.audit() == "", "nothing lost (%s)" % r.audit())
 	w.dispose()
 
@@ -471,10 +477,9 @@ func test_imported_not_resold() -> void:
 	var r := w.regions
 	var g: OffMapSettlement = r.by_id["garton"]
 	r.food_round(w.day())
-	g.day = int(g.transit[0].due)
-	g._deliver()                                   # without the morning market taking it, to see the mark
+	_walk(r, w.minutes, w.minutes + 6000.0)          # without the morning market taking it, to see the mark
 	var have := int(g.trader().stock.get("wheat", 0))
-	check(have > 0 and int(g.trader().imported.wheat) == have, "the delivered wheat is marked imported (%d)" % have)
+	check(have > 0 and int(g.trader().imported.wheat) == have, "the wheat carried home is marked imported (%d)" % have)
 	check(g.trader_has("wheat") == 0 and not g.sell_to_village("wheat", 1, 3), "it is not offered to the village's caravan")
 	check(SettlementParty.make(r, g, "trader").sale_cap("wheat") == 0, "nor to another settlement")
 	g.release_imported()
@@ -513,11 +518,14 @@ func test_repeated_trade_and_decline() -> void:
 			if int(gd[k]) < 0 and bad == "":
 				bad = "day %d: %d %s" % [d, int(gd[k]), k]
 	var on_road := 0
-	for e in g.transit:
-		on_road += int(e.n)
+	for t in g.trips:
+		if str(t.purpose.kind) == "food":
+			on_road += int(t.pack.get("wheat", 0))
 	check(bad == "", "90 days of rounds: every audit holds, no negative stock, no orphaned shipment (%s)" % bad)
-	check(rounds >= 3, "Garton bought food in %d rounds" % rounds)
-	check(int(g.flows.food_delivered) + on_road == int(g.flows.food_bought), "every unit bought arrived once or is still on the road (%d bought, %d arrived, %d on the road)" % [int(g.flows.food_bought), int(g.flows.food_delivered), on_road])
+	# B25R1-019: a purchase now needs a walker from the traders' own household; Garton's one trading household starves with the rest
+	# of the town (an outcome, WDR-022), after which nobody goes
+	check(rounds >= 2, "Garton's walker bought food in %d rounds while its traders' household lived" % rounds)
+	check(int(g.flows.food_delivered) + on_road == int(g.flows.food_bought), "every unit bought arrived once or is still in a pack on the road (%d bought, %d arrived, %d on the road)" % [int(g.flows.food_bought), int(g.flows.food_delivered), on_road])
 	var sold := 0
 	var bought := 0
 	for s: OffMapSettlement in r.list:
@@ -528,7 +536,7 @@ func test_repeated_trade_and_decline() -> void:
 	w.dispose()
 
 
-## Settlements with no world (a diagnostic) have no transaction authority: they buy nothing and change nothing by it.
+## Settlements with no world (a diagnostic) walk the straight line between the places: the purchase is still made by a walker.
 func test_no_world_no_trade() -> void:
 	var r := Regions.create(1)
 	r.step_day(0)
@@ -536,7 +544,8 @@ func test_no_world_no_trade() -> void:
 	r.by_id["higham"].biz.farm.stock["wheat"] = 300
 	r.by_id["higham"].reopen_books()
 	var res := r.food_round(5)
-	check(res.lines.is_empty() and res.unmet.any(func(u): return str(u.reason) == "no_authority") and r.audit() == "", "no authority, no purchase")
+	_walk(r, 5 * 1440.0, 10 * 1440.0)
+	check(res.lines.size() > 0 and int(r.by_id["garton"].flows.food_delivered) > 0 and r.audit() == "", "with no world a walker still goes and brings food home (%d)" % int(r.by_id["garton"].flows.food_delivered))
 
 
 func test_determinism() -> void:
@@ -566,9 +575,7 @@ func test_recorder() -> void:
 	var r: Regions = w.regions
 	var g: OffMapSettlement = r.by_id["garton"]
 	var res := r.food_round(w.day())
-	var due := int(g.transit[0].due) if not g.transit.is_empty() else 0
-	for d in range(w.day() + 1, due + 1):
-		g.step_day(d)
+	_walk(r, w.minutes, w.minutes + 6000.0)
 	rec.flush()
 	var evs: Array = RecorderArchive.read_table(FlightRecorder._abs(rec.dir), "event")
 	var bought := evs.filter(func(e): return e.subtype == "settlement_food_purchase" and e.outcome == "ok")
