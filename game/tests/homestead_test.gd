@@ -131,10 +131,15 @@ func _init() -> void:
 			var cc: Dictionary = _mine(w2.homesteads)[0]
 			if not claimed and str(cc.status) == "claimed":
 				claimed = true
-				var who_c: NPC = w2.npc(id0)
-				check(who_c.cell().distance_to(Homesteads.step_of(cc)) < 20.0, "the land is claimed only once they have walked there (%s from the door)" % who_c.cell().distance_to(Homesteads.step_of(cc)))
+				var near_d := 1e9                   # the first of them to reach it claims it (Homesteads._arrive)
+				for mid in cc.members:
+					var mm: NPC = w2.npc(int(mid))
+					if mm != null:
+						near_d = minf(near_d, mm.cell().distance_to(Homesteads.step_of(cc)))
+				check(near_d < 20.0, "the land is claimed only once they have walked there (%s from the door)" % near_d)
 				check(JSON.stringify(cc.site.cost) == JSON.stringify(_ints(w2.construction.cost_of("house"))), "the house is the village's house, at its cost %s" % cc.site.cost)
-				check(o.homes.size() == 1 and str(o.homes[0].stamp) == "", "its frame stands in the overworld")
+				var fr := o.homes.filter(func(hm) -> bool: return str(hm.id) == str(cc.id))
+				check(fr.size() == 1 and str(fr[0].stamp) == "", "its frame stands in the overworld")
 			if not built and str(cc.get("building", "")) != "":
 				built = true
 			if built and w2.hour() >= 23.0:

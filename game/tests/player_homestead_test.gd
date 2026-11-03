@@ -127,7 +127,8 @@ func _init() -> void:
 				break
 	check(planks == 30 and blocks == 20, "the planks (%d) and building blocks (%d) were bought from the village's sellers" % [planks, blocks])
 	check(bool(c.site.done) and str(c.building) != "" and str(c.status) == "built", "the last load is in and the house stands (%s)" % c.status)
-	check(o.homes.size() == 1 and str(o.homes[0].stamp) == "house" and o.is_solid(Homesteads.house_of(c).position), "the house is drawn and solid in the overworld")
+	var mine_h := o.homes.filter(func(hm) -> bool: return str(hm.id) == str(c.id))     # (the band's camp is drawn too, B25R1-Q2 a)
+	check(mine_h.size() == 1 and str(mine_h[0].stamp) == "house" and o.is_solid(Homesteads.house_of(c).position), "the house is drawn and solid in the overworld")
 	var bed: Dictionary = hs.spots_of(c, "bed")[0]
 	check(not w.map.find_path_world(step, bed.use).is_empty(), "the player can walk in through its door to the beds")
 	p.pos = Vector2(bed.use) + Vector2(0.5, 0.5)
@@ -187,7 +188,7 @@ func _init() -> void:
 	var c2: Dictionary = w2.homesteads.claim(str(c.id))
 	check(not c2.is_empty() and str(c2.status) == "built" and str(c2.owner) == w2.player_ref(w2.player), "the homestead is still the player's after loading")
 	check(w2.player.pos.distance_to(pos0) < 0.01 and not w2.map.in_village(Vector2i(w2.player.pos.floor())), "the player is back at home in the country")
-	check(w2.map.overworld.is_solid(Homesteads.house_of(c2).position) and w2.map.overworld.homes.size() == 1, "the house stands again")
+	check(w2.map.overworld.is_solid(Homesteads.house_of(c2).position) and w2.map.overworld.homes.filter(func(hm) -> bool: return str(hm.id) == str(c.id)).size() == 1, "the house stands again")
 	var u2 := w2.chests.unit("homestead:" + str(c.id))
 	check((c2.store as Inventory).count(item) == 1 and str(w2.chests.info(u2).access) == "own", "the chest still holds what was stored")
 	var t2 := w2.chests.take(u2, item, 1)
