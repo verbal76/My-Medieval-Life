@@ -161,10 +161,15 @@ jobs:
     timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch both runs' archives and statuses
+      - name: Fetch the run's archives and statuses
         uses: actions/download-artifact@v4
         with:
-          pattern: fr-seed${{ matrix.seed }}*-seg*
+          pattern: fr-seed${{ matrix.seed }}-seg*
+          path: ${{ runner.temp }}/dl
+      - name: Fetch the twin's archives and statuses
+        uses: actions/download-artifact@v4
+        with:
+          pattern: fr-seed${{ matrix.seed }}-twin-seg*
           path: ${{ runner.temp }}/dl
       - name: Lay the runs out
         env:
