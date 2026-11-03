@@ -89,6 +89,8 @@ static func _try(w: World, s: OffMapSettlement, reason: String, dir: String) -> 
 static func _barred(w: World, n: NPC) -> bool:
 	if n.role == "bandit" or n.clan != "" or n.household < 3:
 		return true
+	if w.homesteads != null and w.homesteads.away(n):
+		return true                        # B25R1-010: a homesteader leaves their land by its own rules (Homesteads)
 	if n.id == w.reeve_id or n.id == w.sage_id or OFFICES.has(n.job):
 		return true
 	return Life.is_player_id(n.partner) or Life.is_player_id(n.mother) or Life.is_player_id(n.father)

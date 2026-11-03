@@ -466,6 +466,8 @@ func household_ended(h: int) -> void:
 	if hh.get("ended", false):
 		return
 	hh.ended = true
+	if w.homesteads != null:
+		w.homesteads.household_ended(h)    # B25R1-010: its homestead is abandoned (a house on it stays standing)
 	var ref := World.hh_ref(h)
 	var home_name := describe(w.buildings[hh.home]) if w.buildings.has(str(hh.home)) else ""
 	# a house it was building comes down: the materials delivered go to the manor's stores with the

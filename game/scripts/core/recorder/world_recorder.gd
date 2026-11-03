@@ -2207,7 +2207,7 @@ const PASS_THROUGH := ["well_built", "water_drawn", "water_drunk", "band_relocat
 	"wild_shortage", "sale_refused", "livestock_change", "raid", "raid_defended", "household_formed", "homestead_sustain", "homestead_year",
 	"clan_birth", "clan_member_died", "bandit_reintegrated", "runaway_departed", "runaway_outcome", "faction_changed", "wild_craft", "skill_progress",
 	"water_source_selected", "water_unavailable", "settlement_attempt_failed", "bridge_built", "bridge_used", "route_crossing", "travel_blocked_by_water",
-	"settlement_created", "settlement_construction", "settlement_occupancy", "settlement_discovered", "settlement_abandoned"]
+	"settlement_created", "settlement_construction", "settlement_occupancy", "settlement_discovered", "settlement_abandoned", "wild_trade"]
 
 
 static func _flat(data: Dictionary) -> Dictionary:

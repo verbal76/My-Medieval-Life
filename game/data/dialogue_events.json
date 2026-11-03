@@ -285,6 +285,21 @@
         "i": "I have no {thing} and cannot get one",
         "you": "you have no {thing} and cannot get one"
       },
+      "ran_away": {
+        "default": "{A} ran away from home",
+        "i": "I ran away from home",
+        "you": "you ran away from home"
+      },
+      "joined_band": {
+        "default": "{A} went to the bandits' camp",
+        "i": "I went to the bandits' camp",
+        "you": "you went to the bandits' camp"
+      },
+      "left_band": {
+        "default": "{A} left the bandits",
+        "i": "I left the bandits",
+        "you": "you left the bandits"
+      },
       "death": {
         "default": "{V} died",
         "slain": "{V} was killed",

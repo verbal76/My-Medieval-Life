@@ -57,6 +57,8 @@ static func dawn(w: World) -> Array:
 ## The camp: the map's own bandit camp, or the nearest open cell if something has since closed it.
 static func camp_cell(w: World) -> Vector2i:
 	var c := w.bandit_camp
+	if not w.map.in_village(c):
+		return c                             # B25R1-Q2 (a): the camp in the open country (its claim's door step)
 	return c if not w.map.is_solid(c) else w.map.nearest_walkable(c)
 
 
