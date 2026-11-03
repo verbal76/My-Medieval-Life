@@ -580,3 +580,49 @@ arrivals (identity `registered_outlaw`) - deaths (`clan_member_died`, or a `deat
 The other kinds are called by the systems that make the decisions (homesteading, households, factions, runaways, recruitment,
 wilderness settlements: `wip/b25r1-homestead`; journeys: `wip/b25r1-travelers`); `recorder_coverage.json` lists each as
 instrumented only once its hook is merged.
+
+Adapters (the other B25R1 systems report in their own words; nothing in them had to change):
+`WorldRecorder.journey_event(id, ref, what, data)` for `Journeys.record` (started, refused, arrived, provisioned, bought_food, bought,
+failed, waited, seed_designated, ended: journey_begin ... journey_end, one object key `journey:<id>:<day>.<minute>` per journey) and
+`WorldRecorder.life_event(kind, data)` for `Homesteads._rec` and `LifeDecisions._rec` (homestead_choice -> homestead_evaluated and
+chosen or rejected; homestead_brake -> homestead_safeguard; set_out -> homestead_travel_begin, remembering the claim's founder, track
+and path; built -> homestead_shelter_built and homestead_residence; band_recruit -> recruit_rejected, or recruit_accepted and
+recruit_joined; band_left -> bandit_departed; claims `hs<n>` as `homestead:hs<n>`; the vocabulary's own kinds pass through). Every
+data entry is kept as a `needs` factor row; a kind with no mapping is written as `unmapped_event` (detail `life_event:<kind>`) and the
+exception report lists it. Ambient travellers are scenery with no identity and are not recorded.
+
+### 9.4 The reports (`tools/flight_lives.py`)
+
+`python3 tools/flight_lives.py RUN_DIR [--out DIR] [--targeted DIR] [--compare RUN_DIR2]` reads one seed's chained segments (the layout
+`flight_analyse.py` reads) and writes reports A-I of the directive's section 14 from the whole archive: `A_executive.md` (facts, the
+feature classification, the cases, then interpretations by stated rules), `B_migration_ledger.csv/.md` (every change of residence,
+household or affiliation, the caravan moves and the journeys), `C_bandit_ledger.md` (start + births + recruits + arrivals + orphans
+placed - deaths - departures against the end census; a non-zero residual is an exception, never hidden), `D_homestead_ledger.md` (by
+track, the young-adult rate per five-game-year window against the ~2% safeguard, every homestead), `E_economic_ledger.md` (the game's
+counters, trade, the wilderness events, roads, reconciled with the harness's currency and item ledgers and the coin audit),
+`F_life_histories.md` (cases A-G: the matching person with the most recorded events, their timeline, places, decisions, coins and end;
+a case with no matching event is **unobserved**), `G_charts/*.svg` (line and scatter, hand-written SVG: CI has no matplotlib),
+`H_exceptions.md`, `I_evidence_index.md`, `features.json` and `lives.json`. Section 12's classes per feature: no opportunity,
+rejected, failed, partial, completed, sustained (the highest reached, with the count at every level). Only a recorded residence is a
+completed homestead. Tested by `tests/test_flight_lives.py` (a synthetic archive in the chunk format).
+
+### 9.5 Targeted scenarios (`game/tests/flight_scenarios.gd`, `game/data/flight_scenarios.json`)
+
+Rare features that may not occur organically get a deterministic scenario: a fresh world of a fixed seed, a documented start applied
+through the systems' own entry points (`LifeDecisions.set_hardship`, `weigh_runaway`, `recruit`, `leave_band`; `Homesteads.begin`,
+`set_faction`; `World.kill` for an orphaning), which set a record or run a decision exactly as the dawn would (no rule, weight or
+probability changed), then the normal game for some days, recorded. `targeted.json` says per scenario what the recorder saw against
+what was expected ("observed", "not observed: ...", or "not run" when the system is absent). The reports keep it apart: a scenario
+proves a mechanic can work, never how often it happens.
+
+### 9.6 The campaign (B25R1-016)
+
+Dispatched through `long-sims.yml` (flight true; seeds 1; days 365; every 10; segment_days 92 or 100; sim_args `--twin`). `--twin`
+is the campaign's own switch: each seed runs twice, independently, with the same configuration and record on, as chained segments
+that go on from the game's own save (`flight-recorder-seed.yml`, `.github/actions/flight-segment`; one continuous world each, the
+six-hour limit met by segments of 1.3 to 2 hours estimated); each segment's save is also loaded into a fresh world and saved again,
+section by section (`economy_sim.gd`, `SAVE_ROUNDTRIP`); the `lives` job writes reports A-I over the first run and compares the two
+runs' event streams (event, state change, participant and snapshot rows by session and day, the machine's wall_ms and mem_bytes left
+out) and checkpoint fingerprints, failing if they differ. Archives and reports are kept 90 days (`fr-seed<N>[-twin]-seg<K>-*`,
+`fr-living-world-seed<N>`). Runtime: an unrecorded year measured 3.7-4.4 hours on Actions; recorded about 4.5-6 (README); B25R1's
+travellers and homesteads add work: about 5-7 hours a run, two runs in parallel. Locally, recorded, 10 days took 270-300 s at 110 people.
