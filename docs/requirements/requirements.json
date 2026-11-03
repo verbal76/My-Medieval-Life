@@ -7846,6 +7846,33 @@
    ]
   },
   {
+   "id": "B25R1-Q8",
+   "kind": "decision",
+   "title": "Town art gap (Higham, Wulstead, churches, chalk figure not store-quality; owned packs lack a stone market cross, white battlements, a fountain with water): owned art with a better layout, a pack the owner buys, or both?",
+   "description": "Town art gap (Higham, Wulstead, churches, chalk figure not store-quality; owned packs lack a stone market cross, white battlements, a fountain with water): owned art with a better layout, a pack the owner buys, or both?",
+   "source": "lead question 2026-11-03 with renders of Higham and Bear Hill",
+   "owner_wording": null,
+   "owner_answer": "Both: rebuild the towns now with owned art and better layouts (organic streets, yards, gardens, density, reworked churches and chalk figures); the owner will supply an additional pack, to be integrated through the asset pipeline when it arrives (stone cross, white battlements, fountain with water and other gaps)",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "lead question 2026-11-03 with renders of Higham and Bear Hill"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-11-03: \"Owned art and I pack I'm going to give you\""
+    }
+   ]
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
