@@ -384,9 +384,13 @@ static func delivered(c: Dictionary) -> Dictionary:
 ## what is stored in the player's homestead chests.
 func goods() -> Dictionary:
 	var out := {}
+	if w.wilds != null:
+		var lw: Dictionary = w.wilds.loose_well_goods()          # wells being dug that no claim owns (settlements')
+		for id in lw:
+			out[id] = int(out.get(id, 0)) + int(lw[id])
 	for c in claims:
 		var got := delivered(c)
-		var wd := Wilds.work_delivered(c)
+		var wd: Dictionary = w.wilds.work_delivered(c) if w.wilds != null else {}
 		for id in wd:
 			got[id] = int(got.get(id, 0)) + int(wd[id])
 		for id in got:
@@ -1061,7 +1065,7 @@ func _abandon(c: Dictionary, why: String) -> void:
 	if str(c.status) == "abandoned":
 		return
 	var hx := World.ref_id(str(c.owner))
-	if w.wilds != null and not Wilds.work_delivered(c).is_empty():
+	if w.wilds != null and not w.wilds.work_delivered(c).is_empty():
 		var into: Inventory = w.households[hx].pantry if hx >= 0 and hx < w.households.size() and not w.households[hx].get("ended", false) else w.granary
 		var wb := w.wilds.strip_works(c, into)
 		if into == w.granary:
@@ -1719,6 +1723,9 @@ func act(n: NPC, a: Dictionary) -> bool:
 				w.wilds.carried_home(n, c)               # water carried from the village's well on the way
 			trips.erase(str(n.id))
 			if str(c.status) == "intended":
+				if n.cell().distance_to(step_of(c)) > float(cfg().home_radius):
+					_count("walk_short")
+					return false                        # the walk ended short of the land (a bounded path): they walk on next
 				_arrive(n, c)
 			_unpack(n, c)
 			return true

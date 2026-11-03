@@ -156,9 +156,125 @@ func _drink(c: Dictionary, members: Array) -> int:
 	return short
 
 
+# ---------------------------------------------------------------- wells (the one registry) ------
+## B25R1-Q3, coordinated (lead 2026-11-03): every well in the world is one record here, whoever owns it: a claim ("claim:<id>"),
+## a household ("hh:<n>") or a settlement ("settlement:<id>"). {id "wl<n>", kind "well", owner, cell [x, y], rect, cost, need,
+## labour (minutes still to dig), done, day, built_day}. Built: materials (cost) delivered and the labour done (deliver_well,
+## dig_well), or registered built by a caller that has itself taken `cost` from its stock (add_well built=true: the goods
+## ledger counts them used_building_<item>). Saved (Wilds "wells"). Read-only lookups for other systems: well, well_at,
+## wells_near, wells_of.
+var wells := {}            # id -> the well record
+var next_well := 1
+
+
+## Register a well of `owner` at `cell`. built=false: a site still needing `cost` (default the balance's well_cost) and its
+## labour; built=true: standing now, `cost` already taken from the caller's stock (counted as used). Returns the record.
+func add_well(owner: String, cell: Vector2i, built := false, cost := {}) -> Dictionary:
+	var c2: Dictionary = cost if not cost.is_empty() else _cost("well")
+	var ints := {}
+	for id in c2:
+		ints[str(id)] = int(c2[id])
+	var wl := {"id": "wl%d" % next_well, "kind": "well", "owner": owner, "cell": [cell.x, cell.y], "rect": [cell.x, cell.y, 1, 1], "cost": ints,
+		"need": {} if built else ints.duplicate(), "labour": 0.0 if built else _labour("well"), "done": built, "day": w.day()}
+	next_well += 1
+	wells[str(wl.id)] = wl
+	if built:
+		wl.built_day = w.day()
+		for id in ints:
+			w.stat("used_building_" + str(id), float(ints[id]))
+		_rec("well_built", {"owner": owner, "well": str(wl.id), "cell": [cell.x, cell.y], "cost": ints.duplicate()})
+	else:
+		_rec("settlement_construction", {"owner": owner, "action": "begun", "what": "well", "well": str(wl.id), "need": ints.duplicate()})
+	if w.homesteads != null:
+		w.homesteads._sync_overworld()
+	return wl
+
+
+## The well record `id`, {} none.
+func well(id: String) -> Dictionary:
+	return wells.get(id, {})
+
+
+## The well standing or being dug at `cell`, {} none.
+func well_at(cell: Vector2i) -> Dictionary:
+	for id in _well_ids():
+		var wl: Dictionary = wells[id]
+		if int(wl.cell[0]) == cell.x and int(wl.cell[1]) == cell.y:
+			return wl
+	return {}
+
+
+## The wells within `radius` tiles (Chebyshev) of `cell`, nearest first (ties by id); built ones only unless built_only is false.
+func wells_near(cell: Vector2i, radius: int, built_only := true) -> Array:
+	var out := []
+	for id in _well_ids():
+		var wl: Dictionary = wells[id]
+		var at := Vector2i(int(wl.cell[0]), int(wl.cell[1]))
+		var d := maxi(absi(at.x - cell.x), absi(at.y - cell.y))
+		if d <= radius and (bool(wl.done) or not built_only):
+			out.append([d, id, wl])
+	out.sort_custom(func(a: Array, b: Array) -> bool: return a[0] < b[0] or (a[0] == b[0] and str(a[1]) < str(b[1])))
+	return out.map(func(e: Array) -> Dictionary: return e[2])
+
+
+## The wells of `owner` (an ownership reference), in id order.
+func wells_of(owner: String) -> Array:
+	return _well_ids().filter(func(id) -> bool: return str(wells[id].owner) == owner).map(func(id) -> Dictionary: return wells[id])
+
+
+## Deliver materials for well `id` from `inv` (the same rule as a claim's works). True when it took any.
+func deliver_well(id: String, inv: Inventory, by := "") -> bool:
+	var wl := well(id)
+	return not wl.is_empty() and _deliver_into(wl, inv, by, str(wl.owner))
+
+
+## Dig at well `id` for `mins` minutes (its materials all in); true when it stands now.
+func dig_well(id: String, mins: float, n: NPC = null) -> bool:
+	var wl := well(id)
+	if wl.is_empty() or bool(wl.done) or not (wl.need as Dictionary).is_empty():
+		return false
+	var c := _hs().claim(str(wl.owner).trim_prefix("claim:")) if str(wl.owner).begins_with("claim:") else {}
+	if not c.is_empty():
+		labour(c, wl, mins, n)
+	else:
+		wl.labour = maxf(0.0, float(wl.labour) - mins)
+		if float(wl.labour) <= 0.0:
+			wl.done = true
+			wl.built_day = w.day()
+			for k in wl.cost:
+				w.stat("used_building_" + str(k), float(wl.cost[k]))
+			_rec("well_built", {"owner": str(wl.owner), "well": id, "cell": wl.cell, "by": n.id if n != null else -1})
+	return bool(wl.done)
+
+
+## Materials lying on wells not owned by a claim (census goods, Homesteads.goods).
+func loose_well_goods() -> Dictionary:
+	var out := {}
+	for id in _well_ids():
+		var wl: Dictionary = wells[id]
+		if bool(wl.done) or str(wl.owner).begins_with("claim:"):
+			continue
+		for k in wl.cost:
+			var got := int(wl.cost[k]) - int((wl.need as Dictionary).get(k, 0))
+			if got > 0:
+				out[k] = int(out.get(k, 0)) + got
+	return out
+
+
+func _well_ids() -> Array:
+	var ids := wells.keys()
+	ids.sort_custom(func(a, b) -> bool: return int(str(a).trim_prefix("wl")) < int(str(b).trim_prefix("wl")))
+	return ids
+
+
+## A claim's works: its wells (the registry's) then its other works.
+func _all_works(c: Dictionary) -> Array:
+	return wells_of("claim:" + str(c.get("id", ""))) + (c.get("works", []) as Array)
+
+
 # ---------------------------------------------------------------- works (well, pen, workshop) ----
 func work_of(c: Dictionary, kind: String) -> Dictionary:
-	for wk in c.get("works", []):
+	for wk in _all_works(c):
 		if str(wk.kind) == kind:
 			return wk
 	return {}
@@ -182,6 +298,8 @@ func _new_work(c: Dictionary, kind: String, rect: Rect2i) -> Dictionary:
 	if not c.has("works"):
 		c.works = []
 	var cost := _cost(kind)
+	if kind == "well":
+		return add_well("claim:" + str(c.id), rect.position, false)
 	var wk := {"id": "wk%d" % next_work, "kind": kind, "cell": [rect.position.x, rect.position.y], "rect": [rect.position.x, rect.position.y, rect.size.x, rect.size.y],
 		"cost": cost, "need": cost.duplicate(), "labour": _labour(kind), "done": false, "day": w.day()}
 	next_work += 1
@@ -193,7 +311,7 @@ func _new_work(c: Dictionary, kind: String, rect: Rect2i) -> Dictionary:
 
 ## The unfinished work of claim `c` that materials go to now (the first in order), {} none.
 func open_work(c: Dictionary) -> Dictionary:
-	for wk in c.get("works", []):
+	for wk in _all_works(c):
 		if not bool(wk.done):
 			return wk
 	return {}
@@ -210,6 +328,10 @@ func deliver_work(c: Dictionary, inv: Inventory, by: String) -> bool:
 	var wk := open_work(c)
 	if wk.is_empty():
 		return false
+	return _deliver_into(wk, inv, by, str(c.id))
+
+
+func _deliver_into(wk: Dictionary, inv: Inventory, by: String, place: String) -> bool:
 	var need: Dictionary = wk.need
 	if need.has("stone"):
 		w.rubble_cover(inv, int(need.stone) - inv.count("stone"))
@@ -223,7 +345,7 @@ func deliver_work(c: Dictionary, inv: Inventory, by: String) -> bool:
 			if int(need[id]) <= 0:
 				need.erase(id)
 	if given > 0:
-		_rec("settlement_construction", {"claim": str(c.id), "action": "materials", "what": str(wk.kind), "by": by, "loads": given, "need": need.duplicate()})
+		_rec("settlement_construction", {"claim": place.trim_prefix("claim:"), "action": "materials", "what": str(wk.kind), "by": by, "loads": given, "need": need.duplicate()})
 	return given > 0
 
 
@@ -246,7 +368,7 @@ func labour(c: Dictionary, wk: Dictionary, mins: float, n: NPC) -> void:
 		_open_pen(c, wk)
 	_rec("settlement_construction", {"claim": str(c.id), "action": "finished", "what": kind, "cost": (wk.cost as Dictionary).duplicate()})
 	var built := 0
-	for x in c.works:
+	for x in _all_works(c):
 		built += 1 if bool(x.done) else 0
 	if built >= 2 and str(c.get("stage", "")) != "community":
 		c.stage = "community"
@@ -256,9 +378,9 @@ func labour(c: Dictionary, wk: Dictionary, mins: float, n: NPC) -> void:
 
 
 ## Materials lying on unfinished works (item -> count).
-static func work_delivered(c: Dictionary) -> Dictionary:
+func work_delivered(c: Dictionary) -> Dictionary:
 	var out := {}
-	for wk in c.get("works", []):
+	for wk in _all_works(c):
 		if bool(wk.done):
 			continue
 		for id in wk.cost:
@@ -275,6 +397,9 @@ func strip_works(c: Dictionary, pantry: Inventory) -> Dictionary:
 	for id in back:
 		pantry.add(id, int(back[id]))
 	c.works = (c.get("works", []) as Array).filter(func(wk) -> bool: return bool(wk.done))
+	for wl in wells_of("claim:" + str(c.id)):
+		if not bool(wl.done):
+			wells.erase(str(wl.id))                     # an unfinished well struck off with the claim's other unfinished works
 	return back
 
 
@@ -282,7 +407,7 @@ func strip_works(c: Dictionary, pantry: Inventory) -> Dictionary:
 ## work, the village well's two tiles for a well.
 func overworld_entries(c: Dictionary) -> Array:
 	var out := []
-	for wk in c.get("works", []):
+	for wk in _all_works(c):
 		var r := Rect2i(int(wk.rect[0]), int(wk.rect[1]), int(wk.rect[2]), int(wk.rect[3]))
 		var kind := str(wk.kind)
 		if not bool(wk.done):
@@ -587,7 +712,7 @@ func _plan_pen(n: NPC, c: Dictionary) -> bool:
 ## The stations of claim `c`'s built workshops.
 func stations_of(c: Dictionary) -> Array:
 	var out := []
-	for wk in c.get("works", []):
+	for wk in _all_works(c):
 		if bool(wk.done) and str(wk.kind).begins_with("workshop_"):
 			for s in (w.map.data.stamps[str(wk.kind)] as Dictionary).get("stations", []):
 				out.append(str(s.type))
@@ -654,7 +779,7 @@ func _plan_craft(n: NPC, c: Dictionary) -> bool:
 		if short > 0:
 			w.transfer(pantry, n.inv, str(id), short)
 	var at := Homesteads.step_of(c)
-	for wk in c.works:
+	for wk in _all_works(c):
 		if bool(wk.done) and str(wk.kind).begins_with("workshop_"):
 			var st: Dictionary = w.map.data.stamps[str(wk.kind)]
 			at = Vector2i(int(wk.rect[0]), int(wk.rect[1])) + Vector2i(int(st.door[0]), int(st.door[1]) - 1)
@@ -1158,7 +1283,7 @@ func landmarks() -> Array:
 		var hidden := bool(c.get("concealed", false))
 		if str(c.id) != band:
 			out.append({"id": "outlaw:" + str(c.id), "kind": "camp", "name": "Outlaw homestead", "at": Homesteads.step_of(c), "see": see if hidden else Landmarks.SEE})
-		for wk in c.get("works", []):
+		for wk in _all_works(c):
 			if bool(wk.done) and str(wk.kind).begins_with("workshop_"):
 				out.append({"id": "workshop:%s:%s" % [c.id, wk.id], "kind": "workshop", "name": "Hidden " + str(wk.kind).trim_prefix("workshop_") if hidden else str(wk.kind).trim_prefix("workshop_").capitalize(),
 					"at": Vector2i(int(wk.rect[0]), int(wk.rect[1])) + Vector2i(int(wk.rect[2]) / 2, int(wk.rect[3])), "see": see if hidden else Landmarks.SEE})
@@ -1256,7 +1381,7 @@ func report() -> Dictionary:
 	var water := 0
 	for c in _hs().claims:
 		water += int(c.get("water", 0))
-		for wk in c.get("works", []):
+		for wk in _all_works(c):
 			if bool(wk.done):
 				built[str(wk.kind)] = int(built.get(str(wk.kind), 0)) + 1
 	var bc := band_claim()
@@ -1265,7 +1390,7 @@ func report() -> Dictionary:
 
 
 func to_dict() -> Dictionary:
-	return {"format": FORMAT, "raiders": raiders.duplicate(true), "last_raid": last_raid.duplicate(), "led": led.duplicate(), "counts": counts.duplicate(),
+	return {"format": FORMAT, "wells": wells.duplicate(true), "next_well": next_well, "raiders": raiders.duplicate(true), "last_raid": last_raid.duplicate(), "led": led.duplicate(), "counts": counts.duplicate(),
 		"defended_day": defended_day.duplicate(), "next_work": next_work}
 
 
@@ -1279,14 +1404,21 @@ func load_dict(d: Dictionary) -> void:
 	counts = (d.get("counts", {}) as Dictionary).duplicate()
 	defended_day = (d.get("defended_day", {}) as Dictionary).duplicate()
 	next_work = int(d.get("next_work", 1))
+	wells = {}
+	for k in (d.get("wells", {}) as Dictionary):
+		wells[str(k)] = (d.wells[k] as Dictionary).duplicate(true)
+	next_well = int(d.get("next_well", wells.size() + 1))
+	var recs: Array = wells.values()
 	for c in _hs().claims:
-		for wk in c.get("works", []):
-			for k in ["cost", "need"]:
-				var ints := {}
-				for id in wk[k]:
-					ints[str(id)] = int(wk[k][id])
-				wk[k] = ints
-			wk.labour = float(wk.labour)
+		recs.append_array(_all_works(c))
+	for wk in recs:
+		for k in ["cost", "need"]:
+			var ints := {}
+			for id in wk[k]:
+				ints[str(id)] = int(wk[k][id])
+			wk[k] = ints
+		wk.labour = float(wk.labour)
+	for c in _hs().claims:
 		if c.has("water"):
 			c.water = int(c.water)
 	var bc := band_claim()
