@@ -64,10 +64,26 @@ func parcel_at(c: Vector2i) -> Dictionary:
 	return {}
 
 
+## B25R1-014: a cell of a homestead claim the acting player holds, outside its house and the ring round its walls
+## (Homesteads): the player's own land in the open country, farmed by the same rules. {} if none.
+func claim_at(c: Vector2i) -> Dictionary:
+	if w.homesteads == null or w.map.in_village(c):
+		return {}
+	for cl in w.homesteads.claims:
+		if str(cl.owner) == w.acting_ref() and str(cl.status) != "abandoned" and Homesteads.rect_of(cl).has_point(c) \
+				and not Homesteads.house_of(cl).grow(1).has_point(c):
+			return cl
+	return {}
+
+
 ## Why this cell cannot be farmed or fenced, "" if it is the player's, open ground.
 func land_refusal(c: Vector2i) -> String:
 	if not w.map.in_village(c):
-		return "Only land you own or lease can be farmed."
+		if claim_at(c).is_empty():
+			return "Only land you own or lease can be farmed: in the open country, your homestead's."
+		if w.map.overworld.is_road(c):
+			return "Not on the road."
+		return ""
 	var p := parcel_at(c)
 	if p.is_empty():
 		return "That is not your land: buy or lease ground from the manor first."
@@ -93,6 +109,20 @@ func land_refusal(c: Vector2i) -> String:
 ## What stands on a cell that must go before it can be tilled or fenced: {kind: tree | plant | boulder |
 ## solid, ref} ({} if nothing). A mature tree's crown over the cell above its trunk does not count.
 func obstacle(c: Vector2i) -> Dictionary:
+	if not w.map.in_village(c) and w.map.overworld != null:       # B25R1-014: the open country's own trees, rocks and flowers
+		var ot: Dictionary = w.map.overworld.tree_at(c)
+		if not ot.is_empty() and Vector2i(int(ot.x), int(ot.y)) == c and str(ot.state) != "cleared":
+			w.sync_tree(ot)
+			return {"kind": "tree", "ref": ot}
+		var od: Dictionary = w.deposit_at(c)
+		if not od.is_empty() and int(od.amount) > 0:
+			return {"kind": "boulder", "ref": od}
+		var fl: Dictionary = w.map.overworld.flower_at(c)
+		if not fl.is_empty():
+			return {"kind": "plant", "ref": fl}
+		if w.map.is_solid_world(c):
+			return {"kind": "solid", "ref": {}}
+		return {}
 	for t in w.trees:
 		if int(t.x) == c.x and int(t.y) == c.y and t.state != "cleared":
 			w.sync_tree(t)
@@ -122,7 +152,7 @@ func obstacle_name(o: Dictionary) -> String:
 ## Why a tree cannot be cleared by the player now, "" if it can: a mature tree is felled first (the axe), a
 ## stump or a growing tree is dug out with an axe, a sapling or a young tree is pulled up by hand.
 func clear_tree_refusal(t: Dictionary, p: PlayerState) -> String:
-	if parcel_at(Vector2i(int(t.x), int(t.y))).is_empty():
+	if parcel_at(Vector2i(int(t.x), int(t.y))).is_empty() and claim_at(Vector2i(int(t.x), int(t.y))).is_empty():
 		return "That is not your land."
 	match str(t.state):
 		"grown":
@@ -145,7 +175,12 @@ func clear_tree(t: Dictionary, p: PlayerState) -> String:
 			return "You are too tired: rest a moment."
 		p.stamina -= cost
 	t.state = "cleared"
-	w.map.set_solid(Vector2i(int(t.x), int(t.y)), false)
+	if t.get("ow", false):
+		t.regrow = 1.0e15
+		t.erase("born")
+		w.map.overworld.changes[Vector2i(int(t.x), int(t.y))] = t       # a tree of the open country: its change is saved
+	else:
+		w.map.set_solid(Vector2i(int(t.x), int(t.y)), false)
 	w.tree_changed.emit(t)
 	w.stat("farm_cleared_tree")
 	return ""
@@ -157,8 +192,10 @@ func clear_plant(pl: Dictionary, actor: PlayerState = null) -> String:
 		return w.mirror("farm.clear_plant", clear_plant.bind(pl), [pl])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, clear_plant.bind(pl))
-	if parcel_at(Vector2i(int(pl.x), int(pl.y))).is_empty():
+	if parcel_at(Vector2i(int(pl.x), int(pl.y))).is_empty() and claim_at(Vector2i(int(pl.x), int(pl.y))).is_empty():
 		return "That is not your land."
+	if pl.get("ow", false):
+		w.map.overworld.note_flower(Vector2i(int(pl.x), int(pl.y)), 1 << 30)    # a wild flower of the open country, grubbed for good
 	pl.state = "cleared"
 	w.tile_changed.emit(Vector2i(int(pl.x), int(pl.y)), World.PLANT_LAYER, -1)
 	w.stat("farm_cleared_plant")

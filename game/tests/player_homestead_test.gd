@@ -145,6 +145,36 @@ func _init() -> void:
 	check(SettlementHoldings.goods(w) == g1, "the goods in the homestead chest are counted (the census unchanged)")
 	var coins_now := w.total_coins() - w.coin_sources
 	check(coins_now == coins_base, "coins conserved through the whole build (%d)" % (coins_now - coins_base))
+	# ---- a field on the homestead's own land: the village's farming rules in the open country (B25R1-014)
+	var field := Vector2i(-1, -1)
+	var land := Homesteads.rect_of(c)
+	for y in range(land.position.y, land.end.y):
+		for x in range(land.position.x, land.end.x):
+			var fc := Vector2i(x, y)
+			if field.x < 0 and w.farm.land_refusal(fc) == "" and w.farm.obstacle(fc).is_empty():
+				field = fc
+	check(field.x >= 0, "the homestead's land beside the house can be farmed (%s)" % field)
+	check(w.farm.land_refusal(Homesteads.door_of(c)) != "" and w.farm.land_refusal(step + Vector2i(40, 0)) != "", "but not the house's ground, nor land that is not the player's")
+	var seeds := 0
+	if field.x >= 0:
+		p.pos = Vector2(field) + Vector2(0.5, 1.5)
+		p.stamina = 100.0
+		check(w.farm.till(field, p) == "" and w.farm.cells.has(field), "the player tills it by hand, with the stamina it costs")
+		for crop_seed in ["wheat_seed", "carrot_seed", "potato_seed"]:
+			if seeds == 0 and _buy(w, crop_seed, 1) == 1:
+				seeds = 1
+				while not w.farm.can_sow_now():
+					w.minutes += 1440.0
+				var crop := Farming.crop_of_seed(crop_seed)
+				check(w.farm.sow(field, crop, p) == "", "sows %s bought from a village seller" % crop)
+				var hours := 0
+				while str(w.farm.cells[field].state) != "ripe" and hours < 24 * 60:
+					w.minutes += 60.0
+					w.farm.hour()
+					hours += 1
+				var got := w.farm.harvest(field, p)
+				check(not got.is_empty(), "it ripens and is harvested into the pack: %s (after %d hours)" % [got, hours])
+		check(seeds == 1, "(a seed was to be had)")
 	# ---- sleep there, save, load, carry on
 	p.pos = Vector2(bed.use) + Vector2(0.5, 0.5)
 	var r := w.player_rest()
@@ -163,6 +193,8 @@ func _init() -> void:
 	var t2 := w2.chests.take(u2, item, 1)
 	check(bool(t2.ok) and w2.player.inv.count(item) >= 1, "and the player takes it back out")
 	check(w2.homesteads.player_claim_refusal(w2.player) != "", "their own land is not claimable again")
+	if field.x >= 0:
+		check(w2.farm.cells.has(field), "the homestead's field is still there after loading")
 	w2.dispose()
 	_end(w)
 
