@@ -7485,6 +7485,60 @@
    ]
   },
   {
+   "id": "B25R1-Q2",
+   "kind": "decision",
+   "title": "Bandit band as a woodland community: move the band to a hidden overworld claim with a household (a), keep the village camp and put only turned outlaws on claims (b), or abstract bandits offscreen (c)?",
+   "description": "Bandit band as a woodland community: move the band to a hidden overworld claim with a household (a), keep the village camp and put only turned outlaws on claims (b), or abstract bandits offscreen (c)?",
+   "source": "homestead worker blocker report 2026-11-03 under B25R1-014/015",
+   "owner_wording": null,
+   "owner_answer": "Option a: the band gets a household and a concealed overworld claim on the shared homestead foundation; lives, builds, farms and trades there; raids are real journeys; fight and pursuit extended to the overworld (also remote danger for homesteads); older saves migrate the band on load; sim baseline re-recorded",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "homestead worker blocker report 2026-11-03 under B25R1-014/015"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-11-03 ~15:40 EST via question: 'Move to wild (Recommended)'"
+    }
+   ]
+  },
+  {
+   "id": "B25R1-Q3",
+   "kind": "decision",
+   "title": "Water for wilderness settlements: wells built from real materials, streams added by an overworld generator change, or both?",
+   "description": "Water for wilderness settlements: wells built from real materials, streams added by an overworld generator change, or both?",
+   "source": "homestead worker blocker report 2026-11-03 under B25R1-014/016",
+   "owner_wording": null,
+   "owner_answer": "Both: streams on new worlds through an overworld generator version bump (old worlds stay loadable per CLAUDE.md section 6, recorded in docs/DECISIONS.md), and wells built from real stone and labour anywhere (old worlds, or no stream near); water becomes a settlement need",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "homestead worker blocker report 2026-11-03 under B25R1-014/016"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-11-03 ~15:40 EST via question: 'Both'"
+    }
+   ]
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
