@@ -36,7 +36,8 @@ func _setup() -> void:
 		w.player.pos = Vector2(south) + Vector2(0.5, 0.5) + (Vector2(st.gate) - Vector2(south)) * (k / 8.0)
 		w.update(0.01)
 	w.player.pos = Vector2(st.slots[0].spot) + Vector2(0.5, 1.5)
-	w.minutes = float(w.day()) * 1440.0 + 11.0 * 60.0
+	w.minutes = 2.0 * 1440.0 + 11.0 * 60.0
+	w.regions.catch_up(2)
 	process_frame.connect(_wait)
 
 
@@ -47,8 +48,16 @@ func _wait() -> void:
 	frames = 0
 	if step == 0:
 		root.get_viewport().get_texture().get_image().save_png(out + "/region_site_%s.png" % where)
-		main.ui.show_map("region")
+		var folk := SettlementFolk.people(main.world, where)
+		for person in folk:
+			if not SettlementFolk.offers(main.world, person).sells.is_empty():
+				main.ui.show_keeper(person)
+				break
 	elif step == 1:
+		root.get_viewport().get_texture().get_image().save_png(out + "/region_keeper_%s.png" % where)
+		main.ui.hide_all()
+		main.ui.show_map("region")
+	elif step == 2:
 		root.get_viewport().get_texture().get_image().save_png(out + "/region_map_%s.png" % where)
 		quit(0)
 	step += 1

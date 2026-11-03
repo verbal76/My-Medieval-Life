@@ -3789,6 +3789,64 @@ func show_desk(t: Dictionary) -> void:
 
 ## The merchant's window. `pick` ({id, mode: "buy"|"sell", price}) opens the quantity control at the top
 ## for that item (PL1-03); Cancel just redraws the window, so it changes nothing.
+## REGION-NAV-01: a settlement's keeper or official met at their door (SettlementFolk): who they are, what their books hold
+## for sale and what their business wants, both at the settlement's market price, and the way to the other settlements
+## (they know their neighbours: asking tells you where they lie, nothing of their trade). Rules in SettlementFolk and Atlas.
+func show_keeper(person: Dictionary) -> void:
+	var w: World = main.world
+	var p := w.player
+	var place: Dictionary = w.map.overworld.site(str(person.settlement))
+	var what := "%s's %s" % [str(place.get("name", "")), "official" if str(person.role) == "official" else str(person.trade)]
+	_open("keeper", "%s, %s  ·  you have %d coins" % [person.name, what, p.coins])
+	var reason := SettlementFolk.absent_reason(w, person)
+	if reason != "":
+		_label(reason, 16)
+		return
+	var of := SettlementFolk.offers(w, person)
+	_label("They sell:", 20, Color(1, 0.85, 0.5))
+	if of.sells.is_empty():
+		_label("Nothing they can spare now.", 15)
+	for e in of.sells:
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 8)
+		var l := _label("%s: %d for sale, %d coin%s each" % [GameData.item_name(str(e.item)), int(e.n), int(e.price), "" if int(e.price) == 1 else "s"], 16)
+		l.get_parent().remove_child(l)
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h.add_child(l)
+		var it := str(e.item)
+		var buy := func() -> void:
+			var why := SettlementFolk.buy_from(w, World.PLAYER, person, it, 1)
+			message(why if why != "" else "You buy a %s from %s." % [GameData.item_name(it).to_lower(), person.name])
+			show_keeper(person)
+		_button("Buy 1", buy, p.coins >= int(e.price) and p.inv.can_add(it), h)
+		panel_body.add_child(h)
+	_label("They want:", 20, Color(1, 0.85, 0.5))
+	if of.wants.is_empty():
+		_label("Nothing they are short of now.", 15)
+	for e in of.wants:
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 8)
+		var l := _label("%s: up to %d, %d coin%s each (you have %d)" % [GameData.item_name(str(e.item)), int(e.n), int(e.price), "" if int(e.price) == 1 else "s", p.inv.count(str(e.item))], 16)
+		l.get_parent().remove_child(l)
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h.add_child(l)
+		var it := str(e.item)
+		var sell := func() -> void:
+			var why := SettlementFolk.sell_to(w, World.PLAYER, person, it, 1)
+			message(why if why != "" else "You sell a %s to %s." % [GameData.item_name(it).to_lower(), person.name])
+			show_keeper(person)
+		_button("Sell 1", sell, p.inv.count(it) > 0, h)
+		panel_body.add_child(h)
+	var ask := func() -> void:
+		var told := []
+		for st in w.map.overworld.sites:
+			if str(st.id) != str(person.settlement) and Atlas.learn_place(w, p, str(st.id), str(person.ref)):
+				told.append(str(st.name))
+		message(("%s tells you the way to %s. They are on your Region map." % [person.name, ", ".join(told)]) if not told.is_empty() else "%s has nothing new to tell you of the roads." % person.name, 5.0)
+		show_keeper(person)
+	_button("Ask about the roads to the other settlements", ask)
+
+
 func show_trade(n: NPC, pick := {}) -> void:
 	var w: World = main.world
 	var p := w.player

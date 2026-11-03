@@ -2406,6 +2406,25 @@ func _sync_countryside() -> void:
 		if node is ActorSprite:
 			(node as ActorSprite).face(e.facing)
 			(node as ActorSprite).play(("carry" if str(e.kind) == "pedlar" else "walk") if e.moving else "idle")
+	if world.map.overworld != null:                  # REGION-NAV-01: the keepers of a settlement near the camera, at their doors
+		for st in world.map.overworld.sites:
+			if (Vector2(st.center) - cam).length() > radius + 40.0:
+				continue
+			for person in SettlementFolk.people(world, str(st.id)):
+				if not SettlementFolk.present(world, person):
+					continue
+				var id := "k%s" % str(person.ref)
+				seen[id] = true
+				var node: Node = country_sprites.get(id)
+				if node == null:
+					var s := ActorSprite.new()
+					s.setup("res://assets/characters/villager_%02d.png" % (str(person.ref).hash() % 48))
+					node = s
+					actors.add_child(node)
+					country_sprites[id] = node
+				(node as Node2D).position = (Vector2(person.spot) + Vector2(0.5, 0.8)) * T
+				(node as ActorSprite).face(Vector2.DOWN)
+				(node as ActorSprite).play("idle")
 	for id in country_sprites.keys():
 		if not seen.has(id):
 			country_sprites[id].queue_free()
@@ -2817,6 +2836,16 @@ func _find_target() -> void:
 				near.append([d, near.size(), {"kind": "shop", "npc": n, "label": "Trade with %s (%s)" % [n.name, world.shop_name(n)]}])
 			else:
 				near.append([d, near.size(), {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}])
+	var settle: Dictionary = world.map.overworld.site_at(Vector2i(p.pos.floor())) if world.map.overworld != null else {}
+	if not settle.is_empty():                        # REGION-NAV-01: a settlement's keepers at their doors (SettlementFolk)
+		for person in SettlementFolk.people(world, str(settle.id)):
+			if not SettlementFolk.present(world, person):
+				continue
+			var at := Vector2(person.spot) + Vector2(0.5, 0.5)
+			var d := at.distance_to(probe)
+			if d < 1.5:
+				near.append([d, near.size(), {"kind": "keeper", "person": person, "label": "Talk to %s (%s)" % [person.name,
+					"official" if str(person.role) == "official" else str(person.trade)]}])
 	for pt in _player_targets(probe):                # MP-INTERACT-01: another player in reach, among the people
 		near.append([pt[0], near.size(), pt[1]])
 	for c in world.containers:
@@ -3563,6 +3592,8 @@ func _use() -> void:
 			approach(target.npc)
 		"shop":
 			ui.show_trade(target.npc)
+		"keeper":
+			ui.show_keeper(target.person)                  # REGION-NAV-01: a settlement's keeper at their door
 		"stall":
 			ui.show_stall(str(target.id))
 		"front_build":
