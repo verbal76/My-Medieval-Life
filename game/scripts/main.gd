@@ -60,6 +60,7 @@ var move_to: Vector2 = Vector2.INF   # tap-to-move destination (tiles)
 var walk_path := PackedVector2Array()  # the route to move_to, cell by cell (the villagers' pathfinder)
 var walk_i := 0
 var walk_goal := Vector2i(-1, -1)      # the cell walk_path leads to
+var travel := TravelDriver.new()       # B25R1-006: walks to the destination chosen on the Region map (scripts/travel_driver.gd)
 var walk_stuck := 0.0                  # seconds without progress along the route
 var talk_to: NPC = null                # a tapped villager the player walks up to, to talk
 var talk_traveller := -1               # B25R1-002: the key of a tapped countryside traveller the player walks up to, to talk
@@ -2575,6 +2576,7 @@ func _player_step(delta: float) -> void:
 	_traveller_step()
 	_talk_player_step()
 	_reach_step()
+	travel.step(self, v, delta)           # B25R1-006: auto-travel sets move_to along its route; any manual input suspends it
 	if v.length() > 0.1:
 		move_to = Vector2.INF
 	elif move_to != Vector2.INF:
