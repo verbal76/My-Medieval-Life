@@ -209,7 +209,12 @@ static func join_clan(w: World, k: NPC) -> void:
 	k.workplace = ""
 	k.clan = "bandit"
 	k.plan.clear()
-	k.pos = Vector2(w.bandit_camp) + Vector2(0.5, 1.5)
+	var band: int = w.wilds.band_household() if w.wilds != null else -1
+	if band >= 0:
+		k.household = band                   # B25R1-Q2 (a): the band's household at its camp in the open country; the child walks there
+		(w.households[band].members as Array).append(k.id)
+	else:
+		k.pos = Vector2(w.bandit_camp) + Vector2(0.5, 1.5)
 	w.stat("orphans_to_clan")
 	if w.recorder != null:
 		w.recorder.clan_joined(k, old)      # REC-19

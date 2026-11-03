@@ -169,6 +169,8 @@
     "journey_waited": ["travel", "journey", "journey", 0, "the traveller waited at the destination for goods (needs: mornings_left)"],
     "journey_designated": ["travel", "journey", "journey", 0, "a resident designated as a seed traveller (SeedTravelers: item, seller, destination)"],
     "well_built": ["wilds", "site", "settlement", 0, "a well dug (place; materials and labour)"],
+    "water_source_selected": ["wilds", "site", "settlement", 0, "a settlement's water source chosen (needs: source stream or well, cell, distance)"],
+    "settlement_attempt_failed": ["wilds", "site", "settlement", 0, "a settlement or a work on it could not be made (reason: no_water, terrain, resources, no_site)"],
     "water_drawn": ["wilds", "consumption", "production", 0, "water drawn from a well or a stream (needs: units)"],
     "water_drunk": ["wilds", "consumption", "production", 0, "water drunk (needs: units)"],
     "band_relocated": ["outlaw", "clan", "outlaw", 0, "the band moved its home (origin, destination: a concealed claim)"],

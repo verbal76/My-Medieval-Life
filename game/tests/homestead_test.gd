@@ -30,6 +30,11 @@ func _days(w: World, k: float) -> void:
 		w.update(0.5)
 
 
+## The claims of the village's homesteaders (the band's camp, B25R1-Q2 (a), is a claim of its own from the founding).
+func _mine(hs: Homesteads) -> Array:
+	return hs.claims.filter(func(c) -> bool: return str(c.get("path", "")) != "band")
+
+
 func _goods(w: World) -> Dictionary:
 	return SettlementHoldings.goods(w)
 
@@ -74,7 +79,7 @@ func _init() -> void:
 		if w.construction.founder_of(h) != null:
 			w.construction._found(h)
 			break
-	check(hs.claims.is_empty() and hs.decider.is_valid() and int(w.life.counts.get("brake_young", 0)) >= 1,
+	check(_mine(hs).is_empty() and hs.decider.is_valid() and int(w.life.counts.get("brake_young", 0)) >= 1,
 		"the first household formations found no homestead: the population brake (2 %% of formations) allows none yet (%s)" % w.life.counts)
 	check(w.households.size() >= hh0, "(household formation goes on as before)")
 	# ---- a young adult sets out (an explicit start, the entry the decision model will use)
@@ -106,7 +111,7 @@ func _init() -> void:
 	var g0 := _goods(w)
 	var st0: Dictionary = w.stats.duplicate()
 	check(hs.begin(h, who, [who]), "the young adult sets out to found a homestead (%s)" % name0)
-	var c: Dictionary = hs.claims[0]
+	var c: Dictionary = _mine(hs)[0]
 	var nh := who.household
 	check(w.households[nh].get("homestead", "") == str(c.id) and int(w.households[nh].founded_from) == h, "they found a household of their own, from the family's (homestead %s)" % c.id)
 	check(who.id == id0 and "%s %s" % [who.name, who.family] == name0 and who.born == born0, "the same person: id, name and birth kept")
@@ -123,7 +128,7 @@ func _init() -> void:
 	for day in 9:
 		for k in 24:
 			_days(w2, 1.0 / 24.0)
-			var cc: Dictionary = w2.homesteads.claims[0]
+			var cc: Dictionary = _mine(w2.homesteads)[0]
 			if not claimed and str(cc.status) == "claimed":
 				claimed = true
 				var who_c: NPC = w2.npc(id0)
@@ -143,9 +148,9 @@ func _init() -> void:
 			w3.load_dict(VillageMap.load_default(), saved)
 			check(w3.load_error == "", "the save loads (%s)" % w3.load_error)
 			var c3: Dictionary = w3.homesteads.claim(str(c.id))
-			check(not c3.is_empty() and str(c3.owner) == str(c.owner) and Homesteads.rect_of(c3) == Homesteads.rect_of(w2.homesteads.claims[0]),
+			check(not c3.is_empty() and str(c3.owner) == str(c.owner) and Homesteads.rect_of(c3) == Homesteads.rect_of(_mine(w2.homesteads)[0]),
 				"the claim comes back with its owner and bounds")
-			check(Dictionary(c3.site.get("need", {})) == Dictionary(w2.homesteads.claims[0].site.get("need", {})), "and what its house still needs %s" % c3.site.get("need", {}))
+			check(Dictionary(c3.site.get("need", {})) == Dictionary(_mine(w2.homesteads)[0].site.get("need", {})), "and what its house still needs %s" % c3.site.get("need", {}))
 			check(w3.map.overworld.homes.size() == w2.map.overworld.homes.size(), "its frame or house stands again in the loaded overworld")
 			check(w3.npcs.size() == w2.npcs.size() and w3.people.size() == w2.people.size(), "nobody is duplicated by the load (%d villagers)" % w3.npcs.size())
 			var tb := w3.total_coins() - w3.coin_sources
@@ -156,7 +161,7 @@ func _init() -> void:
 			w2.dispose()
 			w2 = w3
 			o = w3.map.overworld
-	var cl: Dictionary = w2.homesteads.claims[0]
+	var cl: Dictionary = _mine(w2.homesteads)[0]
 	var me: NPC = w2.npc(id0)
 	check(claimed, "the homesteader reached the land and claimed it")
 	check(built, "the house went up (%s; trips %s)" % [cl.status, w2.homesteads.counts.get("trips", 0)])
@@ -173,7 +178,7 @@ func _init() -> void:
 	check(int(w2.homesteads.counts.get("trips", 0)) >= 2 and me.spent > spent0, "they traded at the village market: bought what they needed (%d coins spent, %d trips)" % [me.spent - spent0, w2.homesteads.counts.get("trips", 0)])
 	check(me.alive and me.household == nh and w2.homesteads.claim_of(me) == cl, "they live on, a member of the homestead household")
 	check(not w2.map.in_village(me.cell()) or w2.homesteads.trips.has(str(me.id)), "they live out in the country (at %s)" % me.cell())
-	check(w2.homesteads.claims.size() == 1 and w2.homesteads.claims_of(str(cl.owner)).size() == 1, "one claim, one owner: no duplicate claim")
+	check(_mine(w2.homesteads).size() == 1 and w2.homesteads.claims_of(str(cl.owner)).size() == 1, "one claim, one owner: no duplicate claim")
 	check(w2.people.size() >= people0 and w2.people.has(id0), "the register still holds them (%d people)" % w2.people.size())
 	var ids := {}
 	var dup := false

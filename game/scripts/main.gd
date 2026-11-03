@@ -2398,7 +2398,8 @@ func _adopt_country_animals(radius: float) -> void:
 		if a == null or not a.alive:
 			world.country_taken[key] = -1               # hunted, or dead some other way: gone from the countryside for good
 			continue
-		if world.nearest_player_distance(a.pos) > radius + COUNTRY_ADOPT and a.anger == "" and a.hp >= float(a.spec().hp) - 0.01:
+		if world.nearest_player_distance(a.pos) > radius + COUNTRY_ADOPT and a.anger == "" and a.hp >= float(a.spec().hp) - 0.01 \
+				and not (world.wilds != null and Wilds.near(world.wilds.claim_centers(), a.pos, float(Wilds.cfg().country_radius) * 2.0)):     # (B25R1-014: kept by a lived-in claim)
 			world.fauna.animals.erase(a)                # unharmed and out of sight: back to the countryside's ambient life
 			world.country_taken.erase(key)
 	if world.player_level != 0 or not world.player.alive:
@@ -2930,6 +2931,12 @@ func _find_target() -> void:
 				near.append([d, near.size(), {"kind": "npc", "npc": n, "label": "%s is asleep" % _who(n)}])
 			elif world.at_post(n):
 				near.append([d, near.size(), {"kind": "shop", "npc": n, "label": "Trade with %s (%s)" % [n.name, world.shop_name(n)]}])
+			elif world.wilds != null and n.role == "bandit" and n.target == -1 and world.homesteads.remote(n) and str(world.homesteads.claim_of(n).get("faction", "")) == "outlaw":
+				var no: String = world.wilds.player_trade_refusal(p, n)        # B25R1-014: the outlaws' members-only market at their camp
+				if no == "":
+					near.append([d, near.size(), {"kind": "shop", "npc": n, "label": "Trade with %s (the outlaws' camp)" % n.name}])
+				else:
+					near.append([d, near.size(), {"kind": "info", "label": "%s eyes you warily" % n.name, "text": no}])
 			else:
 				near.append([d, near.size(), {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}])
 	var settle: Dictionary = world.map.overworld.site_at(Vector2i(p.pos.floor())) if world.map.overworld != null else {}

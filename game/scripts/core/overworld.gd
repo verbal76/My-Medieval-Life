@@ -940,6 +940,18 @@ func _cell_of(chunk: Chunk, c: Vector2i) -> int:
 	return (c.y - chunk.cy * CHUNK) * CHUNK + (c.x - chunk.cx * CHUNK)
 
 
+## B25R1-Q3 (owner: water from streams and wells): whether `cell` is open water (a stream). STUB on wip/b25r1-homestead:
+## finds no water. The water worker (wip/b25r1-water) replaces is_water and nearest_water with the streams' own; the lead
+## resolves the merge. Homesteads and the band read water only through these two (Wilds.water_access).
+func is_water(cell: Vector2i) -> bool:
+	return false
+
+
+## The nearest water cell to `cell` within `radius` tiles, Vector2i(1 << 30, 0) when there is none. STUB (see is_water).
+func nearest_water(cell: Vector2i, radius: int) -> Vector2i:
+	return Vector2i(1 << 30, 0)
+
+
 func is_solid(c: Vector2i) -> bool:
 	if village.has_point(c):
 		return false

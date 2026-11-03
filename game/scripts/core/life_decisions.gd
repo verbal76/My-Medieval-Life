@@ -425,6 +425,14 @@ func drives(n: NPC) -> bool:
 func plan(n: NPC) -> void:
 	var b: NPCBrain = w.brain
 	n.doing = "running to the bandits' camp"
+	var c: Dictionary = w.wilds.band_claim() if w.wilds != null else {}
+	if not c.is_empty():
+		var path: PackedVector2Array = w.homesteads._path_home(n, c)     # B25R1-Q2 (a): the road out to the camp in the open country
+		if not path.is_empty():
+			n.path = path
+			n.path_i = 0
+			n.plan = [{"k": "go", "to": Vector2i(path[path.size() - 1]), "pathed": true}, b.doit("life", {"step": "band"})]
+			return
 	n.plan = [b.go(b.wander_cell(w.bandit_camp, 2)), b.doit("life", {"step": "band"})]
 
 
@@ -496,6 +504,10 @@ func _join_band(n: NPC, fighter: bool) -> void:
 	if old >= 0:
 		(w.households[old].members as Array).erase(n.id)
 	n.household = -1
+	var band: int = w.wilds.band_household() if w.wilds != null else -1
+	if band >= 0:
+		n.household = band                   # B25R1-Q2 (a): a member of the band's household at its camp
+		(w.households[band].members as Array).append(n.id)
 	n.home = ""
 	n.workplace = ""
 	n.job = ""
@@ -510,6 +522,16 @@ func _join_band(n: NPC, fighter: bool) -> void:
 		w.property.household_ended(old)
 	elif old >= 0:
 		w.brain.evaluate_household(old)
+
+
+## A leaving bandit whose household is an outlaw homestead of its own with family in it (not the band's camp) stays on that land.
+func _stays_on_land(n: NPC) -> bool:
+	if n.household < 0 or n.household >= w.households.size() or w.households[n.household].get("band", false) or not w.households[n.household].has("homestead"):
+		return false
+	for o: NPC in w.brain._members(n.household):
+		if o != n and (o.id == n.partner or o.mother == n.id or o.father == n.id):
+			return true
+	return false
 
 
 ## Decision 4: each adult bandit, on their seasonal turn, weighs leaving the band for ordinary life.
@@ -553,8 +575,29 @@ func leave_band(n: NPC) -> String:
 	n.role = "adult"
 	n.target = -1
 	n.plan.clear()
-	var tiers := Guardianship.candidates(w, n)
 	var tier := ""
+	var band_h := n.household
+	var stays := _stays_on_land(n)
+	if stays:
+		tier = "land"                        # their household on an outlaw claim lives on there, lawful once nobody of it raids
+		_count("left_band_to_land")
+		_rec("band_left", {"person": n.id, "to": tier, "household": World.hh_ref(n.household)})
+		_rec("bandit_reintegrated", {"person": n.id, "action": "lawful_homestead", "tier": tier, "household": World.hh_ref(n.household)})
+		_hist("left_band")
+		_count("left_band")
+		JudgmentLive.on_news(w, "left_band", "npc:%d" % n.id, [], n.pos)
+		w.note("%s %s gives up the outlaw life and stays on the land." % [n.name, n.family])
+		if w.homesteads != null:
+			w.homesteads._allegiance(w.homesteads.claim_of(n), w.brain._members(n.household))
+		if not Outlaws.band_alive(w):
+			Outlaws.on_death(w, n)
+		return tier
+	if band_h >= 0 and band_h < w.households.size() and w.households[band_h].has("homestead"):
+		(w.households[band_h].members as Array).erase(n.id)
+		n.household = -1                     # (out of the camp's household: Guardianship's order or a household of their own below)
+		if w.homesteads != null:
+			w.homesteads.returning[str(n.id)] = true     # they walk back from the open country
+	var tiers := Guardianship.candidates(w, n)
 	for t in ["parent", "grandparent", "relative", "villager"]:
 		if not (tiers.get(t, []) as Array).is_empty():
 			Guardianship.move(w, n, int(tiers[t][0]), "former bandit")

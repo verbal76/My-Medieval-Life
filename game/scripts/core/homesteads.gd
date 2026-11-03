@@ -103,7 +103,7 @@ func _sustain(c: Dictionary, h: int, members: Array) -> void:
 	for o: NPC in members:
 		coins += o.coins
 	_rec("homestead_sustain", {"claim": str(c.id), "household": World.hh_ref(h), "food_units": food, "food_days": snappedf(w.brain.household_food_days(h), 0.1),
-		"water": 0, "coins": coins, "employed": false, "outcome": "failed" if int(c.get("poor_days", 0)) > 0 else "ok"})
+		"water": int(c.get("water", 0)), "coins": coins, "employed": false, "outcome": "failed" if int(c.get("poor_days", 0)) > 0 or int(c.get("dry_days", 0)) > 0 else "ok"})
 	var since := int(c.get("built_day", c.get("claimed_day", c.day)))
 	if w.day() > since and (w.day() - since) % Life.year_days() == 0:
 		_rec("homestead_year", {"claim": str(c.id), "household": World.hh_ref(h), "years": (w.day() - since) / Life.year_days(), "people": members.size()})
@@ -126,8 +126,12 @@ func recorder_rows() -> Array:
 				coins += o.coins
 			for f in NPCBrain.EDIBLE:
 				food += (w.households[h].pantry as Inventory).count(f)
-		out.append({"id": str(c.id), "population": pop, "households": 1 if pop > 0 else 0, "food_units": food, "water": 0,
-			"stores": (c.store as Inventory).items.duplicate(), "coins": coins, "livestock": 0, "path": str(c.get("path", "player" if World.is_player_ref(ref) else "")),
+		var herd := 0
+		var pen: Dictionary = w.wilds.pen_of_claim(c) if w.wilds != null else {}
+		if not pen.is_empty():
+			herd = w.fauna.count(str(pen.id), str(pen.kind))
+		out.append({"id": str(c.id), "population": pop, "households": 1 if pop > 0 else 0, "food_units": food, "water": int(c.get("water", 0)),
+			"stores": (c.store as Inventory).items.duplicate(), "coins": coins, "livestock": herd, "path": str(c.get("path", "player" if World.is_player_ref(ref) else "")),
 			"faction": str(c.get("faction", "lawful")), "status": str(c.status)})
 	return out
 
@@ -225,9 +229,14 @@ func trees_on(house: Rect2i) -> Array:
 ## building ground); a mature tree must be felled first (its logs are the feller's), then its stump goes. Returns the mature
 ## trees still standing there.
 func clear_ground(c: Dictionary) -> Array:
+	return clear_rect(house_of(c))
+
+
+## clear_ground's rule for any building's ground (Wilds: a workshop beside the house).
+func clear_rect(rect: Rect2i) -> Array:
 	var o: Overworld = w.map.overworld
 	var left := []
-	for cell: Vector2i in trees_on(house_of(c)):
+	for cell: Vector2i in trees_on(rect):
 		var t := o.tree_at(cell)
 		if t.is_empty() or Vector2i(int(t.x), int(t.y)) != cell:
 			t = o.base_tree(cell) if not o.changes.has(cell) else o.changes[cell]
@@ -377,6 +386,9 @@ func goods() -> Dictionary:
 	var out := {}
 	for c in claims:
 		var got := delivered(c)
+		var wd := Wilds.work_delivered(c)
+		for id in wd:
+			got[id] = int(got.get(id, 0)) + int(wd[id])
 		for id in got:
 			out[id] = int(out.get(id, 0)) + int(got[id])
 		for id in (c.store as Inventory).items:
@@ -397,6 +409,8 @@ func _sync_overworld() -> void:
 			var hr := house_of(c)
 			list.append({"id": str(c.id), "stamp": "", "rect": hr, "door": door_of(c),
 				"frame": Vector2i(hr.position.x + hr.size.x / 2, hr.position.y + hr.size.y - 2), "tile": int(w.map.data.tiles.frame)})
+		if w.wilds != null:
+			list.append_array(w.wilds.overworld_entries(c))
 	o.homes = list
 	o.homes_version += 1
 
@@ -502,6 +516,9 @@ func player_targets(p: PlayerState, probe: Vector2, facing_up: bool) -> Array:
 					("; %d trees to fell on its ground" % standing) if standing > 0 else ""]})
 			elif d < 1.6:
 				out.append({"d": d, "kind": "info", "label": "%s homestead frame" % _owner_name(c), "text": "Someone is building a house here: it still needs %s." % need_text(c)})
+				if not (c.members as Array).is_empty() and str(c.status) != "abandoned":
+					out.append({"d": d + 0.05, "kind": "chest", "id": "homestead:" + str(c.id), "label": "Open the stores at the %s camp (theft)" % _owner_name(c).to_lower().trim_prefix("the "),
+						"theft": true})        # B25R1-014: what the camp's people really keep there (their household's stores)
 			continue
 		if str(c.get("building", "")) == "":
 			continue
@@ -638,6 +655,8 @@ func gate(h: int, leaving: Array) -> String:
 	var cf := cfg()
 	var setting_out := 0
 	for c in claims:
+		if str(c.get("path", "")) == "band":
+			continue                                    # (the band's camp is no household setting out from the village)
 		if str(c.status) == "intended" or (str(c.status) == "claimed" and not World.is_player_ref(str(c.owner))):
 			setting_out += 1
 	if setting_out >= int(cf.max_starting):
@@ -738,6 +757,7 @@ func _go(h: int, who: NPC, leaving: Array, path: String, h2 := -1) -> bool:
 	c.why = str(site.why)
 	c.path = path
 	c.origin = h
+	c.pending_water = site.get("water", {})
 	var nh := {"id": nid, "family": str(hh.family), "home": "", "members": [], "pantry": Inventory.new(), "founded_from": h,
 		"founded_day": w.day(), "homestead": str(c.id)}
 	w.households.append(nh)
@@ -809,10 +829,21 @@ func _road(sid: String) -> PackedVector2Array:
 
 ## Where `n` would make a homestead: along the roads from the village's south gate to the settlements, beside the road,
 ## on eligible land, the best by what the land offers their trade (directive section 5). {lay, anchor, why} or {}.
-func find_site(n: NPC) -> Dictionary:
+## `outlaw` (the band's camp, Wilds.found_band): off the road in cover (outlaw_offset cells at least), the bandits' camp no
+## danger to it. Every site must have water (Wilds.water_access, B25R1-Q3: a stream in reach, else a well the household can pay
+## for or win the materials of; `coins` the purse it has, -1 the founder's household's): one without is refused, recorded.
+func find_site(n: NPC, outlaw := false, coins := -1) -> Dictionary:
 	var o: Overworld = w.map.overworld
 	var cf := cfg()
 	var trade := n.job
+	if coins < 0:
+		coins = w.property.purse(World.hh_ref(n.household)) if n.household >= 0 else n.coins
+	var tools := []
+	for t in ["axe", "pickaxe"]:
+		if n.inv.has(t):
+			tools.append(t)
+	var min_off := int(cf.outlaw_offset) if outlaw else 8
+	var dry := 0
 	var cands := []
 	for st in o.sites:
 		var sid := str(st.id)
@@ -825,8 +856,8 @@ func find_site(n: NPC) -> Dictionary:
 			var reach := int(cf.reach)
 			for dy in range(-reach, reach + 1, int(cf.grid)):
 				for dx in range(-reach, reach + 1, int(cf.grid)):
-					if absi(dx) < 8 and absi(dy) < 8:
-						continue                            # on the road itself
+					if absi(dx) < min_off and absi(dy) < min_off:
+						continue                            # on the road itself (an outlaw camp: well off it)
 					var lay := _layout(a + Vector2i(dx, dy) + Vector2i(0, 5))     # the house's door step is five rows below its middle
 					cands.append({"lay": lay, "anchor": {"sid": sid, "i": i}})
 			i += int(cf.road_step)
@@ -840,7 +871,12 @@ func find_site(n: NPC) -> Dictionary:
 		seen[k] = true
 		if refusal(land) != "":
 			continue
-		var sc := _score(cd, trade, n)
+		var acc: Dictionary = w.wilds.water_access(cd.lay, coins, tools) if w.wilds != null else {"source": "none"}
+		if acc.is_empty():
+			dry += 1
+			continue                                    # no water to be had there (integration directive s.6)
+		cd.water = acc
+		var sc := _score(cd, trade, n, outlaw)
 		scored.append([-float(sc.score), land.position.y, land.position.x, cd, sc])
 	scored.sort_custom(func(a: Array, b: Array) -> bool:
 		if a[0] != b[0]:
@@ -855,13 +891,15 @@ func find_site(n: NPC) -> Dictionary:
 		var to: Vector2i = cd.lay.house.position + Vector2i(int(w.map.data.stamps[STAMP].door[0]), int(w.map.data.stamps[STAMP].door[1]) + 1)
 		if w.map.find_path_world(from, to).is_empty():
 			continue
-		return {"lay": cd.lay, "anchor": cd.anchor, "why": _why_text(e[4], str(cd.anchor.sid))}
+		return {"lay": cd.lay, "anchor": cd.anchor, "why": _why_text(e[4], str(cd.anchor.sid)), "water": cd.get("water", {})}
+	if dry > 0:
+		_rec("settlement_attempt_failed", {"person": n.id, "reason": "no_water", "sites_without_water": dry, "path": "outlaw" if outlaw else "lawful"})
 	return {}
 
 
 ## What the land round a candidate offers: grown trees (timber), boulders (stone), open ground (fields to come, grazing),
 ## the road's distance to the village (the market), and danger (dense woods for wild animals; the bandits' camp near).
-func _score(cd: Dictionary, trade: String, n: NPC) -> Dictionary:
+func _score(cd: Dictionary, trade: String, n: NPC, outlaw := false) -> Dictionary:
 	var o: Overworld = w.map.overworld
 	var cf := cfg()
 	var c: Vector2i = (cd.lay.house as Rect2i).get_center()
@@ -897,9 +935,13 @@ func _score(cd: Dictionary, trade: String, n: NPC) -> Dictionary:
 	var o_share := float(open) / cells
 	var market := float(int(cd.anchor.i)) / float(maxi(1, int(cf.road_to)))
 	var camp := Vector2(c).distance_to(Vector2(w.bandit_camp))
-	var danger := maxf(0.0, t_share - 0.35) * 2.0 + (0.5 if camp < 70.0 else 0.0)
+	var danger := maxf(0.0, t_share - 0.35) * 2.0 + (0.5 if camp < 70.0 and not outlaw else 0.0)
+	var wat: Dictionary = cd.get("water", {})
+	var water := 0.3 if str(wat.get("source", "")) == "stream" else 0.0      # a stream near beats digging a well
 	var score := float(wt.timber) * minf(t_share, 0.4) + float(wt.stone) * minf(s_share, 0.6) + float(wt.open) * o_share * 0.5 \
-		- float(cf.market_weight) * market - float(cf.danger_weight) * danger
+		- float(cf.market_weight) * market - float(cf.danger_weight) * danger + water
+	if outlaw:
+		score = t_share + 0.3 * float(int(cd.anchor.i) <= int(cf.outlaw_road_to)) - 0.5 * market + water     # cover, and the village within a night's walk
 	return {"score": score, "timber": timber, "stone": stone, "open": open, "market": int(cd.anchor.i), "danger": danger}
 
 
@@ -956,7 +998,13 @@ func dawn() -> void:
 		var unit: Array = w.cheapest_food_unit()
 		var broke: bool = w.brain.household_food_days(h) < 0.5 and (int(unit[0]) <= 0 or cash < int(unit[0]))
 		c.poor_days = int(c.poor_days) + 1 if broke else 0
-		if int(c.poor_days) >= int(cfg().starve_days):
+		if str(c.get("faction", "lawful")) == "outlaw":
+			continue                                    # outlaws do not give up and walk back to the village: they go hungry (WDR-022)
+		if int(c.get("dry_days", 0)) >= int(Wilds.cfg().water_fail_days):
+			_fail(c, "had no water")
+		elif int(c.poor_days) >= int(cfg().starve_days) and w.wilds != null and w.wilds.weigh_turn(c, h):
+			continue                                    # they stay on the land, outside the law
+		elif int(c.poor_days) >= int(cfg().starve_days):
 			_fail(c, "ran out of food and money")
 		elif str(c.status) != "built" and w.day() - int(c.day) > int(cfg().give_up_days):
 			_fail(c, "could not finish the house")
@@ -972,6 +1020,10 @@ func _fail(c: Dictionary, why: String) -> void:
 		var pantry: Inventory = w.households[h].pantry
 		for id in back:
 			pantry.add(id, int(back[id]))
+	if h >= 0 and w.wilds != null:
+		var wb := w.wilds.strip_works(c, w.households[h].pantry)
+		for id in wb:
+			back[id] = int(back.get(id, 0)) + int(wb[id])
 	if not c.site.is_empty() and not bool(c.site.done):
 		c.site = {}
 	c.status = "abandoned"
@@ -1008,6 +1060,13 @@ func household_ended(h: int) -> void:
 func _abandon(c: Dictionary, why: String) -> void:
 	if str(c.status) == "abandoned":
 		return
+	var hx := World.ref_id(str(c.owner))
+	if w.wilds != null and not Wilds.work_delivered(c).is_empty():
+		var into: Inventory = w.households[hx].pantry if hx >= 0 and hx < w.households.size() and not w.households[hx].get("ended", false) else w.granary
+		var wb := w.wilds.strip_works(c, into)
+		if into == w.granary:
+			for id in wb:
+				w.stat("escheat_items", float(wb[id]))
 	if not c.site.is_empty() and not bool(c.site.done):
 		var h := World.ref_id(str(c.owner))
 		var back := delivered(c)
@@ -1063,6 +1122,8 @@ func plan(n: NPC) -> void:
 		return
 	var b: NPCBrain = w.brain
 	var hr := w.hour()
+	if w.wilds != null and w.wilds.plan_first(n, c):
+		return                                          # a raid's legs (the outlaws' own)
 	var trip: Dictionary = trips.get(str(n.id), {})
 	if not trip.is_empty():
 		_plan_trip(n, c, trip)
@@ -1090,6 +1151,8 @@ func plan(n: NPC) -> void:
 	if hr >= NPCBrain.WORK_START and hr < 12.0 and _wants_trip(n, c):
 		_start_trip(n, c)
 		return
+	if hr >= NPCBrain.WORK_START and hr < NPCBrain.WORK_END and w.wilds != null and w.wilds.plan_work(n, c):
+		return                                          # water, the claim's works, its animals, its workshop
 	if hr >= NPCBrain.WORK_START and hr < NPCBrain.WORK_END and _plan_livelihood(n, c):
 		return
 	_idle(n, home, "about the homestead")
@@ -1457,6 +1520,8 @@ func _errand(n: NPC, c: Dictionary, trip: Dictionary) -> bool:
 			n.doing = "buying firewood"
 			n.plan = [b.go(b._workplace_cell(s)), b.doit("buy_from", {"vendor": s.id, "item": "log", "qty": b.buy_qty(n, s, "log", 2, true), "pantry": true})]
 			return true
+	if str(c.status) == "built" and w.wilds != null and w.wilds.errand(n, c, trip):
+		return true                                     # animals for the pen, what the claim's open work needs
 	for id in ["plank", "building_block", "log", "stone", "iron_bar"]:
 		if not need.has(id) or tried.has("buy_" + id):
 			continue
@@ -1664,7 +1729,7 @@ func act(n: NPC, a: Dictionary) -> bool:
 				return false
 			deliver(c, n.inv, World.npc_ref(n.id))
 			return true
-	return false
+	return w.wilds.act(n, c, step, a) if w.wilds != null else false
 
 
 ## At home: the food carried goes into the household's pantry (the family chest) and logs for the hearth up to keep_logs; the
@@ -1710,6 +1775,9 @@ func _arrive(n: NPC, c: Dictionary) -> void:
 	_mark_site(c)
 	clear_ground(c)
 	c.stage = "build"
+	if w.wilds != null:
+		w.wilds.choose_water(c, c.get("pending_water", {}))
+	c.erase("pending_water")
 	_count("claimed")
 	_rec("homestead_claimed", {"claim": str(c.id), "owner": str(c.owner), "by": n.id, "land": [c.x, c.y, c.w, c.h]})
 	w.note("%s %s claims a piece of open country and marks out a house on it." % [n.name, n.family])

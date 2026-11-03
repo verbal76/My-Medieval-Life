@@ -131,7 +131,7 @@ func _init() -> void:
 		w.kill(b, "test")
 	var name0 := "%s %s" % [adult.name, adult.family]
 	var ans2 := life._recruit_answer(adult)
-	check(ans2 == "accept" and adult.role == "bandit" and adult.household == -1, "D: a band of two takes the grown recruit in (%s)" % ans2)
+	check(ans2 == "accept" and adult.role == "bandit" and adult.household == w.wilds.band_household(), "D: a band of two takes the grown recruit in (%s)" % ans2)
 	check(adult.inv.items == inv0 and adult.coins == coins0 and "%s %s" % [adult.name, adult.family] == name0, "D: nothing given: the same pack, purse and name")
 	var kid := _child(w, 12.0, 16.0)
 	if kid != null:
@@ -166,14 +166,15 @@ func _init() -> void:
 	check(int(w2.life.counts.get("left_band", 0)) == int(life.counts.get("left_band", 0)) and w2.life.runaways.size() == life.runaways.size(), "E: the records of who left are saved")
 	# ---- F: a claim's identity through faction change
 	var c := {}
-	if not w.homesteads.claims.is_empty():
-		c = w.homesteads.claims[0]
+	var lawful := w.homesteads.claims.filter(func(x) -> bool: return str(x.get("path", "")) != "band")
+	if not lawful.is_empty():
+		c = lawful[0]
 	else:
 		var p := w.player
 		var site := w.homesteads.find_site(w.npcs[10])
 		p.pos = Vector2(Vector2i(site.lay.door) + Vector2i(0, 1)) + Vector2(0.5, 0.5)
 		w.homesteads.player_claim(p)
-		c = w.homesteads.claims[0]
+		c = w.homesteads.claims[-1]
 	var id_c := str(c.id)
 	var land := Homesteads.rect_of(c)
 	check(w.homesteads.set_faction(c, "outlaw", true, "test") and str(c.faction) == "outlaw" and str(c.id) == id_c and Homesteads.rect_of(c) == land,

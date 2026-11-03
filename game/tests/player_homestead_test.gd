@@ -59,7 +59,7 @@ func _init() -> void:
 	var coins_base := w.total_coins() - w.coin_sources
 	var goods0 := SettlementHoldings.goods(w)
 	check(hs.player_claim(p) == "", "the player claims the land and marks out a house")
-	var c: Dictionary = hs.claims[0]
+	var c: Dictionary = hs.claims[-1]
 	check(str(c.owner) == w.player_ref(p) and str(c.status) == "claimed" and (c.known as Array).has(p.pid), "the claim is the player's, recorded and known to them")
 	check(hs.player_claim_refusal(p) != "", "one unfinished homestead at a time (%s)" % hs.player_claim_refusal(p))
 	check(hs.refusal(Homesteads.rect_of(c)).begins_with("Someone has claimed"), "nobody else can claim the same land")

@@ -1261,7 +1261,7 @@ func on_death(n: NPC) -> void:
 func _hand_over_pens(n: NPC) -> void:
 	for id in w.fauna.pens:
 		var pen: Dictionary = w.fauna.pens[id]
-		if w.tenant_of(pen) != World.npc_ref(n.id):
+		if w.tenant_of(pen) != World.npc_ref(n.id) or pen.has("claim"):
 			continue
 		var next: NPC = null
 		for o: NPC in w.npcs:
@@ -1280,8 +1280,8 @@ func relet_pens() -> void:
 	ids.sort()
 	for id in ids:
 		var pen: Dictionary = w.fauna.pens[id]
-		if w.pen_keeper(pen) != null:
-			continue
+		if w.pen_keeper(pen) != null or pen.has("claim"):
+			continue                                   # (a claim's pen is its household's: Wilds)
 		for o: NPC in w.npcs:
 			if o.alive and o.job == "farmer" and _keeper_pen(o).is_empty():
 				w.set_tenant(pen, World.npc_ref(o.id))
@@ -1989,6 +1989,20 @@ func _loot_to_recover(n: NPC) -> Dictionary:
 	return best
 
 
+## B25R1-Q2 (a): where a bandit's camp is for its AI: the band's own camp in the open country, or, for a raider in the village
+## by night, the old camp ground by the village it keeps to (Wilds.camp_for). Without the wilds, the map's camp as before.
+func camp_of(n: NPC) -> Vector2i:
+	return w.wilds.camp_for(n) if w.wilds != null else w.bandit_camp
+
+
+## B25R1-014: whether `c` is solid for a fighter on the surface: the village's map inside it, the overworld's ground outside
+## (a chase in the open country is not stopped by the village map's edge).
+func _fight_solid(n: NPC, c: Vector2i) -> bool:
+	if n.depth == 0 and w.map.overworld != null:
+		return w.map.is_solid_world(c)
+	return w.map.is_solid(c)
+
+
 func _bandit(n: NPC, h: float) -> void:
 	# SIM-F4 (owner 2026-10-24, "heal at camp"): a badly hurt bandit rests at the camp as a hurt villager rests at home
 	# (below rest.seek_below of their health, for rest.day_minutes, restored by World.rest_recover, PAR-03)
@@ -1996,7 +2010,7 @@ func _bandit(n: NPC, h: float) -> void:
 	if n.hp < n.max_hp * float(GameData.b("rest").seek_below):
 		var mins := float(GameData.b("rest").day_minutes)
 		n.doing = "resting at the camp"
-		n.plan = [go(wander_cell(w.bandit_camp, 2)), work(mins, "rest_end", {"min": mins, "morning": false}, "sleep")]
+		n.plan = [go(wander_cell(camp_of(n), 2)), work(mins, "rest_end", {"min": mins, "morning": false}, "sleep")]
 		return
 	var night := h >= 21.0 or h < 4.5
 	if night:
@@ -2018,7 +2032,7 @@ func _bandit(n: NPC, h: float) -> void:
 	if not night and h >= WORK_START and h < WORK_END and _bandit_market(n):
 		return
 	n.doing = "lurking at the camp"
-	n.plan = [go(wander_cell(w.bandit_camp, 3)), work(w.rng.randf_range(30, 90), "poach", {}, "idle")]
+	n.plan = [go(wander_cell(camp_of(n), 3)), work(w.rng.randf_range(30, 90), "poach", {}, "idle")]
 
 
 ## X20-BANDIT-AI: whether `o` is fighting a bandit (its target is one).
@@ -2118,14 +2132,14 @@ func band_eat(n: NPC) -> bool:
 func _clan_child(n: NPC, h: float) -> void:
 	if n.hunger < float(GameData.b("eat_below")):
 		n.doing = "eating at the bandits' camp"
-		n.plan = [go(wander_cell(w.bandit_camp, 2)), work(15, "camp_meal", {}, "idle")]
+		n.plan = [go(wander_cell(camp_of(n), 2)), work(15, "camp_meal", {}, "idle")]
 		return
 	if h >= SLEEP or h < WAKE:
 		n.doing = "sleeping at the bandits' camp"
-		n.plan = [go(wander_cell(w.bandit_camp, 2)), work(120, "rest_end", {"min": 120.0}, "sleep")]
+		n.plan = [go(wander_cell(camp_of(n), 2)), work(120, "rest_end", {"min": 120.0}, "sleep")]
 		return
 	n.doing = "playing about the bandits' camp"
-	n.plan = [go(wander_cell(w.bandit_camp, 4), 0.9), work(w.rng.randf_range(20, 60), "", {}, "idle")]
+	n.plan = [go(wander_cell(camp_of(n), 4), 0.9), work(w.rng.randf_range(20, 60), "", {}, "idle")]
 
 
 func _prey_for(n: NPC):
@@ -2143,7 +2157,7 @@ func _prey_for(n: NPC):
 			continue                                   # X20-BANDIT-AI: robbed by this bandit lately: another is picked
 		if _guard_near(o.pos, 14.0):
 			continue
-		var d: float = o.pos.distance_to(Vector2(w.bandit_camp))
+		var d: float = o.pos.distance_to(Vector2(camp_of(n)))
 		if d < bd:
 			bd = d
 			best = o
@@ -3148,7 +3162,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"poach":
 			if n.hunger < 60.0 and not band_eat(n) and w.rng.randf() < 0.25:
-				var game: Animal = w.fauna.nearest_game(Vector2(w.bandit_camp), 30.0)
+				var game: Animal = w.fauna.nearest_game(Vector2(camp_of(n)), 30.0)
 				if game != null:
 					w.stat("poached_" + game.species)
 					var bag: Inventory = w.fauna.kill(game)          # carried to the camp, then cooked and eaten
@@ -3235,7 +3249,7 @@ func fight(n: NPC, dt: float) -> void:
 		n.target = -1
 		n.plan.clear()
 		if n.role == "bandit":
-			n.plan = [go(w.bandit_camp, 1.2)]
+			n.plan = [go(camp_of(n), 1.2)]
 			if not tdead and JudgmentBandit.on(w):
 				bandit_retreat[n.id] = w.minutes          # X20-BANDIT-AI: below the survival line it falls back, and holds to it
 				JudgmentBandit.fall_back(w, n, JudgmentBandit.perceive(w, n).attackers)     # ... away from them when the camp itself is where they are
@@ -3257,11 +3271,15 @@ func fight(n: NPC, dt: float) -> void:
 		n.anim = "walk"
 		# S3 (REPAIR_AUDIT): a guard chasing a player goes round a wall by the village's path-finding instead of giving
 		# up at it. Only this case: bandits, and guards chasing bandits, keep the SIM-F4 give-up below unchanged.
-		var pursuit := n.job == "guard" and Life.is_player_id(n.target)
+		# B25R1-014: any chase in the open country (either end outside the village) goes round what is in the way by the world's
+		# bounded path-finder (VillageMap.find_path_world: a box of at most WORLD_PATH_CELLS), so a fight at a homestead or the
+		# band's camp is fought on the world's own ground
+		var outside := n.depth == 0 and w.map.overworld != null and (not w.map.in_village(n.cell()) or not w.map.in_village(Vector2i(tpos.floor())))
+		var pursuit := (n.job == "guard" and Life.is_player_id(n.target)) or outside
 		if pursuit and n.chase_route and _follow_route(n, tpos, dt):
 			return
 		n.pos += d.normalized() * minf(d.length() - 0.9, float(GameData.b("walk_tiles_per_second")) * 1.3 * dt)
-		if w.map.is_solid(n.cell()):
+		if _fight_solid(n, n.cell()):
 			n.pos -= d.normalized() * float(GameData.b("walk_tiles_per_second")) * 1.3 * dt
 			if pursuit and _route_to(n, tpos):
 				return
@@ -3275,7 +3293,7 @@ func fight(n: NPC, dt: float) -> void:
 			n.target = -1
 			n.plan.clear()
 			if n.role == "bandit":
-				n.plan = [go(w.bandit_camp, 1.2)]
+				n.plan = [go(camp_of(n), 1.2)]
 		return
 	if n.attack_cd > 0.0:
 		return
@@ -3321,7 +3339,7 @@ func fight(n: NPC, dt: float) -> void:
 		if w.recorder != null:
 			w.recorder.chase_end(n, "robbed")      # SIM-GATE-01
 		n.target = -1
-		n.plan = [go(w.bandit_camp, 1.2)]
+		n.plan = [go(camp_of(n), 1.2)]
 		return
 	var dmg := w.npc_blow(n)
 	Skills.gain(n, "combat", 4)                        # a blow at a person: the player's 4 xp (PAR-01)
@@ -3441,7 +3459,7 @@ func pursue_arrived(n: NPC) -> void:
 ## following it. False when there is no way round: the chase is then given up as before.
 func _route_to(n: NPC, tpos: Vector2) -> bool:
 	var to := Vector2i(tpos.floor())
-	var p: PackedVector2Array = w.map.find_path(n.cell(), to) if n.depth == 0 else w.underground.find_path(n.depth, n.cell(), to)
+	var p: PackedVector2Array = w.map.find_path_world(n.cell(), to) if n.depth == 0 else w.underground.find_path(n.depth, n.cell(), to)
 	if p.size() < 2:
 		n.chase_route = false
 		return false
