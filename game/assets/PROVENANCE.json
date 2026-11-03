@@ -26348,6 +26348,13 @@
    "member": "14_Wind_loop.wav",
    "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
    "sha256": "63069d9e3772ff7e99487037a998a7e11d55306461f083ccebd5314062ccec54"
+  },
+  {
+   "file": "assets/tiles/road_tiles.png",
+   "source": "PUNY-WORLD-PAID_v1.zip + PUNY_WORLD_v1.zip",
+   "member": "PUNY-WORLD-PAID_v1/Tiled/punyworld-tiles.png tiles 10150, 10151, 10370, 10371; PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/punyworld-overworld-tiles.tsx dirt pathways",
+   "transform": "B25R1 road tiles: 16 dirt path tiles (overworld_tiles.json dirt_path) x 4 rows with their dirt replaced by the paid flagstone ground and the rim darkened to 0.74 (stone road), x 2 rows narrowed by one ring with 22% grass through the dirt (trail)",
+   "sha256": "b52c5e511b5170822ec91a6085494be86651446f5118f34c210a3681c7843485"
   }
  ]
 }
