@@ -805,6 +805,11 @@ def compare(run_a, run_b):
 
 
 # ---------------------------------------------------------------- the reports --------------------
+def _write(path, text):
+    with open(path, "w") as f:
+        f.write(text)
+
+
 def table(header, rows):
     L = ["| " + " | ".join(header) + " |", "|" + "---|" * len(header)]
     for r in rows:
@@ -860,14 +865,14 @@ def build(run_dir, out_dir, targeted=None, compare_dir=None):
           "scenery with no identity and are not recorded.", ""] + table(["journey", "person", "purpose", "from", "to", "begin", "end", "outcome", "reason", "purchases"],
         [(k, j.get("person"), j.get("purpose"), j.get("origin"), j.get("destination"), j.get("begin"), j.get("end"), j.get("outcome", "unfinished"), j.get("reason"), j.get("purchases", 0)) for k, j in list(journeys.items())[:300]]) + [""]
     L += ["## First 300 rows", ""] + table(["day", "person", "name", "what", "origin", "destination", "reason", "outcome"], [(r["day"], r["person"], r["name"], r["what"], r["origin"], r["destination"], r["reason"], r["outcome"]) for r in mig[:300]])
-    open(os.path.join(out_dir, "B_migration_ledger.md"), "w").write("\n".join(L) + "\n")
+    _write(os.path.join(out_dir, "B_migration_ledger.md"), "\n".join(L) + "\n")
     # ---------------- C
     L = ["# C. Bandit population ledger", "", "Observed facts (window days %s to %s, from the first to the last dawn census)." % tuple(bl["window"]), ""]
     L += table(["", "members", "dependants"], [("start", bl["start"]["members"], bl["start"]["dependants"]), ("end", bl["end"]["members"], bl["end"]["dependants"])]) + [""]
     L += ["## Flows", ""] + table(["flow", "count"], sorted(bl["flows"].items())) + [""]
     L += ["## Recruitment by source", ""] + (table(["source", "recruits"], sorted(bl["recruits_by_source"].items())) if bl["recruits_by_source"] else ["No recruit joined a clan in the window."]) + [""]
     L += ["## Reconciliation", "", bl["note"], "", "Expected end total %d; census end total %d; **residual %d**." % (bl["expected_end_total"], bl["end"]["members"] + bl["end"]["dependants"], bl["residual"]), ""]
-    open(os.path.join(out_dir, "C_bandit_ledger.md"), "w").write("\n".join(L) + "\n")
+    _write(os.path.join(out_dir, "C_bandit_ledger.md"), "\n".join(L) + "\n")
     # ---------------- D
     L = ["# D. Homestead ledger", "", "Observed facts. An intention or a claim is never counted as a completed homestead: only a recorded residence is.", ""]
     L += ["## By track", ""] + table(["track", "formations", "evaluated", "chose", "rejected", "set out", "claimed", "built", "resident", "abandoned", "surviving at end"],
@@ -880,7 +885,7 @@ def build(run_dir, out_dir, targeted=None, compare_dir=None):
         [(h["id"], "%s %s" % (h["founder"], name_of(lv, h["founder"])), h["track"], h["path"], h["first_day"], h["status"], len(h["residents"]), h["years"],
           "%d/%d" % (h["sustain_ok"], h["sustain_failed"]), ", ".join("%s %s" % (k, round(v, 1)) for k, v in h["production"].most_common(4)), h["raids"],
           "-" if not h["abandoned"] else "day %s %s" % (h["abandoned"]["day"], h["abandoned"]["reason"])) for h in sorted(hs.values(), key=lambda x: (x["first_day"], x["id"]))])
-    open(os.path.join(out_dir, "D_homestead_ledger.md"), "w").write("\n".join(L) + "\n")
+    _write(os.path.join(out_dir, "D_homestead_ledger.md"), "\n".join(L) + "\n")
     # ---------------- E
     L = ["# E. Economic ledger", "", "Observed facts, summed over the whole archive (the game's own counters, `stats_delta`, and the recorded events).", ""]
     L += ["## Conservation", ""] + table(["segment", "currency leak", "item leaks", "ok"], [(l["segment"], l["currency_leak"], l["item_leaks"] or "none", l["ok"]) for l in econ["harness_ledgers"]])
@@ -892,7 +897,7 @@ def build(run_dir, out_dir, targeted=None, compare_dir=None):
     L += ["## Wilderness and outlaw economy (events)", ""] + (table(["event|action", "count"], sorted(econ["wilderness"].items())) if econ["wilderness"] else ["None recorded."]) + [""]
     L += table(["event|item", "net units"], sorted(econ["wilderness_items"].items())) + [""] if econ["wilderness_items"] else []
     L += ["## Roads", ""] + table(["measure", "count"], sorted(econ["roads"].items())) + ["", "Stone used for paving and repair (recorded): %d" % econ["paving_stone"]]
-    open(os.path.join(out_dir, "E_economic_ledger.md"), "w").write("\n".join(L) + "\n")
+    _write(os.path.join(out_dir, "E_economic_ledger.md"), "\n".join(L) + "\n")
     # ---------------- F
     L = ["# F. Individual life histories", "", "Real people of this run, picked by the rule stated for each case (the matching person with the most recorded events). "
          "No example is invented: a case with no matching organic event is marked unobserved, with the targeted-scenario evidence beside it.", ""]
@@ -913,12 +918,12 @@ def build(run_dir, out_dir, targeted=None, compare_dir=None):
                    [(t["when"], t["kind"], t["role"], t["outcome"], t["reason"], t["place"], t["decision"], "; ".join(t["money"]), t["detail"][:80]) for t in h["timeline"]]) + [""]
         if cid == "G" and gfam:
             L += ["Family (%d generations recorded): %s" % (cases["G_generations"], ", ".join("%s %s (%s)" % (m["ref"], m["name"], m["final"]) for m in gfam)), ""]
-    open(os.path.join(out_dir, "F_life_histories.md"), "w").write("\n".join(L) + "\n")
+    _write(os.path.join(out_dir, "F_life_histories.md"), "\n".join(L) + "\n")
     # ---------------- H
     L = ["# H. Exception report", "", "Observations, not verdicts (WDR-022: a village may fail; the simulation may not). Conservation and accounting rows are the ones that point at defects.", ""]
     L += table(["kind", "observation"], [(x["kind"], x["observation"]) for x in exc[:400]]) if exc else ["Nothing exceptional was observed."]
     L += ["", "## People accounting", "", "Registered %d; %s; unaccounted %d; duplicate births %s." % (pc["registered"], pc["tally"], len(pc["unaccounted"]), pc["duplicates"] or "none")]
-    open(os.path.join(out_dir, "H_exceptions.md"), "w").write("\n".join(L) + "\n")
+    _write(os.path.join(out_dir, "H_exceptions.md"), "\n".join(L) + "\n")
     # ---------------- I
     ev = {"commit": status.get("commit"), "seed": status.get("seed"), "days_requested": status.get("days_requested"), "days_reached": status.get("days_reached"),
           "stop_reason": status.get("stop_reason"), "args": status.get("args"), "segments": status.get("segments"),
@@ -934,7 +939,7 @@ def build(run_dir, out_dir, targeted=None, compare_dir=None):
     L += ["", "## Sessions", ""] + table(["session", "completeness", "bytes", "events", "scenario", "flags"], [(s["session"], s["completeness"], s["bytes"], s["events"], s["scenario"], json.dumps(s["flags"])[:120]) for s in ev["sessions"]])
     L += ["", "## Fingerprints at checkpoints", ""] + table(["day", "fingerprint"], sorted(ev["fingerprints"].items()))
     L += ["", "## Determinism (a second independent run of the same seed and configuration)", "", json.dumps(det, default=str) if det else "Not compared in this report (pass --compare RUN_DIR2)."]
-    open(os.path.join(out_dir, "I_evidence_index.md"), "w").write("\n".join(L) + "\n")
+    _write(os.path.join(out_dir, "I_evidence_index.md"), "\n".join(L) + "\n")
     # ---------------- A
     pop = lv.k("population_day")
     p0, p1 = (pop[0], pop[-1]) if pop else (None, None)
@@ -968,13 +973,13 @@ def build(run_dir, out_dir, targeted=None, compare_dir=None):
     L.append("- Bandit population %s." % ("reconciles with its recorded flows" if bl["residual"] == 0 else "does NOT reconcile with its recorded flows (residual %d: see H)" % bl["residual"]))
     L.append("- Exceptions recorded: %d (H)." % len(exc))
     L += ["", "Reports: B_migration_ledger, C_bandit_ledger, D_homestead_ledger, E_economic_ledger, F_life_histories, G_charts (%s), H_exceptions, I_evidence_index." % ", ".join(chart_files)]
-    open(os.path.join(out_dir, "A_executive.md"), "w").write("\n".join(L) + "\n")
-    json.dump(feats, open(os.path.join(out_dir, "features.json"), "w"), indent=1)
+    _write(os.path.join(out_dir, "A_executive.md"), "\n".join(L) + "\n")
+    _write(os.path.join(out_dir, "features.json"), json.dumps(feats, indent=1))
     data = {"format": "mml-flight-lives/1", "status": {k: status.get(k) for k in ("commit", "seed", "days_requested", "days_reached", "stop_reason")}, "features": feats,
             "bandit_ledger": bl, "homestead_by_track": {k: dict(v) for k, v in by_track.items()}, "young_adult_rate": rates, "economy": econ,
             "people": pc, "cases": {k: (v["ref"] if v else None) for k, v in hist.items()}, "histories": hist, "exceptions": exc, "evidence": ev,
             "homesteads": {k: dict(v, stages=dict(v["stages"]), production=dict(v["production"]), consumption=dict(v["consumption"])) for k, v in hs.items()}}
-    json.dump(data, open(os.path.join(out_dir, "lives.json"), "w"), indent=1, default=str)
+    _write(os.path.join(out_dir, "lives.json"), json.dumps(data, indent=1, default=str))
     return data
 
 

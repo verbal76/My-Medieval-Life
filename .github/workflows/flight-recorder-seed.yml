@@ -139,6 +139,12 @@ jobs:
           tail -n 40 "$out/analyse.log"
           cat "$out/findings.md" 2>/dev/null | head -c 60000 || true
 
+      - name: Living-world reports (B25R1-016)
+        if: always()
+        run: |
+          python3 tools/flight_lives.py "$RUNNER_TEMP/run" --out "$RUNNER_TEMP/results/lives" > "$RUNNER_TEMP/results/lives.log" 2>&1 || echo "::warning::the living-world reports failed: see lives.log"
+          tail -n 40 "$RUNNER_TEMP/results/lives.log"
+
       - name: Cache Godot
         id: godot
         uses: actions/cache@v4
