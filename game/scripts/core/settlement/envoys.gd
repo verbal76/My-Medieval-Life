@@ -123,6 +123,19 @@ static func plan(w: World, n: NPC, j: Dictionary) -> bool:
 			n.doing = "reporting to the reeve"
 			n.plan = [b.go(b.beside(rv.cell(), n.cell())), b.work(15.0, "envoy_report", {"job": int(j.id)}, "work")]
 			return true
+		"tell":
+			while not (j.get("tell", []) as Array).is_empty():
+				var ref: String = j.tell[0]
+				var o := w.npc(int(ref.substr(4)))
+				if o == null or not o.alive:
+					(j.tell as Array).pop_front()
+					continue
+				n.doing = "telling %s what the reeve's envoy learnt" % o.name
+				n.plan = [b.go(b.beside(o.cell(), n.cell())), b.work(float(Intel.cfg().tell_minutes), "envoy_tell", {"job": int(j.id), "to": ref}, "talk")]
+				return true
+			w.manor_work._finish(j, World.npc_ref(n.id))
+			w.stat("envoy_missions_done")
+			return false
 		"survey":
 			n.doing = "surveying the village's trades for the reeve"
 			n.plan = [b.go(w.manor_work.yard_cell()), b.work(float(cfg().survey_minutes), "envoy_survey", {"job": int(j.id)}, "work")]
@@ -176,8 +189,19 @@ static func act(w: World, n: NPC, what: String, a: Dictionary) -> bool:
 			_report(w, n, j)
 		"envoy_survey":
 			_home_survey(w, n, j)
-			w.manor_work._finish(j, World.npc_ref(n.id))
-			w.stat("envoy_missions_done")
+			j.stage = "tell"
+			var refs := []
+			for x in Intel.to_tell(w, book(w)):
+				refs.append(World.npc_ref(x[0].id))
+			j.tell = refs                                # S5: the tradespeople the book has news for, most first
+		"envoy_tell":
+			var o := w.npc(int(str(a.get("to", "")).substr(4)))
+			if o != null and o.alive:
+				var ints := Intel.interests(w, o)
+				for r in book(w).records:
+					if Intel.fresh(w, r) and Intel.concerns(w, o, r, ints) and Intel.hear(w, o, r, World.npc_ref(n.id)):
+						w.stat("intel_told_by_envoy")
+			(j.tell as Array).erase(str(a.get("to", "")))
 	return true
 
 

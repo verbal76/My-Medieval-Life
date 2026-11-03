@@ -3097,7 +3097,7 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"mj_step", "mj_mine":
 			return w.manor_work.act(n, what, a)
-		"envoy_talk", "envoy_report", "envoy_survey":
+		"envoy_talk", "envoy_report", "envoy_survey", "envoy_tell":
 			return Envoys.act(w, n, what, a)          # REGION-NAV-01 S4
 		"mc_load", "mc_hitch", "mc_park", "mc_unload", "mc_place":
 			return w.mine_works.cart_act(n, what, a)       # MIN-F2 (Q3): a miner's minecart haul

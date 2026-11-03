@@ -85,7 +85,7 @@ func _test_mission() -> void:
 	var n := _villager(w)
 	var coins0 := w.total_coins() - w.coin_sources
 	var t0 := w.treasury
-	var c0 := n.coins
+	var e0 := n.earned
 	var j := _envoy_job(w)
 	check(not w.manor_work.open_for("player").has(j), "the player is not offered the envoy post (a villager's work)")
 	check(w.manor_work.take(j, World.npc_ref(n.id)) and w.treasury == t0 - int(j.reserved) and int(j.reserved) > 0, "%s takes it from the board; its wage (%d) is set aside from the treasury" % [n.name, int(j.reserved)])
@@ -109,7 +109,7 @@ func _test_mission() -> void:
 	check(not recs.is_empty() and recs.all(func(r): return str(r.told_by) == World.npc_ref(n.id) and int(r.heard_day) >= int(r.collected_day)), "the reeve's book holds %d records about %s, each with who told it and when it was collected" % [recs.size(), sid])
 	check((b.visits as Dictionary).has(sid) and int(b.visits[sid].met) > 0, "the visit is noted (%d met, %d away)" % [int(b.visits.get(sid, {}).get("met", 0)), int(b.visits.get(sid, {}).get("absent", 0))])
 	check(int(b.home_day) >= 0 and not (b.home as Dictionary).is_empty(), "the home survey records %d village tradespeople's wants and goods" % (b.home as Dictionary).size())
-	check(n.coins >= c0 + wage - 40 and n.earned > 0 and w.total_coins() - w.coin_sources == coins0, "the wage is paid from what was set aside: no coin made or lost")
+	check(n.earned - e0 >= wage and w.total_coins() - w.coin_sources == coins0, "the wage (%d) is paid from what was set aside: no coin made or lost" % wage)
 	check(Envoys.target(w) != sid, "the reeve's next envoy goes elsewhere (%s): %s is surveyed and fresh" % [Envoys.target(w), sid])
 	# the book is saved and loaded
 	var w2 := World.new()

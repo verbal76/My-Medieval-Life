@@ -117,6 +117,7 @@ jobs:
           res://tests/journey_s3_test.gd
           res://tests/loot_recover_test.gd
           res://tests/envoy_test.gd
+          res://tests/intel_test.gd
           res://tests/tree_test.gd
           res://tests/world_test.gd
           res://tests/aging_test.gd
