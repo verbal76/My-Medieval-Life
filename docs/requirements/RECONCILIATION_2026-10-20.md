@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 771 (405 of them still open) |
-| **Open entries now** (rules excluded) | | **564** |
+| Entries added since | | 772 (406 of them still open) |
+| **Open entries now** (rules excluded) | | **565** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (771)
+## Added since the baseline (772)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -753,6 +753,7 @@ None.
 | UI-HUNGER-01 | Hunger icon becomes a drumstick | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | UI-PROGRESS-01 | Progress bar visible on light and dark ground | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
+| VAL-AGENT-01 | One temporary read-only Validation and Integration Agent for Build 25 (REGION-NAV-01 S2 first, then as the lead directs); the main session stays the sole development lead and owns fixes and records | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 18 |
 | VIS-ANIMAL-01 | Stray fragments above animals removed at the source | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |

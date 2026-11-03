@@ -57988,6 +57988,43 @@
    ]
   },
   {
+   "id": "VAL-AGENT-01",
+   "kind": "approved",
+   "title": "One temporary read-only Validation and Integration Agent for Build 25 (REGION-NAV-01 S2 first, then as the lead directs); the main session stays the sole development lead and owns fixes and records",
+   "description": "One temporary read-only Validation and Integration Agent for Build 25 (REGION-NAV-01 S2 first, then as the lead directs); the main session stays the sole development lead and owns fixes and records",
+   "source": "docs/directives/2026-11-03_validation_agent_authorization.md",
+   "owner_wording": "You are authorized to launch exactly one additional subagent to assist with Build 25 development.",
+   "approval": "owner, 2026-11-03",
+   "acceptance": [
+    "Exactly one agent, read-only, isolated checkout",
+    "Reports verified, unverified, defects, integration risks, recommended actions",
+    "Shut down when its assignment is complete or no longer worth its cost"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_validation_agent_authorization.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> validation agent (read-only); branch: None -> wip/region-nav",
+     "why": "launched 2026-11-03 on S2, read-only, detached checkout .claude/worktrees/region-nav-validate at d3b82c4"
+    }
+   ],
+   "assigned_worker": "validation agent (read-only)",
+   "branch": "wip/region-nav"
+  },
+  {
    "id": "VER-CON-50ORE",
    "kind": "approved",
    "title": "Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline)",

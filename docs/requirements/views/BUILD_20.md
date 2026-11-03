@@ -8,21 +8,22 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 149 |
-| Integrated | 123 of 149 (83%) |
-| Automated tests passed | 110 of 149 (74%) |
-| Integration verified | 64 of 149 (43%) |
-| Gameplay verified | 0 of 149 (0%) |
-| Owner playtested | 0 of 149 (0%) |
-| Complete | 2 of 149 (1%) |
-| Open (release blockers) | 147 |
+| Approved requirements in scope | 150 |
+| Integrated | 123 of 150 (82%) |
+| Automated tests passed | 110 of 150 (73%) |
+| Integration verified | 64 of 150 (43%) |
+| Gameplay verified | 0 of 150 (0%) |
+| Owner playtested | 0 of 150 (0%) |
+| Complete | 2 of 150 (1%) |
+| Open (release blockers) | 148 |
 | Open owner decisions (blocking) | 6 (0) |
 
-## In development (worker assigned) (2)
+## In development (worker assigned) (3)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | B25-CLOSE-01 | Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop | OWNER APPROVED | IN DEVELOPMENT | lead (single worker, MML-CONSERVE-01) / wip/b25-farm-phase2 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| VAL-AGENT-01 | One temporary read-only Validation and Integration Agent for Build 25 (REGION-NAV-01 S2 first, then as the lead directs); the main session stays the sole development lead and owns fixes and records | OWNER APPROVED | IN DEVELOPMENT | validation agent (read-only) / wip/region-nav | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 
 ## Integrated, awaiting gameplay or owner verification (121)

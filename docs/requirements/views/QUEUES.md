@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (12)
+## Workers and task branches (13)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -13,6 +13,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | JUICE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | none |  |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
+| VAL-AGENT-01 | 20 | IN DEVELOPMENT | validation agent (read-only) | wip/region-nav |
 | X20-CAREER-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
 | X20-ECON-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |

@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (759)
+## Approved requirement (760)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -671,6 +671,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | UI-HUNGER-01 | Hunger icon becomes a drumstick | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | UI-PROGRESS-01 | Progress bar visible on light and dark ground | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | UI-WIKI-01 | Village Encyclopedia: navigable, searchable wiki window | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| VAL-AGENT-01 | One temporary read-only Validation and Integration Agent for Build 25 (REGION-NAV-01 S2 first, then as the lead directs); the main session stays the sole development lead and owns fixes and records | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | VER-CON-50ORE | Focused contract verification: a 50-iron-ore quantity contract with existing functionality (production, inventory conservation, delivery, payment, deadline) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
 | VIS-ANIMAL-01 | Stray fragments above animals removed at the source | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | VIS-AXE-01 | Lumberjack axe: believable chop, blade never through the head | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
