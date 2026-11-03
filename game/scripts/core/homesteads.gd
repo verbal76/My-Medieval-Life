@@ -1147,7 +1147,7 @@ func plan(n: NPC) -> void:
 		return
 	if n.hunger < float(GameData.b("eat_below")) and _plan_eat(n, c):
 		return
-	if n.role != "adult":
+	if n.role != "adult" and n.role != "bandit":        # (an outlaw works the claim as any adult does)
 		_idle(n, home, "playing by the house" if n.role == "child" else "sitting by the house")
 		return
 	if str(c.status) == "claimed" and _carries_need(n, c):

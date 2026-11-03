@@ -985,7 +985,7 @@ func act(n: NPC, c: Dictionary, step: String, a: Dictionary) -> bool:
 			return true
 		"raid_in":
 			var r: Dictionary = raiders.get(str(n.id), {})
-			if not r.is_empty():
+			if not r.is_empty() and w.map.in_village(n.cell()):
 				r.leg = "village"
 			return true
 		"raid_home":
@@ -1237,6 +1237,12 @@ func plan_first(n: NPC, c: Dictionary) -> bool:
 			if w.map.in_village(n.cell()):
 				r.leg = "village"
 				return plan_first(n, c)
+			var gate: Vector2i = _hs()._gate_cells()[1]
+			if not night and n.cell().distance_to(gate) <= float(cfg().raid_lie_low):
+				var b0: NPCBrain = w.brain
+				n.doing = "lying low by the road till dark"        # outside the village, out of the guards' rounds, as the old camp was
+				n.plan = [b0.wait(n, 30.0)]
+				return true
 			_lay_raid(n, c, true)
 			return true
 		"village":
@@ -1255,9 +1261,8 @@ func plan_first(n: NPC, c: Dictionary) -> bool:
 				if n.plan.is_empty() and n.target == -1:
 					n.plan = [w.brain.wait(n, 20.0)]
 				return true
-			var b: NPCBrain = w.brain
-			n.doing = "waiting for dark by the village"
-			n.plan = [b.go(b.wander_cell(w.village_camp, 3)), b.work(45.0, "", {}, "idle")]
+			r.leg = "back"                                # in the village by daylight: not the plan; home again
+			_lay_raid(n, c, false)
 			return true
 		_:
 			_lay_raid(n, c, false)
@@ -1269,7 +1274,13 @@ func _lay_raid(n: NPC, c: Dictionary, out: bool) -> void:
 	var hs := _hs()
 	if out:
 		var road := hs._road(str(c.anchor.get("sid", "")))
-		hs._lay(n, hs._path_village(n, road, int(c.anchor.get("i", -1))), "raid_in", "on the road to the village by night")
+		var path := hs._path_village(n, road, int(c.anchor.get("i", -1)))
+		var hr := w.hour()
+		if not (hr >= 21.0 or hr < 4.5):
+			var gate: Vector2i = hs._gate_cells()[1]
+			while path.size() > 1 and Vector2i(path[path.size() - 1]).distance_to(gate) < float(cfg().raid_lie_low) - 2.0:
+				path.remove_at(path.size() - 1)             # by day the walk stops short of the gate, to lie low till dark
+		hs._lay(n, path, "raid_in", "on the road to the village by night")
 	else:
 		hs._lay(n, hs._path_home(n, c), "raid_home", "slipping back to the camp")
 
