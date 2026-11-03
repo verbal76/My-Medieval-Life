@@ -2082,6 +2082,7 @@ func chronicle(kind: String, who, f := {}) -> int:
 func road_step(ow: Overworld, c: Vector2i, lv: int, look: String, cart: bool) -> void:
 	var lv2 := RoadWear.level(ow, c)
 	var look2 := RoadWear.visual(ow, c)
+	_road_seen[c] = [lv2, look2]                    # the next dawn compares with this (a path worn and faded between two dawns)
 	var kind := "road_formed" if lv2 > lv else ("road_cleared" if look.ends_with("_overgrown") and not look2.ends_with("_overgrown") else ("road_wear" if lv2 == 3 else ""))
 	if kind == "":
 		return
@@ -2093,6 +2094,7 @@ func road_step(ow: Overworld, c: Vector2i, lv: int, look: String, cart: bool) ->
 ## RoadWear.pave / repair: `by` the ref of who did it (the player, the manor's mender), the stone used.
 func road_work(ow: Overworld, c: Vector2i, mode: String, before: String, by: String, stone: int) -> void:
 	var cell := "cell:%d,%d" % [c.x, c.y]
+	_road_seen[c] = [RoadWear.level(ow, c), RoadWear.visual(ow, c)]
 	chronicle("road_paved" if mode == "pave" else "road_repaired", wref(by) if by != "" else null, {"x": c.x, "y": c.y, "object": cell,
 		"action": mode, "summary": [[cell, "look", before, RoadWear.visual(ow, c)]], "needs": {"stone": stone}})
 
