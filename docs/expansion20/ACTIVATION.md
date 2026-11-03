@@ -79,3 +79,27 @@ Each line needs evidence on the exact candidate commit (reuse valid evidence on 
 - **X20-SERVICES-SCOPE** (OPEN): whether "service contracts behind their switches (OD-LE-03/D02)" includes CON-03..CON-08.
   `market.services` stays off with nothing behind it until answered.
 - **Calibration of provisional parameters** (checklist item 9): engineering defaults, awaiting review.
+
+## 5. Activation record (2026-11-03)
+
+- **Authority:** B25-LE-ACTIVATE-D1 (owner 2026-11-01), under B25-FINISH-01 (owner 2026-11-03).
+- **Change:** `game/data/economy.json` `"enabled": true` (its note updated). `market.services` and `market.negotiated_wages` stay
+  false. No save migration.
+- **Gates:** `LE07_GATE_STATUS.md` (verdict 2026-11-03).
+  - 4 and 6 passed on the economy-on year 41536810831.
+  - 9 is reviewed in `LE07_CALIBRATION_REVIEW.md`.
+  - 11 is profiled and not blocking (the lead's call).
+  - 12 and 13 are applied with this change.
+  - 1 is the activated candidate's CI.
+- **Tests changed for the shipped default:**
+  - `le07_gates_test`
+  - `economy_foundation_test`
+  - `economy_model_test`
+  - `le02_market_test`
+  - `le03_claims_test`
+- **Wiki:**
+  - `sys:market` and `sys:tool_rental` are new.
+  - `sys:repair` gains paid mending.
+  - `todo:tool_rental` is replaced by `todo:tool_rental_menu`.
+  - `todo:other_towns` is corrected for REGION-NAV-01.
+

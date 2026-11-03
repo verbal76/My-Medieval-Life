@@ -2,8 +2,8 @@ class_name EconomyFoundation
 extends RefCounted
 ## Expansion 20 (Living Economy), LE-01: the single attach point of the foundation records (EconActor resolver,
 ## EconReservations, EconEvents). World calls attach() twice only: at the end of setup() and in load_dict(). With
-## game/data/economy.json "enabled": false (the shipped state) attach() returns null: nothing is constructed, no
-## save key is written, and no live code path references these classes. A test can switch it on with set_override().
+## game/data/economy.json "enabled": false attach() returns null: nothing is constructed, no save key is written, and
+## no live code path references these classes. Shipped on from Build 25 (B25-LE-ACTIVATE-D1); a test can switch it with set_override().
 ## Format "mml-economy/1": see docs/expansion20/LE01_DATA_CONTRACTS.md and LE01_IMPLEMENTATION.md.
 ##
 ## LE-01 model (needs, offers, knowledge, contract links) is built here too. Two live calls reach it, each guarded by

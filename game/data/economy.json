@@ -1,7 +1,7 @@
 {
   "format": "mml-economy/1",
-  "note": "Expansion 20 (Living Economy) LE-01 foundation and model (needs, offers, knowledge, contract links) and the LE-02 market (adaptive bids and asks, negotiation, settlement through World.trade, CON-01 procurement and renegotiation). enabled is false: with it off the World builds none of these records and writes no save key. With it on and market.drive true the market acts: villagers post bids from their needs and asks from their stock, bargain when they meet, take bids to sellers they know as CON-01 contracts, and renegotiate contracts on their last day (docs/expansion20/LE02_IMPLEMENTATION.md). Activation is the owner's decision.",
-  "enabled": false,
+  "note": "Expansion 20 (Living Economy) LE-01 foundation and model (needs, offers, knowledge, contract links) and the LE-02 market (adaptive bids and asks, negotiation, settlement through World.trade, CON-01 procurement and renegotiation). enabled is false: with it off the World builds none of these records and writes no save key. With it on and market.drive true the market acts: villagers post bids from their needs and asks from their stock, bargain when they meet, take bids to sellers they know as CON-01 contracts, and renegotiate contracts on their last day (docs/expansion20/LE02_IMPLEMENTATION.md). On by default from Build 25 (B25-LE-ACTIVATE-D1, owner 2026-11-01) after the LE-07 gates passed (docs/expansion20/LE07_GATE_STATUS.md).",
+  "enabled": true,
   "reservations": {
     "keep_finished": 200
   },

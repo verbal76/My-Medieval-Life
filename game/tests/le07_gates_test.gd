@@ -4,7 +4,7 @@ extends SceneTree
 ## validation evidence, but wait for my explicit authorization before enabling it in the normal game"). The gates that can be
 ## automated in a short headless run; the long ones (multi-seed year runs, profiling on a phone, platform builds) are the lead's
 ## (docs/expansion20/ACTIVATION.md, the checklist). Never enables the economy in the shipped data: the switch is a test override.
-##   default   the shipped switch is off; nothing is built or saved; reserved switches stay off while their owner decision is open
+##   default   the shipped switch is on (B25-LE-ACTIVATE-D1); with it off nothing is built or saved; reserved switches stay off
 ##   accounting  a day with the economy on: every coin accounted for (the world's coins less what crossed its boundary never moves)
 ##   determinism two runs of the same seed and code give the same fingerprint (economy_sim's)
 ##   persistence the economy section saves and loads exactly
@@ -81,9 +81,9 @@ func _init() -> void:
 func test_default() -> void:
 	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var shipped: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/economy.json"))
-	check(not bool(shipped.get("enabled", true)), "the shipped switch is off (economy.json enabled false; owner 2026-10-31)")
+	check(bool(shipped.get("enabled", false)), "the shipped switch is on (economy.json enabled true; B25-LE-ACTIVATE-D1, owner 2026-11-01)")
 	var m: Dictionary = shipped.market
-	check(not bool(m.get("services", true)), "market.services stays off and empty (X20-SERVICES-SCOPE is an open owner decision)")
+	check(not bool(m.get("services", true)), "market.services stays off and empty (CON-03..08 are built in contract_services.gd, outside it: X20-SERVICES-SCOPE)")
 	check(not bool(m.get("negotiated_wages", true)), "market.negotiated_wages stays off (built, not reviewed)")
 	var w := new_world(false)
 	var st := EconomyFoundation.activation_state(w)

@@ -68,10 +68,10 @@ func test_disabled() -> void:
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), d)
 	check(w2.economy == null, "disabled: load builds nothing")
-	check(not bool(EconomyFoundation.file_config().enabled), "shipped economy.json is disabled")
+	check(bool(EconomyFoundation.file_config().enabled), "shipped economy.json is enabled (B25-LE-ACTIVATE-D1)")
 	var f := FileAccess.open("res://data/economy.json", FileAccess.READ)
 	var j = JSON.parse_string(f.get_as_text())
-	check(j.format == "mml-economy/1" and j.enabled == false, "economy.json format and enabled=false")
+	check(j.format == "mml-economy/1" and j.enabled == true, "economy.json format and enabled=true")
 
 
 func test_resolver() -> void:

@@ -616,7 +616,7 @@ func fingerprint(w: World) -> String:
 
 func test_switch() -> void:
 	var f: Dictionary = shipped()
-	check(f.enabled == false and f.market.drive == true, "shipped: the economy off (activation is the owner's); its market would drive when switched on")
+	check(f.enabled == true and f.market.drive == true, "shipped: the economy on (B25-LE-ACTIVATE-D1), its market driving")
 	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var off := World.new()
 	off.setup(VillageMap.load_default(), 2)

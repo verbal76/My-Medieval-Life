@@ -480,7 +480,7 @@ func test_determinism() -> void:
 
 # ------------------------------------------------------------------------------------------------ the switch
 func test_switch_off() -> void:
-	check(not bool(EconomyFoundation.file_config().enabled), "shipped: economy.json enabled false")
+	check(bool(EconomyFoundation.file_config().enabled), "shipped: economy.json enabled true")
 	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	var w := World.new()
 	w.setup(VillageMap.load_default(), 1)

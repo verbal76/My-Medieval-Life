@@ -100,6 +100,9 @@ func _data_tests() -> void:
 	check("todo:player_shops" in w.search("player shops") and w.pages["todo:player_shops"].blocks[0].t == "note" and not w.pages.has("todo:lockpicking") and "sys:chests" in w.search("lockpick"), "unbuilt ideas are marked Not in the game yet; lockpicking is built")
 	check(w.search("zzzz").is_empty(), "nonsense finds nothing")
 	check("sys:farm_goods" in w.search("cheese") and w.pages["sys:farm_goods"].text.contains("tanner") and w.pages["job:cook"].text.contains("cheese"), "the wiki explains the village's eggs, milk and wool chain (Build 13)")
+	# B25-LE-ACTIVATE-D1 (LE-07 gate 12): the Living Economy on by default, its player pages; the old todo retired
+	check(w.pages.has("sys:market") and w.pages.has("sys:tool_rental") and not w.pages.has("todo:tool_rental") and w.pages.has("todo:tool_rental_menu") and w.pages["todo:tool_rental_menu"].blocks[0].t == "note", "the market and tool rental pages exist; the tool rental todo is retired, its replacement says Not in the game yet")
+	check(not str(w.pages["todo:other_towns"].blocks[0]).contains("none is on the map yet"), "the other towns todo no longer says the settlements cannot be reached (REGION-NAV-01)")
 	check(w.pages.has("sys:home_work") and w.pages["sys:home_work"].text.contains("poultice"), "the wiki explains villagers' home production and healing (B14)")
 	var meds := ["linen_bandage", "herbal_poultice", "healing_tonic", "strong_healing_tonic"]
 	check(meds.all(func(m): return w.pages["item:" + m].category == "items_medicine") and w.in_category("items_materials").all(func(pid): return not meds.has(str(pid).trim_prefix("item:"))), "medicines have their own category, not Materials (Build 12 audit)")

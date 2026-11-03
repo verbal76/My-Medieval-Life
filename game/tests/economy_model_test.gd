@@ -86,7 +86,7 @@ func test_disabled() -> void:
 	check(not w.to_dict().has("economy"), "off: no save key")
 	var f := FileAccess.open("res://data/economy.json", FileAccess.READ)
 	var j: Dictionary = JSON.parse_string(f.get_as_text())
-	check(j.enabled == false and j.has("needs") and j.has("offers"), "shipped economy.json: off, with needs and offers settings")
+	check(j.enabled == true and j.has("needs") and j.has("offers"), "shipped economy.json: on, with needs and offers settings")
 	var od: Dictionary = j.get("owner_decisions", {})
 	var want := ["OD-LE-02B", "OD-LE-10", "OD-LE-04", "OD-LE-07", "OD-LE-08", "OD-LE-13B", "OD-LE-14", "OD-LE-15"]
 	var all := JSON.stringify(od)
