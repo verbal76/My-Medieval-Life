@@ -51,6 +51,10 @@ on:
         description: "Flight recorder only: game days per chained job (a multiple of every; days at most 4 x this)"
         default: "100"
         required: false
+      gate:
+        description: "SIM-GATE-01 gate only (B25R1, any branch): run tools/sim_suite.py as release.yml's sim-gate job does, with nothing packaged; the other inputs are ignored"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -59,7 +63,7 @@ concurrency:
   # one dispatch at a time per branch; parallel workstreams' branches no longer cancel each other's waiting runs (2026-10-30: run
   # 41118155447 was cancelled that way). FLIGHT-REC-01: a flight recorder campaign has its own group, one per run, so it never
   # cancels or waits for anything, nor anything for it; without flight the group is long-sims-<ref> exactly as before.
-  group: ${{ inputs.flight && format('flight-recorder-{0}', github.run_id) || format('long-sims-{0}', github.ref) }}
+  group: ${{ (inputs.flight || inputs.gate) && format('long-sims-own-{0}', github.run_id) || format('long-sims-{0}', github.ref) }}
   cancel-in-progress: false
 
 env:
@@ -67,7 +71,7 @@ env:
 
 jobs:
   recover:
-    if: inputs.recover_run != '' && !inputs.flight
+    if: inputs.recover_run != '' && !inputs.flight && !inputs.gate
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -88,7 +92,7 @@ jobs:
           done
 
   plan:
-    if: inputs.recover_run == '' && !inputs.flight
+    if: inputs.recover_run == '' && !inputs.flight && !inputs.gate
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -244,7 +248,7 @@ jobs:
   # workflow, which is on main (GitHub dispatches only workflows whose file is on the default branch, and then runs the version on
   # the dispatched ref, the workflows it calls by a local path included). The plan, recover and sim jobs above are skipped.
   flight:
-    if: inputs.flight && inputs.recover_run == ''
+    if: inputs.flight && inputs.recover_run == '' && !inputs.gate
     uses: ./.github/workflows/flight-recorder-campaign.yml
     with:
       seeds: ${{ inputs.seeds }}
@@ -254,3 +258,72 @@ jobs:
       record: ${{ inputs.record }}
       segment_days: ${{ inputs.segment_days }}
       unsupported: ${{ inputs.set }}${{ inputs.variants }}
+
+  # B25R1 (owner 2026-11-03: hand long work to GitHub): the release gate on any branch, nothing packaged; the same steps as
+  # release.yml sim-gate (keep the two in step).
+  sim-gate:
+    if: inputs.gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot and its export templates
+        id: godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
+          key: godot-${{ env.GODOT_VERSION }}-linux-templates
+
+      - name: Install Godot and its export templates
+        if: steps.godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot-bin
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -sSfL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip && mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" ~/godot-bin/godot
+          curl -sSfL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          dest="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          mkdir -p "$dest" && unzip -q -j templates.tpz -d "$dest"
+          rm godot.zip templates.tpz
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Import the project
+        run: ~/godot-bin/godot --headless --path game --import
+
+      - name: Run the simulation gate (SIM-GATE-01)
+        env:
+          BUILD_N: ${{ github.run_number }}
+        run: |
+          # every scenario with the flight recorder on, in parallel; exit 1 on any blocking finding (never on hardship)
+          python3 tools/sim_suite.py --out out/sim-gate --godot ~/godot-bin/godot --jobs "$(nproc)"
+
+      - name: Keep the gate's results (also when it fails)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-gate
+          retention-days: 90
+          if-no-files-found: warn
+          path: |
+            out/sim-gate/gate.json
+            out/sim-gate/SIM_GATE_SUMMARY.md
+            out/sim-gate/sim_gate_workbook.xlsx
+            out/sim-gate/*/sim.json
+            out/sim-gate/*/run.log
+            out/sim-gate/*/analysis.json
+            out/sim-gate/*/probe.json
+
+      - name: Keep the recorder archives (also when the gate fails)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-gate-archives
+          retention-days: 14
+          if-no-files-found: warn
+          path: out/sim-gate/*/rec/
