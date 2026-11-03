@@ -7192,9 +7192,14 @@
      "date": "2026-11-03",
      "change": "owner_answer",
      "why": "owner follow-up 2026-11-03: unused grass paths and dirt roads slowly fade back; paved stone never decays. Assigned to the roads worker as phase 2 on wip/b25r1-roads"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "owner_answer",
+     "why": "owner refinement 2026-11-03 ~14:58 EST replaces 'stone stays': main dirt roads fade very slowly to an overgrown but visible state (never lost, usage restores, no upkeep), usage-made paths fade faster, stone roads take slow damage that hampers carts and need materials to repair; worker told"
     }
    ],
-   "owner_answer": "Dirt fades, stone stays: unused grass paths and dirt roads slowly fade back toward grass; paved stone never decays on its own"
+   "owner_answer": "Main dirt roads fade very slowly, never below visible (overgrown until walked again, no upkeep but use); usage paths fade faster; stone roads damage slowly, hamper carts when damaged, and need materials to repair"
   },
   {
    "id": "B25R1-Q1",
