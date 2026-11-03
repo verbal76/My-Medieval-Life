@@ -50,20 +50,17 @@ func _init() -> void:
 	var left := _run(w, func() -> bool: return not w.map.in_village(n.cell()), 600.0)
 	check(left, "they walk out of the village (at %s)" % n.cell())
 	# on the road: they move a step at a time, never jumping
-	var last := n.pos
-	var max_step := 0.0
-	var on_road := 0
-	var samples := 0
+	var tr := {"last": n.pos, "max": 0.0, "road": 0, "n": 0}          # (a lambda captures locals by value: a dictionary is shared)
 	var midway := _run(w, func() -> bool:
-		max_step = maxf(max_step, n.pos.distance_to(last))
-		last = n.pos
-		samples += 1
+		tr.max = maxf(float(tr.max), n.pos.distance_to(tr.last))
+		tr.last = n.pos
+		tr.n = int(tr.n) + 1
 		if w.map.overworld.is_road(n.cell()):
-			on_road += 1
+			tr.road = int(tr.road) + 1
 		return n.pos.y > float(wul.center.y) / 2.0, 1440.0)
 	check(midway, "half way down the road (at %s)" % n.cell())
-	check(max_step < 3.0, "no jump on the way: the largest move in one tick was %.2f tiles" % max_step)
-	check(on_road * 10 >= samples * 7, "they keep to the road (%d of %d ticks on road cells)" % [on_road, samples])
+	check(int(tr.n) > 20 and float(tr.max) < 3.0, "no jump on the way: the largest move in one of %d ticks was %.2f tiles" % [int(tr.n), float(tr.max)])
+	check(int(tr.road) * 10 >= int(tr.n) * 7, "they keep to the road (%d of %d ticks on road cells)" % [int(tr.road), int(tr.n)])
 	# a save on the road: the journey goes on from where they stand
 	var d := w.to_dict()
 	var w2 := World.new()
@@ -73,11 +70,11 @@ func _init() -> void:
 	var arrived := _run(w2, func() -> bool: return str(n2.journey.get("leg", "")) == "there", 4 * 1440.0)
 	check(arrived and not w2.map.overworld.site_at(n2.cell()).is_empty(), "they arrive at Wulstead's site (day %d, at %s)" % [w2.day(), n2.cell()])
 	check(float(w2.stats.get("journey_arrived_wulstead", 0.0)) == 1.0, "the arrival is counted")
+	check(n2.inv.count("bread") <= bread0, "nothing was gained on the road: %d bread on arrival of the %d they set out with" % [n2.inv.count("bread"), bread0])
 	# at night on the road they rest; at the site they stay till morning, then come home
 	var home := _run(w2, func() -> bool: return not Journeys.active(n2), 5 * 1440.0)
 	check(home and w2.map.in_village(n2.cell()), "they come home and the journey is over (day %d, at %s)" % [w2.day(), n2.cell()])
 	check(float(w2.stats.get("journey_ended_home", 0.0)) == 1.0, "the end is counted")
 	check(w2.total_coins() - w2.coin_sources == coins0, "the journey moved no coin")
-	check(n2.inv.count("bread") <= bread0, "they ate from their own pack on the road (%d bread left of %d)" % [n2.inv.count("bread"), bread0])
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)

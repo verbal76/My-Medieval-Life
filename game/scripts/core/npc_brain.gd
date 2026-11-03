@@ -2899,8 +2899,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return false
 		"buy_from":
 			var v := w.npc(int(a.vendor))
-			if v == null or not v.alive:
-				return false
+			if v == null or not v.alive or Journeys.active(v):
+				return false                     # REGION-NAV-01: nobody sells from the pack of a villager who is away on a journey
 			var buyer := w.npc(int(a.get("payer", n.id)))
 			if buyer == null or not buyer.alive:
 				buyer = n

@@ -1888,6 +1888,8 @@ func can_afford(buyer: NPC, price: int, for_need := false, id := "") -> bool:
 ## its reserve (OD-19); the reserve's one-unit exception (can_afford) covers a single-unit sale only. The one rule for
 ## every sale to a business, whoever sells (PAR-02).
 func purchase_qty(buyer: NPC, seller: Object, id: String, offered: int) -> int:
+	if not buyer.journey.is_empty() or (seller is NPC and not (seller as NPC).journey.is_empty()):
+		return 0                      # REGION-NAV-01: a villager away on a journey (Journeys) buys and sells nothing at home
 	var q: int = mini(offered, brain.wants(buyer, id))
 	if q <= 0:
 		return 0
