@@ -68,6 +68,7 @@ var sprint_btn: Button          # the touch bar's Run toggle (Build 13)
 var attack_btn: Button
 var gather_btn: Button
 var recenter_btn: Button       # shown while the camera is looking around, away from the player
+var travel_bar: TravelBar      # B25R1-006: shown while a destination chosen on the Region map is kept
 var prompt_text := ""
 var scheme := "kbm"
 var place_bar: PanelContainer  # while placing a building: whether it may go here, Place and Cancel
@@ -732,6 +733,9 @@ func _build_hud() -> void:
 	recenter_btn.visible = false
 	recenter_btn.pressed.connect(func(): main.recenter())
 	hud.add_child(recenter_btn)
+	travel_bar = TravelBar.new()              # B25R1-006: the destination, Resume and Dismiss (scripts/ui/travel_bar.gd)
+	travel_bar.setup(self)
+	hud.add_child(travel_bar)
 	_build_place_bar()
 	_build_farm_price()
 
@@ -1526,7 +1530,7 @@ func modal() -> bool:
 func blocks(pos: Vector2) -> bool:
 	if panel.visible:
 		return true
-	for c in (touch_buttons() if touch_bar.visible else []) + [status_box, recenter_btn, place_bar, stick, prompt_next, toast]:
+	for c in (touch_buttons() if touch_bar.visible else []) + [status_box, recenter_btn, place_bar, stick, prompt_next, toast, travel_bar]:
 		if c.visible and c.get_global_rect().has_point(pos):
 			return true
 	return false
@@ -3878,7 +3882,7 @@ func show_keeper(person: Dictionary) -> void:
 		for st in w.map.overworld.sites:
 			if str(st.id) != str(person.settlement) and Atlas.learn_place(w, p, str(st.id), str(person.ref)):
 				told.append(str(st.name))
-		message(("%s tells you the way to %s. They are on your Region map." % [person.name, ", ".join(told)]) if not told.is_empty() else "%s has nothing new to tell you of the roads." % person.name, 5.0)
+		message(("%s tells you the roads to %s." % [person.name, ", ".join(told)]) if not told.is_empty() else "%s has nothing new to tell you of the roads." % person.name, 5.0)
 		show_keeper(person)
 	_button("Ask about the roads to the other settlements", ask)
 
@@ -4263,19 +4267,42 @@ func show_map(mode := "") -> void:
 	if mode != "":
 		map_mode = mode
 	_open("map", "Village map" if map_mode == "village" else "Region map")
-	var bar := HBoxContainer.new()
-	bar.add_theme_constant_override("separation", 8)
+	var bar := HFlowContainer.new()                 # B25R1-005: the Region view's controls wrap on a narrow screen
+	bar.add_theme_constant_override("h_separation", 8)
+	bar.add_theme_constant_override("v_separation", 6)
 	_button("Village", func(): show_map("village"), map_mode != "village", bar)
 	_button("Region", func(): show_map("region"), map_mode != "region", bar)
 	panel_body.add_child(bar)
 	if map_mode == "region":
-		var r := RegionMapPanel.new()
+		var r := RegionMapPanel.new()               # B25R1-005: zoom, pan, Centre on me; a tap travels (B25R1-006)
+		_button("Centre on me", r.centre_on_player, true, bar)
+		_button("Whole region", r.fit_network, true, bar)
+		if RegionTravel.has_destination(main.world.player):
+			_button("Resume destination", func(): resume_travel(), not RegionTravel.active(main.world.player), bar)
+			_button("Dismiss destination", func(): dismiss_travel(), true, bar)
 		panel_body.add_child(r)
 		r.setup(main)
 	else:
 		var m := VillageMapPanel.new()
 		panel_body.add_child(m)
 		m.setup(main)
+
+
+## B25R1-006: Resume Destination (planned again from where the player stands) and Dismiss Destination (cleared).
+func resume_travel() -> void:
+	var why: String = main.travel.resume(main)
+	if why != "":
+		message(why, 5.0)
+		return
+	hide_all()
+	message("You set off again.", 3.0)
+
+
+func dismiss_travel() -> void:
+	main.travel.dismiss(main)
+	if is_open("map"):
+		show_map()
+	message("Destination dismissed.", 3.0)
 
 
 func show_recenter(on: bool) -> void:
