@@ -137,19 +137,22 @@ func _setup_sites(stamps: Dictionary) -> void:
 			slots.append({"trade": t, "stamp": stamp, "rect": Rect2i(at, Vector2i(int(stamps[stamp].w), int(stamps[stamp].h))),
 				"door": door, "spot": door + Vector2i(0, 1)})
 		var gate := Vector2i(center.x, rect.end.y - int(lay.margin) - int(lay.lane) / 2 - 1)    # the lane under the last row: the road comes in here
+		var far := Vector2i(center.x, rect.end.y + 14)                                          # straight down out of the site, as a village gate's road
 		sites.append({"id": str(spec.id), "name": str(spec.name), "kind": str(spec.kind), "center": center, "rect": rect, "slots": slots,
 			"gate": gate})
-		var ci := fdiv(gate.x, NODE)
-		var cj := fdiv(gate.y, NODE)
+		_links.append({"a": gate, "b": far, "key": 2000 + si * 8})
+		var ci := fdiv(far.x, NODE)
+		var cj := fdiv(far.y, NODE)
 		var near: Array = []
 		for j in range(cj - 3, cj + 4):
 			for i in range(ci - 3, ci + 4):
 				var p := node_pos(i, j)
-				if not _node_excluded(p):
-					near.append([(p - gate).length_squared(), i, j, p])
+				var bb := Rect2i(mini(p.x, far.x), mini(p.y, far.y), absi(p.x - far.x), absi(p.y - far.y))
+				if not _node_excluded(p) and not bb.grow(4).intersects(rect):
+					near.append([(p - far).length_squared(), i, j, p])
 		near.sort()
 		for k in mini(3, near.size()):
-			_links.append({"a": gate, "b": near[k][3], "key": 2000 + si * 8 + k})
+			_links.append({"a": far, "b": near[k][3], "key": 2000 + si * 8 + 1 + k})
 		si += 1
 
 
@@ -179,19 +182,23 @@ func road_route(gate: int, sid: String) -> PackedVector2Array:
 		return PackedVector2Array()
 	# the links at each end: link index -> the node it reaches
 	var starts := {}                              # node Vector2i(i, j) -> the link index from the gate's far point
-	var ends := {}                                # node -> the link index of the site's road
+	var ends := {}                                # node -> the link index of the site's road from its far point
 	var base := -1
+	var site_base := -1
 	for li in _links.size():
 		var key := int(_links[li].key)
 		if key >= 2000:
 			if (key - 2000) / 8 == sites.find(st):
-				ends[_node_of(_links[li].b)] = li
+				if (key - 2000) % 8 == 0:
+					site_base = li
+				else:
+					ends[_node_of(_links[li].b)] = li
 		elif (key - 1000) / 8 == gate:
 			if (key - 1000) % 8 == 0:
 				base = li
 			else:
 				starts[_node_of(_links[li].b)] = li
-	if base < 0 or starts.is_empty() or ends.is_empty():
+	if base < 0 or site_base < 0 or starts.is_empty() or ends.is_empty():
 		return PackedVector2Array()
 	# Dijkstra over the road nodes in a box round both ends
 	var lo := Vector2i(mini(fdiv(gates[gate].out.x, NODE), fdiv(st.gate.x, NODE)) - 4, mini(fdiv(gates[gate].out.y, NODE), fdiv(st.gate.y, NODE)) - 4)
@@ -200,7 +207,7 @@ func road_route(gate: int, sid: String) -> PackedVector2Array:
 	var prev := {}
 	var open: Array = []                          # [cost, j, i]
 	for nd: Vector2i in starts:
-		var c0 := _segment(Vector3i(-1, starts[nd], 0), _links[starts[nd]].a, _links[starts[nd]].b, int(_links[starts[nd]].key)).size() / 2
+		var c0 := _segment(Vector3i(starts[nd], 0, -1), _links[starts[nd]].a, _links[starts[nd]].b, int(_links[starts[nd]].key)).size() / 2
 		if not dist.has(nd) or c0 < int(dist[nd]):
 			dist[nd] = c0
 			open.append([c0, nd.y, nd.x])
@@ -232,8 +239,8 @@ func road_route(gate: int, sid: String) -> PackedVector2Array:
 	while prev.has(at):
 		chain.push_front([prev[at][0], at, prev[at][1]])
 		at = prev[at][0]
-	_append_cells(out, _segment(Vector3i(-1, base, 0), _links[base].a, _links[base].b, int(_links[base].key)), false)
-	_append_cells(out, _segment(Vector3i(-1, starts[at], 0), _links[starts[at]].a, _links[starts[at]].b, int(_links[starts[at]].key)), false)
+	_append_cells(out, _segment(Vector3i(base, 0, -1), _links[base].a, _links[base].b, int(_links[base].key)), false)
+	_append_cells(out, _segment(Vector3i(starts[at], 0, -1), _links[starts[at]].a, _links[starts[at]].b, int(_links[starts[at]].key)), false)
 	for step in chain:
 		var seg: Array = step[2]                      # [i, j, k, forward]
 		var a := node_pos(int(seg[0]), int(seg[1]))
@@ -242,7 +249,8 @@ func road_route(gate: int, sid: String) -> PackedVector2Array:
 		var cells := _segment(Vector3i(int(seg[0]), int(seg[1]), int(seg[2])), a, node_pos(ni, nj), (int(seg[0]) * 7919 + int(seg[1]) * 104729 + int(seg[2])) & 0xFFFFFF)
 		_append_cells(out, cells, not bool(seg[3]))
 	var li_end: int = ends[goal]
-	_append_cells(out, _segment(Vector3i(-1, li_end, 0), _links[li_end].a, _links[li_end].b, int(_links[li_end].key)), true)
+	_append_cells(out, _segment(Vector3i(li_end, 0, -1), _links[li_end].a, _links[li_end].b, int(_links[li_end].key)), true)
+	_append_cells(out, _segment(Vector3i(site_base, 0, -1), _links[site_base].a, _links[site_base].b, int(_links[site_base].key)), true)
 	return out
 
 
@@ -278,7 +286,7 @@ func _node_edges(nd: Vector2i) -> Array:
 			if _node_excluded(pa) or _node_excluded(pb) or not _edge(si, sj, k):
 				continue
 			var bb := Rect2i(mini(pa.x, pb.x), mini(pa.y, pb.y), absi(pa.x - pb.x), absi(pa.y - pb.y))
-			if bb.intersects(keep):
+			if bb.intersects(keep) or _crosses_site(bb):
 				continue
 			var cells := _segment(Vector3i(si, sj, k), pa, pb, (si * 7919 + sj * 104729 + k) & 0xFFFFFF)
 			out.append([Vector2i(ni, nj) if dir == 1 else Vector2i(si, sj), cells.size() / 2, [si, sj, k, dir == 1]])
@@ -404,7 +412,21 @@ func _noise1(salt: int, t: int, period: int, amp: int) -> int:
 
 # ---------------------------------------------------------------- roads ----------------------
 func _node_excluded(p: Vector2i) -> bool:
-	return village.grow(24).has_point(p)
+	if village.grow(24).has_point(p):
+		return true
+	for st in sites:                              # REGION-NAV-01: no road node in or right by a settlement
+		if (st.rect as Rect2i).grow(12).has_point(p):
+			return true
+	return false
+
+
+## REGION-NAV-01: whether a network road's box crosses a settlement (it is dropped there, as round the village: a settlement's
+## own roads join it to the network).
+func _crosses_site(bb: Rect2i) -> bool:
+	for st in sites:
+		if bb.intersects((st.rect as Rect2i).grow(2)):
+			return true
+	return false
 
 
 func node_pos(i: int, j: int) -> Vector2i:
@@ -504,8 +526,8 @@ func gate_trails() -> Array:
 		if j == 0:
 			base = li
 			continue
-		var far_node := _segment(Vector3i(-1, li, 0), l.a, l.b, int(l.key))
-		var out_far: PackedInt32Array = _segment(Vector3i(-1, base, 0), _links[base].a, _links[base].b, int(_links[base].key))
+		var far_node := _segment(Vector3i(li, 0, -1), l.a, l.b, int(l.key))
+		var out_far: PackedInt32Array = _segment(Vector3i(base, 0, -1), _links[base].a, _links[base].b, int(_links[base].key))
 		var cells: Array[Vector2i] = []
 		for q in range(far_node.size() - 2, -1, -2):
 			cells.append(Vector2i(far_node[q], far_node[q + 1]))
@@ -515,6 +537,9 @@ func gate_trails() -> Array:
 	return _trails
 
 
+## The cells of a road segment, cached by `key`: a network edge's (i, j, k) with k 0..3, or a link's (link index, 0, -1).
+## REGION-NAV-01: links were keyed (-1, link index, 0), the same key as the network edge leaving node (-1, link index) east,
+## so whichever was cached first was drawn for both; links now have their own key space (k = -1).
 func _segment(key: Vector3i, a: Vector2i, b: Vector2i, hkey: int) -> PackedInt32Array:
 	var s: PackedInt32Array = _segments.get(key, PackedInt32Array())
 	if s.is_empty():
@@ -549,8 +574,8 @@ func _road_mask(ox: int, oy: int) -> PackedByteArray:
 				if not box.intersects(Rect2i(ox, oy, AREA, AREA)):
 					continue
 				var bb := Rect2i(mini(a.x, b.x), mini(a.y, b.y), absi(a.x - b.x), absi(a.y - b.y))
-				if bb.intersects(keep):
-					continue                          # a road never runs through the village: its exits join the network
+				if bb.intersects(keep) or _crosses_site(bb):
+					continue                          # a road never runs through the village or a settlement: their own roads join the network
 				_stamp(mask, _segment(Vector3i(i, j, k), a, b, (i * 7919 + j * 104729 + k) & 0xFFFFFF), ox, oy)
 	var li := 0
 	for l in _links:
@@ -558,7 +583,7 @@ func _road_mask(ox: int, oy: int) -> PackedByteArray:
 		var b2: Vector2i = l.b
 		var box2 := Rect2i(mini(a2.x, b2.x) - 12, mini(a2.y, b2.y) - 12, absi(a2.x - b2.x) + 24, absi(a2.y - b2.y) + 24)
 		if box2.intersects(Rect2i(ox, oy, AREA, AREA)):
-			_stamp(mask, _segment(Vector3i(-1, li, 0), a2, b2, int(l.key)), ox, oy)
+			_stamp(mask, _segment(Vector3i(li, 0, -1), a2, b2, int(l.key)), ox, oy)
 		li += 1
 	return mask
 
