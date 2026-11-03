@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 782 (416 of them still open) |
-| **Open entries now** (rules excluded) | | **575** |
+| Entries added since | | 784 (418 of them still open) |
+| **Open entries now** (rules excluded) | | **577** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (782)
+## Added since the baseline (784)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -205,6 +205,8 @@ None.
 | B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-007 | Character creation: unrestricted cosmetic options | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return; no decorative travelers | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-C | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-D | Expansion 23 BAN-D: rank, challenge, leadership, schism and autonomous succession | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
