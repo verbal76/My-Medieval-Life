@@ -627,6 +627,7 @@ that go on from the game's own save (`flight-recorder-seed.yml`, `.github/action
 six-hour limit met by segments of 1.3 to 2 hours estimated); each segment's save is also loaded into a fresh world and saved again,
 section by section (`economy_sim.gd`, `SAVE_ROUNDTRIP`); the `lives` job writes reports A-I over the first run and compares the two
 runs' event streams (event, state change, participant and snapshot rows by session and day, the machine's wall_ms and mem_bytes left
-out) and checkpoint fingerprints, failing if they differ. Archives and reports are kept 90 days (`fr-seed<N>[-twin]-seg<K>-*`,
+out) and checkpoint fingerprints, failing if they differ. With `--twin` the `scenarios` job also runs every targeted scenario of 9.5 on
+Actions (one job each, in parallel; `fr-targeted-<name>`), and the reports read them with `--targeted`, apart from the organic run. Archives and reports are kept 90 days (`fr-seed<N>[-twin]-seg<K>-*`,
 `fr-living-world-seed<N>`). Runtime: an unrecorded year measured 3.7-4.4 hours on Actions; recorded about 4.5-6 (README); B25R1's
 travellers and homesteads add work: about 5-7 hours a run, two runs in parallel. Locally, recorded, 10 days took 270-300 s at 110 people.
