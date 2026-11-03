@@ -174,6 +174,17 @@ func _route_prefers_road() -> void:
 		check(int(r.get("main", 0)) * 10 >= cells.size() * 7, "on the road between the places (%d of %d)" % [int(r.get("main", 0)), cells.size()])
 		var again := RegionTravel.plan(w, from, Vector2i(wul.slots[0].spot))
 		check(again.cells == r.cells, "the same route every time (deterministic)")
+	# B25R1-018: tap-to-travel reaches every settlement and hamlet of the region from home, by road, each step to a neighbour
+	for st in ow.sites:
+		var rs := RegionTravel.plan(w, from, Vector2i(st.slots[0].spot))
+		var gaps := 0
+		if bool(rs.ok) and not bool(rs.direct):
+			var cs: PackedVector2Array = rs.cells
+			for q in range(1, cs.size()):
+				if absf(cs[q].x - cs[q - 1].x) + absf(cs[q].y - cs[q - 1].y) > 1.5 and q > 1 and q < cs.size() - 1:
+					gaps += 1
+		check(bool(rs.ok) and not bool(rs.direct) and gaps == 0 and Vector2i(rs.cells[rs.cells.size() - 1]) == Vector2i(st.slots[0].spot),
+			"a route from home to %s is planned by road, unbroken (%s, %d gaps)" % [st.name, str(rs.get("why", "ok")), gaps])
 	# a point off the road far down it: the route goes by road, then leaves it for the point
 	var far := _open_beside(_road_point(220), 6)
 	var r2 := RegionTravel.plan(w, from, far)

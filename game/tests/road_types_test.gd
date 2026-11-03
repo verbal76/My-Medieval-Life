@@ -50,7 +50,9 @@ func _run() -> void:
 			var cell := Vector2i(c[q * 2], c[q * 2 + 1])
 			if ow.village.has_point(cell):
 				continue
-			var k := str(RegionRoads.main_kinds(ow).get(cell, "trail"))
+			# a settlement's street is stone (lane_cells) wherever a network segment crosses it: B25R1-018's main street runs
+			# the site's full height, so a side's road in or a grid trail can end on it
+			var k := "stone" if RegionRoads.lane_cells(ow).has(cell) else str(RegionRoads.main_kinds(ow).get(cell, "trail"))
 			by[k].append(cell)
 	var lanes := RegionRoads.lane_cells(ow)
 	check(by.stone.size() > 50 and by.road.size() > 50 and by.trail.size() > 50, "all three road types are on the network (stone %d, dirt road %d, trail %d sampled)" % [by.stone.size(), by.road.size(), by.trail.size()])
