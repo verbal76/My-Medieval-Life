@@ -718,7 +718,7 @@ func _run() -> void:
 	check(map_btn != null and ui.touch_bar.visible, "a Map button on the touch bar")
 	map_btn.pressed.emit()
 	check(ui.is_open("map") and main.paused, "the Map button opens the village map (the world waits)")
-	var mv: VillageMapPanel = ui.panel_body.get_child(0)
+	var mv: VillageMapPanel = ui.panel_body.get_children().filter(func(c): return c is VillageMapPanel)[0]     # (under the Village | Region bar, REGION-NAV-01 S1)
 	await process_frame
 	var img := VillageMapPanel.image_for(w.map, w)
 	check(img.get_width() == w.map.w and img.get_height() == w.map.h, "the map image is the village's size (%dx%d)" % [img.get_width(), img.get_height()])
@@ -739,7 +739,7 @@ func _run() -> void:
 	check(not ui.modal(), "M closes it")
 	# a tap on the map looks there
 	ui.toggle_map()
-	mv = ui.panel_body.get_child(0)
+	mv = ui.panel_body.get_children().filter(func(c): return c is VillageMapPanel)[0]
 	await process_frame
 	var tap_map := InputEventScreenTouch.new()
 	tap_map.pressed = true

@@ -169,7 +169,7 @@ var recorder = null           # REC-19: the flight recorder (WorldRecorder), or 
 
 func _init() -> void:
 	GameData.ensure()
-	journey_hook = func(n: NPC) -> bool: return Envoys.at_site(self, n)      # REGION-NAV-01 S4: an envoy's interviews at the site
+	journey_hook = func(n: NPC) -> bool: return Envoys.at_site(self, n) or RegionTrade.at_site(self, n)      # REGION-NAV-01: an envoy's interviews (S4), a buyer's purchase (S6)
 
 
 # ---------------------------------------------------------------- setup ----------------------
@@ -533,6 +533,7 @@ func _new_day() -> void:
 	if profiling:
 		t = _prof("daily: brain dawn (work, succession)", t)
 	manor_work.dawn()                  # undone manor jobs are released
+	RegionTrade.dawn(self)             # REGION-NAV-01 S6: a few tradespeople weigh what they were told of the neighbouring places
 	justice.dawn()                     # GP-CRIME-PURSUIT A1: outstanding crimes past their tier's wanted_days lapse
 	if judgment != null:
 		judgment.begin_day(d)          # PROSPECTIVE (PROS-19): old events retire; each person's fading follows by the hour
@@ -691,7 +692,12 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 		to = leg.from.stand
 	if not s.has("pathed"):
 		s.pathed = true
-		n.path = map.find_path(n.cell(), to) if n.depth == 0 else underground.find_path(n.depth, n.cell(), to)
+		if n.depth != 0:
+			n.path = underground.find_path(n.depth, n.cell(), to)
+		elif map.in_village(n.cell()) and map.in_village(to):
+			n.path = map.find_path(n.cell(), to)
+		else:
+			n.path = map.find_path_world(n.cell(), to)     # REGION-NAV-01: a traveller at a neighbouring settlement walks the world's cells (the village's grid would pull them home)
 		n.path_i = 0
 		if n.path.is_empty() and n.cell() != to:
 			if recorder != null:
@@ -6467,6 +6473,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		if int(b.amount) <= 0 and not b.get("ow", false):
 			map.set_solid(Vector2i(int(b.x), int(b.y)), false)
 	fields = d.fields
+	for f: Dictionary in fields:
+		if f.has("sown"):
+			f.sown = int(f.sown)          # (a whole number of cells: JSON gives it back as a float)
 	plots = d.plots
 	coin_sources = int(d.coin_sources)
 	# SET-C-FIVE: a save from before the five settlements has none: they are founded from the world's seed and stepped
@@ -6668,7 +6677,7 @@ func start_shared_farming(d: Dictionary) -> void:
 			f.sown = Farming.field_cells(f)
 		if Farming.seasonal_fields() and not f.has("progress"):
 			var span := field_grow_days(f) * DAY
-			f.progress = clampf(1.0 - (float(f.ready) - minutes) / span, 0.0, 1.0) if span > 0.0 else 1.0
+			f.progress = snappedf(clampf(1.0 - (float(f.ready) - minutes) / span, 0.0, 1.0), 1.0 / 65536.0) if span > 0.0 else 1.0     # (a binary fraction: a save of it reloads exactly)
 			f.ready = 1.0e18 if float(f.progress) < 1.0 else minutes
 	var given := Farming.give_seed_corn(self)
 	shared_farming_start = true

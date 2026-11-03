@@ -404,6 +404,13 @@ func known_recipients(sender: String) -> Array:
 		if str(c[0]) == sender and not seen.has(str(c[1])) and _party(str(c[1])) != null:
 			out.append(_entry("region:" + str(c[1]), "business", "has traded with them"))
 			seen[str(c[1])] = true
+	var sn = _npc(sender) if w != null and sender.begins_with("npc:") else null
+	if sn != null:                        # REGION-NAV-01 S6: a party a villager was told of (a fresh record, Intel) may be addressed
+		for r in sn.intel:
+			var key := str(r.about).trim_prefix("region:")
+			if Intel.fresh(w, r) and not seen.has(key) and _party(key) != null:
+				out.append(_entry("region:" + key, "business", "was told of them"))
+				seen[key] = true
 	out.sort_custom(func(a, b): return a.name < b.name or (a.name == b.name and a.kind < b.kind))
 	return out
 
@@ -789,7 +796,7 @@ func _job(order: Dictionary, q: Dictionary, courier: String) -> Dictionary:
 		"collect": (order.get("collect", {}) as Dictionary).duplicate(), "proceeds": str(order.get("proceeds", "deliver")),
 		"carried_coins": 0, "carried_items": {}, "returned_items": {}, "cargo": {}, "state": "", "route": "", "held_at": "", "depart": -1.0,
 		"arrive": -1.0, "back": -1.0, "outcome": "", "history": [], "notarise": notarised(order) or bool(order.get("notarise", false)),
-		"booth": "", "agreement": -1}
+		"booth": "", "agreement": -1, "intel": bool(order.get("intel", false))}
 	next_id += 1
 	jobs.append(j)
 	return j
@@ -871,6 +878,14 @@ func _arrive(j: Dictionary, day: float) -> void:
 		return
 	var rinv = inv_of(str(j.recipient))
 	var col: Dictionary = j.collect
+	if bool(j.get("intel", false)) and not _region_takes(str(j.recipient), j.items, col):
+		_unsigned(j, day)                                       # REGION-NAV-01 S6: the party's books no longer want it at that price
+		j.returned_items = (j.items as Dictionary).duplicate()
+		j.outcome = "no longer wanted"
+		j.state = "returning"
+		j.history.append([day, "the buyer no longer wants it at that price: the goods come back"])
+		w.stat("region_trade_refused")
+		return
 	# a delivery that asks for payment is refused when the recipient cannot or will not pay
 	if not col.is_empty():
 		var can_pay: bool = (coins_of(str(j.recipient)) >= int(col.amount)) if str(col.kind) == "coins" else rinv.has(str(col.item), int(col.amount))
@@ -907,6 +922,25 @@ func _arrive(j: Dictionary, day: float) -> void:
 	j.state = "returning"
 	j.history.append([day, "handed over%s" % (" and payment collected" if not col.is_empty() else "")])
 	_note_carried(j, EconRouteRisk.value_of(j.cargo, int(j.carried_coins)))     # the way back with the payment
+
+
+## REGION-NAV-01 S6: whether a settlement's party takes goods sent on the strength of what a villager was told: its books still want
+## that many (SettlementFolk.offers' want: need over WANT_DAYS less what it holds) and the payment asked is no more than its price.
+func _region_takes(recipient: String, items: Dictionary, col: Dictionary) -> bool:
+	if not recipient.begins_with("region:") or w == null:
+		return true
+	var key := recipient.trim_prefix("region:")
+	var p = _party(key)
+	var s: OffMapSettlement = w.regions.by_id.get(key.split("/")[0])
+	if p == null or s == null:
+		return false
+	var worth := 0
+	for id in items:
+		var want: int = ceili(float(p.need_rate(str(id))) * SettlementFolk.WANT_DAYS) - int(p.held(str(id)))
+		if want < int(items[id]):
+			return false
+		worth += s.price(str(id)) * int(items[id])
+	return str(col.get("kind", "")) != "coins" or int(col.get("amount", 0)) <= worth
 
 
 ## A notarised delivery the recipient did not sign (nobody to sign, would not, could not): the agreement stays unsigned.

@@ -181,8 +181,8 @@ static func act(w: World, n: NPC, what: String, a: Dictionary) -> bool:
 			var p := _person(w, str(j.sid), str(a.ref))
 			if p.is_empty() or (j.met as Array).has(str(a.ref)):
 				return true
-			if not SettlementFolk.present(w, p):
-				_record_absent(w, n, j, p)
+			if not SettlementFolk.present(w, p) or n.pos.distance_to(Vector2(p.spot) + Vector2(0.5, 1.5)) > 3.0:
+				_record_absent(w, n, j, p)                   # away, or out of the envoy's reach: never surveyed from afar
 				return true
 			_interview(w, n, j, p)
 		"envoy_report":
