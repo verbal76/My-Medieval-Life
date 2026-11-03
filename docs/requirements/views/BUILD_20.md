@@ -9,8 +9,8 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 151 |
-| Integrated | 125 of 151 (83%) |
-| Automated tests passed | 110 of 151 (73%) |
+| Integrated | 127 of 151 (84%) |
+| Automated tests passed | 111 of 151 (74%) |
 | Integration verified | 64 of 151 (42%) |
 | Gameplay verified | 0 of 151 (0%) |
 | Owner playtested | 0 of 151 (0%) |
@@ -18,16 +18,15 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | Open (release blockers) | 149 |
 | Open owner decisions (blocking) | 6 (0) |
 
-## In development (worker assigned) (4)
+## In development (worker assigned) (3)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | B25-CLOSE-01 | Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop | OWNER APPROVED | IN DEVELOPMENT | lead (single worker, MML-CONSERVE-01) / wip/b25-farm-phase2 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-FINISH-01 | Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release | OWNER APPROVED | IN DEVELOPMENT | lead session / wip/region-nav | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| VAL-AGENT-01 | One temporary read-only Validation and Integration Agent for Build 25 (REGION-NAV-01 S2 first, then as the lead directs); the main session stays the sole development lead and owns fixes and records | OWNER APPROVED | IN DEVELOPMENT | validation agent (read-only) / wip/region-nav | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (123)
+## Integrated, awaiting gameplay or owner verification (125)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -115,8 +114,10 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | REC-19 | Build 19 Simulation Flight Recorder: full-scope interaction, decision, state-change and causal recording of the whole active simulation (player-independent), invariant and anomaly checks, coverage audit, structured archive with Excel export on Android, Windows and Linux; recording on/off deterministic; developer layer of XEXPL-01 | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 4f50ffb | TARGETED TESTS PASSED | recorder stage D5 (judgment publish, learn, tell, trust, every choice with alternatives and factors) and D4 relations (batch R3) |  | verification only |
 | REC-DIAG | Use the flight recorder now for autonomous simulation analysis: progressively longer runs, analysis between runs, findings with evidence, causes and recommended corrections; defects told apart from emergent behaviour; instrumentation gaps reported; no unrelated fixes without the owner | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 5c303be | INTEGRATION VERIFIED | analysis of judgment once D5 records it (batch R6); closure also waits on SIM-F2 and SIM-F3 |  | verification only |
 | REC-STORE | Recorder keeps every decision's alternatives and factors in full; no reduction, sampling or discarding; storage limit stops recording, keeps data, marks the session incomplete | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 4f50ffb | TARGETED TESTS PASSED | judgment-weighted decisions recorded in full (batch R3) |  | verification only |
+| REGION-NAV-01 | Regional economy, world navigation, envoys and independent inter-village commerce: physical settlements, discovery and world map, NPC travel, envoy surveys with provenance, information network, independent NPC trade over CON-01, regional demand in business decisions, integrity and measurements | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | TARGETED TESTS PASSED |  |  | verification only |
 | SJD-F | Judgment expansion Gate F: incremental rollout (trade, aid, friendship, courtship, employment, crime, politics) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c; Expansion 20 wip/expansion20 5770d00 | TARGETED TESTS PASSED | 13 decision domains live through JudgmentWeighting.choose; close against acceptance with the population evidence of the measurement batch (R6); politics stays with Expansion 21 (Q-POL-1, Q-POL-7) |  | verification only |
 | SJD-G | Judgment expansion Gate G: full soak and calibration: 100/365-day comparisons, performance and save migration | OWNER APPROVED | INTEGRATED | wip/expansion20 531da40 | INTEGRATION VERIFIED | 100- and 365-day judgment on vs off comparisons, ablations, device performance (batch R6), after R1-R5 |  | verification only |
+| VAL-AGENT-01 | One temporary read-only Validation and Integration Agent for Build 25 (REGION-NAV-01 S2 first, then as the lead directs); the main session stays the sole development lead and owns fixes and records | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
 | WDR-009-C | Comply with World Design Rule 9: Emergent Gameplay | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 5770d00 | TARGETED TESTS PASSED | the 30-planks verification scenario on top of GM-01 (batch R4) |  | verification only |
 | WDR-011-C | Comply with World Design Rule 11: NPC Self-Improvement and Prosperity | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 3601211 | TARGETED TESTS PASSED | aspirations in five domains from real state as a decision factor; design note first, then code behind a flag (batch R5) |  | verification only |
 | WEAPON-CATALOG-01 | Every weapon on the master weapons sheet can be made at the smithy at an appropriate Smithing level and bought there | OWNER APPROVED | INTEGRATED | Build 22 wip/build22 b7e1c91 | TARGETED TESTS PASSED |  |  | verification only |
@@ -161,7 +162,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | TARGETED TESTS PASSED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (21)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (20)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -176,7 +177,6 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | DOC-RECON-01 | Documentation reconciliation and owner-decision protection: every expansion (17-27), multiplayer and standalone approved system has a current status document; register statuses corrected from code and test evidence; precedence hierarchy (latest explicit owner decision first); historical documents labelled; missing original sources listed; one authoritative entry point; on the isolated branch wip/requirements-control, not merged into the gameplay baseline without the owner | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | lead / wip/requirements-control | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | DOC-RECON-REVIEW-01 | Owner review of DOC-RECON-01 (2026-10-31): wip/requirements-control stays isolated at the reviewed commit 3098a5f until the owner authorizes integration; decisions on the remaining Expansion 20 placement, economy activation, Expansion 26 bosses and heroes, Expansion 21 recovery, other political offices, original packets and open questions; one consolidated owner-decision report | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | LE-07 | Living Economy stage LE-07: Release readiness and platform builds | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| REGION-NAV-01 | Regional economy, world navigation, envoys and independent inter-village commerce: physical settlements, discovery and world map, NPC travel, envoy surveys with provenance, information network, independent NPC trade over CON-01, regional demand in business decisions, integrity and measurements | OWNER APPROVED | PARTIALLY IMPLEMENTED | lead (single worker) / wip/region-nav | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-CAREER-AUDIT | Audit career progression, NPC ambition and skilled employment | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-ECON-AFFORD | Re-evaluate the unaffordable bids by interval, category, household condition and cause | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-ECON-AUDIT | Audit which of 20 economic progression systems the year-long simulations exercise | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

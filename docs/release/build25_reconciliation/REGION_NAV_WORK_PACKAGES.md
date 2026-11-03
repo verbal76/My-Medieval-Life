@@ -94,18 +94,22 @@ Neither move was approved before it happened.
 
 ## Stage status (DEV-GOV-01 reporting; kept current with development)
 
-| Stage | State | Outstanding deliverables | Current evidence | Blocker | Next action |
-|---|---|---|---|---|---|
-| S1 | Testing (criteria met; Q3 geography check pending) | The Q3 agreement check (positions, distances, roads, travel times, economy) | overworld 179/0 at `6c88df0`; atlas 17/0 at `3fd24e2`; countryside 38/0 | — | Geography agreement test (shared with S2) |
-| S2 | Actively developing | Independent crafters (Q4); save and load test; trade-path equivalence (Q5) | settlement_folk 21/0 at `8a57974` | — | Crafters in the settlement model |
-| S3 | Testing | Deterministic arrival; blocked route; death mid-journey; manifest, decision and wiki records | journey 14/0 at `aafcc4d`; routes in overworld 179/0 | — | After S2 |
-| S4 | Not started | All | — | S2, S3 | — |
-| S5 | Not started | All | — | S4 | — |
-| S6 | Not started | All | — | S5 | — |
-| S7 | Not started | All | — | S6 | — |
-| S8 | Not started | All | — | S7 | — |
+Updated 2026-11-02 22:55 EST. All eight stages are integrated into `wip/expansion20` at `b540971` (fast-forward from
+`wip/region-nav`; 2026-11-03 03:5x UTC). Test counts are local Godot 4.7.2 headless runs on the commit named. CI: sharded run
+41567411820 on `54c2738`: 2 shards green; shards 1 and 3 failed on 3 stale or pre-existing checks, fixed in `14bbd86`.
 
-Summary: eight approved packages; none complete; one in development (S2); two in testing (S1, S3); five not started.
+| Stage | State | Outstanding deliverables | Evidence | Blocker | Next action |
+|---|---|---|---|---|---|
+| S1 | Completed | — | overworld 179/0; atlas 17/0; countryside 38/0; region_geography 132/0 (Q3: positions, roads, route lengths, courier links, after a load too); start_test and crafts_test updated for generation 3 and the map bar (`14bbd86`) | — | Final candidate CI |
+| S2 | Completed | — | settlement_folk 36/0 (Q5 equivalence, save and load); settlement_crafter 25/0 (Q4: crafters, emergence, failure on a spent purse, wind-up, 150-day no-double-role, leave-with-load); validation defects D1-D4 fixed (`8792886`, `b18f418`); regions 120/0, settlement_life 54/0, settlement_development 32/0, migration 109/0, courier_live 138/0 | — | Final candidate CI |
+| S3 | Completed | — | journey 14/0; journey_s3 19/0 (arrival day deterministic; a blocked route fails and turns home; death conserves what is carried); INT-682 | — | Final candidate CI |
+| S4 | Completed | — | envoy_test 31/0 (`b281e90`, `14bbd86`): the reeve posts; a villager takes the post; interviews read each keeper's and crafter's real books face to face; away recorded with reason; nothing known before the return; envoy death and reeve succession mid-mission; wage conserved; book saved. INT-683 | — | — |
+| S5 | Completed | — | intel_test 13/0 (`619fcc2`): knowledge only through a teller; word of mouth limited to the listener's trade; collected day kept; stale and forgotten. INT-684 | — | — |
+| S6 | Completed | — | region_trade_test 23/0 (`14bbd86`): no forced trade; refusal (goods come back); sold before arrival; funds limit; conservation; no instant transfer; face to face only. World._walk defect found and fixed. INT-685 | — | — |
+| S7 | Completed | — | region_demand_test 11/0 (`5a00993`): a told want moves the crafter's recipe choice (station work); busy share before and after; foundings with cause; P2 and P3 measured. INT-686 | — | — |
+| S8 | Completed (Android profile: device check, LE-07 gate 11) | Phone profile (device) | region_sim_test 8/0 (`b540971`): two runs identical; save mid-mission exact for the regional state, stable reload, mission finishes; currency ledger and settlement books balance. economy_sim REGION line (12-day run: 1 mission, 33 records, word to 12 villagers, 7 sales, 4 refused; leak 0, item leaks none). Desktop timing against the baseline: running | Phone: device | Read the timing; final flight |
+
+Summary: eight approved stages; all eight complete against their criteria; the Android profile is the device check of LE-07 gate 11.
 
 ## Owner decisions requested (as asked; answered above)
 

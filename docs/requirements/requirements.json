@@ -49992,8 +49992,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -50021,14 +50021,29 @@
      "date": "2026-11-03",
      "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; tests: overworld_test 159/0, countryside_test 38/0, atlas_test 17/0, settlement_folk_test 21/0 (local) -> overworld_test 159/0, countryside_test 38/0, atlas_test 17/0, settlement_folk_test 21/0 (local); overworld 179/0 (6c88df0), countryside 38/0, atlas 17/0 (3fd24e2), settlement_folk 21/0 (8a57974), journey 14/0 (aafcc4d), wiki_test (add1651), local",
      "why": "DEV-GOV-01 review (2026-11-03): S1 implemented (unapproved split S1a/S1b; AD-1 changed to existing positions, owner Q3); S2 partially complete (unapproved split S2a/b/c; crafters and save/load test outstanding; trade path deviates, Q4/Q5); S3 in progress (journey_test 14/0 at aafcc4d; three of its tests outstanding); S4 onward halted pending REGION-NAV-Q1..Q6"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> INTEGRATED; commits + b540971; integrated_in + Build 25 wip/expansion20",
+     "why": "S1-S8 complete against the approved stage criteria (REGION_NAV_WORK_PACKAGES.md); integrated into wip/expansion20 at b540971"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: overworld_test 159/0, countryside_test 38/0, atlas_test 17/0, settlement_folk_test 21/0 (local); overworld 179/0 (6c88df0), countryside 38/0, atlas 17/0 (3fd24e2), settlement_folk 21/0 (8a57974), journey 14/0 (aafcc4d), wiki_test (add1651), local -> overworld_test 159/0, countryside_test 38/0, atlas_test 17/0, settlement_folk_test 21/0 (local); overworld 179/0 (6c88df0), countryside 38/0, atlas 17/0 (3fd24e2), settlement_folk 21/0 (8a57974), journey 14/0 (aafcc4d), wiki_test (add1651), local; 13 regional suites, 0 failures (local, Godot 4.7.2); test_commit: None -> b540971",
+     "why": "stage tests: overworld 179, atlas 17, countryside 38, region_geography 132, settlement_folk 36, settlement_crafter 25, journey 14, journey_s3 19, envoy 31, intel 13, region_trade 23, region_demand 11, region_sim 8; all 0 failures"
     }
    ],
    "assigned_worker": "lead (single worker)",
    "branch": "wip/region-nav",
-   "tests": "overworld_test 159/0, countryside_test 38/0, atlas_test 17/0, settlement_folk_test 21/0 (local); overworld 179/0 (6c88df0), countryside 38/0, atlas 17/0 (3fd24e2), settlement_folk 21/0 (8a57974), journey 14/0 (aafcc4d), wiki_test (add1651), local",
+   "tests": "overworld_test 159/0, countryside_test 38/0, atlas_test 17/0, settlement_folk_test 21/0 (local); overworld 179/0 (6c88df0), countryside 38/0, atlas 17/0 (3fd24e2), settlement_folk 21/0 (8a57974), journey 14/0 (aafcc4d), wiki_test (add1651), local; 13 regional suites, 0 failures (local, Godot 4.7.2)",
    "commits": [
-    "8a57974"
-   ]
+    "8a57974",
+    "b540971"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
+   ],
+   "test_commit": "b540971"
   },
   {
    "id": "REGION-NAV-Q1",
@@ -58071,7 +58086,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -58085,10 +58100,26 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> validation agent (read-only); branch: None -> wip/region-nav",
      "why": "launched 2026-11-03 on S2, read-only, detached checkout .claude/worktrees/region-nav-validate at d3b82c4"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED",
+     "why": "assignment done: S2 reviewed, four defects reported and fixed (8792886, b18f418); agent stopped"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "commits + b18f418; integrated_in + Build 25 wip/expansion20",
+     "why": "its findings' fixes are integrated"
     }
    ],
    "assigned_worker": "validation agent (read-only)",
-   "branch": "wip/region-nav"
+   "branch": "wip/region-nav",
+   "commits": [
+    "b18f418"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
+   ]
   },
   {
    "id": "VER-CON-50ORE",
