@@ -2287,7 +2287,7 @@ func approach(n: NPC) -> void:
 	if world.at_post(n) and not quest_business:
 		ui.show_trade(n)
 		return
-	if n.role != "bandit" and Dialogue.busy(n) and not quest_business:
+	if n.role != "bandit" and Dialogue.busy(n) and not quest_business and not Journeys.active(n):     # B25R1-009: a villager on a journey stops for a word
 		say(n, Dialogue.brush_off(world, n))
 	else:
 		ui.show_talk(n)

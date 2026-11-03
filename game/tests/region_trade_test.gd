@@ -84,7 +84,7 @@ func _test_no_forced_trade() -> void:
 	RegionTrade.dawn(w)
 	var any := false
 	for o: NPC in w.npcs:
-		if Journeys.active(o) and str(o.journey.get("purpose", {}).get("kind", "")) == "buy":
+		if Journeys.active(o) and str(o.journey.get("purpose", {}).get("kind", "")) == "buy" and not bool(o.journey.purpose.get("seed", false)):     # (B25R1-009: the founding's seed travellers are not sent by RegionTrade)
 			any = true
 	check(not any, "a dawn with nothing worth it sends nobody (no forced trade)")
 

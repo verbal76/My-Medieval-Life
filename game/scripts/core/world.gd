@@ -298,6 +298,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	transactions = EconTransactions.new(self)   # LE-03: always built; does nothing until called
 	civic = CivicRecords.attach(self)    # P21-01: null unless data/civic.json enables it; seeds the current holders, draws nothing
 	note("Day 1 begins in the village.")
+	SeedTravelers.designate(self)        # B25R1-009: a few residents set out to buy one thing at another settlement (once, at the founding)
 
 
 ## The manor's funds are the treasury; the reeve keeps only a purse. Used for a new world and to
