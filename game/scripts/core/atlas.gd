@@ -80,6 +80,8 @@ static func note_position(w: World, p: PlayerState) -> String:
 	if cell != p.wear_cell:
 		p.wear_cell = cell
 		RoadWear.foot(ow, cell, not w.carts.pulled_by(w.player_ref(p)).is_empty())     # B25R1-011: the player's footfall
+		if w.recorder != null:
+			WaterNotes.crossed(w, p, w.player_ref(p), cell)       # B25R1-017: a bridge or ford crossed
 	for nm in Landmarks.note(w, p):                  # B25R1-003: the smaller places, found on foot (an icon on the map)
 		w.stat("landmark_found")
 		if p == w.player:

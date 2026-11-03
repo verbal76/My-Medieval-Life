@@ -537,6 +537,7 @@ func _new_day() -> void:
 	manor_work.dawn()                  # undone manor jobs are released
 	if map.overworld != null:
 		RoadWear.prune(map.overworld)  # B25R1-011: road cells back to what the generator and the clock give are forgotten
+		map.overworld.crossings_seen.clear()     # B25R1-017: the recorder's once-a-day crossing notes start again
 	RegionTrade.dawn(self)             # REGION-NAV-01 S6: a few tradespeople weigh what they were told of the neighbouring places
 	justice.dawn()                     # GP-CRIME-PURSUIT A1: outstanding crimes past their tier's wanted_days lapse
 	if judgment != null:
@@ -734,6 +735,8 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 			n.path_i += 1
 			if outside:
 				RoadWear.foot(map.overworld, Vector2i(goal.floor()), cart)      # B25R1-011: footfall wears the way
+				if recorder != null:
+					WaterNotes.crossed(self, n, World.npc_ref(n.id), Vector2i(goal.floor()))     # B25R1-017: a bridge or ford crossed
 		else:
 			n.pos += d / l * budget
 			n.facing = d

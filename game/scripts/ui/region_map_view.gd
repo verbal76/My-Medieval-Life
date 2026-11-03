@@ -546,7 +546,8 @@ func _draw() -> void:
 		var line := PackedVector2Array()
 		for sp in st.pts:
 			line.append(to_screen(sp))
-		draw_polyline(line, WATER, clampf(zoom * 2.6, 2.0, 40.0))
+		var wide := 2.0 if int(st.get("order", 1)) == 2 else 1.0      # B25R1-017: a river drawn wider than a stream
+		draw_polyline(line, WATER, clampf(zoom * 2.6 * wide, 2.0 * wide, 40.0 * wide))
 		for pool in st.pools:
 			draw_circle(to_screen(pool[0]), maxf(2.0, float(pool[1]) * zoom), WATER)
 	for b in bridges:
@@ -661,7 +662,7 @@ func _draw() -> void:
 	draw_line(Vector2(x, yy), Vector2(x + 24, yy), TRAIL, 2.0)
 	x = _legend_word(font, x + 30, yy, "Trail")
 	draw_line(Vector2(x, yy), Vector2(x + 24, yy), WATER, 4.0)
-	x = _legend_word(font, x + 30, yy, "Stream")
+	x = _legend_word(font, x + 30, yy, "River, stream")
 	draw_rect(Rect2(Vector2(x, yy - 5), Vector2(10, 10)), BRIDGE)
 	x = _legend_word(font, x + 16, yy, "Bridge")
 	draw_rect(Rect2(Vector2(x, yy - 6), Vector2(12, 12)), SITE)

@@ -210,6 +210,91 @@ func _run() -> void:
 		if str(ow3.get_chunk(cc).ground) == str(ref.get_chunk(cc).ground) and str(ow3.get_chunk(cc).solid) == str(ref.get_chunk(cc).solid):
 			same += 1
 	check(same == CHUNKS.size(), "and its chunks are generation 3's, unchanged (%d of %d)" % [same, CHUNKS.size()])
+	# --- B25R1-017: rivers and streams, a connected network, flowing downhill
+	check(Overworld.NO_WATER == Vector2i(1 << 30, 0), "nearest_water's none is Vector2i(1 << 30, 0), the agreed signature")
+	var big := Rect2i(-260, -200, 640, 1200)
+	var courses := ow.streams_in(big)
+	var rivers := courses.filter(func(c): return int(c.order) == 2)
+	var graph := ow.course_graph(big)
+	var fed := 0
+	var uphill := 0
+	for c in courses:
+		if str(c.joins) != "":
+			fed += 1
+		var pts: Array = c.pts
+		for q in range(2, pts.size(), 2):
+			if ow._height(Vector2i((pts[q] as Vector2).round())) > ow._height(Vector2i((pts[q - 2] as Vector2).round())) + 6:
+				uphill += 1
+	check(rivers.size() >= 2 and courses.size() > rivers.size(), "rivers and streams both (%d rivers, %d courses)" % [rivers.size(), courses.size()])
+	check(fed >= 2 and rivers.any(func(r): return not (graph[r.id].tributaries as Array).is_empty()), "streams feed rivers: a network (%d streams join a river)" % fed)
+	check(uphill == 0, "every course runs downhill, step by step (%d steps up)" % uphill)
+	var rv: Dictionary = rivers[0] if not rivers.is_empty() else {}
+	check(not rv.is_empty() and float(graph[rv.id].catchment) >= float(rv.length) and int(graph[rv.id].order) == 2, "the course graph keeps order, length and catchment (%s)" % str(graph.get(rv.get("id", ""), {})))
+	# per cell: flow, level, bank
+	var flows := {}
+	var lv := {}
+	var banks := 0
+	var fall_rim := 0
+	var nfalls := 0
+	var foam_near_fall := 0
+	for cy in range(Overworld.fdiv(area.position.y, 32), Overworld.fdiv(area.end.y, 32) + 1):
+		for cx in range(Overworld.fdiv(area.position.x, 32), Overworld.fdiv(area.end.x, 32) + 1):
+			if a.chunk_in_village(Vector2i(cx, cy)):
+				continue
+			var ch := a.get_chunk(Vector2i(cx, cy))
+			for i in 1024:
+				var c := Vector2i(cx * 32 + i % 32, cy * 32 + i / 32)
+				if ch.water[i] != 0:
+					flows[int(ch.flow[i])] = int(flows.get(int(ch.flow[i]), 0)) + 1
+					lv[int(ch.level[i])] = true
+				elif ch.bank[i] >= 1 and ch.bank[i] <= Overworld.BANK_REACH:
+					banks += 1
+				if ch.water[i] == 3:
+					nfalls += 1
+					# a genuine drop: along the rim either side, rock or more of the fall, and above it the raised ground (a top or
+					# its rim) within a few cells
+					var side := false
+					for e in [Vector2i(1, 0), Vector2i(-1, 0)]:
+						var n2: Vector2i = c + e
+						while a.flow_at(n2) != 0 and a.is_water(n2) and n2.distance_to(c) < 8:
+							n2 += e
+						if a.is_solid(n2) and not a.is_water(n2):
+							side = true
+					var up := false
+					for dd in range(1, 5):
+						if a.is_top(c + Vector2i(0, -dd)) or (a.is_solid(c + Vector2i(1, -dd)) and not a.is_water(c + Vector2i(1, -dd))):
+							up = true
+					if side and up:
+						fall_rim += 1
+					for dd in range(1, 5):
+						if a.flow_at(c + Vector2i(0, dd)) == Overworld.FLOW_FOAM:
+							foam_near_fall += 1
+							break
+	var moving := 0
+	for f in range(1, 9):
+		moving += int(flows.get(f, 0))
+	check(moving > 1000, "the water flows: %d cells carry a downstream direction (%s)" % [moving, str(flows)])
+	check(lv.has(1) and lv.has(2), "levels: streams 1, rivers 2 (%s)" % str(lv.keys()))
+	check(banks > 500, "dry cells beside the water keep their bank height, the floodplain (%d)" % banks)
+	check(nfalls > 0 and fall_rim * 10 >= nfalls * 8, "waterfalls stand in cliff rims, a genuine drop: rock along the rim either side and raised ground above (%d of %d)" % [fall_rim, nfalls])
+	check(int(flows.get(Overworld.FLOW_FOAM, 0)) > 0 and foam_near_fall > 0, "a foaming pool below the falls (%d foam cells; %d falls with foam just below)" % [int(flows.get(Overworld.FLOW_FOAM, 0)), foam_near_fall])
+	# the weather hooks: nothing changes the water now; set_level and on_level_changed are there for it
+	var heard := []
+	ow.on_level_changed = func(c, o, n): heard.append([c, o, n])
+	var wcell := ow.nearest_water(br, 8) if br != Vector2i.ZERO else Vector2i.ZERO
+	var lvl0 := ow.water_level(wcell)
+	ow.set_level(wcell, lvl0 + 1.0)
+	check(heard.size() == 1 and is_equal_approx(ow.water_level(wcell), lvl0 + 1.0), "set_level and on_level_changed: the flood hooks answer (%s)" % str(heard))
+	ow.level_override.clear()
+	ow.on_level_changed = Callable()
+	check(is_equal_approx(ow.seasonal_flow, 1.0) and ow.water_level(wcell) == lvl0, "and the water is constant otherwise (seasonal_flow 1)")
+	# stable crossing ids for the flight recorder
+	if br != Vector2i.ZERO:
+		var id := ow.crossing_id(br)
+		var fresh := Overworld.create(ow.seed, main.map)
+		check(id.begins_with("crossing:bridge:") and fresh.crossing_id(br) == id, "a bridge's crossing id is stable (%s, the same in a fresh world)" % id)
+	check(GameAudio.water_volume(1.0, 2.0, 12.0) == 1.0 and GameAudio.water_volume(7.0, 2.0, 12.0) > 0.0 and GameAudio.water_volume(13.0, 2.0, 12.0) == 0.0,
+		"the water sound is loudest beside the water and silent far off")
 	# --- the Region map
 	var bounds := RegionMapPanel.region_bounds(w, w.player)
 	var sts := ow.streams_in(bounds)

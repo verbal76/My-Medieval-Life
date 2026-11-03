@@ -13,7 +13,7 @@ tileset), so the game can draw with the atlases it already has. Nothing is drawn
   water          B25R1-Q3: the stream tiles in game/assets/tiles/water_tiles.png (tools/water_tiles.py, the same free
                  tileset's grass/river corner set, waterfall and plank walks, and stone bridges from the paid flagstone):
                  river[k] for water corners k (bit 0 top-left, 1 top-right, 2 bottom-right, 3 bottom-left; [] where the set
-                 has no tile), fall, ford (stepping stones), bridge {plank_ns, plank_ew, stone_ns, stone_ew}, as atlas 5 values (5 * 100000 + row * 4)
+                 has no tile), flow_base (B25R1-017: the tile of flow f and corners k is flow_base + (f * 16 + k) * 4), fall, ford (stepping stones), bridge {plank_ns, plank_ew, stone_ns, stone_ew}, as atlas 5 values (5 * 100000 + row * 4)
 
 Run:  python3 tools/build_overworld_tiles.py
 """
@@ -33,7 +33,7 @@ FLOWERS = [2657, 2658, 2659, 2656]   # PL1-12: the low red flower (2656) grows o
 BUSHES = [2661, 2663]
 FORMAT = "mml-overworld-tiles/1"
 WATER_ATLAS = 5 * 100000                 # MapView's water atlas (game/assets/tiles/water_tiles.png: 4 frames a row)
-WATER_ROWS = {"fall": 16, "plank_ns": 17, "plank_ew": 18, "stone_ns": 19, "stone_ew": 20, "ford": 21}
+WATER_ROWS = {"fall": 160, "plank_ns": 161, "plank_ew": 162, "stone_ns": 163, "stone_ew": 164, "ford": 165}   # after 10 flows x 16 corners
 
 
 def build():
@@ -56,7 +56,7 @@ def build():
     for k in range(16):
         key = tuple(river_id if k >> b & 1 else GRASS for b in range(4))
         river.append([WATER_ATLAS + k * 4] if k != 0 and tiles.get(key) else [])
-    water = {"river": river, "fall": WATER_ATLAS + WATER_ROWS["fall"] * 4, "ford": WATER_ATLAS + WATER_ROWS["ford"] * 4,
+    water = {"river": river, "flow_base": WATER_ATLAS, "fall": WATER_ATLAS + WATER_ROWS["fall"] * 4, "ford": WATER_ATLAS + WATER_ROWS["ford"] * 4,
              "bridge": {k: WATER_ATLAS + WATER_ROWS[k] * 4 for k in ["plank_ns", "plank_ew", "stone_ns", "stone_ew"]}}
     village = json.loads(VILLAGE.read_text())
     stamps = sorted({(t["trunk"], t["top"], t["bottom"]) for t in village["trees"]})

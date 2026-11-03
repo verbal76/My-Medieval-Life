@@ -32,8 +32,9 @@ func _setup() -> void:
 	var bridge := Vector2i.ZERO
 	var bend := Vector2i.ZERO
 	var ford := Vector2i.ZERO
+	var river := Vector2i.ZERO
 	var c0 := Overworld.chunk_of(ow.village.get_center())
-	for r in range(1, 14):
+	for r in range(1, 22):
 		for dy in range(-r, r + 1):
 			for dx in range(-r, r + 1):
 				if maxi(absi(dx), absi(dy)) != r:
@@ -48,11 +49,13 @@ func _setup() -> void:
 						fall = c
 					elif ch.water[i] == 2 and bridge == Vector2i.ZERO:
 						bridge = c
+					elif ch.water[i] == 1 and ch.level[i] == 2 and river == Vector2i.ZERO:
+						river = c
 					elif ch.water[i] == 4 and ford == Vector2i.ZERO:
 						ford = c
 					elif ch.water[i] == 1 and bend == Vector2i.ZERO and r > 3:
 						bend = c
-	print("fall ", fall, " bridge ", bridge, " stream ", bend)
+	print("fall ", fall, " bridge ", bridge, " stream ", bend, " ford ", ford, " river ", river)
 	if fall != Vector2i.ZERO:
 		queue.append(["waterfall", Vector2(ow.nearest_water_access(fall + Vector2i(0, 3), 6)) + Vector2(0.5, 0.5)])
 	if bridge != Vector2i.ZERO:
@@ -61,6 +64,8 @@ func _setup() -> void:
 		queue.append(["stream", Vector2(ow.nearest_water_access(bend, 3)) + Vector2(0.5, 0.5)])
 	if ford != Vector2i.ZERO:
 		queue.append(["ford", Vector2(ford) + Vector2(0.5, 0.5)])
+	if river != Vector2i.ZERO:
+		queue.append(["river", Vector2(ow.nearest_water_access(river, 6)) + Vector2(0.5, 0.5)])
 	queue.append(["map", Vector2(bridge) + Vector2(0.5, 0.5)])
 	_next()
 	process_frame.connect(_wait)

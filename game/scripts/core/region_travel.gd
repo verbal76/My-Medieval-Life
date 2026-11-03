@@ -25,6 +25,12 @@ static func _open(w: World, c: Vector2i) -> bool:
 	return not w.map.is_solid_world(c)
 
 
+## B25R1-017: why no way was found, for the flight recorder: "water_no_crossing" when water lies round the destination,
+## else "unreachable".
+static func _no_way(ow: Overworld, dest: Vector2i) -> String:
+	return "water_no_crossing" if ow.nearest_water(dest, 6) != Overworld.NO_WATER else "unreachable"
+
+
 ## The open cell nearest `c` within SNAP (itself when open), or NONE.
 static func snap(w: World, c: Vector2i) -> Vector2i:
 	if _open(w, c):
@@ -240,11 +246,13 @@ static func plan(w: World, from: Vector2i, to: Vector2i) -> Dictionary:
 		return {"ok": false, "why": "Come up to the surface first."}
 	var dest := snap(w, to)
 	if dest == RegionRoads.NONE:
-		return {"ok": false, "why": "You cannot stand there: pick open ground."}
+		if ow.is_water(to):                              # B25R1-017: the middle of a river: no bank within reach
+			return {"ok": false, "why": "That is open water: pick the bank, a bridge or a ford.", "reason": "water_destination"}
+		return {"ok": false, "why": "You cannot stand there: pick open ground.", "reason": "solid"}
 	if dest == from:
 		return {"ok": false, "why": "You are already there."}
 	if not ow.village.has_point(dest) and ow.site_at(dest).is_empty() and enclosed(w, dest):
-		return {"ok": false, "why": "There is no way there on foot that you can find."}
+		return {"ok": false, "why": "There is no way there on foot that you can find.", "reason": _no_way(ow, dest)}
 	var direct := {}
 	var span := Vector2i(absi(dest.x - from.x), absi(dest.y - from.y))
 	var both_village := ow.village.has_point(from) and ow.village.has_point(dest)
@@ -285,7 +293,7 @@ static func plan(w: World, from: Vector2i, to: Vector2i) -> Dictionary:
 			break
 		goals.erase(r.goal)
 	if by_road.is_empty() and direct.is_empty():
-		return {"ok": false, "why": "There is no way there on foot that you can find."}
+		return {"ok": false, "why": "There is no way there on foot that you can find.", "reason": _no_way(ow, dest)}
 	if direct.is_empty() or (not by_road.is_empty() and float(by_road.cost) < float(direct.cost)):
 		var main := RegionRoads.main_cells(ow)
 		return {"ok": true, "dest": dest, "cells": by_road.cells, "road": _on_road(w, by_road.cells), "direct": false,

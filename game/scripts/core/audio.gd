@@ -46,6 +46,7 @@ var cfg := {}
 var active := true                  # false: nothing is loaded or played (headless, no audio device)
 var music_voices: Array = []        # two voices, crossfaded
 var amb_voices: Array = []
+var water_voices := {}              # B25R1-017: "water" (a stream or river loop) and "fall" (a waterfall loop) -> Voice
 var music_id := ""                  # the song that should be playing ("" none)
 var ambience_ids := ["", ""]        # the loops that should be playing, bed and accent ("" none)
 var slot := ""                      # the slot the music follows: morning | day | night
@@ -73,6 +74,9 @@ func _ready() -> void:
 		music_voices.append(_voice(MUSIC_BUS, 0.0))
 	for layer in 2:
 		amb_voices.append([_voice(SFX_BUS, -8.0), _voice(SFX_BUS, -8.0)])
+	var wcfg: Dictionary = cfg.get("water", {})
+	water_voices["water"] = _voice(SFX_BUS, float(wcfg.get("db", -6.0)))
+	water_voices["fall"] = _voice(SFX_BUS, float(wcfg.get("fall_db", -4.0)))
 	for i in int(cfg.get("sfx", {}).get("pool", 6)):
 		var p := AudioStreamPlayer.new()
 		p.bus = SFX_BUS
@@ -149,6 +153,38 @@ func sfx_path(id: String) -> String:
 	return SFX_DIR + id + ".ogg"
 
 
+## B25R1-017: the water layer's loudness by the player's distance (tiles) from the water (`d`, INF none) and a waterfall
+## (`fd`): 1 within near, fading to 0 at far (music.json "water"). The countryside's stream and river sounds.
+static func water_volume(d: float, near: float, far: float) -> float:
+	if d == INF or d >= far:
+		return 0.0
+	return clampf((far - d) / maxf(0.01, far - near), 0.0, 1.0)
+
+
+## B25R1-017: set the water layer: `id` the loop for the water near ("water_stream", "water_river" or ""), its distance
+## `d`, and the waterfall's distance `fd`. Each voice plays its loop while it is heard and fades with the distance.
+func set_water(id: String, d: float, fd: float) -> void:
+	var wcfg: Dictionary = cfg.get("water", {})
+	var levels := {"water": water_volume(d, float(wcfg.get("near", 2)), float(wcfg.get("far", 12))) if id != "" else 0.0,
+		"fall": water_volume(fd, float(wcfg.get("fall_near", 3)), float(wcfg.get("fall_far", 16)))}
+	var ids := {"water": id, "fall": "waterfall"}
+	if not active or water_voices.is_empty():
+		return
+	for k in levels:
+		var v: Voice = water_voices[k]
+		var want: float = levels[k]
+		if want > 0.0 and (v.id != str(ids[k]) or not v.player.playing):
+			var path := SFX_DIR + str(ids[k]) + ".ogg"
+			if ResourceLoader.exists(path):
+				var s := load(path) as AudioStreamOggVorbis
+				if s != null:
+					s.loop = true
+					v.id = str(ids[k])
+					v.player.stream = s
+					v.player.play()
+		v.target = want
+
+
 ## Each frame, from Main, with `ctx()`'s keys.
 func update(dt: float, c: Dictionary) -> void:
 	slot = slot_for(c, _hours())
@@ -165,6 +201,8 @@ func update(dt: float, c: Dictionary) -> void:
 	for layer: Array in amb_voices:
 		for v: Voice in layer:
 			v.fade(dt, float(cfg.get("ambience", {}).get("fade_seconds", 2.5)))
+	for k in water_voices:
+		(water_voices[k] as Voice).fade(dt, 0.8)          # B25R1-017: the water layer follows the player's steps
 	# a song that has ended is followed by a quiet gap, then plays again
 	var cur: Voice = _current(music_voices)
 	if music_id != "" and cur != null and cur.id == music_id and cur.target > 0.0 and not cur.player.playing and _pending == "":

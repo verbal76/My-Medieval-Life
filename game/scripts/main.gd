@@ -4657,6 +4657,7 @@ func _audio_step(delta: float) -> void:
 		audio.play_sfx("player_hurt")
 	_hp_seen = p.hp
 	_footsteps(p)
+	_water_sound(delta)                       # B25R1-017: streams, rivers and waterfalls heard by distance
 
 
 ## A fight: a bandit or anyone fighting the player within 12 cells, or a wild animal angry at the player.
@@ -4674,6 +4675,28 @@ func _in_fight() -> bool:
 
 
 ## Soft footsteps, one every `stride_cells` walked on foot (the minimum gap in music.json drops them in a sprint).
+## B25R1-017: twice a second, the nearest water and waterfall round the player set the audio's water layer (a stream or a
+## river loop, a waterfall loop, each louder the nearer). Nothing below the surface or in a world without streams.
+var _water_scan := 0.0
+
+
+func _water_sound(delta: float) -> void:
+	_water_scan -= delta
+	if _water_scan > 0.0:
+		return
+	_water_scan = 0.5
+	var ow: Overworld = map.overworld if map != null else null
+	if ow == null or ow.gen < 4 or world.player_level != 0:
+		audio.set_water("", INF, INF)
+		return
+	var c := Vector2i(world.player.pos.floor())
+	var wc := ow.nearest_water(c, 12)
+	var fc := ow.nearest_fall(c, 16)
+	var d := INF if wc == Overworld.NO_WATER else Vector2(wc).distance_to(Vector2(c))
+	var fd := INF if fc == Overworld.NO_WATER else Vector2(fc).distance_to(Vector2(c))
+	audio.set_water(("water_river" if ow.water_level(wc) >= 2.0 else "water_stream") if wc != Overworld.NO_WATER else "", d, fd)
+
+
 func _footsteps(p: PlayerState) -> void:
 	var d := p.pos.distance_to(_last_foot) if _last_foot != Vector2.INF else 0.0
 	_last_foot = p.pos

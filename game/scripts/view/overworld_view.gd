@@ -188,16 +188,10 @@ func road_tile(cell: Vector2i, dirt: int) -> int:
 
 ## B25R1-Q3: a road over a stream: a stone bridge on a stone road, else a plank one, running the way the road does.
 func _bridge_tile(cell: Vector2i, look: String) -> int:
-	# across the stream: water further up and down the column than along the row means it flows north-south, so the
-	# bridge runs east-west (and the other way), whichever way the road's cells step across it
-	var col := 0
-	var row := 0
-	for d in range(-3, 4):
-		if d == 0:
-			continue
-		col += 1 if overworld.is_water(cell + Vector2i(0, d)) or overworld.is_bridge(cell + Vector2i(0, d)) else 0
-		row += 1 if overworld.is_water(cell + Vector2i(d, 0)) or overworld.is_bridge(cell + Vector2i(d, 0)) else 0
-	var run := "ew" if col > row else "ns" if row > col else ("ns" if RoadWear.is_way(overworld, cell + Vector2i(0, -1)) or RoadWear.is_way(overworld, cell + Vector2i(0, 1)) else "ew")
+	# B25R1-017: one bridge, one way: the planks (or stones) of all its cells run the long way of the crossing, whichever
+	# way the road's cells step across the water
+	var box := overworld.crossing_box(cell)
+	var run := "ew" if box.size.x > box.size.y else "ns" if box.size.y > box.size.x else ("ns" if overworld.is_water(cell + Vector2i(-1, 0)) or overworld.is_water(cell + Vector2i(1, 0)) else "ew")
 	return int(overworld.tiles.water.bridge[("stone_" if look.begins_with("stone") else "plank_") + run])
 
 
