@@ -367,6 +367,22 @@ corresponding documentation.** Every agent and worker, on every task:
   decision go in the changelog and the state file's workers table in the same session.
 - **Experimental work stays on its branch** until it is reviewed and validated; it is never merged to tidy the graph.
 
+## 5b. Development governance: roadmap authority (owner, 2026-11-03, DEV-GOV-01; permanent)
+
+`docs/directives/2026-11-03_development_governance_roadmap_authority.md`; record `docs/decisions/DEV-GOV-01.md`.
+Agents make ordinary technical implementation decisions within approved requirements. **They do not change the approved
+roadmap.** Without the owner's approval an agent may not:
+1. skip a planned work package (inform the owner and obtain approval first);
+2. move requirements from one stage to another (explain why and obtain approval);
+3. merge, split, rename or reorder approved work packages (sub-labels in commits are not new packages);
+4. defer a Build 25 requirement to Build 26 or another expansion;
+5. mark a stage complete while any of its approved acceptance criteria is outstanding (report the stage against every
+   criterion, with evidence, before starting a stage that depends on it);
+6. change the sequence because of a dependency: explain the problem, recommend a solution and get the decision first.
+An approved design decision (an AD-n in a plan) is part of the roadmap: changing it needs the owner too. A scope
+interpretation (what a requirement's words cover) is raised, not decided. The agent recommends; the owner approves scope and
+sequence. Implementation that already exists is never described as approved because it exists.
+
 ## 6. Deterministic generation
 
 - Same generator version + same inputs (seed, size, options) = byte-identical output on every
