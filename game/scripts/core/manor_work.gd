@@ -580,6 +580,8 @@ func open_for(who: String) -> Array:
 			continue                 # MIN-F2: the player tunnels and fills with their own hands (and orders the fill)
 		if j.kind == "backfill" and (is_staff(who) or (j.stock as Inventory).total() + j.load.total() == 0):
 			continue                 # a player's order pays its own workers, and waits for the player's spoil
+		if j.kind == "envoy" and (World.is_player_ref(who) or is_staff(who) or (_who(who) != null and Journeys.active(_who(who)))):
+			continue                 # REGION-NAV-01 S4: an envoy is a villager of the labour market, not the salaried staff
 		if j.kind == "survey" and (is_staff(who) or not _has_kit(who) or _who(who).coins < int(j.qty) * int(Prospecting.cfg().assay.fee)):
 			continue                 # the assay fees are paid on the way, the wage at the end: a worker needs them in hand
 		out.append(j)
@@ -590,7 +592,7 @@ func open_for(who: String) -> Array:
 func _rank(j: Dictionary) -> int:
 	if j.kind == "haul":
 		return ORDER.find(str(j.to.kind))
-	return {"mend": 3, "quarry": 4, "survey": 5, "trial": 6, "excavate": 7, "tunnel": 8, "backfill": 9, "shore": 2}.get(str(j.kind), 10)     # MIN-EQUIP: shoring with the yard's goods comes before mending
+	return {"mend": 3, "quarry": 4, "survey": 5, "trial": 6, "excavate": 7, "tunnel": 8, "backfill": 9, "shore": 2, "envoy": 11}.get(str(j.kind), 10)     # MIN-EQUIP: shoring with the yard's goods comes before mending
 
 
 func _has_kit(who: String) -> bool:
@@ -709,7 +711,9 @@ func release(j: Dictionary) -> void:
 	j.day = -1
 	if j.kind == "excavate":
 		j.erase("site")
-	if j.kind in ["quarry", "survey", "trial", "excavate", "tunnel", "shore"]:
+	if j.kind == "envoy":
+		j.carried = []               # REGION-NAV-01 S4: what an envoy had learnt is lost with them (the book never had it)
+	if j.kind in ["quarry", "survey", "trial", "excavate", "tunnel", "shore", "envoy"]:
 		jobs.erase(j)              # the reeve posts it again when the works still lack stone (or the find is still wanted)
 
 
@@ -717,6 +721,8 @@ func release(j: Dictionary) -> void:
 ## "put" (at its destination), "mend" (at its site).
 func step(j: Dictionary) -> String:
 	match str(j.kind):
+		"envoy":
+			return Envoys.step(j)                 # REGION-NAV-01 S4: the envoy's mission
 		"haul":
 			return "take" if j.load.total() == 0 else "put"
 		"quarry":
@@ -823,6 +829,9 @@ func step_cell(j: Dictionary) -> Vector2i:
 ## The job in words, for the reeve's list and the journal.
 func describe(j: Dictionary) -> String:
 	match str(j.kind):
+		"envoy":
+			var st: Dictionary = w.map.overworld.site(str(j.sid)) if w.map.overworld != null else {}
+			return "Go to %s as the reeve's envoy: meet its traders and crafters, learn what they sell and want, and report to the reeve (villagers only)" % str(st.get("name", j.sid))
 		"haul":
 			var l := lot(int(j.lot))
 			var what := _goods_words(j.load if j.load.total() > 0 or l.is_empty() else l.inv, int(j.qty))
@@ -1158,7 +1167,7 @@ func _finish(j: Dictionary, who: String) -> void:
 ## Dawn: work taken more than `days` ago and not done is released for someone else.
 func dawn() -> void:
 	for j in jobs.duplicate():
-		if j.taker != "" and w.day() - int(j.day) >= int(cfg("days")):
+		if j.taker != "" and w.day() - int(j.day) >= int(j.get("days_allowed", cfg("days"))):
 			var who: String = j.taker
 			release(j)
 			if World.is_player_ref(who):
@@ -1188,6 +1197,8 @@ func plan(n: NPC) -> bool:
 		return false
 	var b: NPCBrain = w.brain
 	n.doing = "working for the manor"
+	if str(j.kind) == "envoy":
+		return Envoys.plan(w, n, j)
 	match step(j):
 		"mine":
 			if not n.inv.has("pickaxe"):
@@ -1380,7 +1391,7 @@ func load_dict(d: Dictionary) -> void:
 	yard = Inventory.from_dict(d.get("yard", {}))
 	for jd in d.get("jobs", []):
 		var j: Dictionary = jd.duplicate()
-		for k in ["id", "lot", "qty", "wage", "day", "reserved", "taken", "level", "placed"]:
+		for k in ["id", "lot", "qty", "wage", "day", "reserved", "taken", "level", "placed", "days_allowed"]:
 			if j.has(k):
 				j[k] = int(j[k])
 		for k in ["site", "at", "depot"]:

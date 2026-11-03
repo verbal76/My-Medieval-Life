@@ -3097,6 +3097,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			return true
 		"mj_step", "mj_mine":
 			return w.manor_work.act(n, what, a)
+		"envoy_talk", "envoy_report", "envoy_survey":
+			return Envoys.act(w, n, what, a)          # REGION-NAV-01 S4
 		"mc_load", "mc_hitch", "mc_park", "mc_unload", "mc_place":
 			return w.mine_works.cart_act(n, what, a)       # MIN-F2 (Q3): a miner's minecart haul
 		"day_labour":
@@ -3521,6 +3523,7 @@ func reeve_day() -> void:
 	# stone for the works from the village's own seams, when the yard lacks it (a job for the reeve's list)
 	if budget > 0:
 		w.manor_work.post_quarry()
+	Envoys.post(w)                                   # REGION-NAV-01 S4: one envoy to the settlement the reeve knows least about
 	w.manor_work.post_discovery()                    # MIN-D: a survey or a trial pit, as the village's mining capability allows
 	w.manor_work.post_pits()                         # MIN-E: a load of the manor's open pit, or a pit staked for a find out of a trial's reach
 	w.manor_work.post_tunnels()                      # MIN-F2: a load cut at a supported face below ground, while the works lack stone

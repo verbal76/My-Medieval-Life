@@ -115,6 +115,7 @@ var player: PlayerState:
 			_host_player = v
 var coin_sources := 0              # coins that entered the village (caravan)
 var couriers: CourierService         # REG-COURIER-01 (Expansion 18): the five settlements' booths and the village's, regular routes and special deliveries; saved under "couriers" (optional key; absent: no deliveries on the road)
+var intel_book := {}                 # REGION-NAV-01 S4: the reeve's book of what envoys learnt (Envoys.book); saved, optional key
 var journey_hook := Callable()       # REGION-NAV-01: what a traveller does at the settlement (the envoy's survey, S4): (n) -> bool, true when it gave them work
 var regions: Regions                # SET-C-FIVE (Expansion 18): the five off-map settlements and their traders, who are the caravan (ECON-P1.3); saved under "regions" (optional key)
 var quests: Quests                 # side quests on offer (scripts/core/quests.gd)
@@ -168,6 +169,7 @@ var recorder = null           # REC-19: the flight recorder (WorldRecorder), or 
 
 func _init() -> void:
 	GameData.ensure()
+	journey_hook = func(n: NPC) -> bool: return Envoys.at_site(self, n)      # REGION-NAV-01 S4: an envoy's interviews at the site
 
 
 # ---------------------------------------------------------------- setup ----------------------
@@ -6125,7 +6127,7 @@ func to_dict() -> Dictionary:
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
 		"vacancies": vacancies, "station_load": station_load, "wage_offers": wage_offers, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
 		"chapel": chapel.to_dict(), "feast": feast.to_dict(),
-		"player": _host_player.to_dict(), "players": _players_to_dict(), "coin_sources": coin_sources, "regions": regions.to_dict(), "couriers": couriers.to_dict(), "log": log_lines, "quest_offers": quests.to_dict(),
+		"player": _host_player.to_dict(), "players": _players_to_dict(), "coin_sources": coin_sources, "regions": regions.to_dict(), "couriers": couriers.to_dict(), "intel_book": intel_book, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
 		"relations": relations.to_dict(), "contracts": contracts.to_dict(),
 		"underground": {"gen": Underground.GEN_VERSION, "player_level": _host_player.map_level},
@@ -6503,6 +6505,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	_load_guests(d.get("players", {}))              # save 21 (absent: the "player" above is the only player)
 	if not _load_identity(d):
 		return
+	intel_book = (d.get("intel_book", {}) as Dictionary).duplicate(true)      # REGION-NAV-01 S4 (older saves: an empty book)
 	if couriers != null:
 		couriers.refresh_links()          # REGION-NAV-01 Q3: the couriers' routes are the roads' lengths, measured once the regions know the world
 	_load_underground(d.get("underground", {}))      # MIN-A: the level the player was on (absent: the surface)
