@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 800 (427 of them still open) |
-| **Open entries now** (rules excluded) | | **585** |
+| Entries added since | | 801 (428 of them still open) |
+| **Open entries now** (rules excluded) | | **586** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (800)
+## Added since the baseline (801)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -216,6 +216,7 @@ None.
 | B25R1-017 | Integration, real water system (streams, rivers, waterfalls, bridges, wells), credits regression diagnosis, existing-world compatibility, water events in the flight recorder | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25R1-018 | Complete regional world reconstruction: Morris geography (Downs, landmarks, rivers), meandering roads, explorable principal settlements with real residents, game-original hamlets, scale (J-D2, J-G1), save compatibility | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25R1-019 | Presence by view range: everything within the player's view plus a margin (growing with zoom) is live (people, animals, moving water, trees swaying in the breeze); everything beyond is calculation, the starting village included | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| B25R1-020 | Anticipatory NPC crowd management in the presence buffer: eligible ordinary NPCs begin their next legitimate activity sooner and walk away; protected NPCs never moved; soft visible target about 15-20 | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25R1-Q1 | Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)? | decision | APPROVED | 20 |
 | B25R1-Q2 | Bandit band as a woodland community: move the band to a hidden overworld claim with a household (a), keep the village camp and put only turned outlaws on claims (b), or abstract bandits offscreen (c)? | decision | APPROVED | 20 |
 | B25R1-Q3 | Water for wilderness settlements: wells built from real materials, streams added by an overworld generator change, or both? | decision | APPROVED | 20 |

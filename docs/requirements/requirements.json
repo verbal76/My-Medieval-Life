@@ -7605,6 +7605,48 @@
    "branch": "wip/b25r1-presence"
   },
   {
+   "id": "B25R1-020",
+   "kind": "approved",
+   "title": "Anticipatory NPC crowd management in the presence buffer: eligible ordinary NPCs begin their next legitimate activity sooner and walk away; protected NPCs never moved; soft visible target about 15-20",
+   "description": "Anticipatory NPC crowd management in the presence buffer: eligible ordinary NPCs begin their next legitimate activity sooner and walk away; protected NPCs never moved; soft visible target about 15-20",
+   "source": "docs/directives/2026-11-03_b25r1_anticipatory_crowd_management.md",
+   "owner_wording": "I would rather have 25 useful, interactive NPCs around me than 15 NPCs who make the village feel empty or force me to chase merchants and quest givers. ... Make the world feel alive, not artificially evacuated.",
+   "approval": "owner, 2026-11-03",
+   "acceptance": [
+    "Crowd pressure evaluated in the off-screen buffer before NPCs are visible; eligible ordinary NPCs advance a legitimate next activity and walk there on real paths; nobody disappears, teleports or is deleted",
+    "Protected NPCs (merchants at operating businesses, quest givers, special-icon NPCs, emergent events, those interacting with or approached by the player, essential uninterruptible work) are never redirected for crowding; availability locks so they do not walk away as the player arrives",
+    "Soft ordinary-NPC target measured on Android (about 15-20), never a cap; protected and legitimate NPCs stay even above it; rendering optimised rather than removing people",
+    "No fake errands, cancelled transactions or interrupted essential work; hysteresis, cooldowns and persistent destinations; decisions independent of frame rate",
+    "Approved observation exception recorded: proximity may only accelerate eligible activity transitions; identities, inventories, money, completed transactions and unrelated life decisions unchanged",
+    "Measured: frame time by visible count, protected above target, departure effectiveness, pathing cost, Android at normal zoom, determinism, conservation, interaction accessibility; targeted scenarios (crowded market, merchants, quest givers, icons, essential workers)"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [
+    "B25R1-019"
+   ],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_anticipatory_crowd_management.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-presence worker; branch: None -> wip/b25r1-presence",
+     "why": "recorded; assigned to the presence worker as an amendment of B25R1-019"
+    }
+   ],
+   "assigned_worker": "b25r1-presence worker",
+   "branch": "wip/b25r1-presence"
+  },
+  {
    "id": "B25R1-Q1",
    "kind": "decision",
    "title": "Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)?",
