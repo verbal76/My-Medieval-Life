@@ -168,6 +168,132 @@ func site_building_at(c: Vector2i) -> bool:
 	return false
 
 
+## REGION-NAV-01 AD-4: a walking route along the roads from village gate `gate` (an index into `gates`) to settlement `sid`'s
+## lane: the gate's road out to its nodes, the road network from node to node (Dijkstra over the same edges the chunks draw,
+## lengths in cells, ties by node order, so the same seed always gives the same route), and the settlement's road in to its
+## lane. Cells, 4-connected, from the gate's outside cell to the site's gate cell. Empty when no road joins them (a journey then
+## fails and is recorded).
+func road_route(gate: int, sid: String) -> PackedVector2Array:
+	var st := site(sid)
+	if st.is_empty() or gate < 0 or gate >= gates.size():
+		return PackedVector2Array()
+	# the links at each end: link index -> the node it reaches
+	var starts := {}                              # node Vector2i(i, j) -> the link index from the gate's far point
+	var ends := {}                                # node -> the link index of the site's road
+	var base := -1
+	for li in _links.size():
+		var key := int(_links[li].key)
+		if key >= 2000:
+			if (key - 2000) / 8 == sites.find(st):
+				ends[_node_of(_links[li].b)] = li
+		elif (key - 1000) / 8 == gate:
+			if (key - 1000) % 8 == 0:
+				base = li
+			else:
+				starts[_node_of(_links[li].b)] = li
+	if base < 0 or starts.is_empty() or ends.is_empty():
+		return PackedVector2Array()
+	# Dijkstra over the road nodes in a box round both ends
+	var lo := Vector2i(mini(fdiv(gates[gate].out.x, NODE), fdiv(st.gate.x, NODE)) - 4, mini(fdiv(gates[gate].out.y, NODE), fdiv(st.gate.y, NODE)) - 4)
+	var hi := Vector2i(maxi(fdiv(gates[gate].out.x, NODE), fdiv(st.gate.x, NODE)) + 4, maxi(fdiv(gates[gate].out.y, NODE), fdiv(st.gate.y, NODE)) + 4)
+	var dist := {}
+	var prev := {}
+	var open: Array = []                          # [cost, j, i]
+	for nd: Vector2i in starts:
+		var c0 := _segment(Vector3i(-1, starts[nd], 0), _links[starts[nd]].a, _links[starts[nd]].b, int(_links[starts[nd]].key)).size() / 2
+		if not dist.has(nd) or c0 < int(dist[nd]):
+			dist[nd] = c0
+			open.append([c0, nd.y, nd.x])
+	var goal := Vector2i(1 << 30, 0)
+	while not open.is_empty():
+		open.sort()
+		var top: Array = open.pop_front()
+		var nd := Vector2i(int(top[2]), int(top[1]))
+		if int(top[0]) > int(dist.get(nd, 1 << 30)):
+			continue
+		if ends.has(nd):
+			goal = nd
+			break
+		for e in _node_edges(nd):
+			var nb: Vector2i = e[0]
+			if nb.x < lo.x or nb.y < lo.y or nb.x > hi.x or nb.y > hi.y:
+				continue
+			var cost := int(top[0]) + int(e[1])
+			if cost < int(dist.get(nb, 1 << 30)):
+				dist[nb] = cost
+				prev[nb] = [nd, e[2]]
+				open.append([cost, nb.y, nb.x])
+	if goal.x == 1 << 30:
+		return PackedVector2Array()
+	# cells: gate out -> far, far -> first node, node chain, last node -> site gate
+	var out := PackedVector2Array()
+	var chain: Array = []
+	var at := goal
+	while prev.has(at):
+		chain.push_front([prev[at][0], at, prev[at][1]])
+		at = prev[at][0]
+	_append_cells(out, _segment(Vector3i(-1, base, 0), _links[base].a, _links[base].b, int(_links[base].key)), false)
+	_append_cells(out, _segment(Vector3i(-1, starts[at], 0), _links[starts[at]].a, _links[starts[at]].b, int(_links[starts[at]].key)), false)
+	for step in chain:
+		var seg: Array = step[2]                      # [i, j, k, forward]
+		var a := node_pos(int(seg[0]), int(seg[1]))
+		var ni: int = int(seg[0]) + [1, 0, 1, -1][int(seg[2])]
+		var nj: int = int(seg[1]) + [0, 1, 1, 1][int(seg[2])]
+		var cells := _segment(Vector3i(int(seg[0]), int(seg[1]), int(seg[2])), a, node_pos(ni, nj), (int(seg[0]) * 7919 + int(seg[1]) * 104729 + int(seg[2])) & 0xFFFFFF)
+		_append_cells(out, cells, not bool(seg[3]))
+	var li_end: int = ends[goal]
+	_append_cells(out, _segment(Vector3i(-1, li_end, 0), _links[li_end].a, _links[li_end].b, int(_links[li_end].key)), true)
+	return out
+
+
+## The road node a node position belongs to (the grid cell whose jittered node it is).
+func _node_of(p: Vector2i) -> Vector2i:
+	var ci := fdiv(p.x, NODE)
+	var cj := fdiv(p.y, NODE)
+	for j in range(cj - 1, cj + 2):
+		for i in range(ci - 1, ci + 2):
+			if node_pos(i, j) == p:
+				return Vector2i(i, j)
+	return Vector2i(ci, cj)
+
+
+## The roads leaving node `nd`: [[neighbour node, length in cells, [i, j, k, forward]]], by the same rule the chunks draw
+## them (_road_mask): both ends outside the village's exclusion, the edge present, and its box clear of the village.
+func _node_edges(nd: Vector2i) -> Array:
+	var out := []
+	var keep := Rect2i(village.grow(10))
+	var a := node_pos(nd.x, nd.y)
+	if _node_excluded(a):
+		return out
+	for k in 4:
+		for dir in [1, -1]:
+			var dx: int = [1, 0, 1, -1][k]
+			var dy: int = [0, 1, 1, 1][k]
+			var si: int = nd.x if dir == 1 else nd.x - dx
+			var sj: int = nd.y if dir == 1 else nd.y - dy
+			var ni: int = si + dx
+			var nj: int = sj + dy
+			var pa := node_pos(si, sj)
+			var pb := node_pos(ni, nj)
+			if _node_excluded(pa) or _node_excluded(pb) or not _edge(si, sj, k):
+				continue
+			var bb := Rect2i(mini(pa.x, pb.x), mini(pa.y, pb.y), absi(pa.x - pb.x), absi(pa.y - pb.y))
+			if bb.intersects(keep):
+				continue
+			var cells := _segment(Vector3i(si, sj, k), pa, pb, (si * 7919 + sj * 104729 + k) & 0xFFFFFF)
+			out.append([Vector2i(ni, nj) if dir == 1 else Vector2i(si, sj), cells.size() / 2, [si, sj, k, dir == 1]])
+	return out
+
+
+func _append_cells(out: PackedVector2Array, cells: PackedInt32Array, reverse: bool) -> void:
+	var n := cells.size() / 2
+	for q in n:
+		var idx := (n - 1 - q) if reverse else q
+		var c := Vector2(cells[idx * 2], cells[idx * 2 + 1])
+		if out.is_empty() or out[out.size() - 1] != c:
+			out.append(c)
+
+
 ## REGION-NAV-01: the settlement site containing cell `c`, or {}.
 func site_at(c: Vector2i) -> Dictionary:
 	for st in sites:

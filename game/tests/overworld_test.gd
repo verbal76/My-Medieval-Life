@@ -611,6 +611,27 @@ func _test_sites(seed_value: int) -> void:
 			if not seen.has(sl.spot):
 				lost.append("%s %s" % [st.name, sl.trade])
 	check(lost.is_empty(), "seed %d: every settlement's every door is reachable on foot from the village's south gate (%d cells open; cut off: %s)" % [seed_value, seen.size(), lost])
+	# REGION-NAV-01 AD-4: a walking route along the roads from the south gate to each settlement: from the gate to the site's lane,
+	# every step to a neighbouring cell, none of it blocked, the same each time
+	var gi := -1
+	var exits: Array = m.exits()
+	for k in exits.size():
+		if exits[k].side == 2:
+			gi = k
+	for st in o.sites:
+		var r := o.road_route(gi, str(st.id))
+		var steps_ok: bool = r.size() > 0 and Vector2i(r[0]) == o.gates[gi].out and Vector2i(r[r.size() - 1]) == st.gate
+		var bad := 0
+		var blocked := 0
+		for q in range(1, r.size()):
+			var d := Vector2i(r[q]) - Vector2i(r[q - 1])
+			if absi(d.x) + absi(d.y) != 1:
+				bad += 1
+		for c in r:
+			if o.is_solid(Vector2i(c)):
+				blocked += 1
+		check(steps_ok and bad == 0 and blocked == 0, "seed %d: a road route from the south gate to %s, %d cells (%d jumps, %d blocked cells)" % [seed_value, st.name, r.size(), bad, blocked])
+		check(o.road_route(gi, str(st.id)) == r, "and the same route asked again (%s)" % st.name)
 	# a generation-2 save planted a tree where a site now stands: dropped and counted, not placed in the settlement
 	var st0: Dictionary = o.sites[0]
 	var c: Vector2i = st0.gate
