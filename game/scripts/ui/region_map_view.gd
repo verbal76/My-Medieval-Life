@@ -17,6 +17,12 @@ extends Control
 ## pointer); a drag (mouse or finger) pans; Centre on me (the window's bar) recentres. A tap or click, one that did not move
 ## more than DRAG pixels and was not part of a pinch, chooses that point as the destination (TravelDriver.start): the route is
 ## planned, the window closes and the character sets off; a point that cannot be reached is refused with the reason.
+## Gamepad (B25R1-012, owner 2026-11-03): any pad input shows a cursor; the D-pad or the left stick moves it (the map scrolls
+## to keep it in view), A (Interact/Confirm) travels to the point under it through the same `tap` as a touch or a click, the
+## triggers zoom (LT out, RT in) about the cursor, the right stick pans, a click of the right stick (Recenter) centres on the
+## player, X resumes and Y dismisses the destination, B closes the window as it closes every window. The pad's buttons are
+## taken here while the map is open, so they neither move the focus nor reach the character (who stands still behind any
+## window). A mouse or a touch hides the cursor.
 
 const COLOURS := [Color8(30, 22, 15), Color8(104, 128, 70), Color8(46, 78, 42), Color8(132, 124, 112),
 		Color8(120, 126, 76), Color8(138, 82, 52), Color8(111, 74, 44)]      # by Atlas class: unknown, grass, wood, rock, road, settlement (roofs), village
@@ -55,6 +61,9 @@ var _pinch_zoom := 1.0
 var _pinch_mid := Vector2.ZERO
 var _icons := {}
 var _placed: Array[Rect2] = []  # the screen rects of the marks and labels drawn this frame
+var cursor := Vector2.INF       # B25R1-012: the pad's cursor (tiles); INF while no pad has been used on the map
+const CURSOR_SPEED := 420.0     # screen pixels a second at full tilt
+const PAD_ZOOM := 2.2           # zoom factor a second with a trigger held
 
 
 func setup(m) -> void:
@@ -217,15 +226,115 @@ func _fit() -> void:
 		custom_minimum_size = Vector2(0, h)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	_fit()
 	if size.x > 10.0 and size.y > 10.0 and (not fitted or (not moved and size != _fit_size)):
 		fit_network()                              # opens on the whole network, and stays so while the window settles
+	if cursor != Vector2.INF and is_visible_in_tree():
+		pad_step(pad_vector(), pad_triggers(), pad_look(), delta)
 	queue_redraw()
+
+
+# ------------------------------------------------------------------ gamepad (B25R1-012) -----
+func _pad_device() -> int:
+	var pads := Input.get_connected_joypads()
+	return int(pads[0]) if not pads.is_empty() else 0
+
+
+## The cursor's direction: the D-pad (held) or the left stick.
+func pad_vector() -> Vector2:
+	var d := _pad_device()
+	var v := Vector2(Input.get_joy_axis(d, JOY_AXIS_LEFT_X), Input.get_joy_axis(d, JOY_AXIS_LEFT_Y))
+	if v.length() < 0.25:
+		v = Vector2.ZERO
+	if Input.is_joy_button_pressed(d, JOY_BUTTON_DPAD_LEFT): v.x -= 1.0
+	if Input.is_joy_button_pressed(d, JOY_BUTTON_DPAD_RIGHT): v.x += 1.0
+	if Input.is_joy_button_pressed(d, JOY_BUTTON_DPAD_UP): v.y -= 1.0
+	if Input.is_joy_button_pressed(d, JOY_BUTTON_DPAD_DOWN): v.y += 1.0
+	return v.limit_length(1.0)
+
+
+## RT minus LT: >0 zooms in.
+func pad_triggers() -> float:
+	var d := _pad_device()
+	var t := Input.get_joy_axis(d, JOY_AXIS_TRIGGER_RIGHT) - Input.get_joy_axis(d, JOY_AXIS_TRIGGER_LEFT)
+	return t if absf(t) > 0.2 else 0.0
+
+
+func pad_look() -> Vector2:
+	var d := _pad_device()
+	var v := Vector2(Input.get_joy_axis(d, JOY_AXIS_RIGHT_X), Input.get_joy_axis(d, JOY_AXIS_RIGHT_Y))
+	return v if v.length() > 0.25 else Vector2.ZERO
+
+
+## A frame of the pad's cursor: moved by `dir` (the stick or D-pad), the map zoomed by `zoom_dir` about it and panned by `look`;
+## the map scrolls to keep the cursor inside it.
+func pad_step(dir: Vector2, zoom_dir: float, look: Vector2, delta: float) -> void:
+	if cursor == Vector2.INF:
+		return
+	if dir != Vector2.ZERO:
+		cursor += dir * CURSOR_SPEED * delta / zoom
+		cursor = cursor.clamp(Vector2(bounds.position), Vector2(bounds.end))
+	if zoom_dir != 0.0:
+		zoom_at(to_screen(cursor), pow(PAD_ZOOM, zoom_dir * delta))
+	if look != Vector2.ZERO:
+		pan(-look * CURSOR_SPEED * delta)
+	var sc := to_screen(cursor)
+	var ms := map_size()
+	var margin := 48.0
+	var push := Vector2(minf(0.0, sc.x - margin) + maxf(0.0, sc.x - (ms.x - margin)), minf(0.0, sc.y - margin) + maxf(0.0, sc.y - (ms.y - margin)))
+	if push != Vector2.ZERO:
+		centre += push / zoom
+		moved = true
+
+
+## The pad's buttons on the open map (taken here: no focus moves, nothing reaches the character).
+func _input(e: InputEvent) -> void:
+	if not is_visible_in_tree():
+		return
+	if e is InputEventJoypadMotion:
+		if cursor == Vector2.INF and absf((e as InputEventJoypadMotion).axis_value) > 0.5:
+			cursor = main.world.player.pos
+		return
+	if not (e is InputEventJoypadButton):
+		return
+	var b := e as InputEventJoypadButton
+	if b.button_index == JOY_BUTTON_B or b.button_index == JOY_BUTTON_LEFT_SHOULDER or b.button_index == JOY_BUTTON_START:
+		return                                     # closing the window (and the map's own button) work as everywhere
+	get_viewport().set_input_as_handled()
+	if not b.pressed:
+		return
+	if cursor == Vector2.INF:
+		cursor = main.world.player.pos             # the first press shows the cursor, on the player
+		if b.button_index in [JOY_BUTTON_DPAD_LEFT, JOY_BUTTON_DPAD_RIGHT, JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_DOWN]:
+			return
+	pad_button(b.button_index)
+
+
+## What a pad button does on the map (tests call it with the button).
+func pad_button(button: int) -> void:
+	if cursor == Vector2.INF:
+		cursor = main.world.player.pos
+	match button:
+		JOY_BUTTON_A:
+			tap(to_screen(cursor))                 # the same route planning as a touch or a click
+		JOY_BUTTON_RIGHT_STICK:
+			centre_on_player()
+			cursor = main.world.player.pos
+		JOY_BUTTON_X:
+			if RegionTravel.has_destination(main.world.player) and not RegionTravel.active(main.world.player):
+				main.ui.resume_travel()
+		JOY_BUTTON_Y:
+			if RegionTravel.has_destination(main.world.player):
+				main.ui.dismiss_travel()
+		JOY_BUTTON_RIGHT_SHOULDER:
+			zoom_at(to_screen(cursor), 1.4)
 
 
 # ------------------------------------------------------------------ input ---------------------
 func _gui_input(e: InputEvent) -> void:
+	if e is InputEventScreenTouch or e is InputEventMouseButton:
+		cursor = Vector2.INF                       # a touch or the mouse: the pad's cursor goes
 	if e is InputEventScreenTouch:
 		if e.pressed:
 			_touches[e.index] = e.position
@@ -435,6 +544,16 @@ func _draw() -> void:
 	draw_circle(me, 2.5, PALE)
 	for l in labels:
 		_label(font, l[0], l[1], l[2], l[3], l[4])
+	if cursor != Vector2.INF:                      # B25R1-012: the pad's cursor, and what A would do
+		var cs := to_screen(cursor)
+		var ring := Color8(255, 236, 140)
+		draw_arc(cs, 13.0, 0, TAU, 32, Color.BLACK, 5.0)
+		draw_arc(cs, 13.0, 0, TAU, 32, ring, 2.5)
+		for dv in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
+			draw_line(cs + dv * 7.0, cs + dv * 20.0, Color.BLACK, 4.0)
+			draw_line(cs + dv * 7.0, cs + dv * 20.0, ring, 2.0)
+		var what := "A: travel here  ·  %s" % RegionTravel.bearing(main.world.player.pos, cursor)
+		_text(font, cs + Vector2(18, -16), what, 14, ring)
 	# north and the status line
 	var nx := Vector2(ms.x - 26, 30)
 	draw_colored_polygon(PackedVector2Array([nx + Vector2(0, -16), nx + Vector2(8, 6), nx + Vector2(-8, 6)]), PALE)
@@ -458,8 +577,12 @@ func _draw() -> void:
 	x = _legend_word(font, x + 18, yy, "Settlement")
 	draw_texture_rect(_icons.mineral, Rect2(Vector2(x, yy - 9), Vector2(18, 18)), false)
 	x = _legend_word(font, x + 22, yy, "Place you found")
-	for hint in ["Dark: not yet explored.  Tap a point to travel there; drag to move, pinch or wheel to zoom.",
-			"Dark: unexplored.  Tap to travel, drag to move, pinch to zoom.", "Tap to travel"]:
+	var hints := ["Dark: not yet explored.  Tap a point to travel there; drag to move, pinch or wheel to zoom.",
+			"Dark: unexplored.  Tap to travel, drag to move, pinch to zoom.", "Tap to travel"]
+	if cursor != Vector2.INF:
+		hints = ["D-pad move  ·  A travel  ·  LT/RT zoom  ·  R3 centre on me  ·  X resume  ·  Y dismiss  ·  B close",
+			"D-pad move · A travel · LT/RT zoom · R3 centre · X resume · Y dismiss", "A travel · LT/RT zoom"]
+	for hint in hints:
 		if x + 6 + font.get_string_size(hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x <= size.x - 8:
 			_text(font, Vector2(x + 6, yy + 5), hint, 13, Color8(214, 196, 160))
 			break
