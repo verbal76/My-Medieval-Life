@@ -26,4 +26,13 @@ static func add_pages(w: Wiki) -> void:
 			"The country is not safe: animals live in the woods out there and there is nobody to call for help. A homestead far from the village means a long walk to market.",
 			"A homestead you have claimed, or one you come near, is one you know of."]),
 		Wiki.links(["guide:homestead", "sys:property"])], "", "homestead claim wilderness land country")
-	w.add_page("todo:homestead_more", "Villagers' homesteads, and more for a homestead", "notyet", [Wiki.note("Not in the game yet. Villagers do not yet decide to leave the village and make homesteads of their own: how they will choose is waiting for a decision. A homestead has only its house: no extra rooms, lofts, workshops, fields or pens out in the country yet, and no hired helpers carry materials there.")], "", "not implemented planned homestead")
+	w.add_page("sys:leaving_home", "Leaving home: homesteaders, runaways and outlaws", "systems", [
+		Wiki.p("Villagers make the big choices of their lives themselves, weighing what they want and what they fear."),
+		Wiki.bullets([
+			"A young adult setting up a household may choose a homestead in the open country instead of a home in the village, and very rarely an established adult does after a hard turn in life. Few ever go: the village needs its people.",
+			"A homestead household clears its land, buys and carries the materials, builds its house, grows a field on its land, fells or quarries for sale and walks to the village market. If it cannot feed itself or finish its house it gives up and comes back.",
+			"A young person in a household that has gone hungry and poor for years, or has lost a parent or its home, may leave: to relatives or another household who will take them in, to a neighbouring settlement, to fend for themselves, or to the bandits' camp. Children under 12 hardly ever do.",
+			"The bandits decide whom they take in: a grown recruit may join the band, a child may be kept at the camp but never made to fight, and many are sent away.",
+			"A bandit may leave the band for an ordinary life, keeping what they carry and what they did."]),
+		Wiki.links(["sys:homesteads", "guide:homestead"])], "", "runaway bandit homestead leave home outlaw")
+	w.add_page("todo:homestead_more", "More for a homestead", "notyet", [Wiki.note("Not in the game yet. A homestead has only its house and its field: no extra rooms, lofts, workshops or pens out in the country yet, no wells, and no hired helpers carry materials there. The bandits still live at their camp by the village.")], "", "not implemented planned homestead")
