@@ -91,6 +91,55 @@ func remote(n: NPC) -> bool:
 	return away(n) and not w.map.in_village(n.cell())
 
 
+## B25R1-016: a homestead household's day for the recorder (homestead_sustain), and a year lived there (homestead_year).
+func _sustain(c: Dictionary, h: int, members: Array) -> void:
+	if w.recorder == null:
+		return
+	var pantry: Inventory = w.households[h].pantry
+	var food := 0
+	for f in NPCBrain.EDIBLE:
+		food += pantry.count(f)
+	var coins := 0
+	for o: NPC in members:
+		coins += o.coins
+	_rec("homestead_sustain", {"claim": str(c.id), "household": World.hh_ref(h), "food_units": food, "food_days": snappedf(w.brain.household_food_days(h), 0.1),
+		"water": 0, "coins": coins, "employed": false, "outcome": "failed" if int(c.get("poor_days", 0)) > 0 else "ok"})
+	var since := int(c.get("built_day", c.get("claimed_day", c.day)))
+	if w.day() > since and (w.day() - since) % Life.year_days() == 0:
+		_rec("homestead_year", {"claim": str(c.id), "household": World.hh_ref(h), "years": (w.day() - since) / Life.year_days(), "people": members.size()})
+
+
+## B25R1-016: the recorder's dawn rows (read only): one a living claim.
+func recorder_rows() -> Array:
+	var out := []
+	for c in claims:
+		if str(c.status) == "abandoned":
+			continue
+		var ref := str(c.owner)
+		var h := World.ref_id(ref)
+		var pop := 0
+		var coins := 0
+		var food := 0
+		if ref.begins_with("hh:") and h >= 0 and h < w.households.size():
+			for o: NPC in w.brain._members(h):
+				pop += 1
+				coins += o.coins
+			for f in NPCBrain.EDIBLE:
+				food += (w.households[h].pantry as Inventory).count(f)
+		out.append({"id": str(c.id), "population": pop, "households": 1 if pop > 0 else 0, "food_units": food, "water": 0,
+			"stores": (c.store as Inventory).items.duplicate(), "coins": coins, "livestock": 0, "path": str(c.get("path", "player" if World.is_player_ref(ref) else "")),
+			"faction": str(c.get("faction", "lawful")), "status": str(c.status)})
+	return out
+
+
+## The claim whose land holds cell `c` (any owner), {} none.
+func claim_at(c: Vector2i) -> Dictionary:
+	for cl in claims:
+		if str(cl.status) != "abandoned" and rect_of(cl).has_point(c):
+			return cl
+	return {}
+
+
 func claims_of(ref: String) -> Array:
 	return claims.filter(func(c): return str(c.owner) == ref)
 
@@ -708,6 +757,8 @@ func _go(h: int, who: NPC, leaving: Array, path: String, h2 := -1) -> bool:
 	trips[str(who.id)] = {"claim": str(c.id), "leg": "market", "n": 0, "day": w.day(), "tried": {}, "outfit": true}
 	_count("decided")
 	_count("decided_" + path)
+	_rec("household_formed", {"person": who.id, "household": World.hh_ref(nid), "origin": World.hh_ref(h), "track": "couple" if h2 >= 0 and h2 != h else path,
+		"homestead": true})
 	_rec("homestead_set_out", {"claim": str(c.id), "household": World.hh_ref(nid), "from": World.hh_ref(h), "people": leaving.map(func(o: NPC) -> int: return o.id),
 		"path": path, "site": [c.x, c.y], "why": str(c.why)})
 	if w.life != null:
@@ -898,6 +949,7 @@ func dawn() -> void:
 			_abandon(c, "ended")
 			continue
 		_allegiance(c, members)
+		_sustain(c, h, members)
 		var cash := 0
 		for o: NPC in members:
 			cash += o.coins
@@ -1122,6 +1174,8 @@ func _plan_livelihood(n: NPC, c: Dictionary) -> bool:
 			n.doing = "breaking stone"
 			n.plan = [b.go(b.beside(rock, n.cell(), 0, true)), b.work(float(GameData.b("mine_minutes")), "mine", {"x": rock.x, "y": rock.y}, "work", rock)]
 			return true
+	if str(c.status) == "built" and _plan_field(n, c, trade):
+		return true
 	if n.inv.has("axe"):
 		var t := _near_tree(c, n)
 		if t.x != 1 << 30:
@@ -1130,6 +1184,103 @@ func _plan_livelihood(n: NPC, c: Dictionary) -> bool:
 			n.plan = [b.go(b.beside(t, n.cell(), 0, true)), b.work(mins, "chop", {"x": t.x, "y": t.y}, "work", t)]
 			return true
 	return false
+
+
+## B25R1-014: a homestead's own field, by the village's farming rules (Farming: its cells, one seed a cell, the season's
+## growth, the crop's yield and seed back), worked by its people: harvest what is ripe into the pantry, sow tilled soil with
+## seed from the pantry, till new ground on the claim (outside the house's ground, off the door's way) up to field_cells.
+## Farmers, herders and hands first; anyone when the household's food runs low.
+func field_cells(c: Dictionary) -> Array:
+	var out := []
+	var land := rect_of(c)
+	for y in range(land.position.y, land.end.y):
+		for x in range(land.position.x, land.end.x):
+			if w.farm.cells.has(Vector2i(x, y)):
+				out.append(Vector2i(x, y))
+	return out
+
+
+func _field_spot(c: Dictionary) -> Vector2i:
+	var land := rect_of(c)
+	var ring := house_of(c).grow(1)
+	var door := door_of(c)
+	for y in range(land.position.y, land.end.y):
+		for x in range(land.position.x, land.end.x):
+			var cell := Vector2i(x, y)
+			if ring.has_point(cell) or absi(x - door.x) <= 1 or w.farm.cells.has(cell) or _ground(cell) != "open" or not w.farm.obstacle(cell).is_empty():
+				continue
+			return cell
+	return Vector2i(1 << 30, 0)
+
+
+func _plan_field(n: NPC, c: Dictionary, trade: String) -> bool:
+	var farmer: bool = trade in ["farmer", "herder", "manor_hand"] or w.brain.household_food_days(n.household) < float(cfg().food_low_days)
+	if not farmer:
+		return false
+	var pantry: Inventory = w.households[n.household].pantry
+	var cells := field_cells(c)
+	for cell: Vector2i in cells:
+		if str(w.farm.cells[cell].state) == "ripe":
+			n.doing = "harvesting the field"
+			return _field_step(n, cell, "farm_harvest", 20.0)
+	if not w.farm.can_sow_now():
+		return false
+	for cell: Vector2i in cells:
+		if str(w.farm.cells[cell].state) == "tilled" and _seed_in(pantry) != "":
+			n.doing = "sowing the field"
+			return _field_step(n, cell, "farm_sow", 10.0)
+	if cells.size() < int(cfg().field_cells):
+		var spot := _field_spot(c)
+		if spot.x != 1 << 30:
+			n.doing = "breaking ground for a field"
+			return _field_step(n, spot, "farm_till", 60.0)
+	return false
+
+
+func _field_step(n: NPC, cell: Vector2i, step: String, mins: float) -> bool:
+	var b: NPCBrain = w.brain
+	n.plan = [b.go(b.beside(cell, n.cell(), 0, true)), b.work(mins, "homestead", {"step": step, "x": cell.x, "y": cell.y}, "work", cell)]
+	return true
+
+
+func _seed_in(inv: Inventory) -> String:
+	for id in Farming.crops():
+		var seed := str(Farming.crops()[id].seed)
+		if inv.has(seed):
+			return seed
+	return ""
+
+
+## The field work's end (NPCBrain.act "homestead"): the cell's change by Farming's own record and stats.
+func _field_act(n: NPC, c: Dictionary, step: String, cell: Vector2i) -> bool:
+	if claim_at(cell) != c or n.cell().distance_to(cell) > 2.5:
+		return false
+	var pantry: Inventory = w.households[n.household].pantry
+	match step:
+		"farm_till":
+			if w.farm.cells.has(cell) or not w.farm.obstacle(cell).is_empty():
+				return false
+			w.farm.cells[cell] = {"crop": "", "state": "tilled", "progress": 0.0}
+			w.stat("farm_tilled")
+			Skills.gain(n, "farming", Skills.action_xp("till"))
+			w.farm._show_around(cell)
+		"farm_sow":
+			var seed := _seed_in(pantry)
+			if seed == "" or not w.farm.cells.has(cell) or str(w.farm.cells[cell].state) != "tilled" or not w.farm.can_sow_now():
+				return false
+			pantry.remove(seed, 1)
+			w.stat("used_" + seed)
+			w.farm.cells[cell] = {"crop": Farming.crop_of_seed(seed), "state": "growing", "progress": 0.0}
+			Skills.gain(n, "farming", Skills.action_xp("sow"))
+			w.farm._show_around(cell)
+		"farm_harvest":
+			var got := w.farm.harvest_into(cell, pantry)
+			if got.is_empty():
+				return false
+			Skills.gain(n, "farming", Skills.action_xp("harvest"))
+			_count("field_harvests")
+			_rec("wild_production", {"claim": str(c.id), "by": n.id, "action": "farm", "goods": got})
+	return true
 
 
 func _near_tree(c: Dictionary, n: NPC) -> Vector2i:
@@ -1287,6 +1438,18 @@ func _errand(n: NPC, c: Dictionary, trip: Dictionary) -> bool:
 			n.doing = "buying food for the homestead"
 			n.plan = [b.go(b._workplace_cell(v)), b.doit("buy_food", {"vendor": v.id, "pantry": true})]
 			return true
+	var trade_s := str((c.trades as Dictionary).get(str(n.id), c.trade))
+	if str(c.status) == "built" and trade_s in ["farmer", "herder", "manor_hand"] and _seed_in(w.households[n.household].pantry) == "" and not tried.has("seed"):
+		tried.seed = true
+		for sv: NPC in w.npcs:
+			if sv.alive and sv != n and not away(sv) and not w.asleep(sv) and w.farm.sells_seed(sv):
+				for cid in Farming.crops():
+					var sd := str(Farming.crops()[cid].seed)
+					var sq := b.buy_qty(n, sv, sd, 4, true) if sv.inv.count(sd) > 0 else 0
+					if sq > 0:
+						n.doing = "buying seed for the homestead's field"
+						n.plan = [b.go(b._workplace_cell(sv) if sv.job != "farmer" else sv.cell()), b.doit("buy_from", {"vendor": sv.id, "item": sd, "qty": sq, "pantry": true})]
+						return true
 	if (w.households[n.household].pantry as Inventory).count("log") < 1 and not n.inv.has("log") and not tried.has("firewood"):
 		tried.firewood = true
 		var s := b._seller_of("log", n)
@@ -1494,6 +1657,8 @@ func act(n: NPC, a: Dictionary) -> bool:
 			return true
 		"firewood":
 			return _sell_firewood(n, int(a.get("hh", -1)))
+		"farm_till", "farm_sow", "farm_harvest":
+			return _field_act(n, c, step, Vector2i(int(a.get("x", 0)), int(a.get("y", 0))))
 		"deliver":
 			if n.cell().distance_to(step_of(c)) > 2.5:
 				return false

@@ -1000,6 +1000,9 @@ func targets_at(c: Vector2i, p: PlayerState, exact := true) -> Array:
 	if not hired.is_empty():                                          # CON-06: the player hired to cut this field (the crop is the owner's)
 		return [_t("contract_harvest", c, "Hired: harvest for %s (%d done of %d; the crop goes to them)" % [w.ref_name(str(hired.buyer)),
 				int(hired.delivered), int(hired.qty)], {"contract": int(hired.id)})]
+	if cells.has(c) and not w.map.in_village(c) and claim_at(c).is_empty():
+		var owner: Dictionary = w.homesteads.claim_at(c) if w.homesteads != null else {}     # B25R1-014: a homestead household's own field
+		return [{"kind": "info", "id": "hsfield:%d,%d" % [c.x, c.y], "label": "A homestead's field", "text": "%s field: not yours to harvest." % (w.homesteads._owner_name(owner) if not owner.is_empty() else "Somebody's")}]
 	if cells.has(c):
 		var cell: Dictionary = cells[c]
 		match str(cell.state):

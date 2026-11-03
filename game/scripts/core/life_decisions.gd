@@ -344,6 +344,10 @@ func _weigh_runaway(n: NPC, r: Dictionary, little: bool, displaced: bool) -> Str
 	_hist("ran")
 	_hist("runaway_" + out)
 	JudgmentLive.on_news(w, "ran_away", "npc:%d" % n.id, [], n.pos)    # the family knows; the rest hear it told
+	_rec("runaway_departed", {"person": n.id, "origin": World.hh_ref(from), "destination": {"seek_help": World.hh_ref(help_h), "run_settlement": sid,
+		"seek_band": "band", "survive_alone": "alone", "work_home": "home"}.get(out, "")})
+	_rec("runaway_outcome", {"person": n.id, "action": {"seek_help": "sheltered", "work_home": "employed", "run_settlement": "relocated", "survive_alone": "independent",
+		"seek_band": "pending"}.get(out, out)})
 	match out:
 		"seek_help":
 			Guardianship.move(w, n, help_h, "refuge")
@@ -468,6 +472,10 @@ func _recruit_answer(n: NPC) -> String:
 	if runaways.has(str(n.id)):
 		runaways[str(n.id)].band = ans
 	match ans:
+		"dependant", "accept":
+			if runaways.has(str(n.id)):
+				_rec("runaway_outcome", {"person": n.id, "action": "joined_outlaws"})
+	match ans:
 		"dependant":
 			_join_band(n, false)
 			w.note("The bandits take %s %s in at their camp." % [n.name, n.family])
@@ -565,6 +573,7 @@ func leave_band(n: NPC) -> String:
 	_count("left_band")
 	_count("left_band_to_" + tier)
 	_rec("band_left", {"person": n.id, "to": tier, "household": World.hh_ref(n.household)})
+	_rec("bandit_reintegrated", {"person": n.id, "action": "new_household" if tier == "own" else "household", "tier": tier, "household": World.hh_ref(n.household)})
 	_hist("left_band")
 	JudgmentLive.on_news(w, "left_band", "npc:%d" % n.id, [], n.pos)
 	w.note("%s %s leaves the bandits for an ordinary life (%s)." % [n.name, n.family, tier])

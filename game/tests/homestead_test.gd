@@ -12,7 +12,7 @@ extends SceneTree
 
 var failures := 0
 var checks := 0
-const ITEMS := ["plank", "building_block", "log", "wheat", "pottage", "axe", "stone"]
+const ITEMS := ["plank", "building_block", "log", "wheat", "pottage", "axe", "stone", "wheat_seed", "carrot_seed", "carrot"]
 
 
 func check(cond: bool, what: String) -> void:
@@ -185,6 +185,33 @@ func _init() -> void:
 	check(_leaks(w2, g0, st0).is_empty(), "the goods ledger balances (plank, blocks, logs, food, tools: %s)" % _leaks(w2, g0, st0))
 	var rep := w2.homesteads.report()
 	check(int(rep.rural) >= 1 and int(rep.rural_households) == 1, "the report counts the rural household (%s)" % rep)
+	# ---- the homestead's own field (B25R1-014): a farmer's household tills, sows its own seed and grows a crop by Farming's rules
+	cl.trade = "farmer"
+	cl.trades[str(me.id)] = "farmer"
+	var seller: NPC = null
+	for so: NPC in w2.npcs:
+		if so.alive and so.inv.count("wheat_seed") >= 3 and w2.farm.sells_seed(so):
+			seller = so
+	if seller == null:
+		for so: NPC in w2.npcs:
+			if so.alive and so.inv.count("wheat_seed") >= 3:
+				seller = so
+	var g2 := _goods(w2)
+	var s2: Dictionary = w2.stats.duplicate()
+	var coins2 := w2.total_coins() - w2.coin_sources
+	if seller != null:
+		w2.treasury -= 20
+		me.coins += 20
+		w2.trade(me, seller, "wheat_seed", 3, w2.sell_price(seller, "wheat_seed"))
+		w2.transfer(me.inv, w2.households[me.household].pantry, "wheat_seed", 3)
+	while not w2.farm.can_sow_now():
+		_days(w2, 1.0)
+	_days(w2, 3.0)
+	var fcells := w2.homesteads.field_cells(cl)
+	var sown := fcells.filter(func(x): return str(w2.farm.cells[x].state) in ["growing", "ripe"])
+	check(seller != null and fcells.size() >= 1 and sown.size() >= 1, "the household breaks ground on its claim and sows its own seed (%d cells, %d sown)" % [fcells.size(), sown.size()])
+	check(fcells.all(func(x): return not Homesteads.house_of(cl).grow(1).has_point(x) and Homesteads.rect_of(cl).has_point(x)), "its field lies on its own land, clear of the house")
+	check(_leaks(w2, g2, s2).is_empty() and w2.total_coins() - w2.coin_sources == coins2, "the seed bought and sown, the goods and coins balance (%s)" % _leaks(w2, g2, s2))
 	# ---- a second claim may not overlap the first
 	check(w2.homesteads.refusal(Homesteads.rect_of(cl)).begins_with("Someone has claimed"), "the claimed land cannot be claimed again")
 	# ---- giving up: the people walk back, the delivered materials go to their stores (a fresh start on another world)

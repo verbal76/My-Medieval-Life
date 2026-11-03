@@ -1148,6 +1148,8 @@ func _found_couple(f: NPC, m: NPC) -> bool:
 	w.brain.evaluate_household(nid)
 	w.stat("households_founded")
 	w.stat("couples_founded")
+	if w.homesteads != null:                # B25R1-016
+		w.homesteads._rec("household_formed", {"person": f.id, "household": World.hh_ref(nid), "origin": World.hh_ref(int(homes[0])), "track": "couple", "homestead": false})
 	return true
 
 
@@ -1223,6 +1225,9 @@ func _found(h: int) -> bool:
 	w.brain.evaluate_household(h)
 	w.brain.evaluate_household(int(nh.id))
 	w.stat("households_founded")
+	if w.homesteads != null:                # B25R1-016: every formation, the denominator of the homestead safeguard
+		w.homesteads._rec("household_formed", {"person": founder.id, "household": World.hh_ref(int(nh.id)), "origin": World.hh_ref(h),
+			"track": "young" if Life.npc_age(w, founder) <= float(Homesteads.cfg().young_max_age) else "adult", "homestead": false})
 	return true
 
 
