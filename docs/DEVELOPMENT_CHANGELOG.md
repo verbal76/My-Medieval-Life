@@ -59,6 +59,20 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
 
 ---
 
+## 2026-11-03
+
+**DEV-GOV-01: the owner approves scope and sequence (2026-11-03). REGION-NAV-01 halted for review.**
+- **Governance rule:** recorded in `CLAUDE.md` section 5b on both lines, and in `docs/decisions/DEV-GOV-01.md`.
+- **S2 investigation:** the approved stages (`611c294`) were split into sub-packages without approval, and work moved between
+  stages:
+  - the site buildings landed in S2;
+  - the fix for roads running through sites landed in S3.
+- **Design decision changed:** AD-1 was rewritten to the settlements' existing positions.
+- **S2 is partially complete:** crafters, a save and load test and the planned trade path are outstanding or deviate.
+- **S3 is in progress:** journey_test 14/0 at `aafcc4d`; three of its tests are not written.
+- **Register:** `docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md`.
+- **Owner questions:** REGION-NAV-Q1..Q6.
+
 ## 2026-11-02
 
 **Build 25 scope corrected: the regional economy is mandatory Build 25 work (B25-SCOPE-REGION, REGION-NAV-01).**

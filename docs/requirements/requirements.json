@@ -13392,6 +13392,41 @@
    ]
   },
   {
+   "id": "DEV-GOV-01",
+   "kind": "approved",
+   "title": "Development governance: agents make technical decisions within approved requirements; the owner approves scope and sequence (no skipping, moving, merging, splitting, renaming, reordering or deferring work packages, no stage marked complete with criteria outstanding, dependencies raised before the sequence changes)",
+   "description": "Development governance: agents make technical decisions within approved requirements; the owner approves scope and sequence (no skipping, moving, merging, splitting, renaming, reordering or deferring work packages, no stage marked complete with criteria outstanding, dependencies raised before the sequence changes)",
+   "source": "docs/directives/2026-11-03_development_governance_roadmap_authority.md",
+   "owner_wording": "You have authority to make ordinary technical implementation decisions within approved requirements. You do NOT have authority to silently alter the approved development roadmap.",
+   "approval": "owner, 2026-11-03",
+   "acceptance": [
+    "Rule recorded in CLAUDE.md and the decision records",
+    "S2 investigated and a work-package register produced",
+    "Progression into dependent stages stopped until the owner reviews"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_development_governance_roadmap_authority.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED",
+     "why": "CLAUDE.md section 5b on wip/requirements-control and wip/region-nav; docs/decisions/DEV-GOV-01.md; S2 findings and the work-package register in docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md"
+    }
+   ]
+  },
+  {
    "id": "DGA-D1",
    "title": "Meaning of \"isometric\"",
    "kind": "proposal",
@@ -49883,7 +49918,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -49907,13 +49942,150 @@
      "date": "2026-11-03",
      "change": "tests: None -> overworld_test 159/0, countryside_test 38/0, atlas_test 17/0, settlement_folk_test 21/0 (local); commits + 8a57974",
      "why": "S1a 2745f2f: five settlements placed in the overworld at their OffMapSettlement.pos, sites reachable on foot (GEN_VERSION 3); S1b 3fd24e2: per-player places and explored ground, Region map toggle; S2a 909b180: one building per trade drawn with the village stamps, solid, every door reachable (screenshots looked at); S2b 8a57974: named keepers per business speak for their books, trading through the courier edge conserves both ledgers. Tests: overworld 159/0, countryside 38/0, atlas 17/0, settlement_folk 21/0. Next: S2c keepers drawn and the player's talk window, S3 villager travel, S4 envoys."
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; tests: overworld_test 159/0, countryside_test 38/0, atlas_test 17/0, settlement_folk_test 21/0 (local) -> overworld_test 159/0, countryside_test 38/0, atlas_test 17/0, settlement_folk_test 21/0 (local); overworld 179/0 (6c88df0), countryside 38/0, atlas 17/0 (3fd24e2), settlement_folk 21/0 (8a57974), journey 14/0 (aafcc4d), wiki_test (add1651), local",
+     "why": "DEV-GOV-01 review (2026-11-03): S1 implemented (unapproved split S1a/S1b; AD-1 changed to existing positions, owner Q3); S2 partially complete (unapproved split S2a/b/c; crafters and save/load test outstanding; trade path deviates, Q4/Q5); S3 in progress (journey_test 14/0 at aafcc4d; three of its tests outstanding); S4 onward halted pending REGION-NAV-Q1..Q6"
     }
    ],
    "assigned_worker": "lead (single worker)",
    "branch": "wip/region-nav",
-   "tests": "overworld_test 159/0, countryside_test 38/0, atlas_test 17/0, settlement_folk_test 21/0 (local)",
+   "tests": "overworld_test 159/0, countryside_test 38/0, atlas_test 17/0, settlement_folk_test 21/0 (local); overworld 179/0 (6c88df0), countryside 38/0, atlas 17/0 (3fd24e2), settlement_folk 21/0 (8a57974), journey 14/0 (aafcc4d), wiki_test (add1651), local",
    "commits": [
     "8a57974"
+   ]
+  },
+  {
+   "id": "REGION-NAV-Q1",
+   "kind": "decision",
+   "title": "Stage structure: keep the eight approved REGION-NAV-01 stages as the only work packages (the lead's a/b/c labels withdrawn, commit labels only), or approve the sub-packages S1a/b, S2a/b/c, S3a/b?",
+   "description": "Stage structure: keep the eight approved REGION-NAV-01 stages as the only work packages (the lead's a/b/c labels withdrawn, commit labels only), or approve the sub-packages S1a/b, S2a/b/c, S3a/b?",
+   "source": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md"
+    }
+   ]
+  },
+  {
+   "id": "REGION-NAV-Q2",
+   "kind": "decision",
+   "title": "Moved work: accept the site buildings in S2 and the roads-through-sites fix in S3 as recorded moves, or re-attribute them to S1 and reopen S1?",
+   "description": "Moved work: accept the site buildings in S2 and the roads-through-sites fix in S3 as recorded moves, or re-attribute them to S1 and reopen S1?",
+   "source": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md"
+    }
+   ]
+  },
+  {
+   "id": "REGION-NAV-Q3",
+   "kind": "decision",
+   "title": "AD-1: settlements at their existing OffMapSettlement.pos (built, one geography with trade distances), or at the approved bearings?",
+   "description": "AD-1: settlements at their existing OffMapSettlement.pos (built, one geography with trade distances), or at the approved bearings?",
+   "source": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md"
+    }
+   ]
+  },
+  {
+   "id": "REGION-NAV-Q4",
+   "kind": "decision",
+   "title": "Crafters in S2 and S4: (a) business keepers and the official only (built); (b) also every worker household's head; (c) extend the settlement model to households working on their own account?",
+   "description": "Crafters in S2 and S4: (a) business keepers and the official only (built); (b) also every worker household's head; (c) extend the settlement model to households working on their own account?",
+   "source": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md"
+    }
+   ]
+  },
+  {
+   "id": "REGION-NAV-Q5",
+   "kind": "decision",
+   "title": "S2 trade path: keep the courier edge (books both sides) as an approved deviation, or rework onto SettlementParty.deal as planned?",
+   "description": "S2 trade path: keep the courier edge (books both sides) as an approved deviation, or rework onto SettlementParty.deal as planned?",
+   "source": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md"
+    }
+   ]
+  },
+  {
+   "id": "REGION-NAV-Q6",
+   "kind": "decision",
+   "title": "Next: finish S2's outstanding items (save and load test; crafters per Q4) and S3's three outstanding tests, then report S2 and S3 for review before S4?",
+   "description": "Next: finish S2's outstanding items (save and load test; crafters per Q4) and S3's three outstanding tests, then report S2 and S3 for review before S4?",
+   "source": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": true,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md"
+    }
    ]
   },
   {
