@@ -171,11 +171,16 @@ func _run() -> void:
 			if f == 1:
 				Demo.tick(meta, 0.5)
 		worlds.append(JSON.stringify(w.to_dict()))
+		w.dispose()
 	check(worlds[0] == worlds[1], "the same world goes on identically in the demo and the full game")
 	Demo.force = -1
 	main.ui.show_title(main.can_continue())
 	check(main.ui.panel_body.find_child("SteamButton", true, false) != null, "the full game's main menu has the Steam button too")
 	print("%d checks, %d failures" % [checks, failures])
+	SteamPromo.opener = Callable()            # (the test's lambda must not outlive the test in a static)
+	main.queue_free()                         # (a clean exit: the scene and its world freed before quitting)
+	await process_frame
+	await process_frame
 	quit(1 if failures > 0 else 0)
 
 
