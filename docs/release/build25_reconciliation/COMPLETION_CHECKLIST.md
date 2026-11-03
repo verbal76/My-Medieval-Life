@@ -39,10 +39,10 @@ Status words: **DONE** (criteria met, evidence cited), **TESTING** (built; tests
 | B1 | LE-07 gate 1: full suites on the final SHA | TO DO | final SHA | Run on the candidate (section E) | — |
 | B2 | LE-07 gate 4: economy-on long run, leak 0, no item leaks, 0 breaches, no script error | DONE on the baseline for seed 1 | `4b51c92` | Confirmed by the final flight on the candidate (E3) | run 41536810831: 365 days, leak 0, item leaks none, 0 breaches, 0 script errors |
 | B3 | LE-07 gate 6: save and load exact over the year; save size recorded | DONE on the baseline | `4b51c92` | Same | 37 of 37 round trips exact; 838,681 bytes at day 365 |
-| B4 | LE-07 gate 9: calibration review of the PROVISIONAL LE-02..LE-05 parameters | TO DO | — | Write the review from run 41536810831 (measured, not pass/fail) | — |
+| B4 | LE-07 gate 9: calibration review | DONE (`LE07_CALIBRATION_REVIEW.md`, nothing changed) | — | Write the review from run 41536810831 (measured, not pass/fail) | — |
 | B5 | LE-07 gate 10: register settled | TO DO | — | At the build's close | — |
 | B6 | LE-07 gate 11: mid-range Android phone performance | OWNER | — | A device check, or an owner ruling (OD-LE-15: "a target to profile, not a success claim"). The S8 Android profile is the evidence offered | — |
-| B7 | Living Economy on by default (B25-LE-ACTIVATE-D1; B25-NINE: "activated by default once the LE-07 readiness gates pass"), with its wiki pages | TO DO | — | Turn it on in the candidate after B1–B5, before the final flight (so the flight runs the approved configuration) | — |
+| B7 | Living Economy on by default (B25-LE-ACTIVATE-D1), with its wiki pages | DONE (`b00439f`) | — | Turn it on in the candidate after B1–B5, before the final flight (so the flight runs the approved configuration) | — |
 | B8 | EXP-D (section 20 of the design) and X20-COMPLETE | TESTING | `wip/expansion20` | Close with B1–B7 and the final flight | integrated; targeted tests |
 
 ## C. Other approved Build 25 work and recovered work (integrated on `wip/expansion20`)
@@ -79,8 +79,8 @@ Status words: **DONE** (criteria met, evidence cited), **TESTING** (built; tests
 
 | # | Item | Status | Remaining work |
 |---|---|---|---|
-| E1 | Merge `wip/region-nav` into `wip/expansion20` (after S8); regenerate generated data | TO DO | — |
-| E2 | Final candidate SHA. Full CI in parallel groups (tests.yml), every required suite registered in CI (regional suites added at `b18f418`); saves, migrations, determinism, conservation, NPCs, journeys, regions | TO DO | — |
+| E1 | Merge `wip/region-nav` into `wip/expansion20` | DONE | Fast-forward to `b540971` (2026-11-02 22:5x EST) |
+| E2 | Final candidate SHA and full CI | RUNNING | Candidate `a72ed0a`. CI on the activation commit `b00439f` (run 41576207072): shards 1-3 121 suites, 0 failures; shard 0 finishing. Candidate CI: run 41580777660 (dispatched 2026-11-02 23:54 EST) |
 | E3 | Final 365-day flight recorder on that exact SHA with the Living Economy on (B7), under the existing acceptance rules. On a genuine defect: fix, focused tests, rerun the flight | TO DO | — |
 | E4 | Packages: Android APK (permanent signing identity), Windows ZIP, Linux ZIP from the one SHA; export and launch smoke checks; private draft release with the test evidence, simulation report and SHA | TO DO | Not published |
 
@@ -135,14 +135,14 @@ ninth regional stage.
 
 | # | Item | Status |
 |---|---|---|
-| I1 | Demo build configuration (one source; demo flag; the full game never restricted) | TO DO |
-| I2 | Active-play clock (monotonic, injectable; counts only while the world runs) | TO DO |
-| I3 | Per-world allowance saved with stable world identity; warnings 30/10/5/1 once per world; creation notice | TO DO |
-| I4 | Expiry: simulation stops, final save, expiry screen (new world, menu, exit, full-game note, Steam); expired worlds marked | TO DO |
-| I5 | Full game loads demo saves unrestricted; legacy saves migrate; Android save export/import | TO DO |
-| I6 | Steam promotion: one configured destination; "Coming Soon on Steam" until the owner supplies the page; menus and expiry screen | TO DO |
-| I7 | Focused tests (timer, persistence, expiry, compatibility, Steam, demo-equals-full simulation) | TO DO |
-| I8 | Six packages from one SHA in parallel jobs; name, size, SHA-256, run, evidence; private draft release | TO DO |
+| I1 | Demo build configuration (one source; demo flag; the full game never restricted) | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
+| I2 | Active-play clock (monotonic, injectable; counts only while the world runs) | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
+| I3 | Per-world allowance saved with stable world identity; warnings 30/10/5/1 once per world; creation notice | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
+| I4 | Expiry: simulation stops, final save, expiry screen (new world, menu, exit, full-game note, Steam); expired worlds marked | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
+| I5 | Full game loads demo saves unrestricted; legacy saves migrate; Android save export/import | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
+| I6 | Steam promotion: one configured destination; "Coming Soon on Steam" until the owner supplies the page; menus and expiry screen | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
+| I7 | Focused tests (timer, persistence, expiry, compatibility, Steam, demo-equals-full simulation) | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
+| I8 | Six packages from one SHA in parallel jobs; private draft release | PIPELINE READY (release.yml, `ca27195`); runs after the final flight |
 
 ## Order of work (no new scope)
 
