@@ -146,7 +146,9 @@ func pick(w: World, who: String) -> NPC:
 					c = n
 			"child":
 				if age < 12.0 and w.npc(n.mother) != null and w.npc(n.mother).alive and w.npc(n.father) != null and w.npc(n.father).alive:
-					c = n
+					var others: Array = w.brain._members(n.household).filter(func(o: NPC) -> bool: return o.role != "child" and o.id != n.mother and o.id != n.father)
+					if others.is_empty():
+						c = n                  # the parents are the household's only grown-ups: their deaths leave the child to the orphan rules
 		if c != null:
 			break
 	if who == "bandit":

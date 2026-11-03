@@ -30,7 +30,7 @@
      "steps": [{"op": "hardship", "who": "adult", "bad": 12, "event": true}, {"op": "recruit", "who": "adult"}],
      "expect": ["recruit_joined|recruit_rejected"]},
     {"name": "recruit_orphan", "cases": ["D"], "seed": 3, "days": 8,
-     "start": "seed 3 village; the first child under 12 with both parents alive loses both (World.kill, cause scenario); the orphan rules (FAM-07) place them; if unplaced, the child asks the band",
+     "start": "seed 3 village; the first child under 12 whose two living parents are the household's only grown-ups loses both (World.kill, cause scenario); the orphan rules (FAM-07) place them; if unplaced, the child asks the band",
      "steps": [{"op": "orphan", "who": "child"}, {"op": "run", "days": 1}, {"op": "recruit", "who": "orphan_if_unplaced"}],
      "expect": ["guardianship_placement|guardianship_clan|recruit_joined|recruit_rejected"]},
     {"name": "bandit_departure", "cases": ["F"], "seed": 1, "days": 12,
