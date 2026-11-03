@@ -2082,6 +2082,7 @@ func chronicle(kind: String, who, f := {}) -> int:
 func road_step(ow: Overworld, c: Vector2i, lv: int, look: String, cart: bool) -> void:
 	var lv2 := RoadWear.level(ow, c)
 	var look2 := RoadWear.visual(ow, c)
+	_road_seen[c] = [lv2, look2]                    # the next dawn compares with this (a path worn and faded between two dawns)
 	var kind := "road_formed" if lv2 > lv else ("road_cleared" if look.ends_with("_overgrown") and not look2.ends_with("_overgrown") else ("road_wear" if lv2 == 3 else ""))
 	if kind == "":
 		return
@@ -2093,6 +2094,7 @@ func road_step(ow: Overworld, c: Vector2i, lv: int, look: String, cart: bool) ->
 ## RoadWear.pave / repair: `by` the ref of who did it (the player, the manor's mender), the stone used.
 func road_work(ow: Overworld, c: Vector2i, mode: String, before: String, by: String, stone: int) -> void:
 	var cell := "cell:%d,%d" % [c.x, c.y]
+	_road_seen[c] = [RoadWear.level(ow, c), RoadWear.visual(ow, c)]
 	chronicle("road_paved" if mode == "pave" else "road_repaired", wref(by) if by != "" else null, {"x": c.x, "y": c.y, "object": cell,
 		"action": mode, "summary": [[cell, "look", before, RoadWear.visual(ow, c)]], "needs": {"stone": stone}})
 
@@ -2190,3 +2192,192 @@ func _b25_day(d: int) -> void:
 		vals.erase("id")
 		chronicle("settlement_state", null, {"place": "homestead:" + str(rd.get("id", "?")), "object": "homestead:" + str(rd.get("id", "?")),
 			"path": str(rd.get("path", "")), "needs": vals})
+
+
+# ---------------------------------------------------------------- adapters for the B25R1 systems' own calls --------
+## The travellers' and homesteads' systems report in their own words (Journeys.record -> journey_event; Homesteads._rec and
+## LifeDecisions._rec -> life_event); these map each onto the chronicle vocabulary. Every data entry is kept (needs rows, option
+## needs). A kind with no mapping is written as `unmapped_event` (detail: its kind), never lost: the exception report lists it.
+## The recorder's own bookkeeping below only remembers keys it was given (a journey's object key, a claim's founder and track).
+var _journey_key := {}                 # person id -> object key of the journey under way
+var _claims := {}                      # claim id -> {founder, track, path, household}
+var _claim_of := {}                    # person id -> claim id they live at or set out for
+## life_event kinds that are already the vocabulary's own (passed through with their fields)
+const PASS_THROUGH := ["well_built", "water_drawn", "water_drunk", "band_relocated", "band_migrated_on_load", "wild_production", "wild_consumption",
+	"wild_shortage", "sale_refused", "livestock_change", "raid", "raid_defended", "household_formed", "homestead_sustain", "homestead_year",
+	"clan_birth", "clan_member_died", "bandit_reintegrated", "runaway_departed", "runaway_outcome", "faction_changed", "wild_craft", "skill_progress"]
+
+
+static func _flat(data: Dictionary) -> Dictionary:
+	var out := {}
+	for k in data:
+		var v = data[k]
+		out[str(k)] = v if typeof(v) in [TYPE_INT, TYPE_FLOAT, TYPE_BOOL, TYPE_STRING] else JSON.stringify(v).left(200)
+	return out
+
+
+static func _track(path: String) -> String:
+	return "young_adult" if path == "young" else ("established_adult" if path == "adult" else path)
+
+
+## Journeys.record(w, n, what, data): started, refused, arrived, provisioned, bought_food, bought, failed, waited, ended, seed_designated.
+## Ambient travellers are scenery with no identity: they never reach here and are not recorded.
+func journey_event(id: int, _ref: String, what: String, data: Dictionary) -> void:
+	var key := str(_journey_key.get(id, "journey:%d:resumed" % id))
+	if what == "started":
+		key = "journey:%d:%d.%d" % [id, w.day(), int(fmod(w.minutes, World.DAY))]
+		_journey_key[id] = key
+	var to := str(data.get("to", ""))
+	var f := {"object": key, "needs": _flat(data), "destination": ("settlement:" + to) if to != "" else "", "origin": "village"}
+	var purpose = data.get("purpose", {})
+	if purpose is Dictionary:
+		f["action"] = str(purpose.get("kind", "visit")) + (":seed" if bool(purpose.get("seed", false)) else "")
+	var kind := ""
+	match what:
+		"started":
+			kind = "journey_begin"
+			f["trigger"] = str(data.get("trigger", ""))
+		"refused":
+			kind = "journey_refused"
+			f["outcome"] = "refused"
+			f["reason"] = str(data.get("why", "")).replace(" ", "_")
+		"arrived":
+			kind = "journey_leg"
+			f["place"] = f.destination
+		"provisioned":
+			kind = "journey_provisioned"
+		"bought_food", "bought":
+			kind = "journey_purchase"
+			f["place"] = f.destination
+			if data.has("seller"):
+				f["related"] = {"seller": wref(str(data.seller))}
+		"failed":
+			kind = "journey_errand_failed"
+			f["outcome"] = "failed"
+			f["reason"] = str(data.get("why", "")).replace(" ", "_")
+		"waited":
+			kind = "journey_waited"
+			f["reason"] = str(data.get("why", "")).replace(" ", "_")
+		"seed_designated":
+			kind = "journey_designated"
+		"ended":
+			kind = "journey_end"
+			var how := str(data.get("how", ""))
+			f["outcome"] = "ok" if how == "home" else ("abandoned" if how == "turned_back" else "failed")
+			f["reason"] = how
+			_journey_key.erase(id)
+		_:
+			kind = "unmapped_event"
+			f["detail"] = "journey_event:" + what
+	chronicle(kind, id, f)
+
+
+## Homesteads._rec / LifeDecisions._rec (kind, data): data carries day; people are person ids, households hh:<n>, claims hs<n>.
+func life_event(kind: String, data: Dictionary) -> void:
+	var claim := str(data.get("claim", ""))
+	var place := ("homestead:" + claim) if claim != "" else ""
+	var cl: Dictionary = _claims.get(claim, {})
+	var f := {"needs": _flat(data)}
+	if place != "":
+		f["place"] = place
+		f["object"] = place
+	if cl.has("track"):
+		f["track"] = cl.track
+		f["path"] = cl.path
+	var who = data.get("person", data.get("by", cl.get("founder", null)))
+	if who != null and typeof(who) == TYPE_FLOAT:
+		who = int(who)
+	var out := ""
+	match kind:
+		"homestead_brake":
+			out = "homestead_safeguard"
+			f.merge({"track": _track(str(data.get("path", ""))), "outcome": "refused", "reason": "safeguard"}, true)
+		"homestead_choice":
+			var tr := _track(str(data.get("path", "")))
+			var pick := str(data.get("chosen", ""))
+			f.merge({"track": tr, "household": str(data.get("household", "")), "chosen": pick, "basis": "judgment",
+				"alternatives": [["village", true], ["homestead", true]]}, true)
+			chronicle("homestead_evaluated", who, f)
+			f.erase("chosen")
+			f.erase("alternatives")
+			if pick == "homestead":
+				out = "homestead_chosen"
+			else:
+				out = "homestead_rejected"
+				f["outcome"] = "refused"
+				f["reason"] = "chose_" + pick
+		"homestead_set_out":
+			var people: Array = data.get("people", [])
+			var path := str(data.get("path", ""))
+			_claims[claim] = {"founder": int(people[0]) if not people.is_empty() else -1, "track": _track(path), "path": "outlaw" if path in ["outlaw", "band"] else "lawful",
+				"household": str(data.get("household", ""))}
+			for p in people:
+				_claim_of[int(p)] = claim
+			f.merge({"track": _claims[claim].track, "path": _claims[claim].path, "household": str(data.get("household", "")), "origin": str(data.get("from", "")),
+				"destination": place, "reason": str(data.get("why", "")).replace(" ", "_"), "related": {"traveller": people.map(func(p) -> String: return "p:%d" % int(p))}}, true)
+			who = _claims[claim].founder
+			out = "homestead_travel_begin"
+		"homestead_claimed":
+			out = "homestead_claimed"
+		"homestead_materials":
+			out = "homestead_resources"
+		"homestead_built":
+			chronicle("homestead_shelter_built", who, f)
+			out = "homestead_residence"
+		"homestead_trip":
+			out = "homestead_trip"
+		"homestead_trade":
+			out = "wild_trade"
+			f["related"] = {"buyer": str(data.get("to", ""))}
+			if _claim_of.has(int(data.get("by", -1))):
+				f["place"] = "homestead:" + str(_claim_of[int(data.by)])
+		"homestead_member_left":
+			out = "settlement_occupancy"
+			f.merge({"action": "out", "destination": str(data.get("now", ""))}, true)
+			_claim_of.erase(int(data.get("person", -1)))
+		"homestead_member_joined":
+			out = "settlement_occupancy"
+			f["action"] = "in"
+			_claim_of[int(data.get("person", -1))] = claim
+		"homestead_failed":
+			out = "homestead_failed"
+			f.merge({"outcome": "failed", "reason": str(data.get("why", "")).replace(" ", "_")}, true)
+		"homestead_abandoned":
+			out = "homestead_abandoned"
+			f.merge({"outcome": "abandoned", "reason": str(data.get("why", "")).replace(" ", "_")}, true)
+		"settlement_affiliation":
+			out = "settlement_affiliation"
+			f["faction"] = str(data.get("faction", ""))
+		"runaway_choice":
+			out = "runaway_evaluated"
+			f.merge({"household": str(data.get("household", "")), "chosen": str(data.get("chosen", "")), "basis": "judgment",
+				"trigger": "life_event" if bool(data.get("event", false)) else "hardship_threshold"}, true)
+		"band_recruit":
+			var ans := str(data.get("answer", ""))
+			var src := str(data.get("source", ""))
+			src = "displaced_adult" if src == "displaced" else ("orphan" if src == "child" else src)
+			f.merge({"source": src, "related": {"leader": "p:%d" % int(data.get("leader", -1))}, "place": "clan:bandit", "object": "clan:bandit",
+				"chosen": ans, "basis": "judgment", "alternatives": [["reject", true], ["dependant", ans == "dependant"], ["accept", ans == "accept"]]}, true)
+			if ans == "reject":
+				out = "recruit_rejected"
+				f["outcome"] = "refused"
+			else:
+				chronicle("recruit_accepted", who, f)
+				f.erase("chosen")
+				f.erase("alternatives")
+				f.merge({"faction_before": "village", "faction": "clan:bandit", "legal_before": "lawful", "legal": "outlaw", "action": ans}, true)
+				out = "recruit_joined"
+		"band_left":
+			out = "bandit_departed"
+			f.merge({"faction_before": "clan:bandit", "faction": "village", "legal_before": "outlaw", "legal": "lawful", "action": str(data.get("to", "")),
+				"household": str(data.get("household", ""))}, true)
+		_:
+			if PASS_THROUGH.has(kind):
+				out = kind                                      # the vocabulary's own kinds, passed through
+				for k in ["track", "path", "source", "action", "origin", "destination", "household", "faction", "faction_before", "outcome", "reason"]:
+					if data.has(k):
+						f[k] = str(data[k]) if k != "track" else _track(str(data[k]))
+			else:
+				out = "unmapped_event"
+				f["detail"] = "life_event:" + kind
+	chronicle(out, who, f)
