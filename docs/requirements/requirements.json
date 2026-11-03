@@ -7212,6 +7212,11 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-homestead worker; branch: None -> wip/b25r1-homestead",
      "why": "scope audit under B25R1-015: in development by the homesteading worker; full scope ships in Revision 1 with its decision switches on, nothing deferred or disabled"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "note",
+     "why": "measurement (first homestead worker, 8e1ab51, seed 1, stopped at day 160 of 240 by its script's time limit; 0 coin and item leaks at days 40-160): village 104 -> 185; 16 young-adult formations, 9 adult relocation events; 0 homesteads because a 2% cap on 16 formations allows none (choices refused 62 young, 43 adult); 0 runaways (no hardship threshold reached, food 31-35 days); band 6 -> 0 by day 120, 2 at day 160 through returns; 1 bandit left; unemployed 3 -> 25. Organic homesteading will be rare at this formation rate; targeted scenarios cover the mechanic; the cap stays as the owner set it pending the region-wide measurement"
     }
    ],
    "disposition": "APPROVED",
