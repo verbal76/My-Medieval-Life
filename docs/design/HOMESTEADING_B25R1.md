@@ -1,4 +1,4 @@
-# Homesteading (Build 25 Revision 1, register B25R1-010): audit and plan
+# Homesteading (Build 25 Revision 1, register B25R1-010): audit and plan; NPC life decisions (B25R1-013)
 
 Owner directive 2026-11-03, `docs/directives/2026-11-03_b25r1_homesteading.md` (on `wip/requirements-control`; the 16 sections
 are the requirement). Worker branch `wip/b25r1-homestead`, from `wip/b25r1-interact` (`10491e7`, the outside world made
@@ -277,3 +277,143 @@ now (no homesteads by NPCs; the player's homesteading is unaffected).
 **Owner questions (one each, if the lead puts them):** (a) approve the profile, its candidates and factors above, or name
 others; (b) the brake: the share of young adults forming households over a rolling window (proposed 2 % over 5 game years),
 or another form; (c) whether the secondary (established adult) path is wanted now or later.
+
+## 9. Youth runaways and bandit recruitment: audit (owner directive 2026-11-03, B25R1-013)
+
+Source: `docs/directives/2026-11-03_b25r1_youth_runaways.md`. One shared decision architecture (section 7), three distinct
+behaviours: homesteading (an adult's voluntary independent residence), running away (a young person leaving a household in
+sustained hardship), bandit recruitment (a separate event after contact with the band). Nothing of the runaway decision is
+implemented; this section is the audit.
+
+### 9.1 Children and adolescents
+
+`Life`: child under 12, adolescent 12-16 (`Life.stage`); `NPC.role` is "child" for both (no full jobs), "adult" from 16. A
+child is a household member (`households[h].members`), lives in its home, sleeps by the household's sleep order (children share
+beds, `bed_share`), eats from the pantry (`eat_home`), and plays near the home or the square (`NPCBrain._decide`
+child_play, with `w.rng`). Children have no job, no wage, no purse of their own in practice (coins 0 unless given), no
+aspirations (JudgmentAspiration covers adults), but they are persons in the judgment store (they hold and are the object of
+opinions and news). Care: `JudgmentFamily` (FAMILY-01, the responsible parent puts children first in meals, paying and work);
+`Guardianship` (FAM-02..05) moves the children of a household with no adult or elder left to a surviving parent, grandparents,
+the nearest relative, else a willing village household (OD-12 order); the player may adopt (REC-001). Nobody today leaves
+their household as a child except by guardianship.
+
+### 9.2 Household hardship over time
+
+What is measured, and kept across days (the inputs a "sustained" test needs):
+- food: `NPCBrain.household_food_days` (stores and what the purse can buy), the village's `food_days` and `famine()`; a
+  household's `econ` (`evaluate_household`, each dawn: cost, income, days, runway, `sustainable`, and `streak` =
+  `households[h].unsustainable_days`, the consecutive days it could not live on its income; Migration's land and work moves
+  already wait for `mobility_unsustainable_days` of it); missed meals counted (`missed_meal_no_money`, `missed_meal_no_food`,
+  the chapel's `note_missed` round), hunger and starvation damage per person;
+- poverty: the purse against `World.necessity` (OD-19), credit debts falling due and defaults (`Credit.dawn`), relief taken
+  from the manor and the chapel (`relief_units`, chapel help);
+- instability: housing goals and their age (`housing_goals`: "no home", "crowded"), losing a house (`_rehouse`), a parent's
+  death, guardianship moves, a household ending;
+- neglect and conflict: there is no direct measure of neglect or family conflict. What exists: `JudgmentFamily` (a rare
+  self-first temperament may feed itself before the children down to the survival floor), opinions between household
+  members in `JudgmentStore` (harm and help remembered), the aspiration food satisfaction with its streak penalty
+  (`streak_step`). These can stand in where the data supports it; nothing new is invented.
+
+### 9.3 Bandit membership today
+
+- The band: NPCs with `role == "bandit"` living at `World.bandit_camp` (village map); X20-BANDIT-AI (`JudgmentBandit`,
+  profile bandit_danger) for fights; at night they stalk the player within 18 tiles or a villager outdoors within 40 tiles of
+  the camp (`_prey_for`), rob, poach, sell at the market by day (`_bandit_market`); crimes, witnesses and guards by `Justice`.
+- Joining: only two ways exist. (1) FAM-07 / OD-11: an orphan no household can take joins the clan (`Guardianship.join_clan`:
+  `NPC.clan = "bandit"`, household -1, lives at the camp, eats with the band, never prey, never in a fight, identity kept);
+  at coming of age `Guardianship.leave_camp` places them with kin or a household with room, else they stay and become a
+  bandit (Life._set_role: a bandit's health and blow, nothing else made). (2) BANDIT-RETURN (`Outlaws`): a season after the
+  band dies out, 2 or 3 outlaws arrive from outside (new people, purses from outside). There is no recruitment of a living
+  villager or youth by the band, and no "acceptance" behaviour.
+- Leaving: a clan child leaves at coming of age if placed; an adult bandit never leaves (only death ends membership). FAM-08
+  ("their own weighing", bandit factions WDR-016-C) is the open design point for that.
+- Faction and reputation: no faction record; `role`/`clan` are the membership; reputation is the judgment store's opinions
+  and the justice system's cases.
+
+### 9.4 How family notices an absence
+
+There is no "missing person" record. What exists: the judgment store's news (`JudgmentLive.on_news`: an event known to the
+actors and their households, spread by gossip; deaths, harm, help, "no_tool"), family stories (`tell_family_tick`), and
+Guardianship's view of who cares for whom. A villager who leaves by migration is recorded (`Identity.move`, Migration's log)
+but nobody searches for them.
+
+### 9.5 Population accounting
+
+Every person is one record: an NPC in `World.npcs` (alive, or away / dead), a settlement member, or the player, registered in
+`World.people` with `where` (ID-01). Migration's off-map moves keep the person (`away`), the same id, never duplicated
+(Identity.verify). A runaway or recruit would stay the same NPC record (its household, clan and position change), so the
+register needs no new kind of entry.
+
+## 10. Combined proposal: one life-decision framework, three behaviours (for the owner)
+
+**Shared mechanics (reused, not new):** feasibility by live rules; one `JudgmentWeighting.choose` per decision with a
+profile of its own (`homestead_choice`, `runaway_choice`, `recruit_answer`), personality, judgment of the people involved and,
+for adults, aspirations; deterministic (margin picks keyed by the decision); every choice traced by the flight recorder;
+travel by the road routes and `Homesteads`' walking (the same path-laying as journeys); one identity record per person
+throughout; switches per profile in `decision.integration`, off until approved.
+
+### 10.1 Homesteading (section 8, unchanged)
+
+At household formation (`_found`, `_found_couple`) and rarely for adults with a long housing wait; candidates `village` /
+`homestead`; factors property gap, trade fit, village prospect, capital, family ties, isolation risk, tax (minor); brake: the
+homestead option offered only while the share of young adults forming households who homesteaded over a rolling window stays
+under `young_share` (2 %). Built after the choice: `Homesteads.begin` and everything that follows.
+
+### 10.2 Running away (B25R1-013)
+
+**When (event-driven, never per tick, never one bad day).** A household's hardship record, updated at dawn from what is
+already measured (9.2): consecutive unsustainable days (`econ.streak`), days in the last `window` with missed meals by its
+children, days with household food under a day, debts defaulted, a lost home, a parent's death or a guardianship move, and
+(where the judgment store holds it) harm by a household member. A young person (adolescent 12-15 first; a child under 12 only
+with a far higher bar, or never: owner question) is evaluated only when the record crosses a threshold
+(`hardship_days`, for example two game years of sustained trouble with no improving trend) or on a life event (losing a
+parent, eviction), and then at most once a season per person.
+
+**Outcomes (candidates, each feasible only if the live rules allow it):**
+1. `endure` (always present, the default; strong while the household is improving or a parent provides);
+2. `seek_help`: ask a relative's or a friendly household's help: through the existing paths (family help, the chapel's
+   asking for help, the manor's relief), or a move to kin by Guardianship's own order when they can take a dependant;
+3. `work_elsewhere`: an adolescent takes day labour or a hand's place in the village (the manor's work, existing job
+   market) while staying home;
+4. `run_to_settlement`: walk to a neighbouring settlement (road routes) and, if a household there would take them, become a
+   member (Migration's arrival and Identity.move, the same person);
+5. `alone`: leave and try to survive in the country (sleeping rough, foraging, felling; the homestead driver's walking and
+   resting without a claim), with real hunger and danger;
+6. `seek_band`: go to the bandits' camp (only if a band lives and the young person knows of it: news, having been robbed,
+   the clan's children they know).
+Factors: hardship (the record), age and maturity (age within the stage), relationships (opinion of the household's adults,
+loyalty, fear; kin elsewhere), opportunity (a willing household, a place in the market, a settlement known to them, the band),
+temperament (personality spread, stubbornness), and what they know of danger. Children never pick 3-6 below a minimum age
+(proposed 12).
+
+**Bandit recruitment, a separate event.** A youth or adult who reaches the camp asking to join is answered by the band
+(`recruit_answer`, chosen by the band's eldest or strongest bandit with its own personality): `reject` (sent away; they go on
+to another outcome), `exploit` (kept as a dependant who scouts or carries, a clan member, never a fighter: a child under 16 is
+a clan child as FAM-07, eats with the band, is never in a fight), or `accept` (an adult: role bandit by the existing rule of
+coming of age in the clan, no gear, skills or coins given). Factors: the band's size and food (the band's stores), the
+recruit's age and health, their kinship with a bandit, the band's danger lately. Leaving later: a recruit, like a clan child
+at coming of age, may leave by `Guardianship.leave_camp`'s order, and an adult bandit's leaving is the FAM-08 decision (owner
+question whether to build it now).
+
+**Family consequences.** The runaway stays in the household's records (mother, father, siblings) and in `World.people`; the
+household's members learn of the absence through the judgment store's news (a "ran away" event, gossip spreads it), which
+colours their opinion and, through the existing aspirations, the family domain; an adult of the household who knows where they
+went may go to fetch them (a search plan by the existing journeys or village walking) and the youth weighs coming back
+(`runaway_choice` again, `return` among the candidates, when the hardship has eased).
+
+**Safeguards and brakes.** At most one runaway per household per `household_gap_days`; none while the household's hardship
+record is improving; a village-wide brake (runaways over a rolling window under a small share of the village's adolescents)
+so poverty never empties a village; no runaway in the first years of a world (records need time to build). Brakes stop
+outliers; the reasoning produces the ordinary "endure".
+
+**Tracking.** Counts by outcome and destination, survival after a season and a year, recruitment answers, returns, and the
+households' hardship records at the time (economy_sim's HOMESTEAD line becomes a LIFE line covering both).
+
+**Validation (as the directive requires).** (1) A household in sustained hardship whose adolescent endures or seeks help
+(the household improving, kin willing, or the youth young): no runaway. (2) A household in deep, unimproving hardship with no
+kin and no place, and a band nearby: the adolescent runs away; recruitment is a separate answer by the band; identity,
+relationships and population accounting checked; the family learns of it.
+
+**Owner questions (for the lead):** (a) approve the outcome set, the factors and the evaluation moments; (b) the youngest age
+for running away (proposed 12) and whether a child under 12 ever may; (c) whether an adult bandit may leave the band now
+(FAM-08) or later; (d) the village-wide brake's form and size.
