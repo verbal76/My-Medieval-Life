@@ -18708,6 +18708,39 @@
    "notes": "The 2026-10-24 order puts 26 after 25; only the early-phases option is open."
   },
   {
+   "id": "EA-01",
+   "kind": "approved",
+   "title": "Steam Early Access readiness: a presentable demo in about three weeks, polish and juice built in as features are built, centralised decisions and tunables, interactions that all work, story-ready systems, store-quality footage and screenshots",
+   "description": "Steam Early Access readiness: a presentable demo in about three weeks, polish and juice built in as features are built, centralised decisions and tunables, interactions that all work, story-ready systems, store-quality footage and screenshots",
+   "source": "docs/directives/2026-11-03_steam_early_access_readiness.md",
+   "owner_wording": "I have just over 3 weeks to get something good enough that I can present to the world as an Early Access game ... keep polishing mind as we build game juice in mind as we build instead of you know multiple passes later ... centralizing as much things as we can ... decisions aren't scattered all over 8 million locations. We need to make sure the interactions all work well. ... This is going to be a commercial game.",
+   "approval": "owner, 2026-11-03",
+   "acceptance": [
+    "A demo build presentable as Early Access by about 2026-11-24, from one validated commit, three platforms",
+    "Every new or changed feature ships with its feedback and juice (animation, sound, readable UI) in the same change, not a later pass",
+    "Tunables and decisions in one place each (data files such as balance.json, UIStyle for interface style, one module per concern); a centralisation audit finds and folds scattered constants",
+    "An interaction quality pass: every player verb and NPC interaction works, on touch, gamepad and keyboard",
+    "Systems keep story hooks in mind (quest givers, events, landmarks) without building a storyline now",
+    "Store-quality gameplay footage and screenshots captured from real play"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_steam_early_access_readiness.md"
+    }
+   ]
+  },
+  {
    "id": "EARTH-01",
    "title": "Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1)",
    "kind": "approved",

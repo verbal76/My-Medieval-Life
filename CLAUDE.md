@@ -252,6 +252,20 @@ corresponding documentation.** Every agent and worker, on every task:
   record it as `uncertain` with a reason.
 - Engine code conventions get added here once the engine is approved.
 
+### Commercial quality while building (owner, 2026-11-03, EA-01, `docs/directives/2026-11-03_steam_early_access_readiness.md`; standing)
+
+My Medieval Life is a commercial game headed for Steam Early Access. Every agent and worker, on every task:
+- **Polish and juice in the same change.** A new or changed feature ships with its feedback: animation, sound, readable
+  interface (UIStyle), clear prompts on touch, gamepad and keyboard. No "make it work now, make it nice later" passes.
+- **One place per decision.** Tunables live in data files (`balance.json` and the other `game/data/*.json`), interface
+  style in UIStyle, each rule in one module. Before adding a constant, look for the existing owner of that decision; never
+  copy a value into a second place.
+- **Interactions must work.** Every player verb and NPC interaction a feature touches is tested in the real scene, not only
+  in the model.
+- **Story-ready, story later.** There is no storyline yet; keep quest givers, events and landmarks open to hooks a story
+  can use, without building one now.
+- **Show it.** Store-quality screenshots and footage come from real play; look at them before reporting.
+
 ## 5. Branching, commits, tests, releases
 
 - **GitHub is the source of truth; the cloud machine is a temporary workspace (owner, 2026-10-18).**

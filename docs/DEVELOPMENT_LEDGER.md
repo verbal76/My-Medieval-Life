@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (781)
+## Approved requirement (782)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -255,6 +255,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | E22-P1 | Expansion 22 phase 1: read-only audit of the Settlement Advancement specification against Build 18 (complete, partial, missing), Phases A-E dependency map, capability matrix, regional data model proposal, player views and diagnostics plan; no implementation | 22 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | E23-BANA | Expansion 23 BAN-A: existing-system audit and requirements reconciliation for bandit factions and criminal careers (Rule 016, the bandit roadmap); no criminal actions or faction behaviour | 23 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | E23-SCOPE | Expansion 23 works within the village, existing roads and currently represented settlements; travel-time route banditry on Expansion 22's completed routes belongs in Expansion 22 phase E; no temporary systems to be discarded later | 23 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| EA-01 | Steam Early Access readiness: a presentable demo in about three weeks, polish and juice built in as features are built, centralised decisions and tunables, interactions that all work, story-ready systems, store-quality footage and screenshots | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | EARTH-01 | Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | ECON-P1.3 | Caravan as finite regional market (:73) | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | ECON-P3 | Household vs business money: a shop has its own till; the owner pays themselves from it and may choose to move money; World.spendable | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |

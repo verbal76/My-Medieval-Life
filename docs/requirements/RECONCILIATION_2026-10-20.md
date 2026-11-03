@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 801 (428 of them still open) |
-| **Open entries now** (rules excluded) | | **586** |
+| Entries added since | | 802 (429 of them still open) |
+| **Open entries now** (rules excluded) | | **587** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (801)
+## Added since the baseline (802)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -315,6 +315,7 @@ None.
 | E26-OD-07 | Companion combat numbers (recommendation: wolf about a wild wolf, fox weaker but quicker; heal with rest and food) | decision | OPEN | 26 |
 | E26-OD-08 | Can villagers' pets or guard dogs fight in village defence? (recommendation: guard dogs join the guards' line) | decision | OPEN | 26 |
 | E26-OD-09 | When to build Expansion 26, and may phases 26-A..C and 26-F start before Expansion 25? | decision | OPEN | 26 |
+| EA-01 | Steam Early Access readiness: a presentable demo in about three weeks, polish and juice built in as features are built, centralised decisions and tunables, interactions that all work, story-ready systems, store-quality footage and screenshots | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | EARTH-01 | Reuse of excavated earth: farmland improvement, road embankments, plot grading, defensive earthworks, landscaping (MIN-E-Q1) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | ECON-P3.3 | Stock targets in days of sales (agent proposal P3.3, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 185) | proposal | NOT STARTED / NOT TESTED / OPEN | 20 |
 | ECON-P3.4 | Hire wages from the market quote (agent proposal P3.4, docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md line 186) | proposal | NOT STARTED / NOT TESTED / OPEN | 20 |

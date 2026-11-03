@@ -61,7 +61,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 
-## Approved, no build assigned (22)
+## Approved, no build assigned (23)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -70,6 +70,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | DCR-01 | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control | rule | PROPOSED | NOT STARTED |
 | DEV-GOV-01 | Development governance: agents make technical decisions within approved requirements; the owner approves scope and sequence (no skipping, moving, merging, splitting, renaming, reordering or deferring work packages, no stage marked complete with criteria outstanding, dependencies raised before the sequence changes) | approved | OWNER APPROVED | INTEGRATED |
 | DOC-CONT-01 | Permanent development documentation and AI continuity: one current-state entry point, a chronological development changelog, SHA-bound test evidence with status levels, worker recovery records, an 11-step recovery procedure usable by any assistant | approved | OWNER APPROVED | NOT STARTED |
+| EA-01 | Steam Early Access readiness: a presentable demo in about three weeks, polish and juice built in as features are built, centralised decisions and tunables, interactions that all work, story-ready systems, store-quality footage and screenshots | approved | OWNER APPROVED | NOT STARTED |
 | FR-REPAIR-01 | Flight recorder repair: KI-HOME-DOOR root cause, homeless-safe evening, regression tests, 10-day resume, independent investigation of cart_hitch, wheat-sale and contract-cancellation findings; no full campaign until fixed | approved | OWNER APPROVED | INTEGRATED |
 | HAG-MEM-02 | Permanent GitHub memory, decision history (with rationale) and CI reporting: six memory components, a decision-rationale standard, known-issues record, recovery entry point, Markdown+JSON CI reports even on failure, durable conclusions in the repository | approved | OWNER APPROVED | NOT STARTED |
 | ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | approved | OWNER APPROVED | INTEGRATED |
