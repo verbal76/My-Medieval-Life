@@ -6902,7 +6902,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -6921,13 +6921,19 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> region_travel_test 56/0 (road preference, traversability); test_commit: None -> e7e17d2; commits + e7e17d2",
      "why": "audit docs/region_nav/ROADS_AUDIT_B25R1.md: only dirt roads exist (village and overworld; the packs' path sets are dirt, sand, water); roads vs trails are two real network kinds, now drawn distinctly on the map; 239 sampled road cells walkable; every settlement joined by road. Stone roads: no art and no data, owner decision B25R1-Q1"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: PARTIALLY IMPLEMENTED -> IMPLEMENTED ON TASK BRANCH; tests: region_travel_test 56/0 (road preference, traversability) -> region_travel_test 56/0 (road preference, traversability); road_types_test 14/0 (a walk over all three types); region_travel 56/0; overworld 179/0; region_geography 132/0; atlas 17/0; polish_p2 110/0; wiki passed; screenshots looked at (worker and lead); test_commit: e7e17d2 -> 9a9e0f0; commits + 9a9e0f0",
+     "why": "stone-road hierarchy by the roads worker (wip/b25r1-roads 7c9b5ed, a3ddad2), merged into wip/b25r1 (9a9e0f0): stone within 24 tiles of the village and settlements, on stretches used by 14+ of the 30 inter-place routes, and each settlement's street (19% of main roads on seed 1; no rivers, so no bridges); dirt roads elsewhere on the main network; trails for the rest; drawn on the same cells (no generation, routing or save change); map legend of three types. Flagstone art made from the Puny World path shapes filled with the paid tileset's flagstone ground, with a kerb (no stone road tiles exist in the packs)"
     }
    ],
    "branch": "wip/b25r1",
-   "tests": "region_travel_test 56/0 (road preference, traversability)",
-   "test_commit": "e7e17d2",
+   "tests": "region_travel_test 56/0 (road preference, traversability); road_types_test 14/0 (a walk over all three types); region_travel 56/0; overworld 179/0; region_geography 132/0; atlas 17/0; polish_p2 110/0; wiki passed; screenshots looked at (worker and lead)",
+   "test_commit": "9a9e0f0",
    "commits": [
-    "e7e17d2"
+    "e7e17d2",
+    "9a9e0f0"
    ]
   },
   {
@@ -7195,8 +7201,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -7219,9 +7225,20 @@
      "date": "2026-11-03",
      "change": "note",
      "why": "owner addition 2026-11-03 ~15:00 EST: carts wear stone roads faster than people; worker told"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> road_wear_test 40/0 (cart damages stone more than a walker); overworld 179/0; world 339/0; job_board 28/0; start 523/0; worker's sim gate identical before the final cart-weight tune (to be re-run on the final candidate); test_commit: None -> 9a9e0f0; commits + 9a9e0f0",
+     "why": "road wear and paving by the roads worker (fbddb3d, 3d96447), merged into wip/b25r1 (9a9e0f0): footfall +5%/step (cart 10%), 100% a level (grass->trail->dirt road), usage paths fade 12%/day, generated roads never below their level and drawn overgrown after 12 days unwalked (still routed, no upkeep), stone damaged by traffic (cart 12x a walker) plus 0.25%/day age, worn stone (40%) slows carts to 85%, broken (75%) to 60%; player paving 2 stone a cell, repair 1, a 4 s action; manor posts paving jobs from spare works-yard stone, paid at the mending wage; sparse saved 'roads' key; village streets do not wear. Rates in docs/DECISIONS.md"
     }
    ],
-   "owner_answer": "Main dirt roads fade very slowly, never below visible (overgrown until walked again, no upkeep but use); usage paths fade faster; stone roads damage slowly, hamper carts when damaged, and need materials to repair"
+   "owner_answer": "Main dirt roads fade very slowly, never below visible (overgrown until walked again, no upkeep but use); usage paths fade faster; stone roads damage slowly, hamper carts when damaged, and need materials to repair",
+   "branch": "wip/b25r1",
+   "tests": "road_wear_test 40/0 (cart damages stone more than a walker); overworld 179/0; world 339/0; job_board 28/0; start 523/0; worker's sim gate identical before the final cart-weight tune (to be re-run on the final candidate)",
+   "test_commit": "9a9e0f0",
+   "commits": [
+    "9a9e0f0"
+   ]
   },
   {
    "id": "B25R1-012",
@@ -7286,6 +7303,11 @@
      "date": "2026-11-03",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered 2026-11-03: Option 2 with a road hierarchy (stone near settlements/markets/bridges/busy stretches, dirt roads between settlements, dirt trails for remote/resource/homestead routes; existing stone art; same network and navigation; legend and terrain consistent). Worker assigned on wip/b25r1-roads"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "note",
+     "why": "implemented: three road types merged (wip/b25r1 9a9e0f0), see B25R1-004"
     }
    ]
   },

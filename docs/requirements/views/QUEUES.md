@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (21)
+## Workers and task branches (23)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -11,10 +11,12 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | B25R1-002 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1-interact |
 | B25R1-003 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
+| B25R1-004 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
 | B25R1-005 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
 | B25R1-006 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
 | B25R1-007 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
 | B25R1-008 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
+| B25R1-011 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
 | B25R1-012 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
 | DEMO-01 | 20 | IN DEVELOPMENT | lead session | wip/expansion20 |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |

@@ -10,7 +10,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|
 | Approved requirements in scope | 164 |
 | Integrated | 127 of 164 (77%) |
-| Automated tests passed | 119 of 164 (73%) |
+| Automated tests passed | 120 of 164 (73%) |
 | Integration verified | 64 of 164 (39%) |
 | Gameplay verified | 0 of 164 (0%) |
 | Owner playtested | 0 of 164 (0%) |
@@ -175,14 +175,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | B25R1-001 | Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-002 | Full interaction outside the starting village (release blocker) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1-interact | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | OWNER APPROVED | PARTIALLY IMPLEMENTED | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-007 | Character creation: unrestricted cosmetic options | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return; no decorative travelers | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-012 | Gamepad destination selection on the region map (cursor, D-pad, confirm, zoom, recentre) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | BUILD-SEQ-25-27 | Build sequence (owner, 2026-10-31): Build 25 = Expansion 20 validation and freeze (wip/expansion20 becomes the frozen baseline only after validation passes and the owner approves); Build 26 = repository recovery and consolidation on a separate branch from the exact frozen Build 25 SHA, validated and frozen after owner approval; Build 27 = Expansion 21 begins only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers. | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | CHAPEL-LENDING | Chapel community lending and grants (concept approved): hardship recovery, viable businesses in temporary difficulty, village improvements, infrastructure, downturn relief - via a separate implementation proposal built on existing loan, credit, property and repayment systems | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

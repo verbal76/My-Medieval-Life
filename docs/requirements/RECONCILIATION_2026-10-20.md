@@ -200,14 +200,14 @@ None.
 | B25R1-001 | Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-002 | Full interaction outside the starting village (release blocker) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
-| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-007 | Character creation: unrestricted cosmetic options | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return; no decorative travelers | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
-| B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-012 | Gamepad destination selection on the region map (cursor, D-pad, confirm, zoom, recentre) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-Q1 | Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)? | decision | APPROVED | 20 |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
