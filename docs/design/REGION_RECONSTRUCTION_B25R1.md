@@ -393,3 +393,24 @@ Art gaps (no suitable art in the registered packs): a standing stone cross (Gart
 cross head on the buttercross), a true white-stone battlement (the castle's merlons are the grey kit's), and a fountain with
 water. Options: a pack from the owner, or leave the cross out as now (the Landmarks entry is withheld until it stands).
 The site plan stays a street grid with seeded variation. Breaking it up further (bent streets, yards, gardens) is still open.
+
+#### Bear Hill and the castle knoll: not raised (assessed, not started)
+
+The overworld's raised ground is its cliff wangset: cell corners marked cliff in `_generate` form a plateau with a rocky
+rim, and the top is B14-07 ground that is reached only through steps or stairs the player builds. Raising a plateau from
+`region_layout.json` data (cliff corners in a disc) is easy. It is not a clean small change, because three existing rules
+would each need an exception:
+1. **Tops are wooded rock.** A top is covered with pines and boulders (unreachable) and draws snow variants. Bear Hill on
+   the open, treeless Downs and a castle courtyard both need a bare top. Tree, boulder and snow placement would need a
+   "data plateau" case.
+2. **Clearance.** No cliff corner lies within `VILLAGE_CLEAR` (14 tiles) of a site, and the castle is part of Higham's
+   site. A knoll under it needs a clearance exception, rim cells inside a site's rect (solidity, `site_building_at`), and
+   the reachability checks (overworld_test floods every door from the village).
+3. **The way up and the chalk.** A built-in ramp would have to be generated `works` (today they are player-made and saved)
+   or a gap left where a road crosses the rim. Bear Castle's ring bank and the hill figure are cut with the chalk
+   wangset on the same corners the cliff wangset would take: two corner sets on one cell.
+
+What it would need: a `plateau` entry per landmark (centre, radius, way-up side); in `_generate`, cliff corners for it that
+skip the clearance and road rules except on the way-up side; bare tops for data plateaus; the figure kept off the rim;
+tests for reach and solidity. This is roughly a day's work for the next region worker, and the rest of the generator would
+be unchanged.
