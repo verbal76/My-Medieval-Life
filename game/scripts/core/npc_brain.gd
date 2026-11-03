@@ -1976,8 +1976,8 @@ func _loot_to_recover(n: NPC) -> Dictionary:
 			continue
 		if not l.has("t"):
 			l.t = w.minutes
-		if w.minutes - float(l.t) < float(GameData.b("loot_recover_hours")) * 60.0:
-			continue
+		if w.minutes - float(l.t) < float(GameData.b("loot_recover_hours")) * 60.0 or float(l.get("skip_until", -1.0)) > w.minutes:
+			continue                 # KI-RECOVER-LOOT: loot a guard just failed to reach is left a day
 		var d: float = n.pos.distance_to(l.pos)
 		if d < bd and _bandit_near(l.pos, 8.0) == null:
 			bd = d
@@ -3155,6 +3155,16 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 						w.loot.erase(l)
 					w.note("%s %s brings %d coins left lying to the manor." % [n.name, n.family, c])
 					return true
+			# KI-RECOVER-LOOT (flight 41536805310 seed 2, F001-F007): the coins lie where the guard cannot stand (a solid cell,
+			# outside the village's grid). The nearest such loot is left for a day, so the guard does not walk back to it
+			# every couple of minutes; it is still there for anyone, and is tried again tomorrow.
+			var miss: Dictionary = {}
+			for l in w.loot:
+				if int(l.coins) > 0 and World.level_of(l) == 0 and (miss.is_empty() or n.pos.distance_to(l.pos) < n.pos.distance_to(miss.pos)):
+					miss = l
+			if not miss.is_empty():
+				miss.skip_until = w.minutes + 1440.0
+				w.stat("guard_loot_unreachable")
 			return false
 		"look_out":
 			var foe := _bandit_seen(n)

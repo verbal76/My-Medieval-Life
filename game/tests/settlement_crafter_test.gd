@@ -42,7 +42,7 @@ func _init() -> void:
 	var higham: OffMapSettlement = w.regions.by_id["higham"]
 	var garton: OffMapSettlement = w.regions.by_id["garton"]
 	var smith_k: String = higham.own.keys()[0]
-	var miner_k: String = garton.own.keys()[0]
+	var miner_k: String = garton.own.keys()[0]          # (at the start: the data's)
 	var quarry_res0 := JSON.stringify(garton.biz.quarry.reserves) if garton.biz.has("quarry") else ""
 	var claim0: int = int(garton.own[miner_k].reserves.get("iron_ore", 0))
 	# a month of the settlements' own days, the audit kept every day
@@ -94,16 +94,22 @@ func _init() -> void:
 	wul._own_week()
 	check(not wul.own.has(str(cand)) and (not wul.biz.has(trade_bt) or (wul.biz[trade_bt].workers as Array).has(cand)), "a crafter whose trade failed for weeks goes back to its trade's business")
 	# an ended household winds its trade up into its estate
-	var s_k: String = higham.own.keys()[0]
-	var hid := int(s_k)
-	var till := int(higham.own[s_k].till)
-	var hcoins := int(higham.hh[hid].coins)
-	higham._wind_up_own(higham.hh[hid])
-	check(not higham.own.has(s_k) and int(higham.hh[hid].coins) == hcoins + till and w.regions.audit() == "", "a household's own trade wound up goes to it whole: purse to its coins, stock to its pantry, the audit still balances")
+	var ws: OffMapSettlement = null                # (any settlement with a crafter still at work: one may have gone back to a business)
+	for st: OffMapSettlement in w.regions.list:
+		if ws == null and not st.own.is_empty():
+			ws = st
+	check(ws != null, "a crafter is still at work somewhere after the month")
+	if ws != null:
+		var s_k: String = ws.own.keys()[0]
+		var hid := int(s_k)
+		var till := int(ws.own[s_k].till)
+		var hcoins := int(ws.hh[hid].coins)
+		ws._wind_up_own(ws.hh[hid])
+		check(not ws.own.has(s_k) and int(ws.hh[hid].coins) == hcoins + till and w.regions.audit() == "", "a household's own trade wound up goes to it whole: purse to its coins, stock to its pantry, the audit still balances (%s)" % ws.name)
 	# saved and loaded
 	var d := garton.to_dict()
 	var back := OffMapSettlement.from_dict(JSON.parse_string(JSON.stringify(d)))
-	check(JSON.stringify(back.to_dict()) == JSON.stringify(garton.to_dict()) and back.own.has(miner_k), "a settlement with its crafters saves and loads unchanged")
+	check(JSON.stringify(back.to_dict()) == JSON.stringify(garton.to_dict()) and back.own.has(miner_k) == garton.own.has(miner_k), "a settlement with its crafters saves and loads unchanged")
 	var old: Dictionary = JSON.parse_string(JSON.stringify(d))
 	old.erase("own")
 	var oldback := OffMapSettlement.from_dict(old)

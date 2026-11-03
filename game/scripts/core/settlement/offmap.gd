@@ -1240,7 +1240,7 @@ func _pay_own() -> void:
 			h.inc = int(h.get("inc", 0)) + pay
 			o.paid = int(o.get("paid", 0)) + pay
 			o.week = int(o.get("week", 0)) + pay
-		o.idle = int(o.get("idle", 0)) + 1 if pay == 0 else 0      # a day the trade yielded the household nothing (its tools stay in stock)
+		o.idle = int(o.get("idle", 0)) + 1 if int(o.till) <= 1 else 0      # a day the working purse is spent (its tools stay in stock, so stock is not asked)
 
 
 ## Once a week: one craft household short of work sets up on its own (its savings become its working purse), and a crafter

@@ -6110,6 +6110,8 @@ func to_dict() -> Dictionary:
 		lt.append({"pos": [l.pos.x, l.pos.y], "inv": l.inv.to_dict(), "coins": l.coins, "from": l.from, "t": l.get("t", minutes)})
 		if level_of(l) != 0:
 			lt[lt.size() - 1].level = level_of(l)            # MIN-A: written only below the surface
+		if l.has("skip_until"):
+			lt[lt.size() - 1].skip_until = float(l.skip_until)     # KI-RECOVER-LOOT: written only when a guard has left it a day
 	var ns := []
 	for n: NPC in npcs:
 		ns.append(n.to_dict())
@@ -6489,6 +6491,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		loot.append({"pos": Vector2(l.pos[0], l.pos[1]), "inv": Inventory.from_dict(l.inv), "coins": int(l.coins), "from": l.from, "t": float(l.get("t", minutes))})
 		if int(l.get("level", 0)) != 0:
 			loot[loot.size() - 1].level = int(l.level)          # MIN-A: left below the surface
+		if l.has("skip_until"):
+			loot[loot.size() - 1].skip_until = float(l.skip_until)
 	for nd in d.npcs:
 		var n := NPC.from_dict(nd)
 		npcs.append(n)
