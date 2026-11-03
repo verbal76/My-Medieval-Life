@@ -3842,8 +3842,10 @@ func test_credits() -> void:
 	var missing := {}
 	for f in entries:
 		var src := str(f.get("source_zip", f.get("zip", f.get("source", ""))))
-		if src != "" and not credited.has(src):
-			missing[src] = true
+		# a file drawn from more than one pack (tools/road_tiles.py: "A.zip + B.zip") credits each pack it names
+		for one in src.split(" + ", false):
+			if not credited.has(one.strip_edges()):
+				missing[src] = true
 	var root := ProjectSettings.globalize_path("res://").path_join("..")
 	for name in DirAccess.get_files_at(root):
 		if name.ends_with(".zip") or name.ends_with(".unitypackage"):
