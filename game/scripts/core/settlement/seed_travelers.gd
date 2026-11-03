@@ -76,6 +76,8 @@ static func designate(w: World) -> Array:
 			if Journeys.start(w, n, str(sites[k].id), purpose) != "":
 				continue
 			w.stat("seed_travelers")
+			Journeys.record(w, n, "seed_designated", {"to": str(sites[k].id), "item": str(errand.item), "seller": str(errand.about),
+				"price": int(errand.price), "spare_coins": n.coins - w.reserve_of(n), "rank": out.size()})
 			w.stat("seed_travelers_to_" + str(sites[k].id))
 			w.note("%s %s sets out for %s to buy %s." % [n.name, n.family, str(sites[k].name), GameData.item_name(str(errand.item)).to_lower()])
 			out.append(n)

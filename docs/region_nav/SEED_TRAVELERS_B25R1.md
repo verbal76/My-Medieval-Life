@@ -95,7 +95,22 @@ Other suites on the same code: run_tests (3 days) 3602/0, world_test 339/0, outs
 settlement_folk_test 36/0, conservation_test 8/0, wiki_test passed; `tools/check_interactions.py` 0 problems. Test
 corrections, each explained in its commit: region_trade_test's "no forced trade" check skips the seed travelers (not sent by
 RegionTrade); run_tests' grain census counts the chapel's alms parcels (as `Census` already did); region_sim_test's
-save-mid-mission world has no seed travelers (with them seed 1's envoy post goes untaken for 20 days, an outcome).
+save-mid-mission scenario keeps the seed travelers: with them seed 1's job board stays busy and the envoy post (ranked last)
+waits weeks for a taker, an outcome, so after two days untaken a free villager takes it from the board by the board's own
+`take`/`plan` and the scenario saves and loads that mission.
+
+Sim gate (SIM-GATE-01): re-recorded from `df67e8e`, determinism re-check PASS, currency leak 0 and no item leaks;
+`docs/release/SIM_BASELINE_CHANGES_B25R1_TRAVELERS.md`.
+
+### Flight recorder hooks (B25R1-016)
+
+`Journeys.record(w, n, what, data)` is the one funnel: guarded `w.recorder != null and has_method("journey_event")`, read-only,
+the person by stable id (`NPC.id`, the Identity id). Calls: `Journeys.start` (refused: no road; started: decision, trigger,
+origin, destination, purpose, seed flag, coins), `leg_done` (arrived), `end` (ended: home, turned_back, died, lost, no road;
+a death on the road comes through `World.kill` -> `end`), `provision` (provisioned), `buy_food` (bought_food),
+`RegionTrade.act_buy` (bought: seller, item, qty, coins paid, instead_of), `RegionTrade._out_of_date` (failed: why),
+`RegionTrade.at_site` (waited), `SeedTravelers.designate` (seed_designated). The recorder worker defines `journey_event`;
+until it exists the calls are skipped.
 
 ## 4. Limitations
 

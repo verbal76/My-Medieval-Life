@@ -66,15 +66,28 @@ func _init() -> void:
 	check(st.call(a, "envoy_posted") > 0 and st.call(a, "journey_started") > 0, "in %d days the reeve posts envoys and villagers travel (%d posted, %d journeys, %d interviews)" % [DAYS, st.call(a, "envoy_posted"), st.call(a, "journey_started"), st.call(a, "envoy_interviews")])
 	check(_state(a) == _state(b), "two runs of seed 1 for %d days end in the same state, the regional systems included" % DAYS)
 	check(coin_gap(a) == gap0 and a.regions.audit() == "", "the currency ledger balances across the village's boundary (gap %d, was %d) and every settlement's books" % [coin_gap(a), gap0])
-	# save mid-mission (a world without the founding's seed travellers, B25R1-009: with them, seed 1's envoy post goes untaken
-	# for the first 20 days, an outcome of the changed village, so this scenario's envoy would never set out)
-	var seeds0 := int(OffMapSettlement.data().seed_travelers.count)
-	OffMapSettlement.data().seed_travelers.count = 0
+	# save mid-mission
 	var w := _world()
-	OffMapSettlement.data().seed_travelers.count = seeds0
 	var until := w.minutes + 20.0 * 1440.0
+	var posted_at := -1.0
 	while w.minutes < until and _envoy(w) == null:
 		w.update(0.5)
+		var open := w.manor_work.jobs.filter(func(j): return str(j.kind) == "envoy" and str(j.taker) == "")
+		if open.is_empty():
+			posted_at = -1.0
+		elif posted_at < 0.0:
+			posted_at = w.minutes
+		elif w.minutes - posted_at > 2.0 * 1440.0 and w.hour() >= 7.0 and w.hour() < 12.0:
+			# B25R1-009: with the seed travellers, seed 1's job board stays busy and the envoy post (ranked last, ManorWork._rank)
+			# can wait weeks for a taker; after two days a free villager takes it from the board, by the board's own take and
+			# plan, so the mission (not the board's ranking) is what this scenario saves and loads
+			for n: NPC in w.npcs:
+				var who := World.npc_ref(n.id)
+				if n.alive and n.role == "adult" and n.household >= 0 and not Journeys.active(n) and w.manor_work.job_of(who).is_empty() \
+						and not w.manor_work.is_staff(who) and w.manor_work.open_for(who).has(open[0]) and w.manor_work.take(open[0], who):
+					w.manor_work.plan(n)
+					break
+			posted_at = w.minutes
 	var e := _envoy(w)
 	check(e != null, "an envoy is on the road (%s, on day %d)" % [e.name if e else "-", w.day()])
 	if e == null:

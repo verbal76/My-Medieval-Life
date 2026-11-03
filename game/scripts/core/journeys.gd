@@ -42,11 +42,14 @@ static func start(w: World, n: NPC, sid: String, purpose: Dictionary) -> String:
 	var gi := gate_index(w)
 	if w.map.overworld.road_route(gi, sid).is_empty():
 		w.stat("journey_failed_no_road")
+		record(w, n, "refused", {"to": sid, "purpose": purpose.duplicate(true), "why": "no road"})
 		return "There is no road to %s." % w.map.overworld.site(sid).name
 	n.journey = {"to": sid, "purpose": purpose.duplicate(true), "leg": "out", "since": w.day(), "gate": gi}
 	n.plan.clear()
 	provision(w, n, trip_minutes(w, sid) + MARGIN_MINUTES)       # B25R1-009: food for the road from the household's pantry
 	w.stat("journey_started")
+	record(w, n, "started", {"from": "village", "to": sid, "purpose": purpose.duplicate(true), "trigger": str(purpose.get("kind", "visit")),
+		"seed": bool(purpose.get("seed", false)), "coins": n.coins, "gate": gi})
 	w.stat("journey_started_" + str(purpose.get("kind", "visit")))
 	return ""
 
@@ -148,6 +151,7 @@ static func leg_done(w: World, n: NPC) -> void:
 			n.journey.arrived = w.day()
 			n.journey.stay_until = float((w.day() + 1) * 1440 + REST_TO * 60)
 			w.stat("journey_arrived")
+			record(w, n, "arrived", {"to": str(n.journey.to), "since": int(n.journey.since)})
 			w.stat("journey_arrived_" + str(n.journey.to))
 		"back":
 			end(w, n, "turned_back" if bool(n.journey.get("failed", false)) else "home")
@@ -155,6 +159,8 @@ static func leg_done(w: World, n: NPC) -> void:
 
 static func end(w: World, n: NPC, how: String) -> void:
 	w.stat("journey_ended_" + how)
+	record(w, n, "ended", {"to": str(n.journey.get("to", "")), "how": how, "purpose": (n.journey.get("purpose", {}) as Dictionary).duplicate(true),
+		"coins": n.coins, "at": [n.cell().x, n.cell().y]})
 	if bool(n.journey.get("purpose", {}).get("seed", false)):
 		w.stat("seed_travelers_ended_" + how)      # B25R1-009 (SeedTravelers)
 	n.journey = {}
@@ -237,6 +243,7 @@ static func provision(w: World, n: NPC, minutes: float) -> float:
 			taken += pts
 	if taken > 0.0:
 		w.stat("journey_provisioned_food", taken)
+		record(w, n, "provisioned", {"food_points": taken, "from": "household %d pantry" % n.household})
 	return taken
 
 
@@ -263,4 +270,15 @@ static func buy_food(w: World, n: NPC, minutes: float) -> float:
 			got += float(GameData.item(str(o.item)).food)
 	if got > 0.0:
 		w.stat("journey_bought_food", got)
+		record(w, n, "bought_food", {"to": str(n.journey.to), "food_points": got, "coins": n.coins})
 	return got
+
+
+## B25R1-016 (the 365-day flight recorder campaign): every step of a journey goes to the flight recorder, when one is attached, as
+## one event: started (decision, trigger, origin, destination), refused, arrived, provisioned, bought_food, bought, failed (why),
+## waited, ended (home, turned_back, died, lost, no road). `n` by its stable person id (NPC.id is the Identity id, ID-01). Only
+## read: nothing here changes the world. The recorder's own vocabulary call (journey_event) is defined by the recorder worker;
+## until it exists the call is skipped.
+static func record(w: World, n: NPC, what: String, data: Dictionary) -> void:
+	if w.recorder != null and w.recorder.has_method("journey_event"):
+		w.recorder.journey_event(n.id, World.npc_ref(n.id), what, data)
