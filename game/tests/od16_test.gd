@@ -24,8 +24,13 @@ func check(cond: bool, what: String) -> void:
 func _init() -> void:
 	GameData.ensure()
 	test_manor_buys_a_tool_on_sale()
+	# The advance orders (World.manor_orders) are the economy-off rule: with the Living Economy driving (on by default
+	# since LE-07 activation) the manor commissions a smith by a CON-01 contract instead (EconMarket.manor_tools, tested
+	# by le04_test). These two pin the economy off so they test the advance path whatever the installed switch says.
+	EconomyFoundation.set_override(EconomyFoundation.off_config())
 	test_manor_pays_the_smith_in_advance()
 	test_advance_pays_the_orders_inputs()
+	EconomyFoundation.set_override({})
 	test_bandit_spends_at_the_market()
 	test_guard_recovers_loot()
 	test_caravan_buys_producers_surplus()
