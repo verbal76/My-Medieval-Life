@@ -149,3 +149,23 @@ The release also carries `SHA256SUMS.txt`, `SIZES.txt`, each APK's `.idsig` file
 - **Screenshots** (`house_front_shot` "site" mode, Wulstead), looked at: before the fix only the characters' feet showed under the wall; after it, the player and a villager are whole in front of it.
 - **Simulation:** drawing only, so it is unchanged. `git diff --stat c4c3490 0efaf32 -- game/scripts game/data` shows only `game/scripts/view/overworld_view.gd`, and the final flight on `c4c3490` stands.
 - **New release:** release run 41665356439 on `0efaf32` (private, build 25), dispatched 2026-11-03 10:34 EST. It replaces the `726ceeb` draft as the Build 25 candidate.
+
+## Build 25 final private draft: release run 41666958781 on `a459186`, 2026-11-03 10:44-10:59 EST
+
+- **Commit:** `a459186` = the settlement draw-order fix `0efaf32` plus the release-workflow gate-reuse input.
+- **Cancelled run:** release run 41665356439 (`0efaf32`) was cancelled during its simulation gate, at the owner's instruction (2026-11-03 10:43 EST: "let's skip the [simulation gate] for this change and ship the builds").
+- **Gate reused (owner-approved):** run 41648387967's gate (PASS on `726ceeb`). The release job checked that `git diff 726ceeb a459186` touches no simulation code, data or gate tools. The differing files are `game/scripts/view/overworld_view.gd`, `game/tests/house_front_shot.gd`, `game/tests/polish_p2_test.gd` and `.github/workflows/release.yml`. The release notes record the reuse.
+- **Packages:** six package jobs and both Windows launch smoke tests passed.
+- **Draft:** the release updated the existing draft "My Medieval Life — Build 25" (tag `build-25`, id 432836586), whose files were all replaced. The duplicate draft it briefly created was removed automatically, so this is the one current Build 25 draft. Not public; not uploaded to Steam.
+- **Android:** the signature reports are unchanged from the `726ceeb` build: the same release identity; `.dev` (full) and `.dev.demo` (demo).
+
+| File | Bytes | SHA-256 |
+|---|---|---|
+| MyMedievalLife-B25-Android.apk | 91,838,153 | `e25b9a215fe85406e2619e868f6d0a5a05644c6298553136bdfdb92115b2fdd7` |
+| MyMedievalLife-B25-Windows.zip | 234,441,014 | `72bde5eccf90cd4cf573ba32c1f7aeeed77e961c6c3f3edbc98e5bad942244ff` |
+| MyMedievalLife-B25-Linux.zip | 224,686,700 | `c053fe589c6cad5a3d8ab5e55e0fb3ade80815dcc5fe1b60f8379d9e89676fa1` |
+| MyMedievalLife-B25-Demo-Android.apk | 91,838,153 | `91d14a5df044e73de6ecfb3e98faf7c8784fd00e8393cbb0db9582fdaf9add7a` |
+| MyMedievalLife-B25-Demo-Windows.zip | 234,441,031 | `3447248bb3044aae2a9eb7b86a694bf72687de1fc0ae4d6f85c776d5f86322c6` |
+| MyMedievalLife-B25-Demo-Linux.zip | 224,686,755 | `295463581f76ad06243fbb15dd8a4b54f0aea141c3c97f09d538cb26adb73727` |
+
+The `726ceeb` packages listed above are superseded.

@@ -142,7 +142,7 @@ ninth regional stage.
 | I5 | Full game loads demo saves unrestricted; legacy saves migrate; Android save export/import | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
 | I6 | Steam promotion: one configured destination; "Coming Soon on Steam" until the owner supplies the page; menus and expiry screen | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
 | I7 | Focused tests (timer, persistence, expiry, compatibility, Steam, demo-equals-full simulation) | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
-| I8 | Six packages from one SHA in parallel jobs; private draft release | RUNNING: release run 41665356439 on `0efaf32` (the settlement draw-order fix, by the owner's decision to include it in Build 25). The earlier draft from `726ceeb` (run 41648387967) is superseded |
+| I8 | Six packages from one SHA in parallel jobs; private draft release | DONE: release run 41666958781 on `a459186` (the settlement draw-order fix; simulation gate reused from run 41648387967 by owner instruction), draft `build-25` id 432836586. SHA-256 and sizes in `CI_RECORD.md` |
 
 ## Order of work (no new scope)
 
