@@ -320,17 +320,31 @@ func _pen_rect(c: Dictionary) -> Rect2i:
 	var cf := cfg()
 	var size := Vector2i(int(cf.pen_size[0]), int(cf.pen_size[1]))
 	var hr := Homesteads.house_of(c)
-	for off in [Vector2i(-size.x - 1, 2), Vector2i(hr.size.x + 1, 2), Vector2i(-size.x - 1, hr.size.y - size.y)]:
-		var r := Rect2i(hr.position + off, size)
-		var ok := true
-		for y in range(r.position.y, r.end.y):
-			for x in range(r.position.x, r.end.x):
-				var cell := Vector2i(x, y)
-				if w.map.is_solid_world(cell) or w.map.overworld.is_road(cell) or w.map.in_village(cell):
-					ok = false
-		if ok:
-			return r
-	return Rect2i()
+	var door := Homesteads.step_of(c)
+	var best := Rect2i()
+	var bd := 1 << 30
+	for dy in range(-size.y - 6, hr.size.y + 8):
+		for dx in range(-size.x - 8, hr.size.x + 8):
+			var r := Rect2i(hr.position + Vector2i(dx, dy), size)
+			if r.grow(1).intersects(hr) or r.has_point(door) or r.has_point(door + Vector2i(0, 1)):
+				continue
+			var d := absi(r.get_center().x - door.x) + absi(r.get_center().y - door.y)
+			if d >= bd:
+				continue
+			var ok := true
+			for y in range(r.position.y, r.end.y):
+				for x in range(r.position.x, r.end.x):
+					var cell := Vector2i(x, y)
+					if ok and (w.map.is_solid_world(cell) or w.map.overworld.is_road(cell) or w.map.in_village(cell)):
+						ok = false
+			if ok:
+				for o in _hs().claims:
+					if o != c and Homesteads._holds_land(o) and r.intersects(Homesteads.rect_of(o)):
+						ok = false
+			if ok:
+				best = r
+				bd = d
+	return best
 
 
 # ---------------------------------------------------------------- livestock -----------------------

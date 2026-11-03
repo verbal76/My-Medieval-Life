@@ -70,6 +70,11 @@ func _init() -> void:
 	# ---- B: an older save's band moves on load
 	var fx := FileAccess.get_file_as_string("res://tests/fixtures/b24_save_v23_single.json")
 	var old: Dictionary = JSON.parse_string(fx)
+	# (a band too poor to dig a well and with no stream near cannot make a camp: it stays and tries each dawn, below; here the
+	# fixture's bandits carry 20 coins each, a scenario of the same save)
+	for nd in old.npcs:
+		if bool(nd.get("alive", true)) and str(nd.get("role", "")) == "bandit":
+			nd.coins = 20
 	var ob := []
 	var oc := 0
 	var oi := 0
@@ -110,8 +115,9 @@ func _init() -> void:
 	var members: Array = w.brain._members(bh)
 	var hp0 := leader.hp
 	bc.water = 0
+	var dry0 := int(bc.get("dry_days", 0))
 	var short := wl._drink(bc, members)
-	check(short == members.size() and leader.hp < hp0 and int(bc.dry_days) == 1, "C: a dry dawn: everyone thirsty and hurt (%d short)" % short)
+	check(short == members.size() and leader.hp < hp0 and int(bc.dry_days) == dry0 + 1, "C: a dry dawn: everyone thirsty and hurt (%d short, hp %.1f -> %.1f)" % [short, hp0, leader.hp])
 	bc.water = members.size()
 	check(wl._drink(bc, members) == 0 and int(bc.water) == 0 and int(bc.dry_days) == 0, "C: with water enough all drink")
 	# ---- D: livestock
@@ -202,7 +208,7 @@ func _init() -> void:
 		if o.alive and o.job == "guard":
 			g = o
 	var victim: NPC = band[band.size() - 1]
-	var spot := Homesteads.step_of(bc) + Vector2i(0, 3)
+	var spot := Homesteads.step_of(bc) + Vector2i(0, 24)     # away from the camp (guards do not follow into it)
 	victim.pos = Vector2(w.nearest_open_world(spot)) + Vector2(0.5, 0.5)
 	g.pos = Vector2(w.nearest_open_world(spot + Vector2i(6, 0))) + Vector2(0.5, 0.5)
 	g.target = victim.id
@@ -232,10 +238,21 @@ func _init() -> void:
 			mover = o
 			fam_h = o.household
 			break
-	if mover != null and hs.begin(fam_h, mover, [mover, w.npc(mover.partner)], "test"):
-		var nh := mover.household
+	var began := false
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.household >= 0 and not w.households[o.household].has("homestead") and o.partner >= 0 and w.npc(o.partner) != null \
+				and w.npc(o.partner).household == o.household and o.coins < 9999:
+			o.coins += 300
+			w.coin_sources += 300
+			if hs.begin(o.household, o, [o, w.npc(o.partner)], "test"):
+				mover = o
+				began = true
+				break
+	print("   (homestead gates: %s)" % hs.counts)
+	if began:
+		var nh: int = mover.household
 		lawful = hs.claim_of(mover)
-		lawful.status = "claimed"
+		hs._mark_site(lawful)
 		hs._finish(lawful)
 		lawful.poor_days = 3
 		var id_l := str(lawful.id)
@@ -248,7 +265,7 @@ func _init() -> void:
 		check(str(lawful.faction) == "outlaw" and str(lawful.id) == id_l and str(lawful.building) != "", "I: an outlaw settlement now: the same claim and house")
 		var tier := w.life.leave_band(mover)
 		check(tier == "land" and mover.role == "adult" and mover.household == nh, "I: a bandit with family there leaves the band and stays on the land (%s)" % tier)
-		var rest := w.brain._members(nh).filter(func(o: NPC) -> bool: return o.role == "bandit")
+		var rest: Array = w.brain._members(nh).filter(func(o: NPC) -> bool: return o.role == "bandit")
 		for o: NPC in rest:
 			w.life.leave_band(o)
 		check(str(lawful.faction) == "lawful" and str(lawful.id) == id_l, "I: all of them lawful again: the claim lawful, never recreated (%s)" % str(lawful.allegiance))

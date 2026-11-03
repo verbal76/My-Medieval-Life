@@ -33,6 +33,27 @@ static func add_pages(w: Wiki) -> void:
 			"A homestead household clears its land, buys and carries the materials, builds its house, grows a field on its land, fells or quarries for sale and walks to the village market. If it cannot feed itself or finish its house it gives up and comes back.",
 			"A young person in a household that has gone hungry and poor for years, or has lost a parent or its home, may leave: to relatives or another household who will take them in, to a neighbouring settlement, to fend for themselves, or to the bandits' camp. Children under 12 hardly ever do.",
 			"The bandits decide whom they take in: a grown recruit may join the band, a child may be kept at the camp but never made to fight, and many are sent away.",
-			"A bandit may leave the band for an ordinary life, keeping what they carry and what they did."]),
-		Wiki.links(["sys:homesteads", "guide:homestead"])], "", "runaway bandit homestead leave home outlaw")
-	w.add_page("todo:homestead_more", "More for a homestead", "notyet", [Wiki.note("Not in the game yet. A homestead has only its house and its field: no extra rooms, lofts, workshops or pens out in the country yet, no wells, and no hired helpers carry materials there. The bandits still live at their camp by the village.")], "", "not implemented planned homestead")
+			"A bandit may leave the band for an ordinary life, keeping what they carry and what they did. One with a family on a homestead of their own may give up raiding and stay on the land.",
+			"A homestead household that is starving on its land may turn to living outside the law instead of coming back: the same people and house, an outlaw homestead now."]),
+		Wiki.links(["sys:homesteads", "guide:homestead", "sys:outlaw_camp", "sys:wild_water"])], "", "runaway bandit homestead leave home outlaw")
+	var wc: Dictionary = GameData.b("wilds")
+	var well: Dictionary = wc.well_cost
+	var wids: Array = well.keys()
+	wids.sort()
+	w.add_page("sys:wild_water", "Water out in the country", "systems", [
+		Wiki.p("Everyone living out in the country needs water every day. A homestead draws it from a stream close by, or from a well dug on its land. Land with no water near, where the household cannot pay for a well's materials, is not chosen for a homestead."),
+		Wiki.bullets([
+			"A well takes %s, carried to the spot, and then a long day's digging." % ", ".join(wids.map(func(id): return "%d %s" % [int(well[id]), GameData.item_name(str(id)).to_lower()])),
+			"Somebody of the household walks to the water and fetches it; the household keeps a little in store.",
+			"A day without water hurts everybody who went without, and a homestead that stays dry for several days is given up."]),
+		Wiki.links(["sys:homesteads", "sys:leaving_home"])], "", "water well stream drink homestead thirst")
+	w.add_page("sys:outlaw_camp", "The bandits' camp in the wild", "systems", [
+		Wiki.p("The bandits do not live by the village. They are a household of their own at a hidden camp out in the open country, off the roads and in cover. You only find it when you come close."),
+		Wiki.bullets([
+			"They live there as any homestead does: they build a house from real materials, fetch water, fell trees, grow food, keep animals and walk to market.",
+			"Now and then they raid: some of them walk the road to the village in the afternoon, wait for dark by the old camp ground and rob whoever they catch outdoors, then go home with what they took. A hungry, poor band raids more often than a fed one; guards and wounds make them think twice.",
+			"An outlaw with a smith's skill can work at a smithy built at the camp and make weapons the ordinary way, from real metal and tools. The band sells what it makes to its own; it trades with an outsider only one it trusts.",
+			"The camp is defended by the people who live there. Whatever is in its stores, or on its people, is really there: take it and it is theft.",
+			"Children born at the camp grow up in the band; at coming of age they may leave for kin in the village."]),
+		Wiki.links(["sys:leaving_home", "sys:wild_water", "sys:homesteads"])], "", "bandit camp outlaw raid hideout smith wild")
+	w.add_page("todo:homestead_more", "More for a homestead", "notyet", [Wiki.note("Not in the game yet. Your own homestead has only its house and its field: you cannot build its well, pen or workshop yourself yet, no extra rooms or lofts go up out in the country, and no hired helpers carry materials there. Streams are not yet in the open country; until they come, every homestead digs a well.")], "", "not implemented planned homestead")

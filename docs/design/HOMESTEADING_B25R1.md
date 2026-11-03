@@ -417,3 +417,29 @@ relationships and population accounting checked; the family learns of it.
 **Owner questions (for the lead):** (a) approve the outcome set, the factors and the evaluation moments; (b) the youngest age
 for running away (proposed 12) and whether a child under 12 ever may; (c) whether an adult bandit may leave the band now
 (FAM-08) or later; (d) the village-wide brake's form and size.
+
+## 11. The shared wilderness foundation, built (B25R1-014, B25R1-015, B25R1-017; second worker)
+
+Owner decisions in force: B25R1-Q2 option (a) (the band moves to the wild) and B25R1-Q3 (water from streams and wells; the
+integration and water directive sections 4, 6 and 7). One module, `game/scripts/core/wilds.gd` (`Wilds`, World "wilds", saved,
+optional), works on Homesteads' claims and households whatever their faction; nothing here is a second settlement system.
+
+| Part | Built | How |
+|---|---|---|
+| The band's camp | yes | `found_band`: the bandits and clan children become a household (`band: true`) on a concealed outlaw claim found by `Homesteads.find_site(n, outlaw=true)` (outlaw_offset off the road, scored for cover and a night's walk); its house is a frame to build; `World.bandit_camp` is its door step, `World.village_camp` the old camp ground. At setup (they walk there), on loading an older save (`band_migrated_on_load`), and at dawn for outlaws in from the road (an abandoned camp is reoccupied, the same claim) |
+| Raids | yes | at dawn the eldest of each outlaw claim weighs `band_raid` (need, opportunity, risk); raiders walk the road (Homesteads' road paths, the Journeys helpers), keep to the old camp ground, and the existing AI (`NPCBrain._bandit`, `_prey_for`, `fight`) robs by night; home again they unpack. `NPCBrain.camp_of` is the one change to the AI |
+| Defence | fight and flee | camp members fight through existing combat (now over the world's ground, `_fight_solid`, `find_path_world`) and fall back (`JudgmentBandit.escape_cell` on the world's ground). **Surrender does not exist in the game's combat**: not built (see below) |
+| Water | yes | `water_access` (one rule, lawful and outlaw): a stream within stream_reach by `Overworld.nearest_water` (a stub returning none until wip/b25r1-water lands), else a well the household can pay for or win the materials of; a site without is refused (`settlement_attempt_failed` no_water). Drinking each dawn from the claim's store; drawing is an adult's walk and work at the source |
+| Works | yes | a well, a pen, a workshop: World's site shape (cost, need), materials delivered, then labour minutes; census goods while unfinished; returned on failure |
+| Livestock | yes | the pen becomes a Fauna pen (`cp_<claim>`, saved whole); fed with the village's `feed_pen`, products collected, surplus or hunger slaughter, breeding by Fauna; animals bought from the manor keepers (`Farming.spare_animal`, `animal_price`, the keeper paid) and led home |
+| Crafting | yes | a workshop's stations serve the recipes through `World.work_craft`; inputs from the pantry; `wild_craft`, `skill_progress` |
+| Members-only market | yes | members buy weapons and tools the camp's crafter made through `World.trade`; a player trades at the camp only if the bandit's disposition toward them is at least trust_at (`player_trade_refusal`, main's target list) |
+| Discovery and loot | yes | the camp and hidden workshops are landmarks found from discover_hidden tiles; the camp's stores are its household's pantry (a foreign chest: theft) at the frame or in the house; bodies drop what they carry |
+| Remote danger | yes | countryside animals within country_radius of a lived-in claim are real Fauna animals and simulated there as by the player (Fauna.update, `_hunt_people` treats the open country as their ground) |
+| Allegiance | yes | a starving lawful homestead weighs `outlaw_turn`; a bandit with family on their own outlaw claim leaves and stays; `_allegiance` flips the claim; never forced |
+| Clan births | yes | bandits of one household may court (Relations); a bandit mother of an outlaw household gives birth by `Life.births`; the child is of the clan (`clan_birth`) |
+
+Agent decisions (provisional, recorded in DECISIONS.md): a band too poor to pay for a well with no stream near makes no camp and
+tries each dawn (it is not given the means); raids last one night; one open work at a time on a claim; a pen's first animal kind
+is chickens (pen_kinds); the player's own homestead cannot yet build a well, pen or workshop (players have no thirst, and the
+player-side construction UI is not built). Not built: surrender (no such mechanic in combat).
