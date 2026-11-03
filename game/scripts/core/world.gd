@@ -80,6 +80,7 @@ var business: Business             # the player's market stall and the villagers
 var fitting: Fitting               # equipment the player places in their rooms: counters, shelves, stations (PL1-10 stage 3)
 var counters: Counters             # skilled-trade counters: ring, the keeper walks over and serves (CTR-01..03, ARM-01)
 var construction: Construction     # building kinds, placement, hired helpers, households that split
+var homesteads: Homesteads         # B25R1-010: homestead claims in the open country and the households living on them (saved, optional)
 var loot: Array = []               # {pos: Vector2, inv: Inventory, coins, from}
 var fauna: Fauna                   # livestock in the pens, wild animals in the woods
 var farm: Farming                  # the player's field, pens and seeds (PL2-015, scripts/core/farming.gd)
@@ -194,6 +195,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	justice = Justice.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
+	homesteads = Homesteads.new(self)          # B25R1-010
 	business = Business.new(self)
 	ventures = Ventures.new(self)
 	employment = Employment.new(self)
@@ -381,6 +383,7 @@ func update(real_dt: float) -> void:
 		if profiling:
 			t = _prof("hourly (incl. daily)", t)
 	Atlas.note_position(self, _host_player)              # REGION-NAV-01: the region a player sees and the places they reach
+	homesteads.note_player(_host_player)                 # B25R1-010: a homestead the player comes near is known to them
 	for id in _guests:
 		if not _guests[id].away:
 			Atlas.note_position(self, _guests[id])
@@ -545,6 +548,7 @@ func _new_day() -> void:
 	if couriers != null:
 		couriers.daily()               # REG-COURIER-01: the village's booth, its keeper, the routes to the settlements
 	construction.daily()               # helpers' days end; crowded households split; founders build
+	homesteads.dawn()                  # B25R1-010: the decline gate's count, adults' rare departures, homesteads given up or ended
 	ventures.daily()                   # B25-BUSINESS-IMPL: ventures open, change hands or close; villagers weigh founding one
 	employment.daily()                 # EMP-PERM-01: permanent employees paid for the day, or their employment ends
 	farm_plots.daily()                 # households weigh taking farmland (FARM-05)
@@ -600,6 +604,12 @@ func _update_npc(n: NPC, dt: float) -> void:
 		if n.plan.is_empty() and Journeys.resume(self, n):
 			_run_plan(n, dt, gm)
 			return
+	if homesteads.drives(n):                         # B25R1-010: a homesteader's day is laid out by Homesteads, never the village brain
+		homesteads.tick(n)
+		if n.plan.is_empty():
+			homesteads.plan(n)
+		_run_plan(n, dt, gm)
+		return
 	if n.plan.is_empty():
 		var t := Time.get_ticks_usec() if profiling else 0
 		brain.decide(n)
@@ -1899,6 +1909,8 @@ func can_afford(buyer: NPC, price: int, for_need := false, id := "") -> bool:
 func purchase_qty(buyer: NPC, seller: Object, id: String, offered: int) -> int:
 	if not buyer.journey.is_empty() or (seller is NPC and not (seller as NPC).journey.is_empty()):
 		return 0                      # REGION-NAV-01: a villager away on a journey (Journeys) buys and sells nothing at home
+	if homesteads != null and (homesteads.remote(buyer) or (seller is NPC and homesteads.remote(seller as NPC))):
+		return 0                      # B25R1-010: nor does one out at their homestead in the country
 	var q: int = mini(offered, brain.wants(buyer, id))
 	if q <= 0:
 		return 0
@@ -6127,6 +6139,7 @@ func to_dict() -> Dictionary:
 	var out := {
 		"save_version": SAVE_VERSION, "format": "mml-save/%d" % SAVE_VERSION, "seed": seed, "minutes": minutes, "rng_state": str(rng.state), "next_parcel": property.next_parcel,
 		"construction": construction.to_dict(),
+		"homesteads": homesteads.to_dict(),
 		"manor_work": manor_work.to_dict(),
 		"tax": tax_state.duplicate(true), "treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
 		"village": {"format": map.data.format, "seed": map.data.seed},
@@ -6365,6 +6378,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	property = Property.new(self)
 	property.next_parcel = int(d.get("next_parcel", 0))
 	construction = Construction.new(self)
+	homesteads = Homesteads.new(self)          # B25R1-010 (loaded below, once the overworld and the households are back)
 	business = Business.new(self)
 	ventures = Ventures.new(self)
 	employment = Employment.new(self)
@@ -6636,6 +6650,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 			fitting.restore(b)             # the equipment the player placed (PL1-10 stage 3)
 	index_interiors()
 	construction.load_dict(d.get("construction", {}))
+	homesteads.load_dict(d.get("homesteads", {}))     # B25R1-010 (older saves: no homesteads)
 	Life.sync_roles(self)              # B8-029: roles follow age on load
 	if int(d.get("save_version", 1)) < 4:
 		_move_indoors(d)

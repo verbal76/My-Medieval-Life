@@ -2942,6 +2942,9 @@ func _find_target() -> void:
 		for e: Dictionary in countryside.travellers_near(probe, 1.5, world.minutes):
 			if str(e.kind) != "wagon":
 				near.append([(e.pos as Vector2).distance_to(probe), near.size(), {"kind": "traveller", "t": e, "label": "Talk to the %s" % str(e.kind)}])
+	if world.homesteads != null:                     # B25R1-010: a homestead's frame, chest and bed, and the claiming of open country
+		for ht: Dictionary in world.homesteads.player_targets(p, probe, facing_vec().y < -0.5):
+			near.append([float(ht.d), near.size(), ht])
 	for pt in _player_targets(probe):                # MP-INTERACT-01: another player in reach, among the people
 		near.append([pt[0], near.size(), pt[1]])
 	for c in world.containers:
@@ -3692,6 +3695,18 @@ func _use() -> void:
 			ui.show_keeper(target.person)                  # REGION-NAV-01: a settlement's keeper at their door
 		"traveller":
 			ui.show_traveller(target.t)                    # B25R1-002: a traveller on the road
+		"homestead_claim":                                 # B25R1-010: open country claimed, a house marked out (Homesteads)
+			var why: String = world.homesteads.player_claim(p)
+			ui.message(why if why != "" else "You claim this land and mark out a house. Bring its materials to the frame: %s." % Homesteads.need_text(world.homesteads.claims[-1]), 5.0, "" if why != "" else "property")
+		"homestead_site":
+			var hc: Dictionary = world.homesteads.claim(str(target.id))
+			var why: String = world.homesteads.player_deliver(p, str(target.id))
+			if why != "":
+				ui.message(why)
+			elif bool(hc.site.get("done", false)):
+				ui.message("Your house in the country is finished. Its chest and beds are yours.", 5.0, "property")
+			else:
+				ui.message("You add what you carry to the frame. It still needs %s." % Homesteads.need_text(hc), 4.0, "property")
 		"stall":
 			ui.show_stall(str(target.id))
 		"front_build":

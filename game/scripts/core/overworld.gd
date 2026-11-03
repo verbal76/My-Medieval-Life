@@ -88,6 +88,11 @@ var sites: Array = []                    # {id, name, kind, center: Vector2i, re
 var _solid_rows := {}                    # stamp name -> its "solid" rows (village.json), for the site buildings
 var stamps := {}                         # the village's building stamps (village.json), which the view paints the site buildings with
 var _near_sites: Array = []
+## B25R1-010 (Homesteads): the houses and frames standing on homestead claims, {id, stamp ("house", or "" for a frame), rect,
+## door, frame, tile}: collided here (home_building_at, as a settlement's building) and drawn by OverworldView. Set by
+## Homesteads (from its saved claims, on load too); not saved here. homes_version counts the changes (the view redraws).
+var homes: Array = []
+var homes_version := 0
 var dropped_in_sites := 0              # REGION-NAV-01: planted trees of an older save dropped because a site now stands there              # the sites near the chunk being generated (_generate), for _vdist
 var cache := {}                          # Vector2i -> Chunk
 var generated := 0                       # chunks generated so far (tests: the cache bound, no work for loaded chunks)
@@ -170,6 +175,22 @@ func site_building_at(c: Vector2i) -> bool:
 			var ry := c.y - r.position.y
 			var rx := c.x - r.position.x
 			return ry < rows.size() and rx < str(rows[ry]).length() and str(rows[ry])[rx] == "1"
+	return false
+
+
+## B25R1-010: whether a homestead's house stands on cell `c`: its stamp's solid cells above its bottom row, the doorway open
+## (World._built_collision's rule for a house built in the village, so the house is entered the same way).
+func home_building_at(c: Vector2i) -> bool:
+	for hm in homes:
+		var r: Rect2i = hm.rect
+		if str(hm.stamp) == "" or not r.has_point(c):
+			continue
+		var ry := c.y - r.position.y
+		if ry >= r.size.y - 1 or c == Vector2i(hm.door) - Vector2i(0, 1):
+			return false
+		var rows: Array = _solid_rows.get(str(hm.stamp), [])
+		var rx := c.x - r.position.x
+		return ry >= rows.size() or (rx < str(rows[ry]).length() and str(rows[ry])[rx] == "1")
 	return false
 
 
@@ -919,6 +940,8 @@ func is_solid(c: Vector2i) -> bool:
 		return false
 	if site_building_at(c):
 		return true                                    # REGION-NAV-01: a settlement's building
+	if not homes.is_empty() and home_building_at(c):
+		return true                                    # B25R1-010: a homestead's house
 	if works.has(c):
 		return false                                   # B14-07: steps, stairs or a walkway through the cliff's rim
 	var ch := get_chunk(chunk_of(c))

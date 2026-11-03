@@ -40,6 +40,13 @@ func unit_of_container(c: Dictionary) -> Dictionary:
 
 
 func unit(id: String) -> Dictionary:
+	if id.begins_with("homestead:"):             # B25R1-010: a homestead house's chest (Homesteads)
+		var hc: Dictionary = w.homesteads.claim(id.trim_prefix("homestead:")) if w.homesteads != null else {}
+		if hc.is_empty() or str(hc.get("building", "")) == "":
+			return {}
+		var spots: Array = w.homesteads.spots_of(hc, "chest")
+		var at: Vector2 = (Vector2(spots[0].at) if not spots.is_empty() else Vector2(Homesteads.door_of(hc))) + Vector2(0.5, 0.5)
+		return {"id": id, "kind": "chest", "bid": "", "homestead": hc, "at": at}
 	if id.begins_with("cart:"):                  # B14: a cart's load (Carts)
 		var c: Dictionary = w.carts.by_id(int(id.trim_prefix("cart:")))
 		return {} if c.is_empty() else {"id": id, "kind": "cart", "bid": "", "cart": c, "at": c.pos}
@@ -60,6 +67,8 @@ func info(u: Dictionary) -> Dictionary:
 	var p := w.player
 	if u.has("cart"):
 		return _info_cart(u)
+	if u.has("homestead"):
+		return _info_homestead(u)
 	if u.has("c"):
 		return _info_container(u)
 	if not w.buildings.has(bid):
@@ -92,6 +101,23 @@ func _info_cart(u: Dictionary) -> Dictionary:
 	if World.is_player_ref(owner):
 		return {"access": "own", "store": c.store, "owner": null, "whose": "your", "family": false, "business": false}
 	return {"access": "foreign", "store": c.store, "owner": w.party(owner), "whose": w.carts.whose(c), "family": false, "business": false}
+
+
+## B25R1-010: a homestead's chest: the player's own store on their claim; a household's is its pantry (theft, as in the village);
+## an abandoned house's holds nothing.
+func _info_homestead(u: Dictionary) -> Dictionary:
+	var hc: Dictionary = u.homestead
+	var owner := str(hc.owner)
+	if World.is_player_ref(owner):
+		if owner == w.acting_ref():
+			return {"access": "own", "store": hc.store, "owner": null, "whose": "your", "family": false, "business": false}
+		return {"access": "foreign", "store": hc.store, "owner": null, "whose": "another player's", "family": false, "business": false}
+	var h := World.ref_id(owner)
+	if str(hc.status) == "abandoned" or h < 0 or h >= w.households.size() or w.households[h].get("ended", false):
+		return _decor(u)
+	var members: Array = w.brain._members(h)
+	return {"access": "foreign", "store": w.households[h].pantry, "owner": members[0] if not members.is_empty() else null,
+		"whose": "the %s household's" % str(w.households[h].family), "family": false, "business": false}
 
 
 func _decor(_u: Dictionary) -> Dictionary:

@@ -1250,6 +1250,8 @@ func _send_buyers(s: Dictionary, h: int) -> void:
 
 
 func _free(n: NPC) -> bool:
+	if w.homesteads != null and w.homesteads.away(n):
+		return false                       # B25R1-010: a homesteader is not sent from the country to the stall
 	return n.plan.is_empty() or (n.plan[0].k == "work" and n.plan[0].get("anim", "") == "idle")
 
 

@@ -2742,6 +2742,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 		"journey_leg":                                  # REGION-NAV-01: the end of a leg of a journey (Journeys)
 			Journeys.leg_done(w, n)
 			return true
+		"homestead":                                    # B25R1-010: the end of a homesteader's walk (Homesteads.act)
+			return w.homesteads.act(n, a) if w.homesteads != null else false
 		"eat":
 			for f in ([str(a.item)] if a.has("item") else (COOKED if a.get("cooked_only", false) else EDIBLE)):
 				if n.inv.has(f):
@@ -4665,8 +4667,8 @@ func seek_work() -> void:
 	var applicants := []           # B25-EMPLOY-IMPL: those who chose a skilled place; the trade takes the most suitable (_hire_skilled)
 	for h in w.households.size():
 		var econ: Dictionary = w.households[h].get("econ", {})
-		if econ.is_empty():
-			continue
+		if econ.is_empty() or w.households[h].has("homestead"):
+			continue                       # B25R1-010: a homestead household lives by its own land, not the village's posts
 		var members := _members(h)
 		members.sort_custom(func(x: NPC, y: NPC) -> bool: return x.id < y.id)
 		for n: NPC in members:
@@ -5044,6 +5046,8 @@ func _apprentice_for(v: Dictionary) -> NPC:
 	for o: NPC in w.npcs:
 		if not o.alive or o.role != "adult" or o.id == int(v.get("left_by", -1)):
 			continue                                   # (not the worker who just left the trade)
+		if w.homesteads != null and w.homesteads.away(o):
+			continue                                   # B25R1-010: not one living out in the country
 		var pref := APPRENTICE_FROM.find(o.job)
 		if pref < 0:
 			if not skilled or not _would_retrain(o, str(v.job)):
