@@ -44,6 +44,7 @@ static func start(w: World, n: NPC, sid: String, purpose: Dictionary) -> String:
 		return "There is no road to %s." % w.map.overworld.site(sid).name
 	n.journey = {"to": sid, "purpose": purpose.duplicate(true), "leg": "out", "since": w.day(), "gate": gi}
 	n.plan.clear()
+	provision(w, n, trip_minutes(w, sid))       # B25R1-009: food for the road from the household's pantry
 	w.stat("journey_started")
 	w.stat("journey_started_" + str(purpose.get("kind", "visit")))
 	return ""
@@ -68,6 +69,7 @@ static func resume(w: World, n: NPC) -> bool:
 			return _rest(n)
 		n.journey.leg = "back"
 		w.stat("journey_leaving_" + str(n.journey.to))
+		buy_food(w, n, trip_minutes(w, str(n.journey.to)))      # B25R1-009: food for the road home, bought at the site
 		leg = "back"
 	var road := PackedVector2Array()
 	if leg == "out":
@@ -149,13 +151,18 @@ static func leg_done(w: World, n: NPC) -> void:
 
 static func end(w: World, n: NPC, how: String) -> void:
 	w.stat("journey_ended_" + how)
+	if bool(n.journey.get("purpose", {}).get("seed", false)):
+		w.stat("seed_travelers_ended_" + how)      # B25R1-009 (SeedTravelers)
 	n.journey = {}
 	n.plan.clear()
 
 
 ## Before each update of a traveller: rest at night where they stand (unless already at rest), and eat from their pack when
-## hungry. Returns true when they rest this update (World._update_npc skips the plan).
+## hungry (at the site with nothing in the pack, they first buy a day's food there: buy_food). Returns true when they rest this
+## update (World._update_npc skips the plan).
 static func night_and_food(w: World, n: NPC) -> bool:
+	if n.hunger < EAT_BELOW and str(n.journey.leg) == "there" and food_in(n.inv) <= 0.0:
+		buy_food(w, n, 1440.0)
 	if n.hunger < EAT_BELOW:
 		for f in NPCBrain.EDIBLE:
 			if n.inv.has(f):
@@ -175,3 +182,81 @@ static func night_and_food(w: World, n: NPC) -> bool:
 		n.doing = "resting by the road"
 		return true
 	return false
+
+
+# ---------------------------------------------------------------- food for the road (B25R1-009) ----------
+## B25R1-009 (a seed traveller's journey showed it: a traveller ate only from their pack, so one who set out with none starved
+## on the road; a mechanic failing its function, fixed within the existing rules): a traveller takes food for the road from their
+## household's pantry when they set off (provision), and buys food at the settlement for the road home and while they wait there
+## (buy_food, from the people there who sell it, SettlementFolk.buy_from). Nothing is created: a pantry-to-pack transfer
+## (World.transfer) and an ordinary purchase. What cannot be had is not had: an empty pantry, no food on sale or no coins, and
+## they go hungry by the existing rules.
+
+## Game minutes a walk to `sid` takes by the road at the walking pace, with the nights' rest (REST_FROM to REST_TO) in between.
+static func trip_minutes(w: World, sid: String) -> float:
+	var ow: Overworld = w.map.overworld
+	if ow == null:
+		return 0.0
+	var tiles := float(ow.road_route(gate_index(w), sid).size())
+	var per_min := float(GameData.b("walk_tiles_per_second")) / float(GameData.b("game_minutes_per_second"))
+	var walk := tiles / maxf(0.01, per_min)
+	var day := float(REST_FROM - REST_TO) * 60.0
+	return walk + floorf(walk / day) * float(24 - REST_FROM + REST_TO) * 60.0
+
+
+## Food points held in `inv` (the items a traveller eats from: NPCBrain.EDIBLE).
+static func food_in(inv: Inventory) -> float:
+	var pts := 0.0
+	for f in NPCBrain.EDIBLE:
+		pts += float(inv.count(f)) * float(GameData.item(f).get("food", 0))
+	return pts
+
+
+## Food points `n` eats over `minutes` of game time (hunger_per_hour), less what they hold.
+static func _short(n: NPC, minutes: float) -> float:
+	return minutes / 60.0 * float(GameData.b("hunger_per_hour")) * NPCBrain.food_factor(n) - food_in(n.inv)
+
+
+## Setting off: take food for `minutes` on the road from the household's pantry into the pack, at most half the pantry's food
+## (the household at home eats too), in NPCBrain.EDIBLE order. Returns the food points taken.
+static func provision(w: World, n: NPC, minutes: float) -> float:
+	if n.household < 0 or n.household >= w.households.size():
+		return 0.0
+	var pantry: Inventory = w.households[n.household].pantry
+	var cap := food_in(pantry) * 0.5
+	var taken := 0.0
+	for f in NPCBrain.EDIBLE:
+		var pts := float(GameData.item(f).get("food", 0))
+		while pts > 0.0 and _short(n, minutes) > 0.0 and taken + pts <= cap and pantry.has(f):
+			if not w.transfer(pantry, n.inv, f, 1):
+				break
+			taken += pts
+	if taken > 0.0:
+		w.stat("journey_provisioned_food", taken)
+	return taken
+
+
+## At the site: buy food for `minutes` from the people there who sell it (cheapest a food point first), one unit at a time, while
+## their coins pay. Returns the food points bought.
+static func buy_food(w: World, n: NPC, minutes: float) -> float:
+	if w.regions == null or not n.journey.has("to"):
+		return 0.0
+	var offers := []
+	for q in SettlementFolk.people(w, str(n.journey.to)):
+		if not SettlementFolk.present(w, q):
+			continue
+		for line in SettlementFolk.offers(w, q).sells:
+			var pts := float(GameData.item(str(line.item)).get("food", 0))
+			if NPCBrain.EDIBLE.has(str(line.item)) and pts > 0.0 and int(line.price) > 0:
+				offers.append({"who": q, "item": str(line.item), "price": int(line.price), "per": float(line.price) / pts})
+	offers.sort_custom(func(a, b): return a.per < b.per if a.per != b.per else str(a.item) < str(b.item))
+	var got := 0.0
+	var me := World.npc_ref(n.id)
+	for o in offers:
+		while _short(n, minutes) > 0.0 and n.coins >= int(o.price):
+			if SettlementFolk.buy_from(w, me, o.who, str(o.item), 1) != "":
+				break
+			got += float(GameData.item(str(o.item)).food)
+	if got > 0.0:
+		w.stat("journey_bought_food", got)
+	return got
