@@ -612,7 +612,11 @@ Rare features that may not occur organically get a deterministic scenario: a fre
 through the systems' own entry points (`LifeDecisions.set_hardship`, `weigh_runaway`, `recruit`, `leave_band`; `Homesteads.begin`,
 `set_faction`; `World.kill` for an orphaning), which set a record or run a decision exactly as the dawn would (no rule, weight or
 probability changed), then the normal game for some days, recorded. `targeted.json` says per scenario what the recorder saw against
-what was expected ("observed", "not observed: ...", or "not run" when the system is absent). The reports keep it apart: a scenario
+what was expected ("observed", "not observed: ...", or "not run" when the system is absent). A homestead scenario tries its listed
+seeds in order and keeps the first whose village lets the start happen; when the game's own gates refuse every seed (lead's ruling,
+2026-11-03) its `setup` step sets up the documented start conditions on the first seed (an unemployed adult without a post, a viable
+household, the start coins from outside counted in `World.coin_sources`, a site in reach), the gates are asked as always and never
+relaxed, and the result lists every change (`start_conditions_set_up`, `refused_without_setup`). The reports keep it apart: a scenario
 proves a mechanic can work, never how often it happens.
 
 ### 9.6 The campaign (B25R1-016)
