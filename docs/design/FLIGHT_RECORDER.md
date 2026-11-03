@@ -406,3 +406,177 @@ digests hour by hour (a section differing three or more consecutive hours is a p
 - **Android:** the export folder and the workbook definition are excluded from the Android preset (`exclude_filter`), the setting
   is not shown, and nothing in the shipped code names the export scripts (`tests/test_sim_gate.py` checks the preset and the
   references; the release workflow lists the APK's files).
+
+## 9. B25R1: the living world (owner directive 2026-11-03, register B25R1-016)
+
+Build 25 Revision 1's 365-day campaign must show who leaves home, why, where they go, what they build, how they live and how their
+lives end, for villagers and bandits alike (`docs/directives/2026-11-03_b25r1_365_day_flight_recorder.md`, on `wip/requirements-control`).
+Same schema (`mml-recorder/2`): the vocabulary below adds event kinds, codes and factor rows, no table. Every one is written by one
+call, `WorldRecorder.chronicle(kind, who, f)`, guarded at the call site (`if w.recorder != null:`), so with the recorder off nothing
+runs; it reads what the calling system already decided and never draws, decides or changes state (REC-D1..D4).
+
+### 9.1 The call
+
+```gdscript
+if w.recorder != null:
+	w.recorder.chronicle("homestead_claimed", n, {"household": n.household, "place": "homestead:%d" % c.id,
+		"object": "homestead:%d" % c.id, "track": "young_adult", "path": "lawful", "origin": "village",
+		"destination": "homestead:%d" % c.id, "needs": {"coins": n.coins, "food_days": 2.5}, "x": c.x, "y": c.y})
+```
+
+- `kind` is a key of `recorder_codes.json "chronicle"` (below), which fixes the event's system, subsystem, category and stage. A kind
+  not in the table is still written and counted in `unknown_codes` (`recorder_test` requires none).
+- `who` is the person: an `NPC`, a `PlayerState`, a permanent person id (int, ID-01) or a ref string; `null` for a world event. The
+  actor is always `p:<permanent id>`: the same ref before and after any household, faction or settlement change, so a history is
+  one ref (directive section 3: stable ids; a faction change never creates a new person).
+- Read from the live record when the caller does not give them (factor rows, option `ctx`, source `chronicle`): `name`, `age`
+  (years), `stage` (child, adolescent, adult, elder), `role`, `job`, `household` (`hh:<n>`), `faction` (`village`, or `clan:<id>`
+  from `NPC.clan`; `clan:bandit` for the village camp's band); for a settlement member not in the village the register's name and
+  `where`. The stage number of the homestead or recruitment lifecycle is `ctx stage_no`.
+- `f` (all optional; `recorder_codes.json "chronicle_fields"`):
+
+| Field | Meaning |
+|---|---|
+| `who` | the person: an NPC, a PlayerState, a person id (int) or a ref string; null for world |
+| `household` | hh:<n> or the household index |
+| `origin` | place ref |
+| `destination` | place ref |
+| `place` | settlement or wilderness location ref (event.settlement column) |
+| `faction` | village, outlaw, settlement:<id>, clan:<id>, homestead:<id>, wild |
+| `faction_before` | for faction_changed / recruit_joined / bandit_departed |
+| `legal` | lawful, outlaw, fugitive |
+| `legal_before` | previous standing |
+| `track` | young_adult, established_adult, runaway, former_bandit, outlaw, player (homestead and household formation) |
+| `path` | lawful or outlaw (a settlement's or a homestead's) |
+| `source` | recruitment source |
+| `trigger` | the decision trigger (event.rule) |
+| `action` | the action actually taken |
+| `outcome` | ok, failed, refused, abandoned, interrupted, partial (default ok) |
+| `reason` | snake_case reason of the outcome (event.reason) |
+| `needs` | {name: value} needs and economic circumstances (factor rows, option needs) |
+| `factors` | {name: value} judgment factors (factor rows, option judgment) |
+| `alternatives` | [[option, feasible, score, reason], ...] (alternative rows; with chosen a decision row kind life_choice) |
+| `chosen` | the option chosen |
+| `basis` | live_rule (default) or judgment |
+| `coins` | [[ref, before, after], ...] coin moves NOT recorded by any other hook (authority wilds.coins: the hourly audit counts them) |
+| `items` | [[ref, item, before, after], ...] item moves NOT recorded by any other hook (authority wilds.items) |
+| `summary` | [[ref, prop, before, after], ...] values already moved elsewhere, restated (authority summary: never counted twice) |
+| `related` | {role: ref or [refs]} related NPCs, households, settlements, clans |
+| `object` | object thread key (homestead:<id>, journey:<id>, clan:<id>, cell:<x>,<y>): links the events of one thing |
+| `parent` | an event id to hang this one under |
+| `x` | cell x |
+| `y` | cell y |
+| `detail` | free text, at most 160 characters |
+
+Rows: `trigger` is `event.rule`, `place` is `event.settlement`, `reason` is `event.reason` (free snake_case words of the calling
+system), `outcome` is `event.outcome`. `ctx` factor rows hold origin, destination, place, faction, faction_before, legal,
+legal_before, track, path, source, trigger and action as given; `needs` and `judgment` factor rows the dictionaries; a `decision`
+row (kind `life_choice`, basis `live_rule` or `judgment`) and its `alternative` rows when `chosen` or `alternatives` is given; a
+`participant` row per related ref; `state_change` rows for faction and legal standing (authority `lifecourse`), `coins` and `items`
+(authorities `wilds.coins`, `wilds.items`: only for moves no other hook records, because the hourly coin audit counts them) and
+`summary` (authority `summary`: restated, never counted twice). **A coin or item move that went through `World.trade`,
+`World.transfer` or a till is already recorded: restate it under `summary`, never under `coins` or `items`.**
+
+References: `p:<id>` person, `hh:<n>` household, `village`, `settlement:<id>` an off-map settlement, `homestead:<claim id>` a
+wilderness settlement (lawful or outlaw: the same ref through affiliation changes), `clan:<id>` a bandit clan, `wild:<x>,<y>` open
+country, `cell:<x>,<y>` a road cell, `landmark:<id>`, `journey:<person id>:<start day>.<start minute>`.
+
+### 9.2 The vocabulary (`recorder_codes.json "chronicle"`: kind, system / subsystem / category, stage)
+
+| Kind | System / subsystem / category | Stage | Meaning |
+|---|---|---|---|
+| `life_transition` | lifecourse / transition / lifecourse | 1 | a meaningful life transition (trigger: came_of_age, partnered, widowed, child_born, household_crowded, housing_wait, job_lost, hardship_threshold, orphaned, evicted, raised_in_clan_adult, other) |
+| `household_formed` | lifecourse / household / lifecourse |  | a new household exists (track young_adult, established_adult, couple, runaway, former_bandit; household the new one, origin the household left) |
+| `household_dissolved` | lifecourse / household / lifecourse |  | a household ended (reason: all_died, merged, abandoned, left) |
+| `faction_changed` | lifecourse / faction / lifecourse |  | faction or legal standing changed (faction_before -> faction, legal_before -> legal); the same person, never a replacement |
+| `homestead_evaluated` | homestead / stage / homestead | 2 | existing judgment evaluated the opportunities (alternatives, chosen) |
+| `homestead_chosen` | homestead / stage / homestead | 3 | the NPC chose homesteading (an intention: never a completed homestead) |
+| `homestead_rejected` | homestead / stage / homestead | 3 | the NPC rejected homesteading (outcome refused; reason) |
+| `homestead_site_evaluated` | homestead / site / homestead | 4 | a wilderness site was evaluated (candidates, score, chosen or none) |
+| `homestead_travel_begin` | homestead / stage / homestead | 5 | set out for the site (origin, destination) |
+| `homestead_travel_end` | homestead / stage / homestead | 5 | reached the site (ok) or did not (failed / abandoned, reason) |
+| `homestead_claimed` | homestead / stage / homestead | 6 | land claimed or occupied (place homestead:<id>): still not a completed homestead |
+| `homestead_resources` | homestead / stage / homestead | 7 | required resources obtained (items, coins, how: bought, felled, quarried, carried) |
+| `homestead_construction` | homestead / stage / homestead | 8 | shelter or infrastructure progress (what, done of need) |
+| `homestead_shelter_built` | homestead / stage / homestead | 8 | the shelter stands |
+| `homestead_residence` | homestead / stage / homestead | 9 | actual residence established: the completed move |
+| `homestead_sustain` | homestead / stage / homestead | 10 | food, water, employment and household needs met (ok) or not (failed), once a day per homestead household |
+| `homestead_year` | homestead / stage / homestead | 11 | the household continued through another game year (8 days) at the homestead |
+| `homestead_family_change` | homestead / stage / homestead | 12 | a birth, partnership, member joining or leaving at a homestead |
+| `homestead_inheritance` | homestead / stage / homestead | 12 | the homestead passed to an heir |
+| `homestead_member_died` | homestead / stage / homestead | 12 | a homestead resident died (cause) |
+| `homestead_abandoned` | homestead / stage / homestead | 12 | the household gave the homestead up (reason; where they went) |
+| `runaway_hardship` | lifecourse / runaway / runaway | 1 | household hardship reached a threshold (needs: hunger, food_days, purse, hardship_days; family circumstances) |
+| `runaway_evaluated` | lifecourse / runaway / runaway | 2 | the young person weighed staying or going (alternatives: stay_home, seek_help, find_work, relocate, survive_alone, approach_outlaws) |
+| `runaway_departed` | lifecourse / runaway / runaway | 3 | left home (origin, destination) |
+| `runaway_outcome` | lifecourse / runaway / runaway | 4 | what actually happened (action: sheltered, employed, relocated, independent, joined_outlaws, returned, died) |
+| `recruit_circumstance` | outlaw / recruit / outlaw | 2 | the circumstances that lead toward outlaw life (source: orphan, runaway, displaced_adult, fugitive, voluntary, relationship, raised_in_clan, arrival) |
+| `recruit_sought` | outlaw / recruit / outlaw | 3 | the decision to seek outlaw life (alternatives, chosen) |
+| `recruit_contact` | outlaw / recruit / outlaw | 4 | travelled to or met a clan (place clan:<id>) |
+| `recruit_accepted` | outlaw / recruit / outlaw | 5 | the clan accepted the recruit |
+| `recruit_rejected` | outlaw / recruit / outlaw | 5 | the clan rejected the recruit (outcome refused; reason) |
+| `recruit_joined` | outlaw / recruit / outlaw | 6 | actual membership and residence changed (faction_before -> faction; counts in the bandit ledger) |
+| `outlaw_occupation` | outlaw / clan / outlaw | 7 | an outlaw took up or trained in an occupation (action, skill) |
+| `clan_birth` | outlaw / clan / outlaw |  | a child born into a clan (counts in the bandit ledger as a birth) |
+| `clan_member_died` | outlaw / clan / outlaw | 8 | a clan member died (cause; counts in the bandit ledger as a death) |
+| `bandit_leave_evaluated` | outlaw / depart / outlaw | 1 | an adult bandit weighed leaving outlaw life (alternatives, chosen) |
+| `bandit_departed` | outlaw / depart / outlaw | 2 | membership ended (retained items, coins, skills, crimes in needs/factors; counts in the bandit ledger as a departure) |
+| `bandit_reintegrated` | outlaw / depart / outlaw | 3 | a former bandit established lawful life (action: new_household, occupation, lawful_homestead, married) |
+| `settlement_created` | wilds / site / settlement |  | a wilderness settlement exists (path lawful or outlaw) |
+| `settlement_construction` | wilds / site / settlement |  | a building or work at a settlement progressed or finished |
+| `settlement_occupancy` | wilds / site / settlement |  | a resident moved in or out (action in / out) |
+| `settlement_affiliation` | wilds / site / settlement |  | the settlement's ownership or affiliation changed (the same buildings and residents) |
+| `settlement_discovered` | wilds / discovery / discovery |  | a hidden settlement was found (by the player or an NPC) |
+| `settlement_abandoned` | wilds / site / settlement |  | nobody lives there any more (reason) |
+| `settlement_state` | wilds / census / summary |  | one a day per wilderness settlement: population, households, food_units, water, stores, coins, livestock, path (written by WorldRecorder from Homesteads.recorder_rows) |
+| `wild_production` | wilds / production / production |  | goods made outside the village (action: farm, livestock, hunt, gather, fell, quarry, mine, craft, water, fish; items) |
+| `wild_consumption` | wilds / consumption / production |  | goods used outside the village (action: eat, drink, fuel, build, feed) |
+| `wild_trade` | wilds / production / production |  | a purchase or sale by a wilderness household (counterparty; the World.trade event is its own record) |
+| `wild_shortage` | wilds / consumption / production |  | food or water short at a wilderness household (needs) |
+| `sale_refused` | wilds / production / production |  | a legitimate resource sale refused (reason: no_demand, counter_full, no_buyer, price) |
+| `livestock_change` | wilds / livestock / production |  | livestock born, died, bought, sold, stolen or slaughtered (action) |
+| `skill_progress` | wilds / skill / production |  | a skill rose through actual work (summary: skill:<id> before -> after) |
+| `craft` | wilds / craft / production |  | inputs made into finished goods (items: inputs negative, outputs positive) |
+| `raid` | outlaw / raid / raid |  | a raid on a settlement, homestead or traveller (outcome ok / failed / refused; goods and coins taken) |
+| `raid_defended` | outlaw / raid / raid |  | defenders met a raid (outcome ok: repelled) |
+| `journey_begin` | travel / journey / journey |  | a traveller set out (origin, destination, action: buy, sell, envoy, visit, seed; object journey:<id>) |
+| `journey_leg` | travel / journey / journey |  | a leg of a journey done (place) |
+| `journey_purchase` | travel / journey / journey |  | bought or sold on a journey (items, coins) |
+| `journey_end` | travel / journey / journey |  | the journey ended (outcome ok: home again; failed / abandoned; reason: died, lost, no_route, refused) |
+| `travel_destination_set` | travel / player_travel / journey |  | the player chose a destination on the Region map (route length, road share) |
+| `travel_refused` | travel / player_travel / journey |  | a destination could not be reached (reason) |
+| `travel_suspended` | travel / player_travel / journey |  | manual input stopped the walk |
+| `travel_dismissed` | travel / player_travel / journey |  | the destination was cleared |
+| `travel_arrived` | travel / player_travel / journey |  | the player reached the destination |
+| `road_formed` | roads / wear / road |  | footfall raised a cell's level (summary level before -> after: grass, trail, dirt road) |
+| `road_cleared` | roads / wear / road |  | a step cleared a grown-over road |
+| `road_wear` | roads / wear / road |  | stone damage passed a state (look stone -> stone_damaged -> stone_broken) |
+| `road_faded` | roads / wear / road |  | one a dawn: worn paths that lost a level without footfall (cells) |
+| `road_overgrown` | roads / wear / road |  | one a dawn: walked roads that turned grown over (cells) |
+| `road_paved` | roads / paving / road |  | a cell paved with stone (by, stone used, labour) |
+| `road_repaired` | roads / paving / road |  | a damaged stone cell repaired (by, stone used) |
+| `roads_day` | roads / census / summary |  | one a dawn: cells of the road network and worn-in cells by look |
+| `landmark_discovered` | landmark / discovery / discovery |  | the player found a place on foot (place landmark:<id>, kind) |
+| `clan_census` | outlaw / census / summary |  | one a dawn per clan: members (role bandit), dependants (clan children); the bandit ledger's check (written by WorldRecorder) |
+| `population_day` | lifecourse / census / summary |  | one a dawn: the village by life stage, occupations, households, bandits and clan dependants, wilderness and off-map populations (written by WorldRecorder) |
+
+Counting rules the reports apply (section 9.4): an intention (`homestead_chosen`) or a claim (`homestead_claimed`) is never a
+completed homestead; only `homestead_residence` is a completed move, and a homestead that later records `homestead_sustain` ok and
+`homestead_year` is sustained. Young-adult formation (`track young_adult`) and established-adult relocation (`track
+established_adult`) are counted apart; the young-adult rate is homesteads begun over `household_formed` events of track
+young_adult in five-game-year windows (40 days). The bandit ledger is births (`clan_birth`) + recruits (`recruit_joined`) +
+arrivals (identity `registered_outlaw`) - deaths (`clan_member_died`, or a `death` whose ctx faction is a clan) - departures
+(`bandit_departed`), checked against `clan_census`.
+
+### 9.3 Hooks in place (this branch)
+
+| System | Where | Kinds |
+|---|---|---|
+| Roads (B25R1-011) | `RoadWear.foot` (only when a cell's look changed: `Overworld.recorder`, set by `WorldRecorder.attach`), `pave`, `repair` (the `by` argument: `ManorWork._pave` passes the mender, `Paving.done` the player), `prune` at dawn | `road_formed`, `road_cleared`, `road_wear`, `road_paved`, `road_repaired`, `road_faded`, `road_overgrown`, `roads_day` |
+| Region travel (B25R1-006) | `TravelDriver.start`, `suspend`, `dismiss`, the arrival in `step` | `travel_destination_set`, `travel_refused`, `travel_suspended`, `travel_dismissed`, `travel_arrived` |
+| Landmarks (B25R1-003) | `Landmarks.note` | `landmark_discovered` |
+| The day's census | `WorldRecorder._day_summaries` (reads `w.npcs`, `w.households`, `w.regions`, and `w.homesteads.recorder_rows()` when that method exists) | `population_day`, `clan_census`, `settlement_state` |
+
+The other kinds are called by the systems that make the decisions (homesteading, households, factions, runaways, recruitment,
+wilderness settlements: `wip/b25r1-homestead`; journeys: `wip/b25r1-travelers`); `recorder_coverage.json` lists each as
+instrumented only once its hook is merged.

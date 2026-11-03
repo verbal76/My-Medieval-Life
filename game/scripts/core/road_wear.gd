@@ -160,10 +160,14 @@ static func foot(ow: Overworld, c: Vector2i, cart := false) -> void:
 	ow.road_state[c] = e
 	if visual(ow, c) != look:
 		_touched(ow, c)
+		if ow.recorder != null:
+			ow.recorder.road_step(ow, c, lv, look, cart)     # B25R1-016: formed, cleared or worn (only when the look changed)
 
 
-## Pave cell `c` with stone (it never fades back; its damage starts at 0). Callers take the stone.
-static func pave(ow: Overworld, c: Vector2i) -> void:
+## Pave cell `c` with stone (it never fades back; its damage starts at 0). Callers take the stone. `by`: who did it (a
+## person or the player's ref, for the flight recorder only).
+static func pave(ow: Overworld, c: Vector2i, by := "") -> void:
+	var look := visual(ow, c) if ow.recorder != null else ""
 	var e: Dictionary = ow.road_state.get(c, {})
 	e.p = true
 	e.d = 0.0
@@ -171,15 +175,20 @@ static func pave(ow: Overworld, c: Vector2i) -> void:
 	e.t = day_of(ow)
 	ow.road_state[c] = e
 	_touched(ow, c)
+	if ow.recorder != null:
+		ow.recorder.road_work(ow, c, "pave", look, by, PAVE_STONE)
 
 
 ## Repair a stone cell: its damage back to 0. Callers take the stone.
-static func repair(ow: Overworld, c: Vector2i) -> void:
+static func repair(ow: Overworld, c: Vector2i, by := "") -> void:
+	var look := visual(ow, c) if ow.recorder != null else ""
 	var e: Dictionary = ow.road_state.get(c, {})
 	e.d = 0.0
 	e.dd = day_of(ow)
 	ow.road_state[c] = e
 	_touched(ow, c)
+	if ow.recorder != null:
+		ow.recorder.road_work(ow, c, "repair", look, by, REPAIR_STONE)
 
 
 ## Why cell `c` cannot be paved or repaired now ("" when it can), and what it would take: {why, mode, stone}.
@@ -213,6 +222,8 @@ static func visual(ow: Overworld, c: Vector2i) -> String:
 
 ## Dawn: forget the cells that are back to what the generator and the clock alone give (bounded memory).
 static func prune(ow: Overworld) -> void:
+	if ow.recorder != null:
+		ow.recorder.roads_dawn(ow)                 # B25R1-016: what faded and grew over since the last dawn (before it is forgotten)
 	var drop := []
 	for c: Vector2i in ow.road_state:
 		var e: Dictionary = ow.road_state[c]

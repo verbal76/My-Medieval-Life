@@ -129,6 +129,7 @@ jobs:
           res://tests/demo_test.gd
           res://tests/outside_interact_test.gd
           res://tests/gamepad_map_test.gd
+          res://tests/seed_traveler_test.gd
           res://tests/tree_test.gd
           res://tests/world_test.gd
           res://tests/aging_test.gd

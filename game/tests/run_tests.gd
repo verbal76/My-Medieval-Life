@@ -1333,6 +1333,9 @@ func _wheat_held(w: World) -> int:
 		if j.get("load") is Inventory:
 			n += (j.load as Inventory).count("wheat")
 	n += w.manor_work.yard.count("wheat")
+	if w.chapel != null:
+		for p in w.chapel.parcels:          # alms set aside at the chapel's door (chapel_relief_wheat counts them given) are still held
+			n += (p.inv as Inventory).count("wheat")
 	return n
 
 
@@ -3839,8 +3842,10 @@ func test_credits() -> void:
 	var missing := {}
 	for f in entries:
 		var src := str(f.get("source_zip", f.get("zip", f.get("source", ""))))
-		if src != "" and not credited.has(src):
-			missing[src] = true
+		# a file drawn from more than one pack (tools/road_tiles.py: "A.zip + B.zip") credits each pack it names
+		for one in src.split(" + ", false):
+			if not credited.has(one.strip_edges()):
+				missing[src] = true
 	var root := ProjectSettings.globalize_path("res://").path_join("..")
 	for name in DirAccess.get_files_at(root):
 		if name.ends_with(".zip") or name.ends_with(".unitypackage"):

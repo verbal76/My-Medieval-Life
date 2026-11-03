@@ -87,6 +87,22 @@ static func at_site(w: World, n: NPC) -> bool:
 		n.doing = "waiting for the morning to buy"
 		n.plan = [w.brain.work(30.0, "", {}, "idle")]
 		return true
+	if bool(p.get("seed", false)) and not SeedTravelers.refresh(w, n, p):
+		# B25R1-009: nothing ordinary on sale to them at the site now (the seller away on the caravan road, sold out): a seed
+		# traveller waits for the next morning, up to `wait` mornings, then goes home with nothing
+		if bool(p.get("waiting", false)) and float(n.journey.get("stay_until", 0.0)) > w.minutes:
+			return false                         # still waiting (Journeys rests them at the site)
+		if int(p.get("wait", 0)) <= 0:
+			_out_of_date(w, n, p, "nothing to buy")
+			return false
+		p.wait = int(p.wait) - 1
+		p.waiting = true
+		n.journey.stay_until = float((w.day() + 1) * 1440 + SettlementFolk.WORK_FROM * 60)
+		n.doing = "waiting for the market to have something"
+		w.stat("region_trade_waited")
+		Journeys.record(w, n, "waited", {"to": str(n.journey.to), "mornings_left": int(p.wait), "why": "nothing on sale to them"})
+		return false
+	p.erase("waiting")
 	var who := {}
 	for q in SettlementFolk.people(w, str(n.journey.to)):
 		if str(q.ref) == str(p.about):
@@ -129,6 +145,10 @@ static func act_buy(w: World, n: NPC) -> bool:
 		_out_of_date(w, n, p, why)
 		return true
 	w.stat("region_trade_bought", qty)
+	Journeys.record(w, n, "bought", {"to": str(n.journey.to), "seller": str(who.ref), "seller_name": str(who.name), "item": str(p.item), "qty": qty,
+		"coins_paid": price * qty, "unit_price": price, "instead_of": str(p.get("instead_of", "")), "seed": bool(p.get("seed", false))})
+	if bool(p.get("seed", false)):
+		w.stat("seed_travelers_bought", qty)     # B25R1-009
 	w.stat("region_trade_bought_" + str(p.item), qty)
 	w.note("%s %s bought %d %s at %s." % [n.name, n.family, qty, GameData.item_name(str(p.item)).to_lower(), w.map.overworld.site(str(n.journey.to)).get("name", "")])
 	return true
@@ -142,6 +162,7 @@ static func _out_of_date(w: World, n: NPC, p: Dictionary, why: String) -> void:
 			r.kind = "out_of_date"
 			r.why = why
 	w.stat("region_trade_out_of_date")
+	Journeys.record(w, n, "failed", {"to": str(n.journey.get("to", "")), "seller": str(p.get("about", "")), "item": str(p.get("item", "")), "why": why})
 
 
 ## A sale by the courier's route: the record of a place wanting what `n` makes and holds beyond what they keep. True if booked.
