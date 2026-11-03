@@ -7182,8 +7182,15 @@
      "date": "2026-11-03",
      "change": "note",
      "why": "owner clarification 2026-11-03: before implementing NPC homesteading decisions, audit how the NPC simulation makes major life choices (systems, ambition, occupation, skills, money, household, marriage, family, housing, other settlements, adulthood, judgment/aspiration, costs/benefits/risks, population safeguards, decision to action) and present a concise proposed decision process; no isolated random-percentage system; the 1-3% is a balancing constraint, not the reasoning; unrelated work continues"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: None -> APPROVED; owner_answer",
+     "why": "owner decisions 2026-11-03 (outlaw communities directive): D1 the shared judgment architecture approved with clarifications (evaluated at household formation or relocation events; factors property ambition, occupation/resource fit, money, village housing and work, family, isolation and safety, settlement prosperity, taxes minor; young-adult homesteading around 2% or less of eligible formations over five game years, a safeguard not a chance); D2 established adults may homestead now, with a much higher threshold and much smaller allowance, from prolonged housing failure, family change, strong ambition, a viable opportunity or employment change, never routinely abandoning obligations"
     }
-   ]
+   ],
+   "disposition": "APPROVED",
+   "owner_answer": "D1 approved with clarifications; D2 established adults included now (higher threshold, smaller allowance)"
   },
   {
    "id": "B25R1-011",
@@ -7304,6 +7311,41 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_youth_runaways.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: None -> APPROVED; owner_answer",
+     "why": "owner decisions 2026-11-03 (outlaw communities directive): D1 runaway judgment approved (after sustained hardship or major events, at most once a season unless a new major event; outcomes stay home, seek help, work while home, move to another settlement, survive alone, approach an outlaw community; bandit acceptance a separate decision); D3 age 12 normally, younger only in extreme sustained danger or deprivation with a much higher threshold, younger children strongly prefer kin or safe households; FAM-07/OD-11 kept and reconciled; D4 adult bandits may leave now"
+    }
+   ],
+   "disposition": "APPROVED",
+   "owner_answer": "D1 approved; D3 minimum age 12, younger only in extremes; D4 adult bandits may leave the clan now (B25R1-014)"
+  },
+  {
+   "id": "B25R1-014",
+   "kind": "approved",
+   "title": "Shared wilderness settlement foundation: lawful homesteads and outlaw communities; sustainable bandit populations; adult bandits may leave",
+   "description": "Shared wilderness settlement foundation: lawful homesteads and outlaw communities; sustainable bandit populations; adult bandits may leave",
+   "source": "docs/directives/2026-11-03_b25r1_outlaw_communities.md",
+   "owner_wording": "Build one shared wilderness settlement foundation.",
+   "approval": "owner, 2026-11-03 (B25R1 outlaw communities directive, answering the four decision questions)",
+   "acceptance": [
+    "One foundation for lawful and outlaw wilderness settlements (same land, building, household, work, crafting, trade, family, travel, save systems; differences in legal recognition, faction, concealment, access, relationships, behaviour); settlement identity persists through faction changes; real recruitment sources (FAM-07 orphans, runaways, displaced adults, fugitives, volunteers, kin, outlaw-raised children), no replacement bandits; skilled outlaw workers by existing skills and recipes; hidden homes/workshops/markets that physically exist, discovered via landmarks, markets may restrict trade; food production with raids as a supplement moving real goods; real defence and real loot; natural allegiance transitions; adult bandits leave by judgment keeping history; validation per section 11 incl. multigenerational population; tradeoffs identified where infrastructure is missing; nothing unverified in the release candidate"
+   ],
+   "target_build": "20",
+   "parent": "B25R1-001",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_outlaw_communities.md"
     }
    ]
   },
