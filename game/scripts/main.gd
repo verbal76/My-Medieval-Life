@@ -1973,6 +1973,7 @@ func _process(delta: float) -> void:
 		world.update(delta)                 # MP-D3: guests are playing, so the host's menu or fall does not stop the world
 	if Demo.is_demo() and not guest_world and not _demo_step(delta):
 		return                              # DEMO-01: this world's demo time is used up (or the window is in the background): it waits
+	_report_view()                          # B25R1-019: the live range follows what this screen shows (zoom, window, camera)
 	if not guest_world and not paused and world.player.alive:
 		net.apply_requests()                # MP A2: the guests' requests, at this one fixed point of the host's frame
 		world.update(delta)
@@ -1994,6 +1995,67 @@ func _process(delta: float) -> void:
 	_sync_gather_mark()
 	_sync_outlines()
 	ui.update_hud()
+
+
+# ---------------------------------------------------------------- presence (B25R1-019) ----------
+## Tell the world's Presence what this screen shows: the camera's centre and the visible size in tiles. Zooming out on a
+## phone widens the live range; a guest's world classifies its own copy for drawing (the host simulates).
+var view_override := Vector2.ZERO       # tests (presence_shot): a live range of this size in tiles instead of the screen's
+
+
+func _report_view() -> void:
+	if camera == null or world == null:
+		return
+	var size := get_viewport().get_visible_rect().size / camera.zoom / T if view_override == Vector2.ZERO else view_override
+	world.presence.set_view(world.host_player().pid if not guest_world else world.player.pid, size, camera.get_screen_center_position() / T)
+	if guest_world:
+		world.presence.refresh()
+		world.presence.classify()
+
+
+## How far through the current tick the frame is (0..1): the view draws the live between the last tick and this one.
+func _tick_alpha() -> float:
+	return 1.0 if guest_world else clampf(world.tick_left / World.TICK, 0.0, 1.0)
+
+
+## The game clock as the frame sees it, smooth between ticks (the clock-driven countryside walks rather than hops).
+func _view_minutes() -> float:
+	return world.minutes + (0.0 if guest_world else world.tick_left * float(GameData.b("game_minutes_per_second")))
+
+
+## Where to draw a live villager this frame and which way they face: along the cells the last tick walked them through
+## (NPC.trail), so they go round a corner rather than through it. A jump (a door, a portal) is drawn where they landed.
+func _npc_draw(n: NPC) -> Array:
+	var tr := n.trail
+	if guest_world or tr.size() < 2:
+		return [n.pos, n.facing]
+	var total := 0.0
+	for i in range(1, tr.size()):
+		total += tr[i - 1].distance_to(tr[i])
+	if total <= 0.0001 or total > 4.0:
+		return [n.pos, n.facing]
+	var left := total * _tick_alpha()
+	for i in range(1, tr.size()):
+		var l := tr[i - 1].distance_to(tr[i])
+		if l >= left and l > 0.0:
+			return [tr[i - 1] + (tr[i] - tr[i - 1]) / l * left, tr[i] - tr[i - 1]]
+		left -= l
+	return [n.pos, n.facing]
+
+
+var _animal_from := {}            # animal id -> [tick, from, to]: the view's straight line between an animal's last two ticks
+
+
+func _animal_draw(a: Animal) -> Vector2:
+	if guest_world:
+		return a.pos
+	var e: Array = _animal_from.get(a.id, [-1, a.pos, a.pos])
+	if int(e[0]) != world.ticks:
+		e = [world.ticks, e[2], a.pos]
+		if (e[1] as Vector2).distance_to(a.pos) > 3.0:
+			e[1] = a.pos
+		_animal_from[a.id] = e
+	return (e[1] as Vector2).lerp(e[2], _tick_alpha())
 
 
 ## Someone inside a building whose roof is on (the player is not under it) is under that roof: not
@@ -2059,7 +2121,7 @@ func _sync_sprites() -> void:
 			actors.add_child(s)
 			sprites[n.id] = s
 		_flinch_check(n.id, n.hp, n.alive, s)            # JUICE J1: the hurt frames when health actually fell
-		var near := n.pos.distance_to(cam) < 30.0
+		var near := n.live or not n.alive and n.pos.distance_to(cam) < 30.0     # B25R1-019: Presence says who is live (a body falls where it lay)
 		if not n.alive and (n.away != "" or n.became_player):
 			s.visible = false                      # MIGRATE-18: moved to a settlement, not dead: nothing falls (ID-01: nor a child who became the player)
 			continue
@@ -2078,6 +2140,8 @@ func _sync_sprites() -> void:
 		# feet are the sprite's origin, so they stay on the ground
 		s.scale = Vector2.ONE * Life.npc_scale(n, world.minutes)       # child 0.5, adolescent 0.75 (balance.json "life"; B8-029)
 		s.visible = near and not _covered(n) and not world.in_loft(n)     # asleep in the loft: up there, unseen
+		if s.is_processing() != s.visible:
+			s.set_process(s.visible)                   # B25R1-019: a calculated villager's sprite does not animate
 		if not s.visible:
 			continue
 		if _show_sleeper(n, s) or _show_sitter(n, s):
@@ -2092,8 +2156,9 @@ func _sync_sprites() -> void:
 				s.hold(fw.tool)
 			s.play(fw.anim)
 			continue
-		s.position = n.pos * T
-		s.face(n.facing)
+		var drawn := _npc_draw(n)                       # B25R1-019: between ticks, along the way the last tick walked
+		s.position = (drawn[0] as Vector2) * T
+		s.face(drawn[1] if n.anim in ["walk", "carry"] else n.facing)
 		var look: Array = world.brain.work_look(n) if n.anim == "work" else [n.anim, ""]
 		var arm := ActorSprite.npc_weapon(n)       # WEAPON-VISIBLE-01: guards and bandits carry theirs; anyone fighting swings it
 		s.wield(arm)
@@ -2114,7 +2179,7 @@ func _sync_sprites() -> void:
 	# the roof lifts as they step in, so their way in stays in view
 	var people := [[p.pos, null]]
 	for n: NPC in world.npcs:
-		if n.alive and n.pos.distance_to(cam) < 30.0:
+		if n.alive and n.live:
 			var ns: ActorSprite = sprites.get(n.id)
 			people.append([n.pos, ns if ns != null and ns.visible else null])
 	door_view.update(people, get_process_delta_time())
@@ -2362,9 +2427,9 @@ func _sync_animals() -> void:
 			s.setup(a, world.minutes)
 			actors.add_child(s)
 			animal_sprites[a.id] = s
-		s.visible = a.pos.distance_to(cam) < 30.0
+		s.visible = world.presence.animal_live(a.id)        # B25R1-019: Presence says which animals are live
 		if s.visible:
-			s.position = a.pos * T
+			s.position = _animal_draw(a) * T
 			s.show_state(a, world.minutes, get_process_delta_time())
 	for id in animal_sprites.keys():
 		if not seen.has(id):
@@ -2419,7 +2484,7 @@ func _sync_countryside() -> void:
 	_adopt_country_animals(radius)
 	var dt := get_process_delta_time()
 	var seen := {}
-	for a: Animal in countryside.animals_near(cam, radius, world.minutes):
+	for a: Animal in countryside.animals_near(cam, radius, _view_minutes()):
 		var id := "a%d" % a.id
 		seen[id] = true
 		var s: AnimalSprite = country_sprites.get(id)
@@ -2430,7 +2495,7 @@ func _sync_countryside() -> void:
 			country_sprites[id] = s
 		s.position = a.pos * T
 		s.show_state(a, world.minutes, dt)
-	for e: Dictionary in countryside.travellers_near(cam, radius, world.minutes):
+	for e: Dictionary in countryside.travellers_near(cam, radius, _view_minutes()):
 		var id := "t%d" % int(e.key)
 		seen[id] = true
 		var node: Node = country_sprites.get(id)

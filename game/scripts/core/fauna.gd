@@ -24,6 +24,7 @@ var woods := {}              # id -> {x, y, w, h}
 var next_id := 1
 var seeded: Array = []       # wild species that have been started in the woods (saved; B14 adds species to old saves)
 var refuges: Refuges         # WR-01: the woods' protected breeding refuges (saved)
+var move_rng := RandomNumberGenerator.new()   # B25R1-019: a live animal's stroll and pauses (_move) draw from here, never from World.rng, so watching an animal changes no other draw. Not saved: where a live animal strolls is presentation
 var claims := {}             # animal id -> npc id hunting it (not saved; hunters re-plan after loading)
 var _cells := {}             # area id -> Array[Vector2i] of cells an animal may stand on
 var _cell_set := {}          # area id -> {Vector2i: true}, the same cells for membership tests (PERF-04)
@@ -31,6 +32,7 @@ var _cell_set := {}          # area id -> {Vector2i: true}, the same cells for m
 
 func _init(world) -> void:
 	w = world
+	move_rng.seed = hash([int(w.seed), "fauna_move"])     # B25R1-019: the strolls' own stream, from the world's seed
 	for p in w.map.data.get("pens", []):
 		var pd: Dictionary = p.duplicate(true)
 		pd.trough = 0
@@ -279,7 +281,7 @@ func _spare_prey(a: Animal) -> int:
 ## Near the player it is seen chasing the nearest prey (_move), which it may also catch sooner; the hourly
 ## chance still feeds it, so a quick runner cannot starve a hunter that is watched.
 func _predate(a: Animal, gm: float) -> void:
-	if w.nearest_player_distance(a.pos) <= w.detail_radius and (by_id(a.hunt) == null or not can_take(a, by_id(a.hunt))):
+	if (by_id(a.hunt) == null or not can_take(a, by_id(a.hunt))):
 		a.hunt = -1
 		var bd := 1e9
 		for b: Animal in animals:
@@ -716,10 +718,7 @@ func update(dt: float) -> void:
 			a.anger_left -= dt
 			if a.anger_left <= 0.0 or _foe_pos(a.anger) == Vector2.INF:
 				a.anger = ""
-		if w.nearest_player_distance(a.pos) > w.detail_radius:
-			a.moving = false
-			continue
-		_move(a, dt)
+		_move(a, dt)                                     # B25R1-019: every animal, seen or not, on the world's tick (observation-neutral; strolls draw from move_rng)
 
 
 func _move(a: Animal, dt: float) -> void:
@@ -760,16 +759,16 @@ func _move(a: Animal, dt: float) -> void:
 			return
 		var cs := cells(a.area)
 		if a.area == COUNTRY:                           # a stroll round where it is, over open ground
-			var c2 := a.cell() + Vector2i(w.rng.randi_range(-4, 4), w.rng.randi_range(-4, 4))
+			var c2 := a.cell() + Vector2i(move_rng.randi_range(-4, 4), move_rng.randi_range(-4, 4))
 			if not w.map.is_solid_world(c2):
 				a.goal = Vector2(c2) + Vector2(0.5, 0.5)
 			else:
-				a.wait = w.rng.randf_range(1.0, 3.0)
+				a.wait = move_rng.randf_range(1.0, 3.0)
 			return
 		if cs.is_empty():
 			return
-		var c: Vector2i = cs[w.rng.randi() % cs.size()]
-		if a.dest != Vector2.INF and w.rng.randf() >= float(Refuges.cfg().wander_share):
+		var c: Vector2i = cs[move_rng.randi() % cs.size()]
+		if a.dest != Vector2.INF and move_rng.randf() >= float(Refuges.cfg().wander_share):
 			c = Vector2i((a.dest - a.pos).limit_length(5.0) + a.pos)       # WR-01: dispersing, it heads for its settling point
 		if not a.wild() and a.hunger < float(GameData.b("animal_eat_below")) + 10.0:
 			var pen: Dictionary = pens[a.area]
@@ -783,14 +782,14 @@ func _move(a: Animal, dt: float) -> void:
 	var step := speed * dt
 	if d.length() <= step:
 		a.goal = Vector2.INF
-		a.wait = w.rng.randf_range(1.0, 4.0)
+		a.wait = move_rng.randf_range(1.0, 4.0)
 		a.moving = false
 		return
 	var nxt: Vector2 = a.pos + d / d.length() * step
 	var nc := Vector2i(floori(nxt.x), floori(nxt.y))
 	if (w.map.is_solid_world(nc) if a.area == COUNTRY else w.map.is_solid(nc)) or (not in_area(a.area, nc) and in_area(a.area, a.cell())):
 		a.goal = Vector2.INF
-		a.wait = w.rng.randf_range(0.5, 2.0)
+		a.wait = move_rng.randf_range(0.5, 2.0)
 		a.moving = false
 		return
 	a.facing = d

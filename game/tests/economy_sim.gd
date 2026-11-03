@@ -188,6 +188,7 @@ func _init() -> void:
 		_trader_diag(0)
 	var profile := "--profile" in args          # PERF-02: time per subsystem, printed at the end (changes nothing)
 	w.profiling = profile
+	w.presence.crowd_enabled = not ("--no-crowd" in args)     # B25R1-020: the crowd exception off, to measure it alone
 	w.map.profiling = profile
 	var update_us := 0
 	var harness_us := 0
@@ -2338,6 +2339,7 @@ func _print_final(s: Dictionary, start: Dictionary, seed: int, days: int, secs: 
 	print("credit: %s" % JSON.stringify(cr))
 	print("currency: %s" % JSON.stringify(s.currency))
 	print("player: %s" % JSON.stringify(s.player))
+	print("presence: %s" % JSON.stringify(w.presence.crowd_stats))     # B25R1-020: crowd ticks, pastimes ended, protected over the target
 	print("events: %s" % JSON.stringify(s.events))
 	print("ledger flows: %s" % JSON.stringify(s.ledger.flows))
 	print("LEAKS: currency %d; items %s; deposits %s; animals %s" % [s.currency.leak, JSON.stringify(s.ledger.items),

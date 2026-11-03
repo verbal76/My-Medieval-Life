@@ -164,6 +164,13 @@ func work_look(n: NPC) -> Array:
 ## when a walk ends or an act finishes before it; a plan that BEGINS with a work step inherited the previous step's
 ## spent (<= 0) count and ended on the next tick, so decide() ran again every tick (hundreds of times a day for a
 ## producer holding unsold goods). This loads the wait's own minutes, so the wait lasts as long as the plan says.
+## B25R1-020: a pastime (resting, taking the air, play, company), the only kind of step Presence.crowd_step may end early
+## when a crowd stands round a player's view. The step is otherwise unchanged.
+func loose(s: Dictionary) -> Dictionary:
+	s.loose = true
+	return s
+
+
 func wait(n: NPC, minutes: float) -> Dictionary:
 	n.work_left = minutes
 	return work(minutes, "", {}, "idle")
@@ -284,7 +291,7 @@ func _decide(n: NPC) -> String:
 	if n.role == "child":
 		var spot := rest_cell(n) if w.rng.randf() < 0.6 else Vector2i(w.map.data.spawns.player[0], w.map.data.spawns.player[1])
 		n.doing = "playing"
-		n.plan = [go(wander_cell(spot, 6), 0.9), work(w.rng.randf_range(20, 60), "", {}, "idle")]
+		n.plan = [go(wander_cell(spot, 6), 0.9), loose(work(w.rng.randf_range(20, 60), "", {}, "idle"))]
 		return "child_play"
 	if n.role == "elder":
 		if _elder_provides(n) and _plan_provision(n):     # X20-FIREWOOD: the household's firewood and grain, from an elder's purse
@@ -295,7 +302,7 @@ func _decide(n: NPC) -> String:
 			return "elder_chapel"
 		var spot := rest_cell(n) if w.rng.randf() < 0.7 else w.station_use(w.stations_of("well")[0])
 		n.doing = "taking the air"
-		n.plan = [go(wander_cell(spot, 3), 0.6), work(w.rng.randf_range(40, 90), "", {}, "idle")]
+		n.plan = [go(wander_cell(spot, 3), 0.6), loose(work(w.rng.randf_range(40, 90), "", {}, "idle"))]
 		return "elder_air"
 	# hired to carry building materials (or carrying for their own new house): the day's work
 	if h >= WORK_START and h < WORK_END and w.construction.plan_helper(n):
@@ -1045,7 +1052,7 @@ func _plan_evening(n: NPC, h: float) -> void:
 		n.plan = [go(wander_cell(counter + Vector2i(-6, 4), 3)), work(w.rng.randf_range(30, 70), "drink", {}, "idle")]
 		return
 	n.doing = "resting"
-	n.plan = [go(wander_cell(rest_cell(n), 4), 0.8), work(w.rng.randf_range(20, 50), "", {}, "idle")]
+	n.plan = [go(wander_cell(rest_cell(n), 4), 0.8), loose(work(w.rng.randf_range(20, 50), "", {}, "idle"))]
 
 
 ## CRT-11 (owner: "if the single character has extra money and resources it should make them want to spend
@@ -1089,7 +1096,7 @@ func _plan_seek_company(n: NPC) -> bool:
 				break
 	n.doing = "spending time with %s" % who.name
 	n.plan.append(go(wander_cell(who.cell(), 1), 0.8))
-	n.plan.append(work(w.rng.randf_range(40, 90), "", {}, "idle"))
+	n.plan.append(loose(work(w.rng.randf_range(40, 90), "", {}, "idle")))
 	w.stat("evenings_seeking_company")
 	return true
 

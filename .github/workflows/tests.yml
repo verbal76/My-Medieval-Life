@@ -115,6 +115,7 @@ jobs:
           res://tests/settlement_crafter_test.gd
           res://tests/region_geography_test.gd
           res://tests/journey_test.gd
+          res://tests/presence_test.gd        # B25R1-019/020: live range, observation neutrality, a traveller met on the road
           res://tests/region_travel_test.gd
           res://tests/road_types_test.gd
           res://tests/road_wear_test.gd

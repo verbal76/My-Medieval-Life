@@ -133,7 +133,7 @@ var outlaw_gone_day := -1            # BANDIT-RETURN: the day the last bandit di
 var shared_farming_start := false    # FARM-YIELD-D1: the shared field model's seed corn has been given (world setup or once on load); saved when set
 var sage_id := -1
 var reeve_id := -1
-var detail_radius := 34.0          # tiles: NPCs nearer the player get every-frame updates
+var detail_radius := 34.0          # tiles: how near a wolf notices a villager (Fauna._hunt_people). B25R1-019: no longer the update tier (Presence)
 var brain
 var chests: Chests            # PL2-002: storage units, locks and lockpicking
 var carts: Carts              # B14: handcarts set down in the world (pulled storage)
@@ -368,9 +368,44 @@ func is_night() -> bool:
 
 # ---------------------------------------------------------------- update ---------------------
 ## Advance the world by `real_dt` seconds of play.
+## B25R1-019: the world's rules (the clock, the hours, every villager, the animals) run on ONE fixed tick of TICK real seconds,
+## whoever watches: a frame adds its time to `tick_left` and the world takes as many whole ticks as that holds. The players
+## (their own walking, hunger, stamina, actions) stay per frame. Presence then says what is live (drawn) and what is calculated;
+## nothing in the rules reads it, so observation changes no decision, no transaction and no draw of `rng`.
+const TICK := 0.5
+var tick_left := 0.0               # real seconds not yet ticked (under TICK); not saved
+var ticks := 0                     # ticks taken since this World was made (the view interpolates between them); not saved
+var presence := Presence.new(self)
+
+
 func update(real_dt: float) -> void:
 	CapabilityHook.bind(experience)          # X18: the hook reads THIS world's record (several worlds may exist in one process)
+	tick_left += real_dt
+	while tick_left >= TICK - 0.000001:
+		tick_left = maxf(0.0, tick_left - TICK)
+		_tick(TICK)
 	var gm: float = real_dt * float(GameData.b("game_minutes_per_second"))
+	Atlas.note_position(self, _host_player)              # REGION-NAV-01: the region a player sees and the places they reach
+	for id in _guests:
+		if not _guests[id].away:
+			Atlas.note_position(self, _guests[id])
+	var t := Time.get_ticks_usec() if profiling else 0
+	carts.update(real_dt)
+	if profiling:
+		t = _prof("carts", t)
+	_update_player(real_dt, gm)
+	if profiling:
+		t = _prof("player", t)
+	presence.refresh()
+	presence.classify()
+	if profiling:
+		_prof("presence", t)
+
+
+## One tick of the world's rules (B25R1-019): the same for live and calculated villagers and animals.
+func _tick(dt: float) -> void:
+	ticks += 1
+	var gm: float = dt * float(GameData.b("game_minutes_per_second"))
 	minutes += gm
 	if map.overworld != null:
 		map.overworld.clock = minutes
@@ -381,35 +416,21 @@ func update(real_dt: float) -> void:
 		_on_hour(h % 24)
 		if profiling:
 			t = _prof("hourly (incl. daily)", t)
-	Atlas.note_position(self, _host_player)              # REGION-NAV-01: the region a player sees and the places they reach
-	for id in _guests:
-		if not _guests[id].away:
-			Atlas.note_position(self, _guests[id])
 	if judgment != null:
 		judgment.gossip_tick(int(minutes))   # PROSPECTIVE (PROS-19): a few of the hour's queued meetings are told each tick
+	presence.crowd_step()                # B25R1-020: the owner's one observation exception: a crowd round the view may end a pastime early
 	for n: NPC in npcs:
 		if not n.alive:
 			continue
-		var near := nearest_player_distance(n.pos) < detail_radius
-		if near:
-			_update_npc(n, real_dt)
-		else:
-			# Abstract tier: same rules, updated in larger scheduled steps.
-			n.tick_acc += real_dt
-			if n.tick_acc >= 0.5:
-				_update_npc(n, n.tick_acc)
-				n.tick_acc = 0.0
+		n.trail.resize(0)
+		n.trail.append(n.pos)
+		_update_npc(n, dt)
+		n.trail.append(n.pos)
 	if profiling:
 		t = _prof("villagers (all)", t)
-	fauna.update(real_dt)
+	fauna.update(dt)
 	if profiling:
-		t = _prof("fauna", t)
-	carts.update(real_dt)
-	if profiling:
-		t = _prof("carts", t)
-	_update_player(real_dt, gm)
-	if profiling:
-		_prof("player", t)
+		_prof("fauna", t)
 
 
 ## PERF-02: add the time since `t0` (microseconds) to subsystem `key`; returns now.
