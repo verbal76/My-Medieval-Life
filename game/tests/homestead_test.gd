@@ -131,12 +131,10 @@ func _init() -> void:
 			var cc: Dictionary = _mine(w2.homesteads)[0]
 			if not claimed and str(cc.status) == "claimed":
 				claimed = true
-				var near_d := 1e9                   # the first of them to reach it claims it (Homesteads._arrive)
-				for mid in cc.members:
-					var mm: NPC = w2.npc(int(mid))
-					if mm != null:
-						near_d = minf(near_d, mm.cell().distance_to(Homesteads.step_of(cc)))
-				check(near_d < 20.0, "the land is claimed only once they have walked there (%s from the door)" % near_d)
+				# the first of them to reach it claims it (Homesteads._arrive), standing there (they may be off again within the hour)
+				var near_d := Vector2i(int(cc.claimed_at[0]), int(cc.claimed_at[1])).distance_to(Homesteads.step_of(cc)) if cc.has("claimed_at") else 1e9
+				check(near_d < 20.0, "the land is claimed only once they have walked there (%s from the door; members %s at %s, door %s, counts %s)" % [near_d, cc.members,
+					cc.members.map(func(m): return w2.npc(int(m)).cell()), Homesteads.step_of(cc), w2.homesteads.counts])
 				check(JSON.stringify(cc.site.cost) == JSON.stringify(_ints(w2.construction.cost_of("house"))), "the house is the village's house, at its cost %s" % cc.site.cost)
 				var fr := o.homes.filter(func(hm) -> bool: return str(hm.id) == str(cc.id))
 				check(fr.size() == 1 and str(fr[0].stamp) == "", "its frame stands in the overworld")

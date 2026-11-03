@@ -346,8 +346,8 @@ func _weigh_runaway(n: NPC, r: Dictionary, little: bool, displaced: bool) -> Str
 	JudgmentLive.on_news(w, "ran_away", "npc:%d" % n.id, [], n.pos)    # the family knows; the rest hear it told
 	_rec("runaway_departed", {"person": n.id, "origin": World.hh_ref(from), "destination": {"seek_help": World.hh_ref(help_h), "run_settlement": sid,
 		"seek_band": "band", "survive_alone": "alone", "work_home": "home"}.get(out, "")})
-	_rec("runaway_outcome", {"person": n.id, "action": {"seek_help": "sheltered", "work_home": "employed", "run_settlement": "relocated", "survive_alone": "independent",
-		"seek_band": "pending"}.get(out, out)})
+	if out in ["seek_help", "work_home", "survive_alone"]:          # what happens at once; the road's and the band's outcomes when they happen
+		_rec("runaway_outcome", {"person": n.id, "action": {"seek_help": "sheltered", "work_home": "employed", "survive_alone": "independent"}[out]})
 	match out:
 		"seek_help":
 			Guardianship.move(w, n, help_h, "refuge")
@@ -359,6 +359,7 @@ func _weigh_runaway(n: NPC, r: Dictionary, little: bool, displaced: bool) -> Str
 				w.note("%s %s runs away from home, down the road to %s." % [n.name, n.family, w.map.overworld.site(sid).name])
 			else:
 				runaways[str(n.id)].outcome = "stay"
+				_rec("runaway_outcome", {"person": n.id, "action": "returned", "reason": "no_route"})
 		"survive_alone":
 			_found_alone(n)
 		"seek_band":
@@ -413,6 +414,7 @@ func at_site(n: NPC) -> bool:
 	Migration._gone(w, s, ms, load_, null, "hunger")
 	s.note("%s arrives from the village, a runaway, and is taken into a household." % n.name)
 	_count("runaway_arrived_settlement")
+	_rec("runaway_outcome", {"person": n.id, "action": "relocated", "destination": "settlement:" + s.id})
 	return true
 
 
@@ -493,6 +495,8 @@ func _recruit_answer(n: NPC) -> String:
 		_:
 			w.note("The bandits send %s %s away." % [n.name, n.family])
 			n.plan.clear()
+			if runaways.has(str(n.id)):
+				_rec("runaway_outcome", {"person": n.id, "action": "returned", "reason": "band_rejected"})
 	return ans
 
 

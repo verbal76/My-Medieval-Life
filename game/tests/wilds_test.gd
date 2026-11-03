@@ -285,6 +285,27 @@ func _init() -> void:
 	check(not bool(sw.done) and w2.wilds.loose_well_goods().is_empty() and w2.wilds.wells_near(wcell + Vector2i(50, 50), 0, false).size() == 1, "J: a settlement's well registered, being dug")
 	check(not w2.wilds.pen_of_claim(bc2).is_empty(), "J: the claim's pen kept")
 	check(_band(w2).size() == _band(w).size(), "J: every member kept")
+	# ---- K: the player's well on their own claim
+	var pl := w2.player
+	var site := w2.homesteads.find_site(w2.npcs[10], false, 999)
+	pl.pos = Vector2(Vector2i(site.lay.door) + Vector2i(0, 1)) + Vector2(0.5, 0.5)
+	var pwhy := w2.homesteads.player_claim(pl)
+	var pc: Dictionary = w2.homesteads.claims[-1]
+	if pwhy == "":
+		w2.homesteads._finish(pc)
+		pl.pos = Vector2(Homesteads.step_of(pc) + Vector2i(3, 1)) + Vector2(0.5, 0.5)
+		var kinds := w2.wilds.player_targets(pl, pl.pos).map(func(e) -> String: return str(e.kind))
+		check(kinds.has("wild_well_mark") and w2.wilds.player_well(pl, "wild_well_mark", str(pc.id)) == "", "K: the player marks out a well on their own claim")
+		var pwl: Dictionary = w2.wilds.work_of(pc, "well")
+		check(w2.wilds.player_well(pl, "wild_well", str(pwl.id)) != "", "K: with nothing in the pack nothing is delivered")
+		for id in pwl.need:
+			pl.inv.add(str(id), int(pwl.need[id]))
+		check(w2.wilds.player_well(pl, "wild_well", str(pwl.id)) == "" and (pwl.need as Dictionary).is_empty(), "K: the player brings its stone and logs")
+		for i in 20:
+			w2.wilds.player_well(pl, "wild_well", str(pwl.id))
+		check(bool(pwl.done) and w2.wilds.source_of(pc) != Wilds.NONE, "K: dug by the player's work: the well stands")
+	else:
+		check(false, "K: a claim for the player (%s)" % pwhy)
 	var r1 := World.new()
 	r1.setup(VillageMap.load_default(), 5)
 	var r2 := World.new()

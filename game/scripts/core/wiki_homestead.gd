@@ -46,6 +46,7 @@ static func add_pages(w: Wiki) -> void:
 			"A well takes %s, carried to the spot, and then a long day's digging." % ", ".join(wids.map(func(id): return "%d %s" % [int(well[id]), GameData.item_name(str(id)).to_lower()])),
 			"Somebody of the household walks to the water and fetches it; the household keeps a little in store.",
 			"A day without water hurts everybody who went without, and a homestead that stays dry for several days is given up."]),
+		Wiki.p("On your own homestead you can dig a well too: stand on your claim's land beside the house and Use Mark out a well here, bring its stone and logs, then Use it again and again to dig."),
 		Wiki.links(["sys:homesteads", "sys:leaving_home"])], "", "water well stream drink homestead thirst")
 	w.add_page("sys:outlaw_camp", "The bandits' camp in the wild", "systems", [
 		Wiki.p("The bandits do not live by the village. They are a household of their own at a hidden camp out in the open country, off the roads and in cover. You only find it when you come close."),
@@ -56,4 +57,4 @@ static func add_pages(w: Wiki) -> void:
 			"The camp is defended by the people who live there: they fight or flee. Whatever is in its stores, or on its people, is really there: take it and it is theft.",
 			"Children born at the camp grow up in the band; at coming of age they may leave for kin in the village."]),
 		Wiki.links(["sys:leaving_home", "sys:wild_water", "sys:homesteads"])], "", "bandit camp outlaw raid hideout smith wild")
-	w.add_page("todo:homestead_more", "More for a homestead", "notyet", [Wiki.note("Not in the game yet. Your own homestead has only its house and its field: you cannot build its well, pen or workshop yourself yet, no extra rooms or lofts go up out in the country, and no hired helpers carry materials there. Streams are not yet in the open country; until they come, every homestead digs a well.")], "", "not implemented planned homestead")
+	w.add_page("todo:homestead_more", "More for a homestead", "notyet", [Wiki.note("Not in the game yet. Your own homestead has only its house and its field: you cannot build its pen or workshop yourself yet, no extra rooms or lofts go up out in the country, and no hired helpers carry materials there. Streams are not yet in the open country; until they come, every homestead digs a well.")], "", "not implemented planned homestead")

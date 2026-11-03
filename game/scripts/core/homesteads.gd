@@ -540,6 +540,8 @@ func player_targets(p: PlayerState, probe: Vector2, facing_up: bool) -> Array:
 				if d < 0.9:
 					out.append({"d": d, "kind": "rest", "label": "Your bed: sleep"})
 					break
+	if w.wilds != null:
+		out.append_array(w.wilds.player_targets(p, probe))     # B25R1-Q3: a well on the player's own claim
 	if facing_up and player_claim_refusal(p) == "":
 		var cost: Dictionary = w.construction.cost_of("house")
 		var ids: Array = cost.keys()
@@ -1157,6 +1159,8 @@ func plan(n: NPC) -> void:
 		return
 	if hr >= NPCBrain.WORK_START and hr < NPCBrain.WORK_END and w.wilds != null and w.wilds.plan_work(n, c):
 		return                                          # water, the claim's works, its animals, its workshop
+	if hr >= NPCBrain.WORK_START and hr < NPCBrain.WORK_END and w.wilds != null and w.wilds.plan_hunt(n, c):
+		return                                          # game in the open country round the claim, when food runs low (or a hunter's trade)
 	if hr >= NPCBrain.WORK_START and hr < NPCBrain.WORK_END and _plan_livelihood(n, c):
 		return
 	_idle(n, home, "about the homestead")
@@ -1241,7 +1245,7 @@ func _plan_livelihood(n: NPC, c: Dictionary) -> bool:
 			n.doing = "breaking stone"
 			n.plan = [b.go(b.beside(rock, n.cell(), 0, true)), b.work(float(GameData.b("mine_minutes")), "mine", {"x": rock.x, "y": rock.y}, "work", rock)]
 			return true
-	if str(c.status) == "built" and _plan_field(n, c, trade):
+	if str(c.status) != "intended" and _plan_field(n, c, trade):      # (food is grown from the claiming on, not only once the house stands)
 		return true
 	if n.inv.has("axe"):
 		var t := _near_tree(c, n)
@@ -1399,6 +1403,8 @@ func _near_boulder(c: Dictionary, n: NPC) -> Vector2i:
 func _wants_trip(n: NPC, c: Dictionary) -> bool:
 	if int(c.get("trip_day", -1)) == w.day():
 		return false
+	if w.wilds != null and w.wilds.wants_water_trip(c):
+		return true                                     # no water of their own yet: to the village's well
 	var cf := cfg()
 	var h := n.household
 	if w.brain.household_food_days(h) < float(cf.food_low_days) and n.coins >= 3:
@@ -1506,7 +1512,7 @@ func _errand(n: NPC, c: Dictionary, trip: Dictionary) -> bool:
 			n.plan = [b.go(b._workplace_cell(v)), b.doit("buy_food", {"vendor": v.id, "pantry": true})]
 			return true
 	var trade_s := str((c.trades as Dictionary).get(str(n.id), c.trade))
-	if str(c.status) == "built" and trade_s in ["farmer", "herder", "manor_hand"] and _seed_in(w.households[n.household].pantry) == "" and not tried.has("seed"):
+	if str(c.status) != "intended" and (trade_s in ["farmer", "herder", "manor_hand"] or w.brain.household_food_days(n.household) < float(cf.food_low_days)) and _seed_in(w.households[n.household].pantry) == "" and not tried.has("seed"):
 		tried.seed = true
 		for sv: NPC in w.npcs:
 			if sv.alive and sv != n and not away(sv) and not w.asleep(sv) and w.farm.sells_seed(sv):
@@ -1782,6 +1788,7 @@ func _arrive(n: NPC, c: Dictionary) -> void:
 		n.plan.clear()
 		return
 	_mark_site(c)
+	c.claimed_at = [n.cell().x, n.cell().y]             # where the claimant stood when claiming (on the land)
 	clear_ground(c)
 	c.stage = "build"
 	if w.wilds != null:

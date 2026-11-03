@@ -128,6 +128,47 @@ func carried_home(n: NPC, c: Dictionary) -> void:
 	_rec("water_drawn", {"claim": str(c.id), "person": n.id, "units": got, "source": "village_well"})
 
 
+## Homesteads._wants_trip: a claim with no stream and no well dug yet, its store under a day's drinking: water is fetched from
+## the village's well on a trip (carried_home).
+func wants_water_trip(c: Dictionary) -> bool:
+	if source_of(c) != NONE:
+		return false
+	var h := World.ref_id(str(c.owner))
+	return h >= 0 and h < w.households.size() and int(c.get("water", 0)) < w.brain._members(h).size() * int(cfg().water_per_person)
+
+
+## Hunting round the claim (the village's hunt act, on the open country's game adopted into Fauna round lived-in claims, Wilds
+## .country_hour): by a hunter's trade, or by anyone armed when the household's food runs low. The kill's meat and hide go home
+## (stow). True when it laid the plan.
+func plan_hunt(n: NPC, c: Dictionary) -> bool:
+	if n.role == "child":
+		return false
+	var trade := str((c.trades as Dictionary).get(str(n.id), c.trade))
+	var armed := n.inv.has("copper_sword") or n.inv.has("iron_sword") or n.inv.has("steel_sword") or n.inv.has("bow") or n.inv.has("rusty_sword")
+	if not (trade == "hunter" or (armed and w.brain.household_food_days(n.household) < float(Homesteads.cfg().food_low_days))):
+		return false
+	if not armed and trade != "hunter":
+		return false
+	var home := Vector2(Homesteads.step_of(c)) + Vector2(0.5, 0.5)
+	var best: Animal = null
+	var bd := float(cfg().country_radius) * 2.0
+	for a: Animal in w.fauna.animals:
+		if not a.alive or a.area != Fauna.COUNTRY or not a.wild() or not bool(a.spec().get("game", true)) or w.fauna.claims.has(a.id) or bool(a.spec().get("people", false)):
+			continue
+		var d := a.pos.distance_to(home)
+		if d < bd or (is_equal_approx(d, bd) and best != null and a.id < best.id):
+			bd = d
+			best = a
+	if best == null:
+		return false
+	w.fauna.claims[best.id] = n.id
+	var br: NPCBrain = w.brain
+	n.doing = "hunting in the country round the claim"
+	n.plan = [br.go(Vector2i(best.pos.floor()), 1.1), br.work(20.0, "hunt", {"animal": best.id}, "work"), br.doit("homestead", {"step": "stow"})]
+	_count("hunts")
+	return true
+
+
 ## Each dawn: the residents drink (water_per_person each, from the claim's store); short, they go thirsty (thirst_damage),
 ## recorded. Returns the units short.
 func _drink(c: Dictionary, members: Array) -> int:
@@ -270,6 +311,58 @@ func _well_ids() -> Array:
 ## A claim's works: its wells (the registry's) then its other works.
 func _all_works(c: Dictionary) -> Array:
 	return wells_of("claim:" + str(c.get("id", ""))) + (c.get("works", []) as Array)
+
+
+## The player's well on their own claim (B25R1-Q3, "a well on any claim"): marked out where they stand on their claim's land, then
+## the same site: stone and logs from the pack (deliver_well), then digging, player_dig_minutes a Use. Target entries for
+## Homesteads.player_targets.
+func player_targets(p: PlayerState, probe: Vector2) -> Array:
+	var out := []
+	var mine := w.player_ref(p)
+	var cell := Vector2i(p.pos.floor())
+	for c in _hs().claims:
+		if str(c.owner) != mine or str(c.get("building", "")) == "":
+			continue
+		var wl := work_of(c, "well")
+		if wl.is_empty():
+			if Homesteads.rect_of(c).has_point(cell) and not Homesteads.house_of(c).grow(1).has_point(cell) and well_at(cell).is_empty():
+				out.append({"d": 1.5, "kind": "wild_well_mark", "id": str(c.id), "label": "Mark out a well here (%s)" % _need_text(_cost("well"))})
+			continue
+		if bool(wl.done):
+			continue
+		var at := Vector2(int(wl.cell[0]), int(wl.cell[1])) + Vector2(0.5, 0.5)
+		var d := at.distance_to(probe)
+		if d < 1.6:
+			var lab := "Your well: bring %s" % _need_text(wl.need) if not (wl.need as Dictionary).is_empty() else "Dig your well (about %d minutes of digging left)" % ceili(float(wl.labour))
+			out.append({"d": d, "kind": "wild_well", "id": str(wl.id), "label": lab})
+	return out
+
+
+static func _need_text(need: Dictionary) -> String:
+	var ids: Array = need.keys()
+	ids.sort()
+	return ", ".join(ids.map(func(id): return "%d %s" % [int(need[id]), GameData.item_name(str(id)).to_lower()]))
+
+
+## The player's verbs at a well target. "" done (and what happened is in the well's record), else why not.
+func player_well(p: PlayerState, kind: String, id: String) -> String:
+	if kind == "wild_well_mark":
+		var c := _hs().claim(id)
+		if c.is_empty() or str(c.owner) != w.player_ref(p) or not work_of(c, "well").is_empty():
+			return "You cannot mark out a well here."
+		add_well("claim:" + id, Vector2i(p.pos.floor()), false)
+		if not c.has("water_src"):
+			c.water_src = {"source": "well", "cell": [floori(p.pos.x), floori(p.pos.y)]}
+		return ""
+	var wl := well(id)
+	if wl.is_empty() or bool(wl.done):
+		return "There is no well to work on here."
+	if not (wl.need as Dictionary).is_empty():
+		if not deliver_well(id, p.inv, w.player_ref(p)):
+			return "You carry none of what it needs: %s." % _need_text(wl.need)
+		return ""
+	dig_well(id, float(cfg().player_dig_minutes))
+	return ""
 
 
 # ---------------------------------------------------------------- works (well, pen, workshop) ----
@@ -1424,3 +1517,4 @@ func load_dict(d: Dictionary) -> void:
 	var bc := band_claim()
 	if not bc.is_empty():
 		w.bandit_camp = Homesteads.step_of(bc)
+	_hs()._sync_overworld()                             # (the wells are drawn with the claims: Homesteads loaded before them)

@@ -233,7 +233,7 @@ func test_nobody_can_take() -> void:
 	var before := int(w.stats.get("orphans_to_clan", 0))
 	var carried0: int = kid.inv.total() + w.households[f[0]].pantry.total()
 	var tier := Guardianship.place(w, kid)
-	check(tier == "clan" and kid.clan == "bandit" and kid.household == -1, "with no household able, the child joins the bandit clan (FAM-07, OD-11) (%s)" % tier)
+	check(tier == "clan" and kid.clan == "bandit" and kid.household == (w.wilds.band_household() if w.wilds != null else -1), "with no household able, the child joins the bandit clan (FAM-07, OD-11) (%s)" % tier)
 	check(int(w.stats.get("orphans_to_clan", 0)) == before + 1, "and the case is counted")
 	check(kid.alive and kid.role == "child" and kid.name == name0 and kid.family == family0 and absf(Life.npc_age(w, kid) - age0) < 0.01, "the child keeps name, age and role: still a child")
 	check(kid.mother == mom.id and mom.children.has(kid.id), "and the family tree")

@@ -3709,6 +3709,15 @@ func _use() -> void:
 		"homestead_claim":                                 # B25R1-010: open country claimed, a house marked out (Homesteads)
 			var why: String = world.homesteads.player_claim(p)
 			ui.message(why if why != "" else "You claim this land and mark out a house. Bring its materials to the frame: %s." % Homesteads.need_text(world.homesteads.claims[-1]), 5.0, "" if why != "" else "property")
+		"wild_well_mark", "wild_well":                    # B25R1-Q3: the player's well on their own claim (Wilds)
+			var whyw: String = world.wilds.player_well(p, str(target.kind), str(target.id))
+			if whyw != "":
+				ui.message(whyw)
+			elif str(target.kind) == "wild_well_mark":
+				ui.message("You mark out a well. Bring its stone and logs, then dig.", 4.0, "property")
+			else:
+				var wl: Dictionary = world.wilds.well(str(target.id))
+				ui.message("Your well is dug: water for the homestead." if bool(wl.get("done", false)) else "You work at the well.", 3.0, "property")
 		"homestead_site":
 			var hc: Dictionary = world.homesteads.claim(str(target.id))
 			var why: String = world.homesteads.player_deliver(p, str(target.id))
