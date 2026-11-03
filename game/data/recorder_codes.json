@@ -173,7 +173,14 @@
     "water_drunk": ["wilds", "consumption", "production", 0, "water drunk (needs: units)"],
     "band_relocated": ["outlaw", "clan", "outlaw", 0, "the band moved its home (origin, destination: a concealed claim)"],
     "band_migrated_on_load": ["outlaw", "clan", "outlaw", 0, "an older save's band moved to its overworld claim on load (the same people)"],
-    "unmapped_event": ["lifecourse", "transition", "lifecourse", 0, "a system's event the recorder has no mapping for (detail: its kind; needs: its data): listed in the exception report"]
+    "unmapped_event": ["lifecourse", "transition", "lifecourse", 0, "a system's event the recorder has no mapping for (detail: its kind; needs: its data): listed in the exception report"],
+    "water_source_selected": ["wilds", "site", "settlement", 4, "a settlement or homestead chose its water (source stream or well, cell, distance; availability in needs)"],
+    "water_unavailable": ["wilds", "consumption", "production", 0, "a settlement's water source could not be used (dry, frozen, too far, blocked; reason)"],
+    "settlement_attempt_failed": ["wilds", "site", "settlement", 4, "a settlement attempt failed before a claim (reason: no_water, terrain, resources)"],
+    "bridge_built": ["roads", "paving", "road", 0, "a bridge built over water (cell, by, materials)"],
+    "bridge_used": ["travel", "journey", "journey", 0, "a traveller crossed a bridge (cell; the journey's object)"],
+    "route_crossing": ["travel", "journey", "journey", 0, "a route was planned across water (chosen: bridge, ford, detour; alternatives with lengths)"],
+    "travel_blocked_by_water": ["travel", "journey", "journey", 0, "a journey or route failed because of water (outcome failed; reason no_crossing, flooded)"]
   },
   "chronicle_fields": {
     "who": "the person: an NPC, a PlayerState, a person id (int) or a ref string; null for world",

@@ -91,6 +91,8 @@ def story():
     r.add(4, "recruit_joined", "p:11", ctx={"source": "runaway", "faction_before": "village", "faction": "clan:bandit"}, place="clan:bandit")
     r.add(5, "death", "p:12", detail="cause=slain; role=bandit job= household=-1 age=30.0; faction=clan:bandit")
     r.add(6, "unmapped_event", "p:5", detail="life_event:something_new")
+    r.add(2, "water_source_selected", "p:5", ctx={"source": "stream"}, needs={"distance": 6}, object="homestead:hs1", place="homestead:hs1")
+    r.add(6, "settlement_attempt_failed", "p:9", reason="no_water", outcome="failed")
     census(r, 9, 3)
     return r
 
@@ -145,6 +147,13 @@ class FlightLivesTest(unittest.TestCase):
     def test_unmapped_in_exceptions(self):
         data, _ = self.build(story())
         self.assertTrue(any(x["kind"] == "unmapped_event" and "something_new" in x["observation"] for x in data["exceptions"]))
+
+    def test_water(self):
+        data, d = self.build(story())
+        self.assertTrue(any(x["kind"] == "settlement_attempt_failed" and "no_water" in x["observation"] for x in data["exceptions"]))
+        self.assertEqual(data["homesteads"]["homestead:hs1"]["water"], "stream at 6 tiles")
+        self.assertIn("settlement_attempt_failed", (d / "lives" / "B_migration_ledger.csv").read_text())
+        self.assertIn("no_water", (d / "lives" / "D_homestead_ledger.md").read_text())
 
     def test_compare(self):
         a = self.tmp / "a"

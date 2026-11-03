@@ -212,7 +212,8 @@ MIG_KINDS = {"left_village": "left the village", "returned_to_village": "returne
              "runaway_departed": "ran away", "runaway_outcome": "runaway outcome", "recruit_joined": "joined a clan",
              "bandit_departed": "left a clan", "bandit_reintegrated": "reintegrated", "faction_changed": "faction changed",
              "settlement_occupancy": "settlement occupancy", "household_formed": "formed a household", "guardianship_placement": "placed with a household",
-             "guardianship_clan": "placed with the clan"}
+             "guardianship_clan": "placed with the clan", "settlement_attempt_failed": "a settlement attempt failed (B25R1-017)",
+             "travel_blocked_by_water": "a journey failed at water (B25R1-017)"}
 
 
 def migration_ledger(lv):
@@ -316,7 +317,7 @@ def homestead_ledger(lv):
     hs = {}
     people_track = {}
     for e in lv.k(*HS_STAGES, "settlement_created", "settlement_construction", "settlement_occupancy", "settlement_affiliation", "settlement_abandoned",
-                  "settlement_discovered", "settlement_state", "wild_production", "wild_consumption", "wild_trade", "wild_shortage", "livestock_change", "wild_craft", "raid"):
+                  "settlement_discovered", "settlement_state", "water_source_selected", "water_unavailable", "wild_production", "wild_consumption", "wild_trade", "wild_shortage", "livestock_change", "wild_craft", "raid"):
         key = e["object"] if str(e["object"]).startswith("homestead:") else (e["settlement"] if str(e["settlement"]).startswith("homestead:") else "")
         if e["actor"].startswith("p:") and ctx(e, "track"):
             people_track[e["actor"]] = ctx(e, "track")
@@ -356,6 +357,10 @@ def homestead_ledger(lv):
             h["trade_events"] += 1
         elif sub == "raid":
             h["raids"] += 1
+        elif sub == "water_source_selected":
+            h["water"] = "%s at %s tiles" % (ctx(e, "source") or need(e, "source", "?"), need(e, "distance", "?"))
+        elif sub == "water_unavailable":
+            h["water_unavailable"] = h.get("water_unavailable", 0) + 1
         elif sub == "settlement_affiliation":
             h["affiliations"].append((e["day"], ctx(e, "faction_before"), ctx(e, "faction")))
     for h in hs.values():
@@ -421,7 +426,9 @@ def economic_ledger(lv, run_status):
         for s in e["sc"]:
             if str(s[1]).startswith("item:") and num(s[2]) is not None and num(s[3]) is not None:
                 wild_items["%s|%s" % (e["subtype"], s[1][5:])] += num(s[3]) - num(s[2])
-    roads = Counter(e["subtype"] for e in lv.k("road_formed", "road_cleared", "road_wear", "road_paved", "road_repaired"))
+    roads = Counter(e["subtype"] for e in lv.k("road_formed", "road_cleared", "road_wear", "road_paved", "road_repaired", "bridge_built", "bridge_used", "travel_blocked_by_water"))
+    for e in lv.k("route_crossing"):
+        roads["route_crossing:" + str((e["dec"] or (ctx(e, "action") or "?",))[0])] += 1
     for e in lv.k("road_faded", "road_overgrown"):
         roads[e["subtype"] + "_cells"] += int(need(e, "cells", 0) or 0)
     paving_stone = sum(int(need(e, "stone", 0) or 0) for e in lv.k("road_paved", "road_repaired"))
@@ -491,6 +498,10 @@ def feature_table(lv):
     add("road_paving_repair", cnt(["road_paved", "road_repaired", "road_wear"]), 0, 0, 0, cnt(["road_paved", "road_repaired"]), 0)
     add("landmark_discovery", cnt(["landmark_discovered"]), 0, 0, 0, cnt(["landmark_discovered"]), 0)
     add("player_region_travel", cnt(["travel_destination_set", "travel_refused"]), 0, cnt(["travel_refused"]), cnt(["travel_suspended"]), cnt(["travel_arrived"]), 0)
+    add("water_settlement", cnt(["water_source_selected", "settlement_attempt_failed"]), 0, cnt(["settlement_attempt_failed", "water_unavailable"]), 0,
+        cnt(["water_source_selected"]), 0)
+    add("water_crossings", cnt(["route_crossing", "bridge_used", "travel_blocked_by_water", "bridge_built"]), 0, cnt(["travel_blocked_by_water"]), cnt(["route_crossing"]),
+        cnt(["bridge_used"]), cnt(["bridge_built"]))
     add("orphan_placement", cnt(["guardianship_placement", "guardianship_clan"]), 0, 0, 0, cnt(["guardianship_placement", "guardianship_clan"]), 0)
     return F
 
@@ -732,6 +743,12 @@ def exceptions(lv, feats, bl, hs, rates, econ, run_status, people_check):
             add("save_roundtrip", "%s: the save of day %s loaded into a fresh world and saved again differs in: %s" % (seg["name"], rt.get("day"), ", ".join(rt.get("differ", []))), rt)
     for p in people_check["unaccounted"][:50]:
         add("unaccounted_person", "%s registered in the village, not recorded as dead or gone, and not sampled at the end" % p)
+    for k, n in Counter(e["reason"] or str(need(e, "reason", "?")) for e in lv.k("settlement_attempt_failed")).items():
+        add("settlement_attempt_failed", "%d settlement attempts failed for %s (B25R1-017)" % (n, k))
+    for e in lv.k("travel_blocked_by_water"):
+        add("travel_blocked_by_water", "%s %s: %s" % (when(e), e["actor"], e["reason"] or "water"), {"event": "%d:%s" % (e["sess"], e["id"])})
+    if lv.k("water_unavailable"):
+        add("water_unavailable", "%d times a settlement's water could not be used (%s)" % (len(lv.k("water_unavailable")), dict(Counter(e["reason"] for e in lv.k("water_unavailable")))))
     for k, n in Counter(e["detail"] for e in lv.k("unmapped_event")).items():
         add("unmapped_event", "%d events the recorder has no mapping for: %s" % (n, k))
     if lv.a.unknown_codes:
@@ -888,8 +905,13 @@ def build(run_dir, out_dir, targeted=None, compare_dir=None):
     L += ["## Young-adult safeguard (about 2%% or less of eligible household formations, five-game-year windows of %d days)" % WINDOW_DAYS, ""]
     L += table(["days", "eligible formations", "chose homestead", "completed", "rate", "whole window"], [(r["days"], r["eligible_formations"], r["chose_homestead"], r["completed"],
                "-" if r["rate"] is None else "%.2f%%" % (100 * r["rate"]), r["complete_window"]) for r in rates]) + [""]
-    L += ["## Every homestead (%d)" % len(hs), ""] + table(["id", "founder", "track", "path", "from day", "status", "residents", "years", "sustain ok/failed", "production", "raids", "abandoned"],
-        [(h["id"], "%s %s" % (h["founder"], name_of(lv, h["founder"])), h["track"], h["path"], h["first_day"], h["status"], len(h["residents"]), h["years"],
+    fails = lv.k("settlement_attempt_failed")
+    L += ["## Water and failed settlement attempts (B25R1-017)", "", "Water sources chosen: %s." % (dict(Counter(ctx(e, "source") or str(need(e, "source", "?")) for e in lv.k("water_source_selected"))) or "none recorded"),
+          "Failed settlement attempts by reason: %s." % (dict(Counter(e["reason"] or str(need(e, "reason", "?")) for e in fails)) or "none recorded"),
+          "Water unavailable at a settlement: %d events." % len(lv.k("water_unavailable")), ""]
+    L += table(["day", "person", "reason", "cell"], [(e["day"], e["actor"], e["reason"] or need(e, "reason", ""), need(e, "cell", "")) for e in fails[:100]]) + [""] if fails else []
+    L += ["## Every homestead (%d)" % len(hs), ""] + table(["id", "founder", "track", "path", "from day", "status", "water", "residents", "years", "sustain ok/failed", "production", "raids", "abandoned"],
+        [(h["id"], "%s %s" % (h["founder"], name_of(lv, h["founder"])), h["track"], h["path"], h["first_day"], h["status"], h.get("water", "-"), len(h["residents"]), h["years"],
           "%d/%d" % (h["sustain_ok"], h["sustain_failed"]), ", ".join("%s %s" % (k, round(v, 1)) for k, v in h["production"].most_common(4)), h["raids"],
           "-" if not h["abandoned"] else "day %s %s" % (h["abandoned"]["day"], h["abandoned"]["reason"])) for h in sorted(hs.values(), key=lambda x: (x["first_day"], x["id"]))])
     _write(os.path.join(out_dir, "D_homestead_ledger.md"), "\n".join(L) + "\n")

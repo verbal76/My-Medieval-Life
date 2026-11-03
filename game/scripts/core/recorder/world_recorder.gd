@@ -2205,7 +2205,8 @@ var _claim_of := {}                    # person id -> claim id they live at or s
 ## life_event kinds that are already the vocabulary's own (passed through with their fields)
 const PASS_THROUGH := ["well_built", "water_drawn", "water_drunk", "band_relocated", "band_migrated_on_load", "wild_production", "wild_consumption",
 	"wild_shortage", "sale_refused", "livestock_change", "raid", "raid_defended", "household_formed", "homestead_sustain", "homestead_year",
-	"clan_birth", "clan_member_died", "bandit_reintegrated", "runaway_departed", "runaway_outcome", "faction_changed", "wild_craft", "skill_progress"]
+	"clan_birth", "clan_member_died", "bandit_reintegrated", "runaway_departed", "runaway_outcome", "faction_changed", "wild_craft", "skill_progress",
+	"water_source_selected", "water_unavailable", "settlement_attempt_failed", "bridge_built", "bridge_used", "route_crossing", "travel_blocked_by_water"]
 
 
 static func _flat(data: Dictionary) -> Dictionary:
@@ -2374,6 +2375,8 @@ func life_event(kind: String, data: Dictionary) -> void:
 		_:
 			if PASS_THROUGH.has(kind):
 				out = kind                                      # the vocabulary's own kinds, passed through
+				if kind == "settlement_attempt_failed" and not data.has("outcome"):
+					f["outcome"] = "failed"
 				for k in ["track", "path", "source", "action", "origin", "destination", "household", "faction", "faction_before", "outcome", "reason"]:
 					if data.has(k):
 						f[k] = str(data[k]) if k != "track" else _track(str(data[k]))
