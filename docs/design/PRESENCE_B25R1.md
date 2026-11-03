@@ -191,6 +191,8 @@ work step or journey is ever cut: they are not loose.
 Protected people are counted (`crowd_stats.protected_over_target`) but never moved. If 25 must be present, 25 stay.
 `main.gd` locks the villager the player approaches (`approach`) and the one they are walking up to (`_talk_step`).
 - Counting: only people outdoors count toward the crowd; someone under a roof is not seen.
+- Measured at the market (`presence_shot`, normal zoom): for much of the day more than 18 protected people (traders at their
+  trade) stand round the view. They stay, because the target is soft as the owner set it; it is not a defect.
 
 **Safeguards.**
 - *Hysteresis and cooldown* (above).
@@ -229,5 +231,17 @@ Machine: this cloud container (4 cores), Godot 4.7.2 headless. All numbers are m
   the view plus 4 tiles are drawn and animated.
 - Settlements: the region worker keeps their people as records (34 us per member per day), not as calculated NPCs.
 
-Live-render frame time: (Phase 2 measurement, to be filled in).
+**Live-render frame time** (`presence_shot.gd`).
+- Conditions: xvfb with llvmpipe software GL on this shared, loaded 4-core container, so the absolute times are inflated.
+  These are CPU process times, not GPU times.
+- Scene: the market, day 2 late morning, 110 villagers.
+
+| View | Live villagers | Drawn villagers | Mean process time | 95th percentile |
+|---|---|---|---|---|
+| Normal (x3 zoom) | 22 | 19 | 121 ms | 169 ms |
+| Zoomed out (x1.5) | 53 | 48 | 125 ms | 206 ms |
+| Whole village live (stand-in for the old 34-tile tier's drawing) | 107 | 91 | 196 ms | 396 ms |
+
+- Presence saves about 75 ms a frame here against drawing everyone.
+- Android: projected only, not measured on a device.
 Observation test: (Phase 4, to be filled in).
