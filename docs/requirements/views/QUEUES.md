@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (13)
+## Workers and task branches (12)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -12,7 +12,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | JUICE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | none |  |
-| REGION-NAV-01 | 20 | IN DEVELOPMENT | lead (single worker) | wip/region-nav |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-CAREER-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
@@ -20,7 +19,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (75)
+## Implemented but not tested (77)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -50,6 +49,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | CON-06 | owner decision | INTEGRATED |  |
 | CON-07 | owner decision | INTEGRATED |  |
 | CON-08 | owner decision | INTEGRATED |  |
+| DEV-GOV-01 | unassigned | INTEGRATED |  |
 | DVW-A13 | 20+ | PARTIALLY IMPLEMENTED |  |
 | DVW-A14 | 15 | INTEGRATED |  |
 | DVW-A3 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
@@ -79,6 +79,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | PL2-013 | 20+ | PARTIALLY IMPLEMENTED |  |
 | PL2-014 | 18 | INTEGRATED | Checks and owner playtest only (B18-DP-02/03); no NPC module expansion, no module signs |
 | REC-003 | 15 | PARTIALLY IMPLEMENTED | owner confirms the policy (then CLAUDE.md section 8); aapt2 dump badging on a built APK |
+| REGION-NAV-01 | 20 | PARTIALLY IMPLEMENTED |  |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH |  |
 | SJD-A | 16 | INTEGRATED |  |
 | WDR-001-C | 17 | PARTIALLY IMPLEMENTED |  |

@@ -6,14 +6,14 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 26 |
+| OPEN | 32 |
 | APPROVED | 270 |
 | PROVISIONAL | 2 |
 | SUPERSEDED | 3 |
 | REOPENED | 0 |
 | DEFERRED | 5 |
 
-## Build 20: Living Economy: open, reopened or provisional (6)
+## Build 20: Living Economy: open, reopened or provisional (12)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
@@ -23,6 +23,12 @@ The decision register is the `decision` records of the register. A recommendatio
 | B25-ECON-P4 | Ore imports stall: Garton's quarry stock rose 63 to 175 but its trader had no coins to buy it, so 0 iron ore came to the village in 120 days (2 in a year for seed 2). Options: A keep as an outcome; B the trader carries ore on consignment (paid on sale); C smiths buy from the quarry directly. Recommendation: decide after the final year-long runs; leaning B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | OPEN | no |  | docs/directives/2026-11-02_overnight_autonomous_development_directive.md |
 | B25-ECON-P5 | Village land (fields, trees, game, ore) is fixed while population roughly triples in a year, so unemployment rises with population. Should fields grow with population? Recommendation: no change on present evidence. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | OPEN | no |  | docs/directives/2026-11-02_overnight_autonomous_development_directive.md |
 | CHAPEL-GIVE-14-Q | With the 14-day hardship line now governing chapel food alms, households offer wheat to the chapel only above 14 days of their own food (was 6, goods_keep_days), so food given as alms is not offered back. Accept this change to the giving rule? Options: A accept (recommended: consistent with the 14-day line, prevents give-and-take, keeps donations voluntary and from comfortable households); B keep the 6-day offering line (some households would both receive alms and offer wheat). Implemented provisionally as A at 8b203c5. | OPEN | no |  | docs/directives/2026-11-02_chapel_economic_purpose_correction.md |
+| REGION-NAV-Q1 | Stage structure: keep the eight approved REGION-NAV-01 stages as the only work packages (the lead's a/b/c labels withdrawn, commit labels only), or approve the sub-packages S1a/b, S2a/b/c, S3a/b? | OPEN | yes |  | docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md |
+| REGION-NAV-Q2 | Moved work: accept the site buildings in S2 and the roads-through-sites fix in S3 as recorded moves, or re-attribute them to S1 and reopen S1? | OPEN | yes |  | docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md |
+| REGION-NAV-Q3 | AD-1: settlements at their existing OffMapSettlement.pos (built, one geography with trade distances), or at the approved bearings? | OPEN | yes |  | docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md |
+| REGION-NAV-Q4 | Crafters in S2 and S4: (a) business keepers and the official only (built); (b) also every worker household's head; (c) extend the settlement model to households working on their own account? | OPEN | yes |  | docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md |
+| REGION-NAV-Q5 | S2 trade path: keep the courier edge (books both sides) as an approved deviation, or rework onto SettlementParty.deal as planned? | OPEN | yes |  | docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md |
+| REGION-NAV-Q6 | Next: finish S2's outstanding items (save and load test; crafters per Q4) and S3's three outstanding tests, then report S2 and S3 for review before S4? | OPEN | yes |  | docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md |
 
 ## Build 21: Village Politics: open, reopened or provisional (1)
 

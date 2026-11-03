@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 764 (404 of them still open) |
-| **Open entries now** (rules excluded) | | **563** |
+| Entries added since | | 771 (411 of them still open) |
+| **Open entries now** (rules excluded) | | **570** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (764)
+## Added since the baseline (771)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -242,6 +242,7 @@ None.
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | CTR-04 | Permanent counters are not market stalls: no stall commission on counters without an approved rule | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | DCR-01 | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control | rule | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| DEV-GOV-01 | Development governance: agents make technical decisions within approved requirements; the owner approves scope and sequence (no skipping, moving, merging, splitting, renaming, reordering or deferring work packages, no stage marked complete with criteria outstanding, dependencies raised before the sequence changes) | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
 | DOC-AUTH-01 | Document authority replacement: once the owner explicitly approves and delivers the final revised expansion specification set, it is the sole authoritative current specification; older plans, roadmaps, packets, instructions and registers become historical evidence only; omitted features are not reintroduced (ask if materially ambiguous); code differences are reported, not silently changed; later explicit owner decisions supersede and are folded into the set; no third interpretation. Until then: latest explicit owner decisions and the validated baseline. The switch happens only on final approval, not on a draft. | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | DOC-CONT-01 | Permanent development documentation and AI continuity: one current-state entry point, a chronological development changelog, SHA-bound test evidence with status levels, worker recovery records, an 11-step recovery procedure usable by any assistant | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | DOC-RECON-01 | Documentation reconciliation and owner-decision protection: every expansion (17-27), multiplayer and standalone approved system has a current status document; register statuses corrected from code and test evidence; precedence hierarchy (latest explicit owner decision first); historical documents labelled; missing original sources listed; one authoritative entry point; on the isolated branch wip/requirements-control, not merged into the gameplay baseline without the owner | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
@@ -669,7 +670,13 @@ None.
 | REG-X20-D2 | Off-map settlements: should 'cannot buy a day's food' (hunger migration) also count when there is no food for sale at all, not only when the household lacks coins? In the switches-on run Garton starved holding 68-110 coins with empty stalls after its farmers moved to better-paid trades. | decision | DEFERRED | 20 |
 | REG-X20-D3 | Off-map settlements: should settlement-to-settlement food trade get a live path? The owner's REG-BUY-D1 answer allows it, but road trade carries no food and RegionalMarket is not wired into the live game, so one settlement's surplus never reaches a starving neighbour. | decision | APPROVED | 20 |
 | REG-X20-D4 | Off-map settlements: revisit the deferred circulation question (REG-CIRC-D1) now its prerequisites exist? Settlement traders keep buying from the village and buy little back (netherton paid out 460 coins in 30 days and took in 41), draining treasuries until relief and day labour stop. | decision | DEFERRED | 20 |
-| REGION-NAV-01 | Regional economy, world navigation, envoys and independent inter-village commerce: physical settlements, discovery and world map, NPC travel, envoy surveys with provenance, information network, independent NPC trade over CON-01, regional demand in business decisions, integrity and measurements | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| REGION-NAV-01 | Regional economy, world navigation, envoys and independent inter-village commerce: physical settlements, discovery and world map, NPC travel, envoy surveys with provenance, information network, independent NPC trade over CON-01, regional demand in business decisions, integrity and measurements | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 20 |
+| REGION-NAV-Q1 | Stage structure: keep the eight approved REGION-NAV-01 stages as the only work packages (the lead's a/b/c labels withdrawn, commit labels only), or approve the sub-packages S1a/b, S2a/b/c, S3a/b? | decision | OPEN | 20 |
+| REGION-NAV-Q2 | Moved work: accept the site buildings in S2 and the roads-through-sites fix in S3 as recorded moves, or re-attribute them to S1 and reopen S1? | decision | OPEN | 20 |
+| REGION-NAV-Q3 | AD-1: settlements at their existing OffMapSettlement.pos (built, one geography with trade distances), or at the approved bearings? | decision | OPEN | 20 |
+| REGION-NAV-Q4 | Crafters in S2 and S4: (a) business keepers and the official only (built); (b) also every worker household's head; (c) extend the settlement model to households working on their own account? | decision | OPEN | 20 |
+| REGION-NAV-Q5 | S2 trade path: keep the courier edge (books both sides) as an approved deviation, or rework onto SettlementParty.deal as planned? | decision | OPEN | 20 |
+| REGION-NAV-Q6 | Next: finish S2's outstanding items (save and load test; crafters per Q4) and S3's three outstanding tests, then report S2 and S3 for review before S4? | decision | OPEN | 20 |
 | REL-15-18 | Release authorization for Builds 15 to 18: create and publish each when all its release gates pass (section 4), with the established platforms, naming and procedure; private test builds stay private | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 15 |
 | REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made and documented | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE |  |
 | REL18-DET | Build 18 release gate: Determinism gate re-recorded on Build 18 code (two independent runs identical) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |

@@ -13423,7 +13423,15 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> INTEGRATED",
      "why": "CLAUDE.md section 5b on wip/requirements-control and wip/region-nav; docs/decisions/DEV-GOV-01.md; S2 findings and the work-package register in docs/release/build25_reconciliation/REGION_NAV_WORK_PACKAGES.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "commits + a720fd1",
+     "why": "recorded in this records commit"
     }
+   ],
+   "commits": [
+    "a720fd1"
    ]
   },
   {
