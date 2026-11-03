@@ -142,7 +142,7 @@ ninth regional stage.
 | I5 | Full game loads demo saves unrestricted; legacy saves migrate; Android save export/import | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
 | I6 | Steam promotion: one configured destination; "Coming Soon on Steam" until the owner supplies the page; menus and expiry screen | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
 | I7 | Focused tests (timer, persistence, expiry, compatibility, Steam, demo-equals-full simulation) | DONE (`ca27195`, `8d31017`; demo_test 35/0) |
-| I8 | Six packages from one SHA in parallel jobs; private draft release | RUNNING: `release.yml` run 41624309659 on `c4c3490` (private, build 25), dispatched 2026-11-03 06:03 EST |
+| I8 | Six packages from one SHA in parallel jobs; private draft release | RUNNING: run 41624309659 on `c4c3490` built and verified all six packages, but its simulation gate failed on a stale harness expectation (fixed in `726ceeb`, harness only), so no draft was created. Rerun: release run 41648387967 on `726ceeb`, dispatched 2026-11-03 08:53 EST |
 
 ## Order of work (no new scope)
 

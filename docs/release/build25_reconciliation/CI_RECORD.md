@@ -113,4 +113,7 @@ The campaign finished at 05:58 EST (GitHub Actions 06:05-10:58 UTC). The four se
 - The scenario's description is corrected to match.
 - No game code changed, so the final flight on `c4c3490` stands for `726ceeb`: `git diff --stat c4c3490 726ceeb` shows 1 file, `tools/sim_suite.py`.
 
-**Verification:** `tests/test_sim_gate.py` passes 36 of 36. A local targeted run (`sim_suite --only social_chain_off`) is in progress.
+**Verification:**
+- `tests/test_sim_gate.py` passes 36 of 36.
+- A local targeted run (`sim_suite --only social_chain_off`) reached day 10 of 15 with exact save round trips and 0 claims breaches, then stopped when the session's container restarted. It was not repeated.
+- The release workflow reruns the full gate on the corrected commit, and that is the gate of record: release run 41648387967 on `726ceeb` (private, build 25), dispatched 2026-11-03 08:53 EST.
