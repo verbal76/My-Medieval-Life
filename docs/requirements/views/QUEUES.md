@@ -2,11 +2,12 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (13)
+## Workers and task branches (14)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | B25-CLOSE-01 | 20 | IN DEVELOPMENT | lead (single worker, MML-CONSERVE-01) | wip/b25-farm-phase2 |
+| B25-FINISH-01 | 20 | IN DEVELOPMENT | lead session | wip/region-nav |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
@@ -20,7 +21,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (77)
+## Implemented but not tested (79)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -36,6 +37,8 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-BIZ-D5 | 20 | INTEGRATED |  |
 | B25-BIZ-OWN | 20 | INTEGRATED |  |
 | B25-BUSINESS-IMPL | 20 | INTEGRATED |  |
+| B25-CAREER-IMPL | 20 | INTEGRATED |  |
+| B25-CAREER-SYSTEM | 20 | INTEGRATED |  |
 | B25-CLOSE-02 | 20 | PARTIALLY IMPLEMENTED |  |
 | B25-EMPLOY-IMPL | 20 | INTEGRATED |  |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |

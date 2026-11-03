@@ -5867,7 +5867,7 @@
     "B25-CAREER-D1"
    ],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5876,7 +5876,18 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_career_business_employment_final_decisions.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; commits + 265ddc1; integrated_in + Build 25 wip/expansion20",
+     "why": "register stale: the code is integrated since 265ddc1 (npc_brain.gd B25-CAREER-IMPL blocks, merged with B25-EMPLOY-IMPL); closure audit 2026-11-02"
     }
+   ],
+   "commits": [
+    "265ddc1"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
    ]
   },
   {
@@ -5895,7 +5906,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5904,7 +5915,18 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_career_business_employment_final_decisions.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; commits + 265ddc1; integrated_in + Build 25 wip/expansion20",
+     "why": "the system's code is integrated (B25-CAREER-IMPL, 265ddc1); closure audit 2026-11-02"
     }
+   ],
+   "commits": [
+    "265ddc1"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20"
    ]
   },
   {
@@ -6205,6 +6227,50 @@
    "commits": [
     "265ddc1"
    ]
+  },
+  {
+   "id": "B25-FINISH-01",
+   "kind": "approved",
+   "title": "Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release",
+   "description": "Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release",
+   "source": "docs/directives/2026-11-03_build25_completion_directive.md",
+   "owner_wording": "finish all work already approved for Build 25, validate the integrated game, complete a successful 365-day flight recorder simulation, and produce a private playable release. No new features, expansions, or discretionary improvements are authorized.",
+   "approval": "owner, 2026-11-03",
+   "acceptance": [
+    "A fixed completion checklist of all approved Build 25 work with status, branch, commit, remaining work and evidence (docs/release/build25_reconciliation/COMPLETION_CHECKLIST.md)",
+    "Every approved Build 25 requirement complete; confirmed defects fixed",
+    "Integrated source SHA passes all applicable required tests, independent groups in parallel on GitHub Actions; all required suites in CI",
+    "A full 365-day flight recorder run on that exact SHA with the approved Living Economy configuration passes under the existing acceptance rules (repeated on the corrected candidate after any genuine defect)",
+    "Android APK, Windows ZIP and Linux ZIP built, export and launch smoke-checked, attached with test evidence, simulation report and source SHA to a private draft GitHub release; not published"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_build25_completion_directive.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; branch: None -> wip/region-nav",
+     "why": "Phase 1 started: inventory and checklist"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "assigned_worker: None -> lead session",
+     "why": "lead session owns completion (directive Phase 2)"
+    }
+   ],
+   "branch": "wip/region-nav",
+   "assigned_worker": "lead session"
   },
   {
    "id": "B25-LE-ACTIVATE-D1",
