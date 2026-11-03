@@ -25,11 +25,19 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # B25-FINISH-01 (owner 2026-11-03: "Execute independent test groups in parallel through GitHub Actions"): the game suites
+    # are split over four shards by their place in the list (every 4th suite from the shard's index), each its own runner;
+    # shard 0 also runs the Python checks and the 10-day economy run. Each shard keeps its own results and report.
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    name: test (shard ${{ matrix.shard }} of 4)
     # Every suite runs since HAG-MEM-02: run 41482218360 (9c56199) needed 90 min for 138 suites (5400 s, Python 178 s) and
     # was stopped there; the 16 suites it never reached take about 12 min more (712 s measured headless on 9c56199), plus
     # the 10-day smoke run (capped at 15 min) and setup: about 2 h at most. 210 min leaves room for runner speed varying by up to ~1.8x (as the
     # long-sims runs did). One job keeps one results.jsonl and one ci_report, so the report stays the complete suite.
-    timeout-minutes: 210
+    timeout-minutes: 150
     env:
       CI_OUT: ${{ github.workspace }}/ci-out   # per-suite logs, results.jsonl, ci-report.json (HAG-MEM-02 Part 3)
     steps:
@@ -73,6 +81,7 @@ jobs:
       # if any suite failed). Later steps run unless the run was cancelled, so one failure no longer hides the rest.
       - name: Python tests and data checks
         id: python
+        if: ${{ matrix.shard == 0 }}
         run: |
           cat > "$RUNNER_TEMP/python.txt" <<'EOF'
           python3 -m unittest discover -s tests
@@ -280,11 +289,13 @@ jobs:
           res://tests/profile_test.gd       # SET-A/B: the maintained capability profile
           res://tests/civic_records_test.gd   # Expansion 21 P21-01: civic records (offices, tenures, legacy); shipped disabled
           EOF
-          python3 tools/ci_report.py run --group game --list "$RUNNER_TEMP/game.txt" --prefix "$HOME/godot-bin/godot --headless --path game --script" --logs "$CI_OUT/logs" --results "$CI_OUT/results.jsonl"
+          awk -v s=${{ matrix.shard }} -v n=4 'NF && $1 !~ /^#/ { i++; if ((i - 1) % n == s) print $1 }' "$RUNNER_TEMP/game.txt" > "$RUNNER_TEMP/game_shard.txt"
+          echo "shard ${{ matrix.shard }}: $(wc -l < "$RUNNER_TEMP/game_shard.txt") suites"
+          python3 tools/ci_report.py run --group game --list "$RUNNER_TEMP/game_shard.txt" --prefix "$HOME/godot-bin/godot --headless --path game --script" --logs "$CI_OUT/logs" --results "$CI_OUT/results.jsonl"
 
       - name: Short economy simulation (FR-07)
         id: sim
-        if: ${{ !cancelled() && steps.import.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.import.outcome == 'success' && matrix.shard == 0 }}
         run: |
           # 10 game days, seed 1: fails on a currency or item leak (economy_sim's own exit code) and on any
           # script error in the log, which Godot reports without stopping. Year-long runs: long-sims.yml.
@@ -297,7 +308,7 @@ jobs:
         if: always()
         run: |
           python3 tools/ci_report.py report --results "$CI_OUT/results.jsonl" \
-            --expect python --expect game --expect sim \
+            ${{ matrix.shard == 0 && '--expect python --expect sim' || '' }} --expect game \
             --step python=${{ steps.python.outcome }} --step import=${{ steps.import.outcome }} \
             --step game=${{ steps.game.outcome }} --step sim=${{ steps.sim.outcome }} \
             --started "$CI_STARTED" \
@@ -308,7 +319,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ci-report-${{ github.run_id }}-${{ github.run_attempt }}
+          name: ci-report-${{ github.run_id }}-${{ github.run_attempt }}-shard${{ matrix.shard }}
           path: ci-out
           if-no-files-found: warn
           retention-days: 30
