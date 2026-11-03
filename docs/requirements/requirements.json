@@ -7165,8 +7165,14 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_road_wear.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "owner_answer",
+     "why": "owner follow-up 2026-11-03: unused grass paths and dirt roads slowly fade back; paved stone never decays. Assigned to the roads worker as phase 2 on wip/b25r1-roads"
     }
-   ]
+   ],
+   "owner_answer": "Dirt fades, stone stays: unused grass paths and dirt roads slowly fade back toward grass; paved stone never decays on its own"
   },
   {
    "id": "B25R1-Q1",
