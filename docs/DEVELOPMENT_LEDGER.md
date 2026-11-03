@@ -897,7 +897,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (317)
+## Owner decisions (318)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -947,6 +947,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25R1-Q3 | Water for wilderness settlements: wells built from real materials, streams added by an overworld generator change, or both? | 20 | APPROVED |  |
 | B25R1-Q4 | Outlaw camp defenders: add a surrender outcome to combat, or fight or flee only (B25R1-014 section 8 'according to existing systems'; combat has no surrender)? | 20 | APPROVED |  |
 | B25R1-Q5 | Save compatibility for Revision 1: must existing saves migrate across the B25R1 world changes (generator, regional reconstruction, band move, water)? | 20 | APPROVED |  |
+| B25R1-Q6 | Population architecture for the reconstructed region (B25R1-018 section 6): full NPCs everywhere, or persistent people simulated by calculation when away from the player and made present near the player? | 20 | APPROVED |  |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | owner decision | APPROVED |  |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | owner decision | APPROVED |  |
 | BRANCH-POL-Q1 | Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion20 (code), with notices on the code line's copies (recommended); or authorize bringing the records into wip/expansion20 as one reviewed change (files only, not the old ancestry)? | unassigned | OPEN |  |

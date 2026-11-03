@@ -7698,6 +7698,33 @@
    ]
   },
   {
+   "id": "B25R1-Q6",
+   "kind": "decision",
+   "title": "Population architecture for the reconstructed region (B25R1-018 section 6): full NPCs everywhere, or persistent people simulated by calculation when away from the player and made present near the player?",
+   "description": "Population architecture for the reconstructed region (B25R1-018 section 6): full NPCs everywhere, or persistent people simulated by calculation when away from the player and made present near the player?",
+   "source": "owner message 2026-11-03",
+   "owner_wording": null,
+   "owner_answer": "Proximity materialisation: every resident of the other settlements and hamlets is one persistent person (identity, household, money, goods, relations, history) stepped by calculation while out of the player's view; when the player comes within view (just off screen) of where that person should be, including a traveller on the road at the position their journey has reached, they become a full NPC the player can see and interact with; when out of view again they return to calculation with their state carried over intact. Never two copies, never a fresh batch, never a loss in either direction.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "owner message 2026-11-03"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner 2026-11-03: \"the other villagers in those towns don't need to be there unless I'm there so they can stay just math calculations until I walk into the town as I walk to where they should be. They should come into range if there's one traveling to a town when he's just off screen of me he should become visible and be able to interact with me. And as soon as he's off the screen and I can't see him disappear, he should turn back into a math problem.\""
+    }
+   ]
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
