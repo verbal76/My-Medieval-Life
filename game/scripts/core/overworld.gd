@@ -148,26 +148,17 @@ func _setup_sites(stamps: Dictionary) -> void:
 		var center := origin + Vector2i(int(spec.get("x", 0)), int(spec.miles) * int(data.tiles_per_mile))
 		if RegionGeo.has_anchor(str(spec.id)):
 			center = RegionGeo.anchor(str(spec.id))       # B25R1-018 (GEN_VERSION 4): the region layout's anchor
-		var trades: Array = (spec.trades as Dictionary).keys()
-		var bw := int(stamps.house.w)
-		var bh := int(stamps.house.h)
-		var cols := int(lay.cols)
-		var rows := ceili(trades.size() / float(cols))
-		var size := Vector2i(cols * bw + (cols - 1) * int(lay.gap) + 2 * int(lay.margin), rows * (bh + int(lay.lane)) + 2 * int(lay.margin))
-		var rect := Rect2i(center - size / 2, size)
-		var slots := []
-		for k in trades.size():
-			var t := str(trades[k])
-			var stamp := str((lay.stamps as Dictionary).get(t, "house"))
-			var at := rect.position + Vector2i(int(lay.margin) + (k % cols) * (bw + int(lay.gap)), int(lay.margin) + (k / cols) * (bh + int(lay.lane)))
-			var door := at + Vector2i(int(stamps[stamp].door[0]), int(stamps[stamp].door[1]))
-			slots.append({"trade": t, "stamp": stamp, "rect": Rect2i(at, Vector2i(int(stamps[stamp].w), int(stamps[stamp].h))),
-				"door": door, "spot": door + Vector2i(0, 1)})
-		var gate := Vector2i(center.x, rect.end.y - int(lay.margin) - int(lay.lane) / 2 - 1)    # the lane under the last row: the road comes in here
-		var far := Vector2i(center.x, rect.end.y + 14)                                          # straight down out of the site, as a village gate's road
+		var plan := _site_plan(spec, center, stamps, lay, si)
+		var rect: Rect2i = plan.rect
+		var slots: Array = plan.slots
+		var gate: Vector2i = plan.gate
+		var far := Vector2i(gate.x, rect.end.y + 14)                                            # straight down out of the site, as a village gate's road
 		sites.append({"id": str(spec.id), "name": str(spec.name), "kind": str(spec.kind), "center": center, "rect": rect, "slots": slots,
-			"gate": gate})
+			"gate": gate, "streets": plan.streets, "square": plan.square})
 		_links.append({"a": gate, "b": far, "key": 2000 + si * 8})
+		si += 1
+	for k0 in sites.size():                        # B25R1-018: joined to the grid once every site stands (a link never crosses another site)
+		var far: Vector2i = Vector2i(sites[k0].gate.x, (sites[k0].rect as Rect2i).end.y + 14)
 		var ci := fdiv(far.x, NODE)
 		var cj := fdiv(far.y, NODE)
 		var near: Array = []
@@ -175,13 +166,103 @@ func _setup_sites(stamps: Dictionary) -> void:
 			for i in range(ci - 3, ci + 4):
 				var p := node_pos(i, j)
 				var bb := Rect2i(mini(p.x, far.x), mini(p.y, far.y), absi(p.x - far.x), absi(p.y - far.y))
-				if not _node_excluded(p) and not bb.grow(4).intersects(rect):
+				if not _node_excluded(p) and not bb.grow(4).intersects(sites[k0].rect) and not _crosses_site(bb):
 					near.append([(p - far).length_squared(), i, j, p])
 		near.sort()
 		for k in mini(3, near.size()):
-			_links.append({"a": far, "b": near[k][3], "key": 2000 + si * 8 + 1 + k})
-		si += 1
+			_links.append({"a": far, "b": near[k][3], "key": 2000 + k0 * 8 + 1 + k})
 
+
+## B25R1-018 phase 3: a settlement laid out along its streets. Every household of the founding has a home (a house stamp; slot
+## {kind "home", hh: the household id, trade ""}), every business a building (its trade's stamp, as before: {kind "work",
+## trade}), the officials their hall, and a few spare houses stand empty for the households formed later ({kind "home", hh -1}).
+## Streets run east-west, the buildings on their north side with the doors opening onto them (the stamps' doors are at the
+## bottom); a main street runs north-south through the middle, where the routes come in and go on, and the middle street opens
+## into a square (the market). Rows differ in length and start, the gaps between houses vary: a pure function of the seed and
+## the settlement, never a grid. Sizes from the layout's `plan` ({row: buildings a street, spare}; by kind otherwise).
+func _site_plan(spec: Dictionary, center: Vector2i, stamps: Dictionary, lay: Dictionary, si: int) -> Dictionary:
+	var trades: Dictionary = spec.trades
+	var plan: Dictionary = {}
+	for s in RegionGeo.data().settlements:
+		if str(s.id) == str(spec.id):
+			plan = s.get("plan", {})
+	var kind := str(spec.kind)
+	var per_row := int(plan.get("row", 10 if kind.contains("town") else 6 if kind == "village" or kind == "abbey village" else 4))
+	var bw := int(stamps.house.w)
+	var bh := int(stamps.house.h)
+	var lane := 3
+	var mid := 4                                    # the main street's width
+	var items: Array = []                           # [kind, trade, stamp, hh]
+	var tids := trades.keys()
+	tids.sort()
+	for t in trades.keys():                         # the businesses' buildings (settlements.json order, as before)
+		var st := str((lay.stamps as Dictionary).get(t, ""))
+		if st != "" or t == "official" or t == "merchant":
+			items.append(["work", str(t), st if st != "" else "house", -1])
+	var hid := 0
+	for t in tids:                                  # the homes, in OffMapSettlement's household order (trades sorted, then count)
+		for k in int(trades[t]):
+			items.append(["home", "", "house", hid])
+			hid += 1
+	for k in int(plan.get("spare", maxi(1, hid / 8))):
+		items.append(["home", "", "house", -1])
+	var half := ceili(per_row / 2.0)
+	var rows := ceili(items.size() / float(2 * half))
+	var square_row := rows / 2 if rows >= 3 else -1
+	if square_row >= 0 and rows * 2 * half - 2 * mini(2, half) < items.size():
+		rows += 1                                   # the square takes buildings out of its row: one more street for them
+	var slots := []
+	var streets: Array = []
+	var row_h := bh + lane
+	var top := center.y - (rows * row_h) / 2
+	var minx := center.x
+	var maxx := center.x
+	var q := 0
+	for r in rows:
+		var y := top + r * row_h
+		var gap_seed := hash32(seed, si, r, 940)
+		for side in 2:                              # west half then east half of the row, outward from the main street
+			var x := center.x - mid / 2 - 1 if side == 0 else center.x + mid / 2 + 1
+			x += (1 if side == 1 else -1) * (gap_seed >> (side * 3) & 3)
+			var n := half
+			if r == square_row:
+				n = maxi(0, half - 2)               # the square: the two buildings either side of the main street stand back
+				x += (1 if side == 1 else -1) * (2 * (bw + 2))
+			for k in n:
+				if q >= items.size():
+					break
+				var it: Array = items[q]
+				q += 1
+				var g := 1 + (hash32(seed, si, q, 941) % 3)
+				var at := Vector2i(x - bw if side == 0 else x, y + (hash32(seed, si, q, 942) % 2))
+				var sd: Dictionary = stamps[str(it[2])]
+				var door := at + Vector2i(int(sd.door[0]), int(sd.door[1]))
+				var look := ""                      # region_stamps.json variant: about half the homes thatched, more in the villages
+				if str(it[2]) == "house" and hash32(seed, si, q, 943) % 100 < (35 if kind.contains("town") else 60):
+					look = "thatch"
+				slots.append({"kind": it[0], "trade": it[1], "stamp": it[2], "hh": it[3], "rect": Rect2i(at, Vector2i(int(sd.w), int(sd.h))),
+					"door": door, "spot": Vector2i(door.x, y + bh + 1), "look": look})
+				minx = mini(minx, at.x)
+				maxx = maxi(maxx, at.x + bw)
+				x = (at.x - g) if side == 0 else (at.x + bw + g)
+	var margin := 3
+	var rect := Rect2i(minx - margin, top - margin, maxx - minx + 2 * margin, rows * row_h + 2 * margin)
+	for r in rows:                                  # each street: the row under the buildings, across the whole site
+		var sy := top + r * row_h + bh + 1
+		var cells: Array[Vector2i] = []
+		for x in range(rect.position.x + 1, rect.end.x - 1):
+			cells.append(Vector2i(x, sy))
+		streets.append(cells)
+	var main_st: Array[Vector2i] = []
+	for y in range(rect.position.y, rect.end.y):
+		main_st.append(Vector2i(center.x, y))
+	streets.append(main_st)
+	var sq := Rect2i()
+	if square_row >= 0:
+		var sy0 := top + square_row * row_h
+		sq = Rect2i(center.x - mid / 2 - 2 * (bw + 2), sy0, mid + 4 * (bw + 2), row_h)
+	var gate := Vector2i(center.x, top + (rows - 1) * row_h + bh + 1)   # the main street at the last street: the road comes in here
+	return {"rect": rect, "slots": slots, "gate": gate, "streets": streets, "square": sq}
 
 ## B25R1-018: the main routes of the region layout as road nodes and links (see _vpos), and their joins to the sites, the
 ## gates and the grid network. A route's control points give its course (the meander along the country: round Bear Hill, over
@@ -199,10 +280,32 @@ func _setup_routes() -> void:
 	_gate_vlinks.clear()
 	route_kind.clear()
 	var n := 0
+	var through := {}                             # site index -> [route node indices that join it]: a route passing a settlement
 	for r in RegionGeo.routes():
-		var pts: Array = r.points
-		for k in range(1, pts.size()):
-			_route_link(_vnode(pts[k - 1]), _vnode(pts[k]), str(r.kind))
+		var prev := -1
+		for p: Vector2i in r.points:
+			var in_site := -1
+			for si in sites.size():
+				if (sites[si].rect as Rect2i).grow(6).has_point(p):
+					in_site = si
+			if in_site >= 0:                          # the route goes into the settlement here and out again: it is split at it
+				if prev >= 0:
+					var t: Array = through.get(in_site, [])
+					t.append(prev)
+					through[in_site] = t
+				prev = -2 - in_site
+				continue
+			var cur := _vnode(p)
+			if prev >= 0:
+				_route_link(prev, cur, str(r.kind))
+			elif prev <= -2:
+				var t2: Array = through.get(-2 - prev, [])
+				t2.append(cur)
+				through[-2 - prev] = t2
+			prev = cur
+	for si in through:
+		for vi in through[si]:
+			_site_join(si, vi, "main")
 	for si in sites.size():
 		var st: Dictionary = sites[si]
 		var best := {}                            # route id -> [d2, node index]
@@ -210,6 +313,8 @@ func _setup_routes() -> void:
 			var near := -1
 			var nd := 1 << 40
 			for p: Vector2i in r.points:
+				if not _vidx.has(p):
+					continue                          # a point inside a settlement (the route was split there)
 				var d2 := (p - (st.center as Vector2i)).length_squared()
 				if d2 < nd:
 					nd = d2
@@ -217,6 +322,8 @@ func _setup_routes() -> void:
 			if nd <= SITE_ROUTE_REACH * SITE_ROUTE_REACH:
 				best[str(r.id)] = near
 		var joined := {}
+		for e in (_site_vlinks.get(si, {}) as Dictionary):
+			joined[int(e.x) - VNODE] = true
 		for rid in best:
 			var vi: int = best[rid]
 			if joined.has(vi):
@@ -319,7 +426,7 @@ func _site_side(si: int, toward: Vector2i) -> Array:
 		var a: Vector2i = [Vector2i((st.center as Vector2i).x, r.position.y), Vector2i(r.end.x - 1, gy), Vector2i(st.gate),
 			Vector2i(r.position.x, gy)][side]
 		var dir: Vector2i = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][side]
-		var far := a + dir * 8
+		var far := a + dir * 13
 		var li := _links.size()
 		_links.append({"a": a, "b": far, "key": ROUTE_KEY + li})
 		route_kind[li] = "site"
@@ -347,7 +454,7 @@ func _site_ring(si: int) -> void:
 	var bases: Dictionary = _site_bases.get(si, {})
 	if bases.size() < 2:
 		return
-	var r: Rect2i = (sites[si].rect as Rect2i).grow(10)
+	var r: Rect2i = (sites[si].rect as Rect2i).grow(13)
 	var ring: Array[Vector2i] = []
 	var corners := [r.position, Vector2i(r.end.x, r.position.y), r.end, Vector2i(r.position.x, r.end.y)]
 	for side in 4:
@@ -434,6 +541,17 @@ func close_node(nd: Vector2i, shut := true) -> void:
 ## The regional trade's distances and the couriers' days are these routes' lengths (Regions.route_table), so travel and trade
 ## measure the same roads.
 func route_between(ea: Dictionary, eb: Dictionary, honour_closed := true) -> PackedVector2Array:
+	# B25R1-018: one road between two places, the same both ways: the search always runs from the end with the lower base link
+	# and the cells are reversed for the other direction (the search seeds its start nodes without the area bound its ends
+	# are reached under, so the two directions could find different ways)
+	if not ea.is_empty() and not eb.is_empty() and int(ea.base) > int(eb.base):
+		var back := _route_search(eb, ea, honour_closed)
+		back.reverse()
+		return back
+	return _route_search(ea, eb, honour_closed)
+
+
+func _route_search(ea: Dictionary, eb: Dictionary, honour_closed: bool) -> PackedVector2Array:
 	var shut: Dictionary = closed if honour_closed else {}
 	if ea.is_empty() or eb.is_empty() or (ea.nodes as Dictionary).is_empty() or (eb.nodes as Dictionary).is_empty():
 		return PackedVector2Array()
@@ -492,7 +610,8 @@ func route_between(ea: Dictionary, eb: Dictionary, honour_closed := true) -> Pac
 	var base_a: int = int((ea.get("base_of", {}) as Dictionary).get(at, ea.base))
 	var la: int = starts[at]
 	_append_cells(out, _segment(Vector3i(base_a, 0, -1), _links[base_a].a, _links[base_a].b, int(_links[base_a].key)), false)
-	_append_cells(out, _segment(Vector3i(la, 0, -1), _links[la].a, _links[la].b, int(_links[la].key)), false)
+	if la >= 0:
+		_append_cells(out, _segment(Vector3i(la, 0, -1), _links[la].a, _links[la].b, int(_links[la].key)), false)
 	for step in chain:
 		var seg: Array = step[2]                      # [i, j, k, forward], or ["L", link, forward] (B25R1-018: a route link)
 		if seg[0] is String:
@@ -506,12 +625,15 @@ func route_between(ea: Dictionary, eb: Dictionary, honour_closed := true) -> Pac
 		_append_cells(out, cells, not bool(seg[3]))
 	var lb: int = ends[goal]
 	var base_b: int = int((eb.get("base_of", {}) as Dictionary).get(goal, eb.base))
-	_append_cells(out, _segment(Vector3i(lb, 0, -1), _links[lb].a, _links[lb].b, int(_links[lb].key)), true)
+	if lb >= 0:
+		_append_cells(out, _segment(Vector3i(lb, 0, -1), _links[lb].a, _links[lb].b, int(_links[lb].key)), true)
 	_append_cells(out, _segment(Vector3i(base_b, 0, -1), _links[base_b].a, _links[base_b].b, int(_links[base_b].key)), true)
 	return out
 
 
 func _seg_len(li: int) -> int:
+	if li < 0:
+		return 0                                      # a site side's own far point: no link beyond its base
 	return _segment(Vector3i(li, 0, -1), _links[li].a, _links[li].b, int(_links[li].key)).size() / 2
 
 
@@ -553,7 +675,27 @@ func _site_end(sid: String) -> Dictionary:
 	for nd in vl:
 		nodes[nd] = int(vl[nd][0])
 		base_of[nd] = int(vl[nd][1])
+	for side in (_site_bases.get(si, {}) as Dictionary):  # each side's far point is a route node: a way in from there needs only the base
+		var bl: int = _site_bases[si][side]
+		var fp: Vector2i = _links[bl].b
+		if _vidx.has(fp):
+			nodes[_vid(int(_vidx[fp]))] = -1
+			base_of[_vid(int(_vidx[fp]))] = bl
 	return {} if base < 0 else {"base": base, "nodes": nodes, "base_of": base_of}
+
+
+## B25R1-018: the cells where roads enter settlement `sid`: the lane gate and each side's way in (a route arriving from
+## another side ends there).
+func site_entries(sid: String) -> Array:
+	var st := site(sid)
+	if st.is_empty():
+		return []
+	var out := [Vector2i(st.gate)]
+	for side in (_site_bases.get(sites.find(st), {}) as Dictionary):
+		var c: Vector2i = _links[_site_bases[sites.find(st)][side]].a
+		if not out.has(c):
+			out.append(c)
+	return out
 
 
 ## REGION-NAV-01 Q3: the road route between two settlements (cells from a's lane to b's lane).

@@ -116,7 +116,7 @@ The six principal places keep their order and the forty miles, but leave the 70-
 | Village | (60, 45) |
 | Wulstead | (-60, 285) |
 | Netherton | (40, 400) |
-| Garton | (-60, 705) |
+| Garton | (-110, 700) |
 | Higham | (20, 765) |
 | Bourton Abbas | (90, 935) |
 
@@ -132,7 +132,9 @@ Main route:
 - South-east across the plain to Netherton.
 - Up the white road winding round Bear Hill to Bear Castle.
 - The Greenway waving south-south-west over the Downs, by the seven mounds and the drovers' bent, down to Higham's north gate.
-- Higham's south gate, straight over the bridge and two fords, among the vine hills to Bourton.
+- Higham's south gate, straight over the bridge and two fords, among the vine hills to Bourton. **This straight
+  causeway is canon and must stay straight** (BONE-C7-P003: "once by a goodly stone bridge and twice by fords; for the
+  road was straight, and the river wound about much"). Beyond it the road bends east among the vine hills.
 - Straight through the waste into the Wood Perilous.
 
 Side roads join the hamlets and the Mileham-Garton-Milton road along the south foot. There is also the Garton road over
@@ -321,3 +323,53 @@ same seed and version give the same world, and save and load round trips in the 
 - Hamlets without a listed course get a well, placed by the region worker as a site feature and counted by `nearest_water`.
 
 GEN_VERSION 4 is bumped once by whoever lands first; the other rebases.
+
+## (i) Presence, trips and the shared walking rule (owner B25R1-Q6, Q7, B25R1-019; agreed through the lead)
+
+The presence worker (`wip/b25r1-presence`) owns the live range and the transitions. Settlement and hamlet residents use its
+provider protocol:
+- `w.presence.register(provider)`;
+- each update, `presence_candidates()` gives `[{id, pos}]` for every member, at `trip_pos(now)` when travelling, else at the
+  member's station by the hour: home, work or the market square;
+- `materialise(id)` makes an NPC from the member (the same ID-01 id, name, age, sex, skills, household and job), adds it to
+  `w.npcs` and marks the member `live`;
+- `fold(npc)` writes the changes back into the member and removes the NPC in the same call.
+
+Residents move between their record and `w.npcs`. They are not kept as permanent calculated NPCs: the dawn decide alone
+would cost about 17 s a game dawn here for about 480 people (section e). There is exactly one live record per person at any
+moment. While a member is live, the settlement's step skips their personal acts. The household's books stay the one purse,
+pantry and till: the live NPC trades through `SettlementParty.deal` on them.
+
+**Trips.** Trade between places is carried by real walkers on the route network, never by an abstract transfer (owner
+clarification 2026-11-03). Each errand is one trip record on its settlement, saved:
+
+```
+{tx, who: person id, from, to, purpose: {kind: market|wholesale|food|errand}, leg: out|there|back,
+ depart: game minute, pace: 1.3, pack: {item: n}, coins}
+```
+
+- The route is `Overworld.site_route(from, to)`, a pure function of the seed, so it is not saved.
+- The position is `trip_pos(trip, m)`: the route indexed by `Presence.road_tiles(depart, m, pace)`. This is the shared rule:
+  1.3 tiles a game minute, resting 20:00-06:00 (`Journeys.REST_FROM` and `REST_TO`), the same for every traveller on the
+  road.
+- On fold, `depart` is rewritten so that `road_tiles(depart, now)` equals the index reached.
+- `Regions.road_trade` and the X20 food shipments become trips carried by the traders, the shipment's due date becoming
+  the trip's arrival.
+
+## (j) Site layout (phase 3) and civic art
+
+`Overworld._site_plan` lays each settlement along east-west streets. The buildings stand on the north side of each street,
+with the doors opening onto it. A north-south main street runs through the middle, where the routes come in, and the
+middle street opens into a market square.
+
+There is one building per business, a home per founding household (slot `kind: "home"`, `hh: <household id>`), and a few
+spare houses for households formed later. The rows vary in length and start, and the gaps vary, as a function of the seed.
+
+Civic art, checked through the asset pipeline:
+- **Higham's walls and the castle's curtain**: from Puny World (paid) `sample-castle-1.tmj`, in the same style as the game's
+  buildings.
+- **Church, abbey and towers**: there are no Puny World church or tower pieces. Miniworld's `Keep` and `Chapels` are a
+  different scale; using them would mean breaking the one-pixel-density rule.
+  - Recommended: assemble the abbey church and towers from Puny World's modular stone-wall and slate-roof kit, as
+    build_village.py assembles its workshops.
+  - The alternative is a pack from the owner.

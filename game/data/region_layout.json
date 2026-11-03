@@ -43,8 +43,8 @@
   {
    "id": "garton",
    "kind": "village",
-   "x": -60,
-   "y": 705,
+   "x": -110,
+   "y": 700,
    "label": "CANON-INFERRED",
    "note": "under the first hill of the Down country on the road north from Higham, one of the thorps at the feet of the downs toward Higham",
    "src": [
@@ -517,11 +517,11 @@
    ],
    [
     -40,
-    690
+    668
    ],
    [
     -160,
-    705
+    672
    ],
    [
     -300,
@@ -963,8 +963,8 @@
    "id": "garton_cross",
    "name": "the street cross of Garton",
    "kind": "cross",
-   "x": -60,
-   "y": 705,
+   "x": -110,
+   "y": 700,
    "label": "CANON",
    "src": [
     "BFOUR-C21-P017"
@@ -974,8 +974,8 @@
    "id": "garton_barn",
    "name": "the great barn of Garton",
    "kind": "barn",
-   "x": -84,
-   "y": 705,
+   "x": -150,
+   "y": 700,
    "label": "CANON",
    "src": [
     "BFOUR-C21-P021"
@@ -1193,28 +1193,32 @@
      735
     ],
     [
-     -20,
-     722
+     -30,
+     726
     ],
     [
-     -60,
-     712
+     -80,
+     716
+    ],
+    [
+     -110,
+     700
+    ],
+    [
+     -112,
+     668
     ],
     [
      -70,
-     680
+     630
     ],
     [
-     -40,
-     620
+     -20,
+     570
     ],
     [
-     0,
-     560
-    ],
-    [
-     40,
-     500
+     30,
+     505
     ],
     [
      92,

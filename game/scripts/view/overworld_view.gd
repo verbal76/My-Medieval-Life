@@ -275,6 +275,7 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 			if not r.intersects(box):
 				continue
 			var stamp: Dictionary = overworld.stamps.get(str(sl.stamp), overworld.stamps.house)
+			var swap: Dictionary = _look_swap(str(sl.get("look", "")))    # B25R1-018: the building's colour variant (region_stamps.json)
 			var names: Array = (stamp.layers as Dictionary).keys()
 			names.sort_custom(func(a: String, b: String) -> bool:
 				var ra := 0 if a.begins_with("ground") else 1 if a.begins_with("path") else 2 if a.begins_with("below") else 3
@@ -292,6 +293,8 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 				for j in int(stamp.h):
 					for i in int(stamp.w):
 						var v := int(cells[j * int(stamp.w) + i])
+						if not swap.is_empty():
+							v = int(swap.get(str(v), v))
 						var cell := r.position + Vector2i(i, j)
 						if v < 0 or not box.has_point(cell):
 							continue
@@ -312,6 +315,20 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 	if sorted != null:
 		above.append(sorted)              # (freed with the chunk; see _free)
 	return above
+
+
+static var _looks := {}
+
+
+## B25R1-018: tile -> tile of a building colour variant ("thatch"), {} for the stamp as drawn (game/data/region_stamps.json,
+## made by tools/build_region_stamps.py from the paid tileset's colour blocks).
+static func _look_swap(look: String) -> Dictionary:
+	if look == "":
+		return {}
+	if _looks.is_empty():
+		var d = JSON.parse_string(FileAccess.get_file_as_string("res://data/region_stamps.json"))
+		_looks = d.variants if d is Dictionary else {"_": {}}
+	return (_looks.get(look, {}) as Dictionary).get("swap", {})
 
 
 ## GP-DRAW-UNDER-HOUSE for the settlement sites (owner 2026-11-03: "half of them would go under the building's sprite"): an

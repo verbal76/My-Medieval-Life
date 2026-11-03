@@ -118,7 +118,7 @@ func _test_roads() -> void:
 				if a.road[(k + P) * A + 31 + P] == 1 and east.road[(k + P) * A + P] == 1:
 					crossing += 1
 	check(disagree == 0, "chunk seams: roads agree across every edge (%d cells agree, %d differ)" % [agree, disagree])
-	check(crossing > 20, "many roads cross chunk edges (%d crossings)" % crossing)
+	check(crossing > 12, "roads cross chunk edges (B25R1-018: sparser country trails) (%d crossings)" % crossing)
 	# a road followed cell by cell from a village exit runs through many chunks without a break
 	var m := VillageMap.load_default()
 	var seen := {}
@@ -562,7 +562,7 @@ func _run_scene() -> void:
 
 ## REGION-NAV-01 (Build 25 scope, AD-1): the five neighbouring settlements stand in the overworld at their own positions
 ## (OffMapSettlement.pos: x across, miles x tiles_per_mile south of the village's centre), cleared like the village, joined to
-## the road network, and reachable on foot from the village; the same seed places them the same way; a generation-2 save's tree
+## the road network, and reachable on foot from the village; the same seed places them the same way; an older generation's world is refused (B25R1-Q5); was: a generation-2 save's tree
 ## planted where a site now stands is dropped and counted.
 func _test_sites(seed_value: int) -> void:
 	var m := VillageMap.load_default()
@@ -578,8 +578,8 @@ func _test_sites(seed_value: int) -> void:
 	for k in o.sites.size():
 		var st: Dictionary = o.sites[k]
 		var spec: Dictionary = data.settlements[k]
-		var want := o.village.get_center() + Vector2i(int(spec.get("x", 0)), int(spec.miles) * int(data.tiles_per_mile))
-		check(st.center == want and str(st.id) == str(spec.id), "%s stands at its recorded place %s (%d miles)" % [st.name, want, int(spec.miles)])
+		var want := RegionGeo.anchor(str(spec.id))      # B25R1-018 (generation 4): the region layout's anchor
+		check(st.center == want and str(st.id) == str(spec.id), "%s stands at its place in the region layout %s" % [st.name, want])
 		var blocked := 0
 		var road := 0
 		for y in range(st.rect.position.y, st.rect.end.y):
@@ -591,13 +591,18 @@ func _test_sites(seed_value: int) -> void:
 					road += 1
 		check(blocked == 0, "%s: its site is clear ground but for its buildings (%d other blocked cells)" % [st.name, blocked])
 		check(road > 0, "%s: a road runs into it (%d road cells)" % [st.name, road])
-		var trades: Array = (spec.trades as Dictionary).keys()
-		var doors_ok: bool = st.slots.size() == trades.size()
-		for q in st.slots.size():
-			var sl: Dictionary = st.slots[q]
-			doors_ok = doors_ok and str(sl.trade) == str(trades[q]) and st.rect.encloses(sl.rect) and o.site_building_at(sl.rect.position + Vector2i(1, 1)) \
-				and not o.is_solid(sl.spot)
-		check(doors_ok, "%s: one building per trade (%d), inside the site, solid, with open ground at its door" % [st.name, st.slots.size()])
+		# B25R1-018 phase 3: a home for every founding household (one per trade count, OffMapSettlement's order), a building
+		# for each business, spare homes; each inside the site, solid, with open street at its door
+		var households := 0
+		for t in spec.trades:
+			households += int(spec.trades[t])
+		var homes := {}
+		var doors_ok := true
+		for sl in st.slots:
+			if str(sl.kind) == "home" and int(sl.hh) >= 0:
+				homes[int(sl.hh)] = true
+			doors_ok = doors_ok and st.rect.encloses(sl.rect) and o.site_building_at(sl.rect.position + Vector2i(1, 1)) and not o.is_solid(sl.spot)
+		check(doors_ok and homes.size() == households, "%s: a home for each of its %d households (%d buildings), inside the site, solid, with open ground at its door" % [st.name, households, st.slots.size()])
 		check(o.site_at(st.center) == st and o.site(str(st.id)) == st, "%s: found by cell and by id" % st.name)
 		box = box.merge(st.rect.grow(20))
 	var south: Vector2i = Vector2i.ZERO
@@ -620,7 +625,7 @@ func _test_sites(seed_value: int) -> void:
 			gi = k
 	for st in o.sites:
 		var r := o.road_route(gi, str(st.id))
-		var steps_ok: bool = r.size() > 0 and Vector2i(r[0]) == o.gates[gi].out and Vector2i(r[r.size() - 1]) == st.gate
+		var steps_ok: bool = r.size() > 0 and Vector2i(r[0]) == o.gates[gi].out and o.site_entries(str(st.id)).has(Vector2i(r[r.size() - 1]))
 		var bad := 0
 		var blocked := 0
 		for q in range(1, r.size()):
@@ -632,9 +637,7 @@ func _test_sites(seed_value: int) -> void:
 				blocked += 1
 		check(steps_ok and bad == 0 and blocked == 0, "seed %d: a road route from the south gate to %s, %d cells (%d jumps, %d blocked cells)" % [seed_value, st.name, r.size(), bad, blocked])
 		check(o.road_route(gi, str(st.id)) == r, "and the same route asked again (%s)" % st.name)
-	# a generation-2 save planted a tree where a site now stands: dropped and counted, not placed in the settlement
-	var st0: Dictionary = o.sites[0]
-	var c: Vector2i = st0.gate
-	var o2 := Overworld.create(seed_value, m)
-	o2.load_dict({"seed": seed_value, "gen": 2, "changes": [{"x": c.x, "y": c.y, "state": "sapling", "regrow": 0.0, "born": 0.0, "species": "oak_summer", "planted": true}], "rocks": [], "flowers": [], "works": []})
-	check(o2.dropped_in_sites == 1 and not o2.changes.has(c), "a generation-2 save's tree planted inside %s is dropped and counted" % st0.name)
+	# B25R1-Q5: an older generation's world is refused whole by World.load_dict (the file kept), never applied to this one
+	var w3 := World.new()
+	w3.load_dict(m, {"seed": seed_value, "save_version": World.SAVE_VERSION, "overworld": {"seed": seed_value, "gen": 3}})
+	check(w3.load_error.contains("before the region was rebuilt"), "a generation-3 world is refused with a message (%s)" % w3.load_error)
