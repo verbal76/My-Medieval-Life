@@ -726,6 +726,10 @@ def exceptions(lv, feats, bl, hs, rates, econ, run_status, people_check):
             if ds[i + 5] - ds[i] <= WINDOW_DAYS:
                 add("migration_loop", "%s moved 6 times within five game years (days %s)" % (r, ds[i:i + 6]))
                 break
+    for seg in lv.a.segs.list:
+        rt = (seg["status"] or {}).get("save_roundtrip") or {}
+        if rt and not rt.get("exact", True):
+            add("save_roundtrip", "%s: the save of day %s loaded into a fresh world and saved again differs in: %s" % (seg["name"], rt.get("day"), ", ".join(rt.get("differ", []))), rt)
     for p in people_check["unaccounted"][:50]:
         add("unaccounted_person", "%s registered in the village, not recorded as dead or gone, and not sampled at the end" % p)
     for k, n in Counter(e["detail"] for e in lv.k("unmapped_event")).items():
@@ -940,6 +944,9 @@ def build(run_dir, out_dir, targeted=None, compare_dir=None):
     L += ["", "## Segments", ""] + table(["segment", "stop", "days", "seconds", "run", "currency leak", "item leaks"], [(s.get("name"), s.get("stop_reason"), "%s-%s" % (s.get("start_day"), s.get("days_reached")),
                                                                                                          s.get("job_seconds") or s.get("wall_seconds"), s.get("run_url", "local"), s.get("currency_leak"), s.get("item_leaks") or "none") for s in segst])
     L += ["", "## Sessions", ""] + table(["session", "completeness", "bytes", "events", "scenario", "flags"], [(s["session"], s["completeness"], s["bytes"], s["events"], s["scenario"], json.dumps(s["flags"])[:120]) for s in ev["sessions"]])
+    L += ["", "## Save and load at each segment's end (loaded into a fresh world, saved again, section by section)", ""] + table(["segment", "day", "exact", "sections differing"],
+        [(sg["name"], (sg.get("save_roundtrip") or {}).get("day", "-"), (sg.get("save_roundtrip") or {}).get("exact", "not checked (last segment)"),
+          ", ".join((sg.get("save_roundtrip") or {}).get("differ", [])) or "-") for sg in segst])
     L += ["", "## Fingerprints at checkpoints", ""] + table(["day", "fingerprint"], sorted(ev["fingerprints"].items()))
     L += ["", "## Determinism (a second independent run of the same seed and configuration)", "", json.dumps(det, default=str) if det else "Not compared in this report (pass --compare RUN_DIR2)."]
     _write(os.path.join(out_dir, "I_evidence_index.md"), "\n".join(L) + "\n")
