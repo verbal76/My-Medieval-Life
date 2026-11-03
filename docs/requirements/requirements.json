@@ -6755,6 +6755,230 @@
    ]
   },
   {
+   "id": "B25R1-001",
+   "kind": "approved",
+   "title": "Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish",
+   "description": "Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish",
+   "source": "docs/directives/2026-11-03_b25r1_master_directive.md",
+   "owner_wording": "Build 25 Revision 1 must deliver a connected, living medieval world",
+   "approval": "owner, 2026-11-03 (B25R1 master directive: \"OWNER APPROVAL: IMPLEMENT ALL REQUIREMENTS\")",
+   "acceptance": [
+    "Children B25R1-002..008 complete; separate private draft of six packages from one commit; the original Build 25 draft preserved"
+   ],
+   "target_build": "25",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    }
+   ]
+  },
+  {
+   "id": "B25R1-002",
+   "kind": "approved",
+   "title": "Full interaction outside the starting village (release blocker)",
+   "description": "Full interaction outside the starting village (release blocker)",
+   "source": "docs/directives/2026-11-03_b25r1_master_directive.md",
+   "owner_wording": "interaction stopped working after leaving the starting village ... This is unacceptable",
+   "approval": "owner, 2026-11-03 (B25R1 master directive: \"OWNER APPROVAL: IMPLEMENT ALL REQUIREMENTS\")",
+   "acceptance": [
+    "Root cause recorded; NPCs, animals and resources interactive outside the village, at settlements, on roads, in the wilderness, after save/load; interactive gameplay tests (scenarios A-D, F)"
+   ],
+   "target_build": "25",
+   "parent": "B25R1-001",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    }
+   ]
+  },
+  {
+   "id": "B25R1-003",
+   "kind": "approved",
+   "title": "Region map: major settlements and roads known from the start; discovered landmarks persist",
+   "description": "Region map: major settlements and roads known from the start; discovered landmarks persist",
+   "source": "docs/directives/2026-11-03_b25r1_master_directive.md",
+   "owner_wording": "Display and label all major established settlements from the beginning of the game",
+   "approval": "owner, 2026-11-03 (B25R1 master directive: \"OWNER APPROVAL: IMPLEMENT ALL REQUIREMENTS\")",
+   "acceptance": [
+    "Every settlement in world data, with name, distance and direction, visible from day 1; roads drawn; discovered points of interest get persistent icons from real world objects"
+   ],
+   "target_build": "25",
+   "parent": "B25R1-001",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    }
+   ]
+  },
+  {
+   "id": "B25R1-004",
+   "kind": "approved",
+   "title": "Roads and trails audit: stone roads and dirt trails rendered, connected and traversable",
+   "description": "Roads and trails audit: stone roads and dirt trails rendered, connected and traversable",
+   "source": "docs/directives/2026-11-03_b25r1_master_directive.md",
+   "owner_wording": "Audit the existing road and trail implementation before changing it",
+   "approval": "owner, 2026-11-03 (B25R1 master directive: \"OWNER APPROVAL: IMPLEMENT ALL REQUIREMENTS\")",
+   "acceptance": [
+    "Audit recorded; both supported types render, connect and are walkable; map and world agree (scenario G)"
+   ],
+   "target_build": "25",
+   "parent": "B25R1-001",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    }
+   ]
+  },
+  {
+   "id": "B25R1-005",
+   "kind": "approved",
+   "title": "Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown",
+   "description": "Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown",
+   "source": "docs/directives/2026-11-03_b25r1_master_directive.md",
+   "owner_wording": "Redesign the regional map as a useful navigation interface",
+   "approval": "owner, 2026-11-03 (B25R1 master directive: \"OWNER APPROVAL: IMPLEMENT ALL REQUIREMENTS\")",
+   "acceptance": [
+    "Opens on the settlement network; pinch, wheel, drag, centre control; labels legible; a drag never starts travel"
+   ],
+   "target_build": "25",
+   "parent": "B25R1-001",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    }
+   ]
+  },
+  {
+   "id": "B25R1-006",
+   "kind": "approved",
+   "title": "Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved",
+   "description": "Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved",
+   "source": "docs/directives/2026-11-03_b25r1_master_directive.md",
+   "owner_wording": "The player may tap any reachable point on the regional map and instruct the character to travel there",
+   "approval": "owner, 2026-11-03 (B25R1 master directive: \"OWNER APPROVAL: IMPLEMENT ALL REQUIREMENTS\")",
+   "acceptance": [
+    "Reachability; road-preferring route; real movement with the world running; camera follows; manual input suspends; Resume and Dismiss; saved and restored safely (scenario E)"
+   ],
+   "target_build": "25",
+   "parent": "B25R1-001",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    }
+   ]
+  },
+  {
+   "id": "B25R1-007",
+   "kind": "approved",
+   "title": "Character creation: unrestricted cosmetic options",
+   "description": "Character creation: unrestricted cosmetic options",
+   "source": "docs/directives/2026-11-03_b25r1_master_directive.md",
+   "owner_wording": "Unlock all cosmetic character customization options. If a player wants to create a green elf, that is acceptable.",
+   "approval": "owner, 2026-11-03 (B25R1 master directive: \"OWNER APPROVAL: IMPLEMENT ALL REQUIREMENTS\")",
+   "acceptance": [
+    "Audit recorded; broad skin, hair and eye colours, all styles, no gender restriction; preview and gameplay correct in every animation; saved; no equipment or advantage (scenario H)"
+   ],
+   "target_build": "25",
+   "parent": "B25R1-001",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    }
+   ]
+  },
+  {
+   "id": "B25R1-008",
+   "kind": "approved",
+   "title": "Visual polish: character creation, origin story, region map; modal HUD behaviour",
+   "description": "Visual polish: character creation, origin story, region map; modal HUD behaviour",
+   "source": "docs/directives/2026-11-03_b25r1_master_directive.md",
+   "owner_wording": "Redesign the actual appearance of the panels as well as their layouts",
+   "approval": "owner, 2026-11-03 (B25R1 master directive: \"OWNER APPROVAL: IMPLEMENT ALL REQUIREMENTS\")",
+   "acceptance": [
+    "Consistent medieval framing; preview left, controls right; origin centred with portrait; map uses the screen; HUD hidden or dimmed under modals; screenshots at phone and desktop sizes looked at (scenario I)"
+   ],
+   "target_build": "25",
+   "parent": "B25R1-001",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-03_b25r1_master_directive.md"
+    }
+   ]
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",

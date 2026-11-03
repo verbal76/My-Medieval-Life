@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 774 (408 of them still open) |
-| **Open entries now** (rules excluded) | | **567** |
+| Entries added since | | 782 (416 of them still open) |
+| **Open entries now** (rules excluded) | | **575** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (774)
+## Added since the baseline (782)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -197,6 +197,14 @@ None.
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20 |
 | B25-SCOPE-D1 | Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work from abandoned branches? | decision | APPROVED | owner decision |
 | B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25R1-001 | Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish | approved | NOT STARTED / NOT TESTED / OPEN | 25 |
+| B25R1-002 | Full interaction outside the starting village (release blocker) | approved | NOT STARTED / NOT TESTED / OPEN | 25 |
+| B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | approved | NOT STARTED / NOT TESTED / OPEN | 25 |
+| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | approved | NOT STARTED / NOT TESTED / OPEN | 25 |
+| B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | approved | NOT STARTED / NOT TESTED / OPEN | 25 |
+| B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | approved | NOT STARTED / NOT TESTED / OPEN | 25 |
+| B25R1-007 | Character creation: unrestricted cosmetic options | approved | NOT STARTED / NOT TESTED / OPEN | 25 |
+| B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | approved | NOT STARTED / NOT TESTED / OPEN | 25 |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-C | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-D | Expansion 23 BAN-D: rank, challenge, leadership, schism and autonomous succession | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
