@@ -89,11 +89,29 @@ func _minutes(w: World, minutes: int) -> void:
 
 
 # ---------------------------------------------------------------- people, chosen deterministically (lowest household, then id)
+func candidates(w: World, who: String) -> Array:
+	var out := []
+	var keep := picked.duplicate()
+	for i in 40:
+		var n := pick(w, who)
+		if n == null:
+			break
+		out.append(n)
+		excluded[n.id] = true
+		picked.erase(who)
+	excluded.clear()
+	picked = keep
+	return out
+
+
+var excluded := {}          # candidates() walks the pool: people already listed
+
+
 func pick(w: World, who: String) -> NPC:
 	if picked.has(who):
 		return picked[who]
 	var c: NPC = null
-	var pool := w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.household >= 0 and not (n.job in POSTS))
+	var pool := w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.household >= 0 and not (n.job in POSTS) and not excluded.has(n.id))
 	pool.sort_custom(func(a: NPC, b: NPC) -> bool: return a.household < b.household or (a.household == b.household and a.id < b.id))
 	for n: NPC in pool:
 		var age := Life.npc_age(w, n)
@@ -143,12 +161,19 @@ func step(w: World, st: Dictionary) -> String:
 	var n := pick(w, who) if who != "" else null
 	match op:
 		"homestead_begin":
-			if n == null:
-				return "no %s in this village" % who
-			var leaving := [n]
-			if n.partner >= 0 and w.npc(n.partner) != null and w.npc(n.partner).alive:
-				leaving.append(w.npc(n.partner))
-			return "set out: %s" % str(hs.begin(n.household, n, leaving, str(st.path)))
+			# the first candidate (lowest household, then id) whom the game's own gates let go and who can set out; each refusal kept
+			var tried := {}
+			for c: NPC in candidates(w, who):
+				var leaving := [c]
+				if c.partner >= 0 and w.npc(c.partner) != null and w.npc(c.partner).alive:
+					leaving.append(w.npc(c.partner))
+				var why: String = hs.gate(c.household, leaving) if hs.has_method("gate") else ""
+				if why == "" and hs.begin(c.household, c, leaving, str(st.path)):
+					picked[who] = c
+					return "set out: p:%d of hh:%d (refused before: %s)" % [c.id, c.household, JSON.stringify(tried)]
+				var k := why if why != "" else "no_site_or_coins"
+				tried[k] = int(tried.get(k, 0)) + 1
+			return "nobody could set out: %s" % JSON.stringify(tried)
 		"faction":
 			var cl: Array = hs.claims
 			if cl.is_empty():

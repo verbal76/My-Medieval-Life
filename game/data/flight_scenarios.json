@@ -3,11 +3,11 @@
   "note": "B25R1-016 section 12: targeted scenarios for rare features that may not occur organically in the 365-day campaign. Each starts from a fresh world of its seed with the documented start below, applies the listed steps through the systems' own scenario entry points (LifeDecisions.set_hardship / weigh_runaway / recruit / leave_band, Homesteads.begin / set_faction: they set a record or run a decision exactly as the dawn would; no rule, weight or probability is changed), then runs the normal game for its days with the flight recorder on. A scenario proves a mechanic can work; it says nothing of its natural frequency. Run: godot --headless --path game --script res://tests/flight_scenarios.gd -- --out DIR. Read by tools/flight_lives.py --targeted DIR, reported apart from the organic campaign.",
   "scenarios": [
     {"name": "young_adult_homestead", "cases": ["A"], "seed": 1, "days": 12,
-     "start": "seed 1 village; the first household (lowest index) with an unpartnered adult under 25 who holds no post; that person sets out as a young adult",
+     "start": "seed 1 village; unpartnered adults under 25 who hold no post, in order of household then id: the first whom the game's own homestead gates (Homesteads.gate) let go and who finds a site and the coins sets out as a young adult; each refusal is listed",
      "steps": [{"op": "homestead_begin", "who": "young_adult", "path": "young"}],
      "expect": ["homestead_travel_begin", "homestead_claimed", "homestead_residence"]},
     {"name": "established_adult_homestead", "cases": ["B"], "seed": 2, "days": 12,
-     "start": "seed 2 village; the first household with a partnered adult aged 25 or over who holds no post; the couple set out as established adults",
+     "start": "seed 2 village; partnered adults aged 25 or over who hold no post, in the same order: the first couple the gates let go and who find a site and the coins set out as established adults",
      "steps": [{"op": "homestead_begin", "who": "established_adult", "path": "adult"}],
      "expect": ["homestead_travel_begin", "homestead_claimed", "homestead_residence"]},
     {"name": "outlaw_homestead", "cases": ["E"], "seed": 3, "days": 12,

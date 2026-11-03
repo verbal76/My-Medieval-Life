@@ -850,7 +850,10 @@ def build(run_dir, out_dir, targeted=None, compare_dir=None):
     chart_files = charts(lv, os.path.join(out_dir, "G_charts"), bl, hs)
     exc = exceptions(lv, feats, bl, hs, rates, econ, status, pc)
     det = compare(run_dir, compare_dir) if compare_dir else None
-    tgt = load_json(os.path.join(targeted, "targeted.json"), None) if targeted else None
+    tgt = None
+    if targeted:                                     # one targeted.json, or several (one per scenario run) under the directory
+        found = sorted(glob.glob(os.path.join(targeted, "targeted.json")) + glob.glob(os.path.join(targeted, "*", "targeted.json")))
+        tgt = {"scenarios": [x for p in found for x in (load_json(p, {}) or {}).get("scenarios", [])], "files": found}
     # ---------------- B
     with open(os.path.join(out_dir, "B_migration_ledger.csv"), "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=["day", "minute", "person", "name", "type", "what", "origin", "destination", "reason", "track", "outcome", "event"])
