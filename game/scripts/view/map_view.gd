@@ -11,7 +11,7 @@ const ROAD_TRAIL_ROW := 4
 const ROAD_OVERGROWN_ROW := 6          # B25R1-011: rows 6-7 grown-over dirt road and trail, rows 8-9 damaged and broken stone
 const ROAD_DAMAGED_ROW := 8
 const WATER_ATLAS := 5                 # B25R1-Q3: game/assets/tiles/water_tiles.png (tools/water_tiles.py): 4 animation frames a row
-const WATER_FRAMES := 4
+const WATER_FRAMES := 8                # tools/water_tiles.py FRAMES; each frame water.json "frame_seconds" long
 const WATER_STILL_ATLAS := 6           # B25R1-019: the same water sheet with no animation (its first frame): water out of the live range
 
 var tileset := TileSet.new()
@@ -172,8 +172,9 @@ func _put(layer: TileMapLayer, cell: Vector2i, v: int) -> void:
 		src.get_tile_data(coords, 0).y_sort_origin = SORT_ORIGIN
 		if atlas == WATER_ATLAS:                    # B25R1-Q3: the water's own frames, left to right
 			src.set_tile_animation_frames_count(coords, WATER_FRAMES)
+			var secs := float(Overworld.water_cfg().get("frame_seconds", 0.15))
 			for f in WATER_FRAMES:
-				src.set_tile_animation_frame_duration(coords, f, 0.15)
+				src.set_tile_animation_frame_duration(coords, f, secs)
 		elif animated.has(t):
 			src.set_tile_animation_columns(coords, animated[t])
 			src.set_tile_animation_frames_count(coords, animated[t])

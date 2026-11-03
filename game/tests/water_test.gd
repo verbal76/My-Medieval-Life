@@ -102,7 +102,7 @@ func _run() -> void:
 						bridges.append(c)
 						if a.is_solid(c) or not a.is_road(c) or a.is_water(c) or not a.is_bridge(c):
 							bridge_bad += 1
-	check(n.water > 1000 and n.fall > 0 and n.bridge > 0, "generation 4 has streams, waterfalls and bridges round the village (%s)" % str(n))
+	check(n.water > 1000 and n.bridge > 0, "generation 4 has streams and bridges round the village (%s; the falls are checked where the courses drop, below)" % str(n))
 	check(bad_solid == 0, "every stream, pool and waterfall cell is water and solid (%d not)" % bad_solid)
 	check(n.ford > 0 and ford_bad == 0, "streams have fords, stepping stones walked across (%d cells, %d not walkable)" % [n.ford, ford_bad])
 	check(bridge_bad == 0, "every bridge is a road cell, walkable, not water (%d not)" % bridge_bad)
@@ -320,6 +320,35 @@ func _run() -> void:
 						if a.flow_at(c + Vector2i(0, dd)) == Overworld.FLOW_FOAM:
 							foam_near_fall += 1
 							break
+	# the region layout (B25R1-018) leaves no cliff a course crosses near the village: the falls are looked for along the
+	# courses across the region (nearest_fall at every few points)
+	var fall_chunks := {}
+	for crs in a.streams_in(Rect2i(-700, -450, 1400, 1600)):
+		var pts: Array = crs.pts
+		for pi in range(0, pts.size(), 2):
+			if fall_chunks.size() >= 6:
+				break
+			var f := a.nearest_fall(Vector2i(pts[pi]), 7)
+			if f != Overworld.NO_WATER:
+				fall_chunks[Overworld.chunk_of(f)] = true
+	var feet := 0
+	for cc: Vector2i in fall_chunks:
+		var ch := a.get_chunk(cc)
+		for i in 1024:
+			var c := Vector2i(cc.x * 32 + i % 32, cc.y * 32 + i / 32)
+			if ch.water[i] == 3:
+				nfalls += 1
+				if (a.is_top(c + Vector2i(0, -1)) or a.is_top(c + Vector2i(0, -2))) and not a.is_top(c + Vector2i(0, 1)) and a.is_solid(c):
+					fall_rim += 1
+				for dd in range(1, 5):
+					if a.flow_at(c + Vector2i(0, dd)) == Overworld.FLOW_FOAM:
+						foam_near_fall += 1
+						break
+				var below := c + Vector2i(0, 1)
+				var bch := a.get_chunk(Overworld.chunk_of(below))
+				if a.is_water(below) and int(bch.ground[(below.y - Overworld.chunk_of(below).y * 32) * 32 + below.x - Overworld.chunk_of(below).x * 32]) == int(a.tiles.water.fall_foot):
+					feet += 1
+	check(feet > 0, "EA-01: a fall runs on into the cell below it, its foot drawn with the cascade and splash (%d of %d falls)" % [feet, nfalls])
 	var moving := 0
 	for f in range(1, 9):
 		moving += int(flows.get(f, 0))

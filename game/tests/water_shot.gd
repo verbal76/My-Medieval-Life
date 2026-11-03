@@ -1,12 +1,15 @@
 extends SceneTree
-## B25R1-Q3: screenshots of the streams in the world beside the player, to look at (CLAUDE.md: visual output is looked at
-## before it is reported). Needs a display (not --headless):
-##   xvfb-run -a godot --rendering-driver opengl3 --path game --resolution 1280x720 --script res://tests/water_shot.gd -- OUT_DIR
-## Shots: a waterfall over a cliff's rim into its pool, a bridge where a road crosses a stream, a stream's bend, a ford's
-## stepping stones (the player standing on them), and the Region map with the streams.
+## B25R1-Q3: screenshots of the streams in the world beside the player at normal zoom, to look at (CLAUDE.md: visual output is
+## looked at before it is reported). Needs a display (not --headless):
+##   xvfb-run -a godot --rendering-driver opengl3 --path game --resolution 1280x720 --script res://tests/water_shot.gd -- OUT_DIR [SHOT,...]
+## Shots (all by default, or those named): ford (the Upmeads Ford, B25R1-018), stone_bridge (the fair bridge), plank_bridge
+## (a wooden bridge where a road crosses a stream), waterfall (a fall over a cliff's rim into its pool), river (a bend of
+## Upmeads Water), map (the Region map with the streams). Targets come from the layout's crossings and the courses, so no
+## wide chunk scan is needed (a few chunks each).
 
 var main
 var out := "/tmp"
+var only: Array = []
 var frames := 0
 var queue: Array = []
 var current := ""
@@ -16,9 +19,26 @@ func _init() -> void:
 	var args := OS.get_cmdline_user_args()
 	if args.size() > 0:
 		out = args[0]
+	if args.size() > 1:
+		only = Array(args[1].split(","))
 	main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
 	process_frame.connect(_setup, CONNECT_ONE_SHOT)
+
+
+func _want(name: String) -> bool:
+	return only.is_empty() or only.has(name)
+
+
+## A road cell beside `at` that is dry land (where the player stands to look at a crossing), else `at`.
+func _stand(ow: Overworld, at: Vector2i) -> Vector2i:
+	for r in range(1, 10):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				var c := at + Vector2i(dx, dy)
+				if ow.is_road(c) and not ow.is_bridge(c) and not ow.is_water(c) and not ow.is_solid(c):
+					return c
+	return at
 
 
 func _setup() -> void:
@@ -28,65 +48,56 @@ func _setup() -> void:
 	var w: World = main.world
 	w.player.hunger = 100.0
 	var ow: Overworld = w.map.overworld
-	var fall := Vector2i.ZERO
-	var bridge := Vector2i.ZERO
-	var bend := Vector2i.ZERO
-	var ford := Vector2i.ZERO
-	var river := Vector2i.ZERO
-	var c0 := Overworld.chunk_of(ow.village.get_center())
-	for r in range(1, 22):
-		for dy in range(-r, r + 1):
-			for dx in range(-r, r + 1):
-				if maxi(absi(dx), absi(dy)) != r:
-					continue
-				var cc := c0 + Vector2i(dx, dy)
-				if ow.chunk_in_village(cc):
-					continue
-				var ch := ow.get_chunk(cc)
-				for i in 1024:
-					var c := cc * 32 + Vector2i(i % 32, i / 32)
-					if ch.water[i] == 3 and fall == Vector2i.ZERO:
-						fall = c
-					elif ch.water[i] == 2 and bridge == Vector2i.ZERO:
-						bridge = c
-					elif ch.water[i] == 1 and ch.level[i] == 2 and river == Vector2i.ZERO:
-						river = c
-					elif ch.water[i] == 4 and ford == Vector2i.ZERO:
-						ford = c
-					elif ch.water[i] == 1 and bend == Vector2i.ZERO and r > 3:
-						bend = c
-	print("fall ", fall, " bridge ", bridge, " stream ", bend, " ford ", ford, " river ", river)
-	if fall != Vector2i.ZERO:
-		queue.append(["waterfall", Vector2(ow.nearest_water_access(fall + Vector2i(0, 3), 6)) + Vector2(0.5, 0.5)])
-	if bridge != Vector2i.ZERO:
-		queue.append(["bridge", Vector2(bridge) + Vector2(0.5, 0.5)])
-	if bend != Vector2i.ZERO:
-		queue.append(["stream", Vector2(ow.nearest_water_access(bend, 3)) + Vector2(0.5, 0.5)])
-	if ford != Vector2i.ZERO:
-		queue.append(["ford", Vector2(ford) + Vector2(0.5, 0.5)])
-	if river != Vector2i.ZERO:
-		queue.append(["river", Vector2(ow.nearest_water_access(river, 6)) + Vector2(0.5, 0.5)])
-	# B25R1-018: the canonical crossings (Upmeads Water's bridge and ford; the stone bridge and fords south of Higham), the
-	# player on the road beside each
-	var k := 0
+	var plank := Vector2i.ZERO
 	for f in ow._forced:
 		var at := Vector2i((f[0] as Vector2).floor())
-		var stand := at
-		for r in range(0, 9):
+		if str(f[2]) == "ford" and _want("ford") and not queue.any(func(q): return q[0] == "ford"):
+			queue.append(["ford", Vector2(_stand(ow, at)) + Vector2(0.5, 0.5)])
+		elif str(f[2]) == "stone_bridge" and _want("stone_bridge") and not queue.any(func(q): return q[0] == "stone_bridge"):
+			queue.append(["stone_bridge", Vector2(_stand(ow, at)) + Vector2(0.5, 0.5)])
+	if _want("plank_bridge") or _want("map"):
+		var c0 := Overworld.chunk_of(ow.village.get_center())
+		for r in range(1, 9):
+			if plank != Vector2i.ZERO:
+				break
 			for dy in range(-r, r + 1):
 				for dx in range(-r, r + 1):
-					var c := at + Vector2i(dx, dy)
-					if stand == at and ow.is_road(c) and not ow.is_bridge(c) and not ow.is_water(c) and not ow.is_solid(c):
-						stand = c
-		queue.append(["canon_%d_%s" % [k, str(f[2])], Vector2(stand) + Vector2(0.5, 0.5)])
-		k += 1
-	queue.append(["map", Vector2(bridge) + Vector2(0.5, 0.5)])
+					var cc := c0 + Vector2i(dx, dy)
+					if maxi(absi(dx), absi(dy)) != r or ow.chunk_in_village(cc) or plank != Vector2i.ZERO:
+						continue
+					var ch := ow.get_chunk(cc)
+					for i in 1024:
+						var c := cc * 32 + Vector2i(i % 32, i / 32)
+						if ch.water[i] == 2 and ow.forced_crossing(c) == "" and not RoadWear.visual(ow, c).begins_with("stone"):
+							plank = c
+							break
+		if plank != Vector2i.ZERO and _want("plank_bridge"):
+			queue.append(["plank_bridge", Vector2(_stand(ow, plank)) + Vector2(0.5, 0.5)])
+	if _want("waterfall"):
+		var fall := Overworld.NO_WATER
+		for crs in ow.streams_in(Rect2i(-700, -450, 1400, 1600)):
+			var pts: Array = crs.pts
+			for pi in range(0, pts.size(), 2):
+				if fall == Overworld.NO_WATER:
+					fall = ow.nearest_fall(Vector2i(pts[pi]), 7)
+		if fall != Overworld.NO_WATER:
+			queue.append(["waterfall", Vector2(ow.nearest_water_access(fall + Vector2i(0, 3), 6)) + Vector2(0.5, 0.5)])
+	if _want("river"):
+		for crs in ow.anchored_courses():
+			if str(crs.id) == "canon:upmeads_water":
+				var pts: Array = crs.pts
+				var p := Vector2i(pts[pts.size() / 3])
+				queue.append(["river", Vector2(ow.nearest_water_access(p, 8)) + Vector2(0.5, 0.5)])
+	if _want("map"):
+		queue.append(["map", Vector2(plank) + Vector2(0.5, 0.5)])
+	print("shots ", queue.map(func(q): return "%s %s" % [q[0], q[1]]))
 	_next()
 	process_frame.connect(_wait)
 
 
 func _next() -> void:
 	if queue.is_empty():
+		print("shots done")
 		quit(0)
 		return
 	var e: Array = queue.pop_front()

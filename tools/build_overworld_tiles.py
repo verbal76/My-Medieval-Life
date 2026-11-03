@@ -13,9 +13,11 @@ tileset), so the game can draw with the atlases it already has. Nothing is drawn
   trees, sapling the (trunk, canopy top, canopy bottom) tree stamps and the sapling tile the village uses
   rock, flowers, bushes   single-tile objects of the paid tileset, identified visually
   water          B25R1-Q3: the stream tiles in game/assets/tiles/water_tiles.png (tools/water_tiles.py, the same free
-                 tileset's grass/river corner set, waterfall and plank walks, and stone bridges from the paid flagstone):
-                 river[k] for water corners k (bit 0 top-left, 1 top-right, 2 bottom-right, 3 bottom-left; [] where the set
-                 has no tile), flow_base (B25R1-017: the tile of flow f and corners k is flow_base + (f * 16 + k) * 4), fall, ford (stepping stones), bridge {plank_ns, plank_ew, stone_ns, stone_ew}, as atlas 5 values (5 * 100000 + row * 4)
+                 tileset's grass/river corner set, waterfall, wooden walk and castle wall-walk): river[k] for water corners
+                 k (bit 0 top-left, 1 top-right, 2 bottom-right, 3 bottom-left; [] where the set has no tile), cols (the
+                 frames a row), looks and look_rows (EA-01: the tile of look v, flow f and corners k is
+                 flow_base + (v * look_rows + f * 16 + k) * cols), fall, fall_foot, ford (stepping stones), bridge {plank_ns,
+                 plank_ew, stone_ns, stone_ew, plank_n, plank_s, plank_w, plank_e}, as atlas 5 values (5 * 100000 + row * cols)
 
 Run:  python3 tools/build_overworld_tiles.py
 """
@@ -23,6 +25,7 @@ import json
 
 from assetzip import AssetZip, REPO
 import puny_world_terrain as pwt
+import water_tiles
 
 OUT = REPO / "game" / "data" / "overworld_tiles.json"
 VILLAGE = REPO / "game" / "data" / "village.json"
@@ -35,8 +38,8 @@ ROCK = 1964                  # a grey boulder (also the village's worked-out ore
 FLOWERS = [2657, 2658, 2659, 2656]   # PL1-12: the low red flower (2656) grows outside the village too (overworld GEN_VERSION 2)
 BUSHES = [2661, 2663]
 FORMAT = "mml-overworld-tiles/1"
-WATER_ATLAS = 5 * 100000                 # MapView's water atlas (game/assets/tiles/water_tiles.png: 4 frames a row)
-WATER_ROWS = {"fall": 160, "plank_ns": 161, "plank_ew": 162, "stone_ns": 163, "stone_ew": 164, "ford": 165}   # after 10 flows x 16 corners
+WATER_ATLAS = 5 * 100000                 # MapView's water atlas (game/assets/tiles/water_tiles.png; its layout: water_tiles.ROW)
+WCOLS = water_tiles.FRAMES
 
 
 def build():
@@ -65,9 +68,12 @@ def build():
     river = []
     for k in range(16):
         key = tuple(river_id if k >> b & 1 else GRASS for b in range(4))
-        river.append([WATER_ATLAS + k * 4] if k != 0 and tiles.get(key) else [])
-    water = {"river": river, "flow_base": WATER_ATLAS, "fall": WATER_ATLAS + WATER_ROWS["fall"] * 4, "ford": WATER_ATLAS + WATER_ROWS["ford"] * 4,
-             "bridge": {k: WATER_ATLAS + WATER_ROWS[k] * 4 for k in ["plank_ns", "plank_ew", "stone_ns", "stone_ew"]}}
+        river.append([WATER_ATLAS + k * WCOLS] if k != 0 and tiles.get(key) else [])
+    row = water_tiles.ROW
+    water = {"river": river, "flow_base": WATER_ATLAS, "cols": WCOLS, "looks": water_tiles.LOOKS,
+             "look_rows": water_tiles.FLOWS * 16, "fall": WATER_ATLAS + row["fall"] * WCOLS,
+             "fall_foot": WATER_ATLAS + row["fall_foot"] * WCOLS, "ford": WATER_ATLAS + row["ford"] * WCOLS,
+             "bridge": {k: WATER_ATLAS + row[k] * WCOLS for k in water_tiles.BRIDGE}}
     village = json.loads(VILLAGE.read_text())
     stamps = sorted({(t["trunk"], t["top"], t["bottom"]) for t in village["trees"]})
     trees = [{"trunk": a, "top": b, "bottom": c, "group": TREE_GROUPS[c]} for a, b, c in stamps]

@@ -1887,7 +1887,7 @@ func _generate(cx: int, cy: int) -> Chunk:
 			if wn[q] > 0:
 				_water_cell(ch, c, q, gk, wdata, wn, blocked[q] == 1 and inner[q] == 0, road[q] == 1, wx, wy,
 					_is_fall(q, wn, blocked, inner), _is_fall(q - AREA, wn, blocked, inner) or _is_fall(q - 2 * AREA, wn, blocked, inner) or _is_fall(q - 3 * AREA, wn, blocked, inner),
-					_road_shallows(q, road, open, wn))
+					_road_shallows(q, road, open, wn), _is_fall(q - AREA, wn, blocked, inner))
 			elif not wdata.is_empty():
 				ch.bank[c] = (wdata[3] as PackedByteArray)[gk]       # B25R1-017: the floodplain's height above the water
 			if road[q] == 1:
@@ -1970,7 +1970,7 @@ func _road_shallows(q: int, road: PackedByteArray, open: PackedByteArray, wn: Pa
 
 
 func _water_cell(ch: Chunk, c: int, q: int, gk: int, wdata: Array, wn: PackedByteArray, rim: bool, on_road: bool, wx: int, wy: int,
-		fall := false, below_fall := false, shallows := false) -> void:
+		fall := false, below_fall := false, shallows := false, foot := false) -> void:
 	var wc: PackedByteArray = wdata[0]
 	var fl: PackedByteArray = wdata[1]
 	var od: PackedByteArray = wdata[2]
@@ -1991,20 +1991,25 @@ func _water_cell(ch: Chunk, c: int, q: int, gk: int, wdata: Array, wn: PackedByt
 	ch.flow[c] = flow
 	ch.bank[c] = 0
 	var river: Array = tiles.water.river
-	var tile := int(tiles.water.flow_base) + (flow * 16 + bits) * 4 if not (river[bits] as Array).is_empty() else -1
+	# EA-01: one of the art's looks per cell (other ripples, a bank tuft on a corner step), so no lattice of streaks shows
+	var cols := int(tiles.water.cols)
+	var look := hash32(seed, wx, wy, 133) % int(tiles.water.looks) * int(tiles.water.look_rows)
+	var tile := int(tiles.water.flow_base) + (look + flow * 16 + bits) * cols if not (river[bits] as Array).is_empty() else -1
 	if rim:
 		if wn[q] < 2:
 			return                                     # a corner of the rim wet: the rock stays
 		# a waterfall only where the water leaves a mountain top over its rim, heading down (south, as the rock face is
 		# drawn): the top above, the low ground below. Elsewhere a wet rim cell is plain water cut through the rock.
 		var falls: bool = fall
-		ch.ground[c] = int(tiles.water.fall) if falls else (tile if tile >= 0 else int(tiles.water.flow_base) + (flow * 16 + 15) * 4)
+		ch.ground[c] = int(tiles.water.fall) if falls else (tile if tile >= 0 else int(tiles.water.flow_base) + (look + flow * 16 + 15) * cols)
 		ch.water[c] = 3 if falls else 1
 		ch.level[c] = order
 		ch.solid[c] = 1
 		return
 	if tile >= 0:
 		ch.ground[c] = tile
+	if foot and wn[q] == 4:
+		ch.ground[c] = int(tiles.water.fall_foot)      # EA-01: the fall runs on into the cell below and splashes there
 	if wn[q] >= 2:
 		ch.level[c] = order
 		if forced_crossing(Vector2i(wx, wy)) == "ford":

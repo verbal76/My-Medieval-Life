@@ -197,7 +197,17 @@ func _bridge_tile(cell: Vector2i, look: String) -> int:
 	var box := overworld.crossing_box(cell)
 	var run := "ew" if box.size.x > box.size.y else "ns" if box.size.y > box.size.x else ("ns" if overworld.is_water(cell + Vector2i(-1, 0)) or overworld.is_water(cell + Vector2i(1, 0)) else "ew")
 	var stone := look.begins_with("stone") or overworld.forced_crossing(cell) == "stone_bridge"     # B25R1-018: canonical stone bridge
-	return int(overworld.tiles.water.bridge[("stone_" if stone else "plank_") + run])
+	var br: Dictionary = overworld.tiles.water.bridge
+	if not stone:
+		# EA-01: a wooden bridge has its ends: the post-capped north end and the south end on its legs; rounded east and west
+		var step := Vector2i(0, 1) if run == "ns" else Vector2i(1, 0)
+		var head := not overworld.is_bridge(cell - step)
+		var tail := not overworld.is_bridge(cell + step)
+		if head != tail:
+			var end := ("n" if head else "s") if run == "ns" else ("w" if head else "e")
+			if br.has("plank_" + end):
+				return int(br["plank_" + end])
+	return int(br[("stone_" if stone else "plank_") + run])
 
 
 ## B25R1-011: draw a loaded cell's way again (its look changed), with its four neighbours (their joins may change).

@@ -1,7 +1,8 @@
 {
   "format": "mml-water/1",
-  "note": "B25R1-Q3, B25R1-017, B25R1-018 (owner EA-01: one place per decision): the overworld water generator's tuning, read by Overworld (game/scripts/core/overworld.gd, Overworld.water_cfg) and documented in docs/design/WATER.md. Agent values, provisional (docs/DECISIONS.md 2026-11-03). Changing a value changes generation 4's water for every new world (worlds are generated, never saved). Lengths in tiles. The art (ripple scroll, foam) is tools/water_tiles.py's; the sound distances are music.json \"water\".",
+  "note": "B25R1-Q3, B25R1-017, B25R1-018 (owner EA-01: one place per decision): the overworld water generator's tuning, read by Overworld (game/scripts/core/overworld.gd, Overworld.water_cfg) and documented in docs/design/WATER.md. Agent values, provisional (docs/DECISIONS.md 2026-11-03). Changing a value changes generation 4's water for every new world (worlds are generated, never saved). Lengths in tiles. The art (ripples, foam, falls, bridges) is tools/water_tiles.py's, its frame length frame_seconds (8 frames, 2 px a frame: the ripples run 11 px a second); the sound distances are music.json \"water\".",
   "step": 6,
+  "frame_seconds": 0.18,
   "stream": {"lattice": 176, "chance": 70, "high": 540, "steps": 48, "width": [0.8, 1.7], "end_pool": 2.6, "meander": 1.6},
   "river": {"lattice": 352, "chance": 65, "high": 500, "steps": 110, "width": [1.6, 3.4], "end_pool": 4.5, "meander": 0.9},
   "canonical_meander": {"river": 3.0, "stream": 2.2},

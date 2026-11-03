@@ -26477,10 +26477,10 @@
   },
   {
    "file": "assets/tiles/water_tiles.png",
-   "source": "PUNY_WORLD_v1.zip + PUNY-WORLD-PAID_v1.zip",
-   "member": "PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/punyworld-overworld-tiles.tsx grass/river corner tiles and their animations, tiles 598-601, 847, 876; PUNY-WORLD-PAID_v1/Tiled/punyworld-tiles.png tile 10150",
-   "transform": "B25R1-Q3/B25R1-017 water tiles: 4 animation frames x 166 rows, 1:1 (rows flow*16 + corners: the grass/river corner tiles, flow 0 their own animation, 1-8 the open water's ripples (the set's lighter water colours) scrolled 4 px a frame downstream, 9 foam flecks; then the waterfall, plank bridges, stone bridges (the flagstone with its edges darkened to 0.62) and a ford (the full water with tile 703's stones set in twice))",
-   "sha256": "0ca38c990f14b37b04deb0514412ec5ad4ac1789da34c714e5d23bbcda1fb73c"
+   "source": "PUNY_WORLD_v1.zip",
+   "member": "PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/punyworld-overworld-tiles.tsx grass/river corner tiles and their animations, tiles 598-601 (falls), 703 (stones), 750, 876, 747, 775, 723, 777, 875, 877 (the wooden walk and the castle wall-walk: bridges)",
+   "transform": "B25R1-Q3/B25R1-017/EA-01 water tiles: 8 animation frames x 331 rows, 1:1 (rows look*160 + flow*16 + corners: the grass/river corner tiles, flow 0 their own animation held two frames each, 1-8 three long soft ripples (the set's lighter water colours) scrolled 2 px a frame downstream, 9 drifting foam; look 1 other ripples and a tuft of the set's bank grass on corner steps; then the fall (its splash cut), the fall's foot (cascade, splash, foam), a ford (tile 703's stones twice in the full water) and the bridges, the tileset's walks as drawn)",
+   "sha256": "3053102272fbc30d89f7b8a495074e519dea628d22d0194d66480e8dfb9353f2"
   }
  ]
 }
