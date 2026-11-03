@@ -7538,7 +7538,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7547,8 +7547,15 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_regional_world_reconstruction.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-region worker; branch: None -> wip/b25r1-region",
+     "why": "assigned: region worker on wip/b25r1-region (phase 1 design and layout data first); water worker re-anchored on the canonical rivers"
     }
-   ]
+   ],
+   "assigned_worker": "b25r1-region worker",
+   "branch": "wip/b25r1-region"
   },
   {
    "id": "B25R1-Q1",
