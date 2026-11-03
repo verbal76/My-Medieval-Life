@@ -117,3 +117,24 @@ The campaign finished at 05:58 EST (GitHub Actions 06:05-10:58 UTC). The four se
 - `tests/test_sim_gate.py` passes 36 of 36.
 - A local targeted run (`sim_suite --only social_chain_off`) reached day 10 of 15 with exact save round trips and 0 claims breaches, then stopped when the session's container restarted. It was not repeated.
 - The release workflow reruns the full gate on the corrected commit, and that is the gate of record: release run 41648387967 on `726ceeb` (private, build 25), dispatched 2026-11-03 08:53 EST.
+
+## Release run 41648387967 on `726ceeb`: PASSED; private draft release created 2026-11-03 09:55 EST
+
+- Ran 08:53-09:55 EST. All six package jobs passed, as did both Windows launch smoke tests (full and demo) and the simulation gate (SIM-GATE-01 PASS on this commit, checked by the release job; artifact `sim-gate` 13240502316).
+- Draft release "My Medieval Life — Build 25": tag `build-25`, release id 432836586, draft and prerelease, target `726ceeb`. Not public; not uploaded to Steam.
+- Android: both APKs signed by the permanent release identity. Full game: `com.hotatticgames.mymedievallife.dev`. Demo: `com.hotatticgames.mymedievallife.dev.demo`. versionCode 25.
+
+| File | Bytes | SHA-256 |
+|---|---|---|
+| MyMedievalLife-B25-Android.apk | 91,838,153 | `53268b35d060144b3be1fdc24a8b652b1064360982f8bf5a50c439385dff5fcd` |
+| MyMedievalLife-B25-Windows.zip | 234,440,077 | `328c57996a95b4e2431a9624bc7d16bd8f849ca04aece1f8e197a7a16a8e66ad` |
+| MyMedievalLife-B25-Linux.zip | 224,685,322 | `715cb9e00ab4235a685e549749e14a2072adf3bd108ebfb0b84f60b3dfb450de` |
+| MyMedievalLife-B25-Demo-Android.apk | 91,838,153 | `f3f4c64d352326a1baaa974dc2109f23caf6cf5e645f95e88e5a0a3973a76d83` |
+| MyMedievalLife-B25-Demo-Windows.zip | 234,440,119 | `aa499a3c95ec3c1b311452ae22cff411030205908bb7cfe1815389b736e8349d` |
+| MyMedievalLife-B25-Demo-Linux.zip | 224,685,351 | `0bc0f5570b1cabd65517fff86f395a8061b0ed6c504d781ec31765947de10c21` |
+
+The release also carries `SHA256SUMS.txt`, `SIZES.txt`, each APK's `.idsig` file and the two signature reports.
+
+**Known issue found after packaging (owner report, 2026-11-03 09:10 EST):** settlement-site buildings outside the village (REGION-NAV-01 S2a, `909b180`) are drawn by `OverworldView._draw_site_buildings` entirely over the characters. They lack the GP-DRAW-UNDER-HOUSE front-wall sorting, so a character at a settlement building's front wall is drawn half under it.
+- Village buildings are correct: `polish_p2_test` passes 104 of 104, and 8 `house_front_shot` screenshots were looked at.
+- The fix and its timing (in Build 25 or after) await the owner's decision.
