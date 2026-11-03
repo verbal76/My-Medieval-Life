@@ -29,16 +29,44 @@ def preset_options(name):
     raise AssertionError("no export preset named %s" % name)
 
 
+ANDROID_PRESETS = ["Android", "Android Demo"]     # DEMO-01 (owner 2026-11-03): the demo is its own Android app, with the same permissions
+
+
+def preset_section_text(name):
+    """The raw text of the options section of the export preset called `name`."""
+    text = (ROOT / "game" / "export_presets.cfg").read_text()
+    blocks = re.split(r"(?m)^(?=\[preset\.)", text)
+    index = None
+    for b in blocks:
+        m = re.match(r"\[preset\.(\d+)\]\n", b)
+        if m and re.search(r'(?m)^name="%s"$' % re.escape(name), b):
+            index = m.group(1)
+    if index is None:
+        raise AssertionError("no export preset named %s" % name)
+    for b in blocks:
+        if b.startswith("[preset.%s.options]" % index):
+            return b
+    raise AssertionError("export preset %s has no options section" % name)
+
+
 class AndroidNetworkPermissions(unittest.TestCase):
     def test_lan_permissions_are_on(self):
-        opts = preset_options("Android")
-        for p in NEEDED:
-            self.assertEqual(opts.get("permissions/" + p), "true", "permissions/%s must be true in the Android preset" % p)
+        for name in ANDROID_PRESETS:
+            opts = preset_options(name)
+            for p in NEEDED:
+                self.assertEqual(opts.get("permissions/" + p), "true", "permissions/%s must be true in the %s preset" % (p, name))
 
     def test_each_permission_once(self):
-        text = (ROOT / "game" / "export_presets.cfg").read_text()
-        for p in NEEDED:
-            self.assertEqual(len(re.findall(r"^permissions/%s=" % p, text, re.M)), 1, p)
+        # each Android preset names each permission once (a preset of its own may repeat it: the demo's does)
+        for name in ANDROID_PRESETS:
+            text = preset_section_text(name)
+            for p in NEEDED:
+                self.assertEqual(len(re.findall(r"^permissions/%s=" % p, text, re.M)), 1, "%s in %s" % (p, name))
+
+    def test_demo_has_its_own_package_and_the_full_game_keeps_its_own(self):
+        # the owner's package id stays on the full game; the demo is a separate app beside it (DEMO-01)
+        self.assertEqual(preset_options("Android").get("package/unique_name"), '"com.hotatticgames.mymedievallife.dev"')
+        self.assertEqual(preset_options("Android Demo").get("package/unique_name"), '"com.hotatticgames.mymedievallife.dev.demo"')
 
     def test_workflow_checks_the_apk_manifest(self):
         wf = (ROOT / ".github" / "workflows" / "release.yml").read_text()
