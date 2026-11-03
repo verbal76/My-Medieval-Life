@@ -188,8 +188,9 @@ work step or journey is ever cut: they are not loose.
 - anyone within `LOCK_RADIUS` = 5 tiles of a player;
 - anyone under an availability lock (`presence.lock(id, minutes)`, 60 game minutes).
 
-Protected people are counted (`crowd_stats.protected_over_target`) but never moved. If 25 must be present, 25 stay. **Not
-built yet:** `main.gd` does not call `presence.lock` on a talk, trade or tap. The 5-tile radius covers approach for now.
+Protected people are counted (`crowd_stats.protected_over_target`) but never moved. If 25 must be present, 25 stay.
+`main.gd` locks the villager the player approaches (`approach`) and the one they are walking up to (`_talk_step`).
+- Counting: only people outdoors count toward the crowd; someone under a roof is not seen.
 
 **Safeguards.**
 - *Hysteresis and cooldown* (above).

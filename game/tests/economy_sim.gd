@@ -68,6 +68,7 @@ var herd_last := {}            # kind -> the last row's key, to keep only the da
 var herd_care := {}            # kind -> hours a pen had a hungry animal and too little in the trough, and why it was not fed
 var trader_diag := false       # X20-TRADER-PAY-INV: --trader-diag prints the settlements' traders and their households each day (reads only)
 var trader_ever := {}          # "<settlement>|<household id>" of every household that has worked a settlement's trade
+var view_sweep := false        # B25R1-019: --view-sweep moves the view round the village every step (the observation twin)
 var flee_path := PackedVector2Array()   # SIM-GATE-01 crime_spree: the player's flight after a crime, cell by cell
 const FLEE_TILES_PER_SECOND := 4.5      # the player's walking speed (docs: guards chase at 1.3 x walk_tiles_per_second)
 
@@ -189,6 +190,7 @@ func _init() -> void:
 	var profile := "--profile" in args          # PERF-02: time per subsystem, printed at the end (changes nothing)
 	w.profiling = profile
 	w.presence.crowd_enabled = not ("--no-crowd" in args)     # B25R1-020: the crowd exception off, to measure it alone
+	view_sweep = "--view-sweep" in args
 	w.map.profiling = profile
 	var update_us := 0
 	var harness_us := 0
@@ -210,6 +212,9 @@ func _init() -> void:
 			w.player.hunger = 100.0            # the inert player is fed; it is not part of what is measured
 			if not flee_path.is_empty():
 				_flee_step()
+			if view_sweep:
+				# B25R1-019/020 observation twin: the view (not the player) sweeps the village; only what is live differs
+				w.presence.set_view(w.host_player().pid, Presence.DEFAULT_VIEW, Vector2(20 + (i * 7) % 90, 20 + (i * 3) % 70))
 			if i % 60 == 59:
 				var th := Time.get_ticks_usec()
 				_hourly()

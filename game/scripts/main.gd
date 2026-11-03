@@ -2343,6 +2343,7 @@ func say(n: NPC, text: String) -> void:
 ## The player speaks to a villager: someone busy (walking somewhere, working, fighting) calls out a
 ## line and carries on; anyone else stops for a conversation.
 func approach(n: NPC) -> void:
+	world.presence.lock(n.id, world.minutes)         # B25R1-020: someone the player speaks to is not hurried off for a crowd
 	# a sleeper (owner rule: sleeping is not immunity): wake them, pick their pocket, or leave them
 	if world.asleep(n):
 		ui.show_sleeper(n)
@@ -2825,6 +2826,7 @@ func _talk_step() -> void:
 		talk_to = null
 		move_to = Vector2.INF
 		return
+	world.presence.lock(talk_to.id, world.minutes)   # B25R1-020: the one the player is walking up to stays available
 	var d := talk_to.pos - world.player.pos
 	if d.length() > 1.3:
 		move_to = talk_to.pos
