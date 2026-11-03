@@ -7103,8 +7103,14 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_seed_travelers.md"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "owner_answer",
+     "why": "owner 2026-11-03 ~14:15 EST on the ambient pedlars, pilgrims and wayfarers: \"We can have them as well\": they stay (with their talk) alongside the real seed travelers; worker told"
     }
-   ]
+   ],
+   "owner_answer": "Keep the ambient travellers as well as the real seed travelers (owner, 2026-11-03)"
   },
   {
    "id": "B25R1-010",
