@@ -2207,7 +2207,7 @@ const PASS_THROUGH := ["well_built", "water_drawn", "water_drunk", "band_relocat
 	"wild_shortage", "sale_refused", "livestock_change", "raid", "raid_defended", "household_formed", "homestead_sustain", "homestead_year",
 	"clan_birth", "clan_member_died", "bandit_reintegrated", "runaway_departed", "runaway_outcome", "faction_changed", "wild_craft", "skill_progress",
 	"water_source_selected", "water_unavailable", "settlement_attempt_failed", "bridge_built", "bridge_used", "route_crossing", "travel_blocked_by_water",
-	"settlement_created", "settlement_construction", "settlement_occupancy", "wild_trade"]
+	"settlement_created", "settlement_construction", "settlement_occupancy", "settlement_discovered", "settlement_abandoned", "wild_trade"]
 
 
 static func _flat(data: Dictionary) -> Dictionary:
@@ -2381,6 +2381,16 @@ func life_event(kind: String, data: Dictionary) -> void:
 				for k in ["track", "path", "source", "action", "origin", "destination", "household", "faction", "faction_before", "outcome", "reason"]:
 					if data.has(k):
 						f[k] = str(data[k]) if k != "track" else _track(str(data[k]))
+				if data.get("summary") is Array:
+					f["summary"] = data.summary                 # restated moves (World.trade and the rest recorded them)
+				var rel := {}
+				for k in ["mother", "father", "leader", "by"]:
+					if typeof(data.get(k)) in [TYPE_INT, TYPE_FLOAT] and int(data[k]) > 0 and k != "by":
+						rel[k] = "p:%d" % int(data[k])
+				if data.get("raiders") is Array:
+					rel["raider"] = (data.raiders as Array).map(func(p) -> String: return "p:%d" % int(p))
+				if not rel.is_empty():
+					f["related"] = rel
 			else:
 				out = "unmapped_event"
 				f["detail"] = "life_event:" + kind

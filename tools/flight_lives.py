@@ -492,7 +492,9 @@ def feature_table(lv):
     add("wilderness_settlement", cnt(["settlement_created", "homestead_claimed"]), 0, cnt(["settlement_abandoned"]), cnt(["settlement_construction"]),
         cnt(["settlement_occupancy", "homestead_residence"]), cnt(["settlement_state"], lambda e: (num(need(e, "population", 0)) or 0) > 0))
     add("wilderness_production", cnt(["wild_production", "wild_consumption"]), 0, cnt(["wild_shortage", "sale_refused"]), 0, cnt(["wild_production"]), cnt(["wild_trade"]))
-    add("raids", cnt(["raid", "raid_defended"]), cnt(["raid"], lambda e: e["outcome"] == "refused"), cnt(["raid"], fail), 0, cnt(["raid"], lambda e: e["outcome"] == "ok"), 0)
+    back = lambda e: ctx(e, "action") in ("returned", "ended", "")      # a raid's own end (set_out is its start)
+    add("raids", cnt(["raid", "raid_defended"]), cnt(["raid"], lambda e: e["outcome"] == "refused"), cnt(["raid"], lambda e: back(e) and fail(e)),
+        cnt(["raid"], lambda e: ctx(e, "action") == "set_out"), cnt(["raid"], lambda e: back(e) and e["outcome"] == "ok"), cnt(["raid_defended"]))
     add("resident_journeys", cnt(["journey_begin", "journey_refused"]), 0, cnt(["journey_end"], fail) + cnt(["journey_refused", "journey_errand_failed"]), cnt(["journey_leg"]), cnt(["journey_end"], lambda e: e["outcome"] == "ok"), cnt(["journey_purchase"]))
     add("road_formation", cnt(["road_formed", "road_faded", "road_overgrown"]), 0, 0, cnt(["road_formed"]), cnt(["road_formed"], lambda e: any(s[1] == "level" and s[3] == 2 for s in e["sc"])), 0)
     add("road_paving_repair", cnt(["road_paved", "road_repaired", "road_wear"]), 0, 0, 0, cnt(["road_paved", "road_repaired"]), 0)
