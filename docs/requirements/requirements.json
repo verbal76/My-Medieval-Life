@@ -6852,8 +6852,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -6866,7 +6866,18 @@
      "date": "2026-11-03",
      "change": "target_build: 25 -> 20",
      "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> region_travel_test 56/0 (incl. a walk home->Wulstead); overworld 179/0; journey 14/0; region_geography 132/0; world 339/0; polish_p2 110/0; atlas 17/0; start_test 523/0; wiki passed; screenshots 1280x720 and 2400x1080 looked at; test_commit: None -> e7e17d2; commits + e7e17d2",
+     "why": "implemented by the map worker on wip/b25r1-map (b3e9fad), merged into wip/b25r1 (e7e17d2); region_travel_test 56/0 on the merge"
     }
+   ],
+   "branch": "wip/b25r1",
+   "tests": "region_travel_test 56/0 (incl. a walk home->Wulstead); overworld 179/0; journey 14/0; region_geography 132/0; world 339/0; polish_p2 110/0; atlas 17/0; start_test 523/0; wiki passed; screenshots 1280x720 and 2400x1080 looked at",
+   "test_commit": "e7e17d2",
+   "commits": [
+    "e7e17d2"
    ]
   },
   {
@@ -6885,8 +6896,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -6899,7 +6910,18 @@
      "date": "2026-11-03",
      "change": "target_build: 25 -> 20",
      "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> region_travel_test 56/0 (road preference, traversability); test_commit: None -> e7e17d2; commits + e7e17d2",
+     "why": "audit docs/region_nav/ROADS_AUDIT_B25R1.md: only dirt roads exist (village and overworld; the packs' path sets are dirt, sand, water); roads vs trails are two real network kinds, now drawn distinctly on the map; 239 sampled road cells walkable; every settlement joined by road. Stone roads: no art and no data, owner decision B25R1-Q1"
     }
+   ],
+   "branch": "wip/b25r1",
+   "tests": "region_travel_test 56/0 (road preference, traversability)",
+   "test_commit": "e7e17d2",
+   "commits": [
+    "e7e17d2"
    ]
   },
   {
@@ -6918,8 +6940,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -6932,7 +6954,18 @@
      "date": "2026-11-03",
      "change": "target_build: 25 -> 20",
      "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> region_travel_test 56/0 (incl. a walk home->Wulstead); overworld 179/0; journey 14/0; region_geography 132/0; world 339/0; polish_p2 110/0; atlas 17/0; start_test 523/0; wiki passed; screenshots 1280x720 and 2400x1080 looked at; test_commit: None -> e7e17d2; commits + e7e17d2",
+     "why": "implemented by the map worker on wip/b25r1-map (b3e9fad), merged into wip/b25r1 (e7e17d2); region_travel_test 56/0 on the merge"
     }
+   ],
+   "branch": "wip/b25r1",
+   "tests": "region_travel_test 56/0 (incl. a walk home->Wulstead); overworld 179/0; journey 14/0; region_geography 132/0; world 339/0; polish_p2 110/0; atlas 17/0; start_test 523/0; wiki passed; screenshots 1280x720 and 2400x1080 looked at",
+   "test_commit": "e7e17d2",
+   "commits": [
+    "e7e17d2"
    ]
   },
   {
@@ -6951,8 +6984,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -6965,7 +6998,18 @@
      "date": "2026-11-03",
      "change": "target_build: 25 -> 20",
      "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
+    },
+    {
+     "date": "2026-11-03",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> region_travel_test 56/0 (incl. a walk home->Wulstead); overworld 179/0; journey 14/0; region_geography 132/0; world 339/0; polish_p2 110/0; atlas 17/0; start_test 523/0; wiki passed; screenshots 1280x720 and 2400x1080 looked at; test_commit: None -> e7e17d2; commits + e7e17d2",
+     "why": "implemented by the map worker on wip/b25r1-map (b3e9fad), merged into wip/b25r1 (e7e17d2); region_travel_test 56/0 on the merge"
     }
+   ],
+   "branch": "wip/b25r1",
+   "tests": "region_travel_test 56/0 (incl. a walk home->Wulstead); overworld 179/0; journey 14/0; region_geography 132/0; world 339/0; polish_p2 110/0; atlas 17/0; start_test 523/0; wiki passed; screenshots 1280x720 and 2400x1080 looked at",
+   "test_commit": "e7e17d2",
+   "commits": [
+    "e7e17d2"
    ]
   },
   {
@@ -7087,6 +7131,28 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_homesteading.md"
+    }
+   ]
+  },
+  {
+   "id": "B25R1-Q1",
+   "kind": "decision",
+   "title": "Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)?",
+   "description": "Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)?",
+   "source": "docs/region_nav/ROADS_AUDIT_B25R1.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-03",
+     "change": "entered in the register",
+     "why": "docs/region_nav/ROADS_AUDIT_B25R1.md"
     }
    ]
   },

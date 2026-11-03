@@ -10,13 +10,13 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|
 | Approved requirements in scope | 162 |
 | Integrated | 127 of 162 (78%) |
-| Automated tests passed | 112 of 162 (69%) |
+| Automated tests passed | 116 of 162 (72%) |
 | Integration verified | 64 of 162 (40%) |
 | Gameplay verified | 0 of 162 (0%) |
 | Owner playtested | 0 of 162 (0%) |
 | Complete | 2 of 162 (1%) |
 | Open (release blockers) | 160 |
-| Open owner decisions (blocking) | 6 (0) |
+| Open owner decisions (blocking) | 7 (0) |
 
 ## In development (worker assigned) (4)
 
@@ -174,10 +174,10 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-001 | Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-002 | Full interaction outside the starting village (release blocker) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1-interact | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | OWNER APPROVED | PARTIALLY IMPLEMENTED | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-007 | Character creation: unrestricted cosmetic options | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return; no decorative travelers | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
@@ -205,7 +205,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | FIX-D1D2 | Saves never activate a disabled feature, and a disabled feature keeps its saved section untouched (D1 judgment, D2 economy), following the civic-records pattern | INTEGRATION VERIFIED | NOT READY |
 | SJD-E | Judgment expansion Gate E: first gated integration in one low-risk domain, feature flag off by default, matched-seed tests | INTEGRATION VERIFIED | NOT READY |
 
-## Open owner decisions (6)
+## Open owner decisions (7)
 
 | ID | Question | Disposition | Blocks | Affects |
 |---|---|---|---|---|
@@ -214,6 +214,7 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | B25-ECON-P3 | Retired villagers keep trade stock forever (day 120: 68 iron ore, 47 coal, 24 iron bars, 8 pickaxes, 7 axes held by elders while the working smith held nothing). Options: A keep; B elders and adults between jobs sell their goods through the existing sell rule; C the stock passes to the trade's successor as tools already do. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | OPEN | no |  |
 | B25-ECON-P4 | Ore imports stall: Garton's quarry stock rose 63 to 175 but its trader had no coins to buy it, so 0 iron ore came to the village in 120 days (2 in a year for seed 2). Options: A keep as an outcome; B the trader carries ore on consignment (paid on sale); C smiths buy from the quarry directly. Recommendation: decide after the final year-long runs; leaning B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | OPEN | no |  |
 | B25-ECON-P5 | Village land (fields, trees, game, ore) is fixed while population roughly triples in a year, so unemployment rises with population. Should fields grow with population? Recommendation: no change on present evidence. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | OPEN | no |  |
+| B25R1-Q1 | Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)? | OPEN | no |  |
 | CHAPEL-GIVE-14-Q | With the 14-day hardship line now governing chapel food alms, households offer wheat to the chapel only above 14 days of their own food (was 6, goods_keep_days), so food given as alms is not offered back. Accept this change to the giving rule? Options: A accept (recommended: consistent with the 14-day line, prevents give-and-take, keeps donations voluntary and from comfortable households); B keep the 6-day offering line (some households would both receive alms and offer wheat). Implemented provisionally as A at 8b203c5. | OPEN | no |  |
 
 ## Not counted: umbrellas, proposals, ideas, deferred (6)

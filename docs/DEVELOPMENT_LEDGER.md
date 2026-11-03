@@ -96,10 +96,10 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25R1-001 | Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25R1-002 | Full interaction outside the starting village (release blocker) | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
-| B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
-| B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
+| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | 20 | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
+| B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25R1-007 | Character creation: unrestricted cosmetic options | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return; no decorative travelers | 20 | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
@@ -889,7 +889,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (312)
+## Owner decisions (313)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -934,6 +934,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-NINE-D8 | Predefined capabilities and organic societal development | owner decision | APPROVED |  |
 | B25-NINE-D9 | Game juice phases J1 and J2 | owner decision | APPROVED |  |
 | B25-SCOPE-D1 | Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work from abandoned branches? | owner decision | APPROVED |  |
+| B25R1-Q1 | Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)? | 20 | OPEN |  |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | owner decision | APPROVED |  |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | owner decision | APPROVED |  |
 | BRANCH-POL-Q1 | Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion20 (code), with notices on the code line's copies (recommended); or authorize bringing the records into wip/expansion20 as one reviewed change (files only, not the old ancestry)? | unassigned | OPEN |  |
