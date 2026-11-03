@@ -335,7 +335,74 @@ func player_targets(p: PlayerState, probe: Vector2) -> Array:
 		if d < 1.6:
 			var lab := "Your well: bring %s" % _need_text(wl.need) if not (wl.need as Dictionary).is_empty() else "Dig your well (about %d minutes of digging left)" % ceili(float(wl.labour))
 			out.append({"d": d, "kind": "wild_well", "id": str(wl.id), "label": lab})
+	# B25R1-010 (the player's homestead, as an NPC claim's): a pen and a workshop beside the house, then their materials and work
+	for c in _hs().claims:
+		if str(c.owner) != mine or str(c.get("building", "")) == "" or not Homesteads.rect_of(c).grow(4).has_point(cell):
+			continue
+		var open := open_work(c)
+		var near_door := Vector2(Homesteads.step_of(c)).distance_to(probe) < 1.6
+		if open.is_empty() or str(open.kind) == "well":
+			if near_door and work_of(c, "pen").is_empty() and _pen_rect(c) != Rect2i():
+				out.append({"d": 1.55, "kind": "wild_work_begin", "id": "%s|pen" % c.id, "label": "Fence a pen beside your house (%s)" % _need_text(_cost("pen"))})
+			for kind in ["workshop_smithy", "workshop_carpentry"]:
+				if near_door and work_of(c, kind).is_empty() and _workshop_rect(c, kind) != Rect2i():
+					out.append({"d": 1.56, "kind": "wild_work_begin", "id": "%s|%s" % [c.id, kind], "label": "Mark out a %s beside your house (%s)" % [kind.trim_prefix("workshop_").replace("carpentry", "carpentry workshop"), _need_text(_cost(kind))]})
+		if not open.is_empty() and str(open.kind) != "well":
+			var r := Rect2i(int(open.rect[0]), int(open.rect[1]), int(open.rect[2]), int(open.rect[3]))
+			var at2 := Vector2(r.position.x + r.size.x / 2, r.end.y) + Vector2(0.5, 0.5)
+			var d2 := at2.distance_to(probe)
+			if d2 < 1.6:
+				var name := str(open.kind).trim_prefix("workshop_")
+				var standing: Array = clear_rect(r) if str(open.kind).begins_with("workshop_") else []
+				var lab2 := ("Your %s: bring %s" % [name, _need_text(open.need)]) if not (open.need as Dictionary).is_empty() else \
+					("Your %s: fell the %d trees on its ground first" % [name, standing.size()]) if not standing.is_empty() else ("Build your %s (about %d minutes of work left)" % [name, ceili(float(open.labour))])
+				out.append({"d": d2, "kind": "wild_work", "id": "%s|%s" % [c.id, open.id], "label": lab2})
 	return out
+
+
+## The player's verbs at a claim's pen or workshop (wild_work_begin, wild_work). "" done, else why not.
+func player_work(p: PlayerState, kind: String, ref: String) -> String:
+	var parts := ref.split("|")
+	var c := _hs().claim(parts[0])
+	if c.is_empty() or str(c.owner) != w.player_ref(p) or str(c.get("building", "")) == "":
+		return "That is not your homestead."
+	if kind == "wild_work_begin":
+		var what := parts[1]
+		var open := open_work(c)
+		if not open.is_empty() and str(open.kind) != "well":
+			return "Finish the %s first." % str(open.kind).trim_prefix("workshop_")
+		var r := _pen_rect(c) if what == "pen" else _workshop_rect(c, what)
+		if r == Rect2i() or not work_of(c, what).is_empty():
+			return "There is no room for it here."
+		var wk := _new_work(c, what, r)
+		if what == "pen":
+			wk.animal = str(cfg().pen_kinds[0])
+		return ""
+	var wk2 := open_work(c)
+	if wk2.is_empty() or str(wk2.id) != parts[1]:
+		return "There is nothing to work on here."
+	if not (wk2.need as Dictionary).is_empty():
+		if not deliver_work(c, p.inv, w.player_ref(p)):
+			return "You carry none of what it needs: %s." % _need_text(wk2.need)
+		return ""
+	var r2 := Rect2i(int(wk2.rect[0]), int(wk2.rect[1]), int(wk2.rect[2]), int(wk2.rect[3]))
+	if str(wk2.kind).begins_with("workshop_") and not clear_rect(r2).is_empty():
+		return "Fell the trees on its ground first."
+	labour(c, wk2, float(cfg().player_dig_minutes), null)
+	return ""
+
+
+## A player's claim workshop's stations, registered as the village's are (World.stations: the player's crafting reaches them;
+## its owner the player, so leave is theirs). NPC claims craft through Wilds itself and register none.
+func _register_stations(c: Dictionary, wk: Dictionary) -> void:
+	if not World.is_player_ref(str(c.owner)) or not str(wk.kind).begins_with("workshop_") or not bool(wk.done):
+		return
+	var o := Vector2i(int(wk.rect[0]), int(wk.rect[1]))
+	for s in (w.map.data.stamps[str(wk.kind)] as Dictionary).get("stations", []):
+		var id := "cs_%s_%s_%s" % [c.id, wk.id, str(s.type)]
+		var old: Dictionary = w.stations.get(id, {})
+		w.stations[id] = {"id": id, "type": str(s.type), "building": "claim:" + str(c.id), "users": old.get("users", {}), "owner": str(c.owner), "tenant": "",
+			"at": [o.x + int(s.at[0]), o.y + int(s.at[1])], "use": [o.x + int(s.use[0]), o.y + int(s.use[1])]}
 
 
 static func _need_text(need: Dictionary) -> String:
@@ -459,6 +526,7 @@ func labour(c: Dictionary, wk: Dictionary, mins: float, n: NPC) -> void:
 		_rec("well_built", {"claim": str(c.id), "by": n.id if n != null else -1, "cell": wk.cell, "cost": (wk.cost as Dictionary).duplicate()})
 	elif kind == "pen":
 		_open_pen(c, wk)
+	_register_stations(c, wk)
 	_rec("settlement_construction", {"claim": str(c.id), "action": "finished", "what": kind, "cost": (wk.cost as Dictionary).duplicate()})
 	var built := 0
 	for x in _all_works(c):
@@ -591,6 +659,8 @@ func _open_pen(c: Dictionary, wk: Dictionary) -> void:
 	var gate := Vector2i(r.position.x + r.size.x / 2, r.end.y - 1)
 	w.fauna.pens[id] = {"id": id, "kind": str(wk.get("animal", "chicken")), "x": r.position.x, "y": r.position.y, "w": r.size.x, "h": r.size.y,
 		"gate": [gate.x, gate.y], "feed_at": [gate.x, gate.y + 1], "trough": 0, "owner": str(c.owner), "tenant": "", "claim": str(c.id), "products": {}}
+	if World.is_player_ref(str(c.owner)):
+		w.fauna.pens[id].player = true                  # the player's own pen (Farming: buying animals into it, feeding, products)
 	w.fauna._cells.erase(id)
 	w.fauna._cell_set.erase(id)
 
@@ -1529,3 +1599,6 @@ func load_dict(d: Dictionary) -> void:
 	if not bc.is_empty():
 		w.bandit_camp = Homesteads.step_of(bc)
 	_hs()._sync_overworld()                             # (the wells are drawn with the claims: Homesteads loaded before them)
+	for c in _hs().claims:
+		for wk in c.get("works", []):
+			_register_stations(c, wk)

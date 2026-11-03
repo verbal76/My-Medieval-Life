@@ -304,6 +304,36 @@ func _init() -> void:
 		for i in 20:
 			w2.wilds.player_well(pl, "wild_well", str(pwl.id))
 		check(bool(pwl.done) and w2.wilds.source_of(pc) != Wilds.NONE, "K: dug by the player's work: the well stands")
+		# ---- L: the player's pen and workshop on their own claim
+		pl.pos = Vector2(Homesteads.step_of(pc)) + Vector2(0.5, 0.5)
+		var lk := w2.wilds.player_targets(pl, pl.pos).map(func(e) -> String: return str(e.id))
+		check(lk.has("%s|pen" % pc.id) and w2.wilds.player_work(pl, "wild_work_begin", "%s|pen" % pc.id) == "", "L: the player fences a pen beside their house")
+		var ppen := w2.wilds.work_of(pc, "pen")
+		check(w2.wilds.player_work(pl, "wild_work", "%s|%s" % [pc.id, ppen.id]) != "", "L: nothing in the pack, nothing delivered")
+		pl.inv.add("log", int(ppen.need.log))
+		check(w2.wilds.player_work(pl, "wild_work", "%s|%s" % [pc.id, ppen.id]) == "" and (ppen.need as Dictionary).is_empty(), "L: the player brings its logs")
+		for i in 10:
+			w2.wilds.player_work(pl, "wild_work", "%s|%s" % [pc.id, ppen.id])
+		var fpen := w2.wilds.pen_of_claim(pc)
+		check(bool(ppen.done) and not fpen.is_empty() and bool(fpen.get("player", false)), "L: the pen stands, the player's own (Farming's pens for buying and feeding)")
+		var sm := "%s|workshop_smithy" % pc.id
+		if w2.wilds._workshop_rect(pc, "workshop_smithy") != Rect2i():
+			check(w2.wilds.player_work(pl, "wild_work_begin", sm) == "", "L: the player marks out a smithy beside the house")
+			var swk := w2.wilds.work_of(pc, "workshop_smithy")
+			for id in swk.need:
+				pl.inv.add(str(id), int(swk.need[id]))
+			w2.wilds.player_work(pl, "wild_work", "%s|%s" % [pc.id, swk.id])
+			check((swk.need as Dictionary).is_empty(), "L: its materials brought")
+			var r := Rect2i(int(swk.rect[0]), int(swk.rect[1]), int(swk.rect[2]), int(swk.rect[3]))
+			if w2.wilds.clear_rect(r).is_empty():
+				for i in 20:
+					w2.wilds.player_work(pl, "wild_work", "%s|%s" % [pc.id, swk.id])
+				var sts := w2.stations.keys().filter(func(id) -> bool: return str(id).begins_with("cs_%s_" % pc.id))
+				check(bool(swk.done) and sts.size() == 2 and str(w2.stations[sts[0]].owner) == w2.player_ref(pl), "L: the smithy stands, its forge and anvil the player's stations (%d)" % sts.size())
+			else:
+				check(w2.wilds.player_work(pl, "wild_work", "%s|%s" % [pc.id, swk.id]).begins_with("Fell"), "L: the trees on its ground must be felled first")
+		else:
+			print("   (no room for a smithy beside this house: the target is not offered)")
 	else:
 		check(false, "K: a claim for the player (%s)" % pwhy)
 	var r1 := World.new()
