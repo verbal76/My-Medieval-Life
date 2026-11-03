@@ -154,9 +154,9 @@ func _test_roads() -> void:
 					for dy in range(-1, 2):
 						for dx in range(-1, 2):
 							var n := cell + Vector2i(dx, dy)
-							if not m.in_village(n) and o.is_solid(n):
+							if not m.in_village(n) and o.is_solid(n) and not _flanks_crossing(o, n):
 								blocked += 1
-	check(roads > 500 and blocked == 0, "a road and the cells round it are never blocked (%d road cells, %d blocked)" % [roads, blocked])
+	check(roads > 500 and blocked == 0, "a road and the cells round it are never blocked, but for the water beside a bridge or ford (%d road cells, %d blocked)" % [roads, blocked])
 
 
 ## Flood fill over open cells from `from`, inside `box`. Returns the visited set.
@@ -638,3 +638,15 @@ func _test_sites(seed_value: int) -> void:
 	var o2 := Overworld.create(seed_value, m)
 	o2.load_dict({"seed": seed_value, "gen": 2, "changes": [{"x": c.x, "y": c.y, "state": "sapling", "regrow": 0.0, "born": 0.0, "species": "oak_summer", "planted": true}], "rocks": [], "flowers": [], "works": []})
 	check(o2.dropped_in_sites == 1 and not o2.changes.has(c), "a generation-2 save's tree planted inside %s is dropped and counted" % st0.name)
+
+
+## B25R1-017: deep water beside a bridge or ford (the water the road crosses) is the one thing allowed beside a road.
+func _flanks_crossing(o: Overworld, n: Vector2i) -> bool:
+	if not o.is_water(n):
+		return false
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			var e := n + Vector2i(dx, dy)
+			if o.is_road(e) and (o.is_bridge(e) or o.is_ford(e)):
+				return true
+	return false

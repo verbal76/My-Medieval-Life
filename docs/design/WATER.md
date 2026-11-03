@@ -30,6 +30,12 @@ code is `game/scripts/core/overworld.gd` (the section "water"), the art `tools/w
   laid one way (its planks run the long way of the crossing). Water never lies along a road: it may cross a road only at 50
   degrees or more to the road's own line, else the road keeps to the bank, dry; pools keep off roads. Every 4 steps (about 24
   tiles) off the mountains a ford: shallow water with stepping stones, walkable, so no course walls a stretch of country off.
+  The tile beside a road is kept walkable too: water there that flanks no crossing is shallows (`water` 4, no stones drawn), so
+  a road beside a course is never pinched; only the deep water either side of a bridge or ford lies next to a road.
+- **Tuning in one place (EA-01).** The numbers above (lattices, chances, steps, widths, end pools, meanders, ford spacing and
+  radius, bank reach, rocks, the road-crossing angle as a sine, 0.77 = 50 degrees) live in `game/data/water.json`
+  (`mml-water/1`), read once by `Overworld.water_cfg`. The sound distances are `music.json "water"`; the art's ripple and foam
+  are `tools/water_tiles.py`'s. Changing `water.json` changes generation 4's water for every world (water is never saved).
 
 ## 1a. The canonical water (B25R1-018)
 
