@@ -346,8 +346,13 @@ jobs:
       - name: Report (job summary and ci-report.json)
         if: always()
         run: |
+          # game results are expected unless the planner gave this shard no suites (an 'only' run of fewer suites than
+          # shards): then the plan file exists and is empty, and the report job's coverage check still proves every listed
+          # suite was assigned exactly once. A shard whose plan never ran (no file) still expects game results.
+          EXPECT_GAME="--expect game"
+          if [ -f "$RUNNER_TEMP/game_shard.txt" ] && ! grep -q '[^[:space:]]' "$RUNNER_TEMP/game_shard.txt"; then EXPECT_GAME=""; fi
           python3 tools/ci_report.py report --results "$CI_OUT/results.jsonl" \
-            ${{ matrix.shard == 0 && '--expect python --expect sim' || '' }} --expect game \
+            ${{ matrix.shard == 0 && '--expect python --expect sim' || '' }} $EXPECT_GAME \
             ${{ matrix.shard == 0 && format('--step python={0} --step sim={1}', steps.python.outcome, steps.sim.outcome) || '' }} \
             --step import=${{ steps.import.outcome }} --step game=${{ steps.game.outcome }} \
             --started "$CI_STARTED" \
