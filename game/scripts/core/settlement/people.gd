@@ -30,6 +30,10 @@ var r: Regions
 var live := {}                           # person id -> {npc, sid}; not saved (World.to_dict folds everyone first: fold_all)
 var _stations := []                      # [{id, pos}] of members at their stations, for the bucket below
 var _bucket := -1
+## settlement id -> {out, in}: the coins its live residents carried across the two ledgers (_hand: out of the settlement's books
+## into the village's; _take_back: back). A count of the designed crossing only, read by the audits' tests; never read by a rule
+## and not saved (World.to_dict folds everyone first).
+var crossings := {}
 
 
 static func attach(world, regions: Regions) -> SettlementPeople:
@@ -277,6 +281,7 @@ func _hand(s: OffMapSettlement, n, t: Dictionary, _from_trip: bool) -> void:
 		n.coins += c
 		s.flows.outside_coins_out += c
 		w.coin_sources += c
+		_crossed(s, "out", c)
 	var ids: Array = (t.pack as Dictionary).keys()
 	ids.sort()
 	for k in ids:
@@ -287,6 +292,12 @@ func _hand(s: OffMapSettlement, n, t: Dictionary, _from_trip: bool) -> void:
 		OffMapSettlement._add(s.flows.outside_out, str(k), q)
 		w.stat("imported_" + str(k), float(q))
 	t.pack = {}
+
+
+func _crossed(s: OffMapSettlement, way: String, c: int) -> void:
+	var e: Dictionary = crossings.get(s.id, {"out": 0, "in": 0})
+	e[way] = int(e[way]) + c
+	crossings[s.id] = e
 
 
 ## The NPC's coins and goods back into `rec` (a trip's pack, or a household's purse and pantry through `hp`): the reverse lines.
@@ -304,6 +315,7 @@ func _take_back(s: OffMapSettlement, n, rec: Dictionary, hp: SettlementParty = n
 			rec[hp._purse_key()] = int(rec[hp._purse_key()]) + c
 		s.flows.outside_coins_in += c
 		w.coin_sources -= c
+		_crossed(s, "in", c)
 	var goods: Dictionary = rec.pack if hp == null else hp._goods()
 	var items: Dictionary = n.inv.items.duplicate()
 	var ids: Array = items.keys()

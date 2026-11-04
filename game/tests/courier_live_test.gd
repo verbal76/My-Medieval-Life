@@ -51,6 +51,41 @@ func fresh(seed: int) -> World:
 
 
 ## Coins and goods the whole system holds, less what crossed the village's boundary: constant while only the couriers move them.
+## What settlement `sid` paid across its outside line since a snapshot (`snap`, from _till_snap), that is not one courier job's
+## (`job_id`'s) own collection: the outside line also carries its live residents' trip coins (B25R1-019, SettlementPeople._hand,
+## counted in SettlementPeople.crossings) and the payments other deliveries collect from its parties in the same days (the
+## regional trade's own courier orders, Couriers.deliver). Returns the outside line's rise less those two.
+func _till_snap(sid: String) -> Dictionary:
+	var got := {}
+	for j in w.couriers.jobs:
+		got[int(j.id)] = _collected(j)
+	return {"out": int(w.regions.by_id[sid].flows.outside_coins_out), "res": _resident_out(sid), "jobs": got}
+
+
+func _collected(j: Dictionary) -> bool:
+	for h in j.get("history", []):
+		if str(h[1]).contains("payment collected"):
+			return true
+	return false
+
+
+func _resident_out(sid: String) -> int:
+	return int(w.regions.people.crossings.get(sid, {}).get("out", 0)) if w.regions.people != null else 0
+
+
+func _paid_by(sid: String, snap: Dictionary, job_id: int) -> Dictionary:
+	var others := 0
+	for j in w.couriers.jobs:
+		if int(j.id) == job_id or not str(j.recipient).begins_with("region:%s/" % sid) or bool(snap.jobs.get(int(j.id), false)) or not _collected(j):
+			continue
+		var col: Dictionary = j.get("collect", {})
+		if str(col.get("kind", "")) == "coins":
+			others += int(col.amount)
+	var res := _resident_out(sid) - int(snap.res)
+	var rise := int(w.regions.by_id[sid].flows.outside_coins_out) - int(snap.out)
+	return {"own": rise - res - others, "rise": rise, "residents": res, "others": others}
+
+
 func coin_gap(world: World = null) -> int:
 	var x := world if world != null else w
 	return x.total_coins() + x.regions.coins() - (x.coin_sources + x.regions.net_paid_by_village())
@@ -150,6 +185,7 @@ func test_regular_route() -> void:
 	var item0 := item_gap()
 	var held0 := wulstead().held(ITEM)
 	var paid0 := int(w.regions.by_id["wulstead"].flows.outside_coins_out)
+	var snap := _till_snap("wulstead")
 	var keeper: NPC = w.npc(int(str(vb.keeper).trim_prefix("npc:")))
 	var kcoins0 := keeper.coins
 	var order := {"sender": "player", "recipient": "region:wulstead/trader", "recipient_kind": "business", "settlement": "wulstead", "items": {ITEM: 6},
@@ -164,7 +200,8 @@ func test_regular_route() -> void:
 	check(wulstead().held(ITEM) == held0, "and nothing has reached Wulstead before the road is travelled")
 	run_days(float(route.days) + 0.2)
 	check(wulstead().held(ITEM) == held0 + 6 and str(job.outcome) == "delivered", "after the journey's days Wulstead's trader holds the 6 goods")
-	check(int(w.regions.by_id["wulstead"].flows.outside_coins_out) == paid0 + 9, "and has paid the 9 coins asked from its till")
+	var pb := _paid_by("wulstead", snap, int(job.id))
+	check(int(pb.own) == 9, "and has paid the 9 coins asked from its till (%s on its outside line)" % pb)
 	run_days(float(route.days) + 0.3)
 	check(str(job.state) == "fulfilled", "the courier comes home: the contract is fulfilled only then")
 	var dep := cs.waiting(str(vb.id), "player")
@@ -197,6 +234,7 @@ func test_special_and_fees() -> void:
 	check(coin_gap() == gap0, "and held fees count in the village's coins")
 	var held0 := wulstead().held(ITEM)
 	var paid0 := int(w.regions.by_id["wulstead"].flows.outside_coins_out)
+	var snap := _till_snap("wulstead")
 	var pc0: int = w.player.coins
 	var kn: NPC = w.npc(int(courier.trim_prefix("npc:")))
 	run_days(float(q.days) + 0.2)
@@ -207,7 +245,8 @@ func test_special_and_fees() -> void:
 	run_days(float(q.days) + 0.3)
 	check(str(job.state) == "fulfilled" and w.player.coins == pc0 + 5 and int(vb.escrow) == 0, "back home: the 5 coins collected go to the sender and the contract is fulfilled")
 	check(kn.earned - ke1 >= int(n.fee), "the courier is paid its fee only when the work is done (no free transport) (earned %d on the way home, fee %d; spent %d meanwhile)" % [kn.earned - ke1, int(n.fee), kn.spent - ks1])
-	check(int(w.regions.by_id["wulstead"].flows.outside_coins_out) == paid0 + 5, "Wulstead paid from its own till (%+d)" % (int(w.regions.by_id["wulstead"].flows.outside_coins_out) - paid0))
+	var pb := _paid_by("wulstead", snap, int(job.id))
+	check(int(pb.own) == 5, "Wulstead paid from its own till (%s on its outside line: this delivery's, its residents', other deliveries')" % pb)
 	check(coin_gap() == gap0 and item_gap() == item0 and w.regions.audit() == "", "coins and goods balance; settlement books balance")
 	# a delivery to a settlement the player has not dealt with is refused
 	check(cs.refusal({"sender": "player", "recipient": "region:bourton/trader", "recipient_kind": "business", "settlement": "bourton", "items": {ITEM: 1}, "courier": courier}) != "", "a trader the player has not dealt with cannot be addressed")
