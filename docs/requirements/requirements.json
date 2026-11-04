@@ -7652,6 +7652,37 @@
    "branch": "wip/b25r1-presence"
   },
   {
+   "id": "B25R1-022",
+   "kind": "approved",
+   "title": "Integrate Fantasy Lands Houses (Szadi art) into the towns: palette remapped to match our art where too dark, roofs separable and fading like current houses so the player can go inside",
+   "description": "Integrate Fantasy Lands Houses (Szadi art) into the towns: palette remapped to match our art where too dark, roofs separable and fading like current houses so the player can go inside",
+   "source": "owner messages 2026-11-04 (pack supplied; this instruction)",
+   "owner_wording": "If the pallet is too dark, modify the coloring on it to match what we have and we're going to have to make the roofs removable like our current ones for going inside",
+   "approval": "owner, 2026-11-04",
+   "acceptance": [
+    "Pack registered privately with licence and credit (commercial use and modification allowed; no resale, no logo use)",
+    "Houses halved from the 32 px grid to our 16 px scale; colours remapped toward our existing palette where they read too dark, judged side by side at normal zoom",
+    "Each house split into walls and a separate roof layer that fades away when the player enters, using the existing roof system, with walkable interiors and doors",
+    "Used in the towns for variety only where it reads well beside the existing houses; screenshots looked at"
+   ],
+   "target_build": "20",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-04",
+     "change": "entered in the register",
+     "why": "owner messages 2026-11-04 (pack supplied; this instruction)"
+    }
+   ]
+  },
+  {
    "id": "B25R1-Q1",
    "kind": "decision",
    "title": "Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)?",
