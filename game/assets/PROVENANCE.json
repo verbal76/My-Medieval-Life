@@ -26477,10 +26477,10 @@
   },
   {
    "file": "assets/tiles/region_props.png",
-   "source": "MiniWorldSprites.zip",
-   "member": "MiniWorldSprites/Miscellaneous/Tombstones.png",
-   "transform": "the eight 16 x 16 tombstones copied 1:1 into row 0 of an 8-column prop sheet (MapView atlas 8)",
-   "sha256": "c04e6e7858d50222a0f7797d85f14b7cf6cebb1a84dbbd787d908bd35897a1b3"
+   "source": "MiniWorldSprites.zip + PUNY_WORLD_v1.zip",
+   "member": "MiniWorldSprites/Miscellaneous/Tombstones.png; the free overworld tileset's dirt path tiles",
+   "transform": "the eight 16 x 16 tombstones copied 1:1 into row 0 of an 8-column prop sheet (MapView atlas 8); rows 1-2 the 16 dirt path tiles (overworld_tiles.json dirt_path) with the dirt recoloured to cut chalk, the grass kept (hill figures)",
+   "sha256": "5d1a484ec2d3f51d3cbf3d0e2756455c1e27df0a60738ae8c526921984e799fa"
   }
  ]
 }

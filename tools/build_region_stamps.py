@@ -275,6 +275,17 @@ def houses(village):
     out["plot"] = flat(field(GROWING, 4, 2), ["0000", "0000"], (0, 1), "path1")
     out["woodpile"] = flat([[1025, 1024]], ["11"], (0, 0), "below1")
     out["barrels"] = flat([[358, 3502, 796]], ["111"], (0, 0), "below1")
+    # Larchrow's village pieces (owner's pack, B25R1-Q8; MapView atlas 5, docs/assets/LARCHROW_TILES.md): only the small props,
+    # whose bold outline sits well enough beside Shade's art; his roofs and walls are drawn straight down, not in Shade's
+    # three-quarter view, and are not used
+    L = 500000
+    out["stall"] = {"w": 2, "h": 2, "door": [0, 1], "layers": {"above1": [L + 137, L + 138, -1, -1], "below1": [-1, -1, L + 139, L + 140]},
+                    "solid": ["00", "11"]}
+    out["signpost"] = flat([[L + 141]], ["1"], (0, 0), "below1")
+    out["lamp"] = {"w": 1, "h": 2, "door": [0, 1], "layers": {"above1": [L + 144, -1], "below1": [-1, L + 145]}, "solid": ["0", "1"]}
+    out["haystack"] = flat([[L + 16]], ["1"], (0, 0), "below1")
+    out["apples"] = flat([[L + 148, L + 146]], ["11"], (0, 0), "below1")
+    out["casks"] = flat([[L + 146, L + 147]], ["11"], (0, 0), "below1")
     out["churchyard"] = churchyard(13, 9, 1)
     out["churchyard_s"] = churchyard(9, 7, 2)
     return out

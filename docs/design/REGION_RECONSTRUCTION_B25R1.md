@@ -392,7 +392,47 @@ All of it is cut from the paid Puny World tileset by `tools/build_region_stamps.
 Art gaps (no suitable art in the registered packs): a standing stone cross (Garton's street cross; also Wulstead's
 cross head on the buttercross), a true white-stone battlement (the castle's merlons are the grey kit's), and a fountain with
 water. Options: a pack from the owner, or leave the cross out as now (the Landmarks entry is withheld until it stands).
-The site plan stays a street grid with seeded variation. Breaking it up further (bent streets, yards, gardens) is still open.
+### Towns rebuilt (third region worker; owner B25R1-Q8: "Owned art and a pack I'm going to give you")
+
+The site plan now lives in `game/scripts/core/site_plan.gd` (`Overworld._site_plan` calls it). It is still a pure function of the
+seed and the settlement, in integer arithmetic only, so it is the same on every machine.
+- **Streets.** The main street runs north-south and bends with an integer wave. In a town it widens into a lens-shaped
+  market place. Cross streets two cells deep branch east and west, bending too, with different lengths on each side. More
+  are added, alternately north and south, while buildings still need frontage, and each is cut back past its last building
+  when the plan is done.
+- **Frontage.** Each building takes the next place that fits on a line of frontage, nearest the middle first:
+  - on the north side of a cross street, its door on the street;
+  - or gable-on beside the main street, with a footpath from its door.
+  The gaps vary by kind of place: terraced in Higham, a few cells in a market town, up to six cells in a hamlet. The set-back
+  from the street varies too.
+- **Houses** come in seven shapes, resampled from Shade's small house (`house_7` to `house_13`, the deeper `*d` ones, and the
+  original with its ivy), with thatch on 35% in towns and 60% elsewhere. Towns also have manors cut whole from the village
+  map. Every household still has a home and every business its building, and slot order is unchanged.
+- **Yards and street furniture** are `props` on a site: drawn and solid like buildings, never entered, and listed after the
+  slots:
+  - fenced gardens, vegetable plots, sheds, wood piles and barrels behind the houses; haystacks, apple crates and casks from
+    Larchrow;
+  - wells beside the streets;
+  - Larchrow market stalls round the edge of the market place, a signpost at each crossroads, and lamp posts along a town's
+    main street.
+- **Churches and the abbey** have light-stone fronts, lower roofs and the tower at the west end. Beside each is a fenced
+  churchyard with Shade's Miniworld tombstones (`tools/region_props.py`, MapView atlas 8).
+- **Higham.** The town is planned first, then the walls are drawn round it. The main street runs straight through both
+  gates. Outside the south gate the road runs on, with houses straggling along it, and the Way runs east-west under the
+  south wall. The castle stands beyond the north-east corner.
+- **Ways in.** A site's `entries` (N, E, S, W) are where its own streets reach the site's edge, and the routes join there.
+
+Swapping art is data, not code. A stamp in `game/data/region_stamps.json` (built by `tools/build_region_stamps.py`) names its
+tiles. A new sheet goes into `MapView.EXTRA_ATLASES` and is referenced by tile id (atlas x 100000 + index).
+
+The owner's Larchrow pack is used only for small props. Its roofs and walls are drawn straight down, not in Shade's
+three-quarter view, so beside Shade's houses they read as a different game. The town houses stay Shade's.
+
+The chalk figure and Bear Castle are now drawn as follows:
+- **The figure** is a white line cut into whole turf: the dirt path autotile recoloured to chalk (region_props rows 1-2),
+  joined by its four neighbours.
+- **Bear Castle's ring** is a bank three cells broad of Cozy Farm's rough turf, drawn as a 9-slice, with four gaps where the
+  ways went in.
 
 #### Bear Hill and the castle knoll: not raised (assessed, not started)
 

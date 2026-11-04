@@ -122,15 +122,16 @@
      },
      {
       "stamp": "church_tower",
-      "at": "north_east",
+      "at": "front",
       "id": "church"
      },
      {
       "stamp": "church_tower",
-      "at": "north_east",
+      "at": "front",
       "id": "church"
      }
-    ]
+    ],
+    "spare": 10
    }
   },
   {
@@ -874,7 +875,7 @@
    "id": "bear_figures",
    "name": "the chalk figures of Bear Hill",
    "kind": "chalk figure",
-   "x": 56,
+   "x": 34,
    "y": 470,
    "label": "CANON",
    "src": [

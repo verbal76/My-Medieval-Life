@@ -102,6 +102,9 @@ var _solid_rows := {}                    # stamp name -> its "solid" rows (villa
 var stamps := {}                         # the village's building stamps (village.json), which the view paints the site buildings with
 var structures: Array = []               # B25R1-018: the region's landmarks built in the country ({id, name, kind, rect, slots}), drawn as the sites' buildings
 var _marks := {}                         # B25R1-018: cell corner -> true where chalk is cut into the turf (a hill figure, an earthwork's bank)
+var _chalk_cells := {}                   # B25R1-018 (lead review: "the chalk figure reads as sand blobs"): cell -> true on a hill
+                                         # figure's carved line, drawn with the chalk path tiles (region_props.png rows 1-2)
+var _bank_cells := {}                    # cell -> true on Bear Castle's ring bank (Cozy Farm's rough turf, drawn as a 9-slice)
 var _mark_zones: Array = []              # [Rect2i]: round them the turf is kept whole, so the cut chalk reads as the figure it is
 var wall_kit := {}                       # B25R1-018: the battlemented wall kit (region_stamps.json "wall"), composed into walls by _wall_stamp
 var _near_sites: Array = []
@@ -282,11 +285,26 @@ func _setup_routes() -> void:
 	var through := {}                             # site index -> [route node indices that join it]: a route passing a settlement
 	for r in RegionGeo.routes():
 		var prev := -1
+		var last_p := Vector2i.ZERO
 		for p: Vector2i in r.points:
 			var in_site := -1
 			for si in sites.size():
 				if (sites[si].rect as Rect2i).grow(6).has_point(p):
 					in_site = si
+			if in_site >= 0 and prev <= -2 and -2 - prev != in_site:
+				# B25R1-018: straight from one settlement into the next (no point of the route between them): a node half way,
+				# where both join, so the route is not broken between them
+				var mid := (last_p + p) / 2
+				var free := true
+				for sj in sites.size():
+					free = free and not (sites[sj].rect as Rect2i).grow(1).has_point(mid)
+				if free:
+					var mv := _vnode(mid)
+					for s2 in [-2 - prev, in_site]:
+						var tm: Array = through.get(s2, [])
+						tm.append(mv)
+						through[s2] = tm
+			last_p = p
 			if in_site >= 0:                          # the route goes into the settlement here and out again: it is split at it
 				if prev >= 0:
 					var t: Array = through.get(in_site, [])
@@ -537,6 +555,8 @@ func structure_at(c: Vector2i) -> bool:
 func _setup_structures() -> void:
 	structures.clear()
 	_marks.clear()
+	_chalk_cells.clear()
+	_bank_cells.clear()
 	_mark_zones.clear()
 	for lm in RegionGeo.landmarks():
 		var at: Vector2i = lm.at
@@ -559,21 +579,28 @@ func _setup_structures() -> void:
 				var sc := maxi(1, int(lm.scale))
 				var top := at - Vector2i(str(rows[0]).length() * sc / 2, rows.size() * sc / 2)
 				_mark_zones.append(Rect2i(top, Vector2i(str(rows[0]).length() * sc, rows.size() * sc)).grow(6))
-				for j in rows.size():
+				for j in rows.size():                          # the figure's strokes, a white line cut into the whole turf
 					for i in str(rows[j]).length():
 						if str(rows[j])[i] == "X":
 							for dy in sc:
 								for dx in sc:
-									_marks[top + Vector2i(i * sc + dx, j * sc + dy)] = true
+									_chalk_cells[top + Vector2i(i * sc + dx, j * sc + dy)] = true
 			"ring":
 				var r := maxi(4, int(lm.r))
 				_mark_zones.append(Rect2i(at, Vector2i.ONE).grow(r + 6))
-				for a in 360:
-					if hash32(seed, a / 24, 0, 952) % 5 == 0:
-						continue                               # beaten down in places
-					var p := at + Vector2i(roundi(cos(deg_to_rad(a)) * r), roundi(sin(deg_to_rad(a)) * r))
-					for d in [Vector2i.ZERO, Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]:
-						_marks[p + d] = true
+				for y in range(-r - 2, r + 3):                 # a bank three cells broad round the hill top (integer distance: the same
+					for x in range(-r - 2, r + 3):             # on every machine), broken by four gaps where the ways went in
+						var d2 := x * x + y * y
+						if d2 < (r - 1) * (r - 1) or d2 > (r + 2) * (r + 2):
+							continue
+						var gapped := false
+						for g in 4:
+							var gd: Vector2i = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][g]
+							var off := (hash32(seed, g, 0, 952) % 5) - 2
+							if (x * gd.x + y * gd.y) > 0 and absi(x * gd.y - y * gd.x - off) <= 1:
+								gapped = true
+						if not gapped:
+							_bank_cells[at + Vector2i(x, y)] = true
 
 
 func _lm_slot(stamp: String, at: Vector2i, id: String) -> Dictionary:
@@ -1407,6 +1434,9 @@ func _generate(cx: int, cy: int) -> Chunk:
 			ch.ground[c] = opts[hash32(seed, wx, wy, 70) % opts.size()]
 			if blocked[q] == 1:
 				ch.solid[c] = 1
+			if road[q] != 1 and (_chalk_cells.has(Vector2i(wx, wy)) or _bank_cells.has(Vector2i(wx, wy))):
+				ch.path[c] = _figure_tile(Vector2i(wx, wy))   # B25R1-018: a hill figure's chalk line, an earthwork's bank
+				continue
 			if road[q] == 1:
 				var bits := _road_bits(road, i, j, wx, wy)
 				var popts: Array = tiles.dirt_path[bits if bits != 0 else 10]
@@ -1509,6 +1539,20 @@ func _soil_bits(reg: PackedByteArray, fp: PackedInt32Array, fq: PackedInt32Array
 ## high too, so the down-turf stays whole between them.
 static func _chalk(broad: int, fine: int) -> bool:
 	return broad > 560 and fine > 760
+
+
+## B25R1-018: the tile of a chalk-figure cell (the chalk path tile for its 4-neighbour bits, region_props.png 800008 + bits) or
+## of a bank cell (Cozy Farm's rough-turf 3 x 3 patch as a 9-slice by which neighbours are bank).
+func _figure_tile(c: Vector2i) -> int:
+	if _chalk_cells.has(c):
+		var bits := 0
+		for k in 4:
+			if _chalk_cells.has(c + [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][k]):
+				bits |= 1 << k
+		return 800008 + (bits if bits != 0 else 10)
+	var row := 0 if not _bank_cells.has(c + Vector2i(0, -1)) else 2 if not _bank_cells.has(c + Vector2i(0, 1)) else 1
+	var col := 0 if not _bank_cells.has(c + Vector2i(-1, 0)) else 2 if not _bank_cells.has(c + Vector2i(1, 0)) else 1
+	return 200000 + row * 54 + col
 
 
 func _road_bits(road: PackedByteArray, i: int, j: int, wx: int, wy: int) -> int:

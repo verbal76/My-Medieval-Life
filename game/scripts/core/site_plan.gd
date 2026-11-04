@@ -168,6 +168,7 @@ func try_line(ln: Dictionary, sn: String, setback: int, g: int) -> Dictionary:
 	var hh := int(sd.h)
 	var dx := int(sd.door[0])
 	var dy := int(sd.door[1])
+	var start: int = int(ln.cur)
 	for attempt in (60 if str(ln.t) == "N" else 30):
 		var r := Rect2i()
 		var spot := Vector2i.ZERO
@@ -176,8 +177,7 @@ func try_line(ln: Dictionary, sn: String, setback: int, g: int) -> Dictionary:
 			var c: Dictionary = cross[int(ln.c)]
 			var left: int = int(ln.cur) if int(ln.d) > 0 else int(ln.cur) - w + 1
 			if left < int(c.x0) or left + w - 1 > int(c.x1):
-				ln.dead = true
-				return {}
+				break                               # past the street's end (dead below if even the narrowest house cannot fit)
 			var top_min := 1 << 30
 			for x in range(left, left + w):
 				top_min = mini(top_min, cross_y(c, x))
@@ -199,8 +199,8 @@ func try_line(ln: Dictionary, sn: String, setback: int, g: int) -> Dictionary:
 			var edge := 1 << 30 if s < 0 else -(1 << 30)
 			for y in range(top, maxi(sy, top + hh - 1) + 1):
 				if not main.has(y):
-					ln.dead = true
-					return {}
+					ln.cur = start
+					return {}                       # (the main street does not reach so far yet: it may later)
 				edge = mini(edge, int(main[y][0])) if s < 0 else maxi(edge, int(main[y][1]))
 			var sg := 1 + h(int(ln.cur), 964) % 2
 			var left := edge - sg - w if s < 0 else edge + sg + 1
@@ -223,12 +223,17 @@ func try_line(ln: Dictionary, sn: String, setback: int, g: int) -> Dictionary:
 				foot.push_front(spot)
 			path(foot)
 			if str(ln.t) == "N":
+				var cc: Dictionary = cross[int(ln.c)]
+				cc.lo = mini(int(cc.get("lo", r.position.x)), r.position.x)
+				cc.hi = maxi(int(cc.get("hi", r.end.x - 1)), r.end.x - 1)
 				ln.cur = r.end.x + g if int(ln.d) > 0 else r.position.x - 1 - g
 			else:
 				ln.cur = spot.y + 1 + g if int(ln.d) > 0 else r.position.y - 1 - g
 			return {"rect": r, "door": Vector2i(r.position.x + dx, r.position.y + dy), "spot": spot}
-		ln.cur = int(ln.cur) + (int(ln.d) if str(ln.t) == "N" else int(ln.d))
-	ln.dead = true
+		ln.cur = int(ln.cur) + int(ln.d)
+	ln.cur = start                                  # nothing this wide fits on: a narrower building may
+	if w <= 7:
+		ln.dead = true
 	return {}
 
 
@@ -248,7 +253,8 @@ func place(sn: String, home: bool, filter: Callable = Callable()) -> Dictionary:
 			var sb := 0 if gap_hi <= 2 else h(placed.size(), 965) % 2
 			var res := try_line(ln, sn, sb, gap())
 			if not res.is_empty():
-				placed.append({"rect": res.rect, "stamp": sn, "home": home})
+				placed.append({"rect": res.rect, "stamp": sn, "home": home, "t": str(ln.t)})
+				res["ln"] = int(o[1])
 				return res
 		if filter.is_valid():
 			return {}
@@ -268,7 +274,14 @@ func grow_town() -> void:
 	var ys: Array = main.keys()
 	var north := _grow_n % 2 == 1
 	var sp := spacing.x + h(_grow_n, 966) % (spacing.y - spacing.x + 1)
-	var base: int = (ys.min() as int) - sp + 6 if north else (ys.max() as int) + sp - 4
+	var lo := 1 << 30
+	var hi := -(1 << 30)
+	for c in cross:
+		lo = mini(lo, int(c.base))
+		hi = maxi(hi, int(c.base))
+	if market.size.y > 0:
+		lo = mini(lo, market.position.y + sp - 2)       # (the first street north of the market runs along its top)
+	var base: int = lo - sp if north else hi + sp
 	var lw := cross_len.x + h(_grow_n, 967) % (cross_len.y - cross_len.x + 1)
 	var le := cross_len.x + h(_grow_n, 968) % (cross_len.y - cross_len.x + 1)
 	if h(_grow_n, 969) % 4 == 0:
@@ -283,7 +296,7 @@ func grow_town() -> void:
 
 ## The yard pieces behind a building: a fenced garden, a plot, a shed, a wood pile or barrels, where there is room.
 func yard(b: Dictionary, k: int) -> void:
-	var pool := ["garden", "garden_w", "plot", "shed", "woodpile", "barrels", "garden", "plot"]
+	var pool := ["garden", "garden_w", "plot", "shed", "woodpile", "barrels", "garden", "plot", "haystack", "apples", "casks"]
 	var sn: String = pool[h(k, 971) % pool.size()]
 	var sd: Dictionary = stamps[sn]
 	var r: Rect2i = b.rect
@@ -332,19 +345,19 @@ func plan_site(spec: Dictionary, center: Vector2i, stamps_in: Dictionary, lay: D
 	if walled:
 		gap_lo = 0; gap_hi = 1
 		spacing = Vector2i(13, 15)
-		cross_len = Vector2i(28, 42)
+		cross_len = Vector2i(32, 46)
 	elif town:
 		gap_lo = 1; gap_hi = 2
 		spacing = Vector2i(14, 17)
-		cross_len = Vector2i(26, 40)
+		cross_len = Vector2i(34, 50)
 	elif hamlet:
 		gap_lo = 3; gap_hi = 6
 		spacing = Vector2i(16, 22)
-		cross_len = Vector2i(12, 22)
+		cross_len = Vector2i(20, 34)
 	else:
 		gap_lo = 1; gap_hi = 4
 		spacing = Vector2i(15, 19)
-		cross_len = Vector2i(18, 32)
+		cross_len = Vector2i(28, 42)
 	# --- what stands: the businesses, the homes, the spares (slot order as before), then the civic buildings
 	var trades: Dictionary = spec.trades
 	var items: Array = []
@@ -367,7 +380,7 @@ func plan_site(spec: Dictionary, center: Vector2i, stamps_in: Dictionary, lay: D
 	if town:
 		var mh := 16 + h(1, 976) % 7
 		market = Rect2i(0, cy - mh / 2 - 2, 8 + h(2, 976) % 4, mh)      # (size.x: the market's half width beyond the street)
-	add_main(cy - 10, cy + 10)
+	add_main(cy - 16, cy + 16)
 	for s in [-1, 1]:
 		lines.append({"t": "M", "s": s, "d": -1, "cur": cy - 1, "dead": false})
 		lines.append({"t": "M", "s": s, "d": 1, "cur": cy, "dead": false})
@@ -430,6 +443,8 @@ func plan_site(spec: Dictionary, center: Vector2i, stamps_in: Dictionary, lay: D
 					break
 		if res.is_empty():                       # "front", or no room where it was asked: the best frontage there is
 			res = place(sn, false)
+			if res.has("ln"):
+				_churchyard(sn, lines[int(res.ln)])
 		civ_res[ci] = res
 	# the businesses near the middle, then the homes; in a walled town some homes straggle outside the gates
 	var outside := (items.size() / 6) if walled else 0
@@ -444,6 +459,9 @@ func plan_site(spec: Dictionary, center: Vector2i, stamps_in: Dictionary, lay: D
 			yard(b, k)
 		if h(k, 978) % (7 if town else 5) == 0:
 			well_by(b, k)
+	_trim()
+	_market_stalls()
+	_street_furniture(town)
 	var bbox := Rect2i(Vector2i(cx, cy), Vector2i(1, 1))
 	for c in occ:
 		bbox = bbox.expand(c)
@@ -546,6 +564,92 @@ func plan_site(spec: Dictionary, center: Vector2i, stamps_in: Dictionary, lay: D
 		sq = Rect2i(l, market.position.y, r - l + 1, market.size.y)
 	return {"rect": rect, "slots": slots, "gate": gate, "streets": streets, "square": sq, "walled": walled, "props": props,
 		"entries": entries}
+
+
+## Each cross street but the first cut back to a few cells past its last building (it was laid long for the frontage it
+## might need); the cut cells are open ground again.
+func _trim() -> void:
+	var gone := {}
+	for k in range(1, cross.size()):
+		var c: Dictionary = cross[k]
+		var mx := main_x(int(c.base))
+		var lo := mini(int(c.get("lo", mx)), mx - 3) - 3
+		var hi := maxi(int(c.get("hi", mx)), mx + 3) + 3
+		for x in range(int(c.x0), int(c.x1) + 1):
+			if x >= lo and x <= hi:
+				continue
+			var y := cross_y(c, x)
+			for dy in 2:
+				var cell := Vector2i(x, y + dy)
+				if int(occ.get(cell, 0)) == 1 and not _on_main(cell):
+					occ.erase(cell)
+					gone[cell] = true
+		c.x0 = maxi(int(c.x0), lo)
+		c.x1 = mini(int(c.x1), hi)
+	if gone.is_empty():
+		return
+	for k in streets.size():
+		var kept: Array[Vector2i] = []
+		for cell: Vector2i in streets[k]:
+			if not gone.has(cell):
+				kept.append(cell)
+		streets[k] = kept
+
+
+func _on_main(cell: Vector2i) -> bool:
+	return main.has(cell.y) and cell.x >= int(main[cell.y][0]) and cell.x <= int(main[cell.y][1])
+
+
+func _prop(sn: String, at: Vector2i, need_street: bool) -> bool:
+	var sd: Dictionary = stamps[sn]
+	var r := Rect2i(at, Vector2i(int(sd.w), int(sd.h)))
+	for y in range(r.position.y, r.end.y):
+		for x in range(r.position.x, r.end.x):
+			var v := int(occ.get(Vector2i(x, y), 0))
+			if (need_street and v != 1) or (not need_street and v != 0):
+				return false
+	claim(r, 4)
+	props.append({"stamp": sn, "rect": r, "look": "", "id": sn})
+	return true
+
+
+## Market stalls round the edge of the market place, inside it, the middle left open (Larchrow's stall).
+func _market_stalls() -> void:
+	if market.size.y <= 0:
+		return
+	var n := 0
+	for k in 24:
+		if n >= 6:
+			return
+		var y := market.position.y + 2 + (h(k, 980) % maxi(1, market.size.y - 5))
+		var side := -1 if k % 2 == 0 else 1
+		var x: int = int(main[y][0]) + 1 if side < 0 else int(main[y][1]) - 2
+		if absi(y - cy) <= 1 or int(main[y][1]) - int(main[y][0]) < 10:
+			continue
+		var r := Rect2i(Vector2i(x, y), Vector2i(2, 2)).grow(1)
+		var clear := true
+		for yy in range(r.position.y, r.end.y):
+			for xx in range(r.position.x, r.end.x):
+				clear = clear and _on_main(Vector2i(xx, yy)) and int(occ.get(Vector2i(xx, yy), 0)) == 1
+		if clear and _prop("stall", Vector2i(x, y), true):
+			n += 1
+
+
+## A signpost where each cross street leaves the main street; lamp posts along a town's main street.
+func _street_furniture(town: bool) -> void:
+	for k in cross.size():
+		var c: Dictionary = cross[k]
+		var y := cross_y(c, main_x(int(c.base))) - 1
+		if main.has(y):
+			_prop("signpost", Vector2i(int(main[y][1]) + 1, y), false)
+	if not town:
+		return
+	var ys: Array = main.keys()
+	ys.sort()
+	for i in range(0, ys.size(), 9):
+		var y: int = ys[i]
+		var side := -1 if (i / 9) % 2 == 0 else 1
+		_prop("lamp", Vector2i(int(main[y][0]) - 1 if side < 0 else int(main[y][1]) + 1, y - 1), false)
 
 
 func _extend_cross(k: int, to_x: int) -> void:

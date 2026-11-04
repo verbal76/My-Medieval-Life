@@ -153,6 +153,8 @@ func _steps_low_side(cell: Vector2i, ew: bool) -> int:
 ## for the connected sides: the generated ones (from `dirt`), worn ways beside it, and a settlement's street beside stone.
 ## Drawing only: the cell, its walkability and the chunk data are unchanged.
 func road_tile(cell: Vector2i, dirt: int) -> int:
+	if dirt >= 200000:
+		return dirt                                     # B25R1-018: a hill figure's chalk line or an earthwork's bank (no road)
 	var look := RoadWear.visual(overworld, cell)
 	if RegionRoads.lane_cells(overworld).has(cell):
 		look = "stone" if look == "" else look
