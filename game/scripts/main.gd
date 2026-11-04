@@ -2027,8 +2027,8 @@ func _view_minutes() -> float:
 ## (NPC.trail), so they go round a corner rather than through it. A jump (a door, a portal) is drawn where they landed.
 func _npc_draw(n: NPC) -> Array:
 	var tr := n.trail
-	if guest_world or tr.size() < 2:
-		return [n.pos, n.facing]
+	if guest_world or tr.size() < 2 or tr[tr.size() - 1] != n.pos:
+		return [n.pos, n.facing]                        # no walk this tick, or moved since it (a door, a rule between ticks): where they are
 	var total := 0.0
 	for i in range(1, tr.size()):
 		total += tr[i - 1].distance_to(tr[i])
@@ -2106,6 +2106,8 @@ func _show_sitter(n: NPC, s: ActorSprite) -> bool:
 
 
 func _sync_sprites() -> void:
+	_report_view()                                     # B25R1-019: the range is the camera's as drawn now (also for a direct call)
+	world.presence.refresh()
 	if net.role != "" or not avatar_sprites.is_empty():
 		_sync_avatars(get_process_delta_time())       # MP A2: the other players
 	var cam := camera.get_screen_center_position() / T
@@ -2121,7 +2123,7 @@ func _sync_sprites() -> void:
 			actors.add_child(s)
 			sprites[n.id] = s
 		_flinch_check(n.id, n.hp, n.alive, s)            # JUICE J1: the hurt frames when health actually fell
-		var near := n.live or not n.alive and n.pos.distance_to(cam) < 30.0     # B25R1-019: Presence says who is live (a body falls where it lay)
+		var near := world.presence.keeps_live(n.pos, n.live or s.visible)     # B25R1-019: Presence's range, asked where they stand now (a body falls where it lay)
 		if not n.alive and (n.away != "" or n.became_player):
 			s.visible = false                      # MIGRATE-18: moved to a settlement, not dead: nothing falls (ID-01: nor a child who became the player)
 			continue
@@ -2179,7 +2181,7 @@ func _sync_sprites() -> void:
 	# the roof lifts as they step in, so their way in stays in view
 	var people := [[p.pos, null]]
 	for n: NPC in world.npcs:
-		if n.alive and n.live:
+		if n.alive and world.presence.keeps_live(n.pos, n.live):
 			var ns: ActorSprite = sprites.get(n.id)
 			people.append([n.pos, ns if ns != null and ns.visible else null])
 	door_view.update(people, get_process_delta_time())
@@ -2428,7 +2430,7 @@ func _sync_animals() -> void:
 			s.setup(a, world.minutes)
 			actors.add_child(s)
 			animal_sprites[a.id] = s
-		s.visible = world.presence.animal_live(a.id)        # B25R1-019: Presence says which animals are live
+		s.visible = world.presence.keeps_live(a.pos, world.presence.animal_live(a.id) or s.visible)     # B25R1-019: Presence's range, where it stands now
 		if s.visible:
 			s.position = _animal_draw(a) * T
 			s.show_state(a, world.minutes, get_process_delta_time())

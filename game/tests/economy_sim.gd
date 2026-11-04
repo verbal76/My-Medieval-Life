@@ -191,6 +191,7 @@ func _init() -> void:
 	w.profiling = profile
 	w.presence.crowd_enabled = not ("--no-crowd" in args)     # B25R1-020: the crowd exception off, to measure it alone
 	view_sweep = "--view-sweep" in args
+	print("presence switches: crowd %s, view %s" % ["on" if w.presence.crowd_enabled else "off (--no-crowd)", "sweeping (--view-sweep)" if view_sweep else "parked on the player"])     # B25R1-019/020: which configuration this run is
 	w.map.profiling = profile
 	var update_us := 0
 	var harness_us := 0
@@ -349,7 +350,8 @@ func _init() -> void:
 		var f := FileAccess.open(out, FileAccess.WRITE)
 		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "reached": reached, "every": every, "step": STEP,
 			"seconds": secs, "start": _jsonable(start), "samples": samples, "dev": dev_series, "deaths": death_log,
-			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows, "herd": herd_log, "herd_care": herd_care, "region": _region_line()}, " ", false))
+			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows, "herd": herd_log, "herd_care": herd_care, "region": _region_line(),
+			"presence": {"crowd": w.presence.crowd_enabled, "view_sweep": view_sweep, "crowd_stats": w.presence.crowd_stats}}, " ", false))
 		f.close()
 	# SJD-G: save size and memory at the end, after the results above are written (World.to_dict tells any queued gossip first)
 	print("JUDGE_SAVE %s" % JSON.stringify({"judgment_bytes": JSON.stringify(w.judgment.to_dict()).length() if w.judgment != null else 0,

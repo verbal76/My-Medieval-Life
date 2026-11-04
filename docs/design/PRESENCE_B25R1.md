@@ -168,6 +168,12 @@ The owner's directive, in short:
 - `Presence.crowd_step()`, at the start of each tick, may end such a step early. The brain then makes the decision it would
   have made when the step ended anyway, through the same `decide()`, paths, coins and goods.
 
+**Only with a screen.** Crowd management runs only once a view has been reported (`set_view`: the game's camera,
+or `economy_sim --view-sweep`). In headless runs with no view (the economy simulation by default, the tests), there is no crowd
+on any screen to ease, and the inert stand-in player would otherwise reshape the village's day. Measured: `housing_test`
+seed 3 had 1,739 pastimes ended in 18 days. With crowds on, that world had no building blocks for sale by day 18 and the
+house stayed unfinished; with crowds off it finished.
+
 **The rule.**
 - Count the ordinary (unprotected) people awake on the surface in the decision ring (the visible rect + 12 tiles).
 - If there are more than `CROWD_TARGET` (18), end the loose steps of up to that excess, farthest from the view's centre

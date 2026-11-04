@@ -718,7 +718,10 @@ func update(dt: float) -> void:
 			a.anger_left -= dt
 			if a.anger_left <= 0.0 or _foe_pos(a.anger) == Vector2.INF:
 				a.anger = ""
-		_move(a, dt)                                     # B25R1-019: every animal, seen or not, on the world's tick (observation-neutral; strolls draw from move_rng)
+		var left := dt                                   # B25R1-019: every animal, seen or not, on the world's tick (observation-neutral; strolls
+		while left > 0.0001 and a.alive:                 # draw from move_rng); a longer step (an hour at once) moves tick by tick, as play would
+			_move(a, minf(left, World.TICK))
+			left -= World.TICK
 
 
 func _move(a: Animal, dt: float) -> void:

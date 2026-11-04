@@ -249,7 +249,9 @@ func _loose_step(n) -> bool:
 
 ## One tick's crowd check (World._tick). Returns how many pastimes it ended.
 func crowd_step() -> int:
-	if not crowd_enabled or rects.is_empty() or w.player_level != 0:
+	# only for a screen: with no view ever reported (the economy simulation, headless tests) there is no crowd in view to ease,
+	# so the inert stand-in player does not reshape the village's day (housing_test, seed 3: 1739 pastimes ended in 18 days)
+	if not crowd_enabled or views.is_empty() or rects.is_empty() or w.player_level != 0:
 		return 0
 	var ordinary: Array = []
 	var protected := 0
