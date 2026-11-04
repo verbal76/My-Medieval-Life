@@ -23830,6 +23830,11 @@
      "date": "2026-11-02",
      "change": "note",
      "why": "first full flight-mode campaign 41469410306 (8acbdea, normal play, 365 days, 100-day segments) complete with all reporting artifacts. Seed 1: all segments and analysis passed. Seed 2: completed 365 days (archives checked ok, 6.78 M events analysed) but CRITICAL 2 - 5,359 script errors in seg3 and 5,813 in seg4, all World.building_door (world.gd:4140) from NPCBrain._plan_evening (npc_brain.gd:1037): a villager's home is empty or no longer a building. HIGH 2: cart_hitch failing 76 and 52 times in a row (p:40, p:1000138). MEDIUM 19: repeated failed sell_to wheat, a party with 580 goods contracts cancelled, 53 hours of 20+ failed actions. INFORMATIONAL: population 104 -> 306 (221 births, 153 arrivals; 86 old-age deaths, 4 slain), 5,313 unattributed coin sites, settlement hunger. Defect fix on wip/b25-home-door, resuming from the day-200 state."
+    },
+    {
+     "date": "2026-11-04",
+     "change": "note",
+     "why": "owner 2026-11-04 parallel-testing directive: 'If the repeat can safely execute concurrently from the same initial state, use parallel runners.' The twin campaign (--twin) now runs each twin concurrently with its seed (max-parallel 8, wip/b25r1-ci 552826b); the two-simulation concurrency limit stays for runs without --twin"
     }
    ],
    "commits": [
