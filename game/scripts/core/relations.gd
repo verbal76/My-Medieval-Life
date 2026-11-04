@@ -490,8 +490,8 @@ func can_court(a: int, b: int) -> bool:
 	if pa == null or pb == null or not pa.alive or not pb.alive:
 		return false
 	for p in [pa, pb]:
-		if p is NPC and p.role != "adult":
-			return false
+		if p is NPC and p.role != "adult" and not (p.role == "bandit" and pa is NPC and pb is NPC and pa.role == pb.role and pa.household >= 0 and pa.household == pb.household):
+			return false                     # (B25R1-014: two of the band may court one another, as villagers do)
 		var age := Life.age_years(p.born, w.minutes)
 		if age < float(Life.cfg().partner_min_age):
 			return false
@@ -737,7 +737,7 @@ func _villagers_court() -> void:
 	var hi := float(Life.cfg().partner_max_age)
 	var singles: Array = []
 	for n: NPC in w.npcs:
-		if n.alive and n.role == "adult" and n.partner < 0 and not Life.is_player_id(n.partner):
+		if n.alive and (n.role == "adult" or (n.role == "bandit" and JudgmentBandit.on(w))) and n.partner < 0 and not Life.is_player_id(n.partner):
 			var a := Life.npc_age(w, n)
 			if a >= lo and a <= hi:
 				singles.append(n)

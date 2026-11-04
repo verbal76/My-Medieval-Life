@@ -105,6 +105,11 @@ var _marks := {}                         # B25R1-018: cell corner -> true where 
 var _mark_zones: Array = []              # [Rect2i]: round them the turf is kept whole, so the cut chalk reads as the figure it is
 var wall_kit := {}                       # B25R1-018: the battlemented wall kit (region_stamps.json "wall"), composed into walls by _wall_stamp
 var _near_sites: Array = []
+## B25R1-010 (Homesteads): the houses and frames standing on homestead claims, {id, stamp ("house", or "" for a frame), rect,
+## door, frame, tile}: collided here (home_building_at, as a settlement's building) and drawn by OverworldView. Set by
+## Homesteads (from its saved claims, on load too); not saved here. homes_version counts the changes (the view redraws).
+var homes: Array = []
+var homes_version := 0
 var dropped_in_sites := 0              # REGION-NAV-01: planted trees of an older save dropped because a site now stands there              # the sites near the chunk being generated (_generate), for _vdist
 var cache := {}                          # Vector2i -> Chunk
 var generated := 0                       # chunks generated so far (tests: the cache bound, no work for loaded chunks)
@@ -609,6 +614,22 @@ func landmark_places() -> Array:
 					at = s2.slots[0].spot
 		out.append({"id": "region:" + str(lm.id), "kind": str(lm.kind), "name": str(lm.name).capitalize() if str(lm.name).begins_with("the ") else str(lm.name), "at": at})
 	return out
+
+
+## B25R1-010: whether a homestead's house stands on cell `c`: its stamp's solid cells above its bottom row, the doorway open
+## (World._built_collision's rule for a house built in the village, so the house is entered the same way).
+func home_building_at(c: Vector2i) -> bool:
+	for hm in homes:
+		var r: Rect2i = hm.rect
+		if str(hm.stamp) == "" or not r.has_point(c):
+			continue
+		var ry := c.y - r.position.y
+		if ry >= r.size.y - 1 or c == Vector2i(hm.door) - Vector2i(0, 1):
+			return false
+		var rows: Array = _solid_rows.get(str(hm.stamp), [])
+		var rx := c.x - r.position.x
+		return ry >= rows.size() or (rx < str(rows[ry]).length() and str(rows[ry])[rx] == "1")
+	return false
 
 
 ## REGION-NAV-01 AD-4: a walking route along the roads from village gate `gate` (an index into `gates`) to settlement `sid`'s
@@ -1525,11 +1546,25 @@ func _cell_of(chunk: Chunk, c: Vector2i) -> int:
 	return (c.y - chunk.cy * CHUNK) * CHUNK + (c.x - chunk.cx * CHUNK)
 
 
+## B25R1-Q3 (owner: water from streams and wells): whether `cell` is open water (a stream). STUB on wip/b25r1-homestead:
+## finds no water. The water worker (wip/b25r1-water) replaces is_water and nearest_water with the streams' own; the lead
+## resolves the merge. Homesteads and the band read water only through these two (Wilds.water_access).
+func is_water(cell: Vector2i) -> bool:
+	return false
+
+
+## The nearest water cell to `cell` within `radius` tiles, Vector2i(1 << 30, 0) when there is none. STUB (see is_water).
+func nearest_water(cell: Vector2i, radius: int) -> Vector2i:
+	return Vector2i(1 << 30, 0)
+
+
 func is_solid(c: Vector2i) -> bool:
 	if village.has_point(c):
 		return false
 	if site_building_at(c) or structure_at(c):
 		return true                                    # REGION-NAV-01: a settlement's building (B25R1-018: or a landmark's)
+	if not homes.is_empty() and home_building_at(c):
+		return true                                    # B25R1-010: a homestead's house
 	if works.has(c):
 		return false                                   # B14-07: steps, stairs or a walkway through the cliff's rim
 	var ch := get_chunk(chunk_of(c))

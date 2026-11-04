@@ -1,9 +1,9 @@
 """Write game/assets/tiles/region_props.png: the region's prop sheet (B25R1-018, owner B25R1-Q8: owned art now, the owner's pack
-later), an extra map atlas the overworld view adds after the road tiles (atlas 5: tile ids 500000 + index).
+later), MapView atlas 8 (MapView.EXTRA_ATLASES: tile ids 800000 + index).
 
 Row 0: Shade's eight tombstones from Miniworld (MiniWorldSprites.zip, Miscellaneous/Tombstones.png, 16 x 16 each, the world's
 pixel density, copied 1:1), for the churchyards. Later rows are kept for the owner's pack: a new piece is a row here and a stamp
-in game/data/region_stamps.json (tools/build_region_stamps.py), never a code change.
+in game/data/region_stamps.json (tools/build_region_stamps.py).
 
 Run:  python3 tools/region_props.py      # also run by tools/import_game_assets.py
 """
@@ -35,7 +35,7 @@ def import_into(prov, record):
     """Entry point for tools/import_game_assets.py. Returns the number of files written."""
     DEST.parent.mkdir(parents=True, exist_ok=True)
     build().save(DEST)
-    record(DEST, MINI_ZIP, TOMBS, "the eight 16 x 16 tombstones copied 1:1 into row 0 of an 8-column prop sheet (atlas 5)")
+    record(DEST, MINI_ZIP, TOMBS, "the eight 16 x 16 tombstones copied 1:1 into row 0 of an 8-column prop sheet (MapView atlas 8)")
     return 1
 
 

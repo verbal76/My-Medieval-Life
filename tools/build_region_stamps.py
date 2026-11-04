@@ -158,8 +158,7 @@ GROWING, RIPE = 7 * PAID_COLS + 207, 11 * PAID_COLS + 207
 COZY = 200000
 FENCE = {"tl": COZY + 29 * 54 + 4, "t": COZY + 29 * 54 + 5, "tr": COZY + 29 * 54 + 6, "l": COZY + 30 * 54 + 4,
          "r": COZY + 30 * 54 + 6, "bl": COZY + 31 * 54 + 4, "b": COZY + 31 * 54 + 5, "br": COZY + 31 * 54 + 6}
-TOMB = 500000                      # atlas 5 (tools/region_props.py): eight tombstones, 500000-500007
-PROPS_ATLAS = {"image": "res://assets/tiles/region_props.png", "columns": 8}
+TOMB = 800000                      # MapView atlas 8 (EXTRA_ATLASES; tools/region_props.py): eight tombstones, 800000-800007
 
 
 def resample(src, w, h, ivy=False):
@@ -336,7 +335,7 @@ def build():
     kit, white, stamps = civic()
     out["white"] = {"stamps": ["wall"], "swap": white}
     stamps.update(houses(village))
-    return {"format": FORMAT, "variants": out, "wall": kit, "stamps": stamps, "atlases": [PROPS_ATLAS]}
+    return {"format": FORMAT, "variants": out, "wall": kit, "stamps": stamps}
 
 
 def main():

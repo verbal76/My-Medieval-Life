@@ -612,7 +612,11 @@ Rare features that may not occur organically get a deterministic scenario: a fre
 through the systems' own entry points (`LifeDecisions.set_hardship`, `weigh_runaway`, `recruit`, `leave_band`; `Homesteads.begin`,
 `set_faction`; `World.kill` for an orphaning), which set a record or run a decision exactly as the dawn would (no rule, weight or
 probability changed), then the normal game for some days, recorded. `targeted.json` says per scenario what the recorder saw against
-what was expected ("observed", "not observed: ...", or "not run" when the system is absent). The reports keep it apart: a scenario
+what was expected ("observed", "not observed: ...", or "not run" when the system is absent). A homestead scenario tries its listed
+seeds in order and keeps the first whose village lets the start happen; when the game's own gates refuse every seed (lead's ruling,
+2026-11-03) its `setup` step sets up the documented start conditions on the first seed (an unemployed adult without a post, a viable
+household, the start coins from outside counted in `World.coin_sources`, a site in reach), the gates are asked as always and never
+relaxed, and the result lists every change (`start_conditions_set_up`, `refused_without_setup`). The reports keep it apart: a scenario
 proves a mechanic can work, never how often it happens.
 
 ### 9.6 The campaign (B25R1-016)
@@ -623,6 +627,7 @@ that go on from the game's own save (`flight-recorder-seed.yml`, `.github/action
 six-hour limit met by segments of 1.3 to 2 hours estimated); each segment's save is also loaded into a fresh world and saved again,
 section by section (`economy_sim.gd`, `SAVE_ROUNDTRIP`); the `lives` job writes reports A-I over the first run and compares the two
 runs' event streams (event, state change, participant and snapshot rows by session and day, the machine's wall_ms and mem_bytes left
-out) and checkpoint fingerprints, failing if they differ. Archives and reports are kept 90 days (`fr-seed<N>[-twin]-seg<K>-*`,
+out) and checkpoint fingerprints, failing if they differ. With `--twin` the `scenarios` job also runs every targeted scenario of 9.5 on
+Actions (one job each, in parallel; `fr-targeted-<name>`), and the reports read them with `--targeted`, apart from the organic run. Archives and reports are kept 90 days (`fr-seed<N>[-twin]-seg<K>-*`,
 `fr-living-world-seed<N>`). Runtime: an unrecorded year measured 3.7-4.4 hours on Actions; recorded about 4.5-6 (README); B25R1's
 travellers and homesteads add work: about 5-7 hours a run, two runs in parallel. Locally, recorded, 10 days took 270-300 s at 110 people.

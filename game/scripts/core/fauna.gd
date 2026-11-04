@@ -85,7 +85,8 @@ func cells(area: String) -> Array:
 	var inset := 1 if pens.has(area) else 0       # a pen's fence is its border
 	for y in range(int(r.y) + inset, int(r.y) + int(r.h) - inset):
 		for x in range(int(r.x) + inset, int(r.x) + int(r.w) - inset):
-			if not w.map.is_solid(Vector2i(x, y)):
+			var cell := Vector2i(x, y)
+			if not (w.map.is_solid(cell) if w.map.in_village(cell) else w.map.is_solid_world(cell)):     # B25R1-014: a claim's pen in the open country
 				out.append(Vector2i(x, y))
 	_cells[area] = out
 	var members := {}
@@ -380,7 +381,9 @@ func _hunt_people(a: Animal) -> void:
 			people.append(["npc:%d" % n.id, n.pos])
 	for p in people:
 		var at: Vector2 = p[1]
-		if not in_area(a.area, Vector2i(floori(at.x), floori(at.y))) or at.distance_to(a.pos) > 8.0:
+		var cell := Vector2i(floori(at.x), floori(at.y))
+		var in_its_ground: bool = in_area(a.area, cell) or (a.area == COUNTRY and not w.map.in_village(cell))     # B25R1-014: the open country is its ground
+		if not in_its_ground or at.distance_to(a.pos) > 8.0:
 			continue
 		var alone := true
 		for q in people:
@@ -716,9 +719,11 @@ func update(dt: float) -> void:
 			a.anger_left -= dt
 			if a.anger_left <= 0.0 or _foe_pos(a.anger) == Vector2.INF:
 				a.anger = ""
-		if w.nearest_player_distance(a.pos) > w.detail_radius:
+		if w.wilds != null and w.wilds.leading(a):
+			continue                                    # B25R1-014: bought, being led home to a claim's pen
+		if w.nearest_player_distance(a.pos) > w.detail_radius and not (w.wilds != null and w.wilds.active_near(a)):
 			a.moving = false
-			continue
+			continue                                    # (B25R1-014: a countryside animal by a lived-in claim lives there as by the player)
 		_move(a, dt)
 
 
@@ -807,8 +812,8 @@ func to_dict() -> Dictionary:
 	var mine := []                                      # the player's pens (PL2-015) are not on the map: saved whole
 	for id in pens:
 		ps[id] = {"trough": pens[id].trough, "owner": pens[id].owner, "tenant": pens[id].tenant, "products": pens[id].get("products", {}).duplicate()}
-		if pens[id].get("player", false):
-			mine.append(pens[id])
+		if pens[id].get("player", false) or pens[id].has("claim"):
+			mine.append(pens[id])                       # (B25R1-014: a claim's pen likewise)
 	return {"next_id": next_id, "animals": as_, "pens": ps, "player_pens": mine, "seeded": seeded.duplicate(),
 		"refuges": refuges.to_dict()}
 
@@ -825,7 +830,7 @@ func load_dict(d: Dictionary) -> void:
 		if pens.has(id):
 			pens[id].trough = int(d.pens[id].trough)
 			var sp: Dictionary = d.pens[id]
-			if not pens[id].get("player", false):
+			if not pens[id].get("player", false) and not pens[id].has("claim"):
 				pens[id]["products"] = sp.get("products", {}).duplicate()      # waiting eggs, milk and wool (Build 13)
 			if sp.has("tenant"):
 				pens[id].owner = str(sp.owner)

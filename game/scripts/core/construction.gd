@@ -270,6 +270,8 @@ func estimate(need: Dictionary) -> int:
 func can_hire(n: NPC) -> String:
 	if n == null or not n.alive or n.role != "adult" or n.household < 0:
 		return "They cannot work for you."
+	if w.homesteads != null and w.homesteads.away(n):
+		return "%s lives out in the country." % n.name     # B25R1-010
 	if not n.job in HIRABLE:
 		return "%s has work of their own." % n.name
 	if not contract_of(n).is_empty():
@@ -793,6 +795,8 @@ func daily() -> void:
 		var hh: Dictionary = w.households[h]
 		if hh.get("ended", false) or w.brain._members(h).is_empty() or Life.is_couple(hh):
 			continue                       # MP-PLAYER-FAMILY: a player couple's home is the players' own (Life.sync_couple_homes)
+		if hh.has("homestead"):
+			continue                       # B25R1-010: a homestead household builds its own house on its claim (Homesteads)
 		_rehouse(h)
 		if str(hh.get("build", "")) != "":
 			if not hh.has("venture"):
@@ -1092,6 +1096,8 @@ func _grown_child(o: NPC) -> bool:
 ## (above what those who stay keep, _keep) pay for a home by _home_plan. Both leave their households;
 ## until the new house stands they sleep where they did. False when nothing can be paid for.
 func _found_couple(f: NPC, m: NPC) -> bool:
+	if w.homesteads != null and w.homesteads.consider_couple(f, m):
+		return true                        # B25R1-010: the couple found a homestead in the open country instead
 	var pair := [f, m]
 	var homes: Array = [f.household] if f.household == m.household else [f.household, m.household]
 	var gifts := {}
@@ -1142,6 +1148,8 @@ func _found_couple(f: NPC, m: NPC) -> bool:
 	w.brain.evaluate_household(nid)
 	w.stat("households_founded")
 	w.stat("couples_founded")
+	if w.homesteads != null:                # B25R1-016
+		w.homesteads._rec("household_formed", {"person": f.id, "household": World.hh_ref(nid), "origin": World.hh_ref(int(homes[0])), "track": "couple", "homestead": false})
 	return true
 
 
@@ -1191,6 +1199,8 @@ func _found(h: int) -> bool:
 	var leaving: Array = [founder]
 	if _partner_here(founder):
 		leaving.append(w.npc(founder.partner))
+	if w.homesteads != null and w.homesteads.consider(h, founder, leaving):
+		return true                        # B25R1-010: they found a homestead in the open country instead
 	var spare: int = w.property.purse(World.hh_ref(h)) - _keep(h, w.brain._members(h).size() - leaving.size())
 	var plan := _home_plan(spare, w.household_cell(h, founder.cell()), World.hh_ref(h))
 	if plan.is_empty():
@@ -1215,6 +1225,9 @@ func _found(h: int) -> bool:
 	w.brain.evaluate_household(h)
 	w.brain.evaluate_household(int(nh.id))
 	w.stat("households_founded")
+	if w.homesteads != null:                # B25R1-016: every formation, the denominator of the homestead safeguard
+		w.homesteads._rec("household_formed", {"person": founder.id, "household": World.hh_ref(int(nh.id)), "origin": World.hh_ref(h),
+			"track": "young" if Life.npc_age(w, founder) <= float(Homesteads.cfg().young_max_age) else "adult", "homestead": false})
 	return true
 
 

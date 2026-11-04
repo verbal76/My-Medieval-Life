@@ -317,7 +317,7 @@ def homestead_ledger(lv):
     hs = {}
     people_track = {}
     for e in lv.k(*HS_STAGES, "settlement_created", "settlement_construction", "settlement_occupancy", "settlement_affiliation", "settlement_abandoned",
-                  "settlement_discovered", "settlement_state", "water_source_selected", "water_unavailable", "wild_production", "wild_consumption", "wild_trade", "wild_shortage", "livestock_change", "wild_craft", "raid"):
+                  "settlement_discovered", "settlement_state", "band_relocated", "water_source_selected", "water_unavailable", "wild_production", "wild_consumption", "wild_trade", "wild_shortage", "livestock_change", "wild_craft", "raid"):
         key = e["object"] if str(e["object"]).startswith("homestead:") else (e["settlement"] if str(e["settlement"]).startswith("homestead:") else "")
         if e["actor"].startswith("p:") and ctx(e, "track"):
             people_track[e["actor"]] = ctx(e, "track")
@@ -334,6 +334,11 @@ def homestead_ledger(lv):
                 h["founder"] = e["actor"]
             if sub in ("homestead_residence", "homestead_family_change") or (sub == "settlement_occupancy" and ctx(e, "action") != "out"):
                 h["residents"].add(e["actor"])
+        for r, ro in e["parts"]:
+            if ro == "resident" and sub in ("band_relocated", "settlement_occupancy", "homestead_residence", "settlement_created"):
+                h["residents"].add(r)
+        if sub == "band_relocated" and not h["founder"] and e["actor"].startswith("p:"):
+            h["founder"] = e["actor"]
         h["track"] = h["track"] or ctx(e, "track")
         h["path"] = ctx(e, "path") or h["path"]
         if sub == "homestead_sustain":
@@ -492,7 +497,9 @@ def feature_table(lv):
     add("wilderness_settlement", cnt(["settlement_created", "homestead_claimed"]), 0, cnt(["settlement_abandoned"]), cnt(["settlement_construction"]),
         cnt(["settlement_occupancy", "homestead_residence"]), cnt(["settlement_state"], lambda e: (num(need(e, "population", 0)) or 0) > 0))
     add("wilderness_production", cnt(["wild_production", "wild_consumption"]), 0, cnt(["wild_shortage", "sale_refused"]), 0, cnt(["wild_production"]), cnt(["wild_trade"]))
-    add("raids", cnt(["raid", "raid_defended"]), cnt(["raid"], lambda e: e["outcome"] == "refused"), cnt(["raid"], fail), 0, cnt(["raid"], lambda e: e["outcome"] == "ok"), 0)
+    back = lambda e: ctx(e, "action") in ("returned", "ended", "")      # a raid's own end (set_out is its start)
+    add("raids", cnt(["raid", "raid_defended"]), cnt(["raid"], lambda e: e["outcome"] == "refused"), cnt(["raid"], lambda e: back(e) and fail(e)),
+        cnt(["raid"], lambda e: ctx(e, "action") == "set_out"), cnt(["raid"], lambda e: back(e) and e["outcome"] == "ok"), cnt(["raid_defended"]))
     add("resident_journeys", cnt(["journey_begin", "journey_refused"]), 0, cnt(["journey_end"], fail) + cnt(["journey_refused", "journey_errand_failed"]), cnt(["journey_leg"]), cnt(["journey_end"], lambda e: e["outcome"] == "ok"), cnt(["journey_purchase"]))
     add("road_formation", cnt(["road_formed", "road_faded", "road_overgrown"]), 0, 0, cnt(["road_formed"]), cnt(["road_formed"], lambda e: any(s[1] == "level" and s[3] == 2 for s in e["sc"])), 0)
     add("road_paving_repair", cnt(["road_paved", "road_repaired", "road_wear"]), 0, 0, 0, cnt(["road_paved", "road_repaired"]), 0)

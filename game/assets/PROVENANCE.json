@@ -26455,10 +26455,31 @@
    "sha256": "a450d9b12b22e8f9a06a9cd464ada4b536eef13a0235cdcfa3121b87b5dba4f4"
   },
   {
+   "file": "assets/tiles/larchrow_village_cave.png",
+   "source": "larchrow-village-cave-tileset.zip",
+   "member": "larchrow-village-cave-tileset/Tilesheets/larchrow_village_cave_16x16.png",
+   "transform": "copied unchanged (16 x 16 tiles, 16 columns: MapView atlas 5)",
+   "sha256": "3a232155834226cae2f956e968df3c13d67cdd42854b91dce843e54b94ef407d"
+  },
+  {
+   "file": "assets/tiles/low_grass_1.png",
+   "source": "BowPixel_Low_Grass",
+   "member": "low_grass_1.png",
+   "transform": "copied unchanged (16 x 16 tufts, 20 columns: MapView atlas 6)",
+   "sha256": "5aaaac2ecd3a606ce37262fe53ff5963952a2e9a9263f47147b14cb6502e33ca"
+  },
+  {
+   "file": "assets/tiles/low_grass_2.png",
+   "source": "BowPixel_Low_Grass",
+   "member": "low_grass_2.png",
+   "transform": "copied unchanged (16 x 16 tufts, 20 columns: MapView atlas 7)",
+   "sha256": "209a2aa855b2530957860a46825b1f77f2ed25cdd82fe5a9db6a5a8fb9a23f02"
+  },
+  {
    "file": "assets/tiles/region_props.png",
    "source": "MiniWorldSprites.zip",
    "member": "MiniWorldSprites/Miscellaneous/Tombstones.png",
-   "transform": "the eight 16 x 16 tombstones copied 1:1 into row 0 of an 8-column prop sheet (atlas 5)",
+   "transform": "the eight 16 x 16 tombstones copied 1:1 into row 0 of an 8-column prop sheet (MapView atlas 8)",
    "sha256": "c04e6e7858d50222a0f7797d85f14b7cf6cebb1a84dbbd787d908bd35897a1b3"
   }
  ]

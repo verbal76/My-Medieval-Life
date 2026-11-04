@@ -80,6 +80,9 @@ var business: Business             # the player's market stall and the villagers
 var fitting: Fitting               # equipment the player places in their rooms: counters, shelves, stations (PL1-10 stage 3)
 var counters: Counters             # skilled-trade counters: ring, the keeper walks over and serves (CTR-01..03, ARM-01)
 var construction: Construction     # building kinds, placement, hired helpers, households that split
+var life: LifeDecisions            # B25R1-014: homesteading, runaways, recruitment and leaving the band (saved, optional)
+var homesteads: Homesteads         # B25R1-010: homestead claims in the open country and the households living on them (saved, optional)
+var wilds: Wilds                   # B25R1-014/017: water, works, livestock, crafting, the band's camp and raids on the claims (saved, optional)
 var loot: Array = []               # {pos: Vector2, inv: Inventory, coins, from}
 var fauna: Fauna                   # livestock in the pens, wild animals in the woods
 var farm: Farming                  # the player's field, pens and seeds (PL2-015, scripts/core/farming.gd)
@@ -127,7 +130,8 @@ var prof := {}                     # subsystem -> {us, n}
 var stats := {}                    # running ledger (food made, eaten, exported, meals missed ...) for diagnostics; not saved
 var last_hour := -1
 var guard_posts: Array = []        # patrol points
-var bandit_camp := Vector2i.ZERO
+var bandit_camp := Vector2i.ZERO      # B25R1-Q2 (a): the band's camp, its outlaw claim's door step in the open country once it has moved
+var village_camp := Vector2i.ZERO     # the village map's old camp ground (spawns.bandit_camp): where raiders keep to by night
 var law_lessons := {}              # LAW-SKILL: pupil ref -> [day, lessons that day] (Law.teach); saved only when set
 var outlaw_gone_day := -1            # BANDIT-RETURN: the day the last bandit died (-1 while one lives); saved only when set (Outlaws)
 var shared_farming_start := false    # FARM-YIELD-D1: the shared field model's seed corn has been given (world setup or once on load); saved when set
@@ -170,7 +174,7 @@ var recorder = null           # REC-19: the flight recorder (WorldRecorder), or 
 
 func _init() -> void:
 	GameData.ensure()
-	journey_hook = func(n: NPC) -> bool: return Envoys.at_site(self, n) or RegionTrade.at_site(self, n)      # REGION-NAV-01: an envoy's interviews (S4), a buyer's purchase (S6)
+	journey_hook = func(n: NPC) -> bool: return Envoys.at_site(self, n) or RegionTrade.at_site(self, n) or (life != null and life.at_site(n))      # REGION-NAV-01: an envoy's interviews (S4), a buyer's purchase (S6); B25R1-014: a runaway joins the settlement
 
 
 # ---------------------------------------------------------------- setup ----------------------
@@ -194,6 +198,10 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	justice = Justice.new(self)
 	property = Property.new(self)
 	construction = Construction.new(self)
+	homesteads = Homesteads.new(self)          # B25R1-010
+	wilds = Wilds.new(self)                    # B25R1-014/017
+	life = LifeDecisions.new(self)             # B25R1-014
+	homesteads.decider = life.homestead_decider
 	business = Business.new(self)
 	ventures = Ventures.new(self)
 	employment = Employment.new(self)
@@ -247,6 +255,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 		pd.price = property.land_price(int(pd.w), int(pd.h))
 		plots.append(pd)
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
+	village_camp = bandit_camp
 	_guard_posts()
 	Population.populate(self)
 	_open_treasury()
@@ -299,6 +308,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	civic = CivicRecords.attach(self)    # P21-01: null unless data/civic.json enables it; seeds the current holders, draws nothing
 	note("Day 1 begins in the village.")
 	SeedTravelers.designate(self)        # B25R1-009: a few residents set out to buy one thing at another settlement (once, at the founding)
+	wilds.found_band("setup")            # B25R1-Q2 (a): the band makes its camp in the open country (they walk there)
 
 
 ## The manor's funds are the treasury; the reeve keeps only a purse. Used for a new world and to
@@ -382,6 +392,7 @@ func update(real_dt: float) -> void:
 		if profiling:
 			t = _prof("hourly (incl. daily)", t)
 	Atlas.note_position(self, _host_player)              # REGION-NAV-01: the region a player sees and the places they reach
+	homesteads.note_player(_host_player)                 # B25R1-010: a homestead the player comes near is known to them
 	for id in _guests:
 		if not _guests[id].away:
 			Atlas.note_position(self, _guests[id])
@@ -460,6 +471,8 @@ func _on_hour(h: int) -> void:
 	if couriers != null:
 		couriers.step()               # REG-COURIER-01: couriers leave on their routes, arrive, hand over and come home
 	_grow_trees()
+	if wilds != null:
+		wilds.hour()                   # B25R1-014: countryside animals near the claims become real; a camp's defence recorded
 	farm.hour()                        # the player's crops (PL2-015)
 	farm_plots.hour()                  # the households' farmland crops (FARM-03)
 	if h == 17:
@@ -548,6 +561,9 @@ func _new_day() -> void:
 	if couriers != null:
 		couriers.daily()               # REG-COURIER-01: the village's booth, its keeper, the routes to the settlements
 	construction.daily()               # helpers' days end; crowded households split; founders build
+	homesteads.dawn()                  # B25R1-010: the decline gate's count, homesteads given up or ended
+	wilds.dawn()                       # B25R1-014/017: drinking, herds, raids weighed, the band's camp
+	life.dawn()                        # B25R1-014: hardship records; adults' homesteading, runaways, leaving the band (judged)
 	ventures.daily()                   # B25-BUSINESS-IMPL: ventures open, change hands or close; villagers weigh founding one
 	employment.daily()                 # EMP-PERM-01: permanent employees paid for the day, or their employment ends
 	farm_plots.daily()                 # households weigh taking farmland (FARM-05)
@@ -603,6 +619,17 @@ func _update_npc(n: NPC, dt: float) -> void:
 		if n.plan.is_empty() and Journeys.resume(self, n):
 			_run_plan(n, dt, gm)
 			return
+	if life.drives(n):                               # B25R1-014: a runaway on the way to the bandits' camp
+		if n.plan.is_empty():
+			life.plan(n)
+		_run_plan(n, dt, gm)
+		return
+	if homesteads.drives(n):                         # B25R1-010: a homesteader's day is laid out by Homesteads, never the village brain
+		homesteads.tick(n)
+		if n.plan.is_empty():
+			homesteads.plan(n)
+		_run_plan(n, dt, gm)
+		return
 	if n.plan.is_empty():
 		var t := Time.get_ticks_usec() if profiling else 0
 		brain.decide(n)
@@ -836,6 +863,19 @@ func player_positions() -> Array:
 
 
 ## The distance from `at` to the nearest player (of those in play).
+## B25R1-014: the nearest cell open on the world's ground (the village map inside it, the overworld outside) to `c`.
+func nearest_open_world(c: Vector2i) -> Vector2i:
+	if map.in_village(c):
+		return map.nearest_walkable(c)
+	for r in range(0, 8):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				var q := c + Vector2i(dx, dy)
+				if maxi(absi(dx), absi(dy)) == r and not map.is_solid_world(q):
+					return q
+	return c
+
+
 func nearest_player_distance(at: Vector2) -> float:
 	var best := at.distance_to(_host_player.pos)
 	for id in _guests:
@@ -1908,6 +1948,8 @@ func can_afford(buyer: NPC, price: int, for_need := false, id := "") -> bool:
 func purchase_qty(buyer: NPC, seller: Object, id: String, offered: int) -> int:
 	if not buyer.journey.is_empty() or (seller is NPC and not (seller as NPC).journey.is_empty()):
 		return 0                      # REGION-NAV-01: a villager away on a journey (Journeys) buys and sells nothing at home
+	if homesteads != null and (homesteads.remote(buyer) or (seller is NPC and homesteads.remote(seller as NPC))):
+		return 0                      # B25R1-010: nor does one out at their homestead in the country
 	var q: int = mini(offered, brain.wants(buyer, id))
 	if q <= 0:
 		return 0
@@ -6136,6 +6178,9 @@ func to_dict() -> Dictionary:
 	var out := {
 		"save_version": SAVE_VERSION, "format": "mml-save/%d" % SAVE_VERSION, "seed": seed, "minutes": minutes, "rng_state": str(rng.state), "next_parcel": property.next_parcel,
 		"construction": construction.to_dict(),
+		"homesteads": homesteads.to_dict(),
+		"wilds": wilds.to_dict(),
+		"life": life.to_dict(),
 		"manor_work": manor_work.to_dict(),
 		"tax": tax_state.duplicate(true), "treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
 		"village": {"format": map.data.format, "seed": map.data.seed},
@@ -6381,6 +6426,10 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	property = Property.new(self)
 	property.next_parcel = int(d.get("next_parcel", 0))
 	construction = Construction.new(self)
+	homesteads = Homesteads.new(self)          # B25R1-010 (loaded below, once the overworld and the households are back)
+	wilds = Wilds.new(self)                    # B25R1-014/017 (loaded below)
+	life = LifeDecisions.new(self)             # B25R1-014 (loaded below)
+	homesteads.decider = life.homestead_decider
 	business = Business.new(self)
 	ventures = Ventures.new(self)
 	employment = Employment.new(self)
@@ -6598,6 +6647,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	Life.sync_couple_homes(self)
 	property.settle_ended_households()      # saves before property: a house whose family died out goes to the manor
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
+	village_camp = bandit_camp
 	law_lessons = (d.get("law_lessons", {}) as Dictionary).duplicate(true)      # LAW-SKILL: absent in an older save
 	offers = []                                                               # MP-D8: absent: none
 	messages = MessageJournal.from_dict(d.get(MessageJournal.KEY, {}))        # GP-MESSAGE-JOURNAL: absent in a save before it: none
@@ -6654,6 +6704,10 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 			fitting.restore(b)             # the equipment the player placed (PL1-10 stage 3)
 	index_interiors()
 	construction.load_dict(d.get("construction", {}))
+	homesteads.load_dict(d.get("homesteads", {}))     # B25R1-010 (older saves: no homesteads)
+	wilds.load_dict(d.get("wilds", {}))               # B25R1-014/017 (older saves: none)
+	wilds.migrate_on_load()                           # B25R1-Q2 (a): an older save's band moves out to a camp of its own
+	life.load_dict(d.get("life", {}))                 # B25R1-014 (older saves: no records)
 	Life.sync_roles(self)              # B8-029: roles follow age on load
 	if int(d.get("save_version", 1)) < 4:
 		_move_indoors(d)

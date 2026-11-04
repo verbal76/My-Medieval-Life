@@ -147,11 +147,62 @@ jobs:
           path: campaign
           retention-days: 90
 
+  # B25R1-016 section 12: the targeted scenarios (game/tests/flight_scenarios.gd, game/data/flight_scenarios.json), one job per
+  # scenario, in parallel with the campaign: rare features started from documented conditions and reported apart from the organic
+  # run. With --twin only (the B25R1 campaign); kept 90 days.
+  scenarios:
+    needs: plan
+    if: needs.plan.outputs.twin == 'true'
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        name: [young_adult_homestead, established_adult_homestead, outlaw_homestead, youth_runaway, recruit_runaway, recruit_displaced_adult, recruit_orphan, bandit_departure]
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache Godot
+        id: godot
+        uses: actions/cache@v4
+        with:
+          path: ~/godot-bin
+          key: godot-${{ needs.plan.outputs.godot }}-linux-editor
+      - name: Install Godot (editor only)
+        if: steps.godot.outputs.cache-hit != 'true'
+        env:
+          GODOT_VERSION: ${{ needs.plan.outputs.godot }}
+        run: |
+          mkdir -p ~/godot-bin
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -sSfL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip && mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" ~/godot-bin/godot && rm godot.zip
+      - name: Run the scenario
+        env:
+          NAME: ${{ matrix.name }}
+        run: |
+          out="$RUNNER_TEMP/targeted/$NAME"
+          mkdir -p "$out"
+          export XDG_DATA_HOME="$RUNNER_TEMP/ud" TMPDIR="$RUNNER_TEMP/tmp"
+          mkdir -p "$XDG_DATA_HOME" "$TMPDIR"
+          ~/godot-bin/godot --headless --path game --import > "$out/import.log" 2>&1 || true
+          MML_COMMIT="$GITHUB_SHA" timeout 13800 ~/godot-bin/godot --headless --path game --script res://tests/flight_scenarios.gd -- --out "$out" --only "$NAME" > "$out/run.log" 2>&1 || echo "::warning::the scenario $NAME exited with $?"
+          grep -E "SCENARIO|SCRIPT ERROR" "$out/run.log" | tee -a "$GITHUB_STEP_SUMMARY" || true
+          ! grep -q "SCRIPT ERROR" "$out/run.log"
+      - name: Keep the scenario
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fr-targeted-${{ matrix.name }}
+          path: ${{ runner.temp }}/targeted
+          compression-level: 0
+          retention-days: 90
+
   # B25R1-016 (owner directive 2026-11-03, 365-day flight recorder): with --twin, each seed's two independent runs are read together:
   # the living-world reports A-I over the first (tools/flight_lives.py) and the comparison of the two runs' event streams and
   # checkpoint fingerprints (identical, or the first day they differ). Kept 90 days.
   lives:
-    needs: [plan, seed]
+    needs: [plan, seed, scenarios]
     if: always() && needs.plan.outputs.twin == 'true'
     strategy:
       fail-fast: false
@@ -161,11 +212,23 @@ jobs:
     timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch both runs' archives and statuses
+      - name: Fetch the run's archives and statuses
         uses: actions/download-artifact@v4
         with:
-          pattern: fr-seed${{ matrix.seed }}*-seg*
+          pattern: fr-seed${{ matrix.seed }}-seg*
           path: ${{ runner.temp }}/dl
+      - name: Fetch the twin's archives and statuses
+        uses: actions/download-artifact@v4
+        with:
+          pattern: fr-seed${{ matrix.seed }}-twin-seg*
+          path: ${{ runner.temp }}/dl
+      - name: Fetch the targeted scenarios
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          pattern: fr-targeted-*
+          path: ${{ runner.temp }}/targeted
+          merge-multiple: true
       - name: Lay the runs out
         env:
           SEED: ${{ matrix.seed }}
@@ -191,7 +254,7 @@ jobs:
         run: |
           out="$RUNNER_TEMP/lives"
           set +e
-          python3 tools/flight_lives.py "$RUNNER_TEMP/run" --compare "$RUNNER_TEMP/run-twin" --out "$out" > "$RUNNER_TEMP/lives.log" 2>&1
+          python3 tools/flight_lives.py "$RUNNER_TEMP/run" --compare "$RUNNER_TEMP/run-twin" --targeted "$RUNNER_TEMP/targeted" --out "$out" > "$RUNNER_TEMP/lives.log" 2>&1
           echo "code=$?" >> "$GITHUB_OUTPUT"
           set -e
           cp "$RUNNER_TEMP/lives.log" "$out/" 2>/dev/null || true

@@ -44,6 +44,7 @@ static func holders(w: World) -> Dictionary:
 	for src in [w.site_goods(), w.construction.carried()]:
 		for id in src:
 			g.sites[id] = int(g.sites.get(id, 0)) + int(src[id])
+	g["homesteads"] = w.homesteads.goods() if w.homesteads != null else {}     # B25R1-010: frames' materials and homestead chests
 	g["carts"] = {}
 	for c in w.carts.carts:                        # goods riding in carts (B14)
 		add.call(g.carts, c.store)

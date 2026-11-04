@@ -2398,7 +2398,8 @@ func _adopt_country_animals(radius: float) -> void:
 		if a == null or not a.alive:
 			world.country_taken[key] = -1               # hunted, or dead some other way: gone from the countryside for good
 			continue
-		if world.nearest_player_distance(a.pos) > radius + COUNTRY_ADOPT and a.anger == "" and a.hp >= float(a.spec().hp) - 0.01:
+		if world.nearest_player_distance(a.pos) > radius + COUNTRY_ADOPT and a.anger == "" and a.hp >= float(a.spec().hp) - 0.01 \
+				and not (world.wilds != null and Wilds.near(world.wilds.claim_centers(), a.pos, float(Wilds.cfg().country_radius) * 2.0)):     # (B25R1-014: kept by a lived-in claim)
 			world.fauna.animals.erase(a)                # unharmed and out of sight: back to the countryside's ambient life
 			world.country_taken.erase(key)
 	if world.player_level != 0 or not world.player.alive:
@@ -2930,6 +2931,12 @@ func _find_target() -> void:
 				near.append([d, near.size(), {"kind": "npc", "npc": n, "label": "%s is asleep" % _who(n)}])
 			elif world.at_post(n):
 				near.append([d, near.size(), {"kind": "shop", "npc": n, "label": "Trade with %s (%s)" % [n.name, world.shop_name(n)]}])
+			elif world.wilds != null and n.role == "bandit" and n.target == -1 and world.homesteads.remote(n) and str(world.homesteads.claim_of(n).get("faction", "")) == "outlaw":
+				var no: String = world.wilds.player_trade_refusal(p, n)        # B25R1-014: the outlaws' members-only market at their camp
+				if no == "":
+					near.append([d, near.size(), {"kind": "shop", "npc": n, "label": "Trade with %s (the outlaws' camp)" % n.name}])
+				else:
+					near.append([d, near.size(), {"kind": "info", "label": "%s eyes you warily" % n.name, "text": no}])
 			else:
 				near.append([d, near.size(), {"kind": "npc", "npc": n, "label": "Talk to %s" % _who(n)}])
 	var settle: Dictionary = world.map.overworld.site_at(Vector2i(p.pos.floor())) if world.map.overworld != null else {}
@@ -2946,6 +2953,9 @@ func _find_target() -> void:
 		for e: Dictionary in countryside.travellers_near(probe, 1.5, world.minutes):
 			if str(e.kind) != "wagon":
 				near.append([(e.pos as Vector2).distance_to(probe), near.size(), {"kind": "traveller", "t": e, "label": "Talk to the %s" % str(e.kind)}])
+	if world.homesteads != null:                     # B25R1-010: a homestead's frame, chest and bed, and the claiming of open country
+		for ht: Dictionary in world.homesteads.player_targets(p, probe, facing_vec().y < -0.5):
+			near.append([float(ht.d), near.size(), ht])
 	for pt in _player_targets(probe):                # MP-INTERACT-01: another player in reach, among the people
 		near.append([pt[0], near.size(), pt[1]])
 	for c in world.containers:
@@ -3696,6 +3706,35 @@ func _use() -> void:
 			ui.show_keeper(target.person)                  # REGION-NAV-01: a settlement's keeper at their door
 		"traveller":
 			ui.show_traveller(target.t)                    # B25R1-002: a traveller on the road
+		"homestead_claim":                                 # B25R1-010: open country claimed, a house marked out (Homesteads)
+			var why: String = world.homesteads.player_claim(p)
+			ui.message(why if why != "" else "You claim this land and mark out a house. Bring its materials to the frame: %s." % Homesteads.need_text(world.homesteads.claims[-1]), 5.0, "" if why != "" else "property")
+		"wild_work_begin", "wild_work":                   # B25R1-010: the player's pen or workshop on their own claim (Wilds)
+			var whyk: String = world.wilds.player_work(p, str(target.kind), str(target.id))
+			if whyk != "":
+				ui.message(whyk)
+			elif str(target.kind) == "wild_work_begin":
+				ui.message("You mark it out beside the house. Bring its materials, then build it.", 4.0, "property")
+			else:
+				ui.message("You work on it.", 3.0, "property")
+		"wild_well_mark", "wild_well":                    # B25R1-Q3: the player's well on their own claim (Wilds)
+			var whyw: String = world.wilds.player_well(p, str(target.kind), str(target.id))
+			if whyw != "":
+				ui.message(whyw)
+			elif str(target.kind) == "wild_well_mark":
+				ui.message("You mark out a well. Bring its stone and logs, then dig.", 4.0, "property")
+			else:
+				var wl: Dictionary = world.wilds.well(str(target.id))
+				ui.message("Your well is dug: water for the homestead." if bool(wl.get("done", false)) else "You work at the well.", 3.0, "property")
+		"homestead_site":
+			var hc: Dictionary = world.homesteads.claim(str(target.id))
+			var why: String = world.homesteads.player_deliver(p, str(target.id))
+			if why != "":
+				ui.message(why)
+			elif bool(hc.site.get("done", false)):
+				ui.message("Your house in the country is finished. Its chest and beds are yours.", 5.0, "property")
+			else:
+				ui.message("You add what you carry to the frame. It still needs %s." % Homesteads.need_text(hc), 4.0, "property")
 		"stall":
 			ui.show_stall(str(target.id))
 		"front_build":
