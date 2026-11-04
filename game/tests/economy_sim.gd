@@ -68,6 +68,7 @@ var herd_last := {}            # kind -> the last row's key, to keep only the da
 var herd_care := {}            # kind -> hours a pen had a hungry animal and too little in the trough, and why it was not fed
 var trader_diag := false       # X20-TRADER-PAY-INV: --trader-diag prints the settlements' traders and their households each day (reads only)
 var trader_ever := {}          # "<settlement>|<household id>" of every household that has worked a settlement's trade
+var view_sweep := false        # B25R1-019: --view-sweep moves the view round the village every step (the observation twin)
 var flee_path := PackedVector2Array()   # SIM-GATE-01 crime_spree: the player's flight after a crime, cell by cell
 const FLEE_TILES_PER_SECOND := 4.5      # the player's walking speed (docs: guards chase at 1.3 x walk_tiles_per_second)
 
@@ -188,6 +189,9 @@ func _init() -> void:
 		_trader_diag(0)
 	var profile := "--profile" in args          # PERF-02: time per subsystem, printed at the end (changes nothing)
 	w.profiling = profile
+	w.presence.crowd_enabled = not ("--no-crowd" in args)     # B25R1-020: the crowd exception off, to measure it alone
+	view_sweep = "--view-sweep" in args
+	print("presence switches: crowd %s, view %s" % ["on" if w.presence.crowd_enabled else "off (--no-crowd)", "sweeping (--view-sweep)" if view_sweep else "parked on the player"])     # B25R1-019/020: which configuration this run is
 	w.map.profiling = profile
 	var update_us := 0
 	var harness_us := 0
@@ -209,6 +213,9 @@ func _init() -> void:
 			w.player.hunger = 100.0            # the inert player is fed; it is not part of what is measured
 			if not flee_path.is_empty():
 				_flee_step()
+			if view_sweep:
+				# B25R1-019/020 observation twin: the view (not the player) sweeps the village; only what is live differs
+				w.presence.set_view(w.host_player().pid, Presence.DEFAULT_VIEW, Vector2(20 + (i * 7) % 90, 20 + (i * 3) % 70))
 			if i % 60 == 59:
 				var th := Time.get_ticks_usec()
 				_hourly()
@@ -343,7 +350,8 @@ func _init() -> void:
 		var f := FileAccess.open(out, FileAccess.WRITE)
 		f.store_string(JSON.stringify({"format": "economy-sim/1", "seed": seed, "days": days, "reached": reached, "every": every, "step": STEP,
 			"seconds": secs, "start": _jsonable(start), "samples": samples, "dev": dev_series, "deaths": death_log,
-			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows, "herd": herd_log, "herd_care": herd_care, "region": _region_line()}, " ", false))
+			"fingerprint": _fingerprint(), "misses": _miss_summary(), "flows": flows, "herd": herd_log, "herd_care": herd_care, "region": _region_line(),
+			"presence": {"crowd": w.presence.crowd_enabled, "view_sweep": view_sweep, "crowd_stats": w.presence.crowd_stats}}, " ", false))
 		f.close()
 	# SJD-G: save size and memory at the end, after the results above are written (World.to_dict tells any queued gossip first)
 	print("JUDGE_SAVE %s" % JSON.stringify({"judgment_bytes": JSON.stringify(w.judgment.to_dict()).length() if w.judgment != null else 0,
@@ -2346,6 +2354,7 @@ func _print_final(s: Dictionary, start: Dictionary, seed: int, days: int, secs: 
 	print("credit: %s" % JSON.stringify(cr))
 	print("currency: %s" % JSON.stringify(s.currency))
 	print("player: %s" % JSON.stringify(s.player))
+	print("presence: %s" % JSON.stringify(w.presence.crowd_stats))     # B25R1-020: crowd ticks, pastimes ended, protected over the target
 	print("events: %s" % JSON.stringify(s.events))
 	print("ledger flows: %s" % JSON.stringify(s.ledger.flows))
 	print("LEAKS: currency %d; items %s; deposits %s; animals %s" % [s.currency.leak, JSON.stringify(s.ledger.items),

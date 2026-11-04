@@ -30,6 +30,8 @@ var chunk_cells := {}                # overworld chunk -> Array of trunk cells
 var _queue: Array = []               # [chunk, record] waiting to be drawn
 var _fading := {}                    # cells whose canopy is faded or on its way
 var _poll := 0.0
+var wind_time := 0.0                 # B25R1-019: the breeze's clock (seconds of play), fed to the sway shader
+var _sway := {}                      # amplitude class -> ShaderMaterial shared by every tree of that class
 var reduce := false                  # JUICE J1: Settings, Interface, Reduce effects: no flying chips or leaves (the shudder stays)
 
 
@@ -154,6 +156,8 @@ func _dress(n: TreeNode) -> void:
 			pivot = Vector2(s.pivot[0], s.pivot[1])
 	n.texture = Trees.texture(file)
 	n.offset = off - pivot
+	var sk := sway_kind(state, n.texture)
+	n.material = _sway_material(sk) if sk != "" else null      # B25R1-019: the breeze
 	n.drawn = state
 	var hits := world.tree_hits(cell) if world != null and state == "grown" else 0
 	n.hits = hits
@@ -179,6 +183,51 @@ func _cuts(n: TreeNode, v: Dictionary, pivot: Vector2, hits: int, cell: Vector2i
 	var c: Dictionary = v.cuts["left" if side < 0 else "right"][mini(hits, 3) - 1]
 	n.cuts.texture = Trees.texture(c.file)
 	n.cuts.position = Vector2(c.off[0], c.off[1]) - pivot
+
+
+# ---------------------------------------------------------------- the breeze (B25R1-019) ------
+## Trees sway a little in the breeze: the top of the sprite moves, the trunk's foot stays. One shared material per amount of
+## sway (a sapling most, a stout mature tree least); the phase comes from where the tree stands (its node's position, in the
+## shader) and the breeze's clock, so it is the same every time, with no random numbers. Only what is on screen is drawn, so
+## only the trees in view sway: the GPU skips the rest, and the CPU cost is one parameter a frame per class.
+const SWAY_SHADER := """
+shader_type canvas_item;
+uniform float wind_time = 0.0;
+uniform float amp = 1.0;            // texels of sway at the top of the sprite
+void vertex() {
+	vec2 base = MODEL_MATRIX[3].xy;  // the trunk's foot in the world (pixels)
+	float phase = base.x * 0.043 + base.y * 0.027;
+	float gust = 0.65 + 0.35 * sin(wind_time * 0.23 + base.x * 0.0035 + base.y * 0.002);
+	float top = 1.0 - UV.y;
+	VERTEX.x += sin(wind_time * 1.6 + phase) * amp * gust * top;
+}
+"""
+
+
+func _sway_material(kind: String) -> ShaderMaterial:
+	if not _sway.has(kind):
+		var sh := Shader.new()
+		sh.code = SWAY_SHADER
+		var m := ShaderMaterial.new()
+		m.shader = sh
+		m.set_shader_parameter("amp", float(Presence.cfg().sway[kind]))     # balance.json "presence".sway
+		_sway[kind] = m
+	return _sway[kind]
+
+
+## How much this tree sways: by its stage, then by how slender its picture is (height over width).
+static func sway_kind(state: String, tex: Texture2D) -> String:
+	if state == "stump" or tex == null:
+		return ""
+	if state == "sapling":
+		return "sapling"
+	if state == "young":
+		return "slender"
+	var sz := tex.get_size()
+	var aspect := sz.y / maxf(1.0, sz.x)
+	if aspect >= 1.7:
+		return "slender"
+	return "medium" if aspect >= 1.25 else "stout"
 
 
 # ---------------------------------------------------------------- effects --------------------
@@ -268,6 +317,9 @@ func _poof(at: Vector2) -> void:
 ## `feet`: the player's position (tiles). Fades the canopy over them, adds queued trees and brings
 ## the changing ones up to the clock.
 func update(feet: Vector2, delta: float) -> void:
+	wind_time += delta
+	for m: ShaderMaterial in _sway.values():
+		m.set_shader_parameter("wind_time", wind_time)
 	if not _queue.is_empty():
 		_add_queued(BUILD_PER_FRAME)
 	_poll += delta

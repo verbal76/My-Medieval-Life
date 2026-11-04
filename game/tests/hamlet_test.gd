@@ -124,17 +124,17 @@ func test_trip_position() -> void:
 	var mono := true
 	var last := -1.0
 	for m in range(480, int(arr) + 1, 7):
-		var k := SettlementTrips.road_tiles(float(t.depart), float(m))
+		var k := Presence.road_tiles(float(t.depart), float(m))
 		mono = mono and k >= last
 		last = k
 	check(mono, "every minute they are no further back than the minute before")
-	check(SettlementTrips.road_tiles(0.0, 20.0 * 60.0) == SettlementTrips.road_tiles(0.0, 30.0 * 60.0 - 1.0), "nobody walks between 20:00 and 06:00")
-	check(is_equal_approx(SettlementTrips.road_tiles(6.0 * 60.0, 7.0 * 60.0), 78.0), "1.3 tiles a game minute (78 in an hour)")
+	check(Presence.road_tiles(0.0, 20.0 * 60.0) == Presence.road_tiles(0.0, 30.0 * 60.0 - 1.0), "nobody walks between 20:00 and 06:00")
+	check(is_equal_approx(Presence.road_tiles(6.0 * 60.0, 7.0 * 60.0), 78.0), "1.3 tiles a game minute (78 in an hour)")
 	var ok := true
 	for now in [500.0, 1300.0, 2000.0, 5000.0, 9000.5]:
 		for tiles in [0.0, 10.0, 300.0, 1100.0]:
 			var d := SettlementTrips.depart_for(now, tiles)
-			ok = ok and absf(SettlementTrips.road_tiles(d, now) - tiles) < 0.001
+			ok = ok and absf(Presence.road_tiles(d, now) - tiles) < 0.001
 	check(ok, "depart_for is road_tiles' inverse: a folded walker is put back exactly as far along")
 
 

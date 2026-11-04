@@ -19,9 +19,9 @@ extends RefCounted
 ## Calculated and live are the same record: while the walker is a live NPC (SettlementPeople) the trip waits (its pack is with the
 ## NPC); when the NPC is folded back, `depart` is rewritten so that road_tiles(depart, now) is the distance reached.
 
-const PACE := 1.3
-const REST_FROM := 20             # Journeys.REST_FROM, Presence.REST_FROM
-const REST_TO := 6
+const PACE := Presence.PACE      # the road's one pace and walking hours are Presence's (EA-01: road_tiles, arrival, along live there)
+const REST_FROM := Presence.REST_FROM             # Journeys.REST_FROM, Presence.REST_FROM
+const REST_TO := Presence.REST_TO
 const DAY := 1440.0
 
 
@@ -34,52 +34,6 @@ static func hcfg() -> Dictionary:
 
 
 # ------------------------------------------------------------------ the shared walking rule ----------------
-## The road's one pace (B25R1-019, agreed through the lead): Presence.road_tiles. Kept here identical so a settlement without the
-## presence system (tests, regions_sim) walks alike; when Presence is merged both are the same function (presence_test compares).
-# DUPLICATE of Presence.road_tiles, remove at merge
-static func road_tiles(depart: float, m: float, pace := PACE) -> float:
-	if m <= depart:
-		return 0.0
-	return walking_minutes(depart, m) * pace
-
-
-# DUPLICATE of Presence.walking_minutes, remove at merge
-static func walking_minutes(depart: float, m: float) -> float:
-	if m <= depart:
-		return 0.0
-	var from := float(REST_TO) * 60.0
-	var to := float(REST_FROM) * 60.0
-	var d0 := floorf(depart / DAY)
-	var d1 := floorf(m / DAY)
-	var t0 := clampf(depart - d0 * DAY, from, to)
-	var t1 := clampf(m - d1 * DAY, from, to)
-	if d0 == d1:
-		return maxf(0.0, t1 - t0)
-	return (to - t0) + (d1 - d0 - 1.0) * (to - from) + (t1 - from)
-
-
-## The game minute a walk of `tiles` begun at `depart` arrives (the inverse of road_tiles).
-# DUPLICATE of Presence.arrival, remove at merge
-static func arrival(depart: float, tiles: float, pace := PACE) -> float:
-	var need := tiles / maxf(0.0001, pace)
-	var from := float(REST_TO) * 60.0
-	var to := float(REST_FROM) * 60.0
-	var t := depart
-	var tod := t - floorf(t / DAY) * DAY
-	if tod < from:
-		t += from - tod
-	elif tod >= to:
-		t += DAY - tod + from
-	while need > 0.0:
-		tod = t - floorf(t / DAY) * DAY
-		var left := to - tod
-		if need <= left:
-			return t + need
-		need -= left
-		t += left + (DAY - to) + from
-	return t
-
-
 ## The departure minute that puts a walker `tiles` along at minute `now` (a fold rewrites `depart` with it): the latest d with
 ## road_tiles(d, now) == tiles.
 static func depart_for(now: float, tiles: float, pace := PACE) -> float:
@@ -103,23 +57,6 @@ static func depart_for(now: float, tiles: float, pace := PACE) -> float:
 		need -= avail
 		t = base - DAY + to
 	return t
-
-
-## The point `tiles` along `path` (cells; feet at the cells' centres): Presence.along.
-# DUPLICATE of Presence.along, remove at merge
-static func along(path: PackedVector2Array, tiles: float) -> Vector2:
-	if path.is_empty():
-		return Vector2.ZERO
-	var at := path[0] + Vector2(0.5, 0.5)
-	var left := maxf(0.0, tiles)
-	for i in range(1, path.size()):
-		var nxt := path[i] + Vector2(0.5, 0.5)
-		var l := at.distance_to(nxt)
-		if l >= left and l > 0.0:
-			return at + (nxt - at) / l * left
-		left -= l
-		at = nxt
-	return at
 
 
 static func length(path: PackedVector2Array) -> float:
@@ -183,11 +120,11 @@ static func leg_path(r: Regions, t: Dictionary) -> PackedVector2Array:
 ## Where the walker is at minute `m` (overworld cells; the village's frame when the settlements have no world).
 static func pos(r: Regions, t: Dictionary, m: float) -> Vector2:
 	var path := leg_path(r, t)
-	return along(path, minf(road_tiles(float(t.depart), m, float(t.pace)), length(path)))
+	return Presence.along(path, minf(Presence.road_tiles(float(t.depart), m, float(t.pace)), length(path)))[0]
 
 
 static func arrives(r: Regions, t: Dictionary) -> float:
-	return arrival(float(t.depart), length(leg_path(r, t)), float(t.pace))
+	return Presence.arrival(float(t.depart), length(leg_path(r, t)), float(t.pace))
 
 
 ## An adult member of one of `hids` (in that order, eldest first) who is home and not live: [hid, member index], or [] nobody.
