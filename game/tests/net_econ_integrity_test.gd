@@ -417,21 +417,55 @@ func _lossy() -> void:
 	var r0 := net.reconnects
 	await proxy({"loss": 0.2, "dup": 0.2, "reorder": 0.2, "delay_ms": 30, "jitter_ms": 40, "seed": 23})
 	var rids := []
-	var done := 0
+	var accepted := {}                                # offer ids Ann has answered (each answered once)
+	var stages := []                                  # what each sale was still waiting for when the lossy window closed
 	for i in 3:
-		var o := await host_offers("sell", IT, 1, 2)
+		await host_offers("sell", IT, 1, 2)
+		var o := _unanswered_sell(accepted)           # never an offer Ann already answered (still on her copy until the host's reply)
 		if o.is_empty():
+			stages.append("sale %d: offer not yet received" % (i + 1))   # a late offer is accepted after the network recovers
 			continue
-		rids.append(accept(int(o.id)))
-		if await until(func(): return has(ann, IT) == a_i + done + 1, 8.0):
-			done += 1
+		accepted[int(o.id)] = true
+		var rid := accept(int(o.id))
+		rids.append(rid)
+		if not await until(func(): return times(ann, rid) >= 1, 8.0):
+			stages.append("sale %d: request %d not yet applied" % [i + 1, rid])
 	await proxy({})
+	# The clean network back, every sale still in flight is given the network's own recovery limit (RECONNECT_SECONDS, 60 s) to
+	# land: ENet resends a reliable packet with a doubling delay, so under 20% loss one request can take longer than the lossy
+	# window. Delayed delivery then settles; a request lost for good or applied twice still fails below, by request and stage.
+	var settle_end := Time.get_ticks_msec() + int(NetSession.RECONNECT_SECONDS * 1000.0)
+	while rids.size() < 3 and Time.get_ticks_msec() < settle_end:   # an offer that arrived late: accept it once
+		var late := _unanswered_sell(accepted)
+		if late.is_empty():
+			await process_frame
+			continue
+		accepted[int(late.id)] = true
+		var lrid := accept(int(late.id))
+		rids.append(lrid)
+		stages.append("late offer %d accepted as request %d" % [int(late.id), lrid])
+	await until(func(): return rids.all(func(r): return times(ann, r) >= 1), maxf(0.0, (settle_end - Time.get_ticks_msec()) / 1000.0))
 	await wait(1.0)
+	var unsettled := []
+	for r in rids:
+		var n := times(ann, r)
+		if n != 1:
+			unsettled.append("request %d applied %d times%s" % [r, n, " (lost: never applied within the recovery limit)" if n == 0 else " (duplicated)"])
+	if rids.size() < 3:
+		unsettled.append("%d of 3 offers never reached Ann within the recovery limit" % (3 - rids.size()))
 	var ps := read_json("proxy_status.json")
-	check(done == 3 and has(ann, IT) == a_i + 3 and coins(ann) == a_c - 6 and rids.all(func(r): return times(ann, r) == 1),
-		"20%% loss, 20%% repeats, 20%% reordering: three sales, each once (apples +%d, coins %d; relay dropped %d, repeated %d, reordered %d; reconnects %d)" % [has(ann, IT) - a_i, coins(ann) - a_c, int(ps.get("dropped", 0)), int(ps.get("duplicated", 0)), int(ps.get("reordered", 0)), net.reconnects - r0])
+	check(rids.size() == 3 and unsettled.is_empty() and has(ann, IT) == a_i + 3 and coins(ann) == a_c - 6,
+		"20%% loss, 20%% repeats, 20%% reordering: three sales, each once (apples +%d, coins %d; relay dropped %d, repeated %d, reordered %d; reconnects %d; in flight at the window's end: %s; unsettled: %s)" % [has(ann, IT) - a_i, coins(ann) - a_c, int(ps.get("dropped", 0)), int(ps.get("duplicated", 0)), int(ps.get("reordered", 0)), net.reconnects - r0, stages, unsettled])
 	same(l0, await led(), "lossy network")
 	check(await until(func(): return agrees([IT]), 6.0), "Ann's copy agrees")
+
+
+## A sell offer to Ann that she has not answered yet ({} when none).
+func _unanswered_sell(answered: Dictionary) -> Dictionary:
+	for o in main.world.offers_to(main.world.player):
+		if str(o.kind) == "sell" and not answered.has(int(o.id)):
+			return o
+	return {}
 
 
 # ---------------------------------------------------------------- the authority with guests as parties --
