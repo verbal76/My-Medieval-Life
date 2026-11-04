@@ -11,12 +11,19 @@ on:
     branches: [staging/my-medieval-life]
     paths: ["game/**", "tools/**", "tests/**", "data/**", "docs/SYSTEM_INTERACTION_MANIFEST.md", ".github/workflows/tests.yml"]
   workflow_dispatch:
+    inputs:
+      only:
+        description: "Optional: run only these game suites (space-separated, e.g. res://tests/recorder_neutrality_test.gd), as an independent run in its own concurrency group; empty = every suite"
+        required: false
+        default: ""
 
 permissions:
   contents: read
 
 concurrency:
-  group: tests-${{ github.ref }}
+  # a full run supersedes the older full run on its branch; an 'only' run (one suite checked independently, B25R1 validation
+  # 2026-11-04) has its own group, so it and a full run on the same commit never cancel each other
+  group: ${{ inputs.only != '' && inputs.only != null && format('tests-only-{0}', github.run_id) || format('tests-{0}', github.ref) }}
   cancel-in-progress: true
 
 env:
@@ -103,6 +110,8 @@ jobs:
       - name: Game tests (headless)
         id: game
         if: ${{ !cancelled() && steps.import.outcome == 'success' }}
+        env:
+          ONLY: ${{ inputs.only }}
         run: |
           cat > "$RUNNER_TEMP/game.txt" <<'EOF'
           res://tests/run_tests.gd
@@ -315,6 +324,10 @@ jobs:
           res://tests/profile_test.gd       # SET-A/B: the maintained capability profile
           res://tests/civic_records_test.gd   # Expansion 21 P21-01: civic records (offices, tenures, legacy); shipped disabled
           EOF
+          if [ -n "$ONLY" ]; then   # an independent run of named suites: keep only those entries of the list
+            for t in $ONLY; do grep -E "^ *$t( |$)" "$RUNNER_TEMP/game.txt" || { echo "unknown suite: $t"; exit 1; }; done > "$RUNNER_TEMP/only.txt"
+            mv "$RUNNER_TEMP/only.txt" "$RUNNER_TEMP/game.txt"
+          fi
           python3 tools/ci_plan.py tests-shard --list "$RUNNER_TEMP/game.txt" --shards 8 --shard ${{ matrix.shard }} \
             --out "$RUNNER_TEMP/game_shard.txt" --manifest "$CI_OUT/shard.json"
           python3 tools/ci_report.py run --group game --list "$RUNNER_TEMP/game_shard.txt" --prefix "$HOME/godot-bin/godot --headless --path game --script" --logs "$CI_OUT/logs" --results "$CI_OUT/results.jsonl"

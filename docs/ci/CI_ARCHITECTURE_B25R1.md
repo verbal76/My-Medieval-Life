@@ -99,3 +99,17 @@ python3 tools/ci_consolidate.py --sha <sha> --gate dl/gate --meta gate=gate.json
 The repository is public, so standard GitHub-hosted runners cost nothing. The free plan allows 20 concurrent jobs
 (GitHub documentation). I could not check this account's actual limit from this session. Peak concurrency: 8 Tests
 shards; the campaign with twins uses 4 chains + 8 scenarios = 12.
+
+## Concurrency and one source commit (owner amendment 2026-11-04, GitHub parallel validation)
+
+| Workflow / mode | Concurrency group | Cancels |
+|---|---|---|
+| Tests, full | `tests-<ref>` | only an older full Tests run on the same branch (kept: a superseded run is useless) |
+| Tests, `only` input (e.g. the flight-recorder regression) | `tests-only-<run id>` | nothing; nothing cancels it |
+| long-sims `gate` (full simulation check) | `long-sims-own-<run id>` | nothing |
+| long-sims `flight` (365-day campaign, seed and `--twin`) | `long-sims-own-<run id>`, inner `flight-recorder-<run id>` | nothing |
+| release | `release-<ref>` | nothing (`cancel-in-progress: false`) |
+
+All release-gating runs are dispatched on `wip/b25r1` at one head and nothing is pushed there until they finish; each run
+checks out `github.sha` and every report names it, so the matrix row's SHA is the run's own. Artifacts carry the run id in
+their names, so parallel runs never overwrite each other.
