@@ -2154,9 +2154,10 @@ func test_households_split() -> void:
 	# the band is out of this scene: it tests building, and since SIM-F4 (owner 2026-10-24: bandits buy food when they can
 	# afford it and heal at camp) a living band can rob the family of its building money first, a legitimate outcome
 	# (B19-EMERGE) that is not this test's subject. Their coins stay counted (World.total_coins counts every NPC).
+	# (killed by World.kill, so the band's household ends as in play: a save of the scene is a state the game can reach)
 	for o: NPC in w.npcs:
-		if o.role == "bandit":
-			o.alive = false
+		if o.role == "bandit" and o.alive:
+			w.kill(o, "fever")
 	NPC.roles_version += 1
 	var built := _run_until(w, 6 * 1440, func() -> bool: return site.site.get("done", false))
 	var hid := "house_" + str(site.id)
@@ -2196,6 +2197,15 @@ func test_households_split() -> void:
 	check(w3.households.size() == w.households.size() and int(w3.households[n0].founded_from) == h and w3.npc(founder.id).household == n0 and str(w3.households[n0].home) == str(nh.home)
 			and JSON.stringify(w4.to_dict()) == again,
 			"a save keeps the new household, its house and its members")
+	# B25R1 Rev 1: the load changes nothing: every household (members, home, pantry, purse and economy fields), every person
+	# (relations, inventory, coins) and the property, construction, homestead and wild records are saved back exactly as written
+	var saved: Dictionary = JSON.parse_string(text)
+	var back: Dictionary = JSON.parse_string(again)
+	var moved_on_load := []
+	for k in ["households", "npcs", "people", "buildings", "plots", "construction", "contracts", "homesteads", "wilds", "parties", "treasury"]:
+		if saved.has(k) and JSON.stringify(saved[k]) != JSON.stringify(back.get(k)):
+			moved_on_load.append(k)
+	check(moved_on_load.is_empty(), "a save and load of the new household leaves every section as it was (changed: %s)" % [moved_on_load])
 	w.dispose()
 	w2.dispose()
 	w3.dispose()
