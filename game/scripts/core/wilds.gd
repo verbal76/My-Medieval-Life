@@ -1217,7 +1217,8 @@ func found_band(why: String) -> Dictionary:
 		var site := _hs().find_site(leader, true, coins)
 		if site.is_empty():
 			_rec("settlement_attempt_failed", {"person": leader.id, "reason": "no_site", "what": "band_camp", "why": why})
-			_count("band_no_site")
+			if why != "load":
+				_count("band_no_site")                  # (not on loading: a save that loads twice must load the same, SaveTransfer.validate)
 			return {}
 		h = w.households.size()
 		w.households.append({"id": h, "family": "Outlaw", "home": "", "members": [], "pantry": Inventory.new(), "founded_day": w.day(), "band": true})
@@ -1634,8 +1635,9 @@ func report() -> Dictionary:
 
 
 func to_dict() -> Dictionary:
-	return {"format": FORMAT, "wells": wells.duplicate(true), "next_well": next_well, "raiders": raiders.duplicate(true), "last_raid": last_raid.duplicate(), "led": led.duplicate(), "counts": counts.duplicate(),
-		"defended_day": defended_day.duplicate(), "next_work": next_work}
+	return {"format": FORMAT, "wells": Homesteads.whole(wells.duplicate(true)), "next_well": next_well, "raiders": Homesteads.whole(raiders.duplicate(true)),
+		"last_raid": Homesteads.whole(last_raid.duplicate()), "led": Homesteads.whole(led.duplicate()), "counts": Homesteads.whole(counts.duplicate()),
+		"defended_day": Homesteads.whole(defended_day.duplicate()), "next_work": next_work}     # (whole numbers as ints: a reloaded save saves the same)
 
 
 func load_dict(d: Dictionary) -> void:

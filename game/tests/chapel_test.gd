@@ -304,6 +304,8 @@ func test_alms() -> void:
 	for h in w.households.size():
 		if w.households[h].get("ended", false) or w.brain._members(h).is_empty():
 			continue
+		if not w.brain._members(h).any(func(o: NPC) -> bool: return o.alive and o.role in ["adult", "elder"]):
+			continue                          # alms are paid to an adult or elder (Chapel.alms): the band's household (B25R1-Q2 a), all bandits, has none
 		var m := c.household_means(h)
 		if int(m.wealth) < int(m.line) * int(Chapel.cfg().alms_wealth_lines) and maxi(c.household_shortfall(h), int(m.line) - int(m.cash)) > 0:
 			poorest = mini(poorest, int(m.wealth) * 1000 / int(m.members))

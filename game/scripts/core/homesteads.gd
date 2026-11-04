@@ -1837,8 +1837,22 @@ func to_dict() -> Dictionary:
 		var d: Dictionary = c.duplicate(true)
 		d.store = (c.store as Inventory).to_dict()
 		cl.append(d)
-	return {"format": FORMAT, "claims": cl, "next_id": next_id, "pop_history": pop_history.duplicate(true),
-		"last_left": last_left.duplicate(), "returning": returning.duplicate(), "trips": trips.duplicate(true), "counts": counts.duplicate()}
+	return {"format": FORMAT, "claims": whole(cl), "next_id": next_id, "pop_history": whole(pop_history.duplicate(true)),
+		"last_left": whole(last_left.duplicate()), "returning": returning.duplicate(), "trips": whole(trips.duplicate(true)), "counts": whole(counts.duplicate())}
+
+
+## Whole-valued floats as ints, all through `v` (a fresh claim holds ints, a loaded one the JSON reader's floats): a save
+## writes the same either way, so a save loaded and saved again is the same save (SaveTransfer.validate).
+static func whole(v: Variant) -> Variant:
+	if v is float and is_finite(v) and v == floorf(v) and absf(v) < 1.0e15:
+		return int(v)
+	if v is Dictionary:
+		for k in v:
+			v[k] = whole(v[k])
+	elif v is Array:
+		for i in (v as Array).size():
+			v[i] = whole(v[i])
+	return v
 
 
 func load_dict(d: Dictionary) -> void:

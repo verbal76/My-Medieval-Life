@@ -141,10 +141,10 @@ static func validate(src: Dictionary, out: Dictionary, map: VillageMap) -> Strin
 		return "the save's identity changed"
 	for k in ["npcs", "households"]:
 		var n := (out.get(k, []) as Array).size()
-		if k == "households":                  # MP-PLAYER-FAMILY: a save 22's married players are given their household (after the saved ones)
+		if k == "households":                  # MP-PLAYER-FAMILY: a save 22's married players are given their household (after the saved ones); B25R1-Q2: the band's
 			for i in range((src.get(k, []) as Array).size(), n):
-				if (out[k][i] as Dictionary).has("couple"):
-					n -= 1
+				if (out[k][i] as Dictionary).has("couple") or bool((out[k][i] as Dictionary).get("band", false)):
+					n -= 1                         # (B25R1-Q2 option a: an older save's band becomes a household of its own on loading, Wilds.migrate_on_load)
 		if n != (src.get(k, []) as Array).size():
 			return "the number of %s changed" % k
 	for b in (src.get("buildings", {}) as Dictionary):

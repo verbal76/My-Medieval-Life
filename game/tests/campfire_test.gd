@@ -61,8 +61,11 @@ func _run() -> void:
 	var bottom := fire.position.y + fire.offset.y + (lowest + 1) - 16.0       # centred frame
 	check(absf(bottom - fire.position.y) <= 1.0, "the bottom of the logs is on the ground point (%.1f vs %.1f)" % [bottom, fire.position.y])
 	check(Vector2i((fire.position / main.T).floor()) == cell and map.is_solid(cell), "the ground point is in the camp's fire cell %s, which is solid" % str(cell))
-	var camp: Vector2i = main.world.bandit_camp
-	check(camp == cell + Vector2i(0, 1), "the bandits gather just south of it (%s)" % str(camp))
+	# B25R1-Q2 option (a) (owner 2026-11-03): the band lives at its own camp in the wild (World.bandit_camp); the campfire
+	# stays on the village's old camp ground (World.village_camp), where raiders keep to by night (Wilds.camp_for)
+	var camp: Vector2i = main.world.village_camp
+	check(camp == cell + Vector2i(0, 1), "the raiders gather just south of it on the old camp ground (%s)" % str(camp))
+	check(main.world.wilds == null or main.world.bandit_camp != camp, "the band itself lives at its camp in the wild (%s)" % str(main.world.bandit_camp))
 	# front and behind: a character's feet south of the fire sort after it, north of it before
 	var south: Vector2 = (Vector2(cell) + Vector2(0.5, 1.5)) * main.T
 	var north: Vector2 = (Vector2(cell) + Vector2(0.5, -0.4)) * main.T
