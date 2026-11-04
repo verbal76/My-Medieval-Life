@@ -25,19 +25,20 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    # B25-FINISH-01 (owner 2026-11-03: "Execute independent test groups in parallel through GitHub Actions"): the game suites
-    # are split over four shards by their place in the list (every 4th suite from the shard's index), each its own runner;
-    # shard 0 also runs the Python checks and the 10-day economy run. Each shard keeps its own results and report.
+    # B25-FINISH-01 (owner 2026-11-03: "Execute independent test groups in parallel through GitHub Actions"); B25R1 CI
+    # architecture (owner 2026-11-04, docs/ci/CI_ARCHITECTURE_B25R1.md): the game suites are spread over eight shards by their
+    # MEASURED time (tools/ci_plan.py, longest first, from tools/ci_timings.json; a suite with no timing yet goes to the
+    # least-loaded shard), each its own runner; shard 0 also runs the Python checks and the 10-day economy run, and starts with
+    # their time. Each shard keeps its own results and report; the report job below checks that every suite ran exactly once.
     strategy:
       fail-fast: false
       matrix:
-        shard: [0, 1, 2, 3]
-    name: test (shard ${{ matrix.shard }} of 4)
-    # Every suite runs since HAG-MEM-02: run 41482218360 (9c56199) needed 90 min for 138 suites (5400 s, Python 178 s) and
-    # was stopped there; the 16 suites it never reached take about 12 min more (712 s measured headless on 9c56199), plus
-    # the 10-day smoke run (capped at 15 min) and setup: about 2 h at most. 210 min leaves room for runner speed varying by up to ~1.8x (as the
-    # long-sims runs did). One job keeps one results.jsonl and one ci_report, so the report stays the complete suite.
-    timeout-minutes: 150
+        shard: [0, 1, 2, 3, 4, 5, 6, 7]
+    name: test (shard ${{ matrix.shard }} of 8)
+    # Every suite runs since HAG-MEM-02. Measured on five B25R1 runs: all suites about 120 min of runner time, so about 16 min
+    # a shard of eight; a suite is stopped by ci_report.py after 30 min. 90 min leaves room for runner speed varying by up
+    # to ~1.8x and one hung suite.
+    timeout-minutes: 90
     env:
       CI_OUT: ${{ github.workspace }}/ci-out   # per-suite logs, results.jsonl, ci-report.json (HAG-MEM-02 Part 3)
     steps:
@@ -46,6 +47,7 @@ jobs:
 
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.sha }}   # every shard tests the one commit the run was started on
           fetch-depth: 2           # the requirements check compares the register with the previous commit
 
       - name: Fetch the integration branches named by records (the register tests check paths there too)
@@ -305,8 +307,8 @@ jobs:
           res://tests/profile_test.gd       # SET-A/B: the maintained capability profile
           res://tests/civic_records_test.gd   # Expansion 21 P21-01: civic records (offices, tenures, legacy); shipped disabled
           EOF
-          awk -v s=${{ matrix.shard }} -v n=4 'NF && $1 !~ /^#/ { i++; if ((i - 1) % n == s) print $1 }' "$RUNNER_TEMP/game.txt" > "$RUNNER_TEMP/game_shard.txt"
-          echo "shard ${{ matrix.shard }}: $(wc -l < "$RUNNER_TEMP/game_shard.txt") suites"
+          python3 tools/ci_plan.py tests-shard --list "$RUNNER_TEMP/game.txt" --shards 8 --shard ${{ matrix.shard }} \
+            --out "$RUNNER_TEMP/game_shard.txt" --manifest "$CI_OUT/shard.json"
           python3 tools/ci_report.py run --group game --list "$RUNNER_TEMP/game_shard.txt" --prefix "$HOME/godot-bin/godot --headless --path game --script" --logs "$CI_OUT/logs" --results "$CI_OUT/results.jsonl"
 
       - name: Short economy simulation (FR-07)
@@ -325,8 +327,8 @@ jobs:
         run: |
           python3 tools/ci_report.py report --results "$CI_OUT/results.jsonl" \
             ${{ matrix.shard == 0 && '--expect python --expect sim' || '' }} --expect game \
-            --step python=${{ steps.python.outcome }} --step import=${{ steps.import.outcome }} \
-            --step game=${{ steps.game.outcome }} --step sim=${{ steps.sim.outcome }} \
+            ${{ matrix.shard == 0 && format('--step python={0} --step sim={1}', steps.python.outcome, steps.sim.outcome) || '' }} \
+            --step import=${{ steps.import.outcome }} --step game=${{ steps.game.outcome }} \
             --started "$CI_STARTED" \
             --purpose "Automated Python, data and headless Godot suites plus a 10-day economy smoke run on this commit (tests.yml; ${{ github.event_name }})" \
             --json "$CI_OUT/ci-report.json" --markdown "$GITHUB_STEP_SUMMARY" > /dev/null
@@ -337,5 +339,40 @@ jobs:
         with:
           name: ci-report-${{ github.run_id }}-${{ github.run_attempt }}-shard${{ matrix.shard }}
           path: ci-out
+          if-no-files-found: warn
+          retention-days: 30
+
+  # B25R1 CI architecture: one report for this commit over every shard. It fails when a shard is missing, cancelled, skipped or
+  # timed out, ran another commit or another suite list, or when the shards' suites do not cover the list exactly once.
+  report:
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read            # the run's own jobs (conclusions and times)
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Fetch every shard's report
+        uses: actions/download-artifact@v4
+        with:
+          pattern: ci-report-${{ github.run_id }}-${{ github.run_attempt }}-shard*
+          path: shards
+      - name: Consolidated report
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run view "$GITHUB_RUN_ID" -R "$GITHUB_REPOSITORY" --attempt "$GITHUB_RUN_ATTEMPT" --json headSha,status,conclusion,jobs > run.json || echo '{}' > run.json
+          python3 tools/ci_consolidate.py --sha "$GITHUB_SHA" --tests shards --meta tests=run.json --require tests \
+            --json validation/validation.json --markdown "$GITHUB_STEP_SUMMARY"
+      - name: Keep the consolidated report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: validation
           if-no-files-found: warn
           retention-days: 30

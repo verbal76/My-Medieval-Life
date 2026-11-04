@@ -87,7 +87,9 @@ jobs:
     needs: plan
     strategy:
       fail-fast: false          # the seeds are independent: one failing never stops the other
-      max-parallel: 2           # at most two runs simulating at once (the directive's default; with --twin: one seed and its twin)
+      # FLIGHT-REC-01's default: at most two runs simulating at once. With --twin (the B25R1 campaign; owner 2026-11-04, CI wall-clock):
+      # every run at once, so each twin starts with its seed from the same initial state on its own runner instead of after it.
+      max-parallel: ${{ needs.plan.outputs.twin == 'true' && 8 || 2 }}
       matrix:
         include: ${{ fromJSON(needs.plan.outputs.runs) }}
     uses: ./.github/workflows/flight-recorder-seed.yml
