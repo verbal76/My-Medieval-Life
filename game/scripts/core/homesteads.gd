@@ -1060,6 +1060,8 @@ func household_ended(h: int) -> void:
 	var back := delivered(c)
 	for id in back:
 		w.households[h].pantry.add(id, int(back[id]))
+	if not c.site.is_empty() and not bool(c.site.done):
+		c.site = {}                                     # returned once: _abandon must not hand the same materials back again
 	_abandon(c, "ended")
 
 

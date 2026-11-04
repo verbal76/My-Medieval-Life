@@ -2081,7 +2081,7 @@ func _ledger(start: Dictionary) -> Dictionary:
 		var ore: String = w.deposits[i].ore
 		var s0 := int(start.deposits[i]) if i < (start.deposits as Array).size() else 0
 		mined_by_ore[ore] = int(mined_by_ore.get(ore, 0)) + s0 - int(w.deposits[i].amount)
-	for ore in ["iron_ore", "coal", "copper_ore", "gold_ore"]:
+	for ore in ["iron_ore", "coal", "copper_ore", "gold_ore", "tin_ore"]:     # (B25 Decision 5: tin seams are found too)
 		if d.call("found_" + ore) != 0:
 			mined_by_ore[ore] = int(mined_by_ore.get(ore, 0)) + d.call("found_" + ore)
 	# MIN-B: the other stone pools: worked-out seams' host rock, the village's boulders (villagers quarry both now)
@@ -2130,7 +2130,7 @@ func _ledger(start: Dictionary) -> Dictionary:
 		for sk in w.stats:
 			if str(sk).begins_with("eaten_%s_by_" % k):
 				preyed += d.call(str(sk))
-		var expect: int = int(start.animals.get(k, 0)) + d.call("born_" + k) - d.call("hunted_" + k) - d.call("slaughtered_" + k) \
+		var expect: int = int(start.animals.get(k, 0)) + d.call("born_" + k) + d.call("country_in_" + k) - d.call("country_out_" + k) - d.call("hunted_" + k) - d.call("slaughtered_" + k) \
 			- d.call("poached_" + k) - d.call("starved_" + k) - preyed - d.call("fox_took_" + k) - d.call("old_age_" + k)
 		if expect != int(now_a.get(k, 0)):
 			animals[k] = {"expected": expect, "counted": int(now_a.get(k, 0))}

@@ -222,7 +222,24 @@ func _init() -> void:
 	check(_leaks(w2, g2, s2).is_empty() and w2.total_coins() - w2.coin_sources == coins2, "the seed bought and sown, the goods and coins balance (%s)" % _leaks(w2, g2, s2))
 	# ---- a second claim may not overlap the first
 	check(w2.homesteads.refusal(Homesteads.rect_of(cl)).begins_with("Someone has claimed"), "the claimed land cannot be claimed again")
-	# ---- giving up: the people walk back, the delivered materials go to their stores (a fresh start on another world)
+	# ---- a homestead household dying out with materials on its frame: they go back once, not twice (the 240-day run's plank leak)
+	var hn: NPC = null
+	for q: NPC in w2.npcs:
+		if hn == null and q.alive and q.role == "adult" and q.household >= 0 and not w2.households[q.household].has("homestead"):
+			hn = q
+	var site2 := w2.homesteads.find_site(hn)
+	check(not site2.is_empty(), "(a second site for the ending check)")
+	if not site2.is_empty():
+		var c2 := w2.homesteads._new_claim(World.hh_ref(hn.household), site2.lay, hn.id, "claimed")
+		w2.households[hn.household].homestead = str(c2.id)
+		w2.homesteads._mark_site(c2)
+		var load := Inventory.new()
+		load.add("plank", 5)
+		w2.stat("imported_plank", 5.0)
+		w2.homesteads.deliver(c2, load)
+		var planks0 := int(_goods(w2).get("plank", 0))
+		w2.homesteads.household_ended(hn.household)
+		check(int(_goods(w2).get("plank", 0)) == planks0 and str(c2.status) == "abandoned", "a household ending: the 5 planks on its frame go back to its stores once (%d -> %d)" % [planks0, int(_goods(w2).get("plank", 0))])
 	_end(w2)
 
 

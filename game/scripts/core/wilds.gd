@@ -1482,7 +1482,7 @@ func country_hour() -> void:
 			w.country_taken[key] = -1
 			continue
 		if a.anger == "" and a.hp >= float(a.spec().hp) - 0.01 and not near(centers, a.pos, r * 2.0) and w.nearest_player_distance(a.pos) > w.detail_radius + 10.0:
-			w.fauna.animals.erase(a)
+			w.fauna.release_country(a)
 			w.country_taken.erase(key)
 	for at: Vector2 in centers:
 		for amb: Animal in _cs.animals_near(at, r, w.minutes):
