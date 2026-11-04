@@ -719,7 +719,7 @@ func update(dt: float) -> void:
 			a.anger_left -= dt
 			if a.anger_left <= 0.0 or _foe_pos(a.anger) == Vector2.INF:
 				a.anger = ""
-		if w.wilds != null and w.wilds.leading(a):
+		if w.wilds != null and w.wilds.leading(a, dt):
 			continue                                    # B25R1-014: bought, being led home to a claim's pen
 		if w.nearest_player_distance(a.pos) > w.detail_radius and not (w.wilds != null and w.wilds.active_near(a)):
 			a.moving = false

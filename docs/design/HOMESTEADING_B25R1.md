@@ -444,6 +444,19 @@ tries each dawn (it is not given the means); raids last one night; one open work
 is chickens (pen_kinds); the player's own homestead cannot yet build a well, pen or workshop (players have no thirst, and the
 player-side construction UI is not built). Defenders fight or flee (owner B25R1-Q4: no surrender).
 
+**Polish pass (third worker, 2026-11-04).** Drawing: a claim's pen is fenced with Larchrow's fence (B25R1-Q8; corner posts
+while it is being built; finished, solid but for its gate, Overworld.home_building_at); a well being dug shows dug earth with
+the stone heaped beside it, then the Puny World sheet's dry stone ring once digging begins, then Larchrow's one-tile well (the
+village's 2 x 3 well would stand over the house front). The animal led home steps to its leader's heel on the world's tick
+(Wilds.lead_step: World.TICK when the presence branch is in, else half a second of Fauna.update) and AnimalSprite.glide draws
+it between steps. An outlaw at the camp sells a trusted outsider the weapons and tools they hold beyond one of each
+(NPCBrain._camp_spare; before, bandits had nothing for sale, so the members-only market was always empty for the player).
+`Wilds.add_well(..., count := false)`: a settlement's own well, booked in its own flows, leaves the village's ledger alone.
+Checked in the real scene by `game/tests/homestead_shot.gd` (xvfb screenshots, looked at): the door's pen and smithy
+prompts, the pen staked and fenced, the well's three stages, a smithy whose forge and anvil register and forge a chisel, the
+camp refusing a stranger and trading with a trusted friend. Known limitation: a claim's finished well is not solid (the
+player may stand where they dug it).
+
 **Raid size (not tuned).** `wilds.raid_keep_home` is 1: of a band of six fit bandits, five go on a raid and one stays at the
 camp. In the 6-day probe on seed 1 the first raid nights cost three of six bandits in fights with the guards. The 240-day
 measurement (seed 1, every 40 days) will show what this does to the band over generations; the value is left as it is until

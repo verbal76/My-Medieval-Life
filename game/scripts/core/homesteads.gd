@@ -365,7 +365,7 @@ func _finish(c: Dictionary) -> void:
 	_count("built")
 	_rec("homestead_built", {"claim": str(c.id), "owner": str(c.owner), "cost": c.site.cost.duplicate(), "house": str(c.building)})
 	_sync_overworld()
-	w.note("%s's house in the country is finished." % _owner_name(c))
+	w.note("Your house in the country is finished." if World.is_player_ref(str(c.owner)) else "%s's house in the country is finished." % _owner_name(c))
 
 
 ## What a claim's delivered materials are (item -> count), as World.site_delivered.

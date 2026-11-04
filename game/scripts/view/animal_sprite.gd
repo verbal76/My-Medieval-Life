@@ -32,6 +32,12 @@ var layout := "cozy"
 var t := 0.0
 var baby := false          # drawing the baby sheet
 var skin_now := ""
+var _from := Vector2.INF   # glide: the drawn line from the animal's last position to its newest one
+var _to := Vector2.INF
+var _along := 0.0          # seconds into that line
+var _span := 0.0           # its length in seconds: how long the animal took to reach _to (capped at MAX_SPAN)
+var _since := 0.0          # seconds since the animal's position last changed
+const MAX_SPAN := 0.5
 
 
 func setup(a: Animal, now := -1.0) -> void:
@@ -90,3 +96,29 @@ func show_state(a: Animal, now: float, dt: float) -> void:
 	else:
 		row = 0 if v.y >= 0.0 else 1
 	frame = row * hframes + col
+
+
+## Where to draw an animal at `pos` this frame (tiles), `dt` real seconds after the last. An animal moved in steps (one led home
+## on the world's tick, Wilds.leading) is drawn along the line between its last two positions over the time it took to make the
+## last step, so it walks rather than hops; one moved every frame is drawn where it is (a frame late at most). A jump of more
+## than 3 tiles (into its pen, a load) is drawn at once.
+func glide(pos: Vector2, dt: float) -> Vector2:
+	_along += dt
+	_since += dt
+	if pos != _to:
+		if _to == Vector2.INF or pos.distance_to(_to) > 3.0:
+			_from = pos
+			_span = 0.0
+		else:
+			_from = _drawn()
+			_span = minf(_since, MAX_SPAN)
+		_to = pos
+		_along = 0.0
+		_since = 0.0
+	return _drawn()
+
+
+func _drawn() -> Vector2:
+	if _span <= 0.0:
+		return _to
+	return _from.lerp(_to, clampf(_along / _span, 0.0, 1.0))

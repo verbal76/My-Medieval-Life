@@ -284,6 +284,12 @@ func _draw_homes() -> void:
 	add_child(_homes_root)
 	for hm in overworld.homes:
 		var r: Rect2i = hm.rect
+		if hm.has("layers"):
+			for cells: Dictionary in hm.layers:      # a claim's fence, or a well being dug (Wilds.overworld_entries)
+				var ll := _layer(_homes_root, 0)
+				for cell: Vector2i in cells:
+					set_tile(ll, cell, int(cells[cell]))
+			continue
 		if str(hm.stamp) == "":
 			var fl := _layer(_homes_root, 0)
 			set_tile(fl, Vector2i(hm.frame), int(hm.tile))
