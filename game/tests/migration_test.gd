@@ -528,7 +528,7 @@ func test_old_save() -> void:
 		nd.erase("away")
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), d)
-	check(w2.regions != null and w2.regions.list.size() == 5 and w2.regions.moves.is_empty(), "a save from before migration loads: no log, no courtships")
+	check(w2.regions != null and w2.regions.list.size() == OffMapSettlement.data().settlements.size() and w2.regions.moves.is_empty(), "a save from before migration loads: no log, no courtships")
 	var any := false
 	for n: NPC in w2.npcs:
 		any = any or n.away != ""

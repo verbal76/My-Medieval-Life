@@ -24,10 +24,12 @@ var moves: Array = []                # MIGRATE-18: the last Migration.LOG_MAX mo
 var move_counts: Dictionary = {}     # "<dir>:<reason>" -> people moved, for good
 var suits: Dictionary = {}           # MIGRATE-18 marriage across the road: "<settlement>|<dir>" -> {pair, since}, the pair meeting at the caravan and the day they began
 var journal: Array = []              # the parties' exchange lines (SettlementParty.deal): {day, party, kind, item, n, coins, with}; not saved
+var trip_journal: Array = []         # B25R1-019: the walkers' exchanges (SettlementTrips.exchange, the dues), both sides each, apart from `journal`; not saved
 var party_options := {}              # fixtures' settings per party id (SettlementParty.option); not saved
 var food_seq: Dictionary = {}        # X20-SETTLE-FOOD: the last transaction sequence number used per namespace "settle_food/<place>" (saved)
 var food_last: Dictionary = {}       # X20-SETTLE-FOOD: the last food round's result (food_round), for reports and tests; not saved
 var _world: WeakRef = null           # the world the settlements live in (bind_world), for its flight recorder; not saved
+var wilds_override = null            # test hook: a well registry with Wilds' add_well (hamlet_test, before the homestead branch merges); not saved
 var people: SettlementPeople = null  # B25R1-019: the residents' presence provider (made live in view, folded back out of it); not saved
 
 
@@ -182,10 +184,12 @@ func trip_event(kind: String, s: OffMapSettlement, t: Dictionary, f: Dictionary)
 ## the settlement's books as an outside line and enter the village ledger as imported_, where add_well counts them used_building_:
 ## both ledgers balance. A hamlet without the stone and logs has no well yet (WDR-022).
 func _wells() -> void:
+	if _world == null:
+		return
 	var w = _world.get_ref() if _world != null else null
 	if w == null or w.map == null or w.map.overworld == null:
 		return
-	var wilds = w.get("wilds")
+	var wilds = wilds_override if wilds_override != null else w.get("wilds")
 	if wilds == null:
 		return
 	for s: OffMapSettlement in list:

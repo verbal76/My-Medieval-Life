@@ -36,12 +36,14 @@ static func hcfg() -> Dictionary:
 # ------------------------------------------------------------------ the shared walking rule ----------------
 ## The road's one pace (B25R1-019, agreed through the lead): Presence.road_tiles. Kept here identical so a settlement without the
 ## presence system (tests, regions_sim) walks alike; when Presence is merged both are the same function (presence_test compares).
+# DUPLICATE of Presence.road_tiles, remove at merge
 static func road_tiles(depart: float, m: float, pace := PACE) -> float:
 	if m <= depart:
 		return 0.0
 	return walking_minutes(depart, m) * pace
 
 
+# DUPLICATE of Presence.walking_minutes, remove at merge
 static func walking_minutes(depart: float, m: float) -> float:
 	if m <= depart:
 		return 0.0
@@ -57,6 +59,7 @@ static func walking_minutes(depart: float, m: float) -> float:
 
 
 ## The game minute a walk of `tiles` begun at `depart` arrives (the inverse of road_tiles).
+# DUPLICATE of Presence.arrival, remove at merge
 static func arrival(depart: float, tiles: float, pace := PACE) -> float:
 	var need := tiles / maxf(0.0001, pace)
 	var from := float(REST_TO) * 60.0
@@ -103,6 +106,7 @@ static func depart_for(now: float, tiles: float, pace := PACE) -> float:
 
 
 ## The point `tiles` along `path` (cells; feet at the cells' centres): Presence.along.
+# DUPLICATE of Presence.along, remove at merge
 static func along(path: PackedVector2Array, tiles: float) -> Vector2:
 	if path.is_empty():
 		return Vector2.ZERO
@@ -371,6 +375,7 @@ static func errand(r: Regions, s: OffMapSettlement, t: Dictionary, m: float) -> 
 			var lord := SettlementParty.make(r, dest, "treasury")
 			var c := int(t.coins)
 			if c > 0 and me.deal("carriage_paid", lord, "", 0, c, dest.day) and lord.deal("carriage_earned", me, "", 0, c, dest.day):
+				_journal(r, 2)
 				lines.append(["coins", 0, c])
 				s.note("Our elder carried %d coins of tolls and tax to %s." % [c, dest.name])
 	r.trip_event("journey_purchase" if not lines.is_empty() else "journey_errand_failed", s, t,
@@ -383,7 +388,18 @@ static func exchange(b: SettlementParty, sl: SettlementParty, item: String, n: i
 		return false
 	b.deal("buy", sl, item, n, total, day)
 	sl.deal("sell", b, item, n, total, day)
+	_journal(b.regions, 2)
 	return true
+
+
+## The walkers' exchanges are both sides at once (exchange, the dues), so they are kept apart from the regional market's journal (whose
+## two-party ledgers RegionalMarket.matched checks): the last `n` lines move to Regions.trip_journal.
+static func _journal(r: Regions, n: int) -> void:
+	for i in n:
+		r.trip_journal.append(r.journal[r.journal.size() - n + i])
+	r.journal.resize(r.journal.size() - n)
+	if r.trip_journal.size() > 4000:
+		r.trip_journal = r.trip_journal.slice(r.trip_journal.size() - 2000)
 
 
 ## A market errand: sell what was carried to sell to whoever there wants it (the trader, then the businesses that use it), then buy

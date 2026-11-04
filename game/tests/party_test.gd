@@ -65,7 +65,7 @@ func test_addressing() -> void:
 		kinds[p.kind] = int(kinds.get(p.kind, 0)) + 1
 	check(kinds.has("trader") and kinds.has("business") and kinds.has("treasury") and kinds.has("household"),
 		"every holder kind is a party (%s)" % str(kinds))
-	check(int(kinds.trader) == 5 and int(kinds.treasury) == 5, "five traders and five treasuries")
+	check(int(kinds.trader) == 5 and int(kinds.treasury) == r.list.size(), "five traders and a treasury for each of the %d places (the hamlets have no trader)" % r.list.size())
 	var living := 0
 	for s: OffMapSettlement in r.list:
 		living += s.households()
@@ -259,7 +259,8 @@ func test_outside_exchanges() -> void:
 	var pantry0 := p.held("wheat")
 	var c0 := p.purse()
 	_set_stock(p, "plank", 5)
-	s.reopen_books()
+	for x: OffMapSettlement in r.list:
+		x.reopen_books()             # all of them: the walkers' regional lines of the founding days pair across places
 	var sold := p.deal("sell", ledger, "plank", 4, 8, 2)
 	ledger.deal("buy", p, "plank", 4, 8, 2)
 	check(sold and p.held("plank") == 1 and p.purse() == c0 + 8, "a party sells to a fixture party outside the five")
