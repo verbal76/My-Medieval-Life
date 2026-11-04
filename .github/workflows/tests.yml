@@ -298,6 +298,7 @@ jobs:
           res://tests/judgment_perf.gd -- --sizes 100 --days 10
           # REC-19 (wip/recorder): the flight recorder, off by default; archive, context links, cap, recovery, coin audit
           res://tests/recorder_test.gd
+          res://tests/recorder_neutrality_test.gd   # REC-D3: recorded and plain worlds and their hour caches equal hour by hour
           # B25R1-016: the living-world vocabulary (chronicle), the road, travel and landmark hooks, the dawn census
           res://tests/b25_recorder_test.gd
           # SIM-GATE-01: the desktop live export (workbook, analysis, archive) by the one GDScript XLSX writer

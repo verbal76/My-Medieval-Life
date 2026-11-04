@@ -175,9 +175,11 @@ func _init() -> void:
 	var samples: Array = []
 	var d0 := 0                                    # FLIGHT-REC-01: the first day this process steps (a resumed segment's saved day)
 	if fr_resumed.is_empty():
+		w.observing += 1
 		samples.append(_sample(start))
 		_herd_day(0)
 		_print_sample(samples[0])
+		w.observing -= 1
 	else:
 		d0 = _fr_restore(fr_resumed)       # the harness's own records (ledger start, samples, counts) as the segment saved them
 		start = fr_resumed.harness_start
@@ -209,7 +211,9 @@ func _init() -> void:
 			var tu := Time.get_ticks_usec()
 			w.update(STEP)
 			update_us += Time.get_ticks_usec() - tu
+			w.observing += 1                   # REC-D3 / SIM-01: the harness's reads never write the world's hour caches
 			bandits.tick(w)                    # X20-BANDIT-AI: each bandit's state, read only
+			w.observing -= 1
 			w.player.hunger = 100.0            # the inert player is fed; it is not part of what is measured
 			if not flee_path.is_empty():
 				_flee_step()
@@ -218,14 +222,17 @@ func _init() -> void:
 				w.presence.set_view(w.host_player().pid, Presence.DEFAULT_VIEW, Vector2(20 + (i * 7) % 90, 20 + (i * 3) % 70))
 			if i % 60 == 59:
 				var th := Time.get_ticks_usec()
+				w.observing += 1
 				_hourly()
 				if watch_from >= 0 and d >= watch_from:
 					_watch(d, i / 60)
+				w.observing -= 1
 				harness_us += Time.get_ticks_usec() - th
 				if w.player.hp < hp_before:
 					player_attacked += 1
 				hp_before = w.player.hp
 				player_min_hp = minf(player_min_hp, w.player.hp)
+		w.observing += 1                       # (the day's reads and the checkpoint below: observation only, SIM-01)
 		_herd_day(d + 1)
 		if trader_diag:
 			_trader_diag(d + 1)
@@ -269,6 +276,8 @@ func _init() -> void:
 					w.economy.claims.audit().filter(func(x): return str(x.kind) != "unbacked").size(), (Time.get_ticks_usec() - ts2) / 1000])
 			if cap_on and str(d + 1) in cap_at:      # X18-SIM: a milestone read from this one run (SIM-01), read only
 				print("CAPABILITY@%d %s" % [d + 1, JSON.stringify(CapMetrics.report(cap_info, w, cap0, d + 1))])
+		w.observing -= 1
+		if (d + 1) % every == 0 or d + 1 == days:
 			# SIM-01 (owner, 2026-10-21): one long run, checked at every checkpoint; a broken ledger stops it there, with
 			# the day and the state, instead of after the remaining days. A village failing (hunger, decline) never stops it.
 			var bad: Dictionary = samples[-1]
@@ -293,8 +302,10 @@ func _init() -> void:
 			reached = d + 1
 			fr_stop = fr_end
 			if (d + 1) % every != 0:
+				w.observing += 1
 				samples.append(_sample(start))     # the stop day's own checkpoint, so the ledgers are checked where the run ends
 				_print_sample(samples[-1])
+				w.observing -= 1
 			if fr_end == "segment":
 				_fr_write(str(arg.call("--state", "")), seed, d + 1, start, samples)
 			break

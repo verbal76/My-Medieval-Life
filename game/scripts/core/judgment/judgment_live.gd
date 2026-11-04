@@ -507,13 +507,13 @@ static func on_marriage(w, a: int, b: int) -> void:
 ## the choice computes it (the personal disposition clamped, then the colour, clamped again), not as one clamp of the sum,
 ## which overstated it when a NET beyond +-50 points met a colour; and the aspiration layer (which adds factors and scales
 ## weights) and a recording run (whose archive keeps every weighed choice in full) always take the full scan.
-static func _first_stands(j: JudgmentStore, seller: int, first: int, profile := "trade_sell") -> bool:
+static func _first_stands(j: JudgmentStore, seller: int, first: int, profile := "trade_sell", ignore_rec := false) -> bool:
 	var dc: Dictionary = j.cfg.decision
 	var wt: Dictionary = dc.profiles[profile].weights
 	var sel := str(dc.selection)
 	if sel != "argmax" and sel != "margin":
 		return false
-	if j.rec != null or (j.asp != null and j.asp.applies("factors")):     # B25-AMBITION-IMPL: the career ambition alone changes no profile read here
+	if (j.rec != null and not ignore_rec) or (j.asp != null and j.asp.applies("factors")):     # B25-AMBITION-IMPL: the career ambition alone changes no profile read here
 		return false
 	if j.pers.active and (j.pers.holds_stubbornness(seller) or j.pers.overriding(seller, j.now_minute() / 1440, j.now_minute() % 1440)):
 		return false                            # a stubborn chooser's penalties can move the choice
@@ -571,10 +571,15 @@ static func _pick_buyer(w, brain, n: NPC, id: String) -> NPC:
 	if first == null:
 		return null
 	var only_own := shortcut and _first_stands(w.judgment, n.id, first.id, "trade_sell")
+	# REC-D3 (repair 2026-11-04, gate 41770724025 det_s1): a recording run takes the full scan for its archive where the game
+	# would take the shortcut; that extra scan is observation, so it reads the hour caches without filling them (the extra
+	# buyers' World.reserve_of entries made the game's later reads in the hour differ: seed 1 parted on day 15)
+	var forced := not only_own and w.judgment.rec != null and shortcut and _first_stands(w.judgment, n.id, first.id, "trade_sell", true)
 	var cands := []
 	var people := {}
 	var top := 1
 	var tier := -1
+	var obs0: int = w.observing
 	for oi in range(first_outlet, outlets.size()):
 		var in_tier := false
 		for b in brain._with_buy_role(outlets[oi]):
@@ -592,6 +597,9 @@ static func _pick_buyer(w, brain, n: NPC, id: String) -> NPC:
 			cands.append({"id": b.id, "counterparty": b.id, "unit": unit, "tier": tier})
 		if only_own:
 			break                                 # later trades cannot come within the margin: the first's own trade decides
+		if forced and in_tier and w.observing == obs0:
+			w.observing += 1                      # (the first's own trade is scanned as the game scans it; the rest only observed)
+	w.observing = obs0
 	if only_own:
 		w.judgment._stat("trade_shortcut")        # the later trades were not scanned
 	if cands.size() == 1:
@@ -624,6 +632,15 @@ static func _pick(w, chooser: int, people: Array, profile: String, key: Array, e
 	if extra.is_empty() and not peers and shortcut and _first_stands(w.judgment, chooser, people[0].id, profile):
 		w.judgment._stat(profile + "_choices")
 		return people[0]
+	if w.judgment.rec != null and extra.is_empty() and not peers and shortcut and _first_stands(w.judgment, chooser, people[0].id, profile, true):
+		w.observing += 1                          # REC-D3: the full scan only a recording takes is observation (see _pick_buyer)
+		var o := _pick_scan(w, chooser, people, profile, key, extra, tiers)
+		w.observing -= 1
+		return o
+	return _pick_scan(w, chooser, people, profile, key, extra, tiers)
+
+
+static func _pick_scan(w, chooser: int, people: Array, profile: String, key: Array, extra := {}, tiers := []) -> NPC:
 	var cands := []
 	var rank := 0
 	for i in people.size():

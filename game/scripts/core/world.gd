@@ -1880,6 +1880,8 @@ func necessity(who) -> Dictionary:
 func reserve_of(who) -> int:
 	var key := (World.npc_ref(who.id) if who is NPC else (player_ref(who) if who is PlayerState else PLAYER)) + "@" + str(int(minutes / 60.0))
 	if not _reserve_cache.has(key):
+		if observing > 0:
+			return int(necessity(who).reserve)      # REC-D3: an observer's read is worked out, never kept (see `observing`)
 		if _reserve_cache.size() > 4000:
 			_reserve_cache.clear()
 		_reserve_cache[key] = int(necessity(who).reserve)
@@ -1894,6 +1896,13 @@ func spendable(who) -> int:
 
 var _reserve_cache := {}              # (who @ game hour) -> reserve (reserve_of; derived, not saved)
 var _price_cache := {}                # (kind @ game hour) -> coins a unit (_market_price; derived, not saved)
+## REC-D1..D4 (the flight recorder never changes state) and SIM-01 (a checkpoint read changes nothing): while above 0, the code
+## running is an observer (the flight recorder's reads, a harness's sample) and the hour caches above are read but never
+## written or cleared. A cache entry is the value worked out by the FIRST caller in a game hour; were an observer that caller,
+## the game's own later callers in that hour would read the observer's earlier value (or a clear would come at another
+## moment), and recording or sampling would change the world. (Found 2026-11-04: seed 1 recorded and unrecorded, or sampled
+## daily and every five days, parted on day 15.) Observers wrap their reads: `w.observing += 1` ... `w.observing -= 1`.
+var observing := 0
 
 
 ## What the market asks now, by what anyone can see: a food point at the cheapest food on sale, a log, a medicine,
@@ -1902,7 +1911,7 @@ func _market_price(kind: String) -> float:
 	var key := kind + "@" + str(int(minutes / 60.0))
 	if _price_cache.has(key):
 		return float(_price_cache[key])
-	if _price_cache.size() > 200:
+	if observing <= 0 and _price_cache.size() > 200:
 		_price_cache.clear()
 	var ids: Array = NPCBrain.FOOD if kind == "food" else (NPCBrain.MEDICINES if kind == "medicine" else ["log"])
 	var best := INF
@@ -1915,6 +1924,8 @@ func _market_price(kind: String) -> float:
 			if o.alive and o.role == "adult" and o.inv.has(id) and not brain.keeps(o, id):
 				p = minf(p, float(sell_price(o, id)))
 		best = minf(best, p / per)
+	if observing > 0:
+		return 0.0 if best == INF else best
 	_price_cache[key] = 0.0 if best == INF else best
 	return float(_price_cache[key])
 
@@ -1938,7 +1949,8 @@ func cheapest_food_unit() -> Array:
 			if pts > 0.0 and price > 0 and float(price) / pts < per:
 				per = float(price) / pts
 				best = [price, int(pts)]
-	_price_cache[key] = best
+	if observing <= 0:
+		_price_cache[key] = best
 	return best
 
 

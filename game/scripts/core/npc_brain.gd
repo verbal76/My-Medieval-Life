@@ -2734,7 +2734,9 @@ func _bandit_near(p: Vector2, r: float) -> NPC:
 ## trade with its reason and the figures that decided it, through the recorder's existing event calls and codes.
 func _record_refused_buy(buyer: NPC, v: NPC, item: String, qty: int, up: int) -> void:
 	var rec = w.recorder
+	w.observing += 1                              # REC-D3: the reserve read for the record never fills the hour cache (World.observing)
 	var detail := "item=%s qty=%d price=%d purse=%d reserve=%d stock=%d" % [item, qty, up, buyer.coins, w.reserve_of(buyer), v.inv.count(item)]
+	w.observing -= 1
 	var ev: int = rec.begin("economy", "trade", "transaction", "trade", WorldRecorder.ref_of(buyer), {"detail": detail})
 	rec.participant(ev, WorldRecorder.ref_of(buyer), "buyer")
 	rec.participant(ev, WorldRecorder.ref_of(v), "seller")

@@ -95,6 +95,7 @@ func remote(n: NPC) -> bool:
 func _sustain(c: Dictionary, h: int, members: Array) -> void:
 	if w.recorder == null:
 		return
+	w.observing += 1                              # REC-D3: what the recorder is told is read without filling the hour caches
 	var pantry: Inventory = w.households[h].pantry
 	var food := 0
 	for f in NPCBrain.EDIBLE:
@@ -104,6 +105,7 @@ func _sustain(c: Dictionary, h: int, members: Array) -> void:
 		coins += o.coins
 	_rec("homestead_sustain", {"claim": str(c.id), "household": World.hh_ref(h), "food_units": food, "food_days": snappedf(w.brain.household_food_days(h), 0.1),
 		"water": int(c.get("water", 0)), "coins": coins, "employed": false, "outcome": "failed" if int(c.get("poor_days", 0)) > 0 or int(c.get("dry_days", 0)) > 0 else "ok"})
+	w.observing -= 1
 	var since := int(c.get("built_day", c.get("claimed_day", c.day)))
 	if w.day() > since and (w.day() - since) % Life.year_days() == 0:
 		_rec("homestead_year", {"claim": str(c.id), "household": World.hh_ref(h), "years": (w.day() - since) / Life.year_days(), "people": members.size()})
