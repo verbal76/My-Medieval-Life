@@ -132,6 +132,7 @@ jobs:
           res://tests/demo_test.gd
           res://tests/outside_interact_test.gd
           res://tests/homestead_test.gd          # B25R1-010: a homestead from setting out to a house and a life there
+          res://tests/homestead_presence_test.gd # B25R1-010 x 019: the same build watched and unwatched, saved mid-way
           res://tests/player_homestead_test.gd   # B25R1-010: the player's homestead, saved and loaded
           res://tests/life_decisions_test.gd     # B25R1-014: homesteading, runaways, the band's answer, leaving the band
           res://tests/wilds_test.gd              # B25R1-014/017: the band in the wild, water and wells, works, raids

@@ -1542,9 +1542,17 @@ func _errand(n: NPC, c: Dictionary, trip: Dictionary) -> bool:
 		var want := int(need[id]) - n.inv.count(id)
 		if want <= 0:
 			continue
-		var s := _material_seller(id, n)
+		# B25R1-010 (repair 2026-11-04): the nearest seller with any to spare first, then the next, while the house still needs
+		# it, the purse allows and the trip's errands last (before, one seller a trip: a labourer carrying two blocks ended the
+		# day's buying of the twenty the house needed although a merchant held them, so a build could outlast its season)
+		var asked: Dictionary = tried.get("sellers_" + id, {})
+		var s := _material_seller(id, n, asked)
 		var q := b.buy_qty(n, s, id, want) if s != null else 0
-		tried["buy_" + id] = true
+		if s == null:
+			tried["buy_" + id] = true
+		else:
+			asked[s.id] = true
+			tried["sellers_" + id] = asked
 		if q > 0:
 			n.doing = "buying %s for the house" % GameData.item_name(id).to_lower()
 			n.plan = [b.go(b._workplace_cell(s)), b.doit("buy_from", {"vendor": s.id, "item": id, "qty": q})]
@@ -1586,11 +1594,11 @@ func _sell_firewood(n: NPC, h: int) -> bool:
 
 
 ## The nearest villager awake who sells a building material (Construction.SELLERS) and holds some to spare.
-func _material_seller(id: String, n: NPC) -> NPC:
+func _material_seller(id: String, n: NPC, skip := {}) -> NPC:
 	var best: NPC = null
 	var bd := 1e9
 	for o: NPC in w.npcs:
-		if o == n or not o.alive or w.asleep(o) or away(o) or not w.construction._sells(o, id) or o.inv.count(id) <= w.construction._keeps(o, id):
+		if o == n or skip.has(o.id) or not o.alive or w.asleep(o) or away(o) or not w.construction._sells(o, id) or o.inv.count(id) <= w.construction._keeps(o, id):
 			continue
 		var d := n.pos.distance_to(o.pos)
 		if d < bd:
