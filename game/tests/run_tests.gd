@@ -3139,7 +3139,7 @@ func test_caravan_traders() -> void:
 	var tills := func() -> int:
 		var n := 0
 		for s: OffMapSettlement in w.regions.list:
-			n += int(s.trader().till)
+			n += int(s.trader().get("till", 0))        # (a hamlet has no trader: B25R1-018 section 5)
 		return n
 	var smiths: Array = w.npcs.filter(func(o): return o.alive and o.job == "smith")
 	var base: int = all.call()
