@@ -11,6 +11,19 @@ extends SceneTree
 
 var checks := 0
 var failures := 0
+var errors := ErrorWatch.new()
+
+
+## Every script or engine error logged while the suite runs, so a runtime error that aborts a test cannot leave it green.
+class ErrorWatch extends Logger:
+	var seen: Array[String] = []
+
+	func _log_error(function: String, file: String, line: int, _code: String, rationale: String, _editor_notify: bool,
+			_error_type: int, _script_backtraces: Array[ScriptBacktrace]) -> void:
+		seen.append("%s:%d %s: %s %s" % [file, line, function, _code, rationale])
+
+	func _log_message(_message: String, _error: bool) -> void:
+		pass
 
 
 func check(cond: bool, what: String) -> void:
@@ -23,6 +36,7 @@ func check(cond: bool, what: String) -> void:
 
 
 func _init() -> void:
+	OS.add_logger(errors)
 	GameData.ensure()
 	test_claim()
 	test_release()
@@ -30,6 +44,10 @@ func _init() -> void:
 	test_prices()
 	test_village_buys()
 	test_determinism_and_save()
+	OS.remove_logger(errors)
+	for e in errors.seen:
+		print("  error: " + e)
+	check(errors.seen.is_empty(), "no script or engine error was logged while the suite ran (%d)" % errors.seen.size())
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -208,6 +226,8 @@ func test_village_buys() -> void:
 	var on_road: Array = w.regions.begin_visit(w.day())
 	check(on_road.size() > 0, "traders are on the road on the first visit day")
 	for s: OffMapSettlement in w.regions.list:
+		if s.trader().is_empty():
+			continue                               # a hamlet with no trader (B25R1-018) carries nothing
 		s.trader().stock.wheat = 80
 		s.trader().stock.pottage = 30
 		s.trader().till = 400
@@ -260,6 +280,8 @@ func test_village_buys() -> void:
 	v.regions.step_day(0)
 	var road: Array = v.regions.begin_visit(v.day())
 	for s: OffMapSettlement in v.regions.list:
+		if s.trader().is_empty():
+			continue
 		s.trader().stock.wheat = 80
 		s.reopen_books()
 	for h in v.households:
@@ -281,6 +303,8 @@ func test_village_buys() -> void:
 	_empty_village(z)
 	var road2: Array = z.regions.begin_visit(z.day())
 	for s: OffMapSettlement in z.regions.list:
+		if s.trader().is_empty():
+			continue
 		s.trader().stock.wheat = 80
 		s.reopen_books()
 	z.treasury = 0
@@ -292,6 +316,8 @@ func test_village_buys() -> void:
 	_empty_village(e)
 	var road3: Array = e.regions.begin_visit(e.day())
 	for s: OffMapSettlement in e.regions.list:
+		if s.trader().is_empty():
+			continue
 		s.trader().stock.erase("wheat")
 		s.reopen_books()
 	var coins_e := e.total_coins()

@@ -195,8 +195,22 @@ static func lane_cells(ow: Overworld) -> Dictionary:
 
 ## The type of a road cell: "stone", "road" or "trail" (a settlement's street is stone); "" for a cell that is no road.
 static func cell_kind(ow: Overworld, c: Vector2i) -> String:
-	if lane_cells(ow).has(c):
-		return "stone"
-	if not ow.is_road(c):
-		return ""
-	return str(main_kinds(ow).get(c, "trail"))
+	# Perf (B25R1 gate on 2677ea7): the answer is the generator's alone (lanes, the chunk's road bit, the main road kinds:
+	# nothing changes them after generation), so it is kept per cell. Without it a sweep over the stored road cells (the
+	# recorder's roads_dawn, RoadWear.prune; sorted by column) asked Overworld.is_road for cells across the whole region, and
+	# the chunk cache (MAX_CACHED) regenerated the same chunks again and again: 7.6 s a dawn at f60772f, 14.8 s with
+	# 0c1aeb3's denser roads. Kept or not, every answer is the same; the memo is only emptied when it grows large.
+	var memo: Dictionary
+	if ow.has_meta("b25r1_cell_kinds"):
+		memo = ow.get_meta("b25r1_cell_kinds")
+	else:
+		memo = {}
+		ow.set_meta("b25r1_cell_kinds", memo)
+	var k = memo.get(c)
+	if k != null:
+		return k
+	if memo.size() > 200000:
+		memo.clear()
+	var out := "stone" if lane_cells(ow).has(c) else ("" if not ow.is_road(c) else str(main_kinds(ow).get(c, "trail")))
+	memo[c] = out
+	return out
