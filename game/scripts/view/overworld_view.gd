@@ -24,6 +24,9 @@ var _site_sorted_parent: Node2D       # the characters' y-sorted node (the villa
 var _site_roofs := {}                 # the village's roof layer names (village.json "roof_layers")
 var _road_seen := -1                  # B25R1-011: Overworld.road_rev last drawn
 var _road_day := -1                   # the game day the loaded ways were last drawn for
+var live_check: Callable              # B25R1-019: (chunk rect in tiles) -> whether its water animates; Main sets it (the presence query)
+var _live_seen := -1                  # the presence version the loaded water was last drawn for
+var _live := {}                       # chunk -> whether its water was drawn animated
 var _dirt_bits := {}                  # B25R1-Q1: dirt path tile -> its connected sides (overworld_tiles.json dirt_path)
 
 
@@ -78,6 +81,7 @@ func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FR
 	if budget < 0 and tree_sink != null:
 		tree_sink.flush()
 	_road_step()
+	_live_step()
 	if overworld.works_version != _works_seen:
 		_works_seen = overworld.works_version
 		for c: Vector2i in chunks:
@@ -150,6 +154,10 @@ func road_tile(cell: Vector2i, dirt: int) -> int:
 		return -1
 	if sources.size() <= 4:
 		return dirt
+	if overworld.is_ford(cell) and sources.size() > WATER_ATLAS:
+		return -1                                  # EA-01: a ford on the road shows its stepping stones, not a track over the water
+	if overworld.is_bridge(cell) and sources.size() > WATER_ATLAS:
+		return _bridge_tile(cell, look)
 	var bits: int = int(_dirt_bits.get(dirt, 0)) if dirt >= 0 else 0
 	var lanes := RegionRoads.lane_cells(overworld)
 	for k in 4:
@@ -184,6 +192,26 @@ func road_tile(cell: Vector2i, dirt: int) -> int:
 	return ROAD_TILES + row * 16 + bits
 
 
+## B25R1-Q3: a road over a stream: a stone bridge on a stone road, else a plank one, running the way the road does.
+func _bridge_tile(cell: Vector2i, look: String) -> int:
+	# B25R1-017: one bridge, one way: the planks (or stones) of all its cells run the long way of the crossing, whichever
+	# way the road's cells step across the water
+	var box := overworld.crossing_box(cell)
+	var run := "ew" if box.size.x > box.size.y else "ns" if box.size.y > box.size.x else ("ns" if overworld.is_water(cell + Vector2i(-1, 0)) or overworld.is_water(cell + Vector2i(1, 0)) else "ew")
+	var stone := look.begins_with("stone") or overworld.forced_crossing(cell) == "stone_bridge"     # B25R1-018: canonical stone bridge
+	var br: Dictionary = overworld.tiles.water.bridge
+	if not stone:
+		# EA-01: a wooden bridge has its ends: the post-capped north end and the south end on its legs; rounded east and west
+		var step := Vector2i(0, 1) if run == "ns" else Vector2i(1, 0)
+		var head := not overworld.is_bridge(cell - step)
+		var tail := not overworld.is_bridge(cell + step)
+		if head != tail:
+			var end := ("n" if head else "s") if run == "ns" else ("w" if head else "e")
+			if br.has("plank_" + end):
+				return int(br["plank_" + end])
+	return int(br[("stone_" if stone else "plank_") + run])
+
+
 ## B25R1-011: draw a loaded cell's way again (its look changed), with its four neighbours (their joins may change).
 func redraw_road(cell: Vector2i) -> void:
 	for c in [cell, cell + Vector2i(0, -1), cell + Vector2i(1, 0), cell + Vector2i(0, 1), cell + Vector2i(-1, 0)]:
@@ -197,6 +225,38 @@ func redraw_road(cell: Vector2i) -> void:
 
 ## B25R1-011: what changed since the last frame (footfall, paving, repair: Overworld.road_dirty), and once a game day every
 ## loaded way (fading, overgrowth and damage come with time).
+## B25R1-019 (owner: water animates only inside the player's live range): the water of a loaded chunk is drawn from the
+## animated atlas (WATER_ATLAS, 9) when the chunk is live, from its still twin (WATER_STILL_ATLAS, 10, the first frame) when not. live_check answers (Main:
+## the presence workstream's rect_live when it is there, else every loaded chunk is live); re-checked when `version` changes
+## (Main passes it) and for each chunk built.
+func water_value(v: int, live: bool) -> int:
+	if v >= 0 and v / 100000 == WATER_ATLAS and not live and sources.size() > WATER_STILL_ATLAS:
+		return v + (WATER_STILL_ATLAS - WATER_ATLAS) * 100000
+	return v
+
+
+func chunk_live(cc: Vector2i) -> bool:
+	return not live_check.is_valid() or bool(live_check.call(Rect2(Vector2(cc * Overworld.CHUNK), Vector2(Overworld.CHUNK, Overworld.CHUNK))))
+
+
+var live_version := 0                 # bumped by Main when the live range changes
+
+
+func _live_step() -> void:
+	if live_version == _live_seen:
+		return
+	_live_seen = live_version
+	for cc: Vector2i in chunks:
+		var now := chunk_live(cc)
+		if bool(_live.get(cc, true)) == now:
+			continue
+		_live[cc] = now
+		var ch := overworld.get_chunk(cc)
+		for i in Overworld.CHUNK * Overworld.CHUNK:
+			if ch.water[i] != 0:
+				set_tile(chunks[cc].ground, Vector2i(cc.x * Overworld.CHUNK + i % Overworld.CHUNK, cc.y * Overworld.CHUNK + i / Overworld.CHUNK), water_value(ch.ground[i], now))
+
+
 func _road_step() -> void:
 	if overworld.road_rev != _road_seen:
 		_road_seen = overworld.road_rev
@@ -236,12 +296,14 @@ func _build(cc: Vector2i) -> void:
 	var x0 := cc.x * Overworld.CHUNK
 	var y0 := cc.y * Overworld.CHUNK
 	var lanes := RegionRoads.lane_cells(overworld)
+	var live_now := chunk_live(cc)
+	_live[cc] = live_now
 	for y in Overworld.CHUNK:
 		for x in Overworld.CHUNK:
 			var i := y * Overworld.CHUNK + x
 			var cell := Vector2i(x0 + x, y0 + y)
 			if ch.ground[i] >= 0:
-				set_tile(ground, cell, ch.ground[i])
+				set_tile(ground, cell, water_value(ch.ground[i], live_now) if ch.water[i] != 0 else ch.ground[i])
 			if ch.path[i] >= 0 or lanes.has(cell) or overworld.road_state.has(cell):
 				set_tile(path, cell, road_tile(cell, ch.path[i]))
 			if ch.deco[i] >= 0 and not overworld.rock_gone(cell) and not overworld.flower_gone(cell):    # a broken boulder or a picked flower stays gone
@@ -275,6 +337,7 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 			if not r.intersects(box):
 				continue
 			var stamp: Dictionary = overworld.stamps.get(str(sl.stamp), overworld.stamps.house)
+			var swap: Dictionary = _look_swap(str(sl.get("look", "")))    # B25R1-018: the building's colour variant (region_stamps.json)
 			var names: Array = (stamp.layers as Dictionary).keys()
 			names.sort_custom(func(a: String, b: String) -> bool:
 				var ra := 0 if a.begins_with("ground") else 1 if a.begins_with("path") else 2 if a.begins_with("below") else 3
@@ -292,6 +355,8 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 				for j in int(stamp.h):
 					for i in int(stamp.w):
 						var v := int(cells[j * int(stamp.w) + i])
+						if not swap.is_empty():
+							v = int(swap.get(str(v), v))
 						var cell := r.position + Vector2i(i, j)
 						if v < 0 or not box.has_point(cell):
 							continue
@@ -312,6 +377,20 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 	if sorted != null:
 		above.append(sorted)              # (freed with the chunk; see _free)
 	return above
+
+
+static var _looks := {}
+
+
+## B25R1-018: tile -> tile of a building colour variant ("thatch"), {} for the stamp as drawn (game/data/region_stamps.json,
+## made by tools/build_region_stamps.py from the paid tileset's colour blocks).
+static func _look_swap(look: String) -> Dictionary:
+	if look == "":
+		return {}
+	if _looks.is_empty():
+		var d = JSON.parse_string(FileAccess.get_file_as_string("res://data/region_stamps.json"))
+		_looks = d.variants if d is Dictionary else {"_": {}}
+	return (_looks.get(look, {}) as Dictionary).get("swap", {})
 
 
 ## GP-DRAW-UNDER-HOUSE for the settlement sites (owner 2026-11-03: "half of them would go under the building's sprite"): an

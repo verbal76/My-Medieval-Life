@@ -595,7 +595,7 @@
     "terrain"
    ],
    "status": "integrated",
-   "used_for": "Overworld grass/cliff wangset (overworld_tiles.json); its dirt pathway tiles are the dirt roads, and the shapes of the stone road and trail tiles (tools/road_tiles.py).",
+   "used_for": "Overworld grass/cliff wangset (overworld_tiles.json); its dirt pathway tiles are the dirt roads, and the shapes of the stone road and trail tiles (tools/road_tiles.py); B25R1-Q3: its grass/river corner tiles with their four-frame animations, the animated waterfall (598-601, run on into a foot cell with its splash and foam), the pebbles (703), the wooden walk with rails and end pieces (723, 750, 777, 875-877) and the castle wall-walk with parapets (747, 775) are the streams, rivers, pools, waterfalls, fords, plank bridges and stone bridges, its open water given long soft ripples of its own lighter water colours scrolled downstream for the flowing water, and tufts of its bank grass on corner steps (tools/water_tiles.py, game/assets/tiles/water_tiles.png; B25R1-017, EA-01).",
    "scale": "16 px, 1:1",
    "scan": [
     {
@@ -637,7 +637,8 @@
     "assets/terrain/steps_ew_mid.png",
     "assets/terrain/steps_ns.png",
     "assets/terrain/steps_ns_mid.png",
-    "assets/tiles/punyworld-overworld-tiles.png"
+    "assets/tiles/punyworld-overworld-tiles.png",
+    "assets/tiles/water_tiles.png"
    ]
   },
   {
@@ -12246,6 +12247,7 @@
    "status": "planned",
    "opportunities": "Stone ramps and cliff steps for B14-07; fences (4 styles) for pens and fields; animated water and waterfalls (6 frames) for plateau streams; colour-variant trees and bushes for forest variety (as Living Forest-style trees). No cart, wagon, wheelbarrow or horse.",
    "scale": "32 px tiles drawn at the world's pixel density: 1:1, each tile covering 2 x 2 world tiles",
+   "decision": "B25R1-017 (2026-11-03): its 6-frame water and waterfalls were inspected (WaterTiles-6frames.png, from the zip) for the overworld's streams and rivers and not used: their shores are brown rock in another, muted palette on a 32 px grid, and would not sit beside the Puny World grass and cliffs the overworld is drawn with; the water was made from the Puny World set's own corner tiles, flowing (tools/water_tiles.py). Kept as an opportunity for a rocky gorge or cave water look.",
    "known_issues": "The .rar copy has a truncated WaterTiles file; the zip is complete and is the source.",
    "scan": [
     {

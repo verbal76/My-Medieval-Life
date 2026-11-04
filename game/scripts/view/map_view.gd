@@ -10,6 +10,12 @@ const ROAD_STONE_ROWS := 4             # rows 0-3 stone road (paving variants), 
 const ROAD_TRAIL_ROW := 4
 const ROAD_OVERGROWN_ROW := 6          # B25R1-011: rows 6-7 grown-over dirt road and trail, rows 8-9 damaged and broken stone
 const ROAD_DAMAGED_ROW := 8
+## B25R1-Q3: game/assets/tiles/water_tiles.png (tools/water_tiles.py), WATER_FRAMES animation frames a row. Atlas ids 9 and 10
+## (coordinator 2026-11-04): after the EXTRA_ATLASES of the homestead branch (5 Larchrow, 6-7 Bow.Pixel grass, 8 the region's
+## props); on merging, the two go at the end of that one list and _add_water_tiles' padding goes.
+const WATER_ATLAS := 9
+const WATER_FRAMES := 8                # tools/water_tiles.py FRAMES; each frame water.json "frame_seconds" long
+const WATER_STILL_ATLAS := 10          # B25R1-019: the same water sheet with no animation (its first frame): water out of the live range
 
 var tileset := TileSet.new()
 var sources: Array[TileSetAtlasSource] = []
@@ -50,6 +56,7 @@ func build(m: VillageMap, above_parent: Node2D, sorted_parent: Node2D = null) ->
 		tileset.add_source(src)
 	_add_small_boulder(m)
 	_add_road_tiles()
+	_add_water_tiles()
 	for k in m.data.animated:
 		animated[int(k)] = m.data.animated[k].size()
 	for lay in m.data.layers:
@@ -94,6 +101,34 @@ func _add_road_tiles() -> void:
 	sources.append(src)
 	columns.append(16)
 	tileset.add_source(src)
+
+
+## B25R1-Q3: atlases WATER_ATLAS and WATER_STILL_ATLAS, the streams' water, waterfall and bridges (overworld_tiles.json
+## "water"), each row WATER_FRAMES frames. Ids below WATER_ATLAS that no list on this branch fills are padded with
+## unused sources (the homestead branch's EXTRA_ATLASES fill them once merged), so the ids hold either way.
+func _add_water_tiles() -> void:
+	if sources.size() < 5 or sources.size() > WATER_ATLAS:
+		return
+	var tex: Texture2D = load("res://assets/tiles/water_tiles.png")
+	while sources.size() < WATER_ATLAS:
+		var pad := TileSetAtlasSource.new()
+		pad.texture = tex
+		pad.texture_region_size = Vector2i(T, T)
+		sources.append(pad)
+		columns.append(WATER_FRAMES)
+		tileset.add_source(pad)
+	var src := TileSetAtlasSource.new()
+	src.texture = tex
+	src.texture_region_size = Vector2i(T, T)
+	sources.append(src)
+	columns.append(WATER_FRAMES)
+	tileset.add_source(src)
+	var still := TileSetAtlasSource.new()
+	still.texture = src.texture
+	still.texture_region_size = Vector2i(T, T)
+	sources.append(still)
+	columns.append(WATER_FRAMES)
+	tileset.add_source(still)
 
 
 ## The fourth atlas: one tile, the paid atlas's plain boulder scaled down (nearest) and stood on the
@@ -148,7 +183,12 @@ func _put(layer: TileMapLayer, cell: Vector2i, v: int) -> void:
 	if not src.has_tile(coords):
 		src.create_tile(coords)
 		src.get_tile_data(coords, 0).y_sort_origin = SORT_ORIGIN
-		if animated.has(t):
+		if atlas == WATER_ATLAS:                    # B25R1-Q3: the water's own frames, left to right
+			src.set_tile_animation_frames_count(coords, WATER_FRAMES)
+			var secs := float(Overworld.water_cfg().get("frame_seconds", 0.15))
+			for f in WATER_FRAMES:
+				src.set_tile_animation_frame_duration(coords, f, secs)
+		elif animated.has(t):
 			src.set_tile_animation_columns(coords, animated[t])
 			src.set_tile_animation_frames_count(coords, animated[t])
 			for f in animated[t]:

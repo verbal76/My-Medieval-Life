@@ -91,8 +91,12 @@
    "birds": "Minifantasy 13_Birds_loop: outdoors by day in the village",
    "crickets": "Minifantasy 11_Crickets_2_loop: outdoors at night",
    "cicada": "Minifantasy 12_Cicada_loop: summer days outdoors (second layer)",
-   "wind": "Minifantasy 14_Wind_loop: the countryside beyond the village (second layer)"
+   "wind": "Minifantasy 14_Wind_loop: the countryside beyond the village (second layer)",
+   "water_stream": "Minifantasy 09_Water_1_loop: near a stream, louder the nearer (B25R1-017; the water layer)",
+   "water_river": "Minifantasy 09_Water_2_loop: near a river, louder the nearer (the water layer)",
+   "waterfall": "Minifantasy 10_Waterfall_1, looped: near a waterfall, louder the nearer (the water layer)"
   },
+  "water": {"_note": "B25R1-017 (agent values): the water layer's two voices, a stream or river loop and a waterfall loop, each at full volume within near tiles of the water and silent beyond far, by the player's distance (Main measures it twice a second: Overworld.nearest_water, nearest_fall).", "near": 2, "far": 12, "fall_near": 3, "fall_far": 16, "db": -6.0, "fall_db": -4.0},
   "forest": "the Cozy forest loop is the woods variant: the countryside by day",
   "db_by_id": {
    "forest": -8.0,

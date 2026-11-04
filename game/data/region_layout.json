@@ -1,0 +1,1283 @@
+{
+ "format": "mml-region-layout/1",
+ "_note": "B25R1-018 (owner 2026-11-03, regional world reconstruction): the region's fixed geography for new worlds (overworld GEN_VERSION 4). Coordinates are overworld tiles in the village's frame (the village is the rectangle (0,0)-(119,89), its centre (60,45); x east, y south; 12 tiles a mile, settlements.json tiles_per_mile). Every entry carries `label` (CANON: stated by Morris; CANON-INFERRED: our reading of what he states; GAME EXPANSION: ours) and `src` (paragraph ids in research/corpus/paragraphs.json). Positions are an agent design (docs/design/REGION_RECONSTRUCTION_B25R1.md section c), provisional; the relationships they satisfy are listed there. Readers: Overworld (sites, roads, regions, landmarks; region worker) and the water generator (rivers, crossings, downs; water worker). Settlements and hamlets are also listed in settlements.json (their economies); `id` joins the two.",
+ "tiles_per_mile": 12,
+ "village": {
+  "id": "village",
+  "x": 60,
+  "y": 45,
+  "label": "GAME EXPANSION",
+  "note": "the player's village in the Upmeads country (J-D2 resolved: Upmeads anchor), on the north side of Upmeads Water as the High House lies in an ingle of it",
+  "src": [
+   "BONE-C1-P009",
+   "BONE-C3-P002"
+  ]
+ },
+ "settlements": [
+  {
+   "id": "wulstead",
+   "kind": "market town",
+   "x": -60,
+   "y": 285,
+   "label": "CANON-INFERRED",
+   "note": "20 miles south of the village by road; on a little hill amid plain meadows; west of the line to Bear Hill so the westward bent's chalk figures face it",
+   "src": [
+    "BONE-C3-P004",
+    "BONE-C3-P005",
+    "BFOUR-C25-P003",
+    "BONE-C4-P005"
+   ]
+  },
+  {
+   "id": "netherton",
+   "kind": "hamlet",
+   "x": 40,
+   "y": 400,
+   "label": "CANON-INFERRED",
+   "note": "a thorp beside a stream just before the Downs' slopes rise, under Bear Hill",
+   "src": [
+    "BONE-C4-P002",
+    "BONE-C4-P005"
+   ]
+  },
+  {
+   "id": "garton",
+   "kind": "village",
+   "x": -110,
+   "y": 700,
+   "label": "CANON-INFERRED",
+   "note": "under the first hill of the Down country on the road north from Higham, one of the thorps at the feet of the downs toward Higham",
+   "src": [
+    "BFOUR-C21-P017",
+    "BFOUR-C22-P011"
+   ]
+  },
+  {
+   "id": "higham",
+   "kind": "abbey town",
+   "x": 20,
+   "y": 765,
+   "label": "CANON-INFERRED",
+   "note": "forty miles from Wulstead (486 tiles); below the Downs' end in the fertile plain, its river lapping it about",
+   "src": [
+    "BONE-C3-P037",
+    "BONE-C3-P038",
+    "BONE-C5-P002"
+   ]
+  },
+  {
+   "id": "bourton",
+   "kind": "abbey village",
+   "x": 90,
+   "y": 935,
+   "label": "CANON-INFERRED",
+   "note": "a morning's ride south of Higham beyond the meadows and the vine country, in a valley of wild-wood",
+   "src": [
+    "BONE-C7-P003",
+    "BONE-C7-P004",
+    "BONE-C7-P007"
+   ]
+  },
+  {
+   "id": "mileham",
+   "kind": "thorp",
+   "x": -210,
+   "y": 712,
+   "label": "CANON-INFERRED",
+   "note": "named by Morris as a thorp at the feet of the downs toward Higham; its position (west of Garton) is ours",
+   "src": [
+    "BFOUR-C22-P011"
+   ]
+  },
+  {
+   "id": "milton",
+   "kind": "thorp",
+   "x": 150,
+   "y": 700,
+   "label": "CANON-INFERRED",
+   "note": "named by Morris as a thorp at the feet of the downs toward Higham; its position (east of Garton) is ours",
+   "src": [
+    "BFOUR-C22-P011"
+   ]
+  },
+  {
+   "id": "rushford",
+   "kind": "hamlet",
+   "x": -330,
+   "y": 128,
+   "label": "GAME EXPANSION",
+   "note": "on the north bank of Upmeads Water west of the village: flax, fields and a weaver"
+  },
+  {
+   "id": "ashcombe",
+   "kind": "hamlet",
+   "x": 330,
+   "y": 40,
+   "label": "GAME EXPANSION",
+   "note": "a wooded combe east of the village: woodcutters and a sawpit; a well"
+  },
+  {
+   "id": "fallowley",
+   "kind": "hamlet",
+   "x": -250,
+   "y": 300,
+   "label": "GAME EXPANSION",
+   "note": "fields west of the high road: farmers and an alehouse; a well"
+  },
+  {
+   "id": "wendholt",
+   "kind": "hamlet",
+   "x": 180,
+   "y": 262,
+   "label": "GAME EXPANSION",
+   "note": "by the Netherton stream east of Wulstead: fields and a smithy"
+  },
+  {
+   "id": "ewedean",
+   "kind": "hamlet",
+   "x": -260,
+   "y": 385,
+   "label": "GAME EXPANSION",
+   "note": "shepherds at the north foot of the Downs: flocks and a tannery; a well"
+  },
+  {
+   "id": "brookhurst",
+   "kind": "hamlet",
+   "x": -190,
+   "y": 758,
+   "label": "GAME EXPANSION",
+   "note": "on Coldlake west of Higham, Abbey land: fields and an herb garden"
+  },
+  {
+   "id": "elmcote",
+   "kind": "hamlet",
+   "x": 220,
+   "y": 790,
+   "label": "GAME EXPANSION",
+   "note": "east of Higham among the Abbot's lands: fields and a masons' yard; a well"
+  },
+  {
+   "id": "cressbrook",
+   "kind": "hamlet",
+   "x": 185,
+   "y": 915,
+   "label": "GAME EXPANSION",
+   "note": "in the vine country east of the Bourton road: fields and a tavern; a well"
+  }
+ ],
+ "rivers": [
+  {
+   "id": "upmeads_water",
+   "name": "Upmeads Water",
+   "order": 3,
+   "direction": "west to east",
+   "width": 6,
+   "label": "CANON",
+   "src": [
+    "BONE-C1-P009",
+    "BONE-C3-P003"
+   ],
+   "note": "the course is ours; CANON: it winds from west to east through meadows with a low ridge along its south side",
+   "points": [
+    [
+     -700,
+     175
+    ],
+    [
+     -560,
+     150
+    ],
+    [
+     -430,
+     166
+    ],
+    [
+     -330,
+     160
+    ],
+    [
+     -220,
+     134
+    ],
+    [
+     -110,
+     122
+    ],
+    [
+     -20,
+     120
+    ],
+    [
+     40,
+     129
+    ],
+    [
+     110,
+     122
+    ],
+    [
+     190,
+     140
+    ],
+    [
+     260,
+     133
+    ],
+    [
+     300,
+     128
+    ],
+    [
+     420,
+     150
+    ],
+    [
+     560,
+     138
+    ],
+    [
+     720,
+     162
+    ]
+   ]
+  },
+  {
+   "id": "netherton_stream",
+   "name": "Netherton stream",
+   "order": 1,
+   "direction": "north-east, from the foot of the Downs down to Upmeads Water",
+   "width": 2,
+   "label": "CANON-INFERRED",
+   "src": [
+    "BONE-C4-P002"
+   ],
+   "note": "CANON: a stream beside Netherton at the Downs' foot; its course and its joining Upmeads Water are ours (GAME EXPANSION); it rises at the scarp foot, never on the Downs",
+   "points": [
+    [
+     22,
+     412
+    ],
+    [
+     34,
+     392
+    ],
+    [
+     62,
+     368
+    ],
+    [
+     86,
+     330
+    ],
+    [
+     128,
+     280
+    ],
+    [
+     150,
+     262
+    ],
+    [
+     196,
+     214
+    ],
+    [
+     236,
+     172
+    ],
+    [
+     262,
+     133
+    ]
+   ],
+   "joins": "upmeads_water",
+   "passes_settlement": [
+    "netherton"
+   ]
+  },
+  {
+   "id": "coldlake",
+   "name": "Coldlake",
+   "order": 2,
+   "direction": "west to east round Higham, then south and away south-west through the meadows",
+   "width": 4,
+   "label": "CANON",
+   "src": [
+    "BONE-C3-P038",
+    "BONE-C5-P002",
+    "BONE-C7-P003"
+   ],
+   "note": "CANON: a little river winding about Higham's meadows and lapping the town about; the road south is straight and crosses it thrice (a stone bridge, two fords). The course is ours",
+   "points": [
+    [
+     -360,
+     712
+    ],
+    [
+     -250,
+     722
+    ],
+    [
+     -150,
+     728
+    ],
+    [
+     -60,
+     722
+    ],
+    [
+     0,
+     720
+    ],
+    [
+     50,
+     722
+    ],
+    [
+     82,
+     738
+    ],
+    [
+     90,
+     765
+    ],
+    [
+     96,
+     792
+    ],
+    [
+     100,
+     815
+    ],
+    [
+     -10,
+     835
+    ],
+    [
+     -30,
+     848
+    ],
+    [
+     60,
+     860
+    ],
+    [
+     80,
+     874
+    ],
+    [
+     -10,
+     890
+    ],
+    [
+     -60,
+     905
+    ],
+    [
+     -130,
+     940
+    ],
+    [
+     -220,
+     985
+    ],
+    [
+     -330,
+     1030
+    ]
+   ],
+   "passes_settlement": [
+    "higham"
+   ]
+  }
+ ],
+ "crossings": [
+  {
+   "kind": "ford",
+   "x": 40,
+   "y": 129,
+   "course": "upmeads_water",
+   "name": "the Ford",
+   "label": "CANON",
+   "src": [
+    "BONE-C3-P002"
+   ],
+   "note": "the ford in the ingle of the river by the willow copse; here on the village's road south"
+  },
+  {
+   "kind": "bridge",
+   "x": -170,
+   "y": 128,
+   "course": "upmeads_water",
+   "name": "the fair bridge",
+   "material": "stone",
+   "label": "CANON",
+   "src": [
+    "BONE-C3-P004"
+   ],
+   "note": "on the high road from Upmeads to Wulstead, late built between King Peter and a house of Canons on the north side"
+  },
+  {
+   "kind": "bridge",
+   "x": 20,
+   "y": 830,
+   "course": "coldlake",
+   "name": "the stone bridge",
+   "material": "stone",
+   "label": "CANON",
+   "src": [
+    "BONE-C7-P003"
+   ]
+  },
+  {
+   "kind": "ford",
+   "x": 20,
+   "y": 855,
+   "course": "coldlake",
+   "name": "the first ford",
+   "label": "CANON",
+   "src": [
+    "BONE-C7-P003"
+   ]
+  },
+  {
+   "kind": "ford",
+   "x": 20,
+   "y": 885,
+   "course": "coldlake",
+   "name": "the second ford",
+   "label": "CANON",
+   "src": [
+    "BONE-C7-P003"
+   ]
+  }
+ ],
+ "downs": {
+  "name": "the Downs",
+  "label": "CANON",
+  "src": [
+   "BONE-C3-P037",
+   "BONE-C4-P006"
+  ],
+  "note": "open, treeless, waterless chalk uplands: downs on downs, no road but the Greenway, no castle, church or homestead, only shepherds' huts; water only in the chalk hollow of the chapel pool. The extent (north foot by Netherton, south foot by Garton above Higham, about 25 miles across north to south) is CANON-INFERRED; its east and west ends are ours",
+  "rect": [
+   -470,
+   385,
+   940,
+   320
+  ],
+  "polygon": [
+   [
+    -470,
+    430
+   ],
+   [
+    -300,
+    400
+   ],
+   [
+    -160,
+    420
+   ],
+   [
+    -40,
+    405
+   ],
+   [
+    30,
+    412
+   ],
+   [
+    150,
+    392
+   ],
+   [
+    300,
+    420
+   ],
+   [
+    470,
+    402
+   ],
+   [
+    470,
+    690
+   ],
+   [
+    300,
+    700
+   ],
+   [
+    160,
+    688
+   ],
+   [
+    60,
+    700
+   ],
+   [
+    -40,
+    668
+   ],
+   [
+    -160,
+    672
+   ],
+   [
+    -300,
+    690
+   ],
+   [
+    -470,
+    700
+   ]
+  ],
+  "springs": "none",
+  "water_ok": [
+   "st_ann_pool"
+  ]
+ },
+ "regions": [
+  {
+   "id": "upmeads_meads",
+   "name": "the Upmeads meadows",
+   "kind": "farmland",
+   "label": "CANON",
+   "src": [
+    "BONE-C1-P009"
+   ],
+   "polygon": [
+    [
+     -500,
+     -60
+    ],
+    [
+     560,
+     -60
+    ],
+    [
+     560,
+     170
+    ],
+    [
+     -500,
+     170
+    ]
+   ]
+  },
+  {
+   "id": "southern_ridge",
+   "name": "the low ridge and the higher hills",
+   "kind": "hills",
+   "label": "CANON",
+   "src": [
+    "BONE-C1-P009"
+   ],
+   "note": "a low ridge along the Water's south side; beyond it higher hills running east and west, where Upmeads ends",
+   "polygon": [
+    [
+     -500,
+     165
+    ],
+    [
+     560,
+     165
+    ],
+    [
+     560,
+     225
+    ],
+    [
+     -500,
+     225
+    ]
+   ]
+  },
+  {
+   "id": "wulstead_plain",
+   "name": "the plain country",
+   "kind": "farmland",
+   "label": "CANON-INFERRED",
+   "src": [
+    "BONE-C4-P002",
+    "BFOUR-C25-P003"
+   ],
+   "polygon": [
+    [
+     -500,
+     225
+    ],
+    [
+     560,
+     225
+    ],
+    [
+     560,
+     400
+    ],
+    [
+     -500,
+     425
+    ]
+   ]
+  },
+  {
+   "id": "higham_plain",
+   "name": "the fertile plain of Higham",
+   "kind": "meadows",
+   "label": "CANON",
+   "src": [
+    "BONE-C3-P038",
+    "BONE-C7-P003"
+   ],
+   "polygon": [
+    [
+     -470,
+     700
+    ],
+    [
+     470,
+     690
+    ],
+    [
+     470,
+     890
+    ],
+    [
+     -470,
+     900
+    ]
+   ]
+  },
+  {
+   "id": "vine_country",
+   "name": "the vine country",
+   "kind": "vineyards",
+   "label": "CANON",
+   "src": [
+    "BONE-C7-P004"
+   ],
+   "note": "little hills and dales, vineyards and orchards on the hill-sides, corn in the dales",
+   "polygon": [
+    [
+     -80,
+     895
+    ],
+    [
+     230,
+     890
+    ],
+    [
+     240,
+     925
+    ],
+    [
+     150,
+     950
+    ],
+    [
+     30,
+     952
+    ],
+    [
+     -80,
+     930
+    ]
+   ]
+  },
+  {
+   "id": "bourton_vale",
+   "name": "the wooded valley of Bourton",
+   "kind": "wildwood valley",
+   "label": "CANON",
+   "src": [
+    "BONE-C7-P007"
+   ],
+   "polygon": [
+    [
+     30,
+     915
+    ],
+    [
+     150,
+     912
+    ],
+    [
+     160,
+     950
+    ],
+    [
+     30,
+     952
+    ]
+   ]
+  },
+  {
+   "id": "dry_waste",
+   "name": "the waste",
+   "kind": "waste",
+   "label": "CANON",
+   "src": [
+    "BONE-C8-P002"
+   ],
+   "note": "rough, dry and parched, no pasture but for goats, a few bushes; the road goes straight through it",
+   "polygon": [
+    [
+     10,
+     952
+    ],
+    [
+     210,
+     950
+    ],
+    [
+     220,
+     990
+    ],
+    [
+     0,
+     992
+    ]
+   ]
+  },
+  {
+   "id": "wood_perilous",
+   "name": "the Wood Perilous",
+   "kind": "great wood",
+   "label": "CANON",
+   "src": [
+    "BONE-C8-P002",
+    "BONE-C7-P012",
+    "BONE-C6-P005"
+   ],
+   "note": "a long ridge thick with trees, at first wholly beech, no break; a beaten way through. No supernatural mechanics",
+   "polygon": [
+    [
+     -400,
+     990
+    ],
+    [
+     520,
+     990
+    ],
+    [
+     520,
+     1260
+    ],
+    [
+     -400,
+     1260
+    ]
+   ]
+  }
+ ],
+ "landmarks": [
+  {
+   "id": "bear_hill",
+   "name": "Bear Hill",
+   "kind": "hill",
+   "x": 90,
+   "y": 450,
+   "r": 34,
+   "label": "CANON",
+   "src": [
+    "BONE-C3-P037",
+    "BONE-C4-P005"
+   ],
+   "note": "the first great hill of the Downs above Netherton; from its top downs on downs to the south"
+  },
+  {
+   "id": "bear_castle",
+   "name": "Bear Castle",
+   "kind": "earthwork",
+   "x": 90,
+   "y": 450,
+   "r": 16,
+   "label": "CANON",
+   "src": [
+    "BONE-C4-P005",
+    "BONE-C4-P006"
+   ],
+   "note": "an earthwork of the ancient folk on the top of Bear Hill, its walls beaten down in places"
+  },
+  {
+   "id": "bear_figures",
+   "name": "the chalk figures of Bear Hill",
+   "kind": "chalk figure",
+   "x": 62,
+   "y": 452,
+   "label": "CANON",
+   "src": [
+    "BONE-C4-P005"
+   ],
+   "note": "a tree with leaves and a bear ramping on either hand, cut in the turf of the westward bent; not seen from Netherton, clear from nearer Wulstead"
+  },
+  {
+   "id": "seven_mounds",
+   "name": "the seven grave-mounds",
+   "kind": "barrows",
+   "x": 62,
+   "y": 522,
+   "label": "CANON",
+   "src": [
+    "BONE-C4-P009"
+   ],
+   "note": "seven grave-mounds of the ancient folk in a row on a low hill the Greenway tops"
+  },
+  {
+   "id": "shepherds_meeting",
+   "name": "the drovers' bent",
+   "kind": "viewpoint",
+   "x": 50,
+   "y": 548,
+   "label": "CANON-INFERRED",
+   "src": [
+    "BONE-C4-P010",
+    "BONE-C4-P011"
+   ],
+   "note": "some two miles beyond the mounds, little less than twenty miles from Higham"
+  },
+  {
+   "id": "st_ann_chapel",
+   "name": "Saint Ann's Chapel",
+   "kind": "chapel",
+   "x": -120,
+   "y": 575,
+   "label": "CANON-INFERRED",
+   "src": [
+    "BFOUR-C22-P009",
+    "BONE-C3-P037"
+   ],
+   "note": "CANON: a chapel by which a wise woman dwells, in the downs country. CANON-INFERRED: set in a swelly of the chalk with a little pool, as the holy man's chapel Clement describes"
+  },
+  {
+   "id": "st_ann_pool",
+   "name": "the chapel pool",
+   "kind": "pool",
+   "x": -112,
+   "y": 582,
+   "r": 3,
+   "label": "CANON",
+   "src": [
+    "BONE-C3-P037"
+   ],
+   "note": "where the water hath trickled into a pool: the only water on the Downs"
+  },
+  {
+   "id": "canons_bridge_house",
+   "name": "the house of Canons by the bridge",
+   "kind": "religious house",
+   "x": -176,
+   "y": 104,
+   "label": "CANON",
+   "src": [
+    "BONE-C3-P004"
+   ]
+  },
+  {
+   "id": "higham_castle",
+   "name": "the white castle of Higham",
+   "kind": "castle",
+   "x": 50,
+   "y": 744,
+   "label": "CANON",
+   "src": [
+    "BONE-C5-P002"
+   ],
+   "note": "on a knoll overlooking the town"
+  },
+  {
+   "id": "higham_abbey",
+   "name": "St Mary's Abbey",
+   "kind": "abbey",
+   "x": -4,
+   "y": 758,
+   "label": "CANON",
+   "src": [
+    "BONE-C5-P002",
+    "BONE-C7-P009"
+   ],
+   "note": "the great Abbey church, long and high above all"
+  },
+  {
+   "id": "higham_market",
+   "name": "Higham market-square",
+   "kind": "market",
+   "x": 20,
+   "y": 772,
+   "label": "CANON",
+   "src": [
+    "BONE-C3-P031",
+    "BONE-C6-P029"
+   ]
+  },
+  {
+   "id": "higham_south_gate",
+   "name": "the south gate of Higham",
+   "kind": "gate",
+   "x": 20,
+   "y": 797,
+   "label": "CANON",
+   "src": [
+    "BONE-C6-P029",
+    "BONE-C7-P003"
+   ]
+  },
+  {
+   "id": "wulstead_market",
+   "name": "Wulstead market-place",
+   "kind": "market",
+   "x": -60,
+   "y": 285,
+   "label": "CANON",
+   "src": [
+    "BONE-C3-P005"
+   ],
+   "note": "a fountain amidst it and a buttercross"
+  },
+  {
+   "id": "wulstead_canons",
+   "name": "the House of Black Canons",
+   "kind": "religious house",
+   "x": -92,
+   "y": 285,
+   "label": "CANON",
+   "src": [
+    "BFOUR-C25-P010",
+    "BFOUR-C26-P004"
+   ],
+   "note": "at the west of the town, walled toward the fields"
+  },
+  {
+   "id": "netherton_church",
+   "name": "Netherton church and the house of Canons",
+   "kind": "church",
+   "x": 40,
+   "y": 394,
+   "label": "CANON",
+   "src": [
+    "BONE-C4-P002"
+   ]
+  },
+  {
+   "id": "garton_cross",
+   "name": "the street cross of Garton",
+   "kind": "cross",
+   "x": -110,
+   "y": 700,
+   "label": "CANON",
+   "src": [
+    "BFOUR-C21-P017"
+   ]
+  },
+  {
+   "id": "garton_barn",
+   "name": "the great barn of Garton",
+   "kind": "barn",
+   "x": -150,
+   "y": 700,
+   "label": "CANON",
+   "src": [
+    "BFOUR-C21-P021"
+   ],
+   "note": "on the western outskirt"
+  },
+  {
+   "id": "bourton_tavern",
+   "name": "the tavern of the Nicholas",
+   "kind": "tavern",
+   "x": 90,
+   "y": 935,
+   "label": "CANON",
+   "src": [
+    "BONE-C7-P007"
+   ]
+  },
+  {
+   "id": "bourton_vineyard",
+   "name": "the vineyard of Bourton",
+   "kind": "vineyard",
+   "x": 112,
+   "y": 925,
+   "label": "CANON",
+   "src": [
+    "BONE-C7-P009"
+   ]
+  }
+ ],
+ "routes": [
+  {
+   "id": "village_road",
+   "kind": "main",
+   "label": "GAME EXPANSION",
+   "note": "the village's road south over the Ford to the high road",
+   "points": [
+    [
+     46,
+     112
+    ],
+    [
+     40,
+     129
+    ],
+    [
+     30,
+     150
+    ],
+    [
+     -6,
+     176
+    ],
+    [
+     -48,
+     196
+    ],
+    [
+     -80,
+     206
+    ]
+   ]
+  },
+  {
+   "id": "high_road",
+   "kind": "main",
+   "label": "CANON",
+   "src": [
+    "BONE-C3-P004"
+   ],
+   "note": "from Upmeads over the fair bridge to Wulstead",
+   "points": [
+    [
+     -176,
+     90
+    ],
+    [
+     -170,
+     128
+    ],
+    [
+     -150,
+     160
+    ],
+    [
+     -118,
+     186
+    ],
+    [
+     -80,
+     206
+    ],
+    [
+     -72,
+     240
+    ],
+    [
+     -60,
+     272
+    ]
+   ]
+  },
+  {
+   "id": "downs_road",
+   "kind": "main",
+   "label": "CANON",
+   "src": [
+    "BONE-C4-P002",
+    "BONE-C4-P005"
+   ],
+   "note": "Wulstead to Netherton across the plain, then the white road winding up Bear Hill",
+   "points": [
+    [
+     -60,
+     300
+    ],
+    [
+     -48,
+     330
+    ],
+    [
+     -16,
+     352
+    ],
+    [
+     10,
+     372
+    ],
+    [
+     40,
+     388
+    ],
+    [
+     52,
+     412
+    ],
+    [
+     66,
+     430
+    ],
+    [
+     84,
+     446
+    ]
+   ]
+  },
+  {
+   "id": "greenway",
+   "kind": "ancient",
+   "label": "CANON",
+   "src": [
+    "BONE-C4-P006",
+    "BONE-C4-P023",
+    "BFOUR-C22-P008"
+   ],
+   "note": "the green road waving over the Downs from Bear Castle to Higham",
+   "points": [
+    [
+     84,
+     446
+    ],
+    [
+     92,
+     466
+    ],
+    [
+     96,
+     492
+    ],
+    [
+     70,
+     522
+    ],
+    [
+     50,
+     548
+    ],
+    [
+     34,
+     580
+    ],
+    [
+     42,
+     612
+    ],
+    [
+     26,
+     646
+    ],
+    [
+     34,
+     676
+    ],
+    [
+     18,
+     712
+    ],
+    [
+     20,
+     733
+    ]
+   ]
+  },
+  {
+   "id": "garton_road",
+   "kind": "dirt",
+   "label": "CANON-INFERRED",
+   "src": [
+    "BFOUR-C21-P017",
+    "BFOUR-C23-P003"
+   ],
+   "note": "Higham north to Garton under the hill, then across country to Bear Castle (shorter than the Greenway)",
+   "points": [
+    [
+     20,
+     735
+    ],
+    [
+     -30,
+     726
+    ],
+    [
+     -80,
+     716
+    ],
+    [
+     -110,
+     700
+    ],
+    [
+     -112,
+     668
+    ],
+    [
+     -70,
+     630
+    ],
+    [
+     -20,
+     570
+    ],
+    [
+     30,
+     505
+    ],
+    [
+     92,
+     466
+    ]
+   ]
+  },
+  {
+   "id": "south_road",
+   "kind": "main",
+   "label": "CANON",
+   "src": [
+    "BONE-C7-P003",
+    "BONE-C7-P004",
+    "BONE-C8-P002"
+   ],
+   "note": "straight from the south gate through the meadows (crossing Coldlake thrice), then among the vine hills to Bourton, then straight through the waste into the wood",
+   "points": [
+    [
+     20,
+     797
+    ],
+    [
+     20,
+     830
+    ],
+    [
+     20,
+     855
+    ],
+    [
+     20,
+     885
+    ],
+    [
+     34,
+     905
+    ],
+    [
+     60,
+     922
+    ],
+    [
+     90,
+     935
+    ],
+    [
+     100,
+     955
+    ],
+    [
+     100,
+     990
+    ],
+    [
+     96,
+     1040
+    ]
+   ]
+  }
+ ]
+}

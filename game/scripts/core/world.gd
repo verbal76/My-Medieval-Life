@@ -537,6 +537,7 @@ func _new_day() -> void:
 	manor_work.dawn()                  # undone manor jobs are released
 	if map.overworld != null:
 		RoadWear.prune(map.overworld)  # B25R1-011: road cells back to what the generator and the clock give are forgotten
+		map.overworld.crossings_seen.clear()     # B25R1-017: the recorder's once-a-day crossing notes start again
 	RegionTrade.dawn(self)             # REGION-NAV-01 S6: a few tradespeople weigh what they were told of the neighbouring places
 	justice.dawn()                     # GP-CRIME-PURSUIT A1: outstanding crimes past their tier's wanted_days lapse
 	if judgment != null:
@@ -734,6 +735,8 @@ func _walk(n: NPC, s: Dictionary, dt: float) -> bool:
 			n.path_i += 1
 			if outside:
 				RoadWear.foot(map.overworld, Vector2i(goal.floor()), cart)      # B25R1-011: footfall wears the way
+				if recorder != null:
+					WaterNotes.crossed(self, n, World.npc_ref(n.id), Vector2i(goal.floor()))     # B25R1-017: a bridge or ford crossed
 		else:
 			n.pos += d / l * budget
 			n.facing = d
@@ -6342,6 +6345,13 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	if int(d.get("save_version", 0)) == 22:
 		d = migrate_22_to_23(d)                    # MP-PLAYER-FAMILY: save 22 to 23 (above)
 	map = m
+	var ow_gen := int((d.get("overworld", {}) as Dictionary).get("gen", Overworld.GEN_VERSION))
+	if not ow_gen in Overworld.GEN_COMPATIBLE:
+		# B25R1-018 / B25R1-Q5 (owner 2026-11-03: "Don't worry about saved games"): the region was laid out anew in overworld
+		# generation 4 (settlements, roads, the Downs and the waters elsewhere); an older world is refused, never migrated, and
+		# the caller keeps its file (CLAUDE.md section 7)
+		load_error = "this save's world was made before the region was rebuilt (overworld generation %d; this build makes generation %d), so it cannot be loaded; start a new world (the file is kept)" % [ow_gen, Overworld.GEN_VERSION]
+		return
 	seed = int(d.seed)
 	rng.seed = seed + int(d.minutes)
 	if d.has("rng_state"):

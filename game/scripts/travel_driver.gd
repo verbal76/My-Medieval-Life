@@ -55,8 +55,18 @@ func start(m, cell: Vector2i) -> String:
 	var w: World = m.world
 	var r := RegionTravel.choose(w, w.player, cell)
 	if w.recorder != null:                         # B25R1-016: the player's journeys (set or refused, the route's length and road share)
+		var why_code := str(r.get("reason", "unreachable"))
+		if not bool(r.ok) and why_code.begins_with("water"):
+			w.recorder.chronicle("travel_blocked_by_water", w.player, {"destination": "cell:%d,%d" % [cell.x, cell.y], "outcome": "failed",
+				"reason": "no_crossing", "detail": why_code, "x": cell.x, "y": cell.y})       # B25R1-017: refused because of water
+		if bool(r.ok):
+			var xs := WaterNotes.route_crossings(w, r.cells)
+			if int(xs.bridges) + int(xs.fords) > 0:          # B25R1-017: a route choice that crosses water
+				w.recorder.chronicle("route_crossing", w.player, {"destination": "cell:%d,%d" % [cell.x, cell.y], "object": str(xs.first),
+					"needs": {"bridges": int(xs.bridges), "fords": int(xs.fords), "road_cells": int(r.get("road", 0)), "waypoints": (r.cells as PackedVector2Array).size()},
+					"chosen": WaterNotes.chosen(xs), "alternatives": [["bridge", int(xs.bridges) > 0, int(xs.bridges), ""], ["ford", int(xs.fords) > 0, int(xs.fords), ""]]})
 		w.recorder.chronicle("travel_destination_set" if bool(r.ok) else "travel_refused", w.player, {"destination": "cell:%d,%d" % [cell.x, cell.y],
-			"place": RegionTravel.place_name(w, w.player, cell), "outcome": "ok" if bool(r.ok) else "refused", "reason": "" if bool(r.ok) else "unreachable",
+			"place": RegionTravel.place_name(w, w.player, cell), "outcome": "ok" if bool(r.ok) else "refused", "reason": "" if bool(r.ok) else why_code,
 			"needs": {"waypoints": (r.get("cells", PackedVector2Array()) as PackedVector2Array).size(), "road_cells": int(r.get("road", 0)), "direct": bool(r.get("direct", false))},
 			"detail": "" if bool(r.ok) else str(r.get("why", "")).left(160)})
 	if not bool(r.ok):
@@ -168,6 +178,11 @@ func step(m, v: Vector2, delta: float) -> void:
 			return
 	while idx < route.size() and p.pos.distance_to(route[idx] + Vector2(0.5, 0.5)) < REACHED:
 		idx += 1
+	# a waypoint further on reached first (the walk cut a corner the road doubles back round, as where a side road joins
+	# a road and turns back along it): go on from there, or the walk would wait for ever for the one it passed by
+	for q in range(idx + 1, mini(route.size(), idx + AHEAD + 1)):
+		if p.pos.distance_to(route[q] + Vector2(0.5, 0.5)) < REACHED:
+			idx = q + 1
 	if idx >= route.size():
 		var name := RegionTravel.place_name(w, p, RegionTravel.destination(p))
 		_note(m, "travel_arrived")
@@ -189,6 +204,10 @@ func step(m, v: Vector2, delta: float) -> void:
 		if idx == watch_idx and p.pos.distance_to(watch_pos) < 1.0:
 			attempts += 1
 			if attempts >= ATTEMPTS:
+				var here_c := Vector2i(p.pos.floor())
+				if w.recorder != null and w.map.overworld != null and w.map.overworld.nearest_water(here_c, 3) != Overworld.NO_WATER:
+					w.recorder.chronicle("travel_blocked_by_water", p, {"outcome": "failed", "reason": "no_crossing", "detail": "blocked at the water's edge",
+						"x": here_c.x, "y": here_c.y})           # B25R1-017: a walk given up at the water's edge
 				suspend(m, "The way ahead is blocked. Your destination is kept: Resume to try again, or Dismiss it.")
 				return
 			var keep := attempts

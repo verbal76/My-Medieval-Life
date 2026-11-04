@@ -68,16 +68,21 @@ static func main_cells(ow: Overworld) -> Dictionary:
 		ends.append(ow._gate_end(g))
 	for st in ow.sites:
 		ends.append(ow._site_end(str(st.id)))
-	for a in ends.size():
-		for b in range(a + 1, ends.size()):
-			if a < ow.gates.size() and b < ow.gates.size():
-				continue                          # gate to gate goes round the village: not a road between places
+	var ng := ow.gates.size()
+	for b in range(ng, ends.size()):
+		# each pair of places once (B25R1-018): the village's gates are one place, so a cell on the roads from several of its
+		# gates to a settlement counts that pair once; then the busy count is how many pairs of places use a stretch, not how
+		# many gates the village has (with one main road through the region every stretch would otherwise count as busy)
+		for a in b:
+			if a > 0 and a < ng:
+				continue                          # the village's other gates: walked with gate 0 below
 			var seen := {}
-			for c in ow.route_between(ends[a], ends[b], false):
-				var ci := Vector2i(c)
-				if not seen.has(ci):
-					seen[ci] = true
-					cells[ci] = int(cells.get(ci, 0)) + 1
+			for g in (range(ng) if a == 0 else [a]):
+				for c in ow.route_between(ends[g], ends[b], false):
+					var ci := Vector2i(c)
+					if not seen.has(ci):
+						seen[ci] = true
+						cells[ci] = int(cells.get(ci, 0)) + 1
 	ow.set_meta("b25r1_main_roads", cells)
 	return cells
 
@@ -99,8 +104,8 @@ static func kind_of(ow: Overworld, seg: Dictionary) -> String:
 # ------------------------------------------------------------------ the road hierarchy (B25R1-Q1) ---------------
 ## Owner decision B25R1-Q1 (2026-11-03): three road types, from the network's own data, on the same cells (so walking, routes
 ## and saves are unchanged):
-##   stone  improved sections: a main road's approach to the village and to each settlement (within STONE_NEAR tiles of its
-##          rectangle), and its most travelled stretches (at least STONE_HEAVY of the routes between places pass along it); and
+##   stone  improved sections: a main road's approach to the village and to each settlement (within STONE_NEAR tiles of a
+##          way in: a gate or a side entry), and its most travelled stretches (at least STONE_HEAVY of the routes between places pass along it); and
 ##          each settlement's street (the middle row of each lane its doors open onto, lane_cells). The overworld has no rivers,
 ##          so there is no bridge or ford to pave.
 ##   road   the dirt roads between the places: the rest of main_cells.
@@ -115,9 +120,16 @@ static func main_kinds(ow: Overworld) -> Dictionary:
 		return ow.get_meta("b25r1_road_kinds")
 	var out := {}
 	var main := main_cells(ow)
-	var places: Array[Rect2i] = [ow.village.grow(STONE_NEAR)]
+	# B25R1-018: the approach is the road within STONE_NEAR of a way into a place (a village gate, a settlement's gate or side
+	# entry) and the place's own ground, not every road within STONE_NEAR of its rectangle: a road round a settlement
+	# (Overworld._site_ring) is a dirt road by it, not the paved way in
+	var places: Array[Rect2i] = [ow.village]
+	for g in ow.gates:
+		places.append(Rect2i(Vector2i(g.out), Vector2i.ONE).grow(STONE_NEAR))
 	for st in ow.sites:
-		places.append((st.rect as Rect2i).grow(STONE_NEAR))
+		places.append(st.rect)
+		for e: Vector2i in ow.site_entries(str(st.id)):
+			places.append(Rect2i(e, Vector2i.ONE).grow(STONE_NEAR))
 	for c: Vector2i in main:
 		var stone := int(main[c]) >= STONE_HEAVY
 		if not stone:
@@ -140,6 +152,12 @@ static func lane_cells(ow: Overworld) -> Dictionary:
 	var lay: Dictionary = data.site
 	var bh := int(ow.stamps.house.h)
 	for st in ow.sites:
+		if st.has("streets"):                       # B25R1-018: the site's own streets (Overworld._site_plan)
+			for cells in st.streets:
+				for c: Vector2i in cells:
+					if not ow.site_building_at(c):
+						out[c] = true
+			continue
 		var r: Rect2i = st.rect
 		var rows := (r.size.y - 2 * int(lay.margin)) / (bh + int(lay.lane))
 		for k in rows:

@@ -17,6 +17,7 @@ ffmpeg is a developer tool and is never shipped. A source that is missing leaves
 provenance) as they are.
 
     python3 tools/game_audio.py [--download]      # also run by tools/import_game_assets.py
+    python3 tools/game_audio.py --only=ID,ID     # just these effects (the rest kept as they are)
 """
 import hashlib
 import json
@@ -39,7 +40,9 @@ SFX_PACKS = {                                   # id -> (zip in private-assets/,
     "campfire": ("cozy-rpg-sfx-ambience-1.zip", "cozy-rpg-sfx/ambience/ambience-campfire.wav"),
 }
 MINI_SFX_ZIP = "Minifantasy_Forgotten_Plains_SFX.zip"        # Minifantasy: Forgotten Plains SFX by Leohpaz (members are at the zip's root)
-MINI_LOOPS = {"birds": "13_Birds_loop", "crickets": "11_Crickets_2_loop", "cicada": "12_Cicada_loop", "wind": "14_Wind_loop"}
+MINI_LOOPS = {"birds": "13_Birds_loop", "crickets": "11_Crickets_2_loop", "cicada": "12_Cicada_loop", "wind": "14_Wind_loop",
+              "water_stream": "09_Water_1_loop", "water_river": "09_Water_2_loop",     # B25R1-017: near streams and rivers
+              "waterfall": "10_Waterfall_1"}                                          # and a waterfall (looped by the game)
 MINI_VARIANTS = {"bush_rustling": ("01_bush_rustling", 3), "tree_rustling": ("02_tree_rustling", 4), "fruit_drop": ("03_fruit_drop", 2),
                  "step_grass": ("04_step_grass", 3), "step_dirt": ("05_step_dirt", 3), "step_stone": ("06_step_stone", 3),
                  "hit_on_wood": ("15_Hit_on_wood", 2), "hit_on_brick": ("16_Hit_on_brick", 2)}
@@ -132,9 +135,11 @@ def sfx_sources():
     return out
 
 
-def import_sfx(prov, record):
+def import_sfx(prov, record, only=None):
     n = 0
     for sid, (zip_name, member) in sorted(sfx_sources().items()):
+        if only is not None and sid not in only:
+            continue
         path = private_dir() / zip_name
         if not path.is_file():
             print("%s not found: the %s sound is left as it is" % (zip_name, sid))
@@ -194,7 +199,11 @@ def main():
                      "transform": how, "sha256": _sha(dest)})
 
     before = len(prov)
-    import_into([], record, "--download" in sys.argv)
+    only = next((a.split("=", 1)[1].split(",") for a in sys.argv if a.startswith("--only=")), None)
+    if only is not None:                       # B25R1-017: just these sound effects (the rest keep their files and entries)
+        print("encoded %d audio files" % import_sfx([], record, set(only)))
+    else:
+        import_into([], record, "--download" in sys.argv)
     done = {e["file"] for e in prov[before:]}
     prov.extend(e for e in keep if e["file"] not in done)
     doc["files"] = prov

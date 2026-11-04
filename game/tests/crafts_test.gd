@@ -153,7 +153,7 @@ func test_old_overworld_save() -> void:
 	var o: Overworld = w.map.overworld
 	o.note_rock(Vector2i(-50, -50), 0)
 	var d := w.to_dict()
-	check(int(d.overworld.gen) == Overworld.GEN_VERSION and Overworld.GEN_VERSION == 3, "the overworld generator is version 3 (REGION-NAV-01 S1: the settlements' sites)")
+	check(int(d.overworld.gen) == Overworld.GEN_VERSION and Overworld.GEN_VERSION == 4, "the overworld generator is version 4 (REGION-NAV-01 S1: the settlements' sites; B25R1-Q3: streams)")
 	d.overworld.gen = 1
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))

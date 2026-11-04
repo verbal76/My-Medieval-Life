@@ -18237,6 +18237,34 @@
    "sha256": "437b967e337d128978dc7554607cf8b54d3a5f9e1eb16b6df2e3250e26825301"
   },
   {
+   "file": "assets/tiles/road_tiles.png",
+   "source": "PUNY-WORLD-PAID_v1.zip + PUNY_WORLD_v1.zip",
+   "member": "PUNY-WORLD-PAID_v1/Tiled/punyworld-tiles.png tiles 10150, 10151, 10370, 10371; PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/punyworld-overworld-tiles.tsx dirt pathways",
+   "transform": "B25R1 road tiles: 16 dirt path tiles (overworld_tiles.json dirt_path) x 4 rows with their dirt replaced by the paid flagstone ground and the rim darkened to 0.74 (stone road), x 2 rows narrowed by one ring with 22% grass through the dirt (trail); grown-over dirt road and trail rows (30% grass tufts); damaged and broken stone rows (12% and 34% of the paving gone to dirt and grass holes)",
+   "sha256": "a450d9b12b22e8f9a06a9cd464ada4b536eef13a0235cdcfa3121b87b5dba4f4"
+  },
+  {
+   "file": "assets/sfx/water_river.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "09_Water_2_loop.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "0985b97c91011e9cb5b972656f3e17b0a65240718180284c7843190e65c434f8"
+  },
+  {
+   "file": "assets/sfx/water_stream.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "09_Water_1_loop.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "bc373612fa0089950212aa6a796575b28cf6d0551069e0b089d7b3e772481706"
+  },
+  {
+   "file": "assets/sfx/waterfall.ogg",
+   "source": "Minifantasy_Forgotten_Plains_SFX.zip",
+   "member": "10_Waterfall_1.wav",
+   "transform": "encoded to Ogg Vorbis with ffmpeg/libvorbis -q:a 4; the game loops it (a seamless loop)",
+   "sha256": "207738d681529dcd6478db1210193bd28296f3b34dc3f185f1b9b63d6db1e5a2"
+  },
+  {
    "file": "assets/music/sunrise_over_the_village.ogg",
    "source": "https://github.com/verbal76/My-Medieval-Life/releases/download/Songmed/Sunrise.over.the.Village.wav",
    "member": "Sunrise.over.the.Village.wav",
@@ -26448,11 +26476,11 @@
    "sha256": "63069d9e3772ff7e99487037a998a7e11d55306461f083ccebd5314062ccec54"
   },
   {
-   "file": "assets/tiles/road_tiles.png",
-   "source": "PUNY-WORLD-PAID_v1.zip + PUNY_WORLD_v1.zip",
-   "member": "PUNY-WORLD-PAID_v1/Tiled/punyworld-tiles.png tiles 10150, 10151, 10370, 10371; PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/punyworld-overworld-tiles.tsx dirt pathways",
-   "transform": "B25R1 road tiles: 16 dirt path tiles (overworld_tiles.json dirt_path) x 4 rows with their dirt replaced by the paid flagstone ground and the rim darkened to 0.74 (stone road), x 2 rows narrowed by one ring with 22% grass through the dirt (trail); grown-over dirt road and trail rows (30% grass tufts); damaged and broken stone rows (12% and 34% of the paving gone to dirt and grass holes)",
-   "sha256": "a450d9b12b22e8f9a06a9cd464ada4b536eef13a0235cdcfa3121b87b5dba4f4"
+   "file": "assets/tiles/water_tiles.png",
+   "source": "PUNY_WORLD_v1.zip",
+   "member": "PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/punyworld-overworld-tiles.tsx grass/river corner tiles and their animations, tiles 598-601 (falls), 703 (stones), 750, 876, 747, 775, 723, 777, 875, 877 (the wooden walk and the castle wall-walk: bridges)",
+   "transform": "B25R1-Q3/B25R1-017/EA-01 water tiles: 8 animation frames x 331 rows, 1:1 (rows look*160 + flow*16 + corners: the grass/river corner tiles, flow 0 their own animation held two frames each, 1-8 three long soft ripples (the set's lighter water colours) scrolled 2 px a frame downstream, 9 drifting foam; look 1 other ripples and a tuft of the set's bank grass on corner steps; then the fall (its splash cut), the fall's foot (cascade, splash, foam), a ford (tile 703's stones twice in the full water) and the bridges, the tileset's walks as drawn)",
+   "sha256": "3053102272fbc30d89f7b8a495074e519dea628d22d0194d66480e8dfb9353f2"
   }
  ]
 }

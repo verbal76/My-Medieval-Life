@@ -25,6 +25,12 @@ static func _open(w: World, c: Vector2i) -> bool:
 	return not w.map.is_solid_world(c)
 
 
+## B25R1-017: why no way was found, for the flight recorder: "water_no_crossing" when water lies round the destination,
+## else "unreachable".
+static func _no_way(ow: Overworld, dest: Vector2i) -> String:
+	return "water_no_crossing" if ow.nearest_water(dest, 6) != Overworld.NO_WATER else "unreachable"
+
+
 ## The open cell nearest `c` within SNAP (itself when open), or NONE.
 static func snap(w: World, c: Vector2i) -> Vector2i:
 	if _open(w, c):
@@ -102,16 +108,23 @@ static func _attach(w: World, p: Vector2i) -> Dictionary:
 		var end: Dictionary = e[1]
 		if end.is_empty():
 			continue
-		var base: Dictionary = ow._links[int(end.base)]
-		var base_cells := ow._segment(Vector3i(int(end.base), 0, -1), base.a, base.b, int(base.key))
+		var base_of: Dictionary = end.get("base_of", {})
 		for nd: Vector2i in end.nodes:
+			# B25R1-018: a route joined from another side of a site leaves by that side's base; a side's own far point (link -1)
+			# is a route node itself, reached by the base alone
+			var bi := int(base_of.get(nd, end.base))
+			var base: Dictionary = ow._links[bi]
+			var base_cells := ow._segment(Vector3i(bi, 0, -1), base.a, base.b, int(base.key))
 			var li: int = end.nodes[nd]
-			var l: Dictionary = ow._links[li]
-			var lc := ow._segment(Vector3i(li, 0, -1), l.a, l.b, int(l.key))
 			var cells := PackedVector2Array([Vector2(p)])
 			_add(cells, base_cells, 0, base_cells.size() / 2 - 1)
-			_add(cells, lc, 0, lc.size() / 2 - 1)
-			var cost := absi(p.x - Vector2i(e[0]).x) + absi(p.y - Vector2i(e[0]).y) + base_cells.size() / 2 + lc.size() / 2
+			var n := 0
+			if li >= 0:
+				var l: Dictionary = ow._links[li]
+				var lc := ow._segment(Vector3i(li, 0, -1), l.a, l.b, int(l.key))
+				_add(cells, lc, 0, lc.size() / 2 - 1)
+				n = lc.size() / 2
+			var cost := absi(p.x - Vector2i(base.a).x) + absi(p.y - Vector2i(base.a).y) + base_cells.size() / 2 + n
 			_keep(out, nd, cost, cells)
 	if not ends.is_empty():
 		return out
@@ -194,7 +207,8 @@ static func _network(ow: Overworld, starts: Dictionary, goals: Dictionary, lo: V
 				goal = nd
 		for e in ow._node_edges(nd):
 			var nb: Vector2i = e[0]
-			if nb.x < lo.x or nb.y < lo.y or nb.x > hi.x or nb.y > hi.y or ow.closed.has(nb):
+			# B25R1-018: the area bounds the grid; a main route's nodes (VNODE ids) are searched wherever they lie
+			if (nb.x < Overworld.VNODE and (nb.x < lo.x or nb.y < lo.y or nb.x > hi.x or nb.y > hi.y)) or ow.closed.has(nb):
 				continue
 			var cost := float(top[0]) + float(e[1])
 			if cost < float(dist.get(nb, INF)):
@@ -211,7 +225,15 @@ static func _network(ow: Overworld, starts: Dictionary, goals: Dictionary, lo: V
 	var cells := PackedVector2Array()
 	for c in starts[at].cells:
 		cells.append(c)
-	for seg in chain:                                         # [i, j, k, forward]
+	for seg in chain:                                         # [i, j, k, forward], or ["L", link, forward] (a main route's link)
+		if seg[0] is String:
+			var l: Dictionary = ow._links[int(seg[1])]
+			var lc := ow._segment(Vector3i(int(seg[1]), 0, -1), l.a, l.b, int(l.key))
+			if bool(seg[2]):
+				_add(cells, lc, 0, lc.size() / 2 - 1)
+			else:
+				_add(cells, lc, lc.size() / 2 - 1, 0)
+			continue
 		var i := int(seg[0])
 		var j := int(seg[1])
 		var k := int(seg[2])
@@ -240,11 +262,13 @@ static func plan(w: World, from: Vector2i, to: Vector2i) -> Dictionary:
 		return {"ok": false, "why": "Come up to the surface first."}
 	var dest := snap(w, to)
 	if dest == RegionRoads.NONE:
-		return {"ok": false, "why": "You cannot stand there: pick open ground."}
+		if ow.is_water(to):                              # B25R1-017: the middle of a river: no bank within reach
+			return {"ok": false, "why": "That is open water: pick the bank, a bridge or a ford.", "reason": "water_destination"}
+		return {"ok": false, "why": "You cannot stand there: pick open ground.", "reason": "solid"}
 	if dest == from:
 		return {"ok": false, "why": "You are already there."}
 	if not ow.village.has_point(dest) and ow.site_at(dest).is_empty() and enclosed(w, dest):
-		return {"ok": false, "why": "There is no way there on foot that you can find."}
+		return {"ok": false, "why": "There is no way there on foot that you can find.", "reason": _no_way(ow, dest)}
 	var direct := {}
 	var span := Vector2i(absi(dest.x - from.x), absi(dest.y - from.y))
 	var both_village := ow.village.has_point(from) and ow.village.has_point(dest)
@@ -285,7 +309,7 @@ static func plan(w: World, from: Vector2i, to: Vector2i) -> Dictionary:
 			break
 		goals.erase(r.goal)
 	if by_road.is_empty() and direct.is_empty():
-		return {"ok": false, "why": "There is no way there on foot that you can find."}
+		return {"ok": false, "why": "There is no way there on foot that you can find.", "reason": _no_way(ow, dest)}
 	if direct.is_empty() or (not by_road.is_empty() and float(by_road.cost) < float(direct.cost)):
 		var main := RegionRoads.main_cells(ow)
 		return {"ok": true, "dest": dest, "cells": by_road.cells, "road": _on_road(w, by_road.cells), "direct": false,
