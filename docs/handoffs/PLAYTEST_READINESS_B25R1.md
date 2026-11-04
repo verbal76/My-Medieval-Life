@@ -21,10 +21,18 @@ Branch `wip/b25r1`. Code SHA under test: **2677ea7** (this report is committed o
 |---|---|---|---|
 | 41872740140 | Tests, 8 shards, on 2677ea7 | failure: 4 suites (below), down from 12 on f60772f | 16:57-17:57 (60 min) |
 | 41865858149 | Tests on 6748852 | cancelled by the workflow's concurrency group (superseded) | - |
-| 41872734897 | gate (long-sims, gate, seed 1, 10 days) on 2677ea7 | still running at 18:56 (started 16:57); the previous gate took 73 min | - |
+| 41872734897 | gate (long-sims, gate, seed 1, 10 days) on 2677ea7 | cancelled by the job's own timeout-minutes 120 during "Run the simulation gate"; no artifact, so there are no findings | 16:57-19:02 (125 min; the f60772f gate took 73 min) |
 
-Because the gate result is not in, the baseline was not re-recorded and the 365-day campaign was not dispatched
-(SIM-GATE-01: only after a gate whose blocking findings are explained baseline differences, with det_s1 identical).
+The gate gave no result, so the baseline was not re-recorded and the 365-day campaign was not dispatched. SIM-GATE-01 allows
+both only after a gate whose blocking findings are explained baseline differences, with det_s1 identical.
+
+The timeout is category E, but a slower simulation would be category A. Candidates since f60772f:
+- the denser road network: rings in 40-tile stretches, 15703 main road cells against 9368;
+- the homesteaders' extra seller errands.
+
+The next step is to measure one scenario's wall time on Actions before any re-run: for example a 10-day long-sims run with
+`profile` against f60772f's, or the gate with a raised timeout on a pointer branch such as wip/b25r1-cand-ci. Re-running the
+same gate unchanged would likely time out again.
 
 ## Remaining failures
 
@@ -34,6 +42,7 @@ Because the gate result is not in, the baseline was not re-recorded and the 365-
 | wilds_test: "F: the raider walked the road to the village" | A | The band's camp now lies so near the village (about (11,140)) that the raider reaches the village in daylight within the first hour and turns home at once, so the check never sees him there. A trial fix (lie low by any edge of the village) did not change it and was reverted. Next: why _lay_raid's daytime cut does not hold the first walk. |
 | run_tests: "a save keeps the new household, its house and its members" | B | Open since 65f2665 (overnight report), not traced. |
 | net_fauna_test: "the guest's copy holds the host's animals (67)", "animals beyond the snapshots' reach ... (20 off)" (locally also the follow, wander and health checks) | A, multiplayer x presence | The guest does not simulate fauna (no World.update on a guest), so the guest's copy follows the host's snapshots. The id set and far positions differ after presence's tick-by-tick fauna. CI log also shows `Invalid access to property 'present' on Nil`. Not fixed. |
+| gate: timed out at 120 min (73 min on f60772f) | E, or A if the simulation is slower | See Test runs. |
 | regional_food_test: SCRIPT ERROR "key 'stock' on Dictionary" (line 211); the suite did not fail | A, test or data | Seen in shard 7's log. Not traced. |
 
 ## Playtest checks (from the suites; no device check)
