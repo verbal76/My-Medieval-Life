@@ -116,7 +116,8 @@ var _mark_zones: Array = []              # [Rect2i]: round them the turf is kept
 var wall_kit := {}                       # B25R1-018: the battlemented wall kit (region_stamps.json "wall"), composed into walls by _wall_stamp
 var _near_sites: Array = []
 ## B25R1-010 (Homesteads): the houses and frames standing on homestead claims, {id, stamp ("house", or "" for a frame), rect,
-## door, frame, tile}: collided here (home_building_at, as a settlement's building) and drawn by OverworldView. Set by
+## door, frame, tile} or, for a claim's pen and well being dug, {id, stamp "", rect, door, layers: [{cell: tile}], solid: {cell: true}}
+## (Wilds.overworld_entries): collided here (home_building_at, as a settlement's building) and drawn by OverworldView. Set by
 ## Homesteads (from its saved claims, on load too); not saved here. homes_version counts the changes (the view redraws).
 var homes: Array = []
 var homes_version := 0
@@ -671,7 +672,13 @@ func landmark_places() -> Array:
 func home_building_at(c: Vector2i) -> bool:
 	for hm in homes:
 		var r: Rect2i = hm.rect
-		if str(hm.stamp) == "" or not r.has_point(c):
+		if not r.has_point(c):
+			continue
+		if hm.has("solid"):
+			if (hm.solid as Dictionary).has(c):
+				return true                            # B25R1-014: a claim pen's fence (Wilds.overworld_entries)
+			continue
+		if str(hm.stamp) == "":
 			continue
 		var ry := c.y - r.position.y
 		if ry >= r.size.y - 1 or c == Vector2i(hm.door) - Vector2i(0, 1):

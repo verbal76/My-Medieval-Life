@@ -167,6 +167,29 @@ func _init() -> void:
 	var bought := wl.buy_animal(leader, bc, "f")
 	check(bought and w.fauna.count(str(pen.id), "chicken") == 1, "D: a hen bought from the manor's keeper for the claim's pen")
 	check((keeper.coins if keeper != null else w.treasury) > k0 and _coins(w) == c0, "D: the keeper paid, coins conserved")
+	var led_a: Animal = null
+	for a: Animal in w.fauna.animals:
+		if wl.led.has(str(a.id)):
+			led_a = a
+	var step := Wilds.lead_step()
+	check(led_a != null and wl.leading(led_a, 0.0) and led_a.pos.distance_to(leader.pos) < 1.0, "D: the hen bought is led at its keeper's heel")
+	var heel := led_a.pos
+	leader.pos += Vector2(2, 0)
+	wl.leading(led_a, step * 0.4)
+	check(led_a.pos == heel, "D: the lead moves on the world's tick, not every frame (%.2f s of %.2f)" % [step * 0.4, step])
+	wl.leading(led_a, step * 0.6)
+	check(led_a.pos != heel and led_a.pos.distance_to(leader.pos) < 1.0, "D: a full tick later it is at the heel again")
+	var sp := AnimalSprite.new()
+	var g0 := sp.glide(Vector2(0, 0), 0.016)
+	var g1 := sp.glide(Vector2(0, 0), step)
+	var g2 := sp.glide(Vector2(1, 0), 0.016)
+	var g3 := sp.glide(Vector2(1, 0), step * 0.5)
+	check(g0 == Vector2.ZERO and g1 == Vector2.ZERO and g2.x < 0.1 and absf(g3.x - 0.5) < 0.1, "D: drawn between the steps (%s, %s)" % [g2, g3])
+	sp.free()
+	var ent: Array = wl.overworld_entries(bc).filter(func(e) -> bool: return str(e.id).ends_with(str(pw.id)))
+	var gate := Vector2i(pr.position.x + pr.size.x / 2, pr.end.y - 1)
+	check(ent.size() == 1 and (ent[0].layers[0] as Dictionary).size() == Farming.fence_ring(pr).size() and w.map.overworld.is_solid(pr.position)
+		and not w.map.overworld.is_solid(gate) and int(ent[0].layers[0][gate]) == Wilds.FENCE_GATE, "D: the pen is fenced in the overworld, solid but for its gate")
 	wl.led_home(leader)
 	var hen: Animal = null
 	for a: Animal in w.fauna.animals:
@@ -175,6 +198,19 @@ func _init() -> void:
 	check(hen != null and w.fauna.in_area(str(pen.id), Vector2i(hen.pos.floor())), "D: led home into the pen")
 	check(w.brain.act(leader, "slaughter", {"pen": pen.id, "animal": hen.id, "why": "test"}) and w.fauna.count(str(pen.id), "chicken") == 0 and leader.inv.has("meat"),
 		"D: slaughtered through the village's act: meat in hand")
+	# ---- a settlement's own well (count = false): the village's ledger untouched, built at once or dug later
+	var used0 := {"stone": float(w.stats.get("used_building_stone", 0.0)), "log": float(w.stats.get("used_building_log", 0.0))}
+	var hw := wl.add_well("site:test_hamlet", leader.cell() + Vector2i(30, 30), true, {"stone": 4, "log": 2}, false)
+	var hw2 := wl.add_well("site:test_hamlet", leader.cell() + Vector2i(32, 30), false, {"stone": 4, "log": 2}, false)
+	hw2.need = {}
+	wl.dig_well(str(hw2.id), 9999.0)
+	check(bool(hw.done) and bool(hw2.done) and float(w.stats.get("used_building_stone", 0.0)) == used0.stone and float(w.stats.get("used_building_log", 0.0)) == used0.log
+		and not wl.loose_well_goods().has("stone"), "a settlement's own wells (count false) leave the village's ledger untouched")
+	var hw3 := wl.add_well("site:test_hamlet", leader.cell() + Vector2i(34, 30), true, {"stone": 4})
+	check(float(w.stats.get("used_building_stone", 0.0)) == used0.stone + 4.0, "a counted well still books its stone as used (%s)" % w.stats.get("used_building_stone", 0.0))
+	for k in [hw.id, hw2.id, hw3.id]:
+		wl.wells.erase(str(k))
+	w.stats["used_building_stone"] = used0.stone
 	# ---- E: crafting at the camp's smithy
 	var sr := wl._workshop_rect(bc, "workshop_smithy")
 	var smithy := wl._new_work(bc, "workshop_smithy", sr if sr != Rect2i() else Rect2i(Homesteads.house_of(bc).position + Vector2i(11, 0), Vector2i(9, 10)))
@@ -252,6 +288,30 @@ func _init() -> void:
 	var a0 := int(wl.counts.get("country_adopted", 0))
 	wl.country_hour()
 	check(int(wl.counts.get("country_adopted", 0)) - a0 >= amb.size(), "H: the countryside's animals by the camp (%d) are real with no player near" % amb.size())
+	# the animal ledger (economy_sim): every adopted animal counted in by species, every one let go counted out
+	var tally := func() -> Dictionary:
+		var out := {}
+		for a: Animal in w.fauna.animals:
+			if a.alive:
+				out[a.species] = int(out.get(a.species, 0)) + 1
+		return out
+	var st1 := w.stats.duplicate()
+	var t1: Dictionary = tally.call()
+	var deer := w.fauna.adopt_country("deer", "f", str(GameData.b("animals").deer.skins[0]), center)
+	w.country_taken["ledger_test"] = deer.id
+	var keep_c := w.country_taken.duplicate()
+	for key in keep_c:
+		var ra: Animal = w.fauna.by_id(int(keep_c[key]))
+		if ra != null:
+			ra.pos += Vector2(500, 500)                   # far from every claim and the player: let go at the next hour
+	wl.country_hour()
+	var t2: Dictionary = tally.call()
+	var ok_ledger := not keep_c.is_empty()
+	for kind in t1.keys() + t2.keys():
+		var flow := int(w.stats.get("country_in_" + kind, 0)) - int(st1.get("country_in_" + kind, 0)) - (int(w.stats.get("country_out_" + kind, 0)) - int(st1.get("country_out_" + kind, 0)))
+		if int(t2.get(kind, 0)) - int(t1.get(kind, 0)) != flow:
+			ok_ledger = false
+	check(ok_ledger and w.stats.keys().any(func(k): return str(k).begins_with("country_out_")), "H: animals adopted from the countryside and let go again are counted in and out by species (the animal ledger balances)")
 	# ---- I: allegiance
 	var lawful := {}
 	for c in hs.claims:

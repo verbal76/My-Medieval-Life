@@ -2364,7 +2364,7 @@ func _sync_animals() -> void:
 			animal_sprites[a.id] = s
 		s.visible = a.pos.distance_to(cam) < 30.0
 		if s.visible:
-			s.position = a.pos * T
+			s.position = s.glide(a.pos, get_process_delta_time()) * T     # between the steps of a tick-stepped animal (Wilds.leading)
 			s.show_state(a, world.minutes, get_process_delta_time())
 	for id in animal_sprites.keys():
 		if not seen.has(id):
@@ -3075,7 +3075,8 @@ func _find_target() -> void:
 		var pen: Dictionary = world.fauna.pens[id]
 		var fa := Vector2(int(pen.feed_at[0]) + 0.5, int(pen.feed_at[1]) + 0.5)
 		if fa.distance_to(p.pos) < 1.3:
-			here.append({"kind": "pen", "pen": pen, "label": "%s pen: %d hungry, trough %d wheat (they eat about %d a day). Feed them" % [GameData.b("animals")[pen.kind].name, world.fauna.hungry(pen), int(pen.trough), world.fauna.daily_need(pen)]})
+			here.append({"kind": "pen", "pen": pen, "label": ("%s pen: empty, trough %d wheat. Feed them" % [GameData.b("animals")[pen.kind].name, int(pen.trough)]) if world.fauna.daily_need(pen) <= 0 else
+					"%s pen: %d hungry, trough %d wheat (they eat about %d a day). Feed them" % [GameData.b("animals")[pen.kind].name, world.fauna.hungry(pen), int(pen.trough), world.fauna.daily_need(pen)]})
 			if pen.get("player", false):                          # PL2-015: eggs, milk and wool wait in your own pen
 				var waiting: Dictionary = world.farm.products_in(pen)
 				if not waiting.is_empty():

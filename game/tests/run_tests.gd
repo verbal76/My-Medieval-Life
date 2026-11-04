@@ -1384,6 +1384,8 @@ func test_interiors() -> void:
 		check(w.interiors.has(id) and not (w.interiors[id].floor as Array).is_empty(), "%s has an interior with a floor" % id)
 	var short := []
 	for hh in w.households:
+		if hh.has("homestead"):
+			continue                          # B25R1-Q2 (a): the band's household lives at its camp in the wild, its house a frame still to build
 		var beds := {}
 		for mid in hh.members:
 			var s := w.home_spot(w.npc(int(mid)), "bed")
@@ -2382,6 +2384,8 @@ func test_property() -> void:
 	check(things.all(func(t): return not w.owner_of(t).begins_with("npc:")), "people own land and buildings only as households")
 	var houses_ok := true
 	for hh in w.households:
+		if hh.has("homestead"):
+			continue                          # B25R1-Q2 (a): the band's household lives on its claim in the wild, not in a village building
 		var b: Dictionary = w.buildings[hh.home]
 		var ref := World.hh_ref(int(hh.id))
 		houses_ok = houses_ok and (w.owner_of(b) == ref if b.type in ["house", "hut"] else (w.owner_of(b) == World.MANOR and w.tenant_of(b) == ref))

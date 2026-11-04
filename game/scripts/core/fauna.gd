@@ -69,7 +69,15 @@ func adopt_country(species: String, sex: String, skin: String, pos: Vector2) -> 
 	a.wait = 1.0
 	animals.append(a)
 	w.stat("country_adopted")
+	w.stat("country_in_" + species)        # the animal ledger's inflow (economy_sim: start + born + country_in - country_out - ...)
 	return a
+
+
+## B25R1-014: a countryside animal no claim is near any more goes back to being drawn only (Wilds.country_hour): out of the
+## animals, counted out of the animal ledger as adopt_country counted it in.
+func release_country(a: Animal) -> void:
+	animals.erase(a)
+	w.stat("country_out_" + a.species)
 
 
 # ---------------------------------------------------------------- areas ----------------------
@@ -719,7 +727,7 @@ func update(dt: float) -> void:
 			a.anger_left -= dt
 			if a.anger_left <= 0.0 or _foe_pos(a.anger) == Vector2.INF:
 				a.anger = ""
-		if w.wilds != null and w.wilds.leading(a):
+		if w.wilds != null and w.wilds.leading(a, dt):
 			continue                                    # B25R1-014: bought, being led home to a claim's pen
 		if w.nearest_player_distance(a.pos) > w.detail_radius and not (w.wilds != null and w.wilds.active_near(a)):
 			a.moving = false

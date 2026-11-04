@@ -209,20 +209,25 @@ var next_well := 1
 
 
 ## Register a well of `owner` at `cell`. built=false: a site still needing `cost` (default the balance's well_cost) and its
-## labour; built=true: standing now, `cost` already taken from the caller's stock (counted as used). Returns the record.
-func add_well(owner: String, cell: Vector2i, built := false, cost := {}) -> Dictionary:
+## labour; built=true: standing now, `cost` already taken from the caller's stock (counted as used in the village's ledger,
+## used_building_<item>, unless `count` is false: a settlement building its own well from its own store books that use in its
+## own flows, so the village's ledger is left alone). Returns the record.
+func add_well(owner: String, cell: Vector2i, built := false, cost := {}, count := true) -> Dictionary:
 	var c2: Dictionary = cost if not cost.is_empty() else _cost("well")
 	var ints := {}
 	for id in c2:
 		ints[str(id)] = int(c2[id])
 	var wl := {"id": "wl%d" % next_well, "kind": "well", "owner": owner, "cell": [cell.x, cell.y], "rect": [cell.x, cell.y, 1, 1], "cost": ints,
 		"need": {} if built else ints.duplicate(), "labour": 0.0 if built else _labour("well"), "done": built, "day": w.day()}
+	if not count:
+		wl.uncounted = true                             # its cost is in its settlement's own flows, never the village's ledger
 	next_well += 1
 	wells[str(wl.id)] = wl
 	if built:
 		wl.built_day = w.day()
-		for id in ints:
-			w.stat("used_building_" + str(id), float(ints[id]))
+		if count:
+			for id in ints:
+				w.stat("used_building_" + str(id), float(ints[id]))
 		_rec("well_built", {"owner": owner, "well": str(wl.id), "cell": [cell.x, cell.y], "cost": ints.duplicate()})
 	else:
 		_rec("settlement_construction", {"owner": owner, "action": "begun", "what": "well", "well": str(wl.id), "need": ints.duplicate()})
@@ -282,8 +287,9 @@ func dig_well(id: String, mins: float, n: NPC = null) -> bool:
 		if float(wl.labour) <= 0.0:
 			wl.done = true
 			wl.built_day = w.day()
-			for k in wl.cost:
-				w.stat("used_building_" + str(k), float(wl.cost[k]))
+			if not bool(wl.get("uncounted", false)):
+				for k in wl.cost:
+					w.stat("used_building_" + str(k), float(wl.cost[k]))
 			_rec("well_built", {"owner": str(wl.owner), "well": id, "cell": wl.cell, "by": n.id if n != null else -1})
 	return bool(wl.done)
 
@@ -293,8 +299,8 @@ func loose_well_goods() -> Dictionary:
 	var out := {}
 	for id in _well_ids():
 		var wl: Dictionary = wells[id]
-		if bool(wl.done) or str(wl.owner).begins_with("claim:"):
-			continue
+		if bool(wl.done) or str(wl.owner).begins_with("claim:") or bool(wl.get("uncounted", false)):
+			continue                                    # (an uncounted well's materials are its settlement's own)
 		for k in wl.cost:
 			var got := int(wl.cost[k]) - int((wl.need as Dictionary).get(k, 0))
 			if got > 0:
@@ -506,6 +512,8 @@ func _deliver_into(wk: Dictionary, inv: Inventory, by: String, place: String) ->
 				need.erase(id)
 	if given > 0:
 		_rec("settlement_construction", {"claim": place.trim_prefix("claim:"), "action": "materials", "what": str(wk.kind), "by": by, "loads": given, "need": need.duplicate()})
+		if need.is_empty() and str(wk.kind) == "well" and w.homesteads != null:
+			w.homesteads._sync_overworld()             # the stone heap is laid: the well's ring is drawn (overworld_entries)
 	return given > 0
 
 
@@ -535,7 +543,8 @@ func labour(c: Dictionary, wk: Dictionary, mins: float, n: NPC) -> void:
 		c.stage = "community"
 		_rec("settlement_construction", {"claim": str(c.id), "action": "established", "what": "community", "works": built})
 	_hs()._sync_overworld()
-	w.note("%s: the %s on the claim is finished." % [_hs()._owner_name(c), kind.trim_prefix("workshop_").replace("_", " ")])
+	var what := kind.trim_prefix("workshop_").replace("_", " ").replace("carpentry", "carpentry workshop")
+	w.note(("Your %s is finished." % what) if World.is_player_ref(str(c.owner)) else "%s: the %s on the claim is finished." % [_hs()._owner_name(c), what])
 
 
 ## Materials lying on unfinished works (item -> count).
@@ -564,24 +573,65 @@ func strip_works(c: Dictionary, pantry: Inventory) -> Dictionary:
 	return back
 
 
-## The overworld's drawing of the works (Homesteads._sync_overworld): a workshop by its stamp, a frame tile for an unfinished
-## work, the village well's two tiles for a well.
+## The overworld's drawing of the works (Homesteads._sync_overworld): a workshop by its stamp; a workshop being built by the
+## frame tile; a pen by its fence (Larchrow's: _pen_entry; the gate in the bottom row; solid but for the gate) or, while it
+## is being built, by its four corner posts; a well by Larchrow's one-tile stone well (well_tile) or, while it is being
+## dug, by the dig (a patch of turned earth, a heap of stone beside it while materials are still owed) and then the stone ring
+## of its shaft without its roof once the digging has begun. Entries with `layers` ([{cell: tile}], drawn in order) and
+## `solid` ({cell: true}) are drawn and collided cell by cell (Overworld.home_building_at, OverworldView._draw_homes).
 func overworld_entries(c: Dictionary) -> Array:
 	var out := []
+	var cf := cfg()
 	for wk in _all_works(c):
 		var r := Rect2i(int(wk.rect[0]), int(wk.rect[1]), int(wk.rect[2]), int(wk.rect[3]))
 		var kind := str(wk.kind)
-		if not bool(wk.done):
-			out.append({"id": "%s_%s" % [c.id, wk.id], "stamp": "", "rect": r, "door": r.position, "frame": Vector2i(r.position.x + r.size.x / 2, r.end.y - 1),
+		var id := "%s_%s" % [c.id, wk.id]
+		if kind == "pen":
+			out.append(_pen_entry(id, r, bool(wk.done)))
+		elif kind == "well" and not bool(wk.done):
+			var dig := {r.position: DIG_TILE}
+			var top := {}
+			if not (wk.need as Dictionary).is_empty():
+				top[r.position + Vector2i(1, 0)] = Farming.COZY + STONE_HEAP_TILE
+			else:
+				top[r.position] = int(cf.well_ring_tile)
+			out.append({"id": id, "stamp": "", "rect": r, "door": r.position, "layers": [dig, top], "solid": {}})
+		elif not bool(wk.done):
+			out.append({"id": id, "stamp": "", "rect": r, "door": r.position, "frame": Vector2i(r.position.x + r.size.x / 2, r.end.y - 1),
 				"tile": int(w.map.data.tiles.frame)})
 		elif kind == "well":
-			var cf := cfg()
-			out.append({"id": "%s_%s" % [c.id, wk.id], "stamp": "", "rect": r, "door": r.position, "frame": r.position, "tile": int(cf.well_tiles[0])})
-			out.append({"id": "%s_%s_t" % [c.id, wk.id], "stamp": "", "rect": r, "door": r.position, "frame": r.position - Vector2i(0, 1), "tile": int(cf.well_tiles[1])})
+			out.append({"id": id, "stamp": "", "rect": r, "door": r.position, "layers": [{r.position: int(cf.well_tile)}], "solid": {}})
 		elif kind.begins_with("workshop_"):
 			var st: Dictionary = w.map.data.stamps[kind]
-			out.append({"id": "%s_%s" % [c.id, wk.id], "stamp": kind, "rect": r, "door": r.position + Vector2i(int(st.door[0]), int(st.door[1]))})
+			out.append({"id": id, "stamp": kind, "rect": r, "door": r.position + Vector2i(int(st.door[0]), int(st.door[1]))})
 	return out
+
+
+const DIG_TILE := 100084            # the free Puny World sheet's lone patch of bare earth (overworld dirt, row 3 col 3): the dig
+const STONE_HEAP_TILE := 28 * 54 + 9   # Cozy Farm's grey stones (row 28): the stone waiting by the dig
+const FENCE_H := MapView.LARCHROW + 134     # Larchrow's fence_h, fence_v and fence_gate (B25R1-Q8, docs/assets/LARCHROW_TILES.md)
+const FENCE_V := MapView.LARCHROW + 135
+const FENCE_GATE := MapView.LARCHROW + 136
+
+
+## A pen's fence as an overworld entry (Larchrow's fence, which has no corner pieces: the sides run the full height, their
+## posts closing the corners, the rails between them): the gate in the middle of the bottom row (where _open_pen puts it, its
+## keeper feeding from the cell below), solid but for the gate. Unfinished: a post at each corner, open.
+static func _pen_entry(id: String, r: Rect2i, done: bool) -> Dictionary:
+	var gate := Vector2i(r.position.x + r.size.x / 2, r.end.y - 1)
+	var tiles := {}
+	var solid := {}
+	for cell: Vector2i in Farming.fence_ring(r):
+		var side := cell.x == r.position.x or cell.x == r.end.x - 1
+		var corner := side and (cell.y == r.position.y or cell.y == r.end.y - 1)
+		if not done:
+			if corner:
+				tiles[cell] = FENCE_V
+			continue
+		tiles[cell] = FENCE_GATE if cell == gate else FENCE_V if side else FENCE_H
+		if cell != gate:
+			solid[cell] = true
+	return {"id": id, "stamp": "", "rect": r, "door": gate, "layers": [tiles], "solid": solid}
 
 
 ## Where a workshop of stamp `kind` could stand beside claim `c`'s house: its footprint and the ring round it open ground
@@ -701,18 +751,37 @@ func buy_animal(n: NPC, c: Dictionary, sex: String) -> bool:
 	return true
 
 
-## Fauna._move: an animal being led home walks at its leader's heel.
-func leading(a: Animal) -> bool:
-	if not led.has(str(a.id)):
+## Fauna.update: an animal being led home walks at its leader's heel, moved on the world's fixed tick (lead_step real seconds:
+## World.TICK where the world has one, else the same half second accumulated from Fauna's per-frame update), never per frame;
+## AnimalSprite.glide draws it between the steps. `dt`: the real seconds since the last call.
+func leading(a: Animal, dt := 0.0) -> bool:
+	var key := str(a.id)
+	if not led.has(key):
 		return false
-	var n := w.npc(int(led[str(a.id)]))
+	var n := w.npc(int(led[key]))
 	if n == null or not n.alive:
-		led.erase(str(a.id))
+		led.erase(key)
+		_lead_acc.erase(key)
 		_settle(a)
 		return true
-	a.pos = n.pos + Vector2(0.6, 0.6)
+	var acc := float(_lead_acc.get(key, lead_step())) + dt     # the first call steps at once
+	if acc >= lead_step() - 0.000001:
+		acc = fmod(acc, lead_step())
+		var heel := n.pos - (n.facing.normalized() if n.facing != Vector2.ZERO else Vector2.DOWN) * 0.7
+		if heel.distance_to(a.pos) > 0.05:
+			a.facing = heel - a.pos
+		a.pos = heel
+	_lead_acc[key] = acc
 	a.moving = true
 	return true
+
+
+var _lead_acc := {}        # animal id (str) -> real seconds since its last lead step (not saved: a loaded lead steps at once)
+
+
+## The lead's step: World.TICK when the world runs on a fixed tick (wip/b25r1-presence), else half a second.
+static func lead_step() -> float:
+	return float((World as Script).get_script_constant_map().get("TICK", 0.5))
 
 
 func _settle(a: Animal) -> void:
@@ -728,6 +797,7 @@ func led_home(n: NPC) -> void:
 		if int(led[k]) != n.id:
 			continue
 		led.erase(k)
+		_lead_acc.erase(k)
 		var a: Animal = w.fauna.by_id(int(k))
 		if a != null and a.alive:
 			_settle(a)
@@ -1147,7 +1217,8 @@ func found_band(why: String) -> Dictionary:
 		var site := _hs().find_site(leader, true, coins)
 		if site.is_empty():
 			_rec("settlement_attempt_failed", {"person": leader.id, "reason": "no_site", "what": "band_camp", "why": why})
-			_count("band_no_site")
+			if why != "load":
+				_count("band_no_site")                  # (not on loading: a save that loads twice must load the same, SaveTransfer.validate)
 			return {}
 		h = w.households.size()
 		w.households.append({"id": h, "family": "Outlaw", "home": "", "members": [], "pantry": Inventory.new(), "founded_day": w.day(), "band": true})
@@ -1412,7 +1483,7 @@ func country_hour() -> void:
 			w.country_taken[key] = -1
 			continue
 		if a.anger == "" and a.hp >= float(a.spec().hp) - 0.01 and not near(centers, a.pos, r * 2.0) and w.nearest_player_distance(a.pos) > w.detail_radius + 10.0:
-			w.fauna.animals.erase(a)
+			w.fauna.release_country(a)
 			w.country_taken.erase(key)
 	for at: Vector2 in centers:
 		for amb: Animal in _cs.animals_near(at, r, w.minutes):
@@ -1564,8 +1635,9 @@ func report() -> Dictionary:
 
 
 func to_dict() -> Dictionary:
-	return {"format": FORMAT, "wells": wells.duplicate(true), "next_well": next_well, "raiders": raiders.duplicate(true), "last_raid": last_raid.duplicate(), "led": led.duplicate(), "counts": counts.duplicate(),
-		"defended_day": defended_day.duplicate(), "next_work": next_work}
+	return {"format": FORMAT, "wells": Homesteads.whole(wells.duplicate(true)), "next_well": next_well, "raiders": Homesteads.whole(raiders.duplicate(true)),
+		"last_raid": Homesteads.whole(last_raid.duplicate()), "led": Homesteads.whole(led.duplicate()), "counts": Homesteads.whole(counts.duplicate()),
+		"defended_day": Homesteads.whole(defended_day.duplicate()), "next_work": next_work}     # (whole numbers as ints: a reloaded save saves the same)
 
 
 func load_dict(d: Dictionary) -> void:

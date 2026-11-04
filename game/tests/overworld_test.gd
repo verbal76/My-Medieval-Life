@@ -568,7 +568,9 @@ func _test_sites(seed_value: int) -> void:
 	var m := VillageMap.load_default()
 	var o := Overworld.create(seed_value, m)
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/settlements.json"))
-	check(o.sites.size() == (data.settlements as Array).size() and o.sites.size() == 5, "seed %d: five settlement sites (%d)" % [seed_value, o.sites.size()])
+	# (B25R1-018 hamlets, merged from the settle branch: the five towns and villages and the hamlets and thorps beside them)
+	var towns := (data.settlements as Array).filter(func(e) -> bool: return not ["hamlet", "thorp"].has(str(e.get("kind", "")))).size()
+	check(o.sites.size() == (data.settlements as Array).size() and towns == 5, "seed %d: a site for each settlement, five of them towns and villages (%d sites)" % [seed_value, o.sites.size()])
 	var again := Overworld.create(seed_value, m)
 	var same := true
 	for k in o.sites.size():

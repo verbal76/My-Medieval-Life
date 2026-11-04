@@ -2297,10 +2297,21 @@ func for_sale(o: NPC) -> Array:
 	for id in o.inv.ids():
 		if keeps(o, id):
 			continue
-		if o.role == "child" or o.role == "bandit":
+		if o.role == "child":
+			continue
+		if o.role == "bandit" and not _camp_spare(o, id):
 			continue
 		out.append(id)
 	return out
+
+
+## B25R1-014: at the outlaws' camp (the members-only market, Wilds.player_trade_refusal decides who may trade there) an outlaw
+## sells the weapons and tools the camp's crafter made beyond the one of each kind they keep; nothing else, and nothing away
+## from the camp.
+func _camp_spare(o: NPC, id: String) -> bool:
+	if w.wilds == null or w.homesteads == null or not w.homesteads.remote(o) or str(w.homesteads.claim_of(o).get("faction", "")) != "outlaw":
+		return false
+	return GameData.category(id) in ["weapons", "tools"] and o.inv.count(id) > 1
 
 
 func _overstock(n: NPC, id: String) -> bool:

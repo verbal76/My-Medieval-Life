@@ -365,7 +365,7 @@ func _finish(c: Dictionary) -> void:
 	_count("built")
 	_rec("homestead_built", {"claim": str(c.id), "owner": str(c.owner), "cost": c.site.cost.duplicate(), "house": str(c.building)})
 	_sync_overworld()
-	w.note("%s's house in the country is finished." % _owner_name(c))
+	w.note("Your house in the country is finished." if World.is_player_ref(str(c.owner)) else "%s's house in the country is finished." % _owner_name(c))
 
 
 ## What a claim's delivered materials are (item -> count), as World.site_delivered.
@@ -1060,6 +1060,8 @@ func household_ended(h: int) -> void:
 	var back := delivered(c)
 	for id in back:
 		w.households[h].pantry.add(id, int(back[id]))
+	if not c.site.is_empty() and not bool(c.site.done):
+		c.site = {}                                     # returned once: _abandon must not hand the same materials back again
 	_abandon(c, "ended")
 
 
@@ -1835,8 +1837,22 @@ func to_dict() -> Dictionary:
 		var d: Dictionary = c.duplicate(true)
 		d.store = (c.store as Inventory).to_dict()
 		cl.append(d)
-	return {"format": FORMAT, "claims": cl, "next_id": next_id, "pop_history": pop_history.duplicate(true),
-		"last_left": last_left.duplicate(), "returning": returning.duplicate(), "trips": trips.duplicate(true), "counts": counts.duplicate()}
+	return {"format": FORMAT, "claims": whole(cl), "next_id": next_id, "pop_history": whole(pop_history.duplicate(true)),
+		"last_left": whole(last_left.duplicate()), "returning": returning.duplicate(), "trips": whole(trips.duplicate(true)), "counts": whole(counts.duplicate())}
+
+
+## Whole-valued floats as ints, all through `v` (a fresh claim holds ints, a loaded one the JSON reader's floats): a save
+## writes the same either way, so a save loaded and saved again is the same save (SaveTransfer.validate).
+static func whole(v: Variant) -> Variant:
+	if v is float and is_finite(v) and v == floorf(v) and absf(v) < 1.0e15:
+		return int(v)
+	if v is Dictionary:
+		for k in v:
+			v[k] = whole(v[k])
+	elif v is Array:
+		for i in (v as Array).size():
+			v[i] = whole(v[i])
+	return v
 
 
 func load_dict(d: Dictionary) -> void:

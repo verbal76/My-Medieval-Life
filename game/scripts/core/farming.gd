@@ -434,6 +434,11 @@ func pen_rect_ahead(kind: String, pos: Vector2, facing: Vector2) -> Rect2i:
 
 
 func fence_cells(rect: Rect2i) -> Array:
+	return fence_ring(rect)
+
+
+## The border cells of `rect` (a fence's line), row by row.
+static func fence_ring(rect: Rect2i) -> Array:
 	var out := []
 	for j in rect.size.y:
 		for i in rect.size.x:
@@ -493,12 +498,16 @@ func build_pen(kind: String, rect: Rect2i, p: PlayerState) -> Dictionary:
 
 
 func _fence_solid(pen: Dictionary) -> void:
+	if pen.has("claim"):
+		return                     # a homestead claim's pen: its fence is drawn and collided by the overworld (Wilds.overworld_entries)
 	var r := Rect2i(int(pen.x), int(pen.y), int(pen.w), int(pen.h))
 	for c: Vector2i in fence_cells(r):
 		w.map.set_solid(c, not (c.x == int(pen.gate[0]) and c.y == int(pen.gate[1])))
 
 
 func _show_fence(pen: Dictionary) -> void:
+	if pen.has("claim"):
+		return
 	var r := Rect2i(int(pen.x), int(pen.y), int(pen.w), int(pen.h))
 	for c: Vector2i in fence_cells(r):
 		var i := c.x - r.position.x

@@ -6168,6 +6168,8 @@ func to_dict() -> Dictionary:
 	var hh := []
 	for h in households:
 		var c: Dictionary = h.duplicate(true)
+		c.erase("pantry")
+		c = Homesteads.whole(c)             # B25R1: whole numbers as ints, so a household made on loading (the band's, Wilds.migrate_on_load) saves as a loaded one
 		c.pantry = h.pantry.to_dict()
 		hh.append(c)
 	var lt := []
