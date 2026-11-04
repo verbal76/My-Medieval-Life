@@ -92,8 +92,8 @@ Local focused suites on the integrated tree (checks/failures):
 |---|---|---|---|
 | 41753190755 | Tests on wip/b25r1-ci 552826b | failure, the base's known suites | 01:18-02:05 (shards 10-22 min) |
 | 41761854514 | Tests on 65f2665 | failure: the 24 suites above, most fixed since | 02:36-03:54 |
-| 41770720688 | Tests on f60772f | see the addendum | started 04:02 |
-| 41770724025 | gate (long-sims, seeds 1, 10 days) on f60772f | see the addendum | started 04:02 |
+| 41770720688 | Tests on f60772f (185 suites, 8 shards) | failure: 12 suites, listed below | 04:02-04:52 (50 min) |
+| 41770724025 | gate (long-sims, seeds 1, 10 days) on f60772f | FAIL: 32 blocking findings (below) | 04:02-05:15; 4328 s on 4 jobs |
 
 ## Answers
 
@@ -126,3 +126,38 @@ Local focused suites on the integrated tree (checks/failures):
 4. Once Tests is green on the new head and the gate's differences are explained, re-record the gate baseline and run the 365-day campaign once.
 
 The gate baseline was not re-recorded overnight and the campaign was not dispatched; the addendum says why.
+
+## Addendum: the two final runs on f60772f
+
+**Tests 41770720688.** 12 suites fail:
+
+| Suite | Status |
+|---|---|
+| homestead_test | open: homestead x presence |
+| overworld_test | open: the routes through hamlets, Milton's homes |
+| water_test | open: the same route root |
+| road_types_test | open: the stone share; the route root |
+| road_wear_test | open: no dirt-road cell |
+| net_fauna_test | open: presence |
+| recorder_test | open |
+| civic_records_test | open: needs a decision |
+| courier_live_test | open: +13, a C candidate |
+| campfire_test | fails on Actions only (3 frames in 0.9 s; 16/0 locally): timing with the fixed tick, presence worker |
+| luxury_test | fixed in 266fc61, after f60772f |
+| run_tests (the tills) | fixed in 83d6d1a, after f60772f |
+
+run_tests' new-household save check is still open.
+
+Down from 24 failing suites on 65f2665. There were no failures in the save, identity or conservation suites.
+
+**Gate 41770724025.** FAIL, 32 blocking findings:
+- **31 are baseline differences:** eq_s1 seeds 1 and 2 at days 10 and 30 against df67e8e. Alive, households, currency, treasury, animals, deposits and item ledger all differ, as expected from the merged world.
+- **1 is not a baseline difference.** det_s1 checks determinism and recorder neutrality with the shipped switches: the same seed with and without the recorder differs from day 20 (fingerprint, alive, currency, treasury, deposits, animals, item ledger). With the Expansion 20 switches on, the two runs are identical. That makes it a category A defect: something the recorder writes, or a recorder-gated path in the merged homestead, water, presence or settle code, changes the simulation under the shipped switches.
+- There was no FATAL, leak or conservation finding in the summary.
+
+Because of that one finding, I did not re-record the baseline (SIM-GATE-01), and I did not dispatch the 365-day campaign. Both wait for the recorder-neutrality fix.
+
+What to do first:
+1. Find the shipped-switch difference between recorded and unrecorded runs: bisect det_s1 locally from day 20 with economy_sim, diffing recorder on against recorder off. Suspects are the new `_rec` calls in wilds.gd, homesteads.gd, water_notes.gd and SettlementPeople.
+2. Then fix homesteading x presence.
+3. Then re-record the gate with an evidence note, and run the campaign once.
