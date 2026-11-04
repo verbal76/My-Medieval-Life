@@ -217,7 +217,7 @@ func test_stock_limit() -> void:
 	var w := _world(1)
 	for s: OffMapSettlement in w.regions.list:
 		for id: String in Luxury.items():
-			s.trader().stock.erase(id)
+			s.trader().get("stock", {}).erase(id)
 		s.start.goods = s.goods()                      # the books reopen with these stocks
 	var higham: OffMapSettlement = w.regions.by_id["higham"]
 	higham.trader().stock["jewellery"] = 1
@@ -262,7 +262,7 @@ func test_player() -> void:
 	check(Luxury.buy(w, p, "jewellery") == "You need %d coins." % Luxury.price("jewellery") and p.inv.count("jewellery") == 0, "with too few coins nothing is sold")
 	p.coins = 1000
 	for s: OffMapSettlement in w.regions.list:
-		s.trader().stock.erase("fine_cloth")
+		s.trader().get("stock", {}).erase("fine_cloth")
 	check(Luxury.buy(w, p, "fine_cloth") == "None of the traders here has any.", "what no trader holds cannot be bought")
 	check(Luxury.buy(w, p, "iron_bar") == "The caravan does not sell that.", "and the wagon sells only luxuries here")
 	# the pack's own capacity rule applies: a full crafted tab refuses
@@ -309,7 +309,7 @@ func test_player_food() -> void:
 	check(CaravanFood.buy(w, p, "wheat") == "You need %d coins." % seller.food_price("wheat"), "without the coins nothing is sold")
 	p.coins = 1000
 	for s: OffMapSettlement in w.regions.list:
-		s.trader().stock.erase("cheese")
+		s.trader().get("stock", {}).erase("cheese")
 	check(CaravanFood.buy(w, p, "cheese") == "None of the traders here has any.", "what no trader holds cannot be bought")
 	check(CaravanFood.buy(w, p, "iron_bar") == "The caravan does not sell that.", "the wagon sells only the settlements' foods here")
 	var a := _world(3)
@@ -354,12 +354,12 @@ func test_save_and_determinism() -> void:
 	for s in old.regions.settlements:
 		for t in s.biz:
 			for id in ["spice", "fine_cloth", "jewellery"]:
-				(s.biz[t].stock as Dictionary).erase(id)
+				(s.biz[t].get("stock", {}) as Dictionary).erase(id)        # (a hamlet's own trades keep no stock: B25R1-018)
 		for id in ["spice", "fine_cloth", "jewellery"]:
-			(s.start.goods as Dictionary).erase(id)
+			(s.get("start", {}).get("goods", {}) as Dictionary).erase(id)
 	var w3 := World.new()
 	w3.load_dict(map, old)
-	check(w3.regions != null and w3.regions.list.size() == 5, "an older save loads")
+	check(w3.regions != null and w3.regions.list.size() == (OffMapSettlement.data().settlements as Array).size(), "an older save loads (every settlement, the hamlets with them)")
 	var none := 0
 	for s: OffMapSettlement in w3.regions.list:
 		none += s.trader_has("spice") + s.trader_has("fine_cloth") + s.trader_has("jewellery")
