@@ -438,8 +438,12 @@ The pack crosses into the village ledger on materialise and back on fold (outsid
 ### Limits and what remains
 
 - **Not yet live:** nobody is made live until the presence branch merges.
-- **Life events while live:** a live member's old-age death waits, but migration does not yet check `live` (a household that
-  leaves while one of its members is live is a known gap).
-- **Not carried over on fold:** a live NPC's skills and injuries; members keep no hp or skills records.
+- **Life events while live:** a live member's old-age death waits. Any other change to their household's record (a move out,
+  `release_household` or `release_person`; a loss, `_remove_member`) folds them first (`OffMapSettlement.fold_hook`), so no NPC is
+  ever left without a record.
+- **Carried over on fold:** health and skills, in the member's seventh entry `M_BODY` {hp, max, sk: skill -> xp, the village
+  NPC's shape}. Materialise sets them and fold writes them back. They are saved, and they go with the person when they move (the
+  load's `sk`). An older save without the entry loads at full health with no recorded skills. Relations live in the world's own
+  records by person id, so they need nothing here.
 - **Booking workaround:** the wells' imported_ booking stands in until Wilds `count := false` lands.
 

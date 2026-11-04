@@ -63,6 +63,10 @@ const M_WHO := 4
 ## ID-01: every member has a person id, the sixth entry [5] (World.people; never reused; a member with no carried name has {} at [4]).
 ## An older save has none (0): Identity.upgrade gives them, in settlement, household and member order.
 const M_ID := 5
+## B25R1-019 (owner: everything carries over between calculated and live): the seventh entry {hp, sk} once the member has been live:
+## their health (NPC.hp) and their skills in the village's shape (skill -> xp, PAR-01). Absent: full health, no recorded skills (an
+## older save, or someone never seen).
+const M_BODY := 6
 const JOURNAL_MAX := 100             # lines of the settlement's own journal kept (the village's log keeps 300)
 
 ## ID-01: the world's register of people, when this settlement lives in one (Regions.bind_world); not saved. Called as
@@ -132,6 +136,7 @@ var trip_seq := 0
 ## B25R1-019: person id -> true while the member is a live NPC in the world (SettlementPeople); their own acts (a trip's
 ## progress, an old-age death) wait until they are folded back. Not saved: a save folds everyone first.
 var live: Dictionary = {}
+var fold_hook := Callable()          # SettlementPeople.fold_id while the settlements live in a world with residents made live; not saved
 
 
 # ------------------------------------------------------------------ data ----------------
@@ -353,6 +358,33 @@ static func who_of(m: Array) -> Dictionary:
 	return m[M_WHO] if has_who(m) else {}
 
 
+static func body_of(m: Array) -> Dictionary:
+	return m[M_BODY] if m.size() > M_BODY and m[M_BODY] is Dictionary else {}
+
+
+static func set_body(m: Array, b: Dictionary) -> void:
+	while m.size() < M_WHO:
+		m.append(0)
+	while m.size() < M_ID:
+		m.append({})
+	if m.size() == M_ID:
+		m.append(0)
+	if m.size() == M_BODY:
+		m.append(b)
+	else:
+		m[M_BODY] = b
+
+
+## B25R1-019: a live member leaves the world before their household's record changes under them (a move, a loss): SettlementPeople
+## folds them back first (fold_hook, (person id) -> void), so nothing they carry or know is lost and no NPC is left without a record.
+func _fold_live(ms: Array) -> void:
+	if live.is_empty() or not fold_hook.is_valid():
+		return
+	for m in ms.duplicate():
+		if live.has(member_id(m)):
+			fold_hook.call(member_id(m))
+
+
 ## A person is born here: the world gives them their id (0 in a settlement that lives outside a world).
 func _new_person(sex: int, mother: Array, father: Array) -> int:
 	if not person_hook.is_valid():
@@ -477,6 +509,11 @@ func _try_birth(h: Dictionary, chance: float, salt: int) -> void:
 ## Take member `j` out of a household (death); the caller then runs _after_loss.
 func _remove_member(h: Dictionary, j: int) -> void:
 	var m: Array = h.mem[j]
+	if live.has(member_id(m)):
+		_fold_live([m])                                     # (a live member's fold may itself remove a dead NPC's record)
+		j = h.mem.find(m)
+		if j < 0:
+			return
 	h.mem.remove_at(j)
 	if int(m[M_PAIR]) == 1:
 		for x in h.mem:
@@ -2206,6 +2243,12 @@ func _pack_of(m: Array, pair: int) -> Dictionary:
 		out.n = str(m[M_WHO].n)
 		out.f = str(m[M_WHO].f)
 		out.sk = (m[M_WHO].sk as Dictionary).duplicate()
+	var b := body_of(m)                                      # B25R1-019: what they learned while live goes with them
+	if not b.is_empty():
+		if not out.has("sk"):
+			out.sk = {}
+		for k in b.get("sk", {}):
+			out.sk[k] = maxi(int(out.sk.get(k, 0)), int(b.sk[k]))
 	return out
 
 
@@ -2245,6 +2288,7 @@ func person_load(hi: int, j: int) -> Dictionary:
 
 ## Member `j` leaves household `hi` with person_load's coins and goods; the household closes if they were its last.
 func release_person(hi: int, j: int) -> Dictionary:
+	_fold_live([hh[hi].mem[j]])
 	if (hh[hi].mem as Array).size() <= 1:
 		_wind_up_own(hh[hi])                                     # REGION-NAV-01 Q4: the last of the household takes its own trade's purse and stock
 	var l := person_load(hi, j)
@@ -2285,6 +2329,7 @@ func _with_own(h: Dictionary, goods: Dictionary) -> void:
 
 ## The whole household leaves with its coins and pantry; it is dissolved (its business keeps its other households).
 func release_household(hi: int) -> Dictionary:
+	_fold_live(hh[hi].mem)
 	_wind_up_own(hh[hi])                                         # REGION-NAV-01 Q4: its own trade goes with it (purse and stock)
 	var l := household_load(hi)
 	var h: Dictionary = hh[hi]
@@ -2567,6 +2612,12 @@ static func _member_from(m: Array) -> Array:
 			out.append({"n": str(w.get("n", "")), "f": str(w.get("f", "")), "sk": sk})
 	if m.size() > M_ID:
 		out.append(int(m[M_ID]))                            # ID-01 (save 20; absent in an older save)
+	if m.size() > M_BODY and m[M_BODY] is Dictionary:      # B25R1-019 (optional: absent in an older save)
+		var b: Dictionary = m[M_BODY]
+		var sk := {}
+		for k in b.get("sk", {}):
+			sk[str(k)] = int(b.sk[k])
+		out.append({"hp": float(b.get("hp", 30.0)), "max": float(b.get("max", 30.0)), "sk": sk})
 	return out
 
 

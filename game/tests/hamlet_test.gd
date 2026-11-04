@@ -8,6 +8,8 @@ extends SceneTree
 ##   * materialise and fold round trips across many residents: people, coins and items counted on both ledgers
 ##   * a walker met on the road becomes live, walks, is folded, and the errand still completes
 ##   * save and load mid-trip; deterministic replay
+##   * a live resident's injury and skills carry over a fold, a later live spell and a save; an older save loads with defaults
+##   * a household that leaves, or a member who is lost, while live: folded first, nothing left in the world without a record
 ##   * the wells: a whole-world census before and after (village holders and every settlement)
 ##   godot --headless --path game --script res://tests/hamlet_test.gd
 
@@ -34,6 +36,8 @@ func _init() -> void:
 	test_world_people()
 	test_replay()
 	test_well_census()
+	test_carry_over()
+	test_leaving_while_live()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -296,4 +300,87 @@ func test_well_census() -> void:
 	check(r.audit() == "", "the settlements' books balance: the materials left as their own outside line (%s)" % r.audit())
 	r._wells()
 	check(stub.wells.size() == wells.size(), "a well is built once")
+	w.dispose()
+
+
+## The first adult at home in `sid` (not travelling), as [household, member index, person id].
+func _resident(r: Regions, sid: String) -> Array:
+	var s: OffMapSettlement = r.by_id[sid]
+	for h in s.hh:
+		if not bool(h.alive):
+			continue
+		for j in h.mem.size():
+			var id := OffMapSettlement.member_id(h.mem[j])
+			if s._age(h.mem[j]) >= 16.0 and SettlementTrips.of_person(s, id).is_empty():
+				return [int(h.id), j, id]
+	return []
+
+
+func test_carry_over() -> void:
+	var w := World.new()
+	w.setup(VillageMap.load_default(), 1)
+	var r := w.regions
+	var p: SettlementPeople = r.people
+	var who := _resident(r, "elmcote")
+	var n = p.materialise(int(who[2]))
+	check(n != null and is_equal_approx(float(n.hp), float(n.max_hp)), "a resident never hurt comes live at full health (%.0f)" % float(n.hp))
+	n.hp = 11.5
+	Skills.gain(n, "masonry", 400)
+	var xp := int(n.skills.get("masonry", 0))
+	p.fold(n)
+	var m: Array = r.by_id["elmcote"].hh[int(who[0])].mem[int(who[1])]
+	var body := OffMapSettlement.body_of(m)
+	check(is_equal_approx(float(body.get("hp", 0.0)), 11.5) and int(body.get("sk", {}).get("masonry", 0)) == xp and xp > 0,
+		"folded, the record keeps the injury (11.5 hp) and the skill learned (masonry %d xp)" % xp)
+	var n2 = p.materialise(int(who[2]))
+	check(is_equal_approx(float(n2.hp), 11.5) and int(n2.skills.get("masonry", 0)) == xp, "made live again, they are still hurt and still skilled")
+	var saved: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), saved)
+	var m2: Array = w2.regions.by_id["elmcote"].hh[int(who[0])].mem[int(who[1])]
+	check(OffMapSettlement.body_of(m2) == OffMapSettlement.body_of(m), "a save carries them (folded first) and loads them as they were")
+	var n3 = w2.regions.people.materialise(int(who[2]))
+	check(is_equal_approx(float(n3.hp), 11.5) and int(n3.skills.get("masonry", 0)) == xp, "and live again in the loaded world, the same")
+	var old: Dictionary = JSON.parse_string(JSON.stringify(saved))
+	for sd in old.regions.settlements:
+		for h in sd.hh:
+			h.mem = (h.mem as Array).map(func(x): return x.slice(0, 6))
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), old)
+	var n4 = w3.regions.people.materialise(int(who[2]))
+	check(n4 != null and is_equal_approx(float(n4.hp), float(n4.max_hp)) and w3.regions.audit() == "", "an older settlement save (no seventh entry) loads with full health and no recorded skills")
+	w.dispose()
+	w2.dispose()
+	w3.dispose()
+
+
+func test_leaving_while_live() -> void:
+	var w := World.new()
+	w.setup(VillageMap.load_default(), 1)
+	var r := w.regions
+	var p: SettlementPeople = r.people
+	var s: OffMapSettlement = r.by_id["cressbrook"]
+	var who := _resident(r, "cressbrook")
+	var npcs0 := w.npcs.size()
+	var net0 := _net(w)
+	var n = p.materialise(int(who[2]))
+	n.coins += 0
+	n.hp = 20.0
+	var load := s.release_household(int(who[0]))
+	check(not w.by_id.has(int(who[2])) and p.live.is_empty() and s.live.is_empty() and w.npcs.size() == npcs0,
+		"a household leaving while one of them is live: they are folded first, no NPC is left behind")
+	check(load.people.any(func(x): return int(x.id) == int(who[2])), "and they go with their household, as a record")
+	# a member lost while live (the settlement's own rule removing them): folded first, then removed
+	var who2 := _resident(r, "milton")
+	var s2: OffMapSettlement = r.by_id["milton"]
+	var n2 = p.materialise(int(who2[2]))
+	s2._remove_member(s2.hh[int(who2[0])], int(who2[1]))
+	check(not w.by_id.has(int(who2[2])) and p.live.is_empty() and p.find(int(who2[2])).is_empty(), "a member lost while live is folded, then removed: no NPC without a record")
+	# one member leaves on their own while live
+	var who3 := _resident(r, "ewedean")
+	var s3: OffMapSettlement = r.by_id["ewedean"]
+	p.materialise(int(who3[2]))
+	var l3 := s3.release_person(int(who3[0]), int(who3[1]))
+	check(not w.by_id.has(int(who3[2])) and int(l3.people[0].id) == int(who3[2]) and p.live.is_empty(), "a person leaving alone while live is folded first and leaves as a record")
+	check(r.audit() == "", "the settlements' books balance (%s)" % r.audit())
 	w.dispose()

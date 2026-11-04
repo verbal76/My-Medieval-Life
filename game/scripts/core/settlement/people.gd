@@ -36,6 +36,8 @@ static func attach(world, regions: Regions) -> SettlementPeople:
 	var p := SettlementPeople.new()
 	p.w = world
 	p.r = regions
+	for s: OffMapSettlement in regions.list:
+		s.fold_hook = Callable(p, "fold_id")
 	var pr = world.get("presence")
 	if pr != null:
 		pr.register(p)
@@ -122,14 +124,19 @@ func materialise(id: int):
 	n.sex = "female" if int(m[OffMapSettlement.M_SEX]) == 1 else "male"
 	var who := OffMapSettlement.who_of(m)
 	var full := SettlementFolk.name_of(w, s.id, int(h.id), int(f.j), n.sex)
-	n.name = str(who.get("name", full.get_slice(" ", 0)))
-	n.family = str(who.get("family", full.get_slice(" ", 1)))
+	n.name = str(who.get("n", "")) if str(who.get("n", "")) != "" else full.get_slice(" ", 0)
+	n.family = str(who.get("f", "")) if str(who.get("f", "")) != "" else full.get_slice(" ", 1)
 	n.born = float(int(m[OffMapSettlement.M_BORN])) * 1440.0
 	n.role = "adult" if s._age(m) >= s._lim else "child"
 	n.job = str(h.trade) if n.role == "adult" else ""
 	n.household = -1                     # not a village household: their household is h in s (journey.settlement, journey.hh)
-	for k in who.get("skills", {}):
-		n.skills[str(k)] = int(who.skills[k])
+	for k in who.get("sk", {}):                    # a newcomer from the village keeps the skills they came with
+		n.skills[str(k)] = int(who.sk[k])
+	var body := OffMapSettlement.body_of(m)      # B25R1-019: what an earlier live spell left: health and skills
+	for k in body.get("sk", {}):
+		n.skills[str(k)] = int(body.sk[k])
+	n.max_hp = float(body.get("max", n.max_hp))
+	n.hp = minf(float(body.get("hp", n.max_hp)), n.max_hp)
 	n.sprite = "res://assets/characters/villager_%02d.png" % (absi(id) % 48)
 	n.hunger = 100.0
 	if not t.is_empty():
@@ -155,6 +162,8 @@ func fold(n) -> void:
 	live.erase(int(n.id))
 	if s != null:
 		s.live.erase(int(n.id))
+		if n.alive:
+			_keep_body(s, n)
 		var t := SettlementTrips.of_person(s, int(n.id))    # (n.journey may be cleared already: a death ends a journey)
 		if not t.is_empty():
 			var path := SettlementTrips.leg_path(r, t)
@@ -168,6 +177,23 @@ func fold(n) -> void:
 			_died(s, int(n.id))
 	w.npcs.erase(n)
 	w.by_id.erase(n.id)
+
+
+## The NPC's health and skills into their member record (M_BODY), so the next live spell, a move and a save carry them.
+func _keep_body(s: OffMapSettlement, n) -> void:
+	var f := find(int(n.id))
+	if f.is_empty() or f.s != s:
+		return
+	var sk := {}
+	for k in n.skills:
+		sk[str(k)] = int(n.skills[k])
+	OffMapSettlement.set_body(f.m, {"hp": snappedf(float(n.hp), 0.001), "max": float(n.max_hp), "sk": sk})
+
+
+## OffMapSettlement.fold_hook: fold the live resident with person id `pid` (before their household's record changes).
+func fold_id(pid: int) -> void:
+	if live.has(pid):
+		fold(live[pid].npc)
 
 
 ## Fold every live resident (World.to_dict before saving; a save holds records only). They come back live at the next update.
