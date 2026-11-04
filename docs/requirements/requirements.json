@@ -7909,6 +7909,33 @@
    ]
   },
   {
+   "id": "B25R1-Q9",
+   "kind": "decision",
+   "title": "Do hamlets count as civic places (civic_records test premise), and with what institutions?",
+   "description": "Do hamlets count as civic places (civic_records test premise), and with what institutions?",
+   "source": "integration coordinator overnight report 2026-11-04",
+   "owner_wording": null,
+   "owner_answer": "Hamlets are local civic places: community gathering, local trade and visiting merchants, news and gossip, local employment and cooperative work, and existing community activities and civic interactions. They get no independent mayor, council, municipal elections or town-level government institutions; residents stay under the existing regional or town-level authority (their lord's town). Implemented through existing civic systems, no new government structure. Rationale: hamlets of five or six households are communities, not towns (B25R1-018 section 5).",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-04",
+     "change": "entered in the register",
+     "why": "integration coordinator overnight report 2026-11-04"
+    },
+    {
+     "date": "2026-11-04",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner 2026-11-04: Hamlets count as local civic places, but they are not independent town governments."
+    }
+   ]
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
