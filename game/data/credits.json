@@ -42,7 +42,11 @@
   {"creator": "Hot Attic Games", "packs": "Music: Sunrise over the Village, Prosperous Village and Misted Ancient (made with Suno for My Medieval Life)", "licence": "Own (made with Suno)", "sources": ["https://github.com/verbal76/My-Medieval-Life/releases/download/Songsmall/Prosperous.Village.wav", "https://github.com/verbal76/My-Medieval-Life/releases/download/Songmed/Sunrise.over.the.Village.wav", "https://github.com/verbal76/My-Medieval-Life/releases/download/Songbig/misted.ancient.wav"]},
   {"creator": "Spaceyyy (Bramble & Byte), aquumgifts.itch.io", "packs": "Cozy RPG SFX (ambience loops and sound effects)", "licence": "Use in games allowed, no royalties; the sounds are not redistributed as assets", "sources": ["cozy-rpg-sfx.zip", "cozy-rpg-sfx-ambience-1.zip", "cozy-rpg-sfx-ambience-2.zip"]},
   {"creator": "Leohpaz", "packs": "Minifantasy: Forgotten Plains SFX (footsteps, rustling, hits, ambience loops)", "licence": "Personal and commercial use; the pack is not redistributed", "sources": ["Minifantasy_Forgotten_Plains_SFX.zip"]},
-  {"creator": "Leohpaz", "packs": "Minifantasy: Forgotten Plains music (Fair Fight, Plain Sight)", "licence": "Personal and commercial use; the pack is not redistributed", "sources": ["Minifantasy_ForgottenPlains_Music.zip"]}
+  {"creator": "Leohpaz", "packs": "Minifantasy: Forgotten Plains music (Fair Fight, Plain Sight)", "licence": "Personal and commercial use; the pack is not redistributed", "sources": ["Minifantasy_ForgottenPlains_Music.zip"]},
+  {"creator": "Larchrow", "packs": "Pixel Tileset: Village & Cave Expansion", "licence": "Royalty-free in games; the pack is not redistributed", "url": "https://larchrow.itch.io/", "sources": ["larchrow-village-cave-tileset.zip"]},
+  {"creator": "Bow.Pixel", "packs": "Low Grass Set 800+", "licence": "Commercial use; the pack is not distributed", "url": "https://bowpixel.itch.io/", "sources": ["BowPixel_Low_Grass"]},
+  {"creator": "Yavuz (arsden)", "packs": "Grass Pack", "licence": "CC0", "url": "https://arsden.itch.io/", "sources": ["Yavuz_Grass_Pack.zip"]},
+  {"creator": "kassuii", "packs": "FREE - Cozy Village RPG", "licence": "Free for commercial use; the pack is not redistributed", "url": "https://kassuii.itch.io/", "sources": ["FREE - Cozy Village RPG"]}
  ],
  "not_assets": ["ClimbUp_restore_backup.zip"],
  "story": "World history after William Morris, The Well at the World's End (1896, public domain)."

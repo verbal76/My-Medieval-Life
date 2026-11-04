@@ -26453,6 +26453,27 @@
    "member": "PUNY-WORLD-PAID_v1/Tiled/punyworld-tiles.png tiles 10150, 10151, 10370, 10371; PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/punyworld-overworld-tiles.tsx dirt pathways",
    "transform": "B25R1 road tiles: 16 dirt path tiles (overworld_tiles.json dirt_path) x 4 rows with their dirt replaced by the paid flagstone ground and the rim darkened to 0.74 (stone road), x 2 rows narrowed by one ring with 22% grass through the dirt (trail); grown-over dirt road and trail rows (30% grass tufts); damaged and broken stone rows (12% and 34% of the paving gone to dirt and grass holes)",
    "sha256": "a450d9b12b22e8f9a06a9cd464ada4b536eef13a0235cdcfa3121b87b5dba4f4"
+  },
+  {
+   "file": "assets/tiles/larchrow_village_cave.png",
+   "source": "larchrow-village-cave-tileset.zip",
+   "member": "larchrow-village-cave-tileset/Tilesheets/larchrow_village_cave_16x16.png",
+   "transform": "copied unchanged (16 x 16 tiles, 16 columns: MapView atlas 5)",
+   "sha256": "3a232155834226cae2f956e968df3c13d67cdd42854b91dce843e54b94ef407d"
+  },
+  {
+   "file": "assets/tiles/low_grass_1.png",
+   "source": "BowPixel_Low_Grass",
+   "member": "low_grass_1.png",
+   "transform": "copied unchanged (16 x 16 tufts, 20 columns: MapView atlas 6)",
+   "sha256": "5aaaac2ecd3a606ce37262fe53ff5963952a2e9a9263f47147b14cb6502e33ca"
+  },
+  {
+   "file": "assets/tiles/low_grass_2.png",
+   "source": "BowPixel_Low_Grass",
+   "member": "low_grass_2.png",
+   "transform": "copied unchanged (16 x 16 tufts, 20 columns: MapView atlas 7)",
+   "sha256": "209a2aa855b2530957860a46825b1f77f2ed25cdd82fe5a9db6a5a8fb9a23f02"
   }
  ]
 }

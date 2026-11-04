@@ -15303,6 +15303,1841 @@
     "assets/icons/steel_trident_29.png",
     "assets/icons/steel_trident_30.png"
    ]
+  },
+  {
+   "id": "larchrow_village_cave",
+   "name": "Pixel Tileset: Village & Cave Expansion",
+   "creator": "Larchrow",
+   "sources": [
+    "private-assets/larchrow-village-cave-tileset.zip"
+   ],
+   "storage": "private",
+   "licence": "paid",
+   "permissions": "LICENSE.txt: royalty-free for commercial and non-commercial use in games, apps and videos; may be modified; credit appreciated, not required (credited anyway); may NOT be resold or redistributed as-is or as part of another asset pack or tileset. So the zip stays in private-assets and only the imported sheet is committed (owner decision B25R1-Q8, 2026-11-03).",
+   "categories": [
+    "tileset",
+    "village",
+    "roofs",
+    "walls",
+    "fences",
+    "well",
+    "market stall",
+    "props",
+    "cave",
+    "lava",
+    "ores",
+    "rails"
+   ],
+   "status": "partial",
+   "scale": "16 x 16 tiles on the world's own grid (no margin or spacing): 1:1. Its 32-colour larchrow32 palette is darker and outlined in near-black, a different look from Puny World; use pieces where the contrast reads (a well, a fence, props), not whole ground or walls beside Puny buildings.",
+   "used_for": "Imported whole as MapView atlas 5 (game/assets/tiles/larchrow_village_cave.png, tools/village_tile_sheets.py): tile value 500000 + Larchrow's tile_id (row * 16 + column), names in docs/assets/LARCHROW_TILES.md. Not yet drawn by any system.",
+   "opportunities": "Towns (region worker 3, region_stamps.json 'atlases'): timber and stone walls with window and door (500128-500133), red and blue roof Wang sets (500017-500031, 500033-500047, corner code TL 1 + TR 2 + BL 4 + BR 8; roof 00 empty), market stall 2x2 (500137-500140), signpost (500141), lamp post 1x2 (500144 top, 500145 bottom), lidded and water barrels (500146, 500147), crate of apples (500148), haystack (500016), stepping stones (500032), flower patches (500142, 500143), crops in 3 stages (500012-500014), tilled soil (500006, 500007), plank floor (500002-500005). Fences: fence_h, fence_v, fence_gate (500134-500136), no corner pieces. Caves: the cave wall/floor Wang set (500048-500063), animated lava (rows 4-7, 4 frames stacked by row), glowing crystals (4 frames, 500149-500152), stalagmites, mushrooms, iron and gold ore rocks (500157, 500158), bones, minecart rails, minecart, rope and ladder suit the planned skeleton caves (B14-09).",
+   "known_issues": "tile ids 64, 80, 96 and 112 are unnamed (lava set's plain floor column, frame rows): see tile_index.csv. Only the 16 px sheet is imported; the 48 px copy, Tiled and Godot files are not needed.",
+   "tile_names_village": {
+    "500000": "grass_0",
+    "500001": "dirt_0",
+    "500002": "plank_floor_0",
+    "500003": "plank_floor_1",
+    "500004": "plank_floor_2",
+    "500005": "plank_floor_3",
+    "500006": "tilled_soil_0",
+    "500007": "tilled_soil_1",
+    "500012": "crop_0",
+    "500013": "crop_1",
+    "500014": "crop_2",
+    "500015": "well",
+    "500016": "haystack",
+    "500017": "roof_red_01",
+    "500018": "roof_red_02",
+    "500019": "roof_red_03",
+    "500020": "roof_red_04",
+    "500021": "roof_red_05",
+    "500022": "roof_red_06",
+    "500023": "roof_red_07",
+    "500024": "roof_red_08",
+    "500025": "roof_red_09",
+    "500026": "roof_red_10",
+    "500027": "roof_red_11",
+    "500028": "roof_red_12",
+    "500029": "roof_red_13",
+    "500030": "roof_red_14",
+    "500031": "roof_red_15",
+    "500032": "stepping_stones",
+    "500033": "roof_blue_01",
+    "500034": "roof_blue_02",
+    "500035": "roof_blue_03",
+    "500036": "roof_blue_04",
+    "500037": "roof_blue_05",
+    "500038": "roof_blue_06",
+    "500039": "roof_blue_07",
+    "500040": "roof_blue_08",
+    "500041": "roof_blue_09",
+    "500042": "roof_blue_10",
+    "500043": "roof_blue_11",
+    "500044": "roof_blue_12",
+    "500045": "roof_blue_13",
+    "500046": "roof_blue_14",
+    "500047": "roof_blue_15",
+    "500128": "timber_wall",
+    "500129": "timber_window",
+    "500130": "timber_door",
+    "500131": "stone_wall",
+    "500132": "stone_window",
+    "500133": "stone_door",
+    "500134": "fence_h",
+    "500135": "fence_v",
+    "500136": "fence_gate",
+    "500137": "market_stall_00",
+    "500138": "market_stall_01",
+    "500139": "market_stall_10",
+    "500140": "market_stall_11",
+    "500141": "signpost",
+    "500142": "village_flowers_0",
+    "500143": "village_flowers_1",
+    "500144": "lamp_post_0",
+    "500145": "lamp_post_1",
+    "500146": "barrel_lidded",
+    "500147": "barrel_water",
+    "500148": "crate_apples"
+   },
+   "tile_names_cave": {
+    "500008": "cave_floor_0",
+    "500009": "cave_floor_1",
+    "500010": "cave_floor_2",
+    "500011": "cave_floor_3",
+    "500048": "cave_wall_00",
+    "500049": "cave_wall_01",
+    "500050": "cave_wall_02",
+    "500051": "cave_wall_03",
+    "500052": "cave_wall_04",
+    "500053": "cave_wall_05",
+    "500054": "cave_wall_06",
+    "500055": "cave_wall_07",
+    "500056": "cave_wall_08",
+    "500057": "cave_wall_09",
+    "500058": "cave_wall_10",
+    "500059": "cave_wall_11",
+    "500060": "cave_wall_12",
+    "500061": "cave_wall_13",
+    "500062": "cave_wall_14",
+    "500063": "cave_wall_15",
+    "500065": "lava_01",
+    "500066": "lava_02",
+    "500067": "lava_03",
+    "500068": "lava_04",
+    "500069": "lava_05",
+    "500070": "lava_06",
+    "500071": "lava_07",
+    "500072": "lava_08",
+    "500073": "lava_09",
+    "500074": "lava_10",
+    "500075": "lava_11",
+    "500076": "lava_12",
+    "500077": "lava_13",
+    "500078": "lava_14",
+    "500079": "lava_15",
+    "500081": "lava_01_f1",
+    "500082": "lava_02_f1",
+    "500083": "lava_03_f1",
+    "500084": "lava_04_f1",
+    "500085": "lava_05_f1",
+    "500086": "lava_06_f1",
+    "500087": "lava_07_f1",
+    "500088": "lava_08_f1",
+    "500089": "lava_09_f1",
+    "500090": "lava_10_f1",
+    "500091": "lava_11_f1",
+    "500092": "lava_12_f1",
+    "500093": "lava_13_f1",
+    "500094": "lava_14_f1",
+    "500095": "lava_15_f1",
+    "500097": "lava_01_f2",
+    "500098": "lava_02_f2",
+    "500099": "lava_03_f2",
+    "500100": "lava_04_f2",
+    "500101": "lava_05_f2",
+    "500102": "lava_06_f2",
+    "500103": "lava_07_f2",
+    "500104": "lava_08_f2",
+    "500105": "lava_09_f2",
+    "500106": "lava_10_f2",
+    "500107": "lava_11_f2",
+    "500108": "lava_12_f2",
+    "500109": "lava_13_f2",
+    "500110": "lava_14_f2",
+    "500111": "lava_15_f2",
+    "500113": "lava_01_f3",
+    "500114": "lava_02_f3",
+    "500115": "lava_03_f3",
+    "500116": "lava_04_f3",
+    "500117": "lava_05_f3",
+    "500118": "lava_06_f3",
+    "500119": "lava_07_f3",
+    "500120": "lava_08_f3",
+    "500121": "lava_09_f3",
+    "500122": "lava_10_f3",
+    "500123": "lava_11_f3",
+    "500124": "lava_12_f3",
+    "500125": "lava_13_f3",
+    "500126": "lava_14_f3",
+    "500127": "lava_15_f3",
+    "500149": "crystal_glow_0",
+    "500150": "crystal_glow_1",
+    "500151": "crystal_glow_2",
+    "500152": "crystal_glow_3",
+    "500153": "stalagmite_0",
+    "500154": "stalagmite_1",
+    "500155": "cave_mushrooms_0",
+    "500156": "cave_mushrooms_1",
+    "500157": "ore_iron",
+    "500158": "ore_gold",
+    "500159": "bones_pile",
+    "500160": "rail_v",
+    "500161": "rail_h",
+    "500162": "rail_curve_ne",
+    "500163": "rail_curve_nw",
+    "500164": "rail_curve_se",
+    "500165": "rail_curve_sw",
+    "500166": "rail_cross",
+    "500167": "minecart",
+    "500168": "rope",
+    "500169": "ladder"
+   },
+   "scan": [
+    {
+     "source": "private-assets/larchrow-village-cave-tileset.zip",
+     "present": true,
+     "files": 16,
+     "by_ext": {
+      ".csv": 1,
+      ".gif": 1,
+      ".gpl": 1,
+      ".hex": 1,
+      ".json": 1,
+      ".png": 6,
+      ".tmx": 1,
+      ".tres": 1,
+      ".tsx": 1,
+      ".txt": 2
+     },
+     "licence_files": [
+      "larchrow-village-cave-tileset/LICENSE.txt",
+      "larchrow-village-cave-tileset/README.txt"
+     ],
+     "image_count": 7,
+     "sizes": {
+      "256x176": 2,
+      "1600x960": 1,
+      "256x32": 1,
+      "640x400": 1,
+      "768x528": 1,
+      "800x480": 1
+     },
+     "frame_grids": {},
+     "images": [
+      {
+       "member": "larchrow-village-cave-tileset/Godot4/larchrow_village_cave/larchrow_village_cave_16x16.png",
+       "sha": "3a232155834226ca",
+       "size": [
+        256,
+        176
+       ],
+       "content": [
+        0,
+        0,
+        256,
+        176
+       ],
+       "frame": [
+        256,
+        176
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "larchrow-village-cave-tileset/Palette/larchrow32_palette.png",
+       "sha": "1fdb2943ff99e417",
+       "size": [
+        256,
+        32
+       ],
+       "content": [
+        0,
+        0,
+        256,
+        32
+       ],
+       "frame": [
+        256,
+        32
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "larchrow-village-cave-tileset/Previews/animated_preview.gif",
+       "sha": "a910d385f2847853",
+       "size": [
+        640,
+        400
+       ],
+       "content": [
+        0,
+        0,
+        640,
+        400
+       ],
+       "frame": [
+        640,
+        400
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "larchrow-village-cave-tileset/Previews/example_map_1x.png",
+       "sha": "99874bfd9bfb5059",
+       "size": [
+        800,
+        480
+       ],
+       "content": [
+        0,
+        0,
+        800,
+        480
+       ],
+       "frame": [
+        800,
+        480
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "larchrow-village-cave-tileset/Previews/example_map_2x.png",
+       "sha": "f64b4c13773c13c1",
+       "size": [
+        1600,
+        960
+       ],
+       "content": [
+        0,
+        0,
+        1600,
+        960
+       ],
+       "atlas": true
+      },
+      {
+       "member": "larchrow-village-cave-tileset/Tilesheets/larchrow_village_cave_16x16.png",
+       "sha": "3a232155834226ca",
+       "size": [
+        256,
+        176
+       ],
+       "content": [
+        0,
+        0,
+        256,
+        176
+       ],
+       "frame": [
+        256,
+        176
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "larchrow-village-cave-tileset/Tilesheets/larchrow_village_cave_48x48_3x.png",
+       "sha": "8cae3275a9980dd5",
+       "size": [
+        768,
+        528
+       ],
+       "content": [
+        0,
+        0,
+        768,
+        528
+       ],
+       "frame": [
+        768,
+        528
+       ],
+       "frames_per_row": [
+        1
+       ]
+      }
+     ]
+    }
+   ],
+   "imported": [
+    "assets/tiles/larchrow_village_cave.png"
+   ]
+  },
+  {
+   "id": "bowpixel_low_grass",
+   "name": "Low Grass Set 800+",
+   "creator": "Bow.Pixel",
+   "sources": [
+    "private-assets/BowPixel_Low_Grass"
+   ],
+   "storage": "private",
+   "licence": "paid",
+   "permissions": "May be used and edited in any commercial or non-commercial project; may NOT be distributed. The two sheets stay in private-assets; only the imported copies are committed (owner decision B25R1-Q8, 2026-11-03).",
+   "categories": [
+    "ground decoration",
+    "grass",
+    "flowers",
+    "pebbles"
+   ],
+   "status": "partial",
+   "scale": "Checked: two 320 x 320 sheets on an exact 16 px grid (no tuft crosses a cell edge), 20 x 20 = 400 low tufts each, most with tiny flowers or pebbles: 1:1.",
+   "used_for": "Imported unchanged as MapView atlases 6 and 7 (game/assets/tiles/low_grass_1.png, low_grass_2.png; tile value 600000 / 700000 + row * 20 + column). Not yet drawn by any system.",
+   "opportunities": "Ground variety for the overworld and the settlements (region and terrain workers): scatter tufts on plain grass cells by a fixed hash of the cell (deterministic, as the overworld's flowers), denser by woods and water, none on roads, fields or floors; the flowered tufts as spring and summer variants.",
+   "scan": [
+    {
+     "source": "private-assets/BowPixel_Low_Grass",
+     "present": true,
+     "files": 2,
+     "by_ext": {
+      ".png": 2
+     },
+     "licence_files": [],
+     "image_count": 2,
+     "sizes": {
+      "320x320": 2
+     },
+     "frame_grids": {
+      "16x16": {
+       "sheets": 2,
+       "example": "low_grass_1.png"
+      }
+     },
+     "images": [
+      {
+       "member": "low_grass_1.png",
+       "sha": "5aaaac2ecd3a606c",
+       "size": [
+        320,
+        320
+       ],
+       "content": [
+        1,
+        9,
+        319,
+        320
+       ],
+       "frame": [
+        16,
+        16
+       ],
+       "frames_per_row": [
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20
+       ]
+      },
+      {
+       "member": "low_grass_2.png",
+       "sha": "209a2aa855b25309",
+       "size": [
+        320,
+        320
+       ],
+       "content": [
+        0,
+        9,
+        318,
+        320
+       ],
+       "frame": [
+        16,
+        16
+       ],
+       "frames_per_row": [
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20
+       ]
+      }
+     ]
+    }
+   ],
+   "imported": [
+    "assets/tiles/low_grass_1.png",
+    "assets/tiles/low_grass_2.png"
+   ]
+  },
+  {
+   "id": "yavuz_grass",
+   "name": "Grass Pack",
+   "creator": "Yavuz (arsden)",
+   "sources": [
+    "private-assets/Yavuz_Grass_Pack.zip"
+   ],
+   "storage": "private",
+   "licence": "CC0",
+   "permissions": "CC0 (owner, itch.io page): no restriction. Kept in private-assets only because the owner supplied it there.",
+   "categories": [
+    "grass",
+    "isometric"
+   ],
+   "status": "rejected",
+   "scale": "Isometric: 25 sprites of 800 x 512, grass sprigs on 2:1 diamonds of 64 x 32 px (plus shadow layers and an .aseprite).",
+   "decision": "Not imported (agent decision, B25R1-Q8 inspection 2026-11-03): it is drawn for an isometric 2:1 grid, its sprigs laid out on diamond tiles, so no piece tiles on the world's top-down 16 px grid; the loose sprigs alone are a few pixels and Bow.Pixel's top-down Low Grass Set already covers the same need in the right projection.",
+   "opportunities": "None for the top-down world.",
+   "scan": [
+    {
+     "source": "private-assets/Yavuz_Grass_Pack.zip",
+     "present": true,
+     "files": 54,
+     "by_ext": {
+      ".aseprite": 1,
+      ".gif": 2,
+      ".png": 51
+     },
+     "licence_files": [],
+     "image_count": 53,
+     "sizes": {
+      "800x512": 52,
+      "1600x1024": 1
+     },
+     "frame_grids": {
+      "80x512": {
+       "sheets": 11,
+       "example": "Grass Pack/Grass Shadow12.png"
+      },
+      "32x32": {
+       "sheets": 6,
+       "example": "Grass Pack/Grass Shadow11.png"
+      }
+     },
+     "images": [
+      {
+       "member": "Grass Pack/Grass Shadow1.png",
+       "sha": "2828f568a6f9dded",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        49,
+        48,
+        753,
+        464
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow10.png",
+       "sha": "e4ff4de64bccc5e7",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        49,
+        48,
+        760,
+        463
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow11.png",
+       "sha": "636b1a08ea901886",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        53,
+        46,
+        772,
+        462
+       ],
+       "frame": [
+        32,
+        32
+       ],
+       "frames_per_row": [
+        0,
+        21,
+        21,
+        20,
+        18,
+        19,
+        20,
+        19,
+        23,
+        25,
+        24,
+        24,
+        24,
+        23,
+        24,
+        0
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow12.png",
+       "sha": "21c09e8a1b33461a",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        68,
+        53,
+        745,
+        460
+       ],
+       "frame": [
+        80,
+        512
+       ],
+       "frames_per_row": [
+        10
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow13.png",
+       "sha": "eac3f7c11526e82a",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        62,
+        50,
+        758,
+        458
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow14.png",
+       "sha": "6040ba424e674861",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        52,
+        52,
+        762,
+        463
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow15.png",
+       "sha": "cb679b3715b65cc5",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        53,
+        53,
+        755,
+        463
+       ],
+       "frame": [
+        80,
+        512
+       ],
+       "frames_per_row": [
+        10
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow16.png",
+       "sha": "231d85f395247f23",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        48,
+        47,
+        756,
+        465
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow17.png",
+       "sha": "a11e82f16d042630",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        52,
+        48,
+        760,
+        464
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow18.png",
+       "sha": "898adbe260bef5f7",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        52,
+        50,
+        755,
+        465
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow19.png",
+       "sha": "84794c03f2e05e2a",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        51,
+        49,
+        762,
+        466
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow2.png",
+       "sha": "fafbbd8c168880b4",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        50,
+        48,
+        756,
+        464
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow20.png",
+       "sha": "8b63071177fa8c8c",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        50,
+        49,
+        757,
+        466
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow21.png",
+       "sha": "f0440b41f1cba061",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        42,
+        45,
+        784,
+        471
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow22.png",
+       "sha": "bed5ff8567965f89",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        43,
+        47,
+        785,
+        471
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow23.png",
+       "sha": "1badfe65a7e74c1b",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        42,
+        47,
+        772,
+        471
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow24.png",
+       "sha": "9e3211dffdcc3b5a",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        43,
+        45,
+        768,
+        474
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow25.png",
+       "sha": "1e2d69baf1a523a5",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        47,
+        56,
+        759,
+        462
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow3.png",
+       "sha": "d0110063ce08fa64",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        53,
+        48,
+        756,
+        463
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow4.png",
+       "sha": "ef3a6128143c2ff2",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        49,
+        47,
+        755,
+        465
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow5.png",
+       "sha": "10b1fc20edf30546",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        53,
+        53,
+        765,
+        464
+       ],
+       "frame": [
+        80,
+        512
+       ],
+       "frames_per_row": [
+        10
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow6.png",
+       "sha": "210f0cd6dc36e7b7",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        54,
+        48,
+        752,
+        463
+       ],
+       "frame": [
+        80,
+        512
+       ],
+       "frames_per_row": [
+        10
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow7.png",
+       "sha": "b06c9ca2cee3f5d9",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        49,
+        47,
+        763,
+        462
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow8.png",
+       "sha": "8887101d75d0cf35",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        47,
+        47,
+        764,
+        466
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass Shadow9.png",
+       "sha": "2532c8a648fceac7",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        53,
+        47,
+        769,
+        463
+       ],
+       "frame": [
+        80,
+        512
+       ],
+       "frames_per_row": [
+        10
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass1.png",
+       "sha": "c33b5401f167e625",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        47,
+        47,
+        749,
+        464
+       ],
+       "frame": [
+        32,
+        32
+       ],
+       "frames_per_row": [
+        0,
+        23,
+        23,
+        24,
+        24,
+        24,
+        24,
+        24,
+        23,
+        24,
+        23,
+        24,
+        24,
+        24,
+        24,
+        0
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass10.png",
+       "sha": "13f0d8105f86bb64",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        49,
+        45,
+        754,
+        463
+       ],
+       "frame": [
+        80,
+        512
+       ],
+       "frames_per_row": [
+        10
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass11.png",
+       "sha": "b1b178d783cbea1a",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        48,
+        37,
+        760,
+        459
+       ],
+       "frame": [
+        32,
+        32
+       ],
+       "frames_per_row": [
+        0,
+        21,
+        20,
+        19,
+        18,
+        18,
+        19,
+        23,
+        24,
+        24,
+        24,
+        24,
+        24,
+        23,
+        23,
+        0
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass12.png",
+       "sha": "40a121bca34d640c",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        64,
+        49,
+        741,
+        459
+       ],
+       "frame": [
+        80,
+        512
+       ],
+       "frames_per_row": [
+        10
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass13.png",
+       "sha": "e5ec684feae6821b",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        59,
+        46,
+        750,
+        458
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass14.png",
+       "sha": "882cf09d2817d942",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        49,
+        49,
+        757,
+        463
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass15.png",
+       "sha": "afbbe90362b2478f",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        52,
+        50,
+        747,
+        463
+       ],
+       "frame": [
+        80,
+        512
+       ],
+       "frames_per_row": [
+        10
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass16.png",
+       "sha": "2f261bf0f273f86e",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        43,
+        41,
+        751,
+        464
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass17.png",
+       "sha": "a4c0681e9f29e185",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        51,
+        45,
+        747,
+        462
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass18.png",
+       "sha": "8cf221b285bfc70b",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        51,
+        46,
+        745,
+        462
+       ],
+       "frame": [
+        32,
+        32
+       ],
+       "frames_per_row": [
+        0,
+        23,
+        24,
+        24,
+        24,
+        23,
+        24,
+        24,
+        24,
+        23,
+        24,
+        24,
+        24,
+        24,
+        22,
+        0
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass19.png",
+       "sha": "a88928b765eab29a",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        51,
+        42,
+        755,
+        465
+       ],
+       "frame": [
+        32,
+        32
+       ],
+       "frames_per_row": [
+        0,
+        24,
+        23,
+        24,
+        23,
+        23,
+        24,
+        24,
+        24,
+        23,
+        23,
+        23,
+        24,
+        24,
+        24,
+        0
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass2.png",
+       "sha": "35a8011079920529",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        49,
+        45,
+        750,
+        464
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass20.png",
+       "sha": "8952cbf13db4a23c",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        50,
+        48,
+        755,
+        466
+       ],
+       "frame": [
+        32,
+        32
+       ],
+       "frames_per_row": [
+        0,
+        24,
+        23,
+        24,
+        23,
+        23,
+        24,
+        24,
+        24,
+        23,
+        23,
+        23,
+        24,
+        24,
+        24,
+        0
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass21.png",
+       "sha": "3dcd452a79feac08",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        38,
+        26,
+        758,
+        466
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass22.png",
+       "sha": "dc6d1b2584a40182",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        41,
+        33,
+        761,
+        466
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass23.png",
+       "sha": "8bc6430e1fbab39e",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        39,
+        38,
+        761,
+        467
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass24.png",
+       "sha": "46b3647cddd5bfcb",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        40,
+        34,
+        758,
+        468
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass25.png",
+       "sha": "468b88deb15bac63",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        46,
+        54,
+        753,
+        460
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass3.png",
+       "sha": "d155bd1bbe244455",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        52,
+        46,
+        752,
+        463
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass4.png",
+       "sha": "a65d6c7e61c88ffa",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        48,
+        46,
+        751,
+        465
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass5.png",
+       "sha": "40438f57436d9d4e",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        52,
+        48,
+        753,
+        463
+       ],
+       "frame": [
+        80,
+        512
+       ],
+       "frames_per_row": [
+        10
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass6.png",
+       "sha": "cac8767f0e526422",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        44,
+        41,
+        741,
+        462
+       ],
+       "frame": [
+        80,
+        512
+       ],
+       "frames_per_row": [
+        10
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass7.png",
+       "sha": "de8124c91ed1b54a",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        45,
+        45,
+        758,
+        462
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass8.png",
+       "sha": "a6d643d8656a6ef7",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        40,
+        44,
+        758,
+        465
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Grass9.png",
+       "sha": "8fcc5eeb612b823b",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        52,
+        35,
+        753,
+        463
+       ],
+       "frame": [
+        80,
+        512
+       ],
+       "frames_per_row": [
+        10
+       ]
+      },
+      {
+       "member": "Grass Pack/Preview.gif",
+       "sha": "8fc6dd6bc566deff",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        0,
+        0,
+        800,
+        512
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Preview.png",
+       "sha": "c6c878718a1e210e",
+       "size": [
+        800,
+        512
+       ],
+       "content": [
+        0,
+        0,
+        800,
+        512
+       ],
+       "frame": [
+        800,
+        512
+       ],
+       "frames_per_row": [
+        1
+       ]
+      },
+      {
+       "member": "Grass Pack/Preview2x.gif",
+       "sha": "2198bf949b868530",
+       "size": [
+        1600,
+        1024
+       ],
+       "content": [
+        0,
+        0,
+        1600,
+        1024
+       ],
+       "atlas": true
+      }
+     ]
+    }
+   ],
+   "imported": []
+  },
+  {
+   "id": "kassuii_cozy_village",
+   "name": "FREE - Cozy Village RPG",
+   "creator": "kassuii",
+   "sources": [
+    "private-assets/FREE - Cozy Village RPG"
+   ],
+   "storage": "private",
+   "licence": "free",
+   "permissions": "Free version (owner's screenshot of the terms): usable in free and commercial projects, may be modified; credit not required but appreciated (credited anyway); may NOT be used to train AI (we do not); may not be resold or redistributed, even modified. Original .rar (private-assets/FREE - Cozy Village RPG.rar) extracted byte for byte with unar into the folder; only imported pieces would be committed.",
+   "categories": [
+    "houses",
+    "props",
+    "flowers",
+    "stones",
+    "bushes",
+    "grass",
+    "pond",
+    "trees"
+   ],
+   "status": "planned",
+   "scale": "Measured: ATLAS_FREE.png (1800 x 900) is drawn at 3 screen px per art pixel (every run of colour a multiple of 3), so 1/3 nearest gives its native 600 x 300 at the world's density (its ground tiles 32 x 32 native = 2 x 2 world tiles). TREES_OAK.png (1024 x 321) is native 1:1, each oak about 128 x 128 px: 8 world tiles wide, only reducible by 2 with detail lost.",
+   "decision": "Looked at beside Puny World grass, flowers, rocks and bushes at the game's zoom (agent decision, 2026-11-03): its palette is darker and more detailed. The three tall flowers (white, yellow, red) and the two grey stones sit well at 1/3; the bushes (dark, heavy), the slate-roofed houses and window box (a building style no stamp uses), the raised grass, floors and pond (another ground set) clash and are not used; the oaks are too large for the world's trees and not integer-reducible without losing their detail. Nothing is imported until a system draws those pieces (a pack counts as integrated only when used).",
+   "opportunities": "Wildflower variety (the three tall flowers, 1/3 nearest) and loose stones (1/3) for the overworld's flower and rock decoration, as extra variants by a fixed hash of the cell.",
+   "scan": [
+    {
+     "source": "private-assets/FREE - Cozy Village RPG",
+     "present": true,
+     "files": 2,
+     "by_ext": {
+      ".png": 2
+     },
+     "licence_files": [],
+     "image_count": 2,
+     "sizes": {
+      "1024x321": 1,
+      "1800x900": 1
+     },
+     "frame_grids": {},
+     "images": [
+      {
+       "member": "ATLAS_FREE.png",
+       "sha": "c687ec537f1145de",
+       "size": [
+        1800,
+        900
+       ],
+       "content": [
+        0,
+        0,
+        1728,
+        864
+       ],
+       "atlas": true
+      },
+      {
+       "member": "TREES_OAK.png",
+       "sha": "4b5d57f4e414bfd7",
+       "size": [
+        1024,
+        321
+       ],
+       "content": [
+        2,
+        1,
+        1001,
+        291
+       ],
+       "frame": [
+        1024,
+        321
+       ],
+       "frames_per_row": [
+        1
+       ]
+      }
+     ]
+    }
+   ],
+   "imported": []
   }
  ]
 }
