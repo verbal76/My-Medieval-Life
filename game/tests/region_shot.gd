@@ -8,6 +8,7 @@ var out := "/tmp"
 var where := "wulstead"
 var frames := 0
 var step := 0
+var at_square := false
 
 
 func _init() -> void:
@@ -16,6 +17,8 @@ func _init() -> void:
 		out = args[0]
 	if args.size() > 1:
 		where = args[1]
+	if args.size() > 2:
+		at_square = args[2] == "square"         # B25R1-018: stand in the market place instead of at the first door
 	main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
 	process_frame.connect(_setup, CONNECT_ONE_SHOT)
@@ -36,6 +39,8 @@ func _setup() -> void:
 		w.player.pos = Vector2(south) + Vector2(0.5, 0.5) + (Vector2(st.gate) - Vector2(south)) * (k / 8.0)
 		w.update(0.01)
 	w.player.pos = Vector2(st.slots[0].spot) + Vector2(0.5, 1.5)
+	if at_square and (st.square as Rect2i).size.x > 0:
+		w.player.pos = Vector2((st.square as Rect2i).get_center()) + Vector2(0.5, 0.5)
 	w.minutes = 2.0 * 1440.0 + 11.0 * 60.0
 	w.regions.catch_up(2)
 	process_frame.connect(_wait)

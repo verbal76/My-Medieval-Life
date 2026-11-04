@@ -295,8 +295,8 @@ func _setup_routes() -> void:
 				# B25R1-018: straight from one settlement into the next (no point of the route between them): a node half way,
 				# where both join, so the route is not broken between them
 				var mid := (last_p + p) / 2
-				var free := true
-				for sj in sites.size():
+				var free := not bool(sites[-2 - prev].get("walled", false)) and not bool(sites[in_site].get("walled", false))
+				for sj in sites.size():                # (a walled town is left by its gates: the way on is found round it)
 					free = free and not (sites[sj].rect as Rect2i).grow(1).has_point(mid)
 				if free:
 					var mv := _vnode(mid)
@@ -432,6 +432,17 @@ func _site_side(si: int, toward: Vector2i) -> Array:
 		side = 1 if d.x > 0 else 3                     # (a walled town is entered by its north and south gates only)
 	elif d.y < 0:
 		side = 0
+	if (st.get("entries", []) as Array).size() == 4:     # B25R1-018: a side whose road out would cross a settlement is passed over
+		var order := [side, 0, 2, 1, 3] if not bool(st.get("walled", false)) else [side, 0, 2]
+		for sd in order:
+			var fp: Vector2i = st.entries[sd] + [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][sd] * 13
+			var bb := Rect2i(mini(fp.x, toward.x), mini(fp.y, toward.y), absi(fp.x - toward.x) + 1, absi(fp.y - toward.y) + 1).grow(2)
+			var hit := false
+			for s2 in sites:
+				hit = hit or bb.intersects(s2.rect)
+			if not hit:
+				side = sd
+				break
 	var bases: Dictionary = _site_bases.get(si, {})
 	if bases.is_empty():
 		for li in _links.size():
@@ -483,7 +494,11 @@ func _site_ring(si: int) -> void:
 	for k in ring.size():
 		var a: Vector2i = ring[k]
 		var b: Vector2i = ring[(k + 1) % ring.size()]
-		if a != b:
+		var bb := Rect2i(mini(a.x, b.x), mini(a.y, b.y), absi(a.x - b.x) + 1, absi(a.y - b.y) + 1).grow(2)
+		var hit := false
+		for sj in sites.size():                    # B25R1-018: not through a neighbouring settlement (they stand closer now)
+			hit = hit or (sj != si and bb.intersects(sites[sj].rect))
+		if a != b and not hit:
 			_route_link(_vnode(a), _vnode(b), "ring")
 
 

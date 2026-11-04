@@ -279,8 +279,8 @@ def houses(village):
     # whose bold outline sits well enough beside Shade's art; his roofs and walls are drawn straight down, not in Shade's
     # three-quarter view, and are not used
     L = 500000
-    out["stall"] = {"w": 2, "h": 2, "door": [0, 1], "layers": {"above1": [L + 137, L + 138, -1, -1], "below1": [-1, -1, L + 139, L + 140]},
-                    "solid": ["00", "11"]}
+    out["stall"] = {"w": 2, "h": 2, "door": [0, 1], "layers": {"above1": [L + 137, L + 138, -1, -1], "below1": [-1, -1, L + 139, L + 140],
+                    "path0": [-1, -1, 400015, 400015]}, "solid": ["00", "11"]}   # (the market's paving under the counter: road atlas 4)
     out["signpost"] = flat([[L + 141]], ["1"], (0, 0), "below1")
     out["lamp"] = {"w": 1, "h": 2, "door": [0, 1], "layers": {"above1": [L + 144, -1], "below1": [-1, L + 145]}, "solid": ["0", "1"]}
     out["haystack"] = flat([[L + 16]], ["1"], (0, 0), "below1")
@@ -314,7 +314,8 @@ def civic():
         "keep": slate_hall(11, 7, 4, pale=True),
         "buttercross": slate_hall(7, 4, 1, arcade=True),
         "barrow": {"w": 3, "h": 3, "door": [1, 2], "layers": {"below0": [v for r in BARROW for v in r]}, "solid": ["000", "000", "000"]},
-        "fountain": {"w": 2, "h": 2, "door": [0, 1], "layers": {"below0": [v for r in FOUNTAIN for v in r]}, "solid": ["11", "11"]},
+        "fountain": {"w": 2, "h": 2, "door": [0, 1], "layers": {"below0": [v for r in FOUNTAIN for v in r], "path0": [400015] * 4},
+                     "solid": ["11", "11"]},   # (stands on the market's paving: road atlas 4, stone, all sides joined)
     }
     return kit, white, stamps
 

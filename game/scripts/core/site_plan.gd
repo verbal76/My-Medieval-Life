@@ -491,11 +491,11 @@ func plan_site(spec: Dictionary, center: Vector2i, stamps_in: Dictionary, lay: D
 		var gc := Vector2i(gx_s, wr.end.y - 1)
 		wall_slot = {"kind": "civic", "trade": "", "stamp": nm, "hh": -1, "rect": wr, "door": gc, "spot": gc, "look": "", "id": "walls"}
 		# outside: the road on south past the gate, houses straggling along it; the Way east-west under the south wall
-		add_main(wr.end.y + 2, wr.end.y + 34)
-		way = add_cross(wr.end.y + 3, wr.position.x - 12, wr.end.x + 12, 1)
+		add_main(wr.end.y + 2, wr.end.y + 22)
+		way = add_cross(wr.end.y + 3, wr.position.x - 4, wr.end.x + 4, 1)
 		gap_lo = 2; gap_hi = 5
 		for s in [-1, 1]:
-			lines.append({"t": "M", "s": s, "d": 1, "cur": wr.end.y + 7, "dead": false, "lim": wr.end.y + 34})
+			lines.append({"t": "M", "s": s, "d": 1, "cur": wr.end.y + 7, "dead": false, "lim": wr.end.y + 22})
 		var sub := func(ln: Dictionary) -> bool:
 			return str(ln.t) == "M" and ln.has("lim") or str(ln.t) == "N" and int(ln.c) == cross.size() - 1
 		for q in range(items.size() - outside, items.size()):
