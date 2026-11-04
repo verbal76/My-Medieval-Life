@@ -3200,7 +3200,7 @@ Rules:
 - **Trigger:** Every game hour (Regions._wells) until each hamlet whose `water` is well has one, once the world has the well registry (Wilds).
 - **Source:** `game/scripts/core/settlement/regions.gd::_wells`, `game/data/settlements.json`
 - **Affects:** Settlements, Resources
-- **Expected:** Wilds.add_well("settlement:<id>", cell, true, cost) with the stone and logs taken from the hamlet's treasury store as an outside line. The village ledger books them imported_, which balances add_well's used_building_ (a workaround until add_well takes `count := false` for owners that aren't the village). A whole-world census shows the world short exactly the used_building_ amount, with the village's goods and every coin unchanged.
+- **Expected:** Wilds.add_well("settlement:<id>", cell, true, cost, false), with the stone and logs taken from the hamlet's treasury store and booked as the settlement's own use (flows.used). count=false keeps them out of the village's ledger (no used_building_, no imported_). A whole-world census shows the world short exactly the hamlets' recorded use, with the village's goods, figures and every coin unchanged.
 - **Tests:** `game/tests/hamlet_test.gd`
 
 

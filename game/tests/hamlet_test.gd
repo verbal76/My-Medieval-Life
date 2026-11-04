@@ -252,14 +252,15 @@ func test_replay() -> void:
 	check(trips > 0, "walkers set out (%d trips)" % trips)
 
 
-## Wilds.add_well(built=true) as the homestead branch has it: it counts the cost as used_building_ in the world's stats.
+## Wilds.add_well as the homestead branch has it (wip/b25r1-homestead 5236f89): built=true counts the cost as used_building_ in the
+## world's stats unless count is false.
 class WellStub:
 	var w
 	var wells := []
-	func add_well(owner: String, cell: Vector2i, built := false, cost := {}) -> Dictionary:
-		var wl := {"id": "wl%d" % (wells.size() + 1), "owner": owner, "cell": [cell.x, cell.y], "done": built, "cost": cost.duplicate()}
+	func add_well(owner: String, cell: Vector2i, built := false, cost := {}, count := true) -> Dictionary:
+		var wl := {"id": "wl%d" % (wells.size() + 1), "owner": owner, "cell": [cell.x, cell.y], "done": built, "cost": cost.duplicate(), "count": count}
 		wells.append(wl)
-		if built:
+		if built and count:
 			for id in cost:
 				w.stat("used_building_" + str(id), float(cost[id]))
 		return wl
@@ -269,8 +270,8 @@ const Census := preload("res://tests/census.gd")
 
 
 ## The hamlets' wells, census of the whole world (the village's holders and every settlement) before and after: the stone and logs
-## that went into the wells are exactly the used_building_ the ledger counts; nothing else changes; the village's own goods and
-## every coin are untouched (the village's identity: imported_ = used_building_ for them).
+## that went into the wells are exactly what the hamlets' own books count used; the village's goods, its imported_ and used_building_
+## figures and every coin are untouched.
 func test_well_census() -> void:
 	var w := World.new()
 	w.setup(VillageMap.load_default(), 1)
@@ -282,6 +283,10 @@ func test_well_census() -> void:
 	var rg0 := r.goods()
 	var coins0 := w.total_coins() + r.coins()
 	var st0 := w.stats.duplicate()
+	var used0 := {}
+	for s: OffMapSettlement in r.list:
+		for k in ["stone", "log"]:
+			used0[s.id + k] = int(s.flows.used.get(k, 0))
 	r._wells()
 	var wells: Array = stub.wells
 	var hamlet_wells := r.list.filter(func(s): return s.water == "well")
@@ -290,14 +295,18 @@ func test_well_census() -> void:
 	var rg1 := r.goods()
 	var ok := true
 	for k in ["stone", "log"]:
-		var used := int(w.stats.get("used_building_" + k, 0)) - int(st0.get("used_building_" + k, 0))
+		var used := 0
+		for s: OffMapSettlement in hamlet_wells:
+			used += int(s.flows.used.get(k, 0)) - int(used0.get(s.id + k, 0))
+		var vb := int(w.stats.get("used_building_" + k, 0)) - int(st0.get("used_building_" + k, 0))
 		var imp := int(w.stats.get("imported_" + k, 0)) - int(st0.get("imported_" + k, 0))
 		var world_drop := (int(vg0.get(k, 0)) + int(rg0.get(k, 0))) - (int(vg1.get(k, 0)) + int(rg1.get(k, 0)))
-		print("      %s: world %d less, used_building %d, village %d -> %d, imported %d" % [k, world_drop, used, int(vg0.get(k, 0)), int(vg1.get(k, 0)), imp])
-		ok = ok and world_drop == used and used > 0 and int(vg0.get(k, 0)) == int(vg1.get(k, 0)) and imp == used
-	check(ok, "the world holds exactly the wells' stone and logs less, as used_building_ says; the village's goods are unchanged")
+		print("      %s: world %d less, hamlets used %d, village %d -> %d, village used_building %d, imported %d" % [k, world_drop, used, int(vg0.get(k, 0)), int(vg1.get(k, 0)), vb, imp])
+		ok = ok and world_drop == used and used > 0 and int(vg0.get(k, 0)) == int(vg1.get(k, 0)) and imp == 0 and vb == 0
+	check(ok, "the world holds exactly the wells' stone and logs less, as the hamlets' own books say; the village's goods and figures are unchanged")
+	check(stub.wells.all(func(x): return x.count == false), "the registry is told not to count them in the village's ledger")
 	check(w.total_coins() + r.coins() == coins0, "no coin moved")
-	check(r.audit() == "", "the settlements' books balance: the materials left as their own outside line (%s)" % r.audit())
+	check(r.audit() == "", "the settlements' books balance: the materials are their own use (%s)" % r.audit())
 	r._wells()
 	check(stub.wells.size() == wells.size(), "a well is built once")
 	w.dispose()

@@ -445,5 +445,6 @@ The pack crosses into the village ledger on materialise and back on fold (outsid
   NPC's shape}. Materialise sets them and fold writes them back. They are saved, and they go with the person when they move (the
   load's `sk`). An older save without the entry loads at full health with no recorded skills. Relations live in the world's own
   records by person id, so they need nothing here.
-- **Booking workaround:** the wells' imported_ booking stands in until Wilds `count := false` lands.
+- **Wells:** booked as the hamlet's own use (flows.used), with `add_well(..., count := false)` (wip/b25r1-homestead 5236f89); the
+  village's ledger never sees them.
 

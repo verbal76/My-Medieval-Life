@@ -180,9 +180,9 @@ func trip_event(kind: String, s: OffMapSettlement, t: Dictionary, f: Dictionary)
 
 
 ## B25R1-018: a hamlet whose water is a well builds it once its world has the well registry (Wilds.add_well, owner
-## "settlement:<id>"), at the side of its main street below the last row, paid from the stone and logs in its store. The goods leave
-## the settlement's books as an outside line and enter the village ledger as imported_, where add_well counts them used_building_:
-## both ledgers balance. A hamlet without the stone and logs has no well yet (WDR-022).
+## "settlement:<id>"), at the side of its main street below the last row, paid from the stone and logs in its store. The use is the
+## settlement's own (flows.used, as any recipe's inputs); add_well is told count=false, so the village's ledger (used_building_) never
+## sees materials that were never the village's. A hamlet without the stone and logs has no well yet (WDR-022).
 func _wells() -> void:
 	if _world == null:
 		return
@@ -199,17 +199,16 @@ func _wells() -> void:
 		if st.is_empty():
 			continue
 		var cost: Dictionary = (GameData.balance.get("wilds", {}) as Dictionary).get("well_cost", {"stone": 6, "log": 2})
-		var tp := SettlementParty.make(self, s, "treasury")
 		var ok := true
 		for k in cost:
-			ok = ok and tp.held(str(k)) >= int(cost[k])
+			ok = ok and int(s.gov.granary.get(str(k), 0)) >= int(cost[k])
 		if not ok:
 			continue
 		for k in cost:
-			tp.remove(str(k), int(cost[k]))
-			w.stat("imported_" + str(k), float(cost[k]))
+			OffMapSettlement._take(s.gov.granary, str(k), int(cost[k]))
+			OffMapSettlement._add(s.flows.used, str(k), int(cost[k]))
 		var cell := Vector2i(st.gate) + Vector2i(3, 2)
-		var wl: Dictionary = wilds.add_well("settlement:" + s.id, cell, true, cost)
+		var wl: Dictionary = wilds.add_well("settlement:" + s.id, cell, true, cost, false)
 		s.well = str(wl.get("id", "built"))
 		s.note("The well was dug by the main street.")
 
