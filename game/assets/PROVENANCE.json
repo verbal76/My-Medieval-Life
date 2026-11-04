@@ -26481,6 +26481,34 @@
    "member": "PUNY_WORLD_v1/PUNY_WORLD_v1/Tiled/punyworld-overworld-tiles.tsx grass/river corner tiles and their animations, tiles 598-601 (falls), 703 (stones), 750, 876, 747, 775, 723, 777, 875, 877 (the wooden walk and the castle wall-walk: bridges)",
    "transform": "B25R1-Q3/B25R1-017/EA-01 water tiles: 8 animation frames x 331 rows, 1:1 (rows look*160 + flow*16 + corners: the grass/river corner tiles, flow 0 their own animation held two frames each, 1-8 three long soft ripples (the set's lighter water colours) scrolled 2 px a frame downstream, 9 drifting foam; look 1 other ripples and a tuft of the set's bank grass on corner steps; then the fall (its splash cut), the fall's foot (cascade, splash, foam), a ford (tile 703's stones twice in the full water) and the bridges, the tileset's walks as drawn)",
    "sha256": "3053102272fbc30d89f7b8a495074e519dea628d22d0194d66480e8dfb9353f2"
+  },
+  {
+   "file": "assets/tiles/larchrow_village_cave.png",
+   "source": "larchrow-village-cave-tileset.zip",
+   "member": "larchrow-village-cave-tileset/Tilesheets/larchrow_village_cave_16x16.png",
+   "transform": "copied unchanged (16 x 16 tiles, 16 columns: MapView atlas 5)",
+   "sha256": "3a232155834226cae2f956e968df3c13d67cdd42854b91dce843e54b94ef407d"
+  },
+  {
+   "file": "assets/tiles/low_grass_1.png",
+   "source": "BowPixel_Low_Grass",
+   "member": "low_grass_1.png",
+   "transform": "copied unchanged (16 x 16 tufts, 20 columns: MapView atlas 6)",
+   "sha256": "5aaaac2ecd3a606ce37262fe53ff5963952a2e9a9263f47147b14cb6502e33ca"
+  },
+  {
+   "file": "assets/tiles/low_grass_2.png",
+   "source": "BowPixel_Low_Grass",
+   "member": "low_grass_2.png",
+   "transform": "copied unchanged (16 x 16 tufts, 20 columns: MapView atlas 7)",
+   "sha256": "209a2aa855b2530957860a46825b1f77f2ed25cdd82fe5a9db6a5a8fb9a23f02"
+  },
+  {
+   "file": "assets/tiles/region_props.png",
+   "source": "MiniWorldSprites.zip + PUNY_WORLD_v1.zip",
+   "member": "MiniWorldSprites/Miscellaneous/Tombstones.png; the free overworld tileset's dirt path tiles",
+   "transform": "the eight 16 x 16 tombstones copied 1:1 into row 0 of an 8-column prop sheet (MapView atlas 8); rows 1-2 the 16 dirt path tiles (overworld_tiles.json dirt_path) with the dirt recoloured to cut chalk, the grass kept (hill figures)",
+   "sha256": "5d1a484ec2d3f51d3cbf3d0e2756455c1e27df0a60738ae8c526921984e799fa"
   }
  ]
 }

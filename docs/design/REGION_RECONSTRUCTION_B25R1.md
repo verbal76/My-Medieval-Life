@@ -373,3 +373,84 @@ Civic art, checked through the asset pipeline:
   - Recommended: assemble the abbey church and towers from Puny World's modular stone-wall and slate-roof kit, as
     build_village.py assembles its workshops.
   - The alternative is a pack from the owner.
+
+### Civic art as built (second region worker)
+
+All of it is cut from the paid Puny World tileset by `tools/build_region_stamps.py` into `game/data/region_stamps.json`
+(`stamps`, `wall`, the `white` look). The layout's `plan` places it: `civic` [{stamp, at, id}], `walls`, `castle`.
+
+| Piece | Source in the art | Where |
+|---|---|---|
+| Town walls | castle sample's Walls layer: 9-row east-west run (merlons, walkway, parapet, stone face), 5-column north-south run, the face's end column; banners from its Object layer | Higham: round the town, gates 7 wide on the main street N and S, gate towers |
+| White castle | the same wall kit, its faces in the light grey brick (rows 3139-3800), a keep in slate and light stone | beyond Higham's NE corner, gate to the south |
+| Abbey church, churches, towers | slate hall: the manor roof of sample village-2 (ridge N-S, any odd width and length), front in the wall kit's stone face with Shade's door and shuttered windows; a tower is a narrow hall with a tall face | Higham north band (abbey + tower, church + tower x2), Wulstead west (Black Canons), Netherton east |
+| Buttercross | a small slate roof on the round-arched stone arcade (4019-4021), open beneath | Wulstead's square |
+| Fountain | the round stone basin (3225/3226/3445/3446) | Wulstead's square |
+| Grave-mounds | Cozy Farm's 3 x 3 rough-turf patch, walked over | seven in a row on the Greenway's low hill |
+| Chalk figures, Bear Castle | chalk cut into the turf by the chunk generator (`_marks`): the figure from its rows in the layout (a tree, a bear ramping either side) at scale 3; the earthwork a broken ring bank | the west bent of Bear Hill; its top |
+
+Art gaps (no suitable art in the registered packs): a standing stone cross (Garton's street cross; also Wulstead's
+cross head on the buttercross), a true white-stone battlement (the castle's merlons are the grey kit's), and a fountain with
+water. Options: a pack from the owner, or leave the cross out as now (the Landmarks entry is withheld until it stands).
+### Towns rebuilt (third region worker; owner B25R1-Q8: "Owned art and a pack I'm going to give you")
+
+The site plan now lives in `game/scripts/core/site_plan.gd` (`Overworld._site_plan` calls it). It is still a pure function of the
+seed and the settlement, in integer arithmetic only, so it is the same on every machine.
+- **Streets.** The main street runs north-south and bends with an integer wave. In a town it widens into a lens-shaped
+  market place. Cross streets two cells deep branch east and west, bending too, with different lengths on each side. More
+  are added, alternately north and south, while buildings still need frontage, and each is cut back past its last building
+  when the plan is done.
+- **Frontage.** Each building takes the next place that fits on a line of frontage, nearest the middle first:
+  - on the north side of a cross street, its door on the street;
+  - or gable-on beside the main street, with a footpath from its door.
+  The gaps vary by kind of place: terraced in Higham, a few cells in a market town, up to six cells in a hamlet. The set-back
+  from the street varies too.
+- **Houses** come in seven shapes, resampled from Shade's small house (`house_7` to `house_13`, the deeper `*d` ones, and the
+  original with its ivy), with thatch on 35% in towns and 60% elsewhere. Towns also have manors cut whole from the village
+  map. Every household still has a home and every business its building, and slot order is unchanged.
+- **Yards and street furniture** are `props` on a site: drawn and solid like buildings, never entered, and listed after the
+  slots:
+  - fenced gardens, vegetable plots, sheds, wood piles and barrels behind the houses; haystacks, apple crates and casks from
+    Larchrow;
+  - wells beside the streets;
+  - Larchrow market stalls round the edge of the market place, a signpost at each crossroads, and lamp posts along a town's
+    main street.
+- **Churches and the abbey** have light-stone fronts, lower roofs and the tower at the west end. Beside each is a fenced
+  churchyard with Shade's Miniworld tombstones (`tools/region_props.py`, MapView atlas 8).
+- **Higham.** The town is planned first, then the walls are drawn round it. The main street runs straight through both
+  gates. Outside the south gate the road runs on, with houses straggling along it, and the Way runs east-west under the
+  south wall. The castle stands beyond the north-east corner.
+- **Ways in.** A site's `entries` (N, E, S, W) are where its own streets reach the site's edge, and the routes join there.
+
+Swapping art is data, not code. A stamp in `game/data/region_stamps.json` (built by `tools/build_region_stamps.py`) names its
+tiles. A new sheet goes into `MapView.EXTRA_ATLASES` and is referenced by tile id (atlas x 100000 + index).
+
+The owner's Larchrow pack is used only for small props. Its roofs and walls are drawn straight down, not in Shade's
+three-quarter view, so beside Shade's houses they read as a different game. The town houses stay Shade's.
+
+The chalk figure and Bear Castle are now drawn as follows:
+- **The figure** is a white line cut into whole turf: the dirt path autotile recoloured to chalk (region_props rows 1-2),
+  joined by its four neighbours.
+- **Bear Castle's ring** is a bank three cells broad of Cozy Farm's rough turf, drawn as a 9-slice, with four gaps where the
+  ways went in.
+
+#### Bear Hill and the castle knoll: not raised (assessed, not started)
+
+The overworld's raised ground is its cliff wangset: cell corners marked cliff in `_generate` form a plateau with a rocky
+rim, and the top is B14-07 ground that is reached only through steps or stairs the player builds. Raising a plateau from
+`region_layout.json` data (cliff corners in a disc) is easy. It is not a clean small change, because three existing rules
+would each need an exception:
+1. **Tops are wooded rock.** A top is covered with pines and boulders (unreachable) and draws snow variants. Bear Hill on
+   the open, treeless Downs and a castle courtyard both need a bare top. Tree, boulder and snow placement would need a
+   "data plateau" case.
+2. **Clearance.** No cliff corner lies within `VILLAGE_CLEAR` (14 tiles) of a site, and the castle is part of Higham's
+   site. A knoll under it needs a clearance exception, rim cells inside a site's rect (solidity, `site_building_at`), and
+   the reachability checks (overworld_test floods every door from the village).
+3. **The way up and the chalk.** A built-in ramp would have to be generated `works` (today they are player-made and saved)
+   or a gap left where a road crosses the rim. Bear Castle's ring bank and the hill figure are cut with the chalk
+   wangset on the same corners the cliff wangset would take: two corner sets on one cell.
+
+What it would need: a `plateau` entry per landmark (centre, radius, way-up side); in `_generate`, cliff corners for it that
+skip the clearance and road rules except on the way-up side; bare tops for data plateaus; the figure kept off the rim;
+tests for reach and solidity. This is roughly a day's work for the next region worker, and the rest of the generator would
+be unchanged.

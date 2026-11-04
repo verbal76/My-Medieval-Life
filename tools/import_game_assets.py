@@ -38,9 +38,14 @@ records each file's source archive and path. This is that step. It writes:
                                                      B14-07's ways through a cliff and its two items, by
                                                      tools/terrain_art.py (Forgotten Memories, from private-assets/,
                                                      and Miniworld's bridge)
+    game/assets/tiles/region_props.png               B25R1-018: the region's prop sheet (tools/region_props.py)
     game/assets/tiles/road_tiles.png                 B25R1-Q1: stone road and trail tiles, by tools/road_tiles.py (the free
                                                      tileset's dirt paths set with the paid tileset's flagstone ground)
     game/assets/tiles/water_tiles.png                B25R1-Q3: the streams' water, waterfall and bridges, by tools/water_tiles.py
+    game/assets/tiles/larchrow_village_cave.png, low_grass_1.png, low_grass_2.png
+                                                     B25R1-Q8: Larchrow's Village & Cave sheet and Bow.Pixel's low grass
+                                                     sheets as map atlases 5-7, copied unchanged from private-assets/ by
+                                                     tools/village_tile_sheets.py
     game/assets/music/*.ogg, game/assets/sfx/*.ogg     MUSIC-18, SFX-18: the owner's songs (release WAVs, Android's copy) and the
                                                      Cozy RPG SFX (private-assets/), encoded with ffmpeg by tools/game_audio.py
     game/assets/PROVENANCE.json                      source, path and transformation of every file
@@ -74,7 +79,9 @@ import living_forest
 import terrain_art  # noqa: E402
 import road_tiles  # noqa: E402
 import water_tiles  # noqa: E402
+import region_props  # noqa: E402
 import game_audio  # noqa: E402
+import village_tile_sheets  # noqa: E402
 import gear_assets  # noqa: E402
 
 OUT = REPO / "game" / "assets"
@@ -955,8 +962,10 @@ def main():
     terrain_art.import_into(prov, record)             # B14-07: steps, stairs and walkways; the nails and mallet icons
     road_tiles.import_into(prov, record)              # B25R1-Q1: stone road and trail tiles (game/assets/tiles/road_tiles.png)
     water_tiles.import_into(prov, record)             # B25R1-Q3: streams, waterfalls and bridges (game/assets/tiles/water_tiles.png)
+    region_props.import_into(prov, record)            # B25R1-018: the region's prop sheet (churchyard tombstones; tools/region_props.py)
     gear_assets.import_into(prov, record)             # Build 22: the armour and weapon catalogue's icons and worn layers
     game_audio.import_into(prov, record)              # MUSIC-18, SFX-18: Ogg Vorbis music (Android) and the Cozy RPG SFX, from private-assets/ and the release WAVs
+    village_tile_sheets.import_into(prov, record)     # B25R1-Q8: Larchrow's village and cave sheet, Bow.Pixel's low grass (atlases 5-7)
     (OUT / "PROVENANCE.json").write_text(json.dumps({"format": "mml-provenance/1", "files": prov}, indent=1) + "\n")
     print(f"imported {len(prov)} files into game/assets")
 

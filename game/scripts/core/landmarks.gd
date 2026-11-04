@@ -11,6 +11,9 @@ extends RefCounted
 ##   quarry   the village quarry yard, where its ore seams lie (village.json mine.yard), while any seam is left on the surface
 ##   camp     the bandit camp (World.bandit_camp, the map's own)
 ##   ore      an ore seam opened outside the village (Discovery: a trial pit's find, an ordinary World.deposits record)
+##   region   B25R1-018: the region layout's landmarks built in the world (Bear Castle's bank, the chalk figures, the seven
+##            grave-mounds, Saint Ann's Chapel, Higham's castle and abbey, Wulstead's fountain and canons, ...; id "region:<id>",
+##            kind the layout's), from Overworld.landmark_places
 ## Pure reads of the world; only the player's own record changes.
 
 const SEE := 10                 # tiles: a place this close (Chebyshev) is seen
@@ -36,11 +39,16 @@ static func all(w: World) -> Array:
 				out.append({"id": "quarry", "kind": "quarry", "name": "Quarry and ore seams", "at": yard})
 				break
 	if w.bandit_camp != Vector2i.ZERO:
-		out.append({"id": "bandit_camp", "kind": "camp", "name": "Bandit camp", "at": w.bandit_camp})
+		var hidden: bool = w.wilds != null and bool(w.wilds.band_claim().get("concealed", false))
+		out.append({"id": "bandit_camp", "kind": "camp", "name": "Bandit camp", "at": w.bandit_camp, "see": int(Homesteads.cfg().discover_hidden) if hidden else SEE})
+	if w.wilds != null:
+		out.append_array(w.wilds.landmarks())         # B25R1-014: hidden workshops of outlaw claims
 	for d in w.deposits:
 		var c := Vector2i(int(d.x), int(d.y))
 		if int(d.get("level", 0)) == 0 and not w.map.in_village(c) and int(d.get("amount", 0)) > 0:
 			out.append({"id": "ore:%d,%d" % [c.x, c.y], "kind": "ore", "name": GameData.item_name(str(d.ore)) + " seam", "at": c})
+	if w.map.overworld != null:                       # B25R1-018: the region's landmarks that stand in the world (Overworld.landmark_places)
+		out.append_array(w.map.overworld.landmark_places())
 	return out
 
 
@@ -63,7 +71,7 @@ static func note(w: World, p: PlayerState) -> Array:
 	for lm in all(w):
 		var id := str(lm.id)
 		var at: Vector2i = lm.at
-		if p.landmarks.has(id) or maxi(absi(at.x - cell.x), absi(at.y - cell.y)) > SEE:
+		if p.landmarks.has(id) or maxi(absi(at.x - cell.x), absi(at.y - cell.y)) > int(lm.get("see", SEE)):
 			continue
 		p.landmarks[id] = {"kind": str(lm.kind), "name": str(lm.name), "x": at.x, "y": at.y, "day": w.day()}
 		if w.recorder != null:                       # B25R1-016

@@ -22,6 +22,9 @@ var _works_seen := -1                 # B14-07: Overworld.works_version last dra
 var _works_tex := {}                  # way kind ("steps_ns", "stairs_ew", ...) -> its 16 px tile (game/assets/terrain)
 var _site_sorted_parent: Node2D       # the characters' y-sorted node (the village MapView's): where a site building's front wall is drawn
 var _site_roofs := {}                 # the village's roof layer names (village.json "roof_layers")
+var _homes_root: Node2D               # B25R1-010: the homesteads' houses and frames (Overworld.homes), drawn over the chunks' ground
+var _homes_seen := -1                 # Overworld.homes_version last drawn
+var _home_roofs := {}                 # home id -> [its "above" layers, its house rect]: the roof fades while the player is inside
 var _road_seen := -1                  # B25R1-011: Overworld.road_rev last drawn
 var _road_day := -1                   # the game day the loaded ways were last drawn for
 var live_check: Callable              # B25R1-019: (chunk rect in tiles) -> whether its water animates; Main sets it (the presence query)
@@ -86,6 +89,13 @@ func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FR
 		_works_seen = overworld.works_version
 		for c: Vector2i in chunks:
 			_draw_works(c)
+	if overworld.homes_version != _homes_seen:
+		_homes_seen = overworld.homes_version
+		_draw_homes()
+	for id in _home_roofs:
+		var inside := Rect2((_home_roofs[id][1] as Rect2i)).has_point(feet)
+		for l: TileMapLayer in _home_roofs[id][0]:
+			l.modulate.a = 0.3 if inside else 1.0
 	canopy.update(feet, delta)
 
 
@@ -147,6 +157,8 @@ func _steps_low_side(cell: Vector2i, ew: bool) -> int:
 ## for the connected sides: the generated ones (from `dirt`), worn ways beside it, and a settlement's street beside stone.
 ## Drawing only: the cell, its walkability and the chunk data are unchanged.
 func road_tile(cell: Vector2i, dirt: int) -> int:
+	if dirt >= 200000:
+		return dirt                                     # B25R1-018: a hill figure's chalk line or an earthwork's bank (no road)
 	var look := RoadWear.visual(overworld, cell)
 	if RegionRoads.lane_cells(overworld).has(cell):
 		look = "stone" if look == "" else look
@@ -289,6 +301,8 @@ func _build(cc: Vector2i) -> void:
 	var root := Node2D.new()
 	root.name = "chunk_%d_%d" % [cc.x, cc.y]
 	add_child(root)
+	if _homes_root != null:
+		move_child(_homes_root, get_child_count() - 1)     # B25R1-010: the homesteads stay drawn over every chunk's ground
 	var ground := _layer(root, 0)
 	var path := _layer(root, 0)
 	var objects := _layer(root, 0)
@@ -322,6 +336,44 @@ func _build(cc: Vector2i) -> void:
 	_draw_works(cc)
 
 
+## B25R1-010: every homestead's house (painted from the village's house stamp, as a settlement's buildings are: ground, path
+## and "below" layers under the characters, "above" layers over them, fading while the player is inside) and every frame of
+## a house being built (the village's frame tile). Few, so all are drawn again whenever one changes.
+func _draw_homes() -> void:
+	if _homes_root != null:
+		_homes_root.queue_free()
+	_home_roofs.clear()
+	_homes_root = Node2D.new()
+	_homes_root.name = "homesteads"
+	add_child(_homes_root)
+	for hm in overworld.homes:
+		var r: Rect2i = hm.rect
+		if str(hm.stamp) == "":
+			var fl := _layer(_homes_root, 0)
+			set_tile(fl, Vector2i(hm.frame), int(hm.tile))
+			continue
+		var stamp: Dictionary = overworld.stamps.get(str(hm.stamp), overworld.stamps.house)
+		var names: Array = (stamp.layers as Dictionary).keys()
+		names.sort_custom(func(a: String, b: String) -> bool:
+			var ra := 0 if a.begins_with("ground") else 1 if a.begins_with("path") else 2 if a.begins_with("below") else 3
+			var rb := 0 if b.begins_with("ground") else 1 if b.begins_with("path") else 2 if b.begins_with("below") else 3
+			return ra < rb or (ra == rb and a < b))
+		var roofs: Array[TileMapLayer] = []
+		for lname in names:
+			var above := str(lname).begins_with("above")
+			var l := _layer(_homes_root, 10 if above else 0)
+			l.name = "%s_%s" % [str(hm.id), str(lname)]
+			if above:
+				roofs.append(l)
+			var cells: Array = stamp.layers[lname]
+			for j in int(stamp.h):
+				for i in int(stamp.w):
+					var v := int(cells[j * int(stamp.w) + i])
+					if v >= 0:
+						set_tile(l, r.position + Vector2i(i, j), v)
+		_home_roofs[str(hm.id)] = [roofs, Rect2i(r.position, Vector2i(r.size.x, r.size.y - 1))]
+
+
 ## REGION-NAV-01: the buildings of a settlement site in this chunk, painted from the village's building stamps (the same
 ## art and layers as a house or workshop in the village): ground, path and "below" layers under the characters, "above"
 ## layers (roofs) over them. Only the cells inside this chunk, so a building across a seam is drawn once.
@@ -329,10 +381,10 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 	var box := Rect2i(cc * Overworld.CHUNK, Vector2i(Overworld.CHUNK, Overworld.CHUNK))
 	var layers := {}
 	var sorted: TileMapLayer = null       # this chunk's site front walls, drawn among the characters
-	for st in overworld.sites:
+	for st in overworld.sites + overworld.structures:   # (B25R1-018: and the landmarks built in the country)
 		if not (st.rect as Rect2i).intersects(box):
 			continue
-		for sl in st.slots:
+		for sl in st.slots + st.get("props", []):     # (B25R1-018: and the yard pieces)
 			var r: Rect2i = sl.rect
 			if not r.intersects(box):
 				continue
@@ -352,8 +404,9 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 					if str(lname).begins_with("above"):
 						above_layers.append(l)
 				var cells: Array = stamp.layers[lname]
-				for j in int(stamp.h):
-					for i in int(stamp.w):
+				var clip := r.intersection(box)          # only this chunk's part (a town's walls are one stamp round it all)
+				for j in range(clip.position.y - r.position.y, clip.end.y - r.position.y):
+					for i in range(clip.position.x - r.position.x, clip.end.x - r.position.x):
 						var v := int(cells[j * int(stamp.w) + i])
 						if not swap.is_empty():
 							v = int(swap.get(str(v), v))

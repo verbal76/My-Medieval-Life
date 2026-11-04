@@ -56,6 +56,7 @@ const VNODE := 1 << 20                   # B25R1-018: a route node's id is (VNOD
 const ROUTE_KEY := 3000                  # link keys of the main routes and their joins (gates 1000+, sites 2000+)
 const SITE_ROUTE_REACH := 110            # a site joins every main route passing this near (tiles)
 const M := 0xFFFFFFFF
+const SITE_PLAN := preload("res://scripts/core/site_plan.gd")   # B25R1-018: the organic settlement layout
 
 class Chunk extends RefCounted:
 	var cx := 0
@@ -106,7 +107,19 @@ var closed_rev := 0
 var sites: Array = []                    # {id, name, kind, center: Vector2i, rect: Rect2i, slots: [{trade, stamp, rect, door, spot}]}, in settlements.json order
 var _solid_rows := {}                    # stamp name -> its "solid" rows (village.json), for the site buildings
 var stamps := {}                         # the village's building stamps (village.json), which the view paints the site buildings with
+var structures: Array = []               # B25R1-018: the region's landmarks built in the country ({id, name, kind, rect, slots}), drawn as the sites' buildings
+var _marks := {}                         # B25R1-018: cell corner -> true where chalk is cut into the turf (a hill figure, an earthwork's bank)
+var _chalk_cells := {}                   # B25R1-018 (lead review: "the chalk figure reads as sand blobs"): cell -> true on a hill
+                                         # figure's carved line, drawn with the chalk path tiles (region_props.png rows 1-2)
+var _bank_cells := {}                    # cell -> true on Bear Castle's ring bank (Cozy Farm's rough turf, drawn as a 9-slice)
+var _mark_zones: Array = []              # [Rect2i]: round them the turf is kept whole, so the cut chalk reads as the figure it is
+var wall_kit := {}                       # B25R1-018: the battlemented wall kit (region_stamps.json "wall"), composed into walls by _wall_stamp
 var _near_sites: Array = []
+## B25R1-010 (Homesteads): the houses and frames standing on homestead claims, {id, stamp ("house", or "" for a frame), rect,
+## door, frame, tile}: collided here (home_building_at, as a settlement's building) and drawn by OverworldView. Set by
+## Homesteads (from its saved claims, on load too); not saved here. homes_version counts the changes (the view redraws).
+var homes: Array = []
+var homes_version := 0
 var dropped_in_sites := 0              # REGION-NAV-01: planted trees of an older save dropped because a site now stands there              # the sites near the chunk being generated (_generate), for _vdist
 var cache := {}                          # Vector2i -> Chunk
 var generated := 0                       # chunks generated so far (tests: the cache bound, no work for loaded chunks)
@@ -137,10 +150,16 @@ static func create(world_seed: int, m: VillageMap) -> Overworld:
 	for e in m.exits():
 		o.gates.append({"out": e.out, "dir": e.dir})
 	o._setup_gates()
-	o.stamps = m.data.stamps
-	for k in m.data.stamps:
-		o._solid_rows[k] = m.data.stamps[k].get("solid", [])
-	o._setup_sites(m.data.stamps)
+	o.stamps = (m.data.stamps as Dictionary).duplicate()   # (a copy: the sites add their civic stamps, the village's stay as they are)
+	var civic = JSON.parse_string(FileAccess.get_file_as_string("res://data/region_stamps.json"))
+	if civic is Dictionary:                          # B25R1-018: the civic buildings and the wall kit (tools/build_region_stamps.py)
+		o.wall_kit = civic.get("wall", {})
+		for k in (civic.get("stamps", {}) as Dictionary):
+			o.stamps[k] = civic.stamps[k]
+	for k in o.stamps:
+		o._solid_rows[k] = o.stamps[k].get("solid", [])
+	o._setup_sites(o.stamps)
+	o._setup_structures()
 	o._setup_routes()
 	return o
 
@@ -162,7 +181,8 @@ func _setup_sites(stamps: Dictionary) -> void:
 		var gate: Vector2i = plan.gate
 		var far := Vector2i(gate.x, rect.end.y + 14)                                            # straight down out of the site, as a village gate's road
 		sites.append({"id": str(spec.id), "name": str(spec.name), "kind": str(spec.kind), "center": center, "rect": rect, "slots": slots,
-			"gate": gate, "streets": plan.streets, "square": plan.square})
+			"gate": gate, "streets": plan.streets, "square": plan.square, "walled": bool(plan.get("walled", false)),
+			"props": plan.get("props", []), "entries": plan.get("entries", [])})
 		_links.append({"a": gate, "b": far, "key": 2000 + si * 8})
 		si += 1
 	for k0 in sites.size():                        # B25R1-018: joined to the grid once every site stands (a link never crosses another site)
@@ -189,88 +209,70 @@ func _setup_sites(stamps: Dictionary) -> void:
 ## into a square (the market). Rows differ in length and start, the gaps between houses vary: a pure function of the seed and
 ## the settlement, never a grid. Sizes from the layout's `plan` ({row: buildings a street, spare}; by kind otherwise).
 func _site_plan(spec: Dictionary, center: Vector2i, stamps: Dictionary, lay: Dictionary, si: int) -> Dictionary:
-	var trades: Dictionary = spec.trades
 	var plan: Dictionary = {}
 	for s in RegionGeo.data().settlements:
 		if str(s.id) == str(spec.id):
 			plan = s.get("plan", {})
-	var kind := str(spec.kind)
-	var per_row := int(plan.get("row", 10 if kind.contains("town") else 6 if kind == "village" or kind == "abbey village" else 4))
-	var bw := int(stamps.house.w)
-	var bh := int(stamps.house.h)
-	var lane := 3
-	var mid := 4                                    # the main street's width
-	var items: Array = []                           # [kind, trade, stamp, hh]
-	var tids := trades.keys()
-	tids.sort()
-	for t in trades.keys():                         # the businesses' buildings (settlements.json order, as before)
-		var st := str((lay.stamps as Dictionary).get(t, ""))
-		if st != "" or t == "official" or t == "merchant":
-			items.append(["work", str(t), st if st != "" else "house", -1])
-	var hid := 0
-	for t in tids:                                  # the homes, in OffMapSettlement's household order (trades sorted, then count)
-		for k in int(trades[t]):
-			items.append(["home", "", "house", hid])
-			hid += 1
-	for k in int(plan.get("spare", maxi(1, hid / 8))):
-		items.append(["home", "", "house", -1])
-	var half := ceili(per_row / 2.0)
-	var rows := ceili(items.size() / float(2 * half))
-	var square_row := rows / 2 if rows >= 3 else -1
-	if square_row >= 0 and rows * 2 * half - 2 * mini(2, half) < items.size():
-		rows += 1                                   # the square takes buildings out of its row: one more street for them
-	var slots := []
-	var streets: Array = []
-	var row_h := bh + lane
-	var top := center.y - (rows * row_h) / 2
-	var minx := center.x
-	var maxx := center.x
-	var q := 0
-	for r in rows:
-		var y := top + r * row_h
-		var gap_seed := hash32(seed, si, r, 940)
-		for side in 2:                              # west half then east half of the row, outward from the main street
-			var x := center.x - mid / 2 - 1 if side == 0 else center.x + mid / 2 + 1
-			x += (1 if side == 1 else -1) * (gap_seed >> (side * 3) & 3)
-			var n := half
-			if r == square_row:
-				n = maxi(0, half - 2)               # the square: the two buildings either side of the main street stand back
-				x += (1 if side == 1 else -1) * (2 * (bw + 2))
-			for k in n:
-				if q >= items.size():
-					break
-				var it: Array = items[q]
-				q += 1
-				var g := 1 + (hash32(seed, si, q, 941) % 3)
-				var at := Vector2i(x - bw if side == 0 else x, y + (hash32(seed, si, q, 942) % 2))
-				var sd: Dictionary = stamps[str(it[2])]
-				var door := at + Vector2i(int(sd.door[0]), int(sd.door[1]))
-				var look := ""                      # region_stamps.json variant: about half the homes thatched, more in the villages
-				if str(it[2]) == "house" and hash32(seed, si, q, 943) % 100 < (35 if kind.contains("town") else 60):
-					look = "thatch"
-				slots.append({"kind": it[0], "trade": it[1], "stamp": it[2], "hh": it[3], "rect": Rect2i(at, Vector2i(int(sd.w), int(sd.h))),
-					"door": door, "spot": Vector2i(door.x, y + bh + 1), "look": look})
-				minx = mini(minx, at.x)
-				maxx = maxi(maxx, at.x + bw)
-				x = (at.x - g) if side == 0 else (at.x + bw + g)
-	var margin := 3
-	var rect := Rect2i(minx - margin, top - margin, maxx - minx + 2 * margin, rows * row_h + 2 * margin)
-	for r in rows:                                  # each street: the row under the buildings, across the whole site
-		var sy := top + r * row_h + bh + 1
-		var cells: Array[Vector2i] = []
-		for x in range(rect.position.x + 1, rect.end.x - 1):
-			cells.append(Vector2i(x, sy))
-		streets.append(cells)
-	var main_st: Array[Vector2i] = []
-	for y in range(rect.position.y, rect.end.y):
-		main_st.append(Vector2i(center.x, y))
-	streets.append(main_st)
-	var sq := Rect2i()
-	if square_row >= 0:
-		var sy0 := top + square_row * row_h
-		sq = Rect2i(center.x - mid / 2 - 2 * (bw + 2), sy0, mid + 4 * (bw + 2), row_h)
-	var gate := Vector2i(center.x, top + (rows - 1) * row_h + bh + 1)   # the main street at the last street: the road comes in here
-	return {"rect": rect, "slots": slots, "gate": gate, "streets": streets, "square": sq}
+	var sp = SITE_PLAN.new()
+	sp.ow = self
+	return sp.plan_site(spec, center, stamps, lay, si, plan)
+
+## B25R1-018 phase 3: a battlemented wall round a w x h rectangle, from the castle sample's kit (wall_kit, region_stamps.json):
+## the walls along the north and south sides 9 rows deep (merlons, walkway, parapet, the stone face the street sees), those
+## along the west and east sides 5 wide, running over the north wall and onto the south wall's walkway as the sample's do; a
+## gate 7 wide in the north and south walls at each x of `gates_n` and `gates_s` (from the left edge), between two towers; a
+## banner on the face every 12 tiles. Layers below0 (the wall) and below1 (the banners), every wall cell solid.
+func _wall_stamp(w: int, h: int, gates_n: Array, gates_s: Array) -> Dictionary:
+	var kh: Array = wall_kit.h
+	var kv: Array = wall_kit.v
+	var ke: Array = wall_kit.end
+	var wall := PackedInt32Array()
+	wall.resize(w * h)
+	wall.fill(-1)
+	var flag := PackedInt32Array()
+	flag.resize(w * h)
+	flag.fill(-1)
+	var put := func(x: int, y: int, v: int) -> void:
+		if x >= 0 and y >= 0 and x < w and y < h:
+			wall[y * w + x] = v
+	for north in [true, false]:
+		var y0 := 0 if north else h - 9
+		for r in 9:
+			for x in w:
+				put.call(x, y0 + r, int(kh[r][x % 8]))
+		var gates: Array = gates_n if north else gates_s
+		for gx in gates:
+			for x in range(int(gx) - 3, int(gx) + 4):
+				for r in 9:
+					wall[(y0 + r) * w + clampi(x, 0, w - 1)] = -1
+			for tx in [int(gx) - 8, int(gx) + 4]:           # the gate's towers: the side walls' pattern over the walkway
+				for r in range(1 if north else 0, 4):
+					for c in 5:
+						put.call(tx + c, y0 + r, int(kv[(y0 + r) % 4][c]))
+			for r in range(4, 9):
+				put.call(int(gx) - 4, y0 + r, int(ke[r - 4]))
+		for bx in range(6, w - 6, 12):
+			var clear := true
+			for gx in gates:
+				clear = clear and absi(bx - int(gx)) > 6
+			if clear:
+				flag[(y0 + 4) * w + bx] = int(wall_kit.banner[0])
+				flag[(y0 + 5) * w + bx] = int(wall_kit.banner[1])
+	for x0 in [0, w - 5]:
+		for y in range(1, h - 5):                  # down to the south wall's walkway; its parapet and face run on beneath
+			for c in 5:
+				put.call(x0 + c, y, int(kv[y % 4][c]))
+	for r in range(4, 9):
+		put.call(w - 1, h - 9 + r, int(ke[r - 4]))
+		put.call(w - 6, r, int(ke[r - 4]))
+	var solid: Array = []
+	for y in h:
+		var row := ""
+		for x in w:
+			row += "1" if wall[y * w + x] >= 0 else "0"
+		solid.append(row)
+	return {"w": w, "h": h, "door": [w / 2, h - 1], "layers": {"below0": Array(wall), "below1": Array(flag)}, "solid": solid}
+
 
 ## B25R1-018: the main routes of the region layout as road nodes and links (see _vpos), and their joins to the sites, the
 ## gates and the grid network. A route's control points give its course (the meander along the country: round Bear Hill, over
@@ -291,11 +293,26 @@ func _setup_routes() -> void:
 	var through := {}                             # site index -> [route node indices that join it]: a route passing a settlement
 	for r in RegionGeo.routes():
 		var prev := -1
+		var last_p := Vector2i.ZERO
 		for p: Vector2i in r.points:
 			var in_site := -1
 			for si in sites.size():
 				if (sites[si].rect as Rect2i).grow(6).has_point(p):
 					in_site = si
+			if in_site >= 0 and prev <= -2 and -2 - prev != in_site:
+				# B25R1-018: straight from one settlement into the next (no point of the route between them): a node half way,
+				# where both join, so the route is not broken between them
+				var mid := (last_p + p) / 2
+				var free := not bool(sites[-2 - prev].get("walled", false)) and not bool(sites[in_site].get("walled", false))
+				for sj in sites.size():                # (a walled town is left by its gates: the way on is found round it)
+					free = free and not (sites[sj].rect as Rect2i).grow(1).has_point(mid)
+				if free:
+					var mv := _vnode(mid)
+					for s2 in [-2 - prev, in_site]:
+						var tm: Array = through.get(s2, [])
+						tm.append(mv)
+						through[s2] = tm
+			last_p = p
 			if in_site >= 0:                          # the route goes into the settlement here and out again: it is split at it
 				if prev >= 0:
 					var t: Array = through.get(in_site, [])
@@ -419,10 +436,21 @@ func _site_side(si: int, toward: Vector2i) -> Array:
 	var r: Rect2i = st.rect
 	var d := toward - (st.center as Vector2i)
 	var side := 2
-	if absi(d.x) > absi(d.y) * 2:
-		side = 1 if d.x > 0 else 3
+	if absi(d.x) > absi(d.y) * 2 and not bool(st.get("walled", false)):
+		side = 1 if d.x > 0 else 3                     # (a walled town is entered by its north and south gates only)
 	elif d.y < 0:
 		side = 0
+	if (st.get("entries", []) as Array).size() == 4:     # B25R1-018: a side whose road out would cross a settlement is passed over
+		var order := [side, 0, 2, 1, 3] if not bool(st.get("walled", false)) else [side, 0, 2]
+		for sd in order:
+			var fp: Vector2i = st.entries[sd] + [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][sd] * 13
+			var bb := Rect2i(mini(fp.x, toward.x), mini(fp.y, toward.y), absi(fp.x - toward.x) + 1, absi(fp.y - toward.y) + 1).grow(2)
+			var hit := false
+			for s2 in sites:
+				hit = hit or bb.intersects(s2.rect)
+			if not hit:
+				side = sd
+				break
 	var bases: Dictionary = _site_bases.get(si, {})
 	if bases.is_empty():
 		for li in _links.size():
@@ -433,6 +461,8 @@ func _site_side(si: int, toward: Vector2i) -> Array:
 		var gy: int = (st.gate as Vector2i).y           # the lane under the last row runs margin to margin: open at both ends
 		var a: Vector2i = [Vector2i((st.center as Vector2i).x, r.position.y), Vector2i(r.end.x - 1, gy), Vector2i(st.gate),
 			Vector2i(r.position.x, gy)][side]
+		if (st.get("entries", []) as Array).size() == 4:
+			a = st.entries[side]                      # B25R1-018: where the site's own streets reach its edge
 		var dir: Vector2i = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][side]
 		var far := a + dir * 13
 		var li := _links.size()
@@ -472,7 +502,11 @@ func _site_ring(si: int) -> void:
 	for k in ring.size():
 		var a: Vector2i = ring[k]
 		var b: Vector2i = ring[(k + 1) % ring.size()]
-		if a != b:
+		var bb := Rect2i(mini(a.x, b.x), mini(a.y, b.y), absi(a.x - b.x) + 1, absi(a.y - b.y) + 1).grow(2)
+		var hit := false
+		for sj in sites.size():                    # B25R1-018: not through a neighbouring settlement (they stand closer now)
+			hit = hit or (sj != si and bb.intersects(sites[sj].rect))
+		if a != b and not hit:
 			_route_link(_vnode(a), _vnode(b), "ring")
 
 
@@ -512,13 +546,139 @@ func site_building_at(c: Vector2i) -> bool:
 	var st := site_at(c)
 	if st.is_empty():
 		return false
-	for sl in st.slots:
+	for sl in st.slots + st.get("props", []):        # (any slot: a town's walls stand round its buildings, their rects overlap; the yards)
 		var r: Rect2i = sl.rect
 		if r.has_point(c):
 			var rows: Array = _solid_rows.get(str(sl.stamp), [])
 			var ry := c.y - r.position.y
 			var rx := c.x - r.position.x
-			return ry < rows.size() and rx < str(rows[ry]).length() and str(rows[ry])[rx] == "1"
+			if ry < rows.size() and rx < str(rows[ry]).length() and str(rows[ry])[rx] == "1":
+				return true
+	return false
+
+
+## B25R1-018: whether cell `c` is a solid part of a landmark built in the country (structures).
+func structure_at(c: Vector2i) -> bool:
+	for st in structures:
+		if (st.rect as Rect2i).has_point(c):
+			for sl in st.slots:
+				var r: Rect2i = sl.rect
+				if r.has_point(c):
+					var rows: Array = _solid_rows.get(str(sl.stamp), [])
+					if str(rows[c.y - r.position.y])[c.x - r.position.x] == "1":
+						return true
+	return false
+
+
+## B25R1-018 (owner directive 2026-11-03 section 3: "real world locations ... not merely labels on the map"): the landmarks of the
+## region layout that stand in the country, built from its `object`: "structure" a building or the grave-mounds (a chapel, the
+## seven barrows in a row on their low hill), "figure" chalk cut into the turf in the figure's shape (the tree and bears of
+## Bear Hill's westward bent), "ring" the bank of an earthwork of the ancient folk (Bear Castle: a ring of chalk-scarred bank
+## round the hill top, broken in places, BONE-C4-P005). No mechanics: they are places to find (Landmarks).
+func _setup_structures() -> void:
+	structures.clear()
+	_marks.clear()
+	_chalk_cells.clear()
+	_bank_cells.clear()
+	_mark_zones.clear()
+	for lm in RegionGeo.landmarks():
+		var at: Vector2i = lm.at
+		match str(lm.object):
+			"structure":
+				var slots := []
+				if str(lm.kind) == "barrows":
+					for k in 7:                                # in a row along the hill, a little out of line
+						var b := at + Vector2i(-21 + k * 6, (hash32(seed, at.x, k, 951) % 3) - 1)
+						slots.append(_lm_slot("barrow", b, "%s_%d" % [lm.id, k]))
+				else:
+					var sd: Dictionary = stamps.church
+					slots.append(_lm_slot("church", at - Vector2i(int(sd.w) / 2, int(sd.h) - 1), str(lm.id)))
+				var rect: Rect2i = slots[0].rect
+				for sl in slots:
+					rect = rect.merge(sl.rect)
+				structures.append({"id": str(lm.id), "name": str(lm.name), "kind": str(lm.kind), "rect": rect.grow(2), "slots": slots})
+			"figure":
+				var rows: Array = lm.figure
+				var sc := maxi(1, int(lm.scale))
+				var top := at - Vector2i(str(rows[0]).length() * sc / 2, rows.size() * sc / 2)
+				_mark_zones.append(Rect2i(top, Vector2i(str(rows[0]).length() * sc, rows.size() * sc)).grow(6))
+				for j in rows.size():                          # the figure's strokes, a white line cut into the whole turf
+					for i in str(rows[j]).length():
+						if str(rows[j])[i] == "X":
+							for dy in sc:
+								for dx in sc:
+									_chalk_cells[top + Vector2i(i * sc + dx, j * sc + dy)] = true
+			"ring":
+				var r := maxi(4, int(lm.r))
+				_mark_zones.append(Rect2i(at, Vector2i.ONE).grow(r + 6))
+				for y in range(-r - 2, r + 3):                 # a bank three cells broad round the hill top (integer distance: the same
+					for x in range(-r - 2, r + 3):             # on every machine), broken by four gaps where the ways went in
+						var d2 := x * x + y * y
+						if d2 < (r - 1) * (r - 1) or d2 > (r + 2) * (r + 2):
+							continue
+						var gapped := false
+						for g in 4:
+							var gd: Vector2i = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][g]
+							var off := (hash32(seed, g, 0, 952) % 5) - 2
+							if (x * gd.x + y * gd.y) > 0 and absi(x * gd.y - y * gd.x - off) <= 1:
+								gapped = true
+						if not gapped:
+							_bank_cells[at + Vector2i(x, y)] = true
+
+
+func _lm_slot(stamp: String, at: Vector2i, id: String) -> Dictionary:
+	var sd: Dictionary = stamps[stamp]
+	var door := at + Vector2i(int(sd.door[0]), int(sd.door[1]))
+	return {"kind": "civic", "trade": "", "stamp": stamp, "hh": -1, "rect": Rect2i(at, Vector2i(int(sd.w), int(sd.h))), "door": door,
+		"spot": door + Vector2i(0, 1), "look": "", "id": id}
+
+
+## B25R1-018: the landmarks of the region that stand in the world, as Landmarks places: [{id, kind, name, at}] (at: the door or
+## foot of the thing itself). A landmark whose `object` is empty is not a world object yet and is left out.
+func landmark_places() -> Array:
+	var out := []
+	for lm in RegionGeo.landmarks():
+		var ob := str(lm.object)
+		var at: Vector2i = lm.at
+		if ob == "":
+			continue
+		if ob.begins_with("site:"):
+			var parts := ob.substr(5).split("/")
+			var st := site(parts[0])
+			if st.is_empty():
+				continue
+			var found := false
+			if parts[1] == "square" and (st.square as Rect2i).size.x > 0:
+				at = (st.square as Rect2i).get_center()
+				found = true
+			for sl in st.slots:
+				if str(sl.get("id", "")) == parts[1]:
+					at = sl.spot
+					found = true
+					break
+			if not found:
+				continue
+		elif ob == "structure":
+			for s2 in structures:
+				if str(s2.id) == str(lm.id):
+					at = s2.slots[0].spot
+		out.append({"id": "region:" + str(lm.id), "kind": str(lm.kind), "name": str(lm.name).capitalize() if str(lm.name).begins_with("the ") else str(lm.name), "at": at})
+	return out
+
+
+## B25R1-010: whether a homestead's house stands on cell `c`: its stamp's solid cells above its bottom row, the doorway open
+## (World._built_collision's rule for a house built in the village, so the house is entered the same way).
+func home_building_at(c: Vector2i) -> bool:
+	for hm in homes:
+		var r: Rect2i = hm.rect
+		if str(hm.stamp) == "" or not r.has_point(c):
+			continue
+		var ry := c.y - r.position.y
+		if ry >= r.size.y - 1 or c == Vector2i(hm.door) - Vector2i(0, 1):
+			return false
+		var rows: Array = _solid_rows.get(str(hm.stamp), [])
+		var rx := c.x - r.position.x
+		return ry >= rows.size() or (rx < str(rows[ry]).length() and str(rows[ry])[rx] == "1")
 	return false
 
 
@@ -1856,7 +2016,7 @@ func _generate(cx: int, cy: int) -> Chunk:
 	var oy := cy * CHUNK - PAD
 	_near_sites.clear()
 	var site_reach := Rect2i(ox, oy, AREA, AREA).grow(VILLAGE_CLEAR + OBJECT_RAMP + 2)
-	for st in sites:
+	for st in sites + structures:                   # (B25R1-018: a landmark built in the country stands in its own clearing)
 		if (st.rect as Rect2i).intersects(site_reach):
 			_near_sites.append(st)
 	var fe := _field(ox, oy, 1, [128, 64, 32])
@@ -1869,6 +2029,21 @@ func _generate(cx: int, cy: int) -> Chunk:
 	# B25R1-018: the kind of country at each cell corner (RegionGeo; R_* codes) and a patch field for its bare ground
 	var reg := _region_codes(ox, oy)
 	var fp := _field(ox, oy, 8, [14, 7])
+	var fq := _field(ox, oy, 9, [6, 3])           # B25R1-018 chalk polish: the Downs' bare chalk in small scattered scars, not pits
+	var here := Rect2i(ox, oy, GRID, GRID)
+	for z: Rect2i in _mark_zones:                 # chalk cut in the turf (a hill figure, an earthwork's bank): bare at those corners,
+		if not z.intersects(here):                # whole turf round them
+			continue
+		for gj in GRID:
+			for gi in GRID:
+				var cw := Vector2i(ox + gi, oy + gj)
+				if z.has_point(cw):
+					var gk := gj * GRID + gi
+					var cut := _marks.has(cw)
+					if cut:
+						reg[gk] = R_DOWNS
+					fp[gk] = 1000 if cut else 0
+					fq[gk] = 1000 if cut else 0
 	var road := _road_mask(ox, oy)
 	var open := PackedByteArray()                 # road and one cell round it
 	open.resize(AREA * AREA)
@@ -2030,7 +2205,7 @@ func _generate(cx: int, cy: int) -> Chunk:
 			var corners: int = cliff[gk] | (cliff[gk + 1] << 1) | (cliff[gk + GRID + 1] << 2) | (cliff[gk + GRID] << 3)
 			var opts: Array = cliff_tiles[corners]
 			if corners == 0:                          # B25R1-018: chalk on the Downs, bare earth in the waste (the free tileset's corner sets)
-				var soil := _soil_bits(reg, fp, gk)
+				var soil := _soil_bits(reg, fp, fq, gk)
 				if soil.x != 0:
 					opts = (tiles.chalk if soil.y == 1 else tiles.dry)[soil.x]
 			ch.ground[c] = opts[hash32(seed, wx, wy, 70) % opts.size()]
@@ -2042,6 +2217,9 @@ func _generate(cx: int, cy: int) -> Chunk:
 					_road_shallows(q, road, open, wn), _is_fall(q - AREA, wn, blocked, inner), _road_near(q, road, 3))
 			elif not wdata.is_empty():
 				ch.bank[c] = (wdata[3] as PackedByteArray)[gk]       # B25R1-017: the floodplain's height above the water
+			if road[q] != 1 and (_chalk_cells.has(Vector2i(wx, wy)) or _bank_cells.has(Vector2i(wx, wy))):
+				ch.path[c] = _figure_tile(Vector2i(wx, wy))   # B25R1-018: a hill figure's chalk line, an earthwork's bank
+				continue
 			if road[q] == 1:
 				var bits := _road_bits(road, i, j, wx, wy)
 				var popts: Array = tiles.dirt_path[bits if bits != 0 else 10]
@@ -2263,13 +2441,13 @@ func _region_codes(ox: int, oy: int) -> PackedByteArray:
 
 ## The bare-ground corners of the cell whose top-left corner is `gk`: (bits, 1 chalk | 2 dry earth), (0, 0) when all grass.
 ## Bits as the cliff corners: 0 top-left, 1 top-right, 2 bottom-right, 3 bottom-left.
-func _soil_bits(reg: PackedByteArray, fp: PackedInt32Array, gk: int) -> Vector2i:
+func _soil_bits(reg: PackedByteArray, fp: PackedInt32Array, fq: PackedInt32Array, gk: int) -> Vector2i:
 	var bits := 0
 	var kind := 0
 	var idx := [gk, gk + 1, gk + GRID + 1, gk + GRID]
 	for b in 4:
 		var k: int = idx[b]
-		if reg[k] == R_DOWNS and fp[k] > 740:
+		if reg[k] == R_DOWNS and _chalk(fp[k], fq[k]):
 			bits |= 1 << b
 			kind = maxi(kind, 1)
 		elif reg[k] == R_WASTE and fp[k] > 400:
@@ -2279,9 +2457,29 @@ func _soil_bits(reg: PackedByteArray, fp: PackedInt32Array, gk: int) -> Vector2i
 		bits = 0
 		for b in 4:
 			var k2: int = idx[b]
-			if (reg[k2] == R_WASTE and fp[k2] > 400) or (reg[k2] == R_DOWNS and fp[k2] > 740):
+			if (reg[k2] == R_WASTE and fp[k2] > 400) or (reg[k2] == R_DOWNS and _chalk(fp[k2], fq[k2])):
 				bits |= 1 << b
 	return Vector2i(bits, kind)
+
+
+## B25R1-018: bare chalk on the Downs where the turf is thin: small scars (the fine field high) gathered where the broad one is
+## high too, so the down-turf stays whole between them.
+static func _chalk(broad: int, fine: int) -> bool:
+	return broad > 560 and fine > 760
+
+
+## B25R1-018: the tile of a chalk-figure cell (the chalk path tile for its 4-neighbour bits, region_props.png 800008 + bits) or
+## of a bank cell (Cozy Farm's rough-turf 3 x 3 patch as a 9-slice by which neighbours are bank).
+func _figure_tile(c: Vector2i) -> int:
+	if _chalk_cells.has(c):
+		var bits := 0
+		for k in 4:
+			if _chalk_cells.has(c + [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][k]):
+				bits |= 1 << k
+		return 800008 + (bits if bits != 0 else 10)
+	var row := 0 if not _bank_cells.has(c + Vector2i(0, -1)) else 2 if not _bank_cells.has(c + Vector2i(0, 1)) else 1
+	var col := 0 if not _bank_cells.has(c + Vector2i(-1, 0)) else 2 if not _bank_cells.has(c + Vector2i(1, 0)) else 1
+	return 200000 + row * 54 + col
 
 
 func _road_bits(road: PackedByteArray, i: int, j: int, wx: int, wy: int) -> int:
@@ -2322,8 +2520,10 @@ func _cell_of(chunk: Chunk, c: Vector2i) -> int:
 func is_solid(c: Vector2i) -> bool:
 	if village.has_point(c):
 		return false
-	if site_building_at(c):
-		return true                                    # REGION-NAV-01: a settlement's building
+	if site_building_at(c) or structure_at(c):
+		return true                                    # REGION-NAV-01: a settlement's building (B25R1-018: or a landmark's)
+	if not homes.is_empty() and home_building_at(c):
+		return true                                    # B25R1-010: a homestead's house
 	if works.has(c):
 		return false                                   # B14-07: steps, stairs or a walkway through the cliff's rim
 	var ch := get_chunk(chunk_of(c))

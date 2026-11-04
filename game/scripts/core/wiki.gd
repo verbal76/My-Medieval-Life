@@ -135,6 +135,7 @@ static func build() -> Wiki:
 	WikiWorld.add_pages(w)
 	WikiChests.add_pages(w)
 	WikiProperty.add_pages(w)
+	WikiHomestead.add_pages(w)      # B25R1-010: homesteads in the open country
 	WikiFarming.add_pages(w)
 	WikiTopics.add_pages(w)
 	WikiManor.add_pages(w)
@@ -950,7 +951,7 @@ func _medicine_list() -> String:
 func _not_yet() -> void:
 	var items := {
 		"player_shops": ["Player shops: production chains and trade perks", "You can rent and enlarge a market stall, open a shop in a room you built or a house you hold, fit it with equipment, hire an attendant and have them make goods at your own stations (see the guides). You can also employ permanent workers in the trades (see How do I employ a permanent worker?) and buy and sell workshops (see How do I buy or sell a workshop?). Not built yet: a permanent digger at your own pit, a hunter or a prospector in your service, more than one attendant at a counter, a worker hired by contract to make goods for your shop, a crafter of yours selling from your shop by themselves, renting a workshop from a neighbour rather than buying it, shops in houses you rent from a neighbour rather than from the manor, and trading skill perks on your sales."],
-		"other_towns": ["Living in the other towns and villages", "You can walk to the five neighbouring settlements, meet their keepers and crafters and trade with them face to face (see The neighbouring settlements), but their people do not walk about their sites as the village's do, and you cannot live, work or build there. The countryside has only animals and passers-by (see the countryside)."],
+		"other_towns": ["Living in the other towns and villages", "You can walk to the five neighbouring settlements, meet their keepers and crafters and trade with them face to face (see The neighbouring settlements), but their people do not walk about their sites as the village's do, and you cannot live, work or build there. In the open country between them you can claim land and build a homestead (see How do I make a homestead in the open country?)."],
 		"luxury_status": ["Standing from owning luxuries", "Villagers buy spices, fine cloth and jewellery from the caravan to show they can, and keep them, but the village has no measure of a person's standing yet, so owning them changes nothing about how anyone is treated, you included. They are kept in a pack and go to an heir; they are not worn."],
 		"cloud_saves": ["Cloud saves", "Saves stay on your device. There is no cloud sync or online play."],
 		"tool_rental_menu": ["Renting a tool or paying a smith from your own menus", "Villagers rent tools and pay smiths to mend theirs (see Villagers renting tools), but no window lets you do it yet. To get a tool, buy one or have one made; to keep it going, mend it yourself at an anvil (see Repairing tools at the anvil)."],

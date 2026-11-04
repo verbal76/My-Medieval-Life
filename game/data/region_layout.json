@@ -26,7 +26,30 @@
     "BONE-C3-P005",
     "BFOUR-C25-P003",
     "BONE-C4-P005"
-   ]
+   ],
+   "plan": {
+    "civic": [
+     {
+      "stamp": "fountain",
+      "at": "square",
+      "dx": 4,
+      "dy": 5,
+      "id": "fountain"
+     },
+     {
+      "stamp": "buttercross",
+      "at": "square",
+      "dx": -4,
+      "dy": 3,
+      "id": "buttercross"
+     },
+     {
+      "stamp": "church_tower",
+      "at": "west",
+      "id": "canons"
+     }
+    ]
+   }
   },
   {
    "id": "netherton",
@@ -38,7 +61,21 @@
    "src": [
     "BONE-C4-P002",
     "BONE-C4-P005"
-   ]
+   ],
+   "plan": {
+    "civic": [
+     {
+      "stamp": "church_tower",
+      "at": "east",
+      "id": "church"
+     },
+     {
+      "stamp": "house",
+      "at": "east",
+      "id": "canons_house"
+     }
+    ]
+   }
   },
   {
    "id": "garton",
@@ -50,7 +87,17 @@
    "src": [
     "BFOUR-C21-P017",
     "BFOUR-C22-P011"
-   ]
+   ],
+   "plan": {
+    "civic": [
+     {
+      "stamp": "house",
+      "at": "west",
+      "id": "barn",
+      "look": "thatch"
+     }
+    ]
+   }
   },
   {
    "id": "higham",
@@ -63,7 +110,29 @@
     "BONE-C3-P037",
     "BONE-C3-P038",
     "BONE-C5-P002"
-   ]
+   ],
+   "plan": {
+    "walls": true,
+    "castle": true,
+    "civic": [
+     {
+      "stamp": "abbey",
+      "at": "north_west",
+      "id": "abbey"
+     },
+     {
+      "stamp": "church_tower",
+      "at": "front",
+      "id": "church"
+     },
+     {
+      "stamp": "church_tower",
+      "at": "front",
+      "id": "church"
+     }
+    ],
+    "spare": 10
+   }
   },
   {
    "id": "bourton",
@@ -784,7 +853,8 @@
     "BONE-C3-P037",
     "BONE-C4-P005"
    ],
-   "note": "the first great hill of the Downs above Netherton; from its top downs on downs to the south"
+   "note": "the first great hill of the Downs above Netherton; from its top downs on downs to the south",
+   "object": ""
   },
   {
    "id": "bear_castle",
@@ -798,19 +868,33 @@
     "BONE-C4-P005",
     "BONE-C4-P006"
    ],
-   "note": "an earthwork of the ancient folk on the top of Bear Hill, its walls beaten down in places"
+   "note": "an earthwork of the ancient folk on the top of Bear Hill, its walls beaten down in places",
+   "object": "ring"
   },
   {
    "id": "bear_figures",
    "name": "the chalk figures of Bear Hill",
    "kind": "chalk figure",
-   "x": 62,
-   "y": 452,
+   "x": 34,
+   "y": 470,
    "label": "CANON",
    "src": [
     "BONE-C4-P005"
    ],
-   "note": "a tree with leaves and a bear ramping on either hand, cut in the turf of the westward bent; not seen from Netherton, clear from nearer Wulstead"
+   "note": "a tree with leaves and a bear ramping on either hand, cut in the turf of the westward bent; not seen from Netherton, clear from nearer Wulstead",
+   "object": "figure",
+   "figure": [
+    "..........XXXXX..........",
+    "...XX....XXXXXXX....XX...",
+    "..XXXX..XX.XXX.XX..XXXX..",
+    "...XXX.....XXX.....XXX...",
+    "...XXXX....XXX....XXXX...",
+    "..XX.XXX...XXX...XXX.XX..",
+    ".....XXX...XXX...XXX.....",
+    ".....X.X..XXXXX..X.X.....",
+    "....XX.XX.......XX.XX...."
+   ],
+   "scale": 3
   },
   {
    "id": "seven_mounds",
@@ -822,7 +906,8 @@
    "src": [
     "BONE-C4-P009"
    ],
-   "note": "seven grave-mounds of the ancient folk in a row on a low hill the Greenway tops"
+   "note": "seven grave-mounds of the ancient folk in a row on a low hill the Greenway tops",
+   "object": "structure"
   },
   {
    "id": "shepherds_meeting",
@@ -835,7 +920,8 @@
     "BONE-C4-P010",
     "BONE-C4-P011"
    ],
-   "note": "some two miles beyond the mounds, little less than twenty miles from Higham"
+   "note": "some two miles beyond the mounds, little less than twenty miles from Higham",
+   "object": ""
   },
   {
    "id": "st_ann_chapel",
@@ -848,7 +934,8 @@
     "BFOUR-C22-P009",
     "BONE-C3-P037"
    ],
-   "note": "CANON: a chapel by which a wise woman dwells, in the downs country. CANON-INFERRED: set in a swelly of the chalk with a little pool, as the holy man's chapel Clement describes"
+   "note": "CANON: a chapel by which a wise woman dwells, in the downs country. CANON-INFERRED: set in a swelly of the chalk with a little pool, as the holy man's chapel Clement describes",
+   "object": "structure"
   },
   {
    "id": "st_ann_pool",
@@ -861,7 +948,8 @@
    "src": [
     "BONE-C3-P037"
    ],
-   "note": "where the water hath trickled into a pool: the only water on the Downs"
+   "note": "where the water hath trickled into a pool: the only water on the Downs",
+   "object": ""
   },
   {
    "id": "canons_bridge_house",
@@ -872,7 +960,8 @@
    "label": "CANON",
    "src": [
     "BONE-C3-P004"
-   ]
+   ],
+   "object": ""
   },
   {
    "id": "higham_castle",
@@ -884,7 +973,8 @@
    "src": [
     "BONE-C5-P002"
    ],
-   "note": "on a knoll overlooking the town"
+   "note": "on a knoll overlooking the town",
+   "object": "site:higham/keep"
   },
   {
    "id": "higham_abbey",
@@ -897,7 +987,8 @@
     "BONE-C5-P002",
     "BONE-C7-P009"
    ],
-   "note": "the great Abbey church, long and high above all"
+   "note": "the great Abbey church, long and high above all",
+   "object": "site:higham/abbey"
   },
   {
    "id": "higham_market",
@@ -909,7 +1000,8 @@
    "src": [
     "BONE-C3-P031",
     "BONE-C6-P029"
-   ]
+   ],
+   "object": "site:higham/square"
   },
   {
    "id": "higham_south_gate",
@@ -921,7 +1013,8 @@
    "src": [
     "BONE-C6-P029",
     "BONE-C7-P003"
-   ]
+   ],
+   "object": "site:higham/walls"
   },
   {
    "id": "wulstead_market",
@@ -933,7 +1026,8 @@
    "src": [
     "BONE-C3-P005"
    ],
-   "note": "a fountain amidst it and a buttercross"
+   "note": "a fountain amidst it and a buttercross",
+   "object": "site:wulstead/fountain"
   },
   {
    "id": "wulstead_canons",
@@ -946,7 +1040,8 @@
     "BFOUR-C25-P010",
     "BFOUR-C26-P004"
    ],
-   "note": "at the west of the town, walled toward the fields"
+   "note": "at the west of the town, walled toward the fields",
+   "object": "site:wulstead/canons"
   },
   {
    "id": "netherton_church",
@@ -957,7 +1052,8 @@
    "label": "CANON",
    "src": [
     "BONE-C4-P002"
-   ]
+   ],
+   "object": "site:netherton/church"
   },
   {
    "id": "garton_cross",
@@ -968,7 +1064,8 @@
    "label": "CANON",
    "src": [
     "BFOUR-C21-P017"
-   ]
+   ],
+   "object": ""
   },
   {
    "id": "garton_barn",
@@ -980,7 +1077,8 @@
    "src": [
     "BFOUR-C21-P021"
    ],
-   "note": "on the western outskirt"
+   "note": "on the western outskirt",
+   "object": "site:garton/barn"
   },
   {
    "id": "bourton_tavern",
@@ -991,7 +1089,8 @@
    "label": "CANON",
    "src": [
     "BONE-C7-P007"
-   ]
+   ],
+   "object": ""
   },
   {
    "id": "bourton_vineyard",
@@ -1002,7 +1101,8 @@
    "label": "CANON",
    "src": [
     "BONE-C7-P009"
-   ]
+   ],
+   "object": ""
   }
  ],
  "routes": [
@@ -1279,5 +1379,6 @@
     ]
    ]
   }
- ]
+ ],
+ "_note_objects": "landmarks[].object: what stands for the landmark in the world (Overworld.landmark_places): 'site:<settlement>/<civic slot id>' (or /square), 'structure' (built by Overworld._setup_structures), 'figure' (chalk cut in the turf, `figure` rows scaled by `scale`), 'ring' (an earthwork bank, radius r); empty: not yet a world object, so not a Landmarks entry"
 }

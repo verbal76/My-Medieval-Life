@@ -103,14 +103,17 @@ func _run() -> void:
 			else:
 				wrong += 0 if in_atlas and row >= MapView.ROAD_TRAIL_ROW else 1
 			drawn[k] += 1
-	check(wrong == 0 and view.sources.size() >= 5, "each type has its own tiles: dirt roads the dirt path, stone the paving rows, trails the trail rows (%s, %d wrong)" % [str(drawn), wrong])
+	check(wrong == 0 and view.sources.size() == 4 + MapView.EXTRA_ATLASES.size(), "each type has its own tiles: dirt roads the dirt path, stone the paving rows, trails the trail rows (%s, %d wrong)" % [str(drawn), wrong])
 	# the real chunk drawing: stand in Wulstead and let the chunks build
 	var st: Dictionary = ow.site("wulstead")
 	w.player.pos = Vector2(st.gate) + Vector2(0.5, 0.5)
 	main.recenter()
 	view.follow(w.player.pos, w.player.pos, 0.0, -1)     # every chunk round the player built now, as a load does
 	var gate_cell := Vector2i(st.gate)
-	var lane_cell: Vector2i = lanes.keys().filter(func(c): return (st.rect as Rect2i).has_point(c))[0]
+	# a street cell of Wulstead's beside where the player stands (B25R1-018: the site is wider than the chunks drawn round the
+	# player, so its first street cell may lie in a chunk not built yet)
+	var lane_cell: Vector2i = lanes.keys().filter(func(c): return (st.rect as Rect2i).has_point(c) and c != gate_cell \
+			and (c as Vector2i).distance_to(gate_cell) < 6.0)[0]
 	var built: Dictionary = view.chunks.get(Overworld.chunk_of(lane_cell), {})
 	check(not built.is_empty() and (built.path as TileMapLayer).get_cell_source_id(lane_cell) == 4, "in the world, Wulstead's street is drawn with the stone road tiles (atlas 4)")
 	check(not built.is_empty() and (view.chunks.get(Overworld.chunk_of(gate_cell), built).path as TileMapLayer).get_cell_source_id(gate_cell) == 4, "and so is the road where it comes into the site")
@@ -130,13 +133,16 @@ func _run() -> void:
 	var start: Vector2i = lane_cell
 	var goal := Vector2i(-1048576, 0)
 	for cell in by.trail:
-		if cell.distance_to(Vector2(st.center)) < 110.0 and cell.distance_to(Vector2(st.center)) > 50.0 and goal.x == -1048576:
+		if cell.distance_to(Vector2(st.center)) < 200.0 and cell.distance_to(Vector2(st.center)) > 50.0 and goal.x == -1048576:
 			var r := RegionTravel.plan(w, start, cell)
 			if bool(r.ok) and not bool(r.direct):
+				# (each kind for a stretch, not a cell or two: the walker steers along the route and can round off a short piece;
+				# with the B25R1 region and streams merged the first trail found crossed only four dirt-road cells)
 				var ks := {}
 				for c in r.cells:
-					ks[RegionRoads.cell_kind(ow, Vector2i(c))] = true
-				if ks.has("stone") and ks.has("road") and ks.has("trail"):
+					var k := RegionRoads.cell_kind(ow, Vector2i(c))
+					ks[k] = int(ks.get(k, 0)) + 1
+				if int(ks.get("stone", 0)) >= 6 and int(ks.get("road", 0)) >= 10 and int(ks.get("trail", 0)) >= 6:
 					goal = cell
 	check(goal.x != -1048576, "a destination on a trail whose route crosses stone, dirt road and trail")
 	if goal.x != -1048576:
@@ -145,7 +151,7 @@ func _run() -> void:
 		check(why == "", "the travel is planned by the existing route planner (%s)" % why)
 		var walked := {}
 		var n := 0
-		while RegionTravel.has_destination(w.player) and n < 1500:
+		while RegionTravel.has_destination(w.player) and n < 4000:
 			_frames(1)
 			walked[RegionRoads.cell_kind(ow, Vector2i(w.player.pos.floor()))] = true
 			n += 1

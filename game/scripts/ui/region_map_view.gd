@@ -87,7 +87,7 @@ func setup(m) -> void:
 	worn = worn_ways(w.map.overworld)
 	streams = w.map.overworld.streams_in(bounds)
 	bridges = bridge_points(w.map.overworld, streams, bounds)
-	for k in ["mineral", "combat", "tool"]:
+	for k in ["mineral", "combat", "tool", "star"]:
 		_icons[k] = load("res://assets/markers/%s.png" % k)
 	_icons.home = load("res://assets/ui/home.png")
 	_fit()
@@ -608,7 +608,8 @@ func _draw() -> void:
 	var lr := 13.0 if zoom >= 1.0 else 9.0
 	for lm in Landmarks.known(w, p):
 		var at := to_screen(Vector2(lm.at) + Vector2(0.5, 0.5))
-		var icon: Texture2D = _icons.combat if lm.kind == "camp" else _icons.mineral
+		var icon: Texture2D = _icons.combat if lm.kind == "camp" else _icons.mineral if lm.kind in ["mine", "quarry", "ore"] \
+			else _icons.star                          # B25R1-018: a landmark of the region (a chapel, an earthwork, a castle)
 		draw_circle(at, lr, PALE)
 		draw_circle(at, lr - 1.5, Color8(43, 29, 19))
 		draw_texture_rect(icon, Rect2(at - Vector2(lr, lr) * 0.7, Vector2(lr, lr) * 1.4), false)

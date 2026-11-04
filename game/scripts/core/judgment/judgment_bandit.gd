@@ -90,7 +90,10 @@ static func escape_cell(w, b: NPC, attackers: Array) -> Vector2i:
 	if away.length() < 0.01:
 		away = b.pos - camp if b.pos.distance_to(camp) > 0.01 else Vector2.RIGHT
 	var to := b.pos + away.normalized() * float(c.get("escape_tiles", 14.0))
-	return w.map.nearest_walkable(Vector2i(floori(to.x), floori(to.y)))
+	var cell := Vector2i(floori(to.x), floori(to.y))
+	if not w.map.in_village(cell) and w.map.overworld != null:
+		return w.nearest_open_world(cell)       # B25R1-Q2 (a): a camp in the open country falls back over the world's ground
+	return w.map.nearest_walkable(cell)
 
 
 ## The fall-back plan: to the escape cell, and if that is not the camp, lying low there a while (no hiding mechanic exists; a

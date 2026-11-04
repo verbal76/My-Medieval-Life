@@ -11,7 +11,9 @@ var checks := 0
 var failures := 0
 # md5 of seven chunks per seed (ground, path, deco, solid, kind, snow, top, trees, water), generation 4, recorded on
 # wip/b25r1-water after merging the region fix (a8d3886), the EA-01 polish, the straight crossing legs, the water atlas at id 9 and the EA-01 fixes of 2026-11-04: any change to the generator's output changes these
-const GOLDEN_4 := {1: "ced0e3964541c5984ad442a169993c79", 2: "b941b80ef8670f192acf1a907b5ff7ea", 7: "24a33f253ab484332806327fee66f741"}
+## Re-pinned on the B25R1 integration (wip/b25r1, region 9ce9a2e merged on water 49e78a9): the region's towns, chalk figures and
+## banks now share the generation-4 chunks with the streams; the determinism and order-independence checks below hold.
+const GOLDEN_4 := {1: "236022637d1a715d9eb953b01ac16e3a", 2: "66f3e88fff3742146760650f9edfdd33", 7: "57a26b2f9237ee320d59c35efa1c2baa"}
 const CHUNKS := [Vector2i(-3, 2), Vector2i(1, 4), Vector2i(2, 9), Vector2i(-2, -3), Vector2i(5, 1), Vector2i(0, 20), Vector2i(-6, 12)]
 
 

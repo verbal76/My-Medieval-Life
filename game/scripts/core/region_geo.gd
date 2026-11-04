@@ -112,7 +112,7 @@ static func landmarks() -> Array:
 	var out := []
 	for l in data().landmarks:
 		out.append({"id": str(l.id), "name": str(l.name), "kind": str(l.kind), "at": Vector2i(int(l.x), int(l.y)), "r": int(l.get("r", 0)),
-			"label": str(l.get("label", ""))})
+			"label": str(l.get("label", "")), "object": str(l.get("object", "")), "figure": l.get("figure", []), "scale": int(l.get("scale", 1))})
 	return out
 
 

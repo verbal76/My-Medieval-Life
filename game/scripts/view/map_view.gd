@@ -6,13 +6,19 @@ extends Node2D
 const T := 16
 const SMALL_BOULDER_TILE := 300000     # PL1-06: the extra "runtime" atlas (index 3, tile 0): the plain boulder drawn smaller, for small boulders
 const ROAD_TILES := 400000             # B25R1-Q1: atlas 4, game/assets/tiles/road_tiles.png (tools/road_tiles.py): + row * 16 + connection index
+const LARCHROW := 500000               # B25R1-Q8: atlas 5, Larchrow's Village & Cave sheet (tools/village_tile_sheets.py): + its tile_id (docs/assets/LARCHROW_TILES.md)
+const LOW_GRASS := [600000, 700000]    # B25R1-Q8: atlases 6 and 7, Bow.Pixel's low grass sheets 1 and 2: + row * 20 + column
+## The atlases added after village.json's own three and the runtime boulder, in atlas order from 4: [image, columns].
+const EXTRA_ATLASES := [["res://assets/tiles/road_tiles.png", 16], ["res://assets/tiles/larchrow_village_cave.png", 16],
+		["res://assets/tiles/low_grass_1.png", 20], ["res://assets/tiles/low_grass_2.png", 20],
+		["res://assets/tiles/region_props.png", 8],   # atlas 8, B25R1-018: the region's prop sheet (tools/region_props.py)
+		["res://assets/tiles/water_tiles.png", 8], ["res://assets/tiles/water_tiles.png", 8]]   # atlases 9-10, B25R1-Q3: water (WATER_ATLAS animated, WATER_STILL_ATLAS still)
 const ROAD_STONE_ROWS := 4             # rows 0-3 stone road (paving variants), rows 4-5 dirt trail
 const ROAD_TRAIL_ROW := 4
 const ROAD_OVERGROWN_ROW := 6          # B25R1-011: rows 6-7 grown-over dirt road and trail, rows 8-9 damaged and broken stone
 const ROAD_DAMAGED_ROW := 8
-## B25R1-Q3: game/assets/tiles/water_tiles.png (tools/water_tiles.py), WATER_FRAMES animation frames a row. Atlas ids 9 and 10
-## (coordinator 2026-11-04): after the EXTRA_ATLASES of the homestead branch (5 Larchrow, 6-7 Bow.Pixel grass, 8 the region's
-## props); on merging, the two go at the end of that one list and _add_water_tiles' padding goes.
+## B25R1-Q3: game/assets/tiles/water_tiles.png (tools/water_tiles.py), WATER_FRAMES animation frames a row: the last two
+## EXTRA_ATLASES, 9 (animated, set up in _tile) and 10 (the same sheet, still).
 const WATER_ATLAS := 9
 const WATER_FRAMES := 8                # tools/water_tiles.py FRAMES; each frame water.json "frame_seconds" long
 const WATER_STILL_ATLAS := 10          # B25R1-019: the same water sheet with no animation (its first frame): water out of the live range
@@ -56,7 +62,6 @@ func build(m: VillageMap, above_parent: Node2D, sorted_parent: Node2D = null) ->
 		tileset.add_source(src)
 	_add_small_boulder(m)
 	_add_road_tiles()
-	_add_water_tiles()
 	for k in m.data.animated:
 		animated[int(k)] = m.data.animated[k].size()
 	for lay in m.data.layers:
@@ -91,44 +96,18 @@ func build(m: VillageMap, above_parent: Node2D, sorted_parent: Node2D = null) ->
 				_refront(cell)
 
 
-## B25R1-Q1: the fifth atlas, the stone road and trail tiles (ROAD_TILES), drawn by OverworldView on those road cells.
+## B25R1-Q1, B25R1-Q8: the atlases from the fifth on (EXTRA_ATLASES): the stone road and trail tiles (ROAD_TILES), drawn by
+## OverworldView on those road cells; Larchrow's village and cave sheet (LARCHROW); Bow.Pixel's low grass (LOW_GRASS).
 func _add_road_tiles() -> void:
 	if sources.size() != 4:
 		return
-	var src := TileSetAtlasSource.new()
-	src.texture = load("res://assets/tiles/road_tiles.png")
-	src.texture_region_size = Vector2i(T, T)
-	sources.append(src)
-	columns.append(16)
-	tileset.add_source(src)
-
-
-## B25R1-Q3: atlases WATER_ATLAS and WATER_STILL_ATLAS, the streams' water, waterfall and bridges (overworld_tiles.json
-## "water"), each row WATER_FRAMES frames. Ids below WATER_ATLAS that no list on this branch fills are padded with
-## unused sources (the homestead branch's EXTRA_ATLASES fill them once merged), so the ids hold either way.
-func _add_water_tiles() -> void:
-	if sources.size() < 5 or sources.size() > WATER_ATLAS:
-		return
-	var tex: Texture2D = load("res://assets/tiles/water_tiles.png")
-	while sources.size() < WATER_ATLAS:
-		var pad := TileSetAtlasSource.new()
-		pad.texture = tex
-		pad.texture_region_size = Vector2i(T, T)
-		sources.append(pad)
-		columns.append(WATER_FRAMES)
-		tileset.add_source(pad)
-	var src := TileSetAtlasSource.new()
-	src.texture = tex
-	src.texture_region_size = Vector2i(T, T)
-	sources.append(src)
-	columns.append(WATER_FRAMES)
-	tileset.add_source(src)
-	var still := TileSetAtlasSource.new()
-	still.texture = src.texture
-	still.texture_region_size = Vector2i(T, T)
-	sources.append(still)
-	columns.append(WATER_FRAMES)
-	tileset.add_source(still)
+	for e in EXTRA_ATLASES:
+		var src := TileSetAtlasSource.new()
+		src.texture = load(str(e[0]))
+		src.texture_region_size = Vector2i(T, T)
+		sources.append(src)
+		columns.append(int(e[1]))
+		tileset.add_source(src)
 
 
 ## The fourth atlas: one tile, the paid atlas's plain boulder scaled down (nearest) and stood on the

@@ -562,7 +562,7 @@ static func births(w: World) -> void:
 	var c := cfg()
 	var chance := 1.0 / (float(c.birth_interval_years) * year_days())
 	for n: NPC in w.npcs.duplicate():
-		if not n.alive or n.sex != "female" or n.role != "adult" or not has_partner(w, n):
+		if not n.alive or n.sex != "female" or not (n.role == "adult" or (n.role == "bandit" and _in_band(w, n))) or not has_partner(w, n):
 			continue
 		var father = w.player_of_id(n.partner) if is_player_id(n.partner) else w.npc(n.partner)
 		if father != null and father.sex != n.sex:          # couples of one sex have no children (CRT-07)
@@ -580,6 +580,11 @@ static func births(w: World) -> void:
 				var h := couple_household(w, p, q)
 				if h >= 0 and w.buildings.has(str(w.households[h].home)):
 					_try_birth(w, p, h, q, chance)
+
+
+## B25R1-014: a bandit woman of an outlaw household (the band's camp, an outlaw homestead) has children by the normal rules.
+static func _in_band(w: World, n: NPC) -> bool:
+	return n.household >= 0 and n.household < w.households.size() and w.households[n.household].has("homestead")
 
 
 static func _try_birth(w: World, mother, h: int, father, chance: float) -> bool:
@@ -629,6 +634,12 @@ static func birth(w: World, mother, father, h: int) -> NPC:
 	w.by_id[k.id] = k
 	Identity.register_npc(w, k, "birth")
 	w.stat("births")
+	if hh.get("band", false) or (w.homesteads != null and str(w.homesteads.claim_of_household(h).get("faction", "")) == "outlaw"):
+		k.clan = "bandit"                    # B25R1-014: born into the band's household: a child of the clan (FAM-07's standing)
+		w.stat("clan_births")
+		if w.homesteads != null:
+			w.homesteads._rec("clan_birth", {"person": k.id, "household": World.hh_ref(h), "claim": str(w.homesteads.claim_of_household(h).get("id", "")),
+				"mother": mother.id if mother is NPC else -1, "father": father.id if father is NPC else -1})
 	if w.recorder != null:
 		w.recorder.birth(k, mother, father, h)      # REC-19
 	var m_name: String = mother.name if mother != null else father.name
