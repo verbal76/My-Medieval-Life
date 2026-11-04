@@ -56,6 +56,7 @@ const VNODE := 1 << 20                   # B25R1-018: a route node's id is (VNOD
 const ROUTE_KEY := 3000                  # link keys of the main routes and their joins (gates 1000+, sites 2000+)
 const SITE_ROUTE_REACH := 110            # a site joins every main route passing this near (tiles)
 const M := 0xFFFFFFFF
+const SITE_PLAN := preload("res://scripts/core/site_plan.gd")   # B25R1-018: the organic settlement layout
 
 class Chunk extends RefCounted:
 	var cx := 0
@@ -164,7 +165,8 @@ func _setup_sites(stamps: Dictionary) -> void:
 		var gate: Vector2i = plan.gate
 		var far := Vector2i(gate.x, rect.end.y + 14)                                            # straight down out of the site, as a village gate's road
 		sites.append({"id": str(spec.id), "name": str(spec.name), "kind": str(spec.kind), "center": center, "rect": rect, "slots": slots,
-			"gate": gate, "streets": plan.streets, "square": plan.square, "walled": bool(plan.get("walled", false))})
+			"gate": gate, "streets": plan.streets, "square": plan.square, "walled": bool(plan.get("walled", false)),
+			"props": plan.get("props", []), "entries": plan.get("entries", [])})
 		_links.append({"a": gate, "b": far, "key": 2000 + si * 8})
 		si += 1
 	for k0 in sites.size():                        # B25R1-018: joined to the grid once every site stands (a link never crosses another site)
@@ -191,164 +193,13 @@ func _setup_sites(stamps: Dictionary) -> void:
 ## into a square (the market). Rows differ in length and start, the gaps between houses vary: a pure function of the seed and
 ## the settlement, never a grid. Sizes from the layout's `plan` ({row: buildings a street, spare}; by kind otherwise).
 func _site_plan(spec: Dictionary, center: Vector2i, stamps: Dictionary, lay: Dictionary, si: int) -> Dictionary:
-	var trades: Dictionary = spec.trades
 	var plan: Dictionary = {}
 	for s in RegionGeo.data().settlements:
 		if str(s.id) == str(spec.id):
 			plan = s.get("plan", {})
-	var kind := str(spec.kind)
-	var per_row := int(plan.get("row", 10 if kind.contains("town") else 6 if kind == "village" or kind == "abbey village" else 4))
-	var bw := int(stamps.house.w)
-	var bh := int(stamps.house.h)
-	var lane := 3
-	var mid := 4                                    # the main street's width
-	var items: Array = []                           # [kind, trade, stamp, hh]
-	var tids := trades.keys()
-	tids.sort()
-	for t in trades.keys():                         # a building for every trade's business (settlements.json order, as before): a farm,
-		items.append(["work", str(t), str((lay.stamps as Dictionary).get(t, "house")), -1])   # a herd or a tannery keeps a house
-	var hid := 0
-	for t in tids:                                  # the homes, in OffMapSettlement's household order (trades sorted, then count)
-		for k in int(trades[t]):
-			items.append(["home", "", "house", hid])
-			hid += 1
-	for k in int(plan.get("spare", maxi(1, hid / 8))):
-		items.append(["home", "", "house", -1])
-	var half := ceili(per_row / 2.0)
-	var rows := ceili(items.size() / float(2 * half))
-	var square_row := rows / 2 if rows >= 3 else -1
-	if square_row >= 0 and rows * 2 * half - 2 * mini(2, half) < items.size():
-		rows += 1                                   # the square takes buildings out of its row: one more street for them
-	var slots := []
-	var streets: Array = []
-	var row_h := bh + lane
-	var top := center.y - (rows * row_h) / 2
-	var minx := center.x
-	var maxx := center.x
-	var q := 0
-	for r in rows:
-		var y := top + r * row_h
-		var gap_seed := hash32(seed, si, r, 940)
-		for side in 2:                              # west half then east half of the row, outward from the main street
-			var x := center.x - mid / 2 - 1 if side == 0 else center.x + mid / 2 + 1
-			x += (1 if side == 1 else -1) * (gap_seed >> (side * 3) & 3)
-			var n := half
-			if r == square_row:
-				n = maxi(0, half - 2)               # the square: the two buildings either side of the main street stand back
-				x += (1 if side == 1 else -1) * (2 * (bw + 2))
-			for k in n:
-				if q >= items.size():
-					break
-				var it: Array = items[q]
-				q += 1
-				var g := 1 + (hash32(seed, si, q, 941) % 3)
-				var at := Vector2i(x - bw if side == 0 else x, y + (hash32(seed, si, q, 942) % 2))
-				var sd: Dictionary = stamps[str(it[2])]
-				var door := at + Vector2i(int(sd.door[0]), int(sd.door[1]))
-				var look := ""                      # region_stamps.json variant: about half the homes thatched, more in the villages
-				if str(it[2]) == "house" and hash32(seed, si, q, 943) % 100 < (35 if kind.contains("town") else 60):
-					look = "thatch"
-				slots.append({"kind": it[0], "trade": it[1], "stamp": it[2], "hh": it[3], "rect": Rect2i(at, Vector2i(int(sd.w), int(sd.h))),
-					"door": door, "spot": Vector2i(door.x, y + bh + 1), "look": look})
-				minx = mini(minx, at.x)
-				maxx = maxi(maxx, at.x + bw)
-				x = (at.x - g) if side == 0 else (at.x + bw + g)
-	var margin := 3
-	var inner := Rect2i(minx - margin, top - margin, maxx - minx + 2 * margin, rows * row_h + 2 * margin)
-	var sq := Rect2i()
-	if square_row >= 0:
-		var sy0 := top + square_row * row_h
-		sq = Rect2i(center.x - mid / 2 - 2 * (bw + 2), sy0, mid + 4 * (bw + 2), row_h)
-	# B25R1-018 phase 3: the place's civic buildings (the layout's plan "civic": [{stamp, at, id, look, dx, dy}], stamps from
-	# region_stamps.json). "square": in the market square, dx tiles east of the main street (west when negative); "west" and
-	# "east": beyond the end of the square's street, their doors on it; "north_west", "north_east": a band above the first
-	# row, either side of the main street, their doors on a street of their own.
-	var civ: Array = plan.get("civic", [])
-	var north_h := 0
-	for cv in civ:
-		if str(cv.at).begins_with("north"):
-			north_h = maxi(north_h, int(stamps[str(cv.stamp)].h))
-	var band_y := top - margin - 1 - north_h
-	var wx := inner.position.x
-	var ex := inner.end.x
-	var nwx := center.x - mid / 2 - 2
-	var nex := center.x + mid / 2 + 2
-	var band := Vector2i(center.x, center.x)
-	for cv in civ:
-		var sd: Dictionary = stamps[str(cv.stamp)]
-		var cw := int(sd.w)
-		var ch := int(sd.h)
-		var at := Vector2i.ZERO
-		var row_y := sq.position.y if sq.size.x > 0 else top + (rows / 2) * row_h
-		match str(cv.at):
-			"square":
-				var dx := int(cv.get("dx", 4))
-				at = Vector2i(center.x + dx if dx >= 0 else center.x + dx - cw + 1, row_y + int(cv.get("dy", 2)))
-			"west":
-				at = Vector2i(wx - 2 - cw, row_y + bh - ch)
-				wx = at.x
-			"east":
-				at = Vector2i(ex + 2, row_y + bh - ch)
-				ex = at.x + cw
-			"north_west":
-				at = Vector2i(nwx - cw, band_y + north_h - ch)
-				nwx = at.x - 3
-				band.x = mini(band.x, at.x)
-			_:
-				at = Vector2i(nex, band_y + north_h - ch)
-				nex = at.x + cw + 3
-				band.y = maxi(band.y, at.x + cw)
-		var door := at + Vector2i(int(sd.door[0]), int(sd.door[1]))
-		slots.append({"kind": "civic", "trade": "", "stamp": str(cv.stamp), "hh": -1, "rect": Rect2i(at, Vector2i(cw, ch)),
-			"door": door, "spot": door + Vector2i(0, 1), "look": str(cv.get("look", "")), "id": str(cv.get("id", cv.stamp))})
-	var rect := inner
-	for sl in slots:
-		rect = rect.merge((sl.rect as Rect2i).grow(margin))
-	for r in rows:                                  # each street: the row under the buildings, across the whole place
-		var sy := top + r * row_h + bh + 1
-		var cells: Array[Vector2i] = []
-		for x in range(rect.position.x + 1, rect.end.x - 1):
-			cells.append(Vector2i(x, sy))
-		streets.append(cells)
-	if north_h > 0:                                 # the north band's street, its doors on it, joined to the main street
-		var cells: Array[Vector2i] = []
-		for x in range(band.x - 1, band.y + 2):
-			cells.append(Vector2i(x, band_y + north_h))
-		streets.append(cells)
-	if sq.size.x > 0:                               # the market square, paved
-		var cells: Array[Vector2i] = []
-		for y in range(sq.position.y + 1, sq.end.y):
-			for x in range(sq.position.x + 1, sq.end.x - 1):
-				cells.append(Vector2i(x, y))
-		streets.append(cells)
-	var walled := bool(plan.get("walls", false))
-	if walled:                                      # the town walls round it all, a gate where the main street goes out north and south
-		var wr := rect.grow_individual(5, 9, 5, 9)
-		var nm := "walls_%s" % str(spec.id)
-		stamps[nm] = _wall_stamp(wr.size.x, wr.size.y, [center.x - wr.position.x], [center.x - wr.position.x])
-		_solid_rows[nm] = stamps[nm].solid
-		var gc := Vector2i(center.x, wr.end.y - 1)
-		slots.append({"kind": "civic", "trade": "", "stamp": nm, "hh": -1, "rect": wr, "door": gc, "spot": gc, "look": "", "id": "walls"})
-		rect = wr.grow(margin)
-		if bool(plan.get("castle", false)):         # the castle beyond the walls' north-east corner, its gate to the south
-			var cr := Rect2i(wr.end.x + 3, wr.position.y - 6, 34, 32)
-			var cn := "castle_%s" % str(spec.id)
-			stamps[cn] = _wall_stamp(cr.size.x, cr.size.y, [], [cr.size.x / 2])
-			_solid_rows[cn] = stamps[cn].solid
-			var cg := Vector2i(cr.position.x + cr.size.x / 2, cr.end.y - 1)
-			slots.append({"kind": "civic", "trade": "", "stamp": cn, "hh": -1, "rect": cr, "door": cg, "spot": cg, "look": "white", "id": "castle"})
-			var kd: Dictionary = stamps.keep
-			var ka := Vector2i(cr.position.x + (cr.size.x - int(kd.w)) / 2, cr.position.y + 9)
-			var kdoor := ka + Vector2i(int(kd.door[0]), int(kd.door[1]))
-			slots.append({"kind": "civic", "trade": "", "stamp": "keep", "hh": -1, "rect": Rect2i(ka, Vector2i(int(kd.w), int(kd.h))),
-				"door": kdoor, "spot": kdoor + Vector2i(0, 1), "look": "", "id": "keep"})
-			rect = rect.merge(cr.grow(margin))
-	var main_st: Array[Vector2i] = []
-	for y in range(rect.position.y, rect.end.y):
-		main_st.append(Vector2i(center.x, y))
-	streets.append(main_st)
-	var gate := Vector2i(center.x, top + (rows - 1) * row_h + bh + 1)   # the main street at the last street: the road comes in here
-	return {"rect": rect, "slots": slots, "gate": gate, "streets": streets, "square": sq, "walled": walled}
+	var sp = SITE_PLAN.new()
+	sp.ow = self
+	return sp.plan_site(spec, center, stamps, lay, si, plan)
 
 ## B25R1-018 phase 3: a battlemented wall round a w x h rectangle, from the castle sample's kit (wall_kit, region_stamps.json):
 ## the walls along the north and south sides 9 rows deep (merlons, walkway, parapet, the stone face the street sees), those
@@ -568,6 +419,8 @@ func _site_side(si: int, toward: Vector2i) -> Array:
 		var gy: int = (st.gate as Vector2i).y           # the lane under the last row runs margin to margin: open at both ends
 		var a: Vector2i = [Vector2i((st.center as Vector2i).x, r.position.y), Vector2i(r.end.x - 1, gy), Vector2i(st.gate),
 			Vector2i(r.position.x, gy)][side]
+		if (st.get("entries", []) as Array).size() == 4:
+			a = st.entries[side]                      # B25R1-018: where the site's own streets reach its edge
 		var dir: Vector2i = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][side]
 		var far := a + dir * 13
 		var li := _links.size()
@@ -647,7 +500,7 @@ func site_building_at(c: Vector2i) -> bool:
 	var st := site_at(c)
 	if st.is_empty():
 		return false
-	for sl in st.slots:                              # (any slot: a town's walls stand round its buildings, their rects overlap)
+	for sl in st.slots + st.get("props", []):        # (any slot: a town's walls stand round its buildings, their rects overlap; the yards)
 		var r: Rect2i = sl.rect
 		if r.has_point(c):
 			var rows: Array = _solid_rows.get(str(sl.stamp), [])

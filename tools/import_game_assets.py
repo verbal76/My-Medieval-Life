@@ -38,6 +38,7 @@ records each file's source archive and path. This is that step. It writes:
                                                      B14-07's ways through a cliff and its two items, by
                                                      tools/terrain_art.py (Forgotten Memories, from private-assets/,
                                                      and Miniworld's bridge)
+    game/assets/tiles/region_props.png               B25R1-018: the region's prop sheet (tools/region_props.py)
     game/assets/tiles/road_tiles.png                 B25R1-Q1: stone road and trail tiles, by tools/road_tiles.py (the free
                                                      tileset's dirt paths set with the paid tileset's flagstone ground)
     game/assets/music/*.ogg, game/assets/sfx/*.ogg     MUSIC-18, SFX-18: the owner's songs (release WAVs, Android's copy) and the
@@ -72,6 +73,7 @@ import craftpix_shelves  # noqa: E402
 import living_forest
 import terrain_art  # noqa: E402
 import road_tiles  # noqa: E402
+import region_props  # noqa: E402
 import game_audio  # noqa: E402
 import gear_assets  # noqa: E402
 
@@ -952,6 +954,7 @@ def main():
     animal_farm.import_into(prov, record)             # the horse (B14-11): from the private Animal Farm pack, else kept as it is
     terrain_art.import_into(prov, record)             # B14-07: steps, stairs and walkways; the nails and mallet icons
     road_tiles.import_into(prov, record)              # B25R1-Q1: stone road and trail tiles (game/assets/tiles/road_tiles.png)
+    region_props.import_into(prov, record)            # B25R1-018: the region's prop sheet (churchyard tombstones; tools/region_props.py)
     gear_assets.import_into(prov, record)             # Build 22: the armour and weapon catalogue's icons and worn layers
     game_audio.import_into(prov, record)              # MUSIC-18, SFX-18: Ogg Vorbis music (Android) and the Cozy RPG SFX, from private-assets/ and the release WAVs
     (OUT / "PROVENANCE.json").write_text(json.dumps({"format": "mml-provenance/1", "files": prov}, indent=1) + "\n")

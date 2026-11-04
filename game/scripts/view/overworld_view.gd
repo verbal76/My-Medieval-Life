@@ -270,7 +270,7 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 	for st in overworld.sites + overworld.structures:   # (B25R1-018: and the landmarks built in the country)
 		if not (st.rect as Rect2i).intersects(box):
 			continue
-		for sl in st.slots:
+		for sl in st.slots + st.get("props", []):     # (B25R1-018: and the yard pieces)
 			var r: Rect2i = sl.rect
 			if not r.intersects(box):
 				continue

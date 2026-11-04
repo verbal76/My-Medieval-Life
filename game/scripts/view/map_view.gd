@@ -50,6 +50,7 @@ func build(m: VillageMap, above_parent: Node2D, sorted_parent: Node2D = null) ->
 		tileset.add_source(src)
 	_add_small_boulder(m)
 	_add_road_tiles()
+	_add_region_atlases()
 	for k in m.data.animated:
 		animated[int(k)] = m.data.animated[k].size()
 	for lay in m.data.layers:
@@ -94,6 +95,23 @@ func _add_road_tiles() -> void:
 	sources.append(src)
 	columns.append(16)
 	tileset.add_source(src)
+
+
+## B25R1-018 (owner B25R1-Q8): the region's own sheets from game/data/region_stamps.json "atlases" (the prop sheet first: atlas 5,
+## tile ids 500000 + index), so a new piece of art is a sheet and a stamp in data, never a code change.
+func _add_region_atlases() -> void:
+	if sources.size() != 5:
+		return
+	var d = JSON.parse_string(FileAccess.get_file_as_string("res://data/region_stamps.json"))
+	if not d is Dictionary:
+		return
+	for a in (d.get("atlases", []) as Array):
+		var src := TileSetAtlasSource.new()
+		src.texture = load(str(a.image))
+		src.texture_region_size = Vector2i(T, T)
+		sources.append(src)
+		columns.append(int(a.columns))
+		tileset.add_source(src)
 
 
 ## The fourth atlas: one tile, the paid atlas's plain boulder scaled down (nearest) and stood on the

@@ -163,8 +163,8 @@
     "units",
     "nature"
    ],
-   "status": "reference",
-   "used_for": "Building atlas data (data/) used by the tools.",
+   "status": "partial",
+   "used_for": "Building atlas data (data/) used by the tools; the eight tombstones (Miscellaneous/Tombstones.png, 1:1) in the region's churchyards (tools/region_props.py, B25R1-018).",
    "opportunities": "Bridge.png for walkways (B14-07)."
   },
   {

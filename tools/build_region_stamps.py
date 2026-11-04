@@ -25,7 +25,7 @@ TILES = REPO / "game" / "assets" / "tiles" / "punyworld-tiles.png"
 COLS = 220
 FORMAT = "mml-region-stamps/1"
 # variant name -> (tile offset in the paid atlas, stamps it applies to). "thatch": the straw roof, 16 rows below the tiled one.
-VARIANTS = {"thatch": (16 * COLS, ["house"])}
+VARIANTS = {"thatch": (16 * COLS, ["house", "house_*"])}
 
 
 PAID = "PUNY-WORLD-PAID_v1.zip"
@@ -118,12 +118,13 @@ def slate_hall(w, rows, front, door=True, arcade=False, pale=False, windows=Fals
     return st
 
 
-def beside(a, b):
-    """Stamp b set against stamp a's east side, their bottoms level (a church and its tower): a's door is the door."""
+def beside(a, b, door="a"):
+    """Stamp b set against stamp a's east side, their bottoms level (a church and its tower): a's door is the door (b's with
+    door="b")."""
     w, h = a["w"] + b["w"], max(a["h"], b["h"])
     names = set(a["layers"]) | set(b["layers"])
-    out = {"w": w, "h": h, "door": [a["door"][0], h - a["h"] + a["door"][1]], "layers": {n: [-1] * (w * h) for n in names},
-           "solid": []}
+    dd = [a["door"][0], h - a["h"] + a["door"][1]] if door == "a" else [a["w"] + b["door"][0], h - b["h"] + b["door"][1]]
+    out = {"w": w, "h": h, "door": dd, "layers": {n: [-1] * (w * h) for n in names}, "solid": []}
     rows = [["0"] * w for _ in range(h)]
     for st, ox in ((a, 0), (b, a["w"])):
         oy = h - st["h"]
@@ -136,6 +137,147 @@ def beside(a, b):
             for i in range(st["w"]):
                 rows[oy + j][ox + i] = st["solid"][j][i]
     out["solid"] = ["".join(r) for r in rows]
+    return out
+
+
+# --- the region's houses and yards (B25R1-018, owner B25R1-Q8: "owned art", towns that are not rows of identical houses) -------
+# Shade's small house (village.json "house", 9 x 10: roof rows 1-6 with the ridge in column 4, eaves row 7, front row 8, step
+# row 9) resampled: a wider house repeats the slope columns 2 and 6, a narrower one drops them; a deeper one repeats the roof's
+# middle rows. The ivy (layer above4) is left off, so the roofs read clean; the original keeps it. Windows sit two columns
+# either side of the door (and four, on the widest).
+HOUSE_SHAPES = {"house_7": (7, 10), "house_11": (11, 10), "house_13": (13, 11), "house_9d": (9, 12), "house_11d": (11, 12),
+                "house_7d": (7, 11)}
+WIN, WALL = 3659, 945
+# Buildings cut whole from the village map (village.json layers and solid grid, its wang grass left out): x, y, w, h, door.
+# A site building is not entered: every roofed cell is solid but the door.
+CUTS = {"manor": (14, 36, 15, 18, (9, 16)), "inn": (34, 38, 23, 14, (4, 13)), "hall": (67, 40, 17, 14, (4, 13)),
+        "shed": (39, 31, 3, 3, (1, 2))}
+WELL = [[3007, 3008], [3227, 3228], [3447, 3448]]
+PAID_COLS = 220
+GROWING, RIPE = 7 * PAID_COLS + 207, 11 * PAID_COLS + 207
+COZY = 200000
+FENCE = {"tl": COZY + 29 * 54 + 4, "t": COZY + 29 * 54 + 5, "tr": COZY + 29 * 54 + 6, "l": COZY + 30 * 54 + 4,
+         "r": COZY + 30 * 54 + 6, "bl": COZY + 31 * 54 + 4, "b": COZY + 31 * 54 + 5, "br": COZY + 31 * 54 + 6}
+TOMB = 500000                      # atlas 5 (tools/region_props.py): eight tombstones, 500000-500007
+PROPS_ATLAS = {"image": "res://assets/tiles/region_props.png", "columns": 8}
+
+
+def resample(src, w, h, ivy=False):
+    sw, sh = src["w"], src["h"]
+    n = (w - 3) // 2
+    side = [1] + [2] * max(0, n - 2) + ([3] if n >= 2 else [])
+    cols = [0] + side + [4] + [c + 4 for c in side] + [8]
+    m = h - 4
+    mid = [2, 3, 4, 5]
+    roof = [1] + [mid[k % 4] for k in range(m - 2)] + [6] if m >= 2 else [1]
+    if m == 5:
+        roof = [1, 2, 4, 5, 6]
+    rows = [0] + roof + [7, 8, 9]
+    half = (w - 1) // 2
+    out = {"w": w, "h": h, "door": [half, h - 2], "layers": {}}
+    for name, cells in src["layers"].items():
+        if name == "above4" and not ivy:
+            continue
+        out["layers"][name] = [cells[r * sw + c] for r in rows for c in cols]
+    front = out["layers"]["above3"]
+    wins = {half - 2, half + 2} | ({half - 4, half + 4} if w >= 13 else set())
+    for i in range(w):
+        k = (h - 2) * w + i
+        if front[k] == WIN and i not in wins:
+            front[k] = WALL
+        elif i in wins and 0 < i < w - 1:
+            front[k] = WIN
+    out["solid"] = ["".join(src["solid"][r][c] for c in cols) for r in rows]
+    return out
+
+
+def cut(village, x0, y0, w, h, door):
+    W = village["w"]
+    out = {"w": w, "h": h, "door": list(door), "layers": {}}
+    roofed = set()
+    for lay in village["layers"]:
+        if lay["name"] == "ground0":
+            continue
+        cells = [lay["data"][(y0 + y) * W + x0 + x] for y in range(h) for x in range(w)]
+        if any(v >= 0 for v in cells):
+            out["layers"][lay["name"]] = cells
+            if lay["name"] in ("above3", "above4", "above5"):
+                roofed |= {i for i, v in enumerate(cells) if v >= 0}
+    solid = village["solid"]
+    out["solid"] = ["".join("0" if (x, y) == tuple(door) else "1" if (y * w + x) in roofed or solid[y0 + y][x0 + x] == "1" else "0"
+                            for x in range(w)) for y in range(h)]
+    return out
+
+
+def flat(rows, solid_rows, door, layer="below0"):
+    h, w = len(rows), len(rows[0])
+    return {"w": w, "h": h, "door": list(door), "layers": {layer: [v for r in rows for v in r]}, "solid": solid_rows}
+
+
+def field(base, w, h):
+    def t(i, j):
+        col = 0 if w == 1 else 1 if i == 0 else 3 if i == w - 1 else 2
+        row = 3 if h == 1 else 0 if j == 0 else 2 if j == h - 1 else 1
+        return base + row * PAID_COLS + col
+    return [[t(i, j) for i in range(w)] for j in range(h)]
+
+
+def fenced(inner, w, h, gate=True):
+    """A fence ring w x h round `inner` (rows, or None), open for two cells in the middle of its south side."""
+    g = [[-1] * w for _ in range(h)]
+    sol = [["0"] * w for _ in range(h)]
+    for x in range(w):
+        for y in (0, h - 1):
+            g[y][x] = FENCE[("t" if y == 0 else "b")]
+            sol[y][x] = "1"
+    for y in range(h):
+        for x in (0, w - 1):
+            g[y][x] = FENCE[("l" if x == 0 else "r")]
+            sol[y][x] = "1"
+    g[0][0], g[0][w - 1], g[h - 1][0], g[h - 1][w - 1] = FENCE["tl"], FENCE["tr"], FENCE["bl"], FENCE["br"]
+    if gate:
+        for x in (w // 2 - 1, w // 2):
+            g[h - 1][x] = -1
+            sol[h - 1][x] = "0"
+    layers = {"below2": [v for r in g for v in r]}
+    if inner:
+        layers["path1"] = [-1] * (w * h)
+        for j, row in enumerate(inner):
+            for i, v in enumerate(row):
+                layers["path1"][(j + 1) * w + i + 1] = v
+    return {"w": w, "h": h, "door": [w // 2, h - 1], "layers": layers, "solid": ["".join(r) for r in sol]}
+
+
+def churchyard(w, h, salt):
+    """A fenced churchyard w x h, its gate in the middle of the south side; tombstones in loose rows, two cells apart."""
+    st = fenced(None, w, h)
+    tombs = [-1] * (w * h)
+    sol = [list(r) for r in st["solid"]]
+    for y in range(2, h - 2, 2):
+        for x in range(2, w - 2, 2):
+            if (x * 7 + y * 13 + salt) % 5 == 0 or abs(x - w // 2) <= 1:
+                continue
+            tombs[y * w + x] = TOMB + (x * 3 + y * 5 + salt) % 8
+            sol[y][x] = "1"
+    st["layers"]["below1"] = tombs
+    st["solid"] = ["".join(r) for r in sol]
+    return st
+
+
+def houses(village):
+    src = village["stamps"]["house"]
+    out = {name: resample(src, w, h) for name, (w, h) in HOUSE_SHAPES.items()}
+    out["house_9"] = resample(src, 9, 10)
+    for name, (x, y, w, h, door) in CUTS.items():
+        out[name] = cut(village, x, y, w, h, door)
+    out["well"] = flat(WELL, ["11", "11", "11"], (0, 2), "below1")
+    out["garden"] = fenced(field(GROWING, 4, 3), 6, 5)
+    out["garden_w"] = fenced(field(RIPE, 6, 3), 8, 5)
+    out["plot"] = flat(field(GROWING, 4, 2), ["0000", "0000"], (0, 1), "path1")
+    out["woodpile"] = flat([[1025, 1024]], ["11"], (0, 0), "below1")
+    out["barrels"] = flat([[358, 3502, 796]], ["111"], (0, 0), "below1")
+    out["churchyard"] = churchyard(13, 9, 1)
+    out["churchyard_s"] = churchyard(9, 7, 2)
     return out
 
 
@@ -152,9 +294,13 @@ def civic():
     for k, v in enumerate(kit["end"][1:]):
         white[str(v)] = PALE[k][1]
     stamps = {
-        "abbey": beside(slate_hall(13, 18, 3, windows=True), slate_hall(7, 5, 9, door=False)),
-        "church": slate_hall(9, 9, 2, windows=True),
-        "church_tower": beside(slate_hall(9, 9, 2, windows=True), slate_hall(7, 5, 6, door=False)),
+        # B25R1-018 (lead review: "the churches read as dark blocks"): pale stone fronts, a lower roof, and the tower a
+        # narrow pale shaft standing well above the nave under a short slate cap
+        # (the tower at the west end: the stamp's top-left cell is solid, as every building's is)
+        "abbey": beside(beside(slate_hall(7, 3, 13, door=False, pale=True, windows=True), slate_hall(15, 7, 4, pale=True, windows=True), "b"),
+                        slate_hall(11, 4, 3, door=False, pale=True, windows=True)),
+        "church": slate_hall(9, 5, 3, pale=True, windows=True),
+        "church_tower": beside(slate_hall(7, 3, 9, door=False, pale=True, windows=True), slate_hall(9, 5, 3, pale=True, windows=True), "b"),
         "keep": slate_hall(11, 7, 4, pale=True),
         "buttercross": slate_hall(7, 4, 1, arcade=True),
         "barrow": {"w": 3, "h": 3, "door": [1, 2], "layers": {"below0": [v for r in BARROW for v in r]}, "solid": ["000", "000", "000"]},
@@ -175,7 +321,7 @@ def build():
     out = {}
     for name, (off, stamps) in VARIANTS.items():
         swap = {}
-        for sname in stamps:
+        for sname in [n for n in stamps if n in village["stamps"]]:
             for cells in village["stamps"][sname]["layers"].values():
                 for v in cells:
                     if not (0 <= v < 100000) or str(v) in swap:
@@ -189,7 +335,8 @@ def build():
         out[name] = {"stamps": stamps, "swap": dict(sorted(swap.items(), key=lambda kv: int(kv[0])))}
     kit, white, stamps = civic()
     out["white"] = {"stamps": ["wall"], "swap": white}
-    return {"format": FORMAT, "variants": out, "wall": kit, "stamps": stamps}
+    stamps.update(houses(village))
+    return {"format": FORMAT, "variants": out, "wall": kit, "stamps": stamps, "atlases": [PROPS_ATLAS]}
 
 
 def main():
