@@ -43,13 +43,17 @@ func _run() -> void:
 	var vis := tex.get_image().get_used_rect()
 	check(vis.size.y <= 24 and vis.size.x <= 24 * 32, "the fire is about a tile and a half high beside one-tile characters (frames' used height %d px)" % vis.size.y)
 	check(fire.get_parent() == main.actors and main.actors.y_sort_enabled, "drawn among the characters, y-sorted")
-	# it plays and loops: frame = ticks / 150 ms mod 24
+	# it plays and loops: frame = ticks / 150 ms mod 24. Watched for at least 0.9 s and until four frames are seen (at most
+	# 10 s): on a slow runner a frame of the game can take longer than the art's 150 ms, so fewer frames are drawn in 0.9 s,
+	# but each one drawn must still show the fire's frame for its time (it plays; the check is the same four frames)
 	var seen := {}
-	var end := Time.get_ticks_msec() + 900
-	while Time.get_ticks_msec() < end:
+	var t0 := Time.get_ticks_msec()
+	var frames := 0
+	while (Time.get_ticks_msec() - t0 < 900 or seen.size() < 4) and Time.get_ticks_msec() - t0 < 10000:
 		await process_frame
+		frames += 1
 		seen[fire.frame] = true
-	check(seen.size() >= 4, "it plays (%d frames seen in 0.9 s)" % seen.size())
+	check(seen.size() >= 4, "it plays (%d fire frames seen in %d game frames, %d ms)" % [seen.size(), frames, Time.get_ticks_msec() - t0])
 	check(main.CAMPFIRE_FRAMES == 24 and main.CAMPFIRE_MS == 150 and fire.frame < 24, "it loops over its 24 frames at 150 ms (the art's own timing)")
 	# grounded: the lowest opaque row of the art lies on the ground point, which is inside the fire's (solid) cell
 	var img := tex.get_image()
