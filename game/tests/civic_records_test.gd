@@ -72,6 +72,19 @@ func ids_are_stable() -> void:
 	var js := CivicOffices.jurisdictions().map(func(j): return j.id)
 	check(js == ["village", "wulstead", "netherton", "garton", "higham", "bourton"], "jurisdictions: the village and the five settlements (%s)" % str(js))
 	check(CivicOffices.jurisdictions()[1].government == "the mayor and council", "a settlement's government is named, nothing more")
+	# B25R1-Q9: hamlets are local civic places under their lord's town, never jurisdictions of their own
+	var by := {}
+	for j in CivicOffices.jurisdictions():
+		by[j.id] = j
+	check(by.wulstead.hamlets == ["fallowley", "wendholt", "ewedean"] and by.higham.hamlets == ["brookhurst", "elmcote", "cressbrook", "mileham", "milton"]
+			and by.netherton.hamlets.is_empty() and by.village.hamlets.is_empty(), "a town lists the hamlets it is lord of (%s, %s)" % [by.wulstead.hamlets, by.higham.hamlets])
+	check(CivicOffices.jurisdiction_of("milton") == "higham" and CivicOffices.jurisdiction_of("ewedean") == "wulstead" and CivicOffices.jurisdiction_of("higham") == "higham",
+		"a hamlet's residents are under their lord's town; a town's under its own")
+	check(CivicOffices.jurisdiction_of("rushford") == "" and CivicOffices.jurisdiction_of("ashcombe") == "", "a hamlet with no lord is under no jurisdiction")
+	var hamlet_office := false
+	for o in CivicOffices.offices():
+		hamlet_office = hamlet_office or not by.has(str(o.jurisdiction))
+	check(not hamlet_office, "no office, election or government is made for a hamlet")
 	check(str(CivicOffices.office("village/reeve").authority).length() > 20 and not CivicOffices.office("village/reeve").has("powers"), "authority is descriptive text, with no powers")
 
 
