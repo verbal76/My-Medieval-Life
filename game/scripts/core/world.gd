@@ -6163,6 +6163,8 @@ func dispose() -> void:
 
 # ---------------------------------------------------------------- save / load ----------------
 func to_dict() -> Dictionary:
+	if regions != null and regions.people != null:
+		regions.people.fold_all()          # B25R1-019 (settlement worker): a save holds residents as records only
 	var hh := []
 	for h in households:
 		var c: Dictionary = h.duplicate(true)

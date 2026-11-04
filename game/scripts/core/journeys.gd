@@ -59,6 +59,8 @@ static func start(w: World, n: NPC, sid: String, purpose: Dictionary) -> String:
 static func resume(w: World, n: NPC) -> bool:
 	if not active(n):
 		return false
+	if n.journey.has("trip"):                            # B25R1-019: a settlement's resident made live on their trip or at home
+		return w.regions != null and w.regions.people != null and w.regions.people.resume(n)
 	var ow: Overworld = w.map.overworld
 	var st: Dictionary = ow.site(str(n.journey.to))
 	if st.is_empty():
@@ -143,6 +145,10 @@ static func _rest(n: NPC) -> bool:
 
 ## The end of a leg (the brain's "journey_leg" act): out -> there (arrived), back -> home (the journey is over).
 static func leg_done(w: World, n: NPC) -> void:
+	if n.journey.has("trip"):                            # B25R1-019: SettlementPeople's walker
+		if w.regions != null and w.regions.people != null:
+			w.regions.people.leg_done(n)
+		return
 	if not active(n):
 		return
 	match str(n.journey.leg):

@@ -63,6 +63,10 @@ const M_WHO := 4
 ## ID-01: every member has a person id, the sixth entry [5] (World.people; never reused; a member with no carried name has {} at [4]).
 ## An older save has none (0): Identity.upgrade gives them, in settlement, household and member order.
 const M_ID := 5
+## B25R1-019 (owner: everything carries over between calculated and live): the seventh entry {hp, sk} once the member has been live:
+## their health (NPC.hp) and their skills in the village's shape (skill -> xp, PAR-01). Absent: full health, no recorded skills (an
+## older save, or someone never seen).
+const M_BODY := 6
 const JOURNAL_MAX := 100             # lines of the settlement's own journal kept (the village's log keeps 300)
 
 ## ID-01: the world's register of people, when this settlement lives in one (Regions.bind_world); not saved. Called as
@@ -116,6 +120,23 @@ var _want_left: Dictionary = {}      # what the settlement still wants this visi
 ## at the first step on or after `due` the settlement asks for delivery (`arrive_hook`, Regions._arrive) and removes the entry once
 ## delivered, so a save made while it travels delivers it once after loading.
 var transit: Array = []
+## B25R1-018 section 5 (hamlets; docs/design/REGION_RECONSTRUCTION_B25R1.md (d), (f)): a hamlet or thorp (settlements.json "hamlet":
+## true) has no trader and no officials; its elder keeps the lord's box (gov.coins: the tolls and the tax), which the elder carries to
+## the lord's treasury (`lord`, a settlement id; "" no lord: no toll, no tax). `market`: where its people go to buy and sell.
+## `water`: "stream" or "well"; `well`: the well registry's id once its well stands ("" not yet).
+var hamlet := false
+var lord := ""
+var market := ""
+var water := ""
+var well := ""
+## B25R1-019 (trips, SettlementTrips): the errands this settlement's people are on, each one walker carrying a pack of coins and
+## goods that stay their owner's (a household, a business) and are counted in this settlement's books; saved.
+var trips: Array = []
+var trip_seq := 0
+## B25R1-019: person id -> true while the member is a live NPC in the world (SettlementPeople); their own acts (a trip's
+## progress, an old-age death) wait until they are folded back. Not saved: a save folds everyone first.
+var live: Dictionary = {}
+var fold_hook := Callable()          # SettlementPeople.fold_id while the settlements live in a world with residents made live; not saved
 
 
 # ------------------------------------------------------------------ data ----------------
@@ -185,6 +206,10 @@ static func create(spec: Dictionary, world_seed: int, index: int) -> OffMapSettl
 		s.pos = RegionGeo.anchor(s.id) - Vector2i(int(v.x), int(v.y))
 	s.industries = (spec.get("industries", []) as Array).duplicate()
 	s.gov_name = str(spec.government.name)
+	s.hamlet = bool(spec.get("hamlet", false))
+	s.lord = str(spec.government.get("lord", ""))
+	s.market = str(spec.get("market", ""))
+	s.water = str(spec.get("water", ""))
 	var rng := RandomNumberGenerator.new()
 	rng.seed = world_seed * 7919 + (index + 1) * 104729 + 17
 	var trades: Dictionary = spec.trades
@@ -229,6 +254,8 @@ static func create(spec: Dictionary, world_seed: int, index: int) -> OffMapSettl
 		for tool in T.get("tools", {}):
 			_add(s.biz[t].stock, tool, s._tool_stock(T, tool, s.biz[t].workers.size()))
 	s.gov = {"coins": int(spec.government.coins), "granary": {}, "officials": [], "acc": {}}
+	for k in spec.get("granary", {}):                 # B25R1-018: a hamlet's store of the stone and logs its well is built of
+		s.gov.granary[str(k)] = int(spec.granary[k])
 	for h in s.hh:
 		if h.trade == "official":
 			s.gov.officials.append(h.id)
@@ -331,6 +358,33 @@ static func who_of(m: Array) -> Dictionary:
 	return m[M_WHO] if has_who(m) else {}
 
 
+static func body_of(m: Array) -> Dictionary:
+	return m[M_BODY] if m.size() > M_BODY and m[M_BODY] is Dictionary else {}
+
+
+static func set_body(m: Array, b: Dictionary) -> void:
+	while m.size() < M_WHO:
+		m.append(0)
+	while m.size() < M_ID:
+		m.append({})
+	if m.size() == M_ID:
+		m.append(0)
+	if m.size() == M_BODY:
+		m.append(b)
+	else:
+		m[M_BODY] = b
+
+
+## B25R1-019: a live member leaves the world before their household's record changes under them (a move, a loss): SettlementPeople
+## folds them back first (fold_hook, (person id) -> void), so nothing they carry or know is lost and no NPC is left without a record.
+func _fold_live(ms: Array) -> void:
+	if live.is_empty() or not fold_hook.is_valid():
+		return
+	for m in ms.duplicate():
+		if live.has(member_id(m)):
+			fold_hook.call(member_id(m))
+
+
 ## A person is born here: the world gives them their id (0 in a settlement that lives outside a world).
 func _new_person(sex: int, mother: Array, father: Array) -> int:
 	if not person_hook.is_valid():
@@ -411,7 +465,7 @@ func _old_age(salt: int) -> void:
 		for j in range(h.mem.size() - 1, -1, -1):
 			var m: Array = h.mem[j]
 			var ag := _age(m)
-			var p := Life.death_chance(ag) if ag >= _mort_from else 0.0
+			var p := Life.death_chance(ag) if ag >= _mort_from and not live.has(member_id(m)) else 0.0
 			if p > 0.0 and (p >= 1.0 or _roll(salt, day * 7 + 1, int(m[M_BORN]) * 64 + i) < p):
 				_died(m, "old_age")
 				_remove_member(h, j)
@@ -455,6 +509,11 @@ func _try_birth(h: Dictionary, chance: float, salt: int) -> void:
 ## Take member `j` out of a household (death); the caller then runs _after_loss.
 func _remove_member(h: Dictionary, j: int) -> void:
 	var m: Array = h.mem[j]
+	if live.has(member_id(m)):
+		_fold_live([m])                                     # (a live member's fold may itself remove a dead NPC's record)
+		j = h.mem.find(m)
+		if j < 0:
+			return
 	h.mem.remove_at(j)
 	if int(m[M_PAIR]) == 1:
 		for x in h.mem:
@@ -632,6 +691,8 @@ func coins() -> int:
 		n += int(biz[t].till)
 	for k in own:
 		n += int(own[k].till)
+	for t in trips:
+		n += int(t.coins)                            # B25R1-019: coins in a walker's pack are still their owner's
 	return n
 
 
@@ -648,6 +709,9 @@ func goods() -> Dictionary:
 			_add(g, k, int(own[o].stock[k]))
 	for k in gov.granary:
 		_add(g, k, int(gov.granary[k]))
+	for t in trips:
+		for k in t.pack:
+			_add(g, k, int(t.pack[k]))
 	return g
 
 
@@ -677,6 +741,11 @@ func treasury() -> int:
 
 func trader() -> Dictionary:
 	return biz.get("merchant", {})
+
+
+## B25R1-018: a hamlet with no lord collects no toll and no tax (Rushford, Ashcombe: Upmeads has no lord's officials in the game).
+func untaxed() -> bool:
+	return hamlet and lord == ""
 
 
 ## "" when every coin and good is accounted for by a flow line, else what is not.
@@ -900,6 +969,8 @@ func _purchase(buyer: Dictionary, key: String, store, item: String, want: int, b
 
 ## The market toll (or the abbey's tithe) on a sale of `amount` coins: whole coins as the fractions add up.
 func _toll(amount: int) -> int:
+	if untaxed():
+		return 0                                     # B25R1-018: a hamlet with no lord pays no toll
 	_toll_acc = _q(_toll_acc + float(amount) * float(_rules.toll_rate))
 	var t := int(floor(_toll_acc + 1e-9))
 	_toll_acc = _q(_toll_acc - float(t))
@@ -1358,7 +1429,7 @@ func _taxes_and_officials() -> void:
 	var ts := TaxPolicy.step(tax, float(gov.coins), float(ob), day)
 	for line: String in ts.notes:
 		note(line)
-	var rate := float(ts.rate)
+	var rate := float(ts.rate) if not untaxed() else 0.0
 	if rate > 0.0:
 		for h in hh:
 			if not h.alive:
@@ -2059,6 +2130,16 @@ func transit_food_pts() -> float:
 	for e in transit:
 		if _rules.foods.has(str(e.item)):
 			p += float(e.n) * _pts(str(e.item))
+	for t in trips:                                  # B25R1-019: food a walker is sent for, or carries home
+		if str(t.purpose.get("kind", "")) != "food":
+			continue
+		if str(t.leg) == "out":
+			for l in t.purpose.get("lines", []):
+				p += float(l.n) * _pts(str(l.item))
+		else:
+			for k in t.pack:
+				if _rules.foods.has(str(k)):
+					p += float(t.pack[k]) * _pts(str(k))
 	return p
 
 
@@ -2162,6 +2243,12 @@ func _pack_of(m: Array, pair: int) -> Dictionary:
 		out.n = str(m[M_WHO].n)
 		out.f = str(m[M_WHO].f)
 		out.sk = (m[M_WHO].sk as Dictionary).duplicate()
+	var b := body_of(m)                                      # B25R1-019: what they learned while live goes with them
+	if not b.is_empty():
+		if not out.has("sk"):
+			out.sk = {}
+		for k in b.get("sk", {}):
+			out.sk[k] = maxi(int(out.sk.get(k, 0)), int(b.sk[k]))
 	return out
 
 
@@ -2201,6 +2288,7 @@ func person_load(hi: int, j: int) -> Dictionary:
 
 ## Member `j` leaves household `hi` with person_load's coins and goods; the household closes if they were its last.
 func release_person(hi: int, j: int) -> Dictionary:
+	_fold_live([hh[hi].mem[j]])
 	if (hh[hi].mem as Array).size() <= 1:
 		_wind_up_own(hh[hi])                                     # REGION-NAV-01 Q4: the last of the household takes its own trade's purse and stock
 	var l := person_load(hi, j)
@@ -2241,6 +2329,7 @@ func _with_own(h: Dictionary, goods: Dictionary) -> void:
 
 ## The whole household leaves with its coins and pantry; it is dissolved (its business keeps its other households).
 func release_household(hi: int) -> Dictionary:
+	_fold_live(hh[hi].mem)
 	_wind_up_own(hh[hi])                                         # REGION-NAV-01 Q4: its own trade goes with it (purse and stock)
 	var l := household_load(hi)
 	var h: Dictionary = hh[hi]
@@ -2371,7 +2460,8 @@ func to_dict() -> Dictionary:
 		"industries": industries.duplicate(), "hh": hs, "biz": bs, "gov": gv, "own": _own_save(),
 		"prices": prices.duplicate(), "toll_acc": _toll_acc, "flows": flows.duplicate(true), "start": start.duplicate(true), "day": day,
 		"tax": tax.duplicate(true), "journal": journal.duplicate(true), "closed": closed.duplicate(true), "dev": dev.duplicate(true),
-		"transit": transit.duplicate(true)}
+		"transit": transit.duplicate(true), "hamlet": hamlet, "lord": lord, "market": market, "water": water, "well": well,
+		"trips": trips.duplicate(true), "trip_seq": trip_seq}
 
 
 static func from_dict(d: Dictionary) -> OffMapSettlement:
@@ -2455,6 +2545,14 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 	for e in d.get("transit", []):                             # X20-SETTLE-FOOD (optional keys: an older save has nothing on the road)
 		s.transit.append({"tx": str(e.tx), "to": str(e.to), "item": str(e.item), "n": int(e.n), "from": str(e.from),
 			"sent": int(e.sent), "due": int(e.due), "coins": int(e.get("coins", 0))})
+	s.hamlet = bool(d.get("hamlet", false))                  # B25R1-018/019 (optional keys)
+	s.lord = str(d.get("lord", ""))
+	s.market = str(d.get("market", ""))
+	s.water = str(d.get("water", ""))
+	s.well = str(d.get("well", ""))
+	s.trip_seq = int(d.get("trip_seq", 0))
+	for t in d.get("trips", []):
+		s.trips.append(SettlementTrips.from_dict(t))
 	return s
 
 
@@ -2514,6 +2612,12 @@ static func _member_from(m: Array) -> Array:
 			out.append({"n": str(w.get("n", "")), "f": str(w.get("f", "")), "sk": sk})
 	if m.size() > M_ID:
 		out.append(int(m[M_ID]))                            # ID-01 (save 20; absent in an older save)
+	if m.size() > M_BODY and m[M_BODY] is Dictionary:      # B25R1-019 (optional: absent in an older save)
+		var b: Dictionary = m[M_BODY]
+		var sk := {}
+		for k in b.get("sk", {}):
+			sk[str(k)] = int(b.sk[k])
+		out.append({"hp": float(b.get("hp", 30.0)), "max": float(b.get("max", 30.0)), "sk": sk})
 	return out
 
 

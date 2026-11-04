@@ -454,3 +454,77 @@ What it would need: a `plateau` entry per landmark (centre, radius, way-up side)
 skip the clearance and road rules except on the way-up side; bare tops for data plateaus; the figure kept off the rim;
 tests for reach and solidity. This is roughly a day's work for the next region worker, and the rest of the generator would
 be unchanged.
+## (k) The hamlets in the economy, trips and residents (settlement worker, `wip/b25r1-settle`)
+
+**Implemented, as built** (code: `game/scripts/core/settlement/trips.gd`, `people.gd`; data: `game/data/settlements.json`
+`hamlets`, `trips` and the ten entries; INT-770 to 773; DECISIONS 2026-11-04).
+
+### Hamlets
+
+| Place | Households (trades) | Lord | Market | Water |
+|---|---|---|---|---|
+| Rushford | farmer 3, herder, weaver | none | Wulstead | Upmeads Water |
+| Ashcombe | forester 2, sawyer, farmer 2 | none | Wulstead | well |
+| Fallowley | farmer 4, herder, cook | Wulstead | Wulstead | well |
+| Wendholt | farmer 3, herder, smith | Wulstead | Wulstead | the Netherton stream |
+| Ewedean | herder 3, farmer, tanner | Wulstead | Wulstead | well |
+| Brookhurst | farmer 3, herder, healer | Higham | Higham | Coldlake |
+| Elmcote | farmer 3, forester, mason | Higham | Higham | well |
+| Cressbrook | farmer 3, herder, cook | Higham | Bourton Abbas | well |
+| Mileham | farmer 3, herder 2, weaver | Higham | Garton | well |
+| Milton | farmer 4, forester | Higham | Higham | well |
+
+A hamlet is an OffMapSettlement with `hamlet` true: same households, businesses, market, food, life and migration rules; no
+trader, no officials. The elder (the household of the eldest member) carries the box of tolls and tax to the lord weekly; a place
+with no lord collects neither. Each household goes to market every 6 days, staggered, when it needs food its own place cannot
+spare or a wish good nobody there makes. Each business carries what the market wants and buys its missing inputs.
+
+### The initial population (section f, as built)
+
+Founding adds the ten places' households and books to the founding endowment (`start`), as the five's. Seed 1: 52 households and
+about 190 people, each with a band id of their own (hamlet_test: no duplicate, none a villager's). Births, deaths, marriages and
+migration after that are the existing rules, counted apart (`move_counts`, flows).
+
+### Trips
+
+One record per errand (section i's shape, plus `hid`, `owner`, `sent`):
+- the route is Overworld.site_route, or a straight line when there is no world;
+- the position at minute m is `along(route, road_tiles(depart, m))`;
+- the arrival is `arrival(depart, length)`;
+- at the destination the walker deals for `errand_minutes` (60) through SettlementParty (holder `trip:<tx>`), then walks home and
+  unpacks into the owner's books.
+
+Purposes:
+- **wholesale**: the old road_trade, now walked;
+- **food**: the old food shipment, now walked, bought at the day's price, never dearer than planned;
+- **market**: hamlet households and businesses;
+- **dues**: the elder's box.
+
+A trip whose walker dies, or whose household is gone, ends: the pack goes to the owner's books, or to the treasury when the
+owner is gone too. The pack's coins and goods are counted in the settlement's coins and goods, so `audit` holds at every minute.
+
+### Residents live and calculated
+
+SettlementPeople is the presence provider. It is attached in Regions.bind_world and registers only when `w.presence` exists.
+Candidates are refreshed every 10 game minutes for those at their stations and every call for walkers. Stations are their trade's
+building door from 7 to 18 for an adult, else their household's home slot, else the gate.
+
+The pack crosses into the village ledger on materialise and back on fold (outside lines both sides). fold rewrites `depart` with
+`depart_for(now, reached)`. hamlet_test proves:
+- three rounds of 121 residents materialised and folded with both ledgers balanced;
+- a walker met mid-road who walks live, is folded and whose errand completes;
+- a save with a live walker (World.to_dict folds first) that loads mid-trip and ends exactly as the original.
+
+### Limits and what remains
+
+- **Not yet live:** nobody is made live until the presence branch merges.
+- **Life events while live:** a live member's old-age death waits. Any other change to their household's record (a move out,
+  `release_household` or `release_person`; a loss, `_remove_member`) folds them first (`OffMapSettlement.fold_hook`), so no NPC is
+  ever left without a record.
+- **Carried over on fold:** health and skills, in the member's seventh entry `M_BODY` {hp, max, sk: skill -> xp, the village
+  NPC's shape}. Materialise sets them and fold writes them back. They are saved, and they go with the person when they move (the
+  load's `sk`). An older save without the entry loads at full health with no recorded skills. Relations live in the world's own
+  records by person id, so they need nothing here.
+- **Wells:** booked as the hamlet's own use (flows.used), with `add_well(..., count := false)` (wip/b25r1-homestead 5236f89); the
+  village's ledger never sees them.
+
