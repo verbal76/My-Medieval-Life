@@ -178,6 +178,11 @@ func step(m, v: Vector2, delta: float) -> void:
 			return
 	while idx < route.size() and p.pos.distance_to(route[idx] + Vector2(0.5, 0.5)) < REACHED:
 		idx += 1
+	# a waypoint further on reached first (the walk cut a corner the road doubles back round, as where a side road joins
+	# a road and turns back along it): go on from there, or the walk would wait for ever for the one it passed by
+	for q in range(idx + 1, mini(route.size(), idx + AHEAD + 1)):
+		if p.pos.distance_to(route[q] + Vector2(0.5, 0.5)) < REACHED:
+			idx = q + 1
 	if idx >= route.size():
 		var name := RegionTravel.place_name(w, p, RegionTravel.destination(p))
 		_note(m, "travel_arrived")

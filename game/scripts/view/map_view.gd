@@ -10,9 +10,12 @@ const ROAD_STONE_ROWS := 4             # rows 0-3 stone road (paving variants), 
 const ROAD_TRAIL_ROW := 4
 const ROAD_OVERGROWN_ROW := 6          # B25R1-011: rows 6-7 grown-over dirt road and trail, rows 8-9 damaged and broken stone
 const ROAD_DAMAGED_ROW := 8
-const WATER_ATLAS := 5                 # B25R1-Q3: game/assets/tiles/water_tiles.png (tools/water_tiles.py): 4 animation frames a row
+## B25R1-Q3: game/assets/tiles/water_tiles.png (tools/water_tiles.py), WATER_FRAMES animation frames a row. Atlas ids 9 and 10
+## (coordinator 2026-11-04): after the EXTRA_ATLASES of the homestead branch (5 Larchrow, 6-7 Bow.Pixel grass, 8 the region's
+## props); on merging, the two go at the end of that one list and _add_water_tiles' padding goes.
+const WATER_ATLAS := 9
 const WATER_FRAMES := 8                # tools/water_tiles.py FRAMES; each frame water.json "frame_seconds" long
-const WATER_STILL_ATLAS := 6           # B25R1-019: the same water sheet with no animation (its first frame): water out of the live range
+const WATER_STILL_ATLAS := 10          # B25R1-019: the same water sheet with no animation (its first frame): water out of the live range
 
 var tileset := TileSet.new()
 var sources: Array[TileSetAtlasSource] = []
@@ -100,12 +103,22 @@ func _add_road_tiles() -> void:
 	tileset.add_source(src)
 
 
-## B25R1-Q3: the sixth atlas, the streams' water, waterfall and bridges (overworld_tiles.json "water"), each row 4 frames.
+## B25R1-Q3: atlases WATER_ATLAS and WATER_STILL_ATLAS, the streams' water, waterfall and bridges (overworld_tiles.json
+## "water"), each row WATER_FRAMES frames. Ids below WATER_ATLAS that no list on this branch fills are padded with
+## unused sources (the homestead branch's EXTRA_ATLASES fill them once merged), so the ids hold either way.
 func _add_water_tiles() -> void:
-	if sources.size() != 5:
+	if sources.size() < 5 or sources.size() > WATER_ATLAS:
 		return
+	var tex: Texture2D = load("res://assets/tiles/water_tiles.png")
+	while sources.size() < WATER_ATLAS:
+		var pad := TileSetAtlasSource.new()
+		pad.texture = tex
+		pad.texture_region_size = Vector2i(T, T)
+		sources.append(pad)
+		columns.append(WATER_FRAMES)
+		tileset.add_source(pad)
 	var src := TileSetAtlasSource.new()
-	src.texture = load("res://assets/tiles/water_tiles.png")
+	src.texture = tex
 	src.texture_region_size = Vector2i(T, T)
 	sources.append(src)
 	columns.append(WATER_FRAMES)

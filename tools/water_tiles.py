@@ -28,7 +28,7 @@ game/assets/tiles/water_tiles.png, FRAMES (8) columns (animation frames, left to
                      723 north end, 750, 777 south end on its legs; east-west: 875 west end, 876, 877 east end) and the
                      castle wall-walk with crenellated parapets both sides (747 north-south, 775 east-west)
 
-Drawn by OverworldView (MapView atlas 5). Values: overworld_tiles.json "water" (tools/build_overworld_tiles.py, which takes
+Drawn by OverworldView (MapView atlas 9, its still twin 10). Values: overworld_tiles.json "water" (tools/build_overworld_tiles.py, which takes
 this layout from ROW, FRAMES, LOOKS).
 
     python3 tools/water_tiles.py      # also run by tools/import_game_assets.py

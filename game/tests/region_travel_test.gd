@@ -252,7 +252,7 @@ func _to_wulstead() -> void:
 		_frames(1)
 		n += 1
 	check(not RegionTravel.has_destination(p) and not w.map.overworld.site_at(Vector2i(p.pos.floor())).is_empty(),
-		"the character walks all the way into Wulstead (%d frames, %.0f game minutes)" % [n, w.minutes - t0])
+		"the character walks all the way into Wulstead (%d frames, %.0f game minutes; at %s, travel %s)" % [n, w.minutes - t0, p.pos, RegionTravel.active(p)])
 
 
 func _save_load() -> void:

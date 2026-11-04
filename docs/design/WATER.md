@@ -27,15 +27,18 @@ code is `game/scripts/core/overworld.gd` (the section "water"), the art `tools/w
 - **Waterfalls** only at genuine drops: a cliff rim cell the water runs through where a mountain top lies above it and low
   ground below (the rock face is drawn on the south side). Elsewhere a course cuts through the rim as water.
 - **Crossings.** A road cell on water is a bridge (walkable): plank on dirt roads and trails, stone on stone roads, one bridge
-  laid one way (its planks run the long way of the crossing). Water never lies along a road: it may cross a road only at 50
-  degrees or more to the road's own line, else the road keeps to the bank, dry; pools keep off roads. Every 4 steps (about 24
+  laid one way (its planks run the long way of the crossing). Every road crosses a course on one straight, axis-aligned leg
+  square to the course's main direction, from 2 tiles clear of the water on one bank to 2 clear on the other
+  (`Overworld._crossing_legs`, applied to every road's cells as `_polyline` draws them; a layout crossing fixes the leg's line
+  through its point), so a bridge or ford is one straight run and the road turns on dry land. Water never lies along a road: it
+  may cross a road only at 37 degrees or more to the road's own line, else the road keeps to the bank, dry; pools keep off roads. Every 4 steps (about 24
   tiles) off the mountains a ford: shallow water with stepping stones, walkable, so no course walls a stretch of country off;
   a ford is a band straight across the course (`water.json` `ford_band`, half-width 1.3 tiles), a line of stones from bank to
   bank, not a field of them. A canonical ford keeps its stones on the road (its edges shallows).
   The tile beside a road is kept walkable too: water there that flanks no crossing is shallows (`water` 4, no stones drawn), so
   a road beside a course is never pinched; only the deep water either side of a bridge or ford lies next to a road.
 - **Tuning in one place (EA-01).** The numbers above (lattices, chances, steps, widths, end pools, meanders, ford spacing and
-  radius, bank reach, rocks, the road-crossing angle as a sine, 0.77 = 50 degrees) live in `game/data/water.json`
+  radius, bank reach, rocks, the road-crossing angle as a sine, 0.6 = 37 degrees: crossings are straight legs, so a course meeting one at 45 degrees still crosses) live in `game/data/water.json`
   (`mml-water/1`), read once by `Overworld.water_cfg`. The sound distances are `music.json "water"`; the art's ripple and foam
   are `tools/water_tiles.py`'s. Changing `water.json` changes generation 4's water for every world (water is never saved).
 

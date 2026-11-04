@@ -1367,8 +1367,11 @@ func _water_may_cross(road: PackedByteArray, open: PackedByteArray, i: int, j: i
 			on = true
 	if not on:
 		return true
-	if not _forced.is_empty() and _near_forced(Vector2(_wc_ox + i, _wc_oy + j), 0.0):
-		return true                                    # B25R1-018: a canonical crossing: the road crosses here
+	# B25R1-018: a canonical ford: the road goes through the water there, whatever else meets it. A canonical bridge needs no
+	# exception (every road crosses on a straight leg square to the course, _crossing_legs, which the angle rule below lets
+	# through), so another road ending beside it stays dry instead of making a stub of bridge
+	if not _forced.is_empty() and forced_crossing(Vector2i(_wc_ox + i, _wc_oy + j)) == "ford":
+		return true
 	if along.length_squared() == 0.0:
 		return false                                   # a pool keeps off the road
 	var sxx := 0.0
@@ -1543,7 +1546,136 @@ func _polyline(a: Vector2i, b: Vector2i, key: int) -> PackedInt32Array:
 				iy += 1
 			out.append(x)
 			out.append(y)
+	return _crossing_legs(out) if gen >= 4 else out
+
+
+## B25R1-017/018, EA-01 (coordinator 2026-11-03: straight bridges): where a road's cells cross a stream or river, the run
+## over the water is replaced by one straight, axis-aligned leg from bank to bank, square to the course's main direction
+## there, starting and ending CROSS_MARGIN tiles past the water; the road reaches the leg's ends over dry land (where the
+## road tiles turn cleanly). A layout crossing (crossings[]) near the run fixes the leg's line through its point. Pure: the
+## courses are global and the cells depend only on the polyline and the seed, so every chunk draws the same road.
+const CROSS_MARGIN := 2
+
+
+func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
+	var n := cells.size() / 2
+	if n < 3:
+		return cells
+	var lo := Vector2i(cells[0], cells[1])
+	var hi := lo
+	for k in n:
+		lo = Vector2i(mini(lo.x, cells[2 * k]), mini(lo.y, cells[2 * k + 1]))
+		hi = Vector2i(maxi(hi.x, cells[2 * k]), maxi(hi.y, cells[2 * k + 1]))
+	var box := Rect2i(lo, hi - lo + Vector2i.ONE).grow(12)
+	var segs: Array = []                          # [a, b, half-width] of the course segments near the road
+	for crs in streams_in(box):
+		var pts: Array = crs.pts
+		var rs: Array = crs.r
+		for k in range(1, pts.size()):
+			var a: Vector2 = pts[k - 1]
+			var b: Vector2 = pts[k]
+			var w := float(rs[mini(k, rs.size() - 1)])
+			if Rect2(a, Vector2.ZERO).expand(b).grow(w + 4.0).intersects(Rect2(box)):
+				segs.append([a, b, w])
+	if segs.is_empty():
+		return cells
+	var wet := func(c: Vector2i, extra: float) -> int:      # the index of the course segment whose water covers c, else -1
+		var p := Vector2(c) + Vector2(0.5, 0.5)
+		for si in segs.size():
+			if _seg_dist(p, segs[si][0], segs[si][1]) <= float(segs[si][2]) + extra:
+				return si
+		return -1
+	var out := PackedInt32Array()
+	var k := 0
+	var plain := 1                                    # cells from here on were appended as they were (after the last leg)
+	while k < n:
+		var c := Vector2i(cells[2 * k], cells[2 * k + 1])
+		var si: int = wet.call(c, 0.5)
+		if si < 0 or k == 0:
+			out.append(c.x)
+			out.append(c.y)
+			k += 1
+			continue
+		# a run over the water: from the last cell clear of it (a) to the first clear after (b)
+		var e := k
+		while e < n and wet.call(Vector2i(cells[2 * e], cells[2 * e + 1]), float(CROSS_MARGIN)) >= 0:
+			e += 1
+		var s := k
+		while s > plain and wet.call(Vector2i(cells[2 * (s - 1)], cells[2 * (s - 1) + 1]), float(CROSS_MARGIN)) >= 0:
+			s -= 1
+		if e >= n or s <= 0 or wet.call(Vector2i(cells[2 * (s - 1)], cells[2 * (s - 1) + 1]), float(CROSS_MARGIN)) >= 0:
+			out.append(c.x)
+			out.append(c.y)
+			k += 1
+			continue                                  # the road starts or ends in the water: left as drawn
+		var a := Vector2i(cells[2 * (s - 1)], cells[2 * (s - 1) + 1])
+		var b := Vector2i(cells[2 * e], cells[2 * e + 1])
+		var dir: Vector2 = (segs[si][1] as Vector2) - (segs[si][0] as Vector2)
+		var o: Vector2 = segs[si][0]
+		if signf(dir.cross(Vector2(a) - o)) == signf(dir.cross(Vector2(b) - o)):
+			out.append(c.x)                           # the road touches the water and comes back on the same bank (it runs
+			out.append(c.y)                           # along it): no crossing; the water keeps off it (_water_may_cross)
+			k += 1
+			continue
+		var ns := absf(dir.x) >= absf(dir.y)          # the course runs east-west: the leg runs north-south
+		var mid := Vector2(a + b) * 0.5
+		var fc := _forced_near(mid, 8.0)
+		if fc != Vector2.INF:
+			mid = fc
+		var line := roundi(mid.x) if ns else roundi(mid.y)
+		var axis := Vector2i(0, 1) if ns else Vector2i(1, 0)
+		var at := Vector2i(line, roundi(mid.y)) if ns else Vector2i(roundi(mid.x), line)
+		# the leg's ends: out along the line from the water's middle until CROSS_MARGIN clear of every course
+		var sign := 1 if Vector2(b - a).dot(Vector2(axis)) >= 0.0 else -1
+		var p0 := at
+		var p1 := at
+		var guard := 0
+		while wet.call(p0, float(CROSS_MARGIN)) >= 0 and guard < 40:
+			p0 -= axis * sign
+			guard += 1
+		guard = 0
+		while wet.call(p1, float(CROSS_MARGIN)) >= 0 and guard < 40:
+			p1 += axis * sign
+			guard += 1
+		# s - 1 .. a is kept (already appended up to k - 1; drop the run's cells appended from s on)
+		var keep := s
+		out.resize(2 * (out.size() / 2 - (k - keep)))
+		_append_line(out, a, p0)
+		_append_line(out, p0, p1)
+		_append_line(out, p1, b)
+		k = e + 1
+		plain = k
 	return out
+
+
+## The 4-connected cells after `from` up to and including `to` (straight runs as _polyline draws them).
+static func _append_line(out: PackedInt32Array, from: Vector2i, to: Vector2i) -> void:
+	var dx := absi(to.x - from.x)
+	var dy := absi(to.y - from.y)
+	var sx := 1 if to.x > from.x else -1
+	var sy := 1 if to.y > from.y else -1
+	var x := from.x
+	var y := from.y
+	var ix := 0
+	var iy := 0
+	while ix < dx or iy < dy:
+		if (1 + 2 * ix) * dy < (1 + 2 * iy) * dx:
+			x += sx
+			ix += 1
+		else:
+			y += sy
+			iy += 1
+		out.append(x)
+		out.append(y)
+
+
+## B25R1-018: the centre of the layout crossing within r of p, else Vector2.INF.
+func _forced_near(p: Vector2, r: float) -> Vector2:
+	anchored_courses()
+	for f in _forced:
+		if (f[0] as Vector2).distance_to(p) <= r + float(f[1]):
+			return f[0]
+	return Vector2.INF
 
 
 func _setup_gates() -> void:
@@ -2025,8 +2157,7 @@ func _water_cell(ch: Chunk, c: int, q: int, gk: int, wdata: Array, wn: PackedByt
 		if on_road and forced_crossing(Vector2i(wx, wy)) == "ford":
 			ch.water[c] = 4                            # B25R1-018: a canonical ford: the road goes through the shallows (its edges: shallows)
 			ch.solid[c] = 0
-			if wn[q] == 4:
-				ch.ground[c] = int(tiles.water.ford)
+			ch.ground[c] = int(tiles.water.ford)       # EA-01: the stones all the way, so the way across shows (bank to bank)
 		elif on_road:
 			ch.water[c] = 2                            # a bridge: the road runs on over the water
 			ch.solid[c] = 0

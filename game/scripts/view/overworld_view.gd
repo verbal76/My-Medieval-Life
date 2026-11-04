@@ -154,6 +154,8 @@ func road_tile(cell: Vector2i, dirt: int) -> int:
 		return -1
 	if sources.size() <= 4:
 		return dirt
+	if overworld.is_ford(cell) and sources.size() > WATER_ATLAS:
+		return -1                                  # EA-01: a ford on the road shows its stepping stones, not a track over the water
 	if overworld.is_bridge(cell) and sources.size() > WATER_ATLAS:
 		return _bridge_tile(cell, look)
 	var bits: int = int(_dirt_bits.get(dirt, 0)) if dirt >= 0 else 0
@@ -224,7 +226,7 @@ func redraw_road(cell: Vector2i) -> void:
 ## B25R1-011: what changed since the last frame (footfall, paving, repair: Overworld.road_dirty), and once a game day every
 ## loaded way (fading, overgrowth and damage come with time).
 ## B25R1-019 (owner: water animates only inside the player's live range): the water of a loaded chunk is drawn from the
-## animated atlas (5) when the chunk is live, from its still twin (6, the first frame) when not. live_check answers (Main:
+## animated atlas (WATER_ATLAS, 9) when the chunk is live, from its still twin (WATER_STILL_ATLAS, 10, the first frame) when not. live_check answers (Main:
 ## the presence workstream's rect_live when it is there, else every loaded chunk is live); re-checked when `version` changes
 ## (Main passes it) and for each chunk built.
 func water_value(v: int, live: bool) -> int:

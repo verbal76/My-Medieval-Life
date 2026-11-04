@@ -10,8 +10,8 @@ var main
 var checks := 0
 var failures := 0
 # md5 of seven chunks per seed (ground, path, deco, solid, kind, snow, top, trees, water), generation 4, recorded on
-# wip/b25r1-water after merging the region fix (a8d3886) and the EA-01 polish: any change to the generator's output changes these
-const GOLDEN_4 := {1: "f3789cea5de73f30a6209dec0e4b0b5d", 2: "0739c0958e0a3543ad859415a29da4ba", 7: "42f5b6f4f0c113d9159d8cf2983161f1"}
+# wip/b25r1-water after merging the region fix (a8d3886), the EA-01 polish, the straight crossing legs and the water atlas at id 9: any change to the generator's output changes these
+const GOLDEN_4 := {1: "29f84b71ef338727c50fd9c08641e0f6", 2: "226a002f8043e78f6e8e7bfbecdb7e65", 7: "36b57d43ac5285693af347c70aa8bb88"}
 const CHUNKS := [Vector2i(-3, 2), Vector2i(1, 4), Vector2i(2, 9), Vector2i(-2, -3), Vector2i(5, 1), Vector2i(0, 20), Vector2i(-6, 12)]
 
 

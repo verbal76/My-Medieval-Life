@@ -17,7 +17,7 @@ tileset), so the game can draw with the atlases it already has. Nothing is drawn
                  k (bit 0 top-left, 1 top-right, 2 bottom-right, 3 bottom-left; [] where the set has no tile), cols (the
                  frames a row), looks and look_rows (EA-01: the tile of look v, flow f and corners k is
                  flow_base + (v * look_rows + f * 16 + k) * cols), fall, fall_foot, ford (stepping stones), bridge {plank_ns,
-                 plank_ew, stone_ns, stone_ew, plank_n, plank_s, plank_w, plank_e}, as atlas 5 values (5 * 100000 + row * cols)
+                 plank_ew, stone_ns, stone_ew, plank_n, plank_s, plank_w, plank_e}, as atlas 9 values (9 * 100000 + row * cols)
 
 Run:  python3 tools/build_overworld_tiles.py
 """
@@ -38,7 +38,7 @@ ROCK = 1964                  # a grey boulder (also the village's worked-out ore
 FLOWERS = [2657, 2658, 2659, 2656]   # PL1-12: the low red flower (2656) grows outside the village too (overworld GEN_VERSION 2)
 BUSHES = [2661, 2663]
 FORMAT = "mml-overworld-tiles/1"
-WATER_ATLAS = 5 * 100000                 # MapView's water atlas (game/assets/tiles/water_tiles.png; its layout: water_tiles.ROW)
+WATER_ATLAS = 9 * 100000                 # MapView's water atlas (MapView.WATER_ATLAS) (game/assets/tiles/water_tiles.png; its layout: water_tiles.ROW)
 WCOLS = water_tiles.FRAMES
 
 
