@@ -111,8 +111,14 @@ provenance recorded; its layout read by `tools/build_overworld_tiles.py`). EA-01
   water colours, drawn along the flow and scrolled 2 px a frame downstream (eight frames of `water.json` `frame_seconds`,
   0.18 s: about 11 px a second, a seamless loop). Two looks with the ripples in other places are picked per cell
   (`Overworld._water_cell`), so no lattice of streaks shows. Pools keep the set's shimmer, held two frames a step.
-- **Waterfalls**: the rim's fall has its splash cut so it runs on into the cell below, its foot (`fall_foot`: the fall's
-  lower cascade, its splash, foam): two cells tall at every fall; the pool below foams, its flecks drifting south.
+- **Waterfalls**: only where the art fits: a stream (order 1, one or two tiles wide) leaving a mountain top over a
+  south-facing rim. The rim's fall has its splash cut so it runs on into the cell below, its foot (`fall_foot`: the fall's
+  lower cascade, its splash, foam): two cells tall at every fall; the pool below foams, its flecks drifting south. A river,
+  or any course over a rim elsewhere, runs over it as rapids (foaming water cells), never the fall tile.
+- **Fords and rocks**: no generated ford within `ford_bridge_clear` (12) tiles of a road (a crossing that has a bridge needs
+  no ford); rocks stand in about 1% of open water (`rock_in_water_permille` 10), none within 3 tiles of a road or a ford.
+- **Roads meeting the water**: a road that ends by the water (a trail meeting a bridge's foot) reaches its end over land,
+  round the water's edge, where a right-angled way there stays dry.
 - **Bridges** are the tileset's own walks: wooden (rails both sides, the north end capped with posts, the south end on legs
   in the water; east-west the rounded ends; `OverworldView._bridge_tile` picks the end pieces) and, for stone, the castle
   wall-walk with crenellated parapets both sides. The plank and stone tiles replace the earlier flagstone with darkened edges.

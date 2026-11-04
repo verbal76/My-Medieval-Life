@@ -11,6 +11,7 @@
   "ford_radius": 2.7,
   "ford_band": 1.3,
   "bank_reach": 6,
-  "rock_in_water_percent": 3,
+  "rock_in_water_permille": 10,
+  "ford_bridge_clear": 12,
   "road_cross_min_sin": 0.6
 }

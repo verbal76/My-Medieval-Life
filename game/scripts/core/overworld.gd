@@ -940,6 +940,8 @@ static func water_cfg() -> Dictionary:
 	return W
 const FLOW_STILL := 0
 const FLOW_FOAM := 9
+var _wc_order := PackedByteArray()          # the course order per corner of the chunk being generated (_is_fall)
+var _ford_ok := {}                           # ford point -> no road within FORD_BRIDGE_CLEAR of it (_ford_clear)
 var _area_fords: Array = []               # [point, radius, along] of the fords near the chunk being generated (_water_corners)
 var _river_cache := {}                    # river lattice cell -> its course (a pure function of the seed; not saved)
 var _anchored: Array = []                 # B25R1-018: the canonical courses (anchored_courses), traced once
@@ -1426,7 +1428,7 @@ func _water_corners(ox: int, oy: int, road := PackedByteArray(), open := PackedB
 	_area_fords.clear()
 	for st in streams_in(area):
 		for f in st.fords:
-			if Rect2(area).grow(float(f[1]) + 1.0).has_point(f[0]):
+			if Rect2(area).grow(float(f[1]) + 1.0).has_point(f[0]) and _ford_clear(f[0]):
 				_area_fords.append(f)
 		var pts: Array = st.pts
 		var rs: Array = st.r
@@ -1603,6 +1605,23 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 		var s := k
 		while s > plain and wet.call(Vector2i(cells[2 * (s - 1)], cells[2 * (s - 1) + 1]), float(CROSS_MARGIN)) >= 0:
 			s -= 1
+		if e >= n and s > plain and s > 0 and wet.call(Vector2i(cells[2 * (s - 1)], cells[2 * (s - 1) + 1]), float(CROSS_MARGIN)) < 0:
+			# EA-01: the road ends by the water (a trail meeting a bridge's foot): it reaches its end over land, round the
+			# water's edge, if one of the two right-angled ways there stays dry (else as drawn)
+			var a0 := Vector2i(cells[2 * (s - 1)], cells[2 * (s - 1) + 1])
+			var z := Vector2i(cells[2 * (n - 1)], cells[2 * (n - 1) + 1])
+			for corner in [Vector2i(z.x, a0.y), Vector2i(a0.x, z.y)]:
+				var way := PackedInt32Array()
+				_append_line(way, a0, corner)
+				_append_line(way, corner, z)
+				var dry := true
+				for q in range(0, way.size() - 2, 2):
+					if wet.call(Vector2i(way[q], way[q + 1]), 0.5) >= 0:
+						dry = false
+				if dry:
+					out.resize(2 * (out.size() / 2 - (k - s)))
+					out.append_array(way)
+					return out
 		if e >= n or s <= 0 or wet.call(Vector2i(cells[2 * (s - 1)], cells[2 * (s - 1) + 1]), float(CROSS_MARGIN)) >= 0:
 			out.append(c.x)
 			out.append(c.y)
@@ -1859,7 +1878,8 @@ func _generate(cx: int, cy: int) -> Chunk:
 				for dj in range(-1, 2):
 					for di in range(-1, 2):
 						open[(j + dj) * AREA + i + di] = 1
-	var wdata: Array = _water_corners(ox, oy, road, open) if gen >= 4 else []    # B25R1-Q3: generation 4's streams and rivers
+	var wdata: Array = _water_corners(ox, oy, road, open) if gen >= 4 else []
+	_wc_order = wdata[2] if gen >= 4 else PackedByteArray()    # B25R1-Q3: generation 4's streams and rivers
 	var wc: PackedByteArray = wdata[0] if gen >= 4 else PackedByteArray()
 	var wn := PackedByteArray()                   # water corners per cell (0-4)
 	wn.resize(AREA * AREA)
@@ -2019,7 +2039,7 @@ func _generate(cx: int, cy: int) -> Chunk:
 			if wn[q] > 0:
 				_water_cell(ch, c, q, gk, wdata, wn, blocked[q] == 1 and inner[q] == 0, road[q] == 1, wx, wy,
 					_is_fall(q, wn, blocked, inner), _is_fall(q - AREA, wn, blocked, inner) or _is_fall(q - 2 * AREA, wn, blocked, inner) or _is_fall(q - 3 * AREA, wn, blocked, inner),
-					_road_shallows(q, road, open, wn), _is_fall(q - AREA, wn, blocked, inner))
+					_road_shallows(q, road, open, wn), _is_fall(q - AREA, wn, blocked, inner), _road_near(q, road, 3))
 			elif not wdata.is_empty():
 				ch.bank[c] = (wdata[3] as PackedByteArray)[gk]       # B25R1-017: the floodplain's height above the water
 			if road[q] == 1:
@@ -2086,7 +2106,35 @@ func _is_fall(q: int, wn: PackedByteArray, blocked: PackedByteArray, inner: Pack
 		return false
 	if blocked[q] != 1 or inner[q] != 0 or wn[q] < 2 or wn[q - AREA] < 2 or wn[q + AREA] < 2:
 		return false
+	# EA-01 (coordinator 2026-11-04): a fall only where its art fits: a stream (order 1, one or two tiles wide); a river
+	# over a rim is rapids (_water_cell)
+	if not _wc_order.is_empty():
+		var gk := (q / AREA) * GRID + q % AREA
+		if maxi(maxi(_wc_order[gk], _wc_order[gk + 1]), maxi(_wc_order[gk + GRID], _wc_order[gk + GRID + 1])) != 1:
+			return false
 	return (inner[q - AREA] == 1 or (blocked[q - AREA] == 1 and inner[q - 2 * AREA] == 1)) and inner[q + AREA] == 0
+
+
+## EA-01 (coordinator 2026-11-04: a crossing that has a bridge needs no ford): whether no road runs within
+## water.json "ford_bridge_clear" tiles of ford point p (a road near a course crosses it there on a bridge). Global and cached:
+## the same answer for every chunk.
+func _ford_clear(p: Vector2) -> bool:
+	var key := Vector2i(p.round())
+	if _ford_ok.has(key):
+		return _ford_ok[key]
+	var r := int(W.get("ford_bridge_clear", 12))
+	var mask := _road_mask(key.x - AREA / 2, key.y - AREA / 2)
+	var ok := true
+	for dy in range(-r, r + 1):
+		for dx in range(-r, r + 1):
+			var i := AREA / 2 + dx
+			var j := AREA / 2 + dy
+			if ok and i >= 0 and j >= 0 and i < AREA and j < AREA and mask[j * AREA + i] == 1 and dx * dx + dy * dy <= r * r:
+				ok = false
+	if _ford_ok.size() > 4000:
+		_ford_ok.clear()
+	_ford_ok[key] = ok
+	return ok
 
 
 ## B25R1-017, EA-01: whether point p is on ford f [point, radius, along]: within its radius of the point and on the band
@@ -2101,6 +2149,17 @@ func _in_ford(f: Array, p: Vector2) -> bool:
 
 ## B25R1-017: whether area cell q is water at a road's edge (the tile beside the road) that flanks no crossing: kept
 ## walkable as shallows, so a road running beside a course is never pinched. Water beside a bridge or ford stays deep.
+## EA-01: whether a road cell lies within r cells of area cell q (a bridge's or ford's surroundings: no rocks there).
+func _road_near(q: int, road: PackedByteArray, r: int) -> bool:
+	var i := q % AREA
+	var j := q / AREA
+	for y in range(maxi(0, j - r), mini(AREA, j + r + 1)):
+		for x in range(maxi(0, i - r), mini(AREA, i + r + 1)):
+			if road[y * AREA + x] == 1:
+				return true
+	return false
+
+
 func _road_shallows(q: int, road: PackedByteArray, open: PackedByteArray, wn: PackedByteArray) -> bool:
 	if open.is_empty() or open[q] != 1 or road[q] == 1:
 		return false
@@ -2112,7 +2171,7 @@ func _road_shallows(q: int, road: PackedByteArray, open: PackedByteArray, wn: Pa
 
 
 func _water_cell(ch: Chunk, c: int, q: int, gk: int, wdata: Array, wn: PackedByteArray, rim: bool, on_road: bool, wx: int, wy: int,
-		fall := false, below_fall := false, shallows := false, foot := false) -> void:
+		fall := false, below_fall := false, shallows := false, foot := false, road_near := false) -> void:
 	var wc: PackedByteArray = wdata[0]
 	var fl: PackedByteArray = wdata[1]
 	var od: PackedByteArray = wdata[2]
@@ -2143,7 +2202,10 @@ func _water_cell(ch: Chunk, c: int, q: int, gk: int, wdata: Array, wn: PackedByt
 		# a waterfall only where the water leaves a mountain top over its rim, heading down (south, as the rock face is
 		# drawn): the top above, the low ground below. Elsewhere a wet rim cell is plain water cut through the rock.
 		var falls: bool = fall
-		ch.ground[c] = int(tiles.water.fall) if falls else (tile if tile >= 0 else int(tiles.water.flow_base) + (look + flow * 16 + 15) * cols)
+		# EA-01: elsewhere the course runs over the rim as rapids: foaming water, never the fall tile
+		if not falls:
+			ch.flow[c] = FLOW_FOAM
+		ch.ground[c] = int(tiles.water.fall) if falls else int(tiles.water.flow_base) + (look + FLOW_FOAM * 16 + (bits if tile >= 0 else 15)) * cols
 		ch.water[c] = 3 if falls else 1
 		ch.level[c] = order
 		ch.solid[c] = 1
@@ -2172,7 +2234,8 @@ func _water_cell(ch: Chunk, c: int, q: int, gk: int, wdata: Array, wn: PackedByt
 		else:
 			ch.water[c] = 1
 			ch.solid[c] = 1
-			if wn[q] == 4 and hash32(seed, wx, wy, 132) % 100 < int(W.rock_in_water_percent):
+			if wn[q] == 4 and not road_near and hash32(seed, wx, wy, 132) % 1000 < int(W.rock_in_water_permille) \
+					and not _area_fords.any(func(f: Array): return (f[0] as Vector2).distance_to(Vector2(wx, wy)) <= float(f[1]) + 3.0):
 				ch.deco[c] = int(tiles.rock)           # a rock in the water
 
 
