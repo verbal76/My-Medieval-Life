@@ -104,8 +104,8 @@ func test_import_round_trip() -> void:
 	check(str(got.meta.save_id) == "world-A" and got.meta.builds == ["0.1.14-test"], "its world identity and build history carry over")
 	var same := []
 	var differ := []
-	for t in src.trees:                          # a stump's birth time reads as its regrow time until a load writes it down (Trees.born_of)
-		if not t.has("born"):
+	for t in src.trees:                          # a load gives a growing or grown tree without one its birth time (Trees.born_of); a stump keeps none (6e84065)
+		if not t.has("born") and str(t.state) != "stump":
 			t.born = Trees.born_of(t)
 	for k in ["seed", "minutes", "npcs", "households", "relations", "buildings", "plots", "trees", "plants", "deposits", "boulders",
 			"fields", "fauna", "farm", "overworld", "player", "treasury", "granary", "construction", "manor_work", "chests", "carts", "containers", "stalls"]:

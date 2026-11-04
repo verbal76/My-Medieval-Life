@@ -43,7 +43,9 @@ func _world(seed_value := 1) -> World:
 
 
 func _coins(w: World) -> int:
-	return w.total_coins() - w.coin_sources + w.regions.coins()
+	# the world's coin census as the other suites take it (courier_desk, identity): a coin crossing to a settlement lowers
+	# coin_sources and raises the settlement's books, so net_paid_by_village takes it back out once
+	return w.total_coins() + w.regions.coins() - (w.coin_sources + w.regions.net_paid_by_village())
 
 
 func _st(w: World, k: String) -> int:

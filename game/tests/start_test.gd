@@ -1074,14 +1074,17 @@ func _run() -> void:
 	ui.hide_all()
 	var saw_ok := false
 	var saw_fumble := false
-	for k in 40:
+	# a sleeper's pocket is picked with chance up to pickpocket_asleep_max (0.95), so 40 tries saw no fumble 1 run in 8
+	# (0.95^40); 300 tries leave that to well under one in a million, and the loop still stops at the first of each
+	for k in 300:
 		resident.anim = "sleep"
 		resident.coins = 5
-		var mem_before := resident.memory.size()
 		var pr := pi.pickpocket(resident)
 		if pr.ok and pi.asleep(resident):
 			saw_ok = true
-		elif not pr.ok and not pi.asleep(resident) and resident.memory.size() > mem_before:
+		elif not pr.ok and not pi.asleep(resident) and resident.memory.slice(-3).any(func(m): return str(m).contains("picking my pocket")):
+			# a newest memory is the catch (memory holds eight, so its size need not grow once full; the victim's own
+			# witness line "saw ... try to pick" follows it)
 			saw_fumble = true
 		pi.player.crimes.clear()
 		if saw_ok and saw_fumble:

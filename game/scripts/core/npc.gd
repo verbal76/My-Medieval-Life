@@ -105,7 +105,9 @@ func gain(skill: String, xp: int) -> int:
 func remember(text: String) -> void:
 	memory.append(text)
 	if memory.size() > 8:
-		for i in memory.size():
+		# the oldest memory that is not an acquaintance goes, never the one just made (when the other eight were all
+		# acquaintances the new memory itself was dropped: a caught pickpocket was forgotten at once)
+		for i in memory.size() - 1:
 			if not str(memory[i]).begins_with("met "):
 				memory.remove_at(i)
 				return
