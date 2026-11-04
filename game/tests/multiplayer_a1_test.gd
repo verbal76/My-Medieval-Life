@@ -239,16 +239,34 @@ func test_save_21() -> void:
 
 
 func test_save_20_fixture() -> void:
-	var text := FileAccess.get_file_as_string("res://tests/fixtures/b19_save_v20_seed3.json")
+	var old_text := FileAccess.get_file_as_string("res://tests/fixtures/b19_save_v20_seed3.json")
+	var od: Dictionary = JSON.parse_string(old_text)
+	check(int(od.save_version) == 20 and not od.has("players"), "the fixture is a real Build 19 save (version 20, no players section)")
+	# B25R1-Q5 (no migration for the Revision 1 world): the Build 19 world is overworld generation 2: refused, the file kept, and
+	# not imported either; a save with no players section is checked on this build's world with the section taken out
+	var wr := World.new()
+	wr.load_dict(VillageMap.load_default(), JSON.parse_string(old_text))
+	check(wr.load_error.contains("generation") and wr.load_error.contains("the file is kept"), "the version 20 save is refused with its message (%s)" % wr.load_error)
+	wr.dispose()
+	var mo := SaveTransfer.migrate(JSON.parse_string(old_text), VillageMap.load_default())
+	check(not bool(mo.ok) and str(mo.get("reason", "")).contains("generation"), "importing it is refused the same way (%s)" % mo.get("reason", ""))
+	var made := World.new()
+	made.setup(VillageMap.load_default(), 3)
+	made.player.coins = 137
+	var cd: Dictionary = JSON.parse_string(JSON.stringify(made.to_dict()))
+	made.dispose()
+	cd.erase("players")
+	var text := JSON.stringify(cd)
 	var d: Dictionary = JSON.parse_string(text)
-	check(int(d.save_version) == 20 and not d.has("players"), "the fixture is a real Build 19 save (version 20, no players section)")
 	var w := World.new()
 	w.load_dict(VillageMap.load_default(), JSON.parse_string(text))
-	check(w.load_error == "" and w.players.size() == 1 and w.player_list()[0] == w.player, "a version 20 save loads with its \"player\" as the only player")
+	check(w.load_error == "" and w.players.size() == 1 and w.player_list()[0] == w.player, "a save with no players section loads with its \"player\" as the only player")
 	var p := _norm(w.player.to_dict())
 	for k in ["inv", "chest"]:                   # the save continuity fix (da1ed8c) writes an inventory's item order beside its
 		if p.get(k) is Dictionary:               # items; a Build 19 save predates that key, so it is the one key not compared
 			(p[k] as Dictionary).erase("order")
+		if d.player.get(k) is Dictionary:
+			(d.player[k] as Dictionary).erase("order")
 	var same := true
 	for k in d.player:
 		if JSON.stringify(p.get(k), "", true) != JSON.stringify(d.player[k], "", true):
@@ -271,7 +289,7 @@ func test_save_20_fixture() -> void:
 			print("   missing: ", k)
 	check(untouched, "every section of the old save is still written")
 	var m := SaveTransfer.migrate(JSON.parse_string(text), VillageMap.load_default())
-	check(m.ok and int(m.data.save_version) == World.SAVE_VERSION and m.data.has("players"), "importing the old save migrates it to the current version, 21 or later (%s)" % m.get("reason", ""))
+	check(m.ok and int(m.data.save_version) == World.SAVE_VERSION and m.data.has("players"), "importing a save with no players section gives it one, at the current version (%s)" % m.get("reason", ""))
 	w2.dispose()
 	w.dispose()
 

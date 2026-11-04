@@ -1132,8 +1132,10 @@ func _fixture(name: String) -> Dictionary:
 	return JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/" + name))
 
 
-## The Build 20 save (save 21, written by 56c24cb's own save path): read with everything kept, the single player its host by its
-## permanent pid (and -2 in person-id records, ID-D1), the migration idempotent, nothing dropped.
+## The Build 20 save (save 21, 56c24cb) and a save 21 with a guest (805a1c9). B25R1-Q5 (owner: no migration for the Revision 1
+## world; saves are erased at each play test): both worlds are overworld generation 2, so they are refused on load and on import,
+## the file kept. The save 21 -> 22 rewrite itself (World.migrate_21_to_22, a pure function of the save) stays idempotent. What a
+## save 22 and later keeps of a guest (its id, ties and partner) is checked on this build's saves (test_save22).
 func test_build20_migration() -> void:
 	var d := _fixture("b20_save_v21_single.json")
 	check(int(d.save_version) == 21, "the Build 20 fixture is a save 21")
@@ -1143,68 +1145,20 @@ func test_build20_migration() -> void:
 	m2.erase("_migrated_21")
 	check(JSON.stringify(m1, "", true) == JSON.stringify(m2, "", true), "the migration is idempotent: a migrated save migrated again is the same")
 	var w := _reload(d)
-	check(w.load_error == "" and w.player.pid == int(d.player.pid) and w.players.size() == 1 and w.person_id(w.player) == -2,
-		"it loads: the single player is the host, by its permanent pid %d (person id -2)" % w.player.pid)
-	var out := w.to_dict()
-	var lost := []
-	for k in d:
-		if not out.has(k) and k != "meta":            # "meta" is Main's (the save's name and play time), written by Main.save_game
-			lost.append(k)
-	check(lost.is_empty(), "no section of the save is dropped%s" % ("" if lost.is_empty() else ": " + str(lost)))
-	var pin := PlayerState.from_dict(d.player)
-	check(int(out.player.partner) == int(d.player.partner) and int(out.player.coins) == int(d.player.coins) and w.player.crimes.size() == (d.player.crimes as Array).size()
-		and JSON.stringify(w.player.inv.items) == JSON.stringify(pin.inv.items), "the player's purse, pack, crimes and partner are as saved")
-	check(_ties_kept(d.relations.ties, w), "every tie is as saved (the player's under -2)")
-	var npc_same := true
-	for i in (d.npcs as Array).size():
-		npc_same = npc_same and int(out.npcs[i].id) == int(d.npcs[i].id) and int(out.npcs[i].coins) == int(d.npcs[i].coins) and int(out.npcs[i].partner) == int(d.npcs[i].partner)
-	check(npc_same and (out.npcs as Array).size() == (d.npcs as Array).size(), "every villager as saved (ids, purses, partners)")
-	var once := _reload(out).to_dict()
-	check(JSON.stringify(once, "", true) == JSON.stringify(_reload(once).to_dict(), "", true), "loading the migrated save again gives the same save (deterministic, idempotent)")
+	check(w.load_error.contains("generation") and w.load_error.contains("the file is kept"), "the Build 20 save (generation 2) is refused with its message (%s)" % w.load_error)
 	var mt := SaveTransfer.migrate(d, VillageMap.load_default())
-	check(mt.ok and int(mt.data.save_version) == World.SAVE_VERSION and not mt.data.has("_migrated_21"), "an imported Build 20 save migrates to 22 through SaveTransfer (%s)" % mt.get("reason", ""))
-	var census_a := w.total_coins()
-	var census_b := _reload(out).total_coins()
-	check(census_a == census_b, "the coin census is the same before and after (%d)" % census_a)
+	check(not bool(mt.ok) and str(mt.get("reason", "")).contains("generation"), "and refused on import too (%s)" % mt.get("reason", ""))
 	w.dispose()
 
 
-## A save 21 with a guest (Batch B code, 805a1c9): the guest's records stay its own; what save 21 kept under -2 stays the host's line's;
-## the guest's facts are still told apart by their tag.
 func test_save21_guest_migration() -> void:
 	var d := _fixture("mp_save_v21_guest.json")
-	var gk := ""
-	for k in d.players.by_pid:
-		if int(k) != int(d.players.host):
-			gk = k
-	var gd: Dictionary = d.players.by_pid[gk]
+	var m1 := World.migrate_21_to_22(d)
+	var m2 := World.migrate_21_to_22(m1)
+	m1.erase("_migrated_21")
+	m2.erase("_migrated_21")
+	check(JSON.stringify(m1, "", true) == JSON.stringify(m2, "", true), "the save 21 with a guest: its migration is idempotent")
+	check((m1.players.by_pid as Dictionary).size() == (d.players.by_pid as Dictionary).size(), "and keeps every player's record")
 	var w := _reload(d)
-	var g := w.player_by_pid(int(gk))
-	check(g != null and g.away and w.person_id(g) == -int(gk) and w.player_ref(g) == "player:" + gk, "the guest is back (away, MP-D1), by its id -%s" % gk)
-	check(g.coins == int(gd.coins) and JSON.stringify(g.inv.items) == JSON.stringify(PlayerState.from_dict(gd).inv.items) and g.crimes.size() == (gd.crimes as Array).size(),
-		"its purse, pack and crimes as saved")
-	check(not w.justice.case_of("player:" + gk).is_empty() and w.relations.killings_of("player:" + gk) == int(d.relations.guest_killings["player:" + gk]),
-		"its case and its killings as saved")
-	var tagged := 0
-	if w.judgment != null:
-		for ev in w.judgment.facts:
-			var f: Dictionary = w.judgment.fact(int(ev))
-			if (f.tags as Array).has("by:player:" + gk):
-				tagged += 1
-				check(EventTalk.person_of_id(w, int(f.actors[0][0]), EventTalk._tags(f.tags)) == g, "a fact the guest did (save 21: -2, tagged) still names the guest in talk")
-	check(tagged > 0 or w.judgment == null, "the guest's tagged facts are kept (%d)" % tagged)
-	check(_ties_kept(d.relations.ties, w), "the ties under -2 are kept as they were (the host's line's)")
-	var mine := 0
-	for o: NPC in w.npcs:
-		if float(w.relations.peek(w.person_id(g), o.id).regard) != 0.0:
-			mine += 1
-	check(mine == 0, "the guest starts its own ties from this load (none were its own in save 21)")
-	var a := w.to_dict()
-	var lost := []
-	for k in d:
-		if not a.has(k):
-			lost.append(k)
-	check(lost.is_empty(), "no section dropped%s" % ("" if lost.is_empty() else ": " + str(lost)))
-	var a2 := _reload(a).to_dict()
-	check(JSON.stringify(a, "", true) == JSON.stringify(a2, "", true), "the migrated save round trips unchanged%s" % ("" if JSON.stringify(a, "", true) == JSON.stringify(a2, "", true) else " " + _diff(a, a2).left(600)))
+	check(w.load_error.contains("generation") and w.load_error.contains("the file is kept"), "the save 21 with a guest (generation 2) is refused with its message (%s)" % w.load_error)
 	w.dispose()

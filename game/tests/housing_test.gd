@@ -715,7 +715,8 @@ func test_small_room() -> void:
 	c.responsible_adult(h).coins += 1000
 	var took0 := {}
 	for id in c.cost_of("room"):
-		took0[id] = int(w.stats.get("helper_took_" + str(id), 0)) + int(w.stats.get("helper_bought_" + str(id), 0))
+		took0[id] = int(w.stats.get("helper_took_" + str(id), 0)) + int(w.stats.get("helper_bought_" + str(id), 0)) \
+				+ int(w.stats.get("builder_own_" + str(id), 0))
 	c.daily()
 	var p: Dictionary = w.plot(str(hh.get("build", "")))
 	check(not p.is_empty() and str(p.site.get("kind", "")) == "room", "with the loft built and no ground for quarters, the family sets about a small room (%s)" % [c.housing_goals(h)])
@@ -736,9 +737,10 @@ func test_small_room() -> void:
 	check(c.beds_in("b_v1_house") == beds0 + 2 and w.property.rooms_of("b_v1_house").has(str(room.id)), "two more beds, counted as the house's (%d, was %d)" % [c.beds_in("b_v1_house"), beds0])
 	var supplied := true
 	for id in c.cost_of("room"):
-		var got := int(w.stats.get("helper_took_" + str(id), 0)) + int(w.stats.get("helper_bought_" + str(id), 0)) - int(took0[id])
+		var got := int(w.stats.get("helper_took_" + str(id), 0)) + int(w.stats.get("helper_bought_" + str(id), 0)) \
+				+ int(w.stats.get("builder_own_" + str(id), 0)) - int(took0[id])    # made by the builder too (HOUSE-04, as above)
 		supplied = supplied and got >= int(c.cost_of("room")[id])
-	check(supplied, "every plank, stone and log was taken from the household's store or bought: none from nothing")
+	check(supplied, "every plank, stone and log was taken from the household's store, bought or made by the builder: none from nothing")
 	check(w.owner_of(house) == owner0 and members0.all(func(id): return (hh.members as Array).has(id) or not w.npc(int(id)).alive), "the house's ownership and the household unchanged")
 	var in_room := 0
 	for o: NPC in w.brain._members(h):

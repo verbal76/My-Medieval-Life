@@ -120,10 +120,17 @@ func test_running_gates() -> void:
 
 
 func test_activation_old_save() -> void:
-	var text := FileAccess.get_file_as_string("res://tests/fixtures/b24_save_v23_single.json")
-	var d: Dictionary = JSON.parse_string(text)
-	check(int(d.get("save_version", 0)) == 23 and not d.has(EconomyFoundation.KEY), "the fixture is a Build 24 save (save_version 23) with no economy section")
+	# B25R1-Q5: the Build 24 world (overworld generation 2) is refused, the file kept; a save with no economy section is this
+	# build's world saved with the economy off
+	var wr := World.new()
+	wr.load_dict(VillageMap.load_default(), JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/b24_save_v23_single.json")))
+	check(wr.load_error.contains("generation") and wr.load_error.contains("the file is kept"), "the Build 24 save is refused with its message (%s)" % wr.load_error)
 	EconomyFoundation.set_override(EconomyFoundation.off_config())
+	var made := World.new()
+	made.setup(VillageMap.load_default(), 3)
+	var text := JSON.stringify(made.to_dict())
+	var d: Dictionary = JSON.parse_string(text)
+	check(int(d.get("save_version", 0)) == 23 and not d.has(EconomyFoundation.KEY), "a save of this build (save_version 23) with no economy section")
 	var off := World.new()
 	off.load_dict(VillageMap.load_default(), JSON.parse_string(text))
 	EconomyFoundation.set_override(on_cfg())

@@ -20,8 +20,20 @@ func check(cond: bool, what: String) -> void:
 		print("ok   ", what)
 
 
+## B25R1-Q5 (owner: no migration for the Revision 1 world): the Build 24 save's world is overworld generation 2 and is refused
+## (checked in _init); the old-model save is this build's world made and saved under the old field model (shared_manor_farming
+## and seasonal_village_farming 0), the shape Build 24 saved.
 func fixture() -> Dictionary:
-	return JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/b24_save_v23_single.json"))
+	var keep := [GameData.balance.get("shared_manor_farming", 0), GameData.balance.get("seasonal_village_farming", 0)]
+	GameData.balance["shared_manor_farming"] = 0
+	GameData.balance["seasonal_village_farming"] = 0
+	var w := World.new()
+	w.setup(VillageMap.load_default(), 3)
+	var d: Dictionary = JSON.parse_string(JSON.stringify(w.to_dict()))
+	w.dispose()
+	GameData.balance["shared_manor_farming"] = keep[0]
+	GameData.balance["seasonal_village_farming"] = keep[1]
+	return d
 
 
 func loaded(d: Dictionary) -> World:
@@ -42,11 +54,14 @@ func _init() -> void:
 	var keep := [GameData.balance.get("shared_manor_farming", 0), GameData.balance.get("seasonal_village_farming", 0)]
 	check(Farming.shared_manor() and Farming.seasonal_fields() and is_equal_approx(Farming.wheat_yield(), 1.75),
 			"the game's settings: shared and seasonal manor fields, wheat %.2f a cell" % Farming.wheat_yield())
+	var wr := loaded(JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/b24_save_v23_single.json")))
+	check(wr.load_error.contains("generation") and wr.load_error.contains("the file is kept"), "the Build 24 save is refused with its message (%s)" % wr.load_error)
+	wr.dispose()
 	var fx := fixture()
 	var old_shape := not fx.has("shared_farming_start")
 	for f in fx.fields:
 		old_shape = old_shape and not (f as Dictionary).has("sown") and not (f as Dictionary).has("progress")
-	check(int(fx.save_version) == 23 and old_shape, "the Build 24 fixture is an old-model save: no shared_farming_start, no field sown by the cell")
+	check(int(fx.save_version) == 23 and old_shape, "a save of the old model: no shared_farming_start, no field sown by the cell")
 	# one field growing under the old model, half way to ripe (the shape the old model saves: a ready time, no sown, no progress)
 	var span := Life.seasons_to_days(float(GameData.b("field_grow_seasons"))) * World.DAY
 	var g: Dictionary = fx.fields[1]

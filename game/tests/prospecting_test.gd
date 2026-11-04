@@ -46,6 +46,10 @@ func _coins(w: World) -> int:
 	return w.total_coins() - w.coin_sources
 
 
+func _census(w: World) -> int:
+	return w.total_coins() + w.regions.coins() - (w.coin_sources + w.regions.net_paid_by_village())
+
+
 func _st(w: World, k: String) -> int:
 	return int(w.stats.get(k, 0))
 
@@ -295,6 +299,8 @@ func _test_prospector_day() -> void:
 	n.coins = 200
 	n.plan.clear()
 	var coins0 := _coins(w) + w.regions.coins()
+	var census0 := _census(w)
+	var paid0 := w.regions.net_paid_by_village()
 	var goods0: Dictionary = Census.goods(w)
 	var ordered := false
 	var had_kit := false
@@ -314,7 +320,11 @@ func _test_prospector_day() -> void:
 	check(_st(w, "mined_" + Prospecting.ITEM) >= 2, "the prospector takes samples at the clues (%d)" % _st(w, "mined_" + Prospecting.ITEM))
 	check(not mine.is_empty() and _st(w, "assays") >= 1, "and has them assayed by the smith (%d readings)" % mine.size())
 	check(not unreported.call(), "every find is reported to the manor (%d of %d readings found traces)" % [mine.filter(func(r): return str(r.ore) != "").size(), mine.size()])
-	check(_coins(w) + w.regions.coins() == coins0, "coins conserved over the prospector's day (fees, the kit's price)")
+	# the world's coin census as the other suites take it (discovery_test, courier_desk, identity): a coin crossing to a settlement
+	# lowers coin_sources and raises the settlement's books, so net_paid_by_village takes it back out once. Without that term the
+	# day's settlement trade (B25R1-018 hamlets' walkers among them) reads as a gain or loss of exactly the coins carried across
+	print("  census: without net_paid %+d, net_paid %+d, full census %+d" % [_coins(w) + w.regions.coins() - coins0, w.regions.net_paid_by_village() - paid0, _census(w) - census0])
+	check(_census(w) == census0, "coins conserved over the prospector's day (fees, the kit's price; the full census, settlement crossings included)")
 	var goods1: Dictionary = Census.goods(w)
 	var held := int(goods1.get(Prospecting.ITEM, 0))
 	check(held == _st(w, "mined_" + Prospecting.ITEM) - _st(w, "used_" + Prospecting.ITEM), "every sample is held or was assayed (%d held)" % held)

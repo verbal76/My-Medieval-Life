@@ -178,9 +178,17 @@ func test_continuation() -> void:
 ## A real Build 24 save (tests/fixtures/b24_save_v23_single.json, written by gen_b22_save_fixture.gd run unmodified in a checkout of
 ## 4611d86): it loads with the economy off as before, and with it on the economy starts empty, runs, saves and loads exactly.
 func test_build24_save() -> void:
-	var fx: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/b24_save_v23_single.json"))
-	check(int(fx.save_version) == 23 and not fx.has("economy") and not fx.has("transactions"), "the Build 24 fixture: save version 23, no economy or transactions key")
+	# B25R1-Q5 (owner: no migration for the Revision 1 world): the Build 24 world is overworld generation 2: refused, the file
+	# kept. A save with no economy is checked on this build's world saved with the economy off (as Build 24 saved it)
+	var old: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/b24_save_v23_single.json"))
+	var wr := World.new()
+	wr.load_dict(VillageMap.load_default(), old)
+	check(wr.load_error.contains("generation") and wr.load_error.contains("the file is kept"), "the Build 24 save is refused with its message (%s)" % wr.load_error)
 	EconomyFoundation.set_override(EconomyFoundation.off_config())
+	var made := World.new()
+	made.setup(VillageMap.load_default(), 3)
+	var fx: Dictionary = JSON.parse_string(JSON.stringify(made.to_dict()))
+	check(int(fx.save_version) == 23 and not fx.has("economy") and not fx.has("transactions"), "a save of this build with the economy off: save version 23, no economy or transactions key")
 	var off := World.new()
 	off.load_dict(VillageMap.load_default(), fx.duplicate(true))
 	check(off.economy == null and not off.to_dict().has("economy") and not off.to_dict().has("transactions"), "economy off: it loads and writes no new key")

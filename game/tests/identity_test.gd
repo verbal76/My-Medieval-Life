@@ -543,11 +543,24 @@ func _load(d: Dictionary) -> World:
 
 
 func test_upgrade_fixture() -> void:
+	# B25R1-Q5 (owner: no migration for the Revision 1 world): the Build 17 fixture's world is an older overworld generation:
+	# refused, the file kept, not imported. The identity upgrade (a save before 20 given its ids once on load) is checked on this
+	# build's world written as a save 19 (_as_v19, its band counter taken out too)
 	var text := FileAccess.get_file_as_string("res://tests/fixtures/b17_save_seed7.json")
-	var d: Dictionary = JSON.parse_string(text)
+	var od: Dictionary = JSON.parse_string(text)
+	var wr := _load(od)
+	check(wr.load_error.contains("generation") and wr.load_error.contains("the file is kept"), "the Build 17 save is refused with its message (%s)" % wr.load_error)
+	wr.dispose()
+	var mo := SaveTransfer.migrate(od, VillageMap.load_default())
+	check(not bool(mo.ok) and str(mo.get("reason", "")).contains("generation"), "and refused on import (%s)" % mo.get("reason", ""))
+	var made := World.new()
+	made.setup(VillageMap.load_default(), 7)
+	var d: Dictionary = _as_v19(made.to_dict())
+	made.dispose()
+	d.erase("next_band_id")
 	var npcs: int = d.npcs.size()
 	var w := _load(d)
-	check(w.load_error == "" and w.npcs.size() == npcs, "the Build 17 fixture loads and upgrades with every villager kept (%d)" % npcs)
+	check(w.load_error == "" and w.npcs.size() == npcs, "a save 19 of this build's world loads and upgrades with every villager kept (%d) %s" % [npcs, w.load_error])
 	var covered := true
 	var top := 0
 	for n: NPC in w.npcs:
@@ -570,7 +583,7 @@ func test_upgrade_fixture() -> void:
 	var first_member := OffMapSettlement.member_id(w.regions.list[0].hh[0].mem[0])
 	check(band_ok and first_member == World.BAND_START, "every settlement member and the player have band ids, from 1,000,000 in settlement, household, member order")
 	check(w.player.pid == w.next_band_id - 1, "the player's id follows the members' in the band")
-	check(int(w.identity_report.from_version) == 17 and int(w.identity_report.counts.villagers) == npcs, "the report names the save's version and counts")
+	check(int(w.identity_report.from_version) == 19 and int(w.identity_report.counts.villagers) == npcs, "the report names the save's version and counts")
 	var ids_a := JSON.stringify(w._people_to_dict(), "", true, true)
 	var rep_a := JSON.stringify(w.identity_report, "", true, true)
 	var again := _load(d)
@@ -586,7 +599,7 @@ func test_upgrade_fixture() -> void:
 	again.dispose()
 	back.dispose()
 	var m := SaveTransfer.migrate(d, VillageMap.load_default())
-	check(m.ok and int(m.data.save_version) == World.SAVE_VERSION and m.data.has("people"), "an imported old save migrates to the current version (%s)" % m.get("reason", ""))
+	check(m.ok and int(m.data.save_version) == World.SAVE_VERSION and m.data.has("people"), "an imported save 19 migrates to the current version (%s)" % m.get("reason", ""))
 
 
 func test_upgrade_away_member() -> void:

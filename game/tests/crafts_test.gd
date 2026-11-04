@@ -157,7 +157,9 @@ func test_old_overworld_save() -> void:
 	d.overworld.gen = 1
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
-	check(w2.map.overworld.rock_changes.get(Vector2i(-50, -50), 1) == 0, "a version 1 save keeps its changes (the cells are the same)")
+	# B25R1-Q5 (owner: no migration for the Revision 1 world): an older generation's world is refused (was: a version 1 save kept
+	# its rock changes, the cells being the same)
+	check(w2.load_error.contains("generation") and w2.load_error.contains("the file is kept"), "a version 1 save is refused with its message (%s)" % w2.load_error)
 
 
 func test_wiki() -> void:

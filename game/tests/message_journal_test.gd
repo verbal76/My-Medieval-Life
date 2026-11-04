@@ -223,8 +223,22 @@ func _per_player() -> void:
 
 # ---------------------------------------------------------------- 7-8: older saves --------------------------------------------
 func _old_saves() -> void:
+	# B25R1-Q5 (owner: no migration for the Revision 1 world; saves are erased at each play test): the Build 22 and Build 21
+	# fixtures' worlds are overworld generation 2 and are refused, the file kept; a save with no journal is checked on a save
+	# of this build's world with its journal key taken out, as those saves had none
 	for f in [["b22_save_v23_single.json", 23, "Build 22"], ["mp_save_v22_couple.json", 22, "Build 21"]]:
-		var d = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/" + str(f[0])))
+		var od = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/" + str(f[0])))
+		var wr := World.new()
+		wr.load_dict(VillageMap.load_default(), od)
+		check(wr.load_error.contains("generation") and wr.load_error.contains("the file is kept"), "%s save (generation 2): refused with its message (%s)" % [f[2], wr.load_error])
+		wr.dispose()
+	var made := World.new()
+	made.setup(VillageMap.load_default(), 3)
+	var cur: Dictionary = JSON.parse_string(JSON.stringify(made.to_dict()))
+	cur.erase(MessageJournal.KEY)
+	made.dispose()
+	for f in [[cur, World.SAVE_VERSION, "This build's"]]:
+		var d = f[0]
 		check(d is Dictionary and int(d.save_version) == int(f[1]) and not (d as Dictionary).has(MessageJournal.KEY), "%s save (version %d) with no message journal" % [f[2], f[1]])
 		var w := World.new()
 		w.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
