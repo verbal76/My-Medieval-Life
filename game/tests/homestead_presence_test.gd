@@ -127,6 +127,36 @@ func _run(near: bool) -> Dictionary:
 		if str(c.get("building", "")) != "" and int(out.built_hour) < 0:
 			out.built_hour = hour
 			break
+	# the house standing, its field (B25R1-014): a farmer's household with seed in its pantry tills, sows and cuts its crop
+	# into the pantry, the same whether the player watches or not
+	out.sown = 0
+	out.cut = 0
+	var fc: Dictionary = hs.claim(cid)
+	var fh: int = w.npc(id0).household if w.npc(id0) != null else -1
+	if int(out.built_hour) >= 0 and fh >= 0:
+		fc.trade = "farmer"
+		for m in fc.members:
+			fc.trades[str(int(m))] = "farmer"
+		w.households[fh].pantry.add("wheat_seed", 3)
+		w.stat("imported_wheat_seed", 3.0)
+		var grown := {}
+		var cut := {}
+		for _fh in 8 * 24:
+			if near:
+				var at2: Vector2 = Vector2(Homesteads.step_of(fc)) + Vector2(3.5, 2.5)
+				w.player.pos = at2
+				w.presence.set_view(w.host_player().pid, Presence.DEFAULT_VIEW, at2)
+			_hour(w)
+			for x: Vector2i in hs.field_cells(fc):
+				var fst := str(w.farm.cells[x].state)
+				if fst in ["growing", "ripe"]:
+					grown[x] = true
+				elif fst == "tilled" and grown.has(x) and str(w.farm.cells[x].get("cut", "")) != "":
+					cut[x] = true
+			if not cut.is_empty():
+				break
+		out.sown = grown.size()
+		out.cut = cut.size()
 	out.leaks = _leaks(w, g0, st0)
 	out.gap = _coin_gap(w) - gap0
 	w.dispose()
@@ -171,6 +201,7 @@ func _init() -> void:
 		check(bool(r.ok) and int(r.built_hour) >= 0, "%s: the house is built (hour %d)" % [nm, int(r.built_hour)])
 		check(int(r.dup) == 0 and int(r.lost) == 0, "%s: the homesteader and everyone else is never duplicated or lost (%d, %d)" % [nm, int(r.dup), int(r.lost)])
 		check(int(r.regress) == 0, "%s: the frame's delivered materials never go back" % nm)
+		check(int(r.sown) >= 1 and int(r.cut) >= 1, "%s: the household's field is tilled, sown and cut into its pantry (%d sown, %d cut)" % [nm, int(r.sown), int(r.cut)])
 		check((r.leaks as Dictionary).is_empty() and int(r.gap) == 0, "%s: no material or coin made or lost (goods %s, coins %+d)" % [nm, r.leaks, int(r.gap)])
 	check(int(far.far_hours) > int(far.live_hours), "far: the homesteader is calculated at home (live only at the village market, where the player is: %d live, %d calculated hours)" % [int(far.live_hours), int(far.far_hours)])
 	check(int(near.live_hours) > 0 and int(near.far_hours) > 0, "near: live at home and calculated on the road (%d live, %d calculated hours)" % [int(near.live_hours), int(near.far_hours)])

@@ -214,10 +214,36 @@ func _init() -> void:
 		w2.transfer(me.inv, w2.households[me.household].pantry, "wheat_seed", 3)
 	while not w2.farm.can_sow_now():
 		_days(w2, 1.0)
-	_days(w2, 3.0)
+	# the whole round, watched hour by hour (wheat ripens in days, so a single look can fall between a harvest and the next
+	# morning's sowing): ground tilled, seed sown, the crop grown and cut into the household's pantry
+	var harvests0 := int(w2.homesteads.counts.get("field_harvests", 0))
+	var grown := {}                                   # field cells seen sown (growing or ripe)
+	var cut := {}                                     # of those, the ones later cut and tilled again
+	for _hr in 8 * 24:
+		_days(w2, 1.0 / 24.0)
+		for x: Vector2i in w2.homesteads.field_cells(cl):
+			var fst := str(w2.farm.cells[x].state)
+			if fst in ["growing", "ripe"]:
+				grown[x] = true
+			elif fst == "tilled" and grown.has(x) and str(w2.farm.cells[x].get("cut", "")) != "":
+				cut[x] = true
+		if not cut.is_empty() and grown.size() > cut.size():
+			break                                     # a crop cut and the next one sown
 	var fcells := w2.homesteads.field_cells(cl)
-	var sown := fcells.filter(func(x): return str(w2.farm.cells[x].state) in ["growing", "ripe"])
-	check(seller != null and fcells.size() >= 1 and sown.size() >= 1, "the household breaks ground on its claim and sows its own seed (%d cells, %d sown)" % [fcells.size(), sown.size()])
+	check(seller != null and fcells.size() >= 1 and grown.size() >= 1, "the household breaks ground on its claim and sows its own seed (%d cells, %d sown)" % [fcells.size(), grown.size()])
+	check(cut.size() >= 1 and int(w2.homesteads.counts.get("field_harvests", 0)) > harvests0, "the crop is cut into the household's pantry and the field sown again (%d cut, %d harvests)" % [cut.size(), int(w2.homesteads.counts.get("field_harvests", 0)) - harvests0])
+	# a save and load keeps the field, its claim and its household exactly
+	var ftext := JSON.stringify(w2.to_dict())
+	var wf := World.new()
+	wf.load_dict(VillageMap.load_default(), JSON.parse_string(ftext))
+	var fsaved: Dictionary = JSON.parse_string(ftext)
+	var fback: Dictionary = JSON.parse_string(JSON.stringify(wf.to_dict()))
+	var fdiff := []
+	for k in ["farm", "homesteads", "households", "npcs", "wilds"]:
+		if JSON.stringify(fsaved.get(k)) != JSON.stringify(fback.get(k)):
+			fdiff.append(k)
+	check(fdiff.is_empty() and wf.homesteads.field_cells(wf.homesteads.claim(str(cl.id))).size() == fcells.size(), "a save and load keeps the field, the claim and the household exactly (changed: %s)" % [fdiff])
+	wf.dispose()
 	check(fcells.all(func(x): return not Homesteads.house_of(cl).grow(1).has_point(x) and Homesteads.rect_of(cl).has_point(x)), "its field lies on its own land, clear of the house")
 	check(_leaks(w2, g2, s2).is_empty() and w2.total_coins() - w2.coin_sources == coins2, "the seed bought and sown, the goods and coins balance (%s)" % _leaks(w2, g2, s2))
 	# ---- a second claim may not overlap the first

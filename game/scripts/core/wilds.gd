@@ -1637,7 +1637,8 @@ func report() -> Dictionary:
 func to_dict() -> Dictionary:
 	return {"format": FORMAT, "wells": Homesteads.whole(wells.duplicate(true)), "next_well": next_well, "raiders": Homesteads.whole(raiders.duplicate(true)),
 		"last_raid": Homesteads.whole(last_raid.duplicate()), "led": Homesteads.whole(led.duplicate()), "counts": Homesteads.whole(counts.duplicate()),
-		"defended_day": Homesteads.whole(defended_day.duplicate()), "next_work": next_work}     # (whole numbers as ints: a reloaded save saves the same)
+		"defended_day": Homesteads.whole(defended_day.duplicate()), "next_work": next_work,     # (whole numbers as ints: a reloaded save saves the same)
+		"band_wild": true}                    # written since B25R1-Q2 (a): the band already lives in the wild (World.load_dict: no migration)
 
 
 func load_dict(d: Dictionary) -> void:

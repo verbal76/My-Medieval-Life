@@ -6746,7 +6746,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	construction.load_dict(d.get("construction", {}))
 	homesteads.load_dict(d.get("homesteads", {}))     # B25R1-010 (older saves: no homesteads)
 	wilds.load_dict(d.get("wilds", {}))               # B25R1-014/017 (older saves: none)
-	wilds.migrate_on_load()                           # B25R1-Q2 (a): an older save's band moves out to a camp of its own
+	if not (d.get("wilds", {}) as Dictionary).get("band_wild", false):
+		wilds.migrate_on_load()                       # B25R1-Q2 (a): an older save's band moves out to a camp of its own (a newer save
+		                                              # is loaded exactly as it was: its homeless outlaws, arrivals, found a camp at dawn)
 	life.load_dict(d.get("life", {}))                 # B25R1-014 (older saves: no records)
 	Life.sync_roles(self)              # B8-029: roles follow age on load
 	if int(d.get("save_version", 1)) < 4:
