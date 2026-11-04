@@ -183,7 +183,7 @@ func _setup_sites(stamps: Dictionary) -> void:
 		var far := Vector2i(gate.x, rect.end.y + 14)                                            # straight down out of the site, as a village gate's road
 		sites.append({"id": str(spec.id), "name": str(spec.name), "kind": str(spec.kind), "center": center, "rect": rect, "slots": slots,
 			"gate": gate, "streets": plan.streets, "square": plan.square, "walled": bool(plan.get("walled", false)),
-			"props": plan.get("props", []), "entries": plan.get("entries", [])})
+			"props": plan.get("props", []), "entries": plan.get("entries", []), "hamlet": bool(spec.get("hamlet", false))})
 		_links.append({"a": gate, "b": far, "key": 2000 + si * 8})
 		si += 1
 	for k0 in sites.size():                        # B25R1-018: joined to the grid once every site stands (a link never crosses another site)
@@ -332,6 +332,7 @@ func _setup_routes() -> void:
 	for si in through:
 		for vi in through[si]:
 			_site_join(si, vi, "main")
+	var lone: Array = []                          # sites no main route passes near: a side road each, below
 	for si in sites.size():
 		var st: Dictionary = sites[si]
 		var best := {}                            # route id -> [d2, node index]
@@ -357,7 +358,12 @@ func _setup_routes() -> void:
 			joined[vi] = true
 			_site_join(si, vi, "main")
 		if joined.is_empty():
-			_side_road(si)
+			lone.append(si)
+	# B25R1-018 (repair 2026-11-04): the side roads once every site the main routes reach is joined, so a hamlet's road may
+	# join a neighbour's way in (its far point, a route node) rather than run past the neighbour to a node beyond it
+	for si in lone:
+		_side_road(si)
+	for si in sites.size():
 		_site_ring(si)
 	for g in gates.size():
 		var far: Vector2i = _links[_gate_base(g)].b
@@ -368,9 +374,16 @@ func _setup_routes() -> void:
 			route_kind[li] = "main"
 			_gate_vlinks[g] = {_vid(vi): li}
 			_vadj[vi].append([Vector2i(-1 - g, -1), li])   # (a gate end: route_between never walks into it from a node)
-	# each route node joins the nearest grid node in reach, so the country trails meet the main roads
+	# each route node joins the nearest grid node in reach, so the country trails meet the main roads; but not a route node
+	# that is a layout crossing (a bridge's or ford's own point, at the water's edge): a trail from it would leave from the
+	# bridge's end along the bank, beside the land road (seed 1, the fair bridge: from (-169,128), not the road at (-170,129))
+	var crossing_at := {}
+	for xg in (RegionGeo.data().get("crossings", []) as Array):
+		crossing_at[Vector2i(int(xg.x), int(xg.y))] = true
 	for vi in _vpos.size():
 		var p: Vector2i = _vpos[vi]
+		if crossing_at.has(p):
+			continue
 		var ci := fdiv(p.x, NODE)
 		var cj := fdiv(p.y, NODE)
 		var near: Array = []
@@ -432,26 +445,10 @@ func _gate_base(g: int) -> int:
 
 
 ## The far point of site `si`'s side facing `toward` (its base link made on first use: side 2, south, is the lane's own base).
-func _site_side(si: int, toward: Vector2i) -> Array:
+func _site_side(si: int, toward: Vector2i, force := -1) -> Array:
 	var st: Dictionary = sites[si]
 	var r: Rect2i = st.rect
-	var d := toward - (st.center as Vector2i)
-	var side := 2
-	if absi(d.x) > absi(d.y) * 2 and not bool(st.get("walled", false)):
-		side = 1 if d.x > 0 else 3                     # (a walled town is entered by its north and south gates only)
-	elif d.y < 0:
-		side = 0
-	if (st.get("entries", []) as Array).size() == 4:     # B25R1-018: a side whose road out would cross a settlement is passed over
-		var order := [side, 0, 2, 1, 3] if not bool(st.get("walled", false)) else [side, 0, 2]
-		for sd in order:
-			var fp: Vector2i = st.entries[sd] + [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][sd] * 13
-			var bb := Rect2i(mini(fp.x, toward.x), mini(fp.y, toward.y), absi(fp.x - toward.x) + 1, absi(fp.y - toward.y) + 1).grow(2)
-			var hit := false
-			for s2 in sites:
-				hit = hit or bb.intersects(s2.rect)
-			if not hit:
-				side = sd
-				break
+	var side := _side_of(si, toward) if force < 0 else force
 	var bases: Dictionary = _site_bases.get(si, {})
 	if bases.is_empty():
 		for li in _links.size():
@@ -473,8 +470,50 @@ func _site_side(si: int, toward: Vector2i) -> Array:
 	return [bases[side], Vector2i(_links[bases[side]].b)]
 
 
-func _site_join(si: int, vi: int, kind: String) -> void:
-	var sb := _site_side(si, _vpos[vi])
+## Which side of site `si` (0 north, 1 east, 2 south, 3 west) a road toward `toward` leaves by (pure).
+func _side_of(si: int, toward: Vector2i) -> int:
+	var st: Dictionary = sites[si]
+	var d := toward - (st.center as Vector2i)
+	var side := 2
+	if absi(d.x) > absi(d.y) * 2 and not bool(st.get("walled", false)):
+		side = 1 if d.x > 0 else 3                     # (a walled town is entered by its north and south gates only)
+	elif d.y < 0:
+		side = 0
+	if (st.get("entries", []) as Array).size() == 4:     # B25R1-018: a side whose road out would cross a settlement is passed over
+		var order := [side, 0, 2, 1, 3] if not bool(st.get("walled", false)) else [side, 0, 2]
+		for sd in order:
+			var fp: Vector2i = st.entries[sd] + [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][sd] * 13
+			var bb := Rect2i(mini(fp.x, toward.x), mini(fp.y, toward.y), absi(fp.x - toward.x) + 1, absi(fp.y - toward.y) + 1).grow(2)
+			var hit := false
+			for s2 in sites:
+				hit = hit or bb.intersects(s2.rect)
+			if not hit:
+				side = sd
+				break
+	return side
+
+
+## The far point _site_side would give for `toward`, without making its base link (the same side choice, the same point).
+func _side_far(si: int, toward: Vector2i, force := -1) -> Vector2i:
+	var st: Dictionary = sites[si]
+	var r: Rect2i = st.rect
+	var side := _side_of(si, toward) if force < 0 else force
+	var bases: Dictionary = _site_bases.get(si, {})
+	if bases.has(side):
+		return Vector2i(_links[bases[side]].b)
+	if bases.is_empty() and side == 2:
+		for li in _links.size():
+			if int(_links[li].key) == 2000 + si * 8:
+				return Vector2i(_links[li].b)
+	var gy: int = (st.gate as Vector2i).y
+	var a: Vector2i = [Vector2i((st.center as Vector2i).x, r.position.y), Vector2i(r.end.x - 1, gy), Vector2i(st.gate), Vector2i(r.position.x, gy)][side]
+	if (st.get("entries", []) as Array).size() == 4:
+		a = st.entries[side]
+	return a + [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][side] * 13
+
+
+func _site_join(si: int, vi: int, kind: String, force := -1) -> void:
+	var sb := _site_side(si, _vpos[vi], force)
 	var li := _links.size()
 	_links.append({"a": sb[1], "b": _vpos[vi], "key": ROUTE_KEY + li})
 	route_kind[li] = kind
@@ -489,6 +528,9 @@ func _site_join(si: int, vi: int, kind: String) -> void:
 ## B25R1-018: a road round site `si` joining the far points of its sides (and its four corners, 10 tiles out), so a route that
 ## comes to a settlement from one side goes on from another without walking through its buildings. Phase 3 lays the
 ## settlements' own streets along the routes; until then this is their way round.
+const RING_STRETCH := 40.0
+
+
 func _site_ring(si: int) -> void:
 	var bases: Dictionary = _site_bases.get(si, {})
 	if bases.size() < 2:
@@ -507,39 +549,149 @@ func _site_ring(si: int) -> void:
 		var hit := false
 		for sj in sites.size():                    # B25R1-018: not through a neighbouring settlement (they stand closer now)
 			hit = hit or (sj != si and bb.intersects(sites[sj].rect))
-		if a != b and not hit:
-			_route_link(_vnode(a), _vnode(b), "ring")
+		# (repair 2026-11-04) nor the cells the link would have, its wobble included: seed 7's ring round Higham passed the
+		# box test 4 tiles from Garton and wobbled onto its houses
+		if a == b or hit:
+			continue
+		# (repair 2026-11-04) laid in stretches of at most RING_STRETCH tiles, so its wobble (a tenth of a stretch) stays near
+		# the ring's line, and only when none of the cells it would have lies on a neighbour's ground: a long ring leg wobbled
+		# up to 9 tiles, onto Garton's houses beside Higham on seed 7
+		var parts := maxi(1, int(ceil((b - a).length() / RING_STRETCH)))
+		var pts: Array[Vector2i] = []
+		for q in parts + 1:
+			pts.append(a + (b - a) * q / parts)
+		var li0 := _links.size()
+		var clear := true
+		for q in parts:
+			clear = clear and not _cells_on_site(_polyline(pts[q], pts[q + 1], ROUTE_KEY + li0 + q), si)
+		if clear:
+			for q in parts:
+				_route_link(_vnode(pts[q]), _vnode(pts[q + 1]), "ring")
 
 
 ## A hamlet's own road to the nearest route node: a few bent points between (each pushed sideways by the hash, up to a fifth
 ## of the way's length), every one a route node, so the way winds like a farm road rather than running ruler-straight.
+## B25R1-018 (repair 2026-11-04): every settlement's ground is impassable to it. The nearest route node is taken whose way
+## (the side's far point, the bent points, the node), widened by the most a road's wobble moves it (_polyline), keeps off
+## every other settlement's rectangle and off this one's; the nearer nodes are tried first, so a hamlet whose nearest node is
+## clear keeps the road it had. (Before, the straight way to the nearest node could run through a neighbour's houses: seed 1's
+## road to Elmcote through Milton, seed 2's and seed 7's to Mileham through Brookhurst.)
+const SIDE_TRIES := 24
+
+
 func _side_road(si: int) -> void:
 	var st: Dictionary = sites[si]
-	var vi := _nearest_vnode(st.center)
-	if vi < 0:
+	var order: Array = []
+	for vi in _vpos.size():
+		order.append([(_vpos[vi] - (st.center as Vector2i)).length_squared(), vi])
+	if order.is_empty():
 		return
-	var from: Vector2i = _site_side(si, _vpos[vi])[1]
-	var to: Vector2i = _vpos[vi]
-	var d := to - from
-	var steps := clampi(int(d.length()) / 60, 1, 6)
+	order.sort()
+	var pick: int = int(order[0][1])                  # (none clear in reach: the nearest, as before)
+	var pts: Array = []
+	var side := -1
+	var walled := bool(st.get("walled", false))
+	for k in mini(SIDE_TRIES, order.size()):
+		var vi: int = int(order[k][1])
+		# the side facing the node first, then the others (a side whose way out lies on a neighbour's ground is no way out)
+		var first_side := _side_of(si, _vpos[vi])
+		for sd in [first_side] + ([0, 2] if walled else [0, 1, 2, 3]):
+			if sd == first_side and pts.size() > 0:
+				break
+			var cand := _side_points(si, vi, sd)
+			if _side_clear(si, cand):
+				pick = vi
+				pts = cand
+				side = sd
+				break
+		if not pts.is_empty():
+			break
+	if pts.is_empty():
+		# no node in reach has a clear way: the nearest node whose way goes clear round one settlement's corner (14 tiles out,
+		# as its ring road), the shortest such way first
+		for k in mini(SIDE_TRIES, order.size()):
+			var vi: int = int(order[k][1])
+			var best: Array = []
+			var bl := 1 << 30
+			for sd in ([0, 2] if walled else [0, 1, 2, 3]):
+				var far := _side_far(si, _vpos[vi], sd)
+				for sj in sites.size():
+					var g: Rect2i = (sites[sj].rect as Rect2i).grow(14)
+					for cn: Vector2i in [g.position, Vector2i(g.end.x, g.position.y), g.end, Vector2i(g.position.x, g.end.y)]:
+						var cand: Array = [far, cn, _vpos[vi]]
+						var l := int((cn - far).length() + (_vpos[vi] - cn).length())
+						if l < bl and _side_clear(si, cand):
+							bl = l
+							best = cand
+							side = sd
+			if not best.is_empty():
+				pick = vi
+				pts = best
+				break
+	if pts.is_empty():
+		pts = _side_points(si, pick)
 	var prev := -1
 	var first := -1
-	for k in range(1, steps):
-		var base := from + d * k / steps
-		var off := ((hash32(seed, si, k, 905) % 2001) - 1000) * int(d.length()) / 5000
-		var perp := Vector2i(-d.y, d.x)
-		var p := base + Vector2i(perp.x * off / maxi(1, int(d.length())), perp.y * off / maxi(1, int(d.length())))
-		var cur := _vnode(p)
+	for k in range(1, pts.size() - 1):
+		var cur := _vnode(pts[k])
 		if prev >= 0:
 			_route_link(prev, cur, "side")
 		else:
 			first = cur
 		prev = cur
 	if prev >= 0:
-		_route_link(prev, vi, "side")
-		_site_join(si, first, "side")
+		_route_link(prev, pick, "side")
+		_site_join(si, first, "side", side)
 	else:
-		_site_join(si, vi, "side")
+		_site_join(si, pick, "side", side)
+
+
+## The way of site `si`'s side road to route node `vi`: the side's far point, the bent points, the node (pure: no link made).
+func _side_points(si: int, vi: int, force := -1) -> Array:
+	var from := _side_far(si, _vpos[vi], force)
+	var to: Vector2i = _vpos[vi]
+	var d := to - from
+	var steps := clampi(int(d.length()) / 60, 1, 6)
+	var out: Array = [from]
+	for k in range(1, steps):
+		var base := from + d * k / steps
+		var off := ((hash32(seed, si, k, 905) % 2001) - 1000) * int(d.length()) / 5000
+		var perp := Vector2i(-d.y, d.x)
+		out.append(base + Vector2i(perp.x * off / maxi(1, int(d.length())), perp.y * off / maxi(1, int(d.length()))))
+	out.append(to)
+	return out
+
+
+## Whether any of `cells` (x, y pairs) lies on a settlement's ground other than site `own`'s.
+func _cells_on_site(cells: PackedInt32Array, own: int) -> bool:
+	for sj in sites.size():
+		if sj == own:
+			continue
+		var r: Rect2i = sites[sj].rect
+		for q in range(0, cells.size(), 2):
+			if r.has_point(Vector2i(cells[q], cells[q + 1])):
+				return true
+	return false
+
+
+## Whether each leg of `pts`, widened by its wobble (_polyline's amplitude) and a tile, misses every settlement's rectangle.
+func _side_clear(si: int, pts: Array) -> bool:
+	for k in range(1, pts.size()):
+		var a: Vector2i = pts[k - 1]
+		var b: Vector2i = pts[k]
+		var d := b - a
+		var length := maxi(absi(d.x), absi(d.y)) + mini(absi(d.x), absi(d.y)) / 2
+		var pad := mini(9, length / 10) + 1
+		var n := maxi(1, maxi(absi(d.x), absi(d.y)))
+		for sj in sites.size():
+			var r: Rect2i = (sites[sj].rect as Rect2i).grow(pad if sj != si else 0)
+			var box := Rect2i(mini(a.x, b.x), mini(a.y, b.y), absi(d.x) + 1, absi(d.y) + 1)
+			if not box.intersects(r):
+				continue
+			for q in n + 1:
+				if r.has_point(a + d * q / n):
+					return false
+	return true
 
 
 ## REGION-NAV-01: whether a site's building stands on cell `c` (its stamp's solid cells; a building is not entered).

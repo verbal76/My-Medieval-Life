@@ -138,7 +138,7 @@
    "id": "bourton",
    "kind": "abbey village",
    "x": 90,
-   "y": 935,
+   "y": 946,
    "label": "CANON-INFERRED",
    "note": "a morning's ride south of Higham beyond the meadows and the vine country, in a valley of wild-wood",
    "src": [
@@ -161,7 +161,7 @@
   {
    "id": "milton",
    "kind": "thorp",
-   "x": 150,
+   "x": 195,
    "y": 700,
    "label": "CANON-INFERRED",
    "note": "named by Morris as a thorp at the feet of the downs toward Higham; its position (east of Garton) is ours",
@@ -212,8 +212,8 @@
   {
    "id": "brookhurst",
    "kind": "hamlet",
-   "x": -190,
-   "y": 758,
+   "x": -208,
+   "y": 797,
    "label": "GAME EXPANSION",
    "note": "on Coldlake west of Higham, Abbey land: fields and an herb garden"
   },

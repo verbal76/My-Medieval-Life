@@ -13,7 +13,9 @@ var failures := 0
 # wip/b25r1-water after merging the region fix (a8d3886), the EA-01 polish, the straight crossing legs, the water atlas at id 9 and the EA-01 fixes of 2026-11-04: any change to the generator's output changes these
 ## Re-pinned on the B25R1 integration (wip/b25r1: water, region, settle's hamlets, homesteads and presence merged): the towns,
 ## chalk figures, banks and hamlets share the generation-4 chunks with the streams; the determinism and order checks below hold.
-const GOLDEN_4 := {1: "0c9a3447fc4ede1085406b74e395aeb7", 2: "9752e17cdfa904cae5084f2f876d2214", 7: "4200d1dc4ab59d5280b331e5171c5973"}
+## Re-pinned 2026-11-04 (repair): Brookhurst, Milton and Bourton moved clear of their neighbours' ground, the hamlets' side roads
+## kept off every settlement, no trail from a bridge's own point (overworld_test, road_types_test, region_travel_test pass).
+const GOLDEN_4 := {1: "4c42cb400d8358b9d3c55d38fd8091d6", 2: "3ca81cc2872ba9b702b704b2a2419d4a", 7: "e3c98f83ed83bae4e7783b79152b8a1b"}
 const CHUNKS := [Vector2i(-3, 2), Vector2i(1, 4), Vector2i(2, 9), Vector2i(-2, -3), Vector2i(5, 1), Vector2i(0, 20), Vector2i(-6, 12)]
 
 

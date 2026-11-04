@@ -118,9 +118,10 @@ The six principal places keep their order and the forty miles, but leave the 70-
 | Netherton | (40, 400) |
 | Garton | (-110, 700) |
 | Higham | (20, 765) |
-| Bourton Abbas | (90, 935) |
+| Bourton Abbas | (90, 946) (935 until the 2026-11-04 repair: moved 11 tiles south, clear of Higham's ground) |
 
-The canonical thorps Mileham (-210, 712) and Milton (150, 700) are added, and the eight hamlets are spread 240-330 tiles
+The canonical thorps Mileham (-210, 712) and Milton (195, 700; 150 until the 2026-11-04 repair, when its ground lay on
+Higham's and its houses there stood unbuilt) are added, and the eight hamlets are spread 240-330 tiles
 (20-28 miles) to the east and west.
 
 The settlements' `miles` in settlements.json become the road distance in miles from the village (section g).
@@ -137,7 +138,17 @@ Main route:
   road was straight, and the river wound about much"). Beyond it the road bends east among the vine hills.
 - Straight through the waste into the Wood Perilous.
 
-Side roads join the hamlets and the Mileham-Garton-Milton road along the south foot. There is also the Garton road over
+Side roads join the hamlets and the Mileham-Garton-Milton road along the south foot.
+
+Repair of 2026-11-04 (B25R1 Revision 1 coordinator): every settlement's ground is impassable to the roads laid round and
+between them. (1) No two sites' grounds overlap (overworld_test checks it; the three anchors above moved). (2) A hamlet's
+side road is laid once every site the main routes reach is joined, and takes the nearest route node whose way (from any of
+the hamlet's four sides, through its bent points), widened by the road's wobble, keeps off every settlement's ground; failing
+that, a way round one settlement's corner (Overworld._side_road). (3) A ring road round a site is laid in stretches of at most
+40 tiles, and only where none of its cells would lie on a neighbour's ground (Overworld._site_ring). (4) No country trail
+leaves from a layout crossing's own point (the bridge's end): the fair bridge's trail on seed 1 ran along the bank beside the
+land road. (5) Paving's busy count is over the pairs of the village and the towns (RegionRoads.busy_cells): over all 120 pairs
+of Revision 1's places almost every main road was busy, and 4883 of 9368 main road cells were stone. There is also the Garton road over
 the Downs to Bear Castle. `routes` in the layout gives control points; RegionRoads routes between them along terrain, and
 roads keep their three types: main (maintained), dirt and ancient (the Greenway), with trails by wear.
 
@@ -192,7 +203,7 @@ Each hamlet has one or two businesses its land supports:
 | Fallowley | (-250, 300) | farm, cook (alehouse) | a well |
 | Wendholt | (180, 262) | farm, smith | the Netherton stream |
 | Ewedean | (-260, 385) | herd, tanner | a well |
-| Brookhurst | (-190, 758) | farm, healer | Coldlake |
+| Brookhurst | (-208, 797) (-190, 758 until the 2026-11-04 repair: its ground lay on Mileham's and Garton's) | farm, healer | Coldlake |
 | Elmcote | (220, 790) | farm, mason | a well |
 | Cressbrook | (185, 915) | farm, cook (tavern) | a well |
 

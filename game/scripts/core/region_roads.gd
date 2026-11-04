@@ -62,20 +62,42 @@ static func segments(ow: Overworld, area: Rect2i) -> Array:
 static func main_cells(ow: Overworld) -> Dictionary:
 	if ow.has_meta("b25r1_main_roads"):
 		return ow.get_meta("b25r1_main_roads")
+	var cells := _pair_cells(ow, true)
+	ow.set_meta("b25r1_main_roads", cells)
+	return cells
+
+
+## The busy count for paving (B25R1-Q1 "busy stretches"): as main_cells, over the pairs of the village and the towns only.
+## The hamlets (B25R1-018 section 5) are small places off the main roads: their roads are main roads (dirt), but their pairs do
+## not make a stretch busy. (Counted over every pair, the 15 places of Revision 1 made 120 pairs against STONE_HEAVY 14, and
+## most main road cells read as stone: 4883 of 9368 on seed 1 after the settle merge, against 914 of 4648 at a8d3886.)
+static func busy_cells(ow: Overworld) -> Dictionary:
+	if ow.has_meta("b25r1_busy_roads"):
+		return ow.get_meta("b25r1_busy_roads")
+	var cells := _pair_cells(ow, false)
+	ow.set_meta("b25r1_busy_roads", cells)
+	return cells
+
+
+static func _pair_cells(ow: Overworld, hamlets: bool) -> Dictionary:
 	var cells := {}
 	var ends: Array = []
 	for g in ow.gates.size():
 		ends.append(ow._gate_end(g))
 	for st in ow.sites:
-		ends.append(ow._site_end(str(st.id)))
+		ends.append(ow._site_end(str(st.id)) if hamlets or not bool(st.get("hamlet", false)) else {})
 	var ng := ow.gates.size()
 	for b in range(ng, ends.size()):
+		if (ends[b] as Dictionary).is_empty():
+			continue
 		# each pair of places once (B25R1-018): the village's gates are one place, so a cell on the roads from several of its
 		# gates to a settlement counts that pair once; then the busy count is how many pairs of places use a stretch, not how
 		# many gates the village has (with one main road through the region every stretch would otherwise count as busy)
 		for a in b:
 			if a > 0 and a < ng:
 				continue                          # the village's other gates: walked with gate 0 below
+			if (ends[a] as Dictionary).is_empty():
+				continue
 			var seen := {}
 			for g in (range(ng) if a == 0 else [a]):
 				for c in ow.route_between(ends[g], ends[b], false):
@@ -83,7 +105,6 @@ static func main_cells(ow: Overworld) -> Dictionary:
 					if not seen.has(ci):
 						seen[ci] = true
 						cells[ci] = int(cells.get(ci, 0)) + 1
-	ow.set_meta("b25r1_main_roads", cells)
 	return cells
 
 
@@ -105,7 +126,8 @@ static func kind_of(ow: Overworld, seg: Dictionary) -> String:
 ## Owner decision B25R1-Q1 (2026-11-03): three road types, from the network's own data, on the same cells (so walking, routes
 ## and saves are unchanged):
 ##   stone  improved sections: a main road's approach to the village and to each settlement (within STONE_NEAR tiles of a
-##          way in: a gate or a side entry), and its most travelled stretches (at least STONE_HEAVY of the routes between places pass along it); and
+##          way in: a gate or a side entry), and its most travelled stretches (at least STONE_HEAVY of the routes between the village and
+##          the towns pass along it, busy_cells); and
 ##          each settlement's street (the middle row of each lane its doors open onto, lane_cells). The overworld has no rivers,
 ##          so there is no bridge or ford to pave.
 ##   road   the dirt roads between the places: the rest of main_cells.
@@ -120,6 +142,7 @@ static func main_kinds(ow: Overworld) -> Dictionary:
 		return ow.get_meta("b25r1_road_kinds")
 	var out := {}
 	var main := main_cells(ow)
+	var busy := busy_cells(ow)
 	# B25R1-018: the approach is the road within STONE_NEAR of a way into a place (a village gate, a settlement's gate or side
 	# entry) and the place's own ground, not every road within STONE_NEAR of its rectangle: a road round a settlement
 	# (Overworld._site_ring) is a dirt road by it, not the paved way in
@@ -131,7 +154,7 @@ static func main_kinds(ow: Overworld) -> Dictionary:
 		for e: Vector2i in ow.site_entries(str(st.id)):
 			places.append(Rect2i(e, Vector2i.ONE).grow(STONE_NEAR))
 	for c: Vector2i in main:
-		var stone := int(main[c]) >= STONE_HEAVY
+		var stone := int(busy.get(c, 0)) >= STONE_HEAVY
 		if not stone:
 			for r in places:
 				if r.has_point(c):

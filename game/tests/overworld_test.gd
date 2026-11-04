@@ -607,6 +607,14 @@ func _test_sites(seed_value: int) -> void:
 		check(doors_ok and homes.size() == households, "%s: a home for each of its %d households (%d buildings), inside the site, solid, with open ground at its door" % [st.name, households, st.slots.size()])
 		check(o.site_at(st.center) == st and o.site(str(st.id)) == st, "%s: found by cell and by id" % st.name)
 		box = box.merge(st.rect.grow(20))
+	# B25R1-018 (repair 2026-11-04): no settlement's ground lies on another's (a hamlet's houses inside a town's ground were left
+	# unbuilt, and a road between two overlapping places ran through one of them)
+	var overlaps := []
+	for a in o.sites.size():
+		for b in range(a + 1, o.sites.size()):
+			if (o.sites[a].rect as Rect2i).intersects(o.sites[b].rect):
+				overlaps.append("%s/%s" % [o.sites[a].id, o.sites[b].id])
+	check(overlaps.is_empty(), "seed %d: no settlement's ground overlaps another's (%s)" % [seed_value, overlaps])
 	var south: Vector2i = Vector2i.ZERO
 	for e in m.exits():
 		if e.side == 2:
