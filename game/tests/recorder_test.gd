@@ -1184,6 +1184,9 @@ func x20_steps(w: World) -> Dictionary:
 	w.relations.talked(a)
 	out.court = w.relations.ask_court(Life.PLAYER_ID, a)
 	var j: JudgmentStore = w.judgment
+	if a == b:
+		a = adults[0] if adults[0] != b else adults[1]     # (the credit pair may make the buyer the thief: a theft needs another victim)
+	print("x20 theft: offender %d victim %d" % [b.id, a.id])
 	var ev := j.publish("theft", [b.id], [a.id], [], 5)
 	j.observe_all(ev, [a.id, adults[2].id])
 	j.pers.mistake(a.id, "trade", 30000, w.day())
