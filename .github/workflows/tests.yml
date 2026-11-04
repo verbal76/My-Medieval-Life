@@ -230,6 +230,7 @@ jobs:
           res://tests/party_test.gd
           res://tests/regional_food_test.gd
           res://tests/regions_test.gd
+          res://tests/hamlet_test.gd
           res://tests/settlement_development_test.gd
           res://tests/tailor_barber_test.gd
           res://tests/tax_test.gd
