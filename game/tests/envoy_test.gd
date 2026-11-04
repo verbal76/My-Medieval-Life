@@ -96,12 +96,17 @@ func _test_mission() -> void:
 	var at_site := _run(w, func() -> bool: return str(n.journey.get("leg", "")) == "there", 4 * 1440.0)
 	check(at_site, "and reaches the site (day %d)" % w.day())
 	var people := SettlementFolk.people(w, sid)
-	var far := {"max": 0.0}
+	var far := {"max": 0.0, "out": 0}
+	var site_rect: Rect2i = (w.map.overworld.site(sid).rect as Rect2i).grow(2)
 	check(_run(w, func() -> bool:
 		if str(n.doing).begins_with("speaking with"):
 			far.max = maxf(float(far.max), float(w.map.overworld.site(sid).center.distance_to(n.cell())))
+			if not site_rect.has_point(n.cell()):
+				far.out = int(far.out) + 1
 		return str(j.get("stage", "")) == "back", 2 * 1440.0), "at the site they go to each person in turn (%d people), then turn for home" % people.size())
-	check(float(far.max) < 30.0, "every interview is at the site, face to face (at most %.0f tiles from its centre)" % float(far.max))
+	# (B25R1-018: the towns are laid out wider than the old 30 tiles round the centre - market places, cross streets, suburbs -
+	# so "at the site" is the site's own ground, its rect and two cells round it)
+	check(int(far.out) == 0, "every interview is at the site, face to face (%d outside its ground; at most %.0f tiles from its centre)" % [int(far.out), float(far.max)])
 	check((Envoys.book(w).records as Array).is_empty(), "nothing is known at home while the envoy is away (the reeve's book is empty)")
 	var met: Array = j.met
 	check(met.size() == people.size(), "everyone a visitor can meet was met or recorded away (%d of %d)" % [met.size(), people.size()])

@@ -219,7 +219,10 @@ func _overworld_trees(w: World) -> void:
 			var l: TileMapLayer = layers[key]
 			for cell in l.get_used_cells():
 				drawn += 1
-				if tree_tiles.has(main.ow_view.tile_value(l, cell) % 100000):
+				var v: int = main.ow_view.tile_value(l, cell)
+				# (the tree tiles are the village atlases'; the EXTRA_ATLASES from 4 on are other sheets - roads, Larchrow, grass,
+				# props, water - whose tile numbers repeat the village atlas's without being trees)
+				if v / 100000 < 4 and tree_tiles.has(v % 100000):
 					stray += 1
 	check(drawn > 1000 and stray == 0, "no tree tile is drawn in the overworld's layers (%d tiles looked at)" % drawn)
 	var tops := 0

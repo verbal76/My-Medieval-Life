@@ -86,6 +86,9 @@ func test_booths_and_routes() -> void:
 	var cs := w.couriers
 	check(cs != null and cs.live, "the live World has a courier service")
 	for s: OffMapSettlement in w.regions.list:
+		if s.hamlet:
+			check(cs.booth_of(s.id).is_empty(), "%s (a hamlet: no trader, B25R1-018 section 5) has no booth" % s.name)
+			continue
 		var b := cs.booth_of(s.id)
 		check(not b.is_empty() and str(b.keeper) == "region:%s/trader" % s.id and cs.alive(str(b.keeper)), "%s has a booth served by its own trader party" % s.name)
 	var vb := cs.booth_of("village")
@@ -93,6 +96,8 @@ func test_booths_and_routes() -> void:
 	check(str(vb.stall) != "" and w.stalls.has(str(vb.stall)), "and it stands at a market stall of the stall system")
 	var days := {}
 	for s: OffMapSettlement in w.regions.list:
+		if s.hamlet:
+			continue
 		var out: Dictionary = {}
 		var back: Dictionary = {}
 		for r in cs.routes:
@@ -102,7 +107,14 @@ func test_booths_and_routes() -> void:
 				back = r
 		check(not out.is_empty() and not back.is_empty() and float(out.days) > 0.0 and is_equal_approx(float(out.days), float(back.days)), "a regular route each way joins the village and %s (%.2f days for %d miles)" % [s.name, float(out.get("days", 0.0)), s.miles])
 		days[s.id] = float(out.get("days", 0.0))
-	check(days.wulstead < days.netherton and days.netherton < days.garton and days.garton < days.higham and days.higham < days.bourton, "the farther the settlement (miles), the longer the road")
+	# (B25R1-018: the rebuilt region's roads bend round the Downs and the river, so Garton (50 miles as the crow flies) lies
+	# farther by road than Higham (60): the order is the road's length, as the couriers' days are reckoned)
+	var by_road := ["wulstead", "netherton", "garton", "higham", "bourton"]
+	by_road.sort_custom(func(a, b) -> bool: return w.regions._road_tiles(SettlementFacts.VILLAGE, a, 0) < w.regions._road_tiles(SettlementFacts.VILLAGE, b, 0))
+	var longer := true
+	for k in range(1, by_road.size()):
+		longer = longer and float(days[by_road[k - 1]]) < float(days[by_road[k]])
+	check(longer, "the farther the settlement by road, the longer the courier's road %s %s" % [str(by_road), str(days)])
 	var table: Dictionary = w.regions.village_route_table()
 	check(is_equal_approx(float(table["village>wulstead"].days), days.wulstead), "the days are the settlements.json distance hauled by a carrier (Regions.village_route_table)")
 
@@ -195,7 +207,7 @@ func test_special_and_fees() -> void:
 	run_days(float(q.days) + 0.3)
 	check(str(job.state) == "fulfilled" and w.player.coins == pc0 + 5 and int(vb.escrow) == 0, "back home: the 5 coins collected go to the sender and the contract is fulfilled")
 	check(kn.earned - ke1 >= int(n.fee), "the courier is paid its fee only when the work is done (no free transport) (earned %d on the way home, fee %d; spent %d meanwhile)" % [kn.earned - ke1, int(n.fee), kn.spent - ks1])
-	check(int(w.regions.by_id["wulstead"].flows.outside_coins_out) == paid0 + 5, "Wulstead paid from its own till")
+	check(int(w.regions.by_id["wulstead"].flows.outside_coins_out) == paid0 + 5, "Wulstead paid from its own till (%+d)" % (int(w.regions.by_id["wulstead"].flows.outside_coins_out) - paid0))
 	check(coin_gap() == gap0 and item_gap() == item0 and w.regions.audit() == "", "coins and goods balance; settlement books balance")
 	# a delivery to a settlement the player has not dealt with is refused
 	check(cs.refusal({"sender": "player", "recipient": "region:bourton/trader", "recipient_kind": "business", "settlement": "bourton", "items": {ITEM: 1}, "courier": courier}) != "", "a trader the player has not dealt with cannot be addressed")

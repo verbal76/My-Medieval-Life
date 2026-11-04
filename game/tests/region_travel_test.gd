@@ -68,7 +68,9 @@ func _known_from_day_one() -> void:
 	var w: World = main.world
 	var p: PlayerState = w.player
 	var ow: Overworld = w.map.overworld
-	check(ow.sites.size() == 5, "the world has its five settlements (%d)" % ow.sites.size())
+	# (B25R1-018: the five settlements and the hamlets and thorps beside them, one site each)
+	check(ow.sites.size() == (OffMapSettlement.data().settlements as Array).size() and ["wulstead", "netherton", "garton", "higham", "bourton"].all(func(id) -> bool: return not ow.site(id).is_empty()),
+		"the world has its five settlements, and a site for each hamlet (%d)" % ow.sites.size())
 	check(p.places.is_empty(), "day 1: the player has been told of no place (Atlas.places empty)")
 	var net := RegionMapPanel.settlement_network(w)
 	var b := RegionMapPanel.region_bounds(w, p)
