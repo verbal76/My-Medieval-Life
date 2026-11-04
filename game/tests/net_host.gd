@@ -186,6 +186,7 @@ func _commands() -> void:
 			for id in main.net.by_peer:
 				var p: PlayerState = w.player_by_pid(int(main.net.by_peer[id]))
 				p.pos = Vector2(float(c.x), float(c.y))
+				main.net.moves[id].t = Time.get_ticks_msec()     # the step check runs from here: a move the guest sent before it was put here is refused
 				main.net.rpc_id(id, "s_correct", p.pos)
 		"host_pick":
 			var pl := w.plant_at(Vector2i(int(c.x), int(c.y)))

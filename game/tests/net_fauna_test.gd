@@ -91,11 +91,17 @@ func _run() -> void:
 
 func _animals() -> void:
 	var w: World = main.world
-	var st := status()
-	var host_ids: Array = (st.animals as Dictionary).keys().map(func(k): return int(k))
-	host_ids.sort()
-	var my_ids: Array = w.fauna.animals.map(func(x: Animal): return x.id)
-	check(host_ids == my_ids and not my_ids.is_empty(), "the guest's copy holds the host's animals (%d)" % my_ids.size())
+	var seen := {}
+	var ids_of := func() -> bool:                       # (a birth on the host is with the guest by the next snapshot: the two read at one moment)
+		seen.st = status()
+		seen.host = (seen.st.get("animals", {}) as Dictionary).keys().map(func(k): return int(k))
+		seen.host.sort()
+		seen.mine = w.fauna.animals.map(func(x: Animal): return x.id)
+		return seen.host == seen.mine
+	await until(ids_of, 3.0)
+	var st: Dictionary = seen.st
+	var my_ids: Array = seen.mine
+	check(seen.host == my_ids and not my_ids.is_empty(), "the guest's copy holds the host's animals (%d)" % my_ids.size())
 	# a pen animal: the guest goes beside its pen
 	var pick := -1
 	var pen := ""
@@ -156,13 +162,16 @@ func _animals() -> void:
 	var ids2: Array = (status().animals as Dictionary).keys().map(func(k): return int(k))
 	ids2.sort()
 	check(ids2 == w.fauna.animals.map(func(x: Animal): return x.id), "after the deaths and births both machines hold the same animals")
-	# every animal far from the guest stands where the host has it after a section sync
+	# every animal far from the guest stands where the host had it at that section sync (the dump is the sync's moment: every
+	# animal goes on moving on the host's tick, seen or not, B25R1-019, so the host's later places are not the sync's)
 	var far_off := 0
-	var host_now: Dictionary = status().animals
-	var hp0 := Vector2(float(status().host_pos[0]), float(status().host_pos[1]))
+	var synced := {}
+	var df := FileAccess.open(dir + "dump.json", FileAccess.READ)
+	var dd = JSON.parse_string(df.get_as_text()) if df != null else {}
+	for ad in (dd.get("sections", {}).get("fauna", {}) as Dictionary).get("animals", []) if typeof(dd) == TYPE_DICTIONARY else []:
+		synced[int(ad.id)] = Vector2(float(ad.pos[0]), float(ad.pos[1]))
+	check(not synced.is_empty(), "the sync's animals as the host sent them (%d)" % synced.size())
 	for x: Animal in w.fauna.animals:
-		var hpos := Vector2(float(host_now[str(x.id)].pos[0]), float(host_now[str(x.id)].pos[1]))
-		var quiet: bool = hpos.distance_to(hp0) > w.detail_radius + 4.0          # far from the host too: it is not moving there
-		if quiet and x.pos.distance_to(w.player.pos) > NetProtocol.NPC_RANGE and x.pos.distance_to(hpos) > 0.1:
+		if synced.has(x.id) and x.pos.distance_to(w.player.pos) > NetProtocol.NPC_RANGE and x.pos.distance_to(synced[x.id]) > 0.1:
 			far_off += 1
 	check(far_off == 0, "animals beyond the snapshots' reach are where the host had them at the last sync (%d off)" % far_off)

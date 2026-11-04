@@ -246,19 +246,42 @@ func _init() -> void:
 	var why := wl.player_trade_refusal(p, smith)
 	check(not hs.remote(smith) or why != "", "E: a stranger cannot trade at the outlaws' camp (%s)" % why)
 	# ---- F: a raid's legs
+	# A raid sets out from the camp (the band walks there from the old village camp at setup) as a party, as _raid_dawn sends
+	# it: a starving wolf or bear goes for a person alone in the open country (wildlife.alone_radius), and a lone raider can
+	# die of it before the road, a legitimate outcome that is not the raid's legs.
 	var raider: NPC = leader
-	raider.target = -1
-	raider.plan.clear()
-	raider.hp = raider.max_hp
-	wl.raiders[str(raider.id)] = {"claim": str(bc.id), "leg": "out", "day": w.day(), "coins0": raider.coins, "goods0": raider.inv.total(), "hp0": raider.hp, "night": false}
+	var party: Array = _band(w).filter(func(o: NPC) -> bool: return o.role == "bandit" and o.household == bh).slice(0, 2)
+	if not party.has(raider):
+		party[party.size() - 1] = raider
+	var sight := float(GameData.b("witness_radius")) * 2.0
+	var home := func() -> bool:                       # at the camp, and nobody of the village there to fight them (a guard who followed them out)
+		return party.all(func(o: NPC) -> bool: return not w.map.in_village(o.cell()) and o.cell().distance_to(w.bandit_camp) <= float(Homesteads.cfg().home_radius)) \
+			and not w.npcs.any(func(o: NPC) -> bool: return o.alive and o.household != bh and o.pos.distance_to(raider.pos) <= sight)
+	for i in 36:
+		if home.call():
+			break
+		_hours(w, 1.0)
+	check(party.size() >= 2 and home.call(), "F: the raiders (%d) set out from the band's camp (%s, camp %s)" % [party.size(), raider.cell(), w.bandit_camp])
+	for a: Animal in w.fauna.animals:                  # the country's wolves and bears fed: none goes for the raiders (F is the legs, not a beast fight)
+		if a.alive and a.wild() and bool(a.spec().get("people", false)):
+			a.hunger = 100.0
+			a.anger = ""
+	for o: NPC in w.npcs:                              # and no fight carried over into the raid (as the raider's own target is cleared)
+		if o.alive and party.any(func(r: NPC) -> bool: return o.target == r.id):
+			o.target = -1
+	for o: NPC in party:
+		o.target = -1
+		o.plan.clear()
+		o.hp = o.max_hp
+		wl.raiders[str(o.id)] = {"claim": str(bc.id), "leg": "out", "day": w.day(), "coins0": o.coins, "goods0": o.inv.total(), "hp0": o.hp, "night": false}
 	var cr := _coins(w)
 	var reached := false
-	for i in 48:
-		_hours(w, 1.0)
+	for i in 192:                                        # (watched each quarter hour: a night's robbing can be over within the hour)
+		_hours(w, 0.25)
 		reached = reached or (w.map.in_village(raider.cell()) and str(wl.raiders.get(str(raider.id), {}).get("leg", "")) == "village")
 		if not wl.raiders.has(str(raider.id)):
 			break
-	check(reached, "F: the raider walked the road to the village")
+	check(reached, "F: the raider walked the road to the village (%s, %s)" % [raider.cell(), "alive" if raider.alive else "fell"])
 	check(not raider.alive or not wl.raiders.has(str(raider.id)) or str(wl.raiders[str(raider.id)].leg) == "back", "F: and went home after the night (or fell)")
 	check(_coins(w) == cr, "F: coins conserved through the raid (%d -> %d)" % [cr, _coins(w)])
 	for d in 6:
