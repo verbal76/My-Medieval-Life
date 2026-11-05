@@ -1806,6 +1806,7 @@ func _apply_world_changes() -> void:
 		world._field_tiles(f)
 	world.farm.show_all()                     # the player's field and pens (PL2-015)
 	world.farm_plots.show_all()               # family farmland: fences and the households' fields (FARM-02/03)
+	world.clearing.show_all()                 # B25-ECON-P5: the tilled cells of ground being cleared for a manor field
 	_show_plants()
 	for p in world.plots:
 		if not p.site.is_empty() and not p.site.done:

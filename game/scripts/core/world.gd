@@ -88,6 +88,7 @@ var fauna: Fauna                   # livestock in the pens, wild animals in the 
 var farm: Farming                  # the player's field, pens and seeds (PL2-015, scripts/core/farming.gd)
 var feast: Feast                  # DVW-B3-FEAST: wedding and seasonal feasts at the tavern (scripts/core/feast.gd; saved in "feast")
 var chapel: Chapel                # DVW-B3-CHAPEL: the village chapel, its clergy's fund, store and farm plot (scripts/core/chapel.gd; saved in "chapel")
+var clearing: LandClearing         # B25-ECON-P5: rough ground the manor's job board clears into new fields (scripts/core/land_clearing.gd)
 var farm_plots: FarmPlots          # family farmland of any size, leased or bought, for every household (FARM-01..05, scripts/core/farm_plots.gd)
 var tax_state := {}                # DVW-B5: the tax band and any announced change (TaxPolicy); empty until the first reeve evening
 var treasury := 0                  # the manor's coins: kept by the reeve's office, not in anyone's purse
@@ -274,6 +275,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	fauna = Fauna.new(self)
 	farm = Farming.new(self)
 	farm_plots = FarmPlots.new(self)
+	clearing = LandClearing.new(self)
 	feast = Feast.new(self)
 	chapel = Chapel.new(self)
 	chapel.found(true)                 # DVW-B3-CHAPEL: the chapel and its plot stand from the first day, the clergy placed by Population
@@ -6226,7 +6228,7 @@ func to_dict() -> Dictionary:
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"overworld": map.overworld.to_dict() if map.overworld != null else {},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees, "plants": plants,
-		"vacancies": vacancies, "station_load": station_load, "wage_offers": wage_offers, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(),
+		"vacancies": vacancies, "station_load": station_load, "wage_offers": wage_offers, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(), "clearing": clearing.to_dict(),
 		"chapel": chapel.to_dict(), "feast": feast.to_dict(),
 		"player": _host_player.to_dict(), "players": _players_to_dict(), "coin_sources": coin_sources, "regions": regions.to_dict(), "couriers": couriers.to_dict(), "intel_book": intel_book, "country_taken": country_taken, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
@@ -6665,6 +6667,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	farm.load_dict(d.get("farm", {}))          # PL2-015: older saves have no field and no pens of the player's
 	farm_plots = FarmPlots.new(self)
 	farm_plots.load_dict(d.get("farm_plots", {}))   # FARM-01..05: older saves have no farmland
+	clearing = LandClearing.new(self)
+	clearing.load_dict(d.get("clearing", {}))       # B25-ECON-P5: an older save has cleared nothing (its ground is found at the first need)
 	feast = Feast.new(self)
 	feast.load_dict(d.get("feast", {}))          # DVW-B3-FEAST: a save from before feasts has none planned and no weddings owed
 	chapel = Chapel.new(self)

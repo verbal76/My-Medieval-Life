@@ -1336,6 +1336,9 @@ func _free_sums() -> PackedInt32Array:
 		mark.call(Rect2i(int(r.x), int(r.y), int(r.w), int(r.h)))
 	if w.chapel != null and w.chapel.present:
 		mark.call(w.chapel.plot_rect())              # DVW-B3-CHAPEL: the church's farm plot
+	if w.clearing != null:
+		for r in w.clearing.reserved():
+			mark.call(r.grow(1))                     # B25-ECON-P5: rough ground being cleared into a manor field
 	for id in w.stalls:
 		mark.call(Rect2i(int(w.stalls[id].x), int(w.stalls[id].y), 1, 1))
 		mark.call(Rect2i(int(w.stalls[id].use[0]), int(w.stalls[id].use[1]), 1, 1))

@@ -3578,6 +3578,7 @@ func reeve_day() -> void:
 	w.manor_work.post_tunnels()                      # MIN-F2: a load cut at a supported face below ground, while the works lack stone
 	w.mine_works.supply.procure()                    # MIN-EQUIP: the supports, repair goods, ladders and mallet its shore work needs
 	w.manor_work.post_shore()                        # MIN-EQUIP: set up, repair or ladder below ground, with the yard's goods
+	w.manor_work.post_clearing()                     # B25-ECON-P5: rough ground cleared and tilled into a new manor field
 	var quarrying: bool = w.manor_work.jobs.any(func(j): return j.kind == "quarry")
 	for id in ["plank", "stone", "rubble", "log", "iron_bar"]:          # iron bars: fittings and nails, from the smiths; rubble (STONE-04) mends as stone does
 		if id == "stone" and quarrying:
