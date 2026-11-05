@@ -71,3 +71,29 @@ Windows full smoke (release 41939387992, job 126965284940): `--headless --quit-a
 about 0.3 s after the engine banner; the Windows demo smoke passed on the same engine. The presets differ only by the `demo`
 feature. The previous release run 41666958781 (a459186, Build 25) passed. The project starts headless on Linux without a
 crash (local). Not reproduced on Windows yet; cause unknown (startup path that differs between full and demo, or engine).
+
+## Update 2026-11-05 ~03:30 UTC: axe defect fixed and merged; Windows crash not reproduced
+
+Treasury axe loop (V), fixed in `8d05942` (wip/b25r1-axe), merged to `wip/b25r1` as `a995397`:
+- Cause: `Relations._gift_from` (game/scripts/core/relations.gd) gave the courted person's first favourite the giver held;
+  `FAVOURITES["woodcutter"] = ["axe", "bread"]`, so a woodcutter courting a woodcutter gave its only work axe every dawn
+  (seed 1: Agnes 24 -> Margery 67, 1 -> 13 axes by day 16; Roger 13 and Joan 78 likewise). The giver, now without its trade's
+  tool, was a genuine tool needer (NPCBrain.tool_needers) and the treasury bought it another. Bug present since 1c1d4a5
+  (2026-10-19); B25R1's world first paired two woodcutters in seed 1. Builders, homesteads, sharing and rentals not involved.
+- Fix: `_spare_to_give`: a villager never gives away a tool its work keeps unless it holds a spare, nor a rented tool.
+- Test: od16_test `test_courting_gift_keeps_the_work_axe`: old code 44/3 failures, fix 44/0. Local suites on the fix: od16
+  44/0, relations 80/0, gift_quantity 7/0, le04 68/0, le05_rental 53/0, aging 136/0, homestead 49/0, player_homestead 40/0,
+  wilds 69/0; 10-day seed 1 conservation clean. Pre-existing: od16 prints a SCRIPT ERROR "Invalid access to 'stock'" on old
+  and new code (open, not investigated).
+- 30-day seed 1 on the fix (long-sims 41960195751): treasury d10/d20/d30 151/189/414 (df67e8e 130/185/323; bfce680 118/35/32);
+  treasury tools 0, axes given 0, woodcutters hold 5 axes for 5 woodcutters. Remaining differences from df67e8e are the
+  B25R1 world (no pickaxe purchases, 114 vs 112 alive) and still need the gate's per-value listing before a baseline.
+- Dispatched on a995397: simulation gate (long-sims gate) and Tests 'only' (od16, relations, gift_quantity).
+- The four 365-day chains (41939383765, bfce680) contain the axe loop: provisional only, not certification for a995397.
+
+Windows full smoke (V): not reproduced. win-smoke.yml on wip/b25r1-winsmoke (head 5af20c5), runs 41955589354 (full x2, demo,
+Build 25 full: all exit 0) and 41957360444 (27 launches of the same full package: all exit 0); no dump. The failed launch ran
+about 8 s (the game's 300 frames) and lacked the shutdown leak report every other launch prints, so it most likely crashed
+at engine shutdown. New since Build 25: 71 GDScripts leaked at exit, bisected to 1fe523e (`static var _looks := {}` in
+game/scripts/view/overworld_view.gd:441); a local-variable cache removes the leak (scratch test). Proposed, not applied:
+that change, plus failing the release smoke on "resources still in use at exit". Awaiting owner decision.
