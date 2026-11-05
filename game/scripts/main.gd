@@ -2036,9 +2036,13 @@ var _aerial_last := Vector2.INF          # where the player stood last frame: dr
 
 
 func _aerial_step() -> void:
-	if not aerial_background or world.player.map_level != 0 or ow_view == null:
+	if not aerial_background or ow_view == null:
 		return
 	var a := AerialMap.of(self)
+	a.start_sites()                          # owner 2026-11-05: every settlement's ground, drawn on a worker from the start
+	a.integrate_sites()
+	if world.player.map_level != 0:
+		return
 	a.notice()
 	var still: bool = world.player.pos == _aerial_last
 	_aerial_last = world.player.pos
@@ -6179,6 +6183,7 @@ func end_recording() -> void:
 
 
 func _exit_tree() -> void:
+	AerialMap.drop()                       # B25R1-025: the settlements' worker thread is stopped and joined
 	end_recording()
 
 

@@ -15,6 +15,7 @@ var frames := 0
 var step := 0
 var t_open := 0
 var mem0 := 0
+var start_only := false                 # "start": a new game, nothing explored: the Region map as it first is
 
 
 func _init() -> void:
@@ -25,6 +26,8 @@ func _init() -> void:
 		seed = int(args[1])
 	if args.size() > 2 and args[2] == "phone":
 		tag = "phone"
+	if "start" in args:
+		start_only = true
 	main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
 	process_frame.connect(_setup, CONNECT_ONE_SHOT)
@@ -68,6 +71,16 @@ func _setup() -> void:
 	main.aerial_background = false
 	var w: World = main.world
 	w.player.hunger = 100.0
+	if start_only:
+		tag += "_start"
+		mem0 = OS.get_static_memory_usage()
+		var t0 := Time.get_ticks_usec()
+		var a := AerialMap.of(main)
+		a.start_sites()
+		print("MEASURE start_sites on the main thread ms ", (Time.get_ticks_usec() - t0) / 1000.0)
+		t_open = Time.get_ticks_msec()
+		process_frame.connect(_start_wait)
+		return
 	explore(main, ["wulstead", "netherton"])
 	var st: Dictionary = w.map.overworld.site("wulstead")
 	w.player.pos = Vector2(st.center) + Vector2(0.5, 3.5)
@@ -199,3 +212,41 @@ func _wait() -> void:
 				" KiB), static memory delta since before the first open ", (OS.get_static_memory_usage() - mem0) / 1024, " KiB")
 		quit(0)
 
+
+func _start_wait() -> void:
+	frames += 1
+	var a := AerialMap.of(main)
+	a.integrate_sites()
+	var w: World = main.world
+	if step == 0:
+		if a.sites_state == "running":
+			return
+		print("MEASURE settlements drawn: ", a.site_total, " chunks, worker ms ", a.site_usec / 1000.0, ", wall ms ", Time.get_ticks_msec() - t_open,
+				" over ", frames, " frames; static memory delta ", (OS.get_static_memory_usage() - mem0) / 1024, " KiB")
+		main.ui.show_map("region")
+		step = 1
+		frames = 0
+	elif step == 1:
+		if frames < 20:
+			return
+		_shot("region_open")
+		var r := _region()
+		r.zoom = 3.0
+		r.centre = Vector2(w.map.overworld.site("higham").center)
+		r.moved = true
+		step = 2
+		frames = 0
+	elif step == 2:
+		if frames < 20:
+			return
+		_shot("region_higham")
+		var r := _region()
+		r.zoom = 7.0
+		r.centre = Vector2(w.map.overworld.site("netherton").center)
+		step = 3
+		frames = 0
+	elif step == 3:
+		if not AerialMap.of(main).hi_queue.is_empty() or frames < 20:
+			return
+		_shot("region_netherton_close")
+		quit(0)

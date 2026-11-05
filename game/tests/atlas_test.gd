@@ -73,7 +73,16 @@ func _init() -> void:
 	var px := func(tile: Vector2i) -> Color:
 		return img.get_pixel((tile.x - b.position.x) / Atlas.BLOCK, (tile.y - b.position.y) / Atlas.BLOCK)
 	check(b.has_point(gar.center) and b.has_point(wul.center), "the map covers the places you know (%s)" % b)
-	check(px.call(Vector2i(gar.center)) == RegionMapPanel.COLOURS[Atlas.UNKNOWN], "Garton's ground, never seen, is dark on the map")
+	# owner requirement 2026-11-05 (B25R1-025): a settlement's ground is never hidden by discovery; the wilderness is
+	check(px.call(Vector2i(gar.center)) == RegionMapPanel.COLOURS[Atlas.SITE], "Garton's ground, never seen, is on the map as a settlement from the first day")
+	var wild := Vector2i(-1048576, 0)
+	for by in range(b.position.y, b.end.y, Atlas.BLOCK):
+		for bx in range(b.position.x, b.end.x, Atlas.BLOCK):
+			var c := Vector2i(bx, by) + Vector2i(Atlas.BLOCK, Atlas.BLOCK) / 2
+			if wild.x == -1048576 and not p.explored.has(Overworld.chunk_of(c)) and ow.site_at(c).is_empty() and not ow.village.has_point(c) \
+					and (c - Vector2i(gar.center)).length() < 200:
+				wild = c
+	check(wild.x != -1048576 and px.call(wild) == RegionMapPanel.COLOURS[Atlas.UNKNOWN], "the wilderness never seen (near Garton, %s) stays dark" % str(wild))
 	check(px.call(Vector2i(wul.center)) == RegionMapPanel.COLOURS[Atlas.SITE], "Wulstead's, seen, is drawn as a settlement")
 	var seen_road := cc * Overworld.CHUNK
 	var road_cell := Vector2i(-1, -1)

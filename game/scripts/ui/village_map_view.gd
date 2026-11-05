@@ -74,6 +74,7 @@ func setup(m, place := "") -> void:
 	frame = (ow.village if target == "" else st.rect as Rect2i).grow(MARGIN)
 	aerial = AerialMap.of(main)
 	aerial.allow_load = true
+	aerial.start_sites()
 	aerial.refresh()
 	var key := [main.world.get_instance_id(), target, main.world.buildings.size()]
 	if _places_key != key:                     # (the bridges are found along the roads: kept for the next opening)
@@ -329,6 +330,7 @@ func _process(delta: float) -> void:
 		_pad_step(delta)
 		if aerial != null:
 			aerial.allow_load = true               # (a map closed just before this one opened let go of the art)
+			aerial.integrate_sites()
 			if not aerial.queue.is_empty():
 				aerial.pump(8000, true)
 			elif not aerial.hi_queue.is_empty():
