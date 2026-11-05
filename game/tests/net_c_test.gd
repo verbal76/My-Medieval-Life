@@ -6,7 +6,7 @@ extends SceneTree
 ## villager. After each, the host's record of the guest and the guest's own copy agree, the guest's copy of the shared world takes the
 ## host's sections (NetSync: every synchronized section identical on both machines), and coins stay conserved. A request naming the
 ## host's reference is refused. Then several persistent players across a host restart: two guests, the host saves and quits, comes
-## back, each guest returns as the same character with its own records. Real devices and real networks are not tested here.
+## back, each guest returns as the same character with its own records, out of play until it has built the world. Real devices and real networks are not tested here.
 ##   godot --headless --path game --script res://tests/net_c_test.gd
 
 var main
@@ -273,17 +273,26 @@ func several_players_restart() -> void:
 	var players0: Dictionary = status().get("players", {})
 	var guests0 := players0.values().filter(func(p): return not p.host)
 	check(guests0.size() == 2, "the host's world holds two guests (%d)" % guests0.size())
-	var me0 := rec()
 	var pid := int(main.net.my_pid)
 	await stop_host()
-	check(not main.guest_world, "the host saves and quits")
+	var saved: Dictionary = status()                  # the host's last status, written after its last save: the saved world
+	var me0: Dictionary = saved.get("players", {}).get(str(pid), {})
+	check(not main.guest_world and str(saved.get("census", {}).get("at", "")) == "saved" and not me0.is_empty(), "the host saves and quits")
 	check(await start_host("continue"), "the host continues its world from the save")
 	var players1: Dictionary = status().get("players", {})
 	check(players1.values().filter(func(p): return not p.host and bool(p.away)).size() == 2, "both guests are in it, out of play (MP-D1)")
 	check(await join(), "the guest rejoins")
 	var me1 := rec()
 	check(int(main.net.my_pid) == pid and int(me1.coins) == int(me0.coins) and int(me1.crimes) == int(me0.crimes) and int(me1.carts) == int(me0.carts)
-		and int(me1.id) == int(me0.id), "as the same character, with its own purse, record, cart and id")
+		and int(me1.id) == int(me0.id), "as the same character, with its own purse, record, cart and id (as saved: purse %d, crimes %d, carts %d, id %d; back: %d, %d, %d, %d)"
+		% [int(me0.get("coins", -1)), int(me0.get("crimes", -1)), int(me0.get("carts", -1)), int(me0.get("id", 0)), int(me1.get("coins", -1)), int(me1.get("crimes", -1)),
+		int(me1.get("carts", -1)), int(me1.get("id", 0))])
+	# MP-D1: welcomed but still building the world (no first move yet), the guest is out of play on the host: no guard on its case
+	# takes it in, no villager strikes it, while it can neither see nor act; in play from its first move
+	await until(func(): return int(status().get("net_d", {}).get("joining", 1)) == 0 and not bool(rec().get("away", true)), NetSession.JOIN_TIMEOUT_MS / 1000.0)
+	var jn: Dictionary = status().get("joined", {})
+	check(int(jn.get("in_play", -1)) == 0 and int(jn.get("out", 0)) > 0 and not bool(rec().get("away", true)),
+		"while it builds the world the host keeps it out of play (seen out %d times, in play %d); in play at its first move" % [int(jn.get("out", 0)), int(jn.get("in_play", -1))])
 	var b0: Dictionary = {}
 	for k in players0:
 		if not players0[k].host and int(k) != pid:

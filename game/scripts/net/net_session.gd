@@ -142,7 +142,7 @@ var npcs_sent := {}                 # B25R1: peer id -> {npc id: the snapshot ro
 var _n_npcs := 0
 var _players_sent: Array = []       # B25R1: the players' snapshot last broadcast
 var _players_static := {}           # B25R1: pid -> its PLAYER_STATIC fields as last broadcast
-var _players_peers: Array = []      # B25R1: the connections the last snapshot went to (a new one gets every field)
+var _players_peers: Array = []      # B25R1: the connections the last snapshot went to, then those still joining (a change: every field)
 var _n_players := 0
 
 # Batch D, host
@@ -783,6 +783,9 @@ func c_hello(version: String, key: String, who: String, pw_hash: String) -> void
 	moves[id] = {"t": Time.get_ticks_msec(), "dir": Vector2.DOWN, "anim": "idle"}
 	discovery.info = _answer()
 	rpc_id(id, "s_welcome", world_for(p.pid), id)
+	p.away = true                                  # MP-D1: out of active play (not targetable, not acting) while it builds the world it
+	                                               # was sent and cannot see or move; in play at its first move (c_move). Its own copy
+	                                               # (the welcome above) has it in play.
 	rpc_id(id, "z_token", str(resume_tokens[p.pid]))
 	synced[id] = _welcome_digest
 	announce(p, id)                               # MP-INTERACT-01: the guests already here learn who came (their public record)
@@ -844,10 +847,13 @@ func c_move(pos: Vector2, dir: Vector2, anim: String) -> void:
 	var id := multiplayer.get_remote_sender_id()
 	if not by_peer.has(id):
 		return
+	var p: PlayerState = main.world.player_by_pid(int(by_peer[id]))
 	if joining.has(id):
 		joining.erase(id)
 		_set_timeout(id)                           # B25R1: its first move: playing, the usual timeouts from now on
-	var p: PlayerState = main.world.player_by_pid(int(by_peer[id]))
+		if p != null:
+			p.away = false                         # MP-D1: and in active play from now (out of it while it built the world: c_hello)
+			players_changed.emit()
 	if p == null or not p.alive:
 		return
 	var now := Time.get_ticks_msec()
@@ -1483,7 +1489,7 @@ func players_list() -> Array:
 		"partner": h.partner, "children": h.children}]          # MP-PLAYER-FAMILY: a player's spouse and children are public family records
 	for id in by_peer:
 		var g: PlayerState = w.player_by_pid(int(by_peer[id]))
-		if g != null:
+		if g != null and not joining.has(id):     # one still building the world is not in play yet (c_hello, MP-D1)
 			out.append({"pid": g.pid, "name": g.name, "sprite": g.sprite, "pos": g.pos, "dir": moves[id].dir, "anim": moves[id].anim, "alive": g.alive, "level": g.map_level,
 				"worn": [g.armor, g.head], "wield": g.weapon, "partner": g.partner, "children": g.children})
 	return out
@@ -1512,10 +1518,11 @@ func _guest_step(dt: float) -> void:
 
 
 ## Host (B25R1, traffic): the players' list as s_players sends it: each player's place, facing, animation, life and level every time,
-## and its PLAYER_STATIC fields only when they changed since last sent, on the key (`all`), or when a connection came or went.
+## and its PLAYER_STATIC fields only when they changed since last sent, on the key (`all`), or when a player came into play or went.
 func players_snapshot(all: bool) -> Array:
 	var peers := by_peer.keys()
 	peers.sort()
+	peers.append_array(peers.filter(func(i): return joining.has(i)))     # and which of them are not listed yet (players_list)
 	if peers != _players_peers:
 		_players_peers = peers
 		all = true
