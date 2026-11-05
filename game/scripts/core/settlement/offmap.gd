@@ -252,8 +252,6 @@ static func create(spec: Dictionary, world_seed: int, index: int) -> OffMapSettl
 					b.reserves[k] = int(reserves[k])
 			for k in starts.get(bt, {}):
 				b.stock[k] = int(starts[bt][k])
-			if bt == "merchant":
-				b.reserve = int(float(b.till) * 0.85)         # a trader keeps its trading capital; only the margin above it is paid out
 			if bt == "farm":
 				b.horses = int(spec.get("horses", 0))          # the settlement's working horses (the traders lead them to the road)
 			s.biz[bt] = b
@@ -1865,6 +1863,22 @@ func consign_out() -> void:
 				m.consign[item] = {}
 			_add(m.consign[item], str(t), n)
 			room -= n
+
+
+## B25-ECON-P4 (owner 2026-11-05, question 32): units of `item` a NEIGHBOUR trader may collect here on consignment: what this place's
+## businesses (never its trader) hold above their keep, less the carry room this place's own trader still has for it (its own trader
+## keeps first claim, up to rules.carry less its stock; the rest is open to neighbours). No trader of its own: all the spare.
+func consign_spare(item: String) -> int:
+	var n := 0
+	var types := biz.keys()
+	types.sort()
+	for t in types:
+		if t != "merchant":
+			n += maxi(0, int(biz[t].stock.get(item, 0)) - int(_keep(biz[t]).get(item, 0)))
+	var m := trader()
+	if not m.is_empty():
+		n -= maxi(0, int(_rules.carry.get(item, 0)) - int(m.stock.get(item, 0)))
+	return maxi(0, n)
 
 
 ## Units of `item` the trader holds on consignment (owed to their sources).

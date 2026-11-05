@@ -25,6 +25,7 @@ func _init() -> void:
 	GameData.ensure()
 	test_idle_trader_closes()
 	test_closing_trader_takes_in_shipments()
+	test_founding_trader_reserve()
 	test_trader_reopens()
 	test_reopen_every_type()
 	test_every_business_closes_by_every_path()
@@ -233,13 +234,17 @@ func test_every_business_closes_by_every_path() -> void:
 					s.release_household(i)
 	var days := 2 * int(OffMapSettlement.rules().switch_stay_days) + 2
 	var bad := ""
+	var shut := {}                                     # type -> [day, the closed record's till, its stock empty] when first seen closed
 	for d in range(1, days + 1):
 		r.step_day(d)
 		if r.audit() != "" and bad == "":
 			bad = "day %d: %s" % [d, r.audit()]
+		for t in types:                                # seen at closing: a household may take the trade up again later (the opening rule)
+			if not shut.has(t) and not s.biz.has(t) and s.closed.has(t):
+				shut[t] = [d, int(s.closed[t].get("till", -1)), (s.closed[t].get("stock", {"x": 1}) as Dictionary).is_empty()]
 	for t in types:
-		check(not s.biz.has(t) and s.closed.has(t), "%s with no working household (%s) closed" % [t, plan[t]])
-		check(int(s.closed.get(t, {}).get("till", -1)) == 0 and (s.closed.get(t, {}).get("stock", {"x": 1}) as Dictionary).is_empty(), "%s: its till and stock were handed on" % t)
+		check(shut.has(t), "%s with no working household (%s) closed (day %s)" % [t, plan[t], str(shut.get(t, ["never"])[0])])
+		check(shut.has(t) and int(shut[t][1]) == 0 and bool(shut[t][2]), "%s: its till and stock were handed on" % t)
 	check(bad == "", "every day's books balanced (%s)" % bad)
 
 
@@ -352,6 +357,24 @@ func _ready_household(s: OffMapSettlement, coins: int) -> Dictionary:
 ## household does (the opening rule, on the traders' own goods: carried goods and food that went unmet); the new trader starts
 ## from the household's own savings, nothing of the former trader's comes back; coins and goods are conserved throughout; and it
 ## trades again: its walker sets out to buy food from a neighbour (B25R1-019).
+## Owner 2026-11-05, question 33: a founding trader keeps the trader type's working reserve (80), the rule a reopened trader already
+## follows (test_trader_reopens), not 0.85 of its starting till; the till above it is its margin for wages.
+func test_founding_trader_reserve() -> void:
+	var r := Regions.create(1)
+	var want := int(OffMapSettlement.btype("merchant").reserve)
+	var n := 0
+	var above := 0
+	for s: OffMapSettlement in r.list:
+		var m := s.trader()
+		if m.is_empty():
+			continue
+		n += 1
+		check(int(m.reserve) == want, "%s's founding trader keeps the traders' reserve of %d (%d, till %d)" % [s.id, want, int(m.reserve), int(m.till)])
+		if int(m.till) > want:
+			above += 1
+	check(n > 0 and above > 0, "founding traders exist (%d) and some start with coins above the reserve to pay their households (%d)" % [n, above])
+
+
 func test_trader_reopens() -> void:
 	var w := new_world()
 	var r := w.regions
