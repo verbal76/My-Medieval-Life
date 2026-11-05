@@ -84,6 +84,8 @@ const ANIMALS_KEY_EVERY := 4         # every 4th animal snapshot (once a second)
 ## B25R1 (traffic): the villagers' snapshots carry only the villagers whose row changed since it was last sent to that guest, and every
 ## NPCS_KEY_EVERY-th one (once a second) every villager near it, so a lost packet is put right within a second (as the animals').
 const NPCS_KEY_EVERY := 4
+## A villager leaving a guest's range is sent where it went at once and on this many following keys (a lost packet is put right).
+const LEFT_KEYS := 2
 ## ... and the players' list goes only when it changed, and every PLAYERS_KEY_EVERY-th tick (once a second) whatever it holds.
 const PLAYERS_KEY_EVERY := 10
 
@@ -139,6 +141,7 @@ var fauna_known := {}               # peer id -> {animal id: true}: the animals 
 var fauna_sent := {}                # peer id -> {animal id: [x, y, fx, fy, moving, act, hp]}: the live state last sent to it (as floats)
 var _n_animals := 0
 var npcs_sent := {}                 # B25R1: peer id -> {npc id: the snapshot row last sent to it}
+var left_view := {}                 # peer id -> {npc id: keys left to send it on}: villagers gone out of that guest's range
 var _n_npcs := 0
 var _players_sent: Array = []       # B25R1: the players' snapshot last broadcast
 var _players_static := {}           # B25R1: pid -> its PLAYER_STATIC fields as last broadcast
@@ -171,6 +174,7 @@ var reconnect_window := 0.0         # how long the current (or last) reconnectio
 var _retry_at := 0.0
 var _retries := 0
 var reconnects := 0                 # times this guest came back (tests)
+var moves_sent := 0                 # guest: its moves sent to the host (tests)
 var host_paused := false
 var bye := ""                       # the host said it stopped (no retries)
 var _bye_read := false              # B25R1: ... and the guest has yet to end the connection for it
@@ -276,6 +280,7 @@ func stop() -> void:
 	fauna_known.clear()
 	fauna_sent.clear()
 	npcs_sent.clear()
+	left_view.clear()
 	_players_sent = []
 	_players_static.clear()
 	_players_peers = []
@@ -373,6 +378,7 @@ func _drop_peer(id: int, quiet: bool) -> void:
 	fauna_known.erase(id)
 	fauna_sent.erase(id)
 	npcs_sent.erase(id)
+	left_view.erase(id)
 	queue = queue.filter(func(q): return int(q.peer) != id)        # a request from someone gone is not applied
 	discovery.info = _answer()
 	if g != null:
@@ -1326,6 +1332,11 @@ func s_sync(blob: PackedByteArray) -> void:
 		if clock >= 0.0:
 			main.world.minutes = maxf(main.world.minutes, clock)      # the host's clock, as the villager snapshots bring it (s_npcs)
 		NetSync.adopt(main.world, d)
+		if d.has("npcs"):                          # a villager the sync placed beyond the snapshots' reach is not eased back
+			for nid in npc_target.keys():
+				var n: NPC = main.world.npc(nid)
+				if n != null and n.pos.distance_to(main.world.player.pos) > NetProtocol.NPC_RANGE:
+					npc_target.erase(nid)
 		syncs += 1
 		if main.world.recorder != null:
 			main.world.recorder.net_sync(self, false, (d as Dictionary).size(), blob.size(), clock >= 0.0)     # X20-FINAL (and the guest's hourly digest)
@@ -1416,13 +1427,23 @@ func _host_step(dt: float) -> void:
 			var rows := PackedFloat32Array()
 			var anims := PackedStringArray()
 			for n: NPC in main.world.npcs:
+				var fw := FieldWorkView.pose(main.world, n) if n.pos.distance_to(g.pos) <= NetProtocol.NPC_RANGE else {}
+				var row := [n.id, n.pos.x, n.pos.y, n.facing.x, n.facing.y, n.anim, n.alive] if fw.is_empty() else \
+					[n.id, n.pos.x, n.pos.y, fw.facing.x, fw.facing.y, n.anim, n.alive, fw.pos.x, fw.pos.y, 1 if fw.anim == "swing" else 0]
 				if n.pos.distance_to(g.pos) <= NetProtocol.NPC_RANGE:
-					var fw := FieldWorkView.pose(main.world, n)     # GP-FARMER-TENDING: a field worker's drawn place and tool come along
-					var row := [n.id, n.pos.x, n.pos.y, n.facing.x, n.facing.y, n.anim, n.alive] if fw.is_empty() else \
-						[n.id, n.pos.x, n.pos.y, fw.facing.x, fw.facing.y, n.anim, n.alive, fw.pos.x, fw.pos.y, 1 if fw.anim == "swing" else 0]
 					if key or sent.get(n.id) != row:     # B25R1: a villager standing as it was last sent is not sent again until the key
 						sent[n.id] = row
 						list.append(row)
+				elif sent.has(n.id) or left_view.get(id, {}).has(n.id):
+					# a villager gone out of this guest's range (walked off, sent away) is sent once where it went, and again on the
+					# next LEFT_KEYS keys, so the copy never keeps it where it was last seen near the guest (a lost packet included)
+					sent.erase(n.id)
+					var lv: Dictionary = left_view.get_or_add(id, {})
+					lv[n.id] = int(lv.get(n.id, LEFT_KEYS + 1)) - (1 if key else 0)
+					if key or lv[n.id] == LEFT_KEYS + 1:
+						list.append(row)
+					if lv[n.id] <= 0:
+						lv.erase(n.id)
 			for i in range(0, maxi(1, list.size()), NPCS_PER_PACKET):      # unreliable packets stay under the MTU
 				rows.clear()
 				anims.clear()
@@ -1503,6 +1524,7 @@ func _guest_step(dt: float) -> void:
 	if _t_move >= 1.0 / NetProtocol.MOVE_HZ:
 		_t_move = 0.0
 		rpc_id(1, "c_move", main.world.player.pos, main.facing_vec(), main.net_anim())
+		moves_sent += 1
 	var k := minf(1.0, dt * 8.0)
 	for id in npc_target:
 		var n: NPC = main.world.npc(id)
