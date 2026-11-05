@@ -20,6 +20,7 @@ var g2_proc := -1
 var seq := 0
 var g2_seq := 0
 var host_pid := 0
+var staged := {}       # at the end of stage(): Ann's sprite, her reconnects and the frame (for a failing check's message)
 var ann := 0
 var cara := 0
 const KEY := "0123456789abcdef0123456789abcdef"
@@ -218,6 +219,7 @@ func stage() -> void:
 			break
 	main.player_sprite.face(Vector2.LEFT)              # Ann faces the host
 	main.target_pref = ""
+	staged = {"sprite": main.player_sprite.get_instance_id(), "reconnects": main.net.reconnects, "frame": Engine.get_process_frames()}
 	await wait(0.6)                                    # every screen draws the others where they stand (s_players)
 
 
@@ -236,10 +238,13 @@ func replies_said() -> Array:
 func _seen_host() -> String:
 	var q: PlayerState = main.world.player_by_pid(host_pid)
 	var hp: Array = rec(host_pid).get("pos", [])
-	return "host copy %s away %s alive %s level %s avatar %s; Ann %s facing %s; options %s; host has host %s, Ann %s; spot %s; frame %d" % [
+	return ("host copy %s away %s alive %s level %s avatar %s; Ann %s facing %s; options %s; host has host %s, Ann %s (away %s, joining %d, joined %s); spot %s; "
+		+ "frame %d; staged %s, now sprite %d reconnects %d resumes %d, walking %s, move_to %s, talk_player %d") % [
 		q.pos if q != null else "none", q.away if q != null else "-", q.alive if q != null else "-", q.map_level if q != null else "-",
 		main.net.avatars.has(host_pid), main.world.player.pos, main.facing_vec(), main.target_options.map(func(t): return str(t.get("label", ""))),
-		hp, rec(ann).get("pos", []), status().get("spot", []), Engine.get_process_frames()]
+		hp, rec(ann).get("pos", []), rec(ann).get("away", "-"), int(status().get("net_d", {}).get("joining", -1)), status().get("joined", {}),
+		status().get("spot", []), Engine.get_process_frames(), staged, main.player_sprite.get_instance_id(), main.net.reconnects, main.net.resumes,
+		main.walking, main.move_to, main.talk_player]
 
 
 func leak() -> int:
@@ -471,7 +476,7 @@ func _disconnect_and_back() -> void:
 	await command({"cmd": "close"})
 	check(await join(), "Ann reconnects")
 	await stage()
-	check(await until(func(): return hui().get("target", "") == "player" and int(hui().get("target_pid", 0)) == ann, 5.0), "the host can choose her again")
+	check(await until(func(): return hui().get("target", "") == "player" and int(hui().get("target_pid", 0)) == ann, 5.0), "the host can choose her again (%s; %s)" % [hui().get("options", []), _seen_host()])
 	main._find_target()
 	check(str(main.target.get("kind", "")) == "player" and int(main.target.pid) == host_pid, "and she the host (%s; %s)" % [main.target.get("label", ""), _seen_host()])
 
