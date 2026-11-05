@@ -324,6 +324,10 @@ jobs:
           res://tests/experience_test.gd
           res://tests/profile_test.gd       # SET-A/B: the maintained capability profile
           res://tests/civic_records_test.gd   # Expansion 21 P21-01: civic records (offices, tenures, legacy); shipped disabled
+          # B25R1 view suites added after the coverage audit: Fantasy Lands houses (B25R1-022), Low Grass tufts (B25R1-023), aerial maps (B25R1-025/026)
+          res://tests/fl_houses_test.gd
+          res://tests/low_grass_test.gd
+          res://tests/aerial_map_test.gd
           # B25R1 CI cover (2026-11-05): suites that existed in game/tests but were never in this list, so CI never ran them
           # (none was left out on purpose: no workflow, comment or document named them). Each is a few minutes at most.
           res://tests/desk_test.gd               # GP-BUSINESS-DESK: every business's desk, its menu and the old saves
