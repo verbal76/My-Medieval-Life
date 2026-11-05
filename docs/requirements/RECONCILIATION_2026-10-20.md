@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 808 (426 of them still open) |
-| **Open entries now** (rules excluded) | | **584** |
+| Entries added since | | 809 (427 of them still open) |
+| **Open entries now** (rules excluded) | | **585** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (808)
+## Added since the baseline (809)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -220,6 +220,7 @@ None.
 | B25R1-022 | Integrate Fantasy Lands Houses (Szadi art) into the towns: palette remapped to match our art where too dark, roofs separable and fading like current houses so the player can go inside | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | B25R1-023 | Bow.Pixel Low Grass decoration drawn on the overworld (ground variety) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25R1-024 | Region map restyle in the shared UI design language (UIStyle), with gamepad focus on the Village tab | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| B25R1-025 | Aerial region and village maps of the generated world | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B25R1-AUDIT-OPT1 | B25R1 requirements audit (2026-11-05): which completion path? Option 1 = finish validating the current code while continuing development of every approved B25R1 requirement, no deferral | decision | APPROVED | 20 |
 | B25R1-Q1 | Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)? | decision | APPROVED | 20 |
 | B25R1-Q2 | Bandit band as a woodland community: move the band to a hidden overworld claim with a household (a), keep the village camp and put only turned outlaws on claims (b), or abstract bandits offscreen (c)? | decision | APPROVED | 20 |

@@ -8158,6 +8158,41 @@
    "branch": "wip/b25r1-grassmap"
   },
   {
+   "id": "B25R1-025",
+   "kind": "approved",
+   "title": "Aerial region and village maps of the generated world",
+   "description": "Aerial region and village maps of the generated world",
+   "source": "docs/directives/2026-11-05_b25r1_aerial_maps.md",
+   "owner_wording": "Replace the simplified in-game village and region map presentation with beautiful, detailed aerial views of the actual procedurally generated world.",
+   "approval": "owner, 2026-11-05",
+   "acceptance": [
+    "Region and village maps show the player's actual generated world (any seed, current generator version) from overhead with labels, player position, zoom and pan; existing map controls preserved; responsive opening without per-open flyover; memory and load time measured, acceptable on Android; tested on seeds 1 and 11"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-05_b25r1_aerial_maps.md"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-aerial worker; branch: None -> wip/b25r1-aerial",
+     "why": "owner 2026-11-05: approved scope addition for B25R1 tonight (reason: the simplified maps undersell the regenerated world; the flyover showed the real world reads well from overhead); placed in B25R1 and tonight's private playtest packages; worker on wip/b25r1-aerial"
+    }
+   ],
+   "assigned_worker": "b25r1-aerial worker",
+   "branch": "wip/b25r1-aerial"
+  },
+  {
    "id": "B25R1-AUDIT-OPT1",
    "kind": "decision",
    "title": "B25R1 requirements audit (2026-11-05): which completion path? Option 1 = finish validating the current code while continuing development of every approved B25R1 requirement, no deferral",
