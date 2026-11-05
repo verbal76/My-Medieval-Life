@@ -244,7 +244,15 @@ func _seen_host() -> String:
 		main.net.avatars.has(host_pid), main.world.player.pos, main.facing_vec(), main.target_options.map(func(t): return str(t.get("label", ""))),
 		hp, rec(ann).get("pos", []), rec(ann).get("away", "-"), int(status().get("net_d", {}).get("joining", -1)), status().get("joined", {}),
 		status().get("spot", []), Engine.get_process_frames(), staged, main.player_sprite.get_instance_id(), main.net.reconnects, main.net.resumes,
-		main.walking, main.move_to, main.talk_player]
+		main.walking, main.move_to, main.talk_player] + "; host's connections %s; its peer log %s; Ann's peer %d, connected %s, reconnecting %s" % [
+		status().get("connected", []), status().get("peer_log", []), main.net.my_id, main.net.connected(), main.net.reconnecting] + \
+		"; host's ENet view (rtt, throttle, loss, ms since a move) %s; Ann's of the host %s, moves sent %s" % [status().get("peer_stats", {}), _ann_enet(), main.net.get("moves_sent")]
+
+
+func _ann_enet() -> Array:
+	var pp: ENetPacketPeer = main.net.peer.get_peer(1) if main.net.peer != null else null
+	return [] if pp == null else [pp.get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME), pp.get_statistic(ENetPacketPeer.PEER_PACKET_THROTTLE),
+		pp.get_statistic(ENetPacketPeer.PEER_PACKET_LOSS), pp.get_state()]
 
 
 func leak() -> int:
@@ -284,7 +292,7 @@ func _targets() -> void:
 		"the host's screen: Ann beside it is its target (%s %s facing %s; host %s, Ann %s, Cara %s)" % [hui().get("options", []), hui().get("pids", []), hui().get("facing", []),
 		status().get("host_pos"), rec(ann).get("pos"), rec(cara).get("pos")])
 	main._find_target()
-	check(str(main.target.get("kind", "")) == "player" and int(main.target.pid) == host_pid, "Ann's screen: the host beside her is her target")
+	check(str(main.target.get("kind", "")) == "player" and int(main.target.pid) == host_pid, "Ann's screen: the host beside her is her target (%s; %s)" % [main.target.get("label", ""), _seen_host()])
 	check(main.other_players().map(func(q): return q.pid).has(cara), "Ann's copy knows Cara, who joined after her (announced by the host) (host's guests %s, resumes %s; Cara's reconnects %s, connected %s)" % [status().get("connected", []),
 		status().get("net_d", {}).get("resumes", "?"), g2().get("reconnects", "?"), g2().get("connected", "?")])
 	check(await until(func(): return (g2().get("others", []) as Array).map(func(x): return int(x)).has(ann) and (g2().get("others", []) as Array).map(func(x): return int(x)).has(host_pid), 5.0),
