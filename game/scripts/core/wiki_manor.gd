@@ -31,7 +31,7 @@ static func _treasury(sys: Callable) -> void:
 		Wiki.links(["job:reeve", "sys:chapel", "sys:property", "sys:caravan", "sys:theft", "sys:inheritance"])], "treasury manor granary relief tax reserve hunger famine hysteresis announcement")
 
 
-# ManorWork (KINDS, take, open_for, describe, post_quarry, post_discovery, post_pits, post_tunnels, order_backfill, release, excavate_wage);
+# ManorWork (KINDS, take, open_for, describe, post_quarry, post_discovery, post_pits, post_tunnels, post_clearing, order_backfill, release, excavate_wage); LandClearing;
 # game_ui.gd show_manor_jobs; Discovery.cfg().manor; balance.json manor_jobs. The tunnel and backfill kinds are never offered to the player.
 static func _jobs(sys: Callable) -> void:
 	var dm: Dictionary = Discovery.cfg().manor
@@ -45,11 +45,12 @@ static func _jobs(sys: Callable) -> void:
 			"Survey: take %d rock samples of a stain the manor has heard nothing of, with your own prospector's kit, have a smith assay them and tell the manor what they show (%d coins). You pay the assay fees yourself on the way, so you need them in hand; the manor's hands are not asked to survey." % [int(dm.survey_samples), int(dm.survey_wage)],
 			"Trial pit: dig a trial pit by a stain, at the spot the manor's readings point to (%d coins). A pickaxe is needed." % int(dm.trial_wage),
 			"Excavate: dig a load from the manor's own open pit with a pickaxe, tip the earth on its spoil heap and bring any stone to the works yard (%d coins a load). The manor marks out a pit only for a find it knows that no trial pit can reach any more." % ManorWork.excavate_wage(),
+			"Clear ground: villagers only. When every manor field already has its %d farmers and someone in the village has no work, the manor clears rough ground beside the village for a new field, a piece at a time (%d pieces a job, %d coins): wild plants and saplings pulled up by hand, trees felled and stumps dug out with an axe, boulders broken with a pickaxe, and each cell tilled by hand. The logs and stone go to the works yard. When the last cell is tilled the ground is a new manor field and two more farmers can work there. A field's worth of ground takes a worker several days. The village has only so much open ground near its fields; once it is all cleared, no more is." % [int(GameData.b("field_workers_max")), int(LandClearing.cfg().cells_per_job), int(LandClearing.cfg().wage)],
 			"Cut a tunnel: villagers only. While the works lack stone and a sound timber support holds a face below ground, a villager cuts a load from it and brings it to the works yard, at the quarry's rate."]),
 		Wiki.p("Taking a job pays for the labour, whatever is found: a survey that finds nothing and a pit that strikes no ore are paid like the rest. Jobs are the manor's own, not contracts, so there are no counter-offers on the board. You can still make a contract with any villager."),
 		Wiki.p("A tunnel backfill is a job too, but it is yours: you order it and pay the wage, and villagers do it. It is not on the board for you to take; see Backfilling pits and tunnels."),
 		Wiki.links(["job:reeve", "sys:manor_treasury", "sys:prospecting", "sys:open_pits", "sys:mine_backfill", "sys:mining", "sys:contracts", "item:pickaxe", "item:prospecting_kit"])],
-			"manor job board work reeve wage survey quarry mend carry haul excavate trial any work for me")
+			"manor job board work reeve wage survey quarry mend carry haul excavate trial clear ground new field any work for me")
 
 
 # Guardianship (dawn, place, candidates, move, _take_share, player_adopt); game_ui.gd _relation_choices ("Offer a home").
