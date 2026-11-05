@@ -6222,6 +6222,11 @@
      "date": "2026-11-05",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: None -> TARGETED TESTS PASSED; tests: None -> consign 65/0, regions 120/0, region_trade 23/0, settle_food 86/0, settle_review 106/0; run 42058240181; test_commit: None -> c379545; commits + e097fab",
      "why": "cross-settlement consignment (owner q27) implemented c379545 (INT-779, consign_test 65/0), merged into wip/b25r1 as e097fab; 120-day seed 1 run 42058240181: 11 iron ore imported (0 before), no leaks; full Tests 42055669578 on 9871099 (pre-merge) passed all suites"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "note",
+     "why": "owner 2026-11-05: two follow-ups tracked, not resolved: (1) Higham's trader stopped carrying Garton's ore after day 40 in run 42058240181 (cause unexplained); (2) review of the rules 'collect only from traderless places' and 'unsold ore returns after 12 days' against the approved design (no change without owner approval). Investigation on wip/b25r1-econ4"
     }
    ],
    "implementation_status": "INTEGRATED",
