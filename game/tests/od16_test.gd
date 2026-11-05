@@ -10,6 +10,19 @@ extends SceneTree
 
 var failures := 0
 var checks := 0
+var errors := ErrorWatch.new()
+
+
+## Every script or engine error logged while the suite runs, so a runtime error that aborts a test cannot leave it green.
+class ErrorWatch extends Logger:
+	var seen: Array[String] = []
+
+	func _log_error(function: String, file: String, line: int, _code: String, rationale: String, _editor_notify: bool,
+			_error_type: int, _script_backtraces: Array[ScriptBacktrace]) -> void:
+		seen.append("%s:%d %s: %s %s" % [file, line, function, _code, rationale])
+
+	func _log_message(_message: String, _error: bool) -> void:
+		pass
 
 
 func check(cond: bool, what: String) -> void:
@@ -22,6 +35,7 @@ func check(cond: bool, what: String) -> void:
 
 
 func _init() -> void:
+	OS.add_logger(errors)
 	GameData.ensure()
 	test_manor_buys_a_tool_on_sale()
 	test_courting_gift_keeps_the_work_axe()
@@ -36,6 +50,10 @@ func _init() -> void:
 	test_guard_recovers_loot()
 	test_caravan_buys_producers_surplus()
 	test_caravan_buys_by_need()
+	OS.remove_logger(errors)
+	for e in errors.seen:
+		print("  error: " + e)
+	check(errors.seen.is_empty(), "no script or engine error was logged while the suite ran (%d)" % errors.seen.size())
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -328,6 +346,9 @@ func test_caravan_buys_by_need() -> void:
 		if o.alive and (o.job == "merchant" or o.id == w.sage_id):
 			o.coins = 0                              # and nobody buys seed or medicine from it, so its purse is what we set
 	for s: OffMapSettlement in w.regions.list:   # DVW-B3-LUX: and no luxuries on the carts, so no purse here is spent on one (luxury_test covers them)
+		if s.trader().is_empty():
+			s.reopen_books()                         # a hamlet with no trader (B25R1-018) carries nothing
+			continue
 		for id: String in Luxury.items():
 			s.trader().stock.erase(id)
 		for id in ["tin_ore", "tin_bar", "silk", "fur"]:   # B25 Decision 5: nor the new materials the carts sell villagers, whose price would fill this purse mid-visit
