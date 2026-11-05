@@ -969,7 +969,7 @@
     "BONE-C7-P012",
     "BONE-C6-P005"
    ],
-   "note": "a long ridge thick with trees, at first wholly beech, no break; a beaten way through. No supernatural mechanics. Generation 7 (owner decision 2026-11-05, question 29: \"a long ridge with a thick wood\", replacing the rectangle): the wood follows a ridge running west to east about 1100 tiles south of the village, its spine bending (y 1080-1150), its flanks of uneven width with spurs running down them and coves between; about the same area (about 247,000 tiles visible, the rectangle 248,400) and extent (x -445..555, y about 917..1296); its north edge lies under the waste between x -25 and 235 so the road south runs straight from the waste into the wood. Drawn by the B25R1 wood worker's script (spine, flank widths, spurs and coves, a fixed hash jitter), the points stored here, the same for every world; edge_wobble 16 roughens it further (RegionGeo._wobble)",
+   "note": "a long ridge thick with trees, at first wholly beech, no break; a beaten way through. No supernatural mechanics. Generation 7 (owner decision 2026-11-05, question 29: \"a long ridge with a thick wood\", replacing the rectangle): the wood follows a ridge running west to east about 1100 tiles south of the village, its spine bending (y 1080-1150), its flanks of uneven width with spurs running down them and coves between; about the same area (about 247,000 tiles visible, the rectangle 248,400) and extent (x -445..555, y about 973..1306); its north edge lies under the waste between x -25 and 190 (east of it the ridge's edge keeps south of the country by Cressbrook) so the road south runs straight from the waste into the wood. Drawn by the B25R1 wood worker's script (spine, flank widths, spurs and coves, a fixed hash jitter), the points stored here, the same for every world; edge_wobble 16 roughens it further (RegionGeo._wobble)",
    "polygon": [
     [
      -445,
@@ -1101,75 +1101,75 @@
     ],
     [
      195,
-     974
+     984
     ],
     [
      215,
-     974
+     989
     ],
     [
      235,
-     974
+     1004
     ],
     [
      255,
-     952
+     994
     ],
     [
      275,
-     947
+     995
     ],
     [
      295,
-     938
+     978
     ],
     [
      315,
-     935
+     981
     ],
     [
      335,
-     936
+     1001
     ],
     [
      355,
-     935
+     1000
     ],
     [
      375,
-     917
+     980
     ],
     [
      395,
-     937
+     975
     ],
     [
      415,
-     960
+     987
     ],
     [
      435,
-     966
+     1001
     ],
     [
      455,
-     976
+     994
     ],
     [
      475,
-     1027
-    ],
-    [
-     495,
-     1027
-    ],
-    [
-     515,
      1031
     ],
     [
+     495,
+     1032
+    ],
+    [
+     515,
+     1037
+    ],
+    [
      535,
-     1086
+     1089
     ],
     [
      555,
@@ -1177,91 +1177,91 @@
     ],
     [
      535,
-     1173
+     1175
     ],
     [
      515,
-     1208
+     1214
     ],
     [
      495,
-     1208
+     1216
     ],
     [
      475,
-     1220
+     1234
     ],
     [
      455,
-     1241
+     1262
     ],
     [
      435,
-     1220
+     1243
     ],
     [
      415,
-     1222
+     1249
     ],
     [
      395,
-     1214
+     1247
     ],
     [
      375,
-     1214
+     1252
     ],
     [
      355,
-     1209
+     1249
     ],
     [
      335,
-     1217
+     1257
     ],
     [
      315,
-     1239
+     1279
     ],
     [
      295,
-     1266
+     1306
     ],
     [
      275,
-     1236
+     1275
     ],
     [
      255,
-     1240
+     1275
     ],
     [
      235,
-     1248
+     1275
     ],
     [
      215,
-     1241
+     1260
     ],
     [
      195,
-     1229
+     1246
     ],
     [
      175,
-     1259
+     1274
     ],
     [
      155,
-     1263
+     1272
     ],
     [
      135,
-     1269
+     1274
     ],
     [
      115,
-     1270
+     1271
     ],
     [
      95,
@@ -1886,7 +1886,7 @@
     "BONE-C7-P004",
     "BONE-C8-P002"
    ],
-   "note": "straight from the south gate through the meadows (crossing Coldlake thrice), then among the vine hills to Bourton, then straight through the waste into the wood",
+   "note": "straight from the south gate through the meadows (crossing Coldlake thrice), then among the vine hills to Bourton, then straight through the waste into the wood; generation 7 (the Wood Perilous's ridge outline): carried on through the wood to its far side, (100,1180) and (104,1330), the one beaten way through (BONE-C8-P002), where a join from Bourton's far point had been the way on",
    "points": [
     [
      20,
@@ -1931,6 +1931,14 @@
     [
      96,
      1040
+    ],
+    [
+     100,
+     1180
+    ],
+    [
+     104,
+     1330
     ]
    ]
   }

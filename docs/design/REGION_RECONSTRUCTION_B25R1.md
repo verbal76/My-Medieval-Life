@@ -623,13 +623,17 @@ ones, owner B25R1-Q5):
   polygon in `region_layout.json` follows a ridge running west to east about 1,100 tiles south of the village: the spine bends
   (y 1080-1150), the flanks are of uneven width, with spurs running down them and coves between (100 points, a fixed hash
   jitter of a few tiles, drawn once by a script and stored, the same for every world). About the same area (about 247,000
-  tiles visible against the rectangle's 248,400) and extent (x -445..555, y about 917..1296: the ridge's east end swells
-  north towards the meadows, its south flank's spurs reach a little past the old south edge). Its north edge lies under the
-  waste between x -25 and 235 (the waste, earlier in the file, wins there), so the waste's own wandering edge is the boundary
-  and the road south runs straight from the waste into the wood; Bourton Abbas, its vale and the waste are untouched.
-  `edge_wobble` is 16 now (it was 40 on the rectangle): the outline does the large shape, the wave only roughens it. The
-  road through the wood is the layout's route (unchanged); country trails keep out of the wood as before, so trails by the
-  wood's new edge follow it.
+  tiles visible against the rectangle's 248,400) and extent (x -445..555, y about 973..1306: the south flank's spurs reach a
+  little past the old south edge). Its north edge lies under the waste between x -25 and 190 (the waste, earlier in the file,
+  wins there), so the waste's own wandering edge is the boundary and the road south runs straight from the waste into the
+  wood; east of it the ridge's edge keeps south of the country by Cressbrook, with coves; Bourton Abbas, its vale and the
+  waste are untouched. `edge_wobble` is 16 now (it was 40 on the rectangle): the outline does the large shape, the wave only
+  roughens it. **One way through:** the layout's road south ended at (96,1040) just inside the wood, and the way on through
+  it was one of Bourton's far point's joins to the grid; with the new outline more grid nodes beyond the wood came into that
+  far point's reach and three joins ran through the trees (the first v3 flyover showed them). The road south is now carried
+  on through the wood to its far side ((100,1180), (104,1330); the beaten way, BONE-C8-P002), and a far point's join with
+  more than `WOOD_THROUGH` (100) cells in the wood is not laid (`Overworld._wood_cells`); country trails keep out of the wood
+  as before.
 - **Higham's castle way on every seed.** Generation 6 placed the castle after the houses outside the walls; where they had
   taken the ground above the north wall (seeds 11, 18, 19 and 1000 of 24 tried) the castle fell back to its old place beyond
   the north-east corner with no way. `SitePlan._castle_place` now chooses and claims the castle's knoll, its way and the

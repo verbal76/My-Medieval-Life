@@ -19,7 +19,7 @@ var failures := 0
 ## site streets and castle way, the trail spurs and ring legs, the Wood Perilous edge; two runs in two processes agree).
 ## Re-pinned 2026-11-05 for generation 7 (the B25R1 flyover v2: the Wood Perilous's ridge outline, the castle way claimed before
 ## the houses outside Higham's walls, no join or ring leg along the canonical water; seed 2's chunks unchanged; two processes agree).
-const GOLDEN_4 := {1: "33cfcd43656672b50a03854d9e95144a", 2: "3f04ed0be6816a2fa4f7afe07da7d8f9", 7: "251c4733ab5c01adafc2ef3bd8cb33cc"}
+const GOLDEN_4 := {1: "419bb4402f2f4d60c41c63b9433c67e3", 2: "3f04ed0be6816a2fa4f7afe07da7d8f9", 7: "d2502e6e88961cb562d6b15f1e076e7a"}
 const CHUNKS := [Vector2i(-3, 2), Vector2i(1, 4), Vector2i(2, 9), Vector2i(-2, -3), Vector2i(5, 1), Vector2i(0, 20), Vector2i(-6, 12)]
 
 

@@ -53,9 +53,10 @@ const GEN_VERSION := 7
 ## a street no building fronts is not laid (SitePlan._trim). Water, streets and so cells changed round every settlement, so a
 ## generation 5 world is refused like the older ones (owner B25R1-Q5: "Don't worry about saved games").
 ## Generation 7 (owner decisions 2026-11-05, B25R1 flyover v2): the Wood Perilous drawn as a long ridge's irregular wood
-## (region_layout.json), Higham's castle and its way claimed before the houses outside the walls (SitePlan._castle_place), and
-## no join, ring leg or side road laid along the canonical water when a dry way exists (_water_run, _side_dry). Cells changed in the south, at Higham and by the rivers,
-## so a generation 6 world is refused like the older ones (owner B25R1-Q5).
+## (region_layout.json; the road south carried on through it, no grid join into it), Higham's castle and its way claimed before
+## the houses outside the walls (SitePlan._castle_place), and no join, ring leg or side road laid along the canonical water
+## when a dry way exists (_water_run, _side_dry). Cells changed in the south, at Higham and by the rivers, so a generation 6
+## world is refused like the older ones (owner B25R1-Q5).
 const GEN_COMPATIBLE := [7]
 const CHUNK := 32
 const PAD := 4                           # cells computed round a chunk, so neighbours' rules need no other chunk
@@ -283,28 +284,35 @@ func _setup_sites(stamps: Dictionary) -> void:
 			# lies at the river's edge): a join whose way would run along the canonical water (more than LINK_WATER_RUN cells on
 			# it in a row, where a crossing has a few) is not laid and the next nearest node is tried; the three nearest dry
 			# ones are joined; with none dry, one dry node a little further (JOIN_FURTHER), else the one least along the water
+			# Nor through the Wood Perilous ("a beaten way through", BONE-C8-P002): the way through is the layout's road south
+			# (south_road, carried on through the wood in generation 7); a join with more than WOOD_THROUGH cells in the wood
+			# is not laid (its outline brought more grid nodes beyond it into reach of Bourton's and Cressbrook's far points)
 			var k := 0
 			for q in near.size():
 				if k >= 3:
 					break
-				if _water_run(_polyline(far, near[q][3], 2000 + k0 * 8 + 1 + k)) <= LINK_WATER_RUN:
+				var jc := _polyline(far, near[q][3], 2000 + k0 * 8 + 1 + k)
+				if _water_run(jc) <= LINK_WATER_RUN and _wood_cells(jc) <= WOOD_THROUGH:
 					_links.append({"a": far, "b": near[q][3], "key": 2000 + k0 * 8 + 1 + k})
 					k += 1
 			if k == 0 and not near.is_empty():           # (none dry in reach: a dry one a little further, as Milton's on Coldlake)
 				for cand in _far_nodes(k0, far, 5):
-					if int(cand[0]) <= JOIN_FURTHER * JOIN_FURTHER and _water_run(_polyline(far, cand[3], 2000 + k0 * 8 + 1)) <= LINK_WATER_RUN:
+					var fc := _polyline(far, cand[3], 2000 + k0 * 8 + 1)
+					if int(cand[0]) <= JOIN_FURTHER * JOIN_FURTHER and _water_run(fc) <= LINK_WATER_RUN and _wood_cells(fc) <= WOOD_THROUGH:
 						_links.append({"a": far, "b": cand[3], "key": 2000 + k0 * 8 + 1})
 						k = 1
 						break
-			if k == 0 and not near.is_empty():           # (none dry: the one least along the water)
-				var least := 0
+			if k == 0 and not near.is_empty():           # (none dry: the one least along the water; none into the wood, whose
+				var least := -1                           # edge Bourton's far point stands on: the road south is its way)
 				var lr := 1 << 30
 				for q in near.size():
-					var wr := _water_run(_polyline(far, near[q][3], 2000 + k0 * 8 + 1))
-					if wr < lr:
+					var lc := _polyline(far, near[q][3], 2000 + k0 * 8 + 1)
+					var wr := _water_run(lc)
+					if wr < lr and _wood_cells(lc) <= WOOD_THROUGH:
 						lr = wr
 						least = q
-				_links.append({"a": far, "b": near[least][3], "key": 2000 + k0 * 8 + 1})
+				if least >= 0:
+					_links.append({"a": far, "b": near[least][3], "key": 2000 + k0 * 8 + 1})
 			continue
 		for k in mini(3, near.size()):
 			_links.append({"a": far, "b": near[k][3], "key": 2000 + k0 * 8 + 1 + k})
@@ -846,6 +854,7 @@ func _ring_leg_free(legs: Array[PackedInt32Array]) -> bool:
 ## bridge planks where it wanders over the bank's edge (Rushford's south far point at Upmeads Water's edge, its joins to the
 ## grid and ring legs running along the river).
 const LINK_WATER_RUN := 9
+const WOOD_THROUGH := 100                 # cells: a join with more in the Wood Perilous runs into it (it is about 300 deep)
 const JOIN_FURTHER := 200                 # tiles: the furthest a far point's dry join is looked for when none in reach is dry
 
 
@@ -859,6 +868,15 @@ func _water_run(cells: PackedInt32Array) -> int:
 		else:
 			run = 0
 	return best
+
+
+## Generation 7: how many cells of a link's way (x, y pairs) lie in the Wood Perilous.
+func _wood_cells(cells: PackedInt32Array) -> int:
+	var n := 0
+	for q in range(0, cells.size(), 2):
+		if RegionGeo.region_at(cells[q], cells[q + 1]) == "wood_perilous":
+			n += 1
+	return n
 
 
 ## Whether point p lies within `extra` tiles of a canonical course's water (its line and width).
