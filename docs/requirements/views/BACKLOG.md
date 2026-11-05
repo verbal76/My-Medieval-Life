@@ -61,10 +61,11 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 
-## Approved, no build assigned (25)
+## Approved, no build assigned (26)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
+| B25-ECON-P7 | Recover stranded settlement treasury ore | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25R1-025 | Aerial region and village maps of the generated world | approved | OWNER APPROVED | INTEGRATED |
 | B25R1-026 | Settlements never hidden by map discovery | approved | OWNER APPROVED | INTEGRATED |
 | BRANCH-POL-01 | Branch and worktree policy: one code integration branch (wip/expansion20), short-lived task branches, prompt audited merges, no unrelated ancestry, nothing deleted with unmerged work, every integration SHA recorded | approved | OWNER APPROVED | INTEGRATED |

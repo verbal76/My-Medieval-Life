@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 810 (428 of them still open) |
-| **Open entries now** (rules excluded) | | **586** |
+| Entries added since | | 811 (429 of them still open) |
+| **Open entries now** (rules excluded) | | **587** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (810)
+## Added since the baseline (811)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -179,6 +179,7 @@ None.
 | B25-ECON-P3 | Retired villagers keep trade stock forever (day 120: 68 iron ore, 47 coal, 24 iron bars, 8 pickaxes, 7 axes held by elders while the working smith held nothing). Options: A keep; B elders and adults between jobs sell their goods through the existing sell rule; C the stock passes to the trade's successor as tools already do. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | APPROVED | 20 |
 | B25-ECON-P4 | Ore imports stall: Garton's quarry stock rose 63 to 175 but its trader had no coins to buy it, so 0 iron ore came to the village in 120 days (2 in a year for seed 2). Options: A keep as an outcome; B the trader carries ore on consignment (paid on sale); C smiths buy from the quarry directly. Recommendation: decide after the final year-long runs; leaning B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | APPROVED | 20 |
 | B25-ECON-P5 | Village land (fields, trees, game, ore) is fixed while population roughly triples in a year, so unemployment rises with population. Should fields grow with population? Recommendation: no change on present evidence. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | APPROVED | 20 |
+| B25-ECON-P7 | Recover stranded settlement treasury ore | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B25-EMPLOY-D3 | How do skilled occupations grow? | decision | APPROVED | owner decision |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-FINISH-01 | Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |

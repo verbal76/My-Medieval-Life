@@ -6283,6 +6283,41 @@
    ]
   },
   {
+   "id": "B25-ECON-P7",
+   "kind": "approved",
+   "title": "Recover stranded settlement treasury ore",
+   "description": "Recover stranded settlement treasury ore",
+   "source": "docs/directives/2026-11-05_b25r1_treasury_ore_recovery.md",
+   "owner_wording": "When a quarry, mining business, or trader closes, ore already transferred into settlement treasury storage must remain available to the economy.",
+   "approval": "owner, 2026-11-05",
+   "acceptance": [
+    "Treasury ore of closed quarries/traders is offered through existing purchase/consignment paths, own trader first then neighbours, local production/obligation/reserve protected, coins and ore conserved, saved; regression tests for the listed cases; 120-day seeds 1-4 Actions evidence on the exact commit"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-05_b25r1_treasury_ore_recovery.md"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-econ6 worker; branch: None -> wip/b25r1-econ6",
+     "why": "owner approved 2026-11-05; in development on wip/b25r1-econ6; merges into B25R1 only if ready before final validation, else after the private playtest"
+    }
+   ],
+   "assigned_worker": "b25r1-econ6 worker",
+   "branch": "wip/b25r1-econ6"
+  },
+  {
    "id": "B25-EMPLOY-D3",
    "kind": "decision",
    "title": "How do skilled occupations grow?",
