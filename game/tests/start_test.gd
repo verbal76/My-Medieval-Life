@@ -745,6 +745,9 @@ func _run() -> void:
 	tap_map.pressed = true
 	tap_map.position = mv.map_rect().get_center()
 	mv._gui_input(tap_map)
+	var lift := InputEventScreenTouch.new()          # B25R1-025: a tap is a press and a release that did not drag (a drag pans)
+	lift.position = tap_map.position
+	mv._gui_input(lift)
 	check(not ui.modal() and main.cam_free and ui.recenter_btn.visible, "a tap on the map closes it and looks there")
 	var c_key := InputEventKey.new()
 	c_key.physical_keycode = KEY_C

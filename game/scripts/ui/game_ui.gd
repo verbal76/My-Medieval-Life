@@ -4546,12 +4546,19 @@ func toggle_map() -> void:
 ## REGION-NAV-01: Village | Region toggles between the village drawn small and the region as you know it
 ## (scripts/ui/region_map_view.gd); the window remembers which you looked at last.
 var map_mode := "village"
+var map_place := ""             # B25R1-025: the settlement the Village map shows ("" the home village)
 
 
 func show_map(mode := "") -> void:
 	if mode != "":
 		map_mode = mode
-	_open("map", "Village map" if map_mode == "village" else "Region map")
+	var sites: Array = VillageMapPanel.known_sites(main.world)
+	if not sites.any(func(e): return e[0] == map_place):
+		map_place = ""
+	var title := "Village map" if map_mode == "village" else "Region map"
+	if map_mode == "village" and map_place != "":
+		title = "Map of " + str(main.world.map.overworld.site(map_place).name)
+	_open("map", title)
 	var bar := HFlowContainer.new()                 # B25R1-005: the Region view's controls wrap on a narrow screen
 	bar.add_theme_constant_override("h_separation", 8)
 	bar.add_theme_constant_override("v_separation", 6)
@@ -4568,9 +4575,24 @@ func show_map(mode := "") -> void:
 		panel_body.add_child(r)
 		r.setup(main)
 	else:
-		var m := VillageMapPanel.new()
+		var m := VillageMapPanel.new()          # B25R1-025: the home village or a settlement found, from overhead; zoom and pan
+		if not sites.is_empty():
+			var pick := OptionButton.new()
+			pick.add_theme_font_size_override("font_size", 17)
+			pick.add_item("Home village")
+			pick.set_item_metadata(0, "")
+			for e in sites:
+				pick.add_item(str(e[1]))
+				pick.set_item_metadata(pick.item_count - 1, str(e[0]))
+				if str(e[0]) == map_place:
+					pick.select(pick.item_count - 1)
+			pick.item_selected.connect(func(i: int):
+				map_place = str(pick.get_item_metadata(i))
+				show_map("village"))
+			bar.add_child(pick)
+		_button("Whole view", m.fit, true, bar)
 		panel_body.add_child(m)
-		m.setup(main)
+		m.setup(main, map_place)
 
 
 ## B25R1-006: Resume Destination (planned again from where the player stands) and Dismiss Destination (cleared).
