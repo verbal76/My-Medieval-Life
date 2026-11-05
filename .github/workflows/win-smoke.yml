@@ -32,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(github.event_name == 'workflow_dispatch' && format('[{{"run":"{0}","art":"{1}","label":"{2}"}}]', inputs.run_id, inputs.artifact, inputs.label) || '[{"run":"41939387992","art":"pkg-full-windows","label":"full-b1"},{"run":"41939387992","art":"pkg-full-windows","label":"full-b2"},{"run":"41939387992","art":"pkg-demo-windows","label":"demo-b"},{"run":"41666958781","art":"pkg-full-windows","label":"full-b25"}]') }}
+        include: ${{ fromJSON(github.event_name == 'workflow_dispatch' && format('[{{"run":"{0}","art":"{1}","label":"{2}"}}]', inputs.run_id, inputs.artifact, inputs.label) || '[{"run":"41939387992","art":"pkg-full-windows","label":"full-b-repeat","repeat":"25"}]') }}
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -81,6 +81,24 @@ jobs:
           Get-ChildItem dumps -ErrorAction SilentlyContinue | Format-Table Name, Length | Out-String | Tee-Object results\dumps.txt
           Get-WinEvent -FilterHashtable @{ LogName = 'Application'; ProviderName = 'Application Error', 'Windows Error Reporting' } -MaxEvents 6 -ErrorAction SilentlyContinue |
             Format-List TimeCreated, ProviderName, Message | Out-String -Width 400 | Tee-Object results\app_events.txt
+
+      - name: Repeat plain launches (as release.yml's smoke) to catch an intermittent crash
+        if: ${{ matrix.repeat != '' && matrix.repeat != null }}
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem run -Filter *.exe | Where-Object { $_.Name -notlike '*.console.exe' } | Select-Object -First 1
+          $fails = 0
+          for ($i = 1; $i -le [int]'${{ matrix.repeat }}'; $i++) {
+            $start = Get-Date -Format o
+            $p = Start-Process -FilePath $exe.FullName -ArgumentList '--headless', '--quit-after', '300' -PassThru -Wait `
+                 -RedirectStandardOutput "results\r$($i)_out.log" -RedirectStandardError "results\r$($i)_err.log"
+            $end = Get-Date -Format o
+            "r$i start=$start end=$end exit=$($p.ExitCode) hex=0x{0:X8}" -f $p.ExitCode | Tee-Object -Append results\repeat.txt
+            if ($p.ExitCode -ne 0) { $fails++; Get-Content "results\r$($i)_out.log", "results\r$($i)_err.log" -ErrorAction SilentlyContinue }
+          }
+          "failures: $fails" | Tee-Object -Append results\repeat.txt
+          Start-Sleep -Seconds 10
+          Get-ChildItem dumps -ErrorAction SilentlyContinue | Format-Table Name, Length | Out-String | Tee-Object results\dumps_repeat.txt
 
       - name: Analyse dumps with cdb if present
         shell: pwsh
