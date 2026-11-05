@@ -15955,9 +15955,15 @@
      "date": "2026-10-31",
      "change": "notes",
      "why": "owner 2026-10-31 (docs/directives/2026-10-31_doc_recon_review_decisions.md s.6): the original Expansion 25 and 26 packets are with ChatGPT, not lost; ChatGPT rebuilds the master package; the docs/expansions status files are the implementation-evidence layer, never the replacement specifications"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "owner_answer",
+     "why": "owner answered Q6.1 (2026-11-05): the revised specification package is still coming; B25R1 proceeds under current authority (register plus latest owner directives); DOC-AUTH-01 is not a B25R1 completion item"
     }
    ],
-   "notes": "The revised master package (rebuilt by ChatGPT from the owner's originals) will come for code verification, discrepancy review and owner questions; it supersedes older specifications only on the owner's explicit final approval. docs/expansions/ is the implementation-evidence layer supporting that work, not the replacement specification."
+   "notes": "The revised master package (rebuilt by ChatGPT from the owner's originals) will come for code verification, discrepancy review and owner questions; it supersedes older specifications only on the owner's explicit final approval. docs/expansions/ is the implementation-evidence layer supporting that work, not the replacement specification.",
+   "owner_answer": "Still coming; B25R1 continues under current authority (2026-11-05)"
   },
   {
    "id": "DOC-CONT-01",
