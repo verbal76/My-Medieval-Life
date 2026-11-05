@@ -50,6 +50,7 @@ var _site_mutex := Mutex.new()
 var _site_out: Array = []           # [chunk, Image] handed over by the worker
 var _site_cancel := false
 var _worker: AerialMap
+var site_from_cache := false        # the settlements' pictures were read back from the disk cache (no worker)
 var _pal := {}                      # px a tile -> {tile value -> Image (k x k) or null (clear)}
 var _spr := {}                      # px a tile -> {art file -> [Image, scale]}
 var _crops: Image
@@ -789,13 +790,22 @@ func start_sites() -> void:
 	if sites_state != "":
 		return
 	var t0 := Time.get_ticks_usec()
-	var todo: Array = []
-	for cc in site_chunks():
-		if lo_sig.get(cc, null) == null:
-			todo.append(cc)
+	var todo: Array = site_chunks()               # (all of them: the disk cache holds the whole set)
 	site_total = todo.size()
 	if todo.is_empty():
 		sites_state = "done"
+		return
+	# drawn before for this world (seed, generation, format, art): read back from the disk cache, no worker
+	var cached := load_cache(cache_path(), cache_key())
+	if cached.size() == todo.size() and todo.all(func(cc): return cached.has(cc)):
+		for cc: Vector2i in todo:
+			var img := Image.create_from_data(Overworld.CHUNK * LO, Overworld.CHUNK * LO, false, Image.FORMAT_RGBA8, cached[cc])
+			if masked(cc) and int(_sigs.get(cc, 0)) == 0 and lo_sig.get(cc, null) != sig(cc):
+				_place(cc, img)
+		site_done = site_total
+		site_from_cache = true
+		sites_state = "done"
+		site_start_usec = Time.get_ticks_usec() - t0
 		return
 	# what the worker reads, made here: every atlas, every tree picture shrunk, the static tables warmed
 	var keep_load := allow_load
@@ -837,25 +847,31 @@ func start_sites() -> void:
 	var seed_v: int = ow.seed
 	var vmap: VillageMap = world.map
 	_site_thread = Thread.new()
-	_site_thread.start(_site_work.bind(wk, todo, seed_v, vmap, clock), Thread.PRIORITY_LOW)
+	_site_thread.start(_site_work.bind(wk, todo, seed_v, vmap, clock, ow.gen, cache_path(), cache_key()), Thread.PRIORITY_LOW)
 	site_start_usec = Time.get_ticks_usec() - t0
 
 
 ## The worker: a private Overworld, then each settlement chunk composed (2 px a tile, masked) and handed over.
-func _site_work(wk: AerialMap, todo: Array, seed_v: int, vmap: VillageMap, clock: float) -> void:
+func _site_work(wk: AerialMap, todo: Array, seed_v: int, vmap: VillageMap, clock: float, gen: int, path: String, key: String) -> void:
 	var t0 := Time.get_ticks_usec()
 	var o := Overworld.create(seed_v, vmap)
+	o.gen = gen                                   # (the world's own generation, as Overworld.load_dict keeps it)
 	o.clock = clock
+	var out := {}
 	wk.ow = o
 	wk._ovv.overworld = o
 	for cc: Vector2i in todo:
 		if _site_cancel:
 			break
 		var img := wk.compose(cc, LO, true)
+		if img != null:
+			out[cc] = img.get_data()
 		_site_mutex.lock()
 		_site_out.append([cc, img])
 		_site_mutex.unlock()
 		site_done += 1
+	if not _site_cancel and out.size() == todo.size():
+		save_cache(path, key, out)                # (on the worker: the file is written off the main thread)
 	site_usec = Time.get_ticks_usec() - t0
 
 
@@ -905,3 +921,132 @@ func stop_sites() -> void:
 	if _worker != null and is_instance_valid(_worker._ovv):
 		_worker._ovv.free()
 	_worker = null
+
+
+# ------------------------------------------------------------------ the disk cache ---------------------------
+## The settlements' pictures (LO, masked) are kept on disk per world, so the worker's cost (the better part of a minute on a
+## phone) is paid once per world, not at every launch or load. One file a world, named by its key: the seed, the
+## overworld's generation, CACHE_FORMAT and a hash of the tile art and data the pictures are made from (art_hash); any of
+## them changed is another file. The file: a header, then each chunk's picture (raw RGBA), zstd-compressed, with an MD5 of
+## the body; a file that does not read back exactly (missing, short, corrupt, another key) is ignored and the pictures are
+## drawn again. At most CACHE_KEEP worlds are kept (the oldest dropped). Bump CACHE_FORMAT when the way pictures are
+## composed changes. The world's own changes (a felled tree, a homestead) are not in the cache: those chunks are drawn by
+## the main thread as before (their signature is not the base one). The trees' growth stage is the one at the world's
+## first start (cosmetic). Explored chunks are not cached.
+const CACHE_FORMAT := 1
+const CACHE_DIR := "user://aerial_cache"
+const CACHE_KEEP := 6
+const _MAGIC := "MMLA"
+static var _art_hash := ""
+
+
+## A hash of what the pictures are drawn from: the tile atlases (their paths and sizes), the tree art and the data files the
+## overworld's look comes from.
+func art_hash() -> String:
+	if _art_hash != "":
+		return _art_hash
+	var parts: Array = []
+	for src: TileSetAtlasSource in main.view.sources:
+		var t: Texture2D = src.texture
+		parts.append([t.resource_path if t != null else "", t.get_width() if t != null else 0, t.get_height() if t != null else 0])
+	for f in ["res://data/overworld_tiles.json", "res://data/region_stamps.json", "res://data/style_stamps.json", "res://data/village.json",
+			"res://data/settlements.json", Trees.ART + "trees.json", Trees.ART + "fruit_trees.json"]:
+		parts.append([f, FileAccess.get_md5(f) if FileAccess.file_exists(f) else ""])
+	_art_hash = str(hash(parts))
+	return _art_hash
+
+
+func cache_key() -> String:
+	return "%d_g%d_f%d_%s" % [ow.seed, ow.gen, CACHE_FORMAT, art_hash()]
+
+
+func cache_path() -> String:
+	return CACHE_DIR.path_join("sites_%s.bin" % cache_key())
+
+
+## Write `pics` (chunk -> raw RGBA bytes) for `key` (a temporary file renamed into place); the oldest files beyond
+## CACHE_KEEP are removed. False when it could not be written (nothing is left half-written under the real name).
+static func save_cache(path: String, key: String, pics: Dictionary) -> bool:
+	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+	var body := PackedByteArray()
+	var keys: Array = pics.keys()
+	keys.sort()
+	var head := StreamPeerBuffer.new()
+	head.put_32(keys.size())
+	for cc: Vector2i in keys:
+		var b: PackedByteArray = pics[cc]
+		head.put_32(cc.x)
+		head.put_32(cc.y)
+		head.put_32(b.size())
+		head.put_data(b)
+	body = head.data_array
+	var md := HashingContext.new()
+	md.start(HashingContext.HASH_MD5)
+	md.update(body)
+	var tmp := path + ".tmp"
+	var f := FileAccess.open_compressed(tmp, FileAccess.WRITE, FileAccess.COMPRESSION_ZSTD)
+	if f == null:
+		return false
+	f.store_buffer(_MAGIC.to_ascii_buffer())
+	f.store_pascal_string(key)
+	f.store_32(body.size())
+	f.store_buffer(body)
+	f.store_buffer(md.finish())
+	f.close()
+	var d := DirAccess.open(path.get_base_dir())
+	if d == null or d.rename(tmp, path) != OK:
+		return false
+	_trim_cache(path.get_base_dir())
+	return true
+
+
+## The pictures stored for `key` at `path` (chunk -> raw RGBA bytes), or {} when the file is missing or does not read back
+## exactly (another key, a short or corrupt file, a wrong digest).
+static func load_cache(path: String, key: String) -> Dictionary:
+	if not FileAccess.file_exists(path):
+		return {}
+	var f := FileAccess.open_compressed(path, FileAccess.READ, FileAccess.COMPRESSION_ZSTD)
+	if f == null:
+		return {}
+	var ok := f.get_length() > 12 and f.get_buffer(4).get_string_from_ascii() == _MAGIC and f.get_pascal_string() == key
+	if not ok:
+		return {}
+	var n := f.get_32()
+	if n <= 0 or n > 64 * 1024 * 1024:
+		return {}
+	var body := f.get_buffer(n)
+	var digest := f.get_buffer(16)
+	if body.size() != n or digest.size() != 16:
+		return {}
+	var md := HashingContext.new()
+	md.start(HashingContext.HASH_MD5)
+	md.update(body)
+	if md.finish() != digest:
+		return {}
+	var sp := StreamPeerBuffer.new()
+	sp.data_array = body
+	var count := sp.get_32()
+	var want := Overworld.CHUNK * LO * Overworld.CHUNK * LO * 4
+	var out := {}
+	for i in count:
+		if sp.get_position() + 12 > body.size():
+			return {}
+		var cc := Vector2i(sp.get_32(), sp.get_32())
+		var len := sp.get_32()
+		if len != want or sp.get_position() + len > body.size():
+			return {}
+		var got: Array = sp.get_data(len)
+		if int(got[0]) != OK:
+			return {}
+		out[cc] = got[1]
+	return out
+
+
+static func _trim_cache(dir: String) -> void:
+	var files: Array = []
+	for f in DirAccess.get_files_at(dir):
+		if f.begins_with("sites_") and f.ends_with(".bin"):
+			files.append([FileAccess.get_modified_time(dir.path_join(f)), f])
+	files.sort()
+	while files.size() > CACHE_KEEP:
+		DirAccess.remove_absolute(dir.path_join(str(files.pop_front()[1])))
