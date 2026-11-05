@@ -31,6 +31,7 @@ func _init() -> void:
 	test_posting()
 	test_work_into_field()
 	test_tree_and_boulder()
+	test_villager_does_it()
 	test_save_load()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
@@ -259,6 +260,34 @@ func test_tree_and_boulder() -> void:
 	check(logs >= 4 and str(tree.state) == "cleared", "the tree is felled for %d logs and its stump dug out" % logs)
 	check(stone == units and w.deposit_at(bc).is_empty(), "the boulder is broken into its %d stone and gone" % units)
 	check(mw.yard.count("log") >= logs and mw.yard.count("stone") >= stone, "the logs and stone are in the works yard")
+
+
+## End to end in the running village: the reeve's evening posts the job and a villager looking for the manor's work walks
+## there and does it (plan, act), cell by cell.
+func test_villager_does_it() -> void:
+	var w := _world()
+	_fill_fields(w)
+	var n := _adult(w)
+	n.job = ""
+	w.treasury += 300
+	w.coin_sources += 300
+	w.brain.reeve_day()
+	var posted: Array = w.manor_work.jobs.filter(func(j): return j.kind == "clear")
+	check(posted.size() == 1, "the reeve's evening posts the clearing job")
+	var hand := _adult(w)
+	hand.job = "manor_hand"
+	hand.plan = []
+	var tilled0 := int(float(w.stats.get("land_tilled_cells", 0.0)))
+	w.minutes = floorf(w.minutes / 1440.0) * 1440.0 + 1440.0 + 7.0 * 60.0       # the next morning, seven o'clock
+	var took := false
+	for i in 2400:
+		w.update(0.5)
+		if not w.manor_work.job_of(World.npc_ref(hand.id)).is_empty() and w.manor_work.job_of(World.npc_ref(hand.id)).kind == "clear":
+			took = true
+		if int(float(w.stats.get("land_tilled_cells", 0.0))) - tilled0 >= 3:
+			break
+	print("     hand %s doing '%s', took %s, tilled %d" % [hand.name, hand.doing, took, int(float(w.stats.get("land_tilled_cells", 0.0))) - tilled0])
+	check(took and int(float(w.stats.get("land_tilled_cells", 0.0))) - tilled0 >= 1, "a manor hand takes it and tills the ground cell by cell")
 
 
 func test_save_load() -> void:

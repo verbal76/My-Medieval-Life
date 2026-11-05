@@ -252,6 +252,7 @@ func _init() -> void:
 			print("FUNNEL " + JSON.stringify(_funnel_line(d + 1)))
 			print("JOBS " + JSON.stringify(_jobs_line(d + 1)))
 			print("ORE " + JSON.stringify(_ore_line(d + 1)))
+			print("LAND " + JSON.stringify(_land_line(d + 1)))
 			dev_series.append(_dev(d + 1))
 			print("ECON10 " + JSON.stringify(dev_series[-1]))
 			# B25-CAPABILITY: the village's current industry levels, its milestone record (first days), the milestones announced
@@ -1618,6 +1619,26 @@ func _ore_line(day: int) -> Dictionary:
 	return {"day": day, "ores": _sorted_dict(ores), "goods": goods, "people": people, "region": region,
 		"caravan_coins_out": int(_st("caravan_coins_out")), "miner_places_open": _miner_open(),
 		"prospecting": pros, "mining_level": int((w.settlement_caps.get("levels", {}) as Dictionary).get("mining", 0)), "seams_worked_out": events.seams_worked_out}
+
+
+## B25-ECON-P5: the ground cleared into manor fields (read only): blocks left, cells tilled, fields made, the want and the board.
+func _land_line(day: int) -> Dictionary:
+	var lc: LandClearing = w.clearing
+	var per := []
+	for f in w.fields:
+		per.append(w.field_workers(f).size())
+	var idle := 0
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult" and n.job == "":
+			idle += 1
+	var tilled := 0
+	for k in lc.tilled:
+		tilled += (lc.tilled[k] as Array).size()
+	return {"day": day, "fields": w.fields.size(), "farmers_per_field": per, "idle_adults": idle, "wanted": lc.wanted(), "found": lc.found,
+		"blocks_left": lc.blocks.size(), "tilled_cells": tilled, "fields_cleared": lc.made, "clear_jobs": w.manor_work.jobs.filter(func(j): return j.kind == "clear").size(),
+		"stats": {"fields_cleared": int(_st("fields_cleared")), "pieces_tilled": int(_st("land_tilled_cells")), "cleared_plant": int(_st("land_cleared_plant")),
+			"cleared_tree": int(_st("land_cleared_tree")), "cleared_stone": int(_st("land_cleared_stone")), "blocks_lost": int(_st("land_clearing_blocks_lost")),
+			"clear_jobs_done": int(_st("manor_job_clear"))}}
 
 
 func _chapel_line(day: int) -> Dictionary:
