@@ -56060,6 +56060,11 @@
      "date": "2026-10-31",
      "change": "tests",
      "why": "DOC-RECON-01 consistency (checker rules): test evidence recorded from the reconciliation"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "owner_answer",
+     "why": "owner answered Q4.1 and Q4.2 (2026-11-05): Gate H review is based on the judgment section of the B25R1 365-day campaign reports plus the playtest build, as one package; Gate H is not a B25R1 release blocker (judgment ships enabled as ordered; Gate H closes on the owner's review)"
     }
    ],
    "target_build": "20",
@@ -56078,7 +56083,8 @@
     "X20-OPEN-ITEMS"
    ],
    "remaining_work": "present the SJD-G report to the owner (batch R8)",
-   "test_commit": "0b5287c"
+   "test_commit": "0b5287c",
+   "owner_answer": "Basis: R1 campaign judgment reports + playtest build; not a B25R1 release blocker (2026-11-05)"
   },
   {
    "id": "SJD-H-CAL",
