@@ -490,6 +490,7 @@ func test_employment() -> void:
 		e.inv.add("pickaxe", 1)
 	e.plan.clear()
 	var c4 := w4.total_coins() + 0
+	var src4 := w4.coin_sources                    # coins that cross the village's border (a villager buying in Netherton) are booked here
 	var chest4: Inventory = w4.construction.store_of(World.PLAYER)
 	var before := 0
 	for o in Employment.ORES:
@@ -501,4 +502,4 @@ func test_employment() -> void:
 	for o in Employment.ORES:
 		after += chest4.count(o)
 	check(int(w4.stats.get("employment_mined", 0)) > 0 and after > before, "in a lived working day the employee mines and the ore reaches the employer's chest (%d mined, %d delivered)" % [int(w4.stats.get("employment_mined", 0)), after - before])
-	check(w4.total_coins() == c4, "coins are conserved through the lived working day (%d)" % c4)
+	check(w4.total_coins() - c4 == w4.coin_sources - src4, "coins are conserved through the lived working day (%d, then %d; %d crossed the border)" % [c4, w4.total_coins(), w4.coin_sources - src4])
