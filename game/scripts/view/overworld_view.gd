@@ -370,10 +370,11 @@ func _lay_grass(cc: Vector2i, ch: Overworld.Chunk, layer: TileMapLayer, lanes: D
 	var box := Rect2i(cc * Overworld.CHUNK, Vector2i(Overworld.CHUNK, Overworld.CHUNK))
 	var keep_off: Array[Rect2i] = []           # the settlements' buildings and yards, the homesteads, in this chunk
 	for st in overworld.sites + overworld.structures:
-		if (st.rect as Rect2i).intersects(box):
+		if (st.rect as Rect2i).grow(1).intersects(box):
 			for sl in st.slots + st.get("props", []):
-				if (sl.rect as Rect2i).intersects(box):
-					keep_off.append((sl.rect as Rect2i).grow(1))
+				var grown := (sl.rect as Rect2i).grow(1)      # (grown before the test: a plot on a chunk's edge keeps the next chunk's cells off too)
+				if grown.intersects(box):
+					keep_off.append(grown)
 	var fenced := {}
 	for hm in overworld.homes:
 		if (hm.rect as Rect2i).intersects(box):

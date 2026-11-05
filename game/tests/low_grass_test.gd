@@ -111,5 +111,31 @@ func _run() -> void:
 	if first.x != -999999:
 		ov.set_tile(ov.chunks[Overworld.chunk_of(first)].objects, first, int(ow.tiles.rock))
 		check(ov.grass_value(first) == -1, "an object drawn on an overworld tuft's cell takes the tuft away")
+	# B25R1-022 / B25R1-018 (merged with the tufts): none on a styled house's plot or the cell round it (also where the plot's
+	# margin crosses into the next chunk), nor on the generator's steps or a raised rim (Garton, Bear Hill)
+	var places: Array[Vector2] = [Vector2((ow.site("garton").rect as Rect2i).get_center())]
+	for rz in ow.raised:
+		places.append(Vector2((rz.box as Rect2i).get_center()))
+	var styled := 0
+	var sbad := 0
+	var rbad := 0
+	for p in places:
+		ov.follow(p, p, 0.0, -1)
+		for st in ow.sites:
+			for sl in st.slots:
+				if str(sl.get("style", "")) == "":
+					continue
+				var rr: Rect2i = (sl.rect as Rect2i).grow(1)
+				styled += 1
+				for y in range(rr.position.y, rr.end.y):
+					for x in range(rr.position.x, rr.end.x):
+						sbad += 1 if ov.grass_value(Vector2i(x, y)) >= 0 else 0
+		for c: Vector2i in ow.fixed_works:
+			rbad += 1 if ov.grass_value(c) >= 0 else 0
+		for cc: Vector2i in ov.chunks:
+			for c: Vector2i in (ov.chunks[cc].grass as TileMapLayer).get_used_cells():
+				rbad += 1 if ow.raised_at(c) != "" and ow.is_rim(c) else 0
+	check(styled > 0 and sbad == 0, "no tuft on a styled house's plot or the cell round it (%d tufts, %d styled plots)" % [sbad, styled])
+	check(not ow.fixed_works.is_empty() and rbad == 0, "no tuft on the generator's steps or a raised rim (%d)" % rbad)
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
