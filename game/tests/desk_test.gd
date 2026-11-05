@@ -225,10 +225,12 @@ func _run() -> void:
 	w2.load_dict(VillageMap.load_default(), d22)
 	check(w2.load_error == "" and BusinessDesks.all(w2).size() == BusinessDesks.all(w).size(), "a save 22 loads with the same desks (%d)" % BusinessDesks.all(w2).size())
 	w2.dispose()
+	# B25R1-Q5 (owner: no migration for the Revision 1 world): the Build 20 world is overworld generation 2: refused, the file
+	# kept (the desks need nothing saved, so a save of this build without them is the save 22 case above)
 	var d21: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/b20_save_v21_single.json"))
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), d21)
-	check(w3.load_error == "" and BusinessDesks.all(w3).map(func(d): return str(d.id)).has(arm), "the Build 20 save (21) loads and has the smithy's desk")
+	check(w3.load_error.contains("generation") and w3.load_error.contains("the file is kept"), "the Build 20 save (21, generation 2) is refused with its message (%s)" % w3.load_error)
 	w3.dispose()
 	print("\ndesk_test: %d checks, %d failures" % [checks, failures])
 	main.queue_free()
