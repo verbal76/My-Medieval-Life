@@ -53,6 +53,15 @@ func new_world(seed := 1) -> World:
 	return w
 
 
+## FARM-YIELD-D1 / FARM-08: the wheat cut since `made0` (the farm_harvest_wheat faucet), checked to be `cells` cells' worth of the
+## shared wheat yield (each cell its whole part, plus one by the cell's own chance of the fraction: Farming.cell_yield).
+func cut_wheat(w: World, made0: float, cells: int) -> int:
+	var got := int(float(w.stats.get("farm_harvest_wheat", 0.0)) - made0)
+	var y := Farming.wheat_yield()
+	check(got >= int(floor(y)) * cells and got <= int(ceil(y)) * cells, "%d cells cut give %d wheat at %.2f a cell" % [cells, got, y])
+	return got
+
+
 func coins(w: World) -> int:
 	return w.total_coins() - w.coin_sources
 
@@ -376,9 +385,11 @@ func test_harvest_hired_by_household() -> void:
 	var sc0 := s.coins
 	var sw0 := s.inv.count("wheat")
 	var fxp0 := int(s.skills.get("farming", 0))
+	var made0 := float(w.stats.get("farm_harvest_wheat", 0.0))
 	run(w, s)
 	check(str(c.state) == "fulfilled" and int(c.delivered) == 6, "the field is cut (%d cells)" % int(c.delivered))
-	check(pantry.count("wheat") == wheat0 + 18 and s.inv.count("wheat") == sw0, "the crop is the owner's: into the household's pantry, none in the worker's pack")
+	var cut := cut_wheat(w, made0, 6)
+	check(pantry.count("wheat") == wheat0 + cut and s.inv.count("wheat") == sw0, "the crop is the owner's: into the household's pantry, none in the worker's pack")
 	check(s.coins == sc0 + int(c.paid) and int(c.paid) == 6 * int(c.price_each), "the worker is paid each cell")
 	check(int(s.skills.get("farming", 0)) > fxp0, "the work trains Farming")
 	check(coins(w) == c0, "coins only moved")
@@ -420,6 +431,7 @@ func test_harvest_player_as_hand() -> void:
 	var pw0 := w.player.inv.count("wheat")
 	var pc0 := w.player.coins
 	var xp0 := int(w.player.skills.get("farming", 0))
+	var made0 := float(w.stats.get("farm_harvest_wheat", 0.0))
 	for cell: Vector2i in cells:
 		var ts: Array = w.farm.targets_at(cell, w.player)
 		check(not ts.is_empty() and str(ts[0].act) == "contract_harvest", "the ripe cell offers the hired harvest")
@@ -427,7 +439,8 @@ func test_harvest_player_as_hand() -> void:
 		check(bool(pl.ok), "as a timed action")
 		pl.run.call()
 	check(str(o.state) == "fulfilled" and w.player.coins == pc0 + 2, "both cells cut and paid")
-	check(pantry.count("wheat") == wheat0 + 6 and w.player.inv.count("wheat") == pw0, "the crop went to the household, not the player")
+	var cut := cut_wheat(w, made0, 2)
+	check(pantry.count("wheat") == wheat0 + cut and w.player.inv.count("wheat") == pw0, "the crop went to the household, not the player")
 	check(int(w.player.skills.get("farming", 0)) > xp0, "the player earns the Farming the work trains")
 	var other: Vector2i = cells[0]
 	check(w.farm.targets_at(other, w.player).all(func(t): return str(t.get("act", "")) != "contract_harvest"), "with the contract done, nothing more to cut")
@@ -465,8 +478,10 @@ func test_harvest_player_as_employer() -> void:
 	check(rr.has("contract"), "a villager agrees to cut it (\"%s\")" % str(rr.get("say", "")))
 	if not rr.has("contract"):
 		return
+	var made0 := float(w.stats.get("farm_harvest_wheat", 0.0))
 	run(w, s)
-	check(str(rr.contract.state) == "fulfilled" and w.player.chest.count("wheat") == chest0 + 6 and s.inv.count("wheat") == sw0,
+	var cut := cut_wheat(w, made0, 2)
+	check(str(rr.contract.state) == "fulfilled" and w.player.chest.count("wheat") == chest0 + cut and s.inv.count("wheat") == sw0,
 			"the crop is brought into the player's chest, not kept by the worker (%s, %d done, chest %d)" % [str(rr.contract.state), int(rr.contract.delivered), w.player.chest.count("wheat") - chest0])
 	check(coins(w) == c0, "coins only moved")
 	w.player.home = ""

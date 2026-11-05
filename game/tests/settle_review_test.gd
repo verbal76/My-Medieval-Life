@@ -64,8 +64,10 @@ func test_idle_trader_closes() -> void:
 	check(s.journal.any(func(j): return "closed" in str(j.text)), "the settlement records the closing")
 
 
-## A trader that closes while food it bought is on the road: the shipment is delivered at once (the seller paid) and the food goes
-## to the granary with the rest of its stock; nothing stays open waiting for a trader who is gone.
+## A trader that closes while its walker is on the road buying food (B25R1-019: the purchase is carried by a real walker, not a
+## shipment): nothing is lost and nothing waits on a trader who is gone. The walker buys at the seller's place with the coins it
+## carries (the grower paid) and brings the food home to the council's granary (SettlementTrips.finish: the owner gone, the
+## treasury's), with any coins left over.
 func test_closing_trader_takes_in_shipments() -> void:
 	var w := new_world()
 	var r := w.regions
@@ -87,15 +89,45 @@ func test_closing_trader_takes_in_shipments() -> void:
 	for s: OffMapSettlement in r.list:
 		s.reopen_books()
 	var res := r.food_round(w.day())
-	check(not res.lines.is_empty() and g.transit.size() == 1, "Garton's trader bought food that is on the road")
-	var e: Dictionary = g.transit[0].duplicate()
-	var farm := int(hi.biz.farm.till)
+	var trip := _food_trip(g)
+	check(not res.lines.is_empty() and not trip.is_empty() and int(trip.coins) > 0 and str(trip.owner) == "trader",
+		"Garton's trader sent a walker with %d coins to buy food" % int(trip.get("coins", 0)))
+	if trip.is_empty():
+		w.dispose()
+		return
+	var tx := str(trip.tx)
+	var carried := int(trip.coins)
+	var seller: OffMapSettlement = r.by_id[str(trip.to)]
+	var j0 := r.trip_journal.size()
 	g._close_business("merchant")
-	check(g.trader().is_empty() and g.transit.is_empty(), "the trader closes and nothing is left awaited")
-	check(str(w.transactions.get_shipment(str(e.tx)).state) == "delivered" and int(hi.biz.farm.till) == farm + int(e.coins), "the shipment was delivered and the grower paid")
-	check(int(g.gov.granary.get("wheat", 0)) >= int(e.n), "the food went to the granary with the trader's stock")
+	var gov0 := int(g.gov.coins)
+	check(g.trader().is_empty() and g.closed.has("merchant"), "the trader closes while its walker is on the road")
+	check(r.audit() == "", "books balance with the walker on the road (%s)" % r.audit())
+	var m := float(trip.depart)
+	var end := m + 20.0 * 1440.0
+	while m <= end and not SettlementTrips.find(g, tx).is_empty():
+		SettlementTrips.advance(r, m)
+		m += 60.0
+	check(SettlementTrips.find(g, tx).is_empty(), "the walker came home: nothing is left awaited")
+	var food := 0
+	var paid := 0                                  # what the sellers there received for this walker's purchases (their side of each exchange)
+	for e in r.trip_journal.slice(j0):
+		if str(e.kind) == "sell" and str(e.with) == "garton/trip:" + tx and str(e.party).begins_with(seller.id + "/"):
+			paid += int(e.coins)
+			food += int(e.n)
+	var wheat := int(g.gov.granary.get("wheat", 0))
+	check(paid > 0 and wheat > 0 and wheat == food, "the seller in %s was paid (%d) and the food went to the granary (%d wheat)" % [seller.name, paid, wheat])
+	check(int(g.gov.coins) - gov0 == carried - paid, "the coins the walker did not spend went to the council (%d of %d)" % [int(g.gov.coins) - gov0, carried])
 	check(r.audit() == "", "books balance (%s)" % r.audit())
 	w.dispose()
+
+
+## Garton's walker on a food errand, or {}.
+func _food_trip(g: OffMapSettlement) -> Dictionary:
+	for t in g.trips:
+		if str(t.purpose.get("kind", "")) == "food":
+			return t
+	return {}
 
 
 ## A household adult whose household holds their house and has room for a storefront.
@@ -319,7 +351,7 @@ func _ready_household(s: OffMapSettlement, coins: int) -> Dictionary:
 ## An unstaffed trader closes, stays closed and trades nothing while nobody takes up the trade, and is re-established when a
 ## household does (the opening rule, on the traders' own goods: carried goods and food that went unmet); the new trader starts
 ## from the household's own savings, nothing of the former trader's comes back; coins and goods are conserved throughout; and it
-## trades again: buying food from a neighbour through the transaction authority.
+## trades again: its walker sets out to buy food from a neighbour (B25R1-019).
 func test_trader_reopens() -> void:
 	var w := new_world()
 	var r := w.regions
@@ -350,7 +382,8 @@ func test_trader_reopens() -> void:
 	hi.reopen_books()
 	check(float(g.wants()._food_pts) > 0.0, "Garton is short of food")
 	var res := r.food_round(d)
-	check(res.lines.filter(func(l): return str(l.buyer).begins_with("garton/")).is_empty() and g.transit.is_empty(), "with no trader it places no food order")
+	check(res.lines.filter(func(l): return str(l.buyer).begins_with("garton/")).is_empty() and _food_trip(g).is_empty() and g.transit.is_empty(),
+		"with no trader it places no food order and sends no walker")
 	check(g.trader_cash() == 0 and g.trader_has("wheat_seed") == 0 and not g.buy_from_village("iron_bar", 1, 1) and not g.sell_to_village("wheat_seed", 1, 1),
 		"and its caravan neither buys nor sells")
 	check(r.party("region:garton/trader") == null, "its trader is no party to any transaction")
@@ -370,10 +403,15 @@ func test_trader_reopens() -> void:
 	check(int(m.reserve) == int(OffMapSettlement.btype("merchant").reserve) and int(m.paid) == 0, "with a new trader's capital rule and fresh accounts")
 	check(int(g.gov.coins) == gov_after_close, "the council keeps what it received at the closing")
 	check(g.coins() == coins1 and JSON.stringify(g.goods()) == goods1 and g.audit() == "", "reopening conserves coins and goods (%s)" % g.audit())
-	# it trades again: Garton's trader buys food from Higham through the transaction authority
+	# it trades again: Garton's trader sends a walker to buy food (B25R1-019)
 	var res2 := r.food_round(d + 6)
 	var bought: Array = res2.lines.filter(func(l): return str(l.buyer) == "garton/trader")
-	check(not bought.is_empty() and g.transit.size() == bought.size(), "it resumes trade: a food purchase from a neighbour (%d lines)" % bought.size())
+	var walked := 0
+	for t in g.trips:
+		if str(t.purpose.get("kind", "")) == "food" and str(t.owner) == "trader":
+			walked += int(t.coins)
+	check(not bought.is_empty() and walked > 0 and walked == bought.reduce(func(a, l): return a + int(l.total), 0),
+		"it resumes trade: its walker sets out to buy food from a neighbour (%d lines)" % bought.size())
 	check(r.audit() == "", "the region's books balance (%s)" % r.audit())
 	w.dispose()
 

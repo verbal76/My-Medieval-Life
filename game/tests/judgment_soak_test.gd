@@ -40,11 +40,25 @@ func _init() -> void:
 	quit(1 if failures > 0 else 0)
 
 
+## B25R1-Q5 (owner: no migration for the Revision 1 world): every fixture's world is overworld generation 2 and is refused, the file
+## kept. The judgment section is the world's own record of its people (person ids from the seed, not the region), so each fixture's
+## section is loaded in this build's world made from the fixture's seed (the same people), saved with that section in place of its
+## own: [the world, the fixture with its judgment section]. The section's checks below are unchanged.
 func _load(name: String) -> Array:
 	var d: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/" + name))
+	var wr := World.new()
+	wr.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
+	check(wr.load_error.contains("generation") and wr.load_error.contains("the file is kept"), "%s: its world (generation 2) is refused with its message" % name)
+	wr.dispose()
+	var made := World.new()
+	made.setup(VillageMap.load_default(), int(d.seed))
+	var cur: Dictionary = JSON.parse_string(JSON.stringify(made.to_dict()))
+	made.dispose()
+	cur.judgment = d.judgment
 	var w := World.new()
-	w.load_dict(VillageMap.load_default(), d)
-	return [w, d]
+	w.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(cur)))
+	check(w.load_error == "", "%s: its judgment section in this build's world of seed %d loads (%s)" % [name, int(d.seed), w.load_error])
+	return [w, cur]
 
 
 ## Rows of a saved section's list, as text (the order is the store's own sorted order).

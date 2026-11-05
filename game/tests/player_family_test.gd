@@ -322,8 +322,18 @@ func test_migration_from_22() -> void:
 	check(int(m1.save_version) == 23 and JSON.stringify(World.migrate_22_to_23(m1)) == JSON.stringify(m1), "the raw step names version 23 and is idempotent")
 	check((m1.households as Array).size() == (d.households as Array).size() + 1 and (m1.households[-1] as Dictionary).has("couple") and int(m1._migrated_22.couples) == 1,
 		"it founds the married players' household on the saved data (%s)" % JSON.stringify(m1.households[-1]))
+	# B25R1-Q5 (owner: no migration for the Revision 1 world): the Build 21 world is overworld generation 2 and is refused, the file
+	# kept. The players' and households' migration is checked on the same saved data with its overworld section replaced by this
+	# build's (generation 4, the same seed): the region is not what this migration rewrites
+	var wr := _reload(d)
+	check(wr.load_error.contains("generation") and wr.load_error.contains("the file is kept"), "the Build 21 world (generation 2) is refused with its message (%s)" % wr.load_error)
+	wr.dispose()
+	var made := World.new()
+	made.setup(VillageMap.load_default(), int(d.seed))
+	d.overworld = JSON.parse_string(JSON.stringify(made.to_dict().overworld))
+	made.dispose()
 	var w := _reload(d)
-	check(w.load_error == "", "it loads (%s)" % w.load_error)
+	check(w.load_error == "", "it loads with this build's region (%s)" % w.load_error)
 	var gk := ""
 	for k in d.players.by_pid:
 		if int(k) != int(d.players.host):
@@ -332,7 +342,11 @@ func test_migration_from_22() -> void:
 	var g := w.player_by_pid(int(gk))
 	check(g != null and g.away and g.partner == -2 and w.player.partner == w.person_id(g), "the married guest is back, away, both still partners")
 	var h := Life.couple_household(w, w.player, g)
-	check(h == (d.households as Array).size() and w.households.size() == (d.households as Array).size() + 1, "the couple's household is founded once, after every saved household")
+	# B25R1-014: a save with no wilds section has the bandits' band household made on loading (Wilds.migrate_on_load), after the couple's
+	var extra := (w.households as Array).slice((d.households as Array).size() + 1)
+	check(h == (d.households as Array).size() and w.households.size() >= (d.households as Array).size() + 1 and extra.all(func(x): return bool(x.get("band", false)))
+		and w.households.filter(func(x): return x.has("couple")).size() == 1,
+		"the couple's household is founded once, after every saved household (then %d band household(s) made on loading)" % extra.size())
 	check(g.coins == int(gd.coins) and JSON.stringify(g.inv.items) == JSON.stringify(PlayerState.from_dict(gd).inv.items) and JSON.stringify(g.chest.items) == JSON.stringify(PlayerState.from_dict(gd).chest.items),
 		"the guest's purse, pack and chest as saved")
 	var hp := PlayerState.from_dict(d.player)

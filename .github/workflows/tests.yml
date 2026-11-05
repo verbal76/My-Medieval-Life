@@ -44,7 +44,8 @@ jobs:
     name: test (shard ${{ matrix.shard }} of 8)
     # Every suite runs since HAG-MEM-02. Measured on five B25R1 runs: all suites about 120 min of runner time, so about 16 min
     # a shard of eight; a suite is stopped by ci_report.py after 30 min. 90 min leaves room for runner speed varying by up
-    # to ~1.8x and one hung suite.
+    # to ~1.8x and one hung suite. The 34 suites added on 2026-11-05 (B25R1 CI cover) measured about 2.1 h in a busy local
+    # container (an upper bound until runner medians replace them in tools/ci_timings.json): the plan then estimates 33 min a shard.
     timeout-minutes: 90
     env:
       CI_OUT: ${{ github.workspace }}/ci-out   # per-suite logs, results.jsonl, ci-report.json (HAG-MEM-02 Part 3)
@@ -323,6 +324,43 @@ jobs:
           res://tests/experience_test.gd
           res://tests/profile_test.gd       # SET-A/B: the maintained capability profile
           res://tests/civic_records_test.gd   # Expansion 21 P21-01: civic records (offices, tenures, legacy); shipped disabled
+          # B25R1 CI cover (2026-11-05): suites that existed in game/tests but were never in this list, so CI never ran them
+          # (none was left out on purpose: no workflow, comment or document named them). Each is a few minutes at most.
+          res://tests/desk_test.gd               # GP-BUSINESS-DESK: every business's desk, its menu and the old saves
+          res://tests/courier_desk_test.gd       # GP-BUSINESS-COURIER: a business's courier booth at its desk
+          res://tests/market_spacing_test.gd     # GP-MARKET-SPACING: the stalls apart, reachable, and moved on load
+          res://tests/stall_rent_pitch_test.gd   # GP-STALL-RENT-WRONG-PITCH: the stall rented is the one chosen
+          res://tests/table_preview_test.gd      # GP-TABLE-ITEMS: tables show a preview, not a container
+          res://tests/field_work_test.gd         # GP-FARMER-TENDING: a villager at work on a field moves between its cells
+          res://tests/sword_visual_test.gd       # GP-SWORD-VIS: the weapon in use is drawn
+          res://tests/juice_test.gd              # JUICE J1/J2 (owner Decision 9): the effects in the real game scene
+          res://tests/services_d2_test.gd        # Decision 2 and CON-03..CON-08: informal services and service contracts
+          res://tests/materials_b25_test.gd      # B25 Decisions 5-7: the new materials
+          res://tests/capability_progress_test.gd   # B25-CAPABILITY (Decisions 1 and 8)
+          res://tests/career_ambition_test.gd    # B25-AMBITION-IMPL (B25-AMBITION-D4)
+          res://tests/skilled_employment_test.gd # B25-EMPLOY-IMPL, B25-CAREER-IMPL hiring
+          res://tests/business_founding_test.gd  # B25-BUSINESS-IMPL, EMP-PERM-01
+          res://tests/business_ownership_test.gd # B25-BIZ-OWN: the five ownership decisions
+          res://tests/elder_provision_test.gd    # X20-FIREWOOD: an elder buys the household's firewood and grain
+          res://tests/settle_food_test.gd        # X20-SETTLE-FOOD, B25R1-019: settlement food trade carried by walkers
+          res://tests/settle_review_test.gd      # Build 24 settlement review: idle traders close and reopen, leavers keep their tills
+          res://tests/sim_f2_test.gd             # SIM-F2: a failing purchase is not chosen again and again
+          res://tests/sim_f3_test.gd             # SIM-F3: a stalking bandit keeps a lasting plan
+          res://tests/bandit_ai_test.gd          # X20-BANDIT-AI (SJD-H C4): the bandits' threat assessment
+          res://tests/aspiration_test.gd         # Expansion 20 R5 (WDR-011-C): NPC aspirations in six domains
+          res://tests/history_test.gd            # GM-01: historical memory (WDR-009's "30 planks")
+          res://tests/judgment_calibration_test.gd   # SJD-H C1, C2, C5, C6: judgment in decisions, calibrated
+          res://tests/judgment_incident_test.gd  # X20-JUDG-C3: wrongdoing judged by what each knows
+          res://tests/judgment_soak_test.gd      # SJD-G: the judgment section from each build's save; long-horizon fading (~3 min)
+          res://tests/player_family_test.gd      # MP-PLAYER-FAMILY: married players' household, children, save 22 -> 23
+          res://tests/mp_interact_ui_test.gd     # MP-INTERACT-01: one player choosing another and the approved verbs
+          # the same over loopback (each starts its host and guest Godot processes itself, as net_g1 does)
+          res://tests/net_family_test.gd         # MP-PLAYER-FAMILY between two processes
+          res://tests/net_interact_test.gd       # MP-INTERACT-01 between three processes
+          res://tests/net_fault_test.gd          # MP Batch D: invite codes, loss, reordering, pauses, killed and restarted hosts
+          res://tests/net_mp4_test.gd            # X20 phase 4.5: one host with two, then three guests (four players)
+          res://tests/net_recorder_quit_test.gd  # X20: a flight recording ends whenever its world is closed in order
+          res://tests/net_soak_test.gd           # X20 item 11: a recorded multiplayer soak, one host and three guests (~3-4 min)
           EOF
           if [ -n "$ONLY" ]; then   # an independent run of named suites: keep only those entries of the list
             for t in $ONLY; do grep -E "^ *$t( |$)" "$RUNNER_TEMP/game.txt" || { echo "unknown suite: $t"; exit 1; }; done > "$RUNNER_TEMP/only.txt"

@@ -108,6 +108,8 @@ static func dated_backups(path: String) -> Array:
 	var dir := path.get_base_dir()
 	var prefix := path.get_basename().get_file() + DATED
 	var out := []
+	if not DirAccess.dir_exists_absolute(dir):
+		return out                                 # no folder yet (a first save): none, without an engine error from get_files_at
 	for f in DirAccess.get_files_at(dir):
 		if f.begins_with(prefix) and f.ends_with(".json"):
 			out.append(dir.path_join(f))
