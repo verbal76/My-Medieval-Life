@@ -325,6 +325,8 @@ jobs:
           # launch smoke check: the exported game starts headless and quits (DEMO-01: export and launch checks)
           timeout 120 "out/lin/${bin}" --headless --quit-after 300 > out/launch.log 2>&1 || { echo "::error::the Linux ${{ matrix.edition }} build did not start and quit cleanly"; tail -20 out/launch.log; exit 1; }
           if grep -q "SCRIPT ERROR" out/launch.log; then echo "::error::script errors when the Linux ${{ matrix.edition }} build started"; grep -m5 "SCRIPT ERROR" out/launch.log; exit 1; fi
+          # B25R1 leak gate: a resource or object still alive at exit (a static cache holding scripts) fails the build
+          if grep -qE "resources still in use at exit|ObjectDB instances? (were|was) leaked" out/launch.log; then echo "::error::leak at exit when the Linux ${{ matrix.edition }} build quit"; tail -40 out/launch.log; exit 1; fi
           (cd out/lin && zip -q -9 "$GITHUB_WORKSPACE/pkg/MyMedievalLife-B${BUILD_N}${SUFFIX}-Linux.zip" "${bin}")
 
       - name: Remove the signing key from the runner
@@ -363,6 +365,8 @@ jobs:
           Get-Content out.log, err.log -ErrorAction SilentlyContinue | Select-Object -Last 20
           if ($p.ExitCode -ne 0) { Write-Error "the Windows ${{ matrix.edition }} build exited with $($p.ExitCode)"; exit 1 }
           if (Select-String -Path out.log, err.log -Pattern "SCRIPT ERROR" -Quiet) { Write-Error "script errors when the Windows ${{ matrix.edition }} build started"; exit 1 }
+          # B25R1 leak gate: a resource or object still alive at exit (a static cache holding scripts) fails the build
+          if (Select-String -Path out.log, err.log -Pattern 'resources still in use at exit|ObjectDB instances? (were|was) leaked' -Quiet) { Select-String -Path out.log, err.log -Pattern 'still in use at exit|leaked at exit|Leaked instance' | Select-Object -First 20; Write-Error "leak at exit when the Windows ${{ matrix.edition }} build quit"; exit 1 }
 
   release:
     needs: [sim-gate, package, smoke-windows]
