@@ -1,3 +1,5 @@
+> STATUS (2026-10-31, DOC-RECON-01): HISTORICAL — an archived recovery snapshot; not current work assignments or release permission. Current status: docs/handoffs/CURRENT_SESSION_RECOVERY.md and docs/expansions/.
+
 # Current session recovery handoff (updated 2026-10-22, overnight session start)
 
 Continuity checkpoint for the lead agent after a context compaction. The authoritative records are:

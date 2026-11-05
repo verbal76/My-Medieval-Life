@@ -9,10 +9,20 @@ the owner says otherwise. Update it in the same PR as any change to the workflow
 The GitHub repository is the project's memory; conversation memory, the container and private artifacts never
 are. No file is read automatically because it exists: do these steps, in order, before any new work.
 
-1. **Identify the repository, branch and latest remote commit.** Repository `verbal76/My-Medieval-Life`;
-   development branch `staging/my-medieval-life`. Run `git fetch origin staging/my-medieval-life`, check out or
-   update that branch, and note `git log origin/staging/my-medieval-life -1`.
+**Current state (DOC-CONT-01, 2026-11-01): `docs/CURRENT_DEVELOPMENT_STATE.md` on branch `wip/requirements-control`** is the one
+entry point (copies on other branches are stale and marked so); history is `docs/DEVELOPMENT_CHANGELOG.md`; the standard 11-step
+recovery is `docs/handoffs/CURRENT_SESSION_RECOVERY.md`. Record every milestone there and in the register as part of the milestone.
+
+1. **Identify the repository, branches and latest remote commits.** Repository `verbal76/My-Medieval-Life`. The one
+   code integration branch is **`wip/expansion20`**; records (register, directives, state file, this file's authoritative
+   copy) are on **`wip/requirements-control`**; `staging/my-medieval-life` is historical (section 5a, BRANCH-POL-01).
+   Run `git fetch origin`, note both heads, and run `python3 tools/branch_audit.py --worktrees` (on the integration
+   branch) to see every worker branch's unique work, stale base and file overlap.
 2. **Read `docs/PROJECT_MEMORY.md`**, the index of where every authoritative record lives.
+   Then **`docs/expansions/README.md`** (owner, 2026-10-31, DOC-RECON-01): the status of every expansion and system, the
+   precedence of owner decisions (latest explicit owner decision first, regardless of branch) and the one status vocabulary;
+   historical documents are indexed there and are never current instructions. A revised owner specification set becomes
+   authoritative only on the owner's explicit final approval (DOC-AUTH-01).
 3. **Read `docs/CURRENT_DEVELOPMENT_STATE.md`**, the handoff: branches, workers in flight, next actions,
    interrupted processes (session state only; it never restates a requirement's status).
 4. **Review the register and unresolved decisions:** the generated views in `docs/requirements/views/` (STATUS,
@@ -24,14 +34,38 @@ are. No file is read automatically because it exists: do these steps, in order, 
    `python3 tools/check_requirements.py` (it must report 0 problems).
 7. **Determine what was completed, what remains unverified and what is authorized next,** from the register's
    statuses and evidence and the state file's next tasks; never from memory of a conversation.
-8. **Resume only currently authorized work.** Use the live requirements register, latest owner directives and active worker branches. Build 24 (Expansion 20 checkpoint, `4611d86`, 2026-10-28) is the latest private three-platform draft. Development RESUMED (owner 2026-10-30, X20-RESUME): three workstreams per `docs/handoffs/PARALLEL_WORK_2026-10-30.md`; remaining work `docs/handoffs/X20_RECOVERY_HANDOFF.md`. Never answer owner decisions, compromise save/security rules, or merge to main without authorization. The earlier Build 17–19 sequencing and prototype-only restrictions are historical, not a gate against now-authorized Expansion 20.
+8. **Resume only currently authorized work.** Use the live requirements register, latest owner directives and active worker branches; the current build, branches and next authorized action are in `docs/CURRENT_DEVELOPMENT_STATE.md`. Build 25 is the consolidation build (owner, 2026-11-01, B25-SCOPE-D1); the 2026-10-31 Build 25-27 sequence (BUILD-SEQ-25-27) is history for Build 25 scope. Build numbers are not expansion numbers. Never answer owner decisions, compromise save/security rules, or merge to main without authorization.
 
 **After a context compaction or in a fresh session** (owner directive 2026-10-20, `docs/directives/2026-10-20_compaction_readiness.md`):
 - Do steps 1-8 before any further decision.
-- Build authority is the live requirements register, generated STATUS/QUEUES views and most recent explicit owner directives. Build 24 is the latest private test build; development resumed 2026-10-30 (X20-RESUME). WDR-022 remains in force. Recovery: `docs/handoffs/CURRENT_SESSION_RECOVERY.md`; checkpoint around 70–75% context.
+- Build authority is the live requirements register, generated STATUS/QUEUES views and most recent explicit owner directives. Build 24 is the latest private test build; Build 25 (consolidation) is in development. WDR-022 remains in force. Recovery: `docs/handoffs/CURRENT_SESSION_RECOVERY.md`; checkpoint around 70–75% context.
 - What a conversation summary lacks was not thereby unapproved: the register, the decision log and `docs/directives/` are the record.
 - Do not repeat completed work, and never restart a simulation or test before checking whether it is still running (the state file's workers and processes: GitHub Actions runs, local processes).
 - Compaction is not a reason to stop: continue the next approved task.
+
+### Standing owner commands (owner, 2026-11-02, FLIGHT-REC-01; `docs/directives/2026-11-02_permanent_flight_recorder_simulation_system.md`)
+
+- **"Run flight recorder"** means: dispatch the dedicated flight-recorder workflow on GitHub Actions at once. No questions and no
+  further approval. Dispatch `long-sims.yml` on the integration branch (`wip/expansion20`) with these inputs:
+  `flight=true seeds=1,2 days=365 every=10 record=true segment_days=100`, and `sim_args`, `set`, `variants` and `recover_run`
+  left empty.
+  - The run goes through the reusable workflows `flight-recorder-campaign.yml` and `flight-recorder-seed.yml`.
+  - `flight-recorder.yml` becomes directly dispatchable only once it is on `main`.
+  - Results are the `fr-seed<N>-results` and `flight-recorder-campaign` artifacts and the run summary. Guide:
+    `docs/release/flight_recorder/README.md`.
+  - **Defaults:** 365 days, seeds 1 and 2 as independent jobs (two at most), recorder on, checkpoints every 10 days, normal
+    integrated play, on the latest suitable integrated commit. If a known imminent fix would spoil the run, use the corrected
+    commit.
+  - The owner's own seeds, duration or scenario override the defaults.
+  - Give the Actions run link at once and keep developing. Never block other work, never cancel older runs automatically, and
+    never rerun a failed year without examining the failure.
+- **"What did the flight recorder find?"** means: fetch the latest flight-recorder run's summary, findings report and workbook
+  from its Actions artifacts, then explain it, most important first:
+  1. what happened, what worked, what failed;
+  2. which NPCs behaved strangely and which systems may be interfering;
+  3. what deserves investigation.
+
+  Keep confirmed defects separate from suspicions.
 
 At each meaningful checkpoint, and before a session ends, a context handoff or a build: update
 `docs/CURRENT_DEVELOPMENT_STATE.md` and every touched register entry, run
@@ -218,12 +252,27 @@ corresponding documentation.** Every agent and worker, on every task:
   record it as `uncertain` with a reason.
 - Engine code conventions get added here once the engine is approved.
 
+### Commercial quality while building (owner, 2026-11-03, EA-01, `docs/directives/2026-11-03_steam_early_access_readiness.md`; standing)
+
+My Medieval Life is a commercial game headed for Steam Early Access. Every agent and worker, on every task:
+- **Polish and juice in the same change.** A new or changed feature ships with its feedback: animation, sound, readable
+  interface (UIStyle), clear prompts on touch, gamepad and keyboard. No "make it work now, make it nice later" passes.
+- **One place per decision.** Tunables live in data files (`balance.json` and the other `game/data/*.json`), interface
+  style in UIStyle, each rule in one module. Before adding a constant, look for the existing owner of that decision; never
+  copy a value into a second place.
+- **Interactions must work.** Every player verb and NPC interaction a feature touches is tested in the real scene, not only
+  in the model.
+- **Story-ready, story later.** There is no storyline yet; keep quest givers, events and landmarks open to hooks a story
+  can use, without building one now.
+- **Show it.** Store-quality screenshots and footage come from real play; look at them before reporting.
+
 ## 5. Branching, commits, tests, releases
 
 - **GitHub is the source of truth; the cloud machine is a temporary workspace (owner, 2026-10-18).**
-  - `staging/my-medieval-life` is the remote branch for ongoing development. Committing and pushing
-    development checkpoints to it is a **standing authorization**: push completed, tested work
-    regularly, without asking. Never force-push or delete it (`tools/git_hooks/pre-push`, enabled
+  - The code integration branch is `wip/expansion20` and the records branch `wip/requirements-control` (section 5a;
+    `staging/my-medieval-life` held this role until Build 24 and is now historical). Committing and pushing
+    development checkpoints to them is a **standing authorization**: push completed, tested work
+    regularly, without asking. Never force-push or delete any of them (`tools/git_hooks/pre-push`, enabled
     with `git config core.hooksPath tools/git_hooks`, refuses both).
   - Unfinished agent work goes to `wip/<worktree name>` branches as snapshot commits.
   - `python3 tools/checkpoint.py --push [--wip <worktrees>]` does both and checks every remote hash.
@@ -247,7 +296,7 @@ corresponding documentation.** Every agent and worker, on every task:
   python3 tools/miniworld_anims.py && python3 tools/miniworld_buildings.py && python3 tools/build_manifest.py
   python3 tools/lore/build_registries.py && python3 tools/lore/build_constraints.py && python3 tools/lore/render_world_docs.py
   python3 tools/assets/check_assets.py && python3 tools/assets/scan_packs.py
-  python3 tools/check_requirements.py --against origin/staging/my-medieval-life
+  python3 tools/check_requirements.py --against origin/wip/requirements-control   # on the records branch
   git status   # regenerated data must show no diff unless the change was intended
   ```
   A failing test is fixed, never skipped, disabled or weakened to pass.
@@ -335,6 +384,51 @@ corresponding documentation.** Every agent and worker, on every task:
     installations cannot be inspected from this session (the proxy refuses those endpoints), nor
     can rulesets or branch protection be written, so staging is protected by the local hook only.
 
+## 5a. Branch and worktree policy (owner, 2026-11-02, BRANCH-POL-01; permanent)
+
+`docs/directives/2026-11-02_branch_consolidation_worktree_control.md`; rationale `docs/decisions/BRANCH-POL-01.md`.
+
+- **One integration branch for code: `wip/expansion20`.** Every finished, validated unit of work lands there. No other
+  branch is a development mainline, and no worker redefines the baseline: a worker never merges another worker's branch,
+  never rebases the integration branch and never starts a branch from anything but the integration head.
+- **Records are separate, not a second mainline.** `wip/requirements-control` holds the register, directives, decision
+  records, the state file, changelog and known issues, and is edited by the lead only. The owner keeps it isolated from the
+  code line (DOC-RECON-01 review, 2026-10-31: "Do not merge wip/requirements-control into staging, wip/expansion20, or the
+  gameplay baseline without my approval"), so nobody merges the two lines without the owner.
+- **Worker branches are short-lived.** One branch `wip/b25-<task>` (or the build's prefix) per task, from the current
+  integration head, in its own worktree, owning a named set of files and systems. A worker pushes snapshots there and
+  reports; the lead reviews and merges each validated unit **promptly** (the same session, not after other work piles up).
+  A read-only investigation needs no branch: it reports findings, and any fix gets its own task branch.
+- **Before every merge into the integration branch:** run `python3 tools/branch_audit.py --worktrees`. A stale base (more
+  than 20 integration commits behind) is brought up to date by merging the integration branch into the worker branch
+  first; an overlap between two active branches is settled by naming one owner per file, or by merging the first
+  finished branch and having the other merge it in before it submits. Conflicts are resolved by the owner decisions and
+  the implementation's requirements, never by taking the newer file.
+- **No unrelated ancestry.** Never merge historical lines (`staging/my-medieval-life`, old `wip/agent-*`, snapshot or
+  backup branches) into the integration branch to make a graph look clean; content from one is carried as a reviewed
+  change with its source named.
+- **Nothing is deleted while it holds unmerged work.** A branch or worktree is retired only when `branch_audit.py` reports
+  it INTEGRATED and its worktree has no uncommitted files; otherwise it stays, named in the state file.
+- **Record every integration:** the merge SHA, the worker branch and head it came from, the tests run, and any conflict
+  decision go in the changelog and the state file's workers table in the same session.
+- **Experimental work stays on its branch** until it is reviewed and validated; it is never merged to tidy the graph.
+
+## 5b. Development governance: roadmap authority (owner, 2026-11-03, DEV-GOV-01; permanent)
+
+`docs/directives/2026-11-03_development_governance_roadmap_authority.md`; record `docs/decisions/DEV-GOV-01.md`.
+Agents make ordinary technical implementation decisions within approved requirements. **They do not change the approved
+roadmap.** Without the owner's approval an agent may not:
+1. skip a planned work package (inform the owner and obtain approval first);
+2. move requirements from one stage to another (explain why and obtain approval);
+3. merge, split, rename or reorder approved work packages (sub-labels in commits are not new packages);
+4. defer a Build 25 requirement to Build 26 or another expansion;
+5. mark a stage complete while any of its approved acceptance criteria is outstanding (report the stage against every
+   criterion, with evidence, before starting a stage that depends on it);
+6. change the sequence because of a dependency: explain the problem, recommend a solution and get the decision first.
+An approved design decision (an AD-n in a plan) is part of the roadmap: changing it needs the owner too. A scope
+interpretation (what a requirement's words cover) is raised, not decided. The agent recommends; the owner approves scope and
+sequence. Implementation that already exists is never described as approved because it exists.
+
 ## 6. Deterministic generation
 
 - Same generator version + same inputs (seed, size, options) = byte-identical output on every
@@ -392,7 +486,8 @@ manually maintained register of requirements and owner decisions (owner directiv
 `docs/requirements/SCHEMA.md`). Everything else is generated (`docs/DEVELOPMENT_LEDGER.md`, `docs/requirements/views/`)
 or historical (`docs/DECISIONS.md` narrative log, `docs/DEVELOPMENT_QUEUE.md`, archived handoffs).
 
-- **One copy, edited on staging only.** The lead edits the register on `staging/my-medieval-life` with
+- **One copy, edited on the records branch only.** The lead edits the register on `wip/requirements-control` (formerly
+  `staging/my-medieval-life`; section 5a) with
   `tools/requirements_update.py`; build and task branches carry a synchronized copy and never edit it (the pre-push
   hook refuses it). Workers report to the lead; they do not edit the register.
 - **Separate dimensions.** Approval, implementation, verification and release status are separate fields (SCHEMA.md);
@@ -435,7 +530,8 @@ or historical (`docs/DECISIONS.md` narrative log, `docs/DEVELOPMENT_QUEUE.md`, a
 
 ## 10. Parallel agents
 
-- The lead agent integrates and pushes to `staging/my-medieval-life` under section 5's standing authorization. A
+- The lead agent integrates code into `wip/expansion20` and records into `wip/requirements-control` under sections 5 and
+  5a. A
   parallel agent (a subagent or another session working beside the lead) uses one branch and one draft PR per task,
   or a `wip/*` branch, and says which files and areas the task owns.
 - Do not edit files another open PR owns. Coordinate through the PR or ask the owner.
@@ -460,6 +556,13 @@ or historical (`docs/DECISIONS.md` narrative log, `docs/DEVELOPMENT_QUEUE.md`, a
 
 ## 12. Reporting
 
+- **Timestamps (owner, 2026-11-03, REPORT-TS-01, `docs/directives/2026-11-03_reporting_timestamps.md`; permanent).** Every
+  development progress update, test report, commit report and completion summary begins
+  `[YYYY-MM-DD HH:MM EST/EDT] — Project / Build / Status`, in America/New_York time (EST or EDT as in force), read from the
+  system clock when the report is written (`TZ=America/New_York date '+%Y-%m-%d %H:%M %Z'`), never invented or estimated, and
+  stamped when the report is generated, not when the work began. GitHub Actions runs give their actual start and completion
+  times where available; earlier commits and tests are cited with their own recorded times, kept apart from the report's.
+  The work-package status and evidence standards (DEV-GOV-01) still apply. Reporting only: it starts no test or validation.
 - Report what was done, how it was verified, and what was not done, plainly. Never report a skipped
   step or an unlooked-at output as verified.
 - Blockers that need the owner: state the decision needed, the options, and a recommendation, then

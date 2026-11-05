@@ -1,5 +1,8 @@
 # Build 19 recovery matrix (B19-RECOVERY)
 
+> **Status (DOC-RECON-01, 2026-10-31): CURRENT-STATUS-ELSEWHERE.** This document is the 2026-10-26 audit. Since then R1-R5 have been integrated, R6 and R7 done in substance (SJD-G, LE-02 and C1/C5), and R8 presented (SJD-H C1-C6). It is not a current instruction. Current status:
+> `docs/expansions/EXPANSION_20.md` (section 3). Precedence: `docs/expansions/README.md`. Content below kept unchanged.
+
 Owner directive `docs/directives/2026-10-26_build19_carryover_audit_x20_integration.md` (sections 1-4 and 9). Read-only audit,
 2026-10-26, of the code on `origin/wip/expansion20` **0b5287c** (detached worktree), compared with `wip/build19` 42c33e0
 (game code 2f72ec3), `wip/expansion19-preparation` b7f832e, `wip/expansion20-preparation` 1befd0e, `wip/build22` b7e1c91

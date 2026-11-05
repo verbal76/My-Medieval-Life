@@ -1,5 +1,7 @@
 # Build 19 determinism baseline: approved and written (2026-10-24)
 
+> **HISTORICAL** (documentation reconciliation DOC-RECON-01, 2026-10-31). Current status: `docs/expansions/EXPANSION_19.md`. The Build 19 baseline (`2685a26`) was approved and written; later Expansion 20 commits have replaced the simulation baseline several times (latest `ad281dc`). Not the current baseline. Content below is kept unchanged as the historical record.
+
 **Status:** approved by the owner (`docs/directives/2026-10-24_owner_answers_baseline_bandits.md`) and written on `wip/build19`
 **2685a26** from **417c07f**, after the owner's SIM-F4 rule answers were built and measured (final table below). The
 proposal that follows is kept as it was.

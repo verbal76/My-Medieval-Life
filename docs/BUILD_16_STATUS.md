@@ -1,3 +1,5 @@
+> STATUS (2026-10-31, DOC-RECON-01): HISTORICAL — the Build 16 status audit of 2026-10-20; Build 16 was released and its records are tracked in the register. Current status: docs/requirements/views/ and docs/expansions/STANDALONE_SYSTEMS.md.
+
 # Build 16 status audit
 
 The owner's request of 2026-10-20 (register B16-AUDIT, `docs/directives/2026-10-20_build16_seeds_merchants_counters_status.md`):

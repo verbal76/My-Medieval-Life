@@ -1,3 +1,5 @@
+> STATUS (2026-10-31, DOC-RECON-01): HISTORICAL. A 2026-10-23 proposal packet; "neither expansion is authorized" is out of date (Expansion 20 authorized and built; Expansion 21 phase 1 authorized 2026-10-23, then ON HOLD from 2026-10-27, next phase Build 27). Its questions were answered by the OD-LE answers and the 2026-10-27 current-first reconciliation (D19-D26). Current status: docs/expansions/EXPANSION_20.md and EXPANSION_21.md.
+
 # Expansions 20 and 21: decision packet (2026-10-23)
 
 Prepared under the owner's 2026-10-23 directive (`docs/directives/2026-10-23_expansions_19_20_21_progress.md`). Neither

@@ -1,5 +1,7 @@
 # Persistent person identity (ID-01): what is built
 
+> **CURRENT-STATUS-ELSEWHERE** (documentation reconciliation DOC-RECON-01, 2026-10-31). Current status: `docs/expansions/EXPANSION_19.md`. Still an accurate developer reference for what was built, but it is no longer only on `wip/foundation-identity`: the identity foundation is in Build 19 and on `wip/expansion20` (`game/scripts/core/identity.gd`). Status and open decisions (ID-D3) are in the status record. Content below is kept unchanged as the historical record.
+
 Developer reference for the identity foundation (save version 20), on `wip/foundation-identity`. Authority: the owner's approval
 `docs/directives/2026-10-23_identity_foundation_approval.md` (items 1 and 2) of the proposal
 `docs/design/IDENTITY_AND_RECONCILIATION_PROPOSAL.md`. Interaction entries: INT-405 (migration keeps the person) and INT-406

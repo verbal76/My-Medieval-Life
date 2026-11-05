@@ -9,16 +9,16 @@ Readiness: **RELEASED (private playtest draft (code 61ec528, run 39935635926, 20
 | Count | Value |
 |---|---|
 | Approved requirements in scope | 83 |
-| Integrated | 80 of 83 (96%) |
-| Automated tests passed | 78 of 83 (94%) |
-| Integration verified | 57 of 83 (69%) |
+| Integrated | 81 of 83 (98%) |
+| Automated tests passed | 79 of 83 (95%) |
+| Integration verified | 58 of 83 (70%) |
 | Gameplay verified | 0 of 83 (0%) |
 | Owner playtested | 0 of 83 (0%) |
 | Complete | 2 of 83 (2%) |
 | Open (release blockers) | 81 |
 | Open owner decisions (blocking) | 0 (0) |
 
-## Integrated, awaiting gameplay or owner verification (78)
+## Integrated, awaiting gameplay or owner verification (79)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -64,6 +64,7 @@ Readiness: **RELEASED (private playtest draft (code 61ec528, run 39935635926, 20
 | ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | owner playtest on a device; Build 18 release gate; known: no doorway on a house's east wall (furniture) or between rooms stacked north-south; the old-world (legacy plots) view is untested by screenshot |  | verification only |
 | SET-A | Settlement expansion phase A: Design and ledger: requirement ids, cross-industry skill schema, save compatibility, dependency audit | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; 18 | TARGETED TESTS PASSED | Gameplay check (close-out audit: all criteria MET once the save is wired) |  | verification only |
 | SET-B | Settlement expansion phase B: Settlement capability model: per-industry capabilities, NPC knowledge, workshops, prerequisites, decay and continuity | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; 18 | TARGETED TESTS PASSED | Farming capability numbers await the owner (X18-CAPNUM); Q18-11 farming factors; gameplay check |  | verification only |
+| SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 | INTEGRATION VERIFIED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |  | verification only |
 | SET-C-FIVE | Five off-map settlements of mixed kinds, each a simulated economy (SET-C-SIM) | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check; owner may review the lore choices in docs/expansion18/SETTLEMENTS.md; known: Garton's mining diggings are a game invention (flagged unresolved in docs/expansion18/SETTLEMENTS.md); the village's own place on the road is assumed (J-D2 open) |  | verification only |
 | SET-C-SIM | Off-map settlements as lighter-detail simulated economies: households, a manor or council treasury, businesses, wages, taxes and prices under the village's rules, stepped daily | OWNER APPROVED | INTEGRATED | 18 | INTEGRATION VERIFIED | Gameplay check; settlement numbers in game/data/settlements.json are provisional agent values (DECISIONS.md); Higham-on-the-Way loses 10 of 99 after about day 150 in isolation (recorded outcome, not tuned); known: No births or old-age deaths in the settlements yet; Village cannot buy food from the settlements yet; no tool-shortage productivity penalty |  | verification only |
 | SET-D | Settlement expansion phase D: Settlement development: growth and decline, specialization, housing, infrastructure, population and employment | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 66a5d4c | TARGETED TESTS PASSED | Trades opening with sustained unmet demand and closing without workers, capacity following labour (existing rules); 100- and 365-day checks; multi-generation verification outstanding unless a sufficient horizon is shown (B18-DP-05); known: multi-generation verification outstanding (B18-DP-05): the 365-day run reached birth generations 1-3 only |  | verification only |
@@ -101,13 +102,12 @@ Readiness: **RELEASED (private playtest draft (code 61ec528, run 39935635926, 20
 | X18-SIM | Comparative capability simulations (baseline, conservative, moderate, aggressive; levels 0,2,5,8,10; implemented industries; settlement size, resource and labour scenarios; 30 and 90 days) and a recommendation; no permanent constants before owner review | OWNER APPROVED | INTEGRATED | Build 18 wip/build18; Build 18 wip/build18 b196303 | TARGETED TESTS PASSED | run the comparative simulations (models x levels x scenarios, 30 and 90 days) and report; no constants before owner review (Q18-11); known: covers 9 of about 46 planned runs; no capability constants adopted |  | verification only |
 | X18-STONECUT | Professional stonecutter: an independent trade and business that dresses and sells building blocks | OWNER APPROVED | INTEGRATED | Build 18 wip/build18 9932b1d | TARGETED TESTS PASSED |  |  | verification only |
 
-## Ready to proceed now (approved, specified, nothing open blocks it) (3)
+## Ready to proceed now (approved, specified, nothing open blocks it) (2)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
 | REL18-DEVICE | Build 18 release gate: Device and owner playtest of every player-facing Build 18 requirement (the playtest queue) | OWNER APPROVED | NOT STARTED | none | NOT TESTED | Owner-approved sequence (docs/directives/2026-10-23_rel18_device_and_decision_package.md): all implementation items closed or accepted as permanently blocked, pre-package verification done, then final candidate packages (Android, Windows, Linux) for the owner's device playtest; pass closes REL18-DEVICE, fail means fixes and corrected candidates |  | M |
 | REL18-OWNER | Build 18 release gate: The owner's approval to publish a Build 18 distributable (B17-DIR exception carried to Build 18) | OWNER APPROVED | NOT STARTED | none | NOT TESTED | public publication only with the owner's approval |  | S |
-| SET-C | Settlement expansion phase C: Abstract regional economy: off-map settlements with finite demand, supply and budgets; variable caravan trade | OWNER APPROVED | PARTIALLY IMPLEMENTED | Build 18 wip/build18 | NOT TESTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |  | UNKNOWN |
 
 ## Complete (2)
 

@@ -1,5 +1,7 @@
 # Persistent person identity and overlap reconciliation: proposal for approval (2026-10-23)
 
+> **HISTORICAL** (documentation reconciliation DOC-RECON-01, 2026-10-31). Current status: `docs/expansions/EXPANSION_19.md`. The proposal was approved on 2026-10-23 and built: ID-01 is merged (`801d24b`, `b2f7dc2`) and released in Build 19 (save version 20). "Nothing here is built" below is no longer true. The open baseline question is ID-D3 (PROVISIONAL, owner 2026-10-28). Content below is kept unchanged as the historical record.
+
 Owner directive: `docs/directives/2026-10-23_post_audit_foundation_repairs.md` items 3 and 4 (register ID-01, RECON-01). This is
 the design checkpoint the directive requires "before implementing a major identity schema change". **Nothing here is built.**
 Facts are read from the released Build 18 code (`origin/wip/build18`); everything else is a PROPOSAL.

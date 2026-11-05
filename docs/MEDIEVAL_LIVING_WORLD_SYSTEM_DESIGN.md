@@ -1,3 +1,5 @@
+> STATUS (2026-10-31, DOC-RECON-01): HISTORICAL — owner-supplied concept (v0.1, non-binding), kept as a reference for intent; the World Design Rules, the Living Economy specification and the requirements register govern. Current status: docs/expansions/HISTORICAL_DOCUMENTS.md and the docs/expansions/ status files.
+
 # Medieval Living World and Production Economy
 
 **Document type:** Design reference / architectural aid  

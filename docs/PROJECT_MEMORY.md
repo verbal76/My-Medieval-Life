@@ -1,6 +1,6 @@
 # Project memory: start here
 
-This is the entry point for any new session (owner directives 2026-10-20, register MEM-01 and MEM-02; the session-start steps are CLAUDE.md section 0). The repository, not any conversation, is the record. Every file named below is authoritative for its subject. This index only says where things are and in what order to read them. It does not copy their contents.
+This is the entry point for any new session. For the status of every expansion and system, go straight to `docs/expansions/README.md` (DOC-RECON-01, 2026-10-31) (owner directives 2026-10-20, register MEM-01 and MEM-02; the session-start steps are CLAUDE.md section 0). The repository, not any conversation, is the record. Every file named below is authoritative for its subject. This index only says where things are and in what order to read them. It does not copy their contents.
 
 ## What the project is
 
@@ -30,7 +30,7 @@ The living-world philosophy is preserved in the nonbinding conceptual `docs/MEDI
 | Decisions with date and who decided (owner or agent proposal) | `docs/DECISIONS.md` |
 | The five-build roadmap, the three expansions and their dependencies | `docs/EXPANSION_ROADMAP.md` |
 | Expansion specifications (primary): Mining & Industrial (Build 17); Settlement Advancement & Regional Economy (Build 18); NPC Judgment System (Build 19) | `docs/directives/My_Medieval_Life_Mining_Industry_Expansion.pdf`, `docs/directives/My_Medieval_Life_Settlement_Advancement_Regional_Economy_Expansion.pdf`, `docs/directives/My_Medieval_Life_Judgment_Decision_Engine_Master_Spec.pdf` (text copies beside each) |
-| Session state: branches, workers in flight, next actions (never requirement status) | `docs/CURRENT_DEVELOPMENT_STATE.md`; after a compaction `docs/handoffs/CURRENT_SESSION_RECOVERY.md` |
+| **Current state** (build, branches, workers, tests, defects, next action; never requirement status) | `docs/CURRENT_DEVELOPMENT_STATE.md` on `wip/requirements-control`; history `docs/DEVELOPMENT_CHANGELOG.md`; recovery `docs/handoffs/CURRENT_SESSION_RECOVERY.md` |
 | How systems affect each other (INT-### entries, validated) | `docs/SYSTEM_INTERACTION_MANIFEST.md` (`tools/check_interactions.py`) |
 | Design scopes for later work (upper floors and attics) | `docs/design/UPPER_FLOORS_SCOPE.md` |
 | Simulation performance (runtime, timing, restarts, checkpoint evaluation) | `docs/release/SIMULATION_PERFORMANCE.md` |
@@ -44,26 +44,69 @@ The living-world philosophy is preserved in the nonbinding conceptual `docs/MEDI
 | Architecture | `docs/ARCHITECTURE.md`; rules and open questions of the prototype in `docs/BUILD_DECISIONS.md` |
 | Saves: format, safety, migration, carrying a save between builds, recovery | `docs/release/SAVE_CONTINUITY.md`; code in `game/scripts/core/save_store.gd` and `game/scripts/core/save_transfer.gd` |
 | Long-run simulations and their results | `docs/release/LONG_RUN_SIMULATION.md`; harness `game/tests/economy_sim.gd` |
-| Current releases and signing | Latest Build 22 private draft and active X20 restriction: live register/state file; signing: `docs/release/ANDROID_SIGNING.md`. Build 14 packets historical. |
+| Current releases and signing | Latest Build 24 private draft (frozen); Build 25 validation in progress; live register/state file; signing: `docs/release/ANDROID_SIGNING.md`. Build 14 packets historical. |
 | Harvestable resources and their uses | `game/data/resources.json` (`tools/check_resources.py`) |
 | Assets: registry, licences, scaling, the mandatory pipeline skill | `docs/assets/ASSET_REGISTRY.md`, `docs/assets/packs.json`, `docs/assets/ASSET_SCALING_STANDARD.md`, `.claude/skills/asset-integration-pipeline/SKILL.md` |
 | The world research (Morris) | `docs/world/` |
 | The open-items audit and the 231-entry reconciliation against the five builds (2026-10-20) | `docs/requirements/RECONCILIATION_2026-10-20.md` (generated: what has closed, moved or been added since), frozen baseline `docs/requirements/baseline_2026-10-20.json` (the 231 open and 142 closed approved entries at `a203c0b`); the audit before it: `docs/release/BUILD_14_OPEN_ITEMS_AUDIT.md` |
 | Builds 18–21, the Build 20+ backlog, multiplayer, owner decisions, owner or external actions | `docs/requirements/views/` (STATUS, BUILD_18..21, BACKLOG, DECISIONS, QUEUES) |
-| Known limitations | Live register, save continuity guide, current Build 22 tester notes and signing guide; early Build 14 and prototype reports historical. |
+| Known limitations | Live register, save continuity guide, current tester notes and signing guide; early Build 14 and prototype reports historical. |
 | Older recovery records (history; the register supersedes their counts) | `docs/requirements/RECOVERY_2026-10-19.md`, `docs/HANDOFF.md`, `docs/DEVELOPMENT_QUEUE.md`, `docs/DEVELOPMENT_PLAN.md` (all marked historical) |
 
 ## Requirement authority
 
 The only current decision/status source is `docs/requirements/requirements.json`, with `docs/requirements/SCHEMA.md` and generated views. Approval, implementation, testing, device verification and release are distinct. Do not promote proposals, old build claims or unmerged worker code to completed gameplay.
 
-## Current milestones (2026-10-27)
+## Current state and history (DOC-CONT-01, 2026-11-01)
 
-- **Build 22**: latest private three-platform draft, `wip/build22` `b7e1c91`; not to be reopened.
-- **Expansion 20**: currently authorized and in active development. LE-01 foundation integrated but switched off; Android usability/Message journal, Build 19 recovery R1–R4 integrated. Six-domain aspirations R5 in isolation, later LE stages unfinished. Fetch latest heads before interpreting status.
-- **MP-INTERACT-01**: implemented on separate `wip/x20-mp-interact` branch, merges **LAST**. **No Expansion 20 build even a private draft until it is integrated and verified on Android/Windows/Linux as relevant host/guest.**
-- **Decisions**: current-first 39-answer reconciliation on staging `5484ce1`, DCR-01 later added. Two multiplayer questions open, armor/identity provisional at last observation; verify the register.
-- **Future priority**: 20 → 21 → 23 → 22 → 24 → 25 → 26 → 27. Design direction is not implementation authority. Historical Builds 15–19 sequencing does not constrain already completed builds.
+- **Current state:** `docs/CURRENT_DEVELOPMENT_STATE.md` on branch `wip/requirements-control` (build, integration branch,
+  verified SHA, workers, tests, defects, owner decisions, next authorized action). Copies on other branches are stale.
+- **Development history:** `docs/DEVELOPMENT_CHANGELOG.md` (chronological, SHA-bound, with the IMPLEMENTED ... RELEASED levels).
+- **Recovery procedure (10 steps since HAG-MEM-02; 11 under DOC-CONT-01; also for an external assistant):** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
+- **Test and simulation evidence:** the changelog entries (SHA, run id, result); `docs/release/build25_validation/`,
+  `docs/release/chapel_fix/`, `docs/release/economic_maturation/`, `docs/release/build25_reconciliation/`,
+  `docs/release/LONG_RUN_SIMULATION.md`; the register's `tests` and `test_commit` fields.
+- The milestones of 2026-10-31 that stood here (Build 25 as Expansion 20 freeze, Builds 26 and 27) are history: Build 25 is the
+  consolidation build (B25-SCOPE-D1). The archived handoff keeps the old sequence.
+
+## Permanent memory components (HAG-MEM-02, 2026-11-02)
+
+Owner directive HAG-MEM-02 (`docs/directives/2026-11-02_hag_permanent_github_memory_reporting_directive.md`) asks every
+repository for six components. Here they are existing files, with two additions (D's rationale and E):
+
+| Component | Where | Since |
+|---|---|---|
+| A. Project memory (permanent; never rewritten from scratch) | This file, plus the records it links | MEM-01, 2026-10-20 |
+| B. Current development state, with "Snapshot last verified" | [`docs/CURRENT_DEVELOPMENT_STATE.md`](CURRENT_DEVELOPMENT_STATE.md), on `wip/requirements-control` | DOC-CONT-01 |
+| C. Development history | [`docs/DEVELOPMENT_CHANGELOG.md`](DEVELOPMENT_CHANGELOG.md) | DOC-CONT-01 |
+| D. Owner decision register: status | [`docs/requirements/requirements.json`](requirements/requirements.json) and [`views/DECISIONS.md`](requirements/views/DECISIONS.md) | REQ-CTRL-01 |
+| D. Owner decision register: reasoning | [`docs/decisions/`](decisions/README.md) (standard, template, records linked by register ID) | HAG-MEM-02 |
+| E. Known issues and investigations | [`docs/KNOWN_ISSUES.md`](KNOWN_ISSUES.md) | HAG-MEM-02 |
+| F. Session recovery entry point | [`docs/handoffs/CURRENT_SESSION_RECOVERY.md`](handoffs/CURRENT_SESSION_RECOVERY.md) | DOC-CONT-01, aligned to HAG-MEM-02 Part 8 |
+
+**CI reporting.** Every substantial workflow run writes a job summary. `tests.yml` and `requirements.yml` also write
+`ci-report.json` (format `mml-ci-report/1`, written by the ci_report.py tool) and per-suite logs as an artifact. They run every
+suite even after a failure, and classify the run as TESTED, FAILED or INCOMPLETE, never VALIDATED or RELEASED. The tool and
+the workflow changes are on the CI branch docs/hag-memory-rationale-2026-11-02 until the lead merges them into the Build 25
+source. `long-sims.yml` and the
+flight-recorder workflows already wrote summaries.
+
+Artifacts expire, so durable conclusions go into the changelog and known issues, with run links. Automation never commits to
+a code branch under test (see [the HAG-MEM-02 decision record](decisions/HAG-MEM-02.md)).
+
+### What Part 2A asks for, and where it is
+
+| Item | Where |
+|---|---|
+| Vision and intended experience | "What the project is", above; `docs/WORLD_DESIGN_RULES.md` |
+| Target platforms | Android first, then Windows and Linux, always built together (CLAUDE.md sections 1, 5 and 8; BUILD-3PLATFORM) |
+| Main systems and architecture | `docs/ARCHITECTURE.md`; [`docs/SYSTEM_INTERACTION_MANIFEST.md`](SYSTEM_INTERACTION_MANIFEST.md) (INT-### entries) |
+| Owner-approved design principles | `docs/WORLD_DESIGN_RULES.md` (Rule 022: "A village is allowed to fail. The simulation is not.") |
+| Technical constraints | CLAUDE.md sections 5-8 (determinism, saves and migrations, signing, platforms); `docs/release/SAVE_CONTINUITY.md` |
+| Features implemented, feature status, milestones | [`docs/expansions/README.md`](expansions/README.md) (one status file per expansion); [`views/STATUS.md`](requirements/views/STATUS.md); the changelog |
+| Rejected or superseded directions | Register entries with disposition SUPERSEDED or REJECTED (2026-11-02: OD-10, CARAVAN-TMP and JUICE-JD1 superseded; none rejected); superseded rationale records in `docs/decisions/`; old-design content parked as GDD-REVIEW (see "Authority" above) |
+| Long-term objectives | `docs/EXPANSION_ROADMAP.md` (expansion order 20, 21, 23, 22, 24, 25, 26, 27; 22-27 not authorized) |
+| Authoritative specifications | `docs/directives/` (verbatim, including the expansion PDFs and their text copies) |
 
 ## Open owner decisions and blockers
 
@@ -80,16 +123,7 @@ Never answer an open decision on the owner's behalf, and never treat a proposal 
 
 A few early register entries cite chat messages or uploads that were never committed (for example REC-002, REC-007 and REC-013). Their wording is copied into the entry itself, under `owner_wording`. Treat that copy as the record, and ask the owner only if it is not enough to act on.
 
-## Expansion 20 consolidated scope
+## Next approved work and restrictions
 
-The live register and `docs/requirements/views/BUILD_20.md` control current authorized scope; `docs/expansion20/X20_OPEN_ITEMS.md` is a planning snapshot. Owner authorization on 2026-10-26 supersedes the 2026-10-24 planning-only restriction. The economy foundation is not the completed economy. Multiplayer remains a final-integration release blocker.
-
-## Next approved work
-
-1. Fetch current remote branches/worktrees, current registry and running CI/simulations; do not restart ongoing work.
-2. Coordinate worker branches and test evidence from the register's queue; do not follow archived prototype task boards.
-3. Follow the current Expansion 20 multiplayer gate and avoid any build before the correction is integrated last and validated.
-
-## Current restrictions
-
-Do not merge to main, force-push shared branches, break save/identity continuity, disrupt other workers or auto-implement future expansions. Original GDD/Bob/Morris research is historical only. No X20 packaging until MP-INTERACT-01 is integrated last and validated; no automatic publication authorization. Preserve real money/item conservation, family-sacrifice decisions, six aspiration domains, Judgment weighting and host authority.
+See `docs/CURRENT_DEVELOPMENT_STATE.md` ("Next authorized actions", "Restrictions in force"). The Expansion 20 gate and
+multiplayer-last notes that stood here are history (satisfied for Build 23).

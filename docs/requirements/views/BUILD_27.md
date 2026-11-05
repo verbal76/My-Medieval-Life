@@ -24,3 +24,12 @@ Readiness: **NOT AUTHORIZED for implementation**
 |---|---|---|---|---|---|---|---|---|
 | EXP-27 | Expansion 27, World Exploration, Dungeons & Encounters: connect the starting village to a larger county and broader world with meaningful encounters and consequences rather than making the player the predetermined hero; phases WORLD-A (audit map scale, streaming, navigation, save identities, mining cave entrances), WORLD-B (overworld regions, encounter locations, travel persistence; no assumed infinite generation), WORLD-C (approved skeleton behaviours and loot under existing combat and conservation rules), WORLD-D (environmental encounters, performance, multiplayer boundaries; magic as separate scoped work before coding) | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
+## Not counted: umbrellas, proposals, ideas, deferred (4)
+
+| ID | Item | Kind | Approval |
+|---|---|---|---|
+| WORLD-A | Expansion 27 WORLD-A: audit map scale, streaming, navigation, save identities and mining cave entrances | proposal | PROPOSED |
+| WORLD-B | Expansion 27 WORLD-B: overworld regions, encounter locations and travel persistence; no assumed infinite procedural generation | proposal | PROPOSED |
+| WORLD-C | Expansion 27 WORLD-C: approved skeleton behaviours and loot under existing combat and conservation rules (behaviour from Expansion 26, CREATURE-OWN; placement here) | proposal | PROPOSED |
+| WORLD-D | Expansion 27 WORLD-D: environmental encounters, performance and multiplayer boundaries; magic defined as separate scoped work before coding (magic beyond Fireball parked, OD-17 D32i) | proposal | PROPOSED |
+

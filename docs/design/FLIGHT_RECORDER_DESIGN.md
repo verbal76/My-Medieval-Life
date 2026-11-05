@@ -1,3 +1,5 @@
+> STATUS (2026-10-31, DOC-RECON-01): HISTORICAL — the Phase A/B design checkpoint ("nothing is implemented"); the recorder is now built (REC-19, REC-DIAG, REC-STORE) and its xlsx export is game/scripts/recorder_export/, not tools/recorder_xlsx.py. Current status: docs/expansions/STANDALONE_SYSTEMS.md section 12.
+
 # Build 19 Simulation Flight Recorder: Phase A audit and Phase B design (2026-10-23)
 
 Owner directive: `docs/directives/2026-10-23_build19_flight_recorder.md` (register REC-19). This is the Phase C checkpoint: nothing is

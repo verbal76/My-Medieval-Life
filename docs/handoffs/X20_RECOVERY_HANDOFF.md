@@ -1,5 +1,8 @@
 # Expansion 20 recovery handoff (Medieval development PAUSED, 2026-10-28)
 
+> **Status (DOC-RECON-01, 2026-10-31): HISTORICAL.** This document is snapshot of the 2026-10-28 pause. The pause was lifted on 2026-10-30 (X20-RESUME), and LE-03, LE-04 and LE-06 and most of LE-05 have since been integrated. It is not a current instruction. Current status:
+> `docs/expansions/EXPANSION_20.md`. Precedence: `docs/expansions/README.md`. Content below kept unchanged.
+
 Owner decision 2026-10-28 (`docs/directives/2026-10-28_x20_checkpoint_build_and_pause.md`, register X20-CHECKPOINT): Build 24 is a
 private checkpoint of Expansion 20; after it, **all Medieval development is paused** (Upwardly is the studio's priority). Expansion 20 is
 not abandoned and not complete. Resume only on the owner's explicit instruction. Statuses here are a snapshot; the register

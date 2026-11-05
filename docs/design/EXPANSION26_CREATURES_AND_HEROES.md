@@ -1,3 +1,5 @@
+> STATUS (2026-10-31, DOC-RECON-01): CURRENT DESIGN PACKET, DESIGN ONLY, NOT AUTHORIZED (owner 2026-10-24; 2026-10-30). Added since: CREATURE-OWN (ROAD-Q3: 26 owns creature behaviour, 27 their placement). Open conflict for the owner: the boss roster and hero status against OD-17 / D36g and D36a (2026-10-27). Designed together with Expansion 25 as the "Wild World" concept. An original owner-supplied packet, if distinct from this one, is a MISSING SOURCE. Current status: docs/expansions/EXPANSION_26.md; docs/expansions/MISSING_SOURCES.md.
+
 # Expansion 26: Creatures and Heroes
 
 **My Medieval Life — expansion packet (design specification, implementation plan and audit), 2026-10-23**

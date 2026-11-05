@@ -28,7 +28,7 @@ Readiness: **RELEASED (private playtest draft (code 2f72ec3, run 40044931601, 20
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | OWNER DECISION REQUIRED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| FR-11 | Personality, prestige and migration (owner's living-society list, 2026-10-17) | OWNER DECISION REQUIRED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 
 ## Complete (9)
 
@@ -44,7 +44,7 @@ Readiness: **RELEASED (private playtest draft (code 2f72ec3, run 40044931601, 20
 | X19-FOUND-PERS | Personality framework: evolving traits, soft limits, learning from costly mistakes, practical wisdom, temporary emotions and anger, recovery and growth; about 30% of villagers with potential for self-defeating stubbornness (population level) | INTEGRATION VERIFIED | NOT READY |
 | X19-SCOPE | Expansion 19 ships complete: judgment, personality, relationships, family reputation, gossip, memory, deliberate lies, inherited family stories, stubbornness and the family-sacrifice hierarchy all enabled and influencing NPC decisions; nothing core deferred to 19.x | INTEGRATION VERIFIED | RELEASE CANDIDATE |
 
-## Not counted: umbrellas, proposals, ideas, deferred (5)
+## Not counted: umbrellas, proposals, ideas, deferred (4)
 
 | ID | Item | Kind | Approval |
 |---|---|---|---|
@@ -52,5 +52,4 @@ Readiness: **RELEASED (private playtest draft (code 2f72ec3, run 40044931601, 20
 | E20-RISK-QUEUES | Unbounded growth and population-wide scans found in Build 18 economic code: NPCBrain.miss_log never cleared; courier jobs, agreements and contacts never pruned; credit._villager_deals O(n^2) at dawn; the heir-removal id reuse (life.gd:660) | proposal | PROPOSED |
 | EXP-C | Expansion C: NPC Judgment System (Subjective Judgment & Universal Decision Engine; independent future expansion after a stable Build 16 baseline) | umbrella | OWNER APPROVED |
 | FR-09 | Crime from desperation | approved | DEFERRED |
-| REC-F1 | Recorder finding (10-day run, seed 1): villagers holding goods nobody buys ('holding unsold pottage, log, stone, feathers') re-decide every few game minutes without acting (400-600 decisions a day each against 4-19 actions by day 9), tripling decision volume as unsold stock grows. Existing Build 18 behaviour; not changed. | proposal | PROPOSED |
 

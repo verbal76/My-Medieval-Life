@@ -2,27 +2,26 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (15)
+## Workers and task branches (14)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
+| B25-FINISH-01 | 20 | IN DEVELOPMENT | lead session | wip/region-nav |
+| B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
+| B25R1-023 | 20 | IN DEVELOPMENT | b25r1-grassmap worker | wip/b25r1-grassmap |
+| B25R1-024 | 20 | IN DEVELOPMENT | b25r1-grassmap worker | wip/b25r1-grassmap |
+| DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
-| GP-BASELINE-POLICY | multiplayer | IMPLEMENTED ON TASK BRANCH | primary development agent | wip/multiplayer-b19 |
-| ID-01 | unassigned | IN DEVELOPMENT | identity worker 2 (Sonnet subagent) | wip/foundation-identity |
-| LE-05 | 20 | IN DEVELOPMENT | worker A (Living Economy) | wip/x20-le05 |
-| P21-00 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
-| P21-01 | 21 | IMPLEMENTED ON TASK BRANCH | X21 foundation worker (Sonnet subagent) | wip/expansion21-preparation |
-| P21-02 | 21 | IMPLEMENTED ON TASK BRANCH | lead | wip/expansion21-preparation |
+| JUICE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | none |  |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
-| X20-B24-REMED | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
-| X20-B24-REVIEW | 20 | IN DEVELOPMENT | lead (tracking); workers A and B | wip/expansion20 |
+| X20-CAREER-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | X20-COMPLETE | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
-| X20-MERGED-VALIDATION | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
-| X20-RESUME | 20 | IN DEVELOPMENT | lead | wip/expansion20 |
+| X20-ECON-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
+| X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (46)
+## Implemented but not tested (82)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -30,25 +29,54 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B14-10 | 20+ | PARTIALLY IMPLEMENTED |  |
 | B16-AUDIT | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
 | B16-READY | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
+| B25-AMBITION-IMPL | 20 | INTEGRATED |  |
+| B25-BIZ-D1 | 20 | INTEGRATED |  |
+| B25-BIZ-D2 | 20 | INTEGRATED |  |
+| B25-BIZ-D3 | 20 | INTEGRATED |  |
+| B25-BIZ-D4 | 20 | INTEGRATED |  |
+| B25-BIZ-D5 | 20 | INTEGRATED |  |
+| B25-BIZ-OWN | 20 | INTEGRATED |  |
+| B25-BUSINESS-IMPL | 20 | INTEGRATED |  |
+| B25-CAREER-IMPL | 20 | INTEGRATED |  |
+| B25-CAREER-SYSTEM | 20 | INTEGRATED |  |
+| B25-CLOSE-01 | 20 | INTEGRATED |  |
+| B25-EMPLOY-IMPL | 20 | INTEGRATED |  |
+| B25-OVN-0211 | 20 | INTEGRATED |  |
+| B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |
+| B25R1-001 | 20 | PARTIALLY IMPLEMENTED |  |
+| B25R1-016 | 20 | PARTIALLY IMPLEMENTED |  |
 | B7-009 | 15 | INTEGRATED |  |
 | B7-014 | 15 | INTEGRATED |  |
 | B8-007 | 20+ | PARTIALLY IMPLEMENTED |  |
+| BRANCH-POL-01 | unassigned | INTEGRATED |  |
+| CHAPEL-PURPOSE | 20 | INTEGRATED |  |
+| CON-03 | owner decision | INTEGRATED |  |
+| CON-04 | owner decision | INTEGRATED |  |
+| CON-05 | owner decision | INTEGRATED |  |
+| CON-06 | owner decision | INTEGRATED |  |
+| CON-07 | owner decision | INTEGRATED |  |
+| CON-08 | owner decision | INTEGRATED |  |
+| DEV-GOV-01 | unassigned | INTEGRATED |  |
 | DVW-A13 | 20+ | PARTIALLY IMPLEMENTED |  |
 | DVW-A14 | 15 | INTEGRATED |  |
 | DVW-A3 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH |  |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH |  |
+| EMP-PERM-01 | 20 | INTEGRATED | Build 20 (owner 2026-10-23); temporary contracts and workshop attendants do not complete it |
 | EQ-05 | 16 | PARTIALLY IMPLEMENTED |  |
 | FARM-08 | 16 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
+| FLIGHT-REC-01 | 20 | INTEGRATED |  |
+| FR-11 | 19 | PARTIALLY IMPLEMENTED |  |
+| FR-REPAIR-01 | unassigned | INTEGRATED |  |
 | FSE-00 | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
-| LE-00 | 20+ | INTEGRATED |  |
-| MIN-G | 17 | INTEGRATED |  |
+| LE-07 | 20 | PARTIALLY IMPLEMENTED |  |
+| MML-CONSERVE-01 | unassigned | INTEGRATED |  |
 | OWN-08 | owner decision | PARTIALLY IMPLEMENTED |  |
 | OWN-19 | 20+ | PARTIALLY IMPLEMENTED |  |
 | OWN-22 | owner decision | PARTIALLY IMPLEMENTED |  |
 | OWN-28 | 20+ | PARTIALLY IMPLEMENTED |  |
-| P21-00 | 21 | IMPLEMENTED ON TASK BRANCH |  |
-| P21-02 | 21 | IMPLEMENTED ON TASK BRANCH |  |
+| P21-00 | 21 | INTEGRATED |  |
+| P21-02 | 21 | INTEGRATED |  |
 | PERF-01 | 15 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | PL1-07 | 20+ | PARTIALLY IMPLEMENTED |  |
 | PL1-11 | owner decision | PARTIALLY IMPLEMENTED | stages after 1 (Google Drive cloud saves) need the owner's decision (network/paid-service rule, CLAUDE.md section 11) |
@@ -59,8 +87,8 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | PL2-014 | 18 | INTEGRATED | Checks and owner playtest only (B18-DP-02/03); no NPC module expansion, no module signs |
 | REC-003 | 15 | PARTIALLY IMPLEMENTED | owner confirms the policy (then CLAUDE.md section 8); aapt2 dump badging on a built APK |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH |  |
-| SET-C | 18 | PARTIALLY IMPLEMENTED | Close-out (docs/expansion18/CLOSEOUT_SET_A_B_C_WDR002.md): 10 MET, 1 PARTIAL (credit parity, in progress), 1 NOT MET (100- and 365-day multi-seed and multi-generation runs of the integrated game; to run with REL18-LONGRUN on the final code) |
 | SJD-A | 16 | INTEGRATED |  |
+| VAL-AGENT-01 | 20 | INTEGRATED |  |
 | WDR-001-C | 17 | PARTIALLY IMPLEMENTED |  |
 | WDR-010-C | 15 | PARTIALLY IMPLEMENTED |  |
 | WDR-013-C | 17 | PARTIALLY IMPLEMENTED |  |
@@ -70,6 +98,13 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | WDR-021-C | unassigned | PARTIALLY IMPLEMENTED | compliance audit against the rule's verification scenario (human review) |
 | WDR-022-C | 15 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
 | WIKI-B17 | 17 | PARTIALLY IMPLEMENTED | unknown: needs a human review of what remains |
+| X20-CAREER-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |
+| X20-CHAPEL-FIX | 20 | INTEGRATED |  |
+| X20-CHAPEL-INTEGRATE | 20 | INTEGRATED |  |
+| X20-ECON-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |
+| X20-ECON-FIREWOOD | 20 | INTEGRATED |  |
+| X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH |  |
+| X20-TELL-GUARD | 20 | INTEGRATED |  |
 | X20-TRADER-PAY-INV | 20+ | PARTIALLY IMPLEMENTED |  |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 

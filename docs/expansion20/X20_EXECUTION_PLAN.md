@@ -1,5 +1,8 @@
 # Expansion 20: execution batches
 
+> **Status (DOC-RECON-01, 2026-10-31): HISTORICAL.** This document is the 2026-10-26 batch order. It was superseded by X20-RESUME (2026-10-30) and the 2026-10-31 validation and build-sequence directives. It is not a current instruction. Current status:
+> `docs/expansions/EXPANSION_20.md`. Precedence: `docs/expansions/README.md`. Content below kept unchanged.
+
 Owner authorization 2026-10-26 (`docs/directives/2026-10-26_build22_expansion20_execution_authorization.md` and the amendment
 `docs/directives/2026-10-26_build22_final_owner_answers_amendment.md`): begin substantive Expansion 20 implementation as soon as Build 22's
 private packages are prepared. Scope: `X20-OPEN-ITEMS` in the register (snapshot `docs/expansion20/X20_OPEN_ITEMS.md`). The register

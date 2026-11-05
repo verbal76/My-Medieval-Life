@@ -1,4 +1,47 @@
-# Active expansion roadmap — 2026-10-27
+# Active expansion roadmap — 2026-10-31 (DOC-RECON-01)
+
+**Entry point:** `docs/expansions/README.md` (status vocabulary, precedence, build vs expansion numbers) and one status file per
+expansion in `docs/expansions/`. They agree with the register (`docs/requirements/requirements.json`). An approved future
+design is not permission to start it. A revised owner specification set is being prepared; it becomes authoritative only on
+the owner's explicit final approval (DOC-AUTH-01).
+
+**Build 25 scope (owner, 2026-11-01, B25-SCOPE-D1, `docs/directives/2026-11-01_build25_scope_clarification.md`; controls):**
+Build 25 is the consolidation build: all previously approved expansion work and all approved, recoverable work from abandoned or
+superseded branches. Assigning work to Build 25 does not make it present; the read-only audit B25-SCOPE-AUDIT establishes what is.
+The 2026-10-31 sequence below is preserved as history; its Build 26 recovery assignments no longer control Build 25 scope.
+
+**Historical build sequence (owner, 2026-10-31, BUILD-SEQ-25-27; build numbers are not expansion numbers):**
+- **Build 25:** Expansion 20 validation and freeze. `wip/expansion20` at `ad281dc` is being validated (X20-MERGED-VALIDATION, Actions 41233948995 and 41233970504). It becomes the frozen baseline only after the validation passes and the owner approves.
+- **Build 26:** repository recovery and consolidation, on a separate branch from the exact frozen Build 25 SHA.
+- **Build 27:** Expansion 21 begins, only after Build 26 is frozen and the owner explicitly authorizes it.
+
+**Expansion order (owner, 2026-10-24):** 20 → 21 → 23 → 22 → 24 → 25 → 26 → 27. Multiplayer is a parallel track, not an
+expansion. Expansions 22-27 may not be implemented without explicit authorization (owner, 2026-10-30).
+
+| Expansion | Status | Next authorized phase | Status record |
+|---|---|---|---|
+| 17 Mining & Industry | IMPLEMENTED (Build 17); follow-ons are design only | none (follow-ons not placed) | `docs/expansions/EXPANSION_17.md` |
+| 18 Settlements & Regional Economy | PARTIAL: phases A-D shipped (Build 18); phase E continues as Expansion 22 | none | `docs/expansions/EXPANSION_18.md` |
+| 19 Judgment | PARTIAL: gates A-G integrated; gate H (owner review) under way: C1-C6 answered and integrated, the review takes the X20 validation report | owner's SJD-H review | `docs/expansions/EXPANSION_19.md` |
+| 20 Living Economy | PARTIAL: LE-00..04 and LE-06 integrated, LE-05 partial, LE-07 not started; economy OFF by default | Build 25 freeze after the owner approves the validation; remaining work planned in Build 26 (owner 2026-10-31); economy stays off until explicit authorization | `docs/expansions/EXPANSION_20.md` |
+| 21 Village Politics & Civic Authority | Phase 1 only (P21-00..02) on the stranded branch `wip/expansion21-preparation`; ON HOLD | phase-1 recovery in Build 26 (no political gameplay); development from Build 27 on authorization | `docs/expansions/EXPANSION_21.md` |
+| 23 Bandit Factions & Criminal Careers | DESIGN ONLY, NOT AUTHORIZED (audit done) | none | `docs/expansions/EXPANSION_23.md` |
+| 22 Settlement Advancement phase 2 | DESIGN ONLY, NOT AUTHORIZED (audit done) | none | `docs/expansions/EXPANSION_22.md` |
+| 24 Generational Legacy | DESIGN ONLY, NOT AUTHORIZED | none | `docs/expansions/EXPANSION_24.md` |
+| 25 Weather, Seasons & Disasters | DESIGN ONLY, NOT AUTHORIZED; one "Wild World" design scope with 26, two expansion numbers | none | `docs/expansions/EXPANSION_25.md` |
+| 26 Creatures & Heroes | DESIGN ONLY, NOT AUTHORIZED; Wild World with 25 | none | `docs/expansions/EXPANSION_26.md` |
+| 27 World Exploration, Dungeons & Encounters | DESIGN ONLY, NOT AUTHORIZED | none | `docs/expansions/EXPANSION_27.md` |
+| Multiplayer | Integrated through Batch D; internet relay is free methods only (MP-INET-RELAY option A) | real-device matrix | `docs/expansions/MULTIPLAYER.md` |
+| Standalone approved systems | see the file | none beyond Build 26 unless authorized | `docs/expansions/STANDALONE_SYSTEMS.md` |
+
+Historical and superseded documents are indexed in `docs/expansions/HISTORICAL_DOCUMENTS.md`; missing original sources in
+`docs/expansions/MISSING_SOURCES.md`.
+
+---
+
+# Superseded active section of 2026-10-27 (HISTORICAL, kept for traceability; superseded by the section above)
+
+## (was) Active expansion roadmap — 2026-10-27
 
 **Read only this active section for current scheduling.** The rest of this document is preserved as historical planning. Source of truth: current register, latest owner directive and active branch state. An approved future design is not permission to start it.
 

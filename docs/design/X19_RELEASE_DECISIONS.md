@@ -1,5 +1,7 @@
 # Expansion 19: the decisions left before the release gate (2026-10-23)
 
+> **HISTORICAL** (documentation reconciliation DOC-RECON-01, 2026-10-31). Current status: `docs/expansions/EXPANSION_19.md`. Decision packet of 2026-10-23. The owner answered it (`docs/directives/2026-10-23_owner_answers_x19_release_decisions.md`; the X19-* decisions are APPROVED in the register) and Build 19 shipped on 2026-10-24. Read it for the reasoning, not as open questions. Content below is kept unchanged as the historical record.
+
 Owner directive `docs/directives/2026-10-23_x19_complete_release_scope.md` (register X19-SCOPE): Build 19 ships complete,
 with personality and family reputation live and influencing decisions. This packet lists every Expansion 19 choice the
 register still holds open, after removing everything already answered (SJD-Q01..Q14, X19-ASSAULT, X19-CRT12, X19-GUARD,

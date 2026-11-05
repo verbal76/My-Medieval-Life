@@ -1,5 +1,7 @@
 # Determinism gate after the identity foundation (ID-01, ID-D2 option B): analysis
 
+> **HISTORICAL** (documentation reconciliation DOC-RECON-01, 2026-10-31). Current status: `docs/expansions/EXPANSION_19.md`. Analysis of code `45d68d3` (2026-10-23). The candidate baseline it describes is not blessed: the owner's 2026-10-28 ruling on ID-D3 requires a same-commit, current-branch conservation, determinism and first-divergence audit before any identity baseline is promoted. Content below is kept unchanged as the historical record.
+
 Authority: `docs/directives/2026-10-23_id_d2_succession_decisions.md` ("Do not blindly replace the determinism baseline. First verify
 that remaining divergences are explained by approved permanent-identity behavior. Record the exact first divergence, its cause, and the
 new baseline for both test seeds. Investigate any unrelated divergence"). Candidate baseline: `docs/design/IDENTITY_GATE_CANDIDATE.json`

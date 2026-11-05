@@ -1,5 +1,8 @@
 # Expansion 20: consolidated open-items plan
 
+> **Status (DOC-RECON-01, 2026-10-31): CURRENT-STATUS-ELSEWHERE.** This document is a 2026-10-24 snapshot. Its 2026-10-28 note also predates the resumption. It is not a current instruction. Current status:
+> `docs/expansions/EXPANSION_20.md`. Precedence: `docs/expansions/README.md`. Content below kept unchanged.
+
 > **Status note, 2026-10-28 (owner decision resolution and register cleanup).** This file is a 2026-10-24 snapshot and is not
 > current. Current status: the register and `docs/requirements/views/`. Since the snapshot: X20-SCOPE brought the FUTURE Living
 > Economy answers into Expansion 20; LE-01 and LE-02, the till ownership work (TILL-D1 approved, X20-TILL-KEEP), free migration

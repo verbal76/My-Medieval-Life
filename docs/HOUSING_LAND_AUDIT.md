@@ -1,3 +1,5 @@
+> STATUS (2026-10-31, DOC-RECON-01): HISTORICAL — a 2026-10-18 audit at 455e963; property, construction, housing and farm plots were built since (HOUSE-01..12, FARM-01..09). Current status: docs/expansions/STANDALONE_SYSTEMS.md (sections 1 and 3).
+
 # Housing, land ownership and building placement: audit (2026-10-18)
 
 The owner asked for this audit before any construction or property change (helpers delivering

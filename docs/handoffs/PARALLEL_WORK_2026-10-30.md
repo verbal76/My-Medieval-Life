@@ -1,5 +1,8 @@
 # Parallel development plan and interface contracts (2026-10-30)
 
+> **Status (DOC-RECON-01, 2026-10-31): HISTORICAL.** This document is the 2026-10-30 worker plan. Every workstream it assigns has finished and been merged into `wip/expansion20` (`ad281dc`). It is not a current instruction. Current status:
+> `docs/expansions/EXPANSION_20.md` and `docs/expansions/MULTIPLAYER.md`. Precedence: `docs/expansions/README.md`. Content below kept unchanged.
+
 Owner directive: `docs/directives/2026-10-30_master_development_resumption.md` (register X20-RESUME). Lead: the coordinating
 session (integration, register, handoff, releases). Integration branch: `wip/expansion20` (Build 24 = `4611d86`; Build 24 stays a
 reproducible checkpoint by its tag `build-24`). Workers branch from `4611d86`, commit and push only their own branch, never edit the

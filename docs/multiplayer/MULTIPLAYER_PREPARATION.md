@@ -1,5 +1,8 @@
 # Multiplayer preparation: compatibility assessment, architecture, batch plan and decisions (2026-10-24)
 
+> **Status (DOC-RECON-01, 2026-10-31): HISTORICAL.** This document is the 2026-10-24 preparation plan ("nothing is implemented"). Batches A-D have since been implemented and merged, and MP-INET-RELAY was answered as option A. The gates G0-G10 remain the reference. It is not a current instruction. Current status:
+> `docs/expansions/MULTIPLAYER.md`. Precedence: `docs/expansions/README.md`. Content below kept unchanged.
+
 Owner directive `docs/directives/2026-10-24_master_multiplayer_directive.md` (register MP-MASTER). **Preparation only: nothing
 is implemented, merged or activated.** **Architecture approved in principle and MP-D1..D8 decided by the owner on 2026-10-24**
 (`docs/directives/2026-10-24_owner_multiplayer_decisions.md`; register MP-ARCH, MP-INET; sections 5, 6 and 10 updated). Implementation starts after Build 19's owner acceptance and an explicit authorization.

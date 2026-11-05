@@ -1,3 +1,5 @@
+> STATUS (2026-10-31, DOC-RECON-01): HISTORICAL — a 2026-10-17 review; the gate it names (Gate A) has long passed and the systems it reviews are now in the register. Current status: docs/expansions/HISTORICAL_DOCUMENTS.md and the docs/expansions/ status files.
+
 # Living world design: alignment review
 
 Review of `docs/MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md` (v0.1, supplied by the owner on
