@@ -14,7 +14,11 @@ extends RefCounted
 ##    homesteads built in it; the village's buildings, trees and fields; the seed and the generation).
 ##  - HI (8 px a tile): close views (the Village map, the Region map zoomed in), chunk by chunk on demand, at most HI_KEEP
 ##    kept (least recently used dropped), each a texture only (no CPU copy).
-## Discovery: only explored chunks (Atlas.explored) and the home village are drawn; the rest stays dark as before.
+## Discovery: explored chunks (Atlas.explored) and the home village are drawn; owner requirement 2026-11-05: every settlement's
+## own ground (its plan rect) is drawn from the first day, wherever the player has been; the rest of the country stays dark
+## until explored. The settlements' chunks are generated and drawn once, at the start, on a worker thread with a private
+## Overworld of the same seed (start_sites), never on the main thread during play; their pictures are masked to the
+## settlements' rects until the chunk is explored.
 ## Drawing only: nothing here changes the world. One per world (`of`).
 
 const LO := 2
@@ -33,6 +37,19 @@ var _atlas: Array = []             # the tile atlases (MapView.sources) as RGBA8
 var _cols: Array[int] = []
 var allow_load := true              # false during play: a chunk needing art not yet shrunk waits for a map to open
 var _missing := false
+var _ovv: OverworldView = null      # the worker's private view (road tiles, building looks) bound to its own Overworld
+const EXPLORED_SALT := 0x5a17e1d    # in a chunk's signature once explored (its picture is then no longer masked)
+# the settlements' ground, drawn on a worker thread at the start (start_sites)
+var sites_state := ""               # "" not started, "running", "done"
+var site_total := 0
+var site_done := 0                  # (written by the worker)
+var site_usec := 0                  # the worker's time
+var site_start_usec := 0            # main-thread time spent starting it (the atlases read, the trees' art shrunk)
+var _site_thread: Thread
+var _site_mutex := Mutex.new()
+var _site_out: Array = []           # [chunk, Image] handed over by the worker
+var _site_cancel := false
+var _worker: AerialMap
 var _pal := {}                      # px a tile -> {tile value -> Image (k x k) or null (clear)}
 var _spr := {}                      # px a tile -> {art file -> [Image, scale]}
 var _crops: Image
@@ -61,12 +78,16 @@ var _needs_art := {}
 ## The aerial maps of `m`'s world, made on first need and kept while the world is the same.
 static func of(m) -> AerialMap:
 	if _inst == null or _inst.world != m.world or _inst.main != m:
+		if _inst != null:
+			_inst.stop_sites()
 		_inst = AerialMap.new()
 		_inst._setup(m)
 	return _inst
 
 
 static func drop() -> void:
+	if _inst != null:
+		_inst.stop_sites()
 	_inst = null
 
 
@@ -233,7 +254,7 @@ func sprite(file: String, k: int) -> Image:
 # ------------------------------------------------------------------ composing ------------------
 ## The picture of chunk `cc` at k px a tile: what the world view draws there, ground to roofs; null when it needs art that
 ## may not be loaded now (allow_load false).
-func compose(cc: Vector2i, k: int) -> Image:
+func compose(cc: Vector2i, k: int, mask := false) -> Image:
 	_missing = false
 	var t0 := Time.get_ticks_usec()
 	var n := Overworld.CHUNK
@@ -247,7 +268,7 @@ func compose(cc: Vector2i, k: int) -> Image:
 		ch = ow.get_chunk(cc)
 		if not had:
 			gen_usec += Time.get_ticks_usec() - t0
-	var ovv: OverworldView = main.ow_view
+	var ovv: OverworldView = _ovv if _ovv != null else main.ow_view
 	var lanes := RegionRoads.lane_cells(ow)
 	var tops: Array = []            # [cell, value] drawn over the trees (roofs)
 	var trees: Array = []           # tree records
@@ -313,6 +334,8 @@ func compose(cc: Vector2i, k: int) -> Image:
 		_put(img, e[0].x - box.position.x, e[0].y - box.position.y, k, e[1], false)
 	if _missing:
 		return null                         # (art not at hand during play: drawn when a map opens)
+	if mask:
+		img = _mask_sites(img, box, k)
 	if k == LO:
 		lo_usec += Time.get_ticks_usec() - t0
 		lo_drawn += 1
@@ -320,6 +343,37 @@ func compose(cc: Vector2i, k: int) -> Image:
 		hi_usec += Time.get_ticks_usec() - t0
 		hi_drawn += 1
 	return img
+
+
+## Only the settlements' own ground of a picture (their plan rects), the rest clear: a chunk not explored yet.
+func _mask_sites(img: Image, box: Rect2i, k: int) -> Image:
+	var out := Image.create(img.get_width(), img.get_height(), false, Image.FORMAT_RGBA8)
+	for st in ow.sites:
+		var r := (st.rect as Rect2i).intersection(box)
+		if r.has_area():
+			out.blit_rect(img, Rect2i((r.position - box.position) * k, r.size * k), (r.position - box.position) * k)
+	return out
+
+
+## Is the chunk drawn masked (not explored, not the village's: only its settlements' ground)?
+func masked(cc: Vector2i) -> bool:
+	return not world.player.explored.has(cc) and not _box(cc).intersects(ow.village)
+
+
+static func _box(cc: Vector2i) -> Rect2i:
+	return Rect2i(cc * Overworld.CHUNK, Vector2i(Overworld.CHUNK, Overworld.CHUNK))
+
+
+## The chunks with settlement ground, outside the village.
+func site_chunks() -> Array:
+	var seen := {}
+	var out := []
+	for st in ow.sites:
+		for cc in _chunks_of(st.rect):
+			if not seen.has(cc) and not _box(cc).intersects(ow.village):
+				seen[cc] = true
+				out.append(cc)
+	return out
 
 
 func _put(img: Image, x: int, y: int, k: int, v: int, opaque: bool) -> void:
@@ -339,7 +393,7 @@ static func _layer_rank(a: String) -> int:
 
 ## The settlements' and the country landmarks' buildings and yard pieces in `box` (OverworldView._draw_site_buildings).
 func _stamps(img: Image, box: Rect2i, k: int, tops: Array) -> void:
-	var ovv: OverworldView = main.ow_view
+	var ovv: OverworldView = _ovv if _ovv != null else main.ow_view
 	for st in ow.sites + ow.structures:
 		if not (st.rect as Rect2i).intersects(box):
 			continue
@@ -535,12 +589,17 @@ static func _chunks_of(r: Rect2i) -> Array:
 
 
 func sig(cc: Vector2i) -> int:
-	return _sig_base ^ int(_sigs.get(cc, 0))
+	return _sig_base ^ int(_sigs.get(cc, 0)) ^ (EXPLORED_SALT if world.player.explored.has(cc) else 0)
 
 
-## May the map show this chunk: explored by the player, or the home village's.
+## May the map show this chunk: explored by the player, the home village's, or holding a settlement's ground (masked to it).
 func shown(cc: Vector2i) -> bool:
-	return world.player.explored.has(cc) or Rect2i(cc * Overworld.CHUNK, Vector2i(Overworld.CHUNK, Overworld.CHUNK)).intersects(ow.village)
+	if world.player.explored.has(cc) or _box(cc).intersects(ow.village):
+		return true
+	for st in ow.sites:
+		if (st.rect as Rect2i).intersects(_box(cc)):
+			return true
+	return false
 
 
 # ------------------------------------------------------------------ the LO pages ---------------
@@ -559,6 +618,10 @@ func refresh() -> void:
 	for cc in _chunks_of(ow.village):
 		if lo_sig.get(cc, null) != sig(cc) and not world.player.explored.has(cc):
 			want.append(cc)
+	if sites_state == "done":                   # (while the worker draws them, they are its)
+		for cc in site_chunks():
+			if lo_sig.get(cc, null) != sig(cc) and not world.player.explored.has(cc):
+				want.append(cc)
 	var pc := Overworld.chunk_of(Vector2i(world.player.pos.floor()))
 	want.sort_custom(func(a: Vector2i, b: Vector2i): return (a - pc).length_squared() < (b - pc).length_squared())
 	queue = want
@@ -577,8 +640,8 @@ func notice() -> void:
 	if _sigs.is_empty():
 		_sigs = signatures()
 	for cc: Vector2i in world.player.explored:
-		if not lo_sig.has(cc) and not queue.has(cc):
-			queue.append(cc)
+		if lo_sig.get(cc, null) != sig(cc) and not queue.has(cc):
+			queue.append(cc)                         # (new, or a settlement's chunk drawn masked until now)
 
 
 ## Draw queued LO chunks for up to `budget_usec`; with `generate` false a chunk not in the overworld's cache waits (no
@@ -621,9 +684,14 @@ func _keep_near() -> void:
 
 
 func draw_lo(cc: Vector2i) -> bool:
-	var img := compose(cc, LO)
+	var img := compose(cc, LO, masked(cc))
 	if img == null:
 		return false
+	_place(cc, img)
+	return true
+
+
+func _place(cc: Vector2i, img: Image) -> void:
 	var pg := page_of(cc)
 	var p: Dictionary = pages.get(pg, {})
 	if p.is_empty():
@@ -635,7 +703,6 @@ func draw_lo(cc: Vector2i) -> bool:
 	(p.img as Image).blit_rect(img, Rect2i(Vector2i.ZERO, img.get_size()), at)
 	p.dirty = true
 	lo_sig[cc] = sig(cc)
-	return true
 
 
 ## A page's texture, uploaded again when a chunk in it was drawn.
@@ -682,7 +749,7 @@ func pump_hi(budget_usec: int) -> int:
 			continue
 		if not ow.cache.has(cc):
 			_keep_near()
-		var img := compose(cc, HI)
+		var img := compose(cc, HI, masked(cc))
 		if img == null:
 			continue
 		img.generate_mipmaps()                   # (the maps minify them, filtered, below 8 px a tile on screen)
@@ -709,3 +776,132 @@ func bytes() -> Dictionary:
 	var side := PAGE * Overworld.CHUNK * LO
 	var hs := Overworld.CHUNK * HI
 	return {"pages": pages.size(), "lo_bytes": pages.size() * side * side * 4 * 7 / 3, "hi": hi.size(), "hi_bytes": hi.size() * hs * hs * 4 * 4 / 3}
+
+
+# ------------------------------------------------------------------ the settlements, at the start --------------
+## Owner requirement 2026-11-05: every settlement's ground is on the Region map from the first day. Its ~200 chunks cost
+## 25-30 ms each to generate here, too much for the main thread during play, so a worker thread makes a private Overworld of
+## the same seed (Overworld.create, about 1.5 s here) and generates and composes them there (LO, masked to the settlements'
+## rects); the main thread only places the finished pictures (integrate_sites). The worker shares no mutable state with the
+## game: its own Overworld, its own view for road tiles and building looks, its own palette; the atlases and the trees'
+## shrunk art are read-only images prepared here first. Started once a world (Main._aerial_step, or a map opening first).
+func start_sites() -> void:
+	if sites_state != "":
+		return
+	var t0 := Time.get_ticks_usec()
+	var todo: Array = []
+	for cc in site_chunks():
+		if lo_sig.get(cc, null) == null:
+			todo.append(cc)
+	site_total = todo.size()
+	if todo.is_empty():
+		sites_state = "done"
+		return
+	# what the worker reads, made here: every atlas, every tree picture shrunk, the static tables warmed
+	var keep_load := allow_load
+	allow_load = true
+	for a in _atlas.size():
+		_atlas_img(a)
+	allow_load = keep_load
+	for vk in (Trees.art().variants as Dictionary):
+		var v: Dictionary = Trees.art().variants[vk]
+		var files: Array = []
+		for key in ["stump", "sapling", "fruit"]:
+			if v.has(key):
+				files.append(str(v[key].file))
+		for sz in (v.get("sizes", {}) as Dictionary):
+			files.append(str(v.sizes[sz].file))
+		for f in files:
+			sprite(f, LO)
+	Trees.stage_at(0.0)
+	Overworld.water_cfg()
+	var wk := AerialMap.new()
+	wk.main = main
+	wk.world = world
+	wk._atlas = _atlas.duplicate()
+	wk._cols = _cols
+	wk._crops = _crops
+	wk.allow_load = false
+	wk._spr = {LO: (_spr.get(LO, {}) as Dictionary).duplicate()}
+	var v := OverworldView.new()
+	var src: OverworldView = main.ow_view
+	v.sources = src.sources
+	v.columns = src.columns
+	v._dirt_bits = src._dirt_bits
+	v._look_swap("_")                            # (reads its building looks now, not on the worker)
+	wk._ovv = v
+	_worker = wk
+	sites_state = "running"
+	_site_cancel = false
+	var clock: float = ow.clock
+	var seed_v: int = ow.seed
+	var vmap: VillageMap = world.map
+	_site_thread = Thread.new()
+	_site_thread.start(_site_work.bind(wk, todo, seed_v, vmap, clock), Thread.PRIORITY_LOW)
+	site_start_usec = Time.get_ticks_usec() - t0
+
+
+## The worker: a private Overworld, then each settlement chunk composed (2 px a tile, masked) and handed over.
+func _site_work(wk: AerialMap, todo: Array, seed_v: int, vmap: VillageMap, clock: float) -> void:
+	var t0 := Time.get_ticks_usec()
+	var o := Overworld.create(seed_v, vmap)
+	o.clock = clock
+	wk.ow = o
+	wk._ovv.overworld = o
+	for cc: Vector2i in todo:
+		if _site_cancel:
+			break
+		var img := wk.compose(cc, LO, true)
+		_site_mutex.lock()
+		_site_out.append([cc, img])
+		_site_mutex.unlock()
+		site_done += 1
+	site_usec = Time.get_ticks_usec() - t0
+
+
+## Place what the worker has finished (cheap: a blit each), and once it is done, join it and keep its shrunk tiles. A
+## chunk the main thread has drawn meanwhile (explored), or one changed in the player's world (its signature not the base
+## one), is left to the main thread.
+func integrate_sites() -> void:
+	if sites_state != "running":
+		return
+	_site_mutex.lock()
+	var got := _site_out
+	_site_out = []
+	_site_mutex.unlock()
+	for e in got:
+		var cc: Vector2i = e[0]
+		var img: Image = e[1]
+		if img == null or not masked(cc) or int(_sigs.get(cc, 0)) != 0 or lo_sig.get(cc, null) == sig(cc):
+			continue
+		_place(cc, img)
+	if _site_thread != null and not _site_thread.is_alive():
+		_site_thread.wait_to_finish()
+		_site_thread = null
+		_finish_sites()
+
+
+func _finish_sites() -> void:
+	sites_state = "done"
+	if _worker != null:
+		for k in [LO, HI]:
+			var mine := _pal_of(k)
+			var theirs: Dictionary = _worker._pal.get(k, {})
+			for v in theirs:
+				if not mine.has(v):
+					mine[v] = theirs[v]
+		_worker._ovv.free()
+		_worker = null
+	if main.ui == null or not main.ui.is_open("map"):
+		release_art()                            # (the atlases were read for the worker; a map open keeps them)
+
+
+## Stop the worker (a world left: a new game, a load, quitting).
+func stop_sites() -> void:
+	_site_cancel = true
+	if _site_thread != null:
+		_site_thread.wait_to_finish()
+		_site_thread = null
+	if _worker != null and is_instance_valid(_worker._ovv):
+		_worker._ovv.free()
+	_worker = null

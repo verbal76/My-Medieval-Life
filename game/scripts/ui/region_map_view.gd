@@ -83,6 +83,7 @@ var _placed: Array[Rect2] = []  # the screen rects of the marks and labels drawn
 var _px := 2                    # UIStyle's art pixel (GameUI.ui_px: 2 on a desktop window, 1 in the phone layout)
 var _rim: StyleBox              # the map's sunken rim (UIStyle.inset, its centre left open so the map shows)
 var aerial: AerialMap           # B25R1-025: the aerial pictures of this world
+var drawn_labels: Array[String] = []    # the names drawn this frame (tests: every settlement named)
 static var _ways_key := []      # the world and area the cached roads, streams and bridges are for (opening again is quick)
 static var _ways_cache := []
 var cursor := Vector2.INF       # B25R1-012: the pad's cursor (tiles); INF while no pad has been used on the map
@@ -118,6 +119,8 @@ func setup(m) -> void:
 	(_rim as StyleBoxTexture).draw_center = false
 	aerial = AerialMap.of(main)
 	aerial.allow_load = true
+	aerial.start_sites()
+	aerial.integrate_sites()
 	aerial.refresh()
 	aerial.pump(PUMP_USEC, true)
 	_fit()
@@ -148,7 +151,8 @@ static func region_bounds(w: World, p: PlayerState) -> Rect2i:
 	return Rect2i(lo, hi - lo)
 
 
-## One pixel per Atlas block (8 x 8 tiles): explored blocks by their class, the village as itself, the rest unknown.
+## One pixel per Atlas block (8 x 8 tiles): explored blocks by their class, the village as itself, every settlement's ground as
+## a settlement (owner 2026-11-05: never hidden by discovery), the rest unknown.
 static func build_image(w: World, p: PlayerState) -> Image:
 	var b := region_bounds(w, p)
 	var bw := b.size.x / Atlas.BLOCK
@@ -169,6 +173,16 @@ static func build_image(w: World, p: PlayerState) -> Image:
 			if not v.has_point(Vector2i(x, y) + Vector2i(Atlas.BLOCK, Atlas.BLOCK) / 2):
 				continue                                   # a block mostly outside the village (its last row): its own ground
 			img.set_pixel((x - b.position.x) / Atlas.BLOCK, (y - b.position.y) / Atlas.BLOCK, COLOURS[Atlas.VILLAGE])
+	# owner requirement 2026-11-05: every settlement's ground is on the map from the first day, explored or not
+	for st in w.map.overworld.sites:
+		var r: Rect2i = st.rect
+		for by in range(floori(r.position.y / float(Atlas.BLOCK)), ceili(r.end.y / float(Atlas.BLOCK))):
+			for bx in range(floori(r.position.x / float(Atlas.BLOCK)), ceili(r.end.x / float(Atlas.BLOCK))):
+				var px := bx - b.position.x / Atlas.BLOCK
+				var py := by - b.position.y / Atlas.BLOCK
+				var blk := Rect2i(Vector2i(bx, by) * Atlas.BLOCK, Vector2i(Atlas.BLOCK, Atlas.BLOCK))
+				if r.encloses(blk) and px >= 0 and py >= 0 and px < bw and py < bh:   # (whole blocks: no band past its edge)
+					img.set_pixel(px, py, COLOURS[Atlas.SITE])
 	return img
 
 
@@ -324,11 +338,12 @@ func _process(delta: float) -> void:
 	if cursor != Vector2.INF and is_visible_in_tree():
 		pad_step(pad_vector(), pad_triggers(), pad_look(), minf(delta, 0.05))   # (a long frame, chunks being drawn: no jump)
 	# zoomed out, the aerial pages are minified: their mipmaps, filtered, rather than every eighth pixel
-	# (and so are the close pictures between HI_ZOOM and their own 8 px a tile; the 2 px pages magnified stay sharp pixels)
-	var mip := zoom < float(AerialMap.LO) or (zoom >= HI_ZOOM and zoom < float(AerialMap.HI))
+	# (closer in, sharp pixels: no filtered halo where the drawn ground meets the dark)
+	var mip := zoom < float(AerialMap.LO)
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS if mip else CanvasItem.TEXTURE_FILTER_NEAREST
 	if aerial != null and is_visible_in_tree():
 		aerial.allow_load = true                   # (a map closed just before this one opened let go of the art)
+		aerial.integrate_sites()
 		if not aerial.queue.is_empty():
 			aerial.pump(PUMP_USEC, true)
 		elif not aerial.hi_queue.is_empty():
@@ -549,6 +564,7 @@ func _label(font: Font, mark: Rect2, s: String, fs: int, col: Color, must: bool)
 			return
 		pick = tries[0]
 	_placed.append(Rect2(pick, Vector2(sz.x, h)))
+	drawn_labels.append(s)
 	_text(font, pick + Vector2(2, h - 4), s, fs, col)
 
 
@@ -674,6 +690,7 @@ func _markers(view: Rect2) -> void:
 	# the marks first (the home village, every settlement, the places found, the destination, you), then their labels, each
 	# put where it overlaps no mark or label already placed (right, left, below, above), so names stay legible at any zoom
 	_placed.clear()
+	drawn_labels.clear()
 	var labels: Array = []          # [mark rect, text, font size, colour, must]: in priority order
 	var v := Rect2(ow.village)
 	var vr := Rect2(to_screen(v.position), v.size * zoom)
@@ -766,8 +783,9 @@ func _markers(view: Rect2) -> void:
 		var pad := Vector2(10, 6) + Vector2(_px, _px) * 4.0
 		draw_style_box(slip, Rect2(Vector2(10, 10), Vector2(sw, UIStyle.BODY + 4) + pad * 2.0))
 		draw_string(font, Vector2(10, 10) + pad + Vector2(0, UIStyle.BODY), status, HORIZONTAL_ALIGNMENT_LEFT, -1, UIStyle.BODY, UIStyle.INK_RED)
-	if aerial != null and not aerial.queue.is_empty():          # B25R1-025: the explored ground still being drawn
-		var say := "Drawing the map… %d" % aerial.queue.size()
+	if aerial != null and (not aerial.queue.is_empty() or aerial.sites_state == "running"):   # B25R1-025: still being drawn
+		var say := "Drawing the map… %d" % aerial.queue.size() if not aerial.queue.is_empty() else \
+				"Drawing the settlements… %d of %d" % [aerial.site_done, aerial.site_total]
 		_text(font, Vector2(14, ms.y - 14), say, UIStyle.SMALL + 1, UIStyle.MUTED)
 	# the legend, along the foot: a wooden strip under a bronze trim
 	var ly := size.y - LEGEND_H

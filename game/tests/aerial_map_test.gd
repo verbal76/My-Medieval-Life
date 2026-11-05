@@ -37,10 +37,98 @@ func _frames(n: int) -> void:
 
 
 func _run() -> void:
+	for s in [1, 11, 7]:
+		await _start(s)
 	for s in [1, 11]:
 		await _seed(s)
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
+
+
+## Owner requirement 2026-11-05: from the start of a new game, before any exploring, every settlement is named and placed on
+## the Region map with its distance and bearing, its own ground is drawn (by the worker), the wilderness round it is dark,
+## and tap-to-travel still sets off for it.
+func _start(s: int) -> void:
+	SHOT.new_world(main, s)
+	main.ui.hide_all()
+	main.aerial_background = false
+	var w: World = main.world
+	var ow: Overworld = w.map.overworld
+	var p: PlayerState = w.player
+	var a := AerialMap.of(main)
+	var t0 := Time.get_ticks_usec()
+	a.start_sites()
+	var start_ms := (Time.get_ticks_usec() - t0) / 1000.0
+	var frames := 0
+	while a.sites_state == "running":
+		a.integrate_sites()
+		await process_frame
+		frames += 1
+	var wall_ms := (Time.get_ticks_usec() - t0) / 1000.0
+	print("MEASURE seed %d: settlements' ground, %d chunks: start on the main thread %.0f ms (atlases, trees' art), worker %.0f ms (private Overworld and %d chunks), wall %.0f ms over %d frames"
+			% [s, a.site_total, a.site_start_usec / 1000.0, a.site_usec / 1000.0, a.site_total, wall_ms, frames])
+	check(a.site_total > 100 and a.site_done == a.site_total and start_ms < 1500.0, "seed %d: every settlement's chunks drawn by the worker (%d)" % [s, a.site_total])
+	# their ground drawn, the wilderness round it dark
+	var ground := 0
+	var cells := 0
+	for st in ow.sites:
+		var r: Rect2i = st.rect
+		for c in [r.get_center(), r.position + Vector2i(2, 2), r.end - Vector2i(3, 3), Vector2i(r.position.x + 2, r.end.y - 3)]:
+			var pg := AerialMap.page_of(Overworld.chunk_of(c))
+			cells += 1
+			if a.pages.has(pg) and (a.pages[pg].img as Image).get_pixelv((c - pg * AerialMap.PAGE * Overworld.CHUNK) * AerialMap.LO).a > 0.9:
+				ground += 1
+	check(ground == cells, "seed %d: every settlement's ground is drawn from the start (%d of %d cells)" % [s, ground, cells])
+	var wild := 0
+	var dark := 0
+	for cc in a.site_chunks():
+		var box := AerialMap._box(cc)
+		for q in [Vector2i(1, 1), Vector2i(30, 1), Vector2i(1, 30), Vector2i(30, 30), Vector2i(16, 16)]:
+			var c: Vector2i = box.position + q
+			if not ow.site_at(c).is_empty() or p.explored.has(cc):
+				continue
+			wild += 1
+			var pg := AerialMap.page_of(cc)
+			if not a.pages.has(pg) or (a.pages[pg].img as Image).get_pixelv((c - pg * AerialMap.PAGE * Overworld.CHUNK) * AerialMap.LO).a == 0.0:
+				dark += 1
+	check(wild > 50 and dark == wild, "seed %d: the wilderness beside them, never seen, stays dark (%d of %d cells)" % [s, dark, wild])
+	# the worker's private Overworld draws what the game's own would
+	var same := 0
+	var tried := 0
+	for st in ow.sites.slice(0, 4):
+		var cc := Overworld.chunk_of((st.rect as Rect2i).get_center())
+		var mine := a.compose(cc, AerialMap.LO, true)
+		var pg := AerialMap.page_of(cc)
+		var o := (cc - pg * AerialMap.PAGE) * Overworld.CHUNK * AerialMap.LO
+		tried += 1
+		if (a.pages[pg].img as Image).get_region(Rect2i(o, Vector2i(64, 64))).get_data() == mine.get_data():
+			same += 1
+	check(same == tried, "seed %d: the worker's pictures are exactly what the game's own world composes (%d of %d chunks)" % [s, same, tried])
+	# the Region map: every settlement named, with distance and bearing, the player marked; tap-to-travel unchanged
+	main.ui.show_map("region")
+	await _frames(4)
+	var r: RegionMapPanel = main.ui.panel_body.find_children("*", "RegionMapPanel", true, false)[0]
+	r.fit_network()
+	await _frames(2)
+	var named := 0
+	for st in ow.sites:
+		var want := "%s  %s" % [str(st.name), RegionTravel.bearing(p.pos, Vector2(st.center))]
+		if r.drawn_labels.has(want):
+			named += 1
+	check(named == ow.sites.size(), "seed %d: every settlement (%d) is named on the Region map at the start, with its distance and bearing" % [s, named])
+	var ms := r.map_size()
+	var on := 0
+	for st in ow.sites:
+		var sc := r.to_screen(Vector2(st.center))
+		if Rect2(Vector2.ZERO, ms).has_point(sc) and r.to_tile(sc).distance_to(Vector2(st.center)) < 0.5:
+			on += 1
+	check(on == ow.sites.size() and Rect2(Vector2.ZERO, ms).has_point(r.to_screen(p.pos)) and r.drawn_labels.has("You"),
+			"seed %d: every settlement placed on the opening view, and the player marked" % s)
+	var far: Dictionary = ow.site("bourton")
+	r.tap(r.to_screen(Vector2(far.center)))
+	check(RegionTravel.has_destination(p) and not main.ui.modal(), "seed %d: a tap on a settlement never visited sets off for it" % s)
+	main.travel.dismiss(main)
+	await _frames(2)
 
 
 func _seed(s: int) -> void:
