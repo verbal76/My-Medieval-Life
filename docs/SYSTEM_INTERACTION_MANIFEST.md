@@ -1438,8 +1438,8 @@ Rules:
 - **Trigger:** The player cuts cliff steps or builds wooden stairs or a walkway; the overworld is generated.
 - **Source:** `game/scripts/core/terrain.gd::refusal`, `game/scripts/core/terrain.gd::cost`, `game/scripts/core/terrain.gd::plan`, `game/scripts/core/terrain.gd::targets_at`
 - **Affects:** Overworld, Building, Inventory, Crafting, Player state
-- **Expected:** Steps need a pickaxe and Mining, stairs and walkways planks, nails, a mallet and Carpentry, taken from real inventory; each opens a crossing over a cliff or water. Ground nothing can reach is sealed, so no item or creature is lost in a black-hole space.
-- **Tests:** `game/tests/terrain_test.gd`
+- **Expected:** Steps need a pickaxe and Mining, stairs and walkways planks, nails, a mallet and Carpentry, taken from real inventory; each opens a crossing over a cliff or water. Ground nothing can reach is sealed, so no item or creature is lost in a black-hole space. B25R1-018 (overworld generation 5): the raised ground of the region layout (Bear Hill's top, Higham's castle knoll) comes with generated steps (`Overworld.fixed_works`, never saved): every road cell on its rim, and three below the castle gate. They are walked on like the player's ways (`Overworld.way_at`, `is_solid`, `is_rim`), so roads stay connected over the hill and both tops are reached on foot.
+- **Tests:** `game/tests/terrain_test.gd`, `game/tests/overworld_test.gd`
 
 ### INT-178 · Nails and mallets made to order for the goods merchant (B14-07, PAR-04)
 - **Trigger:** A goods merchant holds fewer than 24 nails or 2 mallets; a smith or carpenter at work.

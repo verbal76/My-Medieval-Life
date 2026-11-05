@@ -826,6 +826,21 @@ func _setup_raised() -> void:
 
 ## B25R1-018: whether the cell corner (x, y) (a cell's top-left corner) is on raised ground (_setup_raised).
 func _raised_corner(x: int, y: int) -> bool:
+	return _raised_id(x, y) != ""
+
+
+## B25R1-018: the id of the raised ground (its landmark's) a cell stands on, its top or its rim, "" none. A settlement's site
+## may reach onto it (Netherton lies under Bear Hill; Higham's castle stands on its knoll): its rim there is the hill's, not
+## something the site was not cleared of.
+func raised_at(c: Vector2i) -> String:
+	for d: Vector2i in [Vector2i.ZERO, Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]:
+		var id := _raised_id(c.x + d.x, c.y + d.y)
+		if id != "":
+			return id
+	return ""
+
+
+func _raised_id(x: int, y: int) -> String:
 	for rz in raised:
 		if not (rz.box as Rect2i).has_point(Vector2i(x, y)):
 			continue
@@ -833,15 +848,15 @@ func _raised_corner(x: int, y: int) -> bool:
 			var d: Vector2i = Vector2i(x, y) - (rz.at as Vector2i)
 			var rr: int = int(rz.r) * 8 + (_point(33, [12, 6], x, y) - 512) * 12 / 512     # eighths of a tile: +-1.5 tiles
 			if (d.x * d.x + d.y * d.y) * 64 <= rr * rr:
-				return true
+				return str(rz.id)
 		else:
 			var t: Rect2i = rz.top
 			if x < t.position.x or x > t.end.x or y < t.position.y or y > t.end.y:
 				continue
 			if (x == t.position.x or x == t.end.x) and (y == t.position.y or y == t.end.y):
 				continue                                 # the corners rounded
-			return true
-	return false
+			return str(rz.id)
+	return ""
 
 
 ## B25R1-018: the way through a cliff's rim at `c`: one the player made (works) or one the generator cut (fixed_works), "" none.
