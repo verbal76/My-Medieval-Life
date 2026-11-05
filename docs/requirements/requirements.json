@@ -16070,8 +16070,14 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope revised by the owner 2026-11-01 (B25-SCOPE-D1, docs/directives/2026-11-01_build25_scope_clarification.md): Build 25 is the consolidation build; this record's Build 26 recovery assignment is preserved as historical evidence and no longer controls Build 25 scope (DCR-01: intentional revision by the owner)"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "owner_answer",
+     "why": "owner answered Q7.1 (2026-11-05): merge wip/requirements-control into staging now; merged as ade9a1d (register and docs only, no game or workflow changes; staging's stale-state banner baa6479 superseded)"
     }
-   ]
+   ],
+   "owner_answer": "Merge now (2026-11-05)"
   },
   {
    "id": "DVW-A1",
