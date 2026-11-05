@@ -6195,7 +6195,7 @@
    "description": "Ore imports stall: Garton's quarry stock rose 63 to 175 but its trader had no coins to buy it, so 0 iron ore came to the village in 120 days (2 in a year for seed 2). Options: A keep as an outcome; B the trader carries ore on consignment (paid on sale); C smiths buy from the quarry directly. Recommendation: decide after the final year-long runs; leaning B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686).",
    "source": "docs/directives/2026-11-02_overnight_autonomous_development_directive.md",
    "owner_wording": null,
-   "owner_answer": "B: consignment of real ore (2026-11-05); follow-up q27: other traders consign another settlement's ore through the wholesale trips (2026-11-05)",
+   "owner_answer": "q27: other traders consign; q32: any neighbour trader may collect a place's spare ore, the place's own trader first; 12-day return kept; q33: founding traders use the normal 80-coin trader reserve (2026-11-05)",
    "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
@@ -6227,6 +6227,11 @@
      "date": "2026-11-05",
      "change": "note",
      "why": "owner 2026-11-05: two follow-ups tracked, not resolved: (1) Higham's trader stopped carrying Garton's ore after day 40 in run 42058240181 (cause unexplained); (2) review of the rules 'collect only from traderless places' and 'unsold ore returns after 12 days' against the approved design (no change without owner approval). Investigation on wip/b25r1-econ4"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "owner_answer",
+     "why": "follow-ups investigated (wip/b25r1-econ4, merged 9dabee7; docs/design/CONSIGNMENT_REVIEW_B25.md): Higham stopped because its founding traders closed on day 34 (households left for better-paid trades; the founding 0.85 till reserve left them paying under 4/day); the 12-day return showed no effect (run 42080417065). Owner 2026-11-05 question 32: any neighbour trader may collect a place's spare ore, own trader first; keep the 12-day return. Question 33: founding traders use the normal trader reserve of 80 coins. Both to be implemented and checked on seeds 1-4"
     }
    ],
    "implementation_status": "INTEGRATED",
