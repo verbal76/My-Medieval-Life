@@ -1,0 +1,96 @@
+# Windows launch diagnosis: downloads an existing Windows package artifact from an earlier run, starts it headless
+# with verbose output (and once more with --log-file), and uploads the logs, exit codes and any crash dump.
+# Builds and changes nothing. Dispatch by hand: run_id = the run that made the artifact, artifact = its name.
+name: win-smoke
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "Run id that produced the artifact"
+        required: true
+      artifact:
+        description: "Artifact name (e.g. pkg-full-windows)"
+        required: true
+      label:
+        description: "Short label for the uploaded results"
+        required: false
+        default: "try"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact }}
+          path: pkg
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+
+      - name: Enable WER local crash dumps
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "$env:GITHUB_WORKSPACE\dumps" | Out-Null
+          $k = 'HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps'
+          New-Item -Path $k -Force | Out-Null
+          New-ItemProperty -Path $k -Name DumpFolder -PropertyType ExpandString -Value "$env:GITHUB_WORKSPACE\dumps" -Force | Out-Null
+          New-ItemProperty -Path $k -Name DumpType -PropertyType DWord -Value 2 -Force | Out-Null
+          New-ItemProperty -Path $k -Name DumpCount -PropertyType DWord -Value 10 -Force | Out-Null
+          Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting' -Name DontShowUI -Value 1 -Type DWord -ErrorAction SilentlyContinue
+          Get-ItemProperty $k
+
+      - name: Unzip and start headless (verbose, then verbose with --log-file)
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path results | Out-Null
+          Get-ChildItem pkg | Format-Table Name, Length | Out-String | Tee-Object results\pkg.txt
+          $zip = Get-ChildItem pkg -Filter *.zip | Select-Object -First 1
+          Expand-Archive $zip.FullName -DestinationPath run
+          Get-ChildItem run -Recurse | Format-Table FullName, Length | Out-String | Tee-Object results\files.txt
+          $exe = Get-ChildItem run -Filter *.exe | Where-Object { $_.Name -notlike '*.console.exe' } | Select-Object -First 1
+          (Get-FileHash $exe.FullName -Algorithm SHA256).Hash | Tee-Object results\exe_sha256.txt
+          $tries = @(
+            @{ n = 'a_verbose'; args = @('--headless', '--verbose', '--quit-after', '300') },
+            @{ n = 'b_logfile'; args = @('--headless', '--verbose', '--quit-after', '300', '--log-file', "$env:GITHUB_WORKSPACE\results\b_godot.log") }
+          )
+          foreach ($t in $tries) {
+            $start = Get-Date -Format o
+            $p = Start-Process -FilePath $exe.FullName -ArgumentList $t.args -PassThru -Wait `
+                 -RedirectStandardOutput "results\$($t.n)_out.log" -RedirectStandardError "results\$($t.n)_err.log"
+            $end = Get-Date -Format o
+            $code = $p.ExitCode
+            "$($t.n) start=$start end=$end exit=$code hex=0x{0:X8}" -f $code | Tee-Object -Append results\summary.txt
+            Write-Host "---- $($t.n) stdout (last 60) ----"; Get-Content "results\$($t.n)_out.log" -ErrorAction SilentlyContinue | Select-Object -Last 60
+            Write-Host "---- $($t.n) stderr (last 30) ----"; Get-Content "results\$($t.n)_err.log" -ErrorAction SilentlyContinue | Select-Object -Last 30
+          }
+          Start-Sleep -Seconds 10   # let WER finish writing dumps
+          Get-ChildItem dumps -ErrorAction SilentlyContinue | Format-Table Name, Length | Out-String | Tee-Object results\dumps.txt
+          Get-WinEvent -FilterHashtable @{ LogName = 'Application'; ProviderName = 'Application Error', 'Windows Error Reporting' } -MaxEvents 6 -ErrorAction SilentlyContinue |
+            Format-List TimeCreated, ProviderName, Message | Out-String -Width 400 | Tee-Object results\app_events.txt
+
+      - name: Analyse dumps with cdb if present
+        shell: pwsh
+        run: |
+          $cdb = @('C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe', 'C:\Program Files\Windows Kits\10\Debuggers\x64\cdb.exe') | Where-Object { Test-Path $_ } | Select-Object -First 1
+          "cdb: $cdb" | Tee-Object results\cdb_path.txt
+          foreach ($d in Get-ChildItem dumps -Filter *.dmp -ErrorAction SilentlyContinue) {
+            if ($cdb) {
+              & $cdb -z $d.FullName -c ".ecxr; r; kn 40; ub @rip L10; u @rip L4; lmv m MyMedievalLife*; !analyze -v; q" 2>&1 | Out-File -Width 400 "results\cdb_$($d.BaseName).txt"
+              Get-Content "results\cdb_$($d.BaseName).txt" | Select-Object -Last 120
+            }
+          }
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: win-smoke-${{ inputs.label }}-${{ inputs.artifact }}-${{ inputs.run_id }}
+          path: |
+            results
+            dumps
+          retention-days: 14
