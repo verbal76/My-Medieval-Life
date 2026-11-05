@@ -103,6 +103,9 @@ var prices: Dictionary = {}          # item -> float, the market price (today's 
 var flows: Dictionary = {}
 var start: Dictionary = {}           # the opening books {coins, goods}
 var day := -1
+## B25-ECON-P7, diagnostic only (economy_sim's report; not saved, never read by the rules): units of each good taken out of this
+## place's treasury granary on consignment ("out", by its own trader or a neighbour's walker) and sold to the village ("sold").
+var granary_ore := {"out": {}, "sold": {}}
 ## Diagnostic only (MML_TRACE_TRADERS=1): print why a trader's households leave it; never changes state.
 static var _trace := OS.get_environment("MML_TRACE_TRADERS") == "1"
 
@@ -1865,6 +1868,37 @@ func consign_out() -> void:
 				m.consign[item] = {}
 			_add(m.consign[item], str(t), n)
 			room -= n
+		# B25-ECON-P7: then the ore a closed quarry, mine or trader left in the treasury's granary, above what it must keep
+		var g := mini(room, granary_spare(str(item)))
+		if g > 0:
+			_take(gov.granary, item, g)
+			_add(m.stock, item, g)
+			_add(granary_ore.out, item, g)
+			if not m.has("consign"):
+				m["consign"] = {}
+			if not (m.consign as Dictionary).has(item):
+				m.consign[item] = {}
+			_add(m.consign[item], "treasury", g)
+
+
+## B25-ECON-P7 (owner 2026-11-05, "Recover stranded settlement treasury ore"): the units of `item` (a good of rules.consign) the
+## treasury's granary may let a trader carry on consignment. What it holds, less another place's goods it holds to send home
+## (gov.consign, B25-ECON-P6), less the treasury's own keep of food and upkeep goods (the SettlementParty treasury sale cap's), less
+## the working stock this place's open businesses and crafters keep of it for their recipes (_keep, input_days_ahead): local
+## production keeps first claim and the granary is never drained below it. The goods stay the treasury's until the village buys
+## them (paid to gov.coins, _consign_sold) or they come back (_consign_return; another place's: Regions.consign_round).
+func granary_spare(item: String) -> int:
+	if not (_rules.get("consign", []) as Array).has(item) or _rules.foods.has(item) or _rules.gov_upkeep.has(item):
+		return 0
+	var n := int(gov.granary.get(item, 0)) - consigned_in(gov, item)
+	var types := biz.keys()
+	types.sort()
+	for t in types:
+		if t != "merchant":
+			n -= int(_keep(biz[t]).get(item, 0))
+	for k in _own_ids():
+		n -= int(_keep(own[k]).get(item, 0))
+	return maxi(0, n)
 
 
 ## Units of `item` the trader holds on consignment (owed to their sources).
@@ -1966,6 +2000,10 @@ func _consign_sold(item: String, n: int, unit: int) -> void:
 			break
 		var k := mini(n, int(owed[t]))
 		m.till -= k * pay
+		if str(t) == "treasury":
+			_add(granary_ore.sold, item, k)
+		elif str(t).ends_with("/treasury"):
+			_add(granary_ore.sold, str(t).get_slice("/", 0) + ":" + item, k)     # another place's treasury's, sold here
 		if is_remote(str(t)):
 			# B25-ECON-P6: another place's source: the pay is set aside for it, out of the till, until a walker carries it there
 			if not m.has("consign_due"):

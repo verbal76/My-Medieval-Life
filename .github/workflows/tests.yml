@@ -345,6 +345,7 @@ jobs:
           res://tests/elder_provision_test.gd    # X20-FIREWOOD: an elder buys the household's firewood and grain
           res://tests/settle_food_test.gd        # X20-SETTLE-FOOD, B25R1-019: settlement food trade carried by walkers
           res://tests/consign_test.gd            # B25-ECON-P4: a neighbour trader carries real ore on consignment
+          res://tests/treasury_ore_test.gd       # B25-ECON-P7: ore left in a treasury's granary carried on consignment
           res://tests/land_clearing_test.gd      # B25-ECON-P5: rough ground cleared by labour into new manor fields
           res://tests/settle_review_test.gd      # Build 24 settlement review: idle traders close and reopen, leavers keep their tills
           res://tests/sim_f2_test.gd             # SIM-F2: a failing purchase is not chosen again and again

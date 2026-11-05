@@ -423,7 +423,8 @@ func road_trade() -> void:
 ##   settle   every trader (or the treasury a closed trader left them to) that holds pay set aside for another place's sources, or that
 ##            place's goods held unsold for rules.consign_hold_days (a treasury's at once: it does not trade them), sends one walker
 ##            there with the coins and the goods (SettlementTrips "consign": pay, give); a trader's walker collects again while there;
-##   collect  a place with no trader of its own whose businesses hold goods of rules.consign above their keep is visited by the nearest
+##   collect  a place with no trader of its own whose businesses hold goods of rules.consign above their keep (or whose treasury's
+##            granary holds them above its protected stock, B25-ECON-P7: OffMapSettlement.granary_spare) is visited by the nearest
 ##            trader (road length, then id) with carry room for them that has a walker to send, one a round (SettlementTrips "consign").
 ## The goods stay their source's (the trader's `consign` "<place>/<type>"), are sold only to the village, and pay their source
 ## trader_pays_share when sold (OffMapSettlement._consign_sold). Nobody is told to keep trading or to start: only real walkers, stock and
@@ -453,6 +454,10 @@ func consign_round(d: int) -> void:
 				var n := int(src.biz[bt].stock.get(item, 0)) - int(src._keep(src.biz[bt]).get(item, 0))
 				if n > 0:
 					spare[item] = int(spare.get(item, 0)) + n
+		for item in items:
+			var g := src.granary_spare(str(item))         # B25-ECON-P7: ore a closed business left in the treasury's granary
+			if g > 0:
+				spare[item] = int(spare.get(item, 0)) + g
 		if spare.is_empty():
 			continue
 		var carriers := []

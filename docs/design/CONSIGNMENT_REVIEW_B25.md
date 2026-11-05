@@ -93,3 +93,54 @@ Experimental comparison, seed 1, 120 days, on `wip/b25r1-econ4-exp` (f1189a7, ba
    founding and reopened traders, after a seeds 1-4 comparison.
 4. Minor gap, for the record: ore in a place's treasury granary (left by a closed quarry or trader) is never collected on
    consignment; only businesses' stock is. Raise with recommendation 2 if the owner wants granary ore carried.
+
+## 4. Treasury ore recovery (B25-ECON-P7, owner decision 2026-11-05)
+
+Owner directive `docs/directives/2026-11-05_b25r1_treasury_ore_recovery.md` (approved; implements recommendation 4 above).
+Branch `wip/b25r1-econ6`.
+
+### 4.1 Investigation: how treasury ore is stored, owned, reserved and accounted
+
+- **Storage and ownership.** A settlement's treasury is `OffMapSettlement.gov` (`coins`, `granary{item: n}`). Ore enters the
+  granary only by closure and by consignment returns: `_close_business` (a closing quarry's or smith's stock is first bought by
+  the place's trader at market price as far as its till above its reserve reaches, the rest to the granary; a closing
+  trader's whole stock goes to the granary), `_consign_return` and `SettlementTrips.consign_errand` "give" (goods returned to a
+  source that has closed meanwhile). The granary's goods are the treasury's own; another place's goods a closed trader was
+  carrying are also physically in the granary but marked in `gov.consign` (`consigned_in(gov, item)`, B25-ECON-P6) and owed home.
+- **Accounting.** The granary counts in `OffMapSettlement.goods()` (so the settlement's audit and `Regions.audit` cover it);
+  every cross-place hand-over is a matched regional line pair (`SettlementParty.deal`).
+- **Reserves.** The treasury party's sale cap (`SettlementParty._sale_cap`, "treasury") keeps three days of the households'
+  food and six of its upkeep goods (planks, blocks), less another place's consigned goods; it has no rule for ore.
+- **Why the ore was stranded.** Nothing reads granary ore: the local market offers only businesses' and crafters' stock
+  (`_open_offers`), so neither the place's smith nor its trader (`_trader_collects`) can buy it; the own trader's consignment
+  (`consign_out`) and the neighbours' collection (`Regions.consign_round`, `consign_errand`) look only at businesses' stock above
+  their keep. The regional food round sells treasury goods but only food.
+
+### 4.2 Integration point (no new mechanism)
+
+The treasury becomes **one more consignment source**, key `"treasury"` (a place's own) or `"<place>/treasury"` (another place's),
+in the two existing consignment paths, after that place's businesses:
+
+- own trader, `OffMapSettlement.consign_out` (on a caravan visit), up to its carry room: first claim (B25-ECON-P4);
+- neighbour traders, `Regions.consign_round` (the spare scan) and `SettlementTrips.consign_errand` (the walker's collection), by
+  whatever rule decides who may collect (B25-ECON-P6; owner decision 32 widens it).
+
+Everything else is the existing code, unchanged: the units stay the treasury's until the village buys them; `_consign_sold`
+pays `trader_pays_share` of the price to `gov.coins` (a key with no business of that name is the treasury's, the closed-source
+rule) or sets it aside for another place's treasury and a walker pays it there (`_consign_source` -> treasury); unsold goods
+go back next morning (`_consign_return`, to the granary) or after `consign_hold_days` = 12 by walker. No free transfer, no new
+pricing, no new store, no change to closures.
+
+**Protection** (`OffMapSettlement.granary_spare(item)`): only goods of `rules.consign` (iron ore, coal, copper ore, tin ore),
+never food or upkeep goods; the granary keeps (a) another place's goods it holds to send home (`consigned_in(gov)`), and (b) the
+working stock that this place's open businesses and crafters keep of that good for their recipes (`_keep`: `input_days_ahead`
+days of their recipes' use, e.g. Garton's smith 12 iron ore). A closed smith keeps nothing.
+
+**Known limit (not changed):** the protected stock is kept but the local smith still cannot buy from the granary (the local
+market offers businesses' stock only); letting it buy would change the local market and is outside this decision.
+
+**Diagnostics:** `OffMapSettlement.granary_ore` {out, sold} (not saved, never read by the rules) and the economy_sim mining
+report's `region.<place>.granary` / `granary_ore`.
+
+Tests: `game/tests/treasury_ore_test.gd`; `game/tests/consign_test.gd` (its collection counts now include the closed trader's
+ore in Garton's granary, which the fixture leaves there).

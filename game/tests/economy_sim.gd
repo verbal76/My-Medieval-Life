@@ -1614,6 +1614,14 @@ func _ore_line(day: int) -> Dictionary:
 			row.trader_stock = _sorted_dict(stock)
 			if tm.has("consign"):
 				row.consigned = (tm.consign as Dictionary).duplicate(true)      # B25-ECON-P4: carried for its diggings, owed to them
+		var gran := {}
+		for id in ["iron_ore", "coal", "copper_ore", "tin_ore"]:
+			if int(so.gov.granary.get(id, 0)) > 0:
+				gran[id] = int(so.gov.granary[id])
+		if not gran.is_empty():
+			row.granary = gran                                             # B25-ECON-P7: ore in the treasury's granary
+		if not (so.granary_ore.out as Dictionary).is_empty() or not (so.granary_ore.sold as Dictionary).is_empty():
+			row.granary_ore = so.granary_ore.duplicate(true)               # B25-ECON-P7: lent out on consignment, sold (cumulative)
 		var q: Dictionary = so.biz.get("quarry", {})
 		if not q.is_empty():
 			row.reserves = (q.get("reserves", {}) as Dictionary).duplicate()

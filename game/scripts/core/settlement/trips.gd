@@ -405,7 +405,7 @@ static func market(r: Regions, dest: OffMapSettlement, me: SettlementParty, p: D
 ##            each source business at its place (a source closed meanwhile: its place's treasury);
 ##   give     the source's goods held past rules.consign_hold_days unsold go back to it (closed: to the treasury's granary);
 ##   collect  a trader's walker (never a treasury's) takes along, unpaid, the goods of rules.consign the place's businesses hold above
-##            their keep, up to the trader's carry room, only from a place with no trader of its own (its own trader carries them,
+##            their keep, then its treasury granary's spare (B25-ECON-P7, OffMapSettlement.granary_spare, owed to "<place>/treasury"), up to the trader's carry room, only from a place with no trader of its own (its own trader carries them,
 ##            B25-ECON-P4); they stay the source's (`got`, then the trader's `consign` under "<place>/<type>") until the village buys
 ##            them or they go back.
 ## Every hand-over is a matched regional line on both places (SettlementParty.deal; goods for no coins, coins for no goods); nothing is
@@ -455,6 +455,14 @@ static func consign_errand(r: Regions, s: OffMapSettlement, dest: OffMapSettleme
 				OffMapSettlement._add(p.got[item], str(bt), n)
 				lines.append(["consigned", str(item), n, str(bt)])
 				room -= n
+		# B25-ECON-P7: then the ore a closed quarry, mine or trader left in the treasury's granary, above what it must keep
+		var g := mini(room, dest.granary_spare(str(item)))
+		if g > 0 and exchange(me, SettlementParty.make(r, dest, "treasury"), str(item), g, 0, dest.day):
+			if not (p.got as Dictionary).has(item):
+				p.got[item] = {}
+			OffMapSettlement._add(p.got[item], "treasury", g)
+			OffMapSettlement._add(dest.granary_ore.out, str(item), g)
+			lines.append(["consigned", str(item), g, "treasury"])
 	return lines
 
 

@@ -281,9 +281,11 @@ func test_settle_and_return() -> void:
 	check((st[1].purpose.get("give", {}) as Dictionary).is_empty(), "goods held under consign_hold_days stay with the trader")
 	var qtill := int(q.till)
 	var qore := int(q.stock.get("iron_ore", 0))
+	var gran := int(g.gov.granary.get("iron_ore", 0))
 	var tot := _totals(r)
 	_arrive(r)
-	var again := qore - int(q.stock.get("iron_ore", 0))
+	# B25-ECON-P7: the closed trader's ore in Garton's granary is a source too
+	var again := qore - int(q.stock.get("iron_ore", 0)) + gran - int(g.gov.granary.get("iron_ore", 0))
 	check(int(q.till) == qtill + 4 * pay, "Garton's diggings are paid %d at their door" % (4 * pay))
 	check(c.consigned("iron_ore") == n - 4 + again, "while there the walker took on %d more" % again)
 	check(_totals(r) == tot and r.audit() == "", "coins and goods conserved (%s)" % r.audit())
@@ -297,9 +299,9 @@ func test_settle_and_return() -> void:
 	_arrive(r)
 	var back := 0
 	for e in r.trip_journal:
-		if str(e.party) == "garton/quarry" and str(e.kind) == "buy" and str(e.item) == "iron_ore" and int(e.coins) == 0:
+		if str(e.party) in ["garton/quarry", "garton/treasury"] and str(e.kind) == "buy" and str(e.item) == "iron_ore" and int(e.coins) == 0:
 			back += int(e.n)
-	check(back == held, "Garton's diggings took the %d units back (%d)" % [held, back])
+	check(back == held, "Garton's diggings (and, B25-ECON-P7, its treasury) took the %d units back (%d)" % [held, back])
 	check(r.audit() == "", "the books balance after the return (%s)" % r.audit())
 
 
