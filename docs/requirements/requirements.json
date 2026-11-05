@@ -6195,7 +6195,7 @@
    "description": "Ore imports stall: Garton's quarry stock rose 63 to 175 but its trader had no coins to buy it, so 0 iron ore came to the village in 120 days (2 in a year for seed 2). Options: A keep as an outcome; B the trader carries ore on consignment (paid on sale); C smiths buy from the quarry directly. Recommendation: decide after the final year-long runs; leaning B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686).",
    "source": "docs/directives/2026-11-02_overnight_autonomous_development_directive.md",
    "owner_wording": null,
-   "owner_answer": "B: a neighbour trader may carry real ore stock on consignment, paying its source when the village buys; only real stocks; built in B25R1 (2026-11-05)",
+   "owner_answer": "B: consignment of real ore (2026-11-05); follow-up q27: other traders consign another settlement's ore through the wholesale trips (2026-11-05)",
    "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
@@ -6212,8 +6212,15 @@
      "date": "2026-11-05",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner 2026-11-05 (B25R1 owner questions 20-26)"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: None -> IN DEVELOPMENT; branch: None -> wip/b25r1-econ3; owner_answer",
+     "why": "own-settlement consignment implemented (f163a95, INT-777, consign_test 23/0), merged as c3d9d91; 120-day run 42028695001 imported no iron (Garton's trader closed before day 20). Owner 2026-11-05 question 27: 'Other traders consign' (any neighbour trader carries another settlement's real ore on consignment via wholesale trips); in development on wip/b25r1-econ3"
     }
-   ]
+   ],
+   "implementation_status": "IN DEVELOPMENT",
+   "branch": "wip/b25r1-econ3"
   },
   {
    "id": "B25-ECON-P5",
@@ -6239,7 +6246,19 @@
      "date": "2026-11-05",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner 2026-11-05 (B25R1 owner questions 20-26)"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: None -> INTEGRATED; verification_status: None -> TARGETED TESTS PASSED; tests: None -> land_clearing 28/0, farming 224/0, farm_plots 104/0, run_tests 3608/0; run 42028695001; test_commit: None -> ae4a013; commits + c3d9d91",
+     "why": "implemented on wip/b25r1-econ2 (4108c30, d58799b, ae4a013), merged into wip/b25r1 as c3d9d91 (INT-778); 120-day seed 1 run 42028695001: 3 new manor fields, farmers 12->18, out of work 10->2, starved 1->0, no leaks; land_clearing_test 28/0"
     }
+   ],
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
+   "tests": "land_clearing 28/0, farming 224/0, farm_plots 104/0, run_tests 3608/0; run 42028695001",
+   "test_commit": "ae4a013",
+   "commits": [
+    "c3d9d91"
    ]
   },
   {

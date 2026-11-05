@@ -28,6 +28,7 @@
   when the final SHA changes). **Owner questions** (seven groups, asked one at a time): `docs/handoffs/B25R1_OWNER_QUESTIONS_2026-11-05.md`.
 - **New register ids (in development, grass-and-map worker, branch wip/b25r1-grassmap once created):** B25R1-023 Bow.Pixel Low Grass
   decoration on the overworld; B25R1-024 region map restyle (UIStyle, gamepad focus on the Village tab).
+- **Economy decisions (owner 2026-11-05, questions 20-27):** B25-ECON-P1..P3 integrated (edf1854); B25-ECON-P5 land clearing integrated (c3d9d91); B25-ECON-P4 own-settlement ore consignment integrated (c3d9d91), cross-settlement consignment (owner question 27) in development on wip/b25r1-econ3.
 - **Other ordered work (Option 1 item 2):** B25R1-018 Bear Hill and castle knoll; B25R1-022 Fantasy Lands houses; B25R1-010 player
   homestead well; B25R1-020 Android crowd-management measurement. EA-01 tracked separately (milestone: Early Access demo about
   2026-11-24; build placement is the owner's).
