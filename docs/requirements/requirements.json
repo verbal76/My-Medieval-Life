@@ -5703,6 +5703,11 @@
      "date": "2026-11-02",
      "change": "note",
      "why": "year-long runs 41362329381 on 908a17e (seeds 1, 2; 13751 s and 15767 s): currency and item leaks 0 throughout, no FATAL; NO venture considered, founded, bought, sold, hired or expanded in either seed (BIZ stats empty all year). Gates at day 365: seed 1 founding trades 9, skilled 5, experienced 3, household free 1, owns house 0; seed 2: 8, 4, 2, 0, 0. Population grew to 356 and 308 with 141 and 112 unemployed. Lead change f8f9cac: tenants may reopen or buy (no building); building by tenants put to the owner as B25-BIZ-TENANT-Q. Acceptance 2 not met."
+    },
+    {
+     "date": "2026-11-05",
+     "change": "note",
+     "why": "owner 2026-11-05 (B25R1 owner questions 20-26): investigation (Actions 41967592798, 120 days: 170 looks, 0 founded; the opening/full-bench gate never passed) answered by P1-P5; implementation in B25R1"
     }
    ],
    "assigned_worker": "b25-bizown worker",
@@ -6071,8 +6076,8 @@
    "description": "Business founding requires the trade's benches to be full and busy (Ventures.refusal, skilled_place busy_share 0.35); in seed 1 the founding trades' benches were 2-20% busy all 120 days, so every one of 172 weekly looks stopped there. Options: A keep the rule (businesses form when demand exists); B let a founder weigh independence even with idle benches (the judgment weighing decides); C a lower busy threshold for founding only. Recommendation: A, and act on demand (P2-P4) rather than the gate. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686).",
    "source": "docs/directives/2026-11-02_overnight_autonomous_development_directive.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "B: a qualified villager with capital may found while benches are idle; their own judgment (ambition, demand, capital, skill) decides; built in B25R1 (2026-11-05)",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [
@@ -6085,6 +6090,11 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-02_overnight_autonomous_development_directive.md"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner 2026-11-05 (B25R1 owner questions 20-26): drop the full-bench founding gate"
     }
    ]
   },
@@ -6095,8 +6105,8 @@
    "description": "Coinless adults cannot take open miner or woodcutter places because those jobs need a tool and the manor's tool help covers only workers already in the trade (all 10 jobless at day 120 came of age in the run and hold median 0 coins). Options: A keep; B the household buys a member's first work tool from its own purse (existing purchase rules); C the manor advances the tool against wages; D tool rental outside the Living Economy. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686).",
    "source": "docs/directives/2026-11-02_overnight_autonomous_development_directive.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "B: the household buys a member's first work tool from its own purse when it can afford it; no manor lending (OD-16); built in B25R1 (2026-11-05)",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [],
@@ -6107,6 +6117,11 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-02_overnight_autonomous_development_directive.md"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner 2026-11-05 (B25R1 owner questions 20-26)"
     }
    ]
   },
@@ -6117,8 +6132,8 @@
    "description": "Retired villagers keep trade stock forever (day 120: 68 iron ore, 47 coal, 24 iron bars, 8 pickaxes, 7 axes held by elders while the working smith held nothing). Options: A keep; B elders and adults between jobs sell their goods through the existing sell rule; C the stock passes to the trade's successor as tools already do. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686).",
    "source": "docs/directives/2026-11-02_overnight_autonomous_development_directive.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "B: elders and adults between jobs sell trade stock they no longer use through the existing sell rule; built in B25R1 (2026-11-05)",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [],
@@ -6129,6 +6144,11 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-02_overnight_autonomous_development_directive.md"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner 2026-11-05 (B25R1 owner questions 20-26)"
     }
    ]
   },
@@ -6139,8 +6159,8 @@
    "description": "Ore imports stall: Garton's quarry stock rose 63 to 175 but its trader had no coins to buy it, so 0 iron ore came to the village in 120 days (2 in a year for seed 2). Options: A keep as an outcome; B the trader carries ore on consignment (paid on sale); C smiths buy from the quarry directly. Recommendation: decide after the final year-long runs; leaning B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686).",
    "source": "docs/directives/2026-11-02_overnight_autonomous_development_directive.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "B: a neighbour trader may carry real ore stock on consignment, paying its source when the village buys; only real stocks; built in B25R1 (2026-11-05)",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [],
@@ -6151,6 +6171,11 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-02_overnight_autonomous_development_directive.md"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner 2026-11-05 (B25R1 owner questions 20-26)"
     }
    ]
   },
@@ -6161,8 +6186,8 @@
    "description": "Village land (fields, trees, game, ore) is fixed while population roughly triples in a year, so unemployment rises with population. Should fields grow with population? Recommendation: no change on present evidence. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686).",
    "source": "docs/directives/2026-11-02_overnight_autonomous_development_directive.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Land grows: when households lack fields, villagers clear unused rough ground inside the village's lands by real labour (scrub, stumps into logs, stones), then till it; ends when that ground is used up (WDR-013); built in B25R1 (2026-11-05)",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20",
    "related": [],
@@ -6173,6 +6198,11 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-02_overnight_autonomous_development_directive.md"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner 2026-11-05 (B25R1 owner questions 20-26)"
     }
    ]
   },
@@ -7356,6 +7386,11 @@
      "date": "2026-11-05",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> homestead 47-49/0, homestead_presence 17/0, player_homestead 40/0; commits + c137815; commits + 5cd1765; commits + e080bc0; integrated_in + B25R1 wip/b25r1 (head a995397); known_defects + player homestead cannot build a well (agent provisional, HOMESTEADING_B25R1.md); to be built per owner Option 1 item 2",
      "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IN DEVELOPMENT was stale; c137815..5cd1765 merged (ancestors of a995397); homestead 47-49/0, homestead_presence 17/0, player_homestead 40/0; 160-day measure 0 organic homesteads. Open: player homestead cannot build a well (agent provisional narrowing, contrary to B25R1-015); owner Option 1 item 2 orders player homestead well construction"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "note",
+     "why": "2026-11-05: the player homestead well works since 2607807 (stale records corrected, end-to-end test player_homestead_test 60/0, merged f21039e); the audit's narrowing is withdrawn"
     }
    ],
    "disposition": "APPROVED",
