@@ -344,6 +344,8 @@ jobs:
           res://tests/econ_p2p3_test.gd          # B25-ECON-P2/P3: a household's first tool; elders' unused stock sold
           res://tests/elder_provision_test.gd    # X20-FIREWOOD: an elder buys the household's firewood and grain
           res://tests/settle_food_test.gd        # X20-SETTLE-FOOD, B25R1-019: settlement food trade carried by walkers
+          res://tests/consign_test.gd            # B25-ECON-P4: a neighbour trader carries real ore on consignment
+          res://tests/land_clearing_test.gd      # B25-ECON-P5: rough ground cleared by labour into new manor fields
           res://tests/settle_review_test.gd      # Build 24 settlement review: idle traders close and reopen, leavers keep their tills
           res://tests/sim_f2_test.gd             # SIM-F2: a failing purchase is not chosen again and again
           res://tests/sim_f3_test.gd             # SIM-F3: a stalking bandit keeps a lasting plan

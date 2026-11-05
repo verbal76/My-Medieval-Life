@@ -50,7 +50,7 @@ extends RefCounted
 ## Carried goods ride in the job's own load (never the worker's pack), so they cannot be sold, eaten or
 ## lost; a dead worker's load goes back. Every number is provisional — balance review pending.
 
-const KINDS := ["haul", "quarry", "mend", "survey", "trial", "excavate", "tunnel", "backfill", "shore"]
+const KINDS := ["haul", "quarry", "mend", "survey", "trial", "excavate", "tunnel", "backfill", "shore", "clear"]
 const ORDER := ["pantry", "granary", "yard"]        # hauling priority by destination: relief first
 const MATERIALS := ["plank", "stone", "rubble", "log", "iron_bar"]       # STONE-04: rubble mends as raw stone does
 
@@ -267,6 +267,40 @@ func post_quarry() -> void:
 	if _works_stock("stone") >= 2 * int(cfg("mend_load")):
 		return
 	_post({"kind": "quarry", "item": "stone", "qty": int(cfg("quarry_qty")), "wage": int(cfg("quarry_wage"))})   # X18-D6: posted at the base rate; the taker's wage is set at acceptance (wage_for)
+
+
+## B25-ECON-P5 "Cleared by labour" (owner 2026-11-05), the reeve's evening: while the households lack fields (LandClearing.wanted:
+## every manor field has its farmers and an able adult has no work) and unused rough ground is left, one "clear" job at a time:
+## `cells_per_job` cells of the nearest block cleared and tilled (LandClearing.work), the logs and stone to the works yard.
+func post_clearing() -> void:
+	if w.clearing == null:
+		return
+	for j in jobs.duplicate():
+		if j.kind == "clear" and j.taker == "" and clear_cell(j).x < 0 and not _clear_site_current(j):
+			jobs.erase(j)                            # its ground was taken for something else (or is a field now)
+	if jobs.any(func(j): return j.kind == "clear"):
+		return
+	if not w.clearing.wanted():
+		return
+	var b: Array = w.clearing.current()
+	if b.is_empty():
+		return                                       # the ground is used up
+	var lc := LandClearing.cfg()
+	_post({"kind": "clear", "qty": int(lc.cells_per_job), "done": 0, "site": [int(b[0]), int(b[1])], "wage": int(lc.wage)})
+
+
+func _clear_site_current(j: Dictionary) -> bool:
+	var b: Array = w.clearing.current()
+	return not b.is_empty() and int(b[0]) == int(j.site[0]) and int(b[1]) == int(j.site[1])
+
+
+## The cell a clearing job works next for its taker (or for `who`), Vector2i(-1, -1) when none they can.
+func clear_cell(j: Dictionary, who := "") -> Vector2i:
+	var b: Array = w.clearing.current() if w.clearing != null else []
+	if b.is_empty() or int(b[0]) != int(j.site[0]) or int(b[1]) != int(j.site[1]):
+		return Vector2i(-1, -1)
+	var ref: String = who if who != "" else str(j.taker)
+	return w.clearing.next_cell(b, _who(ref) if ref != "" else null)
 
 
 ## B25R1-011, the reeve's evening: one paving job at a time, while the yard holds the stone for it beyond a mend's load and a
@@ -610,6 +644,8 @@ func open_for(who: String) -> Array:
 			continue
 		if j.kind in ["quarry", "trial", "excavate", "tunnel"] and not can_dig(j, who):
 			continue
+		if j.kind == "clear" and (World.is_player_ref(who) or clear_cell(j, who).x < 0):
+			continue                 # B25-ECON-P5: villagers' work; a cell the worker can clear with what they hold
 		if j.kind in ["tunnel", "backfill", "shore"] and World.is_player_ref(who):
 			continue                 # MIN-F2: the player tunnels and fills with their own hands (and orders the fill)
 		if j.kind == "backfill" and (is_staff(who) or (j.stock as Inventory).total() + j.load.total() == 0):
@@ -626,7 +662,7 @@ func open_for(who: String) -> Array:
 func _rank(j: Dictionary) -> int:
 	if j.kind == "haul":
 		return ORDER.find(str(j.to.kind))
-	return {"mend": 3, "quarry": 4, "survey": 5, "trial": 6, "excavate": 7, "tunnel": 8, "backfill": 9, "shore": 2, "envoy": 11}.get(str(j.kind), 10)     # MIN-EQUIP: shoring with the yard's goods comes before mending
+	return {"mend": 3, "quarry": 4, "survey": 5, "trial": 6, "excavate": 7, "tunnel": 8, "backfill": 9, "shore": 2, "envoy": 11, "clear": 10}.get(str(j.kind), 10)     # MIN-EQUIP: shoring with the yard's goods comes before mending
 
 
 func _has_kit(who: String) -> bool:
@@ -747,7 +783,7 @@ func release(j: Dictionary) -> void:
 		j.erase("site")
 	if j.kind == "envoy":
 		j.carried = []               # REGION-NAV-01 S4: what an envoy had learnt is lost with them (the book never had it)
-	if j.kind in ["quarry", "survey", "trial", "excavate", "tunnel", "shore", "envoy"]:
+	if j.kind in ["quarry", "survey", "trial", "excavate", "tunnel", "shore", "envoy", "clear"]:
 		jobs.erase(j)              # the reeve posts it again when the works still lack stone (or the find is still wanted)
 
 
@@ -769,6 +805,10 @@ func step(j: Dictionary) -> String:
 			return "assay" if not _survey_pending(j).is_empty() else "report"
 		"trial":
 			return "dig"
+		"clear":
+			if int(j.done) < int(j.qty) and clear_cell(j).x >= 0:
+				return "clear"
+			return "put" if j.load.total() > 0 else "done"
 		"shore":
 			if int(j.get("done", 0)) > 0:
 				return "put"
@@ -838,6 +878,9 @@ func step_cell(j: Dictionary) -> Vector2i:
 			return yard_cell()
 		"mend", "dig":
 			return Vector2i(int(j.site[0]), int(j.site[1]))
+		"clear":
+			var c := clear_cell(j)
+			return c if c.x >= 0 else Vector2i(int(j.site[0]), int(j.site[1]))
 		"excavate":
 			var c := excavate_cell(j)
 			return c if c.x >= 0 else yard_cell()
@@ -890,6 +933,8 @@ func describe(j: Dictionary) -> String:
 			return "Cut a load of %d from the rock face below ground with a pickaxe and bring it to the works yard" % int(j.qty)
 		"backfill":
 			return "For the player: carry spoil from the mine's mouth down below ground and put %d back into a passage (%d placed)" % [int(j.qty), int(j.placed)]
+		"clear":
+			return "Clear %d cells of rough ground %s for a new manor field (scrub pulled up, trees felled and stumps dug out with an axe, boulders broken with a pickaxe) and till them by hand; logs and stone go to the works yard" % [int(j.qty), w.where(Rect2i(int(j.site[0]), int(j.site[1]), 11, 6))]
 		"excavate":
 			var p := w.pits.pit(int(j.pit))
 			return "Dig a load of %d from the manor's open pit %s (a shovel for earth, a pickaxe for rock), tip the earth on its spoil heap and bring any stone to the works yard" % [int(j.qty), w.where(OpenPits.rect(p)) if not p.is_empty() else "in the village"]
@@ -962,7 +1007,7 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 				_finish(j, who)
 				return true
 			# quarry: the stone goes into the yard (the player brings it in their pack); an excavation's rides in its load
-			if j.kind in ["excavate", "tunnel"]:
+			if j.kind in ["excavate", "tunnel", "clear"]:
 				for id in j.load.ids():
 					w.transfer(j.load, yard, id, j.load.count(id))
 			elif World.is_player_ref(who):
@@ -1107,6 +1152,16 @@ func do_step(j: Dictionary, who: String, pack: Inventory) -> bool:
 			return true
 		"done":
 			_finish(j, who)
+			return true
+		"clear":
+			var c := clear_cell(j, who)
+			var b: Array = w.clearing.current()
+			if c.x < 0 or b.is_empty():
+				return false
+			if w.clearing.work(b, c, _who(who), j.load):
+				j.done = int(j.done) + 1
+				if w.clearing.current().is_empty() or int(w.clearing.current()[0]) != int(j.site[0]) or int(w.clearing.current()[1]) != int(j.site[1]):
+					j.done = int(j.qty)                # the block is a field now: the job ends with this cell
 			return true
 		"tip":
 			var p := w.pits.pit(int(j.pit))
@@ -1267,6 +1322,9 @@ func plan(n: NPC) -> bool:
 	n.doing = "working for the manor"
 	if str(j.kind) == "envoy":
 		return Envoys.plan(w, n, j)
+	if str(j.kind) == "clear" and int(j.done) == 0 and clear_cell(j).x < 0:
+		release(j)                                   # B25-ECON-P5: nothing here they can clear now: the job goes back unpaid
+		return false
 	match step(j):
 		"mine":
 			if not n.inv.has("pickaxe"):
@@ -1346,6 +1404,14 @@ func plan(n: NPC) -> bool:
 			var hc := step_cell(j)
 			var stand := w.pits.stand_beside(hc, n.cell())
 			n.plan = [b.go(stand if stand.x >= 0 else b.beside(hc, n.cell())), b.doit("mj_step", {"job": int(j.id)})]
+		"clear":
+			var at := clear_cell(j)
+			if at.x < 0:
+				release(j)
+				return false
+			n.doing = "clearing rough ground for a manor field"
+			var t: String = w.clearing.tool_for(at)
+			n.plan = [b.go(b.beside(at, n.cell())), b.work(w.clearing.minutes_for(at), "mj_step", {"job": int(j.id)}, "swing" if t != "" else "work", at)]
 		"dig":
 			if OpenPits.held_tool(n, str(Discovery.cfg().trial.get("tool", "shovel"))) == "":
 				release(j)
@@ -1459,7 +1525,7 @@ func load_dict(d: Dictionary) -> void:
 	yard = Inventory.from_dict(d.get("yard", {}))
 	for jd in d.get("jobs", []):
 		var j: Dictionary = jd.duplicate()
-		for k in ["id", "lot", "qty", "wage", "day", "reserved", "taken", "level", "placed", "days_allowed"]:
+		for k in ["id", "lot", "qty", "wage", "day", "reserved", "taken", "level", "placed", "days_allowed", "done"]:
 			if j.has(k):
 				j[k] = int(j[k])
 		for k in ["site", "at", "depot"]:

@@ -826,6 +826,7 @@ func step_day(d: int) -> void:
 	_sup = {}
 	_pcache = {}
 	var t0 := Time.get_ticks_usec() if profile else 0
+	_consign_return()                      # B25-ECON-P4: what the trader carried on consignment and did not sell goes home first
 	if not transit.is_empty():
 		_deliver()
 	_market()
@@ -1803,6 +1804,111 @@ func _stable() -> void:
 func begin_visit() -> void:
 	_want_left = wants()
 	stock_trader_food()
+	consign_out()
+
+
+# ------------------------------------------------------------------ consignment (B25-ECON-P4) ----------------
+## B25-ECON-P4 (owner 2026-11-05: "a neighbour trader may carry REAL ore stock on consignment, paying its source when the village
+## buys it"; only real stocks, nothing created; OD-01, ECON-P1.3). The rule:
+##   take     when a caravan visit opens (begin_visit), the trader takes along, without paying, the goods of rules.consign that
+##            its own settlement's businesses hold above what they keep (_keep), up to its carry room (rules.carry less its stock),
+##            the businesses in type order; the units stay owed to their source (the trader's `consign` {item: {type: n}});
+##   sell     only to the village (sell_to_village): the trader's own stock goes first, then the consigned; each consigned unit
+##            sold pays its source trader_pays_share of the settlement's price (never more than the sale) from the coins the
+##            village just paid; nobody else may buy a consigned unit (sale_cap, Regions.road_trade);
+##   return   at the settlement's next morning (step_day, before its market) every unsold consigned unit goes back to its source's
+##            stock; a source that has closed meanwhile is the treasury's (its goods to the granary, its pay to gov.coins), the
+##            rule of a closed business (_close_business).
+## Goods and coins move inside the settlement's own books (no flow line), so its audit holds; the village side is sell_to_village's.
+func consign_out() -> void:
+	var m := trader()
+	if m.is_empty():
+		return
+	var items: Array = _rules.get("consign", [])
+	if items.is_empty():
+		return
+	var types := biz.keys()
+	types.sort()
+	for item in items:
+		var room := int(_rules.carry.get(item, 0)) - int(m.stock.get(item, 0))
+		for t in types:
+			if room <= 0:
+				break
+			if t == "merchant":
+				continue
+			var b: Dictionary = biz[t]
+			var n := mini(room, int(b.stock.get(item, 0)) - int(_keep(b).get(item, 0)))
+			if n <= 0:
+				continue
+			_take(b.stock, item, n)
+			_add(m.stock, item, n)
+			if not m.has("consign"):
+				m["consign"] = {}
+			if not (m.consign as Dictionary).has(item):
+				m.consign[item] = {}
+			_add(m.consign[item], str(t), n)
+			room -= n
+
+
+## Units of `item` the trader holds on consignment (owed to their sources).
+func consigned(item: String) -> int:
+	var m := trader()
+	if m.is_empty() or not m.has("consign"):
+		return 0
+	var n := 0
+	for t in (m.consign as Dictionary).get(item, {}):
+		n += int(m.consign[item][t])
+	return n
+
+
+## What a consigned unit of `item` pays its source when sold at `unit`.
+func consign_pay(item: String, unit: int) -> int:
+	return mini(unit, maxi(1, roundi(float(price(item)) * float(_rules.trader_pays_share))))
+
+
+## `n` consigned units of `item` were sold at `unit`: each source is paid in type order and its debt struck off.
+func _consign_sold(item: String, n: int, unit: int) -> void:
+	var m := trader()
+	var owed: Dictionary = (m.get("consign", {}) as Dictionary).get(item, {})
+	var types: Array = owed.keys()
+	types.sort()
+	var pay := consign_pay(item, unit)
+	for t in types:
+		if n <= 0:
+			break
+		var k := mini(n, int(owed[t]))
+		m.till -= k * pay
+		if biz.has(t):
+			biz[t].till += k * pay
+		else:
+			gov.coins += k * pay
+		_take(owed, str(t), k)
+		n -= k
+	if owed.is_empty():
+		m.consign.erase(item)
+	if (m.get("consign", {}) as Dictionary).is_empty():
+		m.erase("consign")
+
+
+## The morning after a visit: every unsold consigned unit goes back to its source (a closed source's to the treasury's granary).
+func _consign_return() -> void:
+	var m := trader()
+	if m.is_empty() or not m.has("consign"):
+		return
+	var items: Array = (m.consign as Dictionary).keys()
+	items.sort()
+	for item in items:
+		var owed: Dictionary = m.consign[item]
+		var types: Array = owed.keys()
+		types.sort()
+		for t in types:
+			var k := mini(int(owed[t]), int(m.stock.get(item, 0)))
+			_take(m.stock, str(item), k)
+			if biz.has(t):
+				_add(biz[t].stock, str(item), k)
+			else:
+				_add(gov.granary, str(item), k)
+	m.erase("consign")
 
 
 func want_left(item: String) -> int:
@@ -1826,10 +1932,13 @@ func sell_to_village(item: String, n: int, unit: int) -> bool:
 	var m := trader()
 	if m.is_empty() or n <= 0 or trader_has(item) < n:
 		return false
+	var own_left := int(m.stock.get(item, 0)) - consigned(item)       # B25-ECON-P4: its own stock first, then the consigned
 	_take(m.stock, item, n)
 	m.till += n * unit
 	_add(flows.to_village, item, n)
 	flows.coins_from_village += n * unit
+	if n > own_left:
+		_consign_sold(item, n - maxi(0, own_left), unit)
 	return true
 
 
@@ -2591,6 +2700,11 @@ static func _biz_from(bd: Dictionary) -> Dictionary:
 	b.reserves = _ints(b.reserves)
 	if b.has("imported"):                                      # X20-SETTLE-FOOD (a trader's imported food; optional)
 		b.imported = _ints(b.imported)
+	if b.has("consign"):                                       # B25-ECON-P4 (a trader's consigned goods by source; optional)
+		var c := {}
+		for item in b.consign:
+			c[str(item)] = _ints(b.consign[item])
+		b.consign = c
 	var acc := {}
 	for k in b.acc:
 		acc[k] = float(b.acc[k])
