@@ -2,31 +2,14 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (31)
+## Workers and task branches (14)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
-| B25-CLOSE-01 | 20 | IN DEVELOPMENT | lead (single worker, MML-CONSERVE-01) | wip/b25-farm-phase2 |
 | B25-FINISH-01 | 20 | IN DEVELOPMENT | lead session | wip/region-nav |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
-| B25R1-002 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1-interact |
-| B25R1-003 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
-| B25R1-004 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
-| B25R1-005 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
-| B25R1-006 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
-| B25R1-007 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
-| B25R1-008 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
-| B25R1-010 | 20 | IN DEVELOPMENT | b25r1-homestead worker | wip/b25r1-homestead |
-| B25R1-011 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
-| B25R1-012 | 20 | IMPLEMENTED ON TASK BRANCH | none | wip/b25r1 |
-| B25R1-013 | 20 | IN DEVELOPMENT | b25r1-homestead worker | wip/b25r1-homestead |
-| B25R1-014 | 20 | IN DEVELOPMENT | b25r1-homestead worker | wip/b25r1-homestead |
-| B25R1-016 | 20 | IN DEVELOPMENT | b25r1-recorder worker | wip/b25r1-recorder |
-| B25R1-017 | 20 | IN DEVELOPMENT | b25r1-water and b25r1-homestead workers | wip/b25r1 |
-| B25R1-018 | 20 | IN DEVELOPMENT | b25r1-region worker | wip/b25r1-region |
-| B25R1-019 | 20 | IN DEVELOPMENT | b25r1-presence worker | wip/b25r1-presence |
-| B25R1-020 | 20 | IN DEVELOPMENT | b25r1-presence worker | wip/b25r1-presence |
-| DEMO-01 | 20 | IN DEVELOPMENT | lead session | wip/expansion20 |
+| B25R1-023 | 20 | IN DEVELOPMENT | b25r1-grassmap worker | wip/b25r1-grassmap |
+| B25R1-024 | 20 | IN DEVELOPMENT | b25r1-grassmap worker | wip/b25r1-grassmap |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
@@ -38,7 +21,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (79)
+## Implemented but not tested (82)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -56,9 +39,12 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-BUSINESS-IMPL | 20 | INTEGRATED |  |
 | B25-CAREER-IMPL | 20 | INTEGRATED |  |
 | B25-CAREER-SYSTEM | 20 | INTEGRATED |  |
-| B25-CLOSE-02 | 20 | PARTIALLY IMPLEMENTED |  |
+| B25-CLOSE-01 | 20 | INTEGRATED |  |
 | B25-EMPLOY-IMPL | 20 | INTEGRATED |  |
+| B25-OVN-0211 | 20 | INTEGRATED |  |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |
+| B25R1-001 | 20 | PARTIALLY IMPLEMENTED |  |
+| B25R1-016 | 20 | PARTIALLY IMPLEMENTED |  |
 | B7-009 | 15 | INTEGRATED |  |
 | B7-014 | 15 | INTEGRATED |  |
 | B8-007 | 20+ | PARTIALLY IMPLEMENTED |  |

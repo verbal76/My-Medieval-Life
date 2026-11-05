@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 805 (430 of them still open) |
-| **Open entries now** (rules excluded) | | **588** |
+| Entries added since | | 808 (431 of them still open) |
+| **Open entries now** (rules excluded) | | **589** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (805)
+## Added since the baseline (808)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -172,8 +172,8 @@ None.
 | B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-CHAPEL-FOOD-Q | The church plot (8x7 cells, replaces its own seed, ripens every 2 days) yields about 12-18 wheat a day; in a food-secure village (yield 2.0) almost no household needs relief or food alms, so the chapel's store grows to 760-2,140 wheat a year (now limited only by normal spoilage, fixed 2026-11-02). What should the church do with food it does not need? Options: A the church farms only to need - it sows the plot only while its store is below a ceiling (recommended by the worker and the lead: no waste, no new flow, nothing created); B it sells the surplus at market and gives the coins as alms; C it passes the surplus to the manor's granary; D leave it (spoilage caps it). Evidence: docs/release/chapel_fix/CHAPEL_FOOD_FINDINGS.md on the Build 25 source. | decision | APPROVED | 20 |
-| B25-CLOSE-01 | Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
-| B25-CLOSE-02 | Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final year-long campaign (seeds 1 and 2 normal, seed 1 economy-on) on it, present B25-ECON-P1..P5, JOB-02/CON-02-KINDS/PIT-02/FSE-10 as future-scope candidates, LE-07 gate 11 open for an owner device test, no packaging until the gates pass | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 20 |
+| B25-CLOSE-01 | Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
+| B25-CLOSE-02 | Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final year-long campaign (seeds 1 and 2 normal, seed 1 economy-on) on it, present B25-ECON-P1..P5, JOB-02/CON-02-KINDS/PIT-02/FSE-10 as future-scope candidates, LE-07 gate 11 open for an owner device test, no packaging until the gates pass | approved | PARTIALLY IMPLEMENTED / NOT TESTED / CLOSED | 20 |
 | B25-ECON-P1 | Business founding requires the trade's benches to be full and busy (Ventures.refusal, skilled_place busy_share 0.35); in seed 1 the founding trades' benches were 2-20% busy all 120 days, so every one of 172 weekly looks stopped there. Options: A keep the rule (businesses form when demand exists); B let a founder weigh independence even with idle benches (the judgment weighing decides); C a lower busy threshold for founding only. Recommendation: A, and act on demand (P2-P4) rather than the gate. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | OPEN | 20 |
 | B25-ECON-P2 | Coinless adults cannot take open miner or woodcutter places because those jobs need a tool and the manor's tool help covers only workers already in the trade (all 10 jobless at day 120 came of age in the run and hold median 0 coins). Options: A keep; B the household buys a member's first work tool from its own purse (existing purchase rules); C the manor advances the tool against wages; D tool rental outside the Living Economy. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | OPEN | 20 |
 | B25-ECON-P3 | Retired villagers keep trade stock forever (day 120: 68 iron ore, 47 coal, 24 iron bars, 8 pickaxes, 7 axes held by elders while the working smith held nothing). Options: A keep; B elders and adults between jobs sell their goods through the existing sell rule; C the stock passes to the trade's successor as tools already do. Recommendation: B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | OPEN | 20 |
@@ -183,7 +183,7 @@ None.
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-FINISH-01 | Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25-LE-ACTIVATE-D1 | Living Economy activation policy for Build 25 | decision | APPROVED | owner decision |
-| B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | B25-NINE-D1 | Organic skills, apprenticeship and career development | decision | APPROVED | owner decision |
 | B25-NINE-D2 | Informal services and expanded service contracts | decision | APPROVED | owner decision |
 | B25-NINE-D3 | Farming yield and food security | decision | APPROVED | owner decision |
@@ -193,31 +193,34 @@ None.
 | B25-NINE-D7 | Ordinary clothing is cosmetic | decision | APPROVED | owner decision |
 | B25-NINE-D8 | Predefined capabilities and organic societal development | decision | APPROVED | owner decision |
 | B25-NINE-D9 | Game juice phases J1 and J2 | decision | APPROVED | owner decision |
-| B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20 |
 | B25-SCOPE-D1 | Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work from abandoned branches? | decision | APPROVED | owner decision |
-| B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
-| B25R1-001 | Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
-| B25R1-002 | Full interaction outside the starting village (release blocker) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
-| B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
-| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
-| B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
-| B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
-| B25R1-007 | Character creation: unrestricted cosmetic options | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
-| B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
+| B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-001 | Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 20 |
+| B25R1-002 | Full interaction outside the starting village (release blocker) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-007 | Character creation: unrestricted cosmetic options | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return, alongside the existing ambient travellers | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
-| B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
-| B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
-| B25R1-012 | Gamepad destination selection on the region map (cursor, D-pad, confirm, zoom, recentre) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
-| B25R1-013 | Youth runaways from sustained household hardship, and bandit recruitment as a separate outcome | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
-| B25R1-014 | Shared wilderness settlement foundation: lawful homesteads and outlaw communities; sustainable bandit populations; adult bandits may leave | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
-| B25R1-015 | Full approved Revision 1 scope is mandatory: no deferral, disabling, placeholder or narrowing without the owner | rule | NOT STARTED / NOT TESTED / OPEN | 20 |
-| B25R1-016 | 365-day flight recorder campaign proving the living world: migration, homesteading, runaways, bandit recruitment and departure, economy, multigenerational life histories | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
-| B25R1-017 | Integration, real water system (streams, rivers, waterfalls, bridges, wells), credits regression diagnosis, existing-world compatibility, water events in the flight recorder | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
-| B25R1-018 | Complete regional world reconstruction: Morris geography (Downs, landmarks, rivers), meandering roads, explorable principal settlements with real residents, game-original hamlets, scale (J-D2, J-G1), save compatibility | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
-| B25R1-019 | Presence by view range: everything within the player's view plus a margin (growing with zoom) is live (people, animals, moving water, trees swaying in the breeze); everything beyond is calculation, the starting village included | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
-| B25R1-020 | Anticipatory NPC crowd management in the presence buffer: eligible ordinary NPCs begin their next legitimate activity sooner and walk away; protected NPCs never moved; soft visible target about 15-20 | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-012 | Gamepad destination selection on the region map (cursor, D-pad, confirm, zoom, recentre) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-013 | Youth runaways from sustained household hardship, and bandit recruitment as a separate outcome | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-014 | Shared wilderness settlement foundation: lawful homesteads and outlaw communities; sustainable bandit populations; adult bandits may leave | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-015 | Full approved Revision 1 scope is mandatory: no deferral, disabling, placeholder or narrowing without the owner | rule | NOT APPLICABLE / NOT APPLICABLE / OPEN | 20 |
+| B25R1-016 | 365-day flight recorder campaign proving the living world: migration, homesteading, runaways, bandit recruitment and departure, economy, multigenerational life histories | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 20 |
+| B25R1-017 | Integration, real water system (streams, rivers, waterfalls, bridges, wells), credits regression diagnosis, existing-world compatibility, water events in the flight recorder | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-018 | Complete regional world reconstruction: Morris geography (Downs, landmarks, rivers), meandering roads, explorable principal settlements with real residents, game-original hamlets, scale (J-D2, J-G1), save compatibility | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-019 | Presence by view range: everything within the player's view plus a margin (growing with zoom) is live (people, animals, moving water, trees swaying in the breeze); everything beyond is calculation, the starting village included | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| B25R1-020 | Anticipatory NPC crowd management in the presence buffer: eligible ordinary NPCs begin their next legitimate activity sooner and walk away; protected NPCs never moved; soft visible target about 15-20 | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-022 | Integrate Fantasy Lands Houses (Szadi art) into the towns: palette remapped to match our art where too dark, roofs separable and fading like current houses so the player can go inside | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
+| B25R1-023 | Bow.Pixel Low Grass decoration drawn on the overworld (ground variety) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| B25R1-024 | Region map restyle in the shared UI design language (UIStyle), with gamepad focus on the Village tab | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| B25R1-AUDIT-OPT1 | B25R1 requirements audit (2026-11-05): which completion path? Option 1 = finish validating the current code while continuing development of every approved B25R1 requirement, no deferral | decision | APPROVED | 20 |
 | B25R1-Q1 | Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Should Revision 1 ship with dirt roads and trails only, or should stone roads be added (needs a stone-road tile set: from a pack the owner supplies, or drawn from existing stone tiles)? | decision | APPROVED | 20 |
 | B25R1-Q2 | Bandit band as a woodland community: move the band to a hidden overworld claim with a household (a), keep the village camp and put only turned outlaws on claims (b), or abstract bandits offscreen (c)? | decision | APPROVED | 20 |
 | B25R1-Q3 | Water for wilderness settlements: wells built from real materials, streams added by an overworld generator change, or both? | decision | APPROVED | 20 |
@@ -273,7 +276,7 @@ None.
 | CTR-03 | Shopkeeper availability: ordinary villagers with schedules; when summoned an available one comes, else the player is told clearly; employees or family may serve; no interrupted emergencies, no duplicate service tasks | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | CTR-04 | Permanent counters are not market stalls: no stall commission on counters without an approved rule | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | DCR-01 | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control | rule | NOT STARTED / NOT TESTED / OPEN | unassigned |
-| DEMO-01 | Replayable 120-Minute Demo and Steam Integration (with the six-package release pipeline) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| DEMO-01 | Replayable 120-Minute Demo and Steam Integration (with the six-package release pipeline) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | DEV-GOV-01 | Development governance: agents make technical decisions within approved requirements; the owner approves scope and sequence (no skipping, moving, merging, splitting, renaming, reordering or deferring work packages, no stage marked complete with criteria outstanding, dependencies raised before the sequence changes) | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
 | DOC-AUTH-01 | Document authority replacement: once the owner explicitly approves and delivers the final revised expansion specification set, it is the sole authoritative current specification; older plans, roadmaps, packets, instructions and registers become historical evidence only; omitted features are not reintroduced (ask if materially ambiguous); code differences are reported, not silently changed; later explicit owner decisions supersede and are folded into the set; no third interpretation. Until then: latest explicit owner decisions and the validated baseline. The switch happens only on final approval, not on a draft. | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | DOC-CONT-01 | Permanent development documentation and AI continuity: one current-state entry point, a chronological development changelog, SHA-bound test evidence with status levels, worker recovery records, an 11-step recovery procedure usable by any assistant | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |

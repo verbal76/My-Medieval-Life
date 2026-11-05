@@ -8,34 +8,26 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 
 | Count | Value |
 |---|---|
-| Approved requirements in scope | 172 |
-| Integrated | 128 of 172 (74%) |
-| Automated tests passed | 121 of 172 (70%) |
-| Integration verified | 64 of 172 (37%) |
-| Gameplay verified | 0 of 172 (0%) |
-| Owner playtested | 0 of 172 (0%) |
-| Complete | 2 of 172 (1%) |
-| Open (release blockers) | 170 |
+| Approved requirements in scope | 173 |
+| Integrated | 148 of 173 (86%) |
+| Automated tests passed | 131 of 173 (76%) |
+| Integration verified | 64 of 173 (37%) |
+| Gameplay verified | 0 of 173 (0%) |
+| Owner playtested | 0 of 173 (0%) |
+| Complete | 2 of 173 (1%) |
+| Open (release blockers) | 171 |
 | Open owner decisions (blocking) | 6 (0) |
 
-## In development (worker assigned) (12)
+## In development (worker assigned) (4)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| B25-CLOSE-01 | Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop | OWNER APPROVED | IN DEVELOPMENT | lead (single worker, MML-CONSERVE-01) / wip/b25-farm-phase2 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-FINISH-01 | Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release | OWNER APPROVED | IN DEVELOPMENT | lead session / wip/region-nav | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | OWNER APPROVED | IN DEVELOPMENT | b25r1-homestead worker / wip/b25r1-homestead | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-013 | Youth runaways from sustained household hardship, and bandit recruitment as a separate outcome | OWNER APPROVED | IN DEVELOPMENT | b25r1-homestead worker / wip/b25r1-homestead | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-014 | Shared wilderness settlement foundation: lawful homesteads and outlaw communities; sustainable bandit populations; adult bandits may leave | OWNER APPROVED | IN DEVELOPMENT | b25r1-homestead worker / wip/b25r1-homestead | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-016 | 365-day flight recorder campaign proving the living world: migration, homesteading, runaways, bandit recruitment and departure, economy, multigenerational life histories | OWNER APPROVED | IN DEVELOPMENT | b25r1-recorder worker / wip/b25r1-recorder | NOT TESTED |  | B25R1-015, design: UNKNOWN | UNKNOWN |
-| B25R1-017 | Integration, real water system (streams, rivers, waterfalls, bridges, wells), credits regression diagnosis, existing-world compatibility, water events in the flight recorder | OWNER APPROVED | IN DEVELOPMENT | b25r1-water and b25r1-homestead workers / wip/b25r1 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-018 | Complete regional world reconstruction: Morris geography (Downs, landmarks, rivers), meandering roads, explorable principal settlements with real residents, game-original hamlets, scale (J-D2, J-G1), save compatibility | OWNER APPROVED | IN DEVELOPMENT | b25r1-region worker / wip/b25r1-region | NOT TESTED |  | B25R1-017, design: UNKNOWN | UNKNOWN |
-| B25R1-019 | Presence by view range: everything within the player's view plus a margin (growing with zoom) is live (people, animals, moving water, trees swaying in the breeze); everything beyond is calculation, the starting village included | OWNER APPROVED | IN DEVELOPMENT | b25r1-presence worker / wip/b25r1-presence | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-020 | Anticipatory NPC crowd management in the presence buffer: eligible ordinary NPCs begin their next legitimate activity sooner and walk away; protected NPCs never moved; soft visible target about 15-20 | OWNER APPROVED | IN DEVELOPMENT | b25r1-presence worker / wip/b25r1-presence | NOT TESTED |  | B25R1-019, design: UNKNOWN | UNKNOWN |
-| DEMO-01 | Replayable 120-Minute Demo and Steam Integration (with the six-package release pipeline) | OWNER APPROVED | IN DEVELOPMENT | lead session / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| B25R1-023 | Bow.Pixel Low Grass decoration drawn on the overworld (ground variety) | OWNER APPROVED | IN DEVELOPMENT | b25r1-grassmap worker / wip/b25r1-grassmap | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| B25R1-024 | Region map restyle in the shared UI design language (UIStyle), with gamepad focus on the Village tab | OWNER APPROVED | IN DEVELOPMENT | b25r1-grassmap worker / wip/b25r1-grassmap | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | X20-COMPLETE | Complete Expansion 20 (Living Economy) before Expansion 21: REC-DIAG, till ownership, LE-02..LE-05, carryovers, LE-06 simulation, LE-07 readiness | OWNER APPROVED | IN DEVELOPMENT | lead / wip/expansion20 | NOT TESTED | Workstream A: LE-03 then LE-04..LE-07 (docs/handoffs/PARALLEL_WORK_2026-10-30.md). | design: UNKNOWN | UNKNOWN |
 
-## Integrated, awaiting gameplay or owner verification (126)
+## Integrated, awaiting gameplay or owner verification (146)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
@@ -52,9 +44,29 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 | B25-BUSINESS-IMPL | Independent business formation by qualified villagers | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
 | B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
+| B25-CLOSE-01 | Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | NOT TESTED |  |  | verification only |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | OWNER APPROVED | INTEGRATED | 265ddc1 | NOT TESTED |  |  | verification only |
+| B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
+| B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | NOT TESTED |  |  | verification only |
+| B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
+| B25R1-002 | Full interaction outside the starting village (release blocker) | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
+| B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
+| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
+| B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
+| B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
+| B25R1-007 | Character creation: unrestricted cosmetic options | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
+| B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
 | B25R1-009 | Seed travelers: real settlement residents travel the roads to buy an item and return, alongside the existing ambient travellers | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 | TARGETED TESTS PASSED |  |  | verification only |
+| B25R1-010 | Independent homesteading and generational rural settlement (NPCs and the player) | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED | known: player homestead cannot build a well (agent provisional, HOMESTEADING_B25R1.md); to be built per owner Option 1 item 2 |  | verification only |
+| B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
+| B25R1-012 | Gamepad destination selection on the region map (cursor, D-pad, confirm, zoom, recentre) | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
+| B25R1-013 | Youth runaways from sustained household hardship, and bandit recruitment as a separate outcome | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
+| B25R1-014 | Shared wilderness settlement foundation: lawful homesteads and outlaw communities; sustainable bandit populations; adult bandits may leave | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
+| B25R1-017 | Integration, real water system (streams, rivers, waterfalls, bridges, wells), credits regression diagnosis, existing-world compatibility, water events in the flight recorder | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
+| B25R1-019 | Presence by view range: everything within the player's view plus a margin (growing with zoom) is live (people, animals, moving water, trees swaying in the breeze); everything beyond is calculation, the starting village included | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
+| B25R1-020 | Anticipatory NPC crowd management in the presence buffer: eligible ordinary NPCs begin their next legitimate activity sooner and walk away; protected NPCs never moved; soft visible target about 15-20 | OWNER APPROVED | INTEGRATED | B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
 | CHAPEL-PURPOSE | Chapel economic purpose: a charitable institution that maintains itself, not enriches itself - accumulate when the village prospers, distribute food and money when villagers need help | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20 | NOT TESTED |  |  | verification only |
+| DEMO-01 | Replayable 120-Minute Demo and Steam Integration (with the six-package release pipeline) | OWNER APPROVED | INTEGRATED | Build 25 wip/expansion20; B25R1 wip/b25r1 (head a995397) | TARGETED TESTS PASSED |  |  | verification only |
 | DVW-B1 | Villager relationships, memory of favours/gifts/harms, gossip | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | satisfied by the judgment store (memories, ledgers, gossip, trust) read by greetings and help; 'prices read relationships' waits on OD-LE-10/14 (Living Economy) |  | verification only |
 | DVW-B2 | Assault and killing as recorded, fined crimes; heir inheritance of fines/stain | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | satisfied by GP-CRIME-PURSUIT (assault, killing, fines) and the owner's heir answer 'Case ends; stain stays'; close against acceptance |  | verification only |
 | E20-P1 | Expansion 20 phase 1: LE-00 audit, requirements registration and isolated LE-01 foundation (no live economy) | OWNER APPROVED | INTEGRATED | Expansion 20 wip/expansion20 0b5287c | TARGETED TESTS PASSED | owner reviews the architecture (LE00_BUILD18_REFRESH.md, LE01_DATA_CONTRACTS.md) and answers OD-LE-02, 04, 07, 10, 13, 15 |  | verification only |
@@ -172,25 +184,14 @@ Readiness: **RELEASED (Build 23 private draft (code c79b12c, run 40526826846, re
 |---|---|---|---|---|---|---|---|---|
 | SJD-H | Judgment expansion Gate H: owner review; release and broad enablement approved separately | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | TARGETED TESTS PASSED | present the SJD-G report to the owner (batch R8) |  | XS |
 
-## Blocked (open owner decision, unfinished dependency or unsettled design) (31)
+## Blocked (open owner decision, unfinished dependency or unsettled design) (20)
 
 | ID | Requirement | Approval | Implementation | Code (branch, commit or build) | Verification | Remaining work | Blocked by / owner decision | Effort |
 |---|---|---|---|---|---|---|---|---|
-| B25-CLOSE-02 | Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final year-long campaign (seeds 1 and 2 normal, seed 1 economy-on) on it, present B25-ECON-P1..P5, JOB-02/CON-02-KINDS/PIT-02/FSE-10 as future-scope candidates, LE-07 gate 11 open for an owner device test, no packaging until the gates pass | OWNER APPROVED | PARTIALLY IMPLEMENTED | lead (single worker) / wip/expansion20 | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-001 | Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-002 | Full interaction outside the starting village (release blocker) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1-interact | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-004 | Roads and trails audit: stone roads and dirt trails rendered, connected and traversable | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-005 | Region map controls: pinch and wheel zoom, pan, centre on player, route and destination shown | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-006 | Tap anywhere to travel: real walked routes, road preference, interrupt, resume, dismiss, saved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-007 | Character creation: unrestricted cosmetic options | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-008 | Visual polish: character creation, origin story, region map; modal HUD behaviour | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-011 | Roads grow with use (grass to path to road by traffic share) and paving with stone by the player and by villages | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
-| B25R1-012 | Gamepad destination selection on the region map (cursor, D-pad, confirm, zoom, recentre) | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | wip/b25r1 | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
+| B25R1-001 | Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish | OWNER APPROVED | PARTIALLY IMPLEMENTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
+| B25R1-016 | 365-day flight recorder campaign proving the living world: migration, homesteading, runaways, bandit recruitment and departure, economy, multigenerational life histories | OWNER APPROVED | PARTIALLY IMPLEMENTED | b25r1-recorder worker / wip/b25r1-recorder | NOT TESTED |  | B25R1-015, design: UNKNOWN | UNKNOWN |
+| B25R1-018 | Complete regional world reconstruction: Morris geography (Downs, landmarks, rivers), meandering roads, explorable principal settlements with real residents, game-original hamlets, scale (J-D2, J-G1), save compatibility | OWNER APPROVED | PARTIALLY IMPLEMENTED | b25r1-region worker / wip/b25r1-region | TARGETED TESTS PASSED |  | design: UNKNOWN | UNKNOWN |
 | B25R1-022 | Integrate Fantasy Lands Houses (Szadi art) into the towns: palette remapped to match our art where too dark, roofs separable and fading like current houses so the player can go inside | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | BUILD-SEQ-25-27 | Build sequence (owner, 2026-10-31): Build 25 = Expansion 20 validation and freeze (wip/expansion20 becomes the frozen baseline only after validation passes and the owner approves); Build 26 = repository recovery and consolidation on a separate branch from the exact frozen Build 25 SHA, validated and frozen after owner approval; Build 27 = Expansion 21 begins only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers. | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |
 | CHAPEL-LENDING | Chapel community lending and grants (concept approved): hardship recovery, viable businesses in temporary difficulty, village improvements, infrastructure, downturn relief - via a separate implementation proposal built on existing loan, credit, property and repayment systems | OWNER APPROVED | NOT STARTED | none | NOT TESTED |  | design: UNKNOWN | UNKNOWN |

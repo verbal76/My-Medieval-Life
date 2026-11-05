@@ -5977,7 +5977,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -5996,10 +5996,21 @@
      "date": "2026-11-02",
      "change": "assigned_worker: None -> lead (single worker, MML-CONSERVE-01)",
      "why": "lead is the one worker"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; commits + 4b51c92; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md: IN DEVELOPMENT was stale; farming Phase 2 merged 4b51c92 (ancestor of a995397); closure process continues under B25-FINISH-01"
     }
    ],
    "branch": "wip/b25-farm-phase2",
-   "assigned_worker": "lead (single worker, MML-CONSERVE-01)"
+   "assigned_worker": "lead (single worker, MML-CONSERVE-01)",
+   "commits": [
+    "4b51c92"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
+   ]
   },
   {
    "id": "B25-CLOSE-02",
@@ -6019,11 +6030,11 @@
    "parent": null,
    "depends_on": [],
    "decisions": [],
-   "approval_status": "OWNER APPROVED",
+   "approval_status": "SUPERSEDED",
    "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
-   "release_status": "NOT READY",
-   "completion": "OPEN",
+   "release_status": "NOT APPLICABLE",
+   "completion": "CLOSED",
    "history": [
     {
      "date": "2026-11-02",
@@ -6039,13 +6050,19 @@
      "date": "2026-11-02",
      "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED",
      "why": "freeze of 4b51c92 superseded by the owner's scope correction (B25-SCOPE-REGION): 4b51c92 stays the tested baseline; the running campaigns 41536805310 and 41536810831 finish as baseline evidence, not final release validation"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "approval_status: OWNER APPROVED -> SUPERSEDED; release_status: NOT READY -> NOT APPLICABLE; completion: OPEN -> CLOSED; superseded_by: None -> B25-SCOPE-REGION",
+     "why": "per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md and the register's own 2026-11-02 history: the strict-scope freeze of 4b51c92 was overtaken by the owner's scope correction (B25-SCOPE-REGION, docs/directives/2026-11-02_build25_scope_correction_regional_economy.md); 4b51c92 remains baseline evidence; completion now governed by B25-FINISH-01"
     }
    ],
    "assigned_worker": "lead (single worker)",
    "branch": "wip/expansion20",
    "commits": [
     "4b51c92"
-   ]
+   ],
+   "superseded_by": "B25-SCOPE-REGION"
   },
   {
    "id": "B25-ECON-P1",
@@ -6317,8 +6334,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -6326,7 +6343,24 @@
      "date": "2026-11-01",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-01_nine_owner_decisions_consolidated.md"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> experience_test 79/0 and capability tests (625e362), per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md; commits + 625e362; commits + 8d71c5e; commits + 4b51c92; commits + 2c364d1; commits + 48acc91; commits + ba94edd; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (owner Option 1, docs/directives/2026-11-05_b25r1_audit_option1.md item 6): NOT STARTED was stale; D1/D8 625e362 (experience 79/0, capability tests), D2 8d71c5e, D3 farming 4b51c92, D4 2c364d1, D5-D7 48acc91, D9 ba94edd, all ancestors of wip/b25r1 a995397. Implemented but unverified: no full suite on the final R1 SHA; year-long skill progression evidence pending from the R1 campaign"
     }
+   ],
+   "tests": "experience_test 79/0 and capability tests (625e362), per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md",
+   "commits": [
+    "625e362",
+    "8d71c5e",
+    "4b51c92",
+    "2c364d1",
+    "48acc91",
+    "ba94edd"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
    ]
   },
   {
@@ -6639,7 +6673,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -6653,7 +6687,19 @@
      "date": "2026-11-02",
      "change": "note",
      "why": "sections 4-6 investigated (wip/b25-econ-funnel, merged at d6ab686): read-only CONFIG/FUNNEL/JOBS/ORE lines and venture refusal counts, fingerprint-neutral; decision systems on; funnel: nobody eligible, stopped at demand (benches 2-20% busy vs 0.35); unemployment = never-employed young adults, places capped by land, treasury and tools; ore depletion follows owner rules (finite seams, OD-01), imports stalled by a coinless neighbour trader; no rule defect; questions B25-ECON-P1..P5 recorded. The year-long FUNNEL evidence comes from the final validation runs."
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; commits + 3c7e45b; commits + d6ab686; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): NOT STARTED was stale; Option B 3c7e45b and the funnel investigation d6ab686 are merged (ancestors of a995397); verification not recorded (no tests named for the directive itself)"
     }
+   ],
+   "commits": [
+    "3c7e45b",
+    "d6ab686"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
    ]
   },
   {
@@ -6742,8 +6788,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -6751,7 +6797,19 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-02_build25_scope_correction_regional_economy.md"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> via REGION-NAV-01: envoy 31/0, intel 13/0, region_trade 23/0, region_demand 11/0, region_sim 8/0; commits + b540971; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): NOT STARTED was stale; its scope (REGION-NAV-01 S1-S8) is integrated b540971 (ancestor of a995397): envoy 31/0, intel 13/0, region_trade 23/0, region_demand 11/0, region_sim 8/0. Implemented but unverified: ten-question final report on the R1 SHA and gate 11 Android profile outstanding"
     }
+   ],
+   "tests": "via REGION-NAV-01: envoy 31/0, intel 13/0, region_trade 23/0, region_demand 11/0, region_sim 8/0",
+   "commits": [
+    "b540971"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
    ]
   },
   {
@@ -6770,7 +6828,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -6784,6 +6842,16 @@
      "date": "2026-11-03",
      "change": "target_build: 25 -> 20",
      "why": "filed under Expansion 20, as the rest of the Build 25 work (DEMO-01, B25-FINISH-01)"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md: children 002-014, 017, 019, 020 integrated on wip/b25r1 (a995397); 016, 018, 022, 023, 024 incomplete; no R1 private package draft (41939387992 failed)"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "note",
+     "why": "owner decision B25R1-AUDIT-OPT1 (2026-11-05, docs/directives/2026-11-05_b25r1_audit_option1.md): Option 1, complete B25R1 without deferral; new children B25R1-023 (Bow.Pixel grass) and B25R1-024 (region map restyle, under B25R1-008) captured"
     }
    ]
   },
@@ -6803,7 +6871,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -6832,6 +6900,11 @@
      "date": "2026-11-03",
      "change": "owner_answer",
      "why": "owner 2026-11-03 accepts the interaction fixes and focused evidence; the final integrated interaction verification and a real-device playtest stay on the release checklist"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IMPLEMENTED ON TASK BRANCH was stale; its commits are merged into wip/b25r1 (ancestors of head a995397). Not integration verified: no full suite on a995397 (full suite 41923790388 on 361f364 had one unrelated failure, fixed bfce680)"
     }
    ],
    "branch": "wip/b25r1-interact",
@@ -6840,7 +6913,10 @@
    "commits": [
     "10491e7"
    ],
-   "owner_answer": "Fixes and focused test evidence accepted; final integrated verification and real-device playtest remain on the release checklist"
+   "owner_answer": "Fixes and focused test evidence accepted; final integrated verification and real-device playtest remain on the release checklist",
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
+   ]
   },
   {
    "id": "B25R1-003",
@@ -6858,7 +6934,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -6877,6 +6953,11 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> region_travel_test 56/0 (incl. a walk home->Wulstead); overworld 179/0; journey 14/0; region_geography 132/0; world 339/0; polish_p2 110/0; atlas 17/0; start_test 523/0; wiki passed; screenshots 1280x720 and 2400x1080 looked at; test_commit: None -> e7e17d2; commits + e7e17d2",
      "why": "implemented by the map worker on wip/b25r1-map (b3e9fad), merged into wip/b25r1 (e7e17d2); region_travel_test 56/0 on the merge"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IMPLEMENTED ON TASK BRANCH was stale; its commits are merged into wip/b25r1 (ancestors of head a995397). Not integration verified: no full suite on a995397 (full suite 41923790388 on 361f364 had one unrelated failure, fixed bfce680)"
     }
    ],
    "branch": "wip/b25r1",
@@ -6884,6 +6965,9 @@
    "test_commit": "e7e17d2",
    "commits": [
     "e7e17d2"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
    ]
   },
   {
@@ -6902,7 +6986,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -6926,6 +7010,11 @@
      "date": "2026-11-03",
      "change": "implementation_status: PARTIALLY IMPLEMENTED -> IMPLEMENTED ON TASK BRANCH; tests: region_travel_test 56/0 (road preference, traversability) -> region_travel_test 56/0 (road preference, traversability); road_types_test 14/0 (a walk over all three types); region_travel 56/0; overworld 179/0; region_geography 132/0; atlas 17/0; polish_p2 110/0; wiki passed; screenshots looked at (worker and lead); test_commit: e7e17d2 -> 9a9e0f0; commits + 9a9e0f0",
      "why": "stone-road hierarchy by the roads worker (wip/b25r1-roads 7c9b5ed, a3ddad2), merged into wip/b25r1 (9a9e0f0): stone within 24 tiles of the village and settlements, on stretches used by 14+ of the 30 inter-place routes, and each settlement's street (19% of main roads on seed 1; no rivers, so no bridges); dirt roads elsewhere on the main network; trails for the rest; drawn on the same cells (no generation, routing or save change); map legend of three types. Flagstone art made from the Puny World path shapes filled with the paid tileset's flagstone ground, with a kerb (no stone road tiles exist in the packs)"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IMPLEMENTED ON TASK BRANCH was stale; its commits are merged into wip/b25r1 (ancestors of head a995397). Not integration verified: no full suite on a995397 (full suite 41923790388 on 361f364 had one unrelated failure, fixed bfce680)"
     }
    ],
    "branch": "wip/b25r1",
@@ -6934,6 +7023,9 @@
    "commits": [
     "e7e17d2",
     "9a9e0f0"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
    ]
   },
   {
@@ -6952,7 +7044,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -6971,6 +7063,11 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> region_travel_test 56/0 (incl. a walk home->Wulstead); overworld 179/0; journey 14/0; region_geography 132/0; world 339/0; polish_p2 110/0; atlas 17/0; start_test 523/0; wiki passed; screenshots 1280x720 and 2400x1080 looked at; test_commit: None -> e7e17d2; commits + e7e17d2",
      "why": "implemented by the map worker on wip/b25r1-map (b3e9fad), merged into wip/b25r1 (e7e17d2); region_travel_test 56/0 on the merge"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IMPLEMENTED ON TASK BRANCH was stale; its commits are merged into wip/b25r1 (ancestors of head a995397). Not integration verified: no full suite on a995397 (full suite 41923790388 on 361f364 had one unrelated failure, fixed bfce680)"
     }
    ],
    "branch": "wip/b25r1",
@@ -6978,6 +7075,9 @@
    "test_commit": "e7e17d2",
    "commits": [
     "e7e17d2"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
    ]
   },
   {
@@ -6996,7 +7096,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7015,6 +7115,11 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> region_travel_test 56/0 (incl. a walk home->Wulstead); overworld 179/0; journey 14/0; region_geography 132/0; world 339/0; polish_p2 110/0; atlas 17/0; start_test 523/0; wiki passed; screenshots 1280x720 and 2400x1080 looked at; test_commit: None -> e7e17d2; commits + e7e17d2",
      "why": "implemented by the map worker on wip/b25r1-map (b3e9fad), merged into wip/b25r1 (e7e17d2); region_travel_test 56/0 on the merge"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IMPLEMENTED ON TASK BRANCH was stale; its commits are merged into wip/b25r1 (ancestors of head a995397). Not integration verified: no full suite on a995397 (full suite 41923790388 on 361f364 had one unrelated failure, fixed bfce680)"
     }
    ],
    "branch": "wip/b25r1",
@@ -7022,6 +7127,9 @@
    "test_commit": "e7e17d2",
    "commits": [
     "e7e17d2"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
    ]
   },
   {
@@ -7040,7 +7148,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7064,6 +7172,11 @@
      "date": "2026-11-03",
      "change": "owner_answer",
      "why": "owner clarification 2026-11-03: no free-form colour picker and no new save field for one; the expanded palettes are sufficient"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IMPLEMENTED ON TASK BRANCH was stale; its commits are merged into wip/b25r1 (ancestors of head a995397). Not integration verified: no full suite on a995397 (full suite 41923790388 on 361f364 had one unrelated failure, fixed bfce680)"
     }
    ],
    "branch": "wip/b25r1",
@@ -7072,7 +7185,10 @@
    "commits": [
     "932739d"
    ],
-   "owner_answer": "No free-form colour picker; the expanded palettes are sufficient; keep bodies, combinations, preview and save compatibility"
+   "owner_answer": "No free-form colour picker; the expanded palettes are sufficient; keep bodies, combinations, preview and save compatibility",
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
+   ]
   },
   {
    "id": "B25R1-008",
@@ -7090,7 +7206,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7109,6 +7225,11 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> char_create_test 0 failures (117 layer options x 3 bodies x 8 directions x animations; save/load, old save); start_test 523/0; character_look_test 0 failures; wiki passed; outside_interact 23/0; region_travel 56/0; polish_p2 110/0; countryside 38/0; screenshots 1280x720 and 2400x1080 looked at (worker and lead); test_commit: None -> 932739d; commits + 932739d",
      "why": "implemented by the UI worker on wip/b25r1-ui (9c3f762; audit docs/ui/CHARACTER_CUSTOMIZATION_AUDIT_B25R1.md), merged into wip/b25r1 (932739d); suites pass on the merge"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IMPLEMENTED ON TASK BRANCH was stale; its commits are merged into wip/b25r1 (ancestors of head a995397). Not integration verified: no full suite on a995397 (full suite 41923790388 on 361f364 had one unrelated failure, fixed bfce680)"
     }
    ],
    "branch": "wip/b25r1",
@@ -7116,6 +7237,9 @@
    "test_commit": "932739d",
    "commits": [
     "932739d"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
    ]
   },
   {
@@ -7188,8 +7312,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -7217,12 +7341,29 @@
      "date": "2026-11-03",
      "change": "note",
      "why": "measurement (first homestead worker, 8e1ab51, seed 1, stopped at day 160 of 240 by its script's time limit; 0 coin and item leaks at days 40-160): village 104 -> 185; 16 young-adult formations, 9 adult relocation events; 0 homesteads because a 2% cap on 16 formations allows none (choices refused 62 young, 43 adult); 0 runaways (no hardship threshold reached, food 31-35 days); band 6 -> 0 by day 120, 2 at day 160 through returns; 1 bandit left; unemployed 3 -> 25. Organic homesteading will be rare at this formation rate; targeted scenarios cover the mechanic; the cap stays as the owner set it pending the region-wide measurement"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> homestead 47-49/0, homestead_presence 17/0, player_homestead 40/0; commits + c137815; commits + 5cd1765; commits + e080bc0; integrated_in + B25R1 wip/b25r1 (head a995397); known_defects + player homestead cannot build a well (agent provisional, HOMESTEADING_B25R1.md); to be built per owner Option 1 item 2",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IN DEVELOPMENT was stale; c137815..5cd1765 merged (ancestors of a995397); homestead 47-49/0, homestead_presence 17/0, player_homestead 40/0; 160-day measure 0 organic homesteads. Open: player homestead cannot build a well (agent provisional narrowing, contrary to B25R1-015); owner Option 1 item 2 orders player homestead well construction"
     }
    ],
    "disposition": "APPROVED",
    "owner_answer": "D1 approved with clarifications; D2 established adults included now (higher threshold, smaller allowance)",
    "assigned_worker": "b25r1-homestead worker",
-   "branch": "wip/b25r1-homestead"
+   "branch": "wip/b25r1-homestead",
+   "tests": "homestead 47-49/0, homestead_presence 17/0, player_homestead 40/0",
+   "commits": [
+    "c137815",
+    "5cd1765",
+    "e080bc0"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
+   ],
+   "known_defects": [
+    "player homestead cannot build a well (agent provisional, HOMESTEADING_B25R1.md); to be built per owner Option 1 item 2"
+   ]
   },
   {
    "id": "B25R1-011",
@@ -7240,7 +7381,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7269,6 +7410,11 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> road_wear_test 40/0 (cart damages stone more than a walker); overworld 179/0; world 339/0; job_board 28/0; start 523/0; worker's sim gate identical before the final cart-weight tune (to be re-run on the final candidate); test_commit: None -> 9a9e0f0; commits + 9a9e0f0",
      "why": "road wear and paving by the roads worker (fbddb3d, 3d96447), merged into wip/b25r1 (9a9e0f0): footfall +5%/step (cart 10%), 100% a level (grass->trail->dirt road), usage paths fade 12%/day, generated roads never below their level and drawn overgrown after 12 days unwalked (still routed, no upkeep), stone damaged by traffic (cart 12x a walker) plus 0.25%/day age, worn stone (40%) slows carts to 85%, broken (75%) to 60%; player paving 2 stone a cell, repair 1, a 4 s action; manor posts paving jobs from spare works-yard stone, paid at the mending wage; sparse saved 'roads' key; village streets do not wear. Rates in docs/DECISIONS.md"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IMPLEMENTED ON TASK BRANCH was stale; its commits are merged into wip/b25r1 (ancestors of head a995397). Not integration verified: no full suite on a995397 (full suite 41923790388 on 361f364 had one unrelated failure, fixed bfce680)"
     }
    ],
    "owner_answer": "Main dirt roads fade very slowly, never below visible (overgrown until walked again, no upkeep but use); usage paths fade faster; stone roads damage slowly, hamper carts when damaged, and need materials to repair",
@@ -7277,6 +7423,9 @@
    "test_commit": "9a9e0f0",
    "commits": [
     "9a9e0f0"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
    ]
   },
   {
@@ -7295,7 +7444,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7309,6 +7458,11 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r1; tests: None -> gamepad_map_test 19/0 (real joypad events); region_travel_test 56/0; wiki passed; 2400x1080 screenshot looked at; test_commit: None -> e66feaf; commits + e66feaf",
      "why": "implemented by the lead on wip/b25r1 (e66feaf): pad cursor on the Region map, A travels through the same tap/route planning, LT/RT zoom, R3 centre, X resume, Y dismiss, B close; gamepad_map_test 19/0 with real joypad events; screenshot looked at"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IMPLEMENTED ON TASK BRANCH was stale; its commits are merged into wip/b25r1 (ancestors of head a995397). Not integration verified: no full suite on a995397 (full suite 41923790388 on 361f364 had one unrelated failure, fixed bfce680)"
     }
    ],
    "branch": "wip/b25r1",
@@ -7316,6 +7470,9 @@
    "test_commit": "e66feaf",
    "commits": [
     "e66feaf"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
    ]
   },
   {
@@ -7334,8 +7491,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -7353,12 +7510,25 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-homestead worker; branch: None -> wip/b25r1-homestead",
      "why": "scope audit under B25R1-015: in development by the homesteading worker; full scope ships in Revision 1 with its decision switches on, nothing deferred or disabled"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> life_decisions 27/0; commits + 8e1ab51; commits + 2607807; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IN DEVELOPMENT was stale; 8e1ab51, 2607807 merged (ancestors of a995397); life_decisions 27/0; 0 organic runaways in the 160-day measure (campaign or labelled targeted scenario outstanding)"
     }
    ],
    "disposition": "APPROVED",
    "owner_answer": "D1 approved; D3 minimum age 12, younger only in extremes; D4 adult bandits may leave the clan now (B25R1-014)",
    "assigned_worker": "b25r1-homestead worker",
-   "branch": "wip/b25r1-homestead"
+   "branch": "wip/b25r1-homestead",
+   "tests": "life_decisions 27/0",
+   "commits": [
+    "8e1ab51",
+    "2607807"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
+   ]
   },
   {
    "id": "B25R1-014",
@@ -7376,8 +7546,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -7390,10 +7560,24 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-homestead worker; branch: None -> wip/b25r1-homestead",
      "why": "scope audit under B25R1-015: in development by the homesteading worker; full scope ships in Revision 1 with its decision switches on, nothing deferred or disabled"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> wilds 69-71/0; commits + bf20dc9; commits + 943b453; commits + a1bb9fc; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IN DEVELOPMENT was stale; bf20dc9, 943b453, a1bb9fc merged (ancestors of a995397); wilds 69-71/0 (raid walk fixed); multigenerational campaign evidence outstanding"
     }
    ],
    "assigned_worker": "b25r1-homestead worker",
-   "branch": "wip/b25r1-homestead"
+   "branch": "wip/b25r1-homestead",
+   "tests": "wilds 69-71/0",
+   "commits": [
+    "bf20dc9",
+    "943b453",
+    "a1bb9fc"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
+   ]
   },
   {
    "id": "B25R1-015",
@@ -7414,9 +7598,9 @@
    "parent": null,
    "depends_on": [],
    "decisions": [],
-   "approval_status": "PROPOSED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT APPLICABLE",
+   "verification_status": "NOT APPLICABLE",
    "release_status": "NOT APPLICABLE",
    "completion": "OPEN",
    "history": [
@@ -7424,6 +7608,11 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_b25r1_full_scope_mandatory.md"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "approval_status: PROPOSED -> OWNER APPROVED; implementation_status: NOT STARTED -> NOT APPLICABLE; verification_status: NOT TESTED -> NOT APPLICABLE",
+     "why": "owner directive docs/directives/2026-11-03_b25r1_full_scope_mandatory.md is the owner's own words (approval evidence), reaffirmed by owner Option 1 2026-11-05 ('The objective remains a complete B25R1, not a reduced-scope release'); PROPOSED was a capture error. Rule in force; completion left OPEN (its acceptance is the whole of Revision 1)"
     }
    ]
   },
@@ -7451,7 +7640,7 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7465,10 +7654,19 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-recorder worker; branch: None -> wip/b25r1-recorder",
      "why": "recorded; reporting layer and instrumentation of the merged B25R1 systems assigned to a recorder worker; homestead and travelers workers instrument their own systems"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; commits + 194f7d1; commits + 85ef070",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): tooling merged (194f7d1, 85ef070, flight_lives.py); campaign 41939383765 on bfce680 is provisional only (contains the axe loop fixed in a995397); the campaign must run on the final SHA (reports A-I)"
     }
    ],
    "assigned_worker": "b25r1-recorder worker",
-   "branch": "wip/b25r1-recorder"
+   "branch": "wip/b25r1-recorder",
+   "commits": [
+    "194f7d1",
+    "85ef070"
+   ]
   },
   {
    "id": "B25R1-017",
@@ -7493,8 +7691,8 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -7512,10 +7710,26 @@
      "date": "2026-11-03",
      "change": "note",
      "why": "owner 2026-11-03 ~16:30 EST: 'We have a weather expansion in the pipeline that includes rain and flooding... we need rivers and streams, we might as well do them now, there are water asset packs and waterfall packs in the repository... and the water needs to be flowing.' Rivers and streams both now, animated flow following each course's direction, owned packs (Forgotten Memories WaterTiles-6frames and waterfalls, Miniworld Cliff-Water, Puny World water, Forgotten Plains water and waterfall sound loops), flood-ready data (per-cell level and bank height, course graph) without building weather"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> water 62 goldens; commits + 1e9c0c8; commits + 70ec466; commits + 49e78a9; commits + 953e750; commits + c5299cd; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IN DEVELOPMENT was stale; water 1e9c0c8, 70ec466, 49e78a9 merged as 953e750, credits fixed c5299cd (ancestors of a995397); water 62 goldens; weather hooks documented, not built (by directive)"
     }
    ],
    "assigned_worker": "b25r1-water and b25r1-homestead workers",
-   "branch": "wip/b25r1"
+   "branch": "wip/b25r1",
+   "tests": "water 62 goldens",
+   "commits": [
+    "1e9c0c8",
+    "70ec466",
+    "49e78a9",
+    "953e750",
+    "c5299cd"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
+   ]
   },
   {
    "id": "B25R1-018",
@@ -7543,8 +7757,8 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -7557,10 +7771,22 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-region worker; branch: None -> wip/b25r1-region",
      "why": "assigned: region worker on wip/b25r1-region (phase 1 design and layout data first); water worker re-anchored on the canonical rivers"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> overworld 333/0 (wip/b25r1); commits + 1d024dc; commits + 4c419a0; commits + 64be5a2; commits + 0c1aeb3",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): merged 1d024dc, 4c419a0, 64be5a2, 0c1aeb3 (overworld 333/0) but incomplete: Bear Hill and the castle knoll not raised; stone cross, white battlements and fountain lack art (owner Q8 pack). Owner Option 1 item 2 orders Bear Hill and the castle knoll; item 3: no invented art"
     }
    ],
    "assigned_worker": "b25r1-region worker",
-   "branch": "wip/b25r1-region"
+   "branch": "wip/b25r1-region",
+   "tests": "overworld 333/0 (wip/b25r1)",
+   "commits": [
+    "1d024dc",
+    "4c419a0",
+    "64be5a2",
+    "0c1aeb3"
+   ]
   },
   {
    "id": "B25R1-019",
@@ -7585,8 +7811,8 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -7604,10 +7830,23 @@
      "date": "2026-11-03",
      "change": "note",
      "why": "owner 2026-11-03 clarification: \"that math problem when it's unseen still has to walk from town to town and buy stuff and go back. I should be able to meet up with that math problem on the road somewhere and it should come into view be real while I'm there and if it passes me and walks down the road and keeps going. It turns back into a math problem but it still has to run that errand.\" Calculated people make real errands on actual routes in real time with real purchases; position known each minute; meetable on the road; the errand completes after they leave view; inter-settlement trade carried by such journeys, not abstract transfers"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> presence 37/0, homestead_presence 17/0, recorder_neutrality 5/0; commits + e66ca18; commits + 711d59d; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IN DEVELOPMENT was stale; e66ca18, 711d59d merged (ancestors of a995397); presence 37/0, homestead_presence 17/0, recorder_neutrality 5/0; gate re-baseline and campaign outstanding"
     }
    ],
    "assigned_worker": "b25r1-presence worker",
-   "branch": "wip/b25r1-presence"
+   "branch": "wip/b25r1-presence",
+   "tests": "presence 37/0, homestead_presence 17/0, recorder_neutrality 5/0",
+   "commits": [
+    "e66ca18",
+    "711d59d"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
+   ]
   },
   {
    "id": "B25R1-020",
@@ -7632,8 +7871,8 @@
    ],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -7646,10 +7885,22 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-presence worker; branch: None -> wip/b25r1-presence",
      "why": "recorded; assigned to the presence worker as an amendment of B25R1-019"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> presence 37/0 (container measurement of the soft target); commits + a970731; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IN DEVELOPMENT was stale; crowd paths and availability locks a970731 merged; soft target measured in the container only, not on Android as acceptance requires (owner Option 1 item 2: Android crowd-management verification)"
     }
    ],
    "assigned_worker": "b25r1-presence worker",
-   "branch": "wip/b25r1-presence"
+   "branch": "wip/b25r1-presence",
+   "tests": "presence 37/0 (container measurement of the soft target)",
+   "commits": [
+    "a970731"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1 (head a995397)"
+   ]
   },
   {
    "id": "B25R1-022",
@@ -7686,6 +7937,131 @@
      "why": "owner 2026-11-04 clarification: \"we don't have to mix these into The villages that already exist. Unless we want to do like some upscale housing for the elites. But we could also do whole homesteads and villages in this style for different regions\". Use as a regional building style (whole villages, hamlets and homesteads of a region) and/or as upscale housing for elites; no requirement to mix into existing villages. Lead proposal (agent, provisional): the rich country south of the Downs (Higham's suburbs and wealthy households, Bourton Abbas, the vine-country hamlets and homesteads) in this style, and elite houses (manor, wealthy merchants) where a town has them"
     }
    ]
+  },
+  {
+   "id": "B25R1-023",
+   "kind": "approved",
+   "title": "Bow.Pixel Low Grass decoration drawn on the overworld (ground variety)",
+   "description": "Bow.Pixel Low Grass decoration drawn on the overworld (ground variety)",
+   "source": "docs/directives/2026-11-05_b25r1_audit_option1.md (item 2, 'Bow.Pixel grass rendering'); owner message on the B25R1-Q8 packs",
+   "owner_wording": "Bow.Pixel Low Grass looka like this is our winner",
+   "approval": "owner, 2026-11-03/04 (B25R1-Q8 pack choice) and 2026-11-05 (Option 1 item 2)",
+   "acceptance": [
+    "Bow.Pixel Low Grass tufts (atlases 6-7, imported dd35a2e) drawn in OverworldView as ground decoration at the 16 px standard, deterministic per seed",
+    "Screenshots at 1280x720 and 2400x1080 looked at; overworld suite passes; no gameplay or generator output change beyond decoration"
+   ],
+   "target_build": "20",
+   "parent": "B25R1-001",
+   "depends_on": [],
+   "decisions": [
+    "B25R1-Q8"
+   ],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-05_b25r1_audit_option1.md (item 2, 'Bow.Pixel grass rendering'); owner message on the B25R1-Q8 packs"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-grassmap worker; branch: None -> wip/b25r1-grassmap",
+     "why": "owner Option 1 (docs/directives/2026-11-05_b25r1_audit_option1.md) item 2 orders the work; lead assigns a worker"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "notes",
+     "why": "audit evidence (): pack imported dd35a2e, atlases 6-7 loaded in MapView, LOW_GRASS constant never used"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "note",
+     "why": "correction of the previous line's empty source: the audit evidence is docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (main table, 'Bow.Pixel grass decoration')"
+    }
+   ],
+   "assigned_worker": "b25r1-grassmap worker",
+   "branch": "wip/b25r1-grassmap",
+   "notes": "Owner wording relayed by the lead 2026-11-05; not saved as a separate directive file."
+  },
+  {
+   "id": "B25R1-024",
+   "kind": "approved",
+   "title": "Region map restyle in the shared UI design language (UIStyle), with gamepad focus on the Village tab",
+   "description": "Region map restyle in the shared UI design language (UIStyle), with gamepad focus on the Village tab",
+   "source": "docs/directives/2026-11-05_b25r1_audit_option1.md (item 2, 'Region map restyle'); docs/directives/2026-11-03_b25r1_master_directive.md section 7C",
+   "owner_wording": "Region Map: Use the same visual design language. Prioritize map usability, readable icons, and clear navigation controls. Do not sacrifice map space for decorative borders.",
+   "approval": "owner, 2026-11-03 (master directive 7C) and 2026-11-05 (Option 1 item 2)",
+   "acceptance": [
+    "region_map_view.gd styled through UIStyle like character creation and origin (B25R1-008)",
+    "Gamepad focus reaches the Village tab; map controls keep B25R1-005/006/012 behaviour",
+    "Screenshots at 1280x720 and 2400x1080 looked at; region_travel and gamepad_map suites pass"
+   ],
+   "target_build": "20",
+   "parent": "B25R1-008",
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-05_b25r1_audit_option1.md (item 2, 'Region map restyle'); docs/directives/2026-11-03_b25r1_master_directive.md section 7C"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-grassmap worker; branch: None -> wip/b25r1-grassmap",
+     "why": "owner Option 1 (docs/directives/2026-11-05_b25r1_audit_option1.md) item 2 orders the work; lead assigns a worker"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "note",
+     "why": "audit evidence (docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md): region_map_view.gd has no UIStyle reference; last change 1d024dc. Captured under CLAUDE.md 9a (capture at once), audit observation 'no register id'"
+    }
+   ],
+   "assigned_worker": "b25r1-grassmap worker",
+   "branch": "wip/b25r1-grassmap"
+  },
+  {
+   "id": "B25R1-AUDIT-OPT1",
+   "kind": "decision",
+   "title": "B25R1 requirements audit (2026-11-05): which completion path? Option 1 = finish validating the current code while continuing development of every approved B25R1 requirement, no deferral",
+   "description": "B25R1 requirements audit (2026-11-05): which completion path? Option 1 = finish validating the current code while continuing development of every approved B25R1 requirement, no deferral",
+   "source": "docs/directives/2026-11-05_b25r1_audit_option1.md",
+   "owner_wording": "The objective remains a complete B25R1, not a reduced-scope release.",
+   "owner_answer": "Choose Option 1. Finish the validation of the current code while continuing development of every approved B25R1 requirement. Do not move unfinished features to a later build without my explicit authorization. The 180-requirement audit is now our working completion checklist. (full text: docs/directives/2026-11-05_b25r1_audit_option1.md)",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "20",
+   "related": [
+    "B25R1-001",
+    "B25R1-015",
+    "EA-01",
+    "B25R1-023",
+    "B25R1-024"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-05_b25r1_audit_option1.md"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "disposition: OPEN -> APPROVED; owner_answer; owner_wording; notes",
+     "why": "owner answered 2026-11-05: Option 1"
+    }
+   ],
+   "notes": "Consequences: audit docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md is the working completion checklist; incomplete work (B25R1-018 Bear Hill and castle knoll, B25R1-022, B25R1-023, B25R1-024, B25R1-010 player well, B25R1-020 Android verification) proceeds in parallel with validation; EA-01 tracked separately; no final baseline before final-commit simulation evidence; no B25R1 packages before release-blocking requirements and gates; seven owner-decision groups asked one at a time (docs/handoffs/B25R1_OWNER_QUESTIONS_2026-11-05.md); live report docs/handoffs/B25R1_COMPLETION_REPORT.md"
   },
   {
    "id": "B25R1-Q1",
@@ -14662,8 +15038,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -14676,10 +15052,24 @@
      "date": "2026-11-03",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead session; branch: None -> wip/expansion20",
      "why": "recorded; implementation starting (lead)"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> demo_test 35/0; R1 Windows demo smoke passed (run 41939387992, bfce680); commits + ca27195; commits + 8d31017; integrated_in + Build 25 wip/expansion20; integrated_in + B25R1 wip/b25r1 (head a995397)",
+     "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IN DEVELOPMENT was stale; ca27195, 8d31017 merged (checklist I1-I8 DONE; demo_test 35/0; Build 25 six-package draft); R1 Windows demo smoke passed in release run 41939387992 (bfce680). Implemented but unverified: device check and an R1 draft on the final SHA outstanding"
     }
    ],
    "assigned_worker": "lead session",
-   "branch": "wip/expansion20"
+   "branch": "wip/expansion20",
+   "tests": "demo_test 35/0; R1 Windows demo smoke passed (run 41939387992, bfce680)",
+   "commits": [
+    "ca27195",
+    "8d31017"
+   ],
+   "integrated_in": [
+    "Build 25 wip/expansion20",
+    "B25R1 wip/b25r1 (head a995397)"
+   ]
   },
   {
    "id": "DEV-GOV-01",
@@ -18827,8 +19217,14 @@
      "date": "2026-11-03",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-03_steam_early_access_readiness.md"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "notes",
+     "why": "milestone finding for owner Option 1 item 5 (docs/directives/2026-11-05_b25r1_audit_option1.md): no owner decision places EA-01 in a build (target_build stays unassigned; only the owner sets it). Its approved milestone is a date: a demo presentable as Early Access about 2026-11-24 to 11-27 (docs/directives/2026-11-03_steam_early_access_readiness.md, lead's reading). The owner's 2026-11-04 amendment (docs/directives/2026-11-04_b25r1_amendment_suites_performance.md item 4) ties the four Early Access candidate packages (Windows full, Linux full, Windows and Linux Steam demo, DEMO-01 configuration) to the B25R1 validation gates, so the first EA candidate is built from the B25R1 final SHA. EA-01's own scope (centralisation audit, interaction quality pass, store footage) is tracked separately from B25R1: neither added to nor removed from it"
     }
-   ]
+   ],
+   "notes": "Tracked separately from B25R1 (owner Option 1 item 5, 2026-11-05). Milestone: Early Access demo about 2026-11-24 (date, not a build); candidate packages follow the B25R1 gates (2026-11-04 amendment item 4). Build placement: owner decision."
   },
   {
    "id": "EARTH-01",
@@ -33623,6 +34019,11 @@
      "date": "2026-11-02",
      "change": "tests: game/tests/le07_gates_test.gd -> game/tests/le07_gates_test.gd; le07_gates 31, run_tests 3602, start_test 523, wiki_test and 28 more suites (eca0e7d, local); test_commit: 63c0144 -> eca0e7d",
      "why": "gate review on eca0e7d merged at 28d52806 (wip/b25-le07 ddf2fdf; docs/expansion20/LE07_GATE_STATUS.md on the Build 25 source). PASSED: 2 (le07_gates 31), 3 (off-path differences explained: baseline reproduces at the economy merge 63c0144), 5 (determinism, two local 30-day economy-on runs identical), 7 (Build 24 and current saves load with the economy on), 8 (no uncontrolled buying path). NEEDS RUN: 1 (Tests workflow), 4, 6, 9 (long-sims seeds 1-4, 365 days, every 10, --market, on the final candidate). Gate 10: LE-05 remainder (route risk, regional links) still to implement; no critical defect. Gate 11 phone performance: a profiling target per OD-LE-15, needs a device. Gates 12-13 applied with the activation commit. CI gap fixed: four suites added to tests.yml; tests set economy-off explicitly."
+    },
+    {
+     "date": "2026-11-05",
+     "change": "note",
+     "why": "audit docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md: gate 11 (mid-range phone performance) was declared non-blocking by the lead (b00439f message, reading of OD-LE-15), not by the owner; completion checklist H2 still asks the owner. Recorded as an owner question in docs/handoffs/B25R1_OWNER_QUESTIONS_2026-11-05.md; the lead's reading is not an approval"
     }
    ],
    "target_build": "20",

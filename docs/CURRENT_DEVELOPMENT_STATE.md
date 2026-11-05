@@ -19,7 +19,20 @@
   - History lives in `docs/DEVELOPMENT_CHANGELOG.md`.
 - **Recovery after lost context:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
 
-## Build 25 Revision 1 (owner, 2026-11-03; controls this session)
+## Owner decision 2026-11-05: B25R1 audit, Option 1 (B25R1-AUDIT-OPT1; controls this session)
+
+- **Directive:** `docs/directives/2026-11-05_b25r1_audit_option1.md`. Finish validating the current code (`wip/b25r1`, head `a995397`)
+  while developing every approved B25R1 requirement; no deferral without the owner. The audit
+  `docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md` is the working completion checklist.
+- **Live completion report:** `docs/handoffs/B25R1_COMPLETION_REPORT.md` (counts, per-requirement table, SHAs and runs, what to repeat
+  when the final SHA changes). **Owner questions** (seven groups, asked one at a time): `docs/handoffs/B25R1_OWNER_QUESTIONS_2026-11-05.md`.
+- **New register ids (in development, grass-and-map worker, branch wip/b25r1-grassmap once created):** B25R1-023 Bow.Pixel Low Grass
+  decoration on the overworld; B25R1-024 region map restyle (UIStyle, gamepad focus on the Village tab).
+- **Other ordered work (Option 1 item 2):** B25R1-018 Bear Hill and castle knoll; B25R1-022 Fantasy Lands houses; B25R1-010 player
+  homestead well; B25R1-020 Android crowd-management measurement. EA-01 tracked separately (milestone: Early Access demo about
+  2026-11-24; build placement is the owner's).
+
+## Build 25 Revision 1 (owner, 2026-11-03)
 
 - **Directives:** `docs/directives/2026-11-03_b25r1_master_directive.md` (B25R1-001..008), `2026-11-03_b25r1_seed_travelers.md` (B25R1-009), `2026-11-03_b25r1_homesteading.md` (B25R1-010), `2026-11-03_b25r1_road_wear.md` (B25R1-011), `2026-11-03_b25r1_owner_clarifications.md` (B25R1-012 and clarifications), `2026-11-03_b25r1_youth_runaways.md` (B25R1-013), `2026-11-03_b25r1_outlaw_communities.md` (B25R1-014, the four decisions), `2026-11-03_b25r1_full_scope_mandatory.md` (B25R1-015), `2026-11-03_b25r1_365_day_flight_recorder.md` (B25R1-016), `2026-11-03_b25r1_integration_water_directive.md` (B25R1-017), `2026-11-03_b25r1_regional_world_reconstruction.md` (B25R1-018); owner answers B25R1-Q2 (band moves to the wild) and Q3 (streams and wells), Q4 (defenders fight or flee, no surrender), Q5 (no save migration: the owner erases saves at each play test), Q6 and Q7 (presence by view range, everywhere including the village).
 - **Scope rule (B25R1-015, owner 2026-11-03):** every approved B25R1 function ships in Revision 1, working, with its switches on in the shipped configuration. Nothing is deferred, disabled, replaced by a placeholder or narrowed without an owner decision. Blockers go to the owner with obstacle, systems, solutions, recommendation and consequences; unblocked work continues. The Revision 1 draft is not ready until all of it is implemented, integrated and validated.
