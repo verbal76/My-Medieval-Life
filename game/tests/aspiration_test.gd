@@ -1017,7 +1017,8 @@ func test_v10_no_resources() -> void:
 		w.update(STEP)
 		w.player.hunger = 100.0
 	var dd := func(k: String) -> int: return int(w.stats.get(k, 0)) - int(stats0.get(k, 0))
-	var leak: int = w.total_coins() - c0 - dd.call("caravan_coins_in") - dd.call("newcomer_coins_in") + dd.call("caravan_coins_out")
+	# (economy_sim's currency ledger: the outlaws' purses come in from outside too, BANDIT-RETURN)
+	var leak: int = w.total_coins() - c0 - dd.call("caravan_coins_in") - dd.call("newcomer_coins_in") - dd.call("outlaw_coins_in") + dd.call("caravan_coins_out")
 	check(leak == 0, "V10: %d days with aspirations and job_choice on: the currency balances (leak %d)" % [days, leak])
 	check(int(w.judgment.stats.get("aspire_dawns", 0)) >= days, "V10: ...and the layer ran every dawn (%d)" % int(w.judgment.stats.get("aspire_dawns", 0)))
 	w.dispose()
