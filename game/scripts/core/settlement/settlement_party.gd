@@ -357,7 +357,7 @@ func _sale_cap(item: String) -> int:
 				keep = ceili(3.0 * pts / OffMapSettlement._pts(item))
 			elif rl.gov_upkeep.has(item):
 				keep = ceili(float(rl.gov_upkeep[item]) * 6.0 * float(s.households()))
-			return maxi(0, have - keep)
+			return maxi(0, have - keep - OffMapSettlement.consigned_in(s.gov, item))   # B25-ECON-P6: another place's goods it holds to send home
 	return 0
 
 
