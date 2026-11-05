@@ -142,7 +142,11 @@ func _run() -> void:
 	# --- a merchant's booth stays at the merchant's stall (unchanged)
 	var m: NPC = w.npcs.filter(func(n): return n.alive and n.job == "merchant")[0]
 	var mref := World.npc_ref(m.id)
-	check(cs.open_shop_booth(mref) == "", "a merchant opens a booth")
+	# (a merchant may already have opened one by their own posting during the days run above: Couriers' villagers' postings,
+	# Build 18; the booth is placed by the same open_shop_booth either way)
+	var had := not cs.booth_of_keeper(mref).is_empty()
+	var why := cs.open_shop_booth(mref) if not had else ""
+	check(why == "" and not cs.booth_of_keeper(mref).is_empty(), "a merchant opens a booth (%s)" % ("opened by their own posting" if had else why))
 	var mb := cs.booth_of_keeper(mref)
 	var ms: Dictionary = w.stalls[str(m.workplace)]
 	check(Vector2i(int(mb.x), int(mb.y)) == Vector2i(int(ms.x), int(ms.y)) and str(mb.stall) == str(m.workplace), "at the merchant's own stall, as before")
