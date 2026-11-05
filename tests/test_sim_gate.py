@@ -563,6 +563,17 @@ class GateSplit(unittest.TestCase):
         for a, b, _ in sim_suite.DET_PAIRS:
             self.assertEqual(where[a], where[b])
 
+    def test_every_part_judges_its_own_subset(self):
+        """A part runner's own (subset) judgement must finish, so it writes its job results: run 41977899291's part 4 held
+        eq_s2 without eq_s1 and crashed on a baseline difference (fixed in sim_suite.evaluate)."""
+        import copy
+        subsets = [p["only"].split(",") for p in self.plan()["parts"]] + [["eq_s2"], ["b18_s1"]]
+        for only in subsets:
+            jobs = [j for j in copy.deepcopy(self.jobs) if j["run"] in only]
+            ev = sim_suite.evaluate(jobs, {n: self.results[n] for n in only}, self.src, COMMIT, partial=True)
+            if "eq_s2" in only:
+                self.assertTrue(any(f["run"] == "eq_s2" and "accepted baseline" in f["description"] for f in ev["findings"]), only)
+
     def test_split_reaches_the_same_findings(self):
         self.plant_difference("x20_on_det_s1")
         self.assert_same_findings(self.plan(), expect_det=["Expansion 20 switches on"])
