@@ -29,7 +29,7 @@ const LEGEND := 22.0             # height of the legend line under the map
 
 const MARGIN := 10               # tiles of country shown round the place
 const MAX_ZOOM := 16.0
-const HI_ZOOM := 2.6            # screen pixels a tile from which the close (8 px a tile) pictures are drawn
+const HI_ZOOM := 1.5            # screen pixels a tile from which the close (8 px a tile) pictures are drawn (mipmapped)
 const DRAG := 12.0
 const PAD_ZOOM := 2.2
 const PAN_SPEED := 520.0
@@ -323,6 +323,8 @@ func _process(delta: float) -> void:
 	_fit()
 	if size.x > 10.0 and size.y > 10.0 and (not fitted or (not moved and size != _fit_size)):
 		fit()
+	# the close pictures minified through their mipmaps, filtered; at their own scale and closer, sharp pixels
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS if zoom < float(AerialMap.HI) else CanvasItem.TEXTURE_FILTER_NEAREST
 	if is_visible_in_tree():
 		_pad_step(delta)
 		if aerial != null:
@@ -652,8 +654,17 @@ func _tap(at: Vector2) -> void:
 	main.look_at_tile(to_tile(at))
 
 
-## B25R1-025: the atlases read to shrink the tiles are let go as the map closes (what was shrunk is kept).
+## B25R1-025: the atlases read to shrink the tiles are let go as the map closes or is left (what was shrunk is kept).
 func _exit_tree() -> void:
+	_let_go()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_VISIBILITY_CHANGED and not is_visible_in_tree():
+		_let_go()
+
+
+func _let_go() -> void:
 	if aerial != null:
 		aerial.release_art()
 		aerial.allow_load = false

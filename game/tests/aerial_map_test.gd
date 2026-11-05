@@ -254,3 +254,17 @@ func _seed(s: int) -> void:
 	check(not main.ui.modal() and main.cam_free, "seed %d: a tap still looks there" % s)
 	main.recenter()
 	main.ui.map_place = ""
+	# during play: the chunks newly explored are drawn while the player stands, from art already shrunk, no atlas read
+	await _frames(2)
+	SHOT.explore(main, ["netherton"])
+	p.pos = Vector2(ow.site("netherton").center) + Vector2(0.5, 0.5)
+	Atlas.note_position(w, p)
+	var drawn0 := a.lo_drawn
+	a.waited_gen = 0
+	a.waited_art = 0
+	main.aerial_background = true
+	await _frames(90)
+	main.aerial_background = false
+	check(a.lo_drawn > drawn0 and a._atlas.all(func(im): return im == null),
+			"seed %d: during play the newly explored chunks are drawn in the background (%d drawn, %d waiting: passed over %d times not generated, %d needing new art), no atlas read"
+			% [s, a.lo_drawn - drawn0, a.queue.size(), a.waited_gen, a.waited_art])

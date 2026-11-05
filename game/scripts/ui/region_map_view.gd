@@ -324,7 +324,9 @@ func _process(delta: float) -> void:
 	if cursor != Vector2.INF and is_visible_in_tree():
 		pad_step(pad_vector(), pad_triggers(), pad_look(), delta)
 	# zoomed out, the aerial pages are minified: their mipmaps, filtered, rather than every eighth pixel
-	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS if zoom < float(AerialMap.LO) else CanvasItem.TEXTURE_FILTER_NEAREST
+	# (and so are the close pictures between HI_ZOOM and their own 8 px a tile; the 2 px pages magnified stay sharp pixels)
+	var mip := zoom < float(AerialMap.LO) or (zoom >= HI_ZOOM and zoom < float(AerialMap.HI))
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS if mip else CanvasItem.TEXTURE_FILTER_NEAREST
 	if aerial != null and is_visible_in_tree():
 		aerial.allow_load = true                   # (a map closed just before this one opened let go of the art)
 		if not aerial.queue.is_empty():
@@ -814,8 +816,17 @@ func _dashed(a: Vector2, b: Vector2, col: Color) -> void:
 			draw_line(a.lerp(b, k / float(n)), a.lerp(b, (k + 1) / float(n)), col, 2.0)
 
 
-## B25R1-025: the atlases read to shrink the tiles are let go as the map closes (what was shrunk is kept).
+## B25R1-025: the atlases read to shrink the tiles are let go as the map closes or is left (what was shrunk is kept).
 func _exit_tree() -> void:
+	_let_go()
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_VISIBILITY_CHANGED and not is_visible_in_tree():
+		_let_go()
+
+
+func _let_go() -> void:
 	if aerial != null:
 		aerial.release_art()
 		aerial.allow_load = false

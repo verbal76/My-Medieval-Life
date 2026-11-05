@@ -2026,11 +2026,13 @@ func _process(delta: float) -> void:
 
 
 # ---------------------------------------------------------------- aerial maps (B25R1-025) -------
-## B25R1-025: the chunks the player explores are drawn for the maps as they go (AerialMap), at most one a frame and only one
+## B25R1-025: the chunks the player explores are drawn for the maps (AerialMap) while they stand still (working, talking,
+## looking round), at most one a frame and only one
 ## the overworld has at hand and whose tiles are already shrunk (no generation and no atlas read during play); what is left
 ## is drawn while a map is open.
 const AERIAL_BUDGET_USEC := 3000
 var aerial_background := true            # tests may turn it off
+var _aerial_last := Vector2.INF          # where the player stood last frame: drawing waits while they walk (no hitch on a phone)
 
 
 func _aerial_step() -> void:
@@ -2038,7 +2040,9 @@ func _aerial_step() -> void:
 		return
 	var a := AerialMap.of(self)
 	a.notice()
-	if not a.queue.is_empty() and not ui.is_open("map"):
+	var still: bool = world.player.pos == _aerial_last
+	_aerial_last = world.player.pos
+	if still and not a.queue.is_empty() and not ui.is_open("map"):
 		a.allow_load = false                  # no atlas is read during play: a chunk needing new art waits for a map
 		a.pump(AERIAL_BUDGET_USEC, false, 1)
 

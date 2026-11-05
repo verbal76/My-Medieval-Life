@@ -53,6 +53,9 @@ var hi_drawn := 0
 var lo_usec := 0
 var hi_usec := 0
 var gen_usec := 0
+var waited_gen := 0                 # chunks passed over during play: not generated (no generation then)
+var waited_art := 0                 # ... or needing art not shrunk yet
+var _needs_art := {}
 
 
 ## The aerial maps of `m`'s world, made on first need and kept while the world is the same.
@@ -587,14 +590,21 @@ func pump(budget_usec: int, generate: bool, most := 1 << 30) -> int:
 	while i < queue.size() and Time.get_ticks_usec() - t0 < budget_usec and done < most:
 		var cc: Vector2i = queue[i]
 		if not generate and not ow.cache.has(cc) and not ow.village.encloses(Rect2i(cc * Overworld.CHUNK, Vector2i(Overworld.CHUNK, Overworld.CHUNK))):
+			waited_gen += 1
 			i += 1
+			continue
+		if not allow_load and _needs_art.has(cc):
+			i += 1                               # (it needs art not shrunk yet: drawn when a map is open)
 			continue
 		queue.remove_at(i)
 		if generate and not ow.cache.has(cc):
 			_keep_near()
 		if draw_lo(cc):
 			done += 1
+			_needs_art.erase(cc)
 		else:
+			_needs_art[cc] = true
+			waited_art += 1
 			queue.insert(i, cc)
 			i += 1
 	return queue.size()
@@ -675,6 +685,7 @@ func pump_hi(budget_usec: int) -> int:
 		var img := compose(cc, HI)
 		if img == null:
 			continue
+		img.generate_mipmaps()                   # (the maps minify them, filtered, below 8 px a tile on screen)
 		_use += 1
 		hi[cc] = {"tex": ImageTexture.create_from_image(img), "sig": sig(cc), "use": _use}
 	while hi.size() > HI_KEEP:
@@ -693,8 +704,8 @@ func hi_trim(keep: Dictionary) -> void:
 	hi_queue = hi_queue.filter(func(c): return keep.has(c))
 
 
-## Bytes held: the LO pages (CPU image and texture) and the HI textures.
+## Bytes held: the LO pages (CPU image, and the texture with its mipmaps) and the HI textures (with their mipmaps).
 func bytes() -> Dictionary:
 	var side := PAGE * Overworld.CHUNK * LO
 	var hs := Overworld.CHUNK * HI
-	return {"pages": pages.size(), "lo_bytes": pages.size() * side * side * 4 * 2, "hi": hi.size(), "hi_bytes": hi.size() * hs * hs * 4}
+	return {"pages": pages.size(), "lo_bytes": pages.size() * side * side * 4 * 7 / 3, "hi": hi.size(), "hi_bytes": hi.size() * hs * hs * 4 * 4 / 3}
