@@ -18,6 +18,13 @@ extends SceneTree
 ## exactly once when nothing was lost); no shipment or escrow stranded; the buyer and seller of each transfer the right ones.
 ##   godot --headless --path game --script res://tests/net_econ_integrity_test.gd
 
+## A request sent on a live connection reaches the host within ENet's longest timeout, or the connection is declared dead
+## (NetSession.TIMEOUT_MAX_MS): the bound for waiting on a request's effect, never a fixed pause (a slow first frame, a cold disk).
+const DELIVERY_SECONDS := NetSession.TIMEOUT_MAX_MS / 1000.0
+## The host frozen this long keeps its guests' connections (under NetSession.TIMEOUT_MIN_MS, ENet's shortest timeout). The answer
+## goes once the freeze has begun (net_host "suspending", after the pause's save), so nothing else adds to it.
+const PAUSE_SECONDS := 3.0
+
 var main
 var failures := 0
 var checks := 0
@@ -419,8 +426,13 @@ func _lossy() -> void:
 	var rids := []
 	var accepted := {}                                # offer ids Ann has answered (each answered once)
 	var stages := []                                  # what each sale was still waiting for when the lossy window closed
+	var made := 0                                     # sell offers the host made (World.player_offer said "")
 	for i in 3:
 		await host_offers("sell", IT, 1, 2)
+		if str(status().get("why_last", "")) == "":
+			made += 1
+		else:                                         # one offer of a kind at a time: the last still unanswered (World.player_offer)
+			stages.append("sale %d: not offered yet (%s)" % [i + 1, status().get("why_last", "")])
 		var o := _unanswered_sell(accepted)           # never an offer Ann already answered (still on her copy until the host's reply)
 		if o.is_empty():
 			stages.append("sale %d: offer not yet received" % (i + 1))   # a late offer is accepted after the network recovers
@@ -437,6 +449,12 @@ func _lossy() -> void:
 	var settle_end := Time.get_ticks_msec() + int(NetSession.RECONNECT_SECONDS * 1000.0)
 	while rids.size() < 3 and Time.get_ticks_msec() < settle_end:   # an offer that arrived late: accept it once
 		var late := _unanswered_sell(accepted)
+		if late.is_empty() and made < 3 and not _host_sell_waiting():
+			await host_offers("sell", IT, 1, 2)       # an offer the host could not make while its last waited: made now
+			if str(status().get("why_last", "")) == "":
+				made += 1
+				stages.append("sale offered again after the window")
+			continue
 		if late.is_empty():
 			await process_frame
 			continue
@@ -458,6 +476,12 @@ func _lossy() -> void:
 		"20%% loss, 20%% repeats, 20%% reordering: three sales, each once (apples +%d, coins %d; relay dropped %d, repeated %d, reordered %d; reconnects %d; in flight at the window's end: %s; unsettled: %s)" % [has(ann, IT) - a_i, coins(ann) - a_c, int(ps.get("dropped", 0)), int(ps.get("duplicated", 0)), int(ps.get("reordered", 0)), net.reconnects - r0, stages, unsettled])
 	same(l0, await led(), "lossy network")
 	check(await until(func(): return agrees([IT]), 6.0), "Ann's copy agrees")
+
+
+## Whether the host's record still holds a sell offer from the host to Ann (unanswered there).
+func _host_sell_waiting() -> bool:
+	var me := ann_ref()
+	return (status().get("offers", []) as Array).any(func(x): return str(x.kind) == "sell" and str(x.to) == me and str(x["from"]) == str(rec(host_pid).get("ref", "")))
 
 
 ## A sell offer to Ann that she has not answered yet ({} when none).
@@ -526,14 +550,16 @@ func _dropped() -> void:
 	var d0 := int(net_d().get("duplicates", 0))
 	var c0 := coins(ann)
 	net.rpc_id(1, "c_request", rid, "verb", {"path": "player_answer", "a": [int(o.id), true]})
-	await wait(0.8)
-	check(times(ann, rid) == n and coins(ann) == c0 and int(net_d().get("duplicates", 0)) == d0 + 1, "the same request number sent again after the reconnection: not applied")
+	await until(func(): return int(net_d().get("duplicates", 0)) > d0 or times(ann, rid) > n, DELIVERY_SECONDS)
+	check(times(ann, rid) == n and coins(ann) == c0 and int(net_d().get("duplicates", 0)) == d0 + 1,
+		"the same request number sent again after the reconnection: not applied (applied %d time(s), was %d; duplicates %+d)" % [times(ann, rid), n, int(net_d().get("duplicates", 0)) - d0])
 	var left: Array = (status().get("offers", []) as Array).filter(func(x): return int(x.id) == int(o.id))
 	if n == 0 and not left.is_empty():
 		var rid2 := accept(int(o.id))
-		await until(func(): return times(ann, rid2) == 1, 5.0)
+		await until(func(): return times(ann, rid2) >= 1, DELIVERY_SECONDS)
 		await wait(0.3)
-		check(times(ann, rid2) == 1 and has(ann, IT) == a_i + 2 and coins(ann) == a_c - 5, "answered again under a new number: done once")
+		check(times(ann, rid2) == 1 and has(ann, IT) == a_i + 2 and coins(ann) == a_c - 5,
+			"answered again under a new number: done once (applied %d time(s); apples %+d, coins %+d)" % [times(ann, rid2), has(ann, IT) - a_i, coins(ann) - a_c])
 	same(l0, await led(), "dropped connection")
 
 
@@ -544,14 +570,16 @@ func _host_pause() -> void:
 	var l0 := await led()
 	var a_c := coins(ann)
 	var o := await host_offers("sell", IT, 1, 3)
-	await command({"cmd": "suspend", "secs": 3.0}, false)
-	await wait(0.6)
+	var r0 := net.reconnects
+	await command({"cmd": "suspend", "secs": PAUSE_SECONDS}, false)
+	var frozen := await until(func(): return bool(status().get("suspending", false)), DELIVERY_SECONDS)     # after the pause's save
 	net.faults = {"dup": true}
 	var rid := accept(int(o.id))
 	net.faults = {}
-	var done := await until(func(): return times(ann, rid) >= 1, 15.0)
+	var done := await until(func(): return times(ann, rid) >= 1, PAUSE_SECONDS + DELIVERY_SECONDS)
 	await wait(0.8)
-	check(done and times(ann, rid) == 1 and coins(ann) == a_c - 3 and in_game(), "an answer (sent twice) while the host's app was frozen: applied once when it came back")
+	check(PAUSE_SECONDS < NetSession.TIMEOUT_MIN_MS / 1000.0 and frozen and done and times(ann, rid) == 1 and coins(ann) == a_c - 3 and in_game() and net.reconnects == r0,
+		"an answer (sent twice) while the host's app was frozen: applied once when it came back (frozen %s; applied %d time(s); coins %+d; reconnects %d)" % [frozen, times(ann, rid), coins(ann) - a_c, net.reconnects - r0])
 	same(l0, await led(), "host paused")
 
 
@@ -616,8 +644,9 @@ func _leaving() -> void:
 	check(await join(), "Ann comes back")
 	var d0 := int(net_d().get("duplicates", 0))
 	net.rpc_id(1, "c_request", r1, "verb", {"path": "player_answer", "a": [int(o.id), true]})
-	await wait(0.8)
-	check(times(ann, r1) == 1 and int(net_d().get("duplicates", 0)) == d0 + 1, "her acceptance repeated from before she left: not applied again")
+	await until(func(): return int(net_d().get("duplicates", 0)) > d0 or times(ann, r1) > 1, DELIVERY_SECONDS)
+	check(times(ann, r1) == 1 and int(net_d().get("duplicates", 0)) == d0 + 1,
+		"her acceptance repeated from before she left: not applied again (applied %d time(s); duplicates %+d)" % [times(ann, r1), int(net_d().get("duplicates", 0)) - d0])
 	await stage()
 	await until(func(): return not main.world.contracts.get_contract(int(c.id)).is_empty(), 4.0)
 	main.world.player_contract_deliver(int(c.id), 2)
@@ -711,7 +740,7 @@ func _host_crash() -> void:
 	check(agrees([IT, WH]), "Ann's copy is the restored host's")
 	var d0 := int(net_d().get("duplicates", 0))
 	net.rpc_id(1, "c_request", rid, "verb", {"path": "player_answer", "a": [int(o2.id), true]})
-	await wait(0.8)
+	await until(func(): return int(net_d().get("duplicates", 0)) > d0 or times(ann, rid) > 0, DELIVERY_SECONDS)
 	check(times(ann, rid) == 0 and coins(ann) == a_c, "her request from before the crash, sent again to the restored host: not applied (duplicates %+d)" % (int(net_d().get("duplicates", 0)) - d0))
 	var rep := await tx({"op": "ship", "txid": "net/crash:1", "buyer": "pid:%d" % ann, "seller": "trader:0", "item": WH, "qty": 3, "total": 9, "days": 3})
 	check(bool(rep.get("replay", false)) and coins(ann) == a_c, "the shipment asked again after the restore: a replay, nothing moves")
@@ -763,7 +792,7 @@ func _succession() -> void:
 		exp.goods[k] = int(exp.goods.get(k, 0)) + int(hr.inv[k])
 	same(exp, l2, "the succession (the heir's starting kit the only addition)")
 	check(str(contract(int(c.get("id", -1))).get("state", "")) == "cancelled" and int(l2.reserved) == int(l1.reserved) - 4,
-		"the dead's contract ended: the host's 4 coins set aside came back")
+		"the dead's contract ended: the host's 4 coins set aside came back (%s; set aside %d -> %d)" % [str(contract(int(c.get("id", -1))).get("state", "")), int(l1.reserved), int(l2.reserved)])
 	var h_w := has(ann, WH)
 	var h_i := has(ann, IT)
 	var d := await tx({"op": "deliver", "txid": "net/heir:1"})

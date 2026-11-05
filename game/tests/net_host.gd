@@ -34,6 +34,7 @@ var batch := {}           # the last release: {held, applied (in that one frame)
 var _batch_from := -1
 var suspended := {}       # Batch D: the last "suspend": {minutes_before, secs, minutes_after (three frames after the resume)}
 var suspend_frames := -1
+var suspending := false    # net_econ_integrity_test: true in the status written as a "suspend" freezes the process
 var still := false         # X20-MP-ECON-INTEGRITY: the world stopped, the network and the requests going on (see the header)
 var ledger := {}           # the last "ledger": every coin and every good in the world, transit and escrow included
 var tx_last := {}          # the last "tx": the transaction authority's result
@@ -283,7 +284,10 @@ func _commands() -> void:
 		"suspend":                                   # Batch D (net_fault_test): Android's background, as the app meets it: the pause
 			var m0: float = w.minutes                    # notification, the process frozen (no frames, no network) for `secs`, then
 			main._notification(Node.NOTIFICATION_APPLICATION_PAUSED)     # the resume notification before the next frame
+			suspending = true                            # told in the status first: a guest acts once the freeze has begun (after
+			_status()                                    # the pause's save), so the freeze alone is what it waits through
 			OS.delay_msec(int(float(c.secs) * 1000.0))
+			suspending = false
 			main._notification(Node.NOTIFICATION_APPLICATION_RESUMED)
 			suspended = {"minutes_before": m0, "secs": float(c.secs)}
 			suspend_frames = 0
@@ -566,7 +570,7 @@ func _status() -> void:
 		"day": w.day(), "net_d": {"duplicates": main.net.duplicates, "gaps": main.net.gaps_skipped, "resumes": main.net.resumes,
 			"log": main.net.applied_log.duplicate(), "tag": main.net.tag, "suspended": suspended, "upnp": main.net.upnp.state,
 			"mp_peers": main.net.multiplayer.get_peers().size() if main.net.peer != null else 0},
-		"still": still, "ledger": ledger, "tx_last": tx_last, "shipments": w.transactions.open_shipments() if w.transactions != null else [],
+		"still": still, "suspending": suspending, "ledger": ledger, "tx_last": tx_last, "shipments": w.transactions.open_shipments() if w.transactions != null else [],
 		"contracts": _player_contracts(w), "traders": _traders().map(func(t): return t.ref)}
 	var tmp := dir + "status.tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
