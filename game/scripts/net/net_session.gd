@@ -31,6 +31,7 @@ extends Node
 signal changed(text: String)        # something the player should be told (joins, refusals, losses)
 signal answered(text: String)       # the host's answer to one of this guest's requests (shown, not kept: routine feedback)
 signal players_changed
+signal world_synced(mark: int)       # guest (MP C): the host's sections taken into this copy (s_sync); `mark` as send_syncs gave it, else -1
 signal verb_answered(rid: int, result: Variant)    # X20: the host's result of one of this guest's verbs (Main._on_verb_answered)
 
 const REFUSALS := {
@@ -1270,7 +1271,9 @@ func c_journal(text: String, category: String) -> void:
 ## One World.to_dict for all of them; nothing is sent to a guest whose copy is current.
 ## X20 (net_soak_test): `clock` >= 0 marks the sync of a recorded host's game hour: every guest gets it, with the host's clock, even
 ## when nothing changed, and a recording guest takes its hourly digest of the very state the host's digest saw (WorldRecorder).
-func send_syncs(all: bool, skip: Array = [], clock := -1.0) -> void:
+## `mark` >= 0 (the tests' "dump", tests/net_host.gd) likewise goes to every due guest even when nothing changed: the guest's copy
+## right after taking it (world_synced) is the host's world of this very frame, whatever syncs come after it.
+func send_syncs(all: bool, skip: Array = [], clock := -1.0, mark := -1) -> void:
 	if peer == null or by_peer.is_empty():
 		return
 	var due := []
@@ -1293,6 +1296,8 @@ func send_syncs(all: bool, skip: Array = [], clock := -1.0) -> void:
 		var ch := NetSync.changed(d, synced[id], skip if not sync_due_was.has(id) else [])
 		if clock >= 0.0:
 			ch["_net_clock"] = clock
+		if mark >= 0:
+			ch["_net_mark"] = mark
 		if ch.is_empty():
 			continue
 		var blob := JSON.stringify(ch).to_utf8_buffer().compress(FileAccess.COMPRESSION_GZIP)
@@ -1309,13 +1314,16 @@ func s_sync(blob: PackedByteArray) -> void:
 	var d = JSON.parse_string(blob.decompress_dynamic(-1, FileAccess.COMPRESSION_GZIP).get_string_from_utf8())
 	if d is Dictionary:
 		var clock := float(d.get("_net_clock", -1.0))
+		var mark := int(d.get("_net_mark", -1))
 		d.erase("_net_clock")
+		d.erase("_net_mark")
 		if clock >= 0.0:
 			main.world.minutes = maxf(main.world.minutes, clock)      # the host's clock, as the villager snapshots bring it (s_npcs)
 		NetSync.adopt(main.world, d)
 		syncs += 1
 		if main.world.recorder != null:
 			main.world.recorder.net_sync(self, false, (d as Dictionary).size(), blob.size(), clock >= 0.0)     # X20-FINAL (and the guest's hourly digest)
+		world_synced.emit(mark)
 
 
 # ---------------------------------------------------------------- every frame ----------------

@@ -300,9 +300,9 @@ func _commands() -> void:
 				w.stat("imported_" + str(c.id), float(c.n))
 				main.net.rpc_id(id, "s_self", gp.to_dict())
 		"dump":                                      # MP C: the shared world's sections as the host has them (NetSync), for comparing copies
-			main.net.send_syncs(true)                # the guests' copies take this same moment's sections
+			main.net.send_syncs(true, [], -1.0, int(c.seq))     # the guests' copies take this same moment's sections, marked with the command
 			var dd: Dictionary = w.to_dict()
-			var out := {"digest": NetSync.digest(dd), "sections": {}}
+			var out := {"digest": NetSync.digest(dd), "sections": {}, "mark": int(c.seq)}
 			for k in c.get("keys", []):
 				out.sections[k] = dd.get(k)
 			if c.get("full", false):                 # X20 phase 4.5 (net_snapshot.gd): offers, villagers, players, the clock
