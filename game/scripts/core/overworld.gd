@@ -32,7 +32,7 @@ extends RefCounted
 ##  - Trees and rocks are single solid cells, never within a cell of each other or of a cliff, so
 ##    they cannot wall anything in. Flowers and bushes are walkable decoration.
 
-const GEN_VERSION := 4
+const GEN_VERSION := 5
 ## Generator versions whose saved changes still apply (their trees, rocks, flowers and roads are in the same cells): 2 (PL1-12,
 ## 2026-10-21) only draws the low red flower (tile 2656) among the wild flowers (overworld_tiles.json flowers), so a flower
 ## may be another colour than in version 1, and nothing else moved.
@@ -40,7 +40,14 @@ const GEN_VERSION := 4
 ## settlements at the region layout's anchors, the main roads along its routes, the Downs, the waste and the Wood Perilous as
 ## their own country; the water worker's courses), so an older generation's changes are not applied (the save is refused by
 ## SaveStore.MIN_VERSION before it gets here).
-const GEN_COMPATIBLE := [4]
+## Generation 5 (B25R1-018, the audit's "assessed, not started": Bear Hill and Higham's castle knoll): raised ground from the
+## layout's `raised` landmarks (`raised`, `_raised_corner`): Bear Hill's top a rock-rimmed plateau of open turf round Bear Castle,
+## climbed by the roads that cut through its rim; the white castle on a knoll above the town, its gate reached by steps cut in
+## the knoll's rim (`fixed_works`). The chalk figures moved a little west, onto the hill's slope below the rim. Cells and objects
+## on and round them changed, so a generation 4 world is refused like the older ones (World.load_dict, its message; the file kept).
+## (It also covers B25R1-022's house styles: the southern settlements' styled houses and the elite houses change those sites'
+## slots and stamps, which a generation 4 world's changes did not see.)
+const GEN_COMPATIBLE := [5]
 const CHUNK := 32
 const PAD := 4                           # cells computed round a chunk, so neighbours' rules need no other chunk
 const AREA := CHUNK + 2 * PAD
@@ -116,6 +123,11 @@ var _mark_zones: Array = []              # [Rect2i]: round them the turf is kept
 var styles := {}                         # B25R1-022: house styles (style_stamps.json "styles": {style: {homes, elite}}), see slot_stamp
 var wall_kit := {}                       # B25R1-018: the battlemented wall kit (region_stamps.json "wall"), composed into walls by _wall_stamp
 var _near_sites: Array = []
+## B25R1-018 (generation 5): raised ground ({id, kind "disc" (at, r) or "rect" (top: the top's cells), box: the corners' reach})
+## and the ways the generator cuts through its rim ({Vector2i: "steps_ns" ...}, as `works` but never saved: a function of the
+## seed and the layout). Both set by _setup_raised.
+var raised: Array = []
+var fixed_works := {}                    # (the knoll's steps from _setup_raised; a road's steps up a rim added as its chunk is generated)
 ## B25R1-010 (Homesteads): the houses and frames standing on homestead claims, {id, stamp ("house", or "" for a frame), rect,
 ## door, frame, tile} or, for a claim's pen and well being dug, {id, stamp "", rect, door, layers: [{cell: tile}], solid: {cell: true}}
 ## (Wilds.overworld_entries): collided here (home_building_at, as a settlement's building) and drawn by OverworldView. Set by
@@ -167,6 +179,7 @@ static func create(world_seed: int, m: VillageMap) -> Overworld:
 		o._solid_rows[k] = o.stamps[k].get("solid", [])
 	o._setup_sites(o.stamps)
 	o._setup_structures()
+	o._setup_raised()
 	o._setup_routes()
 	return o
 
@@ -814,6 +827,80 @@ func _setup_structures() -> void:
 								gapped = true
 						if not gapped:
 							_bank_cells[at + Vector2i(x, y)] = true
+
+
+## B25R1-018 (generation 5; owner directive 2026-11-03 section 3, "Bear Hill ... Bear Castle", section 4, "white castle on its
+## knoll"): the raised ground of the layout's landmarks that carry `raised`, drawn with the mountains' grass/cliff corners (a
+## rock rim round a top of open turf, B14-07) but never covered with their pines and boulders:
+##  - {"r": R}: a top about R tiles round the landmark (its outline wanders a tile or two with the seed), climbed by steps
+##    where a road crosses the rim (_generate: every road over the hill is a way up, and runs on over the top);
+##  - {"site": S, "slot": ID, "margin": [W, N, E, S]}: a top the size of settlement S's slot ID grown by those tiles on its
+##    west, north, east and south (its corners rounded), with
+##    steps cut through the rim below the slot's door, three wide, the one way up (fixed_works).
+func _setup_raised() -> void:
+	raised.clear()
+	fixed_works.clear()
+	if gen < 5:
+		return
+	for lm in RegionGeo.landmarks():
+		var rz: Dictionary = lm.get("raised", {})
+		if rz.is_empty():
+			continue
+		if rz.has("r"):
+			var r := int(rz.r)
+			var at: Vector2i = lm.at
+			raised.append({"id": str(lm.id), "kind": "disc", "at": at, "r": r, "box": Rect2i(at, Vector2i.ONE).grow(r + 3)})
+		elif rz.has("site"):
+			var st := site(str(rz.site))
+			for sl in st.get("slots", []):
+				if str(sl.get("id", "")) != str(rz.slot):
+					continue
+				var mg: Array = rz.get("margin", [2, 2, 2, 2])          # west, north, east, south
+				var top: Rect2i = (sl.rect as Rect2i).grow_individual(int(mg[0]), int(mg[1]), int(mg[2]), int(mg[3]))
+				raised.append({"id": str(lm.id), "kind": "rect", "top": top, "box": top.grow(1)})
+				var door: Vector2i = sl.door
+				for dx in range(-1, 2):                  # the rim's south row (its corners the top's last row's lower ones)
+					fixed_works[Vector2i(door.x + dx, top.end.y)] = "steps_ns"
+
+
+## B25R1-018: whether the cell corner (x, y) (a cell's top-left corner) is on raised ground (_setup_raised).
+func _raised_corner(x: int, y: int) -> bool:
+	return _raised_id(x, y) != ""
+
+
+## B25R1-018: the id of the raised ground (its landmark's) a cell stands on, its top or its rim, "" none. A settlement's site
+## may reach onto it (Netherton lies under Bear Hill; Higham's castle stands on its knoll): its rim there is the hill's, not
+## something the site was not cleared of.
+func raised_at(c: Vector2i) -> String:
+	for d: Vector2i in [Vector2i.ZERO, Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]:
+		var id := _raised_id(c.x + d.x, c.y + d.y)
+		if id != "":
+			return id
+	return ""
+
+
+func _raised_id(x: int, y: int) -> String:
+	for rz in raised:
+		if not (rz.box as Rect2i).has_point(Vector2i(x, y)):
+			continue
+		if str(rz.kind) == "disc":
+			var d: Vector2i = Vector2i(x, y) - (rz.at as Vector2i)
+			var rr: int = int(rz.r) * 8 + (_point(33, [12, 6], x, y) - 512) * 12 / 512     # eighths of a tile: +-1.5 tiles
+			if (d.x * d.x + d.y * d.y) * 64 <= rr * rr:
+				return str(rz.id)
+		else:
+			var t: Rect2i = rz.top
+			if x < t.position.x or x > t.end.x or y < t.position.y or y > t.end.y:
+				continue
+			if (x == t.position.x or x == t.end.x) and (y == t.position.y or y == t.end.y):
+				continue                                 # the corners rounded
+			return str(rz.id)
+	return ""
+
+
+## B25R1-018: the way through a cliff's rim at `c`: one the player made (works) or one the generator cut (fixed_works), "" none.
+func way_at(c: Vector2i) -> String:
+	return str(works.get(c, fixed_works.get(c, "")))
 
 
 func _lm_slot(stamp: String, at: Vector2i, id: String) -> Dictionary:
@@ -2272,9 +2359,19 @@ func _generate(cx: int, cy: int) -> Chunk:
 	# cliff corners
 	var cliff := PackedByteArray()
 	cliff.resize(GRID * GRID)
+	var rzc := PackedByteArray()                  # B25R1-018 (generation 5): corners on raised ground (Bear Hill, the castle knoll)
+	rzc.resize(GRID * GRID)
+	var rz_here := false
+	for rz in raised:
+		if (rz.box as Rect2i).intersects(here):
+			rz_here = true
 	for j in GRID:
 		for i in GRID:
 			var k := j * GRID + i
+			if rz_here and _raised_corner(ox + i, oy + j):
+				rzc[k] = 1
+				cliff[k] = 1                          # (roads too: a road on the top runs on it, and climbs the rim by steps)
+				continue
 			var reach := (fm[k] - 470) / 4
 			if reach <= 0 or absi(fe[k] - 512) >= reach:
 				continue
@@ -2320,8 +2417,10 @@ func _generate(cx: int, cy: int) -> Chunk:
 			var hv := hash32(seed, x, y, 60) & 1023
 			prio[q] = hash32(seed, x, y, 61)
 			if blocked[q] == 1:
-				# a mountain top, a plateau nobody can reach: pines and boulders cover it, so it reads as wooded rock
-				if inner[q] == 1:
+				# a mountain top, a plateau nobody can reach: pines and boulders cover it, so it reads as wooded rock (raised ground
+				# of the layout is open turf: B25R1-018)
+				var gq := j * GRID + i
+				if inner[q] == 1 and rzc[gq] + rzc[gq + 1] + rzc[gq + GRID] + rzc[gq + GRID + 1] == 0:
 					if hv < 520:
 						cand[q] = 3
 					elif hv < 640:
@@ -2407,6 +2506,12 @@ func _generate(cx: int, cy: int) -> Chunk:
 			ch.ground[c] = opts[hash32(seed, wx, wy, 70) % opts.size()]
 			if blocked[q] == 1:
 				ch.solid[c] = 1
+				if road[q] == 1 and inner[q] == 0 and rzc[gk] + rzc[gk + 1] + rzc[gk + GRID] + rzc[gk + GRID + 1] > 0:
+					# B25R1-018: a road up raised ground climbs its rim by steps cut in the rock (walked on; drawn as the B14-07 steps,
+					# running toward the top). Recorded in fixed_works (a function of the seed: the same on every generation).
+					ch.solid[c] = 0
+					var ns := inner[q - AREA] == 1 or inner[q + AREA] == 1
+					fixed_works[Vector2i(wx, wy)] = "steps_ns" if ns else "steps_ew"
 			if wn[q] > 0:
 				_water_cell(ch, c, q, gk, wdata, wn, blocked[q] == 1 and inner[q] == 0, road[q] == 1, wx, wy,
 					_is_fall(q, wn, blocked, inner), _is_fall(q - AREA, wn, blocked, inner) or _is_fall(q - 2 * AREA, wn, blocked, inner) or _is_fall(q - 3 * AREA, wn, blocked, inner),
@@ -2720,8 +2825,8 @@ func is_solid(c: Vector2i) -> bool:
 		return true                                    # REGION-NAV-01: a settlement's building (B25R1-018: or a landmark's)
 	if not homes.is_empty() and home_building_at(c):
 		return true                                    # B25R1-010: a homestead's house
-	if works.has(c):
-		return false                                   # B14-07: steps, stairs or a walkway through the cliff's rim
+	if works.has(c) or fixed_works.has(c):
+		return false                                   # B14-07: steps, stairs or a walkway through the cliff's rim (B25R1-018: or the generator's)
 	var ch := get_chunk(chunk_of(c))
 	var i := _cell_of(ch, c)
 	if ch.water[i] == 1 or ch.water[i] == 3:
@@ -2944,7 +3049,7 @@ func is_top(c: Vector2i) -> bool:
 ## B14-07: whether a cell is the cliff's rim itself (the rock face round a mountain top: never a tree, a rock or a road),
 ## not yet cut or built through.
 func is_rim(c: Vector2i) -> bool:
-	if village.has_point(c) or works.has(c):
+	if village.has_point(c) or works.has(c) or fixed_works.has(c):
 		return false
 	var ch := get_chunk(chunk_of(c))
 	var i := _cell_of(ch, c)

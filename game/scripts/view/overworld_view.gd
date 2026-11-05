@@ -117,17 +117,17 @@ func _draw_works(cc: Vector2i) -> void:
 	var layer: Node2D = c.works
 	for k in layer.get_children():
 		k.queue_free()
-	var cells: Array = overworld.works.keys().filter(func(w: Vector2i) -> bool: return Overworld.chunk_of(w) == cc)
+	var cells: Array = (overworld.works.keys() + overworld.fixed_works.keys()).filter(func(w: Vector2i) -> bool: return Overworld.chunk_of(w) == cc)
 	cells.sort()
 	for cell: Vector2i in cells:
-		var kind := str(overworld.works[cell])
+		var kind := overworld.way_at(cell)              # (B25R1-018: the generator's steps up a knoll too)
 		var low := 0
 		if kind.begins_with("steps") and kind.length() == 8:       # "steps_ns" / "steps_ew" (the old "steps" has no run)
 			# the tile's low side (its grass edge) faces the ground, not the top: steps_ns is drawn low side south, steps_ew low
 			# side east; a cell with more steps on its low side takes the "_mid" tile, whose treads run on to the next cell
 			low = _steps_low_side(cell, kind.ends_with("_ew"))
 			var ahead: Vector2i = cell + (Vector2i(low, 0) if kind.ends_with("_ew") else Vector2i(0, low))
-			if str(overworld.works.get(ahead, "")).begins_with("steps"):
+			if overworld.way_at(ahead).begins_with("steps"):
 				kind += "_mid"
 		var file := kind + ".png"
 		if kind.begins_with("steps") and not ResourceLoader.exists("res://assets/terrain/" + file):
@@ -154,7 +154,7 @@ func _steps_low_side(cell: Vector2i, ew: bool) -> int:
 	var ends := []
 	for sgn in [1, -1]:
 		var c: Vector2i = cell + axis * sgn
-		while overworld.works.has(c) and str(overworld.works[c]).begins_with("steps") and absi(c.x - cell.x) + absi(c.y - cell.y) < 16:
+		while overworld.way_at(c).begins_with("steps") and absi(c.x - cell.x) + absi(c.y - cell.y) < 16:
 			c += axis * sgn
 		ends.append(overworld.is_top(c))
 	return -1 if ends[0] and not ends[1] else 1   # ends[0] is the + end: a top there puts the ground at the - end
@@ -361,7 +361,8 @@ func _build(cc: Vector2i) -> void:
 
 
 ## B25R1-Q8: the low grass tufts of a chunk (MapView.grass_tuft), on open flat grass only: no road, worn way or street, no
-## water, no rock, flower or bush, nothing solid (trees, cliffs), no settlement building or yard, no homestead. Drawing only.
+## water, no rock, flower or bush, nothing solid (trees, cliffs, a raised rim), no settlement building or yard (a styled house's
+## plot included), no homestead, no steps or way through a rim. Drawing only.
 func _lay_grass(cc: Vector2i, ch: Overworld.Chunk, layer: TileMapLayer, lanes: Dictionary) -> void:
 	if not has_grass_art():
 		return
@@ -386,6 +387,8 @@ func _lay_grass(cc: Vector2i, ch: Overworld.Chunk, layer: TileMapLayer, lanes: D
 	var seed := overworld.seed
 	var roads: Dictionary = overworld.road_state
 	var changed: Dictionary = overworld.changes
+	var ways: Dictionary = overworld.works
+	var fixed_ways: Dictionary = overworld.fixed_works
 	for y in Overworld.CHUNK:
 		for x in Overworld.CHUNK:
 			var cell := box.position + Vector2i(x, y)
@@ -396,8 +399,8 @@ func _lay_grass(cc: Vector2i, ch: Overworld.Chunk, layer: TileMapLayer, lanes: D
 			var i := y * Overworld.CHUNK + x
 			if ch.solid[i] != 0 or ch.water[i] != 0 or ch.path[i] >= 0 or ch.deco[i] >= 0 or not _flat.has(ch.ground[i]):
 				continue
-			if lanes.has(cell) or roads.has(cell) or fenced.has(cell) or changed.has(cell):
-				continue
+			if lanes.has(cell) or roads.has(cell) or fenced.has(cell) or changed.has(cell) or ways.has(cell) or fixed_ways.has(cell):
+				continue                           # (B25R1-018: nor on a way through a rim, the player's or the generator's steps)
 			var off := false
 			for r in keep_off:
 				if r.has_point(cell):
