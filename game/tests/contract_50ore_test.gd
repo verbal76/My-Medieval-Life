@@ -99,7 +99,8 @@ func _books_since(w: World, books0: Dictionary, skip: int) -> Dictionary:
 
 
 func _leak(w: World, coins0: int, s0: Dictionary) -> int:
-	var c_in := _d(w, s0, "caravan_coins_in") + _d(w, s0, "newcomer_coins_in") + _d(w, s0, "scenario_coins_in")
+	var c_in := _d(w, s0, "caravan_coins_in") + _d(w, s0, "newcomer_coins_in") + _d(w, s0, "scenario_coins_in") \
+		+ _d(w, s0, "outlaw_coins_in")              # BANDIT-RETURN: returning outlaws' purses come in from outside (economy_sim's rule)
 	return w.total_coins() - coins0 - c_in + _d(w, s0, "caravan_coins_out")
 
 
@@ -154,7 +155,11 @@ func test_fifty_ore() -> void:
 	var mined := _d(w, stats0, "mined_iron_ore")
 	var delivered := int(c.delivered)
 	check(mined >= delivered and delivered > 0, "the ledger shows %d iron ore mined while %d were delivered" % [mined, delivered])
-	check(_d(w, stats0, "made_iron_ore") == 0 and _d(w, stats0, "imported_iron_ore") == 0, "none was made or imported; the ore came out of the seams")
+	# B25-ECON: villagers may buy ore at a neighbouring settlement (region_trade); such a purchase is the only import
+	# allowed here, and it is a villager's own errand, never the contract's: every imported unit is one of them
+	var imported := _d(w, stats0, "imported_iron_ore")
+	var bought := _d(w, stats0, "region_trade_bought_iron_ore")
+	check(_d(w, stats0, "made_iron_ore") == 0 and imported == bought, "none was made, and nothing came in but villagers' own settlement purchases (%d imported, %d bought at settlements); the ore came out of the seams" % [imported, bought])
 	check(w.player.chest.count("iron_ore") - chest0 == delivered, "the player's chest holds exactly the %d delivered (+%d)" % [delivered, w.player.chest.count("iron_ore") - chest0])
 	# (c) payment per unit, from the player's real coins to the miner
 	# The world's contract_paid / contract_units count every contract in the village, and the live world goes on around
