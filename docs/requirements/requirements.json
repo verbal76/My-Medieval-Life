@@ -16075,6 +16075,11 @@
      "date": "2026-11-05",
      "change": "owner_answer",
      "why": "owner answered Q7.1 (2026-11-05): merge wip/requirements-control into staging now; merged as ade9a1d (register and docs only, no game or workflow changes; staging's stale-state banner baa6479 superseded)"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "note",
+     "why": "owner answered Q7.2 (2026-11-05): the other 2026-10-31 review questions (WIKI-B17, E25-OD-07, REC-003, FR-11, REC-014, JD2-JD5, weather and creature questions) stay open and outside B25R1"
     }
    ],
    "owner_answer": "Merge now (2026-11-05)"
