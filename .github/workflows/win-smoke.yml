@@ -1,9 +1,13 @@
 # Windows launch diagnosis: downloads an existing Windows package artifact from an earlier run, starts it headless
 # with verbose output (and once more with --log-file), and uploads the logs, exit codes and any crash dump.
 # Builds and changes nothing. Dispatch by hand: run_id = the run that made the artifact, artifact = its name.
+# A dispatch needs the file on the default branch, so a push of this file to its wip branch runs the fixed set below.
 name: win-smoke
 
 on:
+  push:
+    branches: [wip/b25r1-winsmoke]
+    paths: [.github/workflows/win-smoke.yml]
   workflow_dispatch:
     inputs:
       run_id:
@@ -25,12 +29,16 @@ jobs:
   smoke:
     runs-on: windows-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(github.event_name == 'workflow_dispatch' && format('[{{"run":"{0}","art":"{1}","label":"{2}"}}]', inputs.run_id, inputs.artifact, inputs.label) || '[{"run":"41939387992","art":"pkg-full-windows","label":"full-b1"},{"run":"41939387992","art":"pkg-full-windows","label":"full-b2"},{"run":"41939387992","art":"pkg-demo-windows","label":"demo-b"},{"run":"41666958781","art":"pkg-full-windows","label":"full-b25"}]') }}
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.artifact }}
+          name: ${{ matrix.art }}
           path: pkg
-          run-id: ${{ inputs.run_id }}
+          run-id: ${{ matrix.run }}
           github-token: ${{ github.token }}
 
       - name: Enable WER local crash dumps
@@ -89,7 +97,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: win-smoke-${{ inputs.label }}-${{ inputs.artifact }}-${{ inputs.run_id }}
+          name: win-smoke-${{ matrix.label }}-${{ matrix.art }}-${{ matrix.run }}
           path: |
             results
             dumps
