@@ -40,8 +40,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [0, 1, 2, 3, 4, 5, 6, 7]
-    name: test (shard ${{ matrix.shard }} of 8)
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    name: test (shard ${{ matrix.shard }} of 12)
     # Every suite runs since HAG-MEM-02. Measured on five B25R1 runs: all suites about 120 min of runner time, so about 16 min
     # a shard of eight; a suite is stopped by ci_report.py after 30 min. 90 min leaves room for runner speed varying by up
     # to ~1.8x and one hung suite. The 34 suites added on 2026-11-05 (B25R1 CI cover) measured about 2.1 h in a busy local
@@ -369,7 +369,7 @@ jobs:
             for t in $ONLY; do grep -E "^ *$t( |$)" "$RUNNER_TEMP/game.txt" || { echo "unknown suite: $t"; exit 1; }; done > "$RUNNER_TEMP/only.txt"
             mv "$RUNNER_TEMP/only.txt" "$RUNNER_TEMP/game.txt"
           fi
-          python3 tools/ci_plan.py tests-shard --list "$RUNNER_TEMP/game.txt" --shards 8 --shard ${{ matrix.shard }} \
+          python3 tools/ci_plan.py tests-shard --list "$RUNNER_TEMP/game.txt" --shards 12 --shard ${{ matrix.shard }} \
             --out "$RUNNER_TEMP/game_shard.txt" --manifest "$CI_OUT/shard.json"
           python3 tools/ci_report.py run --group game --list "$RUNNER_TEMP/game_shard.txt" --prefix "$HOME/godot-bin/godot --headless --path game --script" --logs "$CI_OUT/logs" --results "$CI_OUT/results.jsonl"
 
