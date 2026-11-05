@@ -1,0 +1,141 @@
+# Windows launch diagnosis: downloads an existing Windows package artifact from an earlier run, starts it headless
+# with verbose output (and once more with --log-file), and uploads the logs, exit codes and any crash dump.
+# Builds and changes nothing. Dispatch by hand: run_id = the run that made the artifact, artifact = its name.
+# A dispatch needs the file on the default branch, so a push of this file to its wip branch runs the fixed set below.
+# B25R1 leak gate: the job fails when any launch prints "resources still in use at exit" or "ObjectDB instance(s)
+# ... leaked at exit" (a static cache keeping scripts alive, 1fe523e) or exits non-zero; logs and dumps are kept either way.
+name: win-smoke
+
+on:
+  push:
+    branches: [wip/b25r1-winsmoke, wip/b25r1-leak]
+    paths: [.github/workflows/win-smoke.yml]
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "Run id that produced the artifact"
+        required: true
+        default: "41939387992"
+      artifact:
+        description: "Artifact name (e.g. pkg-full-windows)"
+        required: true
+        default: "pkg-full-windows"
+      label:
+        description: "Short label for the uploaded results"
+        required: false
+        default: "try"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(github.event_name == 'workflow_dispatch' && format('[{{"run":"{0}","art":"{1}","label":"{2}"}}]', inputs.run_id, inputs.artifact, inputs.label) || '[{"run":"41939387992","art":"pkg-full-windows","label":"leak-check","repeat":"3"}]') }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.art }}
+          path: pkg
+          run-id: ${{ matrix.run }}
+          github-token: ${{ github.token }}
+
+      - name: Enable WER local crash dumps
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "$env:GITHUB_WORKSPACE\dumps" | Out-Null
+          $k = 'HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps'
+          New-Item -Path $k -Force | Out-Null
+          New-ItemProperty -Path $k -Name DumpFolder -PropertyType ExpandString -Value "$env:GITHUB_WORKSPACE\dumps" -Force | Out-Null
+          New-ItemProperty -Path $k -Name DumpType -PropertyType DWord -Value 2 -Force | Out-Null
+          New-ItemProperty -Path $k -Name DumpCount -PropertyType DWord -Value 10 -Force | Out-Null
+          Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting' -Name DontShowUI -Value 1 -Type DWord -ErrorAction SilentlyContinue
+          Get-ItemProperty $k
+
+      - name: Unzip and start headless (verbose, then verbose with --log-file)
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path results | Out-Null
+          Get-ChildItem pkg | Format-Table Name, Length | Out-String | Tee-Object results\pkg.txt
+          $zip = Get-ChildItem pkg -Filter *.zip | Select-Object -First 1
+          Expand-Archive $zip.FullName -DestinationPath run
+          Get-ChildItem run -Recurse | Format-Table FullName, Length | Out-String | Tee-Object results\files.txt
+          $exe = Get-ChildItem run -Filter *.exe | Where-Object { $_.Name -notlike '*.console.exe' } | Select-Object -First 1
+          (Get-FileHash $exe.FullName -Algorithm SHA256).Hash | Tee-Object results\exe_sha256.txt
+          $tries = @(
+            @{ n = 'a_verbose'; args = @('--headless', '--verbose', '--quit-after', '300') },
+            @{ n = 'b_logfile'; args = @('--headless', '--verbose', '--quit-after', '300', '--log-file', "$env:GITHUB_WORKSPACE\results\b_godot.log") }
+          )
+          foreach ($t in $tries) {
+            $start = Get-Date -Format o
+            $p = Start-Process -FilePath $exe.FullName -ArgumentList $t.args -PassThru -Wait `
+                 -RedirectStandardOutput "results\$($t.n)_out.log" -RedirectStandardError "results\$($t.n)_err.log"
+            $end = Get-Date -Format o
+            $code = $p.ExitCode
+            "$($t.n) start=$start end=$end exit=$code hex=0x{0:X8}" -f $code | Tee-Object -Append results\summary.txt
+            Write-Host "---- $($t.n) stdout (last 60) ----"; Get-Content "results\$($t.n)_out.log" -ErrorAction SilentlyContinue | Select-Object -Last 60
+            Write-Host "---- $($t.n) stderr (last 30) ----"; Get-Content "results\$($t.n)_err.log" -ErrorAction SilentlyContinue | Select-Object -Last 30
+          }
+          Start-Sleep -Seconds 10   # let WER finish writing dumps
+          Get-ChildItem dumps -ErrorAction SilentlyContinue | Format-Table Name, Length | Out-String | Tee-Object results\dumps.txt
+          Get-WinEvent -FilterHashtable @{ LogName = 'Application'; ProviderName = 'Application Error', 'Windows Error Reporting' } -MaxEvents 6 -ErrorAction SilentlyContinue |
+            Format-List TimeCreated, ProviderName, Message | Out-String -Width 400 | Tee-Object results\app_events.txt
+
+      - name: Repeat plain launches (as release.yml's smoke) to catch an intermittent crash
+        if: ${{ matrix.repeat != '' && matrix.repeat != null }}
+        shell: pwsh
+        run: |
+          $exe = Get-ChildItem run -Filter *.exe | Where-Object { $_.Name -notlike '*.console.exe' } | Select-Object -First 1
+          $fails = 0
+          for ($i = 1; $i -le [int]'${{ matrix.repeat }}'; $i++) {
+            $start = Get-Date -Format o
+            $p = Start-Process -FilePath $exe.FullName -ArgumentList '--headless', '--quit-after', '300' -PassThru -Wait `
+                 -RedirectStandardOutput "results\r$($i)_out.log" -RedirectStandardError "results\r$($i)_err.log"
+            $end = Get-Date -Format o
+            "r$i start=$start end=$end exit=$($p.ExitCode) hex=0x{0:X8}" -f $p.ExitCode | Tee-Object -Append results\repeat.txt
+            if ($p.ExitCode -ne 0) { $fails++; Get-Content "results\r$($i)_out.log", "results\r$($i)_err.log" -ErrorAction SilentlyContinue }
+          }
+          "failures: $fails" | Tee-Object -Append results\repeat.txt
+          Start-Sleep -Seconds 10
+          Get-ChildItem dumps -ErrorAction SilentlyContinue | Format-Table Name, Length | Out-String | Tee-Object results\dumps_repeat.txt
+
+      - name: Analyse dumps with cdb if present
+        shell: pwsh
+        run: |
+          $cdb = @('C:\Program Files (x86)\Windows Kits\10\Debuggers\x64\cdb.exe', 'C:\Program Files\Windows Kits\10\Debuggers\x64\cdb.exe') | Where-Object { Test-Path $_ } | Select-Object -First 1
+          "cdb: $cdb" | Tee-Object results\cdb_path.txt
+          foreach ($d in Get-ChildItem dumps -Filter *.dmp -ErrorAction SilentlyContinue) {
+            if ($cdb) {
+              & $cdb -z $d.FullName -c ".ecxr; r; kn 40; ub @rip L10; u @rip L4; lmv m MyMedievalLife*; !analyze -v; q" 2>&1 | Out-File -Width 400 "results\cdb_$($d.BaseName).txt"
+              Get-Content "results\cdb_$($d.BaseName).txt" | Select-Object -Last 120
+            }
+          }
+
+      - name: Leak and exit-code gate (fails on a leak at exit or a non-zero exit)
+        shell: pwsh
+        run: |
+          $logs = Get-ChildItem results -Filter *.log -ErrorAction SilentlyContinue
+          $leaks = $logs | Select-String -Pattern 'resources still in use at exit|ObjectDB instances? (were|was) leaked'
+          $codes = Get-Content results\summary.txt, results\repeat.txt -ErrorAction SilentlyContinue | Select-String -Pattern ' exit=(-?\d+)' |
+                   Where-Object { $_.Matches[0].Groups[1].Value -ne '0' }
+          $leaks | ForEach-Object { "LEAK $($_.Filename): $($_.Line)" } | Tee-Object results\gate.txt
+          $codes | ForEach-Object { "EXIT $($_.Line)" } | Tee-Object -Append results\gate.txt
+          $bad = $false
+          if ($leaks) { Write-Error "leak at exit in $(@($leaks).Count) log line(s)" -ErrorAction Continue; $bad = $true }
+          if ($codes) { Write-Error "non-zero exit in $(@($codes).Count) launch(es)" -ErrorAction Continue; $bad = $true }
+          if ($bad) { exit 1 }
+          "gate: no leak at exit, every launch exited 0" | Tee-Object -Append results\gate.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: win-smoke-${{ matrix.label }}-${{ matrix.art }}-${{ matrix.run }}
+          path: |
+            results
+            dumps
+          retention-days: 14

@@ -438,12 +438,13 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 	return above
 
 
-static var _looks := {}
+## The building colour variants, read once per view (an instance member: a static one kept 71 scripts alive at exit, B25R1).
+var _looks := {}
 
 
 ## B25R1-018: tile -> tile of a building colour variant ("thatch"), {} for the stamp as drawn (game/data/region_stamps.json,
 ## made by tools/build_region_stamps.py from the paid tileset's colour blocks).
-static func _look_swap(look: String) -> Dictionary:
+func _look_swap(look: String) -> Dictionary:
 	if look == "":
 		return {}
 	if _looks.is_empty():
