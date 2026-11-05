@@ -31,6 +31,7 @@ var live_check: Callable              # B25R1-019: (chunk rect in tiles) -> whet
 var _live_seen := -1                  # the presence version the loaded water was last drawn for
 var _live := {}                       # chunk -> whether its water was drawn animated
 var _dirt_bits := {}                  # B25R1-Q1: dirt path tile -> its connected sides (overworld_tiles.json dirt_path)
+var _flat := {}                       # B25R1-Q8: the flat grass tile values (overworld_tiles.json grass): where a tuft may grow
 
 
 func setup(src: MapView, o: Overworld, load_radius: int) -> void:
@@ -48,6 +49,8 @@ func setup(src: MapView, o: Overworld, load_radius: int) -> void:
 	for k in o.tiles.trees:
 		pairs.append([int(k.top), int(k.bottom)])
 		tops_set[int(k.top)] = true
+	for g in o.tiles.grass:
+		_flat[int(g)] = true
 	for k in (o.tiles.dirt_path as Array).size():
 		for t in o.tiles.dirt_path[k]:
 			_dirt_bits[int(t)] = k
@@ -296,7 +299,11 @@ func _layer(root: Node2D, z: int) -> TileMapLayer:
 	return l
 
 
+var build_usec := 0                   # time spent building chunks (_build), for the perf harness (grass_shot)
+
+
 func _build(cc: Vector2i) -> void:
+	var t0 := Time.get_ticks_usec()
 	var ch := overworld.get_chunk(cc)
 	var root := Node2D.new()
 	root.name = "chunk_%d_%d" % [cc.x, cc.y]
@@ -304,6 +311,8 @@ func _build(cc: Vector2i) -> void:
 	if _homes_root != null:
 		move_child(_homes_root, get_child_count() - 1)     # B25R1-010: the homesteads stay drawn over every chunk's ground
 	var ground := _layer(root, 0)
+	var grass := _layer(root, 0)          # B25R1-Q8: the low grass tufts, over the ground, under the roads and objects
+	grass.name = "grass"
 	var path := _layer(root, 0)
 	var objects := _layer(root, 0)
 	var tops := _layer(root, 10)
@@ -325,15 +334,79 @@ func _build(cc: Vector2i) -> void:
 				if v == int(overworld.tiles.rock) and ResourceNodes.boulder_small(cell) and sources.size() > 3:
 					v = MapView.SMALL_BOULDER_TILE
 				set_tile(objects, cell, v)
+	_lay_grass(cc, ch, grass, lanes)
 	if tree_sink != null:
 		tree_sink.load_chunk(cc, overworld.chunk_trees(cc))
 	var site_above := _draw_site_buildings(root, cc)
 	var works := Node2D.new()             # B14-07: steps, stairs and walkways, over the ground and the cliff's rim
 	works.name = "works"
 	root.add_child(works)
-	chunks[cc] = {"root": root, "ground": ground, "path": path, "objects": objects, "tops": tops, "works": works, "site_above": site_above}
+	chunks[cc] = {"root": root, "ground": ground, "grass": grass, "path": path, "objects": objects, "tops": tops, "works": works, "site_above": site_above}
 	above_layers.append(tops)
 	_draw_works(cc)
+	build_usec += Time.get_ticks_usec() - t0
+
+
+## B25R1-Q8: the low grass tufts of a chunk (MapView.grass_tuft), on open flat grass only: no road, worn way or street, no
+## water, no rock, flower or bush, nothing solid (trees, cliffs), no settlement building or yard, no homestead. Drawing only.
+func _lay_grass(cc: Vector2i, ch: Overworld.Chunk, layer: TileMapLayer, lanes: Dictionary) -> void:
+	if not has_grass_art():
+		return
+	var t0 := Time.get_ticks_usec()
+	var box := Rect2i(cc * Overworld.CHUNK, Vector2i(Overworld.CHUNK, Overworld.CHUNK))
+	var keep_off: Array[Rect2i] = []           # the settlements' buildings and yards, the homesteads, in this chunk
+	for st in overworld.sites + overworld.structures:
+		if (st.rect as Rect2i).intersects(box):
+			for sl in st.slots + st.get("props", []):
+				if (sl.rect as Rect2i).intersects(box):
+					keep_off.append((sl.rect as Rect2i).grow(1))
+	var fenced := {}
+	for hm in overworld.homes:
+		if (hm.rect as Rect2i).intersects(box):
+			keep_off.append(hm.rect)
+		for cells: Dictionary in hm.get("layers", []):
+			for c: Vector2i in cells:
+				fenced[c] = true
+	var tufts := MapView.low_grass()
+	var plain: Array = tufts.plain
+	var flowered: Array = tufts.flowered
+	var seed := overworld.seed
+	var roads: Dictionary = overworld.road_state
+	var changed: Dictionary = overworld.changes
+	for y in Overworld.CHUNK:
+		for x in Overworld.CHUNK:
+			var cell := box.position + Vector2i(x, y)
+			var h := Overworld.hash32(seed, cell.x, cell.y, GRASS_SALT)      # MapView.grass_tuft, inlined (a chunk is 1024 cells)
+			var roll := h % 100
+			if roll >= GRASS_PLAIN + GRASS_FLOWERED:
+				continue
+			var i := y * Overworld.CHUNK + x
+			if ch.solid[i] != 0 or ch.water[i] != 0 or ch.path[i] >= 0 or ch.deco[i] >= 0 or not _flat.has(ch.ground[i]):
+				continue
+			if lanes.has(cell) or roads.has(cell) or fenced.has(cell) or changed.has(cell):
+				continue
+			var off := false
+			for r in keep_off:
+				if r.has_point(cell):
+					off = true
+					break
+			if off:
+				continue
+			var list: Array = plain if roll < GRASS_PLAIN else flowered
+			_put(layer, cell, int(list[(h >> 8) % list.size()]))
+	grass_usec += Time.get_ticks_usec() - t0
+
+
+func _grass_off(cell: Vector2i) -> void:
+	var c: Dictionary = chunks.get(Overworld.chunk_of(cell), {})
+	if not c.is_empty():
+		(c.grass as TileMapLayer).erase_cell(cell)
+
+
+## The tuft drawn on a cell of a loaded chunk, -1 for none (tests).
+func grass_value(cell: Vector2i) -> int:
+	var c: Dictionary = chunks.get(Overworld.chunk_of(cell), {})
+	return -1 if c.is_empty() else tile_value(c.grass, cell)
 
 
 ## B25R1-010: every homestead's house (painted from the village's house stamp, as a settlement's buildings are: ground, path

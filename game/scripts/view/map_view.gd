@@ -22,6 +22,18 @@ const ROAD_DAMAGED_ROW := 8
 const WATER_ATLAS := 9
 const WATER_FRAMES := 8                # tools/water_tiles.py FRAMES; each frame water.json "frame_seconds" long
 const WATER_STILL_ATLAS := 10          # B25R1-019: the same water sheet with no animation (its first frame): water out of the live range
+## B25R1-Q8 (owner: "Bow.Pixel Low Grass ... looks like this is our winner"): low grass tufts scattered on open grass, drawing
+## only (no collision, no data). A cell gets a tuft by a fixed hash of the world's seed and the cell: GRASS_PLAIN per cent a
+## plain tuft, GRASS_FLOWERED per cent one with small flowers (game/data/low_grass.json, tools/low_grass_tufts.py: the first
+## sheet only, one texture, so the tiles batch). One
+## TileMapLayer for the village (lay_grass) and one a chunk in the overworld (OverworldView), so it is batched by the tile
+## renderer's quadrants and culled with them; never on a road, path, field, water, building, tree, plant or object.
+const GRASS_PLAIN := 18
+const GRASS_FLOWERED := 5
+const GRASS_SALT := 93
+static var _tufts := {}
+var grass_layer: TileMapLayer      # the village's tufts (lay_grass), null before
+var grass_usec := 0                # how long laying them took (the perf harness reads it)
 
 var tileset := TileSet.new()
 var sources: Array[TileSetAtlasSource] = []
@@ -133,6 +145,8 @@ func _add_small_boulder(m: VillageMap) -> void:
 
 
 func set_tile(layer: TileMapLayer, cell: Vector2i, v: int) -> void:
+	if v >= 0:
+		_grass_off(cell)                  # B25R1-Q8: anything drawn on a cell (a building, a road, a stump) takes its tuft away
 	var twin: TileMapLayer = sorted_of.get(layer)
 	if twin != null and roof_layers.has(layer):
 		twin.erase_cell(cell)
@@ -224,3 +238,84 @@ func tile_value(layer: TileMapLayer, cell: Vector2i) -> int:
 
 func layer(name: String) -> TileMapLayer:
 	return layers.get(name)
+
+
+## B25R1-Q8: the tufts' tile values by kind ({plain, flowered}), read once.
+static func low_grass() -> Dictionary:
+	if _tufts.is_empty():
+		var d = JSON.parse_string(FileAccess.get_file_as_string("res://data/low_grass.json"))
+		_tufts = d if d is Dictionary else {"plain": [], "flowered": []}
+	return _tufts
+
+
+## The tuft a cell of open grass shows (a tile value of atlas 6 or 7), -1 for none: a pure function of the seed and the cell.
+static func grass_tuft(seed: int, cell: Vector2i) -> int:
+	var h := Overworld.hash32(seed, cell.x, cell.y, GRASS_SALT)
+	var roll := h % 100
+	var t := low_grass()
+	var list: Array = t.plain if roll < GRASS_PLAIN else t.flowered if roll < GRASS_PLAIN + GRASS_FLOWERED else []
+	return -1 if list.is_empty() else int(list[(h >> 8) % list.size()])
+
+
+## Whether this view can draw the tufts (its TileSet has the low grass atlases).
+func has_grass_art() -> bool:
+	return sources.size() > int(LOW_GRASS[1]) / 100000
+
+
+## B25R1-Q8: scatter the tufts over the village's open grass: cells whose base ground is one of `grass` (the flat grass tile
+## values), with nothing in any other layer, not solid, and `open` (the caller's own exclusions: roads, fields, trees, plants)
+## true. Drawn in one layer just over the paths, under the pits, crops and everything else. Returns how many were laid.
+func lay_grass(seed: int, grass: Array, open: Callable) -> int:
+	if map == null or not has_grass_art():
+		return 0
+	var t0 := Time.get_ticks_usec()
+	if grass_layer != null:
+		grass_layer.queue_free()
+	var flat := {}
+	for g in grass:
+		flat[int(g)] = true
+	grass_layer = TileMapLayer.new()
+	grass_layer.name = "grass"
+	grass_layer.tile_set = tileset
+	grass_layer.rendering_quadrant_size = 32
+	add_child(grass_layer)
+	var under: TileMapLayer = layers.get("path1", layers.get("ground0"))
+	if under != null:
+		move_child(grass_layer, under.get_index() + 1)
+	var n := 0
+	for y in map.h:
+		for x in map.w:
+			var cell := Vector2i(x, y)
+			var tuft := grass_tuft(seed, cell)
+			if tuft < 0 or map.is_solid(cell) or not _bare(cell, flat) or not open.call(cell):
+				continue
+			_put(grass_layer, cell, tuft)
+			n += 1
+	grass_usec = Time.get_ticks_usec() - t0
+	return n
+
+
+## The cell's base ground is plain grass and no other layer (nor a sorted twin) draws anything there.
+func _bare(cell: Vector2i, flat: Dictionary) -> bool:
+	for lname in layers:
+		var l: TileMapLayer = layers[lname]
+		if str(lname) == "ground0":
+			if not flat.has(tile_value(l, cell)):
+				return false
+		elif l.get_cell_source_id(cell) >= 0:
+			return false
+		var twin: TileMapLayer = sorted_of.get(l)
+		if twin != null and twin.get_cell_source_id(cell) >= 0:
+			return false
+	return true
+
+
+## The tuft on a cell goes (something else is drawn there now). OverworldView looks in the cell's chunk.
+func _grass_off(cell: Vector2i) -> void:
+	if grass_layer != null:
+		grass_layer.erase_cell(cell)
+
+
+## The tuft drawn on a cell, -1 for none (tests).
+func grass_value(cell: Vector2i) -> int:
+	return -1 if grass_layer == null else tile_value(grass_layer, cell)

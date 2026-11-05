@@ -15704,7 +15704,7 @@
    ],
    "status": "partial",
    "scale": "Checked: two 320 x 320 sheets on an exact 16 px grid (no tuft crosses a cell edge), 20 x 20 = 400 low tufts each, most with tiny flowers or pebbles: 1:1.",
-   "used_for": "Imported unchanged as MapView atlases 6 and 7 (game/assets/tiles/low_grass_1.png, low_grass_2.png; tile value 600000 / 700000 + row * 20 + column). Not yet drawn by any system.",
+   "used_for": "Imported unchanged as MapView atlases 6 and 7 (game/assets/tiles/low_grass_1.png, low_grass_2.png; tile value 600000 / 700000 + row * 20 + column). Drawn (B25R1-Q8 grass decoration) as low tufts on open grass in the village (MapView.lay_grass) and the overworld (OverworldView, a layer a chunk): a fixed hash of seed and cell, 18% plain and 5% flowered tufts, never on roads, paths, fields, water, buildings, trees, plants or objects; no collision. The tuft lists (game/data/low_grass.json, tools/low_grass_tufts.py) take sheet 1 only, leaving out the dark-outlined pebble tufts (they read as holes on the Puny World grass) and sheet 2 (a second texture broke the tile batching: +76 draw calls measured, against +2 with one).",
    "opportunities": "Ground variety for the overworld and the settlements (region and terrain workers): scatter tufts on plain grass cells by a fixed hash of the cell (deterministic, as the overworld's flowers), denser by woods and water, none on roads, fields or floors; the flowered tufts as spring and summer variants.",
    "scan": [
     {
