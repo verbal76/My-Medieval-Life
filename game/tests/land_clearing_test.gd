@@ -300,12 +300,34 @@ func test_villager_does_it() -> void:
 	var took := false
 	for i in 2400:
 		w.update(0.5)
-		if not w.manor_work.job_of(World.npc_ref(hand.id)).is_empty() and w.manor_work.job_of(World.npc_ref(hand.id)).kind == "clear":
-			took = true
+		for jx in w.manor_work.jobs:
+			if jx.kind == "clear" and jx.taker != "":
+				took = true                            # (the manor hand or an adult out of work: whoever comes first)
 		if int(float(w.stats.get("land_tilled_cells", 0.0))) - tilled0 >= 3:
 			break
 	print("     hand %s doing '%s', took %s, tilled %d" % [hand.name, hand.doing, took, int(float(w.stats.get("land_tilled_cells", 0.0))) - tilled0])
-	check(took and int(float(w.stats.get("land_tilled_cells", 0.0))) - tilled0 >= 1, "a manor hand takes it and tills the ground cell by cell")
+	check(took and int(float(w.stats.get("land_tilled_cells", 0.0))) - tilled0 >= 1, "a villager looking for the manor's work takes it and tills the ground cell by cell")
+	# an adult out of work takes it too (the manor's hands may be busy with its mending all day)
+	var w2 := _world()
+	_fill_fields(w2)
+	var idle := _adult(w2)
+	idle.job = ""
+	idle.plan = []
+	w2.treasury += 300
+	w2.coin_sources += 300
+	w2.brain.reeve_day()
+	var t0 := int(float(w2.stats.get("land_tilled_cells", 0.0)))
+	w2.minutes = floorf(w2.minutes / 1440.0) * 1440.0 + 1440.0 + 7.0 * 60.0
+	var took2 := false
+	var coins0 := idle.coins
+	for i in 2400:
+		w2.update(0.5)
+		var jj: Dictionary = w2.manor_work.job_of(World.npc_ref(idle.id))
+		if not jj.is_empty() and jj.kind == "clear":
+			took2 = true
+		if int(float(w2.stats.get("land_tilled_cells", 0.0))) - t0 >= 3:
+			break
+	check(took2 and int(float(w2.stats.get("land_tilled_cells", 0.0))) - t0 >= 1, "an adult out of work takes the clearing job and works the ground (%s)" % idle.doing)
 
 
 func test_save_load() -> void:

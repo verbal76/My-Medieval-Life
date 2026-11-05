@@ -324,6 +324,11 @@ func _decide(n: NPC) -> String:
 			return "day_labour"
 		if _plan_job(n):
 			return "job"
+	# B25-ECON-P5 "Cleared by labour": an adult out of work takes the manor's clearing of rough ground for a new field (the
+	# job posted only while the households lack fields: LandClearing.wanted), paid as any manor job
+	if h >= WORK_START and h < WORK_END and n.job == "" and n.role == "adult" and h < float(GameData.b("manor_jobs").get("latest_start", 15)) \
+			and w.manor_work.seek_kind(n, ["clear"]):
+		return "manor_work"
 	_plan_evening(n, h)
 	return "evening"
 
