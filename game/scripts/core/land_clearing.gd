@@ -4,8 +4,9 @@ extends RefCounted
 ## village inside the village's lands as real work, days of labour, then till it; it ends when that ground is used up). In 120-day
 ## seed 1 (run 41967592798) the village's adults rose from 61 to 77 while its farmers stayed at 12: six manor fields of two farmers.
 ##
-##   ground   the candidate blocks are field-sized rectangles (the manor's fields' own size) of the village's own map, nearest the
-##            fields first, found once from the map (find_blocks, deterministic, saved): every cell is ground nobody uses (no road,
+##   ground   the candidate blocks are rectangles of the village's own map, the biggest that fit first up to a manor field's size
+##            (at least min_side x min_side and min_cells), nearest the fields among equals, looked for when none is in hand
+##            (find_blocks, deterministic, saved): every cell is ground nobody uses (no road,
 ##            door trail, building, plot or farmland, pen, field, stall, station, chest, seam, pit, church plot, the village's
 ##            woods, water or wall), a cell's margin from fields and buildings kept; rough ground may hold wild plants, saplings,
 ##            trees, stumps and boulders. A block something else has taken since is dropped (block_ok). Finite: when the blocks are
@@ -29,6 +30,7 @@ var found := false            # whether find_blocks has run (saved)
 var tilled: Dictionary = {}   # "x,y" (a block's origin) -> [cell index in the block, ...] tilled so far
 var made := 0                 # fields made from cleared ground
 var _ok_hour := -1            # the game hour current() last checked its block (the check reads the whole map; not saved)
+var _scan_day := -1           # the day find_blocks last looked (not saved: a look finds the same from the same world)
 
 
 func _init(world) -> void:
@@ -97,49 +99,63 @@ func _used_mask() -> PackedByteArray:
 	return m
 
 
-## The candidate blocks: field-sized rectangles of unused ground within `reach` cells of the manor's fields, nearest first, a cell
-## apart from each other. Deterministic (the map's own cells, in order). Found once, at the first need, and saved.
+## The candidate blocks: rectangles of unused ground within `reach` cells of the manor's fields, the biggest that fit first (a
+## manor field's own size at most, min_side by min_side cells and min_cells in all at least), the nearest to the fields among
+## equals, a cell apart from each other. Deterministic (the map's own cells, in order). Looked for at a need when none is in
+## hand (current), so ground freed or left over later is found too; finite: the village's map holds only so much.
 func find_blocks() -> void:
 	found = true
+	_scan_day = w.day()
 	blocks = []
 	if w.fields.is_empty():
 		return
-	var size := Vector2i(int(w.fields[0].w), int(w.fields[0].h))
+	var lc := cfg()
+	var fw := int(w.fields[0].w)
+	var fh := int(w.fields[0].h)
 	var span := Rect2i(int(w.fields[0].x), int(w.fields[0].y), 0, 0)
 	for f in w.fields:
-		span = span.merge(Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)))
-	var reach := int(cfg().reach)
+		if not f.has("cleared_day"):                 # the village's own fields: ground cleared since does not stretch the reach
+			span = span.merge(Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)))
+	var near := span.grow(int(lc.reach))
+	var centre := span.get_center()
 	var m := _used_mask()
 	var W: int = w.map.w
 	var H: int = w.map.h
-	var sums := PackedInt32Array()
-	sums.resize((W + 1) * (H + 1))
-	for y in H:
-		var row := 0
-		for x in W:
-			row += m[y * W + x]
-			sums[(y + 1) * (W + 1) + x + 1] = sums[y * (W + 1) + x + 1] + row
-	var near := span.grow(reach)
-	var centre := span.get_center()
-	var cands := []
-	for y in range(1, H - size.y):
-		for x in range(1, W - size.x):
-			var r := Rect2i(x, y, size.x, size.y)
-			if not near.encloses(r):
-				continue
-			var used := sums[(y + size.y) * (W + 1) + x + size.x] - sums[y * (W + 1) + x + size.x] - sums[(y + size.y) * (W + 1) + x] + sums[y * (W + 1) + x]
-			if used == 0:
-				cands.append([(r.get_center() - centre).length_squared(), y, x])
-	cands.sort()
-	var taken: Array = []
-	for c in cands:
-		var r := Rect2i(int(c[2]), int(c[1]), size.x, size.y)
-		if taken.any(func(o: Rect2i) -> bool: return o.grow(1).intersects(r)):
-			continue
-		taken.append(r)
-		blocks.append([r.position.x, r.position.y, r.size.x, r.size.y])
-		if blocks.size() >= int(cfg().max_blocks):
+	var sizes := []
+	for sw in range(int(lc.min_side), fw + 1):
+		for sh in range(int(lc.min_side), fh + 1):
+			if sw * sh >= int(lc.min_cells):
+				sizes.append(Vector2i(sw, sh))
+	sizes.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.x * a.y > b.x * b.y or (a.x * a.y == b.x * b.y and (a.x > b.x or (a.x == b.x and a.y > b.y))))
+	for k in int(lc.max_blocks):
+		var sums := PackedInt32Array()
+		sums.resize((W + 1) * (H + 1))
+		for y in H:
+			var row := 0
+			for x in W:
+				row += m[y * W + x]
+				sums[(y + 1) * (W + 1) + x + 1] = sums[y * (W + 1) + x + 1] + row
+		var pick := Rect2i()
+		for size: Vector2i in sizes:
+			var best := -1
+			for y in range(maxi(1, near.position.y), mini(H - size.y, near.end.y - size.y) + 1):
+				for x in range(maxi(1, near.position.x), mini(W - size.x, near.end.x - size.x) + 1):
+					var used := sums[(y + size.y) * (W + 1) + x + size.x] - sums[y * (W + 1) + x + size.x] - sums[(y + size.y) * (W + 1) + x] + sums[y * (W + 1) + x]
+					if used != 0:
+						continue
+					var d := (Rect2i(x, y, size.x, size.y).get_center() - centre).length_squared()
+					if best < 0 or d < best:
+						best = d
+						pick = Rect2i(x, y, size.x, size.y)
+			if best >= 0:
+				break
+		if pick.size == Vector2i.ZERO:
 			break
+		blocks.append([pick.position.x, pick.position.y, pick.size.x, pick.size.y])
+		var g := pick.grow(1).intersection(Rect2i(0, 0, W, H))      # the next keeps a cell apart
+		for y in range(g.position.y, g.end.y):
+			for x in range(g.position.x, g.end.x):
+				m[y * W + x] = 1
 
 
 ## Whether block `b` is still unused ground (nothing has been built, fenced or dug on it since it was found).
@@ -155,8 +171,8 @@ func block_ok(b: Array) -> bool:
 
 ## The block being cleared or next to be, {} when the ground is used up. A block that is no longer free is dropped (and its tilling).
 func current() -> Array:
-	if not found:
-		find_blocks()
+	if blocks.is_empty() and _scan_day != w.day():
+		find_blocks()                                # none in hand: look again (once a day at most)
 	var hour := int(w.minutes / 60.0)
 	while not blocks.is_empty():
 		var b: Array = blocks[0]

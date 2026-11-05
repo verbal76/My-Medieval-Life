@@ -79,7 +79,9 @@ func test_ground() -> void:
 		road[Vector2i(int(c[0]), int(c[1]))] = true
 	for b in lc.blocks:
 		var r := LandClearing.rect(b)
-		if r.size != Vector2i(int(f0.w), int(f0.h)) or not span.grow(int(LandClearing.cfg().reach)).encloses(r):
+		var lc0 := LandClearing.cfg()
+		if r.size.x > int(f0.w) or r.size.y > int(f0.h) or mini(r.size.x, r.size.y) < int(lc0.min_side) or r.get_area() < int(lc0.min_cells) \
+				or not span.grow(int(lc0.reach)).encloses(r):
 			ok = false
 		for f in w.fields:
 			if Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).grow(1).intersects(r):
@@ -94,7 +96,7 @@ func test_ground() -> void:
 		for bd in w.buildings.values():
 			if Rect2i(int(bd.x), int(bd.y), int(bd.w), int(bd.h)).intersects(r):
 				ok = false
-	check(ok, "each block is a field's size, near the fields, and off the roads, buildings, fields and woods")
+	check(ok, "each block is at most a field's size and at least the smallest allowed, near the fields, and off the roads, buildings, fields and woods")
 	var w2 := _world()
 	w2.clearing.find_blocks()
 	check(JSON.stringify(w2.clearing.blocks) == JSON.stringify(lc.blocks), "the same ground in the same order from the same seed")
@@ -134,11 +136,16 @@ func test_posting() -> void:
 	check(not mw.jobs.any(func(j): return j.kind == "clear"), "while a field has a farmer's place open, no ground is cleared")
 
 
-func _clear_all(w: World, n: NPC, limit: int) -> Dictionary:
+func _clear_all(w: World, n: NPC, limit: int, until_fields := 1 << 20) -> Dictionary:
 	var mw: ManorWork = w.manor_work
 	var who := World.npc_ref(n.id)
 	var out := {"jobs": 0, "pieces": 0, "minutes": 0.0, "paid": 0}
 	for k in limit:
+		if w.fields.size() >= until_fields:
+			break
+		_fill_fields(w)                                # (the job moves fill a new field's places in play)
+		n.job = ""
+		n.workplace = ""
 		mw.post_clearing()
 		var open := mw.open_for(who).filter(func(j): return j.kind == "clear")
 		if open.is_empty():
@@ -181,7 +188,7 @@ func test_work_into_field() -> void:
 	var yard_logs0 := mw.yard.count("log")
 	var yard_stone0 := mw.yard.count("stone")
 	var t0 := w.treasury
-	var r := _clear_all(w, n, 40)
+	var r := _clear_all(w, n, 40, fields0 + 1)
 	check(w.fields.size() == fields0 + 1, "the block's cells all tilled, it is a new manor field (%d jobs, %d pieces of work)" % [r.jobs, r.pieces])
 	var nf: Dictionary = w.fields[w.fields.size() - 1]
 	check(nf.state == "tilled" and nf.owner == World.MANOR and int(nf.x) == int(b[0]) and int(nf.y) == int(b[1]) and int(nf.w) * int(nf.h) == area, "the field is the manor's, tilled, on that ground")
@@ -200,11 +207,22 @@ func test_work_into_field() -> void:
 	var jm: Dictionary = w.brain.job_market()
 	check(int(jm.farmer.open) >= int(GameData.b("field_workers_max")), "the job market opens its farmers' places (%d)" % int(jm.farmer.open))
 	# the ground runs out: every block cleared, nothing more is posted
+	var r2 := _clear_all(w, n, 60)
+	var guard := 0
+	var load := Inventory.new()
+	while guard < 20000:                               # the rest straight through LandClearing (the fixture runs out of farmers to fill fields)
+		guard += 1
+		var bk: Array = w.clearing.current()
+		if bk.is_empty():
+			w.minutes += 1440.0                        # a new day: looked for again
+			if w.clearing.current().is_empty():
+				break
+			continue
+		var c := w.clearing.next_cell(bk, n)
+		if c.x < 0 or not w.clearing.work(bk, c, n, load):
+			break
+	check(w.clearing.current().is_empty() and guard < 20000, "the ground is used up: %d fields made in all, nothing left to clear even when looked for again" % (w.fields.size() - fields0))
 	_fill_fields(w)
-	n.job = ""
-	n.workplace = ""
-	var r2 := _clear_all(w, n, 400)
-	check(w.fields.size() <= fields0 + nblocks and w.clearing.current().is_empty(), "the ground is used up: %d fields made in all, nothing left to clear" % (w.fields.size() - fields0))
 	mw.post_clearing()
 	check(not mw.jobs.any(func(j): return j.kind == "clear"), "and no clearing job is posted after")
 	print("     second round: %d jobs, %d pieces" % [r2.jobs, r2.pieces])
