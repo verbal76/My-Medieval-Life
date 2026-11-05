@@ -8218,8 +8218,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -8232,10 +8232,20 @@
      "date": "2026-11-05",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-aerial worker; branch: None -> wip/b25r1-aerial",
      "why": "owner explicit requirement 2026-11-05; in development on wip/b25r1-aerial"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> aerial_map 69/0 (seeds 1,7,11), atlas 18/0, start 523/0, gamepad_map 19/0, region_travel 71/0, wiki 144/0; test_commit: None -> bad3b81; commits + a328b29",
+     "why": "implemented (bad3b81), merged into wip/b25r1 as a328b29: every settlement named with distance and bearing from the first frame, settlement ground drawn from day 1 on a background worker, wilderness dark; aerial_map_test 69/0 (seeds 1, 7, 11), atlas 18/0, start 523/0; phone start-up estimate 40-70 s to fill settlement ground (names and directions immediate); disk cache follow-up in progress"
     }
    ],
    "assigned_worker": "b25r1-aerial worker",
-   "branch": "wip/b25r1-aerial"
+   "branch": "wip/b25r1-aerial",
+   "tests": "aerial_map 69/0 (seeds 1,7,11), atlas 18/0, start 523/0, gamepad_map 19/0, region_travel 71/0, wiki 144/0",
+   "test_commit": "bad3b81",
+   "commits": [
+    "a328b29"
+   ]
   },
   {
    "id": "B25R1-AUDIT-OPT1",

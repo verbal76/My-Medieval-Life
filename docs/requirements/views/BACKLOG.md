@@ -66,7 +66,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
 | B25R1-025 | Aerial region and village maps of the generated world | approved | OWNER APPROVED | INTEGRATED |
-| B25R1-026 | Settlements never hidden by map discovery | approved | OWNER APPROVED | IN DEVELOPMENT |
+| B25R1-026 | Settlements never hidden by map discovery | approved | OWNER APPROVED | INTEGRATED |
 | BRANCH-POL-01 | Branch and worktree policy: one code integration branch (wip/expansion20), short-lived task branches, prompt audited merges, no unrelated ancestry, nothing deleted with unmerged work, every integration SHA recorded | approved | OWNER APPROVED | INTEGRATED |
 | CON-02-KINDS | CON-02 unfinished service kinds: further labour and service contracts beyond dig and survey (e.g. work on the buyer's materials with existing recipes), tracked as open dependencies of the Build 17 approval | approved | OWNER APPROVED | NOT STARTED |
 | DCR-01 | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control | rule | PROPOSED | NOT STARTED |
