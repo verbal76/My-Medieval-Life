@@ -103,6 +103,15 @@ var prices: Dictionary = {}          # item -> float, the market price (today's 
 var flows: Dictionary = {}
 var start: Dictionary = {}           # the opening books {coins, goods}
 var day := -1
+## Diagnostic only (MML_TRACE_TRADERS=1): print why a trader's households leave it; never changes state.
+static var _trace := OS.get_environment("MML_TRACE_TRADERS") == "1"
+
+
+func _ttrace(what: String, hid: int) -> void:
+	if not _trace or not biz.has("merchant") or not hid in biz.merchant.workers:
+		return
+	var h: Dictionary = hh[hid]
+	print("TTRACE day %d %s %s hid %d alive %s mem %d coins %d inc %s rate %s stay %d workers %s till %d" % [day, id, what, hid, h.alive, (h.mem as Array).size(), int(h.coins), str(h.get("inc", 0)), str(h.get("rate", 0)), int(h.get("stay", 0)), str(biz.merchant.workers), int(biz.merchant.till)])
 var closed: Dictionary = {}          # SET-D: business type -> the record of a business that closed (its fields, woods, quarry reserve and horses stay; till and stock were handed on)
 var dev: Dictionary = {"seen": {}, "streak": {}}             # SET-D: {seen: {item: unmet units at the last weekly look}, streak: {business type: weeks of sustained unmet demand}}
 var tax: Dictionary = {}             # DVW-B5: the tax band and any announced change (TaxPolicy), this settlement's own; empty until the first step
@@ -529,6 +538,7 @@ func _after_loss(h: Dictionary) -> void:
 	_recount(h)
 	if int(h.adults) > 0:
 		return
+	_ttrace("no_adult_left", int(h.id))
 	_wind_up_own(h)
 	var heir := _heir(h)
 	if heir < 0 and not h.mem.is_empty():
@@ -670,6 +680,7 @@ func _marry(wh: Dictionary, wj: int, mh: Dictionary, mj: int) -> void:
 	for o in [wh, mh]:
 		if o.mem.is_empty():                                         # the last of a household goes with the couple: it closes, nothing left behind
 			_wind_up_own(o)
+			_ttrace("emptied_by_marriage_into_" + bt, int(o.id))
 			o.alive = false
 			_recount(o)
 			for k in o.pantry:
@@ -1501,6 +1512,7 @@ func _move_jobs() -> void:
 				var h: Dictionary = hh[i]
 				if h.alive and int(h.stay) >= int(_rules.switch_stay_days) and float(h.inc) / 7.0 < float(_rules.switch_below) \
 						and float(pay[best]) >= 2.0 * float(h.inc) / 7.0:
+					_ttrace("job_move_to_" + best, i)
 					b.workers.erase(i)
 					biz[best].workers.append(i)
 					h.trade = _trade_of(best)
@@ -1551,6 +1563,8 @@ func _close_idle() -> void:
 
 
 func _close_business(t: String) -> void:
+	if _trace and t == "merchant":
+		print("TTRACE day %d %s merchant_closes workers %s till %d consign %s due %s" % [day, id, str(biz.merchant.workers), int(biz.merchant.till), str(biz.merchant.get("consign", {})), str(biz.merchant.get("consign_due", {}))])
 	if t == "merchant" and not transit.is_empty():
 		# X20-SETTLE-FOOD: food its traders bought and are still bringing home is taken in now (the shipment delivered early, the
 		# seller paid), so it follows the trader's stock to the granary instead of waiting on the road for a trader who is gone
@@ -1694,6 +1708,7 @@ func _open_trade(delta: Dictionary) -> void:
 		nb.idle = 0
 		nb.fed_miss = 0
 		nb.reserve = int(btype(best).get("reserve", 12))
+	_ttrace("opens_" + best, pick)
 	var old: Dictionary = biz[TRADE_BIZ[h.trade]]
 	old.workers.erase(pick)
 	nb.workers = [pick]
@@ -2491,6 +2506,7 @@ func release_person(hi: int, j: int) -> Dictionary:
 		_take(h.pantry, k, int(l.goods[k]))
 	_remove_member(h, j)
 	if h.mem.is_empty():
+		_ttrace("last_member_leaves", hi)
 		h.alive = false
 		h.credit = 0.0
 	_recount(h)
@@ -2522,6 +2538,7 @@ func _with_own(h: Dictionary, goods: Dictionary) -> void:
 
 ## The whole household leaves with its coins and pantry; it is dissolved (its business keeps its other households).
 func release_household(hi: int) -> Dictionary:
+	_ttrace("household_leaves", hi)
 	_fold_live(hh[hi].mem)
 	_wind_up_own(hh[hi])                                         # REGION-NAV-01 Q4: its own trade goes with it (purse and stock)
 	var l := household_load(hi)
