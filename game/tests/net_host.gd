@@ -90,6 +90,7 @@ func _hold_step() -> void:
 func _start() -> void:
 	if mode == "continue":
 		main.continue_game()
+		_write_records("records_loaded.json", main.world.to_dict())     # as loaded, before the world's first frame
 	else:
 		main.new_game()
 	main.ui.hide_all()
@@ -208,6 +209,7 @@ func _commands() -> void:
 			main.save_game(false)
 			census = {"at": "saved", "coins": w.total_coins(), "goods": _goods(), "away": _aways(), "minutes": w.minutes,
 				"msec": Time.get_unix_time_from_system()}
+			_write_records("records_saved.json", SaveStore.inspect(main.save_path, World.SAVE_VERSION).get("data", {}))
 			_status()
 			quit(0)
 		"crash":                                     # MP Batch B: the host is killed after an hourly save made while the guest played
@@ -233,6 +235,25 @@ func _commands() -> void:
 				if w.judgment != null:
 					w.as_actor(g, func(): JudgmentLive.on_gift(w, w.person_id(g), v, "bread"))      # MP C: the guest gives as itself
 				main.net.rpc_id(id, "s_self", g.to_dict())
+		"credit_guest":                              # owner 2026-11-05: a debt the guest owes a villager, made by Credit.sell_on_credit (the
+			for id in main.net.by_peer:                  # villager's trust in the guest raised to the lending mark first, as "endow" sets
+				var g: PlayerState = w.player_by_pid(int(main.net.by_peer[id]))     # skills); the goods go into the guest's pack
+				for n: NPC in w.npcs:
+					var it := ""
+					for iid in n.inv.ids():
+						if w.credit.available(n, iid) >= 1 and g.inv.can_add(iid) and GameData.value(iid) > 0:
+							it = iid
+							break
+					if not n.alive or n.role != "adult" or n.coins < w.reserve_of(n) or it == "":
+						continue
+					var t: Dictionary = w.relations.tie(n.id, w.person_id(g))
+					t.regard = maxf(float(t.regard), Credit.trust_needed())
+					var r: Dictionary = w.credit.sell_on_credit(n, g, it, 1, maxi(1, GameData.value(it)))
+					if str(r.result) == "credited":
+						why_last = ""
+						main.net.rpc_id(id, "s_self", g.to_dict())
+						break
+					why_last = str(r.text)
 		"still":                                     # X20-MP-ECON-INTEGRITY: the world's simulation stopped (on) or running (off)
 			still = bool(c.on)
 			if not still:
@@ -621,6 +642,48 @@ func _family(w: World) -> Dictionary:
 
 
 ## Every good in the world, over every holder (the census of the economy simulation's ledger; every player's pack and chest).
+## Owner 2026-11-05 (a returning guest across a host restart): each guest's persistent records in a world's saved form (World.to_dict,
+## or a save's "data"), by pid: its character (identity, pack, purse, skills, crimes, quests, family links), the ties and trades that
+## involve its person id, its killings, its justice case, the debts, contracts, carts and offers naming its reference, and the
+## messages its journal keeps. "quit" writes them from the save it has just written, a continue from the world it has just loaded,
+## so a test compares the two (net_c_test, net_interact_test). Every value goes through JSON both ways, as a save does.
+static func guest_records(dd: Dictionary) -> Dictionary:
+	dd = JSON.parse_string(JSON.stringify(dd))
+	var out := {}
+	var pl: Dictionary = dd.get("players", {})
+	var by: Dictionary = pl.get("by_pid", {})
+	for k in by:
+		if int(k) == int(pl.get("host", -1)):
+			continue
+		var p: Dictionary = by[k]
+		var line := int(p.get("line", 0)) if int(p.get("line", 0)) > 0 else int(k)
+		var ref := "player:%d" % line
+		var id := str(-line)
+		var rel: Dictionary = dd.get("relations", {})
+		var ties := {}
+		var trades := {}
+		for tk in rel.get("ties", {}):
+			if (str(tk).split(":") as Array).has(id):
+				ties[tk] = rel.ties[tk]
+		for tk in rel.get("trades", {}):
+			if (str(tk).split(":") as Array).has(id):
+				trades[tk] = rel.trades[tk]
+		var names := func(list) -> Array:
+			return (list if list is Array else []).filter(func(x): return x is Dictionary and (x as Dictionary).values().any(func(v): return str(v) == ref))
+		out[str(k)] = {"player": p, "ties": ties, "trades": trades, "killings": int(rel.get("guest_killings", {}).get(ref, 0)),
+			"case": dd.get("justice", {}).get("cases", {}).get(ref, {}),
+			"debts": names.call(dd.get("credit", {}).get("debts", [])), "contracts": names.call(dd.get("contracts", {}).get("list", [])),
+			"carts": names.call(dd.get("carts", {}).get("carts", [])), "offers": names.call(dd.get("player_offers", {}).get("list", [])),
+			"journal": dd.get(MessageJournal.KEY, {}).get(ref, [])}
+	return out
+
+
+func _write_records(file: String, dd: Dictionary) -> void:
+	var f := FileAccess.open(dir + file, FileAccess.WRITE)
+	f.store_string(JSON.stringify(guest_records(dd), "", true))
+	f.close()
+
+
 func _goods() -> Dictionary:
 	var g := SettlementHoldings.goods(main.world)
 	var out := {}

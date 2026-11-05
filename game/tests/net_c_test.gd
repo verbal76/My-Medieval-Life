@@ -274,11 +274,42 @@ func several_players_restart() -> void:
 	var guests0 := players0.values().filter(func(p): return not p.host)
 	check(guests0.size() == 2, "the host's world holds two guests (%d)" % guests0.size())
 	var pid := int(main.net.my_pid)
+	var ref := "player:%d" % pid
+	# owner 2026-11-05: more of the guest's persistent records before the restart: a kept message (its journal) and a debt it owes a
+	# villager; its tie with a villager (C5), its crimes and case (C6), its cart (C4) and its skills are already there
+	var kept0 := int(status().get("journal_kept", 0))
+	main.ui.message("You sell 1 apple for 3 coins (restart test).", 4.0, "trade")
+	check(await until(func(): return int(status().get("journal_kept", 0)) > kept0, 5.0), "a message the guest keeps reaches the host's journal under the guest")
+	await command({"cmd": "credit_guest"})
+	check(await until(func(): return not main.world.credit.debts_of("", ref).is_empty(), 5.0), "the guest owes a villager a debt (%s)" % status().get("why_last", ""))
+	for f in ["records_saved.json", "records_loaded.json"]:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(dir + f))
 	await stop_host()
 	var saved: Dictionary = status()                  # the host's last status, written after its last save: the saved world
 	var me0: Dictionary = saved.get("players", {}).get(str(pid), {})
 	check(not main.guest_world and str(saved.get("census", {}).get("at", "")) == "saved" and not me0.is_empty(), "the host saves and quits")
 	check(await start_host("continue"), "the host continues its world from the save")
+	# each guest's records as the host saved them at the quit (read back from the save file) and as it loaded them (before its first
+	# frame): character, ties and trades, killings, case, debts, contracts, carts, offers, journal (net_host.guest_records)
+	var rs = JSON.parse_string(FileAccess.get_file_as_string(dir + "records_saved.json"))
+	var rl = JSON.parse_string(FileAccess.get_file_as_string(dir + "records_loaded.json"))
+	var mine0: Dictionary = rs.get(str(pid), {}) if rs is Dictionary else {}
+	var differ := []
+	if rs is Dictionary and rl is Dictionary:
+		for k in rs:
+			for part in rs[k]:
+				if JSON.stringify(rs[k][part]) != JSON.stringify(rl.get(k, {}).get(part)):
+					differ.append("%s %s" % [k, part])
+	check(rs is Dictionary and rl is Dictionary and rs.size() == 2 and rl.size() == 2 and differ.is_empty(),
+		"across the restart every guest's records load as saved: character, ties, killings, case, debts, contracts, carts, offers, journal%s"
+		% ("" if differ.is_empty() else " (differs: %s)" % str(differ)))
+	var p0: Dictionary = mine0.get("player", {})
+	check(not mine0.is_empty() and not (mine0.ties as Dictionary).is_empty() and (p0.get("crimes", []) as Array).size() >= 1
+		and not (mine0.case as Dictionary).is_empty() and (mine0.debts as Array).size() == 1 and (mine0.carts as Array).size() == 1
+		and (mine0.journal as Array).any(func(e): return str(e[2]).contains("restart test")) and not (p0.get("skills", {}) as Dictionary).is_empty(),
+		"and the saved records hold what the guest made: ties %d, crimes %d, a case, debts %d, carts %d, journal %d, skills %s"
+		% [(mine0.get("ties", {}) as Dictionary).size(), (p0.get("crimes", []) as Array).size(), (mine0.get("debts", []) as Array).size(),
+		(mine0.get("carts", []) as Array).size(), (mine0.get("journal", []) as Array).size(), p0.get("skills", {})])
 	var players1: Dictionary = status().get("players", {})
 	check(players1.values().filter(func(p): return not p.host and bool(p.away)).size() == 2, "both guests are in it, out of play (MP-D1)")
 	check(await join(), "the guest rejoins")
@@ -293,6 +324,14 @@ func several_players_restart() -> void:
 	var jn: Dictionary = status().get("joined", {})
 	check(int(jn.get("in_play", -1)) == 0 and int(jn.get("out", 0)) > 0 and not bool(rec().get("away", true)),
 		"while it builds the world the host keeps it out of play (seen out %d times, in play %d); in play at its first move" % [int(jn.get("out", 0)), int(jn.get("in_play", -1))])
+	await copies_agree("after the restart")         # its ties, debts, case, carts and contracts on its copy are the host's (marked sync)
+	var j_host: Array = (rl.get(str(pid), {}).get("journal", []) if rl is Dictionary else [])
+	var j_mine: Array = JSON.parse_string(JSON.stringify(main.world.player_messages()))      # what it saw since ("Joined the world.") follows
+	check(not j_host.is_empty() and JSON.stringify(j_mine.slice(0, j_host.size())) == JSON.stringify(j_host),
+		"its journal comes back to it as the host saved it, the newer entries after (its copy %s; saved %s)" % [j_mine, j_host])
+	check(main.world.player.partner == int(p0.get("partner", -9)) and JSON.stringify(main.world.player.children) == JSON.stringify((p0.get("children", []) as Array).map(func(c): return int(c)))
+		and JSON.stringify(JSON.parse_string(JSON.stringify(main.world.player.skills))) == JSON.stringify(p0.get("skills", {})),
+		"its family links and skills come back to it as saved")
 	var b0: Dictionary = {}
 	for k in players0:
 		if not players0[k].host and int(k) != pid:

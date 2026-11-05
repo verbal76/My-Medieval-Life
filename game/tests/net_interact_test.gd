@@ -231,6 +231,17 @@ func replies_said() -> Array:
 	return out
 
 
+## For a failing check's message: the host as this guest's copy has it (place, away, alive, level, drawn), Ann's place and facing, the
+## options, and the host's own record of both.
+func _seen_host() -> String:
+	var q: PlayerState = main.world.player_by_pid(host_pid)
+	var hp: Array = rec(host_pid).get("pos", [])
+	return "host copy %s away %s alive %s level %s avatar %s; Ann %s facing %s; options %s; host has host %s, Ann %s; spot %s; frame %d" % [
+		q.pos if q != null else "none", q.away if q != null else "-", q.alive if q != null else "-", q.map_level if q != null else "-",
+		main.net.avatars.has(host_pid), main.world.player.pos, main.facing_vec(), main.target_options.map(func(t): return str(t.get("label", ""))),
+		hp, rec(ann).get("pos", []), status().get("spot", []), Engine.get_process_frames()]
+
+
 func leak() -> int:
 	return int(status().get("coin_leak", 999))
 
@@ -462,7 +473,7 @@ func _disconnect_and_back() -> void:
 	await stage()
 	check(await until(func(): return hui().get("target", "") == "player" and int(hui().get("target_pid", 0)) == ann, 5.0), "the host can choose her again")
 	main._find_target()
-	check(str(main.target.get("kind", "")) == "player" and int(main.target.pid) == host_pid, "and she the host (%s)" % main.target.get("label", ""))
+	check(str(main.target.get("kind", "")) == "player" and int(main.target.pid) == host_pid, "and she the host (%s; %s)" % [main.target.get("label", ""), _seen_host()])
 
 
 func _restart_with_offer() -> void:
@@ -474,10 +485,25 @@ func _restart_with_offer() -> void:
 	await command({"cmd": "press", "name": "Apple x%d" % hn})
 	await command({"cmd": "picker", "n": 1})
 	check(await until(func(): return main.world.offers_to(main.world.player).any(func(x): return str(x.kind) == "gift"), 5.0), "the host offers Ann an apple; she has not answered")
+	for f in ["records_saved.json", "records_loaded.json"]:
+		DirAccess.remove_absolute(ProjectSettings.globalize_path(dir + f))
 	await command({"cmd": "quit"})
 	check(await until(func(): return not main.guest_world, 20.0), "the host saves and quits: Ann is out")
 	await until(func(): return not OS.is_process_running(host_proc), 15.0)
 	check(await start_host("continue"), "the host comes back from its save")
+	# owner 2026-11-05: each guest's records as saved at the quit (read back from the save) and as loaded (net_host.guest_records)
+	var rs = JSON.parse_string(FileAccess.get_file_as_string(dir + "records_saved.json"))
+	var rl = JSON.parse_string(FileAccess.get_file_as_string(dir + "records_loaded.json"))
+	var differ := []
+	if rs is Dictionary and rl is Dictionary:
+		for k in rs:
+			for part in rs[k]:
+				if JSON.stringify(rs[k][part]) != JSON.stringify(rl.get(k, {}).get(part)):
+					differ.append("%s %s" % [k, part])
+	var a0r: Dictionary = rs.get(str(ann), {}) if rs is Dictionary else {}
+	check(rs is Dictionary and rl is Dictionary and rs.size() == 2 and differ.is_empty() and (a0r.get("contracts", []) as Array).size() >= 1
+		and (a0r.get("offers", []) as Array).any(func(o): return str(o.kind) == "gift" and str(o.to) == "player:%d" % ann), "Ann's and Cara's records load as saved, her contract with the host and the pending offer among them (contracts %d, offers %d)%s"
+		% [(a0r.get("contracts", []) as Array).size(), (a0r.get("offers", []) as Array).size(), "" if differ.is_empty() else " (differs: %s)" % str(differ)])
 	check(await join(), "Ann rejoins")
 	await stage()
 	var o: Array = main.world.offers_to(main.world.player).filter(func(x): return str(x.kind) == "gift")
@@ -486,7 +512,7 @@ func _restart_with_offer() -> void:
 		return
 	var a0: int = main.world.player.inv.count("apple")
 	await key(KEY_E)
-	check(ui.is_open("player"), "E on the host: its window (%s; %s)" % [ui.panel_kind, main.target.get("label", "")])
+	check(ui.is_open("player"), "E on the host: its window (%s; %s; %s)" % [ui.panel_kind, main.target.get("label", ""), _seen_host()])
 	press("OfferAccept%d" % int(o[0].id))
 	check(await until(func(): return main.world.player.inv.count("apple") == a0 + 1, 5.0), "accepted after the restart: the apple moves once")
 	check(leak() == 0, "coins conserved after the restart")
