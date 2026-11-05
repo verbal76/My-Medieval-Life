@@ -560,3 +560,55 @@ The pack crosses into the village ledger on materialise and back on fold (outsid
 - **Wells:** booked as the hamlet's own use (flows.used), with `add_well(..., count := false)` (wip/b25r1-homestead 5236f89); the
   village's ledger never sees them.
 
+
+#### Generation 6: the B25R1 flyover repair (2026-11-05, `wip/b25r1-visual`)
+
+The seed-1 drone flyover (`game/tests/drone_shot.gd`) and the owner's notes on it found these; each is fixed in the generator
+(`Overworld.GEN_VERSION` 6; a generation 5 world is refused like the older ones, owner B25R1-Q5):
+- **Water erased at settlements.** `_water_clear` kept every course `VILLAGE_CLEAR` (14) tiles off a settlement's whole
+  rectangle (2 for a `passes_settlement` one), and the site rectangles are the plans' bounding boxes, so Upmeads Water lost
+  about 60 tiles by Rushford, the Netherton stream its first 80 tiles and its way past Wendholt, and Coldlake almost all of
+  its course through Mileham, Garton and Higham. A canonical course now keeps only off built ground (`Overworld._built`: each
+  building and yard piece grown by `BUILT_CLEAR` 2, a lamp or signpost by 0, a walled town's walls), and a settlement's streets
+  count as road for the water, so a street it meets is bridged and one it runs along keeps the bank. The courses that ran
+  through houses are laid round them in `region_layout.json`: the Netherton stream rises at the scarp foot east of Netherton
+  and passes Wendholt's west and north sides; **Coldlake** rises at the Downs' foot east of Milton, runs under Milton and down
+  outside Higham's east wall, under the faubourg, and crosses the straight road south three times as the canon has it (the
+  stone bridge at (20,857), heading west; fords at (20,870), heading east, and (20,895), heading west), then away south-west
+  as before; the **Garton brook** (new, GAME EXPANSION) brings the water of Mileham and Garton down outside Higham's west wall
+  into Coldlake below the faubourg, west of the road, so the town is lapped on both sides and the road still crosses water
+  only thrice. Coldlake could not keep its 2026-11-03 line (from the west through the town's north), which the walled plan
+  built over; reaching the road from the west would have meant a fourth crossing or an eastward exit into Bourton.
+- **Dark green rectangles behind thatched roofs.** `tools/build_region_stamps.py` mapped every tile of a house stamp to its
+  counterpart in the thatch colour block, including the house's ground layer (the village's grass), whose counterpart is the
+  block's darker grass. Ground and path layers are no longer mapped (`region_stamps.json` thatch: 80 tiles to 49).
+- **Higham's castle had no way to the town.** It stood beyond the walls' north-east corner, its gate facing the east wall,
+  and walled Higham is entered only by its north and south gates. It now stands on its knoll above the north wall's east end
+  (`SitePlan`: the first place whose knoll and way are clear, from just past the walls' east end westward), and the castle
+  way runs from the steps below its gate to a street along the outside of the north wall, which joins the main street at the
+  north gate. The layout's x, y for each landmark a site's plan places are now that place on seed 1 (overworld_test checks).
+- **Streets ending in the grass.** A site's streets were run out to its edge on all four sides; a side no road came in by
+  ended in grass (Wulstead's west and east lanes, the hamlets' north stubs, Higham's Way). `Overworld._trim_entries` takes
+  those sides' cells off once the roads are laid. A cross street no building fronts is not laid, and each is cut to a few tiles past its last building, the market's
+  too (`SitePlan._trim`, now also for the faubourg's streets): Higham's empty street below the faubourg, Wulstead's east lane
+  (its west lane ends at the canons' churchyard).
+- **Country trails ending in the grass** (owner: roads "fade into open ground"): a grid node whose other trails fell in an
+  exclusion (the village, a settlement, the Downs, the waste, the Wood Perilous) was left with one trail that stopped there.
+  A trail is now laid only between living nodes (`_node_alive`: a node a settlement's, gate's or main route's road reaches, or
+  with two trails to living nodes, looked along three nodes); on seed 1, 21 such spurs in the flyover's area, now none.
+- **Parallel roads and ring frames.** A site's ring road leg was laid even where it ran within a tile or two of a road already
+  there (seed 1: Ewedean's west leg beside its main road's join, x -313 to -310, y 300-440) or alongside the canonical water.
+  And every point of a ring (its corners and 40-tile stretch points) sent its own country trail to the nearest grid node: by
+  Fallowley and Ewedean five trails fanned into one node at (-312,328). Now a point only on ring roads sends none and a grid
+  node takes one trail, from the nearest route node (`_trail_target`).
+  A ring leg beside a road is now left out (`_ring_leg_free`) while the site's ways in stay joined round the rest of the ring; when leaving
+  it out would cut them apart, every leg is laid as before. The other legs keep the rectangular ring (a design of
+  2026-11-04, kept): reworking them as curved bypasses is a separate change.
+- **The Wood Perilous's straight edge** (owner): its polygon is a rectangle ("a long ridge with a thick wood", BONE-C8-P002;
+  nothing in the text squares it). A region may carry `edge_wobble`; the wood's is 40: its edge wanders in a smooth wave (up to about 20 tiles; the waste beside it, `edge_wobble` 12)
+  (`RegionGeo._wobble`, 56 tiles long, the same in every world), its extent the same on average.
+- **Road legibility** (owner: roads "extremely faint"): measured, not changed. At the game's zoom (48 px a tile, drone
+  `cam=48`) the dirt roads read clearly, tan against the grass; the trails are fainter but followable. In the 4 px a tile
+  overview a one-tile road is a faint line: the dirt tile's mean luminance is 168 against the grass's 152 (about 1.1 : 1),
+  carried by its hue, and the stone road's 155 (grey against green). An overview-only fix (a heavier line on the region map
+  or flyover) is a proposal, not done here: no new art.

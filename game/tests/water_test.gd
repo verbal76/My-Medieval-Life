@@ -15,7 +15,9 @@ var failures := 0
 ## chalk figures, banks and hamlets share the generation-4 chunks with the streams; the determinism and order checks below hold.
 ## Re-pinned 2026-11-04 (repair): Brookhurst, Milton and Bourton moved clear of their neighbours' ground, the hamlets' side roads
 ## kept off every settlement, no trail from a bridge's own point (overworld_test, road_types_test, region_travel_test pass).
-const GOLDEN_4 := {1: "4c42cb400d8358b9d3c55d38fd8091d6", 2: "3ca81cc2872ba9b702b704b2a2419d4a", 7: "e3c98f83ed83bae4e7783b79152b8a1b"}
+## Re-pinned 2026-11-05 for generation 6 (the B25R1 flyover repair: canonical water through and round the settlements, the
+## site streets and castle way, the trail spurs and ring legs, the Wood Perilous edge; two runs in two processes agree).
+const GOLDEN_4 := {1: "6537e1ce05ea1bda56ba7b4f56e9f079", 2: "3f04ed0be6816a2fa4f7afe07da7d8f9", 7: "b75416bce7e128ae78f2c1e44d782715"}
 const CHUNKS := [Vector2i(-3, 2), Vector2i(1, 4), Vector2i(2, 9), Vector2i(-2, -3), Vector2i(5, 1), Vector2i(0, 20), Vector2i(-6, 12)]
 
 
@@ -60,7 +62,7 @@ func _run() -> void:
 	# --- generation 4: deterministic, streams there
 	var a := Overworld.create(1, m)
 	var b := Overworld.create(1, m)
-	check(a.gen == Overworld.GEN_VERSION and Overworld.GEN_VERSION == 5, "a new world is generation 5 (B25R1-018: Bear Hill and the castle knoll raised)")
+	check(a.gen == Overworld.GEN_VERSION and Overworld.GEN_VERSION == 6, "a new world is generation 6 (B25R1 flyover repair: the canonical water through and round the settlements)")
 	var fa := fingerprint(a, true)
 	check(fa == fingerprint(b, true), "generation 4 is deterministic (the same seed, the same chunks and water)")
 	var b2 := Overworld.create(1, m)
@@ -88,9 +90,11 @@ func _run() -> void:
 				var wv: int = ch.water[i]
 				if wv == 0:
 					continue
-				# never on built ground; within the clearance only beside a settlement a canonical course passes (the layout's
-				# passes_settlement: the Netherton stream, the river round Higham)
-				if a._rdist(a.village, c.x, c.y) < Overworld.VILLAGE_CLEAR - 1 or a.sites.any(func(st): return a._rdist(st.rect, c.x, c.y) < (1 if passed.has(str(st.id)) else Overworld.VILLAGE_CLEAR - 1)):
+				# never on built ground (a building or yard and a tile round it); within a settlement's clearance only a canonical
+				# course's water (generation 6: the layout's rivers run through and round the settlements, kept off their built
+				# ground), never a generated stream's; never within the village's clearance
+				if a._rdist(a.village, c.x, c.y) < Overworld.VILLAGE_CLEAR - 1 or _on_built(a, c) \
+						or (a.sites.any(func(st): return a._rdist(st.rect, c.x, c.y) < Overworld.VILLAGE_CLEAR - 1) and not _by_canon(a, c)):
 					near_places += 1
 				match wv:
 					4:
@@ -110,7 +114,7 @@ func _run() -> void:
 	check(bad_solid == 0, "every stream, pool and waterfall cell is water and solid (%d not)" % bad_solid)
 	check(n.ford > 0 and ford_bad == 0, "streams have fords, stepping stones walked across (%d cells, %d not walkable)" % [n.ford, ford_bad])
 	check(bridge_bad == 0, "every bridge is a road cell, walkable, not water (%d not)" % bridge_bad)
-	check(near_places == 0, "no water on any settlement's ground, nor within %d tiles of the village or a settlement a canonical course does not pass (%d cells)" % [Overworld.VILLAGE_CLEAR, near_places])
+	check(near_places == 0, "no water on or against any settlement's building or yard, none within %d tiles of the village, and none in a settlement's clearance but a canonical course's (%d cells)" % [Overworld.VILLAGE_CLEAR, near_places])
 	# --- the roads stay walkable and joined
 	var off := 0
 	var sampled := 0
@@ -197,7 +201,10 @@ func _run() -> void:
 	# --- a saved generation-4 world says so; an older generation's save is refused (owner B25R1-Q5)
 	check(main.save_game(false), "saved")
 	var d := SaveStore.inspect(main.save_path, World.SAVE_VERSION)
-	check(int(d.data.overworld.gen) == 5, "a new world's save says generation 5")
+	check(int(d.data.overworld.gen) == 6, "a new world's save says generation 6")
+	var w5 := World.new()
+	w5.load_dict(m, {"seed": 1, "save_version": World.SAVE_VERSION, "overworld": {"seed": 1, "gen": 5}})
+	check(not w5.load_error.is_empty(), "a generation-5 save is refused with a message, not drawn (owner B25R1-Q5) (%s)" % w5.load_error)
 	var w3 := World.new()
 	w3.load_dict(m, {"seed": 1, "save_version": World.SAVE_VERSION, "overworld": {"seed": 1, "gen": 3}})
 	check(not w3.load_error.is_empty(), "a generation-3 save is refused with a message, not drawn (%s)" % w3.load_error)
@@ -281,7 +288,7 @@ func _run() -> void:
 					if t == int(ow.tiles.water.bridge.stone_ns) or t == int(ow.tiles.water.bridge.stone_ew):
 						stone_drawn = true
 	main.ow_view.overworld = view_ow
-	check(stone_drawn or not str(kinds).contains("stone_bridge@(20, 830)\": \"bridge"), "a stone bridge of the layout is drawn in stone (where its road is)")
+	check(stone_drawn or not str(kinds).contains("stone_bridge@(20, 857)\": \"bridge"), "a stone bridge of the layout is drawn in stone (where its road is)")
 	var downs_water := 0
 	var downs_springs := 0
 	for c in ow.streams_in(Rect2i(-500, ow._downs.position.y, 1100, ow._downs.size.y)):
@@ -385,3 +392,30 @@ func _run() -> void:
 	check(not RegionMapPanel.bridge_points(ow, sts, bounds).is_empty(), "and the bridges where the roads cross them (%d)" % RegionMapPanel.bridge_points(ow, sts, bounds).size())
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
+
+
+## Whether cell `c` is on a settlement's or landmark's built ground: a building or yard piece, or the tile round it.
+static func _on_built(ow: Overworld, c: Vector2i) -> bool:
+	for st in ow.sites + ow.structures:
+		if not (st.rect as Rect2i).grow(2).has_point(c):
+			continue
+		for sl in st.slots + st.get("props", []):
+			if (sl.rect as Rect2i).grow(0 if str(sl.get("stamp", "")) in ["lamp", "signpost"] else 1).has_point(c):
+				return true
+	return false
+
+
+## Whether cell `c` lies on a canonical course (within its width and a bank's wobble of its line) or its pools.
+static func _by_canon(ow: Overworld, c: Vector2i) -> bool:
+	var p := Vector2(c) + Vector2(0.5, 0.5)
+	for cc in ow.anchored_courses():
+		if not Rect2(cc.box).grow(2.0).has_point(p):
+			continue
+		var pts: Array = cc.pts
+		for q in range(pts.size() - 1):
+			if Overworld._seg_dist(p, pts[q], pts[q + 1]) <= maxf(float(cc.r[q]), float(cc.r[q + 1])) + 1.5:
+				return true
+		for pool in cc.pools:
+			if (pool[0] as Vector2).distance_to(p) <= float(pool[1]) + 1.5:
+				return true
+	return false

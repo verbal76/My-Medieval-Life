@@ -32,7 +32,7 @@ extends RefCounted
 ##  - Trees and rocks are single solid cells, never within a cell of each other or of a cliff, so
 ##    they cannot wall anything in. Flowers and bushes are walkable decoration.
 
-const GEN_VERSION := 5
+const GEN_VERSION := 6
 ## Generator versions whose saved changes still apply (their trees, rocks, flowers and roads are in the same cells): 2 (PL1-12,
 ## 2026-10-21) only draws the low red flower (tile 2656) among the wild flowers (overworld_tiles.json flowers), so a flower
 ## may be another colour than in version 1, and nothing else moved.
@@ -47,7 +47,12 @@ const GEN_VERSION := 5
 ## on and round them changed, so a generation 4 world is refused like the older ones (World.load_dict, its message; the file kept).
 ## (It also covers B25R1-022's house styles: the southern settlements' styled houses and the elite houses change those sites'
 ## slots and stamps, which a generation 4 world's changes did not see.)
-const GEN_COMPATIBLE := [5]
+## Generation 6 (B25R1 flyover repair, 2026-11-05): the canonical water runs through and round the settlements, kept only off
+## their built ground and bridged where it meets their streets (_water_clear, _setup_built); Coldlake and the Netherton stream
+## laid round the settlements' houses (region_layout.json); a site's streets end where its roads come in (_trim_entries) and
+## a street no building fronts is not laid (SitePlan._trim). Water, streets and so cells changed round every settlement, so a
+## generation 5 world is refused like the older ones (owner B25R1-Q5: "Don't worry about saved games").
+const GEN_COMPATIBLE := [6]
 const CHUNK := 32
 const PAD := 4                           # cells computed round a chunk, so neighbours' rules need no other chunk
 const AREA := CHUNK + 2 * PAD
@@ -181,7 +186,59 @@ static func create(world_seed: int, m: VillageMap) -> Overworld:
 	o._setup_structures()
 	o._setup_raised()
 	o._setup_routes()
+	o._trim_entries()
+	o._setup_built()
 	return o
+
+
+## Generation 6 (B25R1 flyover repair): a site's street runs out to its edge on a side only where a road comes in by that side
+## (its base link, _site_side); the other sides' ways in (the plan's entry_cells) are taken off its streets, so none ends in
+## the grass at the site's edge (Wulstead's west and east lanes, the hamlets' north stubs, Higham's Way east and west).
+func _trim_entries() -> void:
+	for si in sites.size():
+		var st: Dictionary = sites[si]
+		var ec: Array = st.get("entry_cells", [])
+		if ec.size() != 4:
+			continue
+		var bases: Dictionary = _site_bases.get(si, {})
+		var gone := {}
+		for side in 4:
+			if side == 2 or bases.has(side):
+				continue                                   # (the south side is the lane's own base: always a way in)
+			for c: Vector2i in ec[side]:
+				gone[c] = true
+		if gone.is_empty():
+			continue
+		var kept_streets: Array = []
+		for cells in st.streets:
+			var kept: Array[Vector2i] = []
+			for c: Vector2i in cells:
+				if not gone.has(c):
+					kept.append(c)
+			if not kept.is_empty():
+				kept_streets.append(kept)
+		st.streets = kept_streets
+
+
+## Generation 6 (B25R1 flyover repair; owner directive 2026-11-03 section 8, B25R1-017): the settlements' and the country
+## landmarks' built ground, each building's and yard piece's rect grown by BUILT_CLEAR (and a walled town's whole walls):
+## a canonical course runs through or round a settlement on any ground but this (_water_clear), so it is never erased where
+## it crosses a settlement's cleared ground, and no building ever stands in the water.
+const BUILT_CLEAR := 2
+var _built := {}
+
+
+func _setup_built() -> void:
+	_built.clear()
+	for st in sites + structures:
+		for sl in st.slots + st.get("props", []):
+			# (street furniture, a lamp or a signpost, keeps only its own cells: one at a street's edge where a course crosses
+			# it would hold the water off both sides of the bridge)
+			var small := str(sl.get("stamp", "")) in ["lamp", "signpost"]
+			var r: Rect2i = (sl.rect as Rect2i).grow(0 if small else BUILT_CLEAR)
+			for y in range(r.position.y, r.end.y):
+				for x in range(r.position.x, r.end.x):
+					_built[Vector2i(x, y)] = true
 
 
 ## REGION-NAV-01: the settlement sites and the roads that join them to the network (see `sites`).
@@ -202,7 +259,8 @@ func _setup_sites(stamps: Dictionary) -> void:
 		var far := Vector2i(gate.x, rect.end.y + 14)                                            # straight down out of the site, as a village gate's road
 		sites.append({"id": str(spec.id), "name": str(spec.name), "kind": str(spec.kind), "center": center, "rect": rect, "slots": slots,
 			"gate": gate, "streets": plan.streets, "square": plan.square, "walled": bool(plan.get("walled", false)),
-			"props": plan.get("props", []), "entries": plan.get("entries", []), "hamlet": bool(spec.get("hamlet", false))})
+			"props": plan.get("props", []), "entries": plan.get("entries", []), "hamlet": bool(spec.get("hamlet", false)),
+			"entry_cells": plan.get("entry_cells", [])})
 		_links.append({"a": gate, "b": far, "key": 2000 + si * 8})
 		si += 1
 	for k0 in sites.size():                        # B25R1-018: joined to the grid once every site stands (a link never crosses another site)
@@ -399,10 +457,26 @@ func _setup_routes() -> void:
 	var crossing_at := {}
 	for xg in (RegionGeo.data().get("crossings", []) as Array):
 		crossing_at[Vector2i(int(xg.x), int(xg.y))] = true
+	# generation 6 (B25R1 flyover: "parallel paths 1-3 tiles apart" by Fallowley and Ewedean, where every point of two ring roads
+	# sent its own trail to the same grid node): a point that is only on a ring road sends none, and a grid node takes one trail,
+	# from the nearest route node that would send one
+	var best_of := {}                                   # grid node -> [d2, route node index]
+	if gen >= 6:
+		for vi in _vpos.size():
+			var g6 := _trail_target(vi, crossing_at)
+			if g6.is_empty():
+				continue
+			var cur: Array = best_of.get(g6[0], [])
+			if cur.is_empty() or int(g6[1]) < int(cur[0]):
+				best_of[g6[0]] = [int(g6[1]), vi]
 	for vi in _vpos.size():
 		var p: Vector2i = _vpos[vi]
 		if crossing_at.has(p):
 			continue
+		if gen >= 6:
+			var g6 := _trail_target(vi, crossing_at)
+			if g6.is_empty() or int(best_of[g6[0]][1]) != vi:
+				continue
 		var ci := fdiv(p.x, NODE)
 		var cj := fdiv(p.y, NODE)
 		var near: Array = []
@@ -422,6 +496,32 @@ func _setup_routes() -> void:
 		var js: Array = _junction.get(gn, [])
 		js.append([_vid(vi), li2])
 		_junction[gn] = js
+
+
+## The grid node route node `vi` would send its country trail to and how far: [grid node, d2]; [] none (a crossing's own point,
+## a point only on ring roads, no grid node in reach).
+func _trail_target(vi: int, crossing_at: Dictionary) -> Array:
+	var p: Vector2i = _vpos[vi]
+	if crossing_at.has(p):
+		return []
+	var ring_only := not (_vadj[vi] as Array).is_empty()
+	for e in _vadj[vi]:
+		var li: int = int(e[1])
+		ring_only = ring_only and str(route_kind.get(li if li >= 0 else -1 - li, "")) == "ring"
+	if ring_only:
+		return []
+	var ci := fdiv(p.x, NODE)
+	var cj := fdiv(p.y, NODE)
+	var near: Array = []
+	for j in range(cj - 1, cj + 2):
+		for i in range(ci - 1, ci + 2):
+			var q := node_pos(i, j)
+			if not _node_excluded(q) and (q - p).length_squared() <= 60 * 60 and not _crosses_site(Rect2i(mini(p.x, q.x), mini(p.y, q.y), absi(p.x - q.x), absi(p.y - q.y))):
+				near.append([(q - p).length_squared(), j, i, q])
+	if near.is_empty():
+		return []
+	near.sort()
+	return [Vector2i(int(near[0][2]), int(near[0][1])), int(near[0][0])]
 
 
 func _vid(vi: int) -> Vector2i:
@@ -561,6 +661,42 @@ func _site_ring(si: int) -> void:
 		if bases.has(side):
 			ring.append(Vector2i(_links[bases[side]].b))
 		ring.append(corners[(side + 1) % 4] if side < 3 else corners[0])
+	# generation 6: which legs run alongside a road or the water (_ring_leg_free), judged first; they are left out only while
+	# the far points of the site's sides stay joined round the ring without them (else every leg is laid, as before)
+	var skip := {}
+	var fars := {}
+	for side in 4:
+		if bases.has(side):
+			fars[ring.find(Vector2i(_links[bases[side]].b))] = true
+	if gen >= 6:
+		var li_base := _links.size()
+		for k in ring.size():
+			var a: Vector2i = ring[k]
+			var b: Vector2i = ring[(k + 1) % ring.size()]
+			if a == b:
+				continue
+			var parts := maxi(1, int(ceil((b - a).length() / RING_STRETCH)))
+			var legs: Array[PackedInt32Array] = []
+			for q in parts:
+				legs.append(_polyline(a + (b - a) * q / parts, a + (b - a) * (q + 1) / parts, ROUTE_KEY + li_base + k * 8 + q))
+			if not _ring_leg_free(legs):
+				skip[k] = true
+		if not skip.is_empty():
+			# the ring cut at its skipped legs: the points from just after one skip round to the next are one group
+			var n := ring.size()
+			var start: int = (int(skip.keys().min()) + 1) % n
+			var grp := {}
+			var g := 0
+			for t in n:
+				var k := (start + t) % n
+				grp[k] = g
+				if skip.has(k):
+					g += 1
+			var groups := {}
+			for k in fars:
+				groups[grp[k]] = true
+			if groups.size() > 1:
+				skip.clear()
 	for k in ring.size():
 		var a: Vector2i = ring[k]
 		var b: Vector2i = ring[(k + 1) % ring.size()]
@@ -570,7 +706,7 @@ func _site_ring(si: int) -> void:
 			hit = hit or (sj != si and bb.intersects(sites[sj].rect))
 		# (repair 2026-11-04) nor the cells the link would have, its wobble included: seed 7's ring round Higham passed the
 		# box test 4 tiles from Garton and wobbled onto its houses
-		if a == b or hit:
+		if a == b or hit or skip.has(k):
 			continue
 		# (repair 2026-11-04) laid in stretches of at most RING_STRETCH tiles, so its wobble (a tenth of a stretch) stays near
 		# the ring's line, and only when none of the cells it would have lies on a neighbour's ground: a long ring leg wobbled
@@ -581,11 +717,67 @@ func _site_ring(si: int) -> void:
 			pts.append(a + (b - a) * q / parts)
 		var li0 := _links.size()
 		var clear := true
+		var legs: Array[PackedInt32Array] = []
 		for q in parts:
-			clear = clear and not _cells_on_site(_polyline(pts[q], pts[q + 1], ROUTE_KEY + li0 + q), si)
+			legs.append(_polyline(pts[q], pts[q + 1], ROUTE_KEY + li0 + q))
+			clear = clear and not _cells_on_site(legs[q], si)
 		if clear:
 			for q in parts:
 				_route_link(_vnode(pts[q]), _vnode(pts[q + 1]), "ring")
+				_note_road_cells(legs[q])
+
+
+## Generation 6 (B25R1 flyover: "parallel paths 1-3 tiles apart", rings drawn as straight frames beside the rivers): a ring leg
+## is not laid where it would run alongside a road already laid (RING_BESIDE_ROAD of its cells within two tiles of one, its
+## ends apart, where it joins) or alongside the canonical water (RING_BESIDE_WATER of its cells within four tiles of a course's
+## edge: the water would be kept off it for that whole way). The rest of the ring still goes round; a side cut off from it is
+## reached by its own road and the country trails.
+const RING_BESIDE_ROAD := 10
+const RING_BESIDE_WATER := 6
+var _road_cells := {}                     # cells of the links laid so far (_setup_routes; the ring legs' test), not saved
+
+
+func _note_road_cells(cells: PackedInt32Array) -> void:
+	for q in range(0, cells.size(), 2):
+		_road_cells[Vector2i(cells[q], cells[q + 1])] = true
+
+
+func _ring_leg_free(legs: Array[PackedInt32Array]) -> bool:
+	if _road_cells.is_empty():
+		for l in _links:
+			_note_road_cells(_polyline(l.a, l.b, int(l.key)))
+	var n := 0
+	for cells in legs:
+		n += cells.size() / 2
+	var k := 0
+	var beside_road := 0
+	var beside_water := 0
+	for cells in legs:
+		for q in range(0, cells.size(), 2):
+			var c := Vector2i(cells[q], cells[q + 1])
+			if k >= 6 and k < n - 6:
+				var near := false
+				for dy in range(-2, 3):
+					for dx in range(-2, 3):
+						near = near or _road_cells.has(c + Vector2i(dx, dy))
+				if near:
+					beside_road += 1
+			if _near_canon(Vector2(c) + Vector2(0.5, 0.5), 4.0):
+				beside_water += 1
+			k += 1
+	return beside_road < RING_BESIDE_ROAD and beside_water < RING_BESIDE_WATER
+
+
+## Whether point p lies within `extra` tiles of a canonical course's water (its line and width).
+func _near_canon(p: Vector2, extra: float) -> bool:
+	for cc in anchored_courses():
+		if not Rect2(cc.box).grow(extra).has_point(p):
+			continue
+		var pts: Array = cc.pts
+		for q in range(pts.size() - 1):
+			if _seg_dist(p, pts[q], pts[q + 1]) <= maxf(float(cc.r[q]), float(cc.r[q + 1])) + extra:
+				return true
+	return false
 
 
 ## A hamlet's own road to the nearest route node: a few bent points between (each pushed sideways by the hash, up to a fifth
@@ -1197,7 +1389,7 @@ func _node_edges(nd: Vector2i) -> Array:
 			var nj: int = sj + dy
 			var pa := node_pos(si, sj)
 			var pb := node_pos(ni, nj)
-			if _node_excluded(pa) or _node_excluded(pb) or not _edge(si, sj, k):
+			if _node_excluded(pa) or _node_excluded(pb) or not _edge_live(si, sj, k):
 				continue
 			var bb := Rect2i(mini(pa.x, pb.x), mini(pa.y, pb.y), absi(pa.x - pb.x), absi(pa.y - pb.y))
 			if bb.intersects(keep) or _crosses_site(bb):
@@ -1787,9 +1979,16 @@ func course_graph(area: Rect2i) -> Dictionary:
 ## B25R1-018: whether water may lie at corner (wx, wy) for its settlements: never within VILLAGE_CLEAR of the village or a
 ## settlement, except that a course passing a settlement (`passes`, the layout's passes_settlement) keeps only off its built
 ## ground (its site and a tile round it).
-func _water_clear(wx: int, wy: int, passes: Array) -> bool:
+## Generation 6 (B25R1 flyover repair): a canonical course (`canonical`) keeps off the village's clearance and the built ground
+## only (_built: every building and yard piece and BUILT_CLEAR round it, a walled town's walls), beside or through any
+## settlement; where it meets a street it is bridged like a road (_generate). Before, it was cut off for its whole way across a
+## settlement's rectangle (and VILLAGE_CLEAR round one it did not "pass"): Upmeads Water by Rushford, the Netherton stream at
+## Netherton and Wendholt, Coldlake through Mileham, Garton and Higham.
+func _water_clear(wx: int, wy: int, passes: Array, canonical := false) -> bool:
 	if _rdist(village, wx, wy) < VILLAGE_CLEAR:
 		return false
+	if canonical and gen >= 6:
+		return not _built.has(Vector2i(wx, wy))
 	for st in _near_sites:
 		var lim := 2 if str(st.id) in passes else VILLAGE_CLEAR
 		if _rdist(st.rect, wx, wy) < lim:
@@ -1877,6 +2076,7 @@ func _water_corners(ox: int, oy: int, road := PackedByteArray(), open := PackedB
 		var rs: Array = st.r
 		var heads: Array = st.heading
 		var passes: Array = st.get("passes", [])
+		var canon := bool(st.get("canonical", false))
 		for q in range(pts.size() - 1):
 			var a: Vector2 = pts[q]
 			var b: Vector2 = pts[q + 1]
@@ -1891,7 +2091,7 @@ func _water_corners(ox: int, oy: int, road := PackedByteArray(), open := PackedB
 					var wy := oy + j
 					var d := _seg_dist(Vector2(wx, wy), a, b)
 					var bank := float(hash32(seed, wx, wy, 130) % 100) / 200.0 - 0.25
-					if d <= r + bank and _water_clear(wx, wy, passes) and _water_may_cross(road, open, i, j, b - a):
+					if d <= r + bank and _water_clear(wx, wy, passes, canon) and _water_may_cross(road, open, i, j, b - a):
 						if wc[k] == 0 or int(st.order) > od[k]:
 							wc[k] = 1
 							fl[k] = int(heads[mini(q, heads.size() - 1)])
@@ -1907,7 +2107,7 @@ func _water_corners(ox: int, oy: int, road := PackedByteArray(), open := PackedB
 					var wx := ox + i
 					var wy := oy + j
 					var bank := float(hash32(seed, wx, wy, 131) % 100) / 100.0 - 0.5
-					if Vector2(wx, wy).distance_to(c) <= r2 + bank and _water_clear(wx, wy, passes) and _water_may_cross(road, open, i, j, Vector2.ZERO):
+					if Vector2(wx, wy).distance_to(c) <= r2 + bank and _water_clear(wx, wy, passes, canon) and _water_may_cross(road, open, i, j, Vector2.ZERO):
 						var k := j * GRID + i
 						wc[k] = 1
 						fl[k] = FLOW_FOAM if bool(pool[2]) else FLOW_STILL
@@ -1949,6 +2149,62 @@ func _edge(i: int, j: int, k: int) -> bool:
 		return not (_raw_edge(i, j, 1) or _raw_edge(i, j, 2) or _raw_edge(i, j, 3) or _raw_edge(i - 1, j, 0)
 				or _raw_edge(i, j - 1, 1) or _raw_edge(i - 1, j - 1, 2) or _raw_edge(i + 1, j - 1, 3))
 	return raw
+
+
+## Generation 6 (owner, flyover 2026-11-05: roads "fade into open ground rather than connect clearly to destinations"): a country
+## trail is laid only between grid nodes that are alive: a node with a settlement's, gate's or main route's road to it, or with
+## at least two trails to living nodes (looked along up to SPUR_DEPTH nodes), so no trail runs out to a node and stops there in
+## the grass (a spur left where its neighbours fell in a settlement's, the village's or a region's exclusion).
+const SPUR_DEPTH := 3
+var _alive := {}                          # Vector3i(i, j, depth) -> bool (a pure function of the seed and the links; not saved)
+var _anchors := {}                        # node positions a link of the network ends at
+
+
+func _edge_live(i: int, j: int, k: int) -> bool:
+	if not _edge(i, j, k):
+		return false
+	if gen < 6:
+		return true
+	return _node_alive(i, j, SPUR_DEPTH) and _node_alive(i + [1, 0, 1, -1][k], j + [0, 1, 1, 1][k], SPUR_DEPTH)
+
+
+func _edge_open(si: int, sj: int, k: int) -> bool:
+	var a := node_pos(si, sj)
+	var b := node_pos(si + [1, 0, 1, -1][k], sj + [0, 1, 1, 1][k])
+	if _node_excluded(a) or _node_excluded(b) or not _edge(si, sj, k):
+		return false
+	var bb := Rect2i(mini(a.x, b.x), mini(a.y, b.y), absi(a.x - b.x), absi(a.y - b.y))
+	return not bb.intersects(Rect2i(village.grow(10))) and not _crosses_site(bb)
+
+
+func _node_alive(i: int, j: int, depth: int) -> bool:
+	var key := Vector3i(i, j, depth)
+	if _alive.has(key):
+		return _alive[key]
+	if _anchors.is_empty():
+		for l in _links:
+			_anchors[Vector2i(l.a)] = true
+			_anchors[Vector2i(l.b)] = true
+	var ok := _anchors.has(node_pos(i, j)) or _junction.has(Vector2i(i, j))
+	if not ok:
+		var n := 0
+		for k in 4:
+			for dir in [1, -1]:
+				var dx: int = [1, 0, 1, -1][k]
+				var dy: int = [0, 1, 1, 1][k]
+				var si: int = i if dir == 1 else i - dx
+				var sj: int = j if dir == 1 else j - dy
+				if not _edge_open(si, sj, k):
+					continue
+				var oi: int = i + dx if dir == 1 else i - dx
+				var oj: int = j + dy if dir == 1 else j - dy
+				if depth == 0 or _node_alive(oi, oj, depth - 1):
+					n += 1
+		ok = n >= 2
+	if _alive.size() > 20000:
+		_alive.clear()
+	_alive[key] = ok
+	return ok
 
 
 func _raw_edge(i: int, j: int, k: int) -> bool:
@@ -2222,7 +2478,7 @@ func _road_mask(ox: int, oy: int) -> PackedByteArray:
 				var ni: int = i + [1, 0, 1, -1][k]
 				var nj: int = j + [0, 1, 1, 1][k]
 				var b := node_pos(ni, nj)
-				if _node_excluded(b) or not _edge(i, j, k):
+				if _node_excluded(b) or not _edge_live(i, j, k):
 					continue
 				var box := Rect2i(mini(a.x, b.x) - 12, mini(a.y, b.y) - 12, absi(a.x - b.x) + 24, absi(a.y - b.y) + 24)
 				if not box.intersects(Rect2i(ox, oy, AREA, AREA)):
@@ -2336,7 +2592,29 @@ func _generate(cx: int, cy: int) -> Chunk:
 				for dj in range(-1, 2):
 					for di in range(-1, 2):
 						open[(j + dj) * AREA + i + di] = 1
-	var wdata: Array = _water_corners(ox, oy, road, open) if gen >= 4 else []
+	# generation 6: for the water a settlement's streets count as road (a course crossing one is bridged, one running along it
+	# keeps to the bank), so a canonical course through a settlement leaves its streets passable
+	var wroad := road
+	var wopen := open
+	if gen >= 6 and not _near_sites.is_empty():
+		var lanes := RegionRoads.lane_cells(self)
+		var any := false
+		for j in AREA:
+			for i in AREA:
+				if lanes.has(Vector2i(ox + i, oy + j)):
+					if not any:
+						wroad = road.duplicate()
+						wopen = open.duplicate()
+						any = true
+					wroad[j * AREA + i] = 1
+		if any:
+			for j in range(1, AREA - 1):
+				for i in range(1, AREA - 1):
+					if wroad[j * AREA + i] == 1:
+						for dj in range(-1, 2):
+							for di in range(-1, 2):
+								wopen[(j + dj) * AREA + i + di] = 1
+	var wdata: Array = _water_corners(ox, oy, wroad, wopen) if gen >= 4 else []
 	_wc_order = wdata[2] if gen >= 4 else PackedByteArray()    # B25R1-Q3: generation 4's streams and rivers
 	var wc: PackedByteArray = wdata[0] if gen >= 4 else PackedByteArray()
 	var wn := PackedByteArray()                   # water corners per cell (0-4)
@@ -2513,9 +2791,9 @@ func _generate(cx: int, cy: int) -> Chunk:
 					var ns := inner[q - AREA] == 1 or inner[q + AREA] == 1
 					fixed_works[Vector2i(wx, wy)] = "steps_ns" if ns else "steps_ew"
 			if wn[q] > 0:
-				_water_cell(ch, c, q, gk, wdata, wn, blocked[q] == 1 and inner[q] == 0, road[q] == 1, wx, wy,
+				_water_cell(ch, c, q, gk, wdata, wn, blocked[q] == 1 and inner[q] == 0, wroad[q] == 1, wx, wy,
 					_is_fall(q, wn, blocked, inner), _is_fall(q - AREA, wn, blocked, inner) or _is_fall(q - 2 * AREA, wn, blocked, inner) or _is_fall(q - 3 * AREA, wn, blocked, inner),
-					_road_shallows(q, road, open, wn), _is_fall(q - AREA, wn, blocked, inner), _road_near(q, road, 3))
+					_road_shallows(q, wroad, wopen, wn), _is_fall(q - AREA, wn, blocked, inner), _road_near(q, wroad, 3))
 			elif not wdata.is_empty():
 				ch.bank[c] = (wdata[3] as PackedByteArray)[gk]       # B25R1-017: the floodplain's height above the water
 			if road[q] != 1 and (_chalk_cells.has(Vector2i(wx, wy)) or _bank_cells.has(Vector2i(wx, wy))):

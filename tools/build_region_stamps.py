@@ -332,9 +332,18 @@ def build():
     out = {}
     for name, (off, stamps) in VARIANTS.items():
         swap = {}
+        # only the building's own tiles (roof, walls): never a tile of its ground or path layers. The ground under a house
+        # is the village's grass (and its floor), whose counterpart 16 rows down is the darker grass of the colour block, so
+        # mapping it drew a dark green rectangle round every thatched roof's top corners in the settlements (B25R1 flyover)
+        ground = {v for sname in stamps if sname in village["stamps"]
+                  for ln, cells in village["stamps"][sname]["layers"].items() if ln.startswith(("ground", "path")) for v in cells}
         for sname in [n for n in stamps if n in village["stamps"]]:
-            for cells in village["stamps"][sname]["layers"].values():
+            for ln, cells in village["stamps"][sname]["layers"].items():
+                if ln.startswith(("ground", "path")):
+                    continue
                 for v in cells:
+                    if v in ground:
+                        continue
                     if not (0 <= v < 100000) or str(v) in swap:
                         continue
                     u = v + off

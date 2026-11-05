@@ -338,39 +338,43 @@
    "src": [
     "BONE-C4-P002"
    ],
-   "note": "CANON: a stream beside Netherton at the Downs' foot; its course and its joining Upmeads Water are ours (GAME EXPANSION); it rises at the scarp foot, never on the Downs",
+   "note": "CANON: a stream beside Netherton at the Downs' foot; its course and its joining Upmeads Water are ours (GAME EXPANSION); it rises at the scarp foot, never on the Downs; generation 6 (B25R1 flyover repair 2026-11-05): it rises at the scarp foot just east of Netherton's houses and runs north-east past Wendholt's west and north sides (it ran through both places' houses and was cut off there)",
    "points": [
     [
-     22,
-     412
+     104,
+     398
     ],
     [
-     34,
-     392
+     112,
+     372
     ],
     [
-     62,
-     368
+     118,
+     336
     ],
     [
-     86,
-     330
+     126,
+     300
     ],
     [
-     128,
-     280
-    ],
-    [
-     150,
+     134,
      262
     ],
     [
+     140,
+     228
+    ],
+    [
+     156,
+     202
+    ],
+    [
      196,
-     214
+     190
     ],
     [
      236,
-     172
+     168
     ],
     [
      262,
@@ -386,7 +390,7 @@
    "id": "coldlake",
    "name": "Coldlake",
    "order": 2,
-   "direction": "west to east round Higham, then south and away south-west through the meadows",
+   "direction": "from the foot of the Downs east of Milton, west under Milton, down Higham's east side and under its faubourg, across the straight road south thrice, then away south-west through the meadows",
    "width": 4,
    "label": "CANON",
    "src": [
@@ -394,67 +398,115 @@
     "BONE-C5-P002",
     "BONE-C7-P003"
    ],
-   "note": "CANON: a little river winding about Higham's meadows and lapping the town about; the road south is straight and crosses it thrice (a stone bridge, two fords). The course is ours",
+   "note": "CANON: a little river winding about Higham's meadows and lapping the town about; the road south is straight and crosses it thrice (a stone bridge, two fords). The course is ours; generation 6 (B25R1 flyover repair 2026-11-05): laid clear of the houses (it ran through Mileham's, Garton's and Higham's and was cut off there): it rises at the Downs' foot east of Milton, runs under Milton and down outside Higham's east wall, under the faubourg, and winds across the road south (the stone bridge heading west, a ford heading east, a ford heading west), then south-west as before; the Garton brook brings the water of the western thorps to it round the town's west side",
    "points": [
     [
-     -360,
-     712
+     420,
+     695
     ],
     [
-     -250,
+     360,
+     702
+    ],
+    [
+     300,
      722
     ],
     [
-     -150,
-     728
+     250,
+     736
     ],
     [
-     -60,
-     722
+     200,
+     740
     ],
     [
-     0,
-     720
+     150,
+     742
     ],
     [
-     50,
-     722
-    ],
-    [
-     82,
-     738
-    ],
-    [
-     90,
-     765
+     120,
+     744
     ],
     [
      96,
-     792
+     752
     ],
     [
-     100,
-     815
+     89,
+     770
     ],
     [
-     -10,
-     835
+     88,
+     800
     ],
     [
-     -30,
+     88,
+     830
+    ],
+    [
+     86,
      848
     ],
     [
-     60,
+     70,
+     856
+    ],
+    [
+     44,
+     857
+    ],
+    [
+     20,
+     857
+    ],
+    [
+     -6,
+     857
+    ],
+    [
+     -22,
      860
     ],
     [
-     80,
-     874
+     -26,
+     866
     ],
     [
      -10,
+     870
+    ],
+    [
+     20,
+     870
+    ],
+    [
+     40,
+     872
+    ],
+    [
+     45,
+     880
+    ],
+    [
+     44,
      890
+    ],
+    [
+     30,
+     895
+    ],
+    [
+     20,
+     895
+    ],
+    [
+     0,
+     897
+    ],
+    [
+     -30,
+     900
     ],
     [
      -60,
@@ -474,7 +526,86 @@
     ]
    ],
    "passes_settlement": [
+    "higham",
+    "milton"
+   ]
+  },
+  {
+   "id": "garton_brook",
+   "name": "Garton brook",
+   "order": 1,
+   "direction": "west to east under Mileham and Garton, down Higham's west wall into Coldlake",
+   "width": 2,
+   "label": "GAME EXPANSION",
+   "src": [],
+   "note": "generation 6 (B25R1 flyover repair 2026-11-05): the water of the thorps at the feet of the downs toward Higham (Mileham, Garton; BFOUR-C22-P011 names them, not their water): it runs under both and down outside Higham's west wall, lapping the town on that side as Coldlake does on the east (BONE-C5-P002 \"a river lapping it about\"), into Coldlake below the faubourg, west of the road south (so the road still crosses the water thrice)",
+   "joins": "coldlake",
+   "passes_settlement": [
+    "mileham",
+    "garton",
     "higham"
+   ],
+   "points": [
+    [
+     -360,
+     712
+    ],
+    [
+     -300,
+     726
+    ],
+    [
+     -250,
+     740
+    ],
+    [
+     -210,
+     744
+    ],
+    [
+     -170,
+     746
+    ],
+    [
+     -130,
+     752
+    ],
+    [
+     -90,
+     754
+    ],
+    [
+     -64,
+     750
+    ],
+    [
+     -54,
+     764
+    ],
+    [
+     -54,
+     790
+    ],
+    [
+     -54,
+     815
+    ],
+    [
+     -52,
+     838
+    ],
+    [
+     -44,
+     852
+    ],
+    [
+     -34,
+     860
+    ],
+    [
+     -27,
+     864
+    ]
    ]
   }
  ],
@@ -507,7 +638,7 @@
   {
    "kind": "bridge",
    "x": 20,
-   "y": 830,
+   "y": 857,
    "course": "coldlake",
    "name": "the stone bridge",
    "material": "stone",
@@ -519,7 +650,7 @@
   {
    "kind": "ford",
    "x": 20,
-   "y": 855,
+   "y": 870,
    "course": "coldlake",
    "name": "the first ford",
    "label": "CANON",
@@ -530,7 +661,7 @@
   {
    "kind": "ford",
    "x": 20,
-   "y": 885,
+   "y": 895,
    "course": "coldlake",
    "name": "the second ford",
    "label": "CANON",
@@ -807,7 +938,7 @@
    "src": [
     "BONE-C8-P002"
    ],
-   "note": "rough, dry and parched, no pasture but for goats, a few bushes; the road goes straight through it",
+   "note": "rough, dry and parched, no pasture but for goats, a few bushes; the road goes straight through it; edge_wobble 12 (generation 6): its edges wander a little too, so its south edge against the wood is no ruled line",
    "polygon": [
     [
      10,
@@ -825,7 +956,8 @@
      0,
      992
     ]
-   ]
+   ],
+   "edge_wobble": 12
   },
   {
    "id": "wood_perilous",
@@ -837,7 +969,7 @@
     "BONE-C7-P012",
     "BONE-C6-P005"
    ],
-   "note": "a long ridge thick with trees, at first wholly beech, no break; a beaten way through. No supernatural mechanics",
+   "note": "a long ridge thick with trees, at first wholly beech, no break; a beaten way through. No supernatural mechanics; edge_wobble (generation 6, owner flyover feedback 2026-11-05: its edge read as a ruled rectangle): its edge wanders up to 40 tiles (about 20 in practice) either way in a smooth wave (RegionGeo._wobble), the extent the same on average",
    "polygon": [
     [
      -400,
@@ -855,7 +987,8 @@
      -400,
      1260
     ]
-   ]
+   ],
+   "edge_wobble": 40
   }
  ],
  "landmarks": [
@@ -988,13 +1121,13 @@
    "id": "higham_castle",
    "name": "the white castle of Higham",
    "kind": "castle",
-   "x": 50,
-   "y": 744,
+   "x": 91,
+   "y": 644,
    "label": "CANON",
    "src": [
     "BONE-C5-P002"
    ],
-   "note": "on a knoll overlooking the town; the knoll a raised top round the castle with steps cut through its rim below the gate (generation 5)",
+   "note": "on a knoll overlooking the town; the knoll a raised top round the castle with steps cut through its rim below the gate (generation 5); generation 6 (B25R1 flyover repair): above the north wall's east end, the castle way from the steps down to the street along the outside of the north wall and the north gate",
    "object": "site:higham/keep",
    "raised": {
     "site": "higham",
@@ -1012,8 +1145,8 @@
    "id": "higham_abbey",
    "name": "St Mary's Abbey",
    "kind": "abbey",
-   "x": -4,
-   "y": 758,
+   "x": -3,
+   "y": 747,
    "label": "CANON",
    "src": [
     "BONE-C5-P002",
@@ -1026,8 +1159,8 @@
    "id": "higham_market",
    "name": "Higham market-square",
    "kind": "market",
-   "x": 20,
-   "y": 772,
+   "x": 19,
+   "y": 763,
    "label": "CANON",
    "src": [
     "BONE-C3-P031",
@@ -1039,8 +1172,8 @@
    "id": "higham_south_gate",
    "name": "the south gate of Higham",
    "kind": "gate",
-   "x": 20,
-   "y": 797,
+   "x": 22,
+   "y": 832,
    "label": "CANON",
    "src": [
     "BONE-C6-P029",
@@ -1052,8 +1185,8 @@
    "id": "wulstead_market",
    "name": "Wulstead market-place",
    "kind": "market",
-   "x": -60,
-   "y": 285,
+   "x": -57,
+   "y": 281,
    "label": "CANON",
    "src": [
     "BONE-C3-P005"
@@ -1066,8 +1199,8 @@
    "id": "wulstead_canons",
    "name": "the House of Black Canons",
    "kind": "religious house",
-   "x": -92,
-   "y": 285,
+   "x": -108,
+   "y": 292,
    "label": "CANON",
    "src": [
     "BFOUR-C25-P010",
@@ -1080,8 +1213,8 @@
    "id": "netherton_church",
    "name": "Netherton church and the house of Canons",
    "kind": "church",
-   "x": 40,
-   "y": 394,
+   "x": 73,
+   "y": 402,
    "label": "CANON",
    "src": [
     "BONE-C4-P002"
@@ -1105,8 +1238,8 @@
    "id": "garton_barn",
    "name": "the great barn of Garton",
    "kind": "barn",
-   "x": -150,
-   "y": 700,
+   "x": -136,
+   "y": 702,
    "label": "CANON",
    "src": [
     "BFOUR-C21-P021"
@@ -1377,19 +1510,23 @@
     ],
     [
      20,
-     830
+     857
     ],
     [
      20,
-     855
+     870
     ],
     [
      20,
-     885
+     895
     ],
     [
-     34,
+     20,
      905
+    ],
+    [
+     36,
+     914
     ],
     [
      60,
@@ -1414,5 +1551,5 @@
    ]
   }
  ],
- "_note_objects": "landmarks[].object: what stands for the landmark in the world (Overworld.landmark_places): 'site:<settlement>/<civic slot id>' (or /square), 'structure' (built by Overworld._setup_structures), 'figure' (chalk cut in the turf, `figure` rows scaled by `scale`), 'ring' (an earthwork bank, radius r); empty: not yet a world object, so not a Landmarks entry; 'hill' (a hill, its top raised when it carries `raised`). landmarks[].raised (generation 5, Overworld._setup_raised): {r} a raised top r tiles round the landmark, climbed by steps where roads cross its rim; {site, slot, margin: [west, north, east, south]} a raised top round that site slot, steps below its door. landmarks[].pending_art: art the owner is to supply before the thing can stand or look as described (no placeholder is drawn)"
+ "_note_objects": "landmarks[].object: what stands for the landmark in the world (Overworld.landmark_places): 'site:<settlement>/<civic slot id>' (or /square), 'structure' (built by Overworld._setup_structures), 'figure' (chalk cut in the turf, `figure` rows scaled by `scale`), 'ring' (an earthwork bank, radius r); empty: not yet a world object, so not a Landmarks entry; 'hill' (a hill, its top raised when it carries `raised`). landmarks[].raised (generation 5, Overworld._setup_raised): {r} a raised top r tiles round the landmark, climbed by steps where roads cross its rim; {site, slot, margin: [west, north, east, south]} a raised top round that site slot, steps below its door. landmarks[].pending_art: art the owner is to supply before the thing can stand or look as described (no placeholder is drawn) A landmark placed by its object (site:...) stands where the settlement's plan puts it (Overworld.landmark_places); its x, y here are that place for seed 1 (generation 6), kept equal by overworld_test."
 }

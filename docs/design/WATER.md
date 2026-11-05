@@ -54,6 +54,11 @@ anchors the network on Morris's geography, in absolute overworld tiles of the vi
   (order 3) runs west to east past the village; the Netherton stream rises at the Downs' foot and joins it; Coldlake laps
   round Higham and crosses the south road three times. A course that passes a settlement (`passes_settlement`) may come within
   the clearance, never onto the settlement's built ground (its site and a tile round it).
+  Generation 6 (B25R1 flyover repair, 2026-11-05): every canonical course keeps only off built ground (each building and yard
+  piece and 2 tiles round it, a walled town's walls; `Overworld._built`), beside or through any settlement, and a settlement's
+  street it meets is bridged; `passes_settlement` is kept as a record. Coldlake now rises east of Milton and comes down
+  Higham's east side; the Garton brook comes down its west side from Mileham and Garton; the crossings of the road south are
+  (20,857) stone bridge, (20,870) and (20,895) fords (`docs/design/REGION_RECONSTRUCTION_B25R1.md`, "Generation 6").
 - `crossings[]` `{kind ford | bridge, x, y, course, material}`: where a road crosses the course there, the road keeps that
   crossing: a ford (walkable shallows with stepping stones, on the road), a bridge of the road's type, or stone when the
   material is stone (`Overworld.forced_crossing`).

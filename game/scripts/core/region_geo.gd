@@ -30,7 +30,8 @@ static func data() -> Dictionary:
 		_regions.append({"id": "downs", "kind": "downs", "poly": _downs, "box": _box(_downs)})
 		for r in d.regions:
 			var p := _poly(r.polygon)
-			_regions.append({"id": str(r.id), "kind": str(r.kind), "poly": p, "box": _box(p)})
+			var wb := int(r.get("edge_wobble", 0))
+			_regions.append({"id": str(r.id), "kind": str(r.kind), "poly": p, "box": _box(p).grow(wb), "wobble": wb})
 		for s in d.settlements:
 			_anchors[str(s.id)] = Vector2i(int(s.x), int(s.y))
 	return _data
@@ -74,11 +75,42 @@ static func region_at(x: int, y: int, seed := 0) -> String:
 	var at := Vector2(cc.x * CELL + CELL / 2, cc.y * CELL + CELL / 2)
 	var id := ""
 	for r in _regions:
-		if (r.box as Rect2).has_point(at) and Geometry2D.is_point_in_polygon(at, r.poly):
+		var p := at
+		if int(r.get("wobble", 0)) > 0:
+			p += _wobble(at, int(r.wobble))
+		if (r.box as Rect2).has_point(p) and Geometry2D.is_point_in_polygon(p, r.poly):
 			id = str(r.id)
 			break
 	_cache[cc] = id
 	return id
+
+
+## Generation 6 (owner, flyover 2026-11-05: "the southern forest boundary is unusually straight and rectangular"): a region with
+## `edge_wobble` W in the layout has its edge moved by a smooth wave of up to W tiles (value noise over WOBBLE_PERIOD tiles, the
+## same for every world: the layout is), so a ruled polygon side reads as a natural edge; its extent is the same on average.
+const WOBBLE_PERIOD := 56
+
+
+static func _wobble(at: Vector2, w: int) -> Vector2:
+	return Vector2(_wave(at, 911), _wave(at, 912)) * float(w)
+
+
+static func _wave(at: Vector2, salt: int) -> float:
+	var acc := 0.0
+	for k in 2:
+		var per := float(WOBBLE_PERIOD >> k)
+		var gx := floorf(at.x / per)
+		var gy := floorf(at.y / per)
+		var fx := at.x / per - gx
+		var fy := at.y / per - gy
+		fx = fx * fx * (3.0 - 2.0 * fx)
+		fy = fy * fy * (3.0 - 2.0 * fy)
+		var v := func(i: int, j: int) -> float:
+			return float(Overworld.hash32(0, int(gx) + i, int(gy) + j, salt * 4 + k) % 2001) / 1000.0 - 1.0
+		var top: float = lerpf(v.call(0, 0), v.call(1, 0), fx)
+		var bot: float = lerpf(v.call(0, 1), v.call(1, 1), fx)
+		acc += lerpf(top, bot, fy) * (0.7 if k == 0 else 0.3)
+	return acc
 
 
 static func in_downs(x: int, y: int) -> bool:
