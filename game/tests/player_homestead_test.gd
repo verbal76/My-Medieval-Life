@@ -176,6 +176,52 @@ func _init() -> void:
 				var got := w.farm.harvest(field, p)
 				check(not got.is_empty(), "it ripens and is harvested into the pack: %s (after %d hours)" % [got, hours])
 		check(seeds == 1, "(a seed was to be had)")
+	# ---- a well on the homestead's land (B25R1-Q3 "Both": the same well record and add_well path as an NPC claim's), its stone and
+	# logs bought in the village, its digging begun before the save and finished after it (below)
+	var wcell := Vector2i(1 << 30, 0)
+	for y in range(land.position.y, land.end.y):
+		for x in range(land.position.x, land.end.x):
+			var cand := Vector2i(x, y)
+			if wcell.x != 1 << 30 or cand == field or o.is_solid(cand) or w.map.find_path_world(step, cand).is_empty():
+				continue
+			p.pos = Vector2(cand) + Vector2(0.5, 0.5)
+			if w.wilds.player_targets(p, p.pos).any(func(t) -> bool: return str(t.kind) == "wild_well_mark"):
+				wcell = cand
+	check(wcell.x != 1 << 30, "standing on the homestead's land the target list offers Mark out a well (%s)" % wcell)
+	var pwl := {}
+	if wcell.x != 1 << 30:
+		p.pos = Vector2(wcell) + Vector2(0.5, 0.5)
+		check(not _kinds(w, p.pos, false).is_empty() and hs.player_targets(p, p.pos, false).any(func(t) -> bool: return str(t.kind) == "wild_well_mark"),
+			"Main's target list (Homesteads.player_targets) carries the well target")
+		p.pos = Vector2(step + Vector2i(60, 60)) + Vector2(0.5, 0.5)
+		check(not w.wilds.player_targets(p, p.pos).any(func(t) -> bool: return str(t.kind) == "wild_well_mark"), "off the homestead's land no well is offered")
+		p.pos = Vector2(wcell) + Vector2(0.5, 0.5)
+		var n_wells := w.wilds.wells.size()
+		check(w.wilds.player_well(p, "wild_well_mark", str(c.id)) == "", "the player marks out a well on their own land")
+		pwl = w.wilds.work_of(c, "well")
+		check(w.wilds.wells.size() == n_wells + 1 and str(pwl.owner) == "claim:" + str(c.id) and Vector2i(int(pwl.cell[0]), int(pwl.cell[1])) == wcell,
+			"one record in the wells registry, the claim's, at the marked cell (%s)" % pwl.get("id", ""))
+		var wcost: Dictionary = w.wilds.cfg().well_cost
+		check(pwl.cost == {"stone": int(wcost.stone), "log": int(wcost.log)} and not bool(pwl.done) and float(pwl.labour) == float(w.wilds.cfg().well_labour),
+			"its cost and labour are an NPC claim's well's (%s, %d minutes)" % [pwl.cost, int(pwl.labour)])
+		check(w.wilds.player_well(p, "wild_well_mark", str(c.id)) != "", "one well a homestead")
+		var pack := p.inv
+		p.inv = Inventory.new()
+		check(w.wilds.player_well(p, "wild_well", str(pwl.id)) != "" and pwl.need == pwl.cost, "with nothing in the pack nothing is delivered (no free materials)")
+		p.inv = pack
+		var stone_bought := _buy(w, "stone", maxi(0, int(wcost.stone) - p.inv.count("stone")))
+		if p.inv.count("log") < int(wcost.log):
+			_buy(w, "log", int(wcost.log) - p.inv.count("log"))
+		var g_well := SettlementHoldings.goods(w)
+		var coins_well := w.total_coins() - w.coin_sources
+		check(w.wilds.player_well(p, "wild_well", str(pwl.id)) == "" and (pwl.need as Dictionary).is_empty(), "the player brings its stone (%d bought) and logs" % stone_bought)
+		check(SettlementHoldings.goods(w) == g_well, "the materials on the dig are counted (the census unchanged)")
+		check(not o.is_solid(wcell), "the dig is walkable ground")
+		for i in 3:
+			w.wilds.player_well(p, "wild_well", str(pwl.id))
+		check(not bool(pwl.done) and float(pwl.labour) == float(w.wilds.cfg().well_labour) - 3.0 * float(w.wilds.cfg().player_dig_minutes),
+			"each Use digs for a while (%d minutes left)" % int(pwl.labour))
+		check(w.total_coins() - w.coin_sources == coins_well, "coins conserved at the well")
 	# ---- sleep there, save, load, carry on
 	p.pos = Vector2(bed.use) + Vector2(0.5, 0.5)
 	var r := w.player_rest()
@@ -196,6 +242,31 @@ func _init() -> void:
 	check(w2.homesteads.player_claim_refusal(w2.player) != "", "their own land is not claimable again")
 	if field.x != 1 << 30:
 		check(w2.farm.cells.has(field), "the homestead's field is still there after loading")
+	if not pwl.is_empty():
+		var wl2: Dictionary = w2.wilds.well(str(pwl.id))
+		check(not wl2.is_empty() and not bool(wl2.done) and float(wl2.labour) == float(pwl.labour) and (wl2.need as Dictionary).is_empty()
+			and w2.wilds.work_of(c2, "well").get("id", "") == pwl.id, "the half-dug well is still the homestead's after loading (%d minutes left)" % int(wl2.get("labour", 0)))
+		var p2 := w2.player
+		p2.pos = Vector2(wcell) + Vector2(0.5, 0.5)
+		check(w2.wilds.player_targets(p2, p2.pos).any(func(t) -> bool: return str(t.kind) == "wild_well" and str(t.id) == str(pwl.id)), "standing at it the target list offers Dig your well")
+		var used0 := float(w2.stats.get("used_building_stone", 0.0))
+		var g_dig := SettlementHoldings.goods(w2)
+		var uses := 0
+		while not bool(wl2.done) and uses < 20:
+			w2.wilds.player_well(p2, "wild_well", str(pwl.id))
+			uses += 1
+		check(bool(wl2.done) and w2.wilds.source_of(c2) != Wilds.NONE, "dug by the player's own work the well stands (%d more Uses) and is the homestead's water" % uses)
+		var stone_used := float(w2.stats.get("used_building_stone", 0.0)) - used0
+		check(int(stone_used) == int(wl2.cost.stone) and int(g_dig.get("stone", 0)) - int(SettlementHoldings.goods(w2).get("stone", 0)) == int(wl2.cost.stone),
+			"its stone leaves the census and is booked as used in building (%d)" % int(stone_used))
+		check(not w2.map.overworld.is_solid(wcell) and not w2.map.find_path_world(step, wcell).is_empty(), "the finished well is walkable, reached from the door")
+		check(w2.map.overworld.homes.any(func(hm) -> bool: return str(hm.id) == "%s_%s" % [c.id, pwl.id]), "the well is drawn in the overworld")
+		var saved3: Dictionary = JSON.parse_string(JSON.stringify(w2.to_dict()))
+		var w3 := World.new()
+		w3.load_dict(VillageMap.load_default(), saved3)
+		check(w3.load_error == "" and bool(w3.wilds.well(str(pwl.id)).get("done", false)) and w3.wilds.well_at(wcell).get("id", "") == pwl.id,
+			"the finished well is saved and loads standing")
+		w3.dispose()
 	w2.dispose()
 	_end(w)
 
