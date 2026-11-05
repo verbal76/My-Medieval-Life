@@ -38,6 +38,7 @@ var suspending := false    # net_econ_integrity_test: true in the status written
 var still := false         # X20-MP-ECON-INTEGRITY: the world stopped, the network and the requests going on (see the header)
 var ledger := {}           # the last "ledger": every coin and every good in the world, transit and escrow included
 var tx_last := {}          # the last "tx": the transaction authority's result
+var joined := {"in_play": 0, "out": 0}   # net_c_test: status writes that found a guest still joining (building the world) in play / out
 
 
 func _init() -> void:
@@ -538,6 +539,10 @@ func _press_named(node: Node, n: String) -> bool:
 
 func _status() -> void:
 	var w: World = main.world
+	for id in main.net.joining:
+		var g: PlayerState = w.player_by_pid(int(main.net.by_peer.get(id, 0)))
+		if g != null:
+			joined["out" if g.away else "in_play"] += 1
 	var players := {}
 	for p: PlayerState in w.player_list():
 		var ref := w.player_ref(p)
@@ -573,7 +578,7 @@ func _status() -> void:
 			"log": main.net.applied_log.duplicate(), "tag": main.net.tag, "suspended": suspended, "upnp": main.net.upnp.state,
 			"mp_peers": main.net.multiplayer.get_peers().size() if main.net.peer != null else 0, "joining": main.net.joining.size()},
 		"still": still, "suspending": suspending, "ledger": ledger, "tx_last": tx_last, "shipments": w.transactions.open_shipments() if w.transactions != null else [],
-		"contracts": _player_contracts(w), "traders": _traders().map(func(t): return t.ref)}
+		"contracts": _player_contracts(w), "joined": joined, "traders": _traders().map(func(t): return t.ref)}
 	var tmp := dir + "status.tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	f.store_string(JSON.stringify(d))

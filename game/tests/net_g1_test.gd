@@ -313,7 +313,9 @@ func reconnect() -> void:
 	await until(func(): return main.guest_world, 30.0)
 	check(main.guest_world and main.net.my_pid == pid and main.world.player.pos.distance_to(left_at) < 0.3 and main.world.player.inv.items == inv,
 		"rejoining restores the same character: pid %d, where it stood (%.2f off), its pack" % [main.net.my_pid, main.world.player.pos.distance_to(left_at)])
-	await wait(0.3)
+	# back in play at its first move once the world is built (NetSession.c_move, MP-D1): moves go every 1/MOVE_HZ, and a guest
+	# none of whose packets reach the host for TIMEOUT_MAX_MS is dropped, so by then it is in play or gone
+	await until(func(): return not bool(status().get("players", {}).get(str(pid), {}).get("away", true)), NetSession.TIMEOUT_MAX_MS / 1000.0)
 	check(status().players.size() == 2 and not bool(status().players[str(pid)].away), "no second character was made, and it is back in play")
 
 

@@ -70,7 +70,10 @@ provider and are not claimed here.
 - **Timeouts.** ENet peers time out after 4 to 10 seconds without acknowledgement (from ENet's 5 to 30 s defaults). A welcomed
   guest builds the host's world in one long frame (4-5 s measured on a busy test machine, longer on a slow phone), so from the
   welcome until its first move (host) and until the network is read after that frame (guest) both sides allow 30 s
-  (`NetSession.JOIN_TIMEOUT_MS`, B25R1, 2026-11-05: before it, a slow join was dropped and rejoined, seen in CI). A join tries
+  (`NetSession.JOIN_TIMEOUT_MS`, B25R1, 2026-11-05: before it, a slow join was dropped and rejoined, seen in CI). Over that same
+  window the host keeps the guest out of play (`away`, MP-D1), in play from its first move: before this (B25R1, 2026-11-05) a
+  returning guest with an open case was beaten down and fined by a waiting guard while its world was still loading (net_c_test
+  under load). A join tries
   each address with its own limit (LAN 4 s, IPv6 6 s, internet 8 s, a typed address 12 s) and the window's overall limit covers the
   sum.
 - **Guest connection drop.** The guest keeps its view (frozen, inputs stopped) and reconnects by itself, with backoff, for up to

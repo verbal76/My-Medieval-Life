@@ -216,6 +216,9 @@ func restart() -> void:
 	check(bool(rec(before.pid).get("away", false)) and (status().connected as Array).is_empty(), "the guest's character is in the world, out of play until it rejoins")
 	check(await join(), "the guest reconnects")
 	await wait(0.5)
+	# in play on the host at its first move (NetSession.c_move, MP-D1): moves go every 1/MOVE_HZ, and a guest none of whose
+	# packets reach the host for TIMEOUT_MAX_MS is dropped, so by then it is in play or gone
+	await until(func(): return not bool(rec().get("away", true)), NetSession.TIMEOUT_MAX_MS / 1000.0)
 	var after := snapshot()
 	check(after.pid == before.pid and main.world.player.pos.distance_to(left_at) < 0.3, "the same character (pid %d), where it stood" % after.pid)
 	check(after.inv == before.inv and after.coins == before.coins and after.skills == before.skills, "the same pack, purse and skills")
@@ -238,12 +241,16 @@ func killed_host() -> void:
 
 
 ## A guest joins while the host is saving every frame: saving runs on the host's main thread, so the join is handled between
-## saves; the newest save has the guest, readable.
+## saves; the newest save, written once the guest is in play, has the guest in play, readable.
 func mid_save() -> void:
 	await leave()
 	await command({"cmd": "save_storm", "secs": 4.0})
 	var s0 := int(status().saves)
 	check(await join(), "the guest joins while the host saves every frame")
+	# out of play while it builds the world (NetSession.c_hello, MP-D1), in play at its first move; the saving goes on past that
+	check(await until(func(): return not bool(rec().get("away", true)), NetSession.JOIN_TIMEOUT_MS / 1000.0), "and is in play on the host from its first move")
+	if not bool(status().get("storm", false)):
+		await command({"cmd": "save_storm", "secs": 1.0})
 	await until(func(): return not status().get("storm", true), 8.0)
 	var raw := SaveStore.inspect(dir + "host_save.json", World.SAVE_VERSION)
 	var saved: Dictionary = raw.get("data", {}).get("players", {}).get("by_pid", {}).get(str(main.net.my_pid), {}) if raw.state == "ok" else {}

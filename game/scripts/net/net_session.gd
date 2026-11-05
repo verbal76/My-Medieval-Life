@@ -783,6 +783,9 @@ func c_hello(version: String, key: String, who: String, pw_hash: String) -> void
 	moves[id] = {"t": Time.get_ticks_msec(), "dir": Vector2.DOWN, "anim": "idle"}
 	discovery.info = _answer()
 	rpc_id(id, "s_welcome", world_for(p.pid), id)
+	p.away = true                                  # MP-D1: out of active play (not targetable, not acting) while it builds the world it
+	                                               # was sent and cannot see or move; in play at its first move (c_move). Its own copy
+	                                               # (the welcome above) has it in play.
 	rpc_id(id, "z_token", str(resume_tokens[p.pid]))
 	synced[id] = _welcome_digest
 	announce(p, id)                               # MP-INTERACT-01: the guests already here learn who came (their public record)
@@ -844,10 +847,13 @@ func c_move(pos: Vector2, dir: Vector2, anim: String) -> void:
 	var id := multiplayer.get_remote_sender_id()
 	if not by_peer.has(id):
 		return
+	var p: PlayerState = main.world.player_by_pid(int(by_peer[id]))
 	if joining.has(id):
 		joining.erase(id)
 		_set_timeout(id)                           # B25R1: its first move: playing, the usual timeouts from now on
-	var p: PlayerState = main.world.player_by_pid(int(by_peer[id]))
+		if p != null:
+			p.away = false                         # MP-D1: and in active play from now (out of it while it built the world: c_hello)
+			players_changed.emit()
 	if p == null or not p.alive:
 		return
 	var now := Time.get_ticks_msec()
