@@ -1434,9 +1434,8 @@ func _venture_stages(n: NPC, markets: Dictionary) -> Dictionary:
 	if not markets.has(job):
 		markets[job] = w.brain.skilled_place(job)
 	var m: Dictionary = markets[job]
-	out.pass.opening = bool(m.work) and not bool(m.room)
-	if not out.pass.opening:
-		fail.call("no_work" if not bool(m.work) else "bench_room")
+	out.pass.opening = bool(m.work) and not bool(m.room)      # read only: no longer a refusal (B25-ECON-P1); demand is weighed in decides
+	out.busy = float(m.get("busy", 0.0))
 	var econ: Dictionary = hh.get("econ", {})
 	out.pass.means_known = not econ.is_empty()
 	if econ.is_empty():

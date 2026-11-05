@@ -296,6 +296,8 @@ func _decide(n: NPC) -> String:
 	if n.role == "elder":
 		if _elder_provides(n) and _plan_provision(n):     # X20-FIREWOOD: the household's firewood and grain, from an elder's purse
 			return "elder_provision"
+		if h >= WORK_START and h < WORK_END and _plan_sell_stock(n):   # B25-ECON-P3: trade stock they no longer use, to its buyers
+			return "elder_sell"
 		if w.farm_plots.plan_work(n):          # FARM-04: an elder's light work on the family's farmland, by day
 			return "elder_farm"
 		if w.chapel.plan_volunteer(n):         # DVW-B3-CHAPEL: or on the church's plot, when they volunteered
@@ -324,6 +326,8 @@ func _decide(n: NPC) -> String:
 			return "day_labour"
 		if _plan_job(n):
 			return "job"
+	if h >= WORK_START and h < WORK_END and n.job == "" and _plan_sell_stock(n):    # B25-ECON-P3: an adult between jobs
+		return "idle_sell"
 	_plan_evening(n, h)
 	return "evening"
 
@@ -2184,6 +2188,39 @@ func _plan_sell_all(n: NPC) -> bool:
 	return false
 
 
+## B25-ECON-P3 (owner 2026-11-05): an elder, or an adult between jobs (no trade), offers the trade stock they no longer use
+## through the existing sell rule (_plan_sell: the trade's outlets, World.purchase_qty, market prices). True when a sale is
+## planned. Not offered: food and other necessities (the household's), seed and cuttings, weapons and armour (only materials
+## and tools: item type resource or tool), what they owe on a contract (sell_to's reserve), and stock_kept.
+func _plan_sell_stock(n: NPC) -> bool:
+	if not (n.role == "elder" or (n.role == "adult" and n.job == "")):
+		return false
+	for id in n.inv.ids():
+		if not OUTLETS.has(id) or EDIBLE.has(id) or World.is_necessity(id) or id.ends_with("_seed") or id.ends_with("_cutting"):
+			continue
+		if not (str(GameData.item(id).get("type", "")) in ["resource", "tool"]) or stock_kept(n, id):
+			continue
+		if n.inv.count(id) - reserve(n, id) > 0 and _buyer_for(n, id) != null:
+			return _plan_sell(n, id)
+	return false
+
+
+## B25-ECON-P3: whether `n` keeps `id` rather than offer it as stock they no longer use: what they keep for their own work
+## (keeps), a work tool while they are between jobs (JOB_TOOL: the next place may need it), and the household's keep: a tool
+## of the trade of another adult of the household who has not got one, or the axe of a household building its home.
+func stock_kept(n: NPC, id: String) -> bool:
+	if keeps(n, id) or (n.role == "adult" and JOB_TOOL.values().has(id)):
+		return true
+	if n.household < 0 or n.household >= w.households.size():
+		return false
+	if id == "axe" and str(w.households[n.household].get("build", "")) != "":
+		return true
+	for o: NPC in _members(n.household):
+		if o != n and o.role == "adult" and (JOB_TOOL.get(o.job, "") == id or KEEPS.get(o.job, []).has(id)) and not o.inv.has(id):
+			return true
+	return false
+
+
 func _plan_sell(n: NPC, id: String) -> bool:
 	var buyer := _buyer_for(n, id)
 	if buyer == null:
@@ -2505,7 +2542,61 @@ func tool_short(n: NPC) -> bool:
 	if tool == "" or n.inv.has(tool) or not _order_for(n).is_empty():
 		return false                                  # (a tool the manor ordered for them is being forged, EQ-19)
 	var p := tool_price(n, tool)
-	return p < 0 or n.coins < p
+	return p < 0 or n.coins + first_tool_help(n, n.job, tool, p) < p
+
+
+## B25-ECON-P2 (owner 2026-11-05): the coins `n`'s household gives toward the first `tool` of trade `job` at `price` (0 none).
+## Only for a first tool (no recorded working day in the trade's industry yet; the manor's tool orders, EQ-19, are for workers
+## already in the trade), only the shortfall above `n`'s own coins, and only when the household's purse covers the whole price
+## after its keep (Construction._keep) and its other members' missing tools (Construction._tool_reserve), with the other
+## members holding the shortfall. No manor lending (OD-16 option d rejected).
+func first_tool_help(n: NPC, job: String, tool: String, price: int) -> int:
+	if price < 0 or n.coins >= price or tool == "" or n.inv.has(tool) or n.household < 0 or n.household >= w.households.size():
+		return 0
+	var ind: String = TRADE_INDUSTRY.get(job, "")
+	if ind == "" or w.experience.days(World.npc_ref(n.id), ind) >= 1.0:
+		return 0
+	var h := n.household
+	if w.households[h].get("ended", false):
+		return 0
+	var members := _members(h)
+	var others := 0
+	var reserve := 0
+	for o: NPC in members:
+		if o == n:
+			continue
+		others += o.coins
+		var t: String = JOB_TOOL.get(o.job, "")
+		if o.role == "adult" and t != "" and not o.inv.has(t):
+			var tp := tool_price(o, t)
+			reserve += tp if tp > 0 else ceili(GameData.value(t) * 1.5)
+	var need := price - n.coins
+	if others < need or w.property.purse(World.hh_ref(h)) - w.construction._keep(h, members.size()) - reserve < price:
+		return 0
+	return need
+
+
+## B25-ECON-P2: the household hands `n` the shortfall for their first `tool` (first_tool_help) at the dearest bargained price
+## among those who sell one (so whichever seller _buy_tool goes to is paid), from its other members' coins, the richest first:
+## coins move inside the household only. True when given.
+func _household_first_tool(n: NPC, tool: String) -> bool:
+	var price := -1
+	for o: NPC in w.npcs:
+		if o.alive and o != n and (o.job == "smith" or buy_role(o) == "merchant_goods") and o.inv.has(tool) and not keeps(o, tool):
+			price = maxi(price, w.deal_price(w.sell_price(o, tool), n, o))
+	var need := first_tool_help(n, n.job, tool, price)
+	if need <= 0:
+		return false
+	for o: NPC in w.property._payers(World.hh_ref(n.household)):
+		if o == n or need <= 0:
+			continue
+		var k := mini(need, o.coins)
+		o.coins -= k
+		n.coins += k
+		need -= k
+	w.stat("household_first_tools")
+	once("first_tool_%d_%s" % [n.id, tool], "%s %s's household puts up the coins for a first %s." % [n.name, n.family, tool])
+	return true
 
 
 ## How many of each work tool the village's own people need now (EQ-07): workers whose trade needs a tool
@@ -2525,6 +2616,8 @@ func local_tool_need() -> Dictionary:
 
 
 func _get_tool(n: NPC, tool: String) -> bool:
+	if _household_first_tool(n, tool) and _buy_tool(n, tool):
+		return true                                       # B25-ECON-P2: the household's purse buys a member's first tool, from a real seller
 	if w.economy != null and w.economy.rentals.active():
 		# LE05-RENTAL (economy on): buying, renting from a willing owner, or doing without for now, weighed once a day
 		var c: Dictionary = w.economy.rentals.consider(n, tool, _tool_seller(n, tool))
@@ -4882,8 +4975,8 @@ func _job_options(n: NPC, market: Dictionary, skip := []) -> Array:
 		var setup := 0.0
 		if opt.tool != "" and not n.inv.has(opt.tool):
 			var price := tool_price(n, opt.tool)     # the smith or the goods merchant sells tools (not the timber sellers)
-			if price < 0 or n.coins < price:
-				continue
+			if price < 0 or n.coins + first_tool_help(n, job, opt.tool, price) < price:
+				continue                              # B25-ECON-P2: or the household's purse buys a first tool
 			setup = price / 10.0
 		var score: float = float(opt.pay) - setup - Vector2(home).distance_to(Vector2(opt.at)) / 60.0
 		opts.append([job, score])

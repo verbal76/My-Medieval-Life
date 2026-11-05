@@ -15,8 +15,9 @@ extends RefCounted
 ##   of hands), else it closes; one with no work at its stations for close_idle_days days in a row closes; one whose building
 ##   left the household closes. Closing takes nothing: the workshop stays its owner's property under the existing rules;
 ## - a villager on their own weekly morning (looks_today) is considered for founding when ability, experience, premises,
-##   capital, household finances and the trade's demand all allow (eligible), and decides through the shared weighing
-##   (JudgmentWeighting, profile "business_found"); with the judgment layer off nobody founds.
+##   capital and household finances allow (eligible), and decides through the shared weighing (JudgmentWeighting, profile
+##   "business_found"), the trade's demand one of its factors (B25-ECON-P1, owner 2026-11-05: idle benches no longer refuse);
+##   with the judgment layer off nobody founds.
 ## Hiring: an open venture's stations are room for its trade in the labour market (NPCBrain.skilled_place); a hand taken for
 ## one is given the keeper's leave (World.permit) and works there under the existing skilled model (took_place).
 ##
@@ -337,8 +338,8 @@ func _consider() -> void:
 			w.stat("ventures_found_failed")
 
 
-## Why `n` cannot found a business now ("" when they could, the option in `out`): ability and experience, premises, the
-## trade's demand and competition, capital and household finances. `markets`: the trade readings of this morning.
+## Why `n` cannot found a business now ("" when they could, the option in `out`): ability and experience, premises, capital
+## and household finances (the trade's demand is weighed in `decides`, B25-ECON-P1). `markets`: the trade readings of this morning.
 func eligible(n: NPC, markets := {}, out := {}) -> Dictionary:
 	var why := refusal(n, markets, out)
 	return out if why == "" else {}
@@ -378,10 +379,10 @@ func refusal(n: NPC, markets := {}, out := {}) -> String:
 		return "the household has no home to start from"
 	if not markets.has(job):
 		markets[job] = w.brain.skilled_place(job)
+	# B25-ECON-P1 (owner 2026-11-05): no gate on the trade's benches. A qualified villager with the capital may found while the
+	# trade's benches stand idle; the trade's demand (its workers' share of a working day at its stations) is one factor of
+	# their own judgment (decides), never a refusal.
 	var m: Dictionary = markets[job]
-	if not bool(m.work) or bool(m.room):
-		last_refusal = "no_work" if not bool(m.work) else "bench_room"
-		return "no opening for another workshop of the trade"
 	var econ: Dictionary = hh.get("econ", {})
 	if econ.is_empty():
 		last_refusal = "means_unknown"

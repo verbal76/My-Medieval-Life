@@ -136,15 +136,31 @@ func test_tenant_standalone() -> void:
 	check(w.construction.may_build("smithy", World.PLAYER) == "", "a player renting a home may build a standalone workshop too")
 
 
+## B25-ECON-P1 (owner 2026-11-05; evidence run 41967592798: 170 founding looks, 0 founded, every one stopped at the full-bench
+## gate): idle benches no longer refuse a founder. A qualified villager with the capital is eligible while the trade's benches
+## stand idle, and the trade's demand is weighed in their own judgment: at the same weighing, idle benches may decline where
+## busy ones found.
 func test_no_demand_no_venture() -> void:
 	var w := world()
 	var s := founder(w)
 	w.station_load = {}
-	check(w.ventures.refusal(s) == "no opening for another workshop of the trade", "no work seen at the trade's stations: no opening")
-	for d in 28:
-		w.minutes = float(d) * 1440.0 + 6 * 60
-		w.ventures.daily()
-	check(int(w.stats.get("ventures_founded", 0)) == 0 and w.ventures.setting_up().is_empty(), "four weeks without demand found nothing")
+	var why: String = w.ventures.refusal(s)
+	check(why == "" and w.ventures.last_refusal == "", "idle benches: a qualified smith with the capital may still found (%s)" % why)
+	var idle: Dictionary = w.ventures.eligible(s)
+	check(not idle.is_empty() and float(idle.busy) == 0.0, "the option records the trade's demand (none: busy %s)" % str(idle.get("busy", "-")))
+	smithy_full(w)
+	var busy: Dictionary = w.ventures.eligible(s)
+	check(not busy.is_empty() and float(busy.busy) > float(idle.busy), "busy benches read as demand (busy %s)" % str(busy.get("busy", "-")))
+	w.judgment.cfg.decision.trait_spread_permille = 0
+	w.judgment.cfg.decision.selection = "argmax"
+	var split := -1
+	for f in range(0, 100001, 500):          # the first forgo at which the idle trade's smith declines
+		w.judgment.cfg.decision.profiles.business_found.forgo = f
+		if not w.ventures.decides(s, idle):
+			split = f
+			break
+	check(split > 0, "with idle benches the judgment can still say yes (declines from forgo %d)" % split)
+	check(split > 0 and w.ventures.decides(s, busy), "demand is a factor: at that weighing the smith of a busy trade founds")
 
 
 ## B25 economic investigation (owner directive 2026-11-02, section 4): the founding funnel's read-only counts. Each look by a
@@ -166,7 +182,11 @@ func test_funnel_counts() -> void:
 	w.experience.minutes[World.npc_ref(s.id)]["smithing"] = 480.0 * 60.0
 	w.station_load = {}
 	w.ventures.refusal(s)
-	check(w.ventures.last_refusal == "no_work", "no work seen at the trade's stations: stage 'no_work'")
+	check(w.ventures.last_refusal == "", "no work seen at the trade's stations: no refusal stage (B25-ECON-P1)")
+	for o: NPC in w.brain._members(s.household):
+		o.coins = 0
+	w.ventures.refusal(s)
+	check(w.ventures.last_refusal == "money_working", "no capital: stage 'money_working'")
 	var ghost: NPC = null                     # a dead smith's record still carries the job
 	for o: NPC in of_job(w, "smith"):
 		if o != s:
@@ -187,7 +207,8 @@ func test_funnel_counts() -> void:
 		if o.alive and o.role == "adult" and Ventures.kind_for(o.job) != "":
 			living += 1
 	check(looks == living, "each living adult of a founding trade looks once a week (%d looks, %d of them)" % [looks, living])
-	check(refused == looks and int(w.stats.get("venture_refused_no_work", 0)) >= 1, "with no work at the stations every look is refused, the founder's under no_work (%d)" % refused)
+	check(refused == looks and int(w.stats.get("venture_refused_no_work", 0)) == 0 and int(w.stats.get("venture_refused_money_working", 0)) >= 1,
+			"every look is refused, the founder's under money_working and none under no_work (%d)" % refused)
 	check(w.rng.state == rng0 and int(w.stats.get("ventures_founded", 0)) == 0, "counting draws no random number and founds nothing")
 
 
