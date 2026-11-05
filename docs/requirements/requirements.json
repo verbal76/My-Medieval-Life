@@ -6232,6 +6232,11 @@
      "date": "2026-11-05",
      "change": "owner_answer",
      "why": "follow-ups investigated (wip/b25r1-econ4, merged 9dabee7; docs/design/CONSIGNMENT_REVIEW_B25.md): Higham stopped because its founding traders closed on day 34 (households left for better-paid trades; the founding 0.85 till reserve left them paying under 4/day); the 12-day return showed no effect (run 42080417065). Owner 2026-11-05 question 32: any neighbour trader may collect a place's spare ore, own trader first; keep the 12-day return. Question 33: founding traders use the normal trader reserve of 80 coins. Both to be implemented and checked on seeds 1-4"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "commits + a9e9f6e; integrated_in + B25R1 wip/b25r1",
+     "why": "owner decisions 32 (any neighbour collects spare ore after the own trader's claim) and 33 (founding traders keep the 80 reserve) implemented on wip/b25r1-econ5 (9407cc7, 1c20078) and merged into wip/b25r1 at a9e9f6e (frozen F); Tests 42112153928 green; 120-day seeds 1-4 run 42106105599 clean (leaks 0); outcomes recorded: 7-14 trader closures per seed, village iron ore exhausted on seeds 2-4 (WDR-022 outcomes)"
     }
    ],
    "implementation_status": "INTEGRATED",
@@ -6240,7 +6245,11 @@
    "tests": "consign 65/0, regions 120/0, region_trade 23/0, settle_food 86/0, settle_review 106/0; run 42058240181",
    "test_commit": "c379545",
    "commits": [
-    "e097fab"
+    "e097fab",
+    "a9e9f6e"
+   ],
+   "integrated_in": [
+    "B25R1 wip/b25r1"
    ]
   },
   {
