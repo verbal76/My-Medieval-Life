@@ -56,72 +56,14 @@ env:
   GODOT_VERSION: "4.7.2"
 
 jobs:
+  # SIM-GATE-01 split across runners (B25R1, docs/ci/CI_ARCHITECTURE_B25R1.md section 3): plan, one runner a part, then one
+  # gather job that judges every run as the single-job gate did and uploads the same `sim-gate` and `sim-gate-archives`
+  # artifacts. Skipped when an owner-approved earlier gate is reused (reuse_gate_run); the release job's checks are unchanged.
   sim-gate:
     if: inputs.reuse_gate_run == ''
-    runs-on: ubuntu-latest
-    timeout-minutes: 120
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Cache Godot and its export templates
-        id: godot
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
-          key: godot-${{ env.GODOT_VERSION }}-linux-templates
-
-      - name: Install Godot and its export templates
-        if: steps.godot.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p ~/godot-bin
-          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
-          curl -sSfL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
-          unzip -q godot.zip && mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" ~/godot-bin/godot
-          curl -sSfL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
-          dest="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
-          mkdir -p "$dest" && unzip -q -j templates.tpz -d "$dest"
-          rm godot.zip templates.tpz
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Import the project
-        run: ~/godot-bin/godot --headless --path game --import
-
-      - name: Run the simulation gate (SIM-GATE-01)
-        env:
-          BUILD_N: ${{ inputs.build_number || github.run_number }}
-        run: |
-          # every scenario with the flight recorder on, in parallel; exit 1 on any blocking finding (never on hardship)
-          python3 tools/sim_suite.py --out out/sim-gate --godot ~/godot-bin/godot --jobs "$(nproc)"
-
-      - name: Keep the gate's results (also when it fails)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: sim-gate
-          retention-days: 90
-          if-no-files-found: warn
-          path: |
-            out/sim-gate/gate.json
-            out/sim-gate/SIM_GATE_SUMMARY.md
-            out/sim-gate/sim_gate_workbook.xlsx
-            out/sim-gate/*/sim.json
-            out/sim-gate/*/run.log
-            out/sim-gate/*/analysis.json
-            out/sim-gate/*/probe.json
-
-      - name: Keep the recorder archives (also when the gate fails)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: sim-gate-archives
-          retention-days: 14
-          if-no-files-found: warn
-          path: out/sim-gate/*/rec/
+    uses: ./.github/workflows/sim-gate.yml
+    with:
+      build_number: ${{ inputs.build_number || format('{0}', github.run_number) }}
 
   # DEMO-01 (owner 2026-11-03): six packages from this one commit, built in parallel: the full game and the demo (the same source
   # exported with the "demo" feature: game/export_presets.cfg "... Demo" presets), each for Android, Windows and Linux. No package

@@ -2,15 +2,15 @@
 
 Goal: shorten the GitHub Actions wall-clock for validating B25R1 without weakening coverage, determinism or conservation.
 Simulation rules and gameplay are unchanged. Status: **Tests: done and dispatched once for validation. Campaign twin
-concurrency: done. Sim-gate split: helpers built and checked offline, but no workflow wiring yet (see section 3).
-Segment resume: not done.**
+concurrency: done. Sim-gate split: wired (`.github/workflows/sim-gate.yml`, called by release.yml and the long-sims gate
+mode; section 3). Segment resume: not done.**
 
 ## 1. Inventory (measured)
 
 | workflow / job | what it does | measured | independent? |
 |---|---|---|---|
 | tests.yml `test` (4 shards, every 4th suite) | 172 Godot suites + Python checks + 10-day sim | shards 13-64 min; slowest shard 50-64 min (runs 41580777660, 41733575763, 41735516442, 41737006430, 41740708833) | suites are independent processes |
-| long-sims.yml `sim-gate` / release.yml `sim-gate` | `sim_suite.py --jobs 4`: 26 runs (19 sims, 6 probes, perf) | 60 min (41737024930) and 98 min (41733570702); timeout 120 | runs are independent processes; the evaluation needs all of them |
+| long-sims.yml `sim-gate` / release.yml `sim-gate` (before the split) | `sim_suite.py --jobs 4`: 26 runs (19 sims, 6 probes, perf) | 60 min (41737024930), 98 min (41733570702), 93 min (41923800341), >120 min (41962208084, timed out); timeout 120 | runs are independent processes; the evaluation needs all of them |
 | flight-recorder-seed.yml `seg1..seg4` | one 365-day world in 100-day segments | up to 345 min each | **sequential**: each segment continues the previous segment's saved world |
 | flight-recorder-campaign.yml `seed` | one chain per seed (and per twin) | | seeds and twins are independent |
 | campaign `scenarios` | 8 targeted scenarios | | independent; already parallel beside the campaign |
@@ -46,22 +46,40 @@ Estimated wall-clock, from the measured medians: **before** 50-64 min (slowest o
 (16 min of suites + about 1 min setup), with a worst case of about 30 min if the runner is 1.8x slower. Runner minutes:
 about the same suite time, plus 4 more setups (about 3 extra runner-minutes a run).
 
-## 3. Simulation gate split (helpers done; workflows NOT changed)
+## 3. Simulation gate split (wired, 2026-11-05)
 
-- `tools/ci_plan.py gate-plan --parts 4` reads exactly the jobs `sim_suite.py` would run on this commit, rotating seeds
-  included. It does this by running `main()` up to the job start, so there is no second list. It packs them into 4 parts
-  and keeps each determinism pair (eq_s1/det_s1, x20_on_s1/x20_on_det_s1) together. Estimated 23-26 min a part,
-  against 60-98 min for the whole gate on one runner.
-- Each part runs `sim_suite.py --only <part>`, then `gate-record`. `gate-merge` checks that every run is present exactly
-  once, on the same commit, with tool exit 0 or 1. It writes the merged `gate.json`, and `sim_suite.py --reuse` then
-  evaluates it as one whole gate (baselines, determinism pairs, coverage, workbook).
-- Checked offline: the outputs of run 41737024930 were split into 4 parts, merged and evaluated. The result was
-  **identical** to evaluating the unsplit directory (same 47 findings, history, notes and coverage). A missing part makes
-  `gate-merge` fail.
-- **Not wired yet:** a reusable `sim-gate.yml` (plan → 4 parts → gather that writes the same `sim-gate` /
-  `sim-gate-archives` artifacts) called by release.yml and by the long-sims gate mode. It was left out because the gate
-  must not be dispatched for validation tonight, and release.yml should not change without a validating run.
-  sim_suite.py is not modified.
+Why: one runner ran all 26 runs on 4 processes with a 120-minute limit. On 361f364 (run 41923800341) it took 93 min
+(simulations 5294 s); on a995397 (run 41962208084) every run was 20-40% slower with only trivial code changes between
+(simulations 6958 s), so runner speed alone pushed the job past 120 min in its last step. The limit is not raised and the
+workload is not reduced: the same runs are spread over more runners.
+
+- `.github/workflows/sim-gate.yml` (reusable, `workflow_call`), used by release.yml's `sim-gate` job (still skipped when
+  `reuse_gate_run` is given; the release job's checks are unchanged) and by long-sims.yml's `gate: true` mode, so the two
+  cannot drift apart:
+  - **plan** (10 min limit): `tools/ci_plan.py gate-plan --parts 5` reads exactly the jobs `sim_suite.py` would run on this
+    commit, rotating seeds included, by running `main()` up to the job start (no second list). It packs them by the
+    measured seconds in `tools/ci_timings.json` (now the slower of runs 41923800341 and 41962208084 for each run) and keeps
+    each determinism pair (eq_s1/det_s1, x20_on_s1/x20_on_det_s1) in one part, so the recorder-overhead measure compares
+    runs that shared a machine. Estimate: 36, 32, 31, 30, 30 min. The floor is x20_on_s1 alone (35 min on the slow run).
+  - **part** (one runner each, 90 min limit, `fail-fast: false`): `sim_suite.py --only <part>`: the same commands,
+    recorder and checks. Then `gate-record` writes `part-<k>.json` (job results, exit code, commit, runner). The part's
+    own subset verdict is deleted. Exit 1 is a finding, judged again in the gather job. Any other exit fails the part. It
+    uploads `sim-gate-part-<k>` (sim.json, run.log, probe.json, rec/; kept 2 days).
+  - **gather** (job name `sim-gate`, 45 min limit, runs even when a part failed): downloads every part into one
+    `out/sim-gate`. Then `gate-merge` checks that every planned run is there exactly once, with its outputs, from this
+    commit, and that no tool failed. If not, it writes `gate.json` with result `FAIL (incomplete ...)` and fails. Then
+    `sim_suite.py --reuse` judges the whole set as one gate: baselines, both determinism pairs (from the gathered
+    outputs, so a pair split across runners would still be compared), recorder checks, coverage, analyses and workbook.
+    It exits 1 exactly as the single-job gate does. It uploads the same `sim-gate` artifact (plus `parts.json` and the
+    part records, which `tools/ci_consolidate.py` already reads) and `sim-gate-archives`.
+- Equivalence, proved: `tests/test_sim_gate.py` `GateSplit` fabricates all 26 outputs, splits them as the plan does,
+  gathers, merges and judges them. The findings, runs, history and determinism verdicts match the unsplit judgement. A
+  determinism difference is found when the pair shares a part and when it is split across two parts. A missing part or a
+  tool failure (exit 2) fails the merge. A finding (exit 1) does not fail it. `RealGateSplit` (with
+  `MML_GATE_DIR=<a real sim-gate artifact with sim-gate-archives unpacked into it>`) did the same with run 41923800341's
+  real outputs: identical, with 32 blocking findings (all accepted-baseline differences), and both determinism pairs MATCH.
+- Runner cost: about 5 x (setup + about 33 min) + the gather job, against one 93-120 min job. Peak concurrency with a
+  release is 5 parts + 6 package jobs.
 
 ## 4. 365-day campaign
 
