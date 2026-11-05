@@ -48,3 +48,26 @@ Lead coordinator handoff. Verified facts are marked (V); hypotheses (H).
   Actions: a long-sims run of seed 1 for 30 days on bfce680, at df67e8e for comparison, reading the daily treasury and the
   manor/relief lines (economy_sim WATCH RELIEF, manor wages) from the job logs; then record the baseline on Actions.
 - Running: campaign 41939383765, packages 41939387992 (both bfce680).
+
+## Update 2026-11-05 ~02:00 UTC: treasury cause found (V), Windows full smoke crash (open)
+
+Treasury, seed 1, 30 days, from the artifacts of long-sims 41942611804 (df67e8e) and 41942615526 (bfce680), `sim.json`
+(downloaded with the API; both runs reproduce the gate's values exactly: day 30 treasury 323 and 32).
+- Cumulative village-treasury flows at day 30 (df67e8e -> bfce680): tools 125 -> 1040 (+915), wages 1856 -> 1534 (-322),
+  repairs 311 -> 130 (-181), tax 1996 -> 2167 (+171), loot recovered 68 -> 8 (-60). The tools line is the cause.
+- `od16.axes_given` 0 -> 22: the treasury bought 22 axes (OD-16 `NPCBrain._support_trades` / LE-04 `EconMarket.manor_tools`) for
+  "workers short of their trade's tool" (`tool_needers`: a woodcutter with no axe, or the responsible adult of a household
+  building its own home with no axe). tool_needers itself is unchanged since df67e8e.
+- The axes pile up: the 5-6 woodcutters hold 6 axes on day 0, 18 on day 14, 41 on day 30 (df67e8e: 7 at day 30); smiths forge
+  46 axes in 30 days (df67e8e 16). The pile starts on day 8, before the treasury buys any (its first on day 14), so axes are
+  being bought by others too and ending with the woodcutters, and someone keeps coming up short.
+- Classification: a DEFECT (an unintended loop), not legitimate activity and not a changed start. Hypothesis to confirm: an
+  axe given to a home builder (B25R1 homesteads put many households into building) passes to a woodcutter, by household
+  tool sharing or sale, so the builder is short again the next evening and the treasury buys another. Next: trace one axe
+  in a short seed 1 run (who receives it, where it goes), fix the hand-off, then re-run the treasury comparison and the gate.
+  The baseline must NOT be recorded before this fix.
+
+Windows full smoke (release 41939387992, job 126965284940): `--headless --quit-after 300` exits -1073741819 (0xC0000005)
+about 0.3 s after the engine banner; the Windows demo smoke passed on the same engine. The presets differ only by the `demo`
+feature. The previous release run 41666958781 (a459186, Build 25) passed. The project starts headless on Linux without a
+crash (local). Not reproduced on Windows yet; cause unknown (startup path that differs between full and demo, or engine).
