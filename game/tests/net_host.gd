@@ -569,7 +569,7 @@ func _status() -> void:
 		"held": held.size(), "holding": holding, "batch": batch, "why_last": why_last, "felled": felled, "rec": {"dir": str(w.recorder.dir) if w.recorder != null else "", "state": w.recorder.completeness() if w.recorder != null else ""}, "frozen": main.process_mode == Node.PROCESS_MODE_DISABLED,
 		"day": w.day(), "net_d": {"duplicates": main.net.duplicates, "gaps": main.net.gaps_skipped, "resumes": main.net.resumes,
 			"log": main.net.applied_log.duplicate(), "tag": main.net.tag, "suspended": suspended, "upnp": main.net.upnp.state,
-			"mp_peers": main.net.multiplayer.get_peers().size() if main.net.peer != null else 0},
+			"mp_peers": main.net.multiplayer.get_peers().size() if main.net.peer != null else 0, "joining": main.net.joining.size()},
 		"still": still, "suspending": suspending, "ledger": ledger, "tx_last": tx_last, "shipments": w.transactions.open_shipments() if w.transactions != null else [],
 		"contracts": _player_contracts(w), "traders": _traders().map(func(t): return t.ref)}
 	var tmp := dir + "status.tmp"

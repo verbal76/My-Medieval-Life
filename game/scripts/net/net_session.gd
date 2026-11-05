@@ -53,6 +53,10 @@ const RECONNECT_SECONDS := 60.0      # a guest whose connection dropped tries to
 const HOST_PAUSED_SECONDS := 300.0   # ... and this long when the host said it was paused (an Android host in the background)
 const TIMEOUT_MIN_MS := 4000         # ENet: a peer silent this long may be dropped, and is by TIMEOUT_MAX_MS (defaults 5 and 30 s)
 const TIMEOUT_MAX_MS := 10000
+## B25R1: a guest that has just been welcomed builds the host's world in one long frame (main.start_guest_world: 4-5 s measured
+## on a test machine with other work running, longer on a slow phone), and cannot answer the network meanwhile. Its connection is
+## given this long (ENet's own default) until its first move shows it is playing; then TIMEOUT_MIN_MS/TIMEOUT_MAX_MS again.
+const JOIN_TIMEOUT_MS := 30000
 const HOLD_SECONDS := 2.0            # host: a request numbered past a missing one waits this long for it, then goes ahead
 const REPLIES_KEPT := 64             # host: answers kept per guest to answer a repeated request without applying it again
 const RESUME_AFTER_PAUSE_MS := 4000  # guest: back from a pause longer than this, reconnect at once (the host may have dropped it)
@@ -77,6 +81,8 @@ var host_name := ""
 var world_name := ""
 var by_peer := {}                   # peer id -> pid (connected guests)
 var moves := {}                     # peer id -> {t (ms), dir, anim}: the last accepted move
+var joining := {}                   # host: peer ids welcomed and not yet moved (building the world: JOIN_TIMEOUT_MS)
+var _built_frame := -1              # guest: the frame the world was built in (JOIN_TIMEOUT_MS until the network is read after it)
 var queue: Array = []               # requests waiting for the host's next tick: {seq, pid, peer, rid, kind, args}
 var arrivals := 0                   # the arrival counter that orders `queue`
 var applied := 0                    # requests applied (tests and the log)
@@ -234,6 +240,8 @@ func stop() -> void:
 	_fault_pair.clear()
 	by_peer.clear()
 	moves.clear()
+	joining.clear()
+	_built_frame = -1
 	queue.clear()
 	synced.clear()
 	sync_due.clear()
@@ -287,12 +295,12 @@ func connected() -> bool:
 	return peer != null and peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED
 
 
-func _set_timeout(id: int) -> void:
+func _set_timeout(id: int, building := false) -> void:
 	if peer == null:
 		return
 	var pp := peer.get_peer(id)
 	if pp != null:
-		pp.set_timeout(32, TIMEOUT_MIN_MS, TIMEOUT_MAX_MS)
+		pp.set_timeout(32, JOIN_TIMEOUT_MS if building else TIMEOUT_MIN_MS, JOIN_TIMEOUT_MS if building else TIMEOUT_MAX_MS)
 
 
 func _on_peer_connected(id: int) -> void:
@@ -319,6 +327,7 @@ func _drop_peer(id: int, quiet: bool) -> void:
 		(streams[_ident(g)].held as Dictionary).clear()
 	by_peer.erase(id)
 	moves.erase(id)
+	joining.erase(id)
 	synced.erase(id)
 	sync_due.erase(id)
 	fauna_known.erase(id)
@@ -723,6 +732,8 @@ func c_hello(version: String, key: String, who: String, pw_hash: String) -> void
 		resumes += 1
 	var p := guest_state(kh, who)
 	by_peer[id] = p.pid
+	joining[id] = true
+	_set_timeout(id, true)                         # B25R1: it builds the world it is sent before it can answer (JOIN_TIMEOUT_MS)
 	_open_stream(p, int(extra.get("next", -1)), resumed)
 	resume_tokens[p.pid] = Crypto.new().generate_random_bytes(12).hex_encode()
 	if main.world.recorder != null:
@@ -771,6 +782,9 @@ func s_welcome(blob: PackedByteArray, id: int) -> void:
 	good_target = targets[_attempt] if not was_back and _attempt >= 0 and _attempt < targets.size() else good_target
 	if was_back:
 		reconnects += 1
+	_built_frame = Engine.get_process_frames()
+	_set_timeout(1, true)                          # B25R1: ENet checks its timeouts before it reads what came in the meantime, so
+	                                               # after this long frame the host's answers would count as late (JOIN_TIMEOUT_MS)
 	if not main.start_guest_world(d, my_pid):
 		_lost("The world could not be shown. Try joining again.")
 		return
@@ -788,6 +802,9 @@ func c_move(pos: Vector2, dir: Vector2, anim: String) -> void:
 	var id := multiplayer.get_remote_sender_id()
 	if not by_peer.has(id):
 		return
+	if joining.has(id):
+		joining.erase(id)
+		_set_timeout(id)                           # B25R1: its first move: playing, the usual timeouts from now on
 	var p: PlayerState = main.world.player_by_pid(int(by_peer[id]))
 	if p == null or not p.alive:
 		return
@@ -1396,6 +1413,9 @@ func players_list() -> Array:
 
 
 func _guest_step(dt: float) -> void:
+	if _built_frame >= 0 and Engine.get_process_frames() > _built_frame:
+		_built_frame = -1
+		_set_timeout(1)                            # the network read once since the world was built: the usual timeouts again
 	_t_move += dt
 	if _t_move >= 1.0 / NetProtocol.MOVE_HZ:
 		_t_move = 0.0

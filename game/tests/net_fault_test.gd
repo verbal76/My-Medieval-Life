@@ -346,12 +346,19 @@ func _guest_pause() -> void:
 
 # ---------------------------------------------------------------- a second guest killed and frozen ---
 func _guest_killed() -> void:
-	guest2_pid = spawn("res://tests/net_fault_guest.gd", [str(port), KEY2, "Bea", "oak", "g2.json", dir])
-	var in2 := await until(func(): return bool(read_json("g2.json").get("welcomed", false)), 40.0)
+	# B25R1: her world takes longer to build than ENet's longest timeout (a slow phone): the host keeps her connection meanwhile
+	var stall := NetSession.TIMEOUT_MAX_MS + 2000
+	guest2_pid = spawn("res://tests/net_fault_guest.gd", [str(port), KEY2, "Bea", "oak", "g2.json", dir, str(stall)])
+	var in2 := await until(func(): return bool(read_json("g2.json").get("welcomed", false)), 40.0 + stall / 1000.0)
 	check(in2, "a second guest joins directly")
 	if not in2:
 		return
 	var pid2 := int(read_json("g2.json").pid)
+	var moved := await until(func(): return int(net_d().get("joining", -1)) == 0, NetSession.JOIN_TIMEOUT_MS / 1000.0)
+	await wait(NetSession.TIMEOUT_MAX_MS / 1000.0)     # a connection dropped in the stall would be seen gone by now
+	var g2 := read_json("g2.json")
+	check(moved and conn().has(pid2) and int(g2.get("reconnects", -1)) == 0 and not bool(g2.get("reconnecting", true)),
+		"her world built in %d s, longer than the network's timeout: the host kept her connection (%s; host %s)" % [stall / 1000, str(g2), str(conn())])
 	var players0 := (status().players as Dictionary).size()
 	OS.kill(guest2_pid)
 	var gone := await until(func(): return not conn().has(pid2) and bool(rec(pid2).get("away", false)), 20.0)

@@ -1,11 +1,13 @@
 extends SceneTree
 ## Multiplayer Batch D test guest (net_fault_test.gd): the real game joining a host and staying, so the test can kill it, freeze it
 ## or let it reconnect. Writes <dir><out> every 0.2 s: {welcomed, pid, guest_world, reconnecting, reconnects, refusal}.
-## Args after "--": port key name password out_file dir.
+## Args after "--": port key name password out_file dir [stall_ms: B25R1, the frame it is welcomed in lasts this much longer,
+## as a slow device's building of the host's world does (main.start_guest_world), once].
 
 var main
 var a: PackedStringArray
 var t := 0.0
+var stall_ms := 0
 
 
 func _init() -> void:
@@ -13,8 +15,16 @@ func _init() -> void:
 	main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
 	main.save_path = str(a[5]) + "fault_guest_unused.json"
+	stall_ms = int(a[6]) if a.size() > 6 else 0
 	process_frame.connect(func():
+		main.net.changed.connect(_stall)
 		main.net.join("127.0.0.1", int(a[0]), str(a[1]), str(a[2]), str(a[3])), CONNECT_ONE_SHOT)
+
+
+func _stall(text: String) -> void:
+	if stall_ms > 0 and text.begins_with("Joined"):  # emitted at the end of s_welcome, in the frame the world was built
+		OS.delay_msec(stall_ms)
+		stall_ms = 0
 
 
 func _process(delta: float) -> bool:
