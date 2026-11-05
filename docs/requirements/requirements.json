@@ -6289,6 +6289,11 @@
      "date": "2026-11-05",
      "change": "note",
      "why": "owner answered Q2.1 / checklist H4 (2026-11-05): JOB-02, PIT-02 and FSE-10 are outside Build 25 and Revision 1; they stay approved and unplaced"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "note",
+     "why": "owner answered Q2.2 and Q2.3 (2026-11-05): CON-02-KINDS is not Build 25 scope (B25-NINE-D2 covered CON-03..CON-08; it stays approved and unplaced); B25-FINISH-01 closes together with B25R1 on the R1 final commit"
     }
    ],
    "branch": "wip/region-nav",
@@ -12936,6 +12941,11 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope (owner 2026-11-01, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md, Decision 2): the service-contract categories and their dependencies are incorporated into Build 25"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "note",
+     "why": "owner 2026-11-05 (Q2.2): not Build 25 scope; B25-NINE-D2 brought in CON-03..CON-08 only; the earlier history line saying D2 incorporated it is corrected by this one; stays approved and unplaced"
     }
    ]
   },
