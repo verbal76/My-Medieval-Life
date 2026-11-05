@@ -142,7 +142,7 @@ var npcs_sent := {}                 # B25R1: peer id -> {npc id: the snapshot ro
 var _n_npcs := 0
 var _players_sent: Array = []       # B25R1: the players' snapshot last broadcast
 var _players_static := {}           # B25R1: pid -> its PLAYER_STATIC fields as last broadcast
-var _players_peers: Array = []      # B25R1: the connections the last snapshot went to, then those still joining (a change: every field)
+var _players_peers: Array = []      # B25R1: the connections the last snapshot went to (a new one gets every field)
 var _n_players := 0
 
 # Batch D, host
@@ -1489,7 +1489,7 @@ func players_list() -> Array:
 		"partner": h.partner, "children": h.children}]          # MP-PLAYER-FAMILY: a player's spouse and children are public family records
 	for id in by_peer:
 		var g: PlayerState = w.player_by_pid(int(by_peer[id]))
-		if g != null and not joining.has(id):     # one still building the world is not in play yet (c_hello, MP-D1)
+		if g != null:
 			out.append({"pid": g.pid, "name": g.name, "sprite": g.sprite, "pos": g.pos, "dir": moves[id].dir, "anim": moves[id].anim, "alive": g.alive, "level": g.map_level,
 				"worn": [g.armor, g.head], "wield": g.weapon, "partner": g.partner, "children": g.children})
 	return out
@@ -1518,11 +1518,10 @@ func _guest_step(dt: float) -> void:
 
 
 ## Host (B25R1, traffic): the players' list as s_players sends it: each player's place, facing, animation, life and level every time,
-## and its PLAYER_STATIC fields only when they changed since last sent, on the key (`all`), or when a player came into play or went.
+## and its PLAYER_STATIC fields only when they changed since last sent, on the key (`all`), or when a connection came or went.
 func players_snapshot(all: bool) -> Array:
 	var peers := by_peer.keys()
 	peers.sort()
-	peers.append_array(peers.filter(func(i): return joining.has(i)))     # and which of them are not listed yet (players_list)
 	if peers != _players_peers:
 		_players_peers = peers
 		all = true

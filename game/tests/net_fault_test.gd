@@ -316,7 +316,7 @@ func _dropped() -> void:
 	await proxy({})
 	var back := await until(func(): return in_game() and net.reconnects == r0 + 1, 25.0)
 	check(back and net.my_pid == pid and not main.paused, "the network back: the guest is in the game again by itself, the same character (pid %d)" % pid)
-	await until(func(): return not bool(rec(pid).get("away", true)), 3.0)
+	await until(func(): return not bool(rec(pid).get("away", true)), NetSession.TIMEOUT_MAX_MS / 1000.0)    # its first move (c_move, MP-D1)
 	check((status().players as Dictionary).size() == players0 and not bool(rec(pid).away), "no second character; back in play on the host")
 	await until(func(): return main.world.player.inv.count(food) == host_food(), 3.0)
 	check(main.world.player.inv.count(food) == host_food() and int(status().coin_leak) == 0, "the guest's pack is the host's again; coins conserved")
