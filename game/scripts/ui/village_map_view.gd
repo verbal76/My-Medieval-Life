@@ -52,6 +52,8 @@ var _pinch_d := 0.0
 var _pinch_zoom := 1.0
 var _pinch_mid := Vector2.ZERO
 var _labels_cache: Array = []
+static var _places_key := []
+static var _places_list: Array = []
 static var _img: Image
 static var _key := ""
 static var _tile_colours := {}     # tile value -> average colour
@@ -71,8 +73,13 @@ func setup(m, place := "") -> void:
 		target = ""
 	frame = (ow.village if target == "" else st.rect as Rect2i).grow(MARGIN)
 	aerial = AerialMap.of(main)
+	aerial.allow_load = true
 	aerial.refresh()
-	_labels_cache = places_here()
+	var key := [main.world.get_instance_id(), target, main.world.buildings.size()]
+	if _places_key != key:                     # (the bridges are found along the roads: kept for the next opening)
+		_places_key = key
+		_places_list = _declutter(places_here())
+	_labels_cache = _places_list
 	_fit()
 
 
@@ -318,8 +325,12 @@ func _process(delta: float) -> void:
 		fit()
 	if is_visible_in_tree():
 		_pad_step(delta)
-		if aerial != null and not aerial.hi_queue.is_empty():
-			aerial.pump_hi(8000)
+		if aerial != null:
+			aerial.allow_load = true               # (a map closed just before this one opened let go of the art)
+			if not aerial.queue.is_empty():
+				aerial.pump(8000, true)
+			elif not aerial.hi_queue.is_empty():
+				aerial.pump_hi(8000)
 	queue_redraw()                    # the player marker pulses
 
 
@@ -347,7 +358,7 @@ func places_here() -> Array:
 			out.append([pl[0], pl[1], 0])
 		var map: VillageMap = main.map
 		for b in map.data.buildings:
-			if not b.has("name") and b.type != "manor":
+			if not b.has("name") and b.type != "manor" and b.type != "house":
 				out.append([World.cap(str(b.type)), Vector2(b.x + b.w / 2.0, b.y + b.h / 2.0), 2])
 		return out
 	var ow: Overworld = main.world.map.overworld
@@ -393,6 +404,20 @@ func places_here() -> Array:
 	var streams: Array = ow.streams_in(frame)
 	for b in RegionMapPanel.bridge_points(ow, streams, frame):
 		out.append(["Bridge", b, 1])
+	return out
+
+
+## The places by importance (the always-shown first, so they take their places before the others), a name repeated
+## within 12 tiles of itself kept once (two market stalls: one "Market").
+static func _declutter(list: Array) -> Array:
+	var out := []
+	for pri in [0, 1, 2]:
+		for e in list:
+			if int(e[2]) != pri:
+				continue
+			if out.any(func(o): return o[0] == e[0] and (o[1] as Vector2).distance_to(e[1]) < 12.0):
+				continue
+			out.append(e)
 	return out
 
 
@@ -454,8 +479,8 @@ func _draw() -> void:
 		_label(font, fs, "Home", hr.get_center(), HOME, taken, true)
 	for pl in _labels_cache:
 		var pri := int(pl[2])
-		if pri == 2 and zoom < 5.0:
-			continue
+		if (pri == 1 and zoom < 4.5) or (pri == 2 and zoom < 7.0):
+			continue                               # the less important names only when there is room for them
 		_label(font, fs if pri == 0 else fs - 2, pl[0], to_screen(pl[1]), PALE, taken, pri == 0)
 	if target == "":
 		# what the screen shows now
@@ -625,3 +650,10 @@ func _tap(at: Vector2) -> void:
 		return
 	main.ui.hide_all()
 	main.look_at_tile(to_tile(at))
+
+
+## B25R1-025: the atlases read to shrink the tiles are let go as the map closes (what was shrunk is kept).
+func _exit_tree() -> void:
+	if aerial != null:
+		aerial.release_art()
+		aerial.allow_load = false

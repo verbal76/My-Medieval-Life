@@ -83,6 +83,8 @@ var _placed: Array[Rect2] = []  # the screen rects of the marks and labels drawn
 var _px := 2                    # UIStyle's art pixel (GameUI.ui_px: 2 on a desktop window, 1 in the phone layout)
 var _rim: StyleBox              # the map's sunken rim (UIStyle.inset, its centre left open so the map shows)
 var aerial: AerialMap           # B25R1-025: the aerial pictures of this world
+static var _ways_key := []      # the world and area the cached roads, streams and bridges are for (opening again is quick)
+static var _ways_cache := []
 var cursor := Vector2.INF       # B25R1-012: the pad's cursor (tiles); INF while no pad has been used on the map
 const CURSOR_SPEED := 420.0     # screen pixels a second at full tilt
 const PAD_ZOOM := 2.2           # zoom factor a second with a trigger held
@@ -99,10 +101,15 @@ func setup(m) -> void:
 	network = settlement_network(w)
 	bounds = region_bounds(w, w.player)
 	tex = ImageTexture.create_from_image(build_image(w, w.player))
-	roads = road_lines(w.map.overworld, bounds)
+	var key := [w.map.overworld.get_instance_id(), bounds]       # B25R1-025: the lines are a function of the world and the area
+	if _ways_key != key:
+		_ways_key = key
+		_ways_cache = [road_lines(w.map.overworld, bounds), w.map.overworld.streams_in(bounds)]
+		_ways_cache.append(bridge_points(w.map.overworld, _ways_cache[1], bounds))
+	roads = _ways_cache[0]
 	worn = worn_ways(w.map.overworld)
-	streams = w.map.overworld.streams_in(bounds)
-	bridges = bridge_points(w.map.overworld, streams, bounds)
+	streams = _ways_cache[1]
+	bridges = _ways_cache[2]
 	for k in ["mineral", "combat", "tool", "star"]:
 		_icons[k] = load("res://assets/markers/%s.png" % k)
 	_icons.home = load("res://assets/ui/home.png")
@@ -110,6 +117,7 @@ func setup(m) -> void:
 	_rim = UIStyle.inset(_px).duplicate()
 	(_rim as StyleBoxTexture).draw_center = false
 	aerial = AerialMap.of(main)
+	aerial.allow_load = true
 	aerial.refresh()
 	aerial.pump(PUMP_USEC, true)
 	_fit()
@@ -318,6 +326,7 @@ func _process(delta: float) -> void:
 	# zoomed out, the aerial pages are minified: their mipmaps, filtered, rather than every eighth pixel
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS if zoom < float(AerialMap.LO) else CanvasItem.TEXTURE_FILTER_NEAREST
 	if aerial != null and is_visible_in_tree():
+		aerial.allow_load = true                   # (a map closed just before this one opened let go of the art)
 		if not aerial.queue.is_empty():
 			aerial.pump(PUMP_USEC, true)
 		elif not aerial.hi_queue.is_empty():
@@ -803,3 +812,10 @@ func _dashed(a: Vector2, b: Vector2, col: Color) -> void:
 	for k in n:
 		if k % 2 == 0:
 			draw_line(a.lerp(b, k / float(n)), a.lerp(b, (k + 1) / float(n)), col, 2.0)
+
+
+## B25R1-025: the atlases read to shrink the tiles are let go as the map closes (what was shrunk is kept).
+func _exit_tree() -> void:
+	if aerial != null:
+		aerial.release_art()
+		aerial.allow_load = false

@@ -195,7 +195,13 @@ func _seed(s: int) -> void:
 		asked += 1
 	a.pump_hi(100000000)
 	check(asked > AerialMap.HI_KEEP and a.hi.size() <= AerialMap.HI_KEEP, "seed %d: at most %d close pictures are kept (%d of %d asked)" % [s, AerialMap.HI_KEEP, a.hi.size(), asked])
-	# the maps open quickly once drawn; the player marked where they stand
+	# the maps open quickly once drawn (the second time: the first also reads the road network and the streams, as before
+	# the aerial view); the player marked where they stand
+	main.ui.show_map("region")
+	await _frames(2)
+	main.ui.hide_all()
+	await _frames(2)
+	check(a._atlas.all(func(im): return im == null), "seed %d: the atlases are let go as the map closes" % s)
 	t0 = Time.get_ticks_usec()
 	main.ui.show_map("region")
 	var open_ms := (Time.get_ticks_usec() - t0) / 1000.0

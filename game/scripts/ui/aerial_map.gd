@@ -29,8 +29,10 @@ static var _inst: AerialMap = null
 var main
 var world: World
 var ow: Overworld
-var _atlas: Array[Image] = []       # the tile atlases (MapView.sources), RGBA8
+var _atlas: Array = []             # the tile atlases (MapView.sources) as RGBA8 images, loaded while a map is open (release_art)
 var _cols: Array[int] = []
+var allow_load := true              # false during play: a chunk needing art not yet shrunk waits for a map to open
+var _missing := false
 var _pal := {}                      # px a tile -> {tile value -> Image (k x k) or null (clear)}
 var _spr := {}                      # px a tile -> {art file -> [Image, scale]}
 var _crops: Image
@@ -71,14 +73,7 @@ func _setup(m) -> void:
 	ow = world.map.overworld
 	var view: MapView = m.view
 	for k in view.sources.size():
-		var tex: Texture2D = view.sources[k].texture
-		var im: Image = tex.get_image() if tex != null else null
-		if im == null:
-			im = Image.create(T, T, false, Image.FORMAT_RGBA8)
-		if im.is_compressed():
-			im.decompress()
-		im.convert(Image.FORMAT_RGBA8)
-		_atlas.append(im)
+		_atlas.append(null)
 		_cols.append(int(view.columns[k]))
 	var ci: Image = load("res://assets/tiles/crops.png").get_image()
 	if ci.is_compressed():
@@ -89,24 +84,57 @@ func _setup(m) -> void:
 
 
 # ------------------------------------------------------------------ art, shrunk -----------------
+## An atlas's image (MapView.sources), loaded on first need; null while loading is not allowed (play: see allow_load).
+func _atlas_img(a: int) -> Image:
+	if _atlas[a] == null:
+		if not allow_load:
+			return null
+		var tex: Texture2D = main.view.sources[a].texture
+		var im: Image = tex.get_image() if tex != null else null
+		if im == null:
+			im = Image.create(T, T, false, Image.FORMAT_RGBA8)
+		if im.is_compressed():
+			im.decompress()
+		im.convert(Image.FORMAT_RGBA8)
+		_atlas[a] = im
+	return _atlas[a]
+
+
+## Let go of the atlases (tens of MB): what was shrunk from them is kept. Called as a map closes.
+func release_art() -> void:
+	for a in _atlas.size():
+		_atlas[a] = null
+
+
 ## A tile shrunk to k x k: each pixel the alpha-weighted mean of its (16/k)^2 source pixels; null when the tile is clear.
+## Both sizes are made at once (so the atlas is needed once a tile). With loading not allowed and the atlas not at hand,
+## null and `_missing` set (not remembered).
 func tile(v: int, k: int) -> Image:
 	var pal: Dictionary = _pal.get(k, {})
-	if pal.is_empty():
-		_pal[k] = pal
 	if pal.has(v):
 		return pal[v]
 	var a := v / 100000
-	var out: Image = null
-	if a >= 0 and a < _atlas.size():
-		var t := v % 100000
-		var cols := _cols[a]
-		var src := _atlas[a]
-		var r := Rect2i((t % cols) * T, (t / cols) * T, T, T)
-		if r.end.x <= src.get_width() and r.end.y <= src.get_height():
-			out = shrink(src.get_region(r), T / k)
-	pal[v] = out
-	return out
+	if a < 0 or a >= _atlas.size():
+		for kk in [LO, HI]:
+			_pal_of(kk)[v] = null
+		return null
+	var src := _atlas_img(a)
+	if src == null:
+		_missing = true
+		return null
+	var t := v % 100000
+	var cols := _cols[a]
+	var r := Rect2i((t % cols) * T, (t / cols) * T, T, T)
+	var region: Image = src.get_region(r) if r.end.x <= src.get_width() and r.end.y <= src.get_height() else null
+	for kk in [LO, HI]:
+		_pal_of(kk)[v] = shrink(region, T / kk) if region != null else null
+	return _pal[k][v]
+
+
+func _pal_of(k: int) -> Dictionary:
+	if not _pal.has(k):
+		_pal[k] = {}
+	return _pal[k]
 
 
 ## `img` shrunk by an integer factor `f` (alpha-weighted box filter); null if every pixel is clear.
@@ -200,8 +228,10 @@ func sprite(file: String, k: int) -> Image:
 
 
 # ------------------------------------------------------------------ composing ------------------
-## The picture of chunk `cc` at k px a tile: what the world view draws there, ground to roofs.
+## The picture of chunk `cc` at k px a tile: what the world view draws there, ground to roofs; null when it needs art that
+## may not be loaded now (allow_load false).
 func compose(cc: Vector2i, k: int) -> Image:
+	_missing = false
 	var t0 := Time.get_ticks_usec()
 	var n := Overworld.CHUNK
 	var box := Rect2i(cc * n, Vector2i(n, n))
@@ -278,6 +308,8 @@ func compose(cc: Vector2i, k: int) -> Image:
 		img.blend_rect(im, Rect2i(Vector2i.ZERO, im.get_size()), Vector2i(at.round()))
 	for e in tops:
 		_put(img, e[0].x - box.position.x, e[0].y - box.position.y, k, e[1], false)
+	if _missing:
+		return null                         # (art not at hand during play: drawn when a map opens)
 	if k == LO:
 		lo_usec += Time.get_ticks_usec() - t0
 		lo_drawn += 1
@@ -560,8 +592,11 @@ func pump(budget_usec: int, generate: bool, most := 1 << 30) -> int:
 		queue.remove_at(i)
 		if generate and not ow.cache.has(cc):
 			_keep_near()
-		draw_lo(cc)
-		done += 1
+		if draw_lo(cc):
+			done += 1
+		else:
+			queue.insert(i, cc)
+			i += 1
 	return queue.size()
 
 
@@ -575,8 +610,10 @@ func _keep_near() -> void:
 				ow.get_chunk(pc + Vector2i(dx, dy))
 
 
-func draw_lo(cc: Vector2i) -> void:
+func draw_lo(cc: Vector2i) -> bool:
 	var img := compose(cc, LO)
+	if img == null:
+		return false
 	var pg := page_of(cc)
 	var p: Dictionary = pages.get(pg, {})
 	if p.is_empty():
@@ -588,6 +625,7 @@ func draw_lo(cc: Vector2i) -> void:
 	(p.img as Image).blit_rect(img, Rect2i(Vector2i.ZERO, img.get_size()), at)
 	p.dirty = true
 	lo_sig[cc] = sig(cc)
+	return true
 
 
 ## A page's texture, uploaded again when a chunk in it was drawn.
@@ -635,6 +673,8 @@ func pump_hi(budget_usec: int) -> int:
 		if not ow.cache.has(cc):
 			_keep_near()
 		var img := compose(cc, HI)
+		if img == null:
+			continue
 		_use += 1
 		hi[cc] = {"tex": ImageTexture.create_from_image(img), "sig": sig(cc), "use": _use}
 	while hi.size() > HI_KEEP:
