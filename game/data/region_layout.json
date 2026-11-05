@@ -853,8 +853,11 @@
     "BONE-C3-P037",
     "BONE-C4-P005"
    ],
-   "note": "the first great hill of the Downs above Netherton; from its top downs on downs to the south",
-   "object": ""
+   "note": "the first great hill of the Downs above Netherton; from its top downs on downs to the south; its top raised as a rock-rimmed plateau of open turf about 22 tiles round Bear Castle (generation 5), climbed where the roads cut through the rim",
+   "object": "hill",
+   "raised": {
+    "r": 22
+   }
   },
   {
    "id": "bear_castle",
@@ -875,7 +878,7 @@
    "id": "bear_figures",
    "name": "the chalk figures of Bear Hill",
    "kind": "chalk figure",
-   "x": 34,
+   "x": 22,
    "y": 470,
    "label": "CANON",
    "src": [
@@ -973,8 +976,18 @@
    "src": [
     "BONE-C5-P002"
    ],
-   "note": "on a knoll overlooking the town",
-   "object": "site:higham/keep"
+   "note": "on a knoll overlooking the town; the knoll a raised top round the castle with steps cut through its rim below the gate (generation 5)",
+   "object": "site:higham/keep",
+   "raised": {
+    "site": "higham",
+    "slot": "castle",
+    "margin": [
+     2,
+     4,
+     5,
+     5
+    ]
+   }
   },
   {
    "id": "higham_abbey",
