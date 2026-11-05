@@ -3105,6 +3105,9 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 			if not w.trade(b, n, a.item, qty, 0, paid):
 				return false
 			w.deal_xp(b, n, paid)
+			if n.role == "elder" or (n.role == "adult" and n.job == ""):
+				w.stat("unused_stock_sold", qty)          # B25-ECON-P3 diagnostics (decides nothing)
+				w.stat("unused_stock_coins", paid)
 			return true
 		"mine":
 			var d := w.deposit_at(Vector2i(int(a.x), int(a.y)), int(a.get("level", 0)))
