@@ -6095,7 +6095,19 @@
      "date": "2026-11-05",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner 2026-11-05 (B25R1 owner questions 20-26): drop the full-bench founding gate"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: None -> INTEGRATED; verification_status: None -> TARGETED TESTS PASSED; tests: None -> business_founding 77/0, econ_p2p3 25/0, business_ownership 165/0, skilled_employment 54/0, od16 51/0, le04 68/0; run 41987755945; test_commit: None -> b830ec1; commits + edf1854",
+     "why": "implemented on wip/b25r1-econ1 (8257ada, 4248f06, b830ec1), merged into wip/b25r1 as edf1854; 120-day seed 1 Actions run 41987755945: 2 businesses founded (0 before), adults without work 7/80 (10/77), 4 household first tools, 63 units unused stock sold for 108 coins, no leaks; business_founding 77/0, econ_p2p3 25/0"
     }
+   ],
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
+   "tests": "business_founding 77/0, econ_p2p3 25/0, business_ownership 165/0, skilled_employment 54/0, od16 51/0, le04 68/0; run 41987755945",
+   "test_commit": "b830ec1",
+   "commits": [
+    "edf1854"
    ]
   },
   {
@@ -6122,7 +6134,19 @@
      "date": "2026-11-05",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner 2026-11-05 (B25R1 owner questions 20-26)"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: None -> INTEGRATED; verification_status: None -> TARGETED TESTS PASSED; tests: None -> business_founding 77/0, econ_p2p3 25/0, business_ownership 165/0, skilled_employment 54/0, od16 51/0, le04 68/0; run 41987755945; test_commit: None -> b830ec1; commits + edf1854",
+     "why": "implemented on wip/b25r1-econ1 (8257ada, 4248f06, b830ec1), merged into wip/b25r1 as edf1854; 120-day seed 1 Actions run 41987755945: 2 businesses founded (0 before), adults without work 7/80 (10/77), 4 household first tools, 63 units unused stock sold for 108 coins, no leaks; business_founding 77/0, econ_p2p3 25/0"
     }
+   ],
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
+   "tests": "business_founding 77/0, econ_p2p3 25/0, business_ownership 165/0, skilled_employment 54/0, od16 51/0, le04 68/0; run 41987755945",
+   "test_commit": "b830ec1",
+   "commits": [
+    "edf1854"
    ]
   },
   {
@@ -6149,7 +6173,19 @@
      "date": "2026-11-05",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner 2026-11-05 (B25R1 owner questions 20-26)"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: None -> INTEGRATED; verification_status: None -> TARGETED TESTS PASSED; tests: None -> business_founding 77/0, econ_p2p3 25/0, business_ownership 165/0, skilled_employment 54/0, od16 51/0, le04 68/0; run 41987755945; test_commit: None -> b830ec1; commits + edf1854",
+     "why": "implemented on wip/b25r1-econ1 (8257ada, 4248f06, b830ec1), merged into wip/b25r1 as edf1854; 120-day seed 1 Actions run 41987755945: 2 businesses founded (0 before), adults without work 7/80 (10/77), 4 household first tools, 63 units unused stock sold for 108 coins, no leaks; business_founding 77/0, econ_p2p3 25/0"
     }
+   ],
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
+   "tests": "business_founding 77/0, econ_p2p3 25/0, business_ownership 165/0, skilled_employment 54/0, od16 51/0, le04 68/0; run 41987755945",
+   "test_commit": "b830ec1",
+   "commits": [
+    "edf1854"
    ]
   },
   {
