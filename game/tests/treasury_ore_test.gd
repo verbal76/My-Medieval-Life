@@ -33,6 +33,7 @@ func _init() -> void:
 	test_local_reserve()
 	test_closed_trader_neighbour()
 	test_competing_neighbours()
+	test_own_trader_first_claim()
 	test_failed_collection()
 	test_save_load()
 	print("%d checks, %d failures" % [checks, failures])
@@ -246,6 +247,32 @@ func test_competing_neighbours() -> void:
 	var h2: int = s2[0][0].consigned("iron_ore")
 	check(h2 > 0 and h2 <= left and first.consigned("iron_ore") == h1, "it takes %d of the %d left, never the first's units" % [h2, left])
 	check(int(g.gov.granary.get("iron_ore", 0)) == int(g._keep(g.biz.smith).get("iron_ore", 0)) + spare - h1 - h2, "the granary lost exactly what the two carry; the smith's stock stays")
+	check(_totals(r) == tot and r.audit() == "", "conserved (%s)" % r.audit())
+
+
+## Owner decision 32 with B25-ECON-P7: a place WITH a trader keeps its trader's first claim on its granary ore, as much as it can
+## carry; a neighbour's walker may take only the rest.
+func test_own_trader_first_claim() -> void:
+	var f := _closed_quarry(100)
+	var r: Regions = f.r
+	var g: OffMapSettlement = f.g
+	var m: Dictionary = f.m
+	var room := int(OffMapSettlement.rules().carry.iron_ore) - int(m.stock.get("iron_ore", 0))
+	var spare := g.granary_spare("iron_ore")
+	check(spare > room and g.consign_spare("iron_ore") == spare - room, "Garton keeps its own trader's room (%d) of the granary's %d spare; %d open to neighbours" % [room, spare, g.consign_spare("iron_ore")])
+	var tot := _totals(r)
+	r.consign_round(r.day)
+	var sts := _consign_trips(r)
+	check(sts.size() == 1, "a neighbour's walker goes for the rest")
+	if sts.is_empty():
+		return
+	_arrive(r)
+	var c: OffMapSettlement = sts[0][0]
+	var got := int((c.trader().get("consign", {}) as Dictionary).get("iron_ore", {}).get("garton/treasury", 0))
+	check(got > 0 and got <= spare - room, "it takes %d, never the own trader's share" % got)
+	check(g.granary_spare("iron_ore") >= room, "the own trader's share is still in the granary (%d)" % g.granary_spare("iron_ore"))
+	g.begin_visit()
+	check(int(m.consign.get("iron_ore", {}).get("treasury", 0)) == room, "and its own trader carries it on the next visit (%d)" % room)
 	check(_totals(r) == tot and r.audit() == "", "conserved (%s)" % r.audit())
 
 

@@ -1977,7 +1977,8 @@ func _regions(start: Dictionary) -> Dictionary:
 		"moves": r.move_counts.duplicate(), "audit": r.audit(), "coins": coins_now, "coins_start": int(start.regions_coins), "coins_delta": coins_now - int(start.regions_coins),
 		"village_paid_net": net, "coins_mismatch": (coins_now - int(start.regions_coins)) - net,
 		"goods_mismatch": bad_goods.size(), "goods_mismatch_items": bad_goods, "population": r.population(),
-		"settlements": r.summary(), "made": made, "used": used, "bought_from_village": in_v, "sold_to_village": out_v}
+		"settlements": r.summary(), "made": made, "used": used, "bought_from_village": in_v, "sold_to_village": out_v,
+		"traders_open": r.list.filter(func(x): return not x.trader().is_empty()).map(func(x): return x.id)}     # B25-ECON-P4 report: places with a trader (read only)
 
 
 ## FARM-08 (owner, 2026-10-21): the farming economy for the shared-yield comparison: the fields, the pens and their
@@ -2286,6 +2287,7 @@ func _print_sample(s: Dictionary) -> void:
 		per.append("%s %d people %dc (treasury %d, trader %d, %d hungry, %d died)" % [st.id, st.population, st.coins, st.treasury, st.trader, st.hungry, st.deaths])
 	print("  neighbours: %d people, %d coins (village paid net %d); %s%s" % [rg.population, rg.coins, rg.village_paid_net, "; ".join(per),
 		("  AUDIT " + str(rg.audit)) if str(rg.audit) != "" else ""])
+	print("  traders open: %d %s" % [(rg.get("traders_open", []) as Array).size(), str(rg.get("traders_open", []))])
 	print("  migration (MIGRATE-18): %d to the settlements, %d to the village; by reason %s" % [rg.migrants_out, rg.migrants_in, JSON.stringify(rg.moves)])
 	if w.homesteads != null and w.life != null:      # B25R1-010/013/014: the village by age, the rural people, runaways, the band
 		var occ := {}

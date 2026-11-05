@@ -36,6 +36,7 @@ func _init() -> void:
 	test_return_and_closed_source()
 	test_save_load()
 	test_other_trader_collects()
+	test_own_trader_first_claim()
 	test_settle_and_return()
 	test_closed_holders()
 	test_remote_save_load()
@@ -220,7 +221,7 @@ func test_other_trader_collects() -> void:
 		return
 	var c: OffMapSettlement = st[0]
 	var t: Dictionary = st[1]
-	check(carriers.has(c.id), "the same trader as in the days' run (%s)" % c.id)
+	check(not carriers.has("garton"), "the days' run carrier is a neighbour (%s; which one depends on whose walker is free that morning, as below)" % str(carriers))
 	var nearest := ""
 	var best := 1 << 30
 	for s: OffMapSettlement in r.list:
@@ -230,6 +231,22 @@ func test_other_trader_collects() -> void:
 				best = dd
 				nearest = s.id
 	check(c.id == nearest, "the walker is the nearest trader's (%s, nearest %s)" % [c.id, nearest])
+	var f2 := _no_garton_trader(40)                        # the nearest trader with no walker free (all of its people away): the next goes
+	var r2: Regions = f2.r
+	var near: OffMapSettlement = r2.by_id[nearest]
+	for hid in SettlementTrips.owner_hids(near, "trader"):
+		for mm in near.hh[int(hid)].mem:
+			near.live[OffMapSettlement.member_id(mm)] = true
+	var g2: OffMapSettlement = f2.g
+	var order := []
+	for s: OffMapSettlement in r2.list:
+		if s != g2 and s != near and not s.trader().is_empty() and not SettlementTrips.walker(s, SettlementTrips.owner_hids(s, "trader")).is_empty():
+			order.append([r2._road_tiles("garton", s.id, maxi(1, roundi(Vector2(g2.pos).distance_to(Vector2(s.pos))))), s.id])
+	order.sort()
+	r2.consign_round(r2.day)
+	var st2 := _consign_trip(r2)
+	check(not order.is_empty() and not st2.is_empty() and st2[0].id == str(order[0][1]), "with %s's people all away, the next nearest trader with a walker free goes (%s)" % [nearest, str(st2[0].id) if not st2.is_empty() else "none"])
+	near.live.clear()
 	check(int(t.coins) == 0 and (t.pack as Dictionary).is_empty() and str(t.owner) == "trader", "it sets out with no coins and an empty pack")
 	var arr := SettlementTrips.arrives(r, t)
 	check(arr > float(r.day) * 1440.0 + 60.0, "Garton is a real walk away (arrives at minute %d)" % int(arr))
@@ -245,6 +262,39 @@ func test_other_trader_collects() -> void:
 	check(int(m.consign.get("iron_ore", {}).get("garton/quarry", 0)) == got, "the trader holds the %d units on consignment, owed to Garton's diggings" % got)
 	check(_totals(r) == tot and r.audit() == "", "no coin and no good created or lost between the places (%s)" % r.audit())
 	check(ore0 > 0 and int(m.stock.get("iron_ore", 0)) >= got, "the ore is in the trader's stock for the village's caravan")
+
+
+## Owner 2026-11-05, question 32: a place WITH a trader of its own is collected from too, but only the spare beyond what its own
+## trader still has carry room for (its own trader's first claim); the neighbour's walker takes the remainder.
+func test_own_trader_first_claim() -> void:
+	var carry := int(OffMapSettlement.rules().carry.get("iron_ore", 0))
+	var f := _garton(carry - 5)                            # spare below its own trader's carry room: nothing for neighbours
+	var r: Regions = f.r
+	var g: OffMapSettlement = f.g
+	var m: Dictionary = f.m
+	var room := carry - int(m.stock.get("iron_ore", 0))
+	check(not m.is_empty() and room == carry and g.consign_spare("iron_ore") == 0, "Garton's own trader has first claim on all %d spare ore (room %d): none open to neighbours" % [carry - 5, room])
+	r.consign_round(r.day)
+	check(_consign_trip(r).is_empty(), "so no neighbour's walker is sent to Garton")
+	f = _garton(carry + 15)                                # 15 beyond its own trader's room
+	r = f.r
+	g = f.g
+	m = f.m
+	var q: Dictionary = f.q
+	check(g.consign_spare("iron_ore") == 15, "with %d spare, the %d beyond its own trader's carry room are open to neighbours (%d)" % [carry + 15, 15, g.consign_spare("iron_ore")])
+	var tot := _totals(r)
+	var spare0 := int(q.stock.iron_ore) - int(g._keep(q).get("iron_ore", 0))
+	var c := _collect(f)
+	check(c != null and c != g, "a neighbour trader's walker collects at Garton although Garton has a trader of its own")
+	if c == null:
+		return
+	var got := int(c.trader().get("consign", {}).get("iron_ore", {}).get("garton/quarry", 0))
+	var left := int(q.stock.iron_ore) - int(g._keep(q).get("iron_ore", 0))
+	check(got > 0 and got <= 15 and left == spare0 - got and left >= carry, "the neighbour takes %d of the remainder; %d stay for Garton's own trader (room %d)" % [got, left, carry])
+	check(int(m.stock.get("iron_ore", 0)) == 0 and not m.has("consign") or (m.consign as Dictionary).is_empty(), "Garton's own trader's stock is never taken")
+	check(_totals(r) == tot and r.audit() == "", "nothing created or lost (%s)" % r.audit())
+	g.consign_out()                                        # its own trader's visit opens: it takes its full carry room
+	check(int(m.consign.get("iron_ore", {}).get("quarry", 0)) == carry, "Garton's own trader then carries its full %d" % carry)
 
 
 func test_settle_and_return() -> void:

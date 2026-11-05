@@ -405,8 +405,9 @@ static func market(r: Regions, dest: OffMapSettlement, me: SettlementParty, p: D
 ##            each source business at its place (a source closed meanwhile: its place's treasury);
 ##   give     the source's goods held past rules.consign_hold_days unsold go back to it (closed: to the treasury's granary);
 ##   collect  a trader's walker (never a treasury's) takes along, unpaid, the goods of rules.consign the place's businesses hold above
-##            their keep, then its treasury granary's spare (B25-ECON-P7, OffMapSettlement.granary_spare, owed to "<place>/treasury"), up to the trader's carry room, only from a place with no trader of its own (its own trader carries them,
-##            B25-ECON-P4); they stay the source's (`got`, then the trader's `consign` under "<place>/<type>") until the village buys
+##            their keep, up to the trader's carry room and never what that place's own trader still has carry room for (its first
+##            claim, OffMapSettlement.consign_spare; owner 2026-11-05, question 32), then its treasury granary's spare (B25-ECON-P7,
+##            OffMapSettlement.granary_spare, owed to "<place>/treasury"); they stay the source's (`got`, then the trader's `consign` under "<place>/<type>") until the village buys
 ##            them or they go back.
 ## Every hand-over is a matched regional line on both places (SettlementParty.deal; goods for no coins, coins for no goods); nothing is
 ## created. Returns the errand's lines.
@@ -435,13 +436,13 @@ static func consign_errand(r: Regions, s: OffMapSettlement, dest: OffMapSettleme
 				lines.append(["returned", str(item), n, src.holder])
 	p["got"] = {}
 	var m := s.trader()
-	if str(t.owner) != "trader" or m.is_empty() or not dest.trader().is_empty():
+	if str(t.owner) != "trader" or m.is_empty():
 		return lines
 	var rl := OffMapSettlement.rules()
 	var bts: Array = dest.biz.keys()
 	bts.sort()
 	for item in rl.get("consign", []):
-		var room := int(rl.carry.get(item, 0)) - int(m.stock.get(item, 0)) - me.held(str(item))
+		var room := mini(int(rl.carry.get(item, 0)) - int(m.stock.get(item, 0)) - me.held(str(item)), dest.consign_spare(str(item)))
 		for bt in bts:
 			if room <= 0:
 				break
