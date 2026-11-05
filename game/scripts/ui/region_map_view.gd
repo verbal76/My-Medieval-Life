@@ -27,6 +27,13 @@ extends Control
 ## sunken bronze-rimmed inset, the legend on a wooden strip under a bronze trim, the compass and any refusal in their own boxes
 ## (an inset, a parchment slip), the type in UIStyle's sizes and colours. Drawing only: the map's area, its coordinates and
 ## every control are as before.
+## Aerial view (B25R1-025, owner 2026-11-05): the ground the player has explored, and the home village, are drawn as they are
+## from overhead (AerialMap: the world's own tile art, 2 px a tile for the whole region, 8 px a tile once zoomed in past
+## HI_ZOOM), over the summary colours (the placeholder while a chunk is still being drawn); the roads, streams and bridges are
+## drawn as lines under it (so they show across the unexplored dark) and over it only while zoomed out, fading as the real
+## ground becomes legible. The settlements are framed rather than filled where their ground is drawn. Chunks newly explored
+## are drawn in the background as the player walks (Main calls AerialMap.notice and pump); anything still owed is drawn while
+## the map is open, a few a frame, with a note of how many are left.
 
 const COLOURS := [UIStyle.WOOD_DEEP, Color8(104, 128, 70), Color8(46, 78, 42), Color8(132, 124, 112),
 		Color8(120, 126, 76), Color8(138, 82, 52), Color8(111, 74, 44)]      # by Atlas class: unknown, grass, wood, rock, road, settlement (roofs), village
@@ -46,6 +53,8 @@ const DEST := Color8(96, 196, 232)
 const DRAG := 12.0              # pixels a press may move and still be a tap
 const MAX_ZOOM := 16.0          # screen pixels a tile, at most
 const LEGEND_H := 30.0
+const HI_ZOOM := 5.0            # screen pixels a tile from which the close (8 px a tile) pictures are drawn
+const PUMP_USEC := 8000         # time a frame spent drawing owed chunks while the map is open
 
 var main
 var tex: ImageTexture
@@ -73,6 +82,7 @@ var _icons := {}
 var _placed: Array[Rect2] = []  # the screen rects of the marks and labels drawn this frame
 var _px := 2                    # UIStyle's art pixel (GameUI.ui_px: 2 on a desktop window, 1 in the phone layout)
 var _rim: StyleBox              # the map's sunken rim (UIStyle.inset, its centre left open so the map shows)
+var aerial: AerialMap           # B25R1-025: the aerial pictures of this world
 var cursor := Vector2.INF       # B25R1-012: the pad's cursor (tiles); INF while no pad has been used on the map
 const CURSOR_SPEED := 420.0     # screen pixels a second at full tilt
 const PAD_ZOOM := 2.2           # zoom factor a second with a trigger held
@@ -99,6 +109,9 @@ func setup(m) -> void:
 	_px = int(main.ui.ui_px()) if main.ui != null and main.ui.has_method("ui_px") else 2
 	_rim = UIStyle.inset(_px).duplicate()
 	(_rim as StyleBoxTexture).draw_center = false
+	aerial = AerialMap.of(main)
+	aerial.refresh()
+	aerial.pump(PUMP_USEC, true)
 	_fit()
 
 
@@ -302,6 +315,13 @@ func _process(delta: float) -> void:
 		fit_network()                              # opens on the whole network, and stays so while the window settles
 	if cursor != Vector2.INF and is_visible_in_tree():
 		pad_step(pad_vector(), pad_triggers(), pad_look(), delta)
+	# zoomed out, the aerial pages are minified: their mipmaps, filtered, rather than every eighth pixel
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS if zoom < float(AerialMap.LO) else CanvasItem.TEXTURE_FILTER_NEAREST
+	if aerial != null and is_visible_in_tree():
+		if not aerial.queue.is_empty():
+			aerial.pump(PUMP_USEC, true)
+		elif not aerial.hi_queue.is_empty():
+			aerial.pump_hi(PUMP_USEC)
 	queue_redraw()
 
 
@@ -522,15 +542,72 @@ func _label(font: Font, mark: Rect2, s: String, fs: int, col: Color, must: bool)
 
 
 func _draw() -> void:
-	var w: World = main.world
-	var p: PlayerState = w.player
-	var ow: Overworld = w.map.overworld
-	var font := get_theme_default_font()
 	var ms := map_size()
 	draw_rect(Rect2(Vector2.ZERO, size), BACK)
 	draw_texture_rect(tex, Rect2(to_screen(Vector2(bounds.position)), Vector2(bounds.size) * zoom), false)
 	var view := Rect2(to_tile(Vector2.ZERO), ms / zoom).grow(4.0)
-	# roads: trails under roads
+	_ways(view, 1.0)
+	_draw_aerial(view)
+	var over := clampf((4.0 - zoom) / 3.0, 0.0, 0.85)      # the lines over the drawn ground, fading as it becomes legible
+	if over > 0.0:
+		_ways(view, over)
+	# B25R1-011: the ways worn in or paved since, cell by cell (where the ground is not drawn yet)
+	var cs := maxf(zoom, 2.0)
+	for e in worn:
+		if aerial != null and aerial.lo_sig.has(Overworld.chunk_of(e[0])):
+			continue
+		var col: Color = STONE if e[1] == "stone" else ROAD if e[1] == "road" else TRAIL
+		draw_rect(Rect2(to_screen(Vector2(e[0])) - Vector2(cs, cs) * 0.5 + Vector2(zoom, zoom) * 0.5, Vector2(cs, cs)), col)
+	_markers(view)
+
+
+## B25R1-025: the aerial pictures in `view`: the LO pages (mipmapped when zoomed out), then the close HI chunks past HI_ZOOM.
+func _draw_aerial(view: Rect2) -> void:
+	if aerial == null:
+		return
+	var a := AerialMap.page_of(Vector2i(view.position.floor()) / Overworld.CHUNK - Vector2i.ONE)
+	var z := AerialMap.page_of(Vector2i(view.end.ceil()) / Overworld.CHUNK + Vector2i.ONE)
+	for py in range(a.y, z.y + 1):
+		for px in range(a.x, z.x + 1):
+			var t := aerial.page_tex(Vector2i(px, py))
+			if t == null:
+				continue
+			var r := AerialMap.page_rect(Vector2i(px, py))
+			draw_texture_rect(t, Rect2(to_screen(r.position), r.size * zoom), false)
+	if zoom < HI_ZOOM:
+		aerial.hi_trim({})
+		return
+	var keep := {}
+	var c0 := Overworld.chunk_of(Vector2i(view.position.floor()))
+	var c1 := Overworld.chunk_of(Vector2i(view.end.floor()))
+	var pc := Overworld.chunk_of(Vector2i(view.get_center().floor()))
+	var want: Array[Vector2i] = []
+	for cy in range(c0.y, c1.y + 1):
+		for cx in range(c0.x, c1.x + 1):
+			var cc := Vector2i(cx, cy)
+			if aerial.shown(cc) and aerial.lo_sig.has(cc):
+				want.append(cc)
+	want.sort_custom(func(p: Vector2i, q: Vector2i): return (p - pc).length_squared() < (q - pc).length_squared())
+	for cc in want.slice(0, AerialMap.HI_VIEW):           # (the nearest the middle; the rest stay at 2 px a tile)
+		keep[cc] = true
+		var t := aerial.hi_tex(cc)
+		if t != null:
+			draw_texture_rect(t, Rect2(to_screen(Vector2(cc * Overworld.CHUNK)), Vector2(Overworld.CHUNK, Overworld.CHUNK) * zoom), false)
+	aerial.hi_trim(keep)
+
+
+## Is a settlement's ground drawn (any of its chunks): then it is framed, not filled, so its houses show.
+func _drawn(r: Rect2i) -> bool:
+	if aerial == null:
+		return false
+	for cc in AerialMap._chunks_of(r):
+		if aerial.lo_sig.has(cc):
+			return true
+	return false
+
+
+## The roads, streams and bridges as lines, at opacity `alpha`.
+func _ways(view: Rect2, alpha: float) -> void:
 	for pass_kind in ["trail", "road", "stone"]:
 		for r in roads:
 			if r.kind != pass_kind or not (r.box as Rect2).grow(1.0).intersects(view):
@@ -540,14 +617,14 @@ func _draw() -> void:
 				pts.append(to_screen(c))
 			if pass_kind == "stone":
 				var ws := clampf(zoom * 1.3, 3.0, 14.0)
-				draw_polyline(pts, ROAD_EDGE, ws + 2.0)
-				draw_polyline(pts, STONE, ws)
+				draw_polyline(pts, Color(ROAD_EDGE, alpha), ws + 2.0)
+				draw_polyline(pts, Color(STONE, alpha), ws)
 			elif pass_kind == "road":
 				var wd := clampf(zoom * 1.1, 2.0, 12.0)
-				draw_polyline(pts, ROAD_EDGE, wd + 2.0)
-				draw_polyline(pts, ROAD, wd)
+				draw_polyline(pts, Color(ROAD_EDGE, alpha), wd + 2.0)
+				draw_polyline(pts, Color(ROAD, alpha), wd)
 			else:
-				draw_polyline(pts, TRAIL, clampf(zoom * 0.7, 1.2, 8.0))
+				draw_polyline(pts, Color(TRAIL, alpha), clampf(zoom * 0.7, 1.2, 8.0))
 	# B25R1-Q3: the streams and their pools, under the roads' bridges
 	for st in streams:
 		if not (Rect2(st.box) as Rect2).intersects(view):
@@ -556,18 +633,22 @@ func _draw() -> void:
 		for sp in st.pts:
 			line.append(to_screen(sp))
 		var wide := 2.0 if int(st.get("order", 1)) == 2 else 1.0      # B25R1-017: a river drawn wider than a stream
-		draw_polyline(line, WATER, clampf(zoom * 2.6 * wide, 2.0 * wide, 40.0 * wide))
+		draw_polyline(line, Color(WATER, alpha), clampf(zoom * 2.6 * wide, 2.0 * wide, 40.0 * wide))
 		for pool in st.pools:
-			draw_circle(to_screen(pool[0]), maxf(2.0, float(pool[1]) * zoom), WATER)
+			draw_circle(to_screen(pool[0]), maxf(2.0, float(pool[1]) * zoom), Color(WATER, alpha))
 	for b in bridges:
 		var bs := clampf(zoom * 2.0, 4.0, 24.0)
-		draw_rect(Rect2(to_screen(b) - Vector2(bs, bs) / 2.0, Vector2(bs, bs)), BRIDGE)
-		draw_rect(Rect2(to_screen(b) - Vector2(bs, bs) / 2.0, Vector2(bs, bs)), ROAD_EDGE, false, 1.0)
-	# B25R1-011: the ways worn in or paved since, cell by cell
-	var cs := maxf(zoom, 2.0)
-	for e in worn:
-		var col: Color = STONE if e[1] == "stone" else ROAD if e[1] == "road" else TRAIL
-		draw_rect(Rect2(to_screen(Vector2(e[0])) - Vector2(cs, cs) * 0.5 + Vector2(zoom, zoom) * 0.5, Vector2(cs, cs)), col)
+		draw_rect(Rect2(to_screen(b) - Vector2(bs, bs) / 2.0, Vector2(bs, bs)), Color(BRIDGE, alpha))
+		draw_rect(Rect2(to_screen(b) - Vector2(bs, bs) / 2.0, Vector2(bs, bs)), Color(ROAD_EDGE, alpha), false, 1.0)
+
+
+## The route, the places, the player, the labels, the pad's cursor, the rim, the compass and the legend.
+func _markers(view: Rect2) -> void:
+	var w: World = main.world
+	var p: PlayerState = w.player
+	var ow: Overworld = w.map.overworld
+	var font := get_theme_default_font()
+	var ms := map_size()
 	# the route planned to the destination, from where the player is
 	var tv = main.travel
 	if RegionTravel.has_destination(p):
@@ -585,12 +666,17 @@ func _draw() -> void:
 	var labels: Array = []          # [mark rect, text, font size, colour, must]: in priority order
 	var v := Rect2(ow.village)
 	var vr := Rect2(to_screen(v.position), v.size * zoom)
-	draw_rect(vr, Color(HOME, 0.18))
-	draw_rect(vr, HOME, false, 2.0)
+	var village_drawn := _drawn(ow.village)
+	if not village_drawn:
+		draw_rect(vr, Color(HOME, 0.18))
+	draw_rect(vr, Color(HOME, 0.9 if zoom < 3.0 else 0.6), false, 2.0)
 	var hc := to_screen(v.get_center())
 	var isz := clampf(zoom * 18.0, 20.0, 30.0)
 	var hr := Rect2(hc - Vector2(isz, isz) / 2.0, Vector2(isz, isz))
-	draw_texture_rect(_icons.home, hr, false)
+	if zoom < 3.0 or not village_drawn:
+		draw_texture_rect(_icons.home, hr, false)        # (closer in, the village itself shows: its name is enough)
+	else:
+		hr = Rect2(vr.position + Vector2(vr.size.x / 2.0 - 2.0, -4.0), Vector2(4, 4))
 	_placed.append(hr)
 	labels.append([vr if vr.size.x < 80.0 else hr, "Home", UIStyle.HEAD, HOME, true])
 	for st in ow.sites:
@@ -599,6 +685,13 @@ func _draw() -> void:
 		var visited := p.places.has(str(st.id)) and str(p.places[str(st.id)].how) == "visited"
 		if sr.size.x < 12.0:
 			sr = Rect2(sc - Vector2(6, 6), Vector2(12, 12))
+		if _drawn(st.rect) and sr.size.x >= 12.0:
+			if zoom < 3.0:
+				draw_rect(sr, Color(PALE if visited else UIStyle.OUTLINE, 0.8), false, 1.5)  # its houses show: framed only, then not at all
+			var tag := Rect2(Vector2(sr.position.x + sr.size.x / 2.0 - 2.0, sr.position.y - 4.0), Vector2(4, 4))
+			_placed.append(tag)
+			labels.append([tag, "%s  %s" % [str(st.name), RegionTravel.bearing(p.pos, Vector2(st.center))], UIStyle.BODY, PALE, true])
+			continue
 		draw_rect(sr, SITE)
 		draw_rect(sr, PALE if visited else UIStyle.OUTLINE, false, 2.0)
 		_placed.append(sr)
@@ -662,6 +755,9 @@ func _draw() -> void:
 		var pad := Vector2(10, 6) + Vector2(_px, _px) * 4.0
 		draw_style_box(slip, Rect2(Vector2(10, 10), Vector2(sw, UIStyle.BODY + 4) + pad * 2.0))
 		draw_string(font, Vector2(10, 10) + pad + Vector2(0, UIStyle.BODY), status, HORIZONTAL_ALIGNMENT_LEFT, -1, UIStyle.BODY, UIStyle.INK_RED)
+	if aerial != null and not aerial.queue.is_empty():          # B25R1-025: the explored ground still being drawn
+		var say := "Drawing the map… %d" % aerial.queue.size()
+		_text(font, Vector2(14, ms.y - 14), say, UIStyle.SMALL + 1, UIStyle.MUTED)
 	# the legend, along the foot: a wooden strip under a bronze trim
 	var ly := size.y - LEGEND_H
 	draw_rect(Rect2(Vector2(0, ly), Vector2(size.x, LEGEND_H)), UIStyle.WOOD)

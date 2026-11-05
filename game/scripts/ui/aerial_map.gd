@@ -21,6 +21,7 @@ const LO := 2
 const HI := 8
 const PAGE := 4                     # chunks a LO page side (128 tiles, 256 px)
 const HI_KEEP := 36
+const HI_VIEW := 30                 # close pictures a view asks for at most (the nearest its middle), so they never churn
 const T := 16
 
 static var _inst: AerialMap = null
@@ -521,7 +522,7 @@ func refresh() -> void:
 		if lo_sig.get(cc, null) != sig(cc):
 			want.append(cc)
 	for cc in _chunks_of(ow.village):
-		if lo_sig.get(cc, null) != sig(cc):
+		if lo_sig.get(cc, null) != sig(cc) and not world.player.explored.has(cc):
 			want.append(cc)
 	var pc := Overworld.chunk_of(Vector2i(world.player.pos.floor()))
 	want.sort_custom(func(a: Vector2i, b: Vector2i): return (a - pc).length_squared() < (b - pc).length_squared())
@@ -546,11 +547,12 @@ func notice() -> void:
 
 
 ## Draw queued LO chunks for up to `budget_usec`; with `generate` false a chunk not in the overworld's cache waits (no
-## generation stalls play): it is drawn when a map is open. Returns how many are still waiting.
-func pump(budget_usec: int, generate: bool) -> int:
+## generation stalls play): it is drawn when a map is open. At most `most` drawn. Returns how many are still waiting.
+func pump(budget_usec: int, generate: bool, most := 1 << 30) -> int:
 	var t0 := Time.get_ticks_usec()
 	var i := 0
-	while i < queue.size() and Time.get_ticks_usec() - t0 < budget_usec:
+	var done := 0
+	while i < queue.size() and Time.get_ticks_usec() - t0 < budget_usec and done < most:
 		var cc: Vector2i = queue[i]
 		if not generate and not ow.cache.has(cc) and not ow.village.encloses(Rect2i(cc * Overworld.CHUNK, Vector2i(Overworld.CHUNK, Overworld.CHUNK))):
 			i += 1
@@ -559,6 +561,7 @@ func pump(budget_usec: int, generate: bool) -> int:
 		if generate and not ow.cache.has(cc):
 			_keep_near()
 		draw_lo(cc)
+		done += 1
 	return queue.size()
 
 
@@ -593,10 +596,12 @@ func page_tex(pg: Vector2i) -> ImageTexture:
 	if p.is_empty():
 		return null
 	if p.dirty:
+		var up: Image = (p.img as Image).duplicate()
+		up.generate_mipmaps()                       # (the Region map minifies them when zoomed out)
 		if p.tex == null:
-			p.tex = ImageTexture.create_from_image(p.img)
+			p.tex = ImageTexture.create_from_image(up)
 		else:
-			(p.tex as ImageTexture).update(p.img)
+			(p.tex as ImageTexture).update(up)
 		p.dirty = false
 	return p.tex
 

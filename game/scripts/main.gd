@@ -2008,6 +2008,7 @@ func _process(delta: float) -> void:
 		_player_step(delta)
 		_projectiles_step(delta)
 		_look_step(delta)
+		_aerial_step()
 		var h := int(world.minutes / 60.0)
 		if h != autosave_hour:
 			autosave_hour = h
@@ -2022,6 +2023,22 @@ func _process(delta: float) -> void:
 	_sync_gather_mark()
 	_sync_outlines()
 	ui.update_hud()
+
+
+# ---------------------------------------------------------------- aerial maps (B25R1-025) -------
+## B25R1-025: the chunks the player explores are drawn for the maps as they go (AerialMap), at most one a frame and only one
+## the overworld has at hand (no generation during play); what is left is drawn while a map is open.
+const AERIAL_BUDGET_USEC := 3000
+var aerial_background := true            # tests may turn it off
+
+
+func _aerial_step() -> void:
+	if not aerial_background or world.player.map_level != 0 or ow_view == null:
+		return
+	var a := AerialMap.of(self)
+	a.notice()
+	if not a.queue.is_empty():
+		a.pump(AERIAL_BUDGET_USEC, false, 1)
 
 
 # ---------------------------------------------------------------- presence (B25R1-019) ----------
