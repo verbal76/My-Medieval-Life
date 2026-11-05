@@ -108,15 +108,28 @@ func act(c: Callable) -> Variant:
 	return r
 
 
-func copies_agree(what: String) -> void:
-	var s0: int = main.net.syncs
-	await command({"cmd": "dump", "keys": SAME + ["npcs"]})
-	await until(func(): return main.net.syncs > s0, 2.0)
-	await wait(0.3)
+## The guest's copy as it stood the moment it took the sync the host marked with its dump (the host's world of the dump's frame),
+## not as later syncs have moved it on. ENet drops a peer silent for TIMEOUT_MAX_MS: a reliable sync not here by then never comes.
+func copy_at_dump(keys: Array) -> Array:
+	var mark := seq + 1                                # the dump command's number (command), sent with its sync (NetSession.send_syncs)
+	var mine := {}
+	var take := func(m: int) -> void:
+		if m == mark and mine.is_empty():
+			mine.merge(JSON.parse_string(JSON.stringify(main.world.to_dict())))
+	main.net.world_synced.connect(take)
+	await command({"cmd": "dump", "keys": keys})
+	await until(func(): return not mine.is_empty(), NetSession.TIMEOUT_MAX_MS / 1000.0)
+	main.net.world_synced.disconnect(take)
 	var f := FileAccess.open(dir + "dump.json", FileAccess.READ)
 	var host: Dictionary = JSON.parse_string(f.get_as_text()) if f != null else {}
-	var mine: Dictionary = JSON.parse_string(JSON.stringify(main.world.to_dict()))
-	var bad := []
+	return [host if int(host.get("mark", -1)) == mark else {}, mine]
+
+
+func copies_agree(what: String) -> void:
+	var both: Array = await copy_at_dump(SAME + ["npcs"])
+	var host: Dictionary = both[0]
+	var mine: Dictionary = both[1]
+	var bad := [] if not host.is_empty() and not mine.is_empty() else ["the host's marked sync or dump did not come"]
 	for k in SAME:
 		if JSON.stringify(host.get("sections", {}).get(k)) != JSON.stringify(mine.get(k)):
 			bad.append(k)
@@ -124,12 +137,13 @@ func copies_agree(what: String) -> void:
 	var links := {}
 	for nd in host.get("sections", {}).get("npcs", []):
 		links[int(nd.id)] = [nd.mother, nd.father, nd.get("adoptive", []), nd.household, nd.children]
-	for n: NPC in main.world.npcs:
-		var h = links.get(n.id)
-		if h == null or JSON.stringify([float(n.mother), float(n.father), n.adoptive.map(func(x): return float(x)), float(n.household), n.children.map(func(x): return float(x))]) != JSON.stringify(h):
-			bad.append("npc %d" % n.id)
+	var guest_npcs: Array = mine.get("npcs", [])
+	for nd in guest_npcs:
+		var h = links.get(int(nd.id))
+		if h == null or JSON.stringify([nd.mother, nd.father, nd.get("adoptive", []), nd.household, nd.children]) != JSON.stringify(h):
+			bad.append("npc %d" % int(nd.id))
 			break
-	check(bad.is_empty() and links.size() == main.world.npcs.size(), "%s: the guest's copy holds the host's households, ties and family links%s" % [what, "" if bad.is_empty() else " (differs: %s)" % str(bad)])
+	check(bad.is_empty() and links.size() == guest_npcs.size(), "%s: the guest's copy holds the host's households, ties and family links%s" % [what, "" if bad.is_empty() else " (differs: %s)" % str(bad)])
 
 
 func couple() -> Dictionary:
