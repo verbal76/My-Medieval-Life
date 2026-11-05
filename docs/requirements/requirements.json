@@ -6321,10 +6321,18 @@
      "date": "2026-11-05",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-econ6 worker; branch: None -> wip/b25r1-econ6",
      "why": "owner approved 2026-11-05; in development on wip/b25r1-econ6; merges into B25R1 only if ready before final validation, else after the private playtest"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "commits + a583318",
+     "why": "implemented on wip/b25r1-econ6 (a583318, docs 382445d): treasury granary ore is a consignment source after businesses (own trader first, then neighbours), working stock protected; treasury_ore_test 57/0; Tests 42109036522 green; 120-day seeds 1-4 run 42109041416 leaks 0, iron imports seeds 2-4 86 -> 517. Not in the B25R1 package: F a9e9f6e was frozen first and the owner's final package directive forbids economy changes; merge after the release"
     }
    ],
    "assigned_worker": "b25r1-econ6 worker",
-   "branch": "wip/b25r1-econ6"
+   "branch": "wip/b25r1-econ6",
+   "commits": [
+    "a583318"
+   ]
   },
   {
    "id": "B25-EMPLOY-D3",
