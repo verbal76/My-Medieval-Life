@@ -144,7 +144,9 @@ func to_dict() -> Dictionary:
 	if not intel.is_empty():
 		d.intel = intel.duplicate(true)      # REGION-NAV-01 S5: written only when they know something
 	if not journey.is_empty():
-		d.journey = journey.duplicate(true)  # REGION-NAV-01: written only for a traveller
+		# REGION-NAV-01: written only for a traveller, in the form a save file holds (JSON numbers), so the dict is the same
+		# whether the trip began before a load (read back from JSON) or after it (w.day() ints): a save is stable when saved again
+		d.journey = JSON.parse_string(JSON.stringify(journey))
 	return d
 
 
