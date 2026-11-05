@@ -1,0 +1,215 @@
+name: Simulation gate
+
+# SIM-GATE-01 (owner, 2026-10-24, permanent), split across runners (B25R1 CI architecture, docs/ci/CI_ARCHITECTURE_B25R1.md
+# section 3). Called by release.yml (its sim-gate job, before anything is released) and by long-sims.yml's gate mode, so the
+# two run the same gate. Nothing here changes what the gate runs or how it judges, only where the runs happen:
+#
+#   plan    tools/ci_plan.py gate-plan reads exactly the runs tools/sim_suite.py would run on this commit (its rotating
+#           seeds included) and packs them into PARTS parts by measured seconds (tools/ci_timings.json). Each determinism
+#           pair (eq_s1/det_s1, x20_on_s1/x20_on_det_s1) stays in one part, so its recorder-overhead measure compares runs
+#           that shared a machine; the comparison itself is made by the gather job over all outputs.
+#   part    one runner per part: tools/sim_suite.py --only <its runs>, the same commands, recorder and checks as the
+#           single-job gate; then gate-record writes the part's job results and exit code. Its outputs (sim.json, logs,
+#           probe results, recorder archives) are uploaded for the gather job. A part's own verdict is a subset's and is
+#           not kept.
+#   gather  downloads every part's outputs into one directory; gate-merge checks every planned run is there exactly once,
+#           from this commit, with the tool's exit 0 or 1 (a finding, never a tool failure or a lost part), and writes the
+#           merged gate.json; tools/sim_suite.py --reuse then evaluates the whole set as one gate (baseline comparison,
+#           both determinism pairs, recorder checks, coverage, analyses and workbook) and exits 1 on a blocking finding,
+#           exactly as the single-job gate does. It uploads the same `sim-gate` and `sim-gate-archives` artifacts as before
+#           (plus parts.json and the part records), so release.yml and tools/ci_consolidate.py read them unchanged.
+
+on:
+  workflow_call:
+    inputs:
+      build_number:
+        description: "The build number the gate records (gate.json build)"
+        type: string
+        default: ""
+      parts:
+        description: "Runners to split the gate's runs across"
+        type: number
+        default: 5
+
+env:
+  GODOT_VERSION: "4.7.2"
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      plan: ${{ steps.plan.outputs.plan }}
+      parts: ${{ steps.plan.outputs.parts }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - id: plan
+        env:
+          PARTS: ${{ inputs.parts }}
+        run: |
+          python3 tools/ci_plan.py gate-plan --parts "$PARTS" --jobs 4 > plan.json
+          cat plan.json
+          python3 - <<'PY'
+          import json, os
+          plan = json.load(open("plan.json"))
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write("plan=" + json.dumps(plan, separators=(",", ":")) + "\n")
+              f.write("parts=" + json.dumps(plan["parts"], separators=(",", ":")) + "\n")
+          PY
+
+  part:
+    name: part ${{ matrix.part }} (${{ matrix.runs }} runs)
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.plan.outputs.parts) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot and its export templates
+        id: godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
+          key: godot-${{ env.GODOT_VERSION }}-linux-templates
+
+      - name: Install Godot and its export templates
+        if: steps.godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot-bin
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -sSfL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip && mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" ~/godot-bin/godot
+          curl -sSfL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          dest="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          mkdir -p "$dest" && unzip -q -j templates.tpz -d "$dest"
+          rm godot.zip templates.tpz
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Import the project
+        run: ~/godot-bin/godot --headless --path game --import
+
+      - name: Run this part of the simulation gate (SIM-GATE-01)
+        env:
+          BUILD_N: ${{ inputs.build_number }}
+          PART: ${{ matrix.part }}
+          ONLY: ${{ matrix.only }}
+        run: |
+          # this part's runs with the flight recorder on, in parallel; the verdict is the gather job's, over every part
+          echo "part $PART: $ONLY (estimated ${{ matrix.estimate_seconds }} s)"
+          set +e
+          python3 tools/sim_suite.py --out out/sim-gate --godot ~/godot-bin/godot --jobs "$(nproc)" --only "$ONLY"
+          code=$?
+          set -e
+          python3 tools/ci_plan.py gate-record --out out/sim-gate --part "$PART" --only "$ONLY" --code "$code"
+          rm -f out/sim-gate/gate.json out/sim-gate/SIM_GATE_SUMMARY.md out/sim-gate/sim_gate_workbook.xlsx   # a subset's verdict: not kept
+          # exit 1 is a finding (judged again over all parts); anything else is the tool failing, and the gather job refuses it too
+          if [ "$code" -ne 0 ] && [ "$code" -ne 1 ]; then echo "::error::sim_suite.py exited $code"; exit 1; fi
+
+      - name: Hand this part's outputs to the gather job (also when it fails)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-gate-part-${{ matrix.part }}
+          retention-days: 2
+          if-no-files-found: warn
+          path: |
+            out/sim-gate/part-*.json
+            out/sim-gate/*/sim.json
+            out/sim-gate/*/run.log
+            out/sim-gate/*/probe.json
+            out/sim-gate/*/rec/
+
+  gather:
+    name: sim-gate
+    needs: [plan, part]
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot and its export templates
+        id: godot
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot-bin
+            ~/.local/share/godot/export_templates/${{ env.GODOT_VERSION }}.stable
+          key: godot-${{ env.GODOT_VERSION }}-linux-templates
+
+      - name: Install Godot and its export templates
+        if: steps.godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot-bin
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -sSfL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip && mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" ~/godot-bin/godot
+          curl -sSfL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          dest="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          mkdir -p "$dest" && unzip -q -j templates.tpz -d "$dest"
+          rm godot.zip templates.tpz
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Import the project
+        run: ~/godot-bin/godot --headless --path game --import
+
+      - name: Gather every part's outputs
+        uses: actions/download-artifact@v4
+        with:
+          pattern: sim-gate-part-*
+          path: out/sim-gate
+          merge-multiple: true
+
+      - name: Evaluate the whole simulation gate (SIM-GATE-01)
+        env:
+          BUILD_N: ${{ inputs.build_number }}
+          PLAN: ${{ needs.plan.outputs.plan }}
+        run: |
+          # every planned run present once, from this commit, without a tool failure; else the gate fails here
+          python3 tools/ci_plan.py gate-merge --dir out/sim-gate --plan "$PLAN"
+          # the single-job gate's own evaluation over all outputs: exit 1 on any blocking finding (never on hardship)
+          python3 tools/sim_suite.py --reuse out/sim-gate --out out/sim-gate --godot ~/godot-bin/godot --jobs "$(nproc)"
+
+      - name: Keep the gate's results (also when it fails)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-gate
+          retention-days: 90
+          if-no-files-found: warn
+          path: |
+            out/sim-gate/gate.json
+            out/sim-gate/parts.json
+            out/sim-gate/part-*.json
+            out/sim-gate/SIM_GATE_SUMMARY.md
+            out/sim-gate/sim_gate_workbook.xlsx
+            out/sim-gate/*/sim.json
+            out/sim-gate/*/run.log
+            out/sim-gate/*/analysis.json
+            out/sim-gate/*/probe.json
+
+      - name: Keep the recorder archives (also when the gate fails)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sim-gate-archives
+          retention-days: 14
+          if-no-files-found: warn
+          path: out/sim-gate/*/rec/

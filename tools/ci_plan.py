@@ -15,7 +15,10 @@ runner, deterministically (the same list, timings and commit give the same plan 
                 (a recorded run and its unrecorded twin) stays in one part so the recorder-overhead measure compares runs
                 that shared a machine. Prints the matrix as JSON.
 
-      python3 tools/ci_plan.py gate-plan --parts 4 [--jobs 4]
+      python3 tools/ci_plan.py gate-plan --parts 5 [--jobs 4]
+
+                The workflow is .github/workflows/sim-gate.yml (plan, one part a runner, gather), called by release.yml's
+                sim-gate job and long-sims.yml's gate mode.
 
   gate-record   After one part ran: its job results and exit code to <out>/part-<k>.json (the part's own gate.json is a
                 subset evaluation and is not kept).
@@ -254,6 +257,8 @@ def cmd_gate_merge(a):
         problems.append("runs not in the plan: %s" % ", ".join(extra))
     merged = {"format": "mml-sim-gate/1", "commit": commit, "job_results": [results[n] for n in plan["runs"] if n in results],
               "timing": {"simulations": max(sim_secs) if sim_secs else 0.0, "jobs": 0}, "merged_from_parts": len(plan["parts"])}
+    if problems:          # never left looking like a verdict: sim_suite.py --reuse is not run on an incomplete set
+        merged["result"] = "FAIL (incomplete: %d problems gathering the parts; see parts.json)" % len(problems)
     (d / "gate.json").write_text(json.dumps(merged, indent=1))
     (d / "parts.json").write_text(json.dumps({"format": "mml-sim-gate-parts/1", "commit": commit, "plan": plan, "problems": problems,
                                               "part_simulation_seconds": sim_secs}, indent=1))
@@ -274,7 +279,7 @@ def main(argv=None):
     s.add_argument("--out", required=True)
     s.add_argument("--manifest", default="")
     g = sub.add_parser("gate-plan")
-    g.add_argument("--parts", type=int, default=4)
+    g.add_argument("--parts", type=int, default=5)
     g.add_argument("--jobs", type=int, default=4, help="parallel workers per part (a GitHub-hosted Linux runner has 4 CPUs)")
     r = sub.add_parser("gate-record")
     r.add_argument("--out", required=True)

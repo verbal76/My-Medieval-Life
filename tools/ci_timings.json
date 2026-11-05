@@ -3,7 +3,7 @@
  "note": "Measured seconds a suite or gate run took on GitHub-hosted ubuntu-latest runners (median; suites that timed out excluded). Used only to place work on runners (tools/ci_plan.py); never decides a result. Refresh from newer ci-report artifacts when the placement drifts.",
  "sources": {
   "tests": "results.jsonl of Tests runs 41580777660, 41733575763, 41735516442, 41737006430, 41740708833",
-  "sim_gate": "gate.json job_results of long-sims gate runs 41737024930 (47cea96) and 41733570702 (eb04908), 4 jobs on 4 CPUs",
+  "sim_gate": "gate.json job_results of long-sims gate runs 41923800341 (361f364) and 41962208084 (a995397), 4 jobs on 4 CPUs: the slower of the two for each run (runner speed varied 20-40% between them); rotating seeds as seconds a day, the mean of the four rotating runs",
   "tests_b25r1_cicover": "34 suites added to tests.yml on 2026-11-05 (wip/b25r1-cicover): one local headless run each on the 4-CPU session container, three at a time beside other agents' suites (so likely slower than a runner); replace with runner medians from the next ci-report artifacts"
  },
  "shard0_extra": [
@@ -17,8 +17,8 @@
  ],
  "defaults": {
   "unknown_suite_seconds": 60,
-  "sim_seconds_per_day": 35.7,
-  "probe_seconds": 100
+  "sim_seconds_per_day": 43.6,
+  "probe_seconds": 230.0
  },
  "tests": {
   "game/aging_test": 70.4,
@@ -236,29 +236,29 @@
   "sim/economy_sim": 210.3
  },
  "sim_gate": {
-  "b18_s1": 1091.2,
-  "contracts_fail": 807.8,
-  "corner_wheat": 986.1,
-  "crime": 655.4,
-  "det_s1": 1347.2,
-  "eq_s1": 1458.1,
-  "eq_s2": 1005.0,
-  "food_start": 1020.6,
-  "hunt_out": 658.0,
-  "kill_smiths": 630.4,
-  "no_caravan": 759.4,
-  "perf_scaling": 10.4,
-  "poverty": 822.4,
-  "probe_manhunt": 54.2,
-  "probe_playtest": 147.7,
-  "probe_pursuit": 51.2,
-  "probe_saveload_on": 91.8,
-  "probe_saveload_s1": 81.2,
-  "probe_saveload_s2": 62.2,
-  "social_chain": 542.0,
-  "social_chain_off": 545.0,
-  "strip_mine": 700.8,
-  "x20_on_det_s1": 1439.5,
-  "x20_on_s1": 1533.6
+  "b18_s1": 1461.3,
+  "contracts_fail": 1095.1,
+  "corner_wheat": 1191.0,
+  "crime": 842.6,
+  "det_s1": 1839.0,
+  "eq_s1": 1927.2,
+  "eq_s2": 1546.7,
+  "food_start": 1227.2,
+  "hunt_out": 1774.9,
+  "kill_smiths": 1806.3,
+  "no_caravan": 1055.6,
+  "perf_scaling": 11.7,
+  "poverty": 1016.0,
+  "probe_manhunt": 78.9,
+  "probe_playtest": 230.0,
+  "probe_pursuit": 83.5,
+  "probe_saveload_on": 159.4,
+  "probe_saveload_s1": 132.1,
+  "probe_saveload_s2": 122.1,
+  "social_chain": 837.1,
+  "social_chain_off": 859.9,
+  "strip_mine": 1791.0,
+  "x20_on_det_s1": 2003.5,
+  "x20_on_s1": 2131.0
  }
 }

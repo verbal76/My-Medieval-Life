@@ -399,8 +399,8 @@ def evaluate(jobs, results, out, commit, inject_note="", partial=False, release_
         if "1" in sub and "30" in sub["1"]:
             build_points.append({"label": "%s (%s)" % (label, base.get("commit")), "alive": sub["1"]["30"]["alive"], "currency_tenths": sub["1"]["30"]["currency"] / 10.0})
         if problems and blocking:
-            for p in problems:
-                findings.append(finding(by_run[runs_for[0]], "unapproved difference from the accepted baseline (%s): %s" % (base.get("commit"), p), "critical", True,
+            for p in problems:          # named after the first compared run present (a subset, e.g. one gate part, may hold eq_s2 alone)
+                findings.append(finding(by_run[next(rn for rn in runs_for if rn in sims)], "unapproved difference from the accepted baseline (%s): %s" % (base.get("commit"), p), "critical", True,
                                         "identical to docs/release/sim_baseline.json", p))
         elif problems:
             notes.append("%s: %d values differ from %s (an earlier build; reported, not failed)" % (label, len(problems), fname))
