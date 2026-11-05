@@ -7890,6 +7890,11 @@
      "date": "2026-11-05",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> presence 37/0 (container measurement of the soft target); commits + a970731; integrated_in + B25R1 wip/b25r1 (head a995397)",
      "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): IN DEVELOPMENT was stale; crowd paths and availability locks a970731 merged; soft target measured in the container only, not on Android as acceptance requires (owner Option 1 item 2: Android crowd-management verification)"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "owner_answer",
+     "why": "owner 2026-11-05: Android measurement on a real phone required, same session as LE-07 gate 11"
     }
    ],
    "assigned_worker": "b25r1-presence worker",
@@ -7900,7 +7905,8 @@
    ],
    "integrated_in": [
     "B25R1 wip/b25r1 (head a995397)"
-   ]
+   ],
+   "owner_answer": "Measure on a real mid-range phone with the B25R1 candidate APK (owner, 2026-11-05)"
   },
   {
    "id": "B25R1-022",
@@ -34024,6 +34030,11 @@
      "date": "2026-11-05",
      "change": "note",
      "why": "audit docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md: gate 11 (mid-range phone performance) was declared non-blocking by the lead (b00439f message, reading of OD-LE-15), not by the owner; completion checklist H2 still asks the owner. Recorded as an owner question in docs/handoffs/B25R1_OWNER_QUESTIONS_2026-11-05.md; the lead's reading is not an approval"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "owner_answer",
+     "why": "owner answered B25R1 owner question 1 (2026-11-05): gate 11 needs a real mid-range Android phone profile before B25R1 ships, in one session with the B25R1-020 crowd measurement"
     }
    ],
    "target_build": "20",
@@ -34036,7 +34047,8 @@
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
-   "test_commit": "eca0e7d"
+   "test_commit": "eca0e7d",
+   "owner_answer": "Yes, real phone: one profiling session on the B25R1 candidate APK closes gate 11 and the B25R1-020 Android crowd measurement; the owner runs it or names the phone; the lead prepares the instrumented private build and steps (2026-11-05)"
   },
   {
    "id": "LE05-RENTAL",
