@@ -38,6 +38,9 @@ var suspending := false    # net_econ_integrity_test: true in the status written
 var still := false         # X20-MP-ECON-INTEGRITY: the world stopped, the network and the requests going on (see the header)
 var ledger := {}           # the last "ledger": every coin and every good in the world, transit and escrow included
 var tx_last := {}          # the last "tx": the transaction authority's result
+var peer_log: Array = []   # each change of the connections, the joining and the guests' away flags: [frame, msec, {peer: [pid, joining, away]}, live peers]
+var _peers_seen := ""
+var peer_stats := {}
 var joined := {"in_play": 0, "out": 0}   # net_c_test: status writes that found a guest still joining (building the world) in play / out
 
 
@@ -90,6 +93,7 @@ func _hold_step() -> void:
 func _start() -> void:
 	if mode == "continue":
 		main.continue_game()
+		_write_records("records_loaded.json", main.world.to_dict())     # as loaded, before the world's first frame
 	else:
 		main.new_game()
 	main.ui.hide_all()
@@ -152,6 +156,7 @@ func _process(delta: float) -> bool:
 		if suspend_frames == 3:
 			suspended["minutes_after"] = main.world.minutes
 			suspend_frames = -1
+	_note_peers()
 	if spot != Vector2.INF and main.world.host_player().pos.distance_to(spot) < 1.0:
 		_clear_villagers()                           # the stage stays clear while the host stands on it (see _clear_villagers)
 	for e in releases:
@@ -208,6 +213,7 @@ func _commands() -> void:
 			main.save_game(false)
 			census = {"at": "saved", "coins": w.total_coins(), "goods": _goods(), "away": _aways(), "minutes": w.minutes,
 				"msec": Time.get_unix_time_from_system()}
+			_write_records("records_saved.json", SaveStore.inspect(main.save_path, World.SAVE_VERSION).get("data", {}))
 			_status()
 			quit(0)
 		"crash":                                     # MP Batch B: the host is killed after an hourly save made while the guest played
@@ -233,6 +239,25 @@ func _commands() -> void:
 				if w.judgment != null:
 					w.as_actor(g, func(): JudgmentLive.on_gift(w, w.person_id(g), v, "bread"))      # MP C: the guest gives as itself
 				main.net.rpc_id(id, "s_self", g.to_dict())
+		"credit_guest":                              # owner 2026-11-05: a debt the guest owes a villager, made by Credit.sell_on_credit (the
+			for id in main.net.by_peer:                  # villager's trust in the guest raised to the lending mark first, as "endow" sets
+				var g: PlayerState = w.player_by_pid(int(main.net.by_peer[id]))     # skills); the goods go into the guest's pack
+				for n: NPC in w.npcs:
+					var it := ""
+					for iid in n.inv.ids():
+						if w.credit.available(n, iid) >= 1 and g.inv.can_add(iid) and GameData.value(iid) > 0:
+							it = iid
+							break
+					if not n.alive or n.role != "adult" or n.coins < w.reserve_of(n) or it == "":
+						continue
+					var t: Dictionary = w.relations.tie(n.id, w.person_id(g))
+					t.regard = maxf(float(t.regard), Credit.trust_needed())
+					var r: Dictionary = w.credit.sell_on_credit(n, g, it, 1, maxi(1, GameData.value(it)))
+					if str(r.result) == "credited":
+						why_last = ""
+						main.net.rpc_id(id, "s_self", g.to_dict())
+						break
+					why_last = str(r.text)
 		"still":                                     # X20-MP-ECON-INTEGRITY: the world's simulation stopped (on) or running (off)
 			still = bool(c.on)
 			if not still:
@@ -520,6 +545,28 @@ func _open_spot() -> Vector2:
 ## in ten) and elders take the air, so within a few game minutes of any clearing others walk in (CI run 41978365595: a child at
 ## play, Beatrice, chosen instead of the host in net_mp4_test; locally five children stood round the stage in
 ## net_interact_test). _process repeats this every frame while the host stands on the stage; one sent away is no longer near.
+## For a failing check's message (net_interact_test): when a guest's connection, joining or away flag changed on the host.
+func _note_peers() -> void:
+	var now := {}
+	for id in main.net.by_peer:
+		var g: PlayerState = main.world.player_by_pid(int(main.net.by_peer[id]))
+		now[str(id)] = [int(main.net.by_peer[id]), main.net.joining.has(id), g.away if g != null else null]
+	var stats := {}                                  # ENet's view of each connection: round trip, throttle, loss; the last move read
+	for id in main.net.by_peer:
+		var pp: ENetPacketPeer = main.net.peer.get_peer(int(id)) if main.net.peer != null else null
+		if pp != null:
+			stats[str(id)] = [pp.get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME), pp.get_statistic(ENetPacketPeer.PEER_PACKET_THROTTLE),
+				pp.get_statistic(ENetPacketPeer.PEER_PACKET_LOSS), Time.get_ticks_msec() - int(main.net.moves.get(id, {}).get("t", 0))]
+	peer_stats = stats
+	var live: Array = main.net.multiplayer.get_peers() if main.net.peer != null else []
+	var key := JSON.stringify(now) + JSON.stringify(live)
+	if key != _peers_seen:
+		_peers_seen = key
+		peer_log.append([Engine.get_process_frames(), Time.get_ticks_msec(), now, live])
+		if peer_log.size() > 24:
+			peer_log.pop_front()
+
+
 func _clear_villagers() -> void:
 	if spot == Vector2.INF:
 		return
@@ -578,7 +625,7 @@ func _status() -> void:
 			"log": main.net.applied_log.duplicate(), "tag": main.net.tag, "suspended": suspended, "upnp": main.net.upnp.state,
 			"mp_peers": main.net.multiplayer.get_peers().size() if main.net.peer != null else 0, "joining": main.net.joining.size()},
 		"still": still, "suspending": suspending, "ledger": ledger, "tx_last": tx_last, "shipments": w.transactions.open_shipments() if w.transactions != null else [],
-		"contracts": _player_contracts(w), "joined": joined, "traders": _traders().map(func(t): return t.ref)}
+		"contracts": _player_contracts(w), "joined": joined, "peer_log": peer_log, "peer_stats": peer_stats, "traders": _traders().map(func(t): return t.ref)}
 	var tmp := dir + "status.tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)
 	f.store_string(JSON.stringify(d))
@@ -621,6 +668,48 @@ func _family(w: World) -> Dictionary:
 
 
 ## Every good in the world, over every holder (the census of the economy simulation's ledger; every player's pack and chest).
+## Owner 2026-11-05 (a returning guest across a host restart): each guest's persistent records in a world's saved form (World.to_dict,
+## or a save's "data"), by pid: its character (identity, pack, purse, skills, crimes, quests, family links), the ties and trades that
+## involve its person id, its killings, its justice case, the debts, contracts, carts and offers naming its reference, and the
+## messages its journal keeps. "quit" writes them from the save it has just written, a continue from the world it has just loaded,
+## so a test compares the two (net_c_test, net_interact_test). Every value goes through JSON both ways, as a save does.
+static func guest_records(dd: Dictionary) -> Dictionary:
+	dd = JSON.parse_string(JSON.stringify(dd))
+	var out := {}
+	var pl: Dictionary = dd.get("players", {})
+	var by: Dictionary = pl.get("by_pid", {})
+	for k in by:
+		if int(k) == int(pl.get("host", -1)):
+			continue
+		var p: Dictionary = by[k]
+		var line := int(p.get("line", 0)) if int(p.get("line", 0)) > 0 else int(k)
+		var ref := "player:%d" % line
+		var id := str(-line)
+		var rel: Dictionary = dd.get("relations", {})
+		var ties := {}
+		var trades := {}
+		for tk in rel.get("ties", {}):
+			if (str(tk).split(":") as Array).has(id):
+				ties[tk] = rel.ties[tk]
+		for tk in rel.get("trades", {}):
+			if (str(tk).split(":") as Array).has(id):
+				trades[tk] = rel.trades[tk]
+		var names := func(list) -> Array:
+			return (list if list is Array else []).filter(func(x): return x is Dictionary and (x as Dictionary).values().any(func(v): return str(v) == ref))
+		out[str(k)] = {"player": p, "ties": ties, "trades": trades, "killings": int(rel.get("guest_killings", {}).get(ref, 0)),
+			"case": dd.get("justice", {}).get("cases", {}).get(ref, {}),
+			"debts": names.call(dd.get("credit", {}).get("debts", [])), "contracts": names.call(dd.get("contracts", {}).get("list", [])),
+			"carts": names.call(dd.get("carts", {}).get("carts", [])), "offers": names.call(dd.get("player_offers", {}).get("list", [])),
+			"journal": dd.get(MessageJournal.KEY, {}).get(ref, [])}
+	return out
+
+
+func _write_records(file: String, dd: Dictionary) -> void:
+	var f := FileAccess.open(dir + file, FileAccess.WRITE)
+	f.store_string(JSON.stringify(guest_records(dd), "", true))
+	f.close()
+
+
 func _goods() -> Dictionary:
 	var g := SettlementHoldings.goods(main.world)
 	var out := {}

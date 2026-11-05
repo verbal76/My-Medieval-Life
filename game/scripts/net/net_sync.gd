@@ -201,6 +201,8 @@ static func _adopt_npcs(w: World, list: Array) -> void:
 			continue
 		for k in _npc_props:
 			n.set(k, fresh.get(k))
+		if fresh.pos.distance_to(w.player.pos) > NetProtocol.NPC_RANGE:
+			n.pos = fresh.pos                         # out of the snapshots' reach: the host's place (never kept where last seen near)
 
 
 ## Build 21: the host's animals and pens in place (the same Animal objects stay: the sprites hold them). An animal near the local

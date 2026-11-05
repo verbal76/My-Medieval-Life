@@ -370,7 +370,10 @@ func _guest_killed() -> void:
 	guest2_pid = spawn("res://tests/net_fault_guest.gd", [str(port), KEY2, "Bea", "oak", "g2.json", dir])
 	var again := await until(func(): var g := read_json("g2.json"); return bool(g.get("welcomed", false)) and int(g.get("os_pid", -1)) == guest2_pid, 40.0)
 	check(again and int(read_json("g2.json").pid) == pid2 and (status().players as Dictionary).size() == players0, "started again, it is the same character (no duplicate)")
-	# frozen (SIGSTOP) longer than the timeouts, then let go: it reconnects by itself
+	# frozen (SIGSTOP) longer than the timeouts, then let go: it reconnects by itself. The usual timeouts hold once it plays (its
+	# first frame after building the world, NetSession.zz_playing); frozen before that, the host gives it JOIN_TIMEOUT_MS (CI run
+	# 42111915754: frozen while still joining, not dropped in the 20 s below)
+	await until(func(): return int(net_d().get("joining", -1)) == 0, NetSession.JOIN_TIMEOUT_MS / 1000.0)
 	OS.execute("kill", ["-STOP", str(guest2_pid)])
 	await until(func(): return not conn().has(pid2), 20.0)
 	OS.execute("kill", ["-CONT", str(guest2_pid)])
