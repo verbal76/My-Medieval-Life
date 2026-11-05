@@ -7892,6 +7892,11 @@
      "date": "2026-11-05",
      "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> overworld 333/0 (wip/b25r1); commits + 1d024dc; commits + 4c419a0; commits + 64be5a2; commits + 0c1aeb3",
      "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): merged 1d024dc, 4c419a0, 64be5a2, 0c1aeb3 (overworld 333/0) but incomplete: Bear Hill and the castle knoll not raised; stone cross, white battlements and fountain lack art (owner Q8 pack). Owner Option 1 item 2 orders Bear Hill and the castle knoll; item 3: no invented art"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "owner_answer",
+     "why": "owner 2026-11-05 questions 28-30: (28) accept the generation 6 layout as built: Coldlake rises east of Milton, runs outside Higham's east wall, south road crosses it by a stone bridge and two fords; new Garton brook (game expansion) down Higham's west wall — an intentional revision of the regional layout; (29) redraw the Wood Perilous as an irregular ridge-following outline of about the same area (generator bump); (30) the stitched flyover is a development tool (game/tests/drone_shot.gd), not the in-game region map (region_map_view.gd draws its own map), so per the owner's rule roads stay unchanged (readable at gameplay zoom)"
     }
    ],
    "assigned_worker": "b25r1-region worker",
@@ -7902,7 +7907,8 @@
     "4c419a0",
     "64be5a2",
     "0c1aeb3"
-   ]
+   ],
+   "owner_answer": "Q28 accept gen-6 Coldlake and Garton brook; Q29 redraw Wood Perilous irregular outline; Q30 flyover is not the in-game map, roads unchanged (2026-11-05)"
   },
   {
    "id": "B25R1-019",
