@@ -791,15 +791,25 @@ func _villagers_court() -> void:
 				interests.erase(n.id)                  # refused for good: they look elsewhere
 
 
-## A gift a villager has to give: one of the other's favourites, else a traditional gift, else "".
+## A gift a villager has to give: one of the other's favourites, else a traditional gift, else "". B25R1 axe defect: never the
+## tool its own work keeps (its trade's tool, NPCBrain.keeps: a builder's axe, a smith's hammer) unless it holds a spare, nor a
+## unit it holds on rent: a woodcutter courting another gave away its only axe each dawn and the treasury bought it another.
 func _gift_from(n: NPC, to: NPC) -> String:
 	for id in favourites(to):
-		if n.inv.has(id):
+		if n.inv.has(id) and _spare_to_give(n, str(id)):
 			return id
 	for id in ["flower", "ale", "apple", "bread", "red_berries", "blueberries"]:
-		if n.inv.has(id):
+		if n.inv.has(id) and _spare_to_give(n, id):
 			return id
 	return ""
+
+
+## Whether `n` can give one `id` away without giving up its work's tool or a rented unit (EconRentals.spare's own rule).
+func _spare_to_give(n: NPC, id: String) -> bool:
+	if w.economy != null and w.economy.rentals.owner_of(World.npc_ref(n.id), id) != "":
+		return false
+	var keep := 1 if (NPCBrain.JOB_TOOL.get(n.job, "") == id or w.brain.keeps(n, id)) else 0
+	return n.inv.count(id) > keep
 
 
 # ---------------------------------------------------------------- saving ---------------------
