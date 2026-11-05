@@ -577,7 +577,16 @@ func _test_raised(seed_value: int) -> void:
 	for sl in o.site("higham").slots:
 		if str(sl.get("id", "")) == "keep":
 			keep = sl.spot
-	for t in [["bear_hill", Vector2i(90, 450), Rect2i(30, 390, 120, 120)], ["higham_castle", keep, Rect2i(55, 620, 90, 100)]]:
+	# generation 6: the castle stands above the north wall, its way down to the street along the wall (the box's south row)
+	var castle_box := Rect2i()
+	var wall := Rect2i()
+	for sl in o.site("higham").slots:
+		if str(sl.get("id", "")) == "castle":
+			castle_box = (sl.rect as Rect2i).grow(10)
+		if str(sl.get("id", "")) == "walls":
+			wall = sl.rect
+	castle_box.size.y = wall.position.y - 1 - castle_box.position.y
+	for t in [["bear_hill", Vector2i(90, 450), Rect2i(30, 390, 120, 120)], ["higham_castle", keep, castle_box]]:
 		var id: String = t[0]
 		var goal: Vector2i = t[1]
 		var box: Rect2i = t[2]
@@ -623,6 +632,53 @@ func _test_raised(seed_value: int) -> void:
 			steps += 1
 			check(not o.is_solid(c) and not o.is_rim(c) and o.is_top(c + Vector2i(0, -1)), "seed %d: the knoll's steps at %s are walked on, up to the top" % [seed_value, c])
 	check(steps == 3, "seed %d: three steps cut through the knoll's rim below the castle gate (%d)" % [seed_value, steps])
+	# generation 6 (B25R1 flyover: the steps led to bare grass): below the steps the castle way, a street joined round to the
+	# north gate's main street; and the layout's place for each landmark a settlement's plan puts is where it stands (seed 1)
+	var lanes := RegionRoads.lane_cells(o)
+	var foot := Vector2i.ZERO
+	for c: Vector2i in o.fixed_works:
+		if o.raised_at(c) == "higham_castle":
+			foot = c + Vector2i(0, 1)
+	var wall_n := Rect2i()
+	for sl in o.site("higham").slots:
+		if str(sl.get("id", "")) == "walls":
+			wall_n = sl.rect
+	var seen_l := {foot: true}
+	var todo_l: Array[Vector2i] = [foot]
+	var gate_reached := false
+	while not todo_l.is_empty() and not gate_reached:
+		var c: Vector2i = todo_l.pop_back()
+		gate_reached = c.y >= wall_n.position.y and c.y < wall_n.position.y + 9
+		for d: Vector2i in VillageMap.SIDES:
+			if lanes.has(c + d) and not seen_l.has(c + d):
+				seen_l[c + d] = true
+				todo_l.append(c + d)
+	check(lanes.has(foot) and gate_reached, "seed %d: the castle way runs from the foot of the knoll's steps %s along the streets through the north gate" % [seed_value, foot])
+	if seed_value == 1:
+		var places := {}
+		for p in o.landmark_places():
+			places[str(p.id)] = p.at
+		var off := []
+		for lm in RegionGeo.landmarks():
+			if str(lm.object).begins_with("site:") and places.has("region:" + str(lm.id)) and places["region:" + str(lm.id)] != lm.at:
+				off.append("%s %s/%s" % [lm.id, lm.at, places["region:" + str(lm.id)]])
+		check(off.is_empty(), "seed 1: each landmark a settlement's plan places stands at its region layout position (%s)" % str(off))
+	# generation 6 (owner, flyover 2026-11-05: roads fading into open ground): no country trail ends at a grid node in the grass;
+	# each node a trail reaches has a second trail, or a settlement's, gate's or main route's road
+	var spurs := []
+	for j in range(0, 13):
+		for i in range(-7, 7):
+			var n := 0
+			for k in 4:
+				if o._edge_open(i, j, k) and o._edge_live(i, j, k):
+					n += 1
+				var pi: int = i - [1, 0, 1, -1][k]
+				var pj: int = j - [0, 1, 1, 1][k]
+				if o._edge_open(pi, pj, k) and o._edge_live(pi, pj, k):
+					n += 1
+			if n == 1 and not o._anchors.has(o.node_pos(i, j)) and not o._junction.has(Vector2i(i, j)):
+				spurs.append(o.node_pos(i, j))
+	check(spurs.is_empty(), "seed %d: no country trail stops at a node in the open (%s)" % [seed_value, str(spurs)])
 	var d := o.to_dict()
 	check(not d.has("fixed_works") and (d.works as Array).is_empty(), "seed %d: the generated steps are not saved (a function of the seed)" % seed_value)
 
@@ -649,9 +705,22 @@ func _test_sites(seed_value: int) -> void:
 		var raised_rim := 0
 		var rim_on_plot := 0
 		var road := 0
+		var wet := 0
+		var wet_bad := 0
+		var lanes := RegionRoads.lane_cells(o)
 		for y in range(st.rect.position.y, st.rect.end.y):
 			for x in range(st.rect.position.x, st.rect.end.x):
 				var cell := Vector2i(x, y)
+				if o.is_water(cell) or o.is_bridge(cell):
+					# generation 6: a canonical course runs through or past a settlement on its open ground, never on or against
+					# a building or yard, and a street it meets is bridged (walkable)
+					wet += 1
+					for sl in st.slots + st.get("props", []):
+						if (sl.rect as Rect2i).grow(0 if str(sl.get("stamp", "")) in ["lamp", "signpost"] else 1).has_point(cell):
+							wet_bad += 1
+					if lanes.has(cell) and o.is_solid(cell):
+						wet_bad += 1
+					continue
 				if o.is_solid(cell) and not o.site_building_at(cell):
 					if o.raised_at(cell) != "":
 						raised_rim += 1                  # (generation 5: Bear Hill's rim in Netherton's corner, Higham's castle knoll)
@@ -662,7 +731,8 @@ func _test_sites(seed_value: int) -> void:
 						blocked += 1
 				if o.is_road(cell):
 					road += 1
-		check(blocked == 0, "%s: its site is clear ground but for its buildings and the raised ground it reaches onto (%d other blocked cells)" % [st.name, blocked])
+		check(blocked == 0, "%s: its site is clear ground but for its buildings, the raised ground it reaches onto and the water through it (%d other blocked cells)" % [st.name, blocked])
+		check(wet_bad == 0, "%s: no water on or against a building or yard, every street over the water bridged (%d of %d water cells)" % [st.name, wet_bad, wet])
 		check(rim_on_plot == 0, "%s: no rim of raised ground stands on or against a building or yard (%d of %d rim cells)" % [st.name, rim_on_plot, raised_rim])
 		check(road > 0, "%s: a road runs into it (%d road cells)" % [st.name, road])
 		# B25R1-018 phase 3: a home for every founding household (one per trade count, OffMapSettlement's order), a building

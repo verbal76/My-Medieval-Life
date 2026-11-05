@@ -34,7 +34,7 @@ static func segments(ow: Overworld, area: Rect2i) -> Array:
 				var ni: int = i + [1, 0, 1, -1][k]
 				var nj: int = j + [0, 1, 1, 1][k]
 				var b := ow.node_pos(ni, nj)
-				if ow._node_excluded(b) or not ow._edge(i, j, k):
+				if ow._node_excluded(b) or not ow._edge_live(i, j, k):
 					continue
 				var box := Rect2i(mini(a.x, b.x) - 12, mini(a.y, b.y) - 12, absi(a.x - b.x) + 24, absi(a.y - b.y) + 24)
 				if not box.intersects(area):
