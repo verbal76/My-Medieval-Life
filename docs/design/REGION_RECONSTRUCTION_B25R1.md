@@ -36,7 +36,7 @@ The work is split between workers:
 | Wulstead on a little hill amid plain meadows | A | BFOUR-C25-P003 (gazetteer) | The site sits on a rise |
 | House of Black Canons at the west of Wulstead | A | BFOUR-C25-P010, BFOUR-C26-P004 | Landmark `wulstead_canons` at the west edge |
 | Netherton: a thorp beside a stream, a fair church, a little house of Canons, at the Downs' foot | A | BONE-C4-P002 "a little thorp beside a stream, and thereby a fair church and a little house of Canons"; "Just before the slopes began to rise" | Site with a church and the canons' house; the stream passes beside it |
-| Bear Hill above Netherton; its chalk figures on a westward bent, unseen from Netherton but clear from nearer Wulstead | A | BONE-C4-P005 "the bent looked westward down into the hollow of the hill" | Hill at (90,450), figures on its west face (62,452) |
+| Bear Hill above Netherton; its chalk figures on a westward bent, unseen from Netherton but clear from nearer Wulstead | A | BONE-C4-P005 "the bent looked westward down into the hollow of the hill" | Hill at (90,450) (its top raised, generation 5), figures on its west face (22,470) |
 | Wulstead lies west of the Netherton to Bear Hill line | B | Reading of BONE-C4-P005 | A westward bent can only be seen from the west: Wulstead is at x -60, Bear Hill at x 90 |
 | Bear Castle, an earthwork of the ancient folk on Bear Hill's top | A | BONE-C4-P005 "At the top of it was an earth-work of the ancient folk, which also was called Bear Castle" | Ringed earthwork landmark |
 | The Downs: downs on downs, no road to call a road, no castle, church or homestead, waterless | A | BONE-C3-P037 "nought but downs on downs with never a road to call a road ... for otherwise the place is waterless"; BONE-C4-P006 "no trees thereon, nor houses" | Polygon region: open chalk ground, almost no trees, no springs, no settlement |
@@ -400,9 +400,16 @@ All of it is cut from the paid Puny World tileset by `tools/build_region_stamps.
 | Grave-mounds | Cozy Farm's 3 x 3 rough-turf patch, walked over | seven in a row on the Greenway's low hill |
 | Chalk figures, Bear Castle | chalk cut into the turf by the chunk generator (`_marks`): the figure from its rows in the layout (a tree, a bear ramping either side) at scale 3; the earthwork a broken ring bank | the west bent of Bear Hill; its top |
 
-Art gaps (no suitable art in the registered packs): a standing stone cross (Garton's street cross; also Wulstead's
-cross head on the buttercross), a true white-stone battlement (the castle's merlons are the grey kit's), and a fountain with
-water. Options: a pack from the owner, or leave the cross out as now (the Landmarks entry is withheld until it stands).
+Art gaps (no suitable art in the registered packs, or in the private packs either: rechecked 2026-11-05 by looking at Puny
+World paid `punyworld-tiles.png`, Miniworld `Tombstones.png`, Forgotten Memories `Props.png`, Larchrow, Kassuii Cozy Village
+`ATLAS_FREE.png`, the FL Houses demo and the craftpix dungeon objects; none has a cross, a fountain with water or a white
+crenellation):
+- a standing stone cross: Garton's street cross, and the cross head on Wulstead's buttercross;
+- a fountain with water: Wulstead's fountain (now the dry round basin);
+- a white-stone battlement: the merlons and wall-walk of Higham's white castle (now the grey kit, with light-grey faces).
+
+Until the owner's pack arrives, the cross stays out. Its layout entry `garton_cross` keeps its place and an empty `object`, and
+its Landmarks entry is withheld until it stands.
 ### Towns rebuilt (third region worker; owner B25R1-Q8: "Owned art and a pack I'm going to give you")
 
 The site plan now lives in `game/scripts/core/site_plan.gd` (`Overworld._site_plan` calls it). It is still a pure function of the
@@ -445,26 +452,40 @@ The chalk figure and Bear Castle are now drawn as follows:
 - **Bear Castle's ring** is a bank three cells broad of Cozy Farm's rough turf, drawn as a 9-slice, with four gaps where the
   ways went in.
 
-#### Bear Hill and the castle knoll: not raised (assessed, not started)
+#### Bear Hill and the castle knoll: raised (generation 5, `wip/b25r1-terrain`)
 
-The overworld's raised ground is its cliff wangset: cell corners marked cliff in `_generate` form a plateau with a rocky
-rim, and the top is B14-07 ground that is reached only through steps or stairs the player builds. Raising a plateau from
-`region_layout.json` data (cliff corners in a disc) is easy. It is not a clean small change, because three existing rules
-would each need an exception:
-1. **Tops are wooded rock.** A top is covered with pines and boulders (unreachable) and draws snow variants. Bear Hill on
-   the open, treeless Downs and a castle courtyard both need a bare top. Tree, boulder and snow placement would need a
-   "data plateau" case.
-2. **Clearance.** No cliff corner lies within `VILLAGE_CLEAR` (14 tiles) of a site, and the castle is part of Higham's
-   site. A knoll under it needs a clearance exception, rim cells inside a site's rect (solidity, `site_building_at`), and
-   the reachability checks (overworld_test floods every door from the village).
-3. **The way up and the chalk.** A built-in ramp would have to be generated `works` (today they are player-made and saved)
-   or a gap left where a road crosses the rim. Bear Castle's ring bank and the hill figure are cut with the chalk
-   wangset on the same corners the cliff wangset would take: two corner sets on one cell.
+Built on the assessment that stood here (three rules needing exceptions); each is now handled:
+- **Data.** A landmark in `region_layout.json` may carry `raised`. Bear Hill has `{"r": 22}`: a disc round Bear Castle whose
+  outline wanders by up to a tile and a half with the seed (`_point` noise, integer). The white castle has
+  `{"site": "higham", "slot": "castle", "margin": [1, 4, 5, 5]}`: a top round the castle slot, grown by those tiles west,
+  north, east and south, with its corners rounded. The west margin is one tile so that the rim keeps clear of the town
+  wall. `Overworld._setup_raised` reads both (only for `gen >= 5`).
+- **Drawing.** `_generate` sets the cliff corners of the B14-07 grass/cliff wangset on every raised corner. This skips the
+  clearance (`VILLAGE_CLEAR`), the pass lattice and the region rule (the Downs have no ranges), and it covers roads too.
+  The top is open turf. Raised tops get none of the mountains' pines, boulders or snow; the ring bank and the figure stay
+  path overlays.
+- **The way up.** A road cell that falls on a raised rim becomes steps cut in the rock. It is walkable and drawn with the
+  B14-07 `steps_ns`/`steps_ew` tiles, running toward the top. So every road over Bear Hill (the Downs road, the Greenway,
+  the Garton road and any grid road) climbs the rim by steps and runs on over the top. The knoll has three steps below the
+  castle gate, in the rim's south row. All of these are `Overworld.fixed_works`, which are generated and never saved.
+  `way_at` returns a player's way or a generated one; `is_solid` and `is_rim` treat both alike, and `OverworldView` draws
+  both.
+- **Clearance and sites.** `Overworld.raised_at(c)` names the raised ground a cell is on. A site may reach onto raised
+  ground:
+  - Netherton's rect reaches Bear Hill's north rim. Netherton lies under Bear Hill (BONE-C3-P037).
+  - Higham's rect holds the knoll.
+  
+  overworld_test counts those rim cells apart from the "site is clear" rule. It checks that none stands on or against a
+  building or yard.
+- **The figure** moved 12 tiles west, from x 34 to 22. It is still on the hill's westward slope, now below the rim, and its
+  whole turf zone is off the plateau.
+- **Saves.** Cells and objects on and round both places changed, so `GEN_VERSION` is 5 and `GEN_COMPATIBLE` is `[5]`. A
+  generation 4 save is refused by `World.load_dict` with its existing message, and the file is kept (owner B25R1-Q5).
+- **Landmarks.** Bear Hill is now a Landmarks entry, with `object` "hill".
 
-What it would need: a `plateau` entry per landmark (centre, radius, way-up side); in `_generate`, cliff corners for it that
-skip the clearance and road rules except on the way-up side; bare tops for data plateaus; the figure kept off the rim;
-tests for reach and solidity. This is roughly a day's work for the next region worker, and the rest of the generator would
-be unchanged.
+Limits of the existing art: the wangset's rim is one tile of low rock edge, so both places read as a raised terrace with a
+rocky lip, not as a tall mound. A higher cliff face, a ramp or a white chalk scarp would need art.
+
 ## (k) The hamlets in the economy, trips and residents (settlement worker, `wip/b25r1-settle`)
 
 **Implemented, as built** (code: `game/scripts/core/settlement/trips.gd`, `people.gd`; data: `game/data/settlements.json`

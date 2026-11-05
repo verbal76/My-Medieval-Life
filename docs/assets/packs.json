@@ -799,7 +799,7 @@
    ],
    "status": "partial",
    "scale": "Checked: two 320 x 320 sheets on an exact 16 px grid (no tuft crosses a cell edge), 20 x 20 = 400 low tufts each, most with tiny flowers or pebbles: 1:1.",
-   "used_for": "Imported unchanged as MapView atlases 6 and 7 (game/assets/tiles/low_grass_1.png, low_grass_2.png; tile value 600000 / 700000 + row * 20 + column). Not yet drawn by any system.",
+   "used_for": "Imported unchanged as MapView atlases 6 and 7 (game/assets/tiles/low_grass_1.png, low_grass_2.png; tile value 600000 / 700000 + row * 20 + column). Drawn (B25R1-Q8 grass decoration) as low tufts on open grass in the village (MapView.lay_grass) and the overworld (OverworldView, a layer a chunk): a fixed hash of seed and cell, 18% plain and 5% flowered tufts, never on roads, paths, fields, water, buildings, trees, plants or objects; no collision. The tuft lists (game/data/low_grass.json, tools/low_grass_tufts.py) take sheet 1 only, leaving out the dark-outlined pebble tufts (they read as holes on the Puny World grass) and sheet 2 (a second texture broke the tile batching: +76 draw calls measured, against +2 with one).",
    "opportunities": "Ground variety for the overworld and the settlements (region and terrain workers): scatter tufts on plain grass cells by a fixed hash of the cell (deterministic, as the overworld's flowers), denser by woods and water, none on roads, fields or floors; the flowered tufts as spring and summer variants."
   },
   {
@@ -845,6 +845,33 @@
    "scale": "Measured: ATLAS_FREE.png (1800 x 900) is drawn at 3 screen px per art pixel (every run of colour a multiple of 3), so 1/3 nearest gives its native 600 x 300 at the world's density (its ground tiles 32 x 32 native = 2 x 2 world tiles). TREES_OAK.png (1024 x 321) is native 1:1, each oak about 128 x 128 px: 8 world tiles wide, only reducible by 2 with detail lost.",
    "decision": "Looked at beside Puny World grass, flowers, rocks and bushes at the game's zoom (agent decision, 2026-11-03): its palette is darker and more detailed. The three tall flowers (white, yellow, red) and the two grey stones sit well at 1/3; the bushes (dark, heavy), the slate-roofed houses and window box (a building style no stamp uses), the raised grass, floors and pond (another ground set) clash and are not used; the oaks are too large for the world's trees and not integer-reducible without losing their detail. Nothing is imported until a system draws those pieces (a pack counts as integrated only when used).",
    "opportunities": "Wildflower variety (the three tall flowers, 1/3 nearest) and loose stones (1/3) for the overworld's flower and rock decoration, as extra variants by a fixed hash of the cell."
+  },
+  {
+   "id": "fl_houses_demo",
+   "name": "Fantasy Lands Houses (demo) v1.0",
+   "creator": "Szadi art.",
+   "sources": [
+    "private-assets/FL_Houses_Demo_v1.0.zip"
+   ],
+   "storage": "private",
+   "licence": "free",
+   "permissions": "license.txt: use for personal or commercial work, edit, modify and cut the asset, sell games made with it; not in a logo, trademark or service mark; the asset itself may not be resold, original or modified; credit appreciated, not required (credited anyway). So the zip stays in private-assets and only the imported, modified tiles are committed. Owner approval B25R1-022 (2026-11-04), palette changes approved.",
+   "categories": [
+    "buildings",
+    "houses",
+    "roofs",
+    "walls",
+    "doors",
+    "windows",
+    "awnings",
+    "props",
+    "interior"
+   ],
+   "status": "partial",
+   "scale": "Drawn at 32 px a tile (the houses about 160-390 px wide): halved to the 16 px world (2 x 2 area average with premultiplied alpha, alpha cut at half), ASSET_SCALING_STANDARD integer 1/2. Its palette reads about a third darker and greyer than Puny World, so it is recoloured (value ** 0.75, saturation x 1.25, hue kept; owner: 'If the pallet is too dark, modify the coloring'), judged side by side with Shade's houses at normal zoom.",
+   "used_for": "B25R1-022: tools/fl_houses.py imports six of the ready-made houses (a merchant's house with an awning, a cottage, a tall house, a barn-fronted farmhouse, a timbered house, and the great house of two wings) as MapView atlas 11 (game/assets/tiles/fl_houses.png), fitted to each house footprint of the region's settlement plan (house, house_7 ... house_13, manor) in game/data/style_stamps.json: the outside is the roof layer (above3, lifted while the player is inside, OverworldView.site_roof_step), the ground skirt below5, the inside the Puny World interior kit cut to the house's shape; solid only down to the wall base, the door open. Region layout plans: house_style 'fl' for every home of Garton, Mileham, Milton, Brookhurst, Elmcote and Cressbrook (the Higham plain and the vine country: the southern style), elite_style 'fl' for Higham's and Wulstead's manors (the great house) and one in two homes of their better quarter (within 22 tiles of the market's middle).",
+   "decision": "Not used: the seventh ready-made house (no door on its front: windows only) and the open shed (not a house one enters); the separate exterior kit (walls, roofs, doors, windows, chimneys, awnings) and the interior kit, since the ready-made houses already compose them; insides use the Puny World kit the village's houses use, so a house reads the same inside wherever it stands. Not mixed into the existing northern villages (owner: 'we don't have to mix these into the villages that already exist').",
+   "opportunities": "Homesteads of the southern region in this style (Homesteads' house stamp); the open shed as a yard piece or market shelter; the exterior kit (awnings, banners, chimneys, barrels, crates, log piles, ladders) for southern yards; the interior kit (floors, furniture) for a richer elite interior at 1/2 scale; the seventh house with a kit door composited on its front."
   }
  ]
 }

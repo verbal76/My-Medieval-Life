@@ -30,7 +30,13 @@ var _road_day := -1                   # the game day the loaded ways were last d
 var live_check: Callable              # B25R1-019: (chunk rect in tiles) -> whether its water animates; Main sets it (the presence query)
 var _live_seen := -1                  # the presence version the loaded water was last drawn for
 var _live := {}                       # chunk -> whether its water was drawn animated
+var _lift_rect := Rect2i()            # B25R1-022: the site building whose roof is lifted (its slot rect), empty none
+var _lift_alpha := 1.0                # how far it is lifted (1 on, RoofFade.ALPHA off)
+var _lift_moved := []                 # [source layer, cell, source id, atlas coords, alternative, faded layer]
+var _lift_dst: TileMapLayer           # the lifted roof's tiles over the characters
+var _lift_dst_sorted: TileMapLayer    # and its front wall's, among them
 var _dirt_bits := {}                  # B25R1-Q1: dirt path tile -> its connected sides (overworld_tiles.json dirt_path)
+var _flat := {}                       # B25R1-Q8: the flat grass tile values (overworld_tiles.json grass): where a tuft may grow
 
 
 func setup(src: MapView, o: Overworld, load_radius: int) -> void:
@@ -48,6 +54,8 @@ func setup(src: MapView, o: Overworld, load_radius: int) -> void:
 	for k in o.tiles.trees:
 		pairs.append([int(k.top), int(k.bottom)])
 		tops_set[int(k.top)] = true
+	for g in o.tiles.grass:
+		_flat[int(g)] = true
 	for k in (o.tiles.dirt_path as Array).size():
 		for t in o.tiles.dirt_path[k]:
 			_dirt_bits[int(t)] = k
@@ -92,6 +100,7 @@ func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FR
 	if overworld.homes_version != _homes_seen:
 		_homes_seen = overworld.homes_version
 		_draw_homes()
+	site_roof_step(feet, delta)
 	for id in _home_roofs:
 		var inside := Rect2((_home_roofs[id][1] as Rect2i)).has_point(feet)
 		for l: TileMapLayer in _home_roofs[id][0]:
@@ -108,17 +117,17 @@ func _draw_works(cc: Vector2i) -> void:
 	var layer: Node2D = c.works
 	for k in layer.get_children():
 		k.queue_free()
-	var cells: Array = overworld.works.keys().filter(func(w: Vector2i) -> bool: return Overworld.chunk_of(w) == cc)
+	var cells: Array = (overworld.works.keys() + overworld.fixed_works.keys()).filter(func(w: Vector2i) -> bool: return Overworld.chunk_of(w) == cc)
 	cells.sort()
 	for cell: Vector2i in cells:
-		var kind := str(overworld.works[cell])
+		var kind := overworld.way_at(cell)              # (B25R1-018: the generator's steps up a knoll too)
 		var low := 0
 		if kind.begins_with("steps") and kind.length() == 8:       # "steps_ns" / "steps_ew" (the old "steps" has no run)
 			# the tile's low side (its grass edge) faces the ground, not the top: steps_ns is drawn low side south, steps_ew low
 			# side east; a cell with more steps on its low side takes the "_mid" tile, whose treads run on to the next cell
 			low = _steps_low_side(cell, kind.ends_with("_ew"))
 			var ahead: Vector2i = cell + (Vector2i(low, 0) if kind.ends_with("_ew") else Vector2i(0, low))
-			if str(overworld.works.get(ahead, "")).begins_with("steps"):
+			if overworld.way_at(ahead).begins_with("steps"):
 				kind += "_mid"
 		var file := kind + ".png"
 		if kind.begins_with("steps") and not ResourceLoader.exists("res://assets/terrain/" + file):
@@ -145,7 +154,7 @@ func _steps_low_side(cell: Vector2i, ew: bool) -> int:
 	var ends := []
 	for sgn in [1, -1]:
 		var c: Vector2i = cell + axis * sgn
-		while overworld.works.has(c) and str(overworld.works[c]).begins_with("steps") and absi(c.x - cell.x) + absi(c.y - cell.y) < 16:
+		while overworld.way_at(c).begins_with("steps") and absi(c.x - cell.x) + absi(c.y - cell.y) < 16:
 			c += axis * sgn
 		ends.append(overworld.is_top(c))
 	return -1 if ends[0] and not ends[1] else 1   # ends[0] is the + end: a top there puts the ground at the - end
@@ -296,7 +305,11 @@ func _layer(root: Node2D, z: int) -> TileMapLayer:
 	return l
 
 
+var build_usec := 0                   # time spent building chunks (_build), for the perf harness (grass_shot)
+
+
 func _build(cc: Vector2i) -> void:
+	var t0 := Time.get_ticks_usec()
 	var ch := overworld.get_chunk(cc)
 	var root := Node2D.new()
 	root.name = "chunk_%d_%d" % [cc.x, cc.y]
@@ -304,6 +317,8 @@ func _build(cc: Vector2i) -> void:
 	if _homes_root != null:
 		move_child(_homes_root, get_child_count() - 1)     # B25R1-010: the homesteads stay drawn over every chunk's ground
 	var ground := _layer(root, 0)
+	var grass := _layer(root, 0)          # B25R1-Q8: the low grass tufts, over the ground, under the roads and objects
+	grass.name = "grass"
 	var path := _layer(root, 0)
 	var objects := _layer(root, 0)
 	var tops := _layer(root, 10)
@@ -325,15 +340,90 @@ func _build(cc: Vector2i) -> void:
 				if v == int(overworld.tiles.rock) and ResourceNodes.boulder_small(cell) and sources.size() > 3:
 					v = MapView.SMALL_BOULDER_TILE
 				set_tile(objects, cell, v)
+	_lay_grass(cc, ch, grass, lanes)
 	if tree_sink != null:
 		tree_sink.load_chunk(cc, overworld.chunk_trees(cc))
 	var site_above := _draw_site_buildings(root, cc)
 	var works := Node2D.new()             # B14-07: steps, stairs and walkways, over the ground and the cliff's rim
 	works.name = "works"
 	root.add_child(works)
-	chunks[cc] = {"root": root, "ground": ground, "path": path, "objects": objects, "tops": tops, "works": works, "site_above": site_above}
+	chunks[cc] = {"root": root, "ground": ground, "grass": grass, "path": path, "objects": objects, "tops": tops, "works": works, "site_above": site_above}
 	above_layers.append(tops)
 	_draw_works(cc)
+	if _lift_rect.has_area():              # B25R1-022: a lifted roof reaching into this new chunk lifts there too
+		var r := _lift_rect
+		var a := _lift_alpha
+		_site_roof_restore()
+		_site_roof_lift(r)
+		_lift_alpha = a
+		_site_roof_apply()
+	build_usec += Time.get_ticks_usec() - t0
+
+
+## B25R1-Q8: the low grass tufts of a chunk (MapView.grass_tuft), on open flat grass only: no road, worn way or street, no
+## water, no rock, flower or bush, nothing solid (trees, cliffs, a raised rim), no settlement building or yard (a styled house's
+## plot included), no homestead, no steps or way through a rim. Drawing only.
+func _lay_grass(cc: Vector2i, ch: Overworld.Chunk, layer: TileMapLayer, lanes: Dictionary) -> void:
+	if not has_grass_art():
+		return
+	var t0 := Time.get_ticks_usec()
+	var box := Rect2i(cc * Overworld.CHUNK, Vector2i(Overworld.CHUNK, Overworld.CHUNK))
+	var keep_off: Array[Rect2i] = []           # the settlements' buildings and yards, the homesteads, in this chunk
+	for st in overworld.sites + overworld.structures:
+		if (st.rect as Rect2i).grow(1).intersects(box):
+			for sl in st.slots + st.get("props", []):
+				var grown := (sl.rect as Rect2i).grow(1)      # (grown before the test: a plot on a chunk's edge keeps the next chunk's cells off too)
+				if grown.intersects(box):
+					keep_off.append(grown)
+	var fenced := {}
+	for hm in overworld.homes:
+		if (hm.rect as Rect2i).intersects(box):
+			keep_off.append(hm.rect)
+		for cells: Dictionary in hm.get("layers", []):
+			for c: Vector2i in cells:
+				fenced[c] = true
+	var tufts := MapView.low_grass()
+	var plain: Array = tufts.plain
+	var flowered: Array = tufts.flowered
+	var seed := overworld.seed
+	var roads: Dictionary = overworld.road_state
+	var changed: Dictionary = overworld.changes
+	var ways: Dictionary = overworld.works
+	var fixed_ways: Dictionary = overworld.fixed_works
+	for y in Overworld.CHUNK:
+		for x in Overworld.CHUNK:
+			var cell := box.position + Vector2i(x, y)
+			var h := Overworld.hash32(seed, cell.x, cell.y, GRASS_SALT)      # MapView.grass_tuft, inlined (a chunk is 1024 cells)
+			var roll := h % 100
+			if roll >= GRASS_PLAIN + GRASS_FLOWERED:
+				continue
+			var i := y * Overworld.CHUNK + x
+			if ch.solid[i] != 0 or ch.water[i] != 0 or ch.path[i] >= 0 or ch.deco[i] >= 0 or not _flat.has(ch.ground[i]):
+				continue
+			if lanes.has(cell) or roads.has(cell) or fenced.has(cell) or changed.has(cell) or ways.has(cell) or fixed_ways.has(cell):
+				continue                           # (B25R1-018: nor on a way through a rim, the player's or the generator's steps)
+			var off := false
+			for r in keep_off:
+				if r.has_point(cell):
+					off = true
+					break
+			if off:
+				continue
+			var list: Array = plain if roll < GRASS_PLAIN else flowered
+			_put(layer, cell, int(list[(h >> 8) % list.size()]))
+	grass_usec += Time.get_ticks_usec() - t0
+
+
+func _grass_off(cell: Vector2i) -> void:
+	var c: Dictionary = chunks.get(Overworld.chunk_of(cell), {})
+	if not c.is_empty():
+		(c.grass as TileMapLayer).erase_cell(cell)
+
+
+## The tuft drawn on a cell of a loaded chunk, -1 for none (tests).
+func grass_value(cell: Vector2i) -> int:
+	var c: Dictionary = chunks.get(Overworld.chunk_of(cell), {})
+	return -1 if c.is_empty() else tile_value(c.grass, cell)
 
 
 ## B25R1-010: every homestead's house (painted from the village's house stamp, as a settlement's buildings are: ground, path
@@ -394,7 +484,7 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 			var r: Rect2i = sl.rect
 			if not r.intersects(box):
 				continue
-			var stamp: Dictionary = overworld.stamps.get(str(sl.stamp), overworld.stamps.house)
+			var stamp: Dictionary = overworld.stamps.get(Overworld.slot_stamp(sl), overworld.stamps.house)   # (B25R1-022: its house style's)
 			var swap: Dictionary = _look_swap(str(sl.get("look", "")))    # B25R1-018: the building's colour variant (region_stamps.json)
 			var names: Array = (stamp.layers as Dictionary).keys()
 			names.sort_custom(func(a: String, b: String) -> bool:
@@ -471,8 +561,105 @@ func _site_sorts(stamp: Dictionary, lname: String, i: int, j: int, cell: Vector2
 	return true
 
 
+## B25R1-022 (owner 2026-11-04: "make the roofs removable like our current ones for going inside"; RoofFade's rules): a
+## settlement building's roof lifts while the player is inside it (Overworld.site_inside_at: its doorway and rooms), fully
+## (RoofFade.ALPHA) over RoofFade.FADE_TIME, and comes back on leaving. Only that building's roof tiles move, from the
+## chunks' site layers to two layers of their own whose alpha is faded, as RoofFade does in the village. `feet` in tiles.
+func site_roof_step(feet: Vector2, delta: float) -> void:
+	var cell := Vector2i(floori(feet.x), floori(feet.y))
+	var want := Rect2i()
+	if not overworld.village.has_point(cell):
+		var sl := overworld.site_inside_at(cell)
+		if not sl.is_empty():
+			want = sl.rect
+	var step := delta / RoofFade.FADE_TIME
+	if want != _lift_rect:
+		if _lift_rect.has_area():
+			_lift_alpha = move_toward(_lift_alpha, 1.0, step)       # the old roof comes back first
+			if _lift_alpha < 1.0:
+				_site_roof_apply()
+				return
+			_site_roof_restore()
+		if want.has_area():
+			_site_roof_lift(want)
+	elif _lift_rect.has_area():
+		_lift_alpha = move_toward(_lift_alpha, RoofFade.ALPHA, step)
+	_site_roof_apply()
+
+
+## The site building whose roof is lifted (its slot rect), or an empty rect.
+func site_roof_lifted() -> Rect2i:
+	return _lift_rect if _lift_alpha < 1.0 else Rect2i()
+
+
+func _site_roof_apply() -> void:
+	for l in [_lift_dst, _lift_dst_sorted]:
+		if l != null:
+			l.modulate.a = _lift_alpha
+
+
+func _site_roof_lift(r: Rect2i) -> void:
+	_lift_rect = r
+	_lift_alpha = 1.0
+	if _lift_dst == null:
+		_lift_dst = _layer(self, 10)
+		_lift_dst.name = "site_roof_lifted"
+		if _site_sorted_parent != null:
+			_lift_dst_sorted = TileMapLayer.new()
+			_lift_dst_sorted.name = "site_roof_lifted_front"
+			_lift_dst_sorted.tile_set = tileset
+			_lift_dst_sorted.y_sort_enabled = true
+			_site_sorted_parent.add_child(_lift_dst_sorted)
+	var st := overworld.site_at(r.position)
+	var stamp := {}
+	for sl in st.get("slots", []):
+		if sl.rect == r:
+			stamp = overworld.stamps.get(Overworld.slot_stamp(sl), {})
+	if stamp.is_empty():
+		return
+	var above: Array = []
+	for ln in (stamp.layers as Dictionary):
+		if str(ln).begins_with("above"):
+			above.append(stamp.layers[ln])
+	for j in r.size.y:
+		for i in r.size.x:
+			var roofed := false
+			for cells: Array in above:
+				if int(cells[j * int(stamp.w) + i]) >= 0:
+					roofed = true
+			if not roofed:
+				continue
+			var cell := r.position + Vector2i(i, j)
+			var c: Dictionary = chunks.get(Overworld.chunk_of(cell), {})
+			for l: TileMapLayer in c.get("site_above", []):
+				if not is_instance_valid(l):
+					continue
+				var id := l.get_cell_source_id(cell)
+				if id < 0:
+					continue
+				var d := _lift_dst_sorted if l.y_sort_enabled and _lift_dst_sorted != null else _lift_dst
+				_lift_moved.append([l, cell, id, l.get_cell_atlas_coords(cell), l.get_cell_alternative_tile(cell), d])
+				d.set_cell(cell, id, l.get_cell_atlas_coords(cell), l.get_cell_alternative_tile(cell))
+				l.erase_cell(cell)
+
+
+## Put the lifted roof back at once (a chunk is freed or built, or the player has left).
+func _site_roof_restore() -> void:
+	for m in _lift_moved:
+		var l: TileMapLayer = m[0]
+		if is_instance_valid(l):
+			l.set_cell(m[1], m[2], m[3], m[4])
+	_lift_moved.clear()
+	for l in [_lift_dst, _lift_dst_sorted]:
+		if l != null:
+			l.clear()
+	_lift_rect = Rect2i()
+	_lift_alpha = 1.0
+
+
 func _free(cc: Vector2i) -> void:
 	canopy.restore_all()                  # faded tiles go back to their layers before the layer goes
+	_site_roof_restore()                  # (B25R1-022: and a lifted site roof; lifted again next frame if still inside)
 	if tree_sink != null:
 		tree_sink.unload_chunk(cc)
 	var c: Dictionary = chunks[cc]

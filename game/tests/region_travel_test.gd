@@ -293,7 +293,7 @@ func _refused() -> void:
 				var ch := ow.get_chunk(cc)
 				for i in ch.top.size():
 					var c := cc * Overworld.CHUNK + Vector2i(i % Overworld.CHUNK, i / Overworld.CHUNK)
-					if ch.top[i] == 1 and not ow.is_solid(c) and ow.is_top(c):
+					if ch.top[i] == 1 and not ow.is_solid(c) and ow.is_top(c) and ow.raised_at(c) == "":   # (not Bear Hill or the castle knoll: their steps reach them)
 						var ok := true
 						for dy in range(-RegionTravel.SNAP, RegionTravel.SNAP + 1):
 							for dx in range(-RegionTravel.SNAP, RegionTravel.SNAP + 1):

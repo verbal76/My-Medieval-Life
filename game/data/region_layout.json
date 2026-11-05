@@ -48,7 +48,8 @@
       "at": "west",
       "id": "canons"
      }
-    ]
+    ],
+    "elite_style": "fl"
    }
   },
   {
@@ -96,7 +97,8 @@
       "id": "barn",
       "look": "thatch"
      }
-    ]
+    ],
+    "house_style": "fl"
    }
   },
   {
@@ -131,7 +133,8 @@
       "id": "church"
      }
     ],
-    "spare": 10
+    "spare": 10,
+    "elite_style": "fl"
    }
   },
   {
@@ -156,7 +159,10 @@
    "note": "named by Morris as a thorp at the feet of the downs toward Higham; its position (west of Garton) is ours",
    "src": [
     "BFOUR-C22-P011"
-   ]
+   ],
+   "plan": {
+    "house_style": "fl"
+   }
   },
   {
    "id": "milton",
@@ -167,7 +173,10 @@
    "note": "named by Morris as a thorp at the feet of the downs toward Higham; its position (east of Garton) is ours",
    "src": [
     "BFOUR-C22-P011"
-   ]
+   ],
+   "plan": {
+    "house_style": "fl"
+   }
   },
   {
    "id": "rushford",
@@ -215,7 +224,10 @@
    "x": -208,
    "y": 797,
    "label": "GAME EXPANSION",
-   "note": "on Coldlake west of Higham, Abbey land: fields and an herb garden"
+   "note": "on Coldlake west of Higham, Abbey land: fields and an herb garden",
+   "plan": {
+    "house_style": "fl"
+   }
   },
   {
    "id": "elmcote",
@@ -223,7 +235,10 @@
    "x": 220,
    "y": 790,
    "label": "GAME EXPANSION",
-   "note": "east of Higham among the Abbot's lands: fields and a masons' yard; a well"
+   "note": "east of Higham among the Abbot's lands: fields and a masons' yard; a well",
+   "plan": {
+    "house_style": "fl"
+   }
   },
   {
    "id": "cressbrook",
@@ -231,7 +246,10 @@
    "x": 185,
    "y": 915,
    "label": "GAME EXPANSION",
-   "note": "in the vine country east of the Bourton road: fields and a tavern; a well"
+   "note": "in the vine country east of the Bourton road: fields and a tavern; a well",
+   "plan": {
+    "house_style": "fl"
+   }
   }
  ],
  "rivers": [
@@ -853,8 +871,11 @@
     "BONE-C3-P037",
     "BONE-C4-P005"
    ],
-   "note": "the first great hill of the Downs above Netherton; from its top downs on downs to the south",
-   "object": ""
+   "note": "the first great hill of the Downs above Netherton; from its top downs on downs to the south; its top raised as a rock-rimmed plateau of open turf about 22 tiles round Bear Castle (generation 5), climbed where the roads cut through the rim",
+   "object": "hill",
+   "raised": {
+    "r": 22
+   }
   },
   {
    "id": "bear_castle",
@@ -875,7 +896,7 @@
    "id": "bear_figures",
    "name": "the chalk figures of Bear Hill",
    "kind": "chalk figure",
-   "x": 34,
+   "x": 22,
    "y": 470,
    "label": "CANON",
    "src": [
@@ -973,8 +994,19 @@
    "src": [
     "BONE-C5-P002"
    ],
-   "note": "on a knoll overlooking the town",
-   "object": "site:higham/keep"
+   "note": "on a knoll overlooking the town; the knoll a raised top round the castle with steps cut through its rim below the gate (generation 5)",
+   "object": "site:higham/keep",
+   "raised": {
+    "site": "higham",
+    "slot": "castle",
+    "margin": [
+     1,
+     4,
+     5,
+     5
+    ]
+   },
+   "pending_art": "a white-stone battlement kit (merlons, wall-walk and face, as the grey castle sample's Walls layer) for the castle's walls, now the grey kit with light-grey faces"
   },
   {
    "id": "higham_abbey",
@@ -1027,7 +1059,8 @@
     "BONE-C3-P005"
    ],
    "note": "a fountain amidst it and a buttercross",
-   "object": "site:wulstead/fountain"
+   "object": "site:wulstead/fountain",
+   "pending_art": "a fountain with water (2 x 2 tiles or larger, animated water welcome) to replace the dry round basin of the 'fountain' slot; and a stone cross head for the buttercross's roof"
   },
   {
    "id": "wulstead_canons",
@@ -1065,7 +1098,8 @@
    "src": [
     "BFOUR-C21-P017"
    ],
-   "object": ""
+   "object": "",
+   "pending_art": "a standing stone cross (about 1 x 2 tiles, 16 px grid): stands in Garton's street at the crossroads nearest the anchor, as a civic slot 'cross' of the site plan; then object 'site:garton/cross' and its Landmarks entry"
   },
   {
    "id": "garton_barn",
@@ -1380,5 +1414,5 @@
    ]
   }
  ],
- "_note_objects": "landmarks[].object: what stands for the landmark in the world (Overworld.landmark_places): 'site:<settlement>/<civic slot id>' (or /square), 'structure' (built by Overworld._setup_structures), 'figure' (chalk cut in the turf, `figure` rows scaled by `scale`), 'ring' (an earthwork bank, radius r); empty: not yet a world object, so not a Landmarks entry"
+ "_note_objects": "landmarks[].object: what stands for the landmark in the world (Overworld.landmark_places): 'site:<settlement>/<civic slot id>' (or /square), 'structure' (built by Overworld._setup_structures), 'figure' (chalk cut in the turf, `figure` rows scaled by `scale`), 'ring' (an earthwork bank, radius r); empty: not yet a world object, so not a Landmarks entry; 'hill' (a hill, its top raised when it carries `raised`). landmarks[].raised (generation 5, Overworld._setup_raised): {r} a raised top r tiles round the landmark, climbed by steps where roads cross its rim; {site, slot, margin: [west, north, east, south]} a raised top round that site slot, steps below its door. landmarks[].pending_art: art the owner is to supply before the thing can stand or look as described (no placeholder is drawn)"
 }

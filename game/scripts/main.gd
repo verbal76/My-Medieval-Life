@@ -1639,6 +1639,7 @@ func _build_scene() -> void:
 	_clear_legacy_lanes()
 	tree_view.setup(world)
 	_replace_tree_tiles()
+	view.lay_grass(int(map.data.get("seed", 0)), map.overworld.tiles.grass, _grass_open())
 	ow_view.setup(view, map.overworld, int(GameData.b("overworld_chunk_radius")))
 	ow_view.tree_sink = tree_view
 	countryside = Countryside.new(map.overworld)
@@ -1828,6 +1829,31 @@ func _on_tile_changed(cell: Vector2i, kind: String, value: int) -> void:
 			canopy.restore_all()          # a faded canopy's tiles go back first, so the change sticks
 			roofs.restore_all()
 		view.set_tile(layer, cell, value)
+
+
+## B25R1-Q8: where the village's low grass may not grow beyond what MapView checks itself (any tile over the grass, a solid
+## cell): the roads and door trails (also where no tile shows them), the fields, the market's stalls and pitches, the trees
+## (drawn as sprites, their tiles taken out), the wild plants and the ore deposits.
+func _grass_open() -> Callable:
+	var off := {}
+	for c in map.data.road + map.data.get("door_trails", []):
+		off[Vector2i(int(c[0]), int(c[1]))] = true
+	for r in map.data.get("fields", []) + world.fields:
+		for y in range(int(r.y), int(r.y) + int(r.get("h", 1))):
+			for x in range(int(r.x), int(r.x) + int(r.get("w", 1))):
+				off[Vector2i(x, y)] = true
+	for r in map.data.get("stalls", []) + map.data.get("pitches", []):
+		off[Vector2i(int(r.x), int(r.y))] = true
+		if r.has("use"):
+			off[Vector2i(int(r.use[0]), int(r.use[1]))] = true
+	for t in world.trees:
+		off[Vector2i(int(t.x), int(t.y))] = true
+		off[Vector2i(int(t.x), int(t.y) - 1)] = true
+	for pl in world.plants:
+		off[Vector2i(int(pl.x), int(pl.y))] = true
+	for d in map.data.get("deposits", []):
+		off[Vector2i(int(d.x), int(d.y))] = true
+	return func(c: Vector2i) -> bool: return not off.has(c)
 
 
 ## ROOMS-18: a world made with the plots at their old sites (village generator v7) has a new plot's lane running

@@ -32,6 +32,8 @@ func _init() -> void:
 	_test_regions()
 	_test_sites(1)
 	_test_sites(2)
+	_test_raised(1)
+	_test_raised(2)
 	print("sites ", Time.get_ticks_msec() - tp); tp = Time.get_ticks_msec()
 	print("overworld core tests took ", Time.get_ticks_msec() - t0, " ms")
 	main = load("res://scenes/main.tscn").instantiate()
@@ -564,6 +566,67 @@ func _run_scene() -> void:
 ## (OffMapSettlement.pos: x across, miles x tiles_per_mile south of the village's centre), cleared like the village, joined to
 ## the road network, and reachable on foot from the village; the same seed places them the same way; an older generation's world is refused (B25R1-Q5); was: a generation-2 save's tree
 ## planted where a site now stands is dropped and counted.
+## B25R1-018 (generation 5): Bear Hill's top and Higham's castle knoll are raised ground: a rock rim round a top of open turf
+## (no mountain pines or boulders), reached on foot (a road's steps up the hill, the steps below the castle's gate), the same
+## for the same seed.
+func _test_raised(seed_value: int) -> void:
+	var o := Overworld.create(seed_value, VillageMap.load_default())
+	var again := Overworld.create(seed_value, VillageMap.load_default())
+	check(o.raised.size() == 2, "seed %d: two raised places (Bear Hill, the castle knoll): %d" % [seed_value, o.raised.size()])
+	var keep := Vector2i.ZERO
+	for sl in o.site("higham").slots:
+		if str(sl.get("id", "")) == "keep":
+			keep = sl.spot
+	for t in [["bear_hill", Vector2i(90, 450), Rect2i(30, 390, 120, 120)], ["higham_castle", keep, Rect2i(55, 620, 90, 100)]]:
+		var id: String = t[0]
+		var goal: Vector2i = t[1]
+		var box: Rect2i = t[2]
+		var tops := 0
+		var rims := 0
+		var wooded := 0
+		var same := true
+		for y in range(box.position.y, box.end.y):
+			for x in range(box.position.x, box.end.x):
+				var c := Vector2i(x, y)
+				if o.raised_at(c) != id:
+					continue
+				same = same and o.is_solid(c) == again.is_solid(c) and o.is_top(c) == again.is_top(c) and o.way_at(c) == again.way_at(c)
+				if o.is_top(c):
+					tops += 1
+					if not o.base_tree(c).is_empty() or o.has_boulder(c):
+						wooded += 1
+				elif o.is_solid(c) and not o.site_building_at(c):
+					rims += 1
+		check(tops > 300 and rims > 40, "seed %d: %s is a raised top (%d cells) inside a rim (%d cells)" % [seed_value, id, tops, rims])
+		check(wooded == 0, "seed %d: %s's top is open turf, no pines or boulders (%d)" % [seed_value, id, wooded])
+		check(same, "seed %d: %s is the same for the same seed" % [seed_value, id])
+		# on foot from the ground below (the box's south edge) to the top: up the steps
+		var start := Vector2i(goal.x, box.end.y - 1)
+		while o.is_solid(start) or o.raised_at(start) != "":
+			start.x += 1
+		var seen := {start: true}
+		var todo: Array[Vector2i] = [start]
+		var stepped := false
+		while not todo.is_empty() and not seen.has(goal):
+			var c: Vector2i = todo.pop_back()
+			for d: Vector2i in VillageMap.SIDES:
+				var n := c + d
+				if box.has_point(n) and not seen.has(n) and not o.is_solid(n):
+					seen[n] = true
+					todo.append(n)
+					if o.way_at(n) != "":
+						stepped = true
+		check(seen.has(goal) and stepped, "seed %d: %s's top (%s) is reached on foot from below, by steps through its rim" % [seed_value, id, goal])
+	var steps := 0
+	for c: Vector2i in o.fixed_works:
+		if o.raised_at(c) == "higham_castle":
+			steps += 1
+			check(not o.is_solid(c) and not o.is_rim(c) and o.is_top(c + Vector2i(0, -1)), "seed %d: the knoll's steps at %s are walked on, up to the top" % [seed_value, c])
+	check(steps == 3, "seed %d: three steps cut through the knoll's rim below the castle gate (%d)" % [seed_value, steps])
+	var d := o.to_dict()
+	check(not d.has("fixed_works") and (d.works as Array).is_empty(), "seed %d: the generated steps are not saved (a function of the seed)" % seed_value)
+
+
 func _test_sites(seed_value: int) -> void:
 	var m := VillageMap.load_default()
 	var o := Overworld.create(seed_value, m)
@@ -580,18 +643,27 @@ func _test_sites(seed_value: int) -> void:
 	for k in o.sites.size():
 		var st: Dictionary = o.sites[k]
 		var spec: Dictionary = data.settlements[k]
-		var want := RegionGeo.anchor(str(spec.id))      # B25R1-018 (generation 4): the region layout's anchor
+		var want := RegionGeo.anchor(str(spec.id))      # B25R1-018 (generation 4 on): the region layout's anchor
 		check(st.center == want and str(st.id) == str(spec.id), "%s stands at its place in the region layout %s" % [st.name, want])
 		var blocked := 0
+		var raised_rim := 0
+		var rim_on_plot := 0
 		var road := 0
 		for y in range(st.rect.position.y, st.rect.end.y):
 			for x in range(st.rect.position.x, st.rect.end.x):
 				var cell := Vector2i(x, y)
 				if o.is_solid(cell) and not o.site_building_at(cell):
-					blocked += 1
+					if o.raised_at(cell) != "":
+						raised_rim += 1                  # (generation 5: Bear Hill's rim in Netherton's corner, Higham's castle knoll)
+						for sl in st.slots + st.get("props", []):
+							if (sl.rect as Rect2i).grow(1).has_point(cell) and str(sl.get("id", "")) != "castle" and str(sl.get("id", "")) != "keep":
+								rim_on_plot += 1
+					else:
+						blocked += 1
 				if o.is_road(cell):
 					road += 1
-		check(blocked == 0, "%s: its site is clear ground but for its buildings (%d other blocked cells)" % [st.name, blocked])
+		check(blocked == 0, "%s: its site is clear ground but for its buildings and the raised ground it reaches onto (%d other blocked cells)" % [st.name, blocked])
+		check(rim_on_plot == 0, "%s: no rim of raised ground stands on or against a building or yard (%d of %d rim cells)" % [st.name, rim_on_plot, raised_rim])
 		check(road > 0, "%s: a road runs into it (%d road cells)" % [st.name, road])
 		# B25R1-018 phase 3: a home for every founding household (one per trade count, OffMapSettlement's order), a building
 		# for each business, spare homes; each inside the site, solid, with open street at its door
@@ -603,7 +675,9 @@ func _test_sites(seed_value: int) -> void:
 		for sl in st.slots:
 			if str(sl.kind) == "home" and int(sl.hh) >= 0:
 				homes[int(sl.hh)] = true
-			doors_ok = doors_ok and st.rect.encloses(sl.rect) and o.site_building_at(sl.rect.position + Vector2i(1, 1)) and not o.is_solid(sl.spot)
+			doors_ok = doors_ok and st.rect.encloses(sl.rect) and not o.is_solid(sl.spot) \
+				and (o.site_building_at(sl.rect.position + Vector2i(1, 1)) or sl.has("style") and not o.is_solid(sl.door)
+					and (o.site_building_at(sl.door + Vector2i.LEFT) or o.site_building_at(sl.door + Vector2i.RIGHT)))   # B25R1-022: a styled house fills less of its rect
 		check(doors_ok and homes.size() == households, "%s: a home for each of its %d households (%d buildings), inside the site, solid, with open ground at its door" % [st.name, households, st.slots.size()])
 		check(o.site_at(st.center) == st and o.site(str(st.id)) == st, "%s: found by cell and by id" % st.name)
 		box = box.merge(st.rect.grow(20))

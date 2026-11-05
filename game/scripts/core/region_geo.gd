@@ -107,12 +107,14 @@ static func region_name(id: String) -> String:
 	return ""
 
 
-## The layout's landmarks: [{id, name, kind, at: Vector2i, r}] in file order.
+## The layout's landmarks: [{id, name, kind, at: Vector2i, r, label, object, figure, scale, raised}] in file order (raised: the
+## raised ground the overworld gives it, {} none; Overworld._setup_raised).
 static func landmarks() -> Array:
 	var out := []
 	for l in data().landmarks:
 		out.append({"id": str(l.id), "name": str(l.name), "kind": str(l.kind), "at": Vector2i(int(l.x), int(l.y)), "r": int(l.get("r", 0)),
-			"label": str(l.get("label", "")), "object": str(l.get("object", "")), "figure": l.get("figure", []), "scale": int(l.get("scale", 1))})
+			"label": str(l.get("label", "")), "object": str(l.get("object", "")), "figure": l.get("figure", []), "scale": int(l.get("scale", 1)),
+			"raised": l.get("raised", {})})
 	return out
 
 

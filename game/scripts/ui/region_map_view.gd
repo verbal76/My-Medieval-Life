@@ -23,16 +23,20 @@ extends Control
 ## player, X resumes and Y dismisses the destination, B closes the window as it closes every window. The pad's buttons are
 ## taken here while the map is open, so they neither move the focus nor reach the character (who stands still behind any
 ## window). A mouse or a touch hides the cursor.
+## Look (B25R1-008, owner directive 2026-11-03 section 7): the game's UIStyle, as the polished windows: the map sits in a
+## sunken bronze-rimmed inset, the legend on a wooden strip under a bronze trim, the compass and any refusal in their own boxes
+## (an inset, a parchment slip), the type in UIStyle's sizes and colours. Drawing only: the map's area, its coordinates and
+## every control are as before.
 
-const COLOURS := [Color8(30, 22, 15), Color8(104, 128, 70), Color8(46, 78, 42), Color8(132, 124, 112),
+const COLOURS := [UIStyle.WOOD_DEEP, Color8(104, 128, 70), Color8(46, 78, 42), Color8(132, 124, 112),
 		Color8(120, 126, 76), Color8(138, 82, 52), Color8(111, 74, 44)]      # by Atlas class: unknown, grass, wood, rock, road, settlement (roofs), village
 # (B25R1: a road block is ground with a road through it, a shade off the grass: the roads themselves are drawn as lines)
-const BACK := Color8(30, 22, 15)             # the unknown ground's colour: the terrain image has no edge
-const PALE := Color8(236, 214, 170)
-const HOME := Color8(255, 214, 90)
+const BACK := UIStyle.WOOD_DEEP              # the unknown ground's colour: the terrain image has no edge
+const PALE := UIStyle.PALE_TEXT
+const HOME := UIStyle.GOLD
 const YOU := Color8(214, 52, 36)
 const ROAD := Color8(222, 204, 164)
-const ROAD_EDGE := Color8(58, 42, 28)
+const ROAD_EDGE := UIStyle.INK
 const TRAIL := Color8(170, 124, 78)
 const STONE := Color8(178, 182, 176)          # B25R1-Q1: stone road, the paving's grey
 const WATER := Color8(40, 160, 200)           # B25R1-Q3: streams and pools
@@ -67,6 +71,8 @@ var _pinch_zoom := 1.0
 var _pinch_mid := Vector2.ZERO
 var _icons := {}
 var _placed: Array[Rect2] = []  # the screen rects of the marks and labels drawn this frame
+var _px := 2                    # UIStyle's art pixel (GameUI.ui_px: 2 on a desktop window, 1 in the phone layout)
+var _rim: StyleBox              # the map's sunken rim (UIStyle.inset, its centre left open so the map shows)
 var cursor := Vector2.INF       # B25R1-012: the pad's cursor (tiles); INF while no pad has been used on the map
 const CURSOR_SPEED := 420.0     # screen pixels a second at full tilt
 const PAD_ZOOM := 2.2           # zoom factor a second with a trigger held
@@ -90,6 +96,9 @@ func setup(m) -> void:
 	for k in ["mineral", "combat", "tool", "star"]:
 		_icons[k] = load("res://assets/markers/%s.png" % k)
 	_icons.home = load("res://assets/ui/home.png")
+	_px = int(main.ui.ui_px()) if main.ui != null and main.ui.has_method("ui_px") else 2
+	_rim = UIStyle.inset(_px).duplicate()
+	(_rim as StyleBoxTexture).draw_center = false
 	_fit()
 
 
@@ -486,7 +495,7 @@ func _text(font: Font, at: Vector2, s: String, fs: int, col: Color, centred := f
 	var x := at.x
 	if centred:
 		x -= font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x / 2.0
-	draw_string_outline(font, Vector2(x, at.y), s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, 5, Color(0, 0, 0, 0.9))
+	draw_string_outline(font, Vector2(x, at.y), s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, 5, Color(UIStyle.OUTLINE, 0.9))
 	draw_string(font, Vector2(x, at.y), s, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, col)
 
 
@@ -583,7 +592,7 @@ func _draw() -> void:
 	var hr := Rect2(hc - Vector2(isz, isz) / 2.0, Vector2(isz, isz))
 	draw_texture_rect(_icons.home, hr, false)
 	_placed.append(hr)
-	labels.append([vr if vr.size.x < 80.0 else hr, "Home", 16, HOME, true])
+	labels.append([vr if vr.size.x < 80.0 else hr, "Home", UIStyle.HEAD, HOME, true])
 	for st in ow.sites:
 		var sr := Rect2(to_screen(Vector2((st.rect as Rect2i).position)), Vector2((st.rect as Rect2i).size) * zoom)
 		var sc := sr.get_center()
@@ -591,16 +600,16 @@ func _draw() -> void:
 		if sr.size.x < 12.0:
 			sr = Rect2(sc - Vector2(6, 6), Vector2(12, 12))
 		draw_rect(sr, SITE)
-		draw_rect(sr, PALE if visited else Color8(20, 12, 8), false, 2.0)
+		draw_rect(sr, PALE if visited else UIStyle.OUTLINE, false, 2.0)
 		_placed.append(sr)
-		labels.append([sr, "%s  %s" % [str(st.name), RegionTravel.bearing(p.pos, Vector2(st.center))], 16, PALE, true])
+		labels.append([sr, "%s  %s" % [str(st.name), RegionTravel.bearing(p.pos, Vector2(st.center))], UIStyle.BODY, PALE, true])
 	var me := to_screen(p.pos)
 	var dc := Vector2.INF
 	if RegionTravel.has_destination(p):
 		dc = to_screen(Vector2(RegionTravel.destination(p)) + Vector2(0.5, 0.5))
 		_placed.append(Rect2(dc - Vector2(4, 24), Vector2(20, 28)))
 	_placed.append(Rect2(me - Vector2(9, 9), Vector2(18, 18)))
-	labels.append([Rect2(me - Vector2(9, 9), Vector2(18, 18)), "You", 15, Color8(255, 150, 130), true])
+	labels.append([Rect2(me - Vector2(9, 9), Vector2(18, 18)), "You", UIStyle.BODY, Color8(255, 150, 130), true])
 	if dc != Vector2.INF:
 		var nm := RegionTravel.place_name(w, p, RegionTravel.destination(p))
 		labels.append([Rect2(dc - Vector2(4, 24), Vector2(20, 28)), ("Going to " if RegionTravel.active(p) else "Destination: ") + nm, 14, DEST, true])
@@ -610,12 +619,12 @@ func _draw() -> void:
 		var at := to_screen(Vector2(lm.at) + Vector2(0.5, 0.5))
 		var icon: Texture2D = _icons.combat if lm.kind == "camp" else _icons.mineral if lm.kind in ["mine", "quarry", "ore"] \
 			else _icons.star                          # B25R1-018: a landmark of the region (a chapel, an earthwork, a castle)
-		draw_circle(at, lr, PALE)
-		draw_circle(at, lr - 1.5, Color8(43, 29, 19))
+		draw_circle(at, lr, UIStyle.TRIM)
+		draw_circle(at, lr - 1.5, UIStyle.WOOD)
 		draw_texture_rect(icon, Rect2(at - Vector2(lr, lr) * 0.7, Vector2(lr, lr) * 1.4), false)
 		_placed.append(Rect2(at - Vector2(lr, lr), Vector2(lr, lr) * 2.0))
 		if zoom >= 2.0:
-			labels.append([Rect2(at - Vector2(lr, lr), Vector2(lr, lr) * 2.0), str(lm.name), 13, PALE, false])
+			labels.append([Rect2(at - Vector2(lr, lr), Vector2(lr, lr) * 2.0), str(lm.name), UIStyle.SMALL, PALE, false])
 	# the destination's flag
 	if dc != Vector2.INF:
 		draw_line(dc, dc - Vector2(0, 22), Color.BLACK, 4.0)
@@ -632,26 +641,33 @@ func _draw() -> void:
 		_label(font, l[0], l[1], l[2], l[3], l[4])
 	if cursor != Vector2.INF:                      # B25R1-012: the pad's cursor, and what A would do
 		var cur_s := to_screen(cursor)
-		var ring := Color8(255, 236, 140)
-		draw_arc(cur_s, 13.0, 0, TAU, 32, Color.BLACK, 5.0)
+		var ring := UIStyle.GOLD
+		draw_arc(cur_s, 13.0, 0, TAU, 32, UIStyle.OUTLINE, 5.0)
 		draw_arc(cur_s, 13.0, 0, TAU, 32, ring, 2.5)
 		for dv in [Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1)]:
-			draw_line(cur_s + dv * 7.0, cur_s + dv * 20.0, Color.BLACK, 4.0)
+			draw_line(cur_s + dv * 7.0, cur_s + dv * 20.0, UIStyle.OUTLINE, 4.0)
 			draw_line(cur_s + dv * 7.0, cur_s + dv * 20.0, ring, 2.0)
 		var what := "A: travel here  ·  %s" % RegionTravel.bearing(main.world.player.pos, cursor)
-		_text(font, cur_s + Vector2(18, -16), what, 14, ring)
-	# north and the status line
-	var nx := Vector2(ms.x - 26, 30)
-	draw_colored_polygon(PackedVector2Array([nx + Vector2(0, -16), nx + Vector2(8, 6), nx + Vector2(-8, 6)]), PALE)
-	_text(font, nx + Vector2(0, 24), "N", 14, PALE, true)
+		_text(font, cur_s + Vector2(18, -16), what, UIStyle.SMALL + 1, ring)
+	# the map's sunken rim, then north in its own inset and a refusal on a parchment slip
+	draw_style_box(_rim, Rect2(Vector2.ZERO, ms))
+	var nx := Vector2(ms.x - 30, 34)
+	draw_style_box(UIStyle.inset(_px), Rect2(nx - Vector2(18, 26), Vector2(36, 58)))
+	draw_colored_polygon(PackedVector2Array([nx + Vector2(0, -16), nx + Vector2(8, 6), nx + Vector2(-8, 6)]), UIStyle.GOLD)
+	draw_polyline(PackedVector2Array([nx + Vector2(0, -16), nx + Vector2(8, 6), nx + Vector2(-8, 6), nx + Vector2(0, -16)]), UIStyle.OUTLINE, 1.0)
+	_text(font, nx + Vector2(0, 24), "N", UIStyle.SMALL + 1, UIStyle.TEXT, true)
 	if status != "" and Time.get_ticks_msec() < status_until:
-		var sw := font.get_string_size(status, HORIZONTAL_ALIGNMENT_LEFT, -1, 16).x
-		draw_rect(Rect2(Vector2(8, 8), Vector2(sw + 20, 30)), Color(0.1, 0.04, 0.02, 0.9))
-		_text(font, Vector2(18, 29), status, 16, Color8(255, 190, 150))
-	# the legend, along the foot
+		var slip := UIStyle.parchment(_px)
+		var sw := font.get_string_size(status, HORIZONTAL_ALIGNMENT_LEFT, -1, UIStyle.BODY).x
+		var pad := Vector2(10, 6) + Vector2(_px, _px) * 4.0
+		draw_style_box(slip, Rect2(Vector2(10, 10), Vector2(sw, UIStyle.BODY + 4) + pad * 2.0))
+		draw_string(font, Vector2(10, 10) + pad + Vector2(0, UIStyle.BODY), status, HORIZONTAL_ALIGNMENT_LEFT, -1, UIStyle.BODY, UIStyle.INK_RED)
+	# the legend, along the foot: a wooden strip under a bronze trim
 	var ly := size.y - LEGEND_H
-	draw_rect(Rect2(Vector2(0, ly), Vector2(size.x, LEGEND_H)), Color8(43, 29, 19))
-	draw_line(Vector2(0, ly), Vector2(size.x, ly), Color8(111, 74, 44), 2.0)
+	draw_rect(Rect2(Vector2(0, ly), Vector2(size.x, LEGEND_H)), UIStyle.WOOD)
+	draw_rect(Rect2(Vector2(0, ly), Vector2(size.x, _px)), UIStyle.OUTLINE)
+	draw_rect(Rect2(Vector2(0, ly + _px), Vector2(size.x, _px)), UIStyle.TRIM)
+	draw_rect(Rect2(Vector2(0, ly + 2 * _px), Vector2(size.x, _px)), UIStyle.TRIM_DARK)
 	var x := 12.0
 	var yy := ly + LEGEND_H / 2.0
 	draw_line(Vector2(x, yy), Vector2(x + 24, yy), ROAD_EDGE, 7.0)
@@ -676,14 +692,14 @@ func _draw() -> void:
 		hints = ["D-pad move  ·  A travel  ·  LT/RT zoom  ·  R3 centre on me  ·  X resume  ·  Y dismiss  ·  B close",
 			"D-pad move · A travel · LT/RT zoom · R3 centre · X resume · Y dismiss", "A travel · LT/RT zoom"]
 	for hint in hints:
-		if x + 6 + font.get_string_size(hint, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x <= size.x - 8:
-			_text(font, Vector2(x + 6, yy + 5), hint, 13, Color8(214, 196, 160))
+		if x + 6 + font.get_string_size(hint, HORIZONTAL_ALIGNMENT_LEFT, -1, UIStyle.SMALL).x <= size.x - 8:
+			_text(font, Vector2(x + 6, yy + 5), hint, UIStyle.SMALL, UIStyle.MUTED)
 			break
 
 
 func _legend_word(font: Font, x: float, y: float, s: String) -> float:
-	_text(font, Vector2(x, y + 5), s, 14, PALE)
-	return x + font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x + 16.0
+	_text(font, Vector2(x, y + 5), s, UIStyle.SMALL + 1, UIStyle.TEXT)
+	return x + font.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, UIStyle.SMALL + 1).x + 16.0
 
 
 func _dashed(a: Vector2, b: Vector2, col: Color) -> void:

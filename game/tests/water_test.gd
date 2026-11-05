@@ -60,7 +60,7 @@ func _run() -> void:
 	# --- generation 4: deterministic, streams there
 	var a := Overworld.create(1, m)
 	var b := Overworld.create(1, m)
-	check(a.gen == Overworld.GEN_VERSION and Overworld.GEN_VERSION == 4, "a new world is generation 4")
+	check(a.gen == Overworld.GEN_VERSION and Overworld.GEN_VERSION == 5, "a new world is generation 5 (B25R1-018: Bear Hill and the castle knoll raised)")
 	var fa := fingerprint(a, true)
 	check(fa == fingerprint(b, true), "generation 4 is deterministic (the same seed, the same chunks and water)")
 	var b2 := Overworld.create(1, m)
@@ -197,7 +197,7 @@ func _run() -> void:
 	# --- a saved generation-4 world says so; an older generation's save is refused (owner B25R1-Q5)
 	check(main.save_game(false), "saved")
 	var d := SaveStore.inspect(main.save_path, World.SAVE_VERSION)
-	check(int(d.data.overworld.gen) == 4, "a new world's save says generation 4")
+	check(int(d.data.overworld.gen) == 5, "a new world's save says generation 5")
 	var w3 := World.new()
 	w3.load_dict(m, {"seed": 1, "save_version": World.SAVE_VERSION, "overworld": {"seed": 1, "gen": 3}})
 	check(not w3.load_error.is_empty(), "a generation-3 save is refused with a message, not drawn (%s)" % w3.load_error)
