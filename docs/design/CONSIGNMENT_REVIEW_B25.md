@@ -144,3 +144,25 @@ report's `region.<place>.granary` / `granary_ore`.
 
 Tests: `game/tests/treasury_ore_test.gd`; `game/tests/consign_test.gd` (its collection counts now include the closed trader's
 ore in Garton's granary, which the fixture leaves there).
+
+### 4.3 Results (120 days, seeds 1-4, every 10)
+
+Run 42109041416 on `a583318` (treasury recovery on top of decisions 32 and 33) against the decision 32/33 baseline run
+42106105599 on `7c2bef2`. Conservation: currency leak 0, item leaks none, script errors 0 in all eight runs.
+
+| Seed | Treasury iron ore sold to village (coal) | Iron ore imported, base -> new | Iron bars made | Tools made | Starvation | Traders open d120 |
+|---|---|---|---|---|---|---|
+| 1 | 38 (28) | 255 -> 212 | 583 -> 547 | 69 -> 69 | 0 -> 0 | 0 -> 0 |
+| 2 | 155 (81) | 60 -> 225 | 349 -> 469 | 31 -> 39 | 4 -> 4 | 1 -> 2 |
+| 3 | 144 (67) | 8 -> 154 | 405 -> 501 | 40 -> 40 | 0 -> 0 | 2 -> 1 |
+| 4 | 110 (53) | 18 -> 138 | 417 -> 475 | 40 -> 41 | 0 -> 0 | 2 -> 2 |
+
+- Improvement: in seeds 2-4 the ore that closures left in Garton's granary became the village's main iron import
+  (imports 86 -> 517 across those seeds; iron bars +274).
+- Not attributable either way: seed 1 is ahead to day 90 (148 against 141 imported) and behind by day 110-120 (212 against 255).
+  The village diverges from day 50, every trader has closed by day 120 in both runs, and Garton's granary still holds 118 iron ore with
+  no carrier (no walker, no carrying: WDR-022). Village population differs by births and wildlife deaths, not by starvation.
+- Unchanged: trader closures and reopenings follow the same pattern (traders open per checkpoint within one of the baseline),
+  starvation deaths are the same, and the fingerprints are identical to the baseline until the first closure leaves ore in a granary (days 40-70).
+- Left over: ore stays in Garton's granary at day 120 in seeds 1 and 4 (118 and 179 iron ore); "out" counts in the report are
+  gross (the same units lent on each visit and returned the next morning).
