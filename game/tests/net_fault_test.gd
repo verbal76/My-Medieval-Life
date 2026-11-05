@@ -340,8 +340,12 @@ func _guest_pause() -> void:
 	check(back and net.my_pid == pid and int(net_d().resumes) > res0, "it takes its own character back with its token, no refusal (resumes %d)" % int(net_d().resumes))
 	await until(func(): return conn().has(pid), 3.0)
 	check(conn().count(pid) == 1, "one connection for it on the host (%s)" % str(conn()))
-	var clean := await until(func(): return int(net_d().get("mp_peers", -1)) == conn().size(), 12.0)
-	check(clean, "the old connection is gone from the host's network layer too (no ghost peer: %d peers, %d guests)" % [int(net_d().get("mp_peers", -1)), conn().size()])
+	# When the guest came back before the host had seen its old connection die, the host ends that one gracefully (_drop_peer,
+	# quiet): ENet sends the goodbye and, with nobody there to acknowledge it, removes the peer TIMEOUT_MAX_MS after it (measured
+	# 10.5 s), counted from the takeover, which is already behind us here; a few seconds more for the frames in between.
+	var t_clean := Time.get_ticks_msec()
+	var clean := await until(func(): return int(net_d().get("mp_peers", -1)) == conn().size(), NetSession.TIMEOUT_MAX_MS / 1000.0 + 5.0)
+	check(clean, "the old connection is gone from the host's network layer too (no ghost peer: %d peers, %d guests; %.1f s)" % [int(net_d().get("mp_peers", -1)), conn().size(), (Time.get_ticks_msec() - t_clean) / 1000.0])
 
 
 # ---------------------------------------------------------------- a second guest killed and frozen ---
