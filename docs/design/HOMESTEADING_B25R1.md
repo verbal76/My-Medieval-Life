@@ -441,8 +441,10 @@ optional), works on Homesteads' claims and households whatever their faction; no
 
 Agent decisions (provisional, recorded in DECISIONS.md): a band too poor to pay for a well with no stream near makes no camp and
 tries each dawn (it is not given the means); raids last one night; one open work at a time on a claim; a pen's first animal kind
-is chickens (pen_kinds); the player's own homestead cannot yet build a well, pen or workshop (players have no thirst, and the
-player-side construction UI is not built). Defenders fight or flee (owner B25R1-Q4: no surrender).
+is chickens (pen_kinds); the player's own homestead builds a well, pen and workshop through the same records as an NPC claim
+(superseding the first worker's "cannot yet": the well since 2607807, Wilds.player_targets/player_well over Wilds.add_well with
+the balance's well_cost and well_labour, owner B25R1-Q3 "Both"; pen and workshop since e080bc0; end to end with save and load in
+player_homestead_test). The player has no thirst, so their well is the homestead's water source without a drinking need. Defenders fight or flee (owner B25R1-Q4: no surrender).
 
 **Polish pass (third worker, 2026-11-04).** Drawing: a claim's pen is fenced with Larchrow's fence (B25R1-Q8; corner posts
 while it is being built; finished, solid but for its gate, Overworld.home_building_at); a well being dug shows dug earth with
