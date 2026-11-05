@@ -24,6 +24,7 @@ func check(cond: bool, what: String) -> void:
 func _init() -> void:
 	GameData.ensure()
 	test_manor_buys_a_tool_on_sale()
+	test_courting_gift_keeps_the_work_axe()
 	# The advance orders (World.manor_orders) are the economy-off rule: with the Living Economy driving (on by default
 	# since LE-07 activation) the manor commissions a smith by a CON-01 contract instead (EconMarket.manor_tools, tested
 	# by le04_test). These two pin the economy off so they test the advance path whatever the installed switch says.
@@ -65,6 +66,52 @@ func test_manor_buys_a_tool_on_sale() -> void:
 	check(spent > 0 and w.treasury == 2000 - spent, "the treasury paid for it (%d coins)" % spent)
 	check(w.total_coins() == coins0, "coins only moved")
 	check(not w.brain.tool_short(n), "and is no longer short of a tool")
+
+
+## B25R1 axe defect (seed 1, 30 days: treasury 323 -> 32, axes_given 0 -> 22): a single woodcutter courting another gave its
+## only axe (the other's favourite, Relations._gift_from) at each dawn, was then short of its trade's tool, and the manor
+## bought it another from the treasury (EQ-19), which it gave away again the next dawn. The work's tool is never the gift
+## unless the giver holds a spare, so the treasury does not re-equip the same worker day after day; a spare is still given.
+func test_courting_gift_keeps_the_work_axe() -> void:
+	var w := new_world()
+	var r := w.relations
+	var a: NPC = null
+	var b: NPC = null
+	for o: NPC in w.npcs:
+		if a == null and o.alive and o.role == "adult" and o.job == "woodcutter" and o.partner < 0:
+			a = o
+	for o: NPC in w.npcs:
+		if b == null and a != null and o != a and o.alive and o.role == "adult" and o.partner < 0 and r.can_court(a.id, o.id):
+			b = o
+	check(a != null and b != null, "a single woodcutter and someone it may court")
+	if a == null or b == null:
+		return
+	b.job = "woodcutter"                         # an axe is the courted one's favourite (Relations.FAVOURITES)
+	if not b.inv.has("axe"):
+		b.inv.add("axe")                          # its own, so it is not a worker short of one itself
+	a.inv.remove("axe", a.inv.count("axe"))
+	a.inv.add("axe")
+	for id in ["flower", "ale", "apple", "bread", "red_berries", "blueberries"]:
+		a.inv.remove(id, a.inv.count(id))         # nothing else to give: the axe is the only candidate
+	var smith: NPC = w.brain._first_with_job("smith")
+	smith.inv.add("axe", 4)                       # axes on sale, so a worker short of one would be re-equipped at once
+	w.treasury = 5000
+	var b_axes := b.inv.count("axe")
+	var short_days := 0
+	for day in 3:
+		w.minutes += 1440.0
+		r.interests[a.id] = b.id
+		r._villagers_court()
+		if w.brain.tool_needers().any(func(p): return p[0] == a):
+			short_days += 1
+		w.brain._support_trades(w.brain.daily_obligations())
+	check(short_days == 0 and a.inv.count("axe") == 1, "a woodcutter courting with its only axe keeps it: never short, never re-equipped by the treasury (short on %d of 3 days, holds %d)" % [short_days, a.inv.count("axe")])
+	check(b.inv.count("axe") == b_axes, "and the courted woodcutter is given no axe (%d -> %d)" % [b_axes, b.inv.count("axe")])
+	a.inv.add("axe")
+	w.minutes += 1440.0
+	r.interests[a.id] = b.id
+	r._villagers_court()
+	check(a.inv.count("axe") == 1 and b.inv.count("axe") == b_axes + 1, "a spare axe is still a gift (giver %d, receiver %d)" % [a.inv.count("axe"), b.inv.count("axe")])
 
 
 ## EQ-19: with no axe on sale, the poorest smith is paid an axe's worth in advance; the order keeps the woodcutter in
