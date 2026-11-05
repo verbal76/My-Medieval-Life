@@ -380,6 +380,12 @@ func _init() -> void:
 	var le05s := {}
 	for k in ks:
 		le05s[k] = le05[k]
+	# B25-ECON-P1..P3 (owner 2026-11-05): founding, households' first tools and unused stock sold (diagnostics; decide nothing)
+	var econp := {}
+	for k in w.stats.keys():
+		if str(k).begins_with("ventures_") or str(k).begins_with("venture_") or str(k).begins_with("household_first_tool") or str(k).begins_with("unused_stock_"):
+			econp[k] = w.stats[k]
+	print("ECONP %s" % JSON.stringify(_sorted_dict(econp)))
 	print("LE05 %s" % JSON.stringify({"stats": le05s, "rentals_open": w.economy.rentals.open_records().size() if w.economy != null else 0,
 		"rental_escrow": w.economy.rentals.escrow() if w.economy != null else 0,
 		"rentals_save_bytes": JSON.stringify(w.economy.rentals.to_dict()).length() if w.economy != null else 0}))
@@ -1434,9 +1440,8 @@ func _venture_stages(n: NPC, markets: Dictionary) -> Dictionary:
 	if not markets.has(job):
 		markets[job] = w.brain.skilled_place(job)
 	var m: Dictionary = markets[job]
-	out.pass.opening = bool(m.work) and not bool(m.room)
-	if not out.pass.opening:
-		fail.call("no_work" if not bool(m.work) else "bench_room")
+	out.pass.opening = bool(m.work) and not bool(m.room)      # read only: no longer a refusal (B25-ECON-P1); demand is weighed in decides
+	out.busy = float(m.get("busy", 0.0))
 	var econ: Dictionary = hh.get("econ", {})
 	out.pass.means_known = not econ.is_empty()
 	if econ.is_empty():

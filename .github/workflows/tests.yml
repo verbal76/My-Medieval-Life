@@ -341,6 +341,7 @@ jobs:
           res://tests/skilled_employment_test.gd # B25-EMPLOY-IMPL, B25-CAREER-IMPL hiring
           res://tests/business_founding_test.gd  # B25-BUSINESS-IMPL, EMP-PERM-01
           res://tests/business_ownership_test.gd # B25-BIZ-OWN: the five ownership decisions
+          res://tests/econ_p2p3_test.gd          # B25-ECON-P2/P3: a household's first tool; elders' unused stock sold
           res://tests/elder_provision_test.gd    # X20-FIREWOOD: an elder buys the household's firewood and grain
           res://tests/settle_food_test.gd        # X20-SETTLE-FOOD, B25R1-019: settlement food trade carried by walkers
           res://tests/settle_review_test.gd      # Build 24 settlement review: idle traders close and reopen, leavers keep their tills

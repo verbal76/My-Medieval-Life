@@ -71,6 +71,7 @@
     {"id": "feast", "factors": []},
     {"id": "child_play", "factors": ["role"]},
     {"id": "elder_provision", "factors": ["role"]},
+    {"id": "elder_sell", "factors": ["role", "hour"]},
     {"id": "elder_farm", "factors": ["role"]},
     {"id": "elder_chapel", "factors": ["role"]},
     {"id": "elder_air", "factors": ["role"]},
@@ -81,6 +82,7 @@
     {"id": "contract", "factors": ["hour"]},
     {"id": "day_labour", "factors": ["hour", "job"]},
     {"id": "job", "factors": ["hour", "job"]},
+    {"id": "idle_sell", "factors": ["hour", "job"]},
     {"id": "evening", "factors": []}
   ],
   "factor_units": {"hunger": "points (0-100)", "eat_below": "points (0-100)", "hp_ratio": "fraction of max health", "seek_below": "fraction of max health", "hour": "game hour", "role": "text", "job": "text", "clan": "text"},
