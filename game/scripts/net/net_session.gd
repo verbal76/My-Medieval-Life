@@ -531,6 +531,10 @@ func world_for(pid: int) -> PackedByteArray:
 	d["net_pid"] = pid
 	_private_for(d, w.player_ref(w.player_by_pid(pid)))
 	_welcome_digest = NetSync.digest(d)            # what this guest's copy holds from now (NetSync.changed sends the rest)
+	# who is in play and where, as s_players says it: the welcome carries it (reliable), so the copy has the other players from its
+	# first frame. The snapshots are unreliable and ENet's throttle drops most of them while the welcome is acknowledged (CI: a
+	# rejoined guest had none for seconds and could not see or choose the host, net_interact_test "and she the host")
+	d["net_players"] = players_list().map(func(e): return e.merged({"pos": [e.pos.x, e.pos.y], "dir": [e.dir.x, e.dir.y]}, true))
 	var raw := JSON.stringify(d).to_utf8_buffer()
 	return raw.compress(FileAccess.COMPRESSION_GZIP)
 
@@ -839,6 +843,10 @@ func s_welcome(blob: PackedByteArray, id: int) -> void:
 	if not main.start_guest_world(d, my_pid):
 		_lost("The world could not be shown. Try joining again.")
 		return
+	var pl: Array = (d.get("net_players", []) as Array).map(func(e): return (e as Dictionary).merged({"pid": int(e.pid),
+		"pos": Vector2(float(e.pos[0]), float(e.pos[1])), "dir": Vector2(float(e.dir[0]), float(e.dir[1])), "level": int(e.level),
+		"partner": int(e.partner), "children": (e.children as Array).map(func(c): return int(c))}, true))
+	s_players(pl)                                  # the players in play as the host had them when it welcomed this guest
 	if main.world != null and main.world.recorder != null:
 		main.world.recorder.net_event(self, "joined_host", main.world.player, "pid=%d" % my_pid)     # X20-FINAL: the guest's own session
 	changed.emit(("Reconnected to %s." if was_back else "Joined %s.") % str(d.get("world_name", "the world")))
@@ -846,6 +854,29 @@ func s_welcome(blob: PackedByteArray, id: int) -> void:
 
 
 # ---------------------------------------------------------------- RPCs: movement -------------
+## Host: guest connection `id`, welcomed, has built the world and plays: in active play from now (MP-D1), the usual timeouts. Its first
+## move or its zz_playing, whichever comes first.
+func _playing(id: int) -> void:
+	if not joining.has(id):
+		return
+	joining.erase(id)
+	_set_timeout(id)                               # B25R1: playing, the usual timeouts from now on
+	var p: PlayerState = main.world.player_by_pid(int(by_peer[id])) if by_peer.has(id) else null
+	if p != null:
+		p.away = false                             # MP-D1: and in active play from now (out of it while it built the world: c_hello)
+		players_changed.emit()
+
+
+## Guest -> host, reliable, once its world is built (its first frame after): it plays. The moves (unreliable) say so too, but ENet's
+## throttle can drop them for seconds after the welcome, leaving the guest out of play on the host meanwhile (CI, net_interact_test
+## "the host can choose her again"). Named zz_ so the older RPCs keep their ids (Godot numbers them in name order).
+@rpc("any_peer", "call_remote", "reliable")
+func zz_playing() -> void:
+	var id := multiplayer.get_remote_sender_id()
+	if is_host() and by_peer.has(id):
+		_playing(id)
+
+
 @rpc("any_peer", "call_remote", "unreliable_ordered")
 func c_move(pos: Vector2, dir: Vector2, anim: String) -> void:
 	if not is_host():
@@ -854,12 +885,7 @@ func c_move(pos: Vector2, dir: Vector2, anim: String) -> void:
 	if not by_peer.has(id):
 		return
 	var p: PlayerState = main.world.player_by_pid(int(by_peer[id]))
-	if joining.has(id):
-		joining.erase(id)
-		_set_timeout(id)                           # B25R1: its first move: playing, the usual timeouts from now on
-		if p != null:
-			p.away = false                         # MP-D1: and in active play from now (out of it while it built the world: c_hello)
-			players_changed.emit()
+	_playing(id)
 	if p == null or not p.alive:
 		return
 	var now := Time.get_ticks_msec()
@@ -1520,6 +1546,7 @@ func _guest_step(dt: float) -> void:
 	if _built_frame >= 0 and Engine.get_process_frames() > _built_frame:
 		_built_frame = -1
 		_set_timeout(1)                            # the network read once since the world was built: the usual timeouts again
+		rpc_id(1, "zz_playing")                    # and it plays (reliable: the moves may be throttled away for a while)
 	_t_move += dt
 	if _t_move >= 1.0 / NetProtocol.MOVE_HZ:
 		_t_move = 0.0
