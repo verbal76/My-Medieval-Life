@@ -32,7 +32,7 @@ extends RefCounted
 ##  - Trees and rocks are single solid cells, never within a cell of each other or of a cliff, so
 ##    they cannot wall anything in. Flowers and bushes are walkable decoration.
 
-const GEN_VERSION := 6
+const GEN_VERSION := 7
 ## Generator versions whose saved changes still apply (their trees, rocks, flowers and roads are in the same cells): 2 (PL1-12,
 ## 2026-10-21) only draws the low red flower (tile 2656) among the wild flowers (overworld_tiles.json flowers), so a flower
 ## may be another colour than in version 1, and nothing else moved.
@@ -52,7 +52,11 @@ const GEN_VERSION := 6
 ## laid round the settlements' houses (region_layout.json); a site's streets end where its roads come in (_trim_entries) and
 ## a street no building fronts is not laid (SitePlan._trim). Water, streets and so cells changed round every settlement, so a
 ## generation 5 world is refused like the older ones (owner B25R1-Q5: "Don't worry about saved games").
-const GEN_COMPATIBLE := [6]
+## Generation 7 (owner decisions 2026-11-05, B25R1 flyover v2): the Wood Perilous drawn as a long ridge's irregular wood
+## (region_layout.json), Higham's castle and its way claimed before the houses outside the walls (SitePlan._castle_place), and
+## no join, ring leg or side road laid along the canonical water when a dry way exists (_water_run, _side_dry). Cells changed in the south, at Higham and by the rivers,
+## so a generation 6 world is refused like the older ones (owner B25R1-Q5).
+const GEN_COMPATIBLE := [7]
 const CHUNK := 32
 const PAD := 4                           # cells computed round a chunk, so neighbours' rules need no other chunk
 const AREA := CHUNK + 2 * PAD
@@ -257,6 +261,11 @@ func _setup_sites(stamps: Dictionary) -> void:
 		var slots: Array = plan.slots
 		var gate: Vector2i = plan.gate
 		var far := Vector2i(gate.x, rect.end.y + 14)                                            # straight down out of the site, as a village gate's road
+		# generation 7 (B25R1 flyover v2): a far point on the canonical water (Rushford's in Upmeads Water, Milton's in Coldlake)
+		# goes on down across it to the far bank, so the roads that meet there leave from dry ground, not along the water
+		# (not a walled town's: Higham's road south crosses Coldlake at the layout's own ford and bridges)
+		while gen >= 7 and not bool(plan.get("walled", false)) and far.y < rect.end.y + 40 and _near_canon(Vector2(far) + Vector2(0.5, 0.5), 4.0):
+			far.y += 1
 		sites.append({"id": str(spec.id), "name": str(spec.name), "kind": str(spec.kind), "center": center, "rect": rect, "slots": slots,
 			"gate": gate, "streets": plan.streets, "square": plan.square, "walled": bool(plan.get("walled", false)),
 			"props": plan.get("props", []), "entries": plan.get("entries", []), "hamlet": bool(spec.get("hamlet", false)),
@@ -265,18 +274,56 @@ func _setup_sites(stamps: Dictionary) -> void:
 		si += 1
 	for k0 in sites.size():                        # B25R1-018: joined to the grid once every site stands (a link never crosses another site)
 		var far: Vector2i = Vector2i(sites[k0].gate.x, (sites[k0].rect as Rect2i).end.y + 14)
-		var ci := fdiv(far.x, NODE)
-		var cj := fdiv(far.y, NODE)
-		var near: Array = []
-		for j in range(cj - 3, cj + 4):
-			for i in range(ci - 3, ci + 4):
-				var p := node_pos(i, j)
-				var bb := Rect2i(mini(p.x, far.x), mini(p.y, far.y), absi(p.x - far.x), absi(p.y - far.y))
-				if not _node_excluded(p) and not bb.grow(4).intersects(sites[k0].rect) and not _crosses_site(bb):
-					near.append([(p - far).length_squared(), i, j, p])
-		near.sort()
+		for l in _links:
+			if int(l.key) == 2000 + k0 * 8:
+				far = l.b                                 # (generation 7: across the water)
+		var near := _far_nodes(k0, far, 3)
+		if gen >= 7:
+			# generation 7 (B25R1 flyover v2: plank pieces along Upmeads Water's bank west of Rushford, whose south far point
+			# lies at the river's edge): a join whose way would run along the canonical water (more than LINK_WATER_RUN cells on
+			# it in a row, where a crossing has a few) is not laid and the next nearest node is tried; the three nearest dry
+			# ones are joined; with none dry, one dry node a little further (JOIN_FURTHER), else the one least along the water
+			var k := 0
+			for q in near.size():
+				if k >= 3:
+					break
+				if _water_run(_polyline(far, near[q][3], 2000 + k0 * 8 + 1 + k)) <= LINK_WATER_RUN:
+					_links.append({"a": far, "b": near[q][3], "key": 2000 + k0 * 8 + 1 + k})
+					k += 1
+			if k == 0 and not near.is_empty():           # (none dry in reach: a dry one a little further, as Milton's on Coldlake)
+				for cand in _far_nodes(k0, far, 5):
+					if int(cand[0]) <= JOIN_FURTHER * JOIN_FURTHER and _water_run(_polyline(far, cand[3], 2000 + k0 * 8 + 1)) <= LINK_WATER_RUN:
+						_links.append({"a": far, "b": cand[3], "key": 2000 + k0 * 8 + 1})
+						k = 1
+						break
+			if k == 0 and not near.is_empty():           # (none dry: the one least along the water)
+				var least := 0
+				var lr := 1 << 30
+				for q in near.size():
+					var wr := _water_run(_polyline(far, near[q][3], 2000 + k0 * 8 + 1))
+					if wr < lr:
+						lr = wr
+						least = q
+				_links.append({"a": far, "b": near[least][3], "key": 2000 + k0 * 8 + 1})
+			continue
 		for k in mini(3, near.size()):
 			_links.append({"a": far, "b": near[k][3], "key": 2000 + k0 * 8 + 1 + k})
+
+
+## The grid nodes site `k0`'s far point `far` may join (within `reach` grid steps, not excluded, its way clear of the sites),
+## nearest first: [[d2, i, j, node position]].
+func _far_nodes(k0: int, far: Vector2i, reach: int) -> Array:
+	var ci := fdiv(far.x, NODE)
+	var cj := fdiv(far.y, NODE)
+	var near: Array = []
+	for j in range(cj - reach, cj + reach + 1):
+		for i in range(ci - reach, ci + reach + 1):
+			var p := node_pos(i, j)
+			var bb := Rect2i(mini(p.x, far.x), mini(p.y, far.y), absi(p.x - far.x), absi(p.y - far.y))
+			if not _node_excluded(p) and not bb.grow(4).intersects(sites[k0].rect) and not _crosses_site(bb):
+				near.append([(p - far).length_squared(), i, j, p])
+	near.sort()
+	return near
 
 
 ## B25R1-018 phase 3: a settlement laid out along its streets. Every household of the founding has a home (a house stamp; slot
@@ -664,12 +711,13 @@ func _site_ring(si: int) -> void:
 	# generation 6: which legs run alongside a road or the water (_ring_leg_free), judged first; they are left out only while
 	# the far points of the site's sides stay joined round the ring without them (else every leg is laid, as before)
 	var skip := {}
+	var wet := {}
 	var fars := {}
 	for side in 4:
 		if bases.has(side):
 			fars[ring.find(Vector2i(_links[bases[side]].b))] = true
+	var li_base := _links.size()
 	if gen >= 6:
-		var li_base := _links.size()
 		for k in ring.size():
 			var a: Vector2i = ring[k]
 			var b: Vector2i = ring[(k + 1) % ring.size()]
@@ -681,6 +729,12 @@ func _site_ring(si: int) -> void:
 				legs.append(_polyline(a + (b - a) * q / parts, a + (b - a) * (q + 1) / parts, ROUTE_KEY + li_base + k * 8 + q))
 			if not _ring_leg_free(legs):
 				skip[k] = true
+			if gen >= 7:                                  # (generation 7: a leg that would run along the water is never laid)
+				var run := 0
+				for cells in legs:
+					run = maxi(run, _water_run(cells))
+				if run > LINK_WATER_RUN:
+					wet[k] = true
 		if not skip.is_empty():
 			# the ring cut at its skipped legs: the points from just after one skip round to the next are one group
 			var n := ring.size()
@@ -697,6 +751,23 @@ func _site_ring(si: int) -> void:
 				groups[grp[k]] = true
 			if groups.size() > 1:
 				skip.clear()
+		skip.merge(wet)
+		if gen >= 7 and not wet.is_empty():
+			# (generation 7: a corner left with one leg by a leg along the water would be a stub ending in the water, as
+			# Rushford's south-west corner in Upmeads Water: its other leg is left out too, back to a side's far point)
+			var nr := ring.size()
+			var more := true
+			while more:
+				more = false
+				for k in nr:
+					if fars.has(k):
+						continue
+					var kin := (k - 1 + nr) % nr
+					var other := k if wet.has(kin) else kin if wet.has(k) else -1
+					if other >= 0 and not skip.has(other):
+						skip[other] = true
+						wet[other] = true
+						more = true
 	for k in ring.size():
 		var a: Vector2i = ring[k]
 		var b: Vector2i = ring[(k + 1) % ring.size()]
@@ -715,15 +786,17 @@ func _site_ring(si: int) -> void:
 		var pts: Array[Vector2i] = []
 		for q in parts + 1:
 			pts.append(a + (b - a) * q / parts)
-		var li0 := _links.size()
+		# (generation 7: each stretch keeps the key its leg was judged by above, so the way laid is the way judged)
+		var kb := ROUTE_KEY + li_base + k * 8 if gen >= 7 else ROUTE_KEY + _links.size()
 		var clear := true
 		var legs: Array[PackedInt32Array] = []
 		for q in parts:
-			legs.append(_polyline(pts[q], pts[q + 1], ROUTE_KEY + li0 + q))
+			legs.append(_polyline(pts[q], pts[q + 1], kb + q))
 			clear = clear and not _cells_on_site(legs[q], si)
 		if clear:
 			for q in parts:
-				_route_link(_vnode(pts[q]), _vnode(pts[q + 1]), "ring")
+				var li := _route_link(_vnode(pts[q]), _vnode(pts[q + 1]), "ring")
+				_links[li].key = kb + q
 				_note_road_cells(legs[q])
 
 
@@ -768,6 +841,26 @@ func _ring_leg_free(legs: Array[PackedInt32Array]) -> bool:
 	return beside_road < RING_BESIDE_ROAD and beside_water < RING_BESIDE_WATER
 
 
+## Generation 7 (B25R1 flyover v2): the most cells in a row of a link's way (x, y pairs) that lie on the canonical water. A road
+## crossing a course has a few (its width); more than LINK_WATER_RUN is a way running along the water, drawn as a string of
+## bridge planks where it wanders over the bank's edge (Rushford's south far point at Upmeads Water's edge, its joins to the
+## grid and ring legs running along the river).
+const LINK_WATER_RUN := 9
+const JOIN_FURTHER := 200                 # tiles: the furthest a far point's dry join is looked for when none in reach is dry
+
+
+func _water_run(cells: PackedInt32Array) -> int:
+	var run := 0
+	var best := 0
+	for q in range(0, cells.size(), 2):
+		if _near_canon(Vector2(cells[q], cells[q + 1]) + Vector2(0.5, 0.5), 0.5):
+			run += 1
+			best = maxi(best, run)
+		else:
+			run = 0
+	return best
+
+
 ## Whether point p lies within `extra` tiles of a canonical course's water (its line and width).
 func _near_canon(p: Vector2, extra: float) -> bool:
 	for cc in anchored_courses():
@@ -801,7 +894,39 @@ func _side_road(si: int) -> void:
 	var pick: int = int(order[0][1])                  # (none clear in reach: the nearest, as before)
 	var pts: Array = []
 	var side := -1
-	var walled := bool(st.get("walled", false))
+	# generation 7 (B25R1 flyover v2): first only ways that do not run along the canonical water (_side_dry); with none, as before
+	for dry in ([true, false] if gen >= 7 else [false]):
+		var got := _side_pick(si, order, dry)
+		if not (got[1] as Array).is_empty():
+			pick = int(got[0])
+			pts = got[1]
+			side = int(got[2])
+			break
+	if pts.is_empty():
+		pts = _side_points(si, pick)
+	var prev := -1
+	var first := -1
+	for k in range(1, pts.size() - 1):
+		var cur := _vnode(pts[k])
+		if prev >= 0:
+			_route_link(prev, cur, "side")
+		else:
+			first = cur
+		prev = cur
+	if prev >= 0:
+		_route_link(prev, pick, "side")
+		_site_join(si, first, "side", side)
+	else:
+		_site_join(si, pick, "side", side)
+
+
+## The side road's way for site `si` (see _side_road): [node index, points, side], points [] when none is clear (and, `dry`,
+## none keeps off running along the canonical water).
+func _side_pick(si: int, order: Array, dry: bool) -> Array:
+	var pick := -1
+	var pts: Array = []
+	var side := -1
+	var walled := bool(sites[si].get("walled", false))
 	for k in mini(SIDE_TRIES, order.size()):
 		var vi: int = int(order[k][1])
 		# the side facing the node first, then the others (a side whose way out lies on a neighbour's ground is no way out)
@@ -810,7 +935,7 @@ func _side_road(si: int) -> void:
 			if sd == first_side and pts.size() > 0:
 				break
 			var cand := _side_points(si, vi, sd)
-			if _side_clear(si, cand):
+			if _side_clear(si, cand) and (not dry or _side_dry(si, cand, sd)):
 				pick = vi
 				pts = cand
 				side = sd
@@ -831,7 +956,7 @@ func _side_road(si: int) -> void:
 					for cn: Vector2i in [g.position, Vector2i(g.end.x, g.position.y), g.end, Vector2i(g.position.x, g.end.y)]:
 						var cand: Array = [far, cn, _vpos[vi]]
 						var l := int((cn - far).length() + (_vpos[vi] - cn).length())
-						if l < bl and _side_clear(si, cand):
+						if l < bl and _side_clear(si, cand) and (not dry or _side_dry(si, cand, sd)):
 							bl = l
 							best = cand
 							side = sd
@@ -839,23 +964,22 @@ func _side_road(si: int) -> void:
 				pick = vi
 				pts = best
 				break
-	if pts.is_empty():
-		pts = _side_points(si, pick)
-	var prev := -1
-	var first := -1
-	for k in range(1, pts.size() - 1):
-		var cur := _vnode(pts[k])
-		if prev >= 0:
-			_route_link(prev, cur, "side")
-		else:
-			first = cur
-		prev = cur
-	if prev >= 0:
-		_route_link(prev, pick, "side")
-		_site_join(si, first, "side", side)
-	else:
-		_site_join(si, pick, "side", side)
+	return [pick, pts, side]
 
+
+## Generation 7: whether no leg of side road `pts` (leaving by side `sd`) would run along the canonical water, each leg judged
+## with the key it will be laid with (_side_road lays the bent legs first, then the side's base link if it has none, then the
+## join from the far point).
+func _side_dry(si: int, pts: Array, sd: int) -> bool:
+	var l0 := _links.size()
+	var n := pts.size()
+	for q in range(1, n - 1):
+		if _water_run(_polyline(pts[q], pts[q + 1], ROUTE_KEY + l0 + q - 1)) > LINK_WATER_RUN:
+			return false
+	var bases: Dictionary = _site_bases.get(si, {})
+	var extra := 0 if sd == 2 or bases.has(sd) else 1
+	var jl := l0 + maxi(0, n - 2) + extra
+	return _water_run(_polyline(pts[0], pts[1], ROUTE_KEY + jl)) <= LINK_WATER_RUN
 
 ## The way of site `si`'s side road to route node `vi`: the side's far point, the bent points, the node (pure: no link made).
 func _side_points(si: int, vi: int, force := -1) -> Array:

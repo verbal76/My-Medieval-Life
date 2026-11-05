@@ -133,7 +133,9 @@ func _run() -> void:
 	var start: Vector2i = lane_cell
 	var goal := Vector2i(-1048576, 0)
 	for cell in by.trail:
-		if cell.distance_to(Vector2(st.center)) < 200.0 and cell.distance_to(Vector2(st.center)) > 50.0 and goal.x == -1048576:
+		# (generation 7: within 350 tiles, was 200: the network's joins along the water changed which nearer trails' routes run
+		# on a dirt road first; the journey over all three types is what is checked, not one place)
+		if cell.distance_to(Vector2(st.center)) < 350.0 and cell.distance_to(Vector2(st.center)) > 50.0 and goal.x == -1048576:
 			var r := RegionTravel.plan(w, start, cell)
 			if bool(r.ok) and not bool(r.direct):
 				# (each kind for a stretch, not a cell or two: the walker steers along the route and can round off a short piece;
