@@ -63,6 +63,7 @@ jobs:
           PY
 
   part:
+    name: part ${{ matrix.part }} (${{ matrix.runs }} runs)
     needs: plan
     runs-on: ubuntu-latest
     timeout-minutes: 90
