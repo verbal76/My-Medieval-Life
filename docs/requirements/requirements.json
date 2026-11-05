@@ -8173,6 +8173,51 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-05_b25r1_aerial_maps.md"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-aerial worker; branch: None -> wip/b25r1-aerial",
+     "why": "owner 2026-11-05: approved scope addition for B25R1 tonight (reason: the simplified maps undersell the regenerated world; the flyover showed the real world reads well from overhead); placed in B25R1 and tonight's private playtest packages; worker on wip/b25r1-aerial"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> aerial_map 48/0, gamepad_map 19/0, region_travel 71/0, atlas 17/0, start 523/0, wiki 144/0; test_commit: None -> 59f4549; commits + 58cc720",
+     "why": "aerial maps merged into wip/b25r1 as 58cc720 (aerial_map_test 48/0 seeds 1 and 11; region/village map suites pass; measurements in DECISIONS)"
+    }
+   ],
+   "assigned_worker": "b25r1-aerial worker",
+   "branch": "wip/b25r1-aerial",
+   "tests": "aerial_map 48/0, gamepad_map 19/0, region_travel 71/0, atlas 17/0, start 523/0, wiki 144/0",
+   "test_commit": "59f4549",
+   "commits": [
+    "58cc720"
+   ]
+  },
+  {
+   "id": "B25R1-026",
+   "kind": "approved",
+   "title": "Settlements never hidden by map discovery",
+   "description": "Settlements never hidden by map discovery",
+   "source": "docs/directives/2026-11-05_b25r1_aerial_maps.md",
+   "owner_wording": "The region map must show every village, hamlet, and settlement from the beginning, with readable names and accurate locations. The player must also see their own position and have enough directional information to navigate toward any settlement. Roads and rivers should remain visible as navigation references. I'm fine with unexplored wilderness terrain remaining hidden until visited, but settlement locations must never be concealed by discovery rules. For the aerial imagery, reveal settlement areas from the beginning if practical. Generate and cache them efficiently rather than rendering the entire region immediately. Do not implement a discovery system that prevents players from knowing where settlements are. Preserve the existing navigation and tap-to-travel functionality. Record this as an explicit owner requirement and verify it on multiple world seeds.",
+   "approval": "owner, 2026-11-05 (answer to owner question 31)",
+   "acceptance": [
+    "From a new game on several seeds (1, 7, 11): every settlement named and correctly placed on the region map; player position shown with directional information to any settlement; roads and rivers shown; settlement ground drawn in the aerial image from the start (cached, built efficiently); wilderness dark until explored; tap-to-travel unchanged"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
    "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
@@ -8186,7 +8231,7 @@
     {
      "date": "2026-11-05",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> b25r1-aerial worker; branch: None -> wip/b25r1-aerial",
-     "why": "owner 2026-11-05: approved scope addition for B25R1 tonight (reason: the simplified maps undersell the regenerated world; the flyover showed the real world reads well from overhead); placed in B25R1 and tonight's private playtest packages; worker on wip/b25r1-aerial"
+     "why": "owner explicit requirement 2026-11-05; in development on wip/b25r1-aerial"
     }
    ],
    "assigned_worker": "b25r1-aerial worker",

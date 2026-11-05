@@ -29,7 +29,7 @@
 - **New register ids (in development, grass-and-map worker, branch wip/b25r1-grassmap once created):** B25R1-023 Bow.Pixel Low Grass
   decoration on the overworld; B25R1-024 region map restyle (UIStyle, gamepad focus on the Village tab).
 - **Economy decisions (owner 2026-11-05, questions 20-27):** B25-ECON-P1..P3 integrated (edf1854); B25-ECON-P5 land clearing integrated (c3d9d91); B25-ECON-P4 own-settlement ore consignment integrated (c3d9d91), cross-settlement consignment (owner question 27) integrated (e097fab).
-- **Aerial maps (owner 2026-11-05, B25R1-025):** region and village maps drawn from the player's generated world, for tonight's private playtest; in development on wip/b25r1-aerial.
+- **Aerial maps (owner 2026-11-05, B25R1-025):** region and village maps drawn from the player's generated world, for tonight's private playtest; integrated 58cc720; B25R1-026 (settlements never hidden by discovery, owner question 31) in development on wip/b25r1-aerial.
 - **Other ordered work (Option 1 item 2):** B25R1-018 Bear Hill and castle knoll; B25R1-022 Fantasy Lands houses; B25R1-010 player
   homestead well; B25R1-020 Android crowd-management measurement. EA-01 tracked separately (milestone: Early Access demo about
   2026-11-24; build placement is the owner's).
