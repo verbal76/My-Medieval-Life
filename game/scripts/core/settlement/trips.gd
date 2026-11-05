@@ -435,7 +435,7 @@ static func consign_errand(r: Regions, s: OffMapSettlement, dest: OffMapSettleme
 				lines.append(["returned", str(item), n, src.holder])
 	p["got"] = {}
 	var m := s.trader()
-	if str(t.owner) != "trader" or m.is_empty() or not dest.trader().is_empty():
+	if str(t.owner) != "trader" or m.is_empty() or (not dest.trader().is_empty() and float(GameData.balance.get("exp_consign_any", 0)) <= 0.0):   # EXPERIMENT ONLY (not for merge)
 		return lines
 	var rl := OffMapSettlement.rules()
 	var bts: Array = dest.biz.keys()

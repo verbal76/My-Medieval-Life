@@ -433,7 +433,8 @@ func consign_round(d: int) -> void:
 	var items: Array = rl.get("consign", [])
 	if items.is_empty():
 		return
-	var hold := int(rl.get("consign_hold_days", 12))
+	var hold := int(GameData.balance.get("exp_consign_hold", rl.get("consign_hold_days", 12)))   # EXPERIMENT ONLY (not for merge)
+	var any_src := float(GameData.balance.get("exp_consign_any", 0)) > 0.0                          # EXPERIMENT ONLY (not for merge)
 	for s: OffMapSettlement in list:
 		for owner in ["trader", "treasury"]:
 			var rec: Dictionary = s.trader() if owner == "trader" else s.gov
@@ -443,12 +444,14 @@ func consign_round(d: int) -> void:
 				if by_id.has(src) and not _trip_to(s, str(src), "consign"):
 					_consign_settle(s, owner, rec, str(src), d, hold)
 	for src: OffMapSettlement in list:
-		if not src.trader().is_empty():
+		if not src.trader().is_empty() and not any_src:
 			continue
 		var spare := {}
 		var bts: Array = src.biz.keys()
 		bts.sort()
 		for bt in bts:
+			if bt == "merchant":
+				continue                                  # EXPERIMENT ONLY: the errand never takes a trader's own stock
 			for item in items:
 				var n := int(src.biz[bt].stock.get(item, 0)) - int(src._keep(src.biz[bt]).get(item, 0))
 				if n > 0:
