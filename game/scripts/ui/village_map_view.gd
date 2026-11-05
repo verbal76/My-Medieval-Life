@@ -483,6 +483,8 @@ func _draw() -> void:
 		var pri := int(pl[2])
 		if (pri == 1 and zoom < 4.5) or (pri == 2 and zoom < 7.0):
 			continue                               # the less important names only when there is room for them
+		if target != "" and pl[0] != str(ow.site(target).name) and aerial != null and not aerial.shown(Overworld.chunk_of(Vector2i((pl[1] as Vector2).floor()))):
+			continue                               # a building on ground not yet explored is not named
 		_label(font, fs if pri == 0 else fs - 2, pl[0], to_screen(pl[1]), PALE, taken, pri == 0)
 	if target == "":
 		# what the screen shows now

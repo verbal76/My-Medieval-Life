@@ -322,7 +322,7 @@ func _process(delta: float) -> void:
 	if size.x > 10.0 and size.y > 10.0 and (not fitted or (not moved and size != _fit_size)):
 		fit_network()                              # opens on the whole network, and stays so while the window settles
 	if cursor != Vector2.INF and is_visible_in_tree():
-		pad_step(pad_vector(), pad_triggers(), pad_look(), delta)
+		pad_step(pad_vector(), pad_triggers(), pad_look(), minf(delta, 0.05))   # (a long frame, chunks being drawn: no jump)
 	# zoomed out, the aerial pages are minified: their mipmaps, filtered, rather than every eighth pixel
 	# (and so are the close pictures between HI_ZOOM and their own 8 px a tile; the 2 px pages magnified stay sharp pixels)
 	var mip := zoom < float(AerialMap.LO) or (zoom >= HI_ZOOM and zoom < float(AerialMap.HI))
