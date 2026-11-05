@@ -269,7 +269,8 @@ func _targets() -> void:
 		status().get("host_pos"), rec(ann).get("pos"), rec(cara).get("pos")])
 	main._find_target()
 	check(str(main.target.get("kind", "")) == "player" and int(main.target.pid) == host_pid, "Ann's screen: the host beside her is her target")
-	check(main.other_players().map(func(q): return q.pid).has(cara), "Ann's copy knows Cara, who joined after her (announced by the host)")
+	check(main.other_players().map(func(q): return q.pid).has(cara), "Ann's copy knows Cara, who joined after her (announced by the host) (host's guests %s, resumes %s; Cara's reconnects %s, connected %s)" % [status().get("connected", []),
+		status().get("net_d", {}).get("resumes", "?"), g2().get("reconnects", "?"), g2().get("connected", "?")])
 	check(await until(func(): return (g2().get("others", []) as Array).map(func(x): return int(x)).has(ann) and (g2().get("others", []) as Array).map(func(x): return int(x)).has(host_pid), 5.0),
 		"Cara's screen has Ann and the host as players (%s)" % [g2().get("others", [])])
 
