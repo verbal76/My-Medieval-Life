@@ -48,7 +48,8 @@
       "at": "west",
       "id": "canons"
      }
-    ]
+    ],
+    "elite_style": "fl"
    }
   },
   {
@@ -96,7 +97,8 @@
       "id": "barn",
       "look": "thatch"
      }
-    ]
+    ],
+    "house_style": "fl"
    }
   },
   {
@@ -131,7 +133,8 @@
       "id": "church"
      }
     ],
-    "spare": 10
+    "spare": 10,
+    "elite_style": "fl"
    }
   },
   {
@@ -156,7 +159,10 @@
    "note": "named by Morris as a thorp at the feet of the downs toward Higham; its position (west of Garton) is ours",
    "src": [
     "BFOUR-C22-P011"
-   ]
+   ],
+   "plan": {
+    "house_style": "fl"
+   }
   },
   {
    "id": "milton",
@@ -167,7 +173,10 @@
    "note": "named by Morris as a thorp at the feet of the downs toward Higham; its position (east of Garton) is ours",
    "src": [
     "BFOUR-C22-P011"
-   ]
+   ],
+   "plan": {
+    "house_style": "fl"
+   }
   },
   {
    "id": "rushford",
@@ -215,7 +224,10 @@
    "x": -208,
    "y": 797,
    "label": "GAME EXPANSION",
-   "note": "on Coldlake west of Higham, Abbey land: fields and an herb garden"
+   "note": "on Coldlake west of Higham, Abbey land: fields and an herb garden",
+   "plan": {
+    "house_style": "fl"
+   }
   },
   {
    "id": "elmcote",
@@ -223,7 +235,10 @@
    "x": 220,
    "y": 790,
    "label": "GAME EXPANSION",
-   "note": "east of Higham among the Abbot's lands: fields and a masons' yard; a well"
+   "note": "east of Higham among the Abbot's lands: fields and a masons' yard; a well",
+   "plan": {
+    "house_style": "fl"
+   }
   },
   {
    "id": "cressbrook",
@@ -231,7 +246,10 @@
    "x": 185,
    "y": 915,
    "label": "GAME EXPANSION",
-   "note": "in the vine country east of the Bourton road: fields and a tavern; a well"
+   "note": "in the vine country east of the Bourton road: fields and a tavern; a well",
+   "plan": {
+    "house_style": "fl"
+   }
   }
  ],
  "rivers": [

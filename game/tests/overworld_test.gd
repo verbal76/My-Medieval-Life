@@ -603,7 +603,9 @@ func _test_sites(seed_value: int) -> void:
 		for sl in st.slots:
 			if str(sl.kind) == "home" and int(sl.hh) >= 0:
 				homes[int(sl.hh)] = true
-			doors_ok = doors_ok and st.rect.encloses(sl.rect) and o.site_building_at(sl.rect.position + Vector2i(1, 1)) and not o.is_solid(sl.spot)
+			doors_ok = doors_ok and st.rect.encloses(sl.rect) and not o.is_solid(sl.spot) \
+				and (o.site_building_at(sl.rect.position + Vector2i(1, 1)) or sl.has("style") and not o.is_solid(sl.door)
+					and (o.site_building_at(sl.door + Vector2i.LEFT) or o.site_building_at(sl.door + Vector2i.RIGHT)))   # B25R1-022: a styled house fills less of its rect
 		check(doors_ok and homes.size() == households, "%s: a home for each of its %d households (%d buildings), inside the site, solid, with open ground at its door" % [st.name, households, st.slots.size()])
 		check(o.site_at(st.center) == st and o.site(str(st.id)) == st, "%s: found by cell and by id" % st.name)
 		box = box.merge(st.rect.grow(20))

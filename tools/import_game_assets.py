@@ -46,6 +46,9 @@ records each file's source archive and path. This is that step. It writes:
                                                      B25R1-Q8: Larchrow's Village & Cave sheet and Bow.Pixel's low grass
                                                      sheets as map atlases 5-7, copied unchanged from private-assets/ by
                                                      tools/village_tile_sheets.py
+    game/assets/tiles/fl_houses.png, game/data/style_stamps.json
+                                                     B25R1-022: Szadi's Fantasy Lands houses (private-assets/), halved, recoloured
+                                                     and fitted to the region's house footprints by tools/fl_houses.py (atlas 11)
     game/assets/music/*.ogg, game/assets/sfx/*.ogg     MUSIC-18, SFX-18: the owner's songs (release WAVs, Android's copy) and the
                                                      Cozy RPG SFX (private-assets/), encoded with ffmpeg by tools/game_audio.py
     game/assets/PROVENANCE.json                      source, path and transformation of every file
@@ -82,6 +85,7 @@ import water_tiles  # noqa: E402
 import region_props  # noqa: E402
 import game_audio  # noqa: E402
 import village_tile_sheets  # noqa: E402
+import fl_houses  # noqa: E402
 import gear_assets  # noqa: E402
 
 OUT = REPO / "game" / "assets"
@@ -966,6 +970,7 @@ def main():
     gear_assets.import_into(prov, record)             # Build 22: the armour and weapon catalogue's icons and worn layers
     game_audio.import_into(prov, record)              # MUSIC-18, SFX-18: Ogg Vorbis music (Android) and the Cozy RPG SFX, from private-assets/ and the release WAVs
     village_tile_sheets.import_into(prov, record)     # B25R1-Q8: Larchrow's village and cave sheet, Bow.Pixel's low grass (atlases 5-7)
+    fl_houses.import_into(prov, record)               # B25R1-022: the Fantasy Lands houses (atlas 11) and their stamps (style_stamps.json)
     (OUT / "PROVENANCE.json").write_text(json.dumps({"format": "mml-provenance/1", "files": prov}, indent=1) + "\n")
     print(f"imported {len(prov)} files into game/assets")
 
