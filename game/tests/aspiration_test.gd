@@ -920,11 +920,25 @@ func test_v8_save_load() -> void:
 	check(u.load_dict(dd) == "" and u.asp.foreign_names == ["faith"], "V8: a domain this game does not know loads beside the six")
 	var back: Dictionary = u.to_dict()
 	check((back.aspire.domains as Array).has("faith") and int(back.aspire.rows[0][1][6]) == 77 and (back.aspire.rows[0][6][6] as Array) == [5], "V8: ...and is written back, never dropped")
-	# the Build 22 save (judgment version 2): no rows, no false crossing at the first dawn
+	# the Build 22 save (judgment version 2): no rows, no false crossing at the first dawn. B25R1-Q5 (owner: no migration for the
+	# Revision 1 world): the fixture's world is overworld generation 2 and is refused, the file kept; the judgment section's
+	# version 2 is checked on this build's world saved with its section written as Build 22 wrote it (version 2: no refs, no
+	# history, no aspire; JudgmentStore.migrate reads it with nothing rewritten)
 	var fx: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/b22_save_v23_single.json"))
 	check(int(fx.judgment.version) == 2 and not fx.judgment.has("aspire"), "V8: fixture b22_save_v23_single: judgment section version 2, no aspire")
+	var wr := World.new()
+	wr.load_dict(VillageMap.load_default(), fx)
+	check(wr.load_error.contains("generation") and wr.load_error.contains("the file is kept"), "V8: the Build 22 world (generation 2) is refused with its message (%s)" % wr.load_error)
+	wr.dispose()
+	var made := world(5)
+	var cur: Dictionary = JSON.parse_string(JSON.stringify(made.to_dict()))
+	made.dispose()
+	cur.judgment.version = 2
+	for key in ["refs", "history", "aspire"]:
+		(cur.judgment as Dictionary).erase(key)
 	var w3 := World.new()
-	w3.load_dict(VillageMap.load_default(), fx)
+	w3.load_dict(VillageMap.load_default(), cur)
+	check(w3.load_error == "", "V8: this build's world with a Build 22 judgment section loads (%s)" % w3.load_error)
 	check(int(w3.to_dict().judgment.version) == 3 and not w3.to_dict().judgment.has("aspire"), "V8: before its first dawn it re-saves as version 3 with nothing invented")
 	var a3 := asp_on(w3, false)
 	a3.dawn(w3)
