@@ -208,9 +208,23 @@ func test_old_save() -> void:
 	var text := FileAccess.get_file_as_string("res://tests/fixtures/b22_save_v23_single.json")
 	var d: Dictionary = JSON.parse_string(text)
 	check(d.has("judgment") and int(d.judgment.version) == 2 and not d.judgment.has("history"), "fixture: a Build 22 save, judgment section version 2")
+	# B25R1-Q5 (owner: no migration for the Revision 1 world): the Build 22 world is overworld generation 2: refused, the file kept;
+	# the version 2 section is checked on this build's world saved with its section written as Build 22 wrote it (version 2: no
+	# refs, history or aspire; JudgmentStore.migrate reads it with nothing rewritten)
+	var wr := World.new()
+	wr.load_dict(VillageMap.load_default(), d)
+	check(wr.load_error.contains("generation") and wr.load_error.contains("the file is kept"), "the Build 22 world (generation 2) is refused with its message (%s)" % wr.load_error)
+	wr.dispose()
+	var made := World.new()
+	made.setup(VillageMap.load_default(), 4)
+	d = JSON.parse_string(JSON.stringify(made.to_dict()))
+	made.dispose()
+	d.judgment.version = 2
+	for key in ["refs", "history", "aspire"]:
+		(d.judgment as Dictionary).erase(key)
 	var w := World.new()
 	w.load_dict(VillageMap.load_default(), d)
-	check(w.judgment != null and w.judgment.unread.is_empty() and w.judgment.history.is_empty() and w.judgment.fact_refs.is_empty(),
+	check(w.load_error == "" and w.judgment != null and w.judgment.unread.is_empty() and w.judgment.history.is_empty() and w.judgment.fact_refs.is_empty(),
 			"it loads with no historical records and no references, nothing kept unread")
 	var out := w.to_dict()
 	check(int(out.judgment.version) == 3 and not out.judgment.has("history"), "re-saved as version 3, with nothing invented")

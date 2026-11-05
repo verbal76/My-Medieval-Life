@@ -146,11 +146,12 @@ func _init() -> void:
 	var m: NPC = w2.npcs.filter(func(n): return n.alive and n.job == "merchant")[0]
 	check(w2.stalls.has(m.workplace) and w2.tenant_of(w2.stalls[m.workplace]) == World.npc_ref(m.id), "a merchant still keeps its stall by id")
 	w2.dispose()
-	# the Build 20 save (save 21, the old market) loads the same way
+	# the Build 20 save (save 21, the old market): B25R1-Q5 (owner: no migration for the Revision 1 world), its world is overworld
+	# generation 2: refused, the file kept; the old market's move on load is the save 22 case above
 	var d21: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/fixtures/b20_save_v21_single.json"))
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), d21)
-	check(w3.load_error == "" and ["stall0", "stall5", "pitch0", "pitch3"].all(func(id): return int(w3.stalls[id].x) == int(w.stalls[id].x) and int(w3.stalls[id].y) == int(w.stalls[id].y)), "the Build 20 save loads with its market at the new places")
+	check(w3.load_error.contains("generation") and w3.load_error.contains("the file is kept"), "the Build 20 save (generation 2) is refused with its message (%s)" % w3.load_error)
 	w3.dispose()
 	w.dispose()
 	print("\nmarket_spacing_test: %d checks, %d failures" % [checks, failures])
