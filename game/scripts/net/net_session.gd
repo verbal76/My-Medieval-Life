@@ -59,13 +59,32 @@ const TIMEOUT_MAX_MS := 10000
 const JOIN_TIMEOUT_MS := 30000
 const HOLD_SECONDS := 2.0            # host: a request numbered past a missing one waits this long for it, then goes ahead
 const REPLIES_KEPT := 64             # host: answers kept per guest to answer a repeated request without applying it again
+## Host stopping (B25R1): how long it waits for its guests to end their connections after its goodbye (z_bye) before it ends them
+## itself, and then for those ends to be delivered. A guest ends its own connection when it reads the goodbye, so the goodbye is read
+## first: a goodbye and the host's end arriving in one network read reach the guest as the end only (Godot's ENet peer closes on the
+## end and drops the packets read with it), and the guest would wait to reconnect instead of going to the title.
+const BYE_WAIT_SECONDS := 2.0
+const BYE_CLOSE_SECONDS := 0.3
 const RESUME_AFTER_PAUSE_MS := 4000  # guest: back from a pause longer than this, reconnect at once (the host may have dropped it)
 const LOOKS := ["res://assets/characters/player_02.png", "res://assets/characters/player_03.png", "res://assets/characters/player_00.png", "res://assets/characters/player_01.png"]
-const NPCS_PER_PACKET := 16          # villagers per snapshot packet (under 1 KB: ENet warns above its 1392-byte MTU)
+const NPCS_PER_PACKET := 24          # villagers per snapshot packet (under 1 KB: ENet warns above its 1392-byte MTU)
+## B25R1 (traffic): floats a villager takes in a snapshot (s_npcs): id, x, y, facing x and y, flags (NPC_ALIVE, NPC_FIELD,
+## NPC_SWING), and the place drawn at field work (x, y; 0 when not at it). Its animation goes beside, in the packet's string list.
+const NPC_FLOATS := 8
+const NPC_ALIVE := 1
+const NPC_FIELD := 2
+const NPC_SWING := 4
+## ... and the players' fields that change only now and then (a snapshot carries them when they changed, or on the key).
+const PLAYER_STATIC := ["name", "sprite", "worn", "wield", "partner", "children"]
 const ANIMS := ["idle", "walk", "sword", "swing", "gather", "work"]
 const ANIMALS_PER_PACKET := 24       # Build 21: animals per snapshot packet (8 floats each: under the MTU, as the villagers')
 const ANIMAL_ACTS := ["", "attack", "hit"]   # an animal's one-off animation, sent as its index
 const ANIMALS_KEY_EVERY := 4         # every 4th animal snapshot (once a second) carries every animal near the guest, moved or not
+## B25R1 (traffic): the villagers' snapshots carry only the villagers whose row changed since it was last sent to that guest, and every
+## NPCS_KEY_EVERY-th one (once a second) every villager near it, so a lost packet is put right within a second (as the animals').
+const NPCS_KEY_EVERY := 4
+## ... and the players' list goes only when it changed, and every PLAYERS_KEY_EVERY-th tick (once a second) whatever it holds.
+const PLAYERS_KEY_EVERY := 10
 
 var main                            # the game's main node (main.gd)
 var role := ""                      # "", "host" or "guest"
@@ -118,6 +137,12 @@ var sync_bytes := 0                 # bytes of sections sent (the measurements)
 var fauna_known := {}               # peer id -> {animal id: true}: the animals that guest's copy holds
 var fauna_sent := {}                # peer id -> {animal id: [x, y, fx, fy, moving, act, hp]}: the live state last sent to it (as floats)
 var _n_animals := 0
+var npcs_sent := {}                 # B25R1: peer id -> {npc id: the snapshot row last sent to it}
+var _n_npcs := 0
+var _players_sent: Array = []       # B25R1: the players' snapshot last broadcast
+var _players_static := {}           # B25R1: pid -> its PLAYER_STATIC fields as last broadcast
+var _players_peers: Array = []      # B25R1: the connections the last snapshot went to (a new one gets every field)
+var _n_players := 0
 
 # Batch D, host
 var upnp := NetUpnp.new()
@@ -147,6 +172,7 @@ var _retries := 0
 var reconnects := 0                 # times this guest came back (tests)
 var host_paused := false
 var bye := ""                       # the host said it stopped (no retries)
+var _bye_read := false              # B25R1: ... and the guest has yet to end the connection for it
 var _paused_msec := -1
 var faults := {}                    # tests: {dup: true, delay_ms: n, reorder: true} on this guest's requests
 var _fault_out: Array = []
@@ -224,11 +250,12 @@ func stop() -> void:
 			if g != null:
 				g.away = true
 			rpc_id(int(id), "z_bye", "stopped")          # Batch D: so the guests do not wait to reconnect
-		_drain(1.0)
+		_drain()
 	upnp.stop()
 	_close_peer()
 	discovery.close()
 	role = ""
+	_bye_read = false
 	resume_tokens.clear()
 	hello_extra.clear()
 	streams.clear()
@@ -247,6 +274,10 @@ func stop() -> void:
 	sync_due.clear()
 	fauna_known.clear()
 	fauna_sent.clear()
+	npcs_sent.clear()
+	_players_sent = []
+	_players_static.clear()
+	_players_peers = []
 	predicted.clear()
 	avatars.clear()
 	npc_target.clear()
@@ -264,26 +295,34 @@ func _close_peer() -> void:
 		p.close()
 
 
-## Batch D, host: before closing, let the packets just sent (the goodbye) reach the guests: each connection is asked to end once its
-## queue is delivered, and ENet is run for up to `secs` (a fraction of a second, once, when hosting stops) until they have.
-func _drain(secs: float) -> void:
+## Batch D, host: before closing, let the packets just sent (the goodbye) reach the guests. B25R1: ENet is run (once, when hosting
+## stops) until every guest has read the goodbye and ended its connection (z_bye), for up to BYE_WAIT_SECONDS; a connection still
+## open then is asked to end once its queue is delivered, and ENet runs up to BYE_CLOSE_SECONDS more. (Before, the host asked at once:
+## its end often reached a guest in the same read as the goodbye, which the guest then never saw, and it retried for a minute.)
+func _drain() -> void:
 	if peer == null or peer.host == null:
 		return
 	for id in multiplayer.get_peers():
 		var pp := peer.get_peer(id)
-		if pp != null:
-			pp.peer_disconnect_later()
-	var end := Time.get_ticks_msec() + int(secs * 1000.0)
+		if pp != null and not by_peer.has(id):
+			pp.peer_disconnect_later()                 # a connection still joining had no goodbye: ended at once
+	peer.host.flush()
+	var asked := false
+	var start := Time.get_ticks_msec()
+	var end := start + int((BYE_WAIT_SECONDS + BYE_CLOSE_SECONDS) * 1000.0)
 	while Time.get_ticks_msec() < end:
-		var ev: Array = peer.host.service(10)
-		if ev.is_empty() or int(ev[0]) == ENetConnection.EVENT_NONE:
-			var live := false
-			for id in multiplayer.get_peers():
-				var pp := peer.get_peer(id)
-				if pp != null and pp.get_state() != ENetPacketPeer.STATE_DISCONNECTED:
-					live = true
-			if not live:
-				break
+		var live := []
+		for id in multiplayer.get_peers():
+			var pp := peer.get_peer(id)
+			if pp != null and pp.get_state() != ENetPacketPeer.STATE_DISCONNECTED:
+				live.append(pp)
+		if live.is_empty():
+			break
+		if not asked and Time.get_ticks_msec() >= start + int(BYE_WAIT_SECONDS * 1000.0):
+			asked = true
+			for pp: ENetPacketPeer in live:
+				pp.peer_disconnect_later()             # a guest that did not answer in time (frozen, or its connection lost)
+		peer.host.service(10)
 
 
 func _now() -> float:
@@ -332,6 +371,7 @@ func _drop_peer(id: int, quiet: bool) -> void:
 	sync_due.erase(id)
 	fauna_known.erase(id)
 	fauna_sent.erase(id)
+	npcs_sent.erase(id)
 	queue = queue.filter(func(q): return int(q.peer) != id)        # a request from someone gone is not applied
 	discovery.info = _answer()
 	if g != null:
@@ -693,6 +733,7 @@ func z_token(t: String) -> void:
 @rpc("authority", "call_remote", "reliable")
 func z_bye(reason: String) -> void:
 	bye = reason if reason != "" else "stopped"
+	_bye_read = true                               # B25R1: this guest ends the connection itself, next frame (_process)
 
 
 ## Batch D, guest: the host's app went to the background (true) or came back (false).
@@ -902,22 +943,26 @@ func s_self(d: Dictionary) -> void:
 		main.adopt_own_state(d)
 
 
+## B25R1 (traffic): NPC_FLOATS floats a villager in `rows`, its animation in `anims` (the villagers that changed since the last
+## snapshot, and all near the guest on a key one: NPCS_KEY_EVERY).
 @rpc("authority", "call_remote", "unreliable_ordered")
-func s_npcs(minutes: float, list: Array) -> void:
+func s_npcs(minutes: float, rows: PackedFloat32Array, anims: PackedStringArray) -> void:
 	if main.world == null:
 		return
 	main.world.minutes = maxf(main.world.minutes, minutes)
-	for e in list:
-		var n: NPC = main.world.npc(int(e[0]))
+	for r in mini(anims.size(), rows.size() / NPC_FLOATS):
+		var b := r * NPC_FLOATS
+		var n: NPC = main.world.npc(int(rows[b]))
 		if n == null:
 			continue
-		npc_target[n.id] = Vector2(e[1], e[2])
-		n.facing = Vector2(e[3], e[4])
-		n.anim = str(e[5])
-		n.alive = bool(e[6])
-		if e.size() >= 10:
-			var swing := float(e[9]) > 0.5
-			field_pose[n.id] = {"pos": Vector2(e[7], e[8]), "anim": "swing" if swing else "walk", "tool": FieldWorkView.TOOL if swing else "", "facing": n.facing}
+		var flags := int(rows[b + 5])
+		npc_target[n.id] = Vector2(rows[b + 1], rows[b + 2])
+		n.facing = Vector2(rows[b + 3], rows[b + 4])
+		n.anim = anims[r]
+		n.alive = flags & NPC_ALIVE != 0
+		if flags & NPC_FIELD:
+			var swing := flags & NPC_SWING != 0
+			field_pose[n.id] = {"pos": Vector2(rows[b + 6], rows[b + 7]), "anim": "swing" if swing else "walk", "tool": FieldWorkView.TOOL if swing else "", "facing": n.facing}
 		else:
 			field_pose.erase(n.id)
 
@@ -1288,6 +1333,10 @@ func _process(dt: float) -> void:
 		return
 	if not is_guest():
 		return
+	if _bye_read:
+		_bye_read = false
+		_lost(HOST_STOPPED)                        # B25R1: the host is stopping and waits for its guests to end their connections
+		return
 	if reconnecting:
 		_reconnect_step()
 		return
@@ -1320,7 +1369,11 @@ func _host_step(dt: float) -> void:
 	_t_players += dt
 	if _t_players >= 1.0 / NetProtocol.PLAYERS_HZ:
 		_t_players = 0.0
-		rpc("s_players", players_list())
+		_n_players += 1
+		var pl := players_snapshot(_n_players % PLAYERS_KEY_EVERY == 0)
+		if pl != _players_sent or _n_players % PLAYERS_KEY_EVERY == 0:     # B25R1: unchanged, nothing to send but the key
+			_players_sent = pl
+			rpc("s_players", pl)
 	_t_sync += dt
 	if _t_sync >= NetSync.SYNC_SECONDS:
 		_t_sync = 0.0
@@ -1336,20 +1389,36 @@ func _host_step(dt: float) -> void:
 	_t_npcs += dt
 	if _t_npcs >= 1.0 / NetProtocol.NPCS_HZ:
 		_t_npcs = 0.0
+		_n_npcs += 1
+		var key := _n_npcs % NPCS_KEY_EVERY == 0
 		for id in by_peer:
 			var g: PlayerState = main.world.player_by_pid(int(by_peer[id]))
 			if g == null:
 				continue
+			if not npcs_sent.has(id):
+				npcs_sent[id] = {}
+			var sent: Dictionary = npcs_sent[id]
 			var list := []
+			var rows := PackedFloat32Array()
+			var anims := PackedStringArray()
 			for n: NPC in main.world.npcs:
 				if n.pos.distance_to(g.pos) <= NetProtocol.NPC_RANGE:
 					var fw := FieldWorkView.pose(main.world, n)     # GP-FARMER-TENDING: a field worker's drawn place and tool come along
-					if fw.is_empty():
-						list.append([n.id, n.pos.x, n.pos.y, n.facing.x, n.facing.y, n.anim, n.alive])
-					else:
-						list.append([n.id, n.pos.x, n.pos.y, fw.facing.x, fw.facing.y, n.anim, n.alive, fw.pos.x, fw.pos.y, 1 if fw.anim == "swing" else 0])
+					var row := [n.id, n.pos.x, n.pos.y, n.facing.x, n.facing.y, n.anim, n.alive] if fw.is_empty() else \
+						[n.id, n.pos.x, n.pos.y, fw.facing.x, fw.facing.y, n.anim, n.alive, fw.pos.x, fw.pos.y, 1 if fw.anim == "swing" else 0]
+					if key or sent.get(n.id) != row:     # B25R1: a villager standing as it was last sent is not sent again until the key
+						sent[n.id] = row
+						list.append(row)
 			for i in range(0, maxi(1, list.size()), NPCS_PER_PACKET):      # unreliable packets stay under the MTU
-				rpc_id(id, "s_npcs", main.world.minutes, list.slice(i, i + NPCS_PER_PACKET))
+				rows.clear()
+				anims.clear()
+				for row in list.slice(i, i + NPCS_PER_PACKET):
+					var field: bool = row.size() >= 10
+					rows.append_array([row[0], row[1], row[2], row[3], row[4],
+						(NPC_ALIVE if row[6] else 0) | (NPC_FIELD if field else 0) | (NPC_SWING if field and row[9] == 1 else 0),
+						row[7] if field else 0.0, row[8] if field else 0.0])
+					anims.append(str(row[5]))
+				rpc_id(id, "s_npcs", main.world.minutes, rows, anims)
 		_n_animals += 1
 		for id in by_peer:
 			var g2: PlayerState = main.world.player_by_pid(int(by_peer[id]))
@@ -1432,6 +1501,28 @@ func _guest_step(dt: float) -> void:
 			continue
 		a.pos = a.pos.lerp(animal_target[id], k) if a.pos.distance_to(animal_target[id]) < 3.0 else animal_target[id]
 		a.act_left = maxf(0.0, a.act_left - dt)
+
+
+## Host (B25R1, traffic): the players' list as s_players sends it: each player's place, facing, animation, life and level every time,
+## and its PLAYER_STATIC fields only when they changed since last sent, on the key (`all`), or when a connection came or went.
+func players_snapshot(all: bool) -> Array:
+	var peers := by_peer.keys()
+	peers.sort()
+	if peers != _players_peers:
+		_players_peers = peers
+		all = true
+	var out := []
+	for e: Dictionary in players_list():
+		var st := {}
+		for k in PLAYER_STATIC:
+			st[k] = e[k]
+		var pid := int(e.pid)
+		if not all and _players_static.get(pid) == st:
+			for k in PLAYER_STATIC:
+				e.erase(k)
+		_players_static[pid] = st
+		out.append(e)
+	return out
 
 
 ## The other players to draw: pid -> {pid, name, sprite, pos, dir, anim, alive}. On the host, the connected guests.
