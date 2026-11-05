@@ -8,12 +8,13 @@ extends SceneTree
 ## or the whole region), e.g.  -- out/higham.png 8 0 -40,720,120,100
 ## Optional named arguments after those: raw=DIR saves every shot as taken (10 px a tile, DIR/shot_NNNN.png) with DIR/shots.json
 ## (each shot's top-left tile), for a full-resolution mosaic, crops and seam checks; hour=H sets the clock to that hour of day 0
-## (default 12, noon) before the first shot; from=N starts at shot N (resuming an interrupted raw flight).
+## (default 12, noon) before the first shot; cam=PX the camera's pixels a tile while shooting (default 10; 48 the game's zoom); from=N starts at shot N (resuming an interrupted raw flight).
 ## Deterministic: the world (seed 1, new_game's) is paused for the whole flight, so nothing moves or grows between shots; the
 ## camera is set free of the player, who stands far outside the area (no roof lifts, canopy fades or doors open round them);
 ## each shot waits until every chunk round it and its trees are built (OverworldView/TreeView queues empty), then a few frames more.
 
-const SHOT_PX_PER_TILE := 10.0          # the camera while shooting: 128 x 72 tiles a 1280x720 shot, inside the loaded chunks
+var SHOT_PX_PER_TILE := 10.0            # the camera while shooting: 128 x 72 tiles a 1280x720 shot, inside the loaded chunks
+                                        # (cam=PX sets it: cam=48 is the game's own zoom, 3 x 16 px; a close look at the art as played)
 var main
 var out := "/tmp/drone.png"
 var ppt := 4
@@ -41,6 +42,8 @@ func _init() -> void:
 			raw_dir = a.substr(4)
 		elif a.begins_with("from="):
 			i = int(a.substr(5))              # resume an interrupted flight at this shot (raw shots before it already saved)
+		elif a.begins_with("cam="):
+			SHOT_PX_PER_TILE = float(a.substr(4))
 		elif a.begins_with("hour="):
 			hour = float(a.substr(5))
 		else:
