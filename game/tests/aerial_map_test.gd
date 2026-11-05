@@ -36,9 +36,15 @@ func _frames(n: int) -> void:
 		await process_frame
 
 
+var _snap := {}
+
+
 func _run() -> void:
+	for f in DirAccess.get_files_at(AerialMap.CACHE_DIR):
+		DirAccess.remove_absolute(AerialMap.CACHE_DIR.path_join(f))     # (a cold start: the worker draws, the cache is written)
 	for s in [1, 11, 7]:
 		await _start(s)
+	await _cache()
 	for s in [1, 11]:
 		await _seed(s)
 	print("%d checks, %d failures" % [checks, failures])
@@ -67,7 +73,11 @@ func _start(s: int) -> void:
 	var wall_ms := (Time.get_ticks_usec() - t0) / 1000.0
 	print("MEASURE seed %d: settlements' ground, %d chunks: start on the main thread %.0f ms (atlases, trees' art), worker %.0f ms (private Overworld and %d chunks), wall %.0f ms over %d frames"
 			% [s, a.site_total, a.site_start_usec / 1000.0, a.site_usec / 1000.0, a.site_total, wall_ms, frames])
-	check(a.site_total > 100 and a.site_done == a.site_total and start_ms < 1500.0, "seed %d: every settlement's chunks drawn by the worker (%d)" % [s, a.site_total])
+	check(a.site_total > 100 and a.site_done == a.site_total and start_ms < 1500.0 and not a.site_from_cache, "seed %d: every settlement's chunks drawn by the worker (%d)" % [s, a.site_total])
+	check(AerialMap.load_cache(a.cache_path(), a.cache_key()).size() == a.site_total,
+			"seed %d: and kept on disk (%.2f MB)" % [s, FileAccess.get_file_as_bytes(a.cache_path()).size() / 1048576.0])
+	if s == 1:
+		_snap = _pictures(a)
 	# their ground drawn, the wilderness round it dark
 	var ground := 0
 	var cells := 0
@@ -129,6 +139,68 @@ func _start(s: int) -> void:
 	check(RegionTravel.has_destination(p) and not main.ui.modal(), "seed %d: a tap on a settlement never visited sets off for it" % s)
 	main.travel.dismiss(main)
 	await _frames(2)
+
+
+## The settlements' pictures as placed in the pages (chunk -> bytes).
+func _pictures(a: AerialMap) -> Dictionary:
+	var out := {}
+	for cc: Vector2i in a.site_chunks():
+		var pg := AerialMap.page_of(cc)
+		var o := (cc - pg * AerialMap.PAGE) * Overworld.CHUNK * AerialMap.LO
+		out[cc] = (a.pages[pg].img as Image).get_region(Rect2i(o, Vector2i(64, 64))).get_data() if a.pages.has(pg) else PackedByteArray()
+	return out
+
+
+## The disk cache: a second start of the same world reads the pictures back (no worker) byte for byte; another generation
+## or seed is another key; a corrupt file is ignored and the worker draws (and writes it) again.
+func _cache() -> void:
+	SHOT.new_world(main, 1)
+	main.ui.hide_all()
+	main.aerial_background = false
+	var a := AerialMap.of(main)
+	var t0 := Time.get_ticks_usec()
+	a.start_sites()
+	var ms := (Time.get_ticks_usec() - t0) / 1000.0
+	print("MEASURE seed 1, second start: the settlements' pictures from the disk cache in %.0f ms on the main thread" % ms)
+	check(a.site_from_cache and a._site_thread == null and a.sites_state == "done", "a second start of seed 1 reads the settlements from the disk cache, no worker (%.0f ms)" % ms)
+	var now := _pictures(a)
+	var same := now.size() == _snap.size() and now.keys().all(func(cc): return _snap.has(cc) and _snap[cc] == now[cc] and not now[cc].is_empty())
+	check(same, "and its pictures are byte-identical to the worker's (%d chunks)" % now.size())
+	var path := a.cache_path()
+	var key := a.cache_key()
+	var ow: Overworld = main.world.map.overworld
+	ow.gen += 1
+	var key_gen := a.cache_key()
+	ow.gen -= 1
+	check(key_gen != key and AerialMap.load_cache(a.cache_path().replace(key, key_gen), key_gen).is_empty(), "another generator version is another key, with nothing cached for it")
+	var other: String = ""
+	for f in DirAccess.get_files_at(AerialMap.CACHE_DIR):
+		if f.begins_with("sites_11_"):
+			other = AerialMap.CACHE_DIR.path_join(f)
+	check(other != "" and AerialMap.load_cache(other, key).is_empty(), "seed 11's file does not read as seed 1's")
+	var good := FileAccess.get_file_as_bytes(path)
+	var bad := good.duplicate()
+	bad[bad.size() / 2] = bad[bad.size() / 2] ^ 0x5a
+	var fw := FileAccess.open(path, FileAccess.WRITE)
+	fw.store_buffer(bad)
+	fw.close()
+	var flipped := AerialMap.load_cache(path, key).is_empty()
+	fw = FileAccess.open(path, FileAccess.WRITE)
+	fw.store_buffer(good.slice(0, good.size() / 3))
+	fw.close()
+	var short := AerialMap.load_cache(path, key).is_empty()
+	fw = FileAccess.open(path, FileAccess.WRITE)
+	fw.store_string("garbage")
+	fw.close()
+	check(flipped and short and AerialMap.load_cache(path, key).is_empty(), "a corrupt, short or foreign cache file reads as nothing")
+	AerialMap.drop()
+	a = AerialMap.of(main)
+	a.start_sites()
+	check(not a.site_from_cache and a.sites_state == "running", "with the file corrupt, the worker draws the settlements again")
+	while a.sites_state == "running":
+		a.integrate_sites()
+		await process_frame
+	check(AerialMap.load_cache(path, key).size() == a.site_total and _pictures(a) == _snap, "and writes the cache again, the same pictures")
 
 
 func _seed(s: int) -> void:
