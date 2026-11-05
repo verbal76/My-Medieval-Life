@@ -24,7 +24,8 @@ const WATER_FRAMES := 8                # tools/water_tiles.py FRAMES; each frame
 const WATER_STILL_ATLAS := 10          # B25R1-019: the same water sheet with no animation (its first frame): water out of the live range
 ## B25R1-Q8 (owner: "Bow.Pixel Low Grass ... looks like this is our winner"): low grass tufts scattered on open grass, drawing
 ## only (no collision, no data). A cell gets a tuft by a fixed hash of the world's seed and the cell: GRASS_PLAIN per cent a
-## plain tuft, GRASS_FLOWERED per cent one with small flowers (game/data/low_grass.json, tools/low_grass_tufts.py). One
+## plain tuft, GRASS_FLOWERED per cent one with small flowers (game/data/low_grass.json, tools/low_grass_tufts.py: the first
+## sheet only, one texture, so the tiles batch). One
 ## TileMapLayer for the village (lay_grass) and one a chunk in the overworld (OverworldView), so it is batched by the tile
 ## renderer's quadrants and culled with them; never on a road, path, field, water, building, tree, plant or object.
 const GRASS_PLAIN := 18

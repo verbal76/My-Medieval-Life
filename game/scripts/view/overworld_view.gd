@@ -299,7 +299,11 @@ func _layer(root: Node2D, z: int) -> TileMapLayer:
 	return l
 
 
+var build_usec := 0                   # time spent building chunks (_build), for the perf harness (grass_shot)
+
+
 func _build(cc: Vector2i) -> void:
+	var t0 := Time.get_ticks_usec()
 	var ch := overworld.get_chunk(cc)
 	var root := Node2D.new()
 	root.name = "chunk_%d_%d" % [cc.x, cc.y]
@@ -340,6 +344,7 @@ func _build(cc: Vector2i) -> void:
 	chunks[cc] = {"root": root, "ground": ground, "grass": grass, "path": path, "objects": objects, "tops": tops, "works": works, "site_above": site_above}
 	above_layers.append(tops)
 	_draw_works(cc)
+	build_usec += Time.get_ticks_usec() - t0
 
 
 ## B25R1-Q8: the low grass tufts of a chunk (MapView.grass_tuft), on open flat grass only: no road, worn way or street, no
@@ -362,18 +367,33 @@ func _lay_grass(cc: Vector2i, ch: Overworld.Chunk, layer: TileMapLayer, lanes: D
 		for cells: Dictionary in hm.get("layers", []):
 			for c: Vector2i in cells:
 				fenced[c] = true
+	var tufts := MapView.low_grass()
+	var plain: Array = tufts.plain
+	var flowered: Array = tufts.flowered
+	var seed := overworld.seed
+	var roads: Dictionary = overworld.road_state
+	var changed: Dictionary = overworld.changes
 	for y in Overworld.CHUNK:
 		for x in Overworld.CHUNK:
+			var cell := box.position + Vector2i(x, y)
+			var h := Overworld.hash32(seed, cell.x, cell.y, GRASS_SALT)      # MapView.grass_tuft, inlined (a chunk is 1024 cells)
+			var roll := h % 100
+			if roll >= GRASS_PLAIN + GRASS_FLOWERED:
+				continue
 			var i := y * Overworld.CHUNK + x
 			if ch.solid[i] != 0 or ch.water[i] != 0 or ch.path[i] >= 0 or ch.deco[i] >= 0 or not _flat.has(ch.ground[i]):
 				continue
-			var cell := box.position + Vector2i(x, y)
-			var tuft := MapView.grass_tuft(overworld.seed, cell)
-			if tuft < 0 or lanes.has(cell) or overworld.road_state.has(cell) or fenced.has(cell) or overworld.changes.has(cell):
+			if lanes.has(cell) or roads.has(cell) or fenced.has(cell) or changed.has(cell):
 				continue
-			if keep_off.any(func(r: Rect2i) -> bool: return r.has_point(cell)):
+			var off := false
+			for r in keep_off:
+				if r.has_point(cell):
+					off = true
+					break
+			if off:
 				continue
-			_put(layer, cell, tuft)
+			var list: Array = plain if roll < GRASS_PLAIN else flowered
+			_put(layer, cell, int(list[(h >> 8) % list.size()]))
 	grass_usec += Time.get_ticks_usec() - t0
 
 

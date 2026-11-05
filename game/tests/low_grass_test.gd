@@ -2,7 +2,7 @@ extends SceneTree
 ## B25R1-Q8 (owner: "Bow.Pixel Low Grass ... looks like this is our winner"): the low grass tufts, checked in the real game
 ## scene, headless:
 ##   godot --headless --path game --script res://tests/low_grass_test.gd
-## Tufts are drawn on the village's and the overworld's open grass, from the two Bow.Pixel atlases, by a fixed hash (the same
+## Tufts are drawn on the village's and the overworld's open grass, from the Bow.Pixel atlas, by a fixed hash (the same
 ## cells and tufts every time); never on a road, path, field, water, building, tree, plant or object; drawing only (no
 ## collision, nothing walkable changes); and a tuft goes when something is drawn over its cell later.
 

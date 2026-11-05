@@ -9,6 +9,10 @@ out (agent decision, looked at on a mock-up); the rest are sorted by their opaqu
     plain     every opaque pixel green (hue 0.17-0.45, saturation and value over 0.3)
     flowered  no dark pixel (value under 0.3), some pixels not green (the flowers)
 
+Only the first sheet (atlas 6) is used: tufts of two textures laid side by side break the tile renderer's batching at every
+change of texture (measured with game/tests/grass_shot.gd: 76 more draw calls in the village view, against the few of one
+texture), and the first sheet alone has over a hundred of each kind. The second stays imported for later variants.
+
 Writes game/data/low_grass.json (format mml-low-grass/1): the tile values (atlas * 100000 + row * 20 + column) of each kind,
 sorted, read by MapView.grass_tuft. Deterministic: same sheets, same file.
 
@@ -23,7 +27,7 @@ from pathlib import Path
 from PIL import Image
 
 REPO = Path(__file__).resolve().parent.parent
-SHEETS = [(6, REPO / "game" / "assets" / "tiles" / "low_grass_1.png"), (7, REPO / "game" / "assets" / "tiles" / "low_grass_2.png")]
+SHEETS = [(6, REPO / "game" / "assets" / "tiles" / "low_grass_1.png")]     # one texture: see the docstring
 DEST = REPO / "game" / "data" / "low_grass.json"
 T = 16
 COLS = 20
