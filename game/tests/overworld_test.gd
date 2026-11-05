@@ -34,6 +34,8 @@ func _init() -> void:
 	_test_sites(2)
 	_test_raised(1)
 	_test_raised(2)
+	for sv in CASTLE_SEEDS:
+		_test_castle_way(Overworld.create(sv, VillageMap.load_default()), sv)
 	print("sites ", Time.get_ticks_msec() - tp); tp = Time.get_ticks_msec()
 	print("overworld core tests took ", Time.get_ticks_msec() - t0, " ms")
 	main = load("res://scenes/main.tscn").instantiate()
@@ -632,28 +634,8 @@ func _test_raised(seed_value: int) -> void:
 			steps += 1
 			check(not o.is_solid(c) and not o.is_rim(c) and o.is_top(c + Vector2i(0, -1)), "seed %d: the knoll's steps at %s are walked on, up to the top" % [seed_value, c])
 	check(steps == 3, "seed %d: three steps cut through the knoll's rim below the castle gate (%d)" % [seed_value, steps])
-	# generation 6 (B25R1 flyover: the steps led to bare grass): below the steps the castle way, a street joined round to the
-	# north gate's main street; and the layout's place for each landmark a settlement's plan puts is where it stands (seed 1)
-	var lanes := RegionRoads.lane_cells(o)
-	var foot := Vector2i.ZERO
-	for c: Vector2i in o.fixed_works:
-		if o.raised_at(c) == "higham_castle":
-			foot = c + Vector2i(0, 1)
-	var wall_n := Rect2i()
-	for sl in o.site("higham").slots:
-		if str(sl.get("id", "")) == "walls":
-			wall_n = sl.rect
-	var seen_l := {foot: true}
-	var todo_l: Array[Vector2i] = [foot]
-	var gate_reached := false
-	while not todo_l.is_empty() and not gate_reached:
-		var c: Vector2i = todo_l.pop_back()
-		gate_reached = c.y >= wall_n.position.y and c.y < wall_n.position.y + 9
-		for d: Vector2i in VillageMap.SIDES:
-			if lanes.has(c + d) and not seen_l.has(c + d):
-				seen_l[c + d] = true
-				todo_l.append(c + d)
-	check(lanes.has(foot) and gate_reached, "seed %d: the castle way runs from the foot of the knoll's steps %s along the streets through the north gate" % [seed_value, foot])
+	_test_castle_way(o, seed_value)
+	# the layout's place for each landmark a settlement's plan puts is where it stands (seed 1)
 	if seed_value == 1:
 		var places := {}
 		for p in o.landmark_places():
@@ -844,3 +826,37 @@ func _flanks_crossing(o: Overworld, n: Vector2i) -> bool:
 			if o.is_road(e) and (o.is_bridge(e) or o.is_ford(e)):
 				return true
 	return false
+
+
+## Generation 6 (B25R1 flyover: the steps led to bare grass): below the knoll's steps the castle way, a street joined round to
+## the north gate's main street. Generation 7 (flyover v2: on seed 11 the houses outside the walls had taken its ground and the
+## castle had no way): on every seed (CASTLE_SEEDS), the castle stands above the north wall and its way reaches the gate.
+const CASTLE_SEEDS := [3, 7, 11, 18, 19, 1000]
+
+
+func _test_castle_way(o: Overworld, seed_value: int) -> void:
+	var cr := Rect2i()
+	for sl in o.site("higham").slots:
+		if str(sl.get("id", "")) == "castle":
+			cr = sl.rect
+	var lanes := RegionRoads.lane_cells(o)
+	var foot := Vector2i.ZERO
+	for c: Vector2i in o.fixed_works:
+		if o.raised_at(c) == "higham_castle":
+			foot = c + Vector2i(0, 1)
+	var wall_n := Rect2i()
+	for sl in o.site("higham").slots:
+		if str(sl.get("id", "")) == "walls":
+			wall_n = sl.rect
+	check(cr.end.y < wall_n.position.y, "seed %d: the castle %s stands above the north wall %s" % [seed_value, cr, wall_n])
+	var seen_l := {foot: true}
+	var todo_l: Array[Vector2i] = [foot]
+	var gate_reached := false
+	while not todo_l.is_empty() and not gate_reached:
+		var c: Vector2i = todo_l.pop_back()
+		gate_reached = c.y >= wall_n.position.y and c.y < wall_n.position.y + 9
+		for d: Vector2i in VillageMap.SIDES:
+			if lanes.has(c + d) and not seen_l.has(c + d):
+				seen_l[c + d] = true
+				todo_l.append(c + d)
+	check(lanes.has(foot) and gate_reached, "seed %d: the castle way runs from the foot of the knoll's steps %s along the streets through the north gate" % [seed_value, foot])

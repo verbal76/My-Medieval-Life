@@ -531,6 +531,7 @@ func plan_site(spec: Dictionary, center: Vector2i, stamps_in: Dictionary, lay: D
 	var wr := Rect2i()
 	var wall_slot := {}
 	var way := {}
+	var castle := {}
 	if walled:                                    # the walls round it all, a gate where the main street goes out
 		wr = bbox.grow_individual(6, 10, 6, 10)
 		var gx_n := main_x(int(main.keys().min()))
@@ -552,6 +553,11 @@ func plan_site(spec: Dictionary, center: Vector2i, stamps_in: Dictionary, lay: D
 		ow._solid_rows[nm] = stamps[nm].solid
 		var gc := Vector2i(gx_s, wr.end.y - 1)
 		wall_slot = {"kind": "civic", "trade": "", "stamp": nm, "hh": -1, "rect": wr, "door": gc, "spot": gc, "look": "", "id": "walls"}
+		if bool(plan.get("castle", false)):
+			# Generation 7 (B25R1 flyover v2, seed 11: houses outside the walls had taken the ground above the north wall, so the
+			# castle fell back beyond the corner with no way): the castle's knoll and way are chosen and claimed here, before the
+			# houses outside the walls are placed, so the castle stands above the north wall with its way on every seed.
+			castle = _castle_place(wr)
 		# outside: the road on south past the gate, houses straggling along it; the Way east-west under the south wall
 		add_main(wr.end.y + 2, wr.end.y + 22)
 		way = add_cross(wr.end.y + 3, wr.position.x - 4, wr.end.x + 4, 1)
@@ -568,6 +574,17 @@ func plan_site(spec: Dictionary, center: Vector2i, stamps_in: Dictionary, lay: D
 			if k >= 0 and placed[k].home:
 				yard(placed[k], k + 500)
 		_trim(cross.find(way) + 1)                # (B25R1 flyover: a street laid outside for houses that went elsewhere ended in grass)
+		for c: Vector2i in castle.get("kept", []):
+			if int(occ.get(c, 0)) == 3:
+				occ.erase(c)                          # (the knoll's slopes open ground again)
+		if not castle.is_empty() and not (castle.way as Array).is_empty():
+			# (a street laid outside for houses and trimmed again may have run along the north wall's: the castle way is laid
+			# whole again)
+			var way_again: Array[Vector2i] = []
+			for c: Vector2i in castle.way:
+				mark(c, 1)
+				way_again.append(c)
+			streets.append(way_again)
 	for q in items.size():
 		var res: Dictionary = where[q]
 		var it: Array = items[q]
@@ -593,47 +610,8 @@ func plan_site(spec: Dictionary, center: Vector2i, stamps_in: Dictionary, lay: D
 	for c in occ:
 		rect = rect.expand(c)
 	rect.size += Vector2i(1, 1)
-	if walled and bool(plan.get("castle", false)):   # the castle on its knoll above the walls' north-east corner, its gate to the south
-		# Generation 6 (B25R1 flyover: "steps through the knoll rim lead to bare grass, no way to the town street"): the castle
-		# stood beyond the walls' north-east corner, its gate facing the east wall, with no way round to a town gate. It stands
-		# above the north wall now, its knoll's rim (region_layout.json margin: south 5) CASTLE_GAP rows above the walls, and the
-		# castle way runs from the steps below its gate down to a street along the outside of the north wall, which joins the
-		# main street at the north gate. The first place from the walls' east end westward whose knoll and way are clear.
-		var cr := Rect2i()
-		var way_cells: Array[Vector2i] = []
-		var gy := wr.position.y - 3                     # the street along the north wall, two rows (as a cross street)
-		add_main(gy, wr.position.y)
-		var ml: int = int(main[gy][1]) if main.has(gy) else cx + 1
-		for t in 3 * (wr.size.x / 2 + CASTLE_W):
-			var lift := (t / (wr.size.x / 2 + CASTLE_W)) * 6           # (no room: a few rows higher, the way longer)
-			var dx := t % (wr.size.x / 2 + CASTLE_W) - CASTLE_W + 3     # from just past the walls' east end westward
-			var cand := Rect2i(wr.end.x - CASTLE_W - dx, gy - CASTLE_GAP - lift - CASTLE_H, CASTLE_W, CASTLE_H)
-			var gx := cand.position.x + CASTLE_W / 2
-			if gx - 2 <= ml:
-				continue
-			var cells: Array[Vector2i] = []
-			for y in range(cand.end.y + 6, gy):          # down from the foot of the steps (the rim's row is cand.end.y + 5)
-				for x in range(gx - 1, gx + 2):
-					cells.append(Vector2i(x, y))
-			for x in range(ml + 1, gx + 2):
-				cells.append(Vector2i(x, gy))
-				cells.append(Vector2i(x, gy + 1))
-			var ok := true
-			for y in range(cand.position.y - 5, cand.end.y + 6):     # the knoll and a tile round it
-				for x in range(cand.position.x - 2, cand.end.x + 6):
-					ok = ok and not occ.has(Vector2i(x, y))
-			for c in cells:
-				ok = ok and int(occ.get(c, 1)) == 1
-			if ok:
-				cr = cand
-				way_cells = cells
-				break
-		if cr.size.x == 0:
-			cr = Rect2i(wr.end.x + 3, wr.position.y - 18, CASTLE_W, CASTLE_H)    # (no room above: beyond the corner, as before)
-		for c in way_cells:
-			mark(c, 1)
-		if not way_cells.is_empty():
-			streets.append(way_cells)
+	if not castle.is_empty():                     # the castle and its keep (chosen above, before the houses outside the walls)
+		var cr: Rect2i = castle.rect
 		var cn := "castle_%s" % str(spec.id)
 		stamps[cn] = ow._wall_stamp(cr.size.x, cr.size.y, [], [cr.size.x / 2])
 		ow._solid_rows[cn] = stamps[cn].solid
@@ -644,7 +622,6 @@ func plan_site(spec: Dictionary, center: Vector2i, stamps_in: Dictionary, lay: D
 		var kdoor := ka + Vector2i(int(kd.door[0]), int(kd.door[1]))
 		slots.append({"kind": "civic", "trade": "", "stamp": "keep", "hh": -1, "rect": Rect2i(ka, Vector2i(int(kd.w), int(kd.h))),
 			"door": kdoor, "spot": kdoor + Vector2i(0, 1), "look": "", "id": "keep"})
-		claim(cr, 2)
 		rect = rect.merge(cr)
 	rect = rect.grow(3)
 	# the ways in reach the site's edges: the main street north and south, the market's (or the Way's) street east and west.
@@ -682,6 +659,60 @@ func plan_site(spec: Dictionary, center: Vector2i, stamps_in: Dictionary, lay: D
 		sq = Rect2i(l, market.position.y, r - l + 1, market.size.y)
 	return {"rect": rect, "slots": slots, "gate": gate, "streets": streets, "square": sq, "walled": walled, "props": props,
 		"entries": entries, "entry_cells": entry_cells}
+
+
+## The castle's place on its knoll above the walls `wr` (generation 6; generation 7 claims it before the houses outside the
+## walls are placed): its rect claimed, its way laid; {rect, kept} (kept: the knoll's open slopes, freed again once the houses
+## outside are placed).
+func _castle_place(wr: Rect2i) -> Dictionary:
+	# Generation 6 (B25R1 flyover: "steps through the knoll rim lead to bare grass, no way to the town street"): the castle
+	# stood beyond the walls' north-east corner, its gate facing the east wall, with no way round to a town gate. It stands
+	# above the north wall now, its knoll's rim (region_layout.json margin: south 5) CASTLE_GAP rows above the walls, and the
+	# castle way runs from the steps below its gate down to a street along the outside of the north wall, which joins the
+	# main street at the north gate. The first place from the walls' east end westward whose knoll and way are clear.
+	var cr := Rect2i()
+	var way_cells: Array[Vector2i] = []
+	var gy := wr.position.y - 3                     # the street along the north wall, two rows (as a cross street)
+	add_main(gy, wr.position.y)
+	var ml: int = int(main[gy][1]) if main.has(gy) else cx + 1
+	for t in 3 * (wr.size.x / 2 + CASTLE_W):
+		var lift := (t / (wr.size.x / 2 + CASTLE_W)) * 6           # (no room: a few rows higher, the way longer)
+		var dx := t % (wr.size.x / 2 + CASTLE_W) - CASTLE_W + 3     # from just past the walls' east end westward
+		var cand := Rect2i(wr.end.x - CASTLE_W - dx, gy - CASTLE_GAP - lift - CASTLE_H, CASTLE_W, CASTLE_H)
+		var gx := cand.position.x + CASTLE_W / 2
+		if gx - 2 <= ml:
+			continue
+		var cells: Array[Vector2i] = []
+		for y in range(cand.end.y + 6, gy):          # down from the foot of the steps (the rim's row is cand.end.y + 5)
+			for x in range(gx - 1, gx + 2):
+				cells.append(Vector2i(x, y))
+		for x in range(ml + 1, gx + 2):
+			cells.append(Vector2i(x, gy))
+			cells.append(Vector2i(x, gy + 1))
+		var ok := true
+		for y in range(cand.position.y - 5, cand.end.y + 6):     # the knoll and a tile round it
+			for x in range(cand.position.x - 2, cand.end.x + 6):
+				ok = ok and not occ.has(Vector2i(x, y))
+		for c in cells:
+			ok = ok and int(occ.get(c, 1)) == 1
+		if ok:
+			cr = cand
+			way_cells = cells
+			break
+	if cr.size.x == 0:
+		cr = Rect2i(wr.end.x + 3, wr.position.y - 18, CASTLE_W, CASTLE_H)    # (no room above: beyond the corner, as before)
+	for c in way_cells:
+		mark(c, 1)
+	if not way_cells.is_empty():
+		streets.append(way_cells)
+	claim(cr, 2)
+	var kept: Array[Vector2i] = []                  # the knoll's slopes kept open while the houses outside are placed
+	for y in range(cr.position.y - 5, cr.end.y + 6):
+		for x in range(cr.position.x - 2, cr.end.x + 6):
+			if not occ.has(Vector2i(x, y)):
+				occ[Vector2i(x, y)] = 3
+				kept.append(Vector2i(x, y))
+	return {"rect": cr, "kept": kept, "way": way_cells}
 
 
 const CASTLE_W := 34

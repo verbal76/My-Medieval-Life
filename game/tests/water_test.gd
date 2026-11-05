@@ -17,7 +17,9 @@ var failures := 0
 ## kept off every settlement, no trail from a bridge's own point (overworld_test, road_types_test, region_travel_test pass).
 ## Re-pinned 2026-11-05 for generation 6 (the B25R1 flyover repair: canonical water through and round the settlements, the
 ## site streets and castle way, the trail spurs and ring legs, the Wood Perilous edge; two runs in two processes agree).
-const GOLDEN_4 := {1: "6537e1ce05ea1bda56ba7b4f56e9f079", 2: "3f04ed0be6816a2fa4f7afe07da7d8f9", 7: "b75416bce7e128ae78f2c1e44d782715"}
+## Re-pinned 2026-11-05 for generation 7 (the B25R1 flyover v2: the Wood Perilous's ridge outline, the castle way claimed before
+## the houses outside Higham's walls, no join or ring leg along the canonical water; seed 2's chunks unchanged; two processes agree).
+const GOLDEN_4 := {1: "419bb4402f2f4d60c41c63b9433c67e3", 2: "3f04ed0be6816a2fa4f7afe07da7d8f9", 7: "d2502e6e88961cb562d6b15f1e076e7a"}
 const CHUNKS := [Vector2i(-3, 2), Vector2i(1, 4), Vector2i(2, 9), Vector2i(-2, -3), Vector2i(5, 1), Vector2i(0, 20), Vector2i(-6, 12)]
 
 
@@ -62,7 +64,7 @@ func _run() -> void:
 	# --- generation 4: deterministic, streams there
 	var a := Overworld.create(1, m)
 	var b := Overworld.create(1, m)
-	check(a.gen == Overworld.GEN_VERSION and Overworld.GEN_VERSION == 6, "a new world is generation 6 (B25R1 flyover repair: the canonical water through and round the settlements)")
+	check(a.gen == Overworld.GEN_VERSION and Overworld.GEN_VERSION == 7, "a new world is generation 7 (B25R1 flyover v2: the Wood Perilous's ridge outline, the castle way on every seed, no way along the water)")
 	var fa := fingerprint(a, true)
 	check(fa == fingerprint(b, true), "generation 4 is deterministic (the same seed, the same chunks and water)")
 	var b2 := Overworld.create(1, m)
@@ -201,10 +203,11 @@ func _run() -> void:
 	# --- a saved generation-4 world says so; an older generation's save is refused (owner B25R1-Q5)
 	check(main.save_game(false), "saved")
 	var d := SaveStore.inspect(main.save_path, World.SAVE_VERSION)
-	check(int(d.data.overworld.gen) == 6, "a new world's save says generation 6")
-	var w5 := World.new()
-	w5.load_dict(m, {"seed": 1, "save_version": World.SAVE_VERSION, "overworld": {"seed": 1, "gen": 5}})
-	check(not w5.load_error.is_empty(), "a generation-5 save is refused with a message, not drawn (owner B25R1-Q5) (%s)" % w5.load_error)
+	check(int(d.data.overworld.gen) == 7, "a new world's save says generation 7")
+	for old_gen in [6, 5]:
+		var w5 := World.new()
+		w5.load_dict(m, {"seed": 1, "save_version": World.SAVE_VERSION, "overworld": {"seed": 1, "gen": old_gen}})
+		check(not w5.load_error.is_empty(), "a generation-%d save is refused with a message, not drawn (owner B25R1-Q5) (%s)" % [old_gen, w5.load_error])
 	var w3 := World.new()
 	w3.load_dict(m, {"seed": 1, "save_version": World.SAVE_VERSION, "overworld": {"seed": 1, "gen": 3}})
 	check(not w3.load_error.is_empty(), "a generation-3 save is refused with a message, not drawn (%s)" % w3.load_error)

@@ -93,7 +93,7 @@ are allowed where they do not change a named polity's character, and a village o
 | Village to Wulstead (about 270 tiles of road) | about 1 3/4 real minutes, 3.5 game hours |
 | Wulstead to Higham (about 520 tiles of road) | about 3.3 real minutes, 6.7 game hours |
 | Village to Higham | about 5 real minutes, a game day's journey |
-| World dimensions | the region spans x -700..720 and y -60..1260: about 1400 x 1300 tiles, 118 x 108 miles |
+| World dimensions | the region spans x -700..720 and y -60..1260 (the Wood Perilous's spurs reach about 1296, generation 7): about 1400 x 1300 tiles, 118 x 108 miles |
 | Settlement sizes | the village is 120 x 90 tiles. Higham's walls (90 x 62 tiles) would be 7.5 miles across at true scale, so places are at building scale (one tile is about a stride) |
 
 The game's travel times are the novel's ride times compressed into playable minutes, as S3 intends. The overworld is
@@ -612,3 +612,46 @@ The seed-1 drone flyover (`game/tests/drone_shot.gd`) and the owner's notes on i
   overview a one-tile road is a faint line: the dirt tile's mean luminance is 168 against the grass's 152 (about 1.1 : 1),
   carried by its hue, and the stone road's 155 (grey against green). An overview-only fix (a heavier line on the region map
   or flyover) is a proposal, not done here: no new art.
+
+
+#### Generation 7: the Wood Perilous as a ridge, the castle way on every seed, no way along the water (2026-11-05, `wip/b25r1-wood`)
+
+Owner decisions of 2026-11-05 on the flyover v2 (`Overworld.GEN_VERSION` 7; a generation 6 world is refused like the older
+ones, owner B25R1-Q5):
+- **The Wood Perilous redrawn** (owner, question 29: "a long ridge with a thick wood", replacing the rectangle; DCR-01:
+  an intentional revision of the 2026-11-03 rectangle and of generation 6's wave on it, the same canon and intent). Its
+  polygon in `region_layout.json` follows a ridge running west to east about 1,100 tiles south of the village: the spine bends
+  (y 1080-1150), the flanks are of uneven width, with spurs running down them and coves between (100 points, a fixed hash
+  jitter of a few tiles, drawn once by a script and stored, the same for every world). About the same area (about 247,000
+  tiles visible against the rectangle's 248,400) and extent (x -445..555, y about 973..1306: the south flank's spurs reach a
+  little past the old south edge). Its north edge lies under the waste between x -25 and 190 (the waste, earlier in the file,
+  wins there), so the waste's own wandering edge is the boundary and the road south runs straight from the waste into the
+  wood; east of it the ridge's edge keeps south of the country by Cressbrook, with coves; Bourton Abbas, its vale and the
+  waste are untouched. `edge_wobble` is 16 now (it was 40 on the rectangle): the outline does the large shape, the wave only
+  roughens it. **One way through:** the layout's road south ended at (96,1040) just inside the wood, and the way on through
+  it was one of Bourton's far point's joins to the grid; with the new outline more grid nodes beyond the wood came into that
+  far point's reach and three joins ran through the trees (the first v3 flyover showed them). The road south is now carried
+  on through the wood to its far side ((100,1180), (104,1330); the beaten way, BONE-C8-P002), and a far point's join with
+  more than `WOOD_THROUGH` (100) cells in the wood is not laid (`Overworld._wood_cells`); country trails keep out of the wood
+  as before.
+- **Higham's castle way on every seed.** Generation 6 placed the castle after the houses outside the walls; where they had
+  taken the ground above the north wall (seeds 11, 18, 19 and 1000 of 24 tried) the castle fell back to its old place beyond
+  the north-east corner with no way. `SitePlan._castle_place` now chooses and claims the castle's knoll, its way and the
+  street along the north wall right after the walls, before the houses outside are placed (the knoll's slopes kept open
+  while they are, then open ground again); the castle stands above the north wall with its way to the north gate on every
+  seed tried (overworld_test `_test_castle_way`: seeds 1, 2, 3, 7, 11, 18, 19, 1000), at the same place as before on the
+  seeds where it already had room.
+- **No way along the water** (flyover v2: plank pieces on Upmeads Water's bank west of Rushford). Rushford's south far point
+  (where its gate road meets the network) lay in the river, so its joins to the grid and its ring's south and west legs ran
+  along the river, bridged wherever they wandered over the water. Now (`Overworld._water_run`, `LINK_WATER_RUN` 9: the most
+  cells in a row on the canonical water; a crossing has a few): a site's far point on or within 4 tiles of the canonical
+  water goes on down across it to the far bank (Rushford's, Milton's on Coldlake); a far point's join to the grid that would
+  run along the water is not laid and the next nearest node is taken (the three nearest dry ones; with none dry, one a little
+  further within 200 tiles, else the one least along it); a ring leg along the water is never laid, and a ring corner left
+  with one leg by it loses that one too, back to a side's far point, so no stub ends in the water; a hamlet's side road takes
+  a way that keeps off the water when it has one (`_side_dry`, each leg judged by the key it is laid with), else its way as
+  before; a walled town's far point is not moved (Higham's road south keeps the layout's fords and bridge). Ring stretches
+  keep the key they were judged by. On seeds 1, 2 and 11 no join, ring leg, side road or trail runs along the water now
+  (seed 1: Rushford's and Milton's did; seed 2: a side road by Coldlake's second ford, whose road cells the water broke).
+  Not changed (the owner: roads stay as they are): country trails, which on seed 7 run along Coldlake south of Higham for
+  a stretch and by the fair bridge, and the high road at the fair bridge (a canonical crossing at a slant).
