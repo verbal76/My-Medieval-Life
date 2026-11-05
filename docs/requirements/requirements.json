@@ -6284,6 +6284,11 @@
      "date": "2026-11-03",
      "change": "assigned_worker: None -> lead session",
      "why": "lead session owns completion (directive Phase 2)"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "note",
+     "why": "owner answered Q2.1 / checklist H4 (2026-11-05): JOB-02, PIT-02 and FSE-10 are outside Build 25 and Revision 1; they stay approved and unplaced"
     }
    ],
    "branch": "wip/region-nav",
