@@ -34,6 +34,7 @@ var batch := {}           # the last release: {held, applied (in that one frame)
 var _batch_from := -1
 var suspended := {}       # Batch D: the last "suspend": {minutes_before, secs, minutes_after (three frames after the resume)}
 var suspend_frames := -1
+var suspending := false    # net_econ_integrity_test: true in the status written as a "suspend" freezes the process
 var still := false         # X20-MP-ECON-INTEGRITY: the world stopped, the network and the requests going on (see the header)
 var ledger := {}           # the last "ledger": every coin and every good in the world, transit and escrow included
 var tx_last := {}          # the last "tx": the transaction authority's result
@@ -150,6 +151,8 @@ func _process(delta: float) -> bool:
 		if suspend_frames == 3:
 			suspended["minutes_after"] = main.world.minutes
 			suspend_frames = -1
+	if spot != Vector2.INF and main.world.host_player().pos.distance_to(spot) < 1.0:
+		_clear_villagers()                           # the stage stays clear while the host stands on it (see _clear_villagers)
 	for e in releases:
 		Input.parse_input_event(e)
 	releases.clear()
@@ -281,7 +284,10 @@ func _commands() -> void:
 		"suspend":                                   # Batch D (net_fault_test): Android's background, as the app meets it: the pause
 			var m0: float = w.minutes                    # notification, the process frozen (no frames, no network) for `secs`, then
 			main._notification(Node.NOTIFICATION_APPLICATION_PAUSED)     # the resume notification before the next frame
+			suspending = true                            # told in the status first: a guest acts once the freeze has begun (after
+			_status()                                    # the pause's save), so the freeze alone is what it waits through
 			OS.delay_msec(int(float(c.secs) * 1000.0))
+			suspending = false
 			main._notification(Node.NOTIFICATION_APPLICATION_RESUMED)
 			suspended = {"minutes_before": m0, "secs": float(c.secs)}
 			suspend_frames = 0
@@ -506,6 +512,11 @@ func _open_spot() -> Vector2:
 	return base
 
 
+## Villagers within six tiles of the stage are sent away, so a tap, a click or E there chooses a player, never someone passing.
+## Once at "stage" is not enough: the stage is by the player spawn, where a child goes to play (NPCBrain, child_play: four times
+## in ten) and elders take the air, so within a few game minutes of any clearing others walk in (CI run 41978365595: a child at
+## play, Beatrice, chosen instead of the host in net_mp4_test; locally five children stood round the stage in
+## net_interact_test). _process repeats this every frame while the host stands on the stage; one sent away is no longer near.
 func _clear_villagers() -> void:
 	if spot == Vector2.INF:
 		return
@@ -558,8 +569,8 @@ func _status() -> void:
 		"held": held.size(), "holding": holding, "batch": batch, "why_last": why_last, "felled": felled, "rec": {"dir": str(w.recorder.dir) if w.recorder != null else "", "state": w.recorder.completeness() if w.recorder != null else ""}, "frozen": main.process_mode == Node.PROCESS_MODE_DISABLED,
 		"day": w.day(), "net_d": {"duplicates": main.net.duplicates, "gaps": main.net.gaps_skipped, "resumes": main.net.resumes,
 			"log": main.net.applied_log.duplicate(), "tag": main.net.tag, "suspended": suspended, "upnp": main.net.upnp.state,
-			"mp_peers": main.net.multiplayer.get_peers().size() if main.net.peer != null else 0},
-		"still": still, "ledger": ledger, "tx_last": tx_last, "shipments": w.transactions.open_shipments() if w.transactions != null else [],
+			"mp_peers": main.net.multiplayer.get_peers().size() if main.net.peer != null else 0, "joining": main.net.joining.size()},
+		"still": still, "suspending": suspending, "ledger": ledger, "tx_last": tx_last, "shipments": w.transactions.open_shipments() if w.transactions != null else [],
 		"contracts": _player_contracts(w), "traders": _traders().map(func(t): return t.ref)}
 	var tmp := dir + "status.tmp"
 	var f := FileAccess.open(tmp, FileAccess.WRITE)

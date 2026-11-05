@@ -340,18 +340,29 @@ func _guest_pause() -> void:
 	check(back and net.my_pid == pid and int(net_d().resumes) > res0, "it takes its own character back with its token, no refusal (resumes %d)" % int(net_d().resumes))
 	await until(func(): return conn().has(pid), 3.0)
 	check(conn().count(pid) == 1, "one connection for it on the host (%s)" % str(conn()))
-	var clean := await until(func(): return int(net_d().get("mp_peers", -1)) == conn().size(), 12.0)
-	check(clean, "the old connection is gone from the host's network layer too (no ghost peer: %d peers, %d guests)" % [int(net_d().get("mp_peers", -1)), conn().size()])
+	# When the guest came back before the host had seen its old connection die, the host ends that one gracefully (_drop_peer,
+	# quiet): ENet sends the goodbye and, with nobody there to acknowledge it, removes the peer TIMEOUT_MAX_MS after it (measured
+	# 10.5 s), counted from the takeover, which is already behind us here; a few seconds more for the frames in between.
+	var t_clean := Time.get_ticks_msec()
+	var clean := await until(func(): return int(net_d().get("mp_peers", -1)) == conn().size(), NetSession.TIMEOUT_MAX_MS / 1000.0 + 5.0)
+	check(clean, "the old connection is gone from the host's network layer too (no ghost peer: %d peers, %d guests; %.1f s)" % [int(net_d().get("mp_peers", -1)), conn().size(), (Time.get_ticks_msec() - t_clean) / 1000.0])
 
 
 # ---------------------------------------------------------------- a second guest killed and frozen ---
 func _guest_killed() -> void:
-	guest2_pid = spawn("res://tests/net_fault_guest.gd", [str(port), KEY2, "Bea", "oak", "g2.json", dir])
-	var in2 := await until(func(): return bool(read_json("g2.json").get("welcomed", false)), 40.0)
+	# B25R1: her world takes longer to build than ENet's longest timeout (a slow phone): the host keeps her connection meanwhile
+	var stall := NetSession.TIMEOUT_MAX_MS + 2000
+	guest2_pid = spawn("res://tests/net_fault_guest.gd", [str(port), KEY2, "Bea", "oak", "g2.json", dir, str(stall)])
+	var in2 := await until(func(): return bool(read_json("g2.json").get("welcomed", false)), 40.0 + stall / 1000.0)
 	check(in2, "a second guest joins directly")
 	if not in2:
 		return
 	var pid2 := int(read_json("g2.json").pid)
+	var moved := await until(func(): return int(net_d().get("joining", -1)) == 0, NetSession.JOIN_TIMEOUT_MS / 1000.0)
+	await wait(NetSession.TIMEOUT_MAX_MS / 1000.0)     # a connection dropped in the stall would be seen gone by now
+	var g2 := read_json("g2.json")
+	check(moved and conn().has(pid2) and int(g2.get("reconnects", -1)) == 0 and not bool(g2.get("reconnecting", true)),
+		"her world built in %d s, longer than the network's timeout: the host kept her connection (%s; host %s)" % [stall / 1000, str(g2), str(conn())])
 	var players0 := (status().players as Dictionary).size()
 	OS.kill(guest2_pid)
 	var gone := await until(func(): return not conn().has(pid2) and bool(rec(pid2).get("away", false)), 20.0)

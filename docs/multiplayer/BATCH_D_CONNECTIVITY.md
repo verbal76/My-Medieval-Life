@@ -67,7 +67,10 @@ provider and are not claimed here.
 
 ## 5. Interruptions, reconnection and message safety (MP-D1, MP-D6)
 
-- **Timeouts.** ENet peers time out after 4 to 10 seconds without acknowledgement (from ENet's 5 to 30 s defaults). A join tries
+- **Timeouts.** ENet peers time out after 4 to 10 seconds without acknowledgement (from ENet's 5 to 30 s defaults). A welcomed
+  guest builds the host's world in one long frame (4-5 s measured on a busy test machine, longer on a slow phone), so from the
+  welcome until its first move (host) and until the network is read after that frame (guest) both sides allow 30 s
+  (`NetSession.JOIN_TIMEOUT_MS`, B25R1, 2026-11-05: before it, a slow join was dropped and rejoined, seen in CI). A join tries
   each address with its own limit (LAN 4 s, IPv6 6 s, internet 8 s, a typed address 12 s) and the window's overall limit covers the
   sum.
 - **Guest connection drop.** The guest keeps its view (frozen, inputs stopped) and reconnects by itself, with backoff, for up to
