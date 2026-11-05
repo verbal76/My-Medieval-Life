@@ -439,7 +439,8 @@ func test_near_market_booth() -> void:
 
 func _wul_ready(x: World, till: int) -> void:
 	var wul := wulstead_of(x)
-	wul.trader().till += till                         # fixture: the trader's till can pay a formal price
+	wul.trader().till += till                         # fixture: the trader's till can pay a formal price ...
+	wul.trader().reserve += till                      # ... and keeps it as working capital, not paid out in wages meanwhile (B25-ECON-P4 Q33: founding reserve 80)
 	wul.reopen_books()
 
 
