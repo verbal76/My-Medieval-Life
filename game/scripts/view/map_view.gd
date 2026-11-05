@@ -12,7 +12,8 @@ const LOW_GRASS := [600000, 700000]    # B25R1-Q8: atlases 6 and 7, Bow.Pixel's 
 const EXTRA_ATLASES := [["res://assets/tiles/road_tiles.png", 16], ["res://assets/tiles/larchrow_village_cave.png", 16],
 		["res://assets/tiles/low_grass_1.png", 20], ["res://assets/tiles/low_grass_2.png", 20],
 		["res://assets/tiles/region_props.png", 8],   # atlas 8, B25R1-018: the region's prop sheet (tools/region_props.py)
-		["res://assets/tiles/water_tiles.png", 8], ["res://assets/tiles/water_tiles.png", 8]]   # atlases 9-10, B25R1-Q3: water (WATER_ATLAS animated, WATER_STILL_ATLAS still)
+		["res://assets/tiles/water_tiles.png", 8], ["res://assets/tiles/water_tiles.png", 8],   # atlases 9-10, B25R1-Q3: water (WATER_ATLAS animated, WATER_STILL_ATLAS still)
+		["res://assets/tiles/fl_houses.png", 16]]   # atlas 11, B25R1-022: Fantasy Lands houses (tools/fl_houses.py; game/data/style_stamps.json)
 const ROAD_STONE_ROWS := 4             # rows 0-3 stone road (paving variants), rows 4-5 dirt trail
 const ROAD_TRAIL_ROW := 4
 const ROAD_OVERGROWN_ROW := 6          # B25R1-011: rows 6-7 grown-over dirt road and trail, rows 8-9 damaged and broken stone

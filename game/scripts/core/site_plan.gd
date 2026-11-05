@@ -330,6 +330,37 @@ func home_stamp(kind: String, q: int, manors: Array) -> String:
 	return pool[h(q, 974) % pool.size()]
 
 
+## B25R1-022 (owner 2026-11-04: "upscale housing for the elites ... whole homesteads and villages in this style for different
+## regions"): the house style stamp a home is drawn in, "" for the layout stamp itself. The layout's `plan` names it:
+## "house_style" every home of the place in that style (a regional style: the rich plain and vine country south of the Downs);
+## "elite_style" a town's manors, and the homes of its better quarter (within ELITE_REACH of the market's middle) one in two.
+## The style's stamp has the slot's footprint, rect and door (tools/fl_houses.py), so the layout is the same; only what is
+## drawn and which of the rect's cells are solid differ. Pure: the seed, the settlement and the slot.
+const ELITE_REACH := 22
+
+
+func house_style(plan: Dictionary, sl: Dictionary, q: int, town: bool) -> String:
+	if str(sl.kind) != "home" or ow.styles.is_empty():
+		return ""
+	var sn := str(sl.stamp)
+	var regional := str(plan.get("house_style", ""))
+	var elite := str(plan.get("elite_style", ""))
+	var pick := func(style: String, key: String) -> String:
+		var opts: Array = ((ow.styles.get(style, {}) as Dictionary).get(key, {}) as Dictionary).get(sn, [])
+		return "" if opts.is_empty() else str(opts[h(q, 951) % opts.size()])
+	if elite != "" and town:
+		if sn == "manor":
+			return pick.call(elite, "elite")
+		var r: Rect2i = sl.rect
+		var mid := Vector2i(cx, market.position.y + market.size.y / 2 if market.size.y > 0 else cy)
+		var d := r.get_center() - mid
+		if d.length_squared() <= ELITE_REACH * ELITE_REACH and h(q, 952) % 2 == 0:
+			return pick.call(elite, "homes")
+	if regional != "":
+		return pick.call(regional, "elite" if sn == "manor" else "homes")
+	return ""
+
+
 func plan_site(spec: Dictionary, center: Vector2i, stamps_in: Dictionary, lay: Dictionary, site_index: int, plan: Dictionary) -> Dictionary:
 	stamps = stamps_in
 	si = site_index
@@ -512,7 +543,12 @@ func plan_site(spec: Dictionary, center: Vector2i, stamps_in: Dictionary, lay: D
 		var look := ""
 		if sn.begins_with("house") and h(q, 943) % 100 < (35 if town else 60):
 			look = "thatch"
-		slots.append({"kind": it[0], "trade": it[1], "stamp": sn, "hh": it[3], "rect": res.rect, "door": res.door, "spot": res.spot, "look": look})
+		var sl := {"kind": it[0], "trade": it[1], "stamp": sn, "hh": it[3], "rect": res.rect, "door": res.door, "spot": res.spot, "look": look}
+		var style := house_style(plan, sl, q, town)
+		if style != "":
+			sl.style = style
+			sl.look = ""
+		slots.append(sl)
 	for ci in civ.size():
 		var cv: Dictionary = civ[ci]
 		var res: Dictionary = civ_res[ci]

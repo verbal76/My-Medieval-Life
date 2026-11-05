@@ -30,6 +30,11 @@ var _road_day := -1                   # the game day the loaded ways were last d
 var live_check: Callable              # B25R1-019: (chunk rect in tiles) -> whether its water animates; Main sets it (the presence query)
 var _live_seen := -1                  # the presence version the loaded water was last drawn for
 var _live := {}                       # chunk -> whether its water was drawn animated
+var _lift_rect := Rect2i()            # B25R1-022: the site building whose roof is lifted (its slot rect), empty none
+var _lift_alpha := 1.0                # how far it is lifted (1 on, RoofFade.ALPHA off)
+var _lift_moved := []                 # [source layer, cell, source id, atlas coords, alternative, faded layer]
+var _lift_dst: TileMapLayer           # the lifted roof's tiles over the characters
+var _lift_dst_sorted: TileMapLayer    # and its front wall's, among them
 var _dirt_bits := {}                  # B25R1-Q1: dirt path tile -> its connected sides (overworld_tiles.json dirt_path)
 
 
@@ -92,6 +97,7 @@ func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FR
 	if overworld.homes_version != _homes_seen:
 		_homes_seen = overworld.homes_version
 		_draw_homes()
+	site_roof_step(feet, delta)
 	for id in _home_roofs:
 		var inside := Rect2((_home_roofs[id][1] as Rect2i)).has_point(feet)
 		for l: TileMapLayer in _home_roofs[id][0]:
@@ -334,6 +340,13 @@ func _build(cc: Vector2i) -> void:
 	chunks[cc] = {"root": root, "ground": ground, "path": path, "objects": objects, "tops": tops, "works": works, "site_above": site_above}
 	above_layers.append(tops)
 	_draw_works(cc)
+	if _lift_rect.has_area():              # B25R1-022: a lifted roof reaching into this new chunk lifts there too
+		var r := _lift_rect
+		var a := _lift_alpha
+		_site_roof_restore()
+		_site_roof_lift(r)
+		_lift_alpha = a
+		_site_roof_apply()
 
 
 ## B25R1-010: every homestead's house (painted from the village's house stamp, as a settlement's buildings are: ground, path
@@ -394,7 +407,7 @@ func _draw_site_buildings(root: Node2D, cc: Vector2i) -> Array:
 			var r: Rect2i = sl.rect
 			if not r.intersects(box):
 				continue
-			var stamp: Dictionary = overworld.stamps.get(str(sl.stamp), overworld.stamps.house)
+			var stamp: Dictionary = overworld.stamps.get(Overworld.slot_stamp(sl), overworld.stamps.house)   # (B25R1-022: its house style's)
 			var swap: Dictionary = _look_swap(str(sl.get("look", "")))    # B25R1-018: the building's colour variant (region_stamps.json)
 			var names: Array = (stamp.layers as Dictionary).keys()
 			names.sort_custom(func(a: String, b: String) -> bool:
@@ -470,8 +483,105 @@ func _site_sorts(stamp: Dictionary, lname: String, i: int, j: int, cell: Vector2
 	return true
 
 
+## B25R1-022 (owner 2026-11-04: "make the roofs removable like our current ones for going inside"; RoofFade's rules): a
+## settlement building's roof lifts while the player is inside it (Overworld.site_inside_at: its doorway and rooms), fully
+## (RoofFade.ALPHA) over RoofFade.FADE_TIME, and comes back on leaving. Only that building's roof tiles move, from the
+## chunks' site layers to two layers of their own whose alpha is faded, as RoofFade does in the village. `feet` in tiles.
+func site_roof_step(feet: Vector2, delta: float) -> void:
+	var cell := Vector2i(floori(feet.x), floori(feet.y))
+	var want := Rect2i()
+	if not overworld.village.has_point(cell):
+		var sl := overworld.site_inside_at(cell)
+		if not sl.is_empty():
+			want = sl.rect
+	var step := delta / RoofFade.FADE_TIME
+	if want != _lift_rect:
+		if _lift_rect.has_area():
+			_lift_alpha = move_toward(_lift_alpha, 1.0, step)       # the old roof comes back first
+			if _lift_alpha < 1.0:
+				_site_roof_apply()
+				return
+			_site_roof_restore()
+		if want.has_area():
+			_site_roof_lift(want)
+	elif _lift_rect.has_area():
+		_lift_alpha = move_toward(_lift_alpha, RoofFade.ALPHA, step)
+	_site_roof_apply()
+
+
+## The site building whose roof is lifted (its slot rect), or an empty rect.
+func site_roof_lifted() -> Rect2i:
+	return _lift_rect if _lift_alpha < 1.0 else Rect2i()
+
+
+func _site_roof_apply() -> void:
+	for l in [_lift_dst, _lift_dst_sorted]:
+		if l != null:
+			l.modulate.a = _lift_alpha
+
+
+func _site_roof_lift(r: Rect2i) -> void:
+	_lift_rect = r
+	_lift_alpha = 1.0
+	if _lift_dst == null:
+		_lift_dst = _layer(self, 10)
+		_lift_dst.name = "site_roof_lifted"
+		if _site_sorted_parent != null:
+			_lift_dst_sorted = TileMapLayer.new()
+			_lift_dst_sorted.name = "site_roof_lifted_front"
+			_lift_dst_sorted.tile_set = tileset
+			_lift_dst_sorted.y_sort_enabled = true
+			_site_sorted_parent.add_child(_lift_dst_sorted)
+	var st := overworld.site_at(r.position)
+	var stamp := {}
+	for sl in st.get("slots", []):
+		if sl.rect == r:
+			stamp = overworld.stamps.get(Overworld.slot_stamp(sl), {})
+	if stamp.is_empty():
+		return
+	var above: Array = []
+	for ln in (stamp.layers as Dictionary):
+		if str(ln).begins_with("above"):
+			above.append(stamp.layers[ln])
+	for j in r.size.y:
+		for i in r.size.x:
+			var roofed := false
+			for cells: Array in above:
+				if int(cells[j * int(stamp.w) + i]) >= 0:
+					roofed = true
+			if not roofed:
+				continue
+			var cell := r.position + Vector2i(i, j)
+			var c: Dictionary = chunks.get(Overworld.chunk_of(cell), {})
+			for l: TileMapLayer in c.get("site_above", []):
+				if not is_instance_valid(l):
+					continue
+				var id := l.get_cell_source_id(cell)
+				if id < 0:
+					continue
+				var d := _lift_dst_sorted if l.y_sort_enabled and _lift_dst_sorted != null else _lift_dst
+				_lift_moved.append([l, cell, id, l.get_cell_atlas_coords(cell), l.get_cell_alternative_tile(cell), d])
+				d.set_cell(cell, id, l.get_cell_atlas_coords(cell), l.get_cell_alternative_tile(cell))
+				l.erase_cell(cell)
+
+
+## Put the lifted roof back at once (a chunk is freed or built, or the player has left).
+func _site_roof_restore() -> void:
+	for m in _lift_moved:
+		var l: TileMapLayer = m[0]
+		if is_instance_valid(l):
+			l.set_cell(m[1], m[2], m[3], m[4])
+	_lift_moved.clear()
+	for l in [_lift_dst, _lift_dst_sorted]:
+		if l != null:
+			l.clear()
+	_lift_rect = Rect2i()
+	_lift_alpha = 1.0
+
+
 func _free(cc: Vector2i) -> void:
 	canopy.restore_all()                  # faded tiles go back to their layers before the layer goes
+	_site_roof_restore()                  # (B25R1-022: and a lifted site roof; lifted again next frame if still inside)
 	if tree_sink != null:
 		tree_sink.unload_chunk(cc)
 	var c: Dictionary = chunks[cc]

@@ -26509,6 +26509,13 @@
    "member": "MiniWorldSprites/Miscellaneous/Tombstones.png; the free overworld tileset's dirt path tiles",
    "transform": "the eight 16 x 16 tombstones copied 1:1 into row 0 of an 8-column prop sheet (MapView atlas 8); rows 1-2 the 16 dirt path tiles (overworld_tiles.json dirt_path) with the dirt recoloured to cut chalk, the grass kept (hill figures)",
    "sha256": "5d1a484ec2d3f51d3cbf3d0e2756455c1e27df0a60738ae8c526921984e799fa"
+  },
+  {
+   "file": "assets/tiles/fl_houses.png",
+   "source": "FL_Houses_Demo_v1.0.zip",
+   "member": "Exterrior/ready_to_use_houses.png",
+   "transform": "six houses halved (2x2 area average, premultiplied alpha, alpha cut at half), recoloured (value ** 0.75, saturation x 1.25, hue kept), placed on the region's house footprints and cut into 16 px tiles, each distinct tile once (MapView atlas 11, 16 columns); the stamps are game/data/style_stamps.json",
+   "sha256": "2167c1f1c07497ee411de55c500c2c72468a2f7c2e4c53dca726264e40d3b793"
   }
  ]
 }

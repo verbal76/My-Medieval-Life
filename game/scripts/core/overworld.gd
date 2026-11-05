@@ -113,6 +113,7 @@ var _chalk_cells := {}                   # B25R1-018 (lead review: "the chalk fi
                                          # figure's carved line, drawn with the chalk path tiles (region_props.png rows 1-2)
 var _bank_cells := {}                    # cell -> true on Bear Castle's ring bank (Cozy Farm's rough turf, drawn as a 9-slice)
 var _mark_zones: Array = []              # [Rect2i]: round them the turf is kept whole, so the cut chalk reads as the figure it is
+var styles := {}                         # B25R1-022: house styles (style_stamps.json "styles": {style: {homes, elite}}), see slot_stamp
 var wall_kit := {}                       # B25R1-018: the battlemented wall kit (region_stamps.json "wall"), composed into walls by _wall_stamp
 var _near_sites: Array = []
 ## B25R1-010 (Homesteads): the houses and frames standing on homestead claims, {id, stamp ("house", or "" for a frame), rect,
@@ -157,6 +158,11 @@ static func create(world_seed: int, m: VillageMap) -> Overworld:
 		o.wall_kit = civic.get("wall", {})
 		for k in (civic.get("stamps", {}) as Dictionary):
 			o.stamps[k] = civic.stamps[k]
+	var styled = JSON.parse_string(FileAccess.get_file_as_string("res://data/style_stamps.json")) if FileAccess.file_exists("res://data/style_stamps.json") else null
+	if styled is Dictionary:                         # B25R1-022: Fantasy Lands houses fitted to the house footprints (tools/fl_houses.py)
+		o.styles = styled.get("styles", {})
+		for k in (styled.get("stamps", {}) as Dictionary):
+			o.stamps[k] = styled.stamps[k]
 	for k in o.stamps:
 		o._solid_rows[k] = o.stamps[k].get("solid", [])
 	o._setup_sites(o.stamps)
@@ -694,6 +700,13 @@ func _side_clear(si: int, pts: Array) -> bool:
 	return true
 
 
+## B25R1-022: the stamp a site slot is drawn with and whose cells are solid: its house style's stamp ("style", the same footprint,
+## rect and door as its layout stamp) or the layout stamp itself.
+static func slot_stamp(sl: Dictionary) -> String:
+	var st := str(sl.get("style", ""))
+	return st if st != "" else str(sl.stamp)
+
+
 ## REGION-NAV-01: whether a site's building stands on cell `c` (its stamp's solid cells; a building is not entered).
 func site_building_at(c: Vector2i) -> bool:
 	var st := site_at(c)
@@ -702,12 +715,36 @@ func site_building_at(c: Vector2i) -> bool:
 	for sl in st.slots + st.get("props", []):        # (any slot: a town's walls stand round its buildings, their rects overlap; the yards)
 		var r: Rect2i = sl.rect
 		if r.has_point(c):
-			var rows: Array = _solid_rows.get(str(sl.stamp), [])
+			var rows: Array = _solid_rows.get(slot_stamp(sl), [])
 			var ry := c.y - r.position.y
 			var rx := c.x - r.position.x
 			if ry < rows.size() and rx < str(rows[ry]).length() and str(rows[ry])[rx] == "1":
 				return true
 	return false
+
+
+## B25R1-022 (owner: "roofs removable like our current ones for going inside"): the site building whose inside cell `c` is,
+## {} none: a cell of a slot's rect that is open (not solid) and under the building's roof (an "above" tile of its stamp there),
+## so the doorway and the rooms behind it. The view lifts that building's roof (OverworldView). Pure lookup, no state.
+func site_inside_at(c: Vector2i) -> Dictionary:
+	var st := site_at(c)
+	if st.is_empty():
+		return {}
+	for sl in st.slots:
+		var r: Rect2i = sl.rect
+		if not r.has_point(c):
+			continue
+		var sn := slot_stamp(sl)
+		var rows: Array = _solid_rows.get(sn, [])
+		var ry := c.y - r.position.y
+		var rx := c.x - r.position.x
+		if ry >= rows.size() or rx >= str(rows[ry]).length() or str(rows[ry])[rx] != "0":
+			continue
+		var sd: Dictionary = stamps.get(sn, {})
+		for ln in (sd.get("layers", {}) as Dictionary):
+			if str(ln).begins_with("above") and int(sd.layers[ln][ry * int(sd.w) + rx]) >= 0:
+				return sl
+	return {}
 
 
 ## B25R1-018: whether cell `c` is a solid part of a landmark built in the country (structures).
