@@ -12466,8 +12466,14 @@
      "date": "2026-11-02",
      "change": "note",
      "why": "proposal written (docs/expansion20/CHAPEL_LENDING_PROPOSAL.md on the Build 25 source, 8b203c5): reuses existing credit, contracts and transactions; nothing built. Nine owner questions listed there: interest, eligible borrowers, security, repayment schedule, default, lending limit, grants versus loans, who decides, the player as a borrower."
+    },
+    {
+     "date": "2026-11-05",
+     "change": "owner_answer",
+     "why": "owner answered Q5.1-Q5.10 (2026-11-05): design approved; built in a later build (not B25R1)"
     }
-   ]
+   ],
+   "owner_answer": "Q5.1 no interest; Q5.2 households in hardship (14-day line) for recovery and businesses with an earnings history and a temporary shortfall; Q5.3 no security, trust only; Q5.4 repaid when able from what the borrower can spare above its reserve, no due day; Q5.5 no new loan while one is unpaid, written off after a period; Q5.6 lent only from the surplus above the operating reserve after emergency relief, up to a share (to be proposed with evidence); Q5.7 hardship relief stays a grant (alms), loans only for recovery and businesses; Q5.8 the preacher decides through the judgment framework (trust and opinion matter); Q5.9 the player may borrow on the same terms (PAR-02); Q5.10 built in a later build, not B25R1 (owner, 2026-11-05)"
   },
   {
    "id": "CHAPEL-PURPOSE",
