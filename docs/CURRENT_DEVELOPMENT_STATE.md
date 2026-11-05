@@ -31,6 +31,12 @@
 - **Economy decisions (owner 2026-11-05, questions 20-27):** B25-ECON-P1..P3 integrated (edf1854); B25-ECON-P5 land clearing integrated (c3d9d91); B25-ECON-P4 own-settlement ore consignment integrated (c3d9d91), cross-settlement consignment (owner question 27) integrated (e097fab).
 - **Aerial maps (owner 2026-11-05, B25R1-025):** region and village maps drawn from the player's generated world, for tonight's private playtest; integrated 58cc720; B25R1-026 (settlements never hidden by discovery, owner question 31) in development on wip/b25r1-aerial.
 - **Tonight's private playtest package: shipping checklist (owner 2026-11-05):** all four must be merged into wip/b25r1 and pass on the final integrated commit before packaging: (1) aerial maps B25R1-025/026; (2) Wood Perilous outline and remaining visual defects (wip/b25r1-wood); (3) economy follow-up (wip/b25r1-econ4: Higham collection stop, consignment policy review); (4) multiplayer: net_c host-restart defect fixed and merged (9655bfd), net_interact intermittent and host-restart persistence of identity, inventory, money, relationships and records verified (wip/b25r1-net5); all 12 net suites green on the final commit. Then full Tests, split simulation gate and baseline, packages with Windows smoke.
+- **FROZEN 2026-11-05 22:50 UTC: F = `a9e9f6e` on wip/b25r1** (net5 merged 12a8dce, contract_50ore test accounting 30b7864,
+  journey save stability fb64eab, econ5 decisions 32/33 merged a9e9f6e). No merges into wip/b25r1 during validation. Running on F:
+  Tests 42124894260 (12 shards), split simulation gate 42124898077, 365-day twin campaign 42124902114 (independent; holds the package
+  only if it shows the build unsafe). Next: baseline reconciliation (`tools/sim_gate.py --write` asks permission) to commit P, then
+  release.yml private on P. Watch on F: net_fauna, net_econ_integrity 20% loss, net_fault host-killed (single earlier failures);
+  homestead_test failed once on the gen 6 world (0f6921e), passes on gen 7.
 - **Treasury ore recovery (owner 2026-11-05, B25-ECON-P7):** in development on wip/b25r1-econ6; not a blocker for tonight's private playtest (merged only if ready before final validation).
 - **Other ordered work (Option 1 item 2):** B25R1-018 Bear Hill and castle knoll; B25R1-022 Fantasy Lands houses; B25R1-010 player
   homestead well; B25R1-020 Android crowd-management measurement. EA-01 tracked separately (milestone: Early Access demo about
