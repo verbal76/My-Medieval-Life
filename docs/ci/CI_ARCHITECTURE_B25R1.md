@@ -78,6 +78,16 @@ workload is not reduced: the same runs are spread over more runners.
   tool failure (exit 2) fails the merge. A finding (exit 1) does not fail it. `RealGateSplit` (with
   `MML_GATE_DIR=<a real sim-gate artifact with sim-gate-archives unpacked into it>`) did the same with run 41923800341's
   real outputs: identical, with 32 blocking findings (all accepted-baseline differences), and both determinism pairs MATCH.
+- **Validated on GitHub, run 41982321687 (0a4dee2, long-sims `gate: true`): 39 min wall time** (06:43:22-07:22:38). The
+  single job took 93 min on 361f364 and passed 120 min on a995397. Parts took 16, 21, 26, 29 and 34 min. Runs sharing a
+  runner with fewer others go faster: eq_s1 took 698 s beside det_s1, against 1516-1927 s in the single job. The gather
+  job took 5 min. Findings were as expected: FAIL with 32 blocking findings, all accepted-baseline differences; both
+  determinism pairs MATCH; 44 findings in all, as in 41923800341; the workbook is valid; gate-merge found no problems.
+  The first dispatch (41977899291, 8edf984) found a bug that was already there: `sim_suite.evaluate` crashed when a
+  subset held eq_s2 without eq_s1 (a baseline difference was named after `runs_for[0]`). gate-merge refused the 11 runs
+  without results, as designed. Fixed in 0a4dee2, with a test that judges each planned part on its own.
+- In split mode, SIM_GATE_SUMMARY's "Wall time" is the gather job's judging time. "simulations" is the slowest part's
+  simulation seconds. The real wall time is the workflow run's.
 - Runner cost: about 5 x (setup + about 33 min) + the gather job, against one 93-120 min job. Peak concurrency with a
   release is 5 parts + 6 package jobs.
 
