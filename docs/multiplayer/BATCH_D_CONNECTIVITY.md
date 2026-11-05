@@ -79,7 +79,10 @@ provider and are not claimed here.
   never saved, lets the returning connection take over its character even before the host has noticed the old one is dead; without
   the token the existing "already playing" refusal still holds (no duplicate characters, no impersonation by a second copy of the
   identity file).
-- **Host gone.** A host that stops hosting says so first (the guest goes to the title, no retries). A host that vanished (killed,
+- **Host gone.** A host that stops hosting says so first (the guest goes to the title, no retries). B25R1 (2026-11-05): the guest
+  ends its own connection when it reads the goodbye, and the host keeps the network running until every guest has (up to
+  `NetSession.BYE_WAIT_SECONDS`, 2 s), only then ending the rest: a goodbye and the host's end read together reach a guest as the end
+  only (Godot's ENet peer drops the packets read with it), which sent a guest with a long frame into a minute of retries. A host that vanished (killed,
   network lost) is retried for the reconnection window; a restarted host (same world from its save, same port) is joined again
   automatically. Time stops when the host leaves: guests never simulate.
 - **Android suspension.** The host's pause (app to background, screen lock) saves the world (as before), tells the guests the host is

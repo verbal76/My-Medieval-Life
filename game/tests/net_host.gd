@@ -201,6 +201,8 @@ func _commands() -> void:
 			pl2.state = "ripe"
 		"quit":
 			main.save_game(false)
+			census = {"at": "stopping"}                # B25R1 (net_fault_test): the goodbye goes now
+			_status()
 			main.net.stop()
 			main.save_game(false)
 			census = {"at": "saved", "coins": w.total_coins(), "goods": _goods(), "away": _aways(), "minutes": w.minutes,

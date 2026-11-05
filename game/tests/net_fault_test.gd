@@ -430,7 +430,17 @@ func _host_killed() -> void:
 # ---------------------------------------------------------------- the host stops ---------------------
 func _host_stops() -> void:
 	said.clear()
+	# B25R1: a guest busy for a moment as the host stops (a long frame: a slow phone, a large world section) still reads the goodbye.
+	# Its network is not read for SLOW_FRAME seconds from the goodbye: longer than the second the host used to wait before ending
+	# the connection (the goodbye and the end then came in one read, and the end alone was seen: the guest retried for a minute),
+	# shorter than the host's wait for its guests to end theirs (NetSession.BYE_WAIT_SECONDS).
+	var slow := minf(1.3, NetSession.BYE_WAIT_SECONDS - 0.5)
+	multiplayer_poll = false
 	await command({"cmd": "quit"}, false)
+	var stopping := await until(func(): return str(status().get("census", {}).get("at", "")) == "stopping", 10.0)
+	await wait(slow)
+	multiplayer_poll = true
+	check(stopping, "the host stops on purpose while the guest is busy for %.1f s" % slow)
 	var gone := await until(func(): return not main.guest_world, 10.0)
 	check(gone and said.has(NetSession.HOST_STOPPED) and not main.net.reconnecting, "the host stops on purpose: the guest is told at once and does not wait (%s)" % str(said))
 	await until(func(): return not OS.is_process_running(host_pid), 15.0)
