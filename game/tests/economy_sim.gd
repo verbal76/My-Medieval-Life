@@ -1606,6 +1606,8 @@ func _ore_line(day: int) -> Dictionary:
 				if int(tm.stock[id]) > 0:
 					stock[id] = int(tm.stock[id])
 			row.trader_stock = _sorted_dict(stock)
+			if tm.has("consign"):
+				row.consigned = (tm.consign as Dictionary).duplicate(true)      # B25-ECON-P4: carried for its diggings, owed to them
 		var q: Dictionary = so.biz.get("quarry", {})
 		if not q.is_empty():
 			row.reserves = (q.get("reserves", {}) as Dictionary).duplicate()

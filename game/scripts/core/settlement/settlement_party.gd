@@ -335,7 +335,7 @@ func _sale_cap(item: String) -> int:
 	var have := held(item)
 	match kind:
 		"trader":
-			return maxi(0, have - int(s._keep(_biz()).get(item, 0)) - int((_biz().get("imported", {}) as Dictionary).get(item, 0)))
+			return maxi(0, have - int(s._keep(_biz()).get(item, 0)) - int((_biz().get("imported", {}) as Dictionary).get(item, 0)) - s.consigned(item))   # B25-ECON-P4: consigned goods are the village's to buy only
 		"business":
 			return maxi(0, have - int(s._keep(_biz()).get(item, 0)))
 		"household":

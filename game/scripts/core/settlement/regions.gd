@@ -401,7 +401,7 @@ func road_trade() -> void:
 				if int(need[item]) <= 0 or int(wants[seller.id].get(item, 0)) > 0:
 					continue
 				var unit := GameData.value(item)
-				var n := mini(mini(int(need[item]), int(sm.stock.get(item, 0)) - int(keep.get(item, 0))), (cash - coins) / unit)
+				var n := mini(mini(int(need[item]), int(sm.stock.get(item, 0)) - int(keep.get(item, 0)) - seller.consigned(item)), (cash - coins) / unit)   # B25-ECON-P4: never its consigned goods
 				if n <= 0:
 					continue
 				buy[item] = n
