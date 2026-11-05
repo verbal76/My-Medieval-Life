@@ -181,7 +181,7 @@ def build_report(recs, expect, steps, purpose="", started="", env=None):
             missing.append("step '%s' failed without a failing suite recorded (setup or runner failure; see the job log)" % k)
     if failed or any(v == "failure" for v in bad_steps.values()):
         outcome = "FAILED"
-    elif missing or not recs:
+    elif missing or (not recs and expect):        # no results where some were expected; a shard given no suites expects none
         outcome = "INCOMPLETE"
     else:
         outcome = "TESTED"
