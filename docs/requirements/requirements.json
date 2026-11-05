@@ -6217,10 +6217,21 @@
      "date": "2026-11-05",
      "change": "implementation_status: None -> IN DEVELOPMENT; branch: None -> wip/b25r1-econ3; owner_answer",
      "why": "own-settlement consignment implemented (f163a95, INT-777, consign_test 23/0), merged as c3d9d91; 120-day run 42028695001 imported no iron (Garton's trader closed before day 20). Owner 2026-11-05 question 27: 'Other traders consign' (any neighbour trader carries another settlement's real ore on consignment via wholesale trips); in development on wip/b25r1-econ3"
+    },
+    {
+     "date": "2026-11-05",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: None -> TARGETED TESTS PASSED; tests: None -> consign 65/0, regions 120/0, region_trade 23/0, settle_food 86/0, settle_review 106/0; run 42058240181; test_commit: None -> c379545; commits + e097fab",
+     "why": "cross-settlement consignment (owner q27) implemented c379545 (INT-779, consign_test 65/0), merged into wip/b25r1 as e097fab; 120-day seed 1 run 42058240181: 11 iron ore imported (0 before), no leaks; full Tests 42055669578 on 9871099 (pre-merge) passed all suites"
     }
    ],
-   "implementation_status": "IN DEVELOPMENT",
-   "branch": "wip/b25r1-econ3"
+   "implementation_status": "INTEGRATED",
+   "branch": "wip/b25r1-econ3",
+   "verification_status": "TARGETED TESTS PASSED",
+   "tests": "consign 65/0, regions 120/0, region_trade 23/0, settle_food 86/0, settle_review 106/0; run 42058240181",
+   "test_commit": "c379545",
+   "commits": [
+    "e097fab"
+   ]
   },
   {
    "id": "B25-ECON-P5",
