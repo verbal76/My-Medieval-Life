@@ -106,6 +106,15 @@ static func from_dict(d: Dictionary) -> Dictionary:
 	var pu: Dictionary = t.get("purpose", {})
 	if pu.has("buy"):
 		pu.buy = OffMapSettlement._ints(pu.buy)
+	for k in ["pay"]:                                    # B25-ECON-P6: {business type: coins}
+		if pu.has(k):
+			pu[k] = OffMapSettlement._ints(pu[k])
+	for k in ["give", "got"]:                            # B25-ECON-P6: {item: {business type: n}}
+		if pu.has(k):
+			var c := {}
+			for item in pu[k]:
+				c[str(item)] = OffMapSettlement._ints(pu[k][item])
+			pu[k] = c
 	if pu.has("lines"):
 		pu.lines = (pu.lines as Array).map(func(l): return {"holder": str(l.holder), "item": str(l.item), "n": int(l.n), "unit": int(l.unit)})
 	t.purpose = pu
@@ -244,6 +253,8 @@ static func finish(r: Regions, s: OffMapSettlement, t: Dictionary, how: String) 
 	if not op.alive():
 		op = SettlementParty.make(r, s, "treasury")
 	var rec: Dictionary = op.record()
+	if str(t.purpose.get("kind", "")) == "consign":
+		_consign_home(s, t, op)                         # B25-ECON-P6: the goods and pay stay owed to the other place's sources
 	rec[op._purse_key()] = int(rec[op._purse_key()]) + int(t.coins)
 	for k in t.pack:
 		OffMapSettlement._add(op._goods(), str(k), int(t.pack[k]))
@@ -308,6 +319,8 @@ static func errand(r: Regions, s: OffMapSettlement, t: Dictionary, m: float) -> 
 					dest.flows.food_sold += n
 		"market":
 			lines = market(r, dest, me, p, t)
+		"consign":
+			lines = consign_errand(r, s, dest, me, t)
 		"dues":
 			var lord := SettlementParty.make(r, dest, "treasury")
 			var c := int(t.coins)
@@ -381,6 +394,117 @@ static func market(r: Regions, dest: OffMapSettlement, me: SettlementParty, p: D
 				lines.append(["bought", str(item), n, n * price])
 				left -= n
 	return lines
+
+
+# ------------------------------------------------------------------ another place's ore on consignment (B25-ECON-P6) ----------------
+## B25-ECON-P6 (owner 2026-11-05, question 27, "Other traders consign": any neighbour trader may carry ANOTHER settlement's real ore on
+## consignment through the existing wholesale trips, paying that source when the village buys; no change to who keeps trading).
+## One walker's errand (purpose {kind: consign, pay: {type: coins}, give: {item: {type: n}}, got: {item: {type: n}}}), sent by
+## Regions.consign_round on the traders' wholesale day:
+##   pay      the coins the trader set aside when the village bought the source's goods (OffMapSettlement._consign_sold) are handed to
+##            each source business at its place (a source closed meanwhile: its place's treasury);
+##   give     the source's goods held past rules.consign_hold_days unsold go back to it (closed: to the treasury's granary);
+##   collect  a trader's walker (never a treasury's) takes along, unpaid, the goods of rules.consign the place's businesses hold above
+##            their keep, up to the trader's carry room, only from a place with no trader of its own (its own trader carries them,
+##            B25-ECON-P4); they stay the source's (`got`, then the trader's `consign` under "<place>/<type>") until the village buys
+##            them or they go back.
+## Every hand-over is a matched regional line on both places (SettlementParty.deal; goods for no coins, coins for no goods); nothing is
+## created. Returns the errand's lines.
+static func consign_errand(r: Regions, s: OffMapSettlement, dest: OffMapSettlement, me: SettlementParty, t: Dictionary) -> Array:
+	var lines := []
+	var p: Dictionary = t.purpose
+	var pay: Dictionary = p.get("pay", {})
+	var types: Array = pay.keys()
+	types.sort()
+	for bt in types:
+		var c := mini(int(pay[bt]), int(t.coins))
+		var src := _consign_source(r, dest, str(bt))
+		if c > 0 and me.deal("carriage_paid", src, "", 0, c, dest.day) and src.deal("carriage_earned", me, "", 0, c, dest.day):
+			_journal(r, 2)
+			lines.append(["paid", src.holder, c])
+	var give: Dictionary = p.get("give", {})
+	var items: Array = give.keys()
+	items.sort()
+	for item in items:
+		var bts: Array = (give[item] as Dictionary).keys()
+		bts.sort()
+		for bt in bts:
+			var src := _consign_source(r, dest, str(bt))
+			var n := mini(int(give[item][bt]), me.held(str(item)))
+			if n > 0 and exchange(src, me, str(item), n, 0, dest.day):
+				lines.append(["returned", str(item), n, src.holder])
+	p["got"] = {}
+	var m := s.trader()
+	if str(t.owner) != "trader" or m.is_empty() or not dest.trader().is_empty():
+		return lines
+	var rl := OffMapSettlement.rules()
+	var bts: Array = dest.biz.keys()
+	bts.sort()
+	for item in rl.get("consign", []):
+		var room := int(rl.carry.get(item, 0)) - int(m.stock.get(item, 0)) - me.held(str(item))
+		for bt in bts:
+			if room <= 0:
+				break
+			if bt == "merchant":
+				continue
+			var b: Dictionary = dest.biz[bt]
+			var n := mini(room, int(b.stock.get(item, 0)) - int(dest._keep(b).get(item, 0)))
+			if n > 0 and exchange(me, SettlementParty.make(r, dest, str(bt)), str(item), n, 0, dest.day):
+				if not (p.got as Dictionary).has(item):
+					p.got[item] = {}
+				OffMapSettlement._add(p.got[item], str(bt), n)
+				lines.append(["consigned", str(item), n, str(bt)])
+				room -= n
+	return lines
+
+
+## The party a consignment's source business stands for at `dest`: the business, or, closed, the place's treasury.
+static func _consign_source(r: Regions, dest: OffMapSettlement, bt: String) -> SettlementParty:
+	return SettlementParty.make(r, dest, bt if dest.biz.has(bt) else "treasury")
+
+
+## A consign walker home (or the errand ended on the road): the goods and coins stay owed to the other place's sources. Before the
+## errand (leg out) what was to be paid is set aside again and what was to go back is consigned again; after it, what was collected
+## (`got`) is consigned. The pack's goods then go into the owner's books as any walker's (finish), the coins set aside are not.
+static func _consign_home(s: OffMapSettlement, t: Dictionary, op: SettlementParty) -> void:
+	var rec: Dictionary = op.record()
+	var p: Dictionary = t.purpose
+	var src := str(t.to)
+	var marks: Dictionary = p.get("give", {}) if str(t.leg) == "out" else p.get("got", {})
+	if str(t.leg) == "out":
+		var pay: Dictionary = p.get("pay", {})
+		var bts: Array = pay.keys()
+		bts.sort()
+		for bt in bts:
+			var c := mini(int(pay[bt]), int(t.coins))
+			if c > 0:
+				if not rec.has("consign_due"):
+					rec["consign_due"] = {}
+				OffMapSettlement._add(rec.consign_due, src + "/" + str(bt), c)
+				t.coins = int(t.coins) - c
+	var left := (t.pack as Dictionary).duplicate()
+	var items: Array = marks.keys()
+	items.sort()
+	var any := false
+	for item in items:
+		var bts: Array = (marks[item] as Dictionary).keys()
+		bts.sort()
+		for bt in bts:
+			var n := mini(int(marks[item][bt]), int(left.get(item, 0)))
+			if n <= 0:
+				continue
+			OffMapSettlement._add(left, str(item), -n)
+			if not rec.has("consign"):
+				rec["consign"] = {}
+			if not (rec.consign as Dictionary).has(item):
+				rec.consign[item] = {}
+			OffMapSettlement._add(rec.consign[item], src + "/" + str(bt), n)
+			any = true
+	if any:
+		if not rec.has("consign_since"):
+			rec["consign_since"] = {}
+		if not (rec.consign_since as Dictionary).has(src):
+			rec.consign_since[src] = s.day
 
 
 # ------------------------------------------------------------------ the hamlets' errands ----------------

@@ -688,7 +688,8 @@ func coins() -> int:
 	for h in hh:
 		n += int(h.coins)
 	for t in biz:
-		n += int(biz[t].till)
+		n += int(biz[t].till) + consign_due_coins(biz[t])     # B25-ECON-P6: pay a trader holds for another place's sources
+	n += consign_due_coins(gov)
 	for k in own:
 		n += int(own[k].till)
 	for t in trips:
@@ -922,7 +923,7 @@ func _open_offers() -> void:
 		var items: Array = b.stock.keys()
 		items.sort()
 		for item in items:
-			var n := int(b.stock[item]) - int(keep.get(item, 0))
+			var n := int(b.stock[item]) - int(keep.get(item, 0)) - consigned_in(b, str(item))   # B25-ECON-P4/P6: consigned goods are the village's to buy only
 			if n > 0:
 				if not _offers.has(item):
 					_offers[item] = []
@@ -1558,6 +1559,7 @@ func _close_business(t: String) -> void:
 		_deliver()
 	var b: Dictionary = biz[t]
 	gov.coins += int(b.till)
+	_consign_to_treasury(b)                    # B25-ECON-P6: what it carries for, and owes to, another place's sources is the treasury's to settle
 	var m: Dictionary = biz.get("merchant", {}) if t != "merchant" else {}     # a closing trader's own stock goes to the council
 	var items: Array = b.stock.keys()
 	items.sort()
@@ -1861,6 +1863,77 @@ func consigned(item: String) -> int:
 	return n
 
 
+## B25-ECON-P6: a consignment key "<settlement>/<business type>" is another place's source (a key with no "/" is this place's own).
+static func is_remote(key: String) -> bool:
+	return key.contains("/")
+
+
+## Units of `item` the holder record `rec` (a business or the treasury) holds on consignment for any source.
+static func consigned_in(rec: Dictionary, item: String) -> int:
+	var n := 0
+	var c: Dictionary = (rec.get("consign", {}) as Dictionary).get(item, {})
+	for t in c:
+		n += int(c[t])
+	return n
+
+
+## B25-ECON-P6: coins `rec` has set aside for other places' sources (counted in the settlement's coins, never spent).
+static func consign_due_coins(rec: Dictionary) -> int:
+	var n := 0
+	var due: Dictionary = rec.get("consign_due", {})
+	for k in due:
+		n += int(due[k])
+	return n
+
+
+## B25-ECON-P6: the other places whose sources `rec` holds goods or coins for, sorted.
+static func consign_sources(rec: Dictionary) -> Array:
+	var out := {}
+	for k in rec.get("consign_due", {}):
+		out[str(k).get_slice("/", 0)] = true
+	var c: Dictionary = rec.get("consign", {})
+	for item in c:
+		for k in c[item]:
+			if is_remote(str(k)):
+				out[str(k).get_slice("/", 0)] = true
+	var l := out.keys()
+	l.sort()
+	return l
+
+
+## B25-ECON-P6: a closing trader's goods and pay held for other places' sources pass to the treasury (the goods with its stock to the
+## granary, the pay set aside there), which sends them home as the trader would have (Regions.consign_round).
+func _consign_to_treasury(b: Dictionary) -> void:
+	var due: Dictionary = b.get("consign_due", {})
+	for k in due:
+		if not gov.has("consign_due"):
+			gov["consign_due"] = {}
+		_add(gov.consign_due, str(k), int(due[k]))
+	b.erase("consign_due")
+	var c: Dictionary = b.get("consign", {})
+	for item in c:
+		for k in c[item]:
+			if is_remote(str(k)):
+				if not gov.has("consign"):
+					gov["consign"] = {}
+				if not (gov.consign as Dictionary).has(item):
+					gov.consign[item] = {}
+				_add(gov.consign[item], str(k), int(c[item][k]))
+	b.erase("consign")
+	var since: Dictionary = b.get("consign_since", {})
+	for k in since:
+		if not gov.has("consign_since"):
+			gov["consign_since"] = {}
+		gov.consign_since[k] = mini(int(gov.consign_since.get(k, since[k])), int(since[k]))
+	b.erase("consign_since")
+
+
+static func _consign_from(rec: Dictionary) -> void:
+	for k in ["consign_due", "consign_since"]:
+		if rec.has(k):
+			rec[k] = _ints(rec[k])
+
+
 ## What a consigned unit of `item` pays its source when sold at `unit`.
 func consign_pay(item: String, unit: int) -> int:
 	return mini(unit, maxi(1, roundi(float(price(item)) * float(_rules.trader_pays_share))))
@@ -1878,7 +1951,12 @@ func _consign_sold(item: String, n: int, unit: int) -> void:
 			break
 		var k := mini(n, int(owed[t]))
 		m.till -= k * pay
-		if biz.has(t):
+		if is_remote(str(t)):
+			# B25-ECON-P6: another place's source: the pay is set aside for it, out of the till, until a walker carries it there
+			if not m.has("consign_due"):
+				m["consign_due"] = {}
+			_add(m.consign_due, str(t), k * pay)
+		elif biz.has(t):
 			biz[t].till += k * pay
 		else:
 			gov.coins += k * pay
@@ -1902,13 +1980,19 @@ func _consign_return() -> void:
 		var types: Array = owed.keys()
 		types.sort()
 		for t in types:
+			if is_remote(str(t)):
+				continue                               # B25-ECON-P6: another place's goods go home by a walker (Regions.consign_round)
 			var k := mini(int(owed[t]), int(m.stock.get(item, 0)))
 			_take(m.stock, str(item), k)
 			if biz.has(t):
 				_add(biz[t].stock, str(item), k)
 			else:
 				_add(gov.granary, str(item), k)
-	m.erase("consign")
+			owed.erase(t)
+		if owed.is_empty():
+			m.consign.erase(item)
+	if (m.consign as Dictionary).is_empty():
+		m.erase("consign")
 
 
 func want_left(item: String) -> int:
@@ -2627,6 +2711,12 @@ static func from_dict(d: Dictionary) -> OffMapSettlement:
 	g.coins = int(g.coins)
 	g.granary = _ints(g.granary)
 	g.officials = (g.officials as Array).map(func(x): return int(x))
+	if g.has("consign"):                                       # B25-ECON-P6 (another place's goods and pay a closed trader left; optional)
+		var gc := {}
+		for item in g.consign:
+			gc[str(item)] = _ints(g.consign[item])
+		g.consign = gc
+	_consign_from(g)
 	var gacc := {}
 	for k in g.acc:
 		gacc[k] = float(g.acc[k])
@@ -2705,6 +2795,7 @@ static func _biz_from(bd: Dictionary) -> Dictionary:
 		for item in b.consign:
 			c[str(item)] = _ints(b.consign[item])
 		b.consign = c
+	_consign_from(b)                                           # B25-ECON-P6 (pay set aside for another place's sources; optional)
 	var acc := {}
 	for k in b.acc:
 		acc[k] = float(b.acc[k])

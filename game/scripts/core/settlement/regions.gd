@@ -91,6 +91,7 @@ func step_day(d: int) -> void:
 	if every > 0 and d % every == every - 1:
 		food_round(d)                      # B25R1-019: food first: the traders' walkers go for food before wholesale goods
 		road_trade()
+		consign_round(d)                   # B25-ECON-P6: other places' ore on consignment, its pay and its returns
 	SettlementTrips.advance(self, _now(d, 23))
 	day = d
 
@@ -120,6 +121,7 @@ func step_hour(d: int, h: int) -> void:
 		if every > 0 and d % every == every - 1:
 			food_round(d)                      # B25R1-019: food first
 			road_trade()
+			consign_round(d)                   # B25-ECON-P6
 
 
 ## The game minute: the world's clock when the settlements live in one, else hour `h` of day `d`.
@@ -414,6 +416,149 @@ func road_trade() -> void:
 						need[item] = int(need[item]) + int(buy[item])     # nobody to send: the need stands for the next seller
 				else:
 					cash -= coins
+
+
+# ------------------------------------------------------------------ another place's ore on consignment (B25-ECON-P6) ----------------
+## B25-ECON-P6 (owner 2026-11-05, question 27, "Other traders consign"): on the traders' wholesale day, after their wholesale buying:
+##   settle   every trader (or the treasury a closed trader left them to) that holds pay set aside for another place's sources, or that
+##            place's goods held unsold for rules.consign_hold_days (a treasury's at once: it does not trade them), sends one walker
+##            there with the coins and the goods (SettlementTrips "consign": pay, give); a trader's walker collects again while there;
+##   collect  a place with no trader of its own whose businesses hold goods of rules.consign above their keep is visited by the nearest
+##            trader (road length, then id) with carry room for them that has a walker to send, one a round (SettlementTrips "consign").
+## The goods stay their source's (the trader's `consign` "<place>/<type>"), are sold only to the village, and pay their source
+## trader_pays_share when sold (OffMapSettlement._consign_sold). Nobody is told to keep trading or to start: only real walkers, stock and
+## coins (WDR-022: no walker, no room, no surplus: nothing moves).
+func consign_round(d: int) -> void:
+	var rl := OffMapSettlement.rules()
+	var items: Array = rl.get("consign", [])
+	if items.is_empty():
+		return
+	var hold := int(rl.get("consign_hold_days", 12))
+	for s: OffMapSettlement in list:
+		for owner in ["trader", "treasury"]:
+			var rec: Dictionary = s.trader() if owner == "trader" else s.gov
+			if rec.is_empty():
+				continue
+			for src in OffMapSettlement.consign_sources(rec):
+				if by_id.has(src) and not _trip_to(s, str(src), "consign"):
+					_consign_settle(s, owner, rec, str(src), d, hold)
+	for src: OffMapSettlement in list:
+		if not src.trader().is_empty():
+			continue
+		var spare := {}
+		var bts: Array = src.biz.keys()
+		bts.sort()
+		for bt in bts:
+			for item in items:
+				var n := int(src.biz[bt].stock.get(item, 0)) - int(src._keep(src.biz[bt]).get(item, 0))
+				if n > 0:
+					spare[item] = int(spare.get(item, 0)) + n
+		if spare.is_empty():
+			continue
+		var carriers := []
+		var going := false
+		for s: OffMapSettlement in list:
+			if s != src and not s.trader().is_empty():
+				carriers.append(s)
+				going = going or _trip_to(s, src.id, "consign")
+		if going:
+			continue                                        # a walker is already on the way there and collects while there
+		var dist := {}
+		for s: OffMapSettlement in carriers:
+			dist[s.id] = _road_tiles(src.id, s.id, maxi(1, roundi(Vector2(src.pos).distance_to(Vector2(s.pos)))))
+		carriers.sort_custom(func(a, b): return int(dist[a.id]) < int(dist[b.id]) or (int(dist[a.id]) == int(dist[b.id]) and a.id < b.id))
+		for s: OffMapSettlement in carriers:
+			var m := s.trader()
+			var room := false
+			for item in spare:
+				room = room or int(rl.carry.get(item, 0)) > int(m.stock.get(item, 0))
+			if not room:
+				continue
+			var t := SettlementTrips.start(self, s, "trader", src.id, {"kind": "consign"}, 0, {}, _now(d, 8))
+			if not t.is_empty():
+				s.note("Our traders sent to %s for ore to carry on consignment." % src.name)
+				break
+
+
+## One settling walker from `s`'s `owner` (record `rec`) to place `src`: the pay set aside for its sources and its goods held past
+## `hold` days (all of them from a treasury). Nothing to carry, or nobody to send: nothing moves and it all stays owed.
+func _consign_settle(s: OffMapSettlement, owner: String, rec: Dictionary, src: String, d: int, hold: int) -> void:
+	var op := SettlementParty.make(self, s, owner)
+	var pay := {}
+	var coins := 0
+	for k in rec.get("consign_due", {}):
+		if str(k).get_slice("/", 0) == src:
+			pay[str(k).get_slice("/", 1)] = int(rec.consign_due[k])
+			coins += int(rec.consign_due[k])
+	var since := int((rec.get("consign_since", {}) as Dictionary).get(src, d))
+	var give := {}
+	var pack := {}
+	var held := false
+	var c: Dictionary = rec.get("consign", {})
+	var items: Array = c.keys()
+	items.sort()
+	for item in items:
+		var keys: Array = (c[item] as Dictionary).keys()
+		keys.sort()
+		for k in keys:
+			if str(k).get_slice("/", 0) != src:
+				continue
+			held = true
+			if owner == "treasury" or d - since >= hold:
+				var n := mini(int(c[item][k]), op.held(str(item)) - int(pack.get(item, 0)))
+				if n > 0:
+					if not give.has(item):
+						give[item] = {}
+					give[item][str(k).get_slice("/", 1)] = n
+					pack[item] = int(pack.get(item, 0)) + n
+	if not held and rec.has("consign_since"):
+		rec.consign_since.erase(src)
+	if pay.is_empty() and give.is_empty():
+		return
+	# the coins out of the set-aside into the purse the walker takes them from, the goods' marks off (both put back if nobody goes)
+	var pk := op._purse_key()
+	for bt in pay:
+		OffMapSettlement._add(rec.consign_due, src + "/" + str(bt), -int(pay[bt]))
+	rec[pk] = int(rec[pk]) + coins
+	for item in give:
+		for bt in give[item]:
+			OffMapSettlement._add(rec.consign[item], src + "/" + str(bt), -int(give[item][bt]))
+	var t := SettlementTrips.start(self, s, owner, src, {"kind": "consign", "pay": pay, "give": give}, coins, pack, _now(d, 8))
+	if t.is_empty():
+		rec[pk] = int(rec[pk]) - coins
+		for bt in pay:
+			OffMapSettlement._add(rec.consign_due, src + "/" + str(bt), int(pay[bt]))
+		for item in give:
+			for bt in give[item]:
+				OffMapSettlement._add(rec.consign[item], src + "/" + str(bt), int(give[item][bt]))
+	else:
+		_consign_tidy(rec)
+		if not give.is_empty():
+			var left := false
+			for item in rec.get("consign", {}):
+				for k in rec.consign[item]:
+					left = left or str(k).get_slice("/", 0) == src
+			if not left and rec.has("consign_since"):
+				rec.consign_since.erase(src)
+		s.note("Our walker set out for %s with %d coins and %d goods owed there." % [by_id[src].name, coins, _sum(pack)])
+
+
+static func _consign_tidy(rec: Dictionary) -> void:
+	if rec.has("consign_due") and (rec.consign_due as Dictionary).is_empty():
+		rec.erase("consign_due")
+	if rec.has("consign"):
+		for item in (rec.consign as Dictionary).keys():
+			if (rec.consign[item] as Dictionary).is_empty():
+				rec.consign.erase(item)
+		if (rec.consign as Dictionary).is_empty():
+			rec.erase("consign")
+
+
+static func _sum(d: Dictionary) -> int:
+	var n := 0
+	for k in d:
+		n += int(d[k])
+	return n
 
 
 ## Whether `s` has a walker out on a `kind` errand to `to`.
