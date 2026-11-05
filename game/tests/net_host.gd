@@ -150,6 +150,8 @@ func _process(delta: float) -> bool:
 		if suspend_frames == 3:
 			suspended["minutes_after"] = main.world.minutes
 			suspend_frames = -1
+	if spot != Vector2.INF and main.world.host_player().pos.distance_to(spot) < 1.0:
+		_clear_villagers()                           # the stage stays clear while the host stands on it (see _clear_villagers)
 	for e in releases:
 		Input.parse_input_event(e)
 	releases.clear()
@@ -506,6 +508,11 @@ func _open_spot() -> Vector2:
 	return base
 
 
+## Villagers within six tiles of the stage are sent away, so a tap, a click or E there chooses a player, never someone passing.
+## Once at "stage" is not enough: the stage is by the player spawn, where a child goes to play (NPCBrain, child_play: four times
+## in ten) and elders take the air, so within a few game minutes of any clearing others walk in (CI run 41978365595: a child at
+## play, Beatrice, chosen instead of the host in net_mp4_test; locally five children stood round the stage in
+## net_interact_test). _process repeats this every frame while the host stands on the stage; one sent away is no longer near.
 func _clear_villagers() -> void:
 	if spot == Vector2.INF:
 		return

@@ -461,7 +461,7 @@ func _disconnect_and_back() -> void:
 	await stage()
 	check(await until(func(): return hui().get("target", "") == "player" and int(hui().get("target_pid", 0)) == ann, 5.0), "the host can choose her again")
 	main._find_target()
-	check(str(main.target.get("kind", "")) == "player" and int(main.target.pid) == host_pid, "and she the host")
+	check(str(main.target.get("kind", "")) == "player" and int(main.target.pid) == host_pid, "and she the host (%s)" % main.target.get("label", ""))
 
 
 func _restart_with_offer() -> void:
@@ -485,7 +485,7 @@ func _restart_with_offer() -> void:
 		return
 	var a0: int = main.world.player.inv.count("apple")
 	await key(KEY_E)
-	check(ui.is_open("player"), "E on the host: its window")
+	check(ui.is_open("player"), "E on the host: its window (%s; %s)" % [ui.panel_kind, main.target.get("label", "")])
 	press("OfferAccept%d" % int(o[0].id))
 	check(await until(func(): return main.world.player.inv.count("apple") == a0 + 1, 5.0), "accepted after the restart: the apple moves once")
 	check(leak() == 0, "coins conserved after the restart")
