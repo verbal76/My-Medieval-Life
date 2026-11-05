@@ -213,7 +213,7 @@ def build_stamp(name, house, fp, atlas, salt):
     cov = [[float(a[r * T:(r + 1) * T, c * T:(c + 1) * T].mean()) for c in range(w)] for r in range(h)]
     c0, c1, rt = _inside(cov, dc, dr)
     fw, fh = c1 - c0 + 1, dr - rt + 1
-    if fw < 4 or fh < 4:
+    if fw < 3 or fh < 3:
         return None
     n = w * h
     lay = {k: [-1] * n for k in ("ground1", "ground2", "below0", "below1", "below5", "above3")}
@@ -226,23 +226,19 @@ def build_stamp(name, house, fp, atlas, salt):
             lay["above3" if r <= dr else "below5"][r * w + c] = atlas.id_of(tile)
             if r <= dr and cov[r][c] >= 0.5:
                 solid[r][c] = "1"
-    # the inside, in the village houses' kit: back wall top, wall face, floor, front wall with the door
-    k = 0
+    # the inside, in the village houses' kit: the back wall's face, the floor, the front wall with the door (no back wall
+    # top row: the houses are small at 16 px, a room keeps every row it can)
     for y in range(fh):
         for x in range(fw):
             c, r = c0 + x, rt + y
             i = r * w + c
-            k += 1
             solid[r][c] = "1"
             if y == 0:
-                lay["ground1"][i] = 223 if x == 0 else 443 if x == fw - 1 else BACK[(x + salt) % len(BACK)]
-            elif y == 1:
                 lay["ground1"][i] = 450 if x == 0 else 449 if x == fw - 1 else 673
                 lay["below0"][i] = 59 if x == 0 else 61 if x == fw - 1 else 720
             elif y < fh - 1:
                 lay["ground1"][i] = 455 if x == 0 else 232 if x == fw - 1 else FLOOR[(x * 7 + y * 3 + salt) % len(FLOOR)]
                 if 0 < x < fw - 1:
-                    lay["below0"][i] = -1
                     solid[r][c] = "0"
                 else:
                     lay["below0"][i] = 278
@@ -254,8 +250,8 @@ def build_stamp(name, house, fp, atlas, salt):
                     lay["below1"][i] = DOOR
                     lay["ground2"][i] = MAT
                     solid[r][c] = "0"
-    # furniture against the walls, never in the door's column (the way in stays open)
-    floor_rows = list(range(rt + 2, dr))
+    # furniture against the walls, never in the door's column, and only where the room keeps open floor round it
+    floor_rows = list(range(rt + 1, dr))
     inner = [c for c in range(c0 + 1, c1) if c != dc]
 
     def put(c, r, v):
@@ -263,18 +259,15 @@ def build_stamp(name, house, fp, atlas, salt):
             lay["below1"][r * w + c] = v
             solid[r][c] = "1"
 
-    if inner and floor_rows:
+    if len(inner) >= 2 and len(floor_rows) >= 2:
         put(inner[0], floor_rows[0], CHEST)
         put(inner[-1], floor_rows[0], BARREL)
-        bed_col = inner[0] if inner[0] != dc else inner[-1]
-        for j, r in enumerate(floor_rows[1:3]):
-            put(bed_col, r, BEDS[(j + salt) % 2])
+        if len(floor_rows) >= 3:
+            bed_col = inner[0]
+            for j, r in enumerate(floor_rows[1:3]):
+                put(bed_col, r, BEDS[(j + salt) % 2])
         if len(inner) >= 3 and len(floor_rows) >= 3:
             put(inner[len(inner) // 2], floor_rows[len(floor_rows) // 2], TABLE)
-    # the way in: from the door up into the room, kept open
-    for r in floor_rows:
-        if lay["below1"][r * w + dc] < 0:
-            solid[r][dc] = "0"
     # inside tiles in a cell the outside covers only in part: cut to its shape (new atlas tiles), so nothing shows round it
     for key in ("ground1", "ground2", "below0", "below1"):
         for i, v in enumerate(lay[key]):

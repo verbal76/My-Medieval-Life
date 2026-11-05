@@ -26515,7 +26515,7 @@
    "source": "FL_Houses_Demo_v1.0.zip",
    "member": "Exterrior/ready_to_use_houses.png",
    "transform": "six houses halved (2x2 area average, premultiplied alpha, alpha cut at half), recoloured (value ** 0.75, saturation x 1.25, hue kept), placed on the region's house footprints and cut into 16 px tiles, each distinct tile once (MapView atlas 11, 16 columns); the stamps are game/data/style_stamps.json",
-   "sha256": "2167c1f1c07497ee411de55c500c2c72468a2f7c2e4c53dca726264e40d3b793"
+   "sha256": "d545649e4fc4bf8cf5f99397571a618019bf4db32eeeba0ab35aecf11c232b16"
   }
  ]
 }
