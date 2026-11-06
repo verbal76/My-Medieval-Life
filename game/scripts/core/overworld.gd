@@ -2256,7 +2256,9 @@ func _water_may_cross(road: PackedByteArray, open: PackedByteArray, i: int, j: i
 	for cell in [[i - 1, j - 1], [i, j - 1], [i - 1, j], [i, j]]:
 		var x: int = cell[0]
 		var y: int = cell[1]
-		if x >= 0 and y >= 0 and x < AREA and y < AREA and (open[y * AREA + x] == 1 if not open.is_empty() else road[y * AREA + x] == 1):
+		# (generation 8: the road's own cells, not its margin: the roads are laid off the water now, and a margin beside one
+		# running near the water cut the water's edge dry, a stream broken in two beside a road, seed 1 at -62,881)
+		if x >= 0 and y >= 0 and x < AREA and y < AREA and (open[y * AREA + x] == 1 if not open.is_empty() and gen < 8 else road[y * AREA + x] == 1):
 			on = true
 	if not on:
 		return true
@@ -2271,10 +2273,43 @@ func _water_may_cross(road: PackedByteArray, open: PackedByteArray, i: int, j: i
 	var syy := 0.0
 	var sxy := 0.0
 	var n := 0
+	# generation 8: only the road the corner is on (the road cells in the window joined to the one nearest it): with two roads in
+	# the window their spread gave a meaningless axis, and the water between two bridges over a strait was taken for water
+	# along a road and left out (seed 1, a strip of dry land across Upmeads Water between two bridges at -267,142)
+	var own := {}
+	if gen >= 8:
+		var start := Vector2i(-1, -1)
+		var sd := 1 << 30
+		for dy in range(-3, 3):
+			for dx in range(-3, 3):
+				var x := i + dx
+				var y := j + dy
+				if x >= 0 and y >= 0 and x < AREA and y < AREA and road[y * AREA + x] == 1:
+					var dd := (2 * dx + 1) * (2 * dx + 1) + (2 * dy + 1) * (2 * dy + 1)
+					if dd < sd:
+						sd = dd
+						start = Vector2i(dx, dy)
+		if start.x >= -3:
+			own[start] = true
+			var todo: Array[Vector2i] = [start]
+			while not todo.is_empty():
+				var q: Vector2i = todo.pop_back()
+				for ny in range(-1, 2):
+					for nx in range(-1, 2):
+						var t := q + Vector2i(nx, ny)
+						if t.x < -3 or t.y < -3 or t.x > 2 or t.y > 2 or own.has(t):
+							continue
+						var x2 := i + t.x
+						var y2 := j + t.y
+						if x2 >= 0 and y2 >= 0 and x2 < AREA and y2 < AREA and road[y2 * AREA + x2] == 1:
+							own[t] = true
+							todo.append(t)
 	for dy in range(-3, 3):
 		for dx in range(-3, 3):
 			var x := i + dx
 			var y := j + dy
+			if gen >= 8 and not own.has(Vector2i(dx, dy)):
+				continue
 			if x >= 0 and y >= 0 and x < AREA and y < AREA and road[y * AREA + x] == 1:
 				var fx := float(dx) + 0.5
 				var fy := float(dy) + 0.5
@@ -2917,7 +2952,9 @@ const MARGIN_COST := 3
 
 
 func _least_wet_way(a: Vector2i, b: Vector2i, wet: Callable, extra: float) -> PackedInt32Array:
-	var box := Rect2i(Vector2i(mini(a.x, b.x), mini(a.y, b.y)), Vector2i(absi(a.x - b.x), absi(a.y - b.y)) + Vector2i.ONE).grow(DRY_WAY_GROW)
+	# (twice the dry way's room: the way round a lake's end can lie further out than the dry way's search looks, and a box edge
+	# on the water forced it along the shore through the water's edge, seed 11, 4 cells of bridge at 310,935)
+	var box := Rect2i(Vector2i(mini(a.x, b.x), mini(a.y, b.y)), Vector2i(absi(a.x - b.x), absi(a.y - b.y)) + Vector2i.ONE).grow(DRY_WAY_GROW * 2)
 	var cost := {}
 	var from := {a: a}
 	var best := {a: 0}

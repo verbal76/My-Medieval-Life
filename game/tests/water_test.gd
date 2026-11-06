@@ -22,7 +22,7 @@ var failures := 0
 ## Re-pinned 2026-11-06 for generation 8 (B25R2 playtest repair 6: road nodes, ring points and side far points off the water; the
 ## roads' water as drawn; crossings where the water parts the land). Generation 7 (Build 34's worlds) stays pinned below as GOLDEN_7,
 ## unchanged: a saved generation-7 world is drawn byte for byte as before. Two runs in two processes agree.
-const GOLDEN_4 := {1: "fbb63c03d920018a9affa7c85c8e53f5", 2: "2709abaa8a794f852e6bbcdda623b3c0", 7: "b49f6088024b0cacae09085588c94468"}
+const GOLDEN_4 := {1: "72b0974ccb90f45c15f988e38c25a001", 2: "2709abaa8a794f852e6bbcdda623b3c0", 7: "4185a92bacb1d3b2660fd5e3e5568678"}
 const GOLDEN_7 := {1: "419bb4402f2f4d60c41c63b9433c67e3", 2: "3f04ed0be6816a2fa4f7afe07da7d8f9", 7: "d2502e6e88961cb562d6b15f1e076e7a"}
 const CHUNKS := [Vector2i(-3, 2), Vector2i(1, 4), Vector2i(2, 9), Vector2i(-2, -3), Vector2i(5, 1), Vector2i(0, 20), Vector2i(-6, 12)]
 
