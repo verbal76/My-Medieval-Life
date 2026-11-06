@@ -713,6 +713,10 @@ func test_small_room() -> void:
 	var members0: Array = (hh.members as Array).duplicate()
 	var beds0 := c.beds_in("b_v1_house")
 	c.responsible_adult(h).coins += 1000
+	# the room's building blocks in the household's store (as the house tests above stock them): blocks on sale in the
+	# village depend on whether a stone-dresser with mallet and chisel is working that fortnight, a legitimate economic
+	# outcome (WDR-022) and not this test's subject, which is the room module; planks and logs are still taken or bought
+	(hh.pantry as Inventory).add("building_block", int(c.cost_of("room").get("building_block", 0)))
 	var took0 := {}
 	for id in c.cost_of("room"):
 		took0[id] = int(w.stats.get("helper_took_" + str(id), 0)) + int(w.stats.get("helper_bought_" + str(id), 0)) \
