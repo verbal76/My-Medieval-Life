@@ -6198,6 +6198,22 @@ func dispose() -> void:
 
 
 # ---------------------------------------------------------------- save / load ----------------
+## TEST-AUDIT-Q1: the villagers' reservations of work stations ({station id: {npc id: the game minute it lapses}}), so a plan
+## restored on load still holds its station. Only stations with a reservation.
+func _station_users_to_dict() -> Dictionary:
+	var out := {}
+	var ids := stations.keys()
+	ids.sort()
+	for sid in ids:
+		var u: Dictionary = stations[sid].get("users", {})
+		if not u.is_empty():
+			var row := {}
+			for who in u:
+				row[str(who)] = float(u[who])
+			out[sid] = row
+	return out
+
+
 func to_dict() -> Dictionary:
 	if regions != null and regions.people != null:
 		regions.people.fold_all()          # B25R1-019 (settlement worker): a save holds residents as records only
@@ -6232,7 +6248,7 @@ func to_dict() -> Dictionary:
 		"vacancies": vacancies, "station_load": station_load, "wage_offers": wage_offers, "manor_orders": manor_orders, "deposits": deposits, "boulders": boulders.map(func(b): return [int(b.x), int(b.y), int(b.amount)]), "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(), "farm": farm.to_dict(), "farm_plots": farm_plots.to_dict(), "clearing": clearing.to_dict(),
 		"chapel": chapel.to_dict(), "feast": feast.to_dict(),
 		"player": _host_player.to_dict(), "players": _players_to_dict(), "coin_sources": coin_sources, "regions": regions.to_dict(), "couriers": couriers.to_dict(), "intel_book": intel_book, "country_taken": country_taken, "log": log_lines, "quest_offers": quests.to_dict(),
-		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(),
+		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(), "station_users": _station_users_to_dict(),
 		"relations": relations.to_dict(), "contracts": contracts.to_dict(),
 		"underground": {"gen": Underground.GEN_VERSION, "player_level": _host_player.map_level},
 		"prospecting": prospecting.to_dict(),
@@ -6448,7 +6464,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	chests = Chests.new(self)
 	carts = Carts.new(self)
 	carts.load_dict(d.get("carts", {}))           # saves before B14 have no carts
-	carts.release_npc_pullers()                   # KI-FR-CARTHITCH: villagers' plans are not saved, so none holds a cart on load
+	# (KI-FR-CARTHITCH: a villager whose plan was not saved lets go of their cart: done once the villagers are loaded, below)
 	relations = Relations.new(self)
 	relations.load_dict(d.get("relations", {}))   # saves before CRT-01 have no ties: everyone starts as strangers
 	experience = WorkExperience.new()
@@ -6773,6 +6789,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	civic = CivicRecords.attach(self, civic_saved)     # P21-01: absent key or disabled: nothing built; a saved section is kept while disabled
 	civic_foreign = (civic_saved.duplicate(true) if civic == null else {})
 	_unstick()
+	_restore_plans(d)
 	if couriers != null:
 		couriers.seat_at_desks()       # GP-BUSINESS-DESK: a business's courier booth stands at its desk (an older save's at its station)
 	if recorder == null and FlightRecorder.enabled():
@@ -6827,6 +6844,31 @@ func _civic_section() -> Dictionary:
 
 ## Anyone saved standing where the map now has furniture or a wall (a bed added to a home by a later
 ## map) steps to the nearest open cell in the same place, so nobody loads stuck.
+## TEST-AUDIT-Q1: after a load, the villagers go on with the plans they were saved in (NPC.from_dict). The work stations they
+## had reserved are theirs again ("station_users", saved with the reservations' lapse minutes). A villager holding a cart keeps
+## it while their plan still has a step with that cart; one whose plan was not saved (an older save) or has none lets go of it
+## (KI-FR-CARTHITCH, the earlier rule): a cart is never held for ever. Nothing is copied or created: the plan only says what
+## the villager does next, and every step checks again, as it always does, that what it needs is still there.
+func _restore_plans(d: Dictionary) -> void:
+	var su: Dictionary = d.get("station_users", {})
+	var ids := su.keys()
+	ids.sort()
+	for sid in ids:
+		if stations.has(sid):
+			for who in su[sid]:
+				var n := npc(int(who))
+				if n != null and n.alive:
+					stations[sid].users[n.id] = float(su[sid][who])
+	for c in carts.carts:
+		var ref := str(c.puller)
+		if not ref.begins_with("npc:"):
+			continue
+		var n := npc(int(ref.trim_prefix("npc:")))
+		var keeps := n != null and n.alive and n.plan.any(func(s): return str(s.get("act", "")).begins_with("cart_"))
+		if not keeps:
+			c.puller = ""
+
+
 func _unstick() -> void:
 	for n: NPC in npcs:
 		if not n.alive or n.depth != 0 or not map.is_solid(n.cell()):       # below the surface the level's map holds them

@@ -333,6 +333,7 @@ jobs:
           res://tests/travel_perf_test.gd       # B25R2 playtest repair 3: a long journey's frame times (measured; asserts the walk)
           res://tests/pad_reach_test.gd         # B25R2 playtest repairs 4, 5: every window, the travel bar and the map by the pad
           res://tests/save_exact_test.gd        # B25R2 save/reload integrity: cleared trees, shop booths; carts let go by design
+          res://tests/plan_continuity_test.gd   # TEST-AUDIT-Q1 (owner): a villager's plan, cart and station survive a save and load
           # B25R1 CI cover (2026-11-05): suites that existed in game/tests but were never in this list, so CI never ran them
           # (none was left out on purpose: no workflow, comment or document named them). Each is a few minutes at most.
           res://tests/desk_test.gd               # GP-BUSINESS-DESK: every business's desk, its menu and the old saves

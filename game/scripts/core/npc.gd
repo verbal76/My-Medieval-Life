@@ -147,6 +147,18 @@ func to_dict() -> Dictionary:
 		# REGION-NAV-01: written only for a traveller, in the form a save file holds (JSON numbers), so the dict is the same
 		# whether the trip began before a load (read back from JSON) or after it (w.day() ints): a save is stable when saved again
 		d.journey = JSON.parse_string(JSON.stringify(journey))
+	if not plan.is_empty():
+		# TEST-AUDIT-Q1 (owner 2026-11-06: "a villager transporting goods, pulling a cart, or traveling to work should not silently
+		# abandon that activity because the player saved and reloaded"): the plan under way, in Godot's own binary form (base64)
+		# so every value comes back bit for bit (whole numbers, cells, the keys' kinds, floats: the text form rounds them), and
+		# the minutes left on its current work step. The walk's path is
+		# not kept: the current walk finds it again after the load (its "pathed" mark is left out). Optional keys: an older
+		# save has none and its villagers plan afresh, as before; an older build ignores them
+		var p: Array = plan.duplicate(true)
+		if str(p[0].get("k", "")) == "go":
+			p[0].erase("pathed")
+		d.plan_b = Marshalls.variant_to_base64(p)
+		d.work_left = work_left
 	return d
 
 
@@ -194,4 +206,9 @@ static func from_dict(d: Dictionary) -> NPC:
 				n.target = Life.PLAYER_ID
 	for k in d.get("skills", {}):                             # older saves (< 15): World.load_dict seeds them (Skills.seed_villagers)
 		n.skills[str(k)] = int(d.skills[k])
+	if d.has("plan_b"):                   # TEST-AUDIT-Q1: the plan under way when the world was saved
+		var p = Marshalls.base64_to_variant(str(d.plan_b))
+		if p is Array and p.all(func(x): return x is Dictionary and x.has("k")):
+			n.plan = p
+			n.work_left = float(d.get("work_left", 0.0))
 	return n
