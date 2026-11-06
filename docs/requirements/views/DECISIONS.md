@@ -6,9 +6,9 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 23 |
-| APPROVED | 295 |
-| PROVISIONAL | 2 |
+| OPEN | 21 |
+| APPROVED | 296 |
+| PROVISIONAL | 3 |
 | SUPERSEDED | 3 |
 | REOPENED | 0 |
 | DEFERRED | 5 |
@@ -55,7 +55,7 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | X19-SWITCHES-D1 | Enable in normal play the integrated-but-off Build 19 recovery features: R5 aspirations (judgment.json aspiration.enabled, decision.integration.job_choice; WDR-011-C) and the R2 judgment-weighted witness report hook (decision.integration.report; SJD-F)? | OPEN | no |  | game/data/judgment.json@origin/wip/expansion20 ad281dc (_aspiration_note: 'OFF (enabled false) until validation and owner review'); R5_ASPIRATIONS_DESIGN.md (expansion20 notes, on wip/expansion20)@X20; merge 9b90e05 |
 
-## Approved, no build assigned: open, reopened or provisional (8)
+## Approved, no build assigned: open, reopened or provisional (7)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
@@ -65,6 +65,5 @@ The decision register is the `decision` records of the register. A recommendatio
 | JUICE-JD3 | Villager chatter: how often may villagers show what they are doing in bubbles (OWN-19 extension)? | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D3 |
 | JUICE-JD4 | Screen shake and haptics: allowed at all, on which events, and default on or off? | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D4 |
 | JUICE-JD5 | Notifications: which village notes the player sees in the corner log by default, and whether a filter exists. | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D5 |
-| TEST-AUDIT-Q1 | Should villagers' current plans (a market run with a cart, a walk to work) be saved, so a loaded world goes on as it would have? Today plans are not saved (agent decision, 2026-11-01): a villager pulling a cart lets go of it on load (KI-FR-CARTHITCH), nothing is lost, but the trip under way does not finish. Recommendation: keep as is (saving every villager's plan steps is a large save-format change) and document it as intended; revisit if playtesters notice. | OPEN | no |  | docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md |
-| TEST-AUDIT-Q2 | Accept a new simulation baseline (SIM-GATE-01) recorded from the final B25R2 commit, for overworld generation 8 and save version 23? The current one (df67e8e) predates the band household (bf20dc9, B25R1-Q2 a) and generations 6-8; every difference is traced to approved changes (docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md). Recommendation: yes, once the 365-day campaign on the final commit is read. | OPEN | no |  | docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md |
+| TEST-AUDIT-Q2 | Accept a new simulation baseline (SIM-GATE-01) recorded from the final B25R2 commit, for overworld generation 8 and save version 23? The current one (df67e8e) predates the band household (bf20dc9, B25R1-Q2 a) and generations 6-8; every difference is traced to approved changes (docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md). Recommendation: yes, once the 365-day campaign on the final commit is read. | PROVISIONAL | no |  | docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md |
 

@@ -14,17 +14,18 @@ Build One candidate's branch at `7c1bac4`), kept apart from the candidate until 
 | Checks run by the full suite (832f711) | 18,303 |
 | Workflows | 9 (2 run on push to staging, 7 by hand or as called workflows) |
 | Simulation baselines and pinned evidence | 12 baseline files (1 blocking, 4 compared, 7 historical), 3 pinned-hash sets, 1 new check-count floor file |
-| Suites mutation-sampled | 23 distinct suites, 10 injected defects (section C): 9 detected, 1 equivalent (M5) |
+| Mutation sampling | **9 unique injected defects**, 10 rows (M6b is M6 run against 5 more suites); 25 existing suites run against them, plus the new workplace_reach_test. Outcomes: 7 detected (M1, M2, M3, M4, M5b, M7, M8); 1 equivalent (M5: the generation-8 fallbacks lay the same dry roads; its stronger form M5b is detected); 1 undetected by all 9 suites tried (M6, coverage gap G2), now detected by `workplace_reach_test` |
 | Testing defects confirmed | 13 (section C, T1-T13) |
-| Testing defects repaired | 11 |
-| Tracked, not repaired | 2 (owner or later scope; section G) |
+| Testing defects repaired | 13 (all of T1-T13; each repair in section C) |
+| Testing defects tracked, not repaired | 0. (The earlier "2 tracked" counted two coverage gaps, G1 and G3, as defects: they are gaps, section E) |
 | False-positive risks (a red that may not mean a defect) | 4: the gate's baseline of another generation (repaired: now labelled); 19 suites with wall-clock thresholds; 12 multi-process network suites (timing); the CI shard time limit when placement drifts (repaired) |
 | False-negative risks (a green that may hide a defect) | 8: script errors ignored (repaired); no-count suites (repaired); printed failures with exit 0 (repaired); silent early stops (repaired: floors); save_continuity_test left out the player (repaired); 3 data-dependent skips (guarded by floors; none fire today); performance measured, never asserted in CI; the Windows smoke run is headless only |
-| Coverage gaps | 9 identified (section E); 1 closed (G2) |
+| Coverage gaps | 10 identified (section E: G1-G10); 2 closed (G2 by workplace_reach_test, G5 by plan_continuity_test); 8 open, each classified in section I |
 
-Validity, by what this audit could establish: 22 suites mutation-sampled (each injected defect caught by at least one suite in its area
-except where section C says otherwise); 15 suites repaired; the other suites read by the static scan only. No suite is claimed valid beyond
-that. Exhaustive mutation testing of 225 suites (24,100 runner seconds a full pass) was not attempted.
+Validity, by what this audit could establish: 26 suites mutation-tested (25 existing, 1 new); 16 suites repaired or created; all 225
+(now 227) CI suites run under the strict rules (run 42286848307: 232 suites passed, 18,896 checks, 0 script errors, none under its
+floor). The rest are read by the static scan only. No suite is claimed valid beyond that. Exhaustive mutation testing of 227 suites
+(about 28,000 runner seconds a pass) was not attempted.
 
 ## B. Inventory (summary; every item in the appendix)
 
@@ -106,12 +107,13 @@ Mutation sampling (disposable worktree at `7c1bac4`, each defect alone, reverted
 | G1 | Real controllers and Windows hardware: every controller test is headless (events injected); the Windows smoke run starts the game headless for 300 frames (exit code, script errors, leaks), never drawing, playing or using a pad | High: the playtest's main input | release.yml smoke-windows; pad_* suites |
 | G2 | Villagers going to their workplace: mutation M6 passed 9 suites | High | repaired `d8ed2b2` (workplace_reach_test) |
 | G3 | Performance is measured, never asserted in CI (`travel_perf_test` asserts only that the walk arrives; `--assert` is manual) | Medium: a stutter regression would pass CI | tests.yml |
-| G4 | Register traceability: 158 of 599 integrated approved requirements name no test; 185 approved are NOT TESTED; one names a test that does not exist (MP-01: net_test) | Medium: coverage cannot be read from the register | requirements.json |
-| G5 | NPC plans across a save (the cart hold): no test says what a loaded villager does next | Medium | section D |
+| G4 | Register traceability. Matrix (`docs/audits/2026-11-06_REQUIREMENTS_TEST_MATRIX.md`, 742 integrated or NOT TESTED approved records): 445 traced; 76 tested but untraced (a suite cites the id); 15 covered indirectly (checked by hand); 3 gaps (G10); 7 need a device or a person; 81 process, documentation or art; 59 not built yet (no test expected); 56 built, uncited and not yet checked by hand. One record names a test that does not exist (MP-01: net_test) | Medium | the matrix |
+| G5 | NPC plans across a save (the cart hold) | Medium | **closed**: owner decision TEST-AUDIT-Q1 implemented (`adf71ec`); `plan_continuity_test` 15/0, 6 failures without the change |
 | G6 | The skipped Python gate test (`test_sim_gate.RealGateSplit`) never runs in CI | Low | unittest output |
 | G7 | 109 approved requirements wait on a device or owner playtest | Owner | register `playtest` |
 | G8 | Interactions are covered unevenly: travel and geography (travel_river, region_travel, bridge_validity, seed_traveler), economy and inventory (econ, stalls, business, inventory18), employment and skills (skilled_employment, trade_skills), multiplayer and persistence (net_fault host restart, net_mp4) have joint tests; controller input and menu state, and families across long simulation, rest on single-system suites and the 365-day campaign | Medium | inventory |
 | G9 | 19 suites assert wall-clock thresholds that a slower runner can break (false-red risk) | Low | static scan |
+| G10 | Three built requirements with no meaningful test (checked by hand): B13-01 a retirement opens the post; B8R-002 a villager trapped inside a door; B7-008 the player draining buyers or hunting out the wildlife | Medium / medium / low | `2026-11-06_REQUIREMENTS_TEST_MATRIX.md` |
 
 ## F. CI efficiency
 
@@ -135,9 +137,9 @@ Mutation sampling (disposable worktree at `7c1bac4`, each defect alone, reverted
 | High | T10 gate cannot tell another version's baseline from a regression | Repaired `8d239a9`; accepting a generation-8 baseline: owner |
 | High | G1 real hardware and controller verification | Owner playtest (cannot be automated here) |
 | High | G2 villagers' workplace untested | Repaired `d8ed2b2` |
+| High | G5 villagers' plans across a save | Repaired `adf71ec` (owner decision TEST-AUDIT-Q1) |
 | Medium | G3 performance not asserted | Open: proposal, assert the journey's chunk work (not the known first-frame and 17:00 world spikes) |
 | Medium | G4 register traceability | Open |
-| Medium | G5 NPC plans across a save | Owner question |
 | Medium | T11 shard placement | Repaired `8d239a9` |
 | Low | T2, T6, T8, T9, T12 | Repaired |
 | Low | G6, G9, the part workbook chart | Open |
@@ -149,6 +151,31 @@ Mutation sampling (disposable worktree at `7c1bac4`, each defect alone, reverted
 - Commits: candidate `832f711`/`7c1bac4`; audit `2027707`, `8d239a9`, `7199a9a`, `cb7f80b` on `wip/test-audit`.
 - Reproductions: chapel_test replay (old rules pass, new fail); save_continuity_test with M2 (passes before the repair, fails after);
   mutation logs (section C); the household bisection (`docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md`).
+
+## I. Unresolved items (directive part 9)
+
+| Item | What remains unverified | Why it matters | Risk | Verification needed | Blocks Play Test Build One | Evidence |
+|---|---|---|---|---|---|---|
+| G1 hardware and controllers | Drawing on a Windows GPU, a physical pad, audio devices, window modes, input latency | The playtest is played on a Windows PC with a controller | High | The owner plays the package with a pad | No: it is what the playtest is for; recorded as an owner playtest item (B12A-10) | smoke run is headless only (release.yml) |
+| G3 performance not asserted | A stutter regression would pass CI | Repair 3 (stutter) could regress unseen | Medium | Assert the journey's chunk work in CI (the first-frame and 17:00 world spikes are known and excluded) | No: measured on the candidate (travel_perf_test) and reported | travel_perf_test asserts arrival only; `--assert` manual |
+| G4 traceability | 56 built requirements uncited and not hand-checked; 76 tested but not named in the register | Coverage cannot be read from the register | Medium | Add the citing suites to the register; read the 56 | No | the matrix |
+| G6 skipped gate test | `test_sim_gate.RealGateSplit` never runs in CI (needs a real gate's outputs) | The gate's split evaluation on real data is checked only by hand | Low | Run it in the gate workflow, where the outputs exist | No | unittest output (skipped=1) |
+| G7 owner playtests | 109 approved requirements wait on a device or the owner | They cannot be COMPLETE before | Owner | Device checks recorded in the register | No (they are playtest items) | register `playtest` |
+| G8 interaction coverage | Controller and menu state, families over long runs: single-system suites plus the 365-day campaign | Interactions can break where each part passes | Medium | Joint tests where play shows a problem | No | inventory |
+| G9 wall-clock thresholds | 19 suites can go red on a slow runner | False-red risk | Low | Watch; widen only with evidence of a slow runner, never to hide a regression | No | static scan |
+| G10 three requirement gaps | B13-01, B8R-002, B7-008 untested | Old fixes could regress unseen | Medium / medium / low | A focused test each | No: none touched by B25R2 | matrix |
+
+## J. Strict regression, combined candidate and campaign
+
+- **Strict rules validated** (run 42286848307, commit `2027707` on `wip/test-audit`, 20:15:51-21:06:39 UTC): 12 shards and the report,
+  232 suites passed (225 game, 6 Python, 1 simulation), 18,896 checks, 0 script errors, no suite below its floor; the only check-count
+  changes from 832f711 are the nine newly counted suites and the two new Python tests. No false failure.
+- **365-day campaign on 832f711** (run 42274347279, started 18:50:37 UTC): seed 2 segment 3 failed on one SCRIPT ERROR, a genuine
+  game defect (class A): a homestead's pending water source was saved as text and failed after a load. Fixed `c903ce8`; the segment
+  was otherwise clean (currency leak 0, item leaks 0, save round trip exact, `ok` true).
+- **Combined candidate** `1f2ff4f` (`adf71ec` Q1 + `4bfd8fd` merge of wip/test-audit + floors): focused suites 7/7 locally (save_exact
+  15/0, plan_continuity 15/0, workplace_reach 4/0, save_continuity 5/0, save_transfer 21/0, homestead 49/0, wilds 72/0); full strict
+  suite, 365-day campaign and release workflow dispatched on it.
 
 ## Release qualification (directive item 14)
 
