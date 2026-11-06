@@ -4408,6 +4408,7 @@ func _finish_site(p: Dictionary) -> void:
 	_built_collision(b)
 	_workshop_stations(b)
 	index_interiors()
+	_unstick()                         # whoever stood where its walls or furniture now are (the last load's carrier) steps clear, as a load would move them
 	building_added.emit(b)
 	note("%s is finished." % cap(property.describe(b)))
 	property._settle(by)               # a family's first house becomes its home
