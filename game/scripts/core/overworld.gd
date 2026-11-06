@@ -644,7 +644,7 @@ func _site_side(si: int, toward: Vector2i, force := -1) -> Array:
 		if (st.get("entries", []) as Array).size() == 4:
 			a = st.entries[side]                      # B25R1-018: where the site's own streets reach its edge
 		var dir: Vector2i = [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][side]
-		var far := a + dir * 13
+		var far := _side_far_point(a, dir)
 		var li := _links.size()
 		_links.append({"a": a, "b": far, "key": ROUTE_KEY + li})
 		route_kind[li] = "site"
@@ -691,7 +691,27 @@ func _side_far(si: int, toward: Vector2i, force := -1) -> Vector2i:
 	var a: Vector2i = [Vector2i((st.center as Vector2i).x, r.position.y), Vector2i(r.end.x - 1, gy), Vector2i(st.gate), Vector2i(r.position.x, gy)][side]
 	if (st.get("entries", []) as Array).size() == 4:
 		a = st.entries[side]
-	return a + [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][side] * 13
+	return _side_far_point(a, [Vector2i(0, -1), Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0)][side])
+
+
+## The far point of a site's side road leaving edge cell `a` by `dir`: 13 tiles out. Generation 8: one in the water goes on out
+## across it to dry ground (as generation 7's south far points do across the canonical water), at most 27 tiles further; else
+## it stays. Before, it could stand at the water's edge with up to five roads meeting on it over the water, drawn as bridge
+## (seed 1, Rushford's east side in Upmeads Water: -286,131).
+func _side_far_point(a: Vector2i, dir: Vector2i) -> Vector2i:
+	var far := a + dir * 13
+	if gen < 8:
+		return far
+	var end := a + dir * 40
+	var g := NODE_DRY_REACH + 8
+	var near := streams_in(Rect2i(Vector2i(mini(far.x, end.x), mini(far.y, end.y)) - Vector2i(g, g), (end - far).abs() + Vector2i(g, g) * 2))
+	if _dry_node(far, near) == far:
+		return far
+	for t in range(14, 41):
+		var c := a + dir * t
+		if _dry_node(c, near) == c:
+			return c
+	return far
 
 
 func _site_join(si: int, vi: int, kind: String, force := -1) -> void:
@@ -732,6 +752,12 @@ func _site_ring(si: int) -> void:
 	for side in 4:
 		if bases.has(side):
 			fars[ring.find(Vector2i(_links[bases[side]].b))] = true
+	if gen >= 8:
+		# generation 8: the ring's corners stand off the water, as the country roads' nodes do (_dry_node); the far points are the
+		# side roads' ends and stay where they are
+		for k in ring.size():
+			if not fars.has(k):
+				ring[k] = _dry_node(ring[k])
 	var li_base := _links.size()
 	if gen >= 6:
 		for k in ring.size():
@@ -742,7 +768,7 @@ func _site_ring(si: int) -> void:
 			var parts := maxi(1, int(ceil((b - a).length() / RING_STRETCH)))
 			var legs: Array[PackedInt32Array] = []
 			for q in parts:
-				legs.append(_polyline(a + (b - a) * q / parts, a + (b - a) * (q + 1) / parts, ROUTE_KEY + li_base + k * 8 + q))
+				legs.append(_polyline(_ring_point(a, b, q, parts), _ring_point(a, b, q + 1, parts), ROUTE_KEY + li_base + k * 8 + q))
 			if not _ring_leg_free(legs):
 				skip[k] = true
 			if gen >= 7:                                  # (generation 7: a leg that would run along the water is never laid)
@@ -810,7 +836,7 @@ func _site_ring(si: int) -> void:
 		var parts := maxi(1, int(ceil((b - a).length() / RING_STRETCH)))
 		var pts: Array[Vector2i] = []
 		for q in parts + 1:
-			pts.append(a + (b - a) * q / parts)
+			pts.append(_ring_point(a, b, q, parts))
 		# (generation 7: each stretch keeps the key its leg was judged by above, so the way laid is the way judged)
 		var kb := ROUTE_KEY + li_base + k * 8 if gen >= 7 else ROUTE_KEY + _links.size()
 		var clear := true
@@ -823,6 +849,14 @@ func _site_ring(si: int) -> void:
 				var li := _route_link(_vnode(pts[q]), _vnode(pts[q + 1]), "ring")
 				_links[li].key = kb + q
 				_note_road_cells(legs[q])
+
+
+## Point q of the `parts` stretches a ring leg a-b is laid in. Generation 8: a point between the ends stands off the water
+## (_dry_node), as the corners do: before, a stretch's end on a lake's edge left two ring links meeting over the water, drawn as
+## bridge (seed 1, Coldlake by Elmcote: 218,739).
+func _ring_point(a: Vector2i, b: Vector2i, q: int, parts: int) -> Vector2i:
+	var p := a + (b - a) * q / parts
+	return _dry_node(p) if gen >= 8 and q > 0 and q < parts else p
 
 
 ## Whether ring leg a-b of site `si` would cross a neighbouring settlement (B25R1-018: they stand closer now), so is not laid.
@@ -2196,6 +2230,21 @@ func _water_clear_near(wx: int, wy: int, passes: Array, canonical: bool, near: A
 	return true
 
 
+## Generation 8: whether cell c may be drawn as water by the settlements' clearance: a cell is water when two of its four corners
+## are (_water_corners at corners c .. c + (1, 1)), and a corner in a settlement's clearance never is, so it may only when two or
+## more of its corners are clear. Before, the cell's first corner alone was asked: a cell on the clearance's edge with its far
+## corners in the water was taken for land, and a road led round the water on it was drawn as bridge (seed 1, 7 cells down the
+## edge of Fallowley's lake at -203,304).
+func _cell_may_be_wet(c: Vector2i, passes: Array, canonical: bool, near: Array) -> bool:
+	var clear := 0
+	for d in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(1, 1)]:
+		if _water_clear_near(c.x + d.x, c.y + d.y, passes, canonical, near):
+			clear += 1
+			if clear >= 2:
+				return true
+	return false
+
+
 ## B25R1-017 (owner: "keep ... existing roads dry"): whether water may lie on corner (i, j) of the area given the roads round
 ## it: off the road and its one-tile margin, yes; on them (one of the corner's four cells), only where the course crosses it, its heading
 ## (`along`) at least 50 degrees off the road's own line there (the principal axis of the road cells in the 5 x 5 round the
@@ -2354,10 +2403,19 @@ func node_pos(i: int, j: int) -> Vector2i:
 const NODE_DRY_CLEAR := 2.0
 const NODE_DRY_REACH := 14
 var _node_dry := {}                       # Vector2i(i, j) -> the node's cell (generation 8; a pure function of the seed, not saved)
+var _dry_at := {}                         # a cell -> _dry_node's answer for it (the same; kept with _node_dry)
 
 
-func _dry_node(p: Vector2i) -> Vector2i:
-	var near := streams_in(Rect2i(p - Vector2i(NODE_DRY_REACH + 8, NODE_DRY_REACH + 8), Vector2i(NODE_DRY_REACH + 8, NODE_DRY_REACH + 8) * 2))
+func _dry_node(p: Vector2i, near_given = null) -> Vector2i:
+	if _dry_at.has(p):
+		return _dry_at[p]
+	var near: Array = near_given if near_given != null else streams_in(Rect2i(p - Vector2i(NODE_DRY_REACH + 8, NODE_DRY_REACH + 8), Vector2i(NODE_DRY_REACH + 8, NODE_DRY_REACH + 8) * 2))
+	var r := _dry_node3(p, near)
+	_dry_at[p] = r
+	return r
+
+
+func _dry_node3(p: Vector2i, near: Array) -> Vector2i:
 	if near.is_empty():
 		return p
 	var wet := func(c: Vector2i) -> bool:
@@ -2366,7 +2424,7 @@ func _dry_node(p: Vector2i) -> Vector2i:
 			var pts: Array = crs.pts
 			var rs: Array = crs.r
 			for k in range(1, pts.size()):
-				if _seg_dist(q, pts[k - 1], pts[k]) <= float(rs[mini(k, rs.size() - 1)]) + 1.0 + NODE_DRY_CLEAR:
+				if _seg_dist(q, pts[k - 1], pts[k]) <= maxf(float(rs[mini(k - 1, rs.size() - 1)]), float(rs[mini(k, rs.size() - 1)])) + 1.0 + NODE_DRY_CLEAR:
 					return true
 			for pool in crs.pools:
 				if q.distance_to(pool[0]) <= float(pool[1]) + 1.2 + NODE_DRY_CLEAR:
@@ -2520,6 +2578,11 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 			var a: Vector2 = pts[k - 1]
 			var b: Vector2 = pts[k]
 			var w := float(rs[mini(k, rs.size() - 1)])
+			if gen >= 8:
+				# generation 8: the half-width the water is drawn with (_water_corners: the wider of the segment's two ends). Before,
+				# the end's own: where a river opens into a lake the drawn water reached past it, and the road's way round the
+				# water ran on it (seed 1, 7 cells of bridge down the lake's edge at -203,304)
+				w = maxf(float(rs[mini(k - 1, rs.size() - 1)]), w)
 			if Rect2(a, Vector2.ZERO).expand(b).grow(w + 4.0).intersects(Rect2(box)):
 				segs.append([a, b, w, crs.get("passes", []), bool(crs.get("canonical", false))])
 		if gen >= 8:
@@ -2544,17 +2607,32 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 		for st in sites:
 			if (st.rect as Rect2i).grow(VILLAGE_CLEAR + 2).intersects(box.grow(DRY_WAY_GROW + 4)):
 				sites_near.append(st)
+	# each segment's box, grown by its half-width and the widest margin asked (CROSS_MARGIN): a cell outside it is not near it
+	var seg_box: Array[Rect2] = []
+	for sg in segs:
+		seg_box.append(Rect2(sg[0], Vector2.ZERO).expand(sg[1]).grow(float(sg[2]) + float(CROSS_MARGIN) + 1.0))
+	var wet_at := {}                                  # (generation 8: the same cells are asked again and again by the searches)
 	var wet := func(c: Vector2i, extra: float) -> int:      # the index of the course segment whose water covers c, else -1
+		var key := Vector3i(c.x, c.y, roundi(extra * 4.0))
+		if gen >= 8 and wet_at.has(key):
+			return wet_at[key]
 		var p := Vector2(c) + Vector2(0.5, 0.5)
+		var hit := -1
 		for si in segs.size():
+			if extra <= float(CROSS_MARGIN) and not seg_box[si].has_point(p):
+				continue
 			if _seg_dist(p, segs[si][0], segs[si][1]) <= float(segs[si][2]) + extra:
-				if gen >= 8 and not _water_clear_near(c.x, c.y, segs[si][3], bool(segs[si][4]), sites_near):
+				if gen >= 8 and not _cell_may_be_wet(c, segs[si][3], bool(segs[si][4]), sites_near):
 					continue
-				return si
-		return -1
+				hit = si
+				break
+		if gen >= 8:
+			wet_at[key] = hit
+		return hit
 	var out := PackedInt32Array()
 	var k := 0
 	var plain := 1                                    # cells from here on were appended as they were (after the last leg)
+	var run_end := -1                                 # generation 8: the first cell after the run that is not water as drawn (e2)
 	while k < n:
 		var c := Vector2i(cells[2 * k], cells[2 * k + 1])
 		var si: int = wet.call(c, wet_extra)
@@ -2579,6 +2657,7 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 			var b0 := Vector2i(cells[2 * mini(e2, n - 1)], cells[2 * mini(e2, n - 1) + 1])
 			var stub := DRY_WAY_STUB if end_wet or wet.call(a0, wet_extra) >= 0 else 0
 			var way0 := _dry_way(a0, b0, wet, wet_extra, stub)
+			run_end = e2
 			if not way0.is_empty():
 				out.append_array(way0)
 				k = mini(e2, n - 1) + 1
@@ -2607,7 +2686,17 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 					out.resize(2 * (out.size() / 2 - (k - s)))
 					out.append_array(way)
 					return out
-		if e >= n or s <= 0 or wet.call(Vector2i(cells[2 * (s - 1)], cells[2 * (s - 1) + 1]), float(CROSS_MARGIN)) >= 0:
+		var from_run := false
+		if gen >= 8 and run_end < n and wet.call(Vector2i(cells[2 * (k - 1)], cells[2 * (k - 1) + 1]), wet_extra) < 0 \
+				and (e >= n or s <= 0 or wet.call(Vector2i(cells[2 * (s - 1)], cells[2 * (s - 1) + 1]), float(CROSS_MARGIN)) >= 0):
+			# generation 8: the margin's run reaches a road end standing in the water, but the run's own ends as drawn are dry
+			# (k - 1 and run_end, with no dry way round the water between them): it is crossed from there. Before, the run was
+			# left as drawn, a road along a lake's edge drawn as bridge (seed 2, link 64 from its end in Upmeads Water: 10 cells
+			# at -21,183)
+			s = k
+			e = run_end
+			from_run = true
+		if not from_run and (e >= n or s <= 0 or wet.call(Vector2i(cells[2 * (s - 1)], cells[2 * (s - 1) + 1]), float(CROSS_MARGIN)) >= 0):
 			out.append(c.x)
 			out.append(c.y)
 			k += 1
@@ -2627,7 +2716,10 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 			k = e + 1
 			plain = k
 			continue
-		if dir == Vector2.ZERO or signf(dir.cross(Vector2(a) - o)) == signf(dir.cross(Vector2(b) - o)):
+		# generation 8: no dry way joins a and b round the water (searched just above), so they are on two banks: the crossing is
+		# built (its leg checked by _leg_crosses). The side of the first course segment the road touched is no judge on a curving
+		# course or between two pieces of water (seed 2, a neck between two lakes by Wulstead: 10 cells left as drawn at -21,183)
+		if gen < 8 and (dir == Vector2.ZERO or signf(dir.cross(Vector2(a) - o)) == signf(dir.cross(Vector2(b) - o))):
 			out.append(c.x)                           # the road touches the water and comes back on the same bank (it runs
 			out.append(c.y)                           # along it): no crossing; the water keeps off it (_water_may_cross)
 			k += 1
@@ -2645,28 +2737,38 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 			sj = _nearest_seg(segs, mid)
 			var dj: Vector2 = (segs[sj][1] as Vector2) - (segs[sj][0] as Vector2)
 			ns = absf(dj.x) >= absf(dj.y)
-		var leg := _leg(a, b, mid, ns, wet)
-		if gen >= 8 and not _leg_crosses(leg[0], leg[1], segs[sj], wet):
-			leg = _leg(a, b, mid, not ns, wet)       # the other axis, else the road as drawn (a real crossing, if not square)
-			if not _leg_crosses(leg[0], leg[1], segs[sj], wet):
-				out.append(c.x)
-				out.append(c.y)
-				k += 1
-				continue
-		var p0: Vector2i = leg[0]
-		var p1: Vector2i = leg[1]
+		var p0 := Vector2i.ZERO
+		var p1 := Vector2i.ZERO
 		var to_leg := PackedInt32Array()
 		var from_leg := PackedInt32Array()
 		if gen >= 8:
-			# generation 8: the road reaches the leg's ends over dry land (straight, they could run along a curving bank and be drawn
-			# as bridge: seed 2, 7 cells at 445,149); with no dry way, the road as drawn
-			to_leg = _dry_way(a, p0, wet, wet_extra) if a != p0 else PackedInt32Array()
-			from_leg = _dry_way(p1, b, wet, wet_extra) if p1 != b else PackedInt32Array()
-			if (a != p0 and to_leg.is_empty()) or (p1 != b and from_leg.is_empty()):
-				out.append(c.x)
-				out.append(c.y)
-				k += 1
+			# generation 8: a straight leg square to the course that really crosses it, reached over dry land at both ends (straight
+			# ways to it could run along a curving bank and be drawn as bridge: seed 2, 7 cells at 445,149); with none, the road as
+			# drawn
+			var found := _crossing_leg(a, b, mid, ns, segs, sj, wet, wet_extra, cells, s, e)
+			if found.is_empty():
+				# no one straight leg crosses (two channels and the land between, a confluence, a lake's arm): the way with the
+				# least water on it, each water crossed where it is narrowest and every piece of land between walked (seed 4, a
+				# road run 9 cells down a channel beside a spit of land at -350,-150)
+				var least := _least_wet_way(a, b, wet, wet_extra)
+				if least.is_empty():
+					out.append(c.x)
+					out.append(c.y)
+					k += 1
+					continue
+				out.resize(2 * (out.size() / 2 - (k - s)))
+				out.append_array(least)
+				k = e + 1
+				plain = k
 				continue
+			p0 = found[0]
+			p1 = found[1]
+			to_leg = found[2]
+			from_leg = found[3]
+		else:
+			var leg := _leg(a, b, mid, ns, wet)
+			p0 = leg[0]
+			p1 = leg[1]
 		# s - 1 .. a is kept (already appended up to k - 1; drop the run's cells appended from s on)
 		var keep := s
 		out.resize(2 * (out.size() / 2 - (k - keep)))
@@ -2681,6 +2783,44 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 		k = e + 1
 		plain = k
 	return out
+
+
+## Generation 8: the crossing leg for a run over the water from land cell a to land cell b (no dry way joins them): [p0, p1, the
+## dry way a..p0, the dry way p1..b], or [] when there is none. First the leg through the middle (`mid`, square to the course
+## there, `ns`; else the other axis); when it does not cross (the middle of a confluence or a lake: seed 4, 9 cells of bridge at
+## -350,-150), a leg through each cell of the run as drawn (cells[s .. e - 1]), square to the course nearest it, the shortest
+## first. A leg counts when it crosses its course (_leg_crosses) and dry land reaches both its ends.
+func _crossing_leg(a: Vector2i, b: Vector2i, mid: Vector2, ns: bool, segs: Array, sj: int, wet: Callable, extra: float,
+		cells: PackedInt32Array, s: int, e: int) -> Array:
+	var tries: Array = []                              # [span, order, p0, p1]
+	for leg in [_leg(a, b, mid, ns, wet), _leg(a, b, mid, not ns, wet)]:
+		if _leg_crosses(leg[0], leg[1], segs[sj], wet):
+			tries.append([-1, tries.size(), leg[0], leg[1]])       # the middle's legs are tried first, as before
+	var more: Array = []
+	for q in range(s, e):
+		var at := Vector2(cells[2 * q], cells[2 * q + 1])
+		var qj := _nearest_seg(segs, at)
+		var dj: Vector2 = (segs[qj][1] as Vector2) - (segs[qj][0] as Vector2)
+		var leg := _leg(a, b, at, absf(dj.x) >= absf(dj.y), wet)
+		if _leg_crosses(leg[0], leg[1], segs[qj], wet):
+			more.append([maxi(absi(leg[1].x - leg[0].x), absi(leg[1].y - leg[0].y)), q, leg[0], leg[1]])
+	more.sort()
+	tries.append_array(more)
+	var seen := {}
+	for t in tries:
+		var p0: Vector2i = t[2]
+		var p1: Vector2i = t[3]
+		if seen.has([p0, p1]):
+			continue
+		seen[[p0, p1]] = true
+		var to_leg := _dry_way(a, p0, wet, extra) if a != p0 else PackedInt32Array()
+		if a != p0 and to_leg.is_empty():
+			continue
+		var from_leg := _dry_way(p1, b, wet, extra) if p1 != b else PackedInt32Array()
+		if p1 != b and from_leg.is_empty():
+			continue
+		return [p0, p1, to_leg, from_leg]
+	return []
 
 
 ## The straight leg of a crossing between land cells a and b: [p0, p1], from the water's middle (`mid`) out along one axis (north-
@@ -2754,6 +2894,63 @@ func _dry_way(a: Vector2i, b: Vector2i, wet: Callable, extra: float, stub := 0) 
 				continue
 			from[n] = q
 			todo.append(n)
+	if not from.has(b):
+		return PackedInt32Array()
+	var back: Array[Vector2i] = []
+	var c := b
+	while c != a:
+		back.append(c)
+		c = from[c]
+	var out := PackedInt32Array()
+	for j in range(back.size() - 1, -1, -1):
+		out.append(back[j].x)
+		out.append(back[j].y)
+	return out
+
+
+## Generation 8: the 4-connected cells after `a` up to and including `b` with the least water on them (Dijkstra in a box round the
+## two: a cell of open water costs WET_COST, one only within `extra` of it (a bank's margin, a spit of land) MARGIN_COST, dry land
+## 1; ties by the fixed neighbour order, so every chunk lays the same cells); empty when b is not reached.
+const WET_COST := 10
+const MARGIN_COST := 3
+
+
+func _least_wet_way(a: Vector2i, b: Vector2i, wet: Callable, extra: float) -> PackedInt32Array:
+	var box := Rect2i(Vector2i(mini(a.x, b.x), mini(a.y, b.y)), Vector2i(absi(a.x - b.x), absi(a.y - b.y)) + Vector2i.ONE).grow(DRY_WAY_GROW)
+	var cost := {}
+	var from := {a: a}
+	var best := {a: 0}
+	var buckets := {0: [a]}
+	var d := 0
+	var top := 0
+	while d <= top:
+		var bucket: Array = buckets.get(d, [])
+		var i := 0
+		while i < bucket.size():
+			var q: Vector2i = bucket[i]
+			i += 1
+			if int(best[q]) != d:
+				continue
+			if q == b:
+				break
+			for step in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+				var n: Vector2i = q + step
+				if not box.has_point(n):
+					continue
+				if not cost.has(n):
+					cost[n] = 1 if n == b else (WET_COST if wet.call(n, 0.0) >= 0 else (MARGIN_COST if wet.call(n, extra) >= 0 else 1))
+				var nd: int = d + int(cost[n])
+				if not best.has(n) or nd < int(best[n]):
+					best[n] = nd
+					from[n] = q
+					if not buckets.has(nd):
+						buckets[nd] = []
+					buckets[nd].append(n)
+					top = maxi(top, nd)
+		if best.has(b) and int(best[b]) <= d:
+			break
+		buckets.erase(d)
+		d += 1
 	if not from.has(b):
 		return PackedInt32Array()
 	var back: Array[Vector2i] = []
@@ -3966,6 +4163,7 @@ func load_dict(d: Dictionary) -> void:
 	if keep != gen:
 		gen = keep
 		_node_dry.clear()                                # (generation 8 moves road nodes out of the water)
+		_dry_at.clear()
 		cache.clear()                                    # chunks drawn by another generation are dropped
 		_stream_cache.clear()
 		_river_cache.clear()
