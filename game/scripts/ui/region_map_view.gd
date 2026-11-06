@@ -417,11 +417,17 @@ func _input(e: InputEvent) -> void:
 		return
 	var focus := get_viewport().gui_get_focus_owner()
 	var on_button := focus is BaseButton and focus.is_visible_in_tree()
+	if on_button and not pad_on_buttons and not is_ancestor_of(focus):
+		# a window button given focus by something else (the first pad press switches the scheme and the window focuses its
+		# first button): the pad stays on the map's cursor until View is pressed
+		focus.release_focus()
+		on_button = false
 	if e is InputEventJoypadMotion:
 		var jm := e as InputEventJoypadMotion
 		if absf(jm.axis_value) > 0.5 and jm.axis in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
 			if on_button:
 				focus.release_focus()                  # the stick moves the map's cursor again
+				pad_on_buttons = false
 			if cursor == Vector2.INF:
 				cursor = main.world.player.pos
 		return
@@ -433,6 +439,7 @@ func _input(e: InputEvent) -> void:
 	if b.button_index == JOY_BUTTON_B:
 		if on_button and b.pressed:
 			focus.release_focus()                  # B from the buttons: back to the map (a second B closes it)
+			pad_on_buttons = false
 			get_viewport().set_input_as_handled()
 		return
 	if b.button_index == JOY_BUTTON_BACK:
@@ -440,8 +447,9 @@ func _input(e: InputEvent) -> void:
 		if b.pressed:
 			if on_button:
 				focus.release_focus()
+				pad_on_buttons = false
 			else:
-				_focus_buttons()
+				pad_on_buttons = _focus_buttons()
 		return
 	if on_button and b.button_index in [JOY_BUTTON_A, JOY_BUTTON_DPAD_LEFT, JOY_BUTTON_DPAD_RIGHT, JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_DOWN]:
 		return                                     # a button has focus: A presses it, the D-pad moves between buttons
@@ -453,6 +461,9 @@ func _input(e: InputEvent) -> void:
 		if b.button_index in [JOY_BUTTON_DPAD_LEFT, JOY_BUTTON_DPAD_RIGHT, JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_DOWN]:
 			return
 	pad_button(b.button_index)
+
+
+var pad_on_buttons := false              # B25R2: the View button put the pad on the window's buttons
 
 
 func _release_window_focus() -> void:

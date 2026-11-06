@@ -23,13 +23,11 @@ var attempts := 0
 var watch_t := 0.0
 var watch_pos := Vector2.ZERO
 var watch_idx := 0
-var watch_d := INF              # B25R2: the distance to the walk's target at the last progress check
 var world_id := 0
 
 
 func reset() -> void:
 	route = PackedVector2Array()
-	watch_d = INF
 	idx = 0
 	set_to = Vector2.INF
 	attempts = 0
@@ -205,9 +203,9 @@ func step(m, v: Vector2, delta: float) -> void:
 	watch_t += delta
 	if watch_t >= WATCH:
 		watch_t = 0.0
-		var dist := p.pos.distance_to(set_to) if set_to != Vector2.INF else INF
-		var closer := dist < watch_d - 1.0
-		watch_d = dist
+		# (both distances to the walk's target as it is now, from where the character stood at the last check and from here:
+		# a replan between them changes the target)
+		var closer := set_to != Vector2.INF and p.pos.distance_to(set_to) < watch_pos.distance_to(set_to) - 1.0
 		if idx == watch_idx and not closer:
 			attempts += 1
 			if attempts >= ATTEMPTS:

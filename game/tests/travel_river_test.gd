@@ -127,19 +127,21 @@ func _driver() -> void:
 	var w := World.new()
 	w.setup(VillageMap.load_default(), 1)
 	var ow: Overworld = w.map.overworld
-	var starts := _riverside(w, 1)
-	if starts.is_empty():
-		check(false, "driver: a place beside the water to stand")
-		return
+	var starts := _riverside(w, 12)
 	var m := FakeMain.new()
 	m.world = w
 	m.ui = m
 	var p := w.player
-	p.pos = Vector2(starts[0]) + Vector2(0.5, 0.5)
 	var d := TravelDriver.new()
-	var why := d.start(m, Vector2i(ow.sites[0].center))
-	if why != "":
-		check(true, "driver: the journey is refused with a reason (%s)" % why)
+	var started := false
+	for st in starts:                                  # a place beside the water from which the journey is planned
+		p.pos = Vector2(st) + Vector2(0.5, 0.5)
+		d = TravelDriver.new()
+		if d.start(m, Vector2i(ow.sites[0].center)) == "":
+			started = true
+			break
+	check(started, "driver: a journey planned from beside the water (of %d places)" % starts.size())
+	if not started:
 		return
 	# the walker is held at the bank: it slides to and fro along it and never comes nearer the target
 	var t := 0.0

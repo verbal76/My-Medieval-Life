@@ -19,7 +19,11 @@ var failures := 0
 ## site streets and castle way, the trail spurs and ring legs, the Wood Perilous edge; two runs in two processes agree).
 ## Re-pinned 2026-11-05 for generation 7 (the B25R1 flyover v2: the Wood Perilous's ridge outline, the castle way claimed before
 ## the houses outside Higham's walls, no join or ring leg along the canonical water; seed 2's chunks unchanged; two processes agree).
-const GOLDEN_4 := {1: "419bb4402f2f4d60c41c63b9433c67e3", 2: "3f04ed0be6816a2fa4f7afe07da7d8f9", 7: "d2502e6e88961cb562d6b15f1e076e7a"}
+## Re-pinned 2026-11-06 for generation 8 (B25R2 playtest repair 6: road nodes, ring points and side far points off the water; the
+## roads' water as drawn; crossings where the water parts the land). Generation 7 (Build 34's worlds) stays pinned below as GOLDEN_7,
+## unchanged: a saved generation-7 world is drawn byte for byte as before. Two runs in two processes agree.
+const GOLDEN_4 := {1: "fbb63c03d920018a9affa7c85c8e53f5", 2: "2709abaa8a794f852e6bbcdda623b3c0", 7: "b49f6088024b0cacae09085588c94468"}
+const GOLDEN_7 := {1: "419bb4402f2f4d60c41c63b9433c67e3", 2: "3f04ed0be6816a2fa4f7afe07da7d8f9", 7: "d2502e6e88961cb562d6b15f1e076e7a"}
 const CHUNKS := [Vector2i(-3, 2), Vector2i(1, 4), Vector2i(2, 9), Vector2i(-2, -3), Vector2i(5, 1), Vector2i(0, 20), Vector2i(-6, 12)]
 
 
@@ -61,10 +65,14 @@ func _run() -> void:
 	for s in GOLDEN_4:
 		var fp := fingerprint(Overworld.create(s, m), true)
 		check(fp == GOLDEN_4[s], "seed %d, generation 4: every chunk and its water as recorded (%s)" % [s, fp])
+	# --- generation 7 (Build 34's worlds), drawn as it was recorded (a save keeps its own generation)
+	for s in GOLDEN_7:
+		var fp7 := fingerprint(Overworld.create(s, m, 7), true)
+		check(fp7 == GOLDEN_7[s], "seed %d, generation 7: every chunk and its water as recorded before generation 8 (%s)" % [s, fp7])
 	# --- generation 4: deterministic, streams there
 	var a := Overworld.create(1, m)
 	var b := Overworld.create(1, m)
-	check(a.gen == Overworld.GEN_VERSION and Overworld.GEN_VERSION == 7, "a new world is generation 7 (B25R1 flyover v2: the Wood Perilous's ridge outline, the castle way on every seed, no way along the water)")
+	check(a.gen == Overworld.GEN_VERSION and Overworld.GEN_VERSION == 8, "a new world is generation 8 (B25R2: roads off the water, crossings where the water parts the land)")
 	var fa := fingerprint(a, true)
 	check(fa == fingerprint(b, true), "generation 4 is deterministic (the same seed, the same chunks and water)")
 	var b2 := Overworld.create(1, m)
@@ -203,7 +211,7 @@ func _run() -> void:
 	# --- a saved generation-4 world says so; an older generation's save is refused (owner B25R1-Q5)
 	check(main.save_game(false), "saved")
 	var d := SaveStore.inspect(main.save_path, World.SAVE_VERSION)
-	check(int(d.data.overworld.gen) == 7, "a new world's save says generation 7")
+	check(int(d.data.overworld.gen) == 8, "a new world's save says generation 8")
 	for old_gen in [6, 5]:
 		var w5 := World.new()
 		w5.load_dict(m, {"seed": 1, "save_version": World.SAVE_VERSION, "overworld": {"seed": 1, "gen": old_gen}})
