@@ -300,6 +300,13 @@ My Medieval Life is a commercial game headed for Steam Early Access. Every agent
   git status   # regenerated data must show no diff unless the change was intended
   ```
   A failing test is fixed, never skipped, disabled or weakened to pass.
+- **Verify the test itself (owner, 2026-11-06, TEST-GOV-01, `docs/directives/2026-11-06_permanent_testing_governance_and_test_audit.md`;
+  permanent; the procedure in `docs/TESTING_GOVERNANCE.md`).** A failed test is not by itself evidence of defective game code,
+  and a passing test is not by itself evidence of correct behaviour. Before changing game code, test code or a baseline,
+  classify the failure from evidence (A game defect, B outdated expectation, C defective test procedure, D infrastructure,
+  E legitimate evolution, or UNRESOLVED) and answer: is the game right, is the test right, does the baseline apply? Fix
+  what is wrong. Never re-record a baseline to get a pass, never weaken, widen, remove or skip to get green; a test that
+  stops early or hides a script error is a failure. Every green test meaningful, every red test trustworthy.
 - **Testing philosophy (owner, 2026-10-20, WDR-022):** mechanical correctness and simulation integrity are mandatory;
   economic outcomes are measured and analysed, never pass/fail thresholds unless an approved requirement sets one. Do not
   rerun year-long simulations in pursuit of favourable statistics.

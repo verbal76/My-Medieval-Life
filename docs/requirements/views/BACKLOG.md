@@ -61,7 +61,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 
-## Approved, no build assigned (26)
+## Approved, no build assigned (28)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -82,6 +82,8 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | RECON-01 | Reconcile overlaps: one calculation for tolerance (temperament life shifts vs personality drift) and one reservation mechanism per inventory quantity (contract holds vs economic reservations); behaviour unchanged with flags off | approved | OWNER APPROVED | INTEGRATED |
 | REQ-CTRL-01 | One authoritative requirements and decision register with separate status dimensions, validation, generated views and divergence control | approved | OWNER APPROVED | INTEGRATED |
 | REQ-CTRL-02 | Requirements recovery audit: dry run, immutable sources, conflict and evidence audit, recovered-work classification, Builds 18-21 status | approved | OWNER APPROVED | INTEGRATED |
+| TEST-AUDIT-01 | Full test regimen audit (inventory, validity, mutation sampling, gates, generations, save/load, CI reporting, coverage, efficiency, release qualification) | approved | OWNER APPROVED | NOT STARTED |
+| TEST-GOV-01 | Permanent testing governance: verify the test itself | approved | OWNER APPROVED | NOT STARTED |
 | WDR-017-C | Comply with World Design Rule 17: Generational Memory and Living History | approved | OWNER APPROVED | NOT STARTED |
 | WDR-018-C | Comply with World Design Rule 18: Protected Ecological Continuity | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | WDR-019-C | Comply with World Design Rule 19: Living Political Agency and Democratic Consequences | approved | OWNER APPROVED | NOT STARTED |

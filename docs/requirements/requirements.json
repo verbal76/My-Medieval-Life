@@ -59055,6 +59055,67 @@
    "blocks_implementation": false
   },
   {
+   "id": "TEST-AUDIT-01",
+   "kind": "approved",
+   "title": "Full test regimen audit (inventory, validity, mutation sampling, gates, generations, save/load, CI reporting, coverage, efficiency, release qualification)",
+   "description": "Full test regimen audit (inventory, validity, mutation sampling, gates, generations, save/load, CI reporting, coverage, efficiency, release qualification)",
+   "source": "docs/directives/2026-11-06_permanent_testing_governance_and_test_audit.md",
+   "owner_wording": "Audit every existing testing mechanism that contributes to confidence in the game.",
+   "approval": "owner, 2026-11-06",
+   "acceptance": [
+    "Report under docs/audits/ with sections A-H",
+    "Full inventory with file paths and workflow references",
+    "Confirmed testing defects repaired or tracked, with evidence",
+    "Mutation sampling recorded: what was sampled and what remains unverified"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-06",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-06_permanent_testing_governance_and_test_audit.md"
+    }
+   ]
+  },
+  {
+   "id": "TEST-GOV-01",
+   "kind": "approved",
+   "title": "Permanent testing governance: verify the test itself",
+   "description": "Permanent testing governance: verify the test itself",
+   "source": "docs/directives/2026-11-06_permanent_testing_governance_and_test_audit.md",
+   "owner_wording": "A failed test is not automatically evidence of defective game code. ... The objective is not to make every test green. The objective is to make every green test meaningful and every red test trustworthy.",
+   "approval": "owner, 2026-11-06",
+   "acceptance": [
+    "Recorded in docs/TESTING_GOVERNANCE.md and referenced from CLAUDE.md",
+    "Every failure classified A-E or UNRESOLVED from evidence before any change",
+    "No baseline re-recorded to obtain a pass"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-06",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-06_permanent_testing_governance_and_test_audit.md"
+    }
+   ]
+  },
+  {
    "id": "TILL-D1",
    "kind": "decision",
    "title": "Storefront till of a living household that loses or gives up its house (lease taken back for arrears, lease given up, the household migrating away): whose are the coins? (a) they go with the household that earned them (recommended; matches B18-DP-01/INT-392 for the player's shop and D03 one owner per business); (b) to the manor, as when a household ends; (c) unchanged: they stay in the house and the next holder is paid them",

@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (788)
+## Approved requirement (790)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -687,6 +687,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | STONE-06 | Iron chisel: smith-made, worn by use, needed with the mallet to dress stone | 18 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | SYNC-17 | Synchronize Expansions 18 and 19 one way with the Build 17 baseline cd7439c | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | COMPLETE |
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | 18 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| TEST-AUDIT-01 | Full test regimen audit (inventory, validity, mutation sampling, gates, generations, save/load, CI reporting, coverage, efficiency, release qualification) | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| TEST-GOV-01 | Permanent testing governance: verify the test itself | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | TIME-02 | Explicit time units in configuration and code; one shared conversion layer (no third clock) | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | TIME-04 | Player starvation damage follows the villagers' rule (time-audit defect D4) | 16 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
