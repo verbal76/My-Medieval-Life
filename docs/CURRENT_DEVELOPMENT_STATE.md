@@ -19,6 +19,13 @@
   - History lives in `docs/DEVELOPMENT_CHANGELOG.md`.
 - **Recovery after lost context:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
 
+## B25R2 checkpoint (2026-11-06 12:50 EST)
+
+Play Test Build One repairs on `wip/b25r2-playtest`, head `cb5e323` (base F2 `20e579e`). Live checklist with evidence:
+`docs/release/B25R2_COMPLETION_CHECKLIST.md`. Full suite on `f3c5bdd` dispatched (tests.yml on wip/b25r2-playtest).
+Next: read it; the 4 remaining bridge loops; the 365-day campaign on the final commit; the Windows package (not to be
+published without the owner's approval).
+
 ## Owner decision 2026-11-05: B25R1 audit, Option 1 (B25R1-AUDIT-OPT1; controls this session)
 
 - **Directive:** `docs/directives/2026-11-05_b25r1_audit_option1.md`. Finish validating the current code (`wip/b25r1`, head `a995397`)
