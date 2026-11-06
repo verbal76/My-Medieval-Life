@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 817 (431 of them still open) |
-| **Open entries now** (rules excluded) | | **589** |
+| Entries added since | | 819 (433 of them still open) |
+| **Open entries now** (rules excluded) | | **591** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (817)
+## Added since the baseline (819)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -783,6 +783,8 @@ None.
 | TAILOR-18 | Tailor: a village NPC service selling the two backpack upgrades | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
 | TAILOR-Q | Where the tailor comes from | decision | APPROVED | owner decision |
 | TEST-AUDIT-01 | Full test regimen audit (inventory, validity, mutation sampling, gates, generations, save/load, CI reporting, coverage, efficiency, release qualification) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| TEST-AUDIT-Q1 | Should villagers' current plans (a market run with a cart, a walk to work) be saved, so a loaded world goes on as it would have? Today plans are not saved (agent decision, 2026-11-01): a villager pulling a cart lets go of it on load (KI-FR-CARTHITCH), nothing is lost, but the trip under way does not finish. Recommendation: keep as is (saving every villager's plan steps is a large save-format change) and document it as intended; revisit if playtesters notice. | decision | OPEN | unassigned |
+| TEST-AUDIT-Q2 | Accept a new simulation baseline (SIM-GATE-01) recorded from the final B25R2 commit, for overworld generation 8 and save version 23? The current one (df67e8e) predates the band household (bf20dc9, B25R1-Q2 a) and generations 6-8; every difference is traced to approved changes (docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md). Recommendation: yes, once the 365-day campaign on the final commit is read. | decision | OPEN | unassigned |
 | TEST-GOV-01 | Permanent testing governance: verify the test itself | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | TILL-D1 | Storefront till of a living household that loses or gives up its house (lease taken back for arrears, lease given up, the household migrating away): whose are the coins? (a) they go with the household that earned them (recommended; matches B18-DP-01/INT-392 for the player's shop and D03 one owner per business); (b) to the manor, as when a household ends; (c) unchanged: they stay in the house and the next holder is paid them | decision | APPROVED | 20 |
 | TIME-01 | Time-system audit: every timed system's duration, unit, meaning, calendar equivalent, calibration, balance effect and parity | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |

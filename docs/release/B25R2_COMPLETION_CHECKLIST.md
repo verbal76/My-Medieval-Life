@@ -4,7 +4,7 @@ Owner directives: `docs/directives/2026-11-06_my_folklore_pc_playtest_repair.md`
 B25R2-Q1..Q4) and the full completion directive of 2026-11-06. Base F2 `20e579e`; repair branch `wip/b25r2-playtest`.
 Counts, not percentages. Times Eastern. "Open" means not yet verified, never assumed.
 
-Last updated 2026-11-06 15:20 EST. Candidate `832f711` (code); `7c1bac4` adds the decision log only.
+Last updated 2026-11-06 15:45 EST. Test regimen audit alongside: `docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md`. Candidate `832f711` (code); `7c1bac4` adds the decision log only.
 
 ## The five repairs
 
@@ -36,7 +36,7 @@ Last updated 2026-11-06 15:20 EST. Candidate `832f711` (code); `7c1bac4` adds th
   missing skill glyphs (8 skills), chapel_test's Build 17 save case stopping early while reporting PASSED (now 175/0,
   9 checks that never ran now run), three test messages (`832f711`). The rest are the suites' own negative cases.
 - `832f711`: full suite 42274258964 **green**. Sim gate 42274351589: determinism identical at every checkpoint (shipped and Expansion 20 switches); the only blocking findings are baseline differences, investigated in `SIM_BASELINE_DIFFERENCES_B25R2.md` (they begin at `bf20dc9`, the owner-approved band household; not re-recorded). 365-day campaign 42274347279: running.
-- Windows package: release.yml on `7c1bac4` (code of `832f711` plus the decision log), private, build number 34; its release step needs the gate and is skipped, so nothing is published or drafted.
+- Windows package: release.yml run 42284391094 on `7c1bac4` (code of `832f711` plus the decision log), private, build 34: all six packages and both Windows smoke runs **succeeded**; the gate failed (baseline differences only) so the release step was **skipped**: nothing published or drafted. `pkg-full-windows` (artifact 13536562662, 235,931,879 bytes, sha256 `0d20c3084305f6b2392b761b27ce072e322415dc5e494151f8f60c0a15b0188f`) holds `MyMedievalLife-B34-Windows.zip`, version 0.1.34 (file and product 0.1.34.0). The smoke run starts it headless for 300 frames: exit 0, no script errors, no leak at exit. It does not draw, play or use a controller (owner playtest).
 
 ## Known, not in this repair's scope
 

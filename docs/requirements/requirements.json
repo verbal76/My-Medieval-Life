@@ -59086,6 +59086,50 @@
    ]
   },
   {
+   "id": "TEST-AUDIT-Q1",
+   "kind": "decision",
+   "title": "Should villagers' current plans (a market run with a cart, a walk to work) be saved, so a loaded world goes on as it would have? Today plans are not saved (agent decision, 2026-11-01): a villager pulling a cart lets go of it on load (KI-FR-CARTHITCH), nothing is lost, but the trip under way does not finish. Recommendation: keep as is (saving every villager's plan steps is a large save-format change) and document it as intended; revisit if playtesters notice.",
+   "description": "Should villagers' current plans (a market run with a cart, a walk to work) be saved, so a loaded world goes on as it would have? Today plans are not saved (agent decision, 2026-11-01): a villager pulling a cart lets go of it on load (KI-FR-CARTHITCH), nothing is lost, but the trip under way does not finish. Recommendation: keep as is (saving every villager's plan steps is a large save-format change) and document it as intended; revisit if playtesters notice.",
+   "source": "docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-06",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md"
+    }
+   ]
+  },
+  {
+   "id": "TEST-AUDIT-Q2",
+   "kind": "decision",
+   "title": "Accept a new simulation baseline (SIM-GATE-01) recorded from the final B25R2 commit, for overworld generation 8 and save version 23? The current one (df67e8e) predates the band household (bf20dc9, B25R1-Q2 a) and generations 6-8; every difference is traced to approved changes (docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md). Recommendation: yes, once the 365-day campaign on the final commit is read.",
+   "description": "Accept a new simulation baseline (SIM-GATE-01) recorded from the final B25R2 commit, for overworld generation 8 and save version 23? The current one (df67e8e) predates the band household (bf20dc9, B25R1-Q2 a) and generations 6-8; every difference is traced to approved changes (docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md). Recommendation: yes, once the 365-day campaign on the final commit is read.",
+   "source": "docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "unassigned",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-06",
+     "change": "entered in the register",
+     "why": "docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md"
+    }
+   ]
+  },
+  {
    "id": "TEST-GOV-01",
    "kind": "approved",
    "title": "Permanent testing governance: verify the test itself",
