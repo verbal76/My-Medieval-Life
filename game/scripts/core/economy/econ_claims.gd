@@ -161,7 +161,10 @@ func reconcile_all() -> Array:
 ## The units of `item` ("coins") `ref` may part with for this purpose without breaking a claim that cannot yield (stale
 ## offers reconciled first). The holding itself when nothing is claimed.
 func free_units(ref: String, item: String, for_item := "", necessity := false) -> int:
-	if f.reservations._by_owner.has(ref):
+	# REC-D3 (det_s1, gate 42124898077): an observer's read (World.observing: the flight recorder's extra scans) never
+	# reconciles: cutting stale offers is a change, and done only where a recording reads it moved the cuts to other moments
+	# (seed 1 recorded and unrecorded parted on day 18, a buyer's claims 92 against 102 coins). The game's own reads reconcile.
+	if f.reservations._by_owner.has(ref) and (f.actors.w == null or f.actors.w.observing <= 0):
 		reconcile(ref, item)
 	var held := f.actors.holding(ref, item)
 	var k := claims(ref, item)
