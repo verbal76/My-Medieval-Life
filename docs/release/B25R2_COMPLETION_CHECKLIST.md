@@ -66,6 +66,18 @@ the save_exact floor. Original candidate `832f711` kept in history.
 | Release step | 42297641550 | skipped (the gate is red): nothing published or drafted |
 | 365-day campaign | 42297637074 | running |
 
+## Owner, 2026-11-06 18:30 EST: private access, version label, counts
+
+- Private access authorized (not a release): the owner plays `pkg-full-windows` (artifact 13542782040, run 42297641550, `1f2ff4f`,
+  expires 2026-12-06). Nothing published; the gate is not bypassed.
+- Version label for the **next approved package** (not this one): visible identification "0.1.34 Rev 2 — Playtest 1", Build 34
+  kept. The label is stamped at build time by `release.yml` ("Stamp the build number": `config/version` "0.1.34-test", file and
+  product version 0.1.34.0), so it cannot change without a rebuild; the existing artifact is left unchanged.
+- Testing-defect count: the audit report's T1-T13 (13) includes T13, a coverage gap (no workplace check) that is the same issue as
+  gap G2. Without double counting: 12 testing defects (T1-T12), all repaired, and 10 coverage gaps (G1-G10; G2 and G5 closed, one of
+  G10's two items closed on `wip/test-audit` only by `door_exit_test`, 8 open). The report is not rewritten.
+- `door_exit_test` (`7971720`): test only (the test, its line in `tests.yml`, its floor); to be integrated in the next validation cycle.
+
 ## Known, not in this repair's scope
 
 - Eight skills have no glyph in the Skills window (the space is left empty): art to choose.
