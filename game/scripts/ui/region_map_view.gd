@@ -406,9 +406,9 @@ func pad_step(dir: Vector2, zoom_dir: float, look: Vector2, delta: float) -> voi
 
 ## The pad's buttons on the open map (taken here: nothing reaches the character).
 ## B25R2 (owner directive 2026-11-06, item 5): the window's buttons above the map (Village, Region, Centre on me, Whole region,
-## Resume and Dismiss destination) are reached with the triggers (GameUI.cycle_focus, as in every window) or D-pad Up from the
-## map; while one has focus, A presses it and the D-pad moves between them, as in any window. The left stick (or B) gives the
-## pad back to the map's cursor.
+## Resume and Dismiss destination) are reached with the View button (the map's own: the triggers zoom here); while one has focus,
+## A presses it and the D-pad moves between them, as in any window. View again, B or the left stick gives the pad back to the
+## map's cursor.
 func _input(e: InputEvent) -> void:
 	if not is_visible_in_tree():
 		return
@@ -432,11 +432,16 @@ func _input(e: InputEvent) -> void:
 			focus.release_focus()                  # B from the buttons: back to the map (a second B closes it)
 			get_viewport().set_input_as_handled()
 		return
+	if b.button_index == JOY_BUTTON_BACK:
+		get_viewport().set_input_as_handled()      # (not the Pack: the map's own button here)
+		if b.pressed:
+			if on_button:
+				focus.release_focus()
+			else:
+				_focus_buttons()
+		return
 	if on_button and b.button_index in [JOY_BUTTON_A, JOY_BUTTON_DPAD_LEFT, JOY_BUTTON_DPAD_RIGHT, JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_DOWN]:
 		return                                     # a button has focus: A presses it, the D-pad moves between buttons
-	if b.pressed and b.button_index == JOY_BUTTON_DPAD_UP and cursor != Vector2.INF and _focus_buttons():
-		get_viewport().set_input_as_handled()
-		return
 	get_viewport().set_input_as_handled()
 	if not b.pressed:
 		return
@@ -447,11 +452,9 @@ func _input(e: InputEvent) -> void:
 	pad_button(b.button_index)
 
 
-## B25R2: D-pad Up from the map's top edge moves the pad onto the window's buttons above it (the first that can be pressed).
-## True when one took focus. Only when the cursor is at the top of the view, so D-pad Up still moves the cursor on the map.
+## B25R2: the View button moves the pad onto the window's buttons above the map (the first that can be pressed). True when one
+## took focus.
 func _focus_buttons() -> bool:
-	if to_screen(cursor).y > 24.0:
-		return false
 	for c in get_parent().find_children("*", "BaseButton", true, false):
 		var bt := c as BaseButton
 		if bt.is_visible_in_tree() and not bt.disabled and bt.focus_mode != Control.FOCUS_NONE and not is_ancestor_of(bt):
@@ -847,8 +850,8 @@ func _markers(view: Rect2) -> void:
 	var hints := ["Dark: not yet explored.  Tap a point to travel there; drag to move, pinch or wheel to zoom.",
 			"Dark: unexplored.  Tap to travel, drag to move, pinch to zoom.", "Tap to travel"]
 	if cursor != Vector2.INF:
-		hints = ["D-pad move  ·  A travel  ·  LT/RT zoom  ·  R3 centre on me  ·  X resume  ·  Y dismiss  ·  B close",
-			"D-pad move · A travel · LT/RT zoom · R3 centre · X resume · Y dismiss", "A travel · LT/RT zoom"]
+		hints = ["D-pad move  ·  A travel  ·  LT/RT zoom  ·  R3 centre on me  ·  X resume  ·  Y dismiss  ·  View buttons  ·  B close",
+			"D-pad move · A travel · LT/RT zoom · R3 centre · X resume · Y dismiss · View buttons", "A travel · LT/RT zoom · View buttons"]
 	for hint in hints:
 		if x + 6 + font.get_string_size(hint, HORIZONTAL_ALIGNMENT_LEFT, -1, UIStyle.SMALL).x <= size.x - 8:
 			_text(font, Vector2(x + 6, yy + 5), hint, UIStyle.SMALL, UIStyle.MUTED)

@@ -2327,17 +2327,20 @@ func batch_unit(o: NPC, id: String) -> int:
 		for r in GameData.recipes:
 			var rec: Dictionary = GameData.recipes[r]
 			if (rec["in"] as Dictionary).has(id) and TRADE_STATIONS.get(o.job, []).has(str(rec.station)):
-				rs.append(r)
-		_consumers[key] = rs
+				rs.append([int(rec["in"][id]), r])
+		# B25R2 (owner directive 2026-11-06, item 3, the travel stutter): the recipes in the order of the batch they take, smallest
+		# first, so the first one `o` can make is the answer. Before, every one was checked each call: a smith's coal is used by
+		# the hundreds of catalogue weapons and armour, each _can_make walking the smith's pack for its tool, 15-27 ms a call and
+		# about 66 ms for every miner's plan (two ores, three buyers): the half-second ticks that stuttered (travel_perf_test)
+		rs.sort()
+		_consumers[key] = rs.map(func(e): return e[1])
 	var rs: Array = _consumers[key]
 	if rs.is_empty():
 		return 1
-	var unit := 0
 	for r in rs:
-		var q := int(GameData.recipes[r]["in"][id])
-		if _can_make(o, r) and (unit == 0 or q < unit):
-			unit = q
-	return unit
+		if _can_make(o, r):
+			return int(GameData.recipes[r]["in"][id])      # the least batch of those it can make (they are in that order)
+	return 0
 
 
 ## What this NPC will sell to a customer.

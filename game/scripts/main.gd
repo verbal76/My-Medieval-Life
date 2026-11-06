@@ -5708,8 +5708,9 @@ func _unhandled_input(e: InputEvent) -> void:
 	if e is InputEventJoypadMotion and (e.axis == JOY_AXIS_TRIGGER_LEFT or e.axis == JOY_AXIS_TRIGGER_RIGHT):
 		var down: bool = e.axis_value > 0.6
 		if down and not trigger_held.get(e.axis, false):
-			if ui.modal():
-				ui.cycle_focus(1 if e.axis == JOY_AXIS_TRIGGER_RIGHT else -1)    # in a window: step through its buttons
+			if ui.modal() and not (ui.panel_kind == "map" and ui.map_mode == "region"):
+				ui.cycle_focus(1 if e.axis == JOY_AXIS_TRIGGER_RIGHT else -1)    # in a window: step through its buttons (B25R2: not on
+				# the Region map, where the triggers zoom and the View button reaches the window's buttons, RegionMapPanel._input)
 			elif e.axis == JOY_AXIS_TRIGGER_LEFT and world != null and running:
 				toggle_sprint()                                                  # in play: LT turns sprint on or off (B8-027)
 			elif e.axis == JOY_AXIS_TRIGGER_RIGHT and world != null and running and not paused and world.player.alive and placing.is_empty():

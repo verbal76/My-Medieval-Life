@@ -8,7 +8,10 @@ extends MapView
 ## MapView draws the village; the cells inside it are not drawn here. The tiles, the atlases and
 ## the TileSet are the village MapView's (the art is the same packs).
 
-const BUILD_PER_FRAME := 3
+## B25R2 (owner directive 2026-11-06, item 3, the travel stutter): one chunk a frame (it was 3: crossing a chunk border built
+## two or three at once, 100-150 ms in one frame, travel_perf_test), and on a frame with none to build the data of one chunk of
+## the next ring out is prepared ahead in the direction of travel (_prefetch), so the ones needed at the border are ready.
+const BUILD_PER_FRAME := 1
 
 var overworld: Overworld
 var radius := 2                       # chunks beyond the camera's chunk that are kept drawn
@@ -89,6 +92,8 @@ func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FR
 		if not chunks.has(c):
 			_build(c)
 			n += 1
+	if n == 0 and budget >= 0:
+		_prefetch(cc, center)
 	if budget < 0 and tree_sink != null:
 		tree_sink.flush()
 	_road_step()
@@ -106,6 +111,35 @@ func follow(center: Vector2, feet: Vector2, delta: float, budget := BUILD_PER_FR
 		for l: TileMapLayer in _home_roofs[id][0]:
 			l.modulate.a = 0.3 if inside else 1.0
 	canopy.update(feet, delta)
+
+
+var _last_center := Vector2.INF                # B25R2: where the view's centre was, for the direction of travel (_prefetch)
+
+
+## B25R2: with nothing to build this frame, generate the data (Overworld.get_chunk, kept in its cache) of one chunk of the ring
+## just outside the drawn window, the one nearest the point the view is heading for: the costly part of a chunk is then done
+## before the border is crossed, and building it is only drawing. Never more than one a frame.
+func _prefetch(cc: Vector2i, center: Vector2) -> void:
+	var heading := Vector2.ZERO if _last_center == Vector2.INF else (center - _last_center)
+	_last_center = center
+	if heading.length() < 0.01:
+		return                                     # standing still: nothing ahead to prepare
+	var ahead := center + heading.normalized() * float(Overworld.CHUNK * (radius + 1))
+	var best := Vector2i(1 << 30, 0)
+	var bd := INF
+	for dy in range(-radius - 1, radius + 2):
+		for dx in range(-radius - 1, radius + 2):
+			if maxi(absi(dx), absi(dy)) != radius + 1:
+				continue
+			var c := cc + Vector2i(dx, dy)
+			if overworld.cache.has(c) or overworld.chunk_in_village(c):
+				continue
+			var d := (Vector2(c * Overworld.CHUNK) + Vector2(Overworld.CHUNK, Overworld.CHUNK) * 0.5).distance_to(ahead)
+			if d < bd:
+				bd = d
+				best = c
+	if bd < INF:
+		overworld.get_chunk(best)
 
 
 ## B14-07: the steps, stairs and walkways through a cliff's rim in a loaded chunk, each a 16 px tile over its cell, under
