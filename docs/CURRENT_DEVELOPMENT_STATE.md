@@ -2,8 +2,8 @@
 
 **This is the one current-state document.** Owner directives MEM-01 and DOC-CONT-01 make it the entry point.
 
-- **Updated:** 2026-11-03 (Build 25 Revision 1 in progress).
-- **Snapshot last verified:** 2026-11-03 01:10 UTC by the lead, against wip/region-nav `aafcc4d`, wip/expansion20 `4b51c92` (campaigns 41536805310 and 41536810831 running), wip/requirements-control (this commit).
+- **Updated:** 2026-11-06 19:00 EST (B25R2: validation finishing, then development hold).
+- **Snapshot last verified:** 2026-11-07 00:00 UTC by the lead, against wip/b25r2-playtest `1f2ff4f`, wip/requirements-control (this commit), Actions runs to 42297641550.
   - **Convention:** whoever checks this file against the live GitHub state writes this line as
     `YYYY-MM-DD HH:MM UTC by <session or agent>, against wip/expansion20 <sha>, wip/requirements-control <sha>, Actions runs
     to <newest run id>`.
@@ -18,6 +18,30 @@
     `docs/requirements/views/`.
   - History lives in `docs/DEVELOPMENT_CHANGELOG.md`.
 - **Recovery after lost context:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
+
+## DEVELOPMENT HOLD after the current validation (owner, 2026-11-06 night; `docs/directives/2026-11-06_complete_validation_preserve_hold.md`)
+
+Resume here. No new development, workflows, rebuilds, baseline promotion or publication until the owner authorizes it.
+
+- **Candidate:** `wip/b25r2-playtest` at `1f2ff4f33da2d2df60ef876d2cb6a5eaf896b655` (= `832f711` + homestead water `c903ce8` +
+  TEST-AUDIT-Q1 plans `adf71ec` + audit merge `4bfd8fd` + floor). Evidence table: `docs/release/B25R2_COMPLETION_CHECKLIST.md`.
+- **Verified on `1f2ff4f`:** strict full suite 42297632580 (234 suites, 18,918 checks, 0 failures, 0 script errors); release run
+  42297641550 (six packages, Windows smoke full and demo passed; gate red on the baseline only; release step skipped).
+- **Owner's provisional playtest package (B25R2-PKG-01):** `pkg-full-windows`, artifact 13542782040,
+  https://github.com/verbal76/My-Medieval-Life/actions/runs/42297641550/artifacts/13542782040, sha256 `259770e0...31df`, expires
+  2026-12-06. Never alter or replace it.
+- **365-day campaign on `1f2ff4f`:** run 42297637074 (long-sims.yml, flight, seeds 1 and 2, 100-day segments). Segments 1 and 2 passed
+  on both seeds (defect step not triggered). Read on completion: each seed's `analyse` summary and `fr-seed<N>-results`
+  (findings.md, summary.json), the `report` job; compare with the 832f711 campaign 42274347279 (finished: seed 1 0 CRITICAL/20 HIGH/78
+  MEDIUM, 0 confirmed; seed 2 1 CRITICAL confirmed = the homestead water script error fixed in `c903ce8`, 108 HIGH, 45 MEDIUM).
+- **The stopping point: generation 8 baseline (TEST-AUDIT-Q2, conditional).** After a clean campaign: a candidate file beside
+  `docs/release/sim_baseline.json` (never overwrite it; `tools/sim_gate.py --write` needs the owner), with versions and SHA, plus a
+  comparison report extending `docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md`. Then stop for the owner.
+- **Then (owner-authorized, B25R2-DRAFT-01):** the next package from a new commit carrying the label "0.1.34 Rev 2 — Playtest 1"
+  (B25R2-VER-01), `door_exit_test` `7971720` (test-only), the deferred DECISIONS entries for `adf71ec` and `c903ce8`; full strict
+  suite and gate on that exact commit; private draft release only. Never public, never Steam.
+- **Audit:** `docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md`: 12 testing defects all repaired (T13 = gap G2), 10 coverage gaps, 8 open.
+- **Records:** this branch, `wip/requirements-control` (register 0 problems). Audit branch `wip/test-audit` (`7971720`).
 
 ## B25R2 checkpoint (2026-11-06 12:50 EST)
 
