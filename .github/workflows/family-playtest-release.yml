@@ -1,6 +1,6 @@
 # Owner directive 2026-11-05 "Family playtest now, final validation in parallel"
 # (docs/directives/2026-11-05_b25r1_family_playtest_now.md): publish the Build 25R1 family playtest from packages ALREADY
-# built and smoke-tested by release.yml on the frozen source (docs/release/family_playtest.env: the release run and its commit).
+# built by release.yml on the frozen source and smoke-tested by win-smoke.yml (docs/release/family_playtest.env: the release run and its commit).
 # Nothing is rebuilt here: the files are that run's own pkg-* artifacts, byte for byte, with their established names. The owner's
 # directive sets aside SIM-GATE-01's "a failed gate publishes nothing" for this family package only (its determinism finding is
 # being investigated in parallel and recorded in the notes). Runs only on a push to wip/b25r1-family; waits for the owner's
@@ -33,13 +33,25 @@ jobs:
           . docs/release/family_playtest.env
           run_sha=$(gh api "repos/${{ github.repository }}/actions/runs/$RELEASE_RUN" --jq .head_sha)
           [ "$run_sha" = "$SOURCE_SHA" ] || { echo "release run $RELEASE_RUN built $run_sha, not $SOURCE_SHA"; exit 1; }
-          smoke=$(gh api "repos/${{ github.repository }}/actions/runs/$RELEASE_RUN/jobs?per_page=50" --jq '.jobs[] | select(.name=="smoke-windows (full)") | .conclusion')
-          [ "$smoke" = "success" ] || { echo "the full Windows smoke test of run $RELEASE_RUN is '$smoke', not success"; exit 1; }
+          # The Windows smoke tests: win-smoke.yml runs on this release run's own pkg-full-windows and pkg-demo-windows (release.yml's
+          # smoke job waits for all six packages). release.yml's pass rules are applied here to their logs: every launch exits 0,
+          # no SCRIPT ERROR, nothing left in use or leaked at exit.
+          for pair in "$SMOKE_RUN_FULL:pkg-full-windows:family-full" "$SMOKE_RUN_DEMO:pkg-demo-windows:family-demo"; do
+            IFS=: read -r srun sart slabel <<< "$pair"
+            gh run download "$srun" -n "win-smoke-$slabel-$sart-$RELEASE_RUN" -D "smoke/$sart"
+            cat "smoke/$sart/results/summary.txt"
+            n=$(grep -c ' exit=' "smoke/$sart/results/summary.txt"); ok=$(grep -c ' exit=0 ' "smoke/$sart/results/summary.txt")
+            [ "$n" -ge 2 ] && [ "$n" = "$ok" ] || { echo "$sart: a launch did not exit 0"; exit 1; }
+            if grep -lE 'SCRIPT ERROR|resources still in use at exit|ObjectDB instances? (were|was) leaked' smoke/$sart/results/*_out.log smoke/$sart/results/*_err.log; then
+              echo "$sart: script errors or leaks at exit"; exit 1
+            fi
+          done
           mkdir -p pkg
           for a in pkg-full-windows pkg-demo-windows pkg-full-linux pkg-full-android pkg-demo-linux pkg-demo-android; do
             if gh run download "$RELEASE_RUN" -n "$a" -D "dl/$a" 2>/dev/null; then cp dl/$a/* pkg/; else echo "not available yet: $a"; fi
           done
-          ls pkg/*Windows.zip | grep -v Demo >/dev/null || { echo "no full Windows package"; exit 1; }
+          got=$(sha256sum "pkg/$FULL_WIN_ZIP" | cut -d' ' -f1)
+          [ "$got" = "$FULL_WIN_SHA256" ] || { echo "$FULL_WIN_ZIP is $got, not the tested $FULL_WIN_SHA256"; exit 1; }
           (cd pkg && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt && for f in *; do printf '%s\t%s bytes\n' "$f" "$(stat -c %s "$f")"; done)
       - name: Publish the GitHub Release (or add files to it)
         env:

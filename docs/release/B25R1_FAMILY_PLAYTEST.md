@@ -1,4 +1,4 @@
-**My Medieval Life — Build 25R1 Family Playtest.** A family playtest, not a Steam or production release. Built by release run
+**My Medieval Life — Build 25R1 Family Playtest.** A family playtest, not a Steam or production release. Built on 2026-11-06 (01:32 UTC) by release run
 42144510422 (build number 34) from `wip/b25r1` commit `a9e9f6e` (the complete integrated Build 25R1 scope). Not uploaded to Steam.
 
 ## Downloads
@@ -22,7 +22,9 @@
 
 ## What was checked on this exact commit (`a9e9f6e`)
 
-- Windows: the release run's smoke test starts the packaged game headless, quits, and fails on crashes or leaks at exit.
+- Windows: both Windows packages from this run were started headless and quit twice each on a Windows runner (win-smoke runs
+  42146459822 and 42146463230), held to release.yml's rules: exit 0, no script errors, nothing leaked at exit. The full package
+  attached here is byte-identical to the tested one (sha256 `db3b64043443c81027e5bbf6da12e49bd55127d7ab525b915555ec8ef16be369`).
 - Automated (full test run 42124894260): world generation (overworld 440/0, world 339/0, start 523 steps/0); joining and
   shared play (net_g1, net_interact, net_mp4, net_batch_b, net_fauna, net_family, net_ui, multiplayer A1/B, all 0 failures); the
   host's world saved and restarted with every player's identity, purse, goods, relationships and records (multiplayer_c 326/0,
