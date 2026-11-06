@@ -7,8 +7,8 @@ The decision register is the `decision` records of the register. A recommendatio
 | Disposition | Count |
 |---|---|
 | OPEN | 21 |
-| APPROVED | 296 |
-| PROVISIONAL | 3 |
+| APPROVED | 298 |
+| PROVISIONAL | 4 |
 | SUPERSEDED | 3 |
 | REOPENED | 0 |
 | DEFERRED | 5 |
@@ -25,10 +25,11 @@ The decision register is the `decision` records of the register. A recommendatio
 |---|---|---|---|---|---|
 | P21-OFFICES-Q1 | Political offices other than the mayor: their terms, succession, dismissal and vacancy rules (the mayor's rule is not extended to them automatically) | OPEN | no |  | docs/directives/2026-10-31_doc_recon_review_decisions.md |
 
-## Build 25: Weather, Seasons and Disasters: open, reopened or provisional (5)
+## Build 25: Weather, Seasons and Disasters: open, reopened or provisional (6)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
+| B25R2-DRAFT-01 | May Play Test Build One be published, and how? | PROVISIONAL | no |  | docs/directives/2026-11-06_playtest_build_one_owner_decisions.md |
 | E25-OD-03 | Wells for bucket lines away from the river (packet recommendation: one or two wells as public works the reeve can build) | OPEN | no | WEATHER-01 | docs/design/EXPANSION25_WEATHER_SEASONS_DISASTERS.md s.6; docs/directives/2026-10-23_dynamic_weather_idea.md |
 | E25-OD-06 | May the reeve keep a disaster reserve in the treasury? (recommendation: yes, inside the existing reserve rule, no new money) | OPEN | no | WEATHER-01 | docs/design/EXPANSION25_WEATHER_SEASONS_DISASTERS.md s.6; docs/directives/2026-10-23_dynamic_weather_idea.md |
 | E25-OD-07 | When to build Expansion 25 relative to Expansions 20-24 | PROVISIONAL | no | WEATHER-01 | docs/design/EXPANSION25_WEATHER_SEASONS_DISASTERS.md s.6; docs/directives/2026-10-23_dynamic_weather_idea.md |
@@ -65,5 +66,5 @@ The decision register is the `decision` records of the register. A recommendatio
 | JUICE-JD3 | Villager chatter: how often may villagers show what they are doing in bubbles (OWN-19 extension)? | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D3 |
 | JUICE-JD4 | Screen shake and haptics: allowed at all, on which events, and default on or off? | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D4 |
 | JUICE-JD5 | Notifications: which village notes the player sees in the corner log by default, and whether a filter exists. | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D5 |
-| TEST-AUDIT-Q2 | Accept a new simulation baseline (SIM-GATE-01) recorded from the final B25R2 commit, for overworld generation 8 and save version 23? The current one (df67e8e) predates the band household (bf20dc9, B25R1-Q2 a) and generations 6-8; every difference is traced to approved changes (docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md). Recommendation: yes, once the 365-day campaign on the final commit is read. | PROVISIONAL | no |  | docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md |
+| TEST-AUDIT-Q2 | Accept a new simulation baseline (SIM-GATE-01) recorded from the final B25R2 commit, for overworld generation 8 and save version 23? The current one (df67e8e) predates the band household (bf20dc9, B25R1-Q2 a) and generations 6-8; every difference is traced to approved changes (docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md). Recommendation: yes, once the 365-day campaign on the final commit is read. | PROVISIONAL | no | B25R2-DRAFT-01, B25R2-PKG-01 | docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md |
 

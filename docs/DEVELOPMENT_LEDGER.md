@@ -908,7 +908,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (328)
+## Owner decisions (331)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -963,10 +963,13 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25R1-Q7 | Does the live-near-the-player rule (B25R1-Q6) also apply to the starting village's people, or only to the rest of the region? | 20 | APPROVED |  |
 | B25R1-Q8 | Town art gap (Higham, Wulstead, churches, chalk figure not store-quality; owned packs lack a stone market cross, white battlements, a fountain with water): owned art with a better layout, a pack the owner buys, or both? | 20 | APPROVED |  |
 | B25R1-Q9 | Do hamlets count as civic places (civic_records test premise), and with what institutions? | 20 | APPROVED |  |
+| B25R2-DRAFT-01 | May Play Test Build One be published, and how? | 25 | PROVISIONAL |  |
+| B25R2-PKG-01 | May the existing Windows package built from candidate 1f2ff4f (release run 42297641550, artifact pkg-full-windows 13542782040) be used for the owner's personal testing while validation continues? | 25 | APPROVED |  |
 | B25R2-Q1 | Which source for Play Test Build One? | 25 | APPROVED |  |
 | B25R2-Q2 | How far should the My Folklore name change go in this release? | 25 | APPROVED |  |
 | B25R2-Q3 | Public release or private draft for Play Test Build One? | 25 | APPROVED |  |
 | B25R2-Q4 | How should the Claude usage budget be spent on the B25R2 repairs? | 25 | APPROVED |  |
+| B25R2-VER-01 | How should the next Play Test Build One package identify itself? | 25 | APPROVED |  |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | owner decision | APPROVED |  |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | owner decision | APPROVED |  |
 | BRANCH-POL-Q1 | Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion20 (code), with notices on the code line's copies (recommended); or authorize bringing the records into wip/expansion20 as one reviewed change (files only, not the old ancestry)? | unassigned | OPEN |  |

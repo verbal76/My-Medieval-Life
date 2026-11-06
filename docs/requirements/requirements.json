@@ -8594,6 +8594,69 @@
    ]
   },
   {
+   "id": "B25R2-DRAFT-01",
+   "kind": "decision",
+   "title": "May Play Test Build One be published, and how?",
+   "description": "May Play Test Build One be published, and how?",
+   "source": "docs/directives/2026-11-06_playtest_build_one_owner_decisions.md",
+   "owner_wording": null,
+   "owner_answer": "AUTHORIZED, SUBJECT TO VALIDATION: a private GitHub draft release only, after the required validation gates pass: the 365-day campaign completing successfully; all unexplained simulation differences investigated; the Generation 8 baseline receiving explicit owner approval; the normal validation gate passing; the next package carrying the approved revision label. Once met, proceed with the normal private draft release workflow without asking again. Not authorized: a public GitHub release; a Steam release or upload; bypassing or weakening any validation gate; automatically accepting a new simulation baseline; claiming physical controller testing passed before the owner performs it. If GitHub draft releases cannot provide the intended private access in this public repository, report that limitation and preserve the artifact-access method rather than publishing a visible release.",
+   "disposition": "PROVISIONAL",
+   "blocks_implementation": false,
+   "target_build": "25",
+   "related": [
+    "B25R2-Q3",
+    "TEST-AUDIT-Q2",
+    "B25R2-VER-01"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-06",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-06_playtest_build_one_owner_decisions.md"
+    },
+    {
+     "date": "2026-11-06",
+     "change": "disposition: OPEN -> PROVISIONAL; owner_answer; reasoning",
+     "why": "owner decision 2026-11-06 evening"
+    }
+   ],
+   "reasoning": "Conditional authorization: release.yml publishes only when SIM-GATE-01 passes; the gate is red only on the generation-blind baseline (df67e8e), whose replacement needs the owner (TEST-AUDIT-Q2)."
+  },
+  {
+   "id": "B25R2-PKG-01",
+   "kind": "decision",
+   "title": "May the existing Windows package built from candidate 1f2ff4f (release run 42297641550, artifact pkg-full-windows 13542782040) be used for the owner's personal testing while validation continues?",
+   "description": "May the existing Windows package built from candidate 1f2ff4f (release run 42297641550, artifact pkg-full-windows 13542782040) be used for the owner's personal testing while validation continues?",
+   "source": "docs/directives/2026-11-06_playtest_build_one_owner_decisions.md",
+   "owner_wording": null,
+   "owner_answer": "APPROVED FOR IMMEDIATE PERSONAL TESTING. Do not rebuild, modify, replace, or delay access to this artifact. It is a provisional playtest package, not the final validated Play Test Build One release. The existing artifact must remain accessible while validation continues.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "25",
+   "related": [
+    "B25R2-Q3",
+    "TEST-AUDIT-Q2"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-06",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-06_playtest_build_one_owner_decisions.md"
+    },
+    {
+     "date": "2026-11-06",
+     "change": "disposition: OPEN -> APPROVED; owner_answer; reasoning",
+     "why": "owner decision 2026-11-06 evening"
+    }
+   ],
+   "reasoning": "The package from 1f2ff4f passed the strict full suite (run 42297632580: 234 suites, 18,918 checks, 0 failures, 0 script errors) and the headless Windows smoke run; only the release step is withheld by the baseline gate. Personal testing needs no release. Artifact sha256 259770e05dec3b5a78df9bcd7c32a8eaaf6edaa386c4b793ff20b703952331df, expires 2026-12-06."
+  },
+  {
    "id": "B25R2-Q1",
    "kind": "decision",
    "title": "Which source for Play Test Build One?",
@@ -8700,6 +8763,36 @@
      "why": "owner answered 2026-11-06"
     }
    ]
+  },
+  {
+   "id": "B25R2-VER-01",
+   "kind": "decision",
+   "title": "How should the next Play Test Build One package identify itself?",
+   "description": "How should the next Play Test Build One package identify itself?",
+   "source": "docs/directives/2026-11-06_playtest_build_one_owner_decisions.md",
+   "owner_wording": null,
+   "owner_answer": "Keep the underlying Build 34 designation. The next package must visibly identify itself as: 0.1.34 Rev 2 — Playtest 1. The existing package may retain its current version label because changing it requires rebuilding. Apply the corrected label to the next authorized build. Do not rebuild solely to change the label while the 365-day campaign is running.",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "25",
+   "related": [
+    "B25R2-Q4"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-06",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-06_playtest_build_one_owner_decisions.md"
+    },
+    {
+     "date": "2026-11-06",
+     "change": "disposition: OPEN -> APPROVED; owner_answer; reasoning",
+     "why": "owner decision 2026-11-06 evening"
+    }
+   ],
+   "reasoning": "release.yml stamps config/version 0.1.34-test and file/product version 0.1.34.0 at build time, so the label of artifact 13542782040 cannot change without a rebuild."
   },
   {
    "id": "B7-001",
@@ -59082,6 +59175,11 @@
      "date": "2026-11-06",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-06_permanent_testing_governance_and_test_audit.md"
+    },
+    {
+     "date": "2026-11-06",
+     "change": "note",
+     "why": "owner 2026-11-06 evening (docs/directives/2026-11-06_playtest_build_one_owner_decisions.md): count reconciliation accepted: 12 testing defects (T1-T12) all repaired; T13 duplicates coverage gap G2; 10 coverage gaps, 8 open; door_exit_test 7971720 approved for the next validation cycle"
     }
    ]
   },
@@ -59136,6 +59234,11 @@
      "date": "2026-11-06",
      "change": "disposition: OPEN -> PROVISIONAL; owner_answer",
      "why": "owner answered 2026-11-06: conditional only; finish and inspect the 365-day run, attribute every difference, confirm conservation, determinism and version identity, keep earlier baselines, prepare the candidate, then stop for final approval"
+    },
+    {
+     "date": "2026-11-06",
+     "change": "note",
+     "why": "owner 2026-11-06 evening (docs/directives/2026-11-06_playtest_build_one_owner_decisions.md): conditional approval restated for candidate 1f2ff4f; stop before promotion"
     }
    ]
   },

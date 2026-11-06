@@ -78,6 +78,18 @@ the save_exact floor. Original candidate `832f711` kept in history.
   G10's two items closed on `wip/test-audit` only by `door_exit_test`, 8 open). The report is not rewritten.
 - `door_exit_test` (`7971720`): test only (the test, its line in `tests.yml`, its floor); to be integrated in the next validation cycle.
 
+## Owner decisions, 2026-11-06 evening (`docs/directives/2026-11-06_playtest_build_one_owner_decisions.md`)
+
+- B25R2-PKG-01 APPROVED: artifact 13542782040 (`1f2ff4f`) for the owner's personal testing now; not rebuilt, modified or replaced;
+  provisional, not the validated release.
+- B25R2-VER-01 APPROVED: the next package shows "0.1.34 Rev 2 — Playtest 1" (Build 34 kept); no rebuild for the label alone while
+  the campaign runs.
+- B25R2-DRAFT-01 PROVISIONAL: a private GitHub **draft** release, once the campaign is clean, every unexplained difference
+  investigated, the generation 8 baseline owner-approved, the gate passing and the package carrying the new label. Never public,
+  never Steam. Limitation to report: a draft release is visible only to collaborators with write access (it is not shown publicly),
+  but its files are not downloadable by the public either; the artifact link stays the access method in any case.
+- TEST-AUDIT-Q2: still conditional; stop before promotion. `door_exit_test` (`7971720`) goes into the next validation cycle.
+
 ## Known, not in this repair's scope
 
 - Eight skills have no glyph in the Skills window (the space is left empty): art to choose.

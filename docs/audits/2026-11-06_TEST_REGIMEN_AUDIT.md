@@ -27,6 +27,11 @@ Validity, by what this audit could establish: 26 suites mutation-tested (25 exis
 floor). The rest are read by the static scan only. No suite is claimed valid beyond that. Exhaustive mutation testing of 227 suites
 (about 28,000 runner seconds a pass) was not attempted.
 
+**Count reconciliation (accepted by the owner, 2026-11-06 evening, `docs/directives/2026-11-06_playtest_build_one_owner_decisions.md`).**
+The rows above are kept as first reported. The corrected accounting is: **12 confirmed testing defects (T1-T12), all repaired**;
+**10 coverage gaps (G1-G10), 8 still open**. T13 was incorrectly counted as a testing defect: it is the same issue as coverage gap G2
+(no suite checked that villagers reach their workplace), so it is counted once, as G2. No coverage gap is closed by this note.
+
 ## B. Inventory (summary; every item in the appendix)
 
 - **CI (`tests.yml`)**: 12 shards; each suite through `tools/ci_report.py` (a log per suite, its counts, its first failures); a report job
