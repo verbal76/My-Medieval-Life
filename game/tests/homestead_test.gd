@@ -204,6 +204,15 @@ func _init() -> void:
 		for so: NPC in w2.npcs:
 			if so.alive and so.inv.count("wheat_seed") >= 3:
 				seller = so
+	if seller == null:
+		# whether anyone carries seed that morning is the village's economy (after a sowing it may all be in the ground or
+		# in the pantries, WDR-022), not this check's subject: a grown member of a household holding seed in its pantry
+		# takes three in hand to sell (a move within that household; nothing made)
+		for so: NPC in w2.npcs:
+			if seller == null and so.alive and so.role == "adult" and so.household >= 0 and so.household != me.household \
+					and (w2.households[so.household].pantry as Inventory).count("wheat_seed") >= 3:
+				w2.transfer(w2.households[so.household].pantry, so.inv, "wheat_seed", 3)
+				seller = so
 	var g2 := _goods(w2)
 	var s2: Dictionary = w2.stats.duplicate()
 	var coins2 := w2.total_coins() - w2.coin_sources

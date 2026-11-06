@@ -1242,7 +1242,9 @@ func _plan_livelihood(n: NPC, c: Dictionary) -> bool:
 			n.plan = [b.go(b.beside(at, n.cell(), 0, true)), b.work(mins0, "chop", {"x": at.x, "y": at.y}, "work", at)]
 			return true
 	if n.inv.count("log") + n.inv.count("stone") >= int(cfg().sell_at) * 2:
-		return false                                    # the pack is full of goods: a trip is due (or nobody buys)
+		# the pack is full of goods: a trip is due (or nobody buys), so no more felling or breaking stone; the field's work
+		# fills the pantry, not the pack, and goes on (a pack nobody buys from must not keep the household from its crop)
+		return str(c.status) != "intended" and _plan_field(n, c, trade)
 	if trade == "miner" and n.inv.has("pickaxe"):
 		var rock := _near_boulder(c, n)
 		if rock.x != 1 << 30:
