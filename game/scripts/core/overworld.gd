@@ -2554,8 +2554,6 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 			var b0 := Vector2i(cells[2 * mini(e2, n - 1)], cells[2 * mini(e2, n - 1) + 1])
 			var stub := DRY_WAY_STUB if end_wet or wet.call(a0, wet_extra) >= 0 else 0
 			var way0 := _dry_way(a0, b0, wet, wet_extra, stub)
-			if way0.is_empty():
-				way0 = _dry_way(a0, b0, wet, 0.5, stub)   # a narrow strip of bank beside the water: the water's own edge, not a tile out
 			if not way0.is_empty():
 				out.append_array(way0)
 				k = mini(e2, n - 1) + 1
