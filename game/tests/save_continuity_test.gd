@@ -21,6 +21,10 @@ func check(cond: bool, what: String) -> void:
 
 func parts(w: World) -> Dictionary:
 	var d := {"minutes": str(w.minutes), "treasury": str(w.treasury), "coin_sources": str(w.coin_sources), "rng": str(w.rng.state), "granary": str(w.granary.items)}
+	# TEST-AUDIT-01: the player too (before, "every part" left the player out: a save that loaded the player's coins wrong
+	# passed here; mutation M2_save_coins)
+	var p: PlayerState = w.player
+	d["player"] = "%s|%d|%s|%s|%s|%s|%s" % [p.alive, p.coins, p.pos, p.hunger, p.stamina, p.inv.items, p.skills]
 	for n: NPC in w.npcs:
 		d["npc%d" % n.id] = "%s|%d|%s|%s|%s|%s" % [n.alive, n.coins, n.pos, n.hunger, n.job, n.inv.items]
 	for a: Animal in w.fauna.animals:
