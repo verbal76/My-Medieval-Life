@@ -32,7 +32,7 @@ extends RefCounted
 ##  - Trees and rocks are single solid cells, never within a cell of each other or of a cliff, so
 ##    they cannot wall anything in. Flowers and bushes are walkable decoration.
 
-const GEN_VERSION := 7
+const GEN_VERSION := 8
 ## Generator versions whose saved changes still apply (their trees, rocks, flowers and roads are in the same cells): 2 (PL1-12,
 ## 2026-10-21) only draws the low red flower (tile 2656) among the wild flowers (overworld_tiles.json flowers), so a flower
 ## may be another colour than in version 1, and nothing else moved.
@@ -57,7 +57,12 @@ const GEN_VERSION := 7
 ## the houses outside the walls (SitePlan._castle_place), and no join, ring leg or side road laid along the canonical water
 ## when a dry way exists (_water_run, _side_dry). Cells changed in the south, at Higham and by the rivers, so a generation 6
 ## world is refused like the older ones (owner B25R1-Q5).
-const GEN_COMPATIBLE := [7]
+## Generation 8 (B25R2 playtest repair, owner directive 2026-11-06 item 6, "invalid looping bridge geometry"): where a straight road
+## runs onto a curving watercourse and comes back to the bank it left (it runs along the water), the overlapped run is laid round the
+## water over dry land (_crossing_legs, _dry_way) instead of being left on the water, where it was drawn as a chain of bridge cells
+## going nowhere (seed 1: 7 cells at -521,-22, 15 down the river at -336,338). Only those runs change; a generation 7 world keeps
+## its own roads (it is drawn with its own generation), so a generation 7 save still loads.
+const GEN_COMPATIBLE := [7, 8]
 const CHUNK := 32
 const PAD := 4                           # cells computed round a chunk, so neighbours' rules need no other chunk
 const AREA := CHUNK + 2 * PAD
@@ -2456,8 +2461,19 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 			var w := float(rs[mini(k, rs.size() - 1)])
 			if Rect2(a, Vector2.ZERO).expand(b).grow(w + 4.0).intersects(Rect2(box)):
 				segs.append([a, b, w])
+		if gen >= 8:
+			# generation 8: the course's pools too (drawn as water by _water_corners with a bank up to half a tile wider), as a
+			# segment of no length: before, a road over a pool's edge was not seen as on the water and was drawn as bridge
+			for pool in crs.pools:
+				var pc: Vector2 = pool[0]
+				if Rect2(pc, Vector2.ZERO).grow(float(pool[1]) + 4.0).intersects(Rect2(box)):
+					segs.append([pc, pc, float(pool[1]) + 0.5])
 	if segs.is_empty():
 		return cells
+	# the water as drawn: a cell is water when two of its corners are (_water_corners: within a course's half-width plus a bank of
+	# up to a quarter tile), so its middle can lie up to about a tile out; generation 8 counts the run from there (before, half a
+	# tile: cells drawn as water at a run's edge were taken for land and their road cells became bridge)
+	var wet_extra := 1.0 if gen >= 8 else 0.5
 	var wet := func(c: Vector2i, extra: float) -> int:      # the index of the course segment whose water covers c, else -1
 		var p := Vector2(c) + Vector2(0.5, 0.5)
 		for si in segs.size():
@@ -2469,12 +2485,26 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 	var plain := 1                                    # cells from here on were appended as they were (after the last leg)
 	while k < n:
 		var c := Vector2i(cells[2 * k], cells[2 * k + 1])
-		var si: int = wet.call(c, 0.5)
+		var si: int = wet.call(c, wet_extra)
 		if si < 0 or k == 0:
 			out.append(c.x)
 			out.append(c.y)
 			k += 1
 			continue
+		if gen >= 8:
+			# generation 8, first: the run's own ends as drawn (the cell before it, the first cell after it that is not water); when dry
+			# land joins them round the water (one bank: the road runs along the water, over a pool's edge, round a bend), the run is
+			# laid there and no bridge is built. A road running beside the water for long never finds the margin-clear ends below
+			# and was left on the water as drawn (seed 2, 7 cells of bridge along the bank at 445,149)
+			var e2 := k
+			while e2 < n and wet.call(Vector2i(cells[2 * e2], cells[2 * e2 + 1]), wet_extra) >= 0:
+				e2 += 1
+			if e2 < n:
+				var way0 := _dry_way(Vector2i(cells[2 * (k - 1)], cells[2 * (k - 1) + 1]), Vector2i(cells[2 * e2], cells[2 * e2 + 1]), wet, wet_extra)
+				if not way0.is_empty():
+					out.append_array(way0)
+					k = e2 + 1
+					continue
 		# a run over the water: from the last cell clear of it (a) to the first clear after (b)
 		var e := k
 		while e < n and wet.call(Vector2i(cells[2 * e], cells[2 * e + 1]), float(CROSS_MARGIN)) >= 0:
@@ -2508,40 +2538,157 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 		var b := Vector2i(cells[2 * e], cells[2 * e + 1])
 		var dir: Vector2 = (segs[si][1] as Vector2) - (segs[si][0] as Vector2)
 		var o: Vector2 = segs[si][0]
-		if signf(dir.cross(Vector2(a) - o)) == signf(dir.cross(Vector2(b) - o)):
+		# generation 8: when dry land joins the run's two ends round the water (they are on one bank: the road runs along the water,
+		# over a pool's edge or round a bend's inside), the run is laid there and no bridge is built; only water with no dry way
+		# round it is crossed. Before, the side of the course was judged from the first segment the road touched, which on a
+		# meander or a pool said "crossing" for a run along the bank (seed 2, 7 cells of bridge at 445,149)
+		var way := _dry_way(a, b, wet, wet_extra) if gen >= 8 else PackedInt32Array()
+		if not way.is_empty():
+			out.resize(2 * (out.size() / 2 - (k - s)))
+			out.append_array(way)
+			k = e + 1
+			plain = k
+			continue
+		if dir == Vector2.ZERO or signf(dir.cross(Vector2(a) - o)) == signf(dir.cross(Vector2(b) - o)):
 			out.append(c.x)                           # the road touches the water and comes back on the same bank (it runs
 			out.append(c.y)                           # along it): no crossing; the water keeps off it (_water_may_cross)
 			k += 1
 			continue
-		var ns := absf(dir.x) >= absf(dir.y)          # the course runs east-west: the leg runs north-south
 		var mid := Vector2(a + b) * 0.5
 		var fc := _forced_near(mid, 8.0)
 		if fc != Vector2.INF:
 			mid = fc
-		var line := roundi(mid.x) if ns else roundi(mid.y)
-		var axis := Vector2i(0, 1) if ns else Vector2i(1, 0)
-		var at := Vector2i(line, roundi(mid.y)) if ns else Vector2i(roundi(mid.x), line)
-		# the leg's ends: out along the line from the water's middle until CROSS_MARGIN clear of every course
-		var sign := 1 if Vector2(b - a).dot(Vector2(axis)) >= 0.0 else -1
-		var p0 := at
-		var p1 := at
-		var guard := 0
-		while wet.call(p0, float(CROSS_MARGIN)) >= 0 and guard < 40:
-			p0 -= axis * sign
-			guard += 1
-		guard = 0
-		while wet.call(p1, float(CROSS_MARGIN)) >= 0 and guard < 40:
-			p1 += axis * sign
-			guard += 1
+		var ns := absf(dir.x) >= absf(dir.y)          # the course runs east-west: the leg runs north-south
+		var sj := si
+		if gen >= 8:
+			# generation 8: the course's direction where the leg crosses (the course segment nearest the crossing's middle),
+			# not the first segment the road's cells touched: on a meander that one can run across the river's line, and a leg
+			# square to it ran down the river (seed 1, 7 cells of bridge at -521,-22)
+			sj = _nearest_seg(segs, mid)
+			var dj: Vector2 = (segs[sj][1] as Vector2) - (segs[sj][0] as Vector2)
+			ns = absf(dj.x) >= absf(dj.y)
+		var leg := _leg(a, b, mid, ns, wet)
+		if gen >= 8 and not _leg_crosses(leg[0], leg[1], segs[sj], wet):
+			leg = _leg(a, b, mid, not ns, wet)       # the other axis, else the road as drawn (a real crossing, if not square)
+			if not _leg_crosses(leg[0], leg[1], segs[sj], wet):
+				out.append(c.x)
+				out.append(c.y)
+				k += 1
+				continue
+		var p0: Vector2i = leg[0]
+		var p1: Vector2i = leg[1]
+		var to_leg := PackedInt32Array()
+		var from_leg := PackedInt32Array()
+		if gen >= 8:
+			# generation 8: the road reaches the leg's ends over dry land (straight, they could run along a curving bank and be drawn
+			# as bridge: seed 2, 7 cells at 445,149); with no dry way, the road as drawn
+			to_leg = _dry_way(a, p0, wet, wet_extra) if a != p0 else PackedInt32Array()
+			from_leg = _dry_way(p1, b, wet, wet_extra) if p1 != b else PackedInt32Array()
+			if (a != p0 and to_leg.is_empty()) or (p1 != b and from_leg.is_empty()):
+				out.append(c.x)
+				out.append(c.y)
+				k += 1
+				continue
 		# s - 1 .. a is kept (already appended up to k - 1; drop the run's cells appended from s on)
 		var keep := s
 		out.resize(2 * (out.size() / 2 - (k - keep)))
-		_append_line(out, a, p0)
-		_append_line(out, p0, p1)
-		_append_line(out, p1, b)
+		if gen >= 8:
+			out.append_array(to_leg)
+			_append_line(out, p0, p1)
+			out.append_array(from_leg)
+		else:
+			_append_line(out, a, p0)
+			_append_line(out, p0, p1)
+			_append_line(out, p1, b)
 		k = e + 1
 		plain = k
 	return out
+
+
+## The straight leg of a crossing between land cells a and b: [p0, p1], from the water's middle (`mid`) out along one axis (north-
+## south when `ns`) until CROSS_MARGIN clear of every course, p0 on a's side.
+func _leg(a: Vector2i, b: Vector2i, mid: Vector2, ns: bool, wet: Callable) -> Array:
+	var line := roundi(mid.x) if ns else roundi(mid.y)
+	var axis := Vector2i(0, 1) if ns else Vector2i(1, 0)
+	var at := Vector2i(line, roundi(mid.y)) if ns else Vector2i(roundi(mid.x), line)
+	var sign := 1 if Vector2(b - a).dot(Vector2(axis)) >= 0.0 else -1
+	var p0 := at
+	var p1 := at
+	var guard := 0
+	while wet.call(p0, float(CROSS_MARGIN)) >= 0 and guard < 40:
+		p0 -= axis * sign
+		guard += 1
+	guard = 0
+	while wet.call(p1, float(CROSS_MARGIN)) >= 0 and guard < 40:
+		p1 += axis * sign
+		guard += 1
+	return [p0, p1]
+
+
+## Generation 8: whether the straight leg p0..p1 really crosses the course segment `seg` ([a, b, half-width]): its ends on the two
+## sides of the course, clear of the water, and no longer than the water's width and the margins (a leg running down the river is
+## neither).
+func _leg_crosses(p0: Vector2i, p1: Vector2i, seg: Array, wet: Callable) -> bool:
+	var u: Vector2 = seg[0]
+	var v: Vector2 = seg[1]
+	var side0 := signf((v - u).cross(Vector2(p0) + Vector2(0.5, 0.5) - u))
+	var side1 := signf((v - u).cross(Vector2(p1) + Vector2(0.5, 0.5) - u))
+	if side0 == 0.0 or side0 == side1:
+		return false
+	if wet.call(p0, 0.5) >= 0 or wet.call(p1, 0.5) >= 0:
+		return false
+	var span := maxi(absi(p1.x - p0.x), absi(p1.y - p0.y))
+	return span <= 2 * (ceili(float(seg[2])) + CROSS_MARGIN) + 4
+
+
+## The index of the course segment in `segs` ([a, b, half-width]) nearest point p.
+static func _nearest_seg(segs: Array, p: Vector2) -> int:
+	var best := 0
+	var bd := INF
+	for i in segs.size():
+		if segs[i][0] == segs[i][1]:
+			continue                                    # a pool: no direction to cross
+		var d := _seg_dist(p, segs[i][0], segs[i][1])
+		if d < bd:
+			bd = d
+			best = i
+	return best
+
+
+## Generation 8: the 4-connected cells after `a` up to and including `b` over dry land (no cell within half a tile of the
+## water as drawn: `wet` with `extra`), by a breadth-first search in a box round the two (fixed neighbour order, so every chunk lays the same cells);
+## empty when the water leaves no dry way there.
+func _dry_way(a: Vector2i, b: Vector2i, wet: Callable, extra: float) -> PackedInt32Array:
+	var box := Rect2i(Vector2i(mini(a.x, b.x), mini(a.y, b.y)), Vector2i(absi(a.x - b.x), absi(a.y - b.y)) + Vector2i.ONE).grow(DRY_WAY_GROW)
+	var from := {a: a}
+	var todo: Array[Vector2i] = [a]
+	var i := 0
+	while i < todo.size():
+		var q: Vector2i = todo[i]
+		i += 1
+		if q == b:
+			break
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var n: Vector2i = q + d
+			if from.has(n) or not box.has_point(n) or (n != b and wet.call(n, extra) >= 0):
+				continue
+			from[n] = q
+			todo.append(n)
+	if not from.has(b):
+		return PackedInt32Array()
+	var back: Array[Vector2i] = []
+	var c := b
+	while c != a:
+		back.append(c)
+		c = from[c]
+	var out := PackedInt32Array()
+	for j in range(back.size() - 1, -1, -1):
+		out.append(back[j].x)
+		out.append(back[j].y)
+	return out
+
+
+const DRY_WAY_GROW := 16                  # tiles round a run along the water searched for the dry way round it (generation 8)
 
 
 ## The 4-connected cells after `from` up to and including `to` (straight runs as _polyline draws them).
