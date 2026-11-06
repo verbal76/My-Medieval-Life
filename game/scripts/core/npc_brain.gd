@@ -251,11 +251,17 @@ const BUY_RETRY_MINUTES := 60.0      # SIM-F2: PROVISIONAL (agent, docs/DECISION
 func decide(n: NPC) -> void:
 	decide_calls[n.id] = int(decide_calls.get(n.id, 0)) + 1
 	var rec = w.recorder
+	var dbg := OS.get_environment("MML_DBG_PICK") == "1" and w.minutes >= 23040.0 and w.minutes <= 24980.0
 	if rec == null:
-		_decide(n)
+		var b0 := _decide(n)
+		if dbg:
+			print("DBGDEC m=%d n=%d %s c=%d inv=%d plan=%s" % [int(w.minutes), n.id, b0, n.coins, n.inv.total() if n.inv.has_method("total") else 0, str(n.plan.map(func(s): return str(s.get("k", "")) + ":" + str(s.get("act", "")))).left(120)])
 		return
 	var pre: Dictionary = rec.decide_begin(n)          # REC-19: a read-only record of the decision (never changes the choice)
-	rec.decide_end(pre, n, _decide(n))
+	var b1 := _decide(n)
+	if dbg:
+		print("DBGDEC m=%d n=%d %s c=%d inv=%d plan=%s" % [int(w.minutes), n.id, b1, n.coins, n.inv.total() if n.inv.has_method("total") else 0, str(n.plan.map(func(s): return str(s.get("k", "")) + ":" + str(s.get("act", "")))).left(120)])
+	rec.decide_end(pre, n, b1)
 
 
 ## The priority chain: the first branch that makes a plan wins. Returns the winning branch's id (game/data/recorder_codes.json
