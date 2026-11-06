@@ -6,6 +6,7 @@ extends SceneTree
 ## region on several seeds (curved rivers, wide courses, layout crossings).
 ##   godot --headless --path game -s res://tests/bridge_validity_test.gd [-- seeds=1,2,3]
 
+const NEAR_LAND := 2              # tiles round a run over the water searched for land joining its two ends: the bank right beside it
 const LOOP_CELLS := 4             # cells over the water before a run back to the same bank is a chain of bridge (a loop)
 
 var checks := 0
@@ -66,7 +67,10 @@ static func crossings(ow: Overworld, area: Rect2i) -> Array:
 			var key := "%d,%d-%d,%d" % [mini(a.x, b.x), mini(a.y, b.y), maxi(a.x, b.x), maxi(a.y, b.y)]
 			if not seen.has(key):
 				seen[key] = true
-				out.append({"at": mid, "cells": e - k, "same_bank": _same_side(ow, a, b, mid)})
+				var run: Array[Vector2i] = []
+				for q in range(k, e):
+					run.append(Vector2i(sc[2 * q], sc[2 * q + 1]))
+				out.append({"at": mid, "cells": e - k, "same_bank": _land_joined(ow, a, b, run)})
 			k = e + 1
 	return out
 
@@ -76,25 +80,29 @@ static func _wet(ow: Overworld, c: Vector2i) -> bool:
 	return ow.is_bridge(c) or ow.is_water(c) or ow.is_ford(c)
 
 
-## Whether land cells a and b lie on the same side of the watercourse nearest `mid` (the course segment closest to it).
-static func _same_side(ow: Overworld, a: Vector2i, b: Vector2i, mid: Vector2i) -> bool:
-	var best := INF
-	var sa := 0.0
-	var sb := 0.0
-	var p := Vector2(mid) + Vector2(0.5, 0.5)
-	for crs in ow.streams_in(Rect2i(mid - Vector2i(20, 20), Vector2i(40, 40))):
-		var pts: Array = crs.pts
-		for k in range(1, pts.size()):
-			var u: Vector2 = pts[k - 1]
-			var v: Vector2 = pts[k]
-			var d := Geometry2D.get_closest_point_to_segment(p, u, v).distance_to(p)
-			if d < best:
-				best = d
-				sa = (v - u).cross(Vector2(a) + Vector2(0.5, 0.5) - u)
-				sb = (v - u).cross(Vector2(b) + Vector2(0.5, 0.5) - u)
-	if best == INF:
-		return false                                    # a pool with no course: not judged here
-	return signf(sa) == signf(sb)
+## Whether land cells a and b (a road's run over the water between them) are joined over dry land close by: a flood fill from a
+## over land (no water, bridge or ford) within NEAR_LAND tiles of the run reaches b. Then the road could have stayed on the bank and
+## the run over the water is a useless loop; across a river, a braided river's channels or a lake, the water parts them.
+static func _land_joined(ow: Overworld, a: Vector2i, b: Vector2i, run: Array[Vector2i]) -> bool:
+	var lo := a.min(b)
+	var hi := a.max(b)
+	for c in run:
+		lo = lo.min(c)
+		hi = hi.max(c)
+	var box := Rect2i(lo, hi - lo + Vector2i.ONE).grow(NEAR_LAND)
+	var seen := {a: true}
+	var todo: Array[Vector2i] = [a]
+	while not todo.is_empty():
+		var q: Vector2i = todo.pop_back()
+		if q == b:
+			return true
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var n: Vector2i = q + d
+			if seen.has(n) or not box.has_point(n) or _wet(ow, n):
+				continue
+			seen[n] = true
+			todo.append(n)
+	return false
 
 
 func _seed(seed: int) -> void:

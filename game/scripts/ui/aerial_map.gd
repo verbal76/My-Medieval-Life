@@ -854,8 +854,7 @@ func start_sites() -> void:
 ## The worker: a private Overworld, then each settlement chunk composed (2 px a tile, masked) and handed over.
 func _site_work(wk: AerialMap, todo: Array, seed_v: int, vmap: VillageMap, clock: float, gen: int, path: String, key: String) -> void:
 	var t0 := Time.get_ticks_usec()
-	var o := Overworld.create(seed_v, vmap)
-	o.gen = gen                                   # (the world's own generation, as Overworld.load_dict keeps it)
+	var o := Overworld.create(seed_v, vmap, gen)   # (the world's own generation, as Overworld.load_dict keeps it: its nodes and routes too)
 	o.clock = clock
 	var out := {}
 	wk.ow = o

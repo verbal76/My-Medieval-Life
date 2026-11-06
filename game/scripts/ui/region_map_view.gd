@@ -404,19 +404,39 @@ func pad_step(dir: Vector2, zoom_dir: float, look: Vector2, delta: float) -> voi
 		moved = true
 
 
-## The pad's buttons on the open map (taken here: no focus moves, nothing reaches the character).
+## The pad's buttons on the open map (taken here: nothing reaches the character).
+## B25R2 (owner directive 2026-11-06, item 5): the window's buttons above the map (Village, Region, Centre on me, Whole region,
+## Resume and Dismiss destination) are reached with the triggers (GameUI.cycle_focus, as in every window) or D-pad Up from the
+## map; while one has focus, A presses it and the D-pad moves between them, as in any window. The left stick (or B) gives the
+## pad back to the map's cursor.
 func _input(e: InputEvent) -> void:
 	if not is_visible_in_tree():
 		return
+	var focus := get_viewport().gui_get_focus_owner()
+	var on_button := focus is BaseButton and focus.is_visible_in_tree()
 	if e is InputEventJoypadMotion:
-		if cursor == Vector2.INF and absf((e as InputEventJoypadMotion).axis_value) > 0.5:
-			cursor = main.world.player.pos
+		var jm := e as InputEventJoypadMotion
+		if absf(jm.axis_value) > 0.5 and jm.axis in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
+			if on_button:
+				focus.release_focus()                  # the stick moves the map's cursor again
+			if cursor == Vector2.INF:
+				cursor = main.world.player.pos
 		return
 	if not (e is InputEventJoypadButton):
 		return
 	var b := e as InputEventJoypadButton
-	if b.button_index == JOY_BUTTON_B or b.button_index == JOY_BUTTON_LEFT_SHOULDER or b.button_index == JOY_BUTTON_START:
+	if b.button_index == JOY_BUTTON_LEFT_SHOULDER or b.button_index == JOY_BUTTON_START:
 		return                                     # closing the window (and the map's own button) work as everywhere
+	if b.button_index == JOY_BUTTON_B:
+		if on_button and b.pressed:
+			focus.release_focus()                  # B from the buttons: back to the map (a second B closes it)
+			get_viewport().set_input_as_handled()
+		return
+	if on_button and b.button_index in [JOY_BUTTON_A, JOY_BUTTON_DPAD_LEFT, JOY_BUTTON_DPAD_RIGHT, JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_DOWN]:
+		return                                     # a button has focus: A presses it, the D-pad moves between buttons
+	if b.pressed and b.button_index == JOY_BUTTON_DPAD_UP and cursor != Vector2.INF and _focus_buttons():
+		get_viewport().set_input_as_handled()
+		return
 	get_viewport().set_input_as_handled()
 	if not b.pressed:
 		return
@@ -425,6 +445,19 @@ func _input(e: InputEvent) -> void:
 		if b.button_index in [JOY_BUTTON_DPAD_LEFT, JOY_BUTTON_DPAD_RIGHT, JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_DOWN]:
 			return
 	pad_button(b.button_index)
+
+
+## B25R2: D-pad Up from the map's top edge moves the pad onto the window's buttons above it (the first that can be pressed).
+## True when one took focus. Only when the cursor is at the top of the view, so D-pad Up still moves the cursor on the map.
+func _focus_buttons() -> bool:
+	if to_screen(cursor).y > 24.0:
+		return false
+	for c in get_parent().find_children("*", "BaseButton", true, false):
+		var bt := c as BaseButton
+		if bt.is_visible_in_tree() and not bt.disabled and bt.focus_mode != Control.FOCUS_NONE and not is_ancestor_of(bt):
+			bt.grab_focus()
+			return true
+	return false
 
 
 ## What a pad button does on the map (tests call it with the button).

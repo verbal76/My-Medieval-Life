@@ -23,11 +23,13 @@ var attempts := 0
 var watch_t := 0.0
 var watch_pos := Vector2.ZERO
 var watch_idx := 0
+var watch_d := INF              # B25R2: the distance to the walk's target at the last progress check
 var world_id := 0
 
 
 func reset() -> void:
 	route = PackedVector2Array()
+	watch_d = INF
 	idx = 0
 	set_to = Vector2.INF
 	attempts = 0
@@ -197,11 +199,16 @@ func step(m, v: Vector2, delta: float) -> void:
 	if m.move_to == Vector2.INF or (target != set_to and p.pos.distance_to(set_to) < 4.0):
 		m.move_to = target
 		set_to = target
-	# progress: no waypoint passed and hardly moved for WATCH seconds -> plan again; ATTEMPTS times in a row -> give up
+	# progress: no waypoint passed and no closer to the walk's target for WATCH seconds -> plan again; ATTEMPTS times in a row ->
+	# give up with a message. B25R2 (item 2): progress is coming closer to the target, not moving: sliding along a riverbank moves
+	# the character without bringing it nearer, and was taken for progress for ever
 	watch_t += delta
 	if watch_t >= WATCH:
 		watch_t = 0.0
-		if idx == watch_idx and p.pos.distance_to(watch_pos) < 1.0:
+		var dist := p.pos.distance_to(set_to) if set_to != Vector2.INF else INF
+		var closer := dist < watch_d - 1.0
+		watch_d = dist
+		if idx == watch_idx and not closer:
 			attempts += 1
 			if attempts >= ATTEMPTS:
 				var here_c := Vector2i(p.pos.floor())

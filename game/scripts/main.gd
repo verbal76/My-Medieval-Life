@@ -5727,11 +5727,18 @@ func _unhandled_input(e: InputEvent) -> void:
 			cancel_action("You stop.")
 			get_viewport().set_input_as_handled()
 			return
+	if ui.travel_bar != null and ui.travel_bar.pad_input(e):
+		get_viewport().set_input_as_handled()     # B25R2: the travel bar has the pad (B gives it back to play)
+		return
 	if not ui.modal() and running and action.is_empty():
 		if e.is_action_pressed("next_target"):
-			cycle_target(1)
+			# B25R2 (owner directive 2026-11-06, item 4): with fewer than two targets there is nothing to cycle, and D-pad Right
+			# (Left) moves onto the travel bar's Resume and Dismiss when it is shown
+			if target_options.size() >= 2 or not (e is InputEventJoypadButton and ui.travel_bar.pad_enter(1)):
+				cycle_target(1)
 		elif e.is_action_pressed("prev_target"):
-			cycle_target(-1)
+			if target_options.size() >= 2 or not (e is InputEventJoypadButton and ui.travel_bar.pad_enter(-1)):
+				cycle_target(-1)
 		elif e is InputEventKey and e.pressed and not e.echo and e.physical_keycode == KEY_TAB and target_options.size() > 1:
 			tab_cycled = Engine.get_process_frames()       # Tab is the Pack's key too: with a choice to make it chooses
 			cycle_target(1)

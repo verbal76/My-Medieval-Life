@@ -72,6 +72,56 @@ static func walkable(w: World, a: Vector2i, b: Vector2i) -> bool:
 	return not path.is_empty() and Vector2i(path[path.size() - 1]).distance_to(b) <= 1.5
 
 
+## B25R2 (owner directive 2026-11-06, item 2, the riverbank): whether the straight line a..b runs over water (a course, a pool;
+## a bridge or a ford is crossed on foot).
+static func crosses_water(ow: Overworld, a: Vector2i, b: Vector2i) -> bool:
+	var n := maxi(absi(b.x - a.x), absi(b.y - a.y))
+	for k in range(0, n + 1):
+		var c := Vector2i((Vector2(a).lerp(Vector2(b), k / float(maxi(1, n)))).round())
+		if ow.is_water(c):
+			return true
+	return false
+
+
+## B25R2: an off-road leg from a to b that can really be walked: {cells (a, the waypoints, b), cost} or {} when there is none.
+## A straight line clear of water is walked as it is (the walk slides round a tree or a rock). One over water is walked only where
+## the pathfinder finds the way round it, by a bridge or a ford it reaches (its cells every LEG_STEP tiles become waypoints, so the
+## walk is led to the crossing, never pushed at the bank); a leg longer than the pathfinder's reach over water has no way.
+const LEG_STEP := 6
+static func leg(w: World, a: Vector2i, b: Vector2i) -> Dictionary:
+	var ow: Overworld = w.map.overworld
+	if a == b:
+		return {"cells": PackedVector2Array([Vector2(a)]), "cost": 0.0}
+	if not crosses_water(ow, a, b):
+		return {"cells": PackedVector2Array([Vector2(a), Vector2(b)]), "cost": _oct(a, b) * OFF_ROAD}
+	var path := w.map.find_path_world(a, b)
+	if path.is_empty() or Vector2i(path[path.size() - 1]).distance_to(b) > 1.5:
+		return {}
+	# waypoints along the path wherever the straight hop from the last one would run over water (and at most LEG_STEP cells
+	# apart), so every hop the walk takes is dry: it is led along the bank to the crossing and over it
+	var cells := PackedVector2Array([Vector2(a)])
+	var cost := 0.0
+	var last := a
+	for k in range(1, path.size()):
+		cost += (path[k] as Vector2).distance_to(path[k - 1])
+		var c := Vector2i(path[k])
+		if (crosses_water(ow, last, c) or k == path.size() - 1 or _hop(last, c) >= LEG_STEP):
+			var put := c if not crosses_water(ow, last, c) else Vector2i(path[k - 1])
+			if put != last:
+				cells.append(Vector2(put))
+				last = put
+			if put != c:
+				cells.append(Vector2(c))
+				last = c
+	if Vector2i(cells[cells.size() - 1]) != b:
+		cells.append(Vector2(b))
+	return {"cells": cells, "cost": cost * OFF_ROAD}
+
+
+static func _hop(a: Vector2i, b: Vector2i) -> int:
+	return maxi(absi(b.x - a.x), absi(b.y - a.y))
+
+
 ## Whether open ground round `c` is a closed pocket (a mountain top inside its rim, a ring of trees): the cells reached from it
 ## run out before any lies POCKET tiles away. A pocket is never reached on foot, however far from a road it lies.
 static func enclosed(w: World, c: Vector2i) -> bool:
@@ -128,6 +178,10 @@ static func _attach(w: World, p: Vector2i) -> Dictionary:
 			_keep(out, nd, cost, cells)
 	if not ends.is_empty():
 		return out
+	# B25R2 (item 2): the leg off the road to each segment must be walkable (RegionTravel.leg): one straight over a river was set
+	# as the walk's target and the character pushed at the bank. The segments are tried nearest first; a leg over water costs a
+	# pathfinder search, so at most WATER_LEGS of them are searched
+	var cands: Array = []
 	for seg in RegionRoads.segments(ow, Rect2i(p - Vector2i(NEAR, NEAR), Vector2i(NEAR, NEAR) * 2)):
 		if bool(seg.base):
 			continue
@@ -140,18 +194,37 @@ static func _attach(w: World, p: Vector2i) -> Dictionary:
 			if d < bd:
 				bd = d
 				q = k
-		if bd > NEAR:
-			continue
-		var off := bd * OFF_ROAD
+		if bd <= NEAR:
+			cands.append([bd, q, seg])
+	cands.sort_custom(func(x, y): return x[0] < y[0] or (x[0] == y[0] and Vector2i(x[2].na) < Vector2i(y[2].na)))
+	var searched := 0
+	for cd in cands:
+		var q: int = cd[1]
+		var seg: Dictionary = cd[2]
+		var sc: PackedInt32Array = seg.cells
+		var n := sc.size() / 2
+		var join := Vector2i(sc[q * 2], sc[q * 2 + 1])
+		var wet := crosses_water(ow, p, join)
+		if wet:
+			if searched >= WATER_LEGS:
+				continue
+			searched += 1
+		var lg := leg(w, p, join)
+		if lg.is_empty():
+			continue                                   # no way on foot to this road from here (over water, out of reach)
+		var off: float = lg.cost
 		if seg.nb != RegionRoads.NONE:
-			var cells := PackedVector2Array([Vector2(p)])
-			_add(cells, sc, q, n - 1)
+			var cells: PackedVector2Array = (lg.cells as PackedVector2Array).duplicate()
+			_add(cells, sc, q, n - 1)                  # (the join cell, already the leg's last, is not repeated)
 			_keep(out, seg.nb, off + (n - 1 - q), cells)
 		if seg.na != RegionRoads.NONE:
-			var cells2 := PackedVector2Array([Vector2(p)])
+			var cells2: PackedVector2Array = (lg.cells as PackedVector2Array).duplicate()
 			_add(cells2, sc, q, 0)
 			_keep(out, seg.na, off + q, cells2)
 	return out
+
+
+const WATER_LEGS := 4          # B25R2: legs over water searched by the pathfinder per point (the nearest roads first)
 
 
 static func _keep(out: Dictionary, nd: Vector2i, cost: float, cells: PackedVector2Array) -> void:
@@ -274,9 +347,18 @@ static func plan(w: World, from: Vector2i, to: Vector2i) -> Dictionary:
 	var both_village := ow.village.has_point(from) and ow.village.has_point(dest)
 	var same_site := not ow.site_at(from).is_empty() and ow.site_at(from) == ow.site_at(dest)
 	if both_village or same_site or (span.x <= CHECK and span.y <= CHECK):
-		if both_village or walkable(w, from, dest):
-			direct = {"cost": _oct(from, dest) if both_village or same_site else _line_cost(w, from, dest),
-				"cells": PackedVector2Array([Vector2(from), Vector2(dest)])}
+		if both_village:
+			direct = {"cost": _oct(from, dest), "cells": PackedVector2Array([Vector2(from), Vector2(dest)])}
+		elif not crosses_water(ow, from, dest):
+			if walkable(w, from, dest):
+				direct = {"cost": _oct(from, dest) if same_site else _line_cost(w, from, dest),
+					"cells": PackedVector2Array([Vector2(from), Vector2(dest)])}
+		else:
+			# B25R2 (item 2): over water, the pathfinder's own way round (by a bridge or a ford it reaches) as waypoints, so the
+			# walk is led to the crossing; before, only the two ends, and the walk pushed straight at the bank
+			var lg := leg(w, from, dest)
+			if not lg.is_empty():
+				direct = {"cost": float(lg.cost) if not same_site else _oct(from, dest), "cells": lg.cells}
 	if both_village or same_site:
 		return {"ok": true, "dest": dest, "cells": direct.cells, "road": 0, "direct": true} if not direct.is_empty() \
 				else {"ok": false, "why": "There is no way there on foot."}

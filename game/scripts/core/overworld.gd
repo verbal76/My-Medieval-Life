@@ -170,9 +170,12 @@ var _gate_vlinks := {}                   # gate index -> {node id: link index}
 var route_kind := {}                     # link index -> the route's kind ("main", "dirt", "ancient", "side")
 
 
-static func create(world_seed: int, m: VillageMap) -> Overworld:
+## `generation`: the generation to lay the world out with (a save's own, World.load_dict: a generation 7 save keeps generation 7's
+## nodes and routes; B25R2 generation 8 moves road nodes out of the water, _dry_node), clamped as load_dict clamps it.
+static func create(world_seed: int, m: VillageMap, generation := GEN_VERSION) -> Overworld:
 	var o := Overworld.new()
 	o.seed = world_seed
+	o.gen = 3 if generation < 4 else mini(generation, GEN_VERSION)
 	water_cfg()                                   # B25R1-Q3: the water's tuning (game/data/water.json)
 	o.village = Rect2i(0, 0, m.w, m.h)
 	o.tiles = JSON.parse_string(FileAccess.get_file_as_string("res://data/overworld_tiles.json"))
@@ -2321,7 +2324,51 @@ func _crosses_site(bb: Rect2i) -> bool:
 
 
 func node_pos(i: int, j: int) -> Vector2i:
-	return Vector2i(i * NODE + 14 + hash32(seed, i, j, 21) % (NODE - 28), j * NODE + 14 + hash32(seed, i, j, 22) % (NODE - 28))
+	var p := Vector2i(i * NODE + 14 + hash32(seed, i, j, 21) % (NODE - 28), j * NODE + 14 + hash32(seed, i, j, 22) % (NODE - 28))
+	if gen < 8:
+		return p
+	var key := Vector2i(i, j)
+	if not _node_dry.has(key):
+		_node_dry[key] = _dry_node(p)
+	return _node_dry[key]
+
+
+## Generation 8 (B25R2 playtest repair, item 6): a road node (a junction of the country roads) never stands in the water. A node
+## whose hashed place falls in a course or a pool (seed 2: 439,148, in a lake, three roads leaving it over the water as chains of
+## bridge) moves to the nearest cell NODE_DRY_CLEAR tiles clear of the water, rings out to NODE_DRY_REACH in a fixed order; with
+## none, it stays. Pure: the courses do not depend on the roads, so every chunk and the travel planner see the same node.
+const NODE_DRY_CLEAR := 2.0
+const NODE_DRY_REACH := 14
+var _node_dry := {}                       # Vector2i(i, j) -> the node's cell (generation 8; a pure function of the seed, not saved)
+
+
+func _dry_node(p: Vector2i) -> Vector2i:
+	var near := streams_in(Rect2i(p - Vector2i(NODE_DRY_REACH + 8, NODE_DRY_REACH + 8), Vector2i(NODE_DRY_REACH + 8, NODE_DRY_REACH + 8) * 2))
+	if near.is_empty():
+		return p
+	var wet := func(c: Vector2i) -> bool:
+		var q := Vector2(c) + Vector2(0.5, 0.5)
+		for crs in near:
+			var pts: Array = crs.pts
+			var rs: Array = crs.r
+			for k in range(1, pts.size()):
+				if _seg_dist(q, pts[k - 1], pts[k]) <= float(rs[mini(k, rs.size() - 1)]) + 1.0 + NODE_DRY_CLEAR:
+					return true
+			for pool in crs.pools:
+				if q.distance_to(pool[0]) <= float(pool[1]) + 1.2 + NODE_DRY_CLEAR:
+					return true
+		return false
+	if not wet.call(p):
+		return p
+	for r in range(1, NODE_DRY_REACH + 1):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var c := p + Vector2i(dx, dy)
+				if not wet.call(c):
+					return c
+	return p
 
 
 ## Whether grid node (i, j) is joined to its east (0), south (1), south-east (2) or south-west (3)
@@ -3884,6 +3931,7 @@ func load_dict(d: Dictionary) -> void:
 	var keep := 3 if g < 4 else mini(g, GEN_VERSION)          # B25R1-Q3: a world keeps its generation (1-3 are drawn as 3)
 	if keep != gen:
 		gen = keep
+		_node_dry.clear()                                # (generation 8 moves road nodes out of the water)
 		cache.clear()                                    # chunks drawn by another generation are dropped
 		_stream_cache.clear()
 		_river_cache.clear()

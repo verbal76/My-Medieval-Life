@@ -6442,7 +6442,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	if d.has("rng_state"):
 		rng.state = int(str(d.rng_state))     # B25 save continuity: the random stream goes on where it stood (a save without it: reseeded, as before)
 	var ow: Dictionary = d.get("overworld", {})
-	m.overworld = Overworld.create(int(ow.get("seed", seed)), m)
+	m.overworld = Overworld.create(int(ow.get("seed", seed)), m, int(ow.get("gen", Overworld.GEN_VERSION)))   # B25R2: laid out with its own generation
 	m.overworld.load_dict(ow)
 	brain = NPCBrain.new(self)
 	chests = Chests.new(self)
