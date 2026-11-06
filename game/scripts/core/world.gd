@@ -1887,6 +1887,9 @@ func reserve_of(who) -> int:
 		if _reserve_cache.size() > 4000:
 			_reserve_cache.clear()
 		_reserve_cache[key] = int(necessity(who).reserve)
+		if OS.get_environment("MML_DBG_PICK") == "1" and who is NPC and who.id == 39 and minutes >= 24900.0 and minutes <= 24980.0:
+			var st := get_stack()
+			print("DBGRES m=%.2f key=%s val=%d from=%s" % [minutes, key, int(_reserve_cache[key]), str(st.slice(1, 5).map(func(f): return "%s:%d" % [str(f.function), int(f.line)]))])
 	return int(_reserve_cache[key])
 
 
@@ -1997,6 +2000,8 @@ func purchase_qty(buyer: NPC, seller: Object, id: String, offered: int) -> int:
 		bill += int(c)
 	var keep := reserve_of(buyer)
 	var coins := buyer.coins if economy == null else claims_free_coins(buyer, id, World.is_necessity(id))     # LE-03
+	if OS.get_environment("MML_DBG_PICK") == "1" and buyer.id == 39 and minutes >= 24900.0 and minutes <= 24980.0:
+		print("DBGPQ m=%.2f seller=%s id=%s q=%d bill=%d keep=%d coins=%d obs=%d" % [minutes, str(seller.get("id")), id, q, bill, keep, coins, observing])
 	while q > 0:
 		if coins >= bill and (coins - bill >= keep or (q == 1 and can_afford(buyer, bill, false, id))):
 			return q
