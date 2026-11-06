@@ -2755,7 +2755,10 @@ func _workplace_cell(o: NPC) -> Vector2i:
 		var s: Dictionary = w.stalls[o.workplace]
 		return Vector2i(int(s.use[0]), int(s.use[1]))
 	if o.workplace == "manor":
-		return w.building_door(o.home)
+		# B25R2: a manor hand with no house standing (homeless, or a home that is not a building) is found where they are, as
+		# World.household_cell does (the 365-day campaign on F2, seed 2, days 200-300: 127 script errors here, from a contract
+		# priced for such a villager, Contracts.travel_per_unit)
+		return w.household_cell(o.household, o.cell()) if not w.buildings.has(o.home) else w.building_door(o.home)
 	if o.workplace == "chapel" and w.chapel != null and w.chapel.present:
 		return w.chapel.door_cell()
 	return o.cell()
