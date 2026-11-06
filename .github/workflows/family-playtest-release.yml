@@ -1,0 +1,55 @@
+# Owner directive 2026-11-05 "Family playtest now, final validation in parallel"
+# (docs/directives/2026-11-05_b25r1_family_playtest_now.md): publish the Build 25R1 family playtest from packages ALREADY
+# built and smoke-tested by release.yml on the frozen source (docs/release/family_playtest.env: the release run and its commit).
+# Nothing is rebuilt here: the files are that run's own pkg-* artifacts, byte for byte, with their established names. The owner's
+# directive sets aside SIM-GATE-01's "a failed gate publishes nothing" for this family package only (its determinism finding is
+# being investigated in parallel and recorded in the notes). Runs only on a push to wip/b25r1-family; waits for the owner's
+# approval in the "public-release" environment, as release.yml's public releases do. Never uploads to Steam.
+name: Family playtest release
+
+on:
+  push:
+    branches: [wip/b25r1-family]
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: family-playtest-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: public-release
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch the release run's packages and check them
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          . docs/release/family_playtest.env
+          run_sha=$(gh api "repos/${{ github.repository }}/actions/runs/$RELEASE_RUN" --jq .head_sha)
+          [ "$run_sha" = "$SOURCE_SHA" ] || { echo "release run $RELEASE_RUN built $run_sha, not $SOURCE_SHA"; exit 1; }
+          smoke=$(gh api "repos/${{ github.repository }}/actions/runs/$RELEASE_RUN/jobs?per_page=50" --jq '.jobs[] | select(.name=="smoke-windows (full)") | .conclusion')
+          [ "$smoke" = "success" ] || { echo "the full Windows smoke test of run $RELEASE_RUN is '$smoke', not success"; exit 1; }
+          mkdir -p pkg
+          for a in pkg-full-windows pkg-demo-windows pkg-full-linux pkg-full-android pkg-demo-linux pkg-demo-android; do
+            if gh run download "$RELEASE_RUN" -n "$a" -D "dl/$a" 2>/dev/null; then cp dl/$a/* pkg/; else echo "not available yet: $a"; fi
+          done
+          ls pkg/*Windows.zip | grep -v Demo >/dev/null || { echo "no full Windows package"; exit 1; }
+          (cd pkg && sha256sum * > SHA256SUMS.txt && cat SHA256SUMS.txt && for f in *; do printf '%s\t%s bytes\n' "$f" "$(stat -c %s "$f")"; done)
+      - name: Publish the GitHub Release (or add files to it)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          . docs/release/family_playtest.env
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" pkg/* --clobber
+          else
+            gh release create "$TAG" pkg/* --target "$SOURCE_SHA" --title "$TITLE" --notes-file docs/release/B25R1_FAMILY_PLAYTEST.md --latest
+          fi
+          gh release view "$TAG" --json url,isDraft,isPrerelease,assets --jq '{url, isDraft, isPrerelease, assets: [.assets[] | {name, size}]}'
