@@ -2661,6 +2661,7 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 			if not way0.is_empty():
 				out.append_array(way0)
 				k = mini(e2, n - 1) + 1
+				plain = k                             # (the cells before k are no longer out's one for one: a later run starts here)
 				continue
 		# a run over the water: from the last cell clear of it (a) to the first clear after (b)
 		var e := k
