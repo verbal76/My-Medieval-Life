@@ -36,7 +36,7 @@ not assumed covered, not assumed missing). Citations searched in `game/tests/*.g
 | B12A-07 | Art blockers: crop stages, tool swings, sitting poses, chimney, sawhor | IMPLEMENTATION BLOCKED | NOT TESTED | process_or_docs |  |
 | B12A-08 | Deferred features from the Build 12 audit (umbrella; each child item t | NOT STARTED | NOT TESTED | process_or_docs |  |
 | B12A-10 | Hardware verification of everything on real devices (umbrella of the d | INTEGRATED | TARGETED TESTS PASSED | process_or_docs |  |
-| B13-01 | Retirement opens no post | INTEGRATED | INTEGRATION VERIFIED | gap | GAP (medium): aging_test checks retirement, not that the post opens |
+| B13-01 | Retirement opens no post | INTEGRATED | INTEGRATION VERIFIED | indirect | indirect: aging_test, "retiring from a fully staffed trade opens one post" (an earlier hand check missed it) |
 | B13-02 | Gold ore has no source | INTEGRATED | INTEGRATION VERIFIED | unverified_no_test_found |  |
 | B13-03 | Medicine effect text | INTEGRATED | INTEGRATION VERIFIED | unverified_no_test_found |  |
 | B13-04 | Attendant hired as carrier | INTEGRATED | INTEGRATION VERIFIED | indirect | indirect: carts/attendant suites (cart_test family) |
@@ -163,7 +163,7 @@ not assumed covered, not assumed missing). Citations searched in `game/tests/*.g
 | B8-028 | Sawmill | INTEGRATED | INTEGRATION VERIFIED | tested_untraced | run_tests.gd |
 | B8-029 | Calendar, aging, families, animal life cycles | INTEGRATED | INTEGRATION VERIFIED | tested_untraced | aging_test.gd, start_test.gd |
 | B8R-001 | Pad cannot reach Wear/Drop | INTEGRATED | INTEGRATION VERIFIED | unverified_no_test_found |  |
-| B8R-002 | Trapped inside a door | INTEGRATED | INTEGRATION VERIFIED | gap | GAP (medium): no test that a villager is not trapped inside a door (World._unstick on load only) |
+| B8R-002 | Trapped inside a door | INTEGRATED | INTEGRATION VERIFIED | traced_new | door_exit_test (wip/test-audit `7971720`): from just inside every door the way out is open |
 | B8R-003 | Trapped between trees | INTEGRATED | INTEGRATION VERIFIED | unverified_no_test_found |  |
 | B8R-004 | Sage's hut door off by one | INTEGRATED | INTEGRATION VERIFIED | unverified_no_test_found |  |
 | B8R-007 | Overlapping house edges | INTEGRATED | INTEGRATION VERIFIED | unverified_no_test_found |  |

@@ -20,7 +20,7 @@ Build One candidate's branch at `7c1bac4`), kept apart from the candidate until 
 | Testing defects tracked, not repaired | 0. (The earlier "2 tracked" counted two coverage gaps, G1 and G3, as defects: they are gaps, section E) |
 | False-positive risks (a red that may not mean a defect) | 4: the gate's baseline of another generation (repaired: now labelled); 19 suites with wall-clock thresholds; 12 multi-process network suites (timing); the CI shard time limit when placement drifts (repaired) |
 | False-negative risks (a green that may hide a defect) | 8: script errors ignored (repaired); no-count suites (repaired); printed failures with exit 0 (repaired); silent early stops (repaired: floors); save_continuity_test left out the player (repaired); 3 data-dependent skips (guarded by floors; none fire today); performance measured, never asserted in CI; the Windows smoke run is headless only |
-| Coverage gaps | 10 identified (section E: G1-G10); 2 closed (G2 by workplace_reach_test, G5 by plan_continuity_test); 8 open, each classified in section I |
+| Coverage gaps | 10 identified (section E: G1-G10); 2 closed (G2 by workplace_reach_test, G5 by plan_continuity_test) and one of G10's two items closed (door_exit_test); 8 open, each classified in section I |
 
 Validity, by what this audit could establish: 26 suites mutation-tested (25 existing, 1 new); 16 suites repaired or created; all 225
 (now 227) CI suites run under the strict rules (run 42286848307: 232 suites passed, 18,896 checks, 0 script errors, none under its
@@ -113,7 +113,7 @@ Mutation sampling (disposable worktree at `7c1bac4`, each defect alone, reverted
 | G7 | 109 approved requirements wait on a device or owner playtest | Owner | register `playtest` |
 | G8 | Interactions are covered unevenly: travel and geography (travel_river, region_travel, bridge_validity, seed_traveler), economy and inventory (econ, stalls, business, inventory18), employment and skills (skilled_employment, trade_skills), multiplayer and persistence (net_fault host restart, net_mp4) have joint tests; controller input and menu state, and families across long simulation, rest on single-system suites and the 365-day campaign | Medium | inventory |
 | G9 | 19 suites assert wall-clock thresholds that a slower runner can break (false-red risk) | Low | static scan |
-| G10 | Three built requirements with no meaningful test (checked by hand): B13-01 a retirement opens the post; B8R-002 a villager trapped inside a door; B7-008 the player draining buyers or hunting out the wildlife | Medium / medium / low | `2026-11-06_REQUIREMENTS_TEST_MATRIX.md` |
+| G10 | Built requirements with no meaningful test (checked by hand): B8R-002 a villager trapped inside a door (**closed**: door_exit_test, wip/test-audit, 4/0, fails with a door made solid); B7-008 the player draining buyers or hunting out the wildlife (open, low). B13-01 was listed here in error: aging_test checks it | Medium / low | matrix |
 
 ## F. CI efficiency
 
@@ -163,7 +163,7 @@ Mutation sampling (disposable worktree at `7c1bac4`, each defect alone, reverted
 | G7 owner playtests | 109 approved requirements wait on a device or the owner | They cannot be COMPLETE before | Owner | Device checks recorded in the register | No (they are playtest items) | register `playtest` |
 | G8 interaction coverage | Controller and menu state, families over long runs: single-system suites plus the 365-day campaign | Interactions can break where each part passes | Medium | Joint tests where play shows a problem | No | inventory |
 | G9 wall-clock thresholds | 19 suites can go red on a slow runner | False-red risk | Low | Watch; widen only with evidence of a slow runner, never to hide a regression | No | static scan |
-| G10 three requirement gaps | B13-01, B8R-002, B7-008 untested | Old fixes could regress unseen | Medium / medium / low | A focused test each | No: none touched by B25R2 | matrix |
+| G10 B7-008 | The player draining buyers or hunting out the wildlife is untested | A balance outcome (WDR-022: measured, not failed), not a mechanism | Low | A measurement in the long simulations | No | matrix |
 
 ## J. Strict regression, combined candidate and campaign
 
