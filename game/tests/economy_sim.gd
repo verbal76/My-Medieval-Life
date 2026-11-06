@@ -2579,7 +2579,19 @@ func _fr_roundtrip(ws: String, day: int) -> Dictionary:
 	for k in keys:
 		if JSON.stringify(a.get(k), "", true) != JSON.stringify(b.get(k), "", true):
 			differ.append(str(k))
-	return {"day": day, "exact": differ.is_empty(), "sections": keys.size(), "differ": differ}
+	# B25R2: a load lets villagers go of the carts they pull (KI-FR-CARTHITCH, DECISIONS 2026-11-02: their plans are not saved).
+	# The carts section counts as explained only if that is all that differs in it; anything else in it stays a difference.
+	var explained := {}
+	if differ.has("carts") and a.get("carts") is Dictionary:
+		var held := 0
+		for c in a.carts.get("carts", []):
+			if str(c.get("puller", "")).begins_with("npc:"):
+				c.puller = ""
+				held += 1
+		if held > 0 and JSON.stringify(a.carts, "", true) == JSON.stringify(b.get("carts"), "", true):
+			differ.erase("carts")
+			explained["carts"] = "%d cart(s) a villager was pulling, let go on load (KI-FR-CARTHITCH)" % held
+	return {"day": day, "exact": differ.is_empty(), "sections": keys.size(), "differ": differ, "explained": explained}
 
 
 ## --resume STATE: the saved state ({} without the switch; {"error": ...} when it cannot be used).

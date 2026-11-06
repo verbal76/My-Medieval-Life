@@ -278,6 +278,7 @@ func open_shop_booth(owner: String) -> String:
 		"store": Inventory.new(), "coins": 0, "escrow": 0, "deposits": {}, "x": at.x, "y": at.y}
 	next_id += 1
 	booths.append(b)
+	seat_at_desks()                 # B25R2: it stands where a reloaded world would put it (its stall, else its desk)
 	for sb in booths.duplicate():
 		if str(sb.settlement) != SettlementFacts.VILLAGE:
 			add_route(str(b.id), str(sb.id), -1.0, w.day() + 1, str(vb.id))
@@ -285,7 +286,9 @@ func open_shop_booth(owner: String) -> String:
 
 
 ## GP-BUSINESS-DESK: a business's courier booth stands at its desk. A save made before the desks had a business's booth at its
-## work station (a smith's at the forge): on load it moves to the desk (its cell only; nothing it holds changes).
+## work station (a smith's at the forge): on load it moves to the desk (its cell only; nothing it holds changes). B25R2: also
+## applied when a shop booth opens and each day, so the unbroken world and a reloaded one agree (a shop booth was opened at the
+## keeper's first stall found and linked to the last; a load then moved it: the 365-day campaign's save round trip, seed 1).
 func seat_at_desks() -> void:
 	for b in booths:
 		if str(b.settlement) == SettlementFacts.VILLAGE and str(b.get("stall", "")) != "" and w.stalls.has(str(b.stall)):
@@ -1159,6 +1162,7 @@ func daily() -> void:
 	if vb.is_empty():
 		return
 	_tidy_shop_booths()
+	seat_at_desks()                 # B25R2: each booth stands at its stall or desk as they are now, the same rule a load applies
 	keepers_learn()
 	villagers_post()
 	for b in booths.duplicate():
