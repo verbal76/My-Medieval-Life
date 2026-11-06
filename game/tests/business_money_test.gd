@@ -27,7 +27,7 @@ func _init() -> void:
 	var a := _signature()
 	var b := _signature()
 	check(a == b, "the same seed gives the same tills and purses (%s)" % a)
-	print("business_money_test: %d checks, %d failed" % [checks, failures])
+	print("business_money_test: %d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
 

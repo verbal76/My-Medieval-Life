@@ -12,12 +12,14 @@ extends SceneTree
 
 var main
 var failures := 0
+var checks := 0                 # TEST-GOV-01: the standard count line, read by tools/ci_report.py
 const TEST_SAVE := "user://test_saves/char_create_test/save1.json"
 # the frames play draws a character with (ActorSprite.ANIMS); every one must draw in every direction
 const PLAY_ANIMS := ["idle", "walk", "sword", "work", "swing", "gather", "carry", "hurt", "throw"]
 
 
 func check(cond: bool, what: String) -> void:
+	checks += 1
 	print(("ok   " if cond else "FAIL ") + what)
 	if not cond:
 		failures += 1
@@ -267,6 +269,7 @@ func _run() -> void:
 	if args.size() > 0:
 		_contact(args[0], base)
 	print("char_create_test: %d failures" % failures)
+	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
 

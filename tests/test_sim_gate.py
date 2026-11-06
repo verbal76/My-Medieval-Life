@@ -638,3 +638,22 @@ class RealGateSplit(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class BaselineVersions(unittest.TestCase):
+    """TEST-GOV-01: a baseline names the versions it belongs to, so the gate can tell another generation's numbers apart."""
+
+    def test_reads_the_generation_and_save_version(self):
+        import tempfile
+        from pathlib import Path
+        sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
+        import sim_gate
+        with tempfile.TemporaryDirectory() as d:
+            for rel, text in (("game/scripts/core/overworld.gd", "const GEN_VERSION := 7\n"),
+                              ("game/scripts/core/world.gd", "x\nconst SAVE_VERSION := 23          # comment\n")):
+                p = Path(d) / rel
+                p.parent.mkdir(parents=True, exist_ok=True)
+                p.write_text(text)
+            self.assertEqual(sim_gate.game_versions(d), {"overworld_gen": 7, "save_version": 23})
+        self.assertEqual(set(sim_gate.game_versions()), {"overworld_gen", "save_version"})
+        self.assertIsNotNone(sim_gate.game_versions()["overworld_gen"])

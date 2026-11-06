@@ -5,9 +5,11 @@ extends SceneTree
 ##   godot --headless --path game --script res://tests/skills_test.gd
 
 var failures := 0
+var checks := 0                 # TEST-GOV-01: the standard count line, read by tools/ci_report.py
 
 
 func check(cond: bool, what: String) -> void:
+	checks += 1
 	print(("ok   " if cond else "FAIL ") + what)
 	if not cond:
 		failures += 1
@@ -22,6 +24,7 @@ func _init() -> void:
 	test_saves()
 	test_text_and_wiki()
 	print("skills_test: %d failure(s)" % failures)
+	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
 

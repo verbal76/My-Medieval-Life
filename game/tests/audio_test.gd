@@ -4,9 +4,11 @@ extends SceneTree
 ##   godot --headless --path game --script res://tests/audio_test.gd
 
 var failures := 0
+var checks := 0                 # TEST-GOV-01: the standard count line, read by tools/ci_report.py
 
 
 func check(cond: bool, what: String) -> void:
+	checks += 1
 	print(("ok   " if cond else "FAIL ") + what)
 	if not cond:
 		failures += 1
@@ -209,4 +211,5 @@ func _run() -> void:
 	check(main.get_children().filter(func(c): return c is GameAudio).size() == 1, "Main has exactly one audio node")
 
 	print("audio_test: %s" % ("PASS" if failures == 0 else "FAIL (%d)" % failures))
+	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)

@@ -334,6 +334,7 @@ jobs:
           res://tests/pad_reach_test.gd         # B25R2 playtest repairs 4, 5: every window, the travel bar and the map by the pad
           res://tests/save_exact_test.gd        # B25R2 save/reload integrity: cleared trees, shop booths; carts let go by design
           res://tests/plan_continuity_test.gd   # TEST-AUDIT-Q1 (owner): a villager's plan, cart and station survive a save and load
+          res://tests/workplace_reach_test.gd   # TEST-AUDIT-01 G2: villagers reach their station or stall (mutation M6 passed 9 suites)
           # B25R1 CI cover (2026-11-05): suites that existed in game/tests but were never in this list, so CI never ran them
           # (none was left out on purpose: no workflow, comment or document named them). Each is a few minutes at most.
           res://tests/desk_test.gd               # GP-BUSINESS-DESK: every business's desk, its menu and the old saves
@@ -381,7 +382,9 @@ jobs:
           fi
           python3 tools/ci_plan.py tests-shard --list "$RUNNER_TEMP/game.txt" --shards 12 --shard ${{ matrix.shard }} \
             --out "$RUNNER_TEMP/game_shard.txt" --manifest "$CI_OUT/shard.json"
-          python3 tools/ci_report.py run --group game --list "$RUNNER_TEMP/game_shard.txt" --prefix "$HOME/godot-bin/godot --headless --path game --script" --logs "$CI_OUT/logs" --results "$CI_OUT/results.jsonl"
+          # TEST-GOV-01: a suite fails on a SCRIPT ERROR (a check cut short), when it prints no check count, and when it runs
+          # fewer checks than its floor (tools/ci_check_floors.json): an early stop can no longer pass
+          python3 tools/ci_report.py run --group game --list "$RUNNER_TEMP/game_shard.txt" --prefix "$HOME/godot-bin/godot --headless --path game --script" --logs "$CI_OUT/logs" --results "$CI_OUT/results.jsonl" --fail-on-script-errors --require-counts --floors tools/ci_check_floors.json
 
       - name: Short economy simulation (FR-07)
         id: sim

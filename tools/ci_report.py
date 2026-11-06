@@ -17,7 +17,11 @@ List file: one suite per line, read with shell-like quoting; '#' starts a commen
 appended to --prefix (for example "~/godot-bin/godot --headless --path game --script").
 
   python3 tools/ci_report.py run --group game --list suites.txt --prefix "godot --headless --path game --script" \\
-      --logs out/logs --results out/results.jsonl [--timeout 1800] [--fail-on-script-errors]
+      --logs out/logs --results out/results.jsonl [--timeout 1800] [--fail-on-script-errors] [--require-counts]
+      [--floors tools/ci_check_floors.json]
+
+TEST-GOV-01 (2026-11-06): a suite that exited 0 still fails when it printed failures, and, when asked, when it had a
+SCRIPT ERROR (a check cut short), printed no check count, or ran fewer checks than its floor.
   python3 tools/ci_report.py report --results out/results.jsonl --expect python --expect game \\
       --json out/ci-report.json --markdown "$GITHUB_STEP_SUMMARY" [--step game=failure] [--purpose TEXT]
 
@@ -96,7 +100,7 @@ def first_failures(log):
     return [line.rstrip()[:300] for line in log.splitlines() if FAIL_LINE_RE.search(line)][:MAX_FAIL_LINES]
 
 
-def run_suite(group, args, prefix, logs, timeout, fail_on_script_errors):
+def run_suite(group, args, prefix, logs, timeout, fail_on_script_errors, require_counts=False, floors=None):
     argv = prefix + args
     name = suite_name(args)
     log_path = os.path.join(logs, group, re.sub(r"[^A-Za-z0-9_.-]+", "_", name) + ".log")
@@ -118,15 +122,27 @@ def run_suite(group, args, prefix, logs, timeout, fail_on_script_errors):
     script_errors = log.count("SCRIPT ERROR")
     if status == "passed" and code != 0:
         status = "failed"
+    reasons = []                 # TEST-GOV-01: why a suite that exited 0 still failed (each a way a false pass could hide)
     if status == "passed" and fail_on_script_errors and script_errors:
         status = "failed"
+        reasons.append("%d SCRIPT ERROR(s): a check may have been cut short" % script_errors)
+    if status == "passed" and failures:
+        status = "failed"      # (it printed failures but exited 0: before, only a warning)
+        reasons.append("printed %d failures but exited 0" % failures)
+    if status == "passed" and require_counts and checks is None:
+        status = "failed"
+        reasons.append("printed no 'N checks, M failures' line: how many checks ran is unknown")
+    floor = (floors or {}).get(name)
+    if status == "passed" and floor is not None and checks is not None and checks < int(floor):
+        status = "failed"
+        reasons.append("ran %d checks, fewer than its floor of %d (tools/ci_check_floors.json): checks were skipped or removed" % (checks, int(floor)))
     rec = {"group": group, "name": name, "command": " ".join(shlex.quote(a) for a in argv), "status": status,
            "exit_code": code, "seconds": secs, "checks": checks, "failures": failures, "summary_line": summary,
-           "script_errors": script_errors, "first_failures": first_failures(log) if status != "passed" else [],
+           "script_errors": script_errors,
+           "first_failures": (["::error::" + r for r in reasons] + first_failures(log))[:MAX_FAIL_LINES] if status != "passed" else [],
            "log": os.path.relpath(log_path, logs)}
-    # a suite that printed failures but exited 0 would be a tolerated failure: flag it, never hide it
-    if status == "passed" and failures:
-        rec["warning"] = "printed %d failures but exited 0" % failures
+    if reasons:
+        rec["reasons"] = reasons
     return rec, log
 
 
@@ -136,8 +152,11 @@ def cmd_run(a):
     os.makedirs(a.logs, exist_ok=True)
     os.makedirs(os.path.dirname(os.path.abspath(a.results)), exist_ok=True)
     failed = []
+    floors = {}
+    if a.floors:
+        floors = {k: v for k, v in json.loads(read_text(a.floors)).items() if not k.startswith("_")}
     for args in suites:
-        rec, log = run_suite(a.group, args, prefix, a.logs, a.timeout, a.fail_on_script_errors)
+        rec, log = run_suite(a.group, args, prefix, a.logs, a.timeout, a.fail_on_script_errors, a.require_counts, floors)
         print("::group::%s %s (%s s)" % (rec["status"].upper(), rec["name"], rec["seconds"]))
         sys.stdout.write(log if log.endswith("\n") or not log else log + "\n")
         print("::endgroup::")
@@ -271,6 +290,8 @@ def main(argv=None):
     r.add_argument("--results", required=True)
     r.add_argument("--timeout", type=int, default=1800, help="seconds per suite (default 1800)")
     r.add_argument("--fail-on-script-errors", action="store_true")
+    r.add_argument("--require-counts", action="store_true", help="a suite that prints no 'N checks, M failures' line fails")
+    r.add_argument("--floors", help="JSON {suite: least checks}: a suite running fewer fails (TEST-GOV-01)")
     o = sub.add_parser("report")
     o.add_argument("--results", action="append", default=[])
     o.add_argument("--expect", action="append", default=[], help="a group that must have results")
