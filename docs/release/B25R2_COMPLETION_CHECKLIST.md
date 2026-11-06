@@ -4,7 +4,7 @@ Owner directives: `docs/directives/2026-11-06_my_folklore_pc_playtest_repair.md`
 B25R2-Q1..Q4) and the full completion directive of 2026-11-06. Base F2 `20e579e`; repair branch `wip/b25r2-playtest`.
 Counts, not percentages. Times Eastern. "Open" means not yet verified, never assumed.
 
-Last updated 2026-11-06 14:00 EST. Candidate `832f711` (code); `7c1bac4` adds the decision log only.
+Last updated 2026-11-06 15:20 EST. Candidate `832f711` (code); `7c1bac4` adds the decision log only.
 
 ## The five repairs
 
@@ -35,7 +35,8 @@ Last updated 2026-11-06 14:00 EST. Candidate `832f711` (code); `7c1bac4` adds th
   the old tree rule, `0550c1d`); the network tests pass (they had run under the slow generation). Every ERROR line swept:
   missing skill glyphs (8 skills), chapel_test's Build 17 save case stopping early while reporting PASSED (now 175/0,
   9 checks that never ran now run), three test messages (`832f711`). The rest are the suites' own negative cases.
-- `832f711`: full suite 42274258964, 365-day campaign 42274347279 (seeds 1, 2, recorded), sim gate 42274351589: running.
+- `832f711`: full suite 42274258964 **green**. Sim gate 42274351589: determinism identical at every checkpoint (shipped and Expansion 20 switches); the only blocking findings are baseline differences, investigated in `SIM_BASELINE_DIFFERENCES_B25R2.md` (they begin at `bf20dc9`, the owner-approved band household; not re-recorded). 365-day campaign 42274347279: running.
+- Windows package: release.yml on `7c1bac4` (code of `832f711` plus the decision log), private, build number 34; its release step needs the gate and is skipped, so nothing is published or drafted.
 
 ## Known, not in this repair's scope
 
@@ -45,6 +46,6 @@ Last updated 2026-11-06 14:00 EST. Candidate `832f711` (code); `7c1bac4` adds th
 ## Still to do before the package
 
 1. Read the `832f711` suite, campaign and gate; fix anything failing.
-2. Sim gate baseline differences: investigate, not re-record (B25R2-Q1).
+2. Owner decision: whether to accept a new simulation baseline (see `SIM_BASELINE_DIFFERENCES_B25R2.md`).
 3. Windows package from the validated commit through the release workflow, smoke-tested; release notes ("Play Test
    Build One", My Folklore in the notes only). Not published without the owner's approval.
