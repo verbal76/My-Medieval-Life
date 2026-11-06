@@ -98,7 +98,7 @@ func _process(_delta: float) -> void:
 	var where := RegionTravel.bearing(p.pos, Vector2(dest) + Vector2(0.5, 0.5))
 	var walking := RegionTravel.active(p)
 	var t := ("Travelling to %s · %s" if walking else "Destination: %s · %s") % [name, where]
-	if ui.scheme == "pad":
+	if ui.scheme == "gamepad":
 		t += "   ◀ ▶ choose" if not has_pad_focus() else "   A press · B back"   # B25R2: how the pad reaches the buttons
 	if info.text != t or resume_btn.visible == walking:
 		info.text = t

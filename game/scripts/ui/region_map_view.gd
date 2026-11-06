@@ -93,6 +93,9 @@ const PAD_ZOOM := 2.2           # zoom factor a second with a trigger held
 
 func setup(m) -> void:
 	main = m
+	# B25R2: the window gives its first button focus when it opens with a pad (GameUI._focus_first, deferred); on the Region map
+	# the pad starts on the map's cursor (A travels), so that focus is given back right after it, and View reaches the buttons
+	_release_window_focus.call_deferred()
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -450,6 +453,12 @@ func _input(e: InputEvent) -> void:
 		if b.button_index in [JOY_BUTTON_DPAD_LEFT, JOY_BUTTON_DPAD_RIGHT, JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_DOWN]:
 			return
 	pad_button(b.button_index)
+
+
+func _release_window_focus() -> void:
+	var f := get_viewport().gui_get_focus_owner() if is_inside_tree() else null
+	if f != null and get_parent() != null and get_parent().is_ancestor_of(f):
+		f.release_focus()
 
 
 ## B25R2: the View button moves the pad onto the window's buttons above the map (the first that can be pressed). True when one

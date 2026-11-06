@@ -32,11 +32,13 @@ func _init() -> void:
 	quit(1 if failures > 0 else 0)
 
 
-## Whether the straight line a..b runs over water (the test's own check, so it reads the same before and after the repair).
+## Whether the straight line a..b runs over water that cannot be walked (the test's own check, so it reads the same before and
+## after the repair; a bridge, a ford and the shallows are walked: Overworld.is_water counts a ford).
 static func _crosses(ow: Overworld, a: Vector2i, b: Vector2i) -> bool:
 	var n := maxi(absi(b.x - a.x), absi(b.y - a.y))
 	for k in range(0, n + 1):
-		if ow.is_water(Vector2i((Vector2(a).lerp(Vector2(b), k / float(maxi(1, n)))).round())):
+		var c := Vector2i((Vector2(a).lerp(Vector2(b), k / float(maxi(1, n)))).round())
+		if ow.is_water(c) and not ow.is_ford(c):
 			return true
 	return false
 

@@ -72,13 +72,13 @@ static func walkable(w: World, a: Vector2i, b: Vector2i) -> bool:
 	return not path.is_empty() and Vector2i(path[path.size() - 1]).distance_to(b) <= 1.5
 
 
-## B25R2 (owner directive 2026-11-06, item 2, the riverbank): whether the straight line a..b runs over water (a course, a pool;
-## a bridge or a ford is crossed on foot).
+## B25R2 (owner directive 2026-11-06, item 2, the riverbank): whether the straight line a..b runs over water that cannot be walked
+## (a course, a pool; a bridge, a ford and the shallows at a road's edge are crossed on foot: Overworld.is_water counts the ford too).
 static func crosses_water(ow: Overworld, a: Vector2i, b: Vector2i) -> bool:
 	var n := maxi(absi(b.x - a.x), absi(b.y - a.y))
 	for k in range(0, n + 1):
 		var c := Vector2i((Vector2(a).lerp(Vector2(b), k / float(maxi(1, n)))).round())
-		if ow.is_water(c):
+		if ow.is_water(c) and not ow.is_ford(c):
 			return true
 	return false
 

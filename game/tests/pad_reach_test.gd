@@ -96,7 +96,7 @@ func _run() -> void:
 	main.new_game()
 	await _frames(3)
 	main.ui.hide_all()
-	main.ui.scheme = "pad"
+	main.ui.scheme = "gamepad"
 	var w: World = main.world
 	var ui = main.ui
 	# 1. every window
@@ -180,6 +180,7 @@ func _run() -> void:
 	# 3. the Region map's buttons
 	ui.show_map("region")
 	await _frames(4)
+	check(not (ui.get_viewport().gui_get_focus_owner() is BaseButton), "the Region map opens with the pad on the map, not a button (A travels)")
 	await _press(JOY_BUTTON_BACK)
 	var f = ui.get_viewport().gui_get_focus_owner()
 	check(f is BaseButton and ui.panel.is_ancestor_of(f), "View puts the pad on the map window's buttons (%s)" % str(f.get("text") if f != null else "none"))

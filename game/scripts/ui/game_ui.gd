@@ -1807,6 +1807,7 @@ func show_credits() -> void:
 				var link := LinkButton.new()
 				link.text = str(p[key])
 				link.uri = str(p[key])
+				link.focus_mode = Control.FOCUS_ALL    # B25R2 (item 5): the pad reaches it (a LinkButton's own default takes no pad focus)
 				link.add_theme_font_size_override("font_size", 14)
 				panel_body.add_child(link)
 	_label(str(c.story), 15)

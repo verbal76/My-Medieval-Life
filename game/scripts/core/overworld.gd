@@ -2546,12 +2546,20 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 			var e2 := k
 			while e2 < n and wet.call(Vector2i(cells[2 * e2], cells[2 * e2 + 1]), wet_extra) >= 0:
 				e2 += 1
-			if e2 < n:
-				var way0 := _dry_way(Vector2i(cells[2 * (k - 1)], cells[2 * (k - 1) + 1]), Vector2i(cells[2 * e2], cells[2 * e2 + 1]), wet, wet_extra)
-				if not way0.is_empty():
-					out.append_array(way0)
-					k = e2 + 1
-					continue
+			# a road that ends (or begins) in the water (a junction or a link's end standing in a lake or a river: seed 1, the link
+			# to Fallowley at -202,303 ran 9 cells down a lake's edge to its junction) reaches that end by a short stub over the
+			# water, DRY_WAY_STUB cells at most, round the water otherwise
+			var end_wet := e2 >= n
+			var a0 := Vector2i(cells[2 * (k - 1)], cells[2 * (k - 1) + 1])
+			var b0 := Vector2i(cells[2 * mini(e2, n - 1)], cells[2 * mini(e2, n - 1) + 1])
+			var stub := DRY_WAY_STUB if end_wet or wet.call(a0, wet_extra) >= 0 else 0
+			var way0 := _dry_way(a0, b0, wet, wet_extra, stub)
+			if way0.is_empty():
+				way0 = _dry_way(a0, b0, wet, 0.5, stub)   # a narrow strip of bank beside the water: the water's own edge, not a tile out
+			if not way0.is_empty():
+				out.append_array(way0)
+				k = mini(e2, n - 1) + 1
+				continue
 		# a run over the water: from the last cell clear of it (a) to the first clear after (b)
 		var e := k
 		while e < n and wet.call(Vector2i(cells[2 * e], cells[2 * e + 1]), float(CROSS_MARGIN)) >= 0:
@@ -2703,9 +2711,10 @@ static func _nearest_seg(segs: Array, p: Vector2) -> int:
 
 
 ## Generation 8: the 4-connected cells after `a` up to and including `b` over dry land (no cell within half a tile of the
-## water as drawn: `wet` with `extra`), by a breadth-first search in a box round the two (fixed neighbour order, so every chunk lays the same cells);
+## water as drawn: `wet` with `extra`; within `stub` cells of either end it may cross the water, to reach an end standing in it), by
+## a breadth-first search in a box round the two (fixed neighbour order, so every chunk lays the same cells);
 ## empty when the water leaves no dry way there.
-func _dry_way(a: Vector2i, b: Vector2i, wet: Callable, extra: float) -> PackedInt32Array:
+func _dry_way(a: Vector2i, b: Vector2i, wet: Callable, extra: float, stub := 0) -> PackedInt32Array:
 	var box := Rect2i(Vector2i(mini(a.x, b.x), mini(a.y, b.y)), Vector2i(absi(a.x - b.x), absi(a.y - b.y)) + Vector2i.ONE).grow(DRY_WAY_GROW)
 	var from := {a: a}
 	var todo: Array[Vector2i] = [a]
@@ -2717,7 +2726,8 @@ func _dry_way(a: Vector2i, b: Vector2i, wet: Callable, extra: float) -> PackedIn
 			break
 		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 			var n: Vector2i = q + d
-			if from.has(n) or not box.has_point(n) or (n != b and wet.call(n, extra) >= 0):
+			var near_end := stub > 0 and (maxi(absi(n.x - a.x), absi(n.y - a.y)) <= stub or maxi(absi(n.x - b.x), absi(n.y - b.y)) <= stub)
+			if from.has(n) or not box.has_point(n) or (n != b and not near_end and wet.call(n, extra) >= 0):
 				continue
 			from[n] = q
 			todo.append(n)
@@ -2735,6 +2745,7 @@ func _dry_way(a: Vector2i, b: Vector2i, wet: Callable, extra: float) -> PackedIn
 	return out
 
 
+const DRY_WAY_STUB := 3                  # cells over the water a road may take to reach an end standing in it (generation 8)
 const DRY_WAY_GROW := 16                  # tiles round a run along the water searched for the dry way round it (generation 8)
 
 
