@@ -547,7 +547,7 @@ static func _first_stands(j: JudgmentStore, seller: int, first: int, profile := 
 static func pick_buyer(w, brain, n: NPC, id: String) -> NPC:
 	var t := Time.get_ticks_usec()
 	var b := _pick_buyer(w, brain, n, id)
-	if OS.get_environment("MML_DBG_PICK") == "1" and w.day() >= 16:
+	if true and w.day() >= 16:
 		print("DBGPICK buyer m=%d s=%d id=%s -> %s" % [int(w.minutes), n.id, id, str(b.id) if b != null else "-"])
 	var tm: Dictionary = w.judgment.timing
 	tm.trade_us = int(tm.get("trade_us", 0)) + Time.get_ticks_usec() - t
@@ -629,7 +629,7 @@ static func _pick_buyer(w, brain, n: NPC, id: String) -> NPC:
 ## live order, so judgment chooses among comparable people; without tiers each person is a step below the one before.
 static func _pick(w, chooser: int, people: Array, profile: String, key: Array, extra := {}, tiers := []) -> NPC:
 	var r := _pick0(w, chooser, people, profile, key, extra, tiers)
-	if OS.get_environment("MML_DBG_PICK") == "1" and w.day() >= 16:
+	if true and w.day() >= 16:
 		print("DBGPICK %s m=%d c=%d n=%d -> %s" % [profile, int(w.minutes), chooser, people.size(), str(r.id) if r != null else "-"])
 	return r
 
