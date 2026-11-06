@@ -2596,6 +2596,8 @@ func _household_first_tool(n: NPC, tool: String) -> bool:
 		if o.alive and o != n and (o.job == "smith" or buy_role(o) == "merchant_goods") and o.inv.has(tool) and not keeps(o, tool):
 			price = maxi(price, w.deal_price(w.sell_price(o, tool), n, o))
 	var need := first_tool_help(n, n.job, tool, price)
+	if OS.get_environment("MML_DBG_PICK") == "1" and w.minutes >= 24900.0 and w.minutes <= 24980.0:
+		print("DBGHFT m=%.2f n=%d tool=%s price=%d need=%d ncoins=%d" % [w.minutes, n.id, tool, price, need, n.coins])
 	if need <= 0:
 		return false
 	for o: NPC in w.property._payers(World.hh_ref(n.household)):

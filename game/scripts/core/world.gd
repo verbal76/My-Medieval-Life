@@ -1683,6 +1683,8 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 		return false
 	if not cuts.is_empty():
 		economy.claims.apply(cuts)          # LE-03: the parties' own offers yield to this sale (validated above, cannot fail)
+	if OS.get_environment("MML_DBG_PICK") == "1" and minutes >= 24920.0 and minutes <= 24940.0 and ((buyer is NPC and buyer.id == 39) or (seller is NPC and seller.id == 39)):
+		print("DBGTRADE m=%.2f buyer=%s seller=%s id=%s qty=%d total=%d" % [minutes, str(buyer.get("id")), str(seller.get("id")), id, qty, total])
 	var rec_trade: Array = recorder.trade_begin(buyer, seller, id, qty, total) if recorder != null else []     # REC-19
 	var wd: int = seller.inv.wear_leaving(id, qty)     # X20-WEAR-TRANSFER: a worn tool's wear goes with it
 	seller.inv.remove(id, qty)
