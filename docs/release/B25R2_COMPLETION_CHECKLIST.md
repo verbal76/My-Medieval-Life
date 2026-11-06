@@ -46,6 +46,10 @@ Last updated 2026-11-06 17:30 EST. Candidate `1f2ff4f`. Test regimen audit along
   water source. Fixed in `c903ce8` (save form kept, every saved form read); `save_exact_test` 15/0, 2 failures on the old line.
 - The candidate moves to `c903ce8` (plus the validated audit changes): full suite, gate, the 365-day campaign and the package are
   run again on it. The 832f711 campaign is left to finish (not cancelled).
+- Campaign 42274347279 finished 22:22 UTC: both seeds reached 365 of 365. Seed 1: 0 CRITICAL, 20 HIGH, 78 MEDIUM, 0 confirmed
+  defects. Seed 2: 1 CRITICAL confirmed (the seg3 script error above, already fixed in `c903ce8`), 108 HIGH, 45 MEDIUM. The HIGH
+  findings are the flight recorder's unconfirmed heuristics (villagers failing to reach a goal many times in a day, a buyer failing
+  `buy_from` for logs): not defects by themselves (TEST-GOV-01); they are compared with the `1f2ff4f` campaign's findings.
 
 ## Combined candidate `1f2ff4f` (2026-11-06 17:30 EST)
 
