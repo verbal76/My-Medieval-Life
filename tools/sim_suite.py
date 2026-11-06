@@ -45,7 +45,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import check_workbook  # noqa: E402
 import recorder_archive  # noqa: E402
-from sim_gate import summarise, compare  # noqa: E402
+from sim_gate import summarise, compare, game_versions  # noqa: E402
 
 RELEASE = ROOT / "docs" / "release"
 ACCEPTED = RELEASE / "sim_baseline.json"
@@ -399,9 +399,23 @@ def evaluate(jobs, results, out, commit, inject_note="", partial=False, release_
         if "1" in sub and "30" in sub["1"]:
             build_points.append({"label": "%s (%s)" % (label, base.get("commit")), "alive": sub["1"]["30"]["alive"], "currency_tenths": sub["1"]["30"]["currency"] / 10.0})
         if problems and blocking:
+            # TEST-GOV-01: whether the baseline belongs to this code (its overworld generation and save version). One of another
+            # generation, or with none recorded, cannot tell a regression from the approved change of generation: the gate still
+            # blocks, and says so first, instead of calling every value an unapproved change
+            cur = game_versions(ROOT)
+            bver = base.get("versions", {})
+            other = [k for k in ("overworld_gen", "save_version") if bver.get(k) != cur.get(k)]
+            first = by_run[next(rn for rn in runs_for if rn in sims)]
+            if other:
+                findings.append(finding(first, "the accepted baseline (%s) is not applicable to this code: recorded %s, this commit %s; "
+                                        "its differences below cannot be told from a regression until the owner accepts a baseline for this "
+                                        "version (docs/TESTING_GOVERNANCE.md)" % (base.get("commit"),
+                                        ", ".join("%s %s" % (k, bver.get(k, "not recorded")) for k in other),
+                                        ", ".join("%s %s" % (k, cur.get(k)) for k in other)), "critical", True,
+                                        "a baseline of this code's versions", json.dumps({k: bver.get(k) for k in other})))
             for p in problems:          # named after the first compared run present (a subset, e.g. one gate part, may hold eq_s2 alone)
-                findings.append(finding(by_run[next(rn for rn in runs_for if rn in sims)], "unapproved difference from the accepted baseline (%s): %s" % (base.get("commit"), p), "critical", True,
-                                        "identical to docs/release/sim_baseline.json", p))
+                what = ("difference from a baseline of another version (%s)" if other else "unapproved difference from the accepted baseline (%s)") % base.get("commit")
+                findings.append(finding(first, "%s: %s" % (what, p), "critical", True, "identical to docs/release/sim_baseline.json", p))
         elif problems:
             notes.append("%s: %d values differ from %s (an earlier build; reported, not failed)" % (label, len(problems), fname))
     for rn, label in (("eq_s1", "this commit"), ("b18_s1", "this commit, judgment off")):

@@ -15,6 +15,7 @@ An optimization passes only when every one is identical. It changes nothing in t
 Options: --seeds 1,2  --days 30  --check 10,30  --godot PATH (default $GODOT or /opt/godot/godot)
 """
 import argparse
+import re
 import json
 import math
 import os
@@ -39,6 +40,18 @@ def run_seed(godot, seed, days, every, work, extra=()):
            "--days", str(days), "--seed", str(seed), "--every", str(every), "--out", str(out)] + list(extra)
     proc = subprocess.Popen(cmd, stdout=open(log, "w"), stderr=subprocess.STDOUT, env=env)
     return proc, out, log
+
+
+def game_versions(root=None):
+    """TEST-GOV-01: what a baseline's numbers belong to: the overworld generation (Overworld.GEN_VERSION) and the save
+    version (World.SAVE_VERSION) of the code it was recorded from. A baseline of another generation is not this code's."""
+    root = Path(root) if root else Path(__file__).resolve().parent.parent
+    out = {}
+    for key, path, const in (("overworld_gen", "game/scripts/core/overworld.gd", "GEN_VERSION"),
+                             ("save_version", "game/scripts/core/world.gd", "SAVE_VERSION")):
+        m = re.search(r"^const %s := (\d+)" % const, (root / path).read_text(), re.M)
+        out[key] = int(m.group(1)) if m else None
+    return out
 
 
 def summarise(sample):
@@ -122,7 +135,7 @@ def main():
                 seed, day, r["fingerprint"], r["alive"], r["households"], r["currency"], json.dumps(r["leaks"])))
     if args.write:
         BASELINE.write_text(json.dumps({"format": "mml-sim-baseline/1", "commit": commit, "days": args.days,
-                                        "results": results}, indent=1, sort_keys=True) + "\n")
+                                        "versions": game_versions(), "results": results}, indent=1, sort_keys=True) + "\n")
         print("baseline written: %s (from %s)" % (BASELINE.relative_to(ROOT), commit))
         return 0
     base = json.loads(BASELINE.read_text())["results"]
