@@ -4,7 +4,7 @@ Owner directives: `docs/directives/2026-11-06_my_folklore_pc_playtest_repair.md`
 B25R2-Q1..Q4) and the full completion directive of 2026-11-06. Base F2 `20e579e`; repair branch `wip/b25r2-playtest`.
 Counts, not percentages. Times Eastern. "Open" means not yet verified, never assumed.
 
-Last updated 2026-11-06 16:05 EST. Test regimen audit alongside: `docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md`. Candidate `832f711` (code); `7c1bac4` adds the decision log only.
+Last updated 2026-11-06 17:30 EST. Candidate `1f2ff4f`. Test regimen audit alongside: `docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md`. Candidate `832f711` (code); `7c1bac4` adds the decision log only.
 
 ## The five repairs
 
@@ -46,6 +46,21 @@ Last updated 2026-11-06 16:05 EST. Test regimen audit alongside: `docs/audits/20
   water source. Fixed in `c903ce8` (save form kept, every saved form read); `save_exact_test` 15/0, 2 failures on the old line.
 - The candidate moves to `c903ce8` (plus the validated audit changes): full suite, gate, the 365-day campaign and the package are
   run again on it. The 832f711 campaign is left to finish (not cancelled).
+
+## Combined candidate `1f2ff4f` (2026-11-06 17:30 EST)
+
+`1f2ff4f` = `832f711` + `c903ce8` (homestead water, class A from the campaign) + `adf71ec` (owner decision TEST-AUDIT-Q1: villagers
+keep their plans, station reservations and cart holds across a save) + `4bfd8fd` (merge of the validated `wip/test-audit` repairs) +
+the save_exact floor. Original candidate `832f711` kept in history.
+
+| Check | Run | Result |
+|---|---|---|
+| Strict full suite | 42297632580 (21:32:57-22:25:19 UTC) | 234 suites passed (227 game, 6 Python, 1 sim), 18,918 checks, 0 failures, 0 script errors, every game suite counted and at or above its floor |
+| Sim gate | 42297641550 (merged gate 21:55 UTC) | determinism identical at every checkpoint (shipped and Expansion 20 switches); 32 blocking findings, all the baseline: the first says the accepted baseline (df67e8e) is not applicable (no generation or save version recorded; this code generation 8, save 23); conservation clean |
+| Packages | 42297641550 | all six built; `pkg-full-windows` artifact 13542782040, 235,931,704 bytes, sha256 `259770e05dec3b5a78df9bcd7c32a8eaaf6edaa386c4b793ff20b703952331df`, `MyMedievalLife-B34-Windows.zip`, 0.1.34 |
+| Windows smoke | 42297641550 | full and demo: start, exit 0, no script errors, no leaks (headless) |
+| Release step | 42297641550 | skipped (the gate is red): nothing published or drafted |
+| 365-day campaign | 42297637074 | running |
 
 ## Known, not in this repair's scope
 
