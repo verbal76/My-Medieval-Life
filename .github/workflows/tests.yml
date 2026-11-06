@@ -335,6 +335,7 @@ jobs:
           res://tests/save_exact_test.gd        # B25R2 save/reload integrity: cleared trees, shop booths; carts let go by design
           res://tests/plan_continuity_test.gd   # TEST-AUDIT-Q1 (owner): a villager's plan, cart and station survive a save and load
           res://tests/workplace_reach_test.gd   # TEST-AUDIT-01 G2: villagers reach their station or stall (mutation M6 passed 9 suites)
+          res://tests/door_exit_test.gd         # TEST-AUDIT-01 G10 (B8R-002): from just inside every door the way out is open
           # B25R1 CI cover (2026-11-05): suites that existed in game/tests but were never in this list, so CI never ran them
           # (none was left out on purpose: no workflow, comment or document named them). Each is a few minutes at most.
           res://tests/desk_test.gd               # GP-BUSINESS-DESK: every business's desk, its menu and the old saves
