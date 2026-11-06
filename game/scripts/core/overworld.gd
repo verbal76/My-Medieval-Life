@@ -759,6 +759,7 @@ func _site_ring(si: int) -> void:
 				groups[grp[k]] = true
 			if groups.size() > 1:
 				skip.clear()
+		var dry := skip.duplicate()
 		skip.merge(wet)
 		if gen >= 7 and not wet.is_empty():
 			# (generation 7: a corner left with one leg by a leg along the water would be a stub ending in the water, as
@@ -776,13 +777,21 @@ func _site_ring(si: int) -> void:
 						skip[other] = true
 						wet[other] = true
 						more = true
+		if gen >= 7 and not wet.is_empty():
+			# (generation 7, repair 2026-11-06) the legs along the water are left out only while the far points of the site's
+			# sides stay joined round the ring without them and the legs a neighbour blocks (and laying them joins them), as the
+			# generation 6 skips are: on seed 7 Higham's east legs cross Bourton and its west legs run along the water, and
+			# leaving both out cut Higham's south gate from its north, so no road led on to Bourton or Brookhurst
+			var hits := {}
+			for k in ring.size():
+				if _ring_leg_hits(si, ring[k], ring[(k + 1) % ring.size()]):
+					hits[k] = true
+			if _ring_split(ring.size(), skip.merged(hits), fars) and not _ring_split(ring.size(), dry.merged(hits), fars):
+				skip = dry
 	for k in ring.size():
 		var a: Vector2i = ring[k]
 		var b: Vector2i = ring[(k + 1) % ring.size()]
-		var bb := Rect2i(mini(a.x, b.x), mini(a.y, b.y), absi(a.x - b.x) + 1, absi(a.y - b.y) + 1).grow(2)
-		var hit := false
-		for sj in sites.size():                    # B25R1-018: not through a neighbouring settlement (they stand closer now)
-			hit = hit or (sj != si and bb.intersects(sites[sj].rect))
+		var hit := _ring_leg_hits(si, a, b)
 		# (repair 2026-11-04) nor the cells the link would have, its wobble included: seed 7's ring round Higham passed the
 		# box test 4 tiles from Garton and wobbled onto its houses
 		if a == b or hit or skip.has(k):
@@ -806,6 +815,33 @@ func _site_ring(si: int) -> void:
 				var li := _route_link(_vnode(pts[q]), _vnode(pts[q + 1]), "ring")
 				_links[li].key = kb + q
 				_note_road_cells(legs[q])
+
+
+## Whether ring leg a-b of site `si` would cross a neighbouring settlement (B25R1-018: they stand closer now), so is not laid.
+func _ring_leg_hits(si: int, a: Vector2i, b: Vector2i) -> bool:
+	var bb := Rect2i(mini(a.x, b.x), mini(a.y, b.y), absi(a.x - b.x) + 1, absi(a.y - b.y) + 1).grow(2)
+	for sj in sites.size():
+		if sj != si and bb.intersects(sites[sj].rect):
+			return true
+	return false
+
+
+## Whether a ring of `n` points cut at legs `cut` (leg k joins point k to k + 1) leaves the points `fars` in more than one piece.
+static func _ring_split(n: int, cut: Dictionary, fars: Dictionary) -> bool:
+	if cut.is_empty():
+		return false
+	var start: int = (int(cut.keys().min()) + 1) % n
+	var grp := {}
+	var g := 0
+	for t in n:
+		var k := (start + t) % n
+		grp[k] = g
+		if cut.has(k):
+			g += 1
+	var groups := {}
+	for k in fars:
+		groups[grp[k]] = true
+	return groups.size() > 1
 
 
 ## Generation 6 (B25R1 flyover: "parallel paths 1-3 tiles apart", rings drawn as straight frames beside the rivers): a ring leg

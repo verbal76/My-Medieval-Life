@@ -136,7 +136,8 @@ func _start(s: int) -> void:
 			"seed %d: every settlement placed on the opening view, and the player marked" % s)
 	var far: Dictionary = ow.site("bourton")
 	r.tap(r.to_screen(Vector2(far.center)))
-	check(RegionTravel.has_destination(p) and not main.ui.modal(), "seed %d: a tap on a settlement never visited sets off for it" % s)
+	check(RegionTravel.has_destination(p) and not main.ui.modal(), "seed %d: a tap on a settlement never visited sets off for it%s" % [s,
+			"" if RegionTravel.has_destination(p) else " (tapped %s at %s: %s)" % [str(far.name), str(Vector2(far.center)), r.status]])
 	main.travel.dismiss(main)
 	await _frames(2)
 
