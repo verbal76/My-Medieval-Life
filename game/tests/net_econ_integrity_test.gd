@@ -179,7 +179,13 @@ func offer_to_me(kind: String) -> Dictionary:
 func host_offers(kind: String, item: String, qty: int, price: int, days := 0) -> Dictionary:
 	await command({"cmd": "offer", "kind": kind, "to": ann, "item": item, "qty": qty, "price": price, "days": days})
 	await until(func(): return not offer_to_me(kind).is_empty(), 8.0)
-	return offer_to_me(kind)
+	var o := offer_to_me(kind)
+	if o.is_empty():                                   # say which stage failed: the host refused it, or it never reached Ann
+		var st := status()
+		print("note: the host's %s offer to Ann not on her copy: host's answer \"%s\"; host at %s, Ann at %s on the host, %s on her copy; day %s on the host, %d on hers; the host's offers %s" % [
+			kind, str(st.get("why_last", "?")), str(st.get("host_pos", [])), str(rec(ann).get("pos", [])), str(main.world.player.pos),
+			str(st.get("day", "?")), main.world.day(), str(st.get("offers", []))])
+	return o
 
 
 ## An offer on the host's record from `from_ref` of `kind`.
@@ -347,6 +353,8 @@ func _offers() -> void:
 	var d0 := int(net_d().get("duplicates", 0))
 	var o := await host_offers("sell", IT, 3, 9)
 	check(not o.is_empty(), "the host offers Ann 3 apples for 9 coins")
+	if o.is_empty():
+		return
 	net.faults = {"dup": true, "reorder": true, "delay_ms": 150}
 	var rids := [accept(int(o.id))]
 	main.world.player_offer("buy", host_pid, IT, 1, null, 4)
@@ -703,6 +711,9 @@ func _host_crash() -> void:
 	await stage()
 	var s := await tx({"op": "ship", "txid": "net/crash:1", "buyer": "pid:%d" % ann, "seller": "trader:0", "item": WH, "qty": 3, "total": 9, "days": 3})
 	var o := await host_offers("contract", IT, 2, 5, 3)
+	if o.is_empty():
+		check(false, "the host offers Ann a contract for 2 apples at 5 coins (before the crash)")
+		return
 	accept(int(o.id))
 	await until(func(): return not open_contract().is_empty() and int(open_contract().reserved) == 10, 6.0)
 	var c := open_contract()
