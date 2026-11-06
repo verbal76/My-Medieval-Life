@@ -31,6 +31,12 @@
 - **Economy decisions (owner 2026-11-05, questions 20-27):** B25-ECON-P1..P3 integrated (edf1854); B25-ECON-P5 land clearing integrated (c3d9d91); B25-ECON-P4 own-settlement ore consignment integrated (c3d9d91), cross-settlement consignment (owner question 27) integrated (e097fab).
 - **Aerial maps (owner 2026-11-05, B25R1-025):** region and village maps drawn from the player's generated world, for tonight's private playtest; integrated 58cc720; B25R1-026 (settlements never hidden by discovery, owner question 31) in development on wip/b25r1-aerial.
 - **Tonight's private playtest package: shipping checklist (owner 2026-11-05):** all four must be merged into wip/b25r1 and pass on the final integrated commit before packaging: (1) aerial maps B25R1-025/026; (2) Wood Perilous outline and remaining visual defects (wip/b25r1-wood); (3) economy follow-up (wip/b25r1-econ4: Higham collection stop, consignment policy review); (4) multiplayer: net_c host-restart defect fixed and merged (9655bfd), net_interact intermittent and host-restart persistence of identity, inventory, money, relationships and records verified (wip/b25r1-net5); all 12 net suites green on the final commit. Then full Tests, split simulation gate and baseline, packages with Windows smoke.
+- **2026-11-06 03:04 UTC: candidate F2 = `20e579e` on wip/b25r1** (F `a9e9f6e` + wip/b25r1-fixhh + wip/b25r1-fixmap + wip/b25r1-fixdet
+  + DECISIONS). F failed its gates (gate 42124898077 det_s1; Tests 42124894260: 5 suites); all five suites and the determinism cause
+  are fixed (records: `docs/release/B25R1_FAMILY_PLAYTEST_RECORD.md`). Running on F2: Tests 42154221632, split gate 42154224992, 365-day
+  twin campaign (new, on F2). Next: baseline reconciliation (sim_gate.py --write asks), then the freeze per
+  docs/directives/2026-11-05_b25r1_family_playtest_now.md (automatic only when every gate passes). Family playtest published:
+  release build-34 from F (https://github.com/verbal76/My-Medieval-Life/releases/tag/build-34), full Linux pending the corrected build.
 - **FROZEN 2026-11-05 22:50 UTC: F = `a9e9f6e` on wip/b25r1** (net5 merged 12a8dce, contract_50ore test accounting 30b7864,
   journey save stability fb64eab, econ5 decisions 32/33 merged a9e9f6e). No merges into wip/b25r1 during validation. Running on F:
   Tests 42124894260 (12 shards), split simulation gate 42124898077, 365-day twin campaign 42124902114 (independent; holds the package
