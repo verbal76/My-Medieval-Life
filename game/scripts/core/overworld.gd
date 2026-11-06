@@ -2182,6 +2182,20 @@ func _water_clear(wx: int, wy: int, passes: Array, canonical := false) -> bool:
 	return true
 
 
+## Generation 8: _water_clear with the settlements given (`near`), not the chunk's own (_near_sites is the chunk being drawn):
+## for the roads' water (_crossing_legs), which are laid outside any one chunk.
+func _water_clear_near(wx: int, wy: int, passes: Array, canonical: bool, near: Array) -> bool:
+	if _rdist(village, wx, wy) < VILLAGE_CLEAR:
+		return false
+	if canonical and gen >= 6:
+		return not _built.has(Vector2i(wx, wy))
+	for st in near:
+		var lim := 2 if str(st.id) in passes else VILLAGE_CLEAR
+		if _rdist(st.rect, wx, wy) < lim:
+			return false
+	return true
+
+
 ## B25R1-017 (owner: "keep ... existing roads dry"): whether water may lie on corner (i, j) of the area given the roads round
 ## it: off the road and its one-tile margin, yes; on them (one of the corner's four cells), only where the course crosses it, its heading
 ## (`along`) at least 50 degrees off the road's own line there (the principal axis of the road cells in the 5 x 5 round the
@@ -2507,24 +2521,35 @@ func _crossing_legs(cells: PackedInt32Array) -> PackedInt32Array:
 			var b: Vector2 = pts[k]
 			var w := float(rs[mini(k, rs.size() - 1)])
 			if Rect2(a, Vector2.ZERO).expand(b).grow(w + 4.0).intersects(Rect2(box)):
-				segs.append([a, b, w])
+				segs.append([a, b, w, crs.get("passes", []), bool(crs.get("canonical", false))])
 		if gen >= 8:
 			# generation 8: the course's pools too (drawn as water by _water_corners with a bank up to half a tile wider), as a
 			# segment of no length: before, a road over a pool's edge was not seen as on the water and was drawn as bridge
 			for pool in crs.pools:
 				var pc: Vector2 = pool[0]
 				if Rect2(pc, Vector2.ZERO).grow(float(pool[1]) + 4.0).intersects(Rect2(box)):
-					segs.append([pc, pc, float(pool[1]) + 0.5])
+					segs.append([pc, pc, float(pool[1]) + 0.5, crs.get("passes", []), bool(crs.get("canonical", false))])
 	if segs.is_empty():
 		return cells
 	# the water as drawn: a cell is water when two of its corners are (_water_corners: within a course's half-width plus a bank of
 	# up to a quarter tile), so its middle can lie up to about a tile out; generation 8 counts the run from there (before, half a
 	# tile: cells drawn as water at a run's edge were taken for land and their road cells became bridge)
 	var wet_extra := 1.0 if gen >= 8 else 0.5
+	# generation 8: the settlements whose clearance reaches the road, for the water's own rule (_water_clear: no water on a
+	# settlement's ground or the village's clearance), so the road sees the water as it is drawn. Before, a course cleared off a
+	# settlement's ground (seed 1, by Fallowley) still counted as water here: no dry way was found through it and the road was
+	# left running along the real lake as bridge (9 cells at -202,303)
+	var sites_near: Array = []
+	if gen >= 8:
+		for st in sites:
+			if (st.rect as Rect2i).grow(VILLAGE_CLEAR + 2).intersects(box.grow(DRY_WAY_GROW + 4)):
+				sites_near.append(st)
 	var wet := func(c: Vector2i, extra: float) -> int:      # the index of the course segment whose water covers c, else -1
 		var p := Vector2(c) + Vector2(0.5, 0.5)
 		for si in segs.size():
 			if _seg_dist(p, segs[si][0], segs[si][1]) <= float(segs[si][2]) + extra:
+				if gen >= 8 and not _water_clear_near(c.x, c.y, segs[si][3], bool(segs[si][4]), sites_near):
+					continue
 				return si
 		return -1
 	var out := PackedInt32Array()
