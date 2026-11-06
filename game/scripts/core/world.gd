@@ -424,14 +424,21 @@ func _tick(dt: float) -> void:
 		map.overworld.clock = minutes
 	var h := int(minutes / 60.0)
 	var t := Time.get_ticks_usec() if profiling else 0
+	var dbg39 := minutes >= 24925.0 and minutes <= 24945.0
+	var n39: NPC = npc(39) if dbg39 else null
+	var c39 := n39.coins if n39 != null else 0
 	if h != last_hour:
 		last_hour = h
 		_on_hour(h % 24)
 		if profiling:
 			t = _prof("hourly (incl. daily)", t)
+	if n39 != null and n39.coins != c39:
+		print("DBGC39 m=%.2f on_hour %d -> %d" % [minutes, c39, n39.coins]); c39 = n39.coins
 	if judgment != null:
 		judgment.gossip_tick(int(minutes))   # PROSPECTIVE (PROS-19): a few of the hour's queued meetings are told each tick
 	presence.crowd_step()                # B25R1-020: the owner's one observation exception: a crowd round the view may end a pastime early
+	if n39 != null and n39.coins != c39:
+		print("DBGC39 m=%.2f gossip/crowd %d -> %d" % [minutes, c39, n39.coins]); c39 = n39.coins
 	for n: NPC in npcs:
 		if not n.alive:
 			continue
@@ -439,11 +446,15 @@ func _tick(dt: float) -> void:
 		n.trail.append(n.pos)
 		_update_npc(n, dt)
 		n.trail.append(n.pos)
+		if n39 != null and n39.coins != c39:
+			print("DBGC39 m=%.2f update_npc %d (%s %s) %d -> %d" % [minutes, n.id, n.doing, str(n.plan.slice(0, 1)).left(160), c39, n39.coins]); c39 = n39.coins
 	if profiling:
 		t = _prof("villagers (all)", t)
 	fauna.update(dt)
 	if profiling:
 		_prof("fauna", t)
+	if n39 != null and n39.coins != c39:
+		print("DBGC39 m=%.2f fauna %d -> %d" % [minutes, c39, n39.coins])
 
 
 ## PERF-02: add the time since `t0` (microseconds) to subsystem `key`; returns now.
