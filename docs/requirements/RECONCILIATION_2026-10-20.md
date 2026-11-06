@@ -10,7 +10,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 811 (429 of them still open) |
+| Entries added since | | 815 (429 of them still open) |
 | **Open entries now** (rules excluded) | | **587** |
 | Open entries moved to another build | | 15 |
 
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (811)
+## Added since the baseline (815)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -233,6 +233,10 @@ None.
 | B25R1-Q7 | Does the live-near-the-player rule (B25R1-Q6) also apply to the starting village's people, or only to the rest of the region? | decision | APPROVED | 20 |
 | B25R1-Q8 | Town art gap (Higham, Wulstead, churches, chalk figure not store-quality; owned packs lack a stone market cross, white battlements, a fountain with water): owned art with a better layout, a pack the owner buys, or both? | decision | APPROVED | 20 |
 | B25R1-Q9 | Do hamlets count as civic places (civic_records test premise), and with what institutions? | decision | APPROVED | 20 |
+| B25R2-Q1 | Which source for Play Test Build One? | decision | APPROVED | 25 |
+| B25R2-Q2 | How far should the My Folklore name change go in this release? | decision | APPROVED | 25 |
+| B25R2-Q3 | Public release or private draft for Play Test Build One? | decision | APPROVED | 25 |
+| B25R2-Q4 | How should the Claude usage budget be spent on the B25R2 repairs? | decision | APPROVED | 25 |
 | BAN-B | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-C | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |
 | BAN-D | Expansion 23 BAN-D: rank, challenge, leadership, schism and autonomous succession | proposal | NOT STARTED / NOT TESTED / OPEN | 23 |

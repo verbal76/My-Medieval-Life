@@ -46,9 +46,23 @@ exception to the expansion freeze.
    internal version, source commit, the five defects (fixed/unresolved/blocked), test counts, performance before/after, Actions run
    ids, package size and checksum, release link.
 
-## Owner answers, 2026-11-06 (session questions)
+## Owner answers, 2026-11-06 (the four questions; the owner's "no preference" replies were a mis-click and are void)
 
-- Baseline: no preference (agent recommendation taken: F2 `20e579e`, internal Build 25 Revision 2, B25R2).
-- Title: no preference (recommendation: My Folklore in the release notes only; game window, files and save folder unchanged).
-- Visibility: no preference (recommendation: a public GitHub release like build-34; no storefront).
-- Workers: **serial, no extra agents.**
+Saved condensed from the owner's message "MY FOLKLORE — ANSWERS TO FOUR SKIPPED QUESTIONS". Not to be asked again.
+
+1. Source: Option 1, freeze line F2 `20e579e` (the fixes for unreachable settlements and villagers in walls included); internal
+   version Build 25 Revision 2 (B25R2) unless the repository shows a conflicting requirement; the five repairs on top. The
+   simulation baseline differences still need investigating: never re-record automatically to make tests pass. Investigate why the
+   365-day campaign stopped at day 300 on seed 2 (timeout, infrastructure, simulation defect or other). Keep the simulation gate;
+   no claim of full validation until the evidence is resolved.
+2. Name: Option 1, release notes only. Release named exactly "Play Test Build One"; My Folklore the working title in release notes
+   and development documentation. No rename of the executable, the window, the save directories, the repository, save identifiers
+   or paths. A full rebrand later, separately.
+3. Visibility: Option 1, a normal GitHub release like build-34 (the owner understands the repository is public). One Windows PC
+   package; no Android, Linux, demo, storefront or other packages. The tested Windows ZIP, source SHA, internal build number,
+   checksum and release notes.
+4. Budget: serial execution, no extra agents (weekly allowance 84% used, reset Monday 01:00). Priorities: 1 riverbank navigation and
+   crossing validity with the bridge geometry; 2 controller accessibility; 3 the stutter, measured; 4 focused regression tests and the
+   final Windows package validation. None of the five repairs may be dropped. GitHub Actions for repeatable tests; no redundant full
+   suites; little interactive token use; all work in commits and recovery documents. If the allowance runs short, stop at a verified,
+   recoverable checkpoint: no rushed fixes, weakened validation or incomplete release.

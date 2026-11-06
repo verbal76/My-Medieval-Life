@@ -8594,6 +8594,114 @@
    ]
   },
   {
+   "id": "B25R2-Q1",
+   "kind": "decision",
+   "title": "Which source for Play Test Build One?",
+   "description": "Which source for Play Test Build One?",
+   "source": "docs/directives/2026-11-06_my_folklore_pc_playtest_repair.md",
+   "owner_wording": null,
+   "owner_answer": "Option 1: freeze line F2 20e579e; internal Build 25 Revision 2 (B25R2); baseline differences investigated, never re-recorded automatically; the day-300 stop of the seed 2 campaign investigated",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "25",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-06",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-06_my_folklore_pc_playtest_repair.md"
+    },
+    {
+     "date": "2026-11-06",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-11-06"
+    }
+   ]
+  },
+  {
+   "id": "B25R2-Q2",
+   "kind": "decision",
+   "title": "How far should the My Folklore name change go in this release?",
+   "description": "How far should the My Folklore name change go in this release?",
+   "source": "docs/directives/2026-11-06_my_folklore_pc_playtest_repair.md",
+   "owner_wording": null,
+   "owner_answer": "Option 1: release notes and development documents only; release named exactly Play Test Build One; no rename of the executable, window, save directories, repository, save identifiers or paths",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "25",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-06",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-06_my_folklore_pc_playtest_repair.md"
+    },
+    {
+     "date": "2026-11-06",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-11-06"
+    }
+   ]
+  },
+  {
+   "id": "B25R2-Q3",
+   "kind": "decision",
+   "title": "Public release or private draft for Play Test Build One?",
+   "description": "Public release or private draft for Play Test Build One?",
+   "source": "docs/directives/2026-11-06_my_folklore_pc_playtest_repair.md",
+   "owner_wording": null,
+   "owner_answer": "Option 1: a normal GitHub release like build-34; one Windows PC package only; no storefront",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "25",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-06",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-06_my_folklore_pc_playtest_repair.md"
+    },
+    {
+     "date": "2026-11-06",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-11-06"
+    }
+   ]
+  },
+  {
+   "id": "B25R2-Q4",
+   "kind": "decision",
+   "title": "How should the Claude usage budget be spent on the B25R2 repairs?",
+   "description": "How should the Claude usage budget be spent on the B25R2 repairs?",
+   "source": "docs/directives/2026-11-06_my_folklore_pc_playtest_repair.md",
+   "owner_wording": null,
+   "owner_answer": "Serial execution, no extra agents; priorities riverbank and bridges, controller, stutter, then focused tests and the Windows package; stop at a recoverable checkpoint if the allowance runs short",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "25",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-06",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-06_my_folklore_pc_playtest_repair.md"
+    },
+    {
+     "date": "2026-11-06",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner answered 2026-11-06"
+    }
+   ]
+  },
+  {
    "id": "B7-001",
    "title": "Starting coins",
    "kind": "approved",
