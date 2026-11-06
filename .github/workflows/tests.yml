@@ -380,7 +380,9 @@ jobs:
           fi
           python3 tools/ci_plan.py tests-shard --list "$RUNNER_TEMP/game.txt" --shards 12 --shard ${{ matrix.shard }} \
             --out "$RUNNER_TEMP/game_shard.txt" --manifest "$CI_OUT/shard.json"
-          python3 tools/ci_report.py run --group game --list "$RUNNER_TEMP/game_shard.txt" --prefix "$HOME/godot-bin/godot --headless --path game --script" --logs "$CI_OUT/logs" --results "$CI_OUT/results.jsonl"
+          # TEST-GOV-01: a suite fails on a SCRIPT ERROR (a check cut short), when it prints no check count, and when it runs
+          # fewer checks than its floor (tools/ci_check_floors.json): an early stop can no longer pass
+          python3 tools/ci_report.py run --group game --list "$RUNNER_TEMP/game_shard.txt" --prefix "$HOME/godot-bin/godot --headless --path game --script" --logs "$CI_OUT/logs" --results "$CI_OUT/results.jsonl" --fail-on-script-errors --require-counts --floors tools/ci_check_floors.json
 
       - name: Short economy simulation (FR-07)
         id: sim

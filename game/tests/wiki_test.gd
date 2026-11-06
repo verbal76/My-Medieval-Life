@@ -7,9 +7,11 @@ extends SceneTree
 
 var main
 var failures := 0
+var checks := 0                 # TEST-GOV-01: the standard count line, read by tools/ci_report.py
 
 
 func check(cond: bool, what: String) -> void:
+	checks += 1
 	print(("ok   " if cond else "FAIL ") + what)
 	if not cond:
 		failures += 1
@@ -51,6 +53,7 @@ func _run() -> void:
 	await _data_tests()
 	await _flow_tests()
 	print("wiki_test: %s" % ("FAILED %d" % failures if failures else "all passed"))
+	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures else 0)
 
 

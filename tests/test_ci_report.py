@@ -76,9 +76,25 @@ class CiReportTest(unittest.TestCase):
         rep = ci_report.build_report([], ["game"], {"import": "failure", "game": "skipped"}, env={})
         self.assertEqual(rep["outcome"], "FAILED")
 
-    def test_tolerated_failure_is_flagged(self):
-        self.assertEqual(self.run_list([TOLERATED]), 0)
-        self.assertIn("warning", self.recs()[0])
+    def test_printed_failures_fail_even_with_exit_0(self):
+        # TEST-GOV-01: before, a suite that printed failures but exited 0 only earned a warning
+        self.assertEqual(self.run_list([TOLERATED]), 1)
+        self.assertEqual(self.recs()[0]["status"], "failed")
+
+    def test_no_count_line_fails_when_counts_are_required(self):
+        nocount = "-c \"print('all good')\""
+        self.assertEqual(self.run_list([nocount]), 0)
+        self.assertEqual(self.run_list([nocount], extra=["--require-counts"]), 1)
+
+    def test_fewer_checks_than_the_floor_fail(self):
+        # the chapel_test case: a suite stopped early (here 9 of 12 checks) exits 0 and passed
+        early = "-c \"print('9 checks, 0 failures')\""
+        floors = os.path.join(self.dir, "floors.json")
+        with open(floors, "w") as f:
+            json.dump({"_note": "x", ci_report.suite_name(shlex.split(early)): 12, ci_report.suite_name(shlex.split(PASS)): 12}, f)
+        self.assertEqual(self.run_list([PASS], extra=["--floors", floors]), 0)
+        self.assertEqual(self.run_list([early], extra=["--floors", floors]), 1)
+        self.assertIn("floor", " ".join(self.recs()[-1]["reasons"]))
 
     def test_script_errors_fail_only_when_asked(self):
         self.assertEqual(self.run_list([SCRIPT_ERR]), 0)

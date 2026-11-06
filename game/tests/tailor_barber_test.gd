@@ -4,9 +4,11 @@ extends SceneTree
 ## Run: godot --headless --path game --script res://tests/tailor_barber_test.gd
 
 var fails := 0
+var checks := 0                 # TEST-GOV-01: the standard count line, read by tools/ci_report.py
 
 
 func check(ok: bool, what: String) -> void:
+	checks += 1
 	print(("ok    " if ok else "FAIL  ") + what)
 	if not ok:
 		fails += 1
@@ -109,4 +111,5 @@ func _init() -> void:
 	free.alive = false
 	check(int(w3.brain.job_market().tailor.open) == 1 and w3.tenant_of(w3.stalls.pitch2) == "", "if the tailor dies the pitch is freed and the place reopens")
 	print("tailor_barber_test: %s" % ("PASS" if fails == 0 else "%d FAILED" % fails))
+	print("%d checks, %d failures" % [checks, fails])
 	quit(1 if fails > 0 else 0)
