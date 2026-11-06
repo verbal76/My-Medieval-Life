@@ -954,9 +954,19 @@ func test_b17_save() -> void:
 			picked.append(Vector2i(int(p.x), int(p.y)))
 	raw.prospecting = {"gen": 2, "taken": {"cGONE": [[3, 4, "player"]]}, "samples": {}, "bags": {}, "records": [], "next_sample": 1, "next_record": 1}
 	raw.discovery = {"gen": 2, "dug": {"cGONE": [[3, 4, "player", 5]]}, "levels": {}, "history": []}
+	# B25R2: the fixture's overworld is generation 2, and a save that old is refused (owner B25R1-Q5): checked as such, then
+	# loaded with the current generation, since what is tested here (the plants, the clues) is the village's and not the
+	# overworld's. Before, the refusal left the world unloaded and this test stopped at its first check without failing.
+	var w0 := World.new()
+	w0.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(raw)))
+	check(w0.load_error != "", "a Build 17 save of overworld generation 2 is refused, the file kept (B25R1-Q5): %s" % w0.load_error.left(60))
+	raw.overworld.gen = Overworld.GEN_VERSION
 	# 1. the chapel cannot be placed (villagers' land is in the way): every saved plant stays, on its own cell, in its own state
 	var w := World.new()
 	w.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(raw)))
+	check(w.load_error == "" and w.chapel != null, "the Build 17 save loads with the current overworld generation (%s)" % w.load_error)
+	if w.chapel == null:
+		return
 	var cells := {}
 	for p in w.plants:
 		cells[Vector2i(int(p.x), int(p.y))] = p

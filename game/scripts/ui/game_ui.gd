@@ -974,7 +974,9 @@ func set_attack_mode(on: bool) -> void:
 
 func _ui_icon(name: String, size: float) -> TextureRect:
 	var t := TextureRect.new()
-	t.texture = load(UI % name)
+	# B25R2: a glyph not imported (the seven skills added after B7-013 have none yet) leaves the space empty, the rows aligned,
+	# instead of a failed load each time the window opens
+	t.texture = load(UI % name) if ResourceLoader.exists(UI % name) else null
 	t.custom_minimum_size = Vector2(size, size)
 	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED

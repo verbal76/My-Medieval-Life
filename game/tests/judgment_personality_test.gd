@@ -104,13 +104,13 @@ func test_shipped_formula() -> void:
 		else:
 			if j.pers.stubbornness(i, 1) != 0:
 				holders = -9999
-	check(holders > 250 and holders < 350 and lo >= 200 and hi <= 600 and hi - lo > 300, "of 1000 people about 30% hold stubbornness, starting %d..%d permille, the rest at 0 (%d)" % [lo, hi, holders])
+	check(holders > 250 and holders < 350 and lo >= 200 and hi <= 600 and hi - lo > 300, "of 1000 people about 30%% hold stubbornness, starting %d..%d permille, the rest at 0 (%d)" % [lo, hi, holders])
 	var h := holder(j.pers)
 	check(j.pers.stubbornness(h, 1) == j.pers.start_level(h) and j.pers.start_level(h) == j.pers.start_level(h), "...a person's start is a fixed hash of the id")
 	# one theft: the victim's tolerance falls by 2% of the severity points (once, by the formula), they are angry; the Q13 step is not added
 	var t0 := j.tolerance(BOB)
 	j.observe_all(j.publish("theft", [THIEF], [BOB], [], 4), [])
-	check(j.pers.tolerance_drift(BOB) == -20 and j.tolerance(BOB) == t0 - 20 and j.pers.life_tol.is_empty(), "one theft (1 point) lowers tolerance by 2% (%d), not also by the old 4%% step" % j.pers.tolerance_drift(BOB))
+	check(j.pers.tolerance_drift(BOB) == -20 and j.tolerance(BOB) == t0 - 20 and j.pers.life_tol.is_empty(), "one theft (1 point) lowers tolerance by 2%% (%d), not also by the old 4%% step" % j.pers.tolerance_drift(BOB))
 	check(j.pers.anger_at(BOB, j.now_minute() / 1440, j.now_minute() % 1440) == 100, "...and sets anger at 10% of the severity point (100 permille)")
 	check(j.pers.anger_at(BOB, 0, 720) == 50 and j.pers.anger_at(BOB, 1, 0) == 0, "...fading evenly over one game day (half at noon, gone the next morning)")
 
@@ -141,7 +141,7 @@ func test_shipped_curves() -> void:
 	var p := JudgmentPersonality.new(JudgmentStore.default_cfg().traits, 7)
 	for i in 60:
 		p.mistake(BOB, "lend", 3000, i * 4)
-	check(p.practical_wisdom(BOB, "lend") == 500 and p.general_wisdom(BOB) <= 500, "wisdom tops out at 50% (%d)" % p.practical_wisdom(BOB, "lend"))
+	check(p.practical_wisdom(BOB, "lend") == 500 and p.general_wisdom(BOB) <= 500, "wisdom tops out at 50%% (%d)" % p.practical_wisdom(BOB, "lend"))
 	var q := JudgmentPersonality.new(JudgmentStore.default_cfg().traits, 7)
 	var g1 := q.mistake(BOB, "lend", 2000, 1)
 	check(g1 == 40 and q.general_wisdom(BOB) == 10, "a 2-point mistake teaches 4%%, and a quarter (1%%) of it carries to every situation (%d, %d)" % [g1, q.general_wisdom(BOB)])
