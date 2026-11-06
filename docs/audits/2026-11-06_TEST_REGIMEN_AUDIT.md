@@ -14,13 +14,13 @@ Build One candidate's branch at `7c1bac4`), kept apart from the candidate until 
 | Checks run by the full suite (832f711) | 18,303 |
 | Workflows | 9 (2 run on push to staging, 7 by hand or as called workflows) |
 | Simulation baselines and pinned evidence | 12 baseline files (1 blocking, 4 compared, 7 historical), 3 pinned-hash sets, 1 new check-count floor file |
-| Suites mutation-sampled | 22 distinct suites, 10 injected defects (section C) |
-| Testing defects confirmed | 12 (section C) |
-| Testing defects repaired | 10 |
+| Suites mutation-sampled | 23 distinct suites, 10 injected defects (section C): 9 detected, 1 equivalent (M5) |
+| Testing defects confirmed | 13 (section C, T1-T13) |
+| Testing defects repaired | 11 |
 | Tracked, not repaired | 2 (owner or later scope; section G) |
 | False-positive risks (a red that may not mean a defect) | 4: the gate's baseline of another generation (repaired: now labelled); 19 suites with wall-clock thresholds; 12 multi-process network suites (timing); the CI shard time limit when placement drifts (repaired) |
 | False-negative risks (a green that may hide a defect) | 8: script errors ignored (repaired); no-count suites (repaired); printed failures with exit 0 (repaired); silent early stops (repaired: floors); save_continuity_test left out the player (repaired); 3 data-dependent skips (guarded by floors; none fire today); performance measured, never asserted in CI; the Windows smoke run is headless only |
-| Coverage gaps | 9 (section E) |
+| Coverage gaps | 9 identified (section E); 1 closed (G2) |
 
 Validity, by what this audit could establish: 22 suites mutation-sampled (each injected defect caught by at least one suite in its area
 except where section C says otherwise); 15 suites repaired; the other suites read by the static scan only. No suite is claimed valid beyond
@@ -57,6 +57,7 @@ that. Exhaustive mutation testing of 225 suites (24,100 runner seconds a full pa
 | T10 | E | SIM-GATE-01's accepted baseline records no generation or save version, so a generation-8 world against a generation-4/5-era baseline (df67e8e, 2026-11-03) is reported as 31 "unapproved differences" | run 42274351589; bisection to `bf20dc9` (`docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md`) | `8d239a9`: baselines record their versions; a baseline of other versions is reported "not applicable" first; still blocks |
 | T11 | D | CI shard placement used timings missing for 19 suites and drifted up to 20x: shards 22-56 min | run 42274258964 | `8d239a9`: measured timings; predicted 27-34 min |
 | T12 | C | A scratch script committed into `game/tests/` | `zz_ascii.gd` (c0be482) | `2027707`: removed |
+| T13 | coverage | No suite checked that villagers reach their workplace | mutation M6/M6b passed 9 suites | `d8ed2b2`: `workplace_reach_test` |
 
 Mutation sampling (disposable worktree at `7c1bac4`, each defect alone, reverted; nothing committed):
 
@@ -67,11 +68,11 @@ Mutation sampling (disposable worktree at `7c1bac4`, each defect alone, reverted
 | M3 a coin created on every sale | business_money, econ_p2p3, stalls, trade_skills | 3 | trade_skills | detected |
 | M4 the travel bar refuses the pad | pad_reach, gamepad_map, pad_shortcuts | 1 | 2 (they do not cover the bar) | detected by the suite that owns it |
 | M5 generation 8's dry-way search disabled | bridge_validity, travel_river, road_types | 0 | 3 | see M5b: the later fallbacks lay equally dry roads, so this mutation may be equivalent |
-| M5b generation 8's crossing repair skipped entirely | bridge_validity, travel_river | (pending) | | |
+| M5b generation 8's crossing repair skipped entirely | bridge_validity, travel_river | 2 | 0 | detected (bridge_validity: 7 of 8 seeds fail; travel_river: 0 journeys planned): M5 was an equivalent mutation |
 | M6 villagers walk to where they stand instead of their workplace | job_board, health_jobs, business, stalls | 0 | 4 | see M6b |
-| M6b the same against the work suites | desk, courier_desk, contracts, elder_provision, discovery | (pending) | | |
+| M6b the same against the work suites | desk, courier_desk, contracts, elder_provision, discovery | 0 | 5 | **gap G2 confirmed** (9 suites); new `workplace_reach_test` catches it (`d8ed2b2`: 4/0 correct, 2 failures with M6) |
 | M7 skill experience never added | skills, trade_skills, skilled_employment | 2 | skilled_employment | detected |
-| M8 unseeded randomness in villagers' hunger | recorder_neutrality, save_continuity, save_exact | (pending) | | |
+| M8 unseeded randomness in villagers' hunger | recorder_neutrality, save_continuity, save_exact | 2 | save_exact | detected: the determinism checks are real (save_exact compares one round trip, not a run) |
 
 ## D. Baselines and simulation
 
@@ -84,8 +85,8 @@ Mutation sampling (disposable worktree at `7c1bac4`, each defect alone, reverted
   a subset; the merge re-evaluates every run). Part 0's one failure is its own workbook missing a chart (a subset has no historical sheet
   data); the merged workbook is complete. Recommendation: a part's workbook check should not count a chart only the merged workbook has
   (low).
-- **Determinism checks are real**: two independent worlds, compared at every checkpoint; mutation M8 tests whether they catch unseeded
-  randomness.
+- **Determinism checks are real**: two independent worlds, compared at every checkpoint; mutation M8 (unseeded randomness) was caught by
+  recorder_neutrality_test and save_continuity_test.
 - **Generations.** Generation 7 keeps its recorded fingerprints (`water_test` GOLDEN_7, seeds 1, 2, 7: unchanged since before
   generation 8). Generation 8 is pinned on its own (GOLDEN_8). No test compares generation 8 against 7. A loaded world keeps its own
   generation (`World.load_dict` passes the save's generation; `aerial_map` too). New worlds are generation 8 (`water_test`, `crafts_test`).
@@ -103,7 +104,7 @@ Mutation sampling (disposable worktree at `7c1bac4`, each defect alone, reverted
 | # | Gap | Impact | Evidence |
 |---|---|---|---|
 | G1 | Real controllers and Windows hardware: every controller test is headless (events injected); the Windows smoke run starts the game headless for 300 frames (exit code, script errors, leaks), never drawing, playing or using a pad | High: the playtest's main input | release.yml smoke-windows; pad_* suites |
-| G2 | Villagers going to their workplace: mutation M6 passed 4 suites | High if M6b also passes | section C |
+| G2 | Villagers going to their workplace: mutation M6 passed 9 suites | High | repaired `d8ed2b2` (workplace_reach_test) |
 | G3 | Performance is measured, never asserted in CI (`travel_perf_test` asserts only that the walk arrives; `--assert` is manual) | Medium: a stutter regression would pass CI | tests.yml |
 | G4 | Register traceability: 158 of 599 integrated approved requirements name no test; 185 approved are NOT TESTED; one names a test that does not exist (MP-01: net_test) | Medium: coverage cannot be read from the register | requirements.json |
 | G5 | NPC plans across a save (the cart hold): no test says what a loaded villager does next | Medium | section D |
@@ -133,7 +134,7 @@ Mutation sampling (disposable worktree at `7c1bac4`, each defect alone, reverted
 | High | T7 save_continuity_test missing the player | Repaired `cb7f80b` |
 | High | T10 gate cannot tell another version's baseline from a regression | Repaired `8d239a9`; accepting a generation-8 baseline: owner |
 | High | G1 real hardware and controller verification | Owner playtest (cannot be automated here) |
-| High | G2 villagers' workplace untested (if M6b confirms) | Open: a focused test |
+| High | G2 villagers' workplace untested | Repaired `d8ed2b2` |
 | Medium | G3 performance not asserted | Open: proposal, assert the journey's chunk work (not the known first-frame and 17:00 world spikes) |
 | Medium | G4 register traceability | Open |
 | Medium | G5 NPC plans across a save | Owner question |
