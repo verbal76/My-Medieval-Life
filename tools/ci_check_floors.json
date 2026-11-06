@@ -180,7 +180,7 @@
  "road_wear_test": 40,
  "run_tests": 3608,
  "save_continuity_test": 5,
- "save_exact_test": 13,
+ "save_exact_test": 15,
  "save_transfer_test": 21,
  "seed_traveler_test": 48,
  "services_d2_test": 92,
