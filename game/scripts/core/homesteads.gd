@@ -765,7 +765,9 @@ func _go(h: int, who: NPC, leaving: Array, path: String, h2 := -1) -> bool:
 	c.why = str(site.why)
 	c.path = path
 	c.origin = h
-	c.pending_water = site.get("water", {})
+	# (B25R2: kept in save form, the cell as [x, y]: a claim is saved as JSON, where a Vector2i becomes the text "(x, y)" and
+	# Wilds.choose_water failed on it after a load, leaving the homestead with no water source; 365-day campaign, seed 2)
+	c.pending_water = Wilds.save_form(site.get("water", {}))
 	var nh := {"id": nid, "family": str(hh.family), "home": "", "members": [], "pantry": Inventory.new(), "founded_from": h,
 		"founded_day": w.day(), "homestead": str(c.id)}
 	w.households.append(nh)

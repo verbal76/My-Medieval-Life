@@ -94,6 +94,16 @@ func _init() -> void:
 			if str(c.puller).begins_with("npc:"):
 				c.puller = ""
 		check(JSON.stringify(a.carts, "", true) == JSON.stringify(z.carts, "", true), "and in the carts nothing but the villagers' hold differs")
+	# 4. a homestead's water source chosen when its claim is marked, saved before its claimant arrives (365-day campaign on
+	# 832f711, seed 2, days 200-300: Wilds.choose_water met the cell as the text "(x, y)" a JSON save makes of a Vector2i, a
+	# script error, and the homestead got no water source)
+	var acc := {"source": "well", "cell": Vector2i(17, 23), "distance": 2}
+	for form in [["save form", Wilds.save_form(acc)], ["an older save's form", acc]]:
+		var claim := {"id": "hs_test", "works": []}
+		var back = JSON.parse_string(JSON.stringify({"pending_water": form[1]}))
+		w2.wilds.choose_water(claim, back.pending_water)
+		check(claim.has("water_src") and claim.water_src.cell == [17, 23] and str(claim.water_src.source) == "well",
+				"a pending water source loaded from a save (%s) is recorded at its cell (%s)" % [form[0], str(claim.get("water_src", {}))])
 	_end()
 
 

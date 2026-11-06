@@ -104,11 +104,36 @@ func source_of(c: Dictionary) -> Vector2i:
 	return Vector2i(int(wk.cell[0]), int(wk.cell[1]))
 
 
+## A water access (water_access's answer) in the form a save keeps: its cell as [x, y].
+static func save_form(acc: Dictionary) -> Dictionary:
+	var out := acc.duplicate()
+	if acc.has("cell"):
+		var cell := cell_of(acc.cell)
+		out.cell = [cell.x, cell.y]
+	return out
+
+
+## A cell as any save has kept it: a Vector2i, [x, y], or the text "(x, y)" a JSON save made of a Vector2i (B25R2: claims
+## marked before this was kept in save form, and saved before their claimant arrived).
+static func cell_of(v) -> Vector2i:
+	if v is Vector2i:
+		return v
+	if v is Vector2:
+		return Vector2i(v)
+	if v is Array and v.size() >= 2:
+		return Vector2i(int(v[0]), int(v[1]))
+	if v is String:
+		var nums := (v as String).replace("(", "").replace(")", "").split(",")
+		if nums.size() >= 2:
+			return Vector2i(int(nums[0].strip_edges()), int(nums[1].strip_edges()))
+	return NONE
+
+
 ## A claim's source chosen when it is marked out (Homesteads._mark_site, the band's camp): recorded once.
 func choose_water(c: Dictionary, acc: Dictionary) -> void:
 	if acc.is_empty():
 		return
-	var cell: Vector2i = acc.cell
+	var cell: Vector2i = cell_of(acc.get("cell"))
 	c.water_src = {"source": str(acc.source), "cell": [cell.x, cell.y]}
 	if not c.has("water"):
 		c.water = 0
