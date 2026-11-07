@@ -141,6 +141,7 @@
   "game/multiplayer_b_test": 45.1,
   "game/multiplayer_c_test": 475.0,
   "game/net_batch_b_test": 151.1,
+  "game/net_cave_test": 30.0,
   "game/net_c_test": 70.1,
   "game/net_econ_integrity_test": 186.5,
   "game/net_family_test": 57.0,

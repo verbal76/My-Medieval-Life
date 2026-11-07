@@ -597,7 +597,7 @@ func _status() -> void:
 			"away": p.away, "host": w.is_host(p), "ref": ref, "key": p.net_key,
 			"alive": p.alive, "line": p.line, "skills": p.skills.duplicate(), "crimes": p.crimes.size(), "case": (w.justice.case_of(ref).get("crimes", []) as Array).size(),
 			"killings": w.relations.killings_of(ref), "jtag": _tagged(w, ref), "resting": p.rest_until >= 0.0, "quests": p.quests.size(),
-			"carts": w.carts.of(ref).size(), "id": w.person_id(p), "partner": p.partner, "children": p.children.duplicate()}
+			"carts": w.carts.of(ref).size(), "id": w.person_id(p), "partner": p.partner, "children": p.children.duplicate(), "level": p.map_level}
 	var connected := []
 	for id in main.net.by_peer:
 		connected.append(int(main.net.by_peer[id]))

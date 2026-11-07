@@ -211,6 +211,8 @@ jobs:
           res://tests/net_fauna_test.gd
           # Build 21: the host and join menus (compact, on screen at phone and PC sizes) and a two-process smoke over loopback through them
           res://tests/net_ui_test.gd
+          # B25R2-CAVE: a guest through the cave's mouth and out, both machines agreeing on its level and place; a copy left on the cave's level put back
+          res://tests/net_cave_test.gd
           # X20-MP-ECON-INTEGRITY: guests' trades, contracts and the transaction authority under network faults, host recovery and
           # succession, economy off and on: every coin and good conserved, each request applied once (three processes and a relay, ~3 min)
           res://tests/net_econ_integrity_test.gd

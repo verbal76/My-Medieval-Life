@@ -126,6 +126,8 @@ var animal_target := {}             # Build 21: animal id -> the last position t
 var refusal := ""                   # the last refusal's code
 var replies := {}                   # request id -> the host's answer
 var _next_request := 1
+var level_differs := 0              # guest (B25R2-CAVE): players' lists in a row that put this player on another level than its copy
+var portal_rid := 0                  # guest (B25R2-CAVE): the request of a passage through a portal (World.player_through) not yet answered
 var predicted := {}                 # MP C: request id -> what this machine's own run of the verb gave (World.mirror), to tell when the host differs
 var syncs := 0                      # MP C: world sections taken from the host (tests)
 
@@ -888,12 +890,14 @@ func c_move(pos: Vector2, dir: Vector2, anim: String) -> void:
 	_playing(id)
 	if p == null or not p.alive:
 		return
+	if _passage_waiting(id):
+		return                                     # B25R2-CAVE: the guest went through a portal on its own copy; the passage, queued, moves it here
 	var now := Time.get_ticks_msec()
 	var dt := maxf(1.0 / NetProtocol.MOVE_HZ, float(now - int(moves[id].t)) / 1000.0)
 	var most := float(GameData.b("player_tiles_per_second")) * float(GameData.b("sprint_speed")) * dt * 1.5 + 0.25
 	if not move_ok(p, pos, most):
 		rejected += 1
-		rpc_id(id, "s_correct", p.pos)
+		rpc_id(id, "zz_correct", p.pos, p.map_level)     # B25R2-CAVE: the place and the level, so the guest's copy is never on another level
 		return
 	p.pos = pos
 	moves[id] = {"t": now, "dir": dir, "anim": anim if anim in ANIMS else "idle"}
@@ -914,6 +918,29 @@ func s_correct(pos: Vector2) -> void:
 		main.world.player.pos = pos
 
 
+## Host -> guest (B25R2-CAVE, owner 2026-11-07): the guest's place and the level it is on, as the host has them. s_correct sent the
+## place only: a guest whose copy had gone through a cave's mouth the host had not (a move refused before the passage, or the passage
+## refused) stood on the cave's level at a place outside it, in rock, for good. Named zz_ so the older RPCs keep their ids.
+@rpc("authority", "call_remote", "reliable")
+func zz_correct(pos: Vector2, level: int) -> void:
+	if main.world != null:
+		main.world.player.pos = pos
+		main.world.player.map_level = level
+
+
+## Host (B25R2-CAVE): whether guest connection `id` has a passage through a portal queued or held, not yet applied. Its moves meanwhile
+## are from the other side of the portal: not refused (sending it back), only left until the passage puts it there.
+func _passage_waiting(id: int) -> bool:
+	for e in queue:
+		if int(e.peer) == id and e.args is Dictionary and str(e.args.get("path", "")) == "player_through":
+			return true
+	for k in streams:
+		for e in (streams[k].held as Dictionary).values():
+			if int(e.peer) == id and e.args is Dictionary and str(e.args.get("path", "")) == "player_through":
+				return true
+	return false
+
+
 # ---------------------------------------------------------------- RPCs: snapshots ------------
 @rpc("authority", "call_remote", "unreliable_ordered")
 func s_players(list: Array) -> void:
@@ -921,6 +948,16 @@ func s_players(list: Array) -> void:
 	for e in list:
 		var pid := int(e.pid)
 		if pid == my_pid:
+			# B25R2-CAVE: this player's own level, as the host has it, is the truth once no passage of its own is waiting
+			# (twice in a row: a list sent before the passage may arrive after its answer, on another channel)
+			if main.world != null and main.guest_world and portal_rid == 0 and e.has("level") and int(e.level) != main.world.player.map_level:
+				level_differs += 1
+				if level_differs >= 2:
+					main.world.player.map_level = int(e.level)
+					main.world.player.pos = e.pos
+					level_differs = 0
+			else:
+				level_differs = 0
 			continue
 		seen[pid] = true
 		if not avatars.has(pid):
@@ -1054,7 +1091,10 @@ func send_verb(path: String, args: Array) -> int:
 	var a := []
 	for v in args:
 		a.append(NetActions.enc(main.world, v))
-	return request("verb", {"path": path, "a": a})
+	var rid := request("verb", {"path": path, "a": a})
+	if path == "player_through":
+		portal_rid = rid
+	return rid
 
 
 ## Batch D: World verbs that only answer a question and change nothing (the interface asks container_pick every frame to word the
@@ -1264,6 +1304,12 @@ func s_reply(rid: int, r: Dictionary) -> void:
 		var mine: Dictionary = r.get("player", {})
 		if not mine.is_empty() and int(mine.get("pid", 0)) == my_pid:
 			main.adopt_own_state(mine)            # the host's record of this player is the truth
+			if str(r.get("path", "")) == "player_through":
+				var fresh := PlayerState.from_dict(mine)     # B25R2-CAVE: after a passage, the side of the portal too (the host's)
+				main.world.player.pos = fresh.pos
+				main.world.player.map_level = fresh.map_level
+		if rid == portal_rid:
+			portal_rid = 0
 		for patch in r.get("patches", []):
 			NetActions.apply_patch(main.world, patch)
 	if r.has("path"):
