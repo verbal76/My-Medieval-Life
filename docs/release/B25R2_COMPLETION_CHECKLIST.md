@@ -97,6 +97,19 @@ the save_exact floor. Original candidate `832f711` kept in history.
   `wip/b25r2-rev2` (branched from `1f2ff4f`; the candidate branch is unchanged): `NetWindow.host_options` asks for
   `NetProtocol.MAX_PLAYERS` (4). `net_ui_test` 64/0 locally; its 3 new checks fail with the limit at 2. Not yet in CI: it goes into
   the next package with the label (B25R2-VER-01) and `door_exit_test`, validated on that exact commit.
+- **Defect (class A): a guest following the host into a cave stood in the black outside it, for good.** The guest's copy went
+  through the cave's mouth at once and sent the passage as a request; its moves reached the host first, were refused, and the guest
+  was sent back by place only, keeping the cave's level: in rock. Owner: fix now (B25R2-CAVE). Fixed in `5d07527` on
+  `wip/b25r2-rev2`: moves wait while a passage is queued; a refused move is corrected with place and level; the passage's answer and
+  the players' list put the guest's level right. `net_cave_test` (new, two processes) 11/0; 2 failures on the old code. Serially, with
+  the fix: net_g1 45/0, net_c 43/0, net_family 22/0, net_interact 68/0, net_fault 54/0, net_fauna 14/0, net_ui 64/0; Python 196 OK.
+  Workaround in the current package: the guest leaves the game and joins again.
+- **New (owner, B25R2-HOSTMENU): Host a game on the title screen**, asking for the saved character (the saved world) or a new one,
+  then the Open to friends window. `ef8141a`; net_ui_test 69/0, start 523/0, demo 35/0, audio 171/0, wiki 144/0, pad_reach 59/0,
+  gamepad_map 19/0 (local). Wiki page Playing with friends updated.
+- `wip/b25r2-rev2` (from `1f2ff4f`): `6f23933` 4 players, `5d07527` caves, `ef8141a` Host a game. Still to add for the next package:
+  the label "0.1.34 Rev 2 — Playtest 1", `door_exit_test` `7971720`, the DECISIONS entries; then the full strict suite and the gate
+  on that exact commit. Nothing here is in CI yet (the hold: no workflows).
 - **Feedback, not a defect:** the invite code (31 characters here) is long to type; it is meant to be copied and pasted. Options for a
   later cycle (trim it, word code, short room code through an online service): owner choice, nothing started.
 
