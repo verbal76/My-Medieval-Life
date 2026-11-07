@@ -8700,7 +8700,7 @@
    "acceptance": [
     "the title offers Host a game; it asks: the saved character (the saved world) or a new one; the chosen world starts and its Open to friends window opens (password, then Open); Back hosts nothing"
    ],
-   "target_build": "25",
+   "target_build": "20+",
    "parent": null,
    "depends_on": [],
    "decisions": [],
@@ -8719,6 +8719,11 @@
      "date": "2026-11-07",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25r2-rev2; tests: None -> net_ui_test 69/0, start 523/0, wiki 144/0, pad_reach 59/0 (local); commits + ef8141a",
      "why": "built ef8141a on wip/b25r2-rev2 (owner's answers: the saved world; then the host window); net_ui_test 69/0 locally, not yet in CI"
+    },
+    {
+     "date": "2026-11-07",
+     "change": "target_build: 25 -> 20+",
+     "why": "register build field: the B25R1/B25R2 records carry the 20+ build (Build 25 in the register is the weather design build)"
     }
    ],
    "branch": "wip/b25r2-rev2",

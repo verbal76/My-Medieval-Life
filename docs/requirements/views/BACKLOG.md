@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 
 Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backlog, approved work with no build, work waiting on an owner decision for its build, and proposals and ideas. Nothing here is assigned to Build 20 or 21 until the owner says so.
 
-## Build 20 or later (backlog) (52)
+## Build 20 or later (backlog) (53)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -15,6 +15,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B17F-FOOD | Build 17 finding: missed meals for want of money (606-5,417 a year across seeds) | idea | PROPOSED | NOT STARTED |
 | B17F-HENS | Build 17 finding: chickens died out early on seeds 2 and 3 | idea | PROPOSED | NOT STARTED |
 | B17F-JOBS | Build 17 finding: unemployment of 6-30 adults at day 365 | idea | PROPOSED | NOT STARTED |
+| B25R2-HOSTMENU | Host a game on the title screen | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B8-007 | Wrong tool shown | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | CRT-06 | Friendship benefits: better prices, help and favours, gossip and news, backing in disputes and votes | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | DVW-A13 | Every visible object has a use (:38) | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |

@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (15)
+## Workers and task branches (16)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -11,6 +11,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | B25R1-023 | 20 | IN DEVELOPMENT | b25r1-grassmap worker | wip/b25r1-grassmap |
 | B25R1-024 | 20 | IN DEVELOPMENT | b25r1-grassmap worker | wip/b25r1-grassmap |
+| B25R2-HOSTMENU | 20+ | IMPLEMENTED ON TASK BRANCH | none | wip/b25r2-rev2 |
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
