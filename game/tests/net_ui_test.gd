@@ -186,6 +186,9 @@ func _behaviour() -> void:
 	check(NetWindow.parse_address("").is_empty() and NetWindow.parse_address("1.2.3.4:99999").is_empty() and NetWindow.parse_address("not an address/x").is_empty(), "nonsense is refused")
 	var lan := NetDiscovery.lan_addresses()
 	check(lan.all(func(a): return a.is_valid_ip_address() and not a.begins_with("127.") and not a.contains(":")), "this device's addresses to show: LAN IPv4 only (%s)" % str(lan))
+	var opts := NetWindow.host_options(" oak ")
+	check(opts.max_players == NetProtocol.MAX_PLAYERS and NetProtocol.MAX_PLAYERS == 4 and opts.password == "oak" and opts.upnp == true,
+		"the window hosts for 4 players with the password typed (%s)" % str(opts))
 	# hosting refused when the game's port is in use: the window says so
 	var blocker := ENetMultiplayerPeer.new()
 	var held := blocker.create_server(NetProtocol.GAME_PORT, 1) == OK
@@ -208,6 +211,16 @@ func _behaviour() -> void:
 		await frames()
 		check(net.is_host() and net.password == "oak" and net.port == NetProtocol.GAME_PORT and find("HostPlayers") != null and (find("HostPlayers") as Label).text.begins_with("Waiting"),
 			"Open to friends opens the world on port %d with the password; the window shows who is playing" % NetProtocol.GAME_PORT)
+		check(net.max_players == NetProtocol.MAX_PLAYERS and (find("HostPlayers") as Label).text.contains("up to %d players" % NetProtocol.MAX_PLAYERS),
+			"Open to friends makes room for %d players, the host and %d guests (was 2: a second guest was told full)" % [NetProtocol.MAX_PLAYERS, NetProtocol.MAX_PLAYERS - 1])
+		var kept: Dictionary = net.by_peer
+		var ph := NetProtocol.password_hash("oak", net.salt)
+		net.by_peer = {901: -901, 902: -902}
+		var third := net.admit("k3", NetProtocol.full_version(), ph, "Ann")
+		net.by_peer = {901: -901, 902: -902, 903: -903}
+		var fourth := net.admit("k4", NetProtocol.full_version(), ph, "Bea")
+		net.by_peer = kept
+		check(third == "" and fourth == "full", "with two guests in, a third may join; with three, the next is told full (%s, %s)" % [third, fourth])
 		check(ui.panel_kind == "host" and press("Stop hosting"), "Stop hosting is offered")
 		await frames()
 		check(not net.is_host() and main.running and main.world != null and SaveStore.any_exists(main.save_path), "Stop hosting closes the session; the world is intact and saved")

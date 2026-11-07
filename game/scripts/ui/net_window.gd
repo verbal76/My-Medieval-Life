@@ -58,7 +58,7 @@ static func show_host(ui: GameUI) -> void:
 		err.name = "HostError"
 		err.visible = false
 		var go := func(_t = ""):
-			var why: String = m.host_game({"password": pw.text.strip_edges(), "upnp": true})
+			var why: String = m.host_game(host_options(pw.text))
 			if why != "":
 				err.text = why
 				err.visible = true
@@ -74,6 +74,12 @@ static func show_host(ui: GameUI) -> void:
 		ui._button("Back", ui.show_pause, true, row)
 		ui._label("On Windows, allow My Medieval Life through the firewall on private networks (UDP ports %d and %d) when it asks." % [NetProtocol.GAME_PORT, NetProtocol.DISCOVERY_PORT], 13)
 	ui.compact(560.0)
+
+
+## What Open to friends asks for: the password typed, the router asked to let games in, and room for every player the game allows
+## (the host and three guests; owner, 2026-11-07: before this the window asked for nothing, so a second guest was told "full").
+static func host_options(password: String) -> Dictionary:
+	return {"password": password.strip_edges(), "upnp": true, "max_players": NetProtocol.MAX_PLAYERS}
 
 
 ## Batch D: this host's invite code ("" when it has no address to give).
