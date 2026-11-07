@@ -908,7 +908,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (331)
+## Owner decisions (332)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -964,6 +964,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25R1-Q8 | Town art gap (Higham, Wulstead, churches, chalk figure not store-quality; owned packs lack a stone market cross, white battlements, a fountain with water): owned art with a better layout, a pack the owner buys, or both? | 20 | APPROVED |  |
 | B25R1-Q9 | Do hamlets count as civic places (civic_records test premise), and with what institutions? | 20 | APPROVED |  |
 | B25R2-DRAFT-01 | May Play Test Build One be published, and how? | 25 | PROVISIONAL |  |
+| B25R2-HOST4 | Open to friends admits only one guest (the window asks for no player limit, so hosting defaults to 2): how many players should the host window allow? | 25 | APPROVED |  |
 | B25R2-PKG-01 | May the existing Windows package built from candidate 1f2ff4f (release run 42297641550, artifact pkg-full-windows 13542782040) be used for the owner's personal testing while validation continues? | 25 | APPROVED |  |
 | B25R2-Q1 | Which source for Play Test Build One? | 25 | APPROVED |  |
 | B25R2-Q2 | How far should the My Folklore name change go in this release? | 25 | APPROVED |  |

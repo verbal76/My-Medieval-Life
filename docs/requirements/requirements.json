@@ -8626,6 +8626,38 @@
    "reasoning": "Conditional authorization: release.yml publishes only when SIM-GATE-01 passes; the gate is red only on the generation-blind baseline (df67e8e), whose replacement needs the owner (TEST-AUDIT-Q2)."
   },
   {
+   "id": "B25R2-HOST4",
+   "kind": "decision",
+   "title": "Open to friends admits only one guest (the window asks for no player limit, so hosting defaults to 2): how many players should the host window allow?",
+   "description": "Open to friends admits only one guest (the window asks for no player limit, so hosting defaults to 2): how many players should the host window allow?",
+   "source": "owner playtest of artifact 13542782040, 2026-11-07",
+   "owner_wording": null,
+   "owner_answer": "open hosting to 4",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "25",
+   "related": [
+    "B25R2-PKG-01"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-07",
+     "change": "entered in the register",
+     "why": "owner playtest of artifact 13542782040, 2026-11-07"
+    },
+    {
+     "date": "2026-11-07",
+     "change": "disposition: OPEN -> APPROVED; commits + 6f23933; owner_answer",
+     "why": "owner 2026-11-07: open hosting to 4; fixed 6f23933 on wip/b25r2-rev2 (from 1f2ff4f), net_ui_test 64/0, the 3 new checks fail with the limit at 2"
+    }
+   ],
+   "commits": [
+    "6f23933"
+   ]
+  },
+  {
    "id": "B25R2-PKG-01",
    "kind": "decision",
    "title": "May the existing Windows package built from candidate 1f2ff4f (release run 42297641550, artifact pkg-full-windows 13542782040) be used for the owner's personal testing while validation continues?",

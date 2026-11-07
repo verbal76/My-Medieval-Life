@@ -90,6 +90,16 @@ the save_exact floor. Original candidate `832f711` kept in history.
   but its files are not downloadable by the public either; the artifact link stays the access method in any case.
 - TEST-AUDIT-Q2: still conditional; stop before promotion. `door_exit_test` (`7971720`) goes into the next validation cycle.
 
+## Owner playtest of artifact 13542782040, 2026-11-07
+
+- **Defect (class A): only one friend could join.** The Open to friends window passed no player limit, so hosting fell back to 2
+  (host + 1 guest); a second friend was told "full". Owner: "open hosting to 4" (B25R2-HOST4). Fixed in `6f23933` on
+  `wip/b25r2-rev2` (branched from `1f2ff4f`; the candidate branch is unchanged): `NetWindow.host_options` asks for
+  `NetProtocol.MAX_PLAYERS` (4). `net_ui_test` 64/0 locally; its 3 new checks fail with the limit at 2. Not yet in CI: it goes into
+  the next package with the label (B25R2-VER-01) and `door_exit_test`, validated on that exact commit.
+- **Feedback, not a defect:** the invite code (31 characters here) is long to type; it is meant to be copied and pasted. Options for a
+  later cycle (trim it, word code, short room code through an online service): owner choice, nothing started.
+
 ## Known, not in this repair's scope
 
 - Eight skills have no glyph in the Skills window (the space is left empty): art to choose.
