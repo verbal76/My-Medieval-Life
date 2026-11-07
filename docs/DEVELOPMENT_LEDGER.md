@@ -909,7 +909,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (333)
+## Owner decisions (334)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -972,6 +972,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25R2-Q2 | How far should the My Folklore name change go in this release? | 25 | APPROVED |  |
 | B25R2-Q3 | Public release or private draft for Play Test Build One? | 25 | APPROVED |  |
 | B25R2-Q4 | How should the Claude usage budget be spent on the B25R2 repairs? | 25 | APPROVED |  |
+| B25R2-STUTTER | Walking south of the starter village to the next settlement froze the game for about a second every other step: fix? | 20+ | APPROVED |  |
 | B25R2-VER-01 | How should the next Play Test Build One package identify itself? | 25 | APPROVED |  |
 | BANDIT-Q | Should outlaws ever return once the band is wiped out? | owner decision | APPROVED |  |
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | owner decision | APPROVED |  |

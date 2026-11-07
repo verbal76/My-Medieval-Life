@@ -107,6 +107,21 @@ the save_exact floor. Original candidate `832f711` kept in history.
 - **New (owner, B25R2-HOSTMENU): Host a game on the title screen**, asking for the saved character (the saved world) or a new one,
   then the Open to friends window. `ef8141a`; net_ui_test 69/0, start 523/0, demo 35/0, audio 171/0, wiki 144/0, pad_reach 59/0,
   gamepad_map 19/0 (local). Wiki page Playing with friends updated.
+- **Defect (class A, performance): a freeze of about a second every other step walking south of the starter village** (owner:
+  "a definite game breaker"). Cause, measured on the real game scene, seed 1, the walk to Wendholt (`game/tests/stutter_probe.gd`):
+  37 frames over 50 ms (150-280 ms each), every one a frame on which a new tile was made (`MapView._put`, 1 to 59). A tile made
+  during play changes the shared TileSet and every layer drawn with it is updated again, about 150 ms even for one. Fixed in
+  `ed221df` (+ test `fe7d8f8`) on `wip/b25r2-rev2`: the tiles the overworld draws are made at the start (3,062 tiles, 53 ms; atlas 0's
+  29,040 cells all made took 24 s, so only the ones the overworld data names). After: 0 tiles made on the walk, 4 frames over 50 ms
+  (worst about 150 ms, the village's hourly work). `tile_premake_test` (new; counts, not times) 4/0; 2 failures on the old code
+  (772 tiles made). Headless: drawing on a real GPU is not measured; the owner's PC check is the proof.
+- **365-day campaign on `1f2ff4f` (run 42297637074) finished 00:47 UTC:** both seeds 365 of 365, 0 CRITICAL, 0 confirmed defects,
+  archive checks ok; no segment's defect step fired; the homestead water error did not recur. Seed 1 48 HIGH / 65 MEDIUM
+  (was 20 / 78 on `832f711`), seed 2 99 / 45 (was 108 / 45): unconfirmed heuristics (refused trades, goals not reached). Seed 1's
+  rise is an open finding, not investigated (the hold).
+- **Generation 8 baseline candidate prepared, not accepted:** `docs/release/sim_baseline_candidate_gen8.json` (commit `1f2ff4f`,
+  generation 8, save 23, from gate 42297641550's eq_s1/eq_s2); comparison and attribution in `SIM_BASELINE_DIFFERENCES_B25R2.md`.
+  The accepted baseline is unchanged. **Stopping point: the owner's approval.**
 - `wip/b25r2-rev2` (from `1f2ff4f`): `6f23933` 4 players, `5d07527` caves, `ef8141a` Host a game. Still to add for the next package:
   the label "0.1.34 Rev 2 — Playtest 1", `door_exit_test` `7971720`, the DECISIONS entries; then the full strict suite and the gate
   on that exact commit. Nothing here is in CI yet (the hold: no workflows).

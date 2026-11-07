@@ -7,7 +7,7 @@ The decision register is the `decision` records of the register. A recommendatio
 | Disposition | Count |
 |---|---|
 | OPEN | 21 |
-| APPROVED | 300 |
+| APPROVED | 301 |
 | PROVISIONAL | 4 |
 | SUPERSEDED | 3 |
 | REOPENED | 0 |

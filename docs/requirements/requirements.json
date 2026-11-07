@@ -8872,6 +8872,38 @@
    ]
   },
   {
+   "id": "B25R2-STUTTER",
+   "kind": "decision",
+   "title": "Walking south of the starter village to the next settlement froze the game for about a second every other step: fix?",
+   "description": "Walking south of the starter village to the next settlement froze the game for about a second every other step: fix?",
+   "source": "owner playtest, 2026-11-07",
+   "owner_wording": null,
+   "owner_answer": "We have to figure out what's going on there (fix it)",
+   "disposition": "APPROVED",
+   "blocks_implementation": false,
+   "target_build": "20+",
+   "related": [
+    "B25R2-CAVE"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-07",
+     "change": "entered in the register",
+     "why": "owner playtest, 2026-11-07"
+    },
+    {
+     "date": "2026-11-07",
+     "change": "disposition: OPEN -> APPROVED; commits + ed221df; owner_answer",
+     "why": "owner 2026-11-07: 'we have to figure out what's going on there ... a definite game breaker'; cause found (a tile made during play refreshes every layer of the shared TileSet, ~150 ms each, 1-59 tiles on every freeze frame); fixed ed221df/fe7d8f8 on wip/b25r2-rev2 (tiles the overworld draws made at the start, 3,062 in 53 ms); walk to Wendholt 37 frames over 50 ms -> 4; tile_premake_test 4/0, 2 failures on the old code; real PC not checked"
+    }
+   ],
+   "commits": [
+    "ed221df"
+   ]
+  },
+  {
    "id": "B25R2-VER-01",
    "kind": "decision",
    "title": "How should the next Play Test Build One package identify itself?",
@@ -59346,6 +59378,11 @@
      "date": "2026-11-06",
      "change": "note",
      "why": "owner 2026-11-06 evening (docs/directives/2026-11-06_playtest_build_one_owner_decisions.md): conditional approval restated for candidate 1f2ff4f; stop before promotion"
+    },
+    {
+     "date": "2026-11-07",
+     "change": "note",
+     "why": "2026-11-07 02:55 UTC: 365-day campaign 42297637074 on 1f2ff4f clean (both seeds 365/365, 0 CRITICAL, 0 confirmed); generation 8 baseline CANDIDATE prepared (docs/release/sim_baseline_candidate_gen8.json, from gate 42297641550, commit 1f2ff4f) with comparison in SIM_BASELINE_DIFFERENCES_B25R2.md; accepted baseline unchanged; awaiting the owner's approval or rejection"
     }
    ]
   },

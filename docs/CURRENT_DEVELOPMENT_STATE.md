@@ -3,7 +3,7 @@
 **This is the one current-state document.** Owner directives MEM-01 and DOC-CONT-01 make it the entry point.
 
 - **Updated:** 2026-11-06 19:00 EST (B25R2: validation finishing, then development hold).
-- **Snapshot last verified:** 2026-11-07 00:00 UTC by the lead, against wip/b25r2-playtest `1f2ff4f`, wip/requirements-control (this commit), Actions runs to 42297641550.
+- **Snapshot last verified:** 2026-11-07 03:10 UTC by the lead, against wip/b25r2-playtest `1f2ff4f`, wip/b25r2-rev2 `fe7d8f8`, wip/requirements-control (this commit), Actions runs to 42297641550.
   - **Convention:** whoever checks this file against the live GitHub state writes this line as
     `YYYY-MM-DD HH:MM UTC by <session or agent>, against wip/expansion20 <sha>, wip/requirements-control <sha>, Actions runs
     to <newest run id>`.
@@ -30,16 +30,19 @@ Resume here. No new development, workflows, rebuilds, baseline promotion or publ
 - **Owner's provisional playtest package (B25R2-PKG-01):** `pkg-full-windows`, artifact 13542782040,
   https://github.com/verbal76/My-Medieval-Life/actions/runs/42297641550/artifacts/13542782040, sha256 `259770e0...31df`, expires
   2026-12-06. Never alter or replace it.
-- **365-day campaign on `1f2ff4f`:** run 42297637074 (long-sims.yml, flight, seeds 1 and 2, 100-day segments). Segments 1 and 2 passed
-  on both seeds (defect step not triggered). Read on completion: each seed's `analyse` summary and `fr-seed<N>-results`
-  (findings.md, summary.json), the `report` job; compare with the 832f711 campaign 42274347279 (finished: seed 1 0 CRITICAL/20 HIGH/78
-  MEDIUM, 0 confirmed; seed 2 1 CRITICAL confirmed = the homestead water script error fixed in `c903ce8`, 108 HIGH, 45 MEDIUM).
-- **The stopping point: generation 8 baseline (TEST-AUDIT-Q2, conditional).** After a clean campaign: a candidate file beside
-  `docs/release/sim_baseline.json` (never overwrite it; `tools/sim_gate.py --write` needs the owner), with versions and SHA, plus a
-  comparison report extending `docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md`. Then stop for the owner.
-- **Then (owner-authorized, B25R2-DRAFT-01):** the next package from a new commit carrying the label "0.1.34 Rev 2 — Playtest 1"
-  (B25R2-VER-01), `door_exit_test` `7971720` (test-only), the deferred DECISIONS entries for `adf71ec` and `c903ce8`; full strict
-  suite and gate on that exact commit; private draft release only. Never public, never Steam.
+- **365-day campaign on `1f2ff4f` (run 42297637074): FINISHED, clean.** Both seeds 365/365, 0 CRITICAL, 0 confirmed defects;
+  seed 1 48 HIGH (was 20 on `832f711`: an open, uninvestigated finding), seed 2 99 HIGH. The `832f711` campaign 42274347279
+  finished too (its one defect, homestead water, fixed in `c903ce8`).
+- **STOPPING POINT: generation 8 baseline (TEST-AUDIT-Q2).** Candidate `docs/release/sim_baseline_candidate_gen8.json` (commit
+  `1f2ff4f`, gen 8, save 23) and its comparison in `docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md`: every difference attributed
+  (the band household `bf20dc9` + generations 6-8), leaks 0, determinism identical. Accepted baseline unchanged. Wait for the owner.
+- **Owner's playtest fixes on `wip/b25r2-rev2` (from `1f2ff4f`), local tests only, not in CI:** `6f23933` hosting for 4
+  (B25R2-HOST4), `5d07527` guest stuck outside a cave (B25R2-CAVE), `ef8141a` Host a game on the title (B25R2-HOSTMENU), `ed221df`
+  + `fe7d8f8` tiles made at the start, the freeze south of the village (B25R2-STUTTER). Evidence: `docs/release/B25R2_COMPLETION_CHECKLIST.md`.
+- **Then (after the owner's baseline decision):** on `wip/b25r2-rev2` add the label "0.1.34 Rev 2 — Playtest 1" (B25R2-VER-01),
+  `door_exit_test` `7971720`, the DECISIONS entries (`adf71ec`, `c903ce8`, the four playtest fixes); full strict suite and gate on that
+  exact commit (the candidate applies only if its eq_s1/eq_s2 values match; else a new candidate); private draft release only
+  (B25R2-DRAFT-01). Never public, never Steam.
 - **Audit:** `docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md`: 12 testing defects all repaired (T13 = gap G2), 10 coverage gaps, 8 open.
 - **Records:** this branch, `wip/requirements-control` (register 0 problems). Audit branch `wip/test-audit` (`7971720`).
 

@@ -41,3 +41,52 @@ Run 42274351589, code `832f711` (sim-gate on `wip/b25r2-playtest`): 19 runs, 425
 The baseline is not re-recorded (B25R2-Q1). Recording a new accepted baseline needs the owner's permission
 (`tools/sim_gate.py --write`). Recommendation: accept a new baseline from the final B25R2 commit once the 365-day campaign
 on it is read, since the remaining differences are explained by an approved feature and by the repairs.
+
+## Generation 8 baseline candidate (2026-11-06 night; TEST-AUDIT-Q2, conditional; NOT accepted)
+
+Prepared after the 365-day campaign on the candidate passed. **It is a candidate only.** The accepted baseline
+`docs/release/sim_baseline.json` (`df67e8e`) is unchanged, with its history, and still blocks. Promoting it needs the owner.
+
+- **Candidate file:** `docs/release/sim_baseline_candidate_gen8.json`, format `mml-sim-baseline/1`, commit `1f2ff4f`, overworld
+  generation 8, save version 23, days 10 and 30 of seeds 1 and 2. Built from the gate's own runs `eq_s1` and `eq_s2` of release
+  run 42297641550 (code `1f2ff4f`, artifact `sim-gate` 13543193307), with the gate's own `summarise`: the same values an
+  accepted baseline records, and nothing hand-entered.
+- **The 365-day campaign on `1f2ff4f` (run 42297637074, 21:33 UTC to 00:47 UTC):** both seeds reached 365 of 365 days, stopped
+  "completed". 0 CRITICAL and 0 confirmed defects on each seed, archive checks ok, workbooks ok. No segment's defect step fired
+  (script errors, ledgers, twin agreement, save round trips are each segment's own checks). The homestead water script error of
+  the `832f711` campaign (seed 2, days 200-300) did not recur.
+  - The remaining findings are the flight recorder's unconfirmed heuristics (TEST-GOV-01: not defects by themselves). Seed 1:
+    48 HIGH, 65 MEDIUM (`832f711`: 20 HIGH, 78 MEDIUM); the most frequent are trades refused many times in a row (wheat 7,072 times
+    for one villager, iron ore). Seed 2: 99 HIGH, 45 MEDIUM (`832f711`: 108, 45); villagers failing to reach a goal, logs not bought.
+    Seed 1's HIGH count rose, and is the one change worth an owner's look: it is
+    consistent with the plans now kept across saves (TEST-AUDIT-Q1, `adf71ec`: a villager goes on asking where they would have
+    replanned), but that is not proven. Not investigated further (owner's development hold); listed as an open finding.
+- **Gate on `1f2ff4f` (run 42297641550):** determinism identical at every checkpoint (shipped and Expansion 20 switches);
+  conservation clean; 32 blocking findings: the first says the accepted baseline is not applicable (no versions recorded; this
+  code is generation 8, save 23); the other 31 are the value differences below.
+
+| Seed, day | Value | Accepted (`df67e8e`) | Candidate (`1f2ff4f`) |
+|---|---|---|---|
+| 1, 10 | households / alive | 25 / 107 | 26 / 110 |
+| 1, 10 | currency / treasury | 3,314 / 130 | 2,957 / 70 |
+| 1, 30 | households / alive | 25 / 112 | 26 / 116 |
+| 1, 30 | currency / treasury | 4,013 / 323 | 3,366 / 161 |
+| 2, 10 | households / alive | 25 / 109 | 26 / 107 |
+| 2, 10 | currency / treasury | 3,034 / 190 | 2,965 / 95 |
+| 2, 30 | households / alive | 25 / (same) | 26 / (same) |
+| 2, 30 | currency / treasury | 3,597 / 184 | 3,775 / 274 |
+| all four | leaks | 0 | 0 (unchanged) |
+| all four | fingerprint, item ledger, deposits, animals | differ | (follow from the above) |
+
+**Attribution.** Every difference follows from the founding: the 26th household (the outlaw band's own claim, `bf20dc9`,
+owner-approved B25R1-Q2 a, bisected above) and overworld generations 6-8 (B25R1 and B25R2 repairs: roads, river crossings,
+booth seating, the manor hand's door), which change what the founding's people do from the first hour. No rule of the economy
+changed; leaks are 0 in both; determinism is identical. Nothing is unexplained.
+
+**Caution for promotion.** The next package will come from `wip/b25r2-rev2` (the owner's playtest fixes: hosting for 4, caves,
+Host a game, tiles made at the start, the label). None of those touches the simulation (network, interface and drawing only),
+but the gate must run on that exact commit: if its `eq_s1`/`eq_s2` values differ from this candidate, this candidate does not
+apply to it and a new one is prepared, not this one promoted.
+
+**Recommendation:** accept a generation 8 baseline, recorded from the final package's commit, once the owner has read this. The
+owner decides; nothing is promoted here.
