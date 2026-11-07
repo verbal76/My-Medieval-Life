@@ -46,7 +46,7 @@ func _run() -> void:
 	check(before.size() > 1000 and int(main.view.make_tiles_usec) > 0, "the tiles the overworld draws are made at the start (%d, in %.0f ms)" % [before.size(), main.view.make_tiles_usec / 1000.0])
 	var places: Array = []
 	for st in ow.sites + ow.structures:
-		places.append(Vector2(st.center))
+		places.append(Vector2((st.rect as Rect2i).get_center()))
 	var home := Vector2(ow.village.get_center())
 	var south: Dictionary = {}
 	for st in ow.sites:
