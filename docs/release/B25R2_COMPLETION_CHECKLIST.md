@@ -115,6 +115,10 @@ the save_exact floor. Original candidate `832f711` kept in history.
   29,040 cells all made took 24 s, so only the ones the overworld data names). After: 0 tiles made on the walk, 4 frames over 50 ms
   (worst about 150 ms, the village's hourly work). `tile_premake_test` (new; counts, not times) 4/0; 2 failures on the old code
   (772 tiles made). Headless: drawing on a real GPU is not measured; the owner's PC check is the proof.
+- **Drawing suites on `wip/b25r2-rev2` `fe7d8f8` (local, for the stutter fix):** 8 of 14 passed (aerial_map 79/0, countryside 38/0,
+  fl_houses 49/0, low_grass 13/0, market_shelf 15/0, overworld 440/0, polish_p2 110/0, road_types 14/0, no script errors). Not run
+  (container restart, then the owner's hold): road_wear, tree, underground_ext, water, world, start. Run them, or the full strict
+  suite, on the next package's commit.
 - **365-day campaign on `1f2ff4f` (run 42297637074) finished 00:47 UTC:** both seeds 365 of 365, 0 CRITICAL, 0 confirmed defects,
   archive checks ok; no segment's defect step fired; the homestead water error did not recur. Seed 1 48 HIGH / 65 MEDIUM
   (was 20 / 78 on `832f711`), seed 2 99 / 45 (was 108 / 45): unconfirmed heuristics (refused trades, goals not reached). Seed 1's
