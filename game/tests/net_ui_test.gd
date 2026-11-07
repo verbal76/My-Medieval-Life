@@ -46,10 +46,43 @@ func _run() -> void:
 	await _layout()
 	await _behaviour()
 	await _smoke()
+	await _title_host()
 	if host_pid > 0 and OS.is_process_running(host_pid):
 		OS.kill(host_pid)
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
+
+
+# ---------------------------------------------------------------- Host a game (B25R2-HOSTMENU) ----
+## Owner 2026-11-07: Host a game on the title asks for the saved character or a new one; the world chosen starts and its Open to
+## friends window opens (a password typed there). Back hosts nothing.
+func _title_host() -> void:
+	var ui: GameUI = main.ui
+	if main.net.is_host():
+		main.stop_hosting()
+	main.save_game(false)
+	ui.show_title(main.can_continue())
+	await frames()
+	check(press("Host a game"), "the title offers Host a game")
+	await frames()
+	check(ui.panel_kind == "host_start" and find("HostSaved") != null and not (find("HostSaved") as Button).disabled and find("HostNew") != null,
+		"Host a game asks: your saved character or a new one")
+	check(press("Back") and ui.panel_kind == "title" and not main.host_after_start, "Back returns to the title and hosts nothing")
+	await frames()
+	press("Host a game")
+	await frames()
+	press("A new character")
+	await frames()
+	check(ui.panel_kind == "creation" and main.host_after_start, "a new character: character creation, the world to be opened once it starts")
+	ui.show_title(main.can_continue())
+	main.host_after_start = false
+	await frames()
+	press("Host a game")
+	await frames()
+	press("Your saved character")
+	await frames()
+	check(main.running and main.world != null and not main.guest_world and ui.panel_kind == "host" and find("HostPassword") != null and not main.net.is_host() and not main.host_after_start,
+		"the saved character: the saved world loads and its Open to friends window opens, waiting for the password and Open (%s)" % ui.panel_kind)
 
 
 # ---------------------------------------------------------------- helpers ----------------------

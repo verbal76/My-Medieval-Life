@@ -111,6 +111,7 @@ var walking := false           # the player moved this frame (resource prompts w
 var net: NetSession            # MP Batch A2: hosting and joining (scripts/net, docs/multiplayer/BATCH_A.md)
 const HOST_STALL_SECONDS := 1.0   # Batch D: a hosted world's frame longer than this was a freeze, not play: not caught up
 var guest_world := false       # this machine shows a host's world from its own character: it never simulates or saves it
+var host_after_start := false  # B25R2-HOSTMENU (owner 2026-11-07): Host a game on the title: once the world starts, its host window opens
 var avatar_sprites := {}       # the other players in the session, by pid
 var _offers_seen := {}          # MP-D8, MP-INTERACT-01: ids of the offers and messages to this player it was told of
 var player_mark: PlayerMark     # MP-INTERACT-01: the ring at the feet of the players in reach, brightest round the chosen one
@@ -1483,6 +1484,9 @@ func _start(fresh := false) -> void:
 		ui.message("%s %s, %s. %s" % [world.player.name, world.player.family, world.clock_text(), GameUI.OPENING_HINT], 8.0, "game")
 	else:
 		ui.message("%s %s, %s. Explore the village: talk to people, work, trade, build." % [world.player.name, world.player.family, world.clock_text()])
+	if host_after_start and not guest_world:
+		host_after_start = false
+		NetWindow.show_host(ui)                 # B25R2-HOSTMENU: the world chosen under Host a game is running: its Open to friends window
 
 
 func _clear_world() -> void:

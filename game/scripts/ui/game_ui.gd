@@ -1754,6 +1754,7 @@ func show_title(can_continue: bool) -> void:
 	var spent: bool = can_continue and main.demo_save_expired()      # DEMO-01: a world whose demo time is used up, kept and marked
 	_button("Continue (demo time used: continue it in the full game)" if spent else "Continue", func(): main.continue_game(), can_continue)
 	_button("New game", func(): show_creation({}))
+	_button("Host a game", show_host_start)        # B25R2-HOSTMENU (owner 2026-11-07): your world, open to friends, from the start
 	_button("Join a game", func(): NetWindow.show_join(self))      # Build 21: a friend's world on this network
 	_button("Settings", func(): show_settings(func(): show_title(main.can_continue()), "audio"))
 	if not main.settings.phone:
@@ -1764,6 +1765,28 @@ func show_title(can_continue: bool) -> void:
 	_steam_button()                       # DEMO-01: the Steam promotion, in the full game and the demo alike
 	_controls_list(scheme)
 	_scroll_to_top()                      # FR-05: the controls list must not scroll the menu out of view
+
+
+## B25R2-HOSTMENU (owner 2026-11-07): Host a game, from the title: with the saved character (the saved world, loaded) or a new one
+## (character creation, then the new world). Either way, once the world is running its Open to friends window opens (Main._start),
+## where the host types a password if they want one and opens it. Back returns to the title and hosts nothing.
+func show_host_start() -> void:
+	_open("host_start", "Host a game", false)
+	_label("Open a world to friends: they join it with Join a game. Play your saved character in your saved world, or create a new character and world.", 15)
+	var saved: bool = main.can_continue()
+	var b := _button("Your saved character", func():
+		main.host_after_start = true
+		main.continue_game(), saved)
+	b.name = "HostSaved"
+	if not saved:
+		_label("No saved world on this device yet.", 14)
+	var n := _button("A new character", func():
+		main.host_after_start = true
+		show_creation({}))
+	n.name = "HostNew"
+	_button("Back", func():
+		main.host_after_start = false
+		show_title(main.can_continue()))
 
 
 ## DEMO-01: the Steam promotional button and its note (SteamPromo: one configured destination; the label says "Coming Soon on Steam"
