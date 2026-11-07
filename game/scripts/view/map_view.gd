@@ -37,6 +37,7 @@ var grass_layer: TileMapLayer      # the village's tufts (lay_grass), null befor
 var grass_usec := 0                # how long laying them took (the perf harness reads it)
 
 var tileset := TileSet.new()
+var make_tiles_usec := 0         # B25R2: how long making every tile at the start took (_make_all_tiles; the perf probe reads it)
 var sources: Array[TileSetAtlasSource] = []
 var columns: Array[int] = []
 var layers := {}                 # layer name -> TileMapLayer
@@ -77,6 +78,9 @@ func build(m: VillageMap, above_parent: Node2D, sorted_parent: Node2D = null) ->
 	_add_road_tiles()
 	for k in m.data.animated:
 		animated[int(k)] = m.data.animated[k].size()
+	var t_tiles := Time.get_ticks_usec()
+	_make_all_tiles()
+	make_tiles_usec = Time.get_ticks_usec() - t_tiles
 	for lay in m.data.layers:
 		var layer := TileMapLayer.new()
 		layer.name = lay.name
@@ -175,19 +179,87 @@ func _put(layer: TileMapLayer, cell: Vector2i, v: int) -> void:
 	var coords := Vector2i(t % columns[atlas], t / columns[atlas])
 	var src := sources[atlas]
 	if not src.has_tile(coords):
-		src.create_tile(coords)
-		src.get_tile_data(coords, 0).y_sort_origin = SORT_ORIGIN
-		if atlas == WATER_ATLAS:                    # B25R1-Q3: the water's own frames, left to right
-			src.set_tile_animation_frames_count(coords, WATER_FRAMES)
-			var secs := float(Overworld.water_cfg().get("frame_seconds", 0.15))
-			for f in WATER_FRAMES:
-				src.set_tile_animation_frame_duration(coords, f, secs)
-		elif animated.has(t):
-			src.set_tile_animation_columns(coords, animated[t])
-			src.set_tile_animation_frames_count(coords, animated[t])
-			for f in animated[t]:
-				src.set_tile_animation_frame_duration(coords, f, 0.12)
+		_make_tile(atlas, coords, t)
 	layer.set_cell(cell, atlas, coords)
+
+
+## The tile at `coords` of atlas `atlas` (index `t` there), made as the layers draw it: its sort origin and, for water and the
+## village's animated tiles, its frames.
+func _make_tile(atlas: int, coords: Vector2i, t: int) -> void:
+	var src := sources[atlas]
+	src.create_tile(coords)
+	src.get_tile_data(coords, 0).y_sort_origin = SORT_ORIGIN
+	if atlas == WATER_ATLAS:                    # B25R1-Q3: the water's own frames, left to right
+		src.set_tile_animation_frames_count(coords, WATER_FRAMES)
+		var secs := float(Overworld.water_cfg().get("frame_seconds", 0.15))
+		for f in WATER_FRAMES:
+			src.set_tile_animation_frame_duration(coords, f, secs)
+	elif animated.has(t):
+		src.set_tile_animation_columns(coords, animated[t])
+		src.set_tile_animation_frames_count(coords, animated[t])
+		for f in animated[t]:
+			src.set_tile_animation_frame_duration(coords, f, 0.12)
+
+
+## B25R2 playtest (owner 2026-11-07, "freeze every other step" south of the village): the tiles the overworld draws, made once
+## before any layer is drawn. A tile made during play changes the TileSet, and every layer drawn with it (the whole village, each
+## overworld chunk) is updated again: about 150 ms for one new tile, on every frame a chunk first drew a kind of ground, road or
+## building not seen before. Made here exactly as _put makes them: every tile of the small atlases; of the water sheets, each row's
+## first tile (a row is one water tile and its frames); of the large sheets (atlas 0 has 29,040 cells, and making a tile there
+## grows slower as the sheet fills), the tiles the overworld's data names (OVERWORLD_TILE_DATA). The cells an animated tile's frames
+## cover, and the animated tiles themselves, are left to first use (a few, once). Anything else is still made on first use.
+const OVERWORLD_TILE_DATA := ["res://data/overworld_tiles.json", "res://data/region_stamps.json", "res://data/style_stamps.json"]
+const LARGE_ATLAS := 1000              # cells: a larger sheet gets only the tiles the data names
+
+
+func _make_all_tiles() -> void:
+	var covered := {}
+	for t in animated:
+		for f in range(1, int(animated[t])):
+			covered[int(t) + f] = true
+	var named := {}                    # atlas -> {t: true}, from the overworld's data
+	for path in OVERWORLD_TILE_DATA:
+		if FileAccess.file_exists(path):
+			_tile_values(JSON.parse_string(FileAccess.get_file_as_string(path)), named)
+	for atlas in sources.size():
+		var src := sources[atlas]
+		if src.texture == null:
+			continue
+		var cols := columns[atlas]
+		var rows := int(src.texture.get_size().y) / T
+		var water := atlas == WATER_ATLAS or atlas == WATER_STILL_ATLAS
+		var list: Array = []
+		if water:
+			for r in rows:
+				list.append(r * cols)
+		elif cols * rows <= LARGE_ATLAS:
+			list = range(cols * rows)
+		else:
+			list = (named.get(atlas, {}) as Dictionary).keys()
+			list.sort()
+		for t: int in list:
+			var coords := Vector2i(t % cols, t / cols)
+			if t < 0 or coords.y >= rows or animated.has(t) or covered.has(t):
+				continue
+			if src.has_tile(coords) or src.get_tile_at_coords(coords) != Vector2i(-1, -1):
+				continue
+			_make_tile(atlas, coords, t)
+
+
+## Every whole number in parsed JSON `o` read as a tile value (atlas * 100000 + index), into `out` (atlas -> {index: true}).
+## Numbers that are not tile values (sizes, counts) only add a tile or two that is never drawn.
+static func _tile_values(o, out: Dictionary) -> void:
+	if o is Dictionary:
+		for v in o.values():
+			_tile_values(v, out)
+	elif o is Array:
+		for v in o:
+			_tile_values(v, out)
+	elif (o is float or o is int) and float(o) >= 0.0 and float(o) == floorf(float(o)):
+		var v := int(o)
+		if not out.has(v / 100000):
+			out[v / 100000] = {}
+		out[v / 100000][v % 100000] = true
 
 
 ## GP-DRAW-UNDER-HOUSE: a building's front edge is drawn among the characters. A cell is on it when it is solid,
