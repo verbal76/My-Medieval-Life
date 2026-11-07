@@ -909,7 +909,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (334)
+## Owner decisions (335)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -964,6 +964,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25R1-Q7 | Does the live-near-the-player rule (B25R1-Q6) also apply to the starting village's people, or only to the rest of the region? | 20 | APPROVED |  |
 | B25R1-Q8 | Town art gap (Higham, Wulstead, churches, chalk figure not store-quality; owned packs lack a stone market cross, white battlements, a fountain with water): owned art with a better layout, a pack the owner buys, or both? | 20 | APPROVED |  |
 | B25R1-Q9 | Do hamlets count as civic places (civic_records test premise), and with what institutions? | 20 | APPROVED |  |
+| B25R2-BRUSHOFF | Dialogue.brush_off reads n.plan[0] without checking the plan is empty (dialogue.gd:526): a SCRIPT ERROR when a villager between plans brushes the player off. Found by start_test on fe7d8f8 (523/0, 1 script error; the file is untouched by the playtest fixes, a latent defect). Fix in the next cycle? | 20+ | OPEN |  |
 | B25R2-CAVE | A guest who followed the host into a cave was left in the black outside it, unable to move (the guest's copy on the cave's level at a place outside it). Fix now or later? | 25 | APPROVED |  |
 | B25R2-DRAFT-01 | May Play Test Build One be published, and how? | 25 | PROVISIONAL |  |
 | B25R2-HOST4 | Open to friends admits only one guest (the window asks for no player limit, so hosting defaults to 2): how many players should the host window allow? | 25 | APPROVED |  |

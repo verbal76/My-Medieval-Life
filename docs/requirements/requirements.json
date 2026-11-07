@@ -8594,6 +8594,30 @@
    ]
   },
   {
+   "id": "B25R2-BRUSHOFF",
+   "kind": "decision",
+   "title": "Dialogue.brush_off reads n.plan[0] without checking the plan is empty (dialogue.gd:526): a SCRIPT ERROR when a villager between plans brushes the player off. Found by start_test on fe7d8f8 (523/0, 1 script error; the file is untouched by the playtest fixes, a latent defect). Fix in the next cycle?",
+   "description": "Dialogue.brush_off reads n.plan[0] without checking the plan is empty (dialogue.gd:526): a SCRIPT ERROR when a villager between plans brushes the player off. Found by start_test on fe7d8f8 (523/0, 1 script error; the file is untouched by the playtest fixes, a latent defect). Fix in the next cycle?",
+   "source": "start_test on wip/b25r2-rev2 fe7d8f8, 2026-11-07",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20+",
+   "related": [
+    "B25R2-STUTTER"
+   ],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-07",
+     "change": "entered in the register",
+     "why": "start_test on wip/b25r2-rev2 fe7d8f8, 2026-11-07"
+    }
+   ]
+  },
+  {
    "id": "B25R2-CAVE",
    "kind": "decision",
    "title": "A guest who followed the host into a cave was left in the black outside it, unable to move (the guest's copy on the cave's level at a place outside it). Fix now or later?",

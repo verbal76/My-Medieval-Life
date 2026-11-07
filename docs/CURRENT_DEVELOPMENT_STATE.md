@@ -3,7 +3,7 @@
 **This is the one current-state document.** Owner directives MEM-01 and DOC-CONT-01 make it the entry point.
 
 - **Updated:** 2026-11-06 19:00 EST (B25R2: validation finishing, then development hold).
-- **Snapshot last verified:** 2026-11-07 03:10 UTC by the lead, against wip/b25r2-playtest `1f2ff4f`, wip/b25r2-rev2 `fe7d8f8`, wip/requirements-control (this commit), Actions runs to 42297641550.
+- **Snapshot last verified:** 2026-11-07 03:30 UTC by the lead, against wip/b25r2-playtest `1f2ff4f`, wip/b25r2-rev2 `fe7d8f8`, wip/requirements-control (this commit), wip/test-audit `7971720`; no Actions run in progress.
   - **Convention:** whoever checks this file against the live GitHub state writes this line as
     `YYYY-MM-DD HH:MM UTC by <session or agent>, against wip/expansion20 <sha>, wip/requirements-control <sha>, Actions runs
     to <newest run id>`.
@@ -18,6 +18,38 @@
     `docs/requirements/views/`.
   - History lives in `docs/DEVELOPMENT_CHANGELOG.md`.
 - **Recovery after lost context:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
+
+## MONDAY RECOVERY POINT (owner, 2026-11-06 late night; `docs/directives/2026-11-06_finish_tests_save_stop.md`)
+
+**All Claude development is stopped until the owner authorizes work on Monday.** Saved 2026-11-07 03:30 UTC (2026-11-06 10:30 pm EST).
+
+- **Branches and pushed SHAs:** candidate `wip/b25r2-playtest` `1f2ff4f` (unchanged; its package is the owner's provisional
+  playtest build); owner's playtest fixes `wip/b25r2-rev2` `fe7d8f8`; records `wip/requirements-control` (this commit); audit
+  `wip/test-audit` `7971720`. No GitHub Actions workflow is running (checked 03:25 UTC: none in progress).
+- **Drawing suites (stutter fix), all 14 on `fe7d8f8`, local:** 1,885 checks, 0 failures, 1 script error (start_test: the latent
+  `Dialogue.brush_off` empty-plan defect, B25R2-BRUSHOFF, not caused by tonight's changes, not repaired). Table in
+  `docs/release/B25R2_COMPLETION_CHECKLIST.md`.
+- **Stutter fix (B25R2-STUTTER, `ed221df` + `fe7d8f8`):** cause found and fixed (tiles made at the start); the walk to Wendholt went
+  from 37 frames over 50 ms to 4, 0 tiles made in play; `tile_premake_test` 4/0, fails on the old code. Remaining: one frame of about
+  150 ms at the village's hourly work, the known first-frame and 17:00 spikes (about 230 ms); headless only, a real PC unmeasured.
+- **365-day simulations:** `1f2ff4f` run 42297637074 clean (both seeds 365/365, 0 CRITICAL, 0 confirmed; seed 1's HIGH warnings
+  48 against 20 on `832f711`, an open, uninvestigated finding); `832f711` run 42274347279 finished (its homestead water defect fixed).
+- **Generation 8 baseline:** candidate `docs/release/sim_baseline_candidate_gen8.json` (from gate 42297641550 on `1f2ff4f`), comparison
+  in `docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md`: every difference attributed, leaks 0, determinism identical. **Not accepted;
+  the owner decides.** `sim_baseline.json` unchanged.
+- **Unresolved:** B25R2-BRUSHOFF (above); seed 1's HIGH warnings; the 8 open coverage gaps (audit G1, G3, G4, G6, G7, G8, G9, G10's
+  B7-008); the four playtest fixes and the stutter fix tested locally only (not CI); `door_exit_test` not yet in a candidate; the
+  invite code length (owner's choice of option, nothing started); real controller and Windows PC checks (owner).
+- **Package and release:** artifact 13542782040 (`1f2ff4f`, 0.1.34, Windows) for the owner's personal testing only (B25R2-PKG-01),
+  without the playtest fixes. No release published or drafted. Private draft authorized only after the conditions of B25R2-DRAFT-01.
+- **Monday, in priority order (each only once the owner authorizes it):**
+  1. The owner's generation 8 baseline decision (TEST-AUDIT-Q2).
+  2. The owner's decision on B25R2-BRUSHOFF (a one-line guard, with a test) and on seed 1's warnings (investigate or accept).
+  3. On `wip/b25r2-rev2`: the label "0.1.34 Rev 2 — Playtest 1", `door_exit_test` `7971720`, the DECISIONS entries (`adf71ec`,
+     `c903ce8`, the four playtest fixes), the brush-off fix if approved.
+  4. The full strict suite and the gate on that exact commit; a new baseline candidate if its eq_s1/eq_s2 differ from `1f2ff4f`'s.
+  5. The package from that commit, then the private draft release (B25R2-DRAFT-01). Never public, never Steam.
+  6. The owner's real PC and controller playtest of it (stutter, caves with a guest, 4 players, Host a game).
 
 ## DEVELOPMENT HOLD after the current validation (owner, 2026-11-06 night; `docs/directives/2026-11-06_complete_validation_preserve_hold.md`)
 

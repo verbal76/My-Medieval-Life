@@ -115,10 +115,30 @@ the save_exact floor. Original candidate `832f711` kept in history.
   29,040 cells all made took 24 s, so only the ones the overworld data names). After: 0 tiles made on the walk, 4 frames over 50 ms
   (worst about 150 ms, the village's hourly work). `tile_premake_test` (new; counts, not times) 4/0; 2 failures on the old code
   (772 tiles made). Headless: drawing on a real GPU is not measured; the owner's PC check is the proof.
-- **Drawing suites on `wip/b25r2-rev2` `fe7d8f8` (local, for the stutter fix):** 8 of 14 passed (aerial_map 79/0, countryside 38/0,
-  fl_houses 49/0, low_grass 13/0, market_shelf 15/0, overworld 440/0, polish_p2 110/0, road_types 14/0, no script errors). Not run
-  (container restart, then the owner's hold): road_wear, tree, underground_ext, water, world, start. Run them, or the full strict
-  suite, on the next package's commit.
+- **Drawing suites for the stutter fix, all 14, local, on `wip/b25r2-rev2` `fe7d8f8` (2026-11-06/07):**
+
+  | Suite | Checks | Failures | Script errors |
+  |---|---|---|---|
+  | aerial_map | 79 | 0 | 0 |
+  | countryside | 38 | 0 | 0 |
+  | fl_houses | 49 | 0 | 0 |
+  | low_grass | 13 | 0 | 0 |
+  | market_shelf | 15 | 0 | 0 |
+  | overworld | 440 | 0 | 0 |
+  | polish_p2 | 110 | 0 | 0 |
+  | road_types | 14 | 0 | 0 |
+  | road_wear | 40 | 0 | 0 |
+  | tree | 45 | 0 | 0 |
+  | underground_ext | 113 | 0 | 0 |
+  | water | 67 | 0 | 0 |
+  | world | 339 | 0 | 0 |
+  | start | 523 steps | 0 | **1** |
+
+  Total 1,885 checks, 0 failures, 1 script error. The script error (class A, latent, not caused by tonight's changes):
+  `Dialogue.brush_off` reads `n.plan[0]` on an empty plan (`game/scripts/ui/dialogue.gd:526`, from `start_test.gd:2780`, the
+  generated-lines check over 60 villagers). `dialogue.gd` is untouched by the playtest fixes; an earlier start_test run printed none
+  (which villager is between plans when the check runs varies). In play: a script error when a villager between plans brushes the
+  player off. Under the strict CI rules start_test fails on it. Recorded B25R2-BRUSHOFF; not repaired (owner: no repair cycle).
 - **365-day campaign on `1f2ff4f` (run 42297637074) finished 00:47 UTC:** both seeds 365 of 365, 0 CRITICAL, 0 confirmed defects,
   archive checks ok; no segment's defect step fired; the homestead water error did not recur. Seed 1 48 HIGH / 65 MEDIUM
   (was 20 / 78 on `832f711`), seed 2 99 / 45 (was 108 / 45): unconfirmed heuristics (refused trades, goals not reached). Seed 1's

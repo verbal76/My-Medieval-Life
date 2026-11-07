@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 826 (434 of them still open) |
-| **Open entries now** (rules excluded) | | **592** |
+| Entries added since | | 827 (435 of them still open) |
+| **Open entries now** (rules excluded) | | **593** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (826)
+## Added since the baseline (827)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -233,6 +233,7 @@ None.
 | B25R1-Q7 | Does the live-near-the-player rule (B25R1-Q6) also apply to the starting village's people, or only to the rest of the region? | decision | APPROVED | 20 |
 | B25R1-Q8 | Town art gap (Higham, Wulstead, churches, chalk figure not store-quality; owned packs lack a stone market cross, white battlements, a fountain with water): owned art with a better layout, a pack the owner buys, or both? | decision | APPROVED | 20 |
 | B25R1-Q9 | Do hamlets count as civic places (civic_records test premise), and with what institutions? | decision | APPROVED | 20 |
+| B25R2-BRUSHOFF | Dialogue.brush_off reads n.plan[0] without checking the plan is empty (dialogue.gd:526): a SCRIPT ERROR when a villager between plans brushes the player off. Found by start_test on fe7d8f8 (523/0, 1 script error; the file is untouched by the playtest fixes, a latent defect). Fix in the next cycle? | decision | OPEN | 20+ |
 | B25R2-CAVE | A guest who followed the host into a cave was left in the black outside it, unable to move (the guest's copy on the cave's level at a place outside it). Fix now or later? | decision | APPROVED | 25 |
 | B25R2-DRAFT-01 | May Play Test Build One be published, and how? | decision | PROVISIONAL | 25 |
 | B25R2-HOST4 | Open to friends admits only one guest (the window asks for no player limit, so hosting defaults to 2): how many players should the host window allow? | decision | APPROVED | 25 |
