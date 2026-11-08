@@ -210,6 +210,7 @@ jobs:
           res://tests/multiplayer_c_test.gd
           res://tests/mp04_cart_gateway_test.gd  # MP-04: forged cart verb rejected; legitimate placement consumes inventory
           res://tests/inv03_foreign_player_chests_test.gd  # INV-03: foreign player-owned chests
+          res://tests/mp01_guest_stall_attendance_test.gd  # MP-01: guest stall availability and XP
           # MP Batch C over loopback: the guest's verbs applied by the host, the copies agreeing, several players across a restart
           res://tests/net_c_test.gd
           # Build 21 over loopback: the guest's copy of the animals follows the host's (moved, hurt, killed, born, pens)

@@ -1116,9 +1116,21 @@ func plan_attendant(n: NPC) -> bool:
 
 
 # ---------------------------------------------------------------- selling ----------------------
-## The player stands at the counter.
+## The actual player seller of a pitch/shop, whoever is acting on the host.
+## MP-01: the host's hourly AI must evaluate a guest's own attendance.
+func _seller_player(s: Dictionary) -> PlayerState:
+	var seller_ref: String = str(s.get("by", World.PLAYER)) if is_shop(s) else w.tenant_of(s)
+	var seller: PlayerState = w.player_for(seller_ref)
+	if seller == null or not seller.alive:
+		return null
+	if is_shop(s) and not w.holds(seller_ref, building_of(s)):
+		return null
+	return seller
+
+## Whether the player who actually owns this pitch/shop stands at its counter.
 func player_near(s: Dictionary) -> bool:
-	return w.player.pos.distance_to(use_cell(s)) <= float(GameData.b("stall_range"))
+	var seller: PlayerState = _seller_player(s)
+	return seller != null and not seller.away and seller.pos.distance_to(use_cell(s)) <= float(GameData.b("stall_range"))
 
 
 ## Sales run only while the premises are open: the rent not owing, and the player near or the attendant at the
@@ -1129,7 +1141,7 @@ func attended(s: Dictionary) -> bool:
 		return stalls.is_open(s) and int(s.get("missed", 0)) == 0
 	if stalls.is_market(s) and not stalls.is_open(s):
 		return false
-	return is_mine(s) and int(s.get("missed", 0)) == 0 and (player_near(s) or attendant_present(s))
+	return _seller_player(s) != null and int(s.get("missed", 0)) == 0 and (player_near(s) or attendant_present(s))
 
 
 ## What a villager will pay at most, per piece: the cheapest price among those who sell the item in the
@@ -1296,7 +1308,8 @@ func sell(s: Dictionary, n: NPC, id: String, qty: int, price: int, pantry := fal
 	n.spent += total
 	s.till = int(s.till) + total
 	s.earned = int(s.earned) + total
-	var players := is_mine(s)
+	var seller: PlayerState = _seller_player(s)
+	var players := seller != null
 	var by_attendant := not player_near(s) or not players
 	var by := "you" if not by_attendant else ("unattended" if Stalls.is_built(s) and attendant_of(s) == null else "attendant")
 	s.sales.append({"day": w.day(), "hour": int(w.hour()), "who": "%s %s" % [n.name, n.family], "item": id, "qty": qty, "price": price, "by": by})
@@ -1305,8 +1318,10 @@ func sell(s: Dictionary, n: NPC, id: String, qty: int, price: int, pantry := fal
 	w.stat("stall_sold_" + id, qty)
 	w.stat("stall_coins", total)
 	if not by_attendant:
-		var up := w.player.gain("trading", 2)
-		if up > 0:
+		# MP-01: guest-owned premises award trading XP to their owner,
+		# not the host actor processing NPC purchases.
+		var up := seller.gain("trading", 2)
+		if up > 0 and seller == w.player:
 			w.player_leveled.emit("trading", up)     # B25-CAPABILITY: every player level-up is announced (Main._level_up)
 	if players:
 		w.note("%s %s bought %d %s from your %s for %d coins." % [n.name, n.family, qty, GameData.item_name(id).to_lower(), "shop" if is_shop(s) else "stall", total])

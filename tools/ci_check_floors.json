@@ -132,6 +132,7 @@
  "mp_interact_ui_test": 112,
  "multiplayer_a1_test": 69,
  "multiplayer_b_test": 32,
+ "mp01_guest_stall_attendance_test": 11,
  "multiplayer_c_test": 326,
  "net_batch_b_test": 45,
  "net_cave_test": 11,
