@@ -30,7 +30,7 @@ const SIDES := ["have", "want"]
 
 static func cfg() -> Dictionary:
 	var c: Dictionary = OffMapSettlement.data().get("envoy", {})
-	return {"day_wage": int(c.get("day_wage", 4)), "refresh_days": int(c.get("refresh_days", 30)), "talk_minutes": float(c.get("talk_minutes", 20.0)),
+	return {"day_wage": int(c.get("day_wage", 4)), "refresh_days": int(c.get("refresh_days", 4)), "talk_minutes": float(c.get("talk_minutes", 20.0)),
 		"survey_minutes": float(c.get("survey_minutes", 60.0)), "spare_days": int(c.get("spare_days", 3))}
 
 
@@ -38,6 +38,12 @@ static func cfg() -> Dictionary:
 static func book(w: World) -> Dictionary:
 	if w.intel_book.is_empty():
 		w.intel_book = {"records": [], "visits": {}, "home": {}, "home_day": -1}
+	# REG-07: an expired market offer isn't immortal just because no envoy
+	# has revisited that settlement. Visit history is kept for scheduling.
+	else:
+		var max_age := int(Intel.cfg().forget_days)
+		w.intel_book.records = (w.intel_book.get("records", []) as Array).filter(
+			func(r): return Intel.age(w, r) <= max_age)
 	return w.intel_book
 
 
