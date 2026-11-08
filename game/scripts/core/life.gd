@@ -429,6 +429,9 @@ static func _player_dawn_one(w: World) -> void:
 		p.death_cause = "old age"
 		p.last_damage = "old age"
 		p.deaths += 1
+		# JUS-03: same case-ending rule as combat death. The heir keeps
+		# the family reputation but must not inherit the offender\'s pursuit.
+		w.justice.on_death(w.acting_ref())
 		w.note("%s %s died (old age)." % [p.name, p.family])
 		if w.recorder != null:
 			w.recorder.player_died(p, "old age")     # REC-19
