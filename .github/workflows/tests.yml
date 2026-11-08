@@ -212,6 +212,7 @@ jobs:
           res://tests/inv03_foreign_player_chests_test.gd  # INV-03: foreign player-owned chests
           res://tests/mp01_guest_stall_attendance_test.gd  # MP-01: guest stall availability and XP
           res://tests/prop01_cancel_site_test.gd  # PROP-01: host-authority regression
+          res://tests/prop05_guest_sale_test.gd  # PROP-05: host-authority regression
           # MP Batch C over loopback: the guest's verbs applied by the host, the copies agreeing, several players across a restart
           res://tests/net_c_test.gd
           # Build 21 over loopback: the guest's copy of the animals follows the host's (moved, hurt, killed, born, pens)

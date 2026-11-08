@@ -58,7 +58,7 @@ const VERBS := {
 	"farm.collect": "C4", "farm.clear_plant": "C4", "farm_plots.claim": "C4", "farm_plots.build_fence": "C4", "fauna.feed": "C4",
 	"carts.park": "C4", "carts.hitch": "C4", "business.build_storefront": "C4", "business.open_front": "C4",
 	"business.open_shop": "C4", "business.rent": "C4", "business.set_display": "C4", "business.store_item": "C4",
-	"business.upgrade": "C4", "business.set_price": "C4", "business.sell": "C4", "business.hire": "C4", "fitting.place": "C4",
+	"business.upgrade": "C4", "business.set_price": "C4", "business.hire": "C4", "fitting.place": "C4",
 	"ventures.offer": "C4", "ventures.withdraw": "C4", "ventures.buy": "C4",     # B25-BIZ-D5: workshops offered, bought and sold
 	"fitting.remove": "C4", "fitting.trade": "C4",
 	# C5: society
