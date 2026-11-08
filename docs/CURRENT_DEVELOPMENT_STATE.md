@@ -67,7 +67,7 @@
   - **PROP-02, foreign building fittings/stock removal** — draft [PR #8](https://github.com/verbal76/My-Medieval-Life/pull/8); red [42461880196](https://github.com/verbal76/My-Medieval-Life/actions/runs/42461880196), 13/5; green [42461995223](https://github.com/verbal76/My-Medieval-Life/actions/runs/42461995223), 13/0. The existing room-holder check now runs before fitting removal, shop closure or material refund. Fix SHA `ee3727ee`.
   - **JUS-03, justice cases surviving old-age death into the heir** — draft [PR #9](https://github.com/verbal76/My-Medieval-Life/pull/9); red [42462198471](https://github.com/verbal76/My-Medieval-Life/actions/runs/42462198471), 9/5; green [42462279977](https://github.com/verbal76/My-Medieval-Life/actions/runs/42462279977), 9/0. Old-age host and guest death now calls the existing case-closure hook. Fix SHA `6ab511f4`.
   - **With prior MP-04 draft PR #5:** **five** distinct audit concerns have now been reproduced and corrected on **unmerged branches** (MP-04 plus four above). Each PR includes focused tests registered in `.github/workflows/tests.yml`, evidence in `docs/audits/` and red/green exact-SHA Actions. The temporary single-runner workflows were deleted from the final PR diffs; 8 new one-runner jobs ran for the four newer fixes. **No Claude Console usage and no 12-runner suite were required for these new reproductions.** Full integration, combined multiplayer checks, simulation/determinism gates, independent owner review and merge are still outstanding. These items are **not closed**. The three network authority PRs (#5/#6/#7) affect `net_actions.gd`; consolidate carefully to avoid dropping changes. Do not silently merge or publish them.
-- **Five audit corrections, reproduced and fixed by ChatGPT via GitHub, each a DRAFT PR based on `wip/b25r2-rev2` `fe7d8f8`
+- **Seven audit corrections (69 records; 7 runtime-reproduced, 7 corrected in isolation, 7 draft PRs, 0 merged), each a DRAFT PR based on `wip/b25r2-rev2` `fe7d8f8`
   (= the audited commit), each passed its own focused Godot test; NOT integrated, NOT closed** (retrieved 2026-11-08):
 
   | PR | Finding | Head | Code change | New test |
@@ -77,17 +77,24 @@
   | [#7](https://github.com/verbal76/My-Medieval-Life/pull/7) | PROP-05 foreign shop sale | `c1a40eb` | net_actions.gd: `business.sell` off VERBS | prop05_guest_sale_test |
   | [#8](https://github.com/verbal76/My-Medieval-Life/pull/8) | PROP-02 foreign fitting removal | `cc9d432` | fitting.gd: remove checks fit_refusal | prop02_fitting_owner_test |
   | [#9](https://github.com/verbal76/My-Medieval-Life/pull/9) | JUS-03 heir pursued | `1ca1c8e` | life.gd: justice.on_death at old-age death | jus03_old_age_justice_test |
+  | [#10](https://github.com/verbal76/My-Medieval-Life/pull/10) | LIFE-01 retirement payroll | `56e9514` (fix `ed6ce70`) | life.gd: employment ended, owed goods back, before retirement | life01_retirement_payroll_test (10/4 -> 10/0; floor added) |
+  | [#11](https://github.com/verbal76/My-Medieval-Life/pull/11) | SAV-01 famine on reload | `4eb2798` (fix `f5287a2`) | world.gd: food_days saved, legacy recomputed | sav01_famine_reload_test (5/3 -> 5/0; floor added) |
 
   Each PR also adds its test line to tests.yml and a verification note in docs/audits/ (on its branch).
   **Merge check (local, nothing pushed):** the three net_actions.gd edits touch different lines and merge cleanly; #5 and #9 merge
   clean; #6, #7 and #8 conflict **only in .github/workflows/tests.yml** (each adds its line at the same place: keep all five
   lines). Inline `# ...` comments on those lines are safe (ci_report reads them with shlex comments=True).
-  **Integration plan (when authorized):** on a new branch from `wip/b25r2-rev2`, merge #5, #9, #6, #7, #8 in that order,
-  resolving tests.yml by keeping every line; add the five suites' floors to tools/ci_check_floors.json (they have none: the
+  **Seven-PR merge check (local, nothing pushed, 2026-11-08):** #5, #9, #10, #11 merge clean (the #10/#11 floor edits included);
+  #6, #7, #8 conflict only in tests.yml. **Integration plan (when authorized):** on a new branch from `wip/b25r2-rev2`, merge #5,
+  #9, #10, #11, #6, #7, #8 in that order, resolving tests.yml by keeping every line; add floors for the five suites of #5-#9 to tools/ci_check_floors.json (they have none: the
   strict count/floor rule does not yet hold them) and their timings; run the five tests, then the existing multiplayer suites
   (net_g1, net_c, net_ui, net_cave, net_interact, net_mp4, net_fault, net_econ_integrity, net_family, net_fauna), life/justice
   suites (aging, chapel, justice tests), fitting and business suites, then the full strict suite and the gate on that exact commit.
-  Close each finding in the register only after that run, citing its SHA. Keep the five PR branches until then.
+  Also, for #10/#11: LIFE-01 changes simulation outcomes (wages stop at retirement) and SAV-01 adds a save key, so after
+  integration run the save suites (save_exact, save_continuity, save_transfer, plan_continuity, migration fixtures), the gate, and
+  one 365-day campaign (its segment round trips); the generation 8 baseline candidate from `1f2ff4f` will likely no longer apply,
+  and a new candidate needs the owner (never re-recorded automatically). Close each finding in the register only after those runs,
+  citing their SHA. Keep all seven PR branches until then.
 - **Monday, in priority order (each only once the owner authorizes it):**
   1. The owner's generation 8 baseline decision (TEST-AUDIT-Q2).
   2. The owner's decision on B25R2-BRUSHOFF (a one-line guard, with a test) and on seed 1's warnings (investigate or accept).
