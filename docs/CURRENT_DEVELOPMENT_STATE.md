@@ -67,6 +67,19 @@
   - **PROP-02, foreign building fittings/stock removal** — draft [PR #8](https://github.com/verbal76/My-Medieval-Life/pull/8); red [42461880196](https://github.com/verbal76/My-Medieval-Life/actions/runs/42461880196), 13/5; green [42461995223](https://github.com/verbal76/My-Medieval-Life/actions/runs/42461995223), 13/0. The existing room-holder check now runs before fitting removal, shop closure or material refund. Fix SHA `ee3727ee`.
   - **JUS-03, justice cases surviving old-age death into the heir** — draft [PR #9](https://github.com/verbal76/My-Medieval-Life/pull/9); red [42462198471](https://github.com/verbal76/My-Medieval-Life/actions/runs/42462198471), 9/5; green [42462279977](https://github.com/verbal76/My-Medieval-Life/actions/runs/42462279977), 9/0. Old-age host and guest death now calls the existing case-closure hook. Fix SHA `6ab511f4`.
   - **With prior MP-04 draft PR #5:** **five** distinct audit concerns have now been reproduced and corrected on **unmerged branches** (MP-04 plus four above). Each PR includes focused tests registered in `.github/workflows/tests.yml`, evidence in `docs/audits/` and red/green exact-SHA Actions. The temporary single-runner workflows were deleted from the final PR diffs; 8 new one-runner jobs ran for the four newer fixes. **No Claude Console usage and no 12-runner suite were required for these new reproductions.** Full integration, combined multiplayer checks, simulation/determinism gates, independent owner review and merge are still outstanding. These items are **not closed**. The three network authority PRs (#5/#6/#7) affect `net_actions.gd`; consolidate carefully to avoid dropping changes. Do not silently merge or publish them.
+- **AUDIT INTEGRATION IN PROGRESS (owner directive 2026-11-08, "Audit fix integration"): 11 corrections, PRs #5-#15.** Branch
+  `wip/b25-audit-integration` from `wip/b25r2-rev2` `fe7d8f8`; tested head `0d252b4` = all 11 merged (merge order #5, #9, #10-#15,
+  #6-#8; code merged clean; tests.yml conflicts resolved by keeping every line) + floors for the five suites of #5-#9 (6, 7, 8, 13,
+  9, measured). PR heads: #12 `04913e2` PROP-04, #13 `f85fe0a` JUS-01, #14 `ff2f4c4` INV-03, #15 `47a6dc9` MP-01 (others below).
+  - Stage A (local): the 11 audit suites 87 checks, 0 failures, 0 script errors; every count equals its floor.
+  - Strict suite 42509510188 on `0d252b4`: 239 game suites, 238 passed, 1 failed: start_test 523/0 with 1 SCRIPT ERROR, the
+    pre-existing B25R2-BRUSHOFF (`dialogue.gd:526`, untouched by every PR; also on `fe7d8f8`). Python suite and the 10-day economy
+    run (leak 0) passed. **Blocker for the merge: the owner's decision on B25R2-BRUSHOFF.**
+  - Gate (in 42509523836): the same as `1f2ff4f`'s: 32 blocking findings, all differences from the old accepted baseline; eq_s1/eq_s2
+    at days 10 and 30 identical to the generation 8 candidate in every value; non-blocking differences only in the randomised
+    rot_ scenarios. No determinism or conservation finding.
+  - 365-day campaign: run 42515726815 on `0d252b4` (the first request skipped it: a flight campaign with gate=true does not run).
+  - Not merged into `wip/b25r2-rev2`; the 11 draft PRs and their branches are kept until the merge.
 - **Seven audit corrections (69 records; 7 runtime-reproduced, 7 corrected in isolation, 7 draft PRs, 0 merged), each a DRAFT PR based on `wip/b25r2-rev2` `fe7d8f8`
   (= the audited commit), each passed its own focused Godot test; NOT integrated, NOT closed** (retrieved 2026-11-08):
 
