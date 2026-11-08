@@ -117,6 +117,8 @@ jobs:
           cat > "$RUNNER_TEMP/game.txt" <<'EOF'
           res://tests/run_tests.gd
           res://tests/start_test.gd
+          # B25R2-BRUSHOFF: a met villager between plans brushes the player off without a script error
+          res://tests/brushoff_empty_plan_test.gd
           res://tests/character_look_test.gd
           res://tests/char_create_test.gd
           res://tests/furniture_test.gd
