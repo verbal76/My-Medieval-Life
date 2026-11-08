@@ -67,6 +67,21 @@
   - **PROP-02, foreign building fittings/stock removal** — draft [PR #8](https://github.com/verbal76/My-Medieval-Life/pull/8); red [42461880196](https://github.com/verbal76/My-Medieval-Life/actions/runs/42461880196), 13/5; green [42461995223](https://github.com/verbal76/My-Medieval-Life/actions/runs/42461995223), 13/0. The existing room-holder check now runs before fitting removal, shop closure or material refund. Fix SHA `ee3727ee`.
   - **JUS-03, justice cases surviving old-age death into the heir** — draft [PR #9](https://github.com/verbal76/My-Medieval-Life/pull/9); red [42462198471](https://github.com/verbal76/My-Medieval-Life/actions/runs/42462198471), 9/5; green [42462279977](https://github.com/verbal76/My-Medieval-Life/actions/runs/42462279977), 9/0. Old-age host and guest death now calls the existing case-closure hook. Fix SHA `6ab511f4`.
   - **With prior MP-04 draft PR #5:** **five** distinct audit concerns have now been reproduced and corrected on **unmerged branches** (MP-04 plus four above). Each PR includes focused tests registered in `.github/workflows/tests.yml`, evidence in `docs/audits/` and red/green exact-SHA Actions. The temporary single-runner workflows were deleted from the final PR diffs; 8 new one-runner jobs ran for the four newer fixes. **No Claude Console usage and no 12-runner suite were required for these new reproductions.** Full integration, combined multiplayer checks, simulation/determinism gates, independent owner review and merge are still outstanding. These items are **not closed**. The three network authority PRs (#5/#6/#7) affect `net_actions.gd`; consolidate carefully to avoid dropping changes. Do not silently merge or publish them.
+- **12-CORRECTION MERGE CANDIDATE (owner directive 2026-11-08 "Build 25 audit integration and merge"):** `wip/b25-audit-integration`
+  `f0a854c` = `0d252b4` (the 11 corrections, PRs #5-#15) + the B25R2-BRUSHOFF fix (`dialogue.gd` empty-plan guard;
+  `brushoff_empty_plan_test` 5/0, 1 failure with the same SCRIPT ERROR on the old code; floor 5). Strict suite on `f0a854c`:
+  dispatched 20:16 UTC. Gate and campaign evidence reused from `0d252b4` (gate 42509523836; campaign 42515726815, segment 1 clean
+  on both seeds, still running) because brush_off is called only from main.gd's player talk, never by the simulation. The gate's 32
+  blocking findings are the development branch's own (baseline df67e8e, attributed in SIM_BASELINE_DIFFERENCES_B25R2.md); the
+  equilibrium values are identical to the generation 8 candidate: no regression, baseline acceptance stays the owner's.
+  Merge into `wip/b25r2-rev2` when the strict suite is 0 failed / 0 script errors and the campaign is clean.
+- **Owner-approved features, separate:** `wip/b25-features-integration` `46d934c` = the 12 + LIFE-03 (PR #16, with an integration
+  correction: its healing guard excluded nobody because Skills.level is 1 when untrained; now level 2) + LIFE-04 (PR #17) +
+  `owner_features_integration_test` (16/0; 3 failures with PR #16 as merged). Runs on `46d934c`: tests 42517545415, gate
+  42517547863, campaign 42517550077. PROP-06 (PR #18) on `wip/b25-prop06-integration` `a69069f`: blocked (owner rule needed for
+  multi-parcel estates and sublet property, which now cancel the departure; sales are not atomic). MP-05 (PR #19) on
+  `wip/b25-mp05-integration` `767ea22` (chests.gd conflict with INV-03 resolved, MP-05's superset kept): blocked on the security
+  verification the owner listed (real host/guest, modified clients, reconnect, UI menus, privacy, tools/property outside chests).
 - **AUDIT INTEGRATION IN PROGRESS (owner directive 2026-11-08, "Audit fix integration"): 11 corrections, PRs #5-#15.** Branch
   `wip/b25-audit-integration` from `wip/b25r2-rev2` `fe7d8f8`; tested head `0d252b4` = all 11 merged (merge order #5, #9, #10-#15,
   #6-#8; code merged clean; tests.yml conflicts resolved by keeping every line) + floors for the five suites of #5-#9 (6, 7, 8, 13,
