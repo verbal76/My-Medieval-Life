@@ -38,6 +38,10 @@ func _init() -> void:
 	check(Life.kin(relative.id, relative.mother, relative.father, witness.id, witness.mother, witness.father),
 		"the nonwitness is actual family of the witness")
 	var who := w.acting_id()
+	# Regard cannot fall below zero; establish meaningful prior positive
+	# relationships so the penalty is observable rather than clamped away.
+	w.relations.tie(who, witness.id).regard = 60.0
+	w.relations.tie(who, relative.id).regard = 60.0
 	var witness_before := float(w.relations.peek(who, witness.id).regard)
 	var relative_before := float(w.relations.peek(who, relative.id).regard)
 	var saw := w.witness("theft", "bread", null, {}, null, "steal bread")
