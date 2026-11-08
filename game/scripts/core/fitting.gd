@@ -294,6 +294,11 @@ func remove(b: Dictionary, kind: String, actor: PlayerState = null) -> String:
 		return w.mirror("fitting.remove", remove.bind(b, kind), [b, kind])
 	if actor != null and actor != w.player:
 		return w.as_actor(actor, remove.bind(b, kind))
+	# PROP-02: removal needs the same room ownership proof as placement.
+	# Reject before any shop closure, fitting mutation, or material refund.
+	var why := fit_refusal(b)
+	if why != "":
+		return why
 	var e := entry(b, kind)
 	if e.is_empty():
 		return "There is none to take up."
