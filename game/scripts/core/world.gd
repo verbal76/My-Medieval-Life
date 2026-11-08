@@ -1068,7 +1068,7 @@ static func asset_item_tier(id: String) -> int:
 	var cat: String = str(GameData.item(id).get("category", "general"))
 	if cat == "raw":
 		return 1
-	if cat in ["tool", "weapon"]:
+	if cat in ["tool", "tools", "weapon", "weapons"]:
 		return 3
 	return 2
 
