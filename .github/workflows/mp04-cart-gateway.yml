@@ -1,0 +1,48 @@
+# Focused, low-cost MP-04 evidence. Never run the 12-shard full suite for this regression.
+# One Linux runner, editor only, one Godot script. No releases, no baseline changes.
+name: MP-04 cart gateway focused
+
+on:
+  push:
+    branches: [audit/mp04-cart-gateway-20261108]
+    paths:
+      - "game/tests/mp04_cart_gateway_test.gd"
+      - "game/scripts/net/net_actions.gd"
+      - ".github/workflows/mp04-cart-gateway.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mp04-focused-${{ github.sha }}
+  cancel-in-progress: false
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Cache Godot 4.7.2 editor
+        id: godot
+        uses: actions/cache@v4
+        with:
+          path: ~/godot-bin
+          key: godot-4.7.2-linux-editor
+
+      - name: Install Godot editor if needed
+        if: steps.godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot-bin
+          curl -sSfL -o godot.zip https://github.com/godotengine/godot/releases/download/4.7.2-stable/Godot_v4.7.2-stable_linux.x86_64.zip
+          unzip -q godot.zip
+          mv Godot_v4.7.2-stable_linux.x86_64 ~/godot-bin/godot
+
+      - name: Import project (headless)
+        run: ~/godot-bin/godot --headless --path game --import
+
+      - name: MP-04 only (no other tests)
+        run: ~/godot-bin/godot --headless --path game --script res://tests/mp04_cart_gateway_test.gd
