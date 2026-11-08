@@ -147,6 +147,54 @@ static func _pre_leave(w: World, ms: Array) -> void:
 			w.economy.repairs.on_leave(o)       # B25-LEAK2: a paid repair not yet done is refunded to them (or to its customers)
 
 
+## PROP-06 (owner, 2026-11-08): a whole departing household sells
+## outright-owned parcels to the manor, while leased premises are surrendered.
+## If the manor cannot pay for outright ownership, do not depart or confiscate.
+static func _settle_departure_property(w: World, ms: Array) -> bool:
+	var departing := []
+	for h in _households_of(ms):
+		var living: Array = w.brain._members(h)
+		if not living.is_empty() and living.all(func(n): return ms.has(n)):
+			departing.append(h)
+	var deals := []
+	var total := 0
+	for h in departing:
+		var ref := World.hh_ref(h)
+		for head in w.property.held_by(ref):
+			var u: Array = w.property.unit(head)
+			if u.is_empty():
+				continue
+			if w.owner_of(u[0]) == ref:
+				if w.property.estate_parcels(u[0]).size() > 1 and w.property.estate_id(u[0]) == str(u[0].id):
+					return false
+				for r in u:
+					if w.tenant_of(r) != "":
+						return false
+				total += w.property.sale_value(head)
+				deals.append([head, ref, true])
+			elif w.tenant_of(u[0]) == ref:
+				if w.property.estate_parcels(u[0]).size() > 1 and w.property.estate_id(u[0]) == str(u[0].id):
+					return false
+				deals.append([head, ref, false])
+	if w.treasury < total:
+		return false
+	for deal in deals:
+		var head: Dictionary = deal[0]
+		var ref: String = deal[1]
+		if bool(deal[2]):
+			# Materials from an OWNED unfinished site belong to the seller.
+			for r in w.property.unit(head):
+				if w.property.is_parcel(r) and not (r.site as Dictionary).is_empty() and not bool(r.site.get("done", false)):
+					w.cancel_site(r, w.households[World.ref_id(ref)].pantry)
+			if w.property.sell(head, ref) != "":
+				return false
+		else:
+			# Property._release gives leased site materials to the manor.
+			if w.property.end_lease(head, ref) != "":
+				return false
+	return true
+
+
 ## Just before they pack (Build 24 review; owner 2026-10-30: a living household or person that leaves keeps what is theirs): every
 ## stall whose open session or seller is one of the leavers, or a household they are the last of, is closed and settled to them
 ## (Stalls.close: the manor's commission, the rest to their purse); and a household they are everyone left of keeps its storefront
@@ -472,6 +520,8 @@ static func spare_food_pts(s: OffMapSettlement) -> float:
 static func _household_out(w: World, s: OffMapSettlement, ms: Array, _whole: bool, reason: String, bt: String) -> bool:
 	if ms.is_empty() or bt == "" or not s.biz.has(bt):
 		return false
+	if not _settle_departure_property(w, ms):
+		return false
 	_pre_leave(w, ms)
 	var pantry := _take_own(w, ms)                                          # TILL-D1: a household that leaves takes its till and stores
 	var load_ := _pack(w, ms, pantry)
@@ -536,6 +586,8 @@ static func _work_out(w: World, s: OffMapSettlement, market_: Dictionary = {}) -
 	for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector", "tailor", "barber", "preacher", "church_assistant"]:
 		if int(market[job].open) > 0:
 			return false
+	if not _settle_departure_property(w, [who]):
+		return false
 	_pre_leave(w, [who])
 	var pantry := _take_own(w, [who])                                       # the last of a household takes its stores along
 	var load_ := _pack(w, [who], pantry)
@@ -794,6 +846,8 @@ static func _marry_out(w: World, s: OffMapSettlement) -> bool:
 				continue
 			_pre_leave(w, [bride])
 			if not _courted(w, s, "out", "%d:%d:%d" % [bride.id, g[0], int(gh.mem[g[1]][OffMapSettlement.M_BORN])]):
+				return false
+			if not _settle_departure_property(w, [bride]):
 				return false
 			var pantry := _take_own(w, [bride])
 			var load_ := _pack(w, [bride], pantry)

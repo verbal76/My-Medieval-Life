@@ -166,6 +166,7 @@ jobs:
           res://tests/chests_test.gd
           res://tests/property_test.gd
           res://tests/prop04_guest_house_name_test.gd  # PROP-04 regression
+          res://tests/prop06_migration_property_test.gd   # PROP-06: owner-approved gameplay regression
           res://tests/business_test.gd
           res://tests/business_money_test.gd
           res://tests/till_ownership_test.gd
