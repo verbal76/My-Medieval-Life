@@ -42,6 +42,15 @@
   invite code length (owner's choice of option, nothing started); real controller and Windows PC checks (owner).
 - **Package and release:** artifact 13542782040 (`1f2ff4f`, 0.1.34, Windows) for the owner's personal testing only (B25R2-PKG-01),
   without the playtest fixes. No release published or drafted. Private draft authorized only after the conditions of B25R2-DRAFT-01.
+- **Independent audit open items (owner, 2026-11-08):** `docs/audits/2026-11-08_INDEPENDENT_AUDIT_OPEN_ITEMS_v14.md`, verbatim as the
+  owner supplied it. 13 static-only reports (Audits 001-012, 009B) on `wip/b25r2-rev2` `fe7d8f8` (001 on `wip/expansion20`
+  `a459186`): 69 tracked records (EMP 6, BIZ 8, TRD 5, INV 6, SAV 6, NPC 5, LIFE 5, REG 8, JUS 4, MP 7, PROP 6, REQ 3), **zero
+  runtime-confirmed**; Audits 009/009B, 011, 012 partial. Owner: work on it when credits reset; paid audits stopped. Per its
+  protocol: reproduce each on the exact SHA with an isolated test before any fix; owner decisions first for BIZ-03/04, INV-05,
+  SAV-04, LIFE-03/04/05, REG-04/05/07, JUS-04, MP-05, PROP-06; never mark closed without a test run SHA. Its verification
+  buckets, highest value first: multiplayer authority and guest shops (MP-01-05, PROP-01/02/05); person exit cleanup (LIFE-01/02,
+  REG-02/03, JUS-01/02/03); lease/site recovery (PROP-03); save/load continuity (EMP-02, SAV-01/03, REG-01); ledger completeness
+  and courier terminal states (INV-01/04, REG-03/08). B25R2-BRUSHOFF (found by start_test) is not in it: track it alongside.
 - **Monday, in priority order (each only once the owner authorizes it):**
   1. The owner's generation 8 baseline decision (TEST-AUDIT-Q2).
   2. The owner's decision on B25R2-BRUSHOFF (a one-line guard, with a test) and on seed 1's warnings (investigate or accept).
