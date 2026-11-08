@@ -78,7 +78,21 @@
   Claude integrates the tested PRs. REG-04 and REG-05 must share the one journey system. Not done; not to be reported as done.
 - **Features CI:** the strict suite started on `46d934c` (42517545415) was cancelled by the branch's concurrency group when
   f0a854c's run began on the same branch name; it is re-run on `wip/b25-features-integration` when the features are next worked.
-- **12-CORRECTION MERGE CANDIDATE (owner directive 2026-11-08 "Build 25 audit integration and merge"):** `wip/b25-audit-integration`
+- **BATCH A MERGED 2026-11-08 23:37 UTC: `wip/b25r2-rev2` `fe7d8f8` -> `f0a854c` (fast-forward, no force).** The 11 audit
+  corrections (PRs #5-#15: MP-04, PROP-01, PROP-05, PROP-02, PROP-04, JUS-03, JUS-01, LIFE-01, SAV-01, INV-03, MP-01) and
+  B25R2-BRUSHOFF. Evidence on the tested SHA: strict Tests 42519022430 on `f0a854c` passed (0 failed suites, floors met); 365-day
+  campaign 42515726815 on `0d252b4` (code identical but for the player-only brush-off guard): seed 1 365/365, 0 CRITICAL, 48 HIGH,
+  65 MEDIUM, 0 confirmed defects; seed 2 365/365, 0 CRITICAL, 99 HIGH, 45 MEDIUM, 0 confirmed (reference 1f2ff4f: 0/48 and 0/99);
+  gate 42509523836: 32 blocking findings, all baseline-only (df67e8e), identical to the development branch's; the baseline is not
+  replaced (owner's decision). PRs #5-#15 closed naming `f0a854c`.
+- **Features after Batch A:** LIFE-03/LIFE-04 `wip/b25-features-integration` `494af9a` = `46d934c` + LIFE-04 integration fix (a living
+  partner always blocks courting/marriage; PR #17's `free_to_partner` let a living partner with a one-sided link count as free:
+  aspiration_test 3 failures in strict runs 42524437969/42524448237). Strict Tests 42530864510 on `494af9a`: passed. Gate
+  42530880459: 33 blocking, all of the baseline-difference kind (one more day-10/30 value than the dev branch's 32, from the
+  features' changed village; determinism identical); 365-day campaign not yet run on `494af9a`. PROP-06 `wip/b25-prop06-integration`
+  `a7071aa` (= PROP-06 correction 6e02171 + hut fix 2a37653 + the LIFE-04 fix d6e9994 + the brush-off fix): strict and gate
+  dispatched; on `d6e9994` the only failure was start_test (the brush-off bug, fixed in Batch A).
+- **(historical) 12-CORRECTION MERGE CANDIDATE (owner directive 2026-11-08 "Build 25 audit integration and merge"):** `wip/b25-audit-integration`
   `f0a854c` = `0d252b4` (the 11 corrections, PRs #5-#15) + the B25R2-BRUSHOFF fix (`dialogue.gd` empty-plan guard;
   `brushoff_empty_plan_test` 5/0, 1 failure with the same SCRIPT ERROR on the old code; floor 5). Strict suite on `f0a854c`:
   dispatched 20:16 UTC. Gate and campaign evidence reused from `0d252b4` (gate 42509523836; campaign 42515726815, segment 1 clean
@@ -102,7 +116,7 @@
   sold nor surrendered. MP-05 (PR #19) on
   `wip/b25-mp05-integration` `767ea22` (chests.gd conflict with INV-03 resolved, MP-05's superset kept): blocked on the security
   verification the owner listed (real host/guest, modified clients, reconnect, UI menus, privacy, tools/property outside chests).
-- **AUDIT INTEGRATION IN PROGRESS (owner directive 2026-11-08, "Audit fix integration"): 11 corrections, PRs #5-#15.** Branch
+- **(historical) AUDIT INTEGRATION (owner directive 2026-11-08, "Audit fix integration"): 11 corrections, PRs #5-#15.** Branch
   `wip/b25-audit-integration` from `wip/b25r2-rev2` `fe7d8f8`; tested head `0d252b4` = all 11 merged (merge order #5, #9, #10-#15,
   #6-#8; code merged clean; tests.yml conflicts resolved by keeping every line) + floors for the five suites of #5-#9 (6, 7, 8, 13,
   9, measured). PR heads: #12 `04913e2` PROP-04, #13 `f85fe0a` JUS-01, #14 `ff2f4c4` INV-03, #15 `47a6dc9` MP-01 (others below).
