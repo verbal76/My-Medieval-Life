@@ -335,3 +335,26 @@
 - **Highest-value verification buckets, not a new audit:** (a) Multiplayer authorization/guest shop operation [MP-01–05, PROP-01/02/05]; (b) person lifecycle exit/cleanup [LIFE-01/02, REG-02/03, JUS-01/02/03, PROP-06 policy]; (c) lease/site recovery [PROP-03]; (d) save/load/job/road state [EMP-02, SAV-01/03, REG-01]; (e) economy ledger completeness and courier terminal states [INV-01/04, REG-03/08]. Prioritize with actual runtime risk and owner decisions.
 - **Engineering protocol if later authorized:** reproduce on exact SHA; use isolated regressions and deterministic seeds; investigate causes; apply smallest safe correction; run relevant unit/integration/365-day tests through GitHub Actions with commit and artifact evidence; record pre/post conserved coins/items and correct ownership; no baseline rewrite without owner sign-off.
 - **Spending:** Owner reports Console aggregate exceeded **$30** after Audit 012; exact number unknown. The earlier $14.48 and $20 caps are historical, not current authorization. **STOP paid audits.**
+
+## Integration status (2026-11-08 23:37 UTC)
+
+Merged into `wip/b25r2-rev2` at `f0a854c` (fast-forward from `fe7d8f8`), verified on the tested SHA:
+
+| Item | PR | Status |
+|---|---|---|
+| MML-MP-04 | #5 | INTEGRATED `f0a854c` |
+| MML-PROP-01 | #9 | INTEGRATED `f0a854c` |
+| MML-PROP-05, PROP-02, PROP-04 | #10-#12 | INTEGRATED `f0a854c` |
+| MML-JUS-03, JUS-01 | #13 and the JUS-03 PR | INTEGRATED `f0a854c` |
+| MML-LIFE-01, SAV-01 | #6-#8 | INTEGRATED `f0a854c` |
+| MML-INV-03 | #14 | INTEGRATED `f0a854c` |
+| MML-MP-01 | #15 | INTEGRATED `f0a854c` |
+| B25R2-BRUSHOFF | (integration fix `67c5a69`) | FIXED `f0a854c` |
+
+Evidence: strict Tests 42519022430 (passed); 365-day campaign 42515726815: seed 1 0 CRITICAL / 48 HIGH, seed 2 0 / 99, 0 confirmed
+defects (same as the 1f2ff4f reference); gate 42509523836: 32 baseline-only findings, the development branch's own. The accepted
+baseline is unchanged.
+
+Not merged: LIFE-03, LIFE-04 (`wip/b25-features-integration` `494af9a`, strict passed, campaign pending), PROP-06
+(`wip/b25-prop06-integration`, corrected under the owner's 2026-11-08 directive, verification running), MP-05 (security
+verification outstanding), JUS-04 and REG-07 (PRs #20, #21, next batch). MP-07, REG-04 and REG-05 are approved, not implemented.
