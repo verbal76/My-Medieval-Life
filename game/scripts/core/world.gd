@@ -4392,7 +4392,9 @@ func _finish_site(p: Dictionary) -> void:
 		_finish_loft(p)
 		return
 	var by := str(p.site.get("owner", holder_of(p)))
-	var fam := player.family if is_player_ref(by) else (str(households[ref_id(by)].family) if by.begins_with("hh:") else "the manor's")
+	# PROP-04: use the actual site owner's player line, not the current host actor.
+	var site_player: PlayerState = player_for(by) if is_player_ref(by) else null
+	var fam := site_player.family if site_player != null else (str(households[ref_id(by)].family) if by.begins_with("hh:") else "the manor's")
 	var b := {"id": ("house_" if kind == "house" else "workshop_") + str(p.id), "type": "player_house" if kind == "house" else "workshop",
 			  "kind": kind, "stamp": Construction.stamp_name(kind), "x": p.x, "y": p.y, "w": p.w, "h": p.h,
 			  "door": p.door, "name": "%s family %s" % [fam, Construction.kind_name(kind)],
