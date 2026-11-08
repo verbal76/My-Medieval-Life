@@ -41,7 +41,7 @@ func _init() -> void:
 	guest.inv.add("plank", 1)
 	var guest_before: int = guest.inv.count("plank")
 	var host_before: int = w.player.chest.count("plank")
-	var result := w.as_actor(guest, w.chests.store.bind(unit, "plank", 1))
+	var result: String = str(w.as_actor(guest, w.chests.store.bind(unit, "plank", 1)))
 	check(result == "That is not yours to fill.", "INV-03: guest cannot freely put goods in another player's chest")
 	check(guest.inv.count("plank") == guest_before, "INV-03: rejected store does not consume guest's goods")
 	check(w.player.chest.count("plank") == host_before, "INV-03: host chest unchanged")
