@@ -972,6 +972,7 @@ func mirror(path: String, c: Callable, args: Array) -> Variant:
 ## and "gift" (goods handed from one pack to the other, their stolen marks with them). An offer lapses at the end of its day, or when
 ## either player leaves play. Saved under the optional key "player_offers".
 var offers: Array = []              # {id, kind, from (ref), to (ref), item, qty, day}
+var asset_shares := {} # MP-05: unordered pair of player family-line references -> mutual tier
 ## GP-MESSAGE-JOURNAL (owner, 2026-10-26): the messages each player was shown that are worth keeping (MessageJournal), saved with the
 ## world under the optional key "messages" (absent: none). Read only by the journal's Messages page, never by the simulation.
 var messages := MessageJournal.new()
@@ -1043,6 +1044,60 @@ func players_partner_refusal(a: PlayerState, b: PlayerState) -> String:
 	return ""
 
 
+
+## MP-05: explicit reciprocal permissions between two player family lines.
+static func _asset_share_key(a: String, b: String) -> String:
+	return a + "|" + b if a < b else b + "|" + a
+
+
+func asset_share_tier(owner_ref: String, other_ref := "") -> int:
+	var other: String = other_ref if other_ref != "" else acting_ref()
+	if owner_ref == other:
+		return 3
+	if not is_player_ref(owner_ref) or not is_player_ref(other):
+		return 0
+	return clampi(int(asset_shares.get(_asset_share_key(owner_ref, other), 0)), 0, 3)
+
+
+## Raw and construction materials; finished goods; then tools/property.
+static func asset_item_tier(id: String) -> int:
+	if not GameData.items.has(id):
+		return 99
+	if id in ["plank", "nails", "building_block", "log", "rubble", "stone", "iron_bar", "copper_bar", "tin_bar", "gold_bar"]:
+		return 1
+	var cat: String = str(GameData.item(id).get("category", "general"))
+	if cat == "raw":
+		return 1
+	if cat in ["tool", "tools", "weapon", "weapons"]:
+		return 3
+	return 2
+
+
+func asset_item_allowed(owner_ref: String, id: String) -> bool:
+	return asset_share_tier(owner_ref) >= asset_item_tier(id)
+
+
+## Either player can withdraw consent from the entire pair, immediately.
+func asset_share_revoke(pid: int, actor: PlayerState = null) -> String:
+	if mirrors():
+		return mirror("asset_share_revoke", asset_share_revoke.bind(pid), [pid])
+	if actor != null and actor != player:
+		return as_actor(actor, asset_share_revoke.bind(pid))
+	var other: PlayerState = player_by_pid(pid)
+	if other == null or other == player:
+		return "There is no such player."
+	var my_ref := acting_ref()
+	var their_ref := player_ref(other)
+	asset_shares.erase(_asset_share_key(my_ref, their_ref))
+	for o in offers.duplicate():
+		if str(o.kind) == "asset_share" and (str(o.get("from", "")) == my_ref and str(o.to) == their_ref or str(o.get("from", "")) == their_ref and str(o.to) == my_ref):
+			offers.erase(o)
+	stat("asset_share_revocations")
+	return ""
+
+
+
+
 ## MP-INTERACT-01 (owner, 2026-10-27): the other interactions between two players use the same consent record. "sell" (the offerer
 ## sells `qty` of `item` from its pack for `price` coins in all) and "buy" (the offerer offers `price` coins in all for `qty` of `item`
 ## from the other's pack): settled by World.trade on acceptance, the one atomic sale. "contract" (the offerer, the buyer, asks the other
@@ -1054,7 +1109,7 @@ func players_partner_refusal(a: PlayerState, b: PlayerState) -> String:
 const SAY_MAX := 120                 # characters of a message between players (agent decision, docs/DECISIONS.md 2026-10-27)
 const MESSAGES_KEPT := 8             # messages and notes waiting for one player at a time; the oldest goes first
 const PRICE_MAX := 100000            # coins: the most one offer may name (a bound on input, not an economic rule)
-const OFFER_KINDS := ["partner", "gift", "sell", "buy", "contract", "supply", "say"]
+const OFFER_KINDS := ["partner", "gift", "sell", "buy", "contract", "supply", "say", "asset_share"]
 
 
 ## A message between players as it is kept: one line, no control characters, at most SAY_MAX characters.
@@ -1072,6 +1127,8 @@ func _offer_refusal(a: PlayerState, b: PlayerState, kind: String, item: String, 
 	match kind:
 		"partner":
 			return players_partner_refusal(a, b)
+		"asset_share":
+			return "" if qty >= 1 and qty <= 3 else "Choose sharing tier 1, 2 or 3."
 		"gift":
 			if qty < 1 or not a.inv.has(item, qty):
 				return "You do not have that."
@@ -1156,6 +1213,8 @@ func offer_text(o: Dictionary) -> String:
 	match str(o.kind):
 		"partner":
 			return "to be partners"
+		"asset_share":
+			return "mutual asset sharing at tier %d" % int(o.get("qty", 0))
 		"gift":
 			return goods
 		"sell":
@@ -1216,6 +1275,11 @@ func player_answer(id: int, accept: bool, actor: PlayerState = null) -> String:
 		_tell_player(str(o["from"]), "%s could not accept your offer: %s" % [b.name, why])
 		return why if kind in ["gift", "sell", "buy"] else "You cannot: %s" % why.to_lower()
 	match kind:
+		"asset_share":
+			# MP-05: acceptance authorizes exactly the same tier both ways.
+			offers.erase(o)
+			asset_shares[_asset_share_key(player_ref(a), player_ref(b))] = int(o.qty)
+			stat("asset_share_agreements")
 		"partner":
 			offers.erase(o)
 			Life._archive_spouse(a, person_id(b))
@@ -6257,7 +6321,7 @@ func to_dict() -> Dictionary:
 		"chapel": chapel.to_dict(), "feast": feast.to_dict(),
 		"player": _host_player.to_dict(), "players": _players_to_dict(), "coin_sources": coin_sources, "regions": regions.to_dict(), "couriers": couriers.to_dict(), "intel_book": intel_book, "country_taken": country_taken, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(), "station_users": _station_users_to_dict(),
-		"relations": relations.to_dict(), "contracts": contracts.to_dict(),
+		"relations": relations.to_dict(), "contracts": contracts.to_dict(), "asset_shares": asset_shares.duplicate(true),
 		"underground": {"gen": Underground.GEN_VERSION, "player_level": _host_player.map_level},
 		"prospecting": prospecting.to_dict(),
 		"discovery": discovery.to_dict(),
@@ -6650,6 +6714,7 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	_guests.clear()
 	players_foreign.clear()
 	_load_guests(d.get("players", {}))              # save 21 (absent: the "player" above is the only player)
+	asset_shares = (d.get("asset_shares", {}) as Dictionary).duplicate(true) # MP-05: older saves have no agreements
 	if not _load_identity(d):
 		return
 	country_taken = (d.get("country_taken", {}) as Dictionary).duplicate(true)      # B25R1-002 (older saves: none taken)

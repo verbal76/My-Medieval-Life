@@ -52,6 +52,8 @@ static func show(ui: GameUI, pid: int, view := "", form := {}) -> void:
 			_goods(ui, q, view)
 		"contract":
 			_contract(ui, q, form)
+		"sharing":
+			_sharing(ui, q)
 		"terms":
 			_terms(ui, q, form)
 		_:
@@ -78,6 +80,7 @@ static func _menu(ui: GameUI, q: PlayerState) -> void:
 	ui._button("Give", func(): show(ui, pid, "give"), near, row).name = "PlayerGive"
 	ui._button("Sell", func(): show(ui, pid, "sell"), near, row).name = "PlayerSell"
 	ui._button("Contract", func(): show(ui, pid, "contract"), near, row).name = "PlayerContract"
+	ui._button("Asset sharing", func(): show(ui, pid, "sharing"), true, row).name = "PlayerAssetShare"
 	if w.players_partner_refusal(me, q) == "":
 		ui._button("Ask to be partners", func():
 			var why := w.player_offer("partner", pid)
@@ -86,6 +89,29 @@ static func _menu(ui: GameUI, q: PlayerState) -> void:
 	var row2 := _row(ui)
 	ui._button("All players", func(): show_list(ui), true, row2)
 	ui._button("Close", ui.hide_all, true, row2).name = "PlayerClose"
+
+
+## MP-05 — Friend/Companion options: mutual sharing, explicit consent.
+static func _sharing(ui: GameUI, q: PlayerState) -> void:
+	var w: World = ui.main.world
+	var pid: int = q.pid
+	ui.panel_back = func(): show(ui, pid)
+	var current: int = w.asset_share_tier(w.player_ref(q))
+	ui._label("Mutual asset sharing with %s. Current tier: %d. Both players get the same access after acceptance." % [q.name, current], 15)
+	var labels := ["", "Materials", "Materials + finished goods", "Materials + finished goods + tools + property"]
+	for tier in [1, 2, 3]:
+		var chosen: int = tier
+		var row := _row(ui)
+		ui._button("Tier %d: %s" % [chosen, labels[chosen]], func():
+			var why: String = w.player_offer("asset_share", pid, "", chosen)
+			ui.message(why if why != "" else "%s must accept tier %d before sharing starts." % [q.name, chosen], 4.0)
+			show(ui, pid), beside(ui, q), row)
+	var row2 := _row(ui)
+	ui._button("End sharing (both directions)", func():
+		var why: String = w.asset_share_revoke(pid)
+		ui.message(why if why != "" else "Sharing ended for both players.", 4.0)
+		show(ui, pid), current > 0, row2)
+	ui._button("Back", func(): show(ui, pid), true, row2)
 
 
 ## Rows for offers and messages made to the local player: each with its answer buttons. `back` redraws the window after an answer.
