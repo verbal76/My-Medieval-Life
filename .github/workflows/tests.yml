@@ -191,6 +191,7 @@ jobs:
           res://tests/b25_leak2_departure_test.gd   # B25-LEAK2: a leaver's rentals and paid repairs settled, no coin lost
           res://tests/le07_gates_test.gd         # LE-07: the automatable release gates and the activation mechanism
           res://tests/save_continuity_test.gd    # random state, pack order and deposits kept across a save and load
+          res://tests/sav01_famine_reload_test.gd   # SAV-01: focused audit regression
           res://tests/wear_transfer_test.gd      # X20-WEAR-TRANSFER: a tool's wear travels with it
           res://tests/feast_test.gd
           res://tests/horse_test.gd
