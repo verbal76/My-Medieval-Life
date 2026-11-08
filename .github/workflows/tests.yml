@@ -119,6 +119,8 @@ jobs:
           res://tests/start_test.gd
           # B25R2-BRUSHOFF: a met villager between plans brushes the player off without a script error
           res://tests/brushoff_empty_plan_test.gd
+          # LIFE-03/LIFE-04 integration: sage newcomer fallback and services, save with no sage; a living spouse cannot be bypassed, widowhood, save/load
+          res://tests/owner_features_integration_test.gd
           res://tests/character_look_test.gd
           res://tests/char_create_test.gd
           res://tests/furniture_test.gd

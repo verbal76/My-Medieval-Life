@@ -5046,9 +5046,9 @@ func _change_job(n: NPC, job: String, why: String, place := "") -> void:
 		"tailor", "barber":
 			Business.let_service_pitch(w, n, job)
 		"preacher", "church_assistant":
-			n.workplace = "chapel"
+			n.workplace = "chapel"                   # DVW-B3-CHAPEL
 		"sage":
-			n.workplace = "hut"                   # DVW-B3-CHAPEL
+			n.workplace = "hut"                      # LIFE-03: the sage's successor works from the sage's hut
 		_:
 			n.workplace = ""
 	if job == "":
@@ -5079,6 +5079,7 @@ const SKILLED := ["smith", "carpenter", "tanner", "cook", "tavernkeeper", "merch
 const MARKET_JOBS := ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector", "stonecutter", "tailor", "barber", "preacher",
 	"church_assistant", "smith", "carpenter", "tanner", "cook", "tavernkeeper", "merchant"]
 const FLOOR_JOBS := ["farmer", "woodcutter", "miner", "sage"] # LIFE-03: sage is a succession-protected post
+const SAGE_HEALING := 2   # LIFE-03: the healing level a sage's successor needs (1 is every untrained person's level)
 const APPRENTICE_FROM := ["", "manor_hand", "laborer"]          # the adults who can be taken on, in order of preference
 
 
@@ -5206,7 +5207,8 @@ func _apprentice_for(v: Dictionary) -> NPC:
 			pref = APPRENTICE_FROM.size()             # retraining: after those without a trade, at the same skill
 		# LIFE-03: a sage must know healing, not take the post only
 		# because they are unemployed. Without one, await a trained newcomer.
-		if v.job == "sage" and Skills.level(o, "healing") < 1:
+		# (Skills.level is 1 for everyone untrained: real training is SAGE_HEALING, integration fix 2026-11-08.)
+		if v.job == "sage" and Skills.level(o, "healing") < SAGE_HEALING:
 			continue
 		if v.job == "merchant" and o.coins < int(GameData.b("stall_min_coins")):
 			continue
@@ -5322,7 +5324,7 @@ func _newcomer_for(v: Dictionary) -> NPC:
 	if str(v.job) == "sage":
 		# The replacement brings a real minimum healing qualification;
 		# it does not give a spell to every player or applicant.
-		n.skills["healing"] = Skills.xp_for_level(1)
+		n.skills["healing"] = Skills.xp_for_level(SAGE_HEALING)
 	n.hunger = 100.0
 	w.coin_sources += n.coins                        # the purse comes in from outside
 	w.stat("newcomer_coins_in", n.coins)
