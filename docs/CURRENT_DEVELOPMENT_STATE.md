@@ -51,6 +51,16 @@
   buckets, highest value first: multiplayer authority and guest shops (MP-01-05, PROP-01/02/05); person exit cleanup (LIFE-01/02,
   REG-02/03, JUS-01/02/03); lease/site recovery (PROP-03); save/load continuity (EMP-02, SAV-01/03, REG-01); ledger completeness
   and courier terminal states (INV-01/04, REG-03/08). B25R2-BRUSHOFF (found by start_test) is not in it: track it alongside.
+- **Audit register on GitHub (2026-11-08):** master copy https://github.com/verbal76/My-Medieval-Life/blob/docs/build25-audit-register/docs/audits/2026-11-08_build25_master_audit_register.md
+  (branch docs/build25-audit-register, commit e75ee5c); tracking issue https://github.com/verbal76/My-Medieval-Life/issues/4 (with the nine handoff rules).
+- **MP-04 (forged free cart): REPRODUCED and CORRECTED, not merged.** Draft PR https://github.com/verbal76/My-Medieval-Life/pull/5
+  (by ChatGPT via GitHub), branch `audit/mp04-cart-gateway-20261108` head `325dcad`, base `wip/b25r2-rev2` `fe7d8f8`, 4 files, +94/-1.
+  Red: focused Godot run 42459686569 on the original code, 4 of 6 passed, 2 failed. Green: run 42459774174 at `32cab1d`, 6/0.
+  Fix: `carts.place` taken out of `NetActions.VERBS`; `player_set_down_cart` stays. New test `mp04_cart_gateway_test.gd` (in
+  tests.yml); evidence file 2026-11-08_MP04_CART_GATEWAY_VERIFICATION.md (on the PR branch). **Remaining:** the existing multiplayer suites
+  and the full strict suite on the integration commit, then merge. Keep the branch and draft PR as they are until integration.
+  It has to be merged into `wip/b25r2-rev2` along with the playtest fixes before the next package. Its Godot runs printed
+  resources-in-use warnings at exit (not investigated). MP-03/05, INV-03, PROP-01/02/05 remain open and separate.
 - **Monday, in priority order (each only once the owner authorizes it):**
   1. The owner's generation 8 baseline decision (TEST-AUDIT-Q2).
   2. The owner's decision on B25R2-BRUSHOFF (a one-line guard, with a test) and on seed 1's warnings (investigate or accept).
