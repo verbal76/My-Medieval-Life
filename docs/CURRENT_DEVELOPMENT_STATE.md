@@ -89,8 +89,17 @@
 - **Owner-approved features, separate:** `wip/b25-features-integration` `46d934c` = the 12 + LIFE-03 (PR #16, with an integration
   correction: its healing guard excluded nobody because Skills.level is 1 when untrained; now level 2) + LIFE-04 (PR #17) +
   `owner_features_integration_test` (16/0; 3 failures with PR #16 as merged). Runs on `46d934c`: tests 42517545415, gate
-  42517547863, campaign 42517550077. PROP-06 (PR #18) on `wip/b25-prop06-integration` `a69069f`: blocked (owner rule needed for
-  multi-parcel estates and sublet property, which now cancel the departure; sales are not atomic). MP-05 (PR #19) on
+  42517547863, campaign 42517550077. PROP-06 (PR #18) on `wip/b25-prop06-integration`: corrected
+  at `6e02171` under the owner's 2026-11-08 PROP-06 directive (saved in docs/directives): one planned, preflighted, rollback-safe
+  departure settlement (estates whole, let property sold with the lease kept, own leases surrendered, nothing on insolvency,
+  nothing when only part of a household goes). prop06_estate_transaction_test (the directive's 18 cases, floor 57): 57/0, 19
+  failures on PR #18's code. settle_review_test (5) and migration_test (1) already failed on `a69069f`: they assumed no sale
+  proceeds; expectations now add them (same exact equalities). Ten related suites 0 failures locally. Strict CI and gate
+  dispatched on `6e02171`. Interactions: BIZ-04 venture tills follow keep_till's venture_owner rule (tested, case 18); INV-04
+  stash is player-only, so NPC migration does not touch it; PROP-03 leased sites go through Property._release; REG-02 (stale
+  journey, trade credit) is outside the settlement and unchanged; REG-05 must call the settlement where the walk starts.
+  Finding, not fixed: an owned hut that is not a "home" type (the Lorekeeper's) is not in Property.held_by, so it is neither
+  sold nor surrendered. MP-05 (PR #19) on
   `wip/b25-mp05-integration` `767ea22` (chests.gd conflict with INV-03 resolved, MP-05's superset kept): blocked on the security
   verification the owner listed (real host/guest, modified clients, reconnect, UI menus, privacy, tools/property outside chests).
 - **AUDIT INTEGRATION IN PROGRESS (owner directive 2026-11-08, "Audit fix integration"): 11 corrections, PRs #5-#15.** Branch
