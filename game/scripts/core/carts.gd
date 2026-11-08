@@ -93,7 +93,7 @@ func pulled_by(ref: String) -> Dictionary:
 func may_use(c: Dictionary, ref: String) -> bool:
 	var owner := str(c.owner)
 	if World.is_player_ref(ref):
-		return World.is_player_ref(owner)
+		return owner == ref or (World.is_player_ref(owner) and w.asset_share_tier(owner, ref) >= 3)
 	var n: NPC = w.npc(int(ref.trim_prefix("npc:")))
 	if n == null or not n.alive:
 		return false
@@ -126,14 +126,15 @@ func park(c: Dictionary, actor: PlayerState = null) -> void:
 	if actor != null and actor != w.player:
 		w.as_actor(actor, park.bind(c))
 		return
-	c.puller = ""
+	if may_use(c, w.acting_ref()) or str(c.puller) == w.acting_ref():
+		c.puller = ""
 
 
 ## "your", "the Reed household's".
 func whose(c: Dictionary) -> String:
 	var owner := str(c.owner)
 	if World.is_player_ref(owner):
-		return "your"
+		return "your" if owner == w.acting_ref() else "another player\'s"
 	if owner.begins_with("hh:"):
 		var h: int = w.ref_id(owner)
 		if h >= 0 and h < w.households.size():

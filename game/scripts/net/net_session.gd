@@ -503,6 +503,12 @@ static func public_player(p: PlayerState) -> Dictionary:
 ## journal). The interface shows a player only those; another pair's offers and words are theirs. The offer counter stays (the
 ## copy's own offers are numbered from it).
 static func _private_for(d: Dictionary, ref: String) -> void:
+	if d.has("asset_shares"):
+		var visible := {}
+		for pair in d.asset_shares:
+			if str(pair).split("|").has(ref):
+				visible[pair] = d.asset_shares[pair]
+		d["asset_shares"] = visible
 	if d.has("player_offers"):
 		var po: Dictionary = d.player_offers
 		var mine: Array = (po.get("list", []) as Array).filter(func(o): return str(o["from"]) == ref or str(o.to) == ref)
@@ -1373,7 +1379,7 @@ func send_syncs(all: bool, skip: Array = [], clock := -1.0, mark := -1) -> void:
 		if not synced.has(id):
 			synced[id] = {}
 		var d := all_d
-		if all_d.has("player_offers"):                 # X20: only the offers and messages this guest is party to
+		if all_d.has("player_offers") or all_d.has("asset_shares"): # X20 / MP-05: private per-player relations
 			var g: PlayerState = main.world.player_by_pid(int(by_peer[id]))
 			d = all_d.duplicate(false)
 			_private_for(d, main.world.player_ref(g) if g != null else "")
