@@ -56,5 +56,32 @@ func _init() -> void:
 		check(Life.partner_player(w,other) == "" and p.partner == other.id,"LIFE-04: player remarries successfully")
 		check(p.past_partners.has(former.id),"LIFE-04: player remembers deceased former spouse")
 		check(PlayerState.from_dict(p.to_dict()).past_partners.has(former.id),"LIFE-04: player former spouse survives save/load")
+	# A deceased player's spouse no longer blocks a new player-to-player union.
+	var w2 := World.new()
+	w2.setup(VillageMap.load_default(), 8715)
+	var old_npc: NPC = null
+	for n: NPC in w2.npcs:
+		if n.alive and n.role == "adult":
+			old_npc = n
+			break
+	var guest := PlayerState.new()
+	guest.name = "Gwen"
+	guest.family = "Widow"
+	guest.sex = "female"
+	guest.born = w2.player.born
+	Identity.register_player(w2, guest)
+	w2.give_start_kit(guest)
+	guest.net_key = "b".repeat(32)
+	w2.add_guest(guest)
+	guest.pos = w2.player.pos
+	w2.player.partner = old_npc.id
+	old_npc.partner = w2.acting_id()
+	old_npc.alive = false
+	check(w2.players_partner_refusal(w2.player,guest) == "", "LIFE-04: widowed player may court a second player")
+	check(w2.player_offer("partner", guest.pid) == "", "LIFE-04: widowed player proposes to second player")
+	var offer_id: int = int(w2.offers.back().id)
+	check(str(w2.as_actor(guest,w2.player_answer.bind(offer_id,true))) == "", "LIFE-04: player-to-player remarriage accepted")
+	check(w2.player.past_partners.has(old_npc.id) and w2.player.partner == w2.person_id(guest),
+		"LIFE-04: former spouse retained after new player marriage")
 	print("%d checks, %d failures" % [checks,failures])
 	quit(1 if failures>0 else 0)
