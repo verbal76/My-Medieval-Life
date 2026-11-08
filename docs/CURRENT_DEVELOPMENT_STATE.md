@@ -67,6 +67,17 @@
   - **PROP-02, foreign building fittings/stock removal** — draft [PR #8](https://github.com/verbal76/My-Medieval-Life/pull/8); red [42461880196](https://github.com/verbal76/My-Medieval-Life/actions/runs/42461880196), 13/5; green [42461995223](https://github.com/verbal76/My-Medieval-Life/actions/runs/42461995223), 13/0. The existing room-holder check now runs before fitting removal, shop closure or material refund. Fix SHA `ee3727ee`.
   - **JUS-03, justice cases surviving old-age death into the heir** — draft [PR #9](https://github.com/verbal76/My-Medieval-Life/pull/9); red [42462198471](https://github.com/verbal76/My-Medieval-Life/actions/runs/42462198471), 9/5; green [42462279977](https://github.com/verbal76/My-Medieval-Life/actions/runs/42462279977), 9/0. Old-age host and guest death now calls the existing case-closure hook. Fix SHA `6ab511f4`.
   - **With prior MP-04 draft PR #5:** **five** distinct audit concerns have now been reproduced and corrected on **unmerged branches** (MP-04 plus four above). Each PR includes focused tests registered in `.github/workflows/tests.yml`, evidence in `docs/audits/` and red/green exact-SHA Actions. The temporary single-runner workflows were deleted from the final PR diffs; 8 new one-runner jobs ran for the four newer fixes. **No Claude Console usage and no 12-runner suite were required for these new reproductions.** Full integration, combined multiplayer checks, simulation/determinism gates, independent owner review and merge are still outstanding. These items are **not closed**. The three network authority PRs (#5/#6/#7) affect `net_actions.gd`; consolidate carefully to avoid dropping changes. Do not silently merge or publish them.
+- **Next batch (after the 12 merge), owner directive 2026-11-08 "continuous engineering":** PR #20 JUS-04 (head `fbc0384`,
+  world.gd witness `relations.harmed(..., false)`; red 42520518399 6/1, green 42520403018 6/0) and PR #21 REG-07 (head `8ca63ed`,
+  intel stale 4 / forget 8 days, envoy refresh 4, reeve's book expires old records; intel_test red 20/5 in 42520518399, green
+  42520222693 20/0). Both based on `fe7d8f8`. At integration: drop their temporary focused workflows (audit-jus04-focused.yml,
+  audit-reg07-focused.yml), add a floor for jus04_witness_knowledge_test and raise intel_test's floor to its new count; REG-07
+  changes simulated trade, so attribute its gate differences (no baseline change without the owner).
+- **Approved but NOT implemented (Issue #4, owner decisions 2026-11-08):** MP-07 (no private records in network snapshots, saves
+  sent to guests or sync), REG-04 (couriers travel physically), REG-05 (households migrate physically). ChatGPT implements them;
+  Claude integrates the tested PRs. REG-04 and REG-05 must share the one journey system. Not done; not to be reported as done.
+- **Features CI:** the strict suite started on `46d934c` (42517545415) was cancelled by the branch's concurrency group when
+  f0a854c's run began on the same branch name; it is re-run on `wip/b25-features-integration` when the features are next worked.
 - **12-CORRECTION MERGE CANDIDATE (owner directive 2026-11-08 "Build 25 audit integration and merge"):** `wip/b25-audit-integration`
   `f0a854c` = `0d252b4` (the 11 corrections, PRs #5-#15) + the B25R2-BRUSHOFF fix (`dialogue.gd` empty-plan guard;
   `brushoff_empty_plan_test` 5/0, 1 failure with the same SCRIPT ERROR on the old code; floor 5). Strict suite on `f0a854c`:
