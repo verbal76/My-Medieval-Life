@@ -5046,7 +5046,9 @@ func _change_job(n: NPC, job: String, why: String, place := "") -> void:
 		"tailor", "barber":
 			Business.let_service_pitch(w, n, job)
 		"preacher", "church_assistant":
-			n.workplace = "chapel"                   # DVW-B3-CHAPEL
+			n.workplace = "chapel"
+		"sage":
+			n.workplace = "hut"                   # DVW-B3-CHAPEL
 		_:
 			n.workplace = ""
 	if job == "":
@@ -5076,7 +5078,7 @@ const SKILLED := ["smith", "carpenter", "tanner", "cook", "tavernkeeper", "merch
 # the labour market's jobs in the order a seeker weighs them (_job_options); the skilled trades last (B25-EMPLOY-IMPL)
 const MARKET_JOBS := ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector", "stonecutter", "tailor", "barber", "preacher",
 	"church_assistant", "smith", "carpenter", "tanner", "cook", "tavernkeeper", "merchant"]
-const FLOOR_JOBS := ["farmer", "woodcutter", "miner"]
+const FLOOR_JOBS := ["farmer", "woodcutter", "miner", "sage"] # LIFE-03: sage is a succession-protected post
 const APPRENTICE_FROM := ["", "manor_hand", "laborer"]          # the adults who can be taken on, in order of preference
 
 
@@ -5202,6 +5204,10 @@ func _apprentice_for(v: Dictionary) -> NPC:
 			if not skilled or not _would_retrain(o, str(v.job)):
 				continue
 			pref = APPRENTICE_FROM.size()             # retraining: after those without a trade, at the same skill
+		# LIFE-03: a sage must know healing, not take the post only
+		# because they are unemployed. Without one, await a trained newcomer.
+		if v.job == "sage" and Skills.level(o, "healing") < 1:
+			continue
 		if v.job == "merchant" and o.coins < int(GameData.b("stall_min_coins")):
 			continue
 		var key := (suitability(o, str(v.job)) if skilled else []) + [pref, 0 if (int(v.household) >= 0 and o.household == int(v.household)) else 1, o.id]
@@ -5249,6 +5255,8 @@ func _install(n: NPC, v: Dictionary, why: String) -> void:
 	var left := n.job
 	var left_place := n.workplace
 	_change_job(n, str(v.job), why, place)
+	if str(v.job) == "sage":
+		w.sage_id = n.id  # LIFE-03: medicine vendor and magical teacher use successor
 	if not APPRENTICE_FROM.has(left):
 		_post_left(n, left, left_place)              # B25-CAREER-IMPL: one who retrained leaves their old trade's post to be handed on
 	if w.civic != null:
@@ -5311,6 +5319,10 @@ func _newcomer_for(v: Dictionary) -> NPC:
 	n.born = Life.born_for_age(w.rng.randf_range(20.0, 45.0), w.minutes)
 	n.sprite = "res://assets/characters/villager_%02d.png" % (n.id % 48)
 	n.coins = int(GameData.b("newcomer_coins"))
+	if str(v.job) == "sage":
+		# The replacement brings a real minimum healing qualification;
+		# it does not give a spell to every player or applicant.
+		n.skills["healing"] = Skills.xp_for_level(1)
 	n.hunger = 100.0
 	w.coin_sources += n.coins                        # the purse comes in from outside
 	w.stat("newcomer_coins_in", n.coins)
