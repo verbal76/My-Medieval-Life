@@ -282,7 +282,25 @@ static func kin(a_id: int, a_mother: int, a_father: int, b_id: int, b_mother: in
 	return (a_mother != -1 and a_mother == b_mother) or (a_father != -1 and a_father == b_father)
 
 
+static func _archive_spouse(p: Object, next_id: int) -> void:
+	# LIFE-04: keeping history cannot leave a dead spouse as an active blocker.
+	var old: int = int(p.partner)
+	if old != next_id and (old >= 0 or is_player_id(old)) and not (p.past_partners as Array).has(old):
+		p.past_partners.append(old)
+
+
+static func free_to_partner(w: World, p: Object) -> bool:
+	if p is NPC:
+		return not has_partner(w, p)
+	if p is PlayerState:
+		var prior = parent_of(w, int(p.partner)) if int(p.partner) >= 0 or is_player_id(int(p.partner)) else null
+		return prior == null or not prior.alive or int(prior.partner) != w.person_id(p)
+	return false
+
+
 static func _link_partners(a: NPC, b: NPC) -> void:
+	_archive_spouse(a, b.id)
+	_archive_spouse(b, a.id)
 	a.partner = b.id
 	b.partner = a.id
 	kin_version += 1
@@ -524,7 +542,7 @@ static func _may_move(w: World, n: NPC) -> bool:
 static func partner_refusal(w: World, n: NPC) -> String:
 	var p := w.player
 	var lo := float(cfg().partner_min_age)
-	if not p.alive or p.partner >= 0 or is_player_id(p.partner):
+	if not p.alive or not free_to_partner(w, p):
 		return "You already have a partner."
 	if age_years(p.born, w.minutes) < lo:
 		return "You are too young."
@@ -543,6 +561,8 @@ static func partner_player(w: World, n: NPC) -> String:
 	var why := partner_refusal(w, n)
 	if why != "":
 		return why
+	_archive_spouse(w.player, n.id)
+	_archive_spouse(n, w.acting_id())
 	w.player.partner = n.id
 	n.partner = w.acting_id()                  # MP C5: a guest's partner names that guest's line
 	kin_version += 1
