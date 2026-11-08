@@ -6258,6 +6258,8 @@ func to_dict() -> Dictionary:
 		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
 	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"employment": employment.to_dict()} if not employment.is_empty() else {}).merged(_economy_section()).merged(_civic_section()).merged({EconTransactions.KEY: transactions.to_dict()} if transactions != null and not transactions.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"shared_farming_start": true} if shared_farming_start else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
+	# SAV-01: preserve the exact last-hour famine measurement.
+	out["food_days"] = food_days
 	if judgment != null:
 		out.judgment = judgment.to_dict()                          # PROSPECTIVE (PROS-19): provisional section
 	elif not judgment_foreign.is_empty():
@@ -6792,6 +6794,12 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	_restore_plans(d)
 	if couriers != null:
 		couriers.seat_at_desks()       # GP-BUSINESS-DESK: a business's courier booth stands at its desk (an older save's at its station)
+	# SAV-01: keep the previously sampled value on load. Older saves
+	# can recover the current decision cache from restored village stores.
+	if d.has("food_days"):
+		food_days = float(d["food_days"])
+	else:
+		_update_food_days()
 	if recorder == null and FlightRecorder.enabled():
 		WorldRecorder.attach(self)     # REC-19: a loaded game records too (off unless recorder.json enables it)
 	if recorder != null:
