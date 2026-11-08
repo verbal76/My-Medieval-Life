@@ -151,6 +151,7 @@ jobs:
           res://tests/tree_test.gd
           res://tests/world_test.gd
           res://tests/aging_test.gd
+          res://tests/life03_sage_succession_test.gd   # LIFE-03: owner-approved gameplay regression
           res://tests/wiki_test.gd
           res://tests/audio_test.gd
           res://tests/stone_test.gd
