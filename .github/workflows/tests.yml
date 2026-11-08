@@ -205,6 +205,7 @@ jobs:
           res://tests/net_batch_b_test.gd
           # MP Batch C: per-player identities, verb parity host/guest, the G2 matrix, save 22 and the Build 20 migration
           res://tests/multiplayer_c_test.gd
+          res://tests/mp04_cart_gateway_test.gd  # MP-04: forged cart verb rejected; legitimate placement consumes inventory
           # MP Batch C over loopback: the guest's verbs applied by the host, the copies agreeing, several players across a restart
           res://tests/net_c_test.gd
           # Build 21 over loopback: the guest's copy of the animals follows the host's (moved, hurt, killed, born, pens)
