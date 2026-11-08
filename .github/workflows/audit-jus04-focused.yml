@@ -1,0 +1,53 @@
+name: Focused JUS-04 Godot regression
+on:
+  pull_request:
+    paths:
+      - "game/**"
+      - ".github/workflows/audit-jus04-focused.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: focused-jus-04-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      GODOT_VERSION: "4.7.2"
+    steps:
+      - name: Fetch exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Record tested SHA
+        run: echo "Tested commit $(git rev-parse HEAD)"
+      - name: Cache Godot
+        id: godot
+        uses: actions/cache@v4
+        with:
+          path: ~/godot-bin
+          key: godot-4.7.2-linux-editor
+      - name: Install Godot 4.7.2
+        if: steps.godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot-bin
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -sSfL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip
+          mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" ~/godot-bin/godot
+          rm godot.zip
+      - name: Import Godot resources
+        run: ~/godot-bin/godot --headless --path game --import
+      - name: Run one focused regression
+        run: |
+          set -o pipefail
+          ~/godot-bin/godot --headless --path game --script res://tests/jus04_witness_knowledge_test.gd 2>&1 | tee focused.log
+      - name: Upload focused evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-jus-04-focused-log
+          path: focused.log
+          if-no-files-found: ignore
