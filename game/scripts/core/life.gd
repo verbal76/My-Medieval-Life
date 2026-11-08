@@ -293,13 +293,16 @@ static func _archive_spouse(p: Object, next_id: int) -> void:
 		p.past_partners.append(old)
 
 
+## LIFE-04: free to court and marry unless a partner is still alive. A living partner always blocks (owner: a living spouse
+## cannot be bypassed), whether or not their own record points back; only death (or a partner the world no longer holds) frees.
 static func free_to_partner(w: World, p: Object) -> bool:
-	if p is NPC:
-		return not has_partner(w, p)
-	if p is PlayerState:
-		var prior = parent_of(w, int(p.partner)) if int(p.partner) >= 0 or is_player_id(int(p.partner)) else null
-		return prior == null or not prior.alive or int(prior.partner) != w.person_id(p)
-	return false
+	if not (p is NPC or p is PlayerState):
+		return false
+	var pid := int(p.partner)
+	if pid < 0 and not is_player_id(pid):
+		return true
+	var prior = parent_of(w, pid)
+	return prior == null or not prior.alive
 
 
 static func _link_partners(a: NPC, b: NPC) -> void:
