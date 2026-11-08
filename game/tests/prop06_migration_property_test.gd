@@ -17,6 +17,12 @@ func _init() -> void:
 	var people: Array = w.brain._members(h)
 	check(not people.is_empty(), "PROP-06: living family exists")
 	var ref := World.hh_ref(h)
+	# Isolate the owned-sale accounting from the household\'s existing rent bills.
+	for r in w.property._all_things():
+		if w.tenant_of(r) == ref:
+			w.set_tenant(r, "")
+		if w.owner_of(r) == ref:
+			w.set_owner(r, World.MANOR)
 	var land: Dictionary = w.plots[0]
 	w.set_owner(land, ref)
 	w.set_tenant(land, "")
