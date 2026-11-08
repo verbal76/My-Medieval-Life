@@ -196,8 +196,12 @@ static func _departure_plan(w: World, ms: Array) -> Dictionary:
 			continue                                      # only part of the household leaves: nothing is settled
 		var ref := World.hh_ref(h)
 		var estates := {}                                 # anchor id -> [units of this estate held by ref]
-		for head in w.property.held_by(ref):
-			var u: Array = w.property.unit(head)
+		for rec in w.property.records():                  # every record it owns or leases, not only the land office's heads
+			if not w.holds(ref, rec):                     # (an owned hut or other building that is no home is property too)
+				continue
+			var u: Array = w.property.unit(rec)
+			if not w.holds(ref, u[0]):
+				u = [rec]                                 # a building of its own on someone else's ground: the building alone
 			if u.is_empty() or seen.has(str(u[0].id)):
 				continue
 			seen[str(u[0].id)] = true

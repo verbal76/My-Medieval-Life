@@ -27,6 +27,7 @@ func _init() -> void:
 	_save_load()
 	_departures()
 	_business()
+	_other_buildings()
 	print("%d checks, %d failures" % [checks, fails])
 	quit(1 if fails > 0 else 0)
 
@@ -165,6 +166,7 @@ func _estates() -> void:
 	check([anchor, m1, m2].all(func(x): return w.owner_of(x) == World.MANOR), "#3 the anchor and every module are the manor's")
 	check(purse(w, h) == p0 + total and w.treasury == t0 - total, "#3 the estate's value (%d) paid once, parcel by parcel" % total)
 	check(m1.get("estate", "") == "ea" and m2.get("estate", "") == "ea", "#3 the estate stays whole (its modules still belong to it)")
+	check(w.property.for_sale(anchor) and w.property.for_sale(m1), "#3 the manor can sell or let the estate again")
 	# 4: two estates and a house
 	w = world()
 	s = seller(w)
@@ -390,3 +392,25 @@ func _business() -> void:
 		"#18 the other household's business money stays its own (its till or its purse), never the seller's")
 	check(w.treasury == t0 - v, "#18 the manor paid the valuation and took no till")
 	check(w.total_coins() == c0, "#18 no coin made or lost")
+
+
+# ------------------------------------------------------------------------------------------------ #1 (every property it owns)
+## A building the household owns that is not one of the land office's listed homes (the Lorekeeper's hut) is property too.
+func _other_buildings() -> void:
+	var w := world()
+	var who: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.household >= 0 and o.home != "" and w.buildings.has(o.home) and w.owner_of(w.buildings[o.home]) == World.hh_ref(o.household) \
+				and not w.property.held_by(World.hh_ref(o.household)).has(w.buildings[o.home]):
+			who = o
+			break
+	check(who != null, "#1 fixture: a household owning a building the land office does not list (a hut)")
+	if who == null:
+		return
+	var hut: Dictionary = w.buildings[who.home]
+	var v := w.property.sale_value(hut)
+	var p0 := purse(w, who.household)
+	var t0 := w.treasury
+	check(Migration._settle_departure_property(w, members(w, who.household)), "#1 its household leaves")
+	check(w.owner_of(hut) == World.MANOR and purse(w, who.household) == p0 + v and w.treasury == t0 - v,
+		"#1 the hut was sold to the manor too, for its value (%d), not left owned by nobody" % v)
