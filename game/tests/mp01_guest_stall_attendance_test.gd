@@ -38,6 +38,20 @@ func _init() -> void:
 	check(bool(w.as_actor(g, w.business.attended.bind(s))), "MP-01: guest considers their own open pitch attended")
 	check(w.business.attended(s), "MP-01: host hourly AI also sees near guest attending pitch")
 	check(w.business.player_near(s), "MP-01: host seller-distance check targets guest, not host")
+	# A real host-processed NPC sale must credit the guest seller's trading XP.
+	var buyer: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.role == "adult":
+			buyer = n
+			break
+	check(buyer != null, "MP-01: villager customer exists")
+	if buyer != null:
+		buyer.coins = maxi(100, buyer.coins)
+		var guest_xp := int(g.skills.get("trading", 0))
+		var host_xp := int(w.player.skills.get("trading", 0))
+		check(w.business.sell(s, buyer, "plank", 1, 5), "MP-01: host can process NPC purchase from guest stall")
+		check(int(g.skills.get("trading", 0)) > guest_xp and int(w.player.skills.get("trading", 0)) == host_xp,
+			"MP-01: trade XP credits guest seller, not host")
 	g.pos = g.pos + Vector2(200, 200)
 	w.player.pos = w.business.use_cell(s)
 	check(not w.business.attended(s), "MP-01: host proximity cannot make an absent guest's pitch attended")
