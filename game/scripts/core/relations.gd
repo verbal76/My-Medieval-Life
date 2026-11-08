@@ -499,7 +499,7 @@ func can_court(a: int, b: int) -> bool:
 		return false
 	for pair in [[pa, b], [pb, a]]:
 		var p = pair[0]
-		if p.partner >= 0 or Life.is_player_id(p.partner):
+		if not Life.free_to_partner(w, p):
 			if int(p.partner) != int(pair[1]):
 				return false
 	return true
@@ -737,12 +737,12 @@ func _villagers_court() -> void:
 	var hi := float(Life.cfg().partner_max_age)
 	var singles: Array = []
 	for n: NPC in w.npcs:
-		if n.alive and (n.role == "adult" or (n.role == "bandit" and JudgmentBandit.on(w))) and n.partner < 0 and not Life.is_player_id(n.partner):
+		if n.alive and (n.role == "adult" or (n.role == "bandit" and JudgmentBandit.on(w))) and Life.free_to_partner(w, n):
 			var a := Life.npc_age(w, n)
 			if a >= lo and a <= hi:
 				singles.append(n)
 	for n: NPC in singles:
-		if n.partner >= 0:
+		if not Life.free_to_partner(w, n):
 			continue                                   # paired earlier this dawn
 		var target: NPC = w.npc(int(interests.get(n.id, -1))) if interests.has(n.id) else null
 		if target != null and not (target.alive and can_court(n.id, target.id)):
@@ -759,7 +759,7 @@ func _villagers_court() -> void:
 			var pool := []
 			var pull := {}
 			for o: NPC in singles:
-				if o == n or o.partner >= 0 or not can_court(n.id, o.id):
+				if o == n or not Life.free_to_partner(w, o) or not can_court(n.id, o.id):
 					continue
 				var tt := peek(n.id, o.id)
 				var a := float(tt.attraction)

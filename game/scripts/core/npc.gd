@@ -68,6 +68,7 @@ var birth_family := ""       # the surname born with, kept when a child taken in
 var clan := ""               # "bandit": an orphan no household could take, a dependant of the bandit camp (FAM-07, OD-11); "" none
 var father := -1
 var partner := -1            # npc id, a player's person id, -1 none
+var past_partners: Array = [] # LIFE-04: previous marriage links retained when a widow(er) remarries
 var children: Array = []     # npc ids
 var adoptive: Array = []     # MP-PLAYER-FAMILY (save 23): the person ids of the parents who took this child in (both spouses of a player couple, Guardianship.player_adopt); mother and father stay as born
 var away := ""               # MIGRATE-18: the settlement this villager moved to (alive is false then; Migration); "" otherwise
@@ -129,6 +130,8 @@ func to_dict() -> Dictionary:
 		"skills": skills.duplicate(),
 		"report": report.duplicate(),
 	}
+	if not past_partners.is_empty():
+		d.past_partners = past_partners.duplicate()
 	if not pursuit.is_empty():
 		d.pursuit = pursuit.duplicate(true)  # A2: written only for a guard on a case
 	if not talked.is_empty():
@@ -186,6 +189,7 @@ static func from_dict(d: Dictionary) -> NPC:
 	for k in ["mother", "father", "partner"]:
 		n.set(k, int(d.get(k, -1)))
 	n.children = (d.get("children", []) as Array).map(func(c): return int(c))
+	n.past_partners = (d.get("past_partners", []) as Array).map(func(c): return int(c))
 	n.adoptive = (d.get("adoptive", []) as Array).map(func(c): return int(c))      # save 23; older saves: nobody adopted by a couple
 	n.birth_family = str(d.get("birth_family", ""))          # older saves: none changed
 	n.clan = str(d.get("clan", ""))                           # older saves: none

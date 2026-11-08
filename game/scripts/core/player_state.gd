@@ -9,6 +9,7 @@ var generation := 1
 var pid := 0                  # ID-01: this character's permanent person id (World.people); 0 until World gives one (an older save: on load)
 var away := false             # MP Batch A2 (MP-D1): a guest not connected: out of active play (not on the map, no needs, not a detail centre), every record kept
 var net_key := ""             # MP Batch A2: a guest's identity as the host knows it, the SHA-256 hash of its device key (never the key); "" for the host
+var past_partners: Array = [] # LIFE-04: preserved historical spouses after remarriage
 var party := ""               # MP Batch C: a guest's party reference ("player:<line>", World.player_ref), set by World when it joins `players` (not saved; "" = the host's "player"), so static helpers that only have the character (Contracts.ref_of) name the right player
 var rest_until := -1.0        # MP-D2: a rest in real time in a session ends at this game minute (-1: not resting); not saved (a loaded guest is away)
 var rest_since := -1.0
@@ -367,7 +368,7 @@ func to_dict() -> Dictionary:
 		"pos": [pos.x, pos.y], "inv": inv.to_dict(), "coins": coins, "hp": hp, "max_hp": max_hp,
 		"hunger": hunger, "stamina": stamina, "skills": skills.duplicate(), "weapon": weapon, "armor": armor,
 		"spells": spells.duplicate(), "home": home, "chest": chest.to_dict(),
-		"alive": alive, "deaths": deaths, "last_damage": last_damage, "death_cause": death_cause, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "appearance": appearance.duplicate(true), "heir_appearance": heir_appearance.duplicate(true), "born": born, "mother": mother, "father": father, "partner": partner, "children": children.duplicate(), "crimes": crimes.duplicate(true),
+		"alive": alive, "deaths": deaths, "last_damage": last_damage, "death_cause": death_cause, "tool": tool, "head": head, "amulet": amulet, "ring": ring, "sex": sex, "look": look, "appearance": appearance.duplicate(true), "heir_appearance": heir_appearance.duplicate(true), "born": born, "mother": mother, "father": father, "partner": partner, "children": children.duplicate(), "past_partners": past_partners.duplicate(), "crimes": crimes.duplicate(true),
 		"quests": quests.duplicate(true), "stolen": stolen.duplicate(true), "chest_stolen": chest_stolen.duplicate(true),
 		"pack_level": pack_level,
 	}.merged({"map_level": map_level} if map_level != 0 else {}).merged({"net_key": net_key} if net_key != "" else {}).merged({"away": true} if away else {}).merged({"line": line} if line > 0 else {}).merged(
@@ -393,6 +394,7 @@ static func from_dict(d: Dictionary) -> PlayerState:
 	p.map_level = int(d.get("map_level", 0))          # save 21 (guests); the host's level is read from "underground" by World
 	p.net_key = str(d.get("net_key", ""))             # MP A2 (save 21, optional): a guest's identity hash
 	p.away = bool(d.get("away", false))               # MP A2 (MP-D1): a guest out of play when saved
+	p.past_partners = (d.get("past_partners", []) as Array).map(func(c): return int(c))
 	p.line = int(d.get("line", 0))                    # MP B (MP-D4, optional): a guest heir's family line
 	Atlas.load_into(p, d)                             # REGION-NAV-01 (optional): the places and region this player knows
 	Landmarks.load_into(p, d)                         # B25R1-003 (optional): an older save has found none
