@@ -81,6 +81,7 @@
  "identity_test": 100,
  "intel_test": 13,
  "interdependency_test": 30,
+ "inv03_foreign_player_chests_test": 7,
  "inventory18_test": 88,
  "job_board_test": 28,
  "journey_s3_test": 19,
