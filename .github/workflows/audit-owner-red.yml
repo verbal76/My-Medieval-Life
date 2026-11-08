@@ -1,0 +1,45 @@
+name: Baseline red JUS-04 and REG-07 reproductions
+on:
+  push:
+    branches: [audit/red-owner-five-20261108]
+permissions:
+  contents: read
+jobs:
+  baseline-red:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      GODOT_VERSION: "4.7.2"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - run: echo "Baseline reproduction SHA $(git rev-parse HEAD)"
+      - uses: actions/cache@v4
+        id: godot
+        with:
+          path: ~/godot-bin
+          key: godot-4.7.2-linux-editor
+      - name: Install Godot
+        if: steps.godot.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/godot-bin
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -sSfL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip
+          mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" ~/godot-bin/godot
+      - name: Import
+        run: ~/godot-bin/godot --headless --path game --import
+      - name: Observe original failures (intentional RED)
+        run: |
+          set -o pipefail
+          status=0
+          ~/godot-bin/godot --headless --path game --script res://tests/jus04_witness_knowledge_test.gd 2>&1 | tee jus04-red.log || status=1
+          ~/godot-bin/godot --headless --path game --script res://tests/intel_test.gd 2>&1 | tee reg07-red.log || status=1
+          exit "$status"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: owner-five-baseline-red
+          path: "*-red.log"
+          if-no-files-found: ignore
