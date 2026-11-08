@@ -3722,6 +3722,10 @@ func kill(n: NPC, cause: String, by_ref := "") -> void:
 		return
 	n.alive = false
 	n.hp = 0.0
+	# JUS-01: a slain guard must leave the pursuit register immediately;
+	# a wanted case may remain open, but cannot have a dead pursuer.
+	if justice != null and not n.pursuit.is_empty():
+		justice.release(n, "guard_died")
 	n.plan.clear()
 	if not n.journey.is_empty():
 		Journeys.end(self, n, "died")      # REGION-NAV-01 S3: the journey ends with them; what they carried passes on below
