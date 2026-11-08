@@ -147,52 +147,166 @@ static func _pre_leave(w: World, ms: Array) -> void:
 			w.economy.repairs.on_leave(o)       # B25-LEAK2: a paid repair not yet done is refunded to them (or to its customers)
 
 
-## PROP-06 (owner, 2026-11-08): a whole departing household sells
-## outright-owned parcels to the manor, while leased premises are surrendered.
-## If the manor cannot pay for outright ownership, do not depart or confiscate.
+## PROP-06 (owner decisions 2026-11-08, docs/directives/2026-11-08_prop06_estate_tenancy_migration.md): when a whole household
+## leaves at its departure point it settles every property it holds, as ONE transaction:
+## - what it owns outright is sold to the manor at sale_value (the property's own valuation, each parcel once), every parcel of an
+##   estate together (its modules before its anchor, so Property.sell's rule that an anchor goes last is kept), the buildings
+##   standing; the treasury pays the household's head; a lease of the property to another household continues with the manor as
+##   landlord (rent already goes to the manor: Property.collect_rents); materials delivered to an unfinished site on its own ground
+##   are the seller's (into the household's pantry);
+## - what it leases is surrendered (Property._release: an unfinished site and its delivered materials stay with the manor, no
+##   compensation; rent owed is paid as far as the purse allows, as Property.end_lease does).
+## A preflight checks everything first (ownership, tenancy, estates, the manor's funds); if any check fails nothing is changed and
+## the household stays, free to try again. If a step fails anyway, every change is undone (records, treasury, purses, pantry,
+## granary, loot, stats). A household only part of which leaves settles nothing here (its property stays with those who stay).
+## Called where the household actually leaves (today the instant departure; REG-05's physical departure must call it at the start of
+## the walk, not when migration is merely considered).
+static var test_fail_at := -1          # tests only: make the n-th step of the next settlement fail (-1: never)
+
+
 static func _settle_departure_property(w: World, ms: Array) -> bool:
-	var departing := []
+	var plan := _departure_plan(w, ms)
+	if not bool(plan.ok):
+		return false
+	if plan.steps.is_empty():
+		return true
+	var snap := _snapshot(w, plan)
+	var n := 0
+	for st in plan.steps:
+		n += 1
+		var ok := n != test_fail_at and _do_step(w, st)
+		if not ok:
+			test_fail_at = -1
+			_restore(w, snap)
+			w.note("The %s household could not settle its property, so it stays for now." % str(w.households[int(st.h)].get("name", "")))
+			return false
+	test_fail_at = -1
+	return true
+
+
+## What the departure would do, checked in full before anything changes: {ok, steps: [{kind: "sell"|"surrender", unit, ref, h,
+## value}], total}. Modules come before their anchor; a sale's value is counted once per parcel.
+static func _departure_plan(w: World, ms: Array) -> Dictionary:
+	var steps := []
+	var total := 0
+	var seen := {}
 	for h in _households_of(ms):
 		var living: Array = w.brain._members(h)
-		if not living.is_empty() and living.all(func(n): return ms.has(n)):
-			departing.append(h)
-	var deals := []
-	var total := 0
-	for h in departing:
+		if living.is_empty() or not living.all(func(n): return ms.has(n)):
+			continue                                      # only part of the household leaves: nothing is settled
 		var ref := World.hh_ref(h)
+		var estates := {}                                 # anchor id -> [units of this estate held by ref]
 		for head in w.property.held_by(ref):
 			var u: Array = w.property.unit(head)
-			if u.is_empty():
+			if u.is_empty() or seen.has(str(u[0].id)):
 				continue
-			if w.owner_of(u[0]) == ref:
-				if w.property.estate_parcels(u[0]).size() > 1 and w.property.estate_id(u[0]) == str(u[0].id):
-					return false
-				for r in u:
-					if w.tenant_of(r) != "":
-						return false
-				total += w.property.sale_value(head)
-				deals.append([head, ref, true])
-			elif w.tenant_of(u[0]) == ref:
-				if w.property.estate_parcels(u[0]).size() > 1 and w.property.estate_id(u[0]) == str(u[0].id):
-					return false
-				deals.append([head, ref, false])
+			seen[str(u[0].id)] = true
+			var anchor: Dictionary = w.property.anchor_of(u[0])
+			var aid := str(anchor.get("id", u[0].id))
+			if not estates.has(aid):
+				estates[aid] = []
+			estates[aid].append(u)
+		for aid in estates:
+			var units: Array = estates[aid]
+			units.sort_custom(func(a, b): return int(str(a[0].id) == aid) < int(str(b[0].id) == aid))      # the anchor last
+			for u in units:
+				var head: Dictionary = u[0]
+				if w.owner_of(head) == ref:
+					var value: int = w.property.sale_value(head)
+					total += value
+					steps.append({"kind": "sell", "unit": u, "ref": ref, "h": h, "value": value})
+				elif w.tenant_of(head) == ref:
+					steps.append({"kind": "surrender", "unit": u, "ref": ref, "h": h, "value": 0})
 	if w.treasury < total:
+		return {"ok": false, "steps": [], "total": total, "why": "the manor cannot pay %d coins" % total}
+	for st in steps:
+		if st.kind == "sell" and w.party(str(st.ref)) == null:
+			return {"ok": false, "steps": [], "total": total, "why": "nobody of the household to be paid"}
+	return {"ok": true, "steps": steps, "total": total}
+
+
+static func _do_step(w: World, st: Dictionary) -> bool:
+	var u: Array = st.unit
+	var ref := str(st.ref)
+	if str(st.kind) == "sell":
+		if w.owner_of(u[0]) != ref:
+			return false
+		for r in u:
+			if w.property.is_parcel(r) and w.tenant_of(r) in ["", ref] and not (r.site as Dictionary).is_empty() \
+					and not bool(r.site.get("done", false)):
+				w.cancel_site(r, w.households[int(st.h)].pantry)          # delivered materials are the seller's (a tenant's site stays the tenant's)
+		var value := int(st.value)
+		if value > 0:
+			var to: NPC = w.party(ref)
+			if to == null or w.treasury < value:
+				return false
+			w.treasury -= value
+			to.coins += value
+			to.earned += value
+		for r in u:
+			if w.owner_of(r) == ref:
+				w.set_owner(r, World.MANOR)              # a tenant of another household keeps the lease, the manor its landlord
+		w.stat("gov_land_bought", float(value))
+		w.note("%s sold %s to the manor for %d coins before leaving." % [w.ref_name(ref, true), w.property.describe(u[0]), value])
+		return true
+	if w.tenant_of(u[0]) != ref:
 		return false
-	for deal in deals:
-		var head: Dictionary = deal[0]
-		var ref: String = deal[1]
-		if bool(deal[2]):
-			# Materials from an OWNED unfinished site belong to the seller.
-			for r in w.property.unit(head):
-				if w.property.is_parcel(r) and not (r.site as Dictionary).is_empty() and not bool(r.site.get("done", false)):
-					w.cancel_site(r, w.households[World.ref_id(ref)].pantry)
-			if w.property.sell(head, ref) != "":
-				return false
-		else:
-			# Property._release gives leased site materials to the manor.
-			if w.property.end_lease(head, ref) != "":
-				return false
+	var owed := mini(int(u[0].get("arrears", 0)), w.property.purse(ref))
+	if owed > 0 and not w.property._pay_manor(ref, owed):
+		return false
+	w.property._release(u, ref)                           # the manor keeps the ground, the buildings and a site's materials
+	w.note("%s gave up the lease of %s before leaving." % [w.ref_name(ref, true), w.property.describe(u[0])])
 	return true
+
+
+## Everything a settlement can change, for _restore.
+static func _snapshot(w: World, plan: Dictionary) -> Dictionary:
+	var recs := []
+	for st in plan.steps:
+		for r in st.unit:
+			recs.append([r, (r as Dictionary).duplicate(true)])
+	var people := []
+	for n: NPC in w.npcs:
+		people.append([n, n.coins, n.earned, n.spent])
+	var players := []
+	for pl: PlayerState in w.player_list():
+		players.append([pl, pl.coins])
+	var pantries := {}
+	for st in plan.steps:
+		pantries[int(st.h)] = (w.households[int(st.h)].pantry as Inventory).items.duplicate(true)
+	return {"recs": recs, "treasury": w.treasury, "people": people, "pantries": pantries,
+		"granary": w.granary.items.duplicate(true), "loot": w.loot.size(), "stats": w.stats.duplicate(true), "players": players,
+		"log": w.log_lines.duplicate()}
+
+
+static func _restore(w: World, snap: Dictionary) -> void:
+	for e in snap.recs:
+		var r: Dictionary = e[0]
+		var old: Dictionary = e[1]
+		if w.owner_of(r) != str(old.get("owner", World.MANOR)):
+			w.set_owner(r, str(old.get("owner", World.MANOR)))
+		if w.tenant_of(r) != str(old.get("tenant", "")):
+			w.set_tenant(r, str(old.get("tenant", "")), int(old.get("rent", 0)))
+		var had_site := r.has("site") and not (r.site as Dictionary).is_empty()
+		r.clear()
+		r.merge(old.duplicate(true), true)
+		var has_site := r.has("site") and not (r.site as Dictionary).is_empty()
+		if w.property.is_parcel(r) and had_site != has_site:
+			w.tile_changed.emit(w._frame_cell(r), "below", -1)      # a cancelled site stands again on the map
+	w.treasury = int(snap.treasury)
+	for e in snap.people:
+		e[0].coins = int(e[1])
+		e[0].earned = int(e[2])
+		e[0].spent = int(e[3])
+	for h in snap.pantries:
+		w.households[h].pantry.items = (snap.pantries[h] as Dictionary).duplicate(true)
+	w.granary.items = (snap.granary as Dictionary).duplicate(true)
+	if w.loot.size() > int(snap.loot):
+		w.loot.resize(int(snap.loot))
+	w.stats = (snap.stats as Dictionary).duplicate(true)
+	for e in snap.players:
+		e[0].coins = int(e[1])
+	w.log_lines = (snap.log as Array).duplicate()                 # the notes of steps that were undone go too
 
 
 ## Just before they pack (Build 24 review; owner 2026-10-30: a living household or person that leaves keeps what is theirs): every

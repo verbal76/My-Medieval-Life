@@ -167,6 +167,7 @@ jobs:
           res://tests/property_test.gd
           res://tests/prop04_guest_house_name_test.gd  # PROP-04 regression
           res://tests/prop06_migration_property_test.gd   # PROP-06: owner-approved gameplay regression
+          res://tests/prop06_estate_transaction_test.gd   # PROP-06 (owner 2026-11-08): estates, tenancy, atomic departure
           res://tests/business_test.gd
           res://tests/business_money_test.gd
           res://tests/till_ownership_test.gd
