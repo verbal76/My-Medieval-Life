@@ -523,7 +523,7 @@ static func brush_off(w: World, n: NPC) -> String:
 			return _pick(w, n, ["Can't catch me!", "Later, %s! I'm playing!" % you], 6)
 		"elder":
 			return _pick(w, n, ["Another time, %s." % you, "Not now, dear. I'm on my way."], 6)
-	if n.plan[0].k == "work":
+	if not n.plan.is_empty() and str(n.plan[0].get("k", "")) == "work":     # B25R2-BRUSHOFF: a villager between plans has none
 		return _pick(w, n, ["Can't talk, I'm %s!" % _doing_words(n), "Sorry, %s, can't stop now!" % you], 6)
 	return _pick(w, n, ["Sorry, can't stop now!", "I have to be somewhere, %s!" % you, "Can't talk right now!"], 6)
 
