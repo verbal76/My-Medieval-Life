@@ -76,9 +76,13 @@ func info(u: Dictionary) -> Dictionary:
 	var b: Dictionary = w.buildings[bid]
 	var ref := w.holder_of(b)
 	if World.is_player_ref(ref):
-		if bid == p.home:
-			return {"access": "own", "store": p.chest, "owner": null, "whose": "your", "family": true, "business": false}
-		return {"access": "own", "store": _stash(u.id), "owner": null, "whose": "your", "family": false, "business": false}
+		# INV-03: a different player's house is foreign, never free "own" storage.
+		var owner_player: PlayerState = w.player_for(ref)
+		var family_chest := owner_player != null and bid == owner_player.home
+		var store: Inventory = owner_player.chest if family_chest else _stash(u.id)
+		var mine := ref == w.acting_ref()
+		return {"access": "own" if mine else "foreign", "store": store, "owner": null,
+			"whose": "your" if mine else "another player's", "family": family_chest and mine, "business": false}
 	if str(b.type) == "tavern":
 		var k := w.tavern_keeper()
 		if k:
@@ -127,7 +131,10 @@ func _decor(_u: Dictionary) -> Dictionary:
 func _info_container(u: Dictionary) -> Dictionary:
 	var c: Dictionary = u.c
 	if w.buildings.has(c.at) and World.is_player_ref(w.holder_of(w.buildings[c.at])):
-		return {"access": "own", "store": _stash(u.id), "owner": null, "whose": "your", "family": false, "business": false}
+		# INV-03: containers inside another player's property are foreign too.
+		var mine := w.holder_of(w.buildings[c.at]) == w.acting_ref()
+		return {"access": "own" if mine else "foreign", "store": _stash(u.id), "owner": null,
+			"whose": "your" if mine else "another player's", "family": false, "business": false}
 	var store := w.container_store(c)
 	if store == null:
 		return _decor(u)
