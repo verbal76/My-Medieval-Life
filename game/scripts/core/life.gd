@@ -221,6 +221,10 @@ static func _set_role(w: World, n: NPC, r: String) -> void:
 	var who := "%s %s" % [n.name, n.family]
 	if n.role == "adult" and r == "elder":
 		w.brain._open_vacancy(n)
+		# LIFE-01: retirement must terminate paid employment and hand back
+		# employer-owned goods before the worker gives up their trade.
+		if w.employment != null and w.employment.is_employed(n):
+			w.employment.end(w.employment.record_of(n), "retired in old age")
 		if n.job != "":
 			w.brain._change_job(n, "", "retired in old age")
 		w.construction.on_death(n)
