@@ -137,6 +137,16 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 				bad.why = "That is not yours."
 	if bad.why == "" and CONTRACT_SIDE.has(path) and args.size() >= 1 and args[0] is Dictionary and not _contract_side_ok(w, p, path, args[0]):
 		bad.why = "That is not yours."
+	# PROP-01: a guest may cancel only its own site and may only receive
+	# that site's returned materials into its own pack. Other host/NPC
+	# cancellation paths are not guest verbs and keep their own rules.
+	if bad.why == "" and path == "cancel_site":
+		if args.size() != 2 or not (args[0] is Dictionary) or not (args[1] is Inventory):
+			bad.why = "That is not your building site."
+		else:
+			var site: Dictionary = args[0].get("site", {})
+			if args[1] != p.inv or str(site.get("owner", "")) != w.player_ref(p):
+				bad.why = "That is not your building site."
 	if bad.why != "":
 		return _answer(w, p, false, str(bad.why))
 	if path == "player_loot" and args.size() == 1 and args[0] is Dictionary:
