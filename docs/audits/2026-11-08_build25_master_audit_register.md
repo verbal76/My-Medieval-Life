@@ -342,14 +342,18 @@ Merged into `wip/b25r2-rev2` at `f0a854c` (fast-forward from `fe7d8f8`), verifie
 
 | Item | PR | Status |
 |---|---|---|
-| MML-MP-04 | #5 | INTEGRATED `f0a854c` |
-| MML-PROP-01 | #9 | INTEGRATED `f0a854c` |
-| MML-PROP-05, PROP-02, PROP-04 | #10-#12 | INTEGRATED `f0a854c` |
-| MML-JUS-03, JUS-01 | #13 and the JUS-03 PR | INTEGRATED `f0a854c` |
-| MML-LIFE-01, SAV-01 | #6-#8 | INTEGRATED `f0a854c` |
-| MML-INV-03 | #14 | INTEGRATED `f0a854c` |
-| MML-MP-01 | #15 | INTEGRATED `f0a854c` |
-| B25R2-BRUSHOFF | (integration fix `67c5a69`) | FIXED `f0a854c` |
+| MML-MP-04 | #5 | INTEGRATED `f0a854c` (PR merged 23:37 UTC) |
+| MML-PROP-01 | #6 | INTEGRATED `f0a854c` (PR merged 23:37 UTC) |
+| MML-PROP-05 | #7 | INTEGRATED `f0a854c` (PR merged 23:37 UTC) |
+| MML-PROP-02 | #8 | INTEGRATED `f0a854c` (PR merged 23:37 UTC) |
+| MML-JUS-03 | #9 | INTEGRATED `f0a854c` (PR merged 23:37 UTC) |
+| MML-LIFE-01 | #10 | INTEGRATED `f0a854c` (PR merged 23:37 UTC) |
+| MML-SAV-01 | #11 | INTEGRATED `f0a854c` (PR merged 23:37 UTC) |
+| MML-PROP-04 | #12 | INTEGRATED `f0a854c` (PR merged 23:37 UTC) |
+| MML-JUS-01 | #13 | INTEGRATED `f0a854c` (PR merged 23:37 UTC) |
+| MML-INV-03 | #14 | INTEGRATED `f0a854c` (PR merged 23:37 UTC) |
+| MML-MP-01 | #15 | INTEGRATED `f0a854c` (PR merged 23:37 UTC) |
+| B25R2-BRUSHOFF | integration fix `67c5a69` | FIXED `f0a854c` |
 
 Evidence: strict Tests 42519022430 (passed); 365-day campaign 42515726815: seed 1 0 CRITICAL / 48 HIGH, seed 2 0 / 99, 0 confirmed
 defects (same as the 1f2ff4f reference); gate 42509523836: 32 baseline-only findings, the development branch's own. The accepted
