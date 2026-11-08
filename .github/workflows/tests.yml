@@ -164,6 +164,7 @@ jobs:
           res://tests/skills_test.gd
           res://tests/chests_test.gd
           res://tests/property_test.gd
+          res://tests/prop04_guest_house_name_test.gd  # PROP-04 regression
           res://tests/business_test.gd
           res://tests/business_money_test.gd
           res://tests/till_ownership_test.gd
