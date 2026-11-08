@@ -1,5 +1,7 @@
 name: Focused REG-07 Godot regression
 on:
+  push:
+    branches: [audit/reg07-one-year-market-intel-20261108]
   pull_request:
     paths:
       - "game/**"
