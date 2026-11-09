@@ -45,6 +45,12 @@ func _buttons(node: Node, out: Array) -> Array:
 	return out
 
 
+## What the villager in the open talk window says.
+func _speech() -> String:
+	var l: Label = main.ui.panel_body.find_child("Speech", true, false)
+	return l.text if l else ""
+
+
 func _press(text: String) -> bool:
 	for b: Button in _buttons(main.ui.panel_body, []):
 		if b.text.begins_with(text) and not b.disabled:
@@ -285,12 +291,53 @@ func _run() -> void:
 		main._tap(main.get_canvas_transform() * ((walker.pos - Vector2(0, 0.4)) * main.T))
 		check(main.talk_to == walker, "tapping a villager sets them as the one to talk to")
 		var steps_t := 0
-		while not ui.is_open("talk") and steps_t < 600:
+		while main.talk_to != null and steps_t < 600:
 			main._player_step(0.05)
 			w.update(0.05)
 			steps_t += 1
-		check(ui.is_open("talk"), "followed %s and the talk opened (%.1f s)" % [walker.name, steps_t * 0.05])
+		# caught up with them: someone still walking somewhere calls out a line and carries on;
+		# someone who has stopped talks
+		if main.bubbles.has(walker.id):
+			check(not ui.is_open("talk") and main.bubbles[walker.id].label.text != "", "followed %s, who is busy: \"%s\" in a bubble, no talk window (%.1f s)" % [walker.name, main.bubbles[walker.id].label.text, steps_t * 0.05])
+		else:
+			check(ui.is_open("talk"), "followed %s and the talk opened (%.1f s)" % [walker.name, steps_t * 0.05])
 		ui.hide_all()
+
+	# a busy villager (walking somewhere or at work) calls out in a bubble; a stranger's line
+	# differs from the line once they have met the player
+	var busy_one: NPC = null
+	for i in 400:
+		for n: NPC in w.npcs:
+			if n.alive and not n.hidden and n.role == "adult" and Dialogue.busy(n) and n.target == -1 and not Dialogue.met(w, n) and not Dialogue.attacked(w, n) and Dialogue.theft_seen(w, n) == "":
+				busy_one = n
+				break
+		if busy_one:
+			break
+		w.update(0.1)
+	check(busy_one != null, "a busy villager to speak to")
+	if busy_one:
+		ui.hide_all()
+		var stranger_line := Dialogue.brush_off(w, busy_one)
+		main.approach(busy_one)
+		check(not ui.is_open("talk") and main.bubbles.has(busy_one.id), "%s is busy (%s): a bubble, and the talk window stays shut" % [busy_one.name, busy_one.doing])
+		check(main.bubbles[busy_one.id].label.text == stranger_line, "a stranger gets: \"%s\"" % stranger_line)
+		Dialogue.meet(w, busy_one)
+		var friend_line := Dialogue.brush_off(w, busy_one)
+		check(friend_line != stranger_line and Dialogue.met(w, busy_one), "once met, the brush-off is friendlier: \"%s\"" % friend_line)
+		main.bubbles[busy_one.id].left = 0.0
+		main._sync_bubbles()
+		check(not main.bubbles.has(busy_one.id), "the bubble goes after a few seconds")
+	var idle_one: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and not n.hidden and n.role != "bandit" and not Dialogue.busy(n):
+			idle_one = n
+			break
+	if idle_one:
+		main.approach(idle_one)
+		check(ui.is_open("talk") and not main.bubbles.has(idle_one.id), "%s is not busy (%s): the conversation opens" % [idle_one.name, idle_one.doing])
+		ui.hide_all()
+	else:
+		check(false, "a villager who is not busy")
 
 	# 18. talk to a villager
 	var v: NPC = null
@@ -306,6 +353,22 @@ func _run() -> void:
 	else:
 		ui.show_talk(v)
 	check(ui.is_open("talk"), "talked to %s %s" % [v.name, v.family])
+	# the talk is a conversation: what they say, in quotes, not the simulation's numbers
+	var said := _speech()
+	check(said.length() > 4 and not said.contains("/100") and not said.contains("Hunger") and not said.contains("coins"), "%s says: %s" % [v.name, said])
+	check(Dialogue.met(w, v), "talking records that they have met the player")
+	check(_press("What do you do?") and ui.is_open("talk") and _speech() != said, "asking what they do changes what they say: %s" % _speech())
+	var before := _speech()
+	check(_press("How are things at home?") and _speech() != before, "asking about home: %s" % _speech())
+	check(_press("Any news?") and _speech() != "", "asking for news: %s" % _speech())
+	check(_press("Goodbye") and not ui.is_open("talk"), "Goodbye closes the talk")
+	# someone who saw the player steal says so
+	p.pos = v.pos + Vector2(-0.8, 0)
+	w.witness("theft", "3 wheat from %s" % w.fields[0].id, null)
+	ui.show_talk(v)
+	check(_speech().contains("saw you take 3 wheat"), "a witness to a theft mentions it: %s" % _speech())
+	var cold := Dialogue.brush_off(w, v)
+	check(cold.contains("Thief") or cold.contains("saw what you did") or cold.contains("Stay away"), "and, busy, answers coldly: \"%s\"" % cold)
 	ui.hide_all()
 
 	# the journal: the village record on book pages, opening at the latest, with page turning
