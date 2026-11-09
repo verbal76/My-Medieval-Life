@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 848 (455 of them still open) |
-| **Open entries now** (rules excluded) | | **613** |
+| Entries added since | | 851 (458 of them still open) |
+| **Open entries now** (rules excluded) | | **616** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,11 +114,11 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (848)
+## Added since the baseline (851)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
-| AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | rule | NOT APPLICABLE / NOT APPLICABLE / COMPLETE | 16 |
+| AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no nested agents, only the lead runs long simulations; an agent summary in progress reports | rule | NOT APPLICABLE / NOT APPLICABLE / CLOSED | 16 |
 | ANDROID-RELEASE-SIGNING | Android builds signed with the permanent release identity from the four ANDROID_RELEASE_* secrets, no fallback | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 21 |
 | ARM-01 | Armorer availability: verify the armorer exists, keeps a schedule, a place, stock, a path, and trades with the player (the owner's playtest: never available) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | ARMOR-01 | Armour is acquired in play, physical, and visible when worn | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 18 |
@@ -251,6 +251,7 @@ None.
 | B25R1-Q7 | Does the live-near-the-player rule (B25R1-Q6) also apply to the starting village's people, or only to the rest of the region? | decision | APPROVED | 20 |
 | B25R1-Q8 | Town art gap (Higham, Wulstead, churches, chalk figure not store-quality; owned packs lack a stone market cross, white battlements, a fountain with water): owned art with a better layout, a pack the owner buys, or both? | decision | APPROVED | 20 |
 | B25R1-Q9 | Do hamlets count as civic places (civic_records test premise), and with what institutions? | decision | APPROVED | 20 |
+| B25R1-REL-PUBLIC | B25R1 release published as a PUBLIC GitHub Release (build-34), not a private draft | approved | NOT STARTED / NOT TESTED / OPEN | 25 |
 | B25R2-BRUSHOFF | Dialogue.brush_off reads n.plan[0] without checking the plan is empty (dialogue.gd:526): a SCRIPT ERROR when a villager between plans brushes the player off. Found by start_test on fe7d8f8 (523/0, 1 script error; the file is untouched by the playtest fixes, a latent defect). Fix in the next cycle? | decision | APPROVED | 20+ |
 | B25R2-CAVE | A guest who followed the host into a cave was left in the black outside it, unable to move (the guest's copy on the cave's level at a place outside it). Fix now or later? | decision | APPROVED | 25 |
 | B25R2-DRAFT-01 | May Play Test Build One be published, and how? | decision | PROVISIONAL | 25 |
@@ -259,7 +260,7 @@ None.
 | B25R2-PKG-01 | May the existing Windows package built from candidate 1f2ff4f (release run 42297641550, artifact pkg-full-windows 13542782040) be used for the owner's personal testing while validation continues? | decision | APPROVED | 25 |
 | B25R2-Q1 | Which source for Play Test Build One? | decision | APPROVED | 25 |
 | B25R2-Q2 | How far should the My Folklore name change go in this release? | decision | APPROVED | 25 |
-| B25R2-Q3 | Public release or private draft for Play Test Build One? | decision | APPROVED | 25 |
+| B25R2-Q3 | Public release or private draft for Play Test Build One? | decision | SUPERSEDED | 25 |
 | B25R2-Q4 | How should the Claude usage budget be spent on the B25R2 repairs? | decision | APPROVED | 25 |
 | B25R2-STUTTER | Walking south of the starter village to the next settlement froze the game for about a second every other step: fix? | decision | APPROVED | 20+ |
 | B25R2-VER-01 | How should the next Play Test Build One package identify itself? | decision | APPROVED | 25 |
@@ -273,6 +274,7 @@ None.
 | BARBER-Q | Barber: staffing, place, price and what counts as a haircut | decision | APPROVED | owner decision |
 | BRANCH-POL-01 | Branch and worktree policy: one code integration branch (wip/expansion20), short-lived task branches, prompt audited merges, no unrelated ancestry, nothing deleted with unmerged work, every integration SHA recorded | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
 | BRANCH-POL-Q1 | Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion20 (code), with notices on the code line's copies (recommended); or authorize bringing the records into wip/expansion20 as one reviewed change (files only, not the old ancestry)? | decision | OPEN | unassigned |
+| BRANCH-POL-Q2 | Amend BRANCH-POL-01's rule text (CLAUDE.md section 5a, 'One integration branch for code: wip/expansion20') to name the current development line wip/b25r2-rev2, or keep it as historical text with the dated note? | decision | OPEN | owner decision |
 | BUILD-3PLATFORM | Every build produces Android, Windows and Linux together, stably signed | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | multiplayer |
 | BUILD-SEQ-25-27 | Build sequence (owner, 2026-10-31): Build 25 = Expansion 20 validation and freeze (wip/expansion20 becomes the frozen baseline only after validation passes and the owner approves); Build 26 = repository recovery and consolidation on a separate branch from the exact frozen Build 25 SHA, validated and frozen after owner approval; Build 27 = Expansion 21 begins only after Build 26 is frozen and the owner explicitly authorizes it. Build numbers are not expansion numbers. | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | CAP-TOOLHOLDER | Design review: a villager holding a tool only for sale counts as a capability practitioner | idea | NOT STARTED / NOT TESTED / OPEN | 18 |
@@ -311,6 +313,7 @@ None.
 | DCR-01 | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control | rule | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | DEMO-01 | Replayable 120-Minute Demo and Steam Integration (with the six-package release pipeline) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | DEV-GOV-01 | Development governance: agents make technical decisions within approved requirements; the owner approves scope and sequence (no skipping, moving, merging, splitting, renaming, reordering or deferring work packages, no stage marked complete with criteria outstanding, dependencies raised before the sequence changes) | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
+| DEV-LINE-B25 | Current code development line is wip/b25r2-rev2 (Build 25 Revision 2) | approved | NOT STARTED / NOT TESTED / OPEN | 25 |
 | DOC-AUTH-01 | Document authority replacement: once the owner explicitly approves and delivers the final revised expansion specification set, it is the sole authoritative current specification; older plans, roadmaps, packets, instructions and registers become historical evidence only; omitted features are not reintroduced (ask if materially ambiguous); code differences are reported, not silently changed; later explicit owner decisions supersede and are folded into the set; no third interpretation. Until then: latest explicit owner decisions and the validated baseline. The switch happens only on final approval, not on a draft. | approved | NOT STARTED / NOT TESTED / OPEN | 20 |
 | DOC-CONT-01 | Permanent development documentation and AI continuity: one current-state entry point, a chronological development changelog, SHA-bound test evidence with status levels, worker recovery records, an 11-step recovery procedure usable by any assistant | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | DOC-RECON-01 | Documentation reconciliation and owner-decision protection: every expansion (17-27), multiplayer and standalone approved system has a current status document; register statuses corrected from code and test evidence; precedence hierarchy (latest explicit owner decision first); historical documents labelled; missing original sources listed; one authoritative entry point; on the isolated branch wip/requirements-control, not merged into the gameplay baseline without the owner | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20 |
@@ -483,7 +486,7 @@ None.
 | GP-WHEAT-PICKED | Harvested wheat shows as picked, cell by cell | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-WIKI-LAYOUT | Encyclopedia laid out like a classic wiki page, on parchment | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-WIKI-RECIPE-TOOLS | Encyclopedia recipes name every tool the work needs (for example a mallet and a chisel, and which chisels count) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
-| HAG-AUTH-01 | Permanent decision authority and supersession safeguard (lifecycle status, two-way supersession links, current-authority view, automated checks, retroactive audit) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
+| HAG-AUTH-01 | Permanent decision authority and supersession safeguard (lifecycle status, two-way supersession links, current-authority view, automated checks, retroactive audit) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | unassigned |
 | HAG-FORENSICS-01 | Permanent development forensics, GitHub accountability and historical recovery (Nov 1-9 recovery, coverage register, recovery entry points, independent recovery test, continuous checkpoints) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | HAG-MEM-02 | Permanent GitHub memory, decision history (with rationale) and CI reporting: six memory components, a decision-rationale standard, known-issues record, recovery entry point, Markdown+JSON CI reports even on failure, durable conclusions in the repository | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | HEALTH-01 | Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
@@ -912,7 +915,7 @@ None.
 | X19-SWITCHES-D1 | Enable in normal play the integrated-but-off Build 19 recovery features: R5 aspirations (judgment.json aspiration.enabled, decision.integration.job_choice; WDR-011-C) and the R2 judgment-weighted witness report hook (decision.integration.report; SJD-F)? | decision | OPEN | 20+ |
 | X19-TRAIT-DIST | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential | decision | APPROVED | 19 |
 | X19-TRUST-RATES | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at 0); a fair deal +4 trust, a cheat or false accusation -20, a rumour borne out +4 for the teller, one shown false -15; trust does not fade; a friendly guard halves a theft fine (at least 1 coin). Keep, or change any? | decision | APPROVED | 19 |
-| X20-ACTIVATION-AUTHORITY | Does X20-RESUME's automatic Living Economy activation on objective readiness (2026-10-30) still stand after the 2026-10-31 instructions to keep the economy disabled by default and the Build 25 freeze, or does activation now need explicit owner approval? | decision | APPROVED | unassigned |
+| X20-ACTIVATION-AUTHORITY | Does X20-RESUME's automatic Living Economy activation on objective readiness (2026-10-30) still stand after the 2026-10-31 instructions to keep the economy disabled by default and the Build 25 freeze, or does activation now need explicit owner approval? | decision | SUPERSEDED | unassigned |
 | X20-B24-F1 | Review finding 1: a settlement business (its trader) kept operating with nobody working it | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-B24-F2 | Review finding 2: TILL-D1 not applied when a household's last members leave (the storefront till must go to the leavers' own funds) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-B24-F3 | Review finding 3: a leaving trader's stall takings not returned to that trader | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
@@ -948,7 +951,7 @@ None.
 | X20-MIGRATE | Free, individual migration from off-map settlements (REG-X20-D1): remove the sole-worker and last-household retention rules; departures decided per person under the approved framework; business state handled by established rules | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-MP-ECON-INTEGRITY | When multiplayer and the economy systems are integrated, verify that disconnects, retries, duplicate requests and host recovery cannot duplicate or lose currency, goods or transactions | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | X20-OPEN-ITEMS | Expansion 20 consolidated open-items scope: outstanding gameplay polish, Android usability, interaction, visual and carried-forward Build 19 / Build 21 / Build 22 mini-build items, planned alongside the Living Economy | approved | NOT APPLICABLE / NOT APPLICABLE / OPEN | 20 |
-| X20-REMAINING-PLACEMENT | Where does the remaining Expansion 20 scope go relative to the Build 25 freeze (LE-07, EMP-PERM-01, LE-05 remainder, economy activation, SJD-H review): finished before the freeze, in Build 26, or carried past it? | decision | APPROVED | unassigned |
+| X20-REMAINING-PLACEMENT | Where does the remaining Expansion 20 scope go relative to the Build 25 freeze (LE-07, EMP-PERM-01, LE-05 remainder, economy activation, SJD-H review): finished before the freeze, in Build 26, or carried past it? | decision | SUPERSEDED | unassigned |
 | X20-RESUME | Resume Medieval development (owner 2026-10-30): three parallel workstreams (Living Economy LE-03..LE-07, settlement food trade, multiplayer Batch D incl. internet play), bounded autonomy, Living Economy auto-activation on objective readiness, private draft builds only | approved | PARTIALLY IMPLEMENTED / TARGETED TESTS PASSED / OPEN | 20 |
 | X20-SCOPE | Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forward into Expansion 20 (LE-02..LE-05)? | decision | APPROVED | 20 |
 | X20-SERVICES-SCOPE | Does X20-SCOPE's 'negotiated wages and service contracts behind their switches (OD-LE-03/D02)' include the approved service-contract records CON-03..CON-08 (CON02-S-1..6 answers), or do they stay unscheduled? | decision | APPROVED | unassigned |

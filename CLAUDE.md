@@ -42,7 +42,7 @@ recovery is `docs/handoffs/CURRENT_SESSION_RECOVERY.md`. Record every milestone 
 
 **After a context compaction or in a fresh session** (owner directive 2026-10-20, `docs/directives/2026-10-20_compaction_readiness.md`):
 - Do steps 1-8 before any further decision.
-- Build authority is the live requirements register, generated STATUS/QUEUES views and most recent explicit owner directives. Build 24 is the latest private test build; Build 25 (consolidation) is in development. WDR-022 remains in force. Recovery: `docs/handoffs/CURRENT_SESSION_RECOVERY.md`; checkpoint around 70–75% context.
+- Build authority is the live requirements register, generated STATUS/QUEUES views and most recent explicit owner directives. Build 24 is the latest private test build; Build 25 (consolidation) is in development. *(Corrected 2026-11-09, HAG-AUTH-01: the latest published build is `build-34`, B25R1, public, 2026-11-06, `a9e9f6e` (B25R1-REL-PUBLIC); Build 25 Revision 2 (Play Test Build One) is in development on `wip/b25r2-rev2`; see the state file pointer.)* WDR-022 remains in force. Recovery: `docs/handoffs/CURRENT_SESSION_RECOVERY.md`; checkpoint around 70–75% context.
 - What a conversation summary lacks was not thereby unapproved: the register, the decision log and `docs/directives/` are the record.
 - Do not repeat completed work, and never restart a simulation or test before checking whether it is still running (the state file's workers and processes: GitHub Actions runs, local processes).
 - Compaction is not a reason to stop: continue the next approved task.
@@ -96,7 +96,7 @@ Status (keep current):
 | Engine | Established Godot 4.7 implementation; prototype engine proposals are historical. |
 | Platforms | Android APK first, then PC (Windows, Linux), as the owner directed; touch, gamepad, and keyboard and mouse |
 | Gameplay code | Established living-world simulation, economy, family, Judgment and multiplayer; active requirements and branch evidence control status. |
-| Builds | Build 24 (Expansion 20 checkpoint, `4611d86`, run 40636966840, 2026-10-28) is the latest private three-platform draft: Build 23's content plus till ownership (TILL-D1), free migration, visible swords, flight-recorder diagnostics and the LE-02 market behind the off switch. Not device-checked. Development resumed 2026-10-30 (X20-RESUME): Living Economy LE-03+, settlement food trade, multiplayer Batch D. Builds 22 and 23 are frozen. |
+| Builds | Build 24 (Expansion 20 checkpoint, `4611d86`, run 40636966840, 2026-10-28) is the latest private three-platform draft: Build 23's content plus till ownership (TILL-D1), free migration, visible swords, flight-recorder diagnostics and the LE-02 market behind the off switch. Not device-checked. Development resumed 2026-10-30 (X20-RESUME): Living Economy LE-03+, settlement food trade, multiplayer Batch D. Builds 22 and 23 are frozen. *(Superseded 2026-11-09, HAG-AUTH-01: the latest published build is `build-34` (B25R1, public, 2026-11-06, `a9e9f6e`); current work is Build 25 Revision 2 on `wip/b25r2-rev2`. The text below is the 2026-10-28 position.)* |
 
 ## 2. Repository layout
 

@@ -16,7 +16,7 @@
    {
     "file": "CLAUDE.md",
     "contains": "One integration branch for code: `wip/expansion20`",
-    "decision": "BRANCH-POL-Q1",
+    "decision": "BRANCH-POL-Q2",
     "why": "BRANCH-POL-01's rule text; changing it is the owner's decision (a dated note beside it names wip/b25r2-rev2)"
    }
   ]
@@ -132,7 +132,7 @@
    "next_action": "",
    "priority": "",
    "workstream": "",
-   "superseded_by": null,
+   "superseded_by": "MML-CONSERVE-01",
    "notes": "Owner master directive 2026-10-21 section 3 authorizes up to four implementation workers for the Build 16 push (each in its own worktree and branch, lead integrates; no nested agents)",
    "history": [
     {
@@ -159,6 +159,11 @@
      "date": "2026-10-23",
      "change": "schema v2: COMPLETE AND VERIFIED -> approval OWNER APPROVED; implementation NOT APPLICABLE; verification NOT APPLICABLE; release NOT APPLICABLE; COMPLETE",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "approval_status: OWNER APPROVED -> SUPERSEDED; completion: COMPLETE -> CLOSED; superseded_by: None -> MML-CONSERVE-01",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: docs/directives/2026-11-02_credit_conservation_controlled_development.md: 'This directive supersedes previous instructions permitting multiple simultaneous MML workers.' Which worker limit governs now (MML-CONSERVE-01 vs B25-OVN-0211 vs VAL-AGENT-01) is raised to the owner, not settled here"
     }
    ],
    "target_build": "16",
@@ -171,13 +176,13 @@
     "Build 18 wip/build18"
    ],
    "migrated_from_status": "COMPLETE AND VERIFIED",
-   "approval_status": "OWNER APPROVED",
+   "approval_status": "SUPERSEDED",
    "implementation_status": "NOT APPLICABLE",
    "verification_status": "NOT APPLICABLE",
    "legacy_evidence": "v1 COMPLETE AND VERIFIED with its recorded evidence (implementation or commits)",
    "release_status": "NOT APPLICABLE",
-   "completion": "COMPLETE",
-   "lifecycle": "ACTIVE"
+   "completion": "CLOSED",
+   "lifecycle": "SUPERSEDED"
   },
   {
    "id": "ANDROID-RELEASE-SIGNING",
@@ -6864,6 +6869,11 @@
      "date": "2026-11-05",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; commits + 4b51c92; integrated_in + B25R1 wip/b25r1 (head a995397)",
      "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md: IN DEVELOPMENT was stale; farming Phase 2 merged 4b51c92 (ancestor of a995397); closure process continues under B25-FINISH-01"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: freeze part overtaken by B25-SCOPE-REGION (which supersedes B25-CLOSE-02); closure continues under B25-FINISH-01"
     }
    ],
    "branch": "wip/b25-farm-phase2",
@@ -7320,6 +7330,11 @@
      "date": "2026-11-05",
      "change": "note",
      "why": "owner answered Q2.2 and Q2.3 (2026-11-05): CON-02-KINDS is not Build 25 scope (B25-NINE-D2 covered CON-03..CON-08; it stays approved and unplaced); B25-FINISH-01 closes together with B25R1 on the R1 final commit"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: for B25R1 the private-draft clause was overridden by docs/directives/2026-11-05_b25r1_release_visibility_correction.md ('The owner requires a PUBLIC GitHub Release, not a private draft'); build-34 was published publicly 2026-11-06"
     }
    ],
    "branch": "wip/region-nav",
@@ -7352,9 +7367,17 @@
      "date": "2026-11-01",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "Owner 2026-11-01 (docs/directives/2026-11-01_nine_owner_decisions_consolidated.md), approved for Build 25 implementation"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "supersedes + X20-ACTIVATION-AUTHORITY",
+     "why": "supersession made two-way: X20-ACTIVATION-AUTHORITY superseded by B25-LE-ACTIVATE-D1"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "supersedes": [
+    "X20-ACTIVATION-AUTHORITY"
+   ]
   },
   {
    "id": "B25-NINE",
@@ -7740,6 +7763,11 @@
      "date": "2026-11-05",
      "change": "implementation_status: NOT STARTED -> INTEGRATED; commits + 3c7e45b; commits + d6ab686; integrated_in + B25R1 wip/b25r1 (head a995397)",
      "why": "status correction per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md (Option 1 item 6): NOT STARTED was stale; Option B 3c7e45b and the funnel investigation d6ab686 are merged (ancestors of a995397); verification not recorded (no tests named for the directive itself)"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: lifted the one-worker limit (MML-CONSERVE-01; DOC-CONT-01 s.14) with 'several independent workstreams' for that session (docs/decisions/B25-OVN-0211.md); current limit raised to the owner"
     }
    ],
    "commits": [
@@ -7816,9 +7844,17 @@
      "date": "2026-11-01",
      "change": "owner_answer",
      "why": "owner's words recorded (docs/directives/2026-11-01_build25_scope_clarification.md)"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "supersedes + X20-REMAINING-PLACEMENT",
+     "why": "supersession made two-way: X20-REMAINING-PLACEMENT superseded by B25-SCOPE-D1"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "supersedes": [
+    "X20-REMAINING-PLACEMENT"
+   ]
   },
   {
    "id": "B25-SCOPE-REGION",
@@ -9521,6 +9557,35 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25R1-REL-PUBLIC",
+   "kind": "approved",
+   "title": "B25R1 release published as a PUBLIC GitHub Release (build-34), not a private draft",
+   "description": "B25R1 release published as a PUBLIC GitHub Release (build-34), not a private draft",
+   "source": "docs/directives/2026-11-05_b25r1_release_visibility_correction.md; docs/directives/2026-11-05_b25r1_dining_room_release.md; docs/directives/2026-11-05_b25r1_family_playtest_now.md",
+   "owner_wording": "The owner requires a PUBLIC GitHub Release, not a private draft.",
+   "approval": "owner, 2026-11-05",
+   "acceptance": [
+    "build-34 published publicly (a9e9f6e, 2026-11-06)"
+   ],
+   "target_build": "25",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-05",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-05_b25r1_release_visibility_correction.md; docs/directives/2026-11-05_b25r1_dining_room_release.md; docs/directives/2026-11-05_b25r1_family_playtest_now.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25R2-BRUSHOFF",
    "kind": "decision",
    "title": "Dialogue.brush_off reads n.plan[0] without checking the plan is empty (dialogue.gd:526): a SCRIPT ERROR when a villager between plans brushes the player off. Found by start_test on fe7d8f8 (523/0, 1 script error; the file is untouched by the playtest fixes, a latent defect). Fix in the next cycle?",
@@ -9626,10 +9691,18 @@
      "date": "2026-11-06",
      "change": "disposition: OPEN -> PROVISIONAL; owner_answer; reasoning",
      "why": "owner decision 2026-11-06 evening"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "supersedes + B25R2-Q3",
+     "why": "supersession made two-way: B25R2-Q3 superseded by B25R2-DRAFT-01"
     }
    ],
    "reasoning": "Conditional authorization: release.yml publishes only when SIM-GATE-01 passes; the gate is red only on the generation-blind baseline (df67e8e), whose replacement needs the owner (TEST-AUDIT-Q2).",
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "supersedes": [
+    "B25R2-Q3"
+   ]
   },
   {
    "id": "B25R2-HOST4",
@@ -9804,7 +9877,7 @@
    "source": "docs/directives/2026-11-06_my_folklore_pc_playtest_repair.md",
    "owner_wording": null,
    "owner_answer": "Option 1: a normal GitHub release like build-34; one Windows PC package only; no storefront",
-   "disposition": "APPROVED",
+   "disposition": "SUPERSEDED",
    "blocks_implementation": false,
    "target_build": "25",
    "related": [],
@@ -9820,9 +9893,15 @@
      "date": "2026-11-06",
      "change": "disposition: OPEN -> APPROVED; owner_answer",
      "why": "owner answered 2026-11-06"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "disposition: APPROVED -> SUPERSEDED; superseded_by: None -> B25R2-DRAFT-01",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: same question (Play Test Build One visibility) answered again the same evening: DRAFT-01 'private GitHub draft release only ... Not authorized: a public GitHub release' replaces Q3's 'a normal GitHub release like build-34'. Q3's 'one Windows PC package only; no storefront' is not contradicted and carries over"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "SUPERSEDED",
+   "superseded_by": "B25R2-DRAFT-01"
   },
   {
    "id": "B25R2-Q4",
@@ -13768,6 +13847,11 @@
      "date": "2026-11-02",
      "change": "implementation_status: NOT STARTED -> INTEGRATED; commits + d73bd0a",
      "why": "applied: CLAUDE.md section 5a and tools/branch_audit.py on wip/expansion20 d73bd0a (Python suite 178 OK); authoritative CLAUDE.md branch names corrected; decision record docs/decisions/BRANCH-POL-01.md; workers aligned"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: partly narrowed: the owner's 2026-11-08 directives name wip/b25r2-rev2 as the development branch (DEV-LINE-B25); the one-line principle stands; its rule text still names wip/expansion20 pending BRANCH-POL-Q2"
     }
    ],
    "commits": [
@@ -13794,6 +13878,29 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/decisions/BRANCH-POL-01.md"
+    }
+   ],
+   "lifecycle": "UNDER REVIEW"
+  },
+  {
+   "id": "BRANCH-POL-Q2",
+   "kind": "decision",
+   "title": "Amend BRANCH-POL-01's rule text (CLAUDE.md section 5a, 'One integration branch for code: wip/expansion20') to name the current development line wip/b25r2-rev2, or keep it as historical text with the dated note?",
+   "description": "Amend BRANCH-POL-01's rule text (CLAUDE.md section 5a, 'One integration branch for code: wip/expansion20') to name the current development line wip/b25r2-rev2, or keep it as historical text with the dated note?",
+   "source": "docs/directives/2026-11-09_decision_authority_supersession_safeguard.md; HAG-AUTH-01 retroactive audit",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_decision_authority_supersession_safeguard.md; HAG-AUTH-01 retroactive audit"
     }
    ],
    "lifecycle": "UNDER REVIEW"
@@ -13853,6 +13960,11 @@
      "date": "2026-10-30",
      "change": "tests: None -> release runs 40065271734 (B20), Build 21 6567c04, 40398771937 (B22), 40526826846 (B23), 40636966840 (B24): three platforms each, SHA256SUMS OK, APK certificate 31704b80...76cb80e6 (B21-24), Linux start checked; test_commit: None -> 4611d86",
      "why": "test evidence recorded"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: exception for Play Test Build One: docs/directives/2026-11-06_my_folklore_pc_playtest_repair.md 'One Windows package only (no Android, Linux, demos)' and B25R2-Q3 'one Windows PC package only'"
     }
    ],
    "integrated_in": [
@@ -13897,6 +14009,11 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope revised by the owner 2026-11-01 (B25-SCOPE-D1, docs/directives/2026-11-01_build25_scope_clarification.md): Build 25 is the consolidation build; this record's Build 26 recovery assignment is preserved as historical evidence and no longer controls Build 25 scope (DCR-01: intentional revision by the owner)"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: partly revised: its 'Build 25 freeze, then Build 26 recovery' part was revised by B25-SCOPE-D1 (owner 2026-11-01), as its 2026-11-01 history notes"
     }
    ],
    "notes": "Build 26 scope (owner 2026-10-31): repository recovery and consolidation; plus planning, reconciliation and dependency analysis (not implementation) of LE-07, EMP-PERM-01, the LE-05 remainder and economy activation preparation (mechanism and validation evidence; the economy stays disabled until explicit authorization); recovery and reconciliation of Expansion 21 phase 1 without activating political gameplay. Build 26 integration begins only after Build 25 is validated and frozen at its approved SHA.",
@@ -14214,6 +14331,11 @@
      "date": "2026-11-02",
      "change": "implementation_status: NOT STARTED -> INTEGRATED; tests: None -> chapel_test 173 (2745be7, 780dcfd), run_tests 3602 (c5be409), conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, elder_provision 11, wiki_test (local); test_commit: None -> 780dcfd; commits + 8b203c5; integrated_in + Build 25 wip/expansion20",
      "why": "implemented and merged at 8b203c5 (wip/b25-chapel-purpose 8ec9a85): food kept only as an emergency reserve (7 days of recent relief, PROVISIONAL; clergy eat at home, no chapel livestock, seed never given); ordinary weekly food alms at the 14-day line (same as coin alms), shared a portion at a time to the fewest days of food; daily emergency path (dawn, 16:00, on visits) finding households itself (under 2 days, or a missed meal and under 3), priority missed meals then children/elders, may use the reserve and buy with coins; fastest-spoiling food out first (the store has no age record); delivery by clergy or volunteers in parcels that stay the chapel's until handed over (instant transfer replaced), or collected by a household member; reserve audit: no change needed (14 days wages, owed wages, recent relief and seed spending). Starvation investigation (yield 0.5 stress, 3 deaths day 34): chapel held 1 grain and 0 coins, households had asked and been delivered - no preventable starvation; defect fixed: the last odd grain was never given. Before/after 10 days: relief 9,201 -> 24,600 points to 20 households, 59 deliveries. Tests: chapel_test 173, conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, elder_provision 11, wiki_test, run_tests 3602 (local). Fingerprint b01fbf44 -> fdbdde28 (the emergency round reaches households that never asked)."
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: its 14-day food-alms line supersedes X20-CHAPEL-FIX's 6-day line (2026-11-02)"
     }
    ],
    "tests": "chapel_test 173 (2745be7, 780dcfd), run_tests 3602 (c5be409), conservation 8, net_econ_integrity 126, migration 109, save_transfer 21, elder_provision 11, wiki_test (local)",
@@ -16762,7 +16884,7 @@
    "description": "Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled decisions, requirements, code, verified behaviour, saves and release restrictions; classify it as compatible extension, intentional revision or conflict; return only genuine conflicts to the owner with full change control",
    "source": "docs/directives/2026-10-27_design_continuity_directive.md",
    "owner_wording": "Every design improvement should preserve the value of the work already completed unless I explicitly approve changing it.",
-   "approval": "owner, 2026-10-27",
+   "approval": "owner, 2026-10-27, docs/directives/2026-10-27_design_continuity_directive.md (headed 'owner, 2026-10-27'; cited as a standing owner rule in CLAUDE.md section 9)",
    "acceptance": [
     "every implementation driven by a newly approved decision is preceded by a written compatibility review; a later answer never silently supersedes an earlier decision; conflicts reported with requirement id, previous rule and source, new rule, exact difference, systems and code affected, proposed reconciliation, and whether owner approval is needed; previous rules preserved, intentional changes documented"
    ],
@@ -16770,7 +16892,7 @@
    "parent": null,
    "depends_on": [],
    "decisions": [],
-   "approval_status": "PROPOSED",
+   "approval_status": "OWNER APPROVED",
    "implementation_status": "NOT STARTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT APPLICABLE",
@@ -16780,9 +16902,14 @@
      "date": "2026-10-27",
      "change": "entered in the register",
      "why": "docs/directives/2026-10-27_design_continuity_directive.md"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "approval_status: PROPOSED -> OWNER APPROVED; approval",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: correction: recorded PROPOSED although it is a saved owner directive"
     }
    ],
-   "lifecycle": "UNDER REVIEW"
+   "lifecycle": "ACTIVE"
   },
   {
    "id": "DEMO-01",
@@ -16883,6 +17010,35 @@
    ],
    "commits": [
     "a720fd1"
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "DEV-LINE-B25",
+   "kind": "approved",
+   "title": "Current code development line is wip/b25r2-rev2 (Build 25 Revision 2)",
+   "description": "Current code development line is wip/b25r2-rev2 (Build 25 Revision 2)",
+   "source": "docs/directives/2026-11-08_prop06_estate_tenancy_migration.md; docs/directives/2026-11-09_permanent_development_forensics.md",
+   "owner_wording": "Development branch: wip/b25r2-rev2",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "Entry points and the register authority block name wip/b25r2-rev2 as the code development line"
+   ],
+   "target_build": "25",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-08_prop06_estate_tenancy_migration.md; docs/directives/2026-11-09_permanent_development_forensics.md"
+    }
    ],
    "lifecycle": "ACTIVE"
   },
@@ -29821,6 +29977,11 @@
      "date": "2026-10-31",
      "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; notes",
      "why": "DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md). IMPLEMENTED ON TASK BRANCH is stale; the commit is integrated. Evidence: git merge-base --is-ancestor 5ceffe5 origin/wip/expansion20"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: narrowed: TEST-AUDIT-Q2 'stop for explicit final owner approval'; 2026-11-06 'Do not promote or replace the Generation 8 baseline. That decision remains mine.'; owner 2026-11-08 'Never automatically re-record simulation baselines.' Raised to the owner whether any agent baseline authority remains"
     }
    ],
    "assigned_worker": "primary development agent",
@@ -33204,8 +33365,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -33218,11 +33379,24 @@
      "date": "2026-11-09",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/requirements-control",
      "why": "started 2026-11-09 13:45 EST"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> tests/test_decision_authority.py 10/0; full Python suite 120 OK; check_requirements 0 problems; test_commit: None -> 5339c06; commits + 5339c06; integrated_in + wip/requirements-control 5339c06 (tooling) + retroactive audit (this commit)",
+     "why": "safeguard in force; retroactive content audit applied (4 supersessions, DCR-01 correction, DEV-LINE-B25, BRANCH-POL-Q2, B25R1-REL-PUBLIC, 13 partial-change notes); 4 conflicts raised to the owner"
     }
    ],
    "assigned_worker": "lead",
    "branch": "wip/requirements-control",
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "tests": "tests/test_decision_authority.py 10/0; full Python suite 120 OK; check_requirements 0 problems",
+   "test_commit": "5339c06",
+   "commits": [
+    "5339c06"
+   ],
+   "integrated_in": [
+    "wip/requirements-control 5339c06 (tooling) + retroactive audit (this commit)"
+   ]
   },
   {
    "id": "HAG-FORENSICS-01",
@@ -39624,12 +39798,20 @@
      "date": "2026-11-02",
      "change": "implementation_status: NOT STARTED -> INTEGRATED; commits + 34e1041",
      "why": "applied 2026-11-02: farming Phase 2 saved as WIP 710fce9 and stopped; investigation reported and stopped (no commits); scheduled check-in deleted; home-door integrated at 34e1041; standby"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "supersedes + AGENT-01",
+     "why": "supersession made two-way: AGENT-01 superseded by MML-CONSERVE-01"
     }
    ],
    "commits": [
     "34e1041"
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "supersedes": [
+    "AGENT-01"
+   ]
   },
   {
    "id": "MON-01",
@@ -54709,6 +54891,11 @@
      "date": "2026-11-09",
      "change": "supersedes + REL-14-16",
      "why": "HAG-AUTH-01 retroactive audit: supersession made two-way (docs/directives/2026-11-09_decision_authority_supersession_safeguard.md)"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: narrowed by docs/directives/2026-10-21_release_publication_clarification.md (completed milestones may be published)"
     }
    ],
    "target_build": "15",
@@ -54768,6 +54955,11 @@
      "date": "2026-10-23",
      "change": "schema v2: COMPLETE AND VERIFIED -> approval OWNER APPROVED; implementation NOT APPLICABLE; verification NOT APPLICABLE; release NOT APPLICABLE; COMPLETE",
      "why": "master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md)"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: narrowed for Build 25 (no automatic publication): MP-INTERACT-01 'This restriction includes private releases'; B25-SCOPE-REGION 'not complete until ... the owner authorizes release'; B25R2-DRAFT-01 'Not authorized: a public GitHub release'; owner 2026-11-08 and 2026-11-09 'do not publish'. Whether it applies again after Build 25 is the owner's"
     }
    ],
    "integrated_in": [],
@@ -69827,17 +70019,23 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Superseded for Build 25 by the owner 2026-11-01 (B25-LE-ACTIVATE-D1, docs/directives/2026-11-01_nine_owner_decisions_consolidated.md Part 2 s.4): the Living Economy is activated by default in the integrated Build 25 candidate once all thirteen LE-07 readiness gates pass, without another approval; kept as history"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "disposition: APPROVED -> SUPERSEDED; superseded_by: None -> B25-LE-ACTIVATE-D1",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: superseded for Build 25 by the owner 2026-11-01 (its own 2026-11-01 history line: 'Superseded for Build 25 by the owner 2026-11-01 (B25-LE-ACTIVATE-D1 ...)'); kept as history"
     }
    ],
    "owner_wording": null,
    "owner_answer": "Keep the Living Economy disabled by default. The October 31 instruction supersedes the earlier automatic-activation approval. Do not automatically activate it after tests pass or during Build 26 recovery. Prepare the activation mechanism and validation evidence, but wait for my explicit authorization before enabling it in the normal game.",
-   "disposition": "APPROVED",
+   "disposition": "SUPERSEDED",
    "blocks_implementation": false,
    "related": [
     "X20-RESUME",
     "LE-07"
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "SUPERSEDED",
+   "superseded_by": "B25-LE-ACTIVATE-D1"
   },
   {
    "id": "X20-B24-F1",
@@ -70599,6 +70797,11 @@
      "date": "2026-11-02",
      "change": "note",
      "why": "food store defects fixed and merged at 35fbd48 (wip/b25-chapel-food fa75bd1): the chapel's store now spoils at normal rates (DVW-B4 'wherever it is kept'; decay.gd skipped it); weekly Chapel.food_alms gives surplus above a reserve (4 weeks of relief, 14 days) to households below goods_keep_days (6, PROVISIONAL: below it a household offers no wheat, so given food is not offered back) of food counting what coins buy, poorest per member first. Source of the build-up: the church plot's own harvest (not offerings). Tests: chapel_test 137, conservation 8, net_econ_integrity 126, migration 109, wiki_test (branch); merge: chapel 137, conservation 8, elder_provision 11. Default fingerprint changes (b01fbf44): the first service's food alms. Remaining surplus put to the owner as B25-CHAPEL-FOOD-Q."
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: its 6-day food-alms line was superseded 2026-11-02 by the owner's 14-day line in CHAPEL-PURPOSE (docs/decisions/X20-CHAPEL-FIX--food-line-6-day.md)"
     }
    ],
    "assigned_worker": "lead",
@@ -71655,11 +71858,16 @@
      "date": "2026-11-01",
      "change": "note",
      "why": "Build 25 scope revised by the owner 2026-11-01 (B25-SCOPE-D1, docs/directives/2026-11-01_build25_scope_clarification.md): Build 25 is the consolidation build; this record's Build 26 recovery assignment is preserved as historical evidence and no longer controls Build 25 scope (DCR-01: intentional revision by the owner)"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "disposition: APPROVED -> SUPERSEDED; superseded_by: None -> B25-SCOPE-D1",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: B25-SCOPE-D1 owner answer: 'The October 31 records assigning stranded-work recovery to Build 26 do not override this instruction'; its own history says it no longer controls Build 25 scope"
     }
    ],
    "owner_wording": null,
    "owner_answer": "Assign LE-07, permanent employment, remaining LE-05 functionality, and economy activation preparation to the Build 26 recovery/integration scope. This is authorization for planning, reconciliation, and dependency analysis only. Do not assume every outstanding feature is automatically authorized for implementation. Build 25 must finish validation and be frozen at its approved SHA before Build 26 integration begins.",
-   "disposition": "APPROVED",
+   "disposition": "SUPERSEDED",
    "blocks_implementation": false,
    "related": [
     "X20-COMPLETE",
@@ -71668,7 +71876,8 @@
     "EMP-PERM-01",
     "LE-05"
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "SUPERSEDED",
+   "superseded_by": "B25-SCOPE-D1"
   },
   {
    "id": "X20-RESUME",
@@ -71719,6 +71928,11 @@
      "date": "2026-10-31",
      "change": "notes",
      "why": "owner 2026-10-31 (docs/directives/2026-10-31_doc_recon_review_decisions.md s.2): its automatic activation on objective readiness is superseded; the economy stays disabled by default until explicit owner authorization; activation mechanism and evidence are prepared in Build 26"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "HAG-AUTH-01 retroactive audit 2026-11-09: partly superseded: automatic activation replaced by X20-ACTIVATION-AUTHORITY, itself superseded by B25-LE-ACTIVATE-D1; private-draft authority suspended by the 2026-10-31 'do not package, release or publish'"
     }
    ],
    "assigned_worker": "lead",

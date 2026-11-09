@@ -17,14 +17,14 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 
 | File | Line text | Decision | Why |
 |---|---|---|---|
-| CLAUDE.md | One integration branch for code: `wip/expansion20` | BRANCH-POL-Q1 | BRANCH-POL-01's rule text; changing it is the owner's decision (a dated note beside it names wip/b25r2-rev2) |
+| CLAUDE.md | One integration branch for code: `wip/expansion20` | BRANCH-POL-Q2 | BRANCH-POL-01's rule text; changing it is the owner's decision (a dated note beside it names wip/b25r2-rev2) |
 
 ## Lifecycle counts
 
 | Lifecycle | Records |
 |---|---|
-| ACTIVE | 858 |
-| SUPERSEDED | 37 |
+| ACTIVE | 857 |
+| SUPERSEDED | 41 |
 | COMPLETED | 246 |
 | REJECTED | 3 |
 | DEFERRED | 19 |
@@ -34,6 +34,7 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 
 | Record | Title | Superseded by | Governing record now | Governing lifecycle | Why superseded |
 |---|---|---|---|---|---|
+| AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead | MML-CONSERVE-01 | MML-CONSERVE-01 | ACTIVE | HAG-AUTH-01 retroactive audit 2026-11-09: docs/directives/2026-11-02_credit_conservation_controlled_development.md: 'This directive supersed |
 | AR-P1-1 | Prepared; owner must create key | B13-15 | ANDROID-RELEASE-SIGNING | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
 | B12A-04 | Not recorded as done | FR-04 | FR-04 | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
 | B12A-06 | Sword page added by CQ-01 (`3e283b6`); others not recorded | FR-06 | FR-06 | COMPLETED | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
@@ -41,6 +42,7 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 | B12A-11 | "Not investigated further" | FR-05 | FR-05 | COMPLETED | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
 | B13-15 | Android signing stability | ANDROID-RELEASE-SIGNING | ANDROID-RELEASE-SIGNING | ACTIVE | DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md). Owner 2026-10-20 deferred the permanent signing |
 | B25-CLOSE-02 | Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final ye | B25-SCOPE-REGION | B25-SCOPE-REGION | ACTIVE | per docs/audits/B25R1_REQUIREMENTS_AUDIT_2026-11-05.md and the register's own 2026-11-02 history: the strict-scope freeze of 4b51c92 was ove |
+| B25R2-Q3 | Public release or private draft for Play Test Build One? | B25R2-DRAFT-01 | B25R2-DRAFT-01 | ACTIVE | HAG-AUTH-01 retroactive audit 2026-11-09: same question (Play Test Build One visibility) answered again the same evening: DRAFT-01 'private  |
 | B7-017 | No building in a year (no births) | EQ-07 | EQ-07 | COMPLETED | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
 | B8R-005 | Hunger icon looked like coin bag | B8-019 | B8-019 | COMPLETED | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
 | B8R-006 | Where to cook raw meat | FR-03 | FR-03 | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
@@ -71,12 +73,13 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditi | REL-15-18 | REL-15-18 | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
 | REQ-BANDIT | Bandit factions, criminal careers and outlaw leadership | WDR-016-C | WDR-016-C | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
 | REQ-GRAVE | Graveyards, ancestry and NPC legacy | WDR-014-C | WDR-014-C | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
+| X20-ACTIVATION-AUTHORITY | Does X20-RESUME's automatic Living Economy activation on objective readiness (2026-10-30)  | B25-LE-ACTIVATE-D1 | B25-LE-ACTIVATE-D1 | ACTIVE | HAG-AUTH-01 retroactive audit 2026-11-09: superseded for Build 25 by the owner 2026-11-01 (its own 2026-11-01 history line: 'Superseded for  |
+| X20-REMAINING-PLACEMENT | Where does the remaining Expansion 20 scope go relative to the Build 25 freeze (LE-07, EMP | B25-SCOPE-D1 | B25-SCOPE-D1 | ACTIVE | HAG-AUTH-01 retroactive audit 2026-11-09: B25-SCOPE-D1 owner answer: 'The October 31 records assigning stranded-work recovery to Build 26 do |
 
 ## Active owner decisions and rules (in force; implementation status does not retire them)
 
 | Record | Kind | Title | Supersedes |
 |---|---|---|---|
-| AGENT-01 | rule | Controlled parallel development: at most two subagents at once (three agents with the lead), bounded tasks, no |  |
 | ARMOR-CATALOG-D1 | decision | Approve the armour catalogue: the four classes, the buffs (including the new fireball-damage buff), materials  |  |
 | ARMOR-Q | decision | Armour scope: Option A (exact text to be presented) |  |
 | B17-DIR | rule | Build 17 combined integration direction: continue MIN-D, DVW-A12, FARM-08 and MIN-C visual verification; reuse |  |
@@ -109,7 +112,7 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 | B25-ECON-P4 | decision | Ore imports stall: Garton's quarry stock rose 63 to 175 but its trader had no coins to buy it, so 0 iron ore c |  |
 | B25-ECON-P5 | decision | Village land (fields, trees, game, ore) is fixed while population roughly triples in a year, so unemployment r |  |
 | B25-EMPLOY-D3 | decision | How do skilled occupations grow? |  |
-| B25-LE-ACTIVATE-D1 | decision | Living Economy activation policy for Build 25 |  |
+| B25-LE-ACTIVATE-D1 | decision | Living Economy activation policy for Build 25 | X20-ACTIVATION-AUTHORITY |
 | B25-NINE-D1 | decision | Organic skills, apprenticeship and career development |  |
 | B25-NINE-D2 | decision | Informal services and expanded service contracts |  |
 | B25-NINE-D3 | decision | Farming yield and food security |  |
@@ -119,7 +122,7 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 | B25-NINE-D7 | decision | Ordinary clothing is cosmetic |  |
 | B25-NINE-D8 | decision | Predefined capabilities and organic societal development |  |
 | B25-NINE-D9 | decision | Game juice phases J1 and J2 |  |
-| B25-SCOPE-D1 | decision | Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work f |  |
+| B25-SCOPE-D1 | decision | Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work f | X20-REMAINING-PLACEMENT |
 | B25R1-015 | rule | Full approved Revision 1 scope is mandatory: no deferral, disabling, placeholder or narrowing without the owne |  |
 | B25R1-AUDIT-OPT1 | decision | B25R1 requirements audit (2026-11-05): which completion path? Option 1 = finish validating the current code wh |  |
 | B25R1-Q1 | decision | Stone roads: none exist in the game's data or the owned art packs (only dirt, sand and water path tiles). Shou |  |
@@ -133,12 +136,11 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 | B25R1-Q9 | decision | Do hamlets count as civic places (civic_records test premise), and with what institutions? |  |
 | B25R2-BRUSHOFF | decision | Dialogue.brush_off reads n.plan[0] without checking the plan is empty (dialogue.gd:526): a SCRIPT ERROR when a |  |
 | B25R2-CAVE | decision | A guest who followed the host into a cave was left in the black outside it, unable to move (the guest's copy o |  |
-| B25R2-DRAFT-01 | decision | May Play Test Build One be published, and how? |  |
+| B25R2-DRAFT-01 | decision | May Play Test Build One be published, and how? | B25R2-Q3 |
 | B25R2-HOST4 | decision | Open to friends admits only one guest (the window asks for no player limit, so hosting defaults to 2): how man |  |
 | B25R2-PKG-01 | decision | May the existing Windows package built from candidate 1f2ff4f (release run 42297641550, artifact pkg-full-wind |  |
 | B25R2-Q1 | decision | Which source for Play Test Build One? |  |
 | B25R2-Q2 | decision | How far should the My Folklore name change go in this release? |  |
-| B25R2-Q3 | decision | Public release or private draft for Play Test Build One? |  |
 | B25R2-Q4 | decision | How should the Claude usage budget be spent on the B25R2 repairs? |  |
 | B25R2-STUTTER | decision | Walking south of the starter village to the next settlement froze the game for about a second every other step |  |
 | B25R2-VER-01 | decision | How should the next Play Test Build One package identify itself? |  |
@@ -157,6 +159,7 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 | CON02-S-4 | decision | Should harvest be offered as a service contract (the harvest-hire rules now belong to paid quests kept by Q-C2 |  |
 | CON02-S-5 | decision | Which real need should make a villager hire a service on its own (none yet, so the live economy is unchanged)? |  |
 | CON02-S-6 | decision | Confirm the 50-coin formal signing line for services as for goods |  |
+| DCR-01 | rule | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, s |  |
 | E22-OD-03 | decision | Knowledge persistence: how industrial knowledge passes on (teaching, apprenticeship, written records) or is lo |  |
 | E22-OD-04 | decision | Regional trade and transport: do traders' trips take real travel time, carry limited loads and risk loss on ro |  |
 | E22-OD-05 | decision | Population across the region: should off-map settlements get housing and land that limit growth (REG-DEMO-D1 l |  |
@@ -408,8 +411,6 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 | X19-SPILL-REACH | decision | How far does reputation spillover reach through extended family (parents, children, siblings, cousins, in-laws |  |
 | X19-TRAIT-DIST | decision | Population trait distributions and learning percentages beyond the approved 30% stubbornness potential |  |
 | X19-TRUST-RATES | decision | Agent-proposed numbers for Expansion 19 awaiting the owner: trust starts at a quarter of liking (a stranger at |  |
-| X20-ACTIVATION-AUTHORITY | decision | Does X20-RESUME's automatic Living Economy activation on objective readiness (2026-10-30) still stand after th |  |
-| X20-REMAINING-PLACEMENT | decision | Where does the remaining Expansion 20 scope go relative to the Build 25 freeze (LE-07, EMP-PERM-01, LE-05 rema |  |
 | X20-SCOPE | decision | Expansion 20 scope: bring the Living Economy answers classed FUTURE (OD-LE-03, -04, -08, -11, -13B, -14) forwa |  |
 | X20-SERVICES-SCOPE | decision | Does X20-SCOPE's 'negotiated wages and service contracts behind their switches (OD-LE-03/D02)' include the app |  |
 | X20-TRADER-CLOSE | decision | Review finding 1 (settlement traders): once traders close when nobody works them, all five settlement traders  |  |
@@ -431,9 +432,9 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 | BAN-D | proposal | Expansion 23 BAN-D: rank, challenge, leadership, schism and autonomous succession |
 | BAN-E | proposal | Expansion 23 BAN-E: economy, judgment and politics integration; long-run simulations |
 | BRANCH-POL-Q1 | decision | Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion20 (code),  |
+| BRANCH-POL-Q2 | decision | Amend BRANCH-POL-01's rule text (CLAUDE.md section 5a, 'One integration branch for code: wip/expansion20') to name the c |
 | CAP-TOOLHOLDER | idea | Design review: a villager holding a tool only for sale counts as a capability practitioner |
 | CHAPEL-GIVE-14-Q | decision | With the 14-day hardship line now governing chapel food alms, households offer wheat to the chapel only above 14 days of |
-| DCR-01 | rule | Decision continuity rule: before implementing a newly approved decision, compare it with earlier directives, settled dec |
 | DGA-D1 | proposal | Meaning of "isometric" |
 | DGA-D10 | proposal | Formal platform/engine approval (U1, U2) |
 | DGA-D11 | proposal | Living-society scope (U20, U21, P1-P3, balance review) |

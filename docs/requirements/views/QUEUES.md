@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (19)
+## Workers and task branches (18)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -16,7 +16,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | DOC-RECON-01 | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | E22-P1 | 22 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 | E23-BANA | 23 | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
-| HAG-AUTH-01 | unassigned | IN DEVELOPMENT | lead | wip/requirements-control |
 | HAG-FORENSICS-01 | unassigned | IN DEVELOPMENT | documentation agent | docs/history-recovery-2026-11 |
 | JUICE-00 | 20+ | IMPLEMENTED ON TASK BRANCH | none |  |
 | ROAD-03 | owner decision | IMPLEMENTED ON TASK BRANCH | none |  |
