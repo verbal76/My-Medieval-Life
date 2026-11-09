@@ -9,6 +9,7 @@
     "cooking":    {"name": "Cooking",     "unlocks": {"1": "Cook pottage; roast meat", "2": "Brew ale"}},
     "combat":     {"name": "Combat",      "unlocks": {"1": "Sword swings", "2": "+20% damage", "3": "Power strike (hold attack)", "4": "+20% damage"}},
     "magic":      {"name": "Magic",       "unlocks": {"1": "Fireball (learned from the Sage)", "2": "Fireball cooldown 4s", "3": "Fireball damage +50%"}},
-    "trading":    {"name": "Trading",     "unlocks": {"1": "Buy and sell", "2": "5% better prices", "3": "10% better prices"}}
+    "trading":    {"name": "Trading",     "unlocks": {"1": "Buy and sell", "2": "5% better prices", "3": "10% better prices"}},
+    "stealth":    {"name": "Stealth",     "unlocks": {"1": "Pick pockets (40% chance)", "2": "Pick pockets (52% chance)", "3": "Pick pockets (64% chance)", "4": "Pick pockets (76% chance)"}}
   }
 }
