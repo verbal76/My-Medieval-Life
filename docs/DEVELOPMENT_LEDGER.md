@@ -79,7 +79,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-AUD-BIZ-03 | Payroll before owner withdrawals; hiring budgets the whole payroll (audit BIZ-03, Option B) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-AUD-BIZ-04 | A migrating household keeps its business money (audit BIZ-04) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
-| B25-AUD-EMP-03 | Count everyone actively seeking work in hiring competition (audit EMP-03) | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-AUD-EMP-03 | Count everyone actively seeking work in hiring competition (audit EMP-03) | 20+ | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25-AUD-INV-04 | Goods left in sold property pass to the purchaser (audit INV-04) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-AUD-INV-05 | No unapproved rubble-to-dressed-stone conversion (audit INV-05) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-AUD-JUS-04 | Crime affects relatives only once the knowledge reaches them (audit JUS-04) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
@@ -935,7 +935,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | WDR-022 | World Design Rule 22: A Village Is Allowed to Fail; the Simulation Is Not |  | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 | WIKI-01 | Permanent wiki and documentation maintenance: a feature is not complete without accurate documentation; player-facing in-game wiki and developer reference kept separate; updated in the same workstream; implemented-only; reported; a release documentation gate | 17 | OWNER APPROVED | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | COMPLETE |
 
-## Owner decisions (337)
+## Owner decisions (338)
 
 | ID | Question | Build | Disposition | Blocks implementation |
 |---|---|---|---|---|
@@ -959,6 +959,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B18-DP-16 | ECON-P3's title also lists 'quotes follow money, stock days, market hire wages' (agent proposals P3.2-P3.4 in docs/release/ECONOMY_SUSTAINABILITY_PROPOSALS.md lines 183-187). The owner's answer approved the separation of business and household money only. Are P3.2-P3.4 part of the approved Build 18 requirement, or should they be split off as unapproved proposals? | 18 | APPROVED |  |
 | B19-BASELINE | Approve the Build 19 determinism baseline on wip/build19 a7c84e9 (docs/design/BUILD19_BASELINE_PROPOSAL.md)? | 19 | APPROVED | yes |
 | B25-AMBITION-D4 | Activate the career ambition system? | owner decision | APPROVED |  |
+| B25-AUD-REG-08 | REG-08 courier stranded deliveries: who receives stranded goods/coins, how a waiting route job ends, whether the flat fee is refunded, how a courier's migration is treated | owner decision | OPEN |  |
 | B25-BIZ-TENANT-Q | May a household that does not own its house (a tenant, a family in a manor cottage) build a standalone workshop on land it buys? Your rule of 2026-10-18 says 'a house first, then workshops' (Construction.may_build refuses it); Decision 5 A says 'a person with sufficient resources may also establish a standalone workshop elsewhere on legally acquired land' and also 'Both options must follow existing property, construction, resource, and ownership rules'. In the year-long runs 41362329381 no villager founded a business: at day 365 only 0-1 of the eligible owned their house (most families live in manor cottages). Options: A keep house-first (tenants may only buy or reopen a workshop, as now); B a tenant may build a standalone workshop on purchased land, house-first still applying to workshops attached to a house (recommended); C tenants may also rent premises (not built). | 20 | APPROVED |  |
 | B25-BUSINESS-D2 | May villagers establish independent businesses? | owner decision | APPROVED |  |
 | B25-CAREER-D1 | How is career advancement decided? | owner decision | APPROVED |  |

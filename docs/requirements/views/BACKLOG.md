@@ -17,7 +17,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B17F-JOBS | Build 17 finding: unemployment of 6-30 adults at day 365 | idea | PROPOSED | NOT STARTED |
 | B25-AUD-BIZ-03 | Payroll before owner withdrawals; hiring budgets the whole payroll (audit BIZ-03, Option B) | approved | OWNER APPROVED | INTEGRATED |
 | B25-AUD-BIZ-04 | A migrating household keeps its business money (audit BIZ-04) | approved | OWNER APPROVED | INTEGRATED |
-| B25-AUD-EMP-03 | Count everyone actively seeking work in hiring competition (audit EMP-03) | approved | OWNER APPROVED | NOT STARTED |
+| B25-AUD-EMP-03 | Count everyone actively seeking work in hiring competition (audit EMP-03) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-AUD-INV-04 | Goods left in sold property pass to the purchaser (audit INV-04) | approved | OWNER APPROVED | INTEGRATED |
 | B25-AUD-INV-05 | No unapproved rubble-to-dressed-stone conversion (audit INV-05) | approved | OWNER APPROVED | INTEGRATED |
 | B25-AUD-JUS-04 | Crime affects relatives only once the knowledge reaches them (audit JUS-04) | approved | OWNER APPROVED | INTEGRATED |

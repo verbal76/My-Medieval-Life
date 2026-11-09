@@ -5681,8 +5681,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -5695,9 +5695,21 @@
      "date": "2026-11-09",
      "change": "note",
      "why": "lead read the code 2026-11-09: seekers excludes ambitious lookers, homestead members, permanent employees and players; the earlier 'no change needed' is withdrawn; KNOWN_ISSUES KI-15; fix not started"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> lead; branch: None -> wip/b25-emp03; tests: None -> emp03_seeker_count_test 4/0 (2 failures on the old code); career_ambition_test 71/0; competition_test 33/0; test_commit: None -> 00e47a6; commits + 00e47a6",
+     "why": "ambitious lookers now counted as seekers; strict CI, gate and recorded campaign dispatched on 00e47a6; homestead members, permanent employees and players unchanged (KI-15)"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "lead",
+   "branch": "wip/b25-emp03",
+   "tests": "emp03_seeker_count_test 4/0 (2 failures on the old code); career_ambition_test 71/0; competition_test 33/0",
+   "test_commit": "00e47a6",
+   "commits": [
+    "00e47a6"
+   ]
   },
   {
    "id": "B25-AUD-INV-04",
@@ -6211,6 +6223,29 @@
     "wip/b25r2-rev2 53a56d3 (2026-11-09 11:04 UTC)"
    ],
    "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B25-AUD-REG-08",
+   "kind": "decision",
+   "title": "REG-08 courier stranded deliveries: who receives stranded goods/coins, how a waiting route job ends, whether the flat fee is refunded, how a courier's migration is treated",
+   "description": "REG-08 courier stranded deliveries: who receives stranded goods/coins, how a waiting route job ends, whether the flat fee is refunded, how a courier's migration is treated",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; docs/decisions/REG-08-INVESTIGATION-2026-11-09.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "owner decision",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; docs/decisions/REG-08-INVESTIGATION-2026-11-09.md"
+    }
+   ],
+   "lifecycle": "UNDER REVIEW"
   },
   {
    "id": "B25-AUD-SAV-02",

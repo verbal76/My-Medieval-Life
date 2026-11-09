@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 855 (459 of them still open) |
-| **Open entries now** (rules excluded) | | **617** |
+| Entries added since | | 856 (460 of them still open) |
+| **Open entries now** (rules excluded) | | **618** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (855)
+## Added since the baseline (856)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -161,7 +161,7 @@ None.
 | B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-AUD-BIZ-03 | Payroll before owner withdrawals; hiring budgets the whole payroll (audit BIZ-03, Option B) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
 | B25-AUD-BIZ-04 | A migrating household keeps its business money (audit BIZ-04) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
-| B25-AUD-EMP-03 | Count everyone actively seeking work in hiring competition (audit EMP-03) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
+| B25-AUD-EMP-03 | Count everyone actively seeking work in hiring competition (audit EMP-03) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20+ |
 | B25-AUD-INV-04 | Goods left in sold property pass to the purchaser (audit INV-04) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
 | B25-AUD-INV-05 | No unapproved rubble-to-dressed-stone conversion (audit INV-05) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
 | B25-AUD-JUS-04 | Crime affects relatives only once the knowledge reaches them (audit JUS-04) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
@@ -175,6 +175,7 @@ None.
 | B25-AUD-REG-04 | Couriers travel physically (audit REG-04) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
 | B25-AUD-REG-05 | Migrating households travel physically (audit REG-05) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
 | B25-AUD-REG-07 | Trade intelligence valid at most one eight-day year (audit REG-07) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
+| B25-AUD-REG-08 | REG-08 courier stranded deliveries: who receives stranded goods/coins, how a waiting route job ends, whether the flat fee is refunded, how a courier's migration is treated | decision | OPEN | owner decision |
 | B25-AUD-SAV-02 | Saved economic state preserved through load and continuation (audit SAV-02) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
 | B25-AUD-TRD-02 | Merchant earnings recorded net of commission (audit TRD-02) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
 | B25-BIZ-D1 | Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system) | approved | INTEGRATED / NOT TESTED / OPEN | 20 |

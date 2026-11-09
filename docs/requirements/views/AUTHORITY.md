@@ -22,7 +22,7 @@ Before any significant change, find its record here and follow `Governing record
 | COMPLETED | 246 |
 | REJECTED | 3 |
 | DEFERRED | 19 |
-| UNDER REVIEW | 76 |
+| UNDER REVIEW | 77 |
 
 ## Superseded records and what governs instead
 
@@ -424,6 +424,7 @@ Before any significant change, find its record here and follow `Governing record
 | B17F-JOBS | idea | Build 17 finding: unemployment of 6-30 adults at day 365 |
 | B17F-PERF | idea | Build 17 finding: long-run performance analysis (seed 2 took 118 min against 66-93) |
 | B17F-SIMREPORT | idea | economy_sim reporting fixes: open pits counted as building sites; checkpoint lines not in the job log |
+| B25-AUD-REG-08 | decision | REG-08 courier stranded deliveries: who receives stranded goods/coins, how a waiting route job ends, whether the flat fe |
 | BAN-B | proposal | Expansion 23 BAN-B: faction identity, membership, hierarchy, safehouse ownership and persistent faction resources |
 | BAN-C | proposal | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) |
 | BAN-D | proposal | Expansion 23 BAN-D: rank, challenge, leadership, schism and autonomous succession |

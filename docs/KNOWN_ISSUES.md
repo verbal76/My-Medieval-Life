@@ -212,7 +212,12 @@ when the issue arose.
   B25R1-010), (3) permanent employees (EMP-PERM-01), or (4) players. Whether each of these is "actively seeking work" in the owner's
   sense is not settled by the code; (1) plainly is.
 - **Next:** an authorized fix under B25-AUD-EMP-03 with a failing-first test (at least case 1), then its own strict CI and a
-  recorded campaign before merging. Cases 2-4 may need the owner's reading. Not started.
+  recorded campaign before merging. Cases 2-4 may need the owner's reading. *Update 2026-11-09 16:45 EST: case 1 fixed on `wip/b25-emp03` `00e47a6` (failing-first test 2 failures -> 4/0); strict CI, gate and recorded campaign running; not merged. Cases 2-4 unchanged.*
+
+### KI-16 REG-08: stranded courier deliveries (OPEN; investigated 2026-11-09, fixes await owner policy)
+- A waiting route delivery whose carrier is dead and unreplaceable never resolves and blocks that sender's courier trade; refunds
+  and deposits for dead or migrated NPC senders are stranded, and one migration path destroys a refund. Details, code references
+  and the failing-first tests: `docs/decisions/REG-08-INVESTIGATION-2026-11-09.md`. Owner decisions: B25-AUD-REG-08.
 
 ## Outcomes (legitimate results of the approved rules; changing them needs the owner)
 
