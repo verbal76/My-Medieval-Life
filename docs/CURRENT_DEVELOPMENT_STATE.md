@@ -85,7 +85,16 @@
   65 MEDIUM, 0 confirmed defects; seed 2 365/365, 0 CRITICAL, 99 HIGH, 45 MEDIUM, 0 confirmed (reference 1f2ff4f: 0/48 and 0/99);
   gate 42509523836: 32 blocking findings, all baseline-only (df67e8e), identical to the development branch's; the baseline is not
   replaced (owner's decision). PRs #5-#15 closed naming `f0a854c`.
-- **Status 2026-11-09 06:40 UTC (nothing merged since Batch A).** Three batches wait only on 365-day campaigns with the flight
+- **2026-11-09 08:40 UTC: LIFE-03/04 MERGED into `wip/b25r2-rev2` at `229f76e`** (merge of `f0a854c` and `494af9a`; the merged tree
+  is `494af9a`'s, the tested tree). Evidence: strict 42530864510 passed; recorded campaign 42557922632 (record: true): seed 1
+  365/365 0 CRITICAL 17 HIGH 46 MEDIUM 0 confirmed; seed 2 365/365 0/91/35 0 confirmed; archive ok. PROP-06's recorded campaign
+  42557925404 on `a7071aa`: identical results (its settlement runs only when a household leaves). PROP-06 merge commit `96b071c`
+  (on `229f76e`) is on `wip/b25-prop06-merge` under its own strict run before it reaches the development branch.
+- **Overnight backlog (owner 2026-11-09 directive), `wip/b25-backlog` on `f0a854c`:** LIFE-05 `cbd91f6`, BIZ-03 `93327ae`,
+  BIZ-04 `3e9b9a1`, TRD-02 `36fa011`, INV-04 `969a8f4`, INV-05 `e42a37f`, each with a new regression test (red on the old code,
+  green now) and related suites 0 failures. EMP-03: the code already counts everyone seeking work (no change). SAV-02 in progress
+  (earned_at_dawn, laboured_today, the market snapshot and the hour caches are not saved; a load resets them).
+- **Status 2026-11-09 06:40 UTC (historical).** Three batches wait only on 365-day campaigns with the flight
   recorder on:
   - LIFE-03/04 `wip/b25-features-integration` `494af9a`: strict 42530864510 passed; gate 42530880459 33 blocking
     (baseline-difference kind). Campaign 42536147616 was dispatched with `record: false` by mistake (365/365 both seeds, no fatal
