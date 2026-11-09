@@ -200,6 +200,7 @@ when the issue arose.
   230 ms. Measured headless only; a real PC is unmeasured.
 
 ### KI-15 EMP-03: hiring competition does not count every job seeker (OPEN; found 2026-11-09 14:20 EST)
+- *(Time correction 2026-11-09 13:50 EST: the lead wrote EST times one hour off this afternoon; by the system clock this was about 13:30-13:42 EST, commit `201e015` at 13:42 EST.)*
 - **Requirement:** B25-AUD-EMP-03 (owner, 2026-11-08): "Count everyone actively seeking work for hiring-competition purposes."
 - **Earlier record, corrected:** the overnight backlog (state file; `docs/decisions/B25-AUD-BACKLOG-2026-11-09.md`) said "the code
   already counts everyone seeking work (no change)". No test or code citation backed it (coverage register HR-52), and the

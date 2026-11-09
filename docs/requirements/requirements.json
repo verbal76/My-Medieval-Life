@@ -32439,6 +32439,44 @@
    ]
   },
   {
+   "id": "HAG-AUTH-01",
+   "kind": "approved",
+   "title": "Permanent decision authority and supersession safeguard (lifecycle status, two-way supersession links, current-authority view, automated checks, retroactive audit)",
+   "description": "Permanent decision authority and supersession safeguard (lifecycle status, two-way supersession links, current-authority view, automated checks, retroactive audit)",
+   "source": "docs/directives/2026-11-09_decision_authority_supersession_safeguard.md",
+   "owner_wording": "Historical documentation must never be mistaken for current development authority. Every substantive owner or engineering decision must have a stable identifier and an explicit lifecycle status: ACTIVE, SUPERSEDED, COMPLETED, REJECTED, DEFERRED, or UNDER REVIEW.",
+   "approval": "owner, 2026-11-09",
+   "acceptance": [
+    "Every register record carries an explicit lifecycle (ACTIVE/SUPERSEDED/COMPLETED/REJECTED/DEFERRED/UNDER REVIEW) consistent with its status fields",
+    "Supersession two-way (superseded_by and supersedes), chains resolve to the current governing record, shown in a generated view",
+    "check_requirements flags conflicting active decisions, broken supersession links, missing current-authority references and stale recovery instructions, with unit tests, no game runs",
+    "Retroactive audit of existing chains, Build 25 first; history preserved"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_decision_authority_supersession_safeguard.md"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> lead; branch: None -> wip/requirements-control",
+     "why": "started 2026-11-09 13:45 EST"
+    }
+   ],
+   "assigned_worker": "lead",
+   "branch": "wip/requirements-control"
+  },
+  {
    "id": "HAG-FORENSICS-01",
    "kind": "approved",
    "title": "Permanent development forensics, GitHub accountability and historical recovery (Nov 1-9 recovery, coverage register, recovery entry points, independent recovery test, continuous checkpoints)",
