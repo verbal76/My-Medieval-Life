@@ -4369,7 +4369,9 @@ func deliver(p: Dictionary, inv: Inventory, by := "") -> bool:
 	var need: Dictionary = p.site.need
 	var given := 0
 	if need.has("stone"):
-		rubble_cover(inv, int(need.stone) - inv.count("stone"))       # raw-stone work takes rubble (STONE-04)
+		var rk := rubble_cover(inv, int(need.stone) - inv.count("stone"))       # raw-stone work takes rubble (STONE-04)
+		if rk > 0:
+			p.site["rubble"] = int(p.site.get("rubble", 0)) + rk          # INV-05: laid as rubble, to come back as rubble
 	for id in need.keys():
 		var n := mini(int(need[id]), inv.count(id))
 		if n > 0:
@@ -4511,6 +4513,14 @@ func cancel_site(p: Dictionary, inv: Inventory) -> Dictionary:
 	if p.site.is_empty() or p.site.done:
 		return {}
 	var back := site_delivered(p)
+	var rub := mini(int(p.site.get("rubble", 0)), int(back.get("stone", 0)))
+	if rub > 0:                                   # INV-05 (owner, 2026-11-08): stone laid as rubble comes back as rubble, never dressed
+		back.stone = int(back.stone) - rub
+		if int(back.stone) <= 0:
+			back.erase("stone")
+		back["rubble"] = int(back.get("rubble", 0)) + rub
+		stat("made_stone", -float(rub))
+		stat("used_rubble", -float(rub))
 	var left := Inventory.new()
 	for id in back:
 		if not inv.add(id, int(back[id])):

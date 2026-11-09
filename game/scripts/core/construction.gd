@@ -633,7 +633,9 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 		"helper_own":                          # the builder's own goods go to the site (HOUSE-04)
 			var id := str(a.item)
 			if id == "stone":
-				w.rubble_cover(n.inv, int(p.site.need.get(id, 0)) - load.count(id) - n.inv.count(id))       # STONE-04: the builder's rubble, as stone
+				var rk := w.rubble_cover(n.inv, int(p.site.need.get(id, 0)) - load.count(id) - n.inv.count(id))       # STONE-04: the builder's rubble, as stone
+				if rk > 0:
+					p.site["rubble"] = int(p.site.get("rubble", 0)) + rk          # INV-05: to come back as rubble if the site is given up
 			var k := mini(int(p.site.need.get(id, 0)) - load.count(id), n.inv.count(id))
 			if k <= 0:
 				return false
