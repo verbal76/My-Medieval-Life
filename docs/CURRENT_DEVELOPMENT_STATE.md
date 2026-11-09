@@ -72,6 +72,8 @@ and `wip/b25r1`, which are no longer the development line.
 
 ## MONDAY RECOVERY POINT (owner, 2026-11-06 late night; `docs/directives/2026-11-06_finish_tests_save_stop.md`)
 
+*(Note 2026-11-09, HAG-FORENSICS-01 recovery test: since 2026-11-09 the first bullets under this heading are the dated Build 25 merge log, newest first. The current state is the pointer section above; the 2026-11-06 hold described here ended with the owner's 2026-11-09 directives.)*
+
 > **Note (2026-11-09, documentation agent):** the hold described in the next paragraph ended when the owner authorized work on 2026-11-08
 > (the audit directives, recovered in `docs/directives/2026-11-08_recovered_owner_messages.md`). The bullets from "Independent audit open
 > items" on are current, newest at their top-dated entries.
@@ -152,7 +154,7 @@ and `wip/b25r1`, which are no longer the development line.
   `96b071c` and `4f1b3c8`; strict Tests 42597744977 on `53a56d3` passed; recorded campaign 42570299554 on `4f1b3c8`: seed 1
   365/365 0 CRITICAL 48 HIGH 65 MEDIUM 0 confirmed, seed 2 365/365 0/94/36 0 confirmed, archive ok; gate 42542329406 32
   blocking, baseline-difference kind). PRs #20, #21 marked merged. Development head: `53a56d3`. The three overnight batches are
-  all merged. Next: `wip/b25-backlog` (strict 42589325057 FAILED: under investigation) and the PROP-03 test `b727954`.
+  all merged. Next: `wip/b25-backlog` (strict 42589325057 FAILED: under investigation; closed 2026-11-09: the failures were net_fault_test/net_mp4_test CI timing, see the 17:30 UTC entry above and docs/decisions/B25-CI-FLAKE-C9DA5DB.md) and the PROP-03 test `b727954`.
 - **2026-11-09 09:40 UTC: PROP-06 MERGED into `wip/b25r2-rev2` at `96b071c`** (fast-forward from `229f76e`; merge of `229f76e` and
   `a7071aa`; strict Tests 42587815471 on `96b071c` passed). PRs #16, #17, #18 marked merged by GitHub. PROP-03 eviction-path test
   `b727954` on `wip/b25-prop03` (5/0 on `96b071c`; 3 failures with `f0a854c`'s property.gd; the commit message says 4, wrongly).

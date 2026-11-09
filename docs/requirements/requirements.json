@@ -5552,6 +5552,11 @@
      "date": "2026-11-08",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "lead read the code 2026-11-09: seekers excludes ambitious lookers, homestead members, permanent employees and players; the earlier 'no change needed' is withdrawn; KNOWN_ISSUES KI-15; fix not started"
     }
    ]
   },
@@ -6077,6 +6082,11 @@
      "date": "2026-11-09",
      "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed); test_commit: None -> c9da5db; commits + c9da5db; integrated_in + wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)",
      "why": "merged c9da5db; see docs/decisions/B25-AUD-BACKLOG-2026-11-09.md"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "note (HAG-FORENSICS-01 recovery test): the SAV-02 fix f67afdb (earned_at_dawn, laboured, food_points, wheat_price, hour caches) also covers audit item EMP-02 (earned_at_dawn / laboured_today lost on load); EMP-02 is not a separate register record"
     }
    ],
    "tests": "strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed)",
@@ -54502,6 +54512,28 @@
    "remaining_work": "owner playtest on a device; Build 18 release gate",
    "related": [
     "X20-OPEN-ITEMS"
+   ]
+  },
+  {
+   "id": "SAV-04",
+   "kind": "decision",
+   "title": "SAV-04: exact requirement for uninterrupted wildlife/combat continuity versus deterministic continuation from a saved state",
+   "description": "SAV-04: exact requirement for uninterrupted wildlife/combat continuity versus deterministic continuation from a saved state",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md",
+   "owner_wording": null,
+   "owner_answer": null,
+   "disposition": "OPEN",
+   "blocks_implementation": false,
+   "target_build": "20+",
+   "related": [],
+   "approval": "",
+   "acceptance": [],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md"
+    }
    ]
   },
   {

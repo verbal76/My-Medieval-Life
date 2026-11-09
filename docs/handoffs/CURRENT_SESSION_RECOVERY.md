@@ -79,6 +79,24 @@ It works alongside `CLAUDE.md` section 0. The repository is the record. Never re
 10. **Summarise the current state and pick the next authorized action** from the state file's "Next authorized actions".
     - If it is blocked on the owner, record the question with options and continue with the next unblocked item.
 
+## Notes from the independent recovery test (2026-11-09, HAG-FORENSICS-01)
+
+- **Start here even if your checkout says otherwise.** `main` has no CLAUDE.md, and the local checkout's default branch may be an
+  old one (for example `wip/b16-integration`, whose CLAUDE.md still names staging and Build 24). Old branches' copies of CLAUDE.md
+  are stale. Always read CLAUDE.md and every record from `wip/requirements-control` (`git fetch origin wip/requirements-control`,
+  then `git show origin/wip/requirements-control:CLAUDE.md`). The CLAUDE.md on the development line `wip/b25r2-rev2` also still
+  carries an old banner naming `wip/expansion20`; the records branch copy is authoritative.
+- **CLAUDE.md commit `f78515b`** is titled "PROPOSED" but was accepted by the lead and is in force, except the text of the
+  section 5a rule (BRANCH-POL-01), which still names `wip/expansion20` and is the owner's to change (BRANCH-POL-Q1, open).
+- **No checkout or a full disk:** steps that run tools (`branch_audit.py`, `check_requirements.py`) need a checkout. Without one,
+  read the generated views in `docs/requirements/views/` from the records branch and use `git show`/`git log origin/<branch>`.
+- **A red "sim-gate" is not by itself a regression.** Since the baseline `df67e8e` was recorded for an older generator/save
+  version, the gate reports every difference from it as blocking (32-33 findings). The owner has not accepted a new baseline
+  (TEST-AUDIT-Q2). Read the findings: if all are "difference from a baseline of another version" and determinism is identical,
+  it is the known state, not a new failure.
+- **Build views:** `docs/requirements/views/BUILD_*.md` follow the register's build keys, where "25" is an expansion number (Weather,
+  Seasons and Disasters), not Build 25. The Build 25 work is in the B25-* and B25-AUD-* records (STATUS and QUEUES views).
+
 ## Where things are recorded
 
 | Need | Record |

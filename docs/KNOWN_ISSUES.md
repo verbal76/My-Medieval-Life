@@ -199,6 +199,20 @@ when the issue arose.
 - After `ed221df`/`fe7d8f8`: one frame of about 150 ms at the village's hourly work, plus the first-frame and 17:00 spikes of about
   230 ms. Measured headless only; a real PC is unmeasured.
 
+### KI-15 EMP-03: hiring competition does not count every job seeker (OPEN; found 2026-11-09 14:20 EST)
+- **Requirement:** B25-AUD-EMP-03 (owner, 2026-11-08): "Count everyone actively seeking work for hiring-competition purposes."
+- **Earlier record, corrected:** the overnight backlog (state file; `docs/decisions/B25-AUD-BACKLOG-2026-11-09.md`) said "the code
+  already counts everyone seeking work (no change)". No test or code citation backed it (coverage register HR-52), and the
+  independent recovery test of 2026-11-09 flagged it.
+- **What the code does** (`game/scripts/core/npc_brain.gd`, labour market at `c9da5db`, `seekers` near line 4813):
+  `seekers` (passed to `_hiring_competition`) counts adults who are unemployed, short of tools, hunters with no game, or employed
+  but unable to keep their household fed. It does **not** count (1) ambitious employed villagers looking for better work (the
+  `lookers` list, used only when the aspiration flags are on; off by default), (2) members of homestead households (skipped,
+  B25R1-010), (3) permanent employees (EMP-PERM-01), or (4) players. Whether each of these is "actively seeking work" in the owner's
+  sense is not settled by the code; (1) plainly is.
+- **Next:** an authorized fix under B25-AUD-EMP-03 with a failing-first test (at least case 1), then its own strict CI and a
+  recorded campaign before merging. Cases 2-4 may need the owner's reading. Not started.
+
 ## Outcomes (legitimate results of the approved rules; changing them needs the owner)
 
 ### KI-O1 No villager founds a business (OUTCOME, owner questions open)

@@ -6,7 +6,7 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 21 |
+| OPEN | 22 |
 | APPROVED | 302 |
 | PROVISIONAL | 4 |
 | SUPERSEDED | 3 |
@@ -50,10 +50,11 @@ The decision register is the `decision` records of the register. A recommendatio
 | E26-OD-08 | Can villagers' pets or guard dogs fight in village defence? (recommendation: guard dogs join the guards' line) | OPEN | no | MON-01, PET-01 | docs/design/EXPANSION26_CREATURES_AND_HEROES.md s.5 |
 | E26-OD-09 | When to build Expansion 26, and may phases 26-A..C and 26-F start before Expansion 25? | OPEN | no | MON-01, PET-01 | docs/design/EXPANSION26_CREATURES_AND_HEROES.md s.5 |
 
-## Future backlog (Build 20 or later, not assigned): open, reopened or provisional (1)
+## Future backlog (Build 20 or later, not assigned): open, reopened or provisional (2)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
+| SAV-04 | SAV-04: exact requirement for uninterrupted wildlife/combat continuity versus deterministic continuation from a saved state | OPEN | no |  | docs/directives/2026-11-09_overnight_autonomous_development.md |
 | X19-SWITCHES-D1 | Enable in normal play the integrated-but-off Build 19 recovery features: R5 aspirations (judgment.json aspiration.enabled, decision.integration.job_choice; WDR-011-C) and the R2 judgment-weighted witness report hook (decision.integration.report; SJD-F)? | OPEN | no |  | game/data/judgment.json@origin/wip/expansion20 ad281dc (_aspiration_note: 'OFF (enabled false) until validation and owner review'); R5_ASPIRATIONS_DESIGN.md (expansion20 notes, on wip/expansion20)@X20; merge 9b90e05 |
 
 ## Approved, no build assigned: open, reopened or provisional (7)

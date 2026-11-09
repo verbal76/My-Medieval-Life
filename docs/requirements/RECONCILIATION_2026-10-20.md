@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 846 (453 of them still open) |
-| **Open entries now** (rules excluded) | | **611** |
+| Entries added since | | 847 (454 of them still open) |
+| **Open entries now** (rules excluded) | | **612** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (846)
+## Added since the baseline (847)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -768,6 +768,7 @@ None.
 | ROAD-Q4 | Building condition: design it with 22-D (abandonment) or with 25 (disasters)? | decision | APPROVED | owner decision |
 | ROAD-Q5 | Batch 0 (bring wip/expansion20 and wip/expansion21 preparation onto Build 19 together) as the first step after Build 19's acceptance? | decision | APPROVED | owner decision |
 | ROOMS-18 | Inner doorways between joined house rooms, and the two survey plots relaid onto open ground | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 18 |
+| SAV-04 | SAV-04: exact requirement for uninterrupted wildlife/combat continuity versus deterministic continuation from a saved state | decision | OPEN | 20+ |
 | SEED-01 | Seed and propagation audit: crops, fruit trees, berry bushes, flowers (acquire, store, plant, grow, harvest) | approved | INTEGRATED / INTEGRATION VERIFIED / COMPLETE | 16 |
 | SEED-02 | Planting consumes real seed or propagation material for every plant type; harvests recover seed or cuttings at a deterministic chance | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
 | SEED-03 | Perennials (fruit trees, berry bushes) survive harvest and bear again by season; growth follows the 8-day year | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 16 |
