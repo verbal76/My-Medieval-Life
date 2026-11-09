@@ -6,7 +6,7 @@
   The previous stamp ("Updated 2026-11-06 19:00 EST"; "Snapshot last verified 2026-11-07 03:30 UTC ... `fe7d8f8`") had stayed
   unchanged through the 2026-11-08/09 entries below, although those entries were current. It is corrected here. The old wording
   is in git history.
-- **Snapshot last verified:** 2026-11-09 21:20 UTC (16:20 EST) by the lead, against wip/b25r2-rev2 `242ca83`,
+- **Snapshot last verified:** 2026-11-09 21:20 UTC (16:20 EST) by the lead, against wip/b25r2-rev2 `b7884d3`,
   wip/requirements-control (this commit), docs/build25-audit-register `67c667d`, Actions runs to 42664730920 (completed; no
   run in progress).
   - **Convention:** whoever checks this file against the live GitHub state writes this line as
@@ -35,7 +35,7 @@ and `wip/b25r1`, which are no longer the development line.
 | Item | Value |
 |---|---|
 | Build | Build 25, Revision 2 ("Play Test Build One"); the package label is to be "0.1.34 Rev 2 — Playtest 1" (B25R2-VER-01) |
-| **Development line (code)** | **`wip/b25r2-rev2` at `242ca83`** (fast-forwarded from `c9da5db` 2026-11-09 21:18 UTC, MP-05). Confirmed by the owner 2026-11-09 (BRANCH-POL-Q2, DEV-LINE-B25); CLAUDE.md section 5a names it |
+| **Development line (code)** | **`wip/b25r2-rev2` at `b7884d3`** = `242ca83` (MP-05, fast-forwarded from `c9da5db` 2026-11-09 21:18 UTC, the last tested code) + `b7884d3` (CLAUDE.md banner only, no code change). Confirmed by the owner 2026-11-09 (BRANCH-POL-Q2, DEV-LINE-B25); CLAUDE.md section 5a names it |
 | Records branch | `wip/requirements-control`: register, directives, this file, changelog, known issues, decision records. Lead only |
 | Audit register | branch docs/build25-audit-register, commit `257475c`, file docs/audits/2026-11-08_build25_master_audit_register.md on that branch; tracking issue #4 |
 | Running Actions | None. Last: MP-05 recorded campaign [42664730920](https://github.com/verbal76/My-Medieval-Life/actions/runs/42664730920) on `242ca83`, completed 21:13 UTC: seed 1 365/365 0 CRITICAL 17 HIGH 46 MEDIUM 0 confirmed; seed 2 365/365 0/63/42 0 confirmed (identical to `c9da5db`) |
