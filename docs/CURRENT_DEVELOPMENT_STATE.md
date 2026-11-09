@@ -25,6 +25,10 @@
   - History lives in `docs/DEVELOPMENT_CHANGELOG.md`.
 - **Recovery after lost context:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
 
+> **Work preservation, 2026-11-09 17:10 EST (HAG-PRESERVE-01):** all uncommitted work in 29 worktrees snapshotted to GitHub
+> (`wip/backup-20261109/*`, 58 branches) and verified against GitHub's copy (288 files, 0 mismatches). Free disk about 526 MB.
+> Record: `docs/audits/2026-11-09_WORK_PRESERVATION_EVENT.md`. Before disk-heavy work, check `df -h /`.
+
 ## CURRENT BUILD 25 STATE: read this first (pointer, 2026-11-09 18:34 UTC)
 
 Written by the documentation agent (HAG-FORENSICS-01) from the live GitHub state. The dated sections below hold the detail,
@@ -54,7 +58,7 @@ and `wip/b25r1`, which are no longer the development line.
 | Build 25 development, integration and merges | Lead (Claude session `754052d8`) | `wip/b25r2-rev2`; task branches `wip/b25-*` | `242ca83` | not applicable | active | Next authorized work in the pending-integration row |
 | HAG-AUTH-01 decision-authority safeguard (lifecycle, supersession links, checks, retroactive audit) | Lead | `wip/requirements-control` | (this branch) | not applicable | in development (started 2026-11-09 13:45 EST) | Checker + view + tests, then the retroactive chain audit |
 | EMP-03 hiring-competition seekers (KI-15 case 1) | Lead | `wip/b25-emp03` | `00e47a6` | strict Tests, gate and recorded campaign dispatched 2026-11-09 ~21:50 UTC | in validation | Merge into `wip/b25r2-rev2` when CI, gate and campaign are clean |
-| MP-05 forged-client security tests | Worker agent (PAR-AGENTS-01), worktree `audit-int` | local branch b25-mp05-forge (not yet pushed) | (not yet pushed) | its own test runs | in development (started ~16:30 EST) | Report to the lead; lead reviews and integrates |
+| MP-05 forged-client security tests | Worker agent (PAR-AGENTS-01), worktree `audit-int` | `wip/b25-mp05-forge` | `448fc0b` | mp05_forged_client_test 53/0, multiplayer_c 326/0 (local) | done 2026-11-09: two real holes fixed (self-described chest units; forged cart puller) | Lead reviews, runs CI, merges |
 | REG-08 courier stranding investigation | Read-only investigator agent (PAR-AGENTS-01) | none | not applicable | code reading | done 2026-11-09 | Owner policy questions B25-AUD-REG-08; record `docs/decisions/REG-08-INVESTIGATION-2026-11-09.md` |
 | MP-05 integration | Lead | `wip/b25-mp05-on-dev` | `242ca83` | campaign 42664730920 clean | merged into `wip/b25r2-rev2` 2026-11-09 21:18 UTC | Device and security checks outstanding (KI-13) |
 | Historical recovery (HAG-FORENSICS-01) | Documentation agent (subagent of the lead) | branch docs/history-recovery-2026-11 (local; the lead integrates each checkpoint into `wip/requirements-control`, since the pre-push hook refuses register copies on other branches) | integrated `8d16416` | lead integration | active | Finish changelog, state, recovery and known-issues repairs; lead runs the register commands and the independent recovery test |

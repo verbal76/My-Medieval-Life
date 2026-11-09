@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (817)
+## Approved requirement (818)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -444,6 +444,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | HAG-AUTH-01 | Permanent decision authority and supersession safeguard (lifecycle status, two-way supersession links, current-authority view, automated checks, retroactive audit) | unassigned | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | HAG-FORENSICS-01 | Permanent development forensics, GitHub accountability and historical recovery (Nov 1-9 recovery, coverage register, recovery entry points, independent recovery test, continuous checkpoints) | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | HAG-MEM-02 | Permanent GitHub memory, decision history (with rationale) and CI reporting: six memory components, a decision-rationale standard, known-issues record, recovery entry point, Markdown+JSON CI reports even on failure, durable conclusions in the repository | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| HAG-PRESERVE-01 | Urgent work preservation and disk safety: inventory, off-machine snapshots verified, isolation, safe cleanup only after verification | 20+ | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | HEALTH-01 | Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
 | HOUSE-02 | The household's responsible adult decides and builds; no sex or strength restriction (a mother can initiate and complete construction; same-sex couples found homes too) | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |

@@ -33641,6 +33641,49 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "HAG-PRESERVE-01",
+   "kind": "approved",
+   "title": "Urgent work preservation and disk safety: inventory, off-machine snapshots verified, isolation, safe cleanup only after verification",
+   "description": "Urgent work preservation and disk safety: inventory, off-machine snapshots verified, isolation, safe cleanup only after verification",
+   "source": "docs/directives/2026-11-09_urgent_work_preservation_disk_safety.md",
+   "owner_wording": "Preserve first, verify second, clean up third, resume normal development fourth. If you cannot establish a verified recovery path, do not claim the files are safe.",
+   "approval": "owner, 2026-11-09",
+   "acceptance": [
+    "Every uncommitted, staged and untracked file preserved off-machine with verified content and ancestry; isolation restored; only verified-safe cleanup; event recorded"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_urgent_work_preservation_disk_safety.md"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> 29/29 worktrees, 288 files matched against GitHub's copy, 0 mismatches; 58/58 refs; integrated_in + wip/requirements-control (event record)",
+     "why": "preservation done and verified; event record docs/audits/2026-11-09_WORK_PRESERVATION_EVENT.md"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "target_build: 25 -> 20+",
+     "why": "build key: register build 25 is an expansion number; use the 20+ backlog key like the other 2026-11 process records"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "tests": "29/29 worktrees, 288 files matched against GitHub's copy, 0 mismatches; 58/58 refs",
+   "integrated_in": [
+    "wip/requirements-control (event record)"
+   ]
+  },
+  {
    "id": "HEALTH-01",
    "title": "Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions)",
    "kind": "approved",

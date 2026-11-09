@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 
 Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backlog, approved work with no build, work waiting on an owner decision for its build, and proposals and ideas. Nothing here is assigned to Build 20 or 21 until the owner says so.
 
-## Build 20 or later (backlog) (71)
+## Build 20 or later (backlog) (72)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -44,6 +44,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | FR-02 | Forgotten Memories waterfalls, fences and props | approved | OWNER APPROVED | NOT STARTED |
 | FR-03 | A campfire for cooking raw meat outside the village | approved | OWNER APPROVED | NOT STARTED |
 | FR-10 | Archery | approved | DEFERRED | NOT STARTED |
+| HAG-PRESERVE-01 | Urgent work preservation and disk safety: inventory, off-machine snapshots verified, isolation, safe cleanup only after verification | approved | OWNER APPROVED | INTEGRATED |
 | HOUSE-11 | Evaluate the alternatives where a ground-floor addition is impossible (OD-14 item 6): a smaller configuration, and whether an upper-floor or attic conversion is practical in the existing building system; no new upper-floor system invented to bypass geometry | approved | DEFERRED | NOT STARTED |
 | JUICE-00 | Preliminary Game Juice and player feedback assessment (unnumbered presentation workstream, read-only) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | LE-00 | Living Economy stage LE-00: Repository audit and cross-system dependencies (read-only architecture audit first) | approved | OWNER APPROVED | INTEGRATED |
