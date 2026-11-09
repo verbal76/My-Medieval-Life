@@ -148,6 +148,7 @@
  "biz08_venture_hands_load_test": 5,
  "trd01_guest_stall_settle_test": 8,
  "sav03_counter_reload_test": 6,
+ "mp05_forged_client_test": 53,
  "net_interact_test": 68,
  "net_mp4_test": 148,
  "net_recorder_quit_test": 20,

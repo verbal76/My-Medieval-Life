@@ -406,6 +406,7 @@ jobs:
           res://tests/net_family_test.gd         # MP-PLAYER-FAMILY between two processes
           res://tests/net_interact_test.gd       # MP-INTERACT-01 between three processes
           res://tests/mp05_mutual_asset_share_test.gd   # MP-05: owner-approved gameplay regression
+          res://tests/mp05_forged_client_test.gd       # MP-05: a modified guest client's forged requests refused by the host
           res://tests/net_fault_test.gd          # MP Batch D: invite codes, loss, reordering, pauses, killed and restarted hosts
           res://tests/net_mp4_test.gd            # X20 phase 4.5: one host with two, then three guests (four players)
           res://tests/net_recorder_quit_test.gd  # X20: a flight recording ends whenever its world is closed in order

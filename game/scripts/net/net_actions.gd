@@ -27,6 +27,8 @@ const TEXT_ARGS := {"player_offer": [7], "player_tell": [0]}
 const CONTRACT_SIDE := {"contracts.deliver": "deliver", "contracts.accept_offer": "seller", "contracts.counter_offer": "seller",
 	"contracts.decline_offer": "seller", "ContractServices:player_report": "seller", "ContractServices:player_collect": "buyer",
 	"ContractServices:player_harvest": "seller", "contracts.dispute": "party"}
+## MP-05: the verbs whose first argument is a chest unit (Chests.unit): sent by name ({"$r": "unit"}) only, never as a record.
+const UNIT_VERBS := ["chests.store", "chests.take", "chests.set_own_lock", "player_pick_lock"]
 const VERB_REACH := 24.0              # tiles: what a guest acts on is on its screen (the interface's own reach rules apply in the verb)
 
 ## Every player verb a guest's interface can call, by the path World.mirror sends: "" the World itself, "<field>." a module the World
@@ -147,6 +149,14 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 			var site: Dictionary = args[0].get("site", {})
 			if args[1] != p.inv or str(site.get("owner", "")) != w.player_ref(p):
 				bad.why = "That is not your building site."
+	# MP-05 (forged-client audit): a chest unit is named, never described. Chests.info reads ownership and the store from the unit
+	# itself, so a self-made record ("my own cart" wrapping another player's cart load or a household's pantry) would be opened as
+	# the guest's own. Only a unit the host resolves by its id (Chests.unit) is acted on.
+	if bad.why == "" and path in UNIT_VERBS and (raw.is_empty() or not (raw[0] is Dictionary) or str(raw[0].get("$r", "")) != "unit"):
+		bad.why = "That is not there any more."
+	# MP-05: a guest takes hold of a cart as itself only (Carts.hitch takes the puller as an argument and checks only that one).
+	if bad.why == "" and path == "carts.hitch" and (args.size() != 2 or str(args[1]) != w.player_ref(p)):
+		bad.why = "That is not yours."
 	if bad.why != "":
 		return _answer(w, p, false, str(bad.why))
 	if path == "player_loot" and args.size() == 1 and args[0] is Dictionary:
