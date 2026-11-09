@@ -345,6 +345,11 @@ My Medieval Life is a commercial game headed for Steam Early Access. Every agent
 - **Release policy (owner standing directive 2026-10-21, `docs/directives/2026-10-21_standing_continuous_release_directive.md`;
   supersedes the 2026-10-18 rule that each release needs the owner's approval for that occasion).** Development runs on a
   continuous develop, test, release and advance model:
+  - **Superseded for releases (owner, 2026-11-09, REL-OWNER-01, `docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md`):**
+    "No automatic publishing or creation of releases, including private-draft releases, based solely on passing validation
+    gates." Agents develop, run authorized tests, prepare packages where already authorized and report release readiness; the
+    owner authorizes creating or publishing each release. The automatic-release text below is kept as history; its clause on
+    deciding and documenting minor implementation details still applies.
   - When a milestone (a build's approved scope) is complete and its automated gate passes (suites, determinism gate,
     conservation, the four-seed runs of the normal game, save migration, three-platform export), run
     `.github/workflows/release.yml` by hand and publish its APK, Windows and Linux packages to GitHub Releases without
@@ -400,15 +405,18 @@ My Medieval Life is a commercial game headed for Steam Early Access. Every agent
 
 `docs/directives/2026-11-02_branch_consolidation_worktree_control.md`; rationale `docs/decisions/BRANCH-POL-01.md`.
 
-- **One integration branch for code: `wip/expansion20`.** *(2026-11-09 note, HAG-FORENSICS-01: since 2026-11-03 the owner's
-  directives have named the development line `wip/b25r1`, then `wip/b25r2-rev2`. The one-line rule still holds; the named branch
-  is now `wip/b25r2-rev2`. Changing this rule's own text is for the owner.)* Every finished, validated unit of work lands there. No other
+- **One integration branch for code: `wip/b25r2-rev2`** (owner, 2026-11-09, BRANCH-POL-Q2 and DEV-LINE-B25,
+  `docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md`). *History: this rule named `wip/expansion20` from 2026-11-02;
+  the owner's directives moved the line to `wip/b25r1` on 2026-11-03, then `wip/b25r2-rev2`; the owner confirmed the text change
+  on 2026-11-09. `wip/expansion20`, `wip/b25r1` and `wip/b25r2-playtest` are frozen.* Every finished, validated unit of work lands there. No other
   branch is a development mainline, and no worker redefines the baseline: a worker never merges another worker's branch,
   never rebases the integration branch and never starts a branch from anything but the integration head.
 - **Records are separate, not a second mainline.** `wip/requirements-control` holds the register, directives, decision
   records, the state file, changelog and known issues, and is edited by the lead only. The owner keeps it isolated from the
   code line (DOC-RECON-01 review, 2026-10-31: "Do not merge wip/requirements-control into staging, wip/expansion20, or the
-  gameplay baseline without my approval"), so nobody merges the two lines without the owner.
+  gameplay baseline without my approval"), so nobody merges the two lines without the owner. Confirmed 2026-11-09
+  (BRANCH-POL-Q1): "Do not merge these two branches merely to consolidate records. The development branch owns integrated game
+  code. The records branch owns the authoritative requirements, decisions, and documentation."
 - **Worker branches are short-lived.** One branch `wip/b25-<task>` (or the build's prefix) per task, from the current
   integration head, in its own worktree, owning a named set of files and systems. A worker pushes snapshots there and
   reports; the lead reviews and merges each validated unit **promptly** (the same session, not after other work piles up).
@@ -492,6 +500,12 @@ sequence. Implementation that already exists is never described as approved beca
   rewrite the earlier rule; preserve it and document any intentional change. Future-stage answers authorize no
   implementation. First review: `docs/design/DECISION_CONTINUITY_REVIEW_2026-10-27.md`.
 
+- **Conflicting decisions (owner, 2026-11-09, DECISION-CONFLICT-01):** the latest explicit owner decision governs the specific
+  subject it changes; it does not supersede unrelated requirements or every part of an earlier directive. When two decisions
+  appear to conflict, never pick one silently: prepare the owner-decision analysis in `docs/requirements/SCHEMA.md`
+  ("Conflict analysis": original position, later position, other alternatives, complete system impact, recommendation) and
+  implement nothing ambiguous until the owner resolves it; then update the register, supersession chains, system documentation
+  and regression requirements. Settled owner decisions are not reopened because an older document says otherwise.
 - **Decision authority and supersession (owner, 2026-11-09, HAG-AUTH-01, `docs/directives/2026-11-09_decision_authority_supersession_safeguard.md`;
   permanent).** Historical documentation is never current authority. Every substantive decision has a stable register id and a
   lifecycle (ACTIVE, SUPERSEDED, COMPLETED, REJECTED, DEFERRED, UNDER REVIEW). A superseded decision is kept, marked SUPERSEDED with
@@ -552,6 +566,15 @@ or historical (`docs/DECISIONS.md` narrative log, `docs/DEVELOPMENT_QUEUE.md`, a
 
 ## 10. Parallel agents
 
+- **Agent limit (owner, 2026-11-09, PAR-AGENTS-01; supersedes the one-worker restriction where they conflict):** one lead plus
+  up to two additional Claude agents at once, only when genuinely useful. Each has one responsibility and deliverable, its own
+  isolated worktree and authorized branch; no two agents change the same files or systems at once without a documented
+  coordination plan; the lead reviews, tests and integrates; workers push recoverable checkpoints with their decisions, results
+  and unfinished work; no duplicated simulations or needless expensive reruns; token use is monitored. More than two additional
+  agents needs the owner.
+- **Baselines (owner, 2026-11-09, BASELINE-AUTH-01):** no agent promotes, replaces or re-records a simulation baseline. Agents may
+  investigate, produce clearly labelled candidate baselines, measure differences and recommend; the owner authorizes promotion.
+  The Generation 8 decision (TEST-AUDIT-Q2) is preserved. Never change a baseline to make a failing test pass.
 - The lead agent integrates code into the development line (`wip/b25r2-rev2`; formerly `wip/expansion20`) and records into `wip/requirements-control` under sections 5 and
   5a. A
   parallel agent (a subagent or another session working beside the lead) uses one branch and one draft PR per task,

@@ -81,6 +81,12 @@ It works alongside `CLAUDE.md` section 0. The repository is the record. Never re
 
 ## Decision authority (HAG-AUTH-01, 2026-11-09)
 
+- **Owner resolutions of 2026-11-09 (`docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md`), in force:** one lead plus up
+  to two additional agents (PAR-AGENTS-01); no automatic creation or publication of any release, private drafts included
+  (REL-OWNER-01); code line `wip/b25r2-rev2`, records `wip/requirements-control`, kept separate (BRANCH-POL-Q1/Q2); only the owner
+  promotes a simulation baseline (BASELINE-AUTH-01); apparent conflicts get the full analysis in `docs/requirements/SCHEMA.md`
+  (DECISION-CONFLICT-01). Do not reopen them because an older document says otherwise.
+
 - Before acting on any decision, open `docs/requirements/views/AUTHORITY.md` on the records branch: it names the current development
   line and frozen branches, every record's lifecycle, and for each superseded decision the record that governs now and why.
   A document that disagrees with an ACTIVE register record is historical unless the register says otherwise.
@@ -93,7 +99,7 @@ It works alongside `CLAUDE.md` section 0. The repository is the record. Never re
   then `git show origin/wip/requirements-control:CLAUDE.md`). The CLAUDE.md on the development line `wip/b25r2-rev2` also still
   carries an old banner naming `wip/expansion20`; the records branch copy is authoritative.
 - **CLAUDE.md commit `f78515b`** is titled "PROPOSED" but was accepted by the lead and is in force, except the text of the
-  section 5a rule (BRANCH-POL-01), which still names `wip/expansion20` and is the owner's to change (BRANCH-POL-Q1, open).
+  section 5a rule (BRANCH-POL-01), which still named `wip/expansion20`. *Resolved 2026-11-09 15:10 EST: the owner confirmed `wip/b25r2-rev2` and the separate records branch (BRANCH-POL-Q1, BRANCH-POL-Q2, DEV-LINE-B25); the rule text now names `wip/b25r2-rev2`.*
 - **No checkout or a full disk:** steps that run tools (`branch_audit.py`, `check_requirements.py`) need a checkout. Without one,
   read the generated views in `docs/requirements/views/` from the records branch and use `git show`/`git log origin/<branch>`.
 - **A red "sim-gate" is not by itself a regression.** Since the baseline `df67e8e` was recorded for an older generator/save

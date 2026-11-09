@@ -6,8 +6,8 @@ The decision register is the `decision` records of the register. A recommendatio
 
 | Disposition | Count |
 |---|---|
-| OPEN | 23 |
-| APPROVED | 299 |
+| OPEN | 21 |
+| APPROVED | 301 |
 | PROVISIONAL | 4 |
 | SUPERSEDED | 6 |
 | REOPENED | 0 |
@@ -57,21 +57,14 @@ The decision register is the `decision` records of the register. A recommendatio
 | SAV-04 | SAV-04: exact requirement for uninterrupted wildlife/combat continuity versus deterministic continuation from a saved state | OPEN | no |  | docs/directives/2026-11-09_overnight_autonomous_development.md |
 | X19-SWITCHES-D1 | Enable in normal play the integrated-but-off Build 19 recovery features: R5 aspirations (judgment.json aspiration.enabled, decision.integration.job_choice; WDR-011-C) and the R2 judgment-weighted witness report hook (decision.integration.report; SJD-F)? | OPEN | no |  | game/data/judgment.json@origin/wip/expansion20 ad281dc (_aspiration_note: 'OFF (enabled false) until validation and owner review'); R5_ASPIRATIONS_DESIGN.md (expansion20 notes, on wip/expansion20)@X20; merge 9b90e05 |
 
-## Approved, no build assigned: open, reopened or provisional (7)
+## Approved, no build assigned: open, reopened or provisional (6)
 
 | ID | Question | Disposition | Blocks implementation | Affects | Source |
 |---|---|---|---|---|---|
-| BRANCH-POL-Q1 | Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion20 (code), with notices on the code line's copies (recommended); or authorize bringing the records into wip/expansion20 as one reviewed change (files only, not the old ancestry)? | OPEN | no |  | docs/decisions/BRANCH-POL-01.md |
 | ID-D3 | Identity gate baseline: approve the candidate new baseline (docs/design/IDENTITY_GATE_CANDIDATE.json)? Its only divergences (day 13 on both seeds) come from arrivals keeping their permanent band id, which changes traits Build 18 hashes from the id (chapel piety, caravan taste, skill seed, willingness, sprite). Alternatively those traits could be seeded from a stored per-person seed so they no longer depend on the id value (a design change). | PROVISIONAL | no |  | docs/directives/2026-10-23_id_d2_succession_decisions.md |
 | JUICE-JD2 | Day and night: should the picture darken at night (how dark at midnight; interiors; underground already dark)? | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D2 (origin/wip/juice-assessment bebf1f3) |
 | JUICE-JD3 | Villager chatter: how often may villagers show what they are doing in bubbles (OWN-19 extension)? | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D3 |
 | JUICE-JD4 | Screen shake and haptics: allowed at all, on which events, and default on or off? | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D4 |
 | JUICE-JD5 | Notifications: which village notes the player sees in the corner log by default, and whether a filter exists. | OPEN | no |  | the juice assessment PRELIMINARY_ASSESSMENT.md (only on branch wip/juice-assessment) section 6 D5 |
 | TEST-AUDIT-Q2 | Accept a new simulation baseline (SIM-GATE-01) recorded from the final B25R2 commit, for overworld generation 8 and save version 23? The current one (df67e8e) predates the band household (bf20dc9, B25R1-Q2 a) and generations 6-8; every difference is traced to approved changes (docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md). Recommendation: yes, once the 365-day campaign on the final commit is read. | PROVISIONAL | no | B25R2-DRAFT-01, B25R2-PKG-01 | docs/audits/2026-11-06_TEST_REGIMEN_AUDIT.md |
-
-## Waiting on an owner decision for its build: open, reopened or provisional (1)
-
-| ID | Question | Disposition | Blocks implementation | Affects | Source |
-|---|---|---|---|---|---|
-| BRANCH-POL-Q2 | Amend BRANCH-POL-01's rule text (CLAUDE.md section 5a, 'One integration branch for code: wip/expansion20') to name the current development line wip/b25r2-rev2, or keep it as historical text with the dated note? | OPEN | no |  | docs/directives/2026-11-09_decision_authority_supersession_safeguard.md; HAG-AUTH-01 retroactive audit |
 

@@ -131,10 +131,16 @@ class DocumentTest(unittest.TestCase):
 
     def test_acknowledged_stale_line_lapses_when_the_decision_is_made(self):
         d = copy.deepcopy(REGISTER)
+        q = next(r for r in d["requirements"] if r["kind"] == "decision" and da.lifecycle(r) == "UNDER REVIEW")
+        d["authority"]["acknowledged_stale"] = [{"file": "CLAUDE.md", "contains": "One integration branch for code: `wip/expansion20`",
+                                                 "decision": q["id"], "why": "test"}]
         tmp = self._docs()
         (tmp / "CLAUDE.md").write_text("`wip/b25r2-rev2` `wip/requirements-control`\n- **One integration branch for code: `wip/expansion20`.**\n")
         self.assertEqual(da.document_errors(d, tmp), [])
-        q = _by(d, d["authority"]["acknowledged_stale"][0]["decision"])
+        d["authority"]["acknowledged_stale"] = []
+        self.assertTrue(any("presents frozen branch" in e for e in da.document_errors(d, tmp)))
+        d["authority"]["acknowledged_stale"] = [{"file": "CLAUDE.md", "contains": "One integration branch for code: `wip/expansion20`",
+                                                 "decision": q["id"], "why": "test"}]
         q["disposition"], q["owner_answer"] = "APPROVED", "test"
         self.assertTrue(any("no longer under review" in e for e in da.document_errors(d, tmp)))
 

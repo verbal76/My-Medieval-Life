@@ -11,15 +11,8 @@
    "wip/b25r2-playtest",
    "staging/my-medieval-life"
   ],
-  "source": "owner directives 2026-11-08 (Development branch wip/b25r2-rev2), docs/directives/2026-11-08_recovered_owner_messages.md; records branch BRANCH-POL-01; frozen per docs/CURRENT_DEVELOPMENT_STATE.md pointer (2026-11-09). Update this block when the owner names a new line.",
-  "acknowledged_stale": [
-   {
-    "file": "CLAUDE.md",
-    "contains": "One integration branch for code: `wip/expansion20`",
-    "decision": "BRANCH-POL-Q2",
-    "why": "BRANCH-POL-01's rule text; changing it is the owner's decision (a dated note beside it names wip/b25r2-rev2)"
-   }
-  ]
+  "source": "owner 2026-11-09 resolutions to HAG-AUTH-01, decision 3 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md): development line wip/b25r2-rev2, records branch wip/requirements-control kept separate (BRANCH-POL-Q1/Q2, DEV-LINE-B25). Update this block when the owner names a new line.",
+  "acknowledged_stale": []
  },
  "builds": {
   "15": {
@@ -132,7 +125,7 @@
    "next_action": "",
    "priority": "",
    "workstream": "",
-   "superseded_by": "MML-CONSERVE-01",
+   "superseded_by": "PAR-AGENTS-01",
    "notes": "Owner master directive 2026-10-21 section 3 authorizes up to four implementation workers for the Build 16 push (each in its own worktree and branch, lead integrates; no nested agents)",
    "history": [
     {
@@ -164,6 +157,11 @@
      "date": "2026-11-09",
      "change": "approval_status: OWNER APPROVED -> SUPERSEDED; completion: COMPLETE -> CLOSED; superseded_by: None -> MML-CONSERVE-01",
      "why": "HAG-AUTH-01 retroactive audit 2026-11-09: docs/directives/2026-11-02_credit_conservation_controlled_development.md: 'This directive supersedes previous instructions permitting multiple simultaneous MML workers.' Which worker limit governs now (MML-CONSERVE-01 vs B25-OVN-0211 vs VAL-AGENT-01) is raised to the owner, not settled here"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "superseded_by: MML-CONSERVE-01 -> PAR-AGENTS-01",
+     "why": "owner resolutions to HAG-AUTH-01 decision 1: the worker-count subject is governed by PAR-AGENTS-01; AGENT-01 was superseded 2026-11-02 by MML-CONSERVE-01's one-worker clause, itself superseded on that subject (MML-CONSERVE-01 otherwise stays active)"
     }
    ],
    "target_build": "16",
@@ -7335,6 +7333,11 @@
      "date": "2026-11-09",
      "change": "note",
      "why": "HAG-AUTH-01 retroactive audit 2026-11-09: for B25R1 the private-draft clause was overridden by docs/directives/2026-11-05_b25r1_release_visibility_correction.md ('The owner requires a PUBLIC GitHub Release, not a private draft'); build-34 was published publicly 2026-11-06"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 2: its release step needs the owner's authorization for that release (REL-OWNER-01)"
     }
    ],
    "branch": "wip/region-nav",
@@ -7768,6 +7771,11 @@
      "date": "2026-11-09",
      "change": "note",
      "why": "HAG-AUTH-01 retroactive audit 2026-11-09: lifted the one-worker limit (MML-CONSERVE-01; DOC-CONT-01 s.14) with 'several independent workstreams' for that session (docs/decisions/B25-OVN-0211.md); current limit raised to the owner"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 1: parallel workstreams now bounded by PAR-AGENTS-01 (at most two additional agents)"
     }
    ],
    "commits": [
@@ -9696,6 +9704,11 @@
      "date": "2026-11-09",
      "change": "supersedes + B25R2-Q3",
      "why": "supersession made two-way: B25R2-Q3 superseded by B25R2-DRAFT-01"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 2 (REL-OWNER-01): its 'proceed with the normal private draft release workflow without requesting the same publication approval again' is superseded; creating the private draft needs the owner's authorization. Its visibility answer (private draft only, no public release) still stands"
     }
    ],
    "reasoning": "Conditional authorization: release.yml publishes only when SIM-GATE-01 passes; the gate is red only on the generation-blind baseline (df67e8e), whose replacement needs the owner (TEST-AUDIT-Q2).",
@@ -13815,9 +13828,46 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "BASELINE-AUTH-01",
+   "kind": "approved",
+   "title": "Baseline authority: only the owner authorizes promoting, replacing or re-recording a simulation baseline",
+   "description": "Baseline authority: only the owner authorizes promoting, replacing or re-recording a simulation baseline",
+   "source": "docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md",
+   "owner_wording": "No agent has independent authority to promote, replace, or re-record simulation baselines. Agents may investigate discrepancies, produce candidate baselines, measure differences, and recommend changes supported by evidence. The owner must authorize baseline promotion.",
+   "approval": "owner, 2026-11-09",
+   "acceptance": [
+    "No baseline is promoted or re-recorded without owner authorization; candidates are labelled as unapproved; the Generation 8 decision (TEST-AUDIT-Q2) is preserved"
+   ],
+   "target_build": "25",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "supersedes + GP-BASELINE-POLICY",
+     "why": "supersession made two-way: GP-BASELINE-POLICY superseded by BASELINE-AUTH-01"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "supersedes": [
+    "GP-BASELINE-POLICY"
+   ]
+  },
+  {
    "id": "BRANCH-POL-01",
    "kind": "approved",
-   "title": "Branch and worktree policy: one code integration branch (wip/expansion20), short-lived task branches, prompt audited merges, no unrelated ancestry, nothing deleted with unmerged work, every integration SHA recorded",
+   "title": "Branch and worktree policy: one code integration branch (wip/b25r2-rev2 since the owner's 2026-11-08/09 decisions; wip/expansion20 until 2026-11-03), short-lived task branches, prompt audited merges, no unrelated ancestry, records branch separate",
    "description": "Branch and worktree policy: one code integration branch (wip/expansion20), short-lived task branches, prompt audited merges, no unrelated ancestry, nothing deleted with unmerged work, every integration SHA recorded",
    "source": "docs/directives/2026-11-02_branch_consolidation_worktree_control.md",
    "owner_wording": "Consolidate the active development work into one integration branch. ... Correct the underlying workflow problem, not merely the current branch structure.",
@@ -13852,6 +13902,11 @@
      "date": "2026-11-09",
      "change": "note",
      "why": "HAG-AUTH-01 retroactive audit 2026-11-09: partly narrowed: the owner's 2026-11-08 directives name wip/b25r2-rev2 as the development branch (DEV-LINE-B25); the one-line principle stands; its rule text still names wip/expansion20 pending BRANCH-POL-Q2"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "title",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 3 (BRANCH-POL-Q2): branch name updated; previous title named wip/expansion20 (kept in this history line)"
     }
    ],
    "commits": [
@@ -13866,8 +13921,8 @@
    "description": "Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion20 (code), with notices on the code line's copies (recommended); or authorize bringing the records into wip/expansion20 as one reviewed change (files only, not the old ancestry)?",
    "source": "docs/decisions/BRANCH-POL-01.md",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Keep them separate (owner, 2026-11-09, docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md, decision 3): 'The authoritative documentation and requirements-control branch remains separate: wip/requirements-control. Do not merge these two branches merely to consolidate records. The development branch owns integrated game code. The records branch owns the authoritative requirements, decisions, and documentation.'",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "unassigned",
    "related": [],
@@ -13878,9 +13933,14 @@
      "date": "2026-11-02",
      "change": "entered in the register",
      "why": "docs/decisions/BRANCH-POL-01.md"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 3"
     }
    ],
-   "lifecycle": "UNDER REVIEW"
+   "lifecycle": "ACTIVE"
   },
   {
    "id": "BRANCH-POL-Q2",
@@ -13889,8 +13949,8 @@
    "description": "Amend BRANCH-POL-01's rule text (CLAUDE.md section 5a, 'One integration branch for code: wip/expansion20') to name the current development line wip/b25r2-rev2, or keep it as historical text with the dated note?",
    "source": "docs/directives/2026-11-09_decision_authority_supersession_safeguard.md; HAG-AUTH-01 retroactive audit",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "Amend (owner, 2026-11-09, docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md, decision 3): 'The authoritative Build 25 development branch is: wip/b25r2-rev2. Update outdated branch-policy instructions that still identify wip/expansion20 as the current development line.'",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "owner decision",
    "related": [],
@@ -13901,9 +13961,14 @@
      "date": "2026-11-09",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-09_decision_authority_supersession_safeguard.md; HAG-AUTH-01 retroactive audit"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 3"
     }
    ],
-   "lifecycle": "UNDER REVIEW"
+   "lifecycle": "ACTIVE"
   },
   {
    "id": "BUILD-3PLATFORM",
@@ -16907,6 +16972,40 @@
      "date": "2026-11-09",
      "change": "approval_status: PROPOSED -> OWNER APPROVED; approval",
      "why": "HAG-AUTH-01 retroactive audit 2026-11-09: correction: recorded PROPOSED although it is a saved owner directive"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 5 (DECISION-CONFLICT-01): read together with DOC-RECON-01: the latest explicit owner decision governs the subject it changes; it does not retire unrelated parts of an earlier decision; apparent conflicts get the A-E analysis"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "DECISION-CONFLICT-01",
+   "kind": "approved",
+   "title": "Conflicting decisions: the latest explicit owner decision governs only the subject it changes; apparent conflicts get a full A-E owner-decision analysis",
+   "description": "Conflicting decisions: the latest explicit owner decision governs only the subject it changes; apparent conflicts get a full A-E owner-decision analysis",
+   "source": "docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md",
+   "owner_wording": "The latest explicit owner decision governs the specific subject it actually changes. However, a later answer does not automatically supersede unrelated requirements or every part of an earlier directive. When two decisions appear to conflict, do not silently select one.",
+   "approval": "owner, 2026-11-09",
+   "acceptance": [
+    "Every apparent conflict is raised with the A-E analysis (original position, later position, alternatives, full system impact, recommendation) and nothing ambiguous is implemented before the owner resolves it; then register, chains, system docs and regression requirements are updated"
+   ],
+   "target_build": "25",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md"
     }
    ],
    "lifecycle": "ACTIVE"
@@ -17038,6 +17137,11 @@
      "date": "2026-11-08",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-08_prop06_estate_tenancy_migration.md; docs/directives/2026-11-09_permanent_development_forensics.md"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 3: confirmed 'The authoritative Build 25 development branch is: wip/b25r2-rev2'"
     }
    ],
    "lifecycle": "ACTIVE"
@@ -17972,6 +18076,11 @@
      "date": "2026-10-31",
      "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> check_requirements 0 problems (and --against staging); tests.test_requirements 23 OK; status-file path check; test_commit: None -> 7864a61; commits + 7864a61",
      "why": "reconciliation done on wip/requirements-control; awaiting the owner's review and merge authorization"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 5 (DECISION-CONFLICT-01): 'latest explicit owner decision takes precedence' applies to the specific subject the later decision changes, consistent with DCR-01"
     }
    ],
    "assigned_worker": "lead",
@@ -29947,11 +30056,11 @@
    "parent": null,
    "depends_on": [],
    "decisions": [],
-   "approval_status": "OWNER APPROVED",
+   "approval_status": "SUPERSEDED",
    "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
-   "completion": "OPEN",
+   "completion": "CLOSED",
    "history": [
     {
      "date": "2026-10-24",
@@ -29982,6 +30091,11 @@
      "date": "2026-11-09",
      "change": "note",
      "why": "HAG-AUTH-01 retroactive audit 2026-11-09: narrowed: TEST-AUDIT-Q2 'stop for explicit final owner approval'; 2026-11-06 'Do not promote or replace the Generation 8 baseline. That decision remains mine.'; owner 2026-11-08 'Never automatically re-record simulation baselines.' Raised to the owner whether any agent baseline authority remains"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "approval_status: OWNER APPROVED -> SUPERSEDED; completion: OPEN -> CLOSED; superseded_by: None -> BASELINE-AUTH-01",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 4: 'No agent has independent authority to promote, replace, or re-record simulation baselines.' Kept as history"
     }
    ],
    "assigned_worker": "primary development agent",
@@ -29992,7 +30106,8 @@
    "tests": "sim_gate.py PASS against the new baseline at 9feaf77 (lead rerun); baseline diff checked by the lead",
    "test_commit": "9feaf77",
    "notes": "Reconciled 2026-10-31 (DOC-RECON-01): 5ceffe5 is in wip/expansion20 ad281dc; the policy has governed every baseline replacement since (89ee91c, e584a01, 465a6a2, ad281dc).",
-   "lifecycle": "ACTIVE"
+   "lifecycle": "SUPERSEDED",
+   "superseded_by": "BASELINE-AUTH-01"
   },
   {
    "id": "GP-BUSINESS-COURIER",
@@ -33384,6 +33499,11 @@
      "date": "2026-11-09",
      "change": "implementation_status: IN DEVELOPMENT -> INTEGRATED; verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> tests/test_decision_authority.py 10/0; full Python suite 120 OK; check_requirements 0 problems; test_commit: None -> 5339c06; commits + 5339c06; integrated_in + wip/requirements-control 5339c06 (tooling) + retroactive audit (this commit)",
      "why": "safeguard in force; retroactive content audit applied (4 supersessions, DCR-01 correction, DEV-LINE-B25, BRANCH-POL-Q2, B25R1-REL-PUBLIC, 13 partial-change notes); 4 conflicts raised to the owner"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "owner resolved the five conflicts the retroactive audit raised (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md); recorded as PAR-AGENTS-01, REL-OWNER-01, BRANCH-POL-Q1/Q2, BASELINE-AUTH-01, DECISION-CONFLICT-01"
     }
    ],
    "assigned_worker": "lead",
@@ -39803,15 +39923,22 @@
      "date": "2026-11-09",
      "change": "supersedes + AGENT-01",
      "why": "supersession made two-way: AGENT-01 superseded by MML-CONSERVE-01"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 1: its one-worker restriction is superseded by PAR-AGENTS-01 to the extent it conflicts (one lead plus up to two additional agents); its other parts (priorities, conservation) are unchanged"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "supersedes - AGENT-01 (moved to PAR-AGENTS-01)",
+     "why": "owner resolutions to HAG-AUTH-01 decision 1: the worker-count subject is governed by PAR-AGENTS-01; AGENT-01 was superseded 2026-11-02 by MML-CONSERVE-01's one-worker clause, itself superseded on that subject (MML-CONSERVE-01 otherwise stays active)"
     }
    ],
    "commits": [
     "34e1041"
    ],
-   "lifecycle": "ACTIVE",
-   "supersedes": [
-    "AGENT-01"
-   ]
+   "lifecycle": "ACTIVE"
   },
   {
    "id": "MON-01",
@@ -46921,6 +47048,43 @@
    "release_status": "RELEASED",
    "completion": "COMPLETE",
    "lifecycle": "COMPLETED"
+  },
+  {
+   "id": "PAR-AGENTS-01",
+   "kind": "approved",
+   "title": "Parallel agents: one lead plus up to two additional Claude agents, each scoped, isolated and integrated by the lead",
+   "description": "Parallel agents: one lead plus up to two additional Claude agents, each scoped, isolated and integrated by the lead",
+   "source": "docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md",
+   "owner_wording": "You are authorized to operate with one lead agent and up to two additional Claude agents simultaneously. ... Do not exceed two additional agents without further owner authorization. The previous standing one-worker restriction is superseded to the extent it conflicts with this authorization.",
+   "approval": "owner, 2026-11-09",
+   "acceptance": [
+    "At most two additional agents at once; each with one responsibility, its own worktree and branch, no concurrent edits to the same files without a documented plan; lead reviews and integrates; checkpoints pushed; no duplicated simulations; token use monitored"
+   ],
+   "target_build": "25",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "supersedes + AGENT-01",
+     "why": "owner resolutions to HAG-AUTH-01 decision 1: the worker-count subject is governed by PAR-AGENTS-01; AGENT-01 was superseded 2026-11-02 by MML-CONSERVE-01's one-worker clause, itself superseded on that subject (MML-CONSERVE-01 otherwise stays active)"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "supersedes": [
+    "AGENT-01"
+   ]
   },
   {
    "id": "PERF-01",
@@ -54938,7 +55102,7 @@
    "next_action": "",
    "priority": "",
    "workstream": "",
-   "superseded_by": null,
+   "superseded_by": "REL-OWNER-01",
    "notes": "Owner clarification 2026-10-21: completed milestone releases, Build 16 included, are published (visibility public) to the GitHub Releases tab once their acceptance tests pass",
    "history": [
     {
@@ -54960,17 +55124,65 @@
      "date": "2026-11-09",
      "change": "note",
      "why": "HAG-AUTH-01 retroactive audit 2026-11-09: narrowed for Build 25 (no automatic publication): MP-INTERACT-01 'This restriction includes private releases'; B25-SCOPE-REGION 'not complete until ... the owner authorizes release'; B25R2-DRAFT-01 'Not authorized: a public GitHub release'; owner 2026-11-08 and 2026-11-09 'do not publish'. Whether it applies again after Build 25 is the owner's"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "approval_status: OWNER APPROVED -> SUPERSEDED; completion: COMPLETE -> CLOSED; superseded_by: None -> REL-OWNER-01",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 2: 'No automatic publishing or creation of releases, including private-draft releases ... Previously granted automatic release permissions that conflict with this decision are superseded.' Kept as history. Its clause 'decide minor implementation details yourself, document them' is not about releases and continues (carried in REL-OWNER-01's notes)"
     }
    ],
    "integrated_in": [],
    "migrated_from_status": "COMPLETE AND VERIFIED",
-   "approval_status": "OWNER APPROVED",
+   "approval_status": "SUPERSEDED",
    "implementation_status": "NOT APPLICABLE",
    "verification_status": "NOT APPLICABLE",
    "legacy_evidence": "v1 COMPLETE AND VERIFIED with its recorded evidence (implementation or commits)",
    "release_status": "NOT APPLICABLE",
-   "completion": "COMPLETE",
-   "lifecycle": "ACTIVE"
+   "completion": "CLOSED",
+   "lifecycle": "SUPERSEDED"
+  },
+  {
+   "id": "REL-OWNER-01",
+   "kind": "approved",
+   "title": "Release authorization stays with the owner: no automatic creation or publication of releases, private drafts included",
+   "description": "Release authorization stays with the owner: no automatic creation or publication of releases, private drafts included",
+   "source": "docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md",
+   "owner_wording": "No automatic publishing or creation of releases, including private-draft releases, based solely on passing validation gates. ... I retain final authorization for creating or publishing releases. Previously granted automatic release permissions that conflict with this decision are superseded.",
+   "approval": "owner, 2026-11-09",
+   "acceptance": [
+    "No release (public or private draft) is created or published without the owner's authorization for that release; agents may develop, test, package where authorized and report readiness"
+   ],
+   "target_build": "25",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "supersedes + REL-CONT",
+     "why": "supersession made two-way: REL-CONT superseded by REL-OWNER-01"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "notes",
+     "why": "carry REL-CONT's non-release clause"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "supersedes": [
+    "REL-CONT"
+   ],
+   "notes": "Unchanged from REL-CONT (superseded only for releases): agents decide minor implementation details themselves, document them (docs/DECISIONS.md, agent decision) and continue; escalate what changes the vision, contradicts an owner decision, adds significant cost or is irreversible."
   },
   {
    "id": "REL18-DET",
@@ -61738,6 +61950,11 @@
      "date": "2026-11-07",
      "change": "note",
      "why": "2026-11-07 02:55 UTC: 365-day campaign 42297637074 on 1f2ff4f clean (both seeds 365/365, 0 CRITICAL, 0 confirmed); generation 8 baseline CANDIDATE prepared (docs/release/sim_baseline_candidate_gen8.json, from gate 42297641550, commit 1f2ff4f) with comparison in SIM_BASELINE_DIFFERENCES_B25R2.md; accepted baseline unchanged; awaiting the owner's approval or rejection"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 4: preserved; the Generation 8 candidate baseline stays unapproved until the owner's final approval (BASELINE-AUTH-01)"
     }
    ],
    "lifecycle": "ACTIVE"
@@ -62936,6 +63153,11 @@
      "date": "2026-11-03",
      "change": "commits + b18f418; integrated_in + Build 25 wip/expansion20",
      "why": "its findings' fixes are integrated"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 1: a single temporary agent within PAR-AGENTS-01's limit of two additional agents; no conflict"
     }
    ],
    "assigned_worker": "validation agent (read-only)",
@@ -71933,6 +72155,11 @@
      "date": "2026-11-09",
      "change": "note",
      "why": "HAG-AUTH-01 retroactive audit 2026-11-09: partly superseded: automatic activation replaced by X20-ACTIVATION-AUTHORITY, itself superseded by B25-LE-ACTIVATE-D1; private-draft authority suspended by the 2026-10-31 'do not package, release or publish'"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "note",
+     "why": "owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 2: any remaining automatic private-draft authority is superseded by REL-OWNER-01"
     }
    ],
    "assigned_worker": "lead",

@@ -236,6 +236,29 @@ This register stays the one decision authority; `tools/decision_authority.py` ad
 
 These checks read documents only; they run in `check_requirements.py` (and so in CI and the pre-push hook) with no game runs.
 
+### Conflict analysis (owner, 2026-11-09, DECISION-CONFLICT-01)
+
+The latest explicit owner decision governs the specific subject it changes, not unrelated requirements or every part of an
+earlier directive. When two decisions appear to conflict, nothing is chosen silently and nothing ambiguous is implemented. The
+lead raises it to the owner with:
+
+- **A. Original position:** the full requirement or decision; its purpose and reasoning; its evidence and implementation
+  history; the systems and behaviours it protects.
+- **B. Later position:** the full later decision; why it was introduced; what changed in the evidence, circumstances or goals;
+  exactly which portions of the earlier decision it explicitly replaces.
+- **C. Other alternatives:** a third option, compromise or redesign, with advantages, disadvantages, effort and risk of each.
+- **D. Complete system impact,** per option and explained (not just named): gameplay and player interactions; NPC behaviour,
+  employment and households; economy, inventory, goods, money and conservation; property, construction and businesses;
+  settlements, regions, travel and migration; multiplayer, permissions, security and synchronization; saves, persistence,
+  compatibility and migration; interface and feedback; performance and determinism; dependencies on other requirements;
+  tests, regression coverage and baselines; release compatibility on Windows, Linux and Android. Unknown impacts are marked
+  "requires investigation".
+- **E. Recommendation:** the evidence-supported recommendation (including a better third option), what stays unchanged and what
+  would be superseded.
+
+After the owner resolves it: update the register (lifecycle, two-way supersession), the affected system documentation and the
+regression requirements. Store the analysis under `docs/decisions/` and link it from the records involved.
+
 ## Validation and enforcement
 
 `tools/check_requirements.py` checks:

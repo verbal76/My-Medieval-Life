@@ -11,30 +11,24 @@ Before any significant change, find its record here and follow `Governing record
 | Development line (code) | `wip/b25r2-rev2` |
 | Records branch | `wip/requirements-control` |
 | Frozen / historical branches (never resume work on them) | `wip/expansion20`, `wip/b25r1`, `wip/b25r2-playtest`, `staging/my-medieval-life` |
-| Set by | owner directives 2026-11-08 (Development branch wip/b25r2-rev2), docs/directives/2026-11-08_recovered_owner_messages.md; records branch BRANCH-POL-01; frozen per docs/CURRENT_DEVELOPMENT_STATE.md pointer (2026-11-09). Update this block when the owner names a new line. |
-
-Known stale lines kept while the owner decides (the checker accepts them only while the decision is under review):
-
-| File | Line text | Decision | Why |
-|---|---|---|---|
-| CLAUDE.md | One integration branch for code: `wip/expansion20` | BRANCH-POL-Q2 | BRANCH-POL-01's rule text; changing it is the owner's decision (a dated note beside it names wip/b25r2-rev2) |
+| Set by | owner 2026-11-09 resolutions to HAG-AUTH-01, decision 3 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md): development line wip/b25r2-rev2, records branch wip/requirements-control kept separate (BRANCH-POL-Q1/Q2, DEV-LINE-B25). Update this block when the owner names a new line. |
 
 ## Lifecycle counts
 
 | Lifecycle | Records |
 |---|---|
-| ACTIVE | 857 |
-| SUPERSEDED | 41 |
+| ACTIVE | 861 |
+| SUPERSEDED | 43 |
 | COMPLETED | 246 |
 | REJECTED | 3 |
 | DEFERRED | 19 |
-| UNDER REVIEW | 78 |
+| UNDER REVIEW | 76 |
 
 ## Superseded records and what governs instead
 
 | Record | Title | Superseded by | Governing record now | Governing lifecycle | Why superseded |
 |---|---|---|---|---|---|
-| AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead | MML-CONSERVE-01 | MML-CONSERVE-01 | ACTIVE | HAG-AUTH-01 retroactive audit 2026-11-09: docs/directives/2026-11-02_credit_conservation_controlled_development.md: 'This directive supersed |
+| AGENT-01 | Controlled parallel development: at most two subagents at once (three agents with the lead | PAR-AGENTS-01 | PAR-AGENTS-01 | ACTIVE | owner resolutions to HAG-AUTH-01 decision 1: the worker-count subject is governed by PAR-AGENTS-01; AGENT-01 was superseded 2026-11-02 by MM |
 | AR-P1-1 | Prepared; owner must create key | B13-15 | ANDROID-RELEASE-SIGNING | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
 | B12A-04 | Not recorded as done | FR-04 | FR-04 | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
 | B12A-06 | Sword page added by CQ-01 (`3e283b6`); others not recorded | FR-06 | FR-06 | COMPLETED | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
@@ -54,6 +48,7 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 | F-3 | Music and sound | FR-08 | MUSIC-18 | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
 | FR-08 | Music and sound | MUSIC-18 | MUSIC-18 | ACTIVE | DOC-RECON-01 (owner 2026-10-31, docs/directives/2026-10-31_documentation_reconciliation.md). Stale BLOCKED ('no audio supplied'): the owner  |
 | FSE-11 | Village sowing consumes seed (seed consumption correction) | FARM-06 | FARM-06 | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
+| GP-BASELINE-POLICY | Single-player baseline may be updated for intentional approved changes, with each differen | BASELINE-AUTH-01 | BASELINE-AUTH-01 | ACTIVE | owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 4: 'No agent has indepe |
 | GP-STALL-TABLE-10 | Market stall table shows ten goods comfortably | GP-MARKET-SHELVES | GP-MARKET-SHELVES | ACTIVE | duplicate resolved: the owner's Craftpix market shelf directive (docs/directives/2026-10-24_build21_craftpix_market_stalls.md) replaced the  |
 | JUICE-JD1 | Audio: may the owned Living Forest sounds be integrated as FR-08's first slice, which even | MUSIC-18 | MUSIC-18 | ACTIVE | DOC-RECON-01 consistency (checker rules): names the replacing record |
 | K-3 | Every provisional number awaits the owner's balance review | OD-02 | OD-02 | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
@@ -71,6 +66,7 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 | REC-016 | NPC self-improvement and prosperity (as a game system) | WDR-011-C | WDR-011-C | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
 | REC-F1 | Recorder finding (10-day run, seed 1): villagers holding goods nobody buys ('holding unsol | FIX-RECF1 | FIX-RECF1 | COMPLETED | DOC-RECON-01 consistency (checker rules): names the replacing record |
 | REL-14-16 | Release Builds 14, 15 and 16 (three platform packages each) when the eight release conditi | REL-15-18 | REL-15-18 | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
+| REL-CONT | Standing release model: continuous develop, test, release, advance; minor decisions made a | REL-OWNER-01 | REL-OWNER-01 | ACTIVE | owner resolutions to HAG-AUTH-01, 2026-11-09 (docs/directives/2026-11-09_owner_resolutions_hag_auth_01.md), decision 2: 'No automatic publis |
 | REQ-BANDIT | Bandit factions, criminal careers and outlaw leadership | WDR-016-C | WDR-016-C | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
 | REQ-GRAVE | Graveyards, ancestry and NPC legacy | WDR-014-C | WDR-014-C | ACTIVE | master requirements reconciliation (docs/directives/2026-10-23_master_requirements_reconciliation.md) |
 | X20-ACTIVATION-AUTHORITY | Does X20-RESUME's automatic Living Economy activation on objective readiness (2026-10-30)  | B25-LE-ACTIVATE-D1 | B25-LE-ACTIVATE-D1 | ACTIVE | HAG-AUTH-01 retroactive audit 2026-11-09: superseded for Build 25 by the owner 2026-11-01 (its own 2026-11-01 history line: 'Superseded for  |
@@ -146,6 +142,8 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 | B25R2-VER-01 | decision | How should the next Play Test Build One package identify itself? |  |
 | BANDIT-Q | decision | Should outlaws ever return once the band is wiped out? |  |
 | BARBER-Q | decision | Barber: staffing, place, price and what counts as a haircut |  |
+| BRANCH-POL-Q1 | decision | Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion2 |  |
+| BRANCH-POL-Q2 | decision | Amend BRANCH-POL-01's rule text (CLAUDE.md section 5a, 'One integration branch for code: wip/expansion20') to  |  |
 | CHAPEL-R1 | decision | Should the player be allowed to volunteer on the church field? (Today only villagers and the clergy work it.) |  |
 | CHAPEL-R2 | decision | Can offerings sustainably fund the clergy's wages (3 and 2 coins a day, unpaid days owed up to 14)? Needs long |  |
 | CHAPEL-R3 | decision | Can old-save migration preserve the existing wild plants and other objects on the chapel ground instead of rem |  |
@@ -314,7 +312,6 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 | REGION-NAV-Q4 | decision | Crafters in S2 and S4: (a) business keepers and the official only (built); (b) also every worker household's h |  |
 | REGION-NAV-Q5 | decision | S2 trade path: keep the courier edge (books both sides) as an approved deviation, or rework onto SettlementPar |  |
 | REGION-NAV-Q6 | decision | Next: finish S2's outstanding items (save and load test; crafters per Q4) and S3's three outstanding tests, th |  |
-| REL-CONT | rule | Standing release model: continuous develop, test, release, advance; minor decisions made and documented |  |
 | ROAD-01 | decision | Five-build roadmap: 15 simulation stabilization, 16 long-term equilibrium, 17 Mining & Industrial, 18 Settleme |  |
 | ROAD-Q1 | decision | Expansion 27: which specification is it? (none found; candidates World Exploration, Dungeons & Encounters, or  |  |
 | ROAD-Q2 | decision | Expansion 23 before 22: limit 23 to the village, existing roads and off-map books, with route banditry across  |  |
@@ -431,8 +428,6 @@ Known stale lines kept while the owner decides (the checker accepts them only wh
 | BAN-C | proposal | Expansion 23 BAN-C: career actions, recruitment, theft and raids, resale, suspicion and response (within E23-SCOPE) |
 | BAN-D | proposal | Expansion 23 BAN-D: rank, challenge, leadership, schism and autonomous succession |
 | BAN-E | proposal | Expansion 23 BAN-E: economy, judgment and politics integration; long-run simulations |
-| BRANCH-POL-Q1 | decision | Records line and code line: keep wip/requirements-control (records, lead-written) separate from wip/expansion20 (code),  |
-| BRANCH-POL-Q2 | decision | Amend BRANCH-POL-01's rule text (CLAUDE.md section 5a, 'One integration branch for code: wip/expansion20') to name the c |
 | CAP-TOOLHOLDER | idea | Design review: a villager holding a tool only for sale counts as a capability practitioner |
 | CHAPEL-GIVE-14-Q | decision | With the 14-day hardship line now governing chapel food alms, households offer wheat to the chapel only above 14 days of |
 | DGA-D1 | proposal | Meaning of "isometric" |
