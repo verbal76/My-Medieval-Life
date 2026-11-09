@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (792)
+## Approved requirement (810)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -77,6 +77,24 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B19-RECOVERY | Build 19 carryover recovery within Expansion 20: audit the 18 unfinished Build 19 requirements and the 9 awaiting verification against the code, then integrate, finish or implement them on the Expansion 20 line | 20 | OWNER APPROVED | PARTIALLY IMPLEMENTED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | multiplayer | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
+| B25-AUD-BIZ-03 | Payroll before owner withdrawals; hiring budgets the whole payroll (audit BIZ-03, Option B) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| B25-AUD-BIZ-04 | A migrating household keeps its business money (audit BIZ-04) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| B25-AUD-EMP-03 | Count everyone actively seeking work in hiring competition (audit EMP-03) | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-AUD-INV-04 | Goods left in sold property pass to the purchaser (audit INV-04) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| B25-AUD-INV-05 | No unapproved rubble-to-dressed-stone conversion (audit INV-05) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| B25-AUD-JUS-04 | Crime affects relatives only once the knowledge reaches them (audit JUS-04) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| B25-AUD-LIFE-03 | Sage succession by a qualified healer or apprentice (audit LIFE-03) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| B25-AUD-LIFE-04 | Widows and widowers may remarry; previous marriage history kept (audit LIFE-04) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| B25-AUD-LIFE-05 | Bandit heirs inherit last (audit LIFE-05) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| B25-AUD-MP-05 | Mutual, reciprocal three-tier asset sharing between players (audit MP-05) | 20+ | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
+| B25-AUD-MP-07 | Private records never shared automatically between players (audit MP-07) | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-AUD-PROP-03 | Surrendered or evicted leased sites, improvements and materials pass to the manor (audit PROP-03) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| B25-AUD-PROP-06 | Migrating household: owned property sold atomically, leases surrendered to the manor (audit PROP-06) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| B25-AUD-REG-04 | Couriers travel physically (audit REG-04) | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-AUD-REG-05 | Migrating households travel physically (audit REG-05) | 20+ | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-AUD-REG-07 | Trade intelligence valid at most one eight-day year (audit REG-07) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| B25-AUD-SAV-02 | Saved economic state preserved through load and continuation (audit SAV-02) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| B25-AUD-TRD-02 | Merchant earnings recorded net of commission (audit TRD-02) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-BIZ-D1 | Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system) | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-BIZ-D2 | Employees are paid: distinguish an independent craftsperson using another's stations from a paid business employee whose production belongs to the employer | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-BIZ-D3 | Unfinished business construction can be cancelled or abandoned through the existing cancellation system, with no money refund | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
@@ -419,7 +437,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | GP-WHEAT-PICKED | Harvested wheat shows as picked, cell by cell | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | GP-WIKI-LAYOUT | Encyclopedia laid out like a classic wiki page, on parchment | 20 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | GP-WIKI-RECIPE-TOOLS | Encyclopedia recipes name every tool the work needs (for example a mallet and a chisel, and which chisels count) | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
-| HAG-FORENSICS-01 | Permanent development forensics, GitHub accountability and historical recovery (Nov 1-9 recovery, coverage register, recovery entry points, independent recovery test, continuous checkpoints) | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| HAG-FORENSICS-01 | Permanent development forensics, GitHub accountability and historical recovery (Nov 1-9 recovery, coverage register, recovery entry points, independent recovery test, continuous checkpoints) | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | HAG-MEM-02 | Permanent GitHub memory, decision history (with rationale) and CI reporting: six memory components, a decision-rationale standard, known-issues record, recovery entry point, Markdown+JSON CI reports even on failure, durable conclusions in the repository | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | HEALTH-01 | Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions) | owner decision | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | HOUSE-01 | Housing need arises from circumstances: crowding, a couple living apart, an adult leaving home, no permanent residence, a lost home; not every extra person needs a house | 15 | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | RELEASED | COMPLETE |
@@ -965,7 +983,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25R1-Q7 | Does the live-near-the-player rule (B25R1-Q6) also apply to the starting village's people, or only to the rest of the region? | 20 | APPROVED |  |
 | B25R1-Q8 | Town art gap (Higham, Wulstead, churches, chalk figure not store-quality; owned packs lack a stone market cross, white battlements, a fountain with water): owned art with a better layout, a pack the owner buys, or both? | 20 | APPROVED |  |
 | B25R1-Q9 | Do hamlets count as civic places (civic_records test premise), and with what institutions? | 20 | APPROVED |  |
-| B25R2-BRUSHOFF | Dialogue.brush_off reads n.plan[0] without checking the plan is empty (dialogue.gd:526): a SCRIPT ERROR when a villager between plans brushes the player off. Found by start_test on fe7d8f8 (523/0, 1 script error; the file is untouched by the playtest fixes, a latent defect). Fix in the next cycle? | 20+ | OPEN |  |
+| B25R2-BRUSHOFF | Dialogue.brush_off reads n.plan[0] without checking the plan is empty (dialogue.gd:526): a SCRIPT ERROR when a villager between plans brushes the player off. Found by start_test on fe7d8f8 (523/0, 1 script error; the file is untouched by the playtest fixes, a latent defect). Fix in the next cycle? | 20+ | APPROVED |  |
 | B25R2-CAVE | A guest who followed the host into a cave was left in the black outside it, unable to move (the guest's copy on the cave's level at a place outside it). Fix now or later? | 25 | APPROVED |  |
 | B25R2-DRAFT-01 | May Play Test Build One be published, and how? | 25 | PROVISIONAL |  |
 | B25R2-HOST4 | Open to friends admits only one guest (the window asks for no player limit, so hosting defaults to 2): how many players should the host window allow? | 25 | APPROVED |  |

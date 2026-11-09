@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 
 Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backlog, approved work with no build, work waiting on an owner decision for its build, and proposals and ideas. Nothing here is assigned to Build 20 or 21 until the owner says so.
 
-## Build 20 or later (backlog) (53)
+## Build 20 or later (backlog) (71)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -15,6 +15,24 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B17F-FOOD | Build 17 finding: missed meals for want of money (606-5,417 a year across seeds) | idea | PROPOSED | NOT STARTED |
 | B17F-HENS | Build 17 finding: chickens died out early on seeds 2 and 3 | idea | PROPOSED | NOT STARTED |
 | B17F-JOBS | Build 17 finding: unemployment of 6-30 adults at day 365 | idea | PROPOSED | NOT STARTED |
+| B25-AUD-BIZ-03 | Payroll before owner withdrawals; hiring budgets the whole payroll (audit BIZ-03, Option B) | approved | OWNER APPROVED | INTEGRATED |
+| B25-AUD-BIZ-04 | A migrating household keeps its business money (audit BIZ-04) | approved | OWNER APPROVED | INTEGRATED |
+| B25-AUD-EMP-03 | Count everyone actively seeking work in hiring competition (audit EMP-03) | approved | OWNER APPROVED | NOT STARTED |
+| B25-AUD-INV-04 | Goods left in sold property pass to the purchaser (audit INV-04) | approved | OWNER APPROVED | INTEGRATED |
+| B25-AUD-INV-05 | No unapproved rubble-to-dressed-stone conversion (audit INV-05) | approved | OWNER APPROVED | INTEGRATED |
+| B25-AUD-JUS-04 | Crime affects relatives only once the knowledge reaches them (audit JUS-04) | approved | OWNER APPROVED | INTEGRATED |
+| B25-AUD-LIFE-03 | Sage succession by a qualified healer or apprentice (audit LIFE-03) | approved | OWNER APPROVED | INTEGRATED |
+| B25-AUD-LIFE-04 | Widows and widowers may remarry; previous marriage history kept (audit LIFE-04) | approved | OWNER APPROVED | INTEGRATED |
+| B25-AUD-LIFE-05 | Bandit heirs inherit last (audit LIFE-05) | approved | OWNER APPROVED | INTEGRATED |
+| B25-AUD-MP-05 | Mutual, reciprocal three-tier asset sharing between players (audit MP-05) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
+| B25-AUD-MP-07 | Private records never shared automatically between players (audit MP-07) | approved | OWNER APPROVED | NOT STARTED |
+| B25-AUD-PROP-03 | Surrendered or evicted leased sites, improvements and materials pass to the manor (audit PROP-03) | approved | OWNER APPROVED | INTEGRATED |
+| B25-AUD-PROP-06 | Migrating household: owned property sold atomically, leases surrendered to the manor (audit PROP-06) | approved | OWNER APPROVED | INTEGRATED |
+| B25-AUD-REG-04 | Couriers travel physically (audit REG-04) | approved | OWNER APPROVED | NOT STARTED |
+| B25-AUD-REG-05 | Migrating households travel physically (audit REG-05) | approved | OWNER APPROVED | NOT STARTED |
+| B25-AUD-REG-07 | Trade intelligence valid at most one eight-day year (audit REG-07) | approved | OWNER APPROVED | INTEGRATED |
+| B25-AUD-SAV-02 | Saved economic state preserved through load and continuation (audit SAV-02) | approved | OWNER APPROVED | INTEGRATED |
+| B25-AUD-TRD-02 | Merchant earnings recorded net of commission (audit TRD-02) | approved | OWNER APPROVED | INTEGRATED |
 | B25R2-HOSTMENU | Host a game on the title screen | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B8-007 | Wrong tool shown | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | CRT-06 | Friendship benefits: better prices, help and favours, gossip and news, backing in disputes and votes | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
@@ -76,7 +94,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | DOC-CONT-01 | Permanent development documentation and AI continuity: one current-state entry point, a chronological development changelog, SHA-bound test evidence with status levels, worker recovery records, an 11-step recovery procedure usable by any assistant | approved | OWNER APPROVED | NOT STARTED |
 | EA-01 | Steam Early Access readiness: a presentable demo in about three weeks, polish and juice built in as features are built, centralised decisions and tunables, interactions that all work, story-ready systems, store-quality footage and screenshots | approved | OWNER APPROVED | NOT STARTED |
 | FR-REPAIR-01 | Flight recorder repair: KI-HOME-DOOR root cause, homeless-safe evening, regression tests, 10-day resume, independent investigation of cart_hitch, wheat-sale and contract-cancellation findings; no full campaign until fixed | approved | OWNER APPROVED | INTEGRATED |
-| HAG-FORENSICS-01 | Permanent development forensics, GitHub accountability and historical recovery (Nov 1-9 recovery, coverage register, recovery entry points, independent recovery test, continuous checkpoints) | approved | OWNER APPROVED | NOT STARTED |
+| HAG-FORENSICS-01 | Permanent development forensics, GitHub accountability and historical recovery (Nov 1-9 recovery, coverage register, recovery entry points, independent recovery test, continuous checkpoints) | approved | OWNER APPROVED | IN DEVELOPMENT |
 | HAG-MEM-02 | Permanent GitHub memory, decision history (with rationale) and CI reporting: six memory components, a decision-rationale standard, known-issues record, recovery entry point, Markdown+JSON CI reports even on failure, durable conclusions in the repository | approved | OWNER APPROVED | NOT STARTED |
 | ID-01 | One persistent person identity across migration (between settlements, away and back), save/load, household and relationship changes, death and inheritance, and future detailed/abstract transitions; no replacement people, no reused identities; existing saves migrated without discarding or reassigning history | approved | OWNER APPROVED | INTEGRATED |
 | MML-CONSERVE-01 | Credit conservation: MML second priority behind Upwardly; one worker; finish and integrate KI-HOME-DOOR only; pause farming Phase 2 and the flight-finding investigations; no 365-day campaign, new features or scheduled follow-up without owner approval; standby when done | approved | OWNER APPROVED | INTEGRATED |

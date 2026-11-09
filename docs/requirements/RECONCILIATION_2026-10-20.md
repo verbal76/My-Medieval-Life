@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 828 (436 of them still open) |
-| **Open entries now** (rules excluded) | | **594** |
+| Entries added since | | 846 (453 of them still open) |
+| **Open entries now** (rules excluded) | | **611** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (828)
+## Added since the baseline (846)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -159,6 +159,24 @@ None.
 | B21-LAN-PLAYTEST | Build 21: host/join interface, Android networking, animal sync, recorder audit and a private playtest build | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | multiplayer |
 | B25-AMBITION-D4 | Activate the career ambition system? | decision | APPROVED | owner decision |
 | B25-AMBITION-IMPL | Activate and correct the skill-aware career ambition (job_choice) system | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
+| B25-AUD-BIZ-03 | Payroll before owner withdrawals; hiring budgets the whole payroll (audit BIZ-03, Option B) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
+| B25-AUD-BIZ-04 | A migrating household keeps its business money (audit BIZ-04) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
+| B25-AUD-EMP-03 | Count everyone actively seeking work in hiring competition (audit EMP-03) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
+| B25-AUD-INV-04 | Goods left in sold property pass to the purchaser (audit INV-04) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
+| B25-AUD-INV-05 | No unapproved rubble-to-dressed-stone conversion (audit INV-05) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
+| B25-AUD-JUS-04 | Crime affects relatives only once the knowledge reaches them (audit JUS-04) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
+| B25-AUD-LIFE-03 | Sage succession by a qualified healer or apprentice (audit LIFE-03) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
+| B25-AUD-LIFE-04 | Widows and widowers may remarry; previous marriage history kept (audit LIFE-04) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
+| B25-AUD-LIFE-05 | Bandit heirs inherit last (audit LIFE-05) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
+| B25-AUD-MP-05 | Mutual, reciprocal three-tier asset sharing between players (audit MP-05) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20+ |
+| B25-AUD-MP-07 | Private records never shared automatically between players (audit MP-07) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
+| B25-AUD-PROP-03 | Surrendered or evicted leased sites, improvements and materials pass to the manor (audit PROP-03) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
+| B25-AUD-PROP-06 | Migrating household: owned property sold atomically, leases surrendered to the manor (audit PROP-06) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
+| B25-AUD-REG-04 | Couriers travel physically (audit REG-04) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
+| B25-AUD-REG-05 | Migrating households travel physically (audit REG-05) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
+| B25-AUD-REG-07 | Trade intelligence valid at most one eight-day year (audit REG-07) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
+| B25-AUD-SAV-02 | Saved economic state preserved through load and continuation (audit SAV-02) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
+| B25-AUD-TRD-02 | Merchant earnings recorded net of commission (audit TRD-02) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
 | B25-BIZ-D1 | Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system) | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-BIZ-D2 | Employees are paid: distinguish an independent craftsperson using another's stations from a paid business employee whose production belongs to the employer | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-BIZ-D3 | Unfinished business construction can be cancelled or abandoned through the existing cancellation system, with no money refund | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
@@ -233,7 +251,7 @@ None.
 | B25R1-Q7 | Does the live-near-the-player rule (B25R1-Q6) also apply to the starting village's people, or only to the rest of the region? | decision | APPROVED | 20 |
 | B25R1-Q8 | Town art gap (Higham, Wulstead, churches, chalk figure not store-quality; owned packs lack a stone market cross, white battlements, a fountain with water): owned art with a better layout, a pack the owner buys, or both? | decision | APPROVED | 20 |
 | B25R1-Q9 | Do hamlets count as civic places (civic_records test premise), and with what institutions? | decision | APPROVED | 20 |
-| B25R2-BRUSHOFF | Dialogue.brush_off reads n.plan[0] without checking the plan is empty (dialogue.gd:526): a SCRIPT ERROR when a villager between plans brushes the player off. Found by start_test on fe7d8f8 (523/0, 1 script error; the file is untouched by the playtest fixes, a latent defect). Fix in the next cycle? | decision | OPEN | 20+ |
+| B25R2-BRUSHOFF | Dialogue.brush_off reads n.plan[0] without checking the plan is empty (dialogue.gd:526): a SCRIPT ERROR when a villager between plans brushes the player off. Found by start_test on fe7d8f8 (523/0, 1 script error; the file is untouched by the playtest fixes, a latent defect). Fix in the next cycle? | decision | APPROVED | 20+ |
 | B25R2-CAVE | A guest who followed the host into a cave was left in the black outside it, unable to move (the guest's copy on the cave's level at a place outside it). Fix now or later? | decision | APPROVED | 25 |
 | B25R2-DRAFT-01 | May Play Test Build One be published, and how? | decision | PROVISIONAL | 25 |
 | B25R2-HOST4 | Open to friends admits only one guest (the window asks for no player limit, so hosting defaults to 2): how many players should the host window allow? | decision | APPROVED | 25 |
@@ -465,7 +483,7 @@ None.
 | GP-WHEAT-PICKED | Harvested wheat shows as picked, cell by cell | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-WIKI-LAYOUT | Encyclopedia laid out like a classic wiki page, on parchment | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-WIKI-RECIPE-TOOLS | Encyclopedia recipes name every tool the work needs (for example a mallet and a chisel, and which chisels count) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
-| HAG-FORENSICS-01 | Permanent development forensics, GitHub accountability and historical recovery (Nov 1-9 recovery, coverage register, recovery entry points, independent recovery test, continuous checkpoints) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| HAG-FORENSICS-01 | Permanent development forensics, GitHub accountability and historical recovery (Nov 1-9 recovery, coverage register, recovery entry points, independent recovery test, continuous checkpoints) | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | HAG-MEM-02 | Permanent GitHub memory, decision history (with rationale) and CI reporting: six memory components, a decision-rationale standard, known-issues record, recovery entry point, Markdown+JSON CI reports even on failure, durable conclusions in the repository | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | HEALTH-01 | Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | HORSE-Q | Plough horse: price and what it does | decision | APPROVED | owner decision |

@@ -5446,6 +5446,690 @@
    ]
   },
   {
+   "id": "B25-AUD-BIZ-03",
+   "kind": "approved",
+   "title": "Payroll before owner withdrawals; hiring budgets the whole payroll (audit BIZ-03, Option B)",
+   "description": "Payroll before owner withdrawals; hiring budgets the whole payroll (audit BIZ-03, Option B)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "BIZ-03: Option B approved. Employee payroll takes priority over owner withdrawals. Hiring affordability must account for existing workforce obligations plus the proposed employee.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "biz03_payroll_priority_test"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed); test_commit: None -> c9da5db; commits + c9da5db; integrated_in + wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)",
+     "why": "merged c9da5db; see docs/decisions/B25-AUD-BACKLOG-2026-11-09.md"
+    }
+   ],
+   "tests": "strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed)",
+   "test_commit": "c9da5db",
+   "commits": [
+    "c9da5db"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)"
+   ]
+  },
+  {
+   "id": "B25-AUD-BIZ-04",
+   "kind": "approved",
+   "title": "A migrating household keeps its business money (audit BIZ-04)",
+   "description": "A migrating household keeps its business money (audit BIZ-04)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "BIZ-04: A living household retains its business money when migrating. Investigate venture tills and ownership transfers to ensure this rule is followed.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "biz04_venture_till_migration_test"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed); test_commit: None -> c9da5db; commits + c9da5db; integrated_in + wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)",
+     "why": "merged c9da5db; see docs/decisions/B25-AUD-BACKLOG-2026-11-09.md"
+    }
+   ],
+   "tests": "strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed)",
+   "test_commit": "c9da5db",
+   "commits": [
+    "c9da5db"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)"
+   ]
+  },
+  {
+   "id": "B25-AUD-EMP-03",
+   "kind": "approved",
+   "title": "Count everyone actively seeking work in hiring competition (audit EMP-03)",
+   "description": "Count everyone actively seeking work in hiring competition (audit EMP-03)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "EMP-03: Count everyone actively seeking work for hiring-competition purposes.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "a test or code reference showing every seeker is counted"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    }
+   ]
+  },
+  {
+   "id": "B25-AUD-INV-04",
+   "kind": "approved",
+   "title": "Goods left in sold property pass to the purchaser (audit INV-04)",
+   "description": "Goods left in sold property pass to the purchaser (audit INV-04)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "INV-04: Goods left behind in sold property transfer to the purchaser, subject to existing tenant rights and other established ownership protections.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "inv04_stash_handover_test"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed); test_commit: None -> c9da5db; commits + c9da5db; integrated_in + wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)",
+     "why": "merged c9da5db; see docs/decisions/B25-AUD-BACKLOG-2026-11-09.md"
+    }
+   ],
+   "tests": "strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed)",
+   "test_commit": "c9da5db",
+   "commits": [
+    "c9da5db"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)"
+   ]
+  },
+  {
+   "id": "B25-AUD-INV-05",
+   "kind": "approved",
+   "title": "No unapproved rubble-to-dressed-stone conversion (audit INV-05)",
+   "description": "No unapproved rubble-to-dressed-stone conversion (audit INV-05)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "INV-05: Do not permit unapproved conversion of rubble or waste into dressed stone.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "inv05_rubble_refund_test"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed); test_commit: None -> c9da5db; commits + c9da5db; integrated_in + wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)",
+     "why": "merged c9da5db; see docs/decisions/B25-AUD-BACKLOG-2026-11-09.md"
+    }
+   ],
+   "tests": "strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed)",
+   "test_commit": "c9da5db",
+   "commits": [
+    "c9da5db"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)"
+   ]
+  },
+  {
+   "id": "B25-AUD-JUS-04",
+   "kind": "approved",
+   "title": "Crime affects relatives only once the knowledge reaches them (audit JUS-04)",
+   "description": "Crime affects relatives only once the knowledge reaches them (audit JUS-04)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "JUS-04: Criminal reputation consequences may affect relatives only after the relevant crime information has actually reached them through the game's knowledge systems.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "jus04_witness_knowledge_test"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> strict 42597744977 on 53a56d3; recorded campaign 42570299554 on 4f1b3c8; test_commit: None -> 53a56d3; commits + 53a56d3; integrated_in + wip/b25r2-rev2 53a56d3 (2026-11-09 11:04 UTC)",
+     "why": "merged 53a56d3; see docs/decisions/B25-AUD-JUS04-REG07.md"
+    }
+   ],
+   "tests": "strict 42597744977 on 53a56d3; recorded campaign 42570299554 on 4f1b3c8",
+   "test_commit": "53a56d3",
+   "commits": [
+    "53a56d3"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 53a56d3 (2026-11-09 11:04 UTC)"
+   ]
+  },
+  {
+   "id": "B25-AUD-LIFE-03",
+   "kind": "approved",
+   "title": "Sage succession by a qualified healer or apprentice (audit LIFE-03)",
+   "description": "Sage succession by a qualified healer or apprentice (audit LIFE-03)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "LIFE-03: Qualified healer/apprentice succession is approved.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "A qualified successor (healing level 2) takes the sage post; newcomer fallback; save/load"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> strict 42530864510 on 494af9a; recorded campaign 42557922632 (0 CRITICAL, 0 confirmed); test_commit: None -> 494af9a; commits + 229f76e; integrated_in + wip/b25r2-rev2 229f76e (2026-11-09 08:40 UTC)",
+     "why": "merged 229f76e; see docs/decisions/B25-AUD-LIFE-03-04.md"
+    }
+   ],
+   "tests": "strict 42530864510 on 494af9a; recorded campaign 42557922632 (0 CRITICAL, 0 confirmed)",
+   "test_commit": "494af9a",
+   "commits": [
+    "229f76e"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 229f76e (2026-11-09 08:40 UTC)"
+   ]
+  },
+  {
+   "id": "B25-AUD-LIFE-04",
+   "kind": "approved",
+   "title": "Widows and widowers may remarry; previous marriage history kept (audit LIFE-04)",
+   "description": "Widows and widowers may remarry; previous marriage history kept (audit LIFE-04)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "LIFE-04: Widows and widowers may remarry. Preserve previous marriage history and family relationships.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "Widowed NPCs and players may court and marry; a living partner always blocks; former spouse kept in history"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> strict 42530864510 on 494af9a; recorded campaign 42557922632 (0 CRITICAL, 0 confirmed); test_commit: None -> 494af9a; commits + 229f76e; integrated_in + wip/b25r2-rev2 229f76e (2026-11-09 08:40 UTC)",
+     "why": "merged 229f76e; see docs/decisions/B25-AUD-LIFE-03-04.md"
+    }
+   ],
+   "tests": "strict 42530864510 on 494af9a; recorded campaign 42557922632 (0 CRITICAL, 0 confirmed)",
+   "test_commit": "494af9a",
+   "commits": [
+    "229f76e"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 229f76e (2026-11-09 08:40 UTC)"
+   ]
+  },
+  {
+   "id": "B25-AUD-LIFE-05",
+   "kind": "approved",
+   "title": "Bandit heirs inherit last (audit LIFE-05)",
+   "description": "Bandit heirs inherit last (audit LIFE-05)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "LIFE-05: Bandit heirs inherit last. Rehabilitation and return to ordinary life are permitted, but criminal history remains.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "heir_of skips bandit kin until nobody at home is left"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed); test_commit: None -> c9da5db; commits + c9da5db; integrated_in + wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)",
+     "why": "merged c9da5db; see docs/decisions/B25-AUD-BACKLOG-2026-11-09.md"
+    }
+   ],
+   "tests": "strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed)",
+   "test_commit": "c9da5db",
+   "commits": [
+    "c9da5db"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)"
+   ]
+  },
+  {
+   "id": "B25-AUD-MP-05",
+   "kind": "approved",
+   "title": "Mutual, reciprocal three-tier asset sharing between players (audit MP-05)",
+   "description": "Mutual, reciprocal three-tier asset sharing between players (audit MP-05)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "MP-05: Cross-player asset sharing is mutual and reciprocal, requires proposal and acceptance, and defaults to no sharing. ... Either player may revoke sharing. Ownership, sale authority, and demolition authority are not transferred.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "host-validated tiers; revocation both ways; real two-device, modified-client, reconnect and UI checks"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25-mp05-on-dev; tests: None -> full Tests 42636628469 on 242ca83; mp05 24/0; campaign 42664730920 running; test_commit: None -> 242ca83; commits + 242ca83",
+     "why": "two cart defects fixed (a898541/2e74066, be307f8/242ca83); security checks on real devices outstanding; docs/decisions/B25-AUD-MP-05.md"
+    }
+   ],
+   "branch": "wip/b25-mp05-on-dev",
+   "tests": "full Tests 42636628469 on 242ca83; mp05 24/0; campaign 42664730920 running",
+   "test_commit": "242ca83",
+   "commits": [
+    "242ca83"
+   ]
+  },
+  {
+   "id": "B25-AUD-MP-07",
+   "kind": "approved",
+   "title": "Private records never shared automatically between players (audit MP-07)",
+   "description": "Private records never shared automatically between players (audit MP-07)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "MP-07: Private records are not automatically shared between players. Players learn private information through ordinary gameplay. Asset-sharing agreements do not grant access to private information.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "host+two-guest wire-payload privacy tests"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    }
+   ]
+  },
+  {
+   "id": "B25-AUD-PROP-03",
+   "kind": "approved",
+   "title": "Surrendered or evicted leased sites, improvements and materials pass to the manor (audit PROP-03)",
+   "description": "Surrendered or evicted leased sites, improvements and materials pass to the manor (audit PROP-03)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "Leased property is surrendered to the manor, including improvements and construction materials, without compensation.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "eviction path clears the former tenant's unfinished site (prop03_eviction_site_test)"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed); test_commit: None -> c9da5db; commits + c9da5db; integrated_in + wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)",
+     "why": "merged c9da5db; see docs/decisions/B25-AUD-BACKLOG-2026-11-09.md"
+    }
+   ],
+   "tests": "strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed)",
+   "test_commit": "c9da5db",
+   "commits": [
+    "c9da5db"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)"
+   ]
+  },
+  {
+   "id": "B25-AUD-PROP-06",
+   "kind": "approved",
+   "title": "Migrating household: owned property sold atomically, leases surrendered to the manor (audit PROP-06)",
+   "description": "Migrating household: owned property sold atomically, leases surrendered to the manor (audit PROP-06)",
+   "source": "docs/directives/2026-11-08_prop06_estate_tenancy_migration.md; docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "PROP-06: Outright-owned property may be sold before migration, with proceeds retained. Leased property is surrendered to the manor ... Multi-parcel estate sales must be atomic. Existing tenants retain their leases under the new landlord. Failed sales must fully roll back. The Lorekeeper's hut is included when selling owned property.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "the directive's 18 cases (prop06_estate_transaction_test)"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-08_prop06_estate_tenancy_migration.md; docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> prop06_estate_transaction_test 61/0; strict 42587815471 on 96b071c; campaign 42557925404 on a7071aa; test_commit: None -> 96b071c; commits + 96b071c; integrated_in + wip/b25r2-rev2 96b071c (2026-11-09 09:39 UTC)",
+     "why": "merged 96b071c; see docs/decisions/B25-AUD-PROP-06.md"
+    }
+   ],
+   "tests": "prop06_estate_transaction_test 61/0; strict 42587815471 on 96b071c; campaign 42557925404 on a7071aa",
+   "test_commit": "96b071c",
+   "commits": [
+    "96b071c"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 96b071c (2026-11-09 09:39 UTC)"
+   ]
+  },
+  {
+   "id": "B25-AUD-REG-04",
+   "kind": "approved",
+   "title": "Couriers travel physically (audit REG-04)",
+   "description": "Couriers travel physically (audit REG-04)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "REG-04: Couriers physically travel.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "a living carrier on real road legs; no double delivery; save/load; conservation"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    }
+   ]
+  },
+  {
+   "id": "B25-AUD-REG-05",
+   "kind": "approved",
+   "title": "Migrating households travel physically (audit REG-05)",
+   "description": "Migrating households travel physically (audit REG-05)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "REG-05: Migrating households physically travel.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "arrival-triggered adoption; one journey system shared with REG-04; PROP-06 settlement where the walk starts"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    }
+   ]
+  },
+  {
+   "id": "B25-AUD-REG-07",
+   "kind": "approved",
+   "title": "Trade intelligence valid at most one eight-day year (audit REG-07)",
+   "description": "Trade intelligence valid at most one eight-day year (audit REG-07)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "REG-07: Trade intelligence remains valid for no longer than one eight-day game year.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "intel_test day-boundary cases (stale 4, forget 8, envoy refresh 4)"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> strict 42597744977 on 53a56d3; recorded campaign 42570299554 on 4f1b3c8; test_commit: None -> 53a56d3; commits + 53a56d3; integrated_in + wip/b25r2-rev2 53a56d3 (2026-11-09 11:04 UTC)",
+     "why": "merged 53a56d3; see docs/decisions/B25-AUD-JUS04-REG07.md"
+    }
+   ],
+   "tests": "strict 42597744977 on 53a56d3; recorded campaign 42570299554 on 4f1b3c8",
+   "test_commit": "53a56d3",
+   "commits": [
+    "53a56d3"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 53a56d3 (2026-11-09 11:04 UTC)"
+   ]
+  },
+  {
+   "id": "B25-AUD-SAV-02",
+   "kind": "approved",
+   "title": "Saved economic state preserved through load and continuation (audit SAV-02)",
+   "description": "Saved economic state preserved through load and continuation (audit SAV-02)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "SAV-02: Preserve saved economic state correctly during loading and continuation.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "sav02_day_state_test"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed); test_commit: None -> c9da5db; commits + c9da5db; integrated_in + wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)",
+     "why": "merged c9da5db; see docs/decisions/B25-AUD-BACKLOG-2026-11-09.md"
+    }
+   ],
+   "tests": "strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed)",
+   "test_commit": "c9da5db",
+   "commits": [
+    "c9da5db"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)"
+   ]
+  },
+  {
+   "id": "B25-AUD-TRD-02",
+   "kind": "approved",
+   "title": "Merchant earnings recorded net of commission (audit TRD-02)",
+   "description": "Merchant earnings recorded net of commission (audit TRD-02)",
+   "source": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register",
+   "owner_wording": "TRD-02: Record actual net proceeds rather than gross amounts when calculating the relevant merchant earnings.",
+   "approval": "owner, 2026-11-08",
+   "acceptance": [
+    "trd02_merchant_net_earnings_test"
+   ],
+   "target_build": "20+",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-08",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-09_overnight_autonomous_development.md; GitHub issue 4 comments of 2026-11-08; audit register on branch docs/build25-audit-register"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed); test_commit: None -> c9da5db; commits + c9da5db; integrated_in + wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)",
+     "why": "merged c9da5db; see docs/decisions/B25-AUD-BACKLOG-2026-11-09.md"
+    }
+   ],
+   "tests": "strict 42607051457 attempt 2 on c9da5db; recorded campaign 42627103286 (0 CRITICAL, 0 confirmed)",
+   "test_commit": "c9da5db",
+   "commits": [
+    "c9da5db"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 c9da5db (2026-11-09 17:25 UTC)"
+   ]
+  },
+  {
    "id": "B25-BIZ-D1",
    "kind": "approved",
    "title": "Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system)",
@@ -8600,8 +9284,8 @@
    "description": "Dialogue.brush_off reads n.plan[0] without checking the plan is empty (dialogue.gd:526): a SCRIPT ERROR when a villager between plans brushes the player off. Found by start_test on fe7d8f8 (523/0, 1 script error; the file is untouched by the playtest fixes, a latent defect). Fix in the next cycle?",
    "source": "start_test on wip/b25r2-rev2 fe7d8f8, 2026-11-07",
    "owner_wording": null,
-   "owner_answer": null,
-   "disposition": "OPEN",
+   "owner_answer": "APPROVED (owner directive 2026-11-08 15:12 EST, 'Build 25 audit integration and merge', Phase 1: correct B25R2-BRUSHOFF; docs/directives/2026-11-08_recovered_owner_messages.md)",
+   "disposition": "APPROVED",
    "blocks_implementation": false,
    "target_build": "20+",
    "related": [
@@ -8614,7 +9298,27 @@
      "date": "2026-11-07",
      "change": "entered in the register",
      "why": "start_test on wip/b25r2-rev2 fe7d8f8, 2026-11-07"
+    },
+    {
+     "date": "2026-11-08",
+     "change": "disposition: OPEN -> APPROVED; owner_answer",
+     "why": "owner approved the fix 2026-11-08 (recovered directive); disposition was left OPEN"
+    },
+    {
+     "date": "2026-11-08",
+     "change": "implementation_status: None -> INTEGRATED; verification_status: None -> INTEGRATION VERIFIED; tests: None -> brushoff_empty_plan_test 5/0 (1 script error on the old dialogue.gd); strict Tests 42519022430 passed; test_commit: None -> f0a854c; commits + f0a854c; integrated_in + wip/b25r2-rev2 f0a854c (2026-11-08 23:36 UTC)",
+     "why": "fixed in f0a854c and merged in Batch A (reconstructed 2026-11-09 by the documentation agent)"
     }
+   ],
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
+   "tests": "brushoff_empty_plan_test 5/0 (1 script error on the old dialogue.gd); strict Tests 42519022430 passed",
+   "test_commit": "f0a854c",
+   "commits": [
+    "f0a854c"
+   ],
+   "integrated_in": [
+    "wip/b25r2-rev2 f0a854c (2026-11-08 23:36 UTC)"
    ]
   },
   {
@@ -31743,7 +32447,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -31752,8 +32456,15 @@
      "date": "2026-11-09",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-09_permanent_development_forensics.md"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> documentation agent; branch: None -> docs/history-recovery-2026-11",
+     "why": "historical recovery under way (coverage register, changelog, decision records)"
     }
-   ]
+   ],
+   "assigned_worker": "documentation agent",
+   "branch": "docs/history-recovery-2026-11"
   },
   {
    "id": "HAG-MEM-02",
