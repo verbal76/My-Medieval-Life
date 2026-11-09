@@ -219,6 +219,22 @@ when the issue arose.
   and deposits for dead or migrated NPC senders are stranded, and one migration path destroys a refund. Details, code references
   and the failing-first tests: `docs/decisions/REG-08-INVESTIGATION-2026-11-09.md`. Owner decisions: B25-AUD-REG-08.
 
+### KI-17 Saves do not reload every decimal value exactly (OPEN; found 2026-11-09 18:15 EST, SAV-05)
+- **Found by** making the save tests use the game's own save call (`JSON.stringify(d, "", true, true)`, `main.gd`), branch
+  `wip/b25-sav05` `54794d9` (not merged): `save_continuity_test` fails 1 of 5 (`npc101` hunger 91.1000000000051 saved,
+  91.100000000005 loaded).
+- **Measured** (seed 1, 3 days): a text round trip of `World.to_dict` changes 162 of 26,459 float values at the game's full
+  precision (about 1e-14 relative); 1,601 at the default precision the tests used, which compared too coarsely to notice.
+- **Effect:** a loaded world can differ from the saved one in the last digits of some values, so a run continued after a load
+  can drift from one never saved. Coins and item counts are integers and are not affected.
+- **Next:** a lossless float encoding for saves (a save-format change: needs the migration rules of CLAUDE.md section 7 and,
+  if it breaks compatibility, the owner). Not started.
+
+### KI-12 update (2026-11-09 17:45 EST)
+- `net_fault_test`'s "frozen past the timeouts and let go, it reconnects by itself as itself" failed again on `wip/b25-emp03`
+  `00e47a6` (run 42705032193, attempt 1): third failure on commits that touch no network code. Root-cause work assigned to a worker
+  (PAR-AGENTS-01) on `wip/b25-ki12-reconnect`.
+
 ## Outcomes (legitimate results of the approved rules; changing them needs the owner)
 
 ### KI-O1 No villager founds a business (OUTCOME, owner questions open)
