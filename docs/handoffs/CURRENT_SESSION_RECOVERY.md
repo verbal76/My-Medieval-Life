@@ -79,6 +79,12 @@ It works alongside `CLAUDE.md` section 0. The repository is the record. Never re
 10. **Summarise the current state and pick the next authorized action** from the state file's "Next authorized actions".
     - If it is blocked on the owner, record the question with options and continue with the next unblocked item.
 
+## Decision authority (HAG-AUTH-01, 2026-11-09)
+
+- Before acting on any decision, open `docs/requirements/views/AUTHORITY.md` on the records branch: it names the current development
+  line and frozen branches, every record's lifecycle, and for each superseded decision the record that governs now and why.
+  A document that disagrees with an ACTIVE register record is historical unless the register says otherwise.
+
 ## Notes from the independent recovery test (2026-11-09, HAG-FORENSICS-01)
 
 - **Start here even if your checkout says otherwise.** `main` has no CLAUDE.md, and the local checkout's default branch may be an

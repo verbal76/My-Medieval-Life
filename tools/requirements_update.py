@@ -119,6 +119,13 @@ def main():
 
             change.append(k)
         r.setdefault("history", []).append({"date": args.date, "change": "; ".join(change) or "note", "why": args.why})
+    import decision_authority as da      # HAG-AUTH-01: supersession is two-way and every lifecycle is current
+    by = {x["id"]: x for x in d["requirements"]}
+    for x in d["requirements"]:
+        t = x.get("superseded_by")
+        if t and t in by and x["id"] not in da.as_list(by[t].get("supersedes")):
+            da.link_supersession(by, x["id"], t, args.date, "supersession made two-way: %s superseded by %s" % (x["id"], t))
+        x["lifecycle"] = da.lifecycle(x)
     d["requirements"].sort(key=lambda r: r["id"])
     REG.write_text(json.dumps(d, indent=1, ensure_ascii=False) + "\n")
     print("updated %s" % args.id)

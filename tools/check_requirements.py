@@ -21,7 +21,10 @@ Checks (any failure exits 1; an unfinished requirement is never a failure):
   - documents named in any field exist; the roadmap anchors exist; the project memory files exist and name real paths;
   - frozen baselines (docs/requirements/baseline_*.json) and --against REF: no id disappears, no status changes
     without a new history line (older registers are read through the same v1 -> v2 mapping);
-  - every generated file is up to date (run --write).
+  - decision authority (HAG-AUTH-01, tools/decision_authority.py): every record's lifecycle agrees with its statuses;
+    supersession links are two-way, chains end at a governing record, no two active records claim the same predecessor;
+    the entry points name the current development line and records branch and present no frozen branch as current;
+  - every generated file is up to date (run --write; it also writes views/AUTHORITY.md).
 
     python3 tools/check_requirements.py                 # validate
     python3 tools/check_requirements.py --write         # validate and regenerate the ledger and the views
@@ -264,8 +267,9 @@ def validate(d, check_docs=True):
                 if x not in by_id:
                     errors.append("%s: %s names %s, which is not in the register" % (rid, f, x))
         for f in ("parent", "superseded_by", "supersedes"):
-            if r.get(f) and r[f] not in by_id:
-                errors.append("%s: %s %s is not in the register" % (rid, f, r[f]))
+            for x in ([r[f]] if isinstance(r.get(f), str) and r[f] else (r.get(f) or [] if not isinstance(r.get(f), str) else [])):
+                if x not in by_id:
+                    errors.append("%s: %s %s is not in the register" % (rid, f, x))
         if kind == "decision":
             errors += _decision_errors(r)
         else:
@@ -280,8 +284,11 @@ def validate(d, check_docs=True):
             errors.append("%s: the roadmap names it, but it is not in the register" % a)
         elif a.startswith("EXP-") and not DOC_RE.search(str(by_id[a].get("source") or "")):
             errors.append("%s: an expansion must name its specification document in its source" % a)
+    import decision_authority as da      # HAG-AUTH-01: lifecycle, two-way supersession, current authority, stale directions
+    errors += da.record_errors(d)
     if check_docs:
         errors += memory_errors(d)
+        errors += da.document_errors(d)
     for r in reqs:
         seen, p = set(), r.get("parent")
         while p:
@@ -413,7 +420,7 @@ def memory_errors(d, heads=None):
             if path.startswith(LOCAL_ONLY):
                 continue
             generated = {str(reconciliation_path(bp).relative_to(REPO)) for bp in BASELINES} | {"docs/requirements/views"} | {
-                "docs/requirements/views/%s.md" % n for n in ("STATUS", "DECISIONS", "BACKLOG", "QUEUES", "BUILD_18", "BUILD_19", "BUILD_20", "BUILD_21", "BUILD_22", "BUILD_23", "BUILD_24", "BUILD_25", "BUILD_26", "BUILD_27")}
+                "docs/requirements/views/%s.md" % n for n in ("STATUS", "DECISIONS", "BACKLOG", "QUEUES", "AUTHORITY", "BUILD_18", "BUILD_19", "BUILD_20", "BUILD_21", "BUILD_22", "BUILD_23", "BUILD_24", "BUILD_25", "BUILD_26", "BUILD_27")}
             if not (REPO / path).exists() and not list(REPO.glob(path)) and path not in generated:
                 errors.append("%s names %s, which does not exist" % (f.relative_to(REPO), path))
     if STATE.exists():
@@ -573,6 +580,8 @@ def outputs(d):
     out = [(LEDGER, render(d) + "\n")]
     for path, text in rr.views(d).items():
         out.append((path, text))
+    import decision_authority as da
+    out.append((REPO / "docs" / "requirements" / "views" / "AUTHORITY.md", da.view(d, _cell) + "\n"))
     for bp in BASELINES:
         out.append((reconciliation_path(bp), render_reconciliation(d, json.loads(bp.read_text()))))
     return out

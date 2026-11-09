@@ -492,6 +492,14 @@ sequence. Implementation that already exists is never described as approved beca
   rewrite the earlier rule; preserve it and document any intentional change. Future-stage answers authorize no
   implementation. First review: `docs/design/DECISION_CONTINUITY_REVIEW_2026-10-27.md`.
 
+- **Decision authority and supersession (owner, 2026-11-09, HAG-AUTH-01, `docs/directives/2026-11-09_decision_authority_supersession_safeguard.md`;
+  permanent).** Historical documentation is never current authority. Every substantive decision has a stable register id and a
+  lifecycle (ACTIVE, SUPERSEDED, COMPLETED, REJECTED, DEFERRED, UNDER REVIEW). A superseded decision is kept, marked SUPERSEDED with
+  its replacement, and the replacement names it back; `docs/requirements/views/AUTHORITY.md` shows what governs now. Before any
+  significant change, check the governing record there and any newer directive; investigate conflicts, never pick an older
+  reading or invent a resolution. When a decision is superseded, reconcile the state file, recovery handoff, requirements and
+  implementation records it affects. `tools/check_requirements.py` enforces it (schema: `docs/requirements/SCHEMA.md`).
+
 ## 9a. Requirements register (owner, 2026-10-19; standing, do not remove or weaken without the owner's approval)
 
 The repository remembers what the owner asked for, not the agent. `docs/requirements/requirements.json` is the one

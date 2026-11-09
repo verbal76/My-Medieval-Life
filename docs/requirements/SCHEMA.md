@@ -208,6 +208,34 @@ When implementation or play shows that an approved design causes a problem:
 Engineering changes that keep the design intent go ahead without a question. An approved decision states intent; it
 does not oblige the project to keep a flawed implementation.
 
+## Lifecycle, supersession and current authority (owner, 2026-11-09, HAG-AUTH-01; permanent)
+
+`docs/directives/2026-11-09_decision_authority_supersession_safeguard.md`. Historical documentation is never current authority.
+This register stays the one decision authority; `tools/decision_authority.py` adds:
+
+- **`lifecycle`** on every record, one of ACTIVE, SUPERSEDED, COMPLETED, REJECTED, DEFERRED, UNDER REVIEW. It is derived from
+  the status dimensions, kept current by `tools/requirements_update.py` and checked to agree with them. COMPLETED is for an
+  approved requirement whose implementation met its acceptance criteria; an owner decision or a rule stays ACTIVE after its
+  work is done (completing the work does not retire the decision). PROVISIONAL decisions are ACTIVE until the owner confirms
+  or replaces them; open, reopened and proposed records are UNDER REVIEW and are not authority.
+- **Two-way supersession.** Record A replaced by B: A keeps its text, reasoning and history, gets approval or disposition
+  SUPERSEDED and `superseded_by: B`; B lists A in `supersedes` (a list). `requirements_update.py set A --superseded-by B ...`
+  writes both sides. The checker flags one-way links, a `supersedes` naming a record not marked superseded by it, loops,
+  chains that end at a REJECTED or DEFERRED record (nothing governs), and two non-superseded records claiming the same
+  predecessor (conflicting active replacements: investigate; never pick one silently).
+- **The governing record** is the end of the `superseded_by` chain, listed for every superseded record in
+  `docs/requirements/views/AUTHORITY.md` with the reason, so nobody has to walk the chain.
+- **Current authority block.** The register's top-level `authority` names `development_line`, `records_branch` and
+  `frozen_branches`. The session entry points (CLAUDE.md, the state file, the recovery handoff, PROJECT_MEMORY) must name the
+  first two and must not present a frozen branch as current; a line or a section marked HISTORICAL is exempt. A stale line
+  the owner must change is listed in `authority.acknowledged_stale` with its open decision; the exemption lapses when the
+  decision leaves UNDER REVIEW. Change the block when the owner names a new line.
+- **Before a significant change:** find the record in `views/AUTHORITY.md`, follow it to the governing record, and check
+  newer directives. Never implement from an isolated historical document. Conflicting records are investigated and raised,
+  never resolved by choosing the older reading or inventing one.
+
+These checks read documents only; they run in `check_requirements.py` (and so in CI and the pre-push hook) with no game runs.
+
 ## Validation and enforcement
 
 `tools/check_requirements.py` checks:
