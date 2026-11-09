@@ -125,7 +125,7 @@ func land_price(wd: int, ht: int) -> int:
 func price_of(thing: Dictionary) -> int:
 	for r in unit(thing):
 		if not is_parcel(r):
-			return int(GameData.b("house_price"))
+			return int(GameData.b("workshop_price" if str(r.get("type", "")) == "workshop" else "house_price"))
 	return land_price(int(thing.w), int(thing.h))
 
 
@@ -137,16 +137,66 @@ func sale_value(thing: Dictionary) -> int:
 	return roundi(price_of(thing) * float(GameData.b("sell_back_share")))
 
 
-## "plot0", "the house at b7", "your house on plot0": a deal's name in the land office.
+## A place's name as the player reads it, never an internal id (property phase 2): "the Reed family's
+## house", "the Ford family's old house", "the Ashdown family's smithy", "the clearing north of the
+## Reed family's house", "the ground west of the tavern". A name two places would share gets where
+## the place lies added ("the Reed family's house east of the market").
 func describe(thing: Dictionary) -> String:
-	if is_parcel(thing):
-		var b := building_on(thing)
-		return ("the house on %s" % thing.id) if not b.is_empty() else ("the land %s (%dx%d)" % [thing.id, int(thing.w), int(thing.h)])
-	var fam := ""
+	var name := _base_name(thing)
+	for r in heads():
+		if r != thing and r != head(thing) and _base_name(r) == name:
+			return "%s %s" % [name, w.where(_rect(thing), _own_id(thing), name)]
+	return name
+
+
+func _rect(thing: Dictionary) -> Rect2i:
+	return Rect2i(int(thing.x), int(thing.y), int(thing.w), int(thing.h))
+
+
+func _own_id(thing: Dictionary) -> String:
+	var b := building_on(thing) if is_parcel(thing) else thing
+	return str(b.get("id", ""))
+
+
+func _base_name(thing: Dictionary) -> String:
+	var b := building_on(thing) if is_parcel(thing) else thing
+	if b.is_empty():
+		var site: Dictionary = thing.get("site", {})
+		var by := str(site.get("owner", ""))
+		if not site.is_empty() and not site.get("done", false) and (by == World.PLAYER or by.begins_with("hh:")):
+			return "the %s family's building site for %s" % [_family(by), Construction.kind_name(str(site.get("kind", "house")), true)]
+		var what := "clearing" if w.map.data.plots.any(func(mp): return str(mp.id) == str(thing.id)) else "ground"
+		return "the %s %s" % [what, w.where(_rect(thing), "")]
+	return building_name(b)
+
+
+const PLACES := {"manor": "the manor house", "tavern": "the tavern", "hut": "the sage's hut", "smithy": "the smithy"}
+
+
+## "the Reed family's house" (who lives there or holds it), "the Ford family's old house" (fallen to
+## the manor when the family died out), or "the empty house north of the well".
+func building_name(b: Dictionary) -> String:
+	var kind := Construction.kind_name(str(b.get("kind", "house")) if World.is_built(b) else "house")
+	if PLACES.has(str(b.get("type", ""))):
+		return PLACES[str(b.type)]
+	var h: int = w.household_in(str(b.id))
+	if h >= 0:
+		return "the %s family's %s" % [w.households[h].family, kind]
+	var by: String = w.holder_of(b)
+	if by == World.PLAYER or (by.begins_with("hh:") and _anyone_alive(World.ref_id(by))):
+		return "the %s family's %s" % [_family(by), kind]
 	for hh in w.households:
-		if hh.home == thing.id:
-			fam = hh.family
-	return ("the %s family's old house (%s)" % [fam, thing.id]) if fam != "" else ("the house %s" % thing.id)
+		if str(hh.home) == str(b.id):
+			return "the %s family's old %s" % [hh.family, kind]
+	return "the empty %s %s" % [kind, w.where(_rect(b), str(b.id))]
+
+
+func _family(ref: String) -> String:
+	if ref == World.PLAYER:
+		return w.player.family
+	if ref.begins_with("hh:") and World.ref_id(ref) < w.households.size():
+		return str(w.households[World.ref_id(ref)].family)
+	return "manor's"
 
 
 # ---------------------------------------------------------------- purses ---------------------
@@ -330,6 +380,13 @@ func household_ended(h: int) -> void:
 		return
 	hh.ended = true
 	var ref := World.hh_ref(h)
+	var home_name := describe(w.buildings[hh.home]) if w.buildings.has(str(hh.home)) else ""
+	# a house it was building comes down: the materials delivered go to the manor's stores with the
+	# rest (cancel_site returns every load), and its hired help goes home
+	w.construction.employer_ended(ref)
+	for p in w.plots:
+		if not p.site.is_empty() and not p.site.get("done", false) and str(p.site.get("owner", "")) == ref:
+			w.cancel_site(p, w.granary)
 	for r in _all_things():
 		if w.tenant_of(r) == ref:
 			w.set_tenant(r, "")
@@ -343,7 +400,7 @@ func household_ended(h: int) -> void:
 		moved += c
 	pantry.items.clear()
 	w.stat("escheat_items", moved)
-	w.note("The %s household is no more; their house %s goes back to the manor%s." % [hh.family, hh.home,
+	w.note("The %s household is no more; %s goes back to the manor%s." % [hh.family, home_name if home_name != "" else "what it held",
 			(", and its stores (%d things) to the manor's granary" % moved) if moved > 0 else ""])
 
 
@@ -386,7 +443,7 @@ func _settle(ref: String) -> void:
 	var was := p.home
 	p.home = homes[0] if not homes.is_empty() else ""
 	if p.home != was:
-		w.note("%s %s's home is now %s." % [p.name, p.family, p.home if p.home != "" else "nowhere: the family chest waits for the next house"])
+		w.note("%s %s's home is now %s." % [p.name, p.family, describe(w.buildings[p.home]) if p.home != "" else "nowhere: the family chest waits for the next house"])
 
 
 ## Choose which held house is the player's home (respawn point, bed and chest); "" when done.
@@ -430,10 +487,10 @@ func can_claim(rect: Rect2i) -> String:
 		return "outside the village"
 	for b in records():
 		if Rect2i(int(b.x), int(b.y), int(b.w), int(b.h)).intersects(rect):
-			return ("surveyed land (%s)" % b.id) if is_parcel(b) else ("a building (%s)" % b.id)
+			return ("surveyed land (%s)" % describe(b)) if is_parcel(b) else ("a building (%s)" % describe(b))
 	for f in w.fields:
 		if Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)).intersects(rect):
-			return "the manor's field %s" % f.id
+			return "the manor's fields"
 	var pens: Array = w.fauna.pens.keys()
 	pens.sort()
 	for id in pens:
@@ -452,7 +509,8 @@ func can_claim(rect: Rect2i) -> String:
 	for d in w.deposits:
 		spots.append([d.x, d.y, "the mine"])
 	for t in w.trees:
-		spots.append([t.x, t.y, "a tree (fell it first)"])
+		if t.state == "grown":             # a stump or sapling is grubbed up when the ground is claimed
+			spots.append([t.x, t.y, "a tree (fell it first)"])
 	for s in spots:
 		if rect.has_point(Vector2i(int(s[0]), int(s[1]))):
 			return s[2]
@@ -483,4 +541,9 @@ func claim(rect: Rect2i, ref: String, lease_it := false) -> Dictionary:
 		w.plots.erase(p)
 		return {}
 	next_parcel += 1
+	# the stumps and saplings of felled trees on it are grubbed up: they will not grow again there
+	for t in w.trees:
+		if t.state != "grown" and t.state != "cleared" and rect.has_point(Vector2i(int(t.x), int(t.y))):
+			t.state = "cleared"
+			w.tile_changed.emit(Vector2i(int(t.x), int(t.y)), "below", -1)
 	return p

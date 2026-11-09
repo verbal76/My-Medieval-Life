@@ -48,6 +48,17 @@
     "stone": 20,
     "log": 10
   },
+  "_construction_note": "Property phase 2 (owner rules 2026-10-18: free placement anywhere legal, ground bought or leased on the spot; materials only; helpers hired for coin carry the owner's goods; crowded households split; workshops are buildings with stations, built after a house). Every number here is an agent proposal, provisional: balance review pending (docs/BUILD_DECISIONS.md 'Property and construction, phase 2'). workshop_cost: materials per workshop kind; workshop_price: a workshop with its ground, as house_price is a house's; helper_wage: a day's carrying, paid by the employer when hired (the manor's day wage); split_*: a household whose living members outnumber its house's beds founds a new household when, after paying for the new home, it keeps split_keep_base + split_keep_per_member coins a member staying behind; founder_build_days: the helper days a founder budgets for.",
+  "workshop_cost": {
+    "smithy": {"plank": 20, "stone": 30, "log": 10, "iron_bar": 4},
+    "carpentry": {"plank": 30, "stone": 15, "log": 15},
+    "bakehouse": {"plank": 20, "stone": 30, "log": 10}
+  },
+  "workshop_price": 140,
+  "helper_wage": 6,
+  "split_keep_base": 40,
+  "split_keep_per_member": 20,
+  "founder_build_days": 3,
   "fireball_price": 50,
   "fireball_cooldown": 6.0,
   "fireball_stamina": 30,

@@ -42,6 +42,10 @@ func _init() -> void:
 	test_theft_and_shops()
 	test_property()
 	test_property_migration()
+	test_construction()
+	test_helpers()
+	test_households_split()
+	test_construction_migration()
 	test_simulation(days)
 	test_save_round_trip()
 	print("%d checks, %d failures" % [checks, failures])
@@ -1287,7 +1291,7 @@ func test_interiors() -> void:
 			ok = ok and w2.place_of(n.pos) == "b5" and n.cell() == w2.home_cell(n, "bed")
 	check(moved > 0 and ok, "a version 3 save's %d people hidden at home load inside, each at their own bed" % moved)
 	var d2: Dictionary = w2.to_dict()
-	check(int(d2.save_version) == 5 and not JSON.stringify(d2.npcs).contains("\"hidden\""), "saves are version 5 and hold where people are, not \"hidden\"")
+	check(int(d2.save_version) == World.SAVE_VERSION and not JSON.stringify(d2.npcs).contains("\"hidden\""), "saves are the current version and hold where people are, not \"hidden\"")
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d2)))
 	check(w3.npc(walker.id).pos == w2.npc(walker.id).pos and w3.place_of(w3.npc(walker.id).pos) == "b5", "a villager inside a house is still there after saving and loading")
@@ -1332,6 +1336,21 @@ func _all_goods(w: World) -> Dictionary:
 	add.call(w.player.chest)
 	for l in w.loot:
 		add.call(l.inv)
+	# materials delivered to unfinished building sites and carried by hired helpers are still goods
+	# held (the audit: site materials count in the goods-conservation test)
+	for src in [w.site_goods(), w.construction.carried()]:
+		for id in src:
+			out[id] = int(out.get(id, 0)) + int(src[id])
+	return out
+
+
+## Goods held plus what finished buildings used up: constant while goods only move, are delivered,
+## carried, returned or built with.
+func _ledger(w: World, ids: Array) -> Dictionary:
+	var held := _all_goods(w)
+	var out := {}
+	for id in ids:
+		out[id] = int(held.get(id, 0)) + int(w.stats.get("used_building_" + id, 0))
 	return out
 
 
@@ -1557,6 +1576,389 @@ func test_chest_keeps_marks() -> void:
 	check(p.stolen_count("pottage") == 2 and p.chest_stolen.is_empty(), "taken out again, they are still stolen")
 
 
+## Set the clock to `h` o'clock on the current day (the hour's business is not run again).
+func _at_hour(w: World, h: float) -> void:
+	w.minutes = float(w.day()) * World.DAY + h * 60.0
+	w.last_hour = int(w.minutes / 60.0)
+
+
+## Run the world for `mins` game minutes, or until `done` returns true.
+func _run_until(w: World, mins: int, done: Callable) -> bool:
+	var steps := int(mins / (float(GameData.b("game_minutes_per_second")) * 0.5))
+	for i in steps:
+		w.update(0.5)
+		if done.call():
+			return true
+	return done.call()
+
+
+## Ground for a building of this kind at `at` in the forests: its trees felled, as a builder would
+## (the stumps are grubbed up when the ground is claimed).
+func _cleared(w: World, kind: String, at: Vector2i) -> Rect2i:
+	var r := Rect2i(at, w.construction.footprint(kind))
+	for t in w.trees:
+		if t.state == "grown" and (r.has_point(Vector2i(int(t.x), int(t.y))) or Vector2i(int(t.x), int(t.y)) == w.construction.door_step(kind, r)):
+			w.fell(t, 0)
+	return r
+
+
+## Give the player a house of their own (bought and built on plot0), their home, so workshops may follow.
+func _player_house(w: World) -> Dictionary:
+	var pl: Dictionary = w.plots[0]
+	w.player.coins += 100
+	w.property.buy(pl, World.PLAYER)
+	w.start_site(pl)
+	for id in GameData.b("house_cost"):
+		w.player.inv.add(id, int(GameData.b("house_cost")[id]))
+	w.deliver(pl, w.player.inv)
+	return w.buildings["house_" + str(pl.id)]
+
+
+## Property phase 2, construction (owner rules 2026-10-18): free placement anywhere legal with the
+## ground bought or leased on the spot, generic construction any deliverer can feed with the owner
+## keeping the building, readable names, the house-first rule and workshops with stations, interiors,
+## permission and reservations. Coins and goods only move.
+func test_construction() -> void:
+	var w := new_world()
+	var c := w.construction
+	var p := w.player
+	var coins := func() -> int: return w.total_coins() - w.coin_sources
+	# placement legality
+	var home := w.building_door("b5")
+	var b5: Dictionary = w.buildings["b5"]
+	check(c.can_place("house", Rect2i(int(b5.x) + 2, int(b5.y) + 2, 9, 10), World.PLAYER).begins_with("a building"), "a house cannot go over another building")
+	var rc: Array = w.map.data.road[40]
+	check(c.can_place("house", Rect2i(int(rc[0]) - 4, int(rc[1]) - 5, 9, 10), World.PLAYER) != "", "nor across the road")
+	check(c.can_place("house", Rect2i(-3, 4, 9, 10), World.PLAYER) == "outside the village", "nor outside the village")
+	check(c.can_place("smithy", Rect2i(60, 60, 9, 10), World.PLAYER).begins_with("A house comes first"), "a workshop needs a house first (owner rule)")
+	check(c.can_place("house", Rect2i(60, 60, 5, 5), World.PLAYER).contains("needs 9x10"), "the footprint is the building's")
+	var rect := c.find_ground("house", home, World.PLAYER)
+	check(rect.size == Vector2i(9, 10) and c.can_place("house", rect, World.PLAYER) == "", "legal ground is found near a house (%s)" % rect)
+	var step := c.door_step("house", rect)
+	check(not w.map.is_solid(step) and not w.map.find_path(step, home).is_empty(), "its door step is clear and reachable")
+	# buy on placement: the ground is surveyed, bought (the price to the treasury) and the site marked out
+	p.coins = 500
+	var c0: int = coins.call()
+	var t0 := w.treasury
+	var price: int = c.ground_terms(rect).price
+	var site := c.place("house", rect, World.PLAYER)
+	check(not site.is_empty() and w.owner_of(site) == World.PLAYER and w.treasury == t0 + price and p.coins == 500 - price and str(site.site.kind) == "house"
+			and str(site.site.owner) == World.PLAYER and w.site_progress(site) == 0.0, "placing a house buys the ground (%d coins) and marks out the frame in one go" % price)
+	check(c.place("house", rect, World.PLAYER).is_empty() and c.why.begins_with("surveyed land"), "the same ground cannot be built on twice (%s)" % c.why)
+	# lease on placement
+	check(c.can_place("house", Rect2i(62, 15, 9, 10), World.PLAYER).contains("fell it first"), "a grown tree must be felled first")
+	var rect2 := _cleared(w, "house", Vector2i(62, 15))
+	check(c.can_place("house", rect2, World.PLAYER) == "", "felled, its stump does not stand in the way")
+	var rent: int = c.ground_terms(rect2).rent
+	var leased := c.place("house", rect2, World.PLAYER, true)
+	check(not leased.is_empty() and w.tenant_of(leased) == World.PLAYER and w.owner_of(leased) == World.MANOR and int(leased.rent) == rent and str(leased.site.owner) == World.PLAYER,
+			"placing on leased ground: the first week's rent (%d) is paid and the site is the tenant's" % rent)
+	check(coins.call() == c0, "no coin made or lost by placing")
+	check(w.trees.filter(func(t): return rect2.has_point(Vector2i(int(t.x), int(t.y)))).all(func(t): return t.state == "cleared"), "the stumps on claimed ground are grubbed up for good")
+	# readable names: no internal ids anywhere the player reads them
+	var names: Array = w.property.heads().map(func(r): return w.property.describe(r))
+	var raw := names.filter(func(nm): return str(nm).contains("plot") or str(nm).contains("parcel") or str(nm).contains("(b") or str(nm).contains("b7"))
+	check(raw.is_empty(), "places are named without internal ids (%s)" % [raw])
+	check(w.property.describe(w.plots[0]) != w.property.describe(w.plots[1]) and w.property.describe(w.plots[0]).begins_with("the clearing "), "the two clearings have names of their own: %s / %s" % [w.property.describe(w.plots[0]), w.property.describe(w.plots[1])])
+	check(w.property.describe(site).begins_with("the %s family's building site for a house" % p.family), "a site is named for its family: %s" % w.property.describe(site))
+	check(w.property.describe(w.buildings["b5"]).begins_with("the %s family's house" % w.households[w.household_in("b5")].family), "a house is named for the family living there: %s" % w.property.describe(w.buildings["b5"]))
+	# generic construction: anyone may deliver; the site's owner keeps the building
+	var ids := ["plank", "stone", "log", "iron_bar"]
+	var ledger0 := _ledger(w, ids)
+	var carrier: NPC = w.npcs[30]
+	for id in GameData.b("house_cost"):
+		carrier.inv.add(id, int(GameData.b("house_cost")[id]))
+	var ledger1 := _ledger(w, ids)
+	var part := Inventory.new()
+	part.add("plank", 10)
+	carrier.inv.remove("plank", 10)
+	w.deliver(site, part, World.npc_ref(carrier.id))
+	check(_ledger(w, ids) == ledger1 and int(w.site_goods().get("plank", 0)) == 10, "delivered materials stay counted on the site (goods ledger)")
+	check(w.deliver(site, carrier.inv, World.npc_ref(carrier.id)), "a villager who is not the owner finishes the site")
+	var hid := "house_" + str(site.id)
+	check(w.buildings.has(hid) and w.owner_of(w.buildings[hid]) == World.PLAYER and str(w.buildings[hid].parcel) == str(site.id), "the house is the site owner's, not the deliverer's")
+	check(w.interiors.has(hid) and w.map.is_solid(Vector2i(rect.position.x, rect.position.y)) and not w.map.is_solid(Vector2i(int(site.door[0]), int(site.door[1]))), "it has an interior, walls and an open door")
+	check(_ledger(w, ids) == ledger1, "its materials are used up in it, counted in the ledger")
+	# a workshop after a house: stamps, stations, interior, roof; the owner's to use, others with leave
+	check(c.may_build("smithy", World.PLAYER) == "", "owning a house, the player may build a workshop")
+	var wr := _cleared(w, "smithy", Vector2i(72, 15))
+	var ws := c.place("smithy", wr, World.PLAYER)
+	check(not ws.is_empty() and str(ws.site.kind) == "smithy" and ws.site.cost == GameData.b("workshop_cost").smithy, "a smithy is marked out with its own cost")
+	var wcost: Dictionary = GameData.b("workshop_cost").smithy
+	var bag := Inventory.new()
+	for id in wcost:
+		bag.add(id, int(wcost[id]))
+	w.deliver(ws, bag, World.PLAYER)
+	var wid := "workshop_" + str(ws.id)
+	var wb: Dictionary = w.buildings.get(wid, {})
+	var forge := "ws_%s_forge" % wid
+	var anvil := "ws_%s_anvil" % wid
+	check(str(wb.get("type", "")) == "workshop" and w.stations.has(forge) and w.stations.has(anvil) and w.owner_of(w.stations[forge]) == World.PLAYER, "the finished smithy has a forge and an anvil, the player's")
+	var wi: Dictionary = w.interiors.get(wid, {})
+	check(not wi.is_empty() and not (wi.roof as Array).is_empty() and (wi.floor as Array).has(w.stations[forge].use) and w.place_of(Vector2(w.station_use(forge)) + Vector2(0.5, 0.5)) == wid,
+			"it has an interior with a roof, and its stations are used from its floor")
+	check(w.map.is_solid(Vector2i(int(w.stations[forge].at[0]), int(w.stations[forge].at[1]))), "the forge itself is solid")
+	check(w.stations_of("forge").back() == forge, "the village's own forge comes first for villagers")
+	var smith: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.job == "smith":
+			smith = o
+			break
+	check(w.may_use(World.PLAYER, w.stations[forge]) and w.station_refusal(forge) == "" and not w.npc_may_use(smith, w.stations[forge]), "the player works their own forge; a villager may not without leave")
+	w.permit(wb, "all", true)
+	check(w.npc_may_use(smith, w.stations[forge]), "given leave, a villager may")
+	w.permit(wb, "all", false)
+	# a smith whose own forge is taken does not take the player's
+	var s4: Dictionary = w.stations["s4"]
+	var other: NPC = w.npcs[0]
+	s4.users[other.id] = w.minutes + 500.0
+	other.plan = [w.brain.work(60, "craft", {"recipe": "smelt_iron", "station": "s4"})]
+	check(w.brain._station_for(smith, "forge") == "", "with the village's forge reserved, a smith does not use the player's without leave")
+	# reservations (audit defect 3): the player waits for a villager working at a station they do not hold
+	check(w.station_refusal("s4").contains("is working at the forge"), "the player respects a villager's reservation: %s" % w.station_refusal("s4"))
+	other.plan.clear()
+	check(w.station_refusal("s4") == "" and not s4.users.has(other.id), "a reservation whose villager has gone to other work lapses")
+	w.reserve_for_player("s4", 30.0)
+	check(w.brain._station_for(smith, "forge") == "", "while the player works the forge, the smith waits (or goes elsewhere)")
+	s4.player_until = -1.0
+	check(w.brain._station_for(smith, "forge") == "s4", "and uses it afterwards")
+	# someone else's workshop: the player needs leave
+	wb.owner = "hh:5"
+	check(w.station_refusal(forge).contains("you need leave"), "a workshop that is not the player's needs leave: %s" % w.station_refusal(forge))
+	wb.owner = World.PLAYER
+	check(coins.call() == c0, "every coin kept through construction")
+	w.dispose()
+
+
+## Hired helpers (owner rule: hired for coin, they carry the owner's goods; the owner keeps the
+## building): the wage from the employer's purse, the goods from the family chest, or bought at the
+## market with the employer's coins, carried in real movement and delivered through World.deliver.
+func test_helpers() -> void:
+	var w := new_world()
+	var c := w.construction
+	var p := w.player
+	var coins := func() -> int: return w.total_coins() - w.coin_sources
+	var house := _player_house(w)
+	p.home = str(house.id)
+	p.coins = 400
+	var rect := _cleared(w, "smithy", Vector2i(80, 15))
+	var site := c.place("smithy", rect, World.PLAYER)
+	var cost: Dictionary = site.site.cost
+	for id in cost:
+		p.chest.add(id, int(cost[id]))
+	var helper: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o.job in ["miner", "laborer", "woodcutter"] and o.household >= 0:
+			helper = o
+			break
+	helper.job = ""
+	helper.workplace = ""
+	_at_hour(w, 7.5)
+	var c0: int = coins.call()
+	var ids := ["plank", "stone", "log", "iron_bar"]
+	# the employer's goods: the chest, what the helper carries, the site, the building
+	var own := func() -> Dictionary:
+		var out := {}
+		var on_site := w.site_goods()
+		var held := c.carried()
+		for id in ids:
+			out[id] = p.chest.count(id) + int(on_site.get(id, 0)) + int(held.get(id, 0)) + int(w.stats.get("used_building_" + id, 0))
+		return out
+	var ledger0: Dictionary = own.call()
+	var hc0 := helper.coins
+	var pc0 := p.coins
+	check(c.hire(World.PLAYER, helper, site, 0) == "" and helper.coins == hc0 + int(GameData.b("helper_wage")) and p.coins == pc0 - int(GameData.b("helper_wage")),
+			"the player hires %s for a day's wage (%d coins, from the player's purse)" % [helper.name, int(GameData.b("helper_wage"))])
+	check(c.hire(World.PLAYER, helper, site, 0) != "", "nobody is hired twice in a day")
+	var start := helper.pos
+	var near := {"chest": 1e9, "site": 1e9}
+	var done := _run_until(w, 600, func() -> bool:
+		near.chest = minf(near.chest, helper.pos.distance_to(Vector2(w.building_door(p.home)) + Vector2(0.5, 0.5)))
+		near.site = minf(near.site, helper.pos.distance_to(Vector2(int(site.door[0]), int(site.door[1])) + Vector2(0.5, 0.5)))
+		return site.site.get("done", false))
+	var visited_chest: bool = near.chest < 1.5
+	var visited_site: bool = near.site < 1.5
+	check(done and w.buildings.has("workshop_" + str(site.id)) and w.owner_of(w.buildings["workshop_" + str(site.id)]) == World.PLAYER,
+			"the helper carries everything from the chest and the smithy stands, the player's")
+	check(visited_chest and visited_site, "the helper really walked to the chest and to the site (came within %.1f and %.1f tiles; started %.0f tiles from the chest)" % [near.chest, near.site, start.distance_to(Vector2(w.building_door(p.home)))])
+	check(cost.keys().all(func(id): return p.chest.count(id) == 0), "the materials came from the family chest")
+	check(c.contract_of(helper).is_empty() and helper.memory.any(func(m): return str(m).begins_with("carried for")), "the contract ends with the building")
+	check(own.call() == ledger0 and coins.call() == c0, "goods and coins kept: the materials are in the building, the wage in the helper's purse")
+	# buying at the market with the employer's coins: nothing in the chest, a budget
+	var rect2 := _cleared(w, "carpentry", Vector2i(70, 15))
+	var site2 := c.place("carpentry", rect2, World.PLAYER)
+	var helper2: NPC = null
+	for o: NPC in w.npcs:
+		if o.alive and o.role == "adult" and o != helper and o.job in ["miner", "laborer", "woodcutter"] and o.household >= 0:
+			helper2 = o
+			break
+	helper2.job = "laborer"
+	# sellers with stock
+	for o: NPC in w.npcs:
+		if o.alive and o.job == "carpenter":
+			o.inv.add("plank", 20)
+		if o.alive and w.brain.buy_role(o) == "merchant_raw":
+			o.inv.add("stone", 20)
+			o.inv.add("log", 20)
+	w.minutes += World.DAY
+	_at_hour(w, 7.2)
+	p.coins = 300
+	c0 = coins.call()
+	ledger0 = own.call()
+	var budget := 120
+	check(c.hire(World.PLAYER, helper2, site2, budget) == "", "a helper hired to buy the rest (budget %d)" % budget)
+	var pc := p.coins
+	_run_until(w, 600, func() -> bool: return site2.site.get("done", false) or int(c.contract_of(helper2).get("spent", 0)) >= budget - 4)
+	var spent := pc - p.coins
+	var k: Dictionary = c.contract_of(helper2)
+	check(spent > 0 and spent <= budget and (k.is_empty() or int(k.spent) == spent), "the helper bought materials with the player's coins, within the budget (%d)" % spent)
+	check(w.site_progress(site2) > 0.0, "and carried them to the site (%.0f%%)" % (w.site_progress(site2) * 100.0))
+	var bought := {}
+	for id in ids:
+		bought[id] = int(ledger0[id]) + int(w.stats.get("helper_bought_" + id, 0))
+	check(coins.call() == c0 and own.call() == bought, "coins went to the sellers, the goods bought to the site or the helper's arms: nothing made or lost")
+	# the day ends: the contract with it; what is still carried goes back to the chest
+	w.minutes += World.DAY
+	c.daily()
+	check(c.contract_of(helper2).is_empty() and own.call() == bought and c.carried().is_empty(), "the next day the contract is over and nothing carried is lost")
+	# a save keeps contracts and sites; a dead helper's load goes back
+	var helper3 := helper
+	_at_hour(w, 8.0)
+	c.hire(World.PLAYER, helper3, site2, 0)
+	(c.contract_of(helper3).load as Inventory).add("plank", 3)
+	p.chest.remove("plank", mini(3, p.chest.count("plank")))
+	var text := JSON.stringify(w.to_dict())
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(text))
+	check(not w2.construction.contract_of(w2.npc(helper3.id)).is_empty() and (w2.construction.contract_of(w2.npc(helper3.id)).load as Inventory).count("plank") == 3, "a save keeps the day's contract and what the helper carries")
+	var again := JSON.stringify(w2.to_dict())
+	var w2b := World.new()
+	w2b.load_dict(VillageMap.load_default(), JSON.parse_string(again))
+	check(JSON.stringify(w2b.to_dict()) == again, "and saves the same again")
+	w2b.dispose()
+	var chest0 := p.chest.count("plank")
+	w.kill(helper3, "fever")
+	check(c.contract_of(helper3).is_empty() and p.chest.count("plank") == chest0 + 3, "a helper who dies leaves the employer's goods to the employer")
+	w2.dispose()
+	w.dispose()
+
+
+## Crowded households split (owner rule): with more living members than beds and the coins for it, a
+## grown member founds a household of the same family, gets an empty house (moving in at once) or
+## buys ground and builds a house by the player's rules (hiring help or carrying), and moves in.
+func test_households_split() -> void:
+	var w := new_world()
+	var c := w.construction
+	var coins := func() -> int: return w.total_coins() - w.coin_sources
+	check(range(w.households.size()).all(func(h): return not c.crowded(h)), "nobody is crowded at the start (the houses have a bed each)")
+	# crowd a house: two children of another household come to live there
+	var h := w.household_in("b5")
+	var hh: Dictionary = w.households[h]
+	var from := w.household_in("b10")
+	var moved := 0
+	for m in (w.households[from].members as Array).duplicate():
+		var o: NPC = w.npc(int(m))
+		if o.role == "child" and moved < 2:
+			(w.households[from].members as Array).erase(o.id)
+			(hh.members as Array).append(o.id)
+			o.household = h
+			o.home = "b5"
+			moved += 1
+	check(c.crowded(h), "six people in a house with five beds is crowded")
+	var rich: NPC = w.party(World.hh_ref(h))
+	rich.coins += 600
+	var c0: int = coins.call()
+	var n0 := w.households.size()
+	var founder := c.founder_of(h)
+	_at_hour(w, 6.0)
+	c.daily()
+	check(w.households.size() == n0 + 1, "the crowded household splits")
+	var nh: Dictionary = w.households[n0]
+	var ref := World.hh_ref(n0)
+	check(founder.household == n0 and (nh.members as Array) == [founder.id] and not (hh.members as Array).has(founder.id) and str(nh.family) == str(hh.family),
+			"%s founds a household of the same family" % founder.name)
+	check(not c.crowded(h), "the old house is no longer crowded")
+	var site: Dictionary = w.plot(str(nh.get("build", "")))
+	check(not site.is_empty() and w.owner_of(site) == ref and str(site.site.owner) == ref and str(site.site.kind) == "house", "with no empty house for sale, they buy ground and mark out a house")
+	check(c.contracts.any(func(k): return str(k.employer) == ref), "and set someone to carry for it")
+	check(coins.call() == c0, "coins only moved (the family's gift, the ground to the manor, the wage)")
+	var built := _run_until(w, 6 * 1440, func() -> bool: return site.site.get("done", false))
+	var hid := "house_" + str(site.id)
+	check(built and w.buildings.has(hid) and w.owner_of(w.buildings[hid]) == ref, "the house is built in the days that follow (%s)" % ("done" if built else "%.0f%%" % (w.site_progress(site) * 100.0)))
+	check(str(nh.home) == hid and founder.home == hid and w.household_in(hid) == n0, "and the new household moves in")
+	check(w.total_coins() == c0 + w.coin_sources, "coins conserved throughout")
+	# an empty house: a crowded household moves straight in
+	var w2 := new_world()
+	var c2 := w2.construction
+	var gone := w2.household_in("b7")
+	for m in w2.households[gone].members:
+		w2.kill(w2.npc(int(m)), "fever")
+	var h2 := w2.household_in("b6")
+	var hh2: Dictionary = w2.households[h2]
+	var src := w2.household_in("b9")
+	for m in (w2.households[src].members as Array).duplicate():
+		var o: NPC = w2.npc(int(m))
+		if o.role != "adult" and (hh2.members as Array).size() <= 5:
+			(w2.households[src].members as Array).erase(o.id)
+			(hh2.members as Array).append(o.id)
+			o.household = h2
+			o.home = "b6"
+	w2.party(World.hh_ref(h2)).coins += 400
+	var n2 := w2.households.size()
+	_at_hour(w2, 6.0)
+	c2.daily()
+	check(w2.households.size() == n2 + 1 and str(w2.households[n2].home) == "b7" and w2.household_in("b7") == n2 and w2.holds(World.hh_ref(n2), w2.buildings["b7"]),
+			"with an empty house for sale, the new household gets it from the manor and moves in at once")
+	check(w2.property.describe(w2.buildings["b7"]).begins_with("the %s family's house" % hh2.family), "the house is named for its new family: %s" % w2.property.describe(w2.buildings["b7"]))
+	# a save keeps the founded households
+	var text := JSON.stringify(w.to_dict())
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), JSON.parse_string(text))
+	var again := JSON.stringify(w3.to_dict())
+	var w4 := World.new()
+	w4.load_dict(VillageMap.load_default(), JSON.parse_string(again))
+	check(w3.households.size() == w.households.size() and int(w3.households[n0].founded_from) == h and w3.npc(founder.id).household == n0 and str(w3.households[n0].home) == str(nh.home)
+			and JSON.stringify(w4.to_dict()) == again,
+			"a save keeps the new household, its house and its members")
+	w.dispose()
+	w2.dispose()
+	w3.dispose()
+	w4.dispose()
+
+
+## Save version 6 (property phase 2) and the migration from 5: a version 5 save with a house being
+## built on the player's plot and a house built on the other loads with its site a house's site, its
+## house drawn from the house stamp, and nothing moved; saved again it is version 6 and stable.
+func test_construction_migration() -> void:
+	var w := new_world()
+	var p := w.player
+	var house := _player_house(w)
+	p.home = str(house.id)
+	p.coins += 100
+	var pl1: Dictionary = w.plots[1]
+	w.property.buy(pl1, World.PLAYER)
+	w.start_site(pl1)
+	p.inv.add("plank", 12)
+	w.deliver(pl1, p.inv)
+	var d := _as_v5(JSON.parse_string(JSON.stringify(w.to_dict())))
+	check(not d.has("construction") and not d.plots[1].site.has("kind") and not d.buildings[house.id].has("stamp"), "the fixture is a version 5 save")
+	var w2 := World.new()
+	w2.load_dict(VillageMap.load_default(), d)
+	var s1: Dictionary = w2.plot(str(pl1.id)).site
+	check(str(s1.kind) == "house" and absf(w2.site_progress(w2.plot(str(pl1.id))) - 12.0 / 60.0) < 0.001 and w2.site_delivered(w2.plot(str(pl1.id))) == {"plank": 12}, "v5: the site is a house's, with its progress")
+	var hb: Dictionary = w2.buildings[house.id]
+	check(str(hb.stamp) == "house" and str(hb.kind) == "house" and int(hb.x) == int(house.x) and w2.owner_of(hb) == World.PLAYER and w2.interiors.has(str(house.id)) and w2.player.home == str(house.id),
+			"v5: the built house stays, the player's home, with its interior")
+	check(w2.total_coins() == w.total_coins(), "v5: every coin kept")
+	var again := JSON.stringify(w2.to_dict())
+	var w3 := World.new()
+	w3.load_dict(VillageMap.load_default(), JSON.parse_string(again))
+	check(int(w2.to_dict().save_version) == 6 and JSON.stringify(w3.to_dict()) == again, "v5: saved again as version 6, stable")
+	w.dispose()
+	w2.dispose()
+	w3.dispose()
+
+
 func test_simulation(days: int) -> void:
 	var w := new_world()
 	var coins0 := w.total_coins()
@@ -1629,11 +2031,31 @@ func _census(w: World) -> Dictionary:
 		"coins": w.total_coins(), "made": made, "doing": doing}
 
 
+## A save as save_version 5 wrote it, before property phase 2 (fixture builder for the migration
+## tests): no helpers' contracts, sites without a kind, built houses without kind or stamp, no
+## workshops and no founded households.
+func _as_v5(d: Dictionary) -> Dictionary:
+	d.save_version = 5
+	d.format = "mml-save/5"
+	d.erase("construction")
+	for p in d.plots:
+		if p.site is Dictionary:
+			p.site.erase("kind")
+	for id in d.buildings:
+		for k in ["kind", "stamp", "allow"]:
+			d.buildings[id].erase(k)
+	for hh in d.households:
+		for k in ["founded_from", "founded_day", "build"]:
+			hh.erase(k)
+	return d
+
+
 ## A save as save_version 4 wrote it, before property (fixture builder for the migration tests): a
 ## plot's owner "" or "player" and the player's plot list, a field's list of its farmers' ids, a
 ## stall's merchant id and a pen's keeper id (-1 for none), buildings without owners, no parcel
 ## counter and no settled households. `w` is the world the save `d` came from.
 func _as_v4(w: World, d: Dictionary) -> Dictionary:
+	_as_v5(d)
 	d.save_version = 4
 	d.format = "mml-save/4"
 	d.erase("next_parcel")
@@ -1846,8 +2268,8 @@ func test_property() -> void:
 	var d := w.to_dict()
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(d)))
-	check(int(d.save_version) == 5 and w2.owner_of(w2.plot("parcel0")) == World.PLAYER and w2.property.next_parcel == 1 and w2.owner_of(w2.buildings["b7"]) == World.MANOR
-			and w2.tenant_of(w2.stalls[sid]) == World.npc_ref(idle.id) and w2.households[h].get("ended", false), "a version 5 save keeps owners, tenants, parcels and ended households")
+	check(int(d.save_version) == World.SAVE_VERSION and w2.owner_of(w2.plot("parcel0")) == World.PLAYER and w2.property.next_parcel == 1 and w2.owner_of(w2.buildings["b7"]) == World.MANOR
+			and w2.tenant_of(w2.stalls[sid]) == World.npc_ref(idle.id) and w2.households[h].get("ended", false), "a save keeps owners, tenants, parcels and ended households")
 	var saved2 := JSON.stringify(w2.to_dict())
 	var w3 := World.new()
 	w3.load_dict(VillageMap.load_default(), JSON.parse_string(saved2))
@@ -1919,7 +2341,7 @@ func test_property_migration() -> void:
 		var again := JSON.stringify(w2.to_dict())
 		var w3 := World.new()
 		w3.load_dict(VillageMap.load_default(), JSON.parse_string(again))
-		check(int(w2.to_dict().save_version) == 5 and JSON.stringify(w3.to_dict()) == again, "v%d: saved again as version 5, stable" % v)
+		check(int(w2.to_dict().save_version) == World.SAVE_VERSION and JSON.stringify(w3.to_dict()) == again, "v%d: saved again as the current version, stable" % v)
 		w2.dispose()
 		w3.dispose()
 	w.dispose()
@@ -1966,7 +2388,7 @@ func test_save_round_trip() -> void:
 	w5.load_dict(VillageMap.load_default(), v2)
 	check(w5.treasury == treasury_then and w5.npc(w5.reeve_id).coins == int(GameData.b("reeve_purse")), "a version 2 save's reeve coins move into the treasury (%d)" % w5.treasury)
 	check(w5.total_coins() == w.total_coins(), "a version 2 save keeps every coin")
-	check(int(w5.to_dict().save_version) == 5 and JSON.stringify(w5.to_dict()).contains("\"treasury\""), "saves are written as version 5 with the treasury and granary")
+	check(int(w5.to_dict().save_version) == World.SAVE_VERSION and JSON.stringify(w5.to_dict()).contains("\"treasury\""), "saves are written as the current version with the treasury and granary")
 	# a save from before the plots moved (they lay over houses b20-b22): plot0 owned with a house on
 	# it and the player inside, plot1 unsold, and a tree where the new plot0 is
 	var lay: Dictionary = _as_v4(w, JSON.parse_string(text))

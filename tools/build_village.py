@@ -93,6 +93,35 @@ HOUSE_CLEAR = ((1, 4), (2, 4), (1, 6), (2, 6), (1, 7), (2, 7))
 HOUSE_BEDS = (((1, 4), (2, 4), 1693, 1694), ((1, 5), (2, 5), 1698, 1699), ((1, 6), (2, 6), 1703, 1704),
               ((1, 7), (2, 7), 1693, 1694), ((7, 5), (6, 5), 1696, 1695))
 
+# --- workshop stamps (property phase 2, agent proposal) -------------------------------------------
+# A workshop is Shade's small house (the house stamp: walls, roof, door, chest and tables) with its beds
+# and straw pallet taken out and the stations of his smithy (village-2) or tavern kitchen (village-3)
+# moved in, tile for tile, from where he drew them in this village: (local cell, source cell) pairs,
+# copied in the named layers. Nothing is drawn new. Each station records its object cell and the floor
+# cell it is used from. A workshop has no hearth spot (it is not a home).
+WORK_LAYERS = ("below1", "below2", "above0", "above1", "above2")
+WORKSHOPS = {
+    "smithy": {"stations": [
+        {"type": "forge", "at": (5, 2), "use": (5, 3), "layers": WORK_LAYERS,
+         "paste": (((5, 1), (76, 40)), ((6, 1), (77, 40)), ((5, 2), (76, 41)), ((6, 2), (77, 41)))},
+        {"type": "anvil", "at": (1, 5), "use": (3, 5), "layers": WORK_LAYERS,
+         "paste": (((1, 5), (77, 43)), ((2, 5), (78, 43)))},
+    ]},
+    "carpentry": {"stations": [
+        {"type": "workbench", "at": (1, 4), "use": (3, 4), "layers": WORK_LAYERS,
+         "paste": (((1, 4), (79, 47)), ((2, 4), (80, 47)))},
+        {"type": "sawhorse", "at": (2, 6), "use": (3, 6), "layers": ("below0",),
+         "paste": (((1, 6), (76, 45)), ((2, 6), (77, 45)))},
+        {"type": "", "layers": WORK_LAYERS, "paste": (((1, 7), (79, 45)), ((2, 7), (80, 45)))},   # grindstone
+    ]},
+    "bakehouse": {"stations": [
+        {"type": "oven", "at": (5, 2), "use": (5, 3), "layers": WORK_LAYERS,
+         "paste": (((5, 1), (54, 46)), ((6, 1), (55, 46)), ((5, 2), (54, 47)), ((6, 2), (55, 47)))},
+        {"type": "stove", "at": (2, 5), "use": (3, 5), "layers": WORK_LAYERS,
+         "paste": (((1, 5), (51, 47)), ((2, 5), (52, 47)), ((1, 6), (53, 47)))},       # the pan and the pot
+    ]},
+}
+
 CATS = ("ground", "path", "below", "above")
 
 
@@ -674,6 +703,45 @@ class Village:
             self.put("path", 0, x, y, tile_val(1, self.rng.choice(paths["dirt"][key])))
 
     # ---- output -----------------------------------------------------------------------------
+    def workshop_stamp(self, kind, house):
+        """A workshop stamp (WORKSHOPS): the house stamp with its sleeping places cleared and the
+        stations' tiles copied in from where Shade drew them, with the collision, interior and
+        stations to match. Reads only the finished map, draws no random numbers."""
+        w, h = house["w"], house["h"]
+        layers = {k: list(v) for k, v in house["layers"].items()}
+        solid = [list(row) for row in house["solid"]]
+        it = house["interior"]
+        beds = [tuple(s["at"]) for s in it["spots"] if s["kind"] == "bed"]
+        posts = [tuple(p) for _, p, _, _ in HOUSE_BEDS]
+        for x, y in beds + posts:
+            for name in list(layers):
+                v = layers[name][y * w + x]
+                if (name != "below0" or v == tile_val(0, MAT)) and name not in ROOF_LAYERS and not name.startswith("path"):
+                    layers[name][y * w + x] = -1
+            solid[y][x] = "0"
+        stations = []
+        for st in WORKSHOPS[kind]["stations"]:
+            for (x, y), (sx, sy) in st["paste"]:
+                for name in st["layers"]:
+                    key = (name[:-1], int(name[-1]))
+                    v = self.layers[key][sy * W + sx] if key in self.layers else -1
+                    if name not in layers:
+                        layers[name] = [-1] * (w * h)
+                    if v >= 0 or name != "below0":
+                        layers[name][y * w + x] = v
+                if y >= 2:
+                    solid[y][x] = "1"
+            if st["type"]:
+                stations.append({"type": st["type"], "at": list(st["at"]), "use": list(st["use"])})
+                ux, uy = st["use"]
+                assert solid[uy][ux] == "0", f"{kind}: the {st['type']} is used from a wall"
+        area = [tuple(c) for c in it["area"]]
+        floor = sorted(c for c in area if solid[c[1]][c[0]] == "0")
+        interior = {"doors": it["doors"], "area": it["area"], "floor": [list(c) for c in floor], "roof": it["roof"],
+                    "spots": [s for s in it["spots"] if s["kind"] in ("chest", "table")]}
+        return {"w": w, "h": h, "door": house["door"], "layers": {k: layers[k] for k in sorted(layers)},
+                "interior": interior, "solid": ["".join(r) for r in solid], "stations": stations}
+
     def to_json(self):
         solid = self.solid_grid()
         layers = []
@@ -699,6 +767,9 @@ class Village:
         stamp["interior"]["spots"] = [{**sp, "at": local(sp["at"]), "use": local(sp["use"])} for sp in it["spots"]]
         stamp["solid"] = ["".join("1" if solid[hb["y"] + y][hb["x"] + x] else "0" for x in range(hb["w"]))
                           for y in range(hb["h"])]
+        stamps = {"house": stamp}
+        for kind in WORKSHOPS:
+            stamps["workshop_" + kind] = self.workshop_stamp(kind, stamp)
         return {
             "format": "mml-village/1", "seed": self.seed, "w": W, "h": H, "tile": 16,
             "atlases": [{"name": "paid", "image": "res://assets/tiles/punyworld-tiles.png", "columns": 220},
@@ -710,7 +781,7 @@ class Village:
                       "field": FIELD_TILES, "frame": FRAME,
                       "canopy": [list(p) for p in self.canopy_pairs()]},
             "layers": layers,
-            "stamps": {"house": stamp},
+            "stamps": stamps,
             "roof_layers": list(ROOF_LAYERS),
             "solid": ["".join("1" if s else "0" for s in row) for row in solid],
             "road": sorted([list(c) for c in self.road]),
