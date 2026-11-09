@@ -10,6 +10,7 @@ var world: World
 var view: MapView
 var actors: Node2D
 var above: Node2D
+var canopy: CanopyFade         # fades the tree canopy the player walks behind
 var camera: Camera2D
 var ui: GameUI
 var sprites := {}              # npc id -> ActorSprite
@@ -254,6 +255,9 @@ func _build_scene() -> void:
 	target_marker.visible = false
 	above.add_child(target_marker)
 	view.build(map, above)
+	canopy = CanopyFade.new()
+	above.add_child(canopy)
+	canopy.setup(view, map.data.tiles.get("canopy", []))
 	for n: NPC in world.npcs:
 		var s := ActorSprite.new()
 		s.setup(n.sprite)
@@ -286,12 +290,10 @@ func _build_scene() -> void:
 
 func _apply_world_changes() -> void:
 	for t in world.trees:
-		if t.state == "stump":
-			_on_tile_changed(Vector2i(t.x, t.y), "below", map.data.tiles.stump)
+		if t.state != "grown":
+			_on_tile_changed(Vector2i(t.x, t.y), "below", int(t.trunk) if t.state == "stump" else int(map.data.tiles.sapling))
 			_on_tile_changed(Vector2i(t.x, t.y - 1), "above", -1)
-		elif t.state == "sapling":
-			_on_tile_changed(Vector2i(t.x, t.y), "below", map.data.tiles.sapling)
-			_on_tile_changed(Vector2i(t.x, t.y - 1), "above", -1)
+			_on_tile_changed(Vector2i(t.x, t.y), "above", -1)
 	for d in world.deposits:
 		if int(d.amount) <= 0:
 			_on_tile_changed(Vector2i(d.x, d.y), "below", map.data.tiles.depleted_rock)
@@ -309,10 +311,13 @@ func _on_tile_changed(cell: Vector2i, kind: String, value: int) -> void:
 	var layer_name: String = {"below": "below0", "above": "above0", "field": "path1", "path": "path0"}.get(kind, "below0")
 	var layer := view.layer(layer_name)
 	if layer:
+		if kind == "above":
+			canopy.restore_all()          # a faded canopy's tiles go back first, so the change sticks
 		view.set_tile(layer, cell, value)
 
 
 func _on_building_added(b: Dictionary) -> void:
+	canopy.restore_all()
 	var stamp: Dictionary = map.data.stamps.house
 	for lname in stamp.layers:
 		var layer := view.layer(lname)
@@ -369,6 +374,7 @@ func _sync_sprites() -> void:
 		s.play(n.anim)
 	var p := world.player
 	player_sprite.position = p.pos * T
+	canopy.update(p.pos, get_process_delta_time())
 	if not p.alive:
 		if player_sprite.anim != "death":
 			player_sprite.play("death", true)
