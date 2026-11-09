@@ -362,3 +362,30 @@ baseline is unchanged.
 Not merged: LIFE-03, LIFE-04 (`wip/b25-features-integration` `494af9a`, strict passed, campaign pending), PROP-06
 (`wip/b25-prop06-integration`, corrected under the owner's 2026-11-08 directive, verification running), MP-05 (security
 verification outstanding), JUS-04 and REG-07 (PRs #20, #21, next batch). MP-07, REG-04 and REG-05 are approved, not implemented.
+
+## Owner decisions reconciled (2026-11-09 overnight directive, docs/directives/2026-11-09_overnight_autonomous_development.md)
+
+These owner answers of 2026-11-08 supersede the older entries above that describe them as unanswered. Status as of 2026-11-09
+10:00 UTC; "branch" means committed, pushed and locally verified, not yet on the development branch.
+
+| Item | Owner decision | Status |
+|---|---|---|
+| LIFE-03 | qualified healer/apprentice succession | MERGED `229f76e` (with integration fix: successor needs healing level 2) |
+| LIFE-04 | widows/widowers may remarry, history kept | MERGED `229f76e` (with integration fix: a living partner always blocks) |
+| LIFE-05 | bandit heirs inherit last; rehabilitation allowed, record stays | FIXED on `wip/b25-backlog` `cbd91f6` (test 8/0, 3 red) |
+| PROP-06 | atomic estate sale, tenants keep leases, rollback, hut included | merge commit `96b071c` under strict CI (`wip/b25-prop06-merge`) |
+| PROP-03 | surrendered leased property, improvements and materials to the manor | fixed by PROP-06's `Property._release` (end of lease and eviction); eviction-path test pending |
+| BIZ-03 | Option B: payroll before owner withdrawals; hiring budgets the whole payroll | FIXED `93327ae` (test 12/0, 3 red) |
+| BIZ-04 | a living household keeps its business money when migrating | FIXED `3e9b9a1` (venture tills; test 5/0, 2 red) |
+| TRD-02 | record net proceeds | FIXED `36fa011` (test 6/0, 1 red) |
+| INV-04 | goods left in sold property pass to the purchaser, tenant rights kept | FIXED `969a8f4` (stash hand-over; test 9/0, 4 red) |
+| INV-05 | no unapproved rubble-to-stone conversion | FIXED `e42a37f` (fittings and sites; test 12/0, 4 red) |
+| SAV-02 | preserve saved economic state through load | FIXED `f67afdb` (day state and hour caches saved; test 6/0, 4 red) |
+| EMP-03 | count everyone actively seeking work | NO CHANGE NEEDED: the code already counts every seeker, including those who then took other work |
+| JUS-04 | relatives affected only once the crime reached them | `wip/b25-next-batch` `4f1b3c8` (PR #20), recorded campaign running |
+| REG-07 | trade intelligence valid at most one eight-day year | `wip/b25-next-batch` `4f1b3c8` (PR #21), recorded campaign running |
+| MP-05 | mutual, reciprocal three-tier sharing, revocable, no ownership transfer | security verification outstanding (`wip/b25-mp05-integration`) |
+| MP-07 | private records never shared automatically | approved, not implemented |
+| REG-04 / REG-05 | couriers / migrating households travel physically | approved, not implemented |
+| REG-08 | courier stranded-delivery recovery | technical investigation, not assumed resolved |
+| SAV-04 | wildlife/combat continuity vs deterministic continuation | OWNER DECISION STILL OPEN; no policy invented |
