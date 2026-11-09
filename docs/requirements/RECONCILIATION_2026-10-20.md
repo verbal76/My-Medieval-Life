@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 827 (435 of them still open) |
-| **Open entries now** (rules excluded) | | **593** |
+| Entries added since | | 828 (436 of them still open) |
+| **Open entries now** (rules excluded) | | **594** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (827)
+## Added since the baseline (828)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -465,6 +465,7 @@ None.
 | GP-WHEAT-PICKED | Harvested wheat shows as picked, cell by cell | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-WIKI-LAYOUT | Encyclopedia laid out like a classic wiki page, on parchment | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20 |
 | GP-WIKI-RECIPE-TOOLS | Encyclopedia recipes name every tool the work needs (for example a mallet and a chisel, and which chisels count) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
+| HAG-FORENSICS-01 | Permanent development forensics, GitHub accountability and historical recovery (Nov 1-9 recovery, coverage register, recovery entry points, independent recovery test, continuous checkpoints) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | HAG-MEM-02 | Permanent GitHub memory, decision history (with rationale) and CI reporting: six memory components, a decision-rationale standard, known-issues record, recovery entry point, Markdown+JSON CI reports even on failure, durable conclusions in the repository | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | HEALTH-01 | Medieval health, injury and medical system (injury severity, accidents incl. collapses, illness, bleeding and infection, practitioners, apothecary and potions, costs, rest and recovery, lasting harm, death, NPC treatment decisions) | approved | NOT STARTED / NOT TESTED / OPEN | owner decision |
 | HORSE-Q | Plough horse: price and what it does | decision | APPROVED | owner decision |
