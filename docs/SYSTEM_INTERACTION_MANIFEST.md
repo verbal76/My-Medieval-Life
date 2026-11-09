@@ -95,8 +95,8 @@ Rules:
 - **Trigger:** The player interacts with a ripe field.
 - **Source:** `game/scripts/main.gd::interact`, `game/scripts/core/world.gd::player_harvest`, `game/scripts/core/world.gd::take_crop`
 - **Affects:** Fields, Inventory, Ledger, Crime
-- **Expected:** A handful (`harvest_handful`) leaves the field's crop and goes to the pack, counted as made wheat. When the crop is gone the field is tilled. A field worked by farmers is theft from them (INT-008).
-- **Tests:** `game/tests/run_tests.gd::test_player_actions`, `game/tests/start_test.gd`
+- **Expected:** A handful (`harvest_handful`) leaves the field's crop and goes to the pack, counted as made wheat. When the crop is gone the field is tilled. A field worked by farmers is theft from them (INT-008), except the wheat a farmer hired the player to cut there (INT-046).
+- **Tests:** `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_hiring`, `game/tests/start_test.gd`
 
 ### INT-008 · Theft is witnessed
 - **Trigger:** The player takes something that belongs to someone: wheat from a farmed field, anything from a container or an unattended stall (INT-043), or a pocket picked or tried (INT-044).
@@ -109,8 +109,8 @@ Rules:
 - **Trigger:** A farmer's plan reaches a ripe field.
 - **Source:** `game/scripts/core/npc_brain.gd::_farmer`, `game/scripts/core/world.gd::take_crop`, `game/scripts/core/world.gd::_on_hour`
 - **Affects:** Fields, Inventory, Livestock, Ledger
-- **Expected:** The farmer takes what crop is left. A field ripens hourly once grown and holds `field_yield`. Whoever harvests a keeper's field carries feed to the pen first.
-- **Tests:** `game/tests/run_tests.gd::test_food_rules`, `game/tests/run_tests.gd::test_simulation`
+- **Expected:** The farmer takes what crop is left. A field ripens hourly once grown and holds `field_yield`. Whoever harvests a keeper's field carries feed to the pen first. A field whose farmer hired the player to cut it is left to the player while that work is open (INT-046).
+- **Tests:** `game/tests/run_tests.gd::test_food_rules`, `game/tests/run_tests.gd::test_simulation`, `game/tests/run_tests.gd::test_hiring`
 
 ### INT-010 · Eating
 - **Trigger:** The player eats from the inventory; a villager eats in its plan.
@@ -123,8 +123,8 @@ Rules:
 - **Trigger:** Time passes with hunger at zero.
 - **Source:** `game/scripts/core/world.gd::_update_player`, `game/scripts/core/world.gd::damage_player`, `game/scripts/core/world.gd::_update_npc`
 - **Affects:** Food, Health
-- **Expected:** At zero hunger, health falls; at zero health the player or villager dies (INT-016, INT-018).
-- **Tests:** `game/tests/run_tests.gd::test_simulation`, `game/tests/scenarios.gd`
+- **Expected:** At zero hunger, health falls; at zero health the player or villager dies (INT-016, INT-018). A child's hunger falls `child_food_factor` as fast as an adult's (INT-047).
+- **Tests:** `game/tests/run_tests.gd::test_simulation`, `game/tests/run_tests.gd::test_child_food`, `game/tests/scenarios.gd`
 
 ### INT-012 · Fighting a bandit
 - **Trigger:** The player attacks a bandit.
@@ -186,8 +186,8 @@ Rules:
 - **Trigger:** Noon on caravan days.
 - **Source:** `game/scripts/core/npc_brain.gd::caravan`
 - **Affects:** Market, Coins, Ledger
-- **Expected:** The only source of new coins (counted in `coin_sources`). It does not buy food while the village holds under 3 days of it.
-- **Tests:** `game/tests/run_tests.gd::test_simulation`
+- **Expected:** The only source of new coins (counted in `coin_sources`). It does not buy food while the village holds under 3 days of it, days of its age-weighted need (INT-047).
+- **Tests:** `game/tests/run_tests.gd::test_simulation`, `game/tests/run_tests.gd::test_child_food`
 
 ### INT-021 · Crafting and stations
 - **Trigger:** The player makes a recipe at a station; a villager plans a recipe.
@@ -214,15 +214,15 @@ Rules:
 - **Trigger:** A household can cover under 2 days of food.
 - **Source:** `game/scripts/core/npc_brain.gd::_relief`, `game/scripts/core/npc_brain.gd::household_food_days`, `game/scripts/core/npc_brain.gd::_note_relief`
 - **Affects:** Relief, Treasury, Granary, Households, Market
-- **Expected:** Food goes into the pantry up to 3 days, from the granary first, then bought. Under 1 day of food it is paid below the reserve, down to one day of wages. Cash counts as food only up to the market's share. Chronic relief is named in the log.
-- **Tests:** `game/tests/run_tests.gd::test_government`
+- **Expected:** Food goes into the pantry up to 3 days, from the granary first, then bought. Under 1 day of food it is paid below the reserve, down to one day of wages. Cash counts as food only up to the market's share. Chronic relief is named in the log. Days and the fill are measured against the household's age-weighted need (INT-047).
+- **Tests:** `game/tests/run_tests.gd::test_government`, `game/tests/run_tests.gd::test_child_food`
 
 ### INT-025 · Granary purchases
 - **Trigger:** The manor's evening business.
 - **Source:** `game/scripts/core/npc_brain.gd::surplus_wheat`, `game/scripts/core/npc_brain.gd::keep_wheat`, `game/scripts/core/npc_brain.gd::reeve_day`
 - **Affects:** Granary, Treasury, Market, Fields
-- **Expected:** Only genuine surplus is bought: never a farmer's household food, feed reserve or buffer, never in a famine. The granary starts with 7 days of food and is finite.
-- **Tests:** `game/tests/run_tests.gd::test_government`, `game/tests/scenarios.gd`
+- **Expected:** Only genuine surplus is bought: never a farmer's household food, feed reserve or buffer, never in a famine. The granary starts with 7 days of food and is finite. The household food, the target and the start are age-weighted (INT-047).
+- **Tests:** `game/tests/run_tests.gd::test_government`, `game/tests/run_tests.gd::test_child_food`, `game/tests/scenarios.gd`
 
 ### INT-026 · Repairs and plot sales
 - **Trigger:** The evening business (repairs); the player buys a plot.
@@ -249,8 +249,8 @@ Rules:
 - **Trigger:** Each morning, and at once after a death or a job change.
 - **Source:** `game/scripts/core/npc_brain.gd::evaluate_household`, `game/scripts/core/npc_brain.gd::job_market`, `game/scripts/core/npc_brain.gd::seek_work`, `game/scripts/core/npc_brain.gd::_change_job`, `game/scripts/core/npc_brain.gd::dawn`
 - **Affects:** Households, Employment, Wages, Fields, Resources, Wildlife
-- **Expected:** A household is sustainable when income covers cost, or it holds 10 days of food or runway. Adults of an unsustainable household, and the unemployed, move to an opening that pays at least 25% (and 2 coins) more. Cooldowns apply.
-- **Tests:** `game/tests/run_tests.gd::test_households_and_work`, `game/tests/scenarios.gd`
+- **Expected:** A household is sustainable when income covers cost, or it holds 10 days of food or runway. Its daily food need and cost are age-weighted (INT-047). Adults of an unsustainable household, and the unemployed, move to an opening that pays at least 25% (and 2 coins) more. Cooldowns apply.
+- **Tests:** `game/tests/run_tests.gd::test_households_and_work`, `game/tests/run_tests.gd::test_child_food`, `game/tests/scenarios.gd`
 
 ### INT-030 · Building a house
 - **Trigger:** The player delivers materials to their plot.
@@ -331,15 +331,16 @@ Rules:
 ### INT-038 · Side quests
 - **Trigger:** Dawn (offers are refreshed); the player accepts or completes a quest in conversation; a giver dies.
 - **Source:** `game/scripts/ui/game_ui.gd::_quest_choices`, `game/scripts/ui/game_ui.gd::_quest_items`, `game/scripts/main.gd::_sync_diamonds`, `game/scripts/core/quests.gd::refresh`, `game/scripts/core/quests.gd::accept`, `game/scripts/core/quests.gd::complete`, `game/scripts/core/quests.gd::drop_failed`, `game/scripts/core/quests.gd::start_story`, `game/scripts/core/quests.gd::on_learned`, `game/scripts/core/quests.gd::marker`, `game/scripts/core/npc_brain.gd::dawn`, `game/scripts/core/world.gd::continue_as_heir`, `game/data/quests.json`
-- **Affects:** Households, Inventory, Coins, Crime, Save
+- **Affects:** Households, Inventory, Coins, Crime, Save, Player state
 - **Expected:**
   - Offers come only from villagers whose condition holds (job or role, holding too little of something, a household short of food, a living bandit who robbed them), at most `quest_max_offers`.
   - Accepting moves an offer to the player's quests (at most `quest_max_active`).
   - Completing moves the asked-for goods to the giver and up to the reward in coins from the giver's purse to the player; coins are conserved.
   - A giver's death fails a side quest. Offers and accepted quests are saved.
   - Story quests start with every new player and every heir, and on loading a save from before they existed. Their giver shows the story marker, a green pennant, until done; a villager with an offer shows what the quest is about (scroll for a skill, wheat for food, iron for ore, crossed swords for combat, a log, an axe). A giver who is inside their own home shows the marker over the house door instead; givers at work (the tavern, the smithy) are seen and marked as usual. Markers draw over roofs and tree canopies. "The sage in the north" is done when the player learns Fireball.
+  - A quest with `teach` raises a player skill to its level when done ("The tanner's craft": 2 hides for Crafting 2), offered only below that level (`player_below`), under the skill scroll; the talk window says what was learned under the giver's words.
   - In conversation: "Need any help?" hears an offer, then "I'll do it" or "Not now"; "Here you are" hands in a ready quest. A quest giver always stops to talk, even when busy (INT-039). The journal has a Quests page.
-- **Tests:** `game/tests/run_tests.gd::test_quests`, `game/tests/start_test.gd`
+- **Tests:** `game/tests/run_tests.gd::test_quests`, `game/tests/run_tests.gd::test_skill_quest`, `game/tests/start_test.gd`
 
 ### INT-039 · Talking to a villager: conversation or a called-out line
 - **Trigger:** The player uses a villager in front of them, or reaches one they tapped.
@@ -406,6 +407,23 @@ Rules:
   - Sold to anyone else: the usual price (the buyer cannot tell), marked pieces first; a guard within `witness_radius` questions the seller with chance `guard_question_chance`: the piece goes back to its owner and the fine is paid.
 - **Tests:** `game/tests/run_tests.gd::test_theft_and_shops`
 
+### INT-046 · Paid work for the player
+- **Trigger:** The player asks a villager "Any work for me?", accepts, cuts a hired field, hands the work in; dawn (lapses).
+- **Source:** `game/scripts/core/quests.gd::hires`, `game/scripts/core/quests.gd::hire_offer`, `game/scripts/core/quests.gd::accept`, `game/scripts/core/quests.gd::complete`, `game/scripts/core/quests.gd::hired_harvest`, `game/scripts/core/quests.gd::hired_on`, `game/scripts/core/quests.gd::drop_failed`, `game/scripts/core/world.gd::player_harvest`, `game/scripts/core/npc_brain.gd::_farmer`, `game/scripts/ui/game_ui.gd::_quest_choices`, `game/scripts/main.gd::approach`, `game/data/quests.json`
+- **Affects:** Employment, Coins, Inventory, Fields, Crime, Interface, Ledger, Save
+- **Expected:**
+  - A working adult whose job a `hire` template names (farmer, woodcutter, miner) offers work only when it exists (a ripe field, too few logs or ore) and they hold the whole wage; otherwise they say why not. Never a dawn offer or marker. One job per employer; at most `quest_max_active` tasks.
+  - Handing in moves the goods to the employer and the whole wage from their purse to the player (`hired_wages`); an employer who cannot pay keeps nothing and pays nothing. No coins are created.
+  - A hired harvest hand cuts up to the hired amount from the employer's field without theft; the field's farmers leave it meanwhile. Undone work lapses after its `days`; it fails if the employer dies. Accepted work is saved with the player's quests.
+- **Tests:** `game/tests/run_tests.gd::test_hiring`, `game/tests/start_test.gd`
+
+### INT-047 · Children eat by age in every food reckoning
+- **Trigger:** Time passes (hunger); any reckoning of a household's or the village's food.
+- **Source:** `game/scripts/core/npc_brain.gd::food_factor`, `game/scripts/core/npc_brain.gd::household_day_food`, `game/scripts/core/npc_brain.gd::village_day_food`, `game/scripts/core/npc_brain.gd::household_food_days`, `game/scripts/core/npc_brain.gd::_relief`, `game/scripts/core/npc_brain.gd::keep_wheat`, `game/scripts/core/npc_brain.gd::reeve_day`, `game/scripts/core/npc_brain.gd::evaluate_household`, `game/scripts/core/npc_brain.gd::caravan`, `game/scripts/core/world.gd::_update_npc`, `game/scripts/core/world.gd::_update_food_days`, `game/scripts/core/world.gd::setup`, `game/data/balance.json`
+- **Affects:** Food, Households, Relief, Granary, Market, Employment
+- **Expected:** A child's hunger falls `child_food_factor` (0.6) as fast as an adult's, so a child eats that share. Every food reckoning weights members the same way: household days and market share, relief, a farmer's household keep, the granary target and start, the village's food days (famine), the caravan's reserve, the household reckoning, and through them the food quest's `household_food_below` and day labour.
+- **Tests:** `game/tests/run_tests.gd::test_child_food`, `game/tests/run_tests.gd::test_households_and_work`, `game/tests/run_tests.gd::test_simulation`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -413,33 +431,33 @@ Rules:
 | System | Interactions |
 |---|---|
 | Character | INT-001, INT-018, INT-031 |
-| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-044 |
-| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045 |
+| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044 |
+| Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
-| Food | INT-010, INT-011, INT-027, INT-028, INT-042 |
+| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047 |
 | Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033 |
 | Combat | INT-004, INT-012, INT-013, INT-032 |
-| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045 |
+| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030 |
-| Fields | INT-007, INT-009, INT-025, INT-029 |
+| Fields | INT-007, INT-009, INT-025, INT-029, INT-046 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040 |
 | Crafting | INT-021, INT-035, INT-036 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045 |
-| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047 |
+| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046 |
 | Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045 |
 | Wages | INT-023, INT-029 |
-| Relief | INT-024 |
-| Granary | INT-024, INT-025, INT-031 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043 |
-| Employment | INT-017, INT-023, INT-029, INT-037 |
+| Relief | INT-024, INT-047 |
+| Granary | INT-024, INT-025, INT-031, INT-047 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047 |
+| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047 |
 | Inheritance | INT-017 |
 | Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033 |
 | Bandits | INT-012, INT-014 |
 | Building | INT-018, INT-026, INT-030, INT-031 |
-| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021 |
-| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045 |
-| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044 |
+| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-046 |
+| Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046 |
+| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046 |
 | Containers | INT-031, INT-042, INT-043 |
 
 <!-- index:end -->

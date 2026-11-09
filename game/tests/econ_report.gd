@@ -207,7 +207,7 @@ func _init() -> void:
 					if pottage_price == 0 or p < pottage_price:
 						pottage_price = p
 		var row := [d + 1, alive, delta.call("made_wheat"), delta.call("made_pottage"), delta.call("made_roast_meat"), delta.call("made_ale"),
-			delta.call("made_meat"), delta.call("eaten_food"), alive * 24.0 * float(GameData.b("hunger_per_hour")), delta.call("feed_eaten_wheat"),
+			delta.call("made_meat"), delta.call("eaten_food"), w.brain.village_day_food(), delta.call("feed_eaten_wheat"),
 			exported, delta.call("missed_meal_no_money"), delta.call("missed_meal_no_food_for_sale"), stock, w.total_coins(), poor, no_tool,
 			trees, ore, livestock, wild, starved_today[0], killed_today[0], working, no_work, indep, relief_today, wheat_price, pottage_price,
 			market, w.treasury, delta.call("gov_tax"), delta.call("gov_wages"), delta.call("gov_repairs"),
@@ -275,7 +275,7 @@ func _food_days(w: World, h: int, cash: int) -> float:
 	var p: Inventory = w.households[h].pantry
 	var pts := p.count("pottage") * 40.0 + p.count("roast_meat") * 60.0 + p.count("ale") * 10.0 + p.count("wheat") * 120.0
 	pts += cash * 60.0
-	return pts / maxf(1.0, _living(w, h) * 24.0 * float(GameData.b("hunger_per_hour")))
+	return pts / maxf(1.0, w.brain.household_day_food(h))          # members weighted by age, as in the game
 
 
 ## [median, 25th percentile, Gini] of household wealth.

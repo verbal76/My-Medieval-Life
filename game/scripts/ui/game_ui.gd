@@ -878,7 +878,10 @@ func _quest_items() -> Array:
 		var giver: NPC = w.npc(int(q.giver))
 		out.append({"day": true, "text": ("%s (story)" % t.title) if t.get("story", false) else str(t.title)})
 		var who := "%s %s" % [giver.name, giver.family] if giver else "someone"
-		out.append({"day": false, "text": "Asked by %s on day %d." % [who, int(q.day)]})
+		if t.get("hire", false):
+			out.append({"day": false, "text": "Work for %s, taken on day %d, for %d coins. It lapses if not done by the end of day %d." % [who, int(q.day), int(t.wage), int(q.day) + int(t.get("days", 1))]})
+		else:
+			out.append({"day": false, "text": "Asked by %s on day %d." % [who, int(q.day)]})
 		var want: String
 		if t.has("learn"):
 			want = "Learn %s from %s (%d coins)." % [str(t.learn).capitalize(), who, int(GameData.b("fireball_price"))]
@@ -887,6 +890,10 @@ func _quest_items() -> Array:
 			for id in t.need:
 				need.append("%d %s (have %d)" % [int(t.need[id]), GameData.item_name(id).to_lower(), w.player.inv.count(id)])
 			want = "Bring " + ", ".join(need) + "."
+			if t.has("harvest"):
+				want += " Cut it from their field (%d of %d cut)." % [int(q.get("harvested", 0)), int(t.harvest)]
+			if t.has("teach"):
+				want += " They will teach you %s." % str(GameData.skills[t.teach.skill].name)
 		else:
 			var target: NPC = w.npc(int(q.target))
 			want = "Deal with %s." % (target.name if target else "the thief")
@@ -941,34 +948,55 @@ func _quest_choices(n: NPC, choices: GridContainer) -> void:
 	if not q.is_empty() and not Quests.template(q.id).get("story", false):
 		if w.quests.ready(q):
 			_talk_choice(choices, "Here you are", func():
+				var t := Quests.template(q.id)
 				var thanks := w.quests.line(q, "thanks")
 				var paid: int = w.quests.complete(q)
-				message("Quest done: %s%s" % [Quests.template(q.id).title, (" (+%d coins)" % paid) if paid > 0 else ""])
-				_talk_view(n, thanks))
+				if paid == -2:
+					_talk_view(n, w.quests.line(q, "unpaid"))
+					return
+				var learned: String = w.quests.last_learned
+				if t.get("hire", false):
+					message("Work done: %s (+%d coins wage)" % [t.title, paid])
+				else:
+					message("Quest done: %s%s%s" % [t.title, (" (+%d coins)" % paid) if paid > 0 else "", (". " + learned) if learned != "" else ""])
+				_talk_view(n, thanks, false, "", ("You learned: " + learned) if learned != "" else ""))
 		else:
 			_talk_choice(choices, "About your request", func(): _talk_view(n, w.quests.line(q, "waiting")))
 		return
 	var offer: Dictionary = w.quests.offer_of(n)
-	if offer.is_empty():
-		return
-	_talk_choice(choices, "Need any help?", func():
-		_talk_view(n, w.quests.line({"id": offer.id, "giver": n.id}, "offer"), true))
+	if not offer.is_empty():
+		_talk_choice(choices, "Need any help?", func():
+			_talk_view(n, w.quests.line({"id": offer.id, "giver": n.id}, "offer"), true))
+	# paid work (owner: the player can work and earn money): asked for, never marked
+	if w.quests.hires(n):
+		_talk_choice(choices, "Any work for me?", func():
+			var job: Dictionary = w.quests.hire_offer(n)
+			if job.is_empty():
+				_talk_view(n, w.quests.no_work_line(n))
+			else:
+				_talk_view(n, w.quests.line({"id": job.id, "giver": n.id}, "offer"), true, job.id))
 
 
-func _offer_choices(n: NPC, choices: GridContainer) -> void:
+## "I'll do it" or "Not now" to an offer: the villager's quest, or (`hire`) the work they offered.
+func _offer_choices(n: NPC, choices: GridContainer, hire := "") -> void:
 	var w: World = main.world
 	_talk_choice(choices, "I'll do it", func():
-		var q: Dictionary = w.quests.accept(n)
+		var q: Dictionary = w.quests.accept(n, hire)
 		if q.is_empty():
 			message("You have too many tasks already (%d)." % int(GameData.b("quest_max_active")))
 			_talk_view(n, Dialogue.opening(w, n))
+			return
+		if hire != "":
+			message("Hired: %s. It is written in your journal." % Quests.template(q.id).title)
+			_talk_view(n, "Good. Come and find me when it's done, and you'll have your wage.")
 			return
 		message("New quest: %s. It is written in your journal." % Quests.template(q.id).title)
 		_talk_view(n, "Good. Come back when it's done."))
 	_talk_choice(choices, "Not now", func(): _talk_view(n, Dialogue.opening(w, n)))
 
 
-func _talk_view(n: NPC, said: String, offering := false) -> void:
+## `note` is a line under the speech, not spoken (what a teacher taught the player).
+func _talk_view(n: NPC, said: String, offering := false, hire := "", note := "") -> void:
 	var w: World = main.world
 	_open("talk", Dialogue.full_name(n))
 	var tall: float = main.settings.layout_height()
@@ -1018,6 +1046,14 @@ func _talk_view(n: NPC, said: String, offering := false) -> void:
 	speech.add_theme_color_override("font_color", INK)
 	speech.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	speech_box.add_child(speech)
+	if note != "":
+		var learned := Label.new()
+		learned.name = "Note"
+		learned.text = note
+		learned.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		learned.add_theme_font_size_override("font_size", 20)
+		learned.add_theme_color_override("font_color", Color(1, 0.85, 0.5))
+		right.add_child(learned)
 	# the choices: what the old talk window offered, then questions, then goodbye
 	var choices := GridContainer.new()
 	choices.columns = 3
@@ -1029,7 +1065,7 @@ func _talk_view(n: NPC, said: String, offering := false) -> void:
 		_fit_talk(side, choices)
 		return
 	if offering:
-		_offer_choices(n, choices)
+		_offer_choices(n, choices, hire)
 		_fit_talk(side, choices)
 		return
 	_quest_choices(n, choices)
