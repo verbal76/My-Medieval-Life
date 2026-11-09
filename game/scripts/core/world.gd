@@ -3188,7 +3188,8 @@ func player_assault(victim: NPC, actor: PlayerState = null) -> void:
 		if n.role != "bandit":
 			seen += 1
 			n.remember("saw %s %s attack %s %s" % [p.name, p.family, victim.name, victim.family])
-			relations.harmed(n, float(Relations.cfg().witness_harm))
+			# JUS-04: only this eyewitness learns now; their kin/friends must hear the news first.
+			relations.harmed(n, float(Relations.cfg().witness_harm), false)
 	# A1: an assault is a crime on the record and in the case; a blow at a guard is its own kind (escalation)
 	var kind := "guard_assault" if victim.job == "guard" else "assault"
 	var ref := acting_ref()
@@ -4605,7 +4606,7 @@ func witness(kind: String, what: String, victim: NPC, taken := {}, back: Invento
 		if n.role != "bandit":
 			seen.append(n)
 			n.remember("saw %s %s %s" % [player.name, player.family, deed if deed != "" else "take " + what])
-			relations.harmed(n, float(Relations.cfg().witness_harm))          # a crime seen lowers the tie (CRT-10)
+			relations.harmed(n, float(Relations.cfg().witness_harm), false) # JUS-04: no automatic witness-family knowledge
 			if n.job == "guard" and n.target == -1 and (guard == null or n.pos.distance_to(player.pos) < guard.pos.distance_to(player.pos)):
 				guard = n
 	if victim and not seen.has(victim) and deed == "":

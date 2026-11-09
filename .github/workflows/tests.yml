@@ -286,6 +286,7 @@ jobs:
           res://tests/manhunt_test.gd   # GP-CRIME-PURSUIT A3: hue and cry, sharing, sightings, yield, proportionate force
           res://tests/relations_test.gd
           res://tests/life04_remarriage_test.gd  # LIFE-04: NPC/player widow remarriage
+          res://tests/jus04_witness_knowledge_test.gd   # JUS-04: witness's kin do not learn crimes automatically
           res://tests/dialogue_perspective_test.gd   # REPAIR S1-S2: who speaks to whom, from what they know
           res://tests/save_transfer_test.gd
           res://tests/housing_test.gd

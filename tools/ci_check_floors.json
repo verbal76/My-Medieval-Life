@@ -80,7 +80,7 @@
  "horse_test": 56,
  "housing_test": 117,
  "identity_test": 100,
- "intel_test": 13,
+ "intel_test": 20,
  "interdependency_test": 30,
  "inv03_foreign_player_chests_test": 7,
  "inventory18_test": 88,
@@ -245,5 +245,6 @@
  "prop02_fitting_owner_test": 13,
  "prop05_guest_sale_test": 8,
  "brushoff_empty_plan_test": 5,
- "owner_features_integration_test": 16
+ "owner_features_integration_test": 16,
+ "jus04_witness_knowledge_test": 6
 }
