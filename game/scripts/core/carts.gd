@@ -197,7 +197,7 @@ func update(_dt: float) -> void:
 		var at := Vector2.INF
 		if World.is_player_ref(ref):
 			var pl: PlayerState = w.player_for(ref)
-			at = pl.pos if pl.alive else Vector2.INF
+			at = pl.pos if pl.alive and may_use(c, ref) else Vector2.INF     # MP-05: a revoked agreement lets go of the other's cart
 		else:
 			var n: NPC = w.npc(int(ref.trim_prefix("npc:")))
 			if n != null and n.alive:
