@@ -2,11 +2,17 @@
 
 **This is the one current-state document.** Owner directives MEM-01 and DOC-CONT-01 make it the entry point.
 
-- **Updated:** 2026-11-06 19:00 EST (B25R2: validation finishing, then development hold).
-- **Snapshot last verified:** 2026-11-07 03:30 UTC by the lead, against wip/b25r2-playtest `1f2ff4f`, wip/b25r2-rev2 `fe7d8f8`, wip/requirements-control (this commit), wip/test-audit `7971720`; no Actions run in progress.
+- **Updated:** 2026-11-09 13:35 EST (documentation agent, HAG-FORENSICS-01 recovery: top pointer, stamp, worker inventory).
+  The previous stamp ("Updated 2026-11-06 19:00 EST"; "Snapshot last verified 2026-11-07 03:30 UTC ... `fe7d8f8`") had stayed
+  unchanged through the 2026-11-08/09 entries below, although those entries were current. It is corrected here. The old wording
+  is in git history.
+- **Snapshot last verified:** 2026-11-09 18:34 UTC by the documentation agent, against wip/b25r2-rev2 `c9da5db`,
+  wip/requirements-control `8d16416`, wip/b25-mp05-on-dev `242ca83`, docs/build25-audit-register `257475c`, Actions runs to
+  42664730920 (the only run in progress).
   - **Convention:** whoever checks this file against the live GitHub state writes this line as
-    `YYYY-MM-DD HH:MM UTC by <session or agent>, against wip/expansion20 <sha>, wip/requirements-control <sha>, Actions runs
-    to <newest run id>`.
+    `YYYY-MM-DD HH:MM UTC by <session or agent>, against <development line, now wip/b25r2-rev2> <sha>, wip/requirements-control
+    <sha>, Actions runs to <newest run id>`. (Until 2026-11-09 this read `wip/expansion20`, which stopped being the development
+    line on 2026-11-03.)
   - It is rewritten at each checkpoint; earlier stamps live in git history.
   - A reader who finds newer commits or runs than the stamp names must treat this file as stale where they disagree. See
     `docs/handoffs/CURRENT_SESSION_RECOVERY.md`, step 3.
@@ -19,7 +25,56 @@
   - History lives in `docs/DEVELOPMENT_CHANGELOG.md`.
 - **Recovery after lost context:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
 
+## CURRENT BUILD 25 STATE: read this first (pointer, 2026-11-09 18:34 UTC)
+
+Written by the documentation agent (HAG-FORENSICS-01) from the live GitHub state. The dated sections below hold the detail,
+newest first, under "MONDAY RECOVERY POINT". Sections further down ("Build 25 Revision 1", "Overnight autonomous development",
+"Position", "Workers and branches", "Current tests and results", "Known defects") are **history**. They describe `wip/expansion20`
+and `wip/b25r1`, which are no longer the development line.
+
+| Item | Value |
+|---|---|
+| Build | Build 25, Revision 2 ("Play Test Build One"); the package label is to be "0.1.34 Rev 2 — Playtest 1" (B25R2-VER-01) |
+| **Development line (code)** | **`wip/b25r2-rev2` at `c9da5db`** (fast-forwarded 2026-11-09 17:25 UTC). The owner's 2026-11-08 directives name it "Development branch". CLAUDE.md and BRANCH-POL-01 still name `wip/expansion20`; a proposed correction is on the documentation branch for the lead and owner |
+| Records branch | `wip/requirements-control`: register, directives, this file, changelog, known issues, decision records. Lead only |
+| Audit register | branch docs/build25-audit-register, commit `257475c`, file docs/audits/2026-11-08_build25_master_audit_register.md on that branch; tracking issue #4 |
+| Running Actions | Long simulations [42664730920](https://github.com/verbal76/My-Medieval-Life/actions/runs/42664730920), the MP-05 recorded campaign on `242ca83`. Never cancel, re-run or duplicate it (SIM-02) |
+| Pending integration | MP-05: `wip/b25-mp05-on-dev` `242ca83` (= `c9da5db` + PR #19 + cart fixes `2e74066`, `242ca83`). Full Tests 42636628469 green. Merge when the campaign is clean (`docs/decisions/B25-AUD-MP-05.md`). PR #19 stays open until then |
+| Merged on the development line since `fe7d8f8` | `f0a854c` Batch A (PRs #5-#15 + BRUSHOFF); `229f76e` LIFE-03/04; `96b071c` PROP-06; `53a56d3` JUS-04/REG-07; `c9da5db` overnight backlog + PROP-03 test. Evidence: `docs/DEVELOPMENT_CHANGELOG.md` (2026-11-08/09), `docs/decisions/B25-*` |
+| Accepted simulation baseline | `df67e8e` (unchanged). Gate red of the baseline-difference kind is expected; the generation 8 candidate waits on the owner (TEST-AUDIT-Q2) |
+| Packages and releases | The owner's provisional Windows package (artifact 13542782040, `1f2ff4f`, expires 2026-12-06). `build-34` (public, 2026-11-06, `a9e9f6e`). `build-25` draft (`a459186` files). No Play Test Build One draft yet (B25R2-DRAFT-01 conditions). No Steam upload |
+| Approved, not implemented | MP-07 (privacy), REG-04 (physical couriers), REG-05 (physical migration); ChatGPT is to write PRs and Claude integrates. Open: SAV-04 (owner decision), REG-08 (investigation), the other static audit records |
+| Owner decisions pending | TEST-AUDIT-Q2 (baseline); B25R2-DRAFT-01 conditions; the BRANCH-POL-01 text versus the actual development line |
+| History recovery | HAG-FORENSICS-01: coverage register `docs/audits/2026-11-09_HISTORICAL_COVERAGE_REGISTER.md`; recovered owner messages `docs/directives/2026-11-0*_recovered_owner_messages.md`; the independent recovery test is the lead's |
+
+### Worker inventory (directive HAG-FORENSICS-01, section 10)
+
+| Task | Responsible | Branch | Last pushed SHA | Depends on | Status | Next action |
+|---|---|---|---|---|---|---|
+| Build 25 development, integration and merges | Lead (Claude session `754052d8`) | `wip/b25r2-rev2`; task branches `wip/b25-*` | `c9da5db` | not applicable | active | Read campaign 42664730920; merge MP-05 if clean |
+| MP-05 integration | Lead | `wip/b25-mp05-on-dev` | `242ca83` | campaign 42664730920 | campaign running | Fast-forward `wip/b25r2-rev2` to `242ca83` when clean; close PR #19 |
+| Historical recovery (HAG-FORENSICS-01) | Documentation agent (subagent of the lead) | branch docs/history-recovery-2026-11 (local; the lead integrates each checkpoint into `wip/requirements-control`, since the pre-push hook refuses register copies on other branches) | integrated `8d16416` | lead integration | active | Finish changelog, state, recovery and known-issues repairs; lead runs the register commands and the independent recovery test |
+| Audit corrections and approved features (MP-07, REG-04, REG-05, further audit items) | ChatGPT, through the owner's GitHub account | `audit/*`, `feature/*` (new PRs) | not applicable | not applicable | none open except PR #19 | The lead retrieves and integrates new PRs as they appear (owner directive 2026-11-08) |
+
+**Frozen or historical branches.** Do not develop on these:
+- `wip/b25r2-playtest` `1f2ff4f`: the provisional package's source.
+- `wip/b25r1` `20e579e`: F2.
+- `wip/expansion20` `a459186`: the Build 25 draft.
+- `staging/my-medieval-life` `a919963`: historical (BRANCH-POL-01).
+- `main` `de76782`: owner only.
+- Superseded integration and task branches: `wip/b25-audit-integration` `f0a854c`, `wip/b25-features-integration` `494af9a`,
+  `wip/b25-prop06-integration` `a7071aa`, `wip/b25-prop06-merge`, `wip/b25-next-batch` `4f1b3c8`, `wip/b25-next-merge`,
+  `wip/b25-backlog` `f67afdb`, `wip/b25-backlog-merge` `c9da5db`, `wip/b25-prop03` `b727954`, `wip/b25-mp05-integration`
+  `be307f8`. All are contained in `c9da5db` except the MP-05 one.
+- Audit and feature PR branches `audit/*-20261108` and `feature/*-20261108`, kept per BRANCH-POL-01.
+- `wip/test-audit` `7971720`: its `door_exit_test` is not yet in a candidate.
+
+
 ## MONDAY RECOVERY POINT (owner, 2026-11-06 late night; `docs/directives/2026-11-06_finish_tests_save_stop.md`)
+
+> **Note (2026-11-09, documentation agent):** the hold described in the next paragraph ended when the owner authorized work on 2026-11-08
+> (the audit directives, recovered in `docs/directives/2026-11-08_recovered_owner_messages.md`). The bullets from "Independent audit open
+> items" on are current, newest at their top-dated entries.
 
 **All Claude development is stopped until the owner authorizes work on Monday.** Saved 2026-11-07 03:30 UTC (2026-11-06 10:30 pm EST).
 
@@ -324,6 +379,9 @@ Directive: `docs/directives/2026-11-02_overnight_autonomous_development_directiv
 
 ## Position
 
+> **HISTORICAL (superseded 2026-11-03; marked 2026-11-09 by the documentation agent).** This table describes `wip/expansion20`
+> and the 2026-11-02 standby. The current position is the "CURRENT BUILD 25 STATE" pointer at the top of this file.
+
 | Item | Value |
 |---|---|
 | Current development build | **Build 25**, the consolidation build. It holds all approved expansion work and all approved recoverable abandoned-branch work (B25-SCOPE-D1, `docs/directives/2026-11-01_build25_scope_clarification.md`). |
@@ -340,6 +398,8 @@ Directive: `docs/directives/2026-11-02_overnight_autonomous_development_directiv
 | GitHub Actions | **Running, the one final campaign (owner B25-CLOSE-02) on `4b51c92`:** flight [41536805310](https://github.com/verbal76/My-Medieval-Life/actions/runs/41536805310) (seeds 1 and 2, 365 days, every 10, 100-day segments, recorded) and economy-on [41536810831](https://github.com/verbal76/My-Medieval-Life/actions/runs/41536810831) (seed 1, `--market`, 365 days, every 10). Do not cancel, rerun or duplicate (SIM-02). Done: Tests 41509578455 on `0d194c8` green (full CI, reused). |
 
 ## Workers and branches (recovery records)
+
+> **HISTORICAL (2026-11-02 workers; marked 2026-11-09).** The current worker inventory is at the top of this file.
 
 **File ownership (BRANCH-POL-01, 2026-11-02).** Merge order: KI-HOME-DOOR first, then farming Phase 2 (which merges the integration branch in before submitting).
 - **Home-door:** `npc_brain.gd` (evening and home logic), `construction.gd` (home and resident handling), `world.gd` (`building_door` and the home-reference helpers), `home_ref_test.gd`.
@@ -363,6 +423,9 @@ All suspended worktrees are kept on disk. Their branches are pushed, so GitHub h
 "Next authorized actions" below.
 
 ## Current tests and results (Build 25 source)
+
+> **HISTORICAL (evidence on `wip/expansion20` SHAs up to 2026-11-02; marked 2026-11-09).** For current evidence see the changelog's
+> 2026-11-08/09 entries and `docs/decisions/B25-VALIDATION-2026-11.md`.
 
 All of these ran **locally** (Godot 4.7 headless), not in CI. Exact suites and counts are in `docs/DEVELOPMENT_CHANGELOG.md`.
 
@@ -394,6 +457,8 @@ These are planned once, at the end.
 
 ## Known defects and risks
 
+> **HISTORICAL (as of 2026-11-02/03; marked 2026-11-09 by the documentation agent).** The current open limitations are in `docs/KNOWN_ISSUES.md` (KI-06 to KI-12 added 2026-11-09) and the audit register.
+
 **The durable record is `docs/KNOWN_ISSUES.md` (HAG-MEM-02).** Where the list below differs, that file is newer: the firewood defects are fixed, unaffordable bids are an outcome, the coin_sources leak is fixed.
 
 - **Pre-existing failure:** the `housing_test` loft check fails. It failed before the 2026-11-01 changes too. Not yet classified.
@@ -410,6 +475,8 @@ These are planned once, at the end.
 
 ## Outstanding owner decisions
 
+> **HISTORICAL (as of 2026-11-02/03; marked 2026-11-09 by the documentation agent).** The current list is in the pointer at the top and in `docs/requirements/views/DECISIONS.md`.
+
 The full list is `docs/requirements/views/DECISIONS.md`, with context in `docs/expansions/OWNER_DECISIONS_PENDING.md`. These touch
 Build 25:
 
@@ -424,6 +491,8 @@ Build 25:
 - Kept open, not for Build 25: JUICE-JD2..JD5 and later-expansion questions.
 
 ## Next authorized actions (in order)
+
+> **HISTORICAL (as of 2026-11-02/03; marked 2026-11-09 by the documentation agent).** This list is the 2026-11-02 plan for `wip/expansion20`. The current next actions are in the pointer and the worker inventory at the top. The 2026-11-08 "continuous engineering" and 2026-11-09 overnight directives authorize the present work.
 
 **Build 25 scope corrected (owner 2026-11-02, B25-SCOPE-REGION): the regional economy (REGION-NAV-01) is mandatory Build 25 scope.** `4b51c92` is the tested baseline; its campaigns (41536805310, 41536810831) run on as baseline evidence. Work: REGION-NAV-01 stages S1-S8 on `wip/region-nav`, one worker (the lead). Next: read it, then the owner's answers to B25-ECON-P1..P5 and the phone test (gate 11). Closure audit: `docs/release/build25_reconciliation/BUILD25_CLOSURE_2026-11-02.md`. Packaging waits on the owner decisions listed there (a year-long campaign, B25-ECON-P1..P5, LE-07 gate 11, reconciliation Q2). The items below are not picked up without the owner.
 

@@ -59,6 +59,222 @@ ran: *local* (this machine, Godot headless) or *CI* (GitHub Actions, with the ru
 
 ---
 
+## Reconstructed entries, 2026-11-03 to 2026-11-09 (HAG-FORENSICS-01)
+
+**Reconstructed 2026-11-09 (13:15-15:00 EST) by the documentation agent.** Sources: commits on every branch, PRs #5-#21, issue #4,
+GitHub Actions runs and releases, the state file's dated sections, the register, `docs/release/B25R2_COMPLETION_CHECKLIST.md`,
+`docs/handoffs/B25R1_*`, and the lead session record. No changelog entry was written during these seven days. The entries below are
+not contemporaneous. Event times are UTC unless marked EST. Each entry's evidence applies only to the SHA it names. Detail and the
+decision chains are in `docs/decisions/` (records marked "Reconstructed 2026-11-09"), and the event-by-event coverage is in
+`docs/audits/2026-11-09_HISTORICAL_COVERAGE_REGISTER.md`.
+
+**Correction to this file's header (2026-11-09):** the INTEGRATED level names `wip/expansion20` as the Build 25 source. From
+2026-11-03 the development line moved to `wip/b25r1`, then to `wip/b25r2-playtest`, and on 2026-11-06 to `wip/b25r2-rev2`, which
+has been the line since. The owner's directives named these branches (recovered messages of 2026-11-04 and 2026-11-08). In the
+entries below, INTEGRATED means in that day's development line.
+
+### 2026-11-09 (Monday)
+
+**MP-05 recorded campaign running on `wip/b25-mp05-on-dev` `242ca83`.** Not yet merged.
+- `242ca83` = `c9da5db` + PR #19's merge (`a66294c`) + the two cart fixes (`2e74066`, `242ca83`).
+- Full Tests [42636628469](https://github.com/verbal76/My-Medieval-Life/actions/runs/42636628469) passed (TESTED, CI).
+- Campaign [42664730920](https://github.com/verbal76/My-Medieval-Life/actions/runs/42664730920) dispatched 17:27. At the last check
+  (18:00) segment 1 had passed on both seeds and segment 2 was running. Never cancel it.
+- Outstanding: two-device, modified-client, reconnect and UI checks.
+- Record: `docs/decisions/B25-AUD-MP-05.md`.
+
+**Owner directive HAG-FORENSICS-01 (13:12 EST); historical recovery started** on `docs/history-recovery-2026-11`. Integrated into
+the records branch at checkpoints: `1b39194`, `0691357`, `8d16416` and later.
+
+**Overnight backlog and the PROP-03 test merged: `wip/b25r2-rev2` `53a56d3` → `c9da5db`** (fast-forward, 17:25; INTEGRATED).
+- LIFE-05 `cbd91f6`, BIZ-03 `93327ae`, BIZ-04 `3e9b9a1`, TRD-02 `36fa011`, INV-04 `969a8f4`, INV-05 `e42a37f`, SAV-02 `f67afdb`.
+  Each has a new regression test that fails on the old code.
+- EMP-03: no change; the lead found the code already counts every seeker. No test is cited.
+- PROP-03 eviction test `b727954`.
+- Evidence:
+  - strict Tests [42607051457](https://github.com/verbal76/My-Medieval-Life/actions/runs/42607051457): attempt 1 failed
+    `net_fault_test` and `net_mp4_test` (judged CI timing, then re-run); attempt 2 passed;
+  - gate [42607055494](https://github.com/verbal76/My-Medieval-Life/actions/runs/42607055494): 33 blocking findings, all
+    baseline-difference kind;
+  - recorded campaign [42627103286](https://github.com/verbal76/My-Medieval-Life/actions/runs/42627103286): seed 1 365/365,
+    0 CRITICAL, 17 HIGH, 46 MEDIUM, 0 confirmed; seed 2 365/365, 0/63/42, 0 confirmed; no FATAL.
+- Earlier, strict [42589325057](https://github.com/verbal76/My-Medieval-Life/actions/runs/42589325057) on `f67afdb` failed only
+  `net_fault_test`, 1 check.
+- Records: `docs/decisions/B25-AUD-BACKLOG-2026-11-09.md` and `B25-CI-FLAKE-C9DA5DB.md`.
+
+**MP-05 security verification: two cart defects found and fixed** on `wip/b25-mp05-integration`.
+- `a898541`: revoking a tier-3 agreement did not release a cart already being pulled. mp05 test 24/0; 1 failure before.
+- `be307f8`: PR #19's `Carts.park` guard stopped the simulation from ever parking villagers' carts. home_test failed 3 checks and
+  underground_struct_test 1 on `767ea22`; both now 0 failures.
+- That branch's full run [42626491122](https://github.com/verbal76/My-Medieval-Life/actions/runs/42626491122) failed
+  settle_review (5), aspiration Q8 (3) and migration (1). These came from the raw PR #17/#18 code it carries; the same suites pass
+  after the rebase onto `c9da5db`.
+
+**JUS-04 and REG-07 merged: `96b071c` → `53a56d3`** (fast-forward, 11:04; PRs #20 and #21 closed as merged).
+- Strict [42597744977](https://github.com/verbal76/My-Medieval-Life/actions/runs/42597744977) on `53a56d3` passed.
+- Recorded campaign [42570299554](https://github.com/verbal76/My-Medieval-Life/actions/runs/42570299554) on `4f1b3c8`: seed 1
+  0/48/65, seed 2 0/94/36, 0 confirmed.
+- Record: `docs/decisions/B25-AUD-JUS04-REG07.md`.
+
+**PROP-06 merged: `229f76e` → `96b071c`** (fast-forward, 09:39; PR #18 closed as merged).
+- Strict [42587815471](https://github.com/verbal76/My-Medieval-Life/actions/runs/42587815471) on `96b071c` passed.
+- Recorded campaign [42557925404](https://github.com/verbal76/My-Medieval-Life/actions/runs/42557925404) on `a7071aa`: 0/17 and
+  0/91, 0 confirmed.
+- Record: `docs/decisions/B25-AUD-PROP-06.md`.
+
+**LIFE-03/04 merged: `f0a854c` → `229f76e`** (08:40; PRs #16 and #17 closed as merged). The merged tree equals the tested
+`494af9a`.
+- Strict [42530864510](https://github.com/verbal76/My-Medieval-Life/actions/runs/42530864510).
+- Recorded campaign [42557922632](https://github.com/verbal76/My-Medieval-Life/actions/runs/42557922632): 0/17/46 and 0/91/35,
+  0 confirmed.
+- Record: `docs/decisions/B25-AUD-LIFE-03-04.md`.
+
+**Owner's overnight autonomous development directive** (06:48; saved verbatim). It states the owner's 2026-11-08 audit decisions
+and the merge order.
+
+**Three campaigns dispatched with `record: false` by mistake** and re-dispatched with recording on: 42536147616, 42540721533,
+42552442930 (KNOWN_ISSUES KI-11). Found at 03:43.
+
+### 2026-11-08 (Sunday)
+
+**Batch A merged: `wip/b25r2-rev2` `fe7d8f8` → `f0a854c`** (fast-forward, 23:36; PRs #5-#15 closed as merged, 23:37).
+- Contents: eleven audit corrections (MP-04, PROP-01, PROP-05, PROP-02, JUS-03, LIFE-01, SAV-01, PROP-04, JUS-01, INV-03, MP-01)
+  and the B25R2-BRUSHOFF fix. The owner approved the BRUSHOFF fix at 20:12 (directive recovered).
+- Evidence:
+  - strict [42519022430](https://github.com/verbal76/My-Medieval-Life/actions/runs/42519022430) on `f0a854c` passed;
+  - campaign [42515726815](https://github.com/verbal76/My-Medieval-Life/actions/runs/42515726815) on `0d252b4`: 0/48/65 and
+    0/99/45, 0 confirmed;
+  - gate [42509523836](https://github.com/verbal76/My-Medieval-Life/actions/runs/42509523836): 32 baseline-only findings.
+- Baseline `df67e8e` kept: the owner's decision TEST-AUDIT-Q2 is pending.
+- Records: `docs/decisions/B25-AUD-BATCH-A.md` and `B25-VALIDATION-2026-11.md`.
+
+**Feature and next-batch branches built.**
+- `wip/b25-features-integration`: LIFE-03/04, with two integration fixes (`46d934c`, `494af9a`).
+- `wip/b25-prop06-integration`: PROP-06 corrected under the owner's PROP-06 directive (`6e02171`, the hut `2a37653`, `a7071aa`).
+- `wip/b25-next-batch` `4f1b3c8` (2026-11-09 00:45): JUS-04 and REG-07, red/green repeated on the branch.
+- Strict [42542326507](https://github.com/verbal76/My-Medieval-Life/actions/runs/42542326507): `demo_test` crashed natively once
+  and passed on re-run (KI-09, KI-10).
+
+**Owner decisions on twelve audit questions** (issue #4 comments 4-12; ChatGPT posted them for the owner):
+- LIFE-03, LIFE-04;
+- PROP-06;
+- MP-05 (two-way);
+- JUS-04, MP-07;
+- REG-04, REG-05, REG-07;
+- BIZ-03 (Option B).
+
+ChatGPT opened PRs #16-#21 for LIFE-03, LIFE-04, PROP-06, MP-05, JUS-04 and REG-07. The owner's directives "audit fix
+integration", "integration, testing and merge", "Build 25 audit integration and merge", "continuous engineering" and "PROP-06" were
+given in the lead session. The first four are recovered verbatim in `docs/directives/2026-11-08_recovered_owner_messages.md`; the
+PROP-06 directive was saved at the time.
+
+**Audit integration branch** `wip/b25-audit-integration` `0d252b4` (18:19).
+- The eleven PRs merged in the order #5, #9-#15, #6-#8; only `tests.yml` lines conflicted, and all were kept.
+- Five floors added.
+- Local: 87 checks, 0 failures.
+- Strict [42509510188](https://github.com/verbal76/My-Medieval-Life/actions/runs/42509510188): 238/239 suites, the one failure
+  being BRUSHOFF.
+
+**ChatGPT reproduced and corrected eleven audit findings in draft PRs #5-#15** (07:39-17:57). Each had a red run on the audited
+code and a green run on the fix. The red/green run ids are in `docs/decisions/B25-AUD-BATCH-A.md`.
+
+**Owner's independent audit register saved** (07:33; `02ad7aa`; branch `docs/build25-audit-register` `83e2994`; issue #4).
+- 69 tracked records from 13 static audits of `fe7d8f8`, 0 runtime-confirmed.
+- The owner stopped paid audits after Audit 012.
+
+### 2026-11-07 (Saturday, early UTC; evening of 2026-11-06 EST)
+
+**Owner playtest of the provisional package (`1f2ff4f`, artifact 13542782040): four defects fixed on `wip/b25r2-rev2`.**
+- Hosting for 4: `6f23933`.
+- Guest stuck outside a cave: `5d07527`.
+- Host a game on the title screen: `ef8141a`.
+- Stutter: `ed221df`, `fe7d8f8`.
+
+Fourteen drawing suites ran locally on `fe7d8f8`: 1,885 checks, 0 failures, 1 script error (BRUSHOFF). The fixes were first in CI
+in Batch A's strict run. Record: `docs/decisions/B25R2-PLAYTEST-FIXES.md`.
+
+**Monday recovery point** (03:24, records `0798c0b`): all Claude development stopped until the owner authorized work.
+
+**Generation 8 baseline candidate prepared, not accepted** (`8dfc844`; `docs/release/SIM_BASELINE_DIFFERENCES_B25R2.md`).
+- Campaign [42297637074](https://github.com/verbal76/My-Medieval-Life/actions/runs/42297637074) on `1f2ff4f` was clean: 0 CRITICAL,
+  0 confirmed; seed 1 had 48 HIGH, seed 2 99.
+
+### 2026-11-06 (Friday)
+
+**Play Test Build One (B25R2) candidate `1f2ff4f` validated except its campaign** (`wip/b25r2-playtest`).
+- The five repairs; the homestead-water save defect found by campaign 42274347279 and fixed in `c903ce8`; TEST-AUDIT-Q1 (`adf71ec`).
+- Strict [42297632580](https://github.com/verbal76/My-Medieval-Life/actions/runs/42297632580): 234 suites, 18,918 checks,
+  0 failures.
+- Release run [42297641550](https://github.com/verbal76/My-Medieval-Life/actions/runs/42297641550): six packages, Windows smoke
+  passed; the gate was red on the baseline only, so the release step was skipped.
+
+**Owner decisions B25R2-PKG-01, VER-01 and DRAFT-01** (evening EST); then the development hold.
+
+**Testing governance (TEST-GOV-01) and the test regimen audit (TEST-AUDIT-01)** (`b3f9c49` to `ab32eaa`; branch `wip/test-audit`
+`7971720`).
+- 9 mutations detected, 1 equivalent.
+- 12 testing defects repaired.
+- 10 coverage gaps, 8 open.
+
+**Play Test Build One directive (13:38) and the owner's four answers.**
+- The first answers were a mis-click, as the owner said at 15:24.
+- The B25R2 full completion directive (15:31) and the testing-audit validation directive (21:06) are recovered verbatim in
+  `docs/directives/2026-11-06_recovered_owner_messages.md`.
+
+**F2 = `20e579e` on `wip/b25r1`** (03:04): F failed its gates, and the repairs fixhh, fixmap and fixdet (REC-D3) were merged.
+
+**Family playtest release `build-34` published** (01:52, public GitHub Release, from F `a9e9f6e`). The owner corrected the
+visibility to public on 2026-11-05. Record: `docs/release/B25R1_FAMILY_PLAYTEST_RECORD.md`.
+
+### 2026-11-05 (Thursday)
+
+**B25R1 frozen at F = `a9e9f6e`** (22:50).
+- Validation runs on F: Tests 42124894260, split gate 42124898077, twin campaign 42124902114.
+- B25-ECON-P7 (treasury ore) was verified on `wip/b25r1-econ6` but held out of the package.
+
+**Owner answers 1-33** (B25R1 audit Option 1: chapel lending design, economy P1-P5, geography, aerial maps, consignment). All are
+recorded in the register's `owner_answer` fields and commits `aca9ac8` to `93bc136`.
+
+**B25R1 requirements audit** (`0e80f3b`): 180 records classified against `a995397`; the owner chose Option 1.
+
+**Experiments kept, not merged:**
+- `wip/b25r1-econ4-exp` `f1189a7`: relaxed consignment rules; evidence for owner question 32, run 42080417065.
+- `wip/b25r1-detdebug` `2c02087`: a debug trace for REC-D3.
+
+### 2026-11-04 (Wednesday)
+
+**B25R1 integration on `wip/b25r1`:** the region, settle, homestead, presence and water branches merged. The CI architecture
+changed: time-balanced shards, a consolidated report, a split gate and concurrent twins.
+- The owner's directives on these changes (parallel testing architecture, low-token mode, failure triage, parallel repair, GitHub
+  parallel validation) are recovered verbatim in `docs/directives/2026-11-04_recovered_owner_messages.md`.
+- Playtest readiness was reported at `edc32c7`.
+- The `net_econ_integrity_test` timing-race correction was approved by the owner at 23:47.
+- The treasury discrepancy was traced to a repeated manor axe purchase, fixed in `a995397` (2026-11-05).
+
+### 2026-11-03 (Tuesday, after the DEV-GOV-01 entry below)
+
+**Build 25 Revision 1 started** (17:25, the owner's master directive), followed by B25R1-001 to B25R1-020 and Q1-Q9 (directives
+saved verbatim).
+- Rollback point: the Build 25 private draft.
+- Workstreams on `wip/b25r1-*`.
+
+**Build 25 private draft** (tag `build-25`, release id 432836586). Release run
+[41666958781](https://github.com/verbal76/My-Medieval-Life/actions/runs/41666958781) on `a459186`:
+- includes the settlement draw-order fix `0efaf32`;
+- the simulation gate was reused from 41648387967 on `726ceeb`, at the owner's instruction ("let's skip the aim for this change
+  and ship the builds", 10:43 EST);
+- the draft's files were replaced.
+
+Note: the release object still names `726ceeb` as its target commit (KI-07). Record: `docs/release/build25_reconciliation/CI_RECORD.md`.
+
+**Final Build 25 flight on `c4c3490` clean** (`d1a93f1`), after two CI corrections: the shard 0 Python failure (`da7c8c1`) and
+the `od16_test` expectation (`c4c3490`).
+
+**REGION-NAV-01 S1-S8 integrated** (`b540971`, records `2c084fc`); VAL-AGENT-01 read-only validation. The owner gave the
+REPORT-TS-01, B25-FINISH-01 and DEMO-01 directives (saved verbatim).
+
+---
+
 ## 2026-11-03
 
 **DEV-GOV-01: the owner approves scope and sequence (2026-11-03). REGION-NAV-01 halted for review.**
