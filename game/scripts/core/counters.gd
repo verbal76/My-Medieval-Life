@@ -7,8 +7,8 @@ extends RefCounted
 ## true for a keeper serving a counter). A keeper is available when alive, awake, in working hours, not fighting, not
 ## hungry enough to eat and not on a building contract; work in hand (forging at the anvil) is put down, and the station
 ## is freed, since a recipe takes its materials only when it is done. Otherwise the player is told why. One service a
-## counter at a time: a second ring while a keeper is coming says so. A service is not saved (villagers' plans are not):
-## after loading nobody is serving until rung for again.
+## counter at a time: a second ring while a keeper is coming says so. The serving map is not saved; the keepers' plans are
+## (TEST-AUDIT-Q1), so after a load it is rebuilt from them (rebuild_from_plans, SAV-03): the keeper on the way is still known.
 ##
 ## One mechanism for every skilled business: a new counter needs only its station type and its keepers' jobs here.
 
@@ -130,6 +130,24 @@ func served(n: NPC, id: String) -> bool:
 		n.plan = [w.brain.work(float(GameData.b("counter_serve_minutes")), "serve_counter", {"counter": id}, "idle", w.brain._station_at(id))]
 		n.work_left = float(n.plan[0].min)
 		return true
-	serving.erase(id)
+	if int(serving.get(id, -1)) == n.id:
+		serving.erase(id)                      # SAV-03: never erase another keeper's turn at this counter
 	n.doing = ""
 	return true
+
+
+## SAV-03: after a load, who is coming to or serving each counter, read from the villagers' restored plans (their
+## serve_counter steps). Villagers in id order; the first one per counter is its server.
+func rebuild_from_plans() -> void:
+	serving.clear()
+	var ns: Array = w.npcs.duplicate()
+	ns.sort_custom(func(a: NPC, b: NPC) -> bool: return a.id < b.id)
+	for n: NPC in ns:
+		if not n.alive:
+			continue
+		for st in n.plan:
+			if str(st.get("act", "")) == "serve_counter":
+				var c := str((st.get("args", {}) as Dictionary).get("counter", ""))
+				if c != "" and is_counter(c) and not serving.has(c):
+					serving[c] = n.id
+				break

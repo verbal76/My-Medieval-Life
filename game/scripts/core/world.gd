@@ -6984,6 +6984,7 @@ func _restore_plans(d: Dictionary) -> void:
 		var keeps := n != null and n.alive and n.plan.any(func(s): return str(s.get("act", "")).begins_with("cart_"))
 		if not keeps:
 			c.puller = ""
+	counters.rebuild_from_plans()     # SAV-03: who is coming to or serving a counter follows from the restored plans
 
 
 func _unstick() -> void:
