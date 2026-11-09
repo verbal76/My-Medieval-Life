@@ -85,6 +85,11 @@
   65 MEDIUM, 0 confirmed defects; seed 2 365/365, 0 CRITICAL, 99 HIGH, 45 MEDIUM, 0 confirmed (reference 1f2ff4f: 0/48 and 0/99);
   gate 42509523836: 32 blocking findings, all baseline-only (df67e8e), identical to the development branch's; the baseline is not
   replaced (owner's decision). PRs #5-#15 closed naming `f0a854c`.
+- **2026-11-09 09:40 UTC: PROP-06 MERGED into `wip/b25r2-rev2` at `96b071c`** (fast-forward from `229f76e`; merge of `229f76e` and
+  `a7071aa`; strict Tests 42587815471 on `96b071c` passed). PRs #16, #17, #18 marked merged by GitHub. PROP-03 eviction-path test
+  `b727954` on `wip/b25-prop03` (5/0 on `96b071c`; 3 failures with `f0a854c`'s property.gd; the commit message says 4, wrongly).
+  Development branch head: `96b071c`. Next merges: JUS-04/REG-07 (`wip/b25-next-batch`, recorded campaign 42570299554), then
+  `wip/b25-backlog` (strict CI dispatched), then PROP-03's test.
 - **2026-11-09 08:40 UTC: LIFE-03/04 MERGED into `wip/b25r2-rev2` at `229f76e`** (merge of `f0a854c` and `494af9a`; the merged tree
   is `494af9a`'s, the tested tree). Evidence: strict 42530864510 passed; recorded campaign 42557922632 (record: true): seed 1
   365/365 0 CRITICAL 17 HIGH 46 MEDIUM 0 confirmed; seed 2 365/365 0/91/35 0 confirmed; archive ok. PROP-06's recorded campaign
