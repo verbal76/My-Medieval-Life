@@ -410,3 +410,6 @@ is owner-playtested.
 | MP-07, REG-04, REG-05 | approved, not implemented (unchanged) |
 | REG-08 | investigation, not started |
 | SAV-04 | owner decision open; now in the register as decision SAV-04 |
+
+**Update 2026-11-09 16:20 EST (lead):** MP-05 merged into `wip/b25r2-rev2` at `242ca83` (fast-forward from `c9da5db`; recorded
+campaign 42664730920: 0 CRITICAL, 0 confirmed on both seeds; PR #19 closed with a note). Device and security checks remain.
