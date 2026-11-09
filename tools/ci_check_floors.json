@@ -243,5 +243,6 @@
  "brushoff_empty_plan_test": 5,
  "life05_bandit_heir_test": 8,
  "biz03_payroll_priority_test": 12,
- "biz04_venture_till_migration_test": 5
+ "biz04_venture_till_migration_test": 5,
+ "trd02_merchant_net_earnings_test": 6
 }
