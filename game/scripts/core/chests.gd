@@ -142,6 +142,41 @@ func _info_container(u: Dictionary) -> Dictionary:
 		"business": w.stalls.has(c.at) or w._is_tavern(c.at)}
 
 
+## INV-04 (owner, 2026-11-08): goods a player left in the containers of a building they no longer hold pass to whoever holds it
+## now: a household's pantry, the manor's granary. (Another player holding it opens the same stash as their own; the family chest is
+## the player's own and goes with them.) What will not fit is dropped at the container as loot. Nothing is made or lost.
+func hand_over_stash(b: Dictionary, to_ref: String) -> void:
+	if World.is_player_ref(to_ref) or stash.is_empty():
+		return
+	var dest: Inventory = null
+	if to_ref.begins_with("hh:"):
+		var h := World.ref_id(to_ref)
+		if h >= 0 and h < w.households.size() and not w.households[h].get("ended", false):
+			dest = w.households[h].pantry
+	if dest == null:
+		dest = w.granary                          # the manor's, or nobody's: the manor keeps it
+	var bid := str(b.get("id", ""))
+	var spots := []
+	for u in units_in(bid):
+		spots.append([str(u.id), u.at])
+	for c in w.containers:
+		if str(c.get("at", "")) == bid:
+			spots.append([str(c.id), Vector2(int(c.x), int(c.y)) + Vector2(0.5, 0.5)])
+	for sp in spots:
+		var inv: Inventory = stash.get(sp[0])
+		if inv == null or inv.total() <= 0:
+			continue
+		var left := Inventory.new()
+		for id in inv.ids():
+			var k := inv.count(id)
+			if not dest.add(id, k):
+				left.add(id, k)
+		stash.erase(sp[0])
+		if left.total() > 0:
+			w.loot.append({"pos": sp[1], "inv": left, "coins": 0, "from": "a container left behind"})
+		w.stat("stash_handed_over")
+
+
 func _stash(id: String) -> Inventory:
 	if not stash.has(id):
 		stash[id] = Inventory.new()

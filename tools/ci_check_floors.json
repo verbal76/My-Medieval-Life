@@ -244,5 +244,6 @@
  "life05_bandit_heir_test": 8,
  "biz03_payroll_priority_test": 12,
  "biz04_venture_till_migration_test": 5,
- "trd02_merchant_net_earnings_test": 6
+ "trd02_merchant_net_earnings_test": 6,
+ "inv04_stash_handover_test": 9
 }

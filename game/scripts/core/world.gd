@@ -5870,6 +5870,8 @@ func set_tenant(thing: Dictionary, ref: String, rent := 0) -> void:
 func _handed_over(thing: Dictionary, was: String) -> void:
 	if business != null and (thing.has("front") or thing.has("counter")) and was != holder_of(thing):     # LE-04 review 7: counters too
 		business.money.keep_till(thing, was)
+	if chests != null and is_player_ref(was) and was != holder_of(thing) and not thing.has("site"):
+		chests.hand_over_stash(thing, holder_of(thing))       # INV-04: goods left in a player's containers pass to the new holder
 
 
 ## The villager a reference names, alive: the one for "npc:<id>", the head of a household (its first
