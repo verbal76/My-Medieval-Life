@@ -85,6 +85,11 @@
   65 MEDIUM, 0 confirmed defects; seed 2 365/365, 0 CRITICAL, 99 HIGH, 45 MEDIUM, 0 confirmed (reference 1f2ff4f: 0/48 and 0/99);
   gate 42509523836: 32 blocking findings, all baseline-only (df67e8e), identical to the development branch's; the baseline is not
   replaced (owner's decision). PRs #5-#15 closed naming `f0a854c`.
+- **2026-11-09 11:05 UTC: JUS-04 + REG-07 MERGED into `wip/b25r2-rev2` at `53a56d3`** (fast-forward from `96b071c`; merge of
+  `96b071c` and `4f1b3c8`; strict Tests 42597744977 on `53a56d3` passed; recorded campaign 42570299554 on `4f1b3c8`: seed 1
+  365/365 0 CRITICAL 48 HIGH 65 MEDIUM 0 confirmed, seed 2 365/365 0/94/36 0 confirmed, archive ok; gate 42542329406 32
+  blocking, baseline-difference kind). PRs #20, #21 marked merged. Development head: `53a56d3`. The three overnight batches are
+  all merged. Next: `wip/b25-backlog` (strict 42589325057 FAILED: under investigation) and the PROP-03 test `b727954`.
 - **2026-11-09 09:40 UTC: PROP-06 MERGED into `wip/b25r2-rev2` at `96b071c`** (fast-forward from `229f76e`; merge of `229f76e` and
   `a7071aa`; strict Tests 42587815471 on `96b071c` passed). PRs #16, #17, #18 marked merged by GitHub. PROP-03 eviction-path test
   `b727954` on `wip/b25-prop03` (5/0 on `96b071c`; 3 failures with `f0a854c`'s property.gd; the commit message says 4, wrongly).
