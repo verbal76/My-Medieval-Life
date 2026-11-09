@@ -119,6 +119,7 @@ jobs:
           res://tests/start_test.gd
           # B25R2-BRUSHOFF: a met villager between plans brushes the player off without a script error
           res://tests/brushoff_empty_plan_test.gd
+          res://tests/life05_bandit_heir_test.gd   # LIFE-05 (owner 2026-11-08): bandit kin inherit last
           res://tests/character_look_test.gd
           res://tests/char_create_test.gd
           res://tests/furniture_test.gd

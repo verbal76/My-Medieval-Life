@@ -780,29 +780,33 @@ static func parent_ids(n) -> Array:
 # ---------------------------------------------------------------- inheritance ----------------
 ## The family heir of a dead villager (owner order, 2026-10-19): the eldest adult child, then the partner, then
 ## other kin (parents, then siblings, eldest first), then a minor child; null when the family has no one alive
-## (the household fallback in World._heir then applies).
+## (the household fallback in World._heir then applies). LIFE-05 (owner, 2026-11-08): kin who have joined the bandits inherit
+## last, after every one of those at home (eldest bandit kin first); their criminal history stays theirs.
 static func heir_of(w: World, n: NPC) -> NPC:
 	var kids := _alive(w, n.children)
-	var adult_kids := kids.filter(func(o: NPC) -> bool: return o.role != "child")
-	if not adult_kids.is_empty():
-		return _eldest(adult_kids)
+	var kin: Array = []                                   # everyone of the family who could inherit, in the owner's order
+	kin.append(kids.filter(func(o: NPC) -> bool: return o.role != "child"))
+	var pr: NPC = null
 	if n.partner >= 0:
-		var pr := w.npc(n.partner)
-		if pr != null and pr.alive and pr.partner == n.id:
-			return pr
-	var others: Array = _alive(w, [n.mother, n.father])
-	if not others.is_empty():
-		return _eldest(others)
+		pr = w.npc(n.partner)
+		if pr == null or not pr.alive or pr.partner != n.id:
+			pr = null
+	kin.append([pr] if pr != null else [])
+	kin.append(_alive(w, [n.mother, n.father]))
 	var sibs: Array = []
 	for pid in [n.mother, n.father]:
 		var par := parent_of(w, int(pid)) if int(pid) != -1 else null
 		if par != null:
 			sibs.append_array(_alive(w, par.children))
-	sibs = sibs.filter(func(o: NPC) -> bool: return o != n)
-	if not sibs.is_empty():
-		return _eldest(sibs)
-	if not kids.is_empty():
-		return _eldest(kids)
+	kin.append(sibs.filter(func(o: NPC) -> bool: return o != n))
+	kin.append(kids)
+	for tier: Array in kin:
+		var home := tier.filter(func(o: NPC) -> bool: return o.role != "bandit")
+		if not home.is_empty():
+			return _eldest(home)
+	for tier: Array in kin:                               # LIFE-05: only bandit kin are left
+		if not tier.is_empty():
+			return _eldest(tier)
 	return null
 
 
