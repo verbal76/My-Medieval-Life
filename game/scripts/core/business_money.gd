@@ -324,6 +324,12 @@ func keep_tills_of(ref: String) -> void:
 	for b in fronts():
 		if w.holder_of(b) == ref:
 			keep_till(b, ref)
+	# BIZ-04 (owner, 2026-11-08): a living household that leaves keeps its business money too: the till of every venture it runs
+	# goes to its own funds now, before it is gone (after that venture_owner would read the manor)
+	if ref.begins_with("hh:"):
+		for b in venture_buildings():
+			if int(b.venture.get("household", -1)) == World.ref_id(ref):
+				_keep(b, "venture", ref)
 
 
 ## Necessity first, the owner's pay, then the float, for one till record (`rec` holds `till`, `earned`, `paid`), paid to and
