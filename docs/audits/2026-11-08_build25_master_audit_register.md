@@ -390,7 +390,7 @@ These owner answers of 2026-11-08 supersede the older entries above that describ
 | REG-08 | courier stranded-delivery recovery | technical investigation, not assumed resolved |
 | SAV-04 | wildlife/combat continuity vs deterministic continuation | OWNER DECISION STILL OPEN; no policy invented |
 
-## Reconciliation update, 2026-11-09 14:25 EST (lead; HAG-FORENSICS-01 recovery test found the table above stale)
+## Reconciliation update, 2026-11-09 14:25 EST [time correction: 13:43 EST by the system clock; "19:25 UTC" below should read 18:43 UTC] (lead; HAG-FORENSICS-01 recovery test found the table above stale)
 
 The table above stands as written at 10:00 UTC. Status at 2026-11-09 19:25 UTC (14:25 EST), development line `wip/b25r2-rev2`
 at `c9da5db`; full evidence in `docs/decisions/B25-AUD-*.md` and `docs/audits/2026-11-09_HISTORICAL_COVERAGE_REGISTER.md` on
