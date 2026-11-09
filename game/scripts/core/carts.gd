@@ -126,8 +126,11 @@ func park(c: Dictionary, actor: PlayerState = null) -> void:
 	if actor != null and actor != w.player:
 		w.as_actor(actor, park.bind(c))
 		return
-	if may_use(c, w.acting_ref()) or str(c.puller) == w.acting_ref():
-		c.puller = ""
+	# MP-05: a player cannot make another player let go of a cart they may not use; a villager's cart is parked by the simulation
+	var puller := str(c.puller)
+	if World.is_player_ref(puller) and puller != w.acting_ref() and not may_use(c, w.acting_ref()):
+		return
+	c.puller = ""
 
 
 ## "your", "the Reed household's".
