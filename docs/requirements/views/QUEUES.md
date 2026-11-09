@@ -2,11 +2,10 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (18)
+## Workers and task branches (17)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
-| B25-AUD-MP-05 | 20+ | IMPLEMENTED ON TASK BRANCH | none | wip/b25-mp05-on-dev |
 | B25-ECON-P7 | unassigned | IN DEVELOPMENT | b25r1-econ6 worker | wip/b25r1-econ6 |
 | B25-FINISH-01 | 20 | IN DEVELOPMENT | lead session | wip/region-nav |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |

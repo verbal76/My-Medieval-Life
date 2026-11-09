@@ -24,7 +24,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-AUD-LIFE-03 | Sage succession by a qualified healer or apprentice (audit LIFE-03) | approved | OWNER APPROVED | INTEGRATED |
 | B25-AUD-LIFE-04 | Widows and widowers may remarry; previous marriage history kept (audit LIFE-04) | approved | OWNER APPROVED | INTEGRATED |
 | B25-AUD-LIFE-05 | Bandit heirs inherit last (audit LIFE-05) | approved | OWNER APPROVED | INTEGRATED |
-| B25-AUD-MP-05 | Mutual, reciprocal three-tier asset sharing between players (audit MP-05) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
+| B25-AUD-MP-05 | Mutual, reciprocal three-tier asset sharing between players (audit MP-05) | approved | OWNER APPROVED | INTEGRATED |
 | B25-AUD-MP-07 | Private records never shared automatically between players (audit MP-07) | approved | OWNER APPROVED | NOT STARTED |
 | B25-AUD-PROP-03 | Surrendered or evicted leased sites, improvements and materials pass to the manor (audit PROP-03) | approved | OWNER APPROVED | INTEGRATED |
 | B25-AUD-PROP-06 | Migrating household: owned property sold atomically, leases surrendered to the manor (audit PROP-06) | approved | OWNER APPROVED | INTEGRATED |

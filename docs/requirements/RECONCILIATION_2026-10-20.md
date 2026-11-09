@@ -168,7 +168,7 @@ None.
 | B25-AUD-LIFE-03 | Sage succession by a qualified healer or apprentice (audit LIFE-03) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
 | B25-AUD-LIFE-04 | Widows and widowers may remarry; previous marriage history kept (audit LIFE-04) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
 | B25-AUD-LIFE-05 | Bandit heirs inherit last (audit LIFE-05) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
-| B25-AUD-MP-05 | Mutual, reciprocal three-tier asset sharing between players (audit MP-05) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20+ |
+| B25-AUD-MP-05 | Mutual, reciprocal three-tier asset sharing between players (audit MP-05) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
 | B25-AUD-MP-07 | Private records never shared automatically between players (audit MP-07) | approved | NOT STARTED / NOT TESTED / OPEN | 20+ |
 | B25-AUD-PROP-03 | Surrendered or evicted leased sites, improvements and materials pass to the manor (audit PROP-03) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
 | B25-AUD-PROP-06 | Migrating household: owned property sold atomically, leases surrendered to the manor (audit PROP-06) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |

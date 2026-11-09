@@ -6,9 +6,9 @@
   The previous stamp ("Updated 2026-11-06 19:00 EST"; "Snapshot last verified 2026-11-07 03:30 UTC ... `fe7d8f8`") had stayed
   unchanged through the 2026-11-08/09 entries below, although those entries were current. It is corrected here. The old wording
   is in git history.
-- **Snapshot last verified:** 2026-11-09 18:34 UTC by the documentation agent, against wip/b25r2-rev2 `c9da5db`,
-  wip/requirements-control `8d16416`, wip/b25-mp05-on-dev `242ca83`, docs/build25-audit-register `257475c`, Actions runs to
-  42664730920 (the only run in progress).
+- **Snapshot last verified:** 2026-11-09 21:20 UTC (16:20 EST) by the lead, against wip/b25r2-rev2 `242ca83`,
+  wip/requirements-control (this commit), docs/build25-audit-register `67c667d`, Actions runs to 42664730920 (completed; no
+  run in progress).
   - **Convention:** whoever checks this file against the live GitHub state writes this line as
     `YYYY-MM-DD HH:MM UTC by <session or agent>, against <development line, now wip/b25r2-rev2> <sha>, wip/requirements-control
     <sha>, Actions runs to <newest run id>`. (Until 2026-11-09 this read `wip/expansion20`, which stopped being the development
@@ -35,12 +35,12 @@ and `wip/b25r1`, which are no longer the development line.
 | Item | Value |
 |---|---|
 | Build | Build 25, Revision 2 ("Play Test Build One"); the package label is to be "0.1.34 Rev 2 — Playtest 1" (B25R2-VER-01) |
-| **Development line (code)** | **`wip/b25r2-rev2` at `c9da5db`** (fast-forwarded 2026-11-09 17:25 UTC). The owner's 2026-11-08 directives name it "Development branch". CLAUDE.md and BRANCH-POL-01 still name `wip/expansion20`; a proposed correction is on the documentation branch for the lead and owner |
+| **Development line (code)** | **`wip/b25r2-rev2` at `242ca83`** (fast-forwarded from `c9da5db` 2026-11-09 21:18 UTC, MP-05). Confirmed by the owner 2026-11-09 (BRANCH-POL-Q2, DEV-LINE-B25); CLAUDE.md section 5a names it |
 | Records branch | `wip/requirements-control`: register, directives, this file, changelog, known issues, decision records. Lead only |
 | Audit register | branch docs/build25-audit-register, commit `257475c`, file docs/audits/2026-11-08_build25_master_audit_register.md on that branch; tracking issue #4 |
-| Running Actions | Long simulations [42664730920](https://github.com/verbal76/My-Medieval-Life/actions/runs/42664730920), the MP-05 recorded campaign on `242ca83`. Never cancel, re-run or duplicate it (SIM-02) |
-| Pending integration | MP-05: `wip/b25-mp05-on-dev` `242ca83` (= `c9da5db` + PR #19 + cart fixes `2e74066`, `242ca83`). Full Tests 42636628469 green. Merge when the campaign is clean (`docs/decisions/B25-AUD-MP-05.md`). PR #19 stays open until then |
-| Merged on the development line since `fe7d8f8` | `f0a854c` Batch A (PRs #5-#15 + BRUSHOFF); `229f76e` LIFE-03/04; `96b071c` PROP-06; `53a56d3` JUS-04/REG-07; `c9da5db` overnight backlog + PROP-03 test. Evidence: `docs/DEVELOPMENT_CHANGELOG.md` (2026-11-08/09), `docs/decisions/B25-*` |
+| Running Actions | None. Last: MP-05 recorded campaign [42664730920](https://github.com/verbal76/My-Medieval-Life/actions/runs/42664730920) on `242ca83`, completed 21:13 UTC: seed 1 365/365 0 CRITICAL 17 HIGH 46 MEDIUM 0 confirmed; seed 2 365/365 0/63/42 0 confirmed (identical to `c9da5db`) |
+| Pending integration | None. Next authorized work: MP-05 device and security checks (two devices, modified client, reconnect, menus); EMP-03 fix (KI-15); MP-07, REG-04, REG-05 implementation; REG-08 investigation. No release without the owner (REL-OWNER-01) |
+| Merged on the development line since `fe7d8f8` | `f0a854c` Batch A (PRs #5-#15 + BRUSHOFF); `229f76e` LIFE-03/04; `96b071c` PROP-06; `53a56d3` JUS-04/REG-07; `c9da5db` overnight backlog + PROP-03 test; `242ca83` MP-05 (PR #19 + two cart fixes). Evidence: `docs/DEVELOPMENT_CHANGELOG.md` (2026-11-08/09), `docs/decisions/B25-*` |
 | Accepted simulation baseline | `df67e8e` (unchanged). Gate red of the baseline-difference kind is expected; the generation 8 candidate waits on the owner (TEST-AUDIT-Q2) |
 | Packages and releases | The owner's provisional Windows package (artifact 13542782040, `1f2ff4f`, expires 2026-12-06). `build-34` (public, 2026-11-06, `a9e9f6e`). `build-25` draft (`a459186` files). No Play Test Build One draft yet (B25R2-DRAFT-01 conditions). No Steam upload |
 | Approved, not implemented | MP-07 (privacy), REG-04 (physical couriers), REG-05 (physical migration); ChatGPT is to write PRs and Claude integrates. Open: SAV-04 (owner decision), REG-08 (investigation), the other static audit records |
@@ -51,9 +51,9 @@ and `wip/b25r1`, which are no longer the development line.
 
 | Task | Responsible | Branch | Last pushed SHA | Depends on | Status | Next action |
 |---|---|---|---|---|---|---|
-| Build 25 development, integration and merges | Lead (Claude session `754052d8`) | `wip/b25r2-rev2`; task branches `wip/b25-*` | `c9da5db` | not applicable | active | Read campaign 42664730920; merge MP-05 if clean |
+| Build 25 development, integration and merges | Lead (Claude session `754052d8`) | `wip/b25r2-rev2`; task branches `wip/b25-*` | `242ca83` | not applicable | active | Next authorized work in the pending-integration row |
 | HAG-AUTH-01 decision-authority safeguard (lifecycle, supersession links, checks, retroactive audit) | Lead | `wip/requirements-control` | (this branch) | not applicable | in development (started 2026-11-09 13:45 EST) | Checker + view + tests, then the retroactive chain audit |
-| MP-05 integration | Lead | `wip/b25-mp05-on-dev` | `242ca83` | campaign 42664730920 | campaign running | Fast-forward `wip/b25r2-rev2` to `242ca83` when clean; close PR #19 |
+| MP-05 integration | Lead | `wip/b25-mp05-on-dev` | `242ca83` | campaign 42664730920 clean | merged into `wip/b25r2-rev2` 2026-11-09 21:18 UTC | Device and security checks outstanding (KI-13) |
 | Historical recovery (HAG-FORENSICS-01) | Documentation agent (subagent of the lead) | branch docs/history-recovery-2026-11 (local; the lead integrates each checkpoint into `wip/requirements-control`, since the pre-push hook refuses register copies on other branches) | integrated `8d16416` | lead integration | active | Finish changelog, state, recovery and known-issues repairs; lead runs the register commands and the independent recovery test |
 | Audit corrections and approved features (MP-07, REG-04, REG-05, further audit items) | ChatGPT, through the owner's GitHub account | `audit/*`, `feature/*` (new PRs) | not applicable | not applicable | none open except PR #19 | The lead retrieves and integrates new PRs as they appear (owner directive 2026-11-08) |
 
@@ -143,6 +143,11 @@ and `wip/b25r1`, which are no longer the development line.
   65 MEDIUM, 0 confirmed defects; seed 2 365/365, 0 CRITICAL, 99 HIGH, 45 MEDIUM, 0 confirmed (reference 1f2ff4f: 0/48 and 0/99);
   gate 42509523836: 32 blocking findings, all baseline-only (df67e8e), identical to the development branch's; the baseline is not
   replaced (owner's decision). PRs #5-#15 closed naming `f0a854c`.
+- **2026-11-09 21:18 UTC: MP-05 MERGED into `wip/b25r2-rev2` at `242ca83`** (fast-forward from `c9da5db`; `242ca83` =
+  `c9da5db` + PR #19's diff + cart fixes `2e74066` (revoked partner lets go of a pulled cart) and `242ca83` (villagers' carts
+  park again)). Evidence: full Tests 42636628469 on `242ca83` passed; recorded campaign 42664730920 on `242ca83`: seed 1 365/365
+  0 CRITICAL 17 HIGH 46 MEDIUM 0 confirmed, seed 2 365/365 0/63/42 0 confirmed, identical to `c9da5db`. Not yet done: real
+  two-device host/guest, modified-client forging, reconnect, UI walk (KI-13). No release (REL-OWNER-01).
 - **2026-11-09 17:30 UTC: OVERNIGHT BACKLOG + PROP-03 TEST MERGED into `wip/b25r2-rev2` at `c9da5db`** (fast-forward from
   `53a56d3`; `c9da5db` = `53a56d3` + `wip/b25-backlog` `f67afdb` (LIFE-05, BIZ-03, BIZ-04, TRD-02, INV-04, INV-05, SAV-02;
   EMP-03 no change) + `wip/b25-prop03` `b727954`). Evidence: strict Tests 42607051457 attempt 2 passed (attempt 1:

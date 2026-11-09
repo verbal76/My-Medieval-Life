@@ -75,7 +75,17 @@ entries below, INTEGRATED means in that day's development line.
 
 ### 2026-11-09 (Monday)
 
-**MP-05 recorded campaign running on `wip/b25-mp05-on-dev` `242ca83`.** Not yet merged.
+**MP-05 MERGED into `wip/b25r2-rev2` at `242ca83`, 21:18 UTC (16:18 EST), written at the time by the lead.** Fast-forward from
+`c9da5db`, no force. Recorded campaign [42664730920](https://github.com/verbal76/My-Medieval-Life/actions/runs/42664730920) on
+`242ca83` completed 21:13 UTC: seed 1 365/365, 0 CRITICAL, 17 HIGH, 46 MEDIUM, 0 confirmed; seed 2 365/365, 0/63/42, 0 confirmed
+(identical counts to `c9da5db`). Still outstanding: two-device host/guest, modified-client forging, reconnect and menu checks
+(KI-13). No release (REL-OWNER-01).
+
+**Owner decisions 15:10 EST:** five resolutions to HAG-AUTH-01 (PAR-AGENTS-01, REL-OWNER-01, BRANCH-POL-Q1/Q2, BASELINE-AUTH-01,
+DECISION-CONFLICT-01), recorded at `998154b`; the decision-authority safeguard itself at `5339c06` and its retroactive audit at
+`3ea6e1a`.
+
+**(Earlier the same day) MP-05 recorded campaign running on `wip/b25-mp05-on-dev` `242ca83`.** Merged since: see the first entry of this day.
 - `242ca83` = `c9da5db` + PR #19's merge (`a66294c`) + the two cart fixes (`2e74066`, `242ca83`).
 - Full Tests [42636628469](https://github.com/verbal76/My-Medieval-Life/actions/runs/42636628469) passed (TESTED, CI).
 - Campaign [42664730920](https://github.com/verbal76/My-Medieval-Life/actions/runs/42664730920) dispatched 17:27. At the last check
