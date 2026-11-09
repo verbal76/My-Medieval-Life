@@ -73,6 +73,15 @@ func gain(skill: String, xp: int) -> int:
 	return after if after > before else 0
 
 
+## Being taught (a quest's "teach"): the skill goes up to the start of level `lv` if it is below
+## it. Returns whether it went up.
+func raise_to(skill: String, lv: int) -> bool:
+	if level(skill) >= lv:
+		return false
+	skills[skill] = 50 * lv * (lv - 1)             # 100 + 200 + ... + 100 (lv - 1): the start of level lv
+	return true
+
+
 func damage() -> float:
 	var d := 2.0
 	if weapon != "" and inv.has(weapon):
