@@ -235,6 +235,12 @@ when the issue arose.
   `00e47a6` (run 42705032193, attempt 1): third failure on commits that touch no network code. Root-cause work assigned to a worker
   (PAR-AGENTS-01) on `wip/b25-ki12-reconnect`.
 
+### REG-01 audit item: not reproduced (2026-11-09 19:20 EST)
+- The audit's reading (a saved journey walk loses its `pathed` mark, so after a load the walk re-finds a path instead of the
+  laid road) is right about the code, but has no visible effect: `journey_test`'s Wulstead trip saved on the road and continued
+  kept to road cells 185 of 236 ticks, against 184 of 235 for the same trip never saved (`b7884d3`). No change made. Re-open only
+  with a scenario that shows a different route or arrival.
+
 ## Outcomes (legitimate results of the approved rules; changing them needs the owner)
 
 ### KI-O1 No villager founds a business (OUTCOME, owner questions open)
