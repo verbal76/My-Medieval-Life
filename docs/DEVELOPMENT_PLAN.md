@@ -55,12 +55,18 @@ owner's decisions are in `docs/DECISIONS.md`. Status is kept here in four separa
 - ✅ Children eat 0.6 of an adult's food, weighted the same in every food reckoning; villagers hire
   the player for a day's work (harvest, logs, ore) paid from their purse; the tanner's quest teaches
   Crafting under the scroll marker (owner-approved items; numbers are agent proposals)
+- ✅ Property phase 1: one owner model, land registry, buying, weekly leases, empty houses (owner,
+  2026-10-18)
+- ✅ Property phase 2 (owner, 2026-10-18; numbers are agent proposals): building anywhere legal with
+  a placement footprint (touch, pad, keys and mouse) and the ground bought or leased on the spot;
+  generic construction any deliverer can feed; workshops (smithy, carpenter's shop, bakehouse) with
+  stations, interiors and roof fade, after a house; hired helpers who carry the employer's goods;
+  crowded households that split, get an empty house or build one and move in; the player respects
+  villagers' station reservations; readable place names; save version 6
 
 ### Approved but not built yet (need the owner's scope before starting)
 
-- Building rules still open: helpers who deliver materials, NPCs building by the same rules, renting
-  land, workshops after houses
-- Walking into buildings: the roof lifting to show the interior, or separate interior maps (asked)
+- Walking into buildings: done with the roof fade (owner decision); separate interior maps not used
 - Music and sound: the volume settings exist, but no audio has been supplied
 
 ### Future ideas (not approved)
