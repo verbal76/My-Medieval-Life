@@ -173,6 +173,10 @@ changelog entries.
 
 ## 8. Register changes for the lead to run on `wip/requirements-control`
 
+**Done 2026-11-09:** the lead ran the commands on `wip/requirements-control` (commit `1b91b71`), and the check reported 1,239 records
+with 0 problems. HR-29 and the register half of HR-37 are therefore COMPLETE. HR-37 stays PARTIAL only because the ChatGPT
+conversation is unrecoverable (HR-64).
+
 The pre-push hook refuses register edits outside `wip/requirements-control` and staging, so this branch does not change
 `requirements.json`. The lead runs the commands in the "Register commands" appendix of this file, then
 `python3 tools/check_requirements.py --write`.
