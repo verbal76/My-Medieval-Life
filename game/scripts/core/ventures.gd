@@ -92,12 +92,21 @@ func trade_stations(b: Dictionary, job: String) -> Array:
 	return out
 
 
+## BIZ-08: whether villager `id` is one of venture `v`'s hands. Ids are compared as integers: a save stores them as JSON numbers,
+## which load as floats, and Array.has(int) would miss them until the next morning's check rewrote the list.
+static func is_hand(v: Dictionary, id: int) -> bool:
+	for x in v.get("hands", []):
+		if int(x) == id:
+			return true
+	return false
+
+
 ## The venture stations of kind `kind` that `n` keeps or works at (tried first by NPCBrain._station_for), in id order.
 func stations_for(n: NPC, kind: String) -> Array:
 	var out := []
 	for b in open_ventures():
 		var v: Dictionary = b.venture
-		if int(v.keeper) != n.id and not (v.hands as Array).has(n.id) and str(w.employment.record_of(n).get("employer", "")) != ref_of(b):
+		if int(v.keeper) != n.id and not is_hand(v, n.id) and str(w.employment.record_of(n).get("employer", "")) != ref_of(b):
 			continue
 		for id in trade_stations(b, str(v.trade)):
 			if str(w.stations[id].type) == kind:
@@ -219,7 +228,7 @@ func _check(b: Dictionary) -> void:
 			w.stat("ventures_closed_keeper")
 			return
 		v.keeper = next.id
-		v.hands.erase(next.id)
+		v.hands = (v.hands as Array).filter(func(x): return int(x) != next.id)      # BIZ-08: ids may load as floats
 		_work_here(next, b)
 		w.stat("venture_handovers")
 		w.note("%s %s now keeps %s." % [next.name, next.family, w.property.describe(b)])
@@ -256,7 +265,7 @@ func close(b: Dictionary, why: String) -> void:
 		var o := w.npc(int(id))
 		if o == null:
 			continue
-		if (v.hands as Array).has(int(id)):
+		if is_hand(v, int(id)):
 			w.permit(b, World.npc_ref(o.id), false)
 		if w.stations.has(o.workplace) and str(w.stations[o.workplace].get("building", "")) == str(b.id) and int(id) != int(v.keeper):
 			o.workplace = _other_station(o, str(v.trade))
@@ -287,7 +296,7 @@ func took_place(n: NPC, place: String) -> void:
 	if b.is_empty() or n.job != str(b.venture.trade) or int(b.venture.keeper) == n.id:
 		return
 	w.permit(b, World.npc_ref(n.id), true)
-	if not (b.venture.hands as Array).has(n.id):
+	if not is_hand(b.venture, n.id):
 		b.venture.hands.append(n.id)
 	w.stat("venture_hires")
 	var k := w.npc(int(b.venture.keeper))
