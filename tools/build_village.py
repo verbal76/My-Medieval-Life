@@ -15,7 +15,9 @@ tools/puny_world_terrain.py uses).
 Output (deterministic for a given seed):
   game/data/village.json   tile layers, collision, and every gameplay entity: buildings with doors,
                            homes, workstations, trees, ore deposits, fields, stalls, build plots,
-                           containers (crates, barrels, tavern tables), spawn points
+                           containers (crates, barrels, tavern tables), spawn points, and each
+                           building's interior (floor, doors, roof cells, beds and other use spots;
+                           see Village.interiors) with "roof_layers" naming the layers roofs are in
   game/assets/tiles/       the two tile atlases, copied from the archives (provenance in
                            game/assets/PROVENANCE.json, written by tools/import_game_assets.py)
 
@@ -68,6 +70,29 @@ FENCE = {"tl": 29 * 54 + 4, "t": 29 * 54 + 5, "tr": 29 * 54 + 6, "l": 30 * 54 + 
 GATE = 29 * 54 + 0
 PENS = ("cow", "pig", "sheep", "chicken")   # one fenced pen per kind of livestock
 
+# --- interiors (generator v3) --------------------------------------------------------------------
+# Every roofed building has an interior under its roof: Shade drew the rooms, walls and furniture of
+# his houses and the manor under their roofs, and gave the tavern and the smithy roofs of their own
+# (sample-village-3 / -2, in a "Roof" group he left hidden). The game fades a roof while the player is
+# under it (game/scripts/view/roof_fade.gd).
+ROOF_LAYERS = ("above3", "above4", "above5")       # the "above" layers that hold roofs (faded, never canopies)
+HIDDEN_ROOFS = (("village-3", 1, 1), ("village-2", 2, 1))     # (sample, district x, district y)
+# Beds Shade drew (the bed's body tile -> where its head lies); the bed's other tile is a headboard
+BED_TILES = {1472: "up", 1477: "up", 1482: "up", 1691: "right", 1696: "right", 1701: "right",
+             1693: "left", 1698: "left", 1703: "left"}
+TABLE_TILES = {2539, 2540, 2542, 1887, 1888, 1889, 1890, 2547, 2548, 2549, 2550}
+HEARTH_TILES = {2565, 2566, 2567, 2568}     # bread ovens / hearths
+CHEST_TILES = {355}
+MAT = 593                                   # a straw pallet: a sleeping place on the floor (walkable)
+SLEEP_PLACES = 6                            # beds plus pallets in every home
+HOME_TYPES = ("house", "manor", "tavern", "hut")
+HUT_BOX = 3222                              # the box Shade drew in the sage's hut's only inner cell
+# Beds for Shade's small house (local cells; (body, foot post) tiles): four along the west wall, head to
+# the wall, where his straw mat, shelf and jars stood, and one by the east wall. Colours alternate.
+HOUSE_CLEAR = ((1, 4), (2, 4), (1, 6), (2, 6), (1, 7), (2, 7))
+HOUSE_BEDS = (((1, 4), (2, 4), 1693, 1694), ((1, 5), (2, 5), 1698, 1699), ((1, 6), (2, 6), 1703, 1704),
+              ((1, 7), (2, 7), 1693, 1694), ((7, 5), (6, 5), 1696, 1695))
+
 CATS = ("ground", "path", "below", "above")
 
 
@@ -84,6 +109,9 @@ class Village:
         self.decor = set()          # cells whose only object is 1x1 decor (walkable)
         self.roof = set()           # cells under a roof (solid)
         self.solid_extra = set()
+        self.walls = set()          # cells holding a wall tile (Shade's "Wall" layers)
+        self.late_roof = set()      # roof cells added by interiors() (the tavern's and the smithy's)
+        self.floor = set()          # walkable interior floor (interiors())
         self.ents = {"buildings": [], "stations": [], "trees": [], "deposits": [], "fields": [],
                      "stalls": [], "plots": [], "pens": [], "woods": [], "spawns": {}, "mine": None,
                      "containers": []}
@@ -156,6 +184,8 @@ class Village:
                         self.roof.add((ox + x, oy + y))
                     if cat == "below":
                         objs.setdefault((x, y), []).append(t)
+                        if "Wall" in lname.split("/")[-1]:
+                            self.walls.add((ox + x, oy + y))
                         if t in DOORS:
                             self.walkable_override.add((ox + x, oy + y))
         # 1x1 objects with nothing around them and nothing on top are decorations (flowers, rocks)
@@ -320,6 +350,7 @@ class Village:
         self.ents["spawns"]["player"] = [CH + 14, CH + 23]
         self.roads()
         self.containers()
+        self.interiors()
         return self
 
     def containers(self):
@@ -356,6 +387,145 @@ class Village:
                 scan(b["id"], b["x"], b["y"], b["x"] + b["w"], b["y"] + b["h"], False)
         for st in self.ents["stalls"]:
             scan(st["id"], st["x"] + 1, st["y"], st["x"] + 2, st["y"] + 1, False)
+
+    # ---- interiors (generator v3) -----------------------------------------------------------
+    def interiors(self):
+        """Give every roofed building an interior, after everything else is placed (no random numbers,
+        so no tree, building, plot, road or container moves): Shade's hidden tavern and smithy roofs,
+        beds in the small houses, the sage's hut's inner cell cleared, then for each building the cells
+        under its roof reached from its doors (`area`), the walkable ones (`floor`, made walkable here),
+        its roof tiles (faded by the game while the player is inside) and its use spots: beds, straw
+        pallets (homes get SLEEP_PLACES sleeping places), tables, hearths and chests."""
+        for name, dx, dy in HIDDEN_ROOFS:
+            self.paste_hidden_roof(name, dx * CH, dy * CH)
+        for b in self.ents["buildings"]:
+            if b["type"] == "hut":
+                for y in range(b["y"] - 1, b["y"] + b["h"] + 1):
+                    for x in range(b["x"] - 1, b["x"] + b["w"] + 1):
+                        for i in range(6):
+                            if self.get("below", i, x, y) == HUT_BOX:
+                                self.put("below", i, x, y, -1)
+            elif b["type"] == "house":
+                self.furnish_house(b)
+        self.legacy_solid = self.solid_grid()
+        roofs = {}
+        for name in ROOF_LAYERS:
+            data = self.layers.get((name[:5], int(name[5:])), [])
+            for i, v in enumerate(data):
+                if v >= 0:
+                    roofs[(i % W, i // W)] = True
+        comp = {}                   # roof cell -> its roof (4-connected roof cells)
+        k = -1
+        for c in sorted(roofs):
+            if c in comp:
+                continue
+            todo, k = [c], k + 1
+            comp[c] = k
+            while todo:
+                x, y = todo.pop()
+                for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if n in roofs and n not in comp:
+                        comp[n] = k
+                        todo.append(n)
+        members = {}
+        for c, k in comp.items():
+            members.setdefault(k, []).append(c)
+        for b in self.ents["buildings"]:
+            b["interior"] = self.interior_of(b, comp, members)
+
+    def paste_hidden_roof(self, name, ox, oy):
+        """The roof group Shade drew for a sample map but left hidden in Tiled: its first layer (the
+        roof itself) into above3, its roof objects (chimneys, dormers) into above4 and its fence into above5."""
+        d = json.loads(self.paid.text(SAMPLE.format(name)))
+        group = next(g for g in d["layers"] if g["type"] == "group" and g["name"] == "Roof")
+        for j, lay in enumerate(l for l in group["layers"] if l["type"] == "tilelayer"):
+            for i, g in enumerate(lay["data"]):
+                t = (g & 0x1FFFFFFF) - 1
+                if t < 0 or t >= PEOPLE_MIN:
+                    continue
+                x, y = ox + i % 30, oy + i // 30
+                target = 3 + min(j, 2)
+                assert self.get("above", target, x, y) < 0, f"roof tile over another at {(x, y)}"
+                self.put("above", target, x, y, tile_val(0, t))
+                self.late_roof.add((x, y))
+
+    def furnish_house(self, b):
+        """Beds in Shade's small house (HOUSE_BEDS), where his straw mat, shelf and jars stood."""
+        ox, oy = b["x"], b["y"]
+        assert self.get("below", 1, ox + 1, oy + 2) in CHEST_TILES, "not Shade's small house"
+        for x, y in HOUSE_CLEAR:
+            for cat, i in (("below", 1), ("above", 0), ("above", 1)):
+                self.put(cat, i, ox + x, oy + y, -1)
+        for (bx, by), (px, py), body, post in HOUSE_BEDS:
+            for x, y in ((bx, by), (px, py)):
+                assert self.get("below", 1, ox + x, oy + y) < 0, f"bed over furniture in {b['id']}"
+            self.put("below", 1, ox + bx, oy + by, tile_val(0, body))
+            self.put("below", 1, ox + px, oy + py, tile_val(0, post))
+
+    def below_tiles(self, x, y):
+        return [v for (c, _), d in sorted(self.layers.items()) if c == "below" for v in [d[y * W + x]] if v >= 0]
+
+    def interior_of(self, b, comp, members):
+        # doors in the building's rectangle or just outside it (the hut's is one cell off); the area
+        # spreads from them over roofed cells inside the rectangle, never past a wall
+        x0, y0, x1, y1 = b["x"], b["y"], b["x"] + b["w"], b["y"] + b["h"]
+        inside = lambda c: x0 <= c[0] < x1 and y0 <= c[1] < y1
+        doors = sorted((x, y) for y in range(y0 - 1, y1 + 1) for x in range(x0 - 1, x1 + 1)
+                       if (x, y) in comp and any(v in DOORS for v in self.below_tiles(x, y)))
+        area, todo = set(doors), list(doors)
+        while todo:
+            x, y = todo.pop()
+            for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                if n in comp and n not in area and n not in self.walls and inside(n):
+                    area.add(n)
+                    todo.append(n)
+        legacy = self.legacy_solid
+        floor = set()
+        for c in area:
+            if not legacy[c[1]][c[0]] or all(v in DOORS or v == MAT for v in self.below_tiles(*c)):
+                floor.add(c)
+        self.floor |= floor
+        # an open doorway (no door drawn, as into the tavern's open-air kitchen) is a door too
+        walk = lambda c: 0 <= c[0] < W and 0 <= c[1] < H and (not legacy[c[1]][c[0]] or c in self.floor)
+        doors = sorted(set(doors) | {(x, y) for x, y in floor if any(
+            n not in area and walk(n) for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)))})
+        free = sorted(c for c in floor if c not in doors)
+
+        def use_of(at):
+            best = min(free, key=lambda c: (abs(c[0] - at[0]) + abs(c[1] - at[1]), abs(c[1] - at[1]), c[1], c[0]),
+                       default=None)
+            if best is None or abs(best[0] - at[0]) + abs(best[1] - at[1]) > 3:
+                return None
+            return best
+
+        spots = []
+        for c in sorted(area, key=lambda c: (c[1], c[0])):
+            for t in self.below_tiles(*c):
+                kind = ("bed" if t in BED_TILES else "table" if t in TABLE_TILES else
+                        "hearth" if t in HEARTH_TILES else "chest" if t in CHEST_TILES else None)
+                use = use_of(c) if kind else None
+                if use:
+                    s = {"kind": kind, "at": list(c), "use": list(use)}
+                    if kind == "bed":
+                        s.update(head=BED_TILES[t], tile=t)
+                    spots.append(s)
+        beds = [s for s in spots if s["kind"] == "bed"]
+        if b["type"] in HOME_TYPES:
+            taken = {tuple(s["use"]) for s in spots} | {(c["x"], c["y"]) for c in self.ents["containers"]}
+            near_door = {(x + dx, y + dy) for x, y in doors for dx, dy in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1))}
+            cands = [c for c in free if c not in taken and c not in near_door and not self.below_tiles(*c)
+                     and all(self.get("above", i, *c) < 0 for i in range(6) if f"above{i}" not in ROOF_LAYERS)]
+            ref = [tuple(s["at"]) for s in beds] or doors
+            far = -1 if not beds else 1         # pallets by the beds, or as far from the door as can be
+            cands.sort(key=lambda c: (far * min(abs(c[0] - r[0]) + abs(c[1] - r[1]) for r in ref), c[1], c[0]))
+            cands += [c for c in free if c in near_door and c not in taken and c not in cands and not self.below_tiles(*c)]
+            for c in cands[:max(0, SLEEP_PLACES - len(beds))]:
+                i = next(i for i in range(6) if self.get("below", i, *c) < 0)
+                self.put("below", i, c[0], c[1], tile_val(0, MAT))
+                spots.append({"kind": "bed", "at": list(c), "use": list(c), "head": "left", "tile": MAT})
+        roof = sorted({r for k in sorted({comp[c] for c in area}) for r in members[k]})
+        return {"doors": [list(c) for c in doors], "area": [list(c) for c in sorted(area)],
+                "floor": [list(c) for c in sorted(floor)], "roof": [list(c) for c in roof], "spots": spots}
 
     def place_deposits(self, ox, oy):
         """Ore rocks on bare highland floor of the cave sample: cells with only ground tiles whose
@@ -442,7 +612,7 @@ class Village:
             for x in range(W):
                 c = (x, y)
                 s = (self.has_object(x, y) and c not in self.decor) or c in self.roof
-                if c in self.walkable_override:
+                if c in self.walkable_override or c in self.floor:
                     s = False
                 solid[y][x] = s
         for p in self.ents["plots"]:                      # plots are clear land
@@ -522,6 +692,13 @@ class Village:
             cells = [data[(hb["y"] + y) * W + hb["x"] + x] for y in range(hb["h"]) for x in range(hb["w"])]
             if any(v >= 0 for v in cells):
                 stamp["layers"][f"{cat}{i}"] = cells
+        # its interior and collision in the house's own cells, for a house built anywhere
+        local = lambda c: [c[0] - hb["x"], c[1] - hb["y"]]
+        it = hb["interior"]
+        stamp["interior"] = {k: [local(c) for c in it[k]] for k in ("doors", "area", "floor", "roof")}
+        stamp["interior"]["spots"] = [{**sp, "at": local(sp["at"]), "use": local(sp["use"])} for sp in it["spots"]]
+        stamp["solid"] = ["".join("1" if solid[hb["y"] + y][hb["x"] + x] else "0" for x in range(hb["w"]))
+                          for y in range(hb["h"])]
         return {
             "format": "mml-village/1", "seed": self.seed, "w": W, "h": H, "tile": 16,
             "atlases": [{"name": "paid", "image": "res://assets/tiles/punyworld-tiles.png", "columns": 220},
@@ -534,6 +711,7 @@ class Village:
                       "canopy": [list(p) for p in self.canopy_pairs()]},
             "layers": layers,
             "stamps": {"house": stamp},
+            "roof_layers": list(ROOF_LAYERS),
             "solid": ["".join("1" if s else "0" for s in row) for row in solid],
             "road": sorted([list(c) for c in self.road]),
             **self.ents,
