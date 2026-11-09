@@ -2,6 +2,7 @@
  "_format": "mml-ci-check-floors/1",
  "_why": "TEST-GOV-01 (docs/TESTING_GOVERNANCE.md): each game suite's least number of checks. A suite that runs fewer fails in CI (tools/ci_report.py --floors): checks were skipped (an early stop, a script error) or removed. Recorded from the full suite on 832f711 (run 42274258964), the nine suites given a count line from their first counted run (wip/test-audit). Lowering a floor needs the reason in the commit that lowers it; adding checks needs no change here.",
  "aerial_map_test": 79,
+ "life03_sage_succession_test": 9,
  "aging_test": 136,
  "armour_worn_test": 264,
  "aspiration_test": 159,
@@ -180,6 +181,7 @@
  "regional_food_test": 48,
  "regional_test": 71,
  "regions_test": 120,
+ "life04_remarriage_test": 15,
  "relations_test": 80,
  "reserve_test": 43,
  "road_types_test": 14,
@@ -240,5 +242,6 @@
  "prop01_cancel_site_test": 7,
  "prop02_fitting_owner_test": 13,
  "prop05_guest_sale_test": 8,
- "brushoff_empty_plan_test": 5
+ "brushoff_empty_plan_test": 5,
+ "owner_features_integration_test": 16
 }

@@ -1030,9 +1030,9 @@ func players_partner_refusal(a: PlayerState, b: PlayerState) -> String:
 	if a == null or b == null or a == b or not a.alive or not b.alive:
 		return "That is not possible."
 	var lo := float(Life.cfg().partner_min_age)
-	if a.partner >= 0 or Life.is_player_id(a.partner):
+	if not Life.free_to_partner(self, a):
 		return "You already have a partner."
-	if b.partner >= 0 or Life.is_player_id(b.partner):
+	if not Life.free_to_partner(self, b):
 		return "%s already has a partner." % b.name
 	if Life.age_years(a.born, minutes) < lo:
 		return "You are too young."
@@ -1218,6 +1218,8 @@ func player_answer(id: int, accept: bool, actor: PlayerState = null) -> String:
 	match kind:
 		"partner":
 			offers.erase(o)
+			Life._archive_spouse(a, person_id(b))
+			Life._archive_spouse(b, person_id(a))
 			a.partner = person_id(b)
 			b.partner = person_id(a)
 			Life.kin_version += 1
