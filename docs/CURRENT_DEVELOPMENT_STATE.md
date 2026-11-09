@@ -6,7 +6,7 @@
   The previous stamp ("Updated 2026-11-06 19:00 EST"; "Snapshot last verified 2026-11-07 03:30 UTC ... `fe7d8f8`") had stayed
   unchanged through the 2026-11-08/09 entries below, although those entries were current. It is corrected here. The old wording
   is in git history.
-- **Snapshot last verified:** 2026-11-09 21:20 UTC (16:20 EST) by the lead, against wip/b25r2-rev2 `b7884d3`,
+- **Snapshot last verified:** 2026-11-09 21:20 UTC (16:20 EST) by the lead, against wip/b25r2-rev2 `448fc0b`,
   wip/requirements-control (this commit), docs/build25-audit-register `67c667d`, Actions runs to 42664730920 (completed; no
   run in progress).
   - **Convention:** whoever checks this file against the live GitHub state writes this line as
@@ -39,7 +39,7 @@ and `wip/b25r1`, which are no longer the development line.
 | Item | Value |
 |---|---|
 | Build | Build 25, Revision 2 ("Play Test Build One"); the package label is to be "0.1.34 Rev 2 — Playtest 1" (B25R2-VER-01) |
-| **Development line (code)** | **`wip/b25r2-rev2` at `b7884d3`** = `242ca83` (MP-05, fast-forwarded from `c9da5db` 2026-11-09 21:18 UTC, the last tested code) + `b7884d3` (CLAUDE.md banner only, no code change). Confirmed by the owner 2026-11-09 (BRANCH-POL-Q2, DEV-LINE-B25); CLAUDE.md section 5a names it |
+| **Development line (code)** | **`wip/b25r2-rev2` at `448fc0b`** = `242ca83` (MP-05, 2026-11-09 21:18 UTC) + `b7884d3` (CLAUDE.md banner) + `448fc0b` (MP-05 forged-client fixes, fast-forwarded 23:30 UTC; full Tests 42713486147 green). Confirmed by the owner 2026-11-09 (BRANCH-POL-Q2, DEV-LINE-B25); CLAUDE.md section 5a names it |
 | Records branch | `wip/requirements-control`: register, directives, this file, changelog, known issues, decision records. Lead only |
 | Audit register | branch docs/build25-audit-register, commit `257475c`, file docs/audits/2026-11-08_build25_master_audit_register.md on that branch; tracking issue #4 |
 | Running Actions | None. Last: MP-05 recorded campaign [42664730920](https://github.com/verbal76/My-Medieval-Life/actions/runs/42664730920) on `242ca83`, completed 21:13 UTC: seed 1 365/365 0 CRITICAL 17 HIGH 46 MEDIUM 0 confirmed; seed 2 365/365 0/63/42 0 confirmed (identical to `c9da5db`) |
@@ -57,8 +57,8 @@ and `wip/b25r1`, which are no longer the development line.
 |---|---|---|---|---|---|---|
 | Build 25 development, integration and merges | Lead (Claude session `754052d8`) | `wip/b25r2-rev2`; task branches `wip/b25-*` | `242ca83` | not applicable | active | Next authorized work in the pending-integration row |
 | HAG-AUTH-01 decision-authority safeguard (lifecycle, supersession links, checks, retroactive audit) | Lead | `wip/requirements-control` | (this branch) | not applicable | in development (started 2026-11-09 13:45 EST) | Checker + view + tests, then the retroactive chain audit |
-| EMP-03 hiring-competition seekers (KI-15 case 1) | Lead | `wip/b25-emp03` | `00e47a6` | strict Tests, gate and recorded campaign dispatched 2026-11-09 ~21:50 UTC | in validation | Merge into `wip/b25r2-rev2` when CI, gate and campaign are clean |
-| MP-05 forged-client security tests | Worker agent (PAR-AGENTS-01), worktree `audit-int` | `wip/b25-mp05-forge` | `448fc0b` | mp05_forged_client_test 53/0, multiplayer_c 326/0 (local) | done 2026-11-09: two real holes fixed (self-described chest units; forged cart puller) | Lead reviews, runs CI, merges |
+| EMP-03 hiring-competition seekers (KI-15 case 1) | Lead | `wip/b25-emp03` | `00e47a6` | Tests 42705032193 attempt 2 green (attempt 1: KI-12 only); gate 42705036907 33 blocking, baseline-difference only, determinism identical; recorded campaign 42705042231 running | in validation | Merge into `wip/b25r2-rev2` when CI, gate and campaign are clean |
+| MP-05 forged-client security tests | Worker agent (PAR-AGENTS-01), worktree `audit-int` | `wip/b25-mp05-forge` | `448fc0b` | full Tests 42713486147 green; mp05_forged_client_test 53/0 | merged into `wip/b25r2-rev2` 2026-11-09 23:30 UTC | Remaining MP-05 checks: real two devices, reconnect, menus; container verbs (`container_store`, `container_pick`, `player_take`) could also require named records |
 | REG-08 courier stranding investigation | Read-only investigator agent (PAR-AGENTS-01) | none | not applicable | code reading | done 2026-11-09 | Owner policy questions B25-AUD-REG-08; record `docs/decisions/REG-08-INVESTIGATION-2026-11-09.md` |
 | Audit fixes without a simulation change (INV-01 census counts stashes; BIZ-08 hands after load) | Lead | `wip/b25-audit-fixes` | `4761957` | inv01 6/0 (2 failures before), biz08 5/0 (2 before), business suites 0 failures | in development | Strict CI, then merge (no campaign: no simulation change) |
 | SAV-05 save tests at the game's precision | Lead | `wip/b25-sav05` | `54794d9` | save_continuity_test 1 failure (KI-17) | blocked on KI-17 | Do not merge until saves reload exactly |

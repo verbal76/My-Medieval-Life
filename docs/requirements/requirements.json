@@ -5998,13 +5998,19 @@
      "date": "2026-11-09",
      "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: full Tests 42636628469 on 242ca83; mp05 24/0; campaign 42664730920 running -> full Tests 42636628469 on 242ca83; mp05 24/0; campaign 42664730920 running; recorded campaign 42664730920 on 242ca83: 0 CRITICAL, 0 confirmed both seeds; integrated_in + wip/b25r2-rev2 242ca83 (2026-11-09 21:18 UTC)",
      "why": "campaign clean; fast-forwarded the development line; device and security checks outstanding (KI-13)"
+    },
+    {
+     "date": "2026-11-09",
+     "change": "tests: full Tests 42636628469 on 242ca83; mp05 24/0; campaign 42664730920 running; recorded campaign 42664730920 on 242ca83: 0 CRITICAL, 0 confirmed both seeds -> full Tests 42636628469 on 242ca83; mp05 24/0; campaign 42664730920 running; recorded campaign 42664730920 on 242ca83: 0 CRITICAL, 0 confirmed both seeds; mp05_forged_client_test 53/0 (5 failures before the fix); full Tests 42713486147 on 448fc0b; test_commit: 242ca83 -> 448fc0b; commits + 448fc0b",
+     "why": "forged-client security tests: two holes fixed (self-described chest units, forged cart puller) and merged at 448fc0b; real two-device, reconnect and menu checks still outstanding"
     }
    ],
    "branch": "wip/b25-mp05-on-dev",
-   "tests": "full Tests 42636628469 on 242ca83; mp05 24/0; campaign 42664730920 running; recorded campaign 42664730920 on 242ca83: 0 CRITICAL, 0 confirmed both seeds",
-   "test_commit": "242ca83",
+   "tests": "full Tests 42636628469 on 242ca83; mp05 24/0; campaign 42664730920 running; recorded campaign 42664730920 on 242ca83: 0 CRITICAL, 0 confirmed both seeds; mp05_forged_client_test 53/0 (5 failures before the fix); full Tests 42713486147 on 448fc0b",
+   "test_commit": "448fc0b",
    "commits": [
-    "242ca83"
+    "242ca83",
+    "448fc0b"
    ],
    "lifecycle": "ACTIVE",
    "integrated_in": [

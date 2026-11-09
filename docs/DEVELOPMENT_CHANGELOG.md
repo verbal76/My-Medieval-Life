@@ -75,6 +75,12 @@ entries below, INTEGRATED means in that day's development line.
 
 ### 2026-11-09 (Monday)
 
+**MP-05 forged-client fixes MERGED at `448fc0b`, 23:30 UTC (18:30 EST).** Fast-forward from `b7884d3`. A worker (PAR-AGENTS-01) drove
+the host's request handler with forged guest requests (`mp05_forged_client_test`, 53 checks, 5 failing on the old code): the chest
+verbs now accept only a unit named by id (a self-described "own cart" or "own homestead" could open another player's cart load or a
+household's pantry as the guest's own, at any tier), and a guest may hitch a cart only as itself. Full Tests 42713486147 green; no
+simulation change (host request validation only), so no campaign.
+
 **MP-05 MERGED into `wip/b25r2-rev2` at `242ca83`, 21:18 UTC (16:18 EST), written at the time by the lead.** Fast-forward from
 `c9da5db`, no force. Recorded campaign [42664730920](https://github.com/verbal76/My-Medieval-Life/actions/runs/42664730920) on
 `242ca83` completed 21:13 UTC: seed 1 365/365, 0 CRITICAL, 17 HIGH, 46 MEDIUM, 0 confirmed; seed 2 365/365, 0/63/42, 0 confirmed
