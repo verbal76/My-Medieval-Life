@@ -389,3 +389,24 @@ These owner answers of 2026-11-08 supersede the older entries above that describ
 | REG-04 / REG-05 | couriers / migrating households travel physically | approved, not implemented |
 | REG-08 | courier stranded-delivery recovery | technical investigation, not assumed resolved |
 | SAV-04 | wildlife/combat continuity vs deterministic continuation | OWNER DECISION STILL OPEN; no policy invented |
+
+## Reconciliation update, 2026-11-09 14:25 EST (lead; HAG-FORENSICS-01 recovery test found the table above stale)
+
+The table above stands as written at 10:00 UTC. Status at 2026-11-09 19:25 UTC (14:25 EST), development line `wip/b25r2-rev2`
+at `c9da5db`; full evidence in `docs/decisions/B25-AUD-*.md` and `docs/audits/2026-11-09_HISTORICAL_COVERAGE_REGISTER.md` on
+`wip/requirements-control`. "Merged" means on the development line with strict CI, gate and a recorded 365-day campaign; no item
+is owner-playtested.
+
+| Item | Status now |
+|---|---|
+| LIFE-03, LIFE-04 | merged `229f76e` (unchanged) |
+| PROP-06 | merged `96b071c` (strict 42587815471) |
+| JUS-04, REG-07 | merged `53a56d3` (strict 42597744977; campaign 42570299554 clean) |
+| LIFE-05, BIZ-03, BIZ-04, TRD-02, INV-04, INV-05, SAV-02 | merged `c9da5db` (strict 42607051457 attempt 2; gate 42607055494 baseline-difference only; campaign 42627103286: 0 CRITICAL, 0 confirmed) |
+| PROP-03 | eviction-path test `b727954` merged `c9da5db` (5/0; 3 failures on `f0a854c`'s property.gd, re-measured; the commit message's 4 is wrong) |
+| EMP-02 | covered by the SAV-02 fix `f67afdb` (earned_at_dawn and laboured saved) |
+| EMP-03 | **"no change needed" above is withdrawn.** The code does not count ambitious employed lookers, homestead members or players as seekers (KNOWN_ISSUES KI-15). Fix not started. |
+| MP-05 | two cart defects found and fixed (`a898541`/`2e74066`, `be307f8`/`242ca83`); `wip/b25-mp05-on-dev` `242ca83` full CI 42636628469 green; recorded campaign 42664730920 running; two-device, modified-client, reconnect and UI checks outstanding |
+| MP-07, REG-04, REG-05 | approved, not implemented (unchanged) |
+| REG-08 | investigation, not started |
+| SAV-04 | owner decision open; now in the register as decision SAV-04 |
