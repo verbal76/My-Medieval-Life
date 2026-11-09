@@ -249,13 +249,7 @@ func _plan_job(n: NPC) -> bool:
 			return true
 		"manor_hand":
 			for f in w.fields:
-				var worked := false
-				for o in f.owner:
-					var fo := w.npc(int(o))
-					if fo and fo.alive and fo.job == "farmer":
-						worked = true
-				if not worked:
-					f.owner.append(n.id)
+				if w.field_workers(f).is_empty():
 					n.job = "farmer"
 					n.left_job = "manor_hand"
 					n.job_since = w.day()
@@ -274,9 +268,11 @@ func _plan_job(n: NPC) -> bool:
 
 
 ## A death changes the household and the village's work: a pen whose keeper died passes to another
-## farmer (the same household first), and the household re-evaluates its living.
+## farmer (the same household first), a stall falls vacant (the manor lets it again:
+## Property.relet_stalls), and the household re-evaluates its living.
 func on_death(n: NPC) -> void:
 	_hand_over_pens(n)
+	_give_up_stall(n)
 	if n.household >= 0:
 		evaluate_household(n.household)
 
@@ -285,13 +281,13 @@ func on_death(n: NPC) -> void:
 func _hand_over_pens(n: NPC) -> void:
 	for id in w.fauna.pens:
 		var pen: Dictionary = w.fauna.pens[id]
-		if int(pen.owner) != n.id:
+		if w.tenant_of(pen) != World.npc_ref(n.id):
 			continue
 		var next: NPC = null
 		for o: NPC in w.npcs:
 			if o.alive and o != n and o.job == "farmer" and _keeper_pen(o).is_empty() and (next == null or (o.household == n.household and next.household != n.household)):
 				next = o
-		pen.owner = next.id if next else -1
+		w.set_tenant(pen, World.npc_ref(next.id) if next else "")
 		if next:
 			w.note("%s %s takes over the %s pen from %s." % [next.name, next.family, pen.kind, n.name])
 
@@ -484,7 +480,7 @@ func _farmer(n: NPC) -> bool:
 ## A farmer who keeps a pen feeds it from their wheat and slaughters what the pen cannot hold.
 func _keeper_pen(n: NPC) -> Dictionary:
 	for id in w.fauna.pens:
-		if w.fauna.pens[id].owner == n.id:
+		if w.tenant_of(w.fauna.pens[id]) == World.npc_ref(n.id):
 			return w.fauna.pens[id]
 	return {}
 
@@ -965,7 +961,8 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 				var pen: Dictionary = w.fauna.pens[pid]
 				var need := w.fauna.daily_need(pen)
 				var days := 1 if w.famine() else 4
-				if f.owner.has(int(pen.owner)) and int(pen.trough) < need * days and need > 0:
+				var keeper := w.pen_keeper(pen)
+				if keeper and keeper.workplace == f.id and int(pen.trough) < need * days and need > 0:
 					n.plan.push_front(work(15, "feed_pen", {"pen": pen.id, "qty": need * days - int(pen.trough)}, "work", Vector2i(int(pen.gate[0]), int(pen.gate[1]))))
 					n.plan.push_front(go(Vector2i(int(pen.feed_at[0]), int(pen.feed_at[1]))))
 			var pantry: Inventory = w.households[n.household].pantry
@@ -1530,12 +1527,7 @@ func job_market() -> Dictionary:
 
 
 func _field_workers(f: Dictionary) -> int:
-	var c := 0
-	for o in f.owner:
-		var fo := w.npc(int(o))
-		if fo and fo.alive and fo.job == "farmer":
-			c += 1
-	return c
+	return w.field_workers(f).size()
 
 
 ## Every morning: the unemployed, and adults whose household has not been able to live on its income
@@ -1594,12 +1586,18 @@ func seek_work() -> void:
 			_change_job(n, best, why)
 
 
+## A merchant's stall falls vacant when they die or change work.
+func _give_up_stall(n: NPC) -> void:
+	if w.stalls.has(n.workplace) and w.tenant_of(w.stalls[n.workplace]) == World.npc_ref(n.id):
+		w.set_tenant(w.stalls[n.workplace], "")
+
+
 ## Take up a job (or lose one: job ""). The old workplace is given up: a stall falls vacant, a pen
-## passes to another farmer. The household re-evaluates at once.
-func _change_job(n: NPC, job: String, why: String) -> void:
+## passes to another farmer, a field is left (its workers are those whose workplace it is). The
+## household re-evaluates at once. `place`: the stall a new merchant is let (Property.relet_stalls).
+func _change_job(n: NPC, job: String, why: String, place := "") -> void:
 	var old := n.job
-	if w.stalls.has(n.workplace) and int(w.stalls[n.workplace].owner) == n.id:
-		w.stalls[n.workplace].owner = -1
+	_give_up_stall(n)
 	if old == "farmer" and not _keeper_pen(n).is_empty():
 		_hand_over_pens(n)
 	n.left_job = old
@@ -1614,13 +1612,14 @@ func _change_job(n: NPC, job: String, why: String) -> void:
 			for f in w.fields:
 				if _field_workers(f) < int(GameData.b("field_workers_max")) and (pick.is_empty() or _field_workers(f) < _field_workers(pick)):
 					pick = f
-			if not pick.is_empty():
-				pick.owner.append(n.id)
-				n.workplace = pick.id
+			n.workplace = pick.id if not pick.is_empty() else ""
 		"woodcutter", "hunter":
 			n.workplace = "forest"
 		"miner":
 			n.workplace = "mine"
+		"merchant":
+			n.workplace = place
+			w.set_tenant(w.stalls[place], World.npc_ref(n.id))
 		_:
 			n.workplace = ""
 	if job == "":

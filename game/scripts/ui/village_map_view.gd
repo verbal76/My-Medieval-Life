@@ -96,7 +96,7 @@ static func build_image(map: VillageMap, world: World) -> Image:
 	for pen in map.data.pens:
 		_box(img, Rect2i(int(pen.x), int(pen.y), int(pen.w), int(pen.h)), PEN, WALL)
 	for pl in world.plots:
-		if pl.owner != "player" or pl.site.is_empty():
+		if not world.holds(World.PLAYER, pl) or pl.site.is_empty():
 			_box(img, Rect2i(int(pl.x), int(pl.y), int(pl.w), int(pl.h)), GRASS, PLOT)
 	for f in world.fields:
 		_box(img, Rect2i(int(f.x), int(f.y), int(f.w), int(f.h)), FIELD.get(f.state, FIELD.tilled), FIELD.get(f.state, FIELD.tilled))

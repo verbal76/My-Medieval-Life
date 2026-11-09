@@ -170,8 +170,7 @@ static func _equip(w: World, n: NPC, job: String, idx: int, fields: Array, stall
 		"farmer":
 			inv.add("wheat", 4)
 			var f: Dictionary = fields[idx % fields.size()]
-			f.owner.append(n.id)
-			n.workplace = f.id
+			n.workplace = f.id              # its workers are those whose workplace it is (World.field_workers)
 		"cook":
 			inv.add("wheat", 10)
 			inv.add("meat", 3)
@@ -187,7 +186,7 @@ static func _equip(w: World, n: NPC, job: String, idx: int, fields: Array, stall
 		"merchant":
 			var sid: String = stall_ids[idx % stall_ids.size()]
 			var stall: Dictionary = w.stalls[sid]
-			stall.owner = n.id
+			w.set_tenant(stall, World.npc_ref(n.id))      # the manor's stall, let to its merchant
 			n.workplace = sid
 			n.coins = int(GameData.b("start_coins_trader"))
 			match stall.kind:

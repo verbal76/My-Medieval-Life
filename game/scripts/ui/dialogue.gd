@@ -99,12 +99,11 @@ static func _plain_what(w: World, n: NPC, what: String) -> String:
 	for f in w.fields:
 		if str(f.id) != fid:
 			continue
-		if f.owner.has(n.id) or f.owner.has(float(n.id)):
+		var workers := w.field_workers(f)
+		if workers.has(n):
 			return what.substr(0, at) + " from my field"
-		for o in f.owner:
-			var fo := w.npc(int(o))
-			if fo:
-				return what.substr(0, at) + " from %s %s's field" % [fo.name, fo.family]
+		for fo: NPC in workers:
+			return what.substr(0, at) + " from %s %s's field" % [fo.name, fo.family]
 		return what.substr(0, at) + " from a field"
 	return what
 
@@ -169,6 +168,8 @@ static func opening(w: World, n: NPC) -> String:
 		lines.append("Fire answers those who learn its rules. I can teach you to call it.")
 	elif n.id == w.reeve_id:
 		lines.append("Land by the east houses is for sale: two clearings at the forest edge, just north of them. Buy one there; the coins go to the manor.")
+		if w.property.market().any(func(r): return w.property.is_home(r) or not w.property.building_on(r).is_empty()):
+			lines.append("And the manor has an empty house to sell or let. Ask me about land and houses.")
 	else:
 		lines.append(_doing(w, n))
 	var hungry := _hunger(w, n) if not _eating(n) else ""

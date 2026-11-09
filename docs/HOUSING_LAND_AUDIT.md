@@ -41,13 +41,16 @@ NPCs never build, own land or move house. Nothing can be rented. There is no pro
 - **Saves.** Version 3. Buildings, households, plots, stalls, fields, pens and the player's home,
   chest and plots are saved; new map plots or buildings would not reach old saves.
 
-## Defects found (not yet fixed: they touch ownership)
+## Defects found
 
 1. A farmer who changes jobs stays in the field's `owner` list (`npc_brain.gd::_change_job`), so
-   taking that field's wheat can name a former farmer as the victim.
-2. A stall that falls vacant is never let again (merchants are not in the job market).
-3. The player can craft at a station an NPC has reserved.
-4. `plot_price` in `balance.json` is unused.
+   taking that field's wheat can name a former farmer as the victim. **Resolved in phase 1:** the
+   list is gone; a field's farmers are derived from their workplace (`World.field_workers`).
+2. A stall that falls vacant is never let again (merchants are not in the job market). **Resolved in
+   phase 1:** the manor lets it each morning to a villager out of work (`Property.relet_stalls`).
+3. The player can craft at a station an NPC has reserved. **Left for phase 2 (decided):** stations
+   are the manor's and public (`World.may_use`); workshops will give their owner or tenant the say.
+4. `plot_price` in `balance.json` is unused. **Resolved in phase 1:** it sets the price of land.
 
 ## Conflicts to avoid
 
@@ -70,6 +73,27 @@ NPCs never build, own land or move house. Nothing can be rented. There is no pro
 4. Count site materials in the goods-conservation test; keep construction stock from public works.
 5. Save version 4 with a migration (plot owners, new map plots and buildings).
 6. Fix the four defects above.
+
+## Phase 1 status (property and land)
+
+Done on the owner's answers (`docs/BUILD_DECISIONS.md` "Property and land, phase 1", INT-051 to
+INT-056):
+
+- **Ownership recorded six ways:** resolved. One owner reference (`"manor"`, `"player"`,
+  `"hh:<id>"`, `"npc:<id>"` as a tenant only) with `owner` and `tenant` on every building, parcel,
+  stall, pen, field and station, asked and changed through `World.owner_of` and its companions.
+  Buildings and households now own; containers derive their owner from the house's or stall's
+  holder; the player's `plots` list is gone (the registry says what the family holds).
+- **Land sales:** a land registry (`World.plots`, parcels with owner, tenant, weekly rent, due day,
+  arrears), buying and leasing from the manor, weekly rent and eviction, selling back.
+- **Placement:** the two plots stay where they are; arbitrary rectangles can be checked and claimed
+  (`Property.can_claim`, `Property.claim`); the placement interface is phase 2.
+- **A dead household's empty house:** goes back to the manor with its stores (to the granary) and
+  can be bought or leased by the player.
+- **Saves:** version 5; versions 1-4 migrate with the plots and any player house in place.
+- Not done (phase 2): generic construction (`start_site(plot, kind, owner)`, helpers delivering),
+  site materials in the goods-conservation test, public works starving builders, NPC households
+  splitting, building and moving, workshops and station permissions.
 
 ## Questions for the owner
 
