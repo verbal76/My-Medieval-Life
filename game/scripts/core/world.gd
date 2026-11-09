@@ -113,6 +113,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	give_start_kit(player)
 	for n: NPC in npcs:
 		by_id[n.id] = n
+	index_interiors()
 	_load_containers(m, [])
 	serve_tables()                     # the tavern opens: the keepers set food out on its tables
 	brain.dawn(false)                  # the first morning's snapshot of everyone's earnings
@@ -667,13 +668,129 @@ func alive_count(role := "") -> int:
 	return c
 
 
-## People within `r` tiles of a point (alive, visible).
+## People within `r` tiles of a point who are awake and in the same place: inside the same building,
+## or both outdoors (walls stand between a building's inside and the rest of the world).
 func near(p: Vector2, r: float) -> Array:
 	var out := []
+	var here := place_of(p)
 	for n: NPC in npcs:
-		if n.alive and not n.hidden and n.pos.distance_to(p) <= r:
+		if n.alive and not asleep(n) and n.pos.distance_to(p) <= r and place_of(n.pos) == here:
 			out.append(n)
 	return out
+
+
+# ---------------------------------------------------------------- interiors -------------------
+## Every roofed building has an interior (village.json buildings[].interior, made by
+## tools/build_village.py; a house the player builds gets the house stamp's): `area` the cells under
+## its roof reached from its doors, `floor` the walkable ones, `roof` the cells its roof covers (the
+## view fades them while the player is under them), `spots` the beds, tables, hearths and chests with
+## the cell to use each from. Owner rule: one entry mechanic for everyone; people walk in through the
+## door and stay visible to anyone inside the same building. Map data, not saved.
+var interiors := {}                # building id -> interior
+var place_ids: Array = []          # building ids, indexed by place_idx / roof_idx
+var place_idx := PackedInt32Array()  # cell -> index of the building whose area holds it, -1 outdoors
+var roof_idx := PackedInt32Array()   # cell -> index of the building whose roof covers it, -1 none
+
+
+## The interior a building has: its own from the map, or a built house's from the house stamp.
+func interior_for(b: Dictionary) -> Dictionary:
+	for mb in map.data.buildings:
+		if mb.id == b.id:
+			return mb.get("interior", {})
+	var stamp: Dictionary = map.data.stamps.house
+	if b.type != "player_house" or not stamp.has("interior"):
+		return {}
+	var o := Vector2i(int(b.x), int(b.y))
+	var si: Dictionary = stamp.interior
+	var out := {}
+	for k in ["doors", "area", "floor", "roof"]:
+		out[k] = si[k].map(func(c): return [int(c[0]) + o.x, int(c[1]) + o.y])
+	out.spots = si.spots.map(func(s):
+		var d: Dictionary = s.duplicate(true)
+		d.at = [int(s.at[0]) + o.x, int(s.at[1]) + o.y]
+		d.use = [int(s.use[0]) + o.x, int(s.use[1]) + o.y]
+		return d)
+	return out
+
+
+## (Re)build the interiors and the cell lookups (at start, on load, when a house is finished).
+func index_interiors() -> void:
+	interiors.clear()
+	place_ids.clear()
+	place_idx.resize(map.w * map.h)
+	place_idx.fill(-1)
+	roof_idx.resize(map.w * map.h)
+	roof_idx.fill(-1)
+	var ids := buildings.keys()
+	ids.sort()
+	for id in ids:
+		var it := interior_for(buildings[id])
+		if it.is_empty() or it.area.is_empty():
+			continue
+		interiors[id] = it
+		place_ids.append(id)
+		for c in it.roof:
+			roof_idx[int(c[1]) * map.w + int(c[0])] = place_ids.size() - 1
+		for c in it.area:
+			place_idx[int(c[1]) * map.w + int(c[0])] = place_ids.size() - 1
+
+
+func _cell_lookup(idx: PackedInt32Array, p: Vector2) -> String:
+	var x := floori(p.x)
+	var y := floori(p.y)
+	if x < 0 or y < 0 or x >= map.w or y >= map.h or idx.is_empty():
+		return ""
+	var i := idx[y * map.w + x]
+	return place_ids[i] if i >= 0 else ""
+
+
+## The building whose inside a point (tiles) is in, "" outdoors.
+func place_of(p: Vector2) -> String:
+	return _cell_lookup(place_idx, p)
+
+
+## The building whose roof covers a point, "" for none (inside it, or behind its eaves).
+func roof_over(p: Vector2) -> String:
+	return _cell_lookup(roof_idx, p)
+
+
+func asleep(n: NPC) -> bool:
+	return n.alive and n.anim == "sleep"
+
+
+## A villager's own spot of a kind ("bed", "table", "chest", "hearth") in their home: the household
+## shares them out by member order (beds first, then the straw pallets); {} if the home has none.
+func home_spot(n: NPC, kind: String) -> Dictionary:
+	var it: Dictionary = interiors.get(n.home, {})
+	var mine := []
+	for s in it.get("spots", []):
+		if s.kind == kind:
+			mine.append(s)
+	if mine.is_empty():
+		return {}
+	var i := 0
+	if n.household >= 0:
+		i = maxi(0, (households[n.household].members as Array).find(n.id))
+	return mine[i % mine.size()]
+
+
+## The cell to go to for a home spot (the use cell), or the home's door when it has none.
+func home_cell(n: NPC, kind: String) -> Vector2i:
+	var s := home_spot(n, kind)
+	if s.is_empty():
+		return building_door(n.home)
+	return Vector2i(int(s.use[0]), int(s.use[1]))
+
+
+## Collision of a built house: the house stamp's (walls and furniture solid, floor walkable), or the
+## whole footprint for a stamp without one; the doorway is open.
+func _house_collision(b: Dictionary) -> void:
+	var mask: Array = map.data.stamps.house.get("solid", [])
+	for j in int(b.h) - 1:
+		for i in int(b.w):
+			var s := true if mask.is_empty() else str(mask[j])[i] == "1"
+			map.set_solid(Vector2i(int(b.x) + i, int(b.y) + j), s)
+	map.set_solid(Vector2i(int(b.door[0]), int(b.door[1]) - 1), false)
 
 
 func building_door(id: String) -> Vector2i:
@@ -759,10 +876,8 @@ func deliver(p: Dictionary, inv: Inventory) -> bool:
 		var b := {"id": "house_" + p.id, "type": "player_house", "x": p.x, "y": p.y, "w": p.w, "h": p.h,
 				  "door": p.door, "name": "%s family house" % player.family}
 		buildings[b.id] = b
-		for j in int(p.h) - 1:
-			for i in int(p.w):
-				map.set_solid(Vector2i(int(p.x) + i, int(p.y) + j), true)
-		map.set_solid(Vector2i(int(p.door[0]), int(p.door[1]) - 1), false)
+		_house_collision(b)
+		index_interiors()
 		building_added.emit(b)
 		note("The %s is finished." % b.name)
 		return true
@@ -851,7 +966,8 @@ func player_harvest(f: Dictionary) -> int:
 	return n
 
 
-## Record what the village saw the player do: people within sight (not asleep indoors) remember it,
+## Record what the village saw the player do: people within sight (awake, and in the same building as
+## the player or, outdoors, outside: World.near) remember it,
 ## and so does the victim. A guard among them stops the player (guard_confront): `taken` (item ->
 ## count) goes back into `back`, or to the victim. `deed` is what they saw, "take <what>" by default.
 ## Returns how many saw it; what a guard said is in last_guard.
@@ -1168,7 +1284,7 @@ func shop_post(n: NPC) -> Vector2:
 ## A shopkeeper standing at their counter or stall: they always serve the player.
 func at_post(n: NPC) -> bool:
 	var at := shop_post(n)
-	return n.alive and not n.hidden and n.target == -1 and at != Vector2.INF and n.pos.distance_to(at) <= 2.5
+	return n.alive and not asleep(n) and n.target == -1 and at != Vector2.INF and n.pos.distance_to(at) <= 2.5
 
 
 ## Who serves at a counter (a tavern_counter station id) or a stall (a stall id) now, or null.
@@ -1194,7 +1310,7 @@ func shop_name(n: NPC) -> String:
 ## who sees it or is within `guard_call_radius` of their shout stops the player (guard_confront).
 ## Returns {ok, what, text}.
 func pickpocket(n: NPC) -> Dictionary:
-	if not n.alive or n.hidden or n.role == "bandit":
+	if not n.alive or asleep(n) or n.role == "bandit":
 		return {"ok": false, "what": "", "text": "There is nobody to rob."}
 	var lv := player.level("stealth")
 	var chance := minf(float(GameData.b("pickpocket_chance")) + float(GameData.b("pickpocket_chance_per_level")) * (lv - 1), float(GameData.b("pickpocket_chance_max")))
@@ -1352,7 +1468,7 @@ func to_dict() -> Dictionary:
 	for n: NPC in npcs:
 		ns.append(n.to_dict())
 	return {
-		"save_version": 3, "format": "mml-save/3", "seed": seed, "minutes": minutes,
+		"save_version": 4, "format": "mml-save/4", "seed": seed, "minutes": minutes,
 		"treasury": treasury, "granary": granary.to_dict(), "last_reeve_day": last_reeve_day, "last_payday": last_payday,
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees,
@@ -1444,7 +1560,21 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	for id in buildings:
 		var b: Dictionary = buildings[id]
 		if b.type == "player_house":
-			for j in int(b.h) - 1:
-				for i in int(b.w):
-					map.set_solid(Vector2i(int(b.x) + i, int(b.y) + j), true)
-			map.set_solid(Vector2i(int(b.door[0]), int(b.door[1]) - 1), false)
+			_house_collision(b)
+	index_interiors()
+	if int(d.get("save_version", 1)) < 4:
+		_move_indoors(d)
+
+
+## Saves before interiors (save_version 1-3) had villagers "hidden" at home, standing on the door
+## step: each is put inside their home, at their own bed (or the home's first spot), to go on from
+## there. A later save holds where they really are.
+func _move_indoors(d: Dictionary) -> void:
+	for nd in d.npcs:
+		var n := npc(int(nd.id))
+		if n == null or not bool(nd.get("hidden", false)) or not interiors.has(n.home):
+			continue
+		var s := home_spot(n, "bed")
+		var c := home_cell(n, "bed") if not s.is_empty() else Vector2i(int(interiors[n.home].floor[0][0]), int(interiors[n.home].floor[0][1]))
+		n.pos = Vector2(c) + Vector2(0.5, 0.5)
+		n.plan.clear()

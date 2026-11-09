@@ -19,14 +19,13 @@ var max_hp := 30.0
 var damage := 3.0
 var armor := 0.0
 var alive := true
-var hidden := false          # indoors (asleep at home)
 var pos := Vector2.ZERO      # tile coordinates (float); the feet are at the centre of a tile
 var plan: Array = []         # steps: {k: go|work|do, ...}
 var path := PackedVector2Array()
 var path_i := 0
 var work_left := 0.0         # game minutes left on the current work step
 var doing := "idle"          # what the NPC is doing, shown to the player
-var anim := "idle"
+var anim := "idle"           # "sleep": lying in bed (World.asleep); indoors is where pos is (World.place_of)
 var facing := Vector2.DOWN
 var attack_cd := 0.0
 var target := -1             # npc id being fought (-1 none, -2 the player)
@@ -71,7 +70,7 @@ func to_dict() -> Dictionary:
 		"id": id, "name": name, "family": family, "household": household, "role": role, "job": job,
 		"sprite": sprite, "home": home, "workplace": workplace, "inv": inv.to_dict(), "coins": coins,
 		"hunger": hunger, "hp": hp, "max_hp": max_hp, "damage": damage, "armor": armor, "alive": alive,
-		"hidden": hidden, "pos": [pos.x, pos.y], "doing": doing, "memory": memory.duplicate(),
+		"pos": [pos.x, pos.y], "doing": doing, "memory": memory.duplicate(),
 		"earned": earned, "spent": spent, "income_days": income_days.duplicate(), "job_since": job_since, "left_job": left_job,
 	}
 
@@ -85,7 +84,7 @@ static func from_dict(d: Dictionary) -> NPC:
 	for k in ["hunger", "hp", "max_hp", "damage", "armor"]:
 		n.set(k, float(d[k]))
 	n.alive = bool(d.alive)
-	n.hidden = bool(d.hidden)
+	# save_version 1-3 had "hidden" (at home on the door step): World._move_indoors puts them inside
 	n.inv = Inventory.from_dict(d.inv)
 	n.pos = Vector2(float(d.pos[0]), float(d.pos[1]))
 	n.memory = d.memory.duplicate()
