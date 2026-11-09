@@ -14,8 +14,12 @@ entry point (copies on other branches are stale and marked so); history is `docs
 recovery is `docs/handoffs/CURRENT_SESSION_RECOVERY.md`. Record every milestone there and in the register as part of the milestone.
 
 1. **Identify the repository, branches and latest remote commits.** Repository `verbal76/My-Medieval-Life`. The one
-   code integration branch is **`wip/expansion20`**; records (register, directives, state file, this file's authoritative
-   copy) are on **`wip/requirements-control`**; `staging/my-medieval-life` is historical (section 5a, BRANCH-POL-01).
+   code integration branch is the current Build 25 development line, **`wip/b25r2-rev2`** (named "Development branch" in the
+   owner's 2026-11-08 directives). The live SHA is in the pointer at the top of `docs/CURRENT_DEVELOPMENT_STATE.md`. Records
+   (register, directives, state file, this file's authoritative copy) are on **`wip/requirements-control`**.
+   `staging/my-medieval-life` is historical (section 5a, BRANCH-POL-01). `wip/expansion20`, `wip/b25r1` and
+   `wip/b25r2-playtest` are frozen history. Never resume work on them because an older document names them.
+   (Corrected 2026-11-09, HAG-FORENSICS-01; the line had moved off `wip/expansion20` on 2026-11-03.)
    Run `git fetch origin`, note both heads, and run `python3 tools/branch_audit.py --worktrees` (on the integration
    branch) to see every worker branch's unique work, stale base and file overlap.
 2. **Read `docs/PROJECT_MEMORY.md`**, the index of where every authoritative record lives.
@@ -46,7 +50,7 @@ recovery is `docs/handoffs/CURRENT_SESSION_RECOVERY.md`. Record every milestone 
 ### Standing owner commands (owner, 2026-11-02, FLIGHT-REC-01; `docs/directives/2026-11-02_permanent_flight_recorder_simulation_system.md`)
 
 - **"Run flight recorder"** means: dispatch the dedicated flight-recorder workflow on GitHub Actions at once. No questions and no
-  further approval. Dispatch `long-sims.yml` on the integration branch (`wip/expansion20`) with these inputs:
+  further approval. Dispatch `long-sims.yml` on the integration branch (now `wip/b25r2-rev2`; `wip/expansion20` until 2026-11-03) with these inputs:
   `flight=true seeds=1,2 days=365 every=10 record=true segment_days=100`, and `sim_args`, `set`, `variants` and `recover_run`
   left empty.
   - The run goes through the reusable workflows `flight-recorder-campaign.yml` and `flight-recorder-seed.yml`.
@@ -269,7 +273,8 @@ My Medieval Life is a commercial game headed for Steam Early Access. Every agent
 ## 5. Branching, commits, tests, releases
 
 - **GitHub is the source of truth; the cloud machine is a temporary workspace (owner, 2026-10-18).**
-  - The code integration branch is `wip/expansion20` and the records branch `wip/requirements-control` (section 5a;
+  - The code integration branch is the current development line, `wip/b25r2-rev2` since 2026-11-06 (it was `wip/expansion20`
+    until 2026-11-03), and the records branch is `wip/requirements-control` (section 5a;
     `staging/my-medieval-life` held this role until Build 24 and is now historical). Committing and pushing
     development checkpoints to them is a **standing authorization**: push completed, tested work
     regularly, without asking. Never force-push or delete any of them (`tools/git_hooks/pre-push`, enabled
@@ -395,7 +400,9 @@ My Medieval Life is a commercial game headed for Steam Early Access. Every agent
 
 `docs/directives/2026-11-02_branch_consolidation_worktree_control.md`; rationale `docs/decisions/BRANCH-POL-01.md`.
 
-- **One integration branch for code: `wip/expansion20`.** Every finished, validated unit of work lands there. No other
+- **One integration branch for code: `wip/expansion20`.** *(2026-11-09 note, HAG-FORENSICS-01: since 2026-11-03 the owner's
+  directives have named the development line `wip/b25r1`, then `wip/b25r2-rev2`. The one-line rule still holds; the named branch
+  is now `wip/b25r2-rev2`. Changing this rule's own text is for the owner.)* Every finished, validated unit of work lands there. No other
   branch is a development mainline, and no worker redefines the baseline: a worker never merges another worker's branch,
   never rebases the integration branch and never starts a branch from anything but the integration head.
 - **Records are separate, not a second mainline.** `wip/requirements-control` holds the register, directives, decision
@@ -537,7 +544,7 @@ or historical (`docs/DECISIONS.md` narrative log, `docs/DEVELOPMENT_QUEUE.md`, a
 
 ## 10. Parallel agents
 
-- The lead agent integrates code into `wip/expansion20` and records into `wip/requirements-control` under sections 5 and
+- The lead agent integrates code into the development line (`wip/b25r2-rev2`; formerly `wip/expansion20`) and records into `wip/requirements-control` under sections 5 and
   5a. A
   parallel agent (a subagent or another session working beside the lead) uses one branch and one draft PR per task,
   or a `wip/*` branch, and says which files and areas the task owns.
