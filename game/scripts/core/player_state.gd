@@ -22,6 +22,7 @@ var tool := ""                # the tool in hand (a pickaxe or an axe)
 var sex := "male"             # chosen at character creation
 var look := "player_m0_basic" # appearance id (game/data/appearances.json)
 var crimes: Array = []        # {day, kind, what, victim, witnesses}: what the village saw the player do
+var stolen := {}              # item id -> {owner npc id (string): count}: carried goods their owner knows as theirs
 var quests: Array = []          # accepted side quests: {id, giver, day, target} (scripts/core/quests.gd)
 var spells := {}              # "fireball": true
 var fireball_cd := 0.0
@@ -92,6 +93,69 @@ func defense() -> float:
 	return 0.0
 
 
+## Stolen goods (owner rule): each carried piece taken from someone is marked with whose it was, so
+## the owner knows it if it is offered back to them. Marks never outnumber what is carried: goods
+## eaten, dropped, sold, stored or used up lose their marks (trim_stolen), the lowest owner id first.
+func mark_stolen(id: String, owner: int, n := 1) -> void:
+	if n <= 0:
+		return
+	var m: Dictionary = stolen.get(id, {})
+	m[str(owner)] = int(m.get(str(owner), 0)) + n
+	stolen[id] = m
+	trim_stolen()
+
+
+## Take up to `n` marks of `id` off: `owner`'s first, then anyone's.
+func unmark(id: String, owner: int, n := 1) -> void:
+	var m: Dictionary = stolen.get(id, {})
+	var k := mini(n, int(m.get(str(owner), 0)))
+	if k > 0:
+		m[str(owner)] = int(m[str(owner)]) - k
+		n -= k
+	for o in _owners(id):
+		if n <= 0:
+			break
+		var t := mini(n, int(m[o]))
+		m[o] = int(m[o]) - t
+		n -= t
+	_tidy(id)
+
+
+func trim_stolen() -> void:
+	for id in stolen.keys():
+		var over := stolen_count(id, false) - inv.count(id)
+		if over > 0:
+			unmark(id, -1, over)
+		_tidy(id)
+
+
+## How many carried `id` are stolen.
+func stolen_count(id: String, trim := true) -> int:
+	if trim:
+		trim_stolen()
+	var t := 0
+	for o in stolen.get(id, {}):
+		t += int(stolen[id][o])
+	return t
+
+
+func _owners(id: String) -> Array:
+	var keys: Array = stolen.get(id, {}).keys()
+	keys.sort_custom(func(a, b): return int(a) < int(b))
+	return keys
+
+
+func _tidy(id: String) -> void:
+	if not stolen.has(id):
+		return
+	var m: Dictionary = stolen[id]
+	for o in m.keys():
+		if int(m[o]) <= 0:
+			m.erase(o)
+	if m.is_empty():
+		stolen.erase(id)
+
+
 func to_dict() -> Dictionary:
 	return {
 		"name": name, "family": family, "generation": generation, "sprite": sprite, "heir_sprite": heir_sprite,
@@ -99,7 +163,7 @@ func to_dict() -> Dictionary:
 		"hunger": hunger, "stamina": stamina, "skills": skills.duplicate(), "weapon": weapon, "armor": armor,
 		"spells": spells.duplicate(), "home": home, "chest": chest.to_dict(), "plots": plots.duplicate(),
 		"alive": alive, "deaths": deaths, "tool": tool, "sex": sex, "look": look, "crimes": crimes.duplicate(true),
-		"quests": quests.duplicate(true),
+		"quests": quests.duplicate(true), "stolen": stolen.duplicate(true),
 	}
 
 
@@ -124,4 +188,8 @@ static func from_dict(d: Dictionary) -> PlayerState:
 	p.look = str(d.get("look", ""))
 	p.crimes = d.get("crimes", []).duplicate(true)
 	p.quests = d.get("quests", []).duplicate(true)
+	var marks: Dictionary = d.get("stolen", {})           # older saves: nothing marked
+	for id in marks:
+		for o in marks[id]:
+			p.mark_stolen(str(id), int(o), int(marks[id][o]))
 	return p
