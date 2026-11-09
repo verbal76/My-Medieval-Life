@@ -1892,6 +1892,7 @@ func spendable(who) -> int:
 	return maxi(0, int(who.coins) - reserve_of(who))
 
 
+var observing := 0
 var _reserve_cache := {}              # (who @ game hour) -> reserve (reserve_of; derived, not saved)
 var _price_cache := {}                # (kind @ game hour) -> coins a unit (_market_price; derived, not saved)
 
