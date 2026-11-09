@@ -159,13 +159,50 @@ func _run() -> void:
 		main._player_step(0.1)
 	check(p.pos.distance_to(start) > 1.0, "tap-to-walk moves the player (%.1f tiles)" % p.pos.distance_to(start))
 
-	# 7-8. the inventory, and equipping from it
-	ui.show_inventory("")
+	# 7-8. the pack window (Cozy Farm's panel): the bag grid, tabs, and equipping from it
+	ui.show_inventory()
 	check(ui.is_open("inventory"), "the inventory opens")
+	var pack_win: InventoryWindow = ui.inventory_window()
+	check(pack_win != null and pack_win.cells.size() == 27 and pack_win.tab_buttons.size() == 8 and pack_win.gear_buttons.size() == 6, "a 9 x 3 bag grid, 8 tabs and 6 gear slots")
+	check(p.inv.max_stacks == 24 and pack_win.cells.slice(0, 24).all(func(b): return not b.disabled) \
+		and pack_win.cells.slice(24).all(func(b): return b.disabled and b.focus_mode == Control.FOCUS_NONE), "24 cells can be used; the last 3 are locked")
+	check(not _press("Wield") and not _press("Drop"), "no actions until a slot is chosen")
+	pack_win.cells[pack_win.shown.find("rusty_sword")].pressed.emit()
+	check(pack_win.selected == "rusty_sword", "tapping a cell chooses its item")
 	check(_press("Wield"), "a Wield button for the sword")
 	check(p.weapon == "rusty_sword", "the rusty sword is in hand")
-	ui.show_inventory("")
+	pack_win.choose("rusty_pickaxe")
 	check(_press("Use") and p.tool == "rusty_pickaxe", "the rusty pickaxe is the tool")
+	var tab_shows := {"food": ["bread", "rotten_apple"], "materials": [], "tools": ["rusty_pickaxe"], "weapons": ["rusty_sword"],
+		"armour": ["plain_clothes"], "all": ["bread", "plain_clothes", "rotten_apple", "rusty_pickaxe", "rusty_sword"]}
+	for t in tab_shows:
+		pack_win.tab_buttons[pack_win.TABS.map(func(x): return x[0]).find(t)].pressed.emit()
+		check(pack_win.tab == t and pack_win.items_shown() == tab_shows[t], "the %s tab shows %s" % [t, pack_win.items_shown()])
+	pack_win.tab_buttons[6].pressed.emit()
+	check(ui.is_open("skills"), "the Skills tab opens the skills window")
+	ui.show_inventory()
+	ui.inventory_window().tab_buttons[7].pressed.emit()
+	check(ui.is_open("journal"), "the Journal tab opens the journal")
+	# the new gear: a cap on the head, an amulet and a ring, from the Armour tab
+	for id in ["leather_cap", "copper_ring", "amulet"]:
+		p.inv.add(id)
+	ui.show_inventory("armour")
+	pack_win = ui.inventory_window()
+	check(pack_win.tab == "armour" and pack_win.items_shown() == ["amulet", "copper_ring", "leather_cap", "plain_clothes"], "the Armour tab shows worn gear and jewellery")
+	var def0 := p.defense()
+	var stam0 := p.stamina_cap()
+	var hpcap0 := p.hp_cap()
+	pack_win.choose("leather_cap")
+	check(_press("Wear") and p.head == "leather_cap" and p.defense() == def0 + 1.0, "the leather cap is worn and adds 1 armour")
+	pack_win.choose("copper_ring")
+	check(_press("Wear") and p.ring == "copper_ring" and p.stamina_cap() == stam0 + 5.0, "the copper ring is worn: +5 max stamina")
+	pack_win.choose("amulet")
+	check(_press("Wear") and p.amulet == "amulet" and p.hp_cap() == hpcap0 + 5.0, "the amulet is worn: +5 max health")
+	pack_win.gear_buttons["ring"].pressed.emit()
+	check(pack_win.selected == "gear:ring" and _press("Take off") and p.ring == "" and p.stamina_cap() == stam0, "the ring slot's Take off removes it")
+	check(not _press("Take off"), "an empty slot has nothing to take off")
+	pack_win.choose("copper_ring")
+	_press("Wear")
 	ui.hide_all()
 
 	# 9-10. mine a deposit with the rusty pickaxe
@@ -553,6 +590,23 @@ func _run() -> void:
 	pad.pressed = true
 	main._input(pad)
 	check(main.scheme == "gamepad" and not ui.touch_bar.visible and ui.prompt_icon.texture.resource_path.ends_with("xbox_button_a.png"), "a gamepad press switches to gamepad controls (no touch buttons)")
+	# the pack with a pad: focus starts on the first bag cell and moves between cells and tabs by
+	# position, skipping locked cells; B closes it
+	ui.show_inventory()
+	var pack: InventoryWindow = ui.inventory_window()
+	await process_frame
+	await process_frame
+	check(pack.get_viewport().gui_get_focus_owner() == pack.cells[0], "the pack's first bag cell has the pad's focus")
+	var inside := Rect2(Vector2.ZERO, pack.size).grow(0.5)
+	check(pack.cells.all(func(c): return inside.encloses(Rect2(c.position, c.size))) and inside.encloses(Rect2(pack.details.position, pack.details.size)), "the panel and the details fit the window")
+	check(pack.cells[0].find_valid_focus_neighbor(SIDE_RIGHT) == pack.cells[1] and pack.cells[0].find_valid_focus_neighbor(SIDE_BOTTOM) == pack.cells[9] \
+		and pack.cells[0].find_valid_focus_neighbor(SIDE_TOP) in pack.tab_buttons, "the pad moves right and down the grid, and up to the tabs")
+	check(pack.cells[23].find_valid_focus_neighbor(SIDE_RIGHT) != pack.cells[24], "focus skips the locked cells")
+	var pad_b := InputEventJoypadButton.new()
+	pad_b.button_index = JOY_BUTTON_B
+	pad_b.pressed = true
+	main._unhandled_input(pad_b)
+	check(not ui.modal(), "the pad's B closes the pack")
 	var touch := InputEventScreenTouch.new()
 	touch.pressed = true
 	main._input(touch)
@@ -640,13 +694,13 @@ func _run() -> void:
 
 	# 19-20. save, reload, and the state is the same
 	var snap := {"name": p.name, "look": p.look, "sprite": p.sprite, "coins": p.coins, "hp": int(p.hp),
-		"weapon": p.weapon, "tool": p.tool, "armor": p.armor, "wheat": p.inv.count("wheat"), "crimes": p.crimes.size(),
+		"weapon": p.weapon, "tool": p.tool, "armor": p.armor, "head": p.head, "amulet": p.amulet, "ring": p.ring, "wheat": p.inv.count("wheat"), "crimes": p.crimes.size(),
 		"minutes": int(w.minutes), "pos": Vector2i(p.pos)}
 	main.save_game(false)
 	main.continue_game()
 	var q: PlayerState = main.world.player
 	var now := {"name": q.name, "look": q.look, "sprite": q.sprite, "coins": q.coins, "hp": int(q.hp),
-		"weapon": q.weapon, "tool": q.tool, "armor": q.armor, "wheat": q.inv.count("wheat"), "crimes": q.crimes.size(),
+		"weapon": q.weapon, "tool": q.tool, "armor": q.armor, "head": q.head, "amulet": q.amulet, "ring": q.ring, "wheat": q.inv.count("wheat"), "crimes": q.crimes.size(),
 		"minutes": int(main.world.minutes), "pos": Vector2i(q.pos)}
 	check(main.world != w, "a fresh world was loaded from the save")
 	check(now == snap, "the save restores the player: %s" % (str(now) + " vs " + str(snap) if now != snap else "name, look, coins, health, equipment, wheat, crimes, time, place"))
