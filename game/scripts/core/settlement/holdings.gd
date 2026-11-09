@@ -36,6 +36,10 @@ static func holders(w: World) -> Dictionary:
 	for pl: PlayerState in w.player_list():        # every player character (one in single player)
 		add.call(g.player, pl.inv)
 		add.call(g.player, pl.chest)
+	var stash_ids: Array = w.chests.stash.keys()    # INV-01: the players' other containers (Chests.stash), sorted for a stable walk
+	stash_ids.sort()
+	for k in stash_ids:
+		add.call(g.player, w.chests.stash[k])
 	for l in w.loot:
 		add.call(g.loot, l.inv)
 	var mg: Dictionary = w.manor_work.goods()      # the manor's lots, works yard and job loads
