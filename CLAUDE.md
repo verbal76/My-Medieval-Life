@@ -4,11 +4,14 @@ Hot Attic Games. Repository `verbal76/My-Medieval-Life`. This file is the single
 rules for every agent and contributor. If another document disagrees with it, this file wins until
 the owner says otherwise. Update it in the same PR as any change to the workflow it describes.
 
-> **Stale copy notice (BRANCH-POL-01, 2026-11-02).** This branch, `wip/expansion20`, is the one **code integration
-> branch**. The authoritative `CLAUDE.md`, the register, directives and the current state are on
-> **`wip/requirements-control`** (read them there: `git show origin/wip/requirements-control:CLAUDE.md`). Parts of this
-> copy below are older; where it names `staging/my-medieval-life` as the development branch, that is history. Section 5a
-> below is current and binding on every worker.
+> **Stale copy notice (updated 2026-11-09, BRANCH-POL-Q2, DEV-LINE-B25, HAG-AUTH-01).** This branch, **`wip/b25r2-rev2`**, is the
+> one **code integration branch** (Build 25 Revision 2), confirmed by the owner on 2026-11-09. The authoritative `CLAUDE.md`, the
+> register, directives, decision authority (`docs/requirements/views/AUTHORITY.md`) and the current state are on
+> **`wip/requirements-control`**, which stays separate: read them there (`git show origin/wip/requirements-control:CLAUDE.md`).
+> Everything below this notice is an older copy and is **not** current authority: where it names `staging/my-medieval-life` or
+> `wip/expansion20` as the development branch, or describes automatic releases or agent baseline updates, that is history
+> (superseded by REL-OWNER-01, BASELINE-AUTH-01 and PAR-AGENTS-01 on the records branch). *(This notice named `wip/expansion20`
+> from 2026-11-02 to 2026-11-09.)*
 
 ## 0. Session start (mandatory, every session; owner directives 2026-10-20, MEM-01 and MEM-02)
 
