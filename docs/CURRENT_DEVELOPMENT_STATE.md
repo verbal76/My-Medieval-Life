@@ -85,6 +85,21 @@
   65 MEDIUM, 0 confirmed defects; seed 2 365/365, 0 CRITICAL, 99 HIGH, 45 MEDIUM, 0 confirmed (reference 1f2ff4f: 0/48 and 0/99);
   gate 42509523836: 32 blocking findings, all baseline-only (df67e8e), identical to the development branch's; the baseline is not
   replaced (owner's decision). PRs #5-#15 closed naming `f0a854c`.
+- **Status 2026-11-09 06:40 UTC (nothing merged since Batch A).** Three batches wait only on 365-day campaigns with the flight
+  recorder on:
+  - LIFE-03/04 `wip/b25-features-integration` `494af9a`: strict 42530864510 passed; gate 42530880459 33 blocking
+    (baseline-difference kind). Campaign 42536147616 was dispatched with `record: false` by mistake (365/365 both seeds, no fatal
+    stop, no leaks, but no recorder findings: not comparable); record:true campaign dispatched 04:20 UTC.
+  - PROP-06 `wip/b25-prop06-integration` `a7071aa` (corrections 6e02171 + 2a37653 + LIFE-04 fix d6e9994 + brush-off): strict
+    42535255473 passed; gate 42535257321 33 blocking (baseline-difference kind, the +1 from LIFE-03/04). record:false campaign
+    42540721533 365/365 clean of fatal stops; record:true campaign dispatched 04:20 UTC.
+  - JUS-04 + REG-07 `wip/b25-next-batch` `4f1b3c8` (PRs #20/#21 on f0a854c, focused workflows dropped, floors jus04 6 and
+    intel_test 20; red/green: 1 and 5 failures on f0a854c's code): local related suites 0 failures; strict 42542326507: 11 shards
+    passed, shard 9 (demo_test) crashed natively once (double free, all checks before it ok) and passed on re-run (the run reads
+    "failure" only because the report job reads re-run artifacts alone); gate 42542329406: 32 blocking, the 20 printed all
+    baseline-difference. record:true campaign dispatched 06:00 UTC.
+  - Merge order once clean: LIFE-03/04, then PROP-06 (it contains #16/#17), then JUS-04/REG-07 (close PRs #20, #21).
+  - Disk: about 156 MB free; no new worktrees (merges by plumbing).
 - **Features after Batch A:** LIFE-03/LIFE-04 `wip/b25-features-integration` `494af9a` = `46d934c` + LIFE-04 integration fix (a living
   partner always blocks courting/marriage; PR #17's `free_to_partner` let a living partner with a one-sided link count as free:
   aspiration_test 3 failures in strict runs 42524437969/42524448237). Strict Tests 42530864510 on `494af9a`: passed. Gate
