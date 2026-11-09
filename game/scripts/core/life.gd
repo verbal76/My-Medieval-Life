@@ -221,10 +221,6 @@ static func _set_role(w: World, n: NPC, r: String) -> void:
 	var who := "%s %s" % [n.name, n.family]
 	if n.role == "adult" and r == "elder":
 		w.brain._open_vacancy(n)
-		# LIFE-01: retirement must terminate paid employment and hand back
-		# employer-owned goods before the worker gives up their trade.
-		if w.employment != null and w.employment.is_employed(n):
-			w.employment.end(w.employment.record_of(n), "retired in old age")
 		if n.job != "":
 			w.brain._change_job(n, "", "retired in old age")
 		w.construction.on_death(n)
@@ -286,28 +282,7 @@ static func kin(a_id: int, a_mother: int, a_father: int, b_id: int, b_mother: in
 	return (a_mother != -1 and a_mother == b_mother) or (a_father != -1 and a_father == b_father)
 
 
-static func _archive_spouse(p: Object, next_id: int) -> void:
-	# LIFE-04: keeping history cannot leave a dead spouse as an active blocker.
-	var old: int = int(p.partner)
-	if old != next_id and (old >= 0 or is_player_id(old)) and not (p.past_partners as Array).has(old):
-		p.past_partners.append(old)
-
-
-## LIFE-04: free to court and marry unless a partner is still alive. A living partner always blocks (owner: a living spouse
-## cannot be bypassed), whether or not their own record points back; only death (or a partner the world no longer holds) frees.
-static func free_to_partner(w: World, p: Object) -> bool:
-	if not (p is NPC or p is PlayerState):
-		return false
-	var pid := int(p.partner)
-	if pid < 0 and not is_player_id(pid):
-		return true
-	var prior = parent_of(w, pid)
-	return prior == null or not prior.alive
-
-
 static func _link_partners(a: NPC, b: NPC) -> void:
-	_archive_spouse(a, b.id)
-	_archive_spouse(b, a.id)
 	a.partner = b.id
 	b.partner = a.id
 	kin_version += 1
@@ -454,9 +429,6 @@ static func _player_dawn_one(w: World) -> void:
 		p.death_cause = "old age"
 		p.last_damage = "old age"
 		p.deaths += 1
-		# JUS-03: same case-ending rule as combat death. The heir keeps
-		# the family reputation but must not inherit the offender\'s pursuit.
-		w.justice.on_death(w.acting_ref())
 		w.note("%s %s died (old age)." % [p.name, p.family])
 		if w.recorder != null:
 			w.recorder.player_died(p, "old age")     # REC-19
@@ -552,7 +524,7 @@ static func _may_move(w: World, n: NPC) -> bool:
 static func partner_refusal(w: World, n: NPC) -> String:
 	var p := w.player
 	var lo := float(cfg().partner_min_age)
-	if not p.alive or not free_to_partner(w, p):
+	if not p.alive or p.partner >= 0 or is_player_id(p.partner):
 		return "You already have a partner."
 	if age_years(p.born, w.minutes) < lo:
 		return "You are too young."
@@ -571,8 +543,6 @@ static func partner_player(w: World, n: NPC) -> String:
 	var why := partner_refusal(w, n)
 	if why != "":
 		return why
-	_archive_spouse(w.player, n.id)
-	_archive_spouse(n, w.acting_id())
 	w.player.partner = n.id
 	n.partner = w.acting_id()                  # MP C5: a guest's partner names that guest's line
 	kin_version += 1
@@ -803,33 +773,29 @@ static func parent_ids(n) -> Array:
 # ---------------------------------------------------------------- inheritance ----------------
 ## The family heir of a dead villager (owner order, 2026-10-19): the eldest adult child, then the partner, then
 ## other kin (parents, then siblings, eldest first), then a minor child; null when the family has no one alive
-## (the household fallback in World._heir then applies). LIFE-05 (owner, 2026-11-08): kin who have joined the bandits inherit
-## last, after every one of those at home (eldest bandit kin first); their criminal history stays theirs.
+## (the household fallback in World._heir then applies).
 static func heir_of(w: World, n: NPC) -> NPC:
 	var kids := _alive(w, n.children)
-	var kin: Array = []                                   # everyone of the family who could inherit, in the owner's order
-	kin.append(kids.filter(func(o: NPC) -> bool: return o.role != "child"))
-	var pr: NPC = null
+	var adult_kids := kids.filter(func(o: NPC) -> bool: return o.role != "child")
+	if not adult_kids.is_empty():
+		return _eldest(adult_kids)
 	if n.partner >= 0:
-		pr = w.npc(n.partner)
-		if pr == null or not pr.alive or pr.partner != n.id:
-			pr = null
-	kin.append([pr] if pr != null else [])
-	kin.append(_alive(w, [n.mother, n.father]))
+		var pr := w.npc(n.partner)
+		if pr != null and pr.alive and pr.partner == n.id:
+			return pr
+	var others: Array = _alive(w, [n.mother, n.father])
+	if not others.is_empty():
+		return _eldest(others)
 	var sibs: Array = []
 	for pid in [n.mother, n.father]:
 		var par := parent_of(w, int(pid)) if int(pid) != -1 else null
 		if par != null:
 			sibs.append_array(_alive(w, par.children))
-	kin.append(sibs.filter(func(o: NPC) -> bool: return o != n))
-	kin.append(kids)
-	for tier: Array in kin:
-		var home := tier.filter(func(o: NPC) -> bool: return o.role != "bandit")
-		if not home.is_empty():
-			return _eldest(home)
-	for tier: Array in kin:                               # LIFE-05: only bandit kin are left
-		if not tier.is_empty():
-			return _eldest(tier)
+	sibs = sibs.filter(func(o: NPC) -> bool: return o != n)
+	if not sibs.is_empty():
+		return _eldest(sibs)
+	if not kids.is_empty():
+		return _eldest(kids)
 	return null
 
 

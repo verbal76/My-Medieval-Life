@@ -140,16 +140,6 @@ func householder(w: World) -> NPC:
 	return null
 
 
-## PROP-06 (owner, 2026-11-08): what the manor pays a household that leaves for the property it owns (each sale_value once).
-func _proceeds(w: World, h: int) -> int:
-	var ref := World.hh_ref(h)
-	var n := 0
-	for r in w.property.held_by(ref):
-		if w.owner_of(r) == ref:
-			n += w.property.sale_value(r)
-	return n
-
-
 func test_last_member_keeps_till() -> void:
 	var w := new_world()
 	var n := householder(w)
@@ -163,15 +153,13 @@ func test_last_member_keeps_till() -> void:
 	var carried := 37
 	for o: NPC in ms:
 		carried += o.coins
-	var sold := _proceeds(w, h)
-	carried += sold                                   # PROP-06: the sale proceeds go with them too
 	var src0 := w.coin_sources
 	var t0 := w.treasury
 	var s: OffMapSettlement = w.regions.by_id["wulstead"]
 	# not a "whole household" move, but the leavers are everyone left in it
 	var ok := Migration._household_out(w, s, ms, false, "work", Migration.hiring(s) if Migration.hiring(s) != "" else "farm")
 	check(ok, "the household's members leave together (a part move that empties it)")
-	check(int(house.front.get("till", 0)) == 0 and w.treasury == t0 - sold, "its storefront till went with them, not to the manor; the manor paid only for the house (%d) (treasury %d -> %d)" % [sold, t0, w.treasury])
+	check(int(house.front.get("till", 0)) == 0 and w.treasury == t0, "its storefront till went with them, not to the manor (treasury %d -> %d)" % [t0, w.treasury])
 	check(src0 - w.coin_sources == carried, "the coins that crossed are their purses and the till (%d, expected %d)" % [src0 - w.coin_sources, carried])
 	w.dispose()
 
@@ -196,15 +184,14 @@ func test_leaving_trader_settles_stall() -> void:
 	for o: NPC in ms:
 		purses += o.coins
 	var till := int(st.till)
-	var sold := _proceeds(w, m.household)             # PROP-06: what the manor pays for the property they own
 	var src0 := w.coin_sources
 	var t0 := w.treasury
 	var s: OffMapSettlement = w.regions.by_id["wulstead"]
 	var ok := Migration._household_out(w, s, ms, true, "work", Migration.hiring(s) if Migration.hiring(s) != "" else "farm")
 	check(ok, "the merchant's household leaves")
 	check(int(st.get("till", 0)) == 0 and not st.has("session"), "the stall's session was settled before they went")
-	check(w.treasury - t0 == due.x - sold, "the manor took only its commission (%d), not the takings, and paid %d for their property (treasury %+d)" % [due.x, sold, w.treasury - t0])
-	check(src0 - w.coin_sources == purses + till - due.x + sold, "the rest went with them in the merchant's purse, with the sale proceeds (%d crossed, expected %d)" % [src0 - w.coin_sources, purses + till - due.x + sold])
+	check(w.treasury - t0 == due.x, "the manor took only its commission (%d), not the takings (treasury +%d)" % [due.x, w.treasury - t0])
+	check(src0 - w.coin_sources == purses + till - due.x, "the rest went with them in the merchant's purse (%d crossed, expected %d)" % [src0 - w.coin_sources, purses + till - due.x])
 	# an hour later nothing is left to escheat
 	var t1 := w.treasury
 	for i in 60:
@@ -294,13 +281,12 @@ func test_lone_last_member_keeps_all() -> void:
 	w.households[h].pantry.add("wheat", 15)
 	var wheat0 := _all_goods(w, "wheat")
 	var coins0 := _all_coins(w)
-	var sold := _proceeds(w, h)                       # PROP-06: the house is sold to the manor as they go
 	var t0 := w.treasury
 	var g0 := w.granary.count("wheat")
 	var s: OffMapSettlement = w.regions.by_id["wulstead"]
 	var ok := Migration._household_out(w, s, [n], false, "work", Migration.hiring(s) if Migration.hiring(s) != "" else "farm")
 	check(ok and not n.alive and str(n.away) == "wulstead", "the last member leaves alone")
-	check(int(house.front.get("till", 0)) == 0 and w.treasury == t0 - sold, "the till went with them, not to the manor (which paid %d for the house)" % sold)
+	check(int(house.front.get("till", 0)) == 0 and w.treasury == t0, "the till went with them, not to the manor")
 	check(w.households[h].pantry.count("wheat") == 0 and w.granary.count("wheat") == g0, "the household's stores went with them, not to the granary")
 	check(_all_coins(w) == coins0, "coins conserved across the village and the settlements (%d -> %d)" % [coins0, _all_coins(w)])
 	check(_all_goods(w, "wheat") == wheat0, "wheat conserved (%d -> %d)" % [wheat0, _all_goods(w, "wheat")])

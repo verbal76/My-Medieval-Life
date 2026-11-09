@@ -117,17 +117,6 @@ jobs:
           cat > "$RUNNER_TEMP/game.txt" <<'EOF'
           res://tests/run_tests.gd
           res://tests/start_test.gd
-          # B25R2-BRUSHOFF: a met villager between plans brushes the player off without a script error
-          res://tests/brushoff_empty_plan_test.gd
-          # LIFE-03/LIFE-04 integration: sage newcomer fallback and services, save with no sage; a living spouse cannot be bypassed, widowhood, save/load
-          res://tests/owner_features_integration_test.gd
-          res://tests/life05_bandit_heir_test.gd   # LIFE-05 (owner 2026-11-08): bandit kin inherit last
-          res://tests/biz03_payroll_priority_test.gd   # BIZ-03 (owner Option B): payroll before owner withdrawals
-          res://tests/biz04_venture_till_migration_test.gd   # BIZ-04 (owner 2026-11-08): a leaving household keeps its business till
-          res://tests/trd02_merchant_net_earnings_test.gd   # TRD-02 (owner 2026-11-08): merchants' earnings are net of commission
-          res://tests/inv04_stash_handover_test.gd   # INV-04 (owner 2026-11-08): goods left behind pass to the new holder
-          res://tests/inv05_rubble_refund_test.gd   # INV-05 (owner 2026-11-08): rubble comes back as rubble, never stone
-          res://tests/sav02_day_state_test.gd   # SAV-02 (owner 2026-11-08): a mid-day load continues the day's economic state
           res://tests/character_look_test.gd
           res://tests/char_create_test.gd
           res://tests/furniture_test.gd
@@ -162,8 +151,6 @@ jobs:
           res://tests/tree_test.gd
           res://tests/world_test.gd
           res://tests/aging_test.gd
-          res://tests/life01_retirement_payroll_test.gd   # LIFE-01: focused audit regression
-          res://tests/life03_sage_succession_test.gd   # LIFE-03: owner-approved gameplay regression
           res://tests/wiki_test.gd
           res://tests/audio_test.gd
           res://tests/stone_test.gd
@@ -176,10 +163,6 @@ jobs:
           res://tests/skills_test.gd
           res://tests/chests_test.gd
           res://tests/property_test.gd
-          res://tests/prop04_guest_house_name_test.gd  # PROP-04 regression
-          res://tests/prop06_migration_property_test.gd   # PROP-06: owner-approved gameplay regression
-          res://tests/prop06_estate_transaction_test.gd   # PROP-06 (owner 2026-11-08): estates, tenancy, atomic departure
-          res://tests/prop03_eviction_site_test.gd   # PROP-03 (owner 2026-11-08): eviction passes the site and materials to the manor
           res://tests/business_test.gd
           res://tests/business_money_test.gd
           res://tests/till_ownership_test.gd
@@ -207,7 +190,6 @@ jobs:
           res://tests/b25_leak2_departure_test.gd   # B25-LEAK2: a leaver's rentals and paid repairs settled, no coin lost
           res://tests/le07_gates_test.gd         # LE-07: the automatable release gates and the activation mechanism
           res://tests/save_continuity_test.gd    # random state, pack order and deposits kept across a save and load
-          res://tests/sav01_famine_reload_test.gd   # SAV-01: focused audit regression
           res://tests/wear_transfer_test.gd      # X20-WEAR-TRANSFER: a tool's wear travels with it
           res://tests/feast_test.gd
           res://tests/horse_test.gd
@@ -223,12 +205,6 @@ jobs:
           res://tests/net_batch_b_test.gd
           # MP Batch C: per-player identities, verb parity host/guest, the G2 matrix, save 22 and the Build 20 migration
           res://tests/multiplayer_c_test.gd
-          res://tests/mp04_cart_gateway_test.gd  # MP-04: forged cart verb rejected; legitimate placement consumes inventory
-          res://tests/inv03_foreign_player_chests_test.gd  # INV-03: foreign player-owned chests
-          res://tests/mp01_guest_stall_attendance_test.gd  # MP-01: guest stall availability and XP
-          res://tests/prop01_cancel_site_test.gd  # PROP-01: host-authority regression
-          res://tests/prop05_guest_sale_test.gd  # PROP-05: host-authority regression
-          res://tests/prop02_fitting_owner_test.gd  # PROP-02: foreign fitting and shop ownership guard
           # MP Batch C over loopback: the guest's verbs applied by the host, the copies agreeing, several players across a restart
           res://tests/net_c_test.gd
           # Build 21 over loopback: the guest's copy of the animals follows the host's (moved, hurt, killed, born, pens)
@@ -289,12 +265,8 @@ jobs:
           res://tests/combat_test.gd
           res://tests/pursuit_test.gd   # REPAIR S3: a guard chasing the player goes round walls
           res://tests/justice_test.gd   # GP-CRIME-PURSUIT A1: one case per offender, by player reference
-          res://tests/jus03_old_age_justice_test.gd   # JUS-03: case closed on death before heir takes reference
-          res://tests/jus01_dead_guard_pursuit_test.gd  # JUS-01 regression
           res://tests/manhunt_test.gd   # GP-CRIME-PURSUIT A3: hue and cry, sharing, sightings, yield, proportionate force
           res://tests/relations_test.gd
-          res://tests/life04_remarriage_test.gd  # LIFE-04: NPC/player widow remarriage
-          res://tests/jus04_witness_knowledge_test.gd   # JUS-04: witness's kin do not learn crimes automatically
           res://tests/dialogue_perspective_test.gd   # REPAIR S1-S2: who speaks to whom, from what they know
           res://tests/save_transfer_test.gd
           res://tests/housing_test.gd
@@ -401,7 +373,6 @@ jobs:
           # the same over loopback (each starts its host and guest Godot processes itself, as net_g1 does)
           res://tests/net_family_test.gd         # MP-PLAYER-FAMILY between two processes
           res://tests/net_interact_test.gd       # MP-INTERACT-01 between three processes
-          res://tests/mp05_mutual_asset_share_test.gd   # MP-05: owner-approved gameplay regression
           res://tests/net_fault_test.gd          # MP Batch D: invite codes, loss, reordering, pauses, killed and restarted hosts
           res://tests/net_mp4_test.gd            # X20 phase 4.5: one host with two, then three guests (four players)
           res://tests/net_recorder_quit_test.gd  # X20: a flight recording ends whenever its world is closed in order

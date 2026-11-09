@@ -18,7 +18,7 @@ extends RefCounted
 
 static func cfg() -> Dictionary:
 	var c: Dictionary = OffMapSettlement.data().get("intel", {})
-	return {"stale_days": int(c.get("stale_days", 4)), "forget_days": int(c.get("forget_days", 8)), "keep": int(c.get("keep", 24)),
+	return {"stale_days": int(c.get("stale_days", 20)), "forget_days": int(c.get("forget_days", 40)), "keep": int(c.get("keep", 24)),
 		"share_max": int(c.get("share_max", 3)), "tell_max": int(c.get("tell_max", 6)), "tell_minutes": float(c.get("tell_minutes", 15.0))}
 
 

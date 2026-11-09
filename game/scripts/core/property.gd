@@ -419,11 +419,6 @@ func end_lease(thing: Dictionary, ref: String) -> String:
 ## A tenant leaves: the lease ends, and a building the tenant put up on the leased ground passes to
 ## the manor with it (provisional).
 func _release(u: Array, ref: String) -> void:
-	# PROP-06: giving up a lease surrenders the site and everything
-	# delivered to it to the manor (also applies to rent eviction).
-	for r in u:
-		if w.tenant_of(r) == ref and is_parcel(r) and not (r.site as Dictionary).is_empty() and not bool(r.site.get("done", false)):
-			w.cancel_site(r, w.granary)
 	for r in u:
 		if w.tenant_of(r) == ref:
 			w.set_tenant(r, "")

@@ -5047,8 +5047,6 @@ func _change_job(n: NPC, job: String, why: String, place := "") -> void:
 			Business.let_service_pitch(w, n, job)
 		"preacher", "church_assistant":
 			n.workplace = "chapel"                   # DVW-B3-CHAPEL
-		"sage":
-			n.workplace = "hut"                      # LIFE-03: the sage's successor works from the sage's hut
 		_:
 			n.workplace = ""
 	if job == "":
@@ -5078,8 +5076,7 @@ const SKILLED := ["smith", "carpenter", "tanner", "cook", "tavernkeeper", "merch
 # the labour market's jobs in the order a seeker weighs them (_job_options); the skilled trades last (B25-EMPLOY-IMPL)
 const MARKET_JOBS := ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector", "stonecutter", "tailor", "barber", "preacher",
 	"church_assistant", "smith", "carpenter", "tanner", "cook", "tavernkeeper", "merchant"]
-const FLOOR_JOBS := ["farmer", "woodcutter", "miner", "sage"] # LIFE-03: sage is a succession-protected post
-const SAGE_HEALING := 2   # LIFE-03: the healing level a sage's successor needs (1 is every untrained person's level)
+const FLOOR_JOBS := ["farmer", "woodcutter", "miner"]
 const APPRENTICE_FROM := ["", "manor_hand", "laborer"]          # the adults who can be taken on, in order of preference
 
 
@@ -5205,11 +5202,6 @@ func _apprentice_for(v: Dictionary) -> NPC:
 			if not skilled or not _would_retrain(o, str(v.job)):
 				continue
 			pref = APPRENTICE_FROM.size()             # retraining: after those without a trade, at the same skill
-		# LIFE-03: a sage must know healing, not take the post only
-		# because they are unemployed. Without one, await a trained newcomer.
-		# (Skills.level is 1 for everyone untrained: real training is SAGE_HEALING, integration fix 2026-11-08.)
-		if v.job == "sage" and Skills.level(o, "healing") < SAGE_HEALING:
-			continue
 		if v.job == "merchant" and o.coins < int(GameData.b("stall_min_coins")):
 			continue
 		var key := (suitability(o, str(v.job)) if skilled else []) + [pref, 0 if (int(v.household) >= 0 and o.household == int(v.household)) else 1, o.id]
@@ -5257,8 +5249,6 @@ func _install(n: NPC, v: Dictionary, why: String) -> void:
 	var left := n.job
 	var left_place := n.workplace
 	_change_job(n, str(v.job), why, place)
-	if str(v.job) == "sage":
-		w.sage_id = n.id  # LIFE-03: medicine vendor and magical teacher use successor
 	if not APPRENTICE_FROM.has(left):
 		_post_left(n, left, left_place)              # B25-CAREER-IMPL: one who retrained leaves their old trade's post to be handed on
 	if w.civic != null:
@@ -5321,10 +5311,6 @@ func _newcomer_for(v: Dictionary) -> NPC:
 	n.born = Life.born_for_age(w.rng.randf_range(20.0, 45.0), w.minutes)
 	n.sprite = "res://assets/characters/villager_%02d.png" % (n.id % 48)
 	n.coins = int(GameData.b("newcomer_coins"))
-	if str(v.job) == "sage":
-		# The replacement brings a real minimum healing qualification;
-		# it does not give a spell to every player or applicant.
-		n.skills["healing"] = Skills.xp_for_level(SAGE_HEALING)
 	n.hunger = 100.0
 	w.coin_sources += n.coins                        # the purse comes in from outside
 	w.stat("newcomer_coins_in", n.coins)
@@ -5382,33 +5368,6 @@ func _lodge(n: NPC, h: int) -> void:
 ## work a day for a wage while the treasury is above its reserve. Food producers stay at their work.
 var earned_at_dawn := {}
 var laboured_today := {}
-
-
-## SAV-02 (owner, 2026-11-08: saved economic state is preserved through loading and continuation): today's state that dawn set and
-## the day has used, so a load in the middle of the day continues it instead of taking a new morning's reading at the load: each
-## villager's earnings at dawn (the day's income is measured from it), who has already done a day's relief labour, and the
-## morning's market reading.
-func day_state() -> Dictionary:
-	var ids: Array = earned_at_dawn.keys()
-	ids.sort()
-	var e := {}
-	for id in ids:
-		e[str(id)] = int(earned_at_dawn[id])
-	var lab: Array = laboured_today.keys().map(func(k): return int(k))
-	lab.sort()
-	return {"earned_at_dawn": e, "laboured": lab, "food_points": market_food_points, "wheat_price": market_wheat_price}
-
-
-func load_day_state(d: Dictionary) -> void:
-	earned_at_dawn.clear()
-	var e: Dictionary = d.get("earned_at_dawn", {})
-	for k in e:
-		earned_at_dawn[int(k)] = int(e[k])
-	laboured_today.clear()
-	for k in d.get("laboured", []):
-		laboured_today[int(k)] = true
-	market_food_points = float(d.get("food_points", market_food_points))
-	market_wheat_price = int(d.get("wheat_price", market_wheat_price))
 
 
 func dawn(record := true) -> void:

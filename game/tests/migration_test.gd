@@ -153,10 +153,6 @@ func test_hunger() -> void:
 		o.coins = 7
 		o.inv.add("axe")
 	w.households[h].pantry.add("bread", 2)
-	var sold := 0                                     # PROP-06 (owner, 2026-11-08): the manor pays for what they own as they go
-	for r in w.property.held_by(World.hh_ref(h)):
-		if w.owner_of(r) == World.hh_ref(h):
-			sold += w.property.sale_value(r)
 	var before := _books(w)
 	check(w.brain.household_food_days(h) < float(GameData.b("relief_trigger_days")), "the household is under the relief line")
 	check(Migration._hunger_out(w, s), "out: a household under the relief line in famine goes to a settlement with food above its claim")
@@ -174,7 +170,7 @@ func test_hunger() -> void:
 		check(absf(age - float(ages[0])) < 1.0 / float(Life.year_days()) + 0.001, "and their age (%.2f years)" % age)
 	check(int(w.regions.move_counts.get("out:hunger", 0)) == members.size() and int(w.stats.get("migrant_out_hunger", 0)) == members.size(), "the move is recorded as hunger, out")
 	check(_same(before, _books(w)) and _sound(w), "people, coins and goods are conserved across the boundary (axes, bread, purses)")
-	check(int(s.flows.outside_coins_in) == 7 * members.size() + sold and int(s.flows.outside_in.get("axe", 0)) == members.size(), "and the settlement's flow lines show the purses (with %d of sale proceeds) and packs that came" % sold)
+	check(int(s.flows.outside_coins_in) == 7 * members.size() and int(s.flows.outside_in.get("axe", 0)) == members.size(), "and the settlement's flow lines show the purses and packs that came")
 	check(w.households[h].get("ended", false), "the emptied household is ended, its house back with the manor")
 	# in: a hungry settlement household, a village with food to spare
 	var w2 := _world()

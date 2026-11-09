@@ -56,16 +56,16 @@ const VERBS := {
 	"property.buy": "C4", "property.lease": "C4", "property.claim": "C4", "property.set_home": "C4", "property.sell": "C4",
 	"property.end_lease": "C4", "construction.build_stall": "C4", "construction.place": "C4", "farm.till": "C4", "farm.sow": "C4", "farm.build_pen": "C4",
 	"farm.collect": "C4", "farm.clear_plant": "C4", "farm_plots.claim": "C4", "farm_plots.build_fence": "C4", "fauna.feed": "C4",
-	"carts.park": "C4", "carts.hitch": "C4", "business.build_storefront": "C4", "business.open_front": "C4",
+	"carts.place": "C4", "carts.park": "C4", "carts.hitch": "C4", "business.build_storefront": "C4", "business.open_front": "C4",
 	"business.open_shop": "C4", "business.rent": "C4", "business.set_display": "C4", "business.store_item": "C4",
-	"business.upgrade": "C4", "business.set_price": "C4", "business.hire": "C4", "fitting.place": "C4",
+	"business.upgrade": "C4", "business.set_price": "C4", "business.sell": "C4", "business.hire": "C4", "fitting.place": "C4",
 	"ventures.offer": "C4", "ventures.withdraw": "C4", "ventures.buy": "C4",     # B25-BIZ-D5: workshops offered, bought and sold
 	"fitting.remove": "C4", "fitting.trade": "C4",
 	# C5: society
 	"relations.talked": "C5", "relations.give": "C5", "relations.befriend": "C5", "relations.ask_court": "C5",
 	"relations.propose": "C5", "feast.player_feast": "C5", "chapel.player_ask": "C5", "chapel.player_offer_coins": "C5",
 	"chapel.player_offer_item": "C5", "Guardianship:player_adopt": "C5", "player_offer": "C5", "player_answer": "C5",
-	"asset_share_revoke": "C5", "player_contract_deliver": "C5",   # MP-INTERACT-01: the seller hands a contract's goods to the player beside it (World.player_contract_deliver)
+	"player_contract_deliver": "C5",   # MP-INTERACT-01: the seller hands a contract's goods to the player beside it (World.player_contract_deliver)
 	# C6: crime and combat
 	"player_strike": "C6", "player_melee_npc": "C6", "player_hit_npc": "C6", "player_hit_animal": "C6",
 	"player_cast_fireball": "C6", "player_fireball_hit": "C6", "pickpocket": "C6",
@@ -137,16 +137,6 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 				bad.why = "That is not yours."
 	if bad.why == "" and CONTRACT_SIDE.has(path) and args.size() >= 1 and args[0] is Dictionary and not _contract_side_ok(w, p, path, args[0]):
 		bad.why = "That is not yours."
-	# PROP-01: a guest may cancel only its own site and may only receive
-	# that site's returned materials into its own pack. Other host/NPC
-	# cancellation paths are not guest verbs and keep their own rules.
-	if bad.why == "" and path == "cancel_site":
-		if args.size() != 2 or not (args[0] is Dictionary) or not (args[1] is Inventory):
-			bad.why = "That is not your building site."
-		else:
-			var site: Dictionary = args[0].get("site", {})
-			if args[1] != p.inv or str(site.get("owner", "")) != w.player_ref(p):
-				bad.why = "That is not your building site."
 	if bad.why != "":
 		return _answer(w, p, false, str(bad.why))
 	if path == "player_loot" and args.size() == 1 and args[0] is Dictionary:

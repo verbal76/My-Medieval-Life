@@ -93,7 +93,7 @@ func pulled_by(ref: String) -> Dictionary:
 func may_use(c: Dictionary, ref: String) -> bool:
 	var owner := str(c.owner)
 	if World.is_player_ref(ref):
-		return owner == ref or (World.is_player_ref(owner) and w.asset_share_tier(owner, ref) >= 3)
+		return World.is_player_ref(owner)
 	var n: NPC = w.npc(int(ref.trim_prefix("npc:")))
 	if n == null or not n.alive:
 		return false
@@ -126,10 +126,6 @@ func park(c: Dictionary, actor: PlayerState = null) -> void:
 	if actor != null and actor != w.player:
 		w.as_actor(actor, park.bind(c))
 		return
-	# MP-05: a player cannot make another player let go of a cart they may not use; a villager's cart is parked by the simulation
-	var puller := str(c.puller)
-	if World.is_player_ref(puller) and puller != w.acting_ref() and not may_use(c, w.acting_ref()):
-		return
 	c.puller = ""
 
 
@@ -137,7 +133,7 @@ func park(c: Dictionary, actor: PlayerState = null) -> void:
 func whose(c: Dictionary) -> String:
 	var owner := str(c.owner)
 	if World.is_player_ref(owner):
-		return "your" if owner == w.acting_ref() else "another player\'s"
+		return "your"
 	if owner.begins_with("hh:"):
 		var h: int = w.ref_id(owner)
 		if h >= 0 and h < w.households.size():
@@ -200,7 +196,7 @@ func update(_dt: float) -> void:
 		var at := Vector2.INF
 		if World.is_player_ref(ref):
 			var pl: PlayerState = w.player_for(ref)
-			at = pl.pos if pl.alive and may_use(c, ref) else Vector2.INF     # MP-05: a revoked agreement lets go of the other's cart
+			at = pl.pos if pl.alive else Vector2.INF
 		else:
 			var n: NPC = w.npc(int(ref.trim_prefix("npc:")))
 			if n != null and n.alive:

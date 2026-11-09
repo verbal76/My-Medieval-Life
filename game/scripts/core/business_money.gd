@@ -200,8 +200,7 @@ func daily() -> void:
 	for b in counter_buildings():
 		_settle(b.counter, _payee(b), "counter_till", "counter:" + str(b.id))
 	for b in venture_buildings():                    # B25-BIZ-D1: an open villager business, paid to the household that runs it
-		# BIZ-03 (owner, Option B): the employees' wages for today come before the owner's withdrawals
-		_settle(b.venture, w.party(venture_owner(b)), "venture_till", "venture:" + str(b.id), w.employment.payroll_due(Ventures.ref_of(b)))
+		_settle(b.venture, w.party(venture_owner(b)), "venture_till", "venture:" + str(b.id))
 
 
 ## B25-BIZ-D1: whose money a venture's till is: the household that runs it (the manor once that household is gone).
@@ -324,18 +323,11 @@ func keep_tills_of(ref: String) -> void:
 	for b in fronts():
 		if w.holder_of(b) == ref:
 			keep_till(b, ref)
-	# BIZ-04 (owner, 2026-11-08): a living household that leaves keeps its business money too: the till of every venture it runs
-	# goes to its own funds now, before it is gone (after that venture_owner would read the manor)
-	if ref.begins_with("hh:"):
-		for b in venture_buildings():
-			if int(b.venture.get("household", -1)) == World.ref_id(ref):
-				_keep(b, "venture", ref)
 
 
 ## Necessity first, the owner's pay, then the float, for one till record (`rec` holds `till`, `earned`, `paid`), paid to and
 ## topped up from `who`. Nobody left: the till goes to the manor.
-## `hold`: coins kept back in the till before anything is drawn (BIZ-03: a venture's wages still owed today).
-func _settle(rec: Dictionary, who: Object, key: String, ref := "", hold := 0) -> void:
+func _settle(rec: Dictionary, who: Object, key: String, ref := "") -> void:
 	var till := int(rec.get("till", 0))
 	if who == null:
 		if till > 0:
@@ -346,12 +338,12 @@ func _settle(rec: Dictionary, who: Object, key: String, ref := "", hold := 0) ->
 				w.recorder.till_flow(ref, null, -till, 0, "escheat")     # REC-DIAG
 		return
 	var short := maxi(0, w.reserve_of(who) - int(who.coins))
-	var draw := mini(short, maxi(0, till - hold))
+	var draw := mini(short, till)
 	if draw > 0 and _move(rec, who, draw, true, ref, "necessity"):
 		w.stat(key + "_necessity", draw)
 		_rec(ref, rec, who, -draw, "necessity")
 	till = int(rec.get("till", 0))
-	var surplus := till - hold - reserve_coins()
+	var surplus := till - reserve_coins()
 	var pay := int(float(surplus) * payout_share()) if surplus > 0 else 0
 	if pay > 0 and _move(rec, who, pay, true, ref, "owner_pay"):
 		rec["paid"] = int(rec.get("paid", 0)) + pay

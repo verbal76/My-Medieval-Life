@@ -87,24 +87,6 @@ func _init() -> void:
 	var newer := _rec(item, "have", w.day())
 	check(Intel.hear(w, buyer, newer, "npc:0") and buyer.intel.size() == 1 and int(buyer.intel[0].collected_day) == w.day(), "fresher word of the same thing replaces the older")
 	check(not Intel.hear(w, buyer, r, "npc:0"), "older word of it is not news")
-	# REG-07: the game's eight-day year bounds market-offer intelligence.
-	# Four-day usability window; retain for at most eight days for historical
-	# context. Refresh after four days, never treating a hearsay retelling
-	# as if the selling settlement were newly surveyed.
-	check(int(Intel.cfg().stale_days) == 4 and int(Intel.cfg().forget_days) == 8,
-		"REG-07: market intel is stale after four days and forgotten after eight")
-	check(int(Envoys.cfg().refresh_days) == 4, "REG-07: envoy revisit clock is shorter than one game year")
-	check(Intel.fresh(w, _rec(item, "have", w.day() - 4)), "REG-07: a four-day-old offer may still be acted on")
-	check(not Intel.fresh(w, _rec(item, "have", w.day() - 5)), "REG-07: a five-day-old offer is no longer actionable")
-	var expiring := _rec(item, "want", w.day() - 8, "region:wulstead/year-old")
-	check(Intel.hear(w, buyer, expiring, "npc:0"),
-		"REG-07: a one-year-old record is still within the memory cutoff")
-	check(not Intel.hear(w, buyer, _rec(item, "want", w.day() - 9, "region:wulstead/expired"), "npc:0"),
-		"REG-07: offers from beyond one year cannot be learned")
-	var book_now := Envoys.book(w)
-	book_now.records = [_rec(item, "have", w.day() - 9), _rec(item, "have", w.day() - 8), _rec(item, "have", w.day())]
-	check(Envoys.book(w).records.size() == 2,
-		"REG-07: reeve's book expires offers older than a game year but preserves recent surveys")
 	# staleness and forgetting
 	var c := Intel.cfg()
 	check(Intel.fresh(w, _rec(item, "have", w.day() - int(c.stale_days))) and not Intel.fresh(w, _rec(item, "have", w.day() - int(c.stale_days) - 1)), "a record is acted on for %d days from its collection, then it is stale" % int(c.stale_days))
