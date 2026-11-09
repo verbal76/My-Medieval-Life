@@ -48,6 +48,7 @@ var last_reeve_day := -1           # the day the reeve's evening business last r
 var last_payday := -1              # the day wages were last paid
 var player := PlayerState.new()
 var coin_sources := 0              # coins that entered the village (caravan)
+var caravan_purse := 0             # coins the caravan holds to spend on the village's goods (B7-014; starts at caravan_float); saved from version 9
 var quests: Quests                 # side quests on offer (scripts/core/quests.gd)
 var manor_work: ManorWork          # the reeve's jobs: the manor's goods carried and used (scripts/core/manor_work.gd)
 var log_lines: Array = []
@@ -110,6 +111,7 @@ func setup(m: VillageMap, world_seed: int) -> void:
 	_guard_posts()
 	Population.populate(self)
 	_open_treasury()
+	caravan_purse = int(GameData.b("caravan_float"))
 	# the settlers' grain store: a finite stock of last year's harvest, 7 days of the village's food
 	# (its need weighted by age: children eat less)
 	granary.add("wheat", ceili(brain.village_day_food() * float(GameData.b("start_granary_days")) / 120.0))
@@ -1610,7 +1612,7 @@ func buy_plot(p: Dictionary) -> bool:
 ## change who owns or holds a thing; Property (the land office) deals through them.
 const MANOR := "manor"
 const PLAYER := "player"
-const SAVE_VERSION := 8            # 8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
+const SAVE_VERSION := 9            # 9: the caravan's purse (caravan_purse); 8: the manor's work (lots, works yard, jobs); 7: quest rewards set aside (reserved); 6: property phase 2 (site kinds, workshops, helpers' contracts, founded households)
 
 
 static func hh_ref(h: int) -> String:
@@ -1906,7 +1908,7 @@ func to_dict() -> Dictionary:
 		"village": {"format": map.data.format, "seed": map.data.seed},
 		"npcs": ns, "households": hh, "buildings": buildings, "stalls": stalls, "trees": trees,
 		"deposits": deposits, "fields": fields, "plots": plots, "loot": lt, "fauna": fauna.to_dict(),
-		"player": player.to_dict(), "coin_sources": coin_sources, "log": log_lines, "quest_offers": quests.to_dict(),
+		"player": player.to_dict(), "coin_sources": coin_sources, "caravan_purse": caravan_purse, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(),
 	}
 
@@ -1948,6 +1950,9 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	fields = d.fields
 	plots = d.plots
 	coin_sources = int(d.coin_sources)
+	# save_version 1-8 kept no caravan purse: an older world's caravan arrives with its float, as a new
+	# one does (it is the caravan's own, not the village's: no village coin changes hands)
+	caravan_purse = int(d.caravan_purse) if d.has("caravan_purse") else int(GameData.b("caravan_float"))
 	log_lines = d.log
 	sage_id = int(d.sage_id)
 	reeve_id = int(d.reeve_id)

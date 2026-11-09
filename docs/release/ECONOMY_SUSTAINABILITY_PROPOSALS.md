@@ -199,3 +199,77 @@ paid: neither the player's work for the manor nor NPC relief work.
 
 **Recommendation: (b).** It keeps the 10-day reserve for hiring permanent staff, and a day's labour
 is a smaller, shorter promise.
+
+## 5. Household growth: why nothing is built, and a plan (B7-017)
+
+Added 2026-10-18 after the long-run economy fixes (`LONG_RUN_SIMULATION.md`, "After the long-run
+economy fixes"). **Not implemented.** Births, aging and natural death are listed under "Proposals
+requiring decisions" in `MEDIEVAL_LIVING_WORLD_SYSTEM_DESIGN.md`, which also says not to add them
+before the production economy is stable, and `DECISIONS.md` (2026-10-18) keeps them tracked, not
+started. The numbers below are agent proposals, *provisional — balance review pending*.
+
+### Findings (code and runs, no player, seeds 1–3, 365 days: 0 sites, 0 houses, 0 splits)
+
+1. **Building by villagers has one trigger.** `Construction.daily` calls `Construction.crowded(h)`
+   each dawn: a household that holds its house, has more living members than the house has real
+   beds, and two or more adults. `_found` then lets one adult leave with the cost of a home,
+   which is a house on the market, else ground, materials and `founder_build_days` of helpers'
+   wages (`_home_plan`).
+2. **Nothing can make a household crowded.** Every house has 5 beds (`beds_in`); 21 of the 24
+   households have 4 members. The three over their beds (the tavern 6 members / 2 beds, the manor
+   5 / 4, the hut 1 / 0) live in the manor's buildings and do not "hold" them, so `crowded` is
+   false for them. Nobody is born, grows up, ages or arrives: 26 children and 18 elders are fixed
+   for good, and in none of the runs did anyone die.
+3. **The machinery works once a household is crowded.** `game/tests/households_sim.gd --seed 2
+   --days 30 --crowd 3` crowds a household by hand: one adult founds a household, the ground is
+   bought, a helper is hired for a day, the house is built from planks, stone and logs, and the
+   family moves in, with coins and grain conserved (the run's last line: households founded 1, built
+   by NPCs 1, helper wages 6, bought 105 coins).
+4. **Money and materials are not the first blocker.** A founder's home costs about the land price
+   (60 for a 9 x 10 plot) plus 30 planks, 20 stone and 10 logs at today's prices plus three days of
+   helpers (`founder_build_days` x `helper_wage`), and the family must keep `split_keep_base` 40 +
+   20 a member. Households held a median of 1,100–1,250 coins in the Build 7 runs and about 250 in
+   the runs after the caravan became finite. Stone is the scarce part: after the seams are worked
+   out it comes only by caravan, 20 a visit at twice its value.
+5. **So the missing link is growth.** The sums the economy cannot absorb today (about 15,000 spare
+   wheat, a trade surplus of idle coin, planks and stone with no use but repairs and export) are
+   exactly what housing for more people would use. B7-014 to B7-017 are one problem seen four ways.
+
+### Smallest design that closes the loop (proposal)
+
+| Rule | Proposal |
+|---|---|
+| Births | At dawn, in household order, a household with two or more adult members, `birth_min_food_days` (10) of food in hand (`household_food_days`), no famine, fewer than `birth_max_children` (3) children, and `birth_interval_days` (120, staggered by household id so births are spread) since its last birth, has a child. No random numbers are drawn, so no other part of a seeded run changes. A birth is allowed only while members < beds + `birth_over_beds` (1): a household can be one over its beds, which is what makes it crowded. |
+| The newborn | A new `NPC`: role "child", 0 coins, no goods, hunger 100, the household's family and home, name and sprite from `Population` by a seeded hash of the world seed and its id. It eats `child_food_factor` of an adult (already in every food reckoning). |
+| Growing up | A child becomes an adult after `child_days` (180 game days, a play-test timescale, not a real age): job "", hp 30. An adult without work already looks for it (`seek_work`: manor hand, farmer, woodcutter, hunter, miner). The 26 starting children get ages staggered by id so they do not all come of age on one day. |
+| Crowding and building | Unchanged (INT-060): a grown member beyond the beds founds a household and builds. |
+| Natural death | Not part of the minimal loop. Without it elders never die and the village only grows until food or housing stops it (births stop at beds + 1, founding needs coin, stone and planks). Whether elders should die of age is the owner's call. |
+
+### Implementation plan (when approved)
+
+1. `Population.births(w)` called from `Construction.daily` before `crowded` is checked (one function,
+   one place), plus `NPC.born_day`, `hh.last_birth_day` and the maturity step in the same daily pass.
+   `balance.json` gets `birth_*` and `child_days` with the "provisional" note.
+2. Saves: `born_day` per NPC and `last_birth_day` per household; bump `World.SAVE_VERSION` (10),
+   migrate every older save (existing children get `born_day = day - child_days / 2 + id % 60`, so
+   the flagged ages are staggered; households start their interval at the load day), and a
+   fixture test from each older version (CLAUDE.md section 7). `World.to_dict` / `load_dict` only.
+3. Interaction manifest: a new INT entry (births, growing up, crowding, food, relief, jobs), and the
+   updates to INT-017 (inheritance with newborns), INT-024, INT-029, INT-047, INT-060 and INT-031.
+4. Tests in `run_tests.gd`: determinism for a seed (same births on the same days); coins and goods
+   unchanged by a birth; the housing gate (no birth past beds + 1); the food gate; a household born
+   crowded founds a house in a long run; a v8/v9 fixture save loads with ages staggered. The harness
+   (`economy_sim.gd`) already prints births, households, sites and houses; add children, adults
+   and unemployed per sample.
+5. A before/after 365-day run on seeds 1–3, to be reported beside the economy numbers.
+
+### Decisions needed from the owner
+
+1. Is "two adults in a household" enough of a couple, or does marriage (new households formed by two
+   grown members) come first? That is a larger system.
+2. The timescale: `child_days` and `birth_interval_days` are play-test numbers. A real calendar (a
+   year of days, a generation of years) is a design choice.
+3. Natural death by age, and what a household does with an empty chair (heirs, jobs, houses). The
+   living-world design lists this with births.
+4. Whether growth should be capped (a population ceiling) or left to food and housing.
+5. A newborn's appearance (the 48 villager sheets are adults; children share sprites with them today).

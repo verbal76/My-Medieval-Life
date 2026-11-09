@@ -260,6 +260,8 @@ static func uses_of(item: String) -> Array:
 ## (resources.json exports.smith_caps, the caps in NPCBrain.caravan).
 static func exported(item: String) -> bool:
 	GameData.ensure()
+	if NPCBrain.NOT_EXPORTED.has(item):
+		return false                              # the mine's raw output is not carried away
 	for role in NPCBrain.BUYS:
 		if str(role).begins_with("merchant_") and NPCBrain.BUYS[role].has(item):
 			return true

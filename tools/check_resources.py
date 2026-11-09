@@ -79,6 +79,7 @@ def load(root=ROOT):
     ctx["village"] = json.loads((data / "village.json").read_text())
     brain = (core / "npc_brain.gd").read_text()
     ctx["buys"] = gd_const(brain, "BUYS")
+    ctx["not_exported"] = gd_const(brain, "NOT_EXPORTED")
     ctx["smith_caps"] = ast.literal_eval(re.search(r"caps = (\{[^}]*\})", func_body(brain, "caravan")).group(1))
     ctx["manor_materials"] = gd_const((core / "manor_work.gd").read_text(), "MATERIALS")
     ctx["fell_logs"] = int(re.search(r"return (\d+) \+ bonus", func_body((core / "world.gd").read_text(), "fell")).group(1))
@@ -160,6 +161,8 @@ def imports(ctx):
 
 
 def exported(ctx, item):
+    if item in ctx["not_exported"]:
+        return False
     return any(r.startswith("merchant_") and item in caps for r, caps in ctx["buys"].items()) or \
         item in ctx["res"].get("exports", {}).get("smith_caps", {})
 
