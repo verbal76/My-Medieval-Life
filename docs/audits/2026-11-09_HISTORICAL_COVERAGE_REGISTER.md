@@ -189,7 +189,7 @@ The pre-push hook refuses register edits outside `wip/requirements-control` and 
   - a dated correction note.
 - [`docs/PROJECT_MEMORY.md`](../PROJECT_MEMORY.md): a "Current Build 25 line" pointer, and this register.
 - [`docs/DEVELOPMENT_CHANGELOG.md`](../DEVELOPMENT_CHANGELOG.md): entries for 2026-11-03 to 2026-11-09.
-- [`docs/KNOWN_ISSUES.md`](../KNOWN_ISSUES.md): KI-06 to KI-12, and dated corrections to stale entries.
+- [`docs/KNOWN_ISSUES.md`](../KNOWN_ISSUES.md): KI-06 to KI-14, and dated corrections to stale entries.
 - [`docs/decisions/`](../decisions/README.md): seven reconstructed records, and the index.
 - `CLAUDE.md` sections 0 and 5a: proposed in a separate commit. The lead decides, and the owner decides on any change to
   BRANCH-POL-01's rule text.

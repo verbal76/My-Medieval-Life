@@ -10,12 +10,22 @@ It works alongside `CLAUDE.md` section 0. The repository is the record. Never re
 
 1. **Identify the repository and the active branches.**
    - Repository: `verbal76/My-Medieval-Life`, a Godot 4.7 medieval village simulation (Hot Attic Games).
-   - Current development (the Build 25 source): **`wip/expansion20`**.
-   - Records (register, directives, state file): **`wip/requirements-control`**. Read every document below from this branch.
-     Copies elsewhere are stale and carry a banner saying so.
-   - `staging/my-medieval-life` is behind. `main` changes only by the owner.
+   - Current development (the Build 25 source): **`wip/b25r2-rev2`** (Build 25 Revision 2, "Play Test Build One"). The pointer
+     at the top of the state file names its live SHA, the pending integrations and the running Actions.
+     - *Correction 2026-11-09 (documentation agent, HAG-FORENSICS-01):* this step used to name `wip/expansion20`. That branch stopped
+       being the development line on 2026-11-03. The line moved to `wip/b25r1`, then `wip/b25r2-playtest`, then `wip/b25r2-rev2`,
+       as the owner's directives named them. `wip/expansion20` (`a459186`, the Build 25 draft), `wip/b25r1` and
+       `wip/b25r2-playtest` are now frozen history. Never resume work on them because an older document names them.
+   - Records (register, directives, state file, changelog, known issues, decision records): **`wip/requirements-control`**. Read
+     every document below from this branch. Copies elsewhere are stale and carry a banner saying so.
+   - The independent audit's register is on branch `docs/build25-audit-register`, with tracking issue #4. Pull requests from
+     ChatGPT arrive on `audit/*` and `feature/*` branches; the lead integrates them.
+   - `staging/my-medieval-life` is historical. `main` changes only by the owner.
    - Run `git fetch origin` and compare the heads with those named in the state file. A newer head means work landed after the
      last checkpoint, so read those commits first.
+   - The history for 2026-11-03..09 was reconstructed after the fact. Its account of what was recovered and what is still missing
+     is `docs/audits/2026-11-09_HISTORICAL_COVERAGE_REGISTER.md`. The owner's messages that were never saved at the time are in
+     `docs/directives/2026-11-0*_recovered_owner_messages.md`.
 2. **Read the permanent memory and the authoritative requirements.**
    - `CLAUDE.md` (rules, what needs the owner) and [`docs/PROJECT_MEMORY.md`](../PROJECT_MEMORY.md) (the index).
    - The register, [`docs/requirements/requirements.json`](../requirements/requirements.json), read through
@@ -47,7 +57,13 @@ It works alongside `CLAUDE.md` section 0. The repository is the record. Never re
    - Known defects, outcomes and past investigations are in [`docs/KNOWN_ISSUES.md`](../KNOWN_ISSUES.md). Read it before
      starting a new investigation.
 7. **Verify release and package status.**
-   - GitHub Releases (Build 24, `4611d86`, is the latest private draft; it is frozen) and the state file's "Position" table.
+   - GitHub Releases and the state file's top pointer. As of 2026-11-09:
+     - `build-34` was published (public) on 2026-11-06 from `a9e9f6e`, as the B25R1 family playtest;
+     - `build-25` is a private draft (files from `a459186`);
+     - Build 24 (`4611d86`) is frozen;
+     - the owner's provisional Play Test Build One package is an Actions artifact, not a release.
+
+     (Corrected 2026-11-09; this step used to name Build 24 as the latest and point to the "Position" table, which is now history.)
    - The levels are distinct: IMPLEMENTED, COMPILED, TESTED, VALIDATED, INTEGRATED, PACKAGED, RELEASED (changelog header), and
      uploading to Steam is separate again.
    - Results apply only to the SHA they name.

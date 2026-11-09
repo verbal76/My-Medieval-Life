@@ -25,6 +25,7 @@ repeat a failed approach because the conversation that tried it is gone. Owner d
 
 **Paths:**
 - Files under `docs/expansion20/` and `docs/release/flight_recorder/` are on the Build 25 source, branch `wip/expansion20`.
+  (2026-11-09: since 2026-11-03 the development line has been `wip/b25r1`, then `wip/b25r2-rev2`. These files are on it too.)
   They are not on this records branch.
 - Run links point to `https://github.com/verbal76/My-Medieval-Life/actions/runs/<id>`.
 
@@ -132,6 +133,71 @@ repeat a failed approach because the conversation that tried it is gone. Owner d
   "Known defects".
 - **Status:** not yet classified. Reproduction details are not recorded (UNKNOWN). `housing_test` is in `tests.yml`, so the
   first full CI run with the new reporting will show its failure line.
+
+### Added 2026-11-09 by the documentation agent (HAG-FORENSICS-01)
+
+These entries were reconstructed after the fact from the lead session record, the state file and Actions logs. None was written
+when the issue arose.
+
+### KI-06 Flight-recorder HIGH findings move between branches, unexplained (OPEN, not investigated)
+- **Observation (365-day recorded campaigns, both seeds, 0 CRITICAL and 0 confirmed defects in each):**
+
+  | Commit | Seed 1 HIGH | Seed 2 HIGH |
+  |---|---|---|
+  | `832f711` | 20 | 108 |
+  | `1f2ff4f` | 48 | 99 |
+  | `0d252b4` (Batch A) | 48 | 99 |
+  | `494af9a` (LIFE-03/04) | 17 | 91 |
+  | `a7071aa` (PROP-06) | 17 | 91 |
+  | `4f1b3c8` (JUS-04/REG-07, based on Batch A without LIFE-03/04) | 48 | 94 |
+  | `c9da5db` | 17 | 63 |
+
+  Runs: 42274347279, 42297637074, 42515726815, 42557922632, 42557925404, 42570299554, 42627103286.
+- **Status:** HIGH findings are the recorder's unconfirmed heuristics, not defects in themselves (TEST-GOV-01). The 20 → 48 rise was
+  noted as "an open, uninvestigated finding" on 2026-11-07. The later drops coincide with LIFE-03/04 and the backlog, but no one has
+  attributed them.
+- **Next:** compare the findings lists of 42515726815 and 42557922632 before their artifacts expire.
+
+### KI-07 The `build-25` draft release names `726ceeb` though its files are from `a459186` (OPEN, cosmetic)
+- Release id 432836586: `target_commitish` reads `726ceeb`. Release run 41666958781 on `a459186` replaced every file (checksums in
+  `docs/release/build25_reconciliation/CI_RECORD.md`). Read the CI record, not the release's commit field.
+
+### KI-08 "Resources still in use at exit" warnings in Godot runs (OPEN, not investigated)
+- Examples: ChatGPT's green focused runs 42520403018 and 42520222693 (issue #4 comment 11); the lead's local measurement on
+  `c9da5db` ("69 resources still in use at exit"). The earlier state-file note calls "leaked at exit" warnings long-standing noise.
+  It has not been checked whether they are.
+
+### KI-09 Native crash (double free) in `demo_test`, once (OPEN)
+- Strict run 42542326507 on `4f1b3c8`, shard 9. Every check before the crash passed, and the shard passed on re-run. Cause not
+  investigated. Watch for a repeat.
+
+### KI-10 A partly re-run Tests run reports "failure" though every shard passed (OPEN, CI reporting)
+- In 42542326507 (attempt 2 re-ran shard 9 only), the report job reads only the re-run's artifacts, so the run's conclusion is
+  "failure". The lead's merge rule was to count it as a pass only if every shard passed. That rule is recorded in the 53a56d3
+  commit message and the session record.
+
+### KI-11 Campaigns dispatched with `record: false` produce no findings (RESOLVED by re-dispatch; procedure note)
+- 42536147616 (`494af9a`), 42540721533 (`a7071aa`) and 42552442930 (`4f1b3c8`) ran with the recorder off. This was the lead's input
+  error, found on 2026-11-09 at 03:43 UTC. They prove only 365/365 with no leaks. Comparisons need `record: true`, as in
+  CLAUDE.md's "Run flight recorder" inputs.
+
+### KI-12 Multiplayer suites `net_fault_test` and `net_mp4_test` fail intermittently on CI (OPEN, cause unknown)
+- `net_fault_test` failed in 42589325057 (`f67afdb`: a ghost peer after 15 s) and in attempt 1 of 42607051457 (`c9da5db`: a status
+  file JSON parse error).
+- `net_mp4_test` failed in attempt 1 of 42607051457: the guest copy lagged the host after a host kill.
+- Both pass locally (54/0, 148/0) and passed in attempt 2.
+- Judged CI timing by the lead (`docs/decisions/B25-CI-FLAKE-C9DA5DB.md`). If either fails again, investigate the status-file read
+  race and sync lag.
+
+### KI-13 MP-05 limits and outstanding checks (OPEN)
+- A guest promoted to host after host loss holds only its own pairs' sharing agreements. Other pairs' agreements are lost (pending
+  offers behave the same way).
+- Not done: real two-device host/guest, modified-client forging, reconnect, UI menus.
+- Record: `docs/decisions/B25-AUD-MP-05.md`.
+
+### KI-14 Play Test Build One stutter: remaining spikes (OPEN)
+- After `ed221df`/`fe7d8f8`: one frame of about 150 ms at the village's hourly work, plus the first-frame and 17:00 spikes of about
+  230 ms. Measured headless only; a real PC is unmeasured.
 
 ## Outcomes (legitimate results of the approved rules; changing them needs the owner)
 
@@ -344,6 +410,10 @@ repeat a failed approach because the conversation that tried it is gone. Owner d
 - **Not verified:** a full 365-day campaign on the fix (needs owner approval under MML-CONSERVE-01); devices.
 
 ## KI-FR-CARTHITCH: villagers repeatedly fail to hitch a cart (2026-11-02, HIGH; cause found, fix NOT made; PAUSED)
+
+> **Correction 2026-11-09 (documentation agent, HAG-FORENSICS-01):** the title is stale. The changelog's 2026-11-02 entry for the
+> frozen candidate `4b51c92` records the fix as integrated: "the KI-FR-CARTHITCH fix (the held cart is used, a skipped stop still
+> parks, villagers let go of carts on load)". The text below is kept as written. MP-05 later touched cart parking again (KI-13).
 
 - **Symptom:** p:40 failed `cart_hitch` 76 times in a row (days 196-229); p:1000138 failed 52 times in a row (days 134-152). Run
   41469410306, seed 2.

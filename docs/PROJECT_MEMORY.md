@@ -2,6 +2,20 @@
 
 This is the entry point for any new session. For the status of every expansion and system, go straight to `docs/expansions/README.md` (DOC-RECON-01, 2026-10-31) (owner directives 2026-10-20, register MEM-01 and MEM-02; the session-start steps are CLAUDE.md section 0). The repository, not any conversation, is the record. Every file named below is authoritative for its subject. This index only says where things are and in what order to read them. It does not copy their contents.
 
+## Current Build 25 line (added 2026-11-09, HAG-FORENSICS-01)
+
+- **Code:** `wip/b25r2-rev2` is the development line, Build 25 Revision 2. Its live SHA, the pending integrations, the running
+  Actions and the worker inventory are in the "CURRENT BUILD 25 STATE" pointer at the top of `docs/CURRENT_DEVELOPMENT_STATE.md`.
+- **Records:** `wip/requirements-control`.
+- **History:** `wip/expansion20`, `wip/b25r1` and `wip/b25r2-playtest` are frozen history, whatever older text in this file or in
+  CLAUDE.md says.
+- **Recovery:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
+- **The 2026-11-03..09 history:** reconstructed after the fact. The coverage register is
+  `docs/audits/2026-11-09_HISTORICAL_COVERAGE_REGISTER.md`, the decision records are `docs/decisions/B25-*`, and the recovered
+  owner messages are `docs/directives/2026-11-0*_recovered_owner_messages.md`.
+- **The independent audit:** branch docs/build25-audit-register (file docs/audits/2026-11-08_build25_master_audit_register.md on that
+  branch), and GitHub issue #4.
+
 ## What the project is
 
 My Medieval Life (Hot Attic Games, repository `verbal76/My-Medieval-Life`) is a 2D pixel-art medieval life simulation, built in Godot 4.7 (`game/`). It ships to Android first, then Windows and Linux, from one commit with one build number.
@@ -88,7 +102,7 @@ repository for six components. Here they are existing files, with two additions 
 `ci-report.json` (format `mml-ci-report/1`, written by the ci_report.py tool) and per-suite logs as an artifact. They run every
 suite even after a failure, and classify the run as TESTED, FAILED or INCOMPLETE, never VALIDATED or RELEASED. The tool and
 the workflow changes are on the CI branch docs/hag-memory-rationale-2026-11-02 until the lead merges them into the Build 25
-source. `long-sims.yml` and the
+source. (2026-11-09 note: it was merged. `.github/workflows/tests.yml` on `wip/b25r2-rev2` calls ci_report.py.) `long-sims.yml` and the
 flight-recorder workflows already wrote summaries.
 
 Artifacts expire, so durable conclusions go into the changelog and known issues, with run links. Automation never commits to

@@ -457,7 +457,7 @@ These are planned once, at the end.
 
 ## Known defects and risks
 
-> **HISTORICAL (as of 2026-11-02/03; marked 2026-11-09 by the documentation agent).** The current open limitations are in `docs/KNOWN_ISSUES.md` (KI-06 to KI-12 added 2026-11-09) and the audit register.
+> **HISTORICAL (as of 2026-11-02/03; marked 2026-11-09 by the documentation agent).** The current open limitations are in `docs/KNOWN_ISSUES.md` (KI-06 to KI-14 added 2026-11-09) and the audit register.
 
 **The durable record is `docs/KNOWN_ISSUES.md` (HAG-MEM-02).** Where the list below differs, that file is newer: the firewood defects are fixed, unaffordable bids are an outcome, the coin_sources leak is fixed.
 
