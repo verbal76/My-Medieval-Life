@@ -5384,6 +5384,33 @@ var earned_at_dawn := {}
 var laboured_today := {}
 
 
+## SAV-02 (owner, 2026-11-08: saved economic state is preserved through loading and continuation): today's state that dawn set and
+## the day has used, so a load in the middle of the day continues it instead of taking a new morning's reading at the load: each
+## villager's earnings at dawn (the day's income is measured from it), who has already done a day's relief labour, and the
+## morning's market reading.
+func day_state() -> Dictionary:
+	var ids: Array = earned_at_dawn.keys()
+	ids.sort()
+	var e := {}
+	for id in ids:
+		e[str(id)] = int(earned_at_dawn[id])
+	var lab: Array = laboured_today.keys().map(func(k): return int(k))
+	lab.sort()
+	return {"earned_at_dawn": e, "laboured": lab, "food_points": market_food_points, "wheat_price": market_wheat_price}
+
+
+func load_day_state(d: Dictionary) -> void:
+	earned_at_dawn.clear()
+	var e: Dictionary = d.get("earned_at_dawn", {})
+	for k in e:
+		earned_at_dawn[int(k)] = int(e[k])
+	laboured_today.clear()
+	for k in d.get("laboured", []):
+		laboured_today[int(k)] = true
+	market_food_points = float(d.get("food_points", market_food_points))
+	market_wheat_price = int(d.get("wheat_price", market_wheat_price))
+
+
 func dawn(record := true) -> void:
 	update_market()
 	if record:

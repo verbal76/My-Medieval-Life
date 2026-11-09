@@ -244,13 +244,16 @@ func place(b: Dictionary, kind: String, cell: Vector2i, actor: PlayerState = nul
 		return why
 	var use := find_use(b, cell)
 	var c := cost(kind)
+	var rubble := 0
 	for id in c:
 		if id == "stone":
-			w.rubble_cover(w.player.inv, int(c[id]) - w.player.inv.count("stone"))      # STONE-04
+			rubble = w.rubble_cover(w.player.inv, int(c[id]) - w.player.inv.count("stone"))      # STONE-04
 		w.player.inv.remove(id, int(c[id]))
 		w.stat("used_building_" + id, float(c[id]))
 	var fit := list(b).duplicate()
 	fit.append({"kind": kind, "at": [cell.x, cell.y], "use": [use.x, use.y]})
+	if rubble > 0:
+		fit[-1]["rubble"] = rubble                   # INV-05: what of its stone was rubble, to come back as rubble
 	b.fit = fit
 	apply(b, fit[-1], true)
 	w.stat("fitted_" + kind)
@@ -286,6 +289,20 @@ func restore_all() -> void:
 		restore(w.buildings[id])
 
 
+## INV-05 (owner, 2026-11-08): what taking a piece up gives back: its cost, but the stone that was laid as rubble comes back as
+## rubble (rubble is never dressed into stone by fitting and lifting a piece). A piece fitted before this was recorded gives its
+## cost, as before.
+func refund(e: Dictionary) -> Dictionary:
+	var c := cost(str(e.kind)).duplicate()
+	var r := mini(int(e.get("rubble", 0)), int(c.get("stone", 0)))
+	if r > 0:
+		c.stone = int(c.stone) - r
+		if int(c.stone) <= 0:
+			c.erase("stone")
+		c["rubble"] = int(c.get("rubble", 0)) + r
+	return c
+
+
 ## Take a piece up: the materials return to the pack. A counter takes its open shop with it (the goods and
 ## coins return to the player). "" when done, else why not.
 func remove(b: Dictionary, kind: String, actor: PlayerState = null) -> String:
@@ -304,7 +321,7 @@ func remove(b: Dictionary, kind: String, actor: PlayerState = null) -> String:
 		return "There is none to take up."
 	if STATIONS.has(kind) and not (w.stations.get(station_id(b, kind), {}).get("users", {}) as Dictionary).is_empty():
 		return "Someone is working at it."
-	var c := cost(kind)
+	var c := refund(e)
 	if not w.player.inv.can_add_all(c):               # INV-18: every material back, or the piece stays
 		return w.player.inv.full_text_all(c)
 	var s: Dictionary = b.get("shop", {})

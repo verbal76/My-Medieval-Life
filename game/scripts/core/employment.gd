@@ -84,6 +84,23 @@ func of_employer(ref: String) -> Array:
 	return list.filter(func(r: Dictionary) -> bool: return str(r.employer) == ref)
 
 
+## BIZ-03 (owner, Option B): an employer's daily payroll, every employee's wage together.
+func payroll(ref: String) -> int:
+	var n := 0
+	for r in of_employer(ref):
+		n += maxi(0, int(r.wage))
+	return n
+
+
+## BIZ-03: the wages an employer still owes for today (employees not yet paid today).
+func payroll_due(ref: String) -> int:
+	var n := 0
+	for r in of_employer(ref):
+		if int(r.paid_day) < w.day():
+			n += maxi(0, int(r.wage))
+	return n
+
+
 # ---------------------------------------------------------------- the wage ------------------------
 ## B25-BIZ-D4: the day's wage the labour market sets for `role` now: a skilled trade's place pay (NPCBrain.skilled_place:
 ## its earnings shared among one more worker), else the trade's average earnings over the last five days among those with a

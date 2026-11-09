@@ -1898,8 +1898,21 @@ func spendable(who) -> int:
 	return maxi(0, int(who.coins) - reserve_of(who))
 
 
-var _reserve_cache := {}              # (who @ game hour) -> reserve (reserve_of; derived, not saved)
-var _price_cache := {}                # (kind @ game hour) -> coins a unit (_market_price; derived, not saved)
+var _reserve_cache := {}              # (who @ game hour) -> reserve (reserve_of; derived; this hour's entries are saved, SAV-02)
+var _price_cache := {}                # (kind @ game hour) -> coins a unit (_market_price; derived; this hour's entries are saved, SAV-02)
+
+
+## SAV-02: the hour caches' entries for the current game hour (the values this hour's decisions have read), so a load mid-hour reads
+## the same values, not new ones worked out at the load.
+func _hour_caches() -> Dictionary:
+	var tag := "@" + str(int(minutes / 60.0))
+	var out := {"reserve": {}, "price": {}}
+	for pair in [["reserve", _reserve_cache], ["price", _price_cache]]:
+		var keys: Array = (pair[1] as Dictionary).keys().filter(func(k): return str(k).ends_with(tag))
+		keys.sort()
+		for k in keys:
+			out[pair[0]][str(k)] = pair[1][k]
+	return out
 ## REC-D1..D4 (the flight recorder never changes state) and SIM-01 (a checkpoint read changes nothing): while above 0, the code
 ## running is an observer (the flight recorder's reads, a harness's sample) and the hour caches above are read but never
 ## written or cleared. A cache entry is the value worked out by the FIRST caller in a game hour; were an observer that caller,
@@ -4372,7 +4385,9 @@ func deliver(p: Dictionary, inv: Inventory, by := "") -> bool:
 	var need: Dictionary = p.site.need
 	var given := 0
 	if need.has("stone"):
-		rubble_cover(inv, int(need.stone) - inv.count("stone"))       # raw-stone work takes rubble (STONE-04)
+		var rk := rubble_cover(inv, int(need.stone) - inv.count("stone"))       # raw-stone work takes rubble (STONE-04)
+		if rk > 0:
+			p.site["rubble"] = int(p.site.get("rubble", 0)) + rk          # INV-05: laid as rubble, to come back as rubble
 	for id in need.keys():
 		var n := mini(int(need[id]), inv.count(id))
 		if n > 0:
@@ -4514,6 +4529,14 @@ func cancel_site(p: Dictionary, inv: Inventory) -> Dictionary:
 	if p.site.is_empty() or p.site.done:
 		return {}
 	var back := site_delivered(p)
+	var rub := mini(int(p.site.get("rubble", 0)), int(back.get("stone", 0)))
+	if rub > 0:                                   # INV-05 (owner, 2026-11-08): stone laid as rubble comes back as rubble, never dressed
+		back.stone = int(back.stone) - rub
+		if int(back.stone) <= 0:
+			back.erase("stone")
+		back["rubble"] = int(back.get("rubble", 0)) + rub
+		stat("made_stone", -float(rub))
+		stat("used_rubble", -float(rub))
 	var left := Inventory.new()
 	for id in back:
 		if not inv.add(id, int(back[id])):
@@ -5873,6 +5896,8 @@ func set_tenant(thing: Dictionary, ref: String, rent := 0) -> void:
 func _handed_over(thing: Dictionary, was: String) -> void:
 	if business != null and (thing.has("front") or thing.has("counter")) and was != holder_of(thing):     # LE-04 review 7: counters too
 		business.money.keep_till(thing, was)
+	if chests != null and is_player_ref(was) and was != holder_of(thing) and not thing.has("site"):
+		chests.hand_over_stash(thing, holder_of(thing))       # INV-04: goods left in a player's containers pass to the new holder
 
 
 ## The villager a reference names, alive: the one for "npc:<id>", the head of a household (its first
@@ -6266,7 +6291,7 @@ func to_dict() -> Dictionary:
 		"mine_works": mine_works.to_dict(),
 		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"employment": employment.to_dict()} if not employment.is_empty() else {}).merged(_economy_section()).merged(_civic_section()).merged({EconTransactions.KEY: transactions.to_dict()} if transactions != null and not transactions.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"shared_farming_start": true} if shared_farming_start else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"employment": employment.to_dict()} if not employment.is_empty() else {}).merged(_economy_section()).merged(_civic_section()).merged({EconTransactions.KEY: transactions.to_dict()} if transactions != null and not transactions.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"shared_farming_start": true} if shared_farming_start else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {}).merged({"brain_day": brain.day_state(), "hour_caches": _hour_caches()})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
 	# SAV-01: preserve the exact last-hour famine measurement.
 	out["food_days"] = food_days
 	if judgment != null:
@@ -6742,6 +6767,16 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	if not d.has("containers"):
 		serve_tables()
 	brain.dawn(false)
+	if d.has("brain_day"):                           # SAV-02: the day goes on from where it was saved (older saves: a reading at the load)
+		brain.load_day_state(d.brain_day)
+	_reserve_cache.clear()
+	_price_cache.clear()
+	var hc: Dictionary = d.get("hour_caches", {})
+	for k in hc.get("reserve", {}):
+		_reserve_cache[str(k)] = int(hc.reserve[k])
+	for k in hc.get("price", {}):
+		var v = hc.price[k]
+		_price_cache[str(k)] = [int(v[0]), int(v[1])] if v is Array else float(v)     # "unit@" holds [price, food points]
 	quests = Quests.new(self)
 	quests.load_dict(d.get("quest_offers", {}))      # older saves: no offers yet; the next dawn makes them
 	if not d.has("net_pid"):

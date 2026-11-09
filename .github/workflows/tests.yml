@@ -121,6 +121,13 @@ jobs:
           res://tests/brushoff_empty_plan_test.gd
           # LIFE-03/LIFE-04 integration: sage newcomer fallback and services, save with no sage; a living spouse cannot be bypassed, widowhood, save/load
           res://tests/owner_features_integration_test.gd
+          res://tests/life05_bandit_heir_test.gd   # LIFE-05 (owner 2026-11-08): bandit kin inherit last
+          res://tests/biz03_payroll_priority_test.gd   # BIZ-03 (owner Option B): payroll before owner withdrawals
+          res://tests/biz04_venture_till_migration_test.gd   # BIZ-04 (owner 2026-11-08): a leaving household keeps its business till
+          res://tests/trd02_merchant_net_earnings_test.gd   # TRD-02 (owner 2026-11-08): merchants' earnings are net of commission
+          res://tests/inv04_stash_handover_test.gd   # INV-04 (owner 2026-11-08): goods left behind pass to the new holder
+          res://tests/inv05_rubble_refund_test.gd   # INV-05 (owner 2026-11-08): rubble comes back as rubble, never stone
+          res://tests/sav02_day_state_test.gd   # SAV-02 (owner 2026-11-08): a mid-day load continues the day's economic state
           res://tests/character_look_test.gd
           res://tests/char_create_test.gd
           res://tests/furniture_test.gd
