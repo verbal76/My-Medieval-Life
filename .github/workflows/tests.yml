@@ -126,6 +126,7 @@ jobs:
           res://tests/biz04_venture_till_migration_test.gd   # BIZ-04 (owner 2026-11-08): a leaving household keeps its business till
           res://tests/biz08_venture_hands_load_test.gd    # BIZ-08: a business's hands recognised after a save and load
           res://tests/trd02_merchant_net_earnings_test.gd   # TRD-02 (owner 2026-11-08): merchants' earnings are net of commission
+          res://tests/trd01_guest_stall_settle_test.gd    # TRD-01: a guest's stall session is settled to the guest
           res://tests/inv04_stash_handover_test.gd   # INV-04 (owner 2026-11-08): goods left behind pass to the new holder
           res://tests/inv01_stash_census_test.gd          # INV-01: the census counts the players' own containers
           res://tests/inv05_rubble_refund_test.gd   # INV-05 (owner 2026-11-08): rubble comes back as rubble, never stone

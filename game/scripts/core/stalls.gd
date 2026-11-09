@@ -202,8 +202,8 @@ func settle(s: Dictionary, why := "closed") -> Dictionary:
 	var net := int(s.till)
 	var ref := str(ses.get("seller", seller_ref(s)))
 	var to: Object = _payee(ref)
-	if to == w.player:
-		w.player.coins += net
+	if to is PlayerState:
+		(to as PlayerState).coins += net      # TRD-01: the host or a guest player whose session it was
 	elif to != null:
 		var o: NPC = to
 		o.coins += net
