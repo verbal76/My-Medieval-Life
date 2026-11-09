@@ -18,6 +18,8 @@ records each file's source archive and path. This is that step. It writes:
     game/assets/fx/blood_N.png                       kenney_splatpack.zip, shrunk and tinted dark red
     game/assets/icon/icon_<size>.png                 My_Medieval_Life_Icon_Pack.zip (the app icon)
     game/assets/ui/<name>.png                        Flat Game UI Icon Pack/ (icon tiles, the button tile)
+    game/assets/ui/inventory_*.png, tab_*.png        CozyFarm_full_version.zip (the pack window, its tabs and
+                                                     bag icon) and tab icons from the Assorted and Survival packs
     game/assets/prompts/<name>.png                   kenney_input-prompts_1.5.zip (keys, pad buttons, touch)
     game/assets/PROVENANCE.json                      source, path and transformation of every file
 
@@ -100,7 +102,18 @@ ICONS = {
     "copper_sword": "Tools/Sword-01", "leather_armor": "Armour/Leather-Jacket-08",
     "iron_armor": "Armour/Metal-Chestplate-02", "coins": "Metal/Metail-Coins-08",
     "hammer": "Tools/Hammer-02", "fireball": "Tools/Magic-Staff-05",
+    "leather_cap": "Armour/Leather-Cap-07", "iron_helmet": "Armour/Metal-Helm-05",
 }
+JEWELRY_ZIP = "16x16 Jewelry RPG Icons.zip"
+# item id -> icon in the jewelry pack (plain metals; the amulet has a red stone)
+JEWELRY = {"copper_ring": "Rings/Ring-01", "gold_ring": "Rings/Ring-16", "amulet": "Necklaces/Necklace-05"}
+# Cozy Farm's inventory window (full version/ui/inventory.png, 848 x 1360): the panel with flat tabs
+# and the 9 x 3 bag grid is at INV_PANEL; below it, 8 copies with tab 0..7 raised start at INV_RAISED
+# rows, INV_RAISED_STEP apart. A raised tab stands INV_HEAD px higher than the flat strip.
+INV_PANEL = (0, 4, 293, 128)
+INV_RAISED, INV_RAISED_STEP, INV_HEAD, INV_STRIP = 220, 144, 8, 16
+INV_BAG = (160, 192, 176, 208)                    # the bag icon in inventory_chopped.png
+SKILLS_BOOK = ("16x16 Assorted RPG Icons (partial)/books.png", 8, 8)   # sheet, column, row of a gilt book
 # Medieval-village look: natural skin tones (rows 0-6 of the skin ramp), no horns, and headwear
 # from a short list per kind (None = bare head).
 # natural hair colours: rows of the generator's hair ramp (auburn, dark brown, black, grey, white,
@@ -200,9 +213,7 @@ def _import_markers(record, survival):
             img = crossed
             how = "crossed with its mirror image; " + how
         if kind == "skill":
-            for x, y in ((7, 9), (8, 9), (7, 10), (8, 10), (6, 10), (9, 10), (7, 11), (8, 11)):
-                img.putpixel((x, y), (168, 28, 24, 255))                 # a red wax seal
-            img.putpixel((7, 10), (214, 70, 56, 255))
+            img = _seal(img)                                              # a red wax seal
             how = "a red wax seal added; " + how
         dest = out / f"{kind}.png"
         _outlined(img).save(dest)
@@ -252,6 +263,58 @@ def _import_ui(record):
     button.save(dest)
     record(dest, UI_PACK, "Flat_game_UI_set_3.ai", "rasterised at 100 dpi with pdftoppm; a 40 px square "
            f"from a blank tile of the dark LEVELS window (the pack's button colour), recoloured to wood brown {UI_WOOD}")
+
+
+def _seal(img):
+    """The red wax seal the quest marker's scroll has (see _import_markers)."""
+    for x, y in ((7, 9), (8, 9), (7, 10), (8, 10), (6, 10), (9, 10), (7, 11), (8, 11)):
+        img.putpixel((x, y), (168, 28, 24, 255))
+    img.putpixel((7, 10), (214, 70, 56, 255))
+    return img
+
+
+def _import_inventory(record, survival):
+    """The pack window from Cozy Farm's inventory sheet: the panel with flat tabs (8 px of empty
+    headroom on top, where a raised tab reaches), a strip of the 8 tab rows with each tab raised in
+    turn (drawn over the panel's top rows for the selected tab), and the tab icons."""
+    import io
+    import numpy as np
+    from PIL import Image
+    ui = OUT / "ui"
+    ui.mkdir(parents=True, exist_ok=True)
+    cozy = AssetZip(COZY_ZIP)
+    member = "full version/ui/inventory.png"
+    sheet = Image.open(io.BytesIO(cozy.read(member))).convert("RGBA")
+    x0, y0, x1, y1 = INV_PANEL
+    panel = Image.new("RGBA", (x1 - x0, y1 - y0 + INV_HEAD))
+    panel.paste(sheet.crop(INV_PANEL), (0, INV_HEAD))
+    tabs = Image.new("RGBA", (x1 - x0, INV_STRIP * 8))
+    for i in range(8):
+        top = INV_RAISED + i * INV_RAISED_STEP
+        raised = sheet.crop((x0, top, x1, top + INV_STRIP))
+        # below the strip the raised copies match the panel (checked so a misplaced crop fails here)
+        below = np.asarray(sheet.crop((x0, top + INV_STRIP, x1, top + 34)))
+        assert (below == np.asarray(panel)[INV_STRIP:34]).all(), f"tab {i}: raised copy does not line up"
+        tabs.paste(raised, (0, i * INV_STRIP))
+    dest = ui / "inventory_panel.png"
+    panel.save(dest)
+    record(dest, COZY_ZIP, member, f"crop {INV_PANEL} (flat tabs, 9 x 3 bag grid) with {INV_HEAD} px of empty headroom on top")
+    dest = ui / "inventory_tabs.png"
+    tabs.save(dest)
+    record(dest, COZY_ZIP, member, f"the top {INV_STRIP} rows of the 8 copies with one tab raised (rows from y {INV_RAISED}, "
+           f"every {INV_RAISED_STEP}), stacked: row i has tab i raised")
+    member = "full version/ui/inventory_chopped.png"
+    dest = ui / "tab_all.png"
+    Image.open(io.BytesIO(cozy.read(member))).convert("RGBA").crop(INV_BAG).save(dest)
+    record(dest, COZY_ZIP, member, f"crop {INV_BAG}: Cozy Farm's bag icon (the All tab)")
+    sheet_path, col, row = SKILLS_BOOK
+    dest = ui / "tab_skills.png"
+    Image.open(REPO / sheet_path).convert("RGBA").crop((col * 16, row * 16, col * 16 + 16, row * 16 + 16)).save(dest)
+    record(dest, sheet_path.split("/")[0], sheet_path.split("/")[1], f"16 px cell column {col}, row {row}: a gilt book (the Skills tab)")
+    member = f"16x16 Survival RPG Icons/{MARKERS['skill']}.png"
+    dest = ui / "tab_journal.png"
+    _seal(Image.open(io.BytesIO(survival.read(member))).convert("RGBA")).save(dest)
+    record(dest, ICON_ZIP, member, "a red wax seal added (the quest marker's scroll, without its outline): the Journal tab")
 
 
 def main():
@@ -322,6 +385,12 @@ def main():
         dest = icons / f"{item}.png"
         dest.write_bytes(iz.read(member))
         record(dest, ICON_ZIP, member, "copied unchanged")
+    jz = AssetZip(JEWELRY_ZIP)
+    for item, rel in sorted(JEWELRY.items()):
+        member = f"16x16 Jewelry RPG Icons/{rel}.png"
+        dest = icons / f"{item}.png"
+        dest.write_bytes(jz.read(member))
+        record(dest, JEWELRY_ZIP, member, "copied unchanged")
     member = "full version/tiles/tiles.png"
     (tiles / "cozyfarm-tiles.png").write_bytes(AssetZip(COZY_ZIP).read(member))
     record(tiles / "cozyfarm-tiles.png", COZY_ZIP, member, "copied unchanged")
@@ -397,6 +466,7 @@ def main():
                  "transform": "generated: solid dark brown 432 px background for the Android adaptive icon", "sha256": sha(dest)})
     _import_ui(record)
     _import_markers(record, iz)
+    _import_inventory(record, iz)
     prompts = OUT / "prompts"
     prompts.mkdir(parents=True, exist_ok=True)
     pz = AssetZip(PROMPT_ZIP)

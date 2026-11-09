@@ -362,7 +362,7 @@ func _update_player(real_dt: float, gm: float) -> void:
 	p.hunger = maxf(0.0, p.hunger - gm / 60.0 * float(GameData.b("player_hunger_per_hour")))
 	if p.hunger <= 0.0:
 		damage_player(gm / 60.0 * 3.0, "hunger")
-	p.stamina = minf(100.0, p.stamina + real_dt * float(GameData.b("player_stamina_regen_per_second")))
+	p.stamina = minf(p.stamina_cap(), p.stamina + real_dt * float(GameData.b("player_stamina_regen_per_second")))
 	p.fireball_cd = maxf(0.0, p.fireball_cd - real_dt)
 	p.attack_cd = maxf(0.0, p.attack_cd - real_dt)
 
@@ -872,33 +872,30 @@ func player_eat(id: String) -> bool:
 	return true
 
 
-## Hold a weapon, wear armour or take a tool in hand; "" in a slot means nothing there.
+## Hold a weapon, wear armour, a cap or helmet, an amulet or a ring, or take a tool in hand: the
+## item goes in the slot its type names (PlayerState.GEAR); "" in a slot means nothing there.
 func player_equip(id: String) -> bool:
-	if not player.inv.has(id):
+	var slot: String = GameData.item(id).get("type", "")
+	if not player.inv.has(id) or not slot in PlayerState.GEAR:
 		return false
-	match GameData.item(id).get("type", ""):
-		"weapon":
-			player.weapon = id
-		"armor":
-			player.armor = id
-		"tool":
-			player.tool = id
-		_:
-			return false
+	player.set(slot, id)
+	player.fit_caps()
 	return true
 
 
 func player_unequip(slot: String) -> void:
 	player.set(slot, "")
+	player.fit_caps()
 
 
 ## Drop items on the ground where the player stands: they can be picked up again by anyone looking.
 func player_drop(id: String, qty: int) -> bool:
 	if qty <= 0 or not player.inv.remove(id, qty):
 		return false
-	for slot in ["weapon", "armor", "tool"]:
+	for slot in PlayerState.GEAR:
 		if player.get(slot) == id and not player.inv.has(id):
 			player.set(slot, "")
+	player.fit_caps()
 	var bag := Inventory.new()
 	bag.add(id, qty)
 	loot.append({"pos": player.pos + Vector2(0, 0.4), "inv": bag, "coins": 0, "from": "dropped by %s" % player.name})
