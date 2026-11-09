@@ -209,8 +209,6 @@ func settle(s: Dictionary, why := "closed") -> Dictionary:
 		o.coins += net
 		if not is_merchant_stall(s):
 			o.earned += net               # a merchant's earnings were counted at each sale (World.trade)
-		elif ref == World.npc_ref(o.id):
-			o.earned -= c                 # TRD-02 (owner, 2026-11-08): counted gross at each sale; the commission comes off, net remains
 	else:
 		w.treasury += net                 # nobody of theirs is left: to the manor, as an ended household's goods
 		w.stat("stall_net_escheat", net)

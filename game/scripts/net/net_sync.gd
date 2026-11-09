@@ -20,7 +20,7 @@ const NPCS_EVERY := 5
 ## in the faster snapshots (NetSession.s_animals), their births and deaths at once (NetSession.s_fauna_life).
 const KEYS := ["buildings", "stalls", "plots", "fields", "households", "loot", "containers", "trees", "plants", "deposits", "boulders",
 	"treasury", "granary", "vacancies", "wage_offers", "manor_orders", "coin_sources", "log", "carts", "relations", "credit", "justice",
-	"contracts", "quest_offers", "feast", "farm", "farm_plots", "chapel", "chests", "manor_work", "npcs", "player_offers", "asset_shares", "fauna"]
+	"contracts", "quest_offers", "feast", "farm", "farm_plots", "chapel", "chests", "manor_work", "npcs", "player_offers", "fauna"]
 ## The sections sent on the timer only every NPCS_EVERY-th time (their live parts come in the snapshots); at once after a request.
 const SLOW := ["npcs", "fauna"]
 ## NPC fields the snapshots carry, so a section update leaves them as the snapshots have them.
@@ -175,8 +175,6 @@ static func adopt(w: World, sections: Dictionary) -> void:
 			"fauna":
 				if not (d.fauna as Dictionary).is_empty():
 					adopt_fauna(w, d.fauna)
-			"asset_shares":
-				w.asset_shares = (d.asset_shares as Dictionary).duplicate(true)
 			"player_offers":
 				w.next_offer = int((d.player_offers as Dictionary).get("next", w.next_offer))     # X20: the host's counter, as its record has it
 				w.offers = []

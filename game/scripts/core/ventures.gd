@@ -648,7 +648,7 @@ func goods_of(n: NPC, b: Dictionary) -> Dictionary:
 # ---------------------------------------------------------------- paid employees (B25-BIZ-D2) ---------------
 ## Each dawn, an open venture hires one paid employee when it needs and can afford one: its trade has work (skilled_place
 ## `work`: the trade's people are busy at their stations), its own stations have room (fewer people work there than the
-## stations hold), and its till holds hire_runway_days days of its whole payroll with the new wage (BIZ-03). The candidate: the most suitable willing adult
+## stations hold), and its till holds hire_runway_days days of the market wage. The candidate: the most suitable willing adult
 ## of the trade or without a trade of their own, with some skill in it (NPCBrain.suitability: skill, then experience; then
 ## the poorer, then by id), free of other obligations; they agree through JudgmentLive.work_refusal (Employment.hire_for).
 func _hire(b: Dictionary) -> void:
@@ -660,8 +660,7 @@ func _hire(b: Dictionary) -> void:
 	if 1 + (v.hands as Array).size() + w.employment.of_employer(ref_of(b)).size() >= places:
 		return
 	var wage: int = w.employment.market_wage(trade)
-	# BIZ-03 (owner, Option B): the till must carry the whole payroll with the new employee, not one wage
-	if BusinessMoney.venture_till_of(b) < (w.employment.payroll(ref_of(b)) + wage) * int(cfg().get("hire_runway_days", 7)):
+	if BusinessMoney.venture_till_of(b) < wage * int(cfg().get("hire_runway_days", 7)):
 		return
 	if not bool(w.brain.skilled_place(trade).work):
 		return

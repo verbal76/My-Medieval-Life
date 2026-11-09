@@ -76,15 +76,9 @@ func info(u: Dictionary) -> Dictionary:
 	var b: Dictionary = w.buildings[bid]
 	var ref := w.holder_of(b)
 	if World.is_player_ref(ref):
-		var owner_player: PlayerState = w.player_of_ref(ref)
-		if owner_player == null:
-			return _decor(u)
-		var own: bool = ref == w.acting_ref()
-		var shared: bool = not own and w.asset_share_tier(ref) > 0
-		var storage: Inventory = owner_player.chest if bid == owner_player.home else _stash(u.id)
-		return {"access": "own" if own else "shared" if shared else "foreign", "store": storage,
-			"owner": null, "whose": "your" if own else "another player's", "family": own and bid == owner_player.home,
-			"business": false, "share_owner": ref}
+		if bid == p.home:
+			return {"access": "own", "store": p.chest, "owner": null, "whose": "your", "family": true, "business": false}
+		return {"access": "own", "store": _stash(u.id), "owner": null, "whose": "your", "family": false, "business": false}
 	if str(b.type) == "tavern":
 		var k := w.tavern_keeper()
 		if k:
@@ -105,10 +99,7 @@ func _info_cart(u: Dictionary) -> Dictionary:
 	var c: Dictionary = u.cart
 	var owner := str(c.owner)
 	if World.is_player_ref(owner):
-		var own: bool = owner == w.acting_ref()
-		var shared: bool = not own and w.asset_share_tier(owner) >= 3
-		return {"access": "own" if own else "shared" if shared else "foreign", "store": c.store,
-			"owner": null, "whose": "your" if own else "another player's", "family": false, "business": false, "share_owner": owner}
+		return {"access": "own", "store": c.store, "owner": null, "whose": "your", "family": false, "business": false}
 	return {"access": "foreign", "store": c.store, "owner": w.party(owner), "whose": w.carts.whose(c), "family": false, "business": false}
 
 
@@ -120,8 +111,7 @@ func _info_homestead(u: Dictionary) -> Dictionary:
 	if World.is_player_ref(owner):
 		if owner == w.acting_ref():
 			return {"access": "own", "store": hc.store, "owner": null, "whose": "your", "family": false, "business": false}
-		return {"access": "shared" if w.asset_share_tier(owner) > 0 else "foreign",
-			"store": hc.store, "owner": null, "whose": "another player's", "family": false, "business": false, "share_owner": owner}
+		return {"access": "foreign", "store": hc.store, "owner": null, "whose": "another player's", "family": false, "business": false}
 	var h := World.ref_id(owner)
 	if str(hc.status) == "abandoned" or h < 0 or h >= w.households.size() or w.households[h].get("ended", false):
 		return _decor(u)
@@ -137,52 +127,12 @@ func _decor(_u: Dictionary) -> Dictionary:
 func _info_container(u: Dictionary) -> Dictionary:
 	var c: Dictionary = u.c
 	if w.buildings.has(c.at) and World.is_player_ref(w.holder_of(w.buildings[c.at])):
-		var holder: String = w.holder_of(w.buildings[c.at])
-		var own: bool = holder == w.acting_ref()
-		var shared: bool = not own and w.asset_share_tier(holder) > 0
-		return {"access": "own" if own else "shared" if shared else "foreign", "store": _stash(u.id),
-			"owner": null, "whose": "your" if own else "another player's", "family": false,
-			"business": false, "share_owner": holder}
+		return {"access": "own", "store": _stash(u.id), "owner": null, "whose": "your", "family": false, "business": false}
 	var store := w.container_store(c)
 	if store == null:
 		return _decor(u)
 	return {"access": "foreign", "store": store, "owner": w.container_owner(c), "whose": w.container_whose(c), "family": false,
 		"business": w.stalls.has(c.at) or w._is_tavern(c.at)}
-
-
-## INV-04 (owner, 2026-11-08): goods a player left in the containers of a building they no longer hold pass to whoever holds it
-## now: a household's pantry, the manor's granary. (Another player holding it opens the same stash as their own; the family chest is
-## the player's own and goes with them.) What will not fit is dropped at the container as loot. Nothing is made or lost.
-func hand_over_stash(b: Dictionary, to_ref: String) -> void:
-	if World.is_player_ref(to_ref) or stash.is_empty():
-		return
-	var dest: Inventory = null
-	if to_ref.begins_with("hh:"):
-		var h := World.ref_id(to_ref)
-		if h >= 0 and h < w.households.size() and not w.households[h].get("ended", false):
-			dest = w.households[h].pantry
-	if dest == null:
-		dest = w.granary                          # the manor's, or nobody's: the manor keeps it
-	var bid := str(b.get("id", ""))
-	var spots := []
-	for u in units_in(bid):
-		spots.append([str(u.id), u.at])
-	for c in w.containers:
-		if str(c.get("at", "")) == bid:
-			spots.append([str(c.id), Vector2(int(c.x), int(c.y)) + Vector2(0.5, 0.5)])
-	for sp in spots:
-		var inv: Inventory = stash.get(sp[0])
-		if inv == null or inv.total() <= 0:
-			continue
-		var left := Inventory.new()
-		for id in inv.ids():
-			var k := inv.count(id)
-			if not dest.add(id, k):
-				left.add(id, k)
-		stash.erase(sp[0])
-		if left.total() > 0:
-			w.loot.append({"pos": sp[1], "inv": left, "coins": 0, "from": "a container left behind"})
-		w.stat("stash_handed_over")
 
 
 func _stash(id: String) -> Inventory:
@@ -198,7 +148,7 @@ func goods(u: Dictionary) -> Array:
 		return []
 	if i.business and i.owner != null:
 		return w.brain.for_sale(i.owner)
-	return i.store.ids().filter(func(id): return w.asset_item_allowed(str(i.get("share_owner", "")), str(id))) if i.access == "shared" else i.store.ids()
+	return i.store.ids()
 
 
 ## The place named for witnesses and messages: "the Reed household's chest".
@@ -279,10 +229,8 @@ func store(u: Dictionary, id: String, qty: int, actor: PlayerState = null) -> St
 	var i := info(u)
 	if i.access == "decor":
 		return cannot_open(u)
-	if i.access != "own" and i.access != "shared":
+	if i.access != "own":
 		return "That is not yours to fill."
-	if i.access == "shared" and not w.asset_item_allowed(str(i.get("share_owner", "")), id):
-		return "That kind of item is not covered by your sharing agreement."
 	if qty < 1 or not w.player.inv.has(id, qty):
 		return "You do not have that."
 	if u.has("cart") and w.carts.room(u.cart) < qty:
@@ -312,7 +260,7 @@ func take(u: Dictionary, id: String, qty: int, actor: PlayerState = null) -> Dic
 	if not p.inv.can_add(id):
 		return {"ok": false, "text": p.inv.full_text(id), "seen": 0}
 	w.transfer(i.store, p.inv, id, qty)
-	if i.access in ["own", "shared"]:
+	if i.access == "own":
 		p.take_marks(id, qty)
 		return {"ok": true, "text": "You take %d %s." % [qty, GameData.item_name(id).to_lower()], "seen": 0}
 	var victim: NPC = i.owner

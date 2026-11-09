@@ -972,7 +972,6 @@ func mirror(path: String, c: Callable, args: Array) -> Variant:
 ## and "gift" (goods handed from one pack to the other, their stolen marks with them). An offer lapses at the end of its day, or when
 ## either player leaves play. Saved under the optional key "player_offers".
 var offers: Array = []              # {id, kind, from (ref), to (ref), item, qty, day}
-var asset_shares := {} # MP-05: unordered pair of player family-line references -> mutual tier
 ## GP-MESSAGE-JOURNAL (owner, 2026-10-26): the messages each player was shown that are worth keeping (MessageJournal), saved with the
 ## world under the optional key "messages" (absent: none). Read only by the journal's Messages page, never by the simulation.
 var messages := MessageJournal.new()
@@ -1031,9 +1030,9 @@ func players_partner_refusal(a: PlayerState, b: PlayerState) -> String:
 	if a == null or b == null or a == b or not a.alive or not b.alive:
 		return "That is not possible."
 	var lo := float(Life.cfg().partner_min_age)
-	if not Life.free_to_partner(self, a):
+	if a.partner >= 0 or Life.is_player_id(a.partner):
 		return "You already have a partner."
-	if not Life.free_to_partner(self, b):
+	if b.partner >= 0 or Life.is_player_id(b.partner):
 		return "%s already has a partner." % b.name
 	if Life.age_years(a.born, minutes) < lo:
 		return "You are too young."
@@ -1042,60 +1041,6 @@ func players_partner_refusal(a: PlayerState, b: PlayerState) -> String:
 	if Life.kin(person_id(a), a.mother, a.father, person_id(b), b.mother, b.father):
 		return "%s is your kin." % b.name
 	return ""
-
-
-
-## MP-05: explicit reciprocal permissions between two player family lines.
-static func _asset_share_key(a: String, b: String) -> String:
-	return a + "|" + b if a < b else b + "|" + a
-
-
-func asset_share_tier(owner_ref: String, other_ref := "") -> int:
-	var other: String = other_ref if other_ref != "" else acting_ref()
-	if owner_ref == other:
-		return 3
-	if not is_player_ref(owner_ref) or not is_player_ref(other):
-		return 0
-	return clampi(int(asset_shares.get(_asset_share_key(owner_ref, other), 0)), 0, 3)
-
-
-## Raw and construction materials; finished goods; then tools/property.
-static func asset_item_tier(id: String) -> int:
-	if not GameData.items.has(id):
-		return 99
-	if id in ["plank", "nails", "building_block", "log", "rubble", "stone", "iron_bar", "copper_bar", "tin_bar", "gold_bar"]:
-		return 1
-	var cat: String = str(GameData.item(id).get("category", "general"))
-	if cat == "raw":
-		return 1
-	if cat in ["tool", "tools", "weapon", "weapons"]:
-		return 3
-	return 2
-
-
-func asset_item_allowed(owner_ref: String, id: String) -> bool:
-	return asset_share_tier(owner_ref) >= asset_item_tier(id)
-
-
-## Either player can withdraw consent from the entire pair, immediately.
-func asset_share_revoke(pid: int, actor: PlayerState = null) -> String:
-	if mirrors():
-		return mirror("asset_share_revoke", asset_share_revoke.bind(pid), [pid])
-	if actor != null and actor != player:
-		return as_actor(actor, asset_share_revoke.bind(pid))
-	var other: PlayerState = player_by_pid(pid)
-	if other == null or other == player:
-		return "There is no such player."
-	var my_ref := acting_ref()
-	var their_ref := player_ref(other)
-	asset_shares.erase(_asset_share_key(my_ref, their_ref))
-	for o in offers.duplicate():
-		if str(o.kind) == "asset_share" and (str(o.get("from", "")) == my_ref and str(o.to) == their_ref or str(o.get("from", "")) == their_ref and str(o.to) == my_ref):
-			offers.erase(o)
-	stat("asset_share_revocations")
-	return ""
-
-
 
 
 ## MP-INTERACT-01 (owner, 2026-10-27): the other interactions between two players use the same consent record. "sell" (the offerer
@@ -1109,7 +1054,7 @@ func asset_share_revoke(pid: int, actor: PlayerState = null) -> String:
 const SAY_MAX := 120                 # characters of a message between players (agent decision, docs/DECISIONS.md 2026-10-27)
 const MESSAGES_KEPT := 8             # messages and notes waiting for one player at a time; the oldest goes first
 const PRICE_MAX := 100000            # coins: the most one offer may name (a bound on input, not an economic rule)
-const OFFER_KINDS := ["partner", "gift", "sell", "buy", "contract", "supply", "say", "asset_share"]
+const OFFER_KINDS := ["partner", "gift", "sell", "buy", "contract", "supply", "say"]
 
 
 ## A message between players as it is kept: one line, no control characters, at most SAY_MAX characters.
@@ -1127,8 +1072,6 @@ func _offer_refusal(a: PlayerState, b: PlayerState, kind: String, item: String, 
 	match kind:
 		"partner":
 			return players_partner_refusal(a, b)
-		"asset_share":
-			return "" if qty >= 1 and qty <= 3 else "Choose sharing tier 1, 2 or 3."
 		"gift":
 			if qty < 1 or not a.inv.has(item, qty):
 				return "You do not have that."
@@ -1213,8 +1156,6 @@ func offer_text(o: Dictionary) -> String:
 	match str(o.kind):
 		"partner":
 			return "to be partners"
-		"asset_share":
-			return "mutual asset sharing at tier %d" % int(o.get("qty", 0))
 		"gift":
 			return goods
 		"sell":
@@ -1275,15 +1216,8 @@ func player_answer(id: int, accept: bool, actor: PlayerState = null) -> String:
 		_tell_player(str(o["from"]), "%s could not accept your offer: %s" % [b.name, why])
 		return why if kind in ["gift", "sell", "buy"] else "You cannot: %s" % why.to_lower()
 	match kind:
-		"asset_share":
-			# MP-05: acceptance authorizes exactly the same tier both ways.
-			offers.erase(o)
-			asset_shares[_asset_share_key(player_ref(a), player_ref(b))] = int(o.qty)
-			stat("asset_share_agreements")
 		"partner":
 			offers.erase(o)
-			Life._archive_spouse(a, person_id(b))
-			Life._archive_spouse(b, person_id(a))
 			a.partner = person_id(b)
 			b.partner = person_id(a)
 			Life.kin_version += 1
@@ -1962,21 +1896,8 @@ func spendable(who) -> int:
 	return maxi(0, int(who.coins) - reserve_of(who))
 
 
-var _reserve_cache := {}              # (who @ game hour) -> reserve (reserve_of; derived; this hour's entries are saved, SAV-02)
-var _price_cache := {}                # (kind @ game hour) -> coins a unit (_market_price; derived; this hour's entries are saved, SAV-02)
-
-
-## SAV-02: the hour caches' entries for the current game hour (the values this hour's decisions have read), so a load mid-hour reads
-## the same values, not new ones worked out at the load.
-func _hour_caches() -> Dictionary:
-	var tag := "@" + str(int(minutes / 60.0))
-	var out := {"reserve": {}, "price": {}}
-	for pair in [["reserve", _reserve_cache], ["price", _price_cache]]:
-		var keys: Array = (pair[1] as Dictionary).keys().filter(func(k): return str(k).ends_with(tag))
-		keys.sort()
-		for k in keys:
-			out[pair[0]][str(k)] = pair[1][k]
-	return out
+var _reserve_cache := {}              # (who @ game hour) -> reserve (reserve_of; derived, not saved)
+var _price_cache := {}                # (kind @ game hour) -> coins a unit (_market_price; derived, not saved)
 ## REC-D1..D4 (the flight recorder never changes state) and SIM-01 (a checkpoint read changes nothing): while above 0, the code
 ## running is an observer (the flight recorder's reads, a harness's sample) and the hour caches above are read but never
 ## written or cleared. A cache entry is the value worked out by the FIRST caller in a game hour; were an observer that caller,
@@ -3265,8 +3186,7 @@ func player_assault(victim: NPC, actor: PlayerState = null) -> void:
 		if n.role != "bandit":
 			seen += 1
 			n.remember("saw %s %s attack %s %s" % [p.name, p.family, victim.name, victim.family])
-			# JUS-04: only this eyewitness learns now; their kin/friends must hear the news first.
-			relations.harmed(n, float(Relations.cfg().witness_harm), false)
+			relations.harmed(n, float(Relations.cfg().witness_harm))
 	# A1: an assault is a crime on the record and in the case; a blow at a guard is its own kind (escalation)
 	var kind := "guard_assault" if victim.job == "guard" else "assault"
 	var ref := acting_ref()
@@ -3802,10 +3722,6 @@ func kill(n: NPC, cause: String, by_ref := "") -> void:
 		return
 	n.alive = false
 	n.hp = 0.0
-	# JUS-01: a slain guard must leave the pursuit register immediately;
-	# a wanted case may remain open, but cannot have a dead pursuer.
-	if justice != null and not n.pursuit.is_empty():
-		justice.release(n, "guard_died")
 	n.plan.clear()
 	if not n.journey.is_empty():
 		Journeys.end(self, n, "died")      # REGION-NAV-01 S3: the journey ends with them; what they carried passes on below
@@ -4449,9 +4365,7 @@ func deliver(p: Dictionary, inv: Inventory, by := "") -> bool:
 	var need: Dictionary = p.site.need
 	var given := 0
 	if need.has("stone"):
-		var rk := rubble_cover(inv, int(need.stone) - inv.count("stone"))       # raw-stone work takes rubble (STONE-04)
-		if rk > 0:
-			p.site["rubble"] = int(p.site.get("rubble", 0)) + rk          # INV-05: laid as rubble, to come back as rubble
+		rubble_cover(inv, int(need.stone) - inv.count("stone"))       # raw-stone work takes rubble (STONE-04)
 	for id in need.keys():
 		var n := mini(int(need[id]), inv.count(id))
 		if n > 0:
@@ -4478,9 +4392,7 @@ func _finish_site(p: Dictionary) -> void:
 		_finish_loft(p)
 		return
 	var by := str(p.site.get("owner", holder_of(p)))
-	# PROP-04: use the actual site owner's player line, not the current host actor.
-	var site_player: PlayerState = player_for(by) if is_player_ref(by) else null
-	var fam := site_player.family if site_player != null else (str(households[ref_id(by)].family) if by.begins_with("hh:") else "the manor's")
+	var fam := player.family if is_player_ref(by) else (str(households[ref_id(by)].family) if by.begins_with("hh:") else "the manor's")
 	var b := {"id": ("house_" if kind == "house" else "workshop_") + str(p.id), "type": "player_house" if kind == "house" else "workshop",
 			  "kind": kind, "stamp": Construction.stamp_name(kind), "x": p.x, "y": p.y, "w": p.w, "h": p.h,
 			  "door": p.door, "name": "%s family %s" % [fam, Construction.kind_name(kind)],
@@ -4593,14 +4505,6 @@ func cancel_site(p: Dictionary, inv: Inventory) -> Dictionary:
 	if p.site.is_empty() or p.site.done:
 		return {}
 	var back := site_delivered(p)
-	var rub := mini(int(p.site.get("rubble", 0)), int(back.get("stone", 0)))
-	if rub > 0:                                   # INV-05 (owner, 2026-11-08): stone laid as rubble comes back as rubble, never dressed
-		back.stone = int(back.stone) - rub
-		if int(back.stone) <= 0:
-			back.erase("stone")
-		back["rubble"] = int(back.get("rubble", 0)) + rub
-		stat("made_stone", -float(rub))
-		stat("used_rubble", -float(rub))
 	var left := Inventory.new()
 	for id in back:
 		if not inv.add(id, int(back[id])):
@@ -4693,7 +4597,7 @@ func witness(kind: String, what: String, victim: NPC, taken := {}, back: Invento
 		if n.role != "bandit":
 			seen.append(n)
 			n.remember("saw %s %s %s" % [player.name, player.family, deed if deed != "" else "take " + what])
-			relations.harmed(n, float(Relations.cfg().witness_harm), false) # JUS-04: no automatic witness-family knowledge
+			relations.harmed(n, float(Relations.cfg().witness_harm))          # a crime seen lowers the tie (CRT-10)
 			if n.job == "guard" and n.target == -1 and (guard == null or n.pos.distance_to(player.pos) < guard.pos.distance_to(player.pos)):
 				guard = n
 	if victim and not seen.has(victim) and deed == "":
@@ -5960,8 +5864,6 @@ func set_tenant(thing: Dictionary, ref: String, rent := 0) -> void:
 func _handed_over(thing: Dictionary, was: String) -> void:
 	if business != null and (thing.has("front") or thing.has("counter")) and was != holder_of(thing):     # LE-04 review 7: counters too
 		business.money.keep_till(thing, was)
-	if chests != null and is_player_ref(was) and was != holder_of(thing) and not thing.has("site"):
-		chests.hand_over_stash(thing, holder_of(thing))       # INV-04: goods left in a player's containers pass to the new holder
 
 
 ## The villager a reference names, alive: the one for "npc:<id>", the head of a household (its first
@@ -6347,7 +6249,7 @@ func to_dict() -> Dictionary:
 		"chapel": chapel.to_dict(), "feast": feast.to_dict(),
 		"player": _host_player.to_dict(), "players": _players_to_dict(), "coin_sources": coin_sources, "regions": regions.to_dict(), "couriers": couriers.to_dict(), "intel_book": intel_book, "country_taken": country_taken, "log": log_lines, "quest_offers": quests.to_dict(),
 		"sage_id": sage_id, "reeve_id": reeve_id, "containers": _containers_to_dict(), "chests": chests.to_dict(), "carts": carts.to_dict(), "station_users": _station_users_to_dict(),
-		"relations": relations.to_dict(), "contracts": contracts.to_dict(), "asset_shares": asset_shares.duplicate(true),
+		"relations": relations.to_dict(), "contracts": contracts.to_dict(),
 		"underground": {"gen": Underground.GEN_VERSION, "player_level": _host_player.map_level},
 		"prospecting": prospecting.to_dict(),
 		"discovery": discovery.to_dict(),
@@ -6355,9 +6257,7 @@ func to_dict() -> Dictionary:
 		"mine_works": mine_works.to_dict(),
 		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"employment": employment.to_dict()} if not employment.is_empty() else {}).merged(_economy_section()).merged(_civic_section()).merged({EconTransactions.KEY: transactions.to_dict()} if transactions != null and not transactions.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"shared_farming_start": true} if shared_farming_start else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {}).merged({"brain_day": brain.day_state(), "hour_caches": _hour_caches()})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
-	# SAV-01: preserve the exact last-hour famine measurement.
-	out["food_days"] = food_days
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"employment": employment.to_dict()} if not employment.is_empty() else {}).merged(_economy_section()).merged(_civic_section()).merged({EconTransactions.KEY: transactions.to_dict()} if transactions != null and not transactions.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"shared_farming_start": true} if shared_farming_start else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
 	if judgment != null:
 		out.judgment = judgment.to_dict()                          # PROSPECTIVE (PROS-19): provisional section
 	elif not judgment_foreign.is_empty():
@@ -6740,7 +6640,6 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	_guests.clear()
 	players_foreign.clear()
 	_load_guests(d.get("players", {}))              # save 21 (absent: the "player" above is the only player)
-	asset_shares = (d.get("asset_shares", {}) as Dictionary).duplicate(true) # MP-05: older saves have no agreements
 	if not _load_identity(d):
 		return
 	country_taken = (d.get("country_taken", {}) as Dictionary).duplicate(true)      # B25R1-002 (older saves: none taken)
@@ -6832,16 +6731,6 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	if not d.has("containers"):
 		serve_tables()
 	brain.dawn(false)
-	if d.has("brain_day"):                           # SAV-02: the day goes on from where it was saved (older saves: a reading at the load)
-		brain.load_day_state(d.brain_day)
-	_reserve_cache.clear()
-	_price_cache.clear()
-	var hc: Dictionary = d.get("hour_caches", {})
-	for k in hc.get("reserve", {}):
-		_reserve_cache[str(k)] = int(hc.reserve[k])
-	for k in hc.get("price", {}):
-		var v = hc.price[k]
-		_price_cache[str(k)] = [int(v[0]), int(v[1])] if v is Array else float(v)     # "unit@" holds [price, food points]
 	quests = Quests.new(self)
 	quests.load_dict(d.get("quest_offers", {}))      # older saves: no offers yet; the next dawn makes them
 	if not d.has("net_pid"):
@@ -6903,12 +6792,6 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	_restore_plans(d)
 	if couriers != null:
 		couriers.seat_at_desks()       # GP-BUSINESS-DESK: a business's courier booth stands at its desk (an older save's at its station)
-	# SAV-01: keep the previously sampled value on load. Older saves
-	# can recover the current decision cache from restored village stores.
-	if d.has("food_days"):
-		food_days = float(d["food_days"])
-	else:
-		_update_food_days()
 	if recorder == null and FlightRecorder.enabled():
 		WorldRecorder.attach(self)     # REC-19: a loaded game records too (off unless recorder.json enables it)
 	if recorder != null:
