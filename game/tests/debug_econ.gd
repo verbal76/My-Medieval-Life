@@ -49,6 +49,6 @@ func _init() -> void:
 				print(l)
 		for id in w.fauna.pens:
 			var pen: Dictionary = w.fauna.pens[id]
-			var k := w.npc(int(pen.owner))
+			var k := w.npc(World.ref_id(w.tenant_of(pen)))
 			print(id, " trough=", pen.trough, " need=", w.fauna.daily_need(pen), " keeper=", k.name, " ", k.family, " ", k.doing, " inv=", k.inv.items)
 	quit()

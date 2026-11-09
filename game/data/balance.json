@@ -36,7 +36,13 @@
   "mine_minutes": 25,
   "chop_minutes": 40,
   "hunt_minutes": 40,
+  "_property_note": "Property and land (owner rules 2026-10-18: the manor sells and lets land and houses, rent weekly; the numbers are agent proposals, provisional: balance review pending, docs/BUILD_DECISIONS.md 'Property and land'). plot_price is a 9x10 plot's price, other ground by area; house_price a house with its ground; a week's rent is weekly_rent_share of the price; the manor buys back at sell_back_share; rent_evict_missed unpaid weeks end a lease; a vacant stall is let rent-free to a villager out of work with stall_min_coins to stock it.",
   "plot_price": 60,
+  "house_price": 150,
+  "weekly_rent_share": 0.1,
+  "sell_back_share": 0.6,
+  "rent_evict_missed": 2,
+  "stall_min_coins": 20,
   "house_cost": {
     "plank": 30,
     "stone": 20,

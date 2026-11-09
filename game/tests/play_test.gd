@@ -138,7 +138,7 @@ func _run() -> void:
 	var plot: Dictionary = w.plots[0]
 	var treasury0 := w.treasury
 	p.pos = Vector2(int(plot.x) + 4, int(plot.y) + 9.5)
-	check(w.buy_plot(plot) and plot.owner == "player", "plot bought")
+	check(w.buy_plot(plot) and w.owner_of(plot) == World.PLAYER, "plot bought")
 	check(w.treasury == treasury0 + int(plot.price), "the plot's price went to the manor's treasury")
 	w.start_site(plot)
 	var carpenter := npc_with_job("carpenter")
@@ -245,7 +245,7 @@ func _run() -> void:
 	for a: Animal in w.fauna.animals:
 		if a.area == pen.id:
 			sheep = a
-	var keeper := w.npc(int(pen.owner))
+	var keeper := w.pen_keeper(pen)
 	keeper.target = -1
 	for i in 20:
 		if not sheep.alive:

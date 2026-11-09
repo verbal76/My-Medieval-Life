@@ -47,6 +47,7 @@ Rules:
 - **Interface** — panels, HUD, touch controls
 - **Containers** — crates, barrels, stalls and the tavern's tables: their owners' stock
 - **Interiors** — the insides of buildings under their roofs: floor, walls, doors, beds and other spots, roof fade
+- **Property** — who owns and who holds land, buildings, stalls, pens, fields and stations (one owner reference); the land registry, sales, leases, weekly rent
 
 ## Interactions
 
@@ -96,7 +97,7 @@ Rules:
 - **Trigger:** The player interacts with a ripe field.
 - **Source:** `game/scripts/main.gd::interact`, `game/scripts/core/world.gd::player_harvest`, `game/scripts/core/world.gd::take_crop`
 - **Affects:** Fields, Inventory, Ledger, Crime
-- **Expected:** A handful (`harvest_handful`) leaves the field's crop and goes to the pack, counted as made wheat. When the crop is gone the field is tilled. A field worked by farmers is theft from them (INT-008), except the wheat a farmer hired the player to cut there (INT-046).
+- **Expected:** A handful (`harvest_handful`) leaves the field's crop and goes to the pack, counted as made wheat. When the crop is gone the field is tilled. A field is the manor's (INT-051) and its crop its farmers' (those whose workplace it is, `World.field_workers`): taking it is theft from the first of them (INT-008), except the wheat a farmer hired the player to cut there (INT-046); a farmer who has left the field is never named.
 - **Tests:** `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_hiring`, `game/tests/start_test.gd`
 
 ### INT-008 · Theft is witnessed
@@ -165,16 +166,16 @@ Rules:
 ### INT-017 · Non-violent death and inheritance
 - **Trigger:** A villager dies of hunger, illness or a fall.
 - **Source:** `game/scripts/core/world.gd::kill`, `game/scripts/core/world.gd::_heir`, `game/scripts/core/world.gd::_inherit`, `game/scripts/core/npc_brain.gd::on_death`
-- **Affects:** Inheritance, Households, Coins, Employment, Livestock
-- **Expected:** Food goes to the pantry. Coins and goods go to the heir: an adult, else an elder, else a child, lowest id first. A household with nobody left leaves the goods where they fell. The household's reckoning reruns at once. Pens pass on (INT-027).
+- **Affects:** Inheritance, Households, Coins, Employment, Livestock, Property
+- **Expected:** Food goes to the pantry. Coins and goods go to the heir: an adult, else an elder, else a child, lowest id first. A household with nobody left leaves the goods where they fell, and its house, leases and stores go to the manor (INT-054). The household's reckoning reruns at once. Pens pass on (INT-027); a merchant's stall falls vacant (INT-055).
 - **Tests:** `game/tests/run_tests.gd::test_households_and_work`, `game/tests/scenarios.gd`
 
 ### INT-018 · Player death and the heir
 - **Trigger:** The player's health reaches zero.
 - **Source:** `game/scripts/core/world.gd::damage_player`, `game/scripts/core/world.gd::continue_as_heir`, `game/scripts/core/world.gd::give_start_kit`, `game/scripts/main.gd::continue_as_heir`
-- **Affects:** Health, Character, Player state, Loot, Building
-- **Expected:** What the dead carried lies where they fell, for anyone to take, the heir too. The heir keeps the house, chest and plots, starts every skill from nothing and carries only the starting kit, whose coins are counted in `coin_sources`. Anyone fighting the dead player stops; the heir inherits no fight. The world is not reset.
-- **Tests:** `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_player_actions`
+- **Affects:** Health, Character, Player state, Loot, Building, Property
+- **Expected:** What the dead carried lies where they fell, for anyone to take, the heir too. The heir keeps the home, the chest and everything the family owns or leases (all held as "player", INT-051), starts every skill from nothing and carries only the starting kit, whose coins are counted in `coin_sources`. Anyone fighting the dead player stops; the heir inherits no fight. The world is not reset.
+- **Tests:** `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_property`
 
 ### INT-019 · Trade
 - **Trigger:** The player or a villager buys or sells.
@@ -194,7 +195,7 @@ Rules:
 - **Trigger:** The player makes a recipe at a station; a villager plans a recipe.
 - **Source:** `game/scripts/main.gd::craft`, `game/scripts/core/npc_brain.gd::_do_recipe`, `game/scripts/core/npc_brain.gd::_station_for`, `game/scripts/core/npc_brain.gd::release_station`, `game/data/recipes.json`
 - **Affects:** Crafting, Inventory, Player state, Ledger
-- **Expected:** Inputs are removed and outputs added together. A villager reserves a free station first (capacity 1) and frees it when done. When all are taken it does something else, counted as `station_busy_<station>`.
+- **Expected:** Inputs are removed and outputs added together. A villager reserves a free station first (capacity 1) and frees it when done. When all are taken it does something else, counted as `station_busy_<station>`. Every station is the manor's (its building's owner's, INT-051) and open to the player (`World.may_use`); the player does not take or wait for a reservation (audit defect 3, deliberately left to the phase 2 workshops, whose owner or tenant will decide who else may use them).
 - **Tests:** `game/tests/run_tests.gd::test_households_and_work`, `game/tests/play_test.gd`
 
 ### INT-022 · Household tax
@@ -225,18 +226,17 @@ Rules:
 - **Expected:** Only genuine surplus is bought: never a farmer's household food, feed reserve or buffer, never in a famine. The granary starts with 7 days of food and is finite. The household food, the target and the start are age-weighted (INT-047).
 - **Tests:** `game/tests/run_tests.gd::test_government`, `game/tests/run_tests.gd::test_child_food`, `game/tests/scenarios.gd`
 
-### INT-026 · Repairs and plot sales
-- **Trigger:** The evening business (repairs); the player buys a plot.
-- **Source:** `game/scripts/core/npc_brain.gd::reeve_day`, `game/scripts/core/world.gd::buy_plot`
-- **Affects:** Treasury, Market, Coins, Building
-- **Expected:** Repairs are bought from village sellers with money beyond 3 days of wages. A plot's price goes to the treasury.
-- **Tests:** `game/tests/run_tests.gd::test_government`, `game/tests/play_test.gd`
-
+### INT-026 · Repairs and land sales
+- **Trigger:** The evening business (repairs); the player buys, leases or sells land or a house (INT-052).
+- **Source:** `game/scripts/core/npc_brain.gd::reeve_day`, `game/scripts/core/world.gd::buy_plot`, `game/scripts/core/property.gd::buy`, `game/scripts/core/property.gd::lease`, `game/scripts/core/property.gd::sell`
+- **Affects:** Treasury, Market, Coins, Building, Property
+- **Expected:** Repairs are bought from village sellers with money beyond 3 days of wages. A plot's price (`plot_price`, provisional) and every sale or rent go to the treasury; a house sold back is paid from it (`gov_land_sales`, `gov_rent`, `gov_land_bought`). The treasury's level then decides wages, repairs and works as before.
+- **Tests:** `game/tests/run_tests.gd::test_government`, `game/tests/run_tests.gd::test_property`, `game/tests/play_test.gd`
 ### INT-027 · Pens and keepers
 - **Trigger:** Hourly animal update; a keeper's day; a keeper dies or changes job.
 - **Source:** `game/scripts/core/fauna.gd::tick`, `game/scripts/core/fauna.gd::feed`, `game/scripts/core/fauna.gd::new_day`, `game/scripts/core/npc_brain.gd::_keeper`, `game/scripts/core/npc_brain.gd::_hand_over_pens`
 - **Affects:** Livestock, Food, Inventory, Households
-- **Expected:** Animals eat feed from the trough or starve. A fed pair breeds, and babies grow up. Keepers feed from their own wheat, the pantry or bought feed, and slaughter surplus. A pen passes to another farmer, the same household first.
+- **Expected:** Animals eat feed from the trough or starve. A fed pair breeds, and babies grow up. Keepers feed from their own wheat, the pantry or bought feed, and slaughter surplus. A pen is the manor's, let to its keeper (tenant "npc:<id>", `World.pen_keeper`, INT-051); it passes to another farmer, the same household first.
 - **Tests:** `game/tests/run_tests.gd::test_animals`, `game/tests/run_tests.gd::test_households_and_work`
 
 ### INT-028 · Hunting
@@ -250,21 +250,20 @@ Rules:
 - **Trigger:** Each morning, and at once after a death or a job change.
 - **Source:** `game/scripts/core/npc_brain.gd::evaluate_household`, `game/scripts/core/npc_brain.gd::job_market`, `game/scripts/core/npc_brain.gd::seek_work`, `game/scripts/core/npc_brain.gd::_change_job`, `game/scripts/core/npc_brain.gd::dawn`
 - **Affects:** Households, Employment, Wages, Fields, Resources, Wildlife
-- **Expected:** A household is sustainable when income covers cost, or it holds 10 days of food or runway. Its daily food need and cost are age-weighted (INT-047). Adults of an unsustainable household, and the unemployed, move to an opening that pays at least 25% (and 2 coins) more. Cooldowns apply.
+- **Expected:** A household is sustainable when income covers cost, or it holds 10 days of food or runway. Its daily food need and cost are age-weighted (INT-047). Adults of an unsustainable household, and the unemployed, move to an opening that pays at least 25% (and 2 coins) more. Cooldowns apply. Leaving work gives up the workplace at once: a field's farmers are those whose workplace it is (audit defect 1 fixed), a stall falls vacant (INT-055), a pen passes on.
 - **Tests:** `game/tests/run_tests.gd::test_households_and_work`, `game/tests/run_tests.gd::test_child_food`, `game/tests/scenarios.gd`
 
 ### INT-030 · Building a house
-- **Trigger:** The player delivers materials to their plot.
-- **Source:** `game/scripts/core/world.gd::start_site`, `game/scripts/core/world.gd::deliver`, `game/scripts/core/world.gd::site_progress`, `game/scripts/core/world.gd::cancel_site`, `game/scripts/main.gd::_sync_sites`
-- **Affects:** Building, Inventory, Loot
-- **Expected:** Materials are consumed as delivered. The house stands when 30 planks, 20 stone and 10 logs are in, with no extra build time. A progress bar over the frame and in the build window shows the share of loads delivered. Giving up the site returns every delivered load (to the pack, or a bundle at the site if it is full); no coin moves. The finished house has the house stamp's interior, collision and roof (INT-048, INT-049): its floor walkable, walls solid, its bed rests and its chest is the family's store, as the door does (INT-050). The two plots are clear land at the forest edge north of the east houses; no plot overlaps a building, field, pen or stall.
-- **Tests:** `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_building_site`, `game/tests/run_tests.gd::test_interiors`, `game/tests/start_test.gd`
-
+- **Trigger:** The holder of a parcel (its owner, or its tenant on leased ground) marks out a house and delivers materials.
+- **Source:** `game/scripts/core/world.gd::start_site`, `game/scripts/core/world.gd::deliver`, `game/scripts/core/world.gd::site_progress`, `game/scripts/core/world.gd::cancel_site`, `game/scripts/main.gd::_sync_sites`, `game/scripts/ui/game_ui.gd::show_build`
+- **Affects:** Building, Inventory, Loot, Property
+- **Expected:** Materials are consumed as delivered. The house stands when 30 planks, 20 stone and 10 logs are in, with no extra build time. A progress bar over the frame and in the build window shows the share of loads delivered. Giving up the site returns every delivered load (to the pack, or a bundle at the site if it is full); no coin moves. The finished house is the parcel holder's at the site's start (`site.owner`; phase 2 helpers may deliver, the owner keeps it), records its parcel (`building.parcel`, `parcel.building`) and changes hands with it (INT-052); a family's first house becomes its home. It has the house stamp's interior, collision and roof (INT-048, INT-049): its floor walkable, walls solid, its bed rests and its chest is the family's store, as the door does (INT-050). The two plots are clear land at the forest edge north of the east houses; no plot overlaps a building, field, pen or stall. A plot can be bought or leased at the plot itself.
+- **Tests:** `game/tests/play_test.gd`, `game/tests/run_tests.gd::test_building_site`, `game/tests/run_tests.gd::test_interiors`, `game/tests/run_tests.gd::test_property`, `game/tests/start_test.gd`
 ### INT-031 · Saving and loading
 - **Trigger:** Save from the menu, resting, leaving the app, starting a new game; Continue on the title.
-- **Source:** `game/scripts/main.gd::save_game`, `game/scripts/main.gd::continue_game`, `game/scripts/core/world.gd::to_dict`, `game/scripts/core/world.gd::load_dict`, `game/scripts/core/world.gd::_move_plots_to_map`, `game/scripts/core/world.gd::_load_containers`, `game/scripts/core/player_state.gd::to_dict`
-- **Affects:** Save, Character, Player state, Inventory, Equipment, Crime, Treasury, Granary, Livestock, Building, Containers
-- **Expected:** Written atomically as save_version 4 (villagers have no "hidden" flag: where they are is their position, inside a building or not). Versions 1-3 load, with no coin lost; their villagers "hidden" at home (standing on the door step) are moved inside, each to their own bed's spot (`World._move_indoors`). Fields added later (sex, look, tool, crimes, the stolen marks) load with defaults. The tavern tables' dishes are saved ("containers"); a save from before containers loads with its tables set from the keepers' stock (INT-042). A tree's tiles are taken from the map on load (saves from before two-tile trees hold other tiles); its state and regrowth day come from the save. Saves from before the building plots moved (they lay over houses b20-b22) move each plot to its place on the map with its owner, site and house, and the player with it if they stood on it; saved trees the map no longer has (cleared for the plots) are dropped. An unreadable save is kept and a new game starts.
+- **Source:** `game/scripts/main.gd::save_game`, `game/scripts/main.gd::continue_game`, `game/scripts/core/world.gd::to_dict`, `game/scripts/core/world.gd::load_dict`, `game/scripts/core/world.gd::_move_plots_to_map`, `game/scripts/core/world.gd::_load_containers`, `game/scripts/core/world.gd::_migrate_property`, `game/scripts/core/fauna.gd::load_dict`, `game/scripts/core/property.gd::settle_ended_households`, `game/scripts/core/player_state.gd::to_dict`
+- **Affects:** Save, Character, Player state, Inventory, Equipment, Crime, Treasury, Granary, Livestock, Building, Containers, Property
+- **Expected:** Written atomically as save_version 5 (villagers have no "hidden" flag: where they are is their position, inside a building or not; every property record carries its owner and tenant references, leases their rent, due day and arrears, `next_parcel` counts claimed parcels, a settled household is `ended`; the player has no plot list). Versions 1-4 load, with no coin lost: plot owners ""/"player" (and the player's plot list) become the manor's or the player's, a field's farmer ids give way to the manor's ownership (its farmers are those working it), a stall's and a pen's NPC id become their tenant reference (a dead one leaves it vacant), buildings get their starting owners and a house the player built is theirs on its plot, and a household that had died out gives its house and stores to the manor (INT-054); plots, houses and the player stay exactly where they are (`World._migrate_property`). Versions 1-3 also: their villagers "hidden" at home (standing on the door step) are moved inside, each to their own bed's spot (`World._move_indoors`). Fields added later (sex, look, tool, crimes, the stolen marks) load with defaults. The tavern tables' dishes are saved ("containers"); a save from before containers loads with its tables set from the keepers' stock (INT-042). A tree's tiles are taken from the map on load (saves from before two-tile trees hold other tiles); its state and regrowth day come from the save. Saves from before the building plots moved (they lay over houses b20-b22) move each plot to its place on the map with its owner, site and house, and the player with it if they stood on it; saved trees the map no longer has (cleared for the plots) are dropped. An unreadable save is kept and a new game starts.
 - **Tests:** `game/tests/run_tests.gd::test_save_round_trip`, `game/tests/run_tests.gd::test_player_actions`, `game/tests/run_tests.gd::test_interiors`, `game/tests/start_test.gd`
 
 ### INT-032 · Controls: touch, gamepad, keyboard and mouse
@@ -379,7 +378,7 @@ Rules:
 - **Affects:** Containers, Households, Market, Food, Save, Interface
 - **Expected:**
   - village.json lists the crates and barrels by each house, in and around the tavern and beside each stall, and each dish or mug drawn on a tavern table (no map tile moves).
-  - A house's crate or barrel is its household's pantry; a tavern crate is the first alive tavern keeper's stock; a stall's crate (and the stall itself) is its merchant's stock. They hold nothing of their own.
+  - A house's crate or barrel is the pantry of the household that holds the house (`World.holder_of`, INT-051); a tavern crate is the first alive tavern keeper's stock; a stall's crate (and the stall itself) is the stock of the merchant it is let to. A house of the player's or the manor's holds nothing in its crates (the family chest is the player's store). They hold nothing of their own.
   - A tavern table holds one dish of its own: while the tavern is open, each empty table gets one of its kind from a keeper (in turn) who has more than `table_keep` of it, else any cooked food they can spare; at closing every dish goes back to the keeper who set it out. Food on the tables counts in the village's food days and the caravan's food check. A table shows its dish tile only while it holds food.
   - Goods only move between owners and tables: nothing is made or lost.
 - **Tests:** `game/tests/run_tests.gd::test_theft_and_shops`, `game/tests/start_test.gd`
@@ -453,6 +452,54 @@ Rules:
   - In the player's own house, the bed rests until morning and the chest opens the family's store (rest too); the door still offers both.
 - **Tests:** `game/tests/run_tests.gd::test_interiors`, `game/tests/start_test.gd`
 
+### INT-051 · One owner reference for all property
+- **Trigger:** A new world (starting owners), a load, and every deal, job change, death or eviction that changes who owns or holds something.
+- **Source:** `game/scripts/core/world.gd::owner_of`, `game/scripts/core/world.gd::tenant_of`, `game/scripts/core/world.gd::holder_of`, `game/scripts/core/world.gd::holds`, `game/scripts/core/world.gd::set_owner`, `game/scripts/core/world.gd::set_tenant`, `game/scripts/core/world.gd::party`, `game/scripts/core/world.gd::field_workers`, `game/scripts/core/world.gd::pen_keeper`, `game/scripts/core/world.gd::may_use`, `game/scripts/core/world.gd::_init_ownership`, `game/scripts/core/world.gd::container_owner`, `game/scripts/core/population.gd::populate`
+- **Affects:** Property, Building, Fields, Livestock, Market, Containers, Crafting, Households, Crime
+- **Expected:**
+  - One reference everywhere: "manor", "player" (the family, its own household), "hh:<id>", "npc:<id>" (only as the tenant of a stall or pen). Every building, parcel, stall, pen, field and station has `owner` and `tenant`; nothing else records ownership (the six older representations are gone or derived).
+  - At the start a house and the sage's hut are their household's; the manor house and the tavern are the manor's, let rent-free to the reeve's and the tavern keepers' households; the smithy, fields, pens, stalls and stations the manor's; each stall let to its merchant, each pen to its keeper; plots the manor's, for sale.
+  - Derived from it: a container's owner (INT-042), a field's farmers (INT-007), a shopkeeper's post, who may use a station (all public now).
+- **Tests:** `game/tests/run_tests.gd::test_property`, `game/tests/run_tests.gd::test_theft_and_shops`, `game/tests/run_tests.gd::test_animals`
+
+### INT-052 · The land office: buying, leasing and selling land and houses
+- **Trigger:** The player uses "Land and houses" with the reeve, a plot's build window, or an empty or held house's door.
+- **Source:** `game/scripts/core/property.gd::buy`, `game/scripts/core/property.gd::lease`, `game/scripts/core/property.gd::sell`, `game/scripts/core/property.gd::end_lease`, `game/scripts/core/property.gd::for_sale`, `game/scripts/core/property.gd::market`, `game/scripts/core/property.gd::unit`, `game/scripts/core/property.gd::set_home`, `game/scripts/core/property.gd::_settle`, `game/scripts/ui/game_ui.gd::show_land`, `game/scripts/ui/game_ui.gd::show_deal`, `game/scripts/ui/game_ui.gd::show_build`, `game/scripts/main.gd::_find_target`
+- **Affects:** Property, Coins, Treasury, Building, Player state, Interface
+- **Expected:**
+  - Only the manor sells and lets (owner rule). On the market: what is the manor's, let to nobody, lived in by nobody, with no building work going on. A parcel and the house on it change hands together.
+  - Buying pays `price_of` (a plot `plot_price` by area, a house `house_price`) to the treasury; leasing pays the first week's rent (`weekly_rent_share` of the price) at once. Selling back is paid `sell_back_share` from the treasury, refused if it cannot pay, if let, or with an unfinished site. Every coin moves between purses and the treasury.
+  - The player may hold several houses; the home is one of them (`set_home`). A first house becomes the home; giving up the home moves it to another held house (lowest id) or leaves the family homeless, the chest kept for the next house.
+- **Tests:** `game/tests/run_tests.gd::test_property`, `game/tests/start_test.gd`
+
+### INT-053 · Weekly rent, arrears and eviction
+- **Trigger:** Each morning (06:00), for every lease due that day.
+- **Source:** `game/scripts/core/property.gd::collect_rents`, `game/scripts/core/property.gd::_release`, `game/scripts/core/world.gd::_new_day`
+- **Affects:** Property, Coins, Treasury, Player state, Households
+- **Expected:** The rent plus any arrears goes from the tenant's purse (a household's: its members, richest first) to the treasury, and the next due day is a week on. A tenant who cannot pay it all pays nothing that week: the rent joins the arrears. After `rent_evict_missed` (2) unpaid weeks the manor takes the lease back, with any building the tenant put on the ground, and the arrears are let go; giving up a lease pays the arrears the purse can. Rent-free lettings (the manor house, the tavern, stalls, pens) are never charged. No coin is made or lost.
+- **Tests:** `game/tests/run_tests.gd::test_property`
+
+### INT-054 · A household dies out: its house goes back to the manor
+- **Trigger:** The last member of a household dies (`World.kill`); loading a save from before property with such a household.
+- **Source:** `game/scripts/core/world.gd::kill`, `game/scripts/core/property.gd::household_ended`, `game/scripts/core/property.gd::settle_ended_households`
+- **Affects:** Property, Households, Granary, Food, Containers, Ledger
+- **Expected:** Owner rule: what the household owned becomes the manor's and what it leased ends; the stores in its pantry go to the manor's granary (escheat, counted in `escheat_items` and in the village's food days), so nothing is lost or made. The house is then on the market (INT-052) and its crates are nobody's. The household is marked `ended` once.
+- **Tests:** `game/tests/run_tests.gd::test_property`, `game/tests/run_tests.gd::test_property_migration`, `game/tests/start_test.gd`
+
+### INT-055 · A vacant stall is let again
+- **Trigger:** A merchant dies or changes work; each morning.
+- **Source:** `game/scripts/core/npc_brain.gd::_give_up_stall`, `game/scripts/core/npc_brain.gd::_change_job`, `game/scripts/core/property.gd::relet_stalls`
+- **Affects:** Property, Market, Employment, Containers
+- **Expected:** The stall falls vacant at once (its goods are nobody's while it is). Each morning the manor lets each vacant stall, rent-free for now, to the first villager by id who is out of work or a manor hand and holds `stall_min_coins`; they become its merchant and keep its kind (audit defect 2 fixed).
+- **Tests:** `game/tests/run_tests.gd::test_property`
+
+### INT-056 · Claiming new ground anywhere legal
+- **Trigger:** A call to claim a rectangle (phase 2's placement uses it; no interface yet).
+- **Source:** `game/scripts/core/property.gd::can_claim`, `game/scripts/core/property.gd::claim`, `game/scripts/core/property.gd::land_price`
+- **Affects:** Property, Coins, Treasury, Building
+- **Expected:** Owner rule: free placement on any clear spot not someone else's, bought or leased from the manor on the spot. A rectangle is legal when at least 3x3, inside the village with a one-tile margin, clear of buildings, surveyed parcels, fields, pens, stalls, stations, containers, the mine's seams, trees and the road, and walkable. A legal claim becomes a new manor parcel ("parcel<N>") bought or leased at once; if that fails nothing is surveyed.
+- **Tests:** `game/tests/run_tests.gd::test_property`
+
 ## Reverse dependency index
 
 <!-- index:start (generated by tools/check_interactions.py --write) -->
@@ -460,34 +507,35 @@ Rules:
 | System | Interactions |
 |---|---|
 | Character | INT-001, INT-018, INT-031 |
-| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044 |
+| Player state | INT-003, INT-004, INT-005, INT-006, INT-018, INT-021, INT-031, INT-038, INT-044, INT-052, INT-053 |
 | Inventory | INT-003, INT-005, INT-006, INT-007, INT-008, INT-009, INT-010, INT-014, INT-015, INT-019, INT-021, INT-027, INT-028, INT-030, INT-031, INT-032, INT-038, INT-043, INT-044, INT-045, INT-046 |
 | Equipment | INT-003, INT-004, INT-015, INT-031 |
-| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047 |
+| Food | INT-010, INT-011, INT-027, INT-028, INT-042, INT-047, INT-054 |
 | Health | INT-004, INT-010, INT-011, INT-012, INT-016, INT-018, INT-033 |
 | Combat | INT-004, INT-012, INT-013, INT-032 |
-| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050 |
+| Crime | INT-007, INT-008, INT-013, INT-031, INT-032, INT-038, INT-039, INT-043, INT-044, INT-045, INT-046, INT-048, INT-050, INT-051 |
 | Loot | INT-015, INT-016, INT-018, INT-028, INT-030 |
-| Fields | INT-007, INT-009, INT-025, INT-029, INT-046 |
+| Fields | INT-007, INT-009, INT-025, INT-029, INT-046, INT-051 |
 | Resources | INT-004, INT-005, INT-006, INT-029, INT-035, INT-037, INT-040 |
-| Crafting | INT-021, INT-035, INT-036 |
-| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050 |
-| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046 |
-| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045 |
+| Crafting | INT-021, INT-035, INT-036, INT-051 |
+| Market | INT-019, INT-020, INT-024, INT-025, INT-026, INT-035, INT-036, INT-037, INT-041, INT-042, INT-043, INT-045, INT-047, INT-050, INT-051, INT-055 |
+| Coins | INT-003, INT-008, INT-014, INT-015, INT-016, INT-017, INT-019, INT-020, INT-022, INT-023, INT-026, INT-035, INT-036, INT-038, INT-044, INT-045, INT-046, INT-052, INT-053, INT-056 |
+| Treasury | INT-008, INT-022, INT-023, INT-024, INT-025, INT-026, INT-031, INT-036, INT-045, INT-052, INT-053, INT-056 |
 | Wages | INT-023, INT-029 |
 | Relief | INT-024, INT-047 |
-| Granary | INT-024, INT-025, INT-031, INT-047 |
-| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050 |
-| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047 |
+| Granary | INT-024, INT-025, INT-031, INT-047, INT-054 |
+| Households | INT-016, INT-017, INT-022, INT-024, INT-027, INT-029, INT-038, INT-039, INT-042, INT-043, INT-047, INT-048, INT-050, INT-051, INT-053, INT-054 |
+| Employment | INT-017, INT-023, INT-029, INT-037, INT-046, INT-047, INT-055 |
 | Inheritance | INT-017 |
-| Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033 |
+| Livestock | INT-009, INT-013, INT-017, INT-027, INT-031, INT-033, INT-051 |
 | Wildlife | INT-014, INT-028, INT-029, INT-033 |
 | Bandits | INT-012, INT-014, INT-050 |
-| Building | INT-018, INT-026, INT-030, INT-031, INT-048 |
-| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-046 |
+| Building | INT-018, INT-026, INT-030, INT-031, INT-048, INT-051, INT-052, INT-056 |
+| Ledger | INT-007, INT-008, INT-009, INT-010, INT-019, INT-020, INT-021, INT-046, INT-054 |
 | Save | INT-001, INT-002, INT-031, INT-034, INT-038, INT-039, INT-042, INT-045, INT-046, INT-048 |
-| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050 |
-| Containers | INT-031, INT-042, INT-043 |
+| Interface | INT-001, INT-002, INT-004, INT-032, INT-033, INT-034, INT-039, INT-040, INT-041, INT-042, INT-044, INT-046, INT-049, INT-050, INT-052 |
+| Containers | INT-031, INT-042, INT-043, INT-051, INT-054, INT-055 |
 | Interiors | INT-008, INT-014, INT-048, INT-049, INT-050 |
+| Property | INT-017, INT-018, INT-026, INT-030, INT-031, INT-051, INT-052, INT-053, INT-054, INT-055, INT-056 |
 
 <!-- index:end -->
