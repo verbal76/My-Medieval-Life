@@ -85,6 +85,14 @@
   65 MEDIUM, 0 confirmed defects; seed 2 365/365, 0 CRITICAL, 99 HIGH, 45 MEDIUM, 0 confirmed (reference 1f2ff4f: 0/48 and 0/99);
   gate 42509523836: 32 blocking findings, all baseline-only (df67e8e), identical to the development branch's; the baseline is not
   replaced (owner's decision). PRs #5-#15 closed naming `f0a854c`.
+- **2026-11-09 17:30 UTC: OVERNIGHT BACKLOG + PROP-03 TEST MERGED into `wip/b25r2-rev2` at `c9da5db`** (fast-forward from
+  `53a56d3`; `c9da5db` = `53a56d3` + `wip/b25-backlog` `f67afdb` (LIFE-05, BIZ-03, BIZ-04, TRD-02, INV-04, INV-05, SAV-02;
+  EMP-03 no change) + `wip/b25-prop03` `b727954`). Evidence: strict Tests 42607051457 attempt 2 passed (attempt 1:
+  net_fault_test and net_mp4_test failed on CI timing; both pass locally on `c9da5db`, 54/0 and 148/0; the merge touches no
+  net code, and SAV-02's new save keys are not net-synced sections); gate 42607055494 33 blocking, all baseline-difference kind,
+  determinism identical; recorded campaign 42627103286 (flight, record): seed 1 365/365 0 CRITICAL 17 HIGH 46 MEDIUM 0
+  confirmed, seed 2 365/365 0/63/42 0 confirmed, no FATAL. Development head: `c9da5db`. Next: MP-05 (`wip/b25-mp05-on-dev`
+  `242ca83`, full CI 42636628469 green) under its own recorded campaign (it changes cart pulling and parking), then merge.
 - **2026-11-09 11:05 UTC: JUS-04 + REG-07 MERGED into `wip/b25r2-rev2` at `53a56d3`** (fast-forward from `96b071c`; merge of
   `96b071c` and `4f1b3c8`; strict Tests 42597744977 on `53a56d3` passed; recorded campaign 42570299554 on `4f1b3c8`: seed 1
   365/365 0 CRITICAL 48 HIGH 65 MEDIUM 0 confirmed, seed 2 365/365 0/94/36 0 confirmed, archive ok; gate 42542329406 32
