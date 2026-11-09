@@ -150,6 +150,18 @@
   sold nor surrendered. MP-05 (PR #19) on
   `wip/b25-mp05-integration` `767ea22` (chests.gd conflict with INV-03 resolved, MP-05's superset kept): blocked on the security
   verification the owner listed (real host/guest, modified clients, reconnect, UI menus, privacy, tools/property outside chests).
+  **MP-05 verification, 2026-11-09 (partial):** code review of PR #19 found two defects, both fixed with tests:
+  (1) revoking a tier-3 agreement left a former partner pulling the other's cart (`Carts.update` now lets go when `may_use`
+  fails; mp05 test +2 checks, 1 failure on the old code; floor 22 -> 24); (2) MP-05's `Carts.park` guard stopped the
+  simulation parking villagers' carts (home_test 3 and underground_struct_test 1 failures on `767ea22`; guard now only stops a
+  player releasing another player's cart). Commits `a898541`, `be307f8` on `wip/b25-mp05-integration`. That branch's full run
+  42626491122 failed settle_review (5), aspiration Q8 (3), migration (1): the raw PR #17/#18 code it carries, already fixed on
+  the dev line. MP-05 rebased onto the backlog merge as `wip/b25-mp05-on-dev` `242ca83` (c9da5db + PR #19 + both fixes): full
+  CI 42636628469 green; those three suites 0 failures locally. Verified by review: chest takes filtered by tier (`goods`),
+  offer tier bounded 1-3, per-guest privacy of `asset_shares` (`_private_for`, MP-07), mutual revocation. Not yet done:
+  real two-device host/guest, modified-client request forging, reconnect, UI-menu walk. Limitation: a promoted guest after host
+  loss holds only its own pairs' agreements (same as offers). Next: merge `242ca83` onto the dev line after the backlog merge
+  lands (its own gate/campaign decision).
 - **(historical) AUDIT INTEGRATION (owner directive 2026-11-08, "Audit fix integration"): 11 corrections, PRs #5-#15.** Branch
   `wip/b25-audit-integration` from `wip/b25r2-rev2` `fe7d8f8`; tested head `0d252b4` = all 11 merged (merge order #5, #9, #10-#15,
   #6-#8; code merged clean; tests.yml conflicts resolved by keeping every line) + floors for the five suites of #5-#9 (6, 7, 8, 13,
