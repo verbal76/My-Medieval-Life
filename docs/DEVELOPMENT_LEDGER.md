@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (823)
+## Approved requirement (826)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -111,7 +111,10 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-ECON-P7 | Recover stranded settlement treasury ore | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-FINISH-01 | Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| B25-HH-BIZFOOD-D1 | A food seller's household eats from its own business stock when household food is short: no sale, no coins | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-INTEG-SEQ-02 | Build 25 integration sequence after the 2026-11-10 decisions, with mandatory regression coverage and campaign review | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-INV02-SPOIL-D1 | INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-MP03-OWNERSHIP-D1 | MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |

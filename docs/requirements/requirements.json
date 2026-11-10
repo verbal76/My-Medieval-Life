@@ -7471,6 +7471,69 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25-HH-BIZFOOD-D1",
+   "kind": "approved",
+   "title": "A food seller's household eats from its own business stock when household food is short: no sale, no coins",
+   "description": "A food seller's household eats from its own business stock when household food is short: no sale, no coins",
+   "source": "docs/directives/2026-11-10_household_food_property_permissions.md",
+   "owner_wording": "A food seller's own household may consume food from the seller's business inventory without making a purchase. A baker should not have a dependent child starving while edible bread sits in the family's own business inventory.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "Owner and eligible household members take edible food from their own business stock when household food is insufficient; no coins, revenue, profit, market activity or tax",
+    "Exact deduction from business stock; food never in both places; existing availability, ownership, spoilage and inventory rules respected",
+    "Unrelated households cannot take it; no self-purchase used; no retry loops",
+    "Tests: owner, dependant without coins, insufficient stock, competing members, spoilage, conservation, save/load, deterministic replay; the six self-trade scenarios still pass, the 240-decision no-food case free of retry loops"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_household_food_property_permissions.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B25-INTEG-SEQ-02",
+   "kind": "approved",
+   "title": "Build 25 integration sequence after the 2026-11-10 decisions, with mandatory regression coverage and campaign review",
+   "description": "Build 25 integration sequence after the 2026-11-10 decisions, with mandatory regression coverage and campaign review",
+   "source": "docs/directives/2026-11-10_household_food_property_permissions.md",
+   "owner_wording": "Refresh the actual GitHub Actions statuses and artifacts. Merge only when dependencies and required validation gates permit it. Validate the exact resulting merge commit SHA.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "Each merge validated on its exact SHA from Actions artifacts",
+    "Batch 3 campaign reviewed for failed food purchases, self-trade regressions, starvation despite family food, conservation, spoilage, save/load and determinism",
+    "The 33 baseline differences stay blocking until investigated and resolved or accepted through the baseline process"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_household_food_property_permissions.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-INV02-SPOIL-D1",
    "kind": "approved",
    "title": "INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation",
@@ -7538,6 +7601,38 @@
    "supersedes": [
     "X20-ACTIVATION-AUTHORITY"
    ]
+  },
+  {
+   "id": "B25-MP03-OWNERSHIP-D1",
+   "kind": "approved",
+   "title": "MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity",
+   "description": "MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity",
+   "source": "docs/directives/2026-11-10_household_food_property_permissions.md",
+   "owner_wording": "Ownership and permissions determine access. Being the multiplayer host does not grant unrestricted ownership. Being a guest does not remove legitimate ownership rights.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "Genuinely public unowned tables usable within reach; physical access alone never makes a table public",
+    "Tavern tables private (all 15 in the current village unchanged); a dead keeper's tables stay private until ownership is resolved through existing succession/estate rules; any gap documented before a new system",
+    "Players reach tables and containers they own or are authorized to use, including their own home, by the same rules for host and guest; unauthorized players blocked",
+    "Host validates every access; refusals move no goods or coins; reach rules kept; host/guest discrepancies investigated"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_household_food_property_permissions.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
   },
   {
    "id": "B25-MP03-TABLES-D1",

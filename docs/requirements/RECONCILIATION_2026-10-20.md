@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 862 (466 of them still open) |
-| **Open entries now** (rules excluded) | | **624** |
+| Entries added since | | 865 (469 of them still open) |
+| **Open entries now** (rules excluded) | | **627** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (862)
+## Added since the baseline (865)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -204,8 +204,11 @@ None.
 | B25-EMPLOY-D3 | How do skilled occupations grow? | decision | APPROVED | owner decision |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-FINISH-01 | Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
+| B25-HH-BIZFOOD-D1 | A food seller's household eats from its own business stock when household food is short: no sale, no coins | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| B25-INTEG-SEQ-02 | Build 25 integration sequence after the 2026-11-10 decisions, with mandatory regression coverage and campaign review | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-INV02-SPOIL-D1 | INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-LE-ACTIVATE-D1 | Living Economy activation policy for Build 25 | decision | APPROVED | owner decision |
+| B25-MP03-OWNERSHIP-D1 | MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
 | B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | B25-NINE-D1 | Organic skills, apprenticeship and career development | decision | APPROVED | owner decision |
