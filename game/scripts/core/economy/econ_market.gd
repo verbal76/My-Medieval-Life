@@ -1,8 +1,8 @@
 class_name EconMarket
 extends RefCounted
 ## Expansion 20 (Living Economy), LE-02: adaptive bids, asks, negotiation and settlement (design s.5; gate "Ledger-safe
-## multi-actor trades"). DISABLED and isolated: built by EconomyFoundation only while game/data/economy.json "enabled" is true,
-## and it acts only with "market": {"drive": true}. Developer note: docs/expansion20/LE02_IMPLEMENTATION.md.
+## multi-actor trades"). Built by EconomyFoundation only while game/data/economy.json "enabled" is true (on since
+## B25-LE-ACTIVATE-D1), and it acts only with "market": {"drive": true} (on). Developer note: docs/expansion20/LE02_IMPLEMENTATION.md.
 ##
 ## Owner policies implemented (no others):
 ##   OD-LE-02   combined market pricing: supply, demand, scarcity and completed transactions inform asking prices; buyers and

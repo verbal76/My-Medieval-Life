@@ -154,7 +154,7 @@ var economy_foreign := {}   # D2: a saved "economy" section while the foundation
 var employment: Employment     # EMP-PERM-01: the players' permanent employees (scripts/core/employment.gd); saved as the optional key "employment"
 var ventures: Ventures         # B25-BUSINESS-IMPL: villagers' own businesses (scripts/core/ventures.gd); state saved with households and buildings
 var transactions: EconTransactions = null   # LE-03: the transaction authority (docs/expansion20/TRANSACTION_AUTHORITY.md); saved as "transactions" only when non-empty
-var economy: EconomyFoundation = null   # EXPANSION 20 LE-01: null unless game/data/economy.json "enabled" (shipped false); saved as the optional key "economy" only when on and non-empty
+var economy: EconomyFoundation = null   # EXPANSION 20 LE-01: null unless game/data/economy.json "enabled" (on since B25-LE-ACTIVATE-D1); saved as the optional key "economy" only when on and non-empty
 var credit: Credit            # TRADE-CREDIT: barter and recorded debts (scripts/core/credit.gd). Saved as the optional key "credit" (older saves have none)
 var contracts: Contracts      # CON-01: negotiated goods-procurement contracts (scripts/core/contracts.gd). Saved (older saves have none)
 var discovery: Discovery    # MIN-D: trial pits, seams opened from finds, the settlement's mining capability (scripts/core/discovery.gd; saved in "discovery")

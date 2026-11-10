@@ -11,7 +11,12 @@ not request another owner approval merely to change the enabled flag after those
 those thirteen gates; item 13 is now the recording of that authorization with the commit, evidence and configuration, not a new
 request. Gate-by-gate status and the prepared activation change: `docs/expansion20/LE07_GATE_STATUS.md`.
 
-**Nothing here enables the economy.** `game/data/economy.json` `"enabled": false` is unchanged and a test (`le07_gates_test`)
+> **Current state (B25-AUD-TRD-05, 2026-11-10):** the Living Economy is ON. Section 5 records the activation (2026-11-03,
+> B25-LE-ACTIVATE-D1): `game/data/economy.json` `"enabled": true` and `market.drive` true; `market.services` and
+> `market.negotiated_wages` stay false. The paragraph below and the "Release / default" row of section 2 describe the mechanism
+> before activation and are kept as history; `le07_gates_test::test_default` now checks the switch is on.
+
+**Nothing here enables the economy** (as written before activation). `game/data/economy.json` `"enabled": false` is unchanged and a test (`le07_gates_test`)
 fails if it is ever shipped on. Enabling it is one line in that file, made only on the owner's explicit authorization, with the
 commit, evidence and configuration recorded (X20-RESUME's "Record the exact activation commit, evidence, and configuration").
 
@@ -36,7 +41,7 @@ Design s.16 rows, as far as a short headless run can show them:
 
 | Gate (s.16) | Check |
 |---|---|
-| Release / default | the shipped switch is off; `market.services` off (X20-SERVICES-SCOPE open); `market.negotiated_wages` off; economy off builds and saves nothing |
+| Release / default | (before activation; now on, section 5) the shipped switch is off; `market.services` off (X20-SERVICES-SCOPE open); `market.negotiated_wages` off; economy off builds and saves nothing |
 | Accounting | a day with the economy on: the world's coins less what crossed its boundary unchanged |
 | Determinism | two runs of the same seed give economy_sim's fingerprint |
 | Persistence | the economy section loads back exactly; the ledger the same after loading and after running on. Not a fingerprint through save/load: found while writing this gate, the base game's fingerprint is not kept by a JSON save even with the economy off (it differs right after loading, e.g. float positions and hunger), so it cannot gate the economy; LE-06's measure (the section's exact load-back) is used |

@@ -1,7 +1,7 @@
 class_name EconNeeds
 extends RefCounted
-## Expansion 20 (Living Economy), LE-01: the need record (design s.3 Need, s.4). DISABLED and isolated: World builds it only
-## when game/data/economy.json "enabled" is true. It DERIVES needs from state the game already keeps and changes none of
+## Expansion 20 (Living Economy), LE-01: the need record (design s.3 Need, s.4). World builds it only
+## when game/data/economy.json "enabled" is true (on since B25-LE-ACTIVATE-D1). It DERIVES needs from state the game already keeps and changes none of
 ## it: it calls no function that writes (no evaluate_household, no hourly price or reserve cache), draws no random number,
 ## moves no coin or good, and nothing in live play reads it to decide.
 ##

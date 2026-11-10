@@ -1,8 +1,8 @@
 class_name EconReservations
 extends RefCounted
 ## Expansion 20 (Living Economy), LE-01: the reservation record (spec s.6: "Explicitly reserve or earmark material while
-## retaining physical ownership and location"). DISABLED and isolated: World builds it only when game/data/economy.json
-## "enabled" is true; nothing in live play calls it.
+## retaining physical ownership and location"). World builds it only when game/data/economy.json
+## "enabled" is true (on since B25-LE-ACTIVATE-D1); the market, claims and contracts hold reservations through it.
 ##
 ## Record {id, owner, item, qty, purpose, made_day, made_minute, expiry, state}: owner is an actor ref, item an item id or
 ## COINS ("coins"), expiry a day (-1: never) after which expire_due(day) marks it expired, state held | released |
