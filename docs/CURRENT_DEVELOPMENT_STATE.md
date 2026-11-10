@@ -39,7 +39,7 @@ and `wip/b25r1`, which are no longer the development line.
 | Item | Value |
 |---|---|
 | Build | Build 25, Revision 2 ("Play Test Build One"); the package label is to be "0.1.34 Rev 2 — Playtest 1" (B25R2-VER-01) |
-| **Development line (code)** | **`wip/b25r2-rev2` at `93bb304`** (2026-11-10 07:22 UTC / 02:22 EST: MP-03 `0acded4` + TRD-05 `85ad919` on `167b235`; Tests 42764399707 on `93bb304`: ci-validation pass, 269 suites, 0 failed, mp03_forged_store_test among them). Next: public tables and property rules merged on top as `9fd18a5` (`wip/b25-tables-on-dev`), Tests dispatched 07:23 UTC; batch 3 campaign due ~08:40 UTC; batch 4 waits on it |
+| **Development line (code)** | **`wip/b25r2-rev2` at `9fd18a5`** (2026-11-10 08:21 UTC / 03:21 EST: public tables and property rules merged on `93bb304`; Tests 42774872922 on `9fd18a5`: ci-validation pass, 271 suites, 0 failed). Before it: `93bb304` MP-03 + TRD-05 (07:22 UTC), `167b235` KI-09 (05:48 UTC). Batch 3 campaign due ~08:40 UTC; batch 4 waits on it |
 | Records branch | `wip/requirements-control`: register, directives, this file, changelog, known issues, decision records. Lead only |
 | Audit register | branch docs/build25-audit-register, commit `257475c`, file docs/audits/2026-11-08_build25_master_audit_register.md on that branch; tracking issue #4 |
 | Running Actions | None. Last: MP-05 recorded campaign [42664730920](https://github.com/verbal76/My-Medieval-Life/actions/runs/42664730920) on `242ca83`, completed 21:13 UTC: seed 1 365/365 0 CRITICAL 17 HIGH 46 MEDIUM 0 confirmed; seed 2 365/365 0/63/42 0 confirmed (identical to `c9da5db`) |

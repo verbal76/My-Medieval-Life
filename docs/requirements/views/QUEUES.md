@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (23)
+## Workers and task branches (21)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -11,8 +11,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-FINISH-01 | 20 | IN DEVELOPMENT | lead session | wip/region-nav |
 | B25-HH-BIZFOOD-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-audit-sim4 |
 | B25-INV02-SPOIL-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | worker agent (PAR-AGENTS-01) | wip/b25-inv02-proposal |
-| B25-MP03-OWNERSHIP-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | worker agent (PAR-AGENTS-01) | wip/b25-mp03-public-tables |
-| B25-MP03-TABLES-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | worker agent (PAR-AGENTS-01) | wip/b25-mp03-public-tables |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | B25-SELFTRADE-VAL-01 | unassigned | IN DEVELOPMENT | lead | wip/b25-audit-sim3 |
 | B25R1-023 | 20 | IN DEVELOPMENT | b25r1-grassmap worker | wip/b25r1-grassmap |
@@ -53,8 +51,8 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-EMPLOY-IMPL | 20 | INTEGRATED |  |
 | B25-HH-BIZFOOD-D1 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 | B25-INV02-SPOIL-D1 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
-| B25-MP03-OWNERSHIP-D1 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
-| B25-MP03-TABLES-D1 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
+| B25-MP03-OWNERSHIP-D1 | unassigned | INTEGRATED |  |
+| B25-MP03-TABLES-D1 | unassigned | INTEGRATED |  |
 | B25-OVN-0211 | 20 | INTEGRATED |  |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |
 | B25R1-001 | 20 | PARTIALLY IMPLEMENTED |  |

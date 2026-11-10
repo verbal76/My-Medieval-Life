@@ -75,6 +75,9 @@ entries below, INTEGRATED means in that day's development line.
 
 ### 2026-11-10 (Tuesday)
 
+**Public tables and property rules MERGED at `9fd18a5`, 08:21 UTC (03:21 EST).** Fast-forward from `93bb304`. Tests 42774872922 on
+`9fd18a5`: ci-validation pass, 271 suites, 0 failed, both new MP-03 tests among them.
+
 **MP-03 and TRD-05 MERGED at `93bb304`, 07:22 UTC (02:22 EST).** Fast-forward from `167b235`. Tests 42764399707 on `93bb304`:
 ci-validation pass, 269 suites, 0 failed. Public tables and the property rules (`4b83422`, `e3be9ef`, `1fe781d`; owner decisions
 B25-MP03-TABLES-D1 and B25-MP03-OWNERSHIP-D1) merged on top as `9fd18a5` (`wip/b25-tables-on-dev`), Tests dispatched. Batch 3 strict
