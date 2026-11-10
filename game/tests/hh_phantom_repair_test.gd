@@ -16,8 +16,13 @@ extends SceneTree
 ##   3 phantoms removed: a band adult (as p:142), orphans placed elsewhere (as household 27's), a moved villager; a duplicate
 ##     entry kept once; a living villager missing from every list put back in their own household
 ##   4 legitimate entries kept: a dead member in their own household, the band household's other members, every other member
-##   5 ambiguous entries kept as they are and flagged: an unknown id, a dead person listed in a second household, a living person
-##     with no household, conflicting records, an ended household listing someone else's member
+##   5 ambiguous entries kept as they are and flagged: an unknown id, a dead or departed person their own household does not list
+##     or the register does not place, a living person with no household, conflicting records, an ended household listing
+##     someone else's member, a bandit still a bandit listed by another household
+##   D3 (owner 2026-11-10, B25-SAVE-PHANTOM-D3): a dead person listed in a second household (their own lists them, the register
+##     says dead) and a villager gone to a settlement (the register agreeing) are removed from the second household only, their
+##     records untouched; a bandit who left the band (LifeDecisions.leave_band) is removed from the band household; an active
+##     bandit with no household listed by the band household stays, unflagged; a former bandit with no household is flagged
 ##   6 the orphans' old household offers no orphans any more (no re-placement every dawn)
 ##   7 coins and items unchanged by the repair
 ##   8 idempotent: save -> load -> save is identical, the second load repairs and flags nothing new
@@ -53,6 +58,13 @@ func _has_entry(rep: Dictionary, part: String, kind: String, h: int, id: int) ->
 func _report(w: World) -> Dictionary:
 	var r = w.get("membership_report")       # (read by name: the failing-first run is on a build without it)
 	return r if r is Dictionary else {}
+
+
+func _flag_of(rep: Dictionary, id: int) -> bool:
+	for e in rep.get("flagged", []):
+		if int(e.id) == id:
+			return true
+	return false
 
 
 func _items(w: World) -> int:
@@ -97,10 +109,10 @@ func _init() -> void:
 	var orph := _household(w1, "Oakley")          # adults 23, 24, 25; children 26, 27 (seed 1)
 	var marsh := _household(w1, "Marsh")          # 33-35 adults, 36 child, 37 elder
 	var lore := _household(w1, "Lorekeeper")      # 12, alone
-	var brook := 21
 	check(band >= 0 and orph >= 0 and marsh >= 0 and lore >= 0, "the households of the scenario exist (band %d, orphans %d, Marsh %d, Lorekeeper %d)" % [band, orph, marsh, lore])
 	var lead: NPC = w1.npc(int((w1.households[band].members as Array)[0]))
-	Guardianship.move(w1, lead, brook, "villager")    # as p:142: a band adult moved into a village household
+	w1.life.leave_band(lead)                            # as p:142: a band adult leaves the band for a village household (D3)
+	var lead_h := lead.household
 	for id in [23, 24, 25]:
 		w1.kill(w1.npc(id), "illness")
 	var kids := [26, 27]
@@ -130,7 +142,24 @@ func _init() -> void:
 	for nd in d1.npcs:
 		by[int(nd.id)] = nd
 	hs[10].members.append(999999)                       # an id no villager has
-	hs[11].members.append(23)                           # a dead person (Oakley's) listed in a second household
+	hs[11].members.append(23)                           # a dead person (Oakley's, listed there, dead in the register) listed in a second household
+	(hs[orph].members as Array).erase(24.0)
+	(hs[orph].members as Array).erase(24)
+	hs[15].members.append(24)                           # a dead person listed only in a household not their own: cannot be settled
+	var sid: String = str(w1.regions.list[0].id)
+	by[98].alive = false                                # 98 (household 23) moved to a settlement, the register agreeing; also listed in 24
+	by[98].away = sid
+	d1.people["98"].where = sid
+	hs[24].members.append(98)
+	by[110].alive = false                               # 110 (household 24) away, the register still saying the village; also listed in 23
+	by[110].away = sid
+	hs[23].members.append(110)
+	var bandits: Array = (hs[band].members as Array).map(func(x): return int(x)).filter(func(x): return x != lead.id)
+	by[bandits[0]].household = -1                       # an active bandit with no household on record, listed by the band household
+	by[bandits[1]].household = -1                       # a former bandit (no longer one, no clan) with no household, still listed by the band
+	by[bandits[1]].role = "adult"
+	by[bandits[2]].household = 22                       # a bandit (still one) whom household 22 also lists
+	hs[22].members.append(bandits[2])
 	by[46].household = -1                               # a living person of household 10 with no household on record
 	(hs[11].members as Array).erase(50.0)
 	(hs[11].members as Array).erase(50)
@@ -145,7 +174,8 @@ func _init() -> void:
 	check(w2.load_error == "", "the old save loads (%s)" % w2.load_error)
 	var h2: Array = w2.households
 	# 3 phantoms removed
-	check(_count(h2[band].members, lead.id) == 0 and _count(h2[brook].members, lead.id) == 1, "the band adult who left is no longer listed in the band household (as p:142), only in their own")
+	check(lead_h >= 0 and lead_h != band and lead.role != "bandit" and _count(h2[band].members, lead.id) == 0 and _count(h2[lead_h].members, lead.id) == 1,
+			"the bandit who left the band is no longer listed in the band household (as p:142), only in their own (%d)" % lead_h)
 	check(_count(h2[orph].members, 26) == 0 and _count(h2[orph].members, 27) == 0, "the placed orphans are no longer listed in their old household")
 	for id in kids:
 		var hk: int = w2.npc(id).household
@@ -155,7 +185,7 @@ func _init() -> void:
 	check(_count(h2[13].members, 58) == 1, "a living villager listed nowhere is put back in their own household")
 	# 4 legitimate entries kept
 	check(_count(h2[marsh].members, 37) == 1, "a dead member stays in their own household")
-	check(_count(h2[orph].members, 23) == 1 and _count(h2[orph].members, 24) == 1 and _count(h2[orph].members, 25) == 1, "the orphans' dead parents stay in their household")
+	check(_count(h2[orph].members, 23) == 1 and _count(h2[orph].members, 25) == 1, "the orphans' dead parents stay in their household")
 	var bandits_ok := true
 	for m in hs[band].members:
 		if int(m) != lead.id and _count(h2[band].members, int(m)) != 1:
@@ -164,7 +194,21 @@ func _init() -> void:
 	# 5 ambiguous entries kept and flagged
 	var rep: Dictionary = _report(w2)
 	check(_count(h2[10].members, 999999) == 1 and _has_entry(rep, "flagged", "unknown_id", 10, 999999), "an unknown id is kept and flagged")
-	check(_count(h2[11].members, 23) == 1 and _count(h2[orph].members, 23) == 1 and _has_entry(rep, "flagged", "dead_elsewhere", 11, 23), "a dead person listed in a second household is kept and flagged")
+	check(_count(h2[11].members, 23) == 0 and _count(h2[orph].members, 23) == 1 and _has_entry(rep, "repaired", "dead_phantom", 11, 23),
+			"D3: a dead person listed in a second household is removed from it and stays in the household they died in")
+	check(_count(h2[15].members, 24) == 1 and _has_entry(rep, "flagged", "dead_elsewhere", 15, 24), "D3: a dead person their own household does not list is kept and flagged")
+	check(_count(h2[24].members, 98) == 0 and _count(h2[23].members, 98) == 1 and _has_entry(rep, "repaired", "away_phantom", 24, 98),
+			"D3: a villager gone to a settlement, listed in a second household, is removed from it only")
+	check(_count(h2[23].members, 110) == 1 and _count(h2[24].members, 110) == 1 and _has_entry(rep, "flagged", "dead_elsewhere", 23, 110),
+			"D3: a departed villager the register does not place is kept and flagged")
+	check(w2.npc(23) != null and not w2.npc(23).alive and str(w2.people[23].where) == Identity.DEAD and w2.npc(98).away == sid,
+			"D3: the dead and departed people's records and the register are untouched")
+	check(_count(h2[band].members, bandits[0]) == 1 and w2.npc(bandits[0]).household == -1 and not _flag_of(rep, bandits[0]),
+			"D3: an active bandit with no household, listed by the band household, is kept and not flagged")
+	check(_count(h2[band].members, bandits[1]) == 1 and _has_entry(rep, "flagged", "no_household", band, bandits[1]),
+			"D3: a former bandit with no household and no record of where they went is kept in the band household and flagged")
+	check(_count(h2[band].members, bandits[2]) == 1 and _count(h2[22].members, bandits[2]) == 1 and _has_entry(rep, "flagged", "band_conflict", band, bandits[2]),
+			"D3: a bandit still a bandit whom another household lists is kept in both and flagged")
 	check(_count(h2[10].members, 46) == 1 and w2.npc(46).household == -1 and _has_entry(rep, "flagged", "no_household", 10, 46), "a living person with no household on record is kept and flagged")
 	check(_count(h2[12].members, 50) == 1 and _count(h2[11].members, 50) == 0 and _has_entry(rep, "flagged", "conflict", 12, 50) and _has_entry(rep, "flagged", "unlisted", 11, 50),
 			"conflicting records (50 says 11, only 12 lists them) are kept and flagged")
@@ -172,10 +216,10 @@ func _init() -> void:
 	check(_has_entry(rep, "repaired", "phantom", band, lead.id) and _has_entry(rep, "repaired", "phantom", orph, 26) and _has_entry(rep, "repaired", "phantom", orph, 27)
 			and _has_entry(rep, "repaired", "phantom", marsh, 33) and _has_entry(rep, "repaired", "duplicate", marsh, 36) and _has_entry(rep, "repaired", "missing", 13, 58),
 			"every repair is in the report")
-	check((rep.get("repaired", []) as Array).size() == 6 and (rep.get("flagged", []) as Array).size() == 6,
-			"6 repaired and 6 flagged (%d, %d)" % [(rep.get("repaired", []) as Array).size(), (rep.get("flagged", []) as Array).size()])
+	check((rep.get("repaired", []) as Array).size() == 8 and (rep.get("flagged", []) as Array).size() == 9,
+			"8 repaired and 9 flagged (%d, %d)" % [(rep.get("repaired", []) as Array).size(), (rep.get("flagged", []) as Array).size()])
 	# every other living villager is listed once, in their own household only
-	var flagged_ids := {46: true, 50: true, 54: true}
+	var flagged_ids := {46: true, 50: true, 54: true, bandits[0]: true, bandits[1]: true, bandits[2]: true}
 	var bad := []
 	for o: NPC in w2.npcs:
 		if not o.alive or flagged_ids.has(o.id) or o.household < 0:
@@ -195,9 +239,9 @@ func _init() -> void:
 	w3.load_dict(map, JSON.parse_string(s2))
 	var s3 := JSON.stringify(w3.to_dict(), "", true, true)
 	check(s2 == s3, "save -> load -> save is identical after the repair")
-	check(float(w2.stats.get("household_members_repaired", 0.0)) == 6.0 and float(w3.stats.get("household_members_repaired", 0.0)) == 0.0
+	check(float(w2.stats.get("household_members_repaired", 0.0)) == 8.0 and float(w3.stats.get("household_members_repaired", 0.0)) == 0.0
 			and float(w3.stats.get("household_members_flagged", 0.0)) == 0.0,
-			"the first load counts 6 repairs, the second load repairs and flags nothing (%s, %s)" % [w2.stats.get("household_members_repaired", 0.0), w3.stats.get("household_members_repaired", 0.0)])
+			"the first load counts 8 repairs, the second load repairs and flags nothing (%s, %s)" % [w2.stats.get("household_members_repaired", 0.0), w3.stats.get("household_members_repaired", 0.0)])
 	check(JSON.stringify(_report(w3)) == JSON.stringify(_report(w2)), "the second load flags nothing new")
 	# 9 deterministic
 	var w4 := World.new()
