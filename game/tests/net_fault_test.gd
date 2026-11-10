@@ -40,7 +40,7 @@ func _init() -> void:
 	dport = port + 1
 	pport = port + 2
 	DirAccess.make_dir_recursive_absolute(dir)
-	for f in ["status.json", "cmd.json", "host_save.json", "host_save.json.bak", "proxy.json", "proxy_status.json", "g2.json"]:
+	for f in ["status.json", "cmd.json", "host_save.json", "host_save.json.bak", "proxy.json", "proxy_status.json", "g2.json", "g2.json.tmp"]:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(dir + f))
 	main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
@@ -62,6 +62,14 @@ func read_json(name: String) -> Dictionary:
 	return d if typeof(d) == TYPE_DICTIONARY else {}
 
 
+## Written aside and renamed (KI-12), so the host and the relay never read half a file.
+func write_json(name: String, d: Dictionary) -> void:
+	var f := FileAccess.open(dir + name + ".tmp", FileAccess.WRITE)
+	f.store_string(JSON.stringify(d))
+	f.close()
+	DirAccess.rename_absolute(ProjectSettings.globalize_path(dir + name + ".tmp"), ProjectSettings.globalize_path(dir + name))
+
+
 func status() -> Dictionary:
 	return read_json("status.json")
 
@@ -69,17 +77,13 @@ func status() -> Dictionary:
 func command(d: Dictionary, wait_for := true) -> void:
 	seq += 1
 	d["seq"] = seq
-	var f := FileAccess.open(dir + "cmd.json", FileAccess.WRITE)
-	f.store_string(JSON.stringify(d))
-	f.close()
+	write_json("cmd.json", d)
 	if wait_for:
 		await until(func(): return int(status().get("seq", -1)) >= seq, 5.0)
 
 
 func proxy(cfg: Dictionary) -> void:
-	var f := FileAccess.open(dir + "proxy.json", FileAccess.WRITE)
-	f.store_string(JSON.stringify(cfg))
-	f.close()
+	write_json("proxy.json", cfg)
 	await wait(0.4)                              # the relay reads it every 0.2 s
 
 
@@ -373,12 +377,18 @@ func _guest_killed() -> void:
 	# frozen (SIGSTOP) longer than the timeouts, then let go: it reconnects by itself. The usual timeouts hold once it plays (its
 	# first frame after building the world, NetSession.zz_playing); frozen before that, the host gives it JOIN_TIMEOUT_MS (CI run
 	# 42111915754: frozen while still joining, not dropped in the 20 s below)
-	await until(func(): return int(net_d().get("joining", -1)) == 0, NetSession.JOIN_TIMEOUT_MS / 1000.0)
+	var playing := await until(func(): return int(net_d().get("joining", -1)) == 0, NetSession.JOIN_TIMEOUT_MS / 1000.0)
 	OS.execute("kill", ["-STOP", str(guest2_pid)])
-	await until(func(): return not conn().has(pid2), 20.0)
+	var t_stop := Time.get_ticks_msec()
+	var dropped := await until(func(): return not conn().has(pid2), 20.0)
+	var frozen_s := (Time.get_ticks_msec() - t_stop) / 1000.0
+	check(playing and dropped, "the second guest frozen: the host drops it in its time (playing before the freeze %s; dropped %s after %.1f s; host %s)" % [str(playing), str(dropped), frozen_s, str(status().get("peer_log", []).slice(-2))])
 	OS.execute("kill", ["-CONT", str(guest2_pid)])
-	var thawed := await until(func(): var g := read_json("g2.json"); return int(g.get("reconnects", 0)) >= 1 and bool(g.guest_world) and not bool(g.reconnecting), 30.0)
-	check(thawed and conn().has(pid2) and int(read_json("g2.json").pid) == pid2, "frozen past the timeouts and let go, it reconnects by itself as itself (%s; host %s)" % [str(read_json("g2.json")), str(conn())])
+	# KI-12: let go, the guest sees the long frame as a freeze and reconnects at once (NetSession._process), not after ENet finds the
+	# dead connection (TIMEOUT_MAX_MS or more after its first send: 0-20 s measured) and the world sent again
+	var t_cont := Time.get_ticks_msec()
+	var thawed := await until(func(): var g := read_json("g2.json"); return int(g.get("reconnects", 0)) >= 1 and bool(g.get("guest_world", false)) and not bool(g.get("reconnecting", true)), 30.0)
+	check(thawed and conn().has(pid2) and int(read_json("g2.json").pid) == pid2, "frozen past the timeouts and let go, it reconnects by itself as itself (%.1f s after; %s; host %s, joining %d)" % [(Time.get_ticks_msec() - t_cont) / 1000.0, str(read_json("g2.json")), str(conn()), int(net_d().get("joining", -1))])
 	OS.kill(guest2_pid)
 	await until(func(): return not conn().has(pid2), 20.0)
 
