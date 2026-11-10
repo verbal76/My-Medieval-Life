@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 883 (487 of them still open) |
-| **Open entries now** (rules excluded) | | **645** |
+| Entries added since | | 884 (488 of them still open) |
+| **Open entries now** (rules excluded) | | **646** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (883)
+## Added since the baseline (884)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -221,6 +221,7 @@ None.
 | B25-LE-ACTIVATE-D1 | Living Economy activation policy for Build 25 | decision | APPROVED | owner decision |
 | B25-MP03-OWNERSHIP-D1 | MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
 | B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
+| B25-ND12-01 | ND-12: recorder diagnostic line overwritten (refused-trade detail) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | B25-NINE-D1 | Organic skills, apprenticeship and career development | decision | APPROVED | owner decision |
 | B25-NINE-D2 | Informal services and expanded service contracts | decision | APPROVED | owner decision |

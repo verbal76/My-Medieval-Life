@@ -81,7 +81,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 
-## Approved, no build assigned (56)
+## Approved, no build assigned (57)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -104,6 +104,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-INV02-SPOIL-D1 | INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-MP03-OWNERSHIP-D1 | MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity | approved | OWNER APPROVED | INTEGRATED |
 | B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | approved | OWNER APPROVED | INTEGRATED |
+| B25-ND12-01 | ND-12: recorder diagnostic line overwritten (refused-trade detail) | approved | OWNER APPROVED | NOT STARTED |
 | B25-P99-PAYER-01 | p:99: planner reserve check vs payer funds mismatch causes repeated refused buy_from | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-REG02-DEBT-D1 | REG-02 migrating household loans: option (b), preserving legitimate continuing obligations | approved | OWNER APPROVED | NOT STARTED |
 | B25-SAV04-D1 | SAV-04: reload deterministic; exact equivalence with an uninterrupted wildlife/combat run not required | approved | OWNER APPROVED | NOT STARTED |

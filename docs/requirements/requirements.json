@@ -8115,6 +8115,35 @@
    ]
   },
   {
+   "id": "B25-ND12-01",
+   "kind": "approved",
+   "title": "ND-12: recorder diagnostic line overwritten (refused-trade detail)",
+   "description": "ND-12: recorder diagnostic line overwritten (refused-trade detail)",
+   "source": "docs/directives/2026-11-10_nd12_recorder_diagnostic.md",
+   "owner_wording": "investigate, reproduce, fix, test, and document ND-12: Recorder Diagnostic Line Being Overwritten",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "root cause by evidence; failing-first tests; distinct events, real reasons, deterministic, no duplicates, no gameplay change; full Tests and gate; records updated"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_nd12_recorder_diagnostic.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-NINE",
    "kind": "approved",
    "title": "Build 25: implement the nine consolidated owner decisions of 2026-11-01",
