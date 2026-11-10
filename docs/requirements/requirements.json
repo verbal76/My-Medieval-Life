@@ -7558,7 +7558,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7567,9 +7567,19 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_owner_decisions_audit_continuation.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; assigned_worker: None -> worker agent (PAR-AGENTS-01); branch: None -> wip/b25-mp03-public-tables; commits + 4b83422",
+     "why": "worker 2026-11-10: 4b83422 on wip/b25-mp03-public-tables (base 0acded4): NetActions.public_table + _dec_inv; mp03_public_tables_test 67 checks, 4 failures before, 0 after; 14 related suites 0 failures; lead reviewed the diff. None of the 15 shipped tables is public (all in the tavern). Owner questions: tavern tables public? a table in the guest's own house? a tavern table with no keeper left?"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "worker agent (PAR-AGENTS-01)",
+   "branch": "wip/b25-mp03-public-tables",
+   "commits": [
+    "4b83422"
+   ]
   },
   {
    "id": "B25-NINE",

@@ -89,7 +89,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-DISK-CLEAN-D1 | Verified safe disk cleanup of the lead machine | approved | OWNER APPROVED | INTEGRATED |
 | B25-ECON-P7 | Recover stranded settlement treasury ore | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25-INV02-SPOIL-D1 | INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation | approved | OWNER APPROVED | NOT STARTED |
-| B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | approved | OWNER APPROVED | NOT STARTED |
+| B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-SELFTRADE-VAL-01 | Self-trade payer defect: complete the investigation beyond preventing the self-trade | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25R1-025 | Aerial region and village maps of the generated world | approved | OWNER APPROVED | INTEGRATED |
 | B25R1-026 | Settlements never hidden by map discovery | approved | OWNER APPROVED | INTEGRATED |
