@@ -25,7 +25,7 @@ var next_id := 1
 var seeded: Array = []       # wild species that have been started in the woods (saved; B14 adds species to old saves)
 var refuges: Refuges         # WR-01: the woods' protected breeding refuges (saved)
 var move_rng := RandomNumberGenerator.new()   # B25R1-019: a live animal's stroll and pauses (_move) draw from here, never from World.rng, so watching an animal changes no other draw. Not saved: where a live animal strolls is presentation
-var claims := {}             # animal id -> npc id hunting it (not saved; hunters re-plan after loading)
+var claims := {}             # animal id -> npc id hunting it (not saved; rebuilt from the hunters' plans on load: World._rebuild_reservations)
 var _cells := {}             # area id -> Array[Vector2i] of cells an animal may stand on
 var _cell_set := {}          # area id -> {Vector2i: true}, the same cells for membership tests (PERF-04)
 

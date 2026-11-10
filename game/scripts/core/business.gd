@@ -51,7 +51,7 @@ const PRICE_CAP := 4                  # a listing may be priced up to this many 
 const HIRABLE := Construction.HIRABLE   # villagers free to be hired for a day: out of work, a manor hand with no job taken, a labourer
 
 var w: World
-var heading := {}                     # npc id -> game hour they set out for the stall (not saved)
+var heading := {}                     # npc id -> game hour they set out for the stall (not saved; rebuilt from plans on load: World._rebuild_reservations)
 var stalls: Stalls                    # market stalls: building, sessions and the 5% settlement (STALL-01..06)
 var money: BusinessMoney              # villagers' storefront tills and the owner's pay (ECON-P3)
 var works: BusinessWorks              # the attendant's production at the player's own stations (B18-DP-01)

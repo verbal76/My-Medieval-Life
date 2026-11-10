@@ -6986,6 +6986,38 @@ func _restore_plans(d: Dictionary) -> void:
 		if not keeps:
 			c.puller = ""
 	counters.rebuild_from_plans()     # SAV-03: who is coming to or serving a counter follows from the restored plans
+	_rebuild_reservations()
+
+
+## SAV-03: the reservation maps that keep a second villager from being sent to work one is already on the way to are not saved,
+## but the plans that made them are: rebuild them from the restored plans (by NPC id, so a load is reproducible). FarmPlots.busy
+## (fp_work cells), Fauna.claims (hunt), Chapel.booked (church_ask: the household, today), Business.heading (buy_stall: this hour).
+## NPCBrain.buy_failed is a memo of failed purchases, not a reservation, and stays unsaved.
+func _rebuild_reservations() -> void:
+	var ns: Array = npcs.duplicate()
+	ns.sort_custom(func(a: NPC, b: NPC) -> bool: return a.id < b.id)
+	var hr := day() * 24 + int(hour())
+	for n: NPC in ns:
+		if not n.alive:
+			continue
+		for st in n.plan:
+			var args: Dictionary = st.get("args", {}) if st.get("args", {}) is Dictionary else {}
+			match str(st.get("act", "")):
+				"fp_work":
+					if farm_plots != null:
+						var until := minutes + float(st.get("min", FarmPlots.BATCH_MINUTES)) + 180.0
+						for c in args.get("cells", []):
+							var cv := Vector2i(int(c[0]), int(c[1]))
+							farm_plots.busy[cv] = maxf(float(farm_plots.busy.get(cv, -1.0)), until)
+				"hunt":
+					if fauna != null and not fauna.claims.has(int(args.get("animal", -1))):
+						fauna.claims[int(args.get("animal", -1))] = n.id
+				"church_ask":
+					if chapel != null and n.household >= 0:
+						chapel.booked[n.household] = day()
+				"buy_stall":
+					if business != null:
+						business.heading[n.id] = hr
 
 
 func _unstick() -> void:
