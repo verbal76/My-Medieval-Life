@@ -405,7 +405,7 @@ static func dec(w: World, p: PlayerState, v, bad: Dictionary) -> Variant:
 ## table is not one: what is on it is its keeper's stock (World.container_owner), reached through player_take like the host.
 ## B25-MP03-OWNERSHIP-D1 (owner, 2026-11-10): a crate or barrel is decided by the property rule the host's own paths use
 ## (Chests.info, read as the guest): its own ("own") or one a player shares with it ("shared", MP-INTERACT-01 asset sharing, as
-## chests.take allows) within VERB_REACH gives that store (a player's stash); a household's, the tavern's, a stall's or nobody's
+## chests.take allows, and only when the tier covers everything in it: _all_shared) within VERB_REACH gives that store (a player's stash); a household's, the tavern's, a stall's or nobody's
 ## stays refused. The guest's position is the host's record of it, never one the request carries.
 static func _dec_inv(w: World, p: PlayerState, d: Dictionary, bad: Dictionary) -> Inventory:
 	if not w.is_host(p) and str(d["$inv"]) == "container":
@@ -415,7 +415,7 @@ static func _dec_inv(w: World, p: PlayerState, d: Dictionary, bad: Dictionary) -
 			store = tc.inv
 		elif not tc.is_empty() and str(tc.get("kind", "")) != "table":
 			var info: Dictionary = w.as_actor(p, func(): return w.chests.info(w.chests.unit_of_container(tc)))
-			if str(info.access) in ["own", "shared"] and info.store is Inventory:
+			if info.store is Inventory and (str(info.access) == "own" or (str(info.access) == "shared" and _all_shared(w, p, info))):
 				store = info.store
 		if store == null:
 			bad.why = "That is not yours."
@@ -458,6 +458,16 @@ static func _dec_inv(w: World, p: PlayerState, d: Dictionary, bad: Dictionary) -
 			return w.granary
 	bad.why = "That store is not there."
 	return null
+
+
+## MP-05 tiers: a shared store is given whole to a store-taking verb, which may spend any of it, so it is given only when the sharing
+## tier covers every kind of goods in it (World.asset_item_allowed, the rule Chests.goods and chests.take apply item by item).
+static func _all_shared(w: World, p: PlayerState, info: Dictionary) -> bool:
+	var owner := str(info.get("share_owner", ""))
+	for id in (info.store as Inventory).ids():
+		if not bool(w.as_actor(p, func(): return w.asset_item_allowed(owner, str(id)))):
+			return false
+	return owner != ""
 
 
 ## B25-MP03-TABLES-D1: whether container `c` is a genuinely public table: a table (World.containers kind "table", the only container

@@ -229,6 +229,36 @@ func _init() -> void:
 	check(acc.call(mara, s.crate) == "shared" and ans(w, mara, own) == "ok", "with the agreement Mara may use Gwen's crate")
 	check(ans(w, hal, own) == "That is not yours.", "Hal still may not")
 
+	# MP-05 tiers decide which goods a shared store gives (World.asset_item_allowed, as Chests.goods and chests.take read it): a
+	# shared crate holding anything the tier does not cover is not spent from at all; with only covered goods it is.
+	var site_raw = NetActions.enc(w, plot)
+	var mref := w.player_ref(mara)
+	for extra in ["axe", "bread"]:
+		gstash.add(extra, 1)
+		var sn := snapshot(s)
+		var rt := req(w, mara, "deliver", [site_raw, own, mref])
+		check(not bool(rt.ok) and snapshot(s) == sn, "tier 1: Mara's deliver from Gwen's crate holding %s (not covered): refused, nothing moves" % extra)
+		check(ans(w, mara, own) == "That is not yours.", "tier 1: the decoder refuses the crate holding %s" % extra)
+		gstash.remove(extra, 1)
+	gstash.remove("plank", gstash.count("plank"))
+	gstash.add("plank", 1)
+	var nl := int(plot.site.need.get("plank", 0))
+	var ra := req(w, mara, "deliver", [site_raw, own, mref])
+	check(bool(ra.ok) and gstash.count("plank") == 0 and int(plot.site.need.get("plank", 0)) == nl - 1, "tier 1: with only materials in it Mara delivers a plank")
+	check(w.player_offer("asset_share", mara.pid, "", 2, gwen) == "", "Gwen offers Mara tier 2")
+	req(w, mara, "player_answer", [int(w.offers.back().id), true])
+	check(w.asset_share_tier(gref, mref) == 2, "tier 2 agreed")
+	gstash.add("plank", 1)
+	gstash.add("bread", 1)
+	check(ans(w, mara, own) == "ok", "tier 2: a crate of materials and a finished good is Mara's to use")
+	gstash.add("axe", 1)
+	var sn2 := snapshot(s)
+	var rt2 := req(w, mara, "deliver", [site_raw, own, mref])
+	check(not bool(rt2.ok) and snapshot(s) == sn2, "tier 2: the crate holding a tool (tier 3): refused, nothing moves")
+	gstash.remove("axe", 1)
+	gstash.remove("bread", 1)
+	gstash.add("plank", 3)
+
 	# C: the home's food table (Furniture.home_refusal): Gwen's own, Mara's home, not Hal's; the villager's house refuses all three.
 	var sid := table_station(w, s.bid)
 	var vsid := table_station(w, s.vid)
