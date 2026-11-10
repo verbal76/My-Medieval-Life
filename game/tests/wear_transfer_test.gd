@@ -32,6 +32,7 @@ func _init() -> void:
 	test_inheritance_and_loot()
 	test_theft_and_containers()
 	test_stacks()
+	test_barter_credit_and_taken_in()
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)
 
@@ -270,3 +271,45 @@ func test_stacks() -> void:
 	b.inv.durability[T] = 2
 	w.transfer(a.inv, b.inv, T, 1)
 	check(left(b.inv) == 1 and b.inv.count(T) == 3, "two nearly worn out joined: at least 1 left, nothing breaks in a transfer")
+
+
+## INV-06 (Build 25 audit): the barter (Credit.barter), the sale on credit (Credit.sell_on_credit) and the stolen goods a guard takes
+## back when the offender is taken in (Justice._take_in) move the tool with its wear, as every other path above.
+func test_barter_credit_and_taken_in() -> void:
+	var w := new_world()
+	var s: NPC = adults(w)[0]
+	var b: NPC = null
+	for n: NPC in adults(w):
+		if n.household != s.household:
+			b = n
+			break
+	s.job = "smith"                         # glad of coal (credit_test.gd's pair)
+	s.inv = Inventory.new()
+	worn(s.inv)
+	s.coins = 5000
+	clear(w.player.inv)
+	w.player.inv.add("coal", 40)
+	var n0 := axes(w)
+	var r: Dictionary = w.credit.barter(s, w.player, T, 1, "coal")
+	check(r.result == "bartered" and left(w.player.inv) == LEFT and not s.inv.has(T) and axes(w) == n0,
+		"Credit.barter: the worn axe swapped for coal arrives worn (%s; %d left)" % [str(r.result), left(w.player.inv)])
+	worn(s.inv)
+	b.inv = Inventory.new()
+	w.relations.tie(s.id, b.id).regard = Credit.trust_needed()
+	n0 = axes(w)
+	var c: Dictionary = w.credit.sell_on_credit(s, b, T, 1, 3)
+	check(c.result == "credited" and left(b.inv) == LEFT and axes(w) == n0,
+		"Credit.sell_on_credit: the worn axe taken on credit arrives worn (%s; %d left)" % [str(c.result), left(b.inv)])
+	var g: NPC = null
+	for n: NPC in w.npcs:
+		if n.alive and n.job == "guard":
+			g = n
+	clear(s.inv)
+	worn(w.player.inv)
+	w.player.mark_stolen(T, s.id, 1)
+	var ci := w.crime_record({"day": w.day(), "kind": "theft", "what": "an axe", "victim": s.id, "witnesses": 1}, s)
+	w.justice.learn(g, World.PLAYER, [ci], w.player.pos)
+	check(not w.justice.case_of(World.PLAYER).is_empty(), "fixture: a case against the player for the theft")
+	n0 = axes(w)
+	w.justice.take_in(g, World.PLAYER, "yielded")
+	check(s.inv.has(T) and left(s.inv) == LEFT and axes(w) == n0, "Justice: the stolen axe taken back from one taken in returns worn (%d left)" % left(s.inv))
