@@ -1149,6 +1149,8 @@ func _plan_eat(n: NPC) -> bool:
 	if v:
 		priced = true
 		payer = _payer_for(n, _cheapest_meal(v), v)      # the family's tab at the tavern, for anyone without the coin
+		if payer != null and not _affordable_meal(payer, v):
+			payer = null                     # the meal's deal price (a skilled seller asks more) is beyond them: not sent to be refused
 		if payer != null:
 			n.doing = "buying a meal" if payer == n else "eating on the family's tab"
 			n.plan = [go(_workplace_cell(v)), doit("buy_food", {"vendor": v.id, "pantry": false, "payer": payer.id}), work(10, "eat", {}, "idle")]
@@ -1397,6 +1399,15 @@ func _family_meal(n: NPC, fam: NPC) -> String:
 			low = p
 			best = f
 	return best
+
+
+## Whether `payer` can pay the deal price (World.deal_price, what the buy_food act asks) of any cooked meal `v` holds. Draws nothing.
+## Found in campaign 42760291468 (seed 2, day 363): planned at the list price, refused at the deal price, planned again (2776 times).
+func _affordable_meal(payer: NPC, v: NPC) -> bool:
+	for f in COOKED:
+		if v.inv.has(f) and w.deal_price(w.sell_price(v, f), payer, v) <= payer.coins:
+			return true
+	return false
 
 
 ## The cheapest cooked meal `v` has on sale, at its asking price (what _meal_choice can buy at the least).
@@ -2528,14 +2539,14 @@ func _grain_seller(n: NPC) -> NPC:
 ## Someone with coins to spare sometimes treats the household to cheese. "" if nothing is affordable.
 func _meal_choice(payer: NPC, v: NPC, menu: Array = COOKED) -> String:
 	var spare := payer.coins >= int(GameData.b("tavern_spare_coins"))
-	if spare and v.inv.has("cheese") and payer.coins >= w.sell_price(v, "cheese") and w.rng.randf() < float(GameData.b("cheese_treat_chance")):
+	if spare and v.inv.has("cheese") and payer.coins >= w.deal_price(w.sell_price(v, "cheese"), payer, v) and w.rng.randf() < float(GameData.b("cheese_treat_chance")):
 		return "cheese"
 	var best := ""
 	var best_v := -1.0
 	for f in menu:
 		if not v.inv.has(f):
 			continue
-		var price := w.sell_price(v, f)
+		var price := w.deal_price(w.sell_price(v, f), payer, v)     # what the buy_food act will ask (the seller's Trading raises it)
 		if price > payer.coins:
 			continue
 		var per := float(GameData.item(f).food) / float(maxi(1, price))
