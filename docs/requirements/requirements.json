@@ -8130,8 +8130,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -8139,9 +8139,20 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_nd12_recorder_diagnostic.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25-nd12-recorder-detail; tests: None -> recorder_detail_test 11/0 (4 red before); recorder_test 214/0; b25_recorder_test 53/0; recorder_neutrality_test 5/0; sim_f2_test 33/0; python flight analysis tests OK; test_commit: None -> 12d7549; commits + 12d7549",
+     "why": "fixed on its own branch: FlightRecorder.end kept only the end detail; now keeps both ('begun; ended'); failing-first test 11 checks 4 red -> 11/0; full Tests and gate dispatched"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "branch": "wip/b25-nd12-recorder-detail",
+   "tests": "recorder_detail_test 11/0 (4 red before); recorder_test 214/0; b25_recorder_test 53/0; recorder_neutrality_test 5/0; sim_f2_test 33/0; python flight analysis tests OK",
+   "test_commit": "12d7549",
+   "commits": [
+    "12d7549"
+   ]
   },
   {
    "id": "B25-NINE",
