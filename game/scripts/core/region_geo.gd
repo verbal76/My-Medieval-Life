@@ -18,13 +18,26 @@ static var _regions: Array = []         # [{id, kind, poly: PackedVector2Array, 
 static var _cache := {}                 # Vector2i (coarse cell) -> region id ("" none)
 static var _anchors := {}               # settlement id -> Vector2i
 static var _downs := PackedVector2Array()
+## KI-09: two threads lay out overworlds at once (the game's, and AerialMap's settlements worker: its own Overworld.create and
+## chunks), and both fill `_cache`. An unguarded insert from both corrupted the heap ("double free or corruption", SIGABRT,
+## demo_test on a runner without the aerial disk cache). The cache and the one-time load are taken under this lock; what is
+## computed between (the regions' polygons, read-only once loaded) needs none. A lookup's answer depends on the cell alone, so
+## which thread fills an entry changes nothing.
+static var _lock := Mutex.new()
 
 
 static func data() -> Dictionary:
 	if _data.is_empty():
+		_lock.lock()
+		_load()
+		_lock.unlock()
+	return _data
+
+
+static func _load() -> void:
+	if _data.is_empty():
 		var d = JSON.parse_string(FileAccess.get_file_as_string("res://data/region_layout.json"))
 		assert(d is Dictionary and str(d.get("format", "")) == "mml-region-layout/1", "bad data file region_layout.json")
-		_data = d
 		_downs = _poly(d.downs.polygon)
 		# the Downs first: a cell on them is Downs whatever else the regions' rough boxes say
 		_regions.append({"id": "downs", "kind": "downs", "poly": _downs, "box": _box(_downs)})
@@ -34,7 +47,7 @@ static func data() -> Dictionary:
 			_regions.append({"id": str(r.id), "kind": str(r.kind), "poly": p, "box": _box(p).grow(wb), "wobble": wb})
 		for s in d.settlements:
 			_anchors[str(s.id)] = Vector2i(int(s.x), int(s.y))
-	return _data
+		_data = d                                # (last: another thread that sees it loaded sees the tables complete)
 
 
 static func _poly(pts: Array) -> PackedVector2Array:
@@ -70,8 +83,11 @@ static func region_at(x: int, y: int, seed := 0) -> String:
 		x += (Overworld.hash32(seed, x >> 3, y >> 3, 901) % (2 * JITTER + 1)) - JITTER
 		y += (Overworld.hash32(seed, x >> 3, y >> 3, 902) % (2 * JITTER + 1)) - JITTER
 	var cc := Vector2i(Overworld.fdiv(x, CELL), Overworld.fdiv(y, CELL))
-	if _cache.has(cc):
-		return _cache[cc]
+	_lock.lock()
+	var hit = _cache.get(cc)
+	_lock.unlock()
+	if hit != null:
+		return hit
 	var at := Vector2(cc.x * CELL + CELL / 2, cc.y * CELL + CELL / 2)
 	var id := ""
 	for r in _regions:
@@ -81,7 +97,9 @@ static func region_at(x: int, y: int, seed := 0) -> String:
 		if (r.box as Rect2).has_point(p) and Geometry2D.is_point_in_polygon(p, r.poly):
 			id = str(r.id)
 			break
+	_lock.lock()
 	_cache[cc] = id
+	_lock.unlock()
 	return id
 
 
