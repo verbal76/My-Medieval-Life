@@ -230,6 +230,8 @@ jobs:
           res://tests/self_trade_payer_test.gd    # a household never pays a seller for the seller's own goods
           res://tests/hh_business_food_test.gd    # a food seller's household eats the family stock: no sale, no coins
           res://tests/meal_deal_price_test.gd    # a meal is planned only at the deal price the buyer can pay
+          res://tests/smith_forge_purchase_test.gd    # B25-P99-PAYER-01: the forge's purchases planned by buy_from's own rule
+          res://tests/homestead_food_held_test.gd    # B25-F015-FOOD-01: coins are not food held; grain when no cooked meal
           res://tests/identity_test.gd
           res://tests/multiplayer_a1_test.gd
           # MP Batch A2, gate G1: a host and a guest in two Godot processes over loopback (join, move, an action the host applies, same state, rejoin, host restart)

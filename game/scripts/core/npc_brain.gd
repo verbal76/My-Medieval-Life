@@ -4405,6 +4405,16 @@ func _members(h: int) -> Array:
 ## food actually for sale: coins buy nothing when the market is empty. Days are counted against the
 ## household's own need, members weighted by age (a child eats less), and its share of the market
 ## is its share of the village's need.
+## B25-F015-FOOD-01 (owner 2026-11-10: "Coins must not count as food already available for household consumption"): the days
+## of food household `h` holds now, its stores and members' pockets by the one valuation (store_points, FSE-17), and no coins.
+## What a household decides to go and get food by (the homestead's trips and errands). household_food_days below is the
+## other measure, the purchasing capacity the relief, credit and life rules read: this plus what its coins buy now.
+func household_food_held_days(h: int) -> float:
+	return store_points(household_stores(h)) / maxf(1.0, household_day_food(h))
+
+
+## Household `h`'s food and purchasing capacity in days: what it holds (household_food_held_days) plus the food its coins buy
+## now (below). Not food held: a household with coins and an empty larder reads days here and none in the held measure.
 func household_food_days(h: int) -> float:
 	var pts := store_points(household_stores(h))     # all it holds, members' pockets included (FSE-17)
 	var members := _members(h)

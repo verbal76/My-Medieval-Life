@@ -1293,7 +1293,7 @@ func _field_spot(c: Dictionary) -> Vector2i:
 
 
 func _plan_field(n: NPC, c: Dictionary, trade: String) -> bool:
-	var farmer: bool = trade in ["farmer", "herder", "manor_hand"] or w.brain.household_food_days(n.household) < float(cfg().food_low_days)
+	var farmer: bool = trade in ["farmer", "herder", "manor_hand"] or w.brain.household_food_held_days(n.household) < float(cfg().food_low_days)
 	if not farmer:
 		return false
 	var pantry: Inventory = w.households[n.household].pantry
@@ -1415,8 +1415,8 @@ func _wants_trip(n: NPC, c: Dictionary) -> bool:
 		return true                                     # no water of their own yet: to the village's well
 	var cf := cfg()
 	var h := n.household
-	if w.brain.household_food_days(h) < float(cf.food_low_days) and n.coins >= 3:
-		return true
+	if w.brain.household_food_held_days(h) < float(cf.food_low_days) and n.coins >= 3:
+		return true                                     # B25-F015-FOOD-01: the food they hold, not what their coins could buy
 	var unsold := w.day() - int(c.get("unsold_day", -99)) < 3          # nobody bought what they brought lately
 	if not unsold and (n.inv.count("log") - int(cf.keep_logs) >= int(cf.sell_at) or n.inv.count("stone") >= int(cf.sell_at)):
 		return true
@@ -1477,9 +1477,19 @@ func _errand(n: NPC, c: Dictionary, trip: Dictionary) -> bool:
 	if n.hunger < float(GameData.b("eat_below")) and not tried.has("meal"):
 		tried.meal = true
 		var v := b._vendor_with_food(n)
-		if v != null:
+		if v != null and b._affordable_meal(n, v):      # B25-F015-FOOD-01: at the deal price buy_food asks, not sent to be refused
 			n.doing = "buying a meal in the village"
 			n.plan = [b.go(b._workplace_cell(v)), b.doit("buy_food", {"vendor": v.id, "pantry": false}), b.work(10.0, "eat", {}, "idle")]
+			return true
+		# B25-F015-FOOD-01 (campaign 42788018729 seed 2: p:92 starved with 28 coins, no cooked meal on any stall): no cooked meal
+		# they can pay for, so grain, edible as it is (the player's rule, FSE-00), as the village's own meal falls back to grain
+		# (NPCBrain._plan_eat): bought by buy_from's own rule (buy_qty) and eaten there; the rest goes home to the pantry
+		var grain := b._grain_seller(n)
+		var gq := b.buy_qty(n, grain, "wheat", 2, true) if grain != null else 0
+		if gq > 0:
+			n.doing = "buying grain to eat"
+			n.plan = [b.go(b._workplace_cell(grain) if grain.job != "farmer" else grain.cell()), b.doit("buy_from", {"vendor": grain.id, "item": "wheat", "qty": gq}),
+				b.work(10.0, "eat", {"item": "wheat"}, "idle")]
 			return true
 	var need: Dictionary = c.site.get("need", {}) if str(c.status) == "claimed" else \
 		w.construction.cost_of("house") if str(c.status) == "intended" else {}
@@ -1505,7 +1515,7 @@ func _errand(n: NPC, c: Dictionary, trip: Dictionary) -> bool:
 		if b._buy_tool(n, tool):
 			return true
 		n.plan.clear()
-	if w.brain.household_food_days(n.household) < float(cf.food_target_days) and int(tried.get("food", 0)) < 4:
+	if w.brain.household_food_held_days(n.household) < float(cf.food_target_days) and int(tried.get("food", 0)) < 4:     # B25-F015-FOOD-01: food held
 		tried.food = int(tried.get("food", 0)) + 1
 		var grain := b._grain_seller(n)
 		var want := 2 * maxi(1, w.brain._members(n.household).size())
@@ -1520,7 +1530,7 @@ func _errand(n: NPC, c: Dictionary, trip: Dictionary) -> bool:
 			n.plan = [b.go(b._workplace_cell(v)), b.doit("buy_food", {"vendor": v.id, "pantry": true})]
 			return true
 	var trade_s := str((c.trades as Dictionary).get(str(n.id), c.trade))
-	if str(c.status) != "intended" and (trade_s in ["farmer", "herder", "manor_hand"] or w.brain.household_food_days(n.household) < float(cf.food_low_days)) and _seed_in(w.households[n.household].pantry) == "" and not tried.has("seed"):
+	if str(c.status) != "intended" and (trade_s in ["farmer", "herder", "manor_hand"] or w.brain.household_food_held_days(n.household) < float(cf.food_low_days)) and _seed_in(w.households[n.household].pantry) == "" and not tried.has("seed"):
 		tried.seed = true
 		for sv: NPC in w.npcs:
 			if sv.alive and sv != n and not away(sv) and not w.asleep(sv) and w.farm.sells_seed(sv):
