@@ -113,6 +113,7 @@ jobs:
         if: ${{ !cancelled() && steps.import.outcome == 'success' }}
         env:
           ONLY: ${{ inputs.only }}
+          SHARD: ${{ matrix.shard }}       # passed in, not written in the script: a run block with an expression is limited to 21000 characters
         run: |
           cat > "$RUNNER_TEMP/game.txt" <<'EOF'
           res://tests/run_tests.gd
@@ -424,7 +425,7 @@ jobs:
             for t in $ONLY; do grep -E "^ *$t( |$)" "$RUNNER_TEMP/game.txt" || { echo "unknown suite: $t"; exit 1; }; done > "$RUNNER_TEMP/only.txt"
             mv "$RUNNER_TEMP/only.txt" "$RUNNER_TEMP/game.txt"
           fi
-          python3 tools/ci_plan.py tests-shard --list "$RUNNER_TEMP/game.txt" --shards 12 --shard ${{ matrix.shard }} \
+          python3 tools/ci_plan.py tests-shard --list "$RUNNER_TEMP/game.txt" --shards 12 --shard "$SHARD" \
             --out "$RUNNER_TEMP/game_shard.txt" --manifest "$CI_OUT/shard.json"
           # TEST-GOV-01: a suite fails on a SCRIPT ERROR (a check cut short), when it prints no check count, and when it runs
           # fewer checks than its floor (tools/ci_check_floors.json): an early stop can no longer pass
