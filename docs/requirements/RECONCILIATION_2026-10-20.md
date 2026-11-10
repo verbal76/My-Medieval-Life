@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 888 (492 of them still open) |
-| **Open entries now** (rules excluded) | | **650** |
+| Entries added since | | 889 (493 of them still open) |
+| **Open entries now** (rules excluded) | | **651** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (888)
+## Added since the baseline (889)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -196,6 +196,7 @@ None.
 | B25-CAREER-IMPL | Opportunity-based career advancement (no automatic promotion) | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-CHAPEL-FOOD-Q | The church plot (8x7 cells, replaces its own seed, ripens every 2 days) yields about 12-18 wheat a day; in a food-secure village (yield 2.0) almost no household needs relief or food alms, so the chapel's store grows to 760-2,140 wheat a year (now limited only by normal spoilage, fixed 2026-11-02). What should the church do with food it does not need? Options: A the church farms only to need - it sows the plot only while its store is below a ceiling (recommended by the worker and the lead: no waste, no new flow, nothing created); B it sells the surplus at market and gives the coins as alms; C it passes the surplus to the manor's granary; D leave it (spoilage caps it). Evidence: docs/release/chapel_fix/CHAPEL_FOOD_FINDINGS.md on the Build 25 source. | decision | APPROVED | 20 |
+| B25-CI-ACTIONS-01 | GitHub Actions is the default test environment; targeted, split, evidenced runs | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
 | B25-CLOSE-01 | Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-CLOSE-02 | Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final year-long campaign (seeds 1 and 2 normal, seed 1 economy-on) on it, present B25-ECON-P1..P5, JOB-02/CON-02-KINDS/PIT-02/FSE-10 as future-scope candidates, LE-07 gate 11 open for an owner device test, no packaging until the gates pass | approved | PARTIALLY IMPLEMENTED / NOT TESTED / CLOSED | 20 |
 | B25-CONT-INV-01 | Continued investigation, validation and merge preparation (Build 25) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |

@@ -7039,6 +7039,44 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25-CI-ACTIONS-01",
+   "kind": "approved",
+   "title": "GitHub Actions is the default test environment; targeted, split, evidenced runs",
+   "description": "GitHub Actions is the default test environment; targeted, split, evidenced runs",
+   "source": "docs/directives/2026-11-10_github_actions_testing.md",
+   "owner_wording": "Move as much Build 25 testing as technically practical to GitHub Actions ... GitHub Actions should become the default ... Implement it, verify that the workflows run successfully, and make GitHub Actions the default testing environment going forward.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "subsystem and named-suite runs on one runner; full run, gate and campaigns in Actions; each result cites branch, commit, config, seed, save precision, run id, artifact; architecture recorded; workflows verified running"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_github_actions_testing.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; branch: None -> wip/b25-ci-groups; commits + 98bda59",
+     "why": "tests.yml groups and one-runner targeted runs on wip/b25-ci-groups; guide docs/ci/TESTING_ON_GITHUB_ACTIONS.md; CLAUDE.md rule; verification run 42913303043"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "branch": "wip/b25-ci-groups",
+   "commits": [
+    "98bda59"
+   ]
+  },
+  {
    "id": "B25-CLOSE-01",
    "kind": "approved",
    "title": "Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop",

@@ -81,7 +81,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 
-## Approved, no build assigned (61)
+## Approved, no build assigned (62)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -90,6 +90,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-B17FJOBS-D1 | REQ-B17F-JOBS: measure adult unemployment and causes after Batch 3+4 (measurement only) | approved | OWNER APPROVED | NOT STARTED |
 | B25-BASELINE-REVIEW-01 | No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge | approved | OWNER APPROVED | NOT STARTED |
 | B25-BATCH34-MERGE-D1 | Batch 3+4 merge approved after the comparison shows no unexplained regressions; old baseline preserved | approved | OWNER APPROVED | NOT STARTED |
+| B25-CI-ACTIONS-01 | GitHub Actions is the default test environment; targeted, split, evidenced runs | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-CONT-INV-01 | Continued investigation, validation and merge preparation (Build 25) | approved | OWNER APPROVED | NOT STARTED |
 | B25-CONTRACT-FUNDS-D1 | Contract acceptance accounts for committed coins (bids, contracts, obligations) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-DISK-CLEAN-D1 | Verified safe disk cleanup of the lead machine | approved | OWNER APPROVED | INTEGRATED |
