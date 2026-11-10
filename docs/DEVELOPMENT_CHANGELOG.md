@@ -75,6 +75,13 @@ entries below, INTEGRATED means in that day's development line.
 
 ### 2026-11-10 (Tuesday)
 
+**MP-03 and TRD-05 MERGED at `93bb304`, 07:22 UTC (02:22 EST).** Fast-forward from `167b235`. Tests 42764399707 on `93bb304`:
+ci-validation pass, 269 suites, 0 failed. Public tables and the property rules (`4b83422`, `e3be9ef`, `1fe781d`; owner decisions
+B25-MP03-TABLES-D1 and B25-MP03-OWNERSHIP-D1) merged on top as `9fd18a5` (`wip/b25-tables-on-dev`), Tests dispatched. Batch 3 strict
+Tests 42760294917 verified from its artifact: `b57261f`, pass, 272 suites, 0 failed. Batch 4 (`wip/b25-audit-sim4` `13dcabf`,
+B25-HH-BIZFOOD-D1, household eats the family business stock as a last resort): focused test 10 failures before, 22/0 after; 11 related
+suites and wiki_test 0 failures; waits for batch 3's campaign. INV-02 proposal delivered (`906f1a8`, not enabled).
+
 **KI-09 fix MERGED at `167b235`, 05:48 UTC (00:48 EST).** Fast-forward from `72729e5`. Tests 42758089184 on `167b235`, attempt 1:
 every shard green; ci-validation names `167b235`, pass, 0 failed suites; `demo_test` 35/0, exit 0. MP-03 (`0acded4`) and TRD-05
 (`85ad919`) merged on top as `93bb304` (`wip/b25-nosim-on-dev`), Tests dispatched.
