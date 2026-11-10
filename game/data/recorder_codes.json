@@ -23,6 +23,8 @@
     "buyer_short_of_coins": "the buyer's purse was below the bill",
     "seller_lacks_item": "the seller did not hold the units",
     "buyer_inventory_full": "the buyer could not take the item",
+    "seller_stock_reserved": "B25-INV-P100-FULLPACK: the seller's units are promised (LE-03 claims: a contract's earmark or an offer), so the sale was refused",
+    "buyer_coins_reserved": "B25-INV-P100-FULLPACK: the buyer's coins are promised (LE-03 claims), so the sale was refused",
     "from_lacks_item": "the giving inventory did not hold the units",
     "to_cannot_take": "the receiving inventory could not take the item",
     "act_returned_false": "the action returned false; the code gives no finer reason",

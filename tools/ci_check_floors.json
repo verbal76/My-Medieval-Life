@@ -160,6 +160,7 @@
  "self_trade_payer_test": 11,
  "hh_business_food_test": 22,
  "meal_deal_price_test": 7,
+ "meal_claims_test": 14,
  "npc02_gift_claims_test": 8,
  "jus02_join_band_cleanup_test": 8,
  "net_interact_test": 68,

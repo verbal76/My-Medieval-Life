@@ -189,10 +189,12 @@ func check_trade(buyer: Object, seller: Object, id: String, qty: int, total: int
 	var s := plan(sr, id, qty, "", false, exempt)
 	if not s.ok:
 		_stat("trade_refused_seller_" + str(s.reason).replace(" ", "_"))
+		s["side"] = "seller"                    # B25-INV-P100-FULLPACK: whose claims refused, for the recorder's reason
 		return s
 	var b := plan(br, EconReservations.COINS, total, id, World.is_necessity(id), exempt)
 	if not b.ok:
 		_stat("trade_refused_buyer_" + str(b.reason).replace(" ", "_"))
+		b["side"] = "buyer"
 		return b
 	return {"ok": true, "reason": "", "cuts": s.cuts + b.cuts}
 

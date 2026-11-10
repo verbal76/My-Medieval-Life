@@ -1438,9 +1438,13 @@ func plan(n: NPC) -> bool:
 					return true
 			"buy":
 				var v := _vendor(n, c.item, int(c.price_each))
-				if v != null and n.coins - w.reserve_of(n) >= w.deal_price(w.sell_price(v, c.item), n, v):
+				# B25-INV-P52-BLOCKS (campaign 42788018729 seed 1: the merchant p:52 refused 472 times on day 358, every minute,
+				# its coins held by its own open bids): buy_from's own rule (NPCBrain.buy_qty: the deal price above the reserve,
+				# the coins and stock the LE-03 claims leave free, and no re-plan of an unchanged refusal), not the raw purse
+				var q: int = w.brain.buy_qty(n, v, c.item, owed - held) if v != null else 0
+				if q > 0:
 					n.doing = "buying %s for %s" % [GameData.item_name(c.item).to_lower(), w.ref_name(c.buyer)]
-					n.plan = [w.brain.go(w.brain._workplace_cell(v)), w.brain.doit("buy_from", {"vendor": v.id, "item": c.item, "qty": owed - held})]
+					n.plan = [w.brain.go(w.brain._workplace_cell(v)), w.brain.doit("buy_from", {"vendor": v.id, "item": c.item, "qty": q})]
 					return true
 	return false
 

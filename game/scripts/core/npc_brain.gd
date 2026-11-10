@@ -822,6 +822,10 @@ func buy_qty(n: NPC, v: NPC, item: String, want: int, need := false, spent := 0)
 		return 0
 	var up := w.deal_price(w.sell_price(v, item), n, v)
 	var q := mini(want, v.inv.count(item))
+	# B25-INV-P100-FULLPACK: the units World.trade's claims check would let the seller part with (LE-03: stock promised to a
+	# contract or an offer stays the seller's), and the buyer's coins not promised elsewhere; always all while the economy is off
+	while q > 0 and not w.claims_allow(v, item, q):
+		q -= 1
 	var biz: int = w.ventures.budget(n, item) if not need else -1
 	if biz >= 0:                          # B25-BIZ-D1: a business's materials, bought with its till's money only
 		while q > 0 and biz - spent - up * q < 0:
@@ -829,7 +833,8 @@ func buy_qty(n: NPC, v: NPC, item: String, want: int, need := false, spent := 0)
 		return q
 	var whole: bool = need or World.is_necessity(item) or JOB_TOOL.get(n.job, "") == item
 	var floor := 0 if whole else w.reserve_of(n)
-	while q > 0 and n.coins - spent - up * q < floor:
+	var purse := mini(n.coins, w.claims_free_coins(n, item, World.is_necessity(item)))
+	while q > 0 and purse - spent - up * q < floor:
 		q -= 1
 	return q
 
@@ -1405,7 +1410,7 @@ func _family_meal(n: NPC, fam: NPC) -> String:
 ## Found in campaign 42760291468 (seed 2, day 363): planned at the list price, refused at the deal price, planned again (2776 times).
 func _affordable_meal(payer: NPC, v: NPC) -> bool:
 	for f in COOKED:
-		if v.inv.has(f) and w.deal_price(w.sell_price(v, f), payer, v) <= payer.coins:
+		if v.inv.has(f) and w.claims_allow(v, f, 1) and w.deal_price(w.sell_price(v, f), payer, v) <= payer.coins:
 			return true
 	return false
 
@@ -1414,7 +1419,7 @@ func _affordable_meal(payer: NPC, v: NPC) -> bool:
 func _cheapest_meal(v: NPC) -> int:
 	var low := 1 << 30
 	for f in COOKED:
-		if v.inv.has(f):
+		if v.inv.has(f) and w.claims_allow(v, f, 1):     # B25-INV-P100-FULLPACK: stock promised to a contract is not on sale
 			low = mini(low, w.sell_price(v, f))
 	return low
 
@@ -2539,12 +2544,12 @@ func _grain_seller(n: NPC) -> NPC:
 ## Someone with coins to spare sometimes treats the household to cheese. "" if nothing is affordable.
 func _meal_choice(payer: NPC, v: NPC, menu: Array = COOKED) -> String:
 	var spare := payer.coins >= int(GameData.b("tavern_spare_coins"))
-	if spare and v.inv.has("cheese") and payer.coins >= w.deal_price(w.sell_price(v, "cheese"), payer, v) and w.rng.randf() < float(GameData.b("cheese_treat_chance")):
+	if spare and v.inv.has("cheese") and w.claims_allow(v, "cheese", 1) and payer.coins >= w.deal_price(w.sell_price(v, "cheese"), payer, v) and w.rng.randf() < float(GameData.b("cheese_treat_chance")):
 		return "cheese"
 	var best := ""
 	var best_v := -1.0
 	for f in menu:
-		if not v.inv.has(f):
+		if not v.inv.has(f) or not w.claims_allow(v, f, 1):     # B25-INV-P100-FULLPACK: what World.trade's claims check would sell
 			continue
 		var price := w.deal_price(w.sell_price(v, f), payer, v)     # what the buy_food act will ask (the seller's Trading raises it)
 		if price > payer.coins:
@@ -2566,7 +2571,7 @@ func _vendor_with_food(n: NPC) -> NPC:
 			continue
 		var has := false
 		for f in COOKED:
-			if o.inv.has(f):
+			if o.inv.has(f) and w.claims_allow(o, f, 1):     # B25-INV-P100-FULLPACK: stock promised to a contract is not for sale
 				has = true
 		if not has:
 			continue

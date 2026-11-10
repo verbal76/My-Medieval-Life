@@ -282,9 +282,11 @@ func trade_end(t: Array, buyer: Object, seller: Object, id: String) -> void:
 
 
 ## A trade the rules refused: the reason is read from the same conditions World.trade tested.
-func trade_refused(buyer: Object, seller: Object, id: String, qty: int, price_each: int, total: int) -> void:
+func trade_refused(buyer: Object, seller: Object, id: String, qty: int, price_each: int, total: int, why := "") -> void:
 	var reason := "invalid_trade"
-	if not (qty <= 0 or price_each < 0 or buyer == seller):
+	if why != "":
+		reason = why                            # B25-INV-P100-FULLPACK: the LE-03 claims refused it (World.trade says whose)
+	elif not (qty <= 0 or price_each < 0 or buyer == seller):
 		if int(buyer.coins) < total:
 			reason = "buyer_short_of_coins"
 		elif not seller.inv.has(id, qty):
