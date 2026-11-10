@@ -189,6 +189,8 @@ func give(giver: int, n: NPC, id: String, qty := 1) -> String:
 		return ""
 	if not n.inv.can_add(id):
 		return "I've no room to carry that, but thank you."
+	if not w.claims_release(gp if gp != null else w.npc(giver), id, qty):
+		return ""                                # NPC-02: goods held for a contract or an offer are not given away
 	var e := gift_effect(giver, n, id)
 	var rg: Array = w.recorder.gift_begin(giver, from, n, id, peek(giver, n.id)) if w.recorder != null else []   # REC-19 D4
 	var wd := from.wear_leaving(id, qty)     # X20-WEAR-TRANSFER
@@ -809,7 +811,7 @@ func _spare_to_give(n: NPC, id: String) -> bool:
 	if w.economy != null and w.economy.rentals.owner_of(World.npc_ref(n.id), id) != "":
 		return false
 	var keep := 1 if (NPCBrain.JOB_TOOL.get(n.job, "") == id or w.brain.keeps(n, id)) else 0
-	return n.inv.count(id) > keep
+	return n.inv.count(id) > keep and w.claims_allow(n, id, 1)     # NPC-02: never a good its claims hold
 
 
 # ---------------------------------------------------------------- saving ---------------------
