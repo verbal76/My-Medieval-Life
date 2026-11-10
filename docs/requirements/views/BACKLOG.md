@@ -81,7 +81,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 
-## Approved, no build assigned (57)
+## Approved, no build assigned (61)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -89,11 +89,13 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-AUDIT-CONT-01 | Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions | approved | OWNER APPROVED | NOT STARTED |
 | B25-B17FJOBS-D1 | REQ-B17F-JOBS: measure adult unemployment and causes after Batch 3+4 (measurement only) | approved | OWNER APPROVED | NOT STARTED |
 | B25-BASELINE-REVIEW-01 | No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge | approved | OWNER APPROVED | NOT STARTED |
+| B25-BATCH34-MERGE-D1 | Batch 3+4 merge approved after the comparison shows no unexplained regressions; old baseline preserved | approved | OWNER APPROVED | NOT STARTED |
 | B25-CONT-INV-01 | Continued investigation, validation and merge preparation (Build 25) | approved | OWNER APPROVED | NOT STARTED |
 | B25-CONTRACT-FUNDS-D1 | Contract acceptance accounts for committed coins (bids, contracts, obligations) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-DISK-CLEAN-D1 | Verified safe disk cleanup of the lead machine | approved | OWNER APPROVED | INTEGRATED |
 | B25-ECON-P7 | Recover stranded settlement treasury ore | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25-F015-FOOD-01 | F015: homesteader starves with coins; food held separated from purchasing power; fallback food purchase | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
+| B25-F015-POP-01 | F015/P99: explain seed 2 population 316 vs 203 before merge | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25-FINAL-REVIEW-01 | Final testing review of fbfd6ad and an owner decision report for baseline acceptance and merge in one decision | approved | OWNER APPROVED | NOT STARTED |
 | B25-HH-BIZFOOD-D1 | A food seller's household eats from its own business stock when household food is short: no sale, no coins | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-INTEG-SEQ-02 | Build 25 integration sequence after the 2026-11-10 decisions, with mandatory regression coverage and campaign review | approved | OWNER APPROVED | NOT STARTED |
@@ -105,6 +107,8 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-MP03-OWNERSHIP-D1 | MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity | approved | OWNER APPROVED | INTEGRATED |
 | B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | approved | OWNER APPROVED | INTEGRATED |
 | B25-ND12-01 | ND-12: recorder diagnostic line overwritten (refused-trade detail) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
+| B25-ND15-TOL-01 | ND-15: documented numerical tolerances for save/load float differences, proven harmless | approved | OWNER APPROVED | NOT STARTED |
+| B25-ND16-PREC-01 | ND-16: campaigns save at gameplay precision; regime labelled; history preserved | approved | OWNER APPROVED | NOT STARTED |
 | B25-P99-PAYER-01 | p:99: planner reserve check vs payer funds mismatch causes repeated refused buy_from | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-REG02-DEBT-D1 | REG-02 migrating household loans: option (b), preserving legitimate continuing obligations | approved | OWNER APPROVED | NOT STARTED |
 | B25-SAV04-D1 | SAV-04: reload deterministic; exact equivalence with an uninterrupted wildlife/combat run not required | approved | OWNER APPROVED | NOT STARTED |

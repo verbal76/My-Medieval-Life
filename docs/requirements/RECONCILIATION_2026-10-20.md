@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 884 (488 of them still open) |
-| **Open entries now** (rules excluded) | | **646** |
+| Entries added since | | 888 (492 of them still open) |
+| **Open entries now** (rules excluded) | | **650** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (884)
+## Added since the baseline (888)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -182,6 +182,7 @@ None.
 | B25-AUDIT-CONT-01 | Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-B17FJOBS-D1 | REQ-B17F-JOBS: measure adult unemployment and causes after Batch 3+4 (measurement only) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-BASELINE-REVIEW-01 | No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| B25-BATCH34-MERGE-D1 | Batch 3+4 merge approved after the comparison shows no unexplained regressions; old baseline preserved | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-BIZ-D1 | Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system) | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-BIZ-D2 | Employees are paid: distinguish an independent craftsperson using another's stations from a paid business employee whose production belongs to the employer | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-BIZ-D3 | Unfinished business construction can be cancelled or abandoned through the existing cancellation system, with no money refund | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
@@ -209,6 +210,7 @@ None.
 | B25-EMPLOY-D3 | How do skilled occupations grow? | decision | APPROVED | owner decision |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-F015-FOOD-01 | F015: homesteader starves with coins; food held separated from purchasing power; fallback food purchase | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
+| B25-F015-POP-01 | F015/P99: explain seed 2 population 316 vs 203 before merge | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B25-FINAL-REVIEW-01 | Final testing review of fbfd6ad and an owner decision report for baseline acceptance and merge in one decision | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-FINISH-01 | Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25-HH-BIZFOOD-D1 | A food seller's household eats from its own business stock when household food is short: no sale, no coins | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
@@ -222,6 +224,8 @@ None.
 | B25-MP03-OWNERSHIP-D1 | MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
 | B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
 | B25-ND12-01 | ND-12: recorder diagnostic line overwritten (refused-trade detail) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
+| B25-ND15-TOL-01 | ND-15: documented numerical tolerances for save/load float differences, proven harmless | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| B25-ND16-PREC-01 | ND-16: campaigns save at gameplay precision; regime labelled; history preserved | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | B25-NINE-D1 | Organic skills, apprenticeship and career development | decision | APPROVED | owner decision |
 | B25-NINE-D2 | Informal services and expanded service contracts | decision | APPROVED | owner decision |

@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (845)
+## Approved requirement (849)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -99,6 +99,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-AUDIT-CONT-01 | Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-B17FJOBS-D1 | REQ-B17F-JOBS: measure adult unemployment and causes after Batch 3+4 (measurement only) | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-BASELINE-REVIEW-01 | No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-BATCH34-MERGE-D1 | Batch 3+4 merge approved after the comparison shows no unexplained regressions; old baseline preserved | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-BIZ-D1 | Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system) | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-BIZ-D2 | Employees are paid: distinguish an independent craftsperson using another's stations from a paid business employee whose production belongs to the employer | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-BIZ-D3 | Unfinished business construction can be cancelled or abandoned through the existing cancellation system, with no money refund | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
@@ -116,6 +117,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-ECON-P7 | Recover stranded settlement treasury ore | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-F015-FOOD-01 | F015: homesteader starves with coins; food held separated from purchasing power; fallback food purchase | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
+| B25-F015-POP-01 | F015/P99: explain seed 2 population 316 vs 203 before merge | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B25-FINAL-REVIEW-01 | Final testing review of fbfd6ad and an owner decision report for baseline acceptance and merge in one decision | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-FINISH-01 | Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B25-HH-BIZFOOD-D1 | A food seller's household eats from its own business stock when household food is short: no sale, no coins | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
@@ -128,6 +130,8 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-MP03-OWNERSHIP-D1 | MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity | unassigned | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | unassigned | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-ND12-01 | ND-12: recorder diagnostic line overwritten (refused-trade detail) | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
+| B25-ND15-TOL-01 | ND-15: documented numerical tolerances for save/load float differences, proven harmless | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-ND16-PREC-01 | ND-16: campaigns save at gameplay precision; regime labelled; history preserved | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-P99-PAYER-01 | p:99: planner reserve check vs payer funds mismatch causes repeated refused buy_from | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |

@@ -6474,6 +6474,40 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25-BATCH34-MERGE-D1",
+   "kind": "approved",
+   "title": "Batch 3+4 merge approved after the comparison shows no unexplained regressions; old baseline preserved",
+   "description": "Batch 3+4 merge approved after the comparison shows no unexplained regressions; old baseline preserved",
+   "source": "docs/directives/2026-11-10_build25_merge_decisions.md",
+   "owner_wording": "Batch 3+4: Approved for merge once the pending comparison confirms no unexplained regressions. Do not automatically replace the accepted baseline. Preserve the old baseline and its comparison results.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "attribution explains every one of the 33 gate differences; merge only then; df67e8e baseline and comparison kept"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_build25_merge_decisions.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "target_build: 25 -> unassigned",
+     "why": "target build unassigned, as the other B25 owner-directed records"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-BIZ-D1",
    "kind": "approved",
    "title": "Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system)",
@@ -7617,6 +7651,47 @@
    ]
   },
   {
+   "id": "B25-F015-POP-01",
+   "kind": "approved",
+   "title": "F015/P99: explain seed 2 population 316 vs 203 before merge",
+   "description": "F015/P99: explain seed 2 population 316 vs 203 before merge",
+   "source": "docs/directives/2026-11-10_build25_merge_decisions.md",
+   "owner_wording": "Do not merge yet. Investigate the population difference of 316 versus 203 on seed 2. Identify the exact causes of reduced births, arrivals, and any other population changes. Determine whether the difference is legitimate or an unintended side effect.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "exact causes of fewer births and arrivals traced by evidence; legitimate or defect stated; starvation and smith improvements kept"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "IN DEVELOPMENT",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_build25_merge_decisions.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> F015 population worker; branch: None -> wip/b25-f015-p99",
+     "why": "worker briefed: seed 2 population investigation (read-only)"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "target_build: 25 -> unassigned",
+     "why": "target build unassigned, as the other B25 owner-directed records"
+    }
+   ],
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "F015 population worker",
+   "branch": "wip/b25-f015-p99"
+  },
+  {
    "id": "B25-FINAL-REVIEW-01",
    "kind": "approved",
    "title": "Final testing review of fbfd6ad and an owner decision report for baseline acceptance and merge in one decision",
@@ -8154,6 +8229,11 @@
      "date": "2026-11-10",
      "change": "verification_status: INTEGRATION VERIFIED -> TARGETED TESTS PASSED",
      "why": "integration-level verification waits for the merge; CI on the task branch recorded in tests"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "owner_answer",
+     "why": "owner approved merge after Batch 3+4 if scope and tests still verified"
     }
    ],
    "lifecycle": "ACTIVE",
@@ -8162,7 +8242,76 @@
    "test_commit": "12d7549",
    "commits": [
     "12d7549"
-   ]
+   ],
+   "owner_answer": "Approved for merge after Batch 3+4, provided its diagnostic-only scope and passing tests remain verified."
+  },
+  {
+   "id": "B25-ND15-TOL-01",
+   "kind": "approved",
+   "title": "ND-15: documented numerical tolerances for save/load float differences, proven harmless",
+   "description": "ND-15: documented numerical tolerances for save/load float differences, proven harmless",
+   "source": "docs/directives/2026-11-10_build25_merge_decisions.md",
+   "owner_wording": "Minor floating-point differences after save/load are acceptable only when proven harmless to gameplay, inventory, money, contracts, deterministic outcomes, and subsequent simulation behavior. Establish and document numerical tolerances. Exact values must remain exact wherever required for correctness.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "tolerances documented per field class; integers (coins, items, ids, contracts) exact; a test proves harmlessness across later simulation"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_build25_merge_decisions.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "target_build: 25 -> unassigned",
+     "why": "target build unassigned, as the other B25 owner-directed records"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B25-ND16-PREC-01",
+   "kind": "approved",
+   "title": "ND-16: campaigns save at gameplay precision; regime labelled; history preserved",
+   "description": "ND-16: campaigns save at gameplay precision; regime labelled; history preserved",
+   "source": "docs/directives/2026-11-10_build25_merge_decisions.md",
+   "owner_wording": "Approved. Long-running campaigns should use the same save precision as actual gameplay. Preserve historical campaign results and label the new precision regime clearly. Do not compare incompatible results without accounting for the change.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "economy_sim segment saves at full precision; summaries carry a precision label; earlier results kept and not compared unlabelled"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_build25_merge_decisions.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "target_build: 25 -> unassigned",
+     "why": "target build unassigned, as the other B25 owner-directed records"
+    }
+   ],
+   "lifecycle": "ACTIVE"
   },
   {
    "id": "B25-NINE",
