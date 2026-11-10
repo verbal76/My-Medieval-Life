@@ -41,7 +41,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (97)
+## Implemented but not tested (96)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -60,7 +60,6 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-BUSINESS-IMPL | 20 | INTEGRATED |  |
 | B25-CAREER-IMPL | 20 | INTEGRATED |  |
 | B25-CAREER-SYSTEM | 20 | INTEGRATED |  |
-| B25-CI-ACTIONS-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 | B25-CLOSE-01 | 20 | INTEGRATED |  |
 | B25-CONTRACT-FUNDS-D1 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 | B25-DISK-CLEAN-D1 | unassigned | INTEGRATED |  |

@@ -7055,7 +7055,7 @@
    "decisions": [],
    "approval_status": "OWNER APPROVED",
    "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "NOT TESTED",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -7068,13 +7068,20 @@
      "date": "2026-11-10",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; branch: None -> wip/b25-ci-groups; commits + 98bda59",
      "why": "tests.yml groups and one-runner targeted runs on wip/b25-ci-groups; guide docs/ci/TESTING_ON_GITHUB_ACTIONS.md; CLAUDE.md rule; verification run 42913303043"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> targeted Tests 42913303043 pass (1 runner); test_commit: None -> 96090ae",
+     "why": "targeted run 42913303043 (group save recorder) passed on one runner with the Python checks and economy run skipped; full-mode run dispatched"
     }
    ],
    "lifecycle": "ACTIVE",
    "branch": "wip/b25-ci-groups",
    "commits": [
     "98bda59"
-   ]
+   ],
+   "tests": "targeted Tests 42913303043 pass (1 runner)",
+   "test_commit": "96090ae"
   },
   {
    "id": "B25-CLOSE-01",
@@ -8323,11 +8330,16 @@
      "date": "2026-11-10",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25-nd15-tolerance; tests: None -> save_tolerance_test 5/0; save_continuity_test 5/0; test_commit: None -> d7217b8; commits + d7217b8",
      "why": "tolerances documented and proven: save_tolerance_test 5/0, save_continuity_test 5/0 with the rule; Tests dispatched"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "tests: save_tolerance_test 5/0; save_continuity_test 5/0 -> save_tolerance_test 5/0; save_continuity_test 5/0; save_tolerance_test 5/0; save_continuity_test 5/0; full Tests 42908390945 pass",
+     "why": "full Tests 42908390945 pass on d7217b8"
     }
    ],
    "lifecycle": "ACTIVE",
    "branch": "wip/b25-nd15-tolerance",
-   "tests": "save_tolerance_test 5/0; save_continuity_test 5/0",
+   "tests": "save_tolerance_test 5/0; save_continuity_test 5/0; save_tolerance_test 5/0; save_continuity_test 5/0; full Tests 42908390945 pass",
    "test_commit": "d7217b8",
    "commits": [
     "d7217b8"
