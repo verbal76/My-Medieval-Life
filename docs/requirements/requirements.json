@@ -6348,6 +6348,35 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25-AUDIT-69-01",
+   "kind": "approved",
+   "title": "Status audit of the original 69 open items",
+   "description": "Status audit of the original 69 open items",
+   "source": "docs/directives/2026-11-10_69_open_items_audit.md",
+   "owner_wording": "I want a complete status audit of our original list of 69 open items ... This audit does not authorize merging branches, accepting simulation baselines, or closing unresolved items.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "original list located with date, document, commit; all 69 reconciled with evidence; counts total 69; roadmap; discrepancies"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_69_open_items_audit.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-AUDIT-CONT-01",
    "kind": "approved",
    "title": "Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions",

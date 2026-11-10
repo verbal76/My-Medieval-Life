@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (836)
+## Approved requirement (837)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -95,6 +95,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-AUD-REG-07 | Trade intelligence valid at most one eight-day year (audit REG-07) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-AUD-SAV-02 | Saved economic state preserved through load and continuation (audit SAV-02) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-AUD-TRD-02 | Merchant earnings recorded net of commission (audit TRD-02) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| B25-AUDIT-69-01 | Status audit of the original 69 open items | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-AUDIT-CONT-01 | Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-BASELINE-REVIEW-01 | No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-BIZ-D1 | Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system) | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |

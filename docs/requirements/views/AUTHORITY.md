@@ -17,7 +17,7 @@ Before any significant change, find its record here and follow `Governing record
 
 | Lifecycle | Records |
 |---|---|
-| ACTIVE | 880 |
+| ACTIVE | 881 |
 | SUPERSEDED | 43 |
 | COMPLETED | 246 |
 | REJECTED | 3 |

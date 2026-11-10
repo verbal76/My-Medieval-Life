@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 875 (479 of them still open) |
-| **Open entries now** (rules excluded) | | **637** |
+| Entries added since | | 876 (480 of them still open) |
+| **Open entries now** (rules excluded) | | **638** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (875)
+## Added since the baseline (876)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -178,6 +178,7 @@ None.
 | B25-AUD-REG-08 | REG-08 courier stranded deliveries: who receives stranded goods/coins, how a waiting route job ends, whether the flat fee is refunded, how a courier's migration is treated | decision | OPEN | owner decision |
 | B25-AUD-SAV-02 | Saved economic state preserved through load and continuation (audit SAV-02) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
 | B25-AUD-TRD-02 | Merchant earnings recorded net of commission (audit TRD-02) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | 20+ |
+| B25-AUDIT-69-01 | Status audit of the original 69 open items | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-AUDIT-CONT-01 | Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-BASELINE-REVIEW-01 | No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-BIZ-D1 | Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system) | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
