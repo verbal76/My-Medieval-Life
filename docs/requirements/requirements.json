@@ -7621,7 +7621,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7630,9 +7630,16 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_household_food_property_permissions.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker agent (PAR-AGENTS-01); branch: None -> wip/b25-mp03-public-tables",
+     "why": "worker e3be9ef: Chests.info as the guest for crates; 66/0 (6 failures before); findings recorded in the state file; tier-limit check requested"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "worker agent (PAR-AGENTS-01)",
+   "branch": "wip/b25-mp03-public-tables"
   },
   {
    "id": "B25-MP03-TABLES-D1",
