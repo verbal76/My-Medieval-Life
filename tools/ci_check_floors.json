@@ -149,6 +149,7 @@
  "trd01_guest_stall_settle_test": 8,
  "sav03_counter_reload_test": 6,
  "mp05_forged_client_test": 53,
+ "mp03_forged_store_test": 35,
  "emp03_seeker_count_test": 4,
  "reg02_journey_migration_test": 5,
  "npc02_gift_claims_test": 8,

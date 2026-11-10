@@ -392,7 +392,15 @@ static func dec(w: World, p: PlayerState, v, bad: Dictionary) -> Variant:
 	return o
 
 
+## B25-AUD-MP-03: a guest names a store only where it has the right. A genuine guest client only ever sends its own pack (every
+## verb that takes a store: deliver, cancel_site, fauna.feed, construction.build_stall, farm_plots.build_fence, plant_bush, pits.*,
+## mine_works.*, manor_work.stock_backfill). Its own chest is its own; a cart only when Carts.may_use lets it (its own, or a
+## player's at asset-share tier 3) and within VERB_REACH. A villager's pack, a household's pantry, the granary and a container are
+## never a guest's to spend from (they are reached through their own verbs: player_take, chests.*, trading), so they are refused.
 static func _dec_inv(w: World, p: PlayerState, d: Dictionary, bad: Dictionary) -> Inventory:
+	if not w.is_host(p) and not (str(d["$inv"]) in ["pack", "chest", "cart"]):
+		bad.why = "That is not yours."
+		return null
 	match str(d["$inv"]):
 		"pack":
 			return p.inv
@@ -400,6 +408,13 @@ static func _dec_inv(w: World, p: PlayerState, d: Dictionary, bad: Dictionary) -
 			return p.chest
 		"cart":
 			var c: Dictionary = w.carts.by_id(int(d.id))
+			if not c.is_empty() and not w.is_host(p):
+				if not w.carts.may_use(c, w.player_ref(p)):
+					bad.why = "That is not yours."
+					return null
+				if c.get("pos") is Vector2 and (c.pos as Vector2).distance_to(p.pos) > VERB_REACH:
+					bad.why = "That is too far away."
+					return null
 			if not c.is_empty():
 				return c.store
 		"container":
