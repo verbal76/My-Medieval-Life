@@ -1148,7 +1148,9 @@ func _plan_eat(n: NPC) -> bool:
 		v = null
 	if v:
 		priced = true
-		payer = _payer_for(n, _cheapest_meal(v))      # the family's tab at the tavern, for anyone without the coin
+		payer = _payer_for(n, _cheapest_meal(v), v)      # the family's tab at the tavern, for anyone without the coin
+		if payer != null and not _affordable_meal(payer, v):
+			payer = null                     # the meal's deal price (a skilled seller asks more) is beyond them: not sent to be refused
 		if payer != null:
 			n.doing = "buying a meal" if payer == n else "eating on the family's tab"
 			n.plan = [go(_workplace_cell(v)), doit("buy_food", {"vendor": v.id, "pantry": false, "payer": payer.id}), work(10, "eat", {}, "idle")]
@@ -1158,7 +1160,7 @@ func _plan_eat(n: NPC) -> bool:
 			break
 		if o.alive and o != n and not w.asleep(o) and (o.job == "farmer" or buy_role(o) == "merchant_food") and o.inv.count("wheat") - reserve(o, "wheat") >= 2:
 			priced = true
-			payer = _payer_for(n, w.sell_price(o, "wheat") * 2)
+			payer = _payer_for(n, w.sell_price(o, "wheat") * 2, o)
 			if payer != null:
 				n.doing = "buying grain for porridge"
 				n.plan = [go(_workplace_cell(o) if o.job != "farmer" else o.cell()), doit("buy_from", {"vendor": o.id, "item": "wheat", "qty": 2, "payer": payer.id}),
@@ -1167,6 +1169,14 @@ func _plan_eat(n: NPC) -> bool:
 			break
 	if gives_way:
 		return false                       # FAMILY-01: leaves the food to those in their care, down to the survival floor
+	# B25-HH-BIZFOOD-D1 (owner 2026-11-10): nothing at home and no meal or grain they can buy: a member of a food seller's household
+	# eats from the family's own business stock, as a household eats its own food: no sale, no coins (never a purchase from oneself,
+	# B25-SELFTRADE-VAL-01). A fallback, so a member who can buy as before still does (the six self-trade scenarios are unchanged).
+	var fam := _family_food_seller(n)
+	if fam != null:
+		n.doing = "eating from the family's stock"
+		n.plan = [go(_workplace_cell(fam)), doit("eat_family_stock", {"from": fam.id}), work(10, "eat", {"cooked_only": true}, "idle")]
+		return true
 	var why := "no_money" if priced else "no_food_for_sale"
 	w.stat("missed_meal_" + why)
 	w.chapel.note_missed(n)                # CHAPEL-PURPOSE: the chapel's emergency round puts this household first
@@ -1233,6 +1243,9 @@ func _plan_job(n: NPC) -> bool:
 					n.job_since = w.day()
 					n.workplace = f.id
 					once("takes_field_%d" % n.id, "%s %s takes over the untended field %s." % [n.name, n.family, f.id])
+					w.stat("job_changes")                    # B25-AUD-NPC-03: counted and recorded as every change of trade is
+					if w.recorder != null:
+						w.recorder.job_changed(n, "manor_hand", "farmer", "takes over the untended field", str(f.id))
 					evaluate_household(n.household)
 					return _farmer(n)
 			# the manor's hands do its open work (unpaid by the job: they have a day's wage); with none,
@@ -1331,17 +1344,70 @@ func rest_cell(n: NPC) -> Vector2i:
 ## adult (a household's cash feeds all of it, as the manor's relief assumes).
 ## Who pays `price` for `n`'s food: `n` when they have it, else the household member with the most coins when they have
 ## it (the family's tab), else nobody.
-func _payer_for(n: NPC, price: int) -> NPC:
+## Who pays `price` for `n`: the responsible parent (FAMILY-01), `n`, or the household's richest member. Never `seller`: a
+## villager does not buy their own goods (World.trade refuses it, and the refused plan was made again every minute: campaign
+## 42734194963 seed 1, a tavernkeeper's household sent 1262 times in one day to buy from the tavernkeeper with the tavernkeeper's purse).
+func _payer_for(n: NPC, price: int, seller: NPC = null) -> NPC:
 	if JudgmentLive.on(w, JudgmentFamily.FLAG):
 		var parent := JudgmentFamily.payer(w, n, price)      # FAMILY-01: the responsible parent's purse first, for those in their care
-		if parent != null:
+		if parent != null and parent != seller:
 			return parent
-	if n.coins >= price:
+	if n.coins >= price and n != seller:
 		return n
 	if n.household < 0:
 		return null
-	var best := _richest_in_household(n)
+	var best := _richest_in_household(n, seller)
 	return best if best != null and best.coins >= price else null
+
+
+## B25-HH-BIZFOOD-D1: a living member of `n`'s own household (not `n`) who sells food (a tavernkeeper, a food merchant) and holds a
+## cooked meal the family may eat (_family_meal); the nearest of them, by id on a tie. null when none: then `n` looks for food as before.
+func _family_food_seller(n: NPC) -> NPC:
+	if n.household < 0 or n.household >= w.households.size():
+		return null
+	var best: NPC = null
+	var bd := INF
+	var ids: Array = (w.households[n.household].members as Array).duplicate()
+	ids.sort()
+	for m in ids:
+		var o := w.npc(int(m))
+		if o == null or o == n or not o.alive or o.household != n.household:
+			continue
+		if o.job != "tavernkeeper" and buy_role(o) != "merchant_food":
+			continue
+		if _family_meal(n, o) == "":
+			continue
+		var d := n.pos.distance_to(o.pos)
+		if d < bd:
+			bd = d
+			best = o
+	return best
+
+
+## The meal `n` may take from household member `fam`'s business stock: the cheapest cooked meal `fam` holds that no claim, contract or
+## reservation holds back (World.claims_allow, LE-03) and `n` can carry; "" when none. Only for the seller's own household.
+func _family_meal(n: NPC, fam: NPC) -> String:
+	if fam == null or not fam.alive or fam == n or fam.household < 0 or fam.household != n.household:
+		return ""
+	var best := ""
+	var low := 1 << 30
+	for f in COOKED:
+		if not fam.inv.has(f) or not n.inv.can_add(f) or not w.claims_allow(fam, f, 1):
+			continue
+		var p := w.sell_price(fam, f)
+		if p < low:
+			low = p
+			best = f
+	return best
+
+
+## Whether `payer` can pay the deal price (World.deal_price, what the buy_food act asks) of any cooked meal `v` holds. Draws nothing.
+## Found in campaign 42760291468 (seed 2, day 363): planned at the list price, refused at the deal price, planned again (2776 times).
+func _affordable_meal(payer: NPC, v: NPC) -> bool:
+	for f in COOKED:
+		if v.inv.has(f) and w.deal_price(w.sell_price(v, f), payer, v) <= payer.coins:
+			return true
+	return false
 
 
 ## The cheapest cooked meal `v` has on sale, at its asking price (what _meal_choice can buy at the least).
@@ -1353,11 +1419,11 @@ func _cheapest_meal(v: NPC) -> int:
 	return low
 
 
-func _richest_in_household(n: NPC) -> NPC:
+func _richest_in_household(n: NPC, but: NPC = null) -> NPC:
 	var best: NPC = null
 	for m in w.households[n.household].members:
 		var o := w.npc(m)
-		if o and o.alive and o.role in ["adult", "elder"] and (best == null or o.coins > best.coins):
+		if o and o != but and o.alive and o.role in ["adult", "elder"] and (best == null or o.coins > best.coins):
 			best = o
 	return best
 
@@ -2473,14 +2539,14 @@ func _grain_seller(n: NPC) -> NPC:
 ## Someone with coins to spare sometimes treats the household to cheese. "" if nothing is affordable.
 func _meal_choice(payer: NPC, v: NPC, menu: Array = COOKED) -> String:
 	var spare := payer.coins >= int(GameData.b("tavern_spare_coins"))
-	if spare and v.inv.has("cheese") and payer.coins >= w.sell_price(v, "cheese") and w.rng.randf() < float(GameData.b("cheese_treat_chance")):
+	if spare and v.inv.has("cheese") and payer.coins >= w.deal_price(w.sell_price(v, "cheese"), payer, v) and w.rng.randf() < float(GameData.b("cheese_treat_chance")):
 		return "cheese"
 	var best := ""
 	var best_v := -1.0
 	for f in menu:
 		if not v.inv.has(f):
 			continue
-		var price := w.sell_price(v, f)
+		var price := w.deal_price(w.sell_price(v, f), payer, v)     # what the buy_food act will ask (the seller's Trading raises it)
 		if price > payer.coins:
 			continue
 		var per := float(GameData.item(f).food) / float(maxi(1, price))
@@ -3026,6 +3092,12 @@ func act(n: NPC, what: String, a: Dictionary) -> bool:
 					w.stat("keeper_collected_" + id, float(k))
 					w.stat("made_" + id, float(k))       # a pen's products become goods when collected
 			return true
+		"eat_family_stock":
+			var fam := w.npc(int(a.get("from", -1)))
+			var f := _family_meal(n, fam)
+			if f == "":
+				return false                     # the stock is gone or spoken for: the next decision looks again (no retry of this act)
+			return w.transfer(fam.inv, n.inv, f, 1)      # one meal from the family's business stock to the eater: no trade, no coins
 		"buy_food":
 			var v := w.npc(int(a.vendor))
 			if v == null or not v.alive:
