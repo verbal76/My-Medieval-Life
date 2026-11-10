@@ -167,9 +167,21 @@ when the issue arose.
   `c9da5db` ("69 resources still in use at exit"). The earlier state-file note calls "leaked at exit" warnings long-standing noise.
   It has not been checked whether they are.
 
-### KI-09 Native crash (double free) in `demo_test`, once (OPEN)
+### KI-09 Native crash (double free) in `demo_test`, once (ROOT-CAUSED; fix `e276c9f` on `wip/b25-ki09-demo-exit`, not yet merged)
 - Strict run 42542326507 on `4f1b3c8`, shard 9. Every check before the crash passed, and the shard passed on re-run. Cause not
   investigated. Watch for a repeat.
+- Repeated 2026-11-10: attempt 1 of Tests 42734267343 on `72729e5` (`demo_test` exit -6; attempt 2 green).
+- Root cause (worker, 2026-11-10): `RegionGeo._cache` in `game/scripts/core/region_geo.gd` is a shared static Dictionary that
+  `region_at` filled from two threads at once: the main thread and the `AerialMap.start_sites` worker thread. The worker runs only
+  when `user://aerial_cache` is empty, as on a fresh CI runner, so local runs rarely hit it. Concurrent Dictionary inserts corrupted
+  the heap, and the damage surfaced later as an abort at teardown.
+- Fix `e276c9f` (only `region_geo.gd`, +22/-4): a Mutex around the cache read and insert and around the one-time load; `_data` is set
+  last, so a thread that sees it loaded sees complete tables. It does not change any lookup result, so single-thread simulation output
+  is unchanged.
+- Evidence (worker, local, under CPU load with a fresh cache each run): before 1 of 20 runs crashed, after 0 of 20. After the fix:
+  `demo_test` 35/0 (x20), `start_test` 523 steps/0, `aerial_map_test` 79/0, `region_geography_test` 992/0. The 1-in-20 rate means 0
+  of 20 is good but not conclusive evidence; CI on the merge head is the next check.
+- Not done: the worker's optional suggestion to call `AerialMap.drop()` before `world.dispose()` in `Main._clear_world()`.
 
 ### KI-10 A partly re-run Tests run reports "failure" though every shard passed (OPEN, CI reporting)
 - In 42542326507 (attempt 2 re-ran shard 9 only), the report job reads only the re-run's artifacts, so the run's conclusion is
