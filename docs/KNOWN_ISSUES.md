@@ -167,7 +167,7 @@ when the issue arose.
   `c9da5db` ("69 resources still in use at exit"). The earlier state-file note calls "leaked at exit" warnings long-standing noise.
   It has not been checked whether they are.
 
-### KI-09 Native crash (double free) in `demo_test`, once (ROOT-CAUSED; fix `e276c9f` on `wip/b25-ki09-demo-exit`, not yet merged)
+### KI-09 Native crash (double free) in `demo_test`, once (FIXED and MERGED: `167b235` on the development line, 2026-11-10 05:48 UTC)
 - Strict run 42542326507 on `4f1b3c8`, shard 9. Every check before the crash passed, and the shard passed on re-run. Cause not
   investigated. Watch for a repeat.
 - Repeated 2026-11-10: attempt 1 of Tests 42734267343 on `72729e5` (`demo_test` exit -6; attempt 2 green).
@@ -182,6 +182,10 @@ when the issue arose.
   `demo_test` 35/0 (x20), `start_test` 523 steps/0, `aerial_map_test` 79/0, `region_geography_test` 992/0. The 1-in-20 rate means 0
   of 20 is good but not conclusive evidence; CI on the merge head is the next check.
 - Not done: the worker's optional suggestion to call `AerialMap.drop()` before `world.dispose()` in `Main._clear_world()`.
+- Merged onto `72729e5` as `167b235` (`wip/b25-ki09-on-dev`). Tests 42758089184 on `167b235` (attempt 1): every shard passed; its
+  ci-validation artifact names `167b235`, result pass, 0 failed suites in every group; `demo_test` 35 checks, 0 failures, exit 0.
+  The development line was fast-forwarded to `167b235` at 05:48 UTC (00:48 EST). One clean CI run is not proof the crash is gone
+  (it was rare): keep watching `demo_test` in later runs.
 
 ### KI-10 A partly re-run Tests run reports "failure" though every shard passed (OPEN, CI reporting)
 - In 42542326507 (attempt 2 re-ran shard 9 only), the report job reads only the re-run's artifacts, so the run's conclusion is
