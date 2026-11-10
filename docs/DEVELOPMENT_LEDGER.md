@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (818)
+## Approved requirement (823)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -95,6 +95,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-AUD-REG-07 | Trade intelligence valid at most one eight-day year (audit REG-07) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-AUD-SAV-02 | Saved economic state preserved through load and continuation (audit SAV-02) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-AUD-TRD-02 | Merchant earnings recorded net of commission (audit TRD-02) | 20+ | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
+| B25-AUDIT-CONT-01 | Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-BIZ-D1 | Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system) | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-BIZ-D2 | Employees are paid: distinguish an independent craftsperson using another's stations from a paid business employee whose production belongs to the employer | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-BIZ-D3 | Unfinished business construction can be cancelled or abandoned through the existing cancellation system, with no money refund | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
@@ -106,13 +107,17 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-CAREER-SYSTEM | Build 25 career, business and employment system (owner decisions D1-D4) | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-CLOSE-01 | Complete Build 25 before packaging: closure audit, finish farming Phase 2 and the cart-hitch fix, one frozen SHA with targeted validation, owner approval before any year-long campaign, package only when acceptance is met, then stop | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-CLOSE-02 | Close Build 25 under strict scope: finish the targeted tests, freeze one SHA, ONE final year-long campaign (seeds 1 and 2 normal, seed 1 economy-on) on it, present B25-ECON-P1..P5, JOB-02/CON-02-KINDS/PIT-02/FSE-10 as future-scope candidates, LE-07 gate 11 open for an owner device test, no packaging until the gates pass | 20 | SUPERSEDED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT APPLICABLE | CLOSED |
+| B25-DISK-CLEAN-D1 | Verified safe disk cleanup of the lead machine | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-ECON-P7 | Recover stranded settlement treasury ore | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-FINISH-01 | Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release | 20 | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| B25-INV02-SPOIL-D1 | INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | 20 | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
+| B25-SELFTRADE-VAL-01 | Self-trade payer defect: complete the investigation beyond preventing the self-trade | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25R1-001 | Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish | 20 | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
 | B25R1-002 | Full interaction outside the starting village (release blocker) | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |

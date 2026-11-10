@@ -6348,6 +6348,36 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25-AUDIT-CONT-01",
+   "kind": "approved",
+   "title": "Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions",
+   "description": "Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions",
+   "source": "docs/directives/2026-11-10_owner_decisions_audit_continuation.md",
+   "owner_wording": "Complete the existing audit and validation work before introducing additional gameplay changes.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "Every validation result matched to its commit SHA from Actions results and artifacts",
+    "Batch 3 not merged until validation passes and the food-purchase retry behaviour is investigated"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_owner_decisions_audit_continuation.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-BIZ-D1",
    "kind": "approved",
    "title": "Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system)",
@@ -6992,6 +7022,35 @@
    "lifecycle": "SUPERSEDED"
   },
   {
+   "id": "B25-DISK-CLEAN-D1",
+   "kind": "approved",
+   "title": "Verified safe disk cleanup of the lead machine",
+   "description": "Verified safe disk cleanup of the lead machine",
+   "source": "docs/directives/2026-11-10_owner_decisions_audit_continuation.md",
+   "owner_wording": "OWNER DECISION: APPROVED FOR VERIFIED SAFE CLEANUP.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "Inventory; only reproducible or disposable files removed; packages claimed on GitHub confirmed present and retrievable; unique evidence, logs and uncommitted work kept; space recovered and retained items reported"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_owner_decisions_audit_continuation.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-ECON-P1",
    "kind": "decision",
    "title": "Business founding requires the trade's benches to be full and busy (Ventures.refusal, skilled_place busy_share 0.35); in seed 1 the founding trades' benches were 2-20% busy all 120 days, so every one of 172 weekly looks stopped there. Options: A keep the rule (businesses form when demand exists); B let a founder weigh independence even with idle benches (the judgment weighing decides); C a lower busy threshold for founding only. Recommendation: A, and act on demand (P2-P4) rather than the gate. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686).",
@@ -7399,6 +7458,37 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25-INV02-SPOIL-D1",
+   "kind": "approved",
+   "title": "INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation",
+   "description": "INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation",
+   "source": "docs/directives/2026-11-10_owner_decisions_audit_continuation.md",
+   "owner_wording": "OWNER DECISION: APPROVED IN PRINCIPLE, INVESTIGATE BEFORE IMPLEMENTATION. Food stored in inventories, homestead chests, business storage, courier storage, and other containers should eventually spoil where appropriate. However, storage conditions must influence preservation.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "Investigation of existing preservation, consumption, storage and spoilage",
+    "Proposed implementation with expected impacts and testing requirements; unresolved design choices put to the owner",
+    "Not introduced into the running Build 25 validation campaign"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_owner_decisions_audit_continuation.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-LE-ACTIVATE-D1",
    "kind": "decision",
    "title": "Living Economy activation policy for Build 25",
@@ -7435,6 +7525,38 @@
    "supersedes": [
     "X20-ACTIVATION-AUTHORITY"
    ]
+  },
+  {
+   "id": "B25-MP03-TABLES-D1",
+   "kind": "approved",
+   "title": "MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction",
+   "description": "MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction",
+   "source": "docs/directives/2026-11-10_owner_decisions_audit_continuation.md",
+   "owner_wording": "Multiplayer guests may interact with genuinely public tables when the tables are accessible and within the permitted interaction range.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "MP-03 restrictions on private packs, chests and inventories preserved",
+    "Public tables give no indirect access to private household, business or player storage",
+    "Ownership, accessibility, permissions and proximity verified; authorized and unauthorized interactions tested; reconnects and guest state transitions tested",
+    "Blanket MP-06 restriction not reintroduced"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_owner_decisions_audit_continuation.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
   },
   {
    "id": "B25-NINE",
@@ -7967,6 +8089,39 @@
    ],
    "supersedes": [
     "B25-CLOSE-02"
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B25-SELFTRADE-VAL-01",
+   "kind": "approved",
+   "title": "Self-trade payer defect: complete the investigation beyond preventing the self-trade",
+   "description": "Self-trade payer defect: complete the investigation beyond preventing the self-trade",
+   "source": "docs/directives/2026-11-10_owner_decisions_audit_continuation.md",
+   "owner_wording": "Do not consider this defect fully resolved merely because the self-trade is prevented.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "A hungry villager finds another legitimate food source when one exists",
+    "No rapid retry loop when none exists",
+    "Household funds and inventory conserved",
+    "Dependent children, food sellers, penniless households and multiple potential payers tested",
+    "No starvation, trading or household-planning regressions; the next 365-day campaign checked for recurrence of the original HIGH findings"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_owner_decisions_audit_continuation.md"
+    }
    ],
    "lifecycle": "ACTIVE"
   },
