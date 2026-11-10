@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (30)
+## Workers and task branches (31)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -20,6 +20,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-ND12-01 | unassigned | IMPLEMENTED ON TASK BRANCH | none | wip/b25-nd12-recorder-detail |
 | B25-P99-PAYER-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-f015-p99 |
 | B25-SAVE-PHANTOM-D2 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-hh-phantom-repair |
+| B25-SAVE-PHANTOM-D3 | unassigned | IMPLEMENTED ON TASK BRANCH | none | wip/b25-hh-phantom-repair |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | B25-SELFTRADE-VAL-01 | unassigned | IN DEVELOPMENT | lead | wip/b25-audit-sim3 |
 | B25R1-023 | 20 | IN DEVELOPMENT | b25r1-grassmap worker | wip/b25r1-grassmap |

@@ -8721,8 +8721,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -8730,9 +8730,20 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_phantom_repair_decisions_69_tracker.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25-hh-phantom-repair; tests: None -> hh_phantom_repair_test 37/0; 16 related suites 0 failures; real saves 42788018729 day 100/200/300 seeds 1-2; test_commit: None -> 837e3e1; commits + 837e3e1",
+     "why": "worker done: dead/away phantoms and former-bandit band entries removed on load under the owner's safeguards; band conflicts and household-less former bandits flagged only; test 37/0 (7 failures on 7e844e3); 6 real saves verified"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "branch": "wip/b25-hh-phantom-repair",
+   "tests": "hh_phantom_repair_test 37/0; 16 related suites 0 failures; real saves 42788018729 day 100/200/300 seeds 1-2",
+   "test_commit": "837e3e1",
+   "commits": [
+    "837e3e1"
+   ]
   },
   {
    "id": "B25-SCOPE-AUDIT",

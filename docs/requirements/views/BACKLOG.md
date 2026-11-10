@@ -109,7 +109,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-REG02-DEBT-D1 | REG-02 migrating household loans: option (b), preserving legitimate continuing obligations | approved | OWNER APPROVED | NOT STARTED |
 | B25-SAV04-D1 | SAV-04: reload deterministic; exact equivalence with an uninterrupted wildlife/combat run not required | approved | OWNER APPROVED | NOT STARTED |
 | B25-SAVE-PHANTOM-D2 | Deterministic reconciliation of phantom household memberships in existing saves | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| B25-SAVE-PHANTOM-D3 | Phantom repair: remove dead villagers' and departed bandits' incorrect memberships (with safeguards) | approved | OWNER APPROVED | NOT STARTED |
+| B25-SAVE-PHANTOM-D3 | Phantom repair: remove dead villagers' and departed bandits' incorrect memberships (with safeguards) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-SELFTRADE-VAL-01 | Self-trade payer defect: complete the investigation beyond preventing the self-trade | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25-TRACK-69-02 | Original 69 items as a living tracker; new defects in a separate register; work packages for the remaining 29 | approved | OWNER APPROVED | NOT STARTED |
 | B25-WP1-01 | WP-1: the 14-item small-work package authorized on isolated branches | approved | OWNER APPROVED | NOT STARTED |

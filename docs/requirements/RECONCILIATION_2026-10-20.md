@@ -237,7 +237,7 @@ None.
 | B25-REG02-DEBT-D1 | REG-02 migrating household loans: option (b), preserving legitimate continuing obligations | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-SAV04-D1 | SAV-04: reload deterministic; exact equivalence with an uninterrupted wildlife/combat run not required | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-SAVE-PHANTOM-D2 | Deterministic reconciliation of phantom household memberships in existing saves | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
-| B25-SAVE-PHANTOM-D3 | Phantom repair: remove dead villagers' and departed bandits' incorrect memberships (with safeguards) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| B25-SAVE-PHANTOM-D3 | Phantom repair: remove dead villagers' and departed bandits' incorrect memberships (with safeguards) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20 |
 | B25-SCOPE-D1 | Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work from abandoned branches? | decision | APPROVED | owner decision |
 | B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
