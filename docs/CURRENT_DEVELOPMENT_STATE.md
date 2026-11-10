@@ -6,7 +6,7 @@
   The previous stamp ("Updated 2026-11-06 19:00 EST"; "Snapshot last verified 2026-11-07 03:30 UTC ... `fe7d8f8`") had stayed
   unchanged through the 2026-11-08/09 entries below, although those entries were current. It is corrected here. The old wording
   is in git history.
-- **Snapshot last verified:** 2026-11-09 21:20 UTC (16:20 EST) by the lead, against wip/b25r2-rev2 `448fc0b`,
+- **Snapshot last verified:** 2026-11-09 21:20 UTC (16:20 EST) by the lead, against wip/b25r2-rev2 `e44d6b8`,
   wip/requirements-control (this commit), docs/build25-audit-register `67c667d`, Actions runs to 42664730920 (completed; no
   run in progress).
   - **Convention:** whoever checks this file against the live GitHub state writes this line as
@@ -39,7 +39,7 @@ and `wip/b25r1`, which are no longer the development line.
 | Item | Value |
 |---|---|
 | Build | Build 25, Revision 2 ("Play Test Build One"); the package label is to be "0.1.34 Rev 2 — Playtest 1" (B25R2-VER-01) |
-| **Development line (code)** | **`wip/b25r2-rev2` at `448fc0b`** = `242ca83` (MP-05, 2026-11-09 21:18 UTC) + `b7884d3` (CLAUDE.md banner) + `448fc0b` (MP-05 forged-client fixes, fast-forwarded 23:30 UTC; full Tests 42713486147 green). Confirmed by the owner 2026-11-09 (BRANCH-POL-Q2, DEV-LINE-B25); CLAUDE.md section 5a names it |
+| **Development line (code)** | **`wip/b25r2-rev2` at `e44d6b8`** (fast-forwarded from `448fc0b` 2026-11-10 01:10 UTC: INV-01, BIZ-08, TRD-01, SAV-03 counter part, KI-12 fix; full Tests 42726254015 green). Before: **`448fc0b`** = `242ca83` (MP-05, 2026-11-09 21:18 UTC) + `b7884d3` (CLAUDE.md banner) + `448fc0b` (MP-05 forged-client fixes, fast-forwarded 23:30 UTC; full Tests 42713486147 green). Confirmed by the owner 2026-11-09 (BRANCH-POL-Q2, DEV-LINE-B25); CLAUDE.md section 5a names it |
 | Records branch | `wip/requirements-control`: register, directives, this file, changelog, known issues, decision records. Lead only |
 | Audit register | branch docs/build25-audit-register, commit `257475c`, file docs/audits/2026-11-08_build25_master_audit_register.md on that branch; tracking issue #4 |
 | Running Actions | None. Last: MP-05 recorded campaign [42664730920](https://github.com/verbal76/My-Medieval-Life/actions/runs/42664730920) on `242ca83`, completed 21:13 UTC: seed 1 365/365 0 CRITICAL 17 HIGH 46 MEDIUM 0 confirmed; seed 2 365/365 0/63/42 0 confirmed (identical to `c9da5db`) |
@@ -65,6 +65,7 @@ and `wip/b25r1`, which are no longer the development line.
 | KI-12 net_fault reconnect race | Worker agent (PAR-AGENTS-01), worktree `audit-int` (done) | `wip/b25-ki12-reconnect` | `dc049d9` | reproduced under load; fix 55/0 x4 under load | done; merged into `wip/b25-audit-fixes` `e44d6b8` | Merges with the audit fixes when CI is green |
 | Audit fixes that change the simulation, batch 1: EMP-01, BIZ-05, BIZ-01/02, LIFE-02, INV-06 | Worker agent (PAR-AGENTS-01), worktree `audit-int` (done) | `wip/b25-audit-sim1` | `916db07` | failing-first: emp01 2->9/9, biz05 2->9/9, biz01 9->47/47, life02 6->14/14, wear_transfer 3->36/36; related suites 0 failures | done, awaiting the batch campaign | Combine with sim2 on the development line; strict CI, gate, one recorded campaign; then merge |
 | Audit fixes that change the simulation, batch 2: REG-02 (journey part), NPC-02, JUS-02 | Lead | `wip/b25-audit-sim2` | `1497a5c` | failing-first: reg02 3->5/5, npc02 3->8/8, jus02 3->8/8; related suites 0 failures | in development (REG-06, NPC-03 next) | As batch 1 |
+| Simulation batch: EMP-03 + sim1 + sim2 on `e44d6b8` | Lead | `wip/b25-sim-batch` | `72729e5` (`acc24b2` + CI-file fix: shard number through env, the run block had passed GitHub's 21000-character expression limit) | EMP-03 campaign 42705042231 on `00e47a6` clean (0 CRITICAL, 17/46 and 63/42, 0 confirmed); batch: Tests on `72729e5`, gate and recorded campaign on `acc24b2` (code identical) dispatched 2026-11-10 ~01:20 UTC | in validation | Fast-forward `wip/b25r2-rev2` when all are clean |
 | MP-05 integration | Lead | `wip/b25-mp05-on-dev` | `242ca83` | campaign 42664730920 clean | merged into `wip/b25r2-rev2` 2026-11-09 21:18 UTC | Device and security checks outstanding (KI-13) |
 | Historical recovery (HAG-FORENSICS-01) | Documentation agent (subagent of the lead) | branch docs/history-recovery-2026-11 (local; the lead integrates each checkpoint into `wip/requirements-control`, since the pre-push hook refuses register copies on other branches) | integrated `8d16416` | lead integration | active | Finish changelog, state, recovery and known-issues repairs; lead runs the register commands and the independent recovery test |
 | Audit corrections and approved features (MP-07, REG-04, REG-05, further audit items) | ChatGPT, through the owner's GitHub account | `audit/*`, `feature/*` (new PRs) | not applicable | not applicable | none open except PR #19 | The lead retrieves and integrates new PRs as they appear (owner directive 2026-11-08) |

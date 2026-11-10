@@ -5700,12 +5700,17 @@
      "date": "2026-11-09",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; assigned_worker: None -> lead; branch: None -> wip/b25-emp03; tests: None -> emp03_seeker_count_test 4/0 (2 failures on the old code); career_ambition_test 71/0; competition_test 33/0; test_commit: None -> 00e47a6; commits + 00e47a6",
      "why": "ambitious lookers now counted as seekers; strict CI, gate and recorded campaign dispatched on 00e47a6; homestead members, permanent employees and players unchanged (KI-15)"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "tests: emp03_seeker_count_test 4/0 (2 failures on the old code); career_ambition_test 71/0; competition_test 33/0 -> emp03_seeker_count_test 4/0 (2 failures on the old code); career_ambition_test 71/0; competition_test 33/0; recorded campaign 42705042231 on 00e47a6 clean; strict Tests 42705032193 attempt 2 green; gate 42705036907 baseline-difference only",
+     "why": "campaign clean; merging with the simulation batch wip/b25-sim-batch"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "lead",
    "branch": "wip/b25-emp03",
-   "tests": "emp03_seeker_count_test 4/0 (2 failures on the old code); career_ambition_test 71/0; competition_test 33/0",
+   "tests": "emp03_seeker_count_test 4/0 (2 failures on the old code); career_ambition_test 71/0; competition_test 33/0; recorded campaign 42705042231 on 00e47a6 clean; strict Tests 42705032193 attempt 2 green; gate 42705036907 baseline-difference only",
    "test_commit": "00e47a6",
    "commits": [
     "00e47a6"

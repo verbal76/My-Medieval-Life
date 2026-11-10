@@ -73,6 +73,17 @@ decision chains are in `docs/decisions/` (records marked "Reconstructed 2026-11-
 has been the line since. The owner's directives named these branches (recovered messages of 2026-11-04 and 2026-11-08). In the
 entries below, INTEGRATED means in that day's development line.
 
+### 2026-11-10 (Tuesday)
+
+**Audit fixes and the KI-12 fix MERGED at `e44d6b8`, 01:10 UTC (20:10 EST 2026-11-09).** Fast-forward from `448fc0b`. INV-01 (census
+counts players' stashes), BIZ-08 (business hands after a load), TRD-01 (guest stall sessions settled to the guest), SAV-03 counter
+part (serving rebuilt from plans on load), KI-12 (a guest reconnects at once after an unannounced freeze; harness hardened). Each fix
+has a failing-first test. Full Tests 42726254015 on `e44d6b8` green, `net_fault_test` included. No simulation change, no campaign.
+
+**EMP-03 campaign clean** (42705042231 on `00e47a6`: 0 CRITICAL, seed 1 17 HIGH 46 MEDIUM, seed 2 63/42, 0 confirmed). EMP-03 goes to
+the development line inside the simulation batch `wip/b25-sim-batch` with the eight other simulation-changing audit fixes, under one
+strict CI run, gate and recorded campaign.
+
 ### 2026-11-09 (Monday)
 
 **MP-05 forged-client fixes MERGED at `448fc0b`, 23:30 UTC (18:30 EST).** Fast-forward from `b7884d3`. A worker (PAR-AGENTS-01) drove
