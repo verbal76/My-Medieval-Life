@@ -7053,6 +7053,38 @@
    "lifecycle": "SUPERSEDED"
   },
   {
+   "id": "B25-CONT-INV-01",
+   "kind": "approved",
+   "title": "Continued investigation, validation and merge preparation (Build 25)",
+   "description": "Continued investigation, validation and merge preparation (Build 25)",
+   "source": "docs/directives/2026-11-10_continued_investigation_merge_prep.md",
+   "owner_wording": "Keep the Batch 3+4 merge candidate isolated from subsequent defect fixes. Continue validation, investigate all unresolved findings, and preserve the owner approval gates.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "fix branch validated from artifacts of 3d515d6 (Tests, gate, both campaign seeds compared)",
+    "three investigations with root cause, scope, evidence, correction, test requirements",
+    "baseline attribution grouped by initiating cause with ACCEPT/FIX/INVESTIGATE",
+    "owner decision report delivered when attribution completes; no merge or baseline change without owner approval"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_continued_investigation_merge_prep.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-DISK-CLEAN-D1",
    "kind": "approved",
    "title": "Verified safe disk cleanup of the lead machine",
@@ -7643,6 +7675,93 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_household_food_property_permissions.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B25-INV-BANDIT-CHILD",
+   "kind": "approved",
+   "title": "Bandit-clan children starving despite household food (days 305-306)",
+   "description": "Bandit-clan children starving despite household food (days 305-306)",
+   "source": "docs/directives/2026-11-10_continued_investigation_merge_prep.md",
+   "owner_wording": "Distinguish an actual food-distribution defect from legitimate shortages or inaccessible supplies.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "food location, access, ownership and distribution rules, feeding responsibility, edibility/reservation, ordinary-household scope; correction and test requirements"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_continued_investigation_merge_prep.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B25-INV-P100-FULLPACK",
+   "kind": "approved",
+   "title": "p:100: meal purchases refused, buyer's pack full (45 in a day)",
+   "description": "p:100: meal purchases refused, buyer's pack full (45 in a day)",
+   "source": "docs/directives/2026-11-10_continued_investigation_merge_prep.md",
+   "owner_wording": "Recommend a correction that aligns planning with actual purchase eligibility.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "planner, capacity checks in plan and act, scope, retry suppression traced with evidence; correction and regression-test requirements"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_continued_investigation_merge_prep.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B25-INV-P52-BLOCKS",
+   "kind": "approved",
+   "title": "p:52: repeated building-block purchase failures (453 in a row)",
+   "description": "p:52: repeated building-block purchase failures (453 in a row)",
+   "source": "docs/directives/2026-11-10_continued_investigation_merge_prep.md",
+   "owner_wording": "Trace the actual cause using campaign artifacts and code evidence. Do not assume it is another coin-reserve problem.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "planner, execution path, refusal reason, repetition, regression vs amplification, similar systems; correction and test requirements"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_continued_investigation_merge_prep.md"
     }
    ],
    "lifecycle": "ACTIVE"
