@@ -6414,6 +6414,35 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25-B17FJOBS-D1",
+   "kind": "approved",
+   "title": "REQ-B17F-JOBS: measure adult unemployment and causes after Batch 3+4 (measurement only)",
+   "description": "REQ-B17F-JOBS: measure adult unemployment and causes after Batch 3+4 (measurement only)",
+   "source": "docs/directives/2026-11-10_blocked_decisions_wp1.md",
+   "owner_wording": "Approve option (b): measurement only. After Batch 3+4 integration, measure current adult unemployment and identify the actual causes.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "per the directive's verification list"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_blocked_decisions_wp1.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-BASELINE-REVIEW-01",
    "kind": "approved",
    "title": "No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge",
@@ -7871,6 +7900,35 @@
    ]
   },
   {
+   "id": "B25-INV02-D2",
+   "kind": "approved",
+   "title": "INV-02 spoilage: F1(b) F2(b) F3(b) F4(a) F5(b) F6(b) approved, F7 deferred",
+   "description": "INV-02 spoilage: F1(b) F2(b) F3(b) F4(a) F5(b) F6(b) approved, F7 deferred",
+   "source": "docs/directives/2026-11-10_blocked_decisions_wp1.md",
+   "owner_wording": "Approve F1(b), F2(b), F3(b), F4(a), F5(b), and F6(b), as recommended. Defer F7, food preservation. Keep the spoilage prototype disabled by default until implementation and full validation are complete.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "per the directive's verification list"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_blocked_decisions_wp1.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-INV02-SPOIL-D1",
    "kind": "approved",
    "title": "INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation",
@@ -8503,6 +8561,64 @@
    ]
   },
   {
+   "id": "B25-REG02-DEBT-D1",
+   "kind": "approved",
+   "title": "REG-02 migrating household loans: option (b), preserving legitimate continuing obligations",
+   "description": "REG-02 migrating household loans: option (b), preserving legitimate continuing obligations",
+   "source": "docs/directives/2026-11-10_blocked_decisions_wp1.md",
+   "owner_wording": "Approve option (b), subject to preserving legitimate continuing obligations ... Do not automatically liquidate a household merely because it moves.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "per the directive's verification list"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_blocked_decisions_wp1.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B25-SAV04-D1",
+   "kind": "approved",
+   "title": "SAV-04: reload deterministic; exact equivalence with an uninterrupted wildlife/combat run not required",
+   "description": "SAV-04: reload deterministic; exact equivalence with an uninterrupted wildlife/combat run not required",
+   "source": "docs/directives/2026-11-10_blocked_decisions_wp1.md",
+   "owner_wording": "A saved game must reload deterministically, but exact equivalence with an uninterrupted wildlife or combat simulation is not currently required. Document the limitation and verify deterministic repeated reloads.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "per the directive's verification list"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_blocked_decisions_wp1.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-SAVE-PHANTOM-D2",
    "kind": "approved",
    "title": "Deterministic reconciliation of phantom household memberships in existing saves",
@@ -8777,6 +8893,35 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_phantom_repair_decisions_69_tracker.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B25-WP1-01",
+   "kind": "approved",
+   "title": "WP-1: the 14-item small-work package authorized on isolated branches",
+   "description": "WP-1: the 14-item small-work package authorized on isolated branches",
+   "source": "docs/directives/2026-11-10_blocked_decisions_wp1.md",
+   "owner_wording": "Begin the 14-item small-work package using isolated development branches. Start with failing-first reproduction tests and actual code inspection ... Do not mark an issue complete merely because it cannot be reproduced.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "per the directive's verification list"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_blocked_decisions_wp1.md"
     }
    ],
    "lifecycle": "ACTIVE"
