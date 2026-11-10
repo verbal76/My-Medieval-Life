@@ -16,6 +16,10 @@ on:
         description: "Optional: run only these game suites (space-separated, e.g. res://tests/recorder_neutrality_test.gd), as an independent run in its own concurrency group; empty = every suite"
         required: false
         default: ""
+      group:
+        description: "Optional (owner 2026-11-10, GitHub Actions testing directive): run only the suites of these subsystem groups from tools/ci_groups.json (space-separated: save determinism economy population multiplayer recorder justice); combined with 'only'. A targeted run uses one runner and skips the Python checks and the 10-day economy run; empty with 'only' empty = the full run (the integration gate)"
+        required: false
+        default: ""
 
 permissions:
   contents: read
@@ -23,14 +27,36 @@ permissions:
 concurrency:
   # a full run supersedes the older full run on its branch; an 'only' run (one suite checked independently, B25R1 validation
   # 2026-11-04) has its own group, so it and a full run on the same commit never cancel each other
-  group: ${{ inputs.only != '' && inputs.only != null && format('tests-only-{0}', github.run_id) || format('tests-{0}', github.ref) }}
+  group: ${{ ((inputs.only != '' && inputs.only != null) || (inputs.group != '' && inputs.group != null)) && format('tests-only-{0}', github.run_id) || format('tests-{0}', github.ref) }}
   cancel-in-progress: true
 
 env:
   GODOT_VERSION: "4.7.2"
 
 jobs:
+  # Owner 2026-11-10 (GitHub Actions testing directive): a targeted run ('only' or 'group') needs one runner, not twelve (measured
+  # on run 42856156793: eleven idle shards and the full run's Python checks and economy run cost about 19 runner minutes for one
+  # suite). This job picks the matrix: twelve time-balanced shards for the full run, shard 0 alone for a targeted run.
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      shards: ${{ steps.p.outputs.shards }}
+      targeted: ${{ steps.p.outputs.targeted }}
+    steps:
+      - id: p
+        env:
+          ONLY: ${{ inputs.only }}
+          GROUP: ${{ inputs.group }}
+        run: |
+          if [ -n "$ONLY$GROUP" ]; then
+            echo 'shards=[0]' >> "$GITHUB_OUTPUT"; echo 'targeted=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'shards=[0,1,2,3,4,5,6,7,8,9,10,11]' >> "$GITHUB_OUTPUT"; echo 'targeted=false' >> "$GITHUB_OUTPUT"
+          fi
+
   test:
+    needs: plan
     runs-on: ubuntu-latest
     # B25-FINISH-01 (owner 2026-11-03: "Execute independent test groups in parallel through GitHub Actions"); B25R1 CI
     # architecture (owner 2026-11-04, docs/ci/CI_ARCHITECTURE_B25R1.md): the game suites are spread over eight shards by their
@@ -40,8 +66,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
-    name: test (shard ${{ matrix.shard }} of 12)
+        shard: ${{ fromJSON(needs.plan.outputs.shards) }}
+    name: test (shard ${{ matrix.shard }} of ${{ strategy.job-total }})
     # Every suite runs since HAG-MEM-02. Measured on five B25R1 runs: all suites about 120 min of runner time, so about 16 min
     # a shard of eight; a suite is stopped by ci_report.py after 30 min. 90 min leaves room for runner speed varying by up
     # to ~1.8x and one hung suite. The 34 suites added on 2026-11-05 (B25R1 CI cover) measured about 2.1 h in a busy local
@@ -91,7 +117,7 @@ jobs:
       # if any suite failed). Later steps run unless the run was cancelled, so one failure no longer hides the rest.
       - name: Python tests and data checks
         id: python
-        if: ${{ matrix.shard == 0 }}
+        if: ${{ matrix.shard == 0 && needs.plan.outputs.targeted != 'true' }}
         run: |
           cat > "$RUNNER_TEMP/python.txt" <<'EOF'
           python3 -m unittest discover -s tests
@@ -113,6 +139,7 @@ jobs:
         if: ${{ !cancelled() && steps.import.outcome == 'success' }}
         env:
           ONLY: ${{ inputs.only }}
+          GROUP: ${{ inputs.group }}
           SHARD: ${{ matrix.shard }}       # passed in, not written in the script: a run block with an expression is limited to 21000 characters
         run: |
           cat > "$RUNNER_TEMP/game.txt" <<'EOF'
@@ -426,9 +453,17 @@ jobs:
           EOF
           if [ -n "$ONLY" ]; then   # an independent run of named suites: keep only those entries of the list
             for t in $ONLY; do grep -E "^ *$t( |$)" "$RUNNER_TEMP/game.txt" || { echo "unknown suite: $t"; exit 1; }; done > "$RUNNER_TEMP/only.txt"
-            mv "$RUNNER_TEMP/only.txt" "$RUNNER_TEMP/game.txt"
+            mv "$RUNNER_TEMP/only.txt" "$RUNNER_TEMP/game.txt.only"
           fi
-          python3 tools/ci_plan.py tests-shard --list "$RUNNER_TEMP/game.txt" --shards 12 --shard "$SHARD" \
+          if [ -n "$GROUP" ]; then   # subsystem groups (tools/ci_groups.json): suites whose file name matches a group's patterns
+            python3 tools/ci_groups.py "$RUNNER_TEMP/game.txt" $GROUP > "$RUNNER_TEMP/game.txt.group"
+            echo "group(s) $GROUP: $(grep -c . "$RUNNER_TEMP/game.txt.group") suite(s)"
+          fi
+          if [ -n "$ONLY$GROUP" ]; then   # the union of 'only' and the groups, each suite once
+            cat "$RUNNER_TEMP"/game.txt.only "$RUNNER_TEMP"/game.txt.group 2>/dev/null | awk '!seen[$1]++' > "$RUNNER_TEMP/game.txt"
+            [ -s "$RUNNER_TEMP/game.txt" ] || { echo "no suite selected"; exit 1; }
+          fi
+          python3 tools/ci_plan.py tests-shard --list "$RUNNER_TEMP/game.txt" --shards ${{ strategy.job-total }} --shard "$SHARD" \
             --out "$RUNNER_TEMP/game_shard.txt" --manifest "$CI_OUT/shard.json"
           # TEST-GOV-01: a suite fails on a SCRIPT ERROR (a check cut short), when it prints no check count, and when it runs
           # fewer checks than its floor (tools/ci_check_floors.json): an early stop can no longer pass
@@ -436,7 +471,7 @@ jobs:
 
       - name: Short economy simulation (FR-07)
         id: sim
-        if: ${{ !cancelled() && steps.import.outcome == 'success' && matrix.shard == 0 }}
+        if: ${{ !cancelled() && steps.import.outcome == 'success' && matrix.shard == 0 && needs.plan.outputs.targeted != 'true' }}
         run: |
           # 10 game days, seed 1: fails on a currency or item leak (economy_sim's own exit code) and on any
           # script error in the log, which Godot reports without stopping. Year-long runs: long-sims.yml.
@@ -454,8 +489,8 @@ jobs:
           EXPECT_GAME="--expect game"
           if [ -f "$RUNNER_TEMP/game_shard.txt" ] && ! grep -q '[^[:space:]]' "$RUNNER_TEMP/game_shard.txt"; then EXPECT_GAME=""; fi
           python3 tools/ci_report.py report --results "$CI_OUT/results.jsonl" \
-            ${{ matrix.shard == 0 && '--expect python --expect sim' || '' }} $EXPECT_GAME \
-            ${{ matrix.shard == 0 && format('--step python={0} --step sim={1}', steps.python.outcome, steps.sim.outcome) || '' }} \
+            ${{ (matrix.shard == 0 && needs.plan.outputs.targeted != 'true') && '--expect python --expect sim' || '' }} $EXPECT_GAME \
+            ${{ (matrix.shard == 0 && needs.plan.outputs.targeted != 'true') && format('--step python={0} --step sim={1}', steps.python.outcome, steps.sim.outcome) || '' }} \
             --step import=${{ steps.import.outcome }} --step game=${{ steps.game.outcome }} \
             --started "$CI_STARTED" \
             --purpose "Automated Python, data and headless Godot suites plus a 10-day economy smoke run on this commit (tests.yml; ${{ github.event_name }})" \

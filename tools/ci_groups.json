@@ -1,0 +1,13 @@
+{
+ "format": "mml-ci-groups/1",
+ "about": "Owner directive 2026-11-10 (docs/directives/2026-11-10_github_actions_testing.md): targeted Tests runs by subsystem. tests.yml input 'group' takes one or more of these names (space-separated); a suite runs when its path matches any of the group's regular expressions. A targeted run uses one runner and skips the Python checks and the 10-day economy run (they belong to the full run). The full run (no group, no only) stays the integration gate. A suite may sit in several groups; a suite in none runs only in the full run.",
+ "groups": {
+  "save": ["save", "load", "continuity", "tolerance", "exact", "migrat", "identity", "hh_member", "phantom", "sav0", "upgrade"],
+  "determinism": ["determin", "neutral", "replay", "exact", "golden", "fingerprint"],
+  "economy": ["econ", "market", "trade", "contract", "claims", "funds", "buy", "sell", "stall", "biz", "price", "payroll", "wage", "credit", "inv", "meal", "smith", "forge", "till", "shop", "treasury", "caravan", "courier"],
+  "population": ["migrat", "family", "birth", "life", "household", "hh_", "clan", "band", "settle", "region", "journey", "homestead", "food", "starv", "orphan", "heir", "succession", "employ", "job"],
+  "multiplayer": ["net_", "mp", "multiplayer", "guest", "host", "interact"],
+  "recorder": ["recorder", "flight", "chronicle"],
+  "justice": ["judg", "justice", "jus", "guard", "pursuit", "manhunt", "crime", "outlaw", "bandit"]
+ }
+}
