@@ -687,6 +687,10 @@ def run_status(segs, logs):
         st["segments"].append(row)
         for k in ("commit", "seed", "args"):
             st[k] = s.get(k) or st[k]
+        # ND-16 (B25-ND16-PREC-01): segments written before the precision change carry no label; they were default precision
+        prec = s.get("save_precision") or ("default" if s else None)
+        if prec:
+            st["save_precision"] = prec if st.get("save_precision") in (None, prec) else "mixed"
         st["days_requested"] = s.get("days_requested") or st["days_requested"]
         if s.get("days_reached"):
             st["days_reached"] = s["days_reached"]
@@ -784,7 +788,8 @@ def build(run_dir, out_dir, verify=True):
         json.dump(wb, f, default=str)
     top = [{k: x[k] for k in ("id", "severity", "confirmed", "title", "npc", "day_from", "count")} for x in findings if x["severity"] != "INFORMATIONAL"][:10]
     summary = {"format": "mml-flight-summary/1", "commit": status.get("commit"), "seed": status.get("seed"), "days_requested": status.get("days_requested"),
-               "days_reached": status.get("days_reached"), "stop_reason": status.get("stop_reason"), "severity_counts": result["severity_counts"],
+               "days_reached": status.get("days_reached"), "stop_reason": status.get("stop_reason"),
+               "save_precision": status.get("save_precision", "default"), "severity_counts": result["severity_counts"],
                "confirmed_defects": result["confirmed_defects"], "archive_ok": all(c["ok"] for c in checks) if checks else None, "top_findings": top}
     with open(os.path.join(out_dir, "summary.json"), "w") as f:
         json.dump(summary, f, indent=1, default=str)
