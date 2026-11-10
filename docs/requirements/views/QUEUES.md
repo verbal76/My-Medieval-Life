@@ -2,11 +2,12 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (26)
+## Workers and task branches (28)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | B25-AUD-EMP-03 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-emp03 |
+| B25-CONTRACT-FUNDS-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-contract-funds |
 | B25-ECON-P7 | unassigned | IN DEVELOPMENT | b25r1-econ6 worker | wip/b25r1-econ6 |
 | B25-F015-FOOD-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-f015-p99 |
 | B25-FINISH-01 | 20 | IN DEVELOPMENT | lead session | wip/region-nav |
@@ -16,6 +17,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-INV-P52-BLOCKS | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-meal-claims |
 | B25-INV02-SPOIL-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | worker agent (PAR-AGENTS-01) | wip/b25-inv02-proposal |
 | B25-P99-PAYER-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-f015-p99 |
+| B25-SAVE-PHANTOM-D2 | unassigned | IN DEVELOPMENT | worker (lead's agent) | wip/b25-hh-phantom-repair |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | B25-SELFTRADE-VAL-01 | unassigned | IN DEVELOPMENT | lead | wip/b25-audit-sim3 |
 | B25R1-023 | 20 | IN DEVELOPMENT | b25r1-grassmap worker | wip/b25r1-grassmap |
@@ -33,7 +35,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (92)
+## Implemented but not tested (93)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -52,6 +54,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-CAREER-IMPL | 20 | INTEGRATED |  |
 | B25-CAREER-SYSTEM | 20 | INTEGRATED |  |
 | B25-CLOSE-01 | 20 | INTEGRATED |  |
+| B25-CONTRACT-FUNDS-D1 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 | B25-DISK-CLEAN-D1 | unassigned | INTEGRATED |  |
 | B25-EMPLOY-IMPL | 20 | INTEGRATED |  |
 | B25-F015-FOOD-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
