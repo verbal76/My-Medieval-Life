@@ -225,10 +225,8 @@ func barter(seller: Object, buyer: Object, want: String, qty: int, give: String)
 	if not bool(q.ok):
 		return {"result": "failed", "text": str(q.why), "give_qty": 0}
 	var k: int = q.give_qty
-	seller.inv.remove(want, qty)
-	buyer.inv.add(want, qty)
-	buyer.inv.remove(give, k)
-	seller.inv.add(give, k)
+	seller.inv.move_to(buyer.inv, want, qty)      # INV-06 (X20-WEAR-TRANSFER): a worn tool's wear goes with it
+	buyer.inv.move_to(seller.inv, give, k)
 	if w.recorder != null:
 		w.recorder.barter(seller, buyer, want, qty, give, k)     # X20-FINAL
 	_note_deal(seller, buyer)
@@ -284,8 +282,7 @@ func sell_on_credit(seller: Object, buyer: Object, id: String, qty: int, value: 
 			no = "There is no room for it."
 	if no != "":
 		return {"result": "failed", "text": no, "debt": {}}
-	seller.inv.remove(id, qty)
-	buyer.inv.add(id, qty)
+	seller.inv.move_to(buyer.inv, id, qty)       # INV-06 (X20-WEAR-TRANSFER): a worn tool's wear goes with it
 	var d := {"id": next_id, "creditor": ref_of(seller), "debtor": ref_of(buyer), "item": id, "qty": qty, "value": value,
 			"made": w.day(), "due": w.day() + int(cfg().days), "state": OPEN, "ended": -1}
 	next_id += 1

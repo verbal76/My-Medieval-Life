@@ -3828,6 +3828,7 @@ func kill(n: NPC, cause: String, by_ref := "") -> void:
 		economy.rentals.on_death(n)        # LE05-RENTAL: a dead renter's rented tools go back; a dead owner's estate succeeds it
 	if economy != null:
 		economy.repairs.on_death(n)        # LE-05 paid repair: a dead customer's order refunded to its estate, a dead smith's to its customers
+	employment.on_death(n)                 # LIFE-02: an employee's employer's goods go back first; the employment ends
 	var rec_death: Array = recorder.death_begin(n, cause) if recorder != null else []     # REC-19: from here the purse and goods pass on
 	Identity.move(self, n.id, Identity.DEAD)    # ID-01
 	var heir := _heir(n)

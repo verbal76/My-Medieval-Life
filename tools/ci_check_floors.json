@@ -239,7 +239,7 @@
  "underground_test": 95,
  "wanted_indicator_test": 16,
  "water_test": 67,
- "wear_transfer_test": 32,
+ "wear_transfer_test": 36,
  "wiki_test": 144,
  "wildlife_test": 61,
  "wilds_test": 72,
@@ -261,5 +261,9 @@
  "trd02_merchant_net_earnings_test": 6,
  "inv04_stash_handover_test": 9,
  "inv05_rubble_refund_test": 12,
- "sav02_day_state_test": 6
+ "sav02_day_state_test": 6,
+ "emp01_apprentice_employed_test": 9,
+ "biz05_hand_not_hired_test": 9,
+ "biz01_found_atomic_test": 47,
+ "life02_employee_death_test": 14
 }

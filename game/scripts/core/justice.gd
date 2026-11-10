@@ -732,8 +732,7 @@ func _take_in(g: NPC, ref: String, how: String, c: Dictionary, p: PlayerState) -
 			var k := mini(int(p.stolen[id][o]), p.inv.count(str(id)))
 			if owner == null or not owner.alive or k <= 0 or not owner.inv.can_add(str(id)):
 				continue
-			p.inv.remove(str(id), k)
-			owner.inv.add(str(id), k)
+			p.inv.move_to(owner.inv, str(id), k)     # INV-06 (X20-WEAR-TRANSFER): a worn tool's wear goes with it
 			p.unmark(str(id), int(o), k)
 			back[id] = int(back.get(id, 0)) + k
 			words.append("%d %s to %s" % [k, GameData.item_name(str(id)).to_lower(), owner.name])

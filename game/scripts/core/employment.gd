@@ -629,6 +629,18 @@ func act_craft(n: NPC, a: Dictionary) -> bool:
 	return true
 
 
+## LIFE-02 (Build 25 audit; World.kill, before anything passes on): employee `n` has died. What they carry of the employer's goods
+## goes to the employer first (_hand_over: what the store has no room for stays theirs, the dismissal rule, and passes on with the
+## rest of what they had), and the employment ends.
+func on_death(n: NPC) -> void:
+	var rec := record_of(n)
+	if rec.is_empty():
+		return
+	_hand_over(rec, n)
+	list.erase(rec)
+	w.stat("employees_left")
+
+
 ## NPCBrain.act "emp_deliver": at the employer's door, what they carry of the employer's goods goes into the employer's store.
 func act_deliver(n: NPC) -> bool:
 	var rec := record_of(n)
