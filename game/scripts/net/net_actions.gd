@@ -397,7 +397,19 @@ static func dec(w: World, p: PlayerState, v, bad: Dictionary) -> Variant:
 ## mine_works.*, manor_work.stock_backfill). Its own chest is its own; a cart only when Carts.may_use lets it (its own, or a
 ## player's at asset-share tier 3) and within VERB_REACH. A villager's pack, a household's pantry, the granary and a container are
 ## never a guest's to spend from (they are reached through their own verbs: player_take, chests.*, trading), so they are refused.
+##
+## B25-MP03-TABLES-D1 (owner, 2026-11-10): a guest may also name a genuinely public table (public_table) within VERB_REACH. A tavern
+## table is not one: what is on it is its keeper's stock (World.container_owner), reached through player_take like the host.
 static func _dec_inv(w: World, p: PlayerState, d: Dictionary, bad: Dictionary) -> Inventory:
+	if not w.is_host(p) and str(d["$inv"]) == "container":
+		var tc: Dictionary = w.container(str(d.get("id", "")))
+		if not public_table(w, tc):
+			bad.why = "That is not yours."
+			return null
+		if Vector2(int(tc.x) + 0.5, int(tc.y) + 0.5).distance_to(p.pos) > VERB_REACH:
+			bad.why = "That is too far away."
+			return null
+		return tc.inv
 	if not w.is_host(p) and not (str(d["$inv"]) in ["pack", "chest", "cart"]):
 		bad.why = "That is not yours."
 		return null
@@ -432,6 +444,34 @@ static func _dec_inv(w: World, p: PlayerState, d: Dictionary, bad: Dictionary) -
 			return w.granary
 	bad.why = "That store is not there."
 	return null
+
+
+## B25-MP03-TABLES-D1: whether container `c` is a genuinely public table: a table (World.containers kind "table", the only container
+## with goods of its own) that no one holds or keeps. It stands in no building or stall (so no household's, business's, tavern's or
+## player's), no live villager set out what is on it (`keeper`), and its cell lies inside no building, parcel (w.plots) or homestead
+## claim. Anything the code cannot place as nobody's is private. (The village map's tables all stand in the tavern: none is public.)
+static func public_table(w: World, c: Dictionary) -> bool:
+	if c.is_empty() or str(c.get("kind", "")) != "table" or not (c.get("inv") is Inventory):
+		return false
+	var at := str(c.get("at", ""))
+	if at != "" and (w.buildings.has(at) or w.stalls.has(at)):
+		return false
+	var k := w.npc(int(c.get("keeper", -1)))
+	if k != null and k.alive:
+		return false
+	var cell := Vector2i(int(c.x), int(c.y))
+	for id in w.buildings:
+		var b: Dictionary = w.buildings[id]
+		if b.has("x") and b.has("w") and Rect2i(int(b.x), int(b.y), int(b.w), int(b.h)).has_point(cell):
+			return false
+	for pl in w.plots:
+		if Rect2i(int(pl.x), int(pl.y), int(pl.w), int(pl.h)).has_point(cell):
+			return false
+	if w.homesteads != null:
+		for cl in w.homesteads.claims:
+			if str(cl.get("status", "")) != "abandoned" and Homesteads.rect_of(cl).has_point(cell):
+				return false
+	return true
 
 
 static func _dec_record(w: World, p: PlayerState, kind: String, k) -> Dictionary:

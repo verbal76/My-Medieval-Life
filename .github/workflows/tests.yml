@@ -416,6 +416,7 @@ jobs:
           res://tests/mp05_mutual_asset_share_test.gd   # MP-05: owner-approved gameplay regression
           res://tests/mp05_forged_client_test.gd       # MP-05: a modified guest client's forged requests refused by the host
           res://tests/mp03_forged_store_test.gd        # B25-AUD-MP-03: a guest may name only stores it has the right to
+          res://tests/mp03_public_tables_test.gd       # B25-MP03-TABLES-D1: a guest may name a genuinely public table within reach
           res://tests/emp03_seeker_count_test.gd        # EMP-03: ambitious lookers counted as seekers in the hiring competition
           res://tests/net_fault_test.gd          # MP Batch D: invite codes, loss, reordering, pauses, killed and restarted hosts
           res://tests/net_mp4_test.gd            # X20 phase 4.5: one host with two, then three guests (four players)
