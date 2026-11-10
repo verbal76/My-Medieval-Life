@@ -413,3 +413,24 @@ is owner-playtested.
 
 **Update 2026-11-09 16:20 EST (lead):** MP-05 merged into `wip/b25r2-rev2` at `242ca83` (fast-forward from `c9da5db`; recorded
 campaign 42664730920: 0 CRITICAL, 0 confirmed on both seeds; PR #19 closed with a note). Device and security checks remain.
+
+## Engineering status, 2026-11-10 04:55 UTC (23:55 EST 2026-11-09) (lead)
+
+Audit items have no register records (the register holds B25-AUD-* only for EMP-03, MP-05 and the decision B25-AUD-REG-08); their
+engineering status is kept here. Each fix below has a failing-first Godot test. "Merged" means on the development line `wip/b25r2-rev2`.
+
+| Item | Status | Commit / branch | Evidence |
+|---|---|---|---|
+| INV-01, BIZ-08, TRD-01, SAV-03 counter part | Merged | `e44d6b8` | Tests 42726254015 green |
+| EMP-03, EMP-01, BIZ-05, BIZ-01/02, LIFE-02, INV-06, REG-02 journey part, NPC-02, JUS-02 | Merged | `72729e5` | Tests 42734267343, gate 42734190370 (baseline-difference only), campaign 42734194963 (0 CRITICAL, 0 confirmed; seed 1 HIGH 39 vs 17, see below) |
+| REG-06 (live resident folded before their household changes) | Fixed, not merged | `fd55cdd`, `wip/b25-audit-sim3` | reg06 test 5 failures before (treasury took 5 coins), 15/0 after |
+| NPC-03 (manor hand taking a field counted and recorded) | Fixed, not merged | `0bfbb9e`, `wip/b25-audit-sim3` | npc03 test 2 -> 4/0. Worked-out miner without a post kept on purpose (a post at an exhausted mine) |
+| SAV-03 other maps (farm cells, hunt claims, chapel bookings, stall buyers rebuilt on load) | Fixed, not merged | `89a3b06`, `wip/b25-audit-sim3` | sav03 reservations test 4 failures -> 6/0. `NPCBrain.buy_failed` is a memo, left unsaved |
+| TRD-05 (comments saying the Living Economy is off) | Fixed, not merged | `85ad919`, `wip/b25-audit-nosim2` | comments and docs only; le07_gates_test 32/0 |
+| MP-03 (host decodes stores a guest names without rights) | In progress (worker) | `wip/b25-mp03-store-auth` | - |
+| MP-06 (away guest at the gateway) | OPEN | none | A gateway-wide away refusal was written and withdrawn: a rejoining guest is away by design until its first move (MP-D1), and `net_c_test` then lost the guest's justice case. Needs a per-verb rule |
+| KI-09 (demo_test exit crash) | Merged onto `72729e5` as `167b235`, CI running | `wip/b25-ki09-on-dev` | RegionGeo cache written by two threads; 1/20 -> 0/20 under load |
+| INV-02 (stash, homestead chest and courier stores do not spoil) | OWNER DECISION | none | changes a game mechanic; the spoilage policy for those holders is the owner's |
+
+Seed 1's HIGH findings rose from 17 to 39 with the batch, mostly villagers refused food on days 239-243 (a shortage episode). That is
+an outcome under WDR-022, not a broken invariant; which of the nine fixes shifted it is not yet traced (next investigation).
