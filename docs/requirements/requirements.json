@@ -8549,6 +8549,36 @@
    ]
   },
   {
+   "id": "B25-SAVE-PHANTOM-D3",
+   "kind": "approved",
+   "title": "Phantom repair: remove dead villagers' and departed bandits' incorrect memberships (with safeguards)",
+   "description": "Phantom repair: remove dead villagers' and departed bandits' incorrect memberships (with safeguards)",
+   "source": "docs/directives/2026-11-10_phantom_repair_decisions_69_tracker.md",
+   "owner_wording": "Remove incorrect household membership entries for deceased villagers when authoritative records establish that they did not belong to that household ... Remove stale band-household memberships when the records establish that a bandit has genuinely departed.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "only demonstrably incorrect memberships removed; identity, death, family, inheritance, history preserved; ambiguity flagged",
+    "failing-first tests; validated on real campaign saves incl. 42788018729 seed 1 day 300; idempotent; conservation; no unrelated state change"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_phantom_repair_decisions_69_tracker.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-SCOPE-AUDIT",
    "kind": "approved",
    "title": "Build 25 complete expansion and abandoned-work reconciliation audit (read-only)",
@@ -8721,6 +8751,35 @@
    "lifecycle": "ACTIVE",
    "branch": "wip/b25-audit-sim3",
    "assigned_worker": "lead"
+  },
+  {
+   "id": "B25-TRACK-69-02",
+   "kind": "approved",
+   "title": "Original 69 items as a living tracker; new defects in a separate register; work packages for the remaining 29",
+   "description": "Original 69 items as a living tracker; new defects in a separate register; work packages for the remaining 29",
+   "source": "docs/directives/2026-11-10_phantom_repair_decisions_69_tracker.md",
+   "owner_wording": "Maintain these 69 original IDs and update their statuses as evidence changes ... Keep newly discovered defects in a separate register ... Do not start major feature implementations without approval.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "tracker with the seven verification dimensions per item; separate new-defect register; work packages, blocked-decision options with recommendations, large-system plans; dashboard"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_phantom_repair_decisions_69_tracker.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
   },
   {
    "id": "B25R1-001",

@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 876 (480 of them still open) |
-| **Open entries now** (rules excluded) | | **638** |
+| Entries added since | | 878 (482 of them still open) |
+| **Open entries now** (rules excluded) | | **640** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (876)
+## Added since the baseline (878)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -232,10 +232,12 @@ None.
 | B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-P99-PAYER-01 | p:99: planner reserve check vs payer funds mismatch causes repeated refused buy_from | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
 | B25-SAVE-PHANTOM-D2 | Deterministic reconciliation of phantom household memberships in existing saves | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
+| B25-SAVE-PHANTOM-D3 | Phantom repair: remove dead villagers' and departed bandits' incorrect memberships (with safeguards) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20 |
 | B25-SCOPE-D1 | Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work from abandoned branches? | decision | APPROVED | owner decision |
 | B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | B25-SELFTRADE-VAL-01 | Self-trade payer defect: complete the investigation beyond preventing the self-trade | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
+| B25-TRACK-69-02 | Original 69 items as a living tracker; new defects in a separate register; work packages for the remaining 29 | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25R1-001 | Build 25 Revision 1: regional navigation, living-world interactions, automatic travel, character creation and UI polish | approved | PARTIALLY IMPLEMENTED / NOT TESTED / OPEN | 20 |
 | B25R1-002 | Full interaction outside the starting village (release blocker) | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
 | B25R1-003 | Region map: major settlements and roads known from the start; discovered landmarks persist | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
