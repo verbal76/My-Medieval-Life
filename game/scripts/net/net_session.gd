@@ -181,6 +181,7 @@ var host_paused := false
 var bye := ""                       # the host said it stopped (no retries)
 var _bye_read := false              # B25R1: ... and the guest has yet to end the connection for it
 var _paused_msec := -1
+var _frame_msec := -1               # guest (KI-12): when its last frame ran, to see a freeze no pause notice announced
 var faults := {}                    # tests: {dup: true, delay_ms: n, reorder: true} on this guest's requests
 var _fault_out: Array = []
 var _fault_pair: Array = []
@@ -276,6 +277,7 @@ func stop() -> void:
 	moves.clear()
 	joining.clear()
 	_built_frame = -1
+	_frame_msec = -1
 	queue.clear()
 	synced.clear()
 	sync_due.clear()
@@ -1439,6 +1441,15 @@ func _process(dt: float) -> void:
 	if _bye_read:
 		_bye_read = false
 		_lost(HOST_STOPPED)                        # B25R1: the host is stopping and waits for its guests to end their connections
+		return
+	var now_ms := Time.get_ticks_msec()
+	var gap := now_ms - _frame_msec if _frame_msec >= 0 else 0
+	_frame_msec = now_ms
+	if gap > RESUME_AFTER_PAUSE_MS and _built_frame < 0 and main.guest_world and not reconnecting:
+		# KI-12: the process was frozen with no pause notice (stopped, a computer asleep, a debugger; on_app_resumed covers Android's
+		# notice): as after a pause, reconnect at once. Left to ENet, the dead connection is seen only TIMEOUT_MAX_MS or more after its
+		# first send (0-20 s measured after a SIGSTOP), then the world is sent again. The frame that built the world is not a freeze.
+		_begin_reconnect()
 		return
 	if reconnecting:
 		_reconnect_step()
