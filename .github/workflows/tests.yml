@@ -213,6 +213,7 @@ jobs:
           res://tests/horse_test.gd
           res://tests/luxury_test.gd
           res://tests/migration_test.gd
+          res://tests/reg02_journey_migration_test.gd    # REG-02: a traveller who emigrates ends the trip; a returner has none
           res://tests/identity_test.gd
           res://tests/multiplayer_a1_test.gd
           # MP Batch A2, gate G1: a host and a guest in two Godot processes over loopback (join, move, an action the host applies, same state, rejoin, host restart)

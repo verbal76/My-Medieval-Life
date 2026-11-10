@@ -357,6 +357,8 @@ static func _gone(w: World, s: OffMapSettlement, ms: Array, load_: Dictionary, p
 		o.away = s.id
 		if w.civic != null:
 			w.civic.on_departure(o, s.id)          # P21-01: the legacy record and the end of any tenure (observes only)
+		if not o.journey.is_empty():
+			Journeys.end(w, o, "emigrated")        # REG-02: a trip under way ends when its traveller leaves the village
 		o.plan.clear()
 		o.target = -1
 		Identity.move(w, o.id, s.id)                  # ID-01: the same person, now in the settlement
@@ -460,6 +462,7 @@ static func _reactivate(w: World, n: NPC, p: Dictionary, coins: int) -> NPC:
 	n.workplace = ""
 	n.doing = "idle"
 	n.plan.clear()
+	n.journey = {}                                      # REG-02: no trip of their old life comes back with them
 	n.target = -1
 	n.role = Life.role_for(w, n)
 	if n.partner >= 0:                                  # a partner link survives only if it is still mutual (or the partner is away too)
