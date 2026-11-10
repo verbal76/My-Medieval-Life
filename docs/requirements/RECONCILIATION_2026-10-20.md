@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 866 (470 of them still open) |
-| **Open entries now** (rules excluded) | | **628** |
+| Entries added since | | 867 (471 of them still open) |
+| **Open entries now** (rules excluded) | | **629** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (866)
+## Added since the baseline (867)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -204,6 +204,7 @@ None.
 | B25-ECON-P7 | Recover stranded settlement treasury ore | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B25-EMPLOY-D3 | How do skilled occupations grow? | decision | APPROVED | owner decision |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
+| B25-FINAL-REVIEW-01 | Final testing review of fbfd6ad and an owner decision report for baseline acceptance and merge in one decision | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-FINISH-01 | Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25-HH-BIZFOOD-D1 | A food seller's household eats from its own business stock when household food is short: no sale, no coins | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
 | B25-INTEG-SEQ-02 | Build 25 integration sequence after the 2026-11-10 decisions, with mandatory regression coverage and campaign review | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |

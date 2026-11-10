@@ -7437,6 +7437,37 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25-FINAL-REVIEW-01",
+   "kind": "approved",
+   "title": "Final testing review of fbfd6ad and an owner decision report for baseline acceptance and merge in one decision",
+   "description": "Final testing review of fbfd6ad and an owner decision report for baseline acceptance and merge in one decision",
+   "source": "docs/directives/2026-11-10_final_testing_review_baseline_prep.md",
+   "owner_wording": "Do not merge or accept a new baseline without my explicit approval. If everything is verified and correct, I want to be able to approve the baseline and merge in one decision, without unnecessary additional testing or repetitive approval requests.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "Campaign 42788018729 both seeds reviewed from artifacts against batch 3's campaign",
+    "All 33 baseline findings attributed to causes (first commit and actual cause), grouped by cause, classified Expected / Corrected / Defect / Unexplained",
+    "Owner decision report: SHA and run ids, 277 suites, both seeds, grouped findings, old vs new, defects, ACCEPT/FIX/INVESTIGATE per group, merge readiness; stop at the approval gate"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_final_testing_review_baseline_prep.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-FINISH-01",
    "kind": "approved",
    "title": "Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release",

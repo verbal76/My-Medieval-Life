@@ -81,7 +81,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 
-## Approved, no build assigned (39)
+## Approved, no build assigned (40)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
@@ -89,6 +89,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-BASELINE-REVIEW-01 | No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge | approved | OWNER APPROVED | NOT STARTED |
 | B25-DISK-CLEAN-D1 | Verified safe disk cleanup of the lead machine | approved | OWNER APPROVED | INTEGRATED |
 | B25-ECON-P7 | Recover stranded settlement treasury ore | approved | OWNER APPROVED | IN DEVELOPMENT |
+| B25-FINAL-REVIEW-01 | Final testing review of fbfd6ad and an owner decision report for baseline acceptance and merge in one decision | approved | OWNER APPROVED | NOT STARTED |
 | B25-HH-BIZFOOD-D1 | A food seller's household eats from its own business stock when household food is short: no sale, no coins | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-INTEG-SEQ-02 | Build 25 integration sequence after the 2026-11-10 decisions, with mandatory regression coverage and campaign review | approved | OWNER APPROVED | NOT STARTED |
 | B25-INV02-SPOIL-D1 | INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
