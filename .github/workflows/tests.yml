@@ -164,6 +164,7 @@ jobs:
           res://tests/aging_test.gd
           res://tests/life01_retirement_payroll_test.gd   # LIFE-01: focused audit regression
           res://tests/life03_sage_succession_test.gd   # LIFE-03: owner-approved gameplay regression
+          res://tests/emp01_apprentice_employed_test.gd   # EMP-01 (B25 audit): a permanent employee is not taken into a trade's succession
           res://tests/wiki_test.gd
           res://tests/audio_test.gd
           res://tests/stone_test.gd

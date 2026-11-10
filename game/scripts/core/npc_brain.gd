@@ -5200,6 +5200,8 @@ func _apprentice_for(v: Dictionary) -> NPC:
 			continue                                   # (not the worker who just left the trade)
 		if w.homesteads != null and w.homesteads.away(o):
 			continue                                   # B25R1-010: not one living out in the country
+		if w.employment.is_employed(o):
+			continue                                   # EMP-01: a permanent employee keeps the place the player gave them (as seek_work)
 		var pref := APPRENTICE_FROM.find(o.job)
 		if pref < 0:
 			if not skilled or not _would_retrain(o, str(v.job)):
