@@ -1233,6 +1233,9 @@ func _plan_job(n: NPC) -> bool:
 					n.job_since = w.day()
 					n.workplace = f.id
 					once("takes_field_%d" % n.id, "%s %s takes over the untended field %s." % [n.name, n.family, f.id])
+					w.stat("job_changes")                    # B25-AUD-NPC-03: counted and recorded as every change of trade is
+					if w.recorder != null:
+						w.recorder.job_changed(n, "manor_hand", "farmer", "takes over the untended field", str(f.id))
 					evaluate_household(n.household)
 					return _farmer(n)
 			# the manor's hands do its open work (unpaid by the job: they have a day's wage); with none,
