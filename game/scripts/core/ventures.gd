@@ -667,8 +667,11 @@ func _hire(b: Dictionary) -> void:
 		return
 	var sk: String = w.brain._trade_skill(trade)
 	var cands := []
+	var hands := {}
+	for id in v.hands:
+		hands[int(id)] = true          # BIZ-05: a hand already fills one of its places (counted above); not hired into a second
 	for o: NPC in w.npcs:
-		if o.alive and o.role == "adult" and o.household >= 0 and o.id != int(v.keeper) and (o.job in Construction.HIRABLE or o.job == trade) \
+		if o.alive and o.role == "adult" and o.household >= 0 and o.id != int(v.keeper) and not hands.has(o.id) and (o.job in Construction.HIRABLE or o.job == trade) \
 				and sk != "" and int(o.skills.get(sk, 0)) > 0 and Skills.level(o, sk) >= 1 and kept_by(o).is_empty() \
 				and w.employment.refusal(o, trade, ref_of(b)) == "":
 			cands.append(o)
