@@ -140,6 +140,7 @@ jobs:
         env:
           ONLY: ${{ inputs.only }}
           GROUP: ${{ inputs.group }}
+          SHARDS: ${{ strategy.job-total }}   # in env: an expression inside this long script would exceed the 21,000-character limit
           SHARD: ${{ matrix.shard }}       # passed in, not written in the script: a run block with an expression is limited to 21000 characters
         run: |
           cat > "$RUNNER_TEMP/game.txt" <<'EOF'
@@ -463,7 +464,7 @@ jobs:
             cat "$RUNNER_TEMP"/game.txt.only "$RUNNER_TEMP"/game.txt.group 2>/dev/null | awk '!seen[$1]++' > "$RUNNER_TEMP/game.txt"
             [ -s "$RUNNER_TEMP/game.txt" ] || { echo "no suite selected"; exit 1; }
           fi
-          python3 tools/ci_plan.py tests-shard --list "$RUNNER_TEMP/game.txt" --shards ${{ strategy.job-total }} --shard "$SHARD" \
+          python3 tools/ci_plan.py tests-shard --list "$RUNNER_TEMP/game.txt" --shards "$SHARDS" --shard "$SHARD" \
             --out "$RUNNER_TEMP/game_shard.txt" --manifest "$CI_OUT/shard.json"
           # TEST-GOV-01: a suite fails on a SCRIPT ERROR (a check cut short), when it prints no check count, and when it runs
           # fewer checks than its floor (tools/ci_check_floors.json): an early stop can no longer pass
