@@ -455,6 +455,8 @@ func decides(n: NPC, opt: Dictionary) -> bool:
 func found(n: NPC, opt: Dictionary) -> bool:
 	var h := n.household
 	var ref := World.hh_ref(h)
+	if _found_refusal(n, opt) != "":
+		return false                       # BIZ-01/02: nothing ended or paid for a founding that cannot happen
 	var rec: Dictionary = w.employment.record_of(n)
 	if not rec.is_empty():
 		w.employment.end(rec, "to run a business of their own")      # B25-BIZ-D4: an employee may leave to set up
@@ -492,6 +494,30 @@ func found(n: NPC, opt: Dictionary) -> bool:
 	w.note("%s %s sets about building %s of their own." % [n.name, n.family, Construction.kind_name(str(opt.kind), true)])
 	w.construction._keep_building(h)
 	return true
+
+
+## BIZ-01/02 (Build 25 audit): why founding `opt` would fail, "" when it can go ahead, checked before anything changes (the
+## founder's employment ends, an expanding business pays for the premises): the premises payment (a household head to receive
+## it, the till holding it), the workshop on sale at a price the household can pay (with the premises payment, for an
+## expansion), else the ground placeable and its price payable to the manor (likewise). A reopening cannot fail.
+func _found_refusal(n: NPC, opt: Dictionary) -> String:
+	if opt.has("reopen"):
+		return ""
+	var ref := World.hh_ref(n.household)
+	var extra := 0
+	if opt.has("expand"):
+		extra = int(opt.start)
+		if extra <= 0 or w.party(ref) == null or BusinessMoney.venture_till_of(opt.expand) < extra:
+			return "the business cannot pay for the premises"
+	if opt.has("buy"):
+		return buy_refusal(opt.buy, ref, n, extra)
+	var rect: Rect2i = opt.rect
+	var why: String = w.construction.can_place(str(opt.kind), rect, ref, opt.house)
+	if why != "":
+		return why
+	if w.property.purse(ref) + extra < w.property.land_price(rect.size.x, rect.size.y):
+		return "the household cannot pay for the ground"
+	return ""
 
 
 # ---------------------------------------------------------------- the business's money and goods (B25-BIZ-D1) -----
@@ -785,7 +811,8 @@ func price_for(b: Dictionary, buyer: Object) -> int:
 
 
 ## Why `ref` cannot buy workshop `b` now ("" when it can): a current offer by someone else, the money.
-func buy_refusal(b: Dictionary, ref: String, buyer: Object) -> String:
+## `extra`: coins the buyer will have by then (an expanding business's premises payment to its household, BIZ-02).
+func buy_refusal(b: Dictionary, ref: String, buyer: Object, extra := 0) -> String:
 	if not b.has("sale") or offer_refusal(b, str(b.sale.by)) != "":
 		return "It is not for sale."
 	if str(b.sale.by) == ref:
@@ -793,7 +820,7 @@ func buy_refusal(b: Dictionary, ref: String, buyer: Object) -> String:
 	if not World.is_player_ref(str(b.sale.by)) and w.party(str(b.sale.by)) == null:
 		return "Nobody is left to sell it."
 	var price := price_for(b, buyer)
-	if w.property.purse(ref) < price:
+	if w.property.purse(ref) + extra < price:
 		return "You need %d coins." % price if World.is_player_ref(ref) else "They cannot pay %d coins." % price
 	return ""
 

@@ -258,5 +258,6 @@
  "inv05_rubble_refund_test": 12,
  "sav02_day_state_test": 6,
  "emp01_apprentice_employed_test": 9,
- "biz05_hand_not_hired_test": 9
+ "biz05_hand_not_hired_test": 9,
+ "biz01_found_atomic_test": 47
 }
