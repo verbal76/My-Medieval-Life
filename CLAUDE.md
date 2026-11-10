@@ -268,6 +268,11 @@ corresponding documentation.** Every agent and worker, on every task:
   git status   # regenerated data must show no diff unless the change was intended
   ```
   A failing test is fixed, never skipped, disabled or weakened to pass.
+- **Testing on GitHub Actions (owner, 2026-11-10, `docs/directives/2026-11-10_github_actions_testing.md`; standing).** GitHub Actions
+  is the default test environment: Claude develops, Actions executes, Claude reviews the evidence, verified changes become eligible
+  for integration. Use `tests.yml` (`group` or `only` for targeted runs, no inputs for the full run), `long-sims.yml` (`gate`,
+  `flight` campaigns) and `release.yml`; local runs only for quick feedback and what CI cannot do (interactive, visual, devices).
+  Every result cites branch, commit, configuration, seed, save precision, run id and artifact. Guide: `docs/ci/TESTING_ON_GITHUB_ACTIONS.md`.
 - **Testing philosophy (owner, 2026-10-20, WDR-022):** mechanical correctness and simulation integrity are mandatory;
   economic outcomes are measured and analysed, never pass/fail thresholds unless an approved requirement sets one. Do not
   rerun year-long simulations in pursuit of favourable statistics.
