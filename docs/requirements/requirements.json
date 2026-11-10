@@ -7666,7 +7666,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7685,10 +7685,15 @@
      "date": "2026-11-10",
      "change": "target_build: 25 -> unassigned",
      "why": "target build unassigned, as the other B25 owner-directed records"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; assigned_worker: F015 population worker -> ",
+     "why": "worker report: seed 2 gap is hunger arrivals from collapsing outside settlements (Bourton Abbas, Wulstead) in the baseline, births follow arrivals; F015/P99 code paths do not feed migration or births; seed 2 swings 189-322 across unrelated commits; one run per commit, a controlled perturbation run not yet done"
     }
    ],
    "lifecycle": "ACTIVE",
-   "assigned_worker": "F015 population worker",
+   "assigned_worker": "",
    "branch": "wip/b25-f015-p99"
   },
   {

@@ -95,7 +95,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-DISK-CLEAN-D1 | Verified safe disk cleanup of the lead machine | approved | OWNER APPROVED | INTEGRATED |
 | B25-ECON-P7 | Recover stranded settlement treasury ore | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25-F015-FOOD-01 | F015: homesteader starves with coins; food held separated from purchasing power; fallback food purchase | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| B25-F015-POP-01 | F015/P99: explain seed 2 population 316 vs 203 before merge | approved | OWNER APPROVED | IN DEVELOPMENT |
+| B25-F015-POP-01 | F015/P99: explain seed 2 population 316 vs 203 before merge | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | B25-FINAL-REVIEW-01 | Final testing review of fbfd6ad and an owner decision report for baseline acceptance and merge in one decision | approved | OWNER APPROVED | NOT STARTED |
 | B25-HH-BIZFOOD-D1 | A food seller's household eats from its own business stock when household food is short: no sale, no coins | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-INTEG-SEQ-02 | Build 25 integration sequence after the 2026-11-10 decisions, with mandatory regression coverage and campaign review | approved | OWNER APPROVED | NOT STARTED |
