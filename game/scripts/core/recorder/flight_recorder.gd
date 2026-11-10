@@ -241,7 +241,11 @@ func end(id: int, outcome := "ok", reason := "", detail := "") -> void:
 	if reason != "":
 		row[EV_REASON] = _code("reasons", reason)
 	if detail != "":
-		row[EV_DETAIL] = detail
+		# ND-12 (B25-ND12-01): an event begun with a detail line keeps it; the line given at its end is added after "; " (the
+		# separator the detail's key=value readers already use), never written over it: a refused buy kept only "below_reserve"
+		# and a player's verb only its outcome text, losing the figures and the request that explain them
+		var had := str(row[EV_DETAIL])
+		row[EV_DETAIL] = detail if had == "" or had == detail else had + "; " + detail
 	_add("event", row)
 
 
