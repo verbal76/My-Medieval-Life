@@ -20,5 +20,7 @@ requirements-register record (column Register). Same verification columns as the
 | ND-12 | Recorder overwrites the refused-buy detail line with "below_reserve" (diagnostics) | investigation report | - | - | none | N | N | N | N | N | n/a | N |
 | ND-13 | p:52-type contract acceptance capacity blind to claims (now ND-08) | investigation report | B25-CONTRACT-FUNDS-D1 | - | see ND-08 | - | - | - | - | - | - | - |
 | ND-14 | KI-09 demo_test exit crash (RegionGeo cache, two threads) | CI | KI-09 | - | `167b235` merged | Y | Y (1/20 -> 0/20) | Y | n/a | Y | N | N |
+| ND-15 | Godot's full-precision JSON does not round-trip every float exactly (10 of 345 hunger/position values differ in the last bit): real saves are not bit-exact; same-save reloads stay deterministic | SAV-05 work (WP-1) | - | SAV-05, SAV-04 (continuity policy) | `0d6a484` (save_continuity_test now fails on it, on purpose) | N | Y (reproduced) | N | n/a | N | n/a | N |
+| ND-16 | The campaign harness writes its segment saves at default JSON precision (economy_sim.gd _fr_write): resumed campaign segments reload a lossy copy, not a production-equivalent save | SAV-05 work (WP-1) | - | SAV-05 | none | N | N | N | N | N | n/a | N |
 
-Open questions outside the 69: none pending with the owner from this register (D1, D2, D3 answered 2026-11-10).
+Open questions outside the 69: ND-15 (bit-exact saves: change the float encoding, a save-format change, or accept the 1-ulp difference under the SAV-04 policy) and ND-16 (switch the campaign harness to full precision: makes segments faithful to real saves but campaigns after the change are not comparable with earlier ones).

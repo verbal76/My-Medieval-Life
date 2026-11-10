@@ -19,9 +19,9 @@ simulation baseline, which no commit has since `df67e8e`). No item is release-ve
 | Completed and verified (engineering: Code, Focused, Full CI, Sim, Merged) | 40 |
 | Implemented, awaiting integration | 3 |
 | Integrated, awaiting verification | 1 |
-| In progress | 0 |
+| In progress | 2 |
 | Blocked | 4 |
-| Not started | 21 |
+| Not started | 19 |
 | **Total** | **69** |
 | Device verified | 0 |
 | Release-gate verified | 0 |
@@ -59,8 +59,8 @@ simulation baseline, which no commit has since `df67e8e`). No item is release-ve
 | 27 | MML-SAV-02 | Hour caches and market snapshot not saved (owner: preserve) | Completed and verified | Y | Y | Y | Y | Y | N | N | `f67afdb`, merged `c9da5db` |
 | 28 | MML-SAV-03 | Reservation maps cleared on load (counters, farm, business, chapel, fauna) | Implemented, awaiting integration | Y | Y | Y (fbfd6ad 42788023867) | Y (42788018729) | N | N | N | counter part merged `e44d6b8` (`bf6a1de`); remaining maps `89a3b06` in `fbfd6ad` |
 | 29 | MML-SAV-04 | Wildlife/combat transients intentionally not saved | Blocked | N | N | N | N | N | N | N | - |
-| 30 | MML-SAV-05 | Continuity tests use a different JSON precision than production | Not started | N | N | N | N | N | N | N | - |
-| 31 | MML-DOC-SAV-01 | Comments say NPC plans are not saved | Not started | part (1 of 4 comments) | N | N | N | N | N | N | `counters.gd` corrected with SAV-03 |
+| 30 | MML-SAV-05 | Continuity tests use a different JSON precision than production | In progress | Y (tests aligned) | Y (plan_continuity 15/0, save_exact 15/0; save_continuity exposes ND-15) | N | n/a | N | n/a | N | `c1d4b7c`, `0d6a484` on `wip/b25-wp1` |
+| 31 | MML-DOC-SAV-01 | Comments say NPC plans are not saved | In progress | part (3 of 4 comments) | n/a (comments) | N | n/a | N | n/a | N | `c1d4b7c` on `wip/b25-wp1`; fauna.gd after Batch 3+4 |
 | 32 | MML-NPC-01 | Failed pathfinding retried without back-off | Not started | N | N | N | N | N | N | N | - |
 | 33 | MML-NPC-02 | Courtship gifts ignore contract holds | Completed and verified | Y | Y | Y | Y | Y | N | N | `aca3a8b`, merged `72729e5` |
 | 34 | MML-NPC-03 | Manor-hand -> farmer bypasses job-change bookkeeping | Implemented, awaiting integration | Y | Y | Y (fbfd6ad 42788023867) | Y (42788018729) | N | N | N | `0bfbb9e` in `fbfd6ad` |
@@ -106,3 +106,4 @@ simulation baseline, which no commit has since `df67e8e`). No item is release-ve
 |---|---|---|---|
 | 2026-11-10 17:30 | all 69 | baseline reconciliation | `docs/audits/2026-11-10_69_OPEN_ITEMS_AUDIT.md` `6bacff0` |
 | 2026-11-10 18:00 | all 69 | tracker created with the seven verification columns; no status changed | this file |
+| 2026-11-10 18:40 | DOC-SAV-01, SAV-05 | Not started -> In progress (WP-1) | `c1d4b7c`, `0d6a484`; SAV-05 reproduction: default-precision copies differ in 98 villagers after load |
