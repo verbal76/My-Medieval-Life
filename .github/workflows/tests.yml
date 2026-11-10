@@ -165,6 +165,7 @@ jobs:
           res://tests/world_test.gd
           res://tests/aging_test.gd
           res://tests/life01_retirement_payroll_test.gd   # LIFE-01: focused audit regression
+          res://tests/life02_employee_death_test.gd   # LIFE-02 (B25 audit): a dead employee's employer's goods go back before the heir or loot
           res://tests/life03_sage_succession_test.gd   # LIFE-03: owner-approved gameplay regression
           res://tests/emp01_apprentice_employed_test.gd   # EMP-01 (B25 audit): a permanent employee is not taken into a trade's succession
           res://tests/wiki_test.gd
