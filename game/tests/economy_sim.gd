@@ -18,6 +18,7 @@ extends SceneTree
 ##       [--judgment]   (attach a fresh judgment store; Build 19 ships judgment on already; prints its counts at the end)
 ##       [--economy]   (Expansion 20 LE-01: the economy model on, observing only; prints its record counts at the end)
 ##       [--civic]     (Expansion 21 P21-01: the civic records on; they only observe, so the fingerprint is identical to a run without)
+##       [--spoil-storage]   (INV-02 prototype, docs/design/INV02_SPOILAGE_PROPOSAL.md: storage classes on; a measurement run only)
 ##       [--market]    (Expansion 20 LE-03: the shipped economy.json switched on, the market driving; audits the claims at the end)
 ##       [--scenario strip_mine|contracts_fail|social_chain --at DAY]   (X20-FINAL phase 4, tools/sim_suite.py: economic stress
 ##       and the judgment chain through the game's own verbs; see _intervene and _scripted_step)
@@ -128,6 +129,9 @@ func _init() -> void:
 		print("economy: LE-01 model enabled (observing)")
 	if "--civic" in args:                 # P21-01: the civic records on (they only observe; the fingerprint must not change)
 		CivicRecords.override = 1
+	if "--spoil-storage" in args:         # INV-02 PROTOTYPE (off by default, not approved): storage classes and the unreached holders
+		Decay.storage_on = true
+		print("spoilage: INV-02 storage-class prototype ON %s" % JSON.stringify(Decay.STORAGE))
 	w = World.new()
 	var fr_resumed := _fr_read(str(arg.call("--resume", "")), seed)   # FLIGHT-REC-01: {} unless --resume STATE (a chained segment)
 	if fr_resumed.has("error"):

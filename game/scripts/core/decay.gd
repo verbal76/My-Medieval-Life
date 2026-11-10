@@ -21,6 +21,20 @@ extends RefCounted
 
 const WORN_SLOTS := ["armor", "head"]
 
+## INV-02 PROTOTYPE (B25-INV02-SPOIL-D1, owner: approved in principle, investigate before implementation;
+## docs/design/INV02_SPOILAGE_PROPOSAL.md). OFF: nothing below changes the game unless `storage_on` is set (tests and
+## measurement runs only, economy_sim --spoil-storage). On, each holder has a storage class whose multiplier scales the
+## item's base rate (decay.spoil), and the holders Decay.dawn does not reach today (the players' other containers, the
+## homestead chests, the pens' troughs) spoil too. Proposed values, not approved; the shipped version moves them to
+## balance.json.
+static var storage_on := false
+const STORAGE := {"open": 1.5, "carried": 1.0, "home": 1.0, "cellar": 0.5}
+
+
+## The multiplier of a storage class: 1.0 (today's rule, exactly) while the prototype is off.
+static func smul(cls: String) -> float:
+	return float(STORAGE.get(cls, 1.0)) if storage_on else 1.0
+
 
 static func cfg() -> Dictionary:
 	return GameData.b("decay")
@@ -49,12 +63,12 @@ static func spoiled(count: int, r: float, u: float) -> int:
 
 
 ## Spoil one inventory's perishables for the day. Returns the units lost.
-static func spoil_inv(w: World, inv: Inventory, key: String) -> int:
+static func spoil_inv(w: World, inv: Inventory, key: String, m: float = 1.0) -> int:
 	if inv == null:
 		return 0
 	var lost := 0
 	for id in inv.ids():
-		var k := spoiled(inv.count(id), rate(id), draw(w.seed, w.day(), key, id))
+		var k := spoiled(inv.count(id), rate(id) * m, draw(w.seed, w.day(), key, id))
 		if k > 0 and inv.remove(id, k):
 			w.stat("spoiled_" + id, float(k))
 			w.stat("decay_" + id, float(k))           # the part of spoiled_ that is stores spoiling (diagnostics)
@@ -63,13 +77,13 @@ static func spoil_inv(w: World, inv: Inventory, key: String) -> int:
 
 
 ## The same for a stall's or shop's stock or store (item -> count dictionaries).
-static func spoil_dict(w: World, d: Dictionary, key: String) -> int:
+static func spoil_dict(w: World, d: Dictionary, key: String, m: float = 1.0) -> int:
 	var lost := 0
 	var ids := d.keys()
 	ids.sort()
 	for id in ids:
 		var c := int(d[id])
-		var k := spoiled(c, rate(id), draw(w.seed, w.day(), key, id))
+		var k := spoiled(c, rate(id) * m, draw(w.seed, w.day(), key, id))
 		if k <= 0:
 			continue
 		if c - k <= 0:
@@ -85,37 +99,51 @@ static func spoil_dict(w: World, d: Dictionary, key: String) -> int:
 ## Dawn (NPCBrain.dawn): a day's spoilage everywhere goods are kept, and a day's wear of what is worn.
 static func dawn(w: World) -> void:
 	var lost := 0
+	var carried := smul("carried")                  # INV-02 prototype: every multiplier is 1.0 while it is off
+	var home := smul("home")
+	var open := smul("open")
+	var cellar := smul("cellar")
+	var g0 := lost
 	for n: NPC in w.npcs:
 		if n.alive:
-			lost += spoil_inv(w, n.inv, "npc:%d" % n.id)
+			lost += spoil_inv(w, n.inv, "npc:%d" % n.id, carried)
+	g0 = _diag(w, "npc_packs", lost, g0)
 	for h in w.households.size():
-		lost += spoil_inv(w, w.households[h].pantry, "hh:%d" % h)
-	lost += spoil_inv(w, w.granary, "granary")
+		lost += spoil_inv(w, w.households[h].pantry, "hh:%d" % h, home)
+	g0 = _diag(w, "pantries", lost, g0)
+	lost += spoil_inv(w, w.granary, "granary", cellar)
+	g0 = _diag(w, "granary", lost, g0)
 	if w.chapel != null:                            # DVW-B4 "wherever it is kept": the chapel's store (food offered and grown)
-		var ch := spoil_inv(w, w.chapel.store, "chapel")
+		var ch := spoil_inv(w, w.chapel.store, "chapel", home)
 		for pc in w.chapel.parcels:                 # CHAPEL-PURPOSE: its food on the way to a household spoils as any store does
-			ch += spoil_inv(w, pc.inv, "chapel_parcel:%d" % int(pc.id))
+			ch += spoil_inv(w, pc.inv, "chapel_parcel:%d" % int(pc.id), carried)
 		if ch > 0:
 			w.stat("chapel_spoiled", float(ch))
 		lost += ch
+	g0 = _diag(w, "chapel", lost, g0)
 	for pl: PlayerState in w.player_list():         # MP C2: every player's pack and chest (the host's keys as before)
 		var host: bool = w.is_host(pl)
-		lost += spoil_inv(w, pl.inv, "player" if host else w.player_ref(pl))
-		lost += spoil_inv(w, pl.chest, "chest" if host else w.player_ref(pl) + ":chest")
+		lost += spoil_inv(w, pl.inv, "player" if host else w.player_ref(pl), carried)
+		lost += spoil_inv(w, pl.chest, "chest" if host else w.player_ref(pl) + ":chest", home)
+	g0 = _diag(w, "players", lost, g0)
 	for c in w.containers:
 		if c.kind == "table" and c.has("inv"):
-			lost += spoil_inv(w, c.inv, "table:" + str(c.id))
+			lost += spoil_inv(w, c.inv, "table:" + str(c.id), open)
+	g0 = _diag(w, "tables", lost, g0)
 	for c in w.carts.carts:
-		lost += spoil_inv(w, c.store, "cart:%d" % int(c.id))
+		lost += spoil_inv(w, c.store, "cart:%d" % int(c.id), carried)
+	g0 = _diag(w, "carts", lost, g0)
 	for i in w.loot.size():                         # what lies on the ground (a carcass spoils whole: World._new_day)
 		if not str(w.loot[i].from).begins_with("the "):
-			lost += spoil_inv(w, w.loot[i].inv, "loot:%d" % i)
+			lost += spoil_inv(w, w.loot[i].inv, "loot:%d" % i, open)
+	g0 = _diag(w, "loot", lost, g0)
 	var mw: ManorWork = w.manor_work
 	for l in mw.lots:
-		lost += spoil_inv(w, l.inv, "lot:" + str(l.id))
-	lost += spoil_inv(w, mw.yard, "yard")
+		lost += spoil_inv(w, l.inv, "lot:" + str(l.id), open)
+	lost += spoil_inv(w, mw.yard, "yard", home)
 	for j in mw.jobs:
-		lost += spoil_inv(w, j.load, "job:" + str(j.id))
+		lost += spoil_inv(w, j.load, "job:" + str(j.id), carried)
+	g0 = _diag(w, "manor_work", lost, g0)
 	var shops: Array = []
 	for s in w.business.all_premises() + w.business.stalls.npc_built():
 		if not shops.has(s):
@@ -123,10 +151,54 @@ static func dawn(w: World) -> void:
 	for s: Dictionary in shops:
 		for part in ["stock", "store", "work"]:
 			if s.get(part) is Dictionary:
-				lost += spoil_dict(w, s[part], "%s:%s:%s" % [str(s.get("id", "")), part, str(s.get("x", ""))])
+				lost += spoil_dict(w, s[part], "%s:%s:%s" % [str(s.get("id", "")), part, str(s.get("x", ""))], home)
+	g0 = _diag(w, "shops", lost, g0)
+	if storage_on:
+		lost += _spoil_unreached(w)
 	if lost > 0:
 		w.stat("spoiled_total", float(lost))
 	wear_clothes(w)
+
+
+## INV-02 prototype only: the units a holder group lost today (inv02_spoiled_<group>, diagnostics), counted only while
+## the prototype is on, so the shipped run's stats are unchanged. Returns the new running total.
+static func _diag(w: World, group: String, lost: int, before: int) -> int:
+	if storage_on and lost > before:
+		w.stat("inv02_spoiled_" + group, float(lost - before))
+	return lost
+
+
+## INV-02 prototype only: the holders today's rule does not reach. The players' other containers (Chests.stash: a crate
+## or chest at home, a barrel a cellar), the homestead chests (Homesteads claims' store) and the wheat in the pens'
+## troughs (open). The courier booths and loads on the road, and the off-map settlements, are left out: their own books
+## (deposits, delivery quantities, OffMapSettlement flows) would need a spoil line first (proposal, section F).
+static func _spoil_unreached(w: World) -> int:
+	var lost := 0
+	var kinds := {}
+	for c in w.containers:
+		kinds[str(c.id)] = str(c.kind)
+	var ks: Array = w.chests.stash.keys()
+	ks.sort()
+	for k in ks:
+		var cls := "cellar" if str(kinds.get(str(k), "")) == "barrel" else "home"
+		lost += spoil_inv(w, w.chests.stash[k], "stash:" + str(k), smul(cls))
+	var g0 := _diag(w, "stash", lost, 0)
+	if w.homesteads != null:
+		for c in w.homesteads.claims:
+			lost += spoil_inv(w, c.store, "homestead:" + str(c.id), smul("home"))
+	g0 = _diag(w, "homesteads", lost, g0)
+	var pens: Array = w.fauna.pens.keys()
+	pens.sort()
+	for id in pens:
+		var pen: Dictionary = w.fauna.pens[id]
+		var k := spoiled(int(pen.trough), rate("wheat") * smul("open"), draw(w.seed, w.day(), "trough:" + str(id), "wheat"))
+		if k > 0:
+			pen.trough = int(pen.trough) - k
+			w.stat("spoiled_wheat", float(k))
+			w.stat("decay_wheat", float(k))
+			lost += k
+	_diag(w, "troughs", lost, g0)
+	return lost
 
 
 ## A day's wear of the clothes and armour people wear: the player's body and head slots, and each living villager's own
