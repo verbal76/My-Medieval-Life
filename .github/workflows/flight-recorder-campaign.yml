@@ -65,7 +65,7 @@ jobs:
               sys.exit("segment_days must be a multiple of every (a segment ends on a checkpoint)")
           if int(days) > 4 * int(seg):
               sys.exit("days must be at most 4 x segment_days (four chained jobs per seed)")
-          if not re.fullmatch(r"((--aspiration|--job-choice|--economy|--market|--no-judgment|--twin|--scenario [a-z_]+|--at \d{1,3})( |$))*", os.environ.get("SIM_ARGS", "").strip()):
+          if not re.fullmatch(r"((--aspiration|--job-choice|--economy|--market|--no-judgment|--twin|--scenario [a-z_]+|--at \d{1,3}|--perturb \d{1,2})( |$))*", os.environ.get("SIM_ARGS", "").strip()):
               sys.exit("sim_args: only --aspiration --job-choice --economy --market --no-judgment --twin --scenario NAME --at DAY")
           # B25R1-016: --twin is the campaign's own switch, never the simulation's: a second independent run of each seed with the same
           # configuration (the determinism comparison of event streams and fingerprints), the living-world reports over both, and the

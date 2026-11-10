@@ -136,6 +136,14 @@ func _init() -> void:
 		return
 	if fr_resumed.is_empty():
 		w.setup(VillageMap.load_default(), seed)
+		# B25-F015-POP-01 controlled experiment (owner 2026-11-10): --perturb N draws N values from the world's random stream once,
+		# right after setup, and discards them. A neutral change to the same seed: it tells a chaotic divergence (any tiny change
+		# flips the outcome) from a systematic effect of a code change. Harness only; absent, nothing is drawn.
+		var perturb := int(arg.call("--perturb", "0"))
+		for i in perturb:
+			w.rng.randi()
+		if perturb > 0:
+			print("PERTURB %d extra draw(s) from the world's random stream after setup (controlled experiment)" % perturb)
 	else:
 		w.load_dict(VillageMap.load_default(), fr_resumed.world)
 		var on_load: Dictionary = w.stats.duplicate()   # what happened in the load itself (a migration's grant, plants lost): kept on top
