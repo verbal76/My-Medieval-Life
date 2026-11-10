@@ -7102,7 +7102,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7111,9 +7111,19 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_contract_commitments_legacy_save_repair.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; assigned_worker: None -> lead; branch: None -> wip/b25-contract-funds; commits + 11fdaa9",
+     "why": "11fdaa9 on wip/b25-contract-funds (from wip/b25-meal-claims d0ddf8f): Contracts.means buy capacity = claims_free_coins above reserve less committed_buys (open buy-route contracts' remaining purchases at terms.cost_each); investigated: buyer set-aside leaves the purse (no double count), CON-03 advance lowers unit cost as before, villager credit does not fund purchases. contract_funds_test 10 checks (3 failures before, 0 after); 12 contract/economy suites 0 failures; Tests dispatched"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "lead",
+   "branch": "wip/b25-contract-funds",
+   "commits": [
+    "11fdaa9"
+   ]
   },
   {
    "id": "B25-DISK-CLEAN-D1",
@@ -8474,7 +8484,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -8483,9 +8493,16 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_contract_commitments_legacy_save_repair.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker (lead's agent); branch: None -> wip/b25-hh-phantom-repair",
+     "why": "worker started 16:20 UTC on wip/b25-hh-phantom-repair (from wip/b25-hh-member-ids cdfa395), worktree b25-fix2"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "worker (lead's agent)",
+   "branch": "wip/b25-hh-phantom-repair"
   },
   {
    "id": "B25-SCOPE-AUDIT",
