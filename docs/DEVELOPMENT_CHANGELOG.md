@@ -75,6 +75,22 @@ entries below, INTEGRATED means in that day's development line.
 
 ### 2026-11-10 (Tuesday)
 
+**Batch 3 campaign read (42760291468 on `b57261f`), 09:15 UTC (04:15 EST).** Compared kind by kind with 42734194963 (the batch it
+builds on).
+- Seed 1: 365/365, 0 CRITICAL, HIGH 16 (was 39; EMP-03 reference 17), MEDIUM 56 (was 50), 0 confirmed, archive ok. `invalid_trade`
+  gone (6 findings -> 0); no buy_food HIGH (was 14 failed-action and 11 failed-purchase HIGH more). New: F015 HIGH starving_with_means,
+  p:144 "about the homestead", below hunger 15 for 28 hours from day 269 07:00 with 11+ coins (unconfirmed). Hypothesis, not traced:
+  a homestead trip starts only before noon and once a day (`Homesteads._wants_trip`, `trip_day`) and tries one meal per trip
+  (`tried.meal`), so a failed meal waits for the next morning; batch 3 changed no homestead code. F016 (a bandit child starving on day
+  155) is in the reference too.
+- Seed 2: 365/365, 0 CRITICAL, HIGH 79 (was 63), MEDIUM 35 (was 42), 0 confirmed, archive ok. The self-trade loop gone (reference
+  p:1 refused 1213 times on day 70, `invalid_trade`, with its household's buy_food failures). New: F007, p:149 refused bread 2776
+  times on day 363, buyer_short_of_coins, with a buy_food cluster that day: planned at the list price, asked the deal price; fixed in
+  batch 4 (`1381eb3`, meal_deal_price_test 1 failure -> 7/0). Larger: p:99 buy_from refused_by_rules 10269 over days 98-205 (was
+  1785), the SIM-F2 throttled retry (~96 a day): the planner checks the eater's reserve, the act the payer's (open finding).
+- Batch 3 is not merged alone: batches 3 and 4 merged onto `9fd18a5` as `fbfd6ad` (`wip/b25-sim34-on-dev`); gate 42788012219,
+  recorded campaign 42788018729 and Tests 42788023867 dispatched 09:07 UTC.
+
 **Public tables and property rules MERGED at `9fd18a5`, 08:21 UTC (03:21 EST).** Fast-forward from `93bb304`. Tests 42774872922 on
 `9fd18a5`: ci-validation pass, 271 suites, 0 failed, both new MP-03 tests among them.
 
