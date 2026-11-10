@@ -7489,7 +7489,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7498,9 +7498,19 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_household_food_property_permissions.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; assigned_worker: None -> lead; branch: None -> wip/b25-audit-sim4; commits + 7594f37",
+     "why": "7594f37 + wiki 13dcabf on wip/b25-audit-sim4: last-resort family-stock meal (World.transfer, claims respected, own household only); hh_business_food_test 10 failures -> 22/0; 11 related suites 0 failures; needs CI, gate and campaign"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "lead",
+   "branch": "wip/b25-audit-sim4",
+   "commits": [
+    "7594f37"
+   ]
   },
   {
    "id": "B25-INTEG-SEQ-02",
