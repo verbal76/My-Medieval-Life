@@ -7037,7 +7037,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "INTEGRATED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7046,6 +7046,11 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_owner_decisions_audit_continuation.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> INTEGRATED",
+     "why": "cleanup done 2026-11-10 05:46 UTC: 295 -> 1394 MB free; caches and a verified duplicate package removed, unique work kept (changelog)"
     }
    ],
    "lifecycle": "ACTIVE"
@@ -8112,7 +8117,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IN DEVELOPMENT",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -8121,9 +8126,15 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_owner_decisions_audit_continuation.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; branch: None -> wip/b25-audit-sim3",
+     "why": "fix b57261f and extended test fc16aa4 on wip/b25-audit-sim3 (4 failures before, 11/0 after); campaign 42760291468 to be read for recurrence"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "branch": "wip/b25-audit-sim3"
   },
   {
    "id": "B25R1-001",
