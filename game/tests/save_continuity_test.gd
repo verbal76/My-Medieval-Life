@@ -49,6 +49,23 @@ func differing(a: Dictionary, b: Dictionary) -> Array:
 	return out
 
 
+## Two parts' texts agree when every number in them agrees, whole numbers exactly and fractions within 1e-12 of their size (ND-15).
+func _within(x: String, y: String) -> bool:
+	var rx := RegEx.create_from_string("-?[0-9]+(\\.[0-9]+)?(e-?[0-9]+)?")
+	var mx := rx.search_all(x)
+	var my := rx.search_all(y)
+	if mx.size() != my.size() or rx.sub(x, "#", true) != rx.sub(y, "#", true):
+		return false
+	for i in mx.size():
+		var p := float(mx[i].get_string())
+		var q := float(my[i].get_string())
+		if p == q:
+			continue
+		if p == floorf(p) or absf(p - q) > 1e-12 * maxf(absf(p), 1.0):
+			return false
+	return true
+
+
 func run_days(w: World, days: int) -> void:
 	for m in 1440 * days:
 		w.update(0.5)
@@ -61,7 +78,11 @@ func _init() -> void:
 	var b := World.new()
 	b.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(a.to_dict(), "", true, true)))
 	var d0 := differing(parts(a), parts(b))
-	check(d0.is_empty(), "right after loading, the world is the same in every part (%d differ: %s)" % [d0.size(), str(d0.slice(0, 6))])
+	# ND-15 (B25-ND15-TOL-01, owner 2026-11-10): the game's full-precision JSON may bring a fractional value (hunger, stamina, a
+	# position) back one unit in the last place off; accepted only within save_tolerance_test's rule (fractions within 1e-12 of
+	# their size), everything whole and every text exact. A part that differs must differ only in such fractions.
+	var beyond := d0.filter(func(k): return not _within(parts(a)[k], parts(b).get(k, "")))
+	check(beyond.is_empty(), "right after loading, every part is the same, fractions within the ND-15 tolerance (%d differ only in the last place: %s; beyond: %s)" % [d0.size() - beyond.size(), str(d0.slice(0, 4)), str(beyond.slice(0, 4))])
 	var inv := Inventory.new()
 	inv.add("wheat", 2)
 	inv.add("bread", 1)
