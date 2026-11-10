@@ -1,8 +1,8 @@
 class_name EconKnowledge
 extends RefCounted
 ## Expansion 20 (Living Economy), LE-01 record, LE-02 sources and reliability: the knowledge record (design s.3 Knowledge,
-## s.13: "Never grant every NPC global market knowledge"). DISABLED and isolated: World builds it only when
-## game/data/economy.json "enabled" is true. LE-02's market (EconMarket) reads it to price and to choose whom to approach.
+## s.13: "Never grant every NPC global market knowledge"). World builds it only when
+## game/data/economy.json "enabled" is true (on since B25-LE-ACTIVATE-D1). LE-02's market (EconMarket) reads it to price and to choose whom to approach.
 ##
 ## Entry {knower, subject, item, side: sells|buys, price_each (-1 unknown), offer (-1 none), source, latest, via,
 ## learned_day, learned_minute, seen_day, location}: "knower knows that subject sells (or buys) item, last at price_each, as

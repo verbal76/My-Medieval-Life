@@ -8,7 +8,7 @@ Design: `docs/directives/My_Medieval_Life_Living_Economy_Standalone_Build_Design
 
 ## 1. What exists
 
-Everything sits behind `game/data/economy.json` `"enabled": false` (shipped off). With it off the World builds nothing and
+Everything sits behind `game/data/economy.json` `"enabled"` (shipped off at LE-01; on since B25-LE-ACTIVATE-D1, `ACTIVATION.md` section 5). With it off the World builds nothing and
 the two new live calls (`World.trade`, `World._new_day`) are skipped by `if economy != null`.
 
 | Part | Script | What it does | What it never does |

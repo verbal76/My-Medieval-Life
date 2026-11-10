@@ -1,7 +1,7 @@
 class_name EconActor
 extends RefCounted
-## Expansion 20 (Living Economy), LE-01: ONE read-only resolver over the economic actors that exist today. DISABLED and
-## isolated: World builds it only when game/data/economy.json "enabled" is true; nothing in live play calls it.
+## Expansion 20 (Living Economy), LE-01: ONE read-only resolver over the economic actors that exist today. Built by
+## World only when game/data/economy.json "enabled" is true (on since B25-LE-ACTIVATE-D1; docs/expansion20/ACTIVATION.md).
 ##
 ## It re-implements nothing: it reads the existing owners through World.npc / households / treasury / granary /
 ## chapel / stalls / buildings[].shop and Regions.party (settlement/settlement_party.gd). It never moves a coin or a

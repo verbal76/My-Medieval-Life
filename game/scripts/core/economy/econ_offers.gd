@@ -1,7 +1,7 @@
 class_name EconOffers
 extends RefCounted
-## Expansion 20 (Living Economy), LE-01: the offer record (design s.3 Offer, s.5). DISABLED and isolated: World builds it only
-## when game/data/economy.json "enabled" is true; LE-02 (EconMarket) posts and settles offers, still only while the switch is on.
+## Expansion 20 (Living Economy), LE-01: the offer record (design s.3 Offer, s.5). World builds it only
+## when game/data/economy.json "enabled" is true (on since B25-LE-ACTIVATE-D1); LE-02 (EconMarket) posts and settles offers, still only while the switch is on.
 ##
 ## Offer {id, side: ask|bid, actor, item, qty, price_each, location, made_day, made_minute, expiry, visibility, state:
 ## open|withdrawn|expired|filled, filled, reservation, source}.

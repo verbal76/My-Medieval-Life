@@ -1,7 +1,7 @@
 class_name EconContractLinks
 extends RefCounted
-## Expansion 20 (Living Economy), LE-01: the contract side of the model (design s.3 Contract, s.6). DISABLED and isolated:
-## World builds it only when game/data/economy.json "enabled" is true. It adds NO second contract record: CON-01's
+## Expansion 20 (Living Economy), LE-01: the contract side of the model (design s.3 Contract, s.6). World
+## builds it only when game/data/economy.json "enabled" is true (on since B25-LE-ACTIVATE-D1). It adds NO second contract record: CON-01's
 ## Contracts (contracts.gd) stays the one record, settles every delivery and payment and decides every ending (lapse,
 ## cancel, a party's death under OD-29's provisional rules). This class only links that record to the model:
 ##  - view(id): one read of a contract with what the model knows of it: the goods still owed (Contracts.left, which is what

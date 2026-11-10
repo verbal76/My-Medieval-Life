@@ -215,7 +215,8 @@ func to_dict() -> Dictionary:
 # ---------------------------------------------------------------- activation (X20-ACTIVATION-AUTHORITY) ------------------
 ## Owner 2026-10-31 (docs/directives/2026-10-31_doc_recon_review_decisions.md s.2): "Prepare the activation mechanism and validation
 ## evidence, but wait for my explicit authorization before enabling it in the normal game." The switch is economy.json "enabled"
-## (shipped false); this section is the mechanism and its checks only, never a decision to enable (docs/expansion20/ACTIVATION.md).
+## (shipped false until B25-LE-ACTIVATE-D1 turned it on, owner 2026-11-01); this section is the mechanism and its checks only, never a
+## decision to enable (docs/expansion20/ACTIVATION.md).
 ##   New game, switch on: attach() builds empty records; the model derives needs from the world as it is.
 ##   Existing save without an "economy" section (every save_version 23 save written with the switch off), switch on: the same as a
 ##     new game from that day, attach(world, {}): nothing to migrate, nothing dropped or rewritten, no save_version change.

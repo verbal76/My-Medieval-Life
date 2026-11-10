@@ -2,7 +2,7 @@
 
 Phase 1 (owner directive 2026-10-23, `docs/directives/2026-10-23_expansion20_phase1_authorization.md`). Three isolated
 records behind a disabled switch. Nothing in live play calls them; the shipped game builds none of them and writes no
-save key. Spec sections 3, 6, 14, 16; refresh `LE00_BUILD18_REFRESH.md` section 7 items 1-3.
+save key. (As at LE-01. The switch is on since B25-LE-ACTIVATE-D1, `ACTIVATION.md` section 5, and the market uses these records.) Spec sections 3, 6, 14, 16; refresh `LE00_BUILD18_REFRESH.md` section 7 items 1-3.
 
 ## Switch and attach point: `game/data/economy.json` (format `mml-economy/1`)
 
