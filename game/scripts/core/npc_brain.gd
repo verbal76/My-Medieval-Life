@@ -235,7 +235,8 @@ func _home_meal(n: NPC) -> Array:
 var decide_calls := {}
 var act_calls := {}
 ## SIM-F2: each villager's last failed buy_from ({vendor, item, price, stock, purse, at}; erased by a purchase), read by
-## buy_held. Not saved, as a plan is not: a loaded villager decides afresh.
+## buy_held. Not saved (a memo, not a reservation; MML-DOC-SAV-01: plans are saved, TEST-AUDIT-Q1): after a load the first
+## purchase is tried once more, then held again on a refusal.
 var buy_failed := {}
 ## SIM-F3: each bandit's last chase given up blocked ({prey, cell}: the prey's cell then); read by _bandit. Not saved, as
 ## the chase target is not.

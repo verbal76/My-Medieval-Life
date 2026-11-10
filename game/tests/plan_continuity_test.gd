@@ -86,9 +86,9 @@ func _init() -> void:
 		_end()
 		return
 	# --- scenario 1: saved while the walker is on the way to their station
-	var save_w: Dictionary = JSON.parse_string(JSON.stringify(a.to_dict()))
+	var save_w: Dictionary = JSON.parse_string(JSON.stringify(a.to_dict(), "", true, true))
 	var bw_world := World.new()
-	bw_world.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(save_w)))
+	bw_world.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(save_w, "", true, true)))
 	var bw := bw_world.npc(walker.id)
 	check(_plan_as_saved(bw.plan) == _plan_as_saved(walker.plan), "the walker's plan comes back step for step, its destination %s" % str(walker.plan[0].to))
 	var reserved_a: Dictionary = a.stations.get(str(walker.workplace), {}).get("users", {})
@@ -135,9 +135,9 @@ func _init() -> void:
 		return
 	var load_before: Dictionary = (cart.store as Inventory).items.duplicate()
 	var carts_before := a.carts.carts.size()
-	var save: Dictionary = JSON.parse_string(JSON.stringify(a.to_dict()))
+	var save: Dictionary = JSON.parse_string(JSON.stringify(a.to_dict(), "", true, true))
 	var b := World.new()
-	b.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(save)))
+	b.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(save, "", true, true)))
 	var bc := b.npc(carter.id)
 	check(_plan_as_saved(bc.plan) == _plan_as_saved(carter.plan), "the carter's plan comes back step for step (%d steps)" % carter.plan.size())
 	var bcart: Dictionary = b.carts.pulled_by("npc:%d" % bc.id)
@@ -157,15 +157,15 @@ func _init() -> void:
 	check(b.carts.carts.size() == carts_before, "no cart appears or goes (%d)" % carts_before)
 	# --- the same save loaded twice goes on identically; saved again straight after a load, the save is the same
 	var c1 := World.new()
-	c1.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(save)))
+	c1.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(save, "", true, true)))
 	var c2 := World.new()
-	c2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(save)))
+	c2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(save, "", true, true)))
 	run_hours(c1, 6.0)
 	run_hours(c2, 6.0)
 	check(_state(c1) == _state(c2), "the same save loaded twice goes on identically for six hours")
 	var b2 := World.new()
-	b2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(save)))
-	var resaved: Dictionary = JSON.parse_string(JSON.stringify(b2.to_dict()))
+	b2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(save, "", true, true)))
+	var resaved: Dictionary = JSON.parse_string(JSON.stringify(b2.to_dict(), "", true, true))
 	var differ := []
 	for k in save:
 		if JSON.stringify(save[k], "", true) != JSON.stringify(resaved.get(k), "", true):
@@ -174,13 +174,13 @@ func _init() -> void:
 		for i in mini(save.npcs.size(), resaved.npcs.size()):
 			for f in save.npcs[i]:
 				if JSON.stringify(save.npcs[i][f], "", true) != JSON.stringify(resaved.npcs[i].get(f), "", true):
-					print("DIFF npc %s %s: %s -> %s" % [str(save.npcs[i].id), f, JSON.stringify(save.npcs[i][f]).left(300), JSON.stringify(resaved.npcs[i].get(f)).left(300)])
+					print("DIFF npc %s %s: %s -> %s" % [str(save.npcs[i].id), f, JSON.stringify(save.npcs[i][f], "", true, true).left(300), JSON.stringify(resaved.npcs[i].get(f), "", true, true).left(300)])
 			for f in resaved.npcs[i]:
 				if not save.npcs[i].has(f):
 					print("DIFF npc %s new key %s" % [str(save.npcs[i].id), f])
 	check(differ.is_empty(), "saved again straight after loading, the save is the same (%s differ)" % str(differ))
 	# --- an older save: no plans kept
-	var old: Dictionary = JSON.parse_string(JSON.stringify(save))
+	var old: Dictionary = JSON.parse_string(JSON.stringify(save, "", true, true))
 	for nd in old.npcs:
 		nd.erase("plan_b")
 		nd.erase("work_left")

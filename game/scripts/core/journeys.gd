@@ -6,7 +6,8 @@ extends RefCounted
 ##
 ## n.journey (saved, optional NPC key): {to: settlement id, purpose: {kind, ...}, leg: "out" | "there" | "back", since: day,
 ## gate: the village gate index}. Only that is saved: the route is a pure function of the seed (Overworld.road_route), so when the
-## villager has no plan (just started, an interruption, a loaded save: plans are not saved) the leg goes on from where they stand
+## villager has no plan (just started, an interruption, or a loaded save whose plan had no step left; plans themselves are saved,
+## TEST-AUDIT-Q1, but the walked path is laid out again) the leg goes on from where they stand
 ## (resume). Out: the village's own path to the south gate, then the road; there: the purpose's work at the site (purpose hook,
 ## World.journey_hook), else they stay till the next morning; back: the road, then the village path home. At night (20:00 to
 ## 6:00) a traveller rests where they are on the road (the homeless rest rule, KI-HOME-DOOR), and when hungry eats from their pack.
