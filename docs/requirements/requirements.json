@@ -8266,8 +8266,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -8280,9 +8280,20 @@
      "date": "2026-11-10",
      "change": "target_build: 25 -> unassigned",
      "why": "target build unassigned, as the other B25 owner-directed records"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25-nd15-tolerance; tests: None -> save_tolerance_test 5/0; save_continuity_test 5/0; test_commit: None -> d7217b8; commits + d7217b8",
+     "why": "tolerances documented and proven: save_tolerance_test 5/0, save_continuity_test 5/0 with the rule; Tests dispatched"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "branch": "wip/b25-nd15-tolerance",
+   "tests": "save_tolerance_test 5/0; save_continuity_test 5/0",
+   "test_commit": "d7217b8",
+   "commits": [
+    "d7217b8"
+   ]
   },
   {
    "id": "B25-ND16-PREC-01",
@@ -8300,8 +8311,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -8314,9 +8325,20 @@
      "date": "2026-11-10",
      "change": "target_build: 25 -> unassigned",
      "why": "target build unassigned, as the other B25 owner-directed records"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25-nd16-precision; tests: None -> local seed 1 save at day 2 and resume: round trip exact, status full; old-format resume labelled mixed; flight python tests OK; test_commit: None -> df48840; commits + df48840",
+     "why": "harness saves at full precision, regime labelled; local 4-day save/resume exact; Tests dispatched"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "branch": "wip/b25-nd16-precision",
+   "tests": "local seed 1 save at day 2 and resume: round trip exact, status full; old-format resume labelled mixed; flight python tests OK",
+   "test_commit": "df48840",
+   "commits": [
+    "df48840"
+   ]
   },
   {
    "id": "B25-NINE",
