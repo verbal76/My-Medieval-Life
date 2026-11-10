@@ -75,6 +75,20 @@ entries below, INTEGRATED means in that day's development line.
 
 ### 2026-11-10 (Tuesday)
 
+**Simulation batch MERGED at `72729e5`, 04:48 UTC (23:48 EST 2026-11-09).** Fast-forward from `e44d6b8`. Nine audit fixes that change
+the simulation, each with a failing-first test: EMP-03, EMP-01, BIZ-05, BIZ-01/02, LIFE-02, INV-06 (worker), REG-02 journey part,
+NPC-02, JUS-02 (lead), and the CI fix passing the shard number through env (GitHub's 21000-character expression limit). Evidence:
+Tests 42734267343 attempt 2 green on `72729e5` (attempt 1 failed only `demo_test` exit -6, KI-09); gate 42734190370 33 blocking, all
+difference from the `df67e8e` baseline, determinism identical; recorded campaign 42734194963 (on `acc24b2`, the same code): seed 1
+365/365, 0 CRITICAL, 39 HIGH, 50 MEDIUM, 0 confirmed; seed 2 365/365, 0 CRITICAL, 63 HIGH, 42 MEDIUM, 0 confirmed. Seed 1's HIGH
+count rose from 17: mostly villagers refused food on days 239-243, a shortage (an outcome, WDR-022); which fix shifted it is not yet
+traced. No baseline changed (BASELINE-AUTH-01).
+
+**KI-09 root-caused** (worker): `RegionGeo._cache` written by two threads; fix `e276c9f` merged onto `72729e5` as `167b235`
+(`wip/b25-ki09-on-dev`), CI dispatched. **Batch 3** on `wip/b25-audit-sim3` (REG-06, NPC-03, SAV-03 other maps) and TRD-05 comments
+on `wip/b25-audit-nosim2` pushed, not merged. MP-06 gateway away-check withdrawn: it refused requests in the rejoin window where a
+guest is away by design (MP-D1), and `net_c_test` lost the guest's case.
+
 **Audit fixes and the KI-12 fix MERGED at `e44d6b8`, 01:10 UTC (20:10 EST 2026-11-09).** Fast-forward from `448fc0b`. INV-01 (census
 counts players' stashes), BIZ-08 (business hands after a load), TRD-01 (guest stall sessions settled to the guest), SAV-03 counter
 part (serving rebuilt from plans on load), KI-12 (a guest reconnects at once after an unannounced freeze; harness hardened). Each fix
