@@ -6363,7 +6363,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -6372,9 +6372,16 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_69_open_items_audit.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; assigned_worker: None -> lead; branch: None -> wip/requirements-control",
+     "why": "audit delivered: docs/audits/2026-11-10_69_OPEN_ITEMS_AUDIT.md (69 items: 40 completed and verified, 3 awaiting integration, 1 awaiting verification, 4 blocked, 21 not started)"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "lead",
+   "branch": "wip/requirements-control"
   },
   {
    "id": "B25-AUDIT-CONT-01",

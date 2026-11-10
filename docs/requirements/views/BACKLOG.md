@@ -85,7 +85,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
-| B25-AUDIT-69-01 | Status audit of the original 69 open items | approved | OWNER APPROVED | NOT STARTED |
+| B25-AUDIT-69-01 | Status audit of the original 69 open items | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-AUDIT-CONT-01 | Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions | approved | OWNER APPROVED | NOT STARTED |
 | B25-BASELINE-REVIEW-01 | No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge | approved | OWNER APPROVED | NOT STARTED |
 | B25-CONT-INV-01 | Continued investigation, validation and merge preparation (Build 25) | approved | OWNER APPROVED | NOT STARTED |

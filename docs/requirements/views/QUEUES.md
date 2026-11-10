@@ -2,11 +2,12 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (28)
+## Workers and task branches (29)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | B25-AUD-EMP-03 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-emp03 |
+| B25-AUDIT-69-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | B25-CONTRACT-FUNDS-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-contract-funds |
 | B25-ECON-P7 | unassigned | IN DEVELOPMENT | b25r1-econ6 worker | wip/b25r1-econ6 |
 | B25-F015-FOOD-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-f015-p99 |
@@ -35,7 +36,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (93)
+## Implemented but not tested (94)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -44,6 +45,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B16-AUDIT | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
 | B16-READY | 16 | INTEGRATED | closure review against its acceptance criteria (human review) |
 | B25-AMBITION-IMPL | 20 | INTEGRATED |  |
+| B25-AUDIT-69-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 | B25-BIZ-D1 | 20 | INTEGRATED |  |
 | B25-BIZ-D2 | 20 | INTEGRATED |  |
 | B25-BIZ-D3 | 20 | INTEGRATED |  |
