@@ -226,6 +226,7 @@ jobs:
           res://tests/reg02_journey_migration_test.gd    # REG-02: a traveller who emigrates ends the trip; a returner has none
           res://tests/reg06_household_change_live_test.gd    # REG-06: a live resident is folded before their household changes
           res://tests/npc03_field_takeover_bookkeeping_test.gd    # NPC-03: a manor hand taking a field is counted and recorded
+          res://tests/sav03_reservations_reload_test.gd    # SAV-03: farm, hunt, chapel and stall reservations rebuilt on load
           res://tests/identity_test.gd
           res://tests/multiplayer_a1_test.gd
           # MP Batch A2, gate G1: a host and a guest in two Godot processes over loopback (join, move, an action the host applies, same state, rejoin, host restart)

@@ -153,6 +153,7 @@
  "reg02_journey_migration_test": 5,
  "reg06_household_change_live_test": 15,
  "npc03_field_takeover_bookkeeping_test": 4,
+ "sav03_reservations_reload_test": 6,
  "npc02_gift_claims_test": 8,
  "jus02_join_band_cleanup_test": 8,
  "net_interact_test": 68,
