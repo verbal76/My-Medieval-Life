@@ -504,6 +504,14 @@ func _recruit_answer(n: NPC) -> String:
 ## bandit (the role a clan child takes at coming of age, its health and blow untouched). Name, age, family tree, relationships,
 ## skills, pack and purse are kept; the household keeps them in its records (mother, father) and learns of it.
 func _join_band(n: NPC, fighter: bool) -> void:
+	# JUS-02: leaving the village's life for the band has the clean-up a departure has (Migration._pre_leave, _gone): what was set
+	# aside for quests and contracts, rentals and repairs is released; an employment ends; the posts and stall they held are handed
+	# on (NPCBrain.on_death, while their job and workplace are still known). No new policy: the existing departure rules.
+	Migration._pre_leave(w, [n])
+	var rec: Dictionary = w.employment.record_of(n)
+	if not rec.is_empty():
+		w.employment.end(rec, "%s went to the bandits" % n.name)
+	w.brain.on_death(n)
 	var old := n.household
 	if old >= 0:
 		(w.households[old].members as Array).erase(n.id)
