@@ -2,13 +2,14 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (21)
+## Workers and task branches (22)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | B25-AUD-EMP-03 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-emp03 |
 | B25-ECON-P7 | unassigned | IN DEVELOPMENT | b25r1-econ6 worker | wip/b25r1-econ6 |
 | B25-FINISH-01 | 20 | IN DEVELOPMENT | lead session | wip/region-nav |
+| B25-INV02-SPOIL-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | worker agent (PAR-AGENTS-01) | wip/b25-inv02-proposal |
 | B25-MP03-OWNERSHIP-D1 | unassigned | IN DEVELOPMENT | worker agent (PAR-AGENTS-01) | wip/b25-mp03-public-tables |
 | B25-MP03-TABLES-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | worker agent (PAR-AGENTS-01) | wip/b25-mp03-public-tables |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
@@ -28,7 +29,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (84)
+## Implemented but not tested (85)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -49,6 +50,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-CLOSE-01 | 20 | INTEGRATED |  |
 | B25-DISK-CLEAN-D1 | unassigned | INTEGRATED |  |
 | B25-EMPLOY-IMPL | 20 | INTEGRATED |  |
+| B25-INV02-SPOIL-D1 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 | B25-MP03-TABLES-D1 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 | B25-OVN-0211 | 20 | INTEGRATED |  |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |
