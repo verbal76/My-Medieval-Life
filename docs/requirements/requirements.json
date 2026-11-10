@@ -7695,7 +7695,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7704,9 +7704,16 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_continued_investigation_merge_prep.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; assigned_worker: None -> lead; branch: None -> wip/b25-clan-child-pantry",
+     "why": "investigation (90a9453) verified by lead: clan children eat only via band_eat (own pack + bandits' packs), never their household pantry (household 25 held 10 wheat); camp_meal returns true regardless. Second defect verified: World.load_dict keeps household members as floats; Array.erase/has/find(int) fail after any load (probe + hh_member_ids_load_test 5 checks: 3 failures before, 0 after; fix cdfa395 on wip/b25-hh-member-ids). Clan pantry fix in progress on wip/b25-clan-child-pantry (clan_child_pantry_test 7 checks: 2 failures before, 0 after)"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "lead",
+   "branch": "wip/b25-clan-child-pantry"
   },
   {
    "id": "B25-INV-P100-FULLPACK",
@@ -7724,7 +7731,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7733,9 +7740,19 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_continued_investigation_merge_prep.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; assigned_worker: None -> lead; branch: None -> wip/b25-meal-claims; commits + d0ddf8f",
+     "why": "cause verified from archive seed1 d0220 + code: not a full pack (NPC packs unlimited); seller p:40's ale earmarked for CON-01 contract 592 (LE-03 claims) refused by World.trade; meal planner ignored claims; recorder mislabels claims refusals as buyer_inventory_full. Fix d0ddf8f on wip/b25-meal-claims (meal_claims_test 14 checks: 5 failures before, 0 after); Tests + gate dispatched"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "lead",
+   "branch": "wip/b25-meal-claims",
+   "commits": [
+    "d0ddf8f"
+   ]
   },
   {
    "id": "B25-INV-P52-BLOCKS",
@@ -7753,7 +7770,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7762,9 +7779,19 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_continued_investigation_merge_prep.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; assigned_worker: None -> lead; branch: None -> wip/b25-meal-claims; commits + d0ddf8f",
+     "why": "investigation docs/audits/2026-11-10_INVESTIGATIONS_P52_BANDIT_CHILDREN.md (90a9453): contract buy step (Contracts.plan) checked raw purse above reserve; act pays only coins the LE-03 claims leave free (p:52's own bids held them); not a code regression (path unchanged b57261f..fbfd6ad; run divergence). Fix in d0ddf8f (contract buy step uses buy_qty; buy_qty counts claims) - test case in meal_claims_test (60 planned/60 refused before, 0 after). Contract acceptance capacity check (contracts.gd:364-372) not changed: proposal for owner"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "lead",
+   "branch": "wip/b25-meal-claims",
+   "commits": [
+    "d0ddf8f"
+   ]
   },
   {
    "id": "B25-INV02-SPOIL-D1",

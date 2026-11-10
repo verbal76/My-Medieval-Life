@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (23)
+## Workers and task branches (26)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -11,6 +11,9 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-F015-FOOD-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-f015-p99 |
 | B25-FINISH-01 | 20 | IN DEVELOPMENT | lead session | wip/region-nav |
 | B25-HH-BIZFOOD-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-audit-sim4 |
+| B25-INV-BANDIT-CHILD | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-clan-child-pantry |
+| B25-INV-P100-FULLPACK | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-meal-claims |
+| B25-INV-P52-BLOCKS | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-meal-claims |
 | B25-INV02-SPOIL-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | worker agent (PAR-AGENTS-01) | wip/b25-inv02-proposal |
 | B25-P99-PAYER-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-f015-p99 |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
@@ -30,7 +33,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (89)
+## Implemented but not tested (92)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -53,6 +56,9 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-EMPLOY-IMPL | 20 | INTEGRATED |  |
 | B25-F015-FOOD-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 | B25-HH-BIZFOOD-D1 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
+| B25-INV-BANDIT-CHILD | unassigned | IMPLEMENTED ON TASK BRANCH |  |
+| B25-INV-P100-FULLPACK | unassigned | IMPLEMENTED ON TASK BRANCH |  |
+| B25-INV-P52-BLOCKS | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 | B25-INV02-SPOIL-D1 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 | B25-MP03-OWNERSHIP-D1 | unassigned | INTEGRATED |  |
 | B25-MP03-TABLES-D1 | unassigned | INTEGRATED |  |
