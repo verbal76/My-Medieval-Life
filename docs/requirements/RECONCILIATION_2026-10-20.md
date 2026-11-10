@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 867 (471 of them still open) |
-| **Open entries now** (rules excluded) | | **629** |
+| Entries added since | | 869 (473 of them still open) |
+| **Open entries now** (rules excluded) | | **631** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (867)
+## Added since the baseline (869)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -204,6 +204,7 @@ None.
 | B25-ECON-P7 | Recover stranded settlement treasury ore | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
 | B25-EMPLOY-D3 | How do skilled occupations grow? | decision | APPROVED | owner decision |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
+| B25-F015-FOOD-01 | F015: homesteader starves with coins; food held separated from purchasing power; fallback food purchase | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-FINAL-REVIEW-01 | Final testing review of fbfd6ad and an owner decision report for baseline acceptance and merge in one decision | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-FINISH-01 | Build 25 completion: fixed finish line, finish approved scope, integrated tests, final 365-day flight on the exact candidate, private three-platform draft release | approved | IN DEVELOPMENT / NOT TESTED / OPEN | 20 |
 | B25-HH-BIZFOOD-D1 | A food seller's household eats from its own business stock when household food is short: no sale, no coins | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
@@ -223,6 +224,7 @@ None.
 | B25-NINE-D8 | Predefined capabilities and organic societal development | decision | APPROVED | owner decision |
 | B25-NINE-D9 | Game juice phases J1 and J2 | decision | APPROVED | owner decision |
 | B25-OVN-0211 | Overnight autonomous development (2026-11-02): broad engineering discretion, parallel independent workstreams, never idle on one question; investigate the zero-business funnel, profession distribution and unemployment, and ore depletion; preserve all business paths with regression tests; consolidated report on return | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
+| B25-P99-PAYER-01 | p:99: planner reserve check vs payer funds mismatch causes repeated refused buy_from | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-SCOPE-AUDIT | Build 25 complete expansion and abandoned-work reconciliation audit (read-only) | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | 20 |
 | B25-SCOPE-D1 | Is Build 25 the consolidation build containing all approved expansion work and all approved recoverable work from abandoned branches? | decision | APPROVED | owner decision |
 | B25-SCOPE-REGION | Build 25 scope correction: the regional economy, world map, physical inter-village travel, envoy surveys and independent inter-village commerce are mandatory Build 25 Living Economy scope; the 4b51c92 freeze is superseded (kept as a tested baseline); Build 25 is not complete until they are implemented, validated and the owner authorizes release | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |

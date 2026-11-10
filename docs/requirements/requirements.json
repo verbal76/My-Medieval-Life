@@ -7437,6 +7437,38 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25-F015-FOOD-01",
+   "kind": "approved",
+   "title": "F015: homesteader starves with coins; food held separated from purchasing power; fallback food purchase",
+   "description": "F015: homesteader starves with coins; food held separated from purchasing power; fallback food purchase",
+   "source": "docs/directives/2026-11-10_seed2_findings_f015_p99.md",
+   "owner_wording": "Separate actual food inventory from purchasing power. Coins must not count as food already available for household consumption. ... When a hungry villager cannot obtain a cooked meal, investigate and implement reasonable fallback purchasing of available edible ingredients or other suitable food ... Do not create food or guarantee that every villager survives.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "coins never counted as food held for consumption decisions; a separate purchasing-capacity measure kept where needed",
+    "a hungry villager with no cooked meal on sale buys available edible ingredients or other suitable food through the existing market, cooking and travel systems",
+    "no food created; genuine shortage, isolation and unreachable food still possible",
+    "focused regression tests (failing first), conservation, save/load, determinism; isolated from fbfd6ad"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_seed2_findings_f015_p99.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-FINAL-REVIEW-01",
    "kind": "approved",
    "title": "Final testing review of fbfd6ad and an owner decision report for baseline acceptance and merge in one decision",
@@ -8193,6 +8225,37 @@
    ],
    "integrated_in": [
     "B25R1 wip/b25r1 (head a995397)"
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B25-P99-PAYER-01",
+   "kind": "approved",
+   "title": "p:99: planner reserve check vs payer funds mismatch causes repeated refused buy_from",
+   "description": "p:99: planner reserve check vs payer funds mismatch causes repeated refused buy_from",
+   "source": "docs/directives/2026-11-10_seed2_findings_f015_p99.md",
+   "owner_wording": "Investigate the mismatch between the planner's coin-reserve checks and the actual payer's funds. Correct the underlying decision logic so the planner does not repeatedly attempt purchases the payer cannot make. Preserve legitimate third-party payment, household support, and existing trade permissions.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "the planner plans a purchase only when the actual payer can make it under the act's own rules",
+    "third-party payment, household support and trade permissions preserved",
+    "focused regression tests (failing first), conservation, save/load, determinism; isolated from fbfd6ad"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_seed2_findings_f015_p99.md"
+    }
    ],
    "lifecycle": "ACTIVE"
   },
