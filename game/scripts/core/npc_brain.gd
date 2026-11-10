@@ -4804,6 +4804,10 @@ func _field_workers(f: Dictionary) -> int:
 ## weekly morning (looks_today), after everyone in need has chosen, and weighs them against staying (JudgmentLive.pick_job,
 ## staying first in the live order). Skill and room to grow in a place count, scaled by that priority; no level moves anyone
 ## by itself (X18-D3), and most mornings most villagers do not look.
+## EMP-03: how many villagers sought work this morning (the count the hiring competition was given); read by tests and reports only.
+var seekers_today := 0
+
+
 func seek_work() -> void:
 	var market := job_market()
 	var cooldown := int(GameData.b("job_switch_cooldown_days"))
@@ -4848,6 +4852,7 @@ func seek_work() -> void:
 			_take_place(n, best, why, market)
 	for lk in lookers:
 		var n: NPC = lk[0]
+		seekers += 1                           # EMP-03 (owner 2026-11-08): an ambitious villager looking for better work is seeking work
 		var found := _job_options(n, market)
 		if str(found[0]) == "":
 			continue
@@ -4861,6 +4866,7 @@ func seek_work() -> void:
 		w.judgment._stat("ambition_moves")
 		_take_place(n, pick, "looking for work that suits their skills", market)
 	_hire_skilled(applicants, market, judged_job)
+	seekers_today = seekers
 	_hiring_competition(int(market.manor_hand.open), seekers)
 
 
