@@ -230,6 +230,20 @@ when the issue arose.
 - **Next:** a lossless float encoding for saves (a save-format change: needs the migration rules of CLAUDE.md section 7 and,
   if it breaks compatibility, the owner). Not started.
 
+### KI-12 root cause and fix (2026-11-09 21:00 EST, worker under PAR-AGENTS-01; not yet merged)
+- **Cause:** a guest process frozen without a pause notice (SIGSTOP in the test; also a computer asleep or a debugger) did not
+  notice the freeze: it waited for ENet to declare the connection dead (0-20 s after the thaw, measured), then rebuilt the world
+  (5-6 s, longer on CI), so the test's 30 s was sometimes not enough. Hypotheses ruled out with measurements: the host keeping a
+  stale peer (it dropped the guest in 2.8-12.2 s every run), reconnect backoff (first attempt succeeded every time), torn status
+  reads (real but only noise), inflated round-trip time (7-41 ms at loss).
+- **Fix** (`wip/b25-ki12-reconnect` `dc049d9`, merged into `wip/b25-audit-fixes` `e44d6b8`): `NetSession._process` on a guest
+  reconnects at once when a frame comes more than `RESUME_AFTER_PAUSE_MS` (4 s) after the previous one, as `on_app_resumed` does
+  after an Android pause; the world-building frame is excluded. Harness: atomic status/command/proxy writes, the waits around the
+  freeze checked with timings (55 checks). Under 3 CPU burners: thaw to back in play 5.4-5.9 s (was up to 25.4 s); full
+  `net_fault_test` 4 runs 55/0; net_mp4 148/0, multiplayer_c 326/0, net_batch_b 45/0.
+- **Not proven, separate:** in a looped harness under heavy load, later iterations sometimes failed "her world built in 12 s ...
+  the host kept her connection" (ENet ended the connection after the build stall); seen before the fix too, never in CI.
+
 ### KI-12 update (2026-11-09 17:45 EST)
 - `net_fault_test`'s "frozen past the timeouts and let go, it reconnects by itself as itself" failed again on `wip/b25-emp03`
   `00e47a6` (run 42705032193, attempt 1): third failure on commits that touch no network code. Root-cause work assigned to a worker
