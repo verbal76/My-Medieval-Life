@@ -81,11 +81,12 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 
-## Approved, no build assigned (38)
+## Approved, no build assigned (39)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
 | B25-AUDIT-CONT-01 | Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions | approved | OWNER APPROVED | NOT STARTED |
+| B25-BASELINE-REVIEW-01 | No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge | approved | OWNER APPROVED | NOT STARTED |
 | B25-DISK-CLEAN-D1 | Verified safe disk cleanup of the lead machine | approved | OWNER APPROVED | INTEGRATED |
 | B25-ECON-P7 | Recover stranded settlement treasury ore | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25-HH-BIZFOOD-D1 | A food seller's household eats from its own business stock when household food is short: no sale, no coins | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |

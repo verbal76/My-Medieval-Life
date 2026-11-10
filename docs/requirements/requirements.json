@@ -6378,6 +6378,37 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25-BASELINE-REVIEW-01",
+   "kind": "approved",
+   "title": "No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge",
+   "description": "No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge",
+   "source": "docs/directives/2026-11-10_no_auto_merge_baseline_review.md",
+   "owner_wording": "Do not merge automatically when the campaign finishes. The 33 baseline findings remain blocking until we have reviewed their causes and determined whether the differences are intentional, acceptable changes or actual defects.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "Both campaign seeds verified from artifacts; food-purchase loops, F015, conservation and other defects investigated",
+    "Categorized comparison of all 33 baseline findings: old behaviour, new behaviour, cause, expected or concerning; recommendation accept / correct / investigate",
+    "Owner approval requested before any baseline acceptance or merge; no re-recording, no weakened tests, no gate bypass"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_no_auto_merge_baseline_review.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-BIZ-D1",
    "kind": "approved",
    "title": "Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system)",
