@@ -7051,9 +7051,17 @@
      "date": "2026-11-10",
      "change": "implementation_status: NOT STARTED -> INTEGRATED",
      "why": "cleanup done 2026-11-10 05:46 UTC: 295 -> 1394 MB free; caches and a verified duplicate package removed, unique work kept (changelog)"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "integrated_in + lead machine scratchpad 2026-11-10 (no code change)",
+     "why": "evidence: the cleanup is on the lead machine, no code; recorded in DEVELOPMENT_CHANGELOG 2026-11-10"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "integrated_in": [
+    "lead machine scratchpad 2026-11-10 (no code change)"
+   ]
   },
   {
    "id": "B25-ECON-P1",
@@ -8131,10 +8139,16 @@
      "date": "2026-11-10",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; branch: None -> wip/b25-audit-sim3",
      "why": "fix b57261f and extended test fc16aa4 on wip/b25-audit-sim3 (4 failures before, 11/0 after); campaign 42760291468 to be read for recurrence"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "assigned_worker: None -> lead",
+     "why": "assigned"
     }
    ],
    "lifecycle": "ACTIVE",
-   "branch": "wip/b25-audit-sim3"
+   "branch": "wip/b25-audit-sim3",
+   "assigned_worker": "lead"
   },
   {
    "id": "B25R1-001",
