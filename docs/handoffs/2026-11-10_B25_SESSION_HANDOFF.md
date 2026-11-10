@@ -32,7 +32,7 @@ It points to the records; it does not repeat them. Times are EST.
 | `wip/b25-hh-member-ids` | `cdfa395` | fbfd6ad | household member ids whole numbers after load (B25-INV-BANDIT-CHILD, ND-10) | Tests 42843763261 pass; gate same 33 | Ready after Batch 3+4 |
 | `wip/b25-clan-child-pantry` | `bd17bd8` | fbfd6ad | clan children eat from the household pantry (ND-09) | Tests 42846530801 pass; gate same 33 | Ready after Batch 3+4 |
 | `wip/b25-hh-phantom-repair` | `837e3e1` | cdfa395 | phantom membership repair D2 (`7e844e3`) + D3 (B25-SAVE-PHANTOM-D2, -D3) | 7e844e3: gate 42861663966 same 33, determinism identical; Tests 42861657621 running. 837e3e1: gate dispatched 12:52, Tests not yet dispatched | After its own Tests + gate on 837e3e1 |
-| `wip/b25-nd12-recorder-detail` | `12d7549` | 9fd18a5 | recorder keeps both detail lines (B25-ND12-01) | Tests 42867796686, gate 42867803221 running | Recommended ready once both are green and the gate equals the dev line's set (reporting only; neutrality 5/0) |
+| `wip/b25-nd12-recorder-detail` | `12d7549` | 9fd18a5 | recorder keeps both detail lines (B25-ND12-01) | Tests 42867796686 pass; gate 42867803221 same 33, determinism identical | Ready to merge on owner approval (reporting only; neutrality 5/0) |
 | `wip/b25-wp1` | `0d6a484` | 9fd18a5 | WP-1: DOC-SAV-01, SAV-05 (`c1d4b7c`); save_continuity at full precision fails on purpose (ND-15) | none | Blocked on ND-15 decision; 12 WP-1 items not started |
 | `wip/b25-inv02-proposal` | `906f1a8` | - | INV-02 spoilage prototype, flag off | - | Implementation of approved F1-F6 not started |
 
@@ -49,10 +49,10 @@ meal-claims -> contract-funds -> f015-p99 (after its attribution) ; nd12 is inde
 
 | Run | Workflow | Branch / commit | State |
 |---|---|---|---|
-| 42867796686 | Tests | nd12 `12d7549` | running |
-| 42867803221 | Long simulations (gate) | nd12 `12d7549` | running |
-| 42861657621 | Tests | phantom `7e844e3` | running |
-| (dispatched 12:52) | Long simulations (gate) | phantom `837e3e1` | queued/running |
+| 42867796686 | Tests | nd12 `12d7549` | success |
+| 42867803221 | Long simulations (gate) | nd12 `12d7549` | 33 = fbfd6ad set, determinism identical |
+| 42861657621 | Tests | phantom `7e844e3` | success |
+| 42869275430 | Long simulations (gate) | phantom `837e3e1` | 33 = fbfd6ad set, determinism identical |
 | 42861663966 | gate | phantom `7e844e3` | done: 33 = fbfd6ad set, determinism identical |
 | 42859327767 | Tests | contract-funds `11fdaa9` | success |
 | 42856156793 | Tests (station_tap only) | meal-claims `d0ddf8f` | success |

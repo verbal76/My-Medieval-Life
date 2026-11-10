@@ -8144,11 +8144,21 @@
      "date": "2026-11-10",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25-nd12-recorder-detail; tests: None -> recorder_detail_test 11/0 (4 red before); recorder_test 214/0; b25_recorder_test 53/0; recorder_neutrality_test 5/0; sim_f2_test 33/0; python flight analysis tests OK; test_commit: None -> 12d7549; commits + 12d7549",
      "why": "fixed on its own branch: FlightRecorder.end kept only the end detail; now keeps both ('begun; ended'); failing-first test 11 checks 4 red -> 11/0; full Tests and gate dispatched"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "verification_status: TARGETED TESTS PASSED -> INTEGRATION VERIFIED; tests: recorder_detail_test 11/0 (4 red before); recorder_test 214/0; b25_recorder_test 53/0; recorder_neutrality_test 5/0; sim_f2_test 33/0; python flight analysis tests OK -> recorder_detail_test 11/0 (4 red before); recorder_test 214/0; b25_recorder_test 53/0; recorder_neutrality_test 5/0; sim_f2_test 33/0; python flight analysis tests OK; Tests 42867796686 pass; gate 42867803221 33 = fbfd6ad set",
+     "why": "full Tests 42867796686 pass; gate 42867803221 same 33 findings as fbfd6ad, determinism identical"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "verification_status: INTEGRATION VERIFIED -> TARGETED TESTS PASSED",
+     "why": "integration-level verification waits for the merge; CI on the task branch recorded in tests"
     }
    ],
    "lifecycle": "ACTIVE",
    "branch": "wip/b25-nd12-recorder-detail",
-   "tests": "recorder_detail_test 11/0 (4 red before); recorder_test 214/0; b25_recorder_test 53/0; recorder_neutrality_test 5/0; sim_f2_test 33/0; python flight analysis tests OK",
+   "tests": "recorder_detail_test 11/0 (4 red before); recorder_test 214/0; b25_recorder_test 53/0; recorder_neutrality_test 5/0; sim_f2_test 33/0; python flight analysis tests OK; Tests 42867796686 pass; gate 42867803221 33 = fbfd6ad set",
    "test_commit": "12d7549",
    "commits": [
     "12d7549"
