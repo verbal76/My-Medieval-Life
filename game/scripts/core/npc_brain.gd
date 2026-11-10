@@ -2180,6 +2180,10 @@ func _bandit_market(n: NPC) -> bool:
 ## stores the band goes hungry (WDR-022: a band may go hungry).
 func band_eat(n: NPC) -> bool:
 	var band: Array = [n] + w.npcs.filter(func(o: NPC) -> bool: return o != n and o.alive and o.role == "bandit")
+	# B25-INV-BANDIT-CHILD (campaign 42788018729 seed 1: four children of the clan starved on days 305-306 beside 10 wheat in
+	# their household's pantry): a clan child also eats from their household's pantry, the band's stores, by the rule any
+	# household's meal keeps (EDIBLE, one unit at a time); a bandit's own meal is unchanged (the packs only)
+	var pantry: Inventory = w.households[n.household].pantry if n.role != "bandit" and n.household >= 0 and not w.households[n.household].get("ended", false) else null
 	var ate := false
 	var roast: Dictionary = GameData.recipes["roast_meat"]
 	while n.hunger < 90.0:
@@ -2200,6 +2204,13 @@ func band_eat(n: NPC) -> bool:
 				o.inv.remove(got)
 			if got != "":
 				break
+		if got == "" and pantry != null:
+			for f in EDIBLE:
+				if pantry.has(f):
+					pantry.remove(f)
+					got = f
+					w.stat("clan_child_pantry_meals")
+					break
 		if got == "":
 			break
 		n.hunger = minf(100.0, n.hunger + float(GameData.item(got).food))
