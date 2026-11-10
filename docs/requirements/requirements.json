@@ -7455,7 +7455,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7464,9 +7464,19 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_seed2_findings_f015_p99.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; assigned_worker: None -> lead; branch: None -> wip/b25-f015-p99; commits + 3d515d6",
+     "why": "fix on task branch, failing-first test passes; CI Tests 42832327842, gate 42832333046, campaign 42832338970 dispatched on 3d515d6"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "lead",
+   "branch": "wip/b25-f015-p99",
+   "commits": [
+    "3d515d6"
+   ]
   },
   {
    "id": "B25-FINAL-REVIEW-01",
@@ -8246,7 +8256,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -8255,9 +8265,19 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_seed2_findings_f015_p99.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; assigned_worker: None -> lead; branch: None -> wip/b25-f015-p99; commits + 3570832",
+     "why": "fix on task branch, failing-first test passes; CI Tests 42832327842, gate 42832333046, campaign 42832338970 dispatched on 3d515d6"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "lead",
+   "branch": "wip/b25-f015-p99",
+   "commits": [
+    "3570832"
+   ]
   },
   {
    "id": "B25-SCOPE-AUDIT",
