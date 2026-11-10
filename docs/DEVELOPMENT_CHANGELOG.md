@@ -78,8 +78,8 @@ entries below, INTEGRATED means in that day's development line.
 **Seed 1 HIGH rise traced, 05:09 UTC.** Comparing campaign 42734194963 with the EMP-03 reference (42705042231): HIGH
 repeated_failed_purchase 3 -> 14 and repeated_failed_action 5 -> 24, with stuck_npc, impossible_task, decision_oscillation and
 starving_with_means HIGH gone. The new reason `invalid_trade` (6 findings, one villager) is World.trade refusing a trade with oneself:
-`_payer_for` could choose the food seller as the payer of their own household's meal, and the plan was remade every minute (pre-existing;
-the batch's changes put a seller's household in that position on day 243). Fixed on `wip/b25-audit-sim3` (`b57261f`, failing-first
+`_payer_for` could choose the food seller as the payer of their own household's meal, and the plan was remade every minute (the code path is
+pre-existing; that the batch's changes brought a seller's household to it on day 243 is inferred from the findings, not traced in the archive). Fixed on `wip/b25-audit-sim3` (`b57261f`, failing-first
 test); batch 3 dispatched: gate 42760288204, campaign 42760291468, Tests 42760294917.
 
 **Simulation batch MERGED at `72729e5`, 04:48 UTC (23:48 EST 2026-11-09).** Fast-forward from `e44d6b8`. Nine audit fixes that change
