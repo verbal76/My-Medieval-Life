@@ -6726,6 +6726,10 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 	for h in d.households:
 		var c: Dictionary = h.duplicate(true)
 		c.pantry = Inventory.from_dict(h.pantry)
+		# B25-INV-BANDIT-CHILD: member ids as whole numbers (JSON reads floats), as the couple's below and a homestead claim's
+		# are: Array.erase / has / find with a villager's int id never match a float, so every household change after a load
+		# left the person listed where they had been (a phantom member)
+		c.members = (c.get("members", []) as Array).map(func(x): return int(x))
 		households.append(c)
 	for l in d.loot:
 		loot.append({"pos": Vector2(l.pos[0], l.pos[1]), "inv": Inventory.from_dict(l.inv), "coins": int(l.coins), "from": l.from, "t": float(l.get("t", minutes))})
