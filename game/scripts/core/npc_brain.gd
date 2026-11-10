@@ -1728,16 +1728,23 @@ func _smith(n: NPC) -> bool:
 			if short <= 0:
 				continue
 			for v: NPC in w.npcs:
-				if v.alive and v != n and buy_role(v) == "merchant_raw" and v.inv.count(id) > 0 and not w.asleep(v):
+				if not v.alive or v == n or buy_role(v) != "merchant_raw" or v.inv.count(id) <= 0 or w.asleep(v):
+					continue
+				# B25-P99-PAYER-01 (campaign 42788018729 seed 2, F001/F002: p:99 refused 10269 times in a row, every minute):
+				# planned for what buy_from would sell by its own rule (buy_qty: the bargained price above the reserve, and
+				# not again unchanged after a refusal, buy_held), not on `coins >= 10`
+				var q := buy_qty(n, v, id, short)
+				if q > 0:
 					n.doing = "buying %s for the forge" % GameData.item_name(id).to_lower()
-					n.plan = [go(_workplace_cell(v)), doit("buy_from", {"vendor": v.id, "item": id, "qty": short})]
+					n.plan = [go(_workplace_cell(v)), doit("buy_from", {"vendor": v.id, "item": id, "qty": q})]
 					w.stat("forge_bought_" + id)
 					return true
 	if inv.count("plank") < 2 and inv.count("iron_bar") >= 2 and n.coins >= 6:
 		var c := _first_with_job("carpenter")
-		if c and c.inv.has("plank"):
+		var pq := buy_qty(n, c, "plank", 3) if c != null else 0     # B25-P99-PAYER-01: buy_from's own rule
+		if pq > 0:
 			n.doing = "fetching planks"
-			n.plan = [go(_workplace_cell(c)), doit("buy_from", {"vendor": c.id, "item": "plank", "qty": 3})]
+			n.plan = [go(_workplace_cell(c)), doit("buy_from", {"vendor": c.id, "item": "plank", "qty": pq})]
 			return true
 	for id in ["pickaxe", "axe", "iron_sword", "copper_sword"]:
 		if inv.count(id) > 3:
@@ -1797,7 +1804,9 @@ func _fetch_for_order(n: NPC, need: Dictionary) -> bool:
 	var inv := n.inv
 	if inv.count("plank") < int(need.get("plank", 0)):
 		var c := _first_with_job("carpenter")
-		if c != null and c.inv.has("plank") and n.coins >= w.sell_price(c, "plank") and not w.asleep(c):
+		# B25-P99-PAYER-01: planned by buy_from's own rule (buy_qty: the bargained price, the whole purse for an order, and not
+		# again unchanged after a refusal), not on the list price
+		if c != null and not w.asleep(c) and buy_qty(n, c, "plank", 1, true) > 0:
 			n.doing = "fetching a plank for the manor's order"
 			n.plan = [go(_workplace_cell(c)), doit("buy_from", {"vendor": c.id, "item": "plank", "qty": 1, "order": true})]
 			return true
@@ -1808,9 +1817,12 @@ func _fetch_for_order(n: NPC, need: Dictionary) -> bool:
 			if short <= 0:
 				continue
 			for v: NPC in w.npcs:
-				if v.alive and v != n and buy_role(v) == "merchant_raw" and v.inv.count(id) > 0 and not w.asleep(v) and n.coins >= w.sell_price(v, id):
+				if not v.alive or v == n or buy_role(v) != "merchant_raw" or v.inv.count(id) <= 0 or w.asleep(v):
+					continue
+				var q := buy_qty(n, v, id, short, true)     # B25-P99-PAYER-01: what buy_from would sell (an order: the whole purse)
+				if q > 0:
 					n.doing = "buying %s for the manor's order" % GameData.item_name(id).to_lower()
-					n.plan = [go(_workplace_cell(v)), doit("buy_from", {"vendor": v.id, "item": id, "qty": short, "order": true})]
+					n.plan = [go(_workplace_cell(v)), doit("buy_from", {"vendor": v.id, "item": id, "qty": q, "order": true})]
 					return true
 	return false
 
