@@ -7631,7 +7631,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7645,11 +7645,19 @@
      "date": "2026-11-10",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker agent (PAR-AGENTS-01); branch: None -> wip/b25-mp03-public-tables",
      "why": "worker e3be9ef: Chests.info as the guest for crates; 66/0 (6 failures before); findings recorded in the state file; tier-limit check requested"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; commits + 1fe781d",
+     "why": "1fe781d: shared crate given only when the sharing tier covers all its goods (World.asset_item_allowed); 75/0 (5 failures before); awaiting merge after 93bb304"
     }
    ],
    "lifecycle": "ACTIVE",
    "assigned_worker": "worker agent (PAR-AGENTS-01)",
-   "branch": "wip/b25-mp03-public-tables"
+   "branch": "wip/b25-mp03-public-tables",
+   "commits": [
+    "1fe781d"
+   ]
   },
   {
    "id": "B25-MP03-TABLES-D1",
