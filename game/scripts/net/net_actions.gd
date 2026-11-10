@@ -285,6 +285,9 @@ static func _enc_inv(w: World, inv: Inventory) -> Dictionary:
 			return {"$inv": "npc", "id": n.id}
 	if inv == w.granary:
 		return {"$inv": "granary"}
+	for id in (w.chests.stash if w.chests != null else {}):     # B25-MP03-OWNERSHIP-D1: a player's goods in a crate or barrel, by the container
+		if w.chests.stash[id] == inv and not w.container(str(id)).is_empty():
+			return {"$inv": "container", "id": str(id)}
 	return {"$none": "store"}
 
 
@@ -400,16 +403,27 @@ static func dec(w: World, p: PlayerState, v, bad: Dictionary) -> Variant:
 ##
 ## B25-MP03-TABLES-D1 (owner, 2026-11-10): a guest may also name a genuinely public table (public_table) within VERB_REACH. A tavern
 ## table is not one: what is on it is its keeper's stock (World.container_owner), reached through player_take like the host.
+## B25-MP03-OWNERSHIP-D1 (owner, 2026-11-10): a crate or barrel is decided by the property rule the host's own paths use
+## (Chests.info, read as the guest): its own ("own") or one a player shares with it ("shared", MP-INTERACT-01 asset sharing, as
+## chests.take allows) within VERB_REACH gives that store (a player's stash); a household's, the tavern's, a stall's or nobody's
+## stays refused. The guest's position is the host's record of it, never one the request carries.
 static func _dec_inv(w: World, p: PlayerState, d: Dictionary, bad: Dictionary) -> Inventory:
 	if not w.is_host(p) and str(d["$inv"]) == "container":
 		var tc: Dictionary = w.container(str(d.get("id", "")))
-		if not public_table(w, tc):
+		var store: Inventory = null
+		if public_table(w, tc):
+			store = tc.inv
+		elif not tc.is_empty() and str(tc.get("kind", "")) != "table":
+			var info: Dictionary = w.as_actor(p, func(): return w.chests.info(w.chests.unit_of_container(tc)))
+			if str(info.access) in ["own", "shared"] and info.store is Inventory:
+				store = info.store
+		if store == null:
 			bad.why = "That is not yours."
 			return null
 		if Vector2(int(tc.x) + 0.5, int(tc.y) + 0.5).distance_to(p.pos) > VERB_REACH:
 			bad.why = "That is too far away."
 			return null
-		return tc.inv
+		return store
 	if not w.is_host(p) and not (str(d["$inv"]) in ["pack", "chest", "cart"]):
 		bad.why = "That is not yours."
 		return null
