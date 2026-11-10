@@ -7085,6 +7085,37 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25-CONTRACT-FUNDS-D1",
+   "kind": "approved",
+   "title": "Contract acceptance accounts for committed coins (bids, contracts, obligations)",
+   "description": "Contract acceptance accounts for committed coins (bids, contracts, obligations)",
+   "source": "docs/directives/2026-11-10_contract_commitments_legacy_save_repair.md",
+   "owner_wording": "Correct contract acceptance so merchants account for coins already committed to market bids, existing contracts, and other enforceable obligations. Use the economy's established available-funds and claims rules. Preserve legitimate credit and financing where supported.",
+   "approval": "owner, 2026-11-10",
+   "acceptance": [
+    "acceptance uses claim-free funds; no double-counting of commitments",
+    "deposits, staged payments and credit investigated and handled",
+    "tests: competing bids, insufficient funds, legitimate credit, acceptance, conservation"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_contract_commitments_legacy_save_repair.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-DISK-CLEAN-D1",
    "kind": "approved",
    "title": "Verified safe disk cleanup of the lead machine",
@@ -8424,6 +8455,37 @@
    "commits": [
     "3570832"
    ]
+  },
+  {
+   "id": "B25-SAVE-PHANTOM-D2",
+   "kind": "approved",
+   "title": "Deterministic reconciliation of phantom household memberships in existing saves",
+   "description": "Deterministic reconciliation of phantom household memberships in existing saves",
+   "source": "docs/directives/2026-11-10_contract_commitments_legacy_save_repair.md",
+   "owner_wording": "Develop a deterministic migration or reconciliation procedure for phantom household memberships in existing saves. Do not indiscriminately delete household entries. ... Where ownership or membership cannot be determined safely, preserve the data and flag the ambiguity rather than guessing.",
+   "approval": "owner, 2026-11-10 (approved with safeguards)",
+   "acceptance": [
+    "authoritative membership from household, residence, family and migration records; ambiguity preserved and flagged",
+    "validated on copies of representative older saves incl. bandit households and orphan reassignment",
+    "idempotent, deterministic, consistent save/load; isolated from fbfd6ad"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-10",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-10_contract_commitments_legacy_save_repair.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
   },
   {
    "id": "B25-SCOPE-AUDIT",
