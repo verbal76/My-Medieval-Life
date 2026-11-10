@@ -7551,7 +7551,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7560,9 +7560,19 @@
      "date": "2026-11-10",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-10_owner_decisions_audit_continuation.md"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; assigned_worker: None -> worker agent (PAR-AGENTS-01); branch: None -> wip/b25-inv02-proposal; commits + 906f1a8",
+     "why": "worker proposal 906f1a8 on wip/b25-inv02-proposal (docs/design/INV02_SPOILAGE_PROPOSAL.md + off-by-default prototype, --spoil-storage; flag off byte-identical on seed 1 60 days, fingerprint a10438013b1f20a1b53f99223fa1eacc). Missed holders by volume: pen troughs (~150-200 wheat) and the off-map settlements (~6800 food units by day 60, none spoils); player chests/crates/barrels and homestead chests empty in a normal year but an unspoiled loophole for players. Seven owner decisions listed (storage classes, settlements, couriers, base rates, offline guest, eat-perishable-first, preserving). Not enabled; needs owner choices then BASELINE-AUTH-01 and a recorded campaign"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "assigned_worker": "worker agent (PAR-AGENTS-01)",
+   "branch": "wip/b25-inv02-proposal",
+   "commits": [
+    "906f1a8"
+   ]
   },
   {
    "id": "B25-LE-ACTIVATE-D1",
