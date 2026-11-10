@@ -1148,7 +1148,7 @@ func _plan_eat(n: NPC) -> bool:
 		v = null
 	if v:
 		priced = true
-		payer = _payer_for(n, _cheapest_meal(v))      # the family's tab at the tavern, for anyone without the coin
+		payer = _payer_for(n, _cheapest_meal(v), v)      # the family's tab at the tavern, for anyone without the coin
 		if payer != null:
 			n.doing = "buying a meal" if payer == n else "eating on the family's tab"
 			n.plan = [go(_workplace_cell(v)), doit("buy_food", {"vendor": v.id, "pantry": false, "payer": payer.id}), work(10, "eat", {}, "idle")]
@@ -1158,7 +1158,7 @@ func _plan_eat(n: NPC) -> bool:
 			break
 		if o.alive and o != n and not w.asleep(o) and (o.job == "farmer" or buy_role(o) == "merchant_food") and o.inv.count("wheat") - reserve(o, "wheat") >= 2:
 			priced = true
-			payer = _payer_for(n, w.sell_price(o, "wheat") * 2)
+			payer = _payer_for(n, w.sell_price(o, "wheat") * 2, o)
 			if payer != null:
 				n.doing = "buying grain for porridge"
 				n.plan = [go(_workplace_cell(o) if o.job != "farmer" else o.cell()), doit("buy_from", {"vendor": o.id, "item": "wheat", "qty": 2, "payer": payer.id}),
@@ -1334,16 +1334,19 @@ func rest_cell(n: NPC) -> Vector2i:
 ## adult (a household's cash feeds all of it, as the manor's relief assumes).
 ## Who pays `price` for `n`'s food: `n` when they have it, else the household member with the most coins when they have
 ## it (the family's tab), else nobody.
-func _payer_for(n: NPC, price: int) -> NPC:
+## Who pays `price` for `n`: the responsible parent (FAMILY-01), `n`, or the household's richest member. Never `seller`: a
+## villager does not buy their own goods (World.trade refuses it, and the refused plan was made again every minute: campaign
+## 42734194963 seed 1, a tavernkeeper's household sent 1262 times in one day to buy from the tavernkeeper with the tavernkeeper's purse).
+func _payer_for(n: NPC, price: int, seller: NPC = null) -> NPC:
 	if JudgmentLive.on(w, JudgmentFamily.FLAG):
 		var parent := JudgmentFamily.payer(w, n, price)      # FAMILY-01: the responsible parent's purse first, for those in their care
-		if parent != null:
+		if parent != null and parent != seller:
 			return parent
-	if n.coins >= price:
+	if n.coins >= price and n != seller:
 		return n
 	if n.household < 0:
 		return null
-	var best := _richest_in_household(n)
+	var best := _richest_in_household(n, seller)
 	return best if best != null and best.coins >= price else null
 
 
@@ -1356,11 +1359,11 @@ func _cheapest_meal(v: NPC) -> int:
 	return low
 
 
-func _richest_in_household(n: NPC) -> NPC:
+func _richest_in_household(n: NPC, but: NPC = null) -> NPC:
 	var best: NPC = null
 	for m in w.households[n.household].members:
 		var o := w.npc(m)
-		if o and o.alive and o.role in ["adult", "elder"] and (best == null or o.coins > best.coins):
+		if o and o != but and o.alive and o.role in ["adult", "elder"] and (best == null or o.coins > best.coins):
 			best = o
 	return best
 
