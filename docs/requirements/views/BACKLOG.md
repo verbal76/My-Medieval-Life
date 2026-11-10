@@ -103,7 +103,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-MP03-OWNERSHIP-D1 | MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity | approved | OWNER APPROVED | INTEGRATED |
 | B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | approved | OWNER APPROVED | INTEGRATED |
 | B25-P99-PAYER-01 | p:99: planner reserve check vs payer funds mismatch causes repeated refused buy_from | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
-| B25-SAVE-PHANTOM-D2 | Deterministic reconciliation of phantom household memberships in existing saves | approved | OWNER APPROVED | IN DEVELOPMENT |
+| B25-SAVE-PHANTOM-D2 | Deterministic reconciliation of phantom household memberships in existing saves | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-SELFTRADE-VAL-01 | Self-trade payer defect: complete the investigation beyond preventing the self-trade | approved | OWNER APPROVED | IN DEVELOPMENT |
 | B25R1-025 | Aerial region and village maps of the generated world | approved | OWNER APPROVED | INTEGRATED |
 | B25R1-026 | Settlements never hidden by map discovery | approved | OWNER APPROVED | INTEGRATED |

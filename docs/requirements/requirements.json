@@ -8520,7 +8520,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IN DEVELOPMENT",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -8534,11 +8534,19 @@
      "date": "2026-11-10",
      "change": "implementation_status: NOT STARTED -> IN DEVELOPMENT; assigned_worker: None -> worker (lead's agent); branch: None -> wip/b25-hh-phantom-repair",
      "why": "worker started 16:20 UTC on wip/b25-hh-phantom-repair (from wip/b25-hh-member-ids cdfa395), worktree b25-fix2"
+    },
+    {
+     "date": "2026-11-10",
+     "change": "implementation_status: IN DEVELOPMENT -> IMPLEMENTED ON TASK BRANCH; assigned_worker: worker (lead's agent) -> lead; commits + 7e844e3",
+     "why": "7e844e3 on wip/b25-hh-phantom-repair (from cdfa395): World.repair_household_members on load; NPC.household + register 'where' authoritative; phantom/duplicate/missing repaired, unknown/dead_elsewhere/no_household/conflict/ended/unlisted kept and flagged in saved membership_report; no save_version bump. hh_phantom_repair_test 30 checks (15 failures before, 0 after); 16 save/household suites 0 failures. Lead check on the real campaign save 42788018729 seed 1 day 300: 13 living villagers listed in a second household (incl. p:142 in household 25) repaired, 4 dead flagged, second load identical, coins 7543 unchanged. Tests + gate dispatched"
     }
    ],
    "lifecycle": "ACTIVE",
-   "assigned_worker": "worker (lead's agent)",
-   "branch": "wip/b25-hh-phantom-repair"
+   "assigned_worker": "lead",
+   "branch": "wip/b25-hh-phantom-repair",
+   "commits": [
+    "7e844e3"
+   ]
   },
   {
    "id": "B25-SCOPE-AUDIT",

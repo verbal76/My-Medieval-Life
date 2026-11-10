@@ -18,7 +18,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-INV-P52-BLOCKS | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-meal-claims |
 | B25-INV02-SPOIL-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | worker agent (PAR-AGENTS-01) | wip/b25-inv02-proposal |
 | B25-P99-PAYER-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-f015-p99 |
-| B25-SAVE-PHANTOM-D2 | unassigned | IN DEVELOPMENT | worker (lead's agent) | wip/b25-hh-phantom-repair |
+| B25-SAVE-PHANTOM-D2 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-hh-phantom-repair |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH | none |  |
 | B25-SELFTRADE-VAL-01 | unassigned | IN DEVELOPMENT | lead | wip/b25-audit-sim3 |
 | B25R1-023 | 20 | IN DEVELOPMENT | b25r1-grassmap worker | wip/b25r1-grassmap |
@@ -36,7 +36,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (94)
+## Implemented but not tested (95)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -69,6 +69,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-MP03-TABLES-D1 | unassigned | INTEGRATED |  |
 | B25-OVN-0211 | 20 | INTEGRATED |  |
 | B25-P99-PAYER-01 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
+| B25-SAVE-PHANTOM-D2 | unassigned | IMPLEMENTED ON TASK BRANCH |  |
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |
 | B25R1-001 | 20 | PARTIALLY IMPLEMENTED |  |
 | B25R1-016 | 20 | PARTIALLY IMPLEMENTED |  |
