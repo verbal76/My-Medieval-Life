@@ -150,6 +150,8 @@
  "sav03_counter_reload_test": 6,
  "mp05_forged_client_test": 53,
  "mp03_forged_store_test": 35,
+ "mp03_public_tables_test": 67,
+ "mp03_household_tables_test": 75,
  "emp03_seeker_count_test": 4,
  "reg02_journey_migration_test": 5,
  "npc02_gift_claims_test": 8,
