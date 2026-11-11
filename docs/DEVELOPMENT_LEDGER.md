@@ -130,7 +130,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-INV02-SPOIL-D1 | INV-02 food spoilage in every store, with storage conditions: investigate and propose before implementation | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | B25-MP03-OWNERSHIP-D1 | MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity | unassigned | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | unassigned | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
-| B25-ND12-01 | ND-12: recorder diagnostic line overwritten (refused-trade detail) | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
+| B25-ND12-01 | ND-12: recorder diagnostic line overwritten (refused-trade detail) | unassigned | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-ND15-TOL-01 | ND-15: documented numerical tolerances for save/load float differences, proven harmless | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25-ND16-PREC-01 | ND-16: campaigns save at gameplay precision; regime labelled; history preserved | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | 20 | OWNER APPROVED | INTEGRATED | TARGETED TESTS PASSED | NOT READY | OPEN |

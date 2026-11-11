@@ -224,7 +224,7 @@ None.
 | B25-LE-ACTIVATE-D1 | Living Economy activation policy for Build 25 | decision | APPROVED | owner decision |
 | B25-MP03-OWNERSHIP-D1 | MP-03 property rules: public tables, tavern tables private, owners' household tables, keeper death; host-authoritative parity | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
 | B25-MP03-TABLES-D1 | MP-03: guests may use genuinely public tables within reach, implemented separately from the MP-03 correction | approved | INTEGRATED / NOT TESTED / OPEN | unassigned |
-| B25-ND12-01 | ND-12: recorder diagnostic line overwritten (refused-trade detail) | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
+| B25-ND12-01 | ND-12: recorder diagnostic line overwritten (refused-trade detail) | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | unassigned |
 | B25-ND15-TOL-01 | ND-15: documented numerical tolerances for save/load float differences, proven harmless | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
 | B25-ND16-PREC-01 | ND-16: campaigns save at gameplay precision; regime labelled; history preserved | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | unassigned |
 | B25-NINE | Build 25: implement the nine consolidated owner decisions of 2026-11-01 | approved | INTEGRATED / TARGETED TESTS PASSED / OPEN | 20 |
