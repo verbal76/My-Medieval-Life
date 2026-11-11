@@ -18,7 +18,7 @@ It points to the records; it does not repeat them. Times are EST.
 
 ## 2. Development line
 
-- Development branch: `wip/b25r2-rev2` @ `98bda59` (2026-11-11 00:15 UTC: fast-forward from `9fd18a5` with the CI-only change `wip/b25-ci-groups`, owner-authorized by the GitHub Actions testing directive; full Tests 42921579595 and targeted 42913303043 passed). No gameplay change merged. `main` and staging untouched.
+- Development branch: `wip/b25r2-rev2` @ `7d99550` (then also the CI report fix for re-run attempts, verified by 42929466693); earlier @ `98bda59` (2026-11-11 00:15 UTC: fast-forward from `9fd18a5` with the CI-only change `wip/b25-ci-groups`, owner-authorized by the GitHub Actions testing directive; full Tests 42921579595 and targeted 42913303043 passed). No gameplay change merged. `main` and staging untouched.
 - Batch 3+4 merge candidate: `wip/b25-sim34-on-dev` @ `fbfd6ad` (NOT merged; awaits the owner, section 7).
 - Records branch: `wip/requirements-control` (this file's commit is the head).
 

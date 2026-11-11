@@ -7743,6 +7743,11 @@
      "date": "2026-11-10",
      "change": "implementation_status: IN DEVELOPMENT -> PARTIALLY IMPLEMENTED; assigned_worker: F015 population worker -> ",
      "why": "worker report: seed 2 gap is hunger arrivals from collapsing outside settlements (Bourton Abbas, Wulstead) in the baseline, births follow arrivals; F015/P99 code paths do not feed migration or births; seed 2 swings 189-322 across unrelated commits; one run per commit, a controlled perturbation run not yet done"
+    },
+    {
+     "date": "2026-11-11",
+     "change": "note",
+     "why": "controlled seed 2 run (fbfd6ad + one extra random draw, run 42913063605): 253 alive vs 316 without it; a neutral change alone swings seed 2 by 63; seeds 3-4 pending"
     }
    ],
    "lifecycle": "ACTIVE",
