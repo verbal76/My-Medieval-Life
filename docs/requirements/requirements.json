@@ -11020,6 +11020,35 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25R2-CONT-01",
+   "kind": "approved",
+   "title": "Build 25 R2 continuation: conditional sequential merges, baseline questions, births investigation, WP-1",
+   "description": "Build 25 R2 continuation: conditional sequential merges, baseline questions, births investigation, WP-1",
+   "source": "docs/directives/2026-11-11_b25r2_authorization_continuation.md",
+   "owner_wording": "You have my conditional authorization to integrate the following fixes sequentially ... Merge automatically only when verification establishes no unexplained regressions.",
+   "approval": "owner, 2026-11-11",
+   "acceptance": [
+    "each of the 7 fixes merged in order only after Tests and gate on the cumulative line with findings compared by identity, severity, actual values and determinism; baseline questions answered with evidence; births cause established; WP-1 items on own branches failing-first"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-11",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-11_b25r2_authorization_continuation.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25R2-DRAFT-01",
    "kind": "decision",
    "title": "May Play Test Build One be published, and how?",

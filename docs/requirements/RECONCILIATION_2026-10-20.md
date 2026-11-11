@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 889 (493 of them still open) |
-| **Open entries now** (rules excluded) | | **651** |
+| Entries added since | | 890 (494 of them still open) |
+| **Open entries now** (rules excluded) | | **652** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (889)
+## Added since the baseline (890)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -287,6 +287,7 @@ None.
 | B25R1-REL-PUBLIC | B25R1 release published as a PUBLIC GitHub Release (build-34), not a private draft | approved | NOT STARTED / NOT TESTED / OPEN | 25 |
 | B25R2-BRUSHOFF | Dialogue.brush_off reads n.plan[0] without checking the plan is empty (dialogue.gd:526): a SCRIPT ERROR when a villager between plans brushes the player off. Found by start_test on fe7d8f8 (523/0, 1 script error; the file is untouched by the playtest fixes, a latent defect). Fix in the next cycle? | decision | APPROVED | 20+ |
 | B25R2-CAVE | A guest who followed the host into a cave was left in the black outside it, unable to move (the guest's copy on the cave's level at a place outside it). Fix now or later? | decision | APPROVED | 25 |
+| B25R2-CONT-01 | Build 25 R2 continuation: conditional sequential merges, baseline questions, births investigation, WP-1 | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25R2-DRAFT-01 | May Play Test Build One be published, and how? | decision | PROVISIONAL | 25 |
 | B25R2-HOST4 | Open to friends admits only one guest (the window asks for no player limit, so hosting defaults to 2): how many players should the host window allow? | decision | APPROVED | 25 |
 | B25R2-HOSTMENU | Host a game on the title screen | approved | IMPLEMENTED ON TASK BRANCH / TARGETED TESTS PASSED / OPEN | 20+ |
