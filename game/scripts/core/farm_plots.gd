@@ -30,7 +30,7 @@ const BATCH_MINUTES := 60.0                          # a work step covers at mos
 
 var w
 var cells := {}        # Vector2i -> {crop, state: tilled | growing | ripe, progress, plot}: villager households' field cells
-var busy := {}         # Vector2i -> game minute until which a member is on the way to work it (not saved)
+var busy := {}         # Vector2i -> game minute until which a member is on the way to work it (not saved; rebuilt from plans on load)
 var tried := {}        # "npc id:item" -> the day a member last went to buy it for the plot (once a day; not saved)
 var why := ""          # why the last claim() failed
 

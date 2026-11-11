@@ -536,6 +536,7 @@ func _after_loss(h: Dictionary) -> void:
 	_recount(h)
 	if int(h.adults) > 0:
 		return
+	_fold_live(h.mem)                                    # B25-AUD-REG-06: a live child is folded into this household before it passes on
 	_ttrace("no_adult_left", int(h.id))
 	_wind_up_own(h)
 	var heir := _heir(h)
@@ -645,6 +646,11 @@ func _related(a: Dictionary, b: Dictionary) -> bool:
 func _marry(wh: Dictionary, wj: int, mh: Dictionary, mj: int) -> void:
 	var wm: Array = wh.mem[wj]
 	var mm: Array = mh.mem[mj]
+	_fold_live([wm, mm])                                 # B25-AUD-REG-06: folded into their own households before they leave them
+	wj = wh.mem.find(wm)
+	mj = mh.mem.find(mm)
+	if wj < 0 or mj < 0:
+		return
 	var trade := str(mh.trade)
 	var bt := ""
 	if trade != "official" and TRADE_BIZ.has(trade) and biz.has(TRADE_BIZ[trade]):
@@ -2608,6 +2614,10 @@ func receive_person(p: Dictionary, coins: int, goods: Dictionary, bt: String) ->
 func wed_in(gi: int, gj: int, p: Dictionary, coins: int, goods: Dictionary) -> int:
 	var gh: Dictionary = hh[gi]
 	var gm: Array = gh.mem[gj]
+	_fold_live([gm])                                     # B25-AUD-REG-06: folded into his own household before he leaves it
+	gj = gh.mem.find(gm)
+	if gj < 0:                                           # (no longer a member: the bride joins the trade's household on her own)
+		return receive_person(p, coins, goods, str(TRADE_BIZ.get(str(gh.trade), "farm")))
 	var trade := str(gh.trade)
 	var bt := ""
 	if trade != "official" and TRADE_BIZ.has(trade) and biz.has(TRADE_BIZ[trade]):
