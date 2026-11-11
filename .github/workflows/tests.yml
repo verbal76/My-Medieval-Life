@@ -523,8 +523,25 @@ jobs:
       - name: Fetch every shard's report
         uses: actions/download-artifact@v4
         with:
-          pattern: ci-report-${{ github.run_id }}-${{ github.run_attempt }}-shard*
-          path: shards
+          pattern: ci-report-${{ github.run_id }}-*-shard*
+          path: shards-all
+      # Owner 2026-11-10 (Actions testing directive: a failed job must not force re-running successful ones): after "re-run
+      # failed jobs" only the re-run shards upload new reports, so each shard's LATEST attempt is kept (a shard that passed in
+      # attempt 1 counts with its attempt-1 report). Every shard still has to be present.
+      - name: Keep each shard's latest attempt
+        run: |
+          mkdir -p shards
+          python3 - <<'PY'
+          import glob, os, re, shutil
+          best = {}
+          for d in glob.glob("shards-all/ci-report-*-*-shard*"):
+              m = re.search(r"ci-report-\d+-(\d+)-shard(\d+)$", d)
+              if m and int(m.group(1)) >= best.get(int(m.group(2)), (0, ""))[0]:
+                  best[int(m.group(2))] = (int(m.group(1)), d)
+          for k, (att, d) in sorted(best.items()):
+              print("shard %d: attempt %d" % (k, att))
+              shutil.copytree(d, os.path.join("shards", os.path.basename(d)))
+          PY
       - name: Consolidated report
         env:
           GH_TOKEN: ${{ github.token }}
