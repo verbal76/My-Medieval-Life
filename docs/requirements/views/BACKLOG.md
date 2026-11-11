@@ -89,7 +89,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-AUDIT-CONT-01 | Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions | approved | OWNER APPROVED | NOT STARTED |
 | B25-B17FJOBS-D1 | REQ-B17F-JOBS: measure adult unemployment and causes after Batch 3+4 (measurement only) | approved | OWNER APPROVED | NOT STARTED |
 | B25-BASELINE-REVIEW-01 | No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge | approved | OWNER APPROVED | NOT STARTED |
-| B25-BATCH34-MERGE-D1 | Batch 3+4 merge approved after the comparison shows no unexplained regressions; old baseline preserved | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
+| B25-BATCH34-MERGE-D1 | Batch 3+4 merge approved after the comparison shows no unexplained regressions; old baseline preserved | approved | OWNER APPROVED | INTEGRATED |
 | B25-CI-ACTIONS-01 | GitHub Actions is the default test environment; targeted, split, evidenced runs | approved | OWNER APPROVED | INTEGRATED |
 | B25-CONT-INV-01 | Continued investigation, validation and merge preparation (Build 25) | approved | OWNER APPROVED | NOT STARTED |
 | B25-CONTRACT-FUNDS-D1 | Contract acceptance accounts for committed coins (bids, contracts, obligations) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |

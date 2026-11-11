@@ -22,10 +22,23 @@ arrivals; earlier commits gave 189 to 322). The F015/P99 run's 203 lies below th
 
 ## 2. Seeds 3 and 4 on both commits
 
-Runs 42912791595 (fbfd6ad) and 42912797405 (3d515d6): pending at the time of writing; added below when they finish.
+Runs 42912791595 (fbfd6ad) and 42912797405 (3d515d6); every run reached day 365 with 0 confirmed defects.
 
-## Status
+| Seed | Alive fbfd6ad -> 3d515d6 | Births | Arrivals | Starvation deaths | Starved with means |
+|---|---|---|---|---|---|
+| 1 (42788018729 / 42832338970) | 339 -> 318 | 212 -> 222 | 201 -> 183 | 7 -> 3 | 5 -> 0 |
+| 2 (same) | 316 -> 203 (perturbed fbfd6ad: 253) | 206 -> 137 (perturbed: 191) | 173 -> 93 (129) | 28 -> 14 (9) | 18 -> 10 (7) |
+| 3 | 297 -> 314 | 227 -> 205 | 112 -> 140 | 6 -> 4 | 3 -> 4 |
+| 4 | 304 -> 276 | 211 -> 154 | 145 -> 170 | 5 -> 11 | 1 -> 4 |
+| Total | 1256 -> 1111 | 856 -> 718 | 631 -> 586 | 46 -> 32 | 27 -> 18 |
 
-The controlled experiment supports the investigation's conclusion (`docs/audits/2026-11-10_F015_SEED2_POPULATION.md`): the seed 2
-gap is consistent with chaotic divergence, not a systematic effect of F015/P99. The verdict waits for seeds 3 and 4; F015/P99 is
-not merged until then.
+## Verdict (2026-11-11)
+
+- Population: no consistent direction (seed 3 higher, seeds 1, 2, 4 lower); seed 2's gap is within the swing a neutral change
+  produces (316 vs 253 on the same commit). Not established as a regression.
+- Starvation: lower overall (46 -> 32), but seed 4 is higher (5 -> 11). Mixed.
+- Births: lower in three of four seeds (856 -> 718, -16%); seed 4's drop (-57) exceeds the neutral-change swing seen on seed 2
+  (-15). This is an unexplained difference: F015/P99 is NOT cleared for merge. Next: a targeted investigation of the birth rule's
+  inputs on seeds 2 and 4 (which couples are held back and why, by day), on both commits, before any merge decision.
+- P99's smith refusal streaks are reduced on seed 2 (no p:99 streak) but long refusal streaks of other villagers remain on all
+  four seeds in both commits (for example seed 3 p:88, 2169 in a row on 3d515d6); these are separate findings for the register.

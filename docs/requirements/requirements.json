@@ -6489,8 +6489,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "INTEGRATED",
+   "verification_status": "INTEGRATION VERIFIED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -6508,12 +6508,22 @@
      "date": "2026-11-11",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; branch: None -> wip/b25-batch34-merge; commits + b2cd024",
      "why": "attribution 60324ba: all 33 findings tied to 21 change points (10 owner-approved, 10 defect fixes, 1 concerning record b4a302b), none unexplained; fbfd6ad changes no measured value. Merge prepared on wip/b25-batch34-merge b2cd024 (dev line 7d99550 + fbfd6ad); Tests and gate dispatched; baseline df67e8e not replaced"
+    },
+    {
+     "date": "2026-11-11",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; verification_status: NOT TESTED -> INTEGRATION VERIFIED; tests: None -> Tests 42940243926 pass; gate 42940247768 33 = fbfd6ad set; test_commit: None -> b2cd024; integrated_in + wip/b25r2-rev2 b2cd024",
+     "why": "merge b2cd024: Tests 42940243926 pass, gate 42940247768 same 33 as fbfd6ad, determinism identical; wip/b25r2-rev2 fast-forwarded to b2cd024; baseline df67e8e not replaced"
     }
    ],
    "lifecycle": "ACTIVE",
    "branch": "wip/b25-batch34-merge",
    "commits": [
     "b2cd024"
+   ],
+   "tests": "Tests 42940243926 pass; gate 42940247768 33 = fbfd6ad set",
+   "test_commit": "b2cd024",
+   "integrated_in": [
+    "wip/b25r2-rev2 b2cd024"
    ]
   },
   {
@@ -7757,6 +7767,11 @@
      "date": "2026-11-11",
      "change": "note",
      "why": "controlled seed 2 run (fbfd6ad + one extra random draw, run 42913063605): 253 alive vs 316 without it; a neutral change alone swings seed 2 by 63; seeds 3-4 pending"
+    },
+    {
+     "date": "2026-11-11",
+     "change": "note",
+     "why": "seeds 3-4 on both commits done: population mixed (not a consistent regression), starvation 46 -> 32 overall, births lower in 3 of 4 seeds (856 -> 718); births unexplained: F015/P99 not cleared; targeted birth investigation next"
     }
    ],
    "lifecycle": "ACTIVE",
