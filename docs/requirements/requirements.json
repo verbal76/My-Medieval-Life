@@ -7054,7 +7054,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "implementation_status": "INTEGRATED",
    "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -7073,6 +7073,11 @@
      "date": "2026-11-10",
      "change": "verification_status: NOT TESTED -> TARGETED TESTS PASSED; tests: None -> targeted Tests 42913303043 pass (1 runner); test_commit: None -> 96090ae",
      "why": "targeted run 42913303043 (group save recorder) passed on one runner with the Python checks and economy run skipped; full-mode run dispatched"
+    },
+    {
+     "date": "2026-11-11",
+     "change": "implementation_status: IMPLEMENTED ON TASK BRANCH -> INTEGRATED; tests: targeted Tests 42913303043 pass (1 runner) -> targeted Tests 42913303043 pass (1 runner); targeted 42913303043 pass (1 runner); full 42921579595 pass; integrated_in + wip/b25r2-rev2 98bda59",
+     "why": "full-mode run 42921579595 passed; fast-forwarded onto wip/b25r2-rev2 at 98bda59 (CI-only); report fix for re-run attempts 7d99550 under verification"
     }
    ],
    "lifecycle": "ACTIVE",
@@ -7080,8 +7085,11 @@
    "commits": [
     "98bda59"
    ],
-   "tests": "targeted Tests 42913303043 pass (1 runner)",
-   "test_commit": "96090ae"
+   "tests": "targeted Tests 42913303043 pass (1 runner); targeted 42913303043 pass (1 runner); full 42921579595 pass",
+   "test_commit": "96090ae",
+   "integrated_in": [
+    "wip/b25r2-rev2 98bda59"
+   ]
   },
   {
    "id": "B25-CLOSE-01",
@@ -8380,11 +8388,16 @@
      "date": "2026-11-10",
      "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25-nd16-precision; tests: None -> local seed 1 save at day 2 and resume: round trip exact, status full; old-format resume labelled mixed; flight python tests OK; test_commit: None -> df48840; commits + df48840",
      "why": "harness saves at full precision, regime labelled; local 4-day save/resume exact; Tests dispatched"
+    },
+    {
+     "date": "2026-11-11",
+     "change": "tests: local seed 1 save at day 2 and resume: round trip exact, status full; old-format resume labelled mixed; flight python tests OK -> local seed 1 save at day 2 and resume: round trip exact, status full; old-format resume labelled mixed; flight python tests OK; local save/resume exact; Tests 42900237116 all 278 suites pass across attempts 1 and 2",
+     "why": "full Tests 42900237116: all 278 suites passed across attempts (two multiplayer timing checks failed in attempt 1, passed on re-run)"
     }
    ],
    "lifecycle": "ACTIVE",
    "branch": "wip/b25-nd16-precision",
-   "tests": "local seed 1 save at day 2 and resume: round trip exact, status full; old-format resume labelled mixed; flight python tests OK",
+   "tests": "local seed 1 save at day 2 and resume: round trip exact, status full; old-format resume labelled mixed; flight python tests OK; local save/resume exact; Tests 42900237116 all 278 suites pass across attempts 1 and 2",
    "test_commit": "df48840",
    "commits": [
     "df48840"

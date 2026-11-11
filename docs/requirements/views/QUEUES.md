@@ -2,13 +2,12 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (34)
+## Workers and task branches (33)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
 | B25-AUD-EMP-03 | 20+ | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-emp03 |
 | B25-AUDIT-69-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
-| B25-CI-ACTIONS-01 | unassigned | IMPLEMENTED ON TASK BRANCH | none | wip/b25-ci-groups |
 | B25-CONTRACT-FUNDS-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-contract-funds |
 | B25-ECON-P7 | unassigned | IN DEVELOPMENT | b25r1-econ6 worker | wip/b25r1-econ6 |
 | B25-F015-FOOD-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-f015-p99 |
