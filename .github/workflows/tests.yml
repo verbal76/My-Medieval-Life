@@ -258,6 +258,7 @@ jobs:
           res://tests/self_trade_payer_test.gd    # a household never pays a seller for the seller's own goods
           res://tests/hh_business_food_test.gd    # a food seller's household eats the family stock: no sale, no coins
           res://tests/meal_deal_price_test.gd    # a meal is planned only at the deal price the buyer can pay
+          res://tests/hh_member_ids_load_test.gd    # household member ids are whole numbers after a load (erase/has work)
           res://tests/identity_test.gd
           res://tests/multiplayer_a1_test.gd
           # MP Batch A2, gate G1: a host and a guest in two Godot processes over loopback (join, move, an action the host applies, same state, rejoin, host restart)
