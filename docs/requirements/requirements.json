@@ -6489,7 +6489,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -6503,9 +6503,18 @@
      "date": "2026-11-10",
      "change": "target_build: 25 -> unassigned",
      "why": "target build unassigned, as the other B25 owner-directed records"
+    },
+    {
+     "date": "2026-11-11",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; branch: None -> wip/b25-batch34-merge; commits + b2cd024",
+     "why": "attribution 60324ba: all 33 findings tied to 21 change points (10 owner-approved, 10 defect fixes, 1 concerning record b4a302b), none unexplained; fbfd6ad changes no measured value. Merge prepared on wip/b25-batch34-merge b2cd024 (dev line 7d99550 + fbfd6ad); Tests and gate dispatched; baseline df67e8e not replaced"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "branch": "wip/b25-batch34-merge",
+   "commits": [
+    "b2cd024"
+   ]
   },
   {
    "id": "B25-BIZ-D1",
