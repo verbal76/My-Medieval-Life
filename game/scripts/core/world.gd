@@ -49,6 +49,10 @@ var next_band_id := BAND_START
 var people := {}
 var identity_report := {}
 var tie_history := {}
+## B25-SAVE-PHANTOM-D2 (owner 2026-11-10): what the household membership reconciliation on loading found, {"repaired": [...],
+## "flagged": [...]} (repair_household_members); saved when not empty, never pruned, so an ambiguity stays on record.
+var membership_report := {}
+static var member_repair_off := false   # tests only: a load without the repair, to compare the state it leaves with a repaired load's
 var disposed := false               # set by dispose(): the world is being thrown away; views stop reading it
 var load_error := ""                # set by load_dict when the save cannot be brought up to date (the caller refuses it and leaves the file)
 var households: Array = []         # {id, family, home, members, pantry}
@@ -6356,7 +6360,7 @@ func to_dict() -> Dictionary:
 		"mine_works": mine_works.to_dict(),
 		"next_person_id": next_person_id, "next_band_id": next_band_id, "people": _people_to_dict(),
 		"trade_skills": true,        # SKILL-TRADES-18: Carpentry, Masonry and Tanning were started from Crafting (absent: an older save, started on load)
-	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"employment": employment.to_dict()} if not employment.is_empty() else {}).merged(_economy_section()).merged(_civic_section()).merged({EconTransactions.KEY: transactions.to_dict()} if transactions != null and not transactions.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"shared_farming_start": true} if shared_farming_start else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {}).merged({"brain_day": brain.day_state(), "hour_caches": _hour_caches()})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
+	}.merged(_settlement_section()).merged({WorkExperience.KEY: experience.to_dict()} if not experience.to_dict().is_empty() else {}).merged({"credit": credit.to_dict()} if not credit.is_empty() else {}).merged({"employment": employment.to_dict()} if not employment.is_empty() else {}).merged(_economy_section()).merged(_civic_section()).merged({EconTransactions.KEY: transactions.to_dict()} if transactions != null and not transactions.is_empty() else {}).merged({"justice": justice.to_dict()} if not justice.is_empty() else {}).merged({"law_lessons": law_lessons} if not law_lessons.is_empty() else {}).merged({"player_offers": {"next": next_offer, "list": offers.duplicate(true)}} if not offers.is_empty() else {}).merged({MessageJournal.KEY: messages.to_dict()} if not messages.is_empty() else {}).merged({"outlaw_gone_day": outlaw_gone_day} if outlaw_gone_day >= 0 else {}).merged({"shared_farming_start": true} if shared_farming_start else {}).merged({"identity_report": identity_report.duplicate(true)} if not identity_report.is_empty() else {}).merged({"tie_history": tie_history.duplicate(true)} if not tie_history.is_empty() else {}).merged({"membership_report": membership_report.duplicate(true)} if not membership_report.is_empty() else {}).merged({"brain_day": brain.day_state(), "hour_caches": _hour_caches()})   # ID-01 (report, history: optional); X18-CAPCOMP: once seeded (D1) or worked
 	# SAV-01: preserve the exact last-hour famine measurement.
 	out["food_days"] = food_days
 	if judgment != null:
@@ -6425,6 +6429,188 @@ func _load_identity(d: Dictionary) -> bool:
 	regions.bind_world(self)
 	note("Identity upgrade: %d villagers and %d people of the settlements now have permanent ids (%d cases reported)." % [npcs.size(), int(identity_report.counts.members), (identity_report.notes as Array).size()])
 	return true
+
+
+## B25-SAVE-PHANTOM-D2 (owner decision 2026-11-10, docs/directives/2026-11-10_contract_commitments_legacy_save_repair.md: "Do not
+## indiscriminately delete household entries ... Where ownership or membership cannot be determined safely, preserve the data and flag the
+## ambiguity rather than guessing"). A build before cdfa395 kept a loaded household's member ids as floats, and Array.erase with a
+## villager's int id never removed one, so every household change after a load left the person listed where they had been (a phantom:
+## a band adult who left the camp, orphans placed elsewhere and placed again every dawn, a villager who moved). Run on every load, after
+## the households, the villagers, the register of people and the couples' households are back. Authoritative: the villager's own record
+## (NPC.household, alive, away), corroborated by the household that record names listing them and by the register of people (`where`).
+## In play every change of household sets NPC.household and the two lists together (NPCBrain._lodge, Guardianship.move, Construction,
+## LifeDecisions, Migration._arrived: "each is in exactly one household's list"), so a living villager is listed once, in that household.
+## Dead people (and those who moved to a settlement or became the player) stay listed in the household they died in by design.
+##   repaired  "phantom":   a living villager listed in household H whose record names another household X that is not ended and lists
+##                          them, the register placing them in the village: removed from H (every copy)
+##             "duplicate": a known person listed twice in the same household: kept once (the first place)
+##             "missing":   a living villager in the village whose household X (not ended) and no other household lists them: added to X
+##             "dead_phantom" (D3, owner 2026-11-10, decision 1): a dead villager listed in H whose own household X lists them and whom the
+##                          register records as dead: removed from H only (they stay in X, where they died; their record, the register,
+##                          family links, heirs and estate are not touched)
+##             "away_phantom" (D3): a villager who moved to a settlement (alive false, `away` set) listed in H whose own household X
+##                          lists them and whom the register places in that settlement: removed from H only
+##   band households (D3, decision 2): a household with "band", or one on a homestead claim of the outlaw faction (`outlaw_claims`,
+##             read from the saved claims). A living person is removed from one as a "phantom" only when the records show they left
+##             the band: no longer a bandit (role) and of no clan, and their own household lists them (LifeDecisions.leave_band and
+##             Guardianship.leave_camp set exactly that); a bandit or a clan child elsewhere is flagged "band_conflict". An active
+##             bandit or clan child with no household on record listed by a band household is a band member: kept, not flagged.
+##   flagged (left exactly as they are): "unknown_id" (no person has the id), "dead_elsewhere" (a dead or departed person listed in a
+##             household other than their own whom the records above do not place), "no_household" (a living person listed somewhere,
+##             with no household on record, other than a band member in a band household),
+##             "conflict" (a living person listed in H whose own household does not list them, is ended or unknown, or whom the register
+##             places outside the village), "ended_household" (an ended household listing a living person of another), "unlisted" (a
+##             living person whose household does not list them while another does, or whose household is ended or unknown)
+## Decided from the lists as loaded (every household, then each list, in order), then applied: deterministic, and idempotent (a second
+## run finds nothing to repair, and a flag already on record is not added again). Moves no coins or goods; a household left with
+## nobody alive is ended by the load's own rule after it (Property.settle_ended_households), as the uninterrupted game would have.
+func repair_household_members(outlaw_claims := {}) -> void:
+	if member_repair_off:
+		return
+	var size := households.size()
+	var band_h := {}                # the band households (D3)
+	for h in size:
+		if bool(households[h].get("band", false)) or outlaw_claims.has(str(households[h].get("homestead", ""))):
+			band_h[h] = true
+	var lists := {}                 # id -> the households listing them, in order
+	for h in size:
+		for m in households[h].members:
+			var id := int(m)
+			if not lists.has(id):
+				lists[id] = []
+			if not (lists[id] as Array).has(h):
+				lists[id].append(h)
+	var drop := {}                  # h -> {id: true}: every copy removed
+	var dedupe := {}                # h -> {id: true}: kept once
+	var add := []                   # [h, id]
+	var repaired := []
+	var flagged := []
+	for h in size:
+		var hh: Dictionary = households[h]
+		var seen := {}
+		for m in hh.members:
+			var id := int(m)
+			if seen.has(id):
+				if not (dedupe.get(h, {}) as Dictionary).has(id) and npc(id) != null:
+					if not dedupe.has(h):
+						dedupe[h] = {}
+					dedupe[h][id] = true
+					repaired.append(_member_entry("duplicate", h, id))
+				continue
+			seen[id] = true
+			var n := npc(id)
+			if n == null:
+				flagged.append(_member_entry("unknown_id", h, id))
+				continue
+			if n.household == h:
+				continue
+			var x := n.household
+			var x_lists: bool = x >= 0 and x < size and (lists[id] as Array).has(x)
+			var where := str((people.get(id, {}) as Dictionary).get("where", ""))
+			if not n.alive:
+				var kind := ""
+				if x_lists and not n.became_player:
+					if where == Identity.DEAD:                  # (died in the village, or after moving to a settlement)
+						kind = "dead_phantom"
+					elif n.away != "" and where == n.away:
+						kind = "away_phantom"
+				if kind != "":
+					if not drop.has(h):
+						drop[h] = {}
+					drop[h][id] = true
+					repaired.append(_member_entry(kind, h, id))
+				else:
+					flagged.append(_member_entry("dead_elsewhere", h, id))
+				continue
+			if n.household < 0:
+				if not (band_h.has(h) and (n.role == "bandit" or n.clan != "")):
+					flagged.append(_member_entry("no_household", h, id))     # (a band member at the band's household is not)
+				continue
+			if bool(hh.get("ended", false)):
+				flagged.append(_member_entry("ended_household", h, id))
+				continue
+			var proven: bool = x < size and not bool(households[x].get("ended", false)) and x_lists and n.away == "" \
+					and (where == "" or where == Identity.VILLAGE)
+			if proven and band_h.has(h) and (n.role == "bandit" or n.clan != ""):
+				flagged.append(_member_entry("band_conflict", h, id))    # (no record that they left the band)
+			elif proven:
+				if not drop.has(h):
+					drop[h] = {}
+				drop[h][id] = true
+				repaired.append(_member_entry("phantom", h, id))
+			else:
+				flagged.append(_member_entry("conflict", h, id))
+	var ns: Array = npcs.duplicate()
+	ns.sort_custom(func(a: NPC, b: NPC) -> bool: return a.id < b.id)
+	for n: NPC in ns:
+		var x := n.household
+		if not n.alive or x < 0 or (x < size and (lists.get(n.id, []) as Array).has(x)):
+			continue
+		var clear: bool = x < size and not bool(households[x].get("ended", false)) and not lists.has(n.id) and n.away == "" and not n.became_player \
+				and str((people.get(n.id, {}) as Dictionary).get("where", Identity.VILLAGE)) == Identity.VILLAGE
+		if clear:
+			add.append([x, n.id])
+			repaired.append(_member_entry("missing", x, n.id))
+		else:
+			flagged.append(_member_entry("unlisted", x, n.id))
+	for h in size:
+		if not drop.has(h) and not dedupe.has(h):
+			continue
+		var out := []
+		var kept := {}
+		for m in households[h].members:
+			var id := int(m)
+			if (drop.get(h, {}) as Dictionary).has(id) or ((dedupe.get(h, {}) as Dictionary).has(id) and kept.has(id)):
+				continue
+			kept[id] = true
+			out.append(m)
+		households[h].members = out
+	for a in add:
+		(households[int(a[0])].members as Array).append(int(a[1]))
+	var new_r := _report_add("repaired", repaired)
+	var new_f := _report_add("flagged", flagged)
+	if new_r > 0:
+		stat("household_members_repaired", float(new_r))
+	if new_f > 0:
+		stat("household_members_flagged", float(new_f))
+	if new_r > 0 or new_f > 0:
+		note("Household records: %d phantom or missing entries an older save held were put right; %d that the records cannot settle are kept as they are and noted." % [new_r, new_f])
+
+
+## The ids of the homestead claims of the outlaw faction in save `d` (the claims load after the repair runs).
+static func _outlaw_claims(d: Dictionary) -> Dictionary:
+	var out := {}
+	for c in (d.get("homesteads", {}) as Dictionary).get("claims", []):
+		if c is Dictionary and str(c.get("faction", "")) == "outlaw":
+			out[str(c.get("id", ""))] = true
+	return out
+
+
+func _member_entry(kind: String, h: int, id: int) -> Dictionary:
+	var n := npc(id)
+	var e := {"kind": kind, "h": h, "id": id, "day": day()}
+	if n != null:
+		e.merge({"household": n.household, "alive": n.alive, "away": n.away, "home": n.home, "role": n.role, "clan": n.clan,
+				"where": str((people.get(id, {}) as Dictionary).get("where", ""))})
+	return e
+
+
+## Adds the entries of `part` not already on record (by kind, household and person); returns how many were new.
+func _report_add(part: String, entries: Array) -> int:
+	var have := {}
+	for e in membership_report.get(part, []):
+		have["%s/%d/%d" % [str(e.kind), int(e.h), int(e.id)]] = true
+	var added := 0
+	for e: Dictionary in entries:
+		var k := "%s/%d/%d" % [str(e.kind), int(e.h), int(e.id)]
+		if have.has(k):
+			continue
+		have[k] = true
+		if not membership_report.has(part):
+			membership_report[part] = []
+		membership_report[part].append(e)
+		added += 1
+	return added
 
 
 ## A value read from JSON with its whole numbers as integers again (JSON gives every number as a float).
@@ -6813,6 +6999,8 @@ func load_dict(m: VillageMap, d: Dictionary) -> void:
 		if hh.has("couple"):
 			hh.couple = (hh.couple as Array).map(func(x): return int(x))     # person ids as whole numbers (JSON reads floats)
 	Life.sync_couple_homes(self)
+	membership_report = _whole_numbers(d.get("membership_report", {})) as Dictionary
+	repair_household_members(_outlaw_claims(d))   # B25-SAVE-PHANTOM-D2/D3: phantom members an older build left in a save (before the households end below)
 	property.settle_ended_households()      # saves before property: a house whose family died out goes to the manor
 	bandit_camp = Vector2i(int(m.data.spawns.bandit_camp[0]), int(m.data.spawns.bandit_camp[1]))
 	village_camp = bandit_camp
