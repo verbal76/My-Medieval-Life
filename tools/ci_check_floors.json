@@ -296,5 +296,6 @@
  "trd04_stranded_shipment_test": 10,
  "npc04_evening_company_away_test": 9,
  "emp04_skilled_place_split_test": 9,
- "emp05_fields_present_test": 6
+ "emp05_fields_present_test": 6,
+ "trd03_player_chest_claims_test": 6
 }
