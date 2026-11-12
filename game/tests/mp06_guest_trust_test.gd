@@ -228,6 +228,26 @@ func _init() -> void:
 	check(not r.ok and r.text == "That cannot be done in a shared world." and w.experience.days(gref, "mining") == exm0,
 		"a guest's own work figure (note_player_work mining 100000 s) is refused (no network verb), its record unchanged")
 
+	# a swing at a seam: the work record credited by the host's own plan of the swing
+	var seam := {}
+	for dp in w.deposits:
+		if World.level_of(dp) == 0 and int(dp.amount) > 2 and str(dp.ore) != "gold_ore":
+			seam = dp
+			break
+	if not seam.is_empty():
+		g.inv.add("pickaxe", 1)
+		g.pos = Vector2(int(seam.x) + 0.5, int(seam.y) + 1.5)
+		var plan: Dictionary = w.player_mine_plan(seam, g)
+		if bool(plan.get("ok", false)):
+			var em0 := w.experience.days(gref, "mining")
+			r = verb(w, g, "player_mine", [seam, str(plan.tool)])
+			var em1 := w.experience.days(gref, "mining")
+			var want := float(plan.secs) * gm / float(WorkExperience.cfg().get("minutes_per_day", 480))
+			check(r.ok and em1 > em0 and absf((em1 - em0) - want) < want * 0.01 + 0.0001,
+				"a guest's swing at a seam is credited to its work record by the host's plan (+%.5f days, plan %.5f)" % [em1 - em0, want])
+		else:
+			check(false, "setup: the guest may swing at the seam (%s)" % str(plan.get("why", "")))
+
 	# 5. Levels: below the surface at the same x, y is out of reach.
 	var deep: NPC = null
 	for n: NPC in w.npcs:
