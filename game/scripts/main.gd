@@ -4974,7 +4974,7 @@ func _blow() -> void:
 		_level_up("combat", int(h.up))
 	elif who is Animal:
 		swing.hits += 1
-		var s := _hit_animal(who)
+		var s := _strike_animal(who)
 		if s.crit:
 			ui.message("A telling blow!")
 		audio.play_sfx("critical_hit" if s.crit else "enemy_hit")
@@ -5072,10 +5072,19 @@ func _chase_step() -> void:
 
 ## Hunting: a wild animal killed by the player leaves its meat (and hide) where it fell. Killing
 ## livestock is theft from its keeper, a crime like attacking a villager.
-## The rules are core's (World.player_melee_animal: the strike and World.player_hit_animal, DVW-A12 R7, R10; MP-GUEST-TRUST: the
-## damage is worked out there, the host's in a shared world, never a figure the guest sends); the blow and a guard's words are
-## shown here. Returns World.player_melee_animal's result.
-func _hit_animal(a: Animal) -> Dictionary:
+## The rules are core's (World.player_hit_animal, DVW-A12 R10); the blow and a guard's words are shown here.
+func _hit_animal(a: Animal, dmg: float) -> void:
+	var before := a.hp
+	var h := world.player_hit_animal(a, dmg)
+	_hit_fx(animal_sprites.get(a.id), before, before - dmg, dmg)
+	if str(h.guard) != "":
+		ui.message(str(h.guard), 4.0, "crime")
+
+
+## The player's sword blow on animal `a` (the swing's blow): World.player_melee_animal, the strike and the harm together (DVW-A12
+## R7, R10; MP-GUEST-TRUST: the damage is worked out there, the host's in a shared world, never a figure a guest sends); the blow
+## and a guard's words are shown here, as _hit_animal shows them. Returns World.player_melee_animal's result.
+func _strike_animal(a: Animal) -> Dictionary:
 	var h := world.player_melee_animal(a)
 	_hit_fx(animal_sprites.get(a.id), float(h.before), float(h.before) - float(h.dmg), float(h.dmg))
 	if str(h.guard) != "":
