@@ -294,5 +294,6 @@
  "life02_employee_death_test": 14,
  "biz06_venture_close_till_test": 13,
  "trd04_stranded_shipment_test": 10,
- "npc04_evening_company_away_test": 9
+ "npc04_evening_company_away_test": 9,
+ "emp04_skilled_place_split_test": 9
 }
