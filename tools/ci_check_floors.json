@@ -151,6 +151,7 @@
  "trd01_guest_stall_settle_test": 8,
  "sav03_counter_reload_test": 6,
  "mp05_forged_client_test": 53,
+ "mp06_away_reach_test": 30,
  "mp03_forged_store_test": 35,
  "mp03_public_tables_test": 67,
  "mp03_household_tables_test": 75,
