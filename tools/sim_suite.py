@@ -94,7 +94,7 @@ SCENARIOS = [
     {"run": "poverty", "scenario": "B and I stress: a harsh lord (tax 30%, 40% when the treasury is low, no exemption)", "cover": "BCI", "seed": 6, "days": 20,
      "record": True, "args": X20_ON + ["--set", "tax_rate_normal=0.3", "--set", "tax_rate_low_treasury=0.4", "--set", "tax_exemption_base=0",
                                        "--set", "tax_exemption_per_member=0"], "flags": X20_FLAGS, "rows": ["18.7", "20.1"]},
-    {"run": "social_chain", "scenario": "E, F, I and J: two pockets picked in sight of the village, then the player's offers to every adult (switches on)",
+    {"run": "social_chain", "scenario": "E, F, I and J: two pocket-picking tries caught in sight of the village, then the player's offers to every adult (switches on)",
      "cover": "EFIJ", "seed": 1, "days": 15, "record": True, "args": X20_ON + ["--scenario", "social_chain", "--at", "3"], "flags": X20_FLAGS,
      "rows": ["19.1", "19.7", "19.10", "19.11"], "chain": True},
     {"run": "social_chain_off", "scenario": "E, F and J: the same with the shipped switches (judgment, the career ambition and the Living Economy on)", "cover": "EFJ",
