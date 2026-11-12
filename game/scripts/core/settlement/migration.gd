@@ -688,6 +688,7 @@ static func _work_out(w: World, s: OffMapSettlement, market_: Dictionary = {}) -
 	if bt == "":
 		return false
 	var who: NPC = null
+	var spouse: NPC = null
 	for h in range(3, w.households.size()):
 		var hh: Dictionary = w.households[h]
 		var econ: Dictionary = hh.get("econ", {})
@@ -697,7 +698,14 @@ static func _work_out(w: World, s: OffMapSettlement, market_: Dictionary = {}) -
 		ms.sort_custom(func(a: NPC, b: NPC) -> bool: return a.id < b.id)
 		for o: NPC in ms:
 			if o.role == "adult" and o.job == "" and not _barred(w, o) and Life._may_move(w, o):
+				# B25-EMIG-MARRIAGE-D1 (owner 2026-11-12, option A): a married adult leaves for work only with their spouse, as the
+				# land move takes the partner along. A spouse who cannot relocate keeps them both here: a solo emigration would
+				# count the emigrant gone (alive false, away) and free the spouse left behind to remarry (Life.free_to_partner).
+				var p: NPC = _spouse_to_take(w, o)
+				if Life.has_partner(w, o) and p == null:
+					continue
 				who = o
+				spouse = p
 				break
 		if who != null:
 			break
@@ -707,6 +715,8 @@ static func _work_out(w: World, s: OffMapSettlement, market_: Dictionary = {}) -
 	for job in ["manor_hand", "farmer", "woodcutter", "hunter", "miner", "prospector", "tailor", "barber", "preacher", "church_assistant"]:
 		if int(market[job].open) > 0:
 			return false
+	if spouse != null:
+		return _household_out(w, s, [who, spouse], false, "work", bt)
 	if not _settle_departure_property(w, [who]):
 		return false
 	_pre_leave(w, [who])
@@ -717,6 +727,17 @@ static func _work_out(w: World, s: OffMapSettlement, market_: Dictionary = {}) -
 	w.note("%s %s leaves for %s, where work is to be had." % [who.name, who.family, s.name])
 	s.note("%s arrives from the village for work, and joins the %s." % [who.name, OffMapSettlement.btype(bt).get("name", bt)])
 	return h >= 0
+
+
+## B25-EMIG-MARRIAGE-D1: the living spouse who would go along with `o`, or null when `o` has none or the spouse cannot relocate (an
+## office, a player's family, a homestead, young children at home: the land move's and Life._may_move's own reasons).
+static func _spouse_to_take(w: World, o: NPC) -> NPC:
+	if not Life.has_partner(w, o) or Life.is_player_id(o.partner):
+		return null
+	var p := w.npc(o.partner)
+	if p == null or not p.alive or p.role != "adult" or _barred(w, p) or not Life._may_move(w, p):
+		return null
+	return p
 
 
 static func _land_out(w: World, s: OffMapSettlement) -> bool:
