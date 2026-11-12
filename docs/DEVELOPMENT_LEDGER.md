@@ -4,7 +4,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 The register is the one manually maintained list (schema: `docs/requirements/SCHEMA.md`); progress by build is in
 `docs/requirements/views/STATUS.md`. Proposals, ideas and open owner decisions are never counted as approved work.
 
-## Approved requirement (851)
+## Approved requirement (853)
 
 | ID | Item | Build | Approval | Implementation | Verification | Release | Completion |
 |---|---|---|---|---|---|---|---|
@@ -98,6 +98,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-AUDIT-69-01 | Status audit of the original 69 open items | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | B25-AUDIT-CONT-01 | Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-B17FJOBS-D1 | REQ-B17F-JOBS: measure adult unemployment and causes after Batch 3+4 (measurement only) | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-BASELINE-D2 | Baseline findings 1 and 2 accepted; re-recording conditionally authorized | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-BASELINE-REVIEW-01 | No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-BATCH34-MERGE-D1 | Batch 3+4 merge approved after the comparison shows no unexplained regressions; old baseline preserved | unassigned | OWNER APPROVED | INTEGRATED | INTEGRATION VERIFIED | NOT READY | OPEN |
 | B25-BIZ-D1 | Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system) | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
@@ -116,6 +117,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-CONTRACT-FUNDS-D1 | Contract acceptance accounts for committed coins (bids, contracts, obligations) | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | B25-DISK-CLEAN-D1 | Verified safe disk cleanup of the lead machine | unassigned | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-ECON-P7 | Recover stranded settlement treasury ore | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
+| B25-EMIG-MARRIAGE-D1 | A married adult emigrating for work takes the spouse along; no solo emigration that frees the spouse | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-F015-FOOD-01 | F015: homesteader starves with coins; food held separated from purchasing power; fallback food purchase | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | B25-F015-POP-01 | F015/P99: explain seed 2 population 316 vs 203 before merge | unassigned | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |

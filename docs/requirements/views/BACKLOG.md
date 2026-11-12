@@ -81,13 +81,14 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | WDR-016-C | Comply with World Design Rule 16: Bandit Factions, Criminal Careers, and Outlaw Leadership | approved | OWNER APPROVED | NOT STARTED |
 | X20-TRADER-PAY-INV | Investigate why reopened settlement trader households fail to sustain themselves (insufficient sales, insufficient profit, the 85% reserve, household expenses, the profession-change decision), reconcile where the lower village coins reside, and later propose a sustainable trader compensation model from Living Economy results | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 
-## Approved, no build assigned (63)
+## Approved, no build assigned (65)
 
 | ID | Item | Kind | Approval | Implementation |
 |---|---|---|---|---|
 | B25-AUDIT-69-01 | Status audit of the original 69 open items | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-AUDIT-CONT-01 | Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions | approved | OWNER APPROVED | NOT STARTED |
 | B25-B17FJOBS-D1 | REQ-B17F-JOBS: measure adult unemployment and causes after Batch 3+4 (measurement only) | approved | OWNER APPROVED | NOT STARTED |
+| B25-BASELINE-D2 | Baseline findings 1 and 2 accepted; re-recording conditionally authorized | approved | OWNER APPROVED | NOT STARTED |
 | B25-BASELINE-REVIEW-01 | No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge | approved | OWNER APPROVED | NOT STARTED |
 | B25-BATCH34-MERGE-D1 | Batch 3+4 merge approved after the comparison shows no unexplained regressions; old baseline preserved | approved | OWNER APPROVED | INTEGRATED |
 | B25-CI-ACTIONS-01 | GitHub Actions is the default test environment; targeted, split, evidenced runs | approved | OWNER APPROVED | INTEGRATED |
@@ -95,6 +96,7 @@ Open records not assigned to Builds 18-21: the owner's "Build 20 or later" backl
 | B25-CONTRACT-FUNDS-D1 | Contract acceptance accounts for committed coins (bids, contracts, obligations) | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-DISK-CLEAN-D1 | Verified safe disk cleanup of the lead machine | approved | OWNER APPROVED | INTEGRATED |
 | B25-ECON-P7 | Recover stranded settlement treasury ore | approved | OWNER APPROVED | IN DEVELOPMENT |
+| B25-EMIG-MARRIAGE-D1 | A married adult emigrating for work takes the spouse along; no solo emigration that frees the spouse | approved | OWNER APPROVED | NOT STARTED |
 | B25-F015-FOOD-01 | F015: homesteader starves with coins; food held separated from purchasing power; fallback food purchase | approved | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH |
 | B25-F015-POP-01 | F015/P99: explain seed 2 population 316 vs 203 before merge | approved | OWNER APPROVED | PARTIALLY IMPLEMENTED |
 | B25-FINAL-REVIEW-01 | Final testing review of fbfd6ad and an owner decision report for baseline acceptance and merge in one decision | approved | OWNER APPROVED | NOT STARTED |

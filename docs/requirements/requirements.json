@@ -6443,6 +6443,35 @@
    "lifecycle": "ACTIVE"
   },
   {
+   "id": "B25-BASELINE-D2",
+   "kind": "approved",
+   "title": "Baseline findings 1 and 2 accepted; re-recording conditionally authorized",
+   "description": "Baseline findings 1 and 2 accepted; re-recording conditionally authorized",
+   "source": "docs/directives/2026-11-12_b25r2_owner_decisions.md",
+   "owner_wording": "Accept the documented band-household difference and 28 value differences ... Once all seven approved integrations pass their Tests and gates without unexplained regressions, create a new candidate baseline. Preserve historical baseline df67e8e unchanged. Verify the new baseline through independent reproducibility and determinism checks before accepting it.",
+   "approval": "owner, 2026-11-12",
+   "acceptance": [
+    "candidate baseline recorded after the 7-step chain is integrated clean; df67e8e preserved; candidate reproduced independently and deterministic before acceptance"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-12",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-12_b25r2_owner_decisions.md"
+    }
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
    "id": "B25-BASELINE-REVIEW-01",
    "kind": "approved",
    "title": "No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge",
@@ -7606,6 +7635,35 @@
    "branch": "wip/b25r1-econ6",
    "commits": [
     "a583318"
+   ],
+   "lifecycle": "ACTIVE"
+  },
+  {
+   "id": "B25-EMIG-MARRIAGE-D1",
+   "kind": "approved",
+   "title": "A married adult emigrating for work takes the spouse along; no solo emigration that frees the spouse",
+   "description": "A married adult emigrating for work takes the spouse along; no solo emigration that frees the spouse",
+   "source": "docs/directives/2026-11-12_b25r2_owner_decisions.md",
+   "owner_wording": "A married adult permanently emigrating for work must take their spouse along, consistent with land-based relocation. If the spouse cannot relocate, do not permit permanent solo emigration that falsely frees the remaining spouse to remarry. Temporary work travel does not dissolve marriage.",
+   "approval": "owner, 2026-11-12",
+   "acceptance": [
+    "work move takes the partner along or does not happen; no spouse left behind freed by an emigration; temporary travel keeps the marriage; failing-first test incl. save/load and determinism"
+   ],
+   "target_build": "unassigned",
+   "parent": null,
+   "depends_on": [],
+   "decisions": [],
+   "approval_status": "OWNER APPROVED",
+   "implementation_status": "NOT STARTED",
+   "verification_status": "NOT TESTED",
+   "release_status": "NOT READY",
+   "completion": "OPEN",
+   "history": [
+    {
+     "date": "2026-11-12",
+     "change": "entered in the register",
+     "why": "docs/directives/2026-11-12_b25r2_owner_decisions.md"
+    }
    ],
    "lifecycle": "ACTIVE"
   },

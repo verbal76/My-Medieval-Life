@@ -10,8 +10,8 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 | Open entries (rules excluded) | 231 | 160 still open, 71 closed since |
 | Closed approved (complete, superseded, canceled) | 142 | 142 still closed, 0 reopened |
 | Other entries (rules; closed decisions and proposals) | 20 | |
-| Entries added since | | 890 (494 of them still open) |
-| **Open entries now** (rules excluded) | | **652** |
+| Entries added since | | 892 (496 of them still open) |
+| **Open entries now** (rules excluded) | | **654** |
 | Open entries moved to another build | | 15 |
 
 ## Closed since the baseline (71)
@@ -114,7 +114,7 @@ verification / completion (decisions: disposition); see docs/requirements/SCHEMA
 
 None.
 
-## Added since the baseline (890)
+## Added since the baseline (892)
 
 | ID | Item | Kind | State | Build |
 |---|---|---|---|---|
@@ -181,6 +181,7 @@ None.
 | B25-AUDIT-69-01 | Status audit of the original 69 open items | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
 | B25-AUDIT-CONT-01 | Build 25 audit continuation: merge sequence KI-09, MP-03/TRD-05, batch 3 under evidence from GitHub Actions | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-B17FJOBS-D1 | REQ-B17F-JOBS: measure adult unemployment and causes after Batch 3+4 (measurement only) | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
+| B25-BASELINE-D2 | Baseline findings 1 and 2 accepted; re-recording conditionally authorized | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-BASELINE-REVIEW-01 | No automatic merge of fbfd6ad; categorized review of the 33 baseline findings before any baseline acceptance or merge | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-BATCH34-MERGE-D1 | Batch 3+4 merge approved after the comparison shows no unexplained regressions; old baseline preserved | approved | INTEGRATED / INTEGRATION VERIFIED / OPEN | unassigned |
 | B25-BIZ-D1 | Separate business and household finances for founded workshops and all operating businesses (extends ECON-P3; BusinessMoney, tills, transaction system) | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
@@ -208,6 +209,7 @@ None.
 | B25-ECON-P4 | Ore imports stall: Garton's quarry stock rose 63 to 175 but its trader had no coins to buy it, so 0 iron ore came to the village in 120 days (2 in a year for seed 2). Options: A keep as an outcome; B the trader carries ore on consignment (paid on sale); C smiths buy from the quarry directly. Recommendation: decide after the final year-long runs; leaning B. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | APPROVED | 20 |
 | B25-ECON-P5 | Village land (fields, trees, game, ore) is fixed while population roughly triples in a year, so unemployment rises with population. Should fields grow with population? Recommendation: no change on present evidence. Evidence: docs/expansion20/ECONOMIC_INVESTIGATION_2026-11-02.md on the Build 25 source (d6ab686). | decision | APPROVED | 20 |
 | B25-ECON-P7 | Recover stranded settlement treasury ore | approved | IN DEVELOPMENT / NOT TESTED / OPEN | unassigned |
+| B25-EMIG-MARRIAGE-D1 | A married adult emigrating for work takes the spouse along; no solo emigration that frees the spouse | approved | NOT STARTED / NOT TESTED / OPEN | unassigned |
 | B25-EMPLOY-D3 | How do skilled occupations grow? | decision | APPROVED | owner decision |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | approved | INTEGRATED / NOT TESTED / OPEN | 20 |
 | B25-F015-FOOD-01 | F015: homesteader starves with coins; food held separated from purchasing power; fallback food purchase | approved | IMPLEMENTED ON TASK BRANCH / NOT TESTED / OPEN | unassigned |
