@@ -162,6 +162,9 @@ func refusal(n: NPC, role := "miner", employer := "") -> String:
 	var ob := obligation(n)
 	if ob != "":
 		return ob
+	var hb: Dictionary = w.ventures.hand_of(n)
+	if not hb.is_empty() and w.ventures.ref_of(hb) != employer:     # BIZ-07 (owner 2026-11-12, "Refuse while a hand"): one employer at a time (B25-BIZ-D4)
+		return "%s works at %s already." % [n.name, str(hb.get("name", "a business"))]
 	if employer.begins_with("venture:"):
 		var b: Dictionary = w.ventures.by_ref(employer)
 		if b.is_empty() or str(b.venture.trade) != role:

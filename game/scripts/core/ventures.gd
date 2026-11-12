@@ -101,6 +101,14 @@ static func is_hand(v: Dictionary, id: int) -> bool:
 	return false
 
 
+## BIZ-07 (owner 2026-11-12, "Refuse while a hand"): the open venture `n` is a hand of, {} when none.
+func hand_of(n: NPC) -> Dictionary:
+	for b in open_ventures():
+		if is_hand(b.venture, n.id):
+			return b
+	return {}
+
+
 ## The venture stations of kind `kind` that `n` keeps or works at (tried first by NPCBrain._station_for), in id order.
 func stations_for(n: NPC, kind: String) -> Array:
 	var out := []

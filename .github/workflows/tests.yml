@@ -159,6 +159,11 @@ jobs:
           res://tests/biz06_venture_close_till_test.gd   # BIZ-06 (B25 audit, WP-1): a closing venture's till is never erased, even if its recorded hand-over is refused
           res://tests/trd04_stranded_shipment_test.gd   # TRD-04 (B25 audit, WP-1): a shipment whose seller is gone is settled to the estates, over a save
           res://tests/npc04_evening_company_away_test.gd   # NPC-04 (B25 audit, WP-1): no evening walk to a companion away, at a homestead or underground
+          res://tests/emp04_skilled_place_split_test.gd   # EMP-04 (B25 audit, WP-1): room summed across a trade's stations is usable by the new hand
+          res://tests/emp05_fields_present_test.gd   # EMP-05 (B25 audit, WP-1): a village always has fields (job_market reads fields[0])
+          res://tests/trd03_player_chest_claims_test.gd   # TRD-03 (B25 audit, WP-1): no goods claim is ever backed by a player's chest
+          res://tests/npc05_noted_growth_test.gd   # NPC-05 (B25 audit, WP-1): measurement of NPCBrain.noted growth
+          res://tests/reg01_journey_reload_route_test.gd   # REG-01 (B25 audit, WP-1): a journey saved on the road keeps its route and arrival after a load
           res://tests/biz01_found_atomic_test.gd   # BIZ-01/02 (B25 audit): a failed founding ends no employment and pays no premises
           res://tests/trd02_merchant_net_earnings_test.gd   # TRD-02 (owner 2026-11-08): merchants' earnings are net of commission
           res://tests/trd01_guest_stall_settle_test.gd    # TRD-01: a guest's stall session is settled to the guest
@@ -259,6 +264,10 @@ jobs:
           res://tests/emigration_marriage_test.gd   # B25-EMIG-MARRIAGE-D1: a married adult leaves for work only with their spouse
           res://tests/reg02_journey_migration_test.gd    # REG-02: a traveller who emigrates ends the trip; a returner has none
           res://tests/reg02_departure_debts_test.gd   # REG-02 debt part (B25-REG02-DEBT-D1): a leaver's debts are repaid or recorded as defaults as they pack
+          res://tests/biz07_hand_employed_by_player_test.gd   # BIZ-07 (owner 2026-11-12): a venture's hand cannot be employed by another while a hand
+          res://tests/emp06_unemployed_day_labour_test.gd   # EMP-06 (owner 2026-11-12): the unemployed take the manor's day work on a short-food day
+          res://tests/reg03_courier_sender_dies_test.gd   # REG-03 (owner 2026-11-12): a dead sender's courier proceeds go to the heir
+          res://tests/reg08_stranded_route_job_test.gd   # REG-08 (owner 2026-11-12): a delivery nobody carries ends after 7 days, goods back, fee refunded
           res://tests/reg06_household_change_live_test.gd    # REG-06: a live resident is folded before their household changes
           res://tests/npc03_field_takeover_bookkeeping_test.gd    # NPC-03: a manor hand taking a field is counted and recorded
           res://tests/npc01_path_backoff_test.gd    # NPC-01: a villager whose walks keep failing waits, longer each time, before deciding again
