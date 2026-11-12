@@ -39,6 +39,10 @@ func _screen(cell: Vector2) -> Vector2:
 
 ## A finger down and up on `cell` (a tap), or a left click there.
 func _press(cell: Vector2, touch: bool) -> void:
+	# The message strip at the top takes a tap on it (it dismisses the message: GameUI.blocks, toast.gui_input). The opening message
+	# (Main._start, 8 real seconds) is still up or gone when a station is tapped depending on the machine's speed, and the sawhorse
+	# (s7, near the map's top edge) is drawn under it: CI run 43265670635 tapped the message, not the sawhorse. Put it away first.
+	main.ui.dismiss_message()
 	var at := _screen(cell)
 	if touch:
 		var e := InputEventScreenTouch.new()
