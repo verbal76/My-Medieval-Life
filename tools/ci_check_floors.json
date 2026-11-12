@@ -278,5 +278,6 @@
  "emp01_apprentice_employed_test": 9,
  "biz05_hand_not_hired_test": 9,
  "biz01_found_atomic_test": 47,
- "life02_employee_death_test": 14
+ "life02_employee_death_test": 14,
+ "emp04_skilled_place_split_test": 9
 }
