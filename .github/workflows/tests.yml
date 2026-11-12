@@ -264,6 +264,10 @@ jobs:
           res://tests/emigration_marriage_test.gd   # B25-EMIG-MARRIAGE-D1: a married adult leaves for work only with their spouse
           res://tests/reg02_journey_migration_test.gd    # REG-02: a traveller who emigrates ends the trip; a returner has none
           res://tests/reg02_departure_debts_test.gd   # REG-02 debt part (B25-REG02-DEBT-D1): a leaver's debts are repaid or recorded as defaults as they pack
+          res://tests/biz07_hand_employed_by_player_test.gd   # BIZ-07 (owner 2026-11-12): a venture's hand cannot be employed by another while a hand
+          res://tests/emp06_unemployed_day_labour_test.gd   # EMP-06 (owner 2026-11-12): the unemployed take the manor's day work on a short-food day
+          res://tests/reg03_courier_sender_dies_test.gd   # REG-03 (owner 2026-11-12): a dead sender's courier proceeds go to the heir
+          res://tests/reg08_stranded_route_job_test.gd   # REG-08 (owner 2026-11-12): a delivery nobody carries ends after 7 days, goods back, fee refunded
           res://tests/reg06_household_change_live_test.gd    # REG-06: a live resident is folded before their household changes
           res://tests/npc03_field_takeover_bookkeeping_test.gd    # NPC-03: a manor hand taking a field is counted and recorded
           res://tests/npc01_path_backoff_test.gd    # NPC-01: a villager whose walks keep failing waits, longer each time, before deciding again

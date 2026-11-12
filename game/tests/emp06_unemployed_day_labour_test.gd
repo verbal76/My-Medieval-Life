@@ -8,7 +8,7 @@ extends SceneTree
 ## - the same adult, household short of food and nothing earned today, with manor work open: as a labourer they take the day's
 ##   manor work; out of work they do not;
 ## - FAMILY-01 is on, so an unemployed parent of hungry dependants has its own path.
-## It is not in the CI suite list: it pins a behaviour the owner has not ruled on.
+## Owner rule 2026-11-12 (docs/directives/2026-11-12_extra_life_owner_decisions.md, "Allow day labour"): the unemployed take it too.
 ##   godot --headless --path game --script res://tests/emp06_unemployed_day_labour_test.gd
 
 var checks := 0
@@ -28,7 +28,7 @@ func _init() -> void:
 	var unemployed := case_for("")
 	check(as_labourer.ready and unemployed.ready, "fixture: a short-food household, nothing earned today, manor work open (%d jobs)" % int(unemployed.open))
 	check(bool(as_labourer.took), "as a labourer, the adult takes the manor's day work on a short-food day")
-	check(not bool(unemployed.took), "out of work, the same adult is not offered it by the day-labour rule (job \"\" is excluded)")
+	check(bool(unemployed.took), "owner rule 2026-11-12 (EMP-06, allow day labour): out of work, the same adult takes the manor's day work on a short-food day")
 	check(JudgmentLive.on(unemployed.w, JudgmentFamily.FLAG), "FAMILY-01 (family_first) is on in the shipping configuration: an unemployed parent of hungry dependants has _family_labour")
 	print("EMP-06 reading: day labour %s for a labourer, %s for the unemployed; FAMILY-01 %s" % [str(as_labourer.took), str(unemployed.took), "on" if JudgmentLive.on(unemployed.w, JudgmentFamily.FLAG) else "off"])
 	print("%d checks, %d failures" % [checks, failures])

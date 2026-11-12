@@ -102,13 +102,13 @@ func test_stranded() -> void:
 			j2 = j
 	check(not j2.is_empty() and str(j2.state) == "at_booth" and coin_gap(w2) == coin_gap(w), "saved and loaded, it waits as it was and the coins balance")
 	var item2 := items(w2)
-	var departures := 3
+	var departures := 4                                   # 9 days: past the 7-day wait (REG-08 owner rule 2026-11-12)
 	run_days(w2, float(departures * int(route.every_days)) + 1.0)
 	var vb2 := w2.couriers.booth_of("village")
 	print("REG-08 state after %d departures with no carrier: job %s; %d %s in the booth's store; booth keeper %s" % [departures, str(j2.state),
 		(vb2.store as Inventory).count(ITEM), ITEM, str(vb2.keeper)])
 	check(coin_gap(w2) == gap0, "nothing is lost or made while it waits (coin gap %d, was %d)" % [coin_gap(w2), gap0])
 	check(items(w2) == item2, "every %s is still counted (%d, was %d at the load)" % [ITEM, items(w2), item2])
-	# the recovery the owner's policy will define (B25-AUD-REG-08 Q1-Q3): these fail today
+	# owner rule 2026-11-12 (Estate + timeout): the waiting delivery ends and its goods go back
 	check(str(j2.state) != "at_booth", "with no carrier for %d departures the waiting delivery ends (state %s)" % [departures, str(j2.state)])
 	check((vb2.store as Inventory).count(ITEM) == 0, "and its goods leave the booth's store (%d there)" % (vb2.store as Inventory).count(ITEM))

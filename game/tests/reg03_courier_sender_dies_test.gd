@@ -83,3 +83,4 @@ func test_sender_dies() -> void:
 	print("REG-03 state: deposit at the village booth for the dead sender %s: %s; household %d" % [mref, str(dep), hh])
 	check(dep.is_empty() or (int(dep.get("coins", 0)) == 0 and (dep.get("items", {}) as Dictionary).is_empty()),
 		"no proceeds are left in a deposit only the dead sender could withdraw (%s)" % str(dep))
+	check(str(job.get("heir", "")) != "" and str(job.heir) != mref, "owner rule 2026-11-12 (estate): the proceeds went to the sender's heir (%s)" % str(job.get("heir", "")))

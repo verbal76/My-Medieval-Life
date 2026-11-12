@@ -833,6 +833,10 @@ func tick(day: float) -> void:
 		while float(r.next_day) <= day:
 			_depart(r, float(r.next_day))
 			r.next_day = int(r.next_day) + int(r.every_days)
+	var wait := float((cfg().get("routes", {}) as Dictionary).get("wait_days", 7))
+	for j in jobs:
+		if str(j.state) == "at_booth" and not alive(str(j.courier)) and not (j.history as Array).is_empty() and day - float(j.history[0][0]) >= wait:
+			_expire(j, day)                                # REG-08 (owner 2026-11-12): a delivery nobody carries does not wait for ever
 	for j in jobs:
 		if str(j.state) in ["in_transit", "returning"] and not alive(str(j.courier)):
 			interrupt(j, "the courier died on the road")
@@ -844,6 +848,46 @@ func tick(day: float) -> void:
 			"returning":
 				if day >= float(j.back):
 					_home(j, day)
+
+
+## REG-08 (owner 2026-11-12, "Estate + timeout"): a route delivery still waiting at its booth `wait_days` (7) after it was booked
+## (no keeper to carry it) ends: its goods leave the booth's store for the sender (their pack, else a deposit they can withdraw;
+## a dead sender's heir, World._heir, takes their place) and the unearned flat fee is refunded by whoever received it (the carrier,
+## or a dead carrier's heir), as far as they hold the coins. Nothing is made or lost.
+func _expire(j: Dictionary, day: float) -> void:
+	var b := booth(str(j.get("booth", "")))
+	var to := str(j.sender)
+	if not alive(to) and to.begins_with("npc:") and w != null:
+		var dn = _npc(to)
+		if dn != null and str(dn.away) == "":
+			var hr: NPC = w._heir(dn)
+			if hr != null:
+				to = "npc:%d" % hr.id
+	for id in j.items:
+		var n := int(j.items[id])
+		if not b.is_empty():
+			(b.store as Inventory).remove(id, n)
+			if alive(to) and inv_of(to) != null and inv_of(to).can_add(id):
+				inv_of(to).add(id, n)
+			else:
+				_deposit_item(b, to, id, n)
+	var payer := str(j.courier)
+	if not alive(payer) and payer.begins_with("npc:") and w != null:
+		var dc = _npc(payer)
+		var hc: NPC = w._heir(dc) if dc != null else null
+		payer = "npc:%d" % hc.id if hc != null else ""
+	var refund := 0
+	if payer != "" and alive(payer) and alive(to) and str(j.kind) == "route":
+		refund = mini(int(j.fee), coins_of(payer))
+		if refund > 0:
+			add_coins(payer, -refund)
+			add_coins(to, refund)
+	j.state = "returned"
+	j.outcome = "expired"
+	j["refunded"] = refund
+	j.history.append([day, "not carried within %d days: goods returned, %d of the %d fee refunded" % [int(float((cfg().get("routes", {}) as Dictionary).get("wait_days", 7))), refund, int(j.fee)]])
+	if w != null:
+		w.stat("courier_expired")
 
 
 func _depart(r: Dictionary, day: float) -> void:
@@ -967,6 +1011,19 @@ func _home(j: Dictionary, day: float) -> void:
 	if not ag.is_empty():                                       # the notary brings the document home (Law gained by the carrying)
 		formal().bring_home(ag, sender, day)
 		Law.carried(w, courier)
+	# REG-03 (owner 2026-11-12, "Estate + timeout"): a sender who died while the delivery was away is owed nothing at the booth
+	# they can never visit: what comes home goes to their heir by the inheritance rule (World._heir), as any of their coins would;
+	# with no heir the coins go to the manor (the estate rule, EconTransactions.estate_of) and goods stay deposited.
+	var to_estate := false
+	if not alive(sender) and sender.begins_with("npc:") and w != null:
+		var dn = _npc(sender)
+		if dn != null and str(dn.away) == "":
+			var hr: NPC = w._heir(dn)
+			if hr != null:
+				sender = "npc:%d" % hr.id
+				j["heir"] = sender
+			else:
+				to_estate = true
 	var deposit: bool = str(j.proceeds) == "deposit" or not alive(sender)
 	# goods that came back, and goods collected as payment
 	for src in [j.returned_items, j.carried_items]:
@@ -977,7 +1034,10 @@ func _home(j: Dictionary, day: float) -> void:
 				inv_of(sender).add(id, int(src[id]))
 	j.cargo = {}
 	if int(j.carried_coins) > 0:
-		if deposit:
+		if to_estate:
+			w.treasury += int(j.carried_coins)                   # REG-03: no heir: the estate is the manor's
+			w.stat("courier_estate_coins", float(j.carried_coins))
+		elif deposit:
 			b.coins = int(b.coins) + int(j.carried_coins)
 			var dep: Dictionary = (b.deposits as Dictionary).get(sender, {"coins": 0, "items": {}})
 			dep.coins = int(dep.coins) + int(j.carried_coins)

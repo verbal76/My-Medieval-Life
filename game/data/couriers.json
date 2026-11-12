@@ -11,7 +11,9 @@
     "every_days": 2,
     "fee_per_load": 6,
     "load_units": 20,
-    "loads_per_departure": 3
+    "loads_per_departure": 3,
+    "_wait_note": "REG-08 (owner 2026-11-12, docs/directives/2026-11-12_extra_life_owner_decisions.md): a route delivery still at its booth wait_days after booking with no living courier ends: goods back to the sender (or heir), the unearned fee refunded by its receiver (or their heir) as far as they hold it.",
+    "wait_days": 7
   },
   "special": {
     "_note": "Special deliveries are negotiated (CON-01-shaped, provisional adapter); the computed work informs the courier's least acceptable fee: carriers' day wage (balance helper_wage) x journey days there and back (the return leg always: to come home, to bring back payment or to deposit proceeds), plus per extra load, per stop, and the notarial fee when the courier also notarises. UNAPPROVED provisional coefficients.",

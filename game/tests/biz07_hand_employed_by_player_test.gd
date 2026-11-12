@@ -4,9 +4,8 @@ extends SceneTree
 ## obligation) do not look at venture hands, and a hand's job is the trade, so a player holding a workshop of that trade can employ
 ## a venture's hand: the test shows the hire happens and the hand then is both the venture's hand (leave at its benches, on its
 ## list) and the player's paid employee, one person in two places (what BIZ-05 ruled out for the venture's own hiring, and
-## B25-BIZ-D4 "one employer at a time" rules out between employers). FAILING-FIRST reproduction: the fix is an exclusivity rule
-## the owner has not chosen (refuse the employment while they are a hand; or the employment ends the hand's place), so no game
-## code changes and the test is not in the CI suite list.
+## B25-BIZ-D4 "one employer at a time" rules out between employers). Owner rule 2026-11-12 ("Refuse while a hand",
+## docs/directives/2026-11-12_extra_life_owner_decisions.md): Employment.obligation refuses the employment while they are a hand.
 ##   godot --headless --path game --script res://tests/biz07_hand_employed_by_player_test.gd
 
 var checks := 0
@@ -131,3 +130,5 @@ func test_hand_employed() -> void:
 	var leave: bool = (b.get("allow", []) as Array).has(World.npc_ref(hand.id))
 	print("BIZ-07 state: employed by the player %s; on the venture's hands %s; leave at its benches %s" % [str(employed), str(still_hand), str(leave)])
 	check(not (employed and (still_hand or leave)), "one person in one place: a player's employee is not also the venture's hand with its leave (employed %s, hand %s, leave %s)" % [str(employed), str(still_hand), str(leave)])
+	check(not employed and why.find("works at") >= 0, "owner rule 2026-11-12: the hire is refused while they are a hand, with the reason (%s)" % why)
+	check(still_hand and leave, "the hand keeps their place and leave at the smithy")

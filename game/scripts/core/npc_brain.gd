@@ -327,6 +327,8 @@ func _decide(n: NPC) -> String:
 			return "day_labour"
 		if _plan_job(n):
 			return "job"
+	if h >= WORK_START and h < 12.0 and n.job == "" and _day_labour(n):      # EMP-06: out of work, short of food: the manor's day work
+		return "day_labour"
 	# B25-ECON-P5 "Cleared by labour": an adult out of work takes the manor's clearing of rough ground for a new field (the
 	# job posted only while the households lack fields: LandClearing.wanted), paid as any manor job
 	if h >= WORK_START and h < WORK_END and n.job == "" and n.role == "adult" and h < float(GameData.b("manor_jobs").get("latest_start", 15)) \
@@ -5564,7 +5566,8 @@ func dawn(record := true) -> void:
 
 
 func _day_labour(n: NPC) -> bool:
-	if n.role != "adult" or n.job in ["guard", "reeve", "manor_hand", "sage", "", "farmer", "cook", "hunter", "tavernkeeper"] or laboured_today.has(n.id):
+	# EMP-06 (owner 2026-11-12, "Allow day labour"): an adult out of work (job "") may take it too, on the same short-food terms
+	if n.role != "adult" or n.job in ["guard", "reeve", "manor_hand", "sage", "farmer", "cook", "hunter", "tavernkeeper"] or laboured_today.has(n.id):
 		return false
 	if n.earned != int(earned_at_dawn.get(n.id, n.earned)) or household_food_days(n.household) >= float(GameData.b("relief_trigger_days")):
 		return false
