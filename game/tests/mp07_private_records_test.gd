@@ -120,6 +120,8 @@ func _init() -> void:
 		econ_on = w.economy.knowledge.learn(bref, World.npc_ref(v1.id), "bread", EconKnowledge.SELLS, 5)
 		econ_on = econ_on and w.economy.knowledge.learn(aref, World.npc_ref(v2.id), "bread", EconKnowledge.SELLS, 6)
 		econ_on = econ_on and w.economy.knowledge.learn(World.npc_ref(v3.id), World.npc_ref(v1.id), "bread", EconKnowledge.SELLS, 5)
+	w.couriers.jobs.append({"id": "d9301", "kind": "goods", "sender": bref, "recipient": World.npc_ref(v1.id), "items": {"log": 2}, "state": "in_transit", "history": []})
+	w.couriers.jobs.append({"id": "d9302", "kind": "goods", "sender": aref, "recipient": World.npc_ref(v2.id), "items": {"log": 1}, "state": "in_transit", "history": []})
 	bran.coins = 77
 	bran.inv.add("bread", 5)
 
@@ -173,6 +175,8 @@ func _init() -> void:
 		check(not knowers.has(bref) and not knowers.has(World.PLAYER) and knowers.has(aref) and knowers.has(World.npc_ref(v3.id)), "price knowledge: Bran's and the host's withheld, Ann's own and the villagers' kept")
 	else:
 		check(false, "price knowledge: the economy is on and records what players and villagers know (setup)")
+	var jids: Array = (d.couriers.jobs as Array).map(func(j): return str(j.id))
+	check(not jids.has("d9301") and jids.has("d9302"), "courier deliveries: Bran's withheld, Ann's own kept")
 	# -- players: Bran's public look, Ann whole
 	var pb: Dictionary = d.players.by_pid[str(bran.pid)]
 	var pa: Dictionary = d.players.by_pid[str(ann.pid)]

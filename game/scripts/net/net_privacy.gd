@@ -12,7 +12,8 @@ extends RefCounted
 ## another player's: ties and trade contacts with anyone (Relations), killings count, debts, villagers' asks and refusals (Credit), crime
 ## cases open or closed (Justice), contracts (Contracts), stored goods in their chests, carts and homestead houses unless the MP-05 tier
 ## shares them (Chests, Carts, Homesteads), law lessons, the ties kept for their heir (tie_history), their prospecting samples
-## and the assays only they know, what they know of prices (economy knowledge); and the villagers' judgment store
+## and the assays only they know, what they know of prices (economy knowledge), their courier deliveries, booth deposits and
+## agreements; and the villagers' judgment store
 ## (read on the host only). What stays: the public world, the recipient's own records whole, every record between villagers, and the
 ## other players' public look (NetSession.public_player) and their assets as the map shows them (buildings, carts, pens, plots).
 ## The player-to-player offers, sharing pairs and kept messages were filtered already (X20, MP-05); they are here too.
@@ -82,6 +83,8 @@ static func filter(d: Dictionary, ref: String, w: World = null) -> void:
 		kn["rows"] = (kn.get("rows", []) as Array).filter(func(r): return (r as Array).is_empty() or int(r[0]) >= strs.size() or not _other(str(strs[int(r[0])]), ref))
 		ec["knowledge"] = kn                                 # what each knows of prices (EconKnowledge, column 0 the knower): another player's is theirs
 		d[EconomyFoundation.KEY] = ec
+	if d.get("couriers") is Dictionary:
+		d["couriers"] = _couriers(d.couriers, ref)
 	d.erase("judgment")                                     # the villagers' judgment store is read on the host only
 	if d.get("law_lessons") is Dictionary:
 		var ll: Dictionary = d.law_lessons
@@ -188,6 +191,24 @@ static func _prospecting(pr: Dictionary, ref: String) -> Dictionary:
 			sm[k] = pr.samples[k]
 	o["samples"] = sm
 	o["records"] = (pr.get("records", []) as Array).filter(func(r): return (r.get("known_by", []) as Array).has(ref) or not (r.get("known_by", []) as Array).any(func(x): return _other(str(x), ref)))
+	return o
+
+
+## Couriers (REG-COURIER-01): another player's deliveries (sender or recipient), deposits at a booth, dealings and notarised
+## agreements are theirs; the booths, routes and villagers' deliveries stay.
+static func _couriers(c: Dictionary, ref: String) -> Dictionary:
+	var o := c.duplicate(false)
+	o["jobs"] = (c.get("jobs", []) as Array).filter(func(j): return _party_ok(str(j.get("sender", "")), str(j.get("recipient", "")), ref))
+	var bs := []
+	for b in c.get("booths", []):
+		var dep := {}
+		for k in (b as Dictionary).get("deposits", {}):
+			if not _other(str(k), ref):
+				dep[k] = b.deposits[k]
+		bs.append((b as Dictionary).merged({"deposits": dep}, true) if (b as Dictionary).has("deposits") else b)
+	o["booths"] = bs
+	o["contacts"] = (c.get("contacts", []) as Array).filter(func(x): return not (x is Array and not (x as Array).is_empty() and _other(str(x[0]), ref)))
+	o["agreements"] = (c.get("agreements", []) as Array).filter(func(a): return (a.get("parties", []) as Array).has(ref) or not (a.get("parties", []) as Array).any(func(x): return _other(str(x), ref)))
 	return o
 
 
