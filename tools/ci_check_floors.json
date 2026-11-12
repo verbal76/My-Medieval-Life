@@ -297,5 +297,6 @@
  "npc04_evening_company_away_test": 9,
  "emp04_skilled_place_split_test": 9,
  "emp05_fields_present_test": 6,
- "trd03_player_chest_claims_test": 6
+ "trd03_player_chest_claims_test": 6,
+ "npc05_noted_growth_test": 3
 }
