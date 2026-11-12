@@ -21,10 +21,11 @@ extends SceneTree
 ## playtest (Build 21 recorder audit, owner directive 2026-10-24 section 6): the owner's playtest corrections that a running
 ##   village can show, measured hour by hour over --days (default 3) of the whole village, then the band killed and watched
 ##   until outlaws come back (BANDIT-RETURN) and make camp: bandits not dying at once or vanishing without a death, at the
-##   camp (or out stalking) at night, coming back a season after the last died; nobody standing on a solid (wall) cell;
+##   camp (or out stalking) at night, coming back a season after the last died; nobody standing on a solid (wall) cell (the
+##   surface's collision, VillageMap.is_solid_world: a traveller on the road beyond the village is on the overworld's ground);
 ##   every station's use cell open, in reach and reached by a path (GP-ANVIL); a villager asked twice the same day does not
-##   tell the same news again (GP-DIALOGUE A6). Measured, reported; the gate never blocks on these (they are known-defect
-##   watches, not approved thresholds). Static map facts (a trail to every door, GP-BACK-DOORS) are tests/test_village.py's.
+##   tell an event it already told (GP-DIALOGUE A6; by event key, not by a shared sentence). Measured, reported; the gate
+##   never blocks on these (they are known-defect watches, not approved thresholds). Static map facts (a trail to every door, GP-BACK-DOORS) are tests/test_village.py's.
 
 const STEP := 0.5                    # economy_sim's step: one game minute
 
@@ -381,7 +382,7 @@ func playtest(seed: int, days: int) -> Dictionary:
 	w.npc_died.connect(func(n: NPC):
 		cause_of[n.id] = last_cause[0]
 		last_cause[0] = "")
-	var on_wall := [0]                       # (an array: the closure below counts into it)
+	var on_wall := [0, 0, 0]                 # all, inside the village, outside it (an array: the closure below counts into it)
 	var on_wall_examples := []
 	var night := {"samples": 0, "at_camp": 0, "stalking": 0, "elsewhere": 0, "elsewhere_examples": []}
 	var vanished := []
@@ -393,10 +394,16 @@ func playtest(seed: int, days: int) -> Dictionary:
 				if not n.alive and float(bandits[n.id].died) < 0.0:
 					bandits[n.id].died = w.minutes
 					bandits[n.id].cause = str(cause_of.get(n.id, "(no death recorded)"))
-			if n.alive and n.depth == 0 and w.map.is_solid(Vector2i(floori(n.pos.x), floori(n.pos.y))):
+			# the surface's collision as the player meets it (VillageMap.is_solid_world): the village's own map inside it, the
+			# overworld outside. Not is_solid, which counts every cell outside the village as a wall (the village simulation's
+			# path-finding bound), so a traveller on the open road to a neighbouring settlement would be "on a wall".
+			var cell := Vector2i(floori(n.pos.x), floori(n.pos.y))
+			if n.alive and n.depth == 0 and w.map.is_solid_world(cell):
 				on_wall[0] += 1
+				var inside := w.map.in_village(cell)
+				on_wall[1 if inside else 2] += 1
 				if on_wall_examples.size() < 8:
-					on_wall_examples.append("day %d %02d:00 %s %s (%s) at %s" % [w.day(), w.hour(), n.name, n.family, n.doing, str(Vector2i(n.pos.floor()))])
+					on_wall_examples.append("day %d %02d:00 %s %s (%s) at %s%s" % [w.day(), w.hour(), n.name, n.family, n.doing, str(cell), "" if inside else " (outside the village)"])
 		for id in bandits:
 			if float(bandits[id].died) < 0.0 and (w.npc(int(id)) == null or not w.by_id.has(int(id))):
 				if not vanished.has(id):
@@ -438,15 +445,22 @@ func playtest(seed: int, days: int) -> Dictionary:
 	var newcomers := w.npcs.filter(func(n: NPC) -> bool: return n.role == "bandit" and not first_band.has(n.id))
 	var new_alive := newcomers.filter(func(n: NPC) -> bool: return n.alive)
 	var new_at_camp := new_alive.filter(func(n: NPC) -> bool: return n.pos.distance_to(camp) <= 8.0 or n.doing == "stalking" or n.target != -1)
-	# gossip: each grown villager asked for news twice in one day
+	# gossip: each grown villager asked for news twice in one day. A repeat is the second answer telling an event (an
+	# "ev:" key, Dialogue.last_news_keys) the listener was already told: the said history (NPC.talked) is kept by event. A
+	# sentence of the first answer read again in the second is counted apart (same_wording): the data's fixed clauses
+	# ("They have already fenced it off.") recur across different events and are not the same news.
 	var told := 0
 	var repeated := 0
 	var rep_examples := []
+	var same_wording := 0
+	var wording_examples := []
 	for n: NPC in w.npcs:
 		if not n.alive or n.role != "adult" or n.depth != 0:
 			continue
 		var a := Dialogue.news(w, n)
+		var known: Dictionary = EventTalk.told(w, n).duplicate()
 		var b := Dialogue.news(w, n)
+		var retold := (Dialogue.last_news_keys as Array).filter(func(k): return str(k).begins_with("ev:") and known.has(str(k)))
 		var fresh := a.split(". ", false)
 		var again := 0
 		for sent: String in fresh:
@@ -454,10 +468,14 @@ func playtest(seed: int, days: int) -> Dictionary:
 				again += 1
 		if a != b or again > 0:
 			told += 1
-		if again > 0:
+		if not retold.is_empty():
 			repeated += 1
 			if rep_examples.size() < 4:
-				rep_examples.append("%s %s: %s | then: %s" % [n.name, n.family, a.left(160), b.left(160)])
+				rep_examples.append("%s %s: %s | then: %s | told again: %s" % [n.name, n.family, a.left(160), b.left(160), str(retold)])
+		if again > 0:
+			same_wording += 1
+			if wording_examples.size() < 4:
+				wording_examples.append("%s %s: %s | then: %s" % [n.name, n.family, a.left(240), b.left(240)])
 	var quick := []
 	for id in bandits:
 		var lived := float(bandits[id].died) - float(bandits[id].first) if float(bandits[id].died) >= 0.0 else -1.0
@@ -471,9 +489,9 @@ func playtest(seed: int, days: int) -> Dictionary:
 		"bandits_dead_within_2_hours": quick, "bandits_vanished_without_death": vanished.size(), "night": night,
 		"band_killed_day": killed_day, "season_days": wait, "outlaws_back_day": back_at, "outlaws_arrived": int(w.stats.get("outlaws_arrived", 0)) - arrived0,
 		"outlaws_alive": new_alive.size(), "outlaws_at_camp_or_stalking": new_at_camp.size(),
-		"on_solid_cell_npc_hours": on_wall[0], "on_solid_examples": on_wall_examples,
+		"on_solid_cell_npc_hours": on_wall[0], "on_solid_in_village": on_wall[1], "on_solid_outside_village": on_wall[2], "on_solid_examples": on_wall_examples,
 		"stations_day0": stations0, "stations_end": stations1,
-		"gossip": {"asked": told, "repeated": repeated, "examples": rep_examples}, "coins_total_end": w.total_coins(), "ok": true}
+		"gossip": {"asked": told, "repeated": repeated, "examples": rep_examples, "same_wording": same_wording, "same_wording_examples": wording_examples}, "coins_total_end": w.total_coins(), "ok": true}
 	r.bandits_ok = quick.is_empty() and vanished.is_empty() and (back_at >= 0 and new_alive.size() >= 2)
 	r.walls_ok = on_wall[0] == 0
 	r.stations_ok = (stations0.bad as Array).is_empty() and (stations1.bad as Array).is_empty()

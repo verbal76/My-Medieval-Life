@@ -256,7 +256,7 @@ for a season and two days). It measures, never blocks (known-defect watches with
 | Guards' pursuit, search, wanted (GP-CRIME-PURSUIT) | `probe_pursuit`, `probe_manhunt` (blocking) | yes |
 | Station reach, the use cell free (GP-ANVIL) | each station's use cell open, no other station on it, in reach from it, reached by a path; at the start and after 3 days | yes |
 | A trail to every door (GP-BACK-DOORS) | the generator's own check (`tests/test_village.py`) and `polish_p2_test.gd` | yes (static) |
-| Characters walking under building edges / on walls | villagers on a solid cell, every hour | yes |
-| Gossip said over and over (GP-DIALOGUE A6) | every grown villager asked for news twice the same day: a sentence of the first answer in the second | yes |
+| Characters walking under building edges / on walls | villagers on a solid cell of the surface's collision (`VillageMap.is_solid_world`: the village map inside it, the overworld outside), every hour, inside and outside the village counted apart | yes |
+| Gossip said over and over (GP-DIALOGUE A6) | every grown villager asked for news twice the same day: the second answer tells an event (its `ev:` key, `Dialogue.last_news_keys`) the first told; a sentence of the first read again in the second is counted apart (`same_wording`, the data's fixed clauses recur across events) | yes |
 | No coins or goods made or lost | every economy run's ledgers and the recorder's coin audit (blocking) | yes |
 | Menus' size, the brown pause background, roofs, back doors on roofs, interior walls, the smithy wall, sprite choices, the bandit camp's pictures, the campfire | none: what it looks like is the owner's to judge on a device | no (visual) |
