@@ -156,6 +156,7 @@ jobs:
           res://tests/biz04_venture_till_migration_test.gd   # BIZ-04 (owner 2026-11-08): a leaving household keeps its business till
           res://tests/biz08_venture_hands_load_test.gd    # BIZ-08: a business's hands recognised after a save and load
           res://tests/biz05_hand_not_hired_test.gd   # BIZ-05 (B25 audit): a venture's own hand is not also hired as its employee
+          res://tests/npc04_evening_company_away_test.gd   # NPC-04 (B25 audit, WP-1): no evening walk to a companion away, at a homestead or underground
           res://tests/biz01_found_atomic_test.gd   # BIZ-01/02 (B25 audit): a failed founding ends no employment and pays no premises
           res://tests/trd02_merchant_net_earnings_test.gd   # TRD-02 (owner 2026-11-08): merchants' earnings are net of commission
           res://tests/trd01_guest_stall_settle_test.gd    # TRD-01: a guest's stall session is settled to the guest

@@ -1091,10 +1091,10 @@ func _plan_seek_company(n: NPC) -> bool:
 				continue
 			var o := w.npc(int(ids[1]) if int(ids[0]) == n.id else int(ids[0]))
 			var t: Dictionary = r.ties[k]
-			if o != null and o.alive and bool(t.friends) and float(t.regard) > best:
+			if o != null and o.alive and not _away_from(n, o) and bool(t.friends) and float(t.regard) > best:
 				best = float(t.regard)
 				who = o
-	if who == null or not who.alive or w.asleep(who):
+	if who == null or not who.alive or w.asleep(who) or _away_from(n, who):
 		return false
 	n.plan = []
 	if not has_gift and n.coins >= int(sk.gift_coins) and not w.construction.saving_for_home(n):
@@ -1108,6 +1108,12 @@ func _plan_seek_company(n: NPC) -> bool:
 	n.plan.append(loose(work(w.rng.randf_range(40, 90), "", {}, "idle")))
 	w.stat("evenings_seeking_company")
 	return true
+
+
+## NPC-04: whether `o` is somewhere `n` cannot spend the evening beside them: away on a journey (on the road or at a
+## settlement), out at a homestead in the country (Homesteads.remote), or on another depth (underground, MIN-A).
+func _away_from(n: NPC, o: NPC) -> bool:
+	return Journeys.active(o) or (w.homesteads != null and w.homesteads.remote(o)) or o.depth != n.depth
 
 
 func _plan_eat(n: NPC) -> bool:
