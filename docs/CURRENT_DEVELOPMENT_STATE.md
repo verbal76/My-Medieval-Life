@@ -25,6 +25,23 @@
   - History lives in `docs/DEVELOPMENT_CHANGELOG.md`.
 - **Recovery after lost context:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
 
+> **Checkpoint 2026-11-12 18:50 EST (Extra Life; supersedes the 13:30 checkpoint below where they differ):**
+> - Development line `wip/b25r2-rev2` = `b3c9eb5` (chain 12, fast-forward from `e21bfc6`): chain 11 `1d03eea` (chain 10 + guest
+>   trust ND-20, MP-07 privacy, player-journey tests, ND-23/ND-24, ND-25 harness fix) + ND-26 liveness watchdog `b1a2fa8` +
+>   station_tap test fix (ND-27). Tests 43321399738 green (all 12 shards). Build and release 43321404909 (build 39): gate 32
+>   blocking findings, all eq_s1 differences from the df67e8e baseline of another version; determinism identical; judgment chains
+>   complete. Six packages built (artifacts until 2026-12-12): both APKs signed with the permanent key, Linux full/demo launch clean
+>   (exit 0, no script errors, no leaks), Windows full/demo smoke pass. Release step skipped (gate); nothing published.
+> - 69 items (`docs/audits/B25_69_ITEM_TRACKER.md`): 43 completed and verified, 0 awaiting integration, 21 integrated awaiting
+>   verification (no 365-day campaign on chain 12), 1 blocked (B17F-JOBS, owner), 4 not started (REG-04, REG-05, MP-02, JOB-02);
+>   device 0, release 0.
+> - Blocking for a release: an owner-accepted simulation baseline for this version (never re-recorded without approval).
+> - Fallbacks: build 38 (`1d03eea`, run 43298122299), build 37 (`5503614`, run 43257420696). Build 34 is the older public playtest.
+> - Known issues carried: ND-19 in-village walls; ND-22 B34 release lacks the full Linux asset; ND-28 further guest-trust gaps;
+>   journey findings 2-3 (day-0 reeve hint; expired demo world dropped from the menus); Android packages exported with
+>   --export-debug (owner question); INV-02 flag-on validation (4 seeds x 365 days) pending; two-device checks for MP-05/06/07, ND-26.
+> - Container restarted at 18:44 EST: RAM worktrees (/dev/shm) gone; all work was pushed. Workers: none running.
+
 > **Checkpoint 2026-11-12 13:30 EST (Extra Life directive, `docs/directives/2026-11-12_extra_life_owner_decisions.md`):**
 > - Development line `wip/b25r2-rev2` = `e21bfc6`:
 >   - chain steps 5-7 fast-forwarded at 11:20 (`5503614`; Tests 43124224113/43124232365/43124241072 pass, gates unchanged);
