@@ -1743,13 +1743,16 @@ func trade(buyer: Object, seller: Object, id: String, qty: int, price_each: int,
 	var total := qty * price_each if total_price < 0 else total_price
 	var refused: bool = qty <= 0 or price_each < 0 or buyer == seller or int(buyer.coins) < total or not seller.inv.has(id, qty) or not buyer.inv.can_add(id)
 	var cuts := []
+	var why := ""
 	if not refused and economy != null:
 		var v: Dictionary = economy.claims.check_trade(buyer, seller, id, qty, total, exempt)
 		refused = not bool(v.ok)
 		cuts = v.cuts
+		if refused:                         # B25-INV-P100-FULLPACK: named for what refused it, not "buyer_inventory_full"
+			why = "seller_stock_reserved" if str(v.get("side", "")) == "seller" else "buyer_coins_reserved"
 	if refused:
 		if recorder != null:
-			recorder.trade_refused(buyer, seller, id, qty, price_each, total)     # REC-19: a refused sale is an event too
+			recorder.trade_refused(buyer, seller, id, qty, price_each, total, why)     # REC-19: a refused sale is an event too
 		return false
 	if not cuts.is_empty():
 		economy.claims.apply(cuts)          # LE-03: the parties' own offers yield to this sale (validated above, cannot fail)
