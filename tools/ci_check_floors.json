@@ -162,6 +162,7 @@
  "meal_deal_price_test": 7,
  "hh_member_ids_load_test": 5,
  "hh_phantom_repair_test": 37,
+ "clan_child_pantry_test": 7,
  "npc02_gift_claims_test": 8,
  "jus02_join_band_cleanup_test": 8,
  "net_interact_test": 68,

@@ -260,6 +260,7 @@ jobs:
           res://tests/meal_deal_price_test.gd    # a meal is planned only at the deal price the buyer can pay
           res://tests/hh_member_ids_load_test.gd    # household member ids are whole numbers after a load (erase/has work)
           res://tests/hh_phantom_repair_test.gd    # an older save's phantom household members repaired on load; ambiguities kept and flagged
+          res://tests/clan_child_pantry_test.gd    # a clan child eats from their household's pantry; a shortage stays one
           res://tests/identity_test.gd
           res://tests/multiplayer_a1_test.gd
           # MP Batch A2, gate G1: a host and a guest in two Godot processes over loopback (join, move, an action the host applies, same state, rejoin, host restart)
