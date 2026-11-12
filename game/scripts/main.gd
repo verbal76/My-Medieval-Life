@@ -186,7 +186,9 @@ func _ready() -> void:
 	Input.joy_connection_changed.connect(_on_joy_connection)
 	if settings.phone and not _real_pads().is_empty():
 		_on_joy_connection(_real_pads()[0], true)
-	var args := OS.get_cmdline_user_args()
+	# ND-24 (player-journey test 2026-11-12): the screenshot and camera flags are development tools; a shipped (release) build ignores
+	# them, so `-- --screenshot X` can no longer start a default world over the player's own save slot
+	var args: PackedStringArray = OS.get_cmdline_user_args() if OS.is_debug_build() else PackedStringArray()
 	for i in args.size():
 		if i + 1 >= args.size():
 			continue
