@@ -21,6 +21,10 @@ var booth_id := ""                 # the booth the player stands at (deposits wa
 func _init(game_ui: GameUI, courier_service: CourierService) -> void:
 	ui = game_ui
 	service = courier_service
+	# MP-GUEST-TRUST: the sender is the player at this machine (a guest's own "player:<pid>"; the host's "player"), so a guest's
+	# booking names the guest and the host's sender check (NetActions.place_refusal) accepts it.
+	if courier_service != null and courier_service.w != null:
+		sender = courier_service.w.acting_ref()
 
 
 func _items() -> Array:

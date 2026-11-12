@@ -40,6 +40,19 @@ const VERB_REACH := 24.0              # tiles: what a guest acts on is on its sc
 const AWAY_VERBS := ["player_eat", "player_use_medicine", "player_equip", "player_unequip", "player_wake", "player_rest",
 	"player_yield", "release_player_station", "asset_share_revoke"]
 const AWAY_KINDS := ["eat"]
+## MP-GUEST-TRUST: verbs that take a figure the host must work out itself (experience earned, the damage of a blow, the time a
+## piece of work took). The host's own interface still calls them; a guest's request for one is refused, and the host computes
+## the figure from what it verifies instead: experience only inside the verified verb that earns it (player_feed_pen, a craft,
+## a swing, a strike), a sword blow's damage from the guest's own weapon and skills on the host's records (player_melee_npc,
+## player_melee_animal), a fireball's in player_fireball_hit, the work record from a begun craft's time or a swing's own plan
+## (credit_work).
+const HOST_FIGURES := ["player_xp", "player_hit_npc", "player_hit_animal", "note_player_work"]
+## MP-GUEST-TRUST: timed work finished by a verb of its own after a begin verb (the guest's interface always sends both). The
+## host completes it only for the piece of work the guest began (the recipe or the item), at the station it began it at, still
+## in reach, once at least WORK_GRACE of its time has passed on the host's clock (the guest's timer runs on its own machine,
+## and the two requests cross the network apart, so the host allows a margin).
+const BEGUN_WORK := {"player_craft": "player_craft_begin", "player_repair": "player_repair_begin"}
+const WORK_GRACE := 0.75
 
 ## Every player verb a guest's interface can call, by the path World.mirror sends: "" the World itself, "<field>." a module the World
 ## holds, "<Class>:" a static verb taking the World first. The sub-batch is the BATCH_C.md checklist row it belongs to.
@@ -52,7 +65,7 @@ const VERBS := {
 	"player_craft_begin": "C2", "player_craft": "C2", "player_repair_begin": "C2", "player_repair": "C2", "player_take": "C2", "container_store": "C2", "container_pick": "C2",
 	"player_home_move": "C2", "player_loot": "C2", "player_plant_sapling": "C2", "plant_bush": "C2",
 	"release_player_station": "C2", "chests.store": "C2", "chests.take": "C2", "chests.set_own_lock": "C2",
-	"player_pick_lock": "C2", "note_player_work": "C2", "player_xp": "C2", "player_set_down_cart": "C2",
+	"player_pick_lock": "C2", "note_player_work": "C2", "player_xp": "C2", "player_set_down_cart": "C2", "player_feed_pen": "C2",
 	# C3: economy
 	"player_buy_many": "C3", "player_sell_many": "C3", "player_buy_pack_row": "C3", "player_barber_visit": "C3", "player_order_gear": "C3",
 	"player_learn_fireball": "C3", "contracts.propose": "C3", "contracts.deliver": "C3", "contracts.cancel": "C3",
@@ -79,7 +92,7 @@ const VERBS := {
 	"chapel.player_offer_item": "C5", "Guardianship:player_adopt": "C5", "player_offer": "C5", "player_answer": "C5",
 	"asset_share_revoke": "C5", "player_contract_deliver": "C5",   # MP-INTERACT-01: the seller hands a contract's goods to the player beside it (World.player_contract_deliver)
 	# C6: crime and combat
-	"player_strike": "C6", "player_melee_npc": "C6", "player_hit_npc": "C6", "player_hit_animal": "C6",
+	"player_strike": "C6", "player_melee_npc": "C6", "player_hit_npc": "C6", "player_hit_animal": "C6", "player_melee_animal": "C6",
 	"player_cast_fireball": "C6", "player_fireball_hit": "C6", "pickpocket": "C6",
 	# C7: underground levels
 	"player_through": "C7", "mine_works.dig": "C7", "mine_works.dig_shaft": "C7", "mine_works.fill": "C7",
@@ -145,6 +158,8 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 	var c := target(w, path)
 	if not c.is_valid():
 		return _answer(w, p, false, "That cannot be done in a shared world.")
+	if path in HOST_FIGURES:
+		return _answer(w, p, false, "That is not yours to decide.")       # MP-GUEST-TRUST: the host works the figure out itself
 	var args := []
 	var bad := {"why": ""}
 	for i in raw.size():
@@ -182,6 +197,8 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 		var i := w.loot.find(args[0])                 # the pile the guest named, wherever it is in the host's list
 		if i < 0:
 			return _answer(w, p, false, "That is not there any more.")
+		if _out_of_reach(w, p, [args[0]]):
+			return _answer(w, p, false, "That is too far away.")       # MP-GUEST-TRUST: the pile's place and level, before it becomes an index
 		args = [i]
 	var far := _out_of_reach(w, p, args) if not path in DIRECTION_VERBS else false
 	if far:
@@ -189,6 +206,7 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 	var no_place := place_refusal(w, p, path, args)
 	if no_place != "":
 		return _answer(w, p, false, no_place)
+	var plan := _work_plan(w, p, path, args)
 	var r = w.as_actor(p, func():
 		match path:
 			"Guardianship:player_adopt":
@@ -200,6 +218,7 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 			"ContractServices:player_harvest":
 				return ContractServices.player_harvest(w.contracts, args[0], args[1]) if args.size() >= 2 and args[1] is Vector2i else "Nothing to do."
 		return c.callv(args))
+	_after_work(w, p, path, args, r, plan)
 	var text := ""
 	if r is String:
 		text = r
@@ -257,6 +276,15 @@ static func _pos_of(v) -> Variant:
 static func place_refusal(w: World, p: PlayerState, path: String, args: Array) -> String:
 	var far := "That is too far away."
 	match path:
+		"player_craft_begin":
+			if args.is_empty() or not GameData.recipes.has(str(args[0])):
+				return "That cannot be made."
+			var st := str(args[1]) if args.size() >= 2 else ""
+			if st != "" and not w.stations_of(str(GameData.recipes[str(args[0])].station)).has(st):
+				return "That is not made here."          # MP-GUEST-TRUST: a recipe at a station of its own kind only
+			return ""
+		"player_craft", "player_repair":
+			return begun_work_refusal(w, p, path, args)
 		"counters.summon":
 			var id := str(args[0]) if args.size() >= 1 else ""
 			if not w.stations.has(id):
@@ -304,12 +332,17 @@ static func place_refusal(w: World, p: PlayerState, path: String, args: Array) -
 	return ""
 
 
+## A place of the village (a counter, a courier booth, a home's door): on the surface, within VERB_REACH of the guest there.
 static func _near(p: PlayerState, at: Vector2) -> bool:
-	return at.distance_to(p.pos) <= VERB_REACH
+	return p.map_level == 0 and at.distance_to(p.pos) <= VERB_REACH
 
 
 static func _near_npc(p: PlayerState, n: NPC) -> bool:
-	return n != null and n.alive and _near(p, n.pos)
+	return n != null and n.alive and n.depth == p.map_level and at_reach(p, n.pos)
+
+
+static func at_reach(p: PlayerState, at: Vector2) -> bool:
+	return at.distance_to(p.pos) <= VERB_REACH
 
 
 ## A party by its reference (a villager "npc:<id>" or a player) beside guest `p`.
@@ -318,16 +351,102 @@ static func _near_party(w: World, p: PlayerState, ref: String) -> bool:
 	if q is NPC:
 		return _near_npc(p, q)
 	if q is PlayerState:
-		return not (q as PlayerState).away and _near(p, (q as PlayerState).pos)
+		return not (q as PlayerState).away and (q as PlayerState).map_level == p.map_level and at_reach(p, (q as PlayerState).pos)
 	return false
 
 
+## Whether anything `args` names lies out of guest `p`'s reach: more than VERB_REACH tiles off, or (MP-GUEST-TRUST) on another
+## level of the world (a villager or a record below the surface at the same x, y as a guest above it, or the other way round).
+## Plain cells and points carry no level: the verb reads them on the guest's own level.
 static func _out_of_reach(w: World, p: PlayerState, args: Array) -> bool:
 	for v in args:
 		var at = _pos_of(v)
 		if at != null and (at as Vector2).distance_to(p.pos) > VERB_REACH:
 			return true
+		var lv = _level_of_arg(v)
+		if lv != null and int(lv) != p.map_level:
+			return true
 	return false
+
+
+## The level of the world an argument lies on, or null when it carries none: a villager's depth, a player's level, the surface
+## for an animal (fauna live only there), a placed record's "level" (absent: the surface; MIN-A) when it names a place.
+static func _level_of_arg(v) -> Variant:
+	if v is NPC:
+		return (v as NPC).depth
+	if v is Animal:
+		return 0
+	if v is PlayerState:
+		return (v as PlayerState).map_level
+	if v is Dictionary and _pos_of(v) != null:
+		var lv = (v as Dictionary).get("level", 0)
+		return int(lv) if lv is int or lv is float else null
+	return null
+
+
+## MP-GUEST-TRUST: why guest `p` may not finish the piece of work `path` names (BEGUN_WORK), "" when it may: it began that very
+## work (the recipe, or the item to mend) with its begin verb, at a station still within the station's reach of it, and at least
+## WORK_GRACE of the work's time has passed since on the host's clock. The begun work is spent by the attempt (_after_work).
+static func begun_work_refusal(w: World, p: PlayerState, path: String, args: Array) -> String:
+	var b: Dictionary = p.get_meta("mp_work", {}) if p.has_meta("mp_work") else {}
+	if b.is_empty() or str(b.verb) != str(BEGUN_WORK[path]) or args.is_empty() or str(args[0]) != str(b.what):
+		return "You have not begun that."
+	var st := str(b.station)
+	if not w.stations.has(st) or p.map_level != 0 or ((Vector2(w.station_use(st)) + Vector2(0.5, 0.5)).distance_to(p.pos) >= World.STATION_REACH
+			and not World.station_in_reach(w.stations[st], p.pos, Vector2.ZERO)):
+		return "That is out of reach."
+	if w.minutes - float(b.at) < float(b.mins) * WORK_GRACE:
+		return "That is not finished yet."
+	return ""
+
+
+## MP-GUEST-TRUST: what the host knows of a guest's timed work before applying `path` (its own plan of a swing or a blow): the
+## industry and the game minutes it takes, for credit_work. {} for verbs that are not such work.
+static func _work_plan(w: World, p: PlayerState, path: String, args: Array) -> Dictionary:
+	var gm := float(GameData.b("game_minutes_per_second"))
+	match path:
+		"player_mine":
+			if args.size() >= 1 and args[0] is Dictionary:
+				var mp := w.player_mine_plan(args[0], p)
+				if bool(mp.get("ok", false)):
+					return {"industry": "mining", "mins": float(mp.secs) * gm}
+		"player_chop":
+			if args.size() >= 1 and args[0] is Dictionary:
+				var fp := w.player_fell_plan(args[0], p)
+				if bool(fp.get("ok", false)):
+					return {"industry": "forestry", "mins": float(fp.secs) * gm / maxf(1.0, float(Trees.cfg().chops))}
+		"player_craft":
+			var b: Dictionary = p.get_meta("mp_work", {}) if p.has_meta("mp_work") else {}
+			if not b.is_empty() and args.size() >= 1:
+				return {"industry": CapabilityHook.recipe_industry(str(args[0])), "mins": minf(float(b.mins), w.minutes - float(b.at))}
+	return {}
+
+
+## MP-GUEST-TRUST: after the host applied a guest's verb: a begun piece of work is remembered (the begin verbs of BEGUN_WORK, at
+## a station), a finishing verb spends it, and finished work the host verified is credited to the guest's work record.
+static func _after_work(w: World, p: PlayerState, path: String, args: Array, r, plan: Dictionary) -> void:
+	if path in BEGUN_WORK.values():
+		if p.has_meta("mp_work"):
+			p.remove_meta("mp_work")
+		if r is Dictionary and bool(r.get("ok", false)) and str(r.get("station", "")) != "":
+			p.set_meta("mp_work", {"verb": path, "what": str(args[0]), "station": str(r.station), "at": w.minutes,
+				"mins": float(r.secs) * float(GameData.b("game_minutes_per_second"))})
+		return
+	if path in BEGUN_WORK and p.has_meta("mp_work"):
+		p.remove_meta("mp_work")
+	if plan.is_empty() or not (r is Dictionary):
+		return
+	var done := str(r.get("result", ""))
+	if done == "ok" or (path == "player_chop" and done in ["blow", "felled"]):
+		credit_work(w, p, str(plan.industry), float(plan.mins))
+
+
+## MP-GUEST-TRUST: credit `mins` game minutes of work in `industry` to guest `p`'s work record (WorkExperience), as the host's
+## own interface credits its player's finished work (World.note_player_work), from a figure the host worked out.
+static func credit_work(w: World, p: PlayerState, industry: String, mins: float) -> void:
+	if industry == "" or mins <= 0.0 or w.experience == null:
+		return
+	w.experience.credit(w.player_ref(p), industry, mins, w.minutes)
 
 
 # ---------------------------------------------------------------- the codec ----------------------
