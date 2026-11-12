@@ -1281,6 +1281,8 @@ func apply_requests() -> void:
 	queue = []
 	todo.sort_custom(func(a, b): return [int(a.seq), int(a.pid)] < [int(b.seq), int(b.pid)])
 	for q in todo:
+		if joining.has(int(q.peer)) and by_peer.has(int(q.peer)):
+			_playing(int(q.peer))                  # MML-MP-06: a connected guest that acts has built its world: in play, as at its first move (MP-D1)
 		var p: PlayerState = main.world.player_by_pid(int(q.pid))
 		var r := NetActions.apply(main.world, p, str(q.kind), q.args if q.args is Dictionary else {})
 		applied += 1

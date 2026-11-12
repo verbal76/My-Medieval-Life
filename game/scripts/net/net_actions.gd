@@ -30,6 +30,16 @@ const CONTRACT_SIDE := {"contracts.deliver": "deliver", "contracts.accept_offer"
 ## MP-05: the verbs whose first argument is a chest unit (Chests.unit): sent by name ({"$r": "unit"}) only, never as a record.
 const UNIT_VERBS := ["chests.store", "chests.take", "chests.set_own_lock", "player_pick_lock"]
 const VERB_REACH := 24.0              # tiles: what a guest acts on is on its screen (the interface's own reach rules apply in the verb)
+## MML-MP-06: what a guest out of active play (PlayerState.away, MP-D1: disconnected, or welcomed and still building the world) may
+## still ask: only what touches its own character and nothing and nobody else in the world (eating, medicine, gear, waking and
+## resting, yielding, letting go of a station it held, withdrawing an asset-sharing agreement). Every other verb and kind is
+## refused while it is away: a character not on the map, which no one can see, strike or catch, does not act on the shared world.
+## Per verb, not at the whole gateway: a genuine guest sends nothing before its world is built, and NetSession.apply_requests puts a
+## connected guest that is still joining into play before applying its request (as its first move would), so a rejoin never
+## meets this refusal.
+const AWAY_VERBS := ["player_eat", "player_use_medicine", "player_equip", "player_unequip", "player_wake", "player_rest",
+	"player_yield", "release_player_station", "asset_share_revoke"]
+const AWAY_KINDS := ["eat"]
 
 ## Every player verb a guest's interface can call, by the path World.mirror sends: "" the World itself, "<field>." a module the World
 ## holds, "<Class>:" a static verb taking the World first. The sub-batch is the BATCH_C.md checklist row it belongs to.
@@ -85,6 +95,8 @@ static func apply(w: World, p: PlayerState, kind: String, args: Dictionary) -> D
 		return _heir(w, p)
 	if p == null or not p.alive:
 		return _answer(w, p, false, "You cannot do that now.")
+	if p.away and not away_ok(kind, args):
+		return _answer(w, p, false, "You are not in the world now.")      # MML-MP-06 (AWAY_VERBS)
 	match kind:
 		"eat":
 			return _eat(w, p, args)
@@ -93,6 +105,13 @@ static func apply(w: World, p: PlayerState, kind: String, args: Dictionary) -> D
 		"verb":
 			return apply_verb(w, p, str(args.get("path", "")), args.get("a", []) if args.get("a", []) is Array else [])
 	return _answer(w, p, false, "That cannot be done in a shared world yet.")
+
+
+## MML-MP-06: whether request `kind` (with `args`) may be applied for a guest out of active play (AWAY_VERBS, AWAY_KINDS).
+static func away_ok(kind: String, args: Dictionary) -> bool:
+	if kind in AWAY_KINDS:
+		return true
+	return kind == "verb" and str(args.get("path", "")) in AWAY_VERBS
 
 
 static func _answer(w: World, p: PlayerState, ok: bool, text: String, patches: Array = []) -> Dictionary:
@@ -167,6 +186,9 @@ static func apply_verb(w: World, p: PlayerState, path: String, raw: Array) -> Di
 	var far := _out_of_reach(w, p, args) if not path in DIRECTION_VERBS else false
 	if far:
 		return _answer(w, p, false, "That is too far away.")
+	var no_place := place_refusal(w, p, path, args)
+	if no_place != "":
+		return _answer(w, p, false, no_place)
 	var r = w.as_actor(p, func():
 		match path:
 			"Guardianship:player_adopt":
@@ -224,6 +246,80 @@ static func _pos_of(v) -> Variant:
 		if d.get("at") is Vector2:
 			return d.at
 	return null
+
+
+## MML-MP-06: the verbs whose arguments name no place (an id, an order, nothing) although the host's own interface offers them only
+## where they happen: at a counter (counters.summon), at a courier booth (couriers.*, the sender being the guest itself), talking
+## with the villager a debt or an ask is with (credit.*), with the chapel's clergy (chapel.*), with the tavern keeper
+## (feast.player_feast), with the quest's giver (quests.complete), at home (player_home_move). The guest must be within VERB_REACH
+## of that place or person, by the host's record of where it is; "" when it is (or the verb has no such rule), else why not. What
+## the request names that is not there is left to the verb's own refusal.
+static func place_refusal(w: World, p: PlayerState, path: String, args: Array) -> String:
+	var far := "That is too far away."
+	match path:
+		"counters.summon":
+			var id := str(args[0]) if args.size() >= 1 else ""
+			if not w.stations.has(id):
+				return "That is not there any more."
+			return "" if _near(p, Vector2(w.station_use(id)) + Vector2(0.5, 0.5)) else far
+		"couriers.book_route", "couriers.negotiate", "couriers.book_special":
+			if args.is_empty() or not (args[0] is Dictionary) or str(args[0].get("sender", "")) != w.player_ref(p):
+				return "That is not yours."                 # a villager's goods and purse are never a guest's to send
+			return "" if w.couriers != null and not w.couriers.booth_near(p.pos, VERB_REACH).is_empty() else far
+		"couriers.open_shop_booth":
+			return "" if args.size() >= 1 and str(args[0]) == w.player_ref(p) else "That is not yours."
+		"credit.repay":
+			var d: Dictionary = w.credit._debt(int(args[0])) if args.size() >= 1 and (args[0] is int or args[0] is float) else {}
+			if d.is_empty():
+				return ""
+			var me := w.player_ref(p)
+			var other := str(d.creditor) if str(d.debtor) == me else str(d.debtor)
+			return "" if _near_party(w, p, other) else far
+		"credit.answer_request":
+			for r in w.credit.requests:
+				if args.size() >= 1 and (args[0] is int or args[0] is float) and int(r.id) == int(args[0]):
+					return "" if _near_npc(p, w.npc(int(r.npc))) else far
+			return ""
+		"chapel.player_ask", "chapel.player_offer_coins", "chapel.player_offer_item":
+			for n: NPC in w.npcs:
+				if n.alive and n.job in Chapel.JOBS and _near_npc(p, n):
+					return ""
+			return far
+		"feast.player_feast":
+			for n: NPC in w.npcs:
+				if n.alive and n.job == "tavernkeeper" and _near_npc(p, n):
+					return ""
+			return far
+		"quests.complete":
+			if args.size() >= 1 and args[0] is Dictionary and not (args[0] as Dictionary).is_empty():
+				var g := w.npc(int(args[0].get("giver", -1)))
+				return "" if g == null or _near_npc(p, g) else far    # no giver: quests.complete refuses it
+			return ""
+		"player_home_move":
+			if p.home == "" or not w.buildings.has(p.home):
+				return "You have no home."
+			if _near(p, Vector2(w.building_door(p.home)) + Vector2(0.5, 0.5)) or w.property.rooms_of(p.home).has(w.place_of(p.pos)):
+				return ""
+			return far
+	return ""
+
+
+static func _near(p: PlayerState, at: Vector2) -> bool:
+	return at.distance_to(p.pos) <= VERB_REACH
+
+
+static func _near_npc(p: PlayerState, n: NPC) -> bool:
+	return n != null and n.alive and _near(p, n.pos)
+
+
+## A party by its reference (a villager "npc:<id>" or a player) beside guest `p`.
+static func _near_party(w: World, p: PlayerState, ref: String) -> bool:
+	var q = w.credit.party(ref)
+	if q is NPC:
+		return _near_npc(p, q)
+	if q is PlayerState:
+		return not (q as PlayerState).away and _near(p, (q as PlayerState).pos)
+	return false
 
 
 static func _out_of_reach(w: World, p: PlayerState, args: Array) -> bool:
