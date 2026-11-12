@@ -40,13 +40,13 @@ const VERB_REACH := 24.0              # tiles: what a guest acts on is on its sc
 const AWAY_VERBS := ["player_eat", "player_use_medicine", "player_equip", "player_unequip", "player_wake", "player_rest",
 	"player_yield", "release_player_station", "asset_share_revoke"]
 const AWAY_KINDS := ["eat"]
-## MP-GUEST-TRUST: verbs that take a figure the host must work out itself (experience earned, the damage of a blow, the time a
-## piece of work took). The host's own interface still calls them; a guest's request for one is refused, and the host computes
-## the figure from what it verifies instead: experience only inside the verified verb that earns it (player_feed_pen, a craft,
-## a swing, a strike), a sword blow's damage from the guest's own weapon and skills on the host's records (player_melee_npc,
-## player_melee_animal), a fireball's in player_fireball_hit, the work record from a begun craft's time or a swing's own plan
-## (credit_work).
-const HOST_FIGURES := ["player_xp", "player_hit_npc", "player_hit_animal", "note_player_work"]
+## MP-GUEST-TRUST: verbs that take a figure the host must work out itself (experience earned, the damage of a blow). The host's
+## own interface still calls them; a guest's request for one is refused, and the host computes the figure from what it verifies
+## instead: experience only inside the verified verb that earns it (player_feed_pen, a craft, a swing, a strike), a sword blow's
+## damage from the guest's own weapon and skills on the host's records (player_melee_npc, player_melee_animal), a fireball's in
+## player_fireball_hit. The work record (World.note_player_work) is no network verb at all: a guest's machine never sends it, and
+## the host credits a begun craft's time or a swing's own plan (credit_work).
+const HOST_FIGURES := ["player_xp", "player_hit_npc", "player_hit_animal"]
 ## MP-GUEST-TRUST: timed work finished by a verb of its own after a begin verb (the guest's interface always sends both). The
 ## host completes it only for the piece of work the guest began (the recipe or the item), at the station it began it at, still
 ## in reach, once at least WORK_GRACE of its time has passed on the host's clock (the guest's timer runs on its own machine,
@@ -65,7 +65,7 @@ const VERBS := {
 	"player_craft_begin": "C2", "player_craft": "C2", "player_repair_begin": "C2", "player_repair": "C2", "player_take": "C2", "container_store": "C2", "container_pick": "C2",
 	"player_home_move": "C2", "player_loot": "C2", "player_plant_sapling": "C2", "plant_bush": "C2",
 	"release_player_station": "C2", "chests.store": "C2", "chests.take": "C2", "chests.set_own_lock": "C2",
-	"player_pick_lock": "C2", "note_player_work": "C2", "player_xp": "C2", "player_set_down_cart": "C2", "player_feed_pen": "C2",
+	"player_pick_lock": "C2", "player_xp": "C2", "player_set_down_cart": "C2", "player_feed_pen": "C2",
 	# C3: economy
 	"player_buy_many": "C3", "player_sell_many": "C3", "player_buy_pack_row": "C3", "player_barber_visit": "C3", "player_order_gear": "C3",
 	"player_learn_fireball": "C3", "contracts.propose": "C3", "contracts.deliver": "C3", "contracts.cancel": "C3",

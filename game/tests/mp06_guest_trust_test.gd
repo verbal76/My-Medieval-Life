@@ -225,7 +225,8 @@ func _init() -> void:
 	# 4. The work record: named by the guest, refused.
 	var exm0 := w.experience.days(gref, "mining")
 	r = verb(w, g, "note_player_work", ["mining", 100000.0])
-	check(not r.ok and r.text == NOT_YOURS and w.experience.days(gref, "mining") == exm0, "a guest's own work figure (note_player_work mining 100000 s) is refused, its record unchanged")
+	check(not r.ok and r.text == "That cannot be done in a shared world." and w.experience.days(gref, "mining") == exm0,
+		"a guest's own work figure (note_player_work mining 100000 s) is refused (no network verb), its record unchanged")
 
 	# 5. Levels: below the surface at the same x, y is out of reach.
 	var deep: NPC = null
