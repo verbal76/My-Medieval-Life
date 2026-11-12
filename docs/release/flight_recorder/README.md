@@ -193,3 +193,12 @@ defect without evidence, and never answer an owner decision.
 - `tools/flight_analyse.py`, `tools/recorder_archive.py`, `tools/check_workbook.py --flight`
 - `game/tests/flight_workbook.gd`, `game/scripts/recorder_export/workbook_builder.gd` (`build_spec`), `game/data/sim_workbook.json` (`flight_recorder`)
 - `tests/test_flight_analyse.py`
+
+## Save precision regime (ND-16, owner 2026-11-10, B25-ND16-PREC-01)
+
+From `wip/b25-nd16-precision` onward, segment state files store the world at the game's own save precision
+(`JSON.stringify(d, "", true, true)`, as `main.gd` writes a player's save), so a resumed segment reloads exactly what a real save
+holds. Each state file, each segment's `status.json` and the run's `summary.json` carry `save_precision`: `full` for runs entirely
+in the new regime, `mixed` for a run resumed from an older state, and `default` for historical runs (no field). Historical results
+are kept as they are; compare a `full` run with a `default` run only after accounting for the change (resumed segments of
+`default` runs reloaded a lossy copy of the world).

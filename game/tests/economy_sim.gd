@@ -2509,6 +2509,11 @@ func _trader_diag(day: int) -> void:
 # Owner directive 2026-11-02 (docs/release/flight_recorder/README.md). Read only, except the segment save (World.to_dict, the
 # game's own save, which also tells any queued gossip first, as every save does).
 const FR_STATE := "mml-flight-state/1"
+## ND-16 (B25-ND16-PREC-01, owner 2026-11-10): segment saves are written at the game's own save precision (main.gd writes
+## JSON.stringify(d, "", true, true)), so a resumed segment reloads what a player's save would hold. State files written before
+## this change carry no "save_precision" field: they were "default" precision, and runs resumed from them are labelled so.
+const FR_SAVE_PRECISION := "full"
+var fr_precision := FR_SAVE_PRECISION   # the precision regime of this run: "full", or "mixed" when resumed from an older state
 const FR_SKIP := ["w", "bandits", "fr_stop", "fr_roundtrip"]      # the world (saved on its own) and the read-only bandit diagnostics are not harness state
 
 
@@ -2547,13 +2552,13 @@ func _fr_write(path: String, seed: int, day: int, start: Dictionary, samples: Ar
 	for p in get_property_list():
 		if (int(p.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE) and not (str(p.name) in FR_SKIP) and typeof(get(p.name)) != TYPE_OBJECT:
 			h[p.name] = get(p.name)
-	var ws := JSON.stringify(wd)
+	var ws := JSON.stringify(wd, "", true, true)         # ND-16: the game's own save precision (main.gd), not the lossy default
 	var f := FileAccess.open_compressed(path, FileAccess.WRITE, FileAccess.COMPRESSION_GZIP)
 	if f == null:
 		printerr("economy_sim: cannot write the state file %s" % path)
 		return
 	f.store_string(var_to_str({"format": FR_STATE, "seed": seed, "day": day, "commit": OS.get_environment("MML_COMMIT"), "harness": h,
-		"harness_start": start, "samples": samples, "world": ws, "world_stats": w.stats}))
+		"harness_start": start, "samples": samples, "world": ws, "world_stats": w.stats, "save_precision": FR_SAVE_PRECISION}))
 	f.close()
 	print("SEGMENT day %d seed %d: the world (%d bytes of save) and the harness saved to %s; fingerprint %s" % [day, seed, ws.length(), path, _fingerprint()])
 	fr_roundtrip = _fr_roundtrip(ws, day)
@@ -2567,7 +2572,7 @@ func _fr_roundtrip(ws: String, day: int) -> Dictionary:
 	var a = JSON.parse_string(ws)
 	var w2 := World.new()
 	w2.load_dict(VillageMap.load_default(), JSON.parse_string(ws))
-	var b = JSON.parse_string(JSON.stringify(w2.to_dict()))
+	var b = JSON.parse_string(JSON.stringify(w2.to_dict(), "", true, true))
 	w2.dispose()
 	CapabilityHook.bind(w.experience)        # the fresh world bound the static capability hook to its own record: give it back
 	var differ := []
@@ -2611,6 +2616,8 @@ func _fr_read(path: String, seed: int) -> Dictionary:
 	if not (wd is Dictionary):
 		return {"error": "the world save in %s does not parse" % path}
 	d.world = wd
+	if str(d.get("save_precision", "default")) != FR_SAVE_PRECISION:
+		print("PRECISION resuming from a %s-precision state: this run is labelled \"mixed\" and is not comparable with full-precision runs" % str(d.get("save_precision", "default")))
 	return d
 
 
@@ -2619,6 +2626,8 @@ func _fr_restore(d: Dictionary) -> int:
 	for k in d.harness:
 		set(k, d.harness[k])
 	fr_stop = ""
+	if str(d.get("save_precision", "default")) != FR_SAVE_PRECISION:
+		fr_precision = "mixed"      # resumed from an older, default-precision state (the harness record restored above keeps an earlier "mixed")
 	return int(d.day)
 
 
@@ -2632,7 +2641,7 @@ func _fr_status(path: String, seed: int, days: int, d0: int, reached: int, final
 		"alive": people.get("alive"), "households": people.get("households"), "births": people.get("births"), "deaths": people.get("deaths"),
 		"currency_leak": (final.get("currency", {}) as Dictionary).get("leak"), "item_leaks": (final.get("ledger", {}) as Dictionary).get("items"),
 		"regions_audit": str((final.get("regions", {}) as Dictionary).get("audit", "")), "econ_roundtrip_bad": econ_roundtrip_bad,
-		"save_roundtrip": fr_roundtrip,
+		"save_roundtrip": fr_roundtrip, "save_precision": fr_precision,
 		"extinct_since": fr_extinct_since, "fingerprint": final.get("fingerprint"), "wall_seconds": snappedf(secs, 0.1),
 		"recorder": {} if rec == null else {"dir": str(rec.dir), "completeness": str(rec.completeness()), "bytes": int(rec.bytes), "chunks": int(rec.chunks)}}
 	var f := FileAccess.open(path, FileAccess.WRITE)
