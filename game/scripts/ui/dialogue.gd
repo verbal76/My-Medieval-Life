@@ -33,6 +33,9 @@ const JOB_WORDS := {
 }
 const STALL_WORDS := {"raw": "ore, stone, logs and planks", "food": "food: grain, meat, pottage and ale",
 	"goods": "tools, weapons, armour and leather"}
+# What the last `news` call told (its event and line keys, as marked said; [] when it told nothing new). A record for the
+# simulation gate's probe (tests/sim_probes.gd: whether a second asking tells an event the first told); nothing reads it in play.
+static var last_news_keys: Array = []
 
 
 ## A choice among lines that changes with the villager and the day, the same on every machine.
@@ -433,6 +436,7 @@ static func _home_news(w: World, n: NPC) -> Dictionary:
 ## said from the speaker's side (DialogueVoice.event_line: "you", "I", "we", "Mum") and framed by how they know it ("I
 ## saw it myself", "Hugh told me", "they say"). A villager who learned nothing has no news.
 static func news(w: World, n: NPC) -> String:
+	last_news_keys = []
 	var lines: Array = []
 	var prefix := "found "
 	for i in range(n.memory.size() - 1, -1, -1):
@@ -474,6 +478,7 @@ static func news(w: World, n: NPC) -> String:
 		var lead := lead_tier >= 4 and lines.is_empty()
 		lines.append(((_pick(w, n, DialogueVoice.talk().intro.ordinary, 4) + " ") if lead else "") + " ".join(told))
 		EventTalk.mark_said(w, n, keys)
+		last_news_keys = keys.duplicate()
 	elif not groups.is_empty():
 		# all told before: a grief or a harm to the listener is touched on at most once a day, then nothing new
 		var grave: bool = int(groups[0].tier) <= 1
