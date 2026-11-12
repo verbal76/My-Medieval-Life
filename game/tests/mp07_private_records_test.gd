@@ -115,6 +115,11 @@ func _init() -> void:
 	w.prospecting.bags[aref] = [9102]
 	w.prospecting.records.append({"id": 9201, "sample": 9100, "clue": "c1", "x": 3, "y": 1, "ore": "iron_ore", "grade": 2, "confidence": 0.8, "by": bref, "assayer": World.npc_ref(v1.id), "day": 1, "known_by": [bref, World.npc_ref(v1.id)]})
 	w.prospecting.records.append({"id": 9202, "sample": 9099, "clue": "c1", "x": 4, "y": 1, "ore": "", "grade": 0, "confidence": 0.8, "by": aref, "assayer": World.npc_ref(v1.id), "day": 1, "known_by": [aref, World.npc_ref(v1.id)]})
+	var econ_on: bool = w.economy != null
+	if econ_on:
+		econ_on = w.economy.knowledge.learn(bref, World.npc_ref(v1.id), "bread", EconKnowledge.SELLS, 5)
+		econ_on = econ_on and w.economy.knowledge.learn(aref, World.npc_ref(v2.id), "bread", EconKnowledge.SELLS, 6)
+		econ_on = econ_on and w.economy.knowledge.learn(World.npc_ref(v3.id), World.npc_ref(v1.id), "bread", EconKnowledge.SELLS, 5)
 	bran.coins = 77
 	bran.inv.add("bread", 5)
 
@@ -162,6 +167,12 @@ func _init() -> void:
 	var pr: Dictionary = d.prospecting
 	check(not pr.bags.has(bref) and not pr.samples.has("9101") and not (pr.records as Array).any(func(r): return int(r.id) == 9201), "prospecting: Bran's samples and the assay only he knows withheld (private knowledge)")
 	check(pr.bags.has(aref) and pr.samples.has("9102") and (pr.records as Array).any(func(r): return int(r.id) == 9202), "prospecting: Ann's own samples and assays kept")
+	if econ_on:
+		var kn: Dictionary = d[EconomyFoundation.KEY].knowledge
+		var knowers: Array = (kn.rows as Array).map(func(r): return str(kn.strings[int(r[0])]))
+		check(not knowers.has(bref) and not knowers.has(World.PLAYER) and knowers.has(aref) and knowers.has(World.npc_ref(v3.id)), "price knowledge: Bran's and the host's withheld, Ann's own and the villagers' kept")
+	else:
+		check(false, "price knowledge: the economy is on and records what players and villagers know (setup)")
 	# -- players: Bran's public look, Ann whole
 	var pb: Dictionary = d.players.by_pid[str(bran.pid)]
 	var pa: Dictionary = d.players.by_pid[str(ann.pid)]

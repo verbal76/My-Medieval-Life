@@ -12,7 +12,7 @@ extends RefCounted
 ## another player's: ties and trade contacts with anyone (Relations), killings count, debts, villagers' asks and refusals (Credit), crime
 ## cases open or closed (Justice), contracts (Contracts), stored goods in their chests, carts and homestead houses unless the MP-05 tier
 ## shares them (Chests, Carts, Homesteads), law lessons, the ties kept for their heir (tie_history), their prospecting samples
-## and the assays only they know; and the villagers' judgment store
+## and the assays only they know, what they know of prices (economy knowledge); and the villagers' judgment store
 ## (read on the host only). What stays: the public world, the recipient's own records whole, every record between villagers, and the
 ## other players' public look (NetSession.public_player) and their assets as the map shows them (buildings, carts, pens, plots).
 ## The player-to-player offers, sharing pairs and kept messages were filtered already (X20, MP-05); they are here too.
@@ -75,6 +75,13 @@ static func filter(d: Dictionary, ref: String, w: World = null) -> void:
 		d["homesteads"] = hs
 	if d.get("prospecting") is Dictionary:
 		d["prospecting"] = _prospecting(d.prospecting, ref)
+	if d.get(EconomyFoundation.KEY) is Dictionary and (d[EconomyFoundation.KEY] as Dictionary).get("knowledge") is Dictionary:
+		var ec: Dictionary = (d[EconomyFoundation.KEY] as Dictionary).duplicate(false)
+		var kn: Dictionary = (ec.knowledge as Dictionary).duplicate(false)
+		var strs: Array = kn.get("strings", [])
+		kn["rows"] = (kn.get("rows", []) as Array).filter(func(r): return (r as Array).is_empty() or int(r[0]) >= strs.size() or not _other(str(strs[int(r[0])]), ref))
+		ec["knowledge"] = kn                                 # what each knows of prices (EconKnowledge, column 0 the knower): another player's is theirs
+		d[EconomyFoundation.KEY] = ec
 	d.erase("judgment")                                     # the villagers' judgment store is read on the host only
 	if d.get("law_lessons") is Dictionary:
 		var ll: Dictionary = d.law_lessons
