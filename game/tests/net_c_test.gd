@@ -142,8 +142,9 @@ func copies_agree(what: String) -> void:
 	var host: Dictionary = both[0]
 	var mine: Dictionary = both[1]
 	var bad := [] if not host.is_empty() and not mine.is_empty() else ["the host's marked sync or dump did not come"]
+	var hsec: Dictionary = host.get("sections_for", {}).get(str(main.net.my_pid), host.get("sections", {}))     # MML-MP-07: as sent to this guest
 	for k in SAME:
-		if JSON.stringify(host.get("sections", {}).get(k)) != JSON.stringify(mine.get(k)):
+		if JSON.stringify(hsec.get(k)) != JSON.stringify(mine.get(k)):
 			bad.append(k)
 	check(bad.is_empty(), "%s: the guest's copy of the shared world is the host's%s" % [what, "" if bad.is_empty() else " (differs: %s)" % str(bad)])
 

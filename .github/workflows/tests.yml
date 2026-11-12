@@ -468,6 +468,7 @@ jobs:
           res://tests/mp05_mutual_asset_share_test.gd   # MP-05: owner-approved gameplay regression
           res://tests/mp05_forged_client_test.gd       # MP-05: a modified guest client's forged requests refused by the host
           res://tests/mp06_away_reach_test.gd          # MML-MP-06: a modified guest's requests while away or out of reach refused; rejoin acts
+          res://tests/mp07_private_records_test.gd     # MML-MP-07: a guest is sent no other player's private records (welcome and syncs)
           res://tests/mp03_forged_store_test.gd        # B25-AUD-MP-03: a guest may name only stores it has the right to
           res://tests/mp03_public_tables_test.gd       # B25-MP03-TABLES-D1: a guest may name a genuinely public table within reach
           res://tests/mp03_household_tables_test.gd    # B25-MP03-OWNERSHIP-D1: owned and shared containers by the property rule; tavern tables private

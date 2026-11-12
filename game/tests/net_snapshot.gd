@@ -19,8 +19,9 @@ static func compare(w: World, my_pid: int, dump: Dictionary, keys: Array) -> Arr
 	if dump.is_empty():
 		return ["no dump from the host"]
 	var mine: Dictionary = w.to_dict()
+	var hsec: Dictionary = dump.get("sections_for", {}).get(str(my_pid), dump.get("sections", {}))     # MML-MP-07: as sent to this player
 	for k in keys:
-		var hs = _canon(k, dump.get("sections", {}).get(k))
+		var hs = _canon(k, hsec.get(k))
 		var ms = _canon(k, mine.get(k))
 		if norm(hs) != norm(ms):
 			bad.append("section %s%s" % [k, _first_difference(JSON.parse_string(norm(hs)), JSON.parse_string(norm(ms)))])
