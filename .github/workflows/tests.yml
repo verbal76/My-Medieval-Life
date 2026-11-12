@@ -163,6 +163,7 @@ jobs:
           res://tests/emp05_fields_present_test.gd   # EMP-05 (B25 audit, WP-1): a village always has fields (job_market reads fields[0])
           res://tests/trd03_player_chest_claims_test.gd   # TRD-03 (B25 audit, WP-1): no goods claim is ever backed by a player's chest
           res://tests/npc05_noted_growth_test.gd   # NPC-05 (B25 audit, WP-1): measurement of NPCBrain.noted growth
+          res://tests/reg01_journey_reload_route_test.gd   # REG-01 (B25 audit, WP-1): a journey saved on the road keeps its route and arrival after a load
           res://tests/biz01_found_atomic_test.gd   # BIZ-01/02 (B25 audit): a failed founding ends no employment and pays no premises
           res://tests/trd02_merchant_net_earnings_test.gd   # TRD-02 (owner 2026-11-08): merchants' earnings are net of commission
           res://tests/trd01_guest_stall_settle_test.gd    # TRD-01: a guest's stall session is settled to the guest

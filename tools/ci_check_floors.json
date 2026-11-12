@@ -298,5 +298,6 @@
  "emp04_skilled_place_split_test": 9,
  "emp05_fields_present_test": 6,
  "trd03_player_chest_claims_test": 6,
- "npc05_noted_growth_test": 3
+ "npc05_noted_growth_test": 3,
+ "reg01_journey_reload_route_test": 8
 }
