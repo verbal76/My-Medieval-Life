@@ -4035,9 +4035,7 @@ func _use() -> void:
 				for k in got:
 					_gain("+%d %s" % [int(got[k]), GameData.item_name(k)], k))
 		"pen":
-			var put := world.fauna.feed(target.pen, p.inv, 5)
-			if put > 0:
-				world.player_xp("husbandry", Skills.action_xp("feed_pen"))    # DVW-B8
+			var put := int(world.player_feed_pen(target.pen, 5).put)    # DVW-B8: the feeding and its Husbandry xp are core's (MP-GUEST-TRUST)
 			ui.message("You put %d wheat in the trough." % put if put > 0 else "You have no wheat to feed them.")
 		"animal":
 			var own: bool = not target.animal.wild() and world.fauna.pens.has(target.animal.area) and world.fauna.pens[target.animal.area].get("player", false)
@@ -4976,10 +4974,9 @@ func _blow() -> void:
 		_level_up("combat", int(h.up))
 	elif who is Animal:
 		swing.hits += 1
-		var s := world.player_strike()
+		var s := _strike_animal(who)
 		if s.crit:
 			ui.message("A telling blow!")
-		_hit_animal(who, float(s.dmg))
 		audio.play_sfx("critical_hit" if s.crit else "enemy_hit")
 		if not who.alive:
 			audio.play_sfx("enemy_defeat")
@@ -5082,6 +5079,17 @@ func _hit_animal(a: Animal, dmg: float) -> void:
 	_hit_fx(animal_sprites.get(a.id), before, before - dmg, dmg)
 	if str(h.guard) != "":
 		ui.message(str(h.guard), 4.0, "crime")
+
+
+## The player's sword blow on animal `a` (the swing's blow): World.player_melee_animal, the strike and the harm together (DVW-A12
+## R7, R10; MP-GUEST-TRUST: the damage is worked out there, the host's in a shared world, never a figure a guest sends); the blow
+## and a guard's words are shown here, as _hit_animal shows them. Returns World.player_melee_animal's result.
+func _strike_animal(a: Animal) -> Dictionary:
+	var h := world.player_melee_animal(a)
+	_hit_fx(animal_sprites.get(a.id), float(h.before), float(h.before) - float(h.dmg), float(h.dmg))
+	if str(h.guard) != "":
+		ui.message(str(h.guard), 4.0, "crime")
+	return h
 
 
 ## A blow of the player's (a spell's) of `dmg` lands on villager `n`: the rules are core's (World.player_hit_npc,

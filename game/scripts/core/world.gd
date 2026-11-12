@@ -858,8 +858,9 @@ func _note_work(n: NPC, s: Dictionary, mins: float) -> void:
 ## X18 HOOK (X18-CAPCOMP part 1): credit the player's finished work (`secs` real seconds of an action in `industry`).
 func note_player_work(industry: String, secs: float) -> void:
 	# MP C (World.mirror): a guest's verb goes to the host
+	# MP-GUEST-TRUST: never sent from a guest. The host credits a guest's work itself from what it verifies (NetActions.credit_work:
+	# a begun craft's time, a swing's or a blow's own plan), never from a figure the guest names.
 	if mirrors():
-		mirror("note_player_work", note_player_work.bind(industry, secs), [industry, secs])
 		return
 	experience.credit(acting_ref(), industry, secs * float(GameData.b("game_minutes_per_second")), minutes)     # MP C: each player's own record ("player" the host's)
 
@@ -3154,6 +3155,24 @@ func player_melee_npc(n: NPC, actor: PlayerState = null) -> Dictionary:
 	return h
 
 
+## MP-GUEST-TRUST: the player's sword blow lands on animal `a`: player_strike, then player_hit_animal with that damage, both
+## worked out here (the host's, in a shared world: a guest never names the damage of its blow). Returns {crit, dmg, before,
+## killed, guard}.
+func player_melee_animal(a: Animal, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_melee_animal", player_melee_animal.bind(a), [a])
+	if actor != null and actor != player:
+		return as_actor(actor, player_melee_animal.bind(a))
+	var before := a.hp
+	var s := player_strike()
+	var h := player_hit_animal(a, float(s.dmg))
+	h["crit"] = s.crit
+	h["dmg"] = float(s.dmg)
+	h["before"] = before
+	return h
+
+
 ## DVW-A12 R8: a blow of the player's (a sword's or a spell's) of `dmg` lands on villager `n`: harm_npc (their Combat
 ## damage_taken and armour, PAR-01); the blow wakes a sleeper and the noise wakes those near, who then see it (owner
 ## rule); attacking anyone but a bandit is assault (player_assault), and a bandit fights back; at no health they die,
@@ -3552,6 +3571,20 @@ func plant_tree(cell: Vector2i, item: String, actor: PlayerState = null) -> Dict
 	stat("trees_planted")
 	tree_changed.emit(t)
 	return t
+
+
+## DVW-B8, MP-GUEST-TRUST: the player puts up to `n` wheat from the pack in pen `pen`'s trough (Fauna.feed) and earns the
+## feeding's Husbandry xp when any went in, both here (the host's, in a shared world: a guest never names its own xp).
+## Returns {put, up}.
+func player_feed_pen(pen: Dictionary, n: int, actor: PlayerState = null) -> Dictionary:
+	# MP C (World.mirror): a guest's verb goes to the host
+	if mirrors():
+		return mirror("player_feed_pen", player_feed_pen.bind(pen, n), [pen, n])
+	if actor != null and actor != player:
+		return as_actor(actor, player_feed_pen.bind(pen, n))
+	var put := fauna.feed(pen, player.inv, n)
+	var up := player_xp("husbandry", Skills.action_xp("feed_pen")) if put > 0 else 0
+	return {"put": put, "up": up}
 
 
 ## DVW-A12 R6: the player earns `n` xp in `skill` (PlayerState.gain); a new level is announced by player_leveled.

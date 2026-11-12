@@ -251,7 +251,7 @@ func verbs() -> void:
 	# C6: strike a villager
 	var victim: NPC = w.npcs.filter(func(n: NPC) -> bool: return n.alive and n.role == "adult" and n.job != "guard" and n != friend)[0]
 	await near_me(victim)
-	await act(func(): return main.world.player_hit_npc(main.world.npc(victim.id), 1.0))
+	await act(func(): return main.world.player_melee_npc(main.world.npc(victim.id)))     # MP-GUEST-TRUST: the sword blow, its damage the host's
 	check(int(rec().get("crimes", 0)) >= 1 and int(rec().get("case", 0)) >= 1 and status().players.values().all(func(p): return not p.host or int(p.crimes) == 0),
 		"C6: the guest's assault is on the guest's record and case on the host; the host is innocent")
 	await agree("C6 strike")
