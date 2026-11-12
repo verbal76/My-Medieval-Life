@@ -1943,6 +1943,7 @@ func _regions(start: Dictionary) -> Dictionary:
 	var used := {}
 	var in_v := {}
 	var out_v := {}
+	var spoiled := {}
 	for st in r.list:
 		for k in st.flows.produced:
 			made[k] = int(made.get(k, 0)) + int(st.flows.produced[k])
@@ -1950,6 +1951,7 @@ func _regions(start: Dictionary) -> Dictionary:
 			used[k] = int(used.get(k, 0)) + int(st.flows.used[k])
 		for k in st.flows.get("spoiled", {}):     # MML-INV-02 F2(b): food spoiled in a settlement (the flow exists only while INV-02 is on)
 			used[k] = int(used.get(k, 0)) + int(st.flows.spoiled[k])
+			spoiled[k] = int(spoiled.get(k, 0)) + int(st.flows.spoiled[k])
 		for k in st.flows.from_village:
 			in_v[k] = int(in_v.get(k, 0)) + int(st.flows.from_village[k])
 		for k in st.flows.to_village:
@@ -1972,12 +1974,15 @@ func _regions(start: Dictionary) -> Dictionary:
 		if d != f:
 			bad_goods[k] = d - f
 	# MIGRATE-18: people crossing the boundary: the village's count out less in is what the settlements took in less sent
-	return {"people_mismatch": r.net_migrants_counted() - r.net_migrants_from_village(), "migrants_in": int(_st("migrants_in")), "migrants_out": int(_st("migrants_out")),
+	var rep := {"people_mismatch": r.net_migrants_counted() - r.net_migrants_from_village(), "migrants_in": int(_st("migrants_in")), "migrants_out": int(_st("migrants_out")),
 		"moves": r.move_counts.duplicate(), "audit": r.audit(), "coins": coins_now, "coins_start": int(start.regions_coins), "coins_delta": coins_now - int(start.regions_coins),
 		"village_paid_net": net, "coins_mismatch": (coins_now - int(start.regions_coins)) - net,
 		"goods_mismatch": bad_goods.size(), "goods_mismatch_items": bad_goods, "population": r.population(),
 		"settlements": r.summary(), "made": made, "used": used, "bought_from_village": in_v, "sold_to_village": out_v,
 		"traders_open": r.list.filter(func(x): return not x.trader().is_empty()).map(func(x): return x.id)}     # B25-ECON-P4 report: places with a trader (read only)
+	if not spoiled.is_empty():
+		rep["spoiled"] = spoiled                  # MML-INV-02 F2(b): the settlements' spoiled food (only while INV-02 is on; included in `used`)
+	return rep
 
 
 ## FARM-08 (owner, 2026-10-21): the farming economy for the shared-yield comparison: the fields, the pens and their

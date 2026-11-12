@@ -1,12 +1,14 @@
-# INV-02: food spoilage by storage condition, investigation and proposal
+# INV-02: food spoilage by storage condition (design; investigation and decisions)
 
 Register: **B25-INV02-SPOIL-D1** (owner, 2026-11-10: "APPROVED IN PRINCIPLE, INVESTIGATE BEFORE IMPLEMENTATION").
 Audit finding: **MML-INV-02**. Related: **DVW-B4** (goods decay, gentle rates), **WDR-022** (a village may fail; the
 simulation may not), **BASELINE-AUTH-01** (owner baseline authority), **SIM-01/SIM-02** (long-run measurement rules).
 
-Status: investigation and proposal. **No shipped behaviour changes.** A prototype exists on this branch behind a new
-static flag `Decay.storage_on` (default `false`); it is not wired into any shipped path and is not part of the running
-Build 25 validation campaign. It is for the owner's decision.
+Status: **decided and implemented behind an off-by-default switch** (section H). Owner, 2026-11-10
+(`docs/directives/2026-11-10_blocked_decisions_wp1.md`): "Approve F1(b), F2(b), F3(b), F4(a), F5(b), and F6(b), as recommended.
+Defer F7, food preservation. Keep the spoilage prototype disabled by default until implementation and full validation are
+complete." Sections A to G are the investigation as presented for that decision (kept as written); section H is the design as
+built. With the switch off the game is unchanged.
 
 Branch: `wip/b25-inv02-proposal` (from `origin/wip/b25r2-rev2` at `72729e5`).
 
@@ -243,11 +245,65 @@ changed draw, not an effect that one seed can attribute; they are why section E 
 prototype does not touch the off-map settlements or the couriers, so the largest expected effect (F2) is not measured
 here.
 
+## H. Implemented (behind the switch; branch `wip/b25-inv02-impl` from chain9 `57583fb`)
+
+**The switch.** `balance.json` `decay.storage` = `{enabled: false, open: 1.5, carried: 1.0, home: 1.0, cellar: 0.5}`.
+`Decay.on()` is `enabled` or the static override `Decay.storage_on` (tests; `economy_sim.gd --spoil-storage`). Every behaviour
+below is gated by `Decay.on()`; off, `Decay.smul` returns exactly 1.0, the new holders are not walked, the settlements keep no
+`spoiled` flow and `Decay.eat_order` returns the list it was given, so the run is byte-identical (H.3).
+
+**H.1 Decisions as built.**
+- **F1(b)** `Decay.dawn`: each holder's multiplier (`smul`) scales the item's rate: villagers' and players' packs, carts, manor
+  job loads and chapel parcels carried; pantries, family chests, the chapel store, the works yard and shops home; the manor
+  granary cellar; tables, loot and manor lots open. `_spoil_unreached` adds the stash (`stash:<unit>`, a unit whose container
+  kind is `barrel` cellar, others home), homestead chests (`homestead:<claim>`, home) and the pens' troughs (`trough:<pen>`,
+  wheat, open). Stats `spoiled_<item>`, `decay_<item>` and the diagnostics `inv02_spoiled_<group>`.
+- **F2(b)** `OffMapSettlement._spoil`, first thing in `step_day`: living households' pantries, businesses' and own trades'
+  stock (home), the treasury granary (cellar) and the packs of calculated walkers (carried; a live walker's pack is the NPC's
+  and is skipped). Draw key `offmap:<settlement>:<holder>`, the settlement's own day. Every unit goes to the flow line
+  `flows.spoiled` (created on the first loss, saved, loaded as an optional key); `audit()` subtracts it, so `Regions.audit`
+  and the economy sim's settlement goods check (which adds it to `used` and reports `spoiled`) balance. Consigned goods are
+  ores (`rules.consign`, rate 0) and the trader's imported marks are re-clamped (`_imported_left`).
+- **F3(b)** `CourierService.spoil_day` (called by `Decay.dawn`): only booked lines spoil, each with its books together: a
+  deposit line with the booth's store, a load waiting at a booth (`items`) with the store (both home), a load on the road
+  (`cargo`) with the line it carries (`items` going, `returned_items` or `carried_items` coming back) (carried). The booth's
+  store stays the sum of its deposits and waiting loads. The sender bears the loss: no refund; `_spoiled_terms` scales a
+  payment asked on arrival to the units that arrive (rounded down; none asked if nothing arrives), once, with a history line.
+  The delivery records `spoiled` (saved). Counted `spoiled_`, `decay_` and `courier_spoiled` (the booths and loads are in
+  the village census through `held_goods`).
+- **F4(a)** the base rates are unchanged.
+- **F5(b)** `Decay.dawn` walks `World.active_players()` instead of `player_list()`: an away guest's pack and chest keep.
+  (Their homestead chest and their stash units are not per-player holders and spoil as any.)
+- **F6(b)** `Decay.eat_order(list)`: the fastest-spoiling first, ties in the list's order (as `Chapel.give_order`). Used by the
+  eat action (cooked or any), the home meal, the raw-food choice in `_plan_eat`, travellers (`Journeys.night_and_food`),
+  homesteaders on the way (`Homesteads.tick`) and the band (`band_eat`). Provisioning and food reckoning are not eating and
+  keep `EDIBLE`.
+- **F7** deferred: no preservation items or verbs.
+
+**H.2 Saves.** No new required data and no save-version bump: classes follow from holder types, rates from data. Optional
+keys written only once INV-02 has acted: a settlement's `flows.spoiled`, a delivery's `spoiled` and `terms_scaled`. An older
+save loads as it is.
+
+**H.3 Evidence (local, 2026-11-12, chain9 `57583fb` base).**
+- Flag off: `economy_sim.gd -- --days 10 --seed 1 --every 5` on the base and on this branch: fingerprint
+  `4e0685efc8910aa76db9c506da59501f` both, identical day 0/5/10 lines and save bytes; the logs differ only in timings.
+- Flag on (`--spoil-storage`), the same run twice: fingerprint `e7b087b1e9193cc7fada662a10205930` both (deterministic),
+  `LEAKS: currency 0; items {}`, the settlements' audit empty and goods and coins mismatch 0 at every sample.
+- `game/tests/inv02_spoilage_test.gd` (the switch off; each class on a known stack; settlements; courier care; away guest;
+  eating order; conservation; determinism; save and load in the middle).
+
+**H.4 Still needed before enabling (owner's full validation).** The SIM-01 comparison of section E.6: one 365-day run per
+seed 1 to 4 with the switch on, compared with the same commit's switch-off baseline (BASELINE-AUTH-01), plus the determinism
+gate with the switch on and a device check; then the owner's decision to set `enabled`. Not done here.
+
 ## Files on this branch
 
 - `docs/design/INV02_SPOILAGE_PROPOSAL.md` (this document).
-- `game/scripts/core/decay.gd`: `Decay.storage_on` (default false), `STORAGE`, `smul`, an optional multiplier argument
-  on `spoil_inv`/`spoil_dict` (1.0 by default), `_spoil_unreached` (stash, homestead chests, troughs) and per-group
-  diagnostics (`inv02_spoiled_<group>`), all inert while the flag is off.
-- `game/tests/economy_sim.gd`: `--spoil-storage` turns the prototype on for a measurement run.
-- `game/tests/inv02_storage_proto_test.gd`: the prototype's focused test.
+- `game/data/balance.json` `decay.storage`: the switch and the classes.
+- `game/scripts/core/decay.gd`: `on`, `scfg`, `smul`, `eat_order`, multipliers on `spoil_inv`/`spoil_dict`, `_spoil_unreached`,
+  the courier call, the away-guest rule and per-group diagnostics.
+- `game/scripts/core/settlement/offmap.gd`: `_spoil`, `_spoil_d`, the `spoiled` flow in `audit` and `from_dict`.
+- `game/scripts/core/settlement/couriers.gd`: `spoil_day`, `_spoil_lines`, `_spoiled_terms`, `spoiled` in `from_dict`.
+- `game/scripts/core/npc_brain.gd`, `journeys.gd`, `homesteads.gd`: `Decay.eat_order` where villagers eat.
+- `game/tests/economy_sim.gd`: `--spoil-storage`; the settlements' `spoiled` flow in their goods check and report.
+- `game/tests/inv02_spoilage_test.gd`: the focused test (was the prototype's `inv02_storage_proto_test.gd`).
