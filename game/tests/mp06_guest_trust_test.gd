@@ -183,6 +183,42 @@ func _init() -> void:
 	w.minutes += mins * 2.0
 	r = verb(w, g, "player_craft", [recipe])
 	check(not r.ok and r.text == "That is out of reach." and g.inv.count("leather") == leather0 + int(rd.out.leather), "walked away from the workbench: finishing is refused")
+	# a home's food table (not a village station): begun and finished beside it, in the guest's own home
+	var home := ""
+	var table := ""
+	var spot := {}
+	for bid in w.buildings:
+		for sp in w.interiors.get(bid, {}).get("spots", []):
+			if sp.kind == "table" and str(w.buildings[bid].get("type", "")) == "house":
+				home = str(bid)
+				spot = sp
+				table = Furniture.station_id(home, sp)
+				break
+		if table != "":
+			break
+	check(table != "", "setup: a house with a food table")
+	if table != "":
+		var old_home := g.home
+		g.home = home
+		g.inv.add("wheat", 6)
+		var bread_id := "knead_flatbread"
+		var out_id: String = GameData.recipes[bread_id].out.keys()[0]
+		var made0 := g.inv.count(out_id)
+		g.pos = Vector2(int(spot.at[0]), int(spot.at[1])) + Vector2(0.5, 1.5)
+		r = verb(w, g, "player_craft_begin", ["tan_pelts", table])
+		check(not r.ok and r.text == "That is not made here.", "a workbench recipe begun at a home's food table is refused")
+		g.pos = Vector2(int(spot.at[0]), int(spot.at[1])) + Vector2(20.5, 0.5)
+		r = verb(w, g, "player_craft_begin", [bread_id, table])
+		check(not r.ok and r.text == "That is out of reach.", "begun at the guest's own food table from across the village: refused")
+		g.pos = Vector2(int(spot.at[0]), int(spot.at[1])) + Vector2(0.5, 1.5)
+		r = verb(w, g, "player_craft_begin", [bread_id, table])
+		var hb: Dictionary = r.get("result", {}) if r.get("result", {}) is Dictionary else {}
+		check(r.ok and bool(hb.get("ok", false)), "begun beside the guest's own food table (%s)" % str(hb))
+		w.minutes += float(hb.get("secs", 0.0)) * gm + 1.0
+		r = verb(w, g, "player_craft", [bread_id])
+		check(r.ok and g.inv.count(out_id) == made0 + int(GameData.recipes[bread_id].out[out_id]), "and finished there after its time: the food is made (%s)" % r.text)
+		g.home = old_home
+	g.pos = bench_at
 	r = verb(w, g, "player_repair", ["iron_sword"])
 	check(not r.ok and r.text == "You have not begun that.", "a repair finished without being begun is refused")
 

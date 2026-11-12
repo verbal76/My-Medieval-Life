@@ -280,8 +280,11 @@ static func place_refusal(w: World, p: PlayerState, path: String, args: Array) -
 			if args.is_empty() or not GameData.recipes.has(str(args[0])):
 				return "That cannot be made."
 			var st := str(args[1]) if args.size() >= 2 else ""
-			if st != "" and not w.stations_of(str(GameData.recipes[str(args[0])].station)).has(st):
-				return "That is not made here."          # MP-GUEST-TRUST: a recipe at a station of its own kind only
+			if st != "" and not _station_fits(w, st, str(args[0])):
+				return "That is not made here."          # MP-GUEST-TRUST: a recipe at a station that offers it only
+			if st != "" and Furniture.is_home_station(st) and str(w.as_actor(p, func(): return Furniture.home_refusal(w, st))) == "" \
+					and not _station_near(w, p, st):
+				return "That is out of reach."           # (a home's leave, and a village station's reach, are the verb's own words)
 			return ""
 		"player_craft", "player_repair":
 			return begun_work_refusal(w, p, path, args)
@@ -391,13 +394,39 @@ static func begun_work_refusal(w: World, p: PlayerState, path: String, args: Arr
 	var b: Dictionary = p.get_meta("mp_work", {}) if p.has_meta("mp_work") else {}
 	if b.is_empty() or str(b.verb) != str(BEGUN_WORK[path]) or args.is_empty() or str(args[0]) != str(b.what):
 		return "You have not begun that."
-	var st := str(b.station)
-	if not w.stations.has(st) or p.map_level != 0 or ((Vector2(w.station_use(st)) + Vector2(0.5, 0.5)).distance_to(p.pos) >= World.STATION_REACH
-			and not World.station_in_reach(w.stations[st], p.pos, Vector2.ZERO)):
+	if not _station_near(w, p, str(b.station)):
 		return "That is out of reach."
 	if w.minutes - float(b.at) < float(b.mins) * WORK_GRACE:
 		return "That is not finished yet."
 	return ""
+
+
+## MP-GUEST-TRUST: whether station `st` offers `recipe`: a village station of the recipe's own kind (the craft window lists
+## GameData.recipes_at its type), or a home's hearth or table offering it (Furniture.home_recipes).
+static func _station_fits(w: World, st: String, recipe: String) -> bool:
+	if Furniture.is_home_station(st):
+		var d := Furniture.station_def(st)
+		return not d.is_empty() and Furniture.home_recipes(str(d.kind)).has(recipe)
+	return w.stations.has(st) and str(w.stations[st].type) == str(GameData.recipes[recipe].station)
+
+
+## MP-GUEST-TRUST: whether guest `p` is at station `st`: a village station by the host's own craft rule (World.STATION_REACH of
+## its use cell, or beside it, station_in_reach), a home's hearth or table within HOME_STATION_REACH of where it stands (the spot
+## its id names); both on the surface.
+const HOME_STATION_REACH := 3.0
+static func _station_near(w: World, p: PlayerState, st: String) -> bool:
+	if p.map_level != 0:
+		return false
+	if Furniture.is_home_station(st):
+		var parts := st.trim_prefix(Furniture.HOME_PREFIX).split(":")
+		var xy := parts[parts.size() - 1].split(",") if parts.size() >= 3 else PackedStringArray()
+		if xy.size() != 2 or not xy[0].is_valid_int() or not xy[1].is_valid_int():
+			return false
+		return (Vector2(int(xy[0]), int(xy[1])) + Vector2(0.5, 0.5)).distance_to(p.pos) <= HOME_STATION_REACH
+	if not w.stations.has(st):
+		return false
+	return (Vector2(w.station_use(st)) + Vector2(0.5, 0.5)).distance_to(p.pos) < World.STATION_REACH \
+		or World.station_in_reach(w.stations[st], p.pos, Vector2.ZERO)
 
 
 ## MP-GUEST-TRUST: what the host knows of a guest's timed work before applying `path` (its own plan of a swing or a blow): the
