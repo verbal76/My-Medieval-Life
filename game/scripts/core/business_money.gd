@@ -282,7 +282,9 @@ func keep_till(b: Dictionary, ref: String) -> void:
 		_keep(b, "counter", owner)
 
 
-func _keep(b: Dictionary, key: String, ref: String) -> void:
+## `must` (BIZ-06): the record is about to be erased (a venture closing), so a refused recorded transfer must not leave coins
+## in it: they go straight to the same recipient instead (conserved; the hand-over is still recorded as kept).
+func _keep(b: Dictionary, key: String, ref: String, must := false) -> void:
 	var rec: Dictionary = b[key]
 	var till := int(rec.get("till", 0))
 	var tref := key + ":" + str(b.get("id", ""))
@@ -297,7 +299,7 @@ func _keep(b: Dictionary, key: String, ref: String) -> void:
 		return
 	if World.is_player_ref(ref):                 # and a player its own: to that player's purse
 		var pl: PlayerState = w.player_of_ref(ref)
-		if pl != null and _move(rec, pl, till, true, tref, "kept"):
+		if pl != null and (_move(rec, pl, till, true, tref, "kept") or (must and _hand_over(rec, pl, till, key))):
 			w.stat(key + "_till_kept", till)
 			_rec(tref, rec, pl, -till, "kept")
 		return
@@ -313,9 +315,19 @@ func _keep(b: Dictionary, key: String, ref: String) -> void:
 		if w.recorder != null:
 			w.recorder.till_flow(tref, null, -till, 0, "escheat")
 		return
-	if _move(rec, who, till, true, tref, "kept"):
+	if _move(rec, who, till, true, tref, "kept") or (must and _hand_over(rec, who, till, key)):
 		w.stat(key + "_till_kept", till)
 		_rec(tref, rec, who, -till, "kept")
+
+
+## BIZ-06: the till's coins straight to `who` when the recorded transfer was refused and the record is going (conserved).
+func _hand_over(rec: Dictionary, who: Object, till: int, key: String) -> bool:
+	if int(rec.get("till", 0)) < till:
+		return false
+	rec.till = int(rec.till) - till
+	who.coins += till
+	w.stat(key + "_till_kept_direct", till)
+	return true
 
 
 ## TILL-D1: every storefront till of the houses `ref` holds goes to its own funds now (a whole household leaving the village:

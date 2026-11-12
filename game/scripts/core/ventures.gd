@@ -257,7 +257,7 @@ func close(b: Dictionary, why: String) -> void:
 	var v: Dictionary = b.venture
 	for rec in w.employment.of_employer(ref_of(b)):      # B25-BIZ-D2: its paid employees' employment ends with it
 		w.employment.end(rec, "the business closed")
-	w.business.money._keep(b, "venture", w.business.money.venture_owner(b))   # B25-BIZ-D1, TILL-D1: its till goes to its household
+	w.business.money._keep(b, "venture", w.business.money.venture_owner(b), true)   # B25-BIZ-D1, TILL-D1: its till goes to its household (BIZ-06: even if the recorded transfer is refused)
 	b.erase("venture")
 	var people: Array = (v.hands as Array).duplicate()
 	people.append(int(v.keeper))
