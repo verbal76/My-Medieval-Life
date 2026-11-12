@@ -158,6 +158,7 @@ jobs:
           res://tests/biz05_hand_not_hired_test.gd   # BIZ-05 (B25 audit): a venture's own hand is not also hired as its employee
           res://tests/biz06_venture_close_till_test.gd   # BIZ-06 (B25 audit, WP-1): a closing venture's till is never erased, even if its recorded hand-over is refused
           res://tests/trd04_stranded_shipment_test.gd   # TRD-04 (B25 audit, WP-1): a shipment whose seller is gone is settled to the estates, over a save
+          res://tests/npc04_evening_company_away_test.gd   # NPC-04 (B25 audit, WP-1): no evening walk to a companion away, at a homestead or underground
           res://tests/biz01_found_atomic_test.gd   # BIZ-01/02 (B25 audit): a failed founding ends no employment and pays no premises
           res://tests/trd02_merchant_net_earnings_test.gd   # TRD-02 (owner 2026-11-08): merchants' earnings are net of commission
           res://tests/trd01_guest_stall_settle_test.gd    # TRD-01: a guest's stall session is settled to the guest
