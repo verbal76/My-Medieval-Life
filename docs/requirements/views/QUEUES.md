@@ -40,7 +40,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | X20-ECON-SUSTAIN | 20 | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | XAUDIT-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | staging/my-medieval-life |
 
-## Implemented but not tested (96)
+## Implemented but not tested (97)
 
 | ID | Build | Implementation | Remaining |
 |---|---|---|---|
@@ -78,6 +78,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-SCOPE-AUDIT | 20 | IMPLEMENTED ON TASK BRANCH |  |
 | B25R1-001 | 20 | PARTIALLY IMPLEMENTED |  |
 | B25R1-016 | 20 | PARTIALLY IMPLEMENTED |  |
+| B25R2-CONT-01 | unassigned | PARTIALLY IMPLEMENTED |  |
 | B7-009 | 15 | INTEGRATED |  |
 | B7-014 | 15 | INTEGRATED |  |
 | B8-007 | 20+ | PARTIALLY IMPLEMENTED |  |

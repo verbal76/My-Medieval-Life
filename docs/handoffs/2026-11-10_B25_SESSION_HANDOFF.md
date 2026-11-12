@@ -18,7 +18,7 @@ It points to the records; it does not repeat them. Times are EST.
 
 ## 2. Development line
 
-- Development branch: `wip/b25r2-rev2` @ `1f7043b` (2026-11-11 03:40 UTC: ND-12 merged, Tests 42947422593, gate 42947426216); before that @ `b2cd024` (2026-11-11 02:40 UTC: Batch 3+4 merged, Tests 42940243926, gate 42940247768; ND-12 merge `1f7043b` on `wip/b25-nd12-merge` under CI); before that @ `7d99550` (then also the CI report fix for re-run attempts, verified by 42929466693); earlier @ `98bda59` (2026-11-11 00:15 UTC: fast-forward from `9fd18a5` with the CI-only change `wip/b25-ci-groups`, owner-authorized by the GitHub Actions testing directive; full Tests 42921579595 and targeted 42913303043 passed). No gameplay change merged. `main` and staging untouched.
+- Development branch: `wip/b25r2-rev2` @ `ab72074` (2026-11-12: R2 chain step 1, household member ids; chain status `docs/audits/2026-11-12_R2_MERGE_CHAIN.md`); before that @ `1f7043b` (2026-11-11 03:40 UTC: ND-12 merged, Tests 42947422593, gate 42947426216); before that @ `b2cd024` (2026-11-11 02:40 UTC: Batch 3+4 merged, Tests 42940243926, gate 42940247768; ND-12 merge `1f7043b` on `wip/b25-nd12-merge` under CI); before that @ `7d99550` (then also the CI report fix for re-run attempts, verified by 42929466693); earlier @ `98bda59` (2026-11-11 00:15 UTC: fast-forward from `9fd18a5` with the CI-only change `wip/b25-ci-groups`, owner-authorized by the GitHub Actions testing directive; full Tests 42921579595 and targeted 42913303043 passed). No gameplay change merged. `main` and staging untouched.
 - Batch 3+4 merge candidate: `wip/b25-sim34-on-dev` @ `fbfd6ad` (NOT merged; awaits the owner, section 7).
 - Records branch: `wip/requirements-control` (this file's commit is the head).
 

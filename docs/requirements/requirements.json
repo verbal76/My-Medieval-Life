@@ -11104,7 +11104,7 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
+   "implementation_status": "PARTIALLY IMPLEMENTED",
    "verification_status": "NOT TESTED",
    "release_status": "NOT READY",
    "completion": "OPEN",
@@ -11113,9 +11113,18 @@
      "date": "2026-11-11",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-11_b25r2_authorization_continuation.md"
+    },
+    {
+     "date": "2026-11-12",
+     "change": "implementation_status: NOT STARTED -> PARTIALLY IMPLEMENTED; branch: None -> wip/b25r2-rev2; commits + ab72074",
+     "why": "chain step 1 (cdfa395 household member ids) merged: dev line ab72074; Tests 43124190693 pass, gate 43124194923 blocking unchanged, determinism identical"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "branch": "wip/b25r2-rev2",
+   "commits": [
+    "ab72074"
+   ]
   },
   {
    "id": "B25R2-DRAFT-01",
