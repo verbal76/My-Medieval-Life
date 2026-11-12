@@ -289,8 +289,14 @@ save loads as it is.
   `4e0685efc8910aa76db9c506da59501f` both, identical day 0/5/10 lines and save bytes; the logs differ only in timings.
 - Flag on (`--spoil-storage`), the same run twice: fingerprint `e7b087b1e9193cc7fada662a10205930` both (deterministic),
   `LEAKS: currency 0; items {}`, the settlements' audit empty and goods and coins mismatch 0 at every sample.
-- `game/tests/inv02_spoilage_test.gd` (the switch off; each class on a known stack; settlements; courier care; away guest;
-  eating order; conservation; determinism; save and load in the middle).
+- Flag on, seed 2, 30 days (`--every 10`): `LEAKS: currency 0; items {}`, the settlements' audit empty and goods and coins
+  mismatch 0 at days 0, 10, 20, 30; the settlements spoiled 333, 1,066 and 2,160 units by days 10, 20 and 30 (fingerprint
+  `4ccfdb8d5ec323e25bd1e2b1e6f97f1a`). One seed, a month: an integrity check, not the measurement of section E.6.
+- `game/tests/inv02_spoilage_test.gd`, 51 checks (the switch off; each class on a known stack; settlements; courier care; away
+  guest; eating order; conservation; determinism; save and load in the middle). The related suites pass unchanged with the
+  switch off: decay, chapel, clan_child_pantry, conservation, courier_desk, courier_live, courier, hamlet,
+  homestead_food_held, homestead, inv01_stash_census, journey, meal_claims, regions, settlement, settlement_life,
+  le05_route_risk, trd04_stranded_shipment, multiplayer_b, wiki.
 
 **H.4 Still needed before enabling (owner's full validation).** The SIM-01 comparison of section E.6: one 365-day run per
 seed 1 to 4 with the switch on, compared with the same commit's switch-off baseline (BASELINE-AUTH-01), plus the determinism
