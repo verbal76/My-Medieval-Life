@@ -38,7 +38,7 @@
 >   - `wip/b25r2-chain10` `428a494` = chain9 + `baaec84` + owner decisions (BIZ-07, EMP-06, REG-03, REG-08, five guard tests;
 >     `b0d9cca`) + INV-02 flag off (`0498dc3`) + MP-06 (`cda94b8`): Tests and gate running.
 > - Workers: `wip/b25-mp-guest-trust` (guest-trusted values: XP, damage, craft, work notes, level reach, guest courier sender)
->   and `wip/b25-mp07` (private records in snapshots).
+>   and the MP-07 worker branch (private records in snapshots; not pushed yet).
 > - Preserved probe: `wip/b25-inv02-probe` `b6ef238`.
 > - Records still to update: the tracker, the defect register (new: the guest-trust security defects; the 3 NPC-hours inside the
 >   village from the probe finding), and the register.
