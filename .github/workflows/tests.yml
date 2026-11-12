@@ -261,7 +261,9 @@ jobs:
           res://tests/reg02_departure_debts_test.gd   # REG-02 debt part (B25-REG02-DEBT-D1): a leaver's debts are repaid or recorded as defaults as they pack
           res://tests/reg06_household_change_live_test.gd    # REG-06: a live resident is folded before their household changes
           res://tests/npc03_field_takeover_bookkeeping_test.gd    # NPC-03: a manor hand taking a field is counted and recorded
+          res://tests/npc01_path_backoff_test.gd    # NPC-01: a villager whose walks keep failing waits, longer each time, before deciding again
           res://tests/sav03_reservations_reload_test.gd    # SAV-03: farm, hunt, chapel and stall reservations rebuilt on load
+          res://tests/sav04_reload_determinism_test.gd    # SAV-04: a save mid-fight reloads deterministically; persistent wildlife and combat state kept
           res://tests/self_trade_payer_test.gd    # a household never pays a seller for the seller's own goods
           res://tests/hh_business_food_test.gd    # a food seller's household eats the family stock: no sale, no coins
           res://tests/meal_deal_price_test.gd    # a meal is planned only at the deal price the buyer can pay

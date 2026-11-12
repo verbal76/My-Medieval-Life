@@ -166,6 +166,11 @@ are tested without a window. This is what keeps determinism and testing cheap.
   with an empty journal (fixtures `game/tests/fixtures/mp_save_v22_couple.json`, `b22_save_v23_single.json`;
   `game/tests/message_journal_test.gd`).
 
+- Wildlife and combat continuity (MML-SAV-04, owner 2026-11-10 option (a)): a save reloads deterministically (the same save
+  loaded twice, or loaded, saved and loaded, goes on identically), but a fight in progress, animals' anger and strolls and a
+  tree's axe blows are not saved, so a loaded game may differ from one never saved. What is and is not kept, and why:
+  `docs/design/SAVE_WILDLIFE_COMBAT_CONTINUITY.md`; test `game/tests/sav04_reload_determinism_test.gd`.
+
 ### 3.8 Performance
 
 - Integer-scaled viewport. Batched tile layers with chunk culling, and texture atlases from the

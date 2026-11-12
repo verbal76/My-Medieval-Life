@@ -47,6 +47,8 @@ var target_ref := ""         # A7, A8: with target -2, which player ("player", "
 var intel: Array = []        # REGION-NAV-01 S5 (Intel): what this villager was told about the neighbouring settlements' trade, with its source. Saved (optional key)
 var journey := {}            # REGION-NAV-01 (Journeys): {to, purpose, leg, since, gate}: on the road to or at a neighbouring settlement; {} at home. Saved (optional key)
 var pursuit := {}            # A2 (GP-CRIME-PURSUIT): a guard on a player's case: {ref, state: pursuing | responding | searching, at: [x, y] last-known, t, until, cells: [[x, y]], i, share}; {} none. Saved (optional key): the wanted hunt survives save and load (Justice)
+var path_fails := 0          # MML-NPC-01: walks failed in a row (no path, no route to the level) since the last path found; from the second, World._walk_failed makes the villager wait before deciding again. Saved (optional key)
+var path_fail_at := 0.0      # game minutes of the last failed walk. Saved with path_fails
 var chase_route := false     # S3: a guard chasing a player is following `path` round what stands between them (NPCBrain.fight; not saved, as `target` is not)
 var memory: Array = []       # notable events this NPC knows about
 var skills := {}             # skill -> xp, as the player's (PAR-01: the same curve, gates and effects; Skills)
@@ -146,6 +148,9 @@ func to_dict() -> Dictionary:
 		d.adoptive = adoptive.duplicate()    # MP-PLAYER-FAMILY (save 23): written only for a child adopted by a player couple
 	if not intel.is_empty():
 		d.intel = intel.duplicate(true)      # REGION-NAV-01 S5: written only when they know something
+	if path_fails > 0:
+		d.path_fails = path_fails        # NPC-01: written only during a run of failed walks
+		d.path_fail_at = path_fail_at
 	if not journey.is_empty():
 		# REGION-NAV-01: written only for a traveller, in the form a save file holds (JSON numbers), so the dict is the same
 		# whether the trip began before a load (read back from JSON) or after it (w.day() ints): a save is stable when saved again
@@ -197,6 +202,8 @@ static func from_dict(d: Dictionary) -> NPC:
 	n.pursuit = (d.get("pursuit", {}) as Dictionary).duplicate(true)  # A2: older saves (a Build 20 save): no guard on a case
 	n.intel = (d.get("intel", []) as Array).duplicate(true)          # REGION-NAV-01 S5: older saves: nobody told anything
 	n.journey = (d.get("journey", {}) as Dictionary).duplicate(true)  # REGION-NAV-01: older saves: nobody on the road
+	n.path_fails = int(d.get("path_fails", 0))                       # NPC-01: older saves: no failed walks counted
+	n.path_fail_at = float(d.get("path_fail_at", 0.0))
 	for ref in d.get("talked", {}):                                   # A6: older saves: nothing told yet
 		var t := {}
 		for k in d.talked[ref]:
