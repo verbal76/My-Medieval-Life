@@ -25,6 +25,24 @@
   - History lives in `docs/DEVELOPMENT_CHANGELOG.md`.
 - **Recovery after lost context:** `docs/handoffs/CURRENT_SESSION_RECOVERY.md`.
 
+> **Checkpoint 2026-11-12 13:30 EST (Extra Life directive, `docs/directives/2026-11-12_extra_life_owner_decisions.md`):**
+> - Development line `wip/b25r2-rev2` = `e21bfc6`:
+>   - chain steps 5-7 fast-forwarded at 11:20 (`5503614`; Tests 43124224113/43124232365/43124241072 pass, gates unchanged);
+>   - chain 8 (`e21bfc6`: emigration with spouse, BIZ-06, TRD-04, NPC-04) at 13:30 (Tests 43257628284 pass; gate 43257634345:
+>     same 33 identities, values moved by the fixes, determinism identical).
+> - Fallback packages: build 37 = run 43257420696 from `5503614`; 6 packages (artifacts until 2026-12-12), Windows full and demo
+>   smoke pass; gate shows the known 33 baseline findings, so no release.
+> - Candidates:
+>   - `wip/b25r2-chain9` `57583fb` (REG-02 debt, F015/P99, probe findings + traveller paths, SAV-04, NPC-01): gate 43265678488
+>     found 2 NEW blocking (social_chain chains: NPC-01 back-off left bandits standing "lost"); fixed by `baaec84`.
+>   - `wip/b25r2-chain10` `428a494` = chain9 + `baaec84` + owner decisions (BIZ-07, EMP-06, REG-03, REG-08, five guard tests;
+>     `b0d9cca`) + INV-02 flag off (`0498dc3`) + MP-06 (`cda94b8`): Tests and gate running.
+> - Workers: `wip/b25-mp-guest-trust` (guest-trusted values: XP, damage, craft, work notes, level reach, guest courier sender)
+>   and `wip/b25-mp07` (private records in snapshots).
+> - Preserved probe: `wip/b25-inv02-probe` `b6ef238`.
+> - Records still to update: the tracker, the defect register (new: the guest-trust security defects; the 3 NPC-hours inside the
+>   village from the probe finding), and the register.
+
 > **Work preservation, 2026-11-09 17:10 EST (HAG-PRESERVE-01):** all uncommitted work in 29 worktrees snapshotted to GitHub
 > (`wip/backup-20261109/*`, 58 branches) and verified against GitHub's copy (288 files, 0 mismatches). Free disk about 526 MB.
 > Record: `docs/audits/2026-11-09_WORK_PRESERVATION_EVENT.md`. Before disk-heavy work, check `df -h /`.
