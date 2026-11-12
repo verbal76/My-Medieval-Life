@@ -365,7 +365,11 @@ func means(n: NPC, id: String, days: int, price_each := 1 << 30) -> Dictionary:
 		var v := _vendor(n, id, price_each)
 		if v != null:
 			var cost := w.deal_price(w.sell_price(v, id), n, v)
-			var free := maxi(0, n.coins - w.reserve_of(n))
+			# B25-CONTRACT-FUNDS-D1 (owner 2026-11-10): what the seller can fund is the coins the LE-03 claims leave free (its own
+			# bids' coins are not spent twice; fund_refusal's rule for a buyer), above its reserve, less the purchases the
+			# buy-route contracts it already holds still need (not reserved anywhere until it buys: never counted twice)
+			var purse := mini(n.coins, w.claims_free_coins(n, id, World.is_necessity(id)))
+			var free := maxi(0, purse - w.reserve_of(n) - committed_buys(n))
 			out.cap = mini(v.inv.count(id) - w.brain.reserve(v, id), free / maxi(1, cost))
 			if int(out.cap) > 0:
 				out.route = "buy"
@@ -375,6 +379,28 @@ func means(n: NPC, id: String, days: int, price_each := 1 << 30) -> Dictionary:
 	if int(out.stock) > 0 and str(out.route) == "":
 		out.route = "stock"
 	return out
+
+
+## B25-CONTRACT-FUNDS-D1: the coins `n` will still have to pay for the units its open buy-route contracts owe and it does not
+## hold (per item, what it holds counted once across the contracts for that item), at the unit cost recorded when each was
+## agreed (terms.cost_each; a contract agreed before it was recorded counts its price, the most it can have been). These
+## coins are reserved nowhere until it buys, so contract acceptance subtracts them.
+func committed_buys(n: NPC) -> int:
+	var me := World.npc_ref(n.id)
+	var owed := {}
+	var unit := {}
+	for c in list:
+		if not is_open(c) or str(c.seller) != me or str(c.route) != "buy" or is_service(c):
+			continue
+		var id := str(c.item)
+		owed[id] = int(owed.get(id, 0)) + left(c)
+		unit[id] = maxi(int(unit.get(id, 0)), int(c.terms.get("cost_each", c.price_each)))
+	var total := 0
+	var ids := owed.keys()
+	ids.sort()
+	for id in ids:
+		total += maxi(0, int(owed[id]) - n.inv.count(str(id))) * int(unit[id])
+	return total
 
 
 ## The goods route (means) or, for a service, ContractServices.means: one shape for evaluate.
@@ -587,6 +613,8 @@ func evaluate(n: NPC, buyer_ref: String, id: String, qty: int, price_each: int, 
 	r.min_price = int(pt.min)
 	r.terms.merge(pt)
 	r.terms.merge({"route": m.route, "why": m.why, "stock": m.stock, "capacity": m.cap})
+	if str(m.route) == "buy":
+		r.terms["cost_each"] = int(ceilf(float(m.cost)))     # B25-CONTRACT-FUNDS-D1: what each unit will cost it to buy (committed_buys)
 	if can <= 0 and not (float(m.rate) > 0.0 and str(m.route) in ["mine", "chop", "craft", "service"]):
 		match str(m.why):
 			"tool:pickaxe", "tool:axe", "tool:shovel":
