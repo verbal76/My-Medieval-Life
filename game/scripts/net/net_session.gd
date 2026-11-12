@@ -58,6 +58,15 @@ const TIMEOUT_MAX_MS := 10000
 ## on a test machine with other work running, longer on a slow phone), and cannot answer the network meanwhile. Its connection is
 ## given this long (ENet's own default) until its first move shows it is playing; then TIMEOUT_MIN_MS/TIMEOUT_MAX_MS again.
 const JOIN_TIMEOUT_MS := 30000
+## ND-26: ENet alone can take up to about three times TIMEOUT_MAX_MS to find a dead connection (it checks its timeouts only when an
+## unacknowledged reliable send is due again, and the wait doubles each time from a round trip that a joining guest's long frame
+## inflates: 27 s measured). So each side sends the other a small reliable heartbeat (zz_tick) every BEAT_SECONDS while a guest plays,
+## and a side that has heard nothing from the other for longer than TIMEOUT_MAX_MS ends that connection itself, by the same path as
+## ENet's own end: the host drops the guest (MP-D1, out of active play, every record kept), the guest reconnects. A guest still
+## building its world is not watched (JOIN_TIMEOUT_MS); this machine's own long frames do not count as the other side's silence.
+## Never the unreliable moves: ENet's throttle can hold them back for seconds after a join.
+const BEAT_SECONDS := 1.0
+const OWN_GAP_MS := 1000             # a frame of this machine longer than this: its length is not counted as the other side's silence
 const HOLD_SECONDS := 2.0            # host: a request numbered past a missing one waits this long for it, then goes ahead
 const REPLIES_KEPT := 64             # host: answers kept per guest to answer a repeated request without applying it again
 ## Host stopping (B25R1): how long it waits for its guests to end their connections after its goodbye (z_bye) before it ends them
@@ -105,6 +114,12 @@ var by_peer := {}                   # peer id -> pid (connected guests)
 var moves := {}                     # peer id -> {t (ms), dir, anim}: the last accepted move
 var joining := {}                   # host: peer ids welcomed and not yet moved (building the world: JOIN_TIMEOUT_MS)
 var _built_frame := -1              # guest: the frame the world was built in (JOIN_TIMEOUT_MS until the network is read after it)
+var heard := {}                     # host (ND-26): peer id -> when that playing guest was last heard (msec; zz_tick, zz_playing)
+var _host_frame_msec := -1          # host (ND-26): when its last frame ran (its own long frame is not a guest's silence)
+var _t_beat := 0.0
+var watchdog_drops := 0             # host (ND-26): playing guests dropped for silence (tests, the log)
+var host_heard := -1                # guest (ND-26): when the host was last heard while playing (msec), -1 when not watched
+var host_silent_losses := 0         # guest (ND-26): connections ended because the host was silent (tests)
 var queue: Array = []               # requests waiting for the host's next tick: {seq, pid, peer, rid, kind, args}
 var arrivals := 0                   # the arrival counter that orders `queue`
 var applied := 0                    # requests applied (tests and the log)
@@ -276,6 +291,9 @@ func stop() -> void:
 	by_peer.clear()
 	moves.clear()
 	joining.clear()
+	heard.clear()
+	_host_frame_msec = -1
+	host_heard = -1
 	_built_frame = -1
 	_frame_msec = -1
 	queue.clear()
@@ -377,6 +395,7 @@ func _drop_peer(id: int, quiet: bool) -> void:
 	by_peer.erase(id)
 	moves.erase(id)
 	joining.erase(id)
+	heard.erase(id)
 	synced.erase(id)
 	sync_due.erase(id)
 	fauna_known.erase(id)
@@ -645,6 +664,7 @@ func _begin_reconnect() -> void:
 	reconnect_window = HOST_PAUSED_SECONDS if host_paused else RECONNECT_SECONDS
 	reconnect_paused = host_paused
 	reconnect_until = _now() + reconnect_window
+	host_heard = -1
 	_close_peer()
 	_retry_at = _now() + 0.5
 	predicted.clear()
@@ -858,6 +878,7 @@ func _playing(id: int) -> void:
 	if not joining.has(id):
 		return
 	joining.erase(id)
+	heard[id] = Time.get_ticks_msec()              # ND-26: watched from now (zz_tick)
 	_set_timeout(id)                               # B25R1: playing, the usual timeouts from now on
 	var p: PlayerState = main.world.player_by_pid(int(by_peer[id])) if by_peer.has(id) else null
 	if p != null:
@@ -873,6 +894,35 @@ func zz_playing() -> void:
 	var id := multiplayer.get_remote_sender_id()
 	if is_host() and by_peer.has(id):
 		_playing(id)
+
+
+## ND-26: the heartbeat, both ways, reliable, every BEAT_SECONDS while a guest plays: a guest's to the host, the host's to each
+## playing guest. Named zz_ (after zz_playing) so the other RPCs keep their ids.
+@rpc("any_peer", "call_remote", "reliable")
+func zz_tick() -> void:
+	var id := multiplayer.get_remote_sender_id()
+	if is_host():
+		if heard.has(id):
+			heard[id] = Time.get_ticks_msec()
+	elif is_guest() and id == 1 and host_heard >= 0:
+		host_heard = Time.get_ticks_msec()
+
+
+## Host (ND-26): a playing guest silent (no heartbeat) for longer than TIMEOUT_MAX_MS is dropped as ENet drops a dead connection
+## (_drop_peer: out of active play, every record kept, the world saved), and its connection ended at once (peer_disconnect_now: Godot
+## then reports it gone; the peer_disconnected that follows finds it already dropped). A guest still joining is not in `heard`.
+func _watch_guests(now: int) -> void:
+	for id in heard.keys():
+		if not by_peer.has(id) or joining.has(id):
+			heard.erase(id)
+			continue
+		if now - int(heard[id]) <= TIMEOUT_MAX_MS:
+			continue
+		watchdog_drops += 1
+		var pp := peer.get_peer(int(id)) if peer != null else null
+		_drop_peer(int(id), false)
+		if pp != null:
+			pp.peer_disconnect_now()
 
 
 @rpc("any_peer", "call_remote", "unreliable_ordered")
@@ -1422,6 +1472,13 @@ func _process(dt: float) -> void:
 		if upnp.poll():
 			players_changed.emit()                 # Batch D: the router answered; the window shows the new invite code
 		_release_held()
+		var now_h := Time.get_ticks_msec()
+		var own := now_h - _host_frame_msec if _host_frame_msec >= 0 else 0
+		_host_frame_msec = now_h
+		if own > OWN_GAP_MS:
+			for id in heard:                           # ND-26: the host itself stood still (a long frame, a freeze): not the guests' silence
+				heard[id] = int(heard[id]) + own
+		_watch_guests(now_h)
 		_host_step(dt)
 		return
 	if not is_guest():
@@ -1442,6 +1499,14 @@ func _process(dt: float) -> void:
 	if reconnecting:
 		_reconnect_step()
 		return
+	if host_heard >= 0:
+		if gap > OWN_GAP_MS:
+			host_heard += gap                          # ND-26: this guest's own long frame is not the host's silence
+		if now_ms - host_heard > TIMEOUT_MAX_MS and main.guest_world and connected():
+			host_heard = -1
+			host_silent_losses += 1
+			_on_server_gone()                          # ND-26: the host silent past TIMEOUT_MAX_MS: lost, as when ENet ends the connection
+			return
 	if peer != null and peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTING and _now() > _attempt_until:
 		_attempt_failed()                          # Batch D: this address did not answer in its time
 		return
@@ -1460,6 +1525,11 @@ func _host_step(dt: float) -> void:
 			_drop_peer(int(id), false)             # Batch D: a connection ENet has ended without a signal reaching here
 	if by_peer.is_empty():
 		return
+	_t_beat += dt
+	if _t_beat >= BEAT_SECONDS:
+		_t_beat = 0.0
+		for id in heard:                               # ND-26: the host's heartbeat to each playing guest
+			rpc_id(int(id), "zz_tick")
 	if main.world.recorder != null:                    # X20: a recorded host's hour (its digest was just taken, World._on_hour)
 		var hk := int(main.world.minutes / 60.0)
 		if _rec_hour < 0:
@@ -1598,6 +1668,12 @@ func _guest_step(dt: float) -> void:
 		_built_frame = -1
 		_set_timeout(1)                            # the network read once since the world was built: the usual timeouts again
 		rpc_id(1, "zz_playing")                    # and it plays (reliable: the moves may be throttled away for a while)
+		host_heard = Time.get_ticks_msec()         # ND-26: the host watched from now (zz_tick)
+		_t_beat = BEAT_SECONDS
+	_t_beat += dt
+	if _t_beat >= BEAT_SECONDS:
+		_t_beat = 0.0
+		rpc_id(1, "zz_tick")                       # ND-26: this guest's heartbeat to the host
 	_t_move += dt
 	if _t_move >= 1.0 / NetProtocol.MOVE_HZ:
 		_t_move = 0.0

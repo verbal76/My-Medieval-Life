@@ -9,7 +9,7 @@ extends RefCounted
 ## (user://identity.cfg); the host keeps only its SHA-256 hash, on the guest's character (PlayerState.net_key), so the key
 ## itself is never stored in a world save or shown to anyone. The hash maps to the character's permanent pid.
 
-const VERSION := "mml-net/4"          # bump on any protocol change: a host and a guest must match exactly (2: A2, players by pid; 3: Batch D, numbered requests, resume, invite; 4: B25R1, compact villager snapshots, changed-only snapshots)
+const VERSION := "mml-net/5"          # bump on any protocol change: a host and a guest must match exactly (2: A2, players by pid; 3: Batch D, numbered requests, resume, invite; 4: B25R1, compact villager snapshots, changed-only snapshots; 5: ND-26, the reliable heartbeat zz_tick both ways)
 const GAME_PORT := 47810
 const DISCOVERY_PORT := 47811
 const DISCOVER := "MML_DISCOVER/1"    # a guest's broadcast query

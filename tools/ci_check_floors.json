@@ -143,6 +143,7 @@
  "net_econ_integrity_test": 126,
  "net_family_test": 22,
  "net_fault_test": 55,
+ "net_liveness_test": 11,
  "net_fauna_test": 14,
  "net_g1_test": 45,
  "mp05_mutual_asset_share_test": 24,
