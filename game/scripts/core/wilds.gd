@@ -170,7 +170,7 @@ func plan_hunt(n: NPC, c: Dictionary) -> bool:
 		return false
 	var trade := str((c.trades as Dictionary).get(str(n.id), c.trade))
 	var armed := n.inv.has("copper_sword") or n.inv.has("iron_sword") or n.inv.has("steel_sword") or n.inv.has("bow") or n.inv.has("rusty_sword")
-	if not (trade == "hunter" or (armed and w.brain.household_food_days(n.household) < float(Homesteads.cfg().food_low_days))):
+	if not (trade == "hunter" or (armed and w.brain.household_food_held_days(n.household) < float(Homesteads.cfg().food_low_days))):
 		return false
 	if not armed and trade != "hunter":
 		return false
@@ -956,7 +956,7 @@ func _plan_pen(n: NPC, c: Dictionary) -> bool:
 		n.doing = "feeding the animals"
 		n.plan = [b.go(at), b.work(15.0, "feed_pen", {"pen": pen.id}, "work", gate)]
 		return true
-	var hungry_home := b.household_food_days(n.household) < 1.0
+	var hungry_home := b.household_food_held_days(n.household) < 1.0     # B25-F015-FOOD-01: food held, not coins
 	var spare: Animal = w.fauna.surplus(pen, hungry_home)
 	if spare != null and w.fauna.count(pen.id, pen.kind) > int(GameData.b("animals")[pen.kind].keep):
 		n.doing = "slaughtering a %s" % str(pen.kind)

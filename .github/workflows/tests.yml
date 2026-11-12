@@ -269,6 +269,8 @@ jobs:
           res://tests/clan_child_pantry_test.gd    # a clan child eats from their household's pantry; a shortage stays one
           res://tests/meal_claims_test.gd    # purchases planned only for stock and coins the LE-03 claims leave free
           res://tests/contract_funds_test.gd    # contract acceptance counts only claim-free coins less open buy commitments
+          res://tests/smith_forge_purchase_test.gd    # B25-P99-PAYER-01: the forge's purchases planned by buy_from's own rule
+          res://tests/homestead_food_held_test.gd    # B25-F015-FOOD-01: coins are not food held; grain when no cooked meal
           res://tests/identity_test.gd
           res://tests/multiplayer_a1_test.gd
           # MP Batch A2, gate G1: a host and a guest in two Godot processes over loopback (join, move, an action the host applies, same state, rejoin, host restart)

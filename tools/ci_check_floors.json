@@ -167,6 +167,8 @@
  "clan_child_pantry_test": 7,
  "meal_claims_test": 14,
  "contract_funds_test": 10,
+ "smith_forge_purchase_test": 11,
+ "homestead_food_held_test": 14,
  "npc02_gift_claims_test": 8,
  "jus02_join_band_cleanup_test": 8,
  "net_interact_test": 68,
