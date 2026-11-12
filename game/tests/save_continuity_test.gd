@@ -49,6 +49,23 @@ func differing(a: Dictionary, b: Dictionary) -> Array:
 	return out
 
 
+## Two parts' texts agree when every number in them agrees, whole numbers exactly and fractions within 1e-12 of their size (ND-15).
+func _within(x: String, y: String) -> bool:
+	var rx := RegEx.create_from_string("-?[0-9]+(\\.[0-9]+)?(e-?[0-9]+)?")
+	var mx := rx.search_all(x)
+	var my := rx.search_all(y)
+	if mx.size() != my.size() or rx.sub(x, "#", true) != rx.sub(y, "#", true):
+		return false
+	for i in mx.size():
+		var p := float(mx[i].get_string())
+		var q := float(my[i].get_string())
+		if p == q:
+			continue
+		if p == floorf(p) or absf(p - q) > 1e-12 * maxf(absf(p), 1.0):
+			return false
+	return true
+
+
 func run_days(w: World, days: int) -> void:
 	for m in 1440 * days:
 		w.update(0.5)
@@ -59,19 +76,23 @@ func _init() -> void:
 	a.setup(VillageMap.load_default(), 1)
 	run_days(a, 3)
 	var b := World.new()
-	b.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(a.to_dict())))
+	b.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(a.to_dict(), "", true, true)))
 	var d0 := differing(parts(a), parts(b))
-	check(d0.is_empty(), "right after loading, the world is the same in every part (%d differ: %s)" % [d0.size(), str(d0.slice(0, 6))])
+	# ND-15 (B25-ND15-TOL-01, owner 2026-11-10): the game's full-precision JSON may bring a fractional value (hunger, stamina, a
+	# position) back one unit in the last place off; accepted only within save_tolerance_test's rule (fractions within 1e-12 of
+	# their size), everything whole and every text exact. A part that differs must differ only in such fractions.
+	var beyond := d0.filter(func(k): return not _within(parts(a)[k], parts(b).get(k, "")))
+	check(beyond.is_empty(), "right after loading, every part is the same, fractions within the ND-15 tolerance (%d differ only in the last place: %s; beyond: %s)" % [d0.size() - beyond.size(), str(d0.slice(0, 4)), str(beyond.slice(0, 4))])
 	var inv := Inventory.new()
 	inv.add("wheat", 2)
 	inv.add("bread", 1)
 	inv.add("apple", 3)
-	var back := Inventory.from_dict(JSON.parse_string(JSON.stringify(inv.to_dict())))
+	var back := Inventory.from_dict(JSON.parse_string(JSON.stringify(inv.to_dict(), "", true, true)))
 	check(back.items.keys() == inv.items.keys() and back.items == inv.items, "a pack keeps its items in the order they were held")
 	var old := Inventory.from_dict({"items": {"bread": 1, "apple": 3}})
 	check(old.count("bread") == 1 and old.count("apple") == 3, "a pack saved before the order was kept still loads")
 	var b2 := World.new()
-	b2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(a.to_dict())))
+	b2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(a.to_dict(), "", true, true)))
 	run_days(b, 3)
 	run_days(b2, 3)
 	var d1 := differing(parts(b), parts(b2))
@@ -79,7 +100,7 @@ func _init() -> void:
 	var od := a.to_dict()
 	od.erase("rng_state")
 	var c := World.new()
-	c.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(od)))
+	c.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(od, "", true, true)))
 	check(c.minutes == a.minutes and c.npcs.size() == a.npcs.size(), "a save without the random state still loads")
 	print("%d checks, %d failures" % [checks, failures])
 	quit(1 if failures > 0 else 0)

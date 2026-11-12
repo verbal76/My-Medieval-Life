@@ -78,10 +78,10 @@ func _init() -> void:
 			break
 	check(pulled == 1, "a villager pulls their household's cart")
 	# the save, loaded into a fresh world and saved again
-	var a = JSON.parse_string(JSON.stringify(w.to_dict()))
+	var a = JSON.parse_string(JSON.stringify(w.to_dict(), "", true, true))
 	var w2 := World.new()
-	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(a)))
-	var z = JSON.parse_string(JSON.stringify(w2.to_dict()))
+	w2.load_dict(VillageMap.load_default(), JSON.parse_string(JSON.stringify(a, "", true, true)))
+	var z = JSON.parse_string(JSON.stringify(w2.to_dict(), "", true, true))
 	for k in ["trees", "couriers"]:
 		check(JSON.stringify(a.get(k), "", true) == JSON.stringify(z.get(k), "", true), "the %s load back exactly" % k)
 	var differ := []
@@ -100,7 +100,7 @@ func _init() -> void:
 	var acc := {"source": "well", "cell": Vector2i(17, 23), "distance": 2}
 	for form in [["save form", Wilds.save_form(acc)], ["an older save's form", acc]]:
 		var claim := {"id": "hs_test", "works": []}
-		var back = JSON.parse_string(JSON.stringify({"pending_water": form[1]}))
+		var back = JSON.parse_string(JSON.stringify({"pending_water": form[1]}, "", true, true))
 		w2.wilds.choose_water(claim, back.pending_water)
 		check(claim.has("water_src") and claim.water_src.cell == [17, 23] and str(claim.water_src.source) == "well",
 				"a pending water source loaded from a save (%s) is recorded at its cell (%s)" % [form[0], str(claim.get("water_src", {}))])
