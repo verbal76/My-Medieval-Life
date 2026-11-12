@@ -745,6 +745,10 @@ const WALK_BACKOFF_FORGET := 120.0   # game minutes: a failure this long after t
 
 
 func _walk_failed(n: NPC) -> void:
+	# A bandit, a guard or anyone in a fight is never left standing: they decide again at once as before (gate run 43265678488:
+	# bandits whose camp was beyond the path search stood "lost" and were cut down on day 2, ending the judgment-chain scenario).
+	if n.role == "bandit" or n.job == "guard" or n.target >= 0:
+		return
 	if n.path_fails > 0 and minutes - n.path_fail_at > WALK_BACKOFF_FORGET:
 		n.path_fails = 0
 	n.path_fails += 1
