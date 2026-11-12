@@ -712,6 +712,12 @@ func tx_fail(txid: String, why: String) -> Dictionary:
 	return a.fail(txid, why) if a != null else _no_authority(txid)
 
 
+## TRD-04: an open shipment a party of which is gone, settled to the estates (LE-04, EconTransactions.settle_estate).
+func tx_settle_estate(txid: String, why: String) -> Dictionary:
+	var a = authority()
+	return a.settle_estate(txid, why) if a != null else _no_authority(txid)
+
+
 func tx_shipment(txid: String) -> Dictionary:
 	var a = authority()
 	return a.get_shipment(txid) if a != null else {}
@@ -738,11 +744,22 @@ func tx_in_transit() -> Dictionary:
 
 ## The buyer's settlement asks for its shipment at the due day's step (OffMapSettlement._deliver): delivered when it can be; a
 ## shipment whose buyer can no longer take it is failed (goods back to the seller, price refunded) once it is `food_lapse_days` late.
+## TRD-04: if the seller is gone (its business closed while the goods were on the road), failing is refused as well, and the
+## shipment is settled to the estates instead (LE-04: the goods to the seller's estate, the price back to the buyer or its estate),
+## so it is never asked for again for ever with the goods in custody and the price in escrow.
+## A party that stood when the shipment was accepted and is gone now reads "unknown_party" once its record is removed (a closed
+## business: Regions.party is null), "party_unavailable" while its record stands empty.
 func _arrive(e: Dictionary, today: int) -> Dictionary:
 	var res := tx_deliver(str(e.tx))
-	if not bool(res.ok) and str(res.code) == "party_unavailable" and today - int(e.due) >= int(OffMapSettlement.rules().get("food_lapse_days", 6)):
+	if not bool(res.ok) and _gone(res) and today - int(e.due) >= int(OffMapSettlement.rules().get("food_lapse_days", 6)):
 		res = tx_fail(str(e.tx), "undeliverable")
+		if not bool(res.ok) and _gone(res):
+			res = tx_settle_estate(str(e.tx), "undeliverable")
 	return res
+
+
+static func _gone(res: Dictionary) -> bool:
+	return str(res.get("code", "")) in ["party_unavailable", "unknown_party"]
 
 
 ## The flight recorder's record of the food trade (REC-DIAG), when the settlements live in a world that records: a purchase, a buyer
