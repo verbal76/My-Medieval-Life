@@ -248,17 +248,17 @@ func nearest_walkable(c: Vector2i) -> Vector2i:
 
 
 ## A route for the player: the village grid when both ends are in the village, else a small A* over
-## the cells between them (world collision), at most WORLD_PATH_CELLS across. Empty: no route found
+## the cells between them (world collision), at most WORLD_PATH_CELLS (or `max_cells`) across. Empty: no route found
 ## (or too far); the caller then walks straight and slides along what is in the way.
 const WORLD_PATH_CELLS := 140
 
 
-func find_path_world(from: Vector2i, to: Vector2i) -> PackedVector2Array:
+func find_path_world(from: Vector2i, to: Vector2i, max_cells := WORLD_PATH_CELLS) -> PackedVector2Array:
 	if in_village(from) and in_village(to):
 		return find_path(from, to)
 	var lo := Vector2i(mini(from.x, to.x), mini(from.y, to.y)) - Vector2i(10, 10)
 	var hi := Vector2i(maxi(from.x, to.x), maxi(from.y, to.y)) + Vector2i(11, 11)
-	if hi.x - lo.x > WORLD_PATH_CELLS or hi.y - lo.y > WORLD_PATH_CELLS:
+	if hi.x - lo.x > max_cells or hi.y - lo.y > max_cells:
 		return PackedVector2Array()
 	var g := AStarGrid2D.new()
 	g.region = Rect2i(lo, hi - lo)

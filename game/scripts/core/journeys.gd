@@ -19,6 +19,7 @@ const REST_FROM := 20
 const REST_TO := 6
 const EAT_BELOW := 40.0
 const MARGIN_MINUTES := 720.0      # B25R1-009: food for half a day more than the walk (provision, buy_food)
+const SITE_PATH_CELLS := 300       # the bound of the walk between a road's end and a place in its site (the largest site is 251 cells)
 
 
 static func active(n: NPC) -> bool:
@@ -105,11 +106,20 @@ static func resume(w: World, n: NPC) -> bool:
 		var from := _nearest(road, n.cell()) if not w.map.in_village(n.cell()) else 0
 		for q in range(from, road.size()):
 			path.append(road[q])
-		path.append(Vector2(st.slots[0].spot))
+		var spot := Vector2i(st.slots[0].spot)
+		var walk := _site_walk(w, Vector2i(path[path.size() - 1]) if not path.is_empty() else n.cell(), spot)
+		if walk.is_empty():
+			path.append(Vector2(spot))                     # no way found: a straight step, as before
+		else:
+			path.append_array(walk.slice(1))
 	else:
 		var from := road.size() - 1
 		if not ow.site_at(n.cell()).is_empty():
-			path.append(Vector2(st.gate))
+			var walk := _site_walk(w, n.cell(), Vector2i(road[from]))
+			if walk.is_empty():
+				path.append(Vector2(st.gate))              # no way found: by the gate, as before
+			else:
+				path.append_array(walk.slice(0, walk.size() - 1))    # (the road's first cell follows)
 		else:
 			from = _nearest(road, n.cell())
 		for q in range(from, -1, -1):
@@ -124,6 +134,18 @@ static func resume(w: World, n: NPC) -> bool:
 	n.plan = [{"k": "go", "to": dest, "pathed": true}, {"k": "do", "act": "journey_leg", "args": {}}]
 	n.doing = ("on the road to %s" if leg == "out" else "on the road home from %s") % st.name
 	return true
+
+
+## The steps between the road's end at a site and a place in it (either way), walked round the site's buildings by the world's
+## collision (VillageMap.find_path_world): the road ends at the site's edge and the place may lie across the site, and a straight
+## line there went through its buildings (the simulation gate's playtest probe, B25). Ends at `to`; empty when no way is found.
+static func _site_walk(w: World, from: Vector2i, to: Vector2i) -> PackedVector2Array:
+	var walk := w.map.find_path_world(from, to, SITE_PATH_CELLS)
+	if walk.size() < 2:
+		return PackedVector2Array()
+	if walk[walk.size() - 1] != Vector2(to):
+		walk.append(Vector2(to))
+	return walk
 
 
 static func _nearest(road: PackedVector2Array, c: Vector2i) -> int:
