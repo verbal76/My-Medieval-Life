@@ -1758,13 +1758,17 @@ func net_state_maybe() -> void:
 	ks.sort()
 	for k in ks:
 		factor(ev, "section", str(k), str(dig[k]), "hash", "network")
-	if str(net.role) == "host":                # X20: each guest is sent only its own offers (NetSession._private_for): what its copy should hold
+	if str(net.role) == "host":                # X20, MML-MP-07: each guest is sent its own view (NetSession._private_for): what its copy should hold
 		for id in net.by_peer:
 			var g: PlayerState = w.player_by_pid(int(net.by_peer[id]))
 			if g != null:
 				var dd := d.duplicate(false)
-				NetSession._private_for(dd, w.player_ref(g))
-				factor(ev, "for", "%s|player_offers" % ref_of(g), str(net_digest(dd).get("player_offers", "absent")), "hash", "network")     # keyed as that guest's own digests name it (its actor)
+				NetSession._private_for(dd, w.player_ref(g), w)
+				var gd: Dictionary = net_digest(dd)
+				factor(ev, "for", "%s|player_offers" % ref_of(g), str(gd.get("player_offers", "absent")), "hash", "network")     # keyed as that guest's own digests name it (its actor)
+				for k in ks:
+					if k != "player_offers" and str(gd.get(k, "absent")) != str(dig[k]):
+						factor(ev, "for", "%s|%s" % [ref_of(g), k], str(gd.get(k, "absent")), "hash", "network")
 	for k in _net_counts:
 		factor(ev, "sync", str(k), int(_net_counts[k]), "count", "network")
 	_net_counts.clear()

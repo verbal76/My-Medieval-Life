@@ -500,27 +500,10 @@ static func public_player(p: PlayerState) -> Dictionary:
 	return o.to_dict()
 
 
-## X20: what of the players' private records a guest's copy receives (World.to_dict `d`, changed in place for guest `ref`): the offers
-## and messages between players (World.offers) that it sent or that are addressed to it, and its own kept messages (the Messages
-## journal). The interface shows a player only those; another pair's offers and words are theirs. The offer counter stays (the
-## copy's own offers are numbered from it).
-static func _private_for(d: Dictionary, ref: String) -> void:
-	if d.has("asset_shares"):
-		var visible := {}
-		for pair in d.asset_shares:
-			if str(pair).split("|").has(ref):
-				visible[pair] = d.asset_shares[pair]
-		d["asset_shares"] = visible
-	if d.has("player_offers"):
-		var po: Dictionary = d.player_offers
-		var mine: Array = (po.get("list", []) as Array).filter(func(o): return str(o["from"]) == ref or str(o.to) == ref)
-		d["player_offers"] = {"next": po.get("next", 1), "list": mine}
-	if d.has(MessageJournal.KEY):
-		var mj: Dictionary = d[MessageJournal.KEY]
-		if mj.has(ref):
-			d[MessageJournal.KEY] = {ref: mj[ref]}
-		else:
-			d.erase(MessageJournal.KEY)
+## X20: what of the players' private records a guest's copy receives (World.to_dict `d`, changed in place for guest `ref`; `w` the
+## host's world): MML-MP-07, NetPrivacy.filter (the offers, sharing pairs and kept messages of X20 and MP-05 among them).
+static func _private_for(d: Dictionary, ref: String, w: World = null) -> void:
+	NetPrivacy.filter(d, ref, w)
 
 
 ## Host (X20, tests): the offers and messages between players that guest `ref`'s copy holds (_private_for).
@@ -528,10 +511,8 @@ static func offers_for(w: World, ref: String) -> Array:
 	return w.offers.filter(func(o): return str(o["from"]) == ref or str(o.to) == ref)
 
 
-## The world as this guest may see it: the save, with the guest's own character in full and every other player's public
-## record only (no one else's pack, purse, crimes or identity hash).
-func world_for(pid: int) -> PackedByteArray:
-	var w: World = main.world
+## Host (MML-MP-07, tests): the world as guest `pid` is welcomed with it (world_for, before the players in play are added).
+static func welcome_view(w: World, pid: int) -> Dictionary:
 	var d: Dictionary = w.to_dict()
 	d["player"] = public_player(w.host_player())
 	var by := {}
@@ -539,7 +520,14 @@ func world_for(pid: int) -> PackedByteArray:
 		by[str(p.pid)] = p.to_dict() if p.pid == pid else public_player(p)
 	d["players"] = {"host": w.host_player().pid, "by_pid": by}
 	d["net_pid"] = pid
-	_private_for(d, w.player_ref(w.player_by_pid(pid)))
+	_private_for(d, w.player_ref(w.player_by_pid(pid)), w)     # MML-MP-07: nobody else's private records in the welcome
+	return d
+
+
+## The world as this guest may see it: the save, with the guest's own character in full and every other player's public
+## record only (no one else's pack, purse, crimes or identity hash).
+func world_for(pid: int) -> PackedByteArray:
+	var d := welcome_view(main.world, pid)
 	_welcome_digest = NetSync.digest(d)            # what this guest's copy holds from now (NetSync.changed sends the rest)
 	# who is in play and where, as s_players says it: the welcome carries it (reliable), so the copy has the other players from its
 	# first frame. The snapshots are unreliable and ENet's throttle drops most of them while the welcome is acknowledged (CI: a
@@ -1382,11 +1370,9 @@ func send_syncs(all: bool, skip: Array = [], clock := -1.0, mark := -1) -> void:
 		sync_due.erase(id)
 		if not synced.has(id):
 			synced[id] = {}
-		var d := all_d
-		if all_d.has("player_offers") or all_d.has("asset_shares"): # X20 / MP-05: private per-player relations
-			var g: PlayerState = main.world.player_by_pid(int(by_peer[id]))
-			d = all_d.duplicate(false)
-			_private_for(d, main.world.player_ref(g) if g != null else "")
+		var g: PlayerState = main.world.player_by_pid(int(by_peer[id]))
+		var d := all_d.duplicate(false)                # MML-MP-07: each guest's sections filtered for it (the host's world untouched)
+		_private_for(d, main.world.player_ref(g) if g != null else "", main.world)
 		var ch := NetSync.changed(d, synced[id], skip if not sync_due_was.has(id) else [])
 		if clock >= 0.0:
 			ch["_net_clock"] = clock

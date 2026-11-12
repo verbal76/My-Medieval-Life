@@ -331,6 +331,18 @@ func _commands() -> void:
 			var out := {"digest": NetSync.digest(dd), "sections": {}, "mark": int(c.seq)}
 			for k in c.get("keys", []):
 				out.sections[k] = dd.get(k)
+			var sf := {}                             # MML-MP-07: each guest is sent its own view of them (NetSession._private_for)
+			for gid in main.net.by_peer:
+				var gp: PlayerState = w.player_by_pid(int(main.net.by_peer[gid]))
+				if gp == null:
+					continue
+				var gv := dd.duplicate(false)
+				NetSession._private_for(gv, w.player_ref(gp), w)
+				var one := {}
+				for k in c.get("keys", []):
+					one[k] = gv.get(k)
+				sf[str(gp.pid)] = one
+			out["sections_for"] = sf
 			if c.get("full", false):                 # X20 phase 4.5 (net_snapshot.gd): offers, villagers, players, the clock
 				out["offers"] = w.offers.duplicate(true)
 				var of := {}                         # X20: what each player's copy is sent of them (NetSession.offers_for)

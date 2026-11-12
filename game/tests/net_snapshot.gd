@@ -4,7 +4,7 @@ extends RefCounted
 ## "dump" with "full") while its frame is frozen: the synchronized sections, the offers between players, the villagers (alive or
 ## not), every player's public place and the host's records of each player's pack and purse, and the clock. A guest compares its
 ## own copy with that: the sections, the offers, the clock, the villager set, where every other player stands (and that it holds
-## nobody else's pack), and its own pack, purse and place as the host has them. Each difference is one line; none is agreement.
+## nobody else's pack, nor, MML-MP-07, any other player's private records), and its own pack, purse and place as the host has them. Each difference is one line; none is agreement.
 
 const CLOCK_SLACK := 5.0              # game minutes: the guest's clock comes in the 4 Hz snapshots (NetSession.s_npcs), at most this behind
 const POS_SLACK := 0.15               # tiles
@@ -19,8 +19,9 @@ static func compare(w: World, my_pid: int, dump: Dictionary, keys: Array) -> Arr
 	if dump.is_empty():
 		return ["no dump from the host"]
 	var mine: Dictionary = w.to_dict()
+	var hsec: Dictionary = dump.get("sections_for", {}).get(str(my_pid), dump.get("sections", {}))     # MML-MP-07: as sent to this player
 	for k in keys:
-		var hs = _canon(k, dump.get("sections", {}).get(k))
+		var hs = _canon(k, hsec.get(k))
 		var ms = _canon(k, mine.get(k))
 		if norm(hs) != norm(ms):
 			bad.append("section %s%s" % [k, _first_difference(JSON.parse_string(norm(hs)), JSON.parse_string(norm(ms)))])
@@ -61,6 +62,45 @@ static func compare(w: World, my_pid: int, dump: Dictionary, keys: Array) -> Arr
 			bad.append("holds player %s's pack, which is theirs only" % pid_s)
 		if q.away:
 			bad.append("player %s in play on the host, away here" % pid_s)
+	bad.append_array(private_leaks(w, my_pid))
+	return bad
+
+
+## MML-MP-07: what of another player's private records this copy holds (none is agreement): ties and trade contacts, crime cases,
+## debts, villagers' asks, contracts, kept messages.
+static func private_leaks(w: World, my_pid: int) -> Array:
+	var bad := []
+	var me := w.player_by_pid(my_pid)
+	if me == null:
+		return ["no own character here"]
+	var my_id := w.person_id(me)
+	var my_ref := w.player_ref(me)
+	var other_id := func(i: int) -> bool: return Life.is_player_id(i) and i != my_id
+	var other_ref := func(r: String) -> bool: return World.is_player_ref(r) and r != my_ref
+	for k in w.relations.ties.keys() + w.relations.trades.keys():
+		var ids: Array = Array(str(k).split(":")).map(func(x): return int(x))
+		if ids.size() == 2 and not ids.has(my_id) and (other_id.call(ids[0]) or other_id.call(ids[1])):
+			bad.append("holds another player's tie or trade contact %s" % k)
+			break
+	for r in w.justice.cases:
+		if other_ref.call(str(r)):
+			bad.append("holds another player's crime case %s" % r)
+	for x in w.credit.debts:
+		if not my_ref in [str(x.creditor), str(x.debtor)] and (other_ref.call(str(x.creditor)) or other_ref.call(str(x.debtor))):
+			bad.append("holds another player's debt %s" % x.id)
+			break
+	for x in w.credit.requests:
+		if str(x.get("to", World.PLAYER)) != my_ref:
+			bad.append("holds a villager's ask of another player")
+			break
+	for c in w.contracts.list:
+		if not my_ref in [str(c.buyer), str(c.seller)] and (other_ref.call(str(c.buyer)) or other_ref.call(str(c.seller))):
+			bad.append("holds another player's contract %s" % c.id)
+			break
+	for r in w.messages.by_ref:
+		if str(r) != my_ref:
+			bad.append("holds another player's kept messages")
+			break
 	return bad
 
 
