@@ -109,6 +109,12 @@ func _init() -> void:
 	w.messages.by_ref[aref] = [[0, "note", "Ann's own note"]]
 	if w.judgment == null:
 		w.judgment_foreign = {"facts": ["about Bran"]}       # a judgment section the host writes: never sent
+	w.prospecting.samples["9101"] = {"id": 9101, "clue": "c1", "x": 1, "y": 1, "by": bref, "skill": 0, "day": 1}
+	w.prospecting.samples["9102"] = {"id": 9102, "clue": "c1", "x": 2, "y": 1, "by": aref, "skill": 0, "day": 1}
+	w.prospecting.bags[bref] = [9101]
+	w.prospecting.bags[aref] = [9102]
+	w.prospecting.records.append({"id": 9201, "sample": 9100, "clue": "c1", "x": 3, "y": 1, "ore": "iron_ore", "grade": 2, "confidence": 0.8, "by": bref, "assayer": World.npc_ref(v1.id), "day": 1, "known_by": [bref, World.npc_ref(v1.id)]})
+	w.prospecting.records.append({"id": 9202, "sample": 9099, "clue": "c1", "x": 4, "y": 1, "ore": "", "grade": 0, "confidence": 0.8, "by": aref, "assayer": World.npc_ref(v1.id), "day": 1, "known_by": [aref, World.npc_ref(v1.id)]})
 	bran.coins = 77
 	bran.inv.add("bread", 5)
 
@@ -153,6 +159,9 @@ func _init() -> void:
 	check(d.get("law_lessons", {}) == {aref: [1, 1]}, "law lessons: Ann's own only")
 	check(d.get("tie_history", {}).keys() == [str(ann.pid)], "heir's ties: Ann's own only")
 	check(d.get(MessageJournal.KEY, {}).keys() == [aref], "kept messages: Ann's own only")
+	var pr: Dictionary = d.prospecting
+	check(not pr.bags.has(bref) and not pr.samples.has("9101") and not (pr.records as Array).any(func(r): return int(r.id) == 9201), "prospecting: Bran's samples and the assay only he knows withheld (private knowledge)")
+	check(pr.bags.has(aref) and pr.samples.has("9102") and (pr.records as Array).any(func(r): return int(r.id) == 9202), "prospecting: Ann's own samples and assays kept")
 	# -- players: Bran's public look, Ann whole
 	var pb: Dictionary = d.players.by_pid[str(bran.pid)]
 	var pa: Dictionary = d.players.by_pid[str(ann.pid)]

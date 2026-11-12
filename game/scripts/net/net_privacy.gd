@@ -11,7 +11,8 @@ extends RefCounted
 ## is changed, so the host's world and the other guests' copies are untouched) and the recipient's player reference. What it removes is
 ## another player's: ties and trade contacts with anyone (Relations), killings count, debts, villagers' asks and refusals (Credit), crime
 ## cases open or closed (Justice), contracts (Contracts), stored goods in their chests, carts and homestead houses unless the MP-05 tier
-## shares them (Chests, Carts, Homesteads), law lessons, the ties kept for their heir (tie_history); and the villagers' judgment store
+## shares them (Chests, Carts, Homesteads), law lessons, the ties kept for their heir (tie_history), their prospecting samples
+## and the assays only they know; and the villagers' judgment store
 ## (read on the host only). What stays: the public world, the recipient's own records whole, every record between villagers, and the
 ## other players' public look (NetSession.public_player) and their assets as the map shows them (buildings, carts, pens, plots).
 ## The player-to-player offers, sharing pairs and kept messages were filtered already (X20, MP-05); they are here too.
@@ -72,6 +73,8 @@ static func filter(d: Dictionary, ref: String, w: World = null) -> void:
 		var hs: Dictionary = (d.homesteads as Dictionary).duplicate(false)
 		hs["claims"] = _loads(hs.get("claims", []) as Array, ref, w, 1)
 		d["homesteads"] = hs
+	if d.get("prospecting") is Dictionary:
+		d["prospecting"] = _prospecting(d.prospecting, ref)
 	d.erase("judgment")                                     # the villagers' judgment store is read on the host only
 	if d.get("law_lessons") is Dictionary:
 		var ll: Dictionary = d.law_lessons
@@ -158,6 +161,26 @@ static func _credit(c: Dictionary, ref: String) -> Dictionary:
 			o["refused_by"] = {ref: rb[ref]}
 		else:
 			o.erase("refused_by")
+	return o
+
+
+## Prospecting (MIN-C): another player's samples in hand and the assays only they know (where ore lies is private knowledge until
+## told); the cells sampled stay (the ground shows them).
+static func _prospecting(pr: Dictionary, ref: String) -> Dictionary:
+	var o := pr.duplicate(false)
+	var bags := {}
+	var mine := []
+	for h in pr.get("bags", {}):
+		if not _other(str(h), ref):
+			bags[h] = pr.bags[h]
+			mine.append_array((pr.bags[h] as Array).map(func(x): return str(int(x))))
+	o["bags"] = bags
+	var sm := {}
+	for k in pr.get("samples", {}):
+		if not _other(str(pr.samples[k].get("by", "")), ref) or mine.has(str(k)):
+			sm[k] = pr.samples[k]
+	o["samples"] = sm
+	o["records"] = (pr.get("records", []) as Array).filter(func(r): return (r.get("known_by", []) as Array).has(ref) or not (r.get("known_by", []) as Array).any(func(x): return _other(str(x), ref)))
 	return o
 
 
