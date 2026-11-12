@@ -7654,8 +7654,8 @@
    "depends_on": [],
    "decisions": [],
    "approval_status": "OWNER APPROVED",
-   "implementation_status": "NOT STARTED",
-   "verification_status": "NOT TESTED",
+   "implementation_status": "IMPLEMENTED ON TASK BRANCH",
+   "verification_status": "TARGETED TESTS PASSED",
    "release_status": "NOT READY",
    "completion": "OPEN",
    "history": [
@@ -7663,9 +7663,20 @@
      "date": "2026-11-12",
      "change": "entered in the register",
      "why": "docs/directives/2026-11-12_b25r2_owner_decisions.md"
+    },
+    {
+     "date": "2026-11-12",
+     "change": "implementation_status: NOT STARTED -> IMPLEMENTED ON TASK BRANCH; verification_status: NOT TESTED -> TARGETED TESTS PASSED; branch: None -> wip/b25-emig-marriage; tests: None -> emigration_marriage_test 8/0 (6 failures before); migration_test 109/0; b25_leak2_departure_test 20/0; test_commit: None -> 6d0b084; commits + 6d0b084",
+     "why": "failing-first test 8 checks 6 failures before, 8/0 after; migration_test 109/0, b25_leak2 20/0; targeted CI dispatched; becomes chain step 8 before the candidate baseline"
     }
    ],
-   "lifecycle": "ACTIVE"
+   "lifecycle": "ACTIVE",
+   "branch": "wip/b25-emig-marriage",
+   "tests": "emigration_marriage_test 8/0 (6 failures before); migration_test 109/0; b25_leak2_departure_test 20/0",
+   "test_commit": "6d0b084",
+   "commits": [
+    "6d0b084"
+   ]
   },
   {
    "id": "B25-EMPLOY-D3",

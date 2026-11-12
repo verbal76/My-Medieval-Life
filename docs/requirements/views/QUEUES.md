@@ -2,7 +2,7 @@
 
 Generated from `docs/requirements/requirements.json` by `python3 tools/check_requirements.py --write`. Do not edit: change the register (`tools/requirements_update.py`) and regenerate.
 
-## Workers and task branches (32)
+## Workers and task branches (33)
 
 | ID | Build | Status | Worker | Branch |
 |---|---|---|---|---|
@@ -10,6 +10,7 @@ Generated from `docs/requirements/requirements.json` by `python3 tools/check_req
 | B25-AUDIT-69-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/requirements-control |
 | B25-CONTRACT-FUNDS-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-contract-funds |
 | B25-ECON-P7 | unassigned | IN DEVELOPMENT | b25r1-econ6 worker | wip/b25r1-econ6 |
+| B25-EMIG-MARRIAGE-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | none | wip/b25-emig-marriage |
 | B25-F015-FOOD-01 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-f015-p99 |
 | B25-FINISH-01 | 20 | IN DEVELOPMENT | lead session | wip/region-nav |
 | B25-HH-BIZFOOD-D1 | unassigned | IMPLEMENTED ON TASK BRANCH | lead | wip/b25-audit-sim4 |

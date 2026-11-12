@@ -117,7 +117,7 @@ The register is the one manually maintained list (schema: `docs/requirements/SCH
 | B25-CONTRACT-FUNDS-D1 | Contract acceptance accounts for committed coins (bids, contracts, obligations) | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | B25-DISK-CLEAN-D1 | Verified safe disk cleanup of the lead machine | unassigned | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-ECON-P7 | Recover stranded settlement treasury ore | unassigned | OWNER APPROVED | IN DEVELOPMENT | NOT TESTED | NOT READY | OPEN |
-| B25-EMIG-MARRIAGE-D1 | A married adult emigrating for work takes the spouse along; no solo emigration that frees the spouse | unassigned | OWNER APPROVED | NOT STARTED | NOT TESTED | NOT READY | OPEN |
+| B25-EMIG-MARRIAGE-D1 | A married adult emigrating for work takes the spouse along; no solo emigration that frees the spouse | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | TARGETED TESTS PASSED | NOT READY | OPEN |
 | B25-EMPLOY-IMPL | Skilled employment growth without fixed headcount caps | 20 | OWNER APPROVED | INTEGRATED | NOT TESTED | NOT READY | OPEN |
 | B25-F015-FOOD-01 | F015: homesteader starves with coins; food held separated from purchasing power; fallback food purchase | unassigned | OWNER APPROVED | IMPLEMENTED ON TASK BRANCH | NOT TESTED | NOT READY | OPEN |
 | B25-F015-POP-01 | F015/P99: explain seed 2 population 316 vs 203 before merge | unassigned | OWNER APPROVED | PARTIALLY IMPLEMENTED | NOT TESTED | NOT READY | OPEN |
