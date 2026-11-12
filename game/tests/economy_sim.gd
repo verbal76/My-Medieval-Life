@@ -719,7 +719,7 @@ func _crime_step(day_n: int, hour: int) -> void:
 
 ## X20-FINAL phase 4 scripted steps, by day after --at and hour of the game clock, through the game's own verbs:
 ##   social_chain (the owner's chain: a crime seen -> opinions -> gossip -> another's judgment -> a later decision): day 0 11:00 and
-##     day 1 11:00 the player picks the pocket of the adult with the most villagers in sight (two crimes, under the notoriety at
+##     day 1 11:00 the player tries the pocket of the adult with the most villagers in sight and is caught (two crimes, under the notoriety at
 ##     which everyone refuses, so each villager's own judgment answers); day 3 10:00 the player, with 600 coins from outside, offers
 ##     every adult villager a small contract (one unit of something they hold, twice its price, two days): each answer is the
 ##     villager's contract_accept judgment of the player (witnesses, those told, those who heard nothing); the flight recorder
@@ -741,7 +741,18 @@ func _scripted_step(day_n: int, hour: int) -> void:
 			var v := _crime_victim(true)
 			if v != null:
 				p.pos = v.pos + Vector2(0.4, 0)
+				# B25-CHAIN-REG: the scenario is a crime SEEN; a try that works is unseen by design (World._pickpocket_try: no
+				# witness, no belief), so its 40% draw decided whether the chain existed at all (f04782f moved the draws: both
+				# tries worked, the gate's chain broke). The try is made to fail here, through the game's own verb and its own
+				# draw (the random stream is unchanged); the catch, the witnesses and the reports are the game's.
+				var keys := ["pickpocket_chance", "pickpocket_chance_max", "pickpocket_asleep_bonus", "pickpocket_asleep_max"]
+				var keep := {}
+				for k in keys:
+					keep[k] = GameData.b(k)
+					GameData.balance[k] = 0.0
 				scenario_log["pickpocket_" + str(day_n)] = w.pickpocket(v).get("ok", false)
+				for k in keys:
+					GameData.balance[k] = keep[k]
 				scenario_log["victim_" + str(day_n)] = v.id
 				did = "pickpocket"
 		["social_chain", 3, 10]:
