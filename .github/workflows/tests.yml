@@ -177,6 +177,7 @@ jobs:
           res://tests/char_create_test.gd
           res://tests/furniture_test.gd
           res://tests/play_test.gd
+          res://tests/player_journey_test.gd   # Stage E (B25): a player's journey through the title, creation, work, trade, food, save and days
           res://tests/overworld_test.gd
           res://tests/atlas_test.gd
           res://tests/settlement_folk_test.gd
@@ -197,6 +198,7 @@ jobs:
           res://tests/region_demand_test.gd
           res://tests/region_sim_test.gd
           res://tests/demo_test.gd
+          res://tests/demo_journey_test.gd     # DEMO-01 (B25 Stage E): the demo edition played: presets, timer, end screen, full-game continuation
           res://tests/outside_interact_test.gd
           res://tests/homestead_test.gd          # B25R1-010: a homestead from setting out to a house and a life there
           res://tests/homestead_presence_test.gd # B25R1-010 x 019: the same build watched and unwatched, saved mid-way
