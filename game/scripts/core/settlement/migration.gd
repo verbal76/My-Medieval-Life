@@ -319,6 +319,8 @@ static func _restore(w: World, snap: Dictionary) -> void:
 ## tills (TILL-D1: to their purse) and its pantry, which goes with them. Returns that pantry (null when someone stays behind), so
 ## nothing of theirs is left to escheat to the manor once they have gone. Moves coins and goods only between village holders.
 static func _take_own(w: World, ms: Array) -> Inventory:
+	if w.credit != null:
+		w.credit.on_departure(ms)                 # REG-02 debt part (B25-REG02-DEBT-D1): debts settled as they pack
 	var emptied: Array = []
 	for h in _households_of(ms):
 		var left := 0

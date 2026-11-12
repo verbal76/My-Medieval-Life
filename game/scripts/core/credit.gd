@@ -615,6 +615,41 @@ func on_death(n: NPC, heir: NPC) -> void:
 				_end(x, LOST)
 
 
+## REG-02 debt part (owner decision 2026-11-10, B25-REG02-DEBT-D1, option (b) as qualified): villagers `ms` leave the village for
+## a settlement (Migration), the village's economy no longer reaches them, so their debts are settled through the established
+## process at the moment they pack (after any property sale, so its proceeds count):
+## - a debt they owe to someone who stays: repaid now from what they carry (Credit.repay, even below the reserve: they are leaving);
+##   if they cannot pay it all it is a recorded default (Credit._default: the creditor's regard falls), and it stays on the record;
+## - a debt owed to them by someone who stays: repaid now if the debtor can pay (Credit.can_repay), the coins going with them;
+##   otherwise it stays open: a legitimate obligation is not written off because the creditor moved (there is no repayment path to
+##   a settlement yet; REG-04's couriers are the planned one);
+## - a debt between two who leave together stays as it is (it continues between them).
+## No household is liquidated for moving: only coins already in hand pay (PROP-06's estate sale has already run where it applies).
+func on_departure(ms: Array) -> void:
+	var refs := {}
+	for o in ms:
+		refs[ref_of(o)] = true
+	for x in debts.duplicate():
+		if not standing(x):
+			continue
+		var deb := str(x.debtor)
+		var cre := str(x.creditor)
+		if refs.has(deb) and refs.has(cre):
+			continue
+		if refs.has(deb):
+			if not _alive(cre):
+				continue
+			var p = party(deb)
+			if p != null and p.coins >= int(x.value) and repay(int(x.id), true):
+				w.stat("credit_settled_departure")
+			elif str(x.state) == OPEN:
+				_default(x)
+				w.stat("credit_defaulted_departure")
+		elif refs.has(cre):
+			if _alive(deb) and party(deb) is NPC and can_repay(x) and repay(int(x.id)):
+				w.stat("credit_settled_departure")
+
+
 ## Whether `cause` (PlayerState.death_cause) is a killing by a person, the villagers' "slain" (hunger, bad food, old age,
 ## a beast and a mine collapse are not).
 static func slain_cause(cause: String) -> bool:
