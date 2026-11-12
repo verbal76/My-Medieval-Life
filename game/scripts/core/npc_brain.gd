@@ -4106,6 +4106,10 @@ func _relief(obligations: float, reserve: float) -> int:
 	# others still holding most of two days, and went without when the food for sale ran out before its turn)
 	var order := []
 	for h in w.households.size():
+		# ND-23 (owner 2026-11-12, "Exclude the band"): the manor's relief is for the village's households; the outlaw band's
+		# household (and its clan children) fend for themselves, as outlaws (the band test of Life's births: B25R1-014)
+		if w.households[h].get("band", false) or (w.homesteads != null and str(w.homesteads.claim_of_household(h).get("faction", "")) == "outlaw"):
+			continue
 		if not _members(h).is_empty():
 			# CHAPEL-PURPOSE: the chapel's food on its way to the household (set aside today or yesterday) is counted, so the
 			# manor does not give what the church is already bringing

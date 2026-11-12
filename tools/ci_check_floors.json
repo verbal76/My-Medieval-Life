@@ -165,6 +165,7 @@
  "emp06_unemployed_day_labour_test": 4,
  "reg03_courier_sender_dies_test": 7,
  "reg08_stranded_route_job_test": 9,
+ "nd23_band_no_relief_test": 6,
  "reg06_household_change_live_test": 15,
  "npc03_field_takeover_bookkeeping_test": 4,
  "npc01_path_backoff_test": 10,
