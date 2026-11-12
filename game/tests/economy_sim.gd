@@ -251,6 +251,7 @@ func _init() -> void:
 			print("REGION " + JSON.stringify(_region_line()))           # REGION-NAV-01 S8: envoys, word, journeys, trade, demand
 			print("FUNNEL " + JSON.stringify(_funnel_line(d + 1)))
 			print("JOBS " + JSON.stringify(_jobs_line(d + 1)))
+			print("BIRTHDIAG " + JSON.stringify(_birth_diag(d + 1)))   # B25-F015-POP-01 experiment: read only
 			print("ORE " + JSON.stringify(_ore_line(d + 1)))
 			print("LAND " + JSON.stringify(_land_line(d + 1)))
 			dev_series.append(_dev(d + 1))
@@ -2640,3 +2641,51 @@ func _fr_status(path: String, seed: int, days: int, d0: int, reached: int, final
 		f.store_string(JSON.stringify(st, " ", true))
 		f.close()
 	print("STATUS " + JSON.stringify(st))
+
+
+## B25-F015-POP-01 (owner 2026-11-11, births investigation): which of Life._try_birth's conditions holds each partnered woman
+## back today, read only (no random draw, nothing written): women 18-42 with a living partner of the other sex, then age, food
+## (household_food_days below birth_min_food_days), the gap since her last child, else "ready" (only the daily chance remains).
+func _birth_diag(day: int) -> Dictionary:
+	var c := Life.cfg()
+	var out := {"day": day, "adult_women": 0, "partnered": 0, "age": 0, "no_household": 0, "food": 0, "gap": 0, "ready": 0,
+		"food_days_ready_mean": 0.0, "couples_households": 0, "born_in_run": 0}
+	var fsum := 0.0
+	var hh := {}
+	for n: NPC in w.npcs:
+		if n.born >= 0.0:
+			out.born_in_run += 1
+		if not n.alive or n.sex != "female" or n.role != "adult":
+			continue
+		out.adult_women += 1
+		if not Life.has_partner(w, n):
+			continue
+		var f = w.npc(n.partner) if n.partner >= 0 else null
+		if f == null or f.sex == n.sex:
+			continue
+		out.partnered += 1
+		var age := Life.age_years(n.born, w.minutes)
+		if age < float(c.birth_mother_min_age) or age > float(c.birth_mother_max_age):
+			out.age += 1
+			continue
+		if n.household < 0:
+			out.no_household += 1
+			continue
+		hh[n.household] = true
+		var fd: float = w.brain.household_food_days(n.household)
+		if fd < float(c.birth_min_food_days):
+			out.food += 1
+			continue
+		var gap := false
+		for cid in n.children:
+			var k := w.npc(int(cid))
+			if k != null and Life.age_years(k.born, w.minutes) < float(c.birth_min_gap_years):
+				gap = true
+		if gap:
+			out.gap += 1
+			continue
+		out.ready += 1
+		fsum += fd
+	out.couples_households = hh.size()
+	out.food_days_ready_mean = snappedf(fsum / maxf(1.0, float(out.ready)), 0.01)
+	return out
