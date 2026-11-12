@@ -158,6 +158,7 @@
  "reg06_household_change_live_test": 15,
  "npc03_field_takeover_bookkeeping_test": 4,
  "sav03_reservations_reload_test": 6,
+ "sav04_reload_determinism_test": 13,
  "self_trade_payer_test": 11,
  "hh_business_food_test": 22,
  "meal_deal_price_test": 7,
