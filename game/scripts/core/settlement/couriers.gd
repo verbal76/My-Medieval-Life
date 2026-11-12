@@ -923,6 +923,7 @@ func _arrive(j: Dictionary, day: float) -> void:
 		j.state = "returning"
 		j.history.append([day, "nobody to receive it: the goods come back"])
 		return
+	_spoiled_terms(j, day)                                     # MML-INV-02 F3(b): only when some of the load spoiled on the way
 	var rinv = inv_of(str(j.recipient))
 	var col: Dictionary = j.collect
 	if bool(j.get("intel", false)) and not _region_takes(str(j.recipient), j.items, col):
@@ -1134,6 +1135,93 @@ func _drop_load(j: Dictionary) -> void:
 	w.loot.append({"pos": at, "inv": bag, "coins": int(j.carried_coins), "from": "A courier's load", "t": w.minutes})
 	j.cargo = {}
 	j.carried_coins = 0
+
+
+# ------------------------------------------------------------------------------ spoilage (MML-INV-02 F3(b))
+## A day's spoilage of the food in the couriers' care (Decay.dawn, only while Decay.on()): at the booths at the `home` multiplier,
+## on the road at `carried`. Only booked lines spoil, each with its holder's books moved together, so the booth's store stays the
+## sum of its deposits and the loads waiting there: a deposit line (the sender's) and the store; a load waiting at a booth (its
+## `items`) and the store; a load on the road (`cargo`) and the line it carries (`items` out, `returned_items` or
+## `carried_items` back). The SENDER bears the loss: nobody refunds it, the courier delivers what is left (and the payment asked
+## on arrival is scaled to what arrives, _spoiled_terms), and what came back is what is left. Every unit lost is counted
+## spoiled_<item> and decay_<item> (the village ledger: the courier service's goods are in the village census, held_goods) and
+## on the delivery's own `spoiled` record. Returns the units lost.
+func spoil_day(world, home: float, carried: float) -> int:
+	var lost := 0
+	var sd: int = world.seed
+	var dd: int = world.day()
+	for b in booths:
+		var store: Inventory = b.store
+		var senders: Array = (b.deposits as Dictionary).keys()
+		senders.sort()
+		for who in senders:
+			var dep: Dictionary = b.deposits[who]
+			lost += _spoil_lines(world, dep.items, store, null, "booth:%s:dep:%s" % [str(b.id), str(who)], home, sd, dd)
+			if (dep.items as Dictionary).is_empty() and int(dep.coins) == 0:
+				(b.deposits as Dictionary).erase(who)
+	for j in jobs:
+		match str(j.state):
+			"at_booth":
+				var b := booth(str(j.booth))
+				if not b.is_empty():
+					lost += _spoil_lines(world, j.items, b.store, j, "job:%s:booth" % str(j.id), home, sd, dd)
+			"in_transit", "returning":
+				var line: Dictionary = j.items
+				if str(j.state) == "returning":
+					line = j.returned_items if not (j.returned_items as Dictionary).is_empty() else j.carried_items
+				lost += _spoil_lines(world, j.cargo, null, j, "job:%s:road" % str(j.id), carried, sd, dd, line)
+	return lost
+
+
+## Spoil the lines of `d` (item -> n): each unit lost leaves `d`, the booth's `store` (when given) and the `line` the load carries
+## (when given); recorded on the delivery `j` (when given). A line the store cannot give is left alone (never a unit unbooked).
+func _spoil_lines(world, d: Dictionary, store, j, key: String, m: float, sd: int, dd: int, line = null) -> int:
+	var lost := 0
+	var ids: Array = d.keys()
+	ids.sort()
+	for id in ids:
+		var c := int(d[id])
+		var k := Decay.spoiled(c, Decay.rate(str(id)) * m, Decay.draw(sd, dd, key, str(id)))
+		if k <= 0:
+			continue
+		if store != null and not (store as Inventory).remove(str(id), k):
+			continue
+		if c - k <= 0:
+			d.erase(id)
+		else:
+			d[id] = c - k
+		if line != null and not is_same(line, d) and (line as Dictionary).has(id):
+			var lc := int(line[id]) - k
+			if lc <= 0:
+				(line as Dictionary).erase(id)
+			else:
+				line[id] = lc
+		if j != null:
+			if not (j as Dictionary).has("spoiled"):
+				j["spoiled"] = {}
+			j.spoiled[id] = int(j.spoiled.get(id, 0)) + k
+		world.stat("spoiled_" + str(id), float(k))
+		world.stat("decay_" + str(id), float(k))
+		world.stat("courier_spoiled", float(k))
+		lost += k
+	return lost
+
+
+## MML-INV-02 F3(b): the sender bears the loss of what spoiled in the courier's care: a payment asked on arrival is scaled to the
+## units that arrive (whole coins or units, rounded down; nothing asked when nothing arrives). No change when nothing spoiled.
+func _spoiled_terms(j: Dictionary, day: float) -> void:
+	var gone := units_of(j.get("spoiled", {}))
+	var col: Dictionary = j.collect
+	if gone <= 0 or col.is_empty() or bool(j.get("terms_scaled", false)):
+		return
+	var left := units_of(j.items)
+	var amount := int(col.amount) * left / maxi(1, left + gone)
+	j["terms_scaled"] = true
+	if amount <= 0:
+		j.collect = {}
+	else:
+		col.amount = amount
+	j.history.append([day, "%d spoiled on the way: %s" % [gone, ("payment asked %d" % amount) if amount > 0 else "no payment asked"]])
 
 
 ## Coins the courier service holds (booth coins and fees held), for conservation checks.
@@ -1412,6 +1500,8 @@ static func from_dict(world, d: Dictionary) -> CourierService:
 		c["booth"] = str(c.get("booth", ""))
 		for k in ["items", "carried_items", "returned_items", "cargo"]:
 			c[k] = _whole(c.get(k, {}))
+		if c.has("spoiled"):                                   # MML-INV-02 F3(b): what spoiled in the courier's care (optional)
+			c["spoiled"] = _whole(c.spoiled)
 		var col: Dictionary = c.get("collect", {})
 		if not col.is_empty():
 			col.amount = int(col.amount)

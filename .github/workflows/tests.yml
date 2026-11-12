@@ -170,6 +170,7 @@ jobs:
           res://tests/sav03_counter_reload_test.gd        # SAV-03: a counter's keeper still known after a save and load
           res://tests/inv04_stash_handover_test.gd   # INV-04 (owner 2026-11-08): goods left behind pass to the new holder
           res://tests/inv01_stash_census_test.gd          # INV-01: the census counts the players' own containers
+          res://tests/inv02_spoilage_test.gd   # MML-INV-02 (owner 2026-11-10, F1-F6): spoilage by storage condition, off by default
           res://tests/inv05_rubble_refund_test.gd   # INV-05 (owner 2026-11-08): rubble comes back as rubble, never stone
           res://tests/sav02_day_state_test.gd   # SAV-02 (owner 2026-11-08): a mid-day load continues the day's economic state
           res://tests/character_look_test.gd
